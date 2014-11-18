@@ -4205,10 +4205,10 @@ static void _setup_gozag_shop(int index)
                              && type != SHOP_GENERAL_ANTIQUE
                              && type != SHOP_DISTILLERY;
     you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string()
-                                    = need_suffix ?
-                                      random_choose("Shoppe", "Boutique",
-                                                    "Emporium", "Shop", NULL) :
-                                      "";
+                                    = need_suffix
+                                      ? random_choose("Shoppe", "Boutique",
+                                                      "Emporium", "Shop")
+                                      : "";
 
     you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int()
                                     = gozag_price_for_shop();

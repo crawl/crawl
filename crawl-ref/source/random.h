@@ -37,36 +37,33 @@ bool decimal_chance(double percent);
 
 int ui_random(int max);
 
-/**
- * Chooses one of the numbers passed in at random. The list of numbers
- * must be terminated with -1.
- */
+/// Choose a single object "randomly". Base case for a recursive template.
 template <typename T>
-T random_choose(T first, ...)
+const T &random_choose(const T &only)
 {
-    va_list args;
-    va_start(args, first);
-
-    T chosen = first;
-    int count = 1;
-    int nargs = 100; // a hard limit to catch unterminated uses
-
-    while (nargs-- > 0)
-    {
-        const int pick = va_arg(args, int);
-        if (pick == -1)
-            break;
-        if (one_chance_in(++count))
-            chosen = static_cast<T>(pick);
-    }
-
-    va_end(args);
-    ASSERT(nargs > 0);
-    return chosen;
+    return only;
 }
 
-template <>
-const char* random_choose<const char*>(const char* first, ...);
+/// Chooses one of the objects passed in at random.
+template <typename T, typename... Ts>
+const T &random_choose(const T &first, const T &second, Ts... rest)
+{
+    // 1/N chance of choosing first; otherwise choose one of the remaining N-1
+    return one_chance_in(2 + sizeof...(rest))
+           ? first : random_choose(second, rest...);
+}
+
+/** Chooses one of the strings passed in at random.
+ *
+ * Without this overload, the generic random_choose would fail to resolve
+ * the types of, for example, const char[6] versus const char[4] in
+ * random_choose("hello", "foo");
+ */
+template <typename... Ts>
+const char *random_choose(const char *first, const char *second, Ts... rest)
+{
+    return random_choose<const char * const &, Ts...>(first, second, rest...);
+}
 
 template <typename T>
 T random_choose_weighted(int weight, T first, ...)

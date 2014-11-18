@@ -311,7 +311,7 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
     if (random2(pow) > 60 && coinflip())
         type = MONS_SPHINX;
     else
-        type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM, -1);
+        type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM);
 
     int num = (type == MONS_HARPY ? 1 + x_chance_in_y(pow, 80)
                                       + x_chance_in_y(pow - 75, 100)
@@ -678,7 +678,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 // Not a spell. Rather, this is TSO's doing.
 bool summon_holy_warrior(int pow, bool punish)
 {
-    mgen_data mg(random_choose(MONS_ANGEL, MONS_DAEVA, -1),
+    mgen_data mg(random_choose(MONS_ANGEL, MONS_DAEVA),
                  punish ? BEH_HOSTILE : BEH_FRIENDLY,
                  punish ? 0 : &you,
                  punish ? 0 : min(2 + (random2(pow) / 4), 6),
@@ -1113,8 +1113,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
         // tier 4
         type = random_choose(MONS_BLUE_DEVIL,    MONS_RUST_DEVIL,
                              MONS_ORANGE_DEMON,  MONS_RED_DEVIL,
-                             MONS_SIXFIRHY,      MONS_HELLWING,
-                             -1);
+                             MONS_SIXFIRHY,      MONS_HELLWING);
     }
     else
     {
@@ -1122,8 +1121,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
         type = random_choose(MONS_SUN_DEMON,     MONS_SOUL_EATER,
                              MONS_ICE_DEVIL,     MONS_SMOKE_DEMON,
                              MONS_NEQOXEC,       MONS_YNOXINUL,
-                             MONS_CHAOS_SPAWN,
-                             -1);
+                             MONS_CHAOS_SPAWN);
     }
 
     return _summon_demon_wrapper(pow, god, spell, type,

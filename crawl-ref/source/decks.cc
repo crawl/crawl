@@ -1504,7 +1504,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
     {
         case 0:
             for_allies = for_hostiles = random_choose(ENCH_SLOW, ENCH_HASTE,
-                                                      ENCH_SWIFT, -1);
+                                                      ENCH_SWIFT);
             break;
 
         case 1:
@@ -2321,21 +2321,21 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
         dct = random_choose(MONS_BALRUG, MONS_BLIZZARD_DEMON,
               MONS_GREEN_DEATH, MONS_SHADOW_DEMON, MONS_CACODEMON,
               MONS_HELL_BEAST, MONS_REAPER, MONS_LOROCYPROCA,
-              MONS_HELLION, MONS_TORMENTOR, -1);
+              MONS_HELLION, MONS_TORMENTOR);
         dct2 = MONS_PANDEMONIUM_LORD;
     }
     else if (power_level == 1)
     {
         dct = random_choose(MONS_SUN_DEMON, MONS_ICE_DEVIL,
               MONS_SOUL_EATER, MONS_CHAOS_SPAWN, MONS_SMOKE_DEMON,
-              MONS_YNOXINUL, MONS_NEQOXEC, -1);
+              MONS_YNOXINUL, MONS_NEQOXEC);
         dct2 = MONS_RAKSHASA;
     }
     else
     {
         dct = random_choose(MONS_RED_DEVIL, MONS_BLUE_DEVIL,
               MONS_RUST_DEVIL, MONS_HELLWING, MONS_ORANGE_DEMON,
-              MONS_SIXFIRHY, -1);
+              MONS_SIXFIRHY);
         dct2 = MONS_HELL_HOUND;
     }
 
@@ -2523,11 +2523,11 @@ static void _summon_rangers(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     monster_type dctr, dctr2, dctr3, dctr4;
     monster_type base_choice, big_choice, mid_choice, placed_choice;
-    dctr = random_choose(MONS_CENTAUR, MONS_YAKTAUR, -1);
-    dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN, -1);
-    dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN, MONS_NAGA_SHARPSHOOTER, -1);
+    dctr = random_choose(MONS_CENTAUR, MONS_YAKTAUR);
+    dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN);
+    dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN, MONS_NAGA_SHARPSHOOTER);
     dctr4 = random_choose(MONS_SATYR, MONS_MERFOLK_JAVELINEER,
-                          MONS_DEEP_ELF_MASTER_ARCHER, -1);
+                          MONS_DEEP_ELF_MASTER_ARCHER);
     const int launch_count = 1 + random2(2);
 
     if (power_level >= 2)

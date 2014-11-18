@@ -842,7 +842,7 @@ bool cloud_is_yours_at(const coord_def &pos)
 cloud_type random_smoke_type()
 {
     return random_choose(CLOUD_GREY_SMOKE, CLOUD_BLUE_SMOKE,
-                         CLOUD_BLACK_SMOKE, CLOUD_PURPLE_SMOKE, -1);
+                         CLOUD_BLACK_SMOKE, CLOUD_PURPLE_SMOKE);
 }
 int max_cloud_damage(cloud_type cl_type, int power)
 {

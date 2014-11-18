@@ -3191,8 +3191,7 @@ static monster_type _band_member(band_type band, int which)
         if (one_chance_in(4))
         {
             return random_choose(MONS_DEEP_TROLL_EARTH_MAGE,
-                                 MONS_DEEP_TROLL_SHAMAN,
-                                 -1);
+                                 MONS_DEEP_TROLL_SHAMAN);
         }
         return MONS_DEEP_TROLL;
     case BAND_HOGS:
@@ -3343,8 +3342,7 @@ static monster_type _band_member(band_type band, int which)
         {
             return random_choose(MONS_SPRIGGAN_AIR_MAGE,
                                  MONS_SPRIGGAN_BERSERKER,
-                                 MONS_SPRIGGAN_RIDER,
-                                 -1);
+                                 MONS_SPRIGGAN_RIDER);
         }
         return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
@@ -4102,7 +4100,7 @@ monster_type summon_any_demon(monster_type dct)
     if (dct == RANDOM_DEMON)
     {
         dct = random_choose(RANDOM_DEMON_LESSER, RANDOM_DEMON_COMMON,
-                            RANDOM_DEMON_GREATER, -1);
+                            RANDOM_DEMON_GREATER);
     }
 
     switch (dct)
@@ -4115,8 +4113,7 @@ monster_type summon_any_demon(monster_type dct)
             MONS_WHITE_IMP,
             MONS_UFETUBUS,
             MONS_IRON_IMP,
-            MONS_SHADOW_IMP,
-            -1);
+            MONS_SHADOW_IMP);
 
     case RANDOM_DEMON_COMMON:
         if (x_chance_in_y(6, 10))
@@ -4128,8 +4125,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_ORANGE_DEMON,
                 MONS_RED_DEVIL,
                 MONS_SIXFIRHY,
-                MONS_HELLWING,
-                -1);
+                MONS_HELLWING);
         }
         else
         {
@@ -4141,8 +4137,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_SMOKE_DEMON,
                 MONS_NEQOXEC,
                 MONS_YNOXINUL,
-                MONS_CHAOS_SPAWN,
-                -1);
+                MONS_CHAOS_SPAWN);
         }
 
     case RANDOM_DEMON_GREATER:
@@ -4159,8 +4154,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_REAPER,
                 MONS_LOROCYPROCA,
                 MONS_TORMENTOR,
-                MONS_SHADOW_DEMON,
-                -1);
+                MONS_SHADOW_DEMON);
         }
         else
         {
@@ -4170,8 +4164,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_ICE_FIEND,
                 MONS_SHADOW_FIEND,
                 MONS_HELL_SENTINEL,
-                MONS_EXECUTIONER,
-                -1);
+                MONS_EXECUTIONER);
         }
 
     default:
@@ -4209,8 +4202,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
             MONS_FIRE_DRAGON,
             MONS_ICE_DRAGON,
             MONS_SWAMP_DRAGON,
-            MONS_SHADOW_DRAGON,
-            -1);
+            MONS_SHADOW_DRAGON);
         break;
 
     default:

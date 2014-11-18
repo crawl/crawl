@@ -4369,9 +4369,9 @@ static void _build_postvault_level(vault_placement &place)
         if (one_chance_in(20))
             ngb_min = 3, ngb_max = 4;
         delve(0, ngb_min, ngb_max,
-              random_choose(0, 5, 20, 50, 100, -1),
+              random_choose(0, 5, 20, 50, 100),
               -1,
-              random_choose(1, 20, 125, 500, 999999, -1));
+              random_choose(1, 20, 125, 500, 999999));
     }
     else
     {
@@ -5494,7 +5494,7 @@ static dungeon_feature_type _pick_an_altar()
                 god = GOD_BEOGH;
             else
                 god = random_choose(GOD_VEHUMET, GOD_MAKHLEB, GOD_OKAWARU,
-                                    GOD_TROG,    GOD_XOM,     -1);
+                                    GOD_TROG,    GOD_XOM);
             break;
 
         case BRANCH_VAULTS: // lawful gods
@@ -5508,7 +5508,7 @@ static dungeon_feature_type _pick_an_altar()
 
         case BRANCH_ELF: // magic gods
             god = random_choose(GOD_VEHUMET, GOD_SIF_MUNA, GOD_XOM,
-                                GOD_MAKHLEB, -1);
+                                GOD_MAKHLEB);
             break;
 
         case BRANCH_SLIME:
@@ -5536,8 +5536,7 @@ static dungeon_feature_type _pick_an_altar()
         // Note: this case includes Pandemonium or the Abyss.
         god = random_choose(GOD_ZIN,      GOD_SHINING_ONE, GOD_KIKUBAAQUDGHA,
                             GOD_XOM,      GOD_OKAWARU,     GOD_MAKHLEB,
-                            GOD_SIF_MUNA, GOD_TROG,        GOD_ELYVILON,
-                            -1);
+                            GOD_SIF_MUNA, GOD_TROG,        GOD_ELYVILON);
     }
 
     if (is_unavailable_god(god))

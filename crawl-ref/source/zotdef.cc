@@ -813,45 +813,45 @@ static monster_type _choose_unique_by_depth(int step)
     {
     case 0: // depth <= 3
         ret = random_choose(MONS_TERENCE, MONS_JESSICA, MONS_IJYB,
-                            MONS_SIGMUND, -1);
+                            MONS_SIGMUND);
         break;
     case 1: // depth <= 7
         ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
                             MONS_EDMUND, MONS_PRINCE_RIBBIT, MONS_PURGY,
-                            MONS_MENKAURE, MONS_DUVESSA, MONS_PIKEL, -1);
+                            MONS_MENKAURE, MONS_DUVESSA, MONS_PIKEL);
         break;
     case 2: // depth <= 9
         ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE, MONS_JOSEPH,
                             MONS_EROLCHA, MONS_PRINCE_RIBBIT, MONS_GRUM,
                             MONS_GASTRONOK, MONS_GRINDER, MONS_MAURICE,
-                            MONS_PIKEL, -1);
+                            MONS_PIKEL);
         break;
     case 3: // depth <= 13
         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
                             MONS_EUSTACHIO, MONS_SONJA, MONS_GRUM, MONS_NIKOLA,
                             MONS_ERICA, MONS_JOSEPHINE,
                             MONS_HAROLD, MONS_GASTRONOK, MONS_ILSUIW,
-                            MONS_MAURICE, -1);
+                            MONS_MAURICE);
         break;
     case 4: // depth <= 16
         ret = random_choose(MONS_URUG, MONS_EUSTACHIO, MONS_SONJA,
                             MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
                             MONS_ROXANNE, MONS_RUPERT, MONS_NIKOLA,
                             MONS_AZRAEL, MONS_NESSOS, MONS_AGNES, MONS_AIZUL,
-                            MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, MONS_KIRKE, -1);
+                            MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, MONS_KIRKE);
         break;
     case 5: // depth <= 19
         ret = random_choose(MONS_SNORG, MONS_LOUISE, MONS_FRANCES, MONS_KHUFU,
                             MONS_RUPERT, MONS_NORRIS, MONS_AGNES,
                             MONS_AZRAEL, MONS_NESSOS, MONS_NERGALLE,
                             MONS_ROXANNE, MONS_SAINT_ROKA, MONS_KIRKE,
-                            MONS_WIGLAF, -1);
+                            MONS_WIGLAF);
         break;
     case 6: // depth > 19
     default:
         ret = random_choose(MONS_FRANCES, MONS_MARA, MONS_WIGLAF, MONS_MENNAS,
                             MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK, MONS_TIAMAT,
-                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, -1);
+                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA);
     }
 
     return ret;

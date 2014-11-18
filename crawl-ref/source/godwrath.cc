@@ -532,8 +532,7 @@ static spell_type _makhleb_destruction_type()
                                  SPELL_PAIN,
                                  SPELL_STONE_ARROW,
                                  SPELL_SHOCK,
-                                 SPELL_SPIT_ACID,
-                                 -1);
+                                 SPELL_SPIT_ACID);
         case 1:
             // major destruction
             return random_choose(SPELL_BOLT_OF_FIRE,
@@ -542,8 +541,7 @@ static spell_type _makhleb_destruction_type()
                                  SPELL_STICKY_FLAME,
                                  SPELL_IRON_SHOT,
                                  SPELL_BOLT_OF_DRAINING,
-                                 SPELL_ORB_OF_ELECTRICITY,
-                                 -1);
+                                 SPELL_ORB_OF_ELECTRICITY);
         case 2:
             // legendary destruction (no IOOD because it doesn't really
             // work here)
@@ -551,8 +549,7 @@ static spell_type _makhleb_destruction_type()
                                  SPELL_LEHUDIBS_CRYSTAL_SPEAR,
                                  SPELL_ORB_OF_ELECTRICITY,
                                  SPELL_FLASH_FREEZE,
-                                 SPELL_GHOSTLY_FIREBALL,
-                                 -1);
+                                 SPELL_GHOSTLY_FIREBALL);
     }
 }
 
@@ -660,8 +657,7 @@ static bool _makhleb_summon_servants()
                                                    MONS_GREEN_DEATH,
                                                    MONS_BLIZZARD_DEMON,
                                                    MONS_BALRUG,
-                                                   MONS_CACODEMON,
-                                                   -1);
+                                                   MONS_CACODEMON);
         if (_makhleb_summon_servant(servant))
             summoned++;
     }
@@ -672,8 +668,7 @@ static bool _makhleb_summon_servants()
                                                    MONS_NEQOXEC,
                                                    MONS_ORANGE_DEMON,
                                                    MONS_SMOKE_DEMON,
-                                                   MONS_YNOXINUL,
-                                                   -1);
+                                                   MONS_YNOXINUL);
         if (_makhleb_summon_servant(servant))
             summoned++;
     }
@@ -920,7 +915,7 @@ static bool _beogh_retribution()
                               WPN_MORNINGSTAR, WPN_DAGGER,    WPN_SHORT_SWORD,
                               WPN_LONG_SWORD,  WPN_SCIMITAR,  WPN_GREAT_SWORD,
                               WPN_HAND_AXE,    WPN_BATTLEAXE, WPN_SPEAR,
-                              WPN_HALBERD,     -1);
+                              WPN_HALBERD);
 
             // Now create monster.
             if (monster *mon =
@@ -1158,8 +1153,7 @@ static void _lugonu_minion_retribution()
         // try to summon one nasty monster.
         const monster_type to_summon = random_choose(MONS_TENTACLED_STARSPAWN,
                                                      MONS_WRETCHED_STAR,
-                                                     MONS_STARCURSED_MASS,
-                                                     -1);
+                                                     MONS_STARCURSED_MASS);
 
         mgen_data temp = mgen_data::hostile_at(to_summon,
                                                _god_wrath_name(god), true, 0,
@@ -1206,22 +1200,18 @@ static spell_type _vehumet_wrath_type()
             return random_choose(SPELL_MAGIC_DART,
                                  SPELL_STING,
                                  SPELL_SHOCK,
-                                 SPELL_FLAME_TONGUE,
-                                 -1);
+                                 SPELL_FLAME_TONGUE);
         case 2:
             return random_choose(SPELL_THROW_FLAME,
-                                 SPELL_THROW_FROST,
-                                 -1);
+                                 SPELL_THROW_FROST);
         case 3:
             return random_choose(SPELL_MEPHITIC_CLOUD,
-                                 SPELL_STONE_ARROW,
-                                 -1);
+                                 SPELL_STONE_ARROW);
         case 4:
             return random_choose(SPELL_ISKENDERUNS_MYSTIC_BLAST,
                                  SPELL_STICKY_FLAME,
                                  SPELL_THROW_ICICLE,
-                                 SPELL_ENERGY_BOLT,
-                                 -1);
+                                 SPELL_ENERGY_BOLT);
         case 5:
             return random_choose(SPELL_FIREBALL,
                                  SPELL_LIGHTNING_BOLT,
@@ -1229,8 +1219,7 @@ static spell_type _vehumet_wrath_type()
                                  SPELL_VENOM_BOLT,
                                  SPELL_BOLT_OF_DRAINING,
                                  SPELL_QUICKSILVER_BOLT,
-                                 SPELL_METAL_SPLINTERS,
-                                 -1);
+                                 SPELL_METAL_SPLINTERS);
         case 6:
             return random_choose(SPELL_BOLT_OF_FIRE,
                                  SPELL_BOLT_OF_COLD,
@@ -1239,19 +1228,14 @@ static spell_type _vehumet_wrath_type()
                                  SPELL_POISONOUS_CLOUD,
                                  SPELL_POISON_ARROW,
                                  SPELL_IRON_SHOT,
-                                 SPELL_CONJURE_BALL_LIGHTNING,
-                                 -1);
+                                 SPELL_CONJURE_BALL_LIGHTNING);
         case 7:
             return random_choose(SPELL_ORB_OF_ELECTRICITY,
-                                 SPELL_FLASH_FREEZE,
-                                 -1);
+                                 SPELL_FLASH_FREEZE);
         case 8:
-            return random_choose(SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-                                 -1);
+            return random_choose(SPELL_LEHUDIBS_CRYSTAL_SPEAR);
         case 9:
-            return random_choose(SPELL_FIRE_STORM,
-                                 SPELL_HELLFIRE, // let it end...
-                                 -1);
+            return random_choose(SPELL_FIRE_STORM, SPELL_HELLFIRE);
         default:
             return SPELL_NO_SPELL;
     }
@@ -1355,7 +1339,7 @@ static void _jiyva_tmut()
 
     // XXX: someone should probably rethink this list...
     const transformation_type form = random_choose(TRAN_BAT, TRAN_STATUE,
-                                                   TRAN_SPIDER, -1);
+                                                   TRAN_SPIDER);
 
     if (transform(random2(you.penance[god]) * 2, form, true))
         you.transform_uncancellable = true;
@@ -1435,8 +1419,7 @@ static void _fedhas_elemental_miscast()
     simple_god_message(" invokes the elements against you.", god);
 
     const spschool_flag_type stype = random_choose(SPTYP_ICE, SPTYP_FIRE,
-                                                   SPTYP_EARTH, SPTYP_AIR,
-                                                   -1);
+                                                   SPTYP_EARTH, SPTYP_AIR);
     MiscastEffect(&you, NULL, GOD_MISCAST + god, stype,
                   5 + you.experience_level, random2avg(88, 3),
                   _god_wrath_name(god));
@@ -1658,8 +1641,7 @@ static void _qazlal_summon_elementals()
         temp.cls = random_choose(MONS_FIRE_ELEMENTAL,
                                  MONS_WATER_ELEMENTAL,
                                  MONS_AIR_ELEMENTAL,
-                                 MONS_EARTH_ELEMENTAL,
-                                 -1);
+                                 MONS_EARTH_ELEMENTAL);
         if (create_monster(temp, false))
             success = true;
     }

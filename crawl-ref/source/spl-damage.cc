@@ -2568,8 +2568,7 @@ void forest_damage(const actor *mon)
             "You feel roots moving beneath the ground.",
             "Branches wave dangerously above you.",
             "Trunks creak and shift.",
-            "Tree limbs sway around you.",
-            0), MSGCH_TALK_VISUAL);
+            "Tree limbs sway around you."), MSGCH_TALK_VISUAL);
     }
 
     for (radius_iterator ri(pos, LOS_NO_TRANS); ri; ++ri)
@@ -2593,16 +2592,14 @@ void forest_damage(const actor *mon)
                     msg = random_choose(
                             "@foe@ @is@ waved at by a branch.",
                             "A tree reaches out but misses @foe@.",
-                            "A root lunges up near @foe@.",
-                            0);
+                            "A root lunges up near @foe@.");
                 }
                 else if (!apply_chunked_AC(1, foe->melee_evasion(mon) - evnp))
                 {
                     msg = random_choose(
                             "A branch passes through @foe@!",
                             "A tree reaches out and and passes through @foe@!",
-                            "A root lunges and passes through @foe@ from below.",
-                            0);
+                            "A root lunges and passes through @foe@ from below.");
                 }
                 else if (!(dmg = foe->apply_ac(hd + random2(hd), hd * 2 - 1,
                                                AC_PROPORTIONAL)))
@@ -2610,16 +2607,14 @@ void forest_damage(const actor *mon)
                     msg = random_choose(
                             "@foe@ @is@ scraped by a branch!",
                             "A tree reaches out and scrapes @foe@!",
-                            "A root barely touches @foe@ from below.",
-                            0);
+                            "A root barely touches @foe@ from below.");
                 }
                 else
                 {
                     msg = random_choose(
                         "@foe@ @is@ hit by a branch!",
                         "A tree reaches out and hits @foe@!",
-                        "A root smacks @foe@ from below.",
-                        0);
+                        "A root smacks @foe@ from below.");
                 }
 
                 msg = replace_all(replace_all(msg,
@@ -3086,8 +3081,7 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
                                  ZAP_QUICKSILVER_BOLT,
                                  ZAP_CRYSTAL_BOLT,
                                  ZAP_LIGHTNING_BOLT,
-                                 ZAP_CORROSIVE_BOLT,
-                                 -1);
+                                 ZAP_CORROSIVE_BOLT);
     zapping(zap, pow * 7 / 6 + 15, beam, false);
 
     return SPRET_SUCCESS;
