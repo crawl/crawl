@@ -2202,10 +2202,11 @@ bool StashTracker::display_search_results(
 
 void StashTracker::update_corpses()
 {
-    if (you.elapsed_time - last_corpse_update < 20)
+    if (you.elapsed_time - last_corpse_update < ROT_TIME_FACTOR)
         return;
 
-    const int rot_time = (you.elapsed_time - last_corpse_update) / 20;
+    const int rot_time =
+        (you.elapsed_time - last_corpse_update) / ROT_TIME_FACTOR;
 
     last_corpse_update = you.elapsed_time;
 
