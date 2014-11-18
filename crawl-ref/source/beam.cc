@@ -4827,7 +4827,7 @@ void bolt::affect_monster(monster* mon)
                 remove_sanctuary(true);
 
             // It's not the player's fault if the monster couldn't be seen
-            set_attack_conducts(conducts, mon, !you.can_see(mon));
+            set_attack_conducts(conducts, mon, you.can_see(mon));
         }
     }
 
