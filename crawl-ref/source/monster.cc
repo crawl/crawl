@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include <algorithm>
+#include <functional>
 #include <queue>
 
 #include "act-iter.h"
