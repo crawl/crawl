@@ -6095,10 +6095,8 @@ string keyed_mapspec::set_item(const string &s, bool fix)
     return err;
 }
 
-string keyed_mapspec::set_mask(const string &s, bool garbage)
+string keyed_mapspec::set_mask(const string &s, bool /*garbage*/)
 {
-    UNUSED(garbage);
-
     err.clear();
 
     try

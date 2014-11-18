@@ -1921,11 +1921,10 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     return 1;
 }
 
-int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
-                 actor *as, string nas, god_type god, bool actual)
+int animate_dead(actor *caster, int /*pow*/, beh_type beha,
+                 unsigned short hitting, actor *as, string nas, god_type god,
+                 bool actual)
 {
-    UNUSED(pow);
-
     int number_raised = 0;
     int number_seen   = 0;
     int motions       = 0;

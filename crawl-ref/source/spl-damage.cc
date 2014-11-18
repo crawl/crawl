@@ -1571,8 +1571,6 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
 
 static int _ignite_poison_objects(coord_def where, int pow, int, actor *agent)
 {
-    UNUSED(pow);
-
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
     int strength = 0;
@@ -1594,8 +1592,6 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *agent)
 
 static int _ignite_poison_clouds(coord_def where, int pow, int, actor *agent)
 {
-    UNUSED(pow);
-
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
     const int i = env.cgrid(where);

@@ -4033,10 +4033,8 @@ bool god_protects_from_harm()
     return false;
 }
 
-void handle_god_time(int time_delta)
+void handle_god_time(int /*time_delta*/)
 {
-    UNUSED(time_delta);
-
     if (you.attribute[ATTR_GOD_WRATH_COUNT] > 0)
     {
         vector<god_type> angry_gods;

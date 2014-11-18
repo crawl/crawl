@@ -1214,9 +1214,8 @@ bool vitrify_area(int radius)
 }
 
 // Nasty things happen to people who spend too long in Hell.
-static void _hell_effects(int time_delta)
+static void _hell_effects(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (!player_in_hell())
         return;
 
@@ -1911,10 +1910,8 @@ static void _magic_contamination_effects()
 }
 // Checks if the player should be hit with magic contaimination effects,
 // then actually does it if they should be.
-static void _handle_magic_contamination(int time_delta)
+static void _handle_magic_contamination(int /*time_delta*/)
 {
-    UNUSED(time_delta);
-
     // [ds] Move magic contamination effects closer to b26 again.
     const bool glow_effect = get_contamination_level() > 1
             && x_chance_in_y(you.magic_contamination, 12000);
@@ -1932,9 +1929,8 @@ static void _handle_magic_contamination(int time_delta)
 }
 
 // Adjust the player's stats if s/he's diseased (or recovering).
-static void _recover_stats(int time_delta)
+static void _recover_stats(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (!you.disease)
     {
         bool recovery = true;
@@ -1978,9 +1974,8 @@ static void _recover_stats(int time_delta)
 }
 
 // Adjust the player's stats if s/he has the deterioration mutation.
-static void _deteriorate(int time_delta)
+static void _deteriorate(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (player_mutation_level(MUT_DETERIORATION)
         && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
     {
@@ -1989,24 +1984,21 @@ static void _deteriorate(int time_delta)
 }
 
 // Exercise armour *xor* stealth skill: {dlb}
-static void _wait_practice(int time_delta)
+static void _wait_practice(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     practise(EX_WAIT);
 }
 
-static void _lab_change(int time_delta)
+static void _lab_change(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (player_in_branch(BRANCH_LABYRINTH))
         change_labyrinth();
 }
 
 // Update the abyss speed. This place is unstable and the speed can
 // fluctuate. It's not a constant increase.
-static void _abyss_speed(int time_delta)
+static void _abyss_speed(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (!player_in_branch(BRANCH_ABYSS))
         return;
 
@@ -2018,10 +2010,8 @@ static void _abyss_speed(int time_delta)
         --you.abyss_speed;
 }
 
-static void _jiyva_effects(int time_delta)
+static void _jiyva_effects(int /*time_delta*/)
 {
-    UNUSED(time_delta);
-
     if (!you_worship(GOD_JIYVA))
         return;
 

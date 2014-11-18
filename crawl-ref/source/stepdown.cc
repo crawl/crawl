@@ -46,10 +46,8 @@ int stepdown(int value, int step, rounding_type rounding, int max)
 
 // Deprecated definition. Call directly stepdown instead.
 int stepdown_value(int base_value, int stepping, int first_step,
-                   int last_step, int ceiling_value)
+                   int /*last_step*/, int ceiling_value)
 {
-    UNUSED(last_step);
-
     // Disabling max used to be -1.
     if (ceiling_value < 0)
         ceiling_value = 0;
