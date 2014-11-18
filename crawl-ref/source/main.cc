@@ -204,12 +204,14 @@ static void _input();
 static void _move_player(int move_x, int move_y);
 static void _move_player(coord_def move);
 static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
-static void _open_door(coord_def move, bool check_confused = true);
-static void _open_door(int x, int y, bool check_confused = true)
+static void _open_door(coord_def move = coord_def(0,0));
+
+static void _swing_at_target(coord_def move);
+static void _swing_at_target(int x, int y)
 {
-    _open_door(coord_def(x, y), check_confused);
+    _swing_at_target(coord_def(x,y));
 }
-static void _close_door(coord_def move);
+static void _close_door();
 static void _start_running(int dir, int mode);
 
 static void _prep_input();
@@ -1874,14 +1876,14 @@ void process_command(command_type cmd)
 #endif
 
         // Movement and running commands.
-    case CMD_OPEN_DOOR_UP_RIGHT:   _open_door(1, -1); break;
-    case CMD_OPEN_DOOR_UP:         _open_door(0, -1); break;
-    case CMD_OPEN_DOOR_UP_LEFT:    _open_door(-1, -1); break;
-    case CMD_OPEN_DOOR_RIGHT:      _open_door(1,  0); break;
-    case CMD_OPEN_DOOR_DOWN_RIGHT: _open_door(1,  1); break;
-    case CMD_OPEN_DOOR_DOWN:       _open_door(0,  1); break;
-    case CMD_OPEN_DOOR_DOWN_LEFT:  _open_door(-1,  1); break;
-    case CMD_OPEN_DOOR_LEFT:       _open_door(-1,  0); break;
+    case CMD_ATTACK_UP_RIGHT:   _swing_at_target(1, -1); break;
+    case CMD_ATTACK_UP:         _swing_at_target(0, -1); break;
+    case CMD_ATTACK_UP_LEFT:    _swing_at_target(-1, -1); break;
+    case CMD_ATTACK_RIGHT:      _swing_at_target(1,  0); break;
+    case CMD_ATTACK_DOWN_RIGHT: _swing_at_target(1,  1); break;
+    case CMD_ATTACK_DOWN:       _swing_at_target(0,  1); break;
+    case CMD_ATTACK_DOWN_LEFT:  _swing_at_target(-1,  1); break;
+    case CMD_ATTACK_LEFT:       _swing_at_target(-1,  0); break;
 
     case CMD_MOVE_DOWN_LEFT:  _move_player(-1,  1); break;
     case CMD_MOVE_DOWN:       _move_player(0,  1); break;
@@ -1918,8 +1920,8 @@ void process_command(command_type cmd)
         _take_stairs(cmd == CMD_GO_DOWNSTAIRS);
         break;
 
-    case CMD_OPEN_DOOR:       _open_door(0, 0); break;
-    case CMD_CLOSE_DOOR:      _close_door(coord_def(0, 0)); break;
+    case CMD_OPEN_DOOR:       _open_door(); break;
+    case CMD_CLOSE_DOOR:      _close_door(); break;
 
     // Repeat commands.
     case CMD_REPEAT_CMD:     _do_cmd_repeat();  break;
@@ -2589,10 +2591,18 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
     return num;
 }
 
-// Handles some aspects of untrapping. Returns false if the target is a
-// closed door that will need to be opened.
-static bool _untrap_target(const coord_def move, bool check_confused)
+static void _swing_at_target(coord_def move)
 {
+    if (you.attribute[ATTR_HELD])
+    {
+        free_self_from_net();
+        you.turn_is_over = true;
+        return;
+    }
+
+    if (you.confused() && !one_chance_in(3))
+        move = Compass[random2(8)];
+
     const coord_def target = you.pos() + move;
     monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
@@ -2604,86 +2614,44 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             you.berserk_penalty = 0;
         you.apply_berserk_penalty = false;
 
-        return true;
+        return;
     }
 
-    if (find_trap(target) && grd(target) != DNGN_UNDISCOVERED_TRAP)
+    // Don't waste a turn if feature is solid.
+    if (feat_is_solid(grd(target)) && !you.confused())
+        return;
+    else
     {
-        if (!form_can_wield())
-        {
-            mpr("You can't disarm traps in your present form.");
-            return true;
-        }
-        else if (!you.confused())
-        {
-            const int cloud = env.cgrid(target);
-            if (cloud != EMPTY_CLOUD
-                && is_damaging_cloud(env.cloud[cloud].type, true)
-                && !actor_cloud_immune(&you, env.cloud[cloud]))
-            {
-                mpr("You can't get to that trap right now.");
-                return true;
-            }
-        }
+        list<actor*> cleave_targets;
+        const skill_type wpn_skl = you.weapon() ?
+                                          item_attack_skill(*you.weapon()) :
+                                           SK_UNARMED_COMBAT;
+        if (actor_can_cleave(you, wpn_skl))
+            get_all_cleave_targets(&you, target, cleave_targets);
 
-        // If you're confused, you may attempt it and stumble into the trap.
-        disarm_trap(target);
-        return true;
+        if (!cleave_targets.empty())
+        {
+            targetter_cleave hitfunc(&you, target);
+            if (stop_attack_prompt(hitfunc, "attack"))
+                return;
+
+            if (!you.fumbles_attack())
+                attack_cleave_targets(&you, cleave_targets);
+        }
+        else if (!you.fumbles_attack())
+            mpr("You swing at nothing.");
+        make_hungry(3, true);
+        // Take the usual attack delay.
+        you.time_taken = you.attack_delay(you.weapon());
     }
-
-    const dungeon_feature_type feat = grd(target);
-    if (!feat_is_closed_door(feat) || you.confused())
-    {
-        switch (feat)
-        {
-        case DNGN_OPEN_DOOR:
-            _close_door(move); // for convenience
-            return true;
-        default:
-        {
-            bool do_msg = true;
-
-            // Don't waste a turn if feature is solid.
-            if (feat_is_solid(feat) && !you.confused())
-                return true;
-            else
-            {
-                list<actor*> cleave_targets;
-                const skill_type wpn_skl = you.weapon() ?
-                                                item_attack_skill(*you.weapon()) :
-                                                SK_UNARMED_COMBAT;
-                if (actor_can_cleave(you, wpn_skl))
-                    get_all_cleave_targets(&you, target, cleave_targets);
-
-                if (!cleave_targets.empty())
-                {
-                    targetter_cleave hitfunc(&you, target);
-                    if (stop_attack_prompt(hitfunc, "attack"))
-                        return true;
-
-                    if (!you.fumbles_attack())
-                        attack_cleave_targets(&you, cleave_targets);
-                }
-                else if (do_msg && !you.fumbles_attack())
-                    mpr("You swing at nothing.");
-                make_hungry(3, true);
-                // Take the usual attack delay.
-                you.time_taken = you.attack_delay(you.weapon());
-            }
-            you.turn_is_over = true;
-            return true;
-        }
-        }
-    }
-
-    // Else it's a closed door and needs further handling.
-    return false;
+    you.turn_is_over = true;
+    return;
 }
 
-// Opens doors and may also handle untrapping/attacking, etc.
-// If either move_x or move_y are non-zero, the pair carries a specific
-// direction for the door to be opened (eg if you type ctrl + dir).
-static void _open_door(coord_def move, bool check_confused)
+// Opens doors.
+// If move is !::origin, it carries a specific direction for the
+// door to be opened (eg if you type ctrl + dir).
+static void _open_door(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(!crawl_state.arena_suspended);
@@ -2693,15 +2661,6 @@ static void _open_door(coord_def move, bool check_confused)
         free_self_from_net();
         you.turn_is_over = true;
         return;
-    }
-
-    // The player used Ctrl + dir or a variant thereof.
-    if (!move.origin())
-    {
-        if (check_confused && you.confused() && !one_chance_in(3))
-            move = Compass[random2(8)];
-        if (_untrap_target(move, check_confused))
-            return;
     }
 
     // If we get here, the player either hasn't picked a direction yet,
@@ -2743,51 +2702,18 @@ static void _open_door(coord_def move, bool check_confused)
     else
         door_move.delta = move;
 
-    if (check_confused && you.confused() && !one_chance_in(3))
+    if (you.confused() && !one_chance_in(3))
         door_move.delta = Compass[random2(8)];
 
     // We got a valid direction.
     const coord_def doorpos = you.pos() + door_move.delta;
-    const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
-                                                          : DNGN_UNSEEN);
-    string door_already_open = "";
-    if (in_bounds(doorpos))
-    {
-        door_already_open = env.markers.property_at(doorpos, MAT_ANY,
-                                "door_verb_already_open");
-    }
 
-    if (!feat_is_closed_door(feat))
-    {
-        if (you.confused())
-        {
-            mpr("You swing at nothing.");
-            make_hungry(3, true);
-            you.turn_is_over = true;
-            return;
-        }
-        switch (feat)
-        {
-        // This doesn't ever seem to be triggered.
-        case DNGN_OPEN_DOOR:
-            if (!door_already_open.empty())
-                mpr(door_already_open);
-            else
-                mpr("It's already open!");
-            break;
-        default:
-            mpr("There isn't anything that you can open there!");
-            break;
-        }
-        // Don't lose a turn.
-        return;
-    }
-
-    // Allow doors to be locked.
-    const string door_veto_message = env.markers.property_at(doorpos, MAT_ANY,
-                                                             "veto_reason");
     if (door_vetoed(doorpos))
     {
+        // Allow doors to be locked.
+        const string door_veto_message = env.markers.property_at(doorpos,
+                                                                 MAT_ANY,
+                                                                 "veto_reason");
         if (door_veto_message.empty())
             mpr("The door is shut tight!");
         else
@@ -2796,18 +2722,39 @@ static void _open_door(coord_def move, bool check_confused)
         return;
     }
 
-    if (feat == DNGN_SEALED_DOOR)
+    const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
+                                                          : DNGN_UNSEEN);
+    switch (feat)
     {
-        mpr("That door is sealed shut!");
-        return;
+    case DNGN_CLOSED_DOOR:
+    case DNGN_RUNED_DOOR:
+        player_open_door(doorpos);
+        break;
+    case DNGN_OPEN_DOOR:
+    {
+        string door_already_open = "";
+        if (in_bounds(doorpos))
+        {
+            door_already_open = env.markers.property_at(doorpos, MAT_ANY,
+                                                    "door_verb_already_open");
+        }
+
+        if (!door_already_open.empty())
+            mpr(door_already_open);
+        else
+            mpr("It's already open!");
+        break;
     }
-
-    player_open_door(doorpos, check_confused);
-
-    you.turn_is_over = true;
+    case DNGN_SEALED_DOOR:
+        mpr("That door is sealed shut!");
+        break;
+    default:
+        mpr("There isn't anything that you can open there!");
+        break;
+    }
 }
 
-static void _close_door(coord_def move)
+static void _close_door()
 {
     if (!player_can_open_doors())
     {
@@ -2822,32 +2769,28 @@ static void _close_door(coord_def move)
     }
 
     dist door_move;
+    coord_def move = coord_def(0, 0);
 
-    // The player hasn't yet told us a direction.
-    if (move.origin())
+    // If there's only one door to close, don't ask.
+    int num = _check_adjacent(DNGN_OPEN_DOOR, move);
+    if (num == 0)
     {
-        // If there's only one door to close, don't ask.
-        int num = _check_adjacent(DNGN_OPEN_DOOR, move);
-        if (num == 0)
-        {
-            mpr("There's nothing to close nearby.");
-            return;
-        }
-        else if (num == 1)
-            door_move.delta = move;
-        else
-        {
-            mprf(MSGCH_PROMPT, "Which direction?");
-            direction_chooser_args args;
-            args.restricts = DIR_DIR;
-            direction(door_move, args);
-
-            if (!door_move.isValid)
-                return;
-        }
+        mpr("There's nothing to close nearby.");
+        return;
     }
-    else
+    // move got set in _check_adjacent
+    else if (num == 1)
         door_move.delta = move;
+    else
+    {
+        mprf(MSGCH_PROMPT, "Which direction?");
+        direction_chooser_args args;
+        args.restricts = DIR_DIR;
+        direction(door_move, args);
+
+        if (!door_move.isValid)
+            return;
+    }
 
     if (you.confused() && !one_chance_in(3))
         door_move.delta = Compass[random2(8)];
@@ -2862,171 +2805,19 @@ static void _close_door(coord_def move)
     const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
                                                           : DNGN_UNSEEN);
 
-    string berserk_close = env.markers.property_at(doorpos, MAT_ANY,
-                                                   "door_berserk_verb_close");
-    string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
-                                                       "door_berserk_adjective");
-    string door_close_creak = env.markers.property_at(doorpos, MAT_ANY,
-                                                      "door_noisy_verb_close");
-    string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
-                                                   "door_airborne_verb_close");
-    string door_close_verb = env.markers.property_at(doorpos, MAT_ANY,
-                                                     "door_verb_close");
-
-    if (feat == DNGN_OPEN_DOOR)
+    switch (feat)
     {
-        set<coord_def> all_door;
-        find_connected_identical(doorpos, all_door);
-        const char *adj, *noun;
-        get_door_description(all_door.size(), &adj, &noun);
-        const string waynoun_str = make_stringf("%sway", noun);
-        const char *waynoun = waynoun_str.c_str();
-
-        const string door_desc_adj  =
-            env.markers.property_at(doorpos, MAT_ANY,
-                                    "door_description_adjective");
-        const string door_desc_noun =
-            env.markers.property_at(doorpos, MAT_ANY,
-                                    "door_description_noun");
-        if (!door_desc_adj.empty())
-            adj = door_desc_adj.c_str();
-        if (!door_desc_noun.empty())
-        {
-            noun = door_desc_noun.c_str();
-            waynoun = noun;
-        }
-
-        for (set<coord_def>::const_iterator i = all_door.begin();
-             i != all_door.end(); ++i)
-        {
-            const coord_def& dc = *i;
-            if (monster* mon = monster_at(dc))
-            {
-                // Need to make sure that turn_is_over is set if
-                // creature is invisible.
-                if (!you.can_see(mon))
-                {
-                    mprf("Something is blocking the %s!", waynoun);
-                    you.turn_is_over = true;
-                }
-                else
-                    mprf("There's a creature in the %s!", waynoun);
-                return;
-            }
-
-            if (igrd(dc) != NON_ITEM)
-            {
-                mprf("There's something blocking the %s.", waynoun);
-                return;
-            }
-
-            if (you.pos() == dc)
-            {
-                mprf("There's a thick-headed creature in the %s!", waynoun);
-                return;
-            }
-        }
-
-        int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
-
-        if (you.berserk())
-        {
-            if (silenced(you.pos()))
-            {
-                if (!berserk_close.empty())
-                {
-                    berserk_close += ".";
-                    mprf(berserk_close.c_str(), adj, noun);
-                }
-                else
-                    mprf("You slam the %s%s shut!", adj, noun);
-            }
-            else
-            {
-                if (!berserk_close.empty())
-                {
-                    if (!berserk_adjective.empty())
-                        berserk_close += " " + berserk_adjective;
-                    else
-                        berserk_close += ".";
-                    mprf(MSGCH_SOUND, berserk_close.c_str(), adj, noun);
-                }
-                else
-                    mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang!", adj, noun);
-                noisy(15, you.pos());
-            }
-        }
-        else if (one_chance_in(skill) && !silenced(you.pos()))
-        {
-            if (!door_close_creak.empty())
-                mprf(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
-            else
-                mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
-                     adj, noun);
-            noisy(10, you.pos());
-        }
-        else
-        {
-            const char* verb;
-            if (you.airborne())
-            {
-                if (!door_airborne.empty())
-                    verb = door_airborne.c_str();
-                else
-                    verb = "You reach down and close the %s%s.";
-            }
-            else
-            {
-                if (!door_close_verb.empty())
-                   verb = door_close_verb.c_str();
-                else
-                    verb = "You close the %s%s.";
-            }
-
-            mprf(verb, adj, noun);
-        }
-
-        vector<coord_def> excludes;
-        for (set<coord_def>::const_iterator i = all_door.begin();
-             i != all_door.end(); ++i)
-        {
-            const coord_def& dc = *i;
-            // Once opened, formerly runed doors become normal doors.
-            grd(dc) = DNGN_CLOSED_DOOR;
-            set_terrain_changed(dc);
-            dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
-
-            // Even if some of the door is out of LOS once it's closed
-            // (or even if some of it is out of LOS when it's open), we
-            // want the entire door to be updated.
-            if (env.map_knowledge(dc).seen())
-            {
-                env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
-#ifdef USE_TILE
-                env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
-#endif
-            }
-            if (is_excluded(dc))
-                excludes.push_back(dc);
-        }
-
-        update_exclusion_los(excludes);
-        you.turn_is_over = true;
-    }
-    else if (you.confused())
-        _open_door(door_move.delta);
-    else
-    {
-        switch (feat)
-        {
-        case DNGN_CLOSED_DOOR:
-        case DNGN_RUNED_DOOR:
-            mpr("It's already closed!");
-            break;
-        default:
-            mpr("There isn't anything that you can close there!");
-            break;
-        }
+    case DNGN_OPEN_DOOR:
+        player_close_door(doorpos);
+        break;
+    case DNGN_CLOSED_DOOR:
+    case DNGN_RUNED_DOOR:
+    case DNGN_SEALED_DOOR:
+        mpr("It's already closed!");
+        break;
+    default:
+        mpr("There isn't anything that you can close there!");
+        break;
     }
 }
 
@@ -3573,9 +3364,11 @@ static void _move_player(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if ((Options.travel_open_doors || !you.running) && !attacking && feat_is_closed_door(targ_grid))
+    if ((Options.travel_open_doors || !you.running)
+        && !attacking
+        && feat_is_closed_door(targ_grid))
     {
-        _open_door(move.x, move.y, false);
+        _open_door(move);
         you.prev_move = move;
     }
     else if (!targ_pass && grd(targ) == DNGN_MALIGN_GATEWAY && !attacking)

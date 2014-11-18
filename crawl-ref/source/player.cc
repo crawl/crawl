@@ -8557,7 +8557,7 @@ string temperature_text(int temp)
 }
 #endif
 
-void player_open_door(coord_def doorpos, bool check_confused)
+void player_open_door(coord_def doorpos)
 {
     // Finally, open the closed door!
     set<coord_def> all_door;
@@ -8574,7 +8574,7 @@ void player_open_door(coord_def doorpos, bool check_confused)
     if (!door_desc_noun.empty())
         noun = door_desc_noun.c_str();
 
-    if (!(check_confused && you.confused()))
+    if (!you.confused())
     {
         string door_open_prompt =
             env.markers.property_at(doorpos, MAT_ANY, "door_open_prompt");
@@ -8712,6 +8712,163 @@ void player_open_door(coord_def doorpos, bool check_confused)
 
     update_exclusion_los(excludes);
     viewwindow();
+    you.turn_is_over = true;
+}
+
+void player_close_door(coord_def doorpos)
+{
+    // Finally, close the opened door!
+    string berserk_close = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_berserk_verb_close");
+    const string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_berserk_adjective");
+    const string door_close_creak = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_noisy_verb_close");
+    const string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_airborne_verb_close");
+    const string door_close_verb = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_verb_close");
+    const string door_desc_adj  = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_description_adjective");
+    const string door_desc_noun = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_description_noun");
+    set<coord_def> all_door;
+    find_connected_identical(doorpos, all_door);
+    const char *adj, *noun;
+    get_door_description(all_door.size(), &adj, &noun);
+    const string waynoun_str = make_stringf("%sway", noun);
+    const char *waynoun = waynoun_str.c_str();
+
+    if (!door_desc_adj.empty())
+        adj = door_desc_adj.c_str();
+    if (!door_desc_noun.empty())
+    {
+        noun = door_desc_noun.c_str();
+        waynoun = noun;
+    }
+
+    for (set<coord_def>::const_iterator i = all_door.begin();
+         i != all_door.end(); ++i)
+    {
+        const coord_def& dc = *i;
+        if (monster* mon = monster_at(dc))
+        {
+            if (!you.can_see(mon))
+            {
+                mprf("Something is blocking the %s!", waynoun);
+                // No free detection!
+                you.turn_is_over = true;
+            }
+            else
+                mprf("There's a creature in the %s!", waynoun);
+            return;
+        }
+
+        if (igrd(dc) != NON_ITEM)
+        {
+            mprf("There's something blocking the %s.", waynoun);
+            return;
+        }
+
+        if (you.pos() == dc)
+        {
+            mprf("There's a thick-headed creature in the %s!", waynoun);
+            return;
+        }
+    }
+
+    const int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
+
+    if (you.berserk())
+    {
+        if (silenced(you.pos()))
+        {
+            if (!berserk_close.empty())
+            {
+                berserk_close += ".";
+                mprf(berserk_close.c_str(), adj, noun);
+            }
+            else
+                mprf("You slam the %s%s shut!", adj, noun);
+        }
+        else
+        {
+            if (!berserk_close.empty())
+            {
+                if (!berserk_adjective.empty())
+                    berserk_close += " " + berserk_adjective;
+                else
+                    berserk_close += ".";
+                mprf(MSGCH_SOUND, berserk_close.c_str(), adj, noun);
+            }
+            else
+            {
+                mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang!",
+                                  adj, noun);
+            }
+
+            noisy(15, you.pos());
+         }
+    }
+    else if (one_chance_in(skill) && !silenced(you.pos()))
+    {
+        if (!door_close_creak.empty())
+            mprf(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
+        else
+        {
+            mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
+                              adj, noun);
+        }
+
+        noisy(10, you.pos());
+    }
+    else
+    {
+        const char* verb;
+        if (you.airborne())
+        {
+            if (!door_airborne.empty())
+                verb = door_airborne.c_str();
+            else
+                verb = "You reach down and close the %s%s.";
+        }
+        else
+        {
+            if (!door_close_verb.empty())
+                verb = door_close_verb.c_str();
+            else
+                verb = "You close the %s%s.";
+        }
+
+        mprf(verb, adj, noun);
+    }
+
+    vector<coord_def> excludes;
+    for (set<coord_def>::const_iterator i = all_door.begin();
+         i != all_door.end(); ++i)
+    {
+        const coord_def& dc = *i;
+        // Once opened, formerly runed doors become normal doors.
+        grd(dc) = DNGN_CLOSED_DOOR;
+        set_terrain_changed(dc);
+        dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
+        // Even if some of the door is out of LOS once it's closed
+        // (or even if some of it is out of LOS when it's open), we
+        // want the entire door to be updated.
+        if (env.map_knowledge(dc).seen())
+        {
+            env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
+#ifdef USE_TILE
+            env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
+#endif
+        }
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+     }
+
+     update_exclusion_los(excludes);
+     you.turn_is_over = true;
 }
 
 /**
