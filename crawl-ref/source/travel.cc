@@ -4573,7 +4573,11 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
         if (dir_dx[i] != dir.x || dir_dy[i] != dir.y)
             continue;
 
-        return cmd_array[i];
+        int cmd = cmd_array[i];
+        if (force)
+            cmd += CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
+
+        return cmd;
     }
 
     return CK_MOUSE_CMD;
