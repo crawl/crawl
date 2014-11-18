@@ -2291,7 +2291,6 @@ void bolt_parent_init(bolt *parent, bolt *child)
 #ifdef DEBUG_DIAGNOSTICS
     child->quiet_debug    = parent->quiet_debug;
 #endif
-    child->drac_breath    = parent->drac_breath;
 }
 
 static void _maybe_imb_explosion(bolt *parent, coord_def center)
@@ -4587,7 +4586,7 @@ void bolt::beam_hits_actor(actor *act)
     {
         if (you.can_see(act))
         {
-            if (drac_breath)
+            if (origin_spell == SPELL_CHILLING_BREATH)
             {
                 mprf("%s %s blown backwards by the freezing wind.",
                      act->name(DESC_THE).c_str(),
@@ -6324,7 +6323,6 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
 #ifdef DEBUG_DIAGNOSTICS
                quiet_debug(false),
 #endif
-               drac_breath(false),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
                is_targeting(false), aimed_at_feet(false), msg_generated(false),
