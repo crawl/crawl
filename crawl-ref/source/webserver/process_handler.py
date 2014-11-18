@@ -502,8 +502,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         processes[os.path.abspath(self.socketpath)] = self
 
-        self.logger.info("Starting %s.", game["id"])
-
         try:
             self.process = TerminalRecorder(call, self.ttyrec_filename,
                                             self._ttyrec_id_header(),
@@ -519,9 +517,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
             self.connect(self.socketpath, True)
 
-            self.logger.info("Crawl FDs: fd%s, fd%s.",
-                             self.process.child_fd,
-                             self.process.errpipe_read)
+            self.logger.info("Started %s for %s." % (game["id"], self.username))
 
             self.last_activity_time = time.time()
 
@@ -577,7 +573,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                         tstamp, ctime)
 
     def _on_process_end(self):
-        self.logger.info("Crawl terminated.")
+        self.logger.info("Ended %s for %s." % (self.game_params["id"], self.username))
 
         self.remove_inprogress_lock()
 
