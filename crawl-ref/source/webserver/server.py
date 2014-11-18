@@ -39,6 +39,8 @@ def maybe_minified(module):
     if os.path.exists(path):
         return "/static/" + module + ".min"
     else:
+        logging.warning("use_minified is True, but couldn't find %s. Falling back to non-minified javascript" % path)
+        config['use_minified'] = False
         return "/static/" + module
 
 
