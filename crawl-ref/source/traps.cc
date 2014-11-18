@@ -64,6 +64,7 @@ bool trap_def::type_has_ammo() const
     return false;
 }
 
+// Used for when traps run out of ammo.
 void trap_def::disarm()
 {
     if (type == TRAP_NET)
@@ -1067,7 +1068,7 @@ int trap_def::difficulty()
 {
     switch (type)
     {
-    // To-hit and disarming:
+    // To-hit:
     case TRAP_ARROW:
         return 7;
     case TRAP_SPEAR:
@@ -1078,19 +1079,6 @@ int trap_def::difficulty()
         return 5;
     case TRAP_NEEDLE:
         return 8;
-    // Disarming only:
-    case TRAP_BLADE:
-        return 20;
-    case TRAP_PLATE:
-        return 15;
-    case TRAP_WEB:
-        return 12;
-#if TAG_MAJOR_VERSION == 34
-    case TRAP_GAS:
-        return 15;
-    case TRAP_DART:
-        return 3;
- #endif
     // Irrelevant:
     default:
         return 0;
@@ -1149,15 +1137,6 @@ trap_type get_trap_type(const coord_def& pos)
     return TRAP_UNASSIGNED;
 }
 
-static bool _disarm_is_deadly(trap_def& trap)
-{
-    int dam = trap.max_damage(you);
-    if (trap.type == TRAP_NEEDLE && you.res_poison() <= 1)
-        dam += 15; // arbitrary
-
-    return you.hp <= dam;
-}
-
 void search_around()
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -1204,80 +1183,6 @@ void search_around()
                  ptrap->name(DESC_A).c_str());
             learned_something_new(HINT_SEEN_TRAP, *ri);
         }
-    }
-}
-
-// where *must* point to a valid, discovered trap.
-void disarm_trap(const coord_def& where)
-{
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    trap_def& trap = *find_trap(where);
-
-    switch (trap.category())
-    {
-    case DNGN_TRAP_ALARM:
-        // Zotdef - allow alarm traps to be disarmed
-        if (crawl_state.game_is_zotdef())
-            break;
-    case DNGN_TRAP_TELEPORT:
-    case DNGN_TRAP_ZOT:
-        mpr("You can't disarm magical traps.");
-        return;
-    case DNGN_PASSAGE_OF_GOLUBRIA:
-        mpr("You can't disarm passages of Golubria.");
-        return;
-    case DNGN_TRAP_SHAFT:
-        // Only shafts for now.
-        mpr("You can't disarm shafts.");
-        return;
-    default:
-        break;
-    }
-
-    // Prompt for any trap for which you might not survive setting it off.
-    if (_disarm_is_deadly(trap))
-    {
-        string prompt = make_stringf("Really try disarming that %s?",
-                                     feature_description_at(where, false,
-                                                            DESC_BASENAME,
-                                                            false).c_str());
-
-        if (!yesno(prompt.c_str(), true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-    }
-
-    // Make the actual attempt
-    you.turn_is_over = true;
-    if (random2(div_rand_round(you.experience_level, 3) + 2) <= random2(trap.difficulty() + 5))
-    {
-        mpr("You failed to disarm the trap.");
-        if (random2(you.dex()) <= 5 + random2(5 + trap.difficulty()))
-        {
-            if ((trap.type == TRAP_NET || trap.type == TRAP_WEB)
-                && trap.pos != you.pos())
-            {
-                if (coinflip())
-                {
-                    mpr("You stumble into the trap!");
-                    move_player_to_grid(trap.pos, true);
-                }
-            }
-            else
-                trap.trigger(you, true);
-        }
-    }
-    else
-    {
-        mpr("You have disarmed the trap.");
-        trap.disarm();
     }
 }
 

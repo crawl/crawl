@@ -1044,7 +1044,8 @@ bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);
-void player_open_door(coord_def doorpos, bool check_confused);
+void player_open_door(coord_def doorpos);
+void player_close_door(coord_def doorpos);
 
 void dec_disease_player(int delay);
 
