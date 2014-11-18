@@ -1,7 +1,8 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include <algorithm> // shuffle
+#include <algorithm>  // shuffle
+#include <functional> // reference_wrapper
 #include <map>
 #include <vector>
 
@@ -37,20 +38,12 @@ bool decimal_chance(double percent);
 
 int ui_random(int max);
 
-/// Choose a single object "randomly". Base case for a recursive template.
-template <typename T>
-const T &random_choose(const T &only)
-{
-    return only;
-}
-
 /// Chooses one of the objects passed in at random.
 template <typename T, typename... Ts>
-const T &random_choose(const T &first, const T &second, Ts... rest)
+const T &random_choose(const T &first, Ts... rest)
 {
-    // 1/N chance of choosing first; otherwise choose one of the remaining N-1
-    return one_chance_in(2 + sizeof...(rest))
-           ? first : random_choose(second, rest...);
+    const reference_wrapper<const T> elts[] = { first, rest... };
+    return elts[random2(1 + sizeof...(rest))];
 }
 
 /** Chooses one of the strings passed in at random.
@@ -60,9 +53,9 @@ const T &random_choose(const T &first, const T &second, Ts... rest)
  * random_choose("hello", "foo");
  */
 template <typename... Ts>
-const char *random_choose(const char *first, const char *second, Ts... rest)
+const char *random_choose(const char *first, Ts... rest)
 {
-    return random_choose<const char * const &, Ts...>(first, second, rest...);
+    return random_choose<const char *, Ts...>(first, rest...);
 }
 
 template <typename T>
