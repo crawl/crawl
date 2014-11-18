@@ -1630,7 +1630,7 @@ static bool _reaping(monster *mons)
  *
  * @param mons              The dying monster.
  * @param killer            The responsibility for the death.
- *                          (MHITYOU, YOU_FAULTLESS...)
+ *                          (KILL_YOU, KILL_MON...)
  * @param killer_index      The mindex of the killer, if known.
  * @param maybe_good_kill   Whether the kill can be rewarding in piety.
  *                          (Not summoned, etc)
