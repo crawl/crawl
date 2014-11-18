@@ -870,8 +870,13 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
+    // ident known & no brand but still glowing
+    // TODO: deduplicate this with the code in itemname.cc
+    const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
+                           && !item_ident(item, ISFLAG_KNOW_PLUSES);
+
     // special weapon descrip
-    if (spec_ench != SPWPN_NORMAL && item_type_known(item))
+    if (item_type_known(item) && (spec_ench != SPWPN_NORMAL || enchanted))
     {
         description += "\n\n";
 
@@ -1000,6 +1005,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "It disrupts the flow of magical energy around "
                     "spellcasters and certain magical creatures (including "
                     "the wielder).";
+            break;
+        case SPWPN_NORMAL:
+            ASSERT(enchanted);
+            description += "It has no special brand (it is not flaming, "
+                    "freezing, etc), but is still enchanted in some way - "
+                    "positive or negative.";
             break;
         }
     }
