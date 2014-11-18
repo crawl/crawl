@@ -1350,7 +1350,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
         && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
 
-    const bool __know_pluses =
+    const bool know_pluses =
         !basename && !qualname && !dbname
         && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES)
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
@@ -1364,14 +1364,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
     // Display runed/glowing/embroidered etc?
     // Only display this if brand is unknown.
-    const bool show_cosmetic = !__know_pluses && !terse && !basename
+    const bool show_cosmetic = !know_pluses && !terse && !basename
         && !qualname && !dbname
         && !know_brand
         && !(ignore_flags & ISFLAG_COSMETIC_MASK);
-
-    // So that show_cosmetic won't be affected by ignore_flags.
-    const bool know_pluses = __know_pluses
-        && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 
     const bool need_plural = !basename && !dbname;
 
