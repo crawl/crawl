@@ -2827,7 +2827,7 @@ int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
  * @param mons      The monster to maybe drown/incinerate.
  * @param oldpos    Their previous tile, before landing up here.
  * @param killer    Who's responsible for killing them, if they die here.
- * @param killnum   Not sure; *probably* the mindex of the killer, if any?
+ * @param killnum   The mindex of the killer, if any.
  */
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
