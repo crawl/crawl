@@ -644,14 +644,6 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         return;
     }
 
-    if (inscribe && Options.autoinscribe_cursed
-        && item.inscription.find("was cursed") == string::npos
-        && !item_ident(item, ISFLAG_SEEN_CURSED)
-        && !fully_identified(item))
-    {
-        add_inscription(item, "was cursed");
-    }
-
     if (in_inventory(item))
     {
         if (you.equip[EQ_WEAPON] == item.link)
@@ -772,16 +764,6 @@ void set_ident_flags(item_def &item, iflags_t flags)
 
     if (fully_identified(item))
     {
-        // Clear "was cursed" inscription once the item is identified.
-        if (Options.autoinscribe_cursed
-            && item.inscription.find("was cursed") != string::npos)
-        {
-            item.inscription = replace_all(item.inscription, ", was cursed", "");
-            item.inscription = replace_all(item.inscription, "was cursed, ", "");
-            item.inscription = replace_all(item.inscription, "was cursed", "");
-            trim_string(item.inscription);
-        }
-
         if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
             && get_ident_type(item) != ID_KNOWN_TYPE
             && is_interesting_item(item))
