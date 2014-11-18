@@ -2147,7 +2147,7 @@ static int _xom_destruction(int sever, bool debug = false)
             if (!rc)
                 god_speaks(GOD_XOM, _get_xom_speech("fake destruction").c_str());
             rc = true;
-            backlight_monsters(mi->pos(), 0, 0);
+            backlight_monster(*mi);
         }
     }
 

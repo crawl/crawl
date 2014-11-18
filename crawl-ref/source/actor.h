@@ -209,7 +209,7 @@ public:
     virtual void teleport(bool right_now = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
-    virtual bool sicken(int amount, bool allow_hint = true, bool quiet = false) = 0;
+    virtual bool sicken(int amount) = 0;
     virtual void paralyse(actor *attacker, int strength, string source = "") = 0;
     virtual void petrify(actor *attacker, bool force = false) = 0;
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
