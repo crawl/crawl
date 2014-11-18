@@ -1638,9 +1638,14 @@ static bool _reaping(monster *mons)
 static void _fire_kill_conducts(const monster &mons, killer_type killer,
                                 int killer_index, bool maybe_good_kill)
 {
-    const bool maybe_bad_kill    = killer_index != YOU_FAULTLESS;
+    const bool your_kill = killer == KILL_YOU ||
+                           killer == KILL_YOU_CONF ||
+                           killer == KILL_YOU_MISSILE;
+    const bool pet_kill = _is_pet_kill(killer, killer_index);
+    const bool your_fault = your_kill && killer_index != YOU_FAULTLESS
+                            || pet_kill;
 
-    if (!maybe_bad_kill && !maybe_good_kill)
+    if (!your_fault && !maybe_good_kill)
         return;
 
     // Abominations were historically split into demonic & undead abominations.
@@ -1693,13 +1698,19 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
     if (mons.is_priest())
         did_kill_conduct(DID_KILL_PRIEST, mons);
 
-    // Jiyva hates you killing slimes, but eyeballs
-    // mutation can confuse without you meaning it.
-    if (mons_is_slime(&mons) && killer != KILL_YOU_CONF && maybe_bad_kill)
-        did_kill_conduct(DID_KILL_SLIME, mons);
+    if (your_fault)
+    {
+        // Jiyva hates you killing slimes, but eyeballs
+        // mutation can confuse without you meaning it.
+        if (mons_is_slime(&mons) && killer != KILL_YOU_CONF)
+            did_kill_conduct(DID_KILL_SLIME, mons);
 
-    if (fedhas_protects(&mons))
-        did_kill_conduct(DID_KILL_PLANT, mons);
+        if (fedhas_protects(&mons))
+            did_kill_conduct(DID_KILL_PLANT, mons);
+
+        if (mons.is_holy())
+            did_kill_conduct(DID_KILL_HOLY, mons);
+    }
 
     // Cheibriados hates fast monsters.
     if (cheibriados_thinks_mons_is_fast(&mons) && !mons.cannot_move())
@@ -1708,10 +1719,6 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
     // Yredelemnul hates artificial beings.
     if (mons.is_artificial())
         did_kill_conduct(DID_KILL_ARTIFICIAL, mons);
-
-    // Holy kills are always noticed.
-    if (mons.is_holy())
-        did_kill_conduct(DID_KILL_HOLY, mons);
 
     // Dithmenos hates sources of fire.
     // (This is *after* the holy so that the right order of
