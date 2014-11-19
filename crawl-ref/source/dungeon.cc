@@ -3679,10 +3679,6 @@ static void _place_extra_vaults()
 // Return the number of uniques placed.
 static int _place_uniques()
 {
-    // Unique beasties:
-    if (!your_branch().has_uniques)
-        return 0;
-
 #ifdef DEBUG_UNIQUE_PLACEMENT
     FILE *ostat = fopen("unique_placement.log", "a");
     fprintf(ostat, "--- Looking to place uniques on %s\n",
