@@ -2918,7 +2918,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
             if (new_pos == stair_pos)
                 return false;
 
-            if (!slide_feature_over(stair_pos, new_pos))
+            if (!slide_feature_over(stair_pos, new_pos, true))
                 return false;
 
             stair_pos = new_pos;

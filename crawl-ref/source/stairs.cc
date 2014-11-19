@@ -149,7 +149,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     // Get feature name before sliding stair over.
     string stair_str = feature_description_at(you.pos(), false, DESC_THE, false);
 
-    if (!slide_feature_over(you.pos(), coord_def(-1, -1), false))
+    if (!slide_feature_over(you.pos()))
         return false;
 
     string verb = stair_climb_verb(stair);
