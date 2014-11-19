@@ -5168,8 +5168,11 @@ void unmarshallMonster(reader &th, monster& m)
             slot.freq = 27;
             m.spells.push_back(slot);
         }
-        else if (slot.spell != SPELL_DELAYED_FIREBALL)
+        else if (slot.spell != SPELL_DELAYED_FIREBALL
+                 && slot.spell != SPELL_MELEE)
+        {
             m.spells.push_back(slot);
+        }
     }
 #endif
     }
