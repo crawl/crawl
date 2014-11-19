@@ -59,13 +59,13 @@ FTFontWrapper::~FTFontWrapper()
 }
 
 bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
-                              bool outline, int scale_num, int scale_den)
+                              bool outline, int sc_num, int sc_den)
 {
     FT_Library library;
     FT_Error error;
 
-    this->scale_num = scale_num;
-    this->scale_den = scale_den;
+    this->scale_num = sc_num;
+    this->scale_den = sc_den;
 
     outl = outline;
 
