@@ -937,11 +937,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     case BRANCH_PANDEMONIUM:
         if (old_level.branch == BRANCH_PANDEMONIUM)
             mpr("You pass into a different region of Pandemonium.");
-        else
-        {
-            mpr("You enter the halls of Pandemonium!");
-            mpr("To return, you must find a gate leading back.");
-        }
         break;
 
     default:

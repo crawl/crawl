@@ -202,7 +202,8 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PANDEMONIUM, DNGN_EXIT_PANDEMONIUM,
       "Pandemonium", "Pandemonium", "Pan",
-      NULL,
+      "You enter the halls of Pandemonium!\n"
+      "To return, you must find a gate leading back.",
       BLACK, BLACK, // set specially
       'R', false, 0 },
 
