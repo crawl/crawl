@@ -26,7 +26,6 @@ PLUARET(type, expr);             \
 
 BRANCHFN(floorcol, number, br.floor_colour)
 BRANCHFN(rockcol, number, br.rock_colour)
-BRANCHFN(has_uniques, boolean, br.has_uniques)
 BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES
              ? ""
@@ -131,7 +130,6 @@ const struct luaL_reg dgn_level_dlib[] =
 {
 { "br_floorcol", dgn_br_floorcol },
 { "br_rockcol", dgn_br_rockcol },
-{ "br_has_uniques", dgn_br_has_uniques },
 { "br_parent_branch", dgn_br_parent_branch },
 { "br_depth", dgn_br_depth },
 { "br_exists", dgn_br_exists },
