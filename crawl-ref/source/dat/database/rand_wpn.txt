@@ -1539,7 +1539,12 @@ ETAOIN SHRDLU
 
 Lorem Ipsum
 
+# These three are from old Crawl code.
 Plojy
+
+Glorpo
+
+Loopy
 %%%%
 _plain_weapon_name_
 
