@@ -1473,7 +1473,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SATYR,
       {
-       { SPELL_BATTLECRY, 25, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT },
+       { SPELL_BATTLECRY, 25, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
+                              | MON_SPELL_NOISY },
        { SPELL_CAUSE_FEAR, 32, MON_SPELL_WIZARD },
        { SPELL_SLEEP, 16, MON_SPELL_WIZARD },
       }
@@ -1995,14 +1996,14 @@ static const mon_spellbook mspell_list[] =
     {  MST_BATTLECRY,
       {
        { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT
-                               | MON_SPELL_NO_SILENT },
+                               | MON_SPELL_NOISY | MON_SPELL_NO_SILENT },
       }
     },
 
     {  MST_SAINT_ROKA,
       {
        { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT
-                               | MON_SPELL_NO_SILENT },
+                               | MON_SPELL_NOISY | MON_SPELL_NO_SILENT },
        { SPELL_SMITING, 64, MON_SPELL_PRIEST },
       }
     },
