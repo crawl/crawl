@@ -488,21 +488,20 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (targetc == RANDOM_TOUGHER_MONSTER)
     {
         vector<monster_type> target_types;
-        for (int mc = 0; mc < NUM_MONSTERS; ++mc)
+        for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
         {
-            const monsterentry *me = get_monster_data((monster_type) mc);
+            const monsterentry *me = get_monster_data(mc);
             int delta = (int) me->hpdice[0] - mons->get_hit_dice();
             if (delta != 1)
                 continue;
-            if (!_valid_morph(mons, (monster_type) mc))
+            if (!_valid_morph(mons, mc))
                 continue;
-            target_types.push_back((monster_type) mc);
+            target_types.push_back(mc);
         }
         if (target_types.empty())
             return false;
 
-        shuffle_array(target_types);
-        targetc = target_types[0];
+        targetc = target_types[random2(target_types.size())];
     }
 
     if (!_valid_morph(mons, targetc))
