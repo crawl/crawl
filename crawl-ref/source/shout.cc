@@ -1078,9 +1078,12 @@ static void _actor_apply_noise(actor *act,
         }
         else if ((noise.noise_flags & NF_HUNTING_CRY)
                  && source
-                 && mons_genus(mons->type) == mons_genus(source->type))
+                 && (mons_genus(mons->type) == mons_genus(source->type)
+                     || mons->holiness() == MH_HOLY
+                        && source->holiness() == MH_HOLY))
         {
-            // Hunting cries alert monsters of the same genus.
+            // Hunting cries alert monsters of the same genus, or other
+            // holy creatures if the source is holy.
             behaviour_event(mons, ME_ALERT, 0, apparent_source);
         }
         else

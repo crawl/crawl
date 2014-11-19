@@ -309,32 +309,18 @@ void torment(actor *attacker, torment_source_type taux, const coord_def& where)
         _torment_stuff_at(*ri, attacker, taux);
 }
 
-void cleansing_flame(int pow, int caster, coord_def where,
-                     actor *attacker)
+void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+                                coord_def where, actor *attacker)
 {
-    ASSERT(!crawl_state.game_is_arena());
-
-    const char *aux = "cleansing flame";
-
-    bolt beam;
-
-    if (caster < 0)
-    {
-        switch (caster)
-        {
-        case CLEANSING_FLAME_TSO:
-            aux = "the Shining One's cleansing flame";
-            break;
-        }
-    }
-
     beam.flavour      = BEAM_HOLY;
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(2, pow);
-    beam.target       = you.pos();
+    beam.target       = where;
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
-    beam.aux_source   = aux;
+    beam.aux_source   = (caster == CLEANSING_FLAME_TSO)
+                        ? "the Shining One's cleansing flame"
+                        : "cleansing flame";
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
@@ -357,7 +343,15 @@ void cleansing_flame(int pow, int caster, coord_def where,
         beam.thrower   = KILL_MON;
         beam.source_id = attacker->mid;
     }
+}
 
+void cleansing_flame(int pow, int caster, coord_def where,
+                     actor *attacker)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    bolt beam;
+    setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
 }
 

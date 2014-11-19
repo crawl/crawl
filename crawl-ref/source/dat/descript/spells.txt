@@ -251,6 +251,10 @@ Chilling Breath spell
 This creatue can breath a blast of frost that bypasses any armour the unfortunate
 victim may have, and might even knock it backwards if in flight.
 %%%%
+Cleansing Flame spell
+
+<Cleansing Flame ability>
+%%%%
 Cloud Cone spell
 
 This spell blasts the area near the caster with various destructive clouds. At
@@ -1387,6 +1391,10 @@ significant amounts of damage. It will gain more health at high power.
 Summon Hell Beast spell
 
 Using his horn, Geryon can summon a deadly hell beast against his foes.
+%%%%
+Summon Holies spell
+
+Calls forth a divine warrior to aid the caster.
 %%%%
 Summon Horrible Things spell
 
