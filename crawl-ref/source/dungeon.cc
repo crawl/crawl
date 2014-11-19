@@ -36,6 +36,7 @@
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "end.h"
+#include "english.h"
 #include "files.h"
 #include "flood_find.h"
 #include "food.h"
@@ -3281,9 +3282,13 @@ static void _place_gozag_shop(dungeon_feature_type stair)
     env.pgrid(*shop_place) |= FPROP_SEEN_OR_NOEXP;
     seen_notable_thing(grd(*shop_place), *shop_place);
 
+    const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
+                                             GENDER_NEUTER);
+
     string announce = make_stringf(
-                                   "%s invites you to visit their %s%s%s.",
+                                   "%s invites you to visit %s %s%s%s.",
                                    shop->shop_name.c_str(),
+                                   decline_pronoun(gender, PRONOUN_POSSESSIVE),
                                    shop_type_name(shop->type).c_str(),
                                    !shop->shop_suffix_name.empty() ? " " : "",
                                    shop->shop_suffix_name.c_str());
