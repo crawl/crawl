@@ -2023,7 +2023,6 @@ static void _stash_flatten_results(const vector<stash_search_result> &in,
         tmp.count = 1;
         for (const item_def &item : items)
         {
-            
             tmp.match = Stash::stash_item_name(item);
             if (tmp.shop)
             {
