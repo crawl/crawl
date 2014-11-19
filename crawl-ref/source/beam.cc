@@ -112,7 +112,7 @@ bool bolt::is_blockable() const
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
     return !pierce && !is_explosion && flavour != BEAM_ELECTRICITY
-           && hit != AUTOMATIC_HIT;
+           && hit != AUTOMATIC_HIT && flavour != BEAM_VISUAL;
 }
 
 void bolt::emit_message(const char* m)

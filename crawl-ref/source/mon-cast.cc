@@ -50,6 +50,7 @@
 #include "random-weight.h"
 #include "religion.h"
 #include "shout.h"
+#include "showsymb.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
@@ -6972,6 +6973,22 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
 
     if (!(goblin.flags & MF_WAS_IN_VIEW))
         goblin.seen_context = SC_THROWN_IN;
+
+    bolt beam;
+    beam.range   = INFINITE_DISTANCE;
+    beam.flavour = BEAM_VISUAL;
+    beam.source  = old_pos;
+    beam.target  = chosen_dest;
+    beam.name    = "GOBLIN BEAM";
+    const monster_info mi(&goblin);
+    const cglyph_t glyph = get_mons_glyph(mi);
+    beam.glyph   = glyph.ch;
+    beam.colour  = glyph.col;
+
+    beam.draw_delay = 30; // Make beam animation somewhat slower than normal.
+    beam.aimed_at_spot = true;
+    beam.fire();
+
     goblin.move_to_pos(chosen_dest);
     goblin.apply_location_effects(old_pos);
     goblin.check_redraw(old_pos);
