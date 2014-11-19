@@ -507,15 +507,15 @@ static string _describe_branch_bribability()
     _list_bribable_branches(targets);
 
     size_t width = 0;
-    for (unsigned int i = 0; i < targets.size(); i++)
-        width = max(width, strlen(branches[targets[i]].longname));
+    for (branch_type br : targets)
+        width = max(width, strlen(branches[br].longname));
 
-    for (unsigned int i = 0; i < targets.size(); i++)
+    for (branch_type br : targets)
     {
-        string line(branches[targets[i]].longname);
+        string line(branches[br].longname);
         line += string(width + 1 - strwidth(line), ' ');
         // XXX: move this elsewhere?
-        switch (targets[i])
+        switch (br)
         {
             case BRANCH_ORC:
                 line += "(orcs)              ";
@@ -547,15 +547,15 @@ static string _describe_branch_bribability()
         }
 
         line += "Susceptibility: ";
-        const int suscept = gozag_branch_bribe_susceptibility(targets[i]);
+        const int suscept = gozag_branch_bribe_susceptibility(br);
         ASSERT(suscept >= 0
                && suscept < (int)ARRAYSZ(bribe_susceptibility_adjectives));
         line += bribe_susceptibility_adjectives[suscept];
 
-        if (!branch_bribe[targets[i]])
+        if (!branch_bribe[br])
             line += "not bribed";
         else
-            line += make_stringf("$%d", branch_bribe[targets[i]]);
+            line += make_stringf("$%d", branch_bribe[br]);
 
         ret += line + "\n";
     }

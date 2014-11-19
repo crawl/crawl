@@ -395,10 +395,8 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
     char const *colour;
     const int columns = 4;
 
-    for (unsigned int cur_god = 0; cur_god < gods.size(); cur_god++)
+    for (const god_type god : gods)
     {
-        const god_type god = gods[cur_god];
-
         // for each god, look through the notable altars list for a match
         bool has_altar_been_seen = false;
         for (const auto &entry : altars_present)

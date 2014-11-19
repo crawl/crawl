@@ -184,12 +184,12 @@ void init_mon_name_cache()
     if (!Mon_Name_Cache.empty())
         return;
 
-    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
+    for (const monsterentry &me : mondata)
     {
-        string name = mondata[i].name;
+        string name = me.name;
         lowercase(name);
 
-        const int          mtype = mondata[i].mc;
+        const int          mtype = me.mc;
         const monster_type mon   = monster_type(mtype);
 
         // Deal sensibly with duplicate entries; refuse or allow the
@@ -251,9 +251,9 @@ void init_monsters()
         mon_entry[mondata[i].mc] = i;
 
     // Finally, monsters yet with dummy entries point to TTTSNB(tm). {dlb}:
-    for (unsigned int i = 0; i < NUM_MONSTERS; ++i)
-        if (mon_entry[i] == -1)
-            mon_entry[i] = mon_entry[MONS_PROGRAM_BUG];
+    for (int &entry : mon_entry)
+        if (entry == -1)
+            entry = mon_entry[MONS_PROGRAM_BUG];
 
     init_monster_symbols();
 }
@@ -1974,11 +1974,9 @@ int exper_value(const monster* mon, bool real)
     // Let's look for big spells.
     if (spellcaster)
     {
-        const monster_spells &hspell_pass = mon->spells;
-
-        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+        for (const mon_spell_slot &slot : mon->spells)
         {
-            switch (hspell_pass[i].spell)
+            switch (slot.spell)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
@@ -2300,28 +2298,17 @@ unique_books get_unique_spells(const monster_info &mi,
             }
         }
 
-        for (unsigned int j = 0;
-             book == MST_GHOST && j < mi.spells.size()
-             || book != MST_GHOST && j < mspell_list[msidx].spells.size();
-             ++j)
+        if (book != MST_GHOST)
+            ASSERT(msidx < ARRAYSZ(mspell_list));
+        for (const mon_spell_slot &slot : (book == MST_GHOST
+                                           ? mi.spells
+                                           : mspell_list[msidx].spells))
         {
-            mon_spell_slot slot;
-            spell_type spell;
-            if (book == MST_GHOST)
-                slot = mi.spells[j];
-            else
-            {
-                ASSERT(msidx < ARRAYSZ(mspell_list));
-                slot = mspell_list[msidx].spells[j];
-            }
-
             if (flags != MON_SPELL_NO_FLAGS && !(slot.flags & flags))
                 continue;
 
-            spell = slot.spell;
-
-            if (find(spells.begin(), spells.end(), spell) == spells.end())
-                spells.push_back(spell);
+            if (find(spells.begin(), spells.end(), slot.spell) == spells.end())
+                spells.push_back(slot.spell);
         }
 
         if (spells.size() == 0)
@@ -2382,14 +2369,12 @@ void mons_load_spells(monster* mon)
     dprf(DIAG_MONPLACE, "%s: loading spellbook #%d",
          mon->name(DESC_PLAIN, true).c_str(), static_cast<int>(book));
 
-    for (unsigned int i = 0; i < ARRAYSZ(mspell_list); ++i)
-    {
-        if (mspell_list[i].type == book)
+    for (const mon_spellbook &spbook : mspell_list)
+        if (spbook.type == book)
         {
-            mon->spells = mspell_list[i].spells;
+            mon->spells = spbook.spells;
             break;
         }
-    }
 }
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
@@ -3463,8 +3448,8 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     if (mons_has_los_ability(mon->type))
         return true;
 
-    for (unsigned int i = 0; i < mon->spells.size(); ++i)
-        if (_ms_ranged_spell(mon->spells[i].spell, attack_only, ench_too))
+    for (const mon_spell_slot &slot : mon->spells)
+        if (_ms_ranged_spell(slot.spell, attack_only, ench_too))
             return true;
 
     return false;
@@ -3479,9 +3464,9 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 // (such as an amulet of clarity or stasis)
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 {
-    for (unsigned int i = 0; i < mon->spells.size(); ++i)
+    for (const mon_spell_slot &slot : mon->spells)
     {
-        switch (mon->spells[i].spell)
+        switch (slot.spell)
         {
         case SPELL_SLEEP:
             if (foe->can_sleep())
@@ -3678,11 +3663,8 @@ static const spell_type smitey_spells[] = {
  */
 static bool _mons_has_smite_attack(const monster* mons)
 {
-    for (unsigned j = 0 ; j < ARRAYSZ(smitey_spells); j++)
-        if (mons->has_spell(smitey_spells[j]))
-            return true;
-
-    return false;
+    return any_of(begin(smitey_spells), end(smitey_spells),
+                  bind(mem_fn(&monster::has_spell), *mons, placeholders::_1));
 }
 
 /**

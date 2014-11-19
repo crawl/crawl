@@ -184,13 +184,13 @@ void TilesFramework::shutdown()
 
     m_tabs.clear();
 
-    for (unsigned int i = 0; i < LAYER_MAX; i++)
-        m_layers[i].m_regions.clear();
+    for (Layer &layer : m_layers)
+        layer.m_regions.clear();
 
-    for (unsigned int i = 0; i < m_fonts.size(); i++)
+    for (font_info &font : m_fonts)
     {
-        delete m_fonts[i].font;
-        m_fonts[i].font = NULL;
+        delete font.font;
+        font.font = nullptr;
     }
 
     delete m_image;
@@ -678,10 +678,8 @@ int TilesFramework::getch_ck()
                     if (m_last_tick_moved != UINT_MAX)
                     {
                         m_region_msg->alt_text().clear();
-                        for (unsigned int i = 0;
-                            i < m_layers[m_active_layer].m_regions.size(); ++i)
+                        for (Region *reg : m_layers[m_active_layer].m_regions)
                         {
-                            Region *reg = m_layers[m_active_layer].m_regions[i];
                             if (!reg->inside(m_mouse.x, m_mouse.y))
                                 continue;
 
@@ -766,10 +764,8 @@ int TilesFramework::getch_ck()
                     int mouse_key = handle_mouse(event.mouse_event);
 
                     // find mouse location
-                    for (unsigned int i = 0;
-                        i < m_layers[m_active_layer].m_regions.size(); i++)
+                    for (Region *reg : m_layers[m_active_layer].m_regions)
                     {
-                        Region *reg = m_layers[m_active_layer].m_regions[i];
                         if (reg->mouse_pos(m_mouse.x, m_mouse.y,
                                            m_cur_loc.cx, m_cur_loc.cy))
                         {
@@ -844,10 +840,8 @@ int TilesFramework::getch_ck()
                 tiles.clear_text_tags(TAG_CELL_DESC);
                 if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
                 {
-                    for (unsigned int i = 0;
-                         i < m_layers[m_active_layer].m_regions.size(); ++i)
+                    for (Region *reg : m_layers[m_active_layer].m_regions)
                     {
-                        Region *reg = m_layers[m_active_layer].m_regions[i];
                         if (!reg->inside(m_mouse.x, m_mouse.y))
                             continue;
                         if (reg->update_tip_text(m_tooltip))
@@ -1455,8 +1449,8 @@ void TilesFramework::redraw()
 
     glmanager->reset_view_for_redraw(m_viewsc.x, m_viewsc.y);
 
-    for (unsigned int i = 0; i < m_layers[m_active_layer].m_regions.size(); ++i)
-        m_layers[m_active_layer].m_regions[i]->render();
+    for (Region *region : m_layers[m_active_layer].m_regions)
+        region->render();
 
     // Draw tooltip
     if (Options.tile_tooltip_ms > 0 && !m_tooltip.empty())

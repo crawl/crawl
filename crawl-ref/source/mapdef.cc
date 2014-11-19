@@ -1260,9 +1260,8 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
     }
 
     // Copy markers and update locations.
-    for (size_t i = 0; i < vlines.markers.size(); ++i)
+    for (map_marker *mm : vlines.markers)
     {
-        map_marker *mm = vlines.markers[i];
         coord_def mapc = mm->pos + vtl;
         coord_def maskc = mapc - mtl;
 
@@ -2697,21 +2696,14 @@ string map_def::validate_temple_map()
     if (has_tag_prefix("temple_overflow_"))
     {
         vector<string> tag_list = get_tags();
-        string         temple_tag;
 
-        for (unsigned int i = 0; i < tag_list.size(); i++)
-        {
-            if (starts_with(tag_list[i], "temple_overflow_"))
-            {
-                temple_tag = tag_list[i];
-                break;
-            }
-        }
+        auto tag = find_if(begin(tag_list), end(tag_list),
+                bind(starts_with, placeholders::_1, "temple_overflow_"));
 
-        if (temple_tag.empty())
+        if (tag == end(tag_list))
             return make_stringf("Unknown temple tag.");
 
-        temple_tag = strip_tag_prefix(temple_tag, "temple_overflow_");
+        string temple_tag = strip_tag_prefix(*tag, "temple_overflow_");
 
         if (temple_tag.empty())
             return "Malformed temple_overflow_ tag";
@@ -2993,12 +2985,12 @@ coord_def map_def::float_dock()
     map_section_type which_orient = MAP_NONE;
     int norients = 0;
 
-    for (unsigned i = 0; i < ARRAYSZ(orients); ++i)
+    for (map_section_type sec : orients)
     {
-        if (map.solid_borders(orients[i]) && can_dock(orients[i])
+        if (map.solid_borders(sec) && can_dock(sec)
             && one_chance_in(++norients))
         {
-            which_orient = orients[i];
+            which_orient = sec;
         }
     }
 
@@ -3293,8 +3285,8 @@ bool map_def::has_tag(const string &tagwanted) const
 
     vector<string> wanted_tags = split_string(" ", tagwanted);
 
-    for (unsigned int i = 0; i < wanted_tags.size(); i++)
-        if (tags.find(" " + wanted_tags[i] + " ") == string::npos)
+    for (const string &tag : wanted_tags)
+        if (tags.find(" " + tag + " ") == string::npos)
             return false;
 
     return true;
@@ -4541,9 +4533,9 @@ mons_spec mons_list::mons_by_name(string name) const
             return MONS_PROGRAM_BUG;
 
         spec = MONS_CHIMERA;
-        for (unsigned int i = 0; i < components.size(); i++)
+        for (const string &component : components)
         {
-            monster_type monstype = get_monster_by_name(components[i]);
+            monster_type monstype = get_monster_by_name(component);
             if (monstype == MONS_PROGRAM_BUG)
                 return MONS_PROGRAM_BUG;
             spec.chimera_mons.push_back(monstype);
@@ -5383,13 +5375,13 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         CrawlVector &incl_spells
             = result.props["randbook_spells"].new_vector(SV_INT);
 
-        for (unsigned int i = 0; i < spell_list.size(); ++i)
+        for (const string &spnam : spell_list)
         {
-            string spell_name = replace_all_of(spell_list[i], "_", " ");
+            string spell_name = replace_all_of(spnam, "_", " ");
             spell_type spell = spell_by_name(spell_name);
             if (spell == SPELL_NO_SPELL)
             {
-                error = make_stringf("Bad spell: %s", spell_list[i].c_str());
+                error = make_stringf("Bad spell: %s", spnam.c_str());
                 return false;
             }
             incl_spells.push_back(spell);
@@ -5650,15 +5642,14 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
     item_spec_slot list;
 
     list.fix_slot = strip_tag(spec, "fix_slot");
-    vector<string> specifiers = split_string("/", spec);
 
-    for (unsigned i = 0; i < specifiers.size() && error.empty(); ++i)
+    for (const string &specifier : split_string("/", spec))
     {
         item_spec result;
-        if (parse_single_spec(result, specifiers[i]))
+        if (parse_single_spec(result, specifier))
             list.ilist.push_back(result);
         else
-          dprf(DIAG_DNGN, "Failed to parse: %s", specifiers[i].c_str());
+            dprf(DIAG_DNGN, "Failed to parse: %s", specifier.c_str());
     }
 
     return list;

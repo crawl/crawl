@@ -636,9 +636,9 @@ static bool _get_mem_list(spell_list &mem_spells,
     vector<const item_def*> items;
     item_list_on_square(items, you.visible_igrd(you.pos()));
 
-    for (unsigned int i = 0; i < items.size(); ++i)
+    for (const item_def *bptr : items)
     {
-        item_def book(*items[i]);
+        item_def book(*bptr); // Copy
         if (!item_is_spellbook(book))
             continue;
 
@@ -848,9 +848,8 @@ vector<spell_type> get_mem_spell_list(vector<int> &books)
 
     sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
-    for (unsigned int i = 0; i < mem_spells.size(); i++)
+    for (spell_type spell : mem_spells)
     {
-        spell_type spell = mem_spells[i];
         spells.push_back(spell);
 
         spells_to_books::iterator it = book_hash.find(spell);
@@ -1710,9 +1709,8 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
 
     if (completely_random)
     {
-        for (unsigned int i = 0; i < spells.size(); i++)
+        for (spell_type spl : spells)
         {
-            spell_type spl = spells[i];
             if (god == GOD_XOM)
                 spell_weights[spl] = count_bits(get_spell_disciplines(spl));
             else
@@ -1722,9 +1720,8 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
     else
     {
         const int Spc = you.skills[SK_SPELLCASTING];
-        for (unsigned int i = 0; i < spells.size(); i++)
+        for (spell_type spell : spells)
         {
-            spell_type spell = spells[i];
             unsigned int disciplines = get_spell_disciplines(spell);
 
             int d = 1;
@@ -1834,26 +1831,24 @@ static void _remove_nondiscipline_spells(spell_type chosen_spells[],
     }
 }
 
-static void _add_included_spells(spell_type chosen_spells[SPELLBOOK_SIZE],
+static void _add_included_spells(spell_type (&chosen_spells)[SPELLBOOK_SIZE],
                                  vector<spell_type> incl_spells)
 {
-    for (unsigned int i = 0; i < incl_spells.size(); ++i)
+    for (spell_type incl_spell : incl_spells)
     {
-        spell_type incl_spell = incl_spells[i];
-
         if (incl_spell == SPELL_NO_SPELL)
             continue;
 
-        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+        for (spell_type &chosen : chosen_spells)
         {
             // Already included.
-            if (chosen_spells[j] == incl_spell)
+            if (chosen == incl_spell)
                 break;
 
-            if (chosen_spells[j] == SPELL_NO_SPELL)
+            if (chosen == SPELL_NO_SPELL)
             {
                 // Add to spells.
-                chosen_spells[j] = incl_spell;
+                chosen = incl_spell;
                 break;
             }
         }

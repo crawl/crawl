@@ -1336,8 +1336,8 @@ static bool _feat_is_flanked_by_walls(const coord_def &p)
                                coord_def(p.x  ,p.y+1) };
 
     // paranoia!
-    for (unsigned int i = 0; i < ARRAYSZ(adjs); ++i)
-        if (!in_bounds(adjs[i]))
+    for (coord_def c : adjs)
+        if (!in_bounds(c))
             return false;
 
     return feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
@@ -1557,9 +1557,9 @@ void change_labyrinth(bool msg)
 
         string path_str = "";
         mprf(MSGCH_DIAGNOSTICS, "Here's the list of targets: ");
-        for (unsigned int i = 0; i < targets.size(); i++)
+        for (coord_def target : targets)
         {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", targets[i].x, targets[i].y);
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", target.x, target.y);
             path_str += info;
         }
         mprf(MSGCH_DIAGNOSTICS, "%s", path_str.c_str());
@@ -1624,9 +1624,8 @@ void change_labyrinth(bool msg)
         // Add all floor grids meeting a couple of conditions to a vector
         // of potential switch points.
         vector<coord_def> points;
-        for (unsigned int i = 0; i < path.size(); i++)
+        for (const coord_def p : path)
         {
-            const coord_def p(path[i]);
             // The point must be inside the changed area.
             if (p.x < c1.x || p.x > c2.x || p.y < c1.y || p.y > c2.y)
                 continue;
@@ -1777,9 +1776,9 @@ void change_labyrinth(bool msg)
         }
         // Search the eight possible directions in random order.
         shuffle_array(dirs);
-        for (unsigned int i = 0; i < dirs.size(); i++)
+        for (coord_def dir : dirs)
         {
-            const coord_def p = *ri + dirs[i];
+            const coord_def p = *ri + dir;
             if (!in_bounds(p))
                 continue;
 

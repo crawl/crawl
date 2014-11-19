@@ -1594,10 +1594,8 @@ static mutation_type _beastly_appendage()
     mutation_type chosen = NUM_MUTATIONS;
     int count = 0;
 
-    for (unsigned int i = 0; i < ARRAYSZ(appendages); i++)
+    for (mutation_type app : appendages)
     {
-        mutation_type app = appendages[i];
-
         if (_slot_conflict(beastly_slot(app)))
             continue;
         if (physiology_mutation_conflict(app))

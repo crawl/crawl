@@ -250,8 +250,8 @@ static void _sdump_visits(dump_params &par)
     vector<PlaceInfo> branches_visited = you.get_all_place_info(true, true);
 
     PlaceInfo branches_total;
-    for (unsigned int i = 0; i < branches_visited.size(); i++)
-        branches_total += branches_visited[i];
+    for (const PlaceInfo &branch : branches_visited)
+        branches_total += branch;
 
     text += make_stringf("You %svisited %d branch",
                          have.c_str(), (int)branches_visited.size());
@@ -316,9 +316,8 @@ static void _sdump_visits(dump_params &par)
     }
 
     vector<string> misc_portals;
-    for (unsigned int i = 0; i < ARRAYSZ(single_portals); i++)
+    for (branch_type br : single_portals)
     {
-        branch_type br = single_portals[i];
         place_info = you.get_place_info(br);
         if (!place_info.num_visits)
             continue;
@@ -459,11 +458,8 @@ static void _sdump_turns_by_place(dump_params &par)
 
     text += _sdump_turns_place_info(you.global_info, "Total");
 
-    for (unsigned int i = 0; i < all_visited.size(); i++)
-    {
-        PlaceInfo pi = all_visited[i];
+    for (const PlaceInfo &pi : all_visited)
         text += _sdump_turns_place_info(pi);
-    }
 
     text += "               ";
     text += "+-------+-------+-------+-------+-------+----------------------\n";
@@ -550,9 +546,9 @@ static void _sdump_notes(dump_params &par)
 
     text += "\nNotes\nTurn   | Place    | Note\n";
     text += "--------------------------------------------------------------\n";
-    for (unsigned i = 0; i < note_list.size(); ++i)
+    for (const Note &note : note_list)
     {
-        text += note_list[i].describe();
+        text += note.describe();
         text += "\n";
     }
     text += "\n";
@@ -969,11 +965,8 @@ static void _sdump_kills_by_place(dump_params &par)
 
     result += _sdump_kills_place_info(you.global_info, "Total");
 
-    for (unsigned int i = 0; i < all_visited.size(); i++)
-    {
-        PlaceInfo pi = all_visited[i];
+    for (const PlaceInfo &pi : all_visited)
         result += _sdump_kills_place_info(pi);
-    }
 
     if (!result.empty())
         text += header + result + footer + "\n";
@@ -1312,12 +1305,10 @@ void dump_map(FILE *fp, bool debug, bool dist)
             {
 #ifdef COLOURED_DUMPS
                 size_t nv = 0;
-                for (size_t i = 0; i < env.level_vaults.size(); ++i)
-                    if (env.level_vaults[i]->map.in_map(coord_def(x, y)
-                           - env.level_vaults[i]->pos))
-                    {
+                for (const vault_placement *vault : env.level_vaults)
+                    if (vault->map.in_map(coord_def(x, y) - vault->pos))
                         nv++;
-                    }
+
                 int v = env.level_map_ids[x][y];
                 if (v == INVALID_MAP_INDEX)
                     v = -1;
@@ -1445,10 +1436,10 @@ void display_notes()
     scr.set_tag("notes");
     scr.set_highlighter(new MenuHighlighter);
     scr.set_title(new MenuEntry("Turn   | Place    | Note"));
-    for (unsigned int i = 0; i < note_list.size(); ++i)
+    for (const Note &note : note_list)
     {
-        string prefix = note_list[i].describe(true, true, false);
-        string suffix = note_list[i].describe(false, false, true);
+        string prefix = note.describe(true, true, false);
+        string suffix = note.describe(false, false, true);
         if (suffix.empty())
             continue;
 

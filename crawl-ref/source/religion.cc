@@ -2744,8 +2744,6 @@ void excommunication(god_type new_god, bool immediate)
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
-    vector<ability_type> abilities = get_god_abilities(true, true);
-
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.duration[DUR_RECITE] = 0;
     you.piety = 0;
@@ -3023,8 +3021,8 @@ void excommunication(god_type new_god, bool immediate)
     learned_something_new(HINT_EXCOMMUNICATE,
                           coord_def((int)new_god, old_piety));
 
-    for (unsigned int i = 0; i < abilities.size(); ++i)
-        you.stop_train.insert(abil_skill(abilities[i]));
+    for (ability_type abil : get_god_abilities(true, true))
+        you.stop_train.insert(abil_skill(abil));
 
     update_can_train();
 
@@ -3457,8 +3455,8 @@ void join_religion(god_type which_god, bool immediate)
 
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities(true, true);
-    for (unsigned int i = 0; i < abilities.size(); ++i)
-        you.start_train.insert(abil_skill(abilities[i]));
+    for (ability_type abil : abilities)
+        you.start_train.insert(abil_skill(abil));
     update_can_train();
 
     // When you start worshipping a good god, you make all non-hostile

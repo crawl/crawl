@@ -476,11 +476,11 @@ static bool _place_dragon()
 
     // Attempt to place adjacent to the first chosen hostile. If there is no
     // valid spot, move on to the next one.
-    for (unsigned int i = 0; i < targets.size(); ++i)
+    for (monster *target : targets)
     {
         // Chose a random viable adjacent spot to the select target
         vector<coord_def> spots;
-        for (adjacent_iterator ai(targets[i]->pos()); ai; ++ai)
+        for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
             if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai)) && !actor_at(*ai))
                 spots.push_back(*ai);
@@ -1277,9 +1277,8 @@ coord_def find_gateway_location(actor* caster)
     bool xray = you.xray_vision;
     you.xray_vision = false;
 
-    for (unsigned i = 0; i < 8; ++i)
+    for (coord_def delta : Compass)
     {
-        coord_def delta = Compass[i];
         coord_def test = coord_def(-1, -1);
 
         for (int t = 0; t < 11; t++)
@@ -2470,12 +2469,12 @@ void init_servitor(monster* servitor, actor* caster)
         simple_monster_message(servitor, " appears!");
 
     int shortest_range = LOS_RADIUS + 1;
-    for (size_t i = 0; i < servitor->spells.size(); ++i)
+    for (const mon_spell_slot &slot : servitor->spells)
     {
-        if (servitor->spells[i].spell == SPELL_NO_SPELL)
+        if (slot.spell == SPELL_NO_SPELL)
             continue;
 
-        int range = spell_range(servitor->spells[i].spell, 100, false);
+        int range = spell_range(slot.spell, 100, false);
         if (range < shortest_range)
             shortest_range = range;
     }
@@ -2639,24 +2638,21 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
         return SPRET_ABORT;
 
     // Dismiss the summons
-    for (unsigned int i = 0; i < explode.size(); ++i)
-    {
-        monster_die(monster_at(explode[i].first), KILL_DISMISSED, NON_MONSTER,
-                    true);
-    }
+    for (const auto &entry : explode)
+        monster_die(monster_at(entry.first), KILL_DISMISSED, NON_MONSTER, true);
 
     // Now do the explosions
     mpr("You violently release the magic binding your summons!");
-    for (unsigned int i = 0; i < explode.size(); ++i)
+    for (const auto &entry : explode)
     {
         bolt explosion;
         explosion.thrower = KILL_YOU;
-        explosion.source = explode[i].first;
-        explosion.target = explode[i].first;
+        explosion.source = entry.first;
+        explosion.target = entry.first;
         explosion.name = "magical backlash";
         explosion.is_explosion = true;
         explosion.auto_hit = true;
-        explosion.damage = dice_def(1 + div_rand_round(explode[i].second, 4),
+        explosion.damage = dice_def(1 + div_rand_round(entry.second, 4),
                                     7 + pow / 8);
         explosion.flavour = BEAM_MMISSILE;
         explosion.colour  = ETC_MAGIC;
@@ -2861,9 +2857,8 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         {
             testbeam.fire();
 
-            for (size_t i = 0; i < testbeam.path_taken.size(); i++)
+            for (const coord_def c : testbeam.path_taken)
             {
-                const coord_def c = testbeam.path_taken[i];
                 if (c != battlesphere->pos() && monster_at(c))
                 {
                     battlesphere->props["firing_target"] = c;

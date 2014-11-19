@@ -1121,10 +1121,10 @@ void key_recorder::clear()
 
 pause_all_key_recorders::pause_all_key_recorders()
 {
-    for (unsigned int i = 0; i < recorders.size(); i++)
+    for (key_recorder *rec : recorders)
     {
-        prev_pause_status.push_back(recorders[i]->paused);
-        recorders[i]->paused = true;
+        prev_pause_status.push_back(rec->paused);
+        rec->paused = true;
     }
 }
 
@@ -1136,9 +1136,7 @@ pause_all_key_recorders::~pause_all_key_recorders()
 
 void add_key_recorder(key_recorder* recorder)
 {
-    for (int i = 0, size = recorders.size(); i < size; i++)
-        ASSERT(recorders[i] != recorder);
-
+    ASSERT(find(begin(recorders), end(recorders), recorder) == end(recorders));
     recorders.push_back(recorder);
 }
 
@@ -1421,13 +1419,13 @@ string command_to_string(command_type cmd, bool tutorial)
 void insert_commands(string &desc, vector<command_type> cmds, bool formatted)
 {
     desc = untag_tiles_console(desc);
-    for (unsigned int i = 0; i < cmds.size(); ++i)
+    for (command_type cmd : cmds)
     {
         const string::size_type found = desc.find("%");
         if (found == string::npos)
             break;
 
-        string command_name = command_to_string(cmds[i]);
+        string command_name = command_to_string(cmd);
         if (formatted && command_name == "<")
             command_name += "<";
         else if (command_name == "%")

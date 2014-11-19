@@ -495,12 +495,9 @@ static const ability_def Ability_List[] =
 
 const ability_def& get_ability_def(ability_type abil)
 {
-    for (unsigned int i = 0;
-         i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
-    {
-        if (Ability_List[i].ability == abil)
-            return Ability_List[i];
-    }
+    for (const ability_def &ab_def : Ability_List)
+        if (ab_def.ability == abil)
+            return ab_def;
 
     return Ability_List[0];
 }
@@ -1313,10 +1310,9 @@ const char* ability_name(ability_type ability)
 
 vector<const char*> get_ability_names()
 {
-    vector<talent> talents = your_talents(false);
     vector<const char*> result;
-    for (unsigned int i = 0; i < talents.size(); ++i)
-        result.push_back(ability_name(talents[i].which));
+    for (const talent &tal : your_talents(false))
+        result.push_back(ability_name(tal.which));
     return result;
 }
 
@@ -3603,9 +3599,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
-    vector<ability_type> abilities = get_god_abilities(include_unusable);
-    for (unsigned int i = 0; i < abilities.size(); ++i)
-        _add_talent(talents, abilities[i], check_confused);
+    for (ability_type abil : get_god_abilities(include_unusable))
+        _add_talent(talents, abil, check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (!you_worship(GOD_NO_GOD))
@@ -3693,10 +3688,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     // Find hotkeys for the non-hotkeyed talents.
-    for (unsigned int i = 0; i < talents.size(); ++i)
+    for (talent &tal : talents)
     {
         // Skip preassigned hotkeys.
-        if (talents[i].hotkey != 0)
+        if (tal.hotkey != 0)
             continue;
 
         // Try to find a free hotkey for i, starting from Z.
@@ -3706,19 +3701,17 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             bool good_key = true;
 
             // Check that it doesn't conflict with other hotkeys.
-            for (unsigned int j = 0; j < talents.size(); ++j)
-            {
-                if (talents[j].hotkey == kkey)
+            for (const talent &other : talents)
+                if (other.hotkey == kkey)
                 {
                     good_key = false;
                     break;
                 }
-            }
 
             if (good_key)
             {
-                talents[i].hotkey = k;
-                you.ability_letter_table[k] = talents[i].which;
+                tal.hotkey = k;
+                you.ability_letter_table[k] = tal.which;
                 break;
             }
         }

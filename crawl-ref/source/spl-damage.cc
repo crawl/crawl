@@ -403,11 +403,9 @@ static void _pre_refrigerate(actor* agent, bool player,
     {
         // Filter out affected monsters that we don't know for sure are there
         vector<monster*> seen_monsters;
-        for (unsigned int i = 0; i < affected_monsters.size(); ++i)
-        {
-            if (you.can_see(affected_monsters[i]))
-                seen_monsters.push_back(affected_monsters[i]);
-        }
+        for (monster *mon : affected_monsters)
+            if (you.can_see(mon))
+                seen_monsters.push_back(mon);
 
         if (!seen_monsters.empty())
         {
@@ -2698,9 +2696,9 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
             testbeam.fire();
             bool duplicate = false;
 
-            for (unsigned int i = 0; i < beams.size(); ++i)
+            for (const bolt &beam : beams)
             {
-                if (testbeam.path_taken.back() == beams[i].target)
+                if (testbeam.path_taken.back() == beam.target)
                 {
                     duplicate = true;
                     continue;
@@ -2762,10 +2760,10 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
         return SPRET_ABORT;
     }
 
-    for (unsigned int i = 0; i < hitfunc.beams.size(); ++i)
+    for (bolt &beam : hitfunc.beams)
     {
-        zappy(ZAP_DAZZLING_SPRAY, pow, hitfunc.beams[i]);
-        hitfunc.beams[i].fire();
+        zappy(ZAP_DAZZLING_SPRAY, pow, beam);
+        beam.fire();
     }
 
     return SPRET_SUCCESS;

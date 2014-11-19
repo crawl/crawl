@@ -4,6 +4,7 @@
 #include "tilemcache.h"
 
 #include "env.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mon-info.h"
 #include "mon-util.h"
@@ -184,22 +185,19 @@ unsigned int mcache_manager::register_monster(const monster_info& minf)
 
 void mcache_manager::clear_nonref()
 {
-    for (unsigned int i = 0; i < m_entries.size(); i++)
+    for (mcache_entry *entry : m_entries)
     {
-        if (!m_entries[i] || m_entries[i]->ref_count() > 0)
+        if (!entry || entry->ref_count() > 0)
             continue;
 
-        delete m_entries[i];
-        m_entries[i] = NULL;
+        delete entry;
+        entry = nullptr;
     }
 }
 
 void mcache_manager::clear_all()
 {
-    for (unsigned int i = 0; i < m_entries.size(); i++)
-        delete m_entries[i];
-
-    m_entries.resize(0);
+    deleteAll(m_entries);
 }
 
 mcache_entry *mcache_manager::get(tileidx_t tile)

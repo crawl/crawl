@@ -711,8 +711,8 @@ bool wizard_add_mutation()
         {
             vector<string> matches;
 
-            for (unsigned int i = 0; i < partial_matches.size(); ++i)
-                matches.push_back(mutation_name(partial_matches[i]));
+            for (mutation_type mut : partial_matches)
+                matches.push_back(mutation_name(mut));
 
             string prefix = "No exact match for mutation '" +
                             spec +  "', possible matches are: ";

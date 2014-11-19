@@ -234,8 +234,8 @@ static void _update_agrid()
 
     if (!env.sunlight.empty())
     {
-        for (size_t i = 0; i < env.sunlight.size(); ++i)
-            _set_agrid_flag(env.sunlight[i].first, APROP_HALO);
+        for (const auto &entry : env.sunlight)
+            _set_agrid_flag(entry.first, APROP_HALO);
         no_areas = false;
     }
 
@@ -295,9 +295,8 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
     // on the off chance that there is an error, assert here
     ASSERT(at != AREA_NONE);
 
-    for (unsigned int i = 0; i < _agrid_centres.size(); i++)
+    for (const area_centre &a : _agrid_centres)
     {
-        area_centre a = _agrid_centres[i];
         if (a.type != at)
             continue;
 

@@ -483,18 +483,17 @@ vector<coord_def> find_golubria_on_level()
 
 static bool _find_other_passage_side(coord_def& to)
 {
-    vector<coord_def> passages = find_golubria_on_level();
     vector<coord_def> clear_passages;
-    for (unsigned int i = 0; i < passages.size(); i++)
+    for (coord_def passage : find_golubria_on_level())
     {
-        if (passages[i] != to && !actor_at(passages[i]))
-            clear_passages.push_back(passages[i]);
+        if (passage != to && !actor_at(passage))
+            clear_passages.push_back(passage);
     }
     const int choices = clear_passages.size();
     if (choices < 1)
         return false;
     to = clear_passages[random2(choices)];
-        return true;
+    return true;
 }
 
 // Returns a direction string from you.pos to the

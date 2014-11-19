@@ -292,13 +292,8 @@ struct tentacle_attack_constraints
     int min_dist(const coord_def & pos)
     {
         int min = INT_MAX;
-        for (unsigned i = 0; i < target_positions->size(); ++i)
-        {
-            int dist = grid_distance(pos, target_positions->at(i));
-
-            if (dist < min)
-                min = dist;
-        }
+        for (coord_def tpos : *target_positions)
+            min = std::min(min, grid_distance(pos, tpos));
         return min;
     }
 
@@ -308,11 +303,11 @@ struct tentacle_attack_constraints
         shuffle_array(connect_idx);
 
 //        mprf("expanding %d %d, string dist %d", node.pos.x, node.pos.y, node.string_distance);
-        for (unsigned i=0; i < 8; i++)
+        for (int idx : connect_idx)
         {
             position_node temp;
 
-            temp.pos = node.pos + Compass[connect_idx[i]];
+            temp.pos = node.pos + Compass[idx];
             temp.string_distance = node.string_distance;
             temp.departure = node.departure;
             temp.connect_level = node.connect_level;
@@ -414,11 +409,11 @@ struct tentacle_connect_constraints
     {
         shuffle_array(connect_idx);
 
-        for (unsigned i=0; i < 8; i++)
+        for (int idx : connect_idx)
         {
             position_node temp;
 
-            temp.pos = node.pos + Compass[connect_idx[i]];
+            temp.pos = node.pos + Compass[idx];
 
             if (!in_bounds(temp.pos))
                 continue;
@@ -497,12 +492,7 @@ struct multi_target
 
     bool operator() (const coord_def & pos)
     {
-        for (unsigned i = 0; i < targets->size(); ++i)
-        {
-            if (pos == targets->at(i))
-                return true;
-        }
-        return false;
+        return find(begin(*targets), end(*targets), pos) != end(*targets);
     }
 };
 
@@ -513,8 +503,7 @@ static bool _tentacle_pathfind(monster* tentacle,
                        vector<coord_def> & target_positions,
                        int total_length)
 {
-    multi_target foe_check;
-    foe_check.targets = &target_positions;
+    multi_target foe_check { &target_positions };
 
     vector<set<position_node>::iterator > tentacle_path;
 
@@ -776,9 +765,9 @@ void move_solo_tentacle(monster* tentacle)
     if (severed)
     {
         shuffle_array(compass_idx);
-        for (unsigned i = 0; i < 8; ++i)
+        for (int idx : compass_idx)
         {
-            coord_def new_base = base_position + Compass[compass_idx[i]];
+            coord_def new_base = base_position + Compass[idx];
             if (!actor_at(new_base)
                 && tentacle->is_habitable(new_base))
             {
@@ -1006,9 +995,10 @@ void move_child_tentacles(monster* mons)
     _collect_tentacles(mons, tentacles);
 
     // Move each tentacle in turn
-    for (unsigned i = 0; i < tentacles.size(); i++)
+    for (monster_iterator &tent_it : tentacles)
     {
-        monster* tentacle = monster_at(tentacles[i]->pos());
+        // XXX: Why not just use *tent_it ?
+        monster* tentacle = monster_at(tent_it->pos());
 
         if (!tentacle)
         {

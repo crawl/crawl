@@ -431,14 +431,13 @@ static void _check_spell_skills()
 
 static void _check_abil_skills()
 {
-    vector<ability_type> abilities = get_god_abilities(true, true);
-    for (unsigned int i = 0; i < abilities.size(); ++i)
+    for (ability_type abil : get_god_abilities(true, true))
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
-        you.stop_train.erase(abil_skill(abilities[i]));
+        you.stop_train.erase(abil_skill(abil));
     }
 }
 
@@ -1585,9 +1584,8 @@ int species_apt(skill_type skill, species_type species)
         for (int sp = 0; sp < NUM_SPECIES; ++sp)
             for (int sk = 0; sk < NUM_SKILLS; ++sk)
                 _spec_skills[sp][sk] = sentinel;
-        for (unsigned i = 0; i < ARRAYSZ(species_skill_aptitudes); ++i)
+        for (const species_skill_aptitude &ssa : species_skill_aptitudes)
         {
-            const species_skill_aptitude &ssa(species_skill_aptitudes[i]);
             ASSERT(_spec_skills[ssa.species][ssa.skill] == sentinel);
             _spec_skills[ssa.species][ssa.skill] = ssa.aptitude;
         }

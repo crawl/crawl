@@ -2551,7 +2551,7 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
 
-    vector<coord_def> doors;
+    set<coord_def> doors;
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         if (grd(*ai) == feat)
@@ -2559,28 +2559,14 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
             // Specialcase doors to take into account gates.
             if (feat_is_door(feat))
             {
-                bool found_door = false;
-                for (unsigned int i = 0; i < doors.size(); ++i)
-                {
-                    if (doors[i] == *ai)
-                    {
-                        found_door = true;
-                        break;
-                    }
-                }
-
                 // Already included in a gate, skip this door.
-                if (found_door)
+                if (doors.count(*ai))
                     continue;
 
                 // Check if it's part of a gate. If so, remember all its doors.
                 set<coord_def> all_door;
                 find_connected_identical(*ai, all_door);
-                for (set<coord_def>::const_iterator dc = all_door.begin();
-                     dc != all_door.end(); ++dc)
-                {
-                     doors.push_back(*dc);
-                }
+                doors.insert(begin(all_door), end(all_door));
             }
 
             num++;

@@ -330,10 +330,9 @@ void wizard_list_branches()
 
         temple_strings.clear();
 
-        for (unsigned int j = 0; j < temples.size(); j++)
+        for (CrawlHashTable &temple_hash : temples)
         {
             god_names.clear();
-            CrawlHashTable &temple_hash = temples[j];
             CrawlVector    &gods        = temple_hash[TEMPLE_GODS_KEY];
 
             for (unsigned int k = 0; k < gods.size(); k++)

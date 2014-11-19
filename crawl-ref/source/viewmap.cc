@@ -263,10 +263,8 @@ static int _find_feature(const vector<coord_def>& features,
     int firstx = -1, firsty = -1, firstmatch = -1;
     int matchcount = 0;
 
-    for (unsigned feat = 0; feat < features.size(); ++feat)
+    for (coord_def coord : features)
     {
-        const coord_def& coord = features[feat];
-
         if (_is_feature_fudged(feature, coord))
         {
             ++matchcount;
@@ -457,20 +455,20 @@ class feature_list
 public:
     void init()
     {
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            data[i].clear();
+        for (vector<cglyph_t> &groupdata : data)
+            groupdata.clear();
         for (rectangle_iterator ri(0); ri; ++ri)
             maybe_add(*ri);
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            sort(data[i].begin(), data[i].end(), _comp_glyphs);
+        for (vector<cglyph_t> &groupdata : data)
+            sort(begin(groupdata), end(groupdata), _comp_glyphs);
     }
 
     formatted_string format() const
     {
         formatted_string s;
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            for (unsigned int j = 0; j < data[i].size(); ++j)
-                s.add_glyph(data[i][j]);
+        for (const vector<cglyph_t> &groupdata : data)
+            for (cglyph_t gly : groupdata)
+                s.add_glyph(gly);
         return s;
     }
 };

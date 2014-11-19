@@ -1263,14 +1263,12 @@ vector<map_marker*> find_markers_by_prop(const string &prop,
     vector<map_marker*> markers;
     for (rectangle_iterator pos(0, 0); pos; ++pos)
     {
-        const vector<map_marker*> markers_here =
-            env.markers.get_markers_at(*pos);
-        for (unsigned i = 0, size = markers_here.size(); i < size; ++i)
+        for (map_marker *mark : env.markers.get_markers_at(*pos))
         {
-            const string value(markers_here[i]->property(prop));
+            const string value(mark->property(prop));
             if (!value.empty() && (expected.empty() || value == expected))
             {
-                markers.push_back(markers_here[i]);
+                markers.push_back(mark);
                 if (maxresults && markers.size() >= maxresults)
                     return markers;
             }

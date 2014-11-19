@@ -3219,13 +3219,12 @@ void level_change(bool skip_attribute_increase)
                 int level = 0;
                 mutation_type first_body_facet = NUM_MUTATIONS;
 
-                for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                for (const player::demon_trait trait : you.demonic_traits)
                 {
-                    if (is_body_facet(you.demonic_traits[i].mutation))
+                    if (is_body_facet(trait.mutation))
                     {
                         if (first_body_facet < NUM_MUTATIONS
-                            && you.demonic_traits[i].mutation
-                                != first_body_facet)
+                            && trait.mutation != first_body_facet)
                         {
                             if (you.experience_level == level)
                             {
@@ -3239,25 +3238,24 @@ void level_change(bool skip_attribute_increase)
 
                         if (first_body_facet == NUM_MUTATIONS)
                         {
-                            first_body_facet = you.demonic_traits[i].mutation;
-                            level = you.demonic_traits[i].level_gained;
+                            first_body_facet = trait.mutation;
+                            level = trait.level_gained;
                         }
                     }
                 }
 
-                for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                for (const player::demon_trait trait : you.demonic_traits)
                 {
-                    if (you.demonic_traits[i].level_gained
-                        == you.experience_level)
+                    if (trait.level_gained == you.experience_level)
                     {
                         if (!gave_message)
                         {
-                            mprf(MSGCH_INTRINSIC_GAIN, "Your demonic ancestry asserts itself...");
+                            mprf(MSGCH_INTRINSIC_GAIN,
+                                 "Your demonic ancestry asserts itself...");
 
                             gave_message = true;
                         }
-                        perma_mutate(you.demonic_traits[i].mutation, 1,
-                                     "demonic ancestry");
+                        perma_mutate(trait.mutation, 1, "demonic ancestry");
                     }
                 }
 
@@ -6236,9 +6234,8 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     unsigned int effective_points = skill_points[sk];
     if (!real)
     {
-        vector<skill_type> cross_skills = get_crosstrain_skills(sk);
-        for (size_t i = 0; i < cross_skills.size(); ++i)
-            effective_points += skill_points[cross_skills[i]] * 2 / 5;
+        for (skill_type cross : get_crosstrain_skills(sk))
+            effective_points += skill_points[cross] * 2 / 5;
     }
     effective_points = min(effective_points, skill_exp_needed(27, sk));
     while (1)

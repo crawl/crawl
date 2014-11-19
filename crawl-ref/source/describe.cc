@@ -275,9 +275,8 @@ static vector<string> _randart_propnames(const item_def& item,
         if (!ego.empty())
         {
             // XXX: Ugly hack for adding a comma if needed.
-            for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
-                if (known_proprt(propanns[i].prop)
-                    && propanns[i].prop != ARTP_BRAND
+            for (const property_annotators &ann : propanns)
+                if (known_proprt(ann.prop) && ann.prop != ARTP_BRAND
                     && !no_comma)
                 {
                     ego += ",";
@@ -295,49 +294,49 @@ static vector<string> _randart_propnames(const item_def& item,
             propnames.push_back(entry->inscrip);
      }
 
-    for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
+    for (const property_annotators &ann : propanns)
     {
-        if (known_proprt(propanns[i].prop))
+        if (known_proprt(ann.prop))
         {
-            const int val = proprt[propanns[i].prop];
+            const int val = proprt[ann.prop];
 
             // Don't show rF+/rC- for =Fire, or vice versa for =Ice.
             if (item.base_type == OBJ_JEWELLERY)
             {
                 if (item.sub_type == RING_FIRE
-                    && (propanns[i].prop == ARTP_FIRE && val == 1
-                        || propanns[i].prop == ARTP_COLD && val == -1))
+                    && (ann.prop == ARTP_FIRE && val == 1
+                        || ann.prop == ARTP_COLD && val == -1))
                 {
                     continue;
                 }
                 if (item.sub_type == RING_ICE
-                    && (propanns[i].prop == ARTP_COLD && val == 1
-                        || propanns[i].prop == ARTP_FIRE && val == -1))
+                    && (ann.prop == ARTP_COLD && val == 1
+                        || ann.prop == ARTP_FIRE && val == -1))
                 {
                     continue;
                 }
             }
 
             ostringstream work;
-            switch (propanns[i].spell_out)
+            switch (ann.spell_out)
             {
             case 0: // e.g. AC+4
-                work << showpos << propanns[i].name << val;
+                work << showpos << ann.name << val;
                 break;
             case 1: // e.g. F++
             {
                 // XXX: actually handle absurd values instead of displaying
                 // the wrong number of +s or -s
                 const int sval = min(abs(val), 6);
-                work << propanns[i].name
+                work << ann.name
                      << string(sval, (val > 0 ? '+' : '-'));
                 break;
             }
             case 2: // e.g. rPois or SInv
-                if (propanns[i].prop == ARTP_CURSED && val < 1)
+                if (ann.prop == ARTP_CURSED && val < 1)
                     continue;
 
-                work << propanns[i].name;
+                work << ann.name;
                 break;
             }
             propnames.push_back(work.str());
@@ -486,27 +485,24 @@ static string _randart_descrip(const item_def &item)
         }
     }
 
-    for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
+    for (const property_descriptor &desc : propdescs)
     {
-        if (known_proprt(propdescs[i].property))
+        if (known_proprt(desc.property))
         {
             // Only randarts with ARTP_CURSED > 0 may recurse themselves.
-            if (propdescs[i].property == ARTP_CURSED
-                && proprt[propdescs[i].property] < 1)
-            {
+            if (desc.property == ARTP_CURSED && proprt[desc.property] < 1)
                 continue;
-            }
 
-            string sdesc = propdescs[i].desc;
+            string sdesc = desc.desc;
 
             // FIXME Not the nicest hack.
             char buf[80];
-            snprintf(buf, sizeof buf, "%+d", proprt[propdescs[i].property]);
+            snprintf(buf, sizeof buf, "%+d", proprt[desc.property]);
             sdesc = replace_all(sdesc, "%d", buf);
 
-            if (propdescs[i].is_graded_resist)
+            if (desc.is_graded_resist)
             {
-                int idx = proprt[propdescs[i].property] + 3;
+                int idx = proprt[desc.property] + 3;
                 idx = min(idx, 6);
                 idx = max(idx, 0);
 
@@ -3501,13 +3497,13 @@ static string _monster_stat_description(const monster_info& mi)
     vector<string> base_resists;
     vector<string> suscept;
 
-    for (unsigned int i = 0; i < ARRAYSZ(resists); ++i)
+    for (mon_resist_flags rflags : resists)
     {
-        int level = get_resist(resist, resists[i]);
+        int level = get_resist(resist, rflags);
 
         if (level != 0)
         {
-            const char* attackname = _get_resist_name(resists[i]);
+            const char* attackname = _get_resist_name(rflags);
             level = max(level, -1);
             level = min(level,  3);
             switch (level)
@@ -4277,13 +4273,7 @@ void alt_desc_proc::print(const string &str)
 
 int alt_desc_proc::count_newlines(const string &str)
 {
-    int count = 0;
-    for (size_t i = 0; i < str.size(); i++)
-    {
-        if (str[i] == '\n')
-            count++;
-    }
-    return count;
+    return count(begin(str), end(str), '\n');
 }
 
 void alt_desc_proc::trim(string &str)

@@ -290,8 +290,8 @@ void InvEntry::add_class_hotkeys(const item_def &i)
 
     vector<char> glyphs;
     get_class_hotkeys(type, glyphs);
-    for (unsigned int k = 0; k < glyphs.size(); ++k)
-        add_hotkey(glyphs[k]);
+    for (char gly : glyphs)
+        add_hotkey(gly);
 }
 
 bool InvEntry::show_cursor = false;
@@ -325,8 +325,8 @@ vector<const item_def*>
 InvMenu::xlat_itemvect(const vector<item_def> &v)
 {
     vector<const item_def*> xlatitems;
-    for (unsigned i = 0, size = v.size(); i < size; ++i)
-        xlatitems.push_back(&v[i]);
+    for (const item_def &item : v)
+        xlatitems.push_back(&item);
     return xlatitems;
 }
 
@@ -737,10 +737,10 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
         if (s[0] == '<' || s[0] == '>')
             s = s.substr(1);
 
-        for (unsigned ci = 0; ci < ARRAYSZ(cmp_map); ++ci)
-            if (cmp_map[ci].cname == s)
+        for (const auto &ci : cmp_map)
+            if (ci.cname == s)
             {
-                list.push_back(item_comparator(cmp_map[ci].cmp, negated));
+                list.push_back(item_comparator(ci.cmp, negated));
                 break;
             }
     }
@@ -823,8 +823,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
                     subtitle += string(strwidth(str) - strwidth(subtitle),
                                        ' ');
                     subtitle += "(select all with <w>";
-                    for (unsigned int k = 0; k < glyphs.size(); ++k)
-                         subtitle += glyphs[k];
+                    for (char gly : glyphs)
+                         subtitle += gly;
                     subtitle += "</w><blue>)";
                 }
             }
@@ -850,9 +850,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         if (forced_first)
             items_in_class.insert(items_in_class.begin(),forced_first);
 
-        for (unsigned int j = 0; j < items_in_class.size(); ++j)
+        for (InvEntry *ie : items_in_class)
         {
-            InvEntry *ie = items_in_class[j];
             if (tag == "pickup")
             {
                 if (ie->item && item_is_stationary(*ie->item))
@@ -1415,8 +1414,8 @@ vector<SelItem> prompt_invent_items(
                     clear_messages();
                 }
 
-                for (unsigned int i = 0; i < items.size(); ++i)
-                    items[i].slot = letter_to_index(items[i].slot);
+                for (SelItem &sel : items)
+                    sel.slot = letter_to_index(sel.slot);
                 return items;
             }
 

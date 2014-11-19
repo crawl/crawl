@@ -365,9 +365,9 @@ int spell_fail(spell_type spell)
         {-160, 2}, {-180, 0}
     };
 
-    for (unsigned int i = 0; i < ARRAYSZ(chance_breaks); ++i)
-        if (chance < chance_breaks[i][0])
-            chance2 = chance_breaks[i][1];
+    for (const int (&cbrk)[2] : chance_breaks)
+        if (chance < cbrk[0])
+            chance2 = cbrk[1];
 
     chance2 += get_form()->spellcasting_penalty;
 

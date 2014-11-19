@@ -2045,9 +2045,9 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     // able to make tentacles!
     monster_spells oldspells = mon->spells;
     mon->spells.clear();
-    for (size_t i = 0; i < oldspells.size(); i++)
-        if (oldspells[i].spell == SPELL_CREATE_TENTACLES)
-            mon->spells.push_back(oldspells[i]);
+    for (const mon_spell_slot &slot : oldspells)
+        if (slot.spell == SPELL_CREATE_TENTACLES)
+            mon->spells.push_back(slot);
 
     // handle zombies with jobs & ghostdemon zombies; they otherwise
     // wouldn't store enough information for us to recreate them right.
@@ -3599,9 +3599,9 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     else if (!Options.note_monsters.empty())
     {
         const string iname = mons_type_name(mons->type, DESC_A);
-        for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
+        for (const text_pattern &pat : Options.note_monsters)
         {
-            if (Options.note_monsters[i].matches(iname))
+            if (pat.matches(iname))
             {
                 interesting = true;
                 break;

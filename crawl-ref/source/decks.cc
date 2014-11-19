@@ -425,13 +425,9 @@ const string deck_contents(uint8_t deck_type)
     // output.
     FixedVector<bool, NUM_CARDS> cards;
     cards.init(false);
-    const vector<const deck_archetype *> subdecks = _subdecks(deck_type);
-    for (unsigned int i = 0; i < subdecks.size(); i++)
-    {
-        const deck_archetype *pdeck = subdecks[i];
+    for (const deck_archetype *pdeck : _subdecks(deck_type))
         for (int j = 0; pdeck[j].card != NUM_CARDS; ++j)
             cards[pdeck[j].card] = true;
-    }
 
     for (int i = 0; i < NUM_CARDS; i++)
     {
@@ -927,10 +923,9 @@ string which_decks(card_type card)
     bool punishment = false;
     for (uint8_t deck = MISC_FIRST_DECK; deck <= MISC_LAST_DECK; deck++)
     {
-        vector<const deck_archetype *> subdecks = _subdecks(deck);
-        for (unsigned int i = 0; i < subdecks.size(); i++)
+        for (const deck_archetype *subdeck : _subdecks(deck))
         {
-            if (_card_in_deck(card, subdecks[i]))
+            if (_card_in_deck(card, subdeck))
             {
                 if (deck == MISC_DECK_OF_PUNISHMENT)
                     punishment = true;
@@ -975,9 +970,9 @@ static void _describe_cards(vector<card_type> cards)
 #endif
 
     ostringstream data;
-    for (unsigned int i = 0; i < cards.size(); ++i)
+    for (card_type card : cards)
     {
-        string name = card_name(cards[i]);
+        string name = card_name(card);
         string desc = getLongDescription(name + " card");
         if (desc.empty())
             desc = "No description found.";
@@ -985,7 +980,7 @@ static void _describe_cards(vector<card_type> cards)
         name = uppercase_first(name);
         data << "<w>" << name << "</w>\n"
              << get_linebreak_string(desc, get_number_of_cols() - 1)
-             << "\n" << which_decks(cards[i]) << "\n";
+             << "\n" << which_decks(card) << "\n";
     }
     formatted_string fs = formatted_string::parse_string(data.str());
     clrscr();
@@ -1749,8 +1744,8 @@ static void _stairs_card(int /*power*/, deck_rarity_type /*rarity*/)
 
     shuffle_array(stairs_avail);
 
-    for (unsigned int i = 0; i < stairs_avail.size(); ++i)
-        move_stair(stairs_avail[i], stair_draw_count % 2, false);
+    for (coord_def stair : stairs_avail)
+        move_stair(stair, stair_draw_count % 2, false);
 
     stair_draw_count++;
 }
