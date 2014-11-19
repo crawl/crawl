@@ -2130,6 +2130,7 @@ bool StashTracker::display_search_results(
         }
 
         stashmenu.add_entry(me);
+        ++hotkey;
     }
 
     stashmenu.set_flags(MF_SINGLESELECT);

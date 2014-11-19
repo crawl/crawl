@@ -705,6 +705,7 @@ void full_describe_view()
             me->quantity = 2; // Hack to make items selectable.
 
             desc_menu.add_entry(me);
+            ++hotkey;
         }
     }
 
@@ -732,6 +733,7 @@ void full_describe_view()
             // Hack to make features selectable.
             me->quantity   = c.x*100 + c.y + 3;
             desc_menu.add_entry(me);
+            ++hotkey;
         }
     }
 
