@@ -1392,11 +1392,11 @@ static string _find_crawlrc()
 
     // If we have any rcdirs, look in them for files from the
     // rc_dir_names list.
-    for (int i = 0, size = SysEnv.rcdirs.size(); i < size; ++i)
+    for (const string &rc_dir : SysEnv.rcdirs)
     {
-        for (unsigned n = 0; n < ARRAYSZ(rc_dir_filenames); ++n)
+        for (const string &rc_fn : rc_dir_filenames)
         {
-            const string rc(catpath(SysEnv.rcdirs[i], rc_dir_filenames[n]));
+            const string rc(catpath(rc_dir, rc_fn));
             if (file_exists(rc))
                 return rc;
         }
@@ -1450,17 +1450,17 @@ string read_init_file(bool runscript)
 #ifdef CLUA_BINDINGS
     if (runscript)
     {
-        for (unsigned int i = 0; i < ARRAYSZ(lua_builtins); ++i)
+        for (const char *builtin : lua_builtins)
         {
-            clua.execfile(lua_builtins[i], false, false);
+            clua.execfile(builtin, false, false);
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
     }
 
     // Load default options.
-    for (unsigned int i = 0; i < ARRAYSZ(config_defaults); ++i)
-        Options.include(datafile_path(config_defaults[i]), false, runscript);
+    for (const char *def_file : config_defaults)
+        Options.include(datafile_path(def_file), false, runscript);
 #else
     UNUSED(lua_builtins);
     UNUSED(config_defaults);
@@ -1470,10 +1470,10 @@ string read_init_file(bool runscript)
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
     Options.line_num     = 0;
-    for (unsigned int i = 0; i < SysEnv.extra_opts_first.size(); i++)
+    for (const string &extra : SysEnv.extra_opts_first)
     {
         Options.line_num++;
-        Options.read_option_line(SysEnv.extra_opts_first[i], true);
+        Options.read_option_line(extra, true);
     }
 
     // Load init.txt.
@@ -1508,10 +1508,10 @@ string read_init_file(bool runscript)
     Options.filename     = "extra opts last";
     Options.basefilename = "extra opts last";
     Options.line_num     = 0;
-    for (unsigned int i = 0; i < SysEnv.extra_opts_last.size(); i++)
+    for (const string &extra : SysEnv.extra_opts_last)
     {
         Options.line_num++;
-        Options.read_option_line(SysEnv.extra_opts_last[i], false);
+        Options.read_option_line(extra, false);
     }
 
     Options.filename     = init_file_name;
@@ -2181,11 +2181,11 @@ void game_options::set_menu_sort(string field)
         sort_menus.clear();
 
     // Override existing values, if necessary.
-    for (unsigned int i = 0; i < sort_menus.size(); i++)
-        if (sort_menus[i].mtype == cond.mtype)
+    for (menu_sort_condition &m_cond : sort_menus)
+        if (m_cond.mtype == cond.mtype)
         {
-            sort_menus[i].sort = cond.sort;
-            sort_menus[i].cmp  = cond.cmp;
+            m_cond.sort = cond.sort;
+            m_cond.cmp  = cond.cmp;
             return;
         }
 
@@ -4160,15 +4160,15 @@ static void _edit_save(int argc, char **argv)
     es_command_type cmd = NUM_ES;
     bool rw;
 
-    for (unsigned int nc = 0; nc < ARRAYSZ(es_commands); nc++)
-        if (!strcmp(es_commands[nc].name, cmdn))
+    for (const es_command &ec : es_commands)
+        if (!strcmp(ec.name, cmdn))
         {
-            if (argc < es_commands[nc].min_args + 2)
+            if (argc < ec.min_args + 2)
                 FAIL("Too few arguments for %s.\n", cmdn);
-            else if (argc > es_commands[nc].max_args + 2)
+            else if (argc > ec.max_args + 2)
                 FAIL("Too many arguments for %s.\n", cmdn);
-            cmd = es_commands[nc].cmd;
-            rw = es_commands[nc].rw;
+            cmd = ec.cmd;
+            rw = ec.rw;
             break;
         }
     if (cmd == NUM_ES)
@@ -4186,8 +4186,8 @@ static void _edit_save(int argc, char **argv)
         {
             vector<string> list = save.list_chunks();
             sort(list.begin(), list.end(), numcmpstr);
-            for (size_t i = 0; i < list.size(); i++)
-                printf("%s\n", list[i].c_str());
+            for (const string &s : list)
+                printf("%s\n", s.c_str());
         }
         else if (cmd == ES_GET)
         {
@@ -4254,13 +4254,12 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_REPACK)
         {
             package save2((filename + ".tmp").c_str(), true, true);
-            vector<string> list = save.list_chunks();
-            for (size_t i = 0; i < list.size(); i++)
+            for (const string &chunk : save.list_chunks())
             {
                 char buf[16384];
 
-                chunk_reader in(&save, list[i]);
-                chunk_writer out(&save2, list[i]);
+                chunk_reader in(&save, chunk);
+                chunk_writer out(&save2, chunk);
 
                 while (plen_t s = in.read(buf, sizeof(buf)))
                     out.write(buf, s);
@@ -4278,18 +4277,18 @@ static void _edit_save(int argc, char **argv)
             plen_t flen = save.get_size();
             plen_t slack = save.get_slack();
             printf("Chunks: (size compressed/uncompressed, fragments, name)\n");
-            for (size_t i = 0; i < list.size(); i++)
+            for (const string &chunk : list)
             {
-                int cfrag = save.get_chunk_fragmentation(list[i]);
+                int cfrag = save.get_chunk_fragmentation(chunk);
                 frag += cfrag;
-                int cclen = save.get_chunk_compressed_length(list[i]);
+                int cclen = save.get_chunk_compressed_length(chunk);
 
                 char buf[16384];
-                chunk_reader in(&save, list[i]);
+                chunk_reader in(&save, chunk);
                 plen_t clen = 0;
                 while (plen_t s = in.read(buf, sizeof(buf)))
                     clen += s;
-                printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, list[i].c_str());
+                printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, chunk.c_str());
             }
             // the directory is not a chunk visible from the outside
             printf("Fragmentation:    %u/%u (%4.2f)\n", frag, nchunks + 1,
@@ -4312,11 +4311,11 @@ static void _write_colour_list(const vector<pair<int, int> > variable,
         const string &name)
 {
     tiles.json_open_array(name);
-    for (unsigned int i = 0; i < variable.size(); i++)
+    for (const auto &entry : variable)
     {
         tiles.json_open_object();
-        tiles.json_write_int("value", variable[i].first);
-        tiles.json_write_string("colour", colour_to_str(variable[i].second));
+        tiles.json_write_int("value", entry.first);
+        tiles.json_write_string("colour", colour_to_str(entry.second));
         tiles.json_close_object();
     }
     tiles.json_close_array();
@@ -5006,13 +5005,13 @@ void menu_sort_condition::set_menu_type(string &s)
           { "know:",   MT_KNOW      }
       };
 
-    for (unsigned mi = 0; mi < ARRAYSZ(menu_type_map); ++mi)
+    for (const auto &mi : menu_type_map)
     {
-        const string &name = menu_type_map[mi].mname;
+        const string &name = mi.mname;
         if (s.find(name) == 0)
         {
             s = s.substr(name.length());
-            mtype = menu_type_map[mi].mtype;
+            mtype = mi.mtype;
             break;
         }
     }

@@ -758,16 +758,16 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const formatted_string &fs, float orig_x)
 {
     int colour = LIGHTGREY;
-    for (unsigned int i = 0; i < fs.ops.size(); i++)
+    for (const formatted_string::fs_op &op : fs.ops)
     {
-        switch (fs.ops[i].type)
+        switch (op.type)
         {
             case FSOP_COLOUR:
                 // Only foreground colors for now...
-                colour = fs.ops[i].x & 0xF;
+                colour = op.x & 0xF;
                 break;
             case FSOP_TEXT:
-                store(buf, x, y, fs.ops[i].text, term_colours[colour], orig_x);
+                store(buf, x, y, op.text, term_colours[colour], orig_x);
                 break;
             default:
                 break;

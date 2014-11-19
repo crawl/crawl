@@ -91,11 +91,11 @@ static void _lua_push_inv_items(lua_State *ls = NULL)
         ls = clua.state();
     lua_newtable(ls);
     int index = 0;
-    for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
+    for (item_def &item : you.inv)
     {
-        if (you.inv[slot].defined())
+        if (item.defined())
         {
-            clua_push_item(ls, &you.inv[slot]);
+            clua_push_item(ls, &item);
             lua_rawseti(ls, -2, ++index);
         }
     }
@@ -1237,9 +1237,9 @@ static int item_get(lua_State *ls)
     if (!attr)
         return 0;
 
-    for (unsigned i = 0; i < ARRAYSZ(item_attrs); ++i)
-        if (!strcmp(attr, item_attrs[i].attribute))
-            return item_attrs[i].accessor(ls, iw, attr);
+    for (const ItemAccessor &ia : item_attrs)
+        if (!strcmp(attr, ia.attribute))
+            return ia.accessor(ls, iw, attr);
 
     return 0;
 }

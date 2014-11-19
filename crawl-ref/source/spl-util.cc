@@ -73,7 +73,7 @@ struct spell_desc
 
 static int spell_list[NUM_SPELLS];
 
-#define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
+#define SPELLDATASIZE ARRAYSZ(spelldata)
 
 static const struct spell_desc *_seekspell(spell_type spellid);
 
@@ -252,17 +252,19 @@ bool add_spell_to_memory(spell_type spell)
 
     // now we find an available label:
     // first check to see whether we've chosen an automatic label:
-    for (unsigned k = 0; k < Options.auto_spell_letters.size(); ++k)
+    for (const auto &entry : Options.auto_spell_letters)
     {
-        if (!Options.auto_spell_letters[k].first.matches(sname))
+        if (!entry.first.matches(sname))
             continue;
-        for (unsigned l = 0; l < Options.auto_spell_letters[k].second.length(); ++l)
-            if (isaalpha(Options.auto_spell_letters[k].second[l]) &&
-                you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
+        for (char ch : entry.second)
+        {
+            if (isaalpha(ch)
+                && you.spell_letter_table[letter_to_index(ch)] == -1)
             {
-                j = letter_to_index(Options.auto_spell_letters[k].second[l]);
+                j = letter_to_index(ch);
                 break;
             }
+        }
         if (j != -1)
             break;
     }

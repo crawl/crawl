@@ -85,9 +85,9 @@ void draconian_change_colour(monster* drac)
     // Get rid of the old breath weapon first.
     monster_spells oldspells = drac->spells;
     drac->spells.clear();
-    for (size_t i = 0; i < oldspells.size(); i++)
-        if (!(oldspells[i].flags & MON_SPELL_BREATH))
-            drac->spells.push_back(oldspells[i]);
+    for (const mon_spell_slot &slot : oldspells)
+        if (!(slot.flags & MON_SPELL_BREATH))
+            drac->spells.push_back(slot);
 
     drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(drac)));
 }
@@ -883,9 +883,9 @@ static void _starcursed_scream(monster* mon, actor* target)
     if (stun && target->alive())
         target->paralyse(mon, stun, "accursed screaming");
 
-    for (unsigned int i = 0; i < chorus.size(); ++i)
-        if (chorus[i]->alive())
-            chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
+    for (monster *voice : chorus)
+        if (voice->alive())
+            voice->add_ench(mon_enchant(ENCH_SCREAMED, 1, voice, 1));
 }
 
 static bool _will_starcursed_scream(monster* mon)
@@ -937,16 +937,16 @@ static bool _lost_soul_teleport(monster* mons)
     }
     sort(candidates.begin(), candidates.end(), greater_second<mon_quality>());
 
-    for (unsigned int i = 0; i < candidates.size(); ++i)
+    for (mon_quality candidate : candidates)
     {
         coord_def empty;
-        if (find_habitable_spot_near(candidates[i].first->pos(), mons_base_type(mons), 3, false, empty)
+        if (find_habitable_spot_near(candidate.first->pos(), mons_base_type(mons), 3, false, empty)
             && mons->move_to_pos(empty))
         {
             mons->add_ench(ENCH_SUBMERGED);
             mons->behaviour = BEH_WANDER;
             mons->foe = MHITNOT;
-            mons->props["band_leader"].get_int() = candidates[i].first->mid;
+            mons->props["band_leader"].get_int() = candidate.first->mid;
             if (seen)
             {
                 mprf("%s flickers out of the living world.",

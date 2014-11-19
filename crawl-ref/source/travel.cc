@@ -4503,11 +4503,11 @@ bool explore_discoveries::prompt_stop() const
 {
     const bool marker_stop = !marker_msgs.empty() || !marked_feats.empty();
 
-    for (unsigned int i = 0; i < marker_msgs.size(); i++)
-        mpr(marker_msgs[i]);
+    for (const string &msg : marker_msgs)
+        mpr(msg);
 
-    for (unsigned int i = 0; i < marked_feats.size(); i++)
-        mprf("Found %s", marked_feats[i].c_str());
+    for (const string &marked : marked_feats)
+        mprf("Found %s", marked.c_str());
 
     if (!es_flags)
         return marker_stop;
@@ -4651,8 +4651,8 @@ void clear_level_target()
 void clear_travel_trail()
 {
 #ifdef USE_TILE_WEB
-    for (unsigned int i = 0; i < env.travel_trail.size(); ++i)
-        tiles.update_minimap(env.travel_trail[i]);
+    for (coord_def c : env.travel_trail)
+        tiles.update_minimap(c);
 #endif
     env.travel_trail.clear();
 }

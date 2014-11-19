@@ -146,18 +146,18 @@ void DungeonRegion::pack_buffers()
                                  m_cursor[CURSOR_TUTORIAL].y);
     }
 
-    for (unsigned int i = 0; i < m_overlays.size(); i++)
+    for (const tile_overlay &overlay : m_overlays)
     {
         // overlays must be from the main image and must be in LOS.
-        if (!crawl_view.in_los_bounds_g(m_overlays[i].gc))
+        if (!crawl_view.in_los_bounds_g(overlay.gc))
             continue;
 
-        tileidx_t idx = m_overlays[i].idx;
+        tileidx_t idx = overlay.idx;
         if (idx >= TILE_MAIN_MAX)
             continue;
 
-        const coord_def ep(m_overlays[i].gc.x - m_cx_to_gx,
-                           m_overlays[i].gc.y - m_cy_to_gy);
+        const coord_def ep(overlay.gc.x - m_cx_to_gx,
+                           overlay.gc.y - m_cy_to_gy);
         m_buf_dngn.add_main_tile(idx, ep.x, ep.y);
     }
 }
@@ -194,17 +194,17 @@ void DungeonRegion::render()
 
     for (int t = TAG_MAX - 1; t >= 0; t--)
     {
-        for (unsigned int i = 0; i < m_tags[t].size(); i++)
+        for (const TextTag &tag : m_tags[t])
         {
-            if (!crawl_view.in_los_bounds_g(m_tags[t][i].gc))
+            if (!crawl_view.in_los_bounds_g(tag.gc))
                 continue;
 
-            const coord_def ep = grid2show(m_tags[t][i].gc);
+            const coord_def ep = grid2show(tag.gc);
 
             if (tag_show(ep).text)
                 continue;
 
-            const char *str = m_tags[t][i].tag.c_str();
+            const char *str = tag.tag.c_str();
 
             int width    = m_tag_font->string_width(str);
             tag_def &def = tag_show(ep);
@@ -313,9 +313,9 @@ void DungeonRegion::draw_minibars()
             const int hp_percent = (you.hp * 100) / you.hp_max;
 
             int hp_colour = GREEN;
-            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
-                if (hp_percent <= Options.hp_colour[i].first)
-                    hp_colour = Options.hp_colour[i].second;
+            for (const auto &entry : Options.hp_colour)
+                if (hp_percent <= entry.first)
+                    hp_colour = entry.second;
 
             static const VColour healthy(   0, 255, 0, 255); // green
             static const VColour damaged( 255, 255, 0, 255); // yellow
@@ -630,10 +630,8 @@ static bool _cast_spell_on_target(actor* target)
 
 static bool _have_appropriate_spell(const actor* target)
 {
-    for (size_t i = 0; i < you.spells.size(); i++)
+    for (spell_type spell : you.spells)
     {
-        spell_type spell = you.spells[i];
-
         if (!is_valid_spell(spell))
             continue;
 

@@ -1756,17 +1756,12 @@ static int _battle_cry(const monster* chief, bool check_only = false)
                 }
                 else
                 {
-                    bool generic = false;
                     monster_type mon_type = seen_affected[0]->type;
-                    for (unsigned int i = 0; i < seen_affected.size(); i++)
-                    {
-                        if (seen_affected[i]->type != mon_type)
-                        {
-                            // not homogeneous - use the generic term instead
-                            generic = true;
-                            break;
-                        }
-                    }
+                    // if not homogeneous, use the generic term instead
+                    const bool generic = any_of(
+                            begin(seen_affected), end(seen_affected),
+                            [=](const monster *m)
+                            { return m->type != mon_type; });
                     who = get_monster_data(mon_type)->name;
 
                     mprf(channel, messages[type][AFFECT_MANY],
@@ -1909,18 +1904,12 @@ bool get_push_space(const coord_def& pos, coord_def& newpos, actor* act,
                     continue;
                 }
 
-                bool spot_vetoed = false;
-                if (excluded)
+                // Make sure the spot wasn't vetoed.
+                if (excluded && find(begin(*excluded), end(*excluded), *ai)
+                                    != end(*excluded))
                 {
-                    for (unsigned int i = 0; i < excluded->size(); ++i)
-                        if (excluded->at(i) == *ai)
-                        {
-                            spot_vetoed = true;
-                            break;
-                        }
-                }
-                if (spot_vetoed)
                     continue;
+                }
 
                 // If we don't care about tension, first valid spot is acceptable
                 if (ignore_tension)
@@ -2366,21 +2355,21 @@ bool mons_word_of_recall(monster* mons, int recall_target)
     }
     shuffle_array(mon_list);
 
-    coord_def target   = (mons) ? mons->pos() : you.pos();
-    unsigned short foe = (mons) ? mons->foe   : MHITYOU;
+    const coord_def target   = (mons) ? mons->pos() : you.pos();
+    const unsigned short foe = (mons) ? mons->foe   : MHITYOU;
 
     // Now actually recall things
-    for (unsigned int i = 0; i < mon_list.size(); ++i)
+    for (monster *mon : mon_list)
     {
         coord_def empty;
-        if (find_habitable_spot_near(target, mons_base_type(mon_list[i]),
+        if (find_habitable_spot_near(target, mons_base_type(mon),
                                      3, false, empty)
-            && mon_list[i]->move_to_pos(empty))
+            && mon->move_to_pos(empty))
         {
-            mon_list[i]->behaviour = BEH_SEEK;
-            mon_list[i]->foe = foe;
+            mon->behaviour = BEH_SEEK;
+            mon->foe = foe;
             ++num_recalled;
-            simple_monster_message(mon_list[i], " is recalled.");
+            simple_monster_message(mon, " is recalled.");
         }
         // Can only recall a couple things at once
         if (num_recalled == recall_target)
@@ -2437,15 +2426,15 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
         num_vines = min(num_vines, 3 - mon->props["vines_awakened"].get_int());
     bool seen = false;
 
-    for (unsigned int i = 0; i < spots.size(); ++i)
+    for (coord_def spot : spots)
     {
         // Don't place vines where they can't see our target
-        if (!cell_see_cell(spots[i], foe->pos(), LOS_NO_TRANS))
+        if (!cell_see_cell(spot, foe->pos(), LOS_NO_TRANS))
             continue;
 
         // Don't place a vine too near to another existing one
         bool too_close = false;
-        for (distance_iterator di(spots[i], false, true, 3); di; ++di)
+        for (distance_iterator di(spot, false, true, 3); di; ++di)
         {
             monster* m = monster_at(*di);
             if (m && m->type == MONS_SNAPLASHER_VINE)
@@ -2464,7 +2453,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
         // Actually place the vine and update properties
         if (monster* vine = create_monster(
             mgen_data(MONS_SNAPLASHER_VINE, SAME_ATTITUDE(mon), mon,
-                        0, SPELL_AWAKEN_VINES, spots[i], mon->foe,
+                        0, SPELL_AWAKEN_VINES, spot, mon->foe,
                         MG_FORCE_PLACE, mon->god, MONS_NO_MONSTER)))
         {
             vine->props["vine_awakener"].get_int() = mon->mid;
@@ -2586,10 +2575,8 @@ static bool _already_bramble_wall(const monster* mons, coord_def targ)
 
     int briar_count = 0;
     bool targ_reached = false;
-    for (unsigned int i = 0; i < tracer.path_taken.size(); ++i)
+    for (coord_def p : tracer.path_taken)
     {
-        coord_def p = tracer.path_taken[i];
-
         if (!targ_reached && p == targ)
             targ_reached = true;
         else if (!targ_reached)
@@ -2671,9 +2658,9 @@ static bool _wall_of_brambles(monster* mons)
     }
 
     bool seen = false;
-    for (unsigned int i = 0; i < points.size(); ++i)
+    for (coord_def point : points)
     {
-        briar_mg.pos = points[i];
+        briar_mg.pos = point;
         monster* briar = create_monster(briar_mg, false);
         if (briar)
         {
@@ -2951,12 +2938,12 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
 
     bolt beam;
 
-    for (unsigned int i = 0; i < beams.size(); ++i)
+    for (bolt &child : beams)
     {
-        bolt_parent_init(&parent_beam, &(beams[i]));
-        fire_tracer(caster, beams[i]);
-        beam.friend_info += beams[i].friend_info;
-        beam.foe_info    += beams[i].foe_info;
+        bolt_parent_init(&parent_beam, &child);
+        fire_tracer(caster, child);
+        beam.friend_info += child.friend_info;
+        beam.foe_info    += child.foe_info;
     }
 
     return mons_should_fire(beam);
@@ -3143,17 +3130,17 @@ static spell_type _pick_spell_from_list(const monster_spells &spells,
 {
     spell_type spell_cast = SPELL_NO_SPELL;
     int weight = 0;
-    for (unsigned int i = 0; i < spells.size(); i++)
+    for (const mon_spell_slot &slot : spells)
     {
-        int flags = get_spell_flags(spells[i].spell);
+        int flags = get_spell_flags(slot.spell);
         if (!(flags & flag))
             continue;
 
-        weight += spells[i].freq;
-        if (x_chance_in_y(spells[i].freq, weight))
+        weight += slot.freq;
+        if (x_chance_in_y(slot.freq, weight))
         {
-            spell_cast = spells[i].spell;
-            slot_flags = spells[i].flags;
+            spell_cast = slot.spell;
+            slot_flags = slot.flags;
         }
     }
 
@@ -3220,12 +3207,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     if (!finalAnswer && mon_enemies_around(mons)
         && mons->caught() && one_chance_in(15))
     {
-        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+        for (const mon_spell_slot &slot : hspell_pass)
         {
-            if (_ms_quick_get_away(mons, hspell_pass[i].spell))
+            if (_ms_quick_get_away(mons, slot.spell))
             {
-                spell_cast = hspell_pass[i].spell;
-                flags = hspell_pass[i].flags;
+                spell_cast = slot.spell;
+                flags = slot.flags;
                 finalAnswer = true;
                 break;
             }
@@ -3244,13 +3231,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // way we don't have to worry about monsters infinitely casting
         // Healing on themselves (e.g. orc high priests).
         int found_spell = 0;
-        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+        for (const mon_spell_slot &slot : hspell_pass)
         {
-            if (_ms_low_hitpoint_cast(mons, hspell_pass[i])
+            if (_ms_low_hitpoint_cast(mons, slot)
                 && one_chance_in(++found_spell))
             {
-                spell_cast = hspell_pass[i].spell;
-                flags = hspell_pass[i].flags;
+                spell_cast = slot.spell;
+                flags = slot.flags;
                 finalAnswer = true;
             }
         }
@@ -4423,23 +4410,23 @@ static void _blink_allies_encircle(const monster* mon)
     int count = max(1, mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 8
                        + random2(mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 4));
 
-    for (unsigned int i = 0; i < allies.size() && count; ++i)
+    for (monster *ally : allies)
     {
         coord_def empty;
-        if (find_habitable_spot_near(foepos, mons_base_type(allies[i]), 1, false, empty))
+        if (find_habitable_spot_near(foepos, mons_base_type(ally), 1, false, empty))
         {
-            if (allies[i]->blink_to(empty))
+            if (ally->blink_to(empty))
             {
                 // XXX: This seems an awkward way to give a message for something
                 // blinking from out of sight into sight. Probably could use a
                 // more general solution.
-                if (!(allies[i]->flags & MF_WAS_IN_VIEW)
-                    && allies[i]->flags & MF_SEEN)
+                if (!(ally->flags & MF_WAS_IN_VIEW)
+                    && ally->flags & MF_SEEN)
                 {
-                    simple_monster_message(allies[i], " blinks into view!");
+                    simple_monster_message(ally, " blinks into view!");
                 }
-                allies[i]->behaviour = BEH_SEEK;
-                allies[i]->foe = mon->foe;
+                ally->behaviour = BEH_SEEK;
+                ally->foe = mon->foe;
                 count--;
             }
         }
@@ -5410,10 +5397,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                     break;
             }
 
-            for (unsigned int i = 0, size = monsters.size(); i < size; ++i)
+            for (monster_type type : monsters)
             {
                 create_monster(
-                    mgen_data(monsters[i], SAME_ATTITUDE(mons), mons,
+                    mgen_data(type, SAME_ATTITUDE(mons), mons,
                               duration, spell_cast,
                               mons->pos(), mons->foe, 0, god));
             }
@@ -5593,12 +5580,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (!hp_lost)
             sumcount++;
 
-        const dungeon_feature_type safe_tiles[] =
+        static const set<dungeon_feature_type> safe_tiles =
         {
             DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
         };
-
-        bool proceed;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
         {
@@ -5614,13 +5599,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             }
 
             // Make sure we have a legitimate tile.
-            proceed = false;
-            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
-                    proceed = true;
-
-            if (!proceed && feat_is_reachable_past(grd(*ai)))
+            if (!safe_tiles.count(grd(*ai)) && !feat_is_trap(grd(*ai))
+                && feat_is_reachable_past(grd(*ai)))
+            {
                 sumcount++;
+            }
         }
 
         if (sumcount)
@@ -5644,12 +5627,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             }
 
             // Make sure we have a legitimate tile.
-            proceed = false;
-            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
-                    proceed = true;
-
-            if (proceed)
+            if (safe_tiles.count(grd(*ai)) || feat_is_trap(grd(*ai)))
             {
                 // All items are moved inside.
                 if (igrd(*ai) != NON_ITEM)
@@ -6098,10 +6076,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     {
         vector<bolt> beams = get_spray_rays(mons, pbolt.target, pbolt.range, 3,
                                             ZAP_DAZZLING_SPRAY);
-        for (unsigned int i = 0; i < beams.size(); ++i)
+        for (bolt &child : beams)
         {
-            bolt_parent_init(&pbolt, &(beams[i]));
-            beams[i].fire();
+            bolt_parent_init(&pbolt, &child);
+            child.fire();
         }
         return;
     }
@@ -6445,10 +6423,8 @@ static string _speech_message(const vector<string>& key_list,
         prefix = "unseen ";
 
     string msg;
-    for (unsigned int i = 0; i < key_list.size(); i++)
+    for (const string &key : key_list)
     {
-        const string key = key_list[i];
-
 #ifdef DEBUG_MONSPEAK
         dprf(DIAG_SPEECH, "monster casting lookup: %s%s",
              prefix.c_str(), key.c_str());
@@ -6558,11 +6534,8 @@ static void _speech_fill_target(string& targ_prep, string& target,
 
         bool mons_targ_aligned = false;
 
-        const vector<coord_def> &path = tracer.path_taken;
-        for (unsigned int i = 0; i < path.size(); i++)
+        for (const coord_def pos : tracer.path_taken)
         {
-            const coord_def pos = path[i];
-
             if (pos == mons->pos())
                 continue;
 
@@ -6629,7 +6602,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
                     }
                 }
             }
-        } // for (unsigned int i = 0; i < path.size(); i++)
+        } // for (const coord_def pos : path)
     } // if (target == "nothing" && targeted)
 
     const actor* foe = mons->get_foe();

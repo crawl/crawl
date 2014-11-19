@@ -439,9 +439,8 @@ void print_hint(string key, const string arg1, const string arg2)
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
-    vector<string> chunks = split_string("\n", text);
-    for (size_t i = 0; i < chunks.size(); i++)
-        mprf(MSGCH_TUTORIAL, "%s", chunks[i].c_str());
+    for (const string &chunk : split_string("\n", text))
+        mprf(MSGCH_TUTORIAL, "%s", chunk.c_str());
 
     stop_running();
 }
@@ -4280,9 +4279,8 @@ void tutorial_msg(const char *key, bool end)
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
-    vector<string> chunks = split_string("\n", text, false);
-    for (size_t i = 0; i < chunks.size(); i++)
-        mprf(MSGCH_TUTORIAL, "%s", chunks[i].c_str());
+    for (const string &chunk : split_string("\n", text, false))
+        mprf(MSGCH_TUTORIAL, "%s", chunk.c_str());
 
     stop_running();
 }

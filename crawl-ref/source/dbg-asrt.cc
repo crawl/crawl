@@ -182,16 +182,11 @@ static void _dump_player(FILE *file)
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
-        for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
+        for (const delay_queue_item &item : you.delay_queue)
         {
-            const delay_queue_item &item = you.delay_queue[i];
-
             fprintf(file, "    type:     %d", item.type);
-            if (item.type <= DELAY_NOT_DELAYED
-                || item.type >= NUM_DELAYS)
-            {
+            if (item.type <= DELAY_NOT_DELAYED || item.type >= NUM_DELAYS)
                 fprintf(file, " <invalid>");
-            }
             fprintf(file, "\n");
             fprintf(file, "    duration: %d\n", item.duration);
             fprintf(file, "    parm1:    %d\n", item.parm1);
@@ -438,23 +433,8 @@ static void _debug_marker_scan()
             continue;
         }
 
-        bool found = false;
         vector<map_marker*> at_pos = env.markers.get_markers_at(marker->pos);
-
-        for (unsigned int j = 0; j < at_pos.size(); ++j)
-        {
-            map_marker* tmp = at_pos[j];
-
-            if (tmp == NULL)
-                continue;
-
-            if (tmp == marker)
-            {
-                found = true;
-                break;
-            }
-        }
-        if (!found)
+        if (find(begin(at_pos), end(at_pos), marker) == end(at_pos))
         {
             mprf(MSGCH_ERROR, "Marker #%d, type %d at (%d, %d) unlinked",
                  i, (int) type, marker->pos.x, marker->pos.y);

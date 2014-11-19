@@ -3004,9 +3004,9 @@ bool monster::has_spell(spell_type spell) const
 unsigned short monster::spell_slot_flags(spell_type spell) const
 {
     unsigned short slot_flags = MON_SPELL_NO_FLAGS;
-    for (unsigned int i = 0; i < spells.size(); ++i)
-        if (spells[i].spell == spell)
-            slot_flags |= spells[i].flags;
+    for (const mon_spell_slot &slot : spells)
+        if (slot.spell == spell)
+            slot_flags |= slot.flags;
 
     return slot_flags;
 }
@@ -5269,9 +5269,9 @@ bool monster::needs_berserk(bool check_spells) const
 
     if (check_spells)
     {
-        for (unsigned int i = 0; i < spells.size(); ++i)
+        for (const mon_spell_slot &slot : spells)
         {
-            const int spell = spells[i].spell;
+            const int spell = slot.spell;
             if (spell != SPELL_BERSERKER_RAGE)
                 return false;
         }
@@ -5963,15 +5963,15 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
         if (heal(5 + random2(7)))
             simple_monster_message(this, " is healed!");
 
-        const enchant_type cured_enchants[] =
+        static const enchant_type cured_enchants[] =
         {
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
         };
 
         // We can differentiate curing and heal wounds (and blood,
         // for vampires) by seeing if any status ailments are cured.
-        for (unsigned int i = 0; i < ARRAYSZ(cured_enchants); ++i)
-            if (del_ench(cured_enchants[i]))
+        for (enchant_type cured : cured_enchants)
+            if (del_ench(cured))
                 ident = ID_KNOWN_TYPE;
     }
     break;

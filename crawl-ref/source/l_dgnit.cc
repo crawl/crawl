@@ -227,18 +227,18 @@ static int dgn_stash_items(lua_State *ls)
     lua_newtable(ls);
     int index = 0;
 
-    for (unsigned int i = 0; i < floor_items.size(); i++)
+    for (const item_def *item : floor_items)
     {
-        clua_push_item(ls, const_cast<item_def*>(floor_items[i]));
+        clua_push_item(ls, const_cast<item_def*>(item));
         lua_rawseti(ls, -2, ++index);
     }
 
     lua_newtable(ls);
     index = 0;
 
-    for (unsigned int i = 0; i < shop_items.size(); i++)
+    for (const item_def *item : shop_items)
     {
-        clua_push_item(ls, const_cast<item_def*>(shop_items[i]));
+        clua_push_item(ls, const_cast<item_def*>(item));
         lua_rawseti(ls, -2, ++index);
     }
 

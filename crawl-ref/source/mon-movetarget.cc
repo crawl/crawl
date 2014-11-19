@@ -465,8 +465,10 @@ bool find_merfolk_avatar_water_target(monster* mon)
         {
 #ifdef WIZARD
             if (you.wizard)
-                for (unsigned int i = 0; i < mon->travel_path.size(); i++)
-                    env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
+            {
+                for (coord_def pos : mon->travel_path)
+                    env.pgrid(pos) |= FPROP_HIGHLIGHT;
+            }
 #endif
 #ifdef DEBUG_PATHFIND
             mprf("Found a path to (%d, %d) with %d surrounding water squares",
@@ -877,10 +879,10 @@ static bool _herd_wander_target(monster * mon)
             continue;
 
         int count = 0;
-        for (unsigned i = 0; i < friends.size(); i++)
+        for (monster_iterator &fr_it : friends)
         {
-            if (grid_distance(friends[i]->pos(), *r_it) < HERD_COMFORT_RANGE
-                && friends[i]->see_cell_no_trans(*r_it))
+            if (grid_distance(fr_it->pos(), *r_it) < HERD_COMFORT_RANGE
+                && fr_it->see_cell_no_trans(*r_it))
             {
                 count++;
             }

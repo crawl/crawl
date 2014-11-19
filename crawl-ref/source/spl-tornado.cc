@@ -178,16 +178,16 @@ static coord_def _rotate(coord_def org, coord_def from,
     double ang0 = atan2(from.x - org.x, from.y - org.y) + rdur * 0.01;
     if (ang0 > PI)
         ang0 -= 2 * PI;
-    for (unsigned int i = 0; i < avail.size(); i++)
+    for (coord_def pos : avail)
     {
-        double dist = sqrt((avail[i] - org).abs());
+        double dist = sqrt((pos - org).abs());
         double distdiff = fabs(dist - dist0);
-        double ang = atan2(avail[i].x - org.x, avail[i].y - org.y);
+        double ang = atan2(pos.x - org.x, pos.y - org.y);
         double angdiff = min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
 
         double score = distdiff + angdiff * 2;
         if (score < hiscore)
-            best = avail[i], hiscore = score;
+            best = pos, hiscore = score;
     }
 
     // must find _something_, the original space might be already taken
@@ -388,16 +388,16 @@ void tornado_damage(actor *caster, int dur)
         return;
 
     // Gather actors who are to be moved.
-    for (unsigned int i = 0; i < move_act.size(); i++)
-        if (move_act[i]->alive()) // shouldn't ever change...
+    for (actor *act : move_act)
+        if (act->alive()) // shouldn't ever change...
         {
             // Record the old position.
-            move_dest[move_act[i]->mid] = move_act[i]->pos();
+            move_dest[act->mid] = act->pos();
 
             // Temporarily move to (0,0) to allow permutations.
-            if (mgrd(move_act[i]->pos()) == move_act[i]->mindex())
-                mgrd(move_act[i]->pos()) = NON_MONSTER;
-            move_act[i]->moveto(coord_def());
+            if (mgrd(act->pos()) == act->mindex())
+                mgrd(act->pos()) = NON_MONSTER;
+            act->moveto(coord_def());
         }
 
     // Need to check available positions again, as the damage call could
@@ -407,9 +407,9 @@ void tornado_damage(actor *caster, int dur)
             erase_any(move_avail, i);
 
     // Calculate destinations.
-    for (unsigned int i = 0; i < move_act.size(); i++)
+    for (actor *act : move_act)
     {
-        coord_def pos = move_dest[move_act[i]->mid];
+        coord_def pos = move_dest[act->mid];
         int r = pos.range(org);
         coord_def dest = _rotate(org, pos, move_avail, rdurs[r]);
         for (unsigned int j = 0; j < move_avail.size(); j++)
@@ -419,17 +419,17 @@ void tornado_damage(actor *caster, int dur)
                 erase_any(move_avail, j);
                 break;
             }
-        move_dest[move_act[i]->mid] = dest;
+        move_dest[act->mid] = dest;
     }
 
     // Actually move actors into place.
-    for (unsigned int i = 0; i < move_act.size(); i++)
-        if (move_act[i]->alive())
+    for (actor *act : move_act)
+        if (act->alive())
         {
-            coord_def newpos = move_dest[move_act[i]->mid];
+            coord_def newpos = move_dest[act->mid];
             ASSERT(!actor_at(newpos));
-            move_act[i]->move_to_pos(newpos);
-            ASSERT(move_act[i]->pos() == newpos);
+            act->move_to_pos(newpos);
+            ASSERT(act->pos() == newpos);
         }
 
     if (caster->is_player())

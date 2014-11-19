@@ -329,8 +329,8 @@ void DollEditRegion::run()
     tilep_job_default(you.char_class, &m_job_default);
 
     // Read predefined dolls from file.
-    for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
-         m_dolls[i] = equip_doll;
+    for (dolls_data &doll : m_dolls)
+         doll = equip_doll;
 
     m_mode = TILEP_MODE_LOADING;
     m_doll_idx = -1;

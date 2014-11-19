@@ -461,14 +461,14 @@ void shock_serpent_discharge_fineff::fire()
         mpr("The air sparks with electricity!");
 
     // FIXME: should merge the messages.
-    for (unsigned int i = 0; i < targets.size(); ++i)
+    for (actor *act : targets)
     {
         int amount = roll_dice(3, 4 + power * 3 / 2);
-        amount = targets[i]->apply_ac(amount, 0, AC_HALF);
+        amount = act->apply_ac(amount, 0, AC_HALF);
 
-        if (you.see_cell(targets[i]->pos()))
-            mprf("The lightning shocks %s.", targets[i]->name(DESC_THE).c_str());
-        targets[i]->hurt(serpent, amount, BEAM_ELECTRICITY);
+        if (you.see_cell(act->pos()))
+            mprf("The lightning shocks %s.", act->name(DESC_THE).c_str());
+        act->hurt(serpent, amount, BEAM_ELECTRICITY);
     }
 }
 

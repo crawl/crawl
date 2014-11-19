@@ -2237,9 +2237,8 @@ bool imb_can_splash(coord_def origin, coord_def center,
     // square past a lone monster to be optimal.
     if (origin == target)
         return false;
-    for (unsigned int i = 0; i < path_taken.size(); i++)
-        if (path_taken[i] == target)
-            return false;
+    if (find(begin(path_taken), end(path_taken), target) != end(path_taken))
+        return false;
 
     // Don't go far away from the caster (not enough momentum).
     if (distance2(origin, center + (target - center)*2)
@@ -4286,8 +4285,8 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     // Check only if actual damage.
     if (!is_tracer && final > 0)
     {
-        for (unsigned int i = 0; i < messages.size(); ++i)
-            mprf(MSGCH_MONSTER_DAMAGE, "%s", messages[i].c_str());
+        for (const string &msg : messages)
+            mprf(MSGCH_MONSTER_DAMAGE, "%s", msg.c_str());
     }
 
     // Either way, we could hit this monster, so update range used.
@@ -4939,8 +4938,8 @@ void bolt::affect_monster(monster* mon)
 
     if (final > 0)
     {
-        for (unsigned int i = 0; i < messages.size(); ++i)
-            mprf(MSGCH_MONSTER_DAMAGE, "%s", messages[i].c_str());
+        for (const string &msg : messages)
+            mprf(MSGCH_MONSTER_DAMAGE, "%s", msg.c_str());
     }
 
     // Apply flavoured specials.
@@ -6570,9 +6569,9 @@ bool bolt::can_knockback(const actor *act, int dam) const
 
 void clear_zap_info_on_exit()
 {
-    for (unsigned int i = 0; i < ARRAYSZ(zap_data); ++i)
+    for (const zap_info &zap : zap_data)
     {
-        delete zap_data[i].damage;
-        delete zap_data[i].tohit;
+        delete zap.damage;
+        delete zap.tohit;
     }
 }

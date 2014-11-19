@@ -351,17 +351,13 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
 static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
                                coord_def c)
 {
-    vector<coord_def> pos;
-    pos.push_back(mon->pos() + a);
-    pos.push_back(mon->pos() + b);
-    pos.push_back(mon->pos() + c);
-
-    for (unsigned int i = 0; i < pos.size(); i++)
+    for (coord_def delta : { a, b, c })
     {
-        if (!in_bounds(pos[i]))
+        coord_def pos = mon->pos() + delta;
+        if (!in_bounds(pos))
             continue;
 
-        const monster* ally = monster_at(pos[i]);
+        const monster* ally = monster_at(pos);
         if (ally == NULL)
             continue;
 
@@ -4207,11 +4203,8 @@ static bool _monster_move(monster* mons)
         if (adj_water.empty() || coinflip())
             moves = adj_move;
 
-        coord_def newpos = mons->pos();
-        int count = 0;
-        for (unsigned int i = 0; i < moves.size(); ++i)
-            if (one_chance_in(++count))
-                newpos = moves[i];
+        const coord_def newpos = moves.empty() ? mons->pos()
+                                               : moves[random2(moves.size())];
 
         const monster* mon2 = monster_at(newpos);
         if (!mons->has_ench(ENCH_INSANE)

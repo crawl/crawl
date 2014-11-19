@@ -188,8 +188,8 @@ static bool _is_same_ray(los_ray ray, vector<coord_def> newray)
 // Check if the passed ray has already been created.
 static bool _is_duplicate_ray(vector<coord_def> newray)
 {
-    for (unsigned int i = 0; i < fullrays.size(); ++i)
-        if (_is_same_ray(fullrays[i], newray))
+    for (los_ray lray : fullrays)
+        if (_is_same_ray(lray, newray))
             return true;
     return false;
 }
@@ -306,9 +306,8 @@ static vector<int> _find_minimal_cellrays()
     FixedArray<list<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> minima;
     list<cellray>::iterator min_it;
 
-    for (unsigned int r = 0; r < fullrays.size(); ++r)
+    for (los_ray ray : fullrays)
     {
-        los_ray ray = fullrays[r];
         for (unsigned int i = 0; i < ray.length; ++i)
         {
             // Is the cellray ray[0..i] duplicated so far?
@@ -372,8 +371,8 @@ static void _register_ray(geom::ray r)
 
     ray.start = ray_coords.size();
     ray.length = coords.size();
-    for (unsigned int i = 0; i < coords.size(); i++)
-        ray_coords.push_back(coords[i]);
+    for (coord_def c : coords)
+        ray_coords.push_back(c);
     fullrays.push_back(ray);
 }
 
@@ -387,9 +386,8 @@ static void _create_blockrays()
     for (quadrant_iterator qi; qi; ++qi)
         all_blockrays(*qi) = new bit_vector(n_cellrays);
 
-    for (unsigned int r = 0; r < fullrays.size(); ++r)
+    for (los_ray ray : fullrays)
     {
-        los_ray ray = fullrays[r];
         for (unsigned int i = 0; i < ray.length; ++i)
         {
             // Every cell is contained in (thus blocks)
@@ -482,10 +480,10 @@ static void raycast()
         }
 
     sort(xyangles.begin(), xyangles.end(), _complexity_lt);
-    for (unsigned int i = 0; i < xyangles.size(); ++i)
+    for (auto xyangle : xyangles)
     {
-        const int xangle = xyangles[i].first;
-        const int yangle = xyangles[i].second;
+        const int xangle = xyangle.first;
+        const int yangle = xyangle.second;
 
         for (int intercept = 1; intercept < LOS_INTERCEPT_MULT*yangle; ++intercept)
         {

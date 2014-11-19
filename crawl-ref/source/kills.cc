@@ -485,8 +485,8 @@ void kill_def::merge(const kill_def &k, bool uniq)
     else
     {
         kills += k.kills;
-        for (size_t i = 0, size = k.places.size(); i < size; ++i)
-            add_place(k.places[i], uniq);
+        for (level_id lvl : k.places)
+            add_place(lvl, uniq);
     }
 }
 
@@ -499,9 +499,8 @@ void kill_def::add_kill(const monster* mon, level_id place)
 
 void kill_def::add_place(level_id place, bool force)
 {
-    for (size_t i = 0; i < places.size(); ++i)
-        if (places[i] == place)
-            return;
+    if (find(begin(places), end(places), place) != end(places))
+        return; // Already there
 
     if (force || places.size() < PLACE_LIMIT)
         places.push_back(place);

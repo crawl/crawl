@@ -552,9 +552,8 @@ int eat_from_floor(bool skip_chunks)
         }
 #else
         sort(food_items.begin(), food_items.end(), _compare_by_freshness);
-        for (unsigned int i = 0; i < food_items.size(); ++i)
+        for (const item_def *item : food_items)
         {
-            item_def *item = const_cast<item_def *>(food_items[i]);
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
@@ -575,7 +574,7 @@ int eat_from_floor(bool skip_chunks)
                     break;
 
                 if (can_eat(*item, false))
-                    return eat_item(*item);
+                    return eat_item(*const_cast<item_def *>(item));
                 need_more = true;
                 break;
             case 'i':
@@ -665,9 +664,8 @@ bool eat_from_inventory()
     if (found_valid)
     {
         sort(food_items.begin(), food_items.end(), _compare_by_freshness);
-        for (unsigned int i = 0; i < food_items.size(); ++i)
+        for (item_def *item : food_items)
         {
-            item_def *item = food_items[i];
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
@@ -786,10 +784,9 @@ int prompt_eat_chunks(bool only_auto)
     if (found_valid)
     {
         sort(chunks.begin(), chunks.end(), _compare_by_freshness);
-        for (unsigned int i = 0; i < chunks.size(); ++i)
+        for (item_def *item : chunks)
         {
             bool autoeat = false;
-            item_def *item = chunks[i];
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             const bool bad = is_bad_food(*item);

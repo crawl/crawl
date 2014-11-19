@@ -2716,13 +2716,13 @@ void remove_whitespace(string &str)
  */
 weapon_type name_nospace_to_weapon(string name_nospace)
 {
-    for (size_t ii = 0; ii < ARRAYSZ(Weapon_prop); ii++)
+    for (const weapon_def &wpn : Weapon_prop)
     {
-        string weap_nospace = Weapon_prop[ii].name;
+        string weap_nospace = wpn.name;
         remove_whitespace(weap_nospace);
 
         if (name_nospace == weap_nospace)
-            return (weapon_type) Weapon_prop[ii].id;
+            return (weapon_type) wpn.id;
     }
 
     // No match found

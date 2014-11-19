@@ -2971,8 +2971,8 @@ bool is_interesting_item(const item_def& item)
         return true;
 
     const string iname = item_prefix(item, false) + " " + item.name(DESC_PLAIN);
-    for (unsigned i = 0; i < Options.note_items.size(); ++i)
-        if (Options.note_items[i].matches(iname))
+    for (const text_pattern &pat : Options.note_items)
+        if (pat.matches(iname))
             return true;
 
     return false;

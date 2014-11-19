@@ -1184,14 +1184,14 @@ void debug_pathfind(int idx)
         vector<coord_def> path = mp.backtrack();
         env.travel_trail = path;
 #ifdef USE_TILE_WEB
-        for (unsigned int i = 0; i < env.travel_trail.size(); ++i)
-            tiles.update_minimap(env.travel_trail[i]);
+        for (coord_def pos : env.travel_trail)
+            tiles.update_minimap(pos);
 #endif
         string path_str;
         mpr("Here's the shortest path: ");
-        for (unsigned int i = 0; i < path.size(); ++i)
+        for (coord_def pos : path)
         {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", pos.x, pos.y);
             path_str += info;
         }
         mpr(path_str);
@@ -1202,9 +1202,9 @@ void debug_pathfind(int idx)
         path_str = "";
         mpr("");
         mpr("And here are the needed waypoints: ");
-        for (unsigned int i = 0; i < path.size(); ++i)
+        for (coord_def pos : path)
         {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", pos.x, pos.y);
             path_str += info;
         }
         mpr(path_str);

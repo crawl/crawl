@@ -1006,9 +1006,8 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-    for (unsigned int i = 0; i < ARRAYSZ(jobs); ++i)
+    for (job_type &job : jobs)
     {
-        job_type &job = jobs[i];
         if (job == JOB_UNKNOWN)
             break;
 
@@ -1097,8 +1096,8 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     };
 
     menu_letter letter = 'a';
-    for (unsigned int i = 0; i < ARRAYSZ(jobs_order); ++i)
-        jobs_order[i].attach(ng, defaults, menu, letter);
+    for (job_group &group : jobs_order)
+        group.attach(ng, defaults, menu, letter);
 
     // Add all the special button entries
     TextItem* tmp = new TextItem();
@@ -1404,8 +1403,8 @@ static weapon_type _fixup_weapon(weapon_type wp,
 {
     if (wp == WPN_UNKNOWN || wp == WPN_RANDOM || wp == WPN_VIABLE)
         return wp;
-    for (unsigned int i = 0; i < weapons.size(); ++i)
-        if (wp == weapons[i].first)
+    for (weapon_choice choice : weapons)
+        if (wp == choice.first)
             return wp;
     return WPN_UNKNOWN;
 }
@@ -1789,12 +1788,12 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
     case WPN_VIABLE:
     {
         int good_choices = 0;
-        for (unsigned int i = 0; i < weapons.size(); i++)
+        for (weapon_choice choice : weapons)
         {
-            if (weapons[i].second == CC_UNRESTRICTED
+            if (choice.second == CC_UNRESTRICTED
                 && one_chance_in(++good_choices))
             {
-                ng->weapon = weapons[i].first;
+                ng->weapon = choice.first;
             }
         }
         if (good_choices)

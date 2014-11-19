@@ -156,19 +156,17 @@ namespace arena
             return;
 
         vector<int> items;
-
-        for (unsigned int i = 0; i < NUM_MONSTER_SLOTS; i++)
-            if (mon->inv[i] != NON_ITEM)
-                items.push_back(mon->inv[i]);
+        copy_if(begin(mon->inv), end(mon->inv), begin(items),
+                bind(not_equal_to<short>(), short(NON_ITEM), placeholders::_1));
 
         if (items.empty())
             return;
 
         fprintf(file, "%s:\n", mon->name(DESC_PLAIN, true).c_str());
 
-        for (unsigned int i = 0; i < items.size(); i++)
+        for (int iidx : items)
         {
-            item_def &item = mitm[items[i]];
+            item_def &item = mitm[iidx];
             fprintf(file, "        %s\n",
                     item.name(DESC_PLAIN, false, true).c_str());
         }
@@ -642,16 +640,14 @@ namespace arena
             return;
         }
 
-        for (unsigned int i = 0; i < a_spawners.size(); i++)
+        for (int idx : a_spawners)
         {
-            int idx = a_spawners[i];
             menv[idx].speed_increment *= faction_b.active_members;
             menv[idx].speed_increment /= faction_a.active_members;
         }
 
-        for (unsigned int i = 0; i < b_spawners.size(); i++)
+        for (int idx : b_spawners)
         {
-            int idx = b_spawners[i];
             menv[idx].speed_increment *= faction_a.active_members;
             menv[idx].speed_increment /= faction_b.active_members;
         }
@@ -1324,9 +1320,8 @@ int arena_cull_items()
 
     vector<int> ammo;
 
-    for (unsigned int i = 0, end = items.size(); i < end; i++)
+    for (int idx : items)
     {
-        const int      idx = items[i];
         const item_def &item(mitm[idx]);
 
         // If the drop time is 0 then this is probably thrown ammo.
@@ -1363,9 +1358,9 @@ int arena_cull_items()
 #ifdef DEBUG_DIAGNOSTICS
     const int count1 = cull_count;
 #endif
-    for (unsigned int i = 0; i < ammo.size(); i++)
+    for (int idx : ammo)
     {
-        DESTROY_ITEM(ammo[i]);
+        DESTROY_ITEM(idx);
         if (cull_count >= cull_target)
             break;
     }

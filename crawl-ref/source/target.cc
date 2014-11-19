@@ -553,12 +553,10 @@ bool targetter_cloud::set_aim(coord_def a)
 
     for (unsigned int d1 = 0; d1 < queue.size() && placed < cnt_max; d1++)
     {
-        unsigned int to_place = queue[d1].size();
-        placed += to_place;
+        placed += queue[d1].size();
 
-        for (unsigned int i = 0; i < to_place; i++)
+        for (coord_def c : queue[d1])
         {
-            coord_def c = queue[d1][i];
             for (adjacent_iterator ai(c); ai; ++ai)
                 if (_cloudable(*ai, avoid_clouds) && !seen.count(*ai))
                 {
@@ -828,8 +826,8 @@ bool targetter_spray::set_aim(coord_def a)
     beams = get_spray_rays(agent, aim, _range, 3);
 
     paths_taken.clear();
-    for (unsigned int i = 0; i < beams.size(); ++i)
-        paths_taken.push_back(beams[i].path_taken);
+    for (const bolt &beam : beams)
+        paths_taken.push_back(beam.path_taken);
 
     return true;
 }
@@ -1300,13 +1298,8 @@ targetter_list::targetter_list(vector<coord_def> target_list, coord_def center)
 
 aff_type targetter_list::is_affected(coord_def loc)
 {
-    for (unsigned int i = 0; i < targets.size(); ++i)
-    {
-        if (targets[i] == loc)
-            return AFF_YES;
-    }
-
-    return AFF_NO;
+    return find(begin(targets), end(targets), loc) == end(targets) ? AFF_NO
+                                                                   : AFF_YES;
 }
 
 bool targetter_list::valid_aim(coord_def a)

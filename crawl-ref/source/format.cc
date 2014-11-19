@@ -224,11 +224,10 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
 formatted_string::operator string() const
 {
     string s;
-    for (unsigned i = 0, size = ops.size(); i < size; ++i)
-    {
-        if (ops[i] == FSOP_TEXT)
-            s += ops[i].text;
-    }
+    for (const fs_op &op : ops)
+        if (op == FSOP_TEXT)
+            s += op.text;
+
     return s;
 }
 
@@ -246,13 +245,13 @@ static void _replace_all_in_string(string& s, const string& search,
 string formatted_string::html_dump() const
 {
     string s;
-    for (unsigned i = 0; i < ops.size(); ++i)
+    for (const fs_op &op : ops)
     {
         string tmp;
-        switch (ops[i].type)
+        switch (op.type)
         {
         case FSOP_TEXT:
-            tmp = ops[i].text;
+            tmp = op.text;
             // (very) crude HTMLification
             _replace_all_in_string(tmp, "&", "&amp;");
             _replace_all_in_string(tmp, " ", "&nbsp;");
@@ -263,7 +262,7 @@ string formatted_string::html_dump() const
             break;
         case FSOP_COLOUR:
             s += "<font color=";
-            s += colour_to_str(ops[i].x);
+            s += colour_to_str(op.x);
             s += ">";
             break;
         }
@@ -287,9 +286,9 @@ int formatted_string::width() const
 {
     // Just add up the individual string lengths.
     int len = 0;
-    for (unsigned i = 0, size = ops.size(); i < size; ++i)
-        if (ops[i] == FSOP_TEXT)
-            len += strwidth(ops[i].text);
+    for (const fs_op &op : ops)
+        if (op == FSOP_TEXT)
+            len += strwidth(op.text);
     return len;
 }
 
@@ -397,9 +396,8 @@ int formatted_string::find_last_colour() const
 formatted_string formatted_string::chop(int length) const
 {
     formatted_string result;
-    for (unsigned int i = 0; i<ops.size(); i++)
+    for (const fs_op& op : ops)
     {
-        const fs_op& op = ops[i];
         if (op.type == FSOP_TEXT)
         {
             result.ops.push_back(op);
@@ -496,26 +494,26 @@ void formatted_string::swap(formatted_string& other)
 
 void formatted_string::all_caps()
 {
-    for (unsigned int i = 0; i < ops.size(); i++)
-        if (ops[i].type == FSOP_TEXT)
-            uppercase(ops[i].text);
+    for (fs_op &op : ops)
+        if (op.type == FSOP_TEXT)
+            uppercase(op.text);
 }
 
 void formatted_string::capitalise()
 {
-    for (unsigned int i = 0; i < ops.size(); i++)
-        if (ops[i].type == FSOP_TEXT && !ops[i].text.empty())
+    for (fs_op &op : ops)
+        if (op.type == FSOP_TEXT && !op.text.empty())
         {
-            ops[i].text = uppercase_first(ops[i].text);
+            op.text = uppercase_first(op.text);
             break;
         }
 }
 
 void formatted_string::filter_lang()
 {
-    for (unsigned int i = 0; i < ops.size(); i++)
-        if (ops[i].type == FSOP_TEXT)
-            ::filter_lang(ops[i].text);
+    for (fs_op &op : ops)
+        if (op.type == FSOP_TEXT)
+            ::filter_lang(op.text);
 }
 
 int count_linebreaks(const formatted_string& fs)

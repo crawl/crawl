@@ -227,10 +227,10 @@ static vector<coord_def> _get_pool_seed_positions(
 
         // check if it is too close to another seed
         bool too_close = false;
-        for (unsigned int j = 0; j < seeds.size(); j++)
+        for (coord_def seed : seeds)
         {
-            int diff_x = chosen_coord.x - seeds[j].x;
-            int diff_y = chosen_coord.y - seeds[j].y;
+            int diff_x = chosen_coord.x - seed.x;
+            int diff_y = chosen_coord.y - seed.y;
             int distance_squared = diff_x * diff_x + diff_y * diff_y;
 
             if (distance_squared < min_separation_squared)
@@ -483,10 +483,8 @@ static void _draw_join_the_dots_path (map_lines &lines,
 {
     int delta_min = -thickness / 2;
     int delta_max = delta_min + thickness;
-    unsigned int count = path.cells.size();
-    for (unsigned int i = 0; i < count; i++)
+    for (coord_def center : path.cells)
     {
-        coord_def center = path.cells[i];
         for (int dx = delta_min; dx < delta_max; dx++)
             for (int dy = delta_min; dy < delta_max; dy++)
             {
@@ -1418,8 +1416,8 @@ LUAFN(dgn_widen_paths)
             }
 
     // now go through and actually replace the positions
-    for (unsigned int i = 0; i < coord_to_replace.size(); i++)
-        lines(coord_to_replace[i]) = replace;
+    for (coord_def c : coord_to_replace)
+        lines(c) = replace;
 
     return 0;
 }
@@ -2151,8 +2149,8 @@ LUAFN(dgn_add_pools)
     // Step 4: Add the pools to the map
 
     vector<char> pool_glyphs(pool_seeds.size(), '\0');
-    for (unsigned int i = 0; i < pool_glyphs.size(); i++)
-        pool_glyphs[i] = fill_glyphs[random2(fill_glyphs.size())];
+    for (char &gly : pool_glyphs)
+        gly = fill_glyphs[random2(fill_glyphs.size())];
 
     for (int x = 0; x < size_x; x++)
         for (int y = 0; y < size_y; y++)

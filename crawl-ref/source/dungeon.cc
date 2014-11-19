@@ -250,13 +250,13 @@ static void _count_gold()
 
     if (player_under_penance(GOD_GOZAG) && x_chance_in_y(gold - 500, 500))
     {
-        for (unsigned int i = 0; i < gold_piles.size(); i++)
+        for (item_def *pile : gold_piles)
         {
-            gold_piles[i]->clear();
-            gold_piles[i]->base_type = OBJ_MISSILES;
-            gold_piles[i]->sub_type  = MI_STONE;
-            gold_piles[i]->quantity  = 1;
-            item_colour(*gold_piles[i]);
+            pile->clear();
+            pile->base_type = OBJ_MISSILES;
+            pile->sub_type  = MI_STONE;
+            pile->quantity  = 1;
+            item_colour(*pile);
         }
         mprf(MSGCH_GOD, GOD_GOZAG, "You feel a great sense of loss.");
         dec_penance(GOD_GOZAG, gold / 200);
@@ -707,8 +707,8 @@ static void _dgn_unregister_vault(const map_def &map)
             env.level_uniq_map_tags.erase(tag);
     }
 
-    for (unsigned int j = 0; j < map.subvault_places.size(); ++j)
-        _dgn_unregister_vault(*map.subvault_places[j].subvault);
+    for (const subvault_place &sub : map.subvault_places)
+        _dgn_unregister_vault(*sub.subvault);
 }
 
 bool dgn_square_travel_ok(const coord_def &c)
@@ -2575,11 +2575,11 @@ static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
 
     vector<string> tags = layout->get_tags();
 
-    for (unsigned int i = 0; i < tags.size(); i++)
+    for (string &tag : tags)
     {
-        if (starts_with(tags[i], "layout_type_"))
+        if (starts_with(tag, "layout_type_"))
         {
-            string type = strip_tag_prefix(tags[i], "layout_type_");
+            string type = strip_tag_prefix(tag, "layout_type_");
             if (vault->has_tag("layout_" + type))
                 return true;
             else if (vault->has_tag("nolayout_" + type))
@@ -3021,15 +3021,15 @@ static void _slime_connectivity_fixup()
     // Now that we have both connectivity maps, go over each component in the
     // unrestricted map and connect any separate components in the restricted
     // map that it was broken up into.
-    for (unsigned i = 0; i < components.size(); i++)
+    for (map_component &comp : components)
     {
         // Collect the components in the restricted connectivity map that
         // occupy part of the current component
         map<int, map_component *> present;
-        for (rectangle_iterator ri(components[i].min_coord, components[i].max_coord); ri; ++ri)
+        for (rectangle_iterator ri(comp.min_coord, comp.max_coord); ri; ++ri)
         {
             int new_label = non_adjacent_connectivity(*ri);
-            if (components[i].label == connectivity_map(*ri) && new_label != 0)
+            if (comp.label == connectivity_map(*ri) && new_label != 0)
             {
                 // the bit with new_label - 1 is foolish.
                 present[new_label] = &non_adj_components[new_label-1];
@@ -4309,12 +4309,12 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     if (is_layout && place.map.has_tag_prefix("layout_type_"))
     {
         vector<string> tag_list = place.map.get_tags();
-        for (unsigned int i = 0; i < tag_list.size(); i++)
+        for (string &tag : tag_list)
         {
-            if (starts_with(tag_list[i], "layout_type_"))
+            if (starts_with(tag, "layout_type_"))
             {
                 env.level_layout_types.insert(
-                    strip_tag_prefix(tag_list[i], "layout_type_"));
+                    strip_tag_prefix(tag, "layout_type_"));
             }
         }
     }
@@ -4999,8 +4999,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mons->ghost_demon_init();
     }
 
-    for (unsigned int i = 0; i < mspec.ench.size(); i++)
-        mons->add_ench(mspec.ench[i]);
+    for (const mon_enchant &ench : mspec.ench)
+        mons->add_ench(ench);
 
     return mons;
 }
@@ -6734,8 +6734,7 @@ static bool _fixup_interlevel_connectivity()
             return false;
 
     region_connected.resize(max_region + 1);
-    for (unsigned int i = 0; i < region_connected.size(); i++)
-        region_connected[i] = false;
+    fill(begin(region_connected), end(region_connected), false);
 
     // Which up stairs have a down stair? (These are potentially connected.)
     if (!at_branch_bottom())
@@ -6910,11 +6909,8 @@ static bool _fixup_interlevel_connectivity()
 void run_map_epilogues()
 {
     // Iterate over level vaults and run each map's epilogue.
-    for (unsigned i = 0, size = env.level_vaults.size(); i < size; ++i)
-    {
-        map_def &map = env.level_vaults[i]->map;
-        map.run_lua_epilogue();
-    }
+    for (vault_placement *vault : env.level_vaults)
+        vault->map.run_lua_epilogue();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -7149,10 +7145,8 @@ string dump_vault_maps()
 
     vector<level_id> levels = all_dungeon_ids();
 
-    for (unsigned int i = 0; i < levels.size(); i++)
+    for (const level_id &lid : levels)
     {
-        level_id    &lid = levels[i];
-
         if (!you.vault_list.count(lid))
             continue;
 

@@ -302,17 +302,17 @@ void update_monsters_in_view()
 
     if (!msgs.empty())
     {
-        unsigned int size = monsters.size();
         map<monster_type, int> types;
         map<monster_type, int> genera; // This is the plural for genus!
         const monster* target = NULL;
-        for (unsigned int i = 0; i < size; ++i)
+        for (const monster *mon : monsters)
         {
-            const monster_type type = monsters[i]->type;
+            const monster_type type = mon->type;
             types[type]++;
             genera[_mons_genus_keep_uniques(type)]++;
         }
 
+        unsigned int size = monsters.size();
         if (size == 1)
             mprf(MSGCH_MONSTER_WARNING, "%s", msgs[0].c_str());
         else
@@ -327,9 +327,8 @@ void update_monsters_in_view()
         string warning_msg = you_worship(GOD_ZIN) ? "Zin warns you:"
                                                   : "Ashenzari warns you:";
         warning_msg += " ";
-        for (unsigned int i = 0; i < size; ++i)
+        for (const monster* mon : monsters)
         {
-            const monster* mon = monsters[i];
             if (!target
                 && player_mutation_level(MUT_SCREAM)
                 && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3,
@@ -389,9 +388,8 @@ void update_monsters_in_view()
         {
             counted_monster_list mon_count;
             vector<monster *> mons;
-            for (unsigned int i = 0; i < monsters.size(); i++)
+            for (monster *mon : monsters)
             {
-                monster *mon = monsters[i];
                 if (mon->wont_attack())
                     continue;
 
@@ -410,8 +408,8 @@ void update_monsters_in_view()
                 if (strwidth(msg) >= get_number_of_cols() - 2)
                     msg = "Gozag incites your enemies against you.";
                 mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-                for (unsigned int i = 0; i < mons.size(); i++)
-                    gozag_incite(mons[i]);
+                for (monster *mon : mons)
+                    gozag_incite(mon);
 
                 dec_penance(GOD_GOZAG, mons.size());
             }
@@ -737,8 +735,8 @@ string screenshot()
         lines[y] = line;
     }
 
-    for (unsigned int y = 0; y < lines.size(); y++)
-        lines[y].erase(0, lsp); // actually trim from the left
+    for (string &line : lines)
+        line.erase(0, lsp);     // actually trim from the left
     while (!lines.empty() && lines.back().empty())
         lines.pop_back();       // then from the bottom
 

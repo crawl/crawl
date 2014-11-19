@@ -689,28 +689,28 @@ static bool _map_matches_species(const map_def &map)
 
 const map_def *find_map_by_name(const string &name)
 {
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (vdefs[i].name == name)
-            return &vdefs[i];
+    for (const map_def &mapdef : vdefs)
+        if (mapdef.name == name)
+            return &mapdef;
 
-    return NULL;
+    return nullptr;
 }
 
 // Discards Lua code loaded by all maps to reduce memory use. If any stripped
 // map is reused, its data will be reloaded from the .dsc
 void strip_all_maps()
 {
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        vdefs[i].strip();
+    for (map_def &mapdef : vdefs)
+        mapdef.strip();
 }
 
 vector<string> find_map_matches(const string &name)
 {
     vector<string> matches;
 
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (vdefs[i].name.find(name) != string::npos)
-            matches.push_back(vdefs[i].name);
+    for (const map_def &mapdef : vdefs)
+        if (mapdef.name.find(name) != string::npos)
+            matches.push_back(mapdef.name);
     return matches;
 }
 
@@ -721,9 +721,8 @@ mapref_vector find_maps_for_tag(const string tag,
     mapref_vector maps;
     level_id place = level_id::current();
 
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+    for (const map_def &mapdef : vdefs)
     {
-        const map_def &mapdef = vdefs[i];
         if (mapdef.has_tag(tag)
             && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
@@ -1044,15 +1043,12 @@ _random_chance_maps_in_list(const map_selector &sel,
     typedef set<string> tag_set;
     tag_set chance_tags;
 
-    for (unsigned f = 0, size = filtered.size(); f < size; ++f)
-    {
-        const int i = filtered[f];
+    for (const int i : filtered)
         if (!sel.ignore_chance
             && _vault_chance_new(vdefs[i], sel.place, chance_tags))
         {
             chance.push_back(&vdefs[i]);
         }
-    }
 
     for (vault_chance_roll_iterator vc(chance); vc; ++vc)
         if (const map_def *chosen = _resolve_chance_vault(sel, *vc))

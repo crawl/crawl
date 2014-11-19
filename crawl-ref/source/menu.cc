@@ -933,9 +933,7 @@ bool MenuEntry::get_tiles(vector<tile_def>& tileset) const
     if (!Options.tile_menu_icons || tiles.empty())
         return false;
 
-    for (unsigned int i = 0; i < tiles.size(); i++)
-        tileset.push_back(tiles[i]);
-
+    tileset.insert(end(tileset), begin(tiles), end(tiles));
     return true;
 }
 
@@ -1615,8 +1613,8 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
     if (!me->hotkeys.empty())
     {
         tiles.json_open_array("hotkeys");
-        for (unsigned i = 0; i < me->hotkeys.size(); ++i)
-            tiles.json_write_int(me->hotkeys[i]);
+        for (int hotkey : me->hotkeys)
+            tiles.json_write_int(hotkey);
         tiles.json_close_array();
     }
 
@@ -1631,15 +1629,15 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
     {
         tiles.json_open_array("tiles");
 
-        for (unsigned i = 0; i < t.size(); ++i)
+        for (const tile_def &tile : t)
         {
             tiles.json_open_object();
 
-            tiles.json_write_int("t", t[i].tile);
-            tiles.json_write_int("tex", t[i].tex);
+            tiles.json_write_int("t", tile.tile);
+            tiles.json_write_int("tex", tile.tex);
 
-            if (t[i].ymax != TILE_Y)
-                tiles.json_write_int("ymax", t[i].ymax);
+            if (tile.ymax != TILE_Y)
+                tiles.json_write_int("ymax", tile.ymax);
 
             tiles.json_close_object();
         }
@@ -1679,9 +1677,8 @@ int menu_colour(const string &text, const string &prefix, const string &tag)
 {
     const string tmp_text = prefix + text;
 
-    for (unsigned int i = 0; i < Options.menu_colour_mappings.size(); ++i)
+    for (const colour_mapping &cm : Options.menu_colour_mappings)
     {
-        const colour_mapping &cm = Options.menu_colour_mappings[i];
         if ((cm.tag.empty() || cm.tag == "any" || cm.tag == tag
                || cm.tag == "inventory" && tag == "pickup")
             && cm.pattern.matches(tmp_text))
@@ -1754,12 +1751,10 @@ void column_composer::add_formatted(int ncol,
         newlines.push_back(formatted_string());
     }
 
-    for (unsigned i = 0, size = segs.size(); i < size; ++i)
+    for (const string &seg : segs)
     {
         newlines.push_back(
-                formatted_string::parse_string(segs[i],
-                                                eol_ends_format,
-                                                tfilt));
+                formatted_string::parse_string(seg, eol_ends_format, tfilt));
     }
 
     strip_blank_lines(newlines);
@@ -1826,8 +1821,8 @@ void formatted_scroller::add_text(const string& s, bool new_line)
 {
     vector<formatted_string> parts;
     formatted_string::parse_string_to_multiple(s, parts);
-    for (unsigned int i = 0; i < parts.size(); ++i)
-        add_item_formatted_string(parts[i]);
+    for (const formatted_string &part : parts)
+        add_item_formatted_string(part);
 
     if (new_line)
         add_item_formatted_string(formatted_string::parse_string("\n"));
@@ -1879,9 +1874,9 @@ formatted_scroller::~formatted_scroller()
 {
     // Very important: this destructor is called *before* the base
     // (Menu) class destructor... which is as it should be.
-    for (unsigned i = 0; i < items.size(); ++i)
-        if (items[i]->data != NULL)
-            delete static_cast<formatted_string*>(items[i]->data);
+    for (const MenuEntry *item : items)
+        if (item->data)
+            delete static_cast<formatted_string*>(item->data);
 }
 
 int linebreak_string(string& s, int maxcol, bool indent)
@@ -2099,20 +2094,12 @@ int ToggleableMenu::pre_process(int key)
 #endif
     {
         // Toggle all menu entries
-        for (unsigned int i = 0; i < items.size(); ++i)
-        {
-            ToggleableMenuEntry* const p =
-                dynamic_cast<ToggleableMenuEntry*>(items[i]);
-
-            if (p)
+        for (MenuEntry *item : items)
+            if (auto p = dynamic_cast<ToggleableMenuEntry*>(item))
                 p->toggle();
-        }
 
         // Toggle title
-        ToggleableMenuEntry* const pt =
-            dynamic_cast<ToggleableMenuEntry*>(title);
-
-        if (pt)
+        if (auto pt = dynamic_cast<ToggleableMenuEntry*>(title))
             pt->toggle();
 
         // Redraw
@@ -2983,12 +2970,12 @@ void TextTileItem::render()
         m_font_buf.clear();
         for (int t = 0; t < TEX_MAX; t++)
             m_tile_buf[t].clear();
-        for (unsigned int t = 0; t < m_tiles.size(); ++t)
+        for (const tile_def &tdef : m_tiles)
         {
-            int tile      = m_tiles[t].tile;
-            TextureID tex = m_tiles[t].tex;
+            int tile      = tdef.tile;
+            TextureID tex = tdef.tex;
             m_tile_buf[tex].add_unscaled(tile, m_min_coord.x, m_min_coord.y,
-                                         m_tiles[t].ymax,
+                                         tdef.ymax,
                                          (float)m_unit_height_pixels / TILE_Y);
         }
         // center the text

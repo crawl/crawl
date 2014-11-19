@@ -356,11 +356,11 @@ void player_quiver::_maybe_fill_empty_slot()
     }
     else
     {
-        for (unsigned int i = 0; i < order.size(); i++)
+        for (int ord : order)
         {
-            if (is_launched(&you, weapon, you.inv[order[i]]) == desired_ret)
+            if (is_launched(&you, weapon, you.inv[ord]) == desired_ret)
             {
-                m_last_used_of_type[slot] = you.inv[order[i]];
+                m_last_used_of_type[slot] = you.inv[ord];
                 m_last_used_of_type[slot].quantity = 1;
                 break;
             }

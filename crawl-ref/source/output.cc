@@ -600,9 +600,9 @@ static void _print_stats_mp(int x, int y)
                           ? 100
                           : (you.magic_points * 100) / you.max_magic_points);
 
-        for (unsigned int i = 0; i < Options.mp_colour.size(); ++i)
-            if (mp_percent <= Options.mp_colour[i].first)
-                mp_colour = Options.mp_colour[i].second;
+        for (const auto &entry : Options.mp_colour)
+            if (mp_percent <= entry.first)
+                mp_colour = entry.second;
     }
 
     CGOTOXY(x, y, GOTO_STAT);
@@ -697,9 +697,9 @@ static void _print_stats_hp(int x, int y)
         const int hp_percent =
             (you.hp * 100) / get_real_hp(true, false);
 
-        for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
-            if (hp_percent <= Options.hp_colour[i].first)
-                hp_colour = Options.hp_colour[i].second;
+        for (const auto &entry : Options.hp_colour)
+            if (hp_percent <= entry.first)
+                hp_colour = entry.second;
     }
 
     // 01234567890123456789
@@ -754,9 +754,9 @@ static short _get_stat_colour(stat_type stat)
         return LIGHTRED;
 
     // Check the stat_colour option for warning thresholds.
-    for (unsigned int i = 0; i < Options.stat_colour.size(); ++i)
-        if (you.stat(stat) <= Options.stat_colour[i].first)
-            return Options.stat_colour[i].second;
+    for (const auto &entry : Options.stat_colour)
+        if (you.stat(stat) <= entry.first)
+            return entry.second;
 
     // Stat is magically increased.
     if (you.duration[DUR_DIVINE_STAMINA]
@@ -2449,12 +2449,9 @@ static char _get_overview_screen_results()
 
     overview.add_text(_overview_screen_title(get_number_of_cols()));
 
-    {
-        vector<formatted_string> blines = _get_overview_stats();
-        for (unsigned int i = 0; i < blines.size(); ++i)
-            overview.add_item_formatted_string(blines[i]);
-        overview.add_text(" ");
-    }
+    for (const formatted_string &bline : _get_overview_stats())
+        overview.add_item_formatted_string(bline);
+    overview.add_text(" ");
 
     {
         vector<char> equip_chars;
@@ -2482,19 +2479,18 @@ string dump_overview_screen(bool full_id)
     string text = formatted_string::parse_string(_overview_screen_title(80));
     text += "\n";
 
-    vector<formatted_string> blines = _get_overview_stats();
-    for (unsigned int i = 0; i < blines.size(); ++i)
+    for (const formatted_string &bline : _get_overview_stats())
     {
-        text += blines[i];
+        text += bline;
         text += "\n";
     }
     text += "\n";
 
     vector<char> equip_chars;
-    blines = _get_overview_resistances(equip_chars, full_id, 640);
-    for (unsigned int i = 0; i < blines.size(); ++i)
+    for (const formatted_string &bline
+            : _get_overview_resistances(equip_chars, full_id, 640))
     {
-        text += blines[i];
+        text += bline;
         text += "\n";
     }
     text += "\n";

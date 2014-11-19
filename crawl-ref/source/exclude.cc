@@ -53,14 +53,16 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
                                            && testbits(mon->flags, MF_SEEN));
     lowercase(name);
 
-    for (unsigned i = 0; i < Options.auto_exclude.size(); ++i)
-        if (Options.auto_exclude[i].matches(name)
+    for (const text_pattern &pat : Options.auto_exclude)
+    {
+        if (pat.matches(name)
             && _mon_needs_auto_exclude(mon, sleepy)
             && (mon->attitude == ATT_HOSTILE
                 || mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
         {
             return true;
         }
+    }
 
     return false;
 }
@@ -362,8 +364,8 @@ void update_exclusion_los(vector<coord_def> changed)
     if (changed.empty())
         return;
 
-    for (unsigned int i = 0; i < changed.size(); ++i)
-        _mark_excludes_non_updated(changed[i]);
+    for (coord_def c : changed)
+        _mark_excludes_non_updated(c);
 
     curr_excludes.update_excluded_points(true);
 }

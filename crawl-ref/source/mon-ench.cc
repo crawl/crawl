@@ -1866,14 +1866,14 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(en))
         {
             // Search for an open adjacent square to place a spore on
-            int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-            shuffle_array(idx);
+            int indices[] = {0, 1, 2, 3, 4, 5, 6, 7};
+            shuffle_array(indices);
 
             bool re_add = true;
 
-            for (unsigned i = 0; i < 8; ++i)
+            for (int idx : indices)
             {
-                coord_def adjacent = pos() + Compass[idx[i]];
+                coord_def adjacent = pos() + Compass[idx];
 
                 if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
                                         && !actor_at(adjacent))
