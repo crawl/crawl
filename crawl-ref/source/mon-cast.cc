@@ -4094,18 +4094,21 @@ static int _mons_mesmerise(monster* mons, bool actual)
     }
 
     const int pow = min(mons->spell_hd(SPELL_MESMERISE) * 10, 200);
+    const int res_magic = you.check_res_magic(pow);
 
     // Don't mesmerise if you pass an MR check or have clarity.
     // If you're already mesmerised, you cannot resist further.
-    if ((you.check_res_magic(pow) > 0 || you.clarity()
+    if ((res_magic > 0 || you.clarity()
          || you.duration[DUR_MESMERISE_IMMUNE]) && !already_mesmerised)
     {
         if (actual)
         {
             if (you.clarity())
                 canned_msg(MSG_YOU_UNAFFECTED);
-            else
+            else if (you.duration[DUR_MESMERISE_IMMUNE] && !already_mesmerised)
                 canned_msg(MSG_YOU_RESIST);
+            else
+                mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
         }
 
         return 0;
@@ -4141,22 +4144,23 @@ static int _mons_cause_fear(monster* mons, bool actual)
             if (actual)
                 canned_msg(MSG_YOU_UNAFFECTED);
         }
-        else if (you.check_res_magic(pow) > 0)
-        {
-            if (actual)
-                canned_msg(MSG_YOU_RESIST);
-        }
-        else if (actual && you.add_fearmonger(mons))
-        {
-            retval = 1;
-
-            you.increase_duration(DUR_AFRAID, 10 + random2avg(pow / 10, 4));
-
-            if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                mons->add_ench(ENCH_FEAR_INSPIRING);
-        }
+        else if (!actual)
+            retval = 0;
         else
-          retval = 0;
+        {
+            const int res_margin = you.check_res_magic(pow);
+            if (res_margin > 0)
+                mprf("You%s", you.resist_margin_phrase(res_margin).c_str());
+            else if (you.add_fearmonger(mons))
+            {
+                retval = 1;
+
+                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow / 10, 4));
+
+                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                    mons->add_ench(ENCH_FEAR_INSPIRING);
+            }
+        }
     }
 
     for (monster_near_iterator mi(mons->pos()); mi; ++mi)
@@ -4179,18 +4183,20 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
         retval = 0;
 
+        if (!actual)
+            continue;
+
         // It's possible to scare this monster. If its magic
         // resistance fails, do so.
         int res_margin = mi->check_res_magic(pow);
         if (res_margin > 0)
         {
-            if (actual)
-                simple_monster_message(*mi, mons_resist_string(*mi, res_margin));
+            simple_monster_message(*mi,
+                mi->resist_margin_phrase(res_margin).c_str());
             continue;
         }
 
-        if (actual
-            && mi->add_ench(mon_enchant(ENCH_FEAR, 0, mons)))
+        if (mi->add_ench(mon_enchant(ENCH_FEAR, 0, mons)))
         {
             retval = 1;
 
@@ -4221,13 +4227,16 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         retval = 0;
 
         if (actual)
-            if (you.check_res_magic(pow) > 0)
-                canned_msg(MSG_YOU_RESIST);
+        {
+            const int res_magic = you.check_res_magic(pow);
+            if (res_magic > 0)
+                mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
             else
             {
                 you.confuse(mons, 2 + random2(5));
                 retval = 1;
             }
+        }
     }
 
     for (monster_near_iterator mi(mons->pos()); mi; ++mi)
@@ -4249,7 +4258,10 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         if (res_margin > 0)
         {
             if (actual)
-                simple_monster_message(*mi, mons_resist_string(*mi, res_margin));
+            {
+                simple_monster_message(*mi,
+                    mi->resist_margin_phrase(res_margin).c_str());
+            }
             continue;
         }
         if (actual)
@@ -4274,13 +4286,16 @@ static int _mons_control_undead(monster* mons, bool actual)
         retval = 0;
 
         if (actual)
-            if (you.check_res_magic(pow) > 0)
-                canned_msg(MSG_YOU_RESIST);
+        {
+            int res_margin = you.check_res_magic(pow);
+            if (res_margin > 0)
+                mprf("You%s.", you.resist_margin_phrase(res_margin).c_str());
             else
             {
                 enchant_actor_with_flavour(&you, mons, BEAM_ENSLAVE);
                 retval = 1;
             }
+        }
     }
 
     enchant_type good = (mons->wont_attack()) ? ENCH_CHARM
@@ -4308,7 +4323,10 @@ static int _mons_control_undead(monster* mons, bool actual)
         if (res_margin > 0)
         {
             if (actual)
-                simple_monster_message(*mi, mons_resist_string(*mi, res_margin));
+            {
+                simple_monster_message(*mi,
+                    mi->resist_margin_phrase(res_margin).c_str());
+            }
             continue;
         }
         if (actual)
@@ -7080,12 +7098,19 @@ static void _siren_sing(monster* mons, bool avatar)
     }
 
     // Once mesmerised by a particular monster, you cannot resist anymore.
+    const int res_magic =
+        you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15);
+
     if (you.duration[DUR_MESMERISE_IMMUNE]
         || !already_mesmerised
-           && (you.check_res_magic(mons->get_hit_dice() * 22 / 3 + 15) > 0
-               || you.clarity()))
+           && (res_magic > 0 || you.clarity()))
     {
-        canned_msg(you.clarity() ? MSG_YOU_UNAFFECTED : MSG_YOU_RESIST);
+        if (you.clarity())
+            canned_msg(MSG_YOU_UNAFFECTED);
+        else if (you.duration[DUR_MESMERISE_IMMUNE] && !already_mesmerised)
+            canned_msg(MSG_YOU_RESIST);
+        else
+            mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
         return;
     }
 

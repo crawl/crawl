@@ -822,3 +822,25 @@ bool actor::torpor_slowed() const
 
     return false;
 }
+
+string actor::resist_margin_phrase(int margin) const
+{
+    if (res_magic() == MAG_IMMUNE)
+        return " " + conj_verb("are") + " unaffected.";
+
+    static const string resist_messages[][2] =
+    {
+      { " barely %s.",                  "resist" },
+      { " %s to resist.",               "struggle" },
+      { " %s with significant effort.", "resist" },
+      { " %s with some effort.",        "resist" },
+      { " easily %s.",                  "resist" },
+      { " %s with almost no effort.",   "resist" },
+    };
+
+    const int index = max(0, min((int)ARRAYSZ(resist_messages) - 1,
+                                 ((margin + 45) / 15)));
+
+    return make_stringf(resist_messages[index][0].c_str(),
+                        conj_verb(resist_messages[index][1]).c_str());
+}

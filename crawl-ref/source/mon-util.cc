@@ -1793,27 +1793,9 @@ static int _mons_damage(monster_type mc, int rt)
     return smc->attack[rt].damage;
 }
 
-const char* resist_margin_phrase(int margin)
-{
-    return margin >= 30  ? " resists with almost no effort." :
-           margin >= 15  ? " easily resists." :
-           margin >= 0   ? " resists with some effort." :
-           margin >= -14 ? " resists with significant effort.":
-           margin >= -30 ? " struggles to resist."
-                         : " barely resists.";
-}
-
 bool mons_immune_magic(const monster* mon)
 {
     return get_monster_data(mon->type)->resist_magic == MAG_IMMUNE;
-}
-
-const char* mons_resist_string(const monster* mon, int res_margin)
-{
-    if (mons_immune_magic(mon))
-        return " is unaffected.";
-    else
-        return resist_margin_phrase(res_margin);
 }
 
 bool mons_skeleton(monster_type mc)
