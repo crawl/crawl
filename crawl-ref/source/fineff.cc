@@ -377,7 +377,7 @@ void starcursed_merge_fineff::fire()
     monster *mon = defend->as_monster();
     //Find a random adjacent starcursed mass
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx, 8);
+    shuffle_array(compass_idx);
 
     for (int i = 0; i < 8; ++i)
     {
