@@ -5610,7 +5610,6 @@ void player::init()
     spell_no        = 0;
     vehumet_gifts.clear();
     char_direction  = GDT_DESCENDING;
-    opened_zot      = false;
     royal_jelly_dead = false;
     transform_uncancellable = false;
     fishtail = false;

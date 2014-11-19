@@ -715,22 +715,20 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     if (stair_find == DNGN_ENTER_VAULTS
         && !is_existing_level(level_id(BRANCH_VAULTS, 1)))
     {
-        bool has_rune = false;
-        int i = 0;
-        for (; i < NUM_RUNE_TYPES; i++)
-            if (you.runes[i])
-            {
-                has_rune = true;
-                break;
-            }
-
-        if (!has_rune)
+        if (!runes_in_pack())
         {
             mpr("You need a rune to enter this place.");
             return;
         }
 
-        mprf("You insert the %s rune into the lock.", rune_type_name(i));
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (you.runes[i])
+            {
+                mprf("You insert the %s rune into the lock.",
+                     rune_type_name(i));
+                break;
+            }
+
         if (silenced(you.pos()))
             mpr("The gate opens wide!");
         else
@@ -738,7 +736,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         more();
     }
 
-    if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
+    if (stair_find == DNGN_ENTER_ZOT
+        && !is_existing_level(level_id(BRANCH_ZOT, 1)))
     {
         vector<int> runes;
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
@@ -747,16 +746,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
 
         if (runes.size() < NUMBER_OF_RUNES_NEEDED)
         {
-            switch (NUMBER_OF_RUNES_NEEDED)
-            {
-            case 1:
-                mpr("You need a rune to enter this place.");
-                break;
-
-            default:
-                mprf("You need at least %d runes to enter this place.",
-                     NUMBER_OF_RUNES_NEEDED);
-            }
+            mprf("You need at least %d runes to enter this place.",
+                 NUMBER_OF_RUNES_NEEDED);
             return;
         }
 
@@ -787,7 +778,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
             mpr("With a loud hiss the gate opens wide!");
         more();
 
-        you.opened_zot = true;
     }
 
     if (stair_find == DNGN_ENTER_ZIGGURAT)

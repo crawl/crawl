@@ -114,7 +114,6 @@ public:
 
   uint8_t spell_no;
   game_direction_type char_direction;
-  bool opened_zot;
   bool royal_jelly_dead;
   bool transform_uncancellable;
   bool fishtail; // Merfolk fishtail transformation
