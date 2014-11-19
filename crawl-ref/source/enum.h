@@ -216,6 +216,8 @@ enum ability_type
     ABIL_RU_SACRIFICE_HAND,
         ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_HAND,
     ABIL_RU_REJECT_SACRIFICES,
+    // Backtrackticus
+    ABIL_W_BLEND_IN,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

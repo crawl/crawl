@@ -1162,7 +1162,6 @@ void bolt::affect_cell()
         if (hit == AUTOMATIC_HIT && !pierce)
             finish_beam();
     }
-
     // We don't want to hit a monster in a wall square twice. Also,
     // stop single target beams from affecting a monster if they already
     // affected the player on this square. -cao
@@ -4490,7 +4489,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (m_brand == SPMSL_SLEEP && was_asleep && !mon->asleep())
             mon->put_to_sleep(agent(), 0);
     }
-
+    mpr("test");
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
         || origin_spell == SPELL_STICKY_FLAME_RANGE
@@ -5724,7 +5723,7 @@ int bolt::range_used_on_hit() const
     // Non-beams can only affect one thing (player/monster).
     if (!pierce)
         used = BEAM_STOP;
-    else if (is_enchantment())
+    else if (is_enchantment() && !pierce)
         used = (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
     // Hellfire stops for nobody!
     else if (flavour == BEAM_HELLFIRE)

@@ -372,7 +372,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Backtrackticus
     { "You have increased endurance.",
-      "",
+      "walk through enemies",
       "You have significantly increased endurance.",
       "",
       "You have greatly increased endurance."
@@ -524,7 +524,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Backtrackticus
     { "Your endurance wanes.",
-      "",
+      "walk through enemies",
       "Your endurance wanes.",
       "",
       "Your endurance wanes."

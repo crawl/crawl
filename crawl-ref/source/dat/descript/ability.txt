@@ -810,6 +810,10 @@ is an existing offer still extended.
 Each consecutive rejection increases the sacrifice timer significantly.
 Accepting a sacrifice will reset the timer to the standard length.
 %%%%
+Blend In
+
+Travel instantly through any number of adjacent enemies, confusing them.
+%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually

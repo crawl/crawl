@@ -119,4 +119,6 @@ void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
 bool ru_power_leap();
 bool ru_apocalypse();
+
+bool w_blend_in();
 #endif

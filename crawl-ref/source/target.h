@@ -271,4 +271,15 @@ private:
     vector<coord_def> targets;
 };
 
+class targetter_monster_sequence : public targetter_beam
+{
+public:
+    targetter_monster_sequence(const actor *act, int pow, int range);
+    bool set_aim(coord_def a);
+    bool valid_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+private:
+    explosion_map exp_map;
+};
+
 #endif
