@@ -4376,7 +4376,7 @@ static int _mons_control_undead(monster* mons, bool actual)
         {
             int res_margin = you.check_res_magic(pow);
             if (res_margin > 0)
-                mprf("You%s.", you.resist_margin_phrase(res_margin).c_str());
+                mprf("You%s", you.resist_margin_phrase(res_margin).c_str());
             else
             {
                 enchant_actor_with_flavour(&you, mons, BEAM_ENSLAVE);
