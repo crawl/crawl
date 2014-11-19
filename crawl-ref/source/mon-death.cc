@@ -1645,7 +1645,15 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
     const bool your_fault = your_kill && killer_index != YOU_FAULTLESS
                             || pet_kill;
 
-    if (!your_fault && !maybe_good_kill)
+    // if you or your pets didn't do it, no one cares
+    if (!your_fault)
+        return;
+
+    // if you can't get piety for it & your god won't give penance/-piety for
+    // it, no one cares
+    // XXX: this will break holy death curses if they're added back...
+    // but tbh that shouldn't really be in conducts anyway
+    if (!maybe_good_kill && !god_hates_killing(you.religion, &mons))
         return;
 
     // Abominations were historically split into demonic & undead abominations.
@@ -1698,19 +1706,16 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
     if (mons.is_priest())
         did_kill_conduct(DID_KILL_PRIEST, mons);
 
-    if (your_fault)
-    {
-        // Jiyva hates you killing slimes, but eyeballs
-        // mutation can confuse without you meaning it.
-        if (mons_is_slime(&mons) && killer != KILL_YOU_CONF)
-            did_kill_conduct(DID_KILL_SLIME, mons);
+    // Jiyva hates you killing slimes, but eyeballs
+    // mutation can confuse without you meaning it.
+    if (mons_is_slime(&mons) && killer != KILL_YOU_CONF)
+        did_kill_conduct(DID_KILL_SLIME, mons);
 
-        if (fedhas_protects(&mons))
-            did_kill_conduct(DID_KILL_PLANT, mons);
+    if (mons.is_holy())
+        did_kill_conduct(DID_KILL_HOLY, mons);
 
-        if (mons.is_holy())
-            did_kill_conduct(DID_KILL_HOLY, mons);
-    }
+    if (fedhas_protects(&mons))
+        did_kill_conduct(DID_KILL_PLANT, mons);
 
     // Cheibriados hates fast monsters.
     if (cheibriados_thinks_mons_is_fast(&mons) && !mons.cannot_move())
