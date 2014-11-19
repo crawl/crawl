@@ -518,6 +518,10 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 
     eligibility.init(0);
 
+    // Too high HD to ever be affected.
+    if (mon->get_hit_dice() + 5 > zin_recite_power())
+        return 0;
+
     // Anti-chaos prayer: Hits things vulnerable to silver, or with chaotic spells/gods.
     eligibility[RECITE_CHAOTIC] = mon->how_chaotic(true);
 
@@ -562,6 +566,17 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     return 0;
 }
 
+int zin_recite_power()
+{
+    // Resistance is now based on HD.
+    // You can affect up to (30+30)/2 = 30 'power' (HD).
+    const int power_mult = 10;
+    const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
+                           + 3 * power_mult;
+    const int piety_power = you.piety * 3 / 2;
+    return (invo_power + piety_power) / 2 / power_mult;
+}
+
 bool zin_check_able_to_recite(bool quiet)
 {
     if (you.duration[DUR_RECITE])
@@ -594,8 +609,7 @@ bool zin_check_able_to_recite(bool quiet)
  * Otherwise we're actually reciting, and may need to present a menu.
  *
  * @param quiet     Whether to suppress messages.
- * @return  0 if no monsters were found, or if the player declined to choose
- *          a type of recitation, or if all the found monsters returned
+ * @return  0 if no monsters were found, or if all the found monsters returned
  *          zero from _zin_check_recite_to_single_monster().
  * @return  1 if an eligible audience was found.
  * @return  -1 if only an ineligible audience was found: no eligibile
@@ -606,9 +620,6 @@ int zin_check_recite_to_monsters(bool quiet)
 {
     bool found_ineligible = false;
     bool found_eligible = false;
-    recite_counts count(0);
-
-    map<string, int> affected_by_type[NUM_RECITE_TYPES];
 
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
@@ -621,17 +632,14 @@ int zin_check_recite_to_monsters(bool quiet)
         {
         case -1:
             found_ineligible = true;
+        // Intentional fallthrough
         case 0:
             continue;
         }
 
         for (int i = 0; i < NUM_RECITE_TYPES; i++)
             if (retval[i] > 0)
-            {
-                count[i]++;
                 found_eligible = true;
-                ++affected_by_type[i][mon->full_name(DESC_A)];
-            }
     }
 
     if (!found_eligible && !found_ineligible)
@@ -646,13 +654,8 @@ int zin_check_recite_to_monsters(bool quiet)
             dprf("No sensible audience found!");
         return -1;
     }
-
-    int eligible_types = 0;
-    for (int i = 0; i < NUM_RECITE_TYPES; i++)
-        if (count[i] > 0)
-            eligible_types++;
-
-    return 1; // We just recite against everything.
+    else
+        return 1; // We just recite against everything.
 }
 
 enum zin_eff
@@ -709,13 +712,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     if (coinflip())
         return false;
 
-    // Resistance is now based on HD.
-    // You can affect up to (30+30)/2 = 30 'power' (HD).
-    const int power_mult = 10;
-    const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
-                           + 3 * power_mult;
-    const int piety_power = you.piety * 3 / 2;
-    const int power = (invo_power + piety_power) / 2 / power_mult;
+    const int power = zin_recite_power();
     // Old recite was mostly deterministic, which is bad.
     const int resist = mon->get_hit_dice() + random2(6);
     const int check = power - resist;

@@ -21,6 +21,7 @@ bool zin_check_able_to_recite(bool quiet = false);
 int zin_check_recite_to_monsters(bool quiet = false);
 bool zin_recite_to_single_monster(const coord_def& where);
 void zin_recite_interrupt();
+int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
 bool zin_remove_all_mutations();
