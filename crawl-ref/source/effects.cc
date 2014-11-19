@@ -348,8 +348,6 @@ void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker)
 {
-    ASSERT(!crawl_state.game_is_arena());
-
     bolt beam;
     setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
