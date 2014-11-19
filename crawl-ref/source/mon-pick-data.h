@@ -955,6 +955,9 @@ static const pop_entry pop_pan[] =
   {  1,  1,  500, FLAT, MONS_WARMONGER },
   {  1,  1,  500, FLAT, MONS_CORRUPTER },
   {  1,  1,  500, FLAT, MONS_BLACK_SUN },
+  {  1,  1,   50, FLAT, MONS_ANGEL },
+  {  1,  1,   40, FLAT, MONS_CHERUB },
+  {  1,  1,   25, FLAT, MONS_DAEVA },
   { 0,0,0,FLAT,MONS_0 }
 };
 

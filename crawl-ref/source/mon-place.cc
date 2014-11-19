@@ -2941,6 +2941,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_SERAPH:
+        natural_leader = true;
+        band = BAND_HOLIES;
+        band_size = random_range(1, 3); // same as panlords
+        break;
+
     default: ;
     }
 
@@ -3558,6 +3564,14 @@ static monster_type _band_member(band_type band, int which)
     case BAND_ANUBIS_GUARD:
         return MONS_ANUBIS_GUARD;
 
+    case BAND_HOLIES:
+        // same as Summon Holies right now
+        return random_choose_weighted(100, MONS_ANGEL,
+                                       80, MONS_CHERUB,
+                                       50, MONS_DAEVA,
+                                        1, MONS_OPHAN,
+                                        0);
+
     case BAND_RANDOM_SINGLE:
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
@@ -3636,6 +3650,10 @@ static monster_type _pick_zot_exit_defender()
                 return static_cast<monster_type>(MONS_MNOLEG + i);
             }
         }
+
+        if (one_chance_in(11))
+            return MONS_SERAPH;
+
         return MONS_PANDEMONIUM_LORD;
     }
 
