@@ -3322,10 +3322,20 @@ static string _monster_spells_description(const monster_info& mi)
         mi, MON_SPELL_MAGICAL, "Set",
         " possesses the following magical abilities: ",
         " possesses one of the following sets of magical abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_DEMONIC, "Set",
-        " possesses the following demonic abilities: ",
-        " possesses one of the following sets of demonic abilities:\n");
+    if (mi.holi == MH_HOLY)
+    {
+        result << _monster_spell_type_description(
+            mi, MON_SPELL_DEMONIC, "Set",
+            " possesses the following angelic abilities: ",
+            " possesses one of the following sets of angelic abilities:\n");
+    }
+    else
+    {
+        result << _monster_spell_type_description(
+            mi, MON_SPELL_DEMONIC, "Set",
+            " possesses the following demonic abilities: ",
+            " possesses one of the following sets of demonic abilities:\n");
+    }
     result << _monster_spell_type_description(
         mi, MON_SPELL_PRIEST, "Set",
         " possesses the following divine abilities: ",
