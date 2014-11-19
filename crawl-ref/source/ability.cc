@@ -1531,17 +1531,10 @@ static bool _check_ability_possible(const ability_def& abil,
         if (!zin_check_able_to_recite(quiet))
             return false;
 
-        const int result = zin_check_recite_to_monsters(quiet);
-        if (result == -1)
+        if (zin_check_recite_to_monsters(quiet) != 1)
         {
             if (!quiet)
                 mpr("There's no appreciative audience!");
-            return false;
-        }
-        else if (result == 0)
-        {
-            if (!quiet)
-                mpr("There's no-one here to preach to!");
             return false;
         }
         return true;
@@ -2434,7 +2427,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_ZIN_RECITE:
     {
         fail_check();
-        if (zin_check_recite_to_monsters())
+        if (zin_check_recite_to_monsters() == 1)
         {
             you.attribute[ATTR_RECITE_TYPE] = (recite_type) random2(NUM_RECITE_TYPES); // This is just flavor
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
