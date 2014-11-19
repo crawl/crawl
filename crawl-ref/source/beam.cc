@@ -1778,7 +1778,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (res_margin > 0)
         {
             if (simple_monster_message(mons,
-                    mons_resist_string(mons, res_margin)))
+                    mons->resist_margin_phrase(res_margin).c_str()))
             {
                 *did_msg = true;
             }
@@ -1817,7 +1817,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (res_margin > 0)
         {
             if (simple_monster_message(mons,
-                    mons_resist_string(mons, res_margin)))
+                    mons->resist_margin_phrase(res_margin).c_str()))
             {
                 *did_msg = true;
             }
@@ -3414,18 +3414,7 @@ void bolt::affect_player_enchantment(bool resistible)
             {
                 // the message reflects the level of difficulty resisting.
                 const int margin = you.res_magic() - ench_power;
-                if (margin >= 30)
-                    mpr("You resist with almost no effort.");
-                else if (margin >= 15)
-                    mpr("You easily resist.");
-                else if (margin >= 0)
-                    mpr("You resist with some effort.");
-                else if (margin >= -14)
-                    mpr("You resist with significant effort.");
-                else if (margin >= -30)
-                    mpr("You struggle to resist.");
-                else
-                    mpr("You barely resist.");
+                mprf("You%s", you.resist_margin_phrase(margin).c_str());
             }
         }
         // You *could* have gotten a free teleportation in the Abyss,
@@ -4397,7 +4386,7 @@ void bolt::enchantment_affect_monster(monster* mon)
         {
         case MON_RESIST:
             if (simple_monster_message(mon,
-                                   resist_margin_phrase(res_margin)))
+                                   mon->resist_margin_phrase(res_margin).c_str()))
             {
                 msg_generated = true;
             }

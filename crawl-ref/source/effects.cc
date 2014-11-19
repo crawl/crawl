@@ -651,13 +651,11 @@ void direct_effect(monster* source, spell_type spell,
                                       * confuse_power);
         if (res_margin > 0)
         {
-            if (defender->is_player())
-                canned_msg(MSG_YOU_RESIST);
-            else // if (defender->is_monster())
+            if (you.can_see(defender))
             {
-                const monster* foe = defender->as_monster();
-                simple_monster_message(foe,
-                                       mons_resist_string(foe, res_margin));
+                mprf("%s%s",
+                     defender->name(DESC_THE).c_str(),
+                     defender->resist_margin_phrase(res_margin).c_str());
             }
             break;
         }

@@ -440,6 +440,8 @@ public:
 
     string describe_props() const;
 
+    string resist_margin_phrase(int margin) const;
+
 protected:
     void end_constriction(constricting_t::iterator i, bool intentional,
                           bool quiet);
