@@ -2714,7 +2714,6 @@ int spawn_corpse_mushrooms(item_def& corpse,
     if (target_count == 0)
         return 0;
 
-    int c_size = 8;
     int permutation[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
     int placed_targets = 0;
@@ -2827,11 +2826,11 @@ int spawn_corpse_mushrooms(item_def& corpse,
             break;
 
         // Wish adjacent_iterator had a random traversal.
-        shuffle_array(permutation, c_size);
+        shuffle_array(permutation);
 
-        for (int count = 0; count < c_size; ++count)
+        for (int idx : permutation)
         {
-            coord_def temp = current + Compass[permutation[count]];
+            coord_def temp = current + Compass[idx];
 
             int index = temp.x + temp.y * X_WIDTH;
 
