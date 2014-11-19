@@ -17,6 +17,9 @@ class DynamicTemplateLoader(tornado.template.Loader):
 
     def load(self, name, parent_path=None):
         name = self.resolve_path(name, parent_path=parent_path)
+        # Fall back to template.html.default
+        if not os.path.isfile(os.path.join(self.root, name)):
+            name = name + '.default'
         if name in self.templates:
             template = self.templates[name]
             path = os.path.join(self.root, name)
