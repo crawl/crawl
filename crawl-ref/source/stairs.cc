@@ -861,11 +861,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     else
         _player_change_level_downstairs(stair_find, dst);
 
-    // Did we enter a new branch.
-    const bool entered_branch(
-        !player_in_branch(old_level.branch)
-        && parent_branch(you.where_are_you) == old_level.branch);
-
     if (stair_find == DNGN_EXIT_ABYSS
         || stair_find == DNGN_EXIT_PANDEMONIUM
         || stair_find == DNGN_EXIT_THROUGH_ABYSS)
@@ -918,14 +913,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
 
     switch (you.where_are_you)
     {
-    case BRANCH_LABYRINTH:
-        // XXX: Ideally, we want to hint at the wall rule (rock > metal),
-        //      and that the walls can shift occasionally.
-        // Are these too long?
-        mpr("As you enter the labyrinth, previously moving walls settle noisily into place.");
-        mpr("You hear the metallic echo of a distant snort before it fades into the rock.");
-        break;
-
     case BRANCH_ABYSS:
         if (old_level.branch == BRANCH_ABYSS)
         {
@@ -966,7 +953,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     if (!shaft)
         _exit_stair_message(stair_find);
 
-    if (entered_branch)
+    // Did we enter a new branch.
+    if (!player_in_branch(old_level.branch))
     {
         const branch_type branch = you.where_are_you;
         if (branches[branch].entry_message)
@@ -974,16 +962,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         else
             mprf("Welcome to %s!", branches[branch].longname);
         enter_branch(branch, old_level);
-    }
-
-    if (stair_find == DNGN_ENTER_HELL)
-    {
-        mpr("Welcome to Hell!");
-        mpr("Please enjoy your stay.");
-
-        // Kill -more- prompt if we're traveling.
-        if (!you.running && !force_stair)
-            more();
     }
 
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);

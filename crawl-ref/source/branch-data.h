@@ -137,7 +137,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_HELL, DNGN_EXIT_HELL,
       "Hell", "the Vestibule of Hell", "Hell",
-      NULL,
+      "Welcome to Hell!\nPlease enjoy your stay.",
       LIGHTGREY, LIGHTRED,
       'H', false, 0 },
 
@@ -218,7 +218,11 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
       DNGN_ENTER_LABYRINTH, DNGN_EXIT_LABYRINTH,
       "Labyrinth", "a labyrinth", "Lab",
-      NULL,
+      // XXX: Ideally, we want to hint at the wall rule (rock > metal),
+      //      and that the walls can shift occasionally.
+      // Are these too long?
+      "As you enter the labyrinth, previously moving walls settle noisily into place.\n"
+      "You hear the metallic echo of a distant snort before it fades into the rock.",
       BLACK, BLACK,
       '0', false, 0 },
 
