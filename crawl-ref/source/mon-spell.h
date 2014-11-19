@@ -2130,4 +2130,16 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SHROUD_OF_GOLUBRIA, 12, MON_SPELL_WIZARD },
       }
     },
+
+    {  MST_SERAPH,
+      {
+       { SPELL_HUNTING_CRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                                | MON_SPELL_NO_SILENT | MON_SPELL_BREATH },
+       { SPELL_SUMMON_HOLIES, 50, MON_SPELL_PRIEST },
+       { SPELL_INJURY_BOND, 50, MON_SPELL_DEMONIC },
+       { SPELL_CLEANSING_FLAME, 25, MON_SPELL_PRIEST },
+       { SPELL_SMITING, 13, MON_SPELL_DEMONIC },
+       { SPELL_MINOR_HEALING, 12, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
+      }
+    },
 };

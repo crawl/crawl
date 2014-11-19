@@ -1377,6 +1377,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Asterion belongs to Mahkleb.
         else if (mg.cls == MONS_ASTERION)
             mon->god = GOD_MAKHLEB;
+        // Seraphim follow the Shining One.
+        else if (mg.cls == MONS_SERAPH)
+            mon->god = GOD_SHINING_ONE;
         else
         {
             switch (mons_genus(mg.cls))

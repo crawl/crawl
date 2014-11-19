@@ -1392,6 +1392,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AWAKEN_FOREST:
     case SPELL_DRUIDS_CALL:
     case SPELL_SUMMON_SPECTRAL_ORCS:
+    case SPELL_SUMMON_HOLIES:
     case SPELL_REGENERATION:
     case SPELL_CORPSE_ROT:
     case SPELL_LEDAS_LIQUEFACTION:
@@ -1456,6 +1457,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HUNTING_CRY:
     case SPELL_CONDENSATION_SHIELD:
     case SPELL_CONTROL_UNDEAD:
+    case SPELL_CLEANSING_FLAME:
         return true;
     default:
         if (check_validity)
@@ -5450,9 +5452,29 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         _cast_ephemeral_infusion(mons);
         return;
 
-    // TODO: Outsource the cantrip messages and allow specification of
-    //       special cantrip spells per monster, like for speech, both as
-    //       "self buffs" and "player enchantments".
+
+
+    case SPELL_SUMMON_HOLIES: // Holy monsters.
+        if (_mons_abjured(mons, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2)
+                      + random2(mons->spell_hd(spell_cast) / 4 + 1);
+
+        duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
+        for (int i = 0; i < sumcount2; ++i)
+        {
+            create_monster(
+                mgen_data(random_choose_weighted(
+                            100, MONS_ANGEL,     80,  MONS_CHERUB,
+                            50,  MONS_DAEVA,      1,  MONS_OPHAN,
+                             0),
+                          SAME_ATTITUDE(mons),
+                          mons, duration, spell_cast, mons->pos(),
+                          mons->foe, 0, god));
+        }
+        return;
+
     case SPELL_CANTRIP:
     {
         // Monster spell of uselessness, just prints a message.
@@ -6278,6 +6300,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         return;
     }
+
+    case SPELL_CLEANSING_FLAME:
+        simple_monster_message(mons, " channels a blast of cleansing flame!");
+        cleansing_flame(5 + (7 * mons->spell_hd(spell_cast) / 12),
+                        CLEANSING_FLAME_SPELL, mons->pos(), mons);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7643,6 +7671,17 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return !foe
                || !scattershot_tracer(mon, 12 * mon->spell_hd(monspell),
                                       foe->pos());
+
+    case SPELL_CLEANSING_FLAME:
+    {
+        bolt tracer;
+        tracer.foe_ratio = 80;
+        setup_cleansing_flame_beam(tracer,
+                                   5 + (7 * mon->spell_hd(monspell)) / 12,
+                                   CLEANSING_FLAME_SPELL, mon->pos(), mon);
+        fire_tracer(mon, tracer, true);
+        return !mons_should_fire(tracer);
+    }
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

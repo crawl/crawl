@@ -2316,6 +2316,17 @@ static const struct spell_desc spelldata[] =
 #endif
 
 {
+    SPELL_SUMMON_HOLIES, "Summon Holies",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     5, 0,
+     NULL,
+},
+
+{
     SPELL_HEAL_OTHER, "Heal Other",
      SPTYP_NONE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL
@@ -3527,6 +3538,17 @@ static const struct spell_desc spelldata[] =
      0,
      -1, -1,
      25, 0,
+     NULL,
+},
+
+{
+    SPELL_CLEANSING_FLAME, "Cleansing Flame",
+     SPTYP_NONE,
+     SPFLAG_AREA | SPFLAG_MONSTER,
+     8,
+     200,
+     -1, -1,
+     20, 0,
      NULL,
 },
 
