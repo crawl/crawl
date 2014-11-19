@@ -81,7 +81,6 @@ struct bolt
     bool        pierce;                // Can the beam pass through a target and
                                        // hit another target behind the first?
     bool        is_explosion;
-    bool        is_big_cloud;          // expands into big_cloud at endpoint
     bool        aimed_at_spot;         // aimed at (x, y), should not cross
     string      aux_source;            // source of KILL_MISC beams
 
@@ -209,6 +208,7 @@ private:
     bool need_regress() const;
     bool can_see_invis() const;
     bool nightvision() const;
+    bool is_big_cloud() const; // expands into big_cloud at endpoint
 
     set<string> message_cache;
     void emit_message(const char* msg);

@@ -280,7 +280,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
      SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
+         | SPFLAG_CLOUD,
      6,
      200,
      6, 6,
@@ -291,7 +292,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF
+         | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
      3,
      100,
      5, 5,
@@ -470,7 +472,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER
+         | SPFLAG_CLOUD,
      6,
      200,
      6, 6,
@@ -1733,7 +1736,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_NOXIOUS_CLOUD, "Noxious Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER
+         | SPFLAG_CLOUD,
      5,
      200,
      6, 6,
@@ -1843,7 +1847,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MIASMA_BREATH, "Miasma Breath",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_UNCLEAN | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNCLEAN | SPFLAG_MONSTER
+         | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
      6,
      0,
      6, 6,
@@ -1955,7 +1960,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CHAOS_BREATH, "Chaos Breath",
      SPTYP_CONJURATION | SPTYP_RANDOM,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY
+         | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
      5,
      0,
      6, 6,
@@ -2352,7 +2358,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HOLY_BREATH, "Holy Breath",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
      5,
      200,
      6, 6,
@@ -2635,7 +2641,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GHOSTLY_FLAMES, "Ghostly Flames",
      SPTYP_CONJURATION | SPTYP_NECROMANCY,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_CLOUD,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -3335,7 +3341,7 @@ static const struct spell_desc spelldata[] =
     SPELL_FLAMING_CLOUD, "Flaming Cloud",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF | SPFLAG_MONSTER
-         | SPFLAG_NEEDS_TRACER,
+         | SPFLAG_NEEDS_TRACER | SPFLAG_CLOUD,
      5,
      0,
      6, 6,

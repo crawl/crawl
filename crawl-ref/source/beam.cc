@@ -619,7 +619,7 @@ void bolt::initialise_fire()
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (pierce) ? "beam" : "missile",
           (is_explosion) ? "*" :
-          (is_big_cloud) ? "+" : "",
+          (is_big_cloud()) ? "+" : "",
           (is_tracer) ? " tracer" : "",
           name.c_str(),
           source.x, source.y,
@@ -2614,7 +2614,7 @@ void bolt::affect_endpoint()
 
 bool bolt::stop_at_target() const
 {
-    return is_explosion || is_big_cloud || aimed_at_spot;
+    return is_explosion || is_big_cloud() || aimed_at_spot;
 }
 
 void bolt::drop_object()
@@ -2815,8 +2815,8 @@ void bolt::affect_place_clouds()
     if (origin_spell == SPELL_HOLY_BREATH)
         place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, agent());
 
-    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
-        place_cloud(CLOUD_FIRE, p,random2(4) + 2, agent());
+    if (origin_spell == SPELL_FLAMING_CLOUD)
+        place_cloud(CLOUD_FIRE, p, random2(4) + 2, agent());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
@@ -3081,7 +3081,7 @@ bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
-    if (in_good_standing(GOD_QAZLAL) && is_big_cloud)
+    if (in_good_standing(GOD_QAZLAL) && is_big_cloud())
         return true;
 
     switch (flavour)
@@ -3113,7 +3113,7 @@ bool bolt::harmless_to_player() const
 
     case BEAM_POISON:
         return player_res_poison(false) >= 3
-               || is_big_cloud && player_res_poison(false) > 0;
+               || is_big_cloud() && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
         return player_res_poison(false) > 0 || you.clarity(false)
@@ -3126,7 +3126,7 @@ bool bolt::harmless_to_player() const
         return you.res_petrify() || you.petrified();
 
     case BEAM_COLD:
-        return is_big_cloud && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
+        return is_big_cloud() && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
 
 #if TAG_MAJOR_VERSION == 34
     case BEAM_FIRE:
@@ -3163,6 +3163,11 @@ bool bolt::nightvision() const
 bool bolt::can_see_invis() const
 {
     return agent() && agent()->alive() && agent()->can_see_invisible();
+}
+
+bool bolt::is_big_cloud() const
+{
+    return get_spell_flags(origin_spell) & SPFLAG_CLOUD;
 }
 
 coord_def bolt::leg_source() const
@@ -3260,7 +3265,7 @@ bool bolt::misses_player()
     if (is_enchantment())
         return false;
 
-    const bool engulfs = is_explosion || is_big_cloud;
+    const bool engulfs = is_explosion || is_big_cloud();
 
     if (is_explosion || aimed_at_feet || auto_hit)
     {
@@ -3848,7 +3853,7 @@ void bolt::affect_player()
         return;
     }
 
-    const bool engulfs = is_explosion || is_big_cloud;
+    const bool engulfs = is_explosion || is_big_cloud();
 
     if (is_enchantment())
     {
@@ -4755,7 +4760,7 @@ void bolt::affect_monster(monster* mon)
     }
 
     // Explosions always 'hit'.
-    const bool engulfs = (is_explosion || is_big_cloud);
+    const bool engulfs = (is_explosion || is_big_cloud());
 
     if (is_enchantment())
     {
@@ -5724,7 +5729,7 @@ int bolt::range_used_on_hit() const
     else if (flavour == BEAM_HELLFIRE)
         used = 0;
     // Generic explosion.
-    else if (is_explosion || is_big_cloud)
+    else if (is_explosion || is_big_cloud())
         used = BEAM_STOP;
     // Lightning goes through things.
     else if (flavour == BEAM_ELECTRICITY)
@@ -6301,7 +6306,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                thrower(KILL_MISC), ex_size(0), source_id(MID_NOBODY),
                source_name(), name(), short_name(), hit_verb(),
                loudness(0), noise_msg(), pierce(false), is_explosion(false),
-               is_big_cloud(false), aimed_at_spot(false), aux_source(),
+               aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
                effect_wanton(false),
                draw_delay(15), explode_delay(50),
