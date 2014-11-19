@@ -167,4 +167,5 @@ int pakellas_effective_hex_power(int pow);
 bool pakellas_device_surge();
 
 bool ukayaw_stomp();
+bool ukayaw_partner_pass();
 #endif

@@ -6674,3 +6674,132 @@ bool ukayaw_stomp()
         }, you.pos());
     return true;
 }
+
+bool ukayaw_partner_pass()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat partner pass.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return false;
+    }
+    // query for location:
+    int range = 8;
+    int pow = min(200, 50 + you.skill(SK_INVOCATIONS) * 6);
+    dist beam;
+    bolt partner_pass;
+    partner_pass.thrower = KILL_YOU;
+    partner_pass.name = "partner pass";
+    partner_pass.source_name = "you";
+    partner_pass.source_id = MID_PLAYER;
+    partner_pass.flavour = BEAM_CONFUSION;
+    partner_pass.source = you.pos();
+    partner_pass.hit = AUTOMATIC_HIT;
+    partner_pass.range = range;
+    partner_pass.ench_power = pow;
+    partner_pass.pierce = true;
+
+    while (1)
+    {
+        targetter_monster_sequence tgt(&you, pow, range);
+
+        direction_chooser_args args;
+        args.restricts = DIR_LEAP;
+        args.mode = TARG_ANY;
+        args.needs_path = false;
+        args.top_prompt = "Aiming: <white>Partner Pass</white>";
+        args.range = 8;
+
+        if (!spell_direction(beam, partner_pass, &args))
+        {
+            clear_messages();
+            mpr("Cancelling partner pass due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+            return false;         // early return
+
+        monster* beholder = you.get_beholder(beam.target);
+        if (beholder)
+        {
+            clear_messages();
+            mprf("You cannot move away from %s!",
+                 beholder->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        monster* fearmonger = you.get_fearmonger(beam.target);
+        if (fearmonger)
+        {
+            clear_messages();
+            mprf("You cannot move closer to %s!",
+                 fearmonger->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        monster* mons = monster_at(beam.target);
+        if (mons && you.can_see(*mons))
+        {
+            clear_messages();
+            mpr("You can't stand on top of the monster!");
+            continue;
+        }
+
+        if (grd(beam.target) == DNGN_OPEN_SEA)
+        {
+            clear_messages();
+            mpr("You can't partner pass into the sea!");
+            continue;
+        }
+        else if (grd(beam.target) == DNGN_LAVA_SEA)
+        {
+            clear_messages();
+            mpr("You can't partner pass into the sea of lava!");
+            continue;
+        }
+        else if (cell_is_solid(beam.target))
+        {
+            clear_messages();
+            mpr("You can't walk through walls!");
+            continue;
+        }
+        else if (!check_moveto(beam.target, "partner pass"))
+        {
+            // try again (messages handled by check_moveto)
+        }
+        else if (you.see_cell_no_trans(beam.target))
+        {
+            // Grid in los, no problem.
+            break;
+        }
+        else if (you.trans_wall_blocking(beam.target))
+        {
+            clear_messages();
+            mpr("There's something in the way!");
+        }
+        else
+        {
+            clear_messages();
+            mpr("You can only travel to visible locations.");
+        }
+    }
+
+    if (monster_at(beam.target))
+        mpr("Something unexpectedly blocked you, preventing you from "
+                "passing!");
+    else
+    {
+        partner_pass.fire();
+        you.stop_being_constricted(false);
+        move_player_to_grid(beam.target, false);
+    }
+
+    crawl_state.cancel_cmd_again();
+    crawl_state.cancel_cmd_repeat();
+
+    return true;
+}

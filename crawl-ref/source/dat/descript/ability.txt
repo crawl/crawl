@@ -763,6 +763,12 @@ shockwave through all adjacent creatures. The shockwave deals damages the
 creatures it passes through in proportion to the creature's maximum health and
 the reveler's Invocations skill.
 %%%%
+Partner Pass ability
+
+The reveler passes from partner to partner with superhuman speed, ending up in a
+new location and leaving the dance partners confused. The power of the confusion
+increases with Invocations skill.
+%%%%
 Renounce Religion ability
 
 Renounces your faith. This will make you leave your god (and usually anger

@@ -442,6 +442,8 @@ static const ability_def Ability_List[] =
     // Ukayaw
     { ABIL_UKAYAW_STOMP, "Stomp",
         4, 0, 100, generic_cost::fixed(20), abflag::NONE },
+    { ABIL_UKAYAW_PARTNER_PASS, "Partner Pass",
+        5, 0, 200, generic_cost::fixed(40), abflag::NONE},
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, abflag::NONE },
@@ -1000,6 +1002,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_PLANT_RING:
     case ABIL_QAZLAL_UPHEAVAL:
+    case ABIL_UKAYAW_PARTNER_PASS:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
         break;
@@ -3047,6 +3050,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_UKAYAW_STOMP:
         fail_check();
         if (!ukayaw_stomp())
+            return SPRET_ABORT;
+        break;
+
+    case ABIL_UKAYAW_PARTNER_PASS:
+        fail_check();
+        if (!ukayaw_partner_pass())
             return SPRET_ABORT;
         break;
 

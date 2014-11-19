@@ -451,9 +451,9 @@ const vector<god_power> god_powers[NUM_GODS] =
     },
     // Ukayaw
     {
-      { 1, ABIL_UKAYAW_STOMP,
-           "stomp with the beat" },
-    }
+      { 1, ABIL_UKAYAW_STOMP, "stomp with the beat" },
+      { 2, ABIL_UKAYAW_PARTNER_PASS, "pass through a line of other dancers" },
+    },
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -496,6 +496,7 @@ void god_power::display(bool gaining, const char* fmt) const
     else
         god_speaks(you.religion, make_stringf(fmt, str).c_str());
 }
+
 
 static void _place_delayed_monsters();
 

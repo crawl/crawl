@@ -1370,3 +1370,90 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
            (zapped[loc] > 0)          ? AFF_MAYBE
                                       : AFF_NO;
 }
+
+targetter_monster_sequence::targetter_monster_sequence(const actor *act, int pow, int r) :
+                          targetter_beam(act, r, ZAP_EXPLOSIVE_BOLT, pow, 0, 0)
+{
+}
+
+bool targetter_monster_sequence::set_aim(coord_def a)
+{
+    if (!targetter_beam::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+    tempbeam.target = origin;
+    bool last_cell_has_mons = true;
+    bool passed_through_mons = false;
+    for (auto c : path_taken)
+    {
+        if (!last_cell_has_mons)
+            return false; // we must have an uninterrupted chain of monsters
+
+        if (cell_is_solid(c))
+            break;
+
+        tempbeam.target = c;
+        if (anyone_there(c))
+        {
+            passed_through_mons = true;
+            tempbeam.use_target_as_pos = true;
+            exp_map.init(INT_MAX);
+            tempbeam.determine_affected_cells(exp_map, coord_def(), 0,
+                                              0, true, true);
+        }
+        else
+            last_cell_has_mons = false;
+    }
+
+    return passed_through_mons;
+}
+
+bool targetter_monster_sequence::valid_aim(coord_def a)
+{
+    if (!targetter_beam::set_aim(a))
+        return false;
+
+    bool last_cell_has_mons = true;
+    bool passed_through_mons = false;
+    for (auto c : path_taken)
+    {
+        if (!last_cell_has_mons)
+            return false; // we must have an uninterrupted chain of monsters
+
+        if (cell_is_solid(c))
+            return false;
+
+        if (!anyone_there(c))
+            last_cell_has_mons = false;
+        else
+            passed_through_mons = true;
+    }
+
+    return passed_through_mons;
+}
+
+aff_type targetter_monster_sequence::is_affected(coord_def loc)
+{
+    bool on_path = false;
+    for (auto c : path_taken)
+    {
+        if (cell_is_solid(c))
+            break;
+        if (c == loc)
+            on_path = true;
+        if (anyone_there(c)
+            && !beam.ignores_monster(monster_at(c))
+            && (loc - c).rdist() <= 9)
+        {
+            coord_def centre(9,9);
+            if (exp_map(loc - c + centre) < INT_MAX
+                && !cell_is_solid(loc))
+            {
+                return AFF_YES;
+            }
+        }
+    }
+
+    return on_path ? AFF_TRACER : AFF_NO;
+}
