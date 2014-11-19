@@ -954,7 +954,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         _exit_stair_message(stair_find);
 
     // Did we enter a new branch.
-    if (!player_in_branch(old_level.branch))
+    if (!player_in_branch(old_level.branch)
+        && stair_taken == branches[you.where_are_you].entry_stairs)
     {
         const branch_type branch = you.where_are_you;
         if (branches[branch].entry_message)
