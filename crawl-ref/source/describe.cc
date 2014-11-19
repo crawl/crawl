@@ -29,6 +29,7 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
@@ -3914,6 +3915,26 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     {
         inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
                  << " is vulnerable to silver and hated by Zin.\n";
+    }
+
+    if (in_good_standing(GOD_ZIN, 0))
+    {
+        const int check = mons_class_hit_dice(mi.type) - zin_recite_power();
+        if (check >= 0)
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " is too strong to be recited to.\n";
+        }
+        else if (check >= -5)
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " may be too strong to be recited to.\n";
+        }
+        else
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " is weak enough to be recited to.\n";
+        }
     }
 
     if (mi.is(MB_SUMMONED))
