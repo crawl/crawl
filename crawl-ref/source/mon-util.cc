@@ -3622,66 +3622,22 @@ bool mons_can_attack(const monster* mon)
     return adjacent(mon->pos(), foe->pos());
 }
 
+/**
+ * What gender are monsters of the given class?
+ *
+ * Used for pronoun selection.
+ *
+ * @param mc        The type of monster in question
+ * @return          GENDER_NEUTER, _FEMALE, or _MALE.
+ */
 static gender_type _mons_class_gender(monster_type mc)
 {
-    gender_type gender = GENDER_NEUTER;
-
-    if (mc == MONS_QUEEN_ANT
-        || mc == MONS_QUEEN_BEE
-        || mc == MONS_HARPY
-        || mc == MONS_WATER_NYMPH)
-    {
-        gender = GENDER_FEMALE;
-    }
-    else if (mc == MONS_HELLBINDER
-             || mc == MONS_CLOUD_MAGE)
-    {
-        gender = GENDER_MALE;
-    }
-    else if (mons_is_unique(mc) && !mons_is_pghost(mc))
-    {
-        if (mons_species(mc) == MONS_SERPENT_OF_HELL)
-            mc = MONS_SERPENT_OF_HELL;
-        switch (mc)
-        {
-        case MONS_JESSICA:
-        case MONS_PSYCHE:
-        case MONS_JOSEPHINE:
-        case MONS_AGNES:
-        case MONS_MAUD:
-        case MONS_LOUISE:
-        case MONS_FRANCES:
-        case MONS_MARGERY:
-        case MONS_EROLCHA:
-        case MONS_ERICA:
-        case MONS_TIAMAT:
-        case MONS_ERESHKIGAL:
-        case MONS_ROXANNE:
-        case MONS_SONJA:
-        case MONS_ILSUIW:
-        case MONS_NERGALLE:
-        case MONS_KIRKE:
-        case MONS_DUVESSA:
-        case MONS_THE_ENCHANTRESS:
-        case MONS_NELLIE:
-        case MONS_ARACHNE:
-        case MONS_NATASHA:
-        case MONS_VASHNIA:
-            gender = GENDER_FEMALE;
-            break;
-        case MONS_ROYAL_JELLY:
-        case MONS_LERNAEAN_HYDRA:
-        case MONS_IRON_GIANT:
-        case MONS_SERPENT_OF_HELL:
-            gender = GENDER_NEUTER;
-            break;
-        default:
-            gender = GENDER_MALE;
-            break;
-        }
-    }
-
-    return gender;
+    const bool female = mons_class_flag(mc, M_FEMALE);
+    const bool male = mons_class_flag(mc, M_MALE);
+    ASSERT(!(male && female));
+    return male ? GENDER_MALE :
+         female ? GENDER_FEMALE :
+                  GENDER_NEUTER;
 }
 
 // Use of variant (case is irrelevant here):
@@ -4678,6 +4634,11 @@ void debug_mondata()
         {
             fails += make_stringf("%s has 0 speed\n", name);
         }
+
+        const bool male = mons_class_flag(mc, M_MALE);
+        const bool female = mons_class_flag(mc, M_FEMALE);
+        if (male && female)
+            fails += make_stringf("%s is both male and female\n", name);
     }
 
     if (!fails.empty())

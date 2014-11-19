@@ -89,9 +89,11 @@ const uint64_t M_FAST_REGEN        = 1<<26;
 // cannot regenerate
 const uint64_t M_NO_REGEN          = 1<<27;
 
-                                   //1<<28;
+// uses male pronouns
+const uint64_t M_MALE              = 1<<28;
 
-                                   //1<<29;
+// uses female pronouns
+const uint64_t M_FEMALE            = 1<<29;
 
 // boneless corpses
 const uint64_t M_NO_SKELETON       = 1<<30;
