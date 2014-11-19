@@ -591,7 +591,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_COLD;
         beam.hit      = 17 + power / 25;
         beam.pierce   = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_SHOCK:
@@ -753,7 +752,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_MEPHITIC;
         beam.hit      = 18 + power / 25;
         beam.pierce   = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_POISONOUS_CLOUD:
@@ -763,7 +761,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_POISON;
         beam.hit      = 18 + power / 25;
         beam.pierce   = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_ENERGY_BOLT:        // eye of devastation
@@ -841,7 +838,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit      = 14 + power / 30;
         beam.ench_power = power; // probably meaningless
         beam.is_explosion = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_MIASMA_BREATH:      // death drake
@@ -851,7 +847,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_MIASMA;
         beam.hit      = 17 + power / 20;
         beam.pierce   = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon and purple draconian
@@ -926,7 +921,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit          = 30;
         beam.flavour      = BEAM_CHAOS;
         beam.pierce       = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_CHILLING_BREATH:
@@ -955,7 +949,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_HOLY;
         beam.hit      = 18 + power / 25;
         beam.pierce   = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_PORKALATOR:
@@ -1034,7 +1027,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_GHOSTLY_FLAME;
         beam.hit      = AUTOMATIC_HIT;
         beam.pierce   = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_GHOSTLY_FIREBALL:
@@ -1193,7 +1185,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit          = 30;
         beam.flavour      = BEAM_FIRE;
         beam.pierce       = true;
-        beam.is_big_cloud = true;
         break;
 
     case SPELL_THROW_BARBS:

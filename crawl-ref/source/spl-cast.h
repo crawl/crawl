@@ -41,6 +41,7 @@ enum spflag_type
                                                  // target self
     SPFLAG_UTILITY             = 0x1000000,      // usable no matter what foe is
     SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
+    SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
 };
 
 enum spret_type
