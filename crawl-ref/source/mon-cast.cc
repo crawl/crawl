@@ -6992,7 +6992,7 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
 
     if (foe.is_player())
     {
-        const string killed_by = make_stringf("Hit by %s, thrown by %s",
+        const string killed_by = make_stringf("Hit by %s thrown by %s",
                                               goblin.name(DESC_A).c_str(),
                                               tosser.name(DESC_PLAIN).c_str());
         ouch(dam, KILLED_BY_BEAM, tosser.mid, killed_by.c_str());
