@@ -185,7 +185,7 @@ unsigned int mcache_manager::register_monster(const monster_info& minf)
 
 void mcache_manager::clear_nonref()
 {
-    for (mcache_entry *entry : m_entries)
+    for (mcache_entry *&entry : m_entries)
     {
         if (!entry || entry->ref_count() > 0)
             continue;
