@@ -287,8 +287,8 @@ static const char *divine_title[NUM_GODS][8] =
         "Holy Warrior",       "Exorcist",              "Demon Slayer",             "Bringer of Light"},
 
     // Kikubaaqudgha -- scholarly death.
-    {"Tormented",          "Purveyor of Pain",      "Death's Scholar",          "Merchant of Misery",
-        "Death's Artisan",    "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
+    {"Tormented",          "Purveyor of Pain",      "Scholar of Death",         "Merchant of Misery",
+        "Artisan of Death",   "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
     // Yredelemnul -- zombie death.
     {"Traitor",            "Tainted",                "Torchbearer",             "Fey @Genus@",
