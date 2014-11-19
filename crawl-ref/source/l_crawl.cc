@@ -77,6 +77,13 @@ static int crawl_mpr(lua_State *ls)
         ch = MSGCH_PLAIN;
 
     mprf(static_cast<msg_channel_type>(ch), "%s", message);
+
+    FILE *f = fopen("messages.out", "a");
+    fprintf(f, "%s\n", message);
+    fflush(f);
+    fsync(fileno(f));
+    fclose(f);
+
     return 0;
 }
 

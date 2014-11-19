@@ -49,6 +49,7 @@ run_one()
     test) # Not in "all".
         echo "crawl -test" 1>&2
         $CRAWL -test
+        cat messages.out 1>&2
     ;;
     *)
         echo "No such test." 1>&2
