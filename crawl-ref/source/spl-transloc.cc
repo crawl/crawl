@@ -1164,7 +1164,7 @@ spret_type cast_singularity(int pow, const coord_def& where, bool fail)
 
         fail_check();
 
-        mpr("You see a ghostly outline there, and the spell fizzles.");
+        canned_msg(MSG_GHOSTLY_OUTLINE);
         return SPRET_SUCCESS;
     }
 

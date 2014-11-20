@@ -3167,7 +3167,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                                victim->conj_verb("twitch").c_str());
             }
             else
-                mpr("You see a ghostly outline there, and the spell fizzles.");
+                canned_msg(MSG_GHOSTLY_OUTLINE);
         }
         return SPRET_SUCCESS;      // Don't give free detection!
     }
