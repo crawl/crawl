@@ -30,7 +30,7 @@
 #include <android/log.h>
 #include <GLES/gl.h>
 #include <signal.h>
-//#include <SDL_mixer.h>
+#include <SDL_mixer.h>
 #endif
 
 WindowManager *wm = NULL;
@@ -41,7 +41,7 @@ void WindowManager::create()
         return;
 
     wm = new SDLWrapper();
-#if 0 //def __ANDROID__
+#ifdef __ANDROID__
     Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
 #endif
@@ -51,7 +51,7 @@ void WindowManager::shutdown()
 {
     delete wm;
     wm = NULL;
-#if 0 //def __ANDROID__
+#ifdef __ANDROID__
     Mix_CloseAudio();
     while (Mix_Init(0))
         Mix_Quit();
@@ -315,27 +315,9 @@ SDLWrapper::~SDLWrapper()
     SDL_Quit();
 }
 
-#if 0 //def __ANDROID__
-void SDLWrapper::appPutToBackground()
-{
-    SDL_ANDROID_PauseAudioPlayback();
-    raise(SIGHUP);
-}
-
-void SDLWrapper::appPutToForeground()
-{
-    SDL_ANDROID_ResumeAudioPlayback();
-    // re-init
-    wm->swap_buffers();
-}
-#endif
-
 int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
 {
 #ifdef __ANDROID__
-    // set up callbacks for background/foreground events
-//    SDL_ANDROID_SetApplicationPutToBackgroundCallback(
-//            &SDLWrapper::appPutToBackground, &SDLWrapper::appPutToForeground);
     // Do SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER
                  | SDL_INIT_NOPARACHUTE) != 0)

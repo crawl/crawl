@@ -56,12 +56,6 @@ public:
                               tex_proc_func proc = NULL,
                               bool force_power_of_two = true);
 
-#ifdef __ANDROID__
-    // Android background/foreground functions
-    static void appPutToForeground();
-    static void appPutToBackground();
-#endif
-
 protected:
     // Helper functions
     SDL_Surface *load_image(const char *file) const;
