@@ -1455,7 +1455,8 @@ clean-contrib:
 clean-android:
 ifneq ($(ANDROID),)
 	$(RM) -r $(datadir_fp)
-	+cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean
+	+cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean \
+	 && remove AndroidManifest.xml
 endif
 
 distclean: clean clean-contrib clean-rltiles
@@ -1714,7 +1715,11 @@ mac-app-console: all
 #############################################################################
 # Building the Android package
 #
-android: install-data .android-cflags
+
+android-project/AndroidManifest.xml: android-project/AndroidManifest.xml.in
+	sed "s/@CRAWL_VERSION@/${SRC_VERSION}/" <android-project/AndroidManifest.xml.in >android-project/AndroidManifest.xml
+
+android: install-data .android-cflags android-project/AndroidManifest.xml
 ifeq ($(ANDROID),)
 	@echo Please define ANDROID to use this build.
 	@exit 1
