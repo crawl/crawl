@@ -3262,6 +3262,9 @@ static bool _shield_piercing(bolt *pbolt)
 
 bool bolt::misses_player()
 {
+    if (flavour == BEAM_VISUAL)
+        return true;
+
     if (is_enchantment())
         return false;
 

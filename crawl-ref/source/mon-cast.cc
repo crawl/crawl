@@ -6965,24 +6965,6 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
     if (!(goblin.flags & MF_WAS_IN_VIEW))
         goblin.seen_context = SC_THROWN_IN;
 
-    bolt beam;
-    beam.range   = INFINITE_DISTANCE;
-    beam.flavour = BEAM_VISUAL;
-    beam.source  = old_pos;
-    beam.target  = chosen_dest;
-    beam.name    = "GOBLIN BEAM";
-    const monster_info mi(&goblin);
-    const cglyph_t glyph = get_mons_glyph(mi);
-    beam.glyph   = glyph.ch;
-    beam.colour  = glyph.col;
-
-    beam.draw_delay = 30; // Make beam animation somewhat slower than normal.
-    beam.aimed_at_spot = true;
-    beam.fire();
-
-    goblin.move_to_pos(chosen_dest);
-    goblin.apply_location_effects(old_pos);
-    goblin.check_redraw(old_pos);
     if (thrower_seen || victim_was_seen)
     {
         const string victim_name = goblin.name(DESC_THE);
@@ -6996,7 +6978,26 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
              (thrower_seen ? thrower_name.c_str() : "Something"),
              (victim_was_seen ? victim_name.c_str() : "something"),
              destination.c_str());
+
+        bolt beam;
+        beam.range   = INFINITE_DISTANCE;
+        beam.flavour = BEAM_VISUAL;
+        beam.source  = tosser.pos();
+        beam.target  = chosen_dest;
+        beam.name    = "GOBLIN BEAM";
+        const monster_info mi(&goblin);
+        const cglyph_t glyph = get_mons_glyph(mi);
+        beam.glyph   = glyph.ch;
+        beam.colour  = glyph.col;
+
+        beam.draw_delay = 30; // Make beam animation somewhat slower than normal.
+        beam.aimed_at_spot = true;
+        beam.fire();
     }
+
+    goblin.move_to_pos(chosen_dest);
+    goblin.apply_location_effects(old_pos);
+    goblin.check_redraw(old_pos);
 
     if (foe.is_player())
     {
