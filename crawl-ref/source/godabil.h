@@ -121,4 +121,5 @@ bool ru_power_leap();
 bool ru_apocalypse();
 
 bool w_blend_in();
+bool w_change_of_scenery();
 #endif

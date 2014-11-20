@@ -6251,3 +6251,28 @@ bool w_blend_in()
 
     return true;
 }
+
+bool w_change_of_scenery()
+{
+    if (you.no_tele_print_reason(true, false))
+        return false;
+
+    you_teleport_now(false);
+
+    // apply dimensional anchor
+    int invo = you.skill(SK_INVOCATIONS);
+    int dur = 40 + random2(11) - random2(invo+1) - invo;
+    if (dur > 0)
+    {
+        simple_god_message(" commands that you take a look around before leaving.");
+        you.increase_duration(DUR_DIMENSION_ANCHOR, dur, 50);
+        if (you.duration[DUR_TELEPORT])
+        {
+            you.duration[DUR_TELEPORT] = 0;
+            mpr("Your teleport is interrupted.");
+        }
+        you.duration[DUR_PHASE_SHIFT] = 0;
+        you.redraw_evasion = true;
+    }
+    return true;
+}

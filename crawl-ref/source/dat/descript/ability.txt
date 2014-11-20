@@ -813,6 +813,13 @@ Accepting a sacrifice will reset the timer to the standard length.
 Blend In
 
 Travel instantly through any number of adjacent enemies, confusing them.
+The power of the confusion effect is determined by your Invocations skill.
+%%%%
+Change of Scenery
+
+Instantaneously teleport to another location on the same level, and gain the
+dimensional anchor status for a while after. The duration of the dimensional
+anchor decreases as your Invocations increase.
 %%%%
 Renounce Religion ability
 

@@ -218,6 +218,7 @@ enum ability_type
     ABIL_RU_REJECT_SACRIFICES,
     // Backtrackticus
     ABIL_W_BLEND_IN,
+    ABIL_W_CHANGE_OF_SCENERY,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
