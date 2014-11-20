@@ -1090,6 +1090,7 @@ bool is_synthetic_key(int key)
     case KEY_MACRO_MORE_PROTECT:
 #ifdef USE_TILE
     case CK_MOUSE_CMD:
+    case CK_REDRAW:
 #endif
         return true;
     default:

@@ -4,48 +4,35 @@ technical details.
 
 Introduction
 ------------
-DCSS for Android is based on a port of the SDL library written by
-"pelya" (https://github.com/pelya/commandergenius). The library was
-originally put together for an Android version of Commander Genius, but
-has subsequently been repurposed for other apps. It provides a number of
-features that would otherwise need to be written from scratch:
- * pop-up keyboard
- * configurable soft- and hard-keys
- * a multitude of mouse settings suitable for phones and tablets
- * bindings for native foreground/background events
- * .apk packaging
+DCSS for Android employs SDL2's native support for Android applications;
+it is currently built against a distribution of  SDL2 v2.0.3 with some
+homegrown patches to allow it to interact with high resolution screens
+correctly. As with most Android applications, the build process is
+somewhat different from the traditional "./configure; make; make install"
+that you might expect.
 
-The trade-off is a build process that is somewhat different from the
-traditional "./configure; make; make install" that you might expect.
+The Android port is known to build with the NDK's GCC 4.8 toolchain and
+clang toolchains.
 
 
 Build Process
 -------------
 
- * Get the latest Android SDK (here:
-   http://developer.android.com/sdk/index.html)
- * Run "android" and fetch the files for the android-14 platform
- * get the latest Android NDK, r8d (here:
-   http://developer.android.com/sdk/ndk/index.html)
+ * Get the latest Android SDK from http://developer.android.com/sdk/index.html
+ * Run "android" and fetch the files for the android-12 platform
+ * Get the latest Android NDK, r10c at time of writing:
+   http://developer.android.com/sdk/ndk/index.html
  * Configure your PATH. Assuming you've installed the SDK in $SDK and the
    NDK in $NDK: export PATH=$SDK/tools:$SDK/platform-tools:$NDK:$PATH
  * Ensure that you have all of the dependent host libraries required to
-   use the SDK, NDK and build crawl's host tools. For a recent ubuntu host
+   use the SDK, NDK and build crawl's host tools. For a recent Ubuntu host
    these are:
      - ia32-libs
      - build-essential
-     - libpng12-dev
-     - libsdl1.2-dev
-     - libsdl-image1.2-dev
-     - libfreetype6-dev
-   (you may also require libvorbis-dev and zip)
- * If you don't have them already, you need Oracle's JDK and ant installed
- * Get the SDL android port (a modified version of pelya's):
-   git submodule update --checkout crawl-ref/source/contrib/sdl-android
- * run "make android"
- * If it fails, run it again (happens a lot on the first build).
- * you'll find the apk in the source directory. It should be more than 10 MB.
-   If it's only 5.5 MB, run "make android" again.
+     - libpng-dev
+ * If you don't have them already, you need Oracle's JDK and ant installed.
+ * Run "NDK_TOOLCHAIN_VERSION=<version> make ANDROID=1 android", where
+   <version> is either a gcc version or clang (or clang-<version>).
 
 
 Project Structure
@@ -53,58 +40,22 @@ Project Structure
 At a high level, the SDL library and DCSS are laid out on disk as
 follows:
 
-crawl-ref/source/contrib/sdl-android
-  build.sh              # script to build DCSS
-  project/
-    bin/                # where the .apk gets put
-    java/               # Java code that wraps the native game+libs
-    jni/                # where contrib libraries live, including SDL
-      application/src   # symlink to the directory containing crawl-ref
-
-Within the crawl-ref directory there are some additional
-configuration and build scripts that are required to integrate the
-Android libraries with DCSS:
-
- * AndroidBuild.sh
-   This is the point of integration between the NDK's build scripts and
-   Crawl's makefile. By default, Android builds want to use an
-   "Android.mk" file to track compiling/linking tasks, which is no good
-   for DCSS. The exact CFLAGS, LDFLAGS, libraries to link, etc., etc.
-   are also passed from this script into make, in place of any kind of
-   "configure" script. Finally, this script takes care of compressing
-   all of tiles' assets into a resource bundle suitable for inclusion
-   with the .apk.
-
- * AndroidAppSettings.cfg
-   Configuration file that tells the SDL library and its build scripts
-   exactly how to integrate with DCSS, including things like which
-   libraries to use, default key bindings and the like.
-
+crawl-ref/source/android-project
+  bin/                # Where the final .apk is generated.
+  src/                # Java code that wraps the native game and libs
+  jni/                # Where contrib libraries live, including SDL.
 
 Technical Notes
 ---------------
- * this port currently uses r8d of the Android NDK. Even minor revisions
-   of the native dev kit can prevent the app from compiling, or working
-   properly on all Android platforms: be aware if using an earlier (or
-   later!) version
- * there are lots of Android-specifics in the makefile, because (a) the
+ * The external libraries that Crawl needs to build against are pulled from
+   the same "contrib" repositories that Win32 and OS X builds of Crawl
+   use.
+ * There are lots of Android specifics in the Makefile, because (a) the
    custom toolchain needs lots of CFLAGS and LDFLAGS to work properly
    and (b) the target paths for the data directory are completely
    different to where the "executable" lives on Android, and also
-   completely different to the host OS
- * the majority of the changes to the DCSS code are changing GLES calls
+   completely different to the host OS.
+ * The majority of the changes to the DCSS code are changing GLES calls
    so that they work correctly with Android's GLES implementation and
-   integrate properly with the Java-side SDL. The integration is
-   necessary because the SDL library provides overlays for the soft-
-   keyboard and configurable keys, which interferes with some of the
-   OpenGL state
- * the rltiles/ tools get compiled using native tools not the NDK ones,
-   and the environment is cleared for the sub-make. This might cause the
-   build to fail, depending on your environment
- * don't rename the NDK directory: it contains the revision (e.g. -r8d)
-   and some of the build scripts use this to determine which libraries
-   to include
- * the build framework will return "build successful" even if the
-   crawl application is not compiled successfully. A failed build will
-   produce a very small .apk. The error message will be mid-way through
-   the log
+   integrate properly with the Java-side SDL.
+ * The rltiles/ tools get compiled using native tools, not the NDK ones.

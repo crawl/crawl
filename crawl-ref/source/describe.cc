@@ -2474,6 +2474,13 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
 #endif
 
     keyin = toalower(getch_ck());
+#ifdef USE_TILE_LOCAL
+    while (keyin == CK_REDRAW)
+    {
+        menu.draw_menu();
+        keyin = toalower(getch_ck());
+    }
+#endif
     command_type action = _get_action(keyin, actions);
 
 #ifdef TOUCH_UI
@@ -2674,6 +2681,7 @@ static void _adjust_item(item_def &item)
     string prompt = "<cyan>Adjust to which letter? </cyan>";
     formatted_string::parse_string(prompt).display();
     const int keyin = getch_ck();
+    // TODO: CK_RESIZE?
 
     if (isaalpha(keyin))
     {

@@ -17,7 +17,8 @@ public:
     virtual void set(const GLState& state);
     virtual void pixelstore_unpack_alignment(unsigned int bpp);
     virtual void reset_view_for_redraw(float x, float y);
-    virtual void reset_view_for_resize(const coord_def &m_windowsz);
+    virtual void reset_view_for_resize(const coord_def &m_windowsz,
+                                       const coord_def &m_drawablesz);
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale);
     virtual void reset_transform();
 #ifdef __ANDROID__

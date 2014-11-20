@@ -150,6 +150,9 @@
 #include "viewgeom.h"
 #include "view.h"
 #include "viewmap.h"
+#ifdef TOUCH_UI
+#include "windowmanager.h"
+#endif
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
 #include "wiz-fsim.h"
@@ -2176,6 +2179,13 @@ void process_command(command_type cmd)
         debug_terp_dlua(clua);
         break;
 
+#ifdef TOUCH_UI
+    case CMD_SHOW_KEYBOARD:
+        ASSERT(wm);
+        wm->show_keyboard();
+        break;
+#endif
+
     case CMD_NO_CMD:
     default:
         // The backslash in ?\? is there so it doesn't start a trigraph.
@@ -2531,12 +2541,19 @@ static command_type _keycode_to_command(keycode_type key)
 
 static keycode_type _get_next_keycode()
 {
-    keycode_type keyin;
+    keycode_type keyin = 0;
 
     flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
     mouse_control mc(MOUSE_MODE_COMMAND);
-    keyin = unmangle_direction_keys(getch_with_command_macros());
+    for (;;)
+    {
+        keyin = unmangle_direction_keys(getch_with_command_macros());
+        if (keyin == CK_REDRAW)
+            redraw_screen();
+        else
+            break;
+    }
 
     // This is the main clear_messages() with Option.clear_messages.
     if (!is_synthetic_key(keyin))
