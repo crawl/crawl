@@ -25,6 +25,7 @@ butterfly CORPSE_BUTTERFLY
 bat CORPSE_BAT
 raven CORPSE_RAVEN
 caustic_shrike CORPSE_CAUSTIC_SHRIKE
+shard_shrike CORPSE_SHARD_SHRIKE
 
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL

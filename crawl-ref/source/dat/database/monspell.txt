@@ -582,6 +582,10 @@ Hunting Cry seraph cast
 Battlecry seraph cast
 
 @The_monster@ sings a powerful hymn!
+%%%%
+Throw Icicle shard shrike cast
+
+@The_monster@ spits a shard of ice @at@ @target@.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
