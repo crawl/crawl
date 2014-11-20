@@ -8,6 +8,10 @@
 #ifdef __ANDROID__
 # include <SDL.h>
 # include <SDL_image.h>
+# include <android/log.h>
+# include <GLES/gl.h>
+# include <signal.h>
+# include <SDL_mixer.h>
 #else
 # ifdef TARGET_COMPILER_VC
 #  include <SDL.h>
@@ -15,6 +19,9 @@
 #  include <SDL2/SDL.h>
 # endif
 # include <SDL2/SDL_image.h>
+# ifndef WINMM_PLAY_SOUNDS
+#  include <SDL2/SDL_mixer.h>
+# endif
 #endif
 
 #include "cio.h"
@@ -26,13 +33,6 @@
 #include "version.h"
 #include "windowmanager.h"
 
-#ifdef __ANDROID__
-#include <android/log.h>
-#include <GLES/gl.h>
-#include <signal.h>
-#include <SDL_mixer.h>
-#endif
-
 WindowManager *wm = NULL;
 
 void WindowManager::create()
@@ -41,7 +41,7 @@ void WindowManager::create()
         return;
 
     wm = new SDLWrapper();
-#ifdef __ANDROID__
+#ifndef WINMM_PLAY_SOUNDS
     Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
 #endif
@@ -51,7 +51,7 @@ void WindowManager::shutdown()
 {
     delete wm;
     wm = NULL;
-#ifdef __ANDROID__
+#ifndef WINMM_PLAY_SOUNDS
     Mix_CloseAudio();
     while (Mix_Init(0))
         Mix_Quit();
