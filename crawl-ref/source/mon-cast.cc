@@ -6978,6 +6978,21 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
              (thrower_seen ? thrower_name.c_str() : "Something"),
              (victim_was_seen ? victim_name.c_str() : "something"),
              destination.c_str());
+
+        bolt beam;
+        beam.range   = INFINITE_DISTANCE;
+        beam.hit     = AUTOMATIC_HIT;
+        beam.flavour = BEAM_VISUAL;
+        beam.source  = tosser.pos();
+        beam.target  = chosen_dest;
+        beam.name    = goblin.name(DESC_THE);
+        beam.glyph   = mons_char(goblin.type);
+        const monster_info mi(&goblin);
+        beam.colour  = mi.colour();
+
+        beam.draw_delay = 30; // Make beam animation somewhat slower than normal.
+        beam.aimed_at_spot = true;
+        beam.fire();
     }
 
     goblin.move_to_pos(chosen_dest);
