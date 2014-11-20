@@ -4698,10 +4698,15 @@ bool gozag_bribe_branch()
     return false;
 }
 
+static int _upheaval_radius(int pow)
+{
+    return pow >= 100 ? 2 : 1;
+}
+
 spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 {
     int pow = you.skill(SK_INVOCATIONS, 6);
-    const int max_radius = pow >= 100 ? 2 : 1;
+    const int max_radius = _upheaval_radius(pow);
 
     bolt beam;
     beam.name        = "****";
@@ -4964,6 +4969,7 @@ bool qazlal_disaster_area()
     vector<coord_def> targets;
     vector<int> weights;
     const int pow = you.skill(SK_INVOCATIONS, 6);
+    const int upheaval_radius = _upheaval_radius(pow);
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, LOS_NO_TRANS, true);
          ri; ++ri)
     {
@@ -4976,12 +4982,16 @@ bool qazlal_disaster_area()
         {
             friendlies = true;
         }
-        const int dist = distance2(you.pos(), *ri);
-        if (dist <= ((pow < 100) ? 2 : 8))
+
+        const int range = you.pos().range(*ri);
+        const int dist = grid_distance(you.pos(), *ri);
+        if (range <= upheaval_radius)
             continue;
 
         targets.push_back(*ri);
-        int weight = LOS_RADIUS_SQ - dist;
+        // We weight using the square of grid distance, so monsters fewer tiles
+        // away are more likely to be hit.
+        int weight = LOS_RADIUS_SQ - dist * dist;
         if (actor_at(*ri))
             weight *= 10;
         weights.push_back(weight);
