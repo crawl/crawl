@@ -2391,15 +2391,7 @@ colour_t random_monster_colour()
 // Butterflies
 static colour_t _random_butterfly_colour()
 {
-    colour_t col;
-    // Restricted to 'light' colours.
-    do
-    {
-        col = random_monster_colour();
-    }
-    while (is_low_colour(col));
-
-    return col;
+    return random_choose(LIGHTBLUE, LIGHTCYAN, LIGHTMAGENTA, WHITE);
 }
 
 bool init_abomination(monster* mon, int hd)
