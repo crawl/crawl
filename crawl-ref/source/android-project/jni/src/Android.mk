@@ -317,7 +317,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/rltiles/tiledef-unrand.cc \
     $(CRAWL_PATH)/version.cc
 
-LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image freetype sqlite lua zlib
+LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image mikmod smpeg2 SDL2_mixer freetype sqlite lua zlib
 
 LOCAL_LDLIBS := -ldl -lGLESv1_CM -lGLESv2 -llog -landroid
 
