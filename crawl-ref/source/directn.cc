@@ -687,16 +687,15 @@ void full_describe_view()
     if (!list_items.empty())
     {
         vector<InvEntry*> all_items;
-        for (unsigned int i = 0; i < list_items.size(); ++i)
-            all_items.push_back(new InvEntry(list_items[i], true));
+        for (const item_def &item : list_items)
+            all_items.push_back(new InvEntry(item, true));
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
 
         desc_menu.add_entry(new MenuEntry("Items", MEL_SUBTITLE));
-        for (unsigned int i = 0; i < all_items.size(); ++i, hotkey++)
+        for (InvEntry *me : all_items)
         {
-            InvEntry *me = all_items[i];
 #ifndef USE_TILE_LOCAL
             // Show glyphs only for ASCII.
             me->set_show_glyph(true);
@@ -706,15 +705,15 @@ void full_describe_view()
             me->quantity = 2; // Hack to make items selectable.
 
             desc_menu.add_entry(me);
+            ++hotkey;
         }
     }
 
     if (!list_features.empty())
     {
         desc_menu.add_entry(new MenuEntry("Features", MEL_SUBTITLE));
-        for (unsigned int i = 0; i < list_features.size(); ++i, hotkey++)
+        for (const coord_def c : list_features)
         {
-            const coord_def c = list_features[i];
             string desc = "";
 #ifndef USE_TILE_LOCAL
             cglyph_t g = get_cell_glyph(c, true);
@@ -734,6 +733,7 @@ void full_describe_view()
             // Hack to make features selectable.
             me->quantity   = c.x*100 + c.y + 3;
             desc_menu.add_entry(me);
+            ++hotkey;
         }
     }
 
@@ -1520,6 +1520,9 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     // Build the final description string.
     if (!suffixes.empty())
     {
+        // There's Gotta Be A Better Way
+        if (!text.empty() && text[text.size() - 1] != ' ')
+            text += " ";
         text += "("
             + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
             + ")";

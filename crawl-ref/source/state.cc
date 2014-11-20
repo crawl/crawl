@@ -57,8 +57,6 @@ game_state::game_state()
     reset_cmd_again();
 #ifdef TARGET_OS_WINDOWS
     no_gdb = "Non-UNIX Platform -> not running gdb.";
-#elif defined DEBUG_DIAGNOSTICS
-    no_gdb = "Debug build -> run gdb yourself.";
 #else
     no_gdb = access("/usr/bin/gdb", 1) ? "GDB not installed." : 0;
 #endif
@@ -497,8 +495,8 @@ void game_state::dump()
     if (!startup_errors.empty())
     {
         fprintf(stderr, "Startup errors:\n");
-        for (unsigned int i = 0; i < startup_errors.size(); i++)
-            fprintf(stderr, "%s\n", startup_errors[i].c_str());
+        for (const string &err : startup_errors)
+            fprintf(stderr, "%s\n", err.c_str());
         fprintf(stderr, "\n");
     }
 
@@ -507,12 +505,12 @@ void game_state::dump()
     if (doing_prev_cmd_again)
     {
         fprintf(stderr, "Doing prev_cmd again with keys: ");
-        for (unsigned int i = 0; i < prev_cmd_keys.size(); i++)
-            fprintf(stderr, "%d, ", prev_cmd_keys[i]);
+        for (int key : prev_cmd_keys)
+            fprintf(stderr, "%d, ", key);
         fprintf(stderr, "\n");
         fprintf(stderr, "As ASCII keys: ");
-        for (unsigned int i = 0; i < prev_cmd_keys.size(); i++)
-            fprintf(stderr, "%c", (char) prev_cmd_keys[i]);
+        for (int key : prev_cmd_keys)
+            fprintf(stderr, "%c", (char) key);
         fprintf(stderr, "\n\n");
     }
     fprintf(stderr, "repeat_cmd = %s\n", command_to_name(repeat_cmd).c_str());
@@ -528,11 +526,10 @@ void game_state::dump()
     if (!god_act_stack.empty())
     {
         fprintf(stderr, "Other gods acting:\n");
-        for (unsigned int i = 0; i < god_act_stack.size(); i++)
+        for (const god_act_state &godact : god_act_stack)
         {
             fprintf(stderr, "God %s with depth %d\n",
-                    god_name(god_act_stack[i].which_god).c_str(),
-                    god_act_stack[i].depth);
+                    god_name(godact.which_god).c_str(), godact.depth);
         }
         fprintf(stderr, "\n\n");
     }
@@ -547,11 +544,8 @@ void game_state::dump()
     if (!mon_act_stack.empty())
     {
         fprintf(stderr, "Others monsters acting:\n");
-        for (unsigned int i = 0; i < mon_act_stack.size(); i++)
-        {
-            fprintf(stderr, "    %s\n",
-                    debug_mon_str(mon_act_stack[i]).c_str());
-        }
+        for (const monster *mon : mon_act_stack)
+            fprintf(stderr, "    %s\n", debug_mon_str(mon).c_str());
     }
 }
 

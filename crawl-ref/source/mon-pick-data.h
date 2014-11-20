@@ -295,6 +295,7 @@ static const pop_entry pop_swamp[] =
   { -5,  5,  480, UP,   MONS_SLIME_CREATURE },
   {  2,  8,   52, SEMI, MONS_VERY_UGLY_THING },
   {  2,  5,   25, UP,   MONS_TENTACLED_MONSTROSITY },
+  {  2,  5,  385, UP,   MONS_GHOST_CRAB },
   {  2,  6,  425, SEMI, MONS_SHAMBLING_MANGROVE },
   {  1,  6,  480, SEMI, MONS_SPRIGGAN_RIDER },
   {  3,  5,  525, UP,   MONS_SPRIGGAN_DRUID },
@@ -496,7 +497,6 @@ static const pop_entry pop_crypt[] =
   { -3,  3,   70, PEAK, MONS_SHADOW },
   { -3,  3,   40, PEAK, MONS_WIGHT },
   { -3,  3,   45, PEAK, MONS_FLYING_SKULL },
-  {  0,  4,   75, DOWN, MONS_GHOST_CRAB },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -955,6 +955,9 @@ static const pop_entry pop_pan[] =
   {  1,  1,  500, FLAT, MONS_WARMONGER },
   {  1,  1,  500, FLAT, MONS_CORRUPTER },
   {  1,  1,  500, FLAT, MONS_BLACK_SUN },
+  {  1,  1,   50, FLAT, MONS_ANGEL },
+  {  1,  1,   40, FLAT, MONS_CHERUB },
+  {  1,  1,   25, FLAT, MONS_DAEVA },
   { 0,0,0,FLAT,MONS_0 }
 };
 

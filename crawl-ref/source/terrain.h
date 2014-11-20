@@ -115,7 +115,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
 bool slide_feature_over(const coord_def &src,
                         coord_def preferred_dest = coord_def(-1, -1),
-                        bool announce = true);
+                        bool announce = false);
 
 void fall_into_a_pool(dungeon_feature_type terrain);
 

@@ -419,12 +419,11 @@ bool is_being_butchered(const item_def &item, bool just_first)
     if (!you_are_delayed())
         return false;
 
-    for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
+    for (const delay_queue_item &delay : you.delay_queue)
     {
-        if (you.delay_queue[i].type == DELAY_BUTCHER
-            || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD)
+        if (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD)
         {
-            const item_def &corpse = mitm[ you.delay_queue[i].parm1 ];
+            const item_def &corpse = mitm[ delay.parm1 ];
             if (&corpse == &item)
                 return true;
 
@@ -471,12 +470,12 @@ bool already_learning_spell(int spell)
     if (!you_are_delayed())
         return false;
 
-    for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
+    for (const delay_queue_item &delay : you.delay_queue)
     {
-        if (you.delay_queue[i].type != DELAY_MEMORISE)
+        if (delay.type != DELAY_MEMORISE)
             continue;
 
-        if (spell == -1 || you.delay_queue[i].parm1 == spell)
+        if (spell == -1 || delay.parm1 == spell)
             return true;
     }
     return false;

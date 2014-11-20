@@ -1680,26 +1680,29 @@ string scorefile_entry::terse_missile_name() const
     const string pre_post[][2] =
     {
         { "Shot with a", " by " },
-        { "Hit by a",    " thrown by " }
+        { "Hit by ",     " thrown by " }
     };
     const string &aux = auxkilldata;
     string missile;
 
-    for (unsigned i = 0; i < ARRAYSZ(pre_post); ++i)
+    for (const string (&affixes)[2] : pre_post)
     {
-        if (aux.find(pre_post[i][0]) != 0)
+        if (aux.find(affixes[0]) != 0)
             continue;
 
-        string::size_type end = aux.rfind(pre_post[i][1]);
+        string::size_type end = aux.rfind(affixes[1]);
         if (end == string::npos)
             continue;
 
-        int istart = pre_post[i][0].length();
+        int istart = affixes[0].length();
         int nchars = end - istart;
         missile = aux.substr(istart, nchars);
 
-        // Was this prefixed by "an"?
-        if (missile.find("n ") == 0)
+        // Was this prefixed by "a" or "an"?
+        // (This should only ever not be the case with Robin and Ijyb.)
+        if (missile.find("an ") == 0)
+            missile = missile.substr(3);
+        else if (missile.find("a ") == 0)
             missile = missile.substr(2);
     }
     return missile;

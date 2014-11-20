@@ -14,17 +14,17 @@ template <typename T>
 T* random_choose_weighted(vector<pair<T, int> >& choices)
 {
     int total = 0;
-    for (unsigned int i = 0; i < choices.size(); i++)
-        total += choices[i].second;
+    for (const auto &entry : choices)
+        total += entry.second;
     int r = random2(total);
     int sum = 0;
-    for (unsigned int i = 0; i < choices.size(); i++)
+    for (auto &entry : choices)
     {
-        sum += choices[i].second;
+        sum += entry.second;
         if (sum > r)
-            return &choices[i].first;
+            return &entry.first;
     }
-    return NULL;
+    return nullptr;
 }
 
 /**

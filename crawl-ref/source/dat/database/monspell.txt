@@ -574,6 +574,14 @@ Dispel Undead revenant cast
 Blink Away revenant cast
 
 __NONE
+%%%%
+Hunting Cry seraph cast
+
+@The_monster@ shouts a warning to @possessive@ allies!
+%%%%
+Battlecry seraph cast
+
+@The_monster@ sings a powerful hymn!
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

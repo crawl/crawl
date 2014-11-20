@@ -395,7 +395,7 @@ static void _spread_fire(const cloud_struct &cloud)
             did_god_conduct(DID_FIRE, 6);
         }
         else if (cloud.whose == KC_FRIENDLY && !crawl_state.game_is_arena())
-            did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1);
+            did_god_conduct(DID_KILL_PLANT, 1);
 
     }
 }
@@ -842,7 +842,7 @@ bool cloud_is_yours_at(const coord_def &pos)
 cloud_type random_smoke_type()
 {
     return random_choose(CLOUD_GREY_SMOKE, CLOUD_BLUE_SMOKE,
-                         CLOUD_BLACK_SMOKE, CLOUD_PURPLE_SMOKE, -1);
+                         CLOUD_BLACK_SMOKE, CLOUD_PURPLE_SMOKE);
 }
 int max_cloud_damage(cloud_type cl_type, int power)
 {

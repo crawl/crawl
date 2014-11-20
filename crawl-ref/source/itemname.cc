@@ -1117,7 +1117,7 @@ static const char* rod_type_name(int type)
     case ROD_WARDING:         return "warding";
 #endif
     case ROD_LIGHTNING:       return "lightning";
-    case ROD_STRIKING:        return "striking";
+    case ROD_IRON:            return "iron";
     case ROD_SHADOWS:         return "shadows";
 #if TAG_MAJOR_VERSION == 34
     case ROD_VENOM:           return "venom";
@@ -1350,7 +1350,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
         && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
 
-    const bool __know_pluses =
+    const bool know_pluses =
         !basename && !qualname && !dbname
         && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES)
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
@@ -1364,14 +1364,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
     // Display runed/glowing/embroidered etc?
     // Only display this if brand is unknown.
-    const bool show_cosmetic = !__know_pluses && !terse && !basename
+    const bool show_cosmetic = !know_pluses && !terse && !basename
         && !qualname && !dbname
         && !know_brand
         && !(ignore_flags & ISFLAG_COSMETIC_MASK);
-
-    // So that show_cosmetic won't be affected by ignore_flags.
-    const bool know_pluses = __know_pluses
-        && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 
     const bool need_plural = !basename && !dbname;
 
@@ -1841,6 +1837,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
             if (item_typ == ROD_LIGHTNING)
                 buff << "lightning rod";
+            else if (item_typ == ROD_IRON)
+                buff << "iron rod";
             else
                 buff << "rod of " << rod_type_name(item_typ);
         }
@@ -2973,8 +2971,8 @@ bool is_interesting_item(const item_def& item)
         return true;
 
     const string iname = item_prefix(item, false) + " " + item.name(DESC_PLAIN);
-    for (unsigned i = 0; i < Options.note_items.size(); ++i)
-        if (Options.note_items[i].matches(iname))
+    for (const text_pattern &pat : Options.note_items)
+        if (pat.matches(iname))
             return true;
 
     return false;

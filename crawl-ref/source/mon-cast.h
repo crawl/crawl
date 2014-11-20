@@ -21,6 +21,7 @@ bool get_push_space(const coord_def& pos, coord_def& newpos,
                     const vector<coord_def>* excluded = NULL);
 
 bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
+bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 
 bool handle_mon_spell(monster* mons, bolt &beem);
 

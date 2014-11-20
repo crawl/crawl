@@ -1377,6 +1377,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Asterion belongs to Mahkleb.
         else if (mg.cls == MONS_ASTERION)
             mon->god = GOD_MAKHLEB;
+        // Seraphim follow the Shining One.
+        else if (mg.cls == MONS_SERAPH)
+            mon->god = GOD_SHINING_ONE;
         else
         {
             switch (mons_genus(mg.cls))
@@ -2045,9 +2048,9 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     // able to make tentacles!
     monster_spells oldspells = mon->spells;
     mon->spells.clear();
-    for (size_t i = 0; i < oldspells.size(); i++)
-        if (oldspells[i].spell == SPELL_CREATE_TENTACLES)
-            mon->spells.push_back(oldspells[i]);
+    for (const mon_spell_slot &slot : oldspells)
+        if (slot.spell == SPELL_CREATE_TENTACLES)
+            mon->spells.push_back(slot);
 
     // handle zombies with jobs & ghostdemon zombies; they otherwise
     // wouldn't store enough information for us to recreate them right.
@@ -2847,6 +2850,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 3 + random2(3);
         break;
 
+    case MONS_ROBIN:
+        natural_leader = true;
+        band = BAND_ROBIN;
+        band_size = 10 + random2(3);
+        break;
+
     case MONS_RAKSHASA:
         if ((branch_has_monsters(you.where_are_you)
              || !vault_mon_types.empty())
@@ -2936,6 +2945,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
             band = BAND_ANUBIS_GUARD;
             band_size = 1;
         }
+        break;
+
+    case MONS_SERAPH:
+        natural_leader = true;
+        band = BAND_HOLIES;
+        band_size = random_range(1, 3); // same as panlords
         break;
 
     default: ;
@@ -3191,8 +3206,7 @@ static monster_type _band_member(band_type band, int which)
         if (one_chance_in(4))
         {
             return random_choose(MONS_DEEP_TROLL_EARTH_MAGE,
-                                 MONS_DEEP_TROLL_SHAMAN,
-                                 -1);
+                                 MONS_DEEP_TROLL_SHAMAN);
         }
         return MONS_DEEP_TROLL;
     case BAND_HOGS:
@@ -3343,8 +3357,7 @@ static monster_type _band_member(band_type band, int which)
         {
             return random_choose(MONS_SPRIGGAN_AIR_MAGE,
                                  MONS_SPRIGGAN_BERSERKER,
-                                 MONS_SPRIGGAN_RIDER,
-                                 -1);
+                                 MONS_SPRIGGAN_RIDER);
         }
         return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
@@ -3507,6 +3520,11 @@ static monster_type _band_member(band_type band, int which)
     case BAND_VASHNIA:
         return MONS_NAGA_SHARPSHOOTER;
 
+    case BAND_ROBIN:
+        return random_choose_weighted(3, MONS_GOBLIN,
+                                      1, MONS_HOBGOBLIN,
+                                      0);
+
     case BAND_CEREBOV:
         if (which == 1)
             return MONS_BRIMSTONE_FIEND;
@@ -3557,6 +3575,14 @@ static monster_type _band_member(band_type band, int which)
     case BAND_ANUBIS_GUARD:
         return MONS_ANUBIS_GUARD;
 
+    case BAND_HOLIES:
+        // same as Summon Holies right now
+        return random_choose_weighted(100, MONS_ANGEL,
+                                       80, MONS_CHERUB,
+                                       50, MONS_DAEVA,
+                                        1, MONS_OPHAN,
+                                        0);
+
     case BAND_RANDOM_SINGLE:
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
@@ -3601,9 +3627,9 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     else if (!Options.note_monsters.empty())
     {
         const string iname = mons_type_name(mons->type, DESC_A);
-        for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
+        for (const text_pattern &pat : Options.note_monsters)
         {
-            if (Options.note_monsters[i].matches(iname))
+            if (pat.matches(iname))
             {
                 interesting = true;
                 break;
@@ -3635,6 +3661,10 @@ static monster_type _pick_zot_exit_defender()
                 return static_cast<monster_type>(MONS_MNOLEG + i);
             }
         }
+
+        if (one_chance_in(11))
+            return MONS_SERAPH;
+
         return MONS_PANDEMONIUM_LORD;
     }
 
@@ -4102,7 +4132,7 @@ monster_type summon_any_demon(monster_type dct)
     if (dct == RANDOM_DEMON)
     {
         dct = random_choose(RANDOM_DEMON_LESSER, RANDOM_DEMON_COMMON,
-                            RANDOM_DEMON_GREATER, -1);
+                            RANDOM_DEMON_GREATER);
     }
 
     switch (dct)
@@ -4115,8 +4145,7 @@ monster_type summon_any_demon(monster_type dct)
             MONS_WHITE_IMP,
             MONS_UFETUBUS,
             MONS_IRON_IMP,
-            MONS_SHADOW_IMP,
-            -1);
+            MONS_SHADOW_IMP);
 
     case RANDOM_DEMON_COMMON:
         if (x_chance_in_y(6, 10))
@@ -4128,8 +4157,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_ORANGE_DEMON,
                 MONS_RED_DEVIL,
                 MONS_SIXFIRHY,
-                MONS_HELLWING,
-                -1);
+                MONS_HELLWING);
         }
         else
         {
@@ -4141,8 +4169,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_SMOKE_DEMON,
                 MONS_NEQOXEC,
                 MONS_YNOXINUL,
-                MONS_CHAOS_SPAWN,
-                -1);
+                MONS_CHAOS_SPAWN);
         }
 
     case RANDOM_DEMON_GREATER:
@@ -4159,8 +4186,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_REAPER,
                 MONS_LOROCYPROCA,
                 MONS_TORMENTOR,
-                MONS_SHADOW_DEMON,
-                -1);
+                MONS_SHADOW_DEMON);
         }
         else
         {
@@ -4170,8 +4196,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_ICE_FIEND,
                 MONS_SHADOW_FIEND,
                 MONS_HELL_SENTINEL,
-                MONS_EXECUTIONER,
-                -1);
+                MONS_EXECUTIONER);
         }
 
     default:
@@ -4209,8 +4234,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
             MONS_FIRE_DRAGON,
             MONS_ICE_DRAGON,
             MONS_SWAMP_DRAGON,
-            MONS_SHADOW_DRAGON,
-            -1);
+            MONS_SHADOW_DRAGON);
         break;
 
     default:

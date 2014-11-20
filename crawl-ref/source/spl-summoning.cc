@@ -311,7 +311,7 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
     if (random2(pow) > 60 && coinflip())
         type = MONS_SPHINX;
     else
-        type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM, -1);
+        type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM);
 
     int num = (type == MONS_HARPY ? 1 + x_chance_in_y(pow, 80)
                                       + x_chance_in_y(pow - 75, 100)
@@ -476,11 +476,11 @@ static bool _place_dragon()
 
     // Attempt to place adjacent to the first chosen hostile. If there is no
     // valid spot, move on to the next one.
-    for (unsigned int i = 0; i < targets.size(); ++i)
+    for (monster *target : targets)
     {
         // Chose a random viable adjacent spot to the select target
         vector<coord_def> spots;
-        for (adjacent_iterator ai(targets[i]->pos()); ai; ++ai)
+        for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
             if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai)) && !actor_at(*ai))
                 spots.push_back(*ai);
@@ -678,7 +678,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 // Not a spell. Rather, this is TSO's doing.
 bool summon_holy_warrior(int pow, bool punish)
 {
-    mgen_data mg(random_choose(MONS_ANGEL, MONS_DAEVA, -1),
+    mgen_data mg(random_choose(MONS_ANGEL, MONS_DAEVA),
                  punish ? BEH_HOSTILE : BEH_FRIENDLY,
                  punish ? 0 : &you,
                  punish ? 0 : min(2 + (random2(pow) / 4), 6),
@@ -1113,8 +1113,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
         // tier 4
         type = random_choose(MONS_BLUE_DEVIL,    MONS_RUST_DEVIL,
                              MONS_ORANGE_DEMON,  MONS_RED_DEVIL,
-                             MONS_SIXFIRHY,      MONS_HELLWING,
-                             -1);
+                             MONS_SIXFIRHY,      MONS_HELLWING);
     }
     else
     {
@@ -1122,8 +1121,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
         type = random_choose(MONS_SUN_DEMON,     MONS_SOUL_EATER,
                              MONS_ICE_DEVIL,     MONS_SMOKE_DEMON,
                              MONS_NEQOXEC,       MONS_YNOXINUL,
-                             MONS_CHAOS_SPAWN,
-                             -1);
+                             MONS_CHAOS_SPAWN);
     }
 
     return _summon_demon_wrapper(pow, god, spell, type,
@@ -1279,9 +1277,8 @@ coord_def find_gateway_location(actor* caster)
     bool xray = you.xray_vision;
     you.xray_vision = false;
 
-    for (unsigned i = 0; i < 8; ++i)
+    for (coord_def delta : Compass)
     {
-        coord_def delta = Compass[i];
         coord_def test = coord_def(-1, -1);
 
         for (int t = 0; t < 11; t++)
@@ -1923,11 +1920,10 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     return 1;
 }
 
-int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
-                 actor *as, string nas, god_type god, bool actual)
+int animate_dead(actor *caster, int /*pow*/, beh_type beha,
+                 unsigned short hitting, actor *as, string nas, god_type god,
+                 bool actual)
 {
-    UNUSED(pow);
-
     int number_raised = 0;
     int number_seen   = 0;
     int motions       = 0;
@@ -2473,12 +2469,12 @@ void init_servitor(monster* servitor, actor* caster)
         simple_monster_message(servitor, " appears!");
 
     int shortest_range = LOS_RADIUS + 1;
-    for (size_t i = 0; i < servitor->spells.size(); ++i)
+    for (const mon_spell_slot &slot : servitor->spells)
     {
-        if (servitor->spells[i].spell == SPELL_NO_SPELL)
+        if (slot.spell == SPELL_NO_SPELL)
             continue;
 
-        int range = spell_range(servitor->spells[i].spell, 100, false);
+        int range = spell_range(slot.spell, 100, false);
         if (range < shortest_range)
             shortest_range = range;
     }
@@ -2642,24 +2638,21 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
         return SPRET_ABORT;
 
     // Dismiss the summons
-    for (unsigned int i = 0; i < explode.size(); ++i)
-    {
-        monster_die(monster_at(explode[i].first), KILL_DISMISSED, NON_MONSTER,
-                    true);
-    }
+    for (const auto &entry : explode)
+        monster_die(monster_at(entry.first), KILL_DISMISSED, NON_MONSTER, true);
 
     // Now do the explosions
     mpr("You violently release the magic binding your summons!");
-    for (unsigned int i = 0; i < explode.size(); ++i)
+    for (const auto &entry : explode)
     {
         bolt explosion;
         explosion.thrower = KILL_YOU;
-        explosion.source = explode[i].first;
-        explosion.target = explode[i].first;
+        explosion.source = entry.first;
+        explosion.target = entry.first;
         explosion.name = "magical backlash";
         explosion.is_explosion = true;
         explosion.auto_hit = true;
-        explosion.damage = dice_def(1 + div_rand_round(explode[i].second, 4),
+        explosion.damage = dice_def(1 + div_rand_round(entry.second, 4),
                                     7 + pow / 8);
         explosion.flavour = BEAM_MMISSILE;
         explosion.colour  = ETC_MAGIC;
@@ -2864,9 +2857,8 @@ bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
         {
             testbeam.fire();
 
-            for (size_t i = 0; i < testbeam.path_taken.size(); i++)
+            for (const coord_def c : testbeam.path_taken)
             {
-                const coord_def c = testbeam.path_taken[i];
                 if (c != battlesphere->pos() && monster_at(c))
                 {
                     battlesphere->props["firing_target"] = c;
@@ -3118,35 +3110,48 @@ bool fire_battlesphere(monster* mons)
     return used;
 }
 
-spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
+spret_type cast_fulminating_prism(actor* caster, int pow,
+                                  const coord_def& where, bool fail)
 {
-    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_FULMINANT_PRISM,
-                                                 pow)))
+    if (distance2(where, caster->pos())
+        > dist_range(spell_range(SPELL_FULMINANT_PRISM, pow)))
     {
-        mpr("That's too far away.");
+        if (caster->is_player())
+            mpr("That's too far away.");
         return SPRET_ABORT;
     }
 
     if (cell_is_solid(where))
     {
-        mpr("You can't conjure that within a solid object!");
+        if (caster->is_player())
+            mpr("You can't conjure that within a solid object!");
         return SPRET_ABORT;
     }
 
-    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
-    monster* mons = monster_at(where);
-    if (mons)
+    actor* victim = monster_at(where);
+    if (victim)
     {
-        if (you.can_see(mons))
+        if (caster->can_see(victim))
         {
-            mpr("You can't place the prism on a creature.");
+            if (caster->is_player())
+                mpr("You can't place the prism on a creature.");
             return SPRET_ABORT;
         }
 
         fail_check();
 
         // FIXME: maybe should do _paranoid_option_disable() here?
-        mpr("You see a ghostly outline there, and the spell fizzles.");
+        if (caster->is_player()
+            || (you.can_see(caster) && you.see_cell(where)))
+        {
+            if (you.can_see(victim))
+            {
+                mprf("%s %s.", victim->name(DESC_THE).c_str(),
+                               victim->conj_verb("twitch").c_str());
+            }
+            else
+                mpr("You see a ghostly outline there, and the spell fizzles.");
+        }
         return SPRET_SUCCESS;      // Don't give free detection!
     }
 
@@ -3154,15 +3159,27 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
 
     int hd = div_rand_round(pow, 10);
 
-    mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
-                                     3, SPELL_FULMINANT_PRISM,
+    mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM,
+                                     caster->is_player()
+                                     ? BEH_FRIENDLY
+                                     : SAME_ATTITUDE(caster->as_monster()),
+                                     caster, 0, SPELL_FULMINANT_PRISM,
                                      where, MHITYOU, MG_FORCE_PLACE);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 
     if (prism)
-        mpr("You conjure a prism of explosive energy!");
-    else
+    {
+        if (you.can_see(caster))
+        {
+            mprf("%s %s a prism of explosive energy!",
+                 caster->name(DESC_THE).c_str(),
+                 caster->conj_verb("conjure").c_str());
+        }
+        else if (you.can_see(prism))
+            mprf("A prism of explosive energy appears from nowhere!");
+    }
+    else if (you.can_see(caster))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
@@ -3407,7 +3424,7 @@ bool grand_avatar_check_melee(monster* mons, actor* target)
 void trigger_grand_avatar(monster* mons, const actor* victim, spell_type spell,
                           const int old_hp)
 {
-    const bool melee = (spell == SPELL_MELEE);
+    const bool melee = (spell == SPELL_NO_SPELL);
     ASSERT(mons->has_ench(ENCH_GRAND_AVATAR));
 
     actor* avatar = mons->get_ench(ENCH_GRAND_AVATAR).agent();
@@ -3517,6 +3534,7 @@ static const summons_desc summonsdata[] =
     { SPELL_FAKE_MARA_SUMMON,           2, 1 },
     { SPELL_SUMMON_EMPEROR_SCORPIONS,   6, 2 },
     { SPELL_SUMMON_SCARABS,             8, 1 },
+    { SPELL_SUMMON_HOLIES,              4, 2 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              12, 2 },
     { SPELL_WEAVE_SHADOWS,              4, 2 },

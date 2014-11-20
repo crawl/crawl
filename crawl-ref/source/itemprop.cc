@@ -644,14 +644,6 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         return;
     }
 
-    if (inscribe && Options.autoinscribe_cursed
-        && item.inscription.find("was cursed") == string::npos
-        && !item_ident(item, ISFLAG_SEEN_CURSED)
-        && !fully_identified(item))
-    {
-        add_inscription(item, "was cursed");
-    }
-
     if (in_inventory(item))
     {
         if (you.equip[EQ_WEAPON] == item.link)
@@ -719,7 +711,7 @@ actor *net_holdee(const item_def &net)
     return a;
 }
 
-static bool _in_shop(const item_def &item)
+bool in_shop(const item_def &item)
 {
     // yay the shop hack...
     return item.pos.x == 0 && item.pos.y >= 5;
@@ -736,7 +728,7 @@ static bool _is_affordable(const item_def &item)
         return true;
 
     // Disregard shop stuff above your reach.
-    if (_in_shop(item))
+    if (in_shop(item))
         return (int)item_value(item) <= you.gold;
 
     // Explicitly marked by a vault.
@@ -772,16 +764,6 @@ void set_ident_flags(item_def &item, iflags_t flags)
 
     if (fully_identified(item))
     {
-        // Clear "was cursed" inscription once the item is identified.
-        if (Options.autoinscribe_cursed
-            && item.inscription.find("was cursed") != string::npos)
-        {
-            item.inscription = replace_all(item.inscription, ", was cursed", "");
-            item.inscription = replace_all(item.inscription, "was cursed, ", "");
-            item.inscription = replace_all(item.inscription, "was cursed", "");
-            trim_string(item.inscription);
-        }
-
         if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
             && get_ident_type(item) != ID_KNOWN_TYPE
             && is_interesting_item(item))
@@ -2734,13 +2716,13 @@ void remove_whitespace(string &str)
  */
 weapon_type name_nospace_to_weapon(string name_nospace)
 {
-    for (size_t ii = 0; ii < ARRAYSZ(Weapon_prop); ii++)
+    for (const weapon_def &wpn : Weapon_prop)
     {
-        string weap_nospace = Weapon_prop[ii].name;
+        string weap_nospace = wpn.name;
         remove_whitespace(weap_nospace);
 
         if (name_nospace == weap_nospace)
-            return (weapon_type) Weapon_prop[ii].id;
+            return (weapon_type) wpn.id;
     }
 
     // No match found

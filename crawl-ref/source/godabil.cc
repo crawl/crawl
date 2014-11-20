@@ -518,6 +518,10 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 
     eligibility.init(0);
 
+    // Too high HD to ever be affected.
+    if (mon->get_hit_dice() + 5 > zin_recite_power())
+        return 0;
+
     // Anti-chaos prayer: Hits things vulnerable to silver, or with chaotic spells/gods.
     eligibility[RECITE_CHAOTIC] = mon->how_chaotic(true);
 
@@ -562,6 +566,17 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     return 0;
 }
 
+int zin_recite_power()
+{
+    // Resistance is now based on HD.
+    // You can affect up to (30+30)/2 = 30 'power' (HD).
+    const int power_mult = 10;
+    const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
+                           + 3 * power_mult;
+    const int piety_power = you.piety * 3 / 2;
+    return (invo_power + piety_power) / 2 / power_mult;
+}
+
 bool zin_check_able_to_recite(bool quiet)
 {
     if (you.duration[DUR_RECITE])
@@ -594,8 +609,7 @@ bool zin_check_able_to_recite(bool quiet)
  * Otherwise we're actually reciting, and may need to present a menu.
  *
  * @param quiet     Whether to suppress messages.
- * @return  0 if no monsters were found, or if the player declined to choose
- *          a type of recitation, or if all the found monsters returned
+ * @return  0 if no monsters were found, or if all the found monsters returned
  *          zero from _zin_check_recite_to_single_monster().
  * @return  1 if an eligible audience was found.
  * @return  -1 if only an ineligible audience was found: no eligibile
@@ -606,9 +620,6 @@ int zin_check_recite_to_monsters(bool quiet)
 {
     bool found_ineligible = false;
     bool found_eligible = false;
-    recite_counts count(0);
-
-    map<string, int> affected_by_type[NUM_RECITE_TYPES];
 
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
@@ -621,17 +632,14 @@ int zin_check_recite_to_monsters(bool quiet)
         {
         case -1:
             found_ineligible = true;
+        // Intentional fallthrough
         case 0:
             continue;
         }
 
         for (int i = 0; i < NUM_RECITE_TYPES; i++)
             if (retval[i] > 0)
-            {
-                count[i]++;
                 found_eligible = true;
-                ++affected_by_type[i][mon->full_name(DESC_A)];
-            }
     }
 
     if (!found_eligible && !found_ineligible)
@@ -646,13 +654,8 @@ int zin_check_recite_to_monsters(bool quiet)
             dprf("No sensible audience found!");
         return -1;
     }
-
-    int eligible_types = 0;
-    for (int i = 0; i < NUM_RECITE_TYPES; i++)
-        if (count[i] > 0)
-            eligible_types++;
-
-    return 1; // We just recite against everything.
+    else
+        return 1; // We just recite against everything.
 }
 
 enum zin_eff
@@ -709,13 +712,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     if (coinflip())
         return false;
 
-    // Resistance is now based on HD.
-    // You can affect up to (30+30)/2 = 30 'power' (HD).
-    const int power_mult = 10;
-    const int invo_power = you.skill_rdiv(SK_INVOCATIONS, power_mult)
-                           + 3 * power_mult;
-    const int piety_power = you.piety * 3 / 2;
-    const int power = (invo_power + piety_power) / 2 / power_mult;
+    const int power = zin_recite_power();
     // Old recite was mostly deterministic, which is bad.
     const int resist = mon->get_hit_dice() + random2(6);
     const int check = power - resist;
@@ -2408,9 +2405,9 @@ static void _point_point_distance(const vector<coord_def>& origins,
     // Consider all points of origin as blocked (you can search outward
     // from one, but you can't form a path across a different one).
     set<int> base_exclusions;
-    for (unsigned i = 0; i < origins.size(); ++i)
+    for (coord_def c : origins)
     {
-        int idx = origins[i].x + origins[i].y * X_WIDTH;
+        int idx = c.x + c.y * X_WIDTH;
         base_exclusions.insert(idx);
     }
 
@@ -2535,11 +2532,11 @@ static int _collect_fruit(vector<pair<int,int> >& available_fruit)
 static void _decrease_amount(vector<pair<int, int> >& available, int amount)
 {
     const int total_decrease = amount;
-    for (unsigned int i = 0; i < available.size() && amount > 0; i++)
+    for (const auto &avail : available)
     {
-        const int decrease_amount = min(available[i].first, amount);
+        const int decrease_amount = min(avail.first, amount);
         amount -= decrease_amount;
-        dec_inv_item_quantity(available[i].second, decrease_amount);
+        dec_inv_item_quantity(avail.second, decrease_amount);
     }
     if (total_decrease > 1)
         mprf("%d pieces of fruit are consumed!", total_decrease);
@@ -2790,10 +2787,10 @@ int fedhas_check_corpse_spores(bool quiet)
         return count;
 
     viewwindow(false);
-    for (unsigned i = 0; i < positions.size(); ++i)
+    for (const stack_iterator &si : positions)
     {
 #ifndef USE_TILE_LOCAL
-        coord_def temp = grid2view(positions[i]->pos);
+        coord_def temp = grid2view(si->pos);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
 
         unsigned colour = GREEN | COLFLAG_FRIENDLY_MONSTER;
@@ -2803,7 +2800,7 @@ int fedhas_check_corpse_spores(bool quiet)
         put_colour_ch(colour, character);
 #endif
 #ifdef USE_TILE
-        tiles.add_overlay(positions[i]->pos, TILE_SPORE_OVERLAY);
+        tiles.add_overlay(si->pos, TILE_SPORE_OVERLAY);
 #endif
     }
 
@@ -2829,7 +2826,7 @@ int fedhas_corpse_spores(beh_type attitude)
     if (count == 0)
         return count;
 
-    for (unsigned i = 0; i < positions.size(); ++i)
+    for (const stack_iterator &si : positions)
     {
         count++;
 
@@ -2838,7 +2835,7 @@ int fedhas_corpse_spores(beh_type attitude)
                                                &you,
                                                0,
                                                0,
-                                               positions[i]->pos,
+                                               si->pos,
                                                MHITNOT,
                                                MG_FORCE_PLACE,
                                                GOD_FEDHAS)))
@@ -2856,12 +2853,12 @@ int fedhas_corpse_spores(beh_type attitude)
             }
         }
 
-        if (mons_skeleton(positions[i]->mon_type))
-            turn_corpse_into_skeleton(*positions[i]);
+        if (mons_skeleton(si->mon_type))
+            turn_corpse_into_skeleton(*si);
         else
         {
-            item_was_destroyed(*positions[i]);
-            destroy_item(positions[i]->index());
+            item_was_destroyed(*si);
+            destroy_item(si->index());
         }
     }
 
@@ -3236,7 +3233,7 @@ void cheibriados_time_bend(int pow)
             {
                 mprf("%s%s",
                      mon->name(DESC_THE).c_str(),
-                     resist_margin_phrase(res_margin));
+                     mon->resist_margin_phrase(res_margin).c_str());
                 continue;
             }
 
@@ -4205,10 +4202,10 @@ static void _setup_gozag_shop(int index)
                              && type != SHOP_GENERAL_ANTIQUE
                              && type != SHOP_DISTILLERY;
     you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string()
-                                    = need_suffix ?
-                                      random_choose("Shoppe", "Boutique",
-                                                    "Emporium", "Shop", NULL) :
-                                      "";
+                                    = need_suffix
+                                      ? random_choose("Shoppe", "Boutique",
+                                                      "Emporium", "Shop")
+                                      : "";
 
     you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int()
                                     = gozag_price_for_shop();
@@ -4547,12 +4544,12 @@ int gozag_type_bribable(monster_type type, bool force)
     if (!you_worship(GOD_GOZAG) && !force)
         return 0;
 
-    for (unsigned int i = 0; i < ARRAYSZ(mons_bribability); i++)
+    for (const bribability &brib : mons_bribability)
     {
-        if (mons_bribability[i].type == type)
+        if (brib.type == type)
         {
-            return force || branch_bribe[mons_bribability[i].branch]
-                   ? mons_bribability[i].susceptibility
+            return force || branch_bribe[brib.branch]
+                   ? brib.susceptibility
                    : 0;
         }
     }
@@ -4562,23 +4559,18 @@ int gozag_type_bribable(monster_type type, bool force)
 
 branch_type gozag_bribable_branch(monster_type type)
 {
-
-    for (unsigned int i = 0; i < ARRAYSZ(mons_bribability); i++)
-    {
-        if (mons_bribability[i].type == type)
-            return mons_bribability[i].branch;
-    }
+    for (const bribability &brib : mons_bribability)
+        if (brib.type == type)
+            return brib.branch;
 
     return NUM_BRANCHES;
 }
 
 bool gozag_branch_bribable(branch_type branch)
 {
-    for (unsigned int i = 0; i < ARRAYSZ(mons_bribability); i++)
-    {
-        if (mons_bribability[i].branch == branch)
+    for (const bribability &brib : mons_bribability)
+        if (brib.branch == branch)
             return true;
-    }
 
     return false;
 }
@@ -4586,12 +4578,12 @@ bool gozag_branch_bribable(branch_type branch)
 int gozag_branch_bribe_susceptibility(branch_type branch)
 {
     int susceptibility = 0;
-    for (unsigned int i = 0; i < ARRAYSZ(mons_bribability); i++)
+    for (const bribability &brib : mons_bribability)
     {
-        if (mons_bribability[i].branch == branch
-            && susceptibility < mons_bribability[i].susceptibility)
+        if (brib.branch == branch
+            && susceptibility < brib.susceptibility)
         {
-            susceptibility = mons_bribability[i].susceptibility;
+            susceptibility = brib.susceptibility;
         }
     }
 
@@ -4808,9 +4800,9 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         }
     }
 
-    for (unsigned int i = 0; i < affected.size(); i++)
+    for (coord_def pos : affected)
     {
-        beam.draw(affected[i]);
+        beam.draw(pos);
         if (!quiet)
             scaled_delay(25);
     }
@@ -4824,9 +4816,8 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 
     int wall_count = 0;
 
-    for (unsigned int i = 0; i < affected.size(); i++)
+    for (coord_def pos : affected)
     {
-        coord_def pos = affected[i];
         beam.source = pos;
         beam.target = pos;
         beam.fire();
@@ -4972,6 +4963,7 @@ bool qazlal_disaster_area()
     bool friendlies = false;
     vector<coord_def> targets;
     vector<int> weights;
+    const int pow = you.skill(SK_INVOCATIONS, 6);
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, LOS_NO_TRANS, true);
          ri; ++ri)
     {
@@ -4985,11 +4977,14 @@ bool qazlal_disaster_area()
             friendlies = true;
         }
         const int dist = distance2(you.pos(), *ri);
-        if (dist <= 8)
+        if (dist <= ((pow < 100) ? 2 : 8))
             continue;
 
         targets.push_back(*ri);
-        weights.push_back(LOS_RADIUS_SQ - dist);
+        int weight = LOS_RADIUS_SQ - dist;
+        if (actor_at(*ri))
+            weight *= 10;
+        weights.push_back(weight);
     }
 
     if (targets.empty())
@@ -5758,7 +5753,11 @@ bool ru_do_sacrifice(ability_type sac)
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
     // Randomize piety gain very slightly to prevent counting.
-    int new_piety = you.piety + piety_gain + random2(3);
+    // We fuzz the piety gain by up to +-10%, or 5 piety, whichever is smaller.
+    int piety_blur_inc = min(5, piety_gain / 10);
+    int piety_blur = random2((2 * piety_blur_inc) + 1) - piety_blur_inc;
+    int new_piety = you.piety + piety_gain + piety_blur;
+
     if (new_piety > piety_breakpoint(5))
         new_piety = piety_breakpoint(5);
     set_piety(new_piety);
@@ -6064,8 +6063,8 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     //damage scales with XL amd piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
     int effect = random2(5);
-    int duration;
-    string message;
+    int duration = 0;
+    string message = "";
     enchant_type enchantment = ENCH_NONE;
 
     if (mons_is_firewood(mons))

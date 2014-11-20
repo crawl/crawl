@@ -36,7 +36,6 @@ struct Branch
     const char* longname;       // "The Pits of Slime"
     const char* abbrevname;     // "Slime"
     const char* entry_message;
-    bool has_uniques;
     colour_t floor_colour;          // Zot needs special handling.
     colour_t rock_colour;
     int travel_shortcut;         // Which key to press for travel.

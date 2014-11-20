@@ -29,6 +29,7 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
@@ -274,9 +275,8 @@ static vector<string> _randart_propnames(const item_def& item,
         if (!ego.empty())
         {
             // XXX: Ugly hack for adding a comma if needed.
-            for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
-                if (known_proprt(propanns[i].prop)
-                    && propanns[i].prop != ARTP_BRAND
+            for (const property_annotators &ann : propanns)
+                if (known_proprt(ann.prop) && ann.prop != ARTP_BRAND
                     && !no_comma)
                 {
                     ego += ",";
@@ -294,49 +294,49 @@ static vector<string> _randart_propnames(const item_def& item,
             propnames.push_back(entry->inscrip);
      }
 
-    for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
+    for (const property_annotators &ann : propanns)
     {
-        if (known_proprt(propanns[i].prop))
+        if (known_proprt(ann.prop))
         {
-            const int val = proprt[propanns[i].prop];
+            const int val = proprt[ann.prop];
 
             // Don't show rF+/rC- for =Fire, or vice versa for =Ice.
             if (item.base_type == OBJ_JEWELLERY)
             {
                 if (item.sub_type == RING_FIRE
-                    && (propanns[i].prop == ARTP_FIRE && val == 1
-                        || propanns[i].prop == ARTP_COLD && val == -1))
+                    && (ann.prop == ARTP_FIRE && val == 1
+                        || ann.prop == ARTP_COLD && val == -1))
                 {
                     continue;
                 }
                 if (item.sub_type == RING_ICE
-                    && (propanns[i].prop == ARTP_COLD && val == 1
-                        || propanns[i].prop == ARTP_FIRE && val == -1))
+                    && (ann.prop == ARTP_COLD && val == 1
+                        || ann.prop == ARTP_FIRE && val == -1))
                 {
                     continue;
                 }
             }
 
             ostringstream work;
-            switch (propanns[i].spell_out)
+            switch (ann.spell_out)
             {
             case 0: // e.g. AC+4
-                work << showpos << propanns[i].name << val;
+                work << showpos << ann.name << val;
                 break;
             case 1: // e.g. F++
             {
                 // XXX: actually handle absurd values instead of displaying
                 // the wrong number of +s or -s
                 const int sval = min(abs(val), 6);
-                work << propanns[i].name
+                work << ann.name
                      << string(sval, (val > 0 ? '+' : '-'));
                 break;
             }
             case 2: // e.g. rPois or SInv
-                if (propanns[i].prop == ARTP_CURSED && val < 1)
+                if (ann.prop == ARTP_CURSED && val < 1)
                     continue;
 
-                work << propanns[i].name;
+                work << ann.name;
                 break;
             }
             propnames.push_back(work.str());
@@ -485,27 +485,24 @@ static string _randart_descrip(const item_def &item)
         }
     }
 
-    for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
+    for (const property_descriptor &desc : propdescs)
     {
-        if (known_proprt(propdescs[i].property))
+        if (known_proprt(desc.property))
         {
             // Only randarts with ARTP_CURSED > 0 may recurse themselves.
-            if (propdescs[i].property == ARTP_CURSED
-                && proprt[propdescs[i].property] < 1)
-            {
+            if (desc.property == ARTP_CURSED && proprt[desc.property] < 1)
                 continue;
-            }
 
-            string sdesc = propdescs[i].desc;
+            string sdesc = desc.desc;
 
             // FIXME Not the nicest hack.
             char buf[80];
-            snprintf(buf, sizeof buf, "%+d", proprt[propdescs[i].property]);
+            snprintf(buf, sizeof buf, "%+d", proprt[desc.property]);
             sdesc = replace_all(sdesc, "%d", buf);
 
-            if (propdescs[i].is_graded_resist)
+            if (desc.is_graded_resist)
             {
-                int idx = proprt[propdescs[i].property] + 3;
+                int idx = proprt[desc.property] + 3;
                 idx = min(idx, 6);
                 idx = max(idx, 0);
 
@@ -870,8 +867,13 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
+    // ident known & no brand but still glowing
+    // TODO: deduplicate this with the code in itemname.cc
+    const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
+                           && !item_ident(item, ISFLAG_KNOW_PLUSES);
+
     // special weapon descrip
-    if (spec_ench != SPWPN_NORMAL && item_type_known(item))
+    if (item_type_known(item) && (spec_ench != SPWPN_NORMAL || enchanted))
     {
         description += "\n\n";
 
@@ -1000,6 +1002,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "It disrupts the flow of magical energy around "
                     "spellcasters and certain magical creatures (including "
                     "the wielder).";
+            break;
+        case SPWPN_NORMAL:
+            ASSERT(enchanted);
+            description += "It has no special brand (it is not flaming, "
+                    "freezing, etc), but is still enchanted in some way - "
+                    "positive or negative.";
             break;
         }
     }
@@ -3201,7 +3209,8 @@ static string _monster_attacks_description(const monster_info& mi)
         if (!attack_flavours.count(af))
         {
             attack_flavours.insert(af);
-            if (const char* desc = _describe_attack_flavour(af))
+            const char * const desc = _describe_attack_flavour(af);
+            if (desc[0]) // non-empty
                 attack_descs.push_back(desc);
         }
 
@@ -3313,10 +3322,20 @@ static string _monster_spells_description(const monster_info& mi)
         mi, MON_SPELL_MAGICAL, "Set",
         " possesses the following magical abilities: ",
         " possesses one of the following sets of magical abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_DEMONIC, "Set",
-        " possesses the following demonic abilities: ",
-        " possesses one of the following sets of demonic abilities:\n");
+    if (mi.holi == MH_HOLY)
+    {
+        result << _monster_spell_type_description(
+            mi, MON_SPELL_DEMONIC, "Set",
+            " possesses the following angelic abilities: ",
+            " possesses one of the following sets of angelic abilities:\n");
+    }
+    else
+    {
+        result << _monster_spell_type_description(
+            mi, MON_SPELL_DEMONIC, "Set",
+            " possesses the following demonic abilities: ",
+            " possesses one of the following sets of demonic abilities:\n");
+    }
     result << _monster_spell_type_description(
         mi, MON_SPELL_PRIEST, "Set",
         " possesses the following divine abilities: ",
@@ -3488,13 +3507,13 @@ static string _monster_stat_description(const monster_info& mi)
     vector<string> base_resists;
     vector<string> suscept;
 
-    for (unsigned int i = 0; i < ARRAYSZ(resists); ++i)
+    for (mon_resist_flags rflags : resists)
     {
-        int level = get_resist(resist, resists[i]);
+        int level = get_resist(resist, rflags);
 
         if (level != 0)
         {
-            const char* attackname = _get_resist_name(resists[i]);
+            const char* attackname = _get_resist_name(rflags);
             level = max(level, -1);
             level = min(level,  3);
             switch (level)
@@ -3904,6 +3923,26 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << " is vulnerable to silver and hated by Zin.\n";
     }
 
+    if (in_good_standing(GOD_ZIN, 0))
+    {
+        const int check = mons_class_hit_dice(mi.type) - zin_recite_power();
+        if (check >= 0)
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " is too strong to be recited to.\n";
+        }
+        else if (check >= -5)
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " may be too strong to be recited to.\n";
+        }
+        else
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " is weak enough to be recited to.\n";
+        }
+    }
+
     if (mi.is(MB_SUMMONED))
     {
         inf.body << "\n" << "This monster has been summoned, and is thus only "
@@ -4244,13 +4283,7 @@ void alt_desc_proc::print(const string &str)
 
 int alt_desc_proc::count_newlines(const string &str)
 {
-    int count = 0;
-    for (size_t i = 0; i < str.size(); i++)
-    {
-        if (str[i] == '\n')
-            count++;
-    }
-    return count;
+    return count(begin(str), end(str), '\n');
 }
 
 void alt_desc_proc::trim(string &str)

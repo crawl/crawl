@@ -58,19 +58,17 @@ bool player::afraid() const
 // Whether player is afraid of the given monster.
 bool player::afraid_of(const monster* mon) const
 {
-    for (unsigned int i = 0; i < fearmongers.size(); i++)
-        if (fearmongers[i] == mon->mid)
-            return true;
-    return false;
+    return find(begin(fearmongers), end(fearmongers), mon->mid)
+               != end(fearmongers);
 }
 
 // Checks whether a fearmonger keeps you from moving to
 // target, and returns one if it exists.
 monster* player::get_fearmonger(const coord_def &target) const
 {
-    for (unsigned int i = 0; i < fearmongers.size(); i++)
+    for (mid_t monger : fearmongers)
     {
-        monster* mon = monster_by_mid(fearmongers[i]);
+        monster* mon = monster_by_mid(monger);
         // The monster may have died.
         if (!mon)
             continue;

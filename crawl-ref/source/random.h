@@ -1,7 +1,7 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include <algorithm> // shuffle
+#include <algorithm>  // shuffle
 #include <map>
 #include <vector>
 
@@ -37,36 +37,15 @@ bool decimal_chance(double percent);
 
 int ui_random(int max);
 
-/**
- * Chooses one of the numbers passed in at random. The list of numbers
- * must be terminated with -1.
+/** Chooses one of the objects passed in at random (by value).
+ *  @return One of the arguments.
  */
-template <typename T>
-T random_choose(T first, ...)
+template <typename T, typename... Ts>
+T random_choose(T first, Ts... rest)
 {
-    va_list args;
-    va_start(args, first);
-
-    T chosen = first;
-    int count = 1;
-    int nargs = 100; // a hard limit to catch unterminated uses
-
-    while (nargs-- > 0)
-    {
-        const int pick = va_arg(args, int);
-        if (pick == -1)
-            break;
-        if (one_chance_in(++count))
-            chosen = static_cast<T>(pick);
-    }
-
-    va_end(args);
-    ASSERT(nargs > 0);
-    return chosen;
+    const T elts[] = { first, rest... };
+    return elts[random2(1 + sizeof...(rest))];
 }
-
-template <>
-const char* random_choose<const char*>(const char* first, ...);
 
 template <typename T>
 T random_choose_weighted(int weight, T first, ...)

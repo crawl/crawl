@@ -322,7 +322,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_TOMB:
         return TILE_DNGN_ENTER_TOMB;
     case DNGN_ENTER_ZOT:
-        return you.opened_zot ? TILE_DNGN_ENTER_ZOT_OPEN
+        return is_existing_level(level_id(BRANCH_ZOT, 1)) ? TILE_DNGN_ENTER_ZOT_OPEN
                               : TILE_DNGN_ENTER_ZOT_CLOSED;
     case DNGN_ENTER_ZIGGURAT:
         return TILE_DNGN_PORTAL_ZIGGURAT;
@@ -2044,6 +2044,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // goblins and gnolls ('g')
     case MONS_IJYB:
         return TILEP_MONS_IJYB;
+    case MONS_ROBIN:
+        return TILEP_MONS_ROBIN;
     case MONS_CRAZY_YIUF:
         return TILEP_MONS_CRAZY_YIUF;
     case MONS_GRUM:
@@ -4840,7 +4842,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_BOLT_OF_INACCURACY:       return TILEG_BOLT_OF_INACCURACY;
     case SPELL_SUMMON_SWARM:             return TILEG_SUMMON_SWARM;
     case SPELL_THUNDERBOLT:              return TILEG_THUNDERBOLT;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_MELEE:                    return TILEG_MELEE;
+#endif
     case SPELL_EXPLOSIVE_BOLT:           return TILEG_EXPLOSIVE_BOLT;
     case SPELL_WEAVE_SHADOWS:            return TILEG_WEAVE_SHADOWS;
     case SPELL_CLOUD_CONE:               return TILEG_CLOUD_CONE;

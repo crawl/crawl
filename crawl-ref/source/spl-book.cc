@@ -58,12 +58,12 @@ static int _rod_spells[NUM_RODS][2] =
     { ROD_DESTRUCTION, SPELL_RANDOM_BOLT },
     { ROD_INACCURACY,  SPELL_BOLT_OF_INACCURACY },
 #if TAG_MAJOR_VERSION == 34
-    { ROD_WARDING,     SPELL_MELEE },
+    { ROD_WARDING,     SPELL_NO_SPELL },
 #endif
     { ROD_SHADOWS,     SPELL_WEAVE_SHADOWS },
-    { ROD_STRIKING,    SPELL_MELEE },
+    { ROD_IRON,        SPELL_SCATTERSHOT },
 #if TAG_MAJOR_VERSION == 34
-    { ROD_VENOM,       SPELL_MELEE },
+    { ROD_VENOM,       SPELL_NO_SPELL },
 #endif
 };
 
@@ -561,12 +561,7 @@ bool player_can_memorise(const item_def &book)
             return false;
         }
 
-        bool knows_spell = false;
-        for (int i = 0; i < MAX_KNOWN_SPELLS && !knows_spell; i++)
-            knows_spell = (you.spells[i] == stype);
-
-        // You don't already know this spell.
-        if (!knows_spell)
+        if (!is_memorised(stype))
             return true;
     }
     return false;
@@ -641,9 +636,9 @@ static bool _get_mem_list(spell_list &mem_spells,
     vector<const item_def*> items;
     item_list_on_square(items, you.visible_igrd(you.pos()));
 
-    for (unsigned int i = 0; i < items.size(); ++i)
+    for (const item_def *bptr : items)
     {
-        item_def book(*items[i]);
+        item_def book(*bptr); // Copy
         if (!item_is_spellbook(book))
             continue;
 
@@ -853,9 +848,8 @@ vector<spell_type> get_mem_spell_list(vector<int> &books)
 
     sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
-    for (unsigned int i = 0; i < mem_spells.size(); i++)
+    for (spell_type spell : mem_spells)
     {
-        spell_type spell = mem_spells[i];
         spells.push_back(spell);
 
         spells_to_books::iterator it = book_hash.find(spell);
@@ -1267,11 +1261,7 @@ static bool _compare_spells(spell_type a, spell_type b)
 
 bool is_memorised(spell_type spell)
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-        if (you.spells[i] == spell)
-            return true;
-
-    return false;
+    return you.has_spell(spell);
 }
 
 static void _get_spell_list(vector<spell_type> &spells, int level,
@@ -1719,9 +1709,8 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
 
     if (completely_random)
     {
-        for (unsigned int i = 0; i < spells.size(); i++)
+        for (spell_type spl : spells)
         {
-            spell_type spl = spells[i];
             if (god == GOD_XOM)
                 spell_weights[spl] = count_bits(get_spell_disciplines(spl));
             else
@@ -1731,9 +1720,8 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
     else
     {
         const int Spc = you.skills[SK_SPELLCASTING];
-        for (unsigned int i = 0; i < spells.size(); i++)
+        for (spell_type spell : spells)
         {
-            spell_type spell = spells[i];
             unsigned int disciplines = get_spell_disciplines(spell);
 
             int d = 1;
@@ -1843,26 +1831,24 @@ static void _remove_nondiscipline_spells(spell_type chosen_spells[],
     }
 }
 
-static void _add_included_spells(spell_type chosen_spells[SPELLBOOK_SIZE],
+static void _add_included_spells(spell_type (&chosen_spells)[SPELLBOOK_SIZE],
                                  vector<spell_type> incl_spells)
 {
-    for (unsigned int i = 0; i < incl_spells.size(); ++i)
+    for (spell_type incl_spell : incl_spells)
     {
-        spell_type incl_spell = incl_spells[i];
-
         if (incl_spell == SPELL_NO_SPELL)
             continue;
 
-        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+        for (spell_type &chosen : chosen_spells)
         {
             // Already included.
-            if (chosen_spells[j] == incl_spell)
+            if (chosen == incl_spell)
                 break;
 
-            if (chosen_spells[j] == SPELL_NO_SPELL)
+            if (chosen == SPELL_NO_SPELL)
             {
                 // Add to spells.
-                chosen_spells[j] = incl_spell;
+                chosen = incl_spell;
                 break;
             }
         }
@@ -2273,8 +2259,7 @@ void make_book_Kiku_gift(item_def &book, bool first)
                            ? SPELL_AGONY : SPELL_EXCRUCIATING_WOUNDS;
         chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
                                          SPELL_SIMULACRUM,
-                                         SPELL_DEATH_CHANNEL,
-                                         -1);
+                                         SPELL_DEATH_CHANNEL);
         spell_type extra_spell;
         do
         {
@@ -2284,8 +2269,7 @@ void make_book_Kiku_gift(item_def &book, bool first)
                                         SPELL_EXCRUCIATING_WOUNDS,
                                         SPELL_BOLT_OF_DRAINING,
                                         SPELL_SIMULACRUM,
-                                        SPELL_DEATH_CHANNEL,
-                                        -1);
+                                        SPELL_DEATH_CHANNEL);
             if (you.species == SP_FELID && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
                 extra_spell = SPELL_NO_SPELL;
             for (int i = 0; i < 3; i++)

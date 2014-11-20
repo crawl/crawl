@@ -749,14 +749,14 @@ enum command_type
     CMD_RUN_DOWN_LEFT,
     CMD_RUN_UP_RIGHT,
     CMD_RUN_DOWN_RIGHT,
-    CMD_OPEN_DOOR_LEFT,
-    CMD_OPEN_DOOR_DOWN,
-    CMD_OPEN_DOOR_UP,
-    CMD_OPEN_DOOR_RIGHT,
-    CMD_OPEN_DOOR_UP_LEFT,
-    CMD_OPEN_DOOR_DOWN_LEFT,
-    CMD_OPEN_DOOR_UP_RIGHT,
-    CMD_OPEN_DOOR_DOWN_RIGHT,
+    CMD_ATTACK_LEFT,
+    CMD_ATTACK_DOWN,
+    CMD_ATTACK_UP,
+    CMD_ATTACK_RIGHT,
+    CMD_ATTACK_UP_LEFT,
+    CMD_ATTACK_DOWN_LEFT,
+    CMD_ATTACK_UP_RIGHT,
+    CMD_ATTACK_DOWN_RIGHT,
     CMD_OPEN_DOOR,
     CMD_CLOSE_DOOR,
     CMD_REST,
@@ -1060,16 +1060,6 @@ enum conduct_type
     DID_KILL_PRIEST,                      // Beogh
     DID_KILL_HOLY,
     DID_KILL_FAST,                        // Cheibriados
-    DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
-    DID_LIVING_KILLED_BY_SERVANT,
-    DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE,
-    DID_UNDEAD_KILLED_BY_SERVANT,
-    DID_DEMON_KILLED_BY_UNDEAD_SLAVE,
-    DID_DEMON_KILLED_BY_SERVANT,
-    DID_NATURAL_UNHOLY_KILLED_BY_SERVANT, // TSO
-    DID_NATURAL_EVIL_KILLED_BY_SERVANT,   // TSO
-    DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
-    DID_HOLY_KILLED_BY_SERVANT,
     DID_BANISH,
     DID_SPELL_MEMORISE,
     DID_SPELL_CASTING,
@@ -1085,17 +1075,12 @@ enum conduct_type
     DID_DESTROY_ORCISH_IDOL,              // Beogh
     DID_KILL_SLIME,                       // Jiyva
     DID_KILL_PLANT,                       // Fedhas
-    DID_PLANT_KILLED_BY_SERVANT,          // Fedhas
     DID_HASTY,                            // Cheibriados
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
     DID_SOULED_FRIEND_DIED,               // Zin
-    DID_UNCLEAN_KILLED_BY_SERVANT,        // Zin
-    DID_CHAOTIC_KILLED_BY_SERVANT,        // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
     DID_KILL_ARTIFICIAL,                  // Yredelemnul
-    DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE,// Yredelemnul
-    DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
     DID_DESTROY_SPELLBOOK,                // Sif Muna
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
@@ -3027,6 +3012,7 @@ enum monster_type                      // menv[].type
     MONS_ASTERION,
     MONS_NATASHA,
     MONS_VASHNIA,
+    MONS_ROBIN,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -3206,6 +3192,8 @@ enum monster_type                      // menv[].type
     MONS_DEATH_SCARAB,
     MONS_ANUBIS_GUARD,
     MONS_CAUSTIC_SHRIKE,
+
+    MONS_ROBIN,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4119,8 +4107,8 @@ enum spell_type
     SPELL_RESURRECT,
     SPELL_HOLY_LIGHT,
     SPELL_HOLY_WORD,
-    SPELL_SUMMON_HOLIES,
 #endif
+    SPELL_SUMMON_HOLIES,
     SPELL_HEAL_OTHER,
 #if TAG_MAJOR_VERSION == 34
     SPELL_SACRIFICE,
@@ -4148,7 +4136,9 @@ enum spell_type
     SPELL_SUMMON_HYDRA,
     SPELL_DARKNESS,
     SPELL_MESMERISE,
+#if TAG_MAJOR_VERSION == 34
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
+#endif
     SPELL_FIRE_SUMMON,
     SPELL_SHROUD_OF_GOLUBRIA,
     SPELL_INNER_FLAME,
@@ -4267,6 +4257,9 @@ enum spell_type
     SPELL_HUNTING_CRY,
     SPELL_SEARING_BREATH,
     SPELL_CHILLING_BREATH,
+    SPELL_SCATTERSHOT,
+    SPELL_CLEANSING_FLAME,
+    SPELL_GOBLIN_TOSS,
     NUM_SPELLS
 };
 
@@ -4433,6 +4426,7 @@ enum zap_type
     ZAP_QUICKSILVER_BOLT,
     ZAP_CORROSIVE_BOLT,
     ZAP_RANDOM_BOLT_TRACER,
+    ZAP_SCATTERSHOT,
 
     NUM_ZAPS
 };

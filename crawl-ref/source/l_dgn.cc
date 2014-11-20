@@ -1232,12 +1232,10 @@ static int lua_cloud_pow_min;
 static int lua_cloud_pow_max;
 static int lua_cloud_pow_rolls;
 
-static int make_a_lua_cloud(coord_def where, int garbage, int spread_rate,
+static int make_a_lua_cloud(coord_def where, int /*garbage*/, int spread_rate,
                             cloud_type ctype, const actor *agent, int colour,
                             string name, string tile, int excl_rad)
 {
-    UNUSED(garbage);
-
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);

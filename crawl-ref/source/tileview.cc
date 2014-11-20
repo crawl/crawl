@@ -361,22 +361,22 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
     ASSERT(!candidates.empty());
 
     int total = 0;
-    for (unsigned int i = 0; i < candidates.size(); ++i)
+    for (tileidx_t tidx : candidates)
     {
-        const unsigned int count = tile_dngn_count(candidates[i]);
-        total += tile_dngn_probs(candidates[i] + count - 1);
+        const unsigned int count = tile_dngn_count(tidx);
+        total += tile_dngn_probs(tidx + count - 1);
     }
     int rand = value % total;
 
-    for (unsigned int i = 0; i < candidates.size(); ++i)
+    for (tileidx_t tidx : candidates)
     {
-        const unsigned int count = tile_dngn_count(candidates[i]);
+        const unsigned int count = tile_dngn_count(tidx);
         for (unsigned int j = 0; j < count; ++j)
         {
-            if (rand < tile_dngn_probs(candidates[i] + j))
-                return candidates[i] + j;
+            if (rand < tile_dngn_probs(tidx + j))
+                return tidx + j;
         }
-        rand -= tile_dngn_probs(candidates[i] + count - 1);
+        rand -= tile_dngn_probs(tidx + count - 1);
     }
 
     // Should never reach this place

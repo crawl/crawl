@@ -411,9 +411,8 @@ static vector<string> _get_base_dirs()
     };
 
     vector<string> bases;
-    for (unsigned i = 0; i < ARRAYSZ(rawbases); ++i)
+    for (string base : rawbases)
     {
-        string base = rawbases[i];
         if (base.empty())
             continue;
 
@@ -437,11 +436,9 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     if (test_base_path && thing_exists(basename))
         return basename;
 
-    vector<string> bases = _get_base_dirs();
-
-    for (unsigned b = 0, size = bases.size(); b < size; ++b)
+    for (const string &basedir : _get_base_dirs())
     {
-        string name = bases[b] + basename;
+        string name = basedir + basename;
 #ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO,"Crawl","Looking for %s as '%s'",basename.c_str(),name.c_str());
 #endif
@@ -643,11 +640,8 @@ static vector<player_save_info> _find_saved_characters()
     if (searchpath.empty())
         searchpath = ".";
 
-    vector<string> allfiles = get_dir_files(searchpath);
-    for (unsigned int i = 0; i < allfiles.size(); ++i)
+    for (const string &filename : get_dir_files(searchpath))
     {
-        string filename = allfiles[i];
-
         string::size_type point_pos = filename.find_first_of('.');
         string basename = filename.substr(0, point_pos);
 
@@ -1101,8 +1095,8 @@ static bool _leave_level(dungeon_feature_type stair_taken,
         && !player_in_branch(BRANCH_ABYSS))
     {
         vector<string> stack;
-        for (unsigned int i = 0; i < you.level_stack.size(); i++)
-            stack.push_back(you.level_stack[i].id.describe());
+        for (level_pos lvl : you.level_stack)
+            stack.push_back(lvl.id.describe());
         if (you.wizard)
         {
             // warn about breakage so testers know it's an abnormal situation.
@@ -1510,7 +1504,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 string verb = stair_climb_verb(feat);
 
                 if (coinflip()
-                    && slide_feature_over(you.pos(), coord_def(-1, -1), false))
+                    && slide_feature_over(you.pos()))
                 {
                     mprf("%s slides away from you right after you %s it!",
                          stair_str.c_str(), verb.c_str());
@@ -2489,14 +2483,10 @@ off_t file_size(FILE *handle)
 
 vector<string> get_title_files()
 {
-    vector<string> bases = _get_base_dirs();
     vector<string> titles;
-    for (unsigned int i = 0; i < bases.size(); ++i)
-    {
-        vector<string> files = get_dir_files(bases[i]);
-        for (unsigned int j = 0; j < files.size(); ++j)
-            if (files[j].substr(0, 6) == "title_")
-                titles.push_back(files[j]);
-    }
+    for (const string &dir : _get_base_dirs())
+        for (const string &file : get_dir_files(dir))
+            if (file.substr(0, 6) == "title_")
+                titles.push_back(file);
     return titles;
 }

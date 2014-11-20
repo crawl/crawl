@@ -1856,14 +1856,14 @@ void get_monster_info(vector<monster_info>& mons)
     else
         visible = get_nearby_monsters();
 
-    for (unsigned int i = 0; i < visible.size(); i++)
+    for (monster *mon : visible)
     {
-        if (!mons_class_flag(visible[i]->type, M_NO_EXP_GAIN)
-            || visible[i]->is_child_tentacle()
-            || visible[i]->type == MONS_BALLISTOMYCETE
-                && visible[i]->ballisto_activity > 0)
+        if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
+            || mon->is_child_tentacle()
+            || mon->type == MONS_BALLISTOMYCETE
+                && mon->ballisto_activity > 0)
         {
-            mons.push_back(monster_info(visible[i]));
+            mons.push_back(monster_info(mon));
         }
     }
     sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);

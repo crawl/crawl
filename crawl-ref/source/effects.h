@@ -53,6 +53,8 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 void torment(actor *attacker, torment_source_type taux, const coord_def& where);
 void torment_player(actor *attacker, torment_source_type taux);
 
+void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+                                coord_def where, actor *attacker = NULL);
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker = NULL);
 

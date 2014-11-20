@@ -403,11 +403,9 @@ static void _pre_refrigerate(actor* agent, bool player,
     {
         // Filter out affected monsters that we don't know for sure are there
         vector<monster*> seen_monsters;
-        for (unsigned int i = 0; i < affected_monsters.size(); ++i)
-        {
-            if (you.can_see(affected_monsters[i]))
-                seen_monsters.push_back(affected_monsters[i]);
-        }
+        for (monster *mon : affected_monsters)
+            if (you.can_see(mon))
+                seen_monsters.push_back(mon);
 
         if (!seen_monsters.empty())
         {
@@ -1571,8 +1569,6 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
 
 static int _ignite_poison_objects(coord_def where, int pow, int, actor *agent)
 {
-    UNUSED(pow);
-
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
     int strength = 0;
@@ -1594,8 +1590,6 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *agent)
 
 static int _ignite_poison_clouds(coord_def where, int pow, int, actor *agent)
 {
-    UNUSED(pow);
-
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
     const int i = env.cgrid(where);
@@ -2568,8 +2562,7 @@ void forest_damage(const actor *mon)
             "You feel roots moving beneath the ground.",
             "Branches wave dangerously above you.",
             "Trunks creak and shift.",
-            "Tree limbs sway around you.",
-            0), MSGCH_TALK_VISUAL);
+            "Tree limbs sway around you."), MSGCH_TALK_VISUAL);
     }
 
     for (radius_iterator ri(pos, LOS_NO_TRANS); ri; ++ri)
@@ -2593,16 +2586,14 @@ void forest_damage(const actor *mon)
                     msg = random_choose(
                             "@foe@ @is@ waved at by a branch.",
                             "A tree reaches out but misses @foe@.",
-                            "A root lunges up near @foe@.",
-                            0);
+                            "A root lunges up near @foe@.");
                 }
                 else if (!apply_chunked_AC(1, foe->melee_evasion(mon) - evnp))
                 {
                     msg = random_choose(
                             "A branch passes through @foe@!",
                             "A tree reaches out and and passes through @foe@!",
-                            "A root lunges and passes through @foe@ from below.",
-                            0);
+                            "A root lunges and passes through @foe@ from below.");
                 }
                 else if (!(dmg = foe->apply_ac(hd + random2(hd), hd * 2 - 1,
                                                AC_PROPORTIONAL)))
@@ -2610,16 +2601,14 @@ void forest_damage(const actor *mon)
                     msg = random_choose(
                             "@foe@ @is@ scraped by a branch!",
                             "A tree reaches out and scrapes @foe@!",
-                            "A root barely touches @foe@ from below.",
-                            0);
+                            "A root barely touches @foe@ from below.");
                 }
                 else
                 {
                     msg = random_choose(
                         "@foe@ @is@ hit by a branch!",
                         "A tree reaches out and hits @foe@!",
-                        "A root smacks @foe@ from below.",
-                        0);
+                        "A root smacks @foe@ from below.");
                 }
 
                 msg = replace_all(replace_all(msg,
@@ -2707,9 +2696,9 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
             testbeam.fire();
             bool duplicate = false;
 
-            for (unsigned int i = 0; i < beams.size(); ++i)
+            for (const bolt &beam : beams)
             {
-                if (testbeam.path_taken.back() == beams[i].target)
+                if (testbeam.path_taken.back() == beam.target)
                 {
                     duplicate = true;
                     continue;
@@ -2771,10 +2760,10 @@ spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
         return SPRET_ABORT;
     }
 
-    for (unsigned int i = 0; i < hitfunc.beams.size(); ++i)
+    for (bolt &beam : hitfunc.beams)
     {
-        zappy(ZAP_DAZZLING_SPRAY, pow, hitfunc.beams[i]);
-        hitfunc.beams[i].fire();
+        zappy(ZAP_DAZZLING_SPRAY, pow, beam);
+        beam.fire();
     }
 
     return SPRET_SUCCESS;
@@ -3086,9 +3075,90 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
                                  ZAP_QUICKSILVER_BOLT,
                                  ZAP_CRYSTAL_BOLT,
                                  ZAP_LIGHTNING_BOLT,
-                                 ZAP_CORROSIVE_BOLT,
-                                 -1);
+                                 ZAP_CORROSIVE_BOLT);
     zapping(zap, pow * 7 / 6 + 15, beam, false);
+
+    return SPRET_SUCCESS;
+}
+
+size_t shotgun_beam_count(int pow)
+{
+    return 1 + (pow - 5) / 3;
+}
+
+spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
+                            bool fail)
+{
+    const size_t range = spell_range(SPELL_SCATTERSHOT, pow);
+    const size_t beam_count = shotgun_beam_count(pow);
+
+    targetter_shotgun hitfunc(caster, beam_count, range);
+
+    hitfunc.set_aim(pos);
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "scattershot"))
+            return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    bolt beam;
+    beam.thrower = (caster && caster->is_player()) ? KILL_YOU :
+                   (caster)                        ? KILL_MON
+                                                   : KILL_MISC;
+    beam.range       = range;
+    beam.source      = caster->pos();
+    beam.source_id   = caster->mid;
+    beam.source_name = caster->name(DESC_PLAIN, true);
+    zappy(ZAP_SCATTERSHOT, pow, beam);
+    beam.aux_source  = beam.name;
+
+    if (!caster->is_player())
+        beam.damage   = dice_def(3, 4 + (pow / 18));
+
+    // Choose a random number of 'pellets' to fire for each beam in the spread.
+    // total pellets has O(beam_count^2)
+    vector<size_t> pellets;
+    pellets.resize(beam_count);
+    for (size_t i = 0; i < beam_count; i++)
+        pellets[random2avg(beam_count, 3)]++;
+
+    map<mid_t, int> hit_count;
+
+    // for each beam of pellets...
+    for (size_t i = 0; i < beam_count; i++)
+    {
+        // find the beam's path.
+        ray_def ray = hitfunc.rays[i];
+        for (size_t j = 0; j < range; j++)
+            ray.advance();
+
+        // fire the beam once per pellet.
+        for (size_t j = 0; j < pellets[i]; j++)
+        {
+            bolt tempbeam = beam;
+            tempbeam.draw_delay = 0;
+            tempbeam.target = ray.pos();
+            tempbeam.fire();
+            scaled_delay(5);
+            for (auto it : tempbeam.hit_count)
+               hit_count[it.first] += it.second;
+        }
+    }
+
+    for (auto it : hit_count)
+    {
+        if (it.first == MID_PLAYER)
+            continue;
+
+        monster* mons = monster_by_mid(it.first);
+        if (!mons || !mons->alive() || !you.can_see(mons))
+            continue;
+
+        print_wounds(mons);
+    }
 
     return SPRET_SUCCESS;
 }

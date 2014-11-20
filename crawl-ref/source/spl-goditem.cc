@@ -403,7 +403,7 @@ void debuff_player()
 void debuff_monster(monster* mon)
 {
     // List of magical enchantments which will be dispelled.
-    const enchant_type lost_enchantments[] =
+    static const enchant_type lost_enchantments[] =
     {
         ENCH_SLOW,
         ENCH_HASTE,
@@ -442,28 +442,19 @@ void debuff_monster(monster* mon)
     bool dispelled = false;
 
     // Dispel all magical enchantments...
-    for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
+    for (enchant_type ench : lost_enchantments)
     {
-        if (lost_enchantments[i] == ENCH_INVIS)
-        {
-            // ...except for natural invisibility.
-            if (mons_class_flag(mon->type, M_INVIS))
-                continue;
-        }
-        if (lost_enchantments[i] == ENCH_CONFUSION)
-        {
-            // Don't dispel permaconfusion.
-            if (mons_class_flag(mon->type, M_CONFUSED))
-                continue;
-        }
-        if (lost_enchantments[i] == ENCH_REGENERATION)
-        {
-            // Don't dispel regen if it's from Trog.
-            if (mon->has_ench(ENCH_RAISED_MR))
-                continue;
-        }
+        // ...except for natural invisibility...
+        if (ench == ENCH_INVIS && mons_class_flag(mon->type, M_INVIS))
+            continue;
+        // ...permaconfusion...
+        if (ench == ENCH_CONFUSION && mons_class_flag(mon->type, M_CONFUSED))
+            continue;
+        // ...and regeneration from Trog.
+        if (ench == ENCH_REGENERATION && mon->has_ench(ENCH_RAISED_MR))
+            continue;
 
-        if (mon->del_ench(lost_enchantments[i], true, true))
+        if (mon->del_ench(ench, true, true))
             dispelled = true;
     }
     if (dispelled)
@@ -771,7 +762,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     // as more or less the theoretical maximum.
     int number_built = 0;
 
-    const dungeon_feature_type safe_tiles[] =
+    static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
     };
@@ -853,12 +844,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         proceed = false;
         if (!zin && !monster_at(*ai))
         {
-            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true)
-                    || feat_is_stone_stair(grd(*ai)))
-                {
-                    proceed = true;
-                }
+            if (feat_is_trap(grd(*ai), true) || feat_is_stone_stair(grd(*ai))
+                || safe_tiles.count(grd(*ai)))
+            {
+                proceed = true;
+            }
         }
         else if (zin && !cell_is_solid(*ai))
             proceed = true;

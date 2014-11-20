@@ -1473,7 +1473,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SATYR,
       {
-       { SPELL_BATTLECRY, 25, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT },
+       { SPELL_BATTLECRY, 25, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT
+                              | MON_SPELL_NOISY },
        { SPELL_CAUSE_FEAR, 32, MON_SPELL_WIZARD },
        { SPELL_SLEEP, 16, MON_SPELL_WIZARD },
       }
@@ -1995,14 +1996,23 @@ static const mon_spellbook mspell_list[] =
     {  MST_BATTLECRY,
       {
        { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT
-                               | MON_SPELL_NO_SILENT },
+                               | MON_SPELL_NOISY | MON_SPELL_NO_SILENT },
+      }
+    },
+
+    {  MST_ROBIN,
+      {
+        { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
+                                | MON_SPELL_NO_SILENT },
+        { SPELL_GOBLIN_TOSS, 80, MON_SPELL_NATURAL },
+        END_OF_MONS_BOOK
       }
     },
 
     {  MST_SAINT_ROKA,
       {
        { SPELL_BATTLECRY, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT
-                               | MON_SPELL_NO_SILENT },
+                               | MON_SPELL_NOISY | MON_SPELL_NO_SILENT },
        { SPELL_SMITING, 64, MON_SPELL_PRIEST },
       }
     },
@@ -2127,6 +2137,18 @@ static const mon_spellbook mspell_list[] =
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
        { SPELL_HASTE, 12, MON_SPELL_WIZARD },
        { SPELL_SHROUD_OF_GOLUBRIA, 12, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_SERAPH,
+      {
+       { SPELL_HUNTING_CRY, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                                | MON_SPELL_NO_SILENT | MON_SPELL_BREATH },
+       { SPELL_SUMMON_HOLIES, 50, MON_SPELL_PRIEST },
+       { SPELL_INJURY_BOND, 50, MON_SPELL_DEMONIC },
+       { SPELL_CLEANSING_FLAME, 25, MON_SPELL_PRIEST },
+       { SPELL_SMITING, 13, MON_SPELL_DEMONIC },
+       { SPELL_MINOR_HEALING, 12, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
       }
     },
 };

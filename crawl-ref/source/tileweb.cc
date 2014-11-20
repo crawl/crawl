@@ -432,11 +432,10 @@ void TilesFramework::dump()
 {
     fprintf(stderr, "Webtiles message buffer: %s\n", m_msg_buf.c_str());
     fprintf(stderr, "Webtiles JSON stack:\n");
-    for (unsigned int i = 0; i < m_json_stack.size(); ++i)
+    for (const JsonFrame &frame : m_json_stack)
     {
         fprintf(stderr, "start: %d end: %d type: %c\n",
-                m_json_stack[i].start, m_json_stack[i].prefix_end,
-                m_json_stack[i].type);
+                frame.start, frame.prefix_end, frame.type);
     }
 }
 
@@ -647,8 +646,8 @@ static bool _update_statuses(player_info& c)
 
 player_info::player_info()
 {
-    for (unsigned int i = 0; i < NUM_EQUIP; ++i)
-        equip[i] = -1;
+    for (auto &eq : equip)
+        eq = -1;
     position = coord_def(-1, -1);
 }
 
@@ -802,15 +801,15 @@ void TilesFramework::_send_player(bool force_full)
     if (force_full || _update_statuses(c))
     {
         json_open_array("status");
-        for (unsigned int i = 0; i < c.status.size(); ++i)
+        for (const status_info &status : c.status)
         {
             json_open_object();
-            if (!c.status[i].light_text.empty())
-                json_write_string("light", c.status[i].light_text);
-            if (!c.status[i].short_text.empty())
-                json_write_string("text", c.status[i].short_text);
-            if (c.status[i].light_colour)
-                json_write_int("col", macro_colour(c.status[i].light_colour));
+            if (!status.light_text.empty())
+                json_write_string("light", status.light_text);
+            if (!status.short_text.empty())
+                json_write_string("text", status.short_text);
+            if (status.light_colour)
+                json_write_int("col", macro_colour(status.light_colour));
             json_close_object(true);
         }
         json_close_array();
@@ -1596,16 +1595,16 @@ void TilesFramework::_send_everything()
     json_open_object();
     json_write_string("msg", "init_menus");
     json_open_array("menus");
-    for (unsigned int i = 0; i < m_menu_stack.size(); ++i)
+    for (MenuInfo &menu : m_menu_stack)
     {
-        if (m_menu_stack[i].menu)
-            m_menu_stack[i].menu->webtiles_write_menu();
+        if (menu.menu)
+            menu.menu->webtiles_write_menu();
         else
         {
             json_open_object();
             json_write_string("msg", "menu");
             json_write_string("type", "crt");
-            json_write_string("tag", m_menu_stack[i].tag);
+            json_write_string("tag", menu.tag);
             json_close_object();
         }
     }
@@ -1907,9 +1906,8 @@ void TilesFramework::write_message_escaped(const string& s)
 {
     m_msg_buf.reserve(m_msg_buf.size() + s.size());
 
-    for (size_t i = 0; i < s.size(); ++i)
+    for (unsigned char c : s)
     {
-        unsigned char c = s[i];
         if (c == '"')
             m_msg_buf.append("\\\"");
         else if (c == '\\')

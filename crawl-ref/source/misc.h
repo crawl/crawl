@@ -234,12 +234,12 @@ void search_astar(position_node & start,
         vector<position_node> expansion;
         expand_node(*current, expansion);
 
-        for (unsigned i=0;i < expansion.size(); ++i)
+        for (position_node &exp : expansion)
         {
-            expansion[i].last = &(*current);
+            exp.last = &(*current);
 
             pair<set<position_node>::iterator, bool > res;
-            res = visited.insert(expansion[i]);
+            res = visited.insert(exp);
 
             if (!res.second)
                 continue;
@@ -307,4 +307,10 @@ struct counted_monster_list
 };
 
 bool today_is_halloween();
+
+template<class C, class P>
+void erase_if(C &container, P pred) {
+    container.erase(remove_if(begin(container), end(container), pred),
+                    end(container));
+}
 #endif

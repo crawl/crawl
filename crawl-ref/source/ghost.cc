@@ -171,8 +171,7 @@ static brand_type _random_special_pan_lord_brand()
                          SPWPN_PAIN,
                          SPWPN_ANTIMAGIC,
                          SPWPN_DISTORTION,
-                         SPWPN_CHAOS,
-                         -1);
+                         SPWPN_CHAOS);
 }
 
 #define ADD_SPELL(which_spell) \
@@ -277,8 +276,7 @@ void ghost_demon::init_pandemonium_lord()
                                     SPELL_GLACIATE,
                                     SPELL_METAL_SPLINTERS,
            /* eye of devastation */ SPELL_ENERGY_BOLT,
-                                    SPELL_ORB_OF_ELECTRICITY,
-                                    -1));
+                                    SPELL_ORB_OF_ELECTRICITY));
         }
 
         if (one_chance_in(25))
@@ -861,9 +859,8 @@ int ghost_demon::n_extra_ghosts()
 // Sanity checks for some ghost values.
 bool debug_check_ghosts()
 {
-    for (unsigned int k = 0; k < ghosts.size(); ++k)
+    for (const ghost_demon &ghost : ghosts)
     {
-        ghost_demon ghost = ghosts[k];
         // Values greater than the allowed maximum or less then the
         // allowed minimum signalise bugginess.
         if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
@@ -908,8 +905,8 @@ bool debug_check_ghosts()
             return false;
 
         // Check for non-existing spells.
-        for (unsigned int sp = 0; sp < ghost.spells.size(); ++sp)
-            if (ghost.spells[sp].spell < 0 || ghost.spells[sp].spell >= NUM_SPELLS)
+        for (const mon_spell_slot &slot : ghost.spells)
+            if (slot.spell < 0 || slot.spell >= NUM_SPELLS)
                 return false;
     }
     return true;

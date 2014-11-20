@@ -370,6 +370,8 @@ void Stash::update()
 
 static bool _is_rottable(const item_def &item)
 {
+    if (in_shop(item))
+        return false;
     return item.base_type == OBJ_CORPSES
            || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK;
 }
@@ -596,10 +598,8 @@ bool Stash::matches_search(const string &prefix,
     if (!enabled || items.empty() && feat == DNGN_FLOOR)
         return false;
 
-    for (unsigned i = 0; i < items.size(); ++i)
+    for (const item_def &item : items)
     {
-        const item_def &item = items[i];
-
         const string s   = stash_item_name(item);
         const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
         if (search.matches(prefix + " " + ann + s))
@@ -776,8 +776,8 @@ void Stash::save(writer& outf) const
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
-    for (unsigned i = 0; i < items.size(); ++i)
-        marshallItem(outf, items[i], true);
+    for (const item_def &item : items)
+        marshallItem(outf, item, true);
 }
 
 void Stash::load(reader& inf)
@@ -995,18 +995,18 @@ bool ShopInfo::matches_search(const string &prefix,
 
     bool match = false;
 
-    for (unsigned i = 0; i < items.size(); ++i)
+    for (const shop_item &item : items)
     {
-        const string sname = shop_item_name(items[i]);
+        const string sname = shop_item_name(item);
         const string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
-                                                 &items[i].item, true);
+                                                 &item.item, true);
 
         bool thismatch = false;
         if (search.matches(prefix + " " + ann + sname))
             thismatch = true;
         else
         {
-            string desc = shop_item_desc(items[i]);
+            string desc = shop_item_desc(item);
             if (search.matches(desc))
                 thismatch = true;
         }
@@ -1016,7 +1016,7 @@ bool ShopInfo::matches_search(const string &prefix,
             if (!res.count++)
                 res.match = sname;
             res.matches++;
-            res.matching_items.push_back(items[i].item);
+            res.matching_items.push_back(item.item);
         }
     }
 
@@ -1046,8 +1046,8 @@ bool ShopInfo::matches_search(const string &prefix,
 vector<item_def> ShopInfo::inventory() const
 {
     vector<item_def> ret;
-    for (unsigned i = 0; i < items.size(); ++i)
-        ret.push_back(items[i].item);
+    for (const shop_item &item : items)
+        ret.push_back(item.item);
     return ret;
 }
 
@@ -1058,10 +1058,8 @@ void ShopInfo::write(FILE *f, bool identify) const
     fprintf(f, "[Shop] %s\n", OUTS(name));
     if (!items.empty())
     {
-        for (unsigned i = 0; i < items.size(); ++i)
+        for (shop_item item : items)
         {
-            shop_item item = items[i];
-
             if (identify)
                 _fully_identify_item(&item.item);
 
@@ -1093,10 +1091,10 @@ void ShopInfo::save(writer& outf) const
 
     marshallString4(outf, name);
 
-    for (unsigned i = 0; i < items.size(); ++i)
+    for (const shop_item &item : items)
     {
-        marshallItem(outf, items[i].item, true);
-        marshallShort(outf, (short) items[i].price);
+        marshallItem(outf, item.item, true);
+        marshallShort(outf, (short) item.price);
     }
 }
 
@@ -1158,11 +1156,11 @@ const Stash *LevelStashes::find_stash(coord_def c) const
 
 const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 {
-    for (unsigned i = 0; i < m_shops.size(); ++i)
-        if (m_shops[i].isAt(c))
-            return &m_shops[i];
+    for (const ShopInfo &shop : m_shops)
+        if (shop.isAt(c))
+            return &shop;
 
-    return NULL;
+    return nullptr;
 }
 
 bool LevelStashes::shop_needs_visit(const coord_def& c) const
@@ -1198,9 +1196,9 @@ bool LevelStashes::sacrificeable(const coord_def &c) const
 
 ShopInfo &LevelStashes::get_shop(const coord_def& c)
 {
-    for (unsigned i = 0; i < m_shops.size(); ++i)
-        if (m_shops[i].isAt(c))
-            return m_shops[i];
+    for (ShopInfo &shop : m_shops)
+        if (shop.isAt(c))
+            return shop;
 
     ShopInfo si(c.x, c.y);
     si.set_name(shop_name(c));
@@ -1368,10 +1366,10 @@ void LevelStashes::get_matching_stashes(
         }
     }
 
-    for (unsigned i = 0; i < m_shops.size(); ++i)
+    for (const ShopInfo &shop : m_shops)
     {
         stash_search_result res;
-        if (m_shops[i].matches_search(lplace, search, res))
+        if (shop.matches_search(lplace, search, res))
         {
             res.pos.id = m_place;
             results.push_back(res);
@@ -1399,8 +1397,8 @@ void LevelStashes::write(FILE *f, bool identify) const
     // very unlikely level names will be localized, but hey
     fprintf(f, "%s\n", OUTS(level_name()));
 
-    for (unsigned i = 0; i < m_shops.size(); ++i)
-        m_shops[i].write(f, identify);
+    for (const ShopInfo &shop : m_shops)
+        shop.write(f, identify);
 
     if (m_stashes.size())
     {
@@ -1425,8 +1423,8 @@ void LevelStashes::save(writer& outf) const
         entry.second.save(outf);
 
     marshallShort(outf, (short) m_shops.size());
-    for (unsigned i = 0; i < m_shops.size(); ++i)
-        m_shops[i].save(outf);
+    for (const ShopInfo &shop : m_shops)
+        shop.save(outf);
 }
 
 void LevelStashes::load(reader& inf)
@@ -1801,8 +1799,8 @@ void StashTracker::search_stashes()
 
     bool sort_by_dist = true;
     bool show_as_stacks = true;
-    for (unsigned i = 0; i < results.size(); ++i)
-        if (!(results[i].matching_items.empty() && results[i].shop))
+    for (const stash_search_result &result : results)
+        if (!(result.matching_items.empty() && result.shop))
         {
             // Only split up stacks if at least one match is a
             // non-shop (and split anyway in the case of a
@@ -1844,13 +1842,13 @@ void StashTracker::get_matching_stashes(
             return;
     }
 
-    for (unsigned i = 0; i < results.size(); ++i)
+    for (stash_search_result &result : results)
     {
-        int ldist = level_distance(curr, results[i].pos.id);
+        int ldist = level_distance(curr, result.pos.id);
         if (ldist == -1)
             ldist = 1000;
 
-        results[i].player_distance = ldist;
+        result.player_distance = ldist;
     }
 }
 
@@ -1934,13 +1932,13 @@ string ShopInfo::get_shop_item_name(const item_def& search_item) const
     // Rely on items_similar, rnd, quantity to see if the item_def object is in
     // the shop (extremely unlikely to be cheated and only consequence would be a
     // wrong name showing up in the stash search):
-    for (unsigned i = 0; i < items.size(); ++i)
+    for (const shop_item &item : items)
     {
-        if (items_similar(items[i].item, search_item)
-            && items[i].item.rnd == search_item.rnd
-            && items[i].item.quantity == search_item.quantity)
+        if (items_similar(item.item, search_item)
+            && item.item.rnd == search_item.rnd
+            && item.item.quantity == search_item.quantity)
         {
-            return shop_item_name(items[i]);
+            return shop_item_name(item);
         }
     }
     return "";
@@ -1952,30 +1950,29 @@ static void _stash_filter_useless(const vector<stash_search_result> &in,
     // Creates search results vector with useless items filtered
     out.clear();
     out.reserve(in.size());
-    for (unsigned i = 0; i < in.size(); ++i)
+    for (const stash_search_result &res : in)
     {
         vector<item_def> items;
 
         // expand shop inventory
-        if (in[i].matching_items.empty() && in[i].shop)
-            items = in[i].shop->inventory();
-        else if (!in[i].count)
+        if (res.matching_items.empty() && res.shop)
+            items = res.shop->inventory();
+        else if (!res.count)
         {
             //don't filter features
-            out.push_back(in[i]);
+            out.push_back(res);
             continue;
         }
         else
-            items = in[i].matching_items;
+            items = res.matching_items;
 
-        stash_search_result tmp = in[i];
+        stash_search_result tmp = res;
 
         tmp.count = 0;
         tmp.matches = 0;
         tmp.matching_items.clear();
-        for (unsigned j = 0; j < items.size(); ++j)
+        for (const item_def &item : items)
         {
-            const item_def &item = items[j];
             if (is_useless_item(item, false))
                 continue;
 
@@ -2007,26 +2004,25 @@ static void _stash_flatten_results(const vector<stash_search_result> &in,
     // Creates search results vector with at most one item in each entry
     out.clear();
     out.reserve(in.size() * 2);
-    for (unsigned i = 0; i < in.size(); ++i)
+    for (const stash_search_result &res : in)
     {
         vector<item_def> items;
 
         // expand shop inventory
-        if (in[i].matching_items.empty() && in[i].shop)
-            items = in[i].shop->inventory();
-        else if (in[i].count < 2)
+        if (res.matching_items.empty() && res.shop)
+            items = res.shop->inventory();
+        else if (res.count < 2)
         {
-            out.push_back(in[i]);
+            out.push_back(res);
             continue;
         }
         else
-            items = in[i].matching_items;
+            items = res.matching_items;
 
-        stash_search_result tmp = in[i];
+        stash_search_result tmp = res;
         tmp.count = 1;
-        for (unsigned j = 0; j < items.size(); ++j)
+        for (const item_def &item : items)
         {
-            const item_def &item = items[j];
             tmp.match = Stash::stash_item_name(item);
             if (tmp.shop)
             {
@@ -2106,9 +2102,8 @@ bool StashTracker::display_search_results(
     }
 
     menu_letter hotkey;
-    for (unsigned i = 0; i < results->size(); ++i, ++hotkey)
+    for (stash_search_result &res : *results)
     {
-        stash_search_result &res = (*results)[i];
         ostringstream matchtitle;
         if (const uint8_t waypoint = travel_cache.is_waypoint(res.pos))
             matchtitle << "(" << waypoint << ") ";
@@ -2135,6 +2130,7 @@ bool StashTracker::display_search_results(
         }
 
         stashmenu.add_entry(me);
+        ++hotkey;
     }
 
     stashmenu.set_flags(MF_SINGLESELECT);
@@ -2202,10 +2198,11 @@ bool StashTracker::display_search_results(
 
 void StashTracker::update_corpses()
 {
-    if (you.elapsed_time - last_corpse_update < 20)
+    if (you.elapsed_time - last_corpse_update < ROT_TIME_FACTOR)
         return;
 
-    const int rot_time = (you.elapsed_time - last_corpse_update) / 20;
+    const int rot_time =
+        (you.elapsed_time - last_corpse_update) / ROT_TIME_FACTOR;
 
     last_corpse_update = you.elapsed_time;
 

@@ -101,13 +101,13 @@ static string _get_version_information()
 
 static string _get_version_features()
 {
-    string result  = "<w>Features</w>\n";
-           result += "--------\n";
+    string result = "<w>Features</w>\n"
+                    "--------\n";
 
-    for (unsigned int i = 0; i < ARRAYSZ(features); i++)
+    for (const char *feature : features)
     {
         result += " * ";
-        result += features[i];
+        result += feature;
         result += "\n";
     }
 
@@ -2027,8 +2027,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
-            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : open/close door, \n"
-            "         untrap, attack without move\n",
+            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : attack without move \n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(

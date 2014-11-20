@@ -111,6 +111,8 @@ enum band_type
     BAND_MNOLEG,
     BAND_DEATH_SCARABS,
     BAND_ANUBIS_GUARD,
+    BAND_HOLIES,
+    BAND_ROBIN,
     BAND_RANDOM_SINGLE,
     NUM_BANDS                   // always last
 };

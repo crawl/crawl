@@ -1311,7 +1311,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.where_are_you);
     marshallByte(th, you.depth);
     marshallByte(th, you.char_direction);
-    marshallByte(th, you.opened_zot);
     marshallByte(th, you.royal_jelly_dead);
     marshallByte(th, you.transform_uncancellable);
     marshallByte(th, you.berserk_penalty);
@@ -1518,21 +1517,21 @@ static void tag_construct_you(writer &th)
     CANARY;
 
     marshallInt(th, you.dactions.size());
-    for (unsigned int k = 0; k < you.dactions.size(); k++)
-        marshallByte(th, you.dactions[k]);
+    for (daction_type da : you.dactions)
+        marshallByte(th, da);
 
     marshallInt(th, you.level_stack.size());
-    for (unsigned int k = 0; k < you.level_stack.size(); k++)
-        you.level_stack[k].save(th);
+    for (const level_pos &lvl : you.level_stack)
+        lvl.save(th);
 
     // List of currently beholding monsters (usually empty).
     marshallShort(th, you.beholders.size());
-    for (unsigned int k = 0; k < you.beholders.size(); k++)
-         _marshall_as_int<mid_t>(th, you.beholders[k]);
+    for (mid_t beh : you.beholders)
+         _marshall_as_int<mid_t>(th, beh);
 
     marshallShort(th, you.fearmongers.size());
-    for (unsigned int k = 0; k < you.fearmongers.size(); k++)
-        _marshall_as_int<mid_t>(th, you.fearmongers[k]);
+    for (mid_t monger : you.fearmongers)
+        _marshall_as_int<mid_t>(th, monger);
 
     marshallByte(th, you.piety_hysteresis);
 
@@ -1735,8 +1734,8 @@ static void tag_construct_you_dungeon(writer &th)
     // How many different places we have info on?
     marshallShort(th, list.size());
 
-    for (unsigned int k = 0; k < list.size(); k++)
-        marshallPlaceInfo(th, list[k]);
+    for (const PlaceInfo &place : list)
+        marshallPlaceInfo(th, place);
 
     marshall_iterator(th, you.uniq_map_tags.begin(), you.uniq_map_tags.end(),
                       marshallString);
@@ -2102,7 +2101,10 @@ static void tag_read_you(reader &th)
     you.char_direction    = static_cast<game_direction_type>(unmarshallUByte(th));
     ASSERT(you.char_direction <= GDT_ASCENDING);
 
-    you.opened_zot = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_ZOT_OPEN)
+        unmarshallBoolean(th);
+#endif
     you.royal_jelly_dead = unmarshallBoolean(th);
     you.transform_uncancellable = unmarshallBoolean(th);
 
@@ -2110,7 +2112,7 @@ static void tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_IS_UNDEAD)
         unmarshallUByte(th);
     if (th.getMinorVersion() < TAG_MINOR_CALC_UNRAND_REACTS)
-      unmarshallShort(th);
+        unmarshallShort(th);
 #endif
     you.berserk_penalty   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
@@ -3611,10 +3613,10 @@ static void tag_construct_level(writer &th)
     marshallInt(th, env.density);
 
     marshallShort(th, env.sunlight.size());
-    for (size_t i = 0; i < env.sunlight.size(); ++i)
+    for (const auto &sunspot : env.sunlight)
     {
-        marshallCoord(th, env.sunlight[i].first);
-        marshallInt(th, env.sunlight[i].second);
+        marshallCoord(th, sunspot.first);
+        marshallInt(th, sunspot.second);
     }
 }
 
@@ -4310,8 +4312,8 @@ void marshallMonster(writer &th, const monster& m)
     marshallByte(th, help);
 
     marshallShort(th, m.travel_path.size());
-    for (unsigned int i = 0; i < m.travel_path.size(); i++)
-        marshallCoord(th, m.travel_path[i]);
+    for (coord_def pos : m.travel_path)
+        marshallCoord(th, pos);
 
     marshallUnsigned(th, m.flags);
     marshallInt(th, m.experience);
@@ -4750,11 +4752,11 @@ void tag_construct_level_tiles(writer &th)
     marshallShort(th, GYM);
 
     marshallShort(th, env.tile_names.size());
-    for (unsigned int i = 0; i < env.tile_names.size(); ++i)
+    for (const string &name : env.tile_names)
     {
-        marshallString(th, env.tile_names[i]);
+        marshallString(th, name);
 #ifdef DEBUG_TILE_NAMES
-        mprf("Writing '%s' into save.", env.tile_names[i].c_str());
+        mprf("Writing '%s' into save.", name.c_str());
 #endif
     }
 
@@ -5146,14 +5148,14 @@ void unmarshallMonster(reader &th, monster& m)
 #if TAG_MAJOR_VERSION == 34
     monster_spells oldspells = m.spells;
     m.spells.clear();
-    for (size_t i = 0; i < oldspells.size(); i++)
+    for (mon_spell_slot &slot : oldspells)
     {
         if (mons_is_zombified(&m) && !mons_enslaved_soul(&m)
-            && oldspells[i].spell != SPELL_CREATE_TENTACLES)
+            && slot.spell != SPELL_CREATE_TENTACLES)
         {
             // zombies shouldn't have (most) spells
         }
-        else if (oldspells[i].spell == SPELL_DRACONIAN_BREATH)
+        else if (slot.spell == SPELL_DRACONIAN_BREATH)
         {
             // Replace Draconian Breath with the colour-specific spell,
             // and remove Azrael's bad breath while we're at it.
@@ -5161,15 +5163,18 @@ void unmarshallMonster(reader &th, monster& m)
                 m.spells.push_back(drac_breath(draco_or_demonspawn_subspecies(&m)));
         }
         // Give Mnoleg back malign gateway in place of tentacles.
-        else if (oldspells[i].spell == SPELL_CREATE_TENTACLES
+        else if (slot.spell == SPELL_CREATE_TENTACLES
                  && m.type == MONS_MNOLEG)
         {
-            oldspells[i].spell = SPELL_MALIGN_GATEWAY;
-            oldspells[i].freq = 27;
-            m.spells.push_back(oldspells[i]);
+            slot.spell = SPELL_MALIGN_GATEWAY;
+            slot.freq = 27;
+            m.spells.push_back(slot);
         }
-        else if (oldspells[i].spell != SPELL_DELAYED_FIREBALL)
-            m.spells.push_back(oldspells[i]);
+        else if (slot.spell != SPELL_DELAYED_FIREBALL
+                 && slot.spell != SPELL_MELEE)
+        {
+            m.spells.push_back(slot);
+        }
     }
 #endif
     }

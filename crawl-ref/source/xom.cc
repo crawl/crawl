@@ -1064,8 +1064,7 @@ static int _xom_do_potion(bool debug = false)
     {
         pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC, POT_HASTE,
                             POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
-                            POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE,
-                            -1);
+                            POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE);
 
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
             pot = POT_BERSERK_RAGE;
@@ -1884,17 +1883,8 @@ static int _xom_change_scenery(bool debug = false)
         else if (feat_is_closed_door(feat))
         {
             // Check whether this door is already included in a gate.
-            bool found_door = false;
-            for (unsigned int k = 0; k < closed_doors.size(); ++k)
-            {
-                if (closed_doors[k] == *ri)
-                {
-                    found_door = true;
-                    break;
-                }
-            }
-
-            if (!found_door)
+            if (find(begin(closed_doors), end(closed_doors), *ri)
+                    == end(closed_doors))
             {
                 // If it's a gate, add all doors belonging to the gate.
                 set<coord_def> all_door;
@@ -1907,17 +1897,8 @@ static int _xom_change_scenery(bool debug = false)
                  && igrd(*ri) == NON_ITEM)
         {
             // Check whether this door is already included in a gate.
-            bool found_door = false;
-            for (unsigned int k = 0; k < open_doors.size(); ++k)
-            {
-                if (open_doors[k] == *ri)
-                {
-                    found_door = true;
-                    break;
-                }
-            }
-
-            if (!found_door)
+            if (find(begin(open_doors), end(open_doors), *ri)
+                    == end(open_doors))
             {
                 // Check whether any of the doors belonging to a gate is
                 // blocked by an item or monster.
@@ -1947,10 +1928,8 @@ static int _xom_change_scenery(bool debug = false)
     // not make sense.
     // FIXME: Changed fountains behind doors are not properly remembered.
     //        (At least in tiles.)
-    for (unsigned int k = 0; k < open_doors.size(); ++k)
-        candidates.push_back(open_doors[k]);
-    for (unsigned int k = 0; k < closed_doors.size(); ++k)
-        candidates.push_back(closed_doors[k]);
+    candidates.insert(end(candidates), begin(open_doors), end(open_doors));
+    candidates.insert(end(candidates), begin(closed_doors), end(closed_doors));
 
     const string speech = _get_xom_speech("scenery");
     if (candidates.empty())
@@ -1992,9 +1971,8 @@ static int _xom_change_scenery(bool debug = false)
     int fountains_blood = 0;
     int doors_open      = 0;
     int doors_close     = 0;
-    for (unsigned int i = 0; i < candidates.size(); ++i)
+    for (coord_def pos : candidates)
     {
-        coord_def pos = candidates[i];
         switch (grd(pos))
         {
         case DNGN_CLOSED_DOOR:
@@ -2148,7 +2126,7 @@ static int _xom_destruction(int sever, bool debug = false)
             if (!rc)
                 god_speaks(GOD_XOM, _get_xom_speech("fake destruction").c_str());
             rc = true;
-            backlight_monsters(mi->pos(), 0, 0);
+            backlight_monster(*mi);
         }
     }
 
@@ -2524,7 +2502,7 @@ static void _xom_zero_miscast()
                 str += " primary";
             else
             {
-                str += random_choose(" front", " middle", " rear", 0);
+                str += random_choose(" front", " middle", " rear");
                 str += " secondary";
             }
         str += " eye.";
@@ -2940,7 +2918,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
             if (new_pos == stair_pos)
                 return false;
 
-            if (!slide_feature_over(stair_pos, new_pos))
+            if (!slide_feature_over(stair_pos, new_pos, true))
                 return false;
 
             stair_pos = new_pos;
@@ -3122,8 +3100,8 @@ static int _xom_repel_stairs(bool debug = false)
 
     shuffle_array(stairs_avail);
     int count_moved = 0;
-    for (unsigned int i = 0; i < stairs_avail.size(); i++)
-        if (move_stair(stairs_avail[i], true, true))
+    for (coord_def stair : stairs_avail)
+        if (move_stair(stair, true, true))
             count_moved++;
 
     if (!count_moved)
@@ -4315,11 +4293,10 @@ void debug_xom_effects()
         }
 
         sort(xom_ec_pairs.begin(), xom_ec_pairs.end(), _sort_xom_effects);
-        for (unsigned int k = 0; k < xom_ec_pairs.size(); ++k)
+        for (const xom_effect_count &xec : xom_ec_pairs)
         {
-            xom_effect_count xec = xom_ec_pairs[k];
             fprintf(ostat, "%7.2f%%    %s\n",
-                    (100.0 * (float) xec.count / (float) total),
+                    (100.0 * xec.count / total),
                     xec.effect.c_str());
         }
     }

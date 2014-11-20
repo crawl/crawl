@@ -114,7 +114,6 @@ public:
 
   uint8_t spell_no;
   game_direction_type char_direction;
-  bool opened_zot;
   bool royal_jelly_dead;
   bool transform_uncancellable;
   bool fishtail; // Merfolk fishtail transformation
@@ -123,7 +122,9 @@ public:
 
   durations_t duration;
   int rotting;
-  int berserk_penalty;                // penalty for moving while berserk
+  bool apply_berserk_penalty;         // Whether to apply the berserk penalty at
+                                      // end of the turn.
+  int berserk_penalty;                // The penalty for moving while berserk
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
   FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
@@ -616,7 +617,7 @@ public:
 
     void make_hungry(int nutrition, bool silent = true);
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int amount, bool allow_hint = true, bool quiet = false);
+    bool sicken(int amount);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *, bool force = false);
     bool fully_petrify(actor *foe, bool quiet = false);
@@ -1042,7 +1043,8 @@ bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);
-void player_open_door(coord_def doorpos, bool check_confused);
+void player_open_door(coord_def doorpos);
+void player_close_door(coord_def doorpos);
 
 void dec_disease_player(int delay);
 

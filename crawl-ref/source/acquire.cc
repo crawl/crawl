@@ -41,7 +41,7 @@
 static armour_type _random_nonbody_armour_type()
 {
     return random_choose(ARM_SHIELD, ARM_CLOAK, ARM_HELMET, ARM_GLOVES,
-                         ARM_BOOTS, -1);
+                         ARM_BOOTS);
 }
 
 static armour_type _pick_wearable_armour(const armour_type arm)
@@ -88,7 +88,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
             || arm == ARM_CENTAUR_BARDING
             || arm == ARM_NAGA_BARDING)
         {
-            result = random_choose(ARM_HELMET, ARM_GLOVES, ARM_BOOTS, -1);
+            result = random_choose(ARM_HELMET, ARM_GLOVES, ARM_BOOTS);
         }
         else if (arm == ARM_SHIELD)
         {
@@ -252,8 +252,7 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
                         ARM_GOLD_DRAGON_ARMOUR,
                         ARM_SWAMP_DRAGON_ARMOUR,
                         ARM_PEARL_DRAGON_ARMOUR,
-                        ARM_QUICKSILVER_DRAGON_ARMOUR,
-                        -1);
+                        ARM_QUICKSILVER_DRAGON_ARMOUR);
             }
         }
         else

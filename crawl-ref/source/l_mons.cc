@@ -556,9 +556,9 @@ static int monster_get(lua_State *ls)
     if (!attr)
         return 0;
 
-    for (unsigned i = 0; i < ARRAYSZ(mons_attrs); ++i)
-        if (!strcmp(attr, mons_attrs[i].attribute))
-            return mons_attrs[i].accessor(ls, mons, attr);
+    for (const MonsAccessor &ma : mons_attrs)
+        if (!strcmp(attr, ma.attribute))
+            return ma.accessor(ls, mons, attr);
 
     return 0;
 }

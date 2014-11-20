@@ -309,32 +309,18 @@ void torment(actor *attacker, torment_source_type taux, const coord_def& where)
         _torment_stuff_at(*ri, attacker, taux);
 }
 
-void cleansing_flame(int pow, int caster, coord_def where,
-                     actor *attacker)
+void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+                                coord_def where, actor *attacker)
 {
-    ASSERT(!crawl_state.game_is_arena());
-
-    const char *aux = "cleansing flame";
-
-    bolt beam;
-
-    if (caster < 0)
-    {
-        switch (caster)
-        {
-        case CLEANSING_FLAME_TSO:
-            aux = "the Shining One's cleansing flame";
-            break;
-        }
-    }
-
     beam.flavour      = BEAM_HOLY;
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(2, pow);
-    beam.target       = you.pos();
+    beam.target       = where;
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
-    beam.aux_source   = aux;
+    beam.aux_source   = (caster == CLEANSING_FLAME_TSO)
+                        ? "the Shining One's cleansing flame"
+                        : "cleansing flame";
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
@@ -357,7 +343,13 @@ void cleansing_flame(int pow, int caster, coord_def where,
         beam.thrower   = KILL_MON;
         beam.source_id = attacker->mid;
     }
+}
 
+void cleansing_flame(int pow, int caster, coord_def where,
+                     actor *attacker)
+{
+    bolt beam;
+    setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
 }
 
@@ -651,13 +643,11 @@ void direct_effect(monster* source, spell_type spell,
                                       * confuse_power);
         if (res_margin > 0)
         {
-            if (defender->is_player())
-                canned_msg(MSG_YOU_RESIST);
-            else // if (defender->is_monster())
+            if (you.can_see(defender))
             {
-                const monster* foe = defender->as_monster();
-                simple_monster_message(foe,
-                                       mons_resist_string(foe, res_margin));
+                mprf("%s%s",
+                     defender->name(DESC_THE).c_str(),
+                     defender->resist_margin_phrase(res_margin).c_str());
             }
             break;
         }
@@ -1214,9 +1204,8 @@ bool vitrify_area(int radius)
 }
 
 // Nasty things happen to people who spend too long in Hell.
-static void _hell_effects(int time_delta)
+static void _hell_effects(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (!player_in_hell())
         return;
 
@@ -1339,8 +1328,8 @@ static bool _feat_is_flanked_by_walls(const coord_def &p)
                                coord_def(p.x  ,p.y+1) };
 
     // paranoia!
-    for (unsigned int i = 0; i < ARRAYSZ(adjs); ++i)
-        if (!in_bounds(adjs[i]))
+    for (coord_def c : adjs)
+        if (!in_bounds(c))
             return false;
 
     return feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
@@ -1560,9 +1549,9 @@ void change_labyrinth(bool msg)
 
         string path_str = "";
         mprf(MSGCH_DIAGNOSTICS, "Here's the list of targets: ");
-        for (unsigned int i = 0; i < targets.size(); i++)
+        for (coord_def target : targets)
         {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", targets[i].x, targets[i].y);
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", target.x, target.y);
             path_str += info;
         }
         mprf(MSGCH_DIAGNOSTICS, "%s", path_str.c_str());
@@ -1627,9 +1616,8 @@ void change_labyrinth(bool msg)
         // Add all floor grids meeting a couple of conditions to a vector
         // of potential switch points.
         vector<coord_def> points;
-        for (unsigned int i = 0; i < path.size(); i++)
+        for (const coord_def p : path)
         {
-            const coord_def p(path[i]);
             // The point must be inside the changed area.
             if (p.x < c1.x || p.x > c2.x || p.y < c1.y || p.y > c2.y)
                 continue;
@@ -1780,9 +1768,9 @@ void change_labyrinth(bool msg)
         }
         // Search the eight possible directions in random order.
         shuffle_array(dirs);
-        for (unsigned int i = 0; i < dirs.size(); i++)
+        for (coord_def dir : dirs)
         {
-            const coord_def p = *ri + dirs[i];
+            const coord_def p = *ri + dir;
             if (!in_bounds(p))
                 continue;
 
@@ -1911,10 +1899,8 @@ static void _magic_contamination_effects()
 }
 // Checks if the player should be hit with magic contaimination effects,
 // then actually does it if they should be.
-static void _handle_magic_contamination(int time_delta)
+static void _handle_magic_contamination(int /*time_delta*/)
 {
-    UNUSED(time_delta);
-
     // [ds] Move magic contamination effects closer to b26 again.
     const bool glow_effect = get_contamination_level() > 1
             && x_chance_in_y(you.magic_contamination, 12000);
@@ -1932,9 +1918,8 @@ static void _handle_magic_contamination(int time_delta)
 }
 
 // Adjust the player's stats if s/he's diseased (or recovering).
-static void _recover_stats(int time_delta)
+static void _recover_stats(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (!you.disease)
     {
         bool recovery = true;
@@ -1978,9 +1963,8 @@ static void _recover_stats(int time_delta)
 }
 
 // Adjust the player's stats if s/he has the deterioration mutation.
-static void _deteriorate(int time_delta)
+static void _deteriorate(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (player_mutation_level(MUT_DETERIORATION)
         && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
     {
@@ -1989,24 +1973,21 @@ static void _deteriorate(int time_delta)
 }
 
 // Exercise armour *xor* stealth skill: {dlb}
-static void _wait_practice(int time_delta)
+static void _wait_practice(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     practise(EX_WAIT);
 }
 
-static void _lab_change(int time_delta)
+static void _lab_change(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (player_in_branch(BRANCH_LABYRINTH))
         change_labyrinth();
 }
 
 // Update the abyss speed. This place is unstable and the speed can
 // fluctuate. It's not a constant increase.
-static void _abyss_speed(int time_delta)
+static void _abyss_speed(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (!player_in_branch(BRANCH_ABYSS))
         return;
 
@@ -2018,10 +1999,8 @@ static void _abyss_speed(int time_delta)
         --you.abyss_speed;
 }
 
-static void _jiyva_effects(int time_delta)
+static void _jiyva_effects(int /*time_delta*/)
 {
-    UNUSED(time_delta);
-
     if (!you_worship(GOD_JIYVA))
         return;
 
@@ -2727,7 +2706,6 @@ int spawn_corpse_mushrooms(item_def& corpse,
     if (target_count == 0)
         return 0;
 
-    int c_size = 8;
     int permutation[] = {0, 1, 2, 3, 4, 5, 6, 7};
 
     int placed_targets = 0;
@@ -2840,11 +2818,11 @@ int spawn_corpse_mushrooms(item_def& corpse,
             break;
 
         // Wish adjacent_iterator had a random traversal.
-        shuffle_array(permutation, c_size);
+        shuffle_array(permutation);
 
-        for (int count = 0; count < c_size; ++count)
+        for (int idx : permutation)
         {
-            coord_def temp = current + Compass[permutation[count]];
+            coord_def temp = current + Compass[idx];
 
             int index = temp.x + temp.y * X_WIDTH;
 

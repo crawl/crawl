@@ -27,7 +27,7 @@ Terrain
  o - clear permanent rock wall - always undiggable (DNGN_CLEAR_PERMAROCK_WALL)
  v - metal wall - grounds electricity                    (DNGN_METAL_WALL)
  b - crystal wall - reflects cold and fire       (DNGN_GREEN_CRYSTAL_WALL)
- t - tree - a single square doesn't block LOS                  (DNGN_TREE)
+ t - tree - combustible                                        (DNGN_TREE)
 
  . - floor                                                    (DNGN_FLOOR)
  + - closed door                                        (DNGN_CLOSED_DOOR)
@@ -94,14 +94,9 @@ Monsters
 --------
  0 - normal monster
  9 - +5 depth monster
- 8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans
-     this way.[*]
+ 8 - (+2) * 2 depth monster (aargh!).
  1-7 - monster array monster. See section below on MONS: arrays for more
      information
-
-[*]  (using '0', '9', and '8' in portal vaults will use monsters from the
-      level that the portal was entered from, unless a random monster list
-      has been set)
 
 H.   Header information
 =======================
@@ -136,10 +131,9 @@ ORDER:    <integer>
 
 ORIENT:   (float | encompass | north | northwest | ... | southeast)
 
-          Some kind of ORIENT: line is mandatory for vaults; skipping
-          ORIENT: makes your map a minivault. As a rule of thumb, if
-          you're writing a small random map, skip the ORIENT: line and
-          make it a minivault.
+          A ORIENT: line is not mandatory for vaults; skipping ORIENT: makes
+          your map a minivault. As a rule of thumb, if you're writing a small
+          random map, skip the ORIENT: line and make it a minivault.
 
           * "float": The dungeon builder puts your vault wherever it wants to.
           * "some_direction": The vault lies along that side of the map:
@@ -159,18 +153,12 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           specifies the range of levels where the vault may be placed
           in the dungeon. E.g.
 
-            DEPTH: 7-20
+            DEPTH: D:7-13
 
           DEPTH: does not force a map to be placed in a particular place; it
           applies only when the dungeon builder is looking for a random vault
           or minivault, so you can control at what depths your vault gets
           placed.
-
-          A simple DEPTH: declaration that does not specify a branch applies
-          to all branches. A map declared with depth 7-20 could be used in the
-          Lair, for instance (Lair:1 will be treated as a depth of 12 if the
-          Lair entrance is on D:11). In general, you should avoid using such
-          unconstrained DEPTHs unless you know what you are doing.
 
           You can constrain a map by branch:
 
@@ -178,22 +166,20 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
 
           (Anywhere between levels 3-6 of the Lair, inclusive.)
 
-          You can apply multiple constraints in one DEPTH line,
-          comma-separated:
-
-            DEPTH: 7-20, !12-14
-
-          (Anywhere in the dungeon between depths 7-20, but not on levels
-          12-14.)
-
-            DEPTH: 7-20, !Orc
-
-          (Anywhere in the dungeon between depths 7-20, but never in the Orcish
-          Mines.)
-
             DEPTH: Lair
 
           (Anywhere in the Lair. Can also be expressed as "DEPTH: Lair:*".)
+
+          You can apply multiple constraints in one DEPTH line,
+          comma-separated:
+
+            DEPTH: Lair, !Lair:4-6
+
+          (Anywhere in the Lair, except for Lair:4, Lair:5, or Lair:6.)
+
+            DEPTH: Orc, !Orc:$
+
+          (Anywhere in Orc except for the last level.)
 
           Maps that do not specify a DEPTH: attribute will inherit their depth
           constraints from the closest preceding default-depth: line. If there
@@ -208,6 +194,11 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           for an example. When doing this, make sure that there is no
           default-depth line handing out a depth! (This can mean that you are
           better off with a new des file for elaborate vaults.)
+
+          A plain DEPTH: declaration that does not specify a branch applies
+          to all branches. A map declared with depth 7-20 could be used in the
+          Lair, for instance (Lair is treated as depth 10 for this purpose.)
+          In general, you should avoid using such unconstrained DEPTHs.
 
 CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
 
@@ -1229,9 +1220,9 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           You'll notice that 'G' is the symbol of a granite statue. Kxxx
           directives allow you to assign arbitrary definitions to any symbol.
 
-          KFEAT features are specified as a feature name (see section N
-          for a full list of feature names). As another example, you can
-          place a portal to the Abyss as:
+          KFEAT features are specified as a feature name (see feature-data.h
+          in the source/ directory for a full list of feature names). As
+          another example, you can place a portal to the Abyss as:
 
           KFEAT: A = enter_abyss
 

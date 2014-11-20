@@ -184,12 +184,12 @@ void init_mon_name_cache()
     if (!Mon_Name_Cache.empty())
         return;
 
-    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
+    for (const monsterentry &me : mondata)
     {
-        string name = mondata[i].name;
+        string name = me.name;
         lowercase(name);
 
-        const int          mtype = mondata[i].mc;
+        const int          mtype = me.mc;
         const monster_type mon   = monster_type(mtype);
 
         // Deal sensibly with duplicate entries; refuse or allow the
@@ -251,9 +251,9 @@ void init_monsters()
         mon_entry[mondata[i].mc] = i;
 
     // Finally, monsters yet with dummy entries point to TTTSNB(tm). {dlb}:
-    for (unsigned int i = 0; i < NUM_MONSTERS; ++i)
-        if (mon_entry[i] == -1)
-            mon_entry[i] = mon_entry[MONS_PROGRAM_BUG];
+    for (int &entry : mon_entry)
+        if (entry == -1)
+            entry = mon_entry[MONS_PROGRAM_BUG];
 
     init_monster_symbols();
 }
@@ -1753,10 +1753,10 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
     }
 
     if (attk.type == AT_RANDOM)
-        attk.type = random_choose(AT_HIT, AT_GORE, -1);
+        attk.type = random_choose(AT_HIT, AT_GORE);
 
     if (attk.type == AT_CHERUB)
-        attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1);
+        attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE);
 
     if (!base_flavour)
     {
@@ -1793,27 +1793,9 @@ static int _mons_damage(monster_type mc, int rt)
     return smc->attack[rt].damage;
 }
 
-const char* resist_margin_phrase(int margin)
-{
-    return margin >= 30  ? " resists with almost no effort." :
-           margin >= 15  ? " easily resists." :
-           margin >= 0   ? " resists with some effort." :
-           margin >= -14 ? " resists with significant effort.":
-           margin >= -30 ? " struggles to resist."
-                         : " barely resists.";
-}
-
 bool mons_immune_magic(const monster* mon)
 {
     return get_monster_data(mon->type)->resist_magic == MAG_IMMUNE;
-}
-
-const char* mons_resist_string(const monster* mon, int res_margin)
-{
-    if (mons_immune_magic(mon))
-        return " is unaffected.";
-    else
-        return resist_margin_phrase(res_margin);
 }
 
 bool mons_skeleton(monster_type mc)
@@ -1992,11 +1974,9 @@ int exper_value(const monster* mon, bool real)
     // Let's look for big spells.
     if (spellcaster)
     {
-        const monster_spells &hspell_pass = mon->spells;
-
-        for (unsigned int i = 0; i < hspell_pass.size(); ++i)
+        for (const mon_spell_slot &slot : mon->spells)
         {
-            switch (hspell_pass[i].spell)
+            switch (slot.spell)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
@@ -2318,28 +2298,17 @@ unique_books get_unique_spells(const monster_info &mi,
             }
         }
 
-        for (unsigned int j = 0;
-             book == MST_GHOST && j < mi.spells.size()
-             || book != MST_GHOST && j < mspell_list[msidx].spells.size();
-             ++j)
+        if (book != MST_GHOST)
+            ASSERT(msidx < ARRAYSZ(mspell_list));
+        for (const mon_spell_slot &slot : (book == MST_GHOST
+                                           ? mi.spells
+                                           : mspell_list[msidx].spells))
         {
-            mon_spell_slot slot;
-            spell_type spell;
-            if (book == MST_GHOST)
-                slot = mi.spells[j];
-            else
-            {
-                ASSERT(msidx < ARRAYSZ(mspell_list));
-                slot = mspell_list[msidx].spells[j];
-            }
-
             if (flags != MON_SPELL_NO_FLAGS && !(slot.flags & flags))
                 continue;
 
-            spell = slot.spell;
-
-            if (find(spells.begin(), spells.end(), spell) == spells.end())
-                spells.push_back(spell);
+            if (find(spells.begin(), spells.end(), slot.spell) == spells.end())
+                spells.push_back(slot.spell);
         }
 
         if (spells.size() == 0)
@@ -2400,14 +2369,12 @@ void mons_load_spells(monster* mon)
     dprf(DIAG_MONPLACE, "%s: loading spellbook #%d",
          mon->name(DESC_PLAIN, true).c_str(), static_cast<int>(book));
 
-    for (unsigned int i = 0; i < ARRAYSZ(mspell_list); ++i)
-    {
-        if (mspell_list[i].type == book)
+    for (const mon_spellbook &spbook : mspell_list)
+        if (spbook.type == book)
         {
-            mon->spells = mspell_list[i].spells;
+            mon->spells = spbook.spells;
             break;
         }
-    }
 }
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
@@ -3481,8 +3448,8 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     if (mons_has_los_ability(mon->type))
         return true;
 
-    for (unsigned int i = 0; i < mon->spells.size(); ++i)
-        if (_ms_ranged_spell(mon->spells[i].spell, attack_only, ench_too))
+    for (const mon_spell_slot &slot : mon->spells)
+        if (_ms_ranged_spell(slot.spell, attack_only, ench_too))
             return true;
 
     return false;
@@ -3497,9 +3464,9 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 // (such as an amulet of clarity or stasis)
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 {
-    for (unsigned int i = 0; i < mon->spells.size(); ++i)
+    for (const mon_spell_slot &slot : mon->spells)
     {
-        switch (mon->spells[i].spell)
+        switch (slot.spell)
         {
         case SPELL_SLEEP:
             if (foe->can_sleep())
@@ -3640,66 +3607,22 @@ bool mons_can_attack(const monster* mon)
     return adjacent(mon->pos(), foe->pos());
 }
 
+/**
+ * What gender are monsters of the given class?
+ *
+ * Used for pronoun selection.
+ *
+ * @param mc        The type of monster in question
+ * @return          GENDER_NEUTER, _FEMALE, or _MALE.
+ */
 static gender_type _mons_class_gender(monster_type mc)
 {
-    gender_type gender = GENDER_NEUTER;
-
-    if (mc == MONS_QUEEN_ANT
-        || mc == MONS_QUEEN_BEE
-        || mc == MONS_HARPY
-        || mc == MONS_WATER_NYMPH)
-    {
-        gender = GENDER_FEMALE;
-    }
-    else if (mc == MONS_HELLBINDER
-             || mc == MONS_CLOUD_MAGE)
-    {
-        gender = GENDER_MALE;
-    }
-    else if (mons_is_unique(mc) && !mons_is_pghost(mc))
-    {
-        if (mons_species(mc) == MONS_SERPENT_OF_HELL)
-            mc = MONS_SERPENT_OF_HELL;
-        switch (mc)
-        {
-        case MONS_JESSICA:
-        case MONS_PSYCHE:
-        case MONS_JOSEPHINE:
-        case MONS_AGNES:
-        case MONS_MAUD:
-        case MONS_LOUISE:
-        case MONS_FRANCES:
-        case MONS_MARGERY:
-        case MONS_EROLCHA:
-        case MONS_ERICA:
-        case MONS_TIAMAT:
-        case MONS_ERESHKIGAL:
-        case MONS_ROXANNE:
-        case MONS_SONJA:
-        case MONS_ILSUIW:
-        case MONS_NERGALLE:
-        case MONS_KIRKE:
-        case MONS_DUVESSA:
-        case MONS_THE_ENCHANTRESS:
-        case MONS_NELLIE:
-        case MONS_ARACHNE:
-        case MONS_NATASHA:
-        case MONS_VASHNIA:
-            gender = GENDER_FEMALE;
-            break;
-        case MONS_ROYAL_JELLY:
-        case MONS_LERNAEAN_HYDRA:
-        case MONS_IRON_GIANT:
-        case MONS_SERPENT_OF_HELL:
-            gender = GENDER_NEUTER;
-            break;
-        default:
-            gender = GENDER_MALE;
-            break;
-        }
-    }
-
-    return gender;
+    const bool female = mons_class_flag(mc, M_FEMALE);
+    const bool male = mons_class_flag(mc, M_MALE);
+    ASSERT(!(male && female));
+    return male ? GENDER_MALE :
+         female ? GENDER_FEMALE :
+                  GENDER_NEUTER;
 }
 
 // Use of variant (case is irrelevant here):
@@ -3740,11 +3663,8 @@ static const spell_type smitey_spells[] = {
  */
 static bool _mons_has_smite_attack(const monster* mons)
 {
-    for (unsigned j = 0 ; j < ARRAYSZ(smitey_spells); j++)
-        if (mons->has_spell(smitey_spells[j]))
-            return true;
-
-    return false;
+    return any_of(begin(smitey_spells), end(smitey_spells),
+                  bind(mem_fn(&monster::has_spell), *mons, placeholders::_1));
 }
 
 /**
@@ -3779,6 +3699,9 @@ bool monster_shover(const monster* m)
 
     // Geryon really profits from *not* pushing past hell beasts.
     if (m->type == MONS_GERYON)
+        return false;
+    // Likewise, Robin and her mob.
+    if (m->type == MONS_ROBIN)
         return false;
 
     // no dumb creatures pushing, aside from jellies, which just kind of ooze.
@@ -4009,10 +3932,7 @@ mon_inv_type item_to_mslot(const item_def &item)
 
 monster_type royal_jelly_ejectable_monster()
 {
-    return random_choose(MONS_ACID_BLOB,
-                      MONS_AZURE_JELLY,
-                      MONS_DEATH_OOZE,
-                         -1);
+    return random_choose(MONS_ACID_BLOB, MONS_AZURE_JELLY, MONS_DEATH_OOZE);
 }
 
 // Replaces @foe_god@ and @god_is@ with foe's god name.
@@ -4699,6 +4619,11 @@ void debug_mondata()
         {
             fails += make_stringf("%s has 0 speed\n", name);
         }
+
+        const bool male = mons_class_flag(mc, M_MALE);
+        const bool female = mons_class_flag(mc, M_FEMALE);
+        if (male && female)
+            fails += make_stringf("%s is both male and female\n", name);
     }
 
     if (!fails.empty())
@@ -4936,14 +4861,9 @@ void fixup_spells(monster_spells &spells, int hd)
     for (unsigned int i = 0; i < spells.size(); i++)
         spells[i].freq = one_freq;
 
-    for (auto it = spells.begin(); it != spells.end(); it++)
-    {
-        if (it->spell == SPELL_NO_SPELL)
-        {
-            spells.erase(it);
-            it = spells.begin() - 1;
-        }
-    }
+    erase_if(spells, [](const mon_spell_slot &t) {
+        return t.spell == SPELL_NO_SPELL;
+    });
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)

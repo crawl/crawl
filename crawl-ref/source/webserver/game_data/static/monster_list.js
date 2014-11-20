@@ -1,6 +1,6 @@
 define(["jquery", "./map_knowledge", "./cell_renderer", "./dungeon_renderer",
-        "./options"],
-function ($, map_knowledge, cr, dungeon_renderer, options) {
+        "./options", "./util"],
+function ($, map_knowledge, cr, dungeon_renderer, options, util) {
     "use strict";
 
     var monsters, $list, monster_groups, max_rows;
@@ -164,7 +164,7 @@ function ($, map_knowledge, cr, dungeon_renderer, options) {
                 || (canvas.style.height != dungeon_renderer.cell_height))
             {
                 util.init_canvas(canvas, needed_width,
-                                         dungeon_renderer(cell_height));
+                                         dungeon_renderer.cell_height);
                 renderer.init(canvas);
             }
 

@@ -251,6 +251,10 @@ Chilling Breath spell
 This creatue can breath a blast of frost that bypasses any armour the unfortunate
 victim may have, and might even knock it backwards if in flight.
 %%%%
+Cleansing Flame spell
+
+<Cleansing Flame ability>
+%%%%
 Cloud Cone spell
 
 This spell blasts the area near the caster with various destructive clouds. At
@@ -627,6 +631,11 @@ energy. It resembles eerie greenish flames, but it has nothing in common with
 fire besides appearance. Both the direct hit and residual flame does damage to
 living beings and heals the undead. The energy tends to coalesce into spectral
 undead creatures on its own.
+%%%%
+Goblin Toss spell
+
+Throws a nearby friendly goblin in a long, beautiful arc, bopping the target on
+the head and landing the goblin nearby.
 %%%%
 Glaciate spell
 
@@ -1106,6 +1115,11 @@ This ability taints the victim's ability to cast spells; casting a spell while
 afflicted with this condition causes them to lose control over their magic,
 progressively hindering their chances of success as more spells are cast.
 %%%%
+Scattershot spell
+
+This spell generates metallic fragments, blasting a cone-shaped area in front
+of the caster.
+%%%%
 Seal Doors spell
 
 Imparts seals on nearby doors and stairs, preventing those not allied with
@@ -1382,6 +1396,10 @@ significant amounts of damage. It will gain more health at high power.
 Summon Hell Beast spell
 
 Using his horn, Geryon can summon a deadly hell beast against his foes.
+%%%%
+Summon Holies spell
+
+Calls forth a divine warrior to aid the caster.
 %%%%
 Summon Horrible Things spell
 

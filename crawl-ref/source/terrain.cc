@@ -473,9 +473,9 @@ static int _god_altars[][2] =
  */
 god_type feat_altar_god(dungeon_feature_type feat)
 {
-    for (unsigned i = 0; i < ARRAYSZ(_god_altars); i++)
-        if ((dungeon_feature_type) _god_altars[i][1] == feat)
-            return (god_type) _god_altars[i][0];
+    for (const int (&altar)[2] : _god_altars)
+        if ((dungeon_feature_type) altar[1] == feat)
+            return (god_type) altar[0];
 
     return GOD_NO_GOD;
 }
@@ -487,10 +487,9 @@ god_type feat_altar_god(dungeon_feature_type feat)
  */
 dungeon_feature_type altar_for_god(god_type god)
 {
-
-    for (unsigned i = 0; i < ARRAYSZ(_god_altars); i++)
-        if ((god_type) _god_altars[i][0] == god)
-            return (dungeon_feature_type) _god_altars[i][1];
+    for (const int (&altar)[2] : _god_altars)
+        if ((god_type) altar[0] == god)
+            return (dungeon_feature_type) altar[1];
 
     return DNGN_FLOOR;
 }

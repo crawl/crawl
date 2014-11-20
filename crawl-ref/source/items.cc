@@ -827,11 +827,10 @@ void item_check()
     {
         if (!done_init_line)
             mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
-        for (unsigned int i = 0; i < items.size(); ++i)
+        for (const item_def *it : items)
         {
-            item_def it(*items[i]);
-            mprf_nocap("%s", get_menu_colour_prefix_tags(it, DESC_A).c_str());
-            _maybe_give_corpse_hint(it);
+            mprf_nocap("%s", get_menu_colour_prefix_tags(*it, DESC_A).c_str());
+            _maybe_give_corpse_hint(*it);
         }
     }
     else if (!done_init_line)
@@ -842,10 +841,9 @@ void item_check()
         // If there are 2 or more non-corpse items here, we might need
         // a hint.
         int count = 0;
-        for (unsigned int i = 0; i < items.size(); ++i)
+        for (const item_def *it : items)
         {
-            item_def it(*items[i]);
-            if (it.base_type == OBJ_CORPSES)
+            if (it->base_type == OBJ_CORPSES)
                 continue;
 
             if (++count > 1)
@@ -2527,10 +2525,8 @@ static void _multidrop(vector<SelItem> tmp_items)
     // then remove it from the list of items to drop by not copying it
     // over to items_for_multidrop.
     items_for_multidrop.clear();
-    for (unsigned int i = 0; i < tmp_items.size(); ++i)
+    for (SelItem& si : tmp_items)
     {
-        SelItem& si(tmp_items[i]);
-
         const int item_quant = si.item->quantity;
 
         // EVIL HACK: Fix item quantity to match the quantity we will drop,
@@ -2576,16 +2572,16 @@ static void _autoinscribe_item(item_def& item)
 
     string iname = _autopickup_item_name(item);
 
-    for (unsigned i = 0; i < Options.autoinscriptions.size(); ++i)
+    for (const auto &ai_entry : Options.autoinscriptions)
     {
-        if (Options.autoinscriptions[i].first.matches(iname))
+        if (ai_entry.first.matches(iname))
         {
             // Don't autoinscribe dropped items on ground with
             // "=g".  If the item matches a rule which adds "=g",
             // "=g" got added to it before it was dropped, and
             // then the user explicitly removed it because they
             // don't want to autopickup it again.
-            string str = Options.autoinscriptions[i].second;
+            string str = ai_entry.second;
             if ((item.flags & ISFLAG_DROPPED) && !in_inventory(item))
                 str = replace_all(str, "=g", "");
 
@@ -2860,8 +2856,8 @@ static bool _interesting_explore_pickup(const item_def& item)
     {
         const string name = item.name(DESC_PLAIN);
 
-        for (unsigned int i = 0; i < ignores.size(); i++)
-            if (ignores[i].matches(name))
+        for (const text_pattern &pat : ignores)
+            if (pat.matches(name))
                 return false;
     }
 
@@ -4749,20 +4745,16 @@ item_info get_item_info(const item_def& item)
         "worn_tile", "worn_tile_name", "needs_autopickup",
         FORCED_ITEM_COLOUR_KEY, MANGLED_CORPSE_KEY
     };
-    for (unsigned i = 0; i < ARRAYSZ(copy_props); ++i)
-    {
-        if (item.props.exists(copy_props[i]))
-            ii.props[copy_props[i]] = item.props[copy_props[i]];
-    }
+    for (const char *prop : copy_props)
+        if (item.props.exists(prop))
+            ii.props[prop] = item.props[prop];
 
-    const char* copy_ident_props[] = {"spell_list"};
+    static const char* copy_ident_props[] = {"spell_list"};
     if (item_ident(item, ISFLAG_KNOW_TYPE))
     {
-        for (unsigned i = 0; i < ARRAYSZ(copy_ident_props); ++i)
-        {
-            if (item.props.exists(copy_ident_props[i]))
-                ii.props[copy_ident_props[i]] = item.props[copy_ident_props[i]];
-        }
+        for (const char *prop : copy_ident_props)
+            if (item.props.exists(prop))
+                ii.props[prop] = item.props[prop];
     }
 
     if (item.props.exists(ARTEFACT_PROPS_KEY))
@@ -4815,11 +4807,10 @@ object_class_type get_item_mimic_type()
     clear_messages();
     map<char, object_class_type> choices;
     char letter = 'a';
-    for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
+    for (object_class_type cls : _mimic_item_classes)
     {
-        mprf("[%c] %s ", letter,
-             item_class_name(_mimic_item_classes[i], true).c_str());
-        choices[letter++] = _mimic_item_classes[i];
+        mprf("[%c] %s ", letter, item_class_name(cls, true).c_str());
+        choices[letter++] = cls;
     }
     mprf("[%c] random", letter);
     choices[letter] = OBJ_RANDOM;
@@ -4840,10 +4831,8 @@ bool is_valid_mimic_item(const item_def &item)
     if (item_is_orb(item) || item_is_horn_of_geryon(item) || item_is_rune(item))
         return false;
 
-    for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
-        if (item.base_type == _mimic_item_classes[i])
-            return true;
-    return false;
+    return find(begin(_mimic_item_classes), end(_mimic_item_classes),
+                item.base_type) != end(_mimic_item_classes);
 }
 
 /**

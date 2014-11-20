@@ -112,7 +112,7 @@ bool bolt::is_blockable() const
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
     return !pierce && !is_explosion && flavour != BEAM_ELECTRICITY
-           && hit != AUTOMATIC_HIT;
+           && hit != AUTOMATIC_HIT && flavour != BEAM_VISUAL;
 }
 
 void bolt::emit_message(const char* m)
@@ -619,7 +619,7 @@ void bolt::initialise_fire()
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (pierce) ? "beam" : "missile",
           (is_explosion) ? "*" :
-          (is_big_cloud) ? "+" : "",
+          (is_big_cloud()) ? "+" : "",
           (is_tracer) ? " tracer" : "",
           name.c_str(),
           source.x, source.y,
@@ -849,7 +849,7 @@ void bolt::fire_wall_effect()
         did_god_conduct(DID_FIRE, 6, god_cares()); // guaranteed penance
     }
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-        did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
+        did_god_conduct(DID_KILL_PLANT, 1, god_cares());
     ASSERT(agent());
 
     // Trees do not burn so readily in a wet environment, and you shouldn't get
@@ -997,7 +997,7 @@ void bolt::destroy_wall_effect()
         if (whose_kill() == KC_YOU)
             did_god_conduct(DID_KILL_PLANT, 1);
         else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-            did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares(), 0);
+            did_god_conduct(DID_KILL_PLANT, 1, god_cares(), 0);
     }
 
     finish_beam();
@@ -1777,7 +1777,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (res_margin > 0)
         {
             if (simple_monster_message(mons,
-                    mons_resist_string(mons, res_margin)))
+                    mons->resist_margin_phrase(res_margin).c_str()))
             {
                 *did_msg = true;
             }
@@ -1816,7 +1816,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (res_margin > 0)
         {
             if (simple_monster_message(mons,
-                    mons_resist_string(mons, res_margin)))
+                    mons->resist_margin_phrase(res_margin).c_str()))
             {
                 *did_msg = true;
             }
@@ -2236,9 +2236,8 @@ bool imb_can_splash(coord_def origin, coord_def center,
     // square past a lone monster to be optimal.
     if (origin == target)
         return false;
-    for (unsigned int i = 0; i < path_taken.size(); i++)
-        if (path_taken[i] == target)
-            return false;
+    if (find(begin(path_taken), end(path_taken), target) != end(path_taken))
+        return false;
 
     // Don't go far away from the caster (not enough momentum).
     if (distance2(origin, center + (target - center)*2)
@@ -2290,7 +2289,6 @@ void bolt_parent_init(bolt *parent, bolt *child)
 #ifdef DEBUG_DIAGNOSTICS
     child->quiet_debug    = parent->quiet_debug;
 #endif
-    child->drac_breath    = parent->drac_breath;
 }
 
 static void _maybe_imb_explosion(bolt *parent, coord_def center)
@@ -2615,7 +2613,7 @@ void bolt::affect_endpoint()
 
 bool bolt::stop_at_target() const
 {
-    return is_explosion || is_big_cloud || aimed_at_spot;
+    return is_explosion || is_big_cloud() || aimed_at_spot;
 }
 
 void bolt::drop_object()
@@ -2816,8 +2814,8 @@ void bolt::affect_place_clouds()
     if (origin_spell == SPELL_HOLY_BREATH)
         place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, agent());
 
-    if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
-        place_cloud(CLOUD_FIRE, p,random2(4) + 2, agent());
+    if (origin_spell == SPELL_FLAMING_CLOUD)
+        place_cloud(CLOUD_FIRE, p, random2(4) + 2, agent());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
@@ -2934,7 +2932,10 @@ void bolt::internal_ouch(int dam)
     }
     else if (monst && (monst->type == MONS_GIANT_SPORE
                        || monst->type == MONS_BALL_LIGHTNING
-                       || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
+                       || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE
+                       || monst->type == MONS_FULMINANT_PRISM
+                       || monst->type == MONS_BENNU // death flames
+                       ))
     {
         ouch(dam, KILLED_BY_SPORE, source_id,
              aux_source.c_str(), true,
@@ -3079,7 +3080,7 @@ bool bolt::harmless_to_player() const
 {
     dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
-    if (in_good_standing(GOD_QAZLAL) && is_big_cloud)
+    if (in_good_standing(GOD_QAZLAL) && is_big_cloud())
         return true;
 
     switch (flavour)
@@ -3111,7 +3112,7 @@ bool bolt::harmless_to_player() const
 
     case BEAM_POISON:
         return player_res_poison(false) >= 3
-               || is_big_cloud && player_res_poison(false) > 0;
+               || is_big_cloud() && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
         return player_res_poison(false) > 0 || you.clarity(false)
@@ -3124,7 +3125,7 @@ bool bolt::harmless_to_player() const
         return you.res_petrify() || you.petrified();
 
     case BEAM_COLD:
-        return is_big_cloud && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
+        return is_big_cloud() && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
 
 #if TAG_MAJOR_VERSION == 34
     case BEAM_FIRE:
@@ -3161,6 +3162,11 @@ bool bolt::nightvision() const
 bool bolt::can_see_invis() const
 {
     return agent() && agent()->alive() && agent()->can_see_invisible();
+}
+
+bool bolt::is_big_cloud() const
+{
+    return get_spell_flags(origin_spell) & SPFLAG_CLOUD;
 }
 
 coord_def bolt::leg_source() const
@@ -3255,10 +3261,13 @@ static bool _shield_piercing(bolt *pbolt)
 
 bool bolt::misses_player()
 {
+    if (flavour == BEAM_VISUAL)
+        return true;
+
     if (is_enchantment())
         return false;
 
-    const bool engulfs = is_explosion || is_big_cloud;
+    const bool engulfs = is_explosion || is_big_cloud();
 
     if (is_explosion || aimed_at_feet || auto_hit)
     {
@@ -3411,18 +3420,7 @@ void bolt::affect_player_enchantment(bool resistible)
             {
                 // the message reflects the level of difficulty resisting.
                 const int margin = you.res_magic() - ench_power;
-                if (margin >= 30)
-                    mpr("You resist with almost no effort.");
-                else if (margin >= 15)
-                    mpr("You easily resist.");
-                else if (margin >= 0)
-                    mpr("You resist with some effort.");
-                else if (margin >= -14)
-                    mpr("You resist with significant effort.");
-                else if (margin >= -30)
-                    mpr("You struggle to resist.");
-                else
-                    mpr("You barely resist.");
+                mprf("You%s", you.resist_margin_phrase(margin).c_str());
             }
         }
         // You *could* have gotten a free teleportation in the Abyss,
@@ -3857,7 +3855,7 @@ void bolt::affect_player()
         return;
     }
 
-    const bool engulfs = is_explosion || is_big_cloud;
+    const bool engulfs = is_explosion || is_big_cloud();
 
     if (is_enchantment())
     {
@@ -4294,8 +4292,8 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     // Check only if actual damage.
     if (!is_tracer && final > 0)
     {
-        for (unsigned int i = 0; i < messages.size(); ++i)
-            mprf(MSGCH_MONSTER_DAMAGE, "%s", messages[i].c_str());
+        for (const string &msg : messages)
+            mprf(MSGCH_MONSTER_DAMAGE, "%s", msg.c_str());
     }
 
     // Either way, we could hit this monster, so update range used.
@@ -4394,7 +4392,7 @@ void bolt::enchantment_affect_monster(monster* mon)
         {
         case MON_RESIST:
             if (simple_monster_message(mon,
-                                   resist_margin_phrase(res_margin)))
+                                   mon->resist_margin_phrase(res_margin).c_str()))
             {
                 msg_generated = true;
             }
@@ -4469,8 +4467,12 @@ static void _glaciate_freeze(monster* mon, killer_type englaciator,
 
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
-    if (YOU_KILL(thrower) && mons_near(mon))
+    // Suppress the message for scattershot.
+    if (YOU_KILL(thrower) && mons_near(mon)
+        && name != "burst of metal fragments")
+    {
         print_wounds(mon);
+    }
 
     // Don't annoy friendlies or good neutrals if the player's beam
     // did no damage.  Hostiles will still take umbrage.
@@ -4579,7 +4581,7 @@ void bolt::beam_hits_actor(actor *act)
     {
         if (you.can_see(act))
         {
-            if (drac_breath)
+            if (origin_spell == SPELL_CHILLING_BREATH)
             {
                 mprf("%s %s blown backwards by the freezing wind.",
                      act->name(DESC_THE).c_str(),
@@ -4760,7 +4762,7 @@ void bolt::affect_monster(monster* mon)
     }
 
     // Explosions always 'hit'.
-    const bool engulfs = (is_explosion || is_big_cloud);
+    const bool engulfs = (is_explosion || is_big_cloud());
 
     if (is_enchantment())
     {
@@ -4819,7 +4821,7 @@ void bolt::affect_monster(monster* mon)
                 remove_sanctuary(true);
 
             // It's not the player's fault if the monster couldn't be seen
-            set_attack_conducts(conducts, mon, !you.can_see(mon));
+            set_attack_conducts(conducts, mon, you.can_see(mon));
         }
     }
 
@@ -4862,7 +4864,7 @@ void bolt::affect_monster(monster* mon)
     {
         const bool deflected = _test_beam_hit(beam_hit, rand_ev, pierce, 0, r);
         // If the PLAYER cannot see the monster, don't tell them anything!
-        if (mon->observable())
+        if (mon->observable() && name != "burst of metal fragments")
         {
             // if it would have hit otherwise...
             if (_test_beam_hit(beam_hit, rand_ev, pierce, 0, r))
@@ -4943,8 +4945,8 @@ void bolt::affect_monster(monster* mon)
 
     if (final > 0)
     {
-        for (unsigned int i = 0; i < messages.size(); ++i)
-            mprf(MSGCH_MONSTER_DAMAGE, "%s", messages[i].c_str());
+        for (const string &msg : messages)
+            mprf(MSGCH_MONSTER_DAMAGE, "%s", msg.c_str());
     }
 
     // Apply flavoured specials.
@@ -5348,7 +5350,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_UNAFFECTED;
 
     case BEAM_CORONA:
-        if (backlight_monsters(mon->pos(), hit, 0))
+        if (backlight_monster(mon))
         {
             obvious_effect = true;
             return MON_AFFECTED;
@@ -5478,7 +5480,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
     }
 
     case BEAM_ENSLAVE:
-        if (!agent()->is_player())
+        if (agent() && agent()->is_monster())
         {
             enchant_type good = (agent()->wont_attack()) ? ENCH_CHARM
                                                          : ENCH_HEXED;
@@ -5729,7 +5731,7 @@ int bolt::range_used_on_hit() const
     else if (flavour == BEAM_HELLFIRE)
         used = 0;
     // Generic explosion.
-    else if (is_explosion || is_big_cloud)
+    else if (is_explosion || is_big_cloud())
         used = BEAM_STOP;
     // Lightning goes through things.
     else if (flavour == BEAM_ELECTRICITY)
@@ -6306,7 +6308,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                thrower(KILL_MISC), ex_size(0), source_id(MID_NOBODY),
                source_name(), name(), short_name(), hit_verb(),
                loudness(0), noise_msg(), pierce(false), is_explosion(false),
-               is_big_cloud(false), aimed_at_spot(false), aux_source(),
+               aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
                effect_wanton(false),
                draw_delay(15), explode_delay(50),
@@ -6316,7 +6318,6 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
 #ifdef DEBUG_DIAGNOSTICS
                quiet_debug(false),
 #endif
-               drac_breath(false),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
                is_targeting(false), aimed_at_feet(false), msg_generated(false),
@@ -6575,9 +6576,9 @@ bool bolt::can_knockback(const actor *act, int dam) const
 
 void clear_zap_info_on_exit()
 {
-    for (unsigned int i = 0; i < ARRAYSZ(zap_data); ++i)
+    for (const zap_info &zap : zap_data)
     {
-        delete zap_data[i].damage;
-        delete zap_data[i].tohit;
+        delete zap.damage;
+        delete zap.tohit;
     }
 }

@@ -187,7 +187,6 @@ static int _abil_degree(ability_type abil)
 static void _exercise_spell(spell_type spell, bool success)
 {
     // (!success) reduces skill increase for miscast spells
-    skill_type skill;
     int workout = 0;
 
     unsigned int disciplines = get_spell_disciplines(spell);
@@ -209,7 +208,7 @@ static void _exercise_spell(spell_type spell, bool success)
         if (!spell_typematch(spell, 1 << ndx))
             continue;
 
-        skill = spell_type2skill(1 << ndx);
+        skill_type skill = spell_type2skill(1 << ndx);
         if (skill == SK_CONJURATIONS)
             conj = true;
 
@@ -222,9 +221,8 @@ static void _exercise_spell(spell_type spell, bool success)
 
     shuffle_array(disc);
 
-    for (unsigned int k = 0; k < disc.size(); ++k)
+    for (const skill_type skill : disc)
     {
-        skill = disc[k];
         workout = (random2(1 + diff) / skillcount);
 
         if (!one_chance_in(5))

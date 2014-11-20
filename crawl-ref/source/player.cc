@@ -110,7 +110,7 @@ static void _moveto_maybe_repel_stairs()
                                                         DESC_THE, false);
         const string prep = feat_preposition(new_grid, true, &you);
 
-        if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
+        if (slide_feature_over(you.pos()))
         {
             mprf("%s slides away as you move %s it!", stair_str.c_str(),
                  prep.c_str());
@@ -471,10 +471,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
     }
 
-    // Traps go off. (But magical traps don't go off again when losing flight
-    // - i.e., moving into the same tile)
+    // Traps go off.
+    // (But not when losing flight - i.e., moving into the same tile)
     trap_def* ptrap = find_trap(you.pos());
-    if (ptrap && (old_pos != you.pos() || ptrap->ground_only()))
+    if (ptrap && old_pos != you.pos())
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
     if (stepped)
@@ -1437,15 +1437,15 @@ int player_spell_levels()
     if (sl > 99)
         sl = 99;
 
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+    for (const spell_type spell : you.spells)
     {
-        if (you.spells[i] == SPELL_FIREBALL)
+        if (spell == SPELL_FIREBALL)
             fireball = true;
-        else if (you.spells[i] == SPELL_DELAYED_FIREBALL)
+        else if (spell == SPELL_DELAYED_FIREBALL)
             delayed_fireball = true;
 
-        if (you.spells[i] != SPELL_NO_SPELL)
-            sl -= spell_difficulty(you.spells[i]);
+        if (spell != SPELL_NO_SPELL)
+            sl -= spell_difficulty(spell);
     }
 
     // Fireball is free for characters with delayed fireball
@@ -3222,13 +3222,12 @@ void level_change(bool skip_attribute_increase)
                 int level = 0;
                 mutation_type first_body_facet = NUM_MUTATIONS;
 
-                for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                for (const player::demon_trait trait : you.demonic_traits)
                 {
-                    if (is_body_facet(you.demonic_traits[i].mutation))
+                    if (is_body_facet(trait.mutation))
                     {
                         if (first_body_facet < NUM_MUTATIONS
-                            && you.demonic_traits[i].mutation
-                                != first_body_facet)
+                            && trait.mutation != first_body_facet)
                         {
                             if (you.experience_level == level)
                             {
@@ -3242,25 +3241,24 @@ void level_change(bool skip_attribute_increase)
 
                         if (first_body_facet == NUM_MUTATIONS)
                         {
-                            first_body_facet = you.demonic_traits[i].mutation;
-                            level = you.demonic_traits[i].level_gained;
+                            first_body_facet = trait.mutation;
+                            level = trait.level_gained;
                         }
                     }
                 }
 
-                for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                for (const player::demon_trait trait : you.demonic_traits)
                 {
-                    if (you.demonic_traits[i].level_gained
-                        == you.experience_level)
+                    if (trait.level_gained == you.experience_level)
                     {
                         if (!gave_message)
                         {
-                            mprf(MSGCH_INTRINSIC_GAIN, "Your demonic ancestry asserts itself...");
+                            mprf(MSGCH_INTRINSIC_GAIN,
+                                 "Your demonic ancestry asserts itself...");
 
                             gave_message = true;
                         }
-                        perma_mutate(you.demonic_traits[i].mutation, 1,
-                                     "demonic ancestry");
+                        perma_mutate(trait.mutation, 1, "demonic ancestry");
                     }
                 }
 
@@ -5621,7 +5619,6 @@ void player::init()
     spell_no        = 0;
     vehumet_gifts.clear();
     char_direction  = GDT_DESCENDING;
-    opened_zot      = false;
     royal_jelly_dead = false;
     transform_uncancellable = false;
     fishtail = false;
@@ -5630,6 +5627,7 @@ void player::init()
 
     duration.init(0);
     rotting         = 0;
+    apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
     quiver.init(ENDOFPACK);
@@ -5967,13 +5965,7 @@ int player::visible_igrd(const coord_def &where) const
 
 bool player::has_spell(spell_type spell) const
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-    {
-        if (spells[i] == spell)
-            return true;
-    }
-
-    return false;
+    return find(begin(spells), end(spells), spell) != end(spells);
 }
 
 bool player::cannot_speak() const
@@ -6250,9 +6242,8 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     unsigned int effective_points = skill_points[sk];
     if (!real)
     {
-        vector<skill_type> cross_skills = get_crosstrain_skills(sk);
-        for (size_t i = 0; i < cross_skills.size(); ++i)
-            effective_points += skill_points[cross_skills[i]] * 2 / 5;
+        for (skill_type cross : get_crosstrain_skills(sk))
+            effective_points += skill_points[cross] * 2 / 5;
     }
     effective_points = min(effective_points, skill_exp_needed(27, sk));
     while (1)
@@ -7541,7 +7532,7 @@ int player::has_usable_tentacles(bool allow_tran) const
     return has_tentacles(allow_tran);
 }
 
-bool player::sicken(int amount, bool allow_hint, bool quiet)
+bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7554,15 +7545,13 @@ bool player::sicken(int amount, bool allow_hint, bool quiet)
         return false;
     }
 
-    if (!quiet)
-        mpr("You feel ill.");
+    mpr("You feel ill.");
 
     disease += amount * BASELINE_DELAY;
     if (disease > 210 * BASELINE_DELAY)
         disease = 210 * BASELINE_DELAY;
 
-    if (allow_hint)
-        learned_something_new(HINT_YOU_SICK);
+    learned_something_new(HINT_YOU_SICK);
     return true;
 }
 
@@ -8573,7 +8562,7 @@ string temperature_text(int temp)
 }
 #endif
 
-void player_open_door(coord_def doorpos, bool check_confused)
+void player_open_door(coord_def doorpos)
 {
     // Finally, open the closed door!
     set<coord_def> all_door;
@@ -8590,7 +8579,7 @@ void player_open_door(coord_def doorpos, bool check_confused)
     if (!door_desc_noun.empty())
         noun = door_desc_noun.c_str();
 
-    if (!(check_confused && you.confused()))
+    if (!you.confused())
     {
         string door_open_prompt =
             env.markers.property_at(doorpos, MAT_ANY, "door_open_prompt");
@@ -8728,6 +8717,163 @@ void player_open_door(coord_def doorpos, bool check_confused)
 
     update_exclusion_los(excludes);
     viewwindow();
+    you.turn_is_over = true;
+}
+
+void player_close_door(coord_def doorpos)
+{
+    // Finally, close the opened door!
+    string berserk_close = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_berserk_verb_close");
+    const string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_berserk_adjective");
+    const string door_close_creak = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_noisy_verb_close");
+    const string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_airborne_verb_close");
+    const string door_close_verb = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_verb_close");
+    const string door_desc_adj  = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_description_adjective");
+    const string door_desc_noun = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_description_noun");
+    set<coord_def> all_door;
+    find_connected_identical(doorpos, all_door);
+    const char *adj, *noun;
+    get_door_description(all_door.size(), &adj, &noun);
+    const string waynoun_str = make_stringf("%sway", noun);
+    const char *waynoun = waynoun_str.c_str();
+
+    if (!door_desc_adj.empty())
+        adj = door_desc_adj.c_str();
+    if (!door_desc_noun.empty())
+    {
+        noun = door_desc_noun.c_str();
+        waynoun = noun;
+    }
+
+    for (set<coord_def>::const_iterator i = all_door.begin();
+         i != all_door.end(); ++i)
+    {
+        const coord_def& dc = *i;
+        if (monster* mon = monster_at(dc))
+        {
+            if (!you.can_see(mon))
+            {
+                mprf("Something is blocking the %s!", waynoun);
+                // No free detection!
+                you.turn_is_over = true;
+            }
+            else
+                mprf("There's a creature in the %s!", waynoun);
+            return;
+        }
+
+        if (igrd(dc) != NON_ITEM)
+        {
+            mprf("There's something blocking the %s.", waynoun);
+            return;
+        }
+
+        if (you.pos() == dc)
+        {
+            mprf("There's a thick-headed creature in the %s!", waynoun);
+            return;
+        }
+    }
+
+    const int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
+
+    if (you.berserk())
+    {
+        if (silenced(you.pos()))
+        {
+            if (!berserk_close.empty())
+            {
+                berserk_close += ".";
+                mprf(berserk_close.c_str(), adj, noun);
+            }
+            else
+                mprf("You slam the %s%s shut!", adj, noun);
+        }
+        else
+        {
+            if (!berserk_close.empty())
+            {
+                if (!berserk_adjective.empty())
+                    berserk_close += " " + berserk_adjective;
+                else
+                    berserk_close += ".";
+                mprf(MSGCH_SOUND, berserk_close.c_str(), adj, noun);
+            }
+            else
+            {
+                mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang!",
+                                  adj, noun);
+            }
+
+            noisy(15, you.pos());
+         }
+    }
+    else if (one_chance_in(skill) && !silenced(you.pos()))
+    {
+        if (!door_close_creak.empty())
+            mprf(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
+        else
+        {
+            mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
+                              adj, noun);
+        }
+
+        noisy(10, you.pos());
+    }
+    else
+    {
+        const char* verb;
+        if (you.airborne())
+        {
+            if (!door_airborne.empty())
+                verb = door_airborne.c_str();
+            else
+                verb = "You reach down and close the %s%s.";
+        }
+        else
+        {
+            if (!door_close_verb.empty())
+                verb = door_close_verb.c_str();
+            else
+                verb = "You close the %s%s.";
+        }
+
+        mprf(verb, adj, noun);
+    }
+
+    vector<coord_def> excludes;
+    for (set<coord_def>::const_iterator i = all_door.begin();
+         i != all_door.end(); ++i)
+    {
+        const coord_def& dc = *i;
+        // Once opened, formerly runed doors become normal doors.
+        grd(dc) = DNGN_CLOSED_DOOR;
+        set_terrain_changed(dc);
+        dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
+        // Even if some of the door is out of LOS once it's closed
+        // (or even if some of it is out of LOS when it's open), we
+        // want the entire door to be updated.
+        if (env.map_knowledge(dc).seen())
+        {
+            env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
+#ifdef USE_TILE
+            env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
+#endif
+        }
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+     }
+
+     update_exclusion_los(excludes);
+     you.turn_is_over = true;
 }
 
 /**

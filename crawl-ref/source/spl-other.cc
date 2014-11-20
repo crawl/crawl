@@ -152,14 +152,14 @@ void start_recall(recall_t type)
 
     if (!rlist.empty())
     {
-        // Sort the recall list rough
-        for (unsigned int i = 0; i < rlist.size(); ++i)
-            rlist[i].second += random2(10);
+        // Sort the recall list roughly
+        for (mid_hd &entry : rlist)
+            entry.second += random2(10);
         sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
 
         you.recall_list.clear();
-        for (unsigned int i = 0; i < rlist.size(); ++i)
-            you.recall_list.push_back(rlist[i].first);
+        for (mid_hd &entry : rlist)
+            you.recall_list.push_back(entry.first);
 
         you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
         you.attribute[ATTR_NEXT_RECALL_TIME] = 0;

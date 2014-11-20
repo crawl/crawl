@@ -385,6 +385,7 @@
     <ClInclude Include="..\flood_find.h" />
     <ClInclude Include="..\fontwrapper-ft.h" />
     <ClInclude Include="..\food.h" />
+    <ClInclude Include="..\form-data.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\fprop.h" />
     <ClInclude Include="..\geom2d.h" />

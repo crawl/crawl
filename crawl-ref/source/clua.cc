@@ -834,12 +834,9 @@ unsigned int lua_text_pattern::lfndx = 0;
 
 bool lua_text_pattern::is_lua_pattern(const string &s)
 {
-    for (int i = 0, size = ARRAYSZ(pat_ops); i < size; ++i)
-    {
-        if (s.find(pat_ops[i].token) != string::npos)
-            return true;
-    }
-    return false;
+    return any_of(begin(pat_ops), end(pat_ops),
+            [&s] (const lua_pat_op &op)
+            { return s.find(op.token) != string::npos; });
 }
 
 lua_text_pattern::lua_text_pattern(const string &_pattern)

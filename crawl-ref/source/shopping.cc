@@ -405,13 +405,10 @@ static void _shop_print_stock(const vector<int>& stock,
 static int _count_identical(const vector<int>& stock, const item_def& item)
 {
     int count = 0;
-    for (unsigned int i = 0; i < stock.size(); i++)
-    {
-        const item_def &other = mitm[stock[i]];
-
-        if (ShoppingList::items_are_same(item, other))
+    for (int stidx : stock)
+        if (ShoppingList::items_are_same(item, mitm[stidx]))
             count++;
-    }
+
     return count;
 }
 
@@ -1882,8 +1879,6 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_RODS:
         if (!item_type_known(item))
             valued = 120;
-        else if (item.sub_type == ROD_STRIKING)
-            valued = 150;
         else
             valued = 250;
 
@@ -2355,10 +2350,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     vector<list_pair> to_del;
 
     // NOTE: Don't modify the shopping list while iterating over it.
-    for (unsigned int i = 0; i < list->size(); i++)
+    for (CrawlHashTable &thing : *list)
     {
-        CrawlHashTable &thing = (*list)[i];
-
         if (!thing_is_item(thing))
             continue;
 
@@ -2460,8 +2453,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         }
     }
 
-    for (unsigned int i = 0; i < to_del.size(); i++)
-        del_thing(to_del[i].first, &to_del[i].second);
+    for (list_pair &entry : to_del)
+        del_thing(entry.first, &entry.second);
 
     if (add_item && !on_list)
         add_thing(item, cost);
@@ -2479,10 +2472,8 @@ void ShoppingList::item_type_identified(object_class_type base_type,
     // Only restore the excursion at the very end.
     level_excursion le;
 
-    for (unsigned int i = 0; i < list->size(); i++)
+    for (CrawlHashTable &thing : *list)
     {
-        CrawlHashTable &thing = (*list)[i];
-
         if (!thing_is_item(thing))
             continue;
 
@@ -2532,13 +2523,9 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
     const level_pos src(level_id::current(), _src);
     const level_pos dst(level_id::current(), _dst);
 
-    for (unsigned int i = 0; i < list->size(); i++)
-    {
-        CrawlHashTable &thing = (*list)[i];
-
+    for (CrawlHashTable &thing : *list)
         if (thing_pos(thing) == src)
             thing[SHOPPING_THING_POS_KEY] = dst;
-    }
 }
 
 void ShoppingList::forget_pos(const level_pos &pos)
@@ -2665,9 +2652,8 @@ void ShoppingListMenu::draw_title()
 void ShoppingList::fill_out_menu(Menu& shopmenu)
 {
     menu_letter hotkey;
-    for (unsigned i = 0; i < list->size(); ++i, ++hotkey)
+    for (CrawlHashTable &thing : *list)
     {
-        CrawlHashTable &thing  = (*list)[i];
         level_pos      pos     = thing_pos(thing);
         int            cost    = thing_cost(thing);
         bool           unknown = false;
@@ -2699,6 +2685,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
         }
 
         shopmenu.add_entry(me);
+        ++hotkey;
     }
 }
 
@@ -3016,6 +3003,6 @@ const char *shoptype_to_str(shop_type type)
 void list_shop_types()
 {
     mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
-    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
-        mprf_nocap("%s", shop_types[i]);
+    for (const char *type : shop_types)
+        mprf_nocap("%s", type);
 }

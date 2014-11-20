@@ -243,9 +243,9 @@ bool TextDB::_needs_update() const
     string ts;
     bool no_files = true;
 
-    for (unsigned int i = 0; i < _input_files.size(); i++)
+    for (const string &file : _input_files)
     {
-        string full_input_path = _directory + _input_files[i];
+        string full_input_path = _directory + file;
         full_input_path = datafile_path(full_input_path, !_parent);
         time_t mtime = file_modtime(full_input_path);
         if (mtime)
@@ -296,9 +296,9 @@ void TextDB::_regenerate_db()
     string ts;
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
         end(1, true, "Unable to open DB: %s", db_path.c_str());
-    for (unsigned int i = 0; i < _input_files.size(); i++)
+    for (const string &file : _input_files)
     {
-        string full_input_path = _directory + _input_files[i];
+        string full_input_path = _directory + file;
         full_input_path = datafile_path(full_input_path, !_parent);
         char buf[20];
         time_t mtime = file_modtime(full_input_path);

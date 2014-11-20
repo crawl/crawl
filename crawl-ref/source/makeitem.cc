@@ -152,8 +152,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_EVENINGSTAR,
                              WPN_EXECUTIONERS_AXE,
                              WPN_QUICK_BLADE,
-                             WPN_TRIPLE_SWORD,
-                             -1);
+                             WPN_TRIPLE_SWORD);
     }
     else if (x_chance_in_y(item_level, 20))
     {
@@ -174,8 +173,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_WAR_AXE,
                              WPN_TRIDENT,
                              WPN_FLAIL,
-                             WPN_RAPIER,
-                             -1);
+                             WPN_RAPIER);
     }
     else
     {
@@ -187,8 +185,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_DAGGER, WPN_DAGGER,
                              WPN_CLUB,
                              WPN_WHIP,
-                             WPN_SHORT_SWORD,
-                             -1);
+                             WPN_SHORT_SWORD);
     }
 }
 
@@ -1081,8 +1078,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_CLOAK:
         rc = random_choose(SPARM_POISON_RESISTANCE,
                            SPARM_INVISIBILITY,
-                           SPARM_MAGIC_RESISTANCE,
-                           -1);
+                           SPARM_MAGIC_RESISTANCE);
         break;
 
     case ARM_HAT:
@@ -1101,7 +1097,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     case ARM_GLOVES:
-        rc = random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY, -1);
+        rc = random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY);
         break;
 
     case ARM_BOOTS:

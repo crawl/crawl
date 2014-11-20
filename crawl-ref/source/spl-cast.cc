@@ -365,9 +365,9 @@ int spell_fail(spell_type spell)
         {-160, 2}, {-180, 0}
     };
 
-    for (unsigned int i = 0; i < ARRAYSZ(chance_breaks); ++i)
-        if (chance < chance_breaks[i][0])
-            chance2 = chance_breaks[i][1];
+    for (const int (&cbrk)[2] : chance_breaks)
+        if (chance < cbrk[0])
+            chance2 = cbrk[1];
 
     chance2 += get_form()->spellcasting_penalty;
 
@@ -1067,7 +1067,9 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_GLACIATE:
         return new targetter_cone(&you, range);
     case SPELL_CLOUD_CONE:
-        return new targetter_shotgun(&you, range);
+        return new targetter_shotgun(&you, CLOUD_CONE_BEAM_COUNT, range);
+    case SPELL_SCATTERSHOT:
+        return new targetter_shotgun(&you, shotgun_beam_count(pow), range);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1875,20 +1877,19 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_shroud_of_golubria(powc, fail);
 
     case SPELL_FULMINANT_PRISM:
-        return cast_fulminating_prism(powc, beam.target, fail);
+        return cast_fulminating_prism(&you, powc, beam.target, fail);
 
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
-
-    case SPELL_MELEE: // Rod of striking
-        mpr("This rod is automatically evoked when it strikes in combat.");
-        return SPRET_ABORT;
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
 
     case SPELL_RANDOM_BOLT:
         return cast_random_bolt(powc, beam, fail);
+
+    case SPELL_SCATTERSHOT:
+        return cast_scattershot(&you, powc, target, fail);
 
     default:
         return SPRET_NONE;
@@ -2010,8 +2011,6 @@ char* failure_rate_to_string(int fail)
 
 string spell_hunger_string(spell_type spell, bool rod)
 {
-    if (spell == SPELL_MELEE)
-        return "N/A";
     return hunger_cost_string(spell_hunger(spell, rod));
 }
 

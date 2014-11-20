@@ -503,12 +503,9 @@ static const ability_def Ability_List[] =
 
 const ability_def& get_ability_def(ability_type abil)
 {
-    for (unsigned int i = 0;
-         i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
-    {
-        if (Ability_List[i].ability == abil)
-            return Ability_List[i];
-    }
+    for (const ability_def &ab_def : Ability_List)
+        if (ab_def.ability == abil)
+            return ab_def;
 
     return Ability_List[0];
 }
@@ -1323,10 +1320,9 @@ const char* ability_name(ability_type ability)
 
 vector<const char*> get_ability_names()
 {
-    vector<talent> talents = your_talents(false);
     vector<const char*> result;
-    for (unsigned int i = 0; i < talents.size(); ++i)
-        result.push_back(ability_name(talents[i].which));
+    for (const talent &tal : your_talents(false))
+        result.push_back(ability_name(tal.which));
     return result;
 }
 
@@ -1541,17 +1537,10 @@ static bool _check_ability_possible(const ability_def& abil,
         if (!zin_check_able_to_recite(quiet))
             return false;
 
-        const int result = zin_check_recite_to_monsters(quiet);
-        if (result == -1)
+        if (zin_check_recite_to_monsters(quiet) != 1)
         {
             if (!quiet)
                 mpr("There's no appreciative audience!");
-            return false;
-        }
-        else if (result == 0)
-        {
-            if (!quiet)
-                mpr("There's no-one here to preach to!");
             return false;
         }
         return true;
@@ -2444,7 +2433,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_ZIN_RECITE:
     {
         fail_check();
-        if (zin_check_recite_to_monsters())
+        if (zin_check_recite_to_monsters() == 1)
         {
             you.attribute[ATTR_RECITE_TYPE] = (recite_type) random2(NUM_RECITE_TYPES); // This is just flavor
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
@@ -2691,7 +2680,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
         fail_check();
         summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
-                          MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL, -1),
+                          MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
         break;
 
@@ -2720,8 +2709,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                               ZAP_STICKY_FLAME,
                               ZAP_IRON_SHOT,
                               ZAP_BOLT_OF_DRAINING,
-                              ZAP_ORB_OF_ELECTRICITY,
-                              -1);
+                              ZAP_ORB_OF_ELECTRICITY);
             zapping(ztype, power, beam);
         }
         break;
@@ -2729,7 +2717,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         fail_check();
         summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
-                          MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
+                          MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
         break;
 
@@ -3633,9 +3621,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
-    vector<ability_type> abilities = get_god_abilities(include_unusable);
-    for (unsigned int i = 0; i < abilities.size(); ++i)
-        _add_talent(talents, abilities[i], check_confused);
+    for (ability_type abil : get_god_abilities(include_unusable))
+        _add_talent(talents, abil, check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (!you_worship(GOD_NO_GOD))
@@ -3723,10 +3710,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     // Find hotkeys for the non-hotkeyed talents.
-    for (unsigned int i = 0; i < talents.size(); ++i)
+    for (talent &tal : talents)
     {
         // Skip preassigned hotkeys.
-        if (talents[i].hotkey != 0)
+        if (tal.hotkey != 0)
             continue;
 
         // Try to find a free hotkey for i, starting from Z.
@@ -3736,19 +3723,17 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             bool good_key = true;
 
             // Check that it doesn't conflict with other hotkeys.
-            for (unsigned int j = 0; j < talents.size(); ++j)
-            {
-                if (talents[j].hotkey == kkey)
+            for (const talent &other : talents)
+                if (other.hotkey == kkey)
                 {
                     good_key = false;
                     break;
                 }
-            }
 
             if (good_key)
             {
-                talents[i].hotkey = k;
-                you.ability_letter_table[k] = talents[i].which;
+                tal.hotkey = k;
+                you.ability_letter_table[k] = tal.which;
                 break;
             }
         }

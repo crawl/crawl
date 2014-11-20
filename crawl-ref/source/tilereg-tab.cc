@@ -230,11 +230,9 @@ void TabbedRegion::update()
 
 void TabbedRegion::clear()
 {
-    for (size_t i = 0; i < m_tabs.size(); ++i)
-    {
-        if (m_tabs[i].reg)
-            m_tabs[i].reg->clear();
-    }
+    for (TabInfo &tab : m_tabs)
+        if (tab.reg)
+            tab.reg->clear();
 }
 
 void TabbedRegion::pack_buffers()
@@ -306,21 +304,21 @@ void TabbedRegion::on_resize()
     int reg_sx = sx + ox;
     int reg_sy = sy;
 
-    for (size_t i = 0; i < m_tabs.size(); ++i)
+    for (const TabInfo &tab : m_tabs)
     {
-        if (!m_tabs[i].reg)
+        if (!tab.reg)
             continue;
 
         // on small layout we want to draw tab from top-right corner inwards (down and left)
         if (m_use_small_layout)
         {
-            reg_sx = (sx+ox) - ox*dx/32 - mx*m_tabs[i].reg->dx;
-            m_tabs[i].reg->dx = dx;
-            m_tabs[i].reg->dy = dy;
+            reg_sx = (sx+ox) - ox*dx/32 - mx*tab.reg->dx;
+            tab.reg->dx = dx;
+            tab.reg->dy = dy;
         }
 
-        m_tabs[i].reg->place(reg_sx, reg_sy);
-        m_tabs[i].reg->resize(mx, my);
+        tab.reg->place(reg_sx, reg_sy);
+        tab.reg->resize(mx, my);
     }
 }
 

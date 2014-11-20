@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include <algorithm>
+#include <functional>
 #include <queue>
 
 #include "act-iter.h"
@@ -748,19 +749,20 @@ bool monster::is_silenced() const
                && !res_water_drowning();
 }
 
-bool monster::search_spells(function<bool (const mon_spell_slot)> func) const
+bool monster::search_slots(function<bool (const mon_spell_slot &)> func) const
 {
-    for (mon_spell_slot slot : spells)
-        if (func(slot))
-            return true;
+    return any_of(begin(spells), end(spells), func);
+}
 
-    return false;
+bool monster::search_spells(function<bool (spell_type)> func) const
+{
+    return search_slots([&] (const mon_spell_slot &s)
+                        { return func(s.spell); });
 }
 
 bool monster::has_spell_of_type(unsigned disciplines) const
 {
-    return search_spells([&] (const mon_spell_slot& slot)
-                         { return spell_typematch(slot.spell, disciplines); } );
+    return search_spells(bind(spell_typematch, placeholders::_1, disciplines));
 }
 
 void monster::bind_melee_flags()
@@ -1808,6 +1810,10 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
         break;
     case ARM_GLOVES:
         if (type == MONS_NIKOLA)
+            eq = EQ_SHIELD;
+        break;
+    case ARM_HELMET:
+        if (type == MONS_ROBIN)
             eq = EQ_SHIELD;
         break;
     default:
@@ -2996,48 +3002,42 @@ bool monster::has_spells() const
 
 bool monster::has_spell(spell_type spell) const
 {
-    return search_spells([&] (const mon_spell_slot& slot)
-                         { return slot.spell == spell; } );
+    return search_spells([=] (spell_type sp) { return sp == spell; } );
 }
 
 unsigned short monster::spell_slot_flags(spell_type spell) const
 {
     unsigned short slot_flags = MON_SPELL_NO_FLAGS;
-    for (unsigned int i = 0; i < spells.size(); ++i)
-        if (spells[i].spell == spell)
-            slot_flags |= spells[i].flags;
+    for (const mon_spell_slot &slot : spells)
+        if (slot.spell == spell)
+            slot_flags |= slot.flags;
 
     return slot_flags;
 }
 
 bool monster::has_unholy_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_unholy_spell(slot.spell); } );
+    return search_spells(is_unholy_spell);
 }
 
 bool monster::has_evil_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_evil_spell(slot.spell); } );
+    return search_spells(is_evil_spell);
 }
 
 bool monster::has_unclean_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_unclean_spell(slot.spell); } );
+    return search_spells(is_unclean_spell);
 }
 
 bool monster::has_chaotic_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_chaotic_spell(slot.spell); } );
+    return search_spells(is_chaotic_spell);
 }
 
 bool monster::has_corpse_violating_spell() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return is_corpse_violating_spell(slot.spell); } );
+    return search_spells(is_corpse_violating_spell);
 }
 
 bool monster::has_attack_flavour(int flavour) const
@@ -4081,10 +4081,8 @@ bool monster::res_sticky_flame() const
            || get_mons_resist(this, MR_RES_STICKY_FLAME) > 0;
 }
 
-int monster::res_rotting(bool temp) const
+int monster::res_rotting(bool /*temp*/) const
 {
-    UNUSED(temp);
-
     int res = 0;
     switch (holiness())
     {
@@ -4191,10 +4189,8 @@ bool monster::res_wind() const
     return has_ench(ENCH_TORNADO) || get_mons_resist(this, MR_RES_WIND) > 0;
 }
 
-bool monster::res_petrify(bool temp) const
+bool monster::res_petrify(bool /*temp*/) const
 {
-    UNUSED(temp);
-
     return is_insubstantial() || get_mons_resist(this, MR_RES_PETRIFY) > 0;
 }
 
@@ -4300,8 +4296,8 @@ bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 
 bool monster::antimagic_susceptible() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return slot.flags & MON_SPELL_ANTIMAGIC_MASK; } );
+    return search_slots([] (const mon_spell_slot& slot)
+                        { return slot.flags & MON_SPELL_ANTIMAGIC_MASK; });
 }
 
 flight_type monster::flight_mode() const
@@ -4497,12 +4493,9 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
  * Attempts to either apply corrosion to a monster or make it bleed from acid
  * damage.
  */
-void monster::splash_with_acid(const actor* evildoer, int acid_strength,
-                               bool allow_corrosion, const char* hurt_msg)
+void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
+                               bool /*allow_corrosion*/, const char* /*hurt_msg*/)
 {
-    UNUSED(acid_strength);
-    UNUSED(allow_corrosion);
-    UNUSED(hurt_msg);
     item_def *has_shield = mslot_item(MSLOT_SHIELD);
     item_def *has_armour = mslot_item(MSLOT_ARMOUR);
 
@@ -5077,8 +5070,8 @@ bool monster::has_multitargeting() const
 
 bool monster::is_priest() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return slot.flags & MON_SPELL_PRIEST; } );
+    return search_slots([] (const mon_spell_slot& slot)
+                        { return slot.flags & MON_SPELL_PRIEST; } );
 }
 
 bool monster::is_fighter() const
@@ -5093,8 +5086,8 @@ bool monster::is_archer() const
 
 bool monster::is_actual_spellcaster() const
 {
-    return search_spells([] (const mon_spell_slot& slot)
-                         { return slot.flags & MON_SPELL_WIZARD; } );
+    return search_slots([] (const mon_spell_slot& slot)
+                        { return slot.flags & MON_SPELL_WIZARD; } );
 }
 
 bool monster::is_shapeshifter() const
@@ -5136,14 +5129,12 @@ kill_category monster::kill_alignment() const
     return friendly() ? KC_FRIENDLY : KC_OTHER;
 }
 
-bool monster::sicken(int amount, bool unused, bool quiet)
+bool monster::sicken(int amount)
 {
-    UNUSED(unused);
-
     if (res_rotting() || (amount /= 2) < 1)
         return false;
 
-    if (!has_ench(ENCH_SICK) && you.can_see(this) && !quiet)
+    if (!has_ench(ENCH_SICK) && you.can_see(this))
     {
         // Yes, could be confused with poisoning.
         mprf("%s looks sick.", name(DESC_THE).c_str());
@@ -5282,9 +5273,9 @@ bool monster::needs_berserk(bool check_spells) const
 
     if (check_spells)
     {
-        for (unsigned int i = 0; i < spells.size(); ++i)
+        for (const mon_spell_slot &slot : spells)
         {
-            const int spell = spells[i].spell;
+            const int spell = slot.spell;
             if (spell != SPELL_BERSERKER_RAGE)
                 return false;
         }
@@ -5976,15 +5967,15 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
         if (heal(5 + random2(7)))
             simple_monster_message(this, " is healed!");
 
-        const enchant_type cured_enchants[] =
+        static const enchant_type cured_enchants[] =
         {
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
         };
 
         // We can differentiate curing and heal wounds (and blood,
         // for vampires) by seeing if any status ailments are cured.
-        for (unsigned int i = 0; i < ARRAYSZ(cured_enchants); ++i)
-            if (del_ench(cured_enchants[i]))
+        for (enchant_type cured : cured_enchants)
+            if (del_ench(cured))
                 ident = ID_KNOWN_TYPE;
     }
     break;

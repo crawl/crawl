@@ -95,14 +95,14 @@ void initialise_branch_depths()
     // This way you get one "water" branch and one "poison" branch.
     branch_type disabled_branch[] =
     {
-        random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
-        random_choose(BRANCH_SNAKE, BRANCH_SPIDER, -1),
+        random_choose(BRANCH_SWAMP, BRANCH_SHOALS),
+        random_choose(BRANCH_SNAKE, BRANCH_SPIDER),
     };
 
-    for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
+    for (branch_type disabled : disabled_branch)
     {
-        dprf("Disabling branch: %s", branches[disabled_branch[i]].shortname);
-        brentry[disabled_branch[i]].clear();
+        dprf("Disabling branch: %s", branches[disabled].shortname);
+        brentry[disabled].clear();
     }
 
     for (branch_iterator it; it; ++it)
@@ -153,15 +153,12 @@ void initialise_temples()
         if (main_temple->has_tag("temple_variable"))
         {
             vector<int> sizes;
-            vector<string> tag_list = main_temple->get_tags();
-            for (unsigned int j = 0; j < tag_list.size(); j++)
+            for (string &tag : main_temple->get_tags())
             {
-                if (starts_with(tag_list[j], "temple_altars_"))
+                if (starts_with(tag, "temple_altars_"))
                 {
                     sizes.push_back(
-                        atoi(
-                            strip_tag_prefix(
-                                tag_list[j], "temple_altars_").c_str()));
+                        atoi(strip_tag_prefix(tag, "temple_altars_").c_str()));
                 }
             }
             if (sizes.empty())

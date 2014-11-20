@@ -200,7 +200,6 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     beam.thrower           = KILL_YOU;
     beam.hit               = AUTOMATIC_HIT;
     beam.damage            = dice_def(42, 1); // just a convenient non-zero
-    beam.is_big_cloud      = true;
     beam.is_tracer         = true;
     beam.use_target_as_pos = true;
     beam.origin_spell      = spl;
@@ -486,7 +485,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
 
     const int range = spell_range(SPELL_CLOUD_CONE, pow);
 
-    targetter_shotgun hitfunc(caster, range);
+    targetter_shotgun hitfunc(caster, CLOUD_CONE_BEAM_COUNT, range);
 
     hitfunc.set_aim(pos);
 

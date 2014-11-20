@@ -1082,7 +1082,7 @@ ENDMAP
 
 NAME:   makhleb_blood_cavern_becter
 TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
-DEPTH:  2-9
+DEPTH:  D:2-9
 : if you.absdepth() < 6 then
 : dgn.delayed_decay(_G, '1', 'human corpse')
 KMONS:  2 = hound

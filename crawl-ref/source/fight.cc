@@ -285,7 +285,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
              && attacker->is_monster()
              && attacker->as_monster()->has_ench(ENCH_GRAND_AVATAR))
     {
-        trigger_grand_avatar(attacker->as_monster(), defender, SPELL_MELEE,
+        trigger_grand_avatar(attacker->as_monster(), defender, SPELL_NO_SPELL,
                              orig_hp);
     }
 

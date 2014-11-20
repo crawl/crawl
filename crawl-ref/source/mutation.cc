@@ -7,6 +7,7 @@
 
 #include "mutation.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -227,22 +228,14 @@ static const mutation_type _all_scales[] =
 
 static bool _is_covering(mutation_type mut)
 {
-    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
-        if (_all_scales[i] == mut)
-            return true;
-
-    return false;
+    return find(begin(_all_scales), end(_all_scales), mut) != end(_all_scales);
 }
 
 bool is_body_facet(mutation_type mut)
 {
-    for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
-    {
-        if (_body_facets[i].mut == mut)
-            return true;
-    }
-
-    return false;
+    return any_of(begin(_body_facets), end(_body_facets),
+                  [=](const body_facet_def &facet)
+                  { return facet.mut == mut; });
 }
 
 mutation_activity_type mutation_activity_level(mutation_type mut)
@@ -1011,16 +1004,16 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
 static mutation_type _get_mut_with_use(mut_use_type mt)
 {
     int cweight = random2(total_weight[mt]);
-    for (unsigned i = 0; i < ARRAYSZ(mut_data); ++i)
+    for (const mutation_def &mutdef : mut_data)
     {
-        if (!_mut_has_use(mut_data[i], mt))
+        if (!_mut_has_use(mutdef, mt))
             continue;
 
-        cweight -= _mut_weight(mut_data[i], mt);
+        cweight -= _mut_weight(mutdef, mt);
         if (cweight >= 0)
             continue;
 
-        return mut_data[i].mutation;
+        return mutdef.mutation;
     }
 
     die("Error while selecting mutations");
@@ -1118,18 +1111,18 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
 
 int mut_check_conflict(mutation_type mut)
 {
-    for (unsigned i = 0; i < ARRAYSZ(conflict); ++i)
+    for (const int (&confl)[3] : conflict)
     {
-        if (conflict[i][0] == mut || conflict[i][1] == mut)
+        if (confl[0] == mut || confl[1] == mut)
         {
             int level = player_mutation_level(
-                static_cast<mutation_type>(conflict[i][1]));
-            if (conflict[i][0] == mut && level)
+                static_cast<mutation_type>(confl[1]));
+            if (confl[0] == mut && level)
                 return level;
 
             level = player_mutation_level(
-                static_cast<mutation_type>(conflict[i][0]));
-            if (conflict[i][1] == mut && level)
+                static_cast<mutation_type>(confl[0]));
+            if (confl[1] == mut && level)
                 return level;
         }
     }
@@ -1150,19 +1143,19 @@ static int _handle_conflicting_mutations(mutation_type mutation,
 {
     // If we have one of the pair, delete all levels of the other,
     // and continue processing.
-    for (unsigned i = 0; i < ARRAYSZ(conflict); ++i)
+    for (const int (&confl)[3] : conflict)
     {
         for (int j = 0; j < 2; ++j)
         {
-            const mutation_type a = (mutation_type)conflict[i][j];
-            const mutation_type b = (mutation_type)conflict[i][1-j];
+            const mutation_type a = (mutation_type)confl[j];
+            const mutation_type b = (mutation_type)confl[1-j];
 
             if (mutation == a && you.mutation[b] > 0)
             {
                 if (you.innate_mutation[b] >= you.mutation[b])
                     return -1;
 
-                int res = conflict[i][2];
+                int res = confl[2];
                 switch (res)
                 {
                 case -1:
@@ -1213,8 +1206,8 @@ static int _body_covered()
     if (player_genus(GENPC_DRACONIAN))
         covered += 3;
 
-    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
-        covered += you.mutation[_all_scales[i]];
+    for (mutation_type scale : _all_scales)
+        covered += you.mutation[scale];
 
     return covered;
 }
@@ -1227,15 +1220,9 @@ bool physiology_mutation_conflict(mutation_type mutat)
         && find(_all_scales, _all_scales+ARRAYSZ(_all_scales), mutat) !=
                 _all_scales+ARRAYSZ(_all_scales))
     {
-        bool found = false;
-
-        for (unsigned j = 0; j < you.demonic_traits.size(); ++j)
-        {
-            if (you.demonic_traits[j].mutation == mutat)
-                found = true;
-        }
-
-        return !found;
+        return none_of(begin(you.demonic_traits), end(you.demonic_traits),
+                       [=](const player::demon_trait &t) {
+                           return t.mutation == mutat;});
     }
 
     // Strict 3-scale limit.
@@ -1356,17 +1343,17 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (is_body_facet(mutat))
     {
         // Find equipment slot of attempted mutation
-        for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
-            if (mutat == _body_facets[i].mut)
-                eq_type = _body_facets[i].eq;
+        for (const body_facet_def &facet : _body_facets)
+            if (mutat == facet.mut)
+                eq_type = facet.eq;
 
         if (eq_type != EQ_NONE)
         {
-            for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
+                for (const body_facet_def &facet : _body_facets)
             {
-                if (eq_type == _body_facets[i].eq
-                    && mutat != _body_facets[i].mut
-                    && player_mutation_level(_body_facets[i].mut, false))
+                if (eq_type == facet.eq
+                    && mutat != facet.mut
+                    && player_mutation_level(facet.mut, false))
                 {
                     return true;
                 }
@@ -1571,8 +1558,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     {
         bool found = false;
         if (you.species == SP_DEMONSPAWN)
-            for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
-                if (you.demonic_traits[i].mutation == mutat)
+        {
+            for (player::demon_trait trait : you.demonic_traits)
+                if (trait.mutation == mutat)
                 {
                     // This mutation is about to be re-gained, so there is
                     // no need to redraw any stats or print any messages.
@@ -1580,6 +1568,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     you.mutation[mutat]--;
                     break;
                 }
+        }
         if (!found)
             return false;
     }
@@ -2219,39 +2208,29 @@ static bool _works_at_tier(const facet_def& facet, int tier)
 }
 
 #define MUTS_IN_SLOT ARRAYSZ(((facet_def*)0)->muts)
-static bool _slot_is_unique(const mutation_type mut[MUTS_IN_SLOT],
+static bool _slot_is_unique(const mutation_type (&mut)[MUTS_IN_SLOT],
                             set<const facet_def *> facets_used)
 {
     set<const facet_def *>::const_iterator iter;
-    equipment_type eq[MUTS_IN_SLOT];
+    set<equipment_type> eq;
 
     int k = 0;
     // find the equipment slot(s) used by mut
-    for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
+    for (const body_facet_def &facet : _body_facets)
     {
-        for (unsigned j = 0; j < MUTS_IN_SLOT; j++)
-        {
-            if (_body_facets[i].mut == mut[j])
-                eq[k++] = _body_facets[i].eq;
-        }
+        for (mutation_type slotmut : mut)
+            if (facet.mut == slotmut)
+                eq.insert(facet.eq);
     }
 
     if (k == 0)
         return true;
 
-    for (iter = facets_used.begin() ; iter != facets_used.end() ; ++iter)
+    for (const facet_def *used : facets_used)
     {
-        for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
-        {
-            if (_body_facets[i].mut == (*iter)->muts[0])
-            {
-                for (unsigned j = 0; j < ARRAYSZ(eq); j++)
-                {
-                    if (_body_facets[i].eq == eq[j])
-                        return false;
-                }
-            }
-        }
+        for (const body_facet_def &facet : _body_facets)
+            if (facet.mut == used->muts[0] && eq.count(facet.eq))
+                return false;
     }
 
     return true;
@@ -2560,15 +2539,15 @@ void check_demonic_guardian()
         {
         case 1:
             mt = random_choose(MONS_WHITE_IMP, MONS_QUASIT, MONS_UFETUBUS,
-                               MONS_IRON_IMP, MONS_CRIMSON_IMP, -1);
+                               MONS_IRON_IMP, MONS_CRIMSON_IMP);
             break;
         case 2:
             mt = random_choose(MONS_SIXFIRHY, MONS_SMOKE_DEMON, MONS_SOUL_EATER,
-                               MONS_SUN_DEMON, MONS_ICE_DEVIL, -1);
+                               MONS_SUN_DEMON, MONS_ICE_DEVIL);
             break;
         case 3:
             mt = random_choose(MONS_EXECUTIONER, MONS_BALRUG, MONS_REAPER,
-                               MONS_CACODEMON, -1);
+                               MONS_CACODEMON);
             break;
         default:
             die("Invalid demonic guardian level: %d", mutlevel);

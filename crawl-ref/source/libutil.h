@@ -107,6 +107,7 @@ struct greater_second
     }
 };
 
+/// Delete all the pointers in a container and clear the container.
 template<class T>
 static void deleteAll(T& collection)
 {

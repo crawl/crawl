@@ -271,19 +271,13 @@ static vector<string> _in_vaults(const coord_def &pos)
 {
     vector<string> out;
 
-    for (unsigned int i = 0; i < env.level_vaults.size(); ++i)
-    {
-        const vault_placement &vault = *env.level_vaults[i];
-        if (_inside_vault(vault, pos))
-            out.push_back(vault.map.name);
-    }
+    for (const vault_placement *vault : env.level_vaults)
+        if (_inside_vault(*vault, pos))
+            out.push_back(vault->map.name);
 
-    for (unsigned int i = 0; i < Temp_Vaults.size(); ++i)
-    {
-        const vault_placement &vault = Temp_Vaults[i];
+    for (const vault_placement &vault : Temp_Vaults)
         if (_inside_vault(vault, pos))
             out.push_back(vault.map.name);
-    }
 
     return out;
 }
@@ -296,17 +290,16 @@ static string _vault_desc(const coord_def pos)
 
     string out;
 
-    for (unsigned int i = 0; i < env.level_vaults.size(); ++i)
+    for (const vault_placement *vault : env.level_vaults)
     {
-        const vault_placement &vp = *env.level_vaults[i];
-        if (_inside_vault(vp, pos))
+        if (_inside_vault(*vault, pos))
         {
-            coord_def br = vp.pos + vp.size - 1;
+            coord_def br = vault->pos + vault->size - 1;
             out += make_stringf(" [vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
-                        vp.map_name_at(pos).c_str(),
-                        vp.pos.x, vp.pos.y,
+                        vault->map_name_at(pos).c_str(),
+                        vault->pos.x, vault->pos.y,
                         br.x, br.y,
-                        vp.size.x, vp.size.y);
+                        vault->size.x, vault->size.y);
         }
     }
 
@@ -596,9 +589,8 @@ void debug_mons_scan()
 
     mpr("");
 
-    for (unsigned int i = 0; i < floating_mons.size(); ++i)
+    for (int idx : floating_mons)
     {
-        const int       idx = floating_mons[i];
         const monster* mon = &menv[idx];
         vector<string> vaults = _in_vaults(mon->pos());
 
@@ -1193,8 +1185,8 @@ static void _init_stats()
                     ? "AllNumMax" : "NumMax";
                 for (int  j = 0; j <= _item_max_sub_type(base_type); j++)
                 {
-                    for (unsigned int k = 0; k < item_fields[i].size(); k++)
-                        item_recs[lev][i][j][item_fields[i][k]] = 0;
+                    for (const string &field : item_fields[i])
+                        item_recs[lev][i][j][field] = 0;
                     // For determining the NumSD, NumMin and NumMax fields.
                     item_recs[lev][i][j]["NumForIter"] = 0;
                     item_recs[lev][i][j][min_field] = INFINITY;
@@ -1238,8 +1230,8 @@ static void _init_stats()
             for (mi = valid_monsters.begin(); mi != valid_monsters.end();
                  mi++)
             {
-                for (unsigned int i = 0; i < monster_fields.size(); i++)
-                    monster_recs[lev][mi->second][monster_fields[i]] = 0;
+                for (const string &field : monster_fields)
+                    monster_recs[lev][mi->second][field] = 0;
                 // For determining the NumMin and NumMax fields.
                 monster_recs[lev][mi->second]["NumForIter"] = 0;
                 monster_recs[lev][mi->second]["NumMin"] = INFINITY;
@@ -1634,13 +1626,13 @@ static void _write_stat_headers(branch_type br, const vector<string> &fields)
     fprintf(stat_outf, "Property");
     for (li = levels.begin(); li != levels.end(); li++)
     {
-        for (unsigned int i = 0; i < fields.size(); i++)
-            fprintf(stat_outf, "\t%s", fields[i].c_str());
+        for (const string &field : fields)
+            fprintf(stat_outf, "\t%s", field.c_str());
 
         if (++level_count == levels.size() && level_count > 1)
         {
-            for (unsigned int i = 0; i < fields.size(); i++)
-                fprintf(stat_outf, "\t%s", fields[i].c_str());
+            for (const string &field : fields)
+                fprintf(stat_outf, "\t%s", field.c_str());
         }
     }
     fprintf(stat_outf, "\n");
@@ -1792,8 +1784,8 @@ static void _write_item_stats(branch_type br, item_type &item)
     {
         map <string, double> &item_stats =
             item_recs[*li][item.base_type][item.sub_type];
-        for (unsigned int i = 0; i < fields.size(); i++)
-            _write_stat(item_stats, fields[i]);
+        for (const string &field : fields)
+            _write_stat(item_stats, field);
 
         if (is_brand_equip)
         {
@@ -1811,8 +1803,8 @@ static void _write_item_stats(branch_type br, item_type &item)
             map <string, double> &branch_stats =
                 item_recs[br_lev][item.base_type][item.sub_type];
 
-            for (unsigned int i = 0; i < fields.size(); i++)
-                _write_stat(branch_stats, fields[i]);
+            for (const string &field : fields)
+                _write_stat(branch_stats, field);
 
             if (is_brand_equip)
             {
@@ -1844,14 +1836,14 @@ static void _write_monster_stats(branch_type br, monster_type mons_type,
         fprintf(stat_outf, "%s", mons_type_name(mons_type, DESC_PLAIN).c_str());
     for (li = stat_branches[br].begin(); li != stat_branches[br].end(); li++)
     {
-        for (unsigned int i = 0; i < fields.size(); i++)
-            _write_stat(monster_recs[*li][mons_ind], fields[i]);
+        for (const string &field : fields)
+            _write_stat(monster_recs[*li][mons_ind], field);
 
         if (++level_count == stat_branches[li->branch].size() && level_count > 1)
         {
             level_id br_lev(li->branch, -1);
-            for (unsigned int i = 0; i < fields.size(); i++)
-                _write_stat(monster_recs[br_lev][mons_ind], fields[i]);
+            for (const string &field : fields)
+                _write_stat(monster_recs[br_lev][mons_ind], field);
         }
     }
     fprintf(stat_outf, "\n");

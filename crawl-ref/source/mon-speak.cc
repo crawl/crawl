@@ -134,15 +134,9 @@ static bool _invalid_msg(const string &msg, bool no_player, bool no_foe,
 
     if (no_player)
     {
-        vector<string> lines = split_string("\n", msg);
-        for (unsigned int i = 0; i < lines.size(); i++)
-        {
-            if (starts_with(lines[i], "You")
-                || ends_with(lines[i], "you."))
-            {
+        for (const string &line : split_string("\n", msg))
+            if (starts_with(line, "You") || ends_with(line, "you."))
                 return true;
-            }
-        }
     }
 
     if (no_foe && (msg.find("@foe") != string::npos
