@@ -2388,12 +2388,6 @@ colour_t random_monster_colour()
     return col;
 }
 
-// Butterflies
-static colour_t _random_butterfly_colour()
-{
-    return random_choose(LIGHTBLUE, LIGHTCYAN, LIGHTMAGENTA, WHITE);
-}
-
 bool init_abomination(monster* mon, int hd)
 {
     if (mon->type == MONS_CRAWLING_CORPSE
@@ -2438,10 +2432,6 @@ void define_monster(monster* mons)
 
     switch (mcls)
     {
-    case MONS_BUTTERFLY:
-        col = _random_butterfly_colour();
-        break;
-
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
         mons->props["speed"] = 7 + random2avg(9, 2);
