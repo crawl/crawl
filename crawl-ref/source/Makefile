@@ -64,10 +64,10 @@
 #
 # Requirements:
 #    For tile builds, you need pkg-config.
-#    You also need libpng, sdl2, sdl2-image and libfreetype -- if you got your
-#    source from git, you can 'git submodule update' to fetch them; you can also
-#    ask for a package with convenience libraries instead -- we'll try to provide
-#    them somewhere in the near future.
+#    You also need libpng, sdl2, sdl2-image, sdl2-mixer and libfreetype -- if
+#    you got your source from git, you can 'git submodule update' to fetch
+#    them; you can also ask for a package with convenience libraries instead --
+#    we'll try to provide them somewhere in the near future.
 
 GAME = crawl
 
@@ -218,6 +218,7 @@ ifeq ($(uname_S),Darwin)
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL2 = YesPlease
 		BUILD_SDL2IMAGE = YesPlease
+		BUILD_SDL2MIXER = YesPlease
 		BUILD_LIBPNG = YesPlease
 		COPY_FONTS = yes
 	endif
@@ -236,6 +237,7 @@ ifdef BUILD_ALL
 	BUILD_PCRE = YesPlease
 	BUILD_SDL2 = YesPlease
 	BUILD_SDL2IMAGE = YesPlease
+	BUILD_SDL2MIXER = YesPlease
 	BUILD_SQLITE = YesPlease
 	BUILD_LUA = YesPlease
 	BUILD_LIBPNG = YesPlease
@@ -249,6 +251,7 @@ LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL2 := contrib/install/$(ARCH)/lib/libSDL2.a
 LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
 LIBSDL2IMAGE := contrib/install/$(ARCH)/lib/libSDL2_image.a
+LIBSDL2MIXER := contrib/install/$(ARCH)/lib/libSDL2_mixer.a
 LIBFREETYPE := contrib/install/$(ARCH)/lib/libfreetype.a
 LIBSQLITE := contrib/install/$(ARCH)/lib/libsqlite3.a
 ifdef USE_LUAJIT
@@ -704,7 +707,7 @@ SDL2_INCLUDE := $(shell $(PKGCONFIG) sdl2 --cflags-only-I | sed -e 's/-I/-isyste
 SDL2_CFLAGS  := $(shell $(PKGCONFIG) sdl2 --cflags-only-other)
 SDL2_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sdl2 --libs-only-l)
 
-LIBS += -lSDL2_image $(SDL2_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -lSDL2_image -lSDL2_mixer $(SDL2_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
@@ -1096,6 +1099,10 @@ endif
 ifdef BUILD_SDL2IMAGE
 CONTRIBS += sdl2-image
 CONTRIB_LIBS := $(LIBSDL2IMAGE) $(CONTRIB_LIBS)
+endif
+ifdef BUILD_SDL2MIXER
+CONTRIBS += sdl2-mixer
+CONTRIB_LIBS := $(LIBSDL2MIXER) $(CONTRIB_LIBS)
 endif
 ifdef BUILD_ZLIB
 CONTRIBS += zlib
@@ -1629,7 +1636,7 @@ source: removeold prebuildyacc
 	(cd ../..;git ls-files| \
 		grep -v -f crawl-ref/source/misc/src-pkg-excludes.lst| \
 		tar cf - -T -)|tar xf - -C build
-	for x in lua pcre sqlite libpng freetype sdl2 sdl2-image zlib fonts; \
+	for x in lua pcre sqlite libpng freetype sdl2 sdl2-image sdl2-mixer zlib fonts; \
 	  do \
 	   mkdir -p $(BSRC)contrib/$$x; \
 	   (cd contrib/$$x;git ls-files|tar cf - -T -)| \

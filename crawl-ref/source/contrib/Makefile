@@ -1,6 +1,6 @@
 PREFIX := install
 
-SUBDIRS = sqlite sdl2 sdl2-image freetype libpng pcre zlib
+SUBDIRS = sqlite sdl2 sdl2-image sdl2-mixer freetype libpng pcre zlib
 ARCH = unknown
 
 ifdef USE_LUAJIT
@@ -45,5 +45,6 @@ $(SUBDIRS):
 
 libpng freetype: zlib
 sdl2-image: sdl2 libpng
+sdl2-mixer: sdl2
 
 .PHONY: $(SUBDIRS)
