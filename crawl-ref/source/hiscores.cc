@@ -25,6 +25,7 @@
 
 #include "branch.h"
 #include "chardump.h"
+#include "cio.h"
 #include "dungeon.h"
 #include "end.h"
 #include "english.h"
@@ -468,6 +469,9 @@ void show_hiscore_table()
         menu.draw_menu();
         textcolour(WHITE);
         const int keyn = getch_ck();
+
+        if (keyn == CK_REDRAW)
+            continue;
 
         if (key_is_escape(keyn))
         {

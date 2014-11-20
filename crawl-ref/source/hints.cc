@@ -162,6 +162,7 @@ static void _print_hints_menu(hints_types type)
 // Hints mode selection screen and choice.
 void pick_hints(newgame_def* choice)
 {
+again:
     clrscr();
 
     cgotoxy(1,1);
@@ -184,6 +185,8 @@ void pick_hints(newgame_def* choice)
     while (true)
     {
         int keyn = getch_ck();
+        if (keyn == CK_REDRAW)
+            goto again;
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')

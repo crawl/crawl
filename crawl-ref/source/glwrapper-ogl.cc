@@ -10,8 +10,10 @@
 // include more conditional includes here.
 #ifdef USE_SDL
 # ifdef USE_GLES
-#  include <SDL.h>
-#  ifndef __ANDROID__
+#  ifdef __ANDROID__
+#   include <SDL.h>
+#  else
+#   include <SDL2/SDL.h>
 #   include <SDL_gles.h>
 #  endif
 #  include <GLES/gl.h>
@@ -20,7 +22,12 @@
 #   include <SDL.h>
 #   include <GLES/gl.h>
 #  else
-#   include <SDL_opengl.h>
+#   include <SDL2/SDL_opengl.h>
+#   if defined(__MACOSX__)
+#    include <OpenGL/glu.h>
+#   else
+#    include <GL/glu.h>
+#   endif
 #  endif
 # endif
 #endif
@@ -198,8 +205,11 @@ void OGLStateManager::set_transform(const GLW_3VF &trans, const GLW_3VF &scale)
     glScalef(scale.x, scale.y, scale.z);
 }
 
-void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz)
+void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz,
+                                            const coord_def &m_drawablesz)
 {
+    glViewport(0, 0, m_drawablesz.x, m_drawablesz.y);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 

@@ -163,6 +163,8 @@ protected:
 
     // screen pixel dimensions
     coord_def m_windowsz;
+    // screen pixel density ratio
+    int densityNum, densityDen;
     // screen pixels per view cell
     coord_def m_viewsc;
 

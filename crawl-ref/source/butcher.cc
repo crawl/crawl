@@ -26,6 +26,11 @@
 #include "stepdown.h"
 #include "stringutil.h"
 
+#ifdef TOUCH_UI
+#include "invent.h"
+#include "menu.h"
+#endif
+
 static bool _should_butcher(int corpse_id, bool bottle_blood = false)
 {
     const item_def &corpse = mitm[corpse_id];

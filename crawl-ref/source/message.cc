@@ -23,6 +23,7 @@
 #include "monster.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "output.h"
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1475,7 +1476,7 @@ static void readkey_more(bool user_forced)
 {
     if (autoclear_more)
         return;
-    int keypress;
+    int keypress = 0;
 #ifdef USE_TILE_WEB
     unwind_bool unwind_more(_more, true);
 #endif
@@ -1484,6 +1485,11 @@ static void readkey_more(bool user_forced)
     do
     {
         keypress = getch_ck();
+        if (keypress == CK_REDRAW)
+        {
+            redraw_screen();
+            continue;
+        }
     }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
            && !key_is_escape(keypress)

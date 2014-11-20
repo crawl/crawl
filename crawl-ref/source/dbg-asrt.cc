@@ -72,9 +72,13 @@
 #ifdef TARGET_COMPILER_VC
 # include <SDL_syswm.h>
 #else
-# include <SDL/SDL_syswm.h>
+# include <SDL2/SDL_syswm.h>
 #endif
 #endif
+#endif
+
+#ifdef __ANDROID__
+# include <android/log.h>
 #endif
 
 static string _assert_msg;
@@ -765,17 +769,20 @@ void do_crash_dump()
 //---------------------------------------------------------------
 NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
+// FIXME: this needs a way to get the SDL_window in windowmanager-sdl.cc
+#if 0
 #if defined(USE_TILE_LOCAL) && defined(TARGET_OS_WINDOWS)
     SDL_SysWMinfo SysInfo;
     SDL_VERSION(&SysInfo.version);
-    if (SDL_GetWMInfo(&SysInfo) > 0)
+    if (SDL_GetWindowWMInfo(window, &SysInfo) > 0)
     {
-        MessageBoxW(SysInfo.window, OUTW(mesg),
+        MessageBoxW(window, OUTW(mesg),
                    assert ? L"Assertion failed!" : L"Error",
                    MB_OK|MB_ICONERROR);
     }
     // Print the message to STDERR in addition to the above message box,
     // so it's in the message history if we call Crawl from a shell.
+#endif
 #endif
     fprintf(stderr, "%s\n", mesg);
 
@@ -872,6 +879,10 @@ NORETURN void die_noline(const char *format, ...)
     va_end(args);
 
     snprintf(mesg, sizeof(mesg), "ERROR: %s", tmp);
+
+#ifdef __ANDROID__
+    __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", mesg);
+#endif
 
     _assert_msg = mesg;
 

@@ -13,10 +13,14 @@
 #include "macro.h"
 #include "message.h"
 #include "options.h"
+#include "output.h"
 #include "state.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "viewgeom.h"
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+#include "windowmanager.h"
+#endif
 
 static keycode_type _numpad2vi(keycode_type key)
 {
@@ -319,6 +323,11 @@ int line_reader::read_line(bool clear_previous)
     if (clear_previous)
         *buffer = 0;
 
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+    if (wm)
+        wm->show_keyboard();
+#endif
+
 #ifdef USE_TILE_WEB
     if (!tiles.is_in_crt_menu())
     {
@@ -619,6 +628,9 @@ int line_reader::process_key(int ch)
         break;
     case CK_MOUSE_CLICK:
         // FIXME: ought to move cursor to click location, if it's within the input
+        return -1;
+    case CK_REDRAW:
+        redraw_screen();
         return -1;
     default:
         if (wcwidth(ch) >= 0 && length + wclen(ch) < static_cast<int>(bufsz))
