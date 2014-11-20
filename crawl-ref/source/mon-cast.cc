@@ -6985,10 +6985,9 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
         beam.source  = tosser.pos();
         beam.target  = chosen_dest;
         beam.name    = "GOBLIN BEAM";
+        beam.glyph   = mons_char(goblin.type);
         const monster_info mi(&goblin);
-        const cglyph_t glyph = get_mons_glyph(mi);
-        beam.glyph   = glyph.ch;
-        beam.colour  = glyph.col;
+        beam.colour  = mi.colour();
 
         beam.draw_delay = 30; // Make beam animation somewhat slower than normal.
         beam.aimed_at_spot = true;
