@@ -5,12 +5,17 @@
 
 #include "windowmanager-sdl.h"
 
-#ifdef TARGET_COMPILER_VC
+#ifdef __ANDROID__
 # include <SDL.h>
+# include <SDL_image.h>
 #else
-# include <SDL2/SDL.h>
+# ifdef TARGET_COMPILER_VC
+#  include <SDL.h>
+# else
+#  include <SDL2/SDL.h>
+# endif
+# include <SDL2/SDL_image.h>
 #endif
-#include <SDL2/SDL_image.h>
 
 #include "cio.h"
 #include "files.h"
