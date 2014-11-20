@@ -10,14 +10,16 @@
 // include more conditional includes here.
 #ifdef USE_SDL
 # ifdef USE_GLES
-#  include <SDL2/SDL.h>
-#  ifndef __ANDROID__
+#  ifdef __ANDROID__
+#   include <SDL.h>
+#  else
+#   include <SDL2/SDL.h>
 #   include <SDL_gles.h>
 #  endif
 #  include <GLES/gl.h>
 # else
 #  ifdef __ANDROID__
-#   include <SDL2/SDL.h>
+#   include <SDL.h>
 #   include <GLES/gl.h>
 #  else
 #   include <SDL2/SDL_opengl.h>
