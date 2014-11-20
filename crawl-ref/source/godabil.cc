@@ -5753,7 +5753,11 @@ bool ru_do_sacrifice(ability_type sac)
         you.props["num_sacrifice_muts"] = num_sacrifices;
 
     // Randomize piety gain very slightly to prevent counting.
-    int new_piety = you.piety + piety_gain + random2(3);
+    // We fuzz the piety gain by up to +-10%, or 5 piety, whichever is smaller.
+    int piety_blur_inc = min(5, piety_gain / 10);
+    int piety_blur = random2((2 * piety_blur_inc) + 1) - piety_blur_inc;
+    int new_piety = you.piety + piety_gain + piety_blur;
+
     if (new_piety > piety_breakpoint(5))
         new_piety = piety_breakpoint(5);
     set_piety(new_piety);
