@@ -1666,6 +1666,9 @@ void canned_msg(canned_message_type which_message)
         case MSG_YOU_DIE:
             mpr_nojoin(MSGCH_PLAIN, "You die...");
             break;
+        case MSG_GHOSTLY_OUTLINE:
+            mpr("You see a ghostly outline there, and the spell fizzles.");
+            break;
     }
 }
 

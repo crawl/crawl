@@ -663,6 +663,7 @@ enum canned_message_type
     MSG_DECK_EXHAUSTED,
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
+    MSG_GHOSTLY_OUTLINE,
 };
 
 enum char_set_type
