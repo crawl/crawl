@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-CRAWL=${CRAWL:-timeout 595 ./crawl -seed 1 -no-save -name test -wizard -no-throttle}
+CRAWL=${CRAWL:-./crawl -seed 1 -no-save -name test -wizard -no-throttle}
 
 run_one()
 {
@@ -47,9 +47,9 @@ run_one()
         $CRAWL -rc test/stress/qw.rc
     ;;
     test) # Not in "all".
+        tail -F messages.out 1>&2 &
         echo "crawl -test" 1>&2
         $CRAWL -test
-        cat messages.out 1>&2
     ;;
     *)
         echo "No such test." 1>&2
