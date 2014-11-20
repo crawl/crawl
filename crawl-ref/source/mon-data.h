@@ -340,7 +340,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_BUTTERFLY, 'b', COLOUR_UNDEF, "butterfly",
+    MONS_BUTTERFLY, 'b', ETC_JEWEL, "butterfly",
     M_CONFUSED | M_NO_EXP_GAIN,
     MR_VUL_POISON,
     150, 10, MONS_BUTTERFLY, MONS_BUTTERFLY, MH_NATURAL, 10,

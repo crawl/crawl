@@ -1079,7 +1079,7 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     case MONS_VAMPIRE_BAT:
         return TILEP_MONS_VAMPIRE_BAT;
     case MONS_BUTTERFLY:
-        return _mon_mod(TILEP_MONS_BUTTERFLY, colour);
+        return _mon_mod(TILEP_MONS_BUTTERFLY, tile_num_prop);
     case MONS_FIRE_BAT:
         return TILEP_MONS_FIRE_BAT;
     case MONS_RAVEN:
@@ -5794,16 +5794,24 @@ void bind_item_tile(item_def &item)
 void tile_init_props(monster* mon)
 {
     // Only monsters using mon_mod or mon_cycle need a tile_num.
-    if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
-        && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS
-        && mon->type != MONS_BUSH
-        && mon->type != MONS_FIRE_VORTEX && mon->type != MONS_TWISTER
-        && mon->type != MONS_SPATIAL_VORTEX && mon->type != MONS_SPATIAL_MAELSTROM
-        && mon->type != MONS_ABOMINATION_SMALL
-        && mon->type != MONS_ABOMINATION_LARGE
-        && mon->type != MONS_BLOCK_OF_ICE)
+    switch (mon->type)
     {
-        return;
+        case MONS_SLAVE:
+        case MONS_TOADSTOOL:
+        case MONS_FUNGUS:
+        case MONS_PLANT:
+        case MONS_BUSH:
+        case MONS_FIRE_VORTEX:
+        case MONS_TWISTER:
+        case MONS_SPATIAL_VORTEX:
+        case MONS_SPATIAL_MAELSTROM:
+        case MONS_ABOMINATION_SMALL:
+        case MONS_ABOMINATION_LARGE:
+        case MONS_BLOCK_OF_ICE:
+        case MONS_BUTTERFLY:
+            break;
+        default:
+            return;
     }
 
     // Already overridden or set.
