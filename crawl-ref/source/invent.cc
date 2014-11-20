@@ -1657,6 +1657,11 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         return true;
     }
 
+    // Rods are special-cased here, since I'm worried about the effects on
+    // monster behaviour of no longer counting them as melee weapons.
+    if (item.base_type == OBJ_RODS && oper == OPER_ATTACK)
+        return true;
+
     // Everything else depends on knowing the item subtype/brand.
     if (!item_ident(item, ISFLAG_KNOW_TYPE))
         return false;
