@@ -1085,7 +1085,7 @@ caster.
 %%%%
 Regeneration spell
 
-This spell reanimates parts of the caster's wounds. This unholy act
+This spell reanimates parts of the caster's wounds. This unnatural act
 dramatically but temporarily increases the caster's recuperative abilities,
 while also increasing the rate of food consumption.
 %%%%
