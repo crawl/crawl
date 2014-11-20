@@ -2162,6 +2162,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(4);
         break;
 
+    case MONS_SHARD_SHRIKE:
+        band = BAND_SHARD_SHRIKE;
+        band_size = 2 + random2(3);
+        break;
+
     case MONS_FLYING_SKULL:
         band = BAND_FLYING_SKULLS;
         band_size = 2 + random2(4);
@@ -3015,6 +3020,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_CAUSTIC_SHRIKE:
         return MONS_CAUSTIC_SHRIKE;
+
+    case BAND_SHARD_SHRIKE:
+        return MONS_SHARD_SHRIKE;
 
     case BAND_FLYING_SKULLS:
         return MONS_FLYING_SKULL;

@@ -649,6 +649,7 @@ static const pop_entry pop_coc[] =
   {  1,  7,  192, FLAT, MONS_BLIZZARD_DEMON },
   {  2,  7,   35, FLAT, MONS_BONE_DRAGON },
   {  1,  7,  455, UP,   MONS_REAPER },
+  {  1,  7,  270, UP,   MONS_SHARD_SHRIKE },
   {  1,  7,   81, PEAK, MONS_SOUL_EATER },
   {  2,  8,   35, PEAK, MONS_LICH },
   {  3,  7,    8, PEAK, MONS_ANCIENT_LICH },
