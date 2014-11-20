@@ -1343,11 +1343,6 @@ green draconian
 
 A muscular green-scaled humanoid with a reptilian tail and small wings.
 %%%%
-river rat
-
-A rodent with hair of a most peculiar green colour, and a powerful bite. It
-tends to form great swarms with its kin.
-%%%%
 grey draconian
 
 A muscular grey-scaled humanoid with a reptilian tail and small wings.
@@ -1778,6 +1773,11 @@ neqoxec
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly
 distended with the devoured brains of its victims.
 %%%%
+obsidian statue
+
+A beautiful statue of an unknown creature, jet-black like a tear in reality.
+Its eyes glow with an otherworldly, malignant radiance.
+%%%%
 octopode
 
 A more intelligent cousin of the mighty kraken, capable of using tools and
@@ -2053,6 +2053,11 @@ revenant
 A skeletal form wreathed in cold blue fire, standing astride this life and the
 next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
+river rat
+
+A rodent with hair of a most peculiar green colour, and a powerful bite. It
+tends to form great swarms with its kin.
+%%%%
 the royal jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
@@ -2172,11 +2177,6 @@ silent spectre
 The bane of wizards, these terrible spirits bring an unearthly silence to the
 area around them, making it impossible to recite the magical incantations
 involved with casting spells or reading scrolls.
-%%%%
-obsidian statue
-
-A beautiful statue of an unknown creature, jet-black like a tear in reality.
-Its eyes glow with an otherworldly, malignant radiance.
 %%%%
 simulacrum
 
