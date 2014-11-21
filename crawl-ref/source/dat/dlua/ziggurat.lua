@@ -642,6 +642,8 @@ local function ziggurat_stairs(entry, exit)
 end
 
 local function ziggurat_furnish(centre, entry, exit)
+  ziggurat_stairs(entry, exit)
+
   has_loot_chamber = false
   local monster_generation = choose_monster_set()
 
@@ -713,7 +715,6 @@ local function ziggurat_rectangle_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
@@ -750,7 +751,6 @@ local function ziggurat_ellipse_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
@@ -796,7 +796,6 @@ local function ziggurat_hexagon_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(c, entry, exit)
 end
 
