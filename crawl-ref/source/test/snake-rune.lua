@@ -37,9 +37,7 @@ local function visit_branch_end_from(start, stair_places, final_predicate)
     for y = 1, dgn.GYM - 2 do
       crawl.message('5')
       for x = 1, dgn.GXM - 2 do
-        crawl.message('6')
         local dfeat = dgn.grid(x, y)
-        crawl.message('7')
         if not junk_feat_fn(dfeat) then
           crawl.message('8')
           for _, place in ipairs(stair_places) do
@@ -60,7 +58,6 @@ local function visit_branch_end_from(start, stair_places, final_predicate)
           end
           crawl.message('16')
         end
-        crawl.message('17')
       end
       crawl.message('18')
     end
