@@ -3416,7 +3416,7 @@ static void _move_player(coord_def move)
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
-            fmonger->name(DESC_THE, true).c_str());
+            fmonger->name(DESC_THE).c_str());
         stop_running();
         return;
     }
