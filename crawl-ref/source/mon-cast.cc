@@ -2912,7 +2912,8 @@ static bool _should_ephemeral_infusion(monster* agent)
         }
         monster* mon = ai->as_monster();
         if (!mon->has_ench(ENCH_EPHEMERAL_INFUSION)
-            && mon->hit_points * 3 <= mon->max_hit_points * 2)
+            && mon->hit_points * 3 <= mon->max_hit_points * 2
+            && !mons_is_firewood(mon))
         {
             return true;
         }
@@ -2932,7 +2933,8 @@ static void _cast_ephemeral_infusion(monster* agent)
         }
         monster* mon = ai->as_monster();
         if (!mon->has_ench(ENCH_EPHEMERAL_INFUSION)
-            && mon->hit_points < mon->max_hit_points)
+            && mon->hit_points < mon->max_hit_points
+            && !mons_is_firewood(mon))
         {
             const int dur =
                 random2avg(agent->spell_hd(SPELL_EPHEMERAL_INFUSION), 2)
