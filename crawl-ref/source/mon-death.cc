@@ -1856,8 +1856,13 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (MON_KILL(killer) && mons->has_ench(ENCH_CHARM))
     {
-        ASSERT(!crawl_state.game_is_arena());
-        killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
+        bool arena = crawl_state.game_is_arena();
+        mon_enchant ench = mons->get_ench(ENCH_CHARM);
+        if (ench.who == KC_YOU || (!arena && ench.who == KC_FRIENDLY))
+        {
+            ASSERT(!arena);
+            killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
+        }
     }
 
     // Kills by the spectral weapon are considered as kills by the player instead
