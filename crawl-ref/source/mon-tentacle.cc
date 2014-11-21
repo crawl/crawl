@@ -24,19 +24,13 @@ const int MAX_KRAKEN_TENTACLE_DIST = 12;
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
 
-static monster_type _head_to_child_tentacle[][2] =
+static monster_type _head_child_segment[][3] =
 {
-    { MONS_KRAKEN,              MONS_KRAKEN_TENTACLE },
-    { MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE },
+    { MONS_KRAKEN, MONS_KRAKEN_TENTACLE,
+        MONS_KRAKEN_TENTACLE_SEGMENT },
+    { MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE,
+        MONS_STARSPAWN_TENTACLE_SEGMENT },
 };
-
-static monster_type _child_tentacle_to_segment[][2] =
-{
-    { MONS_KRAKEN_TENTACLE,    MONS_KRAKEN_TENTACLE_SEGMENT },
-    { MONS_STARSPAWN_TENTACLE, MONS_STARSPAWN_TENTACLE_SEGMENT },
-};
-
-COMPILE_CHECK(ARRAYSZ(_head_to_child_tentacle) == ARRAYSZ(_child_tentacle_to_segment));
 
 static monster_type _solo_tentacle_to_segment[][2] =
 {
@@ -46,7 +40,7 @@ static monster_type _solo_tentacle_to_segment[][2] =
 
 bool mons_is_tentacle_head(monster_type mc)
 {
-    for (const monster_type (&m)[2] : _head_to_child_tentacle)
+    for (const monster_type (&m)[3] : _head_child_segment)
         if (mc == m[0])
             return true;
 
@@ -55,7 +49,7 @@ bool mons_is_tentacle_head(monster_type mc)
 
 bool mons_is_child_tentacle(monster_type mc)
 {
-    for (const monster_type (&m)[2] : _head_to_child_tentacle)
+    for (const monster_type (&m)[3] : _head_child_segment)
         if (mc == m[1])
             return true;
 
@@ -64,8 +58,8 @@ bool mons_is_child_tentacle(monster_type mc)
 
 bool mons_is_child_tentacle_segment(monster_type mc)
 {
-    for (const monster_type (&m)[2] : _child_tentacle_to_segment)
-        if (mc == m[1])
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[2])
             return true;
 
     return false;
@@ -103,13 +97,13 @@ monster_type mons_tentacle_parent_type(const monster* mons)
 {
     const monster_type mc = mons_base_type(mons);
 
-    for (const monster_type (&m)[2] : _head_to_child_tentacle)
+    for (const monster_type (&m)[3] : _head_child_segment)
         if (mc == m[1])
             return m[0];
 
-    for (const monster_type (&m)[2] : _child_tentacle_to_segment)
-        if (mc == m[1])
-            return m[0];
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[2])
+            return m[1];
 
     for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
         if (mc == m[1])
@@ -122,13 +116,13 @@ monster_type mons_tentacle_child_type(const monster* mons)
 {
     const monster_type mc = mons_base_type(mons);
 
-    for (const monster_type (&m)[2] : _head_to_child_tentacle)
+    for (const monster_type (&m)[3] : _head_child_segment)
         if (mc == m[0])
             return m[1];
 
-    for (const monster_type (&m)[2] : _child_tentacle_to_segment)
-        if (mc == m[0])
-            return m[1];
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[1])
+            return m[2];
 
     for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
         if (mc == m[0])
