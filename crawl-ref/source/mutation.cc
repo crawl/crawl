@@ -2221,7 +2221,7 @@ static bool _slot_is_unique(const mutation_type (&mut)[MUTS_IN_SLOT],
                 eq.insert(facet.eq);
     }
 
-    if (eq.size() == 0)
+    if (eq.empty())
         return true;
 
     for (const facet_def *used : facets_used)
