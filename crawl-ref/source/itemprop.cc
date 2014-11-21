@@ -939,6 +939,43 @@ special_armour_type get_armour_ego_type(const item_def &item)
     return static_cast<special_armour_type>(item.brand);
 }
 
+/// A map between monster species & their hides.
+static map<monster_type, armour_type> _monster_hides = {
+    { MONS_TROLL,               ARM_TROLL_HIDE },
+    { MONS_DEEP_TROLL,          ARM_TROLL_HIDE },
+    { MONS_IRON_TROLL,          ARM_TROLL_HIDE },
+
+    { MONS_FIRE_DRAGON,         ARM_FIRE_DRAGON_HIDE },
+    { MONS_ICE_DRAGON,          ARM_ICE_DRAGON_HIDE },
+    { MONS_STEAM_DRAGON,        ARM_STEAM_DRAGON_HIDE },
+    { MONS_MOTTLED_DRAGON,      ARM_MOTTLED_DRAGON_HIDE },
+    { MONS_STORM_DRAGON,        ARM_STORM_DRAGON_HIDE },
+    { MONS_GOLDEN_DRAGON,       ARM_GOLD_DRAGON_HIDE },
+    { MONS_SWAMP_DRAGON,        ARM_SWAMP_DRAGON_HIDE },
+    { MONS_PEARL_DRAGON,        ARM_PEARL_DRAGON_HIDE },
+    { MONS_SHADOW_DRAGON,       ARM_SHADOW_DRAGON_HIDE },
+    { MONS_QUICKSILVER_DRAGON,  ARM_QUICKSILVER_DRAGON_HIDE },
+};
+
+/**
+ * If a monster of the given type is butchered, what kind of hide can it leave?
+ *
+ * @param mc    The class of monster in question.
+ * @return      The armour_type of the given monster's hide, or NUM_ARMOURS if
+ *              the monster does not leave a hide.
+ */
+armour_type hide_for_monster(monster_type mc)
+{
+    // can't use map_find, since that returns nullptr == 0 in case of item not
+    // found, which may be a valid item enum... (currently ARM_ROBE)
+    // XXX: extend map_find to take a default return value?
+    auto it = _monster_hides.find(mons_species(mc));
+    if (it == _monster_hides.end())
+        return NUM_ARMOURS; // no hide
+    return it->second;
+}
+
+
 // Armour information and checking functions.
 bool hide2armour(item_def &item)
 {

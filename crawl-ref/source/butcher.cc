@@ -276,30 +276,8 @@ static void _create_monster_hide(const item_def corpse)
     if (corpse.props.exists(MANGLED_CORPSE_KEY))
         return;
 
-    monster_type mons_class = corpse.mon_type;
-    armour_type type;
-
-    // These values cannot be set by a reasonable formula: {dlb}
-    if (mons_genus(mons_class) == MONS_TROLL)
-        mons_class = MONS_TROLL;
-    switch (mons_class)
-    {
-        case MONS_FIRE_DRAGON:    type = ARM_FIRE_DRAGON_HIDE;    break;
-        case MONS_TROLL:          type = ARM_TROLL_HIDE;          break;
-        case MONS_ICE_DRAGON:     type = ARM_ICE_DRAGON_HIDE;     break;
-        case MONS_STEAM_DRAGON:   type = ARM_STEAM_DRAGON_HIDE;   break;
-        case MONS_MOTTLED_DRAGON: type = ARM_MOTTLED_DRAGON_HIDE; break;
-        case MONS_STORM_DRAGON:   type = ARM_STORM_DRAGON_HIDE;   break;
-        case MONS_GOLDEN_DRAGON:  type = ARM_GOLD_DRAGON_HIDE;    break;
-        case MONS_SWAMP_DRAGON:   type = ARM_SWAMP_DRAGON_HIDE;   break;
-        case MONS_PEARL_DRAGON:   type = ARM_PEARL_DRAGON_HIDE;   break;
-        case MONS_SHADOW_DRAGON:  type = ARM_SHADOW_DRAGON_HIDE;  break;
-        case MONS_QUICKSILVER_DRAGON:
-            type = ARM_QUICKSILVER_DRAGON_HIDE;
-            break;
-        default:
-            die("an unknown hide drop");
-    }
+    const armour_type type = hide_for_monster(corpse.mon_type);
+    ASSERT(type != NUM_ARMOURS);
 
     int o = items(false, OBJ_ARMOUR, type, 0);
     squash_plusses(o);

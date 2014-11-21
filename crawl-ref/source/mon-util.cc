@@ -1425,26 +1425,16 @@ bool mons_class_fast_regen(monster_type mc)
     return mons_class_flag(mc, M_FAST_REGEN);
 }
 
+/**
+ * Do monsters of the given type ever leave a hide?
+ *
+ * @param mc      The class of monster in question.
+ * @return        Whether the monster has a chance of dropping a hide when
+ *                butchered.
+ */
 bool mons_class_leaves_hide(monster_type mc)
 {
-    if (mons_genus(mc) == MONS_TROLL)
-        return true;
-    switch (mons_species(mc))
-    {
-    case MONS_FIRE_DRAGON:
-    case MONS_ICE_DRAGON:
-    case MONS_STEAM_DRAGON:
-    case MONS_MOTTLED_DRAGON:
-    case MONS_STORM_DRAGON:
-    case MONS_GOLDEN_DRAGON:
-    case MONS_SWAMP_DRAGON:
-    case MONS_PEARL_DRAGON:
-    case MONS_SHADOW_DRAGON:
-    case MONS_QUICKSILVER_DRAGON:
-        return true;
-    default:
-        return false;
-    }
+    return hide_for_monster(mc) != NUM_ARMOURS;
 }
 
 int mons_zombie_size(monster_type mc)
