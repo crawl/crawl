@@ -1380,6 +1380,7 @@ static void mpr_check_patterns(const string& message,
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
         interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
 
+#ifdef USE_SOUND
     for (const sound_mapping &sound : Options.sound_mappings)
     {
         // Maybe we should allow message channel matching as for
@@ -1390,6 +1391,7 @@ static void mpr_check_patterns(const string& message,
             break;
         }
     }
+#endif
 }
 
 static bool channel_message_history(msg_channel_type channel)
