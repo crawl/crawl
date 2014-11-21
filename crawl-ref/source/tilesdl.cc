@@ -630,7 +630,6 @@ int TilesFramework::getch_ck()
 {
     wm_event event;
     cursor_loc cur_loc;
-    cursor_loc tip_loc;
     cursor_loc last_loc;
 
     int key = 0;
@@ -646,7 +645,6 @@ int TilesFramework::getch_ck()
     unsigned int timer_id = wm->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
-    string prev_alt = m_region_msg->alt_text();
     m_region_msg->alt_text().clear();
 
     if (need_redraw())
@@ -663,36 +661,10 @@ int TilesFramework::getch_ck()
         if (wm->wait_event(&event))
         {
             ticks = wm->get_ticks();
-            if (!mouse_target_mode)
+            if (!mouse_target_mode && event.type != WME_CUSTOMEVENT)
             {
-                if (event.type != WME_CUSTOMEVENT)
-                {
-                    tiles.clear_text_tags(TAG_CELL_DESC);
-                    m_region_msg->alt_text().clear();
-                }
-
-                if (tip_loc != m_cur_loc)
-                {
-                    set_need_redraw();
-
-                    // Prevent alt. text getting displayed after a mouseclick,
-                    // only after a mouse movement. (jpeg)
-                    if (m_last_tick_moved != UINT_MAX)
-                    {
-                        m_region_msg->alt_text().clear();
-                        for (Region *reg : m_layers[m_active_layer].m_regions)
-                        {
-                            if (!reg->inside(m_mouse.x, m_mouse.y))
-                                continue;
-
-                            if (reg->update_alt_text(m_region_msg->alt_text()))
-                                break;
-                        }
-
-                        if (prev_alt != m_region_msg->alt_text())
-                            prev_alt = m_region_msg->alt_text();
-                    }
-                }
+                tiles.clear_text_tags(TAG_CELL_DESC);
+                m_region_msg->alt_text().clear();
             }
 
             switch (event.type)
@@ -772,6 +744,7 @@ int TilesFramework::getch_ck()
                     event.mouse_event.mod  = m_key_mod;
                     int mouse_key = handle_mouse(event.mouse_event);
 
+                    m_region_msg->alt_text().clear();
                     // find mouse location
                     for (Region *reg : m_layers[m_active_layer].m_regions)
                     {
@@ -780,6 +753,7 @@ int TilesFramework::getch_ck()
                         {
                             m_cur_loc.reg = reg;
                             m_cur_loc.mode = mouse_control::current_mode();
+                            reg->update_alt_text(m_region_msg->alt_text());
                             break;
                         }
                     }
@@ -852,7 +826,6 @@ int TilesFramework::getch_ck()
 
             if (timeout)
             {
-                tip_loc = m_cur_loc;
                 tiles.clear_text_tags(TAG_CELL_DESC);
                 if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
                 {
@@ -874,7 +847,6 @@ int TilesFramework::getch_ck()
                     set_need_redraw();
 
                 m_tooltip.clear();
-                tip_loc.reset();
             }
 
             if (need_redraw()
