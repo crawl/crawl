@@ -465,6 +465,8 @@ static int _god_altars[][2] =
     { GOD_RU, DNGN_ALTAR_RU },
 };
 
+COMPILE_CHECK(ARRAYSZ(_god_altars) == NUM_GODS - 1);
+
 /** Whose altar is this feature?
  *
  *  @param feat the feature.

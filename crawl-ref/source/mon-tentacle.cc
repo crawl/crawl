@@ -36,6 +36,8 @@ static monster_type _child_tentacle_to_segment[][2] =
     { MONS_STARSPAWN_TENTACLE, MONS_STARSPAWN_TENTACLE_SEGMENT },
 };
 
+COMPILE_CHECK(ARRAYSZ(_head_to_child_tentacle) == ARRAYSZ(_child_tentacle_to_segment));
+
 static monster_type _solo_tentacle_to_segment[][2] =
 {
     { MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE_SEGMENT },
