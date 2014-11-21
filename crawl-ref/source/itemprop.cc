@@ -2184,7 +2184,7 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
     // check for ego resistance
-    if (get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)
+    if (get_armour_ego_type(arm) == SPARM_SEE_INVISIBLE)
         return true;
 
     if (check_artp && is_artefact(arm))
