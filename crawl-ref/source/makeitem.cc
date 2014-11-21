@@ -91,9 +91,7 @@ void item_colour(item_def &item)
     // would be wrong if we ever try to get item colour/names directly...?)
     // possibly a todo for a later date.
 
-    const item_description_type *idesc = map_find(_type_to_idesc,
-                                                  item.base_type);
-    if (idesc)
+    if (auto idesc = map_find(_type_to_idesc, item.base_type))
         item.subtype_rnd = you.item_description[*idesc][item.sub_type];
 }
 
