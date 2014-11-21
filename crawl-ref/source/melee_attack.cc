@@ -1673,6 +1673,11 @@ void melee_attack::set_attack_verb()
             attack_verb = "shatter";
             verb_degree = "into splinters";
         }
+        else if (defender->type == MONS_GREAT_ORB_OF_EYES)
+        {
+            attack_verb = "splatter";
+            verb_degree = "into a gooey mess";
+        }
         else
         {
             const char* pierce_desc[][2] = {{"crush",   "like a grape"},
