@@ -398,10 +398,10 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_TRIDENT:
         case WPN_BARDICHE:
                                     // total weight 100
-            rc = random_choose_weighted(33, SPWPN_NORMAL,
+            rc = random_choose_weighted(36, SPWPN_NORMAL,
                                         17, SPWPN_VENOM,
-                                        12, SPWPN_VORPAL,
                                         12, SPWPN_PROTECTION,
+                                        9, SPWPN_VORPAL,
                                         7, SPWPN_FLAMING,
                                         7, SPWPN_FREEZING,
                                         5, SPWPN_VAMPIRISM,
