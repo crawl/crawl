@@ -18,11 +18,15 @@
 ######################################################
 _jewellery_animal_
 
-Magpie
-
 Firefly
 
 Scarab
+
+w:5
+Magpie
+
+w:5
+Raven
 %%%%
 _jewellery_special_name_
 
@@ -315,6 +319,8 @@ Immorality
 Amorality
 
 Untruth
+
+Spite
 %%%%
 _destiny_name_
 
@@ -408,6 +414,8 @@ the Pure
 the Peculiar
 
 the Special
+
+the First
 %%%%
 _thing_names_
 
