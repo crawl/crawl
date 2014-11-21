@@ -30,19 +30,20 @@
 void mons_att_changed(monster* mon)
 {
     const mon_attitude_type att = mon->temp_attitude();
+    const monster_type mc = mons_base_type(mon);
 
-    if (mons_is_tentacle_head(mons_base_type(mon))
-        || mon->type == MONS_ELDRITCH_TENTACLE)
+    if (mons_is_tentacle_head(mc)
+        || mons_is_solo_tentacle(mc))
     {
         for (monster_iterator mi; mi; ++mi)
             if (mi->is_child_tentacle_of(mon))
             {
                 mi->attitude = att;
-                if (mon->type != MONS_ELDRITCH_TENTACLE)
+                if (!mons_is_solo_tentacle(mc))
                 {
                     for (monster_iterator connect; connect; ++connect)
                     {
-                        if (connect->is_child_tentacle_of(mi->as_monster()))
+                        if (connect->is_child_tentacle_of(*mi))
                             connect->attitude = att;
                     }
                 }

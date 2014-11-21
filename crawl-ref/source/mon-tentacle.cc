@@ -69,13 +69,18 @@ bool mons_is_child_tentacle_segment(monster_type mc)
     return false;
 }
 
-bool mons_is_tentacle(monster_type mc)
+bool mons_is_solo_tentacle(monster_type mc)
 {
     for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
         if (mc == m[0])
             return true;
 
-    return mons_is_child_tentacle(mc);
+    return false;
+}
+
+bool mons_is_tentacle(monster_type mc)
+{
+    return mons_is_child_tentacle(mc) || mons_is_solo_tentacle(mc);
 }
 
 bool mons_is_tentacle_segment(monster_type mc)
@@ -94,16 +99,18 @@ bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
 
 monster_type mons_tentacle_parent_type(const monster* mons)
 {
+    const monster_type mc = mons_base_type(mons);
+
     for (const monster_type (&m)[2] : _head_to_child_tentacle)
-        if (mons->type == m[1])
+        if (mc == m[1])
             return m[0];
 
     for (const monster_type (&m)[2] : _child_tentacle_to_segment)
-        if (mons->type == m[1])
+        if (mc == m[1])
             return m[0];
 
     for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
-        if (mons->type == m[1])
+        if (mc == m[1])
             return m[0];
 
     return MONS_PROGRAM_BUG;
@@ -111,16 +118,18 @@ monster_type mons_tentacle_parent_type(const monster* mons)
 
 monster_type mons_tentacle_child_type(const monster* mons)
 {
+    const monster_type mc = mons_base_type(mons);
+
     for (const monster_type (&m)[2] : _head_to_child_tentacle)
-        if (mons->type == m[0])
+        if (mc == m[0])
             return m[1];
 
     for (const monster_type (&m)[2] : _child_tentacle_to_segment)
-        if (mons->type == m[0])
+        if (mc == m[0])
             return m[1];
 
     for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
-        if (mons->type == m[0])
+        if (mc == m[0])
             return m[1];
 
     return MONS_PROGRAM_BUG;
@@ -128,12 +137,12 @@ monster_type mons_tentacle_child_type(const monster* mons)
 
 bool monster::is_child_tentacle() const
 {
-    return mons_is_child_tentacle(type);
+    return mons_is_child_tentacle(mons_base_type(this));
 }
 
 bool monster::is_child_tentacle_segment() const
 {
-    return mons_is_child_tentacle_segment(type);
+    return mons_is_child_tentacle_segment(mons_base_type(this));
 }
 
 bool monster::is_child_monster() const
@@ -736,12 +745,8 @@ static int _collect_connection_data(monster* start_monster,
 
 void move_solo_tentacle(monster* tentacle)
 {
-    if (!tentacle || (tentacle->type != MONS_ELDRITCH_TENTACLE
-                      && tentacle->type != MONS_SNAPLASHER_VINE))
-    {
+    if (!tentacle || !mons_is_solo_tentacle(mons_base_type(tentacle)))
         return;
-    }
-
 
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
