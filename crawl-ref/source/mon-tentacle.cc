@@ -24,6 +24,108 @@ const int MAX_KRAKEN_TENTACLE_DIST = 12;
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
 
+static monster_type _head_to_child_tentacle[][2] =
+{
+    { MONS_KRAKEN,              MONS_KRAKEN_TENTACLE },
+    { MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE },
+};
+
+static monster_type _child_tentacle_to_segment[][2] =
+{
+    { MONS_KRAKEN_TENTACLE,    MONS_KRAKEN_TENTACLE_SEGMENT },
+    { MONS_STARSPAWN_TENTACLE, MONS_STARSPAWN_TENTACLE_SEGMENT },
+};
+
+static monster_type _solo_tentacle_to_segment[][2] =
+{
+    { MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE_SEGMENT },
+    { MONS_SNAPLASHER_VINE,   MONS_SNAPLASHER_VINE_SEGMENT },
+};
+
+bool mons_is_tentacle_head(monster_type mc)
+{
+    for (const monster_type (&m)[2] : _head_to_child_tentacle)
+        if (mc == m[0])
+            return true;
+
+    return false;
+}
+
+bool mons_is_child_tentacle(monster_type mc)
+{
+    for (const monster_type (&m)[2] : _head_to_child_tentacle)
+        if (mc == m[1])
+            return true;
+
+    return false;
+}
+
+bool mons_is_child_tentacle_segment(monster_type mc)
+{
+    for (const monster_type (&m)[2] : _child_tentacle_to_segment)
+        if (mc == m[1])
+            return true;
+
+    return false;
+}
+
+bool mons_is_tentacle(monster_type mc)
+{
+    for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
+        if (mc == m[0])
+            return true;
+
+    return mons_is_child_tentacle(mc);
+}
+
+bool mons_is_tentacle_segment(monster_type mc)
+{
+    for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
+        if (mc == m[1])
+            return true;
+
+    return mons_is_child_tentacle_segment(mc);
+}
+
+bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
+{
+    return mons_is_tentacle(mc) || mons_is_tentacle_segment(mc);
+}
+
+monster_type mons_tentacle_parent_type(const monster* mons)
+{
+    for (const monster_type (&m)[2] : _head_to_child_tentacle)
+        if (mons->type == m[1])
+            return m[0];
+
+    for (const monster_type (&m)[2] : _child_tentacle_to_segment)
+        if (mons->type == m[1])
+            return m[0];
+
+    for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
+        if (mons->type == m[1])
+            return m[0];
+
+    return MONS_PROGRAM_BUG;
+}
+
+monster_type mons_tentacle_child_type(const monster* mons)
+{
+    for (const monster_type (&m)[2] : _head_to_child_tentacle)
+        if (mons->type == m[0])
+            return m[1];
+
+    for (const monster_type (&m)[2] : _child_tentacle_to_segment)
+        if (mons->type == m[0])
+            return m[1];
+
+    for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
+        if (mons->type == m[0])
+            return m[1];
+
+    return MONS_PROGRAM_BUG;
+}
+
 bool monster::is_child_tentacle() const
 {
     return mons_is_child_tentacle(type);
@@ -49,95 +151,6 @@ bool monster::is_parent_monster_of(const monster* mons) const
 {
     return mons_base_type(this) == mons_tentacle_parent_type(mons)
            && mons->tentacle_connect == mid;
-}
-
-bool mons_is_tentacle_head(monster_type mc)
-{
-    return mc == MONS_KRAKEN || mc == MONS_TENTACLED_STARSPAWN;
-}
-
-bool mons_is_child_tentacle(monster_type mc)
-{
-    return mc == MONS_KRAKEN_TENTACLE
-        || mc == MONS_STARSPAWN_TENTACLE;
-}
-
-bool mons_is_child_tentacle_segment(monster_type mc)
-{
-    return mc == MONS_KRAKEN_TENTACLE_SEGMENT
-        || mc == MONS_STARSPAWN_TENTACLE_SEGMENT;
-}
-
-bool mons_is_tentacle(monster_type mc)
-{
-    return mc == MONS_ELDRITCH_TENTACLE
-           || mc == MONS_SNAPLASHER_VINE
-           || mons_is_child_tentacle(mc);
-}
-
-bool mons_is_tentacle_segment(monster_type mc)
-{
-    return mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-           || mc == MONS_SNAPLASHER_VINE_SEGMENT
-           || mons_is_child_tentacle_segment(mc);
-}
-
-bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
-{
-    return mons_is_tentacle(mc) || mons_is_tentacle_segment(mc);
-}
-
-static monster* _mons_get_parent_monster(monster* mons)
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->is_parent_monster_of(mons))
-            return *mi;
-    }
-
-    return NULL;
-}
-
-monster_type mons_tentacle_parent_type(const monster* mons)
-{
-    switch (mons_base_type(mons))
-    {
-        case MONS_KRAKEN_TENTACLE:
-            return MONS_KRAKEN;
-        case MONS_KRAKEN_TENTACLE_SEGMENT:
-            return MONS_KRAKEN_TENTACLE;
-        case MONS_STARSPAWN_TENTACLE:
-            return MONS_TENTACLED_STARSPAWN;
-        case MONS_STARSPAWN_TENTACLE_SEGMENT:
-            return MONS_STARSPAWN_TENTACLE;
-        case MONS_ELDRITCH_TENTACLE_SEGMENT:
-            return MONS_ELDRITCH_TENTACLE;
-        case MONS_SNAPLASHER_VINE_SEGMENT:
-            return MONS_SNAPLASHER_VINE;
-        default:
-            return MONS_PROGRAM_BUG;
-    }
-}
-
-monster_type mons_tentacle_child_type(const monster* mons)
-{
-    switch (mons_base_type(mons))
-    {
-    case MONS_KRAKEN:
-        return MONS_KRAKEN_TENTACLE;
-    case MONS_KRAKEN_TENTACLE:
-        return MONS_KRAKEN_TENTACLE_SEGMENT;
-    case MONS_TENTACLED_STARSPAWN:
-        return MONS_STARSPAWN_TENTACLE;
-    case MONS_STARSPAWN_TENTACLE:
-        return MONS_STARSPAWN_TENTACLE_SEGMENT;
-    case MONS_ELDRITCH_TENTACLE:
-        return MONS_ELDRITCH_TENTACLE_SEGMENT;
-    case MONS_SNAPLASHER_VINE:
-        return MONS_SNAPLASHER_VINE_SEGMENT;
-    default:
-        return MONS_PROGRAM_BUG;
-    }
 }
 
 //Returns whether a given monster is a tentacle segment immediately attached
@@ -1162,6 +1175,17 @@ void move_child_tentacles(monster* mons)
         tentacle->check_redraw(old_pos);
         tentacle->apply_location_effects(old_pos);
     }
+}
+
+static monster* _mons_get_parent_monster(monster* mons)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_parent_monster_of(mons))
+            return *mi;
+    }
+
+    return NULL;
 }
 
 // When given either a tentacle end or segment, kills the end and all segments
