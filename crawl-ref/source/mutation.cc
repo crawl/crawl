@@ -1349,7 +1349,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
         if (eq_type != EQ_NONE)
         {
-                for (const body_facet_def &facet : _body_facets)
+            for (const body_facet_def &facet : _body_facets)
             {
                 if (eq_type == facet.eq
                     && mutat != facet.mut
@@ -2211,10 +2211,8 @@ static bool _works_at_tier(const facet_def& facet, int tier)
 static bool _slot_is_unique(const mutation_type (&mut)[MUTS_IN_SLOT],
                             set<const facet_def *> facets_used)
 {
-    set<const facet_def *>::const_iterator iter;
     set<equipment_type> eq;
 
-    int k = 0;
     // find the equipment slot(s) used by mut
     for (const body_facet_def &facet : _body_facets)
     {
@@ -2223,7 +2221,7 @@ static bool _slot_is_unique(const mutation_type (&mut)[MUTS_IN_SLOT],
                 eq.insert(facet.eq);
     }
 
-    if (k == 0)
+    if (eq.size() == 0)
         return true;
 
     for (const facet_def *used : facets_used)
