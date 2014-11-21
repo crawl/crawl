@@ -17,6 +17,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h" // map_find
 #include "spl-book.h"
 #include "state.h"
 #include "stepdown.h"
@@ -54,6 +55,15 @@ bool got_curare_roll(const int item_level)
                          (364 - 7 * item_level) / 25);
 }
 
+/// A mapping from randomly-described object types to their per-game descript
+static map<object_class_type, item_description_type> _type_to_idesc = {
+    {OBJ_WANDS, IDESC_WANDS},
+    {OBJ_POTIONS, IDESC_POTIONS},
+    {OBJ_JEWELLERY, IDESC_RINGS},
+    {OBJ_SCROLLS, IDESC_SCROLLS},
+    {OBJ_STAVES, IDESC_STAVES},
+};
+
 /**
  * Initialize the randomized appearance of a given item.
  *
@@ -81,32 +91,10 @@ void item_colour(item_def &item)
     // would be wrong if we ever try to get item colour/names directly...?)
     // possibly a todo for a later date.
 
-    // TODO: move this into a lookup table
-    switch (item.base_type)
-    {
-    case OBJ_WANDS:
-        item.subtype_rnd = you.item_description[IDESC_WANDS][item.sub_type];
-        break;
-
-    case OBJ_POTIONS:
-        item.subtype_rnd = you.item_description[IDESC_POTIONS][item.sub_type];
-        break;
-
-    case OBJ_JEWELLERY:
-        item.subtype_rnd = you.item_description[IDESC_RINGS][item.sub_type];
-        break;
-
-    case OBJ_SCROLLS:
-        item.subtype_rnd = you.item_description[IDESC_SCROLLS][item.sub_type];
-        break;
-
-    case OBJ_STAVES:
-        item.subtype_rnd = you.item_description[IDESC_STAVES][item.sub_type];
-        break;
-
-    default:
-        break;
-    }
+    const item_description_type *idesc = map_find(_type_to_idesc,
+                                                  item.base_type);
+    if (idesc)
+        item.subtype_rnd = you.item_description[*idesc][item.sub_type];
 }
 
 // Does Xom consider an item boring?
