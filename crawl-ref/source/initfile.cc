@@ -1197,7 +1197,7 @@ static int read_symbol(string s)
     }
 
     char *tail;
-    return -strtoul(s.c_str(), &tail, base);
+    return strtoul(s.c_str(), &tail, base);
 }
 
 void game_options::set_fire_order(const string &s, bool append, bool prepend)
