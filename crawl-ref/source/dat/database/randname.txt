@@ -910,7 +910,7 @@ lapis lazuli
 glass
 
 w:2
-spider web
+gossamer
 %%%%
 _amulet material_
 
