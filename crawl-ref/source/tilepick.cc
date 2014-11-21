@@ -3749,6 +3749,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BOULDER_BEETLE;
     case MONS_BORING_BEETLE:
         return TILE_CORPSE_BORING_BEETLE;
+    case MONS_DEATH_SCARAB:
+        return TILE_CORPSE_DEATH_SCARAB;
 
     // giants ('C')
     case MONS_HILL_GIANT:
