@@ -454,8 +454,8 @@ bool mons_is_immotile(const monster* mons);
 
 int get_dist_to_nearest_monster();
 bool monster_nearby();
-actor *actor_by_mid(mid_t m);
-monster *monster_by_mid(mid_t m);
+actor *actor_by_mid(mid_t m, bool require_valid = false);
+monster *monster_by_mid(mid_t m, bool require_valid = false);
 bool mons_is_recallable(actor* caller, monster* targ);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);

@@ -4435,19 +4435,22 @@ bool monster_nearby()
     return false;
 }
 
-actor *actor_by_mid(mid_t m)
+actor *actor_by_mid(mid_t m, bool require_valid)
 {
     if (m == MID_PLAYER)
         return &you;
-    return monster_by_mid(m);
+    return monster_by_mid(m, require_valid);
 }
 
-monster *monster_by_mid(mid_t m)
+monster *monster_by_mid(mid_t m, bool require_valid)
 {
-    if (m == MID_ANON_FRIEND)
-        return &menv[ANON_FRIENDLY_MONSTER];
-    if (m == MID_YOU_FAULTLESS)
-        return &menv[YOU_FAULTLESS];
+    if (!require_valid)
+    {
+        if (m == MID_ANON_FRIEND)
+            return &menv[ANON_FRIENDLY_MONSTER];
+        if (m == MID_YOU_FAULTLESS)
+            return &menv[YOU_FAULTLESS];
+    }
 
     if (unsigned short *mc = map_find(env.mid_cache, m))
         return &menv[*mc];
