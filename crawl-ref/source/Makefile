@@ -18,6 +18,8 @@
 # Typical parameters:
 #    TILES         -- set to anything to enable tiles build
 #
+#    SOUND         -- set to anything to enable sound
+#
 #    CROSSHOST     -- target system, eg, i386-pc-msdosdjgpp or i586-mingw32msvc
 #
 #    prefix        -- installation base.  Specify eg. /usr/local on Unix systems.
@@ -192,6 +194,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
 	BUILD_ZLIB = YesPlease
+	SOUND = YesPlease
 	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
@@ -218,7 +221,11 @@ ifeq ($(uname_S),Darwin)
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL2 = YesPlease
 		BUILD_SDL2IMAGE = YesPlease
-		BUILD_SDL2MIXER = YesPlease
+		ifdef SOUND
+			ifndef WIN32 
+				BUILD_SDL2MIXER = YesPlease
+			endif
+		endif
 		BUILD_LIBPNG = YesPlease
 		COPY_FONTS = yes
 	endif
@@ -237,7 +244,11 @@ ifdef BUILD_ALL
 	BUILD_PCRE = YesPlease
 	BUILD_SDL2 = YesPlease
 	BUILD_SDL2IMAGE = YesPlease
-	BUILD_SDL2MIXER = YesPlease
+	ifdef SOUND
+		ifndef WIN32 
+			BUILD_SDL2MIXER = YesPlease
+		endif
+	endif
 	BUILD_SQLITE = YesPlease
 	BUILD_LUA = YesPlease
 	BUILD_LIBPNG = YesPlease
@@ -593,6 +604,7 @@ ifdef ANDROID
   GLES=Y
   TOUCH_UI=Y
   TILES=Y
+  SOUND=Y
   SAVEDIR="/sdcard/Android/data/org.develz.crawl/saves/"
 else
 
@@ -707,7 +719,12 @@ SDL2_INCLUDE := $(shell $(PKGCONFIG) sdl2 --cflags-only-I | sed -e 's/-I/-isyste
 SDL2_CFLAGS  := $(shell $(PKGCONFIG) sdl2 --cflags-only-other)
 SDL2_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sdl2 --libs-only-l)
 
-LIBS += -lSDL2_image -lSDL2_mixer $(SDL2_LDFLAGS) $(FREETYPE_LDFLAGS)
+ifdef SOUND
+ifndef WIN32 
+LIBS += -lSDL2_mixer
+endif
+endif
+LIBS += -lSDL2_image $(SDL2_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
@@ -725,6 +742,10 @@ DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL2_CFLAGS)
 INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL2_INCLUDE)
 
 endif # TILES
+
+ifdef SOUND
+DEFINES_L += -DUSE_SOUND
+endif
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
 CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
