@@ -3409,7 +3409,7 @@ static void _move_player(coord_def move)
     else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
-            beholder->name(DESC_THE, true).c_str());
+            beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
