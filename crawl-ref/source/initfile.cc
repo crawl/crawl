@@ -17,6 +17,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <set>
 #include <string>
 
 #include "chardump.h"
@@ -1229,24 +1230,32 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
 
 static monster_type _mons_class_by_string(const string &name)
 {
-    // If one character, this is a monster letter.
-    ucs_t letter = -1;
-    if (name.length() == 1)
-        letter = name[0];
-
+    const string match = lowercase_string(name);
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
             continue;
 
-        if ((ucs_t) me->basechar == letter
-              || lowercase_string(me->name) == lowercase_string(name))
-        {
+        if (lowercase_string(me->name) == match)
             return i;
-        }
     }
     return MONS_0;
+}
+
+static set<monster_type> _mons_classes_by_glyph(const char letter)
+{
+    set<monster_type> matches;
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
+    {
+        const monsterentry *me = get_monster_data(i);
+        if (!me || me->mc == MONS_PROGRAM_BUG)
+            continue;
+
+        if (me->basechar == letter)
+            matches.insert(i);
+    }
+    return matches;
 }
 
 cglyph_t game_options::parse_mon_glyph(const string &s) const
@@ -1272,10 +1281,18 @@ void game_options::add_mon_glyph_override(const string &text)
     if (override.size() != 2u)
         return;
 
-    const monster_type m = _mons_class_by_string(override[0]);
-    if (m == MONS_0) {
-        report_error("Unknown monster: \"%s\"", text.c_str());
-        return;
+    set<monster_type> matches;
+    if (override[0].length() == 1)
+        matches = _mons_classes_by_glyph(override[0][0]);
+    else
+    {
+        const monster_type m = _mons_class_by_string(override[0]);
+        if (m == MONS_0)
+        {
+            report_error("Unknown monster: \"%s\"", text.c_str());
+            return;
+        }
+        matches.insert(m);
     }
 
     cglyph_t mdisp;
@@ -1292,7 +1309,8 @@ void game_options::add_mon_glyph_override(const string &text)
         mdisp = parse_mon_glyph(override[1]);
 
     if (mdisp.ch || mdisp.col)
-        mon_glyph_overrides[m] = mdisp;
+        for (monster_type m : matches)
+            mon_glyph_overrides[m] = mdisp;
 }
 
 void game_options::add_item_glyph_override(const string &text)
