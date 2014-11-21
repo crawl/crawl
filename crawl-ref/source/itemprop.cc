@@ -975,63 +975,64 @@ armour_type hide_for_monster(monster_type mc)
     return it->second;
 }
 
+// in principle, you can imagine specifying something that would generate this
+// & _monster_hides from a set of { monster_type, hide_type, armour_type }
+// triples. possibly loading from a file? ideally in a way that's nicer than
+// the horror that is art-data.*
+
+/// A map between hide & armour types.
+static map<armour_type, armour_type> _hide_armours = {
+    { ARM_TROLL_HIDE,               ARM_TROLL_LEATHER_ARMOUR },
+    { ARM_FIRE_DRAGON_HIDE,         ARM_FIRE_DRAGON_ARMOUR },
+    { ARM_ICE_DRAGON_HIDE,          ARM_ICE_DRAGON_ARMOUR },
+    { ARM_STEAM_DRAGON_HIDE,        ARM_STEAM_DRAGON_ARMOUR },
+    { ARM_MOTTLED_DRAGON_HIDE,      ARM_MOTTLED_DRAGON_ARMOUR },
+    { ARM_STORM_DRAGON_HIDE,        ARM_STORM_DRAGON_ARMOUR },
+    { ARM_GOLD_DRAGON_HIDE,         ARM_GOLD_DRAGON_ARMOUR },
+    { ARM_SWAMP_DRAGON_HIDE,        ARM_SWAMP_DRAGON_ARMOUR },
+    { ARM_PEARL_DRAGON_HIDE,        ARM_PEARL_DRAGON_ARMOUR },
+    { ARM_SHADOW_DRAGON_HIDE,       ARM_SHADOW_DRAGON_ARMOUR },
+    { ARM_QUICKSILVER_DRAGON_HIDE,  ARM_QUICKSILVER_DRAGON_ARMOUR },
+};
+
+/**
+ * If a hide of the given type is enchanted, what kind of armour will it turn
+ * into?
+ *
+ * @param hide_type     The type of hide armour in question.
+ * @return              The corresponding enchanted armour, or NUM_ARMOURS if
+ *                      the given armour does not change types when enchanted.
+ */
+armour_type armour_for_hide(armour_type hide_type)
+{
+    // can't use map_find, since that returns nullptr == 0 in case of item not
+    // found, which may be a valid item enum... (currently ARM_ROBE)
+    // XXX: extend map_find to take a default return value?
+    auto it = _hide_armours.find(hide_type);
+    if (it == _hide_armours.end())
+        return NUM_ARMOURS; // no hide
+    return it->second;
+}
 
 // Armour information and checking functions.
+
+/**
+ * Attempt to turn a piece of armour into a new type upon enchanting it.
+ *
+ * @param item      The armour being enchanted.
+ * @return          Whether the armour was transformed.
+ */
 bool hide2armour(item_def &item)
 {
     if (item.base_type != OBJ_ARMOUR)
         return false;
 
-    switch (item.sub_type)
-    {
-    default:
+    const armour_type new_type = armour_for_hide(static_cast<armour_type>
+                                                 (item.sub_type));
+    if (new_type == NUM_ARMOURS)
         return false;
 
-    case ARM_FIRE_DRAGON_HIDE:
-        item.sub_type = ARM_FIRE_DRAGON_ARMOUR;
-        break;
-
-    case ARM_TROLL_HIDE:
-        item.sub_type = ARM_TROLL_LEATHER_ARMOUR;
-        break;
-
-    case ARM_ICE_DRAGON_HIDE:
-        item.sub_type = ARM_ICE_DRAGON_ARMOUR;
-        break;
-
-    case ARM_MOTTLED_DRAGON_HIDE:
-        item.sub_type = ARM_MOTTLED_DRAGON_ARMOUR;
-        break;
-
-    case ARM_STORM_DRAGON_HIDE:
-        item.sub_type = ARM_STORM_DRAGON_ARMOUR;
-        break;
-
-    case ARM_GOLD_DRAGON_HIDE:
-        item.sub_type = ARM_GOLD_DRAGON_ARMOUR;
-        break;
-
-    case ARM_SWAMP_DRAGON_HIDE:
-        item.sub_type = ARM_SWAMP_DRAGON_ARMOUR;
-        break;
-
-    case ARM_STEAM_DRAGON_HIDE:
-        item.sub_type = ARM_STEAM_DRAGON_ARMOUR;
-        break;
-
-    case ARM_PEARL_DRAGON_HIDE:
-        item.sub_type = ARM_PEARL_DRAGON_ARMOUR;
-        break;
-
-    case ARM_SHADOW_DRAGON_HIDE:
-        item.sub_type = ARM_SHADOW_DRAGON_ARMOUR;
-        break;
-
-    case ARM_QUICKSILVER_DRAGON_HIDE:
-        item.sub_type = ARM_QUICKSILVER_DRAGON_ARMOUR;
-        break;
-    }
-
+    item.sub_type = new_type;
     return true;
 }
 
