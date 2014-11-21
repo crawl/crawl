@@ -35,6 +35,9 @@
 
 WindowManager *wm = NULL;
 
+#define MIN_SDL_WINDOW_SIZE_X 800
+#define MIN_SDL_WINDOW_SIZE_Y 480
+
 void WindowManager::create()
 {
     if (wm)
@@ -410,8 +413,8 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
         m_windowsz->x = x;
         m_windowsz->y = y;
 #else
-        m_windowsz->x = max(800, x);
-        m_windowsz->y = max(480, y);
+        m_windowsz->x = max(MIN_SDL_WINDOW_SIZE_X, x);
+        m_windowsz->y = max(MIN_SDL_WINDOW_SIZE_Y, y);
 #endif
 
 #ifdef TARGET_OS_WINDOWS
@@ -461,6 +464,8 @@ int SDLWrapper::init(coord_def *m_windowsz, int *densityNum, int *densityDen)
     SDL_GL_GetDrawableSize(m_window, &x, &y);
     *densityNum = x;
     *densityDen = m_windowsz->x;
+    SDL_SetWindowMinimumSize(m_window, MIN_SDL_WINDOW_SIZE_X,
+                             MIN_SDL_WINDOW_SIZE_Y);
     return true;
 }
 
