@@ -35,31 +35,25 @@ local function visit_branch_end_from(start, stair_places, final_predicate)
     local downstairs = { }
     crawl.message('4')
     for y = 1, dgn.GYM - 2 do
-      crawl.message('5')
       for x = 1, dgn.GXM - 2 do
         local dfeat = dgn.grid(x, y)
         if not junk_feat_fn(dfeat) then
           crawl.message('8')
           for _, place in ipairs(stair_places) do
-            crawl.message('9')
             if dfeat == place[1] then
               crawl.message('10')
               return visit_branch_end_from(place[2], stair_places,
                                            final_predicate)
             end
-            crawl.message('12')
           end
-          crawl.message('13')
 
           if test.is_down_stair(dfeat) then
             crawl.message('14')
             table.insert(downstairs, dgn.point(x, y))
             crawl.message('15')
           end
-          crawl.message('16')
         end
       end
-      crawl.message('18')
     end
     crawl.message('19')
 
