@@ -158,7 +158,7 @@ static const cloud_data clouds[] = {
       ETC_MAGIC,                                // colour
     },
     // CLOUD_TORNADO,
-    { "ranging winds", NULL,                    // terse, verbose name
+    { "raging winds", NULL,                     // terse, verbose name
       ETC_TORNADO,                              // colour
     },
     // CLOUD_DUST_TRAIL,
