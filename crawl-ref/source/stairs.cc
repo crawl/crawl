@@ -944,7 +944,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         const branch_type branch = you.where_are_you;
 
         // Entered a branch (including portals) through the front door.
-        if (stair_taken == branches[you.where_are_you].entry_stairs)
+        if (stair_taken == branches[branch].entry_stairs)
         {
             if (branches[branch].entry_message)
                 mpr(branches[branch].entry_message);
