@@ -1520,10 +1520,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     // Build the final description string.
     if (!suffixes.empty())
     {
-        // There's Gotta Be A Better Way
-        if (!text.empty() && text[text.size() - 1] != ' ')
-            text += " ";
-        text += "("
+        text += " ("
             + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
             + ")";
     }
@@ -3553,8 +3550,8 @@ string get_monster_equipment_desc(const monster_info& mi,
                                                 item_descriptions.end());
 
     if (!item_description.empty() && !desc.empty())
-        desc += ",";
-    return desc + " " + item_description;
+        desc += ", ";
+    return desc + item_description;
 }
 
 static bool _print_cloud_desc(const coord_def where)
