@@ -2742,10 +2742,7 @@ void xlog_fields::add_field(const string &key, const char *format, ...)
 
 string xlog_fields::str_field(const string &s) const
 {
-    if (string *value = map_find(fieldmap, s))
-        return *value;
-    else
-        return "";
+    return lookup(fieldmap, s, "");
 }
 
 int xlog_fields::int_field(const string &s) const

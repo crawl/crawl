@@ -4939,12 +4939,7 @@ bool game_options::o_bool(const char *name, bool def) const
 
 string game_options::o_str(const char *name, const char *def) const
 {
-    string val;
-    if (const string *value = map_find(named_options, name))
-        val = *value;
-    else if (def)
-        val = def;
-    return val;
+    return lookup(named_options, name, def ? def : "");
 }
 
 int game_options::o_colour(const char *name, int def) const
