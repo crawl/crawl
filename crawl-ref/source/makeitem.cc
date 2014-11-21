@@ -397,33 +397,33 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_SCYTHE:
         case WPN_TRIDENT:
         case WPN_BARDICHE:
-            if (one_chance_in(30))
-                rc = SPWPN_HOLY_WRATH;
+                                    // total weight 100
+            rc = random_choose_weighted(33, SPWPN_NORMAL,
+                                        17, SPWPN_VENOM,
+                                        12, SPWPN_VORPAL,
+                                        12, SPWPN_PROTECTION,
+                                        7, SPWPN_FLAMING,
+                                        7, SPWPN_FREEZING,
+                                        5, SPWPN_VAMPIRISM,
+                                        2, SPWPN_DISTORTION,
+                                        2, SPWPN_PAIN,
+                                        2, SPWPN_ANTIMAGIC,
+                                        1, SPWPN_HOLY_WRATH,
+                                        0);
+            break;
 
-            if (one_chance_in(4))
-                rc = SPWPN_PROTECTION;
-            // **** intentional fall through here ****
         case WPN_SPEAR:
-            if (one_chance_in(25))
-                rc = SPWPN_ANTIMAGIC;
-
-            if (one_chance_in(25))
-                rc = SPWPN_PAIN;
-
-            if (one_chance_in(10))
-                rc = SPWPN_VAMPIRISM;
-
-            if (one_chance_in(25))
-                rc = SPWPN_DISTORTION;
-
-            if (one_chance_in(5) && (rc == SPWPN_NORMAL || one_chance_in(6)))
-                rc = SPWPN_VORPAL;
-
-            if (one_chance_in(6))
-                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
-
-            if (one_chance_in(6))
-                rc = SPWPN_VENOM;
+                                    // total weight 100
+            rc = random_choose_weighted(46, SPWPN_NORMAL,
+                                        17, SPWPN_VENOM,
+                                        12, SPWPN_VORPAL,
+                                         7, SPWPN_FLAMING,
+                                         7, SPWPN_FREEZING,
+                                         5, SPWPN_VAMPIRISM,
+                                         2, SPWPN_DISTORTION,
+                                         2, SPWPN_PAIN,
+                                         2, SPWPN_ANTIMAGIC,
+                                         0);
             break;
 
         case WPN_HUNTING_SLING:
