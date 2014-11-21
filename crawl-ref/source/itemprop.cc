@@ -21,6 +21,7 @@
 #include "invent.h"
 #include "items.h"
 #include "item_use.h"
+#include "libutil.h" // map_find
 #include "message.h"
 #include "misc.h"
 #include "notes.h"
@@ -966,13 +967,9 @@ static map<monster_type, armour_type> _monster_hides = {
  */
 armour_type hide_for_monster(monster_type mc)
 {
-    // can't use map_find, since that returns nullptr == 0 in case of item not
-    // found, which may be a valid item enum... (currently ARM_ROBE)
-    // XXX: extend map_find to take a default return value?
-    auto it = _monster_hides.find(mons_species(mc));
-    if (it == _monster_hides.end())
-        return NUM_ARMOURS; // no hide
-    return it->second;
+    if (const armour_type *type = map_find(_monster_hides, mons_species(mc)))
+        return *type;
+    return NUM_ARMOURS; // no hide
 }
 
 // in principle, you can imagine specifying something that would generate this
@@ -1005,13 +1002,9 @@ static map<armour_type, armour_type> _hide_armours = {
  */
 armour_type armour_for_hide(armour_type hide_type)
 {
-    // can't use map_find, since that returns nullptr == 0 in case of item not
-    // found, which may be a valid item enum... (currently ARM_ROBE)
-    // XXX: extend map_find to take a default return value?
-    auto it = _hide_armours.find(hide_type);
-    if (it == _hide_armours.end())
-        return NUM_ARMOURS; // no hide
-    return it->second;
+    if (const armour_type *type = map_find(_hide_armours, hide_type))
+        return *type;
+    return NUM_ARMOURS; // no hide
 }
 
 // Armour information and checking functions.
