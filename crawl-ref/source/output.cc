@@ -529,6 +529,9 @@ void update_message_status()
 
 void update_turn_count()
 {
+    if (crawl_state.game_is_arena())
+        return;
+
     // Don't update turn counter when running/resting/traveling to
     // prevent pointless screen updates.
     if (you.running > 0
