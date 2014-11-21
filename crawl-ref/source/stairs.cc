@@ -939,15 +939,22 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         _exit_stair_message(stair_find);
 
     // Did we enter a new branch.
-    if (!player_in_branch(old_level.branch)
-        && parent_branch(you.where_are_you) == old_level.branch)
+    if (!player_in_branch(old_level.branch))
     {
         const branch_type branch = you.where_are_you;
-        if (branches[branch].entry_message)
-            mpr(branches[branch].entry_message);
-        else
-            mprf("Welcome to %s!", branches[branch].longname);
-        enter_branch(branch, old_level);
+
+        // Entered a branch (including portals) through the front door.
+        if (stair_taken == branches[you.where_are_you].entry_stairs)
+        {
+            if (branches[branch].entry_message)
+                mpr(branches[branch].entry_message);
+            else
+                mprf("Welcome to %s!", branches[branch].longname);
+        }
+
+        // Entered a regular (non-portal) branch from above.
+        if (parent_branch(branch) == old_level.branch)
+            enter_branch(branch, old_level);
     }
 
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
