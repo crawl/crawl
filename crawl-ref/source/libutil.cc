@@ -40,7 +40,7 @@
     #include <sys/resource.h>
 #endif
 
-#if defined(USE_SDL) && !defined(WINMM_PLAY_SOUNDS)
+#if defined(USE_SOUND) && defined(USE_SDL) && !defined(WINMM_PLAY_SOUNDS)
     #ifdef __ANDROID__
         #include <SDL_mixer.h>
     #else
@@ -107,6 +107,7 @@ bool shell_safe(const char *file)
     return match < 0 || !file[match];
 }
 
+#ifdef USE_SOUND
 void play_sound(const char *file)
 {
 #if defined(WINMM_PLAY_SOUNDS)
@@ -132,6 +133,7 @@ void play_sound(const char *file)
     Mix_PlayChannel(0, sdl_sound_to_play, 0);
 #endif
 }
+#endif
 
 bool key_is_escape(int key)
 {

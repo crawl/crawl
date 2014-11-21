@@ -19,7 +19,7 @@
 #  include <SDL2/SDL.h>
 # endif
 # include <SDL2/SDL_image.h>
-# ifndef WINMM_PLAY_SOUNDS
+# if defined(USE_SOUND) && !defined(WINMM_PLAY_SOUNDS)
 #  include <SDL2/SDL_mixer.h>
 # endif
 #endif
@@ -41,7 +41,7 @@ void WindowManager::create()
         return;
 
     wm = new SDLWrapper();
-#ifndef WINMM_PLAY_SOUNDS
+#if defined(USE_SOUND) && !defined(WINMM_PLAY_SOUNDS)
     Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
 #endif
@@ -51,7 +51,7 @@ void WindowManager::shutdown()
 {
     delete wm;
     wm = NULL;
-#ifndef WINMM_PLAY_SOUNDS
+#if defined(USE_SOUND) && !defined(WINMM_PLAY_SOUNDS)
     Mix_CloseAudio();
     while (Mix_Init(0))
         Mix_Quit();
