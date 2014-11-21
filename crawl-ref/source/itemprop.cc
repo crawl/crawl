@@ -967,9 +967,7 @@ static map<monster_type, armour_type> _monster_hides = {
  */
 armour_type hide_for_monster(monster_type mc)
 {
-    if (const armour_type *type = map_find(_monster_hides, mons_species(mc)))
-        return *type;
-    return NUM_ARMOURS; // no hide
+    return lookup(_monster_hides, mons_species(mc), NUM_ARMOURS);
 }
 
 // in principle, you can imagine specifying something that would generate this
@@ -1002,9 +1000,7 @@ static map<armour_type, armour_type> _hide_armours = {
  */
 armour_type armour_for_hide(armour_type hide_type)
 {
-    if (const armour_type *type = map_find(_hide_armours, hide_type))
-        return *type;
-    return NUM_ARMOURS; // no hide
+    return lookup(_hide_armours, hide_type, NUM_ARMOURS);
 }
 
 // Armour information and checking functions.
