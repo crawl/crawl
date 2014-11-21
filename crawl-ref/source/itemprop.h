@@ -57,6 +57,7 @@ bool jewellery_is_amulet(const item_def &item) PURE;
 bool jewellery_is_amulet(int sub_type) IMMUTABLE;
 
 armour_type hide_for_monster(monster_type mc) PURE;
+armour_type armour_for_hide(armour_type hide_type) PURE;
 bool  hide2armour(item_def &item);
 
 int   fit_armour_size(const item_def &item, size_type size) PURE;
