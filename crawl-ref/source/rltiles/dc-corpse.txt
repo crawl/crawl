@@ -116,8 +116,11 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 goliath_beetle CORPSE_GOLIATH_BEETLE
 boring_beetle CORPSE_BORING_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
+%sdir mon/undead
+death_scarab CORPSE_DEATH_SCARAB
 
 ## Frogs ('F')
+%sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 giant_frog CORPSE_GIANT_FROG
 blink_frog CORPSE_BLINK_FROG
