@@ -253,10 +253,26 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_CHARM:
     case ENCH_BRIBED:
     case ENCH_PERMA_BRIBED:
-    case ENCH_HEXED:
+    case ENCH_HEXED: {
         behaviour = BEH_SEEK;
-        target    = you.pos();
-        foe       = MHITYOU;
+
+        actor *source_actor = actor_by_mid(ench.source, true);
+        if (!source_actor)
+        {
+            target = pos();
+            foe = MHITNOT;
+        }
+        else if (source_actor->is_player())
+        {
+            target = you.pos();
+            foe = MHITYOU;
+        }
+        else
+        {
+            actor *foe_actor = &menv[source_actor->as_monster()->foe];
+            target = foe_actor ? foe_actor->pos() : pos();
+            foe = source_actor->as_monster()->foe;
+        }
 
         if (is_patrolling())
         {
@@ -292,6 +308,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         if (you.can_see(this) && friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
+    }
 
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
