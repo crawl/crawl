@@ -1065,44 +1065,42 @@ int armour_max_enchant(const item_def &item)
     return max_plus;
 }
 
-// Doesn't include animal skin (only skins we can make and enchant).
+/**
+ * Find the set of all armours made from hides.
+ */
+static set<armour_type> _make_hide_armour_set()
+{
+    set<armour_type> _hide_armour_set;
+    // iter over armours created from hides
+    for (auto it: _hide_armours)
+        _hide_armour_set.insert(it.second);
+    return _hide_armour_set;
+}
+static set<armour_type> _hide_armour_set = _make_hide_armour_set();
+
+/**
+ * Is the given armour a type that changes when enchanted (i.e. dragon or troll
+ * hide?
+ *
+ * @param item      The armour in question.
+ * @param inc_made  Whether to also accept armour that has already been
+ *                  enchanted & transformed (e.g. fda in addition to fire
+ *                  dragon hides, etc)
+ * @return          Whether the given item is (or was?) a hide.
+ *                  (Note that ARM_ANIMAL_SKIN cannot be enchanted & so doesn't
+ *                  count.)
+ */
 bool armour_is_hide(const item_def &item, bool inc_made)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    switch (item.sub_type)
-    {
-    case ARM_TROLL_LEATHER_ARMOUR:
-    case ARM_FIRE_DRAGON_ARMOUR:
-    case ARM_ICE_DRAGON_ARMOUR:
-    case ARM_STEAM_DRAGON_ARMOUR:
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-    case ARM_STORM_DRAGON_ARMOUR:
-    case ARM_GOLD_DRAGON_ARMOUR:
-    case ARM_SWAMP_DRAGON_ARMOUR:
-    case ARM_PEARL_DRAGON_ARMOUR:
-    case ARM_SHADOW_DRAGON_ARMOUR:
-    case ARM_QUICKSILVER_DRAGON_ARMOUR:
-        return inc_made;
+    const armour_type type = static_cast<armour_type>(item.sub_type);
 
-    case ARM_TROLL_HIDE:
-    case ARM_FIRE_DRAGON_HIDE:
-    case ARM_ICE_DRAGON_HIDE:
-    case ARM_STEAM_DRAGON_HIDE:
-    case ARM_MOTTLED_DRAGON_HIDE:
-    case ARM_STORM_DRAGON_HIDE:
-    case ARM_GOLD_DRAGON_HIDE:
-    case ARM_SWAMP_DRAGON_HIDE:
-    case ARM_PEARL_DRAGON_HIDE:
-    case ARM_SHADOW_DRAGON_HIDE:
-    case ARM_QUICKSILVER_DRAGON_HIDE:
+    // actual hides?
+    if (_hide_armours.count(type))
         return true;
-
-    default:
-        break;
-    }
-
-    return false;
+    // armour made from hides?
+    return inc_made && _hide_armour_set.count(type);
 }
 
 /**
