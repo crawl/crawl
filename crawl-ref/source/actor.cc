@@ -484,10 +484,9 @@ void actor::clear_constricted()
 
 // End my constriction of i->first, but don't yet update my constricting map,
 // so as not to invalidate i.
-void actor::end_constriction(actor::constricting_t::iterator i,
-                             bool intentional, bool quiet)
+void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
 {
-    actor *const constrictee = actor_by_mid(i->first);
+    actor *const constrictee = actor_by_mid(whom);
 
     if (!constrictee)
         return;
@@ -514,7 +513,7 @@ void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
 
     if (i != constricting->end())
     {
-        end_constriction(i, intentional, quiet);
+        end_constriction(whom, intentional, quiet);
         constricting->erase(i);
 
         if (constricting->empty())
@@ -533,7 +532,7 @@ void actor::stop_constricting_all(bool intentional, bool quiet)
     constricting_t::iterator i;
 
     for (i = constricting->begin(); i != constricting->end(); ++i)
-        end_constriction(i, intentional, quiet);
+        end_constriction(i->first, intentional, quiet);
 
     delete constricting;
     constricting = 0;

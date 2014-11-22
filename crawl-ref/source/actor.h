@@ -442,9 +442,8 @@ public:
 
     string resist_margin_phrase(int margin) const;
 
-protected:
-    void end_constriction(constricting_t::iterator i, bool intentional,
-                          bool quiet);
+private:
+    void end_constriction(mid_t whom, bool intentional, bool quiet);
 };
 
 bool actor_slime_wall_immune(const actor *actor);
