@@ -269,9 +269,11 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         }
         else
         {
-            actor *foe_actor = &menv[source_actor->as_monster()->foe];
-            target = foe_actor ? foe_actor->pos() : pos();
             foe = source_actor->as_monster()->foe;
+            if (foe == MHITYOU)
+                target = you.pos();
+            else if (foe != MHITNOT)
+                target = menv[source_actor->as_monster()->foe].pos();
         }
 
         if (is_patrolling())
