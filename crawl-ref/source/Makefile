@@ -711,13 +711,17 @@ ifndef NO_PKGCONFIG
 # the contributing libraries are located.
 #
 
+ifndef BUILD_FREETYPE
 FREETYPE_INCLUDE := $(shell $(PKGCONFIG) freetype2 --cflags-only-I | sed -e 's/-I/-isystem /' )
 FREETYPE_CFLAGS  := $(shell $(PKGCONFIG) freetype2 --cflags-only-other)
 FREETYPE_LDFLAGS := $(shell $(PKGCONFIG) freetype2 --libs-only-L) $(shell $(PKGCONFIG) freetype2 --libs-only-l)
+endif
 
+ifndef BUILD_SDL2
 SDL2_INCLUDE := $(shell $(PKGCONFIG) sdl2 --cflags-only-I | sed -e 's/-I/-isystem /')
 SDL2_CFLAGS  := $(shell $(PKGCONFIG) sdl2 --cflags-only-other)
 SDL2_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sdl2 --libs-only-l)
+endif
 
 ifdef SOUND
 ifndef WIN32 
