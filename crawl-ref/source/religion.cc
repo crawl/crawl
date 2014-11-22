@@ -1966,7 +1966,7 @@ bool do_god_gift(bool forced)
                             if (offers.size() > 2)
                                 prompt += ",";
                             prompt += " ";
-                            set<spell_type>::iterator next = it;
+                            auto next = it;
                             next++;
                             if (next == offers.end())
                                 prompt += "and ";

@@ -2,6 +2,7 @@
 #define RANDOM_H
 
 #include <algorithm>  // shuffle
+#include <iterator>   // advance
 #include <map>
 #include <vector>
 
@@ -45,6 +46,15 @@ T random_choose(T first, Ts... rest)
 {
     const T elts[] = { first, rest... };
     return elts[random2(1 + sizeof...(rest))];
+}
+
+template <typename C>
+auto random_iterator(C &container) -> decltype(container.begin())
+{
+    int pos = random2(container.size());
+    auto it = container.begin();
+    advance(it, pos);
+    return it;
 }
 
 template <typename T>

@@ -1506,12 +1506,7 @@ dungeon_feature_type feat_by_desc(string desc)
     if (desc[desc.size() - 1] != '.')
         desc += ".";
 
-    feat_desc_map::iterator i = feat_desc_cache.find(desc);
-
-    if (i != feat_desc_cache.end())
-        return i->second;
-
-    return DNGN_UNSEEN;
+    return lookup(feat_desc_cache, desc, DNGN_UNSEEN);
 }
 
 // If active is true, the player is just stepping onto the feature, with the

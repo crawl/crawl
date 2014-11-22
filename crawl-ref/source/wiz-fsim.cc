@@ -46,7 +46,6 @@
 
 fight_data null_fight = {0.0, 0, 0, 0.0, 0, 0.0, 0.0};
 typedef map<skill_type, int8_t> skill_map;
-typedef map<skill_type, int8_t>::iterator skill_map_iterator;
 
 static const char* _title_line =
     "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvSpeed | AvEffDam"; // 64 columns
@@ -496,8 +495,8 @@ static string _init_scale(skill_map &scale, bool &xl_mode)
     if (xl_mode)
     {
         you.training.init(0);
-        for (skill_map_iterator it = scale.begin(); it != scale.end(); ++it)
-            you.training[it->first] = it->second;
+        for (const auto &entry : scale)
+            you.training[entry.first] = entry.second;
     }
 
     return ret;
@@ -535,8 +534,10 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         if (xl_mode)
             set_xl(i, true);
         else
-            for (skill_map_iterator it = scale.begin(); it != scale.end(); ++it)
-                set_skill_level(it->first, i / it->second);
+        {
+            for (const auto &entry : scale)
+                set_skill_level(entry.first, i / entry.second);
+        }
 
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
         const string line = make_stringf("        %2d | %s", i,

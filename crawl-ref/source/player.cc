@@ -8222,10 +8222,9 @@ static string _constriction_description()
 
     if (you.constricting && !you.constricting->empty())
     {
-        actor::constricting_t::const_iterator i;
-        for (i = you.constricting->begin(); i != you.constricting->end(); ++i)
+        for (const auto &entry : *you.constricting)
         {
-            monster *whom = monster_by_mid(i->first);
+            monster *whom = monster_by_mid(entry.first);
             ASSERT(whom);
             c_name.push_back(whom->name(DESC_A));
         }
@@ -8743,10 +8742,8 @@ void player_close_door(coord_def doorpos)
         waynoun = noun;
     }
 
-    for (set<coord_def>::const_iterator i = all_door.begin();
-         i != all_door.end(); ++i)
+    for (const coord_def& dc : all_door)
     {
-        const coord_def& dc = *i;
         if (monster* mon = monster_at(dc))
         {
             if (!you.can_see(mon))
@@ -8840,10 +8837,8 @@ void player_close_door(coord_def doorpos)
     }
 
     vector<coord_def> excludes;
-    for (set<coord_def>::const_iterator i = all_door.begin();
-         i != all_door.end(); ++i)
+    for (const coord_def& dc : all_door)
     {
-        const coord_def& dc = *i;
         // Once opened, formerly runed doors become normal doors.
         grd(dc) = DNGN_CLOSED_DOOR;
         set_terrain_changed(dc);

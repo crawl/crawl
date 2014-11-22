@@ -419,15 +419,14 @@ static void _write_map_stats()
     for (const auto &entry : try_count)
         usedmaps.insert(make_pair(entry.second, entry.first));
 
-    for (auto i = usedmaps.rbegin(); i != usedmaps.rend(); ++i)
+    for (const auto &entry : usedmaps)
     {
-        const int tries = i->first;
-        map<string, int>::const_iterator iuse = use_count.find(i->second);
-        const int uses = iuse == use_count.end()? 0 : iuse->second;
+        const int tries = entry.first;
+        const int uses = lookup(use_count, entry.second, 0);
         if (tries == uses)
-            fprintf(outf, "%4d       : %s\n", tries, i->second.c_str());
+            fprintf(outf, "%4d       : %s\n", tries, entry.second.c_str());
         else
-            fprintf(outf, "%4d (%4d): %s\n", uses, tries, i->second.c_str());
+            fprintf(outf, "%4d (%4d): %s\n", uses, tries, entry.second.c_str());
     }
 
     fprintf(outf, "\n\nMaps and where used:\n\n");

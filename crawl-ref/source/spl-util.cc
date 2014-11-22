@@ -138,14 +138,7 @@ spell_type spell_by_name(string name, bool partial_match)
     lowercase(name);
 
     if (!partial_match)
-    {
-        spell_name_map::iterator i = spell_name_cache.find(name);
-
-        if (i != spell_name_cache.end())
-            return i->second;
-
-        return SPELL_NO_SPELL;
-    }
+        return lookup(spell_name_cache, name, SPELL_NO_SPELL);
 
     const spell_type sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
                                               is_valid_spell, spell_title);

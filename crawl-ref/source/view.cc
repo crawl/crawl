@@ -222,13 +222,12 @@ static void _genus_factoring(map<monster_type, int> &types,
 {
     monster_type genus = MONS_NO_MONSTER;
     int num = 0;
-    map<monster_type, int>::iterator it;
     // Find the most represented genus.
-    for (it = genera.begin(); it != genera.end(); ++it)
-        if (it->second > num)
+    for (const auto &entry : genera)
+        if (entry.second > num)
         {
-            genus = it->first;
-            num = it->second;
+            genus = entry.first;
+            num = entry.second;
         }
 
     // The most represented genus has a single member.
@@ -240,7 +239,7 @@ static void _genus_factoring(map<monster_type, int> &types,
     }
 
     genera.erase(genus);
-    it = types.begin();
+    auto it = types.begin();
     do
     {
         if (_mons_genus_keep_uniques(it->first) != genus)

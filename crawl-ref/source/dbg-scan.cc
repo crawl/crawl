@@ -1023,12 +1023,10 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
 // Get the actual food subtype
 static int _orig_food_subtype(int sub_type)
 {
-    map<int, int>::const_iterator mi;
-    for (mi = valid_foods.begin(); mi != valid_foods.end(); mi++)
-    {
-        if (mi->second == sub_type)
-            return mi->first;
-    }
+    for (const auto &entry : valid_foods)
+        if (entry.second == sub_type)
+            return entry.first;
+
     die("Invalid food subtype");
     return 0;
 }
@@ -1161,21 +1159,20 @@ item_type::item_type(item_def &item)
 
 static void _init_stats()
 {
-    map<branch_type, vector<level_id> >::const_iterator bi;
-    for (bi = stat_branches.begin(); bi != stat_branches.end(); bi++)
+    for (const auto &entry : stat_branches)
     {
-        for (unsigned int l = 0; l <= bi->second.size(); l++)
+        for (unsigned int l = 0; l <= entry.second.size(); l++)
         {
             level_id lev;
-            if (l == bi->second.size())
+            if (l == entry.second.size())
             {
-                if (bi->first == NUM_BRANCHES)
+                if (entry.first == NUM_BRANCHES)
                     continue;
-                lev.branch = bi->first;
+                lev.branch = entry.first;
                 lev.depth = -1;
             }
             else
-                lev = (bi->second)[l];
+                lev = (entry.second)[l];
             for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
             {
                 item_base_type base_type = static_cast<item_base_type>(i);
@@ -1226,16 +1223,14 @@ static void _init_stats()
                     missile_brands[lev][i].push_back(0);
             }
 
-            map<monster_type, int>::const_iterator mi;
-            for (mi = valid_monsters.begin(); mi != valid_monsters.end();
-                 mi++)
+            for (const auto &mentry : valid_monsters)
             {
                 for (const string &field : monster_fields)
-                    monster_recs[lev][mi->second][field] = 0;
+                    monster_recs[lev][mentry.second][field] = 0;
                 // For determining the NumMin and NumMax fields.
-                monster_recs[lev][mi->second]["NumForIter"] = 0;
-                monster_recs[lev][mi->second]["NumMin"] = INFINITY;
-                monster_recs[lev][mi->second]["NumMax"] = -1;
+                monster_recs[lev][mentry.second]["NumForIter"] = 0;
+                monster_recs[lev][mentry.second]["NumMin"] = INFINITY;
+                monster_recs[lev][mentry.second]["NumMax"] = -1;
             }
         }
     }
@@ -1540,21 +1535,20 @@ void objstat_record_monster(monster *mons)
 
 void objstat_iteration_stats()
 {
-    map<branch_type, vector<level_id> >::const_iterator bi;
-    for (bi = stat_branches.begin(); bi != stat_branches.end(); bi++)
+    for (const auto &entry : stat_branches)
     {
-        for (unsigned int l = 0; l <= bi->second.size(); l++)
+        for (unsigned int l = 0; l <= entry.second.size(); l++)
         {
             level_id lev;
-            if (l == bi->second.size())
+            if (l == entry.second.size())
             {
-                if (bi->first == NUM_BRANCHES)
+                if (entry.first == NUM_BRANCHES)
                     continue;
-                lev.branch = bi->first;
+                lev.branch = entry.first;
                 lev.depth = -1;
             }
             else
-                lev = (bi->second)[l];
+                lev = (entry.second)[l];
 
             for (int i = 0; i < NUM_ITEM_BASE_TYPES; i++)
             {
@@ -1575,11 +1569,10 @@ void objstat_iteration_stats()
                     stats["NumForIter"] = 0;
                 }
             }
-            map<monster_type, int>::const_iterator mi;
-            for (mi = valid_monsters.begin(); mi != valid_monsters.end();
-                 mi++)
+
+            for (const auto &mentry : valid_monsters)
             {
-                map<string, double> &stats = monster_recs[lev][mi->second];
+                map<string, double> &stats = monster_recs[lev][mentry.second];
                 if (stats["NumForIter"] > stats["NumMax"])
                     stats["NumMax"] = stats["NumForIter"];
                 if (stats["NumForIter"] < stats["NumMin"])
@@ -1595,21 +1588,20 @@ static void _write_level_headers(branch_type br, int num_fields)
 {
     unsigned int level_count = 0;
     vector<level_id> &levels = stat_branches[br];
-    vector<level_id>::const_iterator li;
 
     fprintf(stat_outf, "Place");
-    for (li = levels.begin(); li != levels.end(); li++)
+    for (level_id lid : levels)
     {
         if (br == NUM_BRANCHES)
             fprintf(stat_outf, "\tAllLevels");
         else
-            fprintf(stat_outf, "\t%s", li->describe().c_str());
+            fprintf(stat_outf, "\t%s", lid.describe().c_str());
 
         for (int i = 0; i < num_fields - 1; i++)
             fprintf(stat_outf, "\t");
         if (++level_count == levels.size() && level_count > 1)
         {
-            fprintf(stat_outf, "\t%s", branches[li->branch].abbrevname);
+            fprintf(stat_outf, "\t%s", branches[lid.branch].abbrevname);
             for (int i = 0; i < num_fields - 1; i++)
                 fprintf(stat_outf, "\t");
         }
@@ -1621,11 +1613,11 @@ static void _write_stat_headers(branch_type br, const vector<string> &fields)
 {
     unsigned int level_count = 0;
     vector<level_id> &levels = stat_branches[br];
-    vector<level_id>::const_iterator li;
 
     fprintf(stat_outf, "Property");
-    for (li = levels.begin(); li != levels.end(); li++)
+    for (level_id lid : levels)
     {
+        UNUSED(lid);
         for (const string &field : fields)
             fprintf(stat_outf, "\t%s", field.c_str());
 
@@ -1780,26 +1772,26 @@ static void _write_item_stats(branch_type br, item_type &item)
     vector<level_id>::const_iterator li;
 
     fprintf(stat_outf, "%s", _item_name(item).c_str());
-    for (li = stat_branches[br].begin(); li != stat_branches[br].end(); li++)
+    for (level_id lid : stat_branches[br])
     {
         map <string, double> &item_stats =
-            item_recs[*li][item.base_type][item.sub_type];
+            item_recs[lid][item.base_type][item.sub_type];
         for (const string &field : fields)
             _write_stat(item_stats, field);
 
         if (is_brand_equip)
         {
             vector< vector<int> > &brand_stats =
-                equip_brands[*li][equip_ind][item.sub_type];
+                equip_brands[lid][equip_ind][item.sub_type];
             for (int j = 0; j < 3; j++)
                 _write_brand_stats(brand_stats[j], item);
         }
         else if (item.base_type == ITEM_MISSILES)
-            _write_brand_stats(missile_brands[*li][item.sub_type], item);
+            _write_brand_stats(missile_brands[lid][item.sub_type], item);
 
-        if (++level_count == stat_branches[li->branch].size() && level_count > 1)
+        if (++level_count == stat_branches[lid.branch].size() && level_count > 1)
         {
-            level_id br_lev(li->branch, -1);
+            level_id br_lev(lid.branch, -1);
             map <string, double> &branch_stats =
                 item_recs[br_lev][item.base_type][item.sub_type];
 
@@ -1828,20 +1820,19 @@ static void _write_monster_stats(branch_type br, monster_type mons_type,
 {
     unsigned int level_count = 0;
     const vector<string> &fields = monster_fields;
-    vector<level_id>::const_iterator li;
 
     if (mons_ind == valid_monsters[NUM_MONSTERS])
         fprintf(stat_outf, "All Monsters");
     else
         fprintf(stat_outf, "%s", mons_type_name(mons_type, DESC_PLAIN).c_str());
-    for (li = stat_branches[br].begin(); li != stat_branches[br].end(); li++)
+    for (level_id lid : stat_branches[br])
     {
         for (const string &field : fields)
-            _write_stat(monster_recs[*li][mons_ind], field);
+            _write_stat(monster_recs[lid][mons_ind], field);
 
-        if (++level_count == stat_branches[li->branch].size() && level_count > 1)
+        if (++level_count == stat_branches[lid.branch].size() && level_count > 1)
         {
-            level_id br_lev(li->branch, -1);
+            level_id br_lev(lid.branch, -1);
             for (const string &field : fields)
                 _write_stat(monster_recs[br_lev][mons_ind], field);
         }
@@ -1878,20 +1869,19 @@ static void _write_branch_stats(branch_type br)
     fprintf(stat_outf, "\n\nMonster Generation Stats:\n");
     _write_level_headers(br, monster_fields.size());
     _write_stat_headers(br, monster_fields);
-    map<monster_type, int>::const_iterator mi;
-    for (mi = valid_monsters.begin(); mi != valid_monsters.end(); mi++)
-        _write_monster_stats(br, mi->first, mi->second);
+
+    for (const auto &entry : valid_monsters)
+        _write_monster_stats(br, entry.first, entry.second);
 }
 
 static void _write_object_stats()
 {
     string all_desc = "";
-    map<branch_type, vector<level_id> >::const_iterator bi;
 
-    for (bi = stat_branches.begin(); bi != stat_branches.end(); bi++)
+    for (const auto &entry : stat_branches)
     {
         string branch_name;
-        if (bi->first == NUM_BRANCHES)
+        if (entry.first == NUM_BRANCHES)
         {
             if (num_branches == 1)
                 continue;
@@ -1903,7 +1893,7 @@ static void _write_object_stats()
             all_desc = "Levels included in AllLevels: " + all_desc + "\n";
         }
         else
-            branch_name = branches[bi->first].abbrevname;
+            branch_name = branches[entry.first].abbrevname;
         ostringstream out_file;
         out_file << stat_out_prefix << branch_name << stat_out_ext;
         stat_outf = fopen(out_file.str().c_str(), "w");
@@ -1920,7 +1910,7 @@ static void _write_object_stats()
                 "Number of levels: %d\n"
                 "Version: %s\n", SysEnv.map_gen_iters, num_branches,
                 all_desc.c_str(), num_levels, Version::Long);
-        _write_branch_stats(bi->first);
+        _write_branch_stats(entry.first);
         fclose(stat_outf);
         printf("Wrote statistics for branch %s to %s.\n", branch_name.c_str(),
                out_file.str().c_str());

@@ -36,6 +36,7 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h" // erase_val
 #include "options.h"
 #include "output.h"
 #include "state.h"
@@ -499,7 +500,7 @@ static void macro_buf_add_long(keyseq actions,
 
         while (!tmp.empty())
         {
-            macromap::const_iterator subst = keymap.find(tmp);
+            auto subst = keymap.find(tmp);
             // Found a macro. Add the expansion (action) of the
             // macro into the buffer.
             if (subst != keymap.end() && !subst->second.empty())
@@ -584,7 +585,7 @@ static void macro_buf_apply_command_macro()
     // find the longest match from the start of the buffer and replace it
     while (!tmp.empty())
     {
-        macromap::const_iterator expansion = Macros.find(tmp);
+        auto expansion = Macros.find(tmp);
 
         if (expansion != Macros.end() && !expansion->second.empty())
         {
@@ -1143,14 +1144,7 @@ void add_key_recorder(key_recorder* recorder)
 
 void remove_key_recorder(key_recorder* recorder)
 {
-    vector<key_recorder*>::iterator i;
-
-    for (i = recorders.begin(); i != recorders.end(); ++i)
-        if (*i == recorder)
-        {
-            recorders.erase(i);
-            return;
-        }
+    erase_val(recorders, recorder);
 }
 
 int get_macro_buf_size()
@@ -1208,22 +1202,12 @@ void init_keybindings()
 
 command_type name_to_command(string name)
 {
-    name_to_cmd_map::iterator it = _names_to_cmds.find(name);
-
-    if (it == _names_to_cmds.end())
-        return CMD_NO_CMD;
-
-    return static_cast<command_type>(it->second);
+    return static_cast<command_type>(lookup(_names_to_cmds, name, CMD_NO_CMD));
 }
 
 string command_to_name(command_type cmd)
 {
-    cmd_to_name_map::iterator it = _cmds_to_names.find(cmd);
-
-    if (it == _cmds_to_names.end())
-        return "CMD_NO_CMD";
-
-    return it->second;
+    return lookup(_cmds_to_names, cmd, "CMD_NO_CMD");
 }
 
 command_type key_to_command(int key, KeymapContext context)
@@ -1258,14 +1242,10 @@ command_type key_to_command(int key, KeymapContext context)
         return cmd;
     }
 
-    key_to_cmd_map           &key_map = _keys_to_cmds[context];
-    key_to_cmd_map::iterator it       = key_map.find(key);
+    const auto cmd = static_cast<command_type>(lookup(_keys_to_cmds[context],
+                                                      key, CMD_NO_CMD));
 
-    if (it == key_map.end())
-        return CMD_NO_CMD;
-
-    const command_type cmd = static_cast<command_type>(it->second);
-    ASSERT(_context_for_command(cmd) == context);
+    ASSERT(cmd == CMD_NO_CMD || _context_for_command(cmd) == context);
 
     return cmd;
 }
@@ -1277,13 +1257,7 @@ int command_to_key(command_type cmd)
     if (context == KMC_NONE)
         return '\0';
 
-    cmd_to_key_map           &cmd_map = _cmds_to_keys[context];
-    cmd_to_key_map::iterator it       = cmd_map.find(cmd);
-
-    if (it == cmd_map.end())
-        return '\0';
-
-    return it->second;
+    return lookup(_cmds_to_keys[context], cmd, '\0');
 }
 
 static KeymapContext _context_for_command(command_type cmd)

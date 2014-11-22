@@ -1424,10 +1424,9 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 
     if (features && floodout)
     {
-        exclude_set::const_iterator it;
-        for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+        for (const auto &entry : curr_excludes)
         {
-            const travel_exclude &exc = it->second;
+            const travel_exclude &exc = entry.second;
             // An exclude - wherever it is - is always a feature.
             if (find(features->begin(), features->end(), exc.pos)
                     == features->end())
@@ -1469,10 +1468,9 @@ void travel_pathfind::get_features()
             }
         }
 
-    exclude_set::const_iterator it;
-    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+    for (const auto &entry : curr_excludes)
     {
-        const travel_exclude &exc = it->second;
+        const travel_exclude &exc = entry.second;
 
         // An exclude - wherever it is - is always a feature.
         if (find(features->begin(), features->end(), exc.pos) == features->end())
@@ -3695,7 +3693,7 @@ void LevelInfo::fixup()
 
 bool TravelCache::know_stair(const coord_def &c) const
 {
-    travel_levels_map::const_iterator i = levels.find(level_id::current());
+    auto i = levels.find(level_id::current());
     return i == levels.end() ? false : i->second.know_stair(c);
 }
 
@@ -3870,19 +3868,15 @@ int TravelCache::get_waypoint_count() const
 
 void TravelCache::clear_distances()
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.clear_distances();
+    for (auto &entry : levels)
+        entry.second.clear_distances();
 }
 
 bool TravelCache::is_known_branch(uint8_t branch) const
 {
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        if (i->second.is_known_branch(branch))
-            return true;
-
-    return false;
+    return any_of(begin(levels), end(levels),
+            [branch] (const pair<level_id, LevelInfo> &entry)
+            { return entry.second.is_known_branch(branch); });
 }
 
 void TravelCache::save(writer& outf) const
@@ -3894,11 +3888,10 @@ void TravelCache::save(writer& outf) const
     // Write level count.
     marshallShort(outf, levels.size());
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
+    for (const auto &entry : levels)
     {
-        i->first.save(outf);
-        i->second.save(outf);
+        entry.first.save(outf);
+        entry.second.save(outf);
     }
 
     for (int wp = 0; wp < TRAVEL_WAYPOINT_COUNT; ++wp)
@@ -3963,34 +3956,30 @@ unsigned int TravelCache::query_daction_counter(daction_type c)
 
     unsigned int sum = 0;
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        sum += i->second.daction_counters[c];
+    for (const auto &entry : levels)
+        sum += entry.second.daction_counters[c];
 
     return sum;
 }
 
 void TravelCache::clear_daction_counter(daction_type c)
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.daction_counters[c] = 0;
+    for (auto &entry : levels)
+        entry.second.daction_counters[c] = 0;
 }
 
 void TravelCache::fixup_levels()
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.fixup();
+    for (auto &entry : levels)
+        entry.second.fixup();
 }
 
 vector<level_id> TravelCache::known_levels() const
 {
     vector<level_id> levs;
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        levs.push_back(i->first);
+    for (const auto &entry : levels)
+        levs.push_back(entry.first);
 
     return levs;
 }

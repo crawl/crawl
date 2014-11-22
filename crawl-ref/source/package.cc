@@ -296,7 +296,7 @@ plen_t package::extend_block(plen_t at, plen_t size, plen_t by)
         return by;
     }
 
-    fb_t::iterator bl = free_blocks.find(at + size);
+    auto bl = free_blocks.find(at + size);
     if (bl == free_blocks.end())
         return 0;
 
@@ -363,7 +363,7 @@ void package::finish_chunk(const string name, plen_t at)
 
 void package::free_chunk(const string name)
 {
-    directory_t::iterator ci = directory.find(name);
+    auto ci = directory.find(name);
     if (ci == directory.end())
         return;
 
@@ -431,7 +431,7 @@ void package::free_block_chain(plen_t at)
     dprintf("freeing an unlinked chain at %d\n", at);
     while (at)
     {
-        bm_t::iterator bl = block_map.find(at);
+        auto bl = block_map.find(at);
         ASSERT(bl != block_map.end());
         dprintf("+- at %d size=%d+header\n", at, bl->second.first);
         free_block(at, bl->second.first + sizeof(block_header));
@@ -445,9 +445,7 @@ void package::free_block(plen_t at, plen_t size)
     ASSERT(at >= sizeof(file_header));
     ASSERT(at + size <= file_len);
 
-    fb_t::iterator neigh;
-
-    neigh = free_blocks.lower_bound(at);
+    auto neigh = free_blocks.lower_bound(at);
     if (neigh != free_blocks.begin())
     {
         --neigh;
@@ -591,7 +589,7 @@ void package::trace_chunk(plen_t start)
         plen_t end  = start + len + sizeof(block_header);
         dprintf("{at %u size %u+header}\n", start, len);
 
-        fb_t::iterator sp = free_blocks.upper_bound(start);
+        auto sp = free_blocks.upper_bound(start);
         if (sp == free_blocks.begin())
             corrupted("save file corrupted -- overlapping blocks");
         --sp;
@@ -645,7 +643,7 @@ plen_t package::get_chunk_fragmentation(const string name)
     plen_t at = directory[name];
     while (at)
     {
-        bm_t::iterator bl = block_map.find(at);
+        auto bl = block_map.find(at);
         ASSERT(bl != block_map.end());
         frags ++;
         at = bl->second.second;
@@ -661,7 +659,7 @@ plen_t package::get_chunk_compressed_length(const string name)
     plen_t at = directory[name];
     while (at)
     {
-        bm_t::iterator bl = block_map.find(at);
+        auto bl = block_map.find(at);
         ASSERT(bl != block_map.end());
         len += bl->second.first;
         at = bl->second.second;

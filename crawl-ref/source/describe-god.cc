@@ -416,7 +416,7 @@ static string _describe_ash_skill_boost()
         string skills;
         map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(i));
         const int8_t bonus = boosted_skills.begin()->second;
-        map<skill_type, int8_t>::iterator it = boosted_skills.begin();
+        auto it = boosted_skills.begin();
 
         // First, we keep only one magic school skill (conjuration).
         // No need to list all of them since we boost all or none.
@@ -424,7 +424,7 @@ static string _describe_ash_skill_boost()
         {
             if (it->first > SK_CONJURATIONS && it->first <= SK_LAST_MAGIC)
             {
-                boosted_skills.erase(it);
+                boosted_skills.erase(it++);
                 it = boosted_skills.begin();
             }
             else
@@ -447,8 +447,7 @@ static string _describe_ash_skill_boost()
             else if (boosted_skills.size() == 2)
                 skills += " and ";
 
-            boosted_skills.erase(it);
-            ++it;
+            boosted_skills.erase(it++);
         }
 
         desc << setw(30) << skills;
@@ -1002,15 +1001,13 @@ static void _describe_god_powers(god_type which_god, int numcols)
     }
     else if (which_god == GOD_VEHUMET)
     {
-        set<spell_type>::iterator it = you.vehumet_gifts.begin();
-        if (it != you.vehumet_gifts.end())
+        if (const int numoffers = you.vehumet_gifts.size())
         {
             have_any = true;
 
-            string offer = spell_title(*it);
-            // If we have multiple offers, just summarise.
-            if (++it != you.vehumet_gifts.end())
-                offer = "some of Vehumet's most lethal spells";
+            const string offer = numoffers == 1
+                               ? spell_title(*you.vehumet_gifts.begin())
+                               : "some of Vehumet's most lethal spells";
 
             _print_final_god_abil_desc(which_god,
                                        "You can memorise " + offer + ".",

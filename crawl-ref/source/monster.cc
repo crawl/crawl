@@ -5097,13 +5097,8 @@ bool monster::is_shapeshifter() const
 
 void monster::forget_random_spell()
 {
-    if (spells.size() <= 0)
-        return;
-    int which_spell = random2(spells.size());
-    monster_spells::iterator it = spells.begin();
-    for (; which_spell > 0; which_spell--)
-      it++;
-    spells.erase(it);
+    if (!spells.empty())
+        spells.erase(spells.begin() + random2(spells.size()));
 }
 
 void monster::scale_hp(int num, int den)

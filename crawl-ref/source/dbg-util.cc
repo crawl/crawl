@@ -141,12 +141,11 @@ void debug_dump_constriction(const actor *act)
 {
     if (act->constricting)
     {
-        actor::constricting_t::const_iterator i;
-        for (i = act->constricting->begin(); i != act->constricting->end(); ++i)
+        for (const auto &entry : *act->constricting)
         {
             fprintf(stderr, "Constricting ");
-            _debug_mid_name(i->first);
-            fprintf(stderr, " for %d ticks\n", i->second);
+            _debug_mid_name(entry.first);
+            fprintf(stderr, " for %d ticks\n", entry.second);
         }
     }
 
