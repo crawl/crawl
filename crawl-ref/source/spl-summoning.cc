@@ -3164,7 +3164,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                                      ? BEH_FRIENDLY
                                      : SAME_ATTITUDE(caster->as_monster()),
                                      caster, 0, SPELL_FULMINANT_PRISM,
-                                     where, MHITYOU, MG_FORCE_PLACE);
+                                     where, MHITNOT, MG_FORCE_PLACE);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 
