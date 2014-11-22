@@ -2460,6 +2460,7 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
         case LEFT:
             if ((*it)->get_min_coord().x > closest->get_min_coord().x)
                 closest = *it;
+            break;
         case RIGHT:
             if ((*it)->get_min_coord().x < closest->get_min_coord().x)
                 closest = *it;
@@ -3711,6 +3712,7 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         case LEFT:
             if ((*it)->get_min_coord().x > closest->get_min_coord().x)
                 closest = *it;
+            break;
         case RIGHT:
             if ((*it)->get_min_coord().x < closest->get_min_coord().x)
                 closest = *it;
