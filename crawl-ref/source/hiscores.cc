@@ -1683,7 +1683,7 @@ string scorefile_entry::terse_missile_name() const
 {
     const string pre_post[][2] =
     {
-        { "Shot with a", " by " },
+        { "Shot with ", " by " },
         { "Hit by ",     " thrown by " }
     };
     const string &aux = auxkilldata;
