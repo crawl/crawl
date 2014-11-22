@@ -3163,7 +3163,12 @@ MenuItem* MenuObject::select_item_by_hotkey(int key)
 
 vector<MenuItem*> MenuObject::get_selected_items()
 {
-    return grep(m_entries, [] (MenuItem *item) { return item->selected(); });
+    vector<MenuItem *> result;
+    for (MenuItem *item : m_entries)
+        if (item->selected())
+            result.push_back(item);
+
+    return result;
 }
 
 void MenuObject::clear_selections()
