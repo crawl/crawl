@@ -1020,27 +1020,49 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+/**
+ * Choose a type of imp to summon with Call Imp.
+ *
+ * @param pow   The power with which the spell is being cast.
+ * @return      An appropriate imp type.
+ */
+static monster_type _get_imp_type(int pow)
+{
+    // this seems to think that iron & shadow imps are better than white...?
+    if (random2(pow) >= 46 || one_chance_in(6))
+        return one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
+    return one_chance_in(3) ? MONS_WHITE_IMP : MONS_CRIMSON_IMP;
+}
 
+static map<monster_type, const char*> _imp_summon_messages = {
+    { MONS_WHITE_IMP,
+        "A beastly little devil appears in a puff of frigid air." },
+    { MONS_IRON_IMP, "A metallic apparition takes form in the air." },
+    { MONS_SHADOW_IMP, "A shadowy apparition takes form in the air." },
+    { MONS_CRIMSON_IMP, "A beastly little devil appears in a puff of flame." },
+};
+
+/**
+ * Cast the spell Call Imp, summoning a friendly imp nearby.
+ *
+ * @param pow   The spellpower at which the spell is being cast.
+ * @param god   The god of the caster.
+ * @param fail  Whether the caster (you) failed to cast the spell.
+ * @return      SPRET_FAIL if fail is true; SPRET_SUCCESS otherwise.
+ */
 spret_type cast_call_imp(int pow, god_type god, bool fail)
 {
     fail_check();
-    monster_type mon = MONS_PROGRAM_BUG;
 
-    if (random2(pow) >= 46 || one_chance_in(6))
-        mon = one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
-    else
-        mon = one_chance_in(3) ? MONS_WHITE_IMP : MONS_CRIMSON_IMP;
+    const monster_type imp_type = _get_imp_type(pow);
 
     const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (monster *imp = create_monster(
-            mgen_data(mon, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
+            mgen_data(imp_type, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
                       you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god)))
     {
-        mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
-            (mon == MONS_IRON_IMP)   ? "A metallic apparition takes form in the air." :
-            (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
-                                     : "A beastly little devil appears in a puff of flame.");
+        mpr(_imp_summon_messages[imp_type]);
 
         if (!player_angers_monster(imp))
             _monster_greeting(imp, "_friendly_imp_greeting");
