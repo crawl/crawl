@@ -367,8 +367,9 @@ void update_monsters_in_view()
             }
             else
             {
-                warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
-                                                          DESC_NONE);
+                warning_msg += " "
+                               + get_monster_equipment_desc(mi, DESC_IDENTIFIED,
+                                                            DESC_NONE);
             }
             warning_msg += ".";
         }
