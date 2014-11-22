@@ -1870,6 +1870,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             continue;
 
         if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
+            || (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
             || (wh_enchant != ENCH_INSANE
                 && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
@@ -1884,6 +1885,10 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             }
             if (msg && simple_monster_message(*mi, msg))
                 did_msg = true;
+
+            // Reassert control over hexed undead.
+            if (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
+                mi->del_ench(ENCH_HEXED);
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
