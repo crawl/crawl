@@ -4156,29 +4156,14 @@ static int _gozag_shop_price(int index)
 }
 
 /**
- * Does the given shop type duplicate an earlier-chosen one?
- *
- * @param cur       The index of the current shop.
- *                  (Assumption: shops [0,cur-1] have been chosen already.)
- * @param type      The type of shop being considered.
- * @return          Whether the given shop type duplicates a predecessor.
- */
-static bool _duplicate_shop_type(int cur, shop_type type)
-{
-    for (int i = 0; i < cur; i++)
-        if (_gozag_shop_type(i) == type)
-            return true;
-
-    return false;
-}
-
-/**
  * Initialize the set of shops currently offered to the player through Call
  * Merchant.
  *
- * @param index     The index of the shop offer to be defined.
- */
-static void _setup_gozag_shop(int index)
+ * @param index       The index of the shop offer to be defined.
+ * @param valid_shops Vector of acceptable shop types based on the player and
+ *                    previous choices for this merchant call.
+*/
+static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
 {
     ASSERT(!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)));
 
@@ -4187,11 +4172,10 @@ static void _setup_gozag_shop(int index)
         type = SHOP_FOOD;
     else
     {
-        do
-        {
-            type = static_cast<shop_type>(random2(NUM_SHOPS));
-        }
-        while (_duplicate_shop_type(index, type));
+        int choice = random2(valid_shops.size());
+        type = valid_shops[choice];
+        // Don't choose this shop type again for this merchant call.
+        valid_shops.erase(valid_shops.begin() + choice);
     }
     you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;
 
@@ -4395,12 +4379,34 @@ static void _gozag_place_shop(int index)
 
 bool gozag_call_merchant()
 {
+    // Only offer useful shops.
+    vector<shop_type> valid_shops;
+    for (int i = 0; i < NUM_SHOPS; i++)
+    {
+        shop_type type = static_cast<shop_type>(i);
+        // if they are useful to the player, food shops are handled through the
+        // first index.
+        if (type == SHOP_FOOD)
+            continue;
+        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
+            continue;
+        if (type == SHOP_EVOKABLES && player_mutation_level(MUT_NO_ARTIFICE))
+            continue;
+        if (you.species == SP_FELID &&
+            (type == SHOP_ARMOUR
+             || type == SHOP_ARMOUR_ANTIQUE
+             || type == SHOP_WEAPON
+             || type == SHOP_WEAPON_ANTIQUE))
+            continue;
+        valid_shops.push_back(type);
+    }
+
     // Set up some dummy shops.
     // Generate some shop inventory and store it as a store spec.
     // We still set up the shops in advance in case of hups.
     for (int i = 0; i < _gozag_max_shops(); i++)
         if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)))
-            _setup_gozag_shop(i);
+            _setup_gozag_shop(i, valid_shops);
 
     const int shop_index = _gozag_choose_shop();
     if (shop_index == -1) // hup!
