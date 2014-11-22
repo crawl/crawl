@@ -3961,6 +3961,13 @@ static void _display_attack_delay()
     const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
                                        false, false);
 
+    const int no_shield_delay = you.attack_delay(you.weapon(),
+                                                 uses_ammo ? ammo : NULL,
+                                                 false, false, false);
+    const bool at_min_delay = you.weapon()
+                              && weapon_min_delay(*you.weapon())
+                                 == no_shield_delay;
+
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     int avg = 10 * delay;
@@ -3969,8 +3976,10 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = max(20, avg / 2);
 
-    _display_char_status(avg, "Your attack speed is %s",
-                         _attack_delay_desc(avg));
+    _display_char_status(avg, "Your attack speed is %s%s",
+                         _attack_delay_desc(avg),
+                         at_min_delay ?
+                            " (and cannot be increased with skill)" : "");
 }
 
 // forward declaration
