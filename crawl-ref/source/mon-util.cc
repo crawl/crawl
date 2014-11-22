@@ -3636,7 +3636,7 @@ static const spell_type smitey_spells[] = {
 static bool _mons_has_smite_attack(const monster* mons)
 {
     return any_of(begin(smitey_spells), end(smitey_spells),
-                  bind(mem_fn(&monster::has_spell), *mons, placeholders::_1));
+                  [=] (spell_type sp) { return mons->has_spell(sp); });
 }
 
 /**
