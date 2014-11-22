@@ -25,8 +25,11 @@ git:
 install: perl .travis/deps.pl
 script: perl .travis/build.pl
 notifications:
-#    email:
-#        - crawl-ref-commits@lists.sourceforge.net
+    email:
+        on_success: change
+        on_failure: always
+#        recipients:
+#          - crawl-ref-commits@lists.sourceforge.net
     irc:
         channels: "chat.freenode.net##crawl-dev"
         on_success: change
