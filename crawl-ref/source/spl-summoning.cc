@@ -482,40 +482,43 @@ static bool _place_dragon()
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai)) && !actor_at(*ai))
+            if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai))
+                && !actor_at(*ai))
+            {
                 spots.push_back(*ai);
+            }
         }
 
         // Now try to create the actual dragon
-        if (spots.size() > 0)
-        {
+        if (spots.size() <= 0)
+            continue;
             const coord_def pos = spots[random2(spots.size())];
 
-            if (monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
-                                                           2, SPELL_DRAGON_CALL,
-                                                           pos, MHITYOU,
-                                                           MG_FORCE_PLACE | MG_AUTOFOE)))
-            {
-                dec_mp(random_range(2, 3));
+        monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
+                                                   2, SPELL_DRAGON_CALL,
+                                                   pos, MHITYOU,
+                                                   MG_FORCE_PLACE | MG_AUTOFOE));
+        if (!dragon)
+            continue;
 
-                if (you.see_cell(dragon->pos()))
-                    mpr("A dragon arrives to answer your call!");
+        dec_mp(random_range(2, 3));
 
-                // The dragon is allowed to act immediately here
-                dragon->flags &= ~MF_JUST_SUMMONED;
+        if (you.see_cell(dragon->pos()))
+            mpr("A dragon arrives to answer your call!");
 
-                if (!enough_mp(2, true))
-                {
-                    mprf(MSGCH_DURATION, "Having expended the last of your "
-                                         "magical power, your connection to the "
-                                         "dragon horde fades.");
-                    you.duration[DUR_DRAGON_CALL] = 0;
-                    you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
-                }
+        // The dragon is allowed to act immediately here
+        dragon->flags &= ~MF_JUST_SUMMONED;
 
-                return true;
-            }
+        if (!enough_mp(2, true))
+        {
+            mprf(MSGCH_DURATION, "Having expended the last of your magical "
+                                 "power, your connection to the  dragon horde "
+                                 "fades.");
+            you.duration[DUR_DRAGON_CALL] = 0;
+            you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
         }
+
+        return true;
     }
 
     return false;
