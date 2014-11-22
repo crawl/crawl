@@ -29,6 +29,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "orb.h"
@@ -1145,26 +1146,36 @@ int singularity_max_range(int pow)
     return max(0, min(LOS_RADIUS, (pow / 10) - 3));
 }
 
-spret_type cast_singularity(int pow, const coord_def& where, bool fail)
+spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
+                            bool fail)
 {
     if (cell_is_solid(where))
     {
-        mpr("You can't place that within a solid object!");
+        if (agent->is_player())
+            mpr("You can't place that within a solid object!");
         return SPRET_ABORT;
     }
 
-    monster* mons = monster_at(where);
-    if (mons)
+    actor* victim = actor_at(where);
+    if (victim)
     {
-        if (you.can_see(mons))
+        if (you.can_see(victim))
         {
-            mpr("You can't place the singularity on a creature.");
+            if (agent->is_player())
+                mpr("You can't place the singularity on a creature.");
             return SPRET_ABORT;
         }
 
         fail_check();
 
-        canned_msg(MSG_GHOSTLY_OUTLINE);
+        if (agent->is_player())
+            canned_msg(MSG_GHOSTLY_OUTLINE);
+        else if (you.can_see(victim))
+        {
+            mprf("%s %s for a moment.",
+                 victim->name(DESC_THE).c_str(),
+                 victim->conj_verb("distort").c_str());
+        }
         return SPRET_SUCCESS;
     }
 
@@ -1172,11 +1183,14 @@ spret_type cast_singularity(int pow, const coord_def& where, bool fail)
 
     monster* singularity = create_monster(
                                 mgen_data(MONS_SINGULARITY,
-                                          BEH_FRIENDLY, &you,
+                                          agent->is_player()
+                                          ? BEH_FRIENDLY
+                                          : SAME_ATTITUDE(agent->as_monster()),
+                                          agent,
                                           // It's summoned, but it uses
                                           // its own mechanic to time out.
                                           0, SPELL_SINGULARITY,
-                                          where, MHITYOU, MG_FORCE_PLACE,
+                                          where, MHITNOT, MG_FORCE_PLACE,
                                           GOD_NO_GOD, MONS_NO_MONSTER,
                                           pow / 20, COLOUR_INHERIT,
                                           PROX_ANYWHERE,
