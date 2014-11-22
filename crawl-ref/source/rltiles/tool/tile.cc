@@ -378,7 +378,7 @@ bool tile::load(const string &new_filename)
         unload();
 
 #ifdef USE_TILE
-    FILE* fp = fopen(new_filename.c_str(), "r");
+    FILE* fp = fopen(new_filename.c_str(), "rb");
     if (!fp)
         return false;
 
@@ -470,7 +470,7 @@ bool tile::load(const string &new_filename)
 
     replace_colour(tile_colour::background, tile_colour::transparent);
 #else
-    FILE* fp = fopen(new_filename.c_str(), "r");
+    FILE* fp = fopen(new_filename.c_str(), "rb");
     if (!fp)
         return false;
     fclose(fp);
