@@ -586,6 +586,10 @@ Battlecry seraph cast
 Throw Icicle shard shrike cast
 
 @The_monster@ spits a shard of ice @at@ @target@.
+%%%%
+Lightning Bolt electric golem cast
+
+@The_monster@ hurls @beam@ @at@ @target@.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
