@@ -4397,7 +4397,9 @@ bool gozag_call_merchant()
              || type == SHOP_ARMOUR_ANTIQUE
              || type == SHOP_WEAPON
              || type == SHOP_WEAPON_ANTIQUE))
+        {
             continue;
+        }
         valid_shops.push_back(type);
     }
 
