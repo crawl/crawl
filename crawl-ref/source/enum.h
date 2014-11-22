@@ -366,6 +366,7 @@ enum attribute_type
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
+    ATTR_BONE_ARMOUR,          // Current amount of boney armour (from the spell)
     NUM_ATTRIBUTES
 };
 
@@ -4256,6 +4257,7 @@ enum spell_type
     SPELL_SCATTERSHOT,
     SPELL_CLEANSING_FLAME,
     SPELL_GOBLIN_TOSS,
+    SPELL_BONE_ARMOUR,
     NUM_SPELLS
 };
 
