@@ -1721,7 +1721,7 @@ void zap_wand(int slot)
     item_def& wand = you.inv[item_slot];
     if (wand.base_type != OBJ_WANDS)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        mpr("You can't zap that!");
         return;
     }
 
