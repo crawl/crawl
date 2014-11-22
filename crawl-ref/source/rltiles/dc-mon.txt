@@ -62,6 +62,7 @@ fire_bat MONS_FIRE_BAT
 raven MONS_RAVEN
 bennu MONS_BENNU
 caustic_shrike MONS_CAUSTIC_SHRIKE
+shard_shrike MONS_SHARD_SHRIKE
 %sdir mon/vault
 %rim 0
 microbat MONS_MICROBAT
