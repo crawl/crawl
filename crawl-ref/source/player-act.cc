@@ -266,14 +266,15 @@ brand_type player::damage_brand(int)
  * @param weap          The weapon to be used; may be null.
  * @param projectile    The projectile to be fired/thrown; may be null.
  * @param random        Whether to randomize delay, or provide a fixed value
- *                      for display.
+ *                      for display (the worst-case scenario).
  * @param scaled        Whether to apply special delay modifiers (finesse)
+ * @param shield        Whether to apply shield penalties.
  * @return              The time taken by an attack with the given weapon &
  *                      projectile, in aut.
  */
 random_var player::attack_delay(const item_def *weap,
                                 const item_def *projectile, bool random,
-                                bool scaled) const
+                                bool scaled, bool shield) const
 {
     random_var attk_delay = constant(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
@@ -351,8 +352,11 @@ random_var player::attack_delay(const item_def *weap,
     if (!weap && player_wearing_slot(EQ_SHIELD))
         shield_penalty += rv::random2(2);
 
+    if (!shield)
+        shield_penalty = constant(0);
+
     int final_delay = random ? attk_delay.roll() + shield_penalty.roll()
-                             : attk_delay.expected() + shield_penalty.expected();
+                             : attk_delay.max() + shield_penalty.max();
     // Stop here if we just want the unmodified value.
     if (!scaled)
         return final_delay;
