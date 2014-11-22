@@ -6025,9 +6025,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     const vector< vector<coord_def> > sweep = _radial_sweep(r);
     const coord_def centre(9,9);
 
-    typedef sweep_type::const_iterator siter;
-    typedef sweep_type::value_type::const_iterator viter;
-
     // Draw pass.
     if (!is_tracer)
     {
