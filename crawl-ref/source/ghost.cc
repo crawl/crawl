@@ -1061,6 +1061,7 @@ const mon_spell_slot lich_secondary_spells[] =
     { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
     { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
     { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+    { SPELL_IGNITE_POISON_SINGLE, 12, MON_SPELL_WIZARD },
     { SPELL_HIBERNATION, 12, MON_SPELL_WIZARD },
     { SPELL_ENSLAVEMENT, 12, MON_SPELL_WIZARD },
 };
@@ -1082,11 +1083,27 @@ static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
     return used;
 }
 
+static bool _lich_has_spell_of_school(const monster_spells &spells,
+                                      unsigned int discipline)
+{
+    bool has_spell = false;
+    for (auto slot : spells)
+        if (spell_typematch(slot.spell, discipline))
+            has_spell = true;
+    return has_spell;
+}
+
 static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
                                 int *weights, int total_weight)
 {
     if (_lich_spell_is_used(spells, spell))
         return false;
+
+    if (spell == SPELL_IGNITE_POISON_SINGLE
+        && !_lich_has_spell_of_school(spells, SPTYP_POISON))
+    {
+        return false;
+    }
 
     unsigned int disciplines = get_spell_disciplines(spell);
     int num_disciplines = count_bits(disciplines);
@@ -1147,20 +1164,6 @@ static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
 
     next_spell.freq = next_spell.freq - 4 + random2(9);
     spells.push_back(next_spell);
-
-    if (get_spell_disciplines(next_spell.spell) & SPTYP_POISON)
-    {
-        mon_spell_slot ignite_poison = {
-            SPELL_IGNITE_POISON_SINGLE,
-            (uint8_t)(8 + random2(9)),
-            MON_SPELL_WIZARD,
-        };
-
-        _calculate_lich_spell_weights(spells, weights, total_weight);
-        if (_lich_spell_is_good(spells, ignite_poison.spell, weights,
-                                total_weight))
-            spells.push_back(ignite_poison);
-    }
 }
 
 void ghost_demon::init_lich(monster_type type)
