@@ -26,6 +26,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h" // map_find
 #include "message.h"
 #include "notes.h"
 #include "output.h"
@@ -1138,9 +1139,7 @@ Stash *LevelStashes::find_stash(coord_def c)
     if (c.x == -1 || c.y == -1)
         c = you.pos();
 
-    const int abspos = (GXM * c.y) + c.x;
-    stashes_t::iterator st = m_stashes.find(abspos);
-    return st == m_stashes.end() ? NULL : &st->second;
+    return map_find(m_stashes, (GXM * c.y) + c.x);
 }
 
 const Stash *LevelStashes::find_stash(coord_def c) const
@@ -1149,9 +1148,7 @@ const Stash *LevelStashes::find_stash(coord_def c) const
     if (c.x == -1 || c.y == -1)
         c = you.pos();
 
-    const int abspos = (GXM * c.y) + c.x;
-    stashes_t::const_iterator st = m_stashes.find(abspos);
-    return st == m_stashes.end() ? NULL : &st->second;
+    return map_find(m_stashes, (GXM * c.y) + c.x);
 }
 
 const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
@@ -1469,8 +1466,7 @@ LevelStashes &StashTracker::get_current_level()
 
 LevelStashes *StashTracker::find_level(const level_id &id)
 {
-    stash_levels_t::iterator i = levels.find(id);
-    return i != levels.end()? &i->second : NULL;
+    return map_find(levels, id);
 }
 
 LevelStashes *StashTracker::find_current_level()
@@ -1831,13 +1827,12 @@ void StashTracker::get_matching_stashes(
         bool curr_lev)
     const
 {
-    stash_levels_t::const_iterator iter = levels.begin();
     level_id curr = level_id::current();
-    for (; iter != levels.end(); ++iter)
+    for (const auto &entry : levels)
     {
-        if (curr_lev && curr != iter->first)
+        if (curr_lev && curr != entry.first)
             continue;
-        iter->second.get_matching_stashes(search, results);
+        entry.second.get_matching_stashes(search, results);
         if (results.size() > SEARCH_SPAM_THRESHOLD)
             return;
     }

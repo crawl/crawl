@@ -2187,19 +2187,7 @@ void PrecisionMenu::set_select_type(SelectType flag)
 void PrecisionMenu::clear()
 {
     // release all the data reserved
-    if (m_attached_objects.empty())
-        return;
-
-    vector<MenuObject*>::iterator it;
-    for (it = m_attached_objects.begin() ; it != m_attached_objects.end(); ++it)
-    {
-        if (*it != NULL)
-        {
-            delete *it;
-            *it = NULL;
-        }
-    }
-    m_attached_objects.clear();
+    deleteAll(m_attached_objects);
 }
 
 /**
@@ -2301,10 +2289,9 @@ bool PrecisionMenu::process_key(int key)
         }
     }
     // Handle selection of other objects items hotkeys
-    vector<MenuObject*>::iterator it;
-    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
+    for (MenuObject *obj : m_attached_objects)
     {
-        MenuItem* tmp = (*it)->select_item_by_hotkey(key);
+        MenuItem* tmp = obj->select_item_by_hotkey(key);
         if (tmp != NULL)
         {
             // was it a toggle?
@@ -2325,23 +2312,20 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
     // The objects are responsible for processing the input
     // This includes, if applicable for instance checking if the mouse
     // is over the item or not
-    MenuObject::InputReturnValue input_return = MenuObject::INPUT_NO_ACTION;
-
-    vector<MenuObject*>::iterator it;
-    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
+    for (MenuObject *obj : m_attached_objects)
     {
-        input_return = (*it)->handle_mouse(me);
+        const MenuObject::InputReturnValue input_return = obj->handle_mouse(me);
 
         switch (input_return)
         {
         case MenuObject::INPUT_SELECTED:
-            m_active_object = *it;
+            m_active_object = obj;
             if (m_select_type == PRECISION_SINGLESELECT)
                 return CK_MOUSE_CLICK;
             break;
         case MenuObject::INPUT_ACTIVE_CHANGED:
             // Set the active object to be this one
-            m_active_object = *it;
+            m_active_object = obj;
             break;
         case MenuObject::INPUT_END_MENU_SUCCESS:
             // something got clicked that needs to signal the menu to end
@@ -2350,11 +2334,9 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
             clear_selections();
             return CK_MOUSE_CLICK;
         case MenuObject::INPUT_FOCUS_LOST:
-            if (*it == m_active_object)
-            {
-                // The object lost it's focus and is no longer the active one
-                m_active_object = NULL;
-            }
+            // The object lost its focus and is no longer the active one
+            if (obj == m_active_object)
+                m_active_object = nullptr;
         default:
             break;
         }
@@ -2365,9 +2347,8 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
 
 void PrecisionMenu::clear_selections()
 {
-    vector<MenuObject*>::iterator it;
-    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
-        (*it)->clear_selections();
+    for (MenuObject *obj : m_attached_objects)
+        obj->clear_selections();
 }
 
 /**
@@ -2427,16 +2408,15 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
     // loop through the entries
     // save the currently closest to the index in a variable
     MenuObject* closest = NULL;
-    vector<MenuObject*>::iterator it;
-    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
+    for (MenuObject *obj : m_attached_objects)
     {
-        if (!(*it)->can_be_focused())
+        if (!obj->can_be_focused())
         {
             // this is a noselect entry, skip it
             continue;
         }
 
-        if (!_AABB_intersection((*it)->get_min_coord(), (*it)->get_max_coord(),
+        if (!_AABB_intersection(obj->get_min_coord(), obj->get_max_coord(),
                                 aabb_start, aabb_end))
         {
             continue; // does not intersect, continue loop
@@ -2445,25 +2425,25 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
         // intersects
         // check if it's closer than current
         if (closest == NULL)
-            closest = *it;
+            closest = obj;
 
         switch (dir)
         {
         case UP:
-            if ((*it)->get_min_coord().y > closest->get_min_coord().y)
-                closest = *it;
+            if (obj->get_min_coord().y > closest->get_min_coord().y)
+                closest = obj;
             break;
         case DOWN:
-            if ((*it)->get_min_coord().y < closest->get_min_coord().y)
-                closest = *it;
+            if (obj->get_min_coord().y < closest->get_min_coord().y)
+                closest = obj;
             break;
         case LEFT:
-            if ((*it)->get_min_coord().x > closest->get_min_coord().x)
-                closest = *it;
+            if (obj->get_min_coord().x > closest->get_min_coord().x)
+                closest = obj;
             break;
         case RIGHT:
-            if ((*it)->get_min_coord().x < closest->get_min_coord().x)
-                closest = *it;
+            if (obj->get_min_coord().x < closest->get_min_coord().x)
+                closest = obj;
         }
     }
     // TODO handle special cases here, like pressing down on the last entry
@@ -2474,20 +2454,11 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
 vector<MenuItem*> PrecisionMenu::get_selected_items()
 {
     vector<MenuItem*> ret_val;
-    vector<MenuObject*>::iterator it;
-    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
-    {
-        vector<MenuItem*> object_selected = (*it)->get_selected_items();
-        if (!object_selected.empty())
-        {
-            vector<MenuItem*>::iterator object_it;
-            for (object_it = object_selected.begin();
-                 object_it != object_selected.end(); ++object_it)
-            {
-                ret_val.push_back(*object_it);
-            }
-        }
-    }
+
+    for (MenuObject *obj : m_attached_objects)
+        for (MenuItem *item : obj->get_selected_items())
+            ret_val.push_back(item);
+
     return ret_val;
 }
 
@@ -2505,12 +2476,9 @@ static bool _string_lookup(MenuObject* item, string lookup)
 
 MenuObject* PrecisionMenu::get_object_by_name(const string &search)
 {
-    vector<MenuObject*>::iterator ret_val;
-    ret_val = find_if(m_attached_objects.begin(), m_attached_objects.end(),
+    auto it = find_if(begin(m_attached_objects), end(m_attached_objects),
                       bind(_string_lookup, placeholders::_1, search));
-    if (ret_val != m_attached_objects.end())
-        return *ret_val;
-    return NULL;
+    return it != m_attached_objects.end() ? *it : nullptr;
 }
 
 MenuItem* PrecisionMenu::get_active_item()
@@ -2526,9 +2494,8 @@ void PrecisionMenu::set_active_object(MenuObject* object)
         return;
 
     // is the object attached?
-    vector<MenuObject*>::iterator find_val;
-    find_val = find(m_attached_objects.begin(), m_attached_objects.end(),
-                    object);
+    auto find_val = find(m_attached_objects.begin(), m_attached_objects.end(),
+                         object);
     if (find_val != m_attached_objects.end())
     {
         m_active_object = object;
@@ -2538,15 +2505,8 @@ void PrecisionMenu::set_active_object(MenuObject* object)
 
 void PrecisionMenu::draw_menu()
 {
-    if (!m_attached_objects.empty())
-    {
-        vector<MenuObject*>::iterator it;
-        for (it = m_attached_objects.begin(); it != m_attached_objects.end();
-             ++it)
-        {
-            (*it)->render();
-        }
-    }
+    for (MenuObject *obj : m_attached_objects)
+        obj->render();
     // Render everything else here
 
     // Reset textcolour just in case
@@ -3153,51 +3113,44 @@ MenuItem* MenuObject::_find_item_by_mouse_coords(const coord_def& pos)
 {
     // Is the mouse even in bounds?
     if (!_is_mouse_in_bounds(pos))
-        return NULL;
+        return nullptr;
 
     // Traverse
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    for (MenuItem *item : m_entries)
     {
-        if (!(*it)->can_be_highlighted())
+        if (!item->can_be_highlighted())
         {
             // this is a noselect entry, skip it
             continue;
         }
-        if (!(*it)->is_visible())
+        if (!item->is_visible())
         {
             // this item is not visible, skip it
             continue;
         }
-        if (pos.x >= (*it)->get_min_coord().x
-            && pos.x <= (*it)->get_max_coord().x
-            && pos.y >= (*it)->get_min_coord().y
-            && pos.y <= (*it)->get_max_coord().y)
+        if (pos.x >= item->get_min_coord().x
+            && pos.x <= item->get_max_coord().x
+            && pos.y >= item->get_min_coord().y
+            && pos.y <= item->get_max_coord().y)
         {
             // We're inside
-            return *it;
+            return item;
         }
     }
+
     // nothing found
-    return NULL;
+    return nullptr;
 }
 
 MenuItem* MenuObject::find_item_by_hotkey(int key)
 {
     // browse through all the Entries
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
-        vector<int>::const_iterator hot_iterator;
-        for (hot_iterator = (*it)->get_hotkeys().begin();
-             hot_iterator != (*it)->get_hotkeys().end();
-            ++hot_iterator)
-        {
-            if (key == *hot_iterator)
-                return *it;
-        }
-    }
-    return NULL;
+    for (MenuItem *item : m_entries)
+        for (int hotkey : item->get_hotkeys())
+            if (key == hotkey)
+                return item;
+
+    return nullptr;
 }
 
 MenuItem* MenuObject::select_item_by_hotkey(int key)
@@ -3210,21 +3163,13 @@ MenuItem* MenuObject::select_item_by_hotkey(int key)
 
 vector<MenuItem*> MenuObject::get_selected_items()
 {
-    vector<MenuItem*> ret_val;
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
-        if ((*it)->selected())
-            ret_val.push_back((*it));
-    }
-    return ret_val;
+    return grep(m_entries, [] (MenuItem *item) { return item->selected(); });
 }
 
 void MenuObject::clear_selections()
 {
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
-        (*it)->select(false);
+    for (MenuItem *item : m_entries)
+        item->select(false);
 }
 
 void MenuObject::allow_focus(bool toggle)
@@ -3258,13 +3203,7 @@ MenuFreeform::MenuFreeform(): m_active_item(NULL), m_default_item(NULL)
 
 MenuFreeform::~MenuFreeform()
 {
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
-        if (*it != NULL)
-            delete *it;
-    }
-    m_entries.clear();
+    deleteAll(m_entries);
 }
 
 void MenuFreeform::set_default_item(MenuItem* item)
@@ -3449,9 +3388,8 @@ void MenuFreeform::render()
     if (m_dirty)
         _place_items();
 
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
-        (*it)->render();
+    for (MenuItem *item : m_entries)
+        item->render();
 }
 
 /**
@@ -3479,18 +3417,11 @@ static bool _id_comparison(MenuItem* item, int ID)
  */
 void MenuFreeform ::set_active_item(int ID)
 {
-    vector<MenuItem*>::iterator ret_val;
-    ret_val = find_if(m_entries.begin(), m_entries.end(),
+    auto it = find_if(m_entries.begin(), m_entries.end(),
                       bind(_id_comparison, placeholders::_1, ID));
-    if (ret_val != m_entries.end())
-    {
-        m_active_item = *ret_val;
-        m_dirty = true;
-        return;
-    }
-    m_active_item = NULL;
+
+    m_active_item = (it != m_entries.end()) ? *it : nullptr;
     m_dirty = true;
-    return;
 }
 
 /**
@@ -3516,19 +3447,9 @@ void MenuFreeform::_set_active_item_by_index(int index)
 void MenuFreeform::set_active_item(MenuItem* item)
 {
     // Does item exist in the menu?
-    vector<MenuItem*>::iterator it;
-    it = find(m_entries.begin(), m_entries.end(), item);
-    if (it != m_entries.end())
-    {
-        if (item->can_be_highlighted())
-        {
-            m_active_item = item;
-            m_dirty = true;
-            return;
-        }
-    }
-    // Clear active selection
-    m_active_item = NULL;
+    auto it = find(m_entries.begin(), m_entries.end(), item);
+    m_active_item = (it != end(m_entries) && item->can_be_highlighted())
+                    ? item : nullptr;
     m_dirty = true;
 }
 
@@ -3579,8 +3500,7 @@ bool MenuFreeform::select_item(MenuItem* item)
     ASSERT(item != NULL);
 
     // Is the given item in menu?
-    vector<MenuItem*>::iterator find_val;
-    find_val = find(m_entries.begin(), m_entries.end(), item);
+    auto find_val = find(m_entries.begin(), m_entries.end(), item);
     if (find_val != m_entries.end())
     {
         // Flip the selection flag
@@ -3674,21 +3594,20 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
 
     // loop through the entries
     // save the currently closest to the index in a variable
-    MenuItem* closest = NULL;
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    MenuItem* closest = nullptr;
+    for (MenuItem *item : m_entries)
     {
-        if (!(*it)->can_be_highlighted())
+        if (!item->can_be_highlighted())
         {
             // this is a noselect entry, skip it
             continue;
         }
-        if (!(*it)->is_visible())
+        if (!item->is_visible())
         {
             // this item is not visible, skip it
             continue;
         }
-        if (!_AABB_intersection((*it)->get_min_coord(), (*it)->get_max_coord(),
+        if (!_AABB_intersection(item->get_min_coord(), item->get_max_coord(),
                                 aabb_start, aabb_end))
         {
             continue; // does not intersect, continue loop
@@ -3697,25 +3616,25 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         // intersects
         // check if it's closer than current
         if (closest == NULL)
-            closest = *it;
+            closest = item;
 
         switch (dir)
         {
         case UP:
-            if ((*it)->get_min_coord().y > closest->get_min_coord().y)
-                closest = *it;
+            if (item->get_min_coord().y > closest->get_min_coord().y)
+                closest = item;
             break;
         case DOWN:
-            if ((*it)->get_min_coord().y < closest->get_min_coord().y)
-                closest = *it;
+            if (item->get_min_coord().y < closest->get_min_coord().y)
+                closest = item;
             break;
         case LEFT:
-            if ((*it)->get_min_coord().x > closest->get_min_coord().x)
-                closest = *it;
+            if (item->get_min_coord().x > closest->get_min_coord().x)
+                closest = item;
             break;
         case RIGHT:
-            if ((*it)->get_min_coord().x < closest->get_min_coord().x)
-                closest = *it;
+            if (item->get_min_coord().x < closest->get_min_coord().x)
+                closest = item;
         }
     }
     // TODO handle special cases here, like pressing down on the last entry
@@ -3736,13 +3655,7 @@ MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
 
 MenuScroller::~MenuScroller()
 {
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
-        if (*it != NULL)
-            delete *it;
-    }
-    m_entries.clear();
+    deleteAll(m_entries);
 }
 
 MenuObject::InputReturnValue MenuScroller::process_input(int key)
@@ -3962,9 +3875,8 @@ void MenuScroller::render()
     if (m_dirty)
         _place_items();
 
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
-        (*it)->render();
+    for (MenuItem *item : m_entries)
+       item->render();
 
 #ifdef USE_TILE_LOCAL
     // draw scrollbar
@@ -3994,12 +3906,11 @@ void MenuScroller::set_active_item(int ID)
         }
     }
 
-    vector<MenuItem*>::iterator ret_val;
-    ret_val = find_if(m_entries.begin(), m_entries.end(),
+    auto it = find_if(m_entries.begin(), m_entries.end(),
                       bind(_id_comparison, placeholders::_1, ID));
-    if (ret_val != m_entries.end())
+    if (it != m_entries.end())
     {
-        set_active_item(*ret_val);
+        set_active_item(*it);
         return;
     }
     m_currently_active = 0;
@@ -4125,11 +4036,10 @@ void MenuScroller::_place_items()
     coord_def max_coord(0,0);
 
     // Hide all the items
-    vector<MenuItem*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    for (MenuItem *item : m_entries)
     {
-        (*it)->set_visible(false);
-        (*it)->allow_highlight(false);
+        item->set_visible(false);
+        item->allow_highlight(false);
     }
 
     // calculate how many entries we can fit

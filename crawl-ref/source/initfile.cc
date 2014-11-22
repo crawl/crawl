@@ -2077,8 +2077,7 @@ void game_options::add_alias(const string &key, const string &val)
 
 string game_options::unalias(const string &key) const
 {
-    string_map::const_iterator i = aliases.find(key);
-    return i == aliases.end()? key : i->second;
+    return lookup(aliases, key, key);
 }
 
 #define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
@@ -2111,7 +2110,7 @@ string game_options::expand_vars(const string &field) const
 
         string var_name = field_out.substr(start_pos, end_pos - start_pos + 1);
 
-        string_map::const_iterator x = variables.find(var_name);
+        auto x = variables.find(var_name);
 
         if (x == variables.end())
         {
@@ -2397,8 +2396,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     {                                                                          \
         if (minus_equal)                                                       \
         {                                                                      \
-            vector<_type>::iterator it2 =                                      \
-                find(_opt.begin(), _opt.end(), _conv(part));                   \
+            auto it2 = find(_opt.begin(), _opt.end(), _conv(part));            \
             if (it2 != _opt.end())                                             \
                 _opt.erase(it2);                                               \
         }                                                                      \

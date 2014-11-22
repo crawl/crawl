@@ -227,11 +227,8 @@ monster_type get_monster_by_name(string name, bool substring)
 
     if (!substring)
     {
-        mon_name_map::iterator i = Mon_Name_Cache.find(name);
-
-        if (i != Mon_Name_Cache.end())
-            return i->second;
-
+        if (monster_type *mc = map_find(Mon_Name_Cache, name))
+            return *mc;
         return MONS_PROGRAM_BUG;
     }
 
@@ -264,12 +261,11 @@ void init_monster_symbols()
     for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
     {
         mon_display &md = monster_symbols[mc];
-        const monsterentry *me = get_monster_data(mc);
-        if (me)
+        if (const monsterentry *me = get_monster_data(mc))
         {
             md.glyph  = me->basechar;
             md.colour = me->colour;
-            map<unsigned, monster_type>::iterator it = base_mons.find(md.glyph);
+            auto it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
                 base_mons[md.glyph] = mc;
             md.detected = base_mons[md.glyph];

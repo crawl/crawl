@@ -594,7 +594,7 @@ static void _index_book(item_def& book, spells_to_books &book_hash,
 
         spells_in_book++;
 
-        spells_to_books::iterator it = book_hash.find(spell);
+        auto it = book_hash.find(spell);
         if (it == book_hash.end())
             book_hash[spell] = book.sub_type;
     }
@@ -654,7 +654,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
 
     // Handle Vehumet gifts
-    set<spell_type>::iterator gift_iterator = you.vehumet_gifts.begin();
+    auto gift_iterator = you.vehumet_gifts.begin();
     if (gift_iterator != you.vehumet_gifts.end())
     {
         num_books++;
@@ -851,9 +851,7 @@ vector<spell_type> get_mem_spell_list(vector<int> &books)
     for (spell_type spell : mem_spells)
     {
         spells.push_back(spell);
-
-        spells_to_books::iterator it = book_hash.find(spell);
-        books.push_back(it->second);
+        books.push_back(*map_find(book_hash, spell));
     }
 
     return spells;

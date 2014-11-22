@@ -510,9 +510,8 @@ void marshallSet(writer &th, const set<data> &s,
                  void (*marshall)(writer &, const data &))
 {
     marshallInt(th, s.size());
-    typename set<data>::const_iterator i = s.begin();
-    for (; i != s.end(); ++i)
-        marshall(th, *i);
+    for (const data &elt : s)
+        marshall(th, elt);
 }
 
 template<typename key, typename value>
@@ -521,11 +520,10 @@ void marshallMap(writer &th, const map<key,value>& data,
                  void (*value_marshall)(writer&, const value&))
 {
     marshallInt(th, data.size());
-    typename map<key,value>::const_iterator ci;
-    for (ci = data.begin(); ci != data.end(); ++ci)
+    for (const auto &entry : data)
     {
-        key_marshall(th, ci->first);
-        value_marshall(th, ci->second);
+        key_marshall(th, entry.first);
+        value_marshall(th, entry.second);
     }
 }
 

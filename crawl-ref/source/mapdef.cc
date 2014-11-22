@@ -1689,14 +1689,12 @@ void map_lines::hmirror()
 
 keyed_mapspec *map_lines::mapspec_for_key(int key)
 {
-    keyed_specs::iterator i = keyspecs.find(key);
-    return i != keyspecs.end()? &i->second : NULL;
+    return map_find(keyspecs, key);
 }
 
 const keyed_mapspec *map_lines::mapspec_for_key(int key) const
 {
-    keyed_specs::const_iterator i = keyspecs.find(key);
-    return i != keyspecs.end()? &i->second : NULL;
+    return map_find(keyspecs, key);
 }
 
 keyed_mapspec *map_lines::mapspec_at(const coord_def &c)
@@ -3613,13 +3611,12 @@ void mons_list::set_from_slot(const mons_list &list, int slot_index)
 void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
 {
     spec.explicit_spells = true;
-    vector<string>::iterator spell_it;
 
-    for (spell_it = spells.begin(); spell_it != spells.end(); ++spell_it)
+    for (const string &slotspec : spells)
     {
         monster_spells cur_spells;
 
-        const vector<string> spell_names(split_string(";", (*spell_it)));
+        const vector<string> spell_names(split_string(";", slotspec));
 
         for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
         {
@@ -3638,7 +3635,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 {
                     error = make_stringf(
                         "Invalid spell slot format: '%s' in '%s'",
-                        spname.c_str(), spell_it->c_str());
+                        spname.c_str(), slotspec.c_str());
                     return;
                 }
                 const spell_type sp(spell_by_name(slot_vals[0]));
@@ -3646,7 +3643,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 {
                     error = make_stringf("Unknown spell name: '%s' in '%s'",
                                          slot_vals[0].c_str(),
-                                         spell_it->c_str());
+                                         slotspec.c_str());
                     return;
                 }
                 if (!is_valid_mon_spell(sp))

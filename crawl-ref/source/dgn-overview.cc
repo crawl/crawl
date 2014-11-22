@@ -179,30 +179,27 @@ static string _portals_description_string()
     for (branch_iterator it; it; ++it)
     {
         last_id.depth = 10000;
-        portal_map_type::const_iterator ci_portals;
-        for (ci_portals = portals_present.begin();
-              ci_portals != portals_present.end();
-              ++ci_portals)
+        for (const auto &entry : portals_present)
         {
             // one line per region should be enough, they're all of
             // the form D:XX, except for labyrinth portals, of which
             // you would need 11 (at least) to have a problem.
-            if (ci_portals->second == it->id)
+            if (entry.second == it->id)
             {
                 if (last_id.depth == 10000)
-                    disp += coloured_branch(ci_portals->second)+ ":";
+                    disp += coloured_branch(entry.second)+ ":";
 
-                if (ci_portals->first.id == last_id)
+                if (entry.first.id == last_id)
                     disp += '*';
                 else
                 {
                     disp += ' ';
-                    disp += ci_portals->first.id.describe(false, true);
+                    disp += entry.first.id.describe(false, true);
                 }
-                last_id = ci_portals->first.id;
+                last_id = entry.first.id;
 
                 // Portals notes (Zig/Trovel price).
-                const string note = portal_notes[ci_portals->first];
+                const string note = portal_notes[entry.first];
                 if (!note.empty())
                     disp += " (" + note + ")";
             }
@@ -484,7 +481,6 @@ static string _get_shops(bool display)
         disp += "\n";
     }
     last_id.depth = 10000;
-    map<level_pos, shop_type>::const_iterator ci_shops;
 
     // There are at most 5 shops per level, plus up to 8 chars for the
     // level name, plus 4 for the spacing (3 as padding + 1 separating
@@ -494,12 +490,11 @@ static string _get_shops(bool display)
     const int maxcolumn = get_number_of_cols() - 17;
     int column_count = 0;
 
-    for (ci_shops = shops_present.begin();
-         ci_shops != shops_present.end(); ++ci_shops)
+    for (const auto &entry : shops_present)
     {
-        if (ci_shops->first.id != last_id)
+        if (entry.first.id != last_id)
         {
-            const bool existing = is_existing_level(ci_shops->first.id);
+            const bool existing = is_existing_level(entry.first.id);
             if (column_count > maxcolumn)
             {
                 disp += "\n";
@@ -512,7 +507,7 @@ static string _get_shops(bool display)
             }
             disp += existing ? "<lightgrey>" : "<darkgrey>";
 
-            const string loc = ci_shops->first.id.describe(false, true);
+            const string loc = entry.first.id.describe(false, true);
             disp += loc;
             column_count += strwidth(loc);
 
@@ -520,9 +515,9 @@ static string _get_shops(bool display)
             disp += existing ? "</lightgrey>" : "</darkgrey>";
             column_count += 1;
 
-            last_id = ci_shops->first.id;
+            last_id = entry.first.id;
         }
-        disp += shoptype_to_string(ci_shops->second);
+        disp += shoptype_to_string(entry.second);
         ++column_count;
     }
 
@@ -822,33 +817,26 @@ void clear_level_exclusion_annotation(level_id li)
 string get_level_annotation(level_id li, bool skip_excl, bool skip_uniq,
                             bool use_colour, int colour)
 {
-    annotation_map_type::const_iterator i = level_annotations.find(li);
-    annotation_map_type::const_iterator j = level_exclusions.find(li);
-    annotation_map_type::const_iterator k = level_uniques.find(li);
-
     string note = "";
 
-    if (i != level_annotations.end())
-    {
-        if (use_colour)
-            note += colour_string(i->second, colour);
-        else
-            note += i->second;
-    }
+    if (string *ann = map_find(level_annotations, li))
+        note += use_colour ? colour_string(*ann, colour) : *ann;
 
-    if (!skip_excl && j != level_exclusions.end())
-    {
-        if (note.length() > 0)
-            note += ", ";
-        note += j->second;
-    }
+    if (!skip_excl)
+        if (string *excl = map_find(level_exclusions, li))
+        {
+            if (note.length() > 0)
+                note += ", ";
+            note += *excl;
+        }
 
-    if (!skip_uniq && k != level_uniques.end())
-    {
-        if (note.length() > 0)
-            note += ", ";
-        note += k->second;
-    }
+    if (!skip_uniq)
+        if (string *uniq = map_find(level_uniques, li))
+        {
+            if (note.length() > 0)
+                note += ", ";
+            note += *uniq;
+        }
 
     return note;
 }
@@ -923,8 +911,7 @@ void clear_level_annotations(level_id li)
     if (li == BRANCH_ABYSS)
         return;
 
-    set<monster_annotation>::iterator next;
-    for (auto i = auto_unique_annotations.begin();
+    for (auto i = auto_unique_annotations.begin(), next = i;
          i != auto_unique_annotations.end(); i = next)
     {
         next = i;

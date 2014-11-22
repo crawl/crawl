@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "coord.h"
+#include "misc.h" // erase_val
 
 dgn_event_dispatcher dungeon_events;
 
@@ -154,13 +155,7 @@ void dgn_event_dispatcher::remove_listener_at(const coord_def &pos,
                                               dgn_event_listener *listener)
 {
     if (dgn_square_alarm *alarm = grid_triggers[pos.x][pos.y].get())
-    {
-        list<dgn_event_listener*>::iterator i = find(alarm->listeners.begin(),
-                                                     alarm->listeners.end(),
-                                                     listener);
-        if (i != alarm->listeners.end())
-            alarm->listeners.erase(i);
-    }
+        erase_val(alarm->listeners, listener);
 }
 
 /////////////////////////////////////////////////////////////////////////////

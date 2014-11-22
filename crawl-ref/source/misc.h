@@ -309,8 +309,16 @@ struct counted_monster_list
 bool today_is_halloween();
 
 template<class C, class P>
-void erase_if(C &container, P pred) {
+void erase_if(C &container, P pred)
+{
     container.erase(remove_if(begin(container), end(container), pred),
+                    end(container));
+}
+
+template<class C>
+void erase_val(C &container, const typename C::value_type &val)
+{
+    container.erase(remove(begin(container), end(container), val),
                     end(container));
 }
 #endif

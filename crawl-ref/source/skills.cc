@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 #include <sstream>
 
 #include "ability.h"
@@ -34,7 +35,7 @@
 #include "stringutil.h"
 #include "unwind.h"
 
-typedef string (*string_fn)();
+typedef function<string ()> string_fn;
 typedef map<string, string_fn> skill_op_map;
 
 static skill_op_map Skill_Op_Map;
@@ -67,8 +68,7 @@ public:
 
     static string get(const string &_key)
     {
-        skill_op_map::const_iterator i = Skill_Op_Map.find(_key);
-        return i == Skill_Op_Map.end()? string() : (i->second)();
+        return lookup(Skill_Op_Map, _key, [] () { return string(); })();
     }
 private:
     const char *key;
@@ -638,12 +638,13 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     // We ensure that the percentage always add up to 100 by increasing the
     // training for skills which had the higher rest from the above scaling.
     sort(rests.begin(), rests.end(), _cmp_rest);
-    vector<pair<skill_type, int64_t> >::iterator it = rests.begin();
-    while (scaled_total < scale && it != rests.end())
+    for (auto &rest : rests)
     {
-        ++array[it->first];
+        if (scaled_total >= scale)
+            break;
+
+        ++array[rest.first];
         ++scaled_total;
-        ++it;
     }
 
     ASSERT(scaled_total == scale);

@@ -10,6 +10,7 @@
 #include "files.h"
 #include "libutil.h"
 #include "l_libs.h"
+#include "misc.h" // erase_val
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
@@ -772,10 +773,7 @@ void CLua::add_shutdown_listener(lua_shutdown_listener *listener)
 
 void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
 {
-    vector<lua_shutdown_listener*>::iterator i =
-        find(shutdown_listeners.begin(), shutdown_listeners.end(), listener);
-    if (i != shutdown_listeners.end())
-        shutdown_listeners.erase(i);
+    erase_val(shutdown_listeners, listener);
 }
 
 // Can be called from within a debugger to look at the current Lua
@@ -1056,8 +1054,7 @@ lua_call_throttle::~lua_call_throttle()
 
 CLua *lua_call_throttle::find_clua(lua_State *ls)
 {
-    lua_clua_map::iterator i = lua_map.find(ls);
-    return i != lua_map.end()? i->second : NULL;
+    return lookup(lua_map, ls, nullptr);
 }
 
 // This function is a replacement for Lua's in-built pcall function. It behaves

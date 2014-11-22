@@ -340,18 +340,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
         if (!insparts.empty())
         {
-            buff << " {";
-
-            vector<string>::iterator iter = insparts.begin();
-
-            for (;;)
-            {
-                buff << *iter;
-                if (++iter == insparts.end()) break;
-                buff << ", ";
-            }
-
-            buff << "}";
+            buff << " {"
+                 << comma_separated_line(begin(insparts), end(insparts), ", ")
+                 << "}";
         }
     }
     // These didn't have "cursed " prepended; add them here so that
@@ -3860,9 +3851,8 @@ void init_item_name_cache()
 
                 if (!item_names_cache.count(name))
                 {
-                    item_kind kind = {base_type, (uint8_t)sub_type,
-                                      (int8_t)item.plus, 0};
-                    item_names_cache[name] = kind;
+                    item_names_cache[name] = { base_type, (uint8_t)sub_type,
+                                               (int8_t)item.plus, 0 };
                     if (g.ch)
                         item_names_by_glyph_cache[g.ch].push_back(name);
                 }
@@ -3873,30 +3863,15 @@ void init_item_name_cache()
     ASSERT(!item_names_cache.empty());
 }
 
-item_kind item_kind_by_name(string name)
+item_kind item_kind_by_name(const string &name)
 {
-    lowercase(name);
-
-    item_names_map::iterator i = item_names_cache.find(name);
-
-    if (i != item_names_cache.end())
-        return i->second;
-
-    item_kind err = {OBJ_UNASSIGNED, 0, 0, 0};
-
-    return err;
+    return lookup(item_names_cache, lowercase_string(name),
+                  { OBJ_UNASSIGNED, 0, 0, 0 });
 }
 
 vector<string> item_name_list_for_glyph(unsigned glyph)
 {
-    item_names_by_glyph_map::iterator i;
-    i = item_names_by_glyph_cache.find(glyph);
-
-    if (i != item_names_by_glyph_cache.end())
-        return i->second;
-
-    vector<string> empty;
-    return empty;
+    return lookup(item_names_by_glyph_cache, glyph, {});
 }
 
 bool is_named_corpse(const item_def &corpse)

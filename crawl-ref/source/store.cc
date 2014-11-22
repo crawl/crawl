@@ -11,6 +11,7 @@
 #include <algorithm>
 
 #include "dlua.h"
+#include "libutil.h" // map_find
 #include "monster.h"
 #include "stringutil.h"
 
@@ -1288,12 +1289,10 @@ void CrawlHashTable::write(writer &th) const
 
     marshallUnsigned(th, size());
 
-    CrawlHashTable::hash_map_type::const_iterator i = hash_map->begin();
-
-    for (; i != hash_map->end(); ++i)
+    for (const auto &entry : *hash_map)
     {
-        marshallString(th, i->first);
-        i->second.write(th);
+        marshallString(th, entry.first);
+        entry.second.write(th);
     }
 
     ASSERT_VALIDITY();
@@ -1343,14 +1342,12 @@ static map<string, int> accesses;
 
 bool CrawlHashTable::exists(const string &key) const
 {
-    if (hash_map == NULL)
+    if (!hash_map)
         return false;
 
     ACCESS(key);
     ASSERT_VALIDITY();
-    hash_map_type::const_iterator i = hash_map->find(key);
-
-    return i != hash_map->end();
+    return hash_map->find(key) != hash_map->end();
 }
 
 void CrawlHashTable::assert_validity() const
@@ -1359,16 +1356,14 @@ void CrawlHashTable::assert_validity() const
     if (hash_map == NULL)
         return;
 
-    hash_map_type::const_iterator i = hash_map->begin();
-
     size_t actual_size = 0;
 
-    for (; i != hash_map->end(); ++i)
+    for (const auto &entry : *hash_map)
     {
         actual_size++;
 
-        const string          &key = i->first;
-        const CrawlStoreValue &val = i->second;
+        const string          &key = entry.first;
+        const CrawlStoreValue &val = entry.second;
 
         ASSERT(!key.empty());
         string trimmed = trimmed_string(key);
@@ -1442,23 +1437,18 @@ CrawlStoreValue& CrawlHashTable::get_value(const string &key)
 
 const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 {
-#ifdef ASSERTS
-    if (!hash_map)
-        die("trying to read non-existent property \"%s\"", key.c_str());
-#endif
+    ASSERTM(hash_map,
+            "trying to read non-existent property \"%s\"", key.c_str());
     ASSERT_VALIDITY();
 
     ACCESS(key);
-    hash_map_type::const_iterator i = hash_map->find(key);
+    CrawlStoreValue *store = map_find(*hash_map, key);
 
-#ifdef ASSERTS
-    if (i == hash_map->end())
-        die("trying to read non-existent property \"%s\"", key.c_str());
-#endif
-    ASSERT(i->second.type != SV_NONE);
-    ASSERT(!(i->second.flags & SFLAG_UNSET));
+    ASSERTM(store, "trying to read non-existent property \"%s\"", key.c_str());
+    ASSERT(store->type != SV_NONE);
+    ASSERT(!(store->flags & SFLAG_UNSET));
 
-    return i->second;
+    return *store;
 }
 
 ///////////////////////////

@@ -137,6 +137,14 @@ typename M::mapped_type lookup(M &map, const typename M::key_type &key,
     return it == map.end() ? unfound : it->second;
 }
 
+template<class C, class Pred>
+C grep(const C &container, Pred pred)
+{
+    C retval;
+    copy_if(begin(container), end(container), begin(retval), pred);
+    return retval;
+}
+
 static inline int sqr(int x)
 {
     return x * x;

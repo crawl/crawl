@@ -460,7 +460,7 @@ bool bolt::can_affect_actor(const actor *act) const
     // Blinkbolt doesn't hit its caster, since they are the bolt.
     if (origin_spell == SPELL_BLINKBOLT && act->mid == source_id)
         return false;
-    map<mid_t, int>::const_iterator cnt = hit_count.find(act->mid);
+    auto cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {
         // Note: this is done for balance, even if it hurts realism a bit.
@@ -974,9 +974,8 @@ void bolt::destroy_wall_effect()
     {
         set<coord_def> doors;
         find_connected_identical(pos(), doors);
-        set<coord_def>::iterator it;
-        for (it = doors.begin(); it != doors.end(); ++it)
-            destroy_wall(*it);
+        for (coord_def c : doors)
+            destroy_wall(c);
         break;
     }
 
@@ -6032,13 +6031,11 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     // Draw pass.
     if (!is_tracer)
     {
-        for (siter ci = sweep.begin(); ci != sweep.end(); ++ci)
+        for (const auto &line : sweep)
         {
             bool pass_visible = false;
-            for (viter cci = ci->begin(); cci != ci->end(); ++cci)
+            for (const coord_def delta : line)
             {
-                const coord_def delta = *cci;
-
                 if (delta.origin() && hole_in_the_middle)
                     continue;
 
@@ -6055,12 +6052,10 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     // Affect pass.
     int cells_seen = 0;
-    for (siter ci = sweep.begin(); ci != sweep.end(); ++ci)
+    for (const auto &line : sweep)
     {
-        for (viter cci = ci->begin(); cci != ci->end(); ++cci)
+        for (const coord_def delta : line)
         {
-            const coord_def delta = *cci;
-
             if (delta.origin() && hole_in_the_middle)
                 continue;
 

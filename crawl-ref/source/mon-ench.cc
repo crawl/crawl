@@ -98,8 +98,7 @@ mon_enchant monster::get_ench(enchant_type ench1,
 
     for (int e = ench1; e <= ench2; ++e)
     {
-        mon_enchant_list::const_iterator i =
-            enchantments.find(static_cast<enchant_type>(e));
+        auto i = enchantments.find(static_cast<enchant_type>(e));
 
         if (i != enchantments.end())
             return i->second;
@@ -138,19 +137,15 @@ bool monster::add_ench(const mon_enchant &ench)
         invalidate_agrid();
     }
 
-    mon_enchant_list::iterator i = enchantments.find(ench.ench);
     bool new_enchantment = false;
-    mon_enchant *added = NULL;
-    if (i == enchantments.end())
+    mon_enchant *added = nullptr;
+    if (added = map_find(enchantments, ench.ench))
+        *added += ench;
+    else
     {
         new_enchantment = true;
         added = &(enchantments[ench.ench] = ench);
         ench_cache.set(ench.ench, true);
-    }
-    else
-    {
-        i->second += ench;
-        added = &i->second;
     }
 
     // If the duration is not set, we must calculate it (depending on the
@@ -453,7 +448,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 
 bool monster::del_ench(enchant_type ench, bool quiet, bool effect)
 {
-    mon_enchant_list::iterator i = enchantments.find(ench);
+    auto i = enchantments.find(ench);
     if (i == enchantments.end())
         return false;
 
