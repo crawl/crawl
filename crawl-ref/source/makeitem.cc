@@ -231,288 +231,32 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
     return false;
 }
 
+/**
+ * The number of times to try finding a brand for a given item.
+ *
+ * Result may vary from call to call.
+ */
+static int _num_brand_tries(const item_def& item, int item_level)
+{
+    if (item_level >= MAKE_GIFT_ITEM)
+        return 5;
+    if (is_demonic(item) || x_chance_in_y(101 + item_level, 300))
+        return 1;
+    return 0;
+}
+
 static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 {
     // Forced ego.
-    if (item.special != 0)
-        return static_cast<brand_type>(item.special);
+    if (item.brand != 0)
+        return static_cast<brand_type>(item.brand);
 
-    int tries;
-
-    if (item_level >= MAKE_GIFT_ITEM)
-        tries =  5;
-    else if (is_demonic(item) || x_chance_in_y(101 + item_level, 300))
-        tries = 1;
-    else
-        tries = 0;
-
+    const weapon_type wpn_type = static_cast<weapon_type>(item.sub_type);
+    const int tries       = _num_brand_tries(item, item_level);
     brand_type rc         = SPWPN_NORMAL;
 
     for (int count = 0; count < tries && rc == SPWPN_NORMAL; ++count)
-    {
-
-        // We are not guaranteed to have a special set by the end of
-        // this.
-        switch (item.sub_type)
-        {
-        case WPN_EVENINGSTAR:
-            rc = random_choose_weighted(30, SPWPN_PROTECTION,
-                                        19, SPWPN_DRAINING,
-                                        15, SPWPN_HOLY_WRATH,
-                                        8, SPWPN_NORMAL,
-                                        6, SPWPN_VORPAL,
-                                        6, SPWPN_VENOM,
-                                        4, SPWPN_FLAMING,
-                                        4, SPWPN_FREEZING,
-                                        2, SPWPN_DISTORTION,
-                                        2, SPWPN_ANTIMAGIC,
-                                        2, SPWPN_PAIN,
-                                        2, SPWPN_VAMPIRISM,
-                                        0);
-            break;
-
-        case WPN_MORNINGSTAR:
-            rc = random_choose_weighted(30, SPWPN_PROTECTION,
-                                        15, SPWPN_NORMAL,
-                                        15, SPWPN_HOLY_WRATH,
-                                        10, SPWPN_DRAINING,
-                                        9, SPWPN_VORPAL,
-                                        5, SPWPN_VENOM,
-                                        4, SPWPN_FLAMING,
-                                        4, SPWPN_FREEZING,
-                                        2, SPWPN_DISTORTION,
-                                        2, SPWPN_ANTIMAGIC,
-                                        2, SPWPN_PAIN,
-                                        2, SPWPN_VAMPIRISM,
-                                        0);
-            break;
-
-        case WPN_MACE:
-        case WPN_GREAT_MACE:
-        case WPN_FLAIL:
-        case WPN_DIRE_FLAIL:
-        case WPN_HAMMER:
-            rc = random_choose_weighted(30, SPWPN_PROTECTION,
-                                        28, SPWPN_NORMAL,
-                                        15, SPWPN_HOLY_WRATH,
-                                        14, SPWPN_VORPAL,
-                                        10, SPWPN_DRAINING,
-                                        1, SPWPN_DISTORTION,
-                                        1, SPWPN_ANTIMAGIC,
-                                        1, SPWPN_PAIN,
-                                        0);
-            break;
-
-        case WPN_DAGGER:
-                                    // total weight 100
-            rc = random_choose_weighted(28, SPWPN_VENOM,
-                                        20, SPWPN_NORMAL,
-                                        10, SPWPN_SPEED,
-                                         9, SPWPN_DRAINING,
-                                         6, SPWPN_PROTECTION,
-                                         6, SPWPN_ELECTROCUTION,
-                                         5, SPWPN_HOLY_WRATH,
-                                         4, SPWPN_VAMPIRISM,
-                                         4, SPWPN_FLAMING,
-                                         4, SPWPN_FREEZING,
-                                         2, SPWPN_PAIN,
-                                         1, SPWPN_DISTORTION,
-                                         1, SPWPN_ANTIMAGIC,
-                                         0);
-            break;
-
-        case WPN_SHORT_SWORD:
-        case WPN_RAPIER:
-                                    // total weight 100
-            rc = random_choose_weighted(33, SPWPN_NORMAL,
-                                        17, SPWPN_VENOM,
-                                        10, SPWPN_SPEED,
-                                         9, SPWPN_DRAINING,
-                                         6, SPWPN_PROTECTION,
-                                         6, SPWPN_ELECTROCUTION,
-                                         5, SPWPN_HOLY_WRATH,
-                                         4, SPWPN_VAMPIRISM,
-                                         4, SPWPN_FLAMING,
-                                         4, SPWPN_FREEZING,
-                                         1, SPWPN_DISTORTION,
-                                         1, SPWPN_ANTIMAGIC,
-                                         0);
-            break;
-
-        case WPN_FALCHION:
-        case WPN_LONG_SWORD:
-        case WPN_SCIMITAR:
-        case WPN_GREAT_SWORD:
-        case WPN_DOUBLE_SWORD:
-        case WPN_TRIPLE_SWORD:
-                                    // total weight 100
-            rc = random_choose_weighted(23, SPWPN_HOLY_WRATH,
-                                        19, SPWPN_NORMAL,
-                                        15, SPWPN_VORPAL,
-                                        10, SPWPN_ELECTROCUTION,
-                                         8, SPWPN_PROTECTION,
-                                         5, SPWPN_FREEZING,
-                                         5, SPWPN_FLAMING,
-                                         5, SPWPN_DRAINING,
-                                         4, SPWPN_VAMPIRISM,
-                                         2, SPWPN_VENOM,
-                                         2, SPWPN_DISTORTION,
-                                         1, SPWPN_PAIN,
-                                         1, SPWPN_ANTIMAGIC,
-                                         0);
-            break;
-
-        case WPN_WAR_AXE:
-        case WPN_HAND_AXE:
-        case WPN_BROAD_AXE:
-        case WPN_BATTLEAXE:
-        case WPN_EXECUTIONERS_AXE:
-                                    // total weight 100
-            rc = random_choose_weighted(31, SPWPN_NORMAL,
-                                        16, SPWPN_VORPAL,
-                                        11, SPWPN_ELECTROCUTION,
-                                        10, SPWPN_FREEZING,
-                                        10, SPWPN_FLAMING,
-                                         8, SPWPN_VENOM,
-                                         5, SPWPN_VAMPIRISM,
-                                         3, SPWPN_DRAINING,
-                                         2, SPWPN_DISTORTION,
-                                         2, SPWPN_ANTIMAGIC,
-                                         1, SPWPN_PAIN,
-                                         1, SPWPN_HOLY_WRATH,
-                                         0);
-            break;
-
-        case WPN_WHIP:
-                                    // total weight 100
-            rc = random_choose_weighted(34, SPWPN_NORMAL,
-                                        16, SPWPN_VENOM,
-                                        16, SPWPN_ELECTROCUTION,
-                                         7, SPWPN_DRAINING,
-                                         6, SPWPN_FLAMING,
-                                         6, SPWPN_FREEZING,
-                                         5, SPWPN_VAMPIRISM,
-                                         4, SPWPN_PAIN,
-                                         3, SPWPN_HOLY_WRATH,
-                                         2, SPWPN_DISTORTION,
-                                         1, SPWPN_ANTIMAGIC,
-                                           0);
-            break;
-
-        case WPN_HALBERD:
-        case WPN_GLAIVE:
-        case WPN_SCYTHE:
-        case WPN_TRIDENT:
-        case WPN_BARDICHE:
-                                    // total weight 100
-            rc = random_choose_weighted(36, SPWPN_NORMAL,
-                                        17, SPWPN_VENOM,
-                                        12, SPWPN_PROTECTION,
-                                        9, SPWPN_VORPAL,
-                                        7, SPWPN_FLAMING,
-                                        7, SPWPN_FREEZING,
-                                        5, SPWPN_VAMPIRISM,
-                                        2, SPWPN_DISTORTION,
-                                        2, SPWPN_PAIN,
-                                        2, SPWPN_ANTIMAGIC,
-                                        1, SPWPN_HOLY_WRATH,
-                                        0);
-            break;
-
-        case WPN_SPEAR:
-                                    // total weight 100
-            rc = random_choose_weighted(46, SPWPN_NORMAL,
-                                        17, SPWPN_VENOM,
-                                        12, SPWPN_VORPAL,
-                                         7, SPWPN_FLAMING,
-                                         7, SPWPN_FREEZING,
-                                         5, SPWPN_VAMPIRISM,
-                                         2, SPWPN_DISTORTION,
-                                         2, SPWPN_PAIN,
-                                         2, SPWPN_ANTIMAGIC,
-                                         0);
-            break;
-
-        case WPN_HUNTING_SLING:
-        case WPN_GREATSLING:
-        case WPN_SHORTBOW:
-        case WPN_LONGBOW:
-        case WPN_HAND_CROSSBOW:
-        case WPN_ARBALEST:
-            if (coinflip())
-                continue;
-            // intentionally fallthrough to normal launcher brands
-        case WPN_TRIPLE_CROSSBOW:
-                                    // total weight 100
-            rc = random_choose_weighted(48, SPWPN_FLAMING,
-                                        25, SPWPN_FREEZING,
-                                        15, SPWPN_EVASION,
-                                        11, SPWPN_VORPAL,
-                                         1, SPWPN_NORMAL,
-                                         0);
-            break;
-
-        case WPN_BLOWGUN:
-            if (one_chance_in(30))
-                rc = SPWPN_EVASION;
-            break;
-
-        // Staves
-        case WPN_QUARTERSTAFF:
-                                  // Total weight 100
-        rc = random_choose_weighted(50, SPWPN_NORMAL,
-                                    18, SPWPN_PROTECTION,
-                                     8, SPWPN_DRAINING,
-                                     8, SPWPN_VORPAL,
-                                     8, SPWPN_SPEED,
-                                     2, SPWPN_DISTORTION,
-                                     2, SPWPN_PAIN,
-                                     2, SPWPN_HOLY_WRATH,
-                                     2, SPWPN_ANTIMAGIC,
-                                       0);
-            break;
-
-        case WPN_LAJATANG:
-                                        // total weight 100
-            rc = random_choose_weighted(34, SPWPN_NORMAL,
-                                        12, SPWPN_SPEED,
-                                        12, SPWPN_ELECTROCUTION,
-                                        12, SPWPN_VAMPIRISM,
-                                         9, SPWPN_PROTECTION,
-                                         7, SPWPN_VENOM,
-                                         7, SPWPN_PAIN,
-                                         4, SPWPN_ANTIMAGIC,
-                                         3, SPWPN_DISTORTION,
-                                        0);
-            break;
-
-        case WPN_DEMON_WHIP:
-        case WPN_DEMON_BLADE:
-        case WPN_DEMON_TRIDENT:
-                                        // total weight 100
-            rc = random_choose_weighted(27, SPWPN_NORMAL,
-                                        20, SPWPN_VENOM,
-                                        16, SPWPN_ELECTROCUTION,
-                                        13, coinflip() ? SPWPN_FLAMING
-                                                       : SPWPN_FREEZING,
-                                        10, SPWPN_DRAINING,
-                                         7, SPWPN_VAMPIRISM,
-                                         4, SPWPN_PAIN,
-                                         3, SPWPN_ANTIMAGIC,
-                                         0);
-            break;
-
-        case WPN_EUDEMON_BLADE:      // special gifts of TSO
-        case WPN_SACRED_SCOURGE:
-        case WPN_TRISHULA:
-            rc = SPWPN_HOLY_WRATH;
-            break;
-
-        default:
-            // unlisted weapons have no associated, standard ego-types {dlb}
-            break;
-        }
-    }
+        rc = choose_weapon_brand(wpn_type);
 
     ASSERT(is_weapon_brand_ok(item.sub_type, rc, true));
     return rc;
