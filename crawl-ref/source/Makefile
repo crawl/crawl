@@ -1380,7 +1380,7 @@ ifdef ANDROID
   shareddir_fp =
 endif
 
-install-data: $(GENERATED_FILES) $(DESTTILEFILES)
+install-data: $(GENERATED_FILES)
 ifeq ($(DESTDIR)$(prefix)$(ANDROID),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
 	@exit 1
