@@ -1105,6 +1105,12 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
         return false;
     }
 
+    if (spell == SPELL_SPELLFORGED_SERVITOR
+        && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
+    {
+        return false;
+    }
+
     unsigned int disciplines = get_spell_disciplines(spell);
     int num_disciplines = count_bits(disciplines);
 
