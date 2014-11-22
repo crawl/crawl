@@ -37,6 +37,9 @@ static const int MR_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
+/// The number of ATTR_BONE_ARMOUR points required for a point of AC/SH
+static const int BONE_ARMOUR_DIV = 3;
+
 /// The minimum aut cost for a player move (before haste)
 static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // relevant for swiftness, etc
@@ -500,6 +503,8 @@ public:
     int shout_volume() const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
+
+    void maybe_degrade_bone_armour();
 
     // actor
     int mindex() const;

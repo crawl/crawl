@@ -9,8 +9,11 @@
 
 #include "areas.h"
 #include "art-enum.h"
+#include "butcher.h" // butcher_corpse
+#include "coordit.h" // radius_iterator
 #include "godconduct.h"
 #include "hints.h"
+#include "items.h" // stack_iterator
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -19,7 +22,9 @@
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "transform.h"
+#include "tilepick.h"
 #include "view.h"
+#include "viewchar.h"
 
 int allowed_deaths_door_hp()
 {
@@ -95,10 +100,115 @@ spret_type ice_armour(int pow, bool fail)
     else
         mpr("A film of ice covers your body!");
 
+    if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+    {
+        you.attribute[ATTR_BONE_ARMOUR] = 0;
+        mpr("Your corpse armour falls away.");
+    }
 
     you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
                           NULL);
     you.props[ICY_ARMOUR_KEY] = pow;
+    you.redraw_armour_class = true;
+
+    return SPRET_SUCCESS;
+}
+
+/**
+ * Destroy all corpses in LOS.
+ *
+ * @return  The total number of corpses destroyed. Non-skeleton corpses count
+ *          double.
+ */
+static int _harvest_corpses()
+{
+    int harvested = 0;
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        for (stack_iterator si(*ri, true); si; ++si)
+        {
+            item_def &item = *si;
+            if (item.base_type != OBJ_CORPSES)
+                continue;
+
+            harvested += item.sub_type == CORPSE_SKELETON ? 1 : 2;
+            if (dry_run)
+                continue;
+
+            bolt beam;
+            beam.source = *ri;
+            beam.target = harvester.pos();
+            beam.glyph = dchar_glyph(DCHAR_FIRED_CHUNK);
+            beam.colour = item.get_colour();
+            beam.range = LOS_RADIUS;
+            beam.aimed_at_spot = true;
+            beam.item = &item;
+            beam.flavour = BEAM_VISUAL;
+            beam.draw_delay = 3;
+            beam.fire();
+            destroy_item(item.index());
+        }
+    }
+
+    // don't cover the screen with corpses if we get a more()
+    if (harvested)
+        viewwindow();
+
+    return harvested;
+}
+
+
+/**
+ * Casts the player spell "Cigotuvi's Embrace", pulling all corpses into LOS
+ * around the caster to serve as armour.
+ *
+ * One point of (ac+sh) per for every 1.5 corpses or 3 skeletons.
+ *
+ * @param pow   The spellpower at which the spell is being cast.
+ * @param fail  Whether the casting failed.
+ * @return      SPRET_ABORT if you already have an incompatible buff running,
+ *              SPRET_FAIL if fail is true, and SPRET_SUCCESS otherwise.
+ */
+spret_type corpse_armour(int pow, bool fail)
+{
+    if (player_stoneskin() || you.form == TRAN_STATUE)
+    {
+        mpr("The corpses won't embrace your stony flesh.");
+        return SPRET_ABORT;
+    }
+
+    if (you.duration[DUR_ICY_ARMOUR])
+    {
+        mpr("The corpses won't embrace your icy flesh.");
+        return SPRET_ABORT;
+    }
+
+    // Could check carefully to see if it's even possible that there are any
+    // valid corpses/skeletons in LOS (any piles with stuff under them, etc)
+    // before failing, but it's better to be simple + predictable from the
+    // player's perspective.
+    fail_check();
+
+    const int harvested = _harvest_corpses();
+    dprf("Harvested: %d", harvested);
+
+    if (!harvested)
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return SPRET_SUCCESS; // still takes a turn, etc
+    }
+
+    if (you.attribute[ATTR_BONE_ARMOUR] <= 0)
+        mpr("The bodies of the dead rush to embrace you!");
+    else
+        mpr("Your shell of carrion and bone grows thicker.");
+
+    // 1 point of ac&sh per two skeletons, plus whatever you had already
+    // don't give more than spellpower/10 ac&sh. (5 at 50 power, etc)
+    // but if you got any corpses at all, always give at least 2 ac&sh
+    // and never reduce it below what you had before casting!
+    you.attribute[ATTR_BONE_ARMOUR] += harvested;
     you.redraw_armour_class = true;
 
     return SPRET_SUCCESS;

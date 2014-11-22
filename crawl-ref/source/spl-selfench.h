@@ -1,3 +1,4 @@
+
 #ifndef SPL_SELFENCH_H
 #define SPL_SELFENCH_H
 
@@ -7,6 +8,7 @@ int allowed_deaths_door_hp();
 spret_type cast_deaths_door(int pow, bool fail);
 void remove_ice_armour();
 spret_type ice_armour(int pow, bool fail);
+spret_type corpse_armour(int pow, bool fail);
 spret_type missile_prot(int pow, bool fail);
 spret_type deflection(int pow, bool fail);
 

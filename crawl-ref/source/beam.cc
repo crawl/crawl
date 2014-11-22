@@ -1254,7 +1254,8 @@ void bolt::do_fire()
 #ifdef USE_TILE
     tile_beam = -1;
 
-    if (item && !is_tracer && flavour == BEAM_MISSILE)
+    if (item && !is_tracer && (flavour == BEAM_MISSILE
+                               || flavour == BEAM_VISUAL))
     {
         const coord_def diff = target - source;
         tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
@@ -4653,6 +4654,8 @@ void bolt::hit_shield(actor* blocker) const
                 you.props[MELT_SHIELD_KEY] = true;
         }
     }
+    if (blocker->is_player())
+        you.maybe_degrade_bone_armour();
 }
 
 // Return true if the block succeeded (including reflections.)

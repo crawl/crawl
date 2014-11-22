@@ -494,7 +494,6 @@ static bool _place_dragon()
             continue;
 
         const coord_def pos = spots[random2(spots.size())];
-
         monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
                                                    2, SPELL_DRAGON_CALL,
                                                    pos, MHITYOU,

@@ -977,6 +977,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             _maybe_ru_retribution(dam, source);
             _maybe_spawn_monsters(dam, aux, death_type, source);
             _maybe_fog(dam);
+            you.maybe_degrade_bone_armour();
             _powered_by_pain(dam);
             if (drain_amount > 0)
                 drain_player(drain_amount, true, true);
