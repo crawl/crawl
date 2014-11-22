@@ -56,6 +56,7 @@
 #include "spl-monench.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -81,6 +82,7 @@ static int  _mons_control_undead(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(monster *mons);
 static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
 static coord_def _mons_prism_pos(monster* mon, actor* foe);
+static coord_def _mons_singularity_pos(const monster* mon);
 static bool _mons_consider_tentacle_throwing(const monster &mons);
 static bool _tentacle_toss(const monster &thrower, actor &victim, int pow);
 static bool _mons_consider_goblin_tossing(const monster &mons);
@@ -968,6 +970,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_CONJURE_FLAME:         // ditto
     case SPELL_FULMINANT_PRISM:       // ditto
     case SPELL_SCATTERSHOT:           // ditto
+    case SPELL_SINGULARITY:           // ditto
         beam.flavour  = BEAM_DEVASTATION;
         beam.pierce   = true;
         // Doesn't take distance into account, but this is just a tracer so
@@ -1516,6 +1519,11 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         else if (spell_cast == SPELL_FULMINANT_PRISM)
         {
             pbolt.target = _mons_prism_pos(mons, mons->get_foe());
+            pbolt.aimed_at_spot = true; // ditto
+        }
+        else if (spell_cast == SPELL_SINGULARITY)
+        {
+            pbolt.target = _mons_singularity_pos(mons);
             pbolt.aimed_at_spot = true; // ditto
         }
      }
@@ -3201,6 +3209,53 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
     return enemy > friendly;
 }
 
+/**
+ * Pick a target for conjuring a singularity.
+ * Since a singularity can't harm its caster, this should always
+ * give a valid target if it can see any enemies.
+ *
+ * @param[in] mon The monster casting this.
+ * @returns The best position for creating a singularity.
+ */
+static coord_def _mons_singularity_pos(const monster* mon)
+{
+    const int pow = 6 * mon->spell_hd(SPELL_SINGULARITY);
+    const int rad = singularity_max_range(pow);
+    int max_strength = 0, max_count = 0;
+    coord_def retval;
+
+    for (distance_iterator di(mon->pos(), true, true, LOS_RADIUS); di; ++di)
+    {
+        int strength = 0;
+
+        if (cell_is_solid(*di) || actor_at(*di))
+            continue;
+        for (radius_iterator ri(*di, rad, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+        {
+            actor* victim = actor_at(*ri);
+            if (!victim
+                || !mon->can_see(victim)
+                || mons_aligned(mon, victim))
+            {
+                continue;
+            }
+            strength += ((pow / 10) + 1) / (4 + grid_distance(*di, *ri));
+        }
+        if (strength == 0)
+            continue;
+        if (strength > max_strength
+            || (strength == max_strength && one_chance_in(++max_count)))
+        {
+            if (strength > max_strength)
+                max_count = 1;
+            max_strength = strength;
+            retval = *di;
+        }
+    }
+
+    return retval;
+}
+
 /** Chooses a matching spell from this spell list, based on frequency.
  *
  *  @param[in]  spells     the monster spell list to search
@@ -3531,7 +3586,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
             if ((spell_cast == SPELL_LRD
                  || spell_cast == SPELL_CONJURE_FLAME
-                 || spell_cast == SPELL_FULMINANT_PRISM)
+                 || spell_cast == SPELL_FULMINANT_PRISM
+                 || spell_cast == SPELL_SINGULARITY)
                 && !in_bounds(beem.target))
             {
                 spell_cast = SPELL_NO_SPELL;
@@ -6397,6 +6453,19 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         cleansing_flame(5 + (7 * mons->spell_hd(spell_cast) / 12),
                         CLEANSING_FLAME_SPELL, mons->pos(), mons);
         return;
+
+    case SPELL_SINGULARITY:
+    {
+        if (in_bounds(pbolt.target))
+        {
+           cast_singularity(mons, 6 * mons->spell_hd(spell_cast), pbolt.target,
+                            false);
+        }
+        else if (you.can_see(mons))
+            canned_msg(MSG_NOTHING_HAPPENS);
+
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,
