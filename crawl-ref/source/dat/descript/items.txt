@@ -818,6 +818,13 @@ An enchanted vessel brimming over with elemental water. Removing the stopper
 unleashes a torrent of water from the phial and sets free the water spirits
 that dwell within it.
 %%%%
+plane papyrus
+
+The last and greatest work of the Warper Golubria, detailing the most powerful
+Translocations spells in existence. It is notoriously difficult to track down
+and understand, as copies of the book and their contents have a tendency to
+shift between planes at a moment's notice.
+%%%%
 plate armour
 
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
