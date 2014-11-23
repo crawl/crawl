@@ -428,11 +428,10 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
+    pbolt.ench_power = (zinfo->tohit ? (*zinfo->tohit)(power) : power);
+
     if (zinfo->is_enchantment)
-    {
-        pbolt.ench_power = (zinfo->tohit ? (*zinfo->tohit)(power) : power);
         pbolt.hit = AUTOMATIC_HIT;
-    }
     else
     {
         pbolt.hit = (*zinfo->tohit)(power);
@@ -442,9 +441,6 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     if (zinfo->damage)
         pbolt.damage = (*zinfo->damage)(power);
-
-    if (z_type == ZAP_EXPLOSIVE_BOLT)
-        pbolt.ench_power = power;
 
     pbolt.origin_spell = zap_to_spell(z_type);
 
@@ -4585,9 +4581,9 @@ void bolt::beam_hits_actor(actor *act)
     coord_def newpos(act->pos());
 
     const int distance =
-        (origin_spell == SPELL_CHILLING_BREATH)           ? 2 :
-        (origin_spell == SPELL_FORCE_LANCE && coinflip()) ? 2
-                                                          : 1;
+        (origin_spell == SPELL_FORCE_LANCE)
+            ? 1 + div_rand_round(ench_power, 40) :
+        (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
 
     if (knockback_actor(act, distance, newpos))
     {
@@ -5776,6 +5772,11 @@ bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
     if (act->is_stationary())
         return false;
 
+    const int roll = origin_spell == SPELL_FORCE_LANCE
+                     ? 1000 + 40 * ench_power
+                     : 2500;
+    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
+
     bool moved = false;
 
     ASSERT(ray.pos() == act->pos());
@@ -5784,7 +5785,7 @@ bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
     while (distance-- > 0)
     {
         // Save is based on target's body weight.
-        if (random2(2500) < act->body_weight())
+        if (random2(roll) < weight)
             continue;
 
         const ray_def ray_copy(ray);
