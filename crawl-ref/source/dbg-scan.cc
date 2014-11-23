@@ -1190,38 +1190,24 @@ static void _init_stats()
                     item_recs[lev][i][j][max_field] = -1;
                 }
             }
-            equip_brands[lev] = vector< vector< vector< vector<int> > > >();
-            equip_brands[lev].push_back(vector< vector< vector<int> > >());
+            equip_brands[lev] = { };
+            equip_brands[lev].emplace_back();
             for (int i = 0; i <= NUM_WEAPONS; i++)
             {
-                equip_brands[lev][0].push_back(vector< vector<int> >());
-                for (int j = 0; j < 3; j++)
-                {
-                    equip_brands[lev][0][i].push_back(vector<int>());
-                    for (int k = 0; k < NUM_SPECIAL_WEAPONS; k++)
-                        equip_brands[lev][0][i][j].push_back(0);
-                }
+                equip_brands[lev][0].emplace_back(3,
+                        vector<int>(NUM_SPECIAL_WEAPONS, 0));
             }
 
-            equip_brands[lev].push_back(vector< vector< vector<int> > >());
+            equip_brands[lev].emplace_back();
             for (int i = 0; i <= NUM_ARMOURS; i++)
             {
-                equip_brands[lev][1].push_back(vector< vector<int> >());
-                for (int j = 0; j < 3; j++)
-                {
-                    equip_brands[lev][1][i].push_back(vector<int>());
-                    for (int k = 0; k < NUM_SPECIAL_ARMOURS; k++)
-                        equip_brands[lev][1][i][j].push_back(0);
-                }
+                equip_brands[lev][1].emplace_back(3,
+                        vector<int>(NUM_SPECIAL_ARMOURS, 0));
             }
 
-            missile_brands[lev] = vector< vector<int> >();
+            missile_brands[lev].emplace_back();
             for (int i = 0; i <= NUM_MISSILES; i++)
-            {
-                missile_brands[lev].push_back(vector<int>());
-                for (int j = 0; j < NUM_SPECIAL_ARMOURS; j++)
-                    missile_brands[lev][i].push_back(0);
-            }
+                missile_brands[lev].emplace_back(NUM_SPECIAL_MISSILES, 0);
 
             for (const auto &mentry : valid_monsters)
             {
@@ -1962,8 +1948,7 @@ void objstat_generate_stats()
         }
     }
     // This represents the AllLevels summary.
-    stat_branches[NUM_BRANCHES] = vector<level_id>();
-    stat_branches[NUM_BRANCHES].push_back(level_id(NUM_BRANCHES, -1));
+    stat_branches[NUM_BRANCHES] = { level_id(NUM_BRANCHES, -1) };
     printf("Generating object statistics for %d iteration(s) of %d "
            "level(s) over %d branch(es).\n", SysEnv.map_gen_iters,
            num_levels, num_branches);

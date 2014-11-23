@@ -969,7 +969,7 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
             ch = env.tile_flv(c).wall;
     }
 
-    tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
+    tileset.emplace_back(ch, get_dngn_tex(ch));
 
     if (m->type == MONS_DANCING_WEAPON)
     {
@@ -985,20 +985,20 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
         else
             item = *m->inv[MSLOT_WEAPON];
 
-        tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
-        tileset.push_back(tile_def(TILEI_ANIMATED_WEAPON, TEX_ICONS));
+        tileset.emplace_back(tileidx_item(item), TEX_DEFAULT);
+        tileset.emplace_back(TILEI_ANIMATED_WEAPON, TEX_ICONS);
     }
     else if (mons_is_draconian(m->type))
     {
-        tileset.push_back(tile_def(tileidx_draco_base(*m), TEX_PLAYER));
+        tileset.emplace_back(tileidx_draco_base(*m), TEX_PLAYER);
         tileidx_t job = tileidx_draco_job(*m);
         if (job)
-            tileset.push_back(tile_def(job, TEX_PLAYER));
+            tileset.emplace_back(job, TEX_PLAYER);
     }
     else
     {
         tileidx_t idx = tileidx_monster(*m) & TILE_FLAG_MASK;
-        tileset.push_back(tile_def(idx, TEX_PLAYER));
+        tileset.emplace_back(idx, TEX_PLAYER);
     }
 
     // A fake monster might not have its ghost member set up properly,
@@ -1006,15 +1006,15 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     if (!fake && m->ground_level())
     {
         if (ch == TILE_DNGN_LAVA)
-            tileset.push_back(tile_def(TILEI_MASK_LAVA, TEX_ICONS));
+            tileset.emplace_back(TILEI_MASK_LAVA, TEX_ICONS);
         else if (ch == TILE_DNGN_SHALLOW_WATER)
-            tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER, TEX_ICONS));
+            tileset.emplace_back(TILEI_MASK_SHALLOW_WATER, TEX_ICONS);
         else if (ch == TILE_DNGN_DEEP_WATER)
-            tileset.push_back(tile_def(TILEI_MASK_DEEP_WATER, TEX_ICONS));
+            tileset.emplace_back(TILEI_MASK_DEEP_WATER, TEX_ICONS);
         else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
-            tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS));
+            tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS);
         else if (ch == TILE_DNGN_DEEP_WATER_MURKY)
-            tileset.push_back(tile_def(TILEI_MASK_DEEP_WATER_MURKY, TEX_ICONS));
+            tileset.emplace_back(TILEI_MASK_DEEP_WATER_MURKY, TEX_ICONS);
     }
 
     string damage_desc;
@@ -1024,19 +1024,19 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     {
     case MDAM_DEAD:
     case MDAM_ALMOST_DEAD:
-        tileset.push_back(tile_def(TILEI_MDAM_ALMOST_DEAD, TEX_ICONS));
+        tileset.emplace_back(TILEI_MDAM_ALMOST_DEAD, TEX_ICONS);
         break;
     case MDAM_SEVERELY_DAMAGED:
-        tileset.push_back(tile_def(TILEI_MDAM_SEVERELY_DAMAGED, TEX_ICONS));
+        tileset.emplace_back(TILEI_MDAM_SEVERELY_DAMAGED, TEX_ICONS);
         break;
     case MDAM_HEAVILY_DAMAGED:
-        tileset.push_back(tile_def(TILEI_MDAM_HEAVILY_DAMAGED, TEX_ICONS));
+        tileset.emplace_back(TILEI_MDAM_HEAVILY_DAMAGED, TEX_ICONS);
         break;
     case MDAM_MODERATELY_DAMAGED:
-        tileset.push_back(tile_def(TILEI_MDAM_MODERATELY_DAMAGED, TEX_ICONS));
+        tileset.emplace_back(TILEI_MDAM_MODERATELY_DAMAGED, TEX_ICONS);
         break;
     case MDAM_LIGHTLY_DAMAGED:
-        tileset.push_back(tile_def(TILEI_MDAM_LIGHTLY_DAMAGED, TEX_ICONS));
+        tileset.emplace_back(TILEI_MDAM_LIGHTLY_DAMAGED, TEX_ICONS);
         break;
     case MDAM_OKAY:
     default:
@@ -1045,17 +1045,17 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
     }
 
     if (m->attitude == ATT_FRIENDLY)
-        tileset.push_back(tile_def(TILEI_HEART, TEX_ICONS));
+        tileset.emplace_back(TILEI_HEART, TEX_ICONS);
     else if (m->attitude == ATT_GOOD_NEUTRAL)
-        tileset.push_back(tile_def(TILEI_GOOD_NEUTRAL, TEX_ICONS));
+        tileset.emplace_back(TILEI_GOOD_NEUTRAL, TEX_ICONS);
     else if (m->neutral())
-        tileset.push_back(tile_def(TILEI_NEUTRAL, TEX_ICONS));
+        tileset.emplace_back(TILEI_NEUTRAL, TEX_ICONS);
     else if (m->is(MB_FLEEING))
-        tileset.push_back(tile_def(TILEI_FLEEING, TEX_ICONS));
+        tileset.emplace_back(TILEI_FLEEING, TEX_ICONS);
     else if (m->is(MB_STABBABLE))
-        tileset.push_back(tile_def(TILEI_STAB_BRAND, TEX_ICONS));
+        tileset.emplace_back(TILEI_STAB_BRAND, TEX_ICONS);
     else if (m->is(MB_DISTRACTED))
-        tileset.push_back(tile_def(TILEI_MAY_STAB_BRAND, TEX_ICONS));
+        tileset.emplace_back(TILEI_MAY_STAB_BRAND, TEX_ICONS);
 
     return true;
 }
@@ -1071,10 +1071,10 @@ bool FeatureMenuEntry::get_tiles(vector<tile_def>& tileset) const
     MenuEntry::get_tiles(tileset);
 
     tileidx_t tile = tileidx_feature(pos);
-    tileset.push_back(tile_def(tile, get_dngn_tex(tile)));
+    tileset.emplace_back(tile, get_dngn_tex(tile));
 
     if (in_bounds(pos) && is_unknown_stair(pos))
-        tileset.push_back(tile_def(TILEI_NEW_STAIR, TEX_ICONS));
+        tileset.emplace_back(TILEI_NEW_STAIR, TEX_ICONS);
 
     return true;
 }
@@ -1154,7 +1154,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
             ymax = 18;
         }
 
-        tileset.push_back(tile_def(idx, TEX_PLAYER, ymax));
+        tileset.emplace_back(idx, TEX_PLAYER, ymax);
     }
 
     return true;
@@ -1709,7 +1709,7 @@ column_composer::column_composer(int cols, ...)
     va_list args;
     va_start(args, cols);
 
-    columns.push_back(column(1));
+    columns.emplace_back(1);
     int lastcol = 1;
     for (int i = 1; i < cols; ++i)
     {
@@ -1717,7 +1717,7 @@ column_composer::column_composer(int cols, ...)
         ASSERT(nextcol > lastcol);
 
         lastcol = nextcol;
-        columns.push_back(column(nextcol));
+        columns.emplace_back(nextcol);
     }
 
     va_end(args);
@@ -1751,7 +1751,7 @@ void column_composer::add_formatted(int ncol,
     if (add_separator && col.lines && !segs.empty()
         && (!pagesize || col.lines % pagesize))
     {
-        newlines.push_back(formatted_string());
+        newlines.emplace_back();
     }
 
     for (const string &seg : segs)
@@ -3052,7 +3052,7 @@ void SaveMenuItem::_pack_doll()
             ymax = 18;
         }
 
-        m_tiles.push_back(tile_def(idx, TEX_PLAYER, ymax));
+        m_tiles.emplace_back(idx, TEX_PLAYER, ymax);
     }
 }
 #endif

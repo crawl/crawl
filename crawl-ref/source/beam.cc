@@ -5917,27 +5917,25 @@ typedef vector< vector<coord_def> > sweep_type;
 static sweep_type _radial_sweep(int r)
 {
     sweep_type result;
-    sweep_type::value_type work;
 
     // Center first.
-    work.push_back(coord_def(0,0));
-    result.push_back(work);
+    result.emplace_back(1, coord_def(0,0));
 
     for (int rad = 1; rad <= r; ++rad)
     {
-        work.clear();
+        sweep_type::value_type work;
 
         for (int d = -rad; d <= rad; ++d)
         {
             // Don't put the corners in twice!
             if (d != rad && d != -rad)
             {
-                work.push_back(coord_def(-rad, d));
-                work.push_back(coord_def(+rad, d));
+                work.emplace_back(-rad, d);
+                work.emplace_back(+rad, d);
             }
 
-            work.push_back(coord_def(d, -rad));
-            work.push_back(coord_def(d, +rad));
+            work.emplace_back(d, -rad);
+            work.emplace_back(d, +rad);
         }
         result.push_back(work);
     }

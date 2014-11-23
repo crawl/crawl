@@ -361,7 +361,7 @@ static coord_def random_space_weighted(actor* moved, actor* target,
             weight = dist;
         if (weight < 0)
             weight = 0;
-        dests.push_back(coord_weight(*ri, weight));
+        dests.emplace_back(*ri, weight);
     }
 
     coord_def* choice = random_choose_weighted(dests);

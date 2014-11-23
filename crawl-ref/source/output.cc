@@ -986,12 +986,12 @@ static void _get_status_lights(vector<status_light>& out)
         static char static_pos_buf[80];
         snprintf(static_pos_buf, sizeof(static_pos_buf),
                  "%2d,%2d", you.pos().x, you.pos().y);
-        out.push_back(status_light(LIGHTGREY, static_pos_buf));
+        out.emplace_back(LIGHTGREY, static_pos_buf);
 
         static char static_hunger_buf[80];
         snprintf(static_hunger_buf, sizeof(static_hunger_buf),
                  "(%d:%d)", you.hunger - you.old_hunger, you.hunger);
-        out.push_back(status_light(LIGHTGREY, static_hunger_buf));
+        out.emplace_back(LIGHTGREY, static_hunger_buf);
     }
 #endif
 
@@ -2584,18 +2584,17 @@ static string _status_mut_abilities(int sw)
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
         if (fill_status_info(i, &inf) && !inf.short_text.empty())
-            status.push_back(inf.short_text);
+            status.emplace_back(inf.short_text);
     }
 
     int move_cost = (player_speed() * player_movement_speed()) / 10;
     if (move_cost != 10)
     {
-        string help = (move_cost <   8) ? "very quick" :
-                      (move_cost <  10) ? "quick" :
-                      (move_cost <  13) ? "slow"
-                                        : "very slow";
-
-        status.push_back(help);
+        const char *help = (move_cost <   8) ? "very quick" :
+                           (move_cost <  10) ? "quick" :
+                           (move_cost <  13) ? "slow"
+                                             : "very slow";
+        status.emplace_back(help);
     }
 
     status.push_back(magic_res_adjective(player_res_magic(false))
@@ -2633,9 +2632,9 @@ static string _status_mut_abilities(int sw)
     case SP_NAGA:
         // breathe poison replaces spit poison:
         if (!player_mutation_level(MUT_BREATHE_POISON))
-            mutations.push_back("spit poison");
+            mutations.emplace_back("spit poison");
         else
-            mutations.push_back("breathe poison");
+            mutations.emplace_back("breathe poison");
 
         if (you.experience_level > 12)
         {
@@ -2646,7 +2645,7 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_GHOUL:
-        mutations.push_back("rotting body");
+        mutations.emplace_back("rotting body");
         break;
 
     case SP_TENGU:
@@ -2660,8 +2659,8 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_MUMMY:
-        mutations.push_back("no food or potions");
-        mutations.push_back("fire vulnerability");
+        mutations.emplace_back("no food or potions");
+        mutations.emplace_back("fire vulnerability");
         if (you.experience_level > 12)
         {
             string help = "in touch with death";
@@ -2669,20 +2668,20 @@ static string _status_mut_abilities(int sw)
                 help = "strongly " + help;
             mutations.push_back(help);
         }
-        mutations.push_back("restore body");
+        mutations.emplace_back("restore body");
         break;
 
     case SP_VAMPIRE:
-        mutations.push_back("bottle blood");
+        mutations.emplace_back("bottle blood");
         break;
 
     case SP_DEEP_DWARF:
-        mutations.push_back("damage resistance");
-        mutations.push_back("recharge devices");
+        mutations.emplace_back("damage resistance");
+        mutations.emplace_back("recharge devices");
         break;
 
     case SP_FELID:
-        mutations.push_back("paw claws");
+        mutations.emplace_back("paw claws");
         break;
 
     case SP_RED_DRACONIAN:
@@ -2705,14 +2704,14 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_GREY_DRACONIAN:
-        mutations.push_back("walk through water");
+        mutations.emplace_back("walk through water");
         AC_change += 5;
         break;
 
     case SP_BLACK_DRACONIAN:
         mutations.push_back(_dragon_abil("breathe lightning"));
         if (you.experience_level >= 14)
-            mutations.push_back("able to fly continuously");
+            mutations.emplace_back("able to fly continuously");
         break;
 
     case SP_PURPLE_DRACONIAN:
@@ -2728,22 +2727,22 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_FORMICID:
-        mutations.push_back("permanent stasis");
-        mutations.push_back("dig shafts and tunnels");
-        mutations.push_back("four strong arms");
+        mutations.emplace_back("permanent stasis");
+        mutations.emplace_back("dig shafts and tunnels");
+        mutations.emplace_back("four strong arms");
         break;
 
     case SP_GARGOYLE:
         if (you.experience_level >= 14)
-            mutations.push_back("able to fly continuously");
+            mutations.emplace_back("able to fly continuously");
         AC_change += 2 + you.experience_level * 2 / 5
                        + max(0, you.experience_level - 7) * 2 / 5;
         break;
 
 #if TAG_MAJOR_VERSION == 34
     case SP_DJINNI:
-        mutations.push_back("fire immunity");
-        mutations.push_back("cold vulnerability");
+        mutations.emplace_back("fire immunity");
+        mutations.emplace_back("cold vulnerability");
         break;
 
 #endif
@@ -2755,7 +2754,7 @@ static string _status_mut_abilities(int sw)
     if (you.species == SP_OGRE || you.species == SP_TROLL
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
-        mutations.push_back("unfitting armour");
+        mutations.emplace_back("unfitting armour");
     }
 
     if (player_genus(GENPC_DRACONIAN))
@@ -2766,14 +2765,14 @@ static string _status_mut_abilities(int sw)
 
     if (you.species == SP_FELID)
     {
-        mutations.push_back("no armour");
-        mutations.push_back("no weapons or thrown items");
+        mutations.emplace_back("no armour");
+        mutations.emplace_back("no weapons or thrown items");
     }
 
     if (you.species == SP_OCTOPODE)
     {
-        mutations.push_back("almost no armour");
-        mutations.push_back("amphibious");
+        mutations.emplace_back("almost no armour");
+        mutations.emplace_back("amphibious");
         mutations.push_back(_annotate_form_based(
             "8 rings",
             !get_form()->slot_available(EQ_RING_EIGHT)));
@@ -2783,7 +2782,7 @@ static string _status_mut_abilities(int sw)
     }
 
     if (beogh_water_walk())
-        mutations.push_back("walk on water");
+        mutations.emplace_back("walk on water");
 
     string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
@@ -2820,7 +2819,7 @@ static string _status_mut_abilities(int sw)
     if (AC_change && you.form != TRAN_STATUE)
     {
         snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
-        mutations.push_back(info);
+        mutations.emplace_back(info);
     }
 
     if (mutations.empty())
@@ -2849,7 +2848,7 @@ static string _status_mut_abilities(int sw)
     vector<string> runes;
     for (int i = 0; i < NUM_RUNE_TYPES; i++)
         if (you.runes[i])
-            runes.push_back(rune_type_name(i));
+            runes.emplace_back(rune_type_name(i));
     if (!runes.empty())
     {
         text += make_stringf("\n<w>%s:</w> %d/%d rune%s: %s",

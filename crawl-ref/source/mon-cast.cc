@@ -6531,7 +6531,7 @@ static void _speech_keys(vector<string>& key_list,
         if (pbolt.visible())
         {
             key_list.push_back(pbolt.get_short_name() + " beam " + cast_str);
-            key_list.push_back("beam catchall cast");
+            key_list.emplace_back("beam catchall cast");
         }
     }
 }
@@ -7179,7 +7179,7 @@ static coord_def _choose_tentacle_toss_dest(const monster &thrower,
         {
             const int dist = victim.pos().distance_from(ray.pos());
             const int weight = sqr(LOS_RADIUS - dist + 1);
-            dests.push_back(coord_weight(ray.pos(), weight));
+            dests.emplace_back(ray.pos(), weight);
         }
         if (ray.pos() == target_site)
             break;

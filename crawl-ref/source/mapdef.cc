@@ -748,12 +748,12 @@ string map_lines::parse_glyph_replacements(string s, glyph_replacements_t &gly)
             if (!parse_int(is.substr(2).c_str(), weight) || weight < 1)
                 return "Invalid weight specifier in \"" + s + "\"";
             else
-                gly.push_back(glyph_weighted_replacement_t(glych, weight));
+                gly.emplace_back(glych, weight);
         }
         else
         {
             for (int c = 0, cs = is.length(); c < cs; ++c)
-                gly.push_back(glyph_weighted_replacement_t(is[c], 10));
+                gly.emplace_back(is[c], 10);
         }
     }
 
@@ -799,7 +799,7 @@ bool map_colour_list::parse(const string &col, int weight)
     if (colour == -1)
         return false;
 
-    push_back(map_weighted_colour(colour, weight));
+    emplace_back(colour, weight);
     return true;
 }
 
@@ -842,7 +842,7 @@ bool map_fprop_list::parse(const string &fp, int weight)
     else
         fprop = str_to_fprop(fp);
 
-    push_back(map_weighted_fprop(fprop, weight));
+    emplace_back(fprop, weight);
     return true;
 }
 
@@ -851,7 +851,7 @@ bool map_featheight_list::parse(const string &fp, int weight)
     const int thisheight = strict_aton(fp.c_str(), INVALID_HEIGHT);
     if (thisheight == INVALID_HEIGHT)
         return false;
-    push_back(map_weighted_fheight(thisheight, weight));
+    emplace_back(thisheight, weight);
     return true;
 }
 
@@ -908,7 +908,7 @@ string map_lines::add_fheight(const string &sub)
 
 bool map_string_list::parse(const string &fp, int weight)
 {
-    push_back(map_weighted_string(fp, weight));
+    emplace_back(fp, weight);
     return !fp.empty();
 }
 
@@ -1450,7 +1450,7 @@ void map_lines::nsubst(nsubst_spec &spec)
     {
         string::size_type pos = 0;
         while ((pos = lines[y].find_first_of(spec.key, pos)) != string::npos)
-            positions.push_back(coord_def(pos++, y));
+            positions.emplace_back(pos++, y);
     }
     shuffle_array(positions);
 
@@ -1959,7 +1959,7 @@ bool map_tile_list::parse(const string &s, int weight)
     if (s != "none" && !tile_dngn_index(s.c_str(), &idx))
         return false;
 
-    push_back(map_weighted_tile(s, weight));
+    emplace_back(s, weight);
     return true;
 }
 
@@ -3072,7 +3072,7 @@ point_vector map_def::anchor_points() const
     for (int y = 0, cheight = map.height(); y < cheight; ++y)
         for (int x = 0, cwidth = map.width(); x < cwidth; ++x)
             if (map.glyph(x, y) == '@')
-                points.push_back(coord_def(x, y));
+                points.emplace_back(x, y);
     return points;
 }
 
@@ -3443,10 +3443,8 @@ string map_def::apply_subvault(string_spec &spec)
         env.new_subvault_names.push_back(vault.name);
         env.new_subvault_tags.push_back(vault.tags);
         _register_subvault(vault.name, vault.tags);
-        subvault_places.push_back(
-            subvault_place(subvault_corners.first,
-                           subvault_corners.second,
-                           vault));
+        subvault_places.emplace_back(subvault_corners.first,
+                                     subvault_corners.second, vault);
 
         return "";
     }
@@ -3620,7 +3618,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
 
         for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
         {
-            cur_spells.push_back(mon_spell_slot());
+            cur_spells.emplace_back();
             const string spname(
                 lowercase_string(replace_all_of(spell_names[i], "_", " ")));
             if (spname.empty() || spname == "." || spname == "none"
@@ -4672,7 +4670,7 @@ item_spec item_list::random_item_weighted()
     for (int i = 0, sz = size(); i < sz; ++i)
     {
         item_spec item = get_item(i);
-        pairs.push_back(item_pair(item, item.genweight));
+        pairs.emplace_back(item, item.genweight);
     }
 
     item_spec* rn_item = random_choose_weighted(pairs);
@@ -6045,7 +6043,7 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
     if (ftype == DNGN_UNSEEN)
         err = make_stringf("no features matching \"%s\"", str.c_str());
     else
-        list.push_back(feature_spec(ftype, weight, mimic, no_mimic));
+        list.emplace_back(ftype, weight, mimic, no_mimic);
 
     return list;
 }

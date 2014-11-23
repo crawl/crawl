@@ -200,7 +200,7 @@ static vector<coord_def> _get_pool_seed_positions(
         for (unsigned int y = 0; y < pool_index[x].size(); y++)
         {
             if (pool_index[x][y] == NO_POOL)
-                floor_positions.push_back(coord_def(x, y));
+                floor_positions.emplace_back(x, y);
         }
 
     // 2. Choose the pool seed positions
@@ -1184,14 +1184,14 @@ LUAFN(dgn_make_round_box)
                         && (y - 1 < 0
                             || new_glyphs[x][y - 1] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                     else if (real_y + 1 < lines.height()
                              && strchr(passable, lines(real_x, real_y + 1))
                              && (y + 1 >= size_y
                                  || new_glyphs[x][y + 1] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                 }
 
@@ -1204,14 +1204,14 @@ LUAFN(dgn_make_round_box)
                         && (x - 1 < 0
                             || new_glyphs[x - 1][y] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                     else if (real_x + 1 < lines.width()
                              && strchr(passable, lines(real_x + 1, real_y))
                              && (x + 1 >= size_x
                                  || new_glyphs[x + 1][y] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                 }
             }
@@ -1412,7 +1412,7 @@ LUAFN(dgn_widen_paths)
 
                 // store this coordinate if needed
                 if (x_chance_in_y(percent_for_neighbours[neighbour_count], 100))
-                    coord_to_replace.push_back(coord_def(x, y));
+                    coord_to_replace.emplace_back(x, y);
             }
 
     // now go through and actually replace the positions
@@ -1822,7 +1822,7 @@ LUAFN(dgn_replace_random)
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
             if (lines(x, y) == find)
-                loc.push_back(coord_def(x, y));
+                loc.emplace_back(x, y);
 
     if (loc.empty())
     {

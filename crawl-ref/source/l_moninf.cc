@@ -140,7 +140,7 @@ LUAFN(moninf_get_spells)
         for (size_t j = 0; j < unique_spells.size(); ++j)
         {
             const spell_type spell = unique_spells[j];
-            spell_titles.push_back(spell_title(spell));
+            spell_titles.emplace_back(spell_title(spell));
         }
 
         clua_stringtable(ls, spell_titles);

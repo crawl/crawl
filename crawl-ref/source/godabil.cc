@@ -2522,7 +2522,7 @@ static int _collect_fruit(vector<pair<int,int> >& available_fruit)
         if (you.inv[i].defined() && is_fruit(you.inv[i]))
         {
             total += you.inv[i].quantity;
-            available_fruit.push_back(make_pair(you.inv[i].quantity, i));
+            available_fruit.emplace_back(you.inv[i].quantity, i);
         }
     }
     sort(available_fruit.begin(), available_fruit.end());
@@ -3144,10 +3144,8 @@ void fedhas_evolve_flora()
         plant->add_ench(ENCH_EXPLODING);
     else if (plant->type == MONS_OKLOB_PLANT)
     {
-        plant->spells.clear();
-        plant->spells.push_back(mon_spell_slot());
-        plant->spells[0].spell = SPELL_SPIT_ACID;
-        plant->spells[0].flags = MON_SPELL_NATURAL;
+        // frequency will be set by set_hit_dice below
+        plant->spells = { { SPELL_SPIT_ACID, 0, MON_SPELL_NATURAL } };
     }
 
     plant->set_hit_dice(plant->get_experience_level()
@@ -3967,7 +3965,7 @@ bool gozag_potion_petition()
                                        faith_price);
             vector<string> pot_names;
             for (int j = 0; j < pots[i]->size(); j++)
-                pot_names.push_back(potion_type_name((*pots[i])[j].get_int()));
+                pot_names.emplace_back(potion_type_name((*pots[i])[j].get_int()));
             line += comma_separated_line(pot_names.begin(), pot_names.end());
             mpr_nojoin(MSGCH_PLAIN, line.c_str());
         }

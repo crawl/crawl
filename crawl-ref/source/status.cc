@@ -539,7 +539,7 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_BRIBE:
     {
         int bribe = 0;
-        vector<string> places;
+        vector<const char *> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
             if (branch_bribe[i] > 0)

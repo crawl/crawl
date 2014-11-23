@@ -526,7 +526,7 @@ string SkillMenuSwitch::get_help()
             return make_stringf("Enhanced skills are in <blue>blue</blue>.");
         else
         {
-            vector<string> causes;
+            vector<const char *> causes;
             if (you.attribute[ATTR_XP_DRAIN])
                 causes.push_back("draining");
             if (player_under_penance(GOD_ASHENZARI))

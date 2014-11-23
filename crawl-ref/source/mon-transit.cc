@@ -111,7 +111,7 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
     ASSERT(m.alive());
 
     m_transit_list &mlist = the_lost_ones[lid];
-    mlist.push_back(follower(m));
+    mlist.emplace_back(m);
 
     dprf("Monster in transit to %s: %s", lid.describe().c_str(),
          m.name(DESC_PLAIN, true).c_str());

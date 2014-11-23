@@ -547,7 +547,7 @@ bool targetter_cloud::set_aim(coord_def a)
 
     seen.clear();
     queue.clear();
-    queue.push_back(vector<coord_def>());
+    queue.emplace_back();
 
     int placed = 0;
     queue[0].push_back(a);
@@ -1217,7 +1217,7 @@ targetter_shotgun::targetter_shotgun(const actor* act, size_t beam_count,
     origin = act->pos();
     num_beams = beam_count;
     for (size_t i = 0; i < num_beams; i++)
-        rays.push_back(ray_def());
+        rays.emplace_back();
     range2 = dist_range(range);
 }
 

@@ -101,7 +101,7 @@ static void _actor_areas(actor *a)
 
     if ((r = a->silence_radius2()) >= 0)
     {
-        _agrid_centres.push_back(area_centre(AREA_SILENCE, a->pos(), r));
+        _agrid_centres.emplace_back(AREA_SILENCE, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE); ri; ++ri)
             _set_agrid_flag(*ri, APROP_SILENCE);
@@ -110,7 +110,7 @@ static void _actor_areas(actor *a)
 
     if ((r = a->halo_radius2()) >= 0)
     {
-        _agrid_centres.push_back(area_centre(AREA_HALO, a->pos(), r));
+        _agrid_centres.emplace_back(AREA_HALO, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, APROP_HALO);
@@ -119,7 +119,7 @@ static void _actor_areas(actor *a)
 
     if ((r = a->liquefying_radius2()) >= 0)
     {
-        _agrid_centres.push_back(area_centre(AREA_LIQUID, a->pos(), r));
+        _agrid_centres.emplace_back(AREA_LIQUID, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_SOLID); ri; ++ri)
         {
@@ -135,7 +135,7 @@ static void _actor_areas(actor *a)
 
     if ((r = a->umbra_radius2()) >= 0)
     {
-        _agrid_centres.push_back(area_centre(AREA_UMBRA, a->pos(), r));
+        _agrid_centres.emplace_back(AREA_UMBRA, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, APROP_UMBRA);
@@ -145,7 +145,7 @@ static void _actor_areas(actor *a)
 #if TAG_MAJOR_VERSION == 34
     if ((r = a->heat_radius2()) >= 0)
     {
-        _agrid_centres.push_back(area_centre(AREA_HOT, a->pos(), r));
+        _agrid_centres.emplace_back(AREA_HOT, a->pos(), r);
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
             _set_agrid_flag(*ri, APROP_HOT);
@@ -187,7 +187,7 @@ static void _update_agrid()
                 && mitm[igrd(*ri)].special > 0)
             {
                 no_areas = false;
-                _agrid_centres.push_back(area_centre(AREA_GOLD, *ri, r));
+                _agrid_centres.emplace_back(AREA_GOLD, *ri, r);
                 for (radius_iterator rdi(*ri, r, C_CIRCLE, LOS_NO_TRANS);
                      rdi; ++rdi)
                 {
@@ -200,7 +200,7 @@ static void _update_agrid()
     if (player_has_orb() && !you.pos().origin())
     {
         const int r = 5;
-        _agrid_centres.push_back(area_centre(AREA_ORB, you.pos(), r));
+        _agrid_centres.emplace_back(AREA_ORB, you.pos(), r);
         for (radius_iterator ri(you.pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, APROP_ORB);
         no_areas = false;
@@ -209,7 +209,7 @@ static void _update_agrid()
     if (you.duration[DUR_QUAD_DAMAGE])
     {
         const int r = 5;
-        _agrid_centres.push_back(area_centre(AREA_QUAD, you.pos(), r));
+        _agrid_centres.emplace_back(AREA_QUAD, you.pos(), r);
         for (radius_iterator ri(you.pos(), r, C_CIRCLE);
              ri; ++ri)
         {
@@ -222,7 +222,7 @@ static void _update_agrid()
     if (you.duration[DUR_DISJUNCTION])
     {
         const int r = 27;
-        _agrid_centres.push_back(area_centre(AREA_DISJUNCTION, you.pos(), r));
+        _agrid_centres.emplace_back(AREA_DISJUNCTION, you.pos(), r);
         for (radius_iterator ri(you.pos(), r, C_CIRCLE);
              ri; ++ri)
         {

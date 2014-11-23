@@ -148,10 +148,10 @@ static int _can_pacify_monster(const monster* mon, const int healed,
 
 static vector<string> _desc_mindless(const monster_info& mi)
 {
-    vector<string> descs;
     if (mi.intel() <= I_INSECT)
-        descs.push_back("mindless");
-    return descs;
+        return { "mindless" };
+    else
+        return {};
 }
 
 static spret_type _healing_spell(int healed, int max_healed,
