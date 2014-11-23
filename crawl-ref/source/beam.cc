@@ -428,7 +428,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
-    pbolt.ench_power = (zinfo->tohit ? (*zinfo->tohit)(power) : power);
+    pbolt.ench_power = power; // XXX: is this used for to hit anywhere?
 
     if (zinfo->is_enchantment)
         pbolt.hit = AUTOMATIC_HIT;
