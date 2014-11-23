@@ -1241,11 +1241,18 @@ static void _place_player(dungeon_feature_type stair_taken,
     if (mon && !fedhas_passthrough(mon))
     {
         for (distance_iterator di(you.pos()); di; ++di)
+        {
             if (!monster_at(*di) && mon->is_habitable(*di))
             {
                 mon->move_to_pos(*di);
-                break;
+                return;
             }
+        }
+
+        dprf("%s under monster and can't be moved anywhere; killing",
+             mon->name(DESC_PLAIN).c_str());
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        // XXX: do we need special handling for uniques...?
     }
 }
 
