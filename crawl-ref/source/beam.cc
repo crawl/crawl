@@ -4582,8 +4582,14 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 void bolt::beam_hits_actor(actor *act)
 {
     const coord_def oldpos(act->pos());
+    coord_def newpos(act->pos());
 
-    if (knockback_actor(act))
+    const int distance =
+        (origin_spell == SPELL_CHILLING_BREATH)           ? 2 :
+        (origin_spell == SPELL_FORCE_LANCE && coinflip()) ? 2
+                                                          : 1;
+
+    if (knockback_actor(act, distance, newpos))
     {
         if (you.can_see(act))
         {
@@ -4592,7 +4598,6 @@ void bolt::beam_hits_actor(actor *act)
                 mprf("%s %s blown backwards by the freezing wind.",
                      act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
-                knockback_actor(act);
             }
             else
             {
@@ -4603,9 +4608,8 @@ void bolt::beam_hits_actor(actor *act)
             }
         }
 
-        // Force lance can knockback up to two spaces
-        if (origin_spell == SPELL_FORCE_LANCE && coinflip())
-            knockback_actor(act);
+        if (act->pos() != newpos)
+            act->collide(newpos, agent(), ench_power);
 
         // Stun the monster briefly so that it doesn't look as though it wasn't
         // knocked back at all
@@ -5763,37 +5767,53 @@ int bolt::range_used_on_hit() const
 // Checks whether the beam knocks back the supplied actor. The actor
 // should have already failed their EV check, so the save is entirely
 // body-mass-based.
-bool bolt::knockback_actor(actor *act)
+bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
 {
     // We can't do knockback if the beam starts and ends on the same space
     if (source == act->pos())
         return false;
 
+    if (act->is_stationary())
+        return false;
+
+    bool moved = false;
+
     ASSERT(ray.pos() == act->pos());
 
     const coord_def oldpos(ray.pos());
-    const ray_def ray_copy(ray);
-    ray.advance();
-
-    const coord_def newpos(ray.pos());
-    if (newpos == oldpos
-        || actor_at(newpos)
-        || act->is_stationary()
-        || cell_is_solid(newpos)
-        || !act->can_pass_through(newpos)
-        || !act->is_habitable(newpos)
-        // Save is based on target's body weight.
-        || random2(2500) < act->body_weight())
+    while (distance-- > 0)
     {
-        ray = ray_copy;
-        return false;
-    }
+        // Save is based on target's body weight.
+        if (random2(2500) < act->body_weight())
+            continue;
 
-    act->move_to_pos(newpos);
+        const ray_def ray_copy(ray);
+
+        ray.advance();
+
+        newpos = ray.pos();
+        if (newpos == oldpos)
+        {
+            ray = ray_copy;
+            return moved;
+        }
+
+        moved = true;
+
+        if (!cell_is_solid(newpos)
+            && !actor_at(newpos)
+            && act->can_pass_through(newpos)
+            && act->is_habitable(newpos))
+        {
+            act->move_to_pos(newpos);
+        }
+        else
+            break;
+    }
 
     // Knockback cannot ever kill the actor directly - caller must do
     // apply_location_effects after messaging.
-    return true;
+    return moved;
 }
 
 // Takes a bolt and refines it for use in the explosion function.

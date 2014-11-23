@@ -7,6 +7,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
+#include "directn.h"
 #include "env.h"
 #include "fprop.h"
 #include "itemprop.h"
@@ -837,4 +838,43 @@ string actor::resist_margin_phrase(int margin) const
 
     return make_stringf(resist_messages[index][0].c_str(),
                         conj_verb(resist_messages[index][1]).c_str());
+}
+
+void actor::collide(coord_def newpos, const actor *agent, int pow)
+{
+    actor *other = actor_at(newpos);
+    ASSERT(this != other);
+
+    dice_def damage(2, 1 + pow / 20);
+
+    if (other)
+    {
+        if (you.can_see(this) || you.can_see(other))
+        {
+            mprf("%s %s with %s!",
+                 name(DESC_THE).c_str(),
+                 conj_verb("collide").c_str(),
+                 other->name(DESC_THE).c_str());
+        }
+        other->hurt(this, damage.roll());
+        hurt(other, damage.roll());
+        return;
+    }
+
+    if (you.can_see(this))
+    {
+        if (!can_pass_through_feat(grd(newpos)))
+        {
+            mprf("%s %s into %s!",
+                 name(DESC_THE).c_str(), conj_verb("slam").c_str(),
+                 feature_description_at(newpos, false, DESC_THE, false)
+                     .c_str());
+        }
+        else
+        {
+            mprf("%s violently %s moving!",
+                 name(DESC_THE).c_str(), conj_verb("stop").c_str());
+        }
+    }
+    hurt(agent, damage.roll());
 }

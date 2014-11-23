@@ -444,6 +444,8 @@ public:
 
     string resist_margin_phrase(int margin) const;
 
+    void collide(coord_def newpos, const actor *agent, int pow);
+
 private:
     void end_constriction(mid_t whom, bool intentional, bool quiet);
 };
