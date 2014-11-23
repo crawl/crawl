@@ -2015,8 +2015,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
         {
             butcher_corpse(*si, MB_TRUE);
             mpr("Before your eyes, flesh is ripped from the corpse!");
-            if (Options.chunks_autopickup)
-                request_autopickup();
+            request_autopickup();
             // Only convert the top one.
             break;
         }

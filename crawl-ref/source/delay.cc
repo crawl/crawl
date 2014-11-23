@@ -978,18 +978,10 @@ static void _finish_delay(const delay_queue_item &delay)
             else if (was_intelligent)
                 did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
 
-            // Don't autopickup chunks/potions if there's still another
-            // delay (usually more corpses to butcher or a weapon-swap)
-            // waiting to happen.
             // Also, don't waste time picking up chunks if you're already
             // starving. (jpeg)
-            if ((Options.chunks_autopickup
-                    || delay.type == DELAY_BOTTLE_BLOOD)
-                && you.delay_queue.size() == 1)
-            {
-                if (you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
-                    autopickup();
-            }
+            if (you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
+                autopickup();
         }
         else
         {

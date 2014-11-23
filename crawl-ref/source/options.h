@@ -171,7 +171,6 @@ public:
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     int         confirm_butcher; // When to prompt for butchery
-    bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
