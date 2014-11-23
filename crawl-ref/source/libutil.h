@@ -98,7 +98,7 @@ template <typename Z>
 void erase_any(vector<Z> &vec, unsigned long which)
 {
     if (which != vec.size() - 1)
-        vec[which] = vec[vec.size() - 1];
+        vec[which] = std::move(vec[vec.size() - 1]);
     vec.pop_back();
 }
 
