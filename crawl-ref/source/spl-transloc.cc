@@ -1299,7 +1299,7 @@ void singularity_pull(const monster *singularity)
                                             singularity->get_hit_dice() / 2));
         }
 
-        if (ai->alive())
+        if (ai->alive() && !ai->is_stationary())
             _move_creature_to_singularity(singularity, *ai, strength);
     }
 }
