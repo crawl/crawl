@@ -2151,4 +2151,10 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MINOR_HEALING, 12, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
       }
     },
+
+    {  MST_SHARD_SHRIKE,
+      {
+        { SPELL_THROW_ICICLE, 24, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+      }
+    },
 };

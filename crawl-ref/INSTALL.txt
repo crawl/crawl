@@ -93,8 +93,10 @@ definitions; to make changes to the level compiler, you'll need the flex and
 bison/byacc tools (Other lex/yaccs may also work).  More details are
 available below.
 
-Sounds must be enabled by editing AppHdr.h (uncomment SOUND_PLAY_COMMAND on
-Unixes or WINMM_PLAY_SOUNDS on Windows).
+Sound can be provided by SDL2_mixer (the default), by WINMM on Windows
+(defined by WINMM_PLAY_SOUNDS in AppHdr.h), or by an external command on
+Unix systems (SOUND_PLAY_COMMAND in AppHdr.h).  To enable this, append
+SOUND=y to the make invocation.
 
 Stone Soup 0.6 includes Lua 5.1.4 in its source tree. Crawl uses Lua for
 dungeon generation.  In addition, Crawl has a (rudimentary) Lua interface
@@ -118,8 +120,8 @@ Prerequisites (Debian):
 On Debian-based systems (Ubuntu, Mint, ...), you can get all dependencies by
 typing the following as root/sudo:
 apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
-  libsqlite3-dev libz-dev pkg-config libsdl-image1.2-dev libsdl1.2-dev      \
-  libfreetype6-dev libpng-dev ttf-dejavu-core
+  libsqlite3-dev libz-dev pkg-config libsdl2-image-dev libsdl2-mixer-dev    \
+  libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
 (the last five are needed only for tiles builds).  This is the complete set,
 with it you don't have a need for the bundled "contribs".
 

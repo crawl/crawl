@@ -134,7 +134,7 @@ string get_menu_colour_prefix_tags(const item_def &item,
                                    description_level_type desc);
 
 void            init_item_name_cache();
-item_kind item_kind_by_name(string name);
+item_kind item_kind_by_name(const string &name);
 
 vector<string> item_name_list_for_glyph(unsigned glyph);
 
@@ -143,8 +143,8 @@ const char* rune_type_name(short p);
 bool   is_named_corpse(const item_def &corpse);
 string get_corpse_name(const item_def &corpse, uint64_t *name_type = NULL);
 const char* deck_rarity_name(deck_rarity_type rarity);
-string base_type_string(object_class_type type);
-string base_type_string(const item_def &item);
+const char *base_type_string(object_class_type type);
+const char *base_type_string(const item_def &item);
 
 string sub_type_string(const item_def &item, bool known = true);
 

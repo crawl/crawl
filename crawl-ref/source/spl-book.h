@@ -12,6 +12,7 @@ class formatted_string;
 
 int  book_rarity(uint8_t which_book);
 int  spell_rarity(spell_type which_spell);
+bool is_rare_book(book_type type);
 void init_spell_rarities();
 bool is_player_spell(spell_type which_spell);
 

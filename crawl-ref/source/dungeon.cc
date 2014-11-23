@@ -933,7 +933,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                                 break;
                             }
                             else
-                                coords.push_back(coord_def(fx, fy));
+                                coords.emplace_back(fx, fy);
                         }
                     }
                     if (veto)
@@ -3038,7 +3038,7 @@ static void _slime_connectivity_fixup()
 
         // Set one restricted component as the base point, and search to all
         // other restricted components
-        map<int, map_component * >::iterator target_components = present.begin();
+        auto target_components = present.begin();
 
         // No non-wall adjacent squares in this component? This probably
         // shouldn't happen, but just move on.
@@ -3249,7 +3249,7 @@ static void _place_gozag_shop(dungeon_feature_type stair)
         const int dist2 = distance2(start_pos, *ri);
         if (dist2 > dist_max)
             continue;
-        places.push_back(coord_weight(*ri, dist_max - dist2));
+        places.emplace_back(*ri, dist_max - dist2);
     }
     coord_def *shop_place = random_choose_weighted(places);
     if (!shop_place)
@@ -5998,7 +5998,6 @@ static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
 {
     set<coord_def> flatten;
     set<coord_def> border;
-    set<coord_def>::const_iterator it;
     bool success = false;
 
     if (!overwriteable)
@@ -6010,12 +6009,9 @@ static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
 
     while (!success && !border.empty())
     {
-        coord_def cur;
-        int count = 0;
-        for (it = border.begin(); it != border.end(); ++it)
-            if (one_chance_in(++count))
-                cur = *it;
-        border.erase(border.find(cur));
+        auto it = random_iterator(border);
+        coord_def cur = *it;
+        border.erase(it);
 
         // Flatten orthogonal neighbours, and add new neighbours to border.
         flatten.insert(cur);

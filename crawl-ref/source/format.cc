@@ -65,8 +65,7 @@ formatted_string formatted_string::parse_string(const string &s,
                                                 int main_colour)
 {
     // main_colour will usually be LIGHTGREY (default).
-    vector<int> colour_stack;
-    colour_stack.push_back(main_colour);
+    vector<int> colour_stack(1, main_colour);
 
     formatted_string fs;
 
@@ -84,14 +83,13 @@ formatted_string formatted_string::parse_string(const string &s,
 void formatted_string::parse_string_to_multiple(const string &s,
                                                 vector<formatted_string> &out)
 {
-    vector<int> colour_stack;
-    colour_stack.push_back(LIGHTGREY);
+    vector<int> colour_stack(1, LIGHTGREY);
 
     vector<string> lines = split_string("\n", s, false, true);
 
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
-        out.push_back(formatted_string());
+        out.emplace_back();
         formatted_string& fs = out.back();
         fs.textcolour(colour_stack.back());
         parse_string1(lines[i], fs, colour_stack, NULL);

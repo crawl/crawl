@@ -453,9 +453,10 @@ inflict a great deal of damage on it.
 %%%%
 Dispersal spell
 
-This spell tries to teleport away any monsters directly beside the caster. Any
-monster that it fails to teleport will still be irresistibly blinked a shorter
-distance.
+This spell tries to teleport away any monsters within a short distance of the
+caster. Any monster that it fails to teleport will still be irresistibly
+blinked a shorter distance, and any monster it affects at all has a chance of
+being confused by the crazy warping of space.
 %%%%
 Draconian Breath spell
 
@@ -1085,7 +1086,7 @@ caster.
 %%%%
 Regeneration spell
 
-This spell reanimates parts of the caster's wounds. This unholy act
+This spell reanimates parts of the caster's wounds. This unnatural act
 dramatically but temporarily increases the caster's recuperative abilities,
 while also increasing the rate of food consumption.
 %%%%

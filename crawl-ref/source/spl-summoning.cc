@@ -482,40 +482,43 @@ static bool _place_dragon()
         vector<coord_def> spots;
         for (adjacent_iterator ai(target->pos()); ai; ++ai)
         {
-            if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai)) && !actor_at(*ai))
+            if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai))
+                && !actor_at(*ai))
+            {
                 spots.push_back(*ai);
+            }
         }
 
         // Now try to create the actual dragon
-        if (spots.size() > 0)
-        {
+        if (spots.size() <= 0)
+            continue;
             const coord_def pos = spots[random2(spots.size())];
 
-            if (monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
-                                                           2, SPELL_DRAGON_CALL,
-                                                           pos, MHITYOU,
-                                                           MG_FORCE_PLACE | MG_AUTOFOE)))
-            {
-                dec_mp(random_range(2, 3));
+        monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
+                                                   2, SPELL_DRAGON_CALL,
+                                                   pos, MHITYOU,
+                                                   MG_FORCE_PLACE | MG_AUTOFOE));
+        if (!dragon)
+            continue;
 
-                if (you.see_cell(dragon->pos()))
-                    mpr("A dragon arrives to answer your call!");
+        dec_mp(random_range(2, 3));
 
-                // The dragon is allowed to act immediately here
-                dragon->flags &= ~MF_JUST_SUMMONED;
+        if (you.see_cell(dragon->pos()))
+            mpr("A dragon arrives to answer your call!");
 
-                if (!enough_mp(2, true))
-                {
-                    mprf(MSGCH_DURATION, "Having expended the last of your "
-                                         "magical power, your connection to the "
-                                         "dragon horde fades.");
-                    you.duration[DUR_DRAGON_CALL] = 0;
-                    you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
-                }
+        // The dragon is allowed to act immediately here
+        dragon->flags &= ~MF_JUST_SUMMONED;
 
-                return true;
-            }
+        if (!enough_mp(2, true))
+        {
+            mprf(MSGCH_DURATION, "Having expended the last of your magical "
+                                 "power, your connection to the  dragon horde "
+                                 "fades.");
+            you.duration[DUR_DRAGON_CALL] = 0;
+            you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
         }
+
+        return true;
     }
 
     return false;
@@ -1017,27 +1020,49 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+/**
+ * Choose a type of imp to summon with Call Imp.
+ *
+ * @param pow   The power with which the spell is being cast.
+ * @return      An appropriate imp type.
+ */
+static monster_type _get_imp_type(int pow)
+{
+    // this seems to think that iron & shadow imps are better than white...?
+    if (random2(pow) >= 46 || one_chance_in(6))
+        return one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
+    return one_chance_in(3) ? MONS_WHITE_IMP : MONS_CRIMSON_IMP;
+}
 
+static map<monster_type, const char*> _imp_summon_messages = {
+    { MONS_WHITE_IMP,
+        "A beastly little devil appears in a puff of frigid air." },
+    { MONS_IRON_IMP, "A metallic apparition takes form in the air." },
+    { MONS_SHADOW_IMP, "A shadowy apparition takes form in the air." },
+    { MONS_CRIMSON_IMP, "A beastly little devil appears in a puff of flame." },
+};
+
+/**
+ * Cast the spell Call Imp, summoning a friendly imp nearby.
+ *
+ * @param pow   The spellpower at which the spell is being cast.
+ * @param god   The god of the caster.
+ * @param fail  Whether the caster (you) failed to cast the spell.
+ * @return      SPRET_FAIL if fail is true; SPRET_SUCCESS otherwise.
+ */
 spret_type cast_call_imp(int pow, god_type god, bool fail)
 {
     fail_check();
-    monster_type mon = MONS_PROGRAM_BUG;
 
-    if (random2(pow) >= 46 || one_chance_in(6))
-        mon = one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
-    else
-        mon = one_chance_in(3) ? MONS_WHITE_IMP : MONS_CRIMSON_IMP;
+    const monster_type imp_type = _get_imp_type(pow);
 
     const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (monster *imp = create_monster(
-            mgen_data(mon, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
+            mgen_data(imp_type, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
                       you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god)))
     {
-        mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
-            (mon == MONS_IRON_IMP)   ? "A metallic apparition takes form in the air." :
-            (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
-                                     : "A beastly little devil appears in a puff of flame.");
+        mpr(_imp_summon_messages[imp_type]);
 
         if (!player_angers_monster(imp))
             _monster_greeting(imp, "_friendly_imp_greeting");
@@ -1675,7 +1700,7 @@ static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_t
 // Displays message when raising dead with Animate Skeleton or Animate Dead.
 static void _display_undead_motions(int motions)
 {
-    vector<string> motions_list;
+    vector<const char *> motions_list;
 
     // Check bitfield from _raise_remains for types of corpse(s) being animated.
     if (motions & DEAD_ARE_WALKING)
@@ -2594,7 +2619,7 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
         if (mi->friendly() && mi->is_summoned() && mi->summoner == you.mid
             && you.see_cell_no_trans(mi->pos()))
         {
-            explode.push_back(make_pair(mi->pos(), mi->get_hit_dice()));
+            explode.emplace_back(mi->pos(), mi->get_hit_dice());
         }
     }
 
@@ -3164,7 +3189,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                                      ? BEH_FRIENDLY
                                      : SAME_ATTITUDE(caster->as_monster()),
                                      caster, 0, SPELL_FULMINANT_PRISM,
-                                     where, MHITYOU, MG_FORCE_PLACE);
+                                     where, MHITNOT, MG_FORCE_PLACE);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 

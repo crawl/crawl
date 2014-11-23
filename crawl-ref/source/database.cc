@@ -248,7 +248,11 @@ bool TextDB::_needs_update() const
         string full_input_path = _directory + file;
         full_input_path = datafile_path(full_input_path, !_parent);
         time_t mtime = file_modtime(full_input_path);
+#ifdef __ANDROID__
+        if (file_exists(full_input_path))
+#else
         if (mtime)
+#endif
             no_files = false;
         char buf[20];
         snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
@@ -304,8 +308,16 @@ void TextDB::_regenerate_db()
         time_t mtime = file_modtime(full_input_path);
         snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
         ts += buf;
-        if (mtime || !_parent) // english is mandatory
+        if (
+#ifdef __ANDROID__
+            file_exists(full_input_path)
+#else
+            mtime
+#endif
+            || !_parent) // english is mandatory
+        {
             _store_text_db(full_input_path, _db);
+        }
     }
     _add_entry(_db, "TIMESTAMP", ts);
 

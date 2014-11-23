@@ -712,7 +712,7 @@ bool wizard_add_mutation()
             vector<string> matches;
 
             for (mutation_type mut : partial_matches)
-                matches.push_back(mutation_name(mut));
+                matches.emplace_back(mutation_name(mut));
 
             string prefix = "No exact match for mutation '" +
                             spec +  "', possible matches are: ";
@@ -870,7 +870,7 @@ void wizard_edit_durations()
             if (strstr(duration_name(dur), buf) != NULL)
             {
                 matches.push_back(dur);
-                match_names.push_back(duration_name(dur));
+                match_names.emplace_back(duration_name(dur));
             }
         }
         if (choice != NUM_DURATIONS)

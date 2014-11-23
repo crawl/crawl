@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 #include <sstream>
 
 #include "ability.h"
@@ -34,7 +35,7 @@
 #include "stringutil.h"
 #include "unwind.h"
 
-typedef string (*string_fn)();
+typedef function<string ()> string_fn;
 typedef map<string, string_fn> skill_op_map;
 
 static skill_op_map Skill_Op_Map;
@@ -67,8 +68,7 @@ public:
 
     static string get(const string &_key)
     {
-        skill_op_map::const_iterator i = Skill_Op_Map.find(_key);
-        return i == Skill_Op_Map.end()? string() : (i->second)();
+        return lookup(Skill_Op_Map, _key, [] () { return string(); })();
     }
 private:
     const char *key;
@@ -625,7 +625,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
             int64_t result = (int64_t)array[i] * (int64_t)scale;
             const int64_t rest = result % total;
             if (rest)
-                rests.push_back(pair<skill_type, int64_t>(skill_type(i), rest));
+                rests.emplace_back(skill_type(i), rest);
             array[i] = (int)(result / total);
             scaled_total += array[i];
         }
@@ -638,12 +638,13 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     // We ensure that the percentage always add up to 100 by increasing the
     // training for skills which had the higher rest from the above scaling.
     sort(rests.begin(), rests.end(), _cmp_rest);
-    vector<pair<skill_type, int64_t> >::iterator it = rests.begin();
-    while (scaled_total < scale && it != rests.end())
+    for (auto &rest : rests)
     {
-        ++array[it->first];
+        if (scaled_total >= scale)
+            break;
+
+        ++array[rest.first];
         ++scaled_total;
-        ++it;
     }
 
     ASSERT(scaled_total == scale);
@@ -1602,34 +1603,24 @@ float species_apt_factor(skill_type sk, species_type sp)
 
 vector<skill_type> get_crosstrain_skills(skill_type sk)
 {
-    vector<skill_type> ret;
-
     switch (sk)
     {
     case SK_SHORT_BLADES:
-        ret.push_back(SK_LONG_BLADES);
-        return ret;
+        return { SK_LONG_BLADES };
     case SK_LONG_BLADES:
-        ret.push_back(SK_SHORT_BLADES);
-        return ret;
+        return { SK_SHORT_BLADES };
     case SK_AXES:
     case SK_STAVES:
-        ret.push_back(SK_POLEARMS);
-        ret.push_back(SK_MACES_FLAILS);
-        return ret;
+        return { SK_POLEARMS, SK_MACES_FLAILS };
     case SK_MACES_FLAILS:
     case SK_POLEARMS:
-        ret.push_back(SK_AXES);
-        ret.push_back(SK_STAVES);
-        return ret;
+        return { SK_AXES, SK_STAVES };
     case SK_SLINGS:
-        ret.push_back(SK_THROWING);
-        return ret;
+        return { SK_THROWING };
     case SK_THROWING:
-        ret.push_back(SK_SLINGS);
-        return ret;
+        return { SK_SLINGS };
     default:
-        return ret;
+        return {};
     }
 }
 

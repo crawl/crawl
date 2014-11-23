@@ -23,6 +23,7 @@
 #include "monster.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "output.h"
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1379,6 +1380,7 @@ static void mpr_check_patterns(const string& message,
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
         interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
 
+#ifdef USE_SOUND
     for (const sound_mapping &sound : Options.sound_mappings)
     {
         // Maybe we should allow message channel matching as for
@@ -1389,6 +1391,7 @@ static void mpr_check_patterns(const string& message,
             break;
         }
     }
+#endif
 }
 
 static bool channel_message_history(msg_channel_type channel)
@@ -1424,15 +1427,11 @@ static msg_colour_type prepare_message(const string& imsg,
     if (colour != MSGCOL_MUTED)
         mpr_check_patterns(imsg, channel, param);
 
-    const vector<message_colour_mapping>& mcm
-               = Options.message_colour_mappings;
-    typedef vector<message_colour_mapping>::const_iterator mcmci;
-
-    for (mcmci ci = mcm.begin(); ci != mcm.end(); ++ci)
+    for (const message_colour_mapping &mcm : Options.message_colour_mappings)
     {
-        if (ci->message.is_filtered(channel, imsg))
+        if (mcm.message.is_filtered(channel, imsg))
         {
-            colour = ci->colour;
+            colour = mcm.colour;
             break;
         }
     }
@@ -1475,7 +1474,7 @@ static void readkey_more(bool user_forced)
 {
     if (autoclear_more)
         return;
-    int keypress;
+    int keypress = 0;
 #ifdef USE_TILE_WEB
     unwind_bool unwind_more(_more, true);
 #endif
@@ -1484,6 +1483,11 @@ static void readkey_more(bool user_forced)
     do
     {
         keypress = getch_ck();
+        if (keypress == CK_REDRAW)
+        {
+            redraw_screen();
+            continue;
+        }
     }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
            && !key_is_escape(keypress)

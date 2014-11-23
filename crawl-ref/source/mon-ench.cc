@@ -98,8 +98,7 @@ mon_enchant monster::get_ench(enchant_type ench1,
 
     for (int e = ench1; e <= ench2; ++e)
     {
-        mon_enchant_list::const_iterator i =
-            enchantments.find(static_cast<enchant_type>(e));
+        auto i = enchantments.find(static_cast<enchant_type>(e));
 
         if (i != enchantments.end())
             return i->second;
@@ -138,19 +137,15 @@ bool monster::add_ench(const mon_enchant &ench)
         invalidate_agrid();
     }
 
-    mon_enchant_list::iterator i = enchantments.find(ench.ench);
     bool new_enchantment = false;
-    mon_enchant *added = NULL;
-    if (i == enchantments.end())
+    mon_enchant *added = nullptr;
+    if (added = map_find(enchantments, ench.ench))
+        *added += ench;
+    else
     {
         new_enchantment = true;
         added = &(enchantments[ench.ench] = ench);
         ench_cache.set(ench.ench, true);
-    }
-    else
-    {
-        i->second += ench;
-        added = &i->second;
     }
 
     // If the duration is not set, we must calculate it (depending on the
@@ -253,10 +248,28 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_CHARM:
     case ENCH_BRIBED:
     case ENCH_PERMA_BRIBED:
-    case ENCH_HEXED:
+    case ENCH_HEXED: {
         behaviour = BEH_SEEK;
-        target    = you.pos();
-        foe       = MHITYOU;
+
+        actor *source_actor = actor_by_mid(ench.source, true);
+        if (!source_actor)
+        {
+            target = pos();
+            foe = MHITNOT;
+        }
+        else if (source_actor->is_player())
+        {
+            target = you.pos();
+            foe = MHITYOU;
+        }
+        else
+        {
+            foe = source_actor->as_monster()->foe;
+            if (foe == MHITYOU)
+                target = you.pos();
+            else if (foe != MHITNOT)
+                target = menv[source_actor->as_monster()->foe].pos();
+        }
 
         if (is_patrolling())
         {
@@ -292,6 +305,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         if (you.can_see(this) && friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
+    }
 
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
@@ -434,7 +448,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
 
 bool monster::del_ench(enchant_type ench, bool quiet, bool effect)
 {
-    mon_enchant_list::iterator i = enchantments.find(ench);
+    auto i = enchantments.find(ench);
     if (i == enchantments.end())
         return false;
 

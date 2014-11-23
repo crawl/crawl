@@ -2384,7 +2384,7 @@ void drop_last()
     {
         const item_def* item = &you.inv[entry.first];
         if (item->quantity > 0)
-            items_to_drop.push_back(SelItem(entry.first, entry.second, item));
+            items_to_drop.emplace_back(entry.first, entry.second, item);
     }
 
     if (items_to_drop.empty())
@@ -4809,7 +4809,7 @@ object_class_type get_item_mimic_type()
     char letter = 'a';
     for (object_class_type cls : _mimic_item_classes)
     {
-        mprf("[%c] %s ", letter, item_class_name(cls, true).c_str());
+        mprf("[%c] %s ", letter, item_class_name(cls, true));
         choices[letter++] = cls;
     }
     mprf("[%c] random", letter);

@@ -2912,7 +2912,8 @@ static bool _should_ephemeral_infusion(monster* agent)
         }
         monster* mon = ai->as_monster();
         if (!mon->has_ench(ENCH_EPHEMERAL_INFUSION)
-            && mon->hit_points * 3 <= mon->max_hit_points * 2)
+            && mon->hit_points * 3 <= mon->max_hit_points * 2
+            && !mons_is_firewood(mon))
         {
             return true;
         }
@@ -2932,7 +2933,8 @@ static void _cast_ephemeral_infusion(monster* agent)
         }
         monster* mon = ai->as_monster();
         if (!mon->has_ench(ENCH_EPHEMERAL_INFUSION)
-            && mon->hit_points < mon->max_hit_points)
+            && mon->hit_points < mon->max_hit_points
+            && !mons_is_firewood(mon))
         {
             const int dur =
                 random2avg(agent->spell_hd(SPELL_EPHEMERAL_INFUSION), 2)
@@ -3192,13 +3194,12 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
     mon_attitude_type castatt = caster->temp_attitude();
     int friendly = 0, enemy = 0;
 
-    for (map<coord_def, size_t>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (const auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
 
-        const actor *victim = actor_at(p->first);
+        const actor *victim = actor_at(entry.first);
         if (!victim)
             continue;
 
@@ -6530,7 +6531,7 @@ static void _speech_keys(vector<string>& key_list,
         if (pbolt.visible())
         {
             key_list.push_back(pbolt.get_short_name() + " beam " + cast_str);
-            key_list.push_back("beam catchall cast");
+            key_list.emplace_back("beam catchall cast");
         }
     }
 }
@@ -6981,14 +6982,14 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
 
         bolt beam;
         beam.range   = INFINITE_DISTANCE;
+        beam.hit     = AUTOMATIC_HIT;
         beam.flavour = BEAM_VISUAL;
         beam.source  = tosser.pos();
         beam.target  = chosen_dest;
-        beam.name    = "GOBLIN BEAM";
+        beam.name    = goblin.name(DESC_THE);
+        beam.glyph   = mons_char(goblin.type);
         const monster_info mi(&goblin);
-        const cglyph_t glyph = get_mons_glyph(mi);
-        beam.glyph   = glyph.ch;
-        beam.colour  = glyph.col;
+        beam.colour  = mi.colour();
 
         beam.draw_delay = 30; // Make beam animation somewhat slower than normal.
         beam.aimed_at_spot = true;
@@ -7178,7 +7179,7 @@ static coord_def _choose_tentacle_toss_dest(const monster &thrower,
         {
             const int dist = victim.pos().distance_from(ray.pos());
             const int weight = sqr(LOS_RADIUS - dist + 1);
-            dests.push_back(coord_weight(ray.pos(), weight));
+            dests.emplace_back(ray.pos(), weight);
         }
         if (ray.pos() == target_site)
             break;

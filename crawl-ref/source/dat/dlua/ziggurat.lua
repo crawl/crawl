@@ -649,13 +649,32 @@ local function ziggurat_furnish(centre, entry, exit)
     dgn.set_random_mon_list(monster_generation.spec)
   end
 
+  local need_lootvault = monster_generation.jelly_protect
+
+  -- zig 1: always start on one side
+  -- zig 2+: A chance of starting in the centre, increasing with zigs completed
+  -- & depth; 50% chance at zig2 + depth 27, 50% @ zig3 + depth21, etc
+  local completed = you.zigs_completed()
+  local place_centre = crawl.x_chance_in_y(completed * 6 + you.depth(),
+                                           completed * 6 + you.depth() + 6+27)
+                       and completed > 0
+
+
+
+  -- If we can (since there won't be a loot vault in the way), place the player
+  -- in the centre.
+  if not need_lootvault and place_centre then
+    entry = centre
+  end
+
+  ziggurat_stairs(entry, exit)
+
   -- Identify where we're going to place loot, but don't actually put
   -- anything down until we've placed pillars.
-  local lootspot = ziggurat_locate_loot(entry, exit,
-    monster_generation.jelly_protect)
+  local lootspot = ziggurat_locate_loot(entry, exit, need_lootvault)
 
-  if not has_loot_chamber then
-    -- Place pillars if we did not create a loot chamber.
+  if not has_loot_chamber and entry ~= centre then
+    -- Place pillars if we didn't put anything else in the middle.
     ziggurat_place_pillars(centre)
   end
 
@@ -713,7 +732,6 @@ local function ziggurat_rectangle_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
@@ -750,7 +768,6 @@ local function ziggurat_ellipse_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
@@ -796,7 +813,6 @@ local function ziggurat_hexagon_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(c, entry, exit)
 end
 

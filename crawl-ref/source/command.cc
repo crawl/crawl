@@ -1995,7 +1995,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  \\|/        \\|/", 0);
     _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
-                         CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+                         CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  /|\\        /|\\", 0);
     _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
@@ -2005,7 +2005,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Rest/Search:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>.</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
@@ -2290,7 +2290,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  \\|/        \\|/", 0);
     _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
-                         CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+                         CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  /|\\        /|\\", 0);
     _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
@@ -2307,7 +2307,7 @@ static void _add_formatted_hints_help(column_composer &cols)
             "<h>Rest/Search:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>.</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,

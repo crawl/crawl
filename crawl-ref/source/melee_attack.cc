@@ -35,6 +35,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-summoning.h"
@@ -1672,6 +1673,11 @@ void melee_attack::set_attack_verb()
             attack_verb = "shatter";
             verb_degree = "into splinters";
         }
+        else if (defender->type == MONS_GREAT_ORB_OF_EYES)
+        {
+            attack_verb = "splatter";
+            verb_degree = "into a gooey mess";
+        }
         else
         {
             const char* pierce_desc[][2] = {{"crush",   "like a grape"},
@@ -2473,13 +2479,9 @@ string melee_attack::mons_attack_verb()
     if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
         return RANDOM_ELEMENT(klown_attack);
 
-    if (attk_type == AT_TENTACLE_SLAP
-        && (attacker->type == MONS_KRAKEN_TENTACLE
-            || attacker->type == MONS_ELDRITCH_TENTACLE
-            || attacker->type == MONS_MNOLEG_TENTACLE))
-    {
+    //XXX: then why give them it in the first place?
+    if (attk_type == AT_TENTACLE_SLAP && mons_is_tentacle(attacker->type))
         return "slap";
-    }
 
     static const char *attack_types[] =
     {

@@ -2220,9 +2220,10 @@ spret_type fedhas_sunlight(bool fail)
                 erase_any(env.sunlight, i);
                 break;
             }
-        env.sunlight.push_back(pair<coord_def, int>(*ai,
-            you.elapsed_time + (distance2(*ai, base) <= 1 ? SUNLIGHT_DURATION
-                                : SUNLIGHT_DURATION / 2)));
+        const int expiry = you.elapsed_time + (distance2(*ai, base) <= 1
+                                               ? SUNLIGHT_DURATION
+                                               : SUNLIGHT_DURATION / 2);
+        env.sunlight.emplace_back(*ai, expiry);
 
         temp_bolt.explosion_draw_cell(*ai);
 
@@ -2521,7 +2522,7 @@ static int _collect_fruit(vector<pair<int,int> >& available_fruit)
         if (you.inv[i].defined() && is_fruit(you.inv[i]))
         {
             total += you.inv[i].quantity;
-            available_fruit.push_back(make_pair(you.inv[i].quantity, i));
+            available_fruit.emplace_back(you.inv[i].quantity, i);
         }
     }
     sort(available_fruit.begin(), available_fruit.end());
@@ -3143,10 +3144,8 @@ void fedhas_evolve_flora()
         plant->add_ench(ENCH_EXPLODING);
     else if (plant->type == MONS_OKLOB_PLANT)
     {
-        plant->spells.clear();
-        plant->spells.push_back(mon_spell_slot());
-        plant->spells[0].spell = SPELL_SPIT_ACID;
-        plant->spells[0].flags = MON_SPELL_NATURAL;
+        // frequency will be set by set_hit_dice below
+        plant->spells = { { SPELL_SPIT_ACID, 0, MON_SPELL_NATURAL } };
     }
 
     plant->set_hit_dice(plant->get_experience_level()
@@ -3966,7 +3965,7 @@ bool gozag_potion_petition()
                                        faith_price);
             vector<string> pot_names;
             for (int j = 0; j < pots[i]->size(); j++)
-                pot_names.push_back(potion_type_name((*pots[i])[j].get_int()));
+                pot_names.emplace_back(potion_type_name((*pots[i])[j].get_int()));
             line += comma_separated_line(pot_names.begin(), pot_names.end());
             mpr_nojoin(MSGCH_PLAIN, line.c_str());
         }
@@ -4156,29 +4155,14 @@ static int _gozag_shop_price(int index)
 }
 
 /**
- * Does the given shop type duplicate an earlier-chosen one?
- *
- * @param cur       The index of the current shop.
- *                  (Assumption: shops [0,cur-1] have been chosen already.)
- * @param type      The type of shop being considered.
- * @return          Whether the given shop type duplicates a predecessor.
- */
-static bool _duplicate_shop_type(int cur, shop_type type)
-{
-    for (int i = 0; i < cur; i++)
-        if (_gozag_shop_type(i) == type)
-            return true;
-
-    return false;
-}
-
-/**
  * Initialize the set of shops currently offered to the player through Call
  * Merchant.
  *
- * @param index     The index of the shop offer to be defined.
- */
-static void _setup_gozag_shop(int index)
+ * @param index       The index of the shop offer to be defined.
+ * @param valid_shops Vector of acceptable shop types based on the player and
+ *                    previous choices for this merchant call.
+*/
+static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
 {
     ASSERT(!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)));
 
@@ -4187,11 +4171,10 @@ static void _setup_gozag_shop(int index)
         type = SHOP_FOOD;
     else
     {
-        do
-        {
-            type = static_cast<shop_type>(random2(NUM_SHOPS));
-        }
-        while (_duplicate_shop_type(index, type));
+        int choice = random2(valid_shops.size());
+        type = valid_shops[choice];
+        // Don't choose this shop type again for this merchant call.
+        valid_shops.erase(valid_shops.begin() + choice);
     }
     you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;
 
@@ -4395,12 +4378,36 @@ static void _gozag_place_shop(int index)
 
 bool gozag_call_merchant()
 {
+    // Only offer useful shops.
+    vector<shop_type> valid_shops;
+    for (int i = 0; i < NUM_SHOPS; i++)
+    {
+        shop_type type = static_cast<shop_type>(i);
+        // if they are useful to the player, food shops are handled through the
+        // first index.
+        if (type == SHOP_FOOD)
+            continue;
+        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
+            continue;
+        if (type == SHOP_EVOKABLES && player_mutation_level(MUT_NO_ARTIFICE))
+            continue;
+        if (you.species == SP_FELID &&
+            (type == SHOP_ARMOUR
+             || type == SHOP_ARMOUR_ANTIQUE
+             || type == SHOP_WEAPON
+             || type == SHOP_WEAPON_ANTIQUE))
+        {
+            continue;
+        }
+        valid_shops.push_back(type);
+    }
+
     // Set up some dummy shops.
     // Generate some shop inventory and store it as a store spec.
     // We still set up the shops in advance in case of hups.
     for (int i = 0; i < _gozag_max_shops(); i++)
         if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)))
-            _setup_gozag_shop(i);
+            _setup_gozag_shop(i, valid_shops);
 
     const int shop_index = _gozag_choose_shop();
     if (shop_index == -1) // hup!
@@ -4698,10 +4705,15 @@ bool gozag_bribe_branch()
     return false;
 }
 
+static int _upheaval_radius(int pow)
+{
+    return pow >= 100 ? 2 : 1;
+}
+
 spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 {
     int pow = you.skill(SK_INVOCATIONS, 6);
-    const int max_radius = pow >= 100 ? 2 : 1;
+    const int max_radius = _upheaval_radius(pow);
 
     bolt beam;
     beam.name        = "****";
@@ -4964,6 +4976,7 @@ bool qazlal_disaster_area()
     vector<coord_def> targets;
     vector<int> weights;
     const int pow = you.skill(SK_INVOCATIONS, 6);
+    const int upheaval_radius = _upheaval_radius(pow);
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, LOS_NO_TRANS, true);
          ri; ++ri)
     {
@@ -4976,12 +4989,16 @@ bool qazlal_disaster_area()
         {
             friendlies = true;
         }
-        const int dist = distance2(you.pos(), *ri);
-        if (dist <= ((pow < 100) ? 2 : 8))
+
+        const int range = you.pos().range(*ri);
+        const int dist = grid_distance(you.pos(), *ri);
+        if (range <= upheaval_radius)
             continue;
 
         targets.push_back(*ri);
-        int weight = LOS_RADIUS_SQ - dist;
+        // We weight using the square of grid distance, so monsters fewer tiles
+        // away are more likely to be hit.
+        int weight = LOS_RADIUS_SQ - dist * dist;
         if (actor_at(*ri))
             weight *= 10;
         weights.push_back(weight);

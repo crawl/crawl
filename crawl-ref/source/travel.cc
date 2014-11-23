@@ -830,7 +830,7 @@ static void _explore_find_target_square()
             }
             else
             {
-                vector<string> inacc;
+                vector<const char *> inacc;
                 if (estatus & EST_GREED_UNFULFILLED)
                     inacc.push_back("items");
                 if (estatus & EST_PARTLY_EXPLORED)
@@ -1424,10 +1424,9 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 
     if (features && floodout)
     {
-        exclude_set::const_iterator it;
-        for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+        for (const auto &entry : curr_excludes)
         {
-            const travel_exclude &exc = it->second;
+            const travel_exclude &exc = entry.second;
             // An exclude - wherever it is - is always a feature.
             if (find(features->begin(), features->end(), exc.pos)
                     == features->end())
@@ -1469,10 +1468,9 @@ void travel_pathfind::get_features()
             }
         }
 
-    exclude_set::const_iterator it;
-    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+    for (const auto &entry : curr_excludes)
     {
-        const travel_exclude &exc = it->second;
+        const travel_exclude &exc = entry.second;
 
         // An exclude - wherever it is - is always a feature.
         if (find(features->begin(), features->end(), exc.pos) == features->end())
@@ -1894,8 +1892,7 @@ static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
         return;
     ASSERT(subdepth <= 27);
 
-    level_id lid(branch, subdepth);
-    vec.push_back(lid);
+    vec.emplace_back(branch, subdepth);
 
     if (branch != root_branch)
     {
@@ -2152,9 +2149,9 @@ static int _prompt_travel_branch(int prompt_flags)
             if (allow_waypoints)
             {
                 if (waypoint_list)
-                    segs.push_back("* - list branches");
+                    segs.emplace_back("* - list branches");
                 else if (waycount)
-                    segs.push_back("* - list waypoints");
+                    segs.emplace_back("* - list waypoints");
             }
 
             if (!trans_travel_dest.empty() && remember_targ)
@@ -2163,7 +2160,7 @@ static int _prompt_travel_branch(int prompt_flags)
                     make_stringf("Enter - %s", trans_travel_dest.c_str()));
             }
 
-            segs.push_back("? - help");
+            segs.emplace_back("? - help");
 
             shortcuts += comma_separated_line(segs.begin(), segs.end(),
                                               ", ", ", ");
@@ -3695,7 +3692,7 @@ void LevelInfo::fixup()
 
 bool TravelCache::know_stair(const coord_def &c) const
 {
-    travel_levels_map::const_iterator i = levels.find(level_id::current());
+    auto i = levels.find(level_id::current());
     return i == levels.end() ? false : i->second.know_stair(c);
 }
 
@@ -3870,19 +3867,15 @@ int TravelCache::get_waypoint_count() const
 
 void TravelCache::clear_distances()
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.clear_distances();
+    for (auto &entry : levels)
+        entry.second.clear_distances();
 }
 
 bool TravelCache::is_known_branch(uint8_t branch) const
 {
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        if (i->second.is_known_branch(branch))
-            return true;
-
-    return false;
+    return any_of(begin(levels), end(levels),
+            [branch] (const pair<level_id, LevelInfo> &entry)
+            { return entry.second.is_known_branch(branch); });
 }
 
 void TravelCache::save(writer& outf) const
@@ -3894,11 +3887,10 @@ void TravelCache::save(writer& outf) const
     // Write level count.
     marshallShort(outf, levels.size());
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
+    for (const auto &entry : levels)
     {
-        i->first.save(outf);
-        i->second.save(outf);
+        entry.first.save(outf);
+        entry.second.save(outf);
     }
 
     for (int wp = 0; wp < TRAVEL_WAYPOINT_COUNT; ++wp)
@@ -3963,34 +3955,30 @@ unsigned int TravelCache::query_daction_counter(daction_type c)
 
     unsigned int sum = 0;
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        sum += i->second.daction_counters[c];
+    for (const auto &entry : levels)
+        sum += entry.second.daction_counters[c];
 
     return sum;
 }
 
 void TravelCache::clear_daction_counter(daction_type c)
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.daction_counters[c] = 0;
+    for (auto &entry : levels)
+        entry.second.daction_counters[c] = 0;
 }
 
 void TravelCache::fixup_levels()
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.fixup();
+    for (auto &entry : levels)
+        entry.second.fixup();
 }
 
 vector<level_id> TravelCache::known_levels() const
 {
     vector<level_id> levs;
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        levs.push_back(i->first);
+    for (const auto &entry : levels)
+        levs.push_back(entry.first);
 
     return levs;
 }
@@ -4272,7 +4260,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
 {
     if (feat == DNGN_ENTER_SHOP && ES_shop)
     {
-        shops.push_back(named_thing<int>(shop_name(pos), feat));
+        shops.emplace_back(shop_name(pos), feat);
         es_flags |= ES_SHOP;
     }
     else if (feat_is_stair(feat) && ES_stair)
@@ -4311,8 +4299,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
         string desc = env.markers.property_at(pos, MAT_ANY, "stop_explore");
         if (desc.empty())
             desc = cleaned_feature_description(pos);
-        const named_thing<int> rdoor(desc, 1);
-        runed_doors.push_back(rdoor);
+        runed_doors.emplace_back(desc, 1);
         es_flags |= ES_RUNED_DOOR;
     }
     else if (feat_is_altar(feat) && ES_altar)
@@ -4387,7 +4374,7 @@ void explore_discoveries::add_item(const item_def &i)
     else if (mon && mon->type == MONS_PLANT)
         itemname += " (under plant)";
 
-    items.push_back(named_thing<item_def>(itemname, i));
+    items.emplace_back(itemname, i);
 
     // First item of this type?
     // XXX: Only works when travelling.

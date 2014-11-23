@@ -8,8 +8,9 @@
 {'-', CMD_EDIT_PLAYER_TILE},
 #endif
 // movement keys
-{CK_CLEAR, CMD_MOVE_NOWHERE},
-{'.', CMD_MOVE_NOWHERE},
+{'s', CMD_WAIT},
+{CK_CLEAR, CMD_WAIT},
+{'.', CMD_WAIT},
 {CK_END, CMD_MOVE_DOWN_LEFT},
 {CK_LEFT, CMD_MOVE_LEFT},
 {CK_DOWN, CMD_MOVE_DOWN},
@@ -48,7 +49,6 @@
 {'p', CMD_PRAY},
 {'q', CMD_QUAFF},
 {'r', CMD_READ},
-{'s', CMD_WAIT},
 {'t', CMD_SHOUT},
 {'V', CMD_EVOKE},
 {'v', CMD_EVOKE_WIELDED},

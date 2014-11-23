@@ -349,13 +349,9 @@ multi_overflow:
 
             // Randomly choose from the sizes which have maps.
             for (unsigned int j = 2; j <= remaining_size; j++)
-            {
                 if (overflow_weights[j] > 0)
-                {
-                    num_weights.push_back(
-                        pair<unsigned int, int>(j, overflow_weights[j]));
-                }
-            }
+                    num_weights.emplace_back(j, overflow_weights[j]);
+
             if (!num_weights.empty())
                 num_gods = *(random_choose_weighted(num_weights));
 

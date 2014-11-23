@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iomanip>
+#include <map>
 
 #include "artefact.h"
 #include "colour.h"
@@ -296,6 +297,30 @@ int book_rarity(uint8_t which_book)
 
 static uint8_t _lowest_rarity[NUM_SPELLS];
 
+/**
+ * Rare books require 6 spellcasting and 10 in a specific skill to
+ * memorise from, or worshipping a specific god (usually one who gifts that
+ * spellbook).
+ */
+
+struct rare_book_specs
+{
+    skill_type skill;
+    god_type   god;
+};
+
+static const map<book_type, rare_book_specs> rare_books =
+{
+    { BOOK_ANNIHILATIONS,  { SK_CONJURATIONS, GOD_NO_GOD } },
+    { BOOK_GRAND_GRIMOIRE, { SK_SUMMONINGS,   GOD_NO_GOD } },
+    { BOOK_NECRONOMICON,   { SK_NECROMANCY,   GOD_KIKUBAAQUDGHA } },
+};
+
+bool is_rare_book(book_type type)
+{
+    return rare_books.find(type) != rare_books.end();
+}
+
 void init_spell_rarities()
 {
     for (int i = 0; i < NUM_SPELLS; ++i)
@@ -304,7 +329,7 @@ void init_spell_rarities()
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
         // Manuals and books of destruction are not even part of this loop.
-        if (i >= MIN_RARE_BOOK && i <= MAX_RARE_BOOK)
+        if (is_rare_book(static_cast<book_type>(i)))
             continue;
 
         for (int j = 0; j < SPELLBOOK_SIZE; ++j)
@@ -369,16 +394,11 @@ bool player_can_memorise_from_spellbook(const item_def &book)
     if (book.props.exists(SPELL_LIST_KEY))
         return true;
 
-    if ((book.sub_type == BOOK_ANNIHILATIONS
-         && (you.skill(SK_CONJURATIONS) < 10
-             || you.skill(SK_SPELLCASTING) < 6))
-        || (book.sub_type == BOOK_GRAND_GRIMOIRE
-            && (you.skill(SK_SUMMONINGS) < 10
-                || you.skill(SK_SPELLCASTING) < 6))
-        || (book.sub_type == BOOK_NECRONOMICON
-            && !you_worship(GOD_KIKUBAAQUDGHA)
-            && (you.skill(SK_NECROMANCY) < 10
-                || you.skill(SK_SPELLCASTING) < 6)))
+    auto it = rare_books.find(static_cast<book_type>(book.sub_type));
+
+    if (it != rare_books.end()
+        && (you.skill(SK_SPELLCASTING) < 6 || you.skill(it->second.skill) < 10)
+        && (it->second.god == GOD_NO_GOD || !you_worship(it->second.god)))
     {
         return false;
     }
@@ -594,7 +614,7 @@ static void _index_book(item_def& book, spells_to_books &book_hash,
 
         spells_in_book++;
 
-        spells_to_books::iterator it = book_hash.find(spell);
+        auto it = book_hash.find(spell);
         if (it == book_hash.end())
             book_hash[spell] = book.sub_type;
     }
@@ -654,7 +674,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
 
     // Handle Vehumet gifts
-    set<spell_type>::iterator gift_iterator = you.vehumet_gifts.begin();
+    auto gift_iterator = you.vehumet_gifts.begin();
     if (gift_iterator != you.vehumet_gifts.end())
     {
         num_books++;
@@ -851,9 +871,7 @@ vector<spell_type> get_mem_spell_list(vector<int> &books)
     for (spell_type spell : mem_spells)
     {
         spells.push_back(spell);
-
-        spells_to_books::iterator it = book_hash.find(spell);
-        books.push_back(it->second);
+        books.push_back(*map_find(book_hash, spell));
     }
 
     return spells;
@@ -1278,10 +1296,10 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
     vector<spell_type> special_spells;
     if (god == GOD_SIF_MUNA)
     {
-        for (int i = MIN_RARE_BOOK; i <= MAX_RARE_BOOK; ++i)
+        for (auto i : rare_books)
             for (int j = 0; j < SPELLBOOK_SIZE; ++j)
             {
-                spell_type spell = which_spell_in_book(i, j);
+                spell_type spell = which_spell_in_book(i.first, j);
                 if (spell == SPELL_NO_SPELL)
                     continue;
 

@@ -162,6 +162,7 @@ static void _print_hints_menu(hints_types type)
 // Hints mode selection screen and choice.
 void pick_hints(newgame_def* choice)
 {
+again:
     clrscr();
 
     cgotoxy(1,1);
@@ -184,6 +185,8 @@ void pick_hints(newgame_def* choice)
     while (true)
     {
         int keyn = getch_ck();
+        if (keyn == CK_REDRAW)
+            goto again;
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
@@ -2823,7 +2826,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "also check ";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
-        vector<string> listed;
+        vector<const char *> listed;
         if (you.spell_no > 0)
         {
             listed.push_back("your spells (<w>%?</w>)");
@@ -2892,7 +2895,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_CLOUD_WARNING:
         text << "Rather than step into this cloud and hurt yourself, you should "
                 "try to step around it or wait it out with <w>%</w> or <w>%</w>.";
-        cmd.push_back(CMD_MOVE_NOWHERE);
+        cmd.push_back(CMD_WAIT);
         cmd.push_back(CMD_REST);
         break;
     case HINT_ANIMATE_CORPSE_SKELETON:

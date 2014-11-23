@@ -247,8 +247,13 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_BRIBE_TIMEOUT:
-            mon->del_ench(ENCH_BRIBED);
-            mon->del_ench(ENCH_PERMA_BRIBED);
+            if (mon->del_ench(ENCH_BRIBED)
+                || mon->del_ench(ENCH_PERMA_BRIBED))
+            {
+                mon->attitude = ATT_NEUTRAL;
+                mon->flags   |= MF_WAS_NEUTRAL;
+                mons_att_changed(mon);
+            }
             if (mon->props.exists(GOZAG_BRIBE_KEY))
                 mon->props.erase(GOZAG_BRIBE_KEY);
             if (mon->props.exists(GOZAG_PERMABRIBE_KEY))

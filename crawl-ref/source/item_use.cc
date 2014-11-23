@@ -1678,7 +1678,8 @@ void zap_wand(int slot)
     // system will default to enemies. -- [ds]
     targ_mode_type targ_mode = TARG_HOSTILE;
 
-    beam.source_id = MID_PLAYER;
+    beam.set_agent(&you);
+    beam.source_name = "you";
 
     if (inv_count() < 1)
     {
@@ -1720,7 +1721,7 @@ void zap_wand(int slot)
     item_def& wand = you.inv[item_slot];
     if (wand.base_type != OBJ_WANDS)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        mpr("You can't zap that!");
         return;
     }
 

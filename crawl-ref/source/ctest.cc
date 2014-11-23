@@ -132,7 +132,7 @@ static void run_test(const string &file)
     if (dlua.error.empty())
         ++nsuccess;
     else
-        failures.push_back(file_error(file, dlua.error));
+        failures.emplace_back(file, dlua.error);
 }
 
 static bool _has_test(const string& test)
@@ -158,7 +158,7 @@ static void _run_test(const string &name, void (*func)())
     }
     catch (const ext_fail_exception &E)
     {
-        failures.push_back(file_error(name, E.msg));
+        failures.emplace_back(name, E.msg);
     }
 }
 
@@ -193,14 +193,11 @@ void run_tests()
 
         if (failures.empty() && !ntests && crawl_state.script)
         {
-            failures.push_back(
-                file_error(
-                    "Script setup",
-                    "No scripts found matching " +
-                    comma_separated_line(crawl_state.tests_selected.begin(),
-                                         crawl_state.tests_selected.end(),
-                                         ", ",
-                                         ", ")));
+            failures.emplace_back("Script setup",
+                    "No scripts found matching "
+                    + comma_separated_line(crawl_state.tests_selected.begin(),
+                                           crawl_state.tests_selected.end(),
+                                           ", ", ", "));
         }
     }
 

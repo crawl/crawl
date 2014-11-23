@@ -340,18 +340,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
         if (!insparts.empty())
         {
-            buff << " {";
-
-            vector<string>::iterator iter = insparts.begin();
-
-            for (;;)
-            {
-                buff << *iter;
-                if (++iter == insparts.end()) break;
-                buff << ", ";
-            }
-
-            buff << "}";
+            buff << " {"
+                 << comma_separated_line(begin(insparts), end(insparts), ", ")
+                 << "}";
         }
     }
     // These didn't have "cursed " prepended; add them here so that
@@ -1132,12 +1123,12 @@ static const char* rod_type_name(int type)
     }
 }
 
-string base_type_string(const item_def &item)
+const char *base_type_string(const item_def &item)
 {
     return base_type_string(item.base_type);
 }
 
-string base_type_string(object_class_type type)
+const char *base_type_string(object_class_type type)
 {
     switch (type)
     {
@@ -2361,7 +2352,7 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (i == OBJ_BOOKS && j > MAX_RARE_BOOK)
+            if (i == OBJ_BOOKS && j > MAX_FIXED_BOOK)
                 continue;
 
             // Curse scrolls are only created by Ashenzari.
@@ -2426,9 +2417,9 @@ void check_item_knowledge(bool unknown_items)
                     items.push_back(ptmp);
 
                     if (you.force_autopickup[i][j] == 1)
-                        selected_items.push_back(SelItem(0,1,ptmp));
+                        selected_items.emplace_back(0,1,ptmp);
                     if (you.force_autopickup[i][j] == -1)
-                        selected_items.push_back(SelItem(0,2,ptmp));
+                        selected_items.emplace_back(0,2,ptmp);
                 }
             }
             else
@@ -2457,9 +2448,9 @@ void check_item_knowledge(bool unknown_items)
                 items.push_back(ptmp);
 
                 if (you.force_autopickup[i][ptmp->sub_type] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[i][ptmp->sub_type ] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
         // Missiles
@@ -2479,9 +2470,9 @@ void check_item_knowledge(bool unknown_items)
                 items_missile.push_back(ptmp);
 
                 if (you.force_autopickup[OBJ_MISSILES][i] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[OBJ_MISSILES][i] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
         // Misc.
@@ -2528,9 +2519,9 @@ void check_item_knowledge(bool unknown_items)
                 items_other.push_back(ptmp);
 
                 if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
     }
@@ -3650,7 +3641,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
 string item_prefix(const item_def &item, bool temp)
 {
-    vector<string> prefixes;
+    vector<const char *> prefixes;
 
     if (!item.defined())
         return "";
@@ -3860,9 +3851,8 @@ void init_item_name_cache()
 
                 if (!item_names_cache.count(name))
                 {
-                    item_kind kind = {base_type, (uint8_t)sub_type,
-                                      (int8_t)item.plus, 0};
-                    item_names_cache[name] = kind;
+                    item_names_cache[name] = { base_type, (uint8_t)sub_type,
+                                               (int8_t)item.plus, 0 };
                     if (g.ch)
                         item_names_by_glyph_cache[g.ch].push_back(name);
                 }
@@ -3873,30 +3863,15 @@ void init_item_name_cache()
     ASSERT(!item_names_cache.empty());
 }
 
-item_kind item_kind_by_name(string name)
+item_kind item_kind_by_name(const string &name)
 {
-    lowercase(name);
-
-    item_names_map::iterator i = item_names_cache.find(name);
-
-    if (i != item_names_cache.end())
-        return i->second;
-
-    item_kind err = {OBJ_UNASSIGNED, 0, 0, 0};
-
-    return err;
+    return lookup(item_names_cache, lowercase_string(name),
+                  { OBJ_UNASSIGNED, 0, 0, 0 });
 }
 
 vector<string> item_name_list_for_glyph(unsigned glyph)
 {
-    item_names_by_glyph_map::iterator i;
-    i = item_names_by_glyph_cache.find(glyph);
-
-    if (i != item_names_by_glyph_cache.end())
-        return i->second;
-
-    vector<string> empty;
-    return empty;
+    return lookup(item_names_by_glyph_cache, glyph, {});
 }
 
 bool is_named_corpse(const item_def &corpse)

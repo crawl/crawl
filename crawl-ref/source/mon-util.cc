@@ -227,11 +227,8 @@ monster_type get_monster_by_name(string name, bool substring)
 
     if (!substring)
     {
-        mon_name_map::iterator i = Mon_Name_Cache.find(name);
-
-        if (i != Mon_Name_Cache.end())
-            return i->second;
-
+        if (monster_type *mc = map_find(Mon_Name_Cache, name))
+            return *mc;
         return MONS_PROGRAM_BUG;
     }
 
@@ -264,12 +261,11 @@ void init_monster_symbols()
     for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
     {
         mon_display &md = monster_symbols[mc];
-        const monsterentry *me = get_monster_data(mc);
-        if (me)
+        if (const monsterentry *me = get_monster_data(mc))
         {
             md.glyph  = me->basechar;
             md.colour = me->colour;
-            map<unsigned, monster_type>::iterator it = base_mons.find(md.glyph);
+            auto it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
                 base_mons[md.glyph] = mc;
             md.detected = base_mons[md.glyph];
@@ -673,12 +669,12 @@ bool mons_is_fiery(const monster* mon)
 
 bool mons_is_projectile(monster_type mc)
 {
-    return mc == MONS_ORB_OF_DESTRUCTION;
+    return mons_class_flag(mc, M_PROJECTILE);
 }
 
 bool mons_is_projectile(const monster* mon)
 {
-    return mon->type == MONS_ORB_OF_DESTRUCTION;
+    return mons_is_projectile(mon->type);
 }
 
 bool mons_is_boulder(const monster* mon)
@@ -1071,10 +1067,7 @@ bool mons_is_conjured(monster_type mc)
 {
     return mons_is_projectile(mc)
            || mons_is_avatar(mc)
-           || mc == MONS_FIRE_VORTEX
-           || mc == MONS_SPATIAL_VORTEX
-           || mc == MONS_BALL_LIGHTNING
-           || mc == MONS_FULMINANT_PRISM;
+           || mons_class_flag(mc, M_CONJURED);
 }
 
 int mons_weight(monster_type mc)
@@ -1425,26 +1418,16 @@ bool mons_class_fast_regen(monster_type mc)
     return mons_class_flag(mc, M_FAST_REGEN);
 }
 
+/**
+ * Do monsters of the given type ever leave a hide?
+ *
+ * @param mc      The class of monster in question.
+ * @return        Whether the monster has a chance of dropping a hide when
+ *                butchered.
+ */
 bool mons_class_leaves_hide(monster_type mc)
 {
-    if (mons_genus(mc) == MONS_TROLL)
-        return true;
-    switch (mons_species(mc))
-    {
-    case MONS_FIRE_DRAGON:
-    case MONS_ICE_DRAGON:
-    case MONS_STEAM_DRAGON:
-    case MONS_MOTTLED_DRAGON:
-    case MONS_STORM_DRAGON:
-    case MONS_GOLDEN_DRAGON:
-    case MONS_SWAMP_DRAGON:
-    case MONS_PEARL_DRAGON:
-    case MONS_SHADOW_DRAGON:
-    case MONS_QUICKSILVER_DRAGON:
-        return true;
-    default:
-        return false;
-    }
+    return hide_for_monster(mc) != NUM_ARMOURS;
 }
 
 int mons_zombie_size(monster_type mc)
@@ -2140,121 +2123,73 @@ monster_type random_demonspawn_monster_species()
 // and the books are accounted for here.
 static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 {
-    vector<mon_spellbook_type> books;
-    const monsterentry *m = get_monster_data(mon_type);
-    mon_spellbook_type book = static_cast<mon_spellbook_type>(m->sec);
-
     switch (mon_type)
     {
     case MONS_HELL_KNIGHT:
-        books.push_back(MST_HELL_KNIGHT_I);
-        books.push_back(MST_HELL_KNIGHT_II);
-        break;
+        return { MST_HELL_KNIGHT_I, MST_HELL_KNIGHT_II };
 
     case MONS_LICH:
     case MONS_ANCIENT_LICH:
-        books.push_back(MST_LICH_I);
-        books.push_back(MST_LICH_II);
-        books.push_back(MST_LICH_III);
-        books.push_back(MST_LICH_IV);
-        break;
+        return { MST_LICH_I, MST_LICH_II, MST_LICH_III, MST_LICH_IV };
 
     case MONS_NECROMANCER:
-        books.push_back(MST_NECROMANCER_I);
-        books.push_back(MST_NECROMANCER_II);
-        break;
+        return { MST_NECROMANCER_I, MST_NECROMANCER_II };
 
     case MONS_ORC_WIZARD:
     case MONS_DEEP_ELF_FIGHTER:
-        books.push_back(MST_ORC_WIZARD_I);
-        books.push_back(MST_ORC_WIZARD_II);
-        books.push_back(MST_ORC_WIZARD_III);
-        break;
+        return { MST_ORC_WIZARD_I, MST_ORC_WIZARD_II, MST_ORC_WIZARD_III };
 
     case MONS_WIZARD:
     case MONS_EROLCHA:
-        books.push_back(MST_WIZARD_I);
-        books.push_back(MST_WIZARD_II);
-        books.push_back(MST_WIZARD_III);
-        books.push_back(MST_WIZARD_IV);
-        books.push_back(MST_WIZARD_V);
-        break;
+        return { MST_WIZARD_I, MST_WIZARD_II, MST_WIZARD_III, MST_WIZARD_IV,
+                 MST_WIZARD_V };
 
     case MONS_OGRE_MAGE:
-        books.push_back(MST_OGRE_MAGE_I);
-        books.push_back(MST_OGRE_MAGE_II);
-        books.push_back(MST_OGRE_MAGE_III);
-        books.push_back(MST_OGRE_MAGE_IV);
-        books.push_back(MST_OGRE_MAGE_V);
-        break;
+        return { MST_OGRE_MAGE_I, MST_OGRE_MAGE_II, MST_OGRE_MAGE_III,
+                 MST_OGRE_MAGE_IV, MST_OGRE_MAGE_V };
 
     case MONS_ANCIENT_CHAMPION:
-        books.push_back(MST_ANCIENT_CHAMPION_I);
-        books.push_back(MST_ANCIENT_CHAMPION_II);
-        books.push_back(MST_ANCIENT_CHAMPION_III);
-        books.push_back(MST_ANCIENT_CHAMPION_IV);
-        break;
+        return { MST_ANCIENT_CHAMPION_I, MST_ANCIENT_CHAMPION_II,
+                 MST_ANCIENT_CHAMPION_III, MST_ANCIENT_CHAMPION_IV };
 
     case MONS_TENGU_CONJURER:
-        books.push_back(MST_TENGU_CONJURER_I);
-        books.push_back(MST_TENGU_CONJURER_II);
-        books.push_back(MST_TENGU_CONJURER_III);
-        books.push_back(MST_TENGU_CONJURER_IV);
-        break;
+        return { MST_TENGU_CONJURER_I, MST_TENGU_CONJURER_II,
+                 MST_TENGU_CONJURER_III, MST_TENGU_CONJURER_IV };
 
     case MONS_TENGU_REAVER:
-        books.push_back(MST_TENGU_REAVER_I);
-        books.push_back(MST_TENGU_REAVER_II);
-        books.push_back(MST_TENGU_REAVER_III);
-        break;
+        return { MST_TENGU_REAVER_I, MST_TENGU_REAVER_II,
+                 MST_TENGU_REAVER_III };
 
     case MONS_DEEP_ELF_MAGE:
-        books.push_back(MST_DEEP_ELF_MAGE_I);
-        books.push_back(MST_DEEP_ELF_MAGE_II);
-        books.push_back(MST_DEEP_ELF_MAGE_III);
-        books.push_back(MST_DEEP_ELF_MAGE_IV);
-        books.push_back(MST_DEEP_ELF_MAGE_V);
-        break;
+        return { MST_DEEP_ELF_MAGE_I, MST_DEEP_ELF_MAGE_II,
+                 MST_DEEP_ELF_MAGE_III, MST_DEEP_ELF_MAGE_IV,
+                 MST_DEEP_ELF_MAGE_V };
 
     case MONS_FAUN:
-        books.push_back(MST_FAUN_I);
-        books.push_back(MST_FAUN_II);
-        books.push_back(MST_FAUN_III);
-        break;
+        return { MST_FAUN_I, MST_FAUN_II, MST_FAUN_III };
 
     case MONS_GREATER_MUMMY:
-        books.push_back(MST_GREATER_MUMMY_I);
-        books.push_back(MST_GREATER_MUMMY_II);
-        books.push_back(MST_GREATER_MUMMY_III);
-        books.push_back(MST_GREATER_MUMMY_IV);
-        break;
+        return { MST_GREATER_MUMMY_I, MST_GREATER_MUMMY_II,
+                 MST_GREATER_MUMMY_III, MST_GREATER_MUMMY_IV };
 
     case MONS_DEEP_ELF_KNIGHT:
-        books.push_back(MST_DEEP_ELF_KNIGHT_I);
-        books.push_back(MST_DEEP_ELF_KNIGHT_II);
-        books.push_back(MST_DEEP_ELF_KNIGHT_III);
-        break;
+        return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II,
+                 MST_DEEP_ELF_KNIGHT_III };
 
     default:
-        books.push_back(book);
-        break;
+        return { static_cast<mon_spellbook_type>(
+                     get_monster_data(mon_type)->sec) };
     }
-
-    return books;
 }
 
 vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
 {
-    vector<mon_spellbook_type> books;
-
     // special case for vault monsters: if they have a custom book,
     // treat it as MST_GHOST
     if (mon.props.exists("custom_spells"))
-        books.push_back(MST_GHOST);
+        return { MST_GHOST };
     else
-        books = _mons_spellbook_list(mon.type);
-
-    return books;
+        return _mons_spellbook_list(mon.type);
 }
 
 // Get a list of unique spells from a monster's preset spellbooks
@@ -2388,20 +2323,6 @@ colour_t random_monster_colour()
     return col;
 }
 
-// Butterflies
-static colour_t _random_butterfly_colour()
-{
-    colour_t col;
-    // Restricted to 'light' colours.
-    do
-    {
-        col = random_monster_colour();
-    }
-    while (is_low_colour(col));
-
-    return col;
-}
-
 bool init_abomination(monster* mon, int hd)
 {
     if (mon->type == MONS_CRAWLING_CORPSE
@@ -2446,10 +2367,6 @@ void define_monster(monster* mons)
 
     switch (mcls)
     {
-    case MONS_BUTTERFLY:
-        col = _random_butterfly_colour();
-        break;
-
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
         mons->props["speed"] = 7 + random2avg(9, 2);
@@ -3664,7 +3581,7 @@ static const spell_type smitey_spells[] = {
 static bool _mons_has_smite_attack(const monster* mons)
 {
     return any_of(begin(smitey_spells), end(smitey_spells),
-                  bind(mem_fn(&monster::has_spell), *mons, placeholders::_1));
+                  [=] (spell_type sp) { return mons->has_spell(sp); });
 }
 
 /**
@@ -4463,19 +4380,22 @@ bool monster_nearby()
     return false;
 }
 
-actor *actor_by_mid(mid_t m)
+actor *actor_by_mid(mid_t m, bool require_valid)
 {
     if (m == MID_PLAYER)
         return &you;
-    return monster_by_mid(m);
+    return monster_by_mid(m, require_valid);
 }
 
-monster *monster_by_mid(mid_t m)
+monster *monster_by_mid(mid_t m, bool require_valid)
 {
-    if (m == MID_ANON_FRIEND)
-        return &menv[ANON_FRIENDLY_MONSTER];
-    if (m == MID_YOU_FAULTLESS)
-        return &menv[YOU_FAULTLESS];
+    if (!require_valid)
+    {
+        if (m == MID_ANON_FRIEND)
+            return &menv[ANON_FRIENDLY_MONSTER];
+        if (m == MID_YOU_FAULTLESS)
+            return &menv[YOU_FAULTLESS];
+    }
 
     if (unsigned short *mc = map_find(env.mid_cache, m))
         return &menv[*mc];
@@ -4747,8 +4667,7 @@ bool mons_is_beast(monster_type mc)
 
 bool mons_is_avatar(monster_type mc)
 {
-    return mc == MONS_SPECTRAL_WEAPON || mc == MONS_BATTLESPHERE
-        || mc == MONS_GRAND_AVATAR;
+    return mons_class_flag(mc, M_AVATAR);
 }
 
 bool mons_is_player_shadow(const monster* mon)

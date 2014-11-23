@@ -54,7 +54,7 @@
 #ifdef __ANDROID__
 #include <android/log.h>
 #include <GLES/gl.h>
-#include <SDL_android.h>
+//#include <SDL_android.h>
 #endif
 
 #ifdef TARGET_OS_WINDOWS
@@ -374,7 +374,7 @@ bool TilesFramework::initialise()
         return false;
 
     // Initialize the wrapper
-    if (!wm->init(&m_windowsz))
+    if (!wm->init(&m_windowsz, &densityNum, &densityDen))
         return false;
 
     wm->set_window_title(title.c_str());
@@ -500,7 +500,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
     FontWrapper *font = FontWrapper::create();
 
-    if (!font->load_font(font_file, font_size, outline))
+    if (!font->load_font(font_file, font_size, outline, densityNum, densityDen))
     {
         delete font;
         if (default_on_fail)
@@ -615,8 +615,10 @@ int TilesFramework::handle_mouse(MouseEvent &event)
     return 0;
 }
 
-static unsigned int _timer_callback(unsigned int ticks)
+static unsigned int _timer_callback(unsigned int ticks, void *param)
 {
+    UNUSED(param);
+
     // force the event loop to break
     wm->raise_custom_event();
 
@@ -628,7 +630,6 @@ int TilesFramework::getch_ck()
 {
     wm_event event;
     cursor_loc cur_loc;
-    cursor_loc tip_loc;
     cursor_loc last_loc;
 
     int key = 0;
@@ -641,10 +642,9 @@ int TilesFramework::getch_ck()
     const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
 
     unsigned int res = Options.tile_tooltip_ms;
-    wm->set_timer(res, &_timer_callback);
+    unsigned int timer_id = wm->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
-    string prev_alt = m_region_msg->alt_text();
     m_region_msg->alt_text().clear();
 
     if (need_redraw())
@@ -661,36 +661,10 @@ int TilesFramework::getch_ck()
         if (wm->wait_event(&event))
         {
             ticks = wm->get_ticks();
-            if (!mouse_target_mode)
+            if (!mouse_target_mode && event.type != WME_CUSTOMEVENT)
             {
-                if (event.type != WME_CUSTOMEVENT)
-                {
-                    tiles.clear_text_tags(TAG_CELL_DESC);
-                    m_region_msg->alt_text().clear();
-                }
-
-                if (tip_loc != m_cur_loc)
-                {
-                    set_need_redraw();
-
-                    // Prevent alt. text getting displayed after a mouseclick,
-                    // only after a mouse movement. (jpeg)
-                    if (m_last_tick_moved != UINT_MAX)
-                    {
-                        m_region_msg->alt_text().clear();
-                        for (Region *reg : m_layers[m_active_layer].m_regions)
-                        {
-                            if (!reg->inside(m_mouse.x, m_mouse.y))
-                                continue;
-
-                            if (reg->update_alt_text(m_region_msg->alt_text()))
-                                break;
-                        }
-
-                        if (prev_alt != m_region_msg->alt_text())
-                            prev_alt = m_region_msg->alt_text();
-                    }
-                }
+                tiles.clear_text_tags(TAG_CELL_DESC);
+                m_region_msg->alt_text().clear();
             }
 
             switch (event.type)
@@ -748,6 +722,13 @@ int TilesFramework::getch_ck()
                 m_last_tick_moved = UINT_MAX;
                 break;
 
+            case WME_KEYPRESS:
+                key = event.key.keysym.sym;
+                m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
+
+                m_last_tick_moved = UINT_MAX;
+                break;
+
             case WME_MOUSEMOTION:
                 {
                     // Record mouse pos for tooltip timer
@@ -763,6 +744,7 @@ int TilesFramework::getch_ck()
                     event.mouse_event.mod  = m_key_mod;
                     int mouse_key = handle_mouse(event.mouse_event);
 
+                    m_region_msg->alt_text().clear();
                     // find mouse location
                     for (Region *reg : m_layers[m_active_layer].m_regions)
                     {
@@ -771,6 +753,7 @@ int TilesFramework::getch_ck()
                         {
                             m_cur_loc.reg = reg;
                             m_cur_loc.mode = mouse_control::current_mode();
+                            reg->update_alt_text(m_region_msg->alt_text());
                             break;
                         }
                     }
@@ -821,6 +804,13 @@ int TilesFramework::getch_ck()
                 crawl_state.seen_hups++;
                 return ESCAPE;
 
+            case WME_RESIZE:
+                m_windowsz.x = event.resize.w;
+                m_windowsz.y = event.resize.h;
+                resize();
+                set_need_redraw();
+                return CK_REDRAW;
+
             case WME_CUSTOMEVENT:
             default:
                 // This is only used to refresh the tooltip.
@@ -836,7 +826,6 @@ int TilesFramework::getch_ck()
 
             if (timeout)
             {
-                tip_loc = m_cur_loc;
                 tiles.clear_text_tags(TAG_CELL_DESC);
                 if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
                 {
@@ -858,7 +847,6 @@ int TilesFramework::getch_ck()
                     set_need_redraw();
 
                 m_tooltip.clear();
-                tip_loc.reset();
             }
 
             if (need_redraw()
@@ -873,7 +861,7 @@ int TilesFramework::getch_ck()
     // We got some input, so we'll probably have to redraw something.
     set_need_redraw();
 
-    wm->set_timer(0, NULL);
+    wm->remove_timer(timer_id);
 
     return key;
 }
@@ -1076,12 +1064,7 @@ bool TilesFramework::is_using_small_layout()
         return false;
     case MB_MAYBE:
     default:
-#ifdef __ANDROID__
-        Options.tile_use_small_layout = (SDL_ANDROID_GetY16Inches()<40) ?
-            MB_TRUE : MB_FALSE; // about 2.5" high
-#else
         Options.tile_use_small_layout = (m_windowsz.x<=480) ? MB_TRUE : MB_FALSE;
-#endif
         return Options.tile_use_small_layout == MB_TRUE;
     }
 #else

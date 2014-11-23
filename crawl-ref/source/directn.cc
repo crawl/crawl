@@ -634,29 +634,28 @@ void full_describe_view()
     if (!list_mons.empty())
     {
         desc_menu.add_entry(new MenuEntry("Monsters", MEL_SUBTITLE));
-        vector<monster_info>::const_iterator mi;
-        for (mi = list_mons.begin(); mi != list_mons.end(); ++mi)
+        for (const monster_info &mi : list_mons)
         {
             // List monsters in the form
             // (A) An angel (neutral), wielding a glowing long sword
 
             string prefix = "";
 #ifndef USE_TILE_LOCAL
-            cglyph_t g = get_mons_glyph(*mi);
+            cglyph_t g = get_mons_glyph(mi);
             const string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
                      + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
                      + "</" + col_string + ">) ";
 #endif
 
-            string str = get_monster_equipment_desc(*mi, DESC_FULL, DESC_A, true);
-            if (mi->is(MB_MESMERIZING))
+            string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
+            if (mi.is(MB_MESMERIZING))
                 str += ", keeping you mesmerised";
 
-            if (mi->dam != MDAM_OKAY)
-                str += ", " + mi->damage_desc();
+            if (mi.dam != MDAM_OKAY)
+                str += ", " + mi.damage_desc();
 
-            string consinfo = mi->constriction_description();
+            string consinfo = mi.constriction_description();
             if (!consinfo.empty())
                 str += ", " + consinfo;
 
@@ -670,7 +669,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix+str, &(*mi), hotkey++);
+                    me = new MonsterMenuEntry(prefix+str, &mi, hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
@@ -1520,10 +1519,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
     // Build the final description string.
     if (!suffixes.empty())
     {
-        // There's Gotta Be A Better Way
-        if (!text.empty() && text[text.size() - 1] != ' ')
-            text += " ";
-        text += "("
+        text += " ("
             + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
             + ")";
     }
@@ -2990,11 +2986,9 @@ string raw_feature_description(const coord_def &where)
     int mapi = env.level_map_ids(where);
     if (mapi != INVALID_MAP_INDEX)
     {
-        const vault_placement *v = env.level_vaults[mapi];
-        map<dungeon_feature_type, string>::const_iterator it =
-            v->map.feat_renames.find(feat);
-        if (it != v->map.feat_renames.end())
-            return it->second;
+        const auto &renames = env.level_vaults[mapi]->map.feat_renames;
+        if (const string *rename = map_find(renames, feat))
+            return *rename;
     }
 
     return _base_feature_desc(feat, get_trap_type(where));
@@ -3213,11 +3207,11 @@ static vector<string> _get_monster_behaviour_vector(const monster_info& mi)
     vector<string> descs;
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
-        descs.push_back(mi.is(MB_CONFUSED) ? "sleepwalking" : "resting");
+        descs.emplace_back(mi.is(MB_CONFUSED) ? "sleepwalking" : "resting");
     else if (mi.is(MB_FLEEING))
-        descs.push_back("fleeing");
+        descs.emplace_back("fleeing");
     else if (mi.attitude == ATT_HOSTILE && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
-        descs.push_back("hasn't noticed you");
+        descs.emplace_back("hasn't noticed you");
 
     return descs;
 }
@@ -3228,48 +3222,48 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     vector<string> descs;
 
     if (mi.is(MB_CLINGING))
-        descs.push_back("clinging");
+        descs.emplace_back("clinging");
 
     if (mi.is(MB_MESMERIZING))
-        descs.push_back("mesmerising");
+        descs.emplace_back("mesmerising");
 
     _append_container(descs, _get_monster_behaviour_vector(mi));
 
     if (mi.attitude == ATT_FRIENDLY)
-        descs.push_back("friendly");
+        descs.emplace_back("friendly");
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
-        descs.push_back("peaceful");
+        descs.emplace_back("peaceful");
     else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
     {
         // don't differentiate between permanent or not
-        descs.push_back("indifferent");
+        descs.emplace_back("indifferent");
     }
 
     if (mi.is(MB_SUMMONED))
-        descs.push_back("summoned");
+        descs.emplace_back("summoned");
 
     if (mi.is(MB_PERM_SUMMON))
-        descs.push_back("durably summoned");
+        descs.emplace_back("durably summoned");
 
     if (mi.is(MB_SUMMONED_CAPPED))
-        descs.push_back("expiring");
+        descs.emplace_back("expiring");
 
     if (mi.is(MB_HALOED))
-        descs.push_back("haloed");
+        descs.emplace_back("haloed");
 
     if (mi.is(MB_UMBRAED))
-        descs.push_back("umbra");
+        descs.emplace_back("umbra");
 
     if (mi.is(MB_POSSESSABLE))
-        descs.push_back("possessable"); // FIXME: better adjective
+        descs.emplace_back("possessable"); // FIXME: better adjective
     else if (mi.is(MB_ENSLAVED))
-        descs.push_back("disembodied soul");
+        descs.emplace_back("disembodied soul");
 
     if (mi.is(MB_MIRROR_DAMAGE))
-        descs.push_back("reflecting injuries");
+        descs.emplace_back("reflecting injuries");
 
     if (mi.is(MB_INNER_FLAME))
-        descs.push_back("inner flame");
+        descs.emplace_back("inner flame");
 
     if (mi.fire_blocker)
     {
@@ -3407,24 +3401,24 @@ string get_monster_equipment_desc(const monster_info& mi,
         {
             vector<string> attributes;
             if (mi.is(MB_CHARMED))
-                attributes.push_back("charmed");
+                attributes.emplace_back("charmed");
             else if (mi.attitude == ATT_FRIENDLY)
-                attributes.push_back("friendly");
+                attributes.emplace_back("friendly");
             else if (mi.attitude == ATT_GOOD_NEUTRAL)
-                attributes.push_back("peaceful");
+                attributes.emplace_back("peaceful");
             else if (mi.is(MB_INSANE))
-                attributes.push_back("insane");
+                attributes.emplace_back("insane");
             else if (mi.attitude != ATT_HOSTILE)
-                attributes.push_back("neutral");
+                attributes.emplace_back("neutral");
 
             if (mi.is(MB_SUMMONED))
-                attributes.push_back("summoned");
+                attributes.emplace_back("summoned");
 
             if (mi.is(MB_PERM_SUMMON))
-                attributes.push_back("durably summoned");
+                attributes.emplace_back("durably summoned");
 
             if (mi.is(MB_SUMMONED_CAPPED))
-                attributes.push_back("expiring");
+                attributes.emplace_back("expiring");
 
             string str = comma_separated_line(attributes.begin(),
                                               attributes.end());
@@ -3553,27 +3547,27 @@ string get_monster_equipment_desc(const monster_info& mi,
                                                 item_descriptions.end());
 
     if (!item_description.empty() && !desc.empty())
-        desc += ",";
-    return desc + " " + item_description;
+        desc += ", ";
+    return desc + item_description;
 }
 
 static bool _print_cloud_desc(const coord_def where)
 {
     vector<string> areas;
     if (is_sanctuary(where))
-        areas.push_back("lies inside a sanctuary");
+        areas.emplace_back("lies inside a sanctuary");
     if (silenced(where))
-        areas.push_back("is shrouded in silence");
+        areas.emplace_back("is shrouded in silence");
     if (haloed(where) && !umbraed(where))
-        areas.push_back("is lit by a halo");
+        areas.emplace_back("is lit by a halo");
     if (umbraed(where) && !haloed(where))
-        areas.push_back("is wreathed by an umbra");
+        areas.emplace_back("is wreathed by an umbra");
     if (liquefied(where))
-        areas.push_back("is liquefied");
+        areas.emplace_back("is liquefied");
     if (orb_haloed(where) || quad_haloed(where))
-        areas.push_back("is covered in magical glow");
+        areas.emplace_back("is covered in magical glow");
     if (disjunction_haloed(where))
-        areas.push_back("is bathed in translocation energy");
+        areas.emplace_back("is bathed in translocation energy");
     if (!areas.empty())
     {
         mprf("This square %s.",

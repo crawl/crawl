@@ -326,18 +326,16 @@ void Kills::record_kill(const monster* mon)
 int Kills::get_kills(vector<kill_exp> &all_kills) const
 {
     int count = 0;
-    kill_map::const_iterator iter = kills.begin();
-    for (; iter != kills.end(); ++iter)
+    for (const auto &entry : kills)
     {
-        const kill_monster_desc &md = iter->first;
-        const kill_def &k = iter->second;
-        all_kills.push_back(kill_exp(k, md));
+        const kill_monster_desc &md = entry.first;
+        const kill_def &k = entry.second;
+        all_kills.emplace_back(k, md);
         count += k.kills;
     }
 
-    ghost_vec::const_iterator gi = ghosts.begin();
-    for (; gi != ghosts.end(); ++gi)
-        all_kills.push_back(kill_exp(*gi));
+    for (const kill_ghost &gh : ghosts)
+        all_kills.emplace_back(gh);
     count += ghosts.size();
 
     sort(all_kills.begin(), all_kills.end());
@@ -388,8 +386,7 @@ void Kills::record_ghost_kill(const monster* mon)
     // We should never get to this point, but just in case... {due}
     if (mon->is_summoned())
         return;
-    kill_ghost ghostk(mon);
-    ghosts.push_back(ghostk);
+    ghosts.emplace_back(mon);
 }
 
 int Kills::num_kills(const monster* mon) const
@@ -406,7 +403,7 @@ int Kills::num_kills(const monster_info& mon) const
 
 int Kills::num_kills(kill_monster_desc desc) const
 {
-    kill_map::const_iterator iter = kills.find(desc);
+    auto iter = kills.find(desc);
     int total = (iter == kills.end() ? 0 : iter->second.kills);
 
     if (desc.modifier == kill_monster_desc::M_SHAPESHIFTER)

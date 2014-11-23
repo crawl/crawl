@@ -17,6 +17,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <set>
 #include <string>
 
 #include "chardump.h"
@@ -1087,13 +1088,13 @@ void game_options::reset_options()
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY);
 
     hp_colour.clear();
-    hp_colour.push_back(pair<int,int>(50, YELLOW));
-    hp_colour.push_back(pair<int,int>(25, RED));
+    hp_colour.emplace_back(50, YELLOW);
+    hp_colour.emplace_back(25, RED);
     mp_colour.clear();
-    mp_colour.push_back(pair<int, int>(50, YELLOW));
-    mp_colour.push_back(pair<int, int>(25, RED));
+    mp_colour.emplace_back(50, YELLOW);
+    mp_colour.emplace_back(25, RED);
     stat_colour.clear();
-    stat_colour.push_back(pair<int, int>(3, RED));
+    stat_colour.emplace_back(3, RED);
     enemy_hp_colour.clear();
     // I think these defaults are pretty ugly but apparently OS X has problems
     // with lighter colours
@@ -1197,7 +1198,7 @@ static int read_symbol(string s)
     }
 
     char *tail;
-    return -strtoul(s.c_str(), &tail, base);
+    return strtoul(s.c_str(), &tail, base);
 }
 
 void game_options::set_fire_order(const string &s, bool append, bool prepend)
@@ -1229,24 +1230,32 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
 
 static monster_type _mons_class_by_string(const string &name)
 {
-    // If one character, this is a monster letter.
-    ucs_t letter = -1;
-    if (name.length() == 1)
-        letter = name[0];
-
+    const string match = lowercase_string(name);
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
             continue;
 
-        if ((ucs_t) me->basechar == letter
-              || lowercase_string(me->name) == lowercase_string(name))
-        {
+        if (lowercase_string(me->name) == match)
             return i;
-        }
     }
     return MONS_0;
+}
+
+static set<monster_type> _mons_classes_by_glyph(const char letter)
+{
+    set<monster_type> matches;
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
+    {
+        const monsterentry *me = get_monster_data(i);
+        if (!me || me->mc == MONS_PROGRAM_BUG)
+            continue;
+
+        if (me->basechar == letter)
+            matches.insert(i);
+    }
+    return matches;
 }
 
 cglyph_t game_options::parse_mon_glyph(const string &s) const
@@ -1272,10 +1281,18 @@ void game_options::add_mon_glyph_override(const string &text)
     if (override.size() != 2u)
         return;
 
-    const monster_type m = _mons_class_by_string(override[0]);
-    if (m == MONS_0) {
-        report_error("Unknown monster: \"%s\"", text.c_str());
-        return;
+    set<monster_type> matches;
+    if (override[0].length() == 1)
+        matches = _mons_classes_by_glyph(override[0][0]);
+    else
+    {
+        const monster_type m = _mons_class_by_string(override[0]);
+        if (m == MONS_0)
+        {
+            report_error("Unknown monster: \"%s\"", text.c_str());
+            return;
+        }
+        matches.insert(m);
     }
 
     cglyph_t mdisp;
@@ -1292,7 +1309,8 @@ void game_options::add_mon_glyph_override(const string &text)
         mdisp = parse_mon_glyph(override[1]);
 
     if (mdisp.ch || mdisp.col)
-        mon_glyph_overrides[m] = mdisp;
+        for (monster_type m : matches)
+            mon_glyph_overrides[m] = mdisp;
 }
 
 void game_options::add_item_glyph_override(const string &text)
@@ -1303,7 +1321,7 @@ void game_options::add_item_glyph_override(const string &text)
 
     cglyph_t mdisp = parse_mon_glyph(override[1]);
     if (mdisp.ch || mdisp.col)
-        item_glyph_overrides.push_back(pair<string, cglyph_t>(override[0], mdisp));
+        item_glyph_overrides.emplace_back(override[0], mdisp);
 }
 
 void game_options::add_feature_override(const string &text)
@@ -2059,8 +2077,7 @@ void game_options::add_alias(const string &key, const string &val)
 
 string game_options::unalias(const string &key) const
 {
-    string_map::const_iterator i = aliases.find(key);
-    return i == aliases.end()? key : i->second;
+    return lookup(aliases, key, key);
 }
 
 #define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
@@ -2093,7 +2110,7 @@ string game_options::expand_vars(const string &field) const
 
         string var_name = field_out.substr(start_pos, end_pos - start_pos + 1);
 
-        string_map::const_iterator x = variables.find(var_name);
+        auto x = variables.find(var_name);
 
         if (x == variables.end())
         {
@@ -2379,8 +2396,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     {                                                                          \
         if (minus_equal)                                                       \
         {                                                                      \
-            vector<_type>::iterator it2 =                                      \
-                find(_opt.begin(), _opt.end(), _conv(part));                   \
+            auto it2 = find(_opt.begin(), _opt.end(), _conv(part));            \
             if (it2 != _opt.end())                                             \
                 _opt.erase(it2);                                               \
         }                                                                      \
@@ -4489,7 +4505,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
     if (SysEnv.cmd_args.empty())
     {
         for (int i = 1; i < argc; ++i)
-            SysEnv.cmd_args.push_back(argv[i]);
+            SysEnv.cmd_args.emplace_back(argv[i]);
     }
 
     while (current < argc)
@@ -4672,7 +4688,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             {
                 crawl_state.tests_selected = split_string(",", next_arg);
                 for (int extra = current + 2; extra < argc; ++extra)
-                    crawl_state.script_args.push_back(argv[extra]);
+                    crawl_state.script_args.emplace_back(argv[extra]);
                 current = argc;
             }
             else
@@ -4886,7 +4902,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!_check_extra_opt(next_arg))
                 return true;
 
-            SysEnv.extra_opts_first.push_back(next_arg);
+            SysEnv.extra_opts_first.emplace_back(next_arg);
             nextUsed = true;
 
             // Can be used multiple times.
@@ -4901,7 +4917,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!_check_extra_opt(next_arg))
                 return true;
 
-            SysEnv.extra_opts_last.push_back(next_arg);
+            SysEnv.extra_opts_last.emplace_back(next_arg);
             nextUsed = true;
 
             // Can be used multiple times.
@@ -4939,12 +4955,7 @@ bool game_options::o_bool(const char *name, bool def) const
 
 string game_options::o_str(const char *name, const char *def) const
 {
-    string val;
-    if (const string *value = map_find(named_options, name))
-        val = *value;
-    else if (def)
-        val = def;
-    return val;
+    return lookup(named_options, name, def ? def : "");
 }
 
 int game_options::o_colour(const char *name, int def) const

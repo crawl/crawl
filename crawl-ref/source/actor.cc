@@ -484,10 +484,9 @@ void actor::clear_constricted()
 
 // End my constriction of i->first, but don't yet update my constricting map,
 // so as not to invalidate i.
-void actor::end_constriction(actor::constricting_t::iterator i,
-                             bool intentional, bool quiet)
+void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
 {
-    actor *const constrictee = actor_by_mid(i->first);
+    actor *const constrictee = actor_by_mid(whom);
 
     if (!constrictee)
         return;
@@ -510,11 +509,11 @@ void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
     if (!constricting)
         return;
 
-    constricting_t::iterator i = constricting->find(whom);
+    auto i = constricting->find(whom);
 
     if (i != constricting->end())
     {
-        end_constriction(i, intentional, quiet);
+        end_constriction(whom, intentional, quiet);
         constricting->erase(i);
 
         if (constricting->empty())
@@ -530,10 +529,8 @@ void actor::stop_constricting_all(bool intentional, bool quiet)
     if (!constricting)
         return;
 
-    constricting_t::iterator i;
-
-    for (i = constricting->begin(); i != constricting->end(); ++i)
-        end_constriction(i, intentional, quiet);
+    for (const auto &entry : *constricting)
+        end_constriction(entry.first, intentional, quiet);
 
     delete constricting;
     constricting = 0;
@@ -563,17 +560,15 @@ void actor::clear_far_constrictions()
         return;
 
     vector<mid_t> need_cleared;
-    constricting_t::iterator i;
-    for (i = constricting->begin(); i != constricting->end(); ++i)
+    for (const auto &entry : *constricting)
     {
-        actor* const constrictee = actor_by_mid(i->first);
+        actor* const constrictee = actor_by_mid(entry.first);
         if (!constrictee || !adjacent(pos(), constrictee->pos()))
-            need_cleared.push_back(i->first);
+            need_cleared.push_back(entry.first);
     }
 
-    vector<mid_t>::iterator j;
-    for (j = need_cleared.begin(); j != need_cleared.end(); ++j)
-        stop_constricting(*j, false, false);
+    for (mid_t whom : need_cleared)
+        stop_constricting(whom, false, false);
 }
 
 void actor::start_constricting(actor &whom, int dur)
@@ -608,9 +603,8 @@ void actor::accum_has_constricted()
     if (!constricting)
         return;
 
-    constricting_t::iterator i;
-    for (i = constricting->begin(); i != constricting->end(); ++i)
-        i->second += you.time_taken;
+    for (auto &entry : *constricting)
+        entry.second += you.time_taken;
 }
 
 bool actor::can_constrict(actor* defender)
@@ -644,7 +638,7 @@ void actor::handle_constriction()
     if (!constricting || !constriction_damage())
         return;
 
-    actor::constricting_t::iterator i = constricting->begin();
+    auto i = constricting->begin();
     // monster_die() can cause constricting() to go away.
     while (constricting && i != constricting->end())
     {

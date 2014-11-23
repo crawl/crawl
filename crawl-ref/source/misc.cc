@@ -1224,7 +1224,7 @@ void counted_monster_list::add(const monster* mons)
             return;
         }
     }
-    list.push_back(counted_monster(mons, 1));
+    list.emplace_back(mons, 1);
 }
 
 int counted_monster_list::count()

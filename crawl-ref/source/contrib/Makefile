@@ -1,6 +1,6 @@
 PREFIX := install
 
-SUBDIRS = sqlite sdl sdl-image freetype libpng pcre zlib
+SUBDIRS = sqlite sdl2 sdl2-image sdl2-mixer freetype libpng pcre zlib
 ARCH = unknown
 
 ifdef USE_LUAJIT
@@ -44,6 +44,7 @@ $(SUBDIRS):
 	$(MAKE) install prefix=$(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)/$(ARCH)
 
 libpng freetype: zlib
-sdl-image: sdl libpng
+sdl2-image: sdl2 libpng
+sdl2-mixer: sdl2
 
 .PHONY: $(SUBDIRS)

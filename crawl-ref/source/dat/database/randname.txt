@@ -594,6 +594,8 @@ brightly glowing
 
 smoking
 
+scorched
+
 twisted
 
 shimmering
@@ -601,6 +603,8 @@ shimmering
 warped
 
 transparent
+
+translucent
 
 encrusted
 
@@ -649,8 +653,8 @@ sapphire
 w:3
 ebony
 
-# currently 16 entries, so their overall weight amounts 160
-w:160
+# currently 16 entries, so their overall weight amounts 180
+w:180
 @general appearance@
 %%%%
 robe appearance
@@ -713,7 +717,9 @@ distressingly furry
 
 tattered
 
-silk
+silken
+
+shadowed
 %%%%
 body armour appearance
 
@@ -744,6 +750,8 @@ jewelled
 ichor-stained
 
 distressingly furry
+
+spiked
 
 w:160
 @general appearance@
@@ -789,6 +797,8 @@ agate
 jade
 
 pearl
+
+tiger eye
 %%%%
 ######################################################
 # Jewellery appearance
@@ -812,6 +822,8 @@ glittering
 
 smoking
 
+scorched
+
 shimmering
 
 wavering
@@ -819,6 +831,8 @@ wavering
 warped
 
 transparent
+
+translucent
 
 pitted
 
@@ -841,6 +855,15 @@ heavily runed
 vibrating
 
 twitching
+
+coiled
+
+bound
+
+clouded
+
+w:2
+serpentine
 %%%%
 _ring material_
 
@@ -885,6 +908,9 @@ turquoise
 lapis lazuli
 
 glass
+
+w:2
+gossamer
 %%%%
 _amulet material_
 

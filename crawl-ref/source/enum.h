@@ -542,15 +542,12 @@ enum book_type
     BOOK_DREAMS,
     BOOK_ALCHEMY,
     BOOK_BEASTS,
-    MAX_NORMAL_BOOK = BOOK_BEASTS,
 
-    MIN_RARE_BOOK,
-    BOOK_ANNIHILATIONS = MIN_RARE_BOOK,
+    BOOK_ANNIHILATIONS,
     BOOK_GRAND_GRIMOIRE,
     BOOK_NECRONOMICON,
-    MAX_RARE_BOOK = BOOK_NECRONOMICON,
 
-    MAX_FIXED_BOOK = MAX_RARE_BOOK,
+    MAX_FIXED_BOOK = BOOK_NECRONOMICON,
 
     BOOK_RANDART_LEVEL,
     BOOK_RANDART_THEME,
@@ -732,7 +729,6 @@ enum command_type
 {
     CMD_NO_CMD = 2000,
     CMD_NO_CMD_DEFAULT, // hack to allow assignment of keys to CMD_NO_CMD
-    CMD_MOVE_NOWHERE,
     CMD_MOVE_LEFT,
     CMD_MOVE_DOWN,
     CMD_MOVE_UP,
@@ -860,6 +856,9 @@ enum command_type
     // zoom on dungeon
     CMD_ZOOM_IN,
     CMD_ZOOM_OUT,
+
+    // bring up the on-screen keyboard if needed
+    CMD_SHOW_KEYBOARD,
 #endif
 
     // Repeat previous command
@@ -2398,6 +2397,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_BENNU,
     MONS_CAUSTIC_SHRIKE,
+    MONS_SHARD_SHRIKE,
 
     MONS_ANUBIS_GUARD,
 #endif
@@ -3194,6 +3194,8 @@ enum monster_type                      // menv[].type
     MONS_CAUSTIC_SHRIKE,
 
     MONS_ROBIN,
+
+    MONS_SHARD_SHRIKE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

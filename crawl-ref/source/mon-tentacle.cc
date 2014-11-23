@@ -12,6 +12,7 @@
 #include "delay.h"
 #include "env.h"
 #include "fprop.h"
+#include "libutil.h" // map_find
 #include "losglobal.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -24,14 +25,121 @@ const int MAX_KRAKEN_TENTACLE_DIST = 12;
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
 
+static monster_type _head_child_segment[][3] =
+{
+    { MONS_KRAKEN, MONS_KRAKEN_TENTACLE,
+        MONS_KRAKEN_TENTACLE_SEGMENT },
+    { MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE,
+        MONS_STARSPAWN_TENTACLE_SEGMENT },
+};
+
+static monster_type _solo_tentacle_to_segment[][2] =
+{
+    { MONS_ELDRITCH_TENTACLE, MONS_ELDRITCH_TENTACLE_SEGMENT },
+    { MONS_SNAPLASHER_VINE,   MONS_SNAPLASHER_VINE_SEGMENT },
+};
+
+bool mons_is_tentacle_head(monster_type mc)
+{
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[0])
+            return true;
+
+    return false;
+}
+
+bool mons_is_child_tentacle(monster_type mc)
+{
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[1])
+            return true;
+
+    return false;
+}
+
+bool mons_is_child_tentacle_segment(monster_type mc)
+{
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[2])
+            return true;
+
+    return false;
+}
+
+bool mons_is_solo_tentacle(monster_type mc)
+{
+    for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
+        if (mc == m[0])
+            return true;
+
+    return false;
+}
+
+bool mons_is_tentacle(monster_type mc)
+{
+    return mons_is_child_tentacle(mc) || mons_is_solo_tentacle(mc);
+}
+
+bool mons_is_tentacle_segment(monster_type mc)
+{
+    for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
+        if (mc == m[1])
+            return true;
+
+    return mons_is_child_tentacle_segment(mc);
+}
+
+bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
+{
+    return mons_is_tentacle(mc) || mons_is_tentacle_segment(mc);
+}
+
+monster_type mons_tentacle_parent_type(const monster* mons)
+{
+    const monster_type mc = mons_base_type(mons);
+
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[1])
+            return m[0];
+
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[2])
+            return m[1];
+
+    for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
+        if (mc == m[1])
+            return m[0];
+
+    return MONS_PROGRAM_BUG;
+}
+
+monster_type mons_tentacle_child_type(const monster* mons)
+{
+    const monster_type mc = mons_base_type(mons);
+
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[0])
+            return m[1];
+
+    for (const monster_type (&m)[3] : _head_child_segment)
+        if (mc == m[1])
+            return m[2];
+
+    for (const monster_type (&m)[2] : _solo_tentacle_to_segment)
+        if (mc == m[0])
+            return m[1];
+
+    return MONS_PROGRAM_BUG;
+}
+
 bool monster::is_child_tentacle() const
 {
-    return mons_is_child_tentacle(type);
+    return mons_is_child_tentacle(mons_base_type(this));
 }
 
 bool monster::is_child_tentacle_segment() const
 {
-    return mons_is_child_tentacle_segment(type);
+    return mons_is_child_tentacle_segment(mons_base_type(this));
 }
 
 bool monster::is_child_monster() const
@@ -49,95 +157,6 @@ bool monster::is_parent_monster_of(const monster* mons) const
 {
     return mons_base_type(this) == mons_tentacle_parent_type(mons)
            && mons->tentacle_connect == mid;
-}
-
-bool mons_is_tentacle_head(monster_type mc)
-{
-    return mc == MONS_KRAKEN || mc == MONS_TENTACLED_STARSPAWN;
-}
-
-bool mons_is_child_tentacle(monster_type mc)
-{
-    return mc == MONS_KRAKEN_TENTACLE
-        || mc == MONS_STARSPAWN_TENTACLE;
-}
-
-bool mons_is_child_tentacle_segment(monster_type mc)
-{
-    return mc == MONS_KRAKEN_TENTACLE_SEGMENT
-        || mc == MONS_STARSPAWN_TENTACLE_SEGMENT;
-}
-
-bool mons_is_tentacle(monster_type mc)
-{
-    return mc == MONS_ELDRITCH_TENTACLE
-           || mc == MONS_SNAPLASHER_VINE
-           || mons_is_child_tentacle(mc);
-}
-
-bool mons_is_tentacle_segment(monster_type mc)
-{
-    return mc == MONS_ELDRITCH_TENTACLE_SEGMENT
-           || mc == MONS_SNAPLASHER_VINE_SEGMENT
-           || mons_is_child_tentacle_segment(mc);
-}
-
-bool mons_is_tentacle_or_tentacle_segment(monster_type mc)
-{
-    return mons_is_tentacle(mc) || mons_is_tentacle_segment(mc);
-}
-
-static monster* _mons_get_parent_monster(monster* mons)
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->is_parent_monster_of(mons))
-            return *mi;
-    }
-
-    return NULL;
-}
-
-monster_type mons_tentacle_parent_type(const monster* mons)
-{
-    switch (mons_base_type(mons))
-    {
-        case MONS_KRAKEN_TENTACLE:
-            return MONS_KRAKEN;
-        case MONS_KRAKEN_TENTACLE_SEGMENT:
-            return MONS_KRAKEN_TENTACLE;
-        case MONS_STARSPAWN_TENTACLE:
-            return MONS_TENTACLED_STARSPAWN;
-        case MONS_STARSPAWN_TENTACLE_SEGMENT:
-            return MONS_STARSPAWN_TENTACLE;
-        case MONS_ELDRITCH_TENTACLE_SEGMENT:
-            return MONS_ELDRITCH_TENTACLE;
-        case MONS_SNAPLASHER_VINE_SEGMENT:
-            return MONS_SNAPLASHER_VINE;
-        default:
-            return MONS_PROGRAM_BUG;
-    }
-}
-
-monster_type mons_tentacle_child_type(const monster* mons)
-{
-    switch (mons_base_type(mons))
-    {
-    case MONS_KRAKEN:
-        return MONS_KRAKEN_TENTACLE;
-    case MONS_KRAKEN_TENTACLE:
-        return MONS_KRAKEN_TENTACLE_SEGMENT;
-    case MONS_TENTACLED_STARSPAWN:
-        return MONS_STARSPAWN_TENTACLE;
-    case MONS_STARSPAWN_TENTACLE:
-        return MONS_STARSPAWN_TENTACLE_SEGMENT;
-    case MONS_ELDRITCH_TENTACLE:
-        return MONS_ELDRITCH_TENTACLE_SEGMENT;
-    case MONS_SNAPLASHER_VINE:
-        return MONS_SNAPLASHER_VINE_SEGMENT;
-    default:
-        return MONS_PROGRAM_BUG;
-    }
 }
 
 //Returns whether a given monster is a tentacle segment immediately attached
@@ -342,12 +361,10 @@ struct tentacle_attack_constraints
             int connect_level = temp.connect_level;
             int base_connect_level = connect_level;
 
-            map<coord_def, set<int> >::iterator probe
-                        = connection_constraints->find(temp.pos);
-
-            if (probe != connection_constraints->end())
+            if (auto constraint = map_find(*connection_constraints, temp.pos))
             {
-                int max_val = probe->second.empty() ? INT_MAX : *probe->second.rbegin();
+                int max_val = constraint->empty()
+                            ? INT_MAX : *constraint->rbegin();
 
                 if (max_val < connect_level)
                     temp.departure = true;
@@ -355,9 +372,9 @@ struct tentacle_attack_constraints
                 // If we can still feasibly retract (haven't left connect range)
                 if (!temp.departure)
                 {
-                    if (probe->second.count(connect_level))
+                    if (constraint->count(connect_level))
                     {
-                        while (probe->second.count(connect_level + 1))
+                        while (constraint->count(connect_level + 1))
                             connect_level++;
                     }
 
@@ -418,20 +435,13 @@ struct tentacle_connect_constraints
             if (!in_bounds(temp.pos))
                 continue;
 
-            map<coord_def, set<int> >::iterator probe
-                        = connection_constraints->find(temp.pos);
+            auto constraint = map_find(*connection_constraints, temp.pos);
 
-            if (probe == connection_constraints->end()
-                || !probe->second.count(node.connect_level))
-            {
+            if (!constraint || !constraint->count(node.connect_level))
                 continue;
-            }
 
-            if (!base_monster->is_habitable(temp.pos)
-                || actor_at(temp.pos))
-            {
+            if (!base_monster->is_habitable(temp.pos) || actor_at(temp.pos))
                 temp.path_distance = DISCONNECT_DIST;
-            }
             else
                 temp.path_distance = 1 + node.path_distance;
 
@@ -441,18 +451,11 @@ struct tentacle_connect_constraints
             temp.estimate = 0;
             int test_level = node.connect_level;
 
-/*            for (auto j = probe->second.begin(); j!= probe->second.end(); j++)
-            {
-                if (*j == (test_level + 1))
-                    test_level++;
-            }
-            */
-            while (probe->second.count(test_level + 1))
+            while (constraint->count(test_level + 1))
                 test_level++;
 
-            int max = probe->second.empty() ? INT_MAX : *(probe->second.rbegin());
+            int max = constraint->empty() ? INT_MAX : *constraint->rbegin();
 
-//            mprf("start %d, test %d, max %d", temp.connect_level, test_level, max);
             if (test_level < max)
                 continue;
 
@@ -513,11 +516,11 @@ static bool _tentacle_pathfind(monster* tentacle,
     position_node temp;
     temp.pos = tentacle->pos();
 
-    map<coord_def, set<int> >::iterator probe
-        = attack_constraints.connection_constraints->find(temp.pos);
-    ASSERT(probe != attack_constraints.connection_constraints->end());
+    auto constraint = map_find(*attack_constraints.connection_constraints,
+                               temp.pos);
+    ASSERT(constraint);
     temp.connect_level = 0;
-    while (probe->second.count(temp.connect_level + 1))
+    while (constraint->count(temp.connect_level + 1))
         temp.connect_level++;
 
     temp.departure = false;
@@ -570,13 +573,11 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     }
 
     int start_level = 0;
-    map<coord_def, set<int> >::iterator it
-                    = connect_costs.connection_constraints->find(new_pos);
-
     // This condition should never miss
-    if (it != connect_costs.connection_constraints->end())
+    if (auto constraint = map_find(*connect_costs.connection_constraints,
+                          new_pos))
     {
-        while (it->second.count(start_level + 1))
+        while (constraint->count(start_level + 1))
             start_level++;
     }
 
@@ -723,12 +724,8 @@ static int _collect_connection_data(monster* start_monster,
 
 void move_solo_tentacle(monster* tentacle)
 {
-    if (!tentacle || (tentacle->type != MONS_ELDRITCH_TENTACLE
-                      && tentacle->type != MONS_SNAPLASHER_VINE))
-    {
+    if (!tentacle || !mons_is_solo_tentacle(mons_base_type(tentacle)))
         return;
-    }
-
 
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
@@ -803,8 +800,7 @@ void move_solo_tentacle(monster* tentacle)
     actor* constrictee = NULL;
     if (tentacle->is_constricting())
     {
-        actor::constricting_t::const_iterator it = tentacle->constricting->begin();
-        constrictee = actor_by_mid(it->first);
+        constrictee = actor_by_mid(tentacle->constricting->begin()->first);
 
         // Don't drag things that cannot move
         if (!constrictee->is_stationary())
@@ -872,24 +868,25 @@ void move_solo_tentacle(monster* tentacle)
             }
 
             int escalated = 0;
-            map<coord_def, set<int> >::iterator probe = connection_data.find(test);
+            auto constraint = map_find(connection_data, test);
+            ASSERT(constraint);
 
-            while (probe->second.count(escalated + 1))
+            while (constraint->count(escalated + 1))
                 escalated++;
 
             if (!severed
                 && tentacle->is_habitable(test)
-                && escalated == *probe->second.rbegin()
+                && escalated == *constraint->rbegin()
                 && (visited_count < demonic_max_dist
-                    || connection_data.find(test)->second.size() > 1))
+                    || constraint->size() > 1))
             {
                 new_pos = test;
                 break;
             }
             else if (tentacle->is_habitable(test)
                      && visited_count > 1
-                     && escalated == *probe->second.rbegin()
-                     && connection_data.find(test)->second.size() > 1)
+                     && escalated == *constraint->rbegin()
+                     && constraint->size() > 1)
             {
                 new_pos = test;
                 break;
@@ -1070,8 +1067,7 @@ void move_child_tentacles(monster* mons)
         actor* constrictee = NULL;
         if (tentacle->is_constricting() && retract_found)
         {
-            actor::constricting_t::const_iterator it = tentacle->constricting->begin();
-            constrictee = actor_by_mid(it->first);
+            constrictee = actor_by_mid(tentacle->constricting->begin()->first);
             if (feat_has_solid_floor(grd(old_pos))
                 && constrictee->is_habitable(old_pos))
             {
@@ -1162,6 +1158,17 @@ void move_child_tentacles(monster* mons)
         tentacle->check_redraw(old_pos);
         tentacle->apply_location_effects(old_pos);
     }
+}
+
+static monster* _mons_get_parent_monster(monster* mons)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_parent_monster_of(mons))
+            return *mi;
+    }
+
+    return NULL;
 }
 
 // When given either a tentacle end or segment, kills the end and all segments

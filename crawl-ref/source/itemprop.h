@@ -39,6 +39,7 @@ bool  is_helmet(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
 // ego items:
+brand_type choose_weapon_brand(weapon_type wpn_type);
 bool set_item_ego_type(item_def &item, object_class_type item_type,
                        int ego_type);
 brand_type get_weapon_brand(const item_def &item) PURE;
@@ -56,6 +57,8 @@ equipment_type get_armour_slot(armour_type arm) IMMUTABLE;
 bool jewellery_is_amulet(const item_def &item) PURE;
 bool jewellery_is_amulet(int sub_type) IMMUTABLE;
 
+armour_type hide_for_monster(monster_type mc) PURE;
+armour_type armour_for_hide(armour_type hide_type) PURE;
 bool  hide2armour(item_def &item);
 
 int   fit_armour_size(const item_def &item, size_type size) PURE;

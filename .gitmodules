@@ -13,12 +13,6 @@
 [submodule "crawl-ref/source/contrib/freetype"]
 	path = crawl-ref/source/contrib/freetype
 	url = git://gitorious.org/crawl/crawl-freetype.git
-[submodule "crawl-ref/source/contrib/sdl"]
-	path = crawl-ref/source/contrib/sdl
-	url = git://gitorious.org/crawl/crawl-sdl.git
-[submodule "crawl-ref/source/contrib/sdl-image"]
-	path = crawl-ref/source/contrib/sdl-image
-	url = git://gitorious.org/crawl/crawl-sdl-image.git
 [submodule "crawl-ref/source/contrib/libpng"]
 	path = crawl-ref/source/contrib/libpng
 	url = git://gitorious.org/crawl/crawl-libpng.git
@@ -28,7 +22,12 @@
 [submodule "crawl-ref/source/contrib/fonts"]
 	path = crawl-ref/source/contrib/fonts
 	url = git://gitorious.org/crawl/crawl-fonts.git
-[submodule "crawl-ref/source/contrib/sdl-android"]
-	path = crawl-ref/source/contrib/sdl-android
-	url = git://gitorious.org/crawl/sdl-android.git
-	update = none
+[submodule "crawl-ref/source/contrib/sdl2"]
+	path = crawl-ref/source/contrib/sdl2
+	url = git://gitorious.org/crawl/crawl-sdl2.git
+[submodule "crawl-ref/source/contrib/sdl2-image"]
+	path = crawl-ref/source/contrib/sdl2-image
+	url = git://gitorious.org/crawl/crawl-sdl2-image.git
+[submodule "crawl-ref/source/contrib/sdl2-mixer"]
+	path = crawl-ref/source/contrib/sdl2-mixer
+	url = git://gitorious.org/crawl/crawl-sdl2-mixer

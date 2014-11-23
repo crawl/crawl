@@ -150,6 +150,9 @@
 #include "viewgeom.h"
 #include "view.h"
 #include "viewmap.h"
+#ifdef TOUCH_UI
+#include "windowmanager.h"
+#endif
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
 #include "wiz-fsim.h"
@@ -1142,7 +1145,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 
         return _cmd_is_repeatable(crawl_state.prev_cmd, true);
 
-    case CMD_MOVE_NOWHERE:
     case CMD_REST:
     case CMD_WAIT:
         return i_feel_safe(true);
@@ -1970,7 +1972,6 @@ void process_command(command_type cmd)
     case CMD_SHOW_TERRAIN: toggle_show_terrain(); break;
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
-    case CMD_MOVE_NOWHERE:
     case CMD_WAIT:
         you.turn_is_over = true;
         extract_manticore_spikes("You carefully extract the manticore spikes "
@@ -2175,6 +2176,13 @@ void process_command(command_type cmd)
     case CMD_LUA_CONSOLE:
         debug_terp_dlua(clua);
         break;
+
+#ifdef TOUCH_UI
+    case CMD_SHOW_KEYBOARD:
+        ASSERT(wm);
+        wm->show_keyboard();
+        break;
+#endif
 
     case CMD_NO_CMD:
     default:
@@ -2531,12 +2539,19 @@ static command_type _keycode_to_command(keycode_type key)
 
 static keycode_type _get_next_keycode()
 {
-    keycode_type keyin;
+    keycode_type keyin = 0;
 
     flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
     mouse_control mc(MOUSE_MODE_COMMAND);
-    keyin = unmangle_direction_keys(getch_with_command_macros());
+    for (;;)
+    {
+        keyin = unmangle_direction_keys(getch_with_command_macros());
+        if (keyin == CK_REDRAW)
+            redraw_screen();
+        else
+            break;
+    }
 
     // This is the main clear_messages() with Option.clear_messages.
     if (!is_synthetic_key(keyin))
@@ -2869,8 +2884,7 @@ static void _do_searing_ray()
         return;
     }
 
-    if (crawl_state.prev_cmd == CMD_WAIT
-        || crawl_state.prev_cmd == CMD_MOVE_NOWHERE)
+    if (crawl_state.prev_cmd == CMD_WAIT)
     {
         handle_searing_ray();
     }
@@ -3392,14 +3406,14 @@ static void _move_player(coord_def move)
     else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
-            beholder->name(DESC_THE, true).c_str());
+            beholder->name(DESC_THE).c_str());
         stop_running();
         return;
     }
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
-            fmonger->name(DESC_THE, true).c_str());
+            fmonger->name(DESC_THE).c_str());
         stop_running();
         return;
     }

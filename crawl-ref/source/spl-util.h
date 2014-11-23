@@ -96,7 +96,7 @@ typedef int cloud_func(coord_def where, int pow, int spreadrate,
 int apply_area_visible(cell_func cf, int power, actor *agent);
 
 int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                 int power);
+                                 int power, int radius = 1);
 
 int apply_random_around_square(cell_func cf, const coord_def& where,
                                bool hole_in_middle, int power, int max_targs,

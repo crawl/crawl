@@ -466,6 +466,8 @@ static int _god_altars[][2] =
     { GOD_BACKTRACKTICUS, DNGN_ALTAR_BACKTRACKTICUS },
 };
 
+COMPILE_CHECK(ARRAYSZ(_god_altars) == NUM_GODS - 1);
+
 /** Whose altar is this feature?
  *
  *  @param feat the feature.
@@ -1505,12 +1507,7 @@ dungeon_feature_type feat_by_desc(string desc)
     if (desc[desc.size() - 1] != '.')
         desc += ".";
 
-    feat_desc_map::iterator i = feat_desc_cache.find(desc);
-
-    if (i != feat_desc_cache.end())
-        return i->second;
-
-    return DNGN_UNSEEN;
+    return lookup(feat_desc_cache, desc, DNGN_UNSEEN);
 }
 
 // If active is true, the player is just stepping onto the feature, with the
@@ -1648,7 +1645,7 @@ vector<string> dungeon_feature_matches(const string &name)
 
         const char *featname = get_feature_def(feat).vaultname;
         if (strstr(featname, name.c_str()))
-            matches.push_back(featname);
+            matches.emplace_back(featname);
     }
 
     return matches;

@@ -162,7 +162,7 @@ tutorial2 rest_and_chop_reminder
 tutorial2 wait
 
 与其冲进房间然后被一群怪物围攻，你不如退后几步，等待它们自己走过来。（按
-<input>$cmd[CMD_MOVE_NOWHERE]</input>等待一回合）
+<input>$cmd[CMD_WAIT]</input>等待一回合）
 %%%%
 tutorial2 resting_reminder
 
@@ -243,7 +243,7 @@ tutorial2 exit
   你也可以<input>点击</input>另一个敌人并按<input>Enter</input>确定。</localtiles>
 
 <yellow>休息</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  等待、休息并搜索一个回合
+  <input>$cmd[CMD_WAIT]</input>  等待、休息并搜索一个回合
   <input>$cmd[CMD_REST]</input>  等待、休息并搜索最多100回合
 
 <yellow>尸体<console><brown>%</brown></console></yellow>
@@ -456,7 +456,7 @@ tutorial5 burn_book
 
 如果你按<input>$cmd[CMD_USE_ABILITY]</input><localtiles>或通过<w>命令栏</w>
 </localtiles>来烧掉那本书，塔洛格会很高兴的。有时候，你可能会想要先按
-<input>$cmd[CMD_MOVE_NOWHERE]</input>来等待一会，
+<input>$cmd[CMD_WAIT]</input>来等待一会，
 等到有怪物踩到书上的时候再把它点燃。
 %%%%
 tutorial5 berserk
@@ -495,7 +495,7 @@ tutorial5 exit
   在玩家人物上<input>右击</input>也可以调出宗教界面。</localtiles>
 
 <yellow>休息</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  等待、休息并搜索一回合
+  <input>$cmd[CMD_WAIT]</input>  等待、休息并搜索一回合
   <input>$cmd[CMD_REST]</input>  长时间等待、休息并搜索，最多持续100回合
 
 <yellow>其他命令</yellow>

@@ -1553,6 +1553,9 @@ int attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
  */
 bool attack::attack_shield_blocked(bool verbose)
 {
+    if (defender == attacker)
+        return false; // You can't block your own attacks!
+
     if (defender->incapacitated())
         return false;
 

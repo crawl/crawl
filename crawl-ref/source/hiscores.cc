@@ -25,6 +25,7 @@
 
 #include "branch.h"
 #include "chardump.h"
+#include "cio.h"
 #include "dungeon.h"
 #include "end.h"
 #include "english.h"
@@ -468,6 +469,9 @@ void show_hiscore_table()
         menu.draw_menu();
         textcolour(WHITE);
         const int keyn = getch_ck();
+
+        if (keyn == CK_REDRAW)
+            continue;
 
         if (key_is_escape(keyn))
         {
@@ -1607,7 +1611,7 @@ void scorefile_entry::init(time_t dt)
             scrolls_used += you.action_count[p][i];
 
     potions_used = 0;
-    p = pair<caction_type, int>(CACT_USE, OBJ_POTIONS);
+    p = make_pair(CACT_USE, OBJ_POTIONS);
     if (you.action_count.count(p))
         for (int i = 0; i < maxlev; i++)
             potions_used += you.action_count[p][i];
@@ -1679,7 +1683,7 @@ string scorefile_entry::terse_missile_name() const
 {
     const string pre_post[][2] =
     {
-        { "Shot with a", " by " },
+        { "Shot with ", " by " },
         { "Hit by ",     " thrown by " }
     };
     const string &aux = auxkilldata;
@@ -2717,9 +2721,8 @@ void xlog_fields::init(const string &line)
         if (st == string::npos)
             continue;
 
-        fields.push_back(
-            pair<string, string>(field.substr(0, st),
-                                 _xlog_unescape(field.substr(st + 1))));
+        fields.emplace_back(field.substr(0, st),
+                            _xlog_unescape(field.substr(st + 1)));
     }
 
     map_fields();
@@ -2732,16 +2735,13 @@ void xlog_fields::add_field(const string &key, const char *format, ...)
     string buf = vmake_stringf(format, args);
     va_end(args);
 
-    fields.push_back(pair<string, string>(key, buf));
+    fields.emplace_back(key, buf);
     fieldmap[key] = buf;
 }
 
 string xlog_fields::str_field(const string &s) const
 {
-    if (string *value = map_find(fieldmap, s))
-        return *value;
-    else
-        return "";
+    return lookup(fieldmap, s, "");
 }
 
 int xlog_fields::int_field(const string &s) const

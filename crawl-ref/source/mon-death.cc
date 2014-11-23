@@ -974,10 +974,9 @@ static void _search_dungeon(const coord_def & start,
 
     queue<set<position_node>::iterator > fringe;
 
-    set<position_node>::iterator current = visited.insert(temp_node).first;
+    auto current = visited.insert(temp_node).first;
     fringe.push(current);
 
-    bool done = false;
     while (!fringe.empty())
     {
         current = fringe.front();
@@ -992,8 +991,7 @@ static void _search_dungeon(const coord_def & start,
             {
                 temp_node.pos = adjacent;
                 temp_node.last = &(*current);
-                pair<set<position_node>::iterator, bool > res;
-                res = visited.insert(temp_node);
+                auto res = visited.insert(temp_node);
 
                 if (!res.second)
                     continue;
@@ -1002,22 +1000,13 @@ static void _search_dungeon(const coord_def & start,
                 {
                     candidates.push_back(res.first);
                     if (!exhaustive)
-                    {
-                        done = true;
-                        break;
-                    }
-
+                        return;
                 }
 
                 if (connecting_square(adjacent))
-                {
-//                    if (res.second)
                     fringe.push(res.first);
-                }
             }
         }
-        if (done)
-            break;
     }
 }
 
@@ -1856,8 +1845,13 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (MON_KILL(killer) && mons->has_ench(ENCH_CHARM))
     {
-        ASSERT(!crawl_state.game_is_arena());
-        killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
+        bool arena = crawl_state.game_is_arena();
+        mon_enchant ench = mons->get_ench(ENCH_CHARM);
+        if (ench.who == KC_YOU || (!arena && ench.who == KC_FRIENDLY))
+        {
+            ASSERT(!arena);
+            killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
+        }
     }
 
     // Kills by the spectral weapon are considered as kills by the player instead

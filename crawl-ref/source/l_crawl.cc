@@ -381,6 +381,7 @@ static int crawl_process_keys(lua_State *ls)
     return 0;
 }
 
+#ifdef USE_SOUND
 /*
 --- Play a sound.
 -- @param sf filename of sound to play
@@ -393,6 +394,7 @@ static int crawl_playsound(lua_State *ls)
     play_sound(sf);
     return 0;
 }
+#endif
 
 /*
 --- Run a macro.
@@ -1018,7 +1020,9 @@ static const struct luaL_reg crawl_clib[] =
     { "sendkeys",           crawl_sendkeys },
     { "process_command",    crawl_process_command },
     { "process_keys",       crawl_process_keys },
+#ifdef USE_SOUND
     { "playsound",          crawl_playsound },
+#endif
     { "runmacro",           crawl_runmacro },
     { "bindkey",            crawl_bindkey },
     { "setopt",             crawl_setopt },

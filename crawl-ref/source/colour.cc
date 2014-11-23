@@ -364,7 +364,7 @@ static element_colour_calc *_create_random_element_colour_calc(element_type type
 
         int colour = va_arg(ap, int);
 
-        rand_vals.push_back(make_pair(prob, colour));
+        rand_vals.emplace_back(prob, colour);
     }
 
     va_end(ap);

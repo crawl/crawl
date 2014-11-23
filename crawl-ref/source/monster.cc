@@ -414,7 +414,8 @@ int monster::damage_type(int which_attack)
  */
 random_var monster::attack_delay(const item_def *weap,
                                  const item_def *projectile,
-                                 bool random, bool scaled) const
+                                 bool random, bool scaled,
+                                 bool /*shield*/) const
 {
     const bool use_unarmed =
         (projectile) ? is_launched(this, weap, *projectile) != LRET_LAUNCHED
@@ -5097,13 +5098,8 @@ bool monster::is_shapeshifter() const
 
 void monster::forget_random_spell()
 {
-    if (spells.size() <= 0)
-        return;
-    int which_spell = random2(spells.size());
-    monster_spells::iterator it = spells.begin();
-    for (; which_spell > 0; which_spell--)
-      it++;
-    spells.erase(it);
+    if (!spells.empty())
+        spells.erase(spells.begin() + random2(spells.size()));
 }
 
 void monster::scale_hp(int num, int den)
@@ -6178,7 +6174,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
     else if (mons_is_tentacle_or_tentacle_segment(type)
-             && type != MONS_ELDRITCH_TENTACLE
+             && !mons_is_solo_tentacle(type)
              && flavour != BEAM_TORMENT_DAMAGE
              && monster_by_mid(tentacle_connect)
              && monster_by_mid(tentacle_connect)->is_parent_monster_of(this))

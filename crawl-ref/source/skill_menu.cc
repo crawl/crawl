@@ -526,7 +526,7 @@ string SkillMenuSwitch::get_help()
             return make_stringf("Enhanced skills are in <blue>blue</blue>.");
         else
         {
-            vector<string> causes;
+            vector<const char *> causes;
             if (you.attribute[ATTR_XP_DRAIN])
                 causes.push_back("draining");
             if (player_under_penance(GOD_ASHENZARI))
@@ -606,10 +606,8 @@ bool SkillMenuSwitch::toggle()
     if (m_states.size() <= 1)
         return false;
 
-    vector<skill_menu_state>::iterator it = m_states.begin();
-    while (*it != m_state)
-        ++it;
-
+    auto it = find(begin(m_states), end(m_states), m_state);
+    ASSERT(it != m_states.end());
     ++it;
     if (it == m_states.end())
         it = m_states.begin();
@@ -1438,6 +1436,10 @@ void skill_menu(int flag, int exp)
         {
             switch (keyn)
             {
+            case CK_REDRAW:
+                skm.exit();
+                skm.init(flag);
+                continue;
             case CK_UP:
             case CK_DOWN:
             case CK_LEFT:

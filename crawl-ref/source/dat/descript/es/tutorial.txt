@@ -113,7 +113,7 @@ tutorial2 wait
 
 En lugar de entrar de lleno en la sala, donde podrías verte rodeado de
 monstruos por todas partes, da algunos pasos hacia atrás y espera (con
-<input>$cmd[CMD_MOVE_NOWHERE]</input>) a que ellos vengan a ti.
+<input>$cmd[CMD_WAIT]</input>) a que ellos vengan a ti.
 %%%%
 tutorial2 resting_reminder
 
@@ -323,7 +323,7 @@ tutorial5 burn_book
 A Trog le encantará que quemes ese libro (con
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> o mediante el <w>panel de
 comandos</w></localtiles>). En algunas ocasiones, podría ser preferible
-esperar (con <input>$cmd[CMD_MOVE_NOWHERE]</input>) a que un monstruo pase por
+esperar (con <input>$cmd[CMD_WAIT]</input>) a que un monstruo pase por
 encima del libro antes de hacerlo arder.
 %%%%
 tutorial5 berserk

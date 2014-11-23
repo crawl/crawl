@@ -212,13 +212,8 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 // leaving durations unchanged, I guess. -cao
 static void _split_ench_durations(monster* initial_slime, monster* split_off)
 {
-    mon_enchant_list::iterator i;
-
-    for (i = initial_slime->enchantments.begin();
-         i != initial_slime->enchantments.end(); ++i)
-    {
-        split_off->add_ench(i->second);
-    }
+    for (const auto &entry : initial_slime->enchantments)
+        split_off->add_ench(entry.second);
 }
 
 // What to do about any enchantments these two creatures may have?
@@ -226,44 +221,41 @@ static void _split_ench_durations(monster* initial_slime, monster* split_off)
 // or by hit dice, depending on usehd.
 void merge_ench_durations(monster* initial, monster* merge_to, bool usehd)
 {
-    mon_enchant_list::iterator i;
-
     int initial_count = usehd ? initial->get_hit_dice() : initial->blob_size;
     int merge_to_count = usehd ? merge_to->get_hit_dice() : merge_to->blob_size;
     int total_count = initial_count + merge_to_count;
 
-    for (i = initial->enchantments.begin();
-         i != initial->enchantments.end(); ++i)
+    mon_enchant_list &from_ench = initial->enchantments;
+
+    for (auto &entry : from_ench)
     {
         // Does the other creature have this enchantment as well?
-        mon_enchant temp = merge_to->get_ench(i->first);
+        const mon_enchant temp = merge_to->get_ench(entry.first);
         // If not, use duration 0 for their part of the average.
-        bool no_initial = temp.ench == ENCH_NONE;
-        int duration = no_initial ? 0 : temp.duration;
+        const bool no_initial = temp.ench == ENCH_NONE;
+        const int duration = no_initial ? 0 : temp.duration;
 
-        i->second.duration = (i->second.duration * initial_count
-                              + duration * merge_to_count)/total_count;
+        entry.second.duration = (entry.second.duration * initial_count
+                                 + duration * merge_to_count)/total_count;
 
-        if (!i->second.duration)
-            i->second.duration = 1;
+        if (!entry.second.duration)
+            entry.second.duration = 1;
 
         if (no_initial)
-            merge_to->add_ench(i->second);
+            merge_to->add_ench(entry.second);
         else
-            merge_to->update_ench(i->second);
+            merge_to->update_ench(entry.second);
     }
 
-    for (i = merge_to->enchantments.begin();
-         i != merge_to->enchantments.end(); ++i)
+    for (auto &entry : merge_to->enchantments)
     {
-        if (initial->enchantments.find(i->first)
-                == initial->enchantments.end()
-            && i->second.duration > 1)
+        if (from_ench.find(entry.first) == from_ench.end()
+            && entry.second.duration > 1)
         {
-            i->second.duration = (merge_to_count * i->second.duration)
-                                  / total_count;
+            entry.second.duration = (merge_to_count * entry.second.duration)
+                                    / total_count;
 
-            merge_to->update_ench(i->second);
+            merge_to->update_ench(entry.second);
         }
     }
 }

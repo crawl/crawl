@@ -18,6 +18,8 @@
 # Typical parameters:
 #    TILES         -- set to anything to enable tiles build
 #
+#    SOUND         -- set to anything to enable sound
+#
 #    CROSSHOST     -- target system, eg, i386-pc-msdosdjgpp or i586-mingw32msvc
 #
 #    prefix        -- installation base.  Specify eg. /usr/local on Unix systems.
@@ -64,10 +66,10 @@
 #
 # Requirements:
 #    For tile builds, you need pkg-config.
-#    You also need libpng, sdl, sdl-image and libfreetype -- if you got your
-#    source from git, you can 'git submodule update' to fetch them; you can also
-#    ask for a package with convenience libraries instead -- we'll try to provide
-#    them somewhere in the near future.
+#    You also need libpng, sdl2, sdl2-image, sdl2-mixer and libfreetype -- if
+#    you got your source from git, you can 'git submodule update' to fetch
+#    them; you can also ask for a package with convenience libraries instead --
+#    we'll try to provide them somewhere in the near future.
 
 GAME = crawl
 
@@ -102,8 +104,8 @@ include Makefile.obj
 
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
-CFWARN := -Wall -Wformat-security
-CFWARN_L := -Wundef
+CFWARN := 
+CFWARN_L := -Wall -Wformat-security -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 
@@ -192,13 +194,14 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
 	BUILD_ZLIB = YesPlease
+	SOUND = YesPlease
 	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
-		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDLmain.a -mwindows
+		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lversion contrib/install/$(ARCH)/lib/libSDL2main.a -mwindows
 		BUILD_FREETYPE = YesPlease
-		BUILD_SDL = YesPlease
-		BUILD_SDLIMAGE = YesPlease
+		BUILD_SDL2 = YesPlease
+		BUILD_SDL2IMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 		COPY_FONTS = yes
 	endif
@@ -214,10 +217,15 @@ ifeq ($(uname_S),Darwin)
 	BUILD_SQLITE = YesPlease
 	BUILD_ZLIB = YesPlease
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDLmain.a
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDL2main.a
 		BUILD_FREETYPE = YesPlease
-		BUILD_SDL = YesPlease
-		BUILD_SDLIMAGE = YesPlease
+		BUILD_SDL2 = YesPlease
+		BUILD_SDL2IMAGE = YesPlease
+		ifdef SOUND
+			ifndef WIN32 
+				BUILD_SDL2MIXER = YesPlease
+			endif
+		endif
 		BUILD_LIBPNG = YesPlease
 		COPY_FONTS = yes
 	endif
@@ -234,8 +242,13 @@ endif
 ifdef BUILD_ALL
 	BUILD_FREETYPE = YesPlease
 	BUILD_PCRE = YesPlease
-	BUILD_SDL = YesPlease
-	BUILD_SDLIMAGE = YesPlease
+	BUILD_SDL2 = YesPlease
+	BUILD_SDL2IMAGE = YesPlease
+	ifdef SOUND
+		ifndef WIN32 
+			BUILD_SDL2MIXER = YesPlease
+		endif
+	endif
 	BUILD_SQLITE = YesPlease
 	BUILD_LUA = YesPlease
 	BUILD_LIBPNG = YesPlease
@@ -246,9 +259,10 @@ endif
 all: greet check-fonts $(GAME) docs webserver
 
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
-LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
+LIBSDL2 := contrib/install/$(ARCH)/lib/libSDL2.a
 LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
-LIBSDLIMAGE := contrib/install/$(ARCH)/lib/libSDL_image.a
+LIBSDL2IMAGE := contrib/install/$(ARCH)/lib/libSDL2_image.a
+LIBSDL2MIXER := contrib/install/$(ARCH)/lib/libSDL2_mixer.a
 LIBFREETYPE := contrib/install/$(ARCH)/lib/libfreetype.a
 LIBSQLITE := contrib/install/$(ARCH)/lib/libsqlite3.a
 ifdef USE_LUAJIT
@@ -583,9 +597,15 @@ ifdef ANDROID
   BUILD_LUA=
   BUILD_SQLITE=
   BUILD_ZLIB=
-  BUILD_SDL=
+  BUILD_SDL2=
   BUILD_FREETYPE=
+  COPY_FONTS = yes
   NO_PKGCONFIG=Y
+  GLES=Y
+  TOUCH_UI=Y
+  TILES=Y
+  SOUND=Y
+  SAVEDIR="/sdcard/Android/data/org.develz.crawl/saves/"
 else
 
 ifndef BUILD_LUA
@@ -672,8 +692,8 @@ ifdef TOUCH_UI
 DEFINES_L += -DTOUCH_UI
 endif
 
-ifdef BUILD_SDL
-INCLUDES_L += -isystem contrib/install/$(ARCH)/include/SDL
+ifdef BUILD_SDL2
+INCLUDES_L += -isystem contrib/install/$(ARCH)/include/SDL2
 endif
 ifdef BUILD_FREETYPE
 INCLUDES_L += -isystem contrib/install/$(ARCH)/include/freetype2
@@ -691,23 +711,28 @@ ifndef NO_PKGCONFIG
 # the contributing libraries are located.
 #
 
+ifndef BUILD_FREETYPE
 FREETYPE_INCLUDE := $(shell $(PKGCONFIG) freetype2 --cflags-only-I | sed -e 's/-I/-isystem /' )
 FREETYPE_CFLAGS  := $(shell $(PKGCONFIG) freetype2 --cflags-only-other)
 FREETYPE_LDFLAGS := $(shell $(PKGCONFIG) freetype2 --libs-only-L) $(shell $(PKGCONFIG) freetype2 --libs-only-l)
+endif
 
-SDL_INCLUDE := $(shell $(PKGCONFIG) sdl --cflags-only-I | sed -e 's/-I/-isystem /')
-SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl --cflags-only-other)
-SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl --libs-only-L) $(shell $(PKGCONFIG) sdl --libs-only-l)
+ifndef BUILD_SDL2
+SDL2_INCLUDE := $(shell $(PKGCONFIG) sdl2 --cflags-only-I | sed -e 's/-I/-isystem /')
+SDL2_CFLAGS  := $(shell $(PKGCONFIG) sdl2 --cflags-only-other)
+SDL2_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sdl2 --libs-only-l)
+endif
 
-LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
+ifdef SOUND
+ifndef WIN32 
+LIBS += -lSDL2_mixer
+endif
+endif
+LIBS += -lSDL2_image $(SDL2_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
-ifdef GLES
-ifndef ANDROID
-LIBS += -lSDL_gles -lEGL -lGLES_CM
-endif
-else
+ifndef GLES
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
 LIBS += -lGL -lGLU
@@ -717,19 +742,23 @@ endif
 endif
 endif
 
-DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
-INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
+DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL2_CFLAGS)
+INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL2_INCLUDE)
 
 endif # TILES
+
+ifdef SOUND
+DEFINES_L += -DUSE_SOUND
+endif
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
 CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 CFWARN_L += $(shell w=-Wno-format-zero-length;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
-CFWARN   += $(shell w=-Wmissing-declarations;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
-CFWARN   += $(shell w=-Wredundant-decls;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN_L += $(shell w=-Wmissing-declarations;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN_L  += $(shell w=-Wredundant-decls;echo|$(GXX) -E -x c++ - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
-CFOTHERS_L = -std=c++11 $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
+CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL2_CFLAGS)
 
 ifndef NO_LUA_BINDINGS
 CFOTHERS_L += -DCLUA_BINDINGS
@@ -829,7 +858,7 @@ else
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-  ifneq ($(filter ~%,$(SAVEDIR)),)
+  ifneq ($(filter ~%,$(SAVEDIR))$(ANDROID),)
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
     savedir_fp :=
     shareddir_fp :=
@@ -874,7 +903,7 @@ else
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
         FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
   else
-    ifneq ($(DESTDIR),)
+    ifneq ($(DESTDIR)$(ANDROID),)
         FONTDIR = dat/tiles/
     else
         FONTDIR = contrib/fonts/
@@ -1081,17 +1110,24 @@ ifdef BUILD_FREETYPE
 CONTRIBS += freetype
 CONTRIB_LIBS += $(LIBFREETYPE)
 endif
-ifdef BUILD_SDLIMAGE
-CONTRIBS += sdl-image
-CONTRIB_LIBS += $(LIBSDLIMAGE)
-endif
-ifdef BUILD_SDL
-CONTRIBS += sdl
-CONTRIB_LIBS += $(LIBSDL)
-endif
 ifdef BUILD_LIBPNG
 CONTRIBS += libpng
-CONTRIB_LIBS += $(LIBPNG)
+CONTRIB_LIBS := $(LIBPNG) $(CONTRIB_LIBS)
+endif
+ifdef BUILD_SDL2
+CONTRIBS += sdl2
+CONTRIB_LIBS := $(LIBSDL2) $(CONTRIB_LIBS)
+ifeq ($(uname_S),Linux)
+LIBS += -ldl -lrt
+endif
+endif
+ifdef BUILD_SDL2IMAGE
+CONTRIBS += sdl2-image
+CONTRIB_LIBS := $(LIBSDL2IMAGE) $(CONTRIB_LIBS)
+endif
+ifdef BUILD_SDL2MIXER
+CONTRIBS += sdl2-mixer
+CONTRIB_LIBS := $(LIBSDL2MIXER) $(CONTRIB_LIBS)
 endif
 ifdef BUILD_ZLIB
 CONTRIBS += zlib
@@ -1230,6 +1266,10 @@ ifdef NEED_REBUILD
 	@echo '$(TRACK_CFLAGS)' > .cflags
 endif
 
+.android-cflags: .cflags
+	@echo -std=c++11 $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cxxflags
+	@echo $(CFLAGS_L) | sed 's@"@\\"@g' >.android-cflags
+
 .PHONY: .force-cflags
 
 endif
@@ -1335,19 +1375,17 @@ endif
 ifdef ANDROID
   # during build, data goes in a different directory to when crawl runs!
   prefix_fp = ..
-  datadir_fp = ../AndroidData
-  savedir_fp = ../AndroidData
+  datadir_fp = android-project/assets
+  savedir_fp =
   shareddir_fp =
 endif
 
-install: all
-ifeq ($(DESTDIR)$(prefix),)
+install-data: $(GENERATED_FILES)
+ifeq ($(DESTDIR)$(prefix)$(ANDROID),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
 	@exit 1
 endif
-	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
-	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
-	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
+	[ -d $(datadir_fp) ] || mkdir -p $(datadir_fp)
 	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/dlua
 	mkdir -p $(datadir_fp)/dat/clua
@@ -1366,7 +1404,7 @@ endif
 	echo "-- Autogenerated list of maps to load and compile:" \
 	    >$(datadir_fp)/dat/dlua/loadmaps.lua
 	find dat -name '*.des'|sed s:dat/::| \
-          while read x; \
+	while read x; \
 	    do echo "dgn.load_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
 	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
@@ -1401,8 +1439,6 @@ ifneq ($(savedir_fp),)
 	mkdir -p $(savedir_fp)/saves
 	mkdir -p $(savedir_fp)/morgue
 ifeq ($(USE_DGAMELAUNCH),)
-	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
-	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
@@ -1427,6 +1463,15 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
+install: all install-data
+	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
+	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
+	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
+ifeq ($(USE_DGAMELAUNCH),)
+	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
+endif
+
 clean: clean-rltiles clean-webserver clean-android
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
@@ -1440,9 +1485,11 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-	$(RM) ../icon.png ../libapplication.so
-	$(RM) -r ../AndroidData
-	$(RM) -r ../bin
+ifneq ($(ANDROID),)
+	$(RM) -r $(datadir_fp)
+	+cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean \
+	 && remove AndroidManifest.xml
+endif
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -1481,7 +1528,7 @@ ifdef PCH
 %.gch: % .cflags $(CONTRIB_LIBS)
 # This needs -MD, not -MMD, lest we be haunted by the ghosts of stale
 # system headers.
-	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -MD -c $< -o $@
+	$(QUIET_PCH)$(CXX) -std=c++11 $(ALL_CFLAGS) -MD -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
@@ -1506,9 +1553,9 @@ $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
 %.o: %.cc %.d .cflags $(CC_DEP) | $(GENERATED_HEADERS) $(TILEDEFHDRS)
 ifdef NO_INLINE_DEPGEN
-	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
+	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM -std=c++11 $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+	$(QUIET_CXX)$(CXX) -std=c++11 $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 ifndef NO_INLINE_DEPGEN
 	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
 endif
@@ -1517,7 +1564,7 @@ icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
 config.h: util/configure .cflags
-	${QUIET_GEN}util/configure "$(CXX)" $(ALL_CFLAGS)
+	${QUIET_GEN}util/configure "$(CXX)" -std=c++11 $(ALL_CFLAGS)
 
 #
 # Contribs
@@ -1589,6 +1636,7 @@ clean-rltiles:
 	+$(MAKE) -C $(RLTILES) distclean
 
 ifdef TILES_ANY
+install-data: $(DESTTILEFILES)
 $(GAME): $(DESTTILEFILES)
 endif
 
@@ -1613,7 +1661,7 @@ source: removeold prebuildyacc
 	(cd ../..;git ls-files| \
 		grep -v -f crawl-ref/source/misc/src-pkg-excludes.lst| \
 		tar cf - -T -)|tar xf - -C build
-	for x in lua pcre sqlite libpng freetype sdl sdl-image zlib fonts; \
+	for x in lua pcre sqlite libpng freetype sdl2 sdl2-image sdl2-mixer zlib fonts; \
 	  do \
 	   mkdir -p $(BSRC)contrib/$$x; \
 	   (cd contrib/$$x;git ls-files|tar cf - -T -)| \
@@ -1699,20 +1747,18 @@ mac-app-console: all
 #############################################################################
 # Building the Android package
 #
-PROJECT_DIR=contrib/sdl-android/project
-SRC_LINK=$(PROJECT_DIR)/jni/application/src
-ifeq (,$(wildcard $(PROJECT_DIR)/ant.properties))
-	GENERATED_APK=project/bin/MainActivity-debug.apk
-else
-	GENERATED_APK=project/bin/MainActivity-release.apk
-endif
 
-android:
-	if [ ! -e $(SRC_LINK) ]; then \
-		ln -s `cd ..; pwd` $(SRC_LINK); \
-	fi
-	@cd contrib/sdl-android && ./build.sh && \
-	mv $(GENERATED_APK) ../../crawl_tiles_android-$(SRC_VERSION).apk
+android-project/AndroidManifest.xml: android-project/AndroidManifest.xml.in
+	sed "s/@CRAWL_VERSION@/${SRC_VERSION}/" <android-project/AndroidManifest.xml.in >android-project/AndroidManifest.xml
+
+android: install-data .android-cflags android-project/AndroidManifest.xml
+ifeq ($(ANDROID),)
+	@echo Please define ANDROID to use this build.
+	@exit 1
+endif
+	+cd android-project && ndk-build -$(MAKEFLAGS) && ant debug && \
+	cp bin/DungeonCrawlStoneSoup-debug.apk \
+	../../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests
