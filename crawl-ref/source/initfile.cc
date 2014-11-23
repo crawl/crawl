@@ -1088,13 +1088,13 @@ void game_options::reset_options()
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY);
 
     hp_colour.clear();
-    hp_colour.push_back(pair<int,int>(50, YELLOW));
-    hp_colour.push_back(pair<int,int>(25, RED));
+    hp_colour.emplace_back(50, YELLOW);
+    hp_colour.emplace_back(25, RED);
     mp_colour.clear();
-    mp_colour.push_back(pair<int, int>(50, YELLOW));
-    mp_colour.push_back(pair<int, int>(25, RED));
+    mp_colour.emplace_back(50, YELLOW);
+    mp_colour.emplace_back(25, RED);
     stat_colour.clear();
-    stat_colour.push_back(pair<int, int>(3, RED));
+    stat_colour.emplace_back(3, RED);
     enemy_hp_colour.clear();
     // I think these defaults are pretty ugly but apparently OS X has problems
     // with lighter colours
@@ -1321,7 +1321,7 @@ void game_options::add_item_glyph_override(const string &text)
 
     cglyph_t mdisp = parse_mon_glyph(override[1]);
     if (mdisp.ch || mdisp.col)
-        item_glyph_overrides.push_back(pair<string, cglyph_t>(override[0], mdisp));
+        item_glyph_overrides.emplace_back(override[0], mdisp);
 }
 
 void game_options::add_feature_override(const string &text)

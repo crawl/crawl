@@ -2220,9 +2220,10 @@ spret_type fedhas_sunlight(bool fail)
                 erase_any(env.sunlight, i);
                 break;
             }
-        env.sunlight.push_back(pair<coord_def, int>(*ai,
-            you.elapsed_time + (distance2(*ai, base) <= 1 ? SUNLIGHT_DURATION
-                                : SUNLIGHT_DURATION / 2)));
+        const int expiry = you.elapsed_time + (distance2(*ai, base) <= 1
+                                               ? SUNLIGHT_DURATION
+                                               : SUNLIGHT_DURATION / 2);
+        env.sunlight.emplace_back(*ai, expiry);
 
         temp_bolt.explosion_draw_cell(*ai);
 

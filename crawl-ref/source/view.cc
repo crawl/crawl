@@ -1134,7 +1134,7 @@ public:
 
         if (!random2(10 - current_frame))
         {
-            hidden.insert(std::pair<coord_def, bool>(pos, true));
+            hidden.insert(make_pair(pos, true));
             return coord_def(-1, -1);
         }
 
