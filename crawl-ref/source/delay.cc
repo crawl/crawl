@@ -1107,7 +1107,7 @@ static command_type _get_running_command()
         if (Options.rest_delay > 0)
             delay(Options.rest_delay);
 
-        return CMD_MOVE_NOWHERE;
+        return CMD_WAIT;
     }
     else if (you.running.is_explore() && Options.explore_delay > -1)
         delay(Options.explore_delay);
