@@ -24,7 +24,7 @@ The contents of this text are:
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                pickup_thrown, chunks_autopickup, assign_item_slot,
+                pickup_thrown, assign_item_slot,
                 pickup_menu_limit, drop_filter
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
@@ -474,14 +474,6 @@ pickup_thrown = true
         missiles, which can make life much easier for hunter types. Be
         aware that autopickup uses a turn, though it won't trigger if
         there are hostile monsters in sight.
-
-chunks_autopickup = true
-        If true then butchered flesh will be automatically picked up
-        right after they're generated.
-        Respects all of the autopickup options. Requires '%' to be
-        in the autopickup line.
-        Does not apply to Vampires who will pick up bottled potions
-        of blood regardless of this option, and not pick up chunks.
 
 assign_item_slot = (forward | backward)
         When picking up items, the inventory slot into which the item
