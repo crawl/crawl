@@ -1097,7 +1097,7 @@ static int _item_max_sub_type(item_base_type base_type)
         num = MISC_LAST_DECK - MISC_FIRST_DECK + 1;
         break;
     case ITEM_BOOKS:
-        num = MAX_RARE_BOOK + 1;
+        num = MAX_FIXED_BOOK + 1;
         break;
     case ITEM_ARTEBOOKS:
         num = 2;
