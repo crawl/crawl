@@ -535,7 +535,7 @@ public:
     random_var  attack_delay(const item_def *weapon, const
                              item_def *projectile = NULL,
                              bool random = true, bool scaled = true,
-                             bool shield = true) const;
+                             bool do_shield = true) const;
     int         constriction_damage() const;
 
     int       has_claws(bool allow_tran = true) const;
