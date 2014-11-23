@@ -26,7 +26,7 @@ N         CMD_RUN_DOWN_RIGHT
 U         CMD_RUN_UP_RIGHT
 Y         CMD_RUN_UP_LEFT
 
-Untrapping or opening/closing doors in a given direction:
+Attacking in a given direction without moving:
 ^B        CMD_ATTACK_DOWN_LEFT
 ^H        CMD_ATTACK_LEFT
 ^J        CMD_ATTACK_DOWN
