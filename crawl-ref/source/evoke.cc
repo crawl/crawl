@@ -1168,6 +1168,8 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     wind_beam.range           = LOS_RADIUS;
     wind_beam.is_tracer       = true;
 
+    map<actor *, coord_def> collisions;
+
     bool player_affected = false;
     counted_monster_list affected_monsters;
 
@@ -1195,6 +1197,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                 }
                 else //Try to find an alternate route to push
                 {
+                    bool success = false;
                     for (adjacent_iterator di(newpos); di; ++di)
                     {
                         if (adjacent(*di, act->pos())
@@ -1211,9 +1214,14 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                             // Adjust wind path for moved monster
                             wind_beam.target = *di;
                             wind_beam.fire();
+                            success = true;
                             break;
                         }
                     }
+
+                    // If no luck, they slam into something.
+                    if (!success)
+                        collisions.insert(make_pair(act, newpos));
                 }
             }
         }
@@ -1315,6 +1323,9 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
         else
             mpr("The monsters around you are blown away!");
     }
+
+    for (auto it : collisions)
+        it.first->collide(it.second, agent, pow);
 }
 
 static void _fan_of_gales_elementals()

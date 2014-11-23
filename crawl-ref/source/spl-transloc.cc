@@ -1242,31 +1242,16 @@ static void _move_creature_to_singularity(const monster* singularity,
 
         if (!victim->can_pass_through_feat(grd(newpos)))
         {
-            if (you.can_see(victim))
-            {
-                mprf("%s %s against the %s!",
-                     victim->name(DESC_THE).c_str(),
-                     victim->conj_verb("slam").c_str(),
-                     feature_description_at(newpos, false, DESC_THE, false)
-                         .c_str());
-            }
-            victim->hurt(singularity, COLLISION_DAMAGE);
-            break;
+            victim->collide(newpos, singularity,
+                            10 * singularity->get_hit_dice());
         }
         else if (actor* act_at_space = actor_at(newpos))
         {
             if (victim != act_at_space
                 && act_at_space->type != MONS_SINGULARITY)
             {
-                if (you.can_see(victim) || you.can_see(act_at_space))
-                {
-                    mprf("%s %s with %s!",
-                         victim->name(DESC_THE).c_str(),
-                         victim->conj_verb("collide").c_str(),
-                         act_at_space->name(DESC_THE).c_str());
-                }
-                victim->hurt(act_at_space, COLLISION_DAMAGE);
-                act_at_space->hurt(victim, COLLISION_DAMAGE);
+                victim->collide(newpos, singularity,
+                                10 * singularity->get_hit_dice());
             }
             break;
         }
