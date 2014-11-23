@@ -58,13 +58,11 @@ butterfly9
 butterfly10
 %rim 0
 fire_bat MONS_FIRE_BAT
-%rim 1
 raven MONS_RAVEN
 bennu MONS_BENNU
 caustic_shrike MONS_CAUSTIC_SHRIKE
 shard_shrike MONS_SHARD_SHRIKE
 %sdir mon/vault
-%rim 0
 microbat MONS_MICROBAT
 %rim 1
 megabat MONS_MEGABAT
