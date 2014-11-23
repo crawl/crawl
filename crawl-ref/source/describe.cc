@@ -3937,18 +3937,24 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         if (check >= 0)
         {
             inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " is too strong to be recited to.\n";
+                     << " is too strong to be recited to.";
         }
         else if (check >= -5)
         {
             inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " may be too strong to be recited to.\n";
+                     << " may be too strong to be recited to.";
         }
         else
         {
             inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " is weak enough to be recited to.\n";
+                     << " is weak enough to be recited to.";
         }
+        if (you.wizard)
+        {
+            inf.body << " (Recite power:" << zin_recite_power()
+                     << ", Hit dice:" << mons_class_hit_dice(mi.type) << ")";
+        }
+        inf.body << "\n";
     }
 
     if (mi.is(MB_SUMMONED))
