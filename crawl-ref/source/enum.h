@@ -1996,7 +1996,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
                              //0x00000200,  // was: ISFLAG_BLESSED
-    ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
+                             //0x00000400,  // was: ISFLAG_SEEN_CURSED
     ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
