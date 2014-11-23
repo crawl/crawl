@@ -2606,9 +2606,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_FORCE_LANCE, "Force Lance",
-     SPTYP_CONJURATION,
+     SPTYP_CONJURATION | SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
-     5,
+     4,
      100,
      4, 4,
      5, 0,

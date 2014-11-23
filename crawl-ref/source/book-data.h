@@ -258,10 +258,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 {   // Book of the Warp
     SPELL_RECALL,
     SPELL_CONTROL_TELEPORT,
+    SPELL_FORCE_LANCE,
     SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
-    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
