@@ -1038,8 +1038,7 @@ static void _enter_explore_mode()
 
         if (crawl_state.cmd_repeat_start)
         {
-            crawl_state.cancel_cmd_repeat("Can't repeat entering wizard "
-                                          "mode.");
+            crawl_state.cancel_cmd_repeat("Can't repeat entering explore mode");
             return;
         }
     }
