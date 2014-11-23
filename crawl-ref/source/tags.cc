@@ -2951,7 +2951,7 @@ static void tag_read_you(reader &th)
         }
 #endif
         for (j = 0; j < 27; j++)
-            you.action_count[pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
+            you.action_count[make_pair(caction, subtype)][j] = unmarshallInt(th);
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -4991,7 +4991,7 @@ static void tag_read_level(reader &th)
     while (num_lights-- > 0)
     {
         coord_def c = unmarshallCoord(th);
-        env.sunlight.push_back(pair<coord_def, int>(c, unmarshallInt(th)));
+        env.sunlight.push_back(make_pair(c, unmarshallInt(th)));
     }
 }
 

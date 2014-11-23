@@ -1236,7 +1236,7 @@ void LevelStashes::move_stash(const coord_def& from, const coord_def& to)
     int old_abs = s->abs_pos();
     s->x = to.x;
     s->y = to.y;
-    m_stashes.insert(pair<int, Stash>(s->abs_pos(), *s));
+    m_stashes.insert(make_pair(s->abs_pos(), *s));
     m_stashes.erase(old_abs);
 }
 

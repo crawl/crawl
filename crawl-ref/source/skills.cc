@@ -625,7 +625,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
             int64_t result = (int64_t)array[i] * (int64_t)scale;
             const int64_t rest = result % total;
             if (rest)
-                rests.push_back(pair<skill_type, int64_t>(skill_type(i), rest));
+                rests.emplace_back(skill_type(i), rest);
             array[i] = (int)(result / total);
             scaled_total += array[i];
         }

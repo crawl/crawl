@@ -1611,7 +1611,7 @@ void scorefile_entry::init(time_t dt)
             scrolls_used += you.action_count[p][i];
 
     potions_used = 0;
-    p = pair<caction_type, int>(CACT_USE, OBJ_POTIONS);
+    p = make_pair(CACT_USE, OBJ_POTIONS);
     if (you.action_count.count(p))
         for (int i = 0; i < maxlev; i++)
             potions_used += you.action_count[p][i];
@@ -2721,9 +2721,8 @@ void xlog_fields::init(const string &line)
         if (st == string::npos)
             continue;
 
-        fields.push_back(
-            pair<string, string>(field.substr(0, st),
-                                 _xlog_unescape(field.substr(st + 1))));
+        fields.emplace_back(field.substr(0, st),
+                            _xlog_unescape(field.substr(st + 1)));
     }
 
     map_fields();
@@ -2736,7 +2735,7 @@ void xlog_fields::add_field(const string &key, const char *format, ...)
     string buf = vmake_stringf(format, args);
     va_end(args);
 
-    fields.push_back(pair<string, string>(key, buf));
+    fields.emplace_back(key, buf);
     fieldmap[key] = buf;
 }
 
