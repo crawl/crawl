@@ -102,19 +102,6 @@ void erase_any(vector<Z> &vec, unsigned long which)
     vec.pop_back();
 }
 
-/** Swap two assignable objects.
- *
- * @tparam Z  The type of the swapped objects.
- * @param a,b The objects to be swapped.
- */
-template <typename Z>
-static inline void swapv(Z &a, Z &b)
-{
-    Z tmp = a;
-    a = b;
-    b = tmp;
-}
-
 /** A comparator to compare pairs by their second elements.
  *
  * @tparam T  The type of the pairs (not the second element!)
