@@ -274,7 +274,7 @@ brand_type player::damage_brand(int)
  */
 random_var player::attack_delay(const item_def *weap,
                                 const item_def *projectile, bool random,
-                                bool scaled, bool shield) const
+                                bool scaled, bool do_shield) const
 {
     random_var attk_delay = constant(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
@@ -352,7 +352,7 @@ random_var player::attack_delay(const item_def *weap,
     if (!weap && player_wearing_slot(EQ_SHIELD))
         shield_penalty += rv::random2(2);
 
-    if (!shield)
+    if (!do_shield)
         shield_penalty = constant(0);
 
     int final_delay = random ? attk_delay.roll() + shield_penalty.roll()
