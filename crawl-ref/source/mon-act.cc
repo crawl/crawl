@@ -2930,7 +2930,7 @@ static void _clear_monster_flags()
 static void _update_monster_attitude(monster *mon)
 {
     if (player_mutation_level(MUT_NO_LOVE)
-        && !mons_class_flag(mon->type, M_SPELL_PROXY))
+        && !mons_is_conjured(mon->type))
     {
         mon->attitude = ATT_HOSTILE;
     }
