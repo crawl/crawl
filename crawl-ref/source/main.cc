@@ -2834,9 +2834,8 @@ static void _close_door()
 //
 static void _do_berserk_no_combat_penalty()
 {
-    // Butchering/eating a corpse will maintain a blood rage.
-    const int delay = current_delay_action();
-    if (delay == DELAY_BUTCHER || delay == DELAY_EAT)
+    // Eating a corpse will maintain a blood rage.
+    if (current_delay_action() == DELAY_EAT)
         return;
 
     if (you.berserk_penalty == NO_BERSERK_PENALTY)

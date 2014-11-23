@@ -130,7 +130,6 @@ monster_type fill_out_corpse(const monster* mons,
     corpse.flags          = 0;
     corpse.base_type      = OBJ_CORPSES;
     corpse.mon_type       = corpse_class;
-    corpse.butcher_amount = 0;    // butcher work done
     corpse.sub_type       = CORPSE_BODY;
     corpse.freshness      = FRESHEST_CORPSE;  // rot time
     corpse.quantity       = 1;
