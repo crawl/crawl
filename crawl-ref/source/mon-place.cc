@@ -3931,7 +3931,7 @@ conduct_type player_will_anger_monster(monster_type type)
 conduct_type player_will_anger_monster(monster* mon)
 {
     if (player_mutation_level(MUT_NO_LOVE)
-        && !mons_class_flag(mon->type, M_SPELL_PROXY))
+        && !mons_is_conjured(mon->type))
     {
         // Player angers all real monsters
         return DID_SACRIFICE_LOVE;

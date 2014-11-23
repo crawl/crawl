@@ -669,12 +669,12 @@ bool mons_is_fiery(const monster* mon)
 
 bool mons_is_projectile(monster_type mc)
 {
-    return mc == MONS_ORB_OF_DESTRUCTION;
+    return mons_class_flag(mc, M_PROJECTILE);
 }
 
 bool mons_is_projectile(const monster* mon)
 {
-    return mon->type == MONS_ORB_OF_DESTRUCTION;
+    return mons_is_projectile(mon->type);
 }
 
 bool mons_is_boulder(const monster* mon)
@@ -1067,10 +1067,7 @@ bool mons_is_conjured(monster_type mc)
 {
     return mons_is_projectile(mc)
            || mons_is_avatar(mc)
-           || mc == MONS_FIRE_VORTEX
-           || mc == MONS_SPATIAL_VORTEX
-           || mc == MONS_BALL_LIGHTNING
-           || mc == MONS_FULMINANT_PRISM;
+           || mons_class_flag(mc, M_CONJURED);
 }
 
 int mons_weight(monster_type mc)
@@ -4718,8 +4715,7 @@ bool mons_is_beast(monster_type mc)
 
 bool mons_is_avatar(monster_type mc)
 {
-    return mc == MONS_SPECTRAL_WEAPON || mc == MONS_BATTLESPHERE
-        || mc == MONS_GRAND_AVATAR;
+    return mons_class_flag(mc, M_AVATAR);
 }
 
 bool mons_is_player_shadow(const monster* mon)
