@@ -539,15 +539,12 @@ enum book_type
     BOOK_DREAMS,
     BOOK_ALCHEMY,
     BOOK_BEASTS,
-    MAX_NORMAL_BOOK = BOOK_BEASTS,
 
-    MIN_RARE_BOOK,
-    BOOK_ANNIHILATIONS = MIN_RARE_BOOK,
+    BOOK_ANNIHILATIONS,
     BOOK_GRAND_GRIMOIRE,
     BOOK_NECRONOMICON,
-    MAX_RARE_BOOK = BOOK_NECRONOMICON,
 
-    MAX_FIXED_BOOK = MAX_RARE_BOOK,
+    MAX_FIXED_BOOK = BOOK_NECRONOMICON,
 
     BOOK_RANDART_LEVEL,
     BOOK_RANDART_THEME,
@@ -2395,6 +2392,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_BENNU,
     MONS_CAUSTIC_SHRIKE,
+    MONS_SHARD_SHRIKE,
 
     MONS_ANUBIS_GUARD,
 #endif
@@ -3191,6 +3189,8 @@ enum monster_type                      // menv[].type
     MONS_CAUSTIC_SHRIKE,
 
     MONS_ROBIN,
+
+    MONS_SHARD_SHRIKE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

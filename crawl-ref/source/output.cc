@@ -2372,7 +2372,14 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("rNeg", cwidth, rlife, 3) + "\n";
 
     const int rpois = player_res_poison(calc_unid);
-    out += _resist_composer("rPois", cwidth, rpois) + "\n";
+    string rpois_string = _resist_composer("rPois", cwidth, rpois) + "\n";
+    //XXX
+    if (rpois == 3)
+    {
+       rpois_string = replace_all(rpois_string, "+", "∞");
+       rpois_string = replace_all(rpois_string, "green", "lightgreen");
+    }
+    out += rpois_string;
 
     const int relec = player_res_electricity(calc_unid);
     out += _resist_composer("rElec", cwidth, relec) + "\n";

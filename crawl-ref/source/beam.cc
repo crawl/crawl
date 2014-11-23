@@ -460,7 +460,7 @@ bool bolt::can_affect_actor(const actor *act) const
     // Blinkbolt doesn't hit its caster, since they are the bolt.
     if (origin_spell == SPELL_BLINKBOLT && act->mid == source_id)
         return false;
-    map<mid_t, int>::const_iterator cnt = hit_count.find(act->mid);
+    auto cnt = hit_count.find(act->mid);
     if (cnt != hit_count.end() && cnt->second >= 2)
     {
         // Note: this is done for balance, even if it hurts realism a bit.
@@ -974,9 +974,8 @@ void bolt::destroy_wall_effect()
     {
         set<coord_def> doors;
         find_connected_identical(pos(), doors);
-        set<coord_def>::iterator it;
-        for (it = doors.begin(); it != doors.end(); ++it)
-            destroy_wall(*it);
+        for (coord_def c : doors)
+            destroy_wall(c);
         break;
     }
 
@@ -1870,6 +1869,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             continue;
 
         if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
+            || (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
             || (wh_enchant != ENCH_INSANE
                 && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
@@ -1884,6 +1884,10 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             }
             if (msg && simple_monster_message(*mi, msg))
                 did_msg = true;
+
+            // Reassert control over hexed undead.
+            if (wh_enchant == ENCH_CHARM && mi->has_ench(ENCH_HEXED))
+                mi->del_ench(ENCH_HEXED);
 
             // Extra check for fear (monster needs to reevaluate behaviour).
             if (wh_enchant == ENCH_FEAR)
@@ -6021,19 +6025,14 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     const vector< vector<coord_def> > sweep = _radial_sweep(r);
     const coord_def centre(9,9);
 
-    typedef sweep_type::const_iterator siter;
-    typedef sweep_type::value_type::const_iterator viter;
-
     // Draw pass.
     if (!is_tracer)
     {
-        for (siter ci = sweep.begin(); ci != sweep.end(); ++ci)
+        for (const auto &line : sweep)
         {
             bool pass_visible = false;
-            for (viter cci = ci->begin(); cci != ci->end(); ++cci)
+            for (const coord_def delta : line)
             {
-                const coord_def delta = *cci;
-
                 if (delta.origin() && hole_in_the_middle)
                     continue;
 
@@ -6050,12 +6049,10 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     // Affect pass.
     int cells_seen = 0;
-    for (siter ci = sweep.begin(); ci != sweep.end(); ++ci)
+    for (const auto &line : sweep)
     {
-        for (viter cci = ci->begin(); cci != ci->end(); ++cci)
+        for (const coord_def delta : line)
         {
-            const coord_def delta = *cci;
-
             if (delta.origin() && hole_in_the_middle)
                 continue;
 

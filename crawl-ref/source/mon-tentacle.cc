@@ -12,6 +12,7 @@
 #include "delay.h"
 #include "env.h"
 #include "fprop.h"
+#include "libutil.h" // map_find
 #include "losglobal.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -360,12 +361,10 @@ struct tentacle_attack_constraints
             int connect_level = temp.connect_level;
             int base_connect_level = connect_level;
 
-            map<coord_def, set<int> >::iterator probe
-                        = connection_constraints->find(temp.pos);
-
-            if (probe != connection_constraints->end())
+            if (auto constraint = map_find(*connection_constraints, temp.pos))
             {
-                int max_val = probe->second.empty() ? INT_MAX : *probe->second.rbegin();
+                int max_val = constraint->empty()
+                            ? INT_MAX : *constraint->rbegin();
 
                 if (max_val < connect_level)
                     temp.departure = true;
@@ -373,9 +372,9 @@ struct tentacle_attack_constraints
                 // If we can still feasibly retract (haven't left connect range)
                 if (!temp.departure)
                 {
-                    if (probe->second.count(connect_level))
+                    if (constraint->count(connect_level))
                     {
-                        while (probe->second.count(connect_level + 1))
+                        while (constraint->count(connect_level + 1))
                             connect_level++;
                     }
 
@@ -436,20 +435,13 @@ struct tentacle_connect_constraints
             if (!in_bounds(temp.pos))
                 continue;
 
-            map<coord_def, set<int> >::iterator probe
-                        = connection_constraints->find(temp.pos);
+            auto constraint = map_find(*connection_constraints, temp.pos);
 
-            if (probe == connection_constraints->end()
-                || !probe->second.count(node.connect_level))
-            {
+            if (!constraint || !constraint->count(node.connect_level))
                 continue;
-            }
 
-            if (!base_monster->is_habitable(temp.pos)
-                || actor_at(temp.pos))
-            {
+            if (!base_monster->is_habitable(temp.pos) || actor_at(temp.pos))
                 temp.path_distance = DISCONNECT_DIST;
-            }
             else
                 temp.path_distance = 1 + node.path_distance;
 
@@ -459,18 +451,11 @@ struct tentacle_connect_constraints
             temp.estimate = 0;
             int test_level = node.connect_level;
 
-/*            for (auto j = probe->second.begin(); j!= probe->second.end(); j++)
-            {
-                if (*j == (test_level + 1))
-                    test_level++;
-            }
-            */
-            while (probe->second.count(test_level + 1))
+            while (constraint->count(test_level + 1))
                 test_level++;
 
-            int max = probe->second.empty() ? INT_MAX : *(probe->second.rbegin());
+            int max = constraint->empty() ? INT_MAX : *constraint->rbegin();
 
-//            mprf("start %d, test %d, max %d", temp.connect_level, test_level, max);
             if (test_level < max)
                 continue;
 
@@ -531,11 +516,11 @@ static bool _tentacle_pathfind(monster* tentacle,
     position_node temp;
     temp.pos = tentacle->pos();
 
-    map<coord_def, set<int> >::iterator probe
-        = attack_constraints.connection_constraints->find(temp.pos);
-    ASSERT(probe != attack_constraints.connection_constraints->end());
+    auto constraint = map_find(*attack_constraints.connection_constraints,
+                               temp.pos);
+    ASSERT(constraint);
     temp.connect_level = 0;
-    while (probe->second.count(temp.connect_level + 1))
+    while (constraint->count(temp.connect_level + 1))
         temp.connect_level++;
 
     temp.departure = false;
@@ -588,13 +573,11 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     }
 
     int start_level = 0;
-    map<coord_def, set<int> >::iterator it
-                    = connect_costs.connection_constraints->find(new_pos);
-
     // This condition should never miss
-    if (it != connect_costs.connection_constraints->end())
+    if (auto constraint = map_find(*connect_costs.connection_constraints,
+                          new_pos))
     {
-        while (it->second.count(start_level + 1))
+        while (constraint->count(start_level + 1))
             start_level++;
     }
 
@@ -817,8 +800,7 @@ void move_solo_tentacle(monster* tentacle)
     actor* constrictee = NULL;
     if (tentacle->is_constricting())
     {
-        actor::constricting_t::const_iterator it = tentacle->constricting->begin();
-        constrictee = actor_by_mid(it->first);
+        constrictee = actor_by_mid(tentacle->constricting->begin()->first);
 
         // Don't drag things that cannot move
         if (!constrictee->is_stationary())
@@ -886,24 +868,25 @@ void move_solo_tentacle(monster* tentacle)
             }
 
             int escalated = 0;
-            map<coord_def, set<int> >::iterator probe = connection_data.find(test);
+            auto constraint = map_find(connection_data, test);
+            ASSERT(constraint);
 
-            while (probe->second.count(escalated + 1))
+            while (constraint->count(escalated + 1))
                 escalated++;
 
             if (!severed
                 && tentacle->is_habitable(test)
-                && escalated == *probe->second.rbegin()
+                && escalated == *constraint->rbegin()
                 && (visited_count < demonic_max_dist
-                    || connection_data.find(test)->second.size() > 1))
+                    || constraint->size() > 1))
             {
                 new_pos = test;
                 break;
             }
             else if (tentacle->is_habitable(test)
                      && visited_count > 1
-                     && escalated == *probe->second.rbegin()
-                     && connection_data.find(test)->second.size() > 1)
+                     && escalated == *constraint->rbegin()
+                     && constraint->size() > 1)
             {
                 new_pos = test;
                 break;
@@ -1084,8 +1067,7 @@ void move_child_tentacles(monster* mons)
         actor* constrictee = NULL;
         if (tentacle->is_constricting() && retract_found)
         {
-            actor::constricting_t::const_iterator it = tentacle->constricting->begin();
-            constrictee = actor_by_mid(it->first);
+            constrictee = actor_by_mid(tentacle->constricting->begin()->first);
             if (feat_has_solid_floor(grd(old_pos))
                 && constrictee->is_habitable(old_pos))
             {

@@ -562,15 +562,14 @@ void get_all_manual_charges(vector<int> &charges)
 
 void set_all_manual_charges(const vector<int> &charges)
 {
-    vector<int>::const_iterator charge_iter = charges.begin();
-    FixedVector<item_def,ENDOFPACK>::pointer iter = you.inv.begin();
-    for (;iter!=you.inv.end(); ++iter)
+    auto charge_iter = charges.begin();
+    for (item_def &item : you.inv)
     {
-        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
+        if (item.base_type != OBJ_BOOKS || item.sub_type != BOOK_MANUAL)
             continue;
 
         ASSERT(charge_iter != charges.end());
-        iter->skill_points = *charge_iter;
+        item.skill_points = *charge_iter;
         charge_iter++;
     }
     ASSERT(charge_iter == charges.end());

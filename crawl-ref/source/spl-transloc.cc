@@ -1107,24 +1107,25 @@ static int _disperse_monster(monster* mon, int pow)
         return 0;
 
     if (mon->check_res_magic(pow) > 0)
-    {
         monster_blink(mon);
-        return 1;
-    }
     else
-    {
         monster_teleport(mon, true);
-        return 1;
-    }
 
-    return 0;
+    if (mon->check_res_magic(pow) <= 0)
+        mon->confuse(&you, random2avg(pow / 10, 2));
+
+    return 1;
 }
 
 spret_type cast_dispersal(int pow, bool fail)
 {
     fail_check();
-    if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow))
+    const int radius = spell_range(SPELL_DISPERSAL, pow);
+    if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow,
+                                      radius))
+    {
         mpr("The air shimmers briefly around you.");
+    }
 
     return SPRET_SUCCESS;
 }

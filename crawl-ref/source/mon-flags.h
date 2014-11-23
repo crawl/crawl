@@ -153,15 +153,17 @@ const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
                                    //(uint64_t)1<<50;
 
-                                   //(uint64_t)1<<51;
+// monster is a projectile (just OOD right now)
+const uint64_t M_PROJECTILE        = (uint64_t)1<<51;
 
-                                   //(uint64_t)1<<52;
+// monster is an "avatar" (no independent attacks, only support)
+const uint64_t M_AVATAR            = (uint64_t)1<<52;
 
 // monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
 const uint64_t M_SHADOW            = (uint64_t)1<<53;
 
-// monster is a proxy for a charm/conjuration spell (IOOD, etc.)
-const uint64_t M_SPELL_PROXY       = (uint64_t)1<<54;
+// monster is a proxy for a charm/conjuration spell (ball lightning, etc.)
+const uint64_t M_CONJURED          = (uint64_t)1<<54;
 
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;

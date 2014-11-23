@@ -1181,7 +1181,7 @@ static void _sdump_action_counts(dump_params &par)
                 v[i] = entry.second[i];
                 v[27] += v[i];
             }
-            action_vec.push_back(pair<int, FixedVector<int, 28> >(entry.first.second, v));
+            action_vec.emplace_back(entry.first.second, v);
         }
         sort(action_vec.begin(), action_vec.end(), _sort_by_first);
 

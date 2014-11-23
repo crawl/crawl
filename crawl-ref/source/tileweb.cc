@@ -1447,8 +1447,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     }
 
     const monster_info* last = NULL;
-    map<uint32_t, coord_def>::const_iterator it =
-        m_monster_locs.find(m->client_id);
+    auto it = m_monster_locs.find(m->client_id);
     if (m->client_id == 0 || it == m_monster_locs.end())
     {
         last = m_current_map_knowledge(gc).monsterinfo();

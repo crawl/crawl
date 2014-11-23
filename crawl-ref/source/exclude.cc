@@ -219,7 +219,7 @@ void exclude_set::clear()
 
 void exclude_set::erase(const coord_def &p)
 {
-    exclude_set::iterator it = exclude_roots.find(p);
+    auto it = exclude_roots.find(p);
 
     if (it == exclude_roots.end())
         return;
@@ -299,12 +299,7 @@ bool exclude_set::is_exclude_root(const coord_def &p) const
 
 travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
 {
-    exclude_set::iterator it = exclude_roots.find(p);
-
-    if (it != exclude_roots.end())
-        return &it->second;
-
-    return NULL;
+    return map_find(exclude_roots, p);
 }
 
 size_t exclude_set::size() const
@@ -436,9 +431,8 @@ void deferred_exclude_update()
 {
     _exclude_update();
 #ifdef USE_TILE
-    exclude_set::iterator it;
-    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
-        _tile_exclude_gmap_update(it->second.pos);
+    for (const auto &entry : curr_excludes)
+        _tile_exclude_gmap_update(entry.second.pos);
 #endif
 }
 
@@ -683,12 +677,11 @@ string exclude_set::get_exclusion_desc()
 void marshallExcludes(writer& outf, const exclude_set& excludes)
 {
     marshallShort(outf, excludes.size());
-    exclude_set::const_iterator it;
     if (excludes.size())
     {
-        for (it = excludes.begin(); it != excludes.end(); ++it)
+        for (const auto &entry : excludes)
         {
-            const travel_exclude &ex = it->second;
+            const travel_exclude &ex = entry.second;
             marshallCoord(outf, ex.pos);
             marshallShort(outf, ex.radius);
             marshallBoolean(outf, ex.autoex);

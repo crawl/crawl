@@ -634,29 +634,28 @@ void full_describe_view()
     if (!list_mons.empty())
     {
         desc_menu.add_entry(new MenuEntry("Monsters", MEL_SUBTITLE));
-        vector<monster_info>::const_iterator mi;
-        for (mi = list_mons.begin(); mi != list_mons.end(); ++mi)
+        for (const monster_info &mi : list_mons)
         {
             // List monsters in the form
             // (A) An angel (neutral), wielding a glowing long sword
 
             string prefix = "";
 #ifndef USE_TILE_LOCAL
-            cglyph_t g = get_mons_glyph(*mi);
+            cglyph_t g = get_mons_glyph(mi);
             const string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
                      + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
                      + "</" + col_string + ">) ";
 #endif
 
-            string str = get_monster_equipment_desc(*mi, DESC_FULL, DESC_A, true);
-            if (mi->is(MB_MESMERIZING))
+            string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
+            if (mi.is(MB_MESMERIZING))
                 str += ", keeping you mesmerised";
 
-            if (mi->dam != MDAM_OKAY)
-                str += ", " + mi->damage_desc();
+            if (mi.dam != MDAM_OKAY)
+                str += ", " + mi.damage_desc();
 
-            string consinfo = mi->constriction_description();
+            string consinfo = mi.constriction_description();
             if (!consinfo.empty())
                 str += ", " + consinfo;
 
@@ -670,7 +669,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix+str, &(*mi), hotkey++);
+                    me = new MonsterMenuEntry(prefix+str, &mi, hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
@@ -2987,11 +2986,9 @@ string raw_feature_description(const coord_def &where)
     int mapi = env.level_map_ids(where);
     if (mapi != INVALID_MAP_INDEX)
     {
-        const vault_placement *v = env.level_vaults[mapi];
-        map<dungeon_feature_type, string>::const_iterator it =
-            v->map.feat_renames.find(feat);
-        if (it != v->map.feat_renames.end())
-            return it->second;
+        const auto &renames = env.level_vaults[mapi]->map.feat_renames;
+        if (const string *rename = map_find(renames, feat))
+            return *rename;
     }
 
     return _base_feature_desc(feat, get_trap_type(where));

@@ -457,12 +457,12 @@ monster_info::monster_info(const monster* m, int milev)
     threat = mons_threat_level(m);
 
     props.clear();
+    // CrawlHashTable::begin() const can fail if the hash is empty.
     if (!m->props.empty())
     {
-        CrawlHashTable::hash_map_type::const_iterator i = m->props.begin();
-        for (; i != m->props.end(); ++i)
-            if (_is_public_key(i->first))
-                props[i->first] = i->second;
+        for (const auto &entry : m->props)
+            if (_is_public_key(entry.first))
+                props[entry.first] = entry.second;
     }
 
     // Translate references to tentacles into just their locations
@@ -784,17 +784,14 @@ monster_info::monster_info(const monster* m, int milev)
     // names of what this monster is constricting, if any
     if (m->constricting)
     {
-        actor::constricting_t::const_iterator i;
-        for (i = m->constricting->begin(); i != m->constricting->end(); ++i)
+        const char *gerund = m->constriction_damage() ? "constricting "
+                                                      : "holding ";
+        for (const auto &entry : *m->constricting)
         {
-            actor* const constrictee = actor_by_mid(i->first);
-
-            if (constrictee)
+            if (const actor* const constrictee = actor_by_mid(entry.first))
             {
-                constricting_name.push_back(
-                                (m->constriction_damage() ? "constricting "
-                                                          : "holding ")
-                                + constrictee->name(DESC_A, true));
+                constricting_name.push_back(gerund
+                                            + constrictee->name(DESC_A, true));
             }
         }
     }
