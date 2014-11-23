@@ -60,8 +60,9 @@ public:
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
-  bool          wizard;               // true if player has entered wiz mode.
-  time_t        birth_time;           // start time of game
+  bool          wizard;            // true if player has entered wiz mode.
+  bool          explore;           // true if player has entered explore mode.
+  time_t        birth_time;        // start time of game
 
 
   // ----------------

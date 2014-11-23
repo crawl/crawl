@@ -5570,6 +5570,7 @@ void player::init()
 #else
     wizard = false;
 #endif
+    explore = false;
     birth_time       = time(0);
 
     // Long-term state:

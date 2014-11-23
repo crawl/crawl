@@ -100,6 +100,7 @@ private:
     int         piety;              // piety
     int         penance;            // penance
     uint8_t     wiz_mode;           // character used wiz mode
+    uint8_t     explore_mode;       // character used explore mode
     time_t      birth_time;         // start time of character
     time_t      death_time;         // end time of character
     time_t      real_time;          // real playing time in seconds
