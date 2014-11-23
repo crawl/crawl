@@ -1466,7 +1466,7 @@ static const struct spell_desc spelldata[] =
      SPFLAG_AREA | SPFLAG_ESCAPE,
      6,
      200,
-     -1, -1,
+     1, 4,
      5, 0,
      NULL,
 },
