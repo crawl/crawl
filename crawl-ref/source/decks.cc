@@ -377,42 +377,31 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
     switch (deck_type)
     {
     case MISC_DECK_OF_ESCAPE:
-        subdecks.push_back(deck_of_transport);
-        subdecks.push_back(deck_of_emergency);
-        break;
+        return { deck_of_transport, deck_of_emergency };
     case MISC_DECK_OF_DESTRUCTION:
-        subdecks.push_back(deck_of_destruction);
-        break;
+        return { deck_of_destruction };
 #if TAG_MAJOR_VERSION == 34
     case MISC_DECK_OF_DUNGEONS:
-        subdecks.push_back(deck_of_dungeons);
-        break;
+        return { deck_of_dungeons };
 #endif
     case MISC_DECK_OF_SUMMONING:
-        subdecks.push_back(deck_of_summoning);
-        break;
+        return { deck_of_summoning };
     case MISC_DECK_OF_WONDERS:
-        subdecks.push_back(deck_of_wonders);
-        break;
+        return { deck_of_wonders };
     case MISC_DECK_OF_PUNISHMENT:
-        subdecks.push_back(deck_of_punishment);
-        break;
+        return { deck_of_punishment };
     case MISC_DECK_OF_WAR:
-        subdecks.push_back(deck_of_battle);
-        subdecks.push_back(deck_of_summoning);
-        break;
+        return { deck_of_battle, deck_of_summoning };
     case MISC_DECK_OF_CHANGES:
-        subdecks.push_back(deck_of_battle);
-        subdecks.push_back(deck_of_wonders);
-        break;
+        return { deck_of_battle, deck_of_wonders };
     case MISC_DECK_OF_DEFENCE:
-        subdecks.push_back(deck_of_emergency);
-        subdecks.push_back(deck_of_battle);
-        break;
+        return { deck_of_emergency, deck_of_battle };
     }
 
-    ASSERT(subdecks.size() > 0);
-    return subdecks;
+#ifdef ASSERTS
+    die("No subdecks found for %u", unsigned(deck_type));
+#endif
+    return {};
 }
 
 const string deck_contents(uint8_t deck_type)

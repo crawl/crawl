@@ -1743,15 +1743,15 @@ void change_labyrinth(bool msg)
     // The directions are used to randomly decide where to place items that
     // have ended up in walls during the switching.
     vector<coord_def> dirs;
-    dirs.push_back(coord_def(-1,-1));
-    dirs.push_back(coord_def(0,-1));
-    dirs.push_back(coord_def(1,-1));
-    dirs.push_back(coord_def(-1, 0));
+    dirs.emplace_back(-1,-1);
+    dirs.emplace_back(0,-1);
+    dirs.emplace_back(1,-1);
+    dirs.emplace_back(-1, 0);
 
-    dirs.push_back(coord_def(1, 0));
-    dirs.push_back(coord_def(-1, 1));
-    dirs.push_back(coord_def(0, 1));
-    dirs.push_back(coord_def(1, 1));
+    dirs.emplace_back(1, 0);
+    dirs.emplace_back(-1, 1);
+    dirs.emplace_back(0, 1);
+    dirs.emplace_back(1, 1);
 
     // Search the entire shifted area for stacks of items now stuck in walls
     // and move them to a random adjacent non-wall grid.

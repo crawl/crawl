@@ -2826,7 +2826,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "also check ";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
-        vector<string> listed;
+        vector<const char *> listed;
         if (you.spell_no > 0)
         {
             listed.push_back("your spells (<w>%?</w>)");

@@ -2276,8 +2276,7 @@ try_again:
             {
                 mutation_type m = next_facet->muts[i];
 
-                ret.push_back(demon_mutation_info(m, next_facet->when[i],
-                                                  absfacet));
+                ret.emplace_back(m, next_facet->when[i], absfacet);
 
                 if (_is_covering(m))
                     ++scales;

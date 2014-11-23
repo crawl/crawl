@@ -3830,7 +3830,7 @@ static void _display_char_status(int value, const char *fmt, ...)
 static void _display_vampire_status()
 {
     string msg = "At your current hunger state you ";
-    vector<string> attrib;
+    vector<const char *> attrib;
 
     switch (you.hunger_state)
     {
@@ -6849,13 +6849,13 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     vector<string> problems;
 
     if (duration[DUR_DIMENSION_ANCHOR])
-        problems.push_back("locked down by Dimension Anchor");
+        problems.emplace_back("locked down by Dimension Anchor");
 
     if (form == TRAN_TREE)
-        problems.push_back("held in place by your roots");
+        problems.emplace_back("held in place by your roots");
 
     if (crawl_state.game_is_zotdef() && orb_haloed(pos()))
-        problems.push_back("in the halo of the Orb");
+        problems.emplace_back("in the halo of the Orb");
 
     const bool stasis_block = stasis_blocks_effect(calc_unid, NULL);
     vector<item_def> notele_items;
@@ -6874,7 +6874,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
                                                 item.name(DESC_A).c_str()));
             }
             else
-                worn_notele.push_back(item.name(DESC_A).c_str());
+                worn_notele.push_back(item.name(DESC_A));
 
             if (item.base_type == OBJ_JEWELLERY && jewellery_is_amulet(item))
                 amulet_handled = true;
@@ -6887,7 +6887,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
             {
                 item_def *amulet = slot_item(EQ_AMULET);
                 ASSERT(amulet);
-                worn_notele.push_back(amulet->name(DESC_A).c_str());
+                worn_notele.push_back(amulet->name(DESC_A));
                 found_nonartefact = !is_artefact(*amulet);
             }
             //...but we also don't want to report "buggy stasis" from it.
@@ -6913,7 +6913,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         {
             // Formicids and AMU_STASIS are handled above, other sources
             // of stasis will display this message:
-            problems.push_back("affected by a buggy stasis");
+            problems.emplace_back("affected by a buggy stasis");
         }
     }
 

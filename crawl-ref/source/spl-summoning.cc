@@ -1700,7 +1700,7 @@ static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_t
 // Displays message when raising dead with Animate Skeleton or Animate Dead.
 static void _display_undead_motions(int motions)
 {
-    vector<string> motions_list;
+    vector<const char *> motions_list;
 
     // Check bitfield from _raise_remains for types of corpse(s) being animated.
     if (motions & DEAD_ARE_WALKING)
@@ -2619,7 +2619,7 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
         if (mi->friendly() && mi->is_summoned() && mi->summoner == you.mid
             && you.see_cell_no_trans(mi->pos()))
         {
-            explode.push_back(make_pair(mi->pos(), mi->get_hit_dice()));
+            explode.emplace_back(mi->pos(), mi->get_hit_dice());
         }
     }
 

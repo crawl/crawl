@@ -601,20 +601,20 @@ string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_SIF_MUNA:
-        likes.push_back("you train your various spell casting skills");
+        likes.emplace_back("you train your various spell casting skills");
         break;
 
     case GOD_FEDHAS:
         snprintf(info, INFO_SIZE, "you promote the decay of nearby "
                                   "corpses%s",
                  verbose ? " by <w>p</w>raying" : "");
-        likes.push_back(info);
+        likes.emplace_back(info);
         break;
 
     case GOD_TROG:
         snprintf(info, INFO_SIZE, "you destroy spellbooks%s",
                  verbose ? " via the <w>a</w> command" : "");
-        likes.push_back(info);
+        likes.emplace_back(info);
         break;
 
     case GOD_ELYVILON:
@@ -623,43 +623,43 @@ string get_god_likes(god_type which_god, bool verbose)
                  verbose ? " via the <w>p</w> command (inscribe items with "
                            "<w>!p</w> to prevent their accidental destruction)"
                          : "");
-        likes.push_back(info);
-        likes.push_back("you calm hostilities by healing your foes");
+        likes.emplace_back(info);
+        likes.emplace_back("you calm hostilities by healing your foes");
         break;
 
     case GOD_JIYVA:
         snprintf(info, INFO_SIZE, "you sacrifice items%s",
                  verbose ? " by allowing slimes to consume them" : "");
-        likes.push_back(info);
+        likes.emplace_back(info);
         break;
 
     case GOD_CHEIBRIADOS:
         snprintf(info, INFO_SIZE, "you kill fast things%s",
                  verbose ? ", relative to your speed"
                          : "");
-        likes.push_back(info);
+        likes.emplace_back(info);
         break;
 
     case GOD_ASHENZARI:
-        likes.push_back("you explore the world (preferably while bound by "
-                        "curses)");
+        likes.emplace_back("you explore the world (preferably while bound by "
+                           "curses)");
         break;
 
     case GOD_SHINING_ONE:
-        likes.push_back("you meet creatures to determine whether they need to "
-                        "be eradicated");
+        likes.emplace_back("you meet creatures to determine whether they need "
+                           "to be eradicated");
         break;
 
     case GOD_LUGONU:
-        likes.push_back("you banish creatures to the Abyss");
+        likes.emplace_back("you banish creatures to the Abyss");
         break;
 
     case GOD_GOZAG:
-        likes.push_back("you collect gold");
+        likes.emplace_back("you collect gold");
         break;
 
     case GOD_RU:
-      likes.push_back("you make personal sacrifices");
+      likes.emplace_back("you make personal sacrifices");
       break;
 
     default:
@@ -671,19 +671,19 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_ZIN:
         snprintf(info, INFO_SIZE, "you donate money%s",
                  verbose ? " (by <w>p</w>raying at an altar)" : "");
-        likes.push_back(info);
+        likes.emplace_back(info);
         break;
 
     case GOD_BEOGH:
         snprintf(info, INFO_SIZE, "you bless dead orcs%s",
                  verbose ? " (by standing over their remains and <w>p</w>raying)" : "");
 
-        likes.push_back(info);
+        likes.emplace_back(info);
         break;
 
     case GOD_NEMELEX_XOBEH:
         snprintf(info, INFO_SIZE, "you explore the world");
-        likes.push_back(info);
+        likes.emplace_back(info);
         break;
 
     default:
@@ -695,7 +695,7 @@ string get_god_likes(god_type which_god, bool verbose)
         snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
 
-        likes.push_back(info);
+        likes.emplace_back(info);
     }
 
     switch (which_god)
@@ -703,26 +703,26 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_MAKHLEB:
     case GOD_LUGONU:
     case GOD_QAZLAL:
-        likes.push_back("you or your allies kill living beings");
+        likes.emplace_back("you or your allies kill living beings");
         break;
 
     case GOD_TROG:
-        likes.push_back("you or your god-given allies kill living beings");
+        likes.emplace_back("you or your god-given allies kill living beings");
         break;
 
     case GOD_YREDELEMNUL:
     case GOD_KIKUBAAQUDGHA:
-        likes.push_back("you or your undead slaves kill living beings");
+        likes.emplace_back("you or your undead slaves kill living beings");
         break;
 
     case GOD_BEOGH:
-        likes.push_back("you or your allied orcs kill living beings");
+        likes.emplace_back("you or your allied orcs kill living beings");
         break;
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
     case GOD_DITHMENOS:
-        likes.push_back("you kill living beings");
+        likes.emplace_back("you kill living beings");
         break;
 
     default:
@@ -732,11 +732,11 @@ string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_ZIN:
-        likes.push_back("you or your allies kill unclean or chaotic beings");
+        likes.emplace_back("you or your allies kill unclean or chaotic beings");
         break;
 
     case GOD_SHINING_ONE:
-        likes.push_back("you or your allies kill living unholy or evil beings");
+        likes.emplace_back("you or your allies kill living unholy or evil beings");
         break;
 
     default:
@@ -749,17 +749,17 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_MAKHLEB:
     case GOD_LUGONU:
     case GOD_QAZLAL:
-        likes.push_back("you or your allies kill the undead");
+        likes.emplace_back("you or your allies kill the undead");
         break;
 
     case GOD_BEOGH:
-        likes.push_back("you or your allied orcs kill the undead");
+        likes.emplace_back("you or your allied orcs kill the undead");
         break;
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
     case GOD_DITHMENOS:
-        likes.push_back("you kill the undead");
+        likes.emplace_back("you kill the undead");
         break;
 
     default:
@@ -772,25 +772,25 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_MAKHLEB:
     case GOD_LUGONU:
     case GOD_QAZLAL:
-        likes.push_back("you or your allies kill demons");
+        likes.emplace_back("you or your allies kill demons");
         break;
 
     case GOD_TROG:
-        likes.push_back("you or your god-given allies kill demons");
+        likes.emplace_back("you or your god-given allies kill demons");
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        likes.push_back("you or your undead slaves kill demons");
+        likes.emplace_back("you or your undead slaves kill demons");
         break;
 
     case GOD_BEOGH:
-        likes.push_back("you or your allied orcs kill demons");
+        likes.emplace_back("you or your allied orcs kill demons");
         break;
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
     case GOD_DITHMENOS:
-        likes.push_back("you kill demons");
+        likes.emplace_back("you kill demons");
         break;
 
     default:
@@ -800,7 +800,7 @@ string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_YREDELEMNUL:
-        likes.push_back("you or your undead slaves kill artificial beings");
+        likes.emplace_back("you or your undead slaves kill artificial beings");
         break;
 
     default:
@@ -812,29 +812,29 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_MAKHLEB:
     case GOD_LUGONU:
     case GOD_QAZLAL:
-        likes.push_back("you or your allies kill holy beings");
+        likes.emplace_back("you or your allies kill holy beings");
         break;
 
     case GOD_TROG:
-        likes.push_back("you or your god-given allies kill holy beings");
+        likes.emplace_back("you or your god-given allies kill holy beings");
         break;
 
     case GOD_YREDELEMNUL:
-        likes.push_back("your undead slaves kill holy beings");
+        likes.emplace_back("your undead slaves kill holy beings");
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        likes.push_back("you or your undead slaves kill holy beings");
+        likes.emplace_back("you or your undead slaves kill holy beings");
         break;
 
     case GOD_BEOGH:
-        likes.push_back("you or your allied orcs kill holy beings");
+        likes.emplace_back("you or your allied orcs kill holy beings");
         break;
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
     case GOD_DITHMENOS:
-        likes.push_back("you kill holy beings");
+        likes.emplace_back("you kill holy beings");
         break;
 
     default:
@@ -845,20 +845,20 @@ string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_YREDELEMNUL:
-        really_likes.push_back("you kill holy beings");
+        really_likes.emplace_back("you kill holy beings");
         break;
 
     case GOD_BEOGH:
-        really_likes.push_back("you kill the priests of other religions");
+        really_likes.emplace_back("you kill the priests of other religions");
         break;
 
     case GOD_TROG:
-        really_likes.push_back("you kill wizards and other users of magic");
+        really_likes.emplace_back("you kill wizards and other users of magic");
         break;
 
     case GOD_DITHMENOS:
-        really_likes.push_back("you kill beings that bring fire to the "
-                               "dungeon");
+        really_likes.emplace_back("you kill beings that bring fire to the "
+                                  "dungeon");
         break;
     default:
         break;
@@ -898,55 +898,55 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
     vector<string> really_dislikes; // Penance
 
     if (god_hates_cannibalism(which_god))
-        really_dislikes.push_back("you perform cannibalism");
+        really_dislikes.emplace_back("you perform cannibalism");
 
     if (is_good_god(which_god))
     {
-        really_dislikes.push_back("you desecrate holy remains");
+        really_dislikes.emplace_back("you desecrate holy remains");
 
         if (which_god == GOD_SHINING_ONE)
-            really_dislikes.push_back("you drink blood");
+            really_dislikes.emplace_back("you drink blood");
         else
-            dislikes.push_back("you drink blood");
+            dislikes.emplace_back("you drink blood");
 
-        really_dislikes.push_back("you use necromancy");
-        really_dislikes.push_back("you use unholy magic or items");
-        really_dislikes.push_back("you attack non-hostile holy beings");
-        really_dislikes.push_back("you or your allies kill non-hostile holy beings");
+        really_dislikes.emplace_back("you use necromancy");
+        really_dislikes.emplace_back("you use unholy magic or items");
+        really_dislikes.emplace_back("you attack non-hostile holy beings");
+        really_dislikes.emplace_back("you or your allies kill non-hostile holy beings");
 
         if (which_god == GOD_ZIN)
-            dislikes.push_back("you attack neutral beings");
+            dislikes.emplace_back("you attack neutral beings");
         else
-            really_dislikes.push_back("you attack neutral beings");
+            really_dislikes.emplace_back("you attack neutral beings");
     }
 
     switch (which_god)
     {
     case GOD_ZIN:     case GOD_SHINING_ONE:  case GOD_ELYVILON:
     case GOD_OKAWARU:
-        really_dislikes.push_back("you attack allies");
+        really_dislikes.emplace_back("you attack allies");
         break;
 
     case GOD_BEOGH:
-        really_dislikes.push_back("you attack allied orcs");
+        really_dislikes.emplace_back("you attack allied orcs");
         break;
 
     case GOD_JIYVA:
-        really_dislikes.push_back("you attack fellow slimes");
+        really_dislikes.emplace_back("you attack fellow slimes");
         break;
 
     case GOD_FEDHAS:
-        dislikes.push_back("you or your allies destroy plants");
-        dislikes.push_back("allied flora die");
-        really_dislikes.push_back("you use necromancy on corpses, chunks or skeletons");
+        dislikes.emplace_back("you or your allies destroy plants");
+        dislikes.emplace_back("allied flora die");
+        really_dislikes.emplace_back("you use necromancy on corpses, chunks or skeletons");
         break;
 
     case GOD_SIF_MUNA:
-        really_dislikes.push_back("you destroy spellbooks");
+        really_dislikes.emplace_back("you destroy spellbooks");
         break;
 
     case GOD_DITHMENOS:
-        dislikes.push_back("you use fiery magic or items");
+        dislikes.emplace_back("you use fiery magic or items");
         break;
 
     default:
@@ -956,7 +956,7 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
     switch (which_god)
     {
     case GOD_ELYVILON:
-        dislikes.push_back("you allow allies to die");
+        dislikes.emplace_back("you allow allies to die");
         break;
 
     default:
@@ -966,48 +966,48 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
     switch (which_god)
     {
     case GOD_ZIN:
-        dislikes.push_back("you deliberately mutate yourself");
-        really_dislikes.push_back("you transform yourself");
-        really_dislikes.push_back("you polymorph monsters");
-        really_dislikes.push_back("you use unclean or chaotic magic or items");
-        really_dislikes.push_back("you butcher sentient beings");
-        dislikes.push_back("you or your allies attack monsters in a "
-                           "sanctuary");
+        dislikes.emplace_back("you deliberately mutate yourself");
+        really_dislikes.emplace_back("you transform yourself");
+        really_dislikes.emplace_back("you polymorph monsters");
+        really_dislikes.emplace_back("you use unclean or chaotic magic or items");
+        really_dislikes.emplace_back("you butcher sentient beings");
+        dislikes.emplace_back("you or your allies attack monsters in a "
+                              "sanctuary");
         break;
 
     case GOD_SHINING_ONE:
-        really_dislikes.push_back("you poison monsters");
-        really_dislikes.push_back("you attack intelligent monsters in an "
-                                  "unchivalric manner");
+        really_dislikes.emplace_back("you poison monsters");
+        really_dislikes.emplace_back("you attack intelligent monsters in an "
+                                     "unchivalric manner");
         break;
 
     case GOD_ELYVILON:
-        really_dislikes.push_back("you kill living things while asking for "
-                                  "your life to be spared");
+        really_dislikes.emplace_back("you kill living things while asking for "
+                                     "your life to be spared");
         break;
 
     case GOD_YREDELEMNUL:
-        really_dislikes.push_back("you use holy magic or items");
+        really_dislikes.emplace_back("you use holy magic or items");
         break;
 
     case GOD_TROG:
-        really_dislikes.push_back("you memorise spells");
-        really_dislikes.push_back("you attempt to cast spells");
-        really_dislikes.push_back("you train magic skills");
+        really_dislikes.emplace_back("you memorise spells");
+        really_dislikes.emplace_back("you attempt to cast spells");
+        really_dislikes.emplace_back("you train magic skills");
         break;
 
     case GOD_BEOGH:
-        really_dislikes.push_back("you desecrate orcish remains");
-        really_dislikes.push_back("you destroy orcish idols");
+        really_dislikes.emplace_back("you desecrate orcish remains");
+        really_dislikes.emplace_back("you destroy orcish idols");
         break;
 
     case GOD_JIYVA:
-        really_dislikes.push_back("you kill slimes");
+        really_dislikes.emplace_back("you kill slimes");
         break;
 
     case GOD_CHEIBRIADOS:
-        really_dislikes.push_back("you hasten yourself or others");
-        really_dislikes.push_back("use unnaturally quick items");
+        really_dislikes.emplace_back("you hasten yourself or others");
+        really_dislikes.emplace_back("use unnaturally quick items");
         break;
 
     default:

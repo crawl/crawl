@@ -830,7 +830,7 @@ static void _explore_find_target_square()
             }
             else
             {
-                vector<string> inacc;
+                vector<const char *> inacc;
                 if (estatus & EST_GREED_UNFULFILLED)
                     inacc.push_back("items");
                 if (estatus & EST_PARTLY_EXPLORED)
@@ -1892,8 +1892,7 @@ static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
         return;
     ASSERT(subdepth <= 27);
 
-    level_id lid(branch, subdepth);
-    vec.push_back(lid);
+    vec.emplace_back(branch, subdepth);
 
     if (branch != root_branch)
     {
@@ -2150,9 +2149,9 @@ static int _prompt_travel_branch(int prompt_flags)
             if (allow_waypoints)
             {
                 if (waypoint_list)
-                    segs.push_back("* - list branches");
+                    segs.emplace_back("* - list branches");
                 else if (waycount)
-                    segs.push_back("* - list waypoints");
+                    segs.emplace_back("* - list waypoints");
             }
 
             if (!trans_travel_dest.empty() && remember_targ)
@@ -2161,7 +2160,7 @@ static int _prompt_travel_branch(int prompt_flags)
                     make_stringf("Enter - %s", trans_travel_dest.c_str()));
             }
 
-            segs.push_back("? - help");
+            segs.emplace_back("? - help");
 
             shortcuts += comma_separated_line(segs.begin(), segs.end(),
                                               ", ", ", ");
@@ -4261,7 +4260,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
 {
     if (feat == DNGN_ENTER_SHOP && ES_shop)
     {
-        shops.push_back(named_thing<int>(shop_name(pos), feat));
+        shops.emplace_back(shop_name(pos), feat);
         es_flags |= ES_SHOP;
     }
     else if (feat_is_stair(feat) && ES_stair)
@@ -4300,8 +4299,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
         string desc = env.markers.property_at(pos, MAT_ANY, "stop_explore");
         if (desc.empty())
             desc = cleaned_feature_description(pos);
-        const named_thing<int> rdoor(desc, 1);
-        runed_doors.push_back(rdoor);
+        runed_doors.emplace_back(desc, 1);
         es_flags |= ES_RUNED_DOOR;
     }
     else if (feat_is_altar(feat) && ES_altar)
@@ -4376,7 +4374,7 @@ void explore_discoveries::add_item(const item_def &i)
     else if (mon && mon->type == MONS_PLANT)
         itemname += " (under plant)";
 
-    items.push_back(named_thing<item_def>(itemname, i));
+    items.emplace_back(itemname, i);
 
     // First item of this type?
     // XXX: Only works when travelling.

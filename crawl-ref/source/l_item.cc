@@ -901,7 +901,7 @@ IDEF(base_type)
 {
     ASSERT_DLUA;
 
-    lua_pushstring(ls, base_type_string(*item).c_str());
+    lua_pushstring(ls, base_type_string(*item));
     return 1;
 }
 

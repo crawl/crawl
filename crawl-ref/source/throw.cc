@@ -238,7 +238,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     if (const item_def* item = active_item())
     {
         if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
-            descs.push_back("chaotic");
+            descs.emplace_back("chaotic");
     }
     return descs;
 }

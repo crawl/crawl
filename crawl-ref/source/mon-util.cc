@@ -2123,121 +2123,73 @@ monster_type random_demonspawn_monster_species()
 // and the books are accounted for here.
 static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 {
-    vector<mon_spellbook_type> books;
-    const monsterentry *m = get_monster_data(mon_type);
-    mon_spellbook_type book = static_cast<mon_spellbook_type>(m->sec);
-
     switch (mon_type)
     {
     case MONS_HELL_KNIGHT:
-        books.push_back(MST_HELL_KNIGHT_I);
-        books.push_back(MST_HELL_KNIGHT_II);
-        break;
+        return { MST_HELL_KNIGHT_I, MST_HELL_KNIGHT_II };
 
     case MONS_LICH:
     case MONS_ANCIENT_LICH:
-        books.push_back(MST_LICH_I);
-        books.push_back(MST_LICH_II);
-        books.push_back(MST_LICH_III);
-        books.push_back(MST_LICH_IV);
-        break;
+        return { MST_LICH_I, MST_LICH_II, MST_LICH_III, MST_LICH_IV };
 
     case MONS_NECROMANCER:
-        books.push_back(MST_NECROMANCER_I);
-        books.push_back(MST_NECROMANCER_II);
-        break;
+        return { MST_NECROMANCER_I, MST_NECROMANCER_II };
 
     case MONS_ORC_WIZARD:
     case MONS_DEEP_ELF_FIGHTER:
-        books.push_back(MST_ORC_WIZARD_I);
-        books.push_back(MST_ORC_WIZARD_II);
-        books.push_back(MST_ORC_WIZARD_III);
-        break;
+        return { MST_ORC_WIZARD_I, MST_ORC_WIZARD_II, MST_ORC_WIZARD_III };
 
     case MONS_WIZARD:
     case MONS_EROLCHA:
-        books.push_back(MST_WIZARD_I);
-        books.push_back(MST_WIZARD_II);
-        books.push_back(MST_WIZARD_III);
-        books.push_back(MST_WIZARD_IV);
-        books.push_back(MST_WIZARD_V);
-        break;
+        return { MST_WIZARD_I, MST_WIZARD_II, MST_WIZARD_III, MST_WIZARD_IV,
+                 MST_WIZARD_V };
 
     case MONS_OGRE_MAGE:
-        books.push_back(MST_OGRE_MAGE_I);
-        books.push_back(MST_OGRE_MAGE_II);
-        books.push_back(MST_OGRE_MAGE_III);
-        books.push_back(MST_OGRE_MAGE_IV);
-        books.push_back(MST_OGRE_MAGE_V);
-        break;
+        return { MST_OGRE_MAGE_I, MST_OGRE_MAGE_II, MST_OGRE_MAGE_III,
+                 MST_OGRE_MAGE_IV, MST_OGRE_MAGE_V };
 
     case MONS_ANCIENT_CHAMPION:
-        books.push_back(MST_ANCIENT_CHAMPION_I);
-        books.push_back(MST_ANCIENT_CHAMPION_II);
-        books.push_back(MST_ANCIENT_CHAMPION_III);
-        books.push_back(MST_ANCIENT_CHAMPION_IV);
-        break;
+        return { MST_ANCIENT_CHAMPION_I, MST_ANCIENT_CHAMPION_II,
+                 MST_ANCIENT_CHAMPION_III, MST_ANCIENT_CHAMPION_IV };
 
     case MONS_TENGU_CONJURER:
-        books.push_back(MST_TENGU_CONJURER_I);
-        books.push_back(MST_TENGU_CONJURER_II);
-        books.push_back(MST_TENGU_CONJURER_III);
-        books.push_back(MST_TENGU_CONJURER_IV);
-        break;
+        return { MST_TENGU_CONJURER_I, MST_TENGU_CONJURER_II,
+                 MST_TENGU_CONJURER_III, MST_TENGU_CONJURER_IV };
 
     case MONS_TENGU_REAVER:
-        books.push_back(MST_TENGU_REAVER_I);
-        books.push_back(MST_TENGU_REAVER_II);
-        books.push_back(MST_TENGU_REAVER_III);
-        break;
+        return { MST_TENGU_REAVER_I, MST_TENGU_REAVER_II,
+                 MST_TENGU_REAVER_III };
 
     case MONS_DEEP_ELF_MAGE:
-        books.push_back(MST_DEEP_ELF_MAGE_I);
-        books.push_back(MST_DEEP_ELF_MAGE_II);
-        books.push_back(MST_DEEP_ELF_MAGE_III);
-        books.push_back(MST_DEEP_ELF_MAGE_IV);
-        books.push_back(MST_DEEP_ELF_MAGE_V);
-        break;
+        return { MST_DEEP_ELF_MAGE_I, MST_DEEP_ELF_MAGE_II,
+                 MST_DEEP_ELF_MAGE_III, MST_DEEP_ELF_MAGE_IV,
+                 MST_DEEP_ELF_MAGE_V };
 
     case MONS_FAUN:
-        books.push_back(MST_FAUN_I);
-        books.push_back(MST_FAUN_II);
-        books.push_back(MST_FAUN_III);
-        break;
+        return { MST_FAUN_I, MST_FAUN_II, MST_FAUN_III };
 
     case MONS_GREATER_MUMMY:
-        books.push_back(MST_GREATER_MUMMY_I);
-        books.push_back(MST_GREATER_MUMMY_II);
-        books.push_back(MST_GREATER_MUMMY_III);
-        books.push_back(MST_GREATER_MUMMY_IV);
-        break;
+        return { MST_GREATER_MUMMY_I, MST_GREATER_MUMMY_II,
+                 MST_GREATER_MUMMY_III, MST_GREATER_MUMMY_IV };
 
     case MONS_DEEP_ELF_KNIGHT:
-        books.push_back(MST_DEEP_ELF_KNIGHT_I);
-        books.push_back(MST_DEEP_ELF_KNIGHT_II);
-        books.push_back(MST_DEEP_ELF_KNIGHT_III);
-        break;
+        return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II,
+                 MST_DEEP_ELF_KNIGHT_III };
 
     default:
-        books.push_back(book);
-        break;
+        return { static_cast<mon_spellbook_type>(
+                     get_monster_data(mon_type)->sec) };
     }
-
-    return books;
 }
 
 vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
 {
-    vector<mon_spellbook_type> books;
-
     // special case for vault monsters: if they have a custom book,
     // treat it as MST_GHOST
     if (mon.props.exists("custom_spells"))
-        books.push_back(MST_GHOST);
+        return { MST_GHOST };
     else
-        books = _mons_spellbook_list(mon.type);
-
-    return books;
+        return _mons_spellbook_list(mon.type);
 }
 
 // Get a list of unique spells from a monster's preset spellbooks

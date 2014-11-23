@@ -97,7 +97,7 @@ random_rectangle_iterator::random_rectangle_iterator(const coord_def& corner1,
 
     for (int y = top; y <= bottom; y++)
         for (int x = left; x <= right; x++)
-            remaining.push_back(coord_def(x, y));
+            remaining.emplace_back(x, y);
 
     if (remaining.empty())
         current = 0;
@@ -119,7 +119,7 @@ random_rectangle_iterator::random_rectangle_iterator(int x_border_dist,
 
     for (int y = y_border_dist; y <= bottom; y++)
         for (int x = x_border_dist; x <= right; x++)
-            remaining.push_back(coord_def(x, y));
+            remaining.emplace_back(x, y);
 
     if (remaining.empty())
         current = 0;
@@ -342,7 +342,7 @@ distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
     for (int dx = -1; dx <= 1; dx++)
         for (int dy = -1; dy <= 1; dy++)
             if (dx || dy)
-                vnear->push_back(coord_def(dx, dy));
+                vnear->emplace_back(dx, dy);
 
     if (exclude_center)
         advance();

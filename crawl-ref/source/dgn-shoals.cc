@@ -331,8 +331,7 @@ static int _shoals_contiguous_feature_flood(
     int nregion,
     int size_limit)
 {
-    vector<coord_def> visit;
-    visit.push_back(c);
+    vector<coord_def> visit(1, c);
     int npoints = 1;
     for (size_t i = 0; i < visit.size() && npoints < size_limit; ++i)
     {
@@ -365,8 +364,7 @@ static coord_def _shoals_region_center(
     int nseen = 0;
 
     double cx = 0.0, cy = 0.0;
-    vector<coord_def> visit;
-    visit.push_back(c);
+    vector<coord_def> visit(1, c);
     FixedArray<bool, GXM, GYM> visited(false);
     for (size_t i = 0; i < visit.size(); ++i)
     {
@@ -442,7 +440,7 @@ _shoals_point_feat_cluster(dungeon_feature_type feat,
                                                  region++,
                                                  wanted_count * 3 / 2);
             if (featcount >= wanted_count)
-                regions.push_back(weighted_region(featcount, c));
+                regions.emplace_back(featcount, c);
         }
     }
     return regions;
@@ -572,12 +570,12 @@ static vector<coord_def> _shoals_windshadows(grid_bool &windy)
     if (wi.x > epsilon || wi.x < -epsilon)
     {
         for (int y = 1; y < GYM - 1; ++y)
-            wind_points.push_back(coord_dbl(wi.x > epsilon ? 1 : GXM - 2, y));
+            wind_points.emplace_back(wi.x > epsilon ? 1 : GXM - 2, y);
     }
     if (wi.y > epsilon || wi.y < -epsilon)
     {
         for (int x = 1; x < GXM - 1; ++x)
-            wind_points.push_back(coord_dbl(x, wi.y > epsilon ? 1 : GYM - 2));
+            wind_points.emplace_back(x, wi.y > epsilon ? 1 : GYM - 2);
     }
 
     for (size_t i = 0; i < wind_points.size(); ++i)
@@ -1099,10 +1097,10 @@ static void _shoals_apply_tide(int tide, bool incremental_tide)
     int current_page = 0;
 
     // Start from corners of the map.
-    pages[current_page].push_back(coord_def(1,1));
-    pages[current_page].push_back(coord_def(GXM - 2, 1));
-    pages[current_page].push_back(coord_def(1, GYM - 2));
-    pages[current_page].push_back(coord_def(GXM - 2, GYM - 2));
+    pages[current_page].emplace_back(1,1);
+    pages[current_page].emplace_back(GXM - 2, 1);
+    pages[current_page].emplace_back(1, GYM - 2);
+    pages[current_page].emplace_back(GXM - 2, GYM - 2);
 
     // Find any extra seeds -- markers with tide_seed="y".
     const vector<coord_def> extra_seeds(_shoals_extra_tide_seeds());

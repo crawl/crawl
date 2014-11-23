@@ -1526,8 +1526,8 @@ LUAFN(dgn_with_map_anchors)
         {
             if (lua_isnumber(ls, i) && lua_isnumber(ls, i + 1))
             {
-                map_anchor_points.push_back(coord_def(lua_tointeger(ls, i),
-                                                      lua_tointeger(ls, i + 1)));
+                map_anchor_points.emplace_back(lua_tointeger(ls, i),
+                                               lua_tointeger(ls, i + 1));
             }
         }
 
@@ -1739,9 +1739,8 @@ LUAFN(_dgn_resolve_map)
 
     // Save the vault_placement into Temp_Vaults because the map_def
     // will need to be alive through to the end of dungeon gen.
-    Temp_Vaults.push_back(vault_placement());
-
-    vault_placement &place(Temp_Vaults[Temp_Vaults.size() - 1]);
+    Temp_Vaults.emplace_back();
+    vault_placement &place(Temp_Vaults.back());
 
     if (vault_main(place, map, check_collisions) != MAP_NONE)
     {

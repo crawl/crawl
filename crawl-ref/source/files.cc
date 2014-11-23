@@ -991,9 +991,8 @@ static void _grab_followers()
             }
         }
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-        vector<coord_def> places[2];
+        vector<coord_def> places[2] = { { you.pos() }, {} };
         int place_set = 0;
-        places[place_set].push_back(you.pos());
         while (!places[place_set].empty())
         {
             for (int i = 0, size = places[place_set].size(); i < size; ++i)

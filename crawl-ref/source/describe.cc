@@ -3230,11 +3230,11 @@ static string _monster_attacks_description(const monster_info& mi)
     }
 
     if (trample)
-        attack_descs.push_back("knock back the defender");
+        attack_descs.emplace_back("knock back the defender");
 
     // Assumes nothing has both AT_REACH_STING and AF_REACH.
     if (reach_sting)
-        attack_descs.push_back(_describe_attack_flavour(AF_REACH));
+        attack_descs.emplace_back(_describe_attack_flavour(AF_REACH));
 
     if (!attack_descs.empty())
     {
@@ -3527,16 +3527,16 @@ static string _monster_stat_description(const monster_info& mi)
             switch (level)
             {
                 case -1:
-                    suscept.push_back(attackname);
+                    suscept.emplace_back(attackname);
                     break;
                 case 1:
-                    base_resists.push_back(attackname);
+                    base_resists.emplace_back(attackname);
                     break;
                 case 2:
-                    high_resists.push_back(attackname);
+                    high_resists.emplace_back(attackname);
                     break;
                 case 3:
-                    extreme_resists.push_back(attackname);
+                    extreme_resists.emplace_back(attackname);
                     break;
             }
         }
@@ -4006,17 +4006,17 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     vector<string> attitude;
     if (mons.friendly())
-        attitude.push_back("friendly");
+        attitude.emplace_back("friendly");
     if (mons.neutral())
-        attitude.push_back("neutral");
+        attitude.emplace_back("neutral");
     if (mons.good_neutral())
-        attitude.push_back("good_neutral");
+        attitude.emplace_back("good_neutral");
     if (mons.strict_neutral())
-        attitude.push_back("strict_neutral");
+        attitude.emplace_back("strict_neutral");
     if (mons.pacified())
-        attitude.push_back("pacified");
+        attitude.emplace_back("pacified");
     if (mons.wont_attack())
-        attitude.push_back("wont_attack");
+        attitude.emplace_back("wont_attack");
     if (!attitude.empty())
     {
         inf.body << "; " << comma_separated_line(attitude.begin(),

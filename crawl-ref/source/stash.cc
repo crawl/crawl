@@ -477,7 +477,7 @@ formatted_string StashMenu::create_title_string(bool wrap) const
     extra_parts.push_back(part);
 
     if (can_travel)
-        extra_parts.push_back(string("[ENTER: travel]"));
+        extra_parts.emplace_back("[ENTER: travel]");
 
     int term_width = get_number_of_cols();
     int remaining = term_width - fs.width();
@@ -1615,7 +1615,7 @@ string StashTracker::stash_search_prompt()
             make_stringf("Enter for \"%s\"", disp.c_str()));
     }
     if (lastsearch != ".")
-        opts.push_back("? for help");
+        opts.emplace_back("? for help");
 
     string prompt_qual =
         comma_separated_line(opts.begin(), opts.end(), ", or ", ", or ");

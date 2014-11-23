@@ -933,7 +933,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                                 break;
                             }
                             else
-                                coords.push_back(coord_def(fx, fy));
+                                coords.emplace_back(fx, fy);
                         }
                     }
                     if (veto)
@@ -3249,7 +3249,7 @@ static void _place_gozag_shop(dungeon_feature_type stair)
         const int dist2 = distance2(start_pos, *ri);
         if (dist2 > dist_max)
             continue;
-        places.push_back(coord_weight(*ri, dist_max - dist2));
+        places.emplace_back(*ri, dist_max - dist2);
     }
     coord_def *shop_place = random_choose_weighted(places);
     if (!shop_place)
