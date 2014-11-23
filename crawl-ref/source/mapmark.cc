@@ -528,12 +528,7 @@ string map_wiz_props_marker::property(const string &pname) const
     if (pname == "desc")
         return property("feature_description");
 
-    map<string, string>::const_iterator i = properties.find(pname);
-
-    if (i != properties.end())
-        return i->second;
-    else
-        return "";
+    return lookup(properties, pname, "");
 }
 
 string map_wiz_props_marker::set_property(const string &key, const string &val)
@@ -1030,8 +1025,7 @@ void map_markers::add(map_marker *marker)
 
 void map_markers::unlink_marker(const map_marker *marker)
 {
-    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = markers.equal_range(marker->pos);
+    auto els = markers.equal_range(marker->pos);
     for (auto i = els.first; i != els.second; ++i)
     {
         if (i->second == marker)
@@ -1058,11 +1052,10 @@ void map_markers::remove(map_marker *marker)
 void map_markers::remove_markers_at(const coord_def &c,
                                     map_marker_type type)
 {
-    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = markers.equal_range(c);
+    auto els = markers.equal_range(c);
     for (auto i = els.first; i != els.second;)
     {
-        dgn_marker_map::iterator todel = i++;
+        auto todel = i++;
         if (type == MAT_ANY || todel->second->get_type() == type)
         {
             delete todel->second;
@@ -1074,12 +1067,11 @@ void map_markers::remove_markers_at(const coord_def &c,
 
 map_marker *map_markers::find(const coord_def &c, map_marker_type type)
 {
-    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = markers.equal_range(c);
+    auto els = markers.equal_range(c);
     for (auto i = els.first; i != els.second; ++i)
         if (type == MAT_ANY || i->second->get_type() == type)
             return i->second;
-    return NULL;
+    return nullptr;
 }
 
 map_marker *map_markers::find(map_marker_type type)
@@ -1094,13 +1086,12 @@ map_marker *map_markers::find(map_marker_type type)
 void map_markers::move(const coord_def &from, const coord_def &to)
 {
     unwind_bool inactive(have_inactive_markers);
-    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = markers.equal_range(from);
+    auto els = markers.equal_range(from);
 
     list<map_marker*> tmarkers;
     for (auto i = els.first; i != els.second;)
     {
-        dgn_marker_map::iterator curr = i++;
+        auto curr = i++;
         tmarkers.push_back(curr->second);
         markers.erase(curr);
     }
@@ -1149,8 +1140,7 @@ vector<map_marker*> map_markers::get_all(const string &key, const string &val)
 
 vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
 {
-    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = markers.equal_range(c);
+    auto els = markers.equal_range(c);
     vector<map_marker*> rmarkers;
     for (auto i = els.first; i != els.second; ++i)
         rmarkers.push_back(i->second);
@@ -1160,11 +1150,10 @@ vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
 string map_markers::property_at(const coord_def &c, map_marker_type type,
                                 const string &key)
 {
-    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = markers.equal_range(c);
+    auto els = markers.equal_range(c);
     for (auto i = els.first; i != els.second; ++i)
     {
-        const string prop = i->second->property(key);
+        const string &prop = i->second->property(key);
         if (!prop.empty())
             return prop;
     }

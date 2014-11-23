@@ -244,7 +244,8 @@ public:
     int         damage_type(int which_attack = -1);
     random_var  attack_delay(const item_def *weapon,
                              const item_def *projectile = NULL,
-                             bool random = true, bool scaled = true) const;
+                             bool random = true, bool scaled = true,
+                             bool /*shield*/ = true) const;
     int         has_claws(bool allow_tran = true) const;
 
     int wearing(equipment_type slot, int type, bool calc_unid = true) const;

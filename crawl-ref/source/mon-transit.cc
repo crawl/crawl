@@ -15,6 +15,7 @@
 #include "dungeon.h"
 #include "godcompanions.h"
 #include "items.h"
+#include "libutil.h" // map_find
 #include "mon-place.h"
 #include "religion.h"
 
@@ -37,7 +38,7 @@ static void cull_lost_mons(m_transit_list &mlist, int how_many)
     // First pass, drop non-uniques.
     for (auto i = mlist.begin(); i != mlist.end();)
     {
-        m_transit_list::iterator finger = i++;
+        auto finger = i++;
         if (!mons_is_unique(finger->mons.type))
         {
             mlist.erase(finger);
@@ -58,7 +59,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     // First pass, drop non-artefacts.
     for (auto i = ilist.begin(); i != ilist.end();)
     {
-        i_transit_list::iterator finger = i++;
+        auto finger = i++;
         if (!is_artefact(*finger))
         {
             ilist.erase(finger);
@@ -71,7 +72,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     // Second pass, drop randarts.
     for (auto i = ilist.begin(); i != ilist.end();)
     {
-        i_transit_list::iterator finger = i++;
+        auto finger = i++;
         if (is_random_artefact(*finger))
         {
             ilist.erase(finger);
@@ -84,7 +85,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
     // Third pass, drop unrandarts.
     for (auto i = ilist.begin(); i != ilist.end();)
     {
-        i_transit_list::iterator finger = i++;
+        auto finger = i++;
         if (is_unrandom_artefact(*finger))
         {
             ilist.erase(finger);
@@ -102,8 +103,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
 
 m_transit_list *get_transit_list(const level_id &lid)
 {
-    monsters_in_transit::iterator i = the_lost_ones.find(lid);
-    return i != the_lost_ones.end()? &i->second : NULL;
+    return map_find(the_lost_ones, lid);
 }
 
 void add_monster_to_transit(const level_id &lid, const monster& m)
@@ -168,10 +168,9 @@ static bool place_lost_monster(follower &f)
 
 static void level_place_lost_monsters(m_transit_list &m)
 {
-    for (auto i = m.begin();
-         i != m.end();)
+    for (auto i = m.begin(); i != m.end(); )
     {
-        m_transit_list::iterator mon = i++;
+        auto mon = i++;
 
         // Monsters transiting to the Abyss have a 50% chance of being
         // placed, otherwise a 100% chance.
@@ -194,7 +193,7 @@ static void level_place_followers(m_transit_list &m)
 {
     for (auto i = m.begin(); i != m.end();)
     {
-        m_transit_list::iterator mon = i++;
+        auto mon = i++;
         if ((mon->mons.flags & MF_TAKING_STAIRS) && mon->place(true))
         {
             if (mon->mons.is_divine_companion())
@@ -225,17 +224,14 @@ void place_transiting_items()
 {
     level_id c = level_id::current();
 
-    items_in_transit::iterator i = transiting_items.find(c);
-    if (i == transiting_items.end())
+    i_transit_list *transit = map_find(transiting_items, c);
+    if (!transit)
         return;
 
-    i_transit_list &ilist = i->second;
     i_transit_list keep;
-    i_transit_list::iterator item;
-
-    for (item = ilist.begin(); item != ilist.end(); ++item)
+    for (item_def &item : *transit)
     {
-        coord_def pos = item->pos;
+        coord_def pos = item.pos;
 
         if (!in_bounds(pos))
             pos = random_in_bounds();
@@ -245,12 +241,12 @@ void place_transiting_items()
                                   pos, true);
 
         // List of items we couldn't place.
-        if (!copy_item_to_grid(*item, where_to_go, -1, false, true))
-            keep.push_back(*item);
+        if (!copy_item_to_grid(item, where_to_go, -1, false, true))
+            keep.push_back(item);
     }
 
     // Only unplaceable items are kept in list.
-    ilist = keep;
+    *transit = keep;
 }
 
 void apply_daction_to_transit(daction_type act)

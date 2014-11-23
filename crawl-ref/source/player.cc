@@ -3961,6 +3961,13 @@ static void _display_attack_delay()
     const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
                                        false, false);
 
+    const int no_shield_delay = you.attack_delay(you.weapon(),
+                                                 uses_ammo ? ammo : NULL,
+                                                 false, false, false);
+    const bool at_min_delay = you.weapon()
+                              && weapon_min_delay(*you.weapon())
+                                 == no_shield_delay;
+
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     int avg = 10 * delay;
@@ -3969,8 +3976,10 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = max(20, avg / 2);
 
-    _display_char_status(avg, "Your attack speed is %s",
-                         _attack_delay_desc(avg));
+    _display_char_status(avg, "Your attack speed is %s%s",
+                         _attack_delay_desc(avg),
+                         at_min_delay ?
+                            " (and cannot be increased with skill)" : "");
 }
 
 // forward declaration
@@ -8222,10 +8231,9 @@ static string _constriction_description()
 
     if (you.constricting && !you.constricting->empty())
     {
-        actor::constricting_t::const_iterator i;
-        for (i = you.constricting->begin(); i != you.constricting->end(); ++i)
+        for (const auto &entry : *you.constricting)
         {
-            monster *whom = monster_by_mid(i->first);
+            monster *whom = monster_by_mid(entry.first);
             ASSERT(whom);
             c_name.push_back(whom->name(DESC_A));
         }
@@ -8743,10 +8751,8 @@ void player_close_door(coord_def doorpos)
         waynoun = noun;
     }
 
-    for (set<coord_def>::const_iterator i = all_door.begin();
-         i != all_door.end(); ++i)
+    for (const coord_def& dc : all_door)
     {
-        const coord_def& dc = *i;
         if (monster* mon = monster_at(dc))
         {
             if (!you.can_see(mon))
@@ -8840,10 +8846,8 @@ void player_close_door(coord_def doorpos)
     }
 
     vector<coord_def> excludes;
-    for (set<coord_def>::const_iterator i = all_door.begin();
-         i != all_door.end(); ++i)
+    for (const coord_def& dc : all_door)
     {
-        const coord_def& dc = *i;
         // Once opened, formerly runed doors become normal doors.
         grd(dc) = DNGN_CLOSED_DOOR;
         set_terrain_changed(dc);

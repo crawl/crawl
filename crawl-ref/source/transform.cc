@@ -1252,10 +1252,8 @@ static void _remove_equipment(const set<equipment_type>& removed,
                               bool meld = true, bool mutation = false)
 {
     // Meld items into you in (reverse) order. (set is a sorted container)
-    set<equipment_type>::const_iterator iter;
-    for (iter = removed.begin(); iter != removed.end(); ++iter)
+    for (const equipment_type e : removed)
     {
-        const equipment_type e = *iter;
         item_def *equip = you.slot_item(e, true);
         if (equip == NULL)
             continue;
@@ -1296,9 +1294,11 @@ static void _remove_equipment(const set<equipment_type>& removed,
     }
 
     if (meld)
-        for (iter = removed.begin(); iter != removed.end(); ++iter)
-            if (you.slot_item(*iter, true) != NULL)
-                unequip_effect(*iter, you.equip[*iter], true, true);
+    {
+        for (const equipment_type e : removed)
+            if (you.slot_item(e, true) != NULL)
+                unequip_effect(e, you.equip[e], true, true);
+    }
 }
 
 // FIXME: merge this with you_can_wear(), can_wear_armour(), etc.
@@ -1380,19 +1380,17 @@ static void _unmeld_equipment_type(equipment_type e)
 static void _unmeld_equipment(const set<equipment_type>& melded)
 {
     // Unmeld items in order.
-    set<equipment_type>::const_iterator iter;
-    for (iter = melded.begin(); iter != melded.end(); ++iter)
+    for (const equipment_type e : melded)
     {
-        const equipment_type e = *iter;
         if (you.equip[e] == -1)
             continue;
 
         _unmeld_equipment_type(e);
     }
 
-    for (iter = melded.begin(); iter != melded.end(); ++iter)
-        if (you.equip[*iter] != -1)
-            equip_effect(*iter, you.equip[*iter], true, true);
+    for (const equipment_type e : melded)
+        if (you.equip[e] != -1)
+            equip_effect(e, you.equip[e], true, true);
 }
 
 void unmeld_one_equip(equipment_type eq)

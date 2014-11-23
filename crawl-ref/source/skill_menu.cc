@@ -606,10 +606,8 @@ bool SkillMenuSwitch::toggle()
     if (m_states.size() <= 1)
         return false;
 
-    vector<skill_menu_state>::iterator it = m_states.begin();
-    while (*it != m_state)
-        ++it;
-
+    auto it = find(begin(m_states), end(m_states), m_state);
+    ASSERT(it != m_states.end());
     ++it;
     if (it == m_states.end())
         it = m_states.begin();

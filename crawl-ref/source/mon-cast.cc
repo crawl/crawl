@@ -3194,13 +3194,12 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
     mon_attitude_type castatt = caster->temp_attitude();
     int friendly = 0, enemy = 0;
 
-    for (map<coord_def, size_t>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (const auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
 
-        const actor *victim = actor_at(p->first);
+        const actor *victim = actor_at(entry.first);
         if (!victim)
             continue;
 

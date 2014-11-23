@@ -563,10 +563,8 @@ static void _place_displaced_monsters()
 {
     list<monster*>::iterator mon_itr;
 
-    for (mon_itr = displaced_monsters.begin();
-         mon_itr != displaced_monsters.end(); ++mon_itr)
+    for (monster *mon : displaced_monsters)
     {
-        monster* mon = *mon_itr;
         if (mon->alive() && !mon->find_home_near_place(mon->pos()))
         {
             maybe_bloodify_square(mon->pos());

@@ -227,11 +227,8 @@ monster_type get_monster_by_name(string name, bool substring)
 
     if (!substring)
     {
-        mon_name_map::iterator i = Mon_Name_Cache.find(name);
-
-        if (i != Mon_Name_Cache.end())
-            return i->second;
-
+        if (monster_type *mc = map_find(Mon_Name_Cache, name))
+            return *mc;
         return MONS_PROGRAM_BUG;
     }
 
@@ -264,12 +261,11 @@ void init_monster_symbols()
     for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
     {
         mon_display &md = monster_symbols[mc];
-        const monsterentry *me = get_monster_data(mc);
-        if (me)
+        if (const monsterentry *me = get_monster_data(mc))
         {
             md.glyph  = me->basechar;
             md.colour = me->colour;
-            map<unsigned, monster_type>::iterator it = base_mons.find(md.glyph);
+            auto it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
                 base_mons[md.glyph] = mc;
             md.detected = base_mons[md.glyph];
@@ -673,12 +669,12 @@ bool mons_is_fiery(const monster* mon)
 
 bool mons_is_projectile(monster_type mc)
 {
-    return mc == MONS_ORB_OF_DESTRUCTION;
+    return mons_class_flag(mc, M_PROJECTILE);
 }
 
 bool mons_is_projectile(const monster* mon)
 {
-    return mon->type == MONS_ORB_OF_DESTRUCTION;
+    return mons_is_projectile(mon->type);
 }
 
 bool mons_is_boulder(const monster* mon)
@@ -1071,10 +1067,7 @@ bool mons_is_conjured(monster_type mc)
 {
     return mons_is_projectile(mc)
            || mons_is_avatar(mc)
-           || mc == MONS_FIRE_VORTEX
-           || mc == MONS_SPATIAL_VORTEX
-           || mc == MONS_BALL_LIGHTNING
-           || mc == MONS_FULMINANT_PRISM;
+           || mons_class_flag(mc, M_CONJURED);
 }
 
 int mons_weight(monster_type mc)
@@ -3642,7 +3635,7 @@ static const spell_type smitey_spells[] = {
 static bool _mons_has_smite_attack(const monster* mons)
 {
     return any_of(begin(smitey_spells), end(smitey_spells),
-                  bind(mem_fn(&monster::has_spell), *mons, placeholders::_1));
+                  [=] (spell_type sp) { return mons->has_spell(sp); });
 }
 
 /**
@@ -4728,8 +4721,7 @@ bool mons_is_beast(monster_type mc)
 
 bool mons_is_avatar(monster_type mc)
 {
-    return mc == MONS_SPECTRAL_WEAPON || mc == MONS_BATTLESPHERE
-        || mc == MONS_GRAND_AVATAR;
+    return mons_class_flag(mc, M_AVATAR);
 }
 
 bool mons_is_player_shadow(const monster* mon)

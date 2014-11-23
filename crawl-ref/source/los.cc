@@ -476,7 +476,7 @@ static void raycast()
         for (int yangle = 1; yangle <= LOS_MAX_ANGLE; ++yangle)
         {
             if (_gcd(xangle, yangle) == 1)
-                xyangles.push_back(pair<int,int>(xangle, yangle));
+                xyangles.emplace_back(xangle, yangle);
         }
 
     sort(xyangles.begin(), xyangles.end(), _complexity_lt);

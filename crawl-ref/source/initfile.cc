@@ -1088,13 +1088,13 @@ void game_options::reset_options()
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY);
 
     hp_colour.clear();
-    hp_colour.push_back(pair<int,int>(50, YELLOW));
-    hp_colour.push_back(pair<int,int>(25, RED));
+    hp_colour.emplace_back(50, YELLOW);
+    hp_colour.emplace_back(25, RED);
     mp_colour.clear();
-    mp_colour.push_back(pair<int, int>(50, YELLOW));
-    mp_colour.push_back(pair<int, int>(25, RED));
+    mp_colour.emplace_back(50, YELLOW);
+    mp_colour.emplace_back(25, RED);
     stat_colour.clear();
-    stat_colour.push_back(pair<int, int>(3, RED));
+    stat_colour.emplace_back(3, RED);
     enemy_hp_colour.clear();
     // I think these defaults are pretty ugly but apparently OS X has problems
     // with lighter colours
@@ -1321,7 +1321,7 @@ void game_options::add_item_glyph_override(const string &text)
 
     cglyph_t mdisp = parse_mon_glyph(override[1]);
     if (mdisp.ch || mdisp.col)
-        item_glyph_overrides.push_back(pair<string, cglyph_t>(override[0], mdisp));
+        item_glyph_overrides.emplace_back(override[0], mdisp);
 }
 
 void game_options::add_feature_override(const string &text)
@@ -2077,8 +2077,7 @@ void game_options::add_alias(const string &key, const string &val)
 
 string game_options::unalias(const string &key) const
 {
-    string_map::const_iterator i = aliases.find(key);
-    return i == aliases.end()? key : i->second;
+    return lookup(aliases, key, key);
 }
 
 #define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
@@ -2111,7 +2110,7 @@ string game_options::expand_vars(const string &field) const
 
         string var_name = field_out.substr(start_pos, end_pos - start_pos + 1);
 
-        string_map::const_iterator x = variables.find(var_name);
+        auto x = variables.find(var_name);
 
         if (x == variables.end())
         {
@@ -2397,8 +2396,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     {                                                                          \
         if (minus_equal)                                                       \
         {                                                                      \
-            vector<_type>::iterator it2 =                                      \
-                find(_opt.begin(), _opt.end(), _conv(part));                   \
+            auto it2 = find(_opt.begin(), _opt.end(), _conv(part));            \
             if (it2 != _opt.end())                                             \
                 _opt.erase(it2);                                               \
         }                                                                      \

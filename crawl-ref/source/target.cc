@@ -3,6 +3,7 @@
 #include "target.h"
 
 #include <cmath>
+#include <utility> // swap
 
 #include "coord.h"
 #include "coordit.h"
@@ -759,7 +760,7 @@ bool targetter_thunderbolt::set_aim(coord_def a)
     coord_def a1 = prev - origin;
     coord_def a2 = aim - origin;
     if (left_of(a2, a1))
-        swapv(a1, a2);
+        swap(a1, a2);
 
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; ++x)
         for (int y = -LOS_RADIUS; y <= LOS_RADIUS; ++y)
@@ -985,8 +986,6 @@ aff_type targetter_shadow_step::is_affected(coord_def loc)
 // least one valid landing position from the player's perspective.
 bool targetter_shadow_step::set_aim(coord_def a)
 {
-    set<coord_def>::const_iterator site;
-
     if (a == origin)
         return false;
     if (!targetter::set_aim(a))
@@ -999,10 +998,8 @@ bool targetter_shadow_step::set_aim(coord_def a)
     set_additional_sites(aim);
     if (additional_sites.size())
     {
-        int site_ind = random2(additional_sites.size());
-        for (site = additional_sites.begin(); site_ind > 0; site++)
-            site_ind--;
-        landing_site = *site;
+        auto it = random_iterator(additional_sites);
+        landing_site = *it;
         if (!valid_landing(landing_site, false))
             step_is_blocked = true;
         return true;
@@ -1173,7 +1170,7 @@ bool targetter_cone::set_aim(coord_def a)
     coord_def a1 = l - origin;
     coord_def a2 = r - origin;
     if (left_of(a2, a1))
-        swapv(a1, a2);
+        swap(a1, a2);
 
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; ++x)
         for (int y = -LOS_RADIUS; y <= LOS_RADIUS; ++y)

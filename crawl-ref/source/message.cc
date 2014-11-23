@@ -1427,15 +1427,11 @@ static msg_colour_type prepare_message(const string& imsg,
     if (colour != MSGCOL_MUTED)
         mpr_check_patterns(imsg, channel, param);
 
-    const vector<message_colour_mapping>& mcm
-               = Options.message_colour_mappings;
-    typedef vector<message_colour_mapping>::const_iterator mcmci;
-
-    for (mcmci ci = mcm.begin(); ci != mcm.end(); ++ci)
+    for (const message_colour_mapping &mcm : Options.message_colour_mappings)
     {
-        if (ci->message.is_filtered(channel, imsg))
+        if (mcm.message.is_filtered(channel, imsg))
         {
-            colour = ci->colour;
+            colour = mcm.colour;
             break;
         }
     }
