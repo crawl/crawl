@@ -1042,7 +1042,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 #ifdef WIZARD
     if (!non_death)
     {
-        if (crawl_state.test || you.wizard)
+        if (crawl_state.test || you.wizard || you.explore)
         {
             const string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
@@ -1105,7 +1105,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     activate_notes(false);
 
 #ifndef SCORE_WIZARD_CHARACTERS
-    if (!you.wizard)
+    if (!you.wizard && !you.explore)
 #endif
     {
         // Add this highscore to the score file.

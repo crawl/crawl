@@ -1172,6 +1172,16 @@ static void _redraw_title(const string &your_name, const string &job_name)
         CGOTOXY(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
         CPRINTF(" *WIZARD*");
     }
+#ifdef USE_TILE_LOCAL
+    else if (you.explore && !tiles.is_using_small_layout())
+#else
+    else if (you.explore)
+#endif
+    {
+        textcolour(LIGHTBLUE);
+        CGOTOXY(1 + crawl_view.hudsz.x-10, 1, GOTO_STAT);
+        CPRINTF(" *EXPLORE*");
+    }
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
 #endif

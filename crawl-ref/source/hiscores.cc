@@ -721,6 +721,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     piety             = se.piety;
     penance           = se.penance;
     wiz_mode          = se.wiz_mode;
+    explore_mode      = se.explore_mode;
     birth_time        = se.birth_time;
     death_time        = se.death_time;
     real_time         = se.real_time;
@@ -940,10 +941,11 @@ void scorefile_entry::init_with_fields()
     ev    = fields->int_field("ev");
     sh    = fields->int_field("sh");
 
-    god      = str_to_god(fields->str_field("god"));
-    piety    = fields->int_field("piety");
-    penance  = fields->int_field("pen");
-    wiz_mode = fields->int_field("wiz");
+    god          = str_to_god(fields->str_field("god"));
+    piety        = fields->int_field("piety");
+    penance      = fields->int_field("pen");
+    wiz_mode     = fields->int_field("wiz");
+    explore_mode = fields->int_field("explore");
 
     birth_time = _parse_time(fields->str_field("start"));
     death_time = _parse_time(fields->str_field("end"));
@@ -1029,6 +1031,8 @@ void scorefile_entry::set_base_xlog_fields() const
 
     if (wiz_mode)
         fields->add_field("wiz", "%d", wiz_mode);
+    if (explore_mode)
+        fields->add_field("explore", "%d", explore_mode);
 
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
     fields->add_field("dur",   "%d", (int)real_time);
@@ -1370,6 +1374,7 @@ void scorefile_entry::reset()
     piety                = -1;
     penance              = -1;
     wiz_mode             = 0;
+    explore_mode         = 0;
     birth_time           = 0;
     death_time           = 0;
     real_time            = -1;
@@ -1617,6 +1622,7 @@ void scorefile_entry::init(time_t dt)
             potions_used += you.action_count[p][i];
 
     wiz_mode = (you.wizard ? 1 : 0);
+    explore_mode = (you.explore ? 1 : 0);
 }
 
 string scorefile_entry::hiscore_line(death_desc_verbosity verbosity) const
@@ -1764,7 +1770,7 @@ string scorefile_entry::single_cdesc() const
     scname = chop_string(name, 10);
 
     return make_stringf("%8d %s %s-%02d%s", points, scname.c_str(),
-                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "");
+                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : "");
 }
 
 static string _append_sentence_delimiter(const string &sentence,
@@ -1823,7 +1829,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         desc += " HPs";
     }
 
-    desc += wiz_mode? ") *WIZ*" : ")";
+    desc += wiz_mode ? ") *WIZ*" : explore_mode ? ") *EXPLORE*" : ")";
     desc += _hiscore_newline_string();
 
     if (verbose)
@@ -2803,8 +2809,8 @@ void mark_milestone(const string &type, const string &milestone,
             && lasttype == type
             && lastmilestone == milestone)
 #ifndef SCORE_WIZARD_CHARACTERS
-        // Don't mark normal milestones in wizmode
-        || you.wizard && type != "crash"
+        // Don't mark normal milestones in wizmode or explore mode
+        || (type != "crash" && (you.wizard || you.explore))
 #endif
         )
     {

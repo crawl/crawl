@@ -820,6 +820,7 @@ enum command_type
     CMD_SUSPEND_GAME,
     CMD_QUIT,
     CMD_WIZARD,
+    CMD_EXPLORE_MODE,
 
     CMD_SEARCH_STASHES,
     CMD_EXPLORE,
