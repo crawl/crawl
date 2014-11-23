@@ -279,16 +279,12 @@ int book_rarity(uint8_t which_book)
     case BOOK_ANNIHILATIONS:
     case BOOK_GRAND_GRIMOIRE:
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
+    case BOOK_PLANE_PAPYRUS:
     case BOOK_MANUAL:
         return 20;
 
     case BOOK_DESTRUCTION:
         return 30;
-
-#if TAG_MAJOR_VERSION == 34
-    case BOOK_STALKING:
-        return 100;
-#endif
 
     default:
         return 1;
@@ -311,9 +307,10 @@ struct rare_book_specs
 
 static const map<book_type, rare_book_specs> rare_books =
 {
-    { BOOK_ANNIHILATIONS,  { SK_CONJURATIONS, GOD_NO_GOD } },
-    { BOOK_GRAND_GRIMOIRE, { SK_SUMMONINGS,   GOD_NO_GOD } },
-    { BOOK_NECRONOMICON,   { SK_NECROMANCY,   GOD_KIKUBAAQUDGHA } },
+    { BOOK_ANNIHILATIONS,  { SK_CONJURATIONS,   GOD_NO_GOD } },
+    { BOOK_GRAND_GRIMOIRE, { SK_SUMMONINGS,     GOD_NO_GOD } },
+    { BOOK_NECRONOMICON,   { SK_NECROMANCY,     GOD_KIKUBAAQUDGHA } },
+    { BOOK_PLANE_PAPYRUS,  { SK_TRANSLOCATIONS, GOD_NO_GOD } },
 };
 
 bool is_rare_book(book_type type)

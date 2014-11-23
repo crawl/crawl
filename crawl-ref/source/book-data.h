@@ -256,13 +256,13 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 },
 
 {   // Book of the Warp
+    SPELL_RECALL,
     SPELL_CONTROL_TELEPORT,
     SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
-    SPELL_DISPERSAL,
-    SPELL_CONTROLLED_BLINK,
-    SPELL_DISJUNCTION,
-    SPELL_SINGULARITY,
+    SPELL_SUMMON_FOREST,
+    SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
 
@@ -337,10 +337,10 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 {   // Book of Wizardry
     SPELL_AGONY,
     SPELL_FORCE_LANCE,
-    SPELL_DISPERSAL,
     SPELL_HASTE,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
@@ -378,18 +378,16 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_NO_SPELL,
 },
 
-#if TAG_MAJOR_VERSION == 34
-{   // Book of Stalking
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
+{   // Plane Papyrus
+    SPELL_DISPERSAL,
+    SPELL_CONTROLLED_BLINK,
+    SPELL_MALIGN_GATEWAY,
+    SPELL_DISJUNCTION,
+    SPELL_SINGULARITY,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
-#endif
 
 {   // Book of Debilitation
     SPELL_CORONA,
