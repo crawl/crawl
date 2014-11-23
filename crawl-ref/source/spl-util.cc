@@ -517,13 +517,13 @@ static int _apply_area_around_square(cell_func cf, const coord_def& where,
 // Like apply_area_around_square, but for monsters in those squares,
 // and takes care not to affect monsters twice that change position.
 int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                  int power)
+                                  int power, int radius)
 {
     int rv = 0;
     set<const monster*> affected;
-    for (adjacent_iterator ai(where, true); ai; ++ai)
+    for (radius_iterator ri(where, radius, C_ROUND, true); ri; ++ri)
     {
-        monster* mon = monster_at(*ai);
+        monster* mon = monster_at(*ri);
         if (mon && !affected.count(mon))
         {
             rv += mf(mon, power);
