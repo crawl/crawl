@@ -81,8 +81,19 @@ void play_sound(const char *file);
 
 string unwrap_desc(string desc);
 
+/** Ignore an argument and return true.
+ *
+ * @return true
+ */
 template<class T> bool _always_true(T) { return true; }
 
+/** Remove an element from a vector without preserving order.
+ *  The indicated element is replaced by the last element of the vector.
+ *
+ * @tparam Z The value type of the vector.
+ * @param vec The vector to modify.
+ * @param which The index of the element to remove.
+ */
 template <typename Z>
 void erase_any(vector<Z> &vec, unsigned long which)
 {
@@ -91,6 +102,11 @@ void erase_any(vector<Z> &vec, unsigned long which)
     vec.pop_back();
 }
 
+/** Swap two assignable objects.
+ *
+ * @tparam Z  The type of the swapped objects.
+ * @param a,b The objects to be swapped.
+ */
 template <typename Z>
 static inline void swapv(Z &a, Z &b)
 {
@@ -99,7 +115,12 @@ static inline void swapv(Z &a, Z &b)
     b = tmp;
 }
 
-// A comparator for pairs.
+/** A comparator to compare pairs by their second elements.
+ *
+ * @tparam T  The type of the pairs (not the second element!)
+ * @param left,right  The pairs to be compared.
+ * @return true if left.second > right.second, false otherwise.
+ */
 template<typename T>
 struct greater_second
 {
@@ -109,7 +130,12 @@ struct greater_second
     }
 };
 
-/// Delete all the pointers in a container and clear the container.
+/** Delete all the pointers in a container and clear the container.
+ *
+ * @tparam T The type of the container; must be a container of pointers
+ *           to non-arrays.
+ * @param collection The container to clear.
+ */
 template<class T>
 static void deleteAll(T& collection)
 {
@@ -118,6 +144,14 @@ static void deleteAll(T& collection)
     collection.clear();
 }
 
+/** Find a map element by key, and return a pointer to its value.
+ *
+ * @tparam M The type of the map; may be const.
+ * @param map The map in which to do the lookup.
+ * @param obj The key to search for.
+ * @return a pointer to the value associated with obj if found,
+ *         otherwise null. The pointer is const if the map is.
+ */
 template<class M>
 auto map_find(M &map, const typename M::key_type &obj)
     -> decltype(&map.begin()->second)
@@ -126,9 +160,19 @@ auto map_find(M &map, const typename M::key_type &obj)
     return it == map.end() ? nullptr : &it->second;
 }
 
-// Only intended for use with simple map values where copying is not
-// a concern; use map_find above if the returned value should not be
-// copied.
+/** Find a map element by key, and return its value or a default.
+ *  Only intended for use with simple map values where copying is not
+ *  a concern; use map_find if the returned value should not be
+ *  copied.
+ *
+ * @tparam M The type of the map; may be const.
+ * @param map The map in which to do the lookup.
+ * @param key The key to search for.
+ * @param unfound The object to return if the key was not found.
+ *
+ * @return a copy of the value associated with key if found, otherwise
+ *         a copy of unfound.
+ */
 template<class M>
 typename M::mapped_type lookup(M &map, const typename M::key_type &key,
                                const typename M::mapped_type &unfound)
