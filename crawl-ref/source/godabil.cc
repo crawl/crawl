@@ -519,7 +519,7 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     eligibility.init(0);
 
     // Too high HD to ever be affected.
-    if (mon->get_hit_dice() + 5 > zin_recite_power())
+    if (mon->get_hit_dice() >= zin_recite_power())
         return 0;
 
     // Anti-chaos prayer: Hits things vulnerable to silver, or with chaotic spells/gods.
