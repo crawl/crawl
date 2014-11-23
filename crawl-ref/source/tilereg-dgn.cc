@@ -867,7 +867,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
                         }
                     }
                     // otherwise wait
-                    return command_to_key(CMD_MOVE_NOWHERE);
+                    return command_to_key(CMD_WAIT);
                 }
                 else
                 {
@@ -1249,7 +1249,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
             {
                 // otherwise wait
                 _add_tip(tip, "[L-Click] Wait one turn (%)");
-                cmd.push_back(CMD_MOVE_NOWHERE);
+                cmd.push_back(CMD_WAIT);
             }
         }
         else

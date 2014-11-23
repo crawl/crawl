@@ -2895,7 +2895,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_CLOUD_WARNING:
         text << "Rather than step into this cloud and hurt yourself, you should "
                 "try to step around it or wait it out with <w>%</w> or <w>%</w>.";
-        cmd.push_back(CMD_MOVE_NOWHERE);
+        cmd.push_back(CMD_WAIT);
         cmd.push_back(CMD_REST);
         break;
     case HINT_ANIMATE_CORPSE_SKELETON:
