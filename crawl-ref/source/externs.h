@@ -540,7 +540,6 @@ struct item_def
         short used_count;   ///< the # of known times it was used (decks, wands)
                             // for wands, may hold negative ZAPCOUNT knowledge
                             // info (e.g. "recharged", "empty", "unknown")
-        short butcher_amount;   ///< progress made on butchering
         bool net_placed;    ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
         short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
