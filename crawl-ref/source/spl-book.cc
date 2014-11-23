@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <iomanip>
+#include <set>
 
 #include "artefact.h"
 #include "colour.h"
@@ -296,6 +297,16 @@ int book_rarity(uint8_t which_book)
 
 static uint8_t _lowest_rarity[NUM_SPELLS];
 
+static const set<book_type> rare_books =
+{
+    BOOK_ANNIHILATIONS, BOOK_GRAND_GRIMOIRE, BOOK_NECRONOMICON,
+};
+
+bool is_rare_book(book_type type)
+{
+    return rare_books.find(type) != rare_books.end();
+}
+
 void init_spell_rarities()
 {
     for (int i = 0; i < NUM_SPELLS; ++i)
@@ -304,7 +315,7 @@ void init_spell_rarities()
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
         // Manuals and books of destruction are not even part of this loop.
-        if (i >= MIN_RARE_BOOK && i <= MAX_RARE_BOOK)
+        if (is_rare_book(static_cast<book_type>(i)))
             continue;
 
         for (int j = 0; j < SPELLBOOK_SIZE; ++j)
@@ -1276,7 +1287,7 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
     vector<spell_type> special_spells;
     if (god == GOD_SIF_MUNA)
     {
-        for (int i = MIN_RARE_BOOK; i <= MAX_RARE_BOOK; ++i)
+        for (auto i : rare_books)
             for (int j = 0; j < SPELLBOOK_SIZE; ++j)
             {
                 spell_type spell = which_spell_in_book(i, j);

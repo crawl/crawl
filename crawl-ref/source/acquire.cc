@@ -987,7 +987,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int weights[MAX_FIXED_BOOK+1];
         for (int bk = 0; bk <= MAX_FIXED_BOOK; bk++)
         {
-            if (bk > MAX_NORMAL_BOOK && agent == GOD_SIF_MUNA)
+            if (is_rare_book(static_cast<book_type>(bk))
+                && agent == GOD_SIF_MUNA)
             {
                 weights[bk] = 0;
                 continue;
@@ -1330,8 +1331,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // Sif Muna shouldn't gift special books.
         // (The spells therein are still fair game for randart books.)
         if (agent == GOD_SIF_MUNA
-            && acq_item.sub_type >= MIN_RARE_BOOK
-            && acq_item.sub_type <= MAX_RARE_BOOK)
+            && is_rare_book(static_cast<book_type>(acq_item.sub_type)))
         {
             ASSERT(acq_item.base_type == OBJ_BOOKS);
 

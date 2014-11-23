@@ -2352,7 +2352,7 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (i == OBJ_BOOKS && j > MAX_RARE_BOOK)
+            if (i == OBJ_BOOKS && j > MAX_FIXED_BOOK)
                 continue;
 
             // Curse scrolls are only created by Ashenzari.
