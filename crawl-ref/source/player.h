@@ -416,7 +416,8 @@ public:
     void set_position(const coord_def &c);
     // Low-level move the player. Use this instead of changing pos directly.
     void moveto(const coord_def &c, bool clear_net = true);
-    bool move_to_pos(const coord_def &c, bool clear_net = true);
+    bool move_to_pos(const coord_def &c, bool clear_net = true,
+                     bool /*force*/ = false);
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false);

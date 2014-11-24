@@ -4407,11 +4407,7 @@ bool monster::shift(coord_def p)
     }
 
     if (count > 0)
-    {
-        mgrd(pos()) = NON_MONSTER;
-        moveto(result);
-        mgrd(result) = mindex();
-    }
+        move_to_pos(result);
 
     return count > 0;
 }
@@ -4519,7 +4515,7 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead, bool attacker_effects)
 {
-    if (mons_is_projectile(type) || mid == MID_ANON_FRIENDLY
+    if (mons_is_projectile(type) || mid == MID_ANON_FRIEND
         || mid == MID_YOU_FAULTLESS || type == MONS_DIAMOND_OBELISK
         || type == MONS_PLAYER_SHADOW)
     {
@@ -5643,10 +5639,17 @@ bool monster::self_destructs()
     return false;
 }
 
-bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
+/** A higher-level moving method than moveto().
+ *
+ *  @param newpos    where to move this monster
+ *  @param clear_net whether to clear any trapping nets
+ *  @param force     whether to move it even if you're standing there
+ *  @returns whether the move took place.
+ */
+bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
 {
     const actor* a = actor_at(newpos);
-    if (a && (!a->is_player() || !fedhas_passthrough(this)))
+    if (a && !(a->is_player() && (fedhas_passthrough(this) || force)))
         return false;
 
     const int index = mindex();
@@ -6663,9 +6666,7 @@ bool monster::shove(const char* feat_name)
     for (distance_iterator di(pos()); di; ++di)
         if (monster_space_valid(this, *di, false))
         {
-            mgrd(pos()) = NON_MONSTER;
-            moveto(*di);
-            mgrd(*di) = mindex();
+            move_to_pos(*di);
             simple_monster_message(this,
                 make_stringf(" is pushed out of the %s.", feat_name).c_str());
             dprf("Moved to (%d, %d).", pos().x, pos().y);

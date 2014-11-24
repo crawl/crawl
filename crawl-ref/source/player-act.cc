@@ -78,7 +78,7 @@ void player::moveto(const coord_def &c, bool clear_net)
     end_searing_ray();
 }
 
-bool player::move_to_pos(const coord_def &c, bool clear_net)
+bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
 {
     actor *target = actor_at(c);
     if (!target || target->submerged())

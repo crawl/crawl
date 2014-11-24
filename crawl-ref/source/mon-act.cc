@@ -3050,10 +3050,8 @@ static bool _jelly_divide(monster* parent)
     *child = *parent;
     child->max_hit_points  = child->hit_points;
     child->speed_increment = 70 + random2(5);
-    child->moveto(child_spot);
     child->set_new_monster_id();
-
-    mgrd(child->pos()) = child->mindex();
+    child->move_to_pos(child_spot);
 
     if (!simple_monster_message(parent, " splits in two!")
         && (player_can_hear(parent->pos()) || player_can_hear(child->pos())))
@@ -4042,21 +4040,17 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         // er, what?  Seems impossible.
         mons->seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
     }
-    mgrd(mons->pos()) = NON_MONSTER;
 
     coord_def old_pos = mons->pos();
 
-    mons->set_position(f);
-
-    mgrd(mons->pos()) = mons->mindex();
+    mons->move_to_pos(f, false);
 
     mons->check_clinging(true);
     _ballisto_on_move(mons, old_pos);
 
     // Let go of all constrictees; only stop *being* constricted if we are now
-    // too far away.
+    // too far away (done in move_to_pos above).
     mons->stop_constricting_all(true);
-    mons->clear_far_constrictions();
 
     mons->check_redraw(mons->pos() - delta);
     mons->apply_location_effects(mons->pos() - delta);

@@ -899,27 +899,18 @@ void move_solo_tentacle(monster* tentacle)
     if (new_pos != old_pos)
     {
         // Did we path into a target?
-        actor * blocking_actor = actor_at(new_pos);
-        if (blocking_actor)
+        if (actor* blocking_actor = actor_at(new_pos))
         {
             tentacle->target = new_pos;
-            monster* mtemp = monster_at(new_pos);
-            if (mtemp)
-                tentacle->foe = mtemp->mindex();
-            else if (new_pos == you.pos())
-                tentacle->foe = MHITYOU;
-
+            tentacle->foe = mtemp->mindex();
             new_pos = old_pos;
         }
     }
 
-    mgrd(tentacle->pos()) = NON_MONSTER;
-
     // Why do I have to do this move? I don't get it.
     // specifically, if tentacle isn't registered at its new position on mgrd
     // the search fails (sometimes), Don't know why. -cao
-    tentacle->set_position(new_pos);
-    mgrd(tentacle->pos()) = tentacle->mindex();
+    tentacle->move_to_pos(new_pos);
 
     if (pull_constrictee)
     {
@@ -1098,26 +1089,17 @@ void move_child_tentacles(monster* mons)
         }
 
         // Did we path into a target?
-        actor * blocking_actor = actor_at(new_pos);
-        if (blocking_actor)
+        if (actor* blocking_actor = actor_at(new_pos))
         {
             tentacle->target = new_pos;
-            monster* mtemp = monster_at(new_pos);
-            if (mtemp)
-                tentacle->foe = mtemp->mindex();
-            else if (new_pos == you.pos())
-                tentacle->foe = MHITYOU;
-
+            tentacle->foe = mtemp->mindex();
             new_pos = old_pos;
         }
-
-        mgrd(tentacle->pos()) = NON_MONSTER;
 
         // Why do I have to do this move? I don't get it.
         // specifically, if tentacle isn't registered at its new position on
         // mgrd the search fails (sometimes), Don't know why. -cao
-        tentacle->set_position(new_pos);
-        mgrd(tentacle->pos()) = tentacle->mindex();
+        tentacle->move_to_pos(new_pos);
 
         if (pull_constrictee)
         {
