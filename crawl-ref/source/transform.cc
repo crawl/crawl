@@ -95,6 +95,7 @@ Form::Form(const form_entry &fe)
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
+      flesh_equivalent(fe.flesh_equivalent),
       long_name(fe.long_name), description(fe.description),
       resists(fe.resists), stealth_mod(fe.stealth_mod),
       base_unarmed_damage(fe.base_unarmed_damage),

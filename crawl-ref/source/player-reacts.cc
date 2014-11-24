@@ -206,11 +206,14 @@ static void _decrement_petrification(int delay)
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
         you.redraw_evasion = true;
+        // implicit assumption: all races that can be petrified are made of
+        // flesh when not petrified
+        const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
+                                            "flesh" :
+                                            get_form()->flesh_equivalent;
+
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
-             you.form == TRAN_ICE_BEAST ? "ice" :
-             you.form == TRAN_LICH ? "bone" :
-             you.form == TRAN_TREE ? "wood" :
-             "flesh");
+             flesh_equiv.c_str());
     }
 
     if (you.duration[DUR_PETRIFYING])

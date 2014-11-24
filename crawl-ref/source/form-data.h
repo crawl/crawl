@@ -49,6 +49,7 @@ struct form_entry
     const char *hand_name;
     const char *foot_name;
     const char *prayer_action;
+    const char *flesh_equivalent;
 };
 
 static const form_entry formdata[] =
@@ -61,7 +62,7 @@ static const form_entry formdata[] =
     0, 0, 0, true, 0, 0, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
-    "", 0, "", "", ""
+    "", 0, "", "", "", ""
 },
 {
     TRAN_SPIDER, MONS_SPIDER, "Spider", "spider-form", "spider",
@@ -71,7 +72,7 @@ static const form_entry formdata[] =
     2, 0, 0, true, 10, 10, 5,
     SPWPN_VENOM, LIGHTGREEN, "Fangs", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, true, false,
-    "hiss", -4, "front leg", "", "crawl onto"
+    "hiss", -4, "front leg", "", "crawl onto", "flesh"
 },
 {
     TRAN_BLADE_HANDS, MONS_PLAYER, "Blade", "", "blade",
@@ -81,7 +82,7 @@ static const form_entry formdata[] =
     0, 0, 0, true, 20, 12, -1,
     SPWPN_NORMAL, RED, "", { "hit", "slash", "slice", "shred" },
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
-    "", 0, "scythe-like blade", "", ""
+    "", 0, "scythe-like blade", "", "", ""
 },
 {
     TRAN_STATUE, MONS_STATUE, "Statue", "statue-form", "statue",
@@ -91,7 +92,7 @@ static const form_entry formdata[] =
     17, 10, 0, true, 0, 9, -1,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, true,
-    "", 0, "", "", "place yourself before"
+    "", 0, "", "", "place yourself before", "stone"
 },
 {
     TRAN_ICE_BEAST, MONS_ICE_BEAST, "Ice", "ice-form", "ice",
@@ -101,7 +102,7 @@ static const form_entry formdata[] =
     5, 7, 0, true, 0, 10, 12,
     SPWPN_FREEZING, WHITE, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_ENABLE, FC_FORBID, true, false,
-    "", 0, "front paw", "paw", "bow your head before"
+    "", 0, "front paw", "paw", "bow your head before", "ice"
 },
 
 {
@@ -112,7 +113,7 @@ static const form_entry formdata[] =
     16, 0, 0, true, 0, 10, -1,
     SPWPN_NORMAL, GREEN, "Teeth and claws", { "hit", "claw", "bite", "maul" },
     FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
-    "roar", 6, "foreclaw", "", "bow your head before"
+    "roar", 6, "foreclaw", "", "bow your head before", "flesh"
 },
 
 {
@@ -123,7 +124,7 @@ static const form_entry formdata[] =
     6, 0, 0, true, 0, 10, 5,
     SPWPN_DRAINING, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_FORBID, false, true,
-    "", 0, "", "", ""
+    "", 0, "", "", "", "bone"
 },
 
 {
@@ -134,7 +135,7 @@ static const form_entry formdata[] =
     0, 0, 0, false, 10, 12, -1,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_ENABLE, FC_FORBID, FC_ENABLE, true, false,
-    "squeak", -8, "foreclaw", "", "perch on"
+    "squeak", -8, "foreclaw", "", "perch on", "flesh"
 },
 
 {
@@ -145,7 +146,7 @@ static const form_entry formdata[] =
     0, 0, 0, false, 0, 0, 3,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
-    "squeal", 0, "front trotter", "trotter", "bow your head before"
+    "squeal", 0, "front trotter", "trotter", "bow your head before", "flesh"
 },
 
 {
@@ -156,7 +157,7 @@ static const form_entry formdata[] =
     0, 0, 0, true, 0, 0, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_DEFAULT, FC_DEFAULT, true, true,
-    "", 0, "", "", ""
+    "", 0, "", "", "", ""
 },
 
 {
@@ -167,7 +168,7 @@ static const form_entry formdata[] =
     20, 0, 50, true, 0, 10, 12,
     SPWPN_NORMAL, BROWN, "Branches", { "hit", "smack", "pummel", "thrash" },
     FC_FORBID, FC_FORBID, FC_FORBID, false, false,
-    "creak", 0, "branch", "root", "sway towards"
+    "creak", 0, "branch", "root", "sway towards", "wood"
 },
 
 {
@@ -178,7 +179,7 @@ static const form_entry formdata[] =
     0, 0, 0, false, 0, 0, 3,
     SPWPN_NORMAL, LIGHTGREY, "Teeth", ANIMAL_VERBS,
     FC_DEFAULT, FC_FORBID, FC_ENABLE, true, false,
-    "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before"
+    "squeak", -8, "front leg", "", "curl into a sanctuary of spikes before", "flesh"
 },
 
 {
@@ -192,7 +193,7 @@ static const form_entry formdata[] =
     SPWPN_NORMAL, LIGHTGREY, "Misty tendrils", { "touch", "hit",
                                                  "engulf", "engulf" },
     FC_ENABLE, FC_FORBID, FC_FORBID, false, false,
-    "whoosh", -8, "misty tendril", "strand", "swirl around"
+    "whoosh", -8, "misty tendril", "strand", "swirl around", "vapour"
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -204,7 +205,7 @@ static const form_entry formdata[] =
     0, 0, 0, false, 0, 0, 3,
     SPWPN_NORMAL, LIGHTGREY, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, false,
-    "", 0, "", "", ""
+    "", 0, "", "", "", ""
 },
 #endif
 
@@ -216,7 +217,7 @@ static const form_entry formdata[] =
     12, 0, 0, false, 0, 10, 12,
     SPWPN_CONFUSE, BROWN, "Spores", FormAttackVerbs("release spores at"),
     FC_DEFAULT, FC_FORBID, FC_FORBID, false, false,
-    "sporulate", -8, "hypha", "", "release spores on"
+    "sporulate", -8, "hypha", "", "release spores on", "flesh"
 },
 
 {
@@ -227,7 +228,7 @@ static const form_entry formdata[] =
     0, 0, 0, true, 0, 0, 3,
     SPWPN_NORMAL, MAGENTA, "", DEFAULT_VERBS,
     FC_DEFAULT, FC_FORBID, FC_FORBID, true, true,
-    "", 0, "", "", ""
+    "", 0, "", "", "", "shadow"
 },
 
 {
@@ -238,7 +239,7 @@ static const form_entry formdata[] =
     6, 5, 0, true, 0, 10, -1,
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,
-    "roar", 4, "foreclaw", "", "bow your heads before"
+    "roar", 4, "foreclaw", "", "bow your heads before", "flesh"
 }
 };
 COMPILE_CHECK(ARRAYSZ(formdata) == NUM_TRANSFORMS);

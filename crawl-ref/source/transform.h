@@ -207,6 +207,8 @@ public:
     const string hand_name;
     /// The name of this form's foot-equivalents; "" defaults to species.
     const string foot_name;
+    /// The name of this form's flesh-equivalent; "" defaults to species.
+    const string flesh_equivalent;
 
 protected:
     /// See Form::get_long_name().
