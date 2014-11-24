@@ -121,9 +121,9 @@ The contents of this text are:
                 note_chat_messages, note_dgl_messages
 5-  Miscellaneous.
 5-a     All OS.
-                mouse_input, wiz_mode, char_set, colour, display_char, feature,
-                mon_glyph, item_glyph, use_fake_player_cursor,
-                show_player_species
+                mouse_input, wiz_mode, explore_mode, char_set, colour,
+                display_char, feature, mon_glyph, item_glyph,
+                use_fake_player_cursor, show_player_species
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -2120,6 +2120,13 @@ wiz_mode = (no | never | yes)
           no    -- still allows player to enter wizard mode after start
                    of game
           never -- never allow a wizard command to be used
+
+explore_mode = (no | never | yes)
+        Explore mode options (available only in WIZARD compiles):
+          yes   -- start games in explore mode (game will not be scored)
+          no    -- still allows player to enter explore mode after start
+                   of game
+          never -- never allow explore mode to be entered
 
 char_set = (default | ascii)
         Chooses different pre-set character sets for the game play screen.

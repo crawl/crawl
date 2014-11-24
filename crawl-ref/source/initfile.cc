@@ -948,9 +948,13 @@ void game_options::reset_options()
 #ifdef WIZARD
 #ifdef DGAMELAUNCH
     if (wiz_mode != WIZ_NO)
+    {
         wiz_mode         = WIZ_NEVER;
+        explore_mode     = WIZ_NEVER;
+    }
 #else
     wiz_mode             = WIZ_NO;
+    explore_mode         = WIZ_NO;
 #endif
 #endif
     terp_files.clear();
@@ -2905,6 +2909,21 @@ void game_options::read_option_line(const string &str, bool runscript)
     #endif
 #endif
     }
+    else if (key == "explore_mode")
+    {
+#ifdef WIZARD
+    #ifndef DGAMELAUNCH
+        if (field == "never")
+            explore_mode = WIZ_NEVER;
+        else if (field == "no")
+            explore_mode = WIZ_NO;
+        else if (field == "yes")
+            explore_mode = WIZ_YES;
+        else
+            report_error("Unknown explore_mode option: %s\n", field.c_str());
+    #endif
+#endif
+    }
     else if (key == "ban_pickup")
     {
         if (plain)
@@ -4037,6 +4056,7 @@ enum commandline_option_type
     CLO_ZOTDEF,
     CLO_TUTORIAL,
     CLO_WIZARD,
+    CLO_EXPLORE,
     CLO_NO_SAVE,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
@@ -4058,7 +4078,7 @@ static const char *cmd_ops[] =
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef", "tutorial", "wizard", "no-save",
+    "print-charset", "zotdef", "tutorial", "wizard", "explore", "no-save",
     "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
@@ -4846,6 +4866,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
 #ifdef WIZARD
             if (!rc_only)
                 Options.wiz_mode = WIZ_NO;
+#endif
+            break;
+
+        case CLO_EXPLORE:
+#ifdef WIZARD
+            if (!rc_only)
+                Options.explore_mode = WIZ_NO;
 #endif
             break;
 
