@@ -223,7 +223,8 @@ static const form_entry formdata[] =
 {
     TRAN_SHADOW, MONS_PLAYER_SHADOW, "Shadow", "shadow-form", "shadow",
     "a swirling mass of dark shadows.",
-    EQF_NONE, mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING,
+    EQF_NONE, mrd(MR_RES_POISON, 3) | mrd(MR_RES_NEG, 3) | MR_RES_ROTTING
+                                                         | MR_RES_PETRIFY,
     DEFAULT_DURATION, 0, 0, SIZE_CHARACTER, 10, 30,
     0, 0, 0, true, 0, 0, 3,
     SPWPN_NORMAL, MAGENTA, "", DEFAULT_VERBS,
