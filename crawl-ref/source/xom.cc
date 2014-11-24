@@ -1330,20 +1330,11 @@ bool swap_monsters(monster* m1, monster* m2)
     const bool mon1_caught = mon1.caught();
     const bool mon2_caught = mon2.caught();
 
-    const coord_def mon1_pos = mon1.pos();
-    const coord_def mon2_pos = mon2.pos();
-
-    if (!mon2.is_habitable(mon1_pos) || !mon1.is_habitable(mon2_pos))
-        return false;
-
     // Make submerged monsters unsubmerge.
     mon1.del_ench(ENCH_SUBMERGED);
     mon2.del_ench(ENCH_SUBMERGED);
 
-    mgrd(mon1_pos) = mon2.mindex();
-    mon1.moveto(mon2_pos);
-    mgrd(mon2_pos) = mon1.mindex();
-    mon2.moveto(mon1_pos);
+    mon1.swap_with(m2);
 
     if (mon1_caught && !mon2_caught)
     {

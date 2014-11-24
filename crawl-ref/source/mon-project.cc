@@ -563,16 +563,9 @@ move_again:
         if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
         {
             // Try to swap with the submerged creature.
-            if (mons->is_habitable(mon.pos()))
+            if (mon.swap_with(mons))
             {
                 dprf("iood: Swapping with a submerged monster.");
-                mons->set_position(mon.pos());
-                mon.set_position(pos);
-                ASSERT(!mons->is_constricted());
-                ASSERT(!mons->is_constricting());
-                mgrd(mons->pos()) = mons->mindex();
-                mgrd(pos) = mon.mindex();
-
                 return false;
             }
             else // if swap fails, move ahead

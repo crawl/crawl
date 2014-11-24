@@ -127,6 +127,7 @@ public:
     void moveto(const coord_def& c, bool clear_net = true);
     bool move_to_pos(const coord_def &newpos, bool clear_net = true,
                      bool force = false);
+    bool swap_with(monster* other);
     bool blink_to(const coord_def& c, bool quiet = false);
     bool blink_to(const coord_def& c, bool quiet, bool jump);
     kill_category kill_alignment() const;

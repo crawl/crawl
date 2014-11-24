@@ -2822,26 +2822,13 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     mirror->hit_points = mirror->hit_points * 100 / hp_perc;
     mirror->max_hit_points = mirror->max_hit_points * 100 / hp_perc;
 
-    // Sometimes swap the two monsters, so as to disguise the original and the copy.
+    // Sometimes swap the two monsters, so as to disguise the original and the
+    // copy.
+    // Possibly constriction should be preserved so as to not sometimes leak
+    // info on whether the clone or the original is adjacent to you, but
+    // there's a fair amount of complication in this for very narrow benefit.
     if (coinflip())
-    {
-        // We can skip some habitability checks here, since the monsters are
-        // known to be identical.
-        coord_def p1 = targ->pos();
-        coord_def p2 = mirror->pos();
-
-        targ->set_position(p2);
-        mirror->set_position(p1);
-
-        mgrd(p1) = mirror->mindex();
-        mgrd(p2) = targ->mindex();
-
-        // Possibly constriction should be preserved so as to not sometimes leak
-        // info on whether the clone or the original is adjacent to you, but
-        // there's a fair amount of complication in this for very narrow benefit.
-        targ->clear_far_constrictions();
-        mirror->clear_far_constrictions();
-    }
+        targ->swap_with(mirror);
 
     return mirror;
 }
