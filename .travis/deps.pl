@@ -18,6 +18,7 @@ if ($ENV{BUILD_ALL}) {
 else {
     push @deps, qw(
         liblua5.1-0-dev
+        liblua5.1-0-dbg
     );
 
     push @deps, qw(
