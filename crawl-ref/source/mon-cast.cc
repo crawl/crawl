@@ -4141,7 +4141,7 @@ static bool _mons_cast_freeze(monster* mons)
                               target->conj_verb("are").c_str());
     }
 
-    target->hurt(mons, damage);
+    target->hurt(mons, damage, BEAM_COLD, KILLED_BY_BEAM, "", "by Freeze");
 
     if (target->alive())
     {
@@ -7064,15 +7064,10 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
     goblin.apply_location_effects(old_pos);
     goblin.check_redraw(old_pos);
 
-    if (foe.is_player())
-    {
-        const string killed_by = make_stringf("Hit by %s thrown by %s",
-                                              goblin.name(DESC_A).c_str(),
-                                              tosser.name(DESC_PLAIN).c_str());
-        ouch(dam, KILLED_BY_BEAM, tosser.mid, killed_by.c_str());
-    }
-    else
-        foe.hurt(&tosser, dam, BEAM_NONE, true);
+    const string killed_by = make_stringf("Hit by %s thrown by %s",
+                                          goblin.name(DESC_A).c_str(),
+                                          tosser.name(DESC_PLAIN).c_str());
+    foe.hurt(&tosser, dam, BEAM_NONE, KILLED_BY_BEAM, "", killed_by, true);
 }
 
 /**
@@ -7280,7 +7275,6 @@ static void _tentacle_toss_to(const monster &thrower, actor &victim,
         mprf("%s throws you!",
              (thrower_seen ? thrower_name.c_str() : "Something"));
         move_player_to_grid(chosen_dest, false);
-        ouch(dam, KILLED_BY_BEING_THROWN, thrower.mid);
     }
     else
     {
@@ -7300,8 +7294,9 @@ static void _tentacle_toss_to(const monster &thrower, actor &victim,
                  (victim_was_seen ? victim_name.c_str() : "something"),
                  (you.can_see(vmon) ? "" : "out of view"));
         }
-        victim.hurt(&thrower, dam, BEAM_NONE, true);
     }
+    victim.hurt(&thrower, dam, BEAM_MISSILE, KILLED_BY_BEING_THROWN, "", "",
+                true);
 }
 
 /**

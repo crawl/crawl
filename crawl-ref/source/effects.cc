@@ -593,14 +593,8 @@ void direct_effect(monster* source, spell_type spell,
             }
         }
 
-        if (defender->is_player())
-        {
-            // Bypassing ::hurt so that flay damage can ignore guardian spirit
-            ouch(damage_taken, KILLED_BY_MONSTER, source->mid,
-                 "flay_damage", you.can_see(source));
-        }
-        else
-            defender->hurt(source, damage_taken, BEAM_NONE, true);
+        defender->hurt(source, damage_taken, BEAM_NONE,
+                       KILLED_BY_MONSTER, "", "flay_damage", true);
         defender->props["flay_damage"].get_int() += damage_taken;
 
         vector<coord_def> old_blood;
@@ -668,11 +662,9 @@ void direct_effect(monster* source, spell_type spell,
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
     {
-        if (def)
-            def->hurt(source, damage_taken);
-        else
-            ouch(damage_taken, KILLED_BY_BEAM, pbolt.source_id,
-                 pbolt.aux_source.c_str());
+        actor *victim = def ? (actor *)def : (actor *)&you;
+        victim->hurt(source, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
+                     "", pbolt.aux_source);
     }
 }
 

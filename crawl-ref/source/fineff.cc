@@ -337,7 +337,8 @@ void deferred_damage_fineff::fire()
             damage = min(damage, df_hp - 1);
         }
 
-        df->hurt(attacker(), damage, BEAM_MISSILE, true, attacker_effects);
+        df->hurt(attacker(), damage, BEAM_MISSILE, KILLED_BY_MONSTER, "", "",
+                 true, attacker_effects);
     }
 }
 
@@ -464,7 +465,8 @@ void shock_serpent_discharge_fineff::fire()
 
         if (you.see_cell(act->pos()))
             mprf("The lightning shocks %s.", act->name(DESC_THE).c_str());
-        act->hurt(serpent, amount, BEAM_ELECTRICITY);
+        act->hurt(serpent, amount, BEAM_ELECTRICITY, KILLED_BY_BEAM,
+                  "a shock serpent", "electric aura");
     }
 }
 

@@ -456,7 +456,8 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
 
         beem.flavour = flavour;
         dam = mons_adjust_flavoured(mon_target, beem, dam, true);
-        mon_target->hurt(act_source, dam, BEAM_MISSILE, false);
+        mon_target->hurt(act_source, dam, BEAM_MISSILE, KILLED_BY_BEAM,
+                         "", "", false);
 
         if (!mon_target->alive())
             monster_die(mon_target, kt, actor_to_death_source(act_source));

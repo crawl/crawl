@@ -298,10 +298,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
                                + victim->name(DESC_THE) + "!").c_str());
 
         int dam = victim->apply_ac(roll_dice(3, 20));
-        if (victim->is_player())
-            ouch(dam, KILLED_BY_ROLLING, mon.mid);
-        else
-            victim->hurt(&mon, dam);
+        victim->hurt(&mon, dam, BEAM_MISSILE, KILLED_BY_ROLLING);
     }
 
     noisy(5, pos);

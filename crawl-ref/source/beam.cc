@@ -2366,10 +2366,8 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     coord_def c = victim->pos();
 
     mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
-    if (victim->is_player())
-        ouch(damage, KILLED_BY_BEAM, agent->mid, "by a malign offering");
-    else
-        damage = victim->hurt(agent, damage, BEAM_NEG);
+    damage = victim->hurt(agent, damage, BEAM_NEG, KILLED_BY_BEAM,
+                          "", "by a malign offering");
 
     // Actors that had LOS to the victim (blocked by glass, clouds, etc),
     // even if they couldn't actually see each other because of blindness
@@ -4975,7 +4973,7 @@ void bolt::affect_monster(monster* mon)
             bleed_onto_floor(mon->pos(), mon->type, blood, true);
         }
         // Now hurt monster.
-        mon->hurt(agent(), final, flavour, false);
+        mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
     }
 
     if (mon->alive())

@@ -1042,7 +1042,7 @@ static bool _player_hurt_monster(monster& m, int damage,
 {
     if (damage > 0)
     {
-        m.hurt(&you, damage, flavour, false);
+        m.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
 
         if (m.alive())
         {
@@ -2620,13 +2620,8 @@ void forest_damage(const actor *mon)
                 if (dmg <= 0)
                     break;
 
-                if (foe->is_player())
-                {
-                    ouch(dmg, KILLED_BY_BEAM, mon->mid,
-                         "by angry trees", true);
-                }
-                else
-                    foe->hurt(mon, dmg);
+                foe->hurt(mon, dmg, BEAM_MISSILE, KILLED_BY_BEAM, "",
+                          "by angry trees");
 
                 break;
             }

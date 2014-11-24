@@ -3162,7 +3162,10 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         hps_changed = min(hps_changed, 50);
 
         if (death_ooze_ate_good)
-            mons->hurt(NULL, hps_changed, BEAM_NONE, false);
+        {
+            mons->hurt(NULL, hps_changed, BEAM_NONE, KILLED_BY_SOMETHING,
+                       "", "", false);
+        }
         else
         {
             // This is done manually instead of using heal_monster(),
