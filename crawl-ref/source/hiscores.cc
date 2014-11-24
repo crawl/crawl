@@ -620,6 +620,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
+    "collision",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -1212,7 +1213,8 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             || death_type == KILLED_BY_ROLLING
             || death_type == KILLED_BY_SPINES
             || death_type == KILLED_BY_WATER
-            || death_type == KILLED_BY_BEING_THROWN)
+            || death_type == KILLED_BY_BEING_THROWN
+            || death_type == KILLED_BY_COLLISION)
         && monster_by_mid(death_source))
     {
         const monster* mons = monster_by_mid(death_source);
@@ -2457,6 +2459,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         needs_damage = true;
         break;
 
+    case KILLED_BY_COLLISION:
+        if (terse)
+            desc += auxkilldata + " collision";
+        else
+        {
+            desc += "Collided with " + auxkilldata;
+            needs_called_by_monster_line = true;
+        }
+        needs_damage = true;
+        break;
 
     default:
         desc += terse? "program bug" : "Nibbled to death by software bugs";
@@ -2584,8 +2596,9 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else if (needs_called_by_monster_line)
             {
                 snprintf(scratch, sizeof(scratch), "... %s by %s",
-                         auxkilldata == "by angry trees" ? "awakened"
-                                                         : "invoked",
+                         death_type == KILLED_BY_COLLISION ? "caused" :
+                         auxkilldata == "by angry trees"   ? "awakened"
+                                                           : "invoked",
                          death_source_name.c_str());
                 desc += scratch;
                 desc += _hiscore_newline_string();
