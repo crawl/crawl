@@ -152,13 +152,13 @@ const deck_archetype deck_of_summoning[] =
 
 const deck_archetype deck_of_wonders[] =
 {
-    { CARD_FOCUS,        {3, 3, 3} },
-    { CARD_HELIX,        {3, 4, 5} },
-    { CARD_SHAFT,        {5, 5, 5} },
-    { CARD_DOWSING,      {5, 5, 5} },
-    { CARD_MERCENARY,    {5, 5, 5} },
-    { CARD_ALCHEMIST,    {5, 5, 5} },
-    { CARD_PLACID_MAGIC, {5, 5, 5} },
+    { CARD_FOCUS,             {3, 3, 3} },
+    { CARD_HELIX,             {3, 4, 5} },
+    { CARD_WILD_MAGIC,        {5, 5, 5} },
+    { CARD_DOWSING,           {5, 5, 5} },
+    { CARD_MERCENARY,         {5, 5, 5} },
+    { CARD_ALCHEMIST,         {5, 5, 5} },
+    { CARD_PLACID_MAGIC,      {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -189,7 +189,6 @@ const deck_archetype deck_of_oddities[] =
 const deck_archetype deck_of_punishment[] =
 {
     { CARD_WRAITH,     {5, 5, 5} },
-    { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_WRATH,      {5, 5, 5} },
     { CARD_XOM,        {5, 5, 5} },
     { CARD_FAMINE,     {5, 5, 5} },
@@ -2975,6 +2974,44 @@ static void _placid_magic_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void _wild_magic_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    int num_affected = 0;
+
+    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+    {
+        monster *mons = monster_at(*di);
+
+        if (!mons || mons->wont_attack() || mons_is_firewood(mons))
+            continue;
+
+        if (x_chance_in_y((power_level + 1) * 5 + random2(5),
+                           mons->get_hit_dice()))
+        {
+            MiscastEffect(mons, actor_by_mid(MID_YOU_FAULTLESS),
+                        DECK_MISCAST, SPTYP_RANDOM,
+                        random2(power/15) + 5, random2(power),
+                        "a card of wild magic");
+
+            num_affected++;
+        }
+    }
+
+    if (num_affected > 0)
+    {
+        int mp = 0;
+
+        for (int i = 0; i < num_affected; ++i)
+            mp += random2(5);
+
+        inc_mp(mp);
+        mpr("You feel a surge of magic.");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+}
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety
 // or penance, and are based on experience level instead of evocations skill
 // for more appropriate scaling.
@@ -3015,10 +3052,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     const char *participle = (flags & CFLAG_DEALT) ? "dealt" : "drawn";
     const int power = _card_power(rarity, flags & CFLAG_PUNISHMENT);
-
-    const god_type god =
-        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                      : GOD_NO_GOD;
 
     dprf("Card power: %d, rarity: %d", power, rarity);
 
@@ -3086,6 +3119,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
     case CARD_DEGEN:            _degeneration_card(power, rarity); break;
     case CARD_PLACID_MAGIC:     _placid_magic_card(power, rarity); break;
+    case CARD_WILD_MAGIC:       _wild_magic_card(power, rarity); break;
 
     case CARD_VENOM:
     case CARD_VITRIOL:
@@ -3093,14 +3127,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_PAIN:
     case CARD_ORB:
         _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
-        break;
-
-    case CARD_WILD_MAGIC:
-        // Yes, high power is bad here.
-        MiscastEffect(&you, &you,
-                      god == GOD_NO_GOD ? DECK_MISCAST : GOD_MISCAST + god,
-                      SPTYP_RANDOM, random2(power/15) + 5, random2(power),
-                      "a card of wild magic");
         break;
 
     case CARD_FAMINE:
