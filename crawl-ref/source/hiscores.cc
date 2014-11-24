@@ -1252,6 +1252,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (mons_is_player_shadow(mons))
             death_source_name = "their own shadow"; // heh
 
+        if (mons->mid == MID_YOU_FAULTLESS)
+            death_source_name = "themself";
+
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))

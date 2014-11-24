@@ -503,6 +503,10 @@ bool MiscastEffect::_explosion()
     ASSERT(beam.damage.size != 0);
     ASSERT(beam.flavour != BEAM_NONE);
 
+    // wild magic card
+    if (special_source == DECK_MISCAST)
+        beam.thrower = KILL_MISCAST;
+
     int max_dam = beam.damage.num * beam.damage.size;
     max_dam = check_your_resists(max_dam, beam.flavour, cause);
     if (avoid_lethal(max_dam))
@@ -595,7 +599,7 @@ bool MiscastEffect::_send_to_abyss()
 }
 
 // XXX: Mostly duplicated from cast_malign_gateway.
-bool MiscastEffect::_malign_gateway()
+bool MiscastEffect::_malign_gateway(bool hostile)
 {
     coord_def point = find_gateway_location(target);
     bool success = (point != coord_def(0, 0));
@@ -607,7 +611,7 @@ bool MiscastEffect::_malign_gateway()
                                 malign_gateway_duration,
                                 false,
                                 cause,
-                                BEH_HOSTILE,
+                                hostile ? BEH_HOSTILE : BEH_FRIENDLY,
                                 GOD_NO_GOD,
                                 200));
         env.markers.clear_need_activate();
@@ -1580,7 +1584,7 @@ void MiscastEffect::_summoning(int severity)
                 break;
 
             case 4:
-                reroll = !_malign_gateway();
+                reroll = !_malign_gateway(target->is_player());
                 break;
             }
         }
@@ -3181,7 +3185,7 @@ void MiscastEffect::_zot()
             }
             break;
         case 8:
-            if (!_malign_gateway())
+            if (!_malign_gateway(target->is_player()))
                 goto reroll_1;
             break;
         }

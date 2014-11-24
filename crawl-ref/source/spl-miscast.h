@@ -123,7 +123,7 @@ private:
     bool _sleep(int dur);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     bool _send_to_abyss();
-    bool _malign_gateway();
+    bool _malign_gateway(bool hostile = true);
     void _do_poison(int amount);
     void _malmutate();
 
