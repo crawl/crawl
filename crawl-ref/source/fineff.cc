@@ -375,14 +375,11 @@ void starcursed_merge_fineff::fire()
         return;
 
     monster *mon = defend->as_monster();
-    //Find a random adjacent starcursed mass
-    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
-
-    for (int i = 0; i < 8; ++i)
+    
+    // Find a random adjacent starcursed mass and merge with it.
+    for (fair_adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
-        coord_def target = mon->pos() + Compass[compass_idx[i]];
-        monster* mergee = monster_at(target);
+        monster* mergee = monster_at(*ai);
         if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
         {
             simple_monster_message(mon, " shudders and is absorbed by its neighbour.");

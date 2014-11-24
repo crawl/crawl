@@ -727,8 +727,6 @@ void move_solo_tentacle(monster* tentacle)
     if (!tentacle || !mons_is_solo_tentacle(mons_base_type(tentacle)))
         return;
 
-    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-
     vector<coord_def> foe_positions;
 
     bool attack_foe = false;
@@ -761,15 +759,12 @@ void move_solo_tentacle(monster* tentacle)
 
     if (severed)
     {
-        shuffle_array(compass_idx);
-        for (int idx : compass_idx)
+        for (fair_adjacent_iterator ai(base_position); ai; ++ai)
         {
-            coord_def new_base = base_position + Compass[idx];
-            if (!actor_at(new_base)
-                && tentacle->is_habitable(new_base))
+            if (!actor_at(*ai) && tentacle->is_habitable(*ai))
             {
-                tentacle->props["base_position"].get_coord() = new_base;
-                base_position = new_base;
+                tentacle->props["base_position"].get_coord() = *ai;
+                base_position = *ai;
                 break;
             }
         }
@@ -857,38 +852,33 @@ void move_solo_tentacle(monster* tentacle)
         // todo: set a random position?
 
         dprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
-        shuffle_array(compass_idx);
-        for (int i=0; i < 8; ++i)
+        for (fair_adjacent_iterator ai(old_pos); ai; ++ai)
         {
-            coord_def test = old_pos + Compass[compass_idx[i]];
-            if (!in_bounds(test) || is_sanctuary(test)
-                || actor_at(test))
-            {
+            if (!in_bounds(*ai) || is_sanctuary(*ai) || actor_at(*ai))
                 continue;
-            }
 
             int escalated = 0;
-            auto constraint = map_find(connection_data, test);
+            auto constraint = map_find(connection_data, *ai);
             ASSERT(constraint);
 
             while (constraint->count(escalated + 1))
                 escalated++;
 
             if (!severed
-                && tentacle->is_habitable(test)
+                && tentacle->is_habitable(*ai)
                 && escalated == *constraint->rbegin()
                 && (visited_count < demonic_max_dist
                     || constraint->size() > 1))
             {
-                new_pos = test;
+                new_pos = *ai;
                 break;
             }
-            else if (tentacle->is_habitable(test)
+            else if (tentacle->is_habitable(*ai)
                      && visited_count > 1
                      && escalated == *constraint->rbegin()
                      && constraint->size() > 1)
             {
-                new_pos = test;
+                new_pos = *ai;
                 break;
             }
         }
