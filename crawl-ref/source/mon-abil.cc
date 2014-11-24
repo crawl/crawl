@@ -491,7 +491,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
 // Actually merge two slime creatures, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
-static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
+static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 {
     // Combine enchantment durations.
     merge_ench_durations(initial_slime, merge_to);
@@ -541,8 +541,6 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
 
     // Have to 'kill' the slime doing the merging.
     monster_die(initial_slime, KILL_DISMISSED, NON_MONSTER, true);
-
-    return true;
 }
 
 // Slime creatures can split but not merge under these conditions.
@@ -618,7 +616,10 @@ static bool _slime_merge(monster* thing)
     // We found a merge target and didn't find an open square that
     // would reduce distance to target, so we can actually merge.
     if (merge_target)
-        return _do_merge_slimes(thing, merge_target);
+    {
+        _do_merge_slimes(thing, merge_target);
+        return true;
+    }
 
     // No adjacent slime creatures we could merge with.
     return false;

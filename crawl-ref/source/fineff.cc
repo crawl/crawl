@@ -341,7 +341,7 @@ void deferred_damage_fineff::fire()
     }
 }
 
-static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
+static void _do_merge_masses(monster* initial_mass, monster* merge_to)
 {
     // Combine enchantment durations.
     merge_ench_durations(initial_mass, merge_to);
@@ -364,8 +364,6 @@ static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
 
     // Have to 'kill' the slime doing the merging.
     monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
-
-    return true;
 }
 
 void starcursed_merge_fineff::fire()
@@ -382,9 +380,10 @@ void starcursed_merge_fineff::fire()
         monster* mergee = monster_at(*ai);
         if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
         {
-            simple_monster_message(mon, " shudders and is absorbed by its neighbour.");
-            if (_do_merge_masses(mon, mergee))
-                return;
+            simple_monster_message(mon,
+                    " shudders and is absorbed by its neighbour.");
+            _do_merge_masses(mon, mergee);
+            return;
         }
     }
 
