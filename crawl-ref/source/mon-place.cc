@@ -1560,6 +1560,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->has_spell(SPELL_DEFLECT_MISSILES))
         mon->add_ench(ENCH_DEFLECT_MISSILES);
 
+    if (mon->has_spell(SPELL_BONE_ARMOUR))
+        mon->add_ench(ENCH_BONE_ARMOUR);
+
     if (mon->has_spell(SPELL_CONDENSATION_SHIELD))
     {
         const int power = (mon->spell_hd(SPELL_CONDENSATION_SHIELD) * 15) / 10;

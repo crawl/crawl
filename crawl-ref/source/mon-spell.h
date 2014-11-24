@@ -418,6 +418,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELLWING,
       {
+       { SPELL_BONE_ARMOUR, 28, MON_SPELL_DEMONIC },
        { SPELL_TELEPORT_OTHER, 28, MON_SPELL_DEMONIC },
        { SPELL_TELEPORT_SELF, 28, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
       }

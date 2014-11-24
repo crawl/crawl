@@ -54,6 +54,7 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
+#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1330,6 +1331,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MONSTROUS_MENAGERIE:
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
+    case SPELL_BONE_ARMOUR:
     case SPELL_SIMULACRUM:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_MINOR_DEMON:
@@ -5213,6 +5215,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                              mons->foe, god);
         return;
 
+    case SPELL_BONE_ARMOUR:
+        harvest_corpses(*mons);
+        mprf("The bodies of the dead form a shell around %s.",
+             mons->name(DESC_THE).c_str());
+        mons->add_ench(ENCH_BONE_ARMOUR);
+        return;
+
     case SPELL_SIMULACRUM:
         monster_simulacrum(mons, true);
         return;
@@ -7838,6 +7847,13 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                                            mon->foe, mon->god, false)
                || monspell == SPELL_SIMULACRUM
                   && !monster_simulacrum(mon, false);
+
+    case SPELL_BONE_ARMOUR:
+        if (friendly && !_animate_dead_okay(monspell))
+            return true;
+        if (mon->has_ench(ENCH_BONE_ARMOUR))
+            return true;
+        return !harvest_corpses(*mon, true);
 
     //XXX: unify with the other SPELL_FOO_OTHER spells?
     case SPELL_BERSERK_OTHER:

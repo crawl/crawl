@@ -214,6 +214,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_RESISTANCE;
     case ENCH_HEXED:
         return MB_HEXED;
+    case ENCH_BONE_ARMOUR:
+        return MB_BONE_ARMOUR;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1582,6 +1584,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("unusually resistant");
     if (is(MB_HEXED))
         v.emplace_back("control wrested from you");
+    if (is(MB_BONE_ARMOUR))
+        v.emplace_back("corpse armoured");
     return v;
 }
 
