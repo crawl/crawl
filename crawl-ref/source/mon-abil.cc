@@ -650,17 +650,13 @@ static bool _crawling_corpse_merge(monster *crawlie)
         return false;
 
     // Check for adjacent crawlies
-    monster *merge_target = nullptr;
     for (fair_adjacent_iterator ai(crawlie->pos()); ai; ++ai)
     {
-        // Is there a crawlie/abomination on this square we can merge with?
-        monster* other_thing = monster_at(*ai);
-        if (!merge_target && _crawlie_is_mergeable(other_thing))
-            merge_target = other_thing;
+        monster * const mon = monster_at(*ai);
+        // If there is a crawlie we can merge with, try to do so.
+        if (_crawlie_is_mergeable(mon) && _do_merge_crawlies(crawlie, mon))
+            return true;
     }
-
-    if (merge_target)
-        return _do_merge_crawlies(crawlie, merge_target);
 
     // No adjacent crawlies.
     return false;
