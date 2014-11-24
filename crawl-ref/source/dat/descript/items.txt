@@ -803,8 +803,8 @@ resistance to negative energies.
 pearl dragon hide
 
 The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
-form it does not provide much protection, but by magical means it may be used
-to make excellent armour.
+form it does not provide much protection, beyond resistance to negative energy.
+By magical means, however, it may be used to make excellent armour.
 %%%%
 phantom mirror
 
@@ -1405,12 +1405,13 @@ steam dragon armour
 
 Armour made from the scales of a steam-breathing dragon. Unlike armour made
 from the scales of some larger dragons, it does not provide its wearer with
-much protection, but it is extremely light and supple.
+much protection (beyond a resistance to scalding steam), but it is extremely
+light and supple.
 %%%%
 steam dragon hide
 
-The soft and supple scaly skin of a steam dragon. It may be turned into proper
-armour by magical means.
+The soft and supple scaly skin of a steam dragon. It provides protection
+against scalding steam, and may be turned into proper armour by magical means.
 %%%%
 stone
 
@@ -1434,8 +1435,9 @@ as to provide a substantial benefit to the wearer's stealth.
 shadow dragon hide
 
 The hide of a great umbral dragon, covered in extremely hard blue-black scales.
-In its raw form it does not provide much protection, but with magical means, it
-may be used to make excellent armour.
+In its raw form it does not provide much protection beyond the ability to blend
+with the shadows. With magical means, however, it may be used to make excellent
+armour.
 %%%%
 storm dragon armour
 
