@@ -1104,7 +1104,7 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
         return false;
     }
 
-    if (spell == SPELL_SPELLFORGED_SERVITOR
+    if ((spell == SPELL_SPELLFORGED_SERVITOR || spell == SPELL_BATTLESPHERE)
         && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
     {
         return false;
