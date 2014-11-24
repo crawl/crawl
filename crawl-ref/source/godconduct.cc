@@ -892,7 +892,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
     {
         if (_first_attack_conduct.find(mid) == _first_attack_conduct.end()
             || _first_attack_was_friendly.find(mid)
-               != _first_attack_was_friendly.end()
+               != _first_attack_was_friendly.end())
         {
             conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
             _first_attack_was_friendly.insert(mid);

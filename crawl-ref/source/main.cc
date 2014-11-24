@@ -2921,15 +2921,9 @@ static void _swap_places(monster* mons, const coord_def &loc)
 
     mpr("You swap places.");
 
-    mgrd(mons->pos()) = NON_MONSTER;
-
     const coord_def old_loc = mons->pos();
-    mons->moveto(loc);
+    mons->move_to_pos(loc);
     mons->apply_location_effects(old_loc);
-
-    if (mons->alive())
-        mgrd(mons->pos()) = mons->mindex();
-
     return;
 }
 

@@ -303,7 +303,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
 
     *mons          = *orig;
     mons->set_new_monster_id();
-    mons->set_position(pos);
+    mons->move_to_pos(pos);
     // The monster copy constructor doesn't copy constriction, so no need to
     // worry about that.
 
@@ -311,8 +311,6 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     // Slime vaults on death.
     if (mons->props.exists(MONSTER_DIES_LUA_KEY))
         mons->props.erase(MONSTER_DIES_LUA_KEY);
-
-    mgrd(pos)    = mons->mindex();
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)

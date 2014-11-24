@@ -1086,12 +1086,7 @@ void swap_with_monster(monster* mon_to_swap)
 
     mprf("You swap places with %s.", mon.name(DESC_THE).c_str());
 
-    // Pick the monster up.
-    mgrd(newpos) = NON_MONSTER;
-    mon.moveto(you.pos());
-
-    // Plunk it down.
-    mgrd(mon.pos()) = mon_to_swap->mindex();
+    mon.move_to_pos(you.pos(), true, true);
 
     if (you_caught)
     {
