@@ -6734,13 +6734,8 @@ bool player::res_wind() const
 
 bool player::res_petrify(bool temp) const
 {
-    if (player_mutation_level(MUT_PETRIFICATION_RESISTANCE))
-        return true;
-
-    if (temp && (form == TRAN_STATUE || form == TRAN_WISP))
-        return true;
-
-    return false;
+    return player_mutation_level(MUT_PETRIFICATION_RESISTANCE)
+           || temp && get_form()->res_petrify();
 }
 
 int player::res_constrict() const
