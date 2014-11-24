@@ -2817,14 +2817,11 @@ int spawn_corpse_mushrooms(item_def& corpse,
 
         for (fair_adjacent_iterator ai(current); ai; ++ai)
         {
-            int index = ai->x + ai->y * X_WIDTH;
-
-            if (!visited_indices.count(index)
-                && in_bounds(*ai)
-                && mons_class_can_pass(MONS_TOADSTOOL, grd(*ai)))
+            if (in_bounds(*ai) && mons_class_can_pass(MONS_TOADSTOOL, grd(*ai)))
             {
-                visited_indices.insert(index);
-                fringe.push(*ai);
+                const int index = ai->x + ai->y * X_WIDTH;
+                if (visited_indices.insert(index).second)
+                    fringe.push(*ai); // Not previously visited.
             }
         }
     }
