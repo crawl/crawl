@@ -1216,6 +1216,7 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 
 #define COLLISION_DAMAGE \
     roll_dice(strength / 2, singularity->get_hit_dice() / 2)
+#define GRAVITY "by gravitational forces"
 
 static void _move_creature_to_singularity(const monster* singularity,
                                           actor* victim, int strength)
@@ -1233,7 +1234,8 @@ static void _move_creature_to_singularity(const monster* singularity,
                      victim->name(DESC_THE).c_str(),
                      victim->conj_verb("stop").c_str());
             }
-            victim->hurt(singularity, COLLISION_DAMAGE);
+            victim->hurt(singularity, COLLISION_DAMAGE, BEAM_MMISSILE,
+                         KILLED_BY_BEAM, "", GRAVITY);
             break;
         }
 
@@ -1296,7 +1298,8 @@ void singularity_pull(const monster *singularity)
                      ai->name(DESC_THE).c_str());
             }
             ai->hurt(singularity, roll_dice(strength + 1,
-                                            singularity->get_hit_dice() / 2));
+                                            singularity->get_hit_dice() / 2),
+                     BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
         }
 
         if (ai->alive() && !ai->is_stationary())
