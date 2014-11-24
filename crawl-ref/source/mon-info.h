@@ -134,6 +134,7 @@ enum monster_info_flags
     MB_CONDENSATION_SHIELD,
     MB_RESISTANCE,
     MB_HEXED,
+    MB_BONE_ARMOUR,
     NUM_MB_FLAGS
 };
 

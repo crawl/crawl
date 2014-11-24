@@ -2413,7 +2413,7 @@ static const char *enchant_names[] =
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
     "deflect missiles", "negative_vuln", "condensation_shield", "resistant",
-    "hexed", "buggy",
+    "hexed", "corpse_armour", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

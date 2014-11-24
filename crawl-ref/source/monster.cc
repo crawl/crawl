@@ -3218,7 +3218,8 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield() || has_ench(ENCH_CONDENSATION_SHIELD);
+    return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
+                    || has_ench(ENCH_BONE_ARMOUR);
 }
 
 int monster::shield_bonus() const
@@ -3238,12 +3239,15 @@ int monster::shield_bonus() const
     }
     if (has_ench(ENCH_CONDENSATION_SHIELD))
     {
-        int condensation_shield = get_hit_dice() / 2;
-        if (sh < 0)
-            sh = condensation_shield;
-        else
-            sh += condensation_shield;
+        const int condensation_shield = get_hit_dice() / 2;
+        sh = max(sh + condensation_shield, condensation_shield);
     }
+    if (has_ench(ENCH_BONE_ARMOUR))
+    {
+        const int bone_armour = 6 + get_hit_dice() / 3;
+        sh = max(sh + bone_armour, bone_armour);
+    }
+
     return sh;
 }
 
@@ -3257,6 +3261,12 @@ void monster::shield_block_succeeded(actor *attacker)
     actor::shield_block_succeeded(attacker);
 
     ++shield_blocks;
+    if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
+    {
+        del_ench(ENCH_BONE_ARMOUR);
+        mprf("%s corpse armour sloughs away.",
+            apostrophise(name(DESC_THE)).c_str());
+    }
 }
 
 int monster::shield_bypass_ability(int) const
@@ -3434,6 +3444,8 @@ int monster::armour_class(bool calc_unid) const
         ac += 4 + get_hit_dice() / 3;
     if (has_ench(ENCH_ICEMAIL))
         ac += ICEMAIL_MAX;
+    if (has_ench(ENCH_BONE_ARMOUR))
+        ac += 6 + get_hit_dice() / 3;
 
     // Penalty due to bad temp mutations.
     if (has_ench(ENCH_WRETCHED))
@@ -6337,6 +6349,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             rakshasa_clone_fineff::schedule(this, pos());
             props["emergency_clone"].get_bool() = true;
         }
+    }
+
+    if (alive() && has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
+    {
+        del_ench(ENCH_BONE_ARMOUR);
+        mprf("%s corpse armour sloughs away.",
+             apostrophise(name(DESC_THE)).c_str());
     }
 }
 

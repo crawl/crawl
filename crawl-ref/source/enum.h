@@ -1832,6 +1832,7 @@ enum enchant_type
     ENCH_CONDENSATION_SHIELD,
     ENCH_RESISTANCE,
     ENCH_HEXED,
+    ENCH_BONE_ARMOUR,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
