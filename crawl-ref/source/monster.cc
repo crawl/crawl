@@ -5667,6 +5667,43 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
     return true;
 }
 
+/** Swap positions with another monster.
+ *
+ *  move_to_pos can't be used in this case, since it can't move something
+ *  to a spot that's occupied. This will abort if either monster can't survive
+ *  in the new place.
+ *
+ *  @param other the monster to swap with
+ *  @returns whether they ended up moving.
+ */
+bool monster::swap_with(monster* other)
+{
+    const coord_def old_pos = pos();
+    const coord_def new_pos = other->pos();
+
+    if (!can_pass_through(new_pos)
+        || !other->can_pass_through(old_pos))
+    {
+        return false;
+    }
+
+    if (!monster_habitable_grid(this, grd(new_pos))
+         && !can_cling_to(new_pos)
+        || !monster_habitable_grid(other, grd(old_pos))
+            && !other->can_cling_to(old_pos))
+    {
+        return false;
+    }
+
+    moveto(new_pos);
+    other->moveto(old_pos);
+
+    mgrd(old_pos) = other->mindex();
+    mgrd(new_pos) = mindex();
+
+    return true;
+}
+
 // Returns true if the trap should be revealed to the player.
 bool monster::do_shaft()
 {

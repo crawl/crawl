@@ -232,35 +232,12 @@ static bool _swap_monsters(monster* mover, monster* moved)
         return false;
     }
 
-    if (!mover->can_pass_through(moved->pos())
-        || !moved->can_pass_through(mover->pos()))
-    {
+    // Okay, we can probably do the swap.
+    if (!mover->swap_with(moved))
         return false;
-    }
-
-    if (!monster_habitable_grid(mover, grd(moved->pos()))
-            && !mover->can_cling_to(moved->pos())
-        || !monster_habitable_grid(moved, grd(mover->pos()))
-            && !moved->can_cling_to(mover->pos()))
-    {
-        return false;
-    }
-
-    // Okay, we can do the swap.
-    const coord_def mover_pos = mover->pos();
-    const coord_def moved_pos = moved->pos();
-
-    mover->set_position(moved_pos);
-    moved->set_position(mover_pos);
-
-    mover->clear_far_constrictions();
-    moved->clear_far_constrictions();
 
     mover->check_clinging(true);
     moved->check_clinging(true);
-
-    mgrd(mover->pos()) = mover->mindex();
-    mgrd(moved->pos()) = moved->mindex();
 
     if (you.can_see(mover) && you.can_see(moved))
     {
@@ -3876,50 +3853,31 @@ bool monster_swaps_places(monster* mon, const coord_def& delta, bool takes_time)
         return false;
     }
 
-    // Check that both monsters will be happy at their proposed new locations.
-    const coord_def c = mon->pos();
-    const coord_def n = mon->pos() + delta;
-
-    if (!monster_habitable_grid(mon, grd(n)) && !mon->can_cling_to(n)
-        || !monster_habitable_grid(m2, grd(c)) && !m2->can_cling_to(c))
-    {
+    if (!mon->swap_with(m2))
         return false;
-    }
 
-    // Okay, do the swap!
     if (takes_time)
     {
 #ifdef EUCLIDEAN
         _swim_or_move_energy(mon, delta.abs() == 2);
+        _swim_or_move_energy(m2, delta.abs() == 2);
 #else
         _swim_or_move_energy(mon);
+        _swim_or_move_energy(m2);
 #endif
     }
 
-    mon->set_position(n);
-    mgrd(n) = mon->mindex();
-    m2->set_position(c);
-
-    mon->clear_far_constrictions();
-    m2->clear_far_constrictions();
-
-    const int m2i = m2->mindex();
-    ASSERT_RANGE(m2i, 0, MAX_MONSTERS);
-    mgrd(c) = m2i;
-    if (takes_time)
-        _swim_or_move_energy(m2);
-
-    mon->check_redraw(c, false);
+    mon->check_redraw(m2->pos(), false);
     if (mon->is_wall_clinging())
         mon->check_clinging(true);
     else
-        mon->apply_location_effects(c);
+        mon->apply_location_effects(m2->pos());
 
-    m2->check_redraw(n, false);
+    m2->check_redraw(mon->pos(), false);
     if (m2->is_wall_clinging())
         m2->check_clinging(true);
     else
-        m2->apply_location_effects(n);
+        m2->apply_location_effects(mon->pos());
 
     // The seen context no longer applies if the monster is moving normally.
     mon->seen_context = SC_NONE;

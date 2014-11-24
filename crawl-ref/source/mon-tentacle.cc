@@ -902,7 +902,7 @@ void move_solo_tentacle(monster* tentacle)
         if (actor* blocking_actor = actor_at(new_pos))
         {
             tentacle->target = new_pos;
-            tentacle->foe = mtemp->mindex();
+            tentacle->foe = blocking_actor->mindex();
             new_pos = old_pos;
         }
     }
@@ -1092,7 +1092,7 @@ void move_child_tentacles(monster* mons)
         if (actor* blocking_actor = actor_at(new_pos))
         {
             tentacle->target = new_pos;
-            tentacle->foe = mtemp->mindex();
+            tentacle->foe = blocking_actor->mindex();
             new_pos = old_pos;
         }
 
