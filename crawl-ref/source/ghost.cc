@@ -1064,7 +1064,7 @@ const mon_spell_slot lich_secondary_spells[] =
     { SPELL_ENSLAVEMENT, 12, MON_SPELL_WIZARD },
 };
 
-const mon_spell_slot lich_emergency_spells[] =
+const mon_spell_slot lich_buff_spells[] =
 {
     { SPELL_HASTE, 12, MON_SPELL_WIZARD },
     { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
@@ -1197,8 +1197,8 @@ void ghost_demon::init_lich(monster_type type)
         _add_lich_spell(spells, lich_secondary_spells,
                         ARRAYSZ(lich_secondary_spells));
 
-    _add_lich_spell(spells, lich_emergency_spells,
-                    ARRAYSZ(lich_emergency_spells));
+    _add_lich_spell(spells, lich_buff_spells,
+                    ARRAYSZ(lich_buff_spells));
 
     // not fixup_spells, because we want to handle marking emergency spells
     // ourselves, and we should never have any SPELL_NO_SPELL to strip out
