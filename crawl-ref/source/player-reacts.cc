@@ -207,8 +207,9 @@ static void _decrement_petrification(int delay)
     {
         you.redraw_evasion = true;
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
-             you.form == TRAN_LICH ? "bone" :
              you.form == TRAN_ICE_BEAST ? "ice" :
+             you.form == TRAN_LICH ? "bone" :
+             you.form == TRAN_TREE ? "wood" :
              "flesh");
     }
 
