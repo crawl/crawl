@@ -215,7 +215,8 @@ public:
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
 #ifdef WIZARD
-    int            wiz_mode;   // no, never, start in wiz mode
+    int            wiz_mode;      // no, never, start in wiz mode
+    int            explore_mode;  // no, never, start in explore mode
 #endif
     vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files

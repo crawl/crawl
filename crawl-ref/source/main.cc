@@ -498,6 +498,7 @@ static void _show_commandline_options_help()
     puts("  -zotdef               select Zot Defence");
 #ifdef WIZARD
     puts("  -wizard               allow access to wizard mode");
+    puts("  -explore              allow access to explore mode");
 #endif
 #ifdef DGAMELAUNCH
     puts("  -no-throttle          disable throttling of user Lua scripts");
@@ -1016,6 +1017,14 @@ static void _handle_wizard_command()
 
 static void _enter_explore_mode()
 {
+    // WIZ_NEVER gives protection for those who have wiz compiles,
+    // and don't want to risk their characters. Also, and hackishly,
+    // it's used to prevent access for non-authorised users to wizard
+    // builds in dgamelaunch builds unless the game is started with the
+    // -wizard flag.
+    if (Options.explore_mode == WIZ_NEVER)
+        return;
+
     if (!you.explore)
     {
         mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER EXPLORE MODE!");
