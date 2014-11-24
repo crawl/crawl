@@ -1879,18 +1879,12 @@ void monster::apply_enchantment(const mon_enchant &me)
         // spawn a spore and re-add the enchantment.
         if (decay_enchantment(en))
         {
-            // Search for an open adjacent square to place a spore on
-            int indices[] = {0, 1, 2, 3, 4, 5, 6, 7};
-            shuffle_array(indices);
-
             bool re_add = true;
 
-            for (int idx : indices)
+            for (adjacent_iterator ai(pos()); ai; ++ai)
             {
-                coord_def adjacent = pos() + Compass[idx];
-
-                if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
-                                        && !actor_at(adjacent))
+                if (mons_class_can_pass(MONS_GIANT_SPORE, grd(*ai))
+                    && !actor_at(*ai))
                 {
                     beh_type plant_attitude = SAME_ATTITUDE(this);
 
@@ -1899,7 +1893,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                                                             NULL,
                                                             0,
                                                             0,
-                                                            adjacent,
+                                                            *ai,
                                                             MHITNOT,
                                                             MG_FORCE_PLACE)))
                     {
@@ -1918,15 +1912,15 @@ void monster::apply_enchantment(const mon_enchant &me)
                         plant->behaviour = BEH_WANDER;
                         plant->spore_cooldown = 20;
 
-                        if (you.see_cell(adjacent) && you.see_cell(pos()))
+                        if (you.see_cell(*ai) && you.see_cell(pos()))
                             mpr("A ballistomycete spawns a giant spore.");
 
                         // Decrease the count and maybe become inactive
                         // again.
-                        if (number)
+                        if (ballisto_activity)
                         {
-                            number--;
-                            if (number == 0)
+                            ballisto_activity--;
+                            if (ballisto_activity == 0)
                             {
                                 colour = MAGENTA;
                                 del_ench(ENCH_SPORE_PRODUCTION);
