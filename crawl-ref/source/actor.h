@@ -3,6 +3,7 @@
 
 #include "itemprop-enum.h"
 #include "random-var.h"
+#include "ouch.h"
 
 enum ev_ignore_type
 {
@@ -203,6 +204,9 @@ public:
                      bool quiet = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
+                      kill_method_type kill_type = KILLED_BY_MONSTER,
+                      string source = "",
+                      string aux = "",
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;

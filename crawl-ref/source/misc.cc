@@ -1175,10 +1175,8 @@ void entered_malign_portal(actor* act)
     }
 
     act->blink(false);
-    if (act->is_player())
-        ouch(roll_dice(2, 4), KILLED_BY_WILD_MAGIC, MID_NOBODY, "a malign gateway");
-    else
-        act->hurt(NULL, roll_dice(2, 4));
+    act->hurt(NULL, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
+              "", "a malign gateway");
 }
 
 void handle_real_time(time_t t)

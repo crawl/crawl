@@ -640,6 +640,9 @@ public:
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
+             kill_method_type kill_type = KILLED_BY_MONSTER,
+             string source = "",
+             string aux = "",
              bool cleanup_dead = true,
              bool attacker_effects = true);
 

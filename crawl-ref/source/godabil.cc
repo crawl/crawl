@@ -1047,7 +1047,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
             int damage = dam_dice.roll();
             if (damage > 0)
             {
-                mon->hurt(&you, damage, BEAM_MISSILE, false);
+                mon->hurt(&you, damage, BEAM_MISSILE, KILLED_BY_BEAM,
+                          "", "", false);
 
                 if (mon->alive())
                 {
@@ -3277,7 +3278,7 @@ static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
     int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
     dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
 
-    mon->hurt(agent, dmg, BEAM_MMISSILE, true);
+    mon->hurt(agent, dmg, BEAM_MMISSILE, KILLED_BY_BEAM, "", "", true);
     return 1;
 }
 
@@ -6055,7 +6056,7 @@ bool ru_power_leap()
         //damage scales with XL amd piety
         mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(you.piety *
             (54 + you.experience_level), 777), 3),
-            BEAM_ENERGY, true);
+            BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
     }
 
     return return_val;
@@ -6117,7 +6118,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
             dmg += roll_dice(die_size, 8);
             break;
     }
-    mons->hurt(agent, dmg, BEAM_ENERGY, true);
+    mons->hurt(agent, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
     if (mons->alive() && enchantment != ENCH_NONE)
     {

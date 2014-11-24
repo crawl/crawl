@@ -833,13 +833,11 @@ static void _starcursed_scream(monster* mon, actor* target)
                  target->name(DESC_THE).c_str(),
                  target->pronoun(PRONOUN_POSSESSIVE).c_str());
         }
-        target->hurt(mon, dam);
     }
     else
-    {
         mprf(MSGCH_MONSTER_SPELL, "%s", message);
-        ouch(dam, KILLED_BY_BEAM, mon->mid, "accursed screaming");
-    }
+    target->hurt(mon, dam, BEAM_MISSILE, KILLED_BY_BEAM, "",
+                 "accursed screaming");
 
     if (stun && target->alive())
         target->paralyse(mon, stun, "accursed screaming");

@@ -1393,15 +1393,8 @@ int actor_apply_cloud(actor *act)
              cloud.cloud_name().c_str());
 
         actor *oppressor = cloud.agent();
-
-        if (player)
-        {
-            ouch(final_damage, KILLED_BY_CLOUD,
-                 oppressor ? oppressor->mid : MID_NOBODY,
-                 cloud.cloud_name("", true).c_str());
-        }
-        else
-            mons->hurt(oppressor, final_damage, BEAM_MISSILE);
+        mons->hurt(oppressor, final_damage, BEAM_MISSILE,
+                   KILLED_BY_CLOUD, "", cloud.cloud_name("", true));
     }
 
     return final_damage;

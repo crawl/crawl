@@ -7099,7 +7099,8 @@ void player::teleport(bool now, bool wizard_tele)
 }
 
 int player::hurt(const actor *agent, int amount, beam_type flavour,
-                 bool cleanup_dead, bool /*attacker_effects*/)
+                 kill_method_type kill_type, string source, string aux,
+                 bool /*cleanup_dead*/, bool /*attacker_effects*/)
 {
     // We ignore cleanup_dead here.
     if (!agent)
@@ -7108,15 +7109,14 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         // to a player from a dead monster.  We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
-        ouch(amount, KILLED_BY_MONSTER, MID_NOBODY, "",
-             false, "posthumous revenge");
+        ouch(amount, kill_type, MID_NOBODY, aux.c_str(),
+             false, source.empty() ? "posthumous revenge" : source.c_str());
     }
     else if (agent->is_monster())
     {
         const monster* mon = agent->as_monster();
-        ouch(amount,
-             flavour == BEAM_WATER ? KILLED_BY_WATER : KILLED_BY_MONSTER,
-             mon->mid, "", mon->visible_to(this), NULL);
+        ouch(amount, kill_type, mon->mid, aux.c_str(), mon->visible_to(this),
+             source.c_str());
     }
     else
     {
