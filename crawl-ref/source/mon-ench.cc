@@ -1881,7 +1881,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             bool re_add = true;
 
-            for (adjacent_iterator ai(pos()); ai; ++ai)
+            for (fair_adjacent_iterator ai(pos()); ai; ++ai)
             {
                 if (mons_class_can_pass(MONS_GIANT_SPORE, grd(*ai))
                     && !actor_at(*ai))
