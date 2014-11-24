@@ -192,7 +192,7 @@ enum KEYS
 #endif
 
     // Mouse codes.
-    CK_MOUSE_MOVE  = -10011,
+    CK_MOUSE_MOVE  = -9999,
     CK_MOUSE_CMD,
     CK_MOUSE_B1,
     CK_MOUSE_B2,
@@ -200,11 +200,6 @@ enum KEYS
     CK_MOUSE_B4,
     CK_MOUSE_B5,
     CK_MOUSE_CLICK,
-
-    // If you must add keys here, make sure that you adjust CK_MOUSE_MOVE
-    // above so as not to collide with USERFUNC_BASE in macro.cc and break
-    // macros.
-
     CK_TOUCH_DUMMY, // so a non-event can be passed from handle_mouse to the controlling code
     CK_REDRAW, // no-op to force redraws of things
     CK_NO_KEY // so that the handle_mouse loop can be broken from early (for popups)
