@@ -2138,7 +2138,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INJURY_BOND:
         // It's hard to absorb someone else's injuries when you're dead
         if (!me.agent() || !me.agent()->alive()
-            || me.agent()->mindex() == ANON_FRIENDLY_MONSTER)
+            || me.agent()->mid == MID_ANON_FRIEND)
         {
             del_ench(ENCH_INJURY_BOND, true, false);
         }
@@ -2207,7 +2207,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TORNADO_COOLDOWN:
         if (decay_enchantment(en))
         {
-            remove_tornado_clouds(mindex());
+            remove_tornado_clouds(mid);
             if (you.can_see(this))
                 mprf("The winds around %s calm down.", name(DESC_THE).c_str());
         }

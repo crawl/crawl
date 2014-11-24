@@ -860,7 +860,7 @@ static bool _herd_wander_target(monster * mon)
 
     for (monster_iterator mit; mit; ++mit)
     {
-        if (mit->mindex() == mon->mindex()
+        if (&*mit == mon
             || mons_genus(mit->type) != mons_genus(mon->type)
             || grid_distance(mit->pos(), mon->pos()) > dist_thresh)
         {
@@ -909,7 +909,7 @@ static bool _herd_ok(monster * mon)
     // herdlings magically know others even out of LOS
     for (monster_iterator mit; mit; ++mit)
     {
-        if (mit->mindex() == mon->mindex())
+        if (&*mit == mon)
             continue;
 
         if (mons_genus(mit->type) == mons_genus(mon->type))

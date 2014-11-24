@@ -861,7 +861,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
     _handle_other_gods_response(thing_done);
 }
 
-// These two arrays deal with the situation where a beam hits a non-fleeing
+// These three sets deal with the situation where a beam hits a non-fleeing
 // monster, the monster starts to flee because of the damage, and then the
 // beam bounces and hits the monster again.  If the monster wasn't fleeing
 // when the beam started then hits from bounces shouldn't count as
@@ -872,46 +872,48 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 // since a Beogh worshipper zapping an orc with lightning might cause it to
 // become a follower on the first hit, and the second hit would be
 // against a friendly orc.
-static FixedBitVector<MAX_MONSTERS> _first_attack_conduct;
-static FixedBitVector<MAX_MONSTERS> _first_attack_was_unchivalric;
-static FixedBitVector<MAX_MONSTERS> _first_attack_was_friendly;
+static set<mid_t> _first_attack_conduct;
+static set<mid_t> _first_attack_was_unchivalric;
+static set<mid_t> _first_attack_was_friendly;
 
 void god_conduct_turn_start()
 {
-    _first_attack_conduct.reset();
-    _first_attack_was_unchivalric.reset();
-    _first_attack_was_friendly.reset();
+    _first_attack_conduct.clear();
+    _first_attack_was_unchivalric.clear();
+    _first_attack_was_friendly.clear();
 }
 
 void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
                          bool known)
 {
-    const unsigned int midx = mon->mindex();
+    const mid_t mid = mon->mid;
 
     if (mon->friendly())
     {
-        if (!_first_attack_conduct[midx]
-            || _first_attack_was_friendly[midx])
+        if (_first_attack_conduct.find(mid) == _first_attack_conduct.end()
+            || _first_attack_was_friendly.find(mid)
+               != _first_attack_was_friendly.end()
         {
             conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
-            _first_attack_was_friendly.set(midx);
+            _first_attack_was_friendly.insert(mid);
         }
     }
     else if (mon->neutral())
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
     if (find_stab_type(&you, mon) != STAB_NO_STAB
-        && (!_first_attack_conduct[midx]
-            || _first_attack_was_unchivalric[midx]))
+        && (_first_attack_conduct.find(mid) == _first_attack_conduct.end()
+            || _first_attack_was_unchivalric.find(mid)
+               != _first_attack_was_unchivalric.end()))
     {
         conduct[1].set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
-        _first_attack_was_unchivalric.set(midx);
+        _first_attack_was_unchivalric.insert(mid);
     }
 
     if (mon->is_holy() && !mon->is_illusion())
         conduct[2].set(DID_ATTACK_HOLY, mon->get_experience_level(), known, mon);
 
-    _first_attack_conduct.set(midx);
+    _first_attack_conduct.insert(mid);
 }
 
 void enable_attack_conducts(god_conduct_trigger conduct[3])
