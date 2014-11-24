@@ -1422,15 +1422,15 @@ mcache_demon::mcache_demon(const monster_info& minf)
 
     const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
 
-    m_demon.head = TILEP_DEMON_HEAD
-                   + hash_rand(tile_player_count(TILEP_DEMON_HEAD), seed, 1);
-    m_demon.body = TILEP_DEMON_BODY
-                   + hash_rand(tile_player_count(TILEP_DEMON_BODY), seed, 2);
+    m_demon.head = tile_player_coloured(TILEP_DEMON_HEAD, minf.colour())
+        + hash_rand(tile_player_count(TILEP_DEMON_HEAD), seed, 1);
+    m_demon.body = tile_player_coloured(TILEP_DEMON_BODY, minf.colour())
+        + hash_rand(tile_player_count(TILEP_DEMON_BODY), seed, 2);
 
     if (minf.fly)
     {
-        m_demon.wings = TILEP_DEMON_WINGS
-                        + hash_rand(tile_player_count(TILEP_DEMON_WINGS), seed, 3);
+        m_demon.wings = tile_player_coloured(TILEP_DEMON_WINGS, minf.colour())
+            + hash_rand(tile_player_count(TILEP_DEMON_WINGS), seed, 3);
     }
     else
         m_demon.wings = 0;
