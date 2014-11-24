@@ -4519,8 +4519,8 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead, bool attacker_effects)
 {
-    if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER
-        || mindex() == YOU_FAULTLESS || type == MONS_DIAMOND_OBELISK
+    if (mons_is_projectile(type) || mid == MID_ANON_FRIENDLY
+        || mid == MID_YOU_FAULTLESS || type == MONS_DIAMOND_OBELISK
         || type == MONS_PLAYER_SHADOW)
     {
         return 0;
