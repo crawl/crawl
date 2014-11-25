@@ -1297,8 +1297,9 @@ void singularity_pull(const monster *singularity)
                      singularity->name(DESC_THE).c_str(),
                      ai->name(DESC_THE).c_str());
             }
-            ai->hurt(singularity, roll_dice(strength + 1,
-                                            singularity->get_hit_dice() / 2),
+            ai->hurt(singularity,
+                     roll_dice(strength,
+                               div_rand_round(singularity->get_hit_dice(), 4)),
                      BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
         }
 
