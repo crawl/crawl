@@ -170,7 +170,7 @@ bool butchery(int which_corpse)
     if (num_corpses == 0)
     {
         mprf("There isn't anything to %s here.",
-             bottle_blood ? "bottle" : "butcher");
+             bottle_blood ? "bottle or butcher" : "butcher");
         return false;
     }
 
@@ -184,7 +184,7 @@ bool butchery(int which_corpse)
             && !_should_butcher(mitm[corpse_id], bottle_blood))
         {
             mprf("There isn't anything suitable to %s here.",
-                 bottle_blood ? "bottle" : "butcher");
+                 bottle_blood ? "bottle or butcher" : "butcher");
             return false;
         }
 
@@ -203,7 +203,7 @@ bool butchery(int which_corpse)
 
     corpse_id = -1;
     vector<SelItem> selected =
-        select_items(meat, bottle_blood ? "Choose a corpse to bottle"
+        select_items(meat, bottle_blood ? "Choose a corpse to bottle or butcher"
                                         : "Choose a corpse to butcher",
                      false, MT_ANY, _butcher_menu_title);
     redraw_screen();
