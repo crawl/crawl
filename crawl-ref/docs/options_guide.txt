@@ -360,7 +360,7 @@ restart_after_game = true/false
 
 restart_after_save = false
         When the game is saved, return to the main menu. This option
-        is only effective if restart_after_game is also enabled.
+        has no effect unless restart_after_game is also enabled.
 
 default_manual_training = false
         When set to true, new characters will start with skill training
