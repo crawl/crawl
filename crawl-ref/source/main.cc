@@ -2884,9 +2884,7 @@ static void _do_searing_ray()
     }
 
     if (crawl_state.prev_cmd == CMD_WAIT)
-    {
         handle_searing_ray();
-    }
     else
         end_searing_ray();
 }
