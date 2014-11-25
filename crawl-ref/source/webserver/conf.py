@@ -84,7 +84,7 @@ class Conf(object):
         # Load from games_conf_d
         games_conf_d = self.get("games_conf_d")
         if games_conf_d and os.path.isdir(games_conf_d):
-            for f in os.listdir(games_conf_d):
+            for f in sorted(os.listdir(games_conf_d)):
                 f_path = os.path.join(games_conf_d, f)
                 if not os.path.isfile(f_path):
                     logging.warning("Skipping non-file in games_conf_d: %s" % f_path)
