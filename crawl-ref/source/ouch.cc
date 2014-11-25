@@ -833,15 +833,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)
     {
-        dam = do_shave_damage(dam);
-
-        if (dam <= 0)
-        {
-            // Rotting and costs may lower hp directly.
-            if (you.hp > 0)
-                return;
-            dam = 0;
-        }
+        dam = max(0, do_shave_damage(dam));
     }
 
     if (dam != INSTANT_DEATH)
