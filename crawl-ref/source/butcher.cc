@@ -155,6 +155,10 @@ bool butchery(int which_corpse)
         else if (ce == CE_ROT)
             badness += 1000;
 
+        // Bottleable corpses first, unless forbidden
+        if (bottle_blood && !can_bottle_blood_from_corpse(si->mon_type))
+            badness += 4000;
+
         if (is_forbidden_food(*si))
             badness += 10000;
 
