@@ -3,6 +3,7 @@
 #ifdef USE_TILE
 #include "tilemcache.h"
 
+#include "colour.h"
 #include "env.h"
 #include "libutil.h"
 #include "misc.h"
@@ -1422,14 +1423,17 @@ mcache_demon::mcache_demon(const monster_info& minf)
 
     const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
 
-    m_demon.head = tile_player_coloured(TILEP_DEMON_HEAD, minf.colour())
+    m_demon.head = tile_player_coloured(TILEP_DEMON_HEAD,
+                                        element_colour(minf.colour()))
         + hash_rand(tile_player_count(TILEP_DEMON_HEAD), seed, 1);
-    m_demon.body = tile_player_coloured(TILEP_DEMON_BODY, minf.colour())
+    m_demon.body = tile_player_coloured(TILEP_DEMON_BODY,
+                                        element_colour(minf.colour()))
         + hash_rand(tile_player_count(TILEP_DEMON_BODY), seed, 2);
 
     if (minf.fly)
     {
-        m_demon.wings = tile_player_coloured(TILEP_DEMON_WINGS, minf.colour())
+        m_demon.wings = tile_player_coloured(TILEP_DEMON_WINGS,
+                                             element_colour(minf.colour()))
             + hash_rand(tile_player_count(TILEP_DEMON_WINGS), seed, 3);
     }
     else
