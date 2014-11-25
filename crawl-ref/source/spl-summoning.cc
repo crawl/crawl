@@ -492,7 +492,8 @@ static bool _place_dragon()
         // Now try to create the actual dragon
         if (spots.size() <= 0)
             continue;
-            const coord_def pos = spots[random2(spots.size())];
+
+        const coord_def pos = spots[random2(spots.size())];
 
         monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
                                                    2, SPELL_DRAGON_CALL,
