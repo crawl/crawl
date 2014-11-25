@@ -3561,7 +3561,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_BONE_ARMOUR, "Cigotuvi's Embrace",
     SPTYP_NECROMANCY,
-    SPFLAG_CHAOTIC | SPFLAG_CORPSE_VIOLATING | SPFLAG_UTILITY,
+    SPFLAG_CHAOTIC | SPFLAG_CORPSE_VIOLATING | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
     5,
     200,
     -1, -1,
