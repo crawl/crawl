@@ -2065,8 +2065,11 @@ jewellery_type get_random_amulet_type()
 static jewellery_type _get_raw_random_ring_type()
 {
     jewellery_type ring;
-    do ring = (jewellery_type)(random_range(RING_FIRST_RING, NUM_RINGS - 1));
-        while (ring == RING_TELEPORTATION && crawl_state.game_is_sprint());
+    do
+    {
+        ring = (jewellery_type)(random_range(RING_FIRST_RING, NUM_RINGS - 1));
+    }
+    while (ring == RING_TELEPORTATION && crawl_state.game_is_sprint());
     return ring;
 }
 

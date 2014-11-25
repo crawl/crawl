@@ -155,11 +155,7 @@ static string _get_version_changes()
         {
         highlight:
             // Highlight the Highlights, so to speak.
-            string text  = "<w>";
-                   text += help;
-                   text += "</w>";
-                   text += "\n";
-            result += text;
+            result += "<w>" + help + "</w>\n";
             // And start printing from now on.
             start = true;
         }

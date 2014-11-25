@@ -186,8 +186,11 @@ void ghost_demon::init_pandemonium_lord()
     mon_spell_slot slot;
     slot.flags = MON_SPELL_DEMONIC;
 
-    do name = make_name(random_int(), false);
-        while (!getLongDescription(name).empty());
+    do
+    {
+        name = make_name(random_int(), false);
+    }
+    while (!getLongDescription(name).empty());
 
     // hp - could be defined below (as could ev, AC, etc.). Oh well, too late:
     max_hp = 100 + roll_dice(3, 50);

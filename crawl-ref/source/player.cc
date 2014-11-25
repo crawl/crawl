@@ -178,7 +178,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
         if (!yes_or_no("%s", prompt.c_str()))
         {
             canned_msg(MSG_OK);
-                return false;
+            return false;
         }
     }
     else if (!trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])

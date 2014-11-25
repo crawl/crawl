@@ -1192,8 +1192,8 @@ string part_stack_string(const int num, const int total)
     if (num == total)
         return "Your";
 
-    string ret  = uppercase_first(number_in_words(num));
-           ret += " of your";
+    string ret  = uppercase_first(number_in_words(num))
+                + " of your";
 
     return ret;
 }

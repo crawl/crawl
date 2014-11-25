@@ -5474,7 +5474,7 @@ void ru_offer_new_sacrifices()
         return;
 
     simple_god_message(" believes you are ready to make a new sacrifice.");
-                    more();
+    more();
 
     // try to get three distinct sacrifices
     int lesser_sacrifice;
