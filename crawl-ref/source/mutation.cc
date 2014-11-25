@@ -2410,7 +2410,8 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     int levels = 0;
     while (how_much-- > 0)
     {
-    dprf("Perma Mutate: %d, %d, %d", cap, you.mutation[which_mut], you.innate_mutation[which_mut]);
+        dprf("Perma Mutate: %d, %d, %d", cap,
+             you.mutation[which_mut], you.innate_mutation[which_mut]);
         if (you.mutation[which_mut] == cap && how_much == 0)
         {
             // [rpb] primarily for demonspawn, if the mutation level is already

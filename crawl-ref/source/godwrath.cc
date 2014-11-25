@@ -1549,7 +1549,7 @@ static bool _fedhas_retribution()
     case 1:
     default:
         _fedhas_elemental_miscast();
-            return true;
+        return true;
 
     case 2:
         return _fedhas_summon_plants();

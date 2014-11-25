@@ -1591,8 +1591,8 @@ void append_spells(string &desc, const item_def &item)
         if (stype == SPELL_NO_SPELL)
             continue;
 
-        string name = (is_memorised(stype) ? "*" : "");
-                    name += spell_title(stype);
+        string name = string(is_memorised(stype) ? "*" : "")
+                      + spell_title(stype);
         desc += chop_string(name, 35);
 
         string schools;
@@ -3890,8 +3890,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         symbol_suffix += symbol;
         symbol_suffix += "_suffix";
 
-        string suffix = getLongDescription(symbol_suffix);
-              suffix += getLongDescription(symbol_suffix + "_examine");
+        string suffix = getLongDescription(symbol_suffix)
+                      + getLongDescription(symbol_suffix + "_examine");
 
         if (!suffix.empty())
             inf.body << "\n" << suffix;
