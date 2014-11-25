@@ -2605,6 +2605,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
 
     int merc;
     monster *mon;
+    bool hated = player_mutation_level(MUT_NO_LOVE);
 
     while (1)
     {
@@ -2635,6 +2636,9 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
             return;
         }
 
+        // always hostile, don't try to find a good one
+        if (hated)
+            break;
         if (player_will_anger_monster(mon))
         {
             dprf("God %s doesn't like %s, retrying.",
@@ -2649,6 +2653,12 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
     mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
 
     redraw_screen(); // We want to see the monster while it's asking to be paid.
+
+    if (hated)
+    {
+        simple_monster_message(mon, " is unwilling to work for you!");
+        return;
+    }
 
     const int fee = fuzz_value(exper_value(mon), 15, 15);
     if (fee > you.gold)
