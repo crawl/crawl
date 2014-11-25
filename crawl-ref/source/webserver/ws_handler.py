@@ -555,6 +555,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def get_rc(self, game_id):
         if game_id not in config.games: return
+        if not os.path.isfile(self.rcfile_path(game_id)): return
         with open(self.rcfile_path(game_id), 'r') as f:
             contents = f.read()
         self.send_message("rcfile_contents", contents = contents)
