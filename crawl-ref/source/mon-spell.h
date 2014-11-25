@@ -2158,4 +2158,11 @@ static const mon_spellbook mspell_list[] =
         { SPELL_THROW_ICICLE, 24, MON_SPELL_NATURAL | MON_SPELL_BREATH },
       }
     },
+
+    {  MST_INSUBSTANTIAL_WISP,
+      {
+       { SPELL_BLINK, 18, MON_SPELL_NATURAL },
+       { SPELL_DISCHARGE, 32, MON_SPELL_NATURAL },
+      }
+    },
 };

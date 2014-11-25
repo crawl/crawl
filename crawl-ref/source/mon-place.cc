@@ -2279,7 +2279,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_INSUBSTANTIAL_WISP:
         band = BAND_INSUBSTANTIAL_WISPS;
-        band_size = 3 + random2(4);
+        band_size = 2 + random2(4);
         break;
     case MONS_OGRE_MAGE:
         natural_leader = true;
