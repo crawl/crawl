@@ -2921,7 +2921,7 @@ static void _swap_places(monster* mons, const coord_def &loc)
     mpr("You swap places.");
 
     const coord_def old_loc = mons->pos();
-    mons->move_to_pos(loc);
+    mons->move_to_pos(loc, true, true);
     mons->apply_location_effects(old_loc);
     return;
 }
