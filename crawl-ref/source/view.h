@@ -40,7 +40,8 @@ void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay);
 #endif
 
-enum animation_type {
+enum animation_type
+{
     ANIMATION_SHAKE_VIEWPORT,
     ANIMATION_CHECKERBOARD,
     ANIMATION_BANISH,
@@ -49,7 +50,8 @@ enum animation_type {
     NUM_ANIMATIONS
 };
 
-class animation {
+class animation
+{
 public:
     animation(): frames(10), frame_delay(50) { }
     virtual ~animation() { }

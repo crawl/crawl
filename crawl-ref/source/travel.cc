@@ -2334,7 +2334,8 @@ static level_pos _find_entrance(const level_pos &from)
     lid.depth = 1;
     level_id new_lid = find_up_level(lid);
 
-    if (new_lid.is_valid()) {
+    if (new_lid.is_valid())
+    {
         LevelInfo &li = travel_cache.get_level_info(new_lid);
         vector<stair_info> &stairs = li.get_stairs();
         for (const auto &stair : stairs)
@@ -2400,7 +2401,7 @@ static void _travel_depth_munge(int munge_method, const string &s,
     case '$':
         lid = find_deepest_explored(lid);
         break;
-    case '^': {
+    case '^':
         if (targ.pos.x != -1)
         {
             LevelInfo &li = travel_cache.get_level_info(lid);
@@ -2415,7 +2416,6 @@ static void _travel_depth_munge(int munge_method, const string &s,
         targ = _find_entrance(targ);
         return;
         break;
-    }
     }
     targ.id = lid;
     if (targ.id.depth < 1)

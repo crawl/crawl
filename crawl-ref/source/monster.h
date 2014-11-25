@@ -51,7 +51,8 @@ public:
 
     unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour
-    union {
+    union
+    {
         unsigned int number;   ///< General purpose number variable
         int blob_size;         ///< # of slimes/masses in this one
         int num_heads;         ///< Hydra-like head number

@@ -1879,7 +1879,8 @@ static int _stealth_breakpoint(int stealth)
         return 1 + stealth / STEALTH_PIP;
 }
 
-static string _stealth_bar(int sw) {
+static string _stealth_bar(int sw)
+{
     string bar;
     //no colouring
     bar += _determine_colour_string(0, 5);

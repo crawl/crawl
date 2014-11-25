@@ -4195,7 +4195,8 @@ int player::scan_artefacts(artefact_prop_type which_property,
 
         bool known;
         int val = artefact_wpn_property(inv[eq], which_property, known);
-        if (calc_unid || known) {
+        if (calc_unid || known)
+        {
             retval += val;
             if (matches && val)
                 matches->push_back(inv[eq]);

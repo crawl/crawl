@@ -1178,7 +1178,8 @@ bool show_map(level_pos &lpos,
                                                     : RMODE_EXPLORE);
                     _reset_travel_colours(features, on_level);
 
-                    if (!whereto.zero()) {
+                    if (!whereto.zero())
+                    {
                         move_x = whereto.x - lpos.pos.x;
                         move_y = whereto.y - lpos.pos.y;
                     }

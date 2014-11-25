@@ -578,7 +578,8 @@ static void _wanderer_note_items()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item(you.inv[i]);
-        if (item.defined()) {
+        if (item.defined())
+        {
             if (!first_item)
                 equip_str << ", ";
             equip_str << item.name(DESC_A, false, true);

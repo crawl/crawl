@@ -248,7 +248,8 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_CHARM:
     case ENCH_BRIBED:
     case ENCH_PERMA_BRIBED:
-    case ENCH_HEXED: {
+    case ENCH_HEXED:
+    {
         behaviour = BEH_SEEK;
 
         actor *source_actor = actor_by_mid(ench.source, true);

@@ -1700,9 +1700,8 @@ void zap_wand(int slot)
     }
 
     const int mp_cost = wand_mp_cost();
-    if (!enough_mp(mp_cost, false)) {
+    if (!enough_mp(mp_cost, false))
         return;
-    }
 
     if (slot != -1)
         item_slot = slot;

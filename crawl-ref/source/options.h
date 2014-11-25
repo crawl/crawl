@@ -544,7 +544,8 @@ static inline short macro_colour(short col)
     return col < 0 ? col : Options.colour[ col ];
 }
 
-enum use_animation_type {
+enum use_animation_type
+{
     UA_NONE             = 0,
     // projectile animations, from throwing weapons, fireball, etc
     UA_BEAM             = (1 << 0),
