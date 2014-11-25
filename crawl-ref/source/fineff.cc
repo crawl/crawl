@@ -373,7 +373,7 @@ void starcursed_merge_fineff::fire()
         return;
 
     monster *mon = defend->as_monster();
-    
+
     // Find a random adjacent starcursed mass and merge with it.
     for (fair_adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
