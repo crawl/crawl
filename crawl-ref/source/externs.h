@@ -523,7 +523,8 @@ struct item_def
     object_class_type base_type:8; ///< basic class (eg OBJ_WEAPON)
     uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
-    union {
+    union
+    {
         short plus;                 ///< + to hit/dam (weapons, rods)
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
@@ -534,7 +535,8 @@ struct item_def
         short net_durability;       ///< damage dealt to a net
         short book_param;           ///< level of spells in a monolevel book
     };
-    union {
+    union
+    {
         short plus2;        ///< legacy/generic name for this union
         short evoker_debt;  ///< xp~ required for evoker to finish recharging
         short used_count;   ///< the # of known times it was used (decks, wands)

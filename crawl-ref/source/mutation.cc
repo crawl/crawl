@@ -1479,7 +1479,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     // Undead bodies don't mutate, they fall apart. -- bwr
     if (undead_mutation_rot())
     {
-        switch (mutclass) {
+        switch (mutclass)
+        {
         case MUTCLASS_TEMPORARY:
             lose_stat(STAT_RANDOM, 1, false, reason);
             return true;

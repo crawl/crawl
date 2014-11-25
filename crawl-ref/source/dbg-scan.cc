@@ -738,7 +738,8 @@ const static char *stat_out_ext = ".txt";
 #define STAT_PRECISION 2
 
 // This must match the order of item_fields
-enum item_base_type {
+enum item_base_type
+{
     ITEM_FOOD,
     ITEM_GOLD,
     ITEM_SCROLLS,
@@ -759,7 +760,8 @@ enum item_base_type {
     ITEM_IGNORE = 100,
 };
 
-enum antiquity_level {
+enum antiquity_level
+{
     ANTIQ_ORDINARY,
     ANTIQ_ARTEFACT,
     ANTIQ_ALL,
