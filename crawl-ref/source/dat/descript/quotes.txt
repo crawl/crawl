@@ -2782,6 +2782,18 @@ staff of wizardry
 
 <staff>
 %%%%
+starcursed mass
+
+“Did you see that star go out?
+ I seen it burn.
+
+ That little star went out,
+ your little eyes went out.
+
+ Our burnt little dreams are hid
+ up where the stars get lit.”
+    -Thee Silver Mt. Zion, “I Built Myself a Metal Bird”. 2010.
+%%%%
 steam dragon armour
 
 <steam dragon hide>
