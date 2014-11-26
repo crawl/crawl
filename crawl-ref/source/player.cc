@@ -7114,8 +7114,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     }
     else
     {
-        const monster* mon = agent->as_monster();
-        ouch(amount, kill_type, mon ? mon->mid : MID_PLAYER, aux.c_str(),
+        ouch(amount, kill_type, agent->mid, aux.c_str(),
              agent->visible_to(this), source.c_str());
     }
 
