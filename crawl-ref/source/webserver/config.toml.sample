@@ -64,6 +64,16 @@ max_score_list_length = 1000
 # indicated by color/description on the WebTiles lobby and spectator list.
 # server_admins = []
 
+# Set to a list of users who can use the web ui administration panel.
+# server_admins are implicitly included in this group. You can implicitly
+# include devs by setting devs_are_server_janitors to true.
+# server_janitors = []
+
+# Set to true to allow devs to use web ui admin commands. Note: this is a
+# pretty big security hole! Anyone could register a dev nick, and they're
+# publicly known.
+# devs_are_server_janitors = false
+
 # A text file containing user accounts of the DCSS Development Team. The
 # devteam title is indicated by color/description on the WebTiles lobby and
 # spectator list. This file should come as part of the repository.

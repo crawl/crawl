@@ -74,6 +74,11 @@ class Conf(object):
         # crawl usernames are case-insensitive
         if self.get("server_admins"):
             self.data["server_admins"] = [a.lower() for a in self.server_admins]
+        else:
+            self.data["server_admins"] = []
+        self.janitors = set([j.lower() for j in
+                            self.get("server_janitors", [])])
+        self.janitors.update(self.data["server_admins"])
         devteam_file = self.get("devteam_file")
         if devteam_file:
             try:
@@ -90,6 +95,8 @@ class Conf(object):
                 # We leave case intact on the primary account here since it's
                 # used for display purposes.
                 self.devteam[row[0]] = [u.lower() for u in row[1:]]
+                if self.get('devs_are_server_janitors'):
+                    self.janitors.update(row)
             devteam_fh.close()
         else:
             self.devteam = None
