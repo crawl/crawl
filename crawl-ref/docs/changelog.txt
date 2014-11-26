@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-2405-g490e8e2)
+Stone Soup 0.16 (up to 0.16-a0-2728-gd75f5fb)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -11,6 +11,8 @@ Branches, environment
 * Clouds of draining now require rN+++ for immunity, up from rN+.
 * Clouds of miasma now apply the 'Rot' status, rather than causing rotting
   directly.
+* Traps no longer care about whether the player is flying.
+* The 'disarm trap' command has been removed.
 
 Character
 ---------
@@ -22,6 +24,7 @@ Character
 * Ghouls now gain as much healing from normal chunks as they previously got
   from rotting flesh, and always cure a point of rot when eating a chunk.
 * Vampires now bottle blood with 'c', which they can now do from first level.
+* Butchering/bottling now only takes a single turn.
 * Wanderers now receive a randart spellbook instead of starting with a Level 1
   spell memorized.
 * Wanderers can start with one elemental evoker or a box of beasts instead of
@@ -44,9 +47,18 @@ Monsters
 * Curse skulls now move - fast!
 * Iron devils have been upgraded to rust devils, which do less damage but
   corrode with their touch.
+* Insubstantial wisps are now slightly weaker & less numerous, but have Static
+  Discharge.
+* Seraphim are now considerably stronger, and have a new spellset. They can
+  now (very occasionally) appear on the orb run.
 * New monsters:
+  - Robin of the Strong Arm, appearing in the early Dungeon. An unusually
+    strong hobgoblin, with a personal army of hobgoblins and hogblins that she
+    will happily hurl at the player.
   - Caustic shrikes, appearing in Depths. Metallic birds that travel in flocks,
     attacking with acid-dripping claws that sear through armour & flesh alike.
+  - Shard shrikes, appearing in Cocytus. Batty monsters that come in flocks and
+    spit deadly ice shards at their foes.
   - Elemental wellsprings, appearing in Cocytus. They fire powerful waves of
     water which produce hostile water elementals - but deplete their own
     'health' in the process.
@@ -65,10 +77,12 @@ Monsters
   - Green rats -> river rats.
   - Mermaids -> sirens.
   - Sirens -> merfolk avatars.
+* Ghost crabs have been moved from Crypt to Swamp.
 * The "misshapen and mutated" status (from Malmutate and the new Irradiate
   spell) is now temporary, but more significant.
 * Player ghosts & spellforged servitors can now have more than six spells.
 * Player ghosts now have their weapon brands displayed.
+* Hellwings can now cast Cigotuvi's Embrace, and start with it active.
 * Xtahua's breath now creates a cloud of flames, like red draconians'.
 * Tiamat can now be any colour of draconian, except grey.
 * Fannar can now cast Condensation Shield.
@@ -81,14 +95,22 @@ Monsters
 Spells
 ------
 * New spells:
+  - Singularity (L9 Translocation), which summons a singularity & sucks in all
+    nearby enemies, severely damaging them in the process.
   - Hydra Form (L6 Transmutation), a short-duration form that attacks all
     adjacent foes & devours slain foes for nutrition and healing.
   - Irradiate (L5 Transmutation/Conjuration), which deals heavy damage &
     malmutates nearby enemies, but also contaminates the caster.
+  - Cigotuvi's Embrace (L5 Necromancy), which turns all corpses in LOS into
+    armour for the player.
+* Dispersal now affects a wider radius & has a chance of confusing its victims.
+* Force Lance is now L4 Translocation/Conjuration, and is more accurate and
+  better at knocking enemies back.
 * Ice, Dragon, Tree and Fungus forms no longer meld octopode rings.
 * Dragon Form now provides a spell power & success chance enhancer for Dragon's
   Call.
 * Spell miscast effects have been hugely revamped.
+* Twisted Resurrection has been removed.
 
 Items
 -----
@@ -113,6 +135,8 @@ Items
   - The Iron Rod, which fires a spray of shrapnel in a wide arc. Extremely
     effective against agile, low-AC enemies, but ineffective against armoured
     enemies or at a distance.
+  - The Plane Papyrus, a new high-level book with Dispersal, Controlled Blink,
+    Disjunction and Singularity.
 * Regeneration has been moved from rings to amulets.
 * Corrosion resistance can now occur on artefact armour.
 * Scale mail now only has 10 ER, down from 11.
@@ -186,6 +210,9 @@ Cards
   - Velocity will always apply a overall-positive effect (with allies present).
   - Banshee now drains victims, in addition to causing fear.
   - Solitude can now cause Disjunction at high power.
+* Wild Magic now affects enemies instead of the player, and restores magic for
+  each enemy so affected. It has moved from the Deck of Punishment to the Deck
+  of Wonders.
 * Dowsing is no longer in the deck of battle.
 * Decks of war have lost their set of destruction cards.
 * The Cloud card has moved from decks of destruction to decks of emergency.
@@ -250,6 +277,7 @@ Interface
   are still visible with @.)
 * A third page has been added to the god description (^) screen, listing causes
   and effects of divine wrath.
+* Control-direction no longer tries to open or close doors.
 * Derived undead (zombies, skeletons, &c) now have their full names displayed.
 * Corrosion now visibly (temporarily) reduces weapons' enhancement bonuses.
 * Monsters no longer appear on the minimap.
