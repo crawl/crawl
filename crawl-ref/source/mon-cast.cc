@@ -4250,7 +4250,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
             continue;
         }
 
-        retval = 0;
+        retval = max(retval, 0);
 
         if (!actual)
             continue;
@@ -4321,7 +4321,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
             continue;
         }
 
-        retval = 0;
+        retval = max(retval, 0);
 
         int res_margin = mi->check_res_magic(pow);
         if (res_margin > 0)
@@ -4386,7 +4386,7 @@ static int _mons_control_undead(monster* mons, bool actual)
             continue;
         }
 
-        retval = 0;
+        retval = max(retval, 0);
 
         int res_margin = mi->check_res_magic(pow);
         if (res_margin > 0)
