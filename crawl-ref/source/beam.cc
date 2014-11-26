@@ -5775,12 +5775,10 @@ bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
                      : 2500;
     const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
 
-    bool moved = false;
-
     ASSERT(ray.pos() == act->pos());
 
-    const coord_def oldpos(ray.pos());
-    while (distance-- > 0)
+    const coord_def initial_pos(ray.pos());
+    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
     {
         // Save is based on target's body weight.
         if (random2(roll) < weight)
@@ -5791,13 +5789,11 @@ bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
         ray.advance();
 
         newpos = ray.pos();
-        if (newpos == oldpos)
+        if (newpos == ray_copy.pos())
         {
             ray = ray_copy;
-            return moved;
+            return ray.pos() != initial_pos;
         }
-
-        moved = true;
 
         if (!cell_is_solid(newpos)
             && !actor_at(newpos)
@@ -5812,7 +5808,7 @@ bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
 
     // Knockback cannot ever kill the actor directly - caller must do
     // apply_location_effects after messaging.
-    return moved;
+    return ray.pos() != initial_pos;
 }
 
 // Takes a bolt and refines it for use in the explosion function.
