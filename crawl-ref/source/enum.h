@@ -367,6 +367,7 @@ enum attribute_type
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
     ATTR_BONE_ARMOUR,          // Current amount of boney armour (from the spell)
+    ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     NUM_ATTRIBUTES
 };
 
