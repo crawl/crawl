@@ -26,11 +26,9 @@ opacity_type opacity_default::operator()(const coord_def& p) const
     dungeon_feature_type f = grd(p);
     if (feat_is_opaque(f))
         return OPC_OPAQUE;
-    else if (feat_is_tree(f))
-        return OPC_HALF;
     else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
-    if (const monster *mon = monster_at(p))
+    else if (const monster *mon = monster_at(p))
         return mons_opacity(mon, LOS_DEFAULT);
     return OPC_CLEAR;
 }
@@ -46,11 +44,11 @@ opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
 opacity_type opacity_no_trans::operator()(const coord_def& p) const
 {
     dungeon_feature_type f = grd(p);
-    if (feat_is_opaque(f) || feat_is_wall(f) || feat_is_tree(f))
+    if (feat_is_opaque(f) || feat_is_wall(f))
         return OPC_OPAQUE;
     else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
-    if (const monster *mon = monster_at(p))
+    else if (const monster *mon = monster_at(p))
         return mons_opacity(mon, LOS_NO_TRANS);
     return OPC_CLEAR;
 }
