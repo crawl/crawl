@@ -2233,8 +2233,12 @@ int player_speed()
         ps = haste_mul(ps);
 
     if (you.duration[DUR_BERSERK] && !you_worship(GOD_CHEIBRIADOS))
+    {
         ps = berserk_div(ps);
-    else if (you.duration[DUR_HASTE])
+    }
+    else if (you.duration[DUR_HASTE]
+             || (you.duration[DUR_FRENZY] && you.holiness() == MH_NATURAL
+                 && !you_worship(GOD_CHEIBRIADOS)))
         ps = haste_div(ps);
 
     if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])

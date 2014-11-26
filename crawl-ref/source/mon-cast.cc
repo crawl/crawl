@@ -1219,6 +1219,10 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+    case SPELL_FRENZY:
+        beam.flavour  = BEAM_FRENZY;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1399,7 +1403,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SHATTER:
-    case SPELL_FRENZY:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
 #endif
@@ -1498,8 +1501,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             || spell_cast == SPELL_INVISIBILITY
             || spell_cast == SPELL_MINOR_HEALING
             || spell_cast == SPELL_TELEPORT_SELF
-            || spell_cast == SPELL_SILENCE
-            || spell_cast == SPELL_FRENZY)
+            || spell_cast == SPELL_SILENCE)
         {
             pbolt.target = mons->pos();
         }
@@ -2324,7 +2326,6 @@ static bool _ms_low_hitpoint_cast(monster* mon, mon_spell_slot slot)
     case SPELL_HASTE:
     case SPELL_DEATHS_DOOR:
     case SPELL_BERSERKER_RAGE:
-    case SPELL_FRENZY:
     case SPELL_MIGHT:
     case SPELL_WIND_BLAST:
     case SPELL_EPHEMERAL_INFUSION:
@@ -4979,10 +4980,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->go_berserk(true);
         return;
 
-    case SPELL_FRENZY:
-        mons->go_frenzy(mons);
-        return;
-
     case SPELL_TROGS_HAND:
     {
         simple_monster_message(mons,
@@ -7496,9 +7493,6 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             return true;
         }
         return !mon->needs_berserk(false);
-
-    case SPELL_FRENZY:
-        return !mon->can_go_frenzy();
 
     case SPELL_HASTE:
         return mon->has_ench(ENCH_HASTE);

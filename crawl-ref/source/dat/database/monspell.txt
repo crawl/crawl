@@ -285,10 +285,6 @@ Petrifying Cloud cast
 
 @The_monster@ breathes a plume of calcifying dust @at@ @target@.
 %%%%
-Frenzy cast
-
-@The_monster@ convulses with anger.
-%%%%
 Volley of Thorns cast
 
 @The_monster@ fires a volley of thorns @at@ @target@.

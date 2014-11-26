@@ -496,10 +496,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
         case SPMSL_FRENZY:
             if (defender->holiness() == MH_UNDEAD
                 || defender->holiness() == MH_NONLIVING
-                || defender->is_player()
-                   && !you.can_go_berserk(false, false, false)
-                || defender->is_monster()
-                   && !defender->as_monster()->can_go_frenzy())
+                || !defender->can_go_frenzy())
             {
                 susceptible = false;
             }
@@ -784,10 +781,8 @@ bool ranged_attack::apply_missile_brand()
             // Wake up the monster so that it can frenzy.
             if (mon->behaviour == BEH_SLEEP)
                 mon->behaviour = BEH_WANDER;
-            mon->go_frenzy(attacker);
         }
-        else
-            defender->go_berserk(false);
+        defender->go_frenzy(attacker);
         break;
     }
 

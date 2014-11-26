@@ -166,8 +166,11 @@ public:
     virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other, bool ranged = false) = 0;
     virtual bool can_go_berserk() const = 0;
+    virtual bool can_go_frenzy() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
+    virtual bool go_frenzy(actor *source) = 0;
     virtual bool berserk() const = 0;
+    virtual bool berserk_or_insane() const = 0;
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;

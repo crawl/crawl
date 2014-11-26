@@ -598,10 +598,13 @@ public:
 
     void attacking(actor *other, bool ranged = false);
     bool can_go_berserk() const;
+    bool can_go_frenzy() const;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false) const;
     bool go_berserk(bool intentional, bool potion = false);
+    bool go_frenzy(actor *source);
     bool berserk() const;
+    bool berserk_or_insane() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate(bool temp = true) const;

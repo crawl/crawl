@@ -204,8 +204,8 @@ NORETURN static void _launch_game();
 static void _do_berserk_no_combat_penalty();
 static void _do_searing_ray();
 static void _input();
-static void _move_player(int move_x, int move_y);
-static void _move_player(coord_def move);
+static void _move_player(int move_x, int move_y, bool intentional = true);
+static void _move_player(coord_def move, bool intentional = true);
 static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
 static void _open_door(coord_def move = coord_def(0,0));
 
@@ -1271,6 +1271,58 @@ static void _update_place_info()
     curr_PlaceInfo.assert_validity();
 }
 
+static void _player_frenzy_act()
+{
+    coord_def move;
+    monster *victim = NULL;
+    int min_dist = 999, min_count = 0;
+    for (monster_near_iterator mi(&you); mi; ++mi)
+    {
+        if (!you.can_see(*mi))
+            continue;
+
+        const int dist = grid_distance(mi->pos(), you.pos());
+        if (dist < min_dist || (dist == min_dist && !random2(++min_count)))
+        {
+            if (dist < min_dist)
+                min_count = 1;
+            min_dist = dist;
+            victim = *mi;
+        }
+    }
+    if (victim)
+    {
+        ray_def ray;
+        if (!find_ray(you.pos(), victim->pos(), ray, opc_solid_see))
+        {
+            you.turn_is_over = true;
+            return;
+        }
+        ray.advance();
+        move = ray.pos() - you.pos();
+    }
+    else
+    {
+        move.x = random_range(-1, 1);
+        move.y = random_range(-1, 1);
+    }
+
+    if (move.origin())
+    {
+        you.turn_is_over = true;
+        return;
+    }
+
+    coord_def target = you.pos() + move;
+    if (!you.is_habitable(target))
+    {
+        you.turn_is_over = true;
+        return;
+    }
+
+    _move_player(move);
+}
+
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -1328,13 +1380,15 @@ static void _input()
 
     hints_new_turn();
 
-    if (you.cannot_act())
+    if (you.cannot_act() || you.duration[DUR_FRENZY])
     {
         if (crawl_state.repeat_cmd != CMD_WIZARD)
         {
             crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
                                           "repetition.");
         }
+        if (!you.cannot_act())
+            _player_frenzy_act();
         world_reacts();
         return;
     }
@@ -2449,7 +2503,7 @@ void world_reacts()
 
     viewwindow();
 
-    if (you.cannot_act() && any_messages()
+    if ((you.cannot_act() || you.duration[DUR_FRENZY]) && any_messages()
         && crawl_state.repeat_cmd != CMD_WIZARD)
     {
         more();
@@ -2892,9 +2946,9 @@ static void _do_searing_ray()
 
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
-static void _move_player(int move_x, int move_y)
+static void _move_player(int move_x, int move_y, bool intentional)
 {
-    _move_player(coord_def(move_x, move_y));
+    _move_player(coord_def(move_x, move_y), intentional);
 }
 
 // Swap monster to this location.  Player is swapped elsewhere.
@@ -2926,7 +2980,7 @@ static void _swap_places(monster* mons, const coord_def &loc)
     return;
 }
 
-static void _move_player(coord_def move)
+static void _move_player(coord_def move, bool intentional)
 {
     ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
 
@@ -2981,7 +3035,7 @@ static void _move_player(coord_def move)
         if (you.is_stationary())
             dangerous = DNGN_FLOOR; // still warn about allies
 
-        if (dangerous != DNGN_FLOOR || bad_mons)
+        if (intentional && (dangerous != DNGN_FLOOR || bad_mons))
         {
             string prompt = "Are you sure you want to stumble around while "
                             "confused and next to ";
@@ -3014,7 +3068,7 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (you.is_stationary())
+        if (intentional && you.is_stationary())
         {
             // Don't choose a random location to try to attack into - allows
             // abuse, since trying to move (not attack) takes no time, and
@@ -3080,6 +3134,8 @@ static void _move_player(coord_def move)
         // Why isn't the border permarock?
         if (you.digging)
             mpr("This wall is too hard to dig through.");
+        if (!intentional)
+            you.turn_is_over = true;
         return;
     }
 
@@ -3212,14 +3268,15 @@ static void _move_player(coord_def move)
             mpr("You're too terrified to move while being watched!");
             stop_running();
             moving = false;
-            you.turn_is_over = false;
+            you.turn_is_over = !intentional;
             return;
         }
     }
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
-        if (crawl_state.game_is_zotdef() && you.pos() == env.orb_pos)
+        if (crawl_state.game_is_zotdef() && you.pos() == env.orb_pos
+            && intentional)
         {
             // Are you standing on the Orb? If so, are the critters near?
             bool danger = false;
@@ -3248,11 +3305,12 @@ static void _move_player(coord_def move)
         if (!you.confused() && !check_moveto(targ, walkverb))
         {
             stop_running();
-            you.turn_is_over = false;
+            you.turn_is_over = !intentional;
             return;
         }
 
-        if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
+        if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY)
+            && intentional)
         {
             string prompt = "The barbs in your skin will harm you if you move."
                             " Continue?";
@@ -3391,7 +3449,7 @@ static void _move_player(coord_def move)
 
         stop_running();
         move.reset();
-        you.turn_is_over = false;
+        you.turn_is_over = !intentional;
         crawl_state.cancel_cmd_repeat();
         return;
     }
@@ -3400,6 +3458,7 @@ static void _move_player(coord_def move)
         mprf("You cannot move away from %s!",
             beholder->name(DESC_THE).c_str());
         stop_running();
+        you.turn_is_over = !intentional;
         return;
     }
     else if (fmonger && !attacking)
@@ -3407,6 +3466,7 @@ static void _move_player(coord_def move)
         mprf("You cannot move closer to %s!",
             fmonger->name(DESC_THE).c_str());
         stop_running();
+        you.turn_is_over = !intentional;
         return;
     }
 

@@ -785,11 +785,11 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_FRENZY, "Frenzy",
-     SPTYP_CHARMS,
+     SPTYP_HEXES,
      SPFLAG_HASTY | SPFLAG_MONSTER,
-     3,
+     5,
      0,
-     -1, -1,
+     LOS_RADIUS, LOS_RADIUS,
      3, 0,
      NULL,
 },

@@ -466,7 +466,8 @@ enum beam_type                  // bolt::flavour
     BEAM_DRAIN_MAGIC,
     BEAM_TUKIMAS_DANCE,
     BEAM_RESISTANCE,
-    BEAM_LAST_ENCHANTMENT = BEAM_RESISTANCE,
+    BEAM_FRENZY,
+    BEAM_LAST_ENCHANTMENT = BEAM_FRENZY,
 
     BEAM_MEPHITIC,
     BEAM_INK,
@@ -1688,6 +1689,7 @@ enum duration_type
     DUR_NO_SCROLLS,
     DUR_NEGATIVE_VULN,
     DUR_CLEAVE,
+    DUR_FRENZY,
     NUM_DURATIONS
 };
 

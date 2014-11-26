@@ -389,6 +389,18 @@ static void _update_cowardice()
         mpr("You feel a twist of horror at the sight of this foe.");
 }
 
+static void _exhaust_slow_player()
+{
+    int dur = 12 + roll_dice(2, 12);
+    // For consistency with slow give exhaustion 2 times the nominal
+    // duration.
+    you.increase_duration(DUR_EXHAUSTED, dur * 2);
+
+    notify_stat_change(STAT_STR, -5, true);
+
+    slow_player(dur);
+}
+
 /**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
@@ -415,6 +427,16 @@ void player_reacts_to_monsters()
     handle_starvation();
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
+    if (you.duration[DUR_FRENZY]
+        && _decrement_a_duration(DUR_FRENZY, you.time_taken))
+    {
+        mpr("You regain control of your senses.");
+
+        if (!you.duration[DUR_PARALYSIS] && !you.petrified())
+            mprf(MSGCH_WARN, "You are exhausted.");
+
+        _exhaust_slow_player();
+    }
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awake();
     _maybe_melt_armour();
@@ -429,7 +451,7 @@ static bool _check_recite()
         || you.confused()
         || you.asleep()
         || you.petrified()
-        || you.berserk())
+        || you.berserk_or_insane())
     {
         zin_recite_interrupt();
         return false;
@@ -857,18 +879,11 @@ static void _decrement_durations()
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
 
-        int dur = 12 + roll_dice(2, 12);
-        // For consistency with slow give exhaustion 2 times the nominal
-        // duration.
-        you.increase_duration(DUR_EXHAUSTED, dur * 2);
-
-        notify_stat_change(STAT_STR, -5, true);
-
         // Don't trigger too many hints mode messages.
         const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
         Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 
-        slow_player(dur);
+        _exhaust_slow_player();
 
         make_hungry(BERSERK_NUTRITION, true);
         you.hunger = max(HUNGER_STARVING - 100, you.hunger);

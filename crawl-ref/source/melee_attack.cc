@@ -1517,8 +1517,11 @@ int melee_attack::player_aux_stat_modify_damage(int damage)
 // armed attacks.
 int melee_attack::player_apply_misc_modifiers(int damage)
 {
-    if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
+    if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK]
+        || (you.duration[DUR_FRENZY] && you.holiness() == MH_NATURAL))
+    {
         damage += 1 + random2(10);
+    }
 
     if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         damage -= random2(5);

@@ -33,6 +33,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "viewgeom.h"
+#include "xom.h"
 
 int player::mindex() const
 {
@@ -936,6 +937,39 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
 bool player::berserk() const
 {
     return duration[DUR_BERSERK];
+}
+
+bool player::berserk_or_insane() const
+{
+    return duration[DUR_BERSERK] || duration[DUR_FRENZY];
+}
+
+bool player::go_frenzy(actor *source)
+{
+    if (!can_go_frenzy())
+        return false;
+
+    if (you.duration[DUR_SLOW])
+    {
+        mpr("You shake off your lethargy.");
+        you.duration[DUR_SLOW] = 0;
+    }
+
+    if (you.duration[DUR_HASTE])
+        you.duration[DUR_HASTE] = 0;
+
+    mprf(MSGCH_WARN, "An insane frenzy possesses you!");
+    you.increase_duration(DUR_FRENZY, 16 + random2avg(13, 2));
+    xom_is_stimulated(25);
+
+    _chei_prevents_berserk_haste(source == &you);
+    return true;
+}
+
+bool player::can_go_frenzy() const
+{
+    return !paralysed() && !petrified() && !petrifying() && !asleep()
+           && !berserk_or_insane() && !duration[DUR_EXHAUSTED];
 }
 
 bool player::can_cling_to_walls() const

@@ -529,6 +529,7 @@ static beam_type _chaotic_reflection_flavour(bolt* beam)
             10, BEAM_SLEEP,
             10, BEAM_VULNERABILITY,
             10, BEAM_RESISTANCE,
+            10, BEAM_FRENZY,
              2, BEAM_ENSNARE,
              0);
 }
@@ -3147,6 +3148,9 @@ bool bolt::harmless_to_player() const
     case BEAM_IGNITE_POISON:
         return !ignite_poison_affects(&you);
 
+    case BEAM_FRENZY:
+        return !you.can_go_frenzy();
+
     default:
         return false;
     }
@@ -3762,6 +3766,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         nasty = false;
         nice  = true;
+        break;
+
+    case BEAM_FRENZY:
+        you.go_frenzy(agent());
+        obvious_effect = true;
         break;
 
     default:
@@ -5718,6 +5727,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_FRENZY:
+        mon->go_frenzy(agent());
+        obvious_effect = true;
+        break;
+
     default:
         break;
     }
@@ -6537,6 +6551,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";
     case BEAM_RESISTANCE:            return "resistance";
+    case BEAM_FRENZY:                return "frenzy";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

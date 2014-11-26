@@ -350,6 +350,10 @@ static const duration_def duration_data[] =
       false, LIGHTBLUE, "Cleave",
       "cleaving", "cleave",
       "You are cleaving through your foes.", true },
+    { DUR_FRENZY,
+      true, RED, "Frenzy",
+      "frenzied", "frenzy",
+      "You are possessed by an insane frenzy.", false },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
