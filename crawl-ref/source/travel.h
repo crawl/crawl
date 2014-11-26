@@ -271,10 +271,12 @@ public:
     bool      guessed_pos;  // true if we're not sure that 'destination' is
                             // correct.
     stair_type type;
+    bool      backtracking; // if true, Backtrackticus currently considers
+                            // this stair backtracking and thus hates it
 
     stair_info()
         : position(-1, -1), grid(DNGN_FLOOR), destination(),
-          distance(-1), guessed_pos(true), type(PHYSICAL)
+          distance(-1), guessed_pos(true), type(PHYSICAL), backtracking(true)
     {
     }
 
@@ -605,5 +607,9 @@ void clear_level_target();
 
 void clear_travel_trail();
 int travel_trail_index(const coord_def& gc);
+
+bool has_connected_path_forward(const coord_def &c);
+void set_stair_backtracking_status(bool skip_check = false);
+bool valid_downward_path_exists(dungeon_feature_type up_stair);
 
 #endif // TRAVEL_H

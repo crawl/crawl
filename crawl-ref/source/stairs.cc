@@ -19,6 +19,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godconduct.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -351,6 +352,21 @@ void up_stairs(dungeon_feature_type force_stair, bool wizard)
     if (_stair_moves_pre(stair_find))
         return;
 
+    if (you_worship(GOD_BACKTRACKTICUS))
+    {
+        if (valid_downward_path_exists(stair_find))
+        {
+            if (!yesno("Backtrackticus compels you to press onward! Really ascend?",
+                   false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
+            else
+                did_god_conduct(DID_BACKTRACK, 10, true);
+        }
+    }
+
     if (!you.airborne()
         && you.confused()
         && !feat_is_escape_hatch(stair_find)
@@ -462,6 +478,8 @@ void up_stairs(dungeon_feature_type force_stair, bool wizard)
         mprf(MSGCH_WARN, "You sense a powerful magical force warping space.");
 
     request_autopickup();
+
+    set_stair_backtracking_status();
 }
 
 // Find the other end of the stair or portal at location pos on the current
@@ -1030,6 +1048,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     maybe_update_stashes();
 
     request_autopickup();
+
+    set_stair_backtracking_status();
 
     // Zotdef: returning from portals (e.g. bazaar) paralyses the player in
     // place for 5 moves.  Nasty, but punishes players for using portals as

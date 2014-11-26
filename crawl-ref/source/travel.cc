@@ -27,11 +27,13 @@
 #include "directn.h"
 #include "delay.h"
 #include "dgn-overview.h"
+#include "dungeon.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "flood_find.h"
 #include "godabil.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -3246,6 +3248,7 @@ void stair_info::save(writer& outf) const
     destination.save(outf);
     marshallByte(outf, guessed_pos? 1 : 0);
     marshallByte(outf, type);
+    marshallByte(outf, backtracking);
 }
 
 void stair_info::load(reader& inf)
@@ -3255,6 +3258,11 @@ void stair_info::load(reader& inf)
     destination.load(inf);
     guessed_pos = unmarshallByte(inf) != 0;
     type = static_cast<stair_type>(unmarshallByte(inf));
+    if (inf.getMinorVersion() < TAG_MINOR_STAIR_BACKTRACKING)
+        backtracking = true;
+    else
+        backtracking = unmarshallByte(inf);
+
 }
 
 string stair_info::describe() const
@@ -3402,10 +3410,11 @@ void LevelInfo::create_placeholder_stair(const coord_def &stair,
     }
 
     stair_info placeholder;
-    placeholder.position    = stair;
-    placeholder.grid        = DNGN_FLOOR;
-    placeholder.destination = dest;
-    placeholder.type        = stair_info::PLACEHOLDER;
+    placeholder.position     = stair;
+    placeholder.grid         = DNGN_FLOOR;
+    placeholder.destination  = dest;
+    placeholder.type         = stair_info::PLACEHOLDER;
+    placeholder.backtracking = has_connected_path_forward(stair);
     stairs.push_back(placeholder);
 
     resize_stair_distances();
@@ -4652,4 +4661,114 @@ int travel_trail_index(const coord_def& gc)
         return idx;
     else
         return -1;
+}
+
+static const vector<dungeon_feature_type> _down_stairs_list =
+{
+    DNGN_STONE_STAIRS_DOWN_I,
+    DNGN_STONE_STAIRS_DOWN_II,
+    DNGN_STONE_STAIRS_DOWN_III
+};
+
+static const vector<dungeon_feature_type> _up_stairs_list =
+{
+    DNGN_STONE_STAIRS_UP_I,
+    DNGN_STONE_STAIRS_UP_II,
+    DNGN_STONE_STAIRS_UP_III
+};
+
+/**
+ * Determines whether there's an unexplored stone down stair or rune pathable
+ * on this level. Ignores player water/lava traversability.
+ *
+ * @param coord_def The coordinates from which to determine connection.
+ *
+ * @returns bool Whether such a path exists.
+ */
+bool has_connected_path_forward(const coord_def &c)
+{
+    flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds);
+    coord_def stair_coord;
+    int points_added = 0;
+    for (dungeon_feature_type down_stair : _down_stairs_list)
+    {
+        stair_coord = dgn_find_nearby_stair(down_stair, you.pos(),
+            false, true);
+
+        if (stair_coord.x > 0 && !travel_cache.know_stair(stair_coord))
+        {
+            ff.add_point(stair_coord);
+            ++points_added;
+        }
+    }
+
+    item_def* rune = find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
+    if (rune) {
+        ff.add_point(rune->pos);
+        ++points_added;
+    }
+
+    if (points_added == 0)
+        return false; // with no added points, ff always returns true
+
+    return ff.any_point_connected_from(c);
+}
+
+/**
+ * For each stair, cache whether there's a valid path donwnward and/or rune
+ * accessible from that stair (if true, the stair is "backtracking").
+ * This is re-run every time you enter the level, so that changing features
+ * on the level (digging) doesn't change backtracking status of a stair.
+ *
+ * @param bool skip_check When true, cache all stairs as not backtracking.
+ *                        Used after collecting a rune.
+ */
+void set_stair_backtracking_status(bool skip_check)
+{
+    coord_def stair_coord;
+    LevelInfo *linf = travel_cache.find_level_info(level_id::current());
+
+    // Set whether each stair is considered backtracking.
+    // We'll reset each time you enter the level from below so that
+    // disconnected branches like Orc work.
+    for (dungeon_feature_type up_stair : _up_stairs_list)
+    {
+        stair_coord = dgn_find_nearby_stair(up_stair, you.pos(), false, true);
+        stair_info* sinfo = linf->get_stair(stair_coord);
+
+        if (sinfo != nullptr)
+        {
+            if (skip_check)
+                sinfo->backtracking = false;
+            else
+                sinfo->backtracking = has_connected_path_forward(stair_coord);
+        }
+    }
+}
+
+/**
+ * Checks the travel cache to see whether a stair is "backtracking" or not.
+ * When the cache for that stair is unavailable because it has not yet been
+ * initialized, run a fresh calcuation instead.
+ *
+ * @param coord_def The coordinates from which to determine valid path.
+ *
+ * @returns bool Whether such a path exists.
+ */
+bool valid_downward_path_exists(dungeon_feature_type up_stair)
+{
+    LevelInfo *linf = travel_cache.find_level_info(level_id::current());
+    coord_def stair_coord = dgn_find_nearby_stair(up_stair, you.pos(),
+            false, true);
+    stair_info* sinfo = linf->get_stair(stair_coord);
+    if (sinfo != nullptr)
+        return sinfo->backtracking;
+    else
+    {
+        // Stair data isn't saved until we use them, so when havve no cache
+        // we just have to wing it.
+        return has_connected_path_forward(stair_coord);
+    }
+
+    return false;
 }

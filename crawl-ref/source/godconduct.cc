@@ -65,7 +65,7 @@ static const char *conducts[] =
     "Souled Friend Died", "Attack In Sanctuary",
     "Kill Artificial", "Destroy Spellbook",
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Fire", "Kill Fiery", "Sacrificed Love"
+    "Fire", "Kill Fiery", "Sacrificed Love", "Backtrack"
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -444,7 +444,13 @@ static peeve_map divine_peeves[] =
     // GOD_RU,
     peeve_map(),
     //GOD_BACKTRACKTICUS
-    peeve_map(),
+    {
+        { DID_BACKTRACK, {
+            4, 10, "",
+            " does not appreciate your retracing your steps when you could still press onward!",
+            NULL, -5
+        } },
+    },
 };
 
 

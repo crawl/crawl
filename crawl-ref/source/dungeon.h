@@ -234,7 +234,8 @@ bool seen_replace_feat(dungeon_feature_type replace,
                        dungeon_feature_type feature);
 bool map_masked(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                coord_def base_pos, bool find_closest);
+                                coord_def base_pos, bool find_closest,
+                                bool exact_match = false);
 
 class mons_spec;
 monster *dgn_place_monster(mons_spec &mspec, coord_def where,
@@ -286,6 +287,7 @@ static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat
 string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
+bool dgn_square_is_passable(const coord_def &c);
 
 // Resets travel_point_distance!
 vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,

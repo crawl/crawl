@@ -1087,6 +1087,7 @@ enum conduct_type
     DID_FIRE,                             // Dithmenos
     DID_KILL_FIERY,                       // Dithmenos
     DID_SACRIFICE_LOVE,                   // Ru
+    DID_BACKTRACK,                        // Backtrackticus
 
     NUM_CONDUCTS
 };

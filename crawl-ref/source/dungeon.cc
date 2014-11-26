@@ -156,7 +156,6 @@ static void _remember_vault_placement(const vault_placement &place, bool extra);
 
 // Returns true if the given square is okay for use by any character,
 // but always false for squares in non-transparent vaults.
-static bool _dgn_square_is_passable(const coord_def &c);
 
 static coord_def _dgn_random_point_in_bounds(
     dungeon_feature_type searchfeat,
@@ -723,7 +722,7 @@ bool dgn_square_travel_ok(const coord_def &c)
         return feat_is_traversable(feat);
 }
 
-static bool _dgn_square_is_passable(const coord_def &c)
+bool dgn_square_is_passable(const coord_def &c)
 {
     // [enne] Why does this function check MMT_OPAQUE?
     //
@@ -740,7 +739,7 @@ template <class point_record>
 static bool _dgn_fill_zone(
     const coord_def &start, int zone,
     point_record &record_point,
-    bool (*passable)(const coord_def &) = _dgn_square_is_passable,
+    bool (*passable)(const coord_def &) = dgn_square_is_passable,
     bool (*iswanted)(const coord_def &) = NULL)
 {
     bool ret = false;
@@ -896,7 +895,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
         {
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y]
-                || !_dgn_square_is_passable(coord_def(x, y)))
+                || !dgn_square_is_passable(coord_def(x, y)))
             {
                 continue;
             }
@@ -904,7 +903,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
             const bool found_exit_stair =
                 _dgn_fill_zone(coord_def(x, y), ++nzones,
                                _dgn_point_record_stub,
-                               _dgn_square_is_passable,
+                               dgn_square_is_passable,
                                choose_stairless ? (at_branch_bottom() ?
                                                    _is_upwards_exit_stair :
                                                    _is_exit_stair) : NULL);
@@ -1740,13 +1739,13 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
             const coord_def gc(x, y);
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y] // already covered previously
-                || !_dgn_square_is_passable(gc))
+                || !dgn_square_is_passable(gc))
             {
                 continue;
             }
 
             if (_dgn_fill_zone(gc, ++nzones, _dgn_point_record_stub,
-                               _dgn_square_is_passable, iswanted))
+                               dgn_square_is_passable, iswanted))
             {
                 continue;
             }
@@ -6286,7 +6285,8 @@ static void _fixup_slime_hatch_dest(coord_def* pos)
 }
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
-                                coord_def base_pos, bool find_closest)
+                                coord_def base_pos, bool find_closest,
+                                bool exact_match)
 {
     dprf(DIAG_DNGN, "Level entry point on %sstair: %d (%s)",
          find_closest ? "closest " : "",
@@ -6391,7 +6391,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         }
     }
 
-    if (found)
+    if (found || exact_match)
         return result;
 
     best_dist = 1 + GXM*GXM + GYM*GYM;

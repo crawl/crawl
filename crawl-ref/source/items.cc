@@ -1757,6 +1757,9 @@ static void _get_rune(const item_def& it, bool quiet)
 
     if (it.plus >= RUNE_DIS && it.plus <= RUNE_TARTARUS)
         unset_level_flags(LFLAG_NO_TELE_CONTROL);
+
+    // Release backtracking status
+    set_stair_backtracking_status(true);
 }
 
 /**
