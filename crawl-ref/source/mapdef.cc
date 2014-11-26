@@ -5161,6 +5161,13 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         }
     }
 
+    // Damaged + cursed, but allow other specs to override the former.
+    if (strip_tag(s, "cursed"))
+    {
+        result.level = ISPEC_BAD;
+        result.props["cursed"] = bool(true);
+    }
+
     const string acquirement_source = strip_tag_prefix(s, "acquire:");
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
     {
@@ -5231,16 +5238,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     {
         result.level = ISPEC_MUNDANE;
         result.ego   = -1;
-        if (strip_tag(s, "cursed"))
-            result.props["cursed"] = bool(true);
     }
     if (strip_tag(s, "damaged"))
         result.level = ISPEC_DAMAGED;
-    if (strip_tag(s, "cursed"))
-    {
-        result.level = ISPEC_BAD; // damaged + cursed, actually
-        result.props["cursed"] = bool(true);
-    }
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
     if (strip_tag(s, "not_cursed"))
