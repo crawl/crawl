@@ -78,6 +78,7 @@ static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static int  _mons_control_undead(monster* mons, bool actual = true);
+static int  _mons_discord(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(monster *mons);
 static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe);
 static coord_def _mons_prism_pos(monster* mon, actor* foe);
@@ -1457,6 +1458,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CONDENSATION_SHIELD:
     case SPELL_CONTROL_UNDEAD:
     case SPELL_CLEANSING_FLAME:
+    case SPELL_DISCORD:
         return true;
     default:
         if (check_validity)
@@ -4418,6 +4420,71 @@ static int _mons_control_undead(monster* mons, bool actual)
     return retval;
 }
 
+static int _mons_discord(monster* mons, bool actual)
+{
+    int retval = -1;
+
+    const int pow = min(mons->spell_hd(SPELL_DISCORD) * 8, 200);
+
+    if (mons->can_see(&you) && !mons->wont_attack())
+    {
+        if (!you.can_go_frenzy())
+        {
+            if (actual)
+                canned_msg(MSG_YOU_UNAFFECTED);
+        }
+        else
+        {
+            retval = 0;
+
+            if (actual)
+            {
+                const int res_magic = you.check_res_magic(pow);
+                if (res_magic > 0)
+                    mprf("You%s", you.resist_margin_phrase(res_magic).c_str());
+                else
+                {
+                    you.go_frenzy(mons);
+                    retval = 1;
+                }
+            }
+        }
+    }
+
+    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+    {
+        if (*mi == mons)
+            continue;
+
+        if (mons_immune_magic(*mi)
+            || mons_is_firewood(*mi)
+            || !mi->can_go_frenzy())
+        {
+            continue;
+        }
+
+        retval = max(retval, 0);
+
+        int res_margin = mi->check_res_magic(pow);
+        if (res_margin > 0)
+        {
+            if (actual)
+            {
+                simple_monster_message(*mi,
+                    mi->resist_margin_phrase(res_margin).c_str());
+            }
+            continue;
+        }
+        if (actual)
+        {
+            retval = 1;
+            mi->go_frenzy(mons);
+        }
+    }
+
+    return retval;
+}
+
 static coord_def _mons_fragment_target(monster *mons)
 {
     coord_def target(GXM+1, GYM+1);
@@ -6394,6 +6461,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         cleansing_flame(5 + (7 * mons->spell_hd(spell_cast) / 12),
                         CLEANSING_FLAME_SPELL, mons->pos(), mons);
         return;
+
+    case SPELL_DISCORD:
+        _mons_discord(mons);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -7982,6 +8053,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         fire_tracer(mon, tracer, true);
         return !mons_should_fire(tracer);
     }
+
+    case SPELL_DISCORD:
+        return _mons_discord(mon, false) < 0;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
