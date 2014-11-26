@@ -48,10 +48,9 @@ else:
 if not config.get('nickdb_url'):
     errmsg = "Sequell nickdb URL (option nickdb_url) not set in configuration!"
     sys.exit(errmsg)
-if not config['player_title_file']:
+if not config.get('player_title_file'):
     errmsg = ("Player title file (option player_title_file) not set in"
               "configuration!")
-
     sys.exit(errmsg)
 if not config.get('title_names'):
     errmsg = "Title names (option title_names) not set in configuration!"
