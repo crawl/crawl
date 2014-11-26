@@ -958,6 +958,7 @@ static void _describe_cards(vector<card_type> cards)
 #endif
 
     ostringstream data;
+    bool first = true;
     for (card_type card : cards)
     {
         string name = card_name(card);
@@ -966,14 +967,16 @@ static void _describe_cards(vector<card_type> cards)
             desc = "No description found.";
 
         name = uppercase_first(name);
+        if (first)
+            first = false;
+        else
+            data << "\n";
         data << "<w>" << name << "</w>\n"
              << get_linebreak_string(desc, get_number_of_cols() - 1)
              << "\n" << which_decks(card) << "\n";
     }
-    formatted_string fs = formatted_string::parse_string(data.str());
-    clrscr();
-    fs.display();
-    getchm();
+    formatted_scroller fs(0, data.str());
+    fs.show();
 }
 
 // Stack a deck: look at the next five cards, put them back in any
