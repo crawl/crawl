@@ -135,8 +135,7 @@ Items
   - The Iron Rod, which fires a spray of shrapnel in a wide arc. Extremely
     effective against agile, low-AC enemies, but ineffective against armoured
     enemies or at a distance.
-  - The Plane Papyrus, a new high-level book with Dispersal, Controlled Blink,
-    Disjunction and Singularity.
+  - The Plane Papyrus, a new high-level Translocations book.
 * Regeneration has been moved from rings to amulets.
 * Corrosion resistance can now occur on artefact armour.
 * Scale mail now only has 10 ER, down from 11.
