@@ -1196,6 +1196,9 @@ static void _decrement_durations()
 
     dec_elixir_player(delay);
 
+    if (x_chance_in_y(delay, 50))
+        you.maybe_degrade_bone_armour();
+
     if (!env.sunlight.empty())
         process_sunlights();
 }
