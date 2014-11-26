@@ -47,14 +47,14 @@ Monsters
 * Curse skulls now move - fast!
 * Iron devils have been upgraded to rust devils, which do less damage but
   corrode with their touch.
-* Insubstantial wisps are now slightly weaker & less numerous, but have Static
+* Insubstantial wisps are now more fragile & less numerous, but have Static
   Discharge.
 * Seraphim are now considerably stronger, and have a new spellset. They can
   now (very occasionally) appear on the orb run.
 * New monsters:
   - Robin of the Strong Arm, appearing in the early Dungeon. An unusually
-    strong hobgoblin, with a personal army of hobgoblins and hogblins that she
-    will happily hurl at the player.
+    strong hobgoblin, with a personal army of hobgoblins and goblins. She
+    happily hurls the latter at her enemies.
   - Caustic shrikes, appearing in Depths. Metallic birds that travel in flocks,
     attacking with acid-dripping claws that sear through armour & flesh alike.
   - Shard shrikes, appearing in Cocytus. Batty monsters that come in flocks and
