@@ -1743,8 +1743,9 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
             else
                 mpr("The poison in your system burns!");
 
-            ouch(damage, KILLED_BY_MONSTER, agent->mid,
-                agent->as_monster()->name(DESC_A).c_str());
+            ouch(damage, KILLED_BY_BEAM, agent->mid,
+                 "by burning poison", you.can_see(agent),
+                 agent->as_monster()->name(DESC_A, true).c_str());
 
             if (you.duration[DUR_POISONING] > 0)
             {
