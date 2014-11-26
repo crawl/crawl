@@ -7112,16 +7112,11 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         ouch(amount, kill_type, MID_NOBODY, aux.c_str(),
              false, source.empty() ? "posthumous revenge" : source.c_str());
     }
-    else if (agent->is_monster())
-    {
-        const monster* mon = agent->as_monster();
-        ouch(amount, kill_type, mon->mid, aux.c_str(), mon->visible_to(this),
-             source.c_str());
-    }
     else
     {
-        // Should never happen!
-        die("player::hurt() called for self-damage");
+        const monster* mon = agent->as_monster();
+        ouch(amount, kill_type, mon ? mon->mid : MID_PLAYER, aux.c_str(),
+             agent->visible_to(this), source.c_str());
     }
 
     if ((flavour == BEAM_DEVASTATION || flavour == BEAM_DISINTEGRATION)
