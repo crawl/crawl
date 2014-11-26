@@ -2476,13 +2476,12 @@ void check_item_knowledge(bool unknown_items)
         {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
-            OBJ_MISCELLANY, OBJ_MISCELLANY, OBJ_MISCELLANY
+            OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] =
         {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BEEF_JERKY, FOOD_BREAD_RATION, FOOD_FRUIT, FOOD_PIZZA, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
-            MISC_PHANTOM_MIRROR,
             NUM_MISCELLANY
         };
         COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
