@@ -38,7 +38,7 @@ stop += flesh start
 # Enchantments
 #
 ignore += Your skin is crawling a little less now.
-ignore += A chunk of your corpse armour falls away.
+ignore += of your corpse armour falls away.
 
 # Ghouls
 #
