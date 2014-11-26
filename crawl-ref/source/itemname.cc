@@ -3614,9 +3614,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_RUNE_OF_ZOT:
             return false;
 
+        // Purely summoning misc items don't work w/ sac love
         case MISC_SACK_OF_SPIDERS:
         case MISC_BOX_OF_BEASTS:
         case MISC_HORN_OF_GERYON:
+        case MISC_PHANTOM_MIRROR:
             return player_mutation_level(MUT_NO_LOVE)
                 || player_mutation_level(MUT_NO_ARTIFICE);
 
