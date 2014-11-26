@@ -3355,6 +3355,8 @@ static void _make_empty_vec(CrawlStoreValue &v, store_val_type vectype)
 
 void join_religion(god_type which_god, bool immediate)
 {
+    ASSERT(which_god != GOD_NO_GOD);
+
     redraw_screen();
 
     const god_type old_god = you.religion;
