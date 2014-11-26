@@ -42,12 +42,12 @@ sub try {
             error(1);
         }
         elsif ($? & 127) {
-            printf "'$cmd' died with signal %d", ($? & 127);
+            printf "'$cmd' died with signal %d\n", ($? & 127);
             error(1);
         }
         elsif ($?) {
             my $exit = $? >> 8;
-            printf "'$cmd' returned exit value %d", $exit;
+            printf "'$cmd' returned exit value %d\n", $exit;
             error($exit);
         }
     }
