@@ -1393,8 +1393,8 @@ int actor_apply_cloud(actor *act)
              cloud.cloud_name().c_str());
 
         actor *oppressor = cloud.agent();
-        mons->hurt(oppressor, final_damage, BEAM_MISSILE,
-                   KILLED_BY_CLOUD, "", cloud.cloud_name("", true));
+        act->hurt(oppressor, final_damage, BEAM_MISSILE,
+                  KILLED_BY_CLOUD, "", cloud.cloud_name("", true));
     }
 
     return final_damage;
