@@ -1214,7 +1214,9 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
                 del_ench(entry.first);
-            if (!is_stationary())
+            // That triggered a behaviour_event, which could have made a
+            // pacified monster leave the level.
+            if (alive() && !is_stationary())
                 monster_blink(this, true);
             break;
 
