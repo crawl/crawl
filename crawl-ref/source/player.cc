@@ -2597,9 +2597,12 @@ int player_shield_class()
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
-    // make sure bone armour always gives at least one point of displayed sh.
     if (you.attribute[ATTR_BONE_ARMOUR])
-        shield += (you.attribute[ATTR_BONE_ARMOUR] + 2) * 200 / BONE_ARMOUR_DIV;
+    {
+        // make sure bone armour always gives at least one point of sh.
+        shield += (you.attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 200
+                   / BONE_ARMOUR_DIV;
+    }
 
     return (shield + 50) / 100;
 }
@@ -6405,9 +6408,12 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_CORROSION])
         AC -= 500 * you.props["corrosion_amount"].get_int();
 
-    // make sure bone armour always gives at least one point of ac.
     if (attribute[ATTR_BONE_ARMOUR])
-        AC += (attribute[ATTR_BONE_ARMOUR] + 2) * 100 / BONE_ARMOUR_DIV;
+    {
+        // make sure bone armour always gives at least one point of ac.
+        AC += (attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 100
+              / BONE_ARMOUR_DIV;
+    }
 
     AC += get_form()->get_ac_bonus();
 
@@ -8908,7 +8914,8 @@ string player::hands_act(const string &plural_verb,
 }
 
 /**
- * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit.
+ * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit,
+ * or over time (currently every ~4 turns)
  *
  * Chance of losing a point of ac/sh (BONE_ARMOUR_DIV) increases with current
  * number of corpses (ATTR_BONE_ARMOUR) and decreases with spellpower, both
