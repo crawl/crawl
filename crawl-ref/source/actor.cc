@@ -859,10 +859,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         }
         const string thisname = name(DESC_A, true);
         const string othername = other->name(DESC_A, true);
-        other->hurt(agent, damage.roll(), BEAM_MISSILE, KILLED_BY_COLLISION,
+        other->hurt(agent, other->apply_ac(damage.roll()),
+                    BEAM_MISSILE, KILLED_BY_COLLISION,
                     "", thisname);
-        hurt(agent, damage.roll(), BEAM_MISSILE, KILLED_BY_COLLISION,
-             "", othername);
+        hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE, 
+             KILLED_BY_COLLISION, "", othername);
         return;
     }
 
@@ -881,6 +882,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
                  name(DESC_THE).c_str(), conj_verb("stop").c_str());
         }
     }
-    hurt(agent, damage.roll(), BEAM_MISSILE, KILLED_BY_COLLISION, "",
+    hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+         KILLED_BY_COLLISION, "",
          feature_description_at(newpos, false, DESC_A, false));
 }
