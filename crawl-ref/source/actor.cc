@@ -846,7 +846,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     actor *other = actor_at(newpos);
     ASSERT(this != other);
 
-    dice_def damage(2, 1 + pow / 20);
+    dice_def damage(2, 1 + pow / 10);
 
     if (other)
     {
