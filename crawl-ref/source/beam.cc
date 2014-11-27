@@ -5789,21 +5789,17 @@ bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
         ray.advance();
 
         newpos = ray.pos();
-        if (newpos == ray_copy.pos())
+        if (newpos == ray_copy.pos()
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !act->can_pass_through(newpos)
+            || !act->is_habitable(newpos))
         {
             ray = ray_copy;
-            return ray.pos() != initial_pos;
+            return newpos != initial_pos;
         }
 
-        if (!cell_is_solid(newpos)
-            && !actor_at(newpos)
-            && act->can_pass_through(newpos)
-            && act->is_habitable(newpos))
-        {
-            act->move_to_pos(newpos);
-        }
-        else
-            break;
+        act->move_to_pos(newpos);
     }
 
     // Knockback cannot ever kill the actor directly - caller must do
