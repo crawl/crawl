@@ -491,7 +491,8 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
 
         bool see_source = act_source && you.can_see(act_source);
         ouch(dam, method, act_source ? act_source->mid : MID_NOBODY,
-             cause.c_str(), see_source);
+             cause.c_str(), see_source,
+             act_source ? act_source->name(DESC_A, true).c_str() : NULL);
     }
 
     return true;
