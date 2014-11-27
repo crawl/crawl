@@ -1135,15 +1135,15 @@ spret_type cast_dispersal(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-int singularity_max_range(int pow)
+int singularity_range(int pow, int strength)
 {
     // XXX: unify some of this functionality.
     // A singularity is HD (pow / 10) + 1; its strength is
-    // (HD / (4 + range)) for a given range, and the singularity needs
-    // to have a strength of at least 1 to do something at a given
-    // range; thus, range <= hit_dice - 4 = (pow / 10) - 3.
+    // (HD / (4 + range)) for a given range, so for a given strength the
+    // range is ((pow / 10) + 1 - 4*strength) / strength.
 
-    return max(0, min(LOS_RADIUS, (pow / 10) - 3));
+    return max(0, min(LOS_RADIUS,
+                      ((pow / 10) + 1 - 4*strength) / strength));
 }
 
 spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
