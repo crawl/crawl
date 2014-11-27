@@ -1220,23 +1220,23 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 static void _move_creature_to_singularity(const monster* singularity,
                                           actor* victim, int strength)
 {
+    ray_def ray;
+    if (!find_ray(singularity->pos(), victim->pos(), ray, opc_solid))
+    {
+        // This probably shouldn't ever happen, but just in case:
+        if (you.can_see(victim))
+        {
+            mprf("%s violently %s moving!",
+                 victim->name(DESC_THE).c_str(),
+                 victim->conj_verb("stop").c_str());
+        }
+        victim->hurt(singularity, COLLISION_DAMAGE, BEAM_MMISSILE,
+                     KILLED_BY_BEAM, "", GRAVITY);
+        return;
+    }
+
     for (int i = 0; i < strength; i++)
     {
-        ray_def ray;
-        if (!find_ray(singularity->pos(), victim->pos(), ray, opc_solid))
-        {
-            // This probably shouldn't ever happen, but just in case:
-            if (you.can_see(victim))
-            {
-                mprf("%s violently %s moving!",
-                     victim->name(DESC_THE).c_str(),
-                     victim->conj_verb("stop").c_str());
-            }
-            victim->hurt(singularity, COLLISION_DAMAGE, BEAM_MMISSILE,
-                         KILLED_BY_BEAM, "", GRAVITY);
-            break;
-        }
-
         ray.advance();
         const coord_def newpos = ray.pos();
 
@@ -1244,6 +1244,7 @@ static void _move_creature_to_singularity(const monster* singularity,
         {
             victim->collide(newpos, singularity,
                             10 * singularity->get_hit_dice());
+            break;
         }
         else if (actor* act_at_space = actor_at(newpos))
         {
