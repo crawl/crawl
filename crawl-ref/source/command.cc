@@ -20,6 +20,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "describe-god.h"
+#include "describe-spells.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -1164,7 +1165,7 @@ static int _do_description(string key, string type, const string &suffix,
                     desc += "This book is beyond your current level "
                             "of understanding.";
                 }
-                append_spells(desc, mitm[thing_created]);
+                desc += describe_item_spells(mitm[thing_created]);
             }
         }
     }

@@ -21,7 +21,7 @@ void mark_had_book(int booktype);
 void inscribe_book_highlevel(item_def &book);
 
 bool maybe_id_book(item_def &book, bool silent = false);
-int read_book(item_def &item);
+void read_book(item_def &item);
 
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
@@ -43,8 +43,6 @@ bool you_can_memorise(spell_type spell) PURE;
 bool has_spells_to_memorise(bool silent = true,
                             int current_spell = SPELL_NO_SPELL);
 vector<spell_type> get_mem_spell_list(vector<int> &books);
-
-int spellbook_contents(item_def &book, formatted_string *fs = NULL);
 
 bool make_book_level_randart(item_def &book, int level = -1,
                              string owner = "");

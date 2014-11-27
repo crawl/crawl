@@ -22,6 +22,7 @@
 #include "database.h"
 #include "decks.h"
 #include "delay.h"
+#include "describe-spells.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -1576,37 +1577,6 @@ static string _describe_deck(const item_def &item)
     return description;
 }
 
-// Adds a list of all spells contained in a book or rod to its
-// description string.
-void append_spells(string &desc, const item_def &item)
-{
-    if (!item.has_spells())
-        return;
-
-    desc += "\n\nSpells                             Type                      Level\n";
-
-    for (int j = 0; j < SPELLBOOK_SIZE; ++j)
-    {
-        spell_type stype = which_spell_in_book(item, j);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
-        string name = string(is_memorised(stype) ? "*" : "")
-                      + spell_title(stype);
-        desc += chop_string(name, 35);
-
-        string schools;
-        if (item.base_type == OBJ_RODS)
-            schools = "Evocations";
-        else
-            schools = spell_schools_string(stype);
-
-        desc += chop_string(schools, 65 - 36);
-
-        desc += make_stringf("%d\n", spell_difficulty(stype));
-    }
-}
-
 // ========================================================================
 //      Public Functions
 // ========================================================================
@@ -1770,7 +1740,7 @@ string get_item_description(const item_def &item, bool verbose,
         if (!verbose
             && (Options.dump_book_spells || is_random_artefact(item)))
         {
-            append_spells(desc, item);
+            desc += describe_item_spells(item);
             if (desc.empty())
                 need_extra_line = false;
             else
@@ -1914,7 +1884,7 @@ string get_item_description(const item_def &item, bool verbose,
         }
         else if (Options.dump_book_spells)
         {
-            append_spells(desc, item);
+            desc += describe_item_spells(item);
             if (desc.empty())
                 need_extra_line = false;
             else
@@ -2200,14 +2170,6 @@ static bool _can_show_spells(const item_def &item)
                || player_can_memorise_from_spellbook(item));
 }
 
-static void _show_spells(const item_def &item)
-{
-    formatted_string fs;
-    item_def dup = item;
-    spellbook_contents(dup, &fs);
-    fs.display(2, -2);
-}
-
 static void _show_item_description(const item_def &item)
 {
     const unsigned int lineWidth = get_number_of_cols() - 1;
@@ -2230,26 +2192,11 @@ static void _show_item_description(const item_def &item)
         hints_describe_item(item);
 
     if (_can_show_spells(item))
-      _show_spells(item);
-}
-
-static bool _describe_spells(const item_def &item)
-{
-    const int c = getchm();
-    if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
     {
-        clear_messages();
-        return false;
+        formatted_string fdesc;
+        fdesc.cprintf("%s", desc.c_str());
+        list_spellset(item_spellset(item), &item, fdesc);
     }
-
-    const int spell_index = letter_to_index(c);
-
-    const spell_type nthing = which_spell_in_book(item, spell_index);
-    if (nthing == SPELL_NO_SPELL)
-        return false;
-
-    describe_spell(nthing, &item);
-    return item.is_valid();
 }
 
 static bool _can_memorise(item_def &item)
@@ -2264,35 +2211,6 @@ static void _update_inscription(item_def &item)
         && !_can_memorise(item))
     {
         inscribe_book_highlevel(item);
-    }
-}
-
-static bool _describe_spellbook(item_def &item)
-{
-    while (true)
-    {
-        // Memorised spell while reading a spellbook.
-        if (already_learning_spell(-1))
-            return false;
-
-        _show_item_description(item);
-        _update_inscription(item);
-
-        cgotoxy(1, wherey());
-        textcolour(LIGHTGREY);
-
-        if (_can_memorise(item) && !crawl_state.player_is_dead())
-        {
-            cprintf("Select a spell to read its description, to "
-                    "memorise it or to forget it.");
-        }
-        else
-            cprintf("Select a spell to read its description.");
-
-        if (_describe_spells(item))
-            continue;
-
-        return true;
     }
 }
 
@@ -2576,10 +2494,20 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
 #endif
 
-    if (_can_show_spells(item))
-        return _describe_spellbook(item);
-
+    // we might destroy the item, so save this first.
+    const bool item_had_spells = _can_show_spells(item);
     _show_item_description(item);
+
+    // spellbooks & rods have their own UIs, so we don't currently support the
+    // inscribe/drop/etc prompt UI for them.
+    // ...it would be nice if we did, though.
+    if (item_had_spells)
+    {
+        // only continue the inventory loop if we didn't start memorizing a
+        // spell & didn't destroy the item for amnesia.
+        return !already_learning_spell() && item.is_valid();
+    }
+
     _update_inscription(item);
 
     if (allow_inscribe && crawl_state.game_is_tutorial())
