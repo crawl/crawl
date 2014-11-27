@@ -1220,7 +1220,6 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 static void _move_creature_to_singularity(const monster* singularity,
                                           actor* victim, int strength)
 {
-    coord_def dir(coord_def(0,0));
     for (int i = 0; i < strength; i++)
     {
         ray_def ray;
