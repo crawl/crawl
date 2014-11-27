@@ -1078,21 +1078,21 @@ const mon_spell_slot lich_buff_spells[] =
 
 static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
 {
-    bool used = false;
     for (auto slot : spells)
         if (slot.spell == spell)
-            used = true;
-    return used;
+            return true;
+
+    return false;
 }
 
 static bool _lich_has_spell_of_school(const monster_spells &spells,
                                       unsigned int discipline)
 {
-    bool has_spell = false;
     for (auto slot : spells)
         if (spell_typematch(slot.spell, discipline))
-            has_spell = true;
-    return has_spell;
+            return true;
+
+    return false;
 }
 
 static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
@@ -1101,22 +1101,12 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
     if (_lich_spell_is_used(spells, spell))
         return false;
 
-    if (spell == SPELL_IGNITE_POISON_SINGLE
-        && !_lich_has_spell_of_school(spells, SPTYP_POISON))
-    {
-        return false;
-    }
-
-    if ((spell == SPELL_SPELLFORGED_SERVITOR || spell == SPELL_BATTLESPHERE)
-        && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
-    {
-        return false;
-    }
-
     if (spells.size() > 2
         && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
     {
-        return spell_typematch(spell, SPTYP_CONJURATION);
+        return spell_typematch(spell, SPTYP_CONJURATION)
+            && spell != SPELL_BATTLESPHERE
+            && spell != SPELL_SPELLFORGED_SERVITOR;
     }
 
     unsigned int disciplines = get_spell_disciplines(spell);
