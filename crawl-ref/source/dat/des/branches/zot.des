@@ -967,6 +967,7 @@ SUBST:   F = 3
 ITEM:    disc of storms, fan of gales, staff of air, book of the sky
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
+KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
@@ -975,6 +976,7 @@ SUBST:   w = l
 SUBST:   W = l..
 : else
 MONS:    fire giant, fire dragon
+KMONS:   F = salamander firebrand
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
@@ -1666,7 +1668,7 @@ KFEAT: _ = altar_xom / altar_lugonu / altar_zin / altar_the_shining_one / \
 SUBST: 1 = 1.
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
-KITEM: Z = randbook spells:summon_demon|fireball|twisted_resurrection|airstrike title:the_Zealot
+KITEM: Z = randbook spells:summon_demon|fireball|animate_dead|airstrike title:the_Zealot
 KITEM: F = randbook spells:bolt_of_fire|fireball|sticky_flame|conjure_flame title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta
@@ -1714,7 +1716,7 @@ KMONS:   H = green draconian
 KMONS:   I = green death / nonbase green draconian w:6
 KMONS:   J = white very ugly thing
 KMONS:   K = white draconian
-KMONS:   L = white draconian knight / nonbase white draconian w:6
+KMONS:   L = shard shrike / nonbase white draconian w:6
 KMONS:   M = brown very ugly thing
 KMONS:   N = yellow draconian
 KMONS:   O = acid blob / nonbase yellow draconian w:6

@@ -727,8 +727,8 @@ string get_prefs_filename()
 
 static void _write_ghost_version(writer &outf)
 {
-    marshallByte(outf, TAG_MAJOR_VERSION);
-    marshallByte(outf, TAG_MINOR_VERSION);
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
 
     // extended_version just pads the version out to four 32-bit words.
     // This makes the bones file compatible with Hearse with no extra
@@ -752,8 +752,8 @@ static void _write_tagged_chunk(const string &chunkname, tag_type tag)
     writer outf(you.save, chunkname);
 
     // write version
-    marshallByte(outf, TAG_MAJOR_VERSION);
-    marshallByte(outf, TAG_MINOR_VERSION);
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
 
     tag_write(tag, outf);
 }
@@ -991,9 +991,8 @@ static void _grab_followers()
             }
         }
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-        vector<coord_def> places[2];
+        vector<coord_def> places[2] = { { you.pos() }, {} };
         int place_set = 0;
-        places[place_set].push_back(you.pos());
         while (!places[place_set].empty())
         {
             for (int i = 0, size = places[place_set].size(); i < size; ++i)

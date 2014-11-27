@@ -111,9 +111,7 @@ void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list)
             if (comp.level.branch == BRANCH_ABYSS)
                 continue;
 
-            pair<mid_t, int> p = make_pair(mid,
-                                           comp.mons.mons.get_experience_level());
-            recall_list.push_back(p);
+            recall_list.emplace_back(mid, comp.mons.mons.get_experience_level());
         }
     }
 }

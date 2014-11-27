@@ -43,7 +43,7 @@ vector<level_id> all_dungeon_ids()
     for (branch_iterator it; it; ++it)
     {
         for (int depth = 1; depth <= brdepth[it->id]; depth++)
-            out.push_back(level_id(it->id, depth));
+            out.emplace_back(it->id, depth);
     }
     return out;
 }

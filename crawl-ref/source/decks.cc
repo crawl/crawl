@@ -152,13 +152,13 @@ const deck_archetype deck_of_summoning[] =
 
 const deck_archetype deck_of_wonders[] =
 {
-    { CARD_FOCUS,        {3, 3, 3} },
-    { CARD_HELIX,        {3, 4, 5} },
-    { CARD_SHAFT,        {5, 5, 5} },
-    { CARD_DOWSING,      {5, 5, 5} },
-    { CARD_MERCENARY,    {5, 5, 5} },
-    { CARD_ALCHEMIST,    {5, 5, 5} },
-    { CARD_PLACID_MAGIC, {5, 5, 5} },
+    { CARD_FOCUS,             {3, 3, 3} },
+    { CARD_HELIX,             {3, 4, 5} },
+    { CARD_WILD_MAGIC,        {5, 5, 5} },
+    { CARD_DOWSING,           {5, 5, 5} },
+    { CARD_MERCENARY,         {5, 5, 5} },
+    { CARD_ALCHEMIST,         {5, 5, 5} },
+    { CARD_PLACID_MAGIC,      {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -189,7 +189,6 @@ const deck_archetype deck_of_oddities[] =
 const deck_archetype deck_of_punishment[] =
 {
     { CARD_WRAITH,     {5, 5, 5} },
-    { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_WRATH,      {5, 5, 5} },
     { CARD_XOM,        {5, 5, 5} },
     { CARD_FAMINE,     {5, 5, 5} },
@@ -377,42 +376,31 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
     switch (deck_type)
     {
     case MISC_DECK_OF_ESCAPE:
-        subdecks.push_back(deck_of_transport);
-        subdecks.push_back(deck_of_emergency);
-        break;
+        return { deck_of_transport, deck_of_emergency };
     case MISC_DECK_OF_DESTRUCTION:
-        subdecks.push_back(deck_of_destruction);
-        break;
+        return { deck_of_destruction };
 #if TAG_MAJOR_VERSION == 34
     case MISC_DECK_OF_DUNGEONS:
-        subdecks.push_back(deck_of_dungeons);
-        break;
+        return { deck_of_dungeons };
 #endif
     case MISC_DECK_OF_SUMMONING:
-        subdecks.push_back(deck_of_summoning);
-        break;
+        return { deck_of_summoning };
     case MISC_DECK_OF_WONDERS:
-        subdecks.push_back(deck_of_wonders);
-        break;
+        return { deck_of_wonders };
     case MISC_DECK_OF_PUNISHMENT:
-        subdecks.push_back(deck_of_punishment);
-        break;
+        return { deck_of_punishment };
     case MISC_DECK_OF_WAR:
-        subdecks.push_back(deck_of_battle);
-        subdecks.push_back(deck_of_summoning);
-        break;
+        return { deck_of_battle, deck_of_summoning };
     case MISC_DECK_OF_CHANGES:
-        subdecks.push_back(deck_of_battle);
-        subdecks.push_back(deck_of_wonders);
-        break;
+        return { deck_of_battle, deck_of_wonders };
     case MISC_DECK_OF_DEFENCE:
-        subdecks.push_back(deck_of_emergency);
-        subdecks.push_back(deck_of_battle);
-        break;
+        return { deck_of_emergency, deck_of_battle };
     }
 
-    ASSERT(subdecks.size() > 0);
-    return subdecks;
+#ifdef ASSERTS
+    die("No subdecks found for %u", unsigned(deck_type));
+#endif
+    return {};
 }
 
 const string deck_contents(uint8_t deck_type)
@@ -970,6 +958,7 @@ static void _describe_cards(vector<card_type> cards)
 #endif
 
     ostringstream data;
+    bool first = true;
     for (card_type card : cards)
     {
         string name = card_name(card);
@@ -978,14 +967,16 @@ static void _describe_cards(vector<card_type> cards)
             desc = "No description found.";
 
         name = uppercase_first(name);
+        if (first)
+            first = false;
+        else
+            data << "\n";
         data << "<w>" << name << "</w>\n"
              << get_linebreak_string(desc, get_number_of_cols() - 1)
              << "\n" << which_decks(card) << "\n";
     }
-    formatted_string fs = formatted_string::parse_string(data.str());
-    clrscr();
-    fs.display();
-    getchm();
+    formatted_scroller fs(0, data.str());
+    fs.show();
 }
 
 // Stack a deck: look at the next five cards, put them back in any
@@ -2617,6 +2608,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
 
     int merc;
     monster *mon;
+    bool hated = player_mutation_level(MUT_NO_LOVE);
 
     while (1)
     {
@@ -2647,6 +2639,9 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
             return;
         }
 
+        // always hostile, don't try to find a good one
+        if (hated)
+            break;
         if (player_will_anger_monster(mon))
         {
             dprf("God %s doesn't like %s, retrying.",
@@ -2661,6 +2656,12 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
     mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
 
     redraw_screen(); // We want to see the monster while it's asking to be paid.
+
+    if (hated)
+    {
+        simple_monster_message(mon, " is unwilling to work for you!");
+        return;
+    }
 
     const int fee = fuzz_value(exper_value(mon), 15, 15);
     if (fee > you.gold)
@@ -2986,6 +2987,44 @@ static void _placid_magic_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void _wild_magic_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    int num_affected = 0;
+
+    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+    {
+        monster *mons = monster_at(*di);
+
+        if (!mons || mons->wont_attack() || mons_is_firewood(mons))
+            continue;
+
+        if (x_chance_in_y((power_level + 1) * 5 + random2(5),
+                           mons->get_hit_dice()))
+        {
+            MiscastEffect(mons, actor_by_mid(MID_YOU_FAULTLESS),
+                        DECK_MISCAST, SPTYP_RANDOM,
+                        random2(power/15) + 5, random2(power),
+                        "a card of wild magic");
+
+            num_affected++;
+        }
+    }
+
+    if (num_affected > 0)
+    {
+        int mp = 0;
+
+        for (int i = 0; i < num_affected; ++i)
+            mp += random2(5);
+
+        inc_mp(mp);
+        mpr("You feel a surge of magic.");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+}
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety
 // or penance, and are based on experience level instead of evocations skill
 // for more appropriate scaling.
@@ -3026,10 +3065,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     const char *participle = (flags & CFLAG_DEALT) ? "dealt" : "drawn";
     const int power = _card_power(rarity, flags & CFLAG_PUNISHMENT);
-
-    const god_type god =
-        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                      : GOD_NO_GOD;
 
     dprf("Card power: %d, rarity: %d", power, rarity);
 
@@ -3097,6 +3132,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
     case CARD_DEGEN:            _degeneration_card(power, rarity); break;
     case CARD_PLACID_MAGIC:     _placid_magic_card(power, rarity); break;
+    case CARD_WILD_MAGIC:       _wild_magic_card(power, rarity); break;
 
     case CARD_VENOM:
     case CARD_VITRIOL:
@@ -3104,14 +3140,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_PAIN:
     case CARD_ORB:
         _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
-        break;
-
-    case CARD_WILD_MAGIC:
-        // Yes, high power is bad here.
-        MiscastEffect(&you, &you,
-                      god == GOD_NO_GOD ? DECK_MISCAST : GOD_MISCAST + god,
-                      SPTYP_RANDOM, random2(power/15) + 5, random2(power),
-                      "a card of wild magic");
         break;
 
     case CARD_FAMINE:

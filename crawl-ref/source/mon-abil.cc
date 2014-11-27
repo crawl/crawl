@@ -271,7 +271,7 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 // Create a new slime creature at 'target', and split 'thing''s hp and
 // merge count with the new monster.
 // Now it returns index of new slime (-1 if it fails).
-static monster* _do_split(monster* thing, coord_def & target)
+static monster* _do_split(monster* thing, const coord_def & target)
 {
     ASSERT(thing->alive());
 
@@ -491,7 +491,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
 // Actually merge two slime creatures, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
-static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
+static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 {
     // Combine enchantment durations.
     merge_ench_durations(initial_slime, merge_to);
@@ -541,8 +541,6 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
 
     // Have to 'kill' the slime doing the merging.
     monster_die(initial_slime, KILL_DISMISSED, NON_MONSTER, true);
-
-    return true;
 }
 
 // Slime creatures can split but not merge under these conditions.
@@ -574,35 +572,29 @@ static bool _slime_merge(monster* thing)
         return false;
 
     int max_slime_merge = 5;
-    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
-    coord_def origin = thing->pos();
-
     int target_distance = grid_distance(thing->target, thing->pos());
 
-    monster* merge_target = NULL;
     // Check for adjacent slime creatures.
-    for (int i = 0; i < 8; ++i)
+    monster* merge_target = nullptr;
+    for (fair_adjacent_iterator ai(thing->pos()); ai; ++ai)
     {
-        coord_def target = origin + Compass[compass_idx[i]];
-
         // If this square won't reduce the distance to our target, don't
         // look for a potential merge, and don't allow this square to
         // prevent a merge if empty.
-        if (grid_distance(thing->target, target) >= target_distance)
+        if (grid_distance(thing->target, *ai) >= target_distance)
             continue;
 
         // Don't merge if there is an open square that reduces distance
         // to target, even if we found a possible slime to merge with.
-        if (!actor_at(target)
-            && mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target)))
+        if (!actor_at(*ai)
+            && mons_class_can_pass(MONS_SLIME_CREATURE, grd(*ai)))
         {
             return false;
         }
 
         // Is there a slime creature on this square we can consider
         // merging with?
-        monster* other_thing = monster_at(target);
+        monster* other_thing = monster_at(*ai);
         if (!merge_target
             && other_thing
             && other_thing->type == MONS_SLIME_CREATURE
@@ -624,7 +616,10 @@ static bool _slime_merge(monster* thing)
     // We found a merge target and didn't find an open square that
     // would reduce distance to target, so we can actually merge.
     if (merge_target)
-        return _do_merge_slimes(thing, merge_target);
+    {
+        _do_merge_slimes(thing, merge_target);
+        return true;
+    }
 
     // No adjacent slime creatures we could merge with.
     return false;
@@ -654,24 +649,14 @@ static bool _crawling_corpse_merge(monster *crawlie)
     if (!crawlie || _disabled_merge(crawlie))
         return false;
 
-    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
-    coord_def origin = crawlie->pos();
-
-    monster* merge_target = NULL;
     // Check for adjacent crawlies
-    for (int i = 0; i < 8; ++i)
+    for (fair_adjacent_iterator ai(crawlie->pos()); ai; ++ai)
     {
-        coord_def target = origin + Compass[compass_idx[i]];
-
-        // Is there a crawlie/abomination on this square we can merge with?
-        monster* other_thing = monster_at(target);
-        if (!merge_target && _crawlie_is_mergeable(other_thing))
-            merge_target = other_thing;
+        monster * const mon = monster_at(*ai);
+        // If there is a crawlie we can merge with, try to do so.
+        if (_crawlie_is_mergeable(mon) && _do_merge_crawlies(crawlie, mon))
+            return true;
     }
-
-    if (merge_target)
-        return _do_merge_crawlies(crawlie, merge_target);
 
     // No adjacent crawlies.
     return false;
@@ -715,27 +700,22 @@ static monster *_slime_split(monster* thing, bool force_split)
         }
     }
 
-    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
-
     // Anywhere we can place an offspring?
-    for (int i = 0; i < 8; ++i)
+    for (fair_adjacent_iterator ai(origin); ai; ++ai)
     {
-        coord_def target = origin + Compass[compass_idx[i]];
-
         // Don't split if this increases the distance to the target.
-        if (has_foe && grid_distance(target, foe_pos) > old_dist
+        if (has_foe && grid_distance(*ai, foe_pos) > old_dist
             && !force_split)
         {
             continue;
         }
 
-        if (_slime_can_spawn(target))
+        if (_slime_can_spawn(*ai))
         {
             // This can fail if placing a new monster fails.  That
             // probably means we have too many monsters on the level,
             // so just return in that case.
-            return _do_split(thing, target);
+            return _do_split(thing, *ai);
         }
     }
 
@@ -783,27 +763,16 @@ bool slime_creature_polymorph(monster* slime)
 
 static bool _starcursed_split(monster* mon)
 {
-    if (!mon
-        || mon->blob_size <= 1
-        || mon->type != MONS_STARCURSED_MASS)
-    {
+    if (!mon || mon->blob_size <= 1 || mon->type != MONS_STARCURSED_MASS)
         return false;
-    }
-
-    const coord_def origin = mon->pos();
-
-    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
 
     // Anywhere we can place an offspring?
-    for (int i = 0; i < 8; ++i)
+    for (fair_adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
-        coord_def target = origin + Compass[compass_idx[i]];
-
-        if (mons_class_can_pass(MONS_STARCURSED_MASS, env.grid(target))
-            && !actor_at(target))
+        if (mons_class_can_pass(MONS_STARCURSED_MASS, env.grid(*ai))
+            && !actor_at(*ai))
         {
-            return _do_split(mon, target);
+            return _do_split(mon, *ai);
         }
     }
 
@@ -864,13 +833,11 @@ static void _starcursed_scream(monster* mon, actor* target)
                  target->name(DESC_THE).c_str(),
                  target->pronoun(PRONOUN_POSSESSIVE).c_str());
         }
-        target->hurt(mon, dam);
     }
     else
-    {
         mprf(MSGCH_MONSTER_SPELL, "%s", message);
-        ouch(dam, KILLED_BY_BEAM, mon->mid, "accursed screaming");
-    }
+    target->hurt(mon, dam, BEAM_MISSILE, KILLED_BY_BEAM, "",
+                 "accursed screaming");
 
     if (stun && target->alive())
         target->paralyse(mon, stun, "accursed screaming");

@@ -514,21 +514,21 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
         if (eq != EQ_NONE)
         {
             if (item_known_cursed(*item))
-                tileset.push_back(tile_def(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT));
+                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT);
             else
-                tileset.push_back(tile_def(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT));
+                tileset.emplace_back(TILE_ITEM_SLOT_EQUIP, TEX_DEFAULT);
         }
         else if (item_known_cursed(*item))
-            tileset.push_back(tile_def(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT));
+            tileset.emplace_back(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT);
 
-        tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
+        tileset.emplace_back(TILE_ITEM_SLOT, TEX_FEAT);
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
-            tileset.push_back(tile_def(base_item, TEX_DEFAULT));
-        tileset.push_back(tile_def(idx, TEX_DEFAULT));
+            tileset.emplace_back(base_item, TEX_DEFAULT);
+        tileset.emplace_back(idx, TEX_DEFAULT);
 
         if (eq != EQ_NONE && you.melded[eq])
-            tileset.push_back(tile_def(TILEI_MESH, TEX_ICONS));
+            tileset.emplace_back(TILEI_MESH, TEX_ICONS);
     }
     else
     {
@@ -538,10 +538,7 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
             : item->pos;
         tileidx_t ch = 0;
         if (!show_background || c.x == 0)
-        {
-            // Store items.
-            tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
-        }
+            tileset.emplace_back(TILE_ITEM_SLOT, TEX_FEAT); // Store items.
         else if (c != coord_def())
         {
             ch = tileidx_feature(c);
@@ -550,27 +547,21 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
             else if (ch == TILE_WALL_NORMAL)
                 ch = env.tile_flv(c).wall;
 
-            tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
+            tileset.emplace_back(ch, get_dngn_tex(ch));
         }
         tileidx_t base_item = tileidx_known_base_item(idx);
         if (base_item)
-            tileset.push_back(tile_def(base_item, TEX_DEFAULT));
+            tileset.emplace_back(base_item, TEX_DEFAULT);
 
-        tileset.push_back(tile_def(idx, TEX_DEFAULT));
+        tileset.emplace_back(idx, TEX_DEFAULT);
 
         if (ch != 0)
         {
             // Needs to be displayed so as to not give away mimics in shallow water.
             if (ch == TILE_DNGN_SHALLOW_WATER)
-            {
-                tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER,
-                                           TEX_ICONS));
-            }
+                tileset.emplace_back(TILEI_MASK_SHALLOW_WATER, TEX_ICONS);
             else if (ch == TILE_DNGN_SHALLOW_WATER_MURKY)
-            {
-                tileset.push_back(tile_def(TILEI_MASK_SHALLOW_WATER_MURKY,
-                                           TEX_ICONS));
-            }
+                tileset.emplace_back(TILEI_MASK_SHALLOW_WATER_MURKY, TEX_ICONS);
         }
     }
     if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_MISSILES
@@ -578,13 +569,13 @@ bool InvEntry::get_tiles(vector<tile_def>& tileset) const
     {
         tileidx_t brand = tileidx_known_brand(*item);
         if (brand)
-            tileset.push_back(tile_def(brand, TEX_DEFAULT));
+            tileset.emplace_back(brand, TEX_DEFAULT);
     }
     else if (item->base_type == OBJ_CORPSES)
     {
         tileidx_t brand = tileidx_corpse_brand(*item);
         if (brand)
-            tileset.push_back(tile_def(brand, TEX_DEFAULT));
+            tileset.emplace_back(brand, TEX_DEFAULT);
     }
 
     return true;
@@ -740,16 +731,13 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
         for (const auto &ci : cmp_map)
             if (ci.cname == s)
             {
-                list.push_back(item_comparator(ci.cmp, negated));
+                list.emplace_back(ci.cmp, negated);
                 break;
             }
     }
 
     if (list.empty())
-    {
-        list.push_back(
-            item_comparator(compare_item_str<&InvEntry::get_fullname>));
-    }
+        list.emplace_back(compare_item_str<&InvEntry::get_fullname>);
 }
 
 const menu_sort_condition *InvMenu::find_menu_sort_condition() const
@@ -899,11 +887,8 @@ vector<SelItem> InvMenu::get_selitems() const
     for (int i = 0, count = sel.size(); i < count; ++i)
     {
         InvEntry *inv = dynamic_cast<InvEntry*>(sel[i]);
-        selected_items.push_back(
-                SelItem(
-                    inv->hotkeys[0],
-                    inv->selected_qty,
-                    inv->item));
+        selected_items.emplace_back(inv->hotkeys[0], inv->selected_qty,
+                                    inv->item);
     }
     return selected_items;
 }
@@ -993,7 +978,7 @@ bool in_inventory(const item_def &i)
     return i.pos.x == -1 && i.pos.y == -1;
 }
 
-string item_class_name(int type, bool terse)
+const char *item_class_name(int type, bool terse)
 {
     if (terse)
     {
@@ -1461,9 +1446,8 @@ vector<SelItem> prompt_invent_items(
 
     if (ret != PROMPT_ABORT)
     {
-        items.push_back(
-            SelItem(ret, count,
-                     ret != PROMPT_GOT_SPECIAL ? &you.inv[ret] : NULL));
+        items.emplace_back(ret, count,
+                           ret != PROMPT_GOT_SPECIAL ? &you.inv[ret] : nullptr);
     }
     return items;
 }

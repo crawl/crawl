@@ -113,7 +113,7 @@ void dgn_event_dispatcher::register_listener(unsigned mask,
                 return;
             }
         }
-        listeners.push_back(dgn_listener_def(mask, listener));
+        listeners.emplace_back(mask, listener);
     }
 }
 

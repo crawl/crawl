@@ -366,6 +366,8 @@ enum attribute_type
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
+    ATTR_BONE_ARMOUR,          // Current amount of boney armour (from the spell)
+    ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     NUM_ATTRIBUTES
 };
 
@@ -531,7 +533,7 @@ enum book_type
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,
 #if TAG_MAJOR_VERSION == 34
-    BOOK_STALKING,
+    BOOK_PLANE_PAPYRUS,
 #endif
     BOOK_DEBILITATION,
     BOOK_DRAGON,
@@ -543,8 +545,15 @@ enum book_type
     BOOK_ANNIHILATIONS,
     BOOK_GRAND_GRIMOIRE,
     BOOK_NECRONOMICON,
+#if TAG_MAJOR_VERSION > 34
+    BOOK_PLANE_PAPYRUS,
+#endif
 
+#if TAG_MAJOR_VERSION == 34
     MAX_FIXED_BOOK = BOOK_NECRONOMICON,
+#else
+    MAX_FIXED_BOOK = BOOK_PLANE_PAPYRUS,
+#endif
 
     BOOK_RANDART_LEVEL,
     BOOK_RANDART_THEME,
@@ -662,6 +671,7 @@ enum canned_message_type
     MSG_DECK_EXHAUSTED,
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
+    MSG_GHOSTLY_OUTLINE,
 };
 
 enum char_set_type
@@ -726,7 +736,6 @@ enum command_type
 {
     CMD_NO_CMD = 2000,
     CMD_NO_CMD_DEFAULT, // hack to allow assignment of keys to CMD_NO_CMD
-    CMD_MOVE_NOWHERE,
     CMD_MOVE_LEFT,
     CMD_MOVE_DOWN,
     CMD_MOVE_UP,
@@ -1120,9 +1129,9 @@ enum delay_type
     DELAY_ARMOUR_OFF,
     DELAY_JEWELLERY_ON,
     DELAY_MEMORISE,
+#if TAG_MAJOR_VERSION == 34
     DELAY_BUTCHER,
     DELAY_BOTTLE_BLOOD,
-#if TAG_MAJOR_VERSION == 34
     DELAY_WEAPON_SWAP,
 #endif
     DELAY_PASSWALL,
@@ -1832,6 +1841,7 @@ enum enchant_type
     ENCH_CONDENSATION_SHIELD,
     ENCH_RESISTANCE,
     ENCH_HEXED,
+    ENCH_BONE_ARMOUR,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -1997,7 +2007,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
                              //0x00000200,  // was: ISFLAG_BLESSED
-    ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
+                             //0x00000400,  // was: ISFLAG_SEEN_CURSED
     ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
@@ -3024,6 +3034,7 @@ enum monster_type                      // menv[].type
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
 #if TAG_MAJOR_VERSION > 34
     MONS_FULMINANT_PRISM,
+    MONS_SINGULARITY,
     MONS_BATTLESPHERE,
 #endif
     MONS_PILLAR_OF_SALT,
@@ -3191,6 +3202,7 @@ enum monster_type                      // menv[].type
     MONS_ROBIN,
 
     MONS_SHARD_SHRIKE,
+    MONS_SINGULARITY,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4257,6 +4269,8 @@ enum spell_type
     SPELL_SCATTERSHOT,
     SPELL_CLEANSING_FLAME,
     SPELL_GOBLIN_TOSS,
+    SPELL_BONE_ARMOUR,
+    SPELL_SINGULARITY,
     NUM_SPELLS
 };
 
@@ -4544,12 +4558,19 @@ enum seen_context_type
 
 enum los_type
 {
-    LOS_NONE         = 0,
-    LOS_ARENA        = LOS_NONE,
-    LOS_DEFAULT      = (1 << 0),
-    LOS_NO_TRANS     = (1 << 1),
-    LOS_SOLID        = (1 << 2),
-    LOS_SOLID_SEE    = (1 << 3),
+    LOS_NONE         = 0,        // w g s c
+    LOS_ARENA        = LOS_NONE, // -------  See key below
+    LOS_DEFAULT      = (1 << 0), // o T T h
+    LOS_NO_TRANS     = (1 << 1), // o o T h
+    LOS_SOLID        = (1 << 2), // o o o T
+    LOS_SOLID_SEE    = (1 << 3), // o o o h
+    // KEY:
+    //   o: opaque, T: transparent, h: half-opaque (two cells block LOS)
+    // Columns:
+    //   w: FFT_OPAQUE features: rock walls, closed doors, trees, etc.
+    //   g: glass (transparent walls)
+    //   s: other FFT_SOLID features: grate, statue/idol, open/lava sea
+    //   c: semi-opaque clouds (fog, etc.); bushes
 };
 
 enum ac_type

@@ -1040,7 +1040,7 @@ static const zap_info zap_data[] =
     "lance of force",
     100,
     new dicedef_calculator<2, 6, 1, 6>,
-    new tohit_calculator<10, 1, 9>,
+    new tohit_calculator<10, 1, 7>,
     CYAN,
     false,
     BEAM_MMISSILE,

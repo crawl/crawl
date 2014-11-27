@@ -43,7 +43,8 @@ struct Branch
     int ambient_noise;           // affects noise loudness and player stealth
 };
 
-class branch_iterator {
+class branch_iterator
+{
 public:
     branch_iterator();
 

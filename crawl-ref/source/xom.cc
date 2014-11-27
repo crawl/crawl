@@ -1330,20 +1330,11 @@ bool swap_monsters(monster* m1, monster* m2)
     const bool mon1_caught = mon1.caught();
     const bool mon2_caught = mon2.caught();
 
-    const coord_def mon1_pos = mon1.pos();
-    const coord_def mon2_pos = mon2.pos();
-
-    if (!mon2.is_habitable(mon1_pos) || !mon1.is_habitable(mon2_pos))
-        return false;
-
     // Make submerged monsters unsubmerge.
     mon1.del_ench(ENCH_SUBMERGED);
     mon2.del_ench(ENCH_SUBMERGED);
 
-    mgrd(mon1_pos) = mon2.mindex();
-    mon1.moveto(mon2_pos);
-    mgrd(mon2_pos) = mon1.mindex();
-    mon2.moveto(mon1_pos);
+    mon1.swap_with(m2);
 
     if (mon1_caught && !mon2_caught)
     {
@@ -2038,7 +2029,7 @@ static int _xom_change_scenery(bool debug = false)
                                  : "Several",
                  doors_open == 1 ? ""  : "s",
                  doors_open == 1 ? "s" : "");
-        effects.push_back(info);
+        effects.emplace_back(info);
         terse.push_back(make_stringf("%d doors open", doors_open));
     }
     if (doors_close > 0)
@@ -2357,7 +2348,7 @@ static void _xom_zero_miscast()
     }
 
     // Assure that the messages vector has at least one element.
-    messages.push_back("Nothing appears to happen... Ominous!");
+    messages.emplace_back("Nothing appears to happen... Ominous!");
 
     ///////////////////////////////////
     // Dungeon feature dependent stuff.
@@ -2367,64 +2358,64 @@ static void _xom_zero_miscast()
         in_view.set(grd(*ri));
 
     if (in_view[DNGN_LAVA])
-        messages.push_back("The lava spits out sparks!");
+        messages.emplace_back("The lava spits out sparks!");
 
     if (in_view[DNGN_SHALLOW_WATER] || in_view[DNGN_DEEP_WATER])
     {
-        messages.push_back("The water briefly bubbles.");
-        messages.push_back("The water briefly swirls.");
-        messages.push_back("The water briefly glows.");
+        messages.emplace_back("The water briefly bubbles.");
+        messages.emplace_back("The water briefly swirls.");
+        messages.emplace_back("The water briefly glows.");
     }
 
     if (in_view[DNGN_DEEP_WATER])
     {
-        messages.push_back("From the corner of your eye you spot something "
+        messages.emplace_back("From the corner of your eye you spot something "
                            "lurking in the deep water.");
     }
 
     if (in_view[DNGN_ORCISH_IDOL])
     {
         if (player_genus(GENPC_ORCISH))
-            priority.push_back("The idol of Beogh turns to glare at you.");
+            priority.emplace_back("The idol of Beogh turns to glare at you.");
         else
-            priority.push_back("The orcish idol turns to glare at you.");
+            priority.emplace_back("The orcish idol turns to glare at you.");
     }
 
     if (in_view[DNGN_GRANITE_STATUE])
-        priority.push_back("The granite statue turns to stare at you.");
+        priority.emplace_back("The granite statue turns to stare at you.");
 
     if (in_view[DNGN_CLEAR_ROCK_WALL] || in_view[DNGN_CLEAR_STONE_WALL]
         || in_view[DNGN_CLEAR_PERMAROCK_WALL])
     {
-        messages.push_back("Dim shapes swim through the translucent wall.");
+        messages.emplace_back("Dim shapes swim through the translucent wall.");
     }
 
     if (in_view[DNGN_GREEN_CRYSTAL_WALL])
-        messages.push_back("Dim shapes swim through the green crystal wall.");
+        messages.emplace_back("Dim shapes swim through the green crystal wall.");
 
     if (in_view[DNGN_METAL_WALL])
     {
-        messages.push_back("Tendrils of electricity crawl over the metal "
-                           "wall!");
+        messages.emplace_back("Tendrils of electricity crawl over the metal "
+                              "wall!");
     }
 
     if (in_view[DNGN_FOUNTAIN_BLUE] || in_view[DNGN_FOUNTAIN_SPARKLING])
     {
-        priority.push_back("The water in the fountain briefly bubbles.");
-        priority.push_back("The water in the fountain briefly swirls.");
-        priority.push_back("The water in the fountain briefly glows.");
+        priority.emplace_back("The water in the fountain briefly bubbles.");
+        priority.emplace_back("The water in the fountain briefly swirls.");
+        priority.emplace_back("The water in the fountain briefly glows.");
     }
 
     if (in_view[DNGN_DRY_FOUNTAIN])
     {
-        priority.push_back("Water briefly sprays from the dry fountain.");
-        priority.push_back("Dust puffs up from the dry fountain.");
+        priority.emplace_back("Water briefly sprays from the dry fountain.");
+        priority.emplace_back("Dust puffs up from the dry fountain.");
     }
 
     if (in_view[DNGN_STONE_ARCH])
     {
-        priority.push_back("The stone arch briefly shows a sunny meadow on "
-                           "the other side.");
+        priority.emplace_back("The stone arch briefly shows a sunny meadow on "
+                              "the other side.");
     }
 
     const dungeon_feature_type feat = grd(you.pos());
@@ -2453,15 +2444,15 @@ static void _xom_zero_miscast()
 
             if (feat_is_water(feat))
             {
-                priority.push_back("Something invisible splashes into the "
-                                   "water beneath you!");
+                priority.emplace_back("Something invisible splashes into the "
+                                      "water beneath you!");
             }
         }
         else if (feat_is_water(feat))
         {
-            priority.push_back("The water briefly recedes away from you.");
-            priority.push_back("Something invisible splashes into the water "
-                               "beside you!");
+            priority.emplace_back("The water briefly recedes away from you.");
+            priority.emplace_back("Something invisible splashes into the water "
+                                  "beside you!");
         }
     }
 
@@ -2489,9 +2480,9 @@ static void _xom_zero_miscast()
 
     if (you.species == SP_MUMMY && you_tran_can_wear(EQ_BODY_ARMOUR))
     {
-        messages.push_back("You briefly get tangled in your bandages.");
+        messages.emplace_back("You briefly get tangled in your bandages.");
         if (!you.airborne() && !you.swimming())
-            messages.push_back("You trip over your bandages.");
+            messages.emplace_back("You trip over your bandages.");
     }
 
     {
@@ -2513,12 +2504,12 @@ static void _xom_zero_miscast()
         && you.species != SP_MUMMY && you.species != SP_OCTOPODE
         && !form_changed_physiology())
     {
-        messages.push_back("Your eyebrows briefly feel incredibly bushy.");
-        messages.push_back("Your eyebrows wriggle.");
+        messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
+        messages.emplace_back("Your eyebrows wriggle.");
     }
 
     if (you.species != SP_NAGA && !you.fishtail && !you.airborne())
-        messages.push_back("You do an impromptu tapdance.");
+        messages.emplace_back("You do an impromptu tapdance.");
 
     ///////////////////////////
     // Equipment related stuff.
@@ -2534,7 +2525,7 @@ static void _xom_zero_miscast()
     }
 
     if (_tran_get_eq(EQ_CLOAK) != NULL)
-        messages.push_back("Your cloak billows in an unfelt wind.");
+        messages.emplace_back("Your cloak billows in an unfelt wind.");
 
     if ((item = _tran_get_eq(EQ_HELMET)))
     {
@@ -2653,7 +2644,7 @@ static void _get_hand_type(string &hand, bool &can_plural)
         item_def* item;
         if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS)
         {
-            hand_vec.push_back("boot");
+            hand_vec.emplace_back("boot");
             plural = true;
         }
         else
@@ -2663,14 +2654,14 @@ static void _get_hand_type(string &hand, bool &can_plural)
 
     if (you.form == TRAN_SPIDER)
     {
-        hand_vec.push_back("mandible");
+        hand_vec.emplace_back("mandible");
         plural_vec.push_back(true);
     }
     else if (you.species != SP_MUMMY && you.species != SP_OCTOPODE
              && !player_mutation_level(MUT_BEAK)
           || form_changed_physiology())
     {
-        hand_vec.push_back("nose");
+        hand_vec.emplace_back("nose");
         plural_vec.push_back(false);
     }
 
@@ -2678,14 +2669,14 @@ static void _get_hand_type(string &hand, bool &can_plural)
         || you.species != SP_MUMMY && you.species != SP_OCTOPODE
            && !form_changed_physiology())
     {
-        hand_vec.push_back("ear");
+        hand_vec.emplace_back("ear");
         plural_vec.push_back(true);
     }
 
     if (!form_changed_physiology()
         && you.species != SP_FELID && you.species != SP_OCTOPODE)
     {
-        hand_vec.push_back("elbow");
+        hand_vec.emplace_back("elbow");
         plural_vec.push_back(true);
     }
 
@@ -4205,7 +4196,7 @@ void debug_xom_effects()
 
     // Add an empty list to later add all effects to.
     all_effects.push_back(mood_effects);
-    moods.push_back("total");
+    moods.emplace_back("total");
     mood_good_acts.push_back(0); // count total good acts
 
     int mood_good = 0;
@@ -4274,9 +4265,8 @@ void debug_xom_effects()
             {
                 if (count > 0)
                 {
-                    string name          = _xom_effect_to_name(old_effect);
-                    xom_effect_count xec = xom_effect_count(name, count);
-                    xom_ec_pairs.push_back(xec);
+                    xom_ec_pairs.emplace_back(_xom_effect_to_name(old_effect),
+                                              count);
                 }
                 old_effect = mood_effects[k];
                 count = 1;
@@ -4286,11 +4276,7 @@ void debug_xom_effects()
         }
 
         if (count > 0)
-        {
-            string name          = _xom_effect_to_name(old_effect);
-            xom_effect_count xec = xom_effect_count(name, count);
-            xom_ec_pairs.push_back(xec);
-        }
+            xom_ec_pairs.emplace_back(_xom_effect_to_name(old_effect), count);
 
         sort(xom_ec_pairs.begin(), xom_ec_pairs.end(), _sort_xom_effects);
         for (const xom_effect_count &xec : xom_ec_pairs)

@@ -95,6 +95,7 @@ Form::Form(const form_entry &fe)
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
+      flesh_equivalent(fe.flesh_equivalent),
       long_name(fe.long_name), description(fe.description),
       resists(fe.resists), stealth_mod(fe.stealth_mod),
       base_unarmed_damage(fe.base_unarmed_damage),
@@ -343,6 +344,14 @@ bool Form::res_acid() const
 bool Form::res_sticky_flame() const
 {
     return get_resist(resists, MR_RES_STICKY_FLAME);
+}
+
+/**
+ * Does this form provide resistance to petrification?
+ */
+bool Form::res_petrify() const
+{
+    return get_resist(resists, MR_RES_PETRIFY);
 }
 
 

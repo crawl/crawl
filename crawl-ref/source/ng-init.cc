@@ -178,8 +178,8 @@ void initialise_temples()
 
         // Without all this find_glyph() returns 0.
         string err;
-              main_temple->load();
-              main_temple->reinit();
+        main_temple->load();
+        main_temple->reinit();
         err = main_temple->run_lua(true);
 
         if (!err.empty())

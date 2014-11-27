@@ -464,6 +464,22 @@ close-barred sties. And art thou come to release them? Nay, I tell thee, thou
 shalt not thyself return, but shalt remain there with the others.”
     -Homer, Odysseia
 %%%%
+Lee's Rapid Deconstruction spell
+
+“Now the house was full of men and women; and all the lords of the Philistines
+were there; and there were upon the roof about three thousand men and women,
+that beheld while Samson made sport.
+
+And Samson called unto the LORD, and said, O Lord GOD, remember me, I pray
+thee, and strengthen me, I pray thee, only this once, O God, that I may be at
+once avenged of the Philistines for my two eyes.
+
+And Samson said, Let me die with the Philistines. And he bowed himself with all
+his might; and the house fell upon the lords, and upon all the people that were
+therein. So the dead which he slew at his death were more than they which he
+slew in his life.”
+    -KJV Bible, Judges 16:28-30.
+%%%%
 Mara
 
 “This night the Lord of Illusion passed among you, Mara, mighty among dreamers,
@@ -573,6 +589,15 @@ Psyche
  And darkness eke as thrall to him remain.”
     -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
     trans. William Adlington, 1566.
+%%%%
+Shatter spell
+
+“And it happened when the people heard the sound of the trumpet, and the people
+shouted with a great shout, that the wall fell down flat. Then the people went
+up into the city, every man straight before him, and they took the city. And
+they utterly destroyed all that was in the city, both man and woman, young and
+old, ox and sheep and donkey, with the edge of the sword.”
+    -KJV Bible, Joshua 6:20-21.
 %%%%
 Shoals
 
@@ -730,7 +755,7 @@ amulet of stasis
 amulet of the gourmand
 
 “put a knife to thy throat, if thou be a man given to appetite.”
-    -KJV Bible, Proverbs 23:2
+    -KJV Bible, Proverbs 23:2.
 %%%%
 amulet of warding
 
@@ -808,8 +833,12 @@ cult image.”
 %%%%
 battlesphere
 
-Rule 4: Close air support covereth a multitude of sins.
-    -The Seven Habits of Highly Effective Pirates
+“I'm your only friend
+ I'm not your only friend
+ But I'm a little glowing friend
+ But really I'm not actually your friend
+ But I am”
+    -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
 %%%%
 blowgun
 
@@ -1592,6 +1621,12 @@ insubstantial wisp
  To Boggs and Mires, and oft through Pond or Poole,
  There swallow'd up and lost, from succour farr.”
     -John Milton, _Paradise Lost_
+%%%%
+Iskenderun's Battlesphere spell
+
+“Rule 4: Close air support covereth a multitude of sins.”
+    -Howard Tayler, _The Seven Habits of Highly Effective Pirates_,
+     in _Schlock Mercenary_. 2008.
 %%%%
 jackal
 
@@ -2781,6 +2816,18 @@ staff of summoning
 staff of wizardry
 
 <staff>
+%%%%
+starcursed mass
+
+“Did you see that star go out?
+ I seen it burn.
+
+ That little star went out,
+ your little eyes went out.
+
+ Our burnt little dreams are hid
+ up where the stars get lit.”
+    -Thee Silver Mt. Zion, “I Built Myself a Metal Bird”. 2010.
 %%%%
 steam dragon armour
 

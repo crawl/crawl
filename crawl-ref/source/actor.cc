@@ -7,6 +7,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
+#include "directn.h"
 #include "env.h"
 #include "fprop.h"
 #include "itemprop.h"
@@ -663,7 +664,8 @@ void actor::handle_constriction()
         damage = timescale_damage(this, damage);
         DIAG_ONLY(const int timescale_dam = damage);
 
-        damage = defender->hurt(this, damage, BEAM_MISSILE, false);
+        damage = defender->hurt(this, damage, BEAM_MISSILE,
+                                KILLED_BY_MONSTER, "", "", false);
         DIAG_ONLY(const int infdam = damage);
 
         string exclamations;
@@ -837,4 +839,50 @@ string actor::resist_margin_phrase(int margin) const
 
     return make_stringf(resist_messages[index][0].c_str(),
                         conj_verb(resist_messages[index][1]).c_str());
+}
+
+void actor::collide(coord_def newpos, const actor *agent, int pow)
+{
+    actor *other = actor_at(newpos);
+    ASSERT(this != other);
+
+    dice_def damage(2, 1 + pow / 20);
+
+    if (other)
+    {
+        if (you.can_see(this) || you.can_see(other))
+        {
+            mprf("%s %s with %s!",
+                 name(DESC_THE).c_str(),
+                 conj_verb("collide").c_str(),
+                 other->name(DESC_THE).c_str());
+        }
+        const string thisname = name(DESC_A, true);
+        const string othername = other->name(DESC_A, true);
+        other->hurt(agent, other->apply_ac(damage.roll()),
+                    BEAM_MISSILE, KILLED_BY_COLLISION,
+                    "", thisname);
+        hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+             KILLED_BY_COLLISION, "", othername);
+        return;
+    }
+
+    if (you.can_see(this))
+    {
+        if (!can_pass_through_feat(grd(newpos)))
+        {
+            mprf("%s %s into %s!",
+                 name(DESC_THE).c_str(), conj_verb("slam").c_str(),
+                 feature_description_at(newpos, false, DESC_THE, false)
+                     .c_str());
+        }
+        else
+        {
+            mprf("%s violently %s moving!",
+                 name(DESC_THE).c_str(), conj_verb("stop").c_str());
+        }
+    }
+    hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+         KILLED_BY_COLLISION, "",
+         feature_description_at(newpos, false, DESC_A, false));
 }

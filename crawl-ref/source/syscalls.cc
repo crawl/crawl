@@ -411,7 +411,7 @@ vector<string> get_dir_files(const string &dirname)
 
         const char *file;
         while ((file = AAssetDir_getNextFileName(adir)) != NULL)
-            files.push_back(string(file));
+            files.emplace_back(file);
 
         AAssetDir_close(adir);
         return files;

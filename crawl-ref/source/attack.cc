@@ -1106,13 +1106,8 @@ int attack::inflict_damage(int dam, beam_type flavour, bool clean)
         // gets the zombie. Too rare a case to care any more.
         defender->props["reaper"].get_int() = attacker->mid;
     }
-    if (defender->is_player())
-    {
-        ouch(dam, kill_type, responsible->mid, aux_source.c_str(),
-             you.can_see(attacker));
-        return dam;
-    }
-    return defender->hurt(responsible, dam, flavour, clean);
+    return defender->hurt(responsible, dam, flavour, kill_type,
+                          "", aux_source.c_str(), clean);
 }
 
 /* If debug, return formatted damage done

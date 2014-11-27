@@ -492,8 +492,8 @@ static bool _place_dragon()
         // Now try to create the actual dragon
         if (spots.size() <= 0)
             continue;
-            const coord_def pos = spots[random2(spots.size())];
 
+        const coord_def pos = spots[random2(spots.size())];
         monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
                                                    2, SPELL_DRAGON_CALL,
                                                    pos, MHITYOU,
@@ -1700,7 +1700,7 @@ static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_t
 // Displays message when raising dead with Animate Skeleton or Animate Dead.
 static void _display_undead_motions(int motions)
 {
-    vector<string> motions_list;
+    vector<const char *> motions_list;
 
     // Check bitfield from _raise_remains for types of corpse(s) being animated.
     if (motions & DEAD_ARE_WALKING)
@@ -1904,7 +1904,6 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                 continue;
 
             const bool was_draining = is_being_drained(*si);
-            const bool was_butchering = is_being_butchered(*si);
 
             success = _raise_remains(a, si.link(), beha, hitting, as, nas,
                                      god, actual, force_beh, mon,
@@ -1913,20 +1912,16 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             if (actual && success)
             {
                 // Ignore quiet.
-                if (was_butchering || was_draining)
+                if (was_draining)
                 {
-                    mprf("The corpse you are %s rises to %s!",
-                         was_draining ? "drinking from"
-                                      : "butchering",
+                    mprf("The corpse you are drinking from rises to %s!",
                          beha == BEH_FRIENDLY ? "join your ranks"
                                               : "attack");
+                    xom_is_stimulated(200);
                 }
 
                 if (!quiet && you.see_cell(a))
                     _display_undead_motions(motions);
-
-                if (was_butchering)
-                    xom_is_stimulated(200);
             }
 
             break;
@@ -2015,8 +2010,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
         {
             butcher_corpse(*si, MB_TRUE);
             mpr("Before your eyes, flesh is ripped from the corpse!");
-            if (Options.chunks_autopickup)
-                request_autopickup();
+            request_autopickup();
             // Only convert the top one.
             break;
         }
@@ -2167,7 +2161,6 @@ bool monster_simulacrum(monster *mon, bool actual)
             int how_many = 1 + random2(mons_weight(mitm[co].mon_type) / 300);
             how_many  = stepdown_value(how_many, 2, 2, 6, 6);
             bool was_draining = is_being_drained(*si);
-            bool was_butchering = is_being_butchered(*si);
             bool was_successful = false;
             for (int i = 0; i < how_many; ++i)
             {
@@ -2194,10 +2187,9 @@ bool monster_simulacrum(monster *mon, bool actual)
                 did_creation = true;
                 turn_corpse_into_skeleton(mitm[co]);
                 // Ignore quiet.
-                if (was_butchering || was_draining)
+                if (was_draining)
                 {
-                    mprf("The flesh of the corpse you are %s vaporises!",
-                         was_draining ? "drinking from" : "butchering");
+                    mpr("The flesh of the corpse you are drinking from vaporises!");
                     xom_is_stimulated(200);
                 }
 
@@ -2379,17 +2371,6 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * num_holy);
 
     return true;
-}
-
-spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
-{
-    if (twisted_resurrection(&you, pow, BEH_FRIENDLY, MHITYOU, god, !fail))
-        return fail ? SPRET_FAIL : SPRET_SUCCESS;
-    else
-    {
-        mpr("There are no corpses nearby!");
-        return SPRET_ABORT;
-    }
 }
 
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
@@ -2619,7 +2600,7 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
         if (mi->friendly() && mi->is_summoned() && mi->summoner == you.mid
             && you.see_cell_no_trans(mi->pos()))
         {
-            explode.push_back(make_pair(mi->pos(), mi->get_hit_dice()));
+            explode.emplace_back(mi->pos(), mi->get_hit_dice());
         }
     }
 
@@ -3175,7 +3156,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                                victim->conj_verb("twitch").c_str());
             }
             else
-                mpr("You see a ghostly outline there, and the spell fizzles.");
+                canned_msg(MSG_GHOSTLY_OUTLINE);
         }
         return SPRET_SUCCESS;      // Don't give free detection!
     }

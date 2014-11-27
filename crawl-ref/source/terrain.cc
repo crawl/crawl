@@ -1644,7 +1644,7 @@ vector<string> dungeon_feature_matches(const string &name)
 
         const char *featname = get_feature_def(feat).vaultname;
         if (strstr(featname, name.c_str()))
-            matches.push_back(featname);
+            matches.emplace_back(featname);
     }
 
     return matches;

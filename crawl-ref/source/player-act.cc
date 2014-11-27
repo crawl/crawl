@@ -78,7 +78,7 @@ void player::moveto(const coord_def &c, bool clear_net)
     end_searing_ray();
 }
 
-bool player::move_to_pos(const coord_def &c, bool clear_net)
+bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
 {
     actor *target = actor_at(c);
     if (!target || target->submerged())
@@ -448,7 +448,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
             if (!quiet)
-                mprf("You can't wield %s.", base_type_string(item).c_str());
+                mprf("You can't wield %s.", base_type_string(item));
             return false;
         }
 

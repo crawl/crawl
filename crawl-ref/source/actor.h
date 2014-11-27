@@ -3,6 +3,7 @@
 
 #include "itemprop-enum.h"
 #include "random-var.h"
+#include "ouch.h"
 
 enum ev_ignore_type
 {
@@ -54,7 +55,8 @@ public:
     // High-level actor movement. If in doubt, use this. Returns false if the
     // actor cannot be moved to the target, possibly because it is already
     // occupied.
-    virtual bool move_to_pos(const coord_def &c, bool clear_net = true) = 0;
+    virtual bool move_to_pos(const coord_def &c, bool clear_net = true,
+                             bool force = false) = 0;
 
     virtual void apply_location_effects(const coord_def &oldpos,
                                         killer_type killer = KILL_NONE,
@@ -202,6 +204,9 @@ public:
                      bool quiet = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
+                      kill_method_type kill_type = KILLED_BY_MONSTER,
+                      string source = "",
+                      string aux = "",
                       bool cleanup_dead = true,
                       bool attacker_effects = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
@@ -442,6 +447,8 @@ public:
     string describe_props() const;
 
     string resist_margin_phrase(int margin) const;
+
+    void collide(coord_def newpos, const actor *agent, int pow);
 
 private:
     void end_constriction(mid_t whom, bool intentional, bool quiet);

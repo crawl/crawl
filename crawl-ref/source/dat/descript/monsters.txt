@@ -1510,7 +1510,7 @@ infernal demonspawn
 insubstantial wisp
 
 A thin wisp of floating gas, flickering, disappearing and reforming in a
-disconcertingly random fashion.
+disconcertingly random fashion while building up an electrical charge.
 %%%%
 iron dragon
 
@@ -2187,6 +2187,11 @@ involved with casting spells or reading scrolls.
 simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
+%%%%
+singularity
+
+A gravitational singularity, which pulls in enemies of its creator and
+violently warps them in the process.
 %%%%
 siren
 

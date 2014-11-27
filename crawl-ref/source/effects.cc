@@ -593,14 +593,8 @@ void direct_effect(monster* source, spell_type spell,
             }
         }
 
-        if (defender->is_player())
-        {
-            // Bypassing ::hurt so that flay damage can ignore guardian spirit
-            ouch(damage_taken, KILLED_BY_MONSTER, source->mid,
-                 "flay_damage", you.can_see(source));
-        }
-        else
-            defender->hurt(source, damage_taken, BEAM_NONE, true);
+        defender->hurt(source, damage_taken, BEAM_NONE,
+                       KILLED_BY_MONSTER, "", "flay_damage", true);
         defender->props["flay_damage"].get_int() += damage_taken;
 
         vector<coord_def> old_blood;
@@ -668,11 +662,9 @@ void direct_effect(monster* source, spell_type spell,
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
     {
-        if (def)
-            def->hurt(source, damage_taken);
-        else
-            ouch(damage_taken, KILLED_BY_BEAM, pbolt.source_id,
-                 pbolt.aux_source.c_str());
+        actor *victim = def ? (actor *)def : (actor *)&you;
+        victim->hurt(source, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
+                     "", pbolt.aux_source);
     }
 }
 
@@ -1743,15 +1735,15 @@ void change_labyrinth(bool msg)
     // The directions are used to randomly decide where to place items that
     // have ended up in walls during the switching.
     vector<coord_def> dirs;
-    dirs.push_back(coord_def(-1,-1));
-    dirs.push_back(coord_def(0,-1));
-    dirs.push_back(coord_def(1,-1));
-    dirs.push_back(coord_def(-1, 0));
+    dirs.emplace_back(-1,-1);
+    dirs.emplace_back(0,-1);
+    dirs.emplace_back(1,-1);
+    dirs.emplace_back(-1, 0);
 
-    dirs.push_back(coord_def(1, 0));
-    dirs.push_back(coord_def(-1, 1));
-    dirs.push_back(coord_def(0, 1));
-    dirs.push_back(coord_def(1, 1));
+    dirs.emplace_back(1, 0);
+    dirs.emplace_back(-1, 1);
+    dirs.emplace_back(0, 1);
+    dirs.emplace_back(1, 1);
 
     // Search the entire shifted area for stacks of items now stuck in walls
     // and move them to a random adjacent non-wall grid.
@@ -2706,8 +2698,6 @@ int spawn_corpse_mushrooms(item_def& corpse,
     if (target_count == 0)
         return 0;
 
-    int permutation[] = {0, 1, 2, 3, 4, 5, 6, 7};
-
     int placed_targets = 0;
 
     queue<coord_def> fringe;
@@ -2817,21 +2807,13 @@ int spawn_corpse_mushrooms(item_def& corpse,
         if (placed_targets == target_count)
             break;
 
-        // Wish adjacent_iterator had a random traversal.
-        shuffle_array(permutation);
-
-        for (int idx : permutation)
+        for (fair_adjacent_iterator ai(current); ai; ++ai)
         {
-            coord_def temp = current + Compass[idx];
-
-            int index = temp.x + temp.y * X_WIDTH;
-
-            if (!visited_indices.count(index)
-                && in_bounds(temp)
-                && mons_class_can_pass(MONS_TOADSTOOL, grd(temp)))
+            if (in_bounds(*ai) && mons_class_can_pass(MONS_TOADSTOOL, grd(*ai)))
             {
-                visited_indices.insert(index);
-                fringe.push(temp);
+                const int index = ai->x + ai->y * X_WIDTH;
+                if (visited_indices.insert(index).second)
+                    fringe.push(*ai); // Not previously visited.
             }
         }
     }

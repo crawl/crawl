@@ -1728,11 +1728,11 @@ static int _get_monster_armour_value(const monster *mon,
     // Each resistance/property counts as much as 1 point of AC.
     // Steam has been excluded because of its general uselessness.
     // Well, the same's true for sticky flame but... (jpeg)
-    int value  = item.armour_rating();
-        value += get_armour_res_fire(item, true);
-        value += get_armour_res_cold(item, true);
-        value += get_armour_res_elec(item, true);
-        value += get_armour_res_sticky_flame(item);
+    int value = item.armour_rating()
+              + get_armour_res_fire(item, true)
+              + get_armour_res_cold(item, true)
+              + get_armour_res_elec(item, true)
+              + get_armour_res_sticky_flame(item);
 
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_armour_res_magic(item, true) > 0)
@@ -3218,7 +3218,8 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield() || has_ench(ENCH_CONDENSATION_SHIELD);
+    return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
+                    || has_ench(ENCH_BONE_ARMOUR);
 }
 
 int monster::shield_bonus() const
@@ -3238,12 +3239,15 @@ int monster::shield_bonus() const
     }
     if (has_ench(ENCH_CONDENSATION_SHIELD))
     {
-        int condensation_shield = get_hit_dice() / 2;
-        if (sh < 0)
-            sh = condensation_shield;
-        else
-            sh += condensation_shield;
+        const int condensation_shield = get_hit_dice() / 2;
+        sh = max(sh + condensation_shield, condensation_shield);
     }
+    if (has_ench(ENCH_BONE_ARMOUR))
+    {
+        const int bone_armour = 6 + get_hit_dice() / 3;
+        sh = max(sh + bone_armour, bone_armour);
+    }
+
     return sh;
 }
 
@@ -3257,6 +3261,12 @@ void monster::shield_block_succeeded(actor *attacker)
     actor::shield_block_succeeded(attacker);
 
     ++shield_blocks;
+    if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
+    {
+        del_ench(ENCH_BONE_ARMOUR);
+        mprf("%s corpse armour sloughs away.",
+            apostrophise(name(DESC_THE)).c_str());
+    }
 }
 
 int monster::shield_bypass_ability(int) const
@@ -3434,6 +3444,8 @@ int monster::armour_class(bool calc_unid) const
         ac += 4 + get_hit_dice() / 3;
     if (has_ench(ENCH_ICEMAIL))
         ac += ICEMAIL_MAX;
+    if (has_ench(ENCH_BONE_ARMOUR))
+        ac += 6 + get_hit_dice() / 3;
 
     // Penalty due to bad temp mutations.
     if (has_ench(ENCH_WRETCHED))
@@ -4407,11 +4419,7 @@ bool monster::shift(coord_def p)
     }
 
     if (count > 0)
-    {
-        mgrd(pos()) = NON_MONSTER;
-        moveto(result);
-        mgrd(result) = mindex();
-    }
+        move_to_pos(result);
 
     return count > 0;
 }
@@ -4444,7 +4452,7 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
         mprf("%s is drained!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.
-    hurt(agent, 2 + random2(3), BEAM_NEG, !quiet);
+    hurt(agent, 2 + random2(3), BEAM_NEG, KILLED_BY_DRAINING, "", "", !quiet);
 
     if (alive())
     {
@@ -4476,7 +4484,7 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
     {
         // If quiet, don't clean up the monster in order to credit
         // properly.
-        hurt(agent, immediate, BEAM_MISSILE, !quiet);
+        hurt(agent, immediate, BEAM_MISSILE, KILLED_BY_BEAM, "", "", !quiet);
 
         if (alive())
         {
@@ -4517,11 +4525,11 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
-                   bool cleanup_dead, bool attacker_effects)
+                   kill_method_type /*kill_type*/, string /*source*/,
+                   string /*aux*/, bool cleanup_dead, bool attacker_effects)
 {
-    if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER
-        || mindex() == YOU_FAULTLESS || type == MONS_DIAMOND_OBELISK
-        || type == MONS_PLAYER_SHADOW)
+    if (mons_is_projectile(type) || mid == MID_ANON_FRIEND
+        || type == MONS_SINGULARITY || type == MONS_PLAYER_SHADOW)
     {
         return 0;
     }
@@ -5643,10 +5651,17 @@ bool monster::self_destructs()
     return false;
 }
 
-bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
+/** A higher-level moving method than moveto().
+ *
+ *  @param newpos    where to move this monster
+ *  @param clear_net whether to clear any trapping nets
+ *  @param force     whether to move it even if you're standing there
+ *  @returns whether the move took place.
+ */
+bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
 {
     const actor* a = actor_at(newpos);
-    if (a && (!a->is_player() || !fedhas_passthrough(this)))
+    if (a && !(a->is_player() && (fedhas_passthrough(this) || force)))
         return false;
 
     const int index = mindex();
@@ -5660,6 +5675,43 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
 
     // Set new monster grid pointer to this monster.
     mgrd(newpos) = index;
+
+    return true;
+}
+
+/** Swap positions with another monster.
+ *
+ *  move_to_pos can't be used in this case, since it can't move something
+ *  to a spot that's occupied. This will abort if either monster can't survive
+ *  in the new place.
+ *
+ *  @param other the monster to swap with
+ *  @returns whether they ended up moving.
+ */
+bool monster::swap_with(monster* other)
+{
+    const coord_def old_pos = pos();
+    const coord_def new_pos = other->pos();
+
+    if (!can_pass_through(new_pos)
+        || !other->can_pass_through(old_pos))
+    {
+        return false;
+    }
+
+    if (!monster_habitable_grid(this, grd(new_pos))
+         && !can_cling_to(new_pos)
+        || !monster_habitable_grid(other, grd(old_pos))
+            && !other->can_cling_to(old_pos))
+    {
+        return false;
+    }
+
+    moveto(new_pos);
+    other->moveto(old_pos);
+
+    mgrd(old_pos) = other->mindex();
+    mgrd(new_pos) = mindex();
 
     return true;
 }
@@ -6298,6 +6350,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             props["emergency_clone"].get_bool() = true;
         }
     }
+
+    if (alive() && has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
+    {
+        del_ench(ENCH_BONE_ARMOUR);
+        mprf("%s corpse armour sloughs away.",
+             apostrophise(name(DESC_THE)).c_str());
+    }
 }
 
 reach_type monster::reach_range() const
@@ -6663,9 +6722,7 @@ bool monster::shove(const char* feat_name)
     for (distance_iterator di(pos()); di; ++di)
         if (monster_space_valid(this, *di, false))
         {
-            mgrd(pos()) = NON_MONSTER;
-            moveto(*di);
-            mgrd(*di) = mindex();
+            move_to_pos(*di);
             simple_monster_message(this,
                 make_stringf(" is pushed out of the %s.", feat_name).c_str());
             dprf("Moved to (%d, %d).", pos().x, pos().y);

@@ -850,6 +850,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_FLYING:
+            // If you weren't flying when you took off the boots, don't restart.
+            if (you.attribute[ATTR_LAST_FLIGHT_STATUS] == 0)
+                break;
+
             if (you.airborne())
             {
                 you.attribute[ATTR_PERM_FLIGHT] = 1;
@@ -986,6 +990,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_FLYING:
+        // Save current flight status so we can restore it on reequip
+        you.attribute[ATTR_LAST_FLIGHT_STATUS] =
+            you.attribute[ATTR_PERM_FLIGHT];
+
         if (you.attribute[ATTR_PERM_FLIGHT]
             && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
             && !you.racial_permanent_flight())

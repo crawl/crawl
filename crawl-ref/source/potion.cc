@@ -294,7 +294,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
                 return false;
             }
 
-            vector<string> afflictions;
+            vector<const char *> afflictions;
             if (you.haloed())
                 afflictions.push_back("halo");
             if (get_contamination_level() > 1)

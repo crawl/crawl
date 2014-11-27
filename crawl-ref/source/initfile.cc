@@ -794,7 +794,6 @@ void game_options::reset_options()
     equip_unequip          = false;
     jewellery_prompt       = false;
     confirm_butcher        = CONFIRM_AUTO;
-    chunks_autopickup      = true;
     easy_eat_chunks        = false;
     auto_eat_chunks        = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
@@ -2601,7 +2600,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "auto")
             confirm_butcher = CONFIRM_AUTO;
     }
-    else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(auto_eat_chunks);
     else if (key == "lua_file" && runscript)
@@ -4505,7 +4503,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
     if (SysEnv.cmd_args.empty())
     {
         for (int i = 1; i < argc; ++i)
-            SysEnv.cmd_args.push_back(argv[i]);
+            SysEnv.cmd_args.emplace_back(argv[i]);
     }
 
     while (current < argc)
@@ -4688,7 +4686,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             {
                 crawl_state.tests_selected = split_string(",", next_arg);
                 for (int extra = current + 2; extra < argc; ++extra)
-                    crawl_state.script_args.push_back(argv[extra]);
+                    crawl_state.script_args.emplace_back(argv[extra]);
                 current = argc;
             }
             else
@@ -4902,7 +4900,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!_check_extra_opt(next_arg))
                 return true;
 
-            SysEnv.extra_opts_first.push_back(next_arg);
+            SysEnv.extra_opts_first.emplace_back(next_arg);
             nextUsed = true;
 
             // Can be used multiple times.
@@ -4917,7 +4915,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!_check_extra_opt(next_arg))
                 return true;
 
-            SysEnv.extra_opts_last.push_back(next_arg);
+            SysEnv.extra_opts_last.emplace_back(next_arg);
             nextUsed = true;
 
             // Can be used multiple times.
