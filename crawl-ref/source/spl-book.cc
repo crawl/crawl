@@ -20,6 +20,7 @@
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
+#include "describe-spells.h"
 #include "end.h"
 #include "english.h"
 #include "godconduct.h"
@@ -103,109 +104,6 @@ spell_type which_spell_in_book(int sbook_type, int spl)
 {
     ASSERT_RANGE(sbook_type, 0, (int)ARRAYSZ(spellbook_template_array));
     return spellbook_template_array[sbook_type][spl];
-}
-
-// If fs is not NULL, updates will be to the formatted_string instead of
-// the display.
-// XXX: redundancy with append_spells in describe.cc
-int spellbook_contents(item_def &book, formatted_string *fs)
-{
-    int spelcount = 0;
-    int i, j;
-    bool update_screen = !fs;
-
-    const int spell_levels = player_spell_levels();
-
-    formatted_string out;
-    out.textcolour(LIGHTGREY);
-
-    out.cprintf("%s", book.name(DESC_THE).c_str());
-
-    out.cprintf("\n\n Spells                             Type                      Level\n");
-
-    for (j = 0; j < SPELLBOOK_SIZE; j++)
-    {
-        spell_type stype = which_spell_in_book(book, j);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
-        out.cprintf(" ");
-
-        const int level_diff = spell_difficulty(stype);
-        const int levels_req = spell_levels_required(stype);
-
-        int colour = DARKGREY;
-        if (you.has_spell(stype))
-            colour = COL_MEMORIZED;
-        else if (!you_can_memorise(stype)
-                 || you.experience_level < level_diff
-                 || spell_levels < levels_req
-                 || book.base_type == OBJ_BOOKS
-                    && !player_can_memorise_from_spellbook(book))
-        {
-            colour = COL_USELESS;
-        }
-        else if (!you.has_spell(stype))
-            colour = COL_UNMEMORIZED;
-        else
-            colour = spell_highlight_by_utility(stype);
-
-        out.textcolour(colour);
-
-        char strng[2];
-        strng[0] = index_to_letter(spelcount);
-        strng[1] = 0;
-
-        out.cprintf("%s", strng);
-        out.cprintf(" - ");
-
-        out.cprintf("%s", chop_string(spell_title(stype), 29).c_str());
-
-        string schools;
-        bool first = true;
-        for (i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-        {
-            if (spell_typematch(stype, 1 << i))
-            {
-                if (!first)
-                    schools += "/";
-                schools += spelltype_long_name(1 << i);
-                first = false;
-            }
-        }
-        out.cprintf("%s%d\n", chop_string(schools, 30).c_str(), level_diff);
-        spelcount++;
-    }
-
-    out.textcolour(LIGHTGREY);
-    out.cprintf("\n");
-
-    if (book.base_type == OBJ_BOOKS && in_inventory(book)
-        && item_type_known(book)
-        && player_can_memorise_from_spellbook(book))
-    {
-        out.cprintf("Select a spell to read its description, to "
-                    "memorise it or to forget it.\n");
-    }
-    else
-        out.cprintf("Select a spell to read its description.\n");
-
-    if (fs)
-        *fs = out;
-
-    int keyn = 0;
-    if (update_screen && !crawl_state.is_replaying_keys())
-    {
-        cursor_control coff(false);
-        clrscr();
-
-        out.display();
-    }
-
-    if (update_screen)
-        keyn = toalower(getchm(KMC_MENU));
-
-    return keyn;     // either ignored or spell letter
 }
 
 // Rarity 100 is reserved for unused books.
@@ -484,21 +382,21 @@ bool maybe_id_book(item_def &book, bool silent)
     return true;
 }
 
-int read_book(item_def &book)
+void read_book(item_def &book)
 {
     if (!maybe_id_book(book))
-        return 0;
+        return;
 
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "read_book");
 #endif
 
-    const int keyin = spellbook_contents(book);
+    spellset spells = item_spellset(book);
+    ASSERT(spells.size() == 1); // one book per book
+    spells[0].label = book.name(DESC_THE);
 
-    if (!crawl_state.is_replaying_keys())
-        redraw_screen();
-
-    return keyin;
+    formatted_string fdesc;
+    list_spellset(spells, &book, fdesc);
 }
 
 /**

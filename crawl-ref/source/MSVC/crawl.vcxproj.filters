@@ -40,6 +40,7 @@
     <ClCompile Include="..\delay.cc" />
     <ClCompile Include="..\describe.cc" />
     <ClCompile Include="..\describe-god.cc" />
+    <ClCompile Include="..\describe-spells.cc" />
     <ClCompile Include="..\dgl-message.cc" />
     <ClCompile Include="..\dgn-delve.cc" />
     <ClCompile Include="..\dgn-height.cc" />
@@ -350,6 +351,7 @@
     <ClInclude Include="..\delay.h" />
     <ClInclude Include="..\describe.h" />
     <ClInclude Include="..\describe-god.h" />
+    <ClInclude Include="..\describe-spells.h" />
     <ClInclude Include="..\dgl-message.h" />
     <ClInclude Include="..\dgn-delve.h" />
     <ClInclude Include="..\dgn-height.h" />

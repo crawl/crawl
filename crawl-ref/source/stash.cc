@@ -18,6 +18,7 @@
 #include "command.h"
 #include "coordit.h"
 #include "describe.h"
+#include "describe-spells.h"
 #include "directn.h"
 #include "env.h"
 #include "feature.h"
@@ -69,8 +70,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
     if (item->has_spells())
     {
         formatted_string fs;
-        item_def dup = *item;
-        spellbook_contents(dup, &fs);
+        describe_spellset(item_spellset(*item), item, fs);
         text += "\n";
         text += fs.tostring(2, -2);
     }

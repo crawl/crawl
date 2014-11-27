@@ -409,6 +409,14 @@ bool player_stair_delay()
            || delay.type == DELAY_DESCENDING_STAIRS;
 }
 
+/**
+ * Is the player currently in the middle of memorizing a spell?
+ *
+ * @param spell     A specific spell, or -1 to check if we're memorizing any
+ *                  spell at all.
+ * @return          Whether the player is currently memorizing the given type
+ *                  of spell.
+ */
 bool already_learning_spell(int spell)
 {
     if (!you_are_delayed())

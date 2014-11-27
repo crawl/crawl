@@ -2645,31 +2645,7 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
-    while (true)
-    {
-        // Spellbook
-        const int ltr = read_book(book);
-
-        if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
-        {
-            clear_messages();
-            return;
-        }
-
-        const spell_type spell = which_spell_in_book(book,
-                                                     letter_to_index(ltr));
-        if (spell == SPELL_NO_SPELL)
-        {
-            clear_messages();
-            return;
-        }
-
-        describe_spell(spell, &book);
-
-        // Player memorised spell which was being looked at.
-        if (you.turn_is_over)
-            return;
-    }
+    read_book(book);
 }
 
 static void _vulnerability_scroll()

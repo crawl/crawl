@@ -76,7 +76,7 @@ bool delay_is_run(delay_type delay);
 bool is_being_drained(const item_def &item);
 bool is_vampire_feeding();
 bool player_stair_delay();
-bool already_learning_spell(int spell);
+bool already_learning_spell(int spell = -1);
 
 void clear_macro_process_key_delay();
 

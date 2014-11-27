@@ -46,8 +46,6 @@ struct describe_info
     string quote;
 };
 
-void append_spells(string &desc, const item_def &item);
-
 bool is_dumpable_artefact(const item_def &item);
 
 string get_item_description(const item_def &item, bool verbose,
