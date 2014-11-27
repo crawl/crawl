@@ -519,7 +519,7 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     eligibility.init(0);
 
     // Too high HD to ever be affected.
-    if (mon->get_hit_dice() + 5 > zin_recite_power())
+    if (mon->get_hit_dice() >= zin_recite_power())
         return 0;
 
     // Anti-chaos prayer: Hits things vulnerable to silver, or with chaotic spells/gods.
@@ -1047,7 +1047,8 @@ bool zin_recite_to_single_monster(const coord_def& where)
             int damage = dam_dice.roll();
             if (damage > 0)
             {
-                mon->hurt(&you, damage, BEAM_MISSILE, false);
+                mon->hurt(&you, damage, BEAM_MISSILE, KILLED_BY_BEAM,
+                          "", "", false);
 
                 if (mon->alive())
                 {
@@ -2522,7 +2523,7 @@ static int _collect_fruit(vector<pair<int,int> >& available_fruit)
         if (you.inv[i].defined() && is_fruit(you.inv[i]))
         {
             total += you.inv[i].quantity;
-            available_fruit.push_back(make_pair(you.inv[i].quantity, i));
+            available_fruit.emplace_back(you.inv[i].quantity, i);
         }
     }
     sort(available_fruit.begin(), available_fruit.end());
@@ -3144,10 +3145,8 @@ void fedhas_evolve_flora()
         plant->add_ench(ENCH_EXPLODING);
     else if (plant->type == MONS_OKLOB_PLANT)
     {
-        plant->spells.clear();
-        plant->spells.push_back(mon_spell_slot());
-        plant->spells[0].spell = SPELL_SPIT_ACID;
-        plant->spells[0].flags = MON_SPELL_NATURAL;
+        // frequency will be set by set_hit_dice below
+        plant->spells = { { SPELL_SPIT_ACID, 0, MON_SPELL_NATURAL } };
     }
 
     plant->set_hit_dice(plant->get_experience_level()
@@ -3279,7 +3278,7 @@ static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
     int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
     dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
 
-    mon->hurt(agent, dmg, BEAM_MMISSILE, true);
+    mon->hurt(agent, dmg, BEAM_MMISSILE, KILLED_BY_BEAM, "", "", true);
     return 1;
 }
 
@@ -3967,7 +3966,7 @@ bool gozag_potion_petition()
                                        faith_price);
             vector<string> pot_names;
             for (int j = 0; j < pots[i]->size(); j++)
-                pot_names.push_back(potion_type_name((*pots[i])[j].get_int()));
+                pot_names.emplace_back(potion_type_name((*pots[i])[j].get_int()));
             line += comma_separated_line(pot_names.begin(), pot_names.end());
             mpr_nojoin(MSGCH_PLAIN, line.c_str());
         }
@@ -5476,7 +5475,7 @@ void ru_offer_new_sacrifices()
         return;
 
     simple_god_message(" believes you are ready to make a new sacrifice.");
-                    more();
+    more();
 
     // try to get three distinct sacrifices
     int lesser_sacrifice;
@@ -6057,7 +6056,7 @@ bool ru_power_leap()
         //damage scales with XL amd piety
         mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(you.piety *
             (54 + you.experience_level), 777), 3),
-            BEAM_ENERGY, true);
+            BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
     }
 
     return return_val;
@@ -6119,9 +6118,10 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
             dmg += roll_dice(die_size, 8);
             break;
     }
-    mons->hurt(agent, dmg, BEAM_ENERGY, true);
+    mons->hurt(agent, dmg, BEAM_ENERGY, KILLED_BY_BEAM, "", "", true);
 
-    if (mons->alive() && enchantment != ENCH_NONE) {
+    if (mons->alive() && enchantment != ENCH_NONE)
+    {
         simple_monster_message(mons, message.c_str());
         mons->add_ench(mon_enchant(enchantment, 1, agent, duration));
     }

@@ -2384,7 +2384,7 @@ void drop_last()
     {
         const item_def* item = &you.inv[entry.first];
         if (item->quantity > 0)
-            items_to_drop.push_back(SelItem(entry.first, entry.second, item));
+            items_to_drop.emplace_back(entry.first, entry.second, item);
     }
 
     if (items_to_drop.empty())
@@ -2630,6 +2630,13 @@ void autoinscribe()
     will_autoinscribe = false;
 }
 
+/**
+ * Resolve an item's subtype to an appropriate value for autopickup.
+ * @param item The item to check.
+ * @returns The actual sub_type for items that either have an identified
+ * sub_type or where the sub_type is always known. Otherwise the value of the
+ * max subtype.
+*/
 static int _autopickup_subtype(const item_def &item)
 {
     // Sensed items.
@@ -2654,9 +2661,7 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
     case OBJ_MISCELLANY:
-        return (item.sub_type == MISC_RUNE_OF_ZOT
-                || item.sub_type == MISC_PHANTOM_MIRROR)
-               ? item.sub_type : max_type;
+        return item.sub_type == MISC_RUNE_OF_ZOT ? item.sub_type : max_type;
     case OBJ_BOOKS:
         if (item.sub_type == BOOK_MANUAL || item_type_known(item))
             return item.sub_type;
@@ -4518,7 +4523,7 @@ item_info get_item_info(const item_def& item)
     ii.quantity = item.quantity;
     ii.inscription = item.inscription;
     ii.flags = item.flags & (0
-            | ISFLAG_IDENT_MASK | ISFLAG_SEEN_CURSED
+            | ISFLAG_IDENT_MASK
             | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
             | ISFLAG_COSMETIC_MASK);
 
@@ -4809,7 +4814,7 @@ object_class_type get_item_mimic_type()
     char letter = 'a';
     for (object_class_type cls : _mimic_item_classes)
     {
-        mprf("[%c] %s ", letter, item_class_name(cls, true).c_str());
+        mprf("[%c] %s ", letter, item_class_name(cls, true));
         choices[letter++] = cls;
     }
     mprf("[%c] random", letter);

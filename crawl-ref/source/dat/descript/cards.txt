@@ -213,6 +213,14 @@ The card depicts a crumpled wizard's hat, abandoned and stomped into the dirt.
 Drawing this card suppresses nearby magic. Your magic is drained, enchantments
 vanish, and foes are rendered temporarily inept at sorcery.
 %%%%
+Wild Magic card
+
+The card depicts a pointy wizard's hat, scorched and resting on a pile of ashes.
+
+Drawing this card causes wild magic (as if from miscasting a spell) to act upon
+its user's enemies. Each creature affected will restore some of the user's
+magic.
+%%%%
 # deck of summonings
 the Crusade card
 
@@ -309,13 +317,6 @@ the Wraith card
 The card depicts absolutely nothing.
 
 Drawing this card will drain the user.
-%%%%
-Wild Magic card
-
-The card depicts a pointy wizard's hat, scorched and resting on a pile of ashes.
-
-Drawing this card causes wild magic (as if from miscasting a spell) to act upon
-its user.
 %%%%
 the Swine card
 

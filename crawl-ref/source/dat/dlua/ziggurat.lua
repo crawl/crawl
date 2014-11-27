@@ -202,8 +202,7 @@ end
 
 mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "catoblepas w:12 / hellephant w:6 / spriggan druid w:1 / " ..
-                "guardian serpent w:1 / deep troll shaman w:1 / " ..
-                "raiju w:1 / hell beast w:1", { weight = 5 }),
+                "caustic shrike w:4", { weight = 5 }),
      with_props("place:Shoals:$ w:125 band / merfolk aquamancer / " ..
                 "water nymph w:5 / merfolk impaler w:5 / " ..
                 "merfolk javelineer / octopode crusher w:12", { weight = 5 }),
@@ -227,9 +226,9 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "frost giant / ettin / titan", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
                 "fire dragon / fire giant / orb of fire", { weight = 2 }),
-     with_props("ice beast / freezing wraith / ice dragon / " ..
-                "frost giant / ice devil / ice fiend / simulacrum / " ..
-                "white draconian knight / blizzard demon", { weight = 2 }),
+     with_props("ice beast / ice dragon / frost giant / " ..
+                "ice devil / blizzard demon / ice fiend / simulacrum / " ..
+                "white draconian knight / shard shrike", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / titan / raiju / " ..
                 "storm dragon / electric golem / spriggan air mage / " ..
                 "shock serpent", { weight = 2 }),
@@ -265,7 +264,7 @@ mset(spec_fn(function ()
                local d = 290 - 10 * you.depth()
                local e = math.max(0, you.depth() - 20)
                return "place:Orc:$ w:" .. d .. " / orc warlord / " ..
-                 "orc high priest band / orc sorcerer w:5 / stone giant / " ..
+                 "orc high priest / orc sorcerer w:5 / stone giant / " ..
                  "iron troll w:5 / moth of wrath w:" .. e
              end))
 

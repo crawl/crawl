@@ -1549,7 +1549,7 @@ static bool _fedhas_retribution()
     case 1:
     default:
         _fedhas_elemental_miscast();
-            return true;
+        return true;
 
     case 2:
         return _fedhas_summon_plants();
@@ -1668,7 +1668,7 @@ static void _qazlal_deform_terrain()
             continue;
 
         const int weight = LOS_RADIUS*LOS_RADIUS - distance2(you.pos(), *ri);
-        candidates.push_back(coord_weight(*ri, weight));
+        candidates.emplace_back(*ri, weight);
     }
 
     const int how_many = min((int)candidates.size(),

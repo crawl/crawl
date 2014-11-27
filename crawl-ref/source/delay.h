@@ -74,9 +74,7 @@ void finish_last_delay();
 
 bool delay_is_run(delay_type delay);
 bool is_being_drained(const item_def &item);
-bool is_being_butchered(const item_def &item, bool just_first = true);
 bool is_vampire_feeding();
-bool is_butchering();
 bool player_stair_delay();
 bool already_learning_spell(int spell);
 

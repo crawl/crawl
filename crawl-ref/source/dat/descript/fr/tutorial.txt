@@ -184,7 +184,7 @@ tutorial2 wait
 
 Plutôt que de foncer tête baissée dans une pièce et vous retrouver encerclé par
 des monstres, vous pouvez aussi reculer et les laisser venir vers vous (avec
-<input>$cmd[CMD_MOVE_NOWHERE]</input>).
+<input>$cmd[CMD_WAIT]</input>).
 %%%%
 tutorial2 resting_reminder
 
@@ -275,7 +275,7 @@ tutorial2 exit
   Vous pouvez aussi tirer un projectile en <input>cliquant</input> dessus et en confirmant votre cible avec <input>Entrée</input>.</localtiles>
 
 <yellow>Repos</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  attendre et se reposer un seul tour
+  <input>$cmd[CMD_WAIT]</input>  attendre et se reposer un seul tour
   <input>$cmd[CMD_REST]</input>  attendre et se reposer jusqu'à 100 tours
 
 <yellow>Corps<console> <brown>%</brown></console></yellow>
@@ -555,7 +555,7 @@ tutorial4 order_allies
 Essayez de laisser vos alliés tuer vos adversaires ! Si nécessaire, vous pouvez
 leur donner des ordres avec <input>$cmd[CMD_SHOUT]</input>. Avant d'ouvrir
 cette porte, vous devriez peut-être attendre avec
-<input>$cmd[CMD_MOVE_NOWHERE]</input> que vos alliés vous rattrapent.
+<input>$cmd[CMD_WAIT]</input> que vos alliés vous rattrapent.
 %%%%
 tutorial4 heavy_armour
 
@@ -650,7 +650,7 @@ tutorial5 burn_book
 Trog apprécierait si vous brûliez ce grimoire (avec
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> ou via le <w>panneau de
 commandes</w></localtiles>). Parfois, vous préférerez attendre (avec
-<input>$cmd[CMD_MOVE_NOWHERE]</input>) qu'un monstre passe dessus avant de le
+<input>$cmd[CMD_WAIT]</input>) qu'un monstre passe dessus avant de le
 faire.
 %%%%
 tutorial5 berserk
@@ -694,7 +694,7 @@ tutorial5 exit
   Un <input>clic droit</input> sur votre personnage vous amènera aussi à l'écran religion.</localtiles>
 
 <yellow>Repos</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input> attendre et reposer pendant un unique tour
+  <input>$cmd[CMD_WAIT]</input> attendre et reposer pendant un unique tour
   <input>$cmd[CMD_REST]</input> attendre et se reposer jusqu'à 100 tours
 
 <yellow>Autres commandes</yellow>

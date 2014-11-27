@@ -1603,34 +1603,24 @@ float species_apt_factor(skill_type sk, species_type sp)
 
 vector<skill_type> get_crosstrain_skills(skill_type sk)
 {
-    vector<skill_type> ret;
-
     switch (sk)
     {
     case SK_SHORT_BLADES:
-        ret.push_back(SK_LONG_BLADES);
-        return ret;
+        return { SK_LONG_BLADES };
     case SK_LONG_BLADES:
-        ret.push_back(SK_SHORT_BLADES);
-        return ret;
+        return { SK_SHORT_BLADES };
     case SK_AXES:
     case SK_STAVES:
-        ret.push_back(SK_POLEARMS);
-        ret.push_back(SK_MACES_FLAILS);
-        return ret;
+        return { SK_POLEARMS, SK_MACES_FLAILS };
     case SK_MACES_FLAILS:
     case SK_POLEARMS:
-        ret.push_back(SK_AXES);
-        ret.push_back(SK_STAVES);
-        return ret;
+        return { SK_AXES, SK_STAVES };
     case SK_SLINGS:
-        ret.push_back(SK_THROWING);
-        return ret;
+        return { SK_THROWING };
     case SK_THROWING:
-        ret.push_back(SK_SLINGS);
-        return ret;
+        return { SK_SLINGS };
     default:
-        return ret;
+        return {};
     }
 }
 

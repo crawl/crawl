@@ -382,6 +382,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_BONE_ARMOUR:
+        if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+        {
+            inf->short_text = "corpse armour";
+            inf->long_text = "You are enveloped in carrion and bones.";
+        }
+        break;
+
     case STATUS_CONSTRICTED:
         if (you.is_constricted())
         {
@@ -539,7 +547,7 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_BRIBE:
     {
         int bribe = 0;
-        vector<string> places;
+        vector<const char *> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
             if (branch_bribe[i] > 0)

@@ -1086,12 +1086,7 @@ void swap_with_monster(monster* mon_to_swap)
 
     mprf("You swap places with %s.", mon.name(DESC_THE).c_str());
 
-    // Pick the monster up.
-    mgrd(newpos) = NON_MONSTER;
-    mon.moveto(you.pos());
-
-    // Plunk it down.
-    mgrd(mon.pos()) = mon_to_swap->mindex();
+    mon.move_to_pos(you.pos(), true, true);
 
     if (you_caught)
     {
@@ -1180,10 +1175,8 @@ void entered_malign_portal(actor* act)
     }
 
     act->blink(false);
-    if (act->is_player())
-        ouch(roll_dice(2, 4), KILLED_BY_WILD_MAGIC, MID_NOBODY, "a malign gateway");
-    else
-        act->hurt(NULL, roll_dice(2, 4));
+    act->hurt(NULL, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
+              "", "a malign gateway");
 }
 
 void handle_real_time(time_t t)
@@ -1197,8 +1190,8 @@ string part_stack_string(const int num, const int total)
     if (num == total)
         return "Your";
 
-    string ret  = uppercase_first(number_in_words(num));
-           ret += " of your";
+    string ret  = uppercase_first(number_in_words(num))
+                + " of your";
 
     return ret;
 }
@@ -1224,7 +1217,7 @@ void counted_monster_list::add(const monster* mons)
             return;
         }
     }
-    list.push_back(counted_monster(mons, 1));
+    list.emplace_back(mons, 1);
 }
 
 int counted_monster_list::count()

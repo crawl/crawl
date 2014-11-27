@@ -1124,8 +1124,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
     // Duration depends on corpse weight.
     const int max_chunks = get_max_corpse_chunks(mons_type);
-    int chunk_amount     = 1 + max_chunks/3;
-        chunk_amount     = stepdown_value(chunk_amount, 6, 6, 12, 12);
+    const int chunk_amount = stepdown_value(1 + max_chunks/3, 6, 6, 12, 12);
 
     // Add 1 for the artificial extra call at the start of draining.
     const int duration   = 1 + chunk_amount;

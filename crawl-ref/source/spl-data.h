@@ -832,7 +832,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TWISTED_RESURRECTION, "Twisted Resurrection",
      SPTYP_NECROMANCY,
-     SPFLAG_CHAOTIC | SPFLAG_CORPSE_VIOLATING | SPFLAG_UTILITY,
+     SPFLAG_CHAOTIC | SPFLAG_CORPSE_VIOLATING | SPFLAG_UTILITY | SPFLAG_MONSTER,
      5,
      200,
      -1, -1,
@@ -1646,6 +1646,17 @@ static const struct spell_desc spelldata[] =
      200,
      5, 5,
      4, 0,
+     NULL,
+},
+
+{
+    SPELL_SINGULARITY, "Singularity",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
+     9,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     20, 0,
      NULL,
 },
 
@@ -2595,9 +2606,9 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_FORCE_LANCE, "Force Lance",
-     SPTYP_CONJURATION,
+     SPTYP_CONJURATION | SPTYP_TRANSLOCATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
-     5,
+     4,
      100,
      4, 4,
      5, 0,
@@ -3537,6 +3548,39 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_HUNTING_CRY, "Hunting Cry",
+    SPTYP_HEXES,
+    SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH | SPFLAG_NOISY,
+    6,
+    0,
+    -1, -1,
+    25, 0,
+    NULL,
+},
+
+{
+    SPELL_CLEANSING_FLAME, "Cleansing Flame",
+    SPTYP_NONE,
+    SPFLAG_AREA | SPFLAG_MONSTER,
+    8,
+    200,
+    -1, -1,
+    20, 0,
+    NULL,
+},
+
+{
+    SPELL_BONE_ARMOUR, "Cigotuvi's Embrace",
+    SPTYP_NECROMANCY,
+    SPFLAG_CHAOTIC | SPFLAG_CORPSE_VIOLATING | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
+    5,
+    200,
+    -1, -1,
+    4, 0,
+    NULL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,
@@ -3545,28 +3589,6 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     1, 0,
     NULL,
-},
-
-{
-    SPELL_HUNTING_CRY, "Hunting Cry",
-     SPTYP_HEXES,
-     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_SELFENCH | SPFLAG_NOISY,
-     6,
-     0,
-     -1, -1,
-     25, 0,
-     NULL,
-},
-
-{
-    SPELL_CLEANSING_FLAME, "Cleansing Flame",
-     SPTYP_NONE,
-     SPFLAG_AREA | SPFLAG_MONSTER,
-     8,
-     200,
-     -1, -1,
-     20, 0,
-     NULL,
 },
 
 };

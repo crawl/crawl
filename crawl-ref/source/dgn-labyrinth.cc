@@ -231,7 +231,7 @@ static void _change_walls_from_centre(const dgn_region &region,
         const dungeon_feature_type feat =
             static_cast<dungeon_feature_type>(va_arg(args, int));
 
-        ldist.push_back(dist_feat(dist, feat));
+        ldist.emplace_back(dist, feat);
     }
 
     _change_walls_from_centre(region, c, rectangular, MMT_VAULT, wall, ldist);

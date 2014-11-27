@@ -1560,6 +1560,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->has_spell(SPELL_DEFLECT_MISSILES))
         mon->add_ench(ENCH_DEFLECT_MISSILES);
 
+    if (mon->has_spell(SPELL_BONE_ARMOUR))
+        mon->add_ench(ENCH_BONE_ARMOUR);
+
     if (mon->has_spell(SPELL_CONDENSATION_SHIELD))
     {
         const int power = (mon->spell_hd(SPELL_CONDENSATION_SHIELD) * 15) / 10;
@@ -2164,7 +2167,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_SHARD_SHRIKE:
         band = BAND_SHARD_SHRIKE;
-        band_size = 2 + random2(3);
+        band_size = 1 + random2(3);
         break;
 
     case MONS_FLYING_SKULL:
@@ -2276,7 +2279,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_INSUBSTANTIAL_WISP:
         band = BAND_INSUBSTANTIAL_WISPS;
-        band_size = 3 + random2(4);
+        band_size = 2 + random2(4);
         break;
     case MONS_OGRE_MAGE:
         natural_leader = true;
@@ -3731,7 +3734,7 @@ monster* mons_place(mgen_data mg)
     {
         mg.behaviour = (mg.summoner && mg.summoner->is_player())
                         ? BEH_FRIENDLY
-                        : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+                        : SAME_ATTITUDE(mg.summoner->as_monster());
     }
 
     monster* creation = place_monster(mg);

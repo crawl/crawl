@@ -4991,7 +4991,7 @@ static void tag_read_level(reader &th)
     while (num_lights-- > 0)
     {
         coord_def c = unmarshallCoord(th);
-        env.sunlight.push_back(make_pair(c, unmarshallInt(th)));
+        env.sunlight.emplace_back(c, unmarshallInt(th));
     }
 }
 

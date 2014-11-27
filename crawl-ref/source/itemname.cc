@@ -1043,9 +1043,6 @@ static const char* _book_type_name(int booktype)
     case BOOK_POWER:                  return "Power";
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
-#if TAG_MAJOR_VERSION == 34
-    case BOOK_STALKING:               return "Stalking";
-#endif
     case BOOK_DEBILITATION:           return "Debilitation";
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
@@ -1123,12 +1120,12 @@ static const char* rod_type_name(int type)
     }
 }
 
-string base_type_string(const item_def &item)
+const char *base_type_string(const item_def &item)
 {
     return base_type_string(item.base_type);
 }
 
-string base_type_string(object_class_type type)
+const char *base_type_string(object_class_type type)
 {
     switch (type)
     {
@@ -1187,6 +1184,8 @@ string sub_type_string(const item_def &item, bool known)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
             return "Fen Folio";
+        else if (sub_type == BOOK_PLANE_PAPYRUS)
+            return "Plane Papyrus";
 
         return string("book of ") + _book_type_name(sub_type);
     }
@@ -2395,9 +2394,6 @@ void check_item_knowledge(bool unknown_items)
 
             if (i == OBJ_STAVES && j == STAFF_CHANNELING)
                 continue;
-
-            if (i == OBJ_BOOKS && j == BOOK_STALKING)
-                continue;
 #endif
 
             if (unknown_items ? you.type_ids[i][j] != ID_KNOWN_TYPE
@@ -2417,9 +2413,9 @@ void check_item_knowledge(bool unknown_items)
                     items.push_back(ptmp);
 
                     if (you.force_autopickup[i][j] == 1)
-                        selected_items.push_back(SelItem(0,1,ptmp));
+                        selected_items.emplace_back(0,1,ptmp);
                     if (you.force_autopickup[i][j] == -1)
-                        selected_items.push_back(SelItem(0,2,ptmp));
+                        selected_items.emplace_back(0,2,ptmp);
                 }
             }
             else
@@ -2448,9 +2444,9 @@ void check_item_knowledge(bool unknown_items)
                 items.push_back(ptmp);
 
                 if (you.force_autopickup[i][ptmp->sub_type] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[i][ptmp->sub_type ] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
         // Missiles
@@ -2470,9 +2466,9 @@ void check_item_knowledge(bool unknown_items)
                 items_missile.push_back(ptmp);
 
                 if (you.force_autopickup[OBJ_MISSILES][i] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[OBJ_MISSILES][i] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
         // Misc.
@@ -2480,13 +2476,12 @@ void check_item_knowledge(bool unknown_items)
         {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
-            OBJ_MISCELLANY, OBJ_MISCELLANY, OBJ_MISCELLANY
+            OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] =
         {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BEEF_JERKY, FOOD_BREAD_RATION, FOOD_FRUIT, FOOD_PIZZA, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
-            MISC_PHANTOM_MIRROR,
             NUM_MISCELLANY
         };
         COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
@@ -2519,9 +2514,9 @@ void check_item_knowledge(bool unknown_items)
                 items_other.push_back(ptmp);
 
                 if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
     }
@@ -3614,9 +3609,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_RUNE_OF_ZOT:
             return false;
 
+        // Purely summoning misc items don't work w/ sac love
         case MISC_SACK_OF_SPIDERS:
         case MISC_BOX_OF_BEASTS:
         case MISC_HORN_OF_GERYON:
+        case MISC_PHANTOM_MIRROR:
             return player_mutation_level(MUT_NO_LOVE)
                 || player_mutation_level(MUT_NO_ARTIFICE);
 
@@ -3641,7 +3638,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
 string item_prefix(const item_def &item, bool temp)
 {
-    vector<string> prefixes;
+    vector<const char *> prefixes;
 
     if (!item.defined())
         return "";

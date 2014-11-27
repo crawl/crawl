@@ -544,17 +544,17 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
             // Only give needles if they have a blowgun in inventory.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.push_back(make_pair(MI_TOMAHAWK, 75));
+            missile_weights.emplace_back(MI_TOMAHAWK, 75);
 
             // Include the possibility of needles if they have some stealth skill.
             if (x_chance_in_y(you.skills[SK_STEALTH], 15))
-                missile_weights.push_back(make_pair(MI_NEEDLE, 100));
+                missile_weights.emplace_back(MI_NEEDLE, 100);
 
             if (you.body_size() >= SIZE_MEDIUM)
-                missile_weights.push_back(make_pair(MI_JAVELIN, 100));
+                missile_weights.emplace_back(MI_JAVELIN, 100);
 
             if (you.can_throw_large_rocks())
-                missile_weights.push_back(make_pair(MI_LARGE_ROCK, 100));
+                missile_weights.emplace_back(MI_LARGE_ROCK, 100);
 
             result = *random_choose_weighted(missile_weights);
         }
@@ -994,13 +994,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 continue;
             }
 
-#if TAG_MAJOR_VERSION == 34
-            if (bk == BOOK_STALKING)
-            {
-                weights[bk] = 0;
-                continue;
-            }
-#endif
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
         }

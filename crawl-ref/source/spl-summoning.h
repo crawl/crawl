@@ -91,7 +91,6 @@ int animate_dead(actor *caster, int /*pow*/, beh_type beha,
 spret_type cast_simulacrum(int pow, god_type god, bool fail);
 bool monster_simulacrum(monster *caster, bool actual);
 
-spret_type cast_twisted_resurrection(int pow, god_type god, bool fail);
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual = true);
 
