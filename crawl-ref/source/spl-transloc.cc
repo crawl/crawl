@@ -1139,11 +1139,10 @@ int singularity_range(int pow, int strength)
 {
     // XXX: unify some of this functionality.
     // A singularity is HD (pow / 10) + 1; its strength is
-    // (HD / (4 + range)) for a given range, so for a given strength the
-    // range is ((pow / 10) + 1 - 4*strength) / strength.
+    // (HD / (range^2)) for a given range, so for a given strength the
+    // range is sqrt(pow/10 + 1) / strength.
 
-    return max(0, min(LOS_RADIUS,
-                      ((pow / 10) + 1 - 4*strength) / strength));
+    return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
 }
 
 spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
@@ -1276,7 +1275,7 @@ void singularity_pull(const monster *singularity)
 
         const int range = isqrt((singularity->pos() - ai->pos()).abs());
         const int strength =
-            max(0, min(5, (singularity->get_hit_dice()) / (4 + range)));
+            max(0, min(4, (singularity->get_hit_dice()) / (range*range)));
         static const char *messages[] =
         {
             "%s pulls at %s.",
