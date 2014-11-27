@@ -5396,6 +5396,17 @@ void unmarshallMonster(reader &th, monster& m)
         m.ghost_demon_init();
         parts |= MP_GHOST_DEMON;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_RANDLICHES
+        && mons_is_ghost_demon(m.type)
+        && (m.type == MONS_LICH || m.type == MONS_ANCIENT_LICH))
+    {
+        ghost_demon ghost;
+        ghost.init_lich(m.type);
+        ghost.spells = m.spells; // ???
+        m.set_ghost(ghost);
+        parts |= MP_GHOST_DEMON;
+    }
 #endif
 
     if (m.props.exists("monster_tile_name"))
