@@ -2373,17 +2373,6 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     return true;
 }
 
-spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
-{
-    if (twisted_resurrection(&you, pow, BEH_FRIENDLY, MHITYOU, god, !fail))
-        return fail ? SPRET_FAIL : SPRET_SUCCESS;
-    else
-    {
-        mpr("There are no corpses nearby!");
-        return SPRET_ABORT;
-    }
-}
-
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
     monster* m = monster_at(where);
