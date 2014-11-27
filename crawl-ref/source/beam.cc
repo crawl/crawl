@@ -428,11 +428,10 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
+    pbolt.ench_power = power; // XXX: is this used for to hit anywhere?
+
     if (zinfo->is_enchantment)
-    {
-        pbolt.ench_power = (zinfo->tohit ? (*zinfo->tohit)(power) : power);
         pbolt.hit = AUTOMATIC_HIT;
-    }
     else
     {
         pbolt.hit = (*zinfo->tohit)(power);
@@ -442,9 +441,6 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     if (zinfo->damage)
         pbolt.damage = (*zinfo->damage)(power);
-
-    if (z_type == ZAP_EXPLOSIVE_BOLT)
-        pbolt.ench_power = power;
 
     pbolt.origin_spell = zap_to_spell(z_type);
 
@@ -1254,7 +1250,8 @@ void bolt::do_fire()
 #ifdef USE_TILE
     tile_beam = -1;
 
-    if (item && !is_tracer && flavour == BEAM_MISSILE)
+    if (item && !is_tracer && (flavour == BEAM_MISSILE
+                               || flavour == BEAM_VISUAL))
     {
         const coord_def diff = target - source;
         tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
@@ -2369,10 +2366,8 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     coord_def c = victim->pos();
 
     mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
-    if (victim->is_player())
-        ouch(damage, KILLED_BY_BEAM, agent->mid, "by a malign offering");
-    else
-        damage = victim->hurt(agent, damage, BEAM_NEG);
+    damage = victim->hurt(agent, damage, BEAM_NEG, KILLED_BY_BEAM,
+                          "", "by a malign offering");
 
     // Actors that had LOS to the victim (blocked by glass, clouds, etc),
     // even if they couldn't actually see each other because of blindness
@@ -4581,8 +4576,14 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 void bolt::beam_hits_actor(actor *act)
 {
     const coord_def oldpos(act->pos());
+    coord_def newpos(act->pos());
 
-    if (knockback_actor(act))
+    const int distance =
+        (origin_spell == SPELL_FORCE_LANCE)
+            ? 1 + div_rand_round(ench_power, 40) :
+        (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
+
+    if (knockback_actor(act, distance, newpos))
     {
         if (you.can_see(act))
         {
@@ -4591,7 +4592,6 @@ void bolt::beam_hits_actor(actor *act)
                 mprf("%s %s blown backwards by the freezing wind.",
                      act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
-                knockback_actor(act);
             }
             else
             {
@@ -4602,9 +4602,8 @@ void bolt::beam_hits_actor(actor *act)
             }
         }
 
-        // Force lance can knockback up to two spaces
-        if (origin_spell == SPELL_FORCE_LANCE && coinflip())
-            knockback_actor(act);
+        if (act->pos() != newpos)
+            act->collide(newpos, agent(), ench_power);
 
         // Stun the monster briefly so that it doesn't look as though it wasn't
         // knocked back at all
@@ -4653,6 +4652,8 @@ void bolt::hit_shield(actor* blocker) const
                 you.props[MELT_SHIELD_KEY] = true;
         }
     }
+    if (blocker->is_player())
+        you.maybe_degrade_bone_armour();
 }
 
 // Return true if the block succeeded (including reflections.)
@@ -4972,7 +4973,7 @@ void bolt::affect_monster(monster* mon)
             bleed_onto_floor(mon->pos(), mon->type, blood, true);
         }
         // Now hurt monster.
-        mon->hurt(agent(), final, flavour, false);
+        mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
     }
 
     if (mon->alive())
@@ -5760,37 +5761,54 @@ int bolt::range_used_on_hit() const
 // Checks whether the beam knocks back the supplied actor. The actor
 // should have already failed their EV check, so the save is entirely
 // body-mass-based.
-bool bolt::knockback_actor(actor *act)
+bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
 {
     // We can't do knockback if the beam starts and ends on the same space
     if (source == act->pos())
         return false;
 
+    if (act->is_stationary())
+        return false;
+
+    const int roll = origin_spell == SPELL_FORCE_LANCE
+                     ? 1000 + 40 * ench_power
+                     : 2500;
+    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
+
     ASSERT(ray.pos() == act->pos());
 
-    const coord_def oldpos(ray.pos());
-    const ray_def ray_copy(ray);
-    ray.advance();
-
-    const coord_def newpos(ray.pos());
-    if (newpos == oldpos
-        || actor_at(newpos)
-        || act->is_stationary()
-        || cell_is_solid(newpos)
-        || !act->can_pass_through(newpos)
-        || !act->is_habitable(newpos)
-        // Save is based on target's body weight.
-        || random2(2500) < act->body_weight())
+    const coord_def initial_pos(ray.pos());
+    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
     {
-        ray = ray_copy;
-        return false;
-    }
+        // Save is based on target's body weight.
+        if (random2(roll) < weight)
+            continue;
 
-    act->move_to_pos(newpos);
+        const ray_def ray_copy(ray);
+
+        ray.advance();
+
+        newpos = ray.pos();
+        if (newpos == ray_copy.pos())
+        {
+            ray = ray_copy;
+            return ray.pos() != initial_pos;
+        }
+
+        if (!cell_is_solid(newpos)
+            && !actor_at(newpos)
+            && act->can_pass_through(newpos)
+            && act->is_habitable(newpos))
+        {
+            act->move_to_pos(newpos);
+        }
+        else
+            break;
+    }
 
     // Knockback cannot ever kill the actor directly - caller must do
     // apply_location_effects after messaging.
-    return true;
+    return ray.pos() != initial_pos;
 }
 
 // Takes a bolt and refines it for use in the explosion function.

@@ -382,6 +382,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_BONE_ARMOUR:
+        if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+        {
+            inf->short_text = "corpse armour";
+            inf->long_text = "You are enveloped in carrion and bones.";
+        }
+        break;
+
     case STATUS_CONSTRICTED:
         if (you.is_constricted())
         {

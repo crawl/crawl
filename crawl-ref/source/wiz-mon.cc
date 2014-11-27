@@ -556,6 +556,8 @@ void debug_stethoscope(int mon)
         else
             spl << spell_title(hspell_pass[k].spell);
 
+        spl << "." << (int)hspell_pass[k].freq;
+
         spl << " (" << static_cast<int>(hspell_pass[k].spell) << ")";
     }
     if (found_spell)

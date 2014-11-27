@@ -6,7 +6,8 @@
 #ifndef WIZDUMP_H
 #define WIZDUMP_H
 
-class chardump_parser {
+class chardump_parser
+{
 public:
     chardump_parser(const string &f)
         : filename(f), in_equipment(false), seen_skills(false) { }

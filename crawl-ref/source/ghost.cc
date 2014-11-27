@@ -184,10 +184,14 @@ static brand_type _random_special_pan_lord_brand()
 void ghost_demon::init_pandemonium_lord()
 {
     mon_spell_slot slot;
+    slot.freq = 12;
     slot.flags = MON_SPELL_DEMONIC;
 
-    do name = make_name(random_int(), false);
-        while (!getLongDescription(name).empty());
+    do
+    {
+        name = make_name(random_int(), false);
+    }
+    while (!getLongDescription(name).empty());
 
     // hp - could be defined below (as could ev, AC, etc.). Oh well, too late:
     max_hp = 100 + roll_dice(3, 50);
@@ -723,6 +727,7 @@ void ghost_demon::add_spells(bool actual_ghost)
 {
     spells.clear();
     mon_spell_slot slot;
+    slot.freq = 12;
     slot.flags = MON_SPELL_WIZARD;
 
     for (int i = 0; i < you.spell_no; i++)
@@ -1020,4 +1025,182 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     }
 
     fixup_spells(spells, 150);
+}
+
+const mon_spell_slot lich_primary_spells[] =
+{
+    { SPELL_IOOD, 18, MON_SPELL_WIZARD },
+    { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 18, MON_SPELL_WIZARD },
+    { SPELL_CHAIN_LIGHTNING, 18, MON_SPELL_WIZARD },
+    { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
+    { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
+    { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
+};
+
+const mon_spell_slot lich_secondary_spells[] =
+{
+    { SPELL_MALIGN_GATEWAY, 12, MON_SPELL_WIZARD },
+    { SPELL_SPELLFORGED_SERVITOR, 12, MON_SPELL_WIZARD },
+    { SPELL_OZOCUBUS_REFRIGERATION, 12, MON_SPELL_WIZARD },
+    { SPELL_SIMULACRUM, 12, MON_SPELL_WIZARD },
+    { SPELL_POISON_ARROW, 12, MON_SPELL_WIZARD },
+    { SPELL_HAUNT, 12, MON_SPELL_WIZARD },
+    { SPELL_SUMMON_HORRIBLE_THINGS, 12, MON_SPELL_WIZARD },
+    { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
+    { SPELL_BATTLESPHERE, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_DRAINING, 12, MON_SPELL_WIZARD },
+    { SPELL_AGONY, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_FIRE, 12, MON_SPELL_WIZARD },
+    { SPELL_FIREBALL, 12, MON_SPELL_WIZARD },
+    { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
+    { SPELL_THROW_ICICLE, 12, MON_SPELL_WIZARD },
+    { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
+    { SPELL_LRD, 12, MON_SPELL_WIZARD },
+    { SPELL_PETRIFY, 12, MON_SPELL_WIZARD },
+    { SPELL_LIGHTNING_BOLT, 12, MON_SPELL_WIZARD },
+    { SPELL_POISONOUS_CLOUD, 12, MON_SPELL_WIZARD },
+    { SPELL_VIRULENCE, 12, MON_SPELL_WIZARD },
+    { SPELL_SHADOW_CREATURES, 12, MON_SPELL_WIZARD },
+    { SPELL_PARALYSE, 12, MON_SPELL_WIZARD },
+    { SPELL_CONFUSE, 12, MON_SPELL_WIZARD },
+    { SPELL_SLOW, 12, MON_SPELL_WIZARD },
+    { SPELL_SLEEP, 12, MON_SPELL_WIZARD },
+    { SPELL_ENSLAVEMENT, 12, MON_SPELL_WIZARD },
+};
+
+const mon_spell_slot lich_buff_spells[] =
+{
+    { SPELL_HASTE, 12, MON_SPELL_WIZARD },
+    { SPELL_INVISIBILITY, 12, MON_SPELL_WIZARD },
+    { SPELL_TELEPORT_SELF, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+    { SPELL_BANISHMENT, 12, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+};
+
+static bool _lich_spell_is_used(const monster_spells &spells, spell_type spell)
+{
+    for (auto slot : spells)
+        if (slot.spell == spell)
+            return true;
+
+    return false;
+}
+
+static bool _lich_has_spell_of_school(const monster_spells &spells,
+                                      unsigned int discipline)
+{
+    for (auto slot : spells)
+        if (spell_typematch(slot.spell, discipline))
+            return true;
+
+    return false;
+}
+
+static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
+                                int *weights, int total_weight)
+{
+    if (_lich_spell_is_used(spells, spell))
+        return false;
+
+    if (spells.size() > 2
+        && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
+    {
+        return spell_typematch(spell, SPTYP_CONJURATION)
+            && spell != SPELL_BATTLESPHERE
+            && spell != SPELL_SPELLFORGED_SERVITOR;
+    }
+
+    unsigned int disciplines = get_spell_disciplines(spell);
+    int num_disciplines = count_bits(disciplines);
+
+    for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
+        if (disciplines & (1 << exponent))
+            if (x_chance_in_y(weights[exponent], total_weight * num_disciplines))
+                return true;
+
+    return false;
+}
+
+static void _calculate_lich_spell_weights(const monster_spells &spells,
+                                          int *weights, int &total_weight)
+{
+    for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
+        // there are no primary hexes, and hexes are interesting to have on
+        // liches, so give them a slightly higher chance
+        weights[exponent] = (1 << exponent) == SPTYP_HEXES
+            ? SPTYP_LAST_EXPONENT / 4
+            : 1;
+
+    for (auto slot : spells)
+        for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
+        {
+            unsigned int discipline = 1 << exponent;
+            if (spell_typematch(slot.spell, discipline))
+            {
+                // or else we just get entirely bolts
+                int increment = discipline == SPTYP_CONJURATION
+                    ? SPTYP_LAST_EXPONENT / 4
+                    : SPTYP_LAST_EXPONENT;
+                weights[exponent] = min(
+                     weights[exponent] + increment,
+                     (int)SPTYP_LAST_EXPONENT * 2
+                );
+            }
+        }
+
+    total_weight = 0;
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
+        total_weight += weights[i];
+
+}
+
+static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
+                            size_t set_len)
+{
+    int weights[SPTYP_LAST_EXPONENT + 1];
+    int total_weight;
+    _calculate_lich_spell_weights(spells, weights, total_weight);
+
+    mon_spell_slot next_spell;
+    do {
+       next_spell = set[random2(set_len)];
+    } while (!_lich_spell_is_good(spells, next_spell.spell, weights,
+                                  total_weight));
+
+    next_spell.freq = next_spell.freq - 4 + random2(9);
+    spells.push_back(next_spell);
+}
+
+void ghost_demon::init_lich(monster_type type)
+{
+    monsterentry* me = get_monster_data(type);
+    ASSERT(me);
+
+    colour = me->colour;
+    speed = me->speed;
+    ev = me->ev;
+    ac = me->AC;
+    xl = me->hpdice[0];
+    max_hp = hit_points(xl, me->hpdice[1], me->hpdice[2]);
+    damage = me->attack[0].damage;
+    att_type = me->attack[0].type;
+    att_flav = me->attack[0].flavour;
+
+    size_t count = 5 + random2(3);
+
+    _add_lich_spell(spells, lich_primary_spells,
+                    ARRAYSZ(lich_primary_spells));
+    if (type == MONS_ANCIENT_LICH && coinflip())
+        _add_lich_spell(spells, lich_primary_spells,
+                        ARRAYSZ(lich_primary_spells));
+
+    while (spells.size() < count - 1)
+        _add_lich_spell(spells, lich_secondary_spells,
+                        ARRAYSZ(lich_secondary_spells));
+
+    _add_lich_spell(spells, lich_buff_spells,
+                    ARRAYSZ(lich_buff_spells));
+
+    // not fixup_spells, because we want to handle marking emergency spells
+    // ourselves, and we should never have any SPELL_NO_SPELL to strip out
+    normalize_spell_freq(spells, xl);
 }

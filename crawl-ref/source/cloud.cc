@@ -16,7 +16,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "godconduct.h"
-#include "losglobal.h"
+#include "los.h"
 #include "mapmark.h"
 #include "melee_attack.h"
 #include "message.h"
@@ -253,7 +253,7 @@ static bool _is_opaque_cloud(cloud_type ctype);
 static void _los_cloud_changed(const coord_def& p, cloud_type t)
 {
     if (_is_opaque_cloud(t))
-        invalidate_los_around(p);
+        los_terrain_changed(p);
 }
 
 static void _new_cloud(int cloud, cloud_type type, const coord_def& p,
@@ -673,8 +673,8 @@ void swap_clouds(coord_def p1, coord_def p2)
     env.cgrid(p2) = c1;
     if (affects_los)
     {
-        invalidate_los_around(p1);
-        invalidate_los_around(p2);
+        los_terrain_changed(p1);
+        los_terrain_changed(p2);
     }
 }
 
@@ -1393,15 +1393,8 @@ int actor_apply_cloud(actor *act)
              cloud.cloud_name().c_str());
 
         actor *oppressor = cloud.agent();
-
-        if (player)
-        {
-            ouch(final_damage, KILLED_BY_CLOUD,
-                 oppressor ? oppressor->mid : MID_NOBODY,
-                 cloud.cloud_name("", true).c_str());
-        }
-        else
-            mons->hurt(oppressor, final_damage, BEAM_MISSILE);
+        act->hurt(oppressor, final_damage, BEAM_MISSILE,
+                  KILLED_BY_CLOUD, "", cloud.cloud_name("", true));
     }
 
     return final_damage;

@@ -156,8 +156,9 @@ namespace arena
             return;
 
         vector<int> items;
-        copy_if(begin(mon->inv), end(mon->inv), begin(items),
-                [] (short it) { return it != NON_ITEM; });
+        for (short it : mon->inv)
+            if (it != NON_ITEM)
+                items.push_back(it);
 
         if (items.empty())
             return;

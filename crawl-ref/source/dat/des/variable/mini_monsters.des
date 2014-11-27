@@ -5670,7 +5670,8 @@ COLOUR:  F = lightred
 KMONS:   9 = ice devil / blue devil w:5 / ice dragon / simulacrum w:5 / \
              skeletal warrior ; hunting sling ego:freezing ident:type . \
              mundane sling bullet . mace ego:freezing ident:type
-KMONS:   8 = blizzard demon / lich / reaper ; scythe ego:freezing ident:type
+KMONS:   8 = blizzard demon / lich / shard shrike / \
+             reaper ; scythe ego:freezing ident:type
 KMONS:   7 = ice fiend
 MARKER:  F = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 8, pow_max = 10, delay = 100, \

@@ -1611,7 +1611,8 @@ KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
              wand of teleportation w:5 / any scroll w:1
 KITEM:   e = ring of teleport control w:9 / ring of teleportation w:20 / any ring w:1
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
-             manual of translocations w:5 / randbook disc:translocation numspells:5 / \
+             plane papyrus w:5 / manual of translocations w:5 / \
+             randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:shroud_of_golubria|passage_of_golubria
 KITEM:   g = ring of flight / potion of flight q:2 / \

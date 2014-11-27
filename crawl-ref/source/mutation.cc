@@ -1479,7 +1479,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     // Undead bodies don't mutate, they fall apart. -- bwr
     if (undead_mutation_rot())
     {
-        switch (mutclass) {
+        switch (mutclass)
+        {
         case MUTCLASS_TEMPORARY:
             lose_stat(STAT_RANDOM, 1, false, reason);
             return true;
@@ -2410,7 +2411,8 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     int levels = 0;
     while (how_much-- > 0)
     {
-    dprf("Perma Mutate: %d, %d, %d", cap, you.mutation[which_mut], you.innate_mutation[which_mut]);
+        dprf("Perma Mutate: %d, %d, %d", cap,
+             you.mutation[which_mut], you.innate_mutation[which_mut]);
         if (you.mutation[which_mut] == cap && how_much == 0)
         {
             // [rpb] primarily for demonspawn, if the mutation level is already
@@ -2636,10 +2638,7 @@ int handle_pbd_corpses()
     {
         for (stack_iterator j(*ri); j; ++j)
         {
-            if (j->base_type == OBJ_CORPSES
-                && j->sub_type == CORPSE_BODY
-                && j->special > 50
-                && !j->props.exists(MANGLED_CORPSE_KEY))
+            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
             {
                 ++corpse_count;
                 if (corpse_count == 7)

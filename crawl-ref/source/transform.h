@@ -124,6 +124,7 @@ public:
     bool res_rot() const;
     bool res_acid() const;
     bool res_sticky_flame() const;
+    bool res_petrify() const;
 
     /**
      * A multiplier to Stealth skill for player stealth calculations.
@@ -207,6 +208,8 @@ public:
     const string hand_name;
     /// The name of this form's foot-equivalents; "" defaults to species.
     const string foot_name;
+    /// The name of this form's flesh-equivalent; "" defaults to species.
+    const string flesh_equivalent;
 
 protected:
     /// See Form::get_long_name().

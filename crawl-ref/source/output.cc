@@ -492,7 +492,8 @@ static bool _boosted_ac()
     return you.duration[DUR_ICY_ARMOUR]
            || player_stoneskin()
            || player_icemail_armour_class()
-           || you.duration[DUR_QAZLAL_AC];
+           || you.duration[DUR_QAZLAL_AC]
+           || you.attribute[ATTR_BONE_ARMOUR] > 0;
 }
 
 static bool _boosted_ev()
@@ -506,7 +507,8 @@ static bool _boosted_sh()
     return you.duration[DUR_CONDENSATION_SHIELD]
            || you.duration[DUR_MAGIC_SHIELD]
            || you.duration[DUR_DIVINE_SHIELD]
-           || qazlal_sh_boost() > 0;
+           || qazlal_sh_boost() > 0
+           || you.attribute[ATTR_BONE_ARMOUR] > 0;
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
@@ -1889,7 +1891,8 @@ static int _stealth_breakpoint(int stealth)
         return 1 + stealth / STEALTH_PIP;
 }
 
-static string _stealth_bar(int sw) {
+static string _stealth_bar(int sw)
+{
     string bar;
     //no colouring
     bar += _determine_colour_string(0, 5);
