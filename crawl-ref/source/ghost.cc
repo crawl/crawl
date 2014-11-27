@@ -1190,12 +1190,16 @@ void ghost_demon::init_lich(monster_type type)
     _add_lich_spell(spells, lich_primary_spells,
                     ARRAYSZ(lich_primary_spells));
     if (type == MONS_ANCIENT_LICH && coinflip())
+    {
         _add_lich_spell(spells, lich_primary_spells,
                         ARRAYSZ(lich_primary_spells));
+    }
 
     while (spells.size() < count - 1)
+    {
         _add_lich_spell(spells, lich_secondary_spells,
                         ARRAYSZ(lich_secondary_spells));
+    }
 
     _add_lich_spell(spells, lich_buff_spells,
                     ARRAYSZ(lich_buff_spells));
