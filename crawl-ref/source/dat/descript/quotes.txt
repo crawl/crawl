@@ -835,8 +835,13 @@ cult image.”
 %%%%
 battlesphere
 
-Rule 4: Close air support covereth a multitude of sins.
-    -The Seven Habits of Highly Effective Pirates
+"I'm your only friend
+ I'm not your only friend
+ But I'm a little glowing friend
+ But really I'm not actually your friend
+ But I am"
+
+-They Might be Giants, "Birdhouse in your Soul", 1989
 %%%%
 blowgun
 
@@ -1619,6 +1624,11 @@ insubstantial wisp
  To Boggs and Mires, and oft through Pond or Poole,
  There swallow'd up and lost, from succour farr.”
     -John Milton, _Paradise Lost_
+%%%%
+Iskenderun's Battlesphere spell
+
+Rule 4: Close air support covereth a multitude of sins.
+-The Seven Habits of Highly Effective Pirates
 %%%%
 jackal
 
