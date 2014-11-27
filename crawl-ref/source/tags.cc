@@ -1284,6 +1284,7 @@ static void tag_construct_char(writer &th)
     marshallString2(th, you.jiyva_second_name);
 
     marshallByte(th, you.wizard);
+    marshallByte(th, you.explore);
 
     marshallByte(th, crawl_state.type);
     if (crawl_state.game_is_tutorial())
@@ -2047,6 +2048,10 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     you.jiyva_second_name = unmarshallString2(th);
 
     you.wizard            = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 34
+    if (minor >= TAG_MINOR_EXPLORE_MODE)
+#endif
+        you.explore       = unmarshallBoolean(th);
 
     crawl_state.type = (game_type) unmarshallUByte(th);
     if (crawl_state.game_is_tutorial())
