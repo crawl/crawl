@@ -177,7 +177,7 @@ public:
 
     // Return whether any affected cell was seen.
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
-    bool knockback_actor(actor *actor);
+    bool knockback_actor(actor *actor, int distance, coord_def &newpos);
 
     bool visible() const;
 

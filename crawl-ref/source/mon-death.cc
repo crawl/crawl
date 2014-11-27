@@ -130,7 +130,6 @@ monster_type fill_out_corpse(const monster* mons,
     corpse.flags          = 0;
     corpse.base_type      = OBJ_CORPSES;
     corpse.mon_type       = corpse_class;
-    corpse.butcher_amount = 0;    // butcher work done
     corpse.sub_type       = CORPSE_BODY;
     corpse.freshness      = FRESHEST_CORPSE;  // rot time
     corpse.quantity       = 1;
@@ -1921,6 +1920,12 @@ int monster_die(monster* mons, killer_type killer,
                                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
+    }
+    else if (mons->type == MONS_SINGULARITY && mons->countdown <= 0)
+    {
+        simple_monster_message(mons, " implodes!");
+        invalidate_agrid();
+        silent = true;
     }
     else if (mons->type == MONS_FIRE_VORTEX
              || mons->type == MONS_SPATIAL_VORTEX

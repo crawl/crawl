@@ -1238,7 +1238,9 @@ bool mons_is_ghost_demon(monster_type mc)
             || mons_class_is_animated_weapon(mc)
             || mc == MONS_PANDEMONIUM_LORD
             || mons_class_is_chimeric(mc)
-            || mc == MONS_SPELLFORGED_SERVITOR;
+            || mc == MONS_SPELLFORGED_SERVITOR
+            || mc == MONS_LICH
+            || mc == MONS_ANCIENT_LICH;
 }
 
 bool mons_is_pghost(monster_type mc)
@@ -2128,10 +2130,6 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
     case MONS_HELL_KNIGHT:
         return { MST_HELL_KNIGHT_I, MST_HELL_KNIGHT_II };
 
-    case MONS_LICH:
-    case MONS_ANCIENT_LICH:
-        return { MST_LICH_I, MST_LICH_II, MST_LICH_III, MST_LICH_IV };
-
     case MONS_NECROMANCER:
         return { MST_NECROMANCER_I, MST_NECROMANCER_II };
 
@@ -2547,6 +2545,18 @@ void define_monster(monster* mons)
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);
+        break;
+    }
+
+    case MONS_LICH:
+    case MONS_ANCIENT_LICH:
+    {
+        ghost_demon ghost;
+        ghost.init_lich(mcls);
+        mons->set_ghost(ghost);
+        mons->ghost_demon_init();
+        mons->bind_melee_flags();
+        mons->bind_spell_flags();
         break;
     }
 
@@ -4776,13 +4786,21 @@ void fixup_spells(monster_spells &spells, int hd)
         return;
     }
 
-    unsigned one_freq = (hd + 50) / count;
-    for (unsigned int i = 0; i < spells.size(); i++)
-        spells[i].freq = one_freq;
-
     erase_if(spells, [](const mon_spell_slot &t) {
         return t.spell == SPELL_NO_SPELL;
     });
+
+    normalize_spell_freq(spells, hd);
+}
+
+void normalize_spell_freq(monster_spells &spells, int hd)
+{
+    unsigned int total_freq = (hd + 50);
+    unsigned int total_given_freq = 0;
+    for (size_t i = 0; i < spells.size(); ++i)
+        total_given_freq += spells[i].freq;
+    for (size_t i = 0; i < spells.size(); ++i)
+        spells[i].freq = total_freq * spells[i].freq / total_given_freq;
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)

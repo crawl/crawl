@@ -453,6 +453,12 @@ spret_type cast_stoneskin(int pow, bool fail)
     else
         mpr("Your skin hardens.");
 
+    if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+    {
+        you.attribute[ATTR_BONE_ARMOUR] = 0;
+        mpr("Your corpse armour falls away.");
+    }
+
     you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
     you.props[STONESKIN_KEY] = pow;
     you.redraw_armour_class = true;

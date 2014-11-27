@@ -1591,8 +1591,8 @@ void append_spells(string &desc, const item_def &item)
         if (stype == SPELL_NO_SPELL)
             continue;
 
-        string name = (is_memorised(stype) ? "*" : "");
-                    name += spell_title(stype);
+        string name = string(is_memorised(stype) ? "*" : "")
+                      + spell_title(stype);
         desc += chop_string(name, 35);
 
         string schools;
@@ -3316,6 +3316,10 @@ static string _monster_spells_description(const monster_info& mi)
     if (mi.type == MONS_PANDEMONIUM_LORD)
         return "It may possess any of a vast number of diabolical powers.\n";
 
+    // Ditto for (a)liches.
+    if (mi.type == MONS_LICH || mi.type == MONS_ANCIENT_LICH)
+        return "It has mastered any of a vast number of powerful spells.\n";
+
     // Show monster spells and spell-like abilities.
     if (!mi.has_spells())
         return "";
@@ -3890,8 +3894,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         symbol_suffix += symbol;
         symbol_suffix += "_suffix";
 
-        string suffix = getLongDescription(symbol_suffix);
-              suffix += getLongDescription(symbol_suffix + "_examine");
+        string suffix = getLongDescription(symbol_suffix)
+                      + getLongDescription(symbol_suffix + "_examine");
 
         if (!suffix.empty())
             inf.body << "\n" << suffix;
@@ -3937,18 +3941,24 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         if (check >= 0)
         {
             inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " is too strong to be recited to.\n";
+                     << " is too strong to be recited to.";
         }
         else if (check >= -5)
         {
             inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " may be too strong to be recited to.\n";
+                     << " may be too strong to be recited to.";
         }
         else
         {
             inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
-                     << " is weak enough to be recited to.\n";
+                     << " is weak enough to be recited to.";
         }
+        if (you.wizard)
+        {
+            inf.body << " (Recite power:" << zin_recite_power()
+                     << ", Hit dice:" << mons_class_hit_dice(mi.type) << ")";
+        }
+        inf.body << "\n";
     }
 
     if (mi.is(MB_SUMMONED))

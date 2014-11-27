@@ -146,17 +146,13 @@ function ($, cr, map_knowledge, options, dngn, util) {
             if (w > 0 && h > 0)
             {
                 var floor = Math.floor;
-                var ratio = window.devicePixelRatio;
-                this.ctx.save();
-                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
                 this.ctx.drawImage(this.element,
-                                   floor(sx * cw * ratio),
-                                   floor(sy * ch * ratio),
-                                   w * ratio, h * ratio,
-                                   floor(dx * cw * ratio),
-                                   floor(dy * ch * ratio),
-                                   w * ratio, h * ratio);
-                this.ctx.restore();
+                                   floor(sx * cw),
+                                   floor(sy * ch),
+                                   w, h,
+                                   floor(dx * cw),
+                                   floor(dy * ch),
+                                   w, h);
             }
 
             // Render cells that came into view
@@ -183,9 +179,10 @@ function ($, cr, map_knowledge, options, dngn, util) {
 
         fit_to: function(width, height, min_diameter)
         {
+            var ratio = window.devicePixelRatio;
             var cell_size = {
-                w: options.get("tile_cell_pixels"),
-                h: options.get("tile_cell_pixels")
+                w: Math.floor(options.get("tile_cell_pixels") * ratio),
+                h: Math.floor(options.get("tile_cell_pixels") * ratio)
             };
 
             if (options.get("tile_display_mode") == "glyphs")
@@ -194,19 +191,19 @@ function ($, cr, map_knowledge, options, dngn, util) {
                 var metrics = this.ctx.measureText("@");
                 this.set_cell_size(metrics.width + 2, this.glyph_mode_font_size + 2);
             }
-            else if ((min_diameter * cell_size.w > width)
-                || (min_diameter * cell_size.h > height))
+            else if ((min_diameter * cell_size.w / ratio > width)
+                || (min_diameter * cell_size.h / ratio > height))
             {
-                var scale = Math.min(width / (min_diameter * cell_size.w),
-                                     height / (min_diameter * cell_size.h));
+                var scale = Math.min(width * ratio / (min_diameter * cell_size.w),
+                                     height * ratio / (min_diameter * cell_size.h));
                 this.set_cell_size(Math.floor(cell_size.w * scale),
                                    Math.floor(cell_size.h * scale));
             }
             else
                 this.set_cell_size(cell_size.w, cell_size.h);
 
-            var view_width = Math.floor(width / this.cell_width);
-            var view_height = Math.floor(height / this.cell_height);
+            var view_width = Math.floor(width * ratio / this.cell_width);
+            var view_height = Math.floor(height * ratio / this.cell_height);
             this.set_size(view_width, view_height);
         },
 

@@ -786,7 +786,6 @@ void do_curse_item(item_def &item, bool quiet)
 
         // If we get the message, we know the item is cursed now.
         item.flags |= ISFLAG_KNOW_CURSE;
-        item.flags |= ISFLAG_SEEN_CURSED;
     }
 
     item.flags |= ISFLAG_CURSED;
@@ -828,7 +827,6 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
 {
     if (!item.cursed())
     {
-        item.flags &= ~ISFLAG_SEEN_CURSED;
         if (in_inventory(item))
             item.flags |= ISFLAG_KNOW_CURSE;
         return;
@@ -850,7 +848,6 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         item.flags |= ISFLAG_KNOW_CURSE;
     }
     item.flags &= (~ISFLAG_CURSED);
-    item.flags &= (~ISFLAG_SEEN_CURSED);
 
     if (check_bondage)
         ash_check_bondage();

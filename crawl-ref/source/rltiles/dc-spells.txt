@@ -154,6 +154,7 @@ portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
 shroud_of_golubria SHROUD_OF_GOLUBRIA
+singularity SINGULARITY
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS

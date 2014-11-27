@@ -291,14 +291,8 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     const coord_def oldplace = mons->pos();
 
-    // Pick the monster up.
-    mgrd(oldplace) = NON_MONSTER;
-
     // Move it to its new home.
-    mons->moveto(newpos, true);
-
-    // And slot it back into the grid.
-    mgrd(mons->pos()) = mons->mindex();
+    mons->move_to_pos(newpos);
 
     const bool now_visible = mons_near(mons);
     if (!silent && now_visible)

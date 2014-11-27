@@ -155,13 +155,13 @@ KPROP:   l = no_cloud_gen
 KMONS:   1 = ice fiend
 KMONS:   2 = blizzard demon
 KMONS:   34 = ice devil / blue devil
-KMONS:   56 = reaper ; scythe ego:freezing ident:type
+KMONS:   56 = reaper ; scythe ego:freezing ident:type / shard shrike w:5
 KMONS:   7 = alligator snapping turtle skeleton / anaconda simulacrum / \
          golden dragon simulacrum w:5 / iron troll simulacrum w:5 / hydra simulacrum
 KMONS:   0 = skeletal warrior ; hunting sling ego:freezing ident:type . sling bullet
 SUBST:   l = w, W = .
 :  else
-KMONS:   1 = kraken simulacrum
+KMONS:   1 = shard shrike
 KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
 KMONS:   3 = orb of fire / hellephant w:5
 KMONS:   4 = draconian scorcher
@@ -196,11 +196,12 @@ TAGS:    no_monster_gen no_pool_fixup allow_dup
 DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
 SHUFFLE: 123456, }] / }] / {[ / **
 :  if you.branch() == "Geh" then
-MONS:    brimstone fiend / balrug / hellion, sun demon / smoke demon / \
-         hell knight
+MONS:    brimstone fiend / balrug / hellion
+MONS:    sun demon / smoke demon / hell knight
 SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
 :  elseif you.branch() == "Coc" then
-MONS:    ice fiend / blizzard demon / reaper ; scythe ego:freezing ident:type
+MONS:    ice fiend / blizzard demon / shard shrike / \
+         reaper ; scythe ego:freezing ident:type
 MONS:    eight-headed hydra simulacrum w:2 / \
          seven-headed hydra simulacrum w:2 / \
          ice dragon simulacrum w:3 / freezing wraith w:3 / ice devil

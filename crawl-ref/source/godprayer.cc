@@ -141,11 +141,11 @@ static bool _bless_weapon(god_type god, brand_type brand, colour_t colour)
     calc_mp(); // in case the old brand was antimagic,
     you.redraw_armour_class = true; // protection,
     you.redraw_evasion = true;      // or evasion
-    string desc  = old_name + " ";
-            desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
-                     god == GOD_LUGONU        ? "corrupted by Lugonu" :
-                     god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
-                                              : "touched by the gods");
+    string desc  = old_name + " "
+                 + (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
+                    god == GOD_LUGONU        ? "corrupted by Lugonu" :
+                    god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
+                                             : "touched by the gods");
 
     take_note(Note(NOTE_ID_ITEM, 0, 0,
               wpn.name(DESC_A).c_str(), desc.c_str()));

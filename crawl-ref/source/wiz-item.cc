@@ -48,10 +48,6 @@ static void _make_all_books()
 {
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
-#if TAG_MAJOR_VERSION == 34
-        if (i == BOOK_STALKING)
-            continue;
-#endif
         int thing = items(false, OBJ_BOOKS, i, 0, 0, AQ_WIZMODE);
         if (thing == NON_ITEM)
             continue;

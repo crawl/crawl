@@ -580,7 +580,8 @@ static void _wanderer_note_items()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item(you.inv[i]);
-        if (item.defined()) {
+        if (item.defined())
+        {
             if (!first_item)
                 equip_str << ", ";
             equip_str << item.name(DESC_A, false, true);
@@ -2875,9 +2876,8 @@ static void _close_door()
 //
 static void _do_berserk_no_combat_penalty()
 {
-    // Butchering/eating a corpse will maintain a blood rage.
-    const int delay = current_delay_action();
-    if (delay == DELAY_BUTCHER || delay == DELAY_EAT)
+    // Eating a corpse will maintain a blood rage.
+    if (current_delay_action() == DELAY_EAT)
         return;
 
     if (you.berserk_penalty == NO_BERSERK_PENALTY)
@@ -2926,9 +2926,7 @@ static void _do_searing_ray()
     }
 
     if (crawl_state.prev_cmd == CMD_WAIT)
-    {
         handle_searing_ray();
-    }
     else
         end_searing_ray();
 }
@@ -2963,15 +2961,9 @@ static void _swap_places(monster* mons, const coord_def &loc)
 
     mpr("You swap places.");
 
-    mgrd(mons->pos()) = NON_MONSTER;
-
     const coord_def old_loc = mons->pos();
-    mons->moveto(loc);
+    mons->move_to_pos(loc, true, true);
     mons->apply_location_effects(old_loc);
-
-    if (mons->alive())
-        mgrd(mons->pos()) = mons->mindex();
-
     return;
 }
 

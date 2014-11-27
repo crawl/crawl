@@ -26,15 +26,15 @@ N         CMD_RUN_DOWN_RIGHT
 U         CMD_RUN_UP_RIGHT
 Y         CMD_RUN_UP_LEFT
 
-Untrapping or opening/closing doors in a given direction:
-^B        CMD_OPEN_DOOR_DOWN_LEFT
-^H        CMD_OPEN_DOOR_LEFT
-^J        CMD_OPEN_DOOR_DOWN
-^K        CMD_OPEN_DOOR_UP
-^L        CMD_OPEN_DOOR_RIGHT
-^N        CMD_OPEN_DOOR_DOWN_RIGHT
-^U        CMD_OPEN_DOOR_UP_RIGHT
-^Y        CMD_OPEN_DOOR_UP_LEFT
+Attacking in a given direction without moving:
+^B        CMD_ATTACK_DOWN_LEFT
+^H        CMD_ATTACK_LEFT
+^J        CMD_ATTACK_DOWN
+^K        CMD_ATTACK_UP
+^L        CMD_ATTACK_RIGHT
+^N        CMD_ATTACK_DOWN_RIGHT
+^U        CMD_ATTACK_UP_RIGHT
+^Y        CMD_ATTACK_UP_LEFT
 
 Inventory management
 --------------------
@@ -66,7 +66,7 @@ Dungeon interaction
 -------------------
 c         CMD_BUTCHER
 o         CMD_EXPLORE
-s, .      CMD_MOVE_NOWHERE
+s, .      CMD_WAIT
 5         CMD_REST             (rest 100 turns)
 t         CMD_SHOUT
 x         CMD_LOOK_AROUND

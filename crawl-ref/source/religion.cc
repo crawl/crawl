@@ -1033,9 +1033,9 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
     {
         text += uppercase_first(god_name(which_god));
         text += " strongly dislikes it when ";
-                text += comma_separated_line(really_dislikes.begin(),
-                                             really_dislikes.end(),
-                                             " or ", ", ");
+        text += comma_separated_line(really_dislikes.begin(),
+                                     really_dislikes.end(),
+                                     " or ", ", ");
         text += ".";
     }
 
@@ -3355,6 +3355,8 @@ static void _make_empty_vec(CrawlStoreValue &v, store_val_type vectype)
 
 void join_religion(god_type which_god, bool immediate)
 {
+    ASSERT(which_god != GOD_NO_GOD);
+
     redraw_screen();
 
     const god_type old_god = you.religion;

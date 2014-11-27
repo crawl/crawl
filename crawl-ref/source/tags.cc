@@ -5802,6 +5802,11 @@ static void unmarshallSpells(reader &th, monster_spells &spells
         spells[j].flags = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
         }
+        else
+        {
+            // initialize freq to something so fixup_spells works properly
+            spells[j].freq = 12;
+        }
 #endif
     }
 

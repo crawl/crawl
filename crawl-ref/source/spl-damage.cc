@@ -1042,7 +1042,7 @@ static bool _player_hurt_monster(monster& m, int damage,
 {
     if (damage > 0)
     {
-        m.hurt(&you, damage, flavour, false);
+        m.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
 
         if (m.alive())
         {
@@ -1743,8 +1743,9 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
             else
                 mpr("The poison in your system burns!");
 
-            ouch(damage, KILLED_BY_MONSTER, agent->mid,
-                agent->as_monster()->name(DESC_A).c_str());
+            ouch(damage, KILLED_BY_BEAM, agent->mid,
+                 "by burning poison", you.can_see(agent),
+                 agent->as_monster()->name(DESC_A, true).c_str());
 
             if (you.duration[DUR_POISONING] > 0)
             {
@@ -2620,13 +2621,8 @@ void forest_damage(const actor *mon)
                 if (dmg <= 0)
                     break;
 
-                if (foe->is_player())
-                {
-                    ouch(dmg, KILLED_BY_BEAM, mon->mid,
-                         "by angry trees", true);
-                }
-                else
-                    foe->hurt(mon, dmg);
+                foe->hurt(mon, dmg, BEAM_MISSILE, KILLED_BY_BEAM, "",
+                          "by angry trees");
 
                 break;
             }
