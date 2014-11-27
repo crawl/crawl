@@ -3219,7 +3219,7 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
 static coord_def _mons_singularity_pos(const monster* mon)
 {
     const int pow = 6 * mon->spell_hd(SPELL_SINGULARITY);
-    const int rad = singularity_max_range(pow);
+    const int rad = singularity_range(pow);
     int max_strength = 0, max_count = 0;
     coord_def retval;
 
