@@ -74,6 +74,7 @@ static spell_type search_order_conj[] =
 static spell_type search_order_selfench[] =
 {
     SPELL_SUMMON_DRAGON,
+    SPELL_SINGULARITY,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_HAUNT,
@@ -90,6 +91,7 @@ static spell_type search_order_selfench[] =
     SPELL_SUMMON_SWARM,
     SPELL_SIMULACRUM,
     SPELL_BATTLESPHERE,
+    SPELL_FULMINANT_PRISM,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_ANIMATE_DEAD,
     SPELL_SWIFTNESS,
