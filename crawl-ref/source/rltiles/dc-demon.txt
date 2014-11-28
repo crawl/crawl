@@ -1,3 +1,6 @@
+# Please update describe.cc with descriptions matching the bodies, heads,
+# and wings if you are adding them here.
+
 %rim 0
 %sdir mon/panlord
 
