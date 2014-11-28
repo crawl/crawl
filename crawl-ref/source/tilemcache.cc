@@ -507,6 +507,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MASTER_ELEMENTALIST:
     case TILEP_MONS_JESSICA:
     case TILEP_MONS_ANGEL:
+    case TILEP_MONS_DAEVA:
     case TILEP_MONS_MERFOLK_WATER:
     case TILEP_MONS_MERFOLK_JAVELINEER_WATER:
     case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
@@ -836,6 +837,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_OCTOPODE_CRUSHER:
     case TILEP_MONS_CHERUB:
+    case TILEP_MONS_SERAPH:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -1051,6 +1053,8 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_PANDEMONIUM_LORD:
+    case TILEP_MONS_ANGEL:
+    case TILEP_MONS_DAEVA:
         *ofs_x = 1;
         *ofs_y = 1;
         break;
