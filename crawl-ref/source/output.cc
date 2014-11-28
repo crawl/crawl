@@ -1956,8 +1956,6 @@ static void _print_overview_screen_equip(column_composer& cols,
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
 
         char slot[15] = "";
-        // uncomment (and change 42 to 33) to bring back slot names
-        // snprintf(slot, sizeof slot, "%-7s: ", equip_slot_to_name(eqslot);
 
         if (you.equip[ e_order[i] ] != -1)
         {
