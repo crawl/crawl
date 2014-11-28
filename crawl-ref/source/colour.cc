@@ -649,9 +649,9 @@ void init_element_colours()
                         0));
     add_element_colour(_create_random_element_colour_calc(
                             ETC_SHINING, "shining",
-                            40,  WHITE,
-                            40,  YELLOW,
-                            40,  BROWN,
+                            // no YELLOW - always make this visually distinct
+                            60,  WHITE,
+                            60,  BROWN,
                         0));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
