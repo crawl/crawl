@@ -2116,6 +2116,9 @@ static string _god_asterisks()
     if (player_under_penance())
         return "*";
 
+    if (you_worship(GOD_GOZAG))
+        return "";
+
     if (you_worship(GOD_XOM))
     {
         const int p_rank = xom_favour_rank() - 1;
