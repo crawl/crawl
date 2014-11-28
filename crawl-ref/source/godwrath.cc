@@ -2024,13 +2024,13 @@ void gozag_incite(monster *mon)
  */
 int gozag_goldify(const item_def &it, int quant_got, bool quiet)
 {
-    if (it.base_type != OBJ_POTIONS
-        && it.base_type != OBJ_SCROLLS
-        && it.base_type != OBJ_FOOD)
+    if ((it.base_type != OBJ_POTIONS
+         && it.base_type != OBJ_SCROLLS
+         && it.base_type != OBJ_FOOD)
+        || it.flags & ISFLAG_HANDLED)
     {
         return 0;
     }
-
 
     const int val = item_value(it, true) / it.quantity;
     double prob = (double)(val - 20) / 100.0;

@@ -3095,7 +3095,17 @@ static void tag_read_you_items(reader &th)
     count = unmarshallByte(th);
     ASSERT(count == ENDOFPACK); // not supposed to change
     for (i = 0; i < count; ++i)
+    {
         unmarshallItem(th, you.inv[i]);
+#if TAG_MAJOR_VERSION == 34
+        // Items in inventory have already been handled.
+        if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED
+            && you.inv[i].defined())
+        {
+            you.inv[i].flags |= ISFLAG_HANDLED;
+        }
+#endif
+    }
 
     // Initialize cache of equipped unrand functions
     for (i = 0; i < NUM_EQUIP; ++i)
@@ -4042,6 +4052,13 @@ void unmarshallItem(reader &th, item_def &item)
             item.props.erase("never_hide");
             item.props[MANGLED_CORPSE_KEY] = true;
         }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED
+        && item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
+    {
+       // Items we've dropped or thrown have been handled already.
+       item.flags |= ISFLAG_HANDLED;
     }
 #endif
 

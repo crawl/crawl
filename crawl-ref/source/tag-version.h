@@ -140,6 +140,7 @@ enum tag_minor_version
     TAG_MINOR_ZOT_OPEN,            // Don't store whether you opened Zot
     TAG_MINOR_EXPLORE_MODE,        // Store whether you are in explore mode
     TAG_MINOR_RANDLICHES,          // Liches are now GHOST_DEMONs
+    TAG_MINOR_ISFLAG_HANDLED,      // Game tracks which items player has handled
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
