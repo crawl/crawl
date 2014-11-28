@@ -1026,7 +1026,9 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
         }
     }
 
-    fixup_spells(spells, 150);
+    const size_t count = spells.size();
+    for (auto& spellslot : spells)
+        spellslot.freq = 200 / count;
 }
 
 const mon_spell_slot lich_primary_spells[] =
