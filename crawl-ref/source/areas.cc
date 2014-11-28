@@ -191,7 +191,6 @@ static void _update_agrid()
 
     if (you_worship(GOD_GOZAG))
     {
-        const int r = 2;
         for (rectangle_iterator ri(0); ri; ++ri)
         {
             // ASSUMPTION: gold will always be on the top of the pile.
@@ -199,12 +198,8 @@ static void _update_agrid()
                 && mitm[igrd(*ri)].special > 0)
             {
                 no_areas = false;
-                _agrid_centres.emplace_back(AREA_GOLD, *ri, r);
-                for (radius_iterator rdi(*ri, r, C_CIRCLE, LOS_NO_TRANS);
-                     rdi; ++rdi)
-                {
-                    _set_agrid_flag(*rdi, APROP_GOLD);
-                }
+                _agrid_centres.emplace_back(AREA_GOLD, *ri, 0);
+                _set_agrid_flag(*ri, APROP_GOLD);
             }
         }
     }
