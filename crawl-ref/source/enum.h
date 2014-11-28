@@ -2007,7 +2007,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
-                             //0x00000200,  // was: ISFLAG_BLESSED
+    ISFLAG_HANDLED           = 0x00000200,  // player has handled this item
                              //0x00000400,  // was: ISFLAG_SEEN_CURSED
     ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
 

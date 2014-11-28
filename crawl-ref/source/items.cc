@@ -1577,6 +1577,7 @@ static void _got_item(item_def& item)
 {
     seen_item(item);
     shopping_list.cull_identical_items(item);
+    item.flags |= ISFLAG_HANDLED;
 
     if (item.props.exists("needs_autopickup"))
         item.props.erase("needs_autopickup");
