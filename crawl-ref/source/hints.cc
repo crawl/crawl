@@ -4102,7 +4102,7 @@ bool hints_monster_interesting(const monster* mons)
     return mons_threat_level(mons) == MTHRT_NASTY;
 }
 
-void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
+string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
     cgotoxy(1, wherey());
     ostringstream ostr;
@@ -4224,7 +4224,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 
     string broken = ostr.str();
     linebreak_string(broken, _get_hints_cols());
-    display_tagged_block(broken);
+    return broken;
 }
 
 void hints_observe_cell(const coord_def& gc)

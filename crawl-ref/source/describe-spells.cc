@@ -15,13 +15,15 @@
 #include "invent.h"
 #include "libutil.h"
 #include "macro.h"
+#include "mon-book.h"
 #include "prompt.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "stringutil.h"
 #include "state.h"
 #include "unicode.h"
 
-
+extern const spell_type serpent_of_hell_breaths[4][3];
 
 /**
  * Returns a spellset containing the spells for the given item.
@@ -35,7 +37,165 @@ spellset item_spellset(const item_def &item)
     if (!item.has_spells())
         return {};
 
-    return { { "", spells_in_book(item) } };
+    return { { "\n", spells_in_book(item) } };
+}
+
+/**
+ * What's the appropriate descriptor for a given type of "spell" that's not
+ * really a spell?
+ *
+ * @param type              The type of spell-ability; e.g. MON_SPELL_DEMONIC.
+ * @param caster_holiness   The holiness of the caster; e.g. MH_NATURAL.
+ * @return                  A descriptor of the spell type; e.g. "natural",
+ *                          "angelic", "demonic", etc.
+ */
+static string _ability_type_descriptor(mon_spell_slot_flags type,
+                                       mon_holy_type caster_holiness)
+{
+    // special case (:
+    if (type == MON_SPELL_DEMONIC && caster_holiness == MH_HOLY)
+        return "angelic";
+
+    static map<mon_spell_slot_flags, string> descriptors =
+    {
+        { MON_SPELL_NATURAL, "special" },
+        { MON_SPELL_MAGICAL, "magical" },
+        { MON_SPELL_DEMONIC, "demonic" },
+        { MON_SPELL_PRIEST,  "divine" },
+    };
+
+    return lookup(descriptors, type, "buggy");
+}
+
+/**
+ * What description should a given (set of) monster spellbooks be prefixed
+ * with?
+ *
+ * @param type              The type of book(s); e.g. MON_SPELL_DEMONIC.
+ * @param num_books         The number of books in the set.
+ * @param mi                The player's information about the caster.
+ * @return                  A header string for the bookset; e.g.,
+ *                          "She has mastered one of the following spellbooks:\n"
+ *                          "It possesses the following special abilities:\n"
+ */
+static string _booktype_header(mon_spell_slot_flags type, size_t num_books,
+                               const monster_info &mi)
+{
+    const string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
+
+    if (type == MON_SPELL_WIZARD)
+    {
+        return make_stringf("\n%s has mastered %s:", pronoun.c_str(),
+                            num_books > 1 ? "one of the following spellbooks"
+                                          : "the following spells");
+    }
+
+    const string descriptor = _ability_type_descriptor(type, mi.holi);
+
+    if (num_books > 1)
+    {
+        return make_stringf("\n%s possesses one of the following sets of %s abilities:",
+                            pronoun.c_str(), descriptor.c_str());
+    }
+
+    return make_stringf("\n%s possesses the following %s abilities:",
+                        pronoun.c_str(), descriptor.c_str());
+}
+
+/**
+ * Append all spells of a given type that a given monster may know to the
+ * provided vector.
+ *
+ * @param mi                The player's knowledge of a monster.
+ * @param type              The type of spells to select.
+ *                          (E.g. MON_SPELL_DEMONIC, MON_SPELL_WIZARD...)
+ * @param[out] all_books    An output vector of "spellbooks".
+ */
+void _monster_spellbooks(const monster_info &mi, mon_spell_slot_flags type,
+                         spellset &all_books)
+{
+    const unique_books books = get_unique_spells(mi, type);
+    const size_t num_books = books.size();
+
+    if (num_books == 0)
+        return;
+
+    const string set_name = type == MON_SPELL_WIZARD ? "Book" : "Set";
+
+    // Loop through books and display spells/abilities for each of them
+    for (size_t i = 0; i < num_books; ++i)
+    {
+        const vector<spell_type> &book_spells = books[i];
+        spellbook_contents output_book;
+
+        if (i == 0)
+            output_book.label += _booktype_header(type, num_books, mi);
+        if (num_books > 1)
+        {
+            output_book.label += make_stringf("\n%s %lu:",
+                                              set_name.c_str(), i+1);
+        }
+
+        for (auto spell : book_spells)
+        {
+            if (spell != SPELL_SERPENT_OF_HELL_BREATH)
+            {
+                output_book.spells.emplace_back(spell);
+                continue;
+            }
+
+            static map<monster_type, size_t> serpent_indices =
+            {
+                { MONS_SERPENT_OF_HELL, 0 },
+                { MONS_SERPENT_OF_HELL_COCYTUS, 1 },
+                { MONS_SERPENT_OF_HELL_DIS, 2 },
+                { MONS_SERPENT_OF_HELL_TARTARUS, 3 },
+            };
+
+            const size_t *s_i_ptr = map_find(serpent_indices, mi.type);
+            ASSERT(s_i_ptr);
+            const size_t serpent_index = *s_i_ptr;
+            ASSERT_RANGE(serpent_index, 0, ARRAYSZ(serpent_of_hell_breaths));
+
+            for (auto breath : serpent_of_hell_breaths[serpent_index])
+                output_book.spells.emplace_back(breath);
+        }
+
+        // XXX: it seems like we should be able to just place this in the
+        // vector at the start, without having to copy it in now...?
+        all_books.emplace_back(output_book);
+    }
+}
+
+/**
+ * Return a spellset containing the spells potentially given by the given
+ * monster information.
+ *
+ * @param mi    The player's knowledge of a monster.
+ * @return      The spells potentially castable by that monster (as far as
+ *              the player knows).
+ */
+spellset monster_spellset(const monster_info &mi)
+{
+    if (!mi.has_spells())
+        return {};
+
+    static const mon_spell_slot_flags book_flags[] =
+    {
+        MON_SPELL_NATURAL,
+        MON_SPELL_MAGICAL,
+        MON_SPELL_DEMONIC,
+        MON_SPELL_PRIEST,
+        MON_SPELL_WIZARD,
+    };
+
+    spellset books;
+
+    for (auto book_flag : book_flags)
+        _monster_spellbooks(mi, book_flag, books);
+
+    ASSERT(books.size());
+    return books;
 }
 
 
@@ -48,11 +208,27 @@ spellset item_spellset(const item_def &item)
  */
 static vector<spell_type> _spellset_contents(const spellset &spells)
 {
-    vector<spell_type> list;
+    // find unique spells (O(nlogn))
+    set<spell_type> unique_spells;
     for (auto &book : spells)
         for (auto spell : book.spells)
-            list.emplace_back(spell);
-    return list;
+            unique_spells.insert(spell);
+
+    // list spells in original order (O(nlogn)?)
+    vector<spell_type> spell_list;
+    for (auto &book : spells)
+    {
+        for (auto spell : book.spells)
+        {
+            if (unique_spells.find(spell) != unique_spells.end())
+            {
+                unique_spells.erase(spell);
+                spell_list.emplace_back(spell);
+            }
+        }
+    }
+
+    return spell_list;
 }
 
 /**
@@ -129,12 +305,12 @@ static void _describe_book(const spellbook_contents &book,
 
     description.cprintf("%s", book.label.c_str());
 
-    description.cprintf("\n\n Spells");
-    // only display type & level for book/rod spells
+    // only display header for book/rod spells
     if (source_item)
-        description.cprintf("                             Type                      Level");
+        description.cprintf("\n Spells                             Type                      Level");
     description.cprintf("\n");
 
+    bool first_line_element = true;
     for (auto spell : book.spells)
     {
         description.cprintf(" ");
@@ -152,7 +328,15 @@ static void _describe_book(const spellbook_contents &book,
 
         // only display type & level for book/rod spells
         if (!source_item)
+        {
+            // print monster spells in two columns
+            if (first_line_element)
+                description.cprintf("    ");
+            else
+                description.cprintf("\n");
+            first_line_element = !first_line_element;
             continue;
+        }
 
         string schools =
             source_item->base_type == OBJ_RODS ? "Evocations"
@@ -224,7 +408,6 @@ void list_spellset(const spellset &spells, const item_def *source_item,
     describe_spellset(spells, source_item, description);
 
     description.textcolour(LIGHTGREY);
-    description.cprintf("\n");
 
     description.cprintf("Select a spell to read its description");
     if (can_memorize)

@@ -62,8 +62,6 @@
 #endif
 #include "unicode.h"
 
-extern const spell_type serpent_of_hell_breaths[4][3];
-
 // ========================================================================
 //      Internal Functions
 // ========================================================================
@@ -3179,70 +3177,6 @@ static string _monster_attacks_description(const monster_info& mi)
     return result.str();
 }
 
-static string _monster_spell_type_description(const monster_info& mi,
-                                              mon_spell_slot_flags flags,
-                                              string set_name,
-                                              string desc_singular,
-                                              string desc_plural)
-{
-    unique_books books = get_unique_spells(mi, flags);
-    const size_t num_books = books.size();
-
-    if (num_books == 0)
-        return "";
-
-    ostringstream result;
-
-    result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-
-    if (num_books > 1)
-        result << desc_plural;
-    else
-        result << desc_singular;
-
-    // Loop through books and display spells/abilities for each of them
-    for (size_t i = 0; i < num_books; ++i)
-    {
-        vector<spell_type> &book_spells = books[i];
-
-        // Display spells for this book
-        if (num_books > 1)
-            result << set_name << " " << i+1 << ": ";
-
-        for (size_t j = 0; j < book_spells.size(); ++j)
-        {
-            const spell_type spell = book_spells[j];
-            if (spell == SPELL_SERPENT_OF_HELL_BREATH)
-            {
-                const int idx =
-                        mi.type == MONS_SERPENT_OF_HELL          ? 0
-                      : mi.type == MONS_SERPENT_OF_HELL_COCYTUS  ? 1
-                      : mi.type == MONS_SERPENT_OF_HELL_DIS      ? 2
-                      : mi.type == MONS_SERPENT_OF_HELL_TARTARUS ? 3
-                      :                                           -1;
-                ASSERT(idx >= 0 && idx <= 3);
-                for (size_t k = 0;
-                     k < ARRAYSZ(serpent_of_hell_breaths[idx]);
-                     ++k)
-                {
-                    if (j > 0 || k > 0)
-                        result << ", ";
-                    result << spell_title(serpent_of_hell_breaths[idx][k]);
-                }
-            }
-            else
-            {
-                if (j > 0)
-                    result << ", ";
-                result << spell_title(spell);
-            }
-        }
-        result << "\n";
-    }
-
-    return result.str();
-}
-
 static string _monster_spells_description(const monster_info& mi)
 {
     // Show a generic message for pan lords, since they're secret.
@@ -3257,40 +3191,9 @@ static string _monster_spells_description(const monster_info& mi)
     if (!mi.has_spells())
         return "";
 
-    ostringstream result;
-
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_NATURAL, "Set",
-        " possesses the following special abilities: ",
-        " possesses one of the following sets of special abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_MAGICAL, "Set",
-        " possesses the following magical abilities: ",
-        " possesses one of the following sets of magical abilities:\n");
-    if (mi.holi == MH_HOLY)
-    {
-        result << _monster_spell_type_description(
-            mi, MON_SPELL_DEMONIC, "Set",
-            " possesses the following angelic abilities: ",
-            " possesses one of the following sets of angelic abilities:\n");
-    }
-    else
-    {
-        result << _monster_spell_type_description(
-            mi, MON_SPELL_DEMONIC, "Set",
-            " possesses the following demonic abilities: ",
-            " possesses one of the following sets of demonic abilities:\n");
-    }
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_PRIEST, "Set",
-        " possesses the following divine abilities: ",
-        " possesses one of the following sets of divine abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_WIZARD, "Book",
-        " has mastered the following spells: ",
-        " has mastered one of the following spellbooks:\n");
-
-    return result.str();
+    formatted_string description;
+    describe_spellset(monster_spellset(mi), NULL, description);
+    return description.tostring();
 }
 
 static const char *_speed_description(int speed)
@@ -4032,8 +3935,6 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     bool has_stat_desc = false;
     get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
 
-    bool show_quote = false;
-
     if (!footer.empty())
     {
         if (inf.footer.empty())
@@ -4046,26 +3947,22 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
 #endif
 
-    int key;
-    do
+    formatted_string fout = formatted_string::parse_string(inf.body.str());
+    if (crawl_state.game_is_hints())
     {
-        if (show_quote)
-            _print_quote(inf);
-        else
-        {
-            print_description(inf);
-
-            // TODO enne - this should really move into get_monster_db_desc
-            // and an additional tutorial string added to describe_info.
-            if (crawl_state.game_is_hints())
-                hints_describe_monster(mi, has_stat_desc);
-        }
-
-        show_quote = !show_quote;
+        const string hintstr = hints_describe_monster(mi, has_stat_desc);
+        vector<formatted_string> hintvec;
+        formatted_string::parse_string_to_multiple(hintstr, hintvec);
+        for (auto hint : hintvec)
+            fout += hint;
     }
-    while (_print_toggle_message(inf, key));
+    fout += formatted_string::parse_string(inf.footer);
 
-    return key;
+    formatted_scroller fs;
+    fs.add_item_formatted_string(fout);
+    fs.show();
+
+    return 'a'; //TODO
 }
 
 static const char* xl_rank_names[] =
