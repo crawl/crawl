@@ -159,7 +159,7 @@ static const char *describe_xom_mood()
 {
     const int mood = xom_favour_rank();
     ASSERT(mood >= 0);
-    ASSERT(mood < ARRAYSZ(xom_moods));
+    ASSERT((size_t) mood < ARRAYSZ(xom_moods));
     return xom_moods[mood];
 }
 

@@ -187,8 +187,8 @@ void describe_spellset(const spellset &spells,
     // .. and spells to characters.
     map<spell_type, char> spell_letters;
     // TODO: support more than 26 spells
-    for (char c = 0; c < flat_spells.size() && c < 26; c++)
-        spell_letters[flat_spells[c]] = c;
+    for (size_t c = 0; c < flat_spells.size() && c < 26; c++)
+        spell_letters[flat_spells[c]] = (char) c;
 
     for (auto book : spells)
         _describe_book(book, spell_letters, source_item, description);
@@ -258,7 +258,7 @@ void list_spellset(const spellset &spells, const item_def *source_item,
 
         const int spell_index = letter_to_index(input_char);
         ASSERT(spell_index >= 0);
-        if (spell_index >= flat_spells.size())
+        if ((size_t) spell_index >= flat_spells.size())
             return;
 
         const spell_type chosen_spell = flat_spells[spell_index];
