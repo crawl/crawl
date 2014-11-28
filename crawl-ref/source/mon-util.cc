@@ -4767,7 +4767,7 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
 void fixup_spells(monster_spells &spells, int hd)
 {
     unsigned count = 0;
-    for (unsigned int i = 0; i < spells.size(); i++)
+    for (size_t i = 0; i < spells.size(); i++)
     {
         if (spells[i].spell == SPELL_NO_SPELL)
             continue;
