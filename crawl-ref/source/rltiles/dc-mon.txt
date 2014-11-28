@@ -24,6 +24,8 @@ lernaean_hydra07
 lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
+%sdir mon/holy
+seraph MONS_SERAPH
 %sdir mon/sprint
 unspeakable MONS_UNSPEAKABLE
 
@@ -582,7 +584,6 @@ demigod MONS_DEMIGOD
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
-seraph MONS_SERAPH
 %sdir mon/undead
 profane_servitor MONS_PROFANE_SERVITOR
 %sdir mon/unique
