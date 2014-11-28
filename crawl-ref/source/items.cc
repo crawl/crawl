@@ -3876,7 +3876,7 @@ colour_t item_def::get_colour() const
         case OBJ_MISCELLANY:
             return miscellany_colour();
         case OBJ_GOLD:
-            return YELLOW;
+            return special > 0 ? static_cast<colour_t>(ETC_SHINING) : (YELLOW);
         case OBJ_DETECTED:
             return Options.detected_item_colour;
         case NUM_OBJECT_CLASSES:
@@ -4725,10 +4725,14 @@ item_info get_item_info(const item_def& item)
             ii.props["card_flags"] = info_card_flags;
         }
         break;
-    case OBJ_ORBS:
     case OBJ_GOLD:
+        ii.special = item.special;
+        ii.sub_type = item.sub_type;
+        break;
+    case OBJ_ORBS:
     default:
         ii.sub_type = item.sub_type;
+        break;
     }
 
     if (item_ident(item, ISFLAG_KNOW_CURSE))
