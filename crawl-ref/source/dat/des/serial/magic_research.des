@@ -139,7 +139,7 @@ MONS:    sea snake / redback, red wasp / yellow wasp
 MONS:    mana viper / tarantella
 KMONS:   D = death drake
 KITEM:   E = potion of poison ident:type / \
-             potion of confusion ident:type / \
+             potion of mutation ident:type / \
              potion of decay ident:type
 COLOUR:  .012345DE = lightgreen
 FTILE:   .+n012345DE = floor_moss

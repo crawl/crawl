@@ -369,7 +369,9 @@ static const duration_def duration_data[] =
     { DUR_CLEAVE,
       LIGHTBLUE, "Cleave",
       "cleaving", "cleave",
-      "You are cleaving through your foes.", D_DISPELLABLE},
+      "You are cleaving through your foes.", D_DISPELLABLE },
+    { DUR_AMBROSIA, GREEN, "Ambros", "", "ambrosia",
+      "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -423,7 +425,6 @@ static const duration_def duration_data[] =
     { DUR_SPIRIT_HOWL, 0, "", "", "old spirit howl", "", D_NO_FLAGS},
     { DUR_SONG_OF_SHIELDING, 0, "", "", "old song of shielding", "", D_NO_FLAGS},
     { DUR_ANTENNAE_EXTEND, 0, "", "", "old antennae extend", "", D_NO_FLAGS},
-    { DUR_AMBROSIA, 0, "", "", "old ambrosia", "", D_NO_FLAGS},
     { DUR_BUILDING_RAGE, 0, "", "", "old building rage", "", D_NO_FLAGS},
 #endif
 };

@@ -279,10 +279,20 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         mpr("You feel magically purged.");
         break;
 
-    case POT_CONFUSION:
-        if (confuse_player(3 + random2(8)))
-            xom_is_stimulated(100 / xom_factor);
+    case POT_AMBROSIA:
+    {
+        const int ambrosia_turns = 3+random2(8);
+        if (confuse_player(ambrosia_turns))
+        {
+            mprf("You feel%s invigorated.",
+                 you.duration[DUR_AMBROSIA] ? " more" : "");
+            you.increase_duration(DUR_AMBROSIA, ambrosia_turns);
+        }
+        else
+            mpr("You feel briefly invigorated.");
+
         break;
+    }
 
     case POT_INVISIBILITY:
         if (you.backlit() || you.haloed())

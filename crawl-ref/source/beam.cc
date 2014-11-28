@@ -3513,7 +3513,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_CONFUSION:
-        potion_effect(POT_CONFUSION, ench_power, nullptr, blame_player);
+        confuse_player(3 + random2(ench_power));
         obvious_effect = true;
         break;
 
@@ -3540,7 +3540,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_ENSLAVE:
         mprf(MSGCH_WARN, "Your will is overpowered!");
-        potion_effect(POT_CONFUSION, ench_power, nullptr, blame_player);
+        confuse_player(3 + random2(ench_power));
         obvious_effect = true;
         break;     // enslavement - confusion?
 
@@ -3936,8 +3936,7 @@ void bolt::affect_player()
         && you.holiness() != MH_UNDEAD
         && !you.is_unbreathing())
     {
-        potion_effect(POT_CONFUSION, 1, nullptr,
-                      god_cares() && YOU_KILL(thrower));
+        confuse_player(3);
     }
 
     // handling of missiles

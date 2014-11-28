@@ -717,6 +717,11 @@ static void _decrement_durations()
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     }
 
+    // Decrement ambrosia before confusion, otherwise confusion ending
+    // will cancel ambrosia early. Might be a bad coupling, but ambrosia
+    // needs to use DUR_CONF otherwise it won't behave right if a player
+    // gets confused after eating ambrosia.
+    dec_ambrosia_player(delay);
     _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
     _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
