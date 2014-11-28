@@ -60,7 +60,6 @@
  #include "tilereg-crt.h"
 #endif
 #include "unicode.h"
-#include "tiledef-player.h"
 
 extern const spell_type serpent_of_hell_breaths[4][3];
 
