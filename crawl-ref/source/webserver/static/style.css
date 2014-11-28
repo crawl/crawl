@@ -371,7 +371,7 @@ ol.select li:hover {
 }
 
 .spectator_list .admins, .player_list .admins {
-    color: magenta;
+    color: #A138FF;
     font-weight: bold;
 }
 
@@ -381,7 +381,7 @@ ol.select li:hover {
 }
 
 .spectator_list .goodplayers, .player_list .goodplayers {
-    color: green;
+    color: #37C11C;
 }
 
 .spectator_list .greatplayers, .player_list .greatplayers {
@@ -393,7 +393,7 @@ ol.select li:hover {
 }
 
 .spectator_list .centuryplayers, .player_list .centuryplayers {
-    color: red;
+    color: #D92C2B;
 }
 
 .chat_body form {
