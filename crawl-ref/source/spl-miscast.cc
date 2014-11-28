@@ -537,27 +537,21 @@ bool MiscastEffect::_lose_stat(stat_type which_stat, int8_t stat_loss)
     return lose_stat(which_stat, stat_loss, false, cause);
 }
 
-void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
+void MiscastEffect::_potion_effect(miscast_potion_type pot_eff, int pot_pow)
 {
-    if (target->is_player())
-    {
-        potion_effect(pot_eff, pot_pow, nullptr, false);
-        return;
-    }
-
     switch (pot_eff)
     {
-        case POT_BERSERK_RAGE:
+        case MISCAST_BERSERK_RAGE:
             if (target->can_go_berserk())
             {
                 target->go_berserk(false);
                 break;
             }
             // Intentional fallthrough if that didn't work.
-        case POT_SLOWING:
+        case MISCAST_SLOWING:
             target->slow_down(act_source, pot_pow);
             break;
-        case POT_CONFUSION:
+        case MISCAST_CONFUSION:
             target->confuse(act_source, pot_pow);
             break;
 
@@ -1009,7 +1003,7 @@ void MiscastEffect::_hexes(int severity)
         case 3:
         case 4:
         case 5:
-            _potion_effect(POT_SLOWING, 10);
+            _potion_effect(MISCAST_SLOWING, 10);
             break;
         case 6:
             // XXX: Monster silence shrinks awkwardly (i.e. very
@@ -1042,7 +1036,7 @@ void MiscastEffect::_hexes(int severity)
                 reroll = !_sleep(3 + random2(7));
                 break;
             case 1:
-                _potion_effect(POT_CONFUSION, 10);
+                _potion_effect(MISCAST_CONFUSION, 10);
                 reroll = false;
                 break;
             case 2:
@@ -1163,10 +1157,10 @@ void MiscastEffect::_charms(int severity)
         case 3:
         case 4:
         case 5:
-            _potion_effect(POT_SLOWING, 10);
+            _potion_effect(MISCAST_SLOWING, 10);
             break;
         case 6:
-            _potion_effect(POT_BERSERK_RAGE, 10);
+            _potion_effect(MISCAST_BERSERK_RAGE, 10);
             break;
         }
         break;
@@ -1182,7 +1176,7 @@ void MiscastEffect::_charms(int severity)
                 reroll = !_paralyse(2 + random2(6));
                 break;
             case 1:
-                _potion_effect(POT_CONFUSION, 10);
+                _potion_effect(MISCAST_CONFUSION, 10);
                 reroll = false;
                 break;
             case 2:
@@ -1334,7 +1328,7 @@ void MiscastEffect::_translocation(int severity)
                         target->blink(false);
                 }
                 if (target->alive())
-                    _potion_effect(POT_CONFUSION, 40);
+                    _potion_effect(MISCAST_CONFUSION, 40);
             }
             break;
         case 5:
@@ -1387,7 +1381,7 @@ void MiscastEffect::_translocation(int severity)
                 if (!target->no_tele())
                     target->teleport(true);
                 if (target->alive())
-                    _potion_effect(POT_CONFUSION, 60);
+                    _potion_effect(MISCAST_CONFUSION, 60);
             }
             break;
         case 2:
@@ -1648,7 +1642,7 @@ void MiscastEffect::_divination_you(int severity)
             mpr("You feel a little dazed.");
             break;
         case 1:
-            potion_effect(POT_CONFUSION, 10);
+            _potion_effect(MISCAST_CONFUSION, 10);
             break;
         }
         break;
@@ -1681,7 +1675,7 @@ void MiscastEffect::_divination_you(int severity)
             break;
         }
 
-        potion_effect(POT_CONFUSION, 1);  // common to all cases here {dlb}
+        _potion_effect(MISCAST_CONFUSION, 1);  // common to all cases here {dlb}
         break;
 
     case 3:         // nasty
@@ -1712,7 +1706,7 @@ void MiscastEffect::_divination_you(int severity)
             break;
         }
 
-        potion_effect(POT_CONFUSION, 1);  // common to all cases here {dlb}
+        _potion_effect(MISCAST_CONFUSION, 1);  // common to all cases here {dlb}
         break;
     }
 }
@@ -1875,7 +1869,7 @@ void MiscastEffect::_necromancy(int severity)
         case 1:
             you_msg      = "You feel horribly lethargic.";
             mon_msg_seen = "@The_monster@ looks incredibly listless.";
-            _potion_effect(POT_SLOWING, 15);
+            _potion_effect(MISCAST_SLOWING, 15);
             break;
         case 2:
             if (!target->res_rotting())
@@ -3230,9 +3224,9 @@ void MiscastEffect::_zot()
         case 6:
             roll = random2(3); // Give 2 of 3 effects.
             if (roll != 0)
-                _potion_effect(POT_CONFUSION, 15);
+                _potion_effect(MISCAST_CONFUSION, 15);
             if (roll != 1)
-                _potion_effect(POT_SLOWING, 15);
+                _potion_effect(MISCAST_SLOWING, 15);
             if (roll != 2)
             {
                 you_msg        = "Space warps around you!";

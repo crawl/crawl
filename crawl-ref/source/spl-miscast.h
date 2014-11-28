@@ -33,6 +33,13 @@ enum miscast_source
     GOD_MISCAST
 };
 
+enum miscast_potion_type
+{
+    MISCAST_BERSERK_RAGE,
+    MISCAST_CONFUSION,
+    MISCAST_SLOWING
+};
+
 class actor;
 // class monster;
 
@@ -118,7 +125,7 @@ private:
     bool _big_cloud(cloud_type cl_type, int cloud_pow, int size,
                     int spread_rate = -1);
     bool _lose_stat(stat_type which_stat, int8_t stat_loss);
-    void _potion_effect(potion_type pot_eff, int pot_pow);
+    void _potion_effect(miscast_potion_type pot_eff, int pot_pow);
     bool _paralyse(int dur);
     bool _sleep(int dur);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
