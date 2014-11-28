@@ -11,6 +11,7 @@
 
 #include "enum.h"
 #include "format.h"
+#include "mon-info.h"
 
 /// What's in a given spellbook?
 struct spellbook_contents
@@ -24,6 +25,7 @@ struct spellbook_contents
 typedef vector<spellbook_contents> spellset;
 
 spellset item_spellset(const item_def &item);
+spellset monster_spellset(const monster_info &mi);
 void describe_spellset(const spellset &spells,
                        const item_def* const source_item,
                        formatted_string &description);
