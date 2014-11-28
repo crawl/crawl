@@ -2060,6 +2060,7 @@ void drink(int slot)
         return;
     }
 
+    // TODO: merge the following checks into potion.cc's can_quaff functions
     const bool alreadyknown = item_type_known(potion);
 
     if (alreadyknown && you.hunger_state == HS_ENGORGED
@@ -2114,11 +2115,8 @@ void drink(int slot)
         return;
     }
 
-    if (!potion_effect(static_cast<potion_type>(potion.sub_type),
-                       40, &potion, alreadyknown))
-    {
+    if (!quaff_potion(potion))
         return;
-    }
 
     if (!alreadyknown && dangerous)
     {

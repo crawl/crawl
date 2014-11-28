@@ -846,7 +846,7 @@ static bool _trog_retribution()
         switch (random2(6))
         {
         case 0:
-            potion_effect(POT_DECAY, 100);
+            potionlike_effect(POT_DECAY, 100);
             break;
 
         case 1:

@@ -1078,7 +1078,7 @@ static int _xom_do_potion(bool debug = false)
         return XOM_GOOD_POTION;
 
     potion_type pot = POT_CURING;
-    while (true)
+    do
     {
         pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC, POT_HASTE,
                             POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
@@ -1086,37 +1086,8 @@ static int _xom_do_potion(bool debug = false)
 
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
             pot = POT_BERSERK_RAGE;
-
-        bool has_effect = true;
-        // Don't pick something that won't have an effect.
-        // Extending an existing effect is okay, though.
-        switch (pot)
-        {
-        case POT_CURING:
-            if (you.duration[DUR_POISONING] || you.rotting || you.disease
-                || you.duration[DUR_CONF])
-            {
-                break;
-            }
-            // else fall through
-        case POT_HEAL_WOUNDS:
-            if (you.hp == you.hp_max && player_rotted() == 0)
-                has_effect = false;
-            break;
-        case POT_MAGIC:
-            if (you.magic_points == you.max_magic_points)
-                has_effect = false;
-            break;
-        case POT_BERSERK_RAGE:
-            if (!you.can_go_berserk(false))
-                has_effect = false;
-            break;
-        default:
-            break;
-        }
-        if (has_effect)
-            break;
     }
+    while (!get_potion_effect(pot)->can_quaff());
 
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
 
@@ -1128,9 +1099,9 @@ static int _xom_do_potion(bool debug = false)
 
     _note_potion_effect(pot);
 
-    potion_effect(pot, 150, nullptr, false);
+    get_potion_effect(pot)->effect(true, 150);
 
-    level_change(); // potion_effect() doesn't do this anymore
+    level_change(); // need this for !xp - see mantis #3245
 
     return XOM_GOOD_POTION;
 }
