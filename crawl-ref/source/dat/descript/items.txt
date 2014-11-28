@@ -839,6 +839,12 @@ potion of agility
 A magic potion which greatly increases the dexterity and evasiveness of one who
 drinks it.
 %%%%
+potion of ambrosia
+
+A strange substance, produced by ghost moths. Consuming it causes regeneration
+of health and magic, along with total befuddlement. The two effects are
+fundamentally linked - the regeneration ends the moment the confusion does.
+%%%%
 potion of beneficial mutation
 
 A potion which gives you a supposedly good mutation.
@@ -866,11 +872,6 @@ potion of coagulated blood
 A potion containing the essence of life. Vampires find it... vital. The blood
 within won't be palatable for much longer.
 # endif
-%%%%
-potion of confusion
-
-A potion which confuses your perceptions and reduces your control over your own
-actions.
 %%%%
 potion of cure mutation
 

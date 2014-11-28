@@ -832,7 +832,7 @@ i-flight POT_FLIGHT
 i-poison POT_POISON
 i-slowing POT_SLOWING
 i-cancel POT_CANCELLATION
-i-confusion POT_CONFUSION
+i-ambrosia POT_AMBROSIA
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION

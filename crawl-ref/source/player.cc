@@ -5368,6 +5368,28 @@ void dec_elixir_player(int delay)
         _dec_elixir_mp(delay);
 }
 
+void dec_ambrosia_player(int delay)
+{
+    // ambrosia ends when confusion does.
+    if (!you.confused() && you.duration[DUR_AMBROSIA])
+    {
+        you.duration[DUR_AMBROSIA] = 0;
+        mpr("You feel less invigorated.");
+        return;
+    }
+
+    you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
+
+    // 3-5 per turn, 9-50 over (3-10) turns
+    const int restoration = 3 + random2(3);
+    if (!you.duration[DUR_DEATHS_DOOR])
+    {
+        const int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
+        inc_hp(div_rand_round(restoration * mut_factor, 3));
+    }
+    inc_mp(restoration);
+}
+
 bool flight_allowed(bool quiet)
 {
     if (get_form()->forbids_flight())
