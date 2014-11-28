@@ -4767,7 +4767,7 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
 void fixup_spells(monster_spells &spells, int hd)
 {
     unsigned count = 0;
-    for (unsigned int i = 0; i < spells.size(); i++)
+    for (int i = 0; i < spells.size(); i++)
     {
         if (spells[i].spell == SPELL_NO_SPELL)
             continue;
@@ -4790,6 +4790,12 @@ void fixup_spells(monster_spells &spells, int hd)
         return t.spell == SPELL_NO_SPELL;
     });
 
+    if (!spells.size())
+        return;
+
+    for (auto slot : spells)
+        slot.freq = (hd + 50) / spells.size();
+
     normalize_spell_freq(spells, hd);
 }
 
@@ -4799,6 +4805,7 @@ void normalize_spell_freq(monster_spells &spells, int hd)
     unsigned int total_given_freq = 0;
     for (size_t i = 0; i < spells.size(); ++i)
         total_given_freq += spells[i].freq;
+    ASSERT(total_given_freq > 0);
     for (size_t i = 0; i < spells.size(); ++i)
         spells[i].freq = total_freq * spells[i].freq / total_given_freq;
 }
