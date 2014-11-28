@@ -692,11 +692,11 @@ static void _powered_by_pain(int dam)
         }
         case 2:
             mpr("You focus on the pain.");
-            potion_effect(POT_MIGHT, level * 20);
+            potionlike_effect(POT_MIGHT, level * 20);
             break;
         case 3:
             mpr("You focus on the pain.");
-            potion_effect(POT_AGILITY, level * 20);
+            potionlike_effect(POT_AGILITY, level * 20);
             break;
         }
     }

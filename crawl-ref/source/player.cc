@@ -4815,7 +4815,7 @@ bool curare_hits_player(int death_source, int levels, string name,
         }
     }
 
-    potion_effect(POT_SLOWING, levels + random2(3*levels));
+    slow_player(10 + random2(levels + random2(3 * levels)));
 
     return hurted > 0;
 }
@@ -5113,7 +5113,7 @@ bool miasma_player(actor *who, string source_aux)
 
     if (one_chance_in(3))
     {
-        potion_effect(POT_SLOWING, 5);
+        slow_player(10 + random2(5));
         success = true;
     }
 

@@ -2051,13 +2051,13 @@ static void _potion_card(int power, deck_rarity_type rarity)
         pot = (coinflip() ? POT_HEAL_WOUNDS : POT_MAGIC);
 
     if (you_worship(GOD_CHEIBRIADOS) && (pot == POT_HASTE
-        || pot == POT_BERSERK_RAGE))
+                                         || pot == POT_BERSERK_RAGE))
     {
         simple_god_message(" protects you from inadvertent hurry.");
         return;
     }
 
-    potion_effect(pot, random2(power/4));
+    potionlike_effect(pot, random2(power/4));
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {

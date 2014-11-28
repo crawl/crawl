@@ -3467,12 +3467,13 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_SLOW:
-        potion_effect(POT_SLOWING, ench_power, nullptr, blame_player);
+        slow_player(10 + random2(ench_power));
         obvious_effect = true;
         break;
 
     case BEAM_HASTE:
-        potion_effect(POT_HASTE, ench_power, nullptr, blame_player);
+        haste_player(40 + random2(ench_power));
+        did_god_conduct(DID_HASTY, 10, blame_player);
         contaminate_player(1000, blame_player);
         obvious_effect = true;
         nasty = false;
@@ -3480,14 +3481,14 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_HEALING:
-        potion_effect(POT_HEAL_WOUNDS, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_HEAL_WOUNDS, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
         break;
 
     case BEAM_MIGHT:
-        potion_effect(POT_MIGHT, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_MIGHT, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3495,7 +3496,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_INVISIBILITY:
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
-        potion_effect(POT_INVISIBILITY, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_INVISIBILITY, ench_power);
         contaminate_player(1000 + random2(1000), blame_player);
         obvious_effect = true;
         nasty = false;
@@ -3642,7 +3643,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_BERSERK:
-        potion_effect(POT_BERSERK_RAGE, ench_power, nullptr, blame_player);
+        you.go_berserk(blame_player, true);
         obvious_effect = true;
         break;
 
@@ -3705,7 +3706,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_AGILITY:
-        potion_effect(POT_AGILITY, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_AGILITY, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3755,7 +3756,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_RESISTANCE:
-        potion_effect(POT_RESISTANCE, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_RESISTANCE, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
