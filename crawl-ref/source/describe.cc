@@ -60,6 +60,7 @@
  #include "tilereg-crt.h"
 #endif
 #include "unicode.h"
+#include "tiledef-player.h"
 
 extern const spell_type serpent_of_hell_breaths[4][3];
 
@@ -607,56 +608,41 @@ int str_to_trap(const string &s)
 //---------------------------------------------------------------
 static string _describe_demon(const string& name, flight_type fly)
 {
-    const uint32_t seed = hash32(&name[0], name.length());
+    const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_rand(ARRAYSZ(arr), seed, id)]
 
     const char* body_descs[] =
     {
-        "huge, barrel-shaped ",
-        "wispy, insubstantial ",
-        "spindly ",
-        "skeletal ",
-        "horribly deformed ",
-        "spiny ",
-        "waif-like ",
-        "scaly ",
-        "sickeningly deformed ",
-        "bruised and bleeding ",
-        "sickly ",
-        "mass of writhing tentacles for a ",
-        "mass of ropey tendrils for a ",
-        "tree trunk-like ",
-        "hairy ",
-        "furry ",
-        "fuzzy ",
-        "obese ",
-        "fat ",
-        "slimy ",
-        "wrinkled ",
-        "metallic ",
-        "glassy ",
-        "crystalline ",
-        "muscular ",
-        "icky ",
-        "swollen ",
-        "lumpy ",
         "armoured ",
-        "carapaced ",
+        "spindly ",
+        "fat ",
+        "obese ",
+        "muscular ",
+        "spiked ",
+        "spotty ",
+        "feminine ",
+        "tentacley ",
         "slender ",
+        "bug-like ",
+        "skeletal ",
+        "mantis ",
     };
 
     const char* wing_names[] =
     {
-        " with small insectoid wings",
-        " with large insectoid wings",
-        " with moth-like wings",
-        " with butterfly wings",
-        " with huge, bat-like wings",
-        " with fleshy wings",
         " with small, bat-like wings",
-        " with hairy wings",
-        " with great feathered wings",
-        " with shiny metal wings",
+        " with great bony wings",
+        " with butterfly wings",
+        " with small, butterfly-like wings",
+        " with huge, bat-like wings",
+        " with dragonfly-like wings",
+        " with large, powerful wings",
+        " with powerful wings",
+        " with great, sinister wings",
+        " with torn wings",
+        " with sparrow-like wings",
+        " with hooked wings",
+        " with knobbly wings",
     };
 
     const char* lev_names[] =
@@ -665,36 +651,35 @@ static string _describe_demon(const string& name, flight_type fly)
         " with sacs of gas hanging from its back",
     };
 
-    const char* nonfly_names[] =
+    const char* head_names[] =
     {
-        " covered in tiny crawling spiders",
-        " covered in tiny crawling insects",
-        " and the head of a crocodile",
-        " and the head of a hippopotamus",
-        " and a cruel curved beak for a mouth",
-        " and a straight sharp beak for a mouth",
-        " and no head at all",
+        " and boxes for heads",
+        " and a brain for a head",
         " and a hideous tangle of tentacles for a mouth",
-        " and an elephantine trunk",
-        " and an evil-looking proboscis",
-        " and dozens of eyes",
-        " and two ugly heads",
-        " and a long serpentine tail",
-        " and a pair of huge tusks growing from its jaw",
-        " and a single huge eye in the centre of its forehead",
-        " and spikes of black metal for teeth",
-        " and a disc-shaped sucker for a head",
-        " and huge, flapping ears",
-        " and a huge, toothy maw in the centre of its chest",
-        " and a giant snail shell on its back",
-        " and a dozen heads",
-        " and the head of a jackal",
-        " and the head of a baboon",
-        " and a huge, slobbery tongue",
-        " which is covered in oozing lacerations",
-        " and the head of a frog",
-        " and the head of a yak",
-        " and eyes out on stalks",
+        " and the head of an elephant",
+        " and an eyeball for a head",
+        " and wears a helmet over its head",
+        " with a horn in place of a head",
+        " with a horned head",
+        " with the head of a horse",
+        " with the head of an incubus",
+        " with snakes for hair",
+        " with the head of a monkey",
+        " with the head of a mouse",
+        " with the head of a ram",
+        " with the head of a rhino",
+        " with the head of a succubus",
+        " with a gigantic mouth",
+        " with a mass of tentacles growing from its neck",
+        " with a thin, worm-like head",
+        " with the head of a fly",
+        " with the head of a frog",
+        " with the head of a butterfly",
+        " with a great mass of hair",
+        " with a skull for a head",
+        " with a cow's skull for a head",
+        " with the head of a bird",
+        " and growing a large fungus from its neck",
     };
 
     const char* misc_descs[] =
@@ -722,26 +707,30 @@ static string _describe_demon(const string& name, flight_type fly)
     ostringstream description;
     description << "A powerful demon, " << name << " has ";
 
-    const string a_body = HRANDOM_ELEMENT(body_descs, 1);
+    const string a_body = HRANDOM_ELEMENT(body_descs, 2);
     description << article_a(a_body) << "body";
+
+    string head_desc = HRANDOM_ELEMENT(head_names, 1);
 
     switch (fly)
     {
     case FL_WINGED:
-        description << HRANDOM_ELEMENT(wing_names, 2);
+        description << HRANDOM_ELEMENT(wing_names, 3);
+        if (head_desc.find(" with") == 0)
+            description << " and";
         break;
 
     case FL_LEVITATE:
-        description << HRANDOM_ELEMENT(lev_names, 2);
+        description << HRANDOM_ELEMENT(lev_names, 3);
+        if (head_desc.find(" with") == 0)
+            description << " and";
         break;
 
-    case FL_NONE:  // does not fly
-        if (hash_rand(4, seed, 3))
-            description << HRANDOM_ELEMENT(nonfly_names, 2);
+    default:
         break;
     }
 
-    description << ".";
+    description << head_desc << ".";
 
     if (hash_rand(40, seed, 4) < 3)
     {
