@@ -1176,7 +1176,7 @@ void entered_malign_portal(actor* act)
 
     act->blink(false);
     act->hurt(NULL, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
-              "", "a malign gateway");
+              "", "entering a malign gateway");
 }
 
 void handle_real_time(time_t t)
