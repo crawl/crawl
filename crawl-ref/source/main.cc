@@ -3404,7 +3404,8 @@ static void _move_player(coord_def move)
         _open_door(move);
         you.prev_move = move;
     }
-    else if (!targ_pass && grd(targ) == DNGN_MALIGN_GATEWAY && !attacking)
+    else if (!targ_pass && grd(targ) == DNGN_MALIGN_GATEWAY
+             && !attacking && !you.is_stationary())
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !_prompt_dangerous_portal(grd(targ)))
