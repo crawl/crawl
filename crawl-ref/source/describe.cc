@@ -613,14 +613,14 @@ static string _describe_demon(const string& name, flight_type fly)
     const char* body_descs[] =
     {
         "armoured ",
-        "spindly ",
+        "vast, spindly ",
         "fat ",
         "obese ",
         "muscular ",
         "spiked ",
         "spotty ",
         "feminine ",
-        "tentacley ",
+        "tentacled ",
         "slender ",
         "bug-like ",
         "skeletal ",
@@ -630,18 +630,18 @@ static string _describe_demon(const string& name, flight_type fly)
     const char* wing_names[] =
     {
         " with small, bat-like wings",
-        " with great bony wings",
-        " with butterfly wings",
-        " with small, butterfly-like wings",
-        " with huge, bat-like wings",
-        " with dragonfly-like wings",
+        " with bony wings",
+        " with sharp, metallic wings",
+        " with the wings of a moth",
+        " with thin, membranous wings",
+        " with dragonfly wings",
         " with large, powerful wings",
-        " with powerful wings",
+        " with fluttering wings",
         " with great, sinister wings",
-        " with torn wings",
+        " with hideous, tattered wings",
         " with sparrow-like wings",
         " with hooked wings",
-        " with knobbly wings",
+        " with strange knobs attached",
     };
 
     const char* lev_names[] =
@@ -652,33 +652,33 @@ static string _describe_demon(const string& name, flight_type fly)
 
     const char* head_names[] =
     {
-        " and boxes for heads",
+        " and a cubic structure in place of a head",
         " and a brain for a head",
         " and a hideous tangle of tentacles for a mouth",
         " and the head of an elephant",
         " and an eyeball for a head",
         " and wears a helmet over its head",
-        " with a horn in place of a head",
-        " with a horned head",
-        " with the head of a horse",
-        " with the head of an incubus",
-        " with snakes for hair",
-        " with the head of a monkey",
-        " with the head of a mouse",
-        " with the head of a ram",
-        " with the head of a rhino",
-        " with the head of a succubus",
-        " with a gigantic mouth",
-        " with a mass of tentacles growing from its neck",
-        " with a thin, worm-like head",
-        " with the head of a fly",
-        " with the head of a frog",
-        " with the head of a butterfly",
-        " with a great mass of hair",
-        " with a skull for a head",
-        " with a cow's skull for a head",
-        " with the head of a bird",
-        " and growing a large fungus from its neck",
+        " and a horn in place of a head",
+        " and a thick, horned head",
+        " and the head of a horse",
+        " and a vicious glare",
+        " and snakes for hair",
+        " and the face of a baboon",
+        " and the head of a mouse",
+        " and a ram's head",
+        " and the head of a rhino",
+        " and the head of a succubus",
+        " and a gigantic mouth",
+        " and a mass of tentacles growing from its neck",
+        " and a thin, worm-like head",
+        " and huge, compound eyes",
+        " and the head of a frog",
+        " and an insectoid head",
+        " and a great mass of hair",
+        " and a skull for a head",
+        " and a cow's skull for a head",
+        " and the head of a bird",
+        " and a large fungus growing from its neck",
     };
 
     const char* misc_descs[] =
@@ -701,6 +701,18 @@ static string _describe_demon(const string& name, flight_type fly)
         " It shimmers before your eyes.",
         " It is surrounded by a brilliant glow.",
         " It radiates an aura of extreme power.",
+        " It seems utterly heartbroken.",
+        " It seems filled with irrepressible glee.",
+        " It constantly shivers and twitches.",
+        " Blue sparks crawl across its body.",
+        " It seems uncertain.",
+        " A cloud of flies swarms around it.",
+        " The air ripples with heat as it passes.",
+        " It appears supremely confident.",
+        " Its skin is covered in a network of cracks.",
+        " Its skin has a disgusting oily sheen.",
+        " It seems completely insane!",
+        " It seems somehow familiar."
     };
 
     ostringstream description;
@@ -735,7 +747,7 @@ static string _describe_demon(const string& name, flight_type fly)
     {
         if (you.can_smell())
         {
-            switch (hash_rand(3, seed, 5))
+            switch (hash_rand(4, seed, 5))
             {
             case 0:
                 description << " It stinks of brimstone.";
@@ -744,6 +756,9 @@ static string _describe_demon(const string& name, flight_type fly)
                 description << " It is surrounded by a sickening stench.";
                 break;
             case 2:
+                description << " It smells delicious!";
+                break;
+            case 3:
                 description << " It smells like rotting flesh"
                             << (you.species == SP_GHOUL ? " - yum!"
                                                        : ".");
