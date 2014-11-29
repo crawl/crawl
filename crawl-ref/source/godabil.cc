@@ -5235,39 +5235,6 @@ static vector<ability_type> _get_possible_sacrifices()
     return possible_sacrifices;
 }
 
-static const char* _arcane_mutation_to_school_name(mutation_type mutation)
-{
-    switch (mutation)
-    {
-        case MUT_NO_AIR_MAGIC:
-            return "Air Magic";
-        case MUT_NO_CHARM_MAGIC:
-            return "Charms";
-        case MUT_NO_CONJURATION_MAGIC:
-            return "Conjurations";
-        case MUT_NO_EARTH_MAGIC:
-            return "Earth Magic";
-        case MUT_NO_FIRE_MAGIC:
-            return "Fire Magic";
-        case MUT_NO_HEXES_MAGIC:
-            return "Hexes";
-        case MUT_NO_ICE_MAGIC:
-            return "Ice Magic";
-        case MUT_NO_NECROMANCY_MAGIC:
-            return "Necromancy";
-        case MUT_NO_POISON_MAGIC:
-            return "Poison Magic";
-        case MUT_NO_SUMMONING_MAGIC:
-            return "Summoning";
-        case MUT_NO_TRANSLOCATION_MAGIC:
-            return "Translocations";
-        case MUT_NO_TRANSMUTATION_MAGIC:
-            return "Transmutations";
-        default:
-            return "N/A";
-    }
-}
-
 static const skill_type _arcane_mutation_to_skill(mutation_type mutation)
 {
     switch (mutation)
@@ -5299,6 +5266,18 @@ static const skill_type _arcane_mutation_to_skill(mutation_type mutation)
         default:
             return SK_NONE;
     }
+}
+
+/**
+ * What's the name of the spell school corresponding to the given Ru mutation?
+ *
+ * @param mutation  The variety of MUT_NO_*_MAGIC in question.
+ * @return          A long school name ("Summoning", "Translocations", etc.)
+ */
+static const char* _arcane_mutation_to_school_name(mutation_type mutation)
+{
+    const int school = skill2spell_type(_arcane_mutation_to_skill(mutation));
+    return spelltype_long_name(school);
 }
 
 static int _piety_for_skill(skill_type skill)
