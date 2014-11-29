@@ -868,8 +868,11 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         other->hurt(agent, other->apply_ac(damage.roll()),
                     BEAM_MISSILE, KILLED_BY_COLLISION,
                     "", thisname);
-        hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-             KILLED_BY_COLLISION, "", othername);
+        if (alive())
+        {
+            hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+                 KILLED_BY_COLLISION, "", othername);
+        }
         return;
     }
 
