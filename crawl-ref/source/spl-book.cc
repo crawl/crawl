@@ -384,19 +384,12 @@ bool maybe_id_book(item_def &book, bool silent)
 
 void read_book(item_def &book)
 {
-    if (!maybe_id_book(book))
-        return;
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "read_book");
-#endif
-
-    spellset spells = item_spellset(book);
-    ASSERT(spells.size() == 1); // one book per book
-    spells[0].label = book.name(DESC_THE);
-
-    formatted_string fdesc;
-    list_spellset(spells, &book, fdesc);
+    if (maybe_id_book(book))
+    {
+        clrscr();
+        describe_item(book);
+        redraw_screen();
+    }
 }
 
 /**
