@@ -5279,6 +5279,10 @@ bool monster::needs_berserk(bool check_spells) const
     {
         for (const mon_spell_slot &slot : spells)
         {
+            // Don't count natural abilities for this purpose.
+            if (slot.flags & MON_SPELL_NATURAL)
+                continue;
+
             const int spell = slot.spell;
             if (spell != SPELL_BERSERKER_RAGE)
                 return false;
