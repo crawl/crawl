@@ -1427,6 +1427,28 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 }
 
 /**
+ * Is it OK for the player to cast Irradiate right now, or will they end up
+ * injuring a monster they didn't mean to?
+ *
+ * @return  true if it's ok to go ahead with the spell; false if the player
+ *          wants to abort.
+ */
+static bool _irradiate_is_safe()
+{
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        const monster *mon = monster_at(*ai);
+        if (!mon)
+            continue;
+
+        if (stop_attack_prompt(mon, false, you.pos()))
+            return false;
+    }
+
+    return true;
+}
+
+/**
  * Irradiate the given cell. (Per the spell.)
  *
  * @param where     The cell in question.
@@ -1470,10 +1492,15 @@ static int _irradiate_cell(coord_def where, int pow, int aux, actor *agent)
  * @param pow   The power at which the spell is being cast.
  * @param who   The actor doing the irradiating.
  * @param fail  Whether the player has failed to cast the spell.
- * @return      The result of casting the spell. (Success or failure.)
+ * @return      SPRET_ABORT if the player changed their mind about casting after
+ *              realizing they would hit an ally; SPRET_FAIL if they failed the
+ *              cast chance; SPRET_SUCCESS otherwise.
  */
 spret_type cast_irradiate(int powc, actor* who, bool fail)
 {
+    if (!_irradiate_is_safe())
+        return SPRET_ABORT;
+
     fail_check();
 
     ASSERT(who);
