@@ -102,7 +102,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_ARCANA, MUT_NON_MUTATION,
-  "Ru asks you to sacrifice all use of",
+  "sacrifice all use of",
   "sacrificed arcana",
 
   25,
