@@ -879,8 +879,10 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         {
             mprf("%s %s into %s!",
                  name(DESC_THE).c_str(), conj_verb("slam").c_str(),
-                 feature_description_at(newpos, false, DESC_THE, false)
-                     .c_str());
+                 env.map_knowledge(newpos).known()
+                 ? feature_description_at(newpos, false, DESC_THE, false)
+                       .c_str()
+                 : "something");
         }
         else
         {
