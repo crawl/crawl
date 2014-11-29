@@ -91,6 +91,8 @@ Monsters
   invisible + blindness immunity instead.
 * Magic immunity no longer confers confusion immunity to monsters.
 * Polymorphed monsters now return to their original shapes in death.
+* Liches (and ancient liches) now choose their spells randomly from a large
+  set of possible spells, instead of having fixed spellbooks.
 
 Spells
 ------
@@ -284,6 +286,11 @@ Interface
   specified in the init file, causing one to be randomly selected; a new combo
   option allows entire sets of the above to be specified, again with one being
   randomly selected.
+* Added explore mode, which is a limited version of wizard mode, where the
+  only benefit gained is the inability to die. No extra information is
+  displayed (like in wizard mode), and no extra commands are available. As
+  with wizard mode, explore mode games are not scored. Enter explore mode
+  using '+'.
 
 Stone Soup 0.15.2 (20141018)
 ----------------------------
