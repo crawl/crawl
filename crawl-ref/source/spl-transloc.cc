@@ -1275,7 +1275,10 @@ void singularity_pull(const monster *singularity)
 
         const int range = isqrt((singularity->pos() - ai->pos()).abs());
         const int strength =
-            max(0, min(4, (singularity->get_hit_dice()) / (range*range)));
+            min(4, (singularity->get_hit_dice()) / (range*range));
+        if (strength <= 0)
+            continue;
+
         static const char *messages[] =
         {
             "%s pulls at %s.",
@@ -1284,26 +1287,23 @@ void singularity_pull(const monster *singularity)
             "%s twists %s apart!",
         };
 
-        if (strength >= 1)
-        {
-            if (ai->is_monster())
-                behaviour_event(ai->as_monster(), ME_ANNOY, singularity);
+        if (ai->is_monster())
+            behaviour_event(ai->as_monster(), ME_ANNOY, singularity);
 
-            if (you.can_see(*ai))
-            {
-                // Note that we don't care if you see the singularity if
-                // you can see its impact on the monster; "Something
-                // violently warps Sigmund!" is perfectly acceptable,
-                // after all.
-                mprf(messages[strength - 1],
-                     singularity->name(DESC_THE).c_str(),
-                     ai->name(DESC_THE).c_str());
-            }
-            ai->hurt(singularity,
-                     roll_dice(strength,
-                               div_rand_round(singularity->get_hit_dice(), 4)),
-                     BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
+        if (you.can_see(*ai))
+        {
+            // Note that we don't care if you see the singularity if
+            // you can see its impact on the monster; "Something
+            // violently warps Sigmund!" is perfectly acceptable,
+            // after all.
+            mprf(messages[strength - 1],
+                 singularity->name(DESC_THE).c_str(),
+                 ai->name(DESC_THE).c_str());
         }
+        ai->hurt(singularity,
+                 roll_dice(strength,
+                           div_rand_round(singularity->get_hit_dice(), 4)),
+                 BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
 
         if (ai->alive() && !ai->is_stationary())
             _move_creature_to_singularity(singularity, *ai, strength);
