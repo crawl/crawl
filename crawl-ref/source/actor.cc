@@ -13,6 +13,7 @@
 #include "itemprop.h"
 #include "los.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "mon-death.h"
 #include "religion.h"
 #include "stepdown.h"
@@ -846,10 +847,15 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     actor *other = actor_at(newpos);
     ASSERT(this != other);
 
+    if (is_monster())
+        behaviour_event(as_monster(), ME_WHACK, agent);
+
     dice_def damage(2, 1 + pow / 10);
 
     if (other)
     {
+        if (other->is_monster())
+            behaviour_event(other->as_monster(), ME_WHACK, agent);
         if (you.can_see(this) || you.can_see(other))
         {
             mprf("%s %s with %s!",
