@@ -1171,7 +1171,7 @@ void entered_malign_portal(actor* act)
     if (you.can_see(act))
     {
         mprf("%s %s twisted violently and ejected from the portal!",
-             act->name(DESC_THE).c_str(), act->conj_verb("be"));
+             act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
     }
 
     act->blink(false);
