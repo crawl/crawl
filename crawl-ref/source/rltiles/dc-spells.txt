@@ -104,6 +104,7 @@ sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
 twisted_resurrection TWISTED_RESURRECTION
 vampiric_draining VAMPIRIC_DRAINING
+cigotuvis_embrace CIGOTUVIS_EMBRACE
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
