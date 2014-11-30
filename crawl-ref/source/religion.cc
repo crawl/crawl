@@ -1871,8 +1871,8 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-            int gift;
-            gift = NUM_BOOKS;
+        {
+            book_type gift = NUM_BOOKS;
             // Break early if giving a gift now means it would be lost.
             if (!feat_has_solid_floor(grd(you.pos())))
                 break;
@@ -1895,56 +1895,50 @@ bool do_god_gift(bool forced)
             else if (forced || you.piety >= piety_breakpoint(5)
                                && random2(you.piety) > 100)
             {
+                // Sif Muna special: Keep quiet if acquirement fails
+                // because the player already has seen all spells.
                 if (you_worship(GOD_SIF_MUNA))
-                    gift = OBJ_RANDOM;
+                    success = acquirement(OBJ_BOOKS, you.religion, true);
             }
 
             if (gift != NUM_BOOKS)
             {
-                if (gift == OBJ_RANDOM)
+                int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
+                                          you.religion);
+                // Replace a Kiku gift by a custom-random book.
+                if (you_worship(GOD_KIKUBAAQUDGHA))
                 {
-                    // Sif Muna special: Keep quiet if acquirement fails
-                    // because the player already has seen all spells.
-                    success = acquirement(OBJ_BOOKS, you.religion, true);
+                    make_book_Kiku_gift(mitm[thing_created],
+                                        gift == BOOK_NECROMANCY);
                 }
-                else
-                {
-                    int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
-                                              you.religion);
-                    // Replace a Kiku gift by a custom-random book.
-                    if (you_worship(GOD_KIKUBAAQUDGHA))
-                    {
-                        make_book_Kiku_gift(mitm[thing_created],
-                                            gift == BOOK_NECROMANCY);
-                    }
-                    if (thing_created == NON_ITEM)
-                        return false;
+                if (thing_created == NON_ITEM)
+                    return false;
 
-                    // Mark the book type as known to avoid duplicate
-                    // gifts if players don't read their gifts for some
-                    // reason.
-                    mark_had_book(gift);
+                // Mark the book type as known to avoid duplicate
+                // gifts if players don't read their gifts for some
+                // reason.
+                mark_had_book(gift);
 
-                    move_item_to_grid(&thing_created, you.pos(), true);
+                move_item_to_grid(&thing_created, you.pos(), true);
 
-                    if (thing_created != NON_ITEM)
-                        success = true;
-                }
+                if (thing_created != NON_ITEM)
+                    success = true;
+            }
 
-                if (success)
-                {
-                    simple_god_message(" grants you a gift!");
-                    more();
+            if (success)
+            {
+                simple_god_message(" grants you a gift!");
+                more();
 
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-                    // Timeouts are meaningless for Kiku.
-                    if (!you_worship(GOD_KIKUBAAQUDGHA))
-                        _inc_gift_timeout(40 + random2avg(19, 2));
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
-                }
-            }                   // End of giving books.
-            break;              // End of book gods.
+                you.num_current_gifts[you.religion]++;
+                you.num_total_gifts[you.religion]++;
+                // Timeouts are meaningless for Kiku.
+                if (!you_worship(GOD_KIKUBAAQUDGHA))
+                    _inc_gift_timeout(40 + random2avg(19, 2));
+                take_note(Note(NOTE_GOD_GIFT, you.religion));
+            }
+            break;
+        }              // End of book gods.
 
         case GOD_VEHUMET:
             const int gifts = you.num_total_gifts[you.religion];

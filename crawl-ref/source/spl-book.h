@@ -7,17 +7,18 @@
 #define SPL_BOOK_H
 
 #define SPELLBOOK_SIZE 8
+#include "itemprop-enum.h"
 
 class formatted_string;
 
-int  book_rarity(uint8_t which_book);
+int  book_rarity(book_type which_book);
 int  spell_rarity(spell_type which_spell);
 bool is_rare_book(book_type type);
 void init_spell_rarities();
 bool is_player_spell(spell_type which_spell);
 
 void mark_had_book(const item_def &book);
-void mark_had_book(int booktype);
+void mark_had_book(book_type booktype);
 void inscribe_book_highlevel(item_def &book);
 
 bool maybe_id_book(item_def &book, bool silent = false);
@@ -32,15 +33,13 @@ bool forget_spell_from_book(spell_type spell, const item_def* book);
 string desc_cannot_memorise_reason(spell_type spell);
 bool player_can_memorise_from_spellbook(const item_def &book);
 
-spell_type spell_in_rod(int rod);
+spell_type spell_in_rod(rod_type rod);
 spell_type which_spell_in_book(const item_def &book, int spl);
-spell_type which_spell_in_book(int sbook_type, int spl);
-
-bool is_memorised(spell_type spell);
+spell_type which_spell_in_book(book_type book, int spl);
 
 bool you_can_memorise(spell_type spell) PURE;
 bool has_spells_to_memorise(bool silent = true,
-                            int current_spell = SPELL_NO_SPELL);
+                            spell_type current_spell = SPELL_NO_SPELL);
 vector<spell_type> get_mem_spell_list(vector<int> &books);
 
 bool make_book_level_randart(item_def &book, int level = -1,

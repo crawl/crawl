@@ -1014,7 +1014,7 @@ static bool _is_rod_spell(spell_type spell)
         return false;
 
     for (int i = 0; i < NUM_RODS; i++)
-        if (spell_in_rod(i) == spell)
+        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
             return true;
 
     return false;
@@ -1060,8 +1060,8 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(i, j) == type)
+        for (int j = 0; j < SPELLBOOK_SIZE; j++)
+            if (which_spell_in_book(static_cast<book_type>(i), j) == type)
             {
                 item.sub_type = i;
                 books.push_back(item.name(DESC_PLAIN));
@@ -1071,7 +1071,7 @@ static bool _append_books(string &desc, item_def &item, string key)
     for (int i = 0; i < NUM_RODS; i++)
     {
         item.sub_type = i;
-        if (spell_in_rod(i) == type)
+        if (spell_in_rod(static_cast<rod_type>(i)) == type)
             rods.push_back(item.name(DESC_BASENAME));
     }
 

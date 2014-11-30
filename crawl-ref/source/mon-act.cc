@@ -1295,7 +1295,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
 
-    spell_type mzap = spell_in_rod(rod.sub_type);
+    spell_type mzap = spell_in_rod(static_cast<rod_type>(rod.sub_type));
     int rate        = spell_difficulty(mzap) * ROD_CHARGE_MULT;
 
     if (rod.plus < rate)
