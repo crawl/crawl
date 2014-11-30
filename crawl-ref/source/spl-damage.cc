@@ -349,7 +349,9 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         {
             case SPELL_CHAIN_LIGHTNING:
                 beam.colour = LIGHTBLUE;
-                beam.damage = calc_dice(5, 10 + pow * 2 / 3);
+                beam.damage = caster->is_player()
+                    ? calc_dice(5, 10 + pow * 2 / 3)
+                    : calc_dice(5, 46 + pow / 6);
                 break;
             case SPELL_CHAIN_OF_CHAOS:
                 beam.colour       = ETC_RANDOM;
