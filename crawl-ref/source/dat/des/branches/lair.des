@@ -2373,17 +2373,17 @@ ZZxxxxxx%.9.xxxzx
  ZZZZZxxxxxxxxxxx
 ENDMAP
 
-NAME: cheibrodos_lair_reptile_den
-DEPTH: Lair, !Lair:$
-TAGS: no_item_gen no_monster_gen
-MONS: adder / water moccasin, komodo dragon / black mamba, plant, fungus
+NAME:    cheibrodos_lair_reptile_den
+TAGS:    no_item_gen no_monster_gen
+DEPTH:   Lair, !Lair:$
+MONS:    adder / water moccasin, komodo dragon / black mamba, plant, fungus
 SHUFFLE: "', ABC
-SUBST: A = ., B = x, C = x, D = x .:2
-NSUBST: " = 7:1
-NSUBST: ' = 2:2
-NSUBST: - = 6:3
-NSUBST: ; = 5:3
-SUBST: 3 = 3 4:5
+SUBST:   A = ., B = x, C = x, D = x .:2
+NSUBST:  " = 7:1
+NSUBST:  ' = 2:2
+NSUBST:  - = 6:3
+NSUBST:  ; = 5:3
+SUBST:   3 = 3 4:5
 MAP
   ...........
  ..DDDDCDDDD..
@@ -2402,10 +2402,10 @@ MAP
   ...........
 ENDMAP
 
-NAME: cheibrodos_lair_caveside_slide
-DEPTH: Lair, !Lair:$
-TAGS: extra
-MONS: fungus w:3 / nothing, plant w:3 / nothing
+NAME:    cheibrodos_lair_caveside_slide
+TAGS:    extra decor
+DEPTH:   Lair, !Lair:$
+MONS:    fungus w:3 / nothing, plant w:3 / nothing
 SHUFFLE: 12
 SUBST: " = x.
 MAP
@@ -2426,6 +2426,29 @@ xxWWWWWWWxxx
 xxxWWWWWxxx
  xxxxxxxxx
   xxxxxx
+ENDMAP
+
+# Not very randomized, but the unusual shape, wall-plant use,
+# and location should be variable enough. Intentionally lacks
+# the transparent tag, to minimize niches in walls behind plants.
+NAME:    hangedman_lair_unloving_vines
+TAGS:    extra decor
+DEPTH:   Lair
+KMONS:   P = plant
+KMASK:   ` = no_monster_gen
+SHUFFLE: xP'. / xP'. / .'xP
+SUBST:   '` = .
+MAP
+           xPx
+         xxPxPxx    ````..@
+        xPP'.'PPx   ....'''
+      xxP''.'.''Px...'''PPP
+   xxxPP'```.``'Px.''PPPxxx
+xxxPPP''.xP'``.```'PPxxx
+PPP'''...xP''.'.''Pxx
+'''....   xPP'.'PPx
+@..````    xxPxPxx
+             xPx
 ENDMAP
 
 ###############################################################################

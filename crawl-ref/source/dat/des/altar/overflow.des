@@ -1649,7 +1649,6 @@ MAP
 @...   ...@
 ENDMAP
 
-
 NAME: nicolae_ru_awakened_eye
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
 TAGS: no_pool_fixup
@@ -1667,7 +1666,6 @@ MAP
    .ccccccc.
     .......
 ENDMAP
-
 
 # Overgrown and disused, since many pilgrims find Ru's sacrifices too onerous.
 NAME: nicolae_ru_the_path_less_chosen
@@ -1689,7 +1687,6 @@ xriiirxACBx
 xrrrrrxxxxx
 xxxxxxx
 ENDMAP
-
 
 NAME: nicolae_ru_sacrificial_ziggurat
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
@@ -1735,6 +1732,30 @@ l,......,llc
 @lcccccccccc
 ENDMAP
 
+NAME:   hangedman_ru_absence
+TAGS:   temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
+TAGS:   no_pool_fixup
+DEPTH:  D:2-
+WEIGHT: 5
+KFEAT:  _ = altar_ru
+SUBST:  X : x., x : cxx, b: cbxx, + : W+++, m : mmw
+KMASK:  wW = no_monster_gen
+: interest_check(_G)
+MAP
+......xxxxx......
+..x...........x..
+xxxxxx.....xxxxxx
+..x..x.....x..x..
+..x..x.XxX.x..x..
+.....+..b..+.....
+....xxbbbbbxx....
+.....+..b_.+.....
+..x..x.XxX.m..m..
+..x..x.....m..m..
+xxxxxx.....mmmmmm
+..x...........m..
+......xxxxx......
+ENDMAP
 
 ### Sif Muna overflow altars ##################################################
 

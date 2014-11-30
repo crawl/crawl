@@ -2547,6 +2547,43 @@ x.(xl%vvvvvvvvx
 xxxxxxxxxxxx@@x
 ENDMAP
 
+NAME:    hangedman_batty
+TAGS:    patrolling no_monster_gen no_item_gen
+DEPTH:   D:11-15, Crypt, !Crypt:$
+WEIGHT:  5
+MONS:    bat, phantom, vampire, unseen horror
+MONS:    phantasmal warrior, vampire knight, jiangshi
+# Notably, sometimes fill in parts of the grid.
+SHUFFLE: ABC, DE, FGH, 34 / 34 / 34 / 43
+SUBST:   A = 1, F = 2, B : xx..., D : xx..., G : xx..., CEH = .
+SUBST:   I : c...., 5 = 3333445
+: if you.branch() == "Crypt" then
+SUBST:   4 = 7, 3 = 6, 2 = 5, 1 = 1444
+SUBST:   c = v, x = c
+: end
+KITEM:   % = % no_pickup
+KITEM:   * = * no_pickup
+MAP
+xx@xxxxxxxxxxx
+x.x.xxxxxxxxxx
+@x.x.xAxBxxxxx
+x.x.x.x.x1xxxx
+xx.x4....xCxxxxxxx
+xxx..%....xxxxxxxx
+xxAx..%..xDxxxxxxx
+xxx....%..cExFxxxx
+xxBx....Ic.x.x1xxx
+xxx1x.x.cI..%.xGxx
+xxxxCxDc..*..%.xxx
+xxxxxxxEx..*..xHxx
+xxxxxxxx.%..*..xxx
+     xxFx.%..3x4xx
+     xxx1x.x.x5xxx
+     xxxxGxHx4xxxx
+     xxxxxxxxxxx
+     xxxxxxxxxxx
+ENDMAP
+
 ################################################################################
 #
 # <<5>> Stationary shooters: statues, oklobs, fog generators.
