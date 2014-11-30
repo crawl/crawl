@@ -254,6 +254,8 @@ xxcclccclccccc4..wccx
            xxx+++xx
 ENDMAP
 
+##############################################################################
+
 NAME:    nicolae_geh_sunburst
 DEPTH:   Geh, !Geh:$
 TAGS:    transparent extra decor
@@ -347,6 +349,44 @@ Cbbc
 .llc
 .llc
 Cbbc
+ENDMAP
+
+NAME:    hangedman_gehenna_grave_pits
+TAGS:    transparent extra decor allow_dup luniq
+DEPTH:   Geh, !Geh:$
+KFEAT:   ' = open_door
+# Randomized: lava pit edges, extra entrance, door pair openness.
+SUBST:   ! = {[(<}])> ':40 +:40 .:120
+SUBST:   d : ++++', e : +++++'", f : +++++'", g : +++++'"
+SHUFFLE: C`D- / C`D- / C`D- / E~F_, GH / GH / HG, JK / JK / KJ
+SUBST:   CFHK = c, - : ccc+, ~E = ., GJ = l
+CLEAR:   D`
+MARKER:  " = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 8, pow_max = 10, delay = 100, \
+             size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
+FTILE:   " = floor_volcanic
+MAP
+       cc@.c
+   DDDcc...cc
+  DD``C.....c
+  D```C.....ccccccc
+  ccc-cc+c+cccccGGc
+  cclllc........llc
+cccclllc..."....llc
+cKKccecccdcccfccHHc
+cll...."...clllcccc
+cll........clllcccc
+cJJccgccc!cccgccJJc
+cccclllc........llc
+cccclllc..."....llc
+cHHccfcccdccceccKKc
+cll...."...clllcccc
+cll........clllcc
+cGGccccc+c+cc-ccc
+ccccccc.....C```D
+      c.....C``DD
+      cc...ccDDD
+       c.@cc
 ENDMAP
 
 ##############################################################################

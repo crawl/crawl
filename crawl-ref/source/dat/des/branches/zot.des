@@ -2393,6 +2393,40 @@ xx''''''''''''''''''''''''''''''''''''''''''''
    ''''''   ''''@''''   '''''''''   '''''''''
 ENDMAP
 
+NAME:    hangedman_zot_wheel_spokes
+TAGS:    transparent extra decor
+DEPTH:   Zot, !Zot:$
+# Swap positions in unit's potential spots
+# with the spokes and / or the center, maybe.
+SHUFFLE: AGMBHN / AHMBGN / AGNBJM
+SHUFFLE: CIOFLR / CLOFIR / CIRFLO
+SHUFFLE: DJPEKQ / DJQEKP / DJQEKP
+SHUFFLE: AGM / BHN / CIO / DJP / EKQ / FLR
+# Make those slots random walls or floor.
+SUBST:   AGM : xxxxcccbbv, BHN : xxxxcccbbv
+SUBST:   CIO : xxxxcccbbv .:100
+SUBST:   DJP : xxxxcccbbv .:100, EFKLQR = .
+MAP
+      ...CDEF...
+      ..F.AB.C..
+........EB..AD..
+........DA..BE..
+.IJKL...C.BA.F..
+L.GH.I...FEDC...
+KH..GJ.OPQR.......
+JG..HKR.MN.O......
+I.HG.LQN..MP.IJKL.
+.LKJI.PM..NQL.GH.I
+......O.NM.RKH..GJ
+.......RQPO.JG..HK
+  ...CEDF...I.HG.L
+  ..F.AB.C...LKJI.
+  ..EB..AE........
+  ..DA..BD........
+  ..C.BA.F..
+  ...FEDC...
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
