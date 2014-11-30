@@ -1,0 +1,9 @@
+# Rebind shift-move to safe moving.
+bindkey = [H] CMD_SAFE_MOVE_LEFT
+bindkey = [J] CMD_SAFE_MOVE_DOWN
+bindkey = [K] CMD_SAFE_MOVE_UP
+bindkey = [L] CMD_SAFE_MOVE_RIGHT
+bindkey = [Y] CMD_SAFE_MOVE_UP_LEFT
+bindkey = [U] CMD_SAFE_MOVE_UP_RIGHT
+bindkey = [B] CMD_SAFE_MOVE_DOWN_LEFT
+bindkey = [N] CMD_SAFE_MOVE_DOWN_RIGHT
