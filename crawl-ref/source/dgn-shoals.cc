@@ -667,8 +667,8 @@ void dgn_shoals_generate_flora()
 
 void dgn_build_shoals_level()
 {
-	// TODO: Attach this information to the vault name string
-	//       instead of the build method string.
+        // TODO: Attach this information to the vault name string
+        //       instead of the build method string.
     env.level_build_method += make_stringf(" [depth %d]", you.depth);
 
     const int shoals_depth = you.depth - 1;
