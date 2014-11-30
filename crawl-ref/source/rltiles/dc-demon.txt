@@ -1,7 +1,10 @@
+# Please update describe.cc with descriptions matching the bodies, heads,
+# and wings if you are adding them here.
+
 %rim 0
 %sdir mon/panlord
 
-demon_body_armour DEMON_BODY
+demon_body_armour DEMON_BODY DEMON_BODY_CYAN
 demon_body_crouch
 demon_body_fat
 demon_body_fatter
@@ -15,7 +18,167 @@ demon_body_caterpillar
 demon_body_skeletal
 demon_body_mantis
 
-demon_head_boxes DEMON_HEAD
+%variation DEMON_BODY red
+%hue 180 0
+%hue 181 1
+%hue 182 2
+%hue 50 30
+%hue 51 31
+%repeat DEMON_BODY DEMON_BODY_RED
+%resetcol
+
+%variation DEMON_BODY blue
+%hue 180 240
+%hue 181 241
+%hue 182 242
+%hue 50 180
+%hue 51 181
+%repeat DEMON_BODY DEMON_BODY_BLUE
+%resetcol
+
+%variation DEMON_BODY green
+%hue 180 140
+%hue 181 141
+%hue 182 142
+%hue 50 10
+%hue 51 11
+%repeat DEMON_BODY DEMON_BODY_GREEN
+%resetcol
+
+%variation DEMON_BODY magenta
+%hue 180 270
+%hue 181 271
+%hue 182 272
+%desat 50
+%desat 51
+%repeat DEMON_BODY DEMON_BODY_MAGENTA
+%resetcol
+
+%variation DEMON_BODY brown
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -10
+%lum 181 -10
+%lum 182 -10
+%hue 50 30
+%hue 51 31
+%repeat DEMON_BODY DEMON_BODY_BROWN
+%resetcol
+
+%variation DEMON_BODY lightgray
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -20
+%lum 181 -20
+%lum 182 -20
+%desat 50
+%desat 51
+%repeat DEMON_BODY DEMON_BODY_LIGHTGRAY
+%resetcol
+
+%variation DEMON_BODY darkgray
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -30
+%lum 181 -30
+%lum 182 -30
+%hue 50 280
+%hue 51 281
+%repeat DEMON_BODY DEMON_BODY_DARKGRAY
+%resetcol
+
+%variation DEMON_BODY lightred
+%hue 180 10
+%hue 181 11
+%hue 182 12
+%lum 180 10
+%lum 181 10
+%lum 182 10
+%hue 50 230
+%hue 51 231
+%lum 50 10
+%lum 51 11
+%repeat DEMON_BODY DEMON_BODY_LIGHTRED
+%resetcol
+
+%variation DEMON_BODY lightblue
+%hue 180 210
+%hue 181 211
+%hue 182 212
+%lum 180 5
+%lum 181 5
+%lum 182 5
+%hue 50 340
+%hue 51 341
+%lum 50 -5
+%lum 51 -5
+%repeat DEMON_BODY DEMON_BODY_LIGHTBLUE
+%resetcol
+
+%variation DEMON_BODY lightgreen
+%hue 180 110
+%hue 181 111
+%hue 182 112
+%hue 50 80
+%hue 51 81
+%repeat DEMON_BODY DEMON_BODY_LIGHTGREEN
+%resetcol
+
+%variation DEMON_BODY lightcyan
+%lum 180 20
+%lum 181 20
+%lum 182 20
+%lum 50 10
+%lum 51 10
+%repeat DEMON_BODY DEMON_BODY_LIGHTCYAN
+%resetcol
+
+%variation DEMON_BODY lightmagenta
+%hue 180 300
+%hue 181 301
+%hue 182 302
+%lum 180 5
+%lum 181 5
+%lum 182 5
+%hue 50 270
+%hue 51 271
+%lum 50 5
+%lum 51 5
+%repeat DEMON_BODY DEMON_BODY_LIGHTMAGENTA
+%resetcol
+
+%variation DEMON_BODY yellow
+%hue 180 60
+%hue 181 61
+%hue 182 62
+%lum 180 15
+%lum 181 15
+%lum 182 15
+%lum 50 -20
+%lum 51 -20
+%hue 50 120
+%hue 51 121
+%repeat DEMON_BODY DEMON_BODY_YELLOW
+%resetcol
+
+%variation DEMON_BODY white
+%desat 180
+%desat 181
+%desat 182
+%lum 180 30
+%lum 181 30
+%lum 182 30
+%hue 50 30
+%hue 51 31
+%lum 50 30
+%lum 51 30
+%repeat DEMON_BODY DEMON_BODY_WHITE
+%resetcol
+
+demon_head_boxes DEMON_HEAD DEMON_HEAD_CYAN
 demon_head_brain
 demon_head_cthulhu
 demon_head_elephant
@@ -43,7 +206,167 @@ demon_head_cow_skull
 demon_head_bird
 demon_head_fungus
 
-demon_wings_bat DEMON_WINGS
+%variation DEMON_HEAD red
+%hue 180 0
+%hue 181 1
+%hue 182 2
+%hue 50 30
+%hue 51 31
+%repeat DEMON_HEAD DEMON_HEAD_RED
+%resetcol
+
+%variation DEMON_HEAD blue
+%hue 180 240
+%hue 181 241
+%hue 182 242
+%hue 50 180
+%hue 51 181
+%repeat DEMON_HEAD DEMON_HEAD_BLUE
+%resetcol
+
+%variation DEMON_HEAD green
+%hue 180 140
+%hue 181 141
+%hue 182 142
+%hue 50 10
+%hue 51 11
+%repeat DEMON_HEAD DEMON_HEAD_GREEN
+%resetcol
+
+%variation DEMON_HEAD magenta
+%hue 180 270
+%hue 181 271
+%hue 182 272
+%desat 50
+%desat 51
+%repeat DEMON_HEAD DEMON_HEAD_MAGENTA
+%resetcol
+
+%variation DEMON_HEAD brown
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -10
+%lum 181 -10
+%lum 182 -10
+%hue 50 30
+%hue 51 31
+%repeat DEMON_HEAD DEMON_HEAD_BROWN
+%resetcol
+
+%variation DEMON_HEAD lightgray
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -20
+%lum 181 -20
+%lum 182 -20
+%desat 50
+%desat 51
+%repeat DEMON_HEAD DEMON_HEAD_LIGHTGRAY
+%resetcol
+
+%variation DEMON_HEAD darkgray
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -30
+%lum 181 -30
+%lum 182 -30
+%hue 50 280
+%hue 51 281
+%repeat DEMON_HEAD DEMON_HEAD_DARKGRAY
+%resetcol
+
+%variation DEMON_HEAD lightred
+%hue 180 10
+%hue 181 11
+%hue 182 12
+%lum 180 10
+%lum 181 10
+%lum 182 10
+%hue 50 230
+%hue 51 231
+%lum 50 10
+%lum 51 11
+%repeat DEMON_HEAD DEMON_HEAD_LIGHTRED
+%resetcol
+
+%variation DEMON_HEAD lightblue
+%hue 180 210
+%hue 181 211
+%hue 182 212
+%lum 180 5
+%lum 181 5
+%lum 182 5
+%hue 50 340
+%hue 51 341
+%lum 50 -5
+%lum 51 -5
+%repeat DEMON_HEAD DEMON_HEAD_LIGHTBLUE
+%resetcol
+
+%variation DEMON_HEAD lightgreen
+%hue 180 110
+%hue 181 111
+%hue 182 112
+%hue 50 80
+%hue 51 81
+%repeat DEMON_HEAD DEMON_HEAD_LIGHTGREEN
+%resetcol
+
+%variation DEMON_HEAD lightcyan
+%lum 180 20
+%lum 181 20
+%lum 182 20
+%lum 50 10
+%lum 51 10
+%repeat DEMON_HEAD DEMON_HEAD_LIGHTCYAN
+%resetcol
+
+%variation DEMON_HEAD lightmagenta
+%hue 180 300
+%hue 181 301
+%hue 182 302
+%lum 180 5
+%lum 181 5
+%lum 182 5
+%hue 50 270
+%hue 51 271
+%lum 50 5
+%lum 51 5
+%repeat DEMON_HEAD DEMON_HEAD_LIGHTMAGENTA
+%resetcol
+
+%variation DEMON_HEAD yellow
+%hue 180 60
+%hue 181 61
+%hue 182 62
+%lum 180 15
+%lum 181 15
+%lum 182 15
+%lum 50 -20
+%lum 51 -20
+%hue 50 120
+%hue 51 121
+%repeat DEMON_HEAD DEMON_HEAD_YELLOW
+%resetcol
+
+%variation DEMON_HEAD white
+%desat 180
+%desat 181
+%desat 182
+%lum 180 30
+%lum 181 30
+%lum 182 30
+%hue 50 30
+%hue 51 31
+%lum 50 30
+%lum 51 30
+%repeat DEMON_HEAD DEMON_HEAD_WHITE
+%resetcol
+
+demon_wings_bat DEMON_WINGS DEMON_WINGS_CYAN
 demon_wings_bones
 demon_wings_butterfly
 demon_wings_butterfly_small
@@ -56,3 +379,163 @@ demon_wings_torn
 demon_wings_sparrow
 demon_wings_hooked
 demon_wings_knobs
+
+%variation DEMON_WINGS red
+%hue 180 0
+%hue 181 1
+%hue 182 2
+%hue 50 30
+%hue 51 31
+%repeat DEMON_WINGS DEMON_WINGS_RED
+%resetcol
+
+%variation DEMON_WINGS blue
+%hue 180 240
+%hue 181 241
+%hue 182 242
+%hue 50 180
+%hue 51 181
+%repeat DEMON_WINGS DEMON_WINGS_BLUE
+%resetcol
+
+%variation DEMON_WINGS green
+%hue 180 140
+%hue 181 141
+%hue 182 142
+%hue 50 10
+%hue 51 11
+%repeat DEMON_WINGS DEMON_WINGS_GREEN
+%resetcol
+
+%variation DEMON_WINGS magenta
+%hue 180 270
+%hue 181 271
+%hue 182 272
+%desat 50
+%desat 51
+%repeat DEMON_WINGS DEMON_WINGS_MAGENTA
+%resetcol
+
+%variation DEMON_WINGS brown
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -10
+%lum 181 -10
+%lum 182 -10
+%hue 50 30
+%hue 51 31
+%repeat DEMON_WINGS DEMON_WINGS_BROWN
+%resetcol
+
+%variation DEMON_WINGS lightgray
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -20
+%lum 181 -20
+%lum 182 -20
+%desat 50
+%desat 51
+%repeat DEMON_WINGS DEMON_WINGS_LIGHTGRAY
+%resetcol
+
+%variation DEMON_WINGS darkgray
+%desat 180
+%desat 181
+%desat 182
+%lum 180 -30
+%lum 181 -30
+%lum 182 -30
+%hue 50 280
+%hue 51 281
+%repeat DEMON_WINGS DEMON_WINGS_DARKGRAY
+%resetcol
+
+%variation DEMON_WINGS lightred
+%hue 180 10
+%hue 181 11
+%hue 182 12
+%lum 180 10
+%lum 181 10
+%lum 182 10
+%hue 50 230
+%hue 51 231
+%lum 50 10
+%lum 51 11
+%repeat DEMON_WINGS DEMON_WINGS_LIGHTRED
+%resetcol
+
+%variation DEMON_WINGS lightblue
+%hue 180 210
+%hue 181 211
+%hue 182 212
+%lum 180 5
+%lum 181 5
+%lum 182 5
+%hue 50 340
+%hue 51 341
+%lum 50 -5
+%lum 51 -5
+%repeat DEMON_WINGS DEMON_WINGS_LIGHTBLUE
+%resetcol
+
+%variation DEMON_WINGS lightgreen
+%hue 180 110
+%hue 181 111
+%hue 182 112
+%hue 50 80
+%hue 51 81
+%repeat DEMON_WINGS DEMON_WINGS_LIGHTGREEN
+%resetcol
+
+%variation DEMON_WINGS lightcyan
+%lum 180 20
+%lum 181 20
+%lum 182 20
+%lum 50 10
+%lum 51 10
+%repeat DEMON_WINGS DEMON_WINGS_LIGHTCYAN
+%resetcol
+
+%variation DEMON_WINGS lightmagenta
+%hue 180 300
+%hue 181 301
+%hue 182 302
+%lum 180 5
+%lum 181 5
+%lum 182 5
+%hue 50 270
+%hue 51 271
+%lum 50 5
+%lum 51 5
+%repeat DEMON_WINGS DEMON_WINGS_LIGHTMAGENTA
+%resetcol
+
+%variation DEMON_WINGS yellow
+%hue 180 60
+%hue 181 61
+%hue 182 62
+%lum 180 15
+%lum 181 15
+%lum 182 15
+%lum 50 -20
+%lum 51 -20
+%hue 50 120
+%hue 51 121
+%repeat DEMON_WINGS DEMON_WINGS_YELLOW
+%resetcol
+
+%variation DEMON_WINGS white
+%desat 180
+%desat 181
+%desat 182
+%lum 180 30
+%lum 181 30
+%lum 182 30
+%hue 50 30
+%hue 51 31
+%lum 50 30
+%lum 51 30
+%repeat DEMON_WINGS DEMON_WINGS_WHITE
+%resetcol
