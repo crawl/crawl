@@ -616,7 +616,7 @@ int monster::halo_radius2() const
         return size;
     // The values here depend on 1. power, 2. sentience.  Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
-    // small ones.
+    // little or none.
     switch (type)
     {
     case MONS_ANGEL:
@@ -625,9 +625,9 @@ int monster::halo_radius2() const
         return 29;
     case MONS_DAEVA:
         return 32;
-    case MONS_SERAPH:
-        return 50;
     case MONS_OPHAN:
+        return 50;
+    case MONS_SERAPH:
         return 65; // highest rank among sentient ones
     case MONS_HOLY_SWINE:
         return 2;  // only notionally holy
