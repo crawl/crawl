@@ -284,6 +284,23 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_call_catoblepas(int pow, god_type god, bool fail)
+{
+    fail_check();
+    const monster_type mc = MONS_CATOBLEPAS;
+
+    auto mg = mgen_data(MONS_CATOBLEPAS, BEH_FRIENDLY, &you, 1,
+                        SPELL_CALL_CATOBLEPAS, you.pos(), MHITYOU,
+                        MG_AUTOFOE, god);
+
+    mg.hd = mons_class_hit_dice(mc) + power_to_barcount(pow)/2;
+
+    if (!create_monster(mg))
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+}
+
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -3502,6 +3519,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_BUTTERFLIES,         8, 5 },
     { SPELL_SUMMON_SMALL_MAMMAL,        4, 2 },
     { SPELL_CALL_CANINE_FAMILIAR,       1, 2 },
+    { SPELL_CALL_CATOBLEPAS,            1, 2 },
     { SPELL_SUMMON_ICE_BEAST,           3, 3 },
     { SPELL_SUMMON_HYDRA,               3, 2 },
     { SPELL_SUMMON_MANA_VIPER,          2, 2 },

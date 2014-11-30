@@ -1577,6 +1577,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
 
+    case SPELL_CALL_CATOBLEPAS:
+        return cast_call_catoblepas(powc, god, fail);
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_ELEMENTAL:
         mpr("Sorry, this spell is gone!");

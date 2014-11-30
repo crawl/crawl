@@ -195,6 +195,11 @@ Call Canine Familiar spell
 
 This spell summons a solitary canine to the caster's aid.
 %%%%
+Call Catoblepas spell
+
+This spell summons a solitary catoblepas to the caster's aid for a short
+time. Beware its deadly dust!
+%%%%
 Call Imp spell
 
 This spell calls forth a minor demon from the pits of Hell.

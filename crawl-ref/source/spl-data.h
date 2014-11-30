@@ -3581,6 +3581,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CALL_CATOBLEPAS, "Call Catoblepas",
+     SPTYP_SUMMONING | SPTYP_EARTH,
+     SPFLAG_NONE,
+     7,
+     200,
+     -1, -1,
+     5, 0,
+     NULL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     0,
     SPFLAG_TESTING,
