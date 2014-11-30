@@ -1559,8 +1559,10 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     if (in_good_standing(GOD_NEMELEX_XOBEH))
         nemelex_bonus = you.piety;
 
-    int extra_targets = power_level + random2(you.skill(SK_EVOCATIONS, 20)
-                                              + nemelex_bonus) / 240;
+    int extra_targets =
+        power_level
+        + random2(player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 20))
+                  + nemelex_bonus) / 240;
 
     for (int i = 0; i < 1 + extra_targets; ++i)
     {
@@ -2908,18 +2910,21 @@ static int _card_power(deck_rarity_type rarity, bool punishment)
 
     if (!punishment)
     {
+        surge_power(you.spec_evoke());
         if (player_under_penance(GOD_NEMELEX_XOBEH))
             result -= you.penance[GOD_NEMELEX_XOBEH];
         else if (you_worship(GOD_NEMELEX_XOBEH))
         {
             result = you.piety;
-            result *= (you.skill(SK_EVOCATIONS, 100) + 2500);
+            result *= player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 100))
+                      + 2500;
             result /= 2700;
         }
     }
 
     result += (punishment) ? you.experience_level * 18
-                           : you.skill(SK_EVOCATIONS, 9);
+                           : player_adjust_evoc_power(
+                                 you.skill(SK_EVOCATIONS, 9));
 
     if (rarity == DECK_RARITY_RARE)
         result += 150;

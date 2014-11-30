@@ -952,6 +952,9 @@ int player_spec_charm();
 int player_spec_poison();
 int player_spec_summ();
 
+const int player_adjust_evoc_power(const int power);
+const int player_adjust_invoc_power(const int power);
+
 int player_speed();
 
 int player_spell_levels();

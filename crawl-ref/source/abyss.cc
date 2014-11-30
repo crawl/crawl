@@ -1674,8 +1674,10 @@ static bool _incorruptible(monster_type mt)
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
     const beh_type beh =
-        x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)) ? BEH_HOSTILE
-        : BEH_NEUTRAL;
+        x_chance_in_y(100,
+                      player_adjust_invoc_power(
+                          200 + you.skill(SK_INVOCATIONS, 25)))
+        ? BEH_HOSTILE : BEH_NEUTRAL;
 
     // [ds] No longer summon hostiles -- don't create the monster if
     // it would be hostile.

@@ -281,6 +281,30 @@ int actor::archmagi(bool calc_unid, bool items) const
     return wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid);
 }
 
+/**
+ * Indicates if the actor has an active evocations enhancer.
+ *
+ * @param calc_unid Whether to identify unknown items that enhance evocations.
+ * @param items Whether to count item powers.
+ * @return The number of levels of evocations enhancement this actor has.
+ */
+int actor::spec_evoke(bool calc_unid, bool items) const
+{
+    return 0;
+}
+
+/**
+ * Indicates if the actor has an active invocations enhancer.
+ *
+ * @param calc_unid Whether to identify unknown items that enhance invocations.
+ * @param items Whether to count item powers.
+ * @return The number of levels of invocations enhancement this actor has.
+ */
+int actor::spec_invoc(bool calc_unid, bool items) const
+{
+    return 0;
+}
+
 bool actor::no_cast(bool calc_unid, bool items) const
 {
     return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING, calc_unid);

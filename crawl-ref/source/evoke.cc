@@ -78,7 +78,10 @@ void shadow_lantern_effect()
         {
             dec_mp(1);
 
-            if (x_chance_in_y(you.skill_rdiv(SK_EVOCATIONS, 1, 5) + 1, 14))
+            if (x_chance_in_y(
+                    player_adjust_evoc_power(
+                        you.skill_rdiv(SK_EVOCATIONS, 1, 5) + 1),
+                    14))
             {
                 create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2,
                                MON_SUMM_LANTERN, you.pos(), MHITNOT));
@@ -261,14 +264,17 @@ static bool _evoke_horn_of_geryon(item_def &item)
         return false;
     }
 
+    surge_power(you.spec_evoke());
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
     did_god_conduct(DID_UNHOLY, 3);
     int num = 1;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(90) > 130)
+    const int adjusted_power =
+        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10));
+    if (adjusted_power + random2(90) > 130)
         ++num;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(90) > 180)
+    if (adjusted_power + random2(90) > 180)
         ++num;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(90) > 230)
+    if (adjusted_power + random2(90) > 230)
         ++num;
     for (int n = 0; n < num; ++n)
     {
@@ -276,7 +282,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
         beh_type beh = BEH_HOSTILE;
         bool will_anger = player_will_anger_monster(MONS_HELL_BEAST);
 
-        if (!will_anger && random2(you.skill(SK_EVOCATIONS, 10)) > 7)
+        if (!will_anger && random2(adjusted_power) > 7)
             beh = BEH_FRIENDLY;
         mgen_data mg(MONS_HELL_BEAST, beh, &you, 3, SPELL_NO_SPELL, you.pos(),
                      MHITYOU, MG_FORCE_BEH, GOD_NO_GOD, MONS_HELL_BEAST, 0,
@@ -365,7 +371,8 @@ static void _spray_lightning(int range, int power)
  */
 bool disc_of_storms()
 {
-    const int fail_rate = 30 - you.skill(SK_EVOCATIONS);
+    const int fail_rate =
+        30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
 
     if (x_chance_in_y(fail_rate, 100))
     {
@@ -581,8 +588,10 @@ void zap_wand(int slot)
     }
     const bool randeff = wand.sub_type == WAND_RANDOM_EFFECTS;
 
-    const int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
-        * (player_mutation_level(MUT_MP_WANDS) + 3) / 3;
+    const int power =
+        player_adjust_evoc_power(
+            (15 + you.skill(SK_EVOCATIONS, 5) / 2)
+            * (player_mutation_level(MUT_MP_WANDS) + 3) / 3);
     const int tracer_range = (alreadyknown && !randeff)
                            ? _wand_range(type_zapped) : _max_wand_range();
     const string zap_title =
@@ -697,6 +706,7 @@ void zap_wand(int slot)
 #endif
 
     dec_mp(mp_cost, false);
+    surge_power(you.spec_evoke());
 
     // zapping() updates beam.
     zapping(type_zapped, power, beam);
@@ -1022,6 +1032,7 @@ static const pop_entry pop_spiders[] =
 
 static bool _box_of_beasts(item_def &box)
 {
+    surge_power(you.spec_evoke());
     mpr("You open the lid...");
 
     if (!box.plus)
@@ -1034,7 +1045,9 @@ static bool _box_of_beasts(item_def &box)
 
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     const int hd_min = min(27,
-                           you.skill(SK_EVOCATIONS) + random2(7) - random2(7));
+                           player_adjust_evoc_power(
+                               you.skill(SK_EVOCATIONS)
+                               + random2(7) - random2(7)));
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -1078,6 +1091,7 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 
 static bool _sack_of_spiders(item_def &sack)
 {
+    surge_power(you.spec_evoke());
     mpr("You reach into the bag...");
 
     if (!sack.charges)
@@ -1095,13 +1109,17 @@ static bool _sack_of_spiders(item_def &sack)
     }
 
     bool success = false;
-    int count = 1 + random2(2)
-        + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30));
+    int count =
+        player_adjust_evoc_power(
+            1 + random2(3)
+            + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 30)));
     for (int n = 0; n < count; n++)
     {
         // Invoke mon-pick with our custom list
         monster_type mon = pick_monster_from(pop_spiders,
-                                             max(1, you.skill(SK_EVOCATIONS)),
+                                             max(1, min(27,
+                                             player_adjust_evoc_power(
+                                                 you.skill(SK_EVOCATIONS)))),
                                              _sack_of_spiders_veto_mon);
         mgen_data mg = mgen_data(mon,
                                  BEH_FRIENDLY, &you,
@@ -1132,7 +1150,7 @@ static bool _sack_of_spiders(item_def &sack)
             }
 
             int chance = 100 - (100 * (you.pos().distance_from((*mi)->pos()) - 1) / rad)
-                - 2 * (27 - you.skill(SK_EVOCATIONS));
+                - player_adjust_evoc_power(2 * (27 - you.skill(SK_EVOCATIONS)));
             if (x_chance_in_y(chance, 100))
             {
                 if (trap && trap->type == TRAP_WEB)
@@ -1163,8 +1181,9 @@ static bool _ball_of_energy()
     bool ret = false;
 
     mpr("You gaze into the crystal ball.");
+    surge_power(you.spec_evoke());
 
-    int use = random2(you.skill(SK_EVOCATIONS, 6));
+    int use = player_adjust_evoc_power(random2(you.skill(SK_EVOCATIONS, 6)));
 
     if (use < 2)
         lose_stat(STAT_INT, 1 + random2avg(7, 2));
@@ -1179,7 +1198,9 @@ static bool _ball_of_energy()
     {
         int proportional = (you.magic_points * 100) / you.max_magic_points;
 
-        if (random2avg(77 - you.skill(SK_EVOCATIONS, 2), 4) > proportional
+        if (random2avg(
+                77 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2)), 4)
+            > proportional
             || one_chance_in(25))
         {
             mpr("You feel your power drain away!");
@@ -1188,7 +1209,9 @@ static bool _ball_of_energy()
         else
         {
             mpr("You are suffused with power!");
-            inc_mp(5 + random2avg(you.skill(SK_EVOCATIONS), 2));
+            inc_mp(
+                player_adjust_evoc_power(
+                    5 + random2avg(you.skill(SK_EVOCATIONS), 2)));
 
             ret = true;
         }
@@ -1200,9 +1223,11 @@ static bool _ball_of_energy()
 static int _num_evoker_elementals()
 {
     int n = 1;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(70) > 110)
+    const int adjusted_power =
+        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10));
+    if (adjusted_power + random2(70) > 110)
         ++n;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(70) > 170)
+    if (adjusted_power + random2(70) > 170)
         ++n;
     return n;
 }
@@ -1383,7 +1408,8 @@ static bool _lamp_of_fire()
     bolt base_beam;
     dist target;
 
-    const int pow = 8 + you.skill_rdiv(SK_EVOCATIONS, 9, 4);
+    const int pow =
+        player_adjust_evoc_power(8 + you.skill_rdiv(SK_EVOCATIONS, 9, 4));
     if (spell_direction(target, base_beam, DIR_TARGET, TARG_HOSTILE, 8,
                         true, true, false, nullptr,
                         "Aim the lamp in which direction?", true, nullptr))
@@ -1391,6 +1417,7 @@ static bool _lamp_of_fire()
         if (you.confused())
             target.confusion_fuzz();
 
+        surge_power(you.spec_evoke());
         did_god_conduct(DID_FIRE, 6 + random2(3));
 
         mpr("The flames dance!");
@@ -1449,7 +1476,8 @@ struct dist_sorter
 
 static int _gale_push_dist(const actor* agent, const actor* victim)
 {
-    int dist = 1 + you.skill_rdiv(SK_EVOCATIONS, 1, 10);
+    int dist =
+        player_adjust_evoc_power(1 + you.skill_rdiv(SK_EVOCATIONS, 1, 10));
 
     if (victim->airborne())
         dist++;
@@ -1674,7 +1702,9 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
 static void _fan_of_gales_elementals()
 {
-    int radius = min(6, 4 + you.skill_rdiv(SK_EVOCATIONS, 1, 6));
+    int radius =
+        min(6,
+            player_adjust_evoc_power(4 + you.skill_rdiv(SK_EVOCATIONS, 1, 6)));
 
     vector<coord_def> elementals;
     for (radius_iterator ri(you.pos(), radius, C_SQUARE, true); ri; ++ri)
@@ -1700,7 +1730,8 @@ static void _fan_of_gales_elementals()
                       elementals[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE,
                       GOD_NO_GOD, MONS_AIR_ELEMENTAL, 0, COLOUR_INHERIT,
                       PROX_CLOSE_TO_PLAYER);
-        mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+        mg.hd =
+            player_adjust_evoc_power(6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
         if (create_monster(mg))
             created = true;
     }
@@ -1758,14 +1789,17 @@ static bool _stone_of_tremors()
             rubble_pos.push_back(*di);
     }
 
+    surge_power(you.spec_evoke());
     mpr("The dungeon trembles and rubble falls from the walls!");
     noisy(15, you.pos());
 
     bolt rubble;
     rubble.name       = "falling rubble";
     rubble.range      = 1;
-    rubble.hit        = 10 + you.skill_rdiv(SK_EVOCATIONS, 1, 2);
-    rubble.damage     = dice_def(3, 5 + you.skill(SK_EVOCATIONS));
+    rubble.hit        = player_adjust_evoc_power(
+                            10 + you.skill_rdiv(SK_EVOCATIONS, 1, 2));
+    rubble.damage     = dice_def(3, player_adjust_evoc_power(
+                                        5 + you.skill(SK_EVOCATIONS)));
     rubble.source_id  = MID_PLAYER;
     rubble.glyph      = dchar_glyph(DCHAR_FIRED_MISSILE);
     rubble.colour     = LIGHTGREY;
@@ -1789,7 +1823,9 @@ static bool _stone_of_tremors()
     {
         if (grd(mi->pos()) == DNGN_FLOOR
             && is_valid_shaft_level()
-            && x_chance_in_y(75 + you.skill(SK_EVOCATIONS, 2), 800))
+            && x_chance_in_y(
+                   player_adjust_evoc_power(75 + you.skill(SK_EVOCATIONS, 2)),
+                   800))
         {
             mi->do_shaft();
         }
@@ -1830,7 +1866,8 @@ static bool _stone_of_tremors()
                      rubble_pos[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
                      MONS_EARTH_ELEMENTAL, 0, COLOUR_INHERIT,
                      PROX_CLOSE_TO_PLAYER);
-        mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+        mg.hd = player_adjust_evoc_power(
+                    6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
         if (create_monster(mg))
             created = true;
     }
@@ -1851,7 +1888,9 @@ static bool _phial_of_floods()
     dist target;
     bolt beam;
 
-    zappy(ZAP_PRIMAL_WAVE, 25 + you.skill(SK_EVOCATIONS, 6), beam);
+    zappy(ZAP_PRIMAL_WAVE,
+          player_adjust_evoc_power(25 + you.skill(SK_EVOCATIONS, 6)),
+          beam);
     beam.range = LOS_RADIUS;
     beam.thrower = KILL_YOU;
     beam.name = "flood of elemental water";
@@ -1866,13 +1905,16 @@ static bool _phial_of_floods()
             target.confusion_fuzz();
             beam.set_target(target);
         }
+        surge_power(you.spec_evoke());
         beam.fire();
 
         vector<coord_def> elementals;
         // Flood the endpoint
         coord_def center = beam.path_taken.back();
-        int num = 5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + random2(7);
-        int dur = 40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3);
+        int num = player_adjust_evoc_power(
+                      5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + random2(7));
+        int dur = player_adjust_evoc_power(
+                      40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3));
         for (distance_iterator di(center, true, false, 2); di && num > 0; ++di)
         {
             if (can_flood_feature(grd(*di))
@@ -1901,7 +1943,8 @@ static bool _phial_of_floods()
                           MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
                           MONS_WATER_ELEMENTAL, 0, COLOUR_INHERIT,
                           PROX_CLOSE_TO_PLAYER);
-            mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15);
+            mg.hd = player_adjust_evoc_power(
+                        6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15));
             if (create_monster(mg))
                 created = true;
         }
@@ -1965,9 +2008,12 @@ static spret_type _phantom_mirror()
         return SPRET_FAIL;
     }
 
-    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
-    int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
-                             * (100 - victim->check_res_magic(power)) / 100));
+    surge_power(you.spec_evoke());
+    const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
+    int dur = min(6, max(1,
+                         player_adjust_evoc_power(
+                             you.skill(SK_EVOCATIONS, 1) / 4 + 1)
+                         * (100 - victim->check_res_magic(power)) / 100));
 
     mon->attitude = ATT_FRIENDLY;
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
@@ -2198,7 +2244,9 @@ bool evoke_item(int slot, bool check_range)
             mpr("Your reserves of magic are already full.");
             return false;
         }
-        else if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 1100, 4000))
+        else if (x_chance_in_y(player_adjust_evoc_power(
+                                   you.skill(SK_EVOCATIONS, 100) + 1100),
+                               4000))
         {
             mpr("You channel some magical energy.");
             inc_mp(1 + random2(3));
@@ -2237,7 +2285,10 @@ bool evoke_item(int slot, bool check_range)
                 mpr("That is presently inert.");
                 return false;
             }
-            wind_blast(&you, you.skill(SK_EVOCATIONS, 10), coord_def());
+            surge_power(you.spec_evoke());
+            wind_blast(&you,
+                       player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10)),
+                       coord_def());
             _fan_of_gales_elementals();
             _expend_xp_evoker(item);
             pract = 1;

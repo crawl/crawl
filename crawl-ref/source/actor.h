@@ -316,6 +316,8 @@ public:
     virtual bool faith(bool calc_unid = true, bool items = true) const;
     virtual bool warding(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
+    virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
+    virtual int spec_invoc(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
