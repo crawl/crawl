@@ -72,7 +72,7 @@ void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-    bool evoked = true);
+    bool evoked = false);
 
 double get_miscast_chance(spell_type spell, int severity = 2);
 int fail_severity(spell_type spell);
