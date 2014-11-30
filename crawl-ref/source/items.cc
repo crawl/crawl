@@ -4222,8 +4222,8 @@ static bool _book_from_spell(const char* specs, item_def &item)
         return false;
 
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        for (int j = 0; j < 8; ++j)
-            if (which_spell_in_book(i, j) == type)
+        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
+            if (which_spell_in_book(static_cast<book_type>(i), j) == type)
             {
                 item.sub_type = i;
                 return true;

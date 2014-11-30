@@ -17,13 +17,13 @@
 LUAFN(l_spells_memorised)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(boolean, is_memorised(spell));
+    PLUARET(boolean, you.has_spell(spell));
 }
 
 LUAFN(l_spells_letter)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    if (!is_memorised(spell))
+    if (!you.has_spell(spell))
     {
         lua_pushnil(ls);
         return 1;

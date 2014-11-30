@@ -38,7 +38,7 @@
 
 struct spell_desc
 {
-    int id;
+    spell_type id;
     const char  *title;
     unsigned int disciplines; // bitfield
     unsigned int flags;       // bitfield
@@ -106,6 +106,9 @@ void init_spell_descs()
         ASSERTM(!(data.flags & SPFLAG_TARGETING_MASK)
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
+
+        ASSERTM(!(data.flags & SPFLAG_MONSTER && is_player_spell(data.id)),
+                "spell '%s' is declared as a monster spell but is a player spell", data.title);
 
         spell_list[data.id] = i;
     }

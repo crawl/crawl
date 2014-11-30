@@ -1427,7 +1427,7 @@ bool trog_burn_spellbooks()
             totalpiety += 2;
 
             // Rarity influences the duration of the pyre.
-            rarity += book_rarity(si->sub_type);
+            rarity += book_rarity(static_cast<book_type>(si->sub_type));
 
             dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);

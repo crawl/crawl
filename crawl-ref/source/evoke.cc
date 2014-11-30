@@ -1635,7 +1635,7 @@ static bool _rod_spell(item_def& irod, bool check_range)
 {
     ASSERT(irod.base_type == OBJ_RODS);
 
-    const spell_type spell = spell_in_rod(irod.sub_type);
+    const spell_type spell = spell_in_rod(static_cast<rod_type>(irod.sub_type));
     int mana = spell_mana(spell) * ROD_CHARGE_MULT;
     int power = calc_spell_power(spell, false, false, true, true);
 

@@ -1822,8 +1822,10 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_BOOKS:
+    {
         valued = 150;
-        if (item.sub_type == BOOK_DESTRUCTION)
+        const book_type book = static_cast<book_type>(item.sub_type);
+        if (book == BOOK_DESTRUCTION)
             break;
 
         if (item_type_known(item))
@@ -1863,15 +1865,16 @@ unsigned int item_value(item_def item, bool ident)
 
                 // Fixed level randarts get a bonus for the really low and
                 // really high level spells.
-                if (item.sub_type == BOOK_RANDART_LEVEL)
+                if (book == BOOK_RANDART_LEVEL)
                     valued += 50 * abs(5 - item.plus);
             }
             else
-                rarity = book_rarity(item.sub_type);
+                rarity = book_rarity(book);
 
             valued += (int)(rarity * 50.0);
         }
         break;
+    }
 
     case OBJ_STAVES:
         valued = item_type_known(item) ? 250 : 120;
