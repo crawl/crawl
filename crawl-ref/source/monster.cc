@@ -3264,8 +3264,11 @@ void monster::shield_block_succeeded(actor *attacker)
     if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
     {
         del_ench(ENCH_BONE_ARMOUR);
-        mprf("%s corpse armour sloughs away.",
-            apostrophise(name(DESC_THE)).c_str());
+        if (you.can_see(this))
+        {
+            mprf("%s corpse armour sloughs away.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
     }
 }
 
