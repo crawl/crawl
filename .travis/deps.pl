@@ -7,7 +7,8 @@ my @deps = qw(
 );
 
 if ($ENV{BUILD_ALL}) {
-    system "git submodule update --init --recursive";
+    system "git submodule update --init --recursive" == 0
+        or die "Couldn't update submodules: $?";
 
     push @deps, qw(
        libegl1-mesa-dev
