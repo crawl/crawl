@@ -3324,20 +3324,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     if (!hspell_pass.size())
         return false;
 
-    // Force the casting of dig when the player is not visible -
-    // this is EVIL!
-    // only do this for monsters that are actually seeking out a
-    // hostile target -doy
-    if (mons->has_spell(SPELL_DIG)
-        && mons_is_seeking(mons)
-        && !(mons->wont_attack() && mons->foe == MHITYOU)
-        && !mon_enemies_around(mons))
-    {
-        spell_cast = SPELL_DIG;
-        flags = mons->spell_slot_flags(SPELL_DIG);
-        finalAnswer = true;
-    }
-
     // Monsters caught in a net try to get away.
     // This is only urgent if enemies are around.
     if (!finalAnswer && mon_enemies_around(mons)
