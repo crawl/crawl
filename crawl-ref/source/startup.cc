@@ -226,7 +226,7 @@ static void _zap_los_monsters(bool items_also)
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
         monster* mon = monster_at(*ri);
-        if (mon == NULL || mons_class_flag(mon->type, M_NO_EXP_GAIN))
+        if (mon == nullptr || mons_class_flag(mon->type, M_NO_EXP_GAIN))
             continue;
 
         dprf("Dismissing %s",
@@ -308,7 +308,7 @@ static void _post_init(bool newc)
     you.wield_change        = true;
 
     // Start timer on session.
-    you.last_keypress_time = time(NULL);
+    you.last_keypress_time = time(nullptr);
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
@@ -380,9 +380,9 @@ static void _post_init(bool newc)
 static void _construct_game_modes_menu(MenuScroller* menu)
 {
 #ifdef USE_TILE_LOCAL
-    TextTileItem* tmp = NULL;
+    TextTileItem* tmp = nullptr;
 #else
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
 #endif
     string text;
 

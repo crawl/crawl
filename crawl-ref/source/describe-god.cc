@@ -576,7 +576,7 @@ static bool _check_description_cycle(god_desc_type gdesc)
     const int bottom_line = min(30, get_number_of_lines());
 
     cgotoxy(1, bottom_line);
-    const char* place = NULL;
+    const char* place = nullptr;
     switch (gdesc)
     {
         case GDESC_OVERVIEW: place = "<w>Overview</w>|Powers|Wrath"; break;

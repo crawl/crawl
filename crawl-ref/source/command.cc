@@ -698,7 +698,7 @@ static help_file help_files[] =
 #ifdef USE_TILE_LOCAL
     { "tiles_help.txt",    'T', false },
 #endif
-    { NULL, 0, false }
+    { nullptr, 0, false }
 };
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
@@ -743,7 +743,7 @@ public:
         : Menu(_flags, "", _text_only), sort_alpha(true),
           showing_monsters(_show_mon)
         {
-            set_highlighter(NULL);
+            set_highlighter(nullptr);
 
             if (_show_mon)
                 toggle_sorting();
@@ -838,7 +838,7 @@ static vector<string> _get_monster_keys(ucs_t showchar)
 
         const monsterentry *me = get_monster_data(i);
 
-        if (me == NULL || me->name == NULL || me->name[0] == '\0')
+        if (me == nullptr || me->name == nullptr || me->name[0] == '\0')
             continue;
 
         if (me->mc != i)
@@ -917,7 +917,7 @@ static bool _skill_filter(string key, string body)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
-        // There are a couple of NULL entries in the skill set.
+        // There are a couple of nullptr entries in the skill set.
         if (!skill_name(sk))
             continue;
 
@@ -1297,8 +1297,8 @@ static void _find_description(bool *again, string *error_inout)
     string    type;
     string    extra;
     string    suffix;
-    db_find_filter filter     = NULL;
-    db_keys_recap  recap      = NULL;
+    db_find_filter filter     = nullptr;
+    db_keys_recap  recap      = nullptr;
     bool           want_regex = true;
     bool           want_sort  = true;
 
@@ -1356,13 +1356,13 @@ static void _find_description(bool *again, string *error_inout)
         break;
     case 'G':
         type       = "god";
-        filter     = NULL;
+        filter     = nullptr;
         want_regex = false;
         doing_gods = true;
         break;
     case 'B':
         type           = "branch";
-        filter         = NULL;
+        filter         = nullptr;
         want_regex     = false;
         want_sort      = false;
         doing_branches = true;
@@ -1432,7 +1432,7 @@ static void _find_description(bool *again, string *error_inout)
     else
         key_list = _get_desc_keys(regex, filter);
 
-    if (recap != NULL)
+    if (recap != nullptr)
         (*recap)(key_list);
 
     if (key_list.empty())
@@ -1514,7 +1514,7 @@ static void _find_description(bool *again, string *error_inout)
         if (ends_with(str, suffix)) // perhaps we should assert this?
             str.erase(str.length() - suffix.length());
 
-        MenuEntry *me = NULL;
+        MenuEntry *me = nullptr;
 
         if (doing_mons)
         {
@@ -1803,7 +1803,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
 
     if (with_manual)
     {
-        for (int i = 0; help_files[i].name != NULL; ++i)
+        for (int i = 0; help_files[i].name != nullptr; ++i)
         {
             // Attempt to open this file, skip it if unsuccessful.
             string fname = canonicalise_file_separator(help_files[i].name);

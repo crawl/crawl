@@ -2331,5 +2331,5 @@ const struct luaL_reg dgn_build_dlib[] =
     { "layout_shoals", &dgn_layout_shoals },
     { "layout_swamp", &dgn_layout_swamp },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };

@@ -296,7 +296,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     case BEAM_HOLY:
     {
         // Cleansing flame.
-        const int rhe = you.res_holy_energy(NULL);
+        const int rhe = you.res_holy_energy(nullptr);
         if (rhe > 0)
             hurted = 0;
         else if (rhe == 0)
@@ -985,7 +985,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         && crawl_state.other_gods_acting().empty())
     {
         you.escaped_death_cause = death_type;
-        you.escaped_death_aux   = aux == NULL ? "" : aux;
+        you.escaped_death_aux   = aux == nullptr ? "" : aux;
 
         // Xom should only kill his worshippers if they're under penance
         // or Xom is bored.
@@ -1007,12 +1007,12 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         you.reset_escaped_death();
 
         // Ensure some minimal information about Xom's involvement.
-        if (aux == NULL || !*aux)
+        if (aux == nullptr || !*aux)
         {
             if (death_type != KILLED_BY_XOM)
                 aux = "Xom";
         }
-        else if (strstr(aux, "Xom") == NULL)
+        else if (strstr(aux, "Xom") == nullptr)
             death_type = KILLED_BY_XOM;
     }
     // Xom may still try to save your life.

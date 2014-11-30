@@ -28,7 +28,7 @@ static void *_compile_pattern(const char *pattern, bool icase)
                         flags,
                         &error,
                         &erroffset,
-                        NULL);
+                        nullptr);
 }
 
 static void _free_compiled_pattern(void *cp)
@@ -41,7 +41,7 @@ static bool _pattern_match(void *compiled_pattern, const char *text, int length)
 {
     int ovector[42];
     int pcre_rc = pcre_exec(static_cast<pcre *>(compiled_pattern),
-                            NULL,
+                            nullptr,
                             text, length, 0, 0,
                             ovector, sizeof(ovector) / sizeof(*ovector));
     return pcre_rc >= 0;
@@ -56,7 +56,7 @@ static void *_compile_pattern(const char *pattern, bool icase)
 {
     regex_t *re = new regex_t;
     if (!re)
-        return NULL;
+        return nullptr;
 
     int flags = REG_EXTENDED | REG_NOSUB;
     if (icase)
@@ -66,7 +66,7 @@ static void *_compile_pattern(const char *pattern, bool icase)
     if (rc)
     {
         delete re;
-        return NULL;
+        return nullptr;
     }
     return re;
 }
@@ -84,7 +84,7 @@ static void _free_compiled_pattern(void *cp)
 static bool _pattern_match(void *compiled_pattern, const char *text, int length)
 {
     regex_t *re = static_cast<regex_t *>(compiled_pattern);
-    return !regexec(re, text, 0, NULL, 0);
+    return !regexec(re, text, 0, nullptr, 0);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -104,7 +104,7 @@ const text_pattern &text_pattern::operator= (const text_pattern &tp)
     if (compiled_pattern)
         _free_compiled_pattern(compiled_pattern);
     pattern = tp.pattern;
-    compiled_pattern = NULL;
+    compiled_pattern = nullptr;
     isvalid      = tp.isvalid;
     ignore_case  = tp.ignore_case;
     return *this;
@@ -118,7 +118,7 @@ const text_pattern &text_pattern::operator= (const string &spattern)
     if (compiled_pattern)
         _free_compiled_pattern(compiled_pattern);
     pattern = spattern;
-    compiled_pattern = NULL;
+    compiled_pattern = nullptr;
     isvalid = true;
     // We don't change ignore_case
     return *this;

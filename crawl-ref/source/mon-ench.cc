@@ -151,7 +151,7 @@ bool monster::add_ench(const mon_enchant &ench)
     // If the duration is not set, we must calculate it (depending on the
     // enchantment).
     if (!ench.duration)
-        added->set_duration(this, new_enchantment ? NULL : &ench);
+        added->set_duration(this, new_enchantment ? nullptr : &ench);
 
     if (new_enchantment)
         add_enchantment_effect(ench);
@@ -367,7 +367,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     if (mons_is_lurking(mon))
     {
         const actor* foe = mon->get_foe();
-        if (foe != NULL && mon->can_see(foe)
+        if (foe != nullptr && mon->can_see(foe)
             && !adjacent(mon->pos(), foe->pos()))
         {
             return false;
@@ -994,7 +994,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         dam = min(dam, hit_points - 1);
         if (dam > 0)
-            hurt(NULL, dam);
+            hurt(nullptr, dam);
         if (!quiet)
             simple_monster_message(this, " looks less vigorous.");
         break;
@@ -1338,7 +1338,7 @@ static void _entangle_actor(actor* act)
     else
     {
         monster* mact = act->as_monster();
-        mact->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 1, NULL, INFINITE_DURATION));
+        mact->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 1, nullptr, INFINITE_DURATION));
     }
 }
 
@@ -1375,7 +1375,7 @@ static bool _apply_grasping_roots(monster* mons)
             if (x_chance_in_y(3, 5))
                 continue;
 
-            if (x_chance_in_y(10, 50 - ai->melee_evasion(NULL)))
+            if (x_chance_in_y(10, 50 - ai->melee_evasion(nullptr)))
             {
                 if (ai->is_player())
                     mpr("Roots rise up to grasp you, but you nimbly evade.");
@@ -1893,7 +1893,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
                     if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                             plant_attitude,
-                                                            NULL,
+                                                            nullptr,
                                                             0,
                                                             0,
                                                             *ai,
@@ -2280,25 +2280,25 @@ bool monster::is_summoned(int* duration, int* summon_type) const
     const mon_enchant abj = get_ench(ENCH_ABJ);
     if (abj.ench == ENCH_NONE)
     {
-        if (duration != NULL)
+        if (duration != nullptr)
             *duration = -1;
-        if (summon_type != NULL)
+        if (summon_type != nullptr)
             *summon_type = 0;
 
         return false;
     }
-    if (duration != NULL)
+    if (duration != nullptr)
         *duration = abj.duration;
 
     const mon_enchant summ = get_ench(ENCH_SUMMON);
     if (summ.ench == ENCH_NONE)
     {
-        if (summon_type != NULL)
+        if (summon_type != nullptr)
             *summon_type = 0;
 
         return true;
     }
-    if (summon_type != NULL)
+    if (summon_type != nullptr)
         *summon_type = summ.degree;
 
     if (mons_is_conjured(type))

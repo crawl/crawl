@@ -416,7 +416,7 @@ void create_sanctuary(const coord_def& center, int time)
     int       trap_count  = 0;
     int       scare_count = 0;
     int       cloud_count = 0;
-    monster* seen_mon    = NULL;
+    monster* seen_mon    = nullptr;
 
     // Since revealing mimics can move monsters, we do it first.
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
@@ -520,7 +520,7 @@ void create_sanctuary(const coord_def& center, int time)
     if (blood_count > 0)
         mprf(MSGCH_GOD, "By Zin's power, all blood is cleared from the sanctuary.");
 
-    if (scare_count == 1 && seen_mon != NULL)
+    if (scare_count == 1 && seen_mon != nullptr)
         simple_monster_message(seen_mon, " turns to flee the light!");
     else if (scare_count > 0)
         mpr("The monsters scatter in all directions!");

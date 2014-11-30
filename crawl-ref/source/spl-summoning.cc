@@ -2377,7 +2377,7 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
     monster* m = monster_at(where);
 
-    if (m == NULL)
+    if (m == nullptr)
     {
         fail_check();
         mpr("An evil force gathers, but it quickly dissipates.");
@@ -2677,7 +2677,7 @@ monster* find_battlesphere(const actor* agent)
     if (agent->props.exists("battlesphere"))
         return monster_by_mid(agent->props["battlesphere"].get_int());
     else
-        return NULL;
+        return nullptr;
 }
 
 spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
@@ -3196,7 +3196,7 @@ monster* find_spectral_weapon(const actor* agent)
     if (agent->props.exists("spectral_weapon"))
         return monster_by_mid(agent->props["spectral_weapon"].get_int());
     else
-        return NULL;
+        return nullptr;
 }
 
 spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
@@ -3676,7 +3676,7 @@ int count_summons(const actor *summoner, spell_type spell)
             continue;
 
         int stype    = 0;
-        const bool summoned = mi->is_summoned(NULL, &stype);
+        const bool summoned = mi->is_summoned(nullptr, &stype);
         if (summoned && stype == spell && summoner->mid == mi->summoner
             && mons_aligned(summoner, *mi))
         {

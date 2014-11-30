@@ -528,13 +528,13 @@ bool noisy(int original_loudness, const coord_def& where,
 bool noisy(int loudness, const coord_def& where, mid_t who,
            noise_flag_type flags)
 {
-    return noisy(loudness, where, NULL, who, flags);
+    return noisy(loudness, where, nullptr, who, flags);
 }
 
 // This fakes noise even through silence.
 bool fake_noisy(int loudness, const coord_def& where)
 {
-    return noisy(loudness, where, NULL, MID_NOBODY, NF_NONE, true);
+    return noisy(loudness, where, nullptr, MID_NOBODY, NF_NONE, true);
 }
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where)

@@ -393,5 +393,5 @@ const struct luaL_reg debug_dlib[] =
 { "viewwindow", debug_viewwindow },
 { "seen_monsters_react", debug_seen_monsters_react },
 { "disable", debug_disable },
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

@@ -189,7 +189,7 @@ subvault_place::subvault_place(const coord_def &_tl,
 
 subvault_place::subvault_place(const subvault_place &place)
     : tl(place.tl), br(place.br),
-      subvault(place.subvault.get() ? new map_def(*place.subvault) : NULL)
+      subvault(place.subvault.get() ? new map_def(*place.subvault) : nullptr)
 {
 }
 
@@ -197,7 +197,8 @@ subvault_place &subvault_place::operator = (const subvault_place &place)
 {
     tl = place.tl;
     br = place.br;
-    subvault.reset(place.subvault.get() ? new map_def(*place.subvault) : NULL);
+    subvault.reset(place.subvault.get() ? new map_def(*place.subvault)
+                                        : nullptr);
     return *this;
 }
 
@@ -513,7 +514,7 @@ void map_lines::init_from(const map_lines &map)
 {
     // Markers have to be regenerated, they will not be copied.
     clear_markers();
-    overlay.reset(NULL);
+    overlay.reset(nullptr);
     lines            = map.lines;
     map_width        = map.map_width;
     solid_north      = map.solid_north;
@@ -1145,7 +1146,7 @@ void map_lines::clear()
     clear_markers();
     lines.clear();
     keyspecs.clear();
-    overlay.reset(NULL);
+    overlay.reset(nullptr);
     map_width = 0;
     solid_checked = false;
 
@@ -1211,7 +1212,7 @@ void map_lines::fill_mask_matrix(const string &glyphs,
         {
             int ox = x - tl.x;
             int oy = y - tl.y;
-            flags(ox, oy) = (strchr(glyphs.c_str(), (*this)(x, y)) != NULL);
+            flags(ox, oy) = (strchr(glyphs.c_str(), (*this)(x, y)) != nullptr);
         }
 }
 
@@ -1706,12 +1707,12 @@ keyed_mapspec *map_lines::mapspec_at(const coord_def &c)
         // Any subvault should create the overlay.
         ASSERT(overlay.get());
         if (!overlay.get())
-            return NULL;
+            return nullptr;
 
         key = (*overlay)(c.x, c.y).keyspec_idx;
         ASSERT(key);
         if (!key)
-            return NULL;
+            return nullptr;
     }
 
     return mapspec_for_key(key);
@@ -1726,12 +1727,12 @@ const keyed_mapspec *map_lines::mapspec_at(const coord_def &c) const
         // Any subvault should create the overlay and set the keyspec idx.
         ASSERT(overlay.get());
         if (!overlay.get())
-            return NULL;
+            return nullptr;
 
         key = (*overlay)(c.x, c.y).keyspec_idx;
         ASSERT(key);
         if (!key)
-            return NULL;
+            return nullptr;
     }
 
     return mapspec_for_key(key);
@@ -1912,7 +1913,7 @@ bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
         {
             tpd[c.x][c.y] = zone;
 
-            ret |= (wanted && strchr(wanted, (*this)(c)) != NULL);
+            ret |= (wanted && strchr(wanted, (*this)(c)) != nullptr);
 
             for (int yi = -1; yi <= 1; ++yi)
                 for (int xi = -1; xi <= 1; ++xi)
@@ -2226,7 +2227,7 @@ void map_def::init()
 
     // Subvault mask set and cleared externally.
     // It should *not* be in reinit.
-    svmask = NULL;
+    svmask = nullptr;
 }
 
 void map_def::reinit()
@@ -2735,7 +2736,7 @@ string map_def::validate_temple_map()
     for (auto c : b_glyphs)
     {
         const keyed_mapspec *spec = map.mapspec_at(c);
-        if (spec != NULL && !spec->feat.feats.empty())
+        if (spec != nullptr && !spec->feat.feats.empty())
             return "Can't change feat 'B' in temple (KFEAT)";
     }
 
@@ -3458,7 +3459,7 @@ string map_def::apply_subvault(string_spec &spec)
 
 bool map_def::is_subvault() const
 {
-    return svmask != NULL;
+    return svmask != nullptr;
 }
 
 void map_def::apply_subvault_mask()
@@ -4186,7 +4187,7 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 {
     static const char *zombie_types[] =
     {
-        " zombie", " skeleton", " simulacrum", " spectre", NULL
+        " zombie", " skeleton", " simulacrum", " spectre", nullptr
     };
 
     // This order must match zombie_types, indexed from one.
@@ -4581,7 +4582,7 @@ mons_spec mons_list::mons_by_name(string name) const
 // item_list
 
 item_spec::item_spec(const item_spec &other)
-    : _corpse_monster_spec(NULL)
+    : _corpse_monster_spec(nullptr)
 {
     *this = other;
 }
@@ -4619,7 +4620,7 @@ item_spec::~item_spec()
 void item_spec::release_corpse_monster_spec()
 {
     delete _corpse_monster_spec;
-    _corpse_monster_spec = NULL;
+    _corpse_monster_spec = nullptr;
 }
 
 bool item_spec::corpselike() const
@@ -4796,7 +4797,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
 #if TAG_MAJOR_VERSION == 34
         "jumping",
 #endif
-        NULL
+        nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);
 
@@ -4832,7 +4833,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
 #endif
         "penetration",
         "reaping",
-        NULL
+        nullptr
     };
     COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS);
 
@@ -4857,7 +4858,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "sickness",
 #endif
         "frenzy",
-        NULL
+        nullptr
     };
     COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_REAL_SPECIAL_MISSILES);
 
@@ -4893,7 +4894,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
 
     const char** allowed = name_lists[order[0]];
 
-    for (int i = 0; allowed[i] != NULL; i++)
+    for (int i = 0; allowed[i] != nullptr; i++)
     {
         if (ego_str == allowed[i])
             return i + 1;
@@ -4904,7 +4905,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
     {
         const char** list = name_lists[order[i]];
 
-        for (int j = 0; list[j] != NULL; j++)
+        for (int j = 0; list[j] != nullptr; j++)
             if (ego_str == list[j])
                 // Ego incompatible with base type.
                 return -1;
@@ -6150,8 +6151,8 @@ feature_spec::feature_spec()
     genweight = 0;
     feat = 0;
     glyph = -1;
-    shop.reset(NULL);
-    trap.reset(NULL);
+    shop.reset(nullptr);
+    trap.reset(nullptr);
     mimic = 0;
     no_mimic = false;
 }
@@ -6161,8 +6162,8 @@ feature_spec::feature_spec(int f, int wt, int _mimic, bool _no_mimic)
     genweight = wt;
     feat = f;
     glyph = -1;
-    shop.reset(NULL);
-    trap.reset(NULL);
+    shop.reset(nullptr);
+    trap.reset(nullptr);
     mimic = _mimic;
     no_mimic = _no_mimic;
 }
@@ -6190,12 +6191,12 @@ void feature_spec::init_with(const feature_spec& other)
     if (other.trap.get())
         trap.reset(new trap_spec(*other.trap));
     else
-        trap.reset(NULL);
+        trap.reset(nullptr);
 
     if (other.shop.get())
         shop.reset(new shop_spec(*other.shop));
     else
-        shop.reset(NULL);
+        shop.reset(nullptr);
 }
 
 feature_slot::feature_slot() : feats(), fix_slot(false)

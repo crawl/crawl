@@ -58,7 +58,7 @@ static int _lua_element_colour(int rand, const coord_def& loc,
     lua_pushinteger(ls, rand);
     lua_pushinteger(ls, loc.x);
     lua_pushinteger(ls, loc.y);
-    if (!dlua.callfn(NULL, 3, 1))
+    if (!dlua.callfn(nullptr, 3, 1))
     {
         mprf(MSGCH_WARN, "%s", dlua.error.c_str());
         return BLACK;
@@ -99,7 +99,7 @@ static const struct luaL_reg colour_lib[] =
 {
     { "add_colour", l_add_colour },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void dluaopen_colour(lua_State *ls)

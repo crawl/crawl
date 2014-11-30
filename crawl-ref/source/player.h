@@ -518,14 +518,15 @@ public:
 #endif
         return true;
     }
-    monster* as_monster() { return NULL; }
+    monster* as_monster() { return nullptr; }
     player* as_player() { return this; }
-    const monster* as_monster() const { return NULL; }
+    const monster* as_monster() const { return nullptr; }
     const player* as_player() const { return this; }
 
     god_type  deity() const;
     bool      alive() const;
-    bool      is_summoned(int* duration = NULL, int* summon_type = NULL) const;
+    bool      is_summoned(int* duration = nullptr,
+                          int* summon_type = nullptr) const;
     bool      is_perm_summoned() const { return false; };
 
     bool        swimming() const;
@@ -540,7 +541,7 @@ public:
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
     random_var  attack_delay(const item_def *weapon, const
-                             item_def *projectile = NULL,
+                             item_def *projectile = nullptr,
                              bool random = true, bool scaled = true,
                              bool do_shield = true) const;
     int         constriction_damage() const;
@@ -565,7 +566,7 @@ public:
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
     int scan_artefacts(artefact_prop_type which_property,
                        bool calc_unid = true,
-                       vector<item_def> *matches = NULL) const;
+                       vector<item_def> *matches = nullptr) const;
 
     item_def *weapon(int which_attack = -1) const;
     item_def *shield() const;
@@ -586,11 +587,11 @@ public:
                 bool force_article = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
     string conj_verb(const string &verb) const;
-    string hand_name(bool plural, bool *can_plural = NULL) const;
+    string hand_name(bool plural, bool *can_plural = nullptr) const;
     string hands_verb(const string &plural_verb) const;
     string hands_act(const string &plural_verb, const string &subject) const;
-    string foot_name(bool plural, bool *can_plural = NULL) const;
-    string arm_name(bool plural, bool *can_plural = NULL) const;
+    string foot_name(bool plural, bool *can_plural = nullptr) const;
+    string arm_name(bool plural, bool *can_plural = nullptr) const;
     string unarmed_attack_name() const;
 
     bool fumbles_attack();
@@ -637,7 +638,7 @@ public:
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
-                          const char* hurt_msg = NULL);
+                          const char* hurt_msg = nullptr);
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
@@ -789,9 +790,9 @@ public:
     void set_gold(int amount);
 
     void increase_duration(duration_type dur, int turns, int cap = 0,
-                           const char* msg = NULL);
+                           const char* msg = nullptr);
     void set_duration(duration_type dur, int turns, int cap = 0,
-                      const char *msg = NULL);
+                      const char *msg = nullptr);
 
     bool attempt_escape(int attempts = 1);
     int usable_tentacles() const;
@@ -969,7 +970,7 @@ void display_char_status();
 void forget_map(bool rot = false);
 
 int get_exp_progress();
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = nullptr);
 
 bool player_can_open_doors();
 
@@ -996,7 +997,7 @@ bool enough_zp(int minimum, bool suppress_msg);
 void calc_hp();
 void calc_mp();
 
-void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
+void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
 void drain_mp(int mp_loss);
 

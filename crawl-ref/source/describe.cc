@@ -291,7 +291,7 @@ static vector<string> _randart_propnames(const item_def& item,
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);
-        if (entry && entry->inscrip != NULL)
+        if (entry && entry->inscrip != nullptr)
             propnames.push_back(entry->inscrip);
      }
 
@@ -2255,7 +2255,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
 {
 #ifdef USE_TILE_LOCAL
     PrecisionMenu menu;
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     MenuFreeform* freeform = new MenuFreeform();
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     freeform->init(coord_def(1, 1),
@@ -2560,13 +2560,16 @@ void inscribe_item(item_def &item, bool msgwin)
     char buf[79];
     int ret;
     if (msgwin)
-        ret = msgwin_get_line(prompt, buf, sizeof buf, NULL, item.inscription);
+    {
+        ret = msgwin_get_line(prompt, buf, sizeof buf, nullptr,
+                              item.inscription);
+    }
     else
     {
         _safe_newline();
         prompt = "<cyan>" + prompt + "</cyan>";
         formatted_string::parse_string(prompt).display();
-        ret = cancellable_get_line(buf, sizeof buf, NULL, NULL,
+        ret = cancellable_get_line(buf, sizeof buf, nullptr, nullptr,
                                   item.inscription);
     }
 
@@ -2718,7 +2721,7 @@ string get_skill_description(skill_type skill, bool need_title)
 // forget it and BOOK_NEITHER if you can do neither
 static int _get_spell_description(const spell_type spell,
                                    string &description,
-                                   const item_def* item = NULL)
+                                   const item_def* item = nullptr)
 {
     description.reserve(500);
 
@@ -3647,7 +3650,7 @@ static string _monster_stat_description(const monster_info& mi)
         "tiny",
         "very small",
         "small",
-        NULL,     // don't display anything for 'medium'
+        nullptr,     // don't display anything for 'medium'
         "large",
         "very large",
         "giant",

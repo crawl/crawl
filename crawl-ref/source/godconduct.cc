@@ -34,7 +34,7 @@ void god_conduct_trigger::set(conduct_type c, int pg, bool kn,
     conduct = c;
     pgain = pg;
     known = kn;
-    victim.reset(NULL);
+    victim.reset(nullptr);
     if (vict)
     {
         victim.reset(new monster);
@@ -109,7 +109,7 @@ static void _handle_piety_penance(int piety_change, int piety_denom,
  * Whether good gods that you folow are offended by you attacking a specific
  * holy monster.
  *
- * @param victim    The holy in question. (May be NULL.)
+ * @param victim    The holy in question. (May be nullptr.)
  * @return          Whether DID_ATTACK_HOLY applies.
  */
 static bool _attacking_holy_matters(const monster* victim)
@@ -132,10 +132,10 @@ struct dislike_response
     /// Something your god says when you accidentally triggered the conduct.
     /// Implies that unknowingly triggering the conduct is forgiven.
     const char *forgiveness_message;
-    /// Something your god says when you trigger this conduct. May be NULL.
+    /// Something your god says when you trigger this conduct. May be nullptr.
     const char *message;
     /// A function that checks the victim of the conduct to see if the conduct
-    /// should actually, really apply to it. If NULL, all victims are valid.
+    /// should actually, really apply to it. If nullptr, all victims are valid.
     bool (*valid_victim)(const monster* victim);
     /// A flat decrease to penance, after penance_factor is applied.
     int penance_offset;
@@ -201,12 +201,12 @@ static const dislike_response GOOD_BLOOD_RESPONSE = {
 
 /// Good gods', and Beogh's, response to cannibalism.
 static const dislike_response RUDE_CANNIBALISM_RESPONSE = {
-    5, 3, NULL, " expects more respect for your departed relatives."
+    5, 3, nullptr, " expects more respect for your departed relatives."
 };
 
 /// Zin and Ely's responses to desecrating holy remains.
 static const dislike_response GOOD_DESECRATE_HOLY_RESPONSE = {
-    1, 1, NULL, " expects more respect for holy creatures!"
+    1, 1, nullptr, " expects more respect for holy creatures!"
 };
 
 /// Zin and Ely's responses to unholy actions & necromancy.
@@ -216,18 +216,18 @@ static const dislike_response GOOD_UNHOLY_RESPONSE = {
 
 /// Zin and Ely's responses to the player attacking holy creatures.
 static const dislike_response GOOD_ATTACK_HOLY_RESPONSE = {
-    1, 1, NULL, NULL, _attacking_holy_matters
+    1, 1, nullptr, nullptr, _attacking_holy_matters
 };
 
 /// Good gods' response to the player killing holy creatures.
 static const dislike_response GOOD_KILL_HOLY_RESPONSE = {
-    3, 3, NULL, NULL, _attacking_holy_matters
+    3, 3, nullptr, nullptr, _attacking_holy_matters
 };
 
 /// TSO's response to the player stabbing or poisoning monsters.
 static const dislike_response TSO_UNCHIVALRIC_RESPONSE = {
     1, 2, " forgives your inadvertent dishonourable attack, just"
-              " this once.", NULL, [] (const monster* victim) {
+              " this once.", nullptr, [] (const monster* victim) {
         return !victim || !tso_unchivalric_attack_safe_monster(victim);
     }
 };
@@ -240,7 +240,7 @@ static const dislike_response GOOD_ATTACK_NEUTRAL_RESPONSE = {
 /// Various gods' response to attacking a pal.
 static const dislike_response ATTACK_FRIEND_RESPONSE = {
     1, 3, " forgives your inadvertent attack on an ally, just this once.",
-    NULL, [] (const monster* victim) {
+    nullptr, [] (const monster* victim) {
         dprf("hates friend : %d", god_hates_attacking_friend(you.religion, victim));
         return god_hates_attacking_friend(you.religion, victim);
     }
@@ -248,7 +248,7 @@ static const dislike_response ATTACK_FRIEND_RESPONSE = {
 
 /// Ely response to a friend dying.
 static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
-    1, 0, NULL, NULL, [] (const monster* victim) {
+    1, 0, nullptr, nullptr, [] (const monster* victim) {
         // For everyone but Fedhas, plants are items not creatures,
         // and animated items are, well, items as well.
         return victim && !mons_is_object(victim->type)
@@ -260,7 +260,7 @@ static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
 
 /// Fedhas's response to a friend(ly plant) dying.
 static const dislike_response FEDHAS_FRIEND_DEATH_RESPONSE = {
-    1, 0, NULL, NULL, [] (const monster* victim) {
+    1, 0, nullptr, nullptr, [] (const monster* victim) {
         // ballistomycetes are penalized separately.
         return victim && fedhas_protects(victim)
         && victim->mons_species() != MONS_BALLISTOMYCETE;
@@ -310,11 +310,11 @@ static peeve_map divine_peeves[] =
         { DID_DRINK_BLOOD, GOOD_BLOOD_RESPONSE },
         { DID_CANNIBALISM, RUDE_CANNIBALISM_RESPONSE },
         { DID_ATTACK_HOLY, {
-            1, 2, NULL, NULL, _attacking_holy_matters
+            1, 2, nullptr, nullptr, _attacking_holy_matters
         } },
         { DID_KILL_HOLY, GOOD_KILL_HOLY_RESPONSE },
         { DID_DESECRATE_HOLY_REMAINS, {
-            1, 2, NULL, " expects more respect for holy creatures!"
+            1, 2, nullptr, " expects more respect for holy creatures!"
         } },
         { DID_NECROMANCY, {
             1, 2, " forgives your inadvertent unholy act, just this once."
@@ -358,7 +358,7 @@ static peeve_map divine_peeves[] =
             1, 5,
         } },
         { DID_SPELL_PRACTISE, {
-            1, 0, NULL, " doesn't appreciate your training magic!"
+            1, 0, nullptr, " doesn't appreciate your training magic!"
         } },
     },
     // GOD_NEMELEX_XOBEH,
@@ -377,7 +377,7 @@ static peeve_map divine_peeves[] =
         { DID_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
         { DID_SOULED_FRIEND_DIED, ELY_FRIEND_DEATH_RESPONSE },
         { DID_KILL_LIVING, {
-            1, 2, NULL, " does not appreciate your shedding blood"
+            1, 2, nullptr, " does not appreciate your shedding blood"
                             " when asking for salvation!",
             [] (const monster*) {
                 // Killing is only disapproved of during prayer.
@@ -397,12 +397,12 @@ static peeve_map divine_peeves[] =
     // GOD_JIYVA,
     {
         { DID_KILL_SLIME, {
-            1, 2, NULL, NULL, [] (const monster* victim) {
+            1, 2, nullptr, nullptr, [] (const monster* victim) {
                 return victim && !victim->is_shapeshifter();
             }
         } },
         { DID_ATTACK_NEUTRAL, {
-            1, 1, NULL, NULL, [] (const monster* victim) {
+            1, 1, nullptr, nullptr, [] (const monster* victim) {
                 return victim
                     && mons_is_slime(victim) && !victim->is_shapeshifter();
             }
@@ -425,7 +425,7 @@ static peeve_map divine_peeves[] =
     {
         { DID_HASTY, {
             1, 1, " forgives your accidental hurry, just this once.",
-            " thinks you should slow down.", NULL, -5
+            " thinks you should slow down.", nullptr, -5
         } },
     },
     // GOD_ASHENZARI,
@@ -434,7 +434,7 @@ static peeve_map divine_peeves[] =
     {
         { DID_FIRE, {
             1, 1, " forgives your accidental fire-starting, just this once.",
-            " does not appreciate your starting fires!", NULL, -5
+            " does not appreciate your starting fires!", nullptr, -5
         } },
     },
     // GOD_GOZAG,
@@ -477,10 +477,10 @@ struct like_response
     /// Degree to which your XL modifies piety gained. If zero, do not
     /// modify piety by XL; otherwise divide player XL by this value.
     int xl_denom;
-    /// Something your god says when you trigger this conduct. May be NULL.
+    /// Something your god says when you trigger this conduct. May be nullptr.
     const char *message;
     /// Special-case code for weird likes. May modify piety bonus/denom, or
-    /// may have other side effects. If NULL, doesn't trigger, ofc.
+    /// may have other side effects. If nullptr, doesn't trigger, ofc.
     void (*special)(int &piety, int &denom, const monster* victim);
 
     /// Apply this response to a given conduct, severity level, and victim.
@@ -552,7 +552,7 @@ static int _piety_bonus_for_holiness(mon_holy_type holiness)
  */
 static like_response _on_kill(mon_holy_type holiness, bool god_is_good = false,
                              void (*special)(int &piety, int &denom,
-                                             const monster* victim) = NULL)
+                                             const monster* victim) = nullptr)
 {
     like_response response = {
         _piety_bonus_for_holiness(holiness),
@@ -582,7 +582,7 @@ static const like_response GOOD_KILL_RESPONSE = _on_kill(MH_DEMONIC, true);
 // If you or any friendly kills one, you'll get the credit/blame.
 
 static const like_response OKAWARU_KILL = {
-    0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+    0, 0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
     {
         piety = get_fuzzied_monster_difficulty(victim);
         dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
@@ -615,7 +615,7 @@ static like_map divine_likes[] =
         { DID_KILL_NATURAL_UNHOLY, GOOD_KILL_RESPONSE },
         { DID_KILL_NATURAL_EVIL, GOOD_KILL_RESPONSE },
         { DID_SEE_MONSTER, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* victim)
+            0, 0, 0, nullptr, [] (int &piety, int &denom, const monster* victim)
             {
                 // don't give piety for seeing things we get piety for killing.
                 if (victim && (victim->is_evil() || victim->is_unholy()))
@@ -679,7 +679,8 @@ static like_map divine_likes[] =
     // GOD_SIF_MUNA,
     {
         { DID_SPELL_PRACTISE, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* /*victim*/)
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
                 denom = 4;
@@ -698,7 +699,8 @@ static like_map divine_likes[] =
     // GOD_NEMELEX_XOBEH,
     {
         { DID_EXPLORATION, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* /*victim*/)
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 // piety = denom = level at the start of the function
                 piety = 14;
@@ -734,7 +736,8 @@ static like_map divine_likes[] =
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
-            -6, 18, 2, NULL, [] (int &piety, int &/*denom*/, const monster* victim)
+            -6, 18, 2, nullptr,
+            [] (int &piety, int &/*denom*/, const monster* victim)
             {
                 const int speed_delta =
                     cheibriados_monster_player_speed_delta(victim);
@@ -755,7 +758,8 @@ static like_map divine_likes[] =
     // GOD_ASHENZARI,
     {
         { DID_EXPLORATION, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* /*victim*/)
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 const int level = denom; // also = piety
                 const int base_gain = 8; // base gain per dungeon level
@@ -787,7 +791,8 @@ static like_map divine_likes[] =
     // GOD_RU,
     {
         { DID_EXPLORATION, {
-            0, 0, 0, NULL, [] (int &piety, int &denom, const monster* /*victim*/)
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
             {
                 piety = 0;
                 denom = 1;

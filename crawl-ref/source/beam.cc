@@ -78,7 +78,7 @@
 #define SAP_MAGIC_CHANCE() x_chance_in_y(7, 10)
 
 // Helper functions (some of these should probably be public).
-static void _ench_animation(int flavour, const monster* mon = NULL,
+static void _ench_animation(int flavour, const monster* mon = nullptr,
                             bool force = false);
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
@@ -141,7 +141,7 @@ kill_category bolt::whose_kill() const
 
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-static void _zap_animation(int colour, const monster* mon = NULL,
+static void _zap_animation(int colour, const monster* mon = nullptr,
                            bool force = false)
 {
     coord_def p = you.pos();
@@ -357,7 +357,7 @@ public:
 struct zap_info
 {
     zap_type ztype;
-    const char* name;           // NULL means handled specially
+    const char* name;           // nullptr means handled specially
     int power_cap;
     dam_deducer* damage;
     tohit_deducer* tohit;       // Enchantments have power modifier here
@@ -388,7 +388,7 @@ static const zap_info* _seek_zap(zap_type z_type)
 {
     ASSERT_RANGE(z_type, 0, NUM_ZAPS);
     if (zap_index[z_type] == -1)
-        return NULL;
+        return nullptr;
     else
         return &zap_data[zap_index[z_type]];
 }
@@ -405,7 +405,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     const zap_info* zinfo = _seek_zap(z_type);
 
     // None found?
-    if (zinfo == NULL)
+    if (zinfo == nullptr)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_ERROR, "Couldn't find zap type %d", z_type);
@@ -545,11 +545,11 @@ void bolt::initialise_fire()
     use_target_as_pos  = false;
     hit_count.clear();
 
-    if (special_explosion != NULL)
+    if (special_explosion != nullptr)
     {
         ASSERT(!is_explosion);
         ASSERT(special_explosion->is_explosion);
-        ASSERT(special_explosion->special_explosion == NULL);
+        ASSERT(special_explosion->special_explosion == nullptr);
         special_explosion->in_explosion_phase = false;
         special_explosion->use_target_as_pos  = false;
     }
@@ -1210,12 +1210,12 @@ void bolt::fire()
     if (is_tracer)
     {
         bolt boltcopy = *this;
-        if (special_explosion != NULL)
+        if (special_explosion != nullptr)
             boltcopy.special_explosion = new bolt(*special_explosion);
 
         do_fire();
 
-        if (special_explosion != NULL)
+        if (special_explosion != nullptr)
         {
             _undo_tracer(*special_explosion, *boltcopy.special_explosion);
             delete boltcopy.special_explosion;
@@ -1226,7 +1226,7 @@ void bolt::fire()
     else
         do_fire();
 
-    if (special_explosion != NULL)
+    if (special_explosion != nullptr)
     {
         seen           = seen  || special_explosion->seen;
         heard          = heard || special_explosion->heard;
@@ -1840,8 +1840,8 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 }
 
 // Enchants all monsters in player's sight.
-// If m_succumbed is non-NULL, will be set to the number of monsters that
-// were enchanted. If m_attempted is non-NULL, will be set to the number of
+// If m_succumbed is non-nullptr, will be set to the number of monsters that
+// were enchanted. If m_attempted is not nullptr, will be set to the number of
 // monsters that we tried to enchant.
 spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 {
@@ -1880,7 +1880,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             case ENCH_FEAR:      msg = " looks frightened!";      break;
             case ENCH_CONFUSION: msg = " looks rather confused."; break;
             case ENCH_CHARM:     msg = " submits to your will.";  break;
-            default:             msg = NULL;                      break;
+            default:             msg = nullptr;                   break;
             }
             if (msg && simple_monster_message(*mi, msg))
                 did_msg = true;
@@ -2621,7 +2621,7 @@ bool bolt::stop_at_target() const
 
 void bolt::drop_object()
 {
-    ASSERT(item != NULL);
+    ASSERT(item != nullptr);
     ASSERT(item->defined());
 
     // Conditions: beam is missile and not tracer.
@@ -2706,7 +2706,7 @@ void bolt::affect_ground()
 
             if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                          beh,
-                                         NULL,
+                                         nullptr,
                                          0,
                                          0,
                                          pos(),
@@ -2901,7 +2901,7 @@ void bolt::affect_place_explosion_clouds()
                          p, MHITNOT, 0, god);
 
             // Spell-summoned monsters need to have a live summoner.
-            if (summ == NULL || !summ->alive())
+            if (summ == nullptr || !summ->alive())
             {
                 if (!source_name.empty())
                     mg.non_actor_summoner = source_name;
@@ -2917,7 +2917,7 @@ void bolt::affect_place_explosion_clouds()
 // A little helper function to handle the calling of ouch()...
 void bolt::internal_ouch(int dam)
 {
-    monster* monst = NULL;
+    monster* monst = nullptr;
     monst = monster_by_mid(source_id);
 
     const char *what = aux_source.empty() ? name.c_str() : aux_source.c_str();
@@ -2930,8 +2930,8 @@ void bolt::internal_ouch(int dam)
         && !monst->mname.empty())
     {
         ouch(dam, KILLED_BY_DIVINE_WRATH, MID_NOBODY,
-             aux_source.empty() ? NULL : aux_source.c_str(), true,
-             source_name.empty() ? NULL : source_name.c_str());
+             aux_source.empty() ? nullptr : aux_source.c_str(), true,
+             source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (monst && (monst->type == MONS_GIANT_SPORE
                        || monst->type == MONS_BALL_LIGHTNING
@@ -2942,12 +2942,12 @@ void bolt::internal_ouch(int dam)
     {
         ouch(dam, KILLED_BY_SPORE, source_id,
              aux_source.c_str(), true,
-             source_name.empty() ? NULL : source_name.c_str());
+             source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
     {
         ouch(dam, KILLED_BY_DISINT, source_id, what, true,
-             source_name.empty() ? NULL : source_name.c_str());
+             source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (YOU_KILL(thrower) && aux_source.empty())
     {
@@ -2966,7 +2966,7 @@ void bolt::internal_ouch(int dam)
     else if (MON_KILL(thrower) || aux_source == "exploding inner flame")
         ouch(dam, KILLED_BY_BEAM, source_id,
              aux_source.c_str(), true,
-             source_name.empty() ? NULL : source_name.c_str());
+             source_name.empty() ? nullptr : source_name.c_str());
     else // KILL_MISC || (YOU_KILL && aux_source)
         ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
 }
@@ -3447,7 +3447,7 @@ void bolt::affect_player_enchantment(bool resistible)
     {
     case BEAM_HIBERNATION:
     case BEAM_SLEEP:
-        you.put_to_sleep(NULL, ench_power, flavour == BEAM_HIBERNATION);
+        you.put_to_sleep(nullptr, ench_power, flavour == BEAM_HIBERNATION);
         break;
 
     case BEAM_CORONA:
@@ -5034,7 +5034,7 @@ bool bolt::ignores_monster(const monster* mon) const
     if (flavour == BEAM_DIGGING)
         return true;
 
-    // The targetters might call us with NULL in the event of a remembered
+    // The targetters might call us with nullptr in the event of a remembered
     // monster that is no longer there. Treat it as opaque.
     if (!mon)
         return false;
@@ -5822,8 +5822,8 @@ void bolt::refine_for_explosion()
 {
     ASSERT(!special_explosion);
 
-    const char *seeMsg  = NULL;
-    const char *hearMsg = NULL;
+    const char *seeMsg  = nullptr;
+    const char *hearMsg = nullptr;
 
     if (ex_size == 0)
         ex_size = 1;
@@ -5835,7 +5835,7 @@ void bolt::refine_for_explosion()
     // tmp needed so that what c_str() points to doesn't go out of scope
     // before the function ends.
     string tmp;
-    if (item != NULL)
+    if (item != nullptr)
     {
         tmp  = "The " + item->name(DESC_PLAIN, false, false, false)
                + " explodes!";
@@ -5912,7 +5912,7 @@ void bolt::refine_for_explosion()
         ex_size = 1;
     }
 
-    if (seeMsg == NULL)
+    if (seeMsg == nullptr)
     {
         seeMsg  = "The beam explodes into a cloud of software bugs!";
         hearMsg = "You hear the sound of one hand!";
@@ -6321,7 +6321,7 @@ bool bolt::nice_to(const monster* mon) const
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                range(-2), glyph('*'), colour(BLACK), flavour(BEAM_MAGIC),
-               real_flavour(BEAM_MAGIC), drop_item(false), item(NULL),
+               real_flavour(BEAM_MAGIC), drop_item(false), item(nullptr),
                source(), target(), damage(0, 0), ench_power(0), hit(0),
                thrower(KILL_MISC), ex_size(0), source_id(MID_NOBODY),
                source_name(), name(), short_name(), hit_verb(),
@@ -6330,7 +6330,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                affects_nothing(false), affects_items(true), effect_known(true),
                effect_wanton(false),
                draw_delay(15), explode_delay(50),
-               special_explosion(NULL), was_missile(false),
+               special_explosion(nullptr), was_missile(false),
                animate(Options.use_animations & UA_BEAM),
                ac_rule(AC_NORMAL),
 #ifdef DEBUG_DIAGNOSTICS
@@ -6401,7 +6401,7 @@ void bolt::setup_retrace()
 
 void bolt::set_agent(actor *actor)
 {
-    // NULL actor is fine by us.
+    // nullptr actor is fine by us.
     if (!actor)
         return;
 
@@ -6442,7 +6442,7 @@ string bolt::get_short_name() const
     if (!short_name.empty())
         return short_name;
 
-    if (item != NULL && item->defined())
+    if (item != nullptr && item->defined())
     {
         return item->name(DESC_A, false, false, false, false,
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
@@ -6578,7 +6578,7 @@ string bolt::get_source_name() const
  * The bolts that knockback flying actors or actors only when damage
  * is dealt will return when.
  *
- * @param act The target actor. If not-NULL, check if the actor is flying for
+ * @param act The target actor. If not-nullptr, check if the actor is flying for
  *            bolts that knockback flying actors.
  * @param dam The damage dealt. If non-negative, check that dam > 0 for bolts
  *             like force bolt that only push back upon damage.

@@ -799,7 +799,7 @@ int str_to_colour(const string &str, int default_colour, bool accept_number)
     {
         // Check if we have a direct colour index.
         const char *s = str.c_str();
-        char *es = NULL;
+        char *es = nullptr;
         const int ci = static_cast<int>(strtol(s, &es, 10));
         if (s != es && es && ci >= 0 && ci < 16)
             ret = ci;

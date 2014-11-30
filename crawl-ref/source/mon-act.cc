@@ -301,7 +301,7 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
             break;
 
         const monster* ally = monster_at(pos);
-        if (ally == NULL)
+        if (ally == nullptr)
             continue;
 
         if (mons_aligned(mon, ally))
@@ -336,7 +336,7 @@ static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
             continue;
 
         const monster* ally = monster_at(pos);
-        if (ally == NULL)
+        if (ally == nullptr)
             continue;
 
         if (ally->is_stationary() || ally->reach_range() > REACH_NONE)
@@ -1589,8 +1589,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     if (mons_is_fleeing(mons) || mons->pacified())
         return false;
 
-    item_def *launcher = NULL;
-    const item_def *weapon = NULL;
+    item_def *launcher = nullptr;
+    const item_def *weapon = nullptr;
     const int mon_item = mons_usable_missile(mons, &launcher);
 
     if (mon_item == NON_ITEM || !mitm[mon_item].defined())
@@ -1654,7 +1654,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             {
                 monster* new_target = monster_at(*ri);
 
-                if (new_target == NULL
+                if (new_target == nullptr
                     || mons_is_projectile(new_target->type)
                     || mons_is_firewood(new_target))
                 {
@@ -1784,7 +1784,7 @@ static void _pre_monster_move(monster* mons)
     }
 
     int sumtype = 0;
-    if (mons->summoner && (mons->is_summoned(NULL, &sumtype)
+    if (mons->summoner && (mons->is_summoned(nullptr, &sumtype)
                            || sumtype == MON_SUMM_CLONE))
     {
         const actor * const summoner = actor_by_mid(mons->summoner);
@@ -2207,7 +2207,7 @@ void handle_monster_move(monster* mons)
             simple_monster_message(mons,
                     " is distracted by the nearby gold.");
             mons->add_ench(
-                mon_enchant(ENCH_GOLD_LUST, 1, NULL,
+                mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
                             random_range(1, 5) * BASELINE_DELAY));
             mons->foe = MHITNOT;
             mons->target = mons->pos();
@@ -2473,7 +2473,7 @@ void handle_monster_move(monster* mons)
                             for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
                             {
                                 monster* candidate = monster_at(*ai);
-                                if (candidate == NULL
+                                if (candidate == nullptr
                                     || mons_is_projectile(candidate->type)
                                     || mons_is_firewood(candidate))
                                 {
@@ -2518,12 +2518,12 @@ void handle_monster_move(monster* mons)
         if (targ && mons_tentacle_adjacent(mons, targ))
         {
             const bool basis = targ->props.exists("outwards");
-            monster* outward =  basis ? monster_by_mid(targ->props["outwards"].get_int()) : NULL;
+            monster* outward =  basis ? monster_by_mid(targ->props["outwards"].get_int()) : nullptr;
             if (outward)
                 outward->props["inwards"].get_int() = mons->mid;
 
             monster_die(targ, KILL_MISC, NON_MONSTER, true);
-            targ = NULL;
+            targ = nullptr;
         }
 
         if (targ
@@ -3011,13 +3011,13 @@ static bool _jelly_divide(monster* parent)
     if (parent->hit_points < reqd)
         return false;
 
-    monster* child = NULL;
+    monster* child = nullptr;
     coord_def child_spot;
     int num_spots = 0;
 
     // First, find a suitable spot for the child {dlb}:
     for (adjacent_iterator ai(parent->pos()); ai; ++ai)
-        if (actor_at(*ai) == NULL && parent->can_pass_through(*ai)
+        if (actor_at(*ai) == nullptr && parent->can_pass_through(*ai)
             && one_chance_in(++num_spots))
         {
             child_spot = *ai;
@@ -3163,7 +3163,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
         if (death_ooze_ate_good)
         {
-            mons->hurt(NULL, hps_changed, BEAM_NONE, KILLED_BY_SOMETHING,
+            mons->hurt(nullptr, hps_changed, BEAM_NONE, KILLED_BY_SOMETHING,
                        "", "", false);
         }
         else
@@ -3820,7 +3820,7 @@ static void _ballisto_on_move(monster* mons, const coord_def& position)
     // try to make a ballistomycete.
     const beh_type attitude = attitude_creation_behavior(mons->attitude);
     monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
-                                              NULL, 0, 0, position, MHITNOT,
+                                              nullptr, 0, 0, position, MHITNOT,
                                               MG_FORCE_PLACE));
 
     if (!plant)

@@ -1669,7 +1669,7 @@ void jiyva_paralyse_jellies()
     {
         monster* mon = monster_at(*ri);
         const int dur = 16 + random2(9);
-        if (mon != NULL && mons_is_slime(mon) && !mon->is_shapeshifter())
+        if (mon != nullptr && mons_is_slime(mon) && !mon->is_shapeshifter())
         {
             mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
                                       &you, dur * BASELINE_DELAY));
@@ -2872,7 +2872,7 @@ int fedhas_corpse_spores(beh_type attitude)
 struct monster_conversion
 {
     monster_conversion() :
-        base_monster(NULL),
+        base_monster(nullptr),
         piety_cost(0),
         fruit_cost(0)
     {
@@ -3168,7 +3168,7 @@ void fedhas_evolve_flora()
 
 static int _lugonu_warp_monster(monster* mon, int pow)
 {
-    if (mon == NULL)
+    if (mon == nullptr)
         return 0;
 
     if (coinflip())
@@ -3249,7 +3249,7 @@ void cheibriados_time_bend(int pow)
 static int _slouchable(coord_def where, int pow, int, actor* agent)
 {
     monster* mon = monster_at(where);
-    if (mon == NULL || mon->is_stationary() || mon->cannot_move()
+    if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(mon))
     {
@@ -3627,7 +3627,7 @@ static bool _dithmenos_shadow_acts()
 monster* shadow_monster(bool equip)
 {
     if (monster_at(you.pos()))
-        return NULL;
+        return nullptr;
 
     int wpn_index  = NON_ITEM;
 
@@ -3641,7 +3641,7 @@ monster* shadow_monster(bool equip)
     {
         wpn_index = get_mitm_slot(10);
         if (wpn_index == NON_ITEM)
-            return NULL;
+            return nullptr;
         item_def& new_item = mitm[wpn_index];
         if (wpn->base_type == OBJ_STAVES)
         {
@@ -3668,7 +3668,7 @@ monster* shadow_monster(bool equip)
     {
         if (wpn_index)
             destroy_item(wpn_index);
-        return NULL;
+        return nullptr;
     }
 
     mon->type       = MONS_PLAYER_SHADOW;
@@ -4369,7 +4369,7 @@ static void _gozag_place_shop_here(int index)
  */
 static void _gozag_place_shop(int index)
 {
-    vector<level_id> candidates = _get_gozag_shop_candidates(NULL);
+    vector<level_id> candidates = _get_gozag_shop_candidates(nullptr);
 
     if (candidates.size())
         _gozag_place_shop_offlevel(index, candidates);
@@ -4736,7 +4736,7 @@ spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
         dist spd;
         targetter_smite tgt(&you, LOS_RADIUS, 0, max_radius);
         if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE,
-                             LOS_RADIUS, false, true, false, NULL,
+                             LOS_RADIUS, false, true, false, nullptr,
                              "Aiming: <white>Upheaval</white>", true,
                              &tgt))
         {
@@ -5548,7 +5548,7 @@ static void _extra_sacrifice_code(ability_type sac)
         bool open_ring_slot = false;
 
         // Drop your shield if there is one
-        if (shield != NULL)
+        if (shield != nullptr)
         {
             mprf("You can no longer hold %s!",
                 shield->name(DESC_YOUR).c_str());
@@ -5556,7 +5556,7 @@ static void _extra_sacrifice_code(ability_type sac)
         }
 
         // And your two-handed weapon
-        if (weapon != NULL)
+        if (weapon != nullptr)
         {
             if (you.hands_reqd(*weapon) == HANDS_TWO)
             {
@@ -5567,7 +5567,7 @@ static void _extra_sacrifice_code(ability_type sac)
         }
 
         // And one ring
-        if (ring != NULL)
+        if (ring != nullptr)
         {
             if (you.species == SP_OCTOPODE)
             {
@@ -5890,7 +5890,7 @@ bool ru_power_leap()
     {
         targetter_smite tgt(&you, range, explosion_size, explosion_size);
         if (!spell_direction(beam, fake_beam, DIR_LEAP, TARG_ANY,
-                             range, false, false, false, NULL,
+                             range, false, false, false, nullptr,
                              "Aiming: <white>Power Leap</white>", true,
                              &tgt)
             && crawl_state.seen_hups)
@@ -5997,7 +5997,7 @@ bool ru_power_leap()
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
     {
         monster* mon = monster_at(*ai);
-        if (mon == NULL || mons_is_projectile(mon->type) || mon->friendly())
+        if (mon == nullptr || mons_is_projectile(mon->type) || mon->friendly())
             continue;
         ASSERT(mon);
 
@@ -6013,7 +6013,7 @@ bool ru_power_leap()
 static int _apocalypseable(coord_def where, int pow, int, actor* agent)
 {
     monster* mon = monster_at(where);
-    if (mon == NULL || mons_is_projectile(mon->type) || mon->friendly())
+    if (mon == nullptr || mons_is_projectile(mon->type) || mon->friendly())
         return 0;
     return 1;
 }

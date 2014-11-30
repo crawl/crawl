@@ -36,7 +36,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 void fire_thing(int item = -1);
 void throw_item_no_quiver();
 
-bool throw_it(bolt &pbolt, int throw_2, dist *target = NULL);
+bool throw_it(bolt &pbolt, int throw_2, dist *target = nullptr);
 
 bool thrown_object_destroyed(item_def *item, const coord_def& where);
 

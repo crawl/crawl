@@ -217,7 +217,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Look for conditions like berserking that could prevent wielding
     // weapons.
-    if (!can_wield(NULL, true, false, slot == SLOT_BARE_HANDS))
+    if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
         return false;
 
     int item_slot = 0;          // default is 'a'
@@ -250,7 +250,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
-                            true, true, true, '-', -1, NULL, OPER_WIELD);
+                            true, true, true, '-', -1, nullptr, OPER_WIELD);
         }
         else
             item_slot = SLOT_BARE_HANDS;
@@ -374,7 +374,7 @@ bool item_is_worn(int inv_slot)
 //---------------------------------------------------------------
 bool armour_prompt(const string & mesg, int *index, operation_types oper)
 {
-    ASSERT(index != NULL);
+    ASSERT(index != nullptr);
 
     if (inv_count() < 1)
         canned_msg(MSG_NOTHING_CARRIED);
@@ -386,7 +386,7 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
         int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector,
-                                      true, true, true, 0, -1, NULL,
+                                      true, true, true, 0, -1, nullptr,
                                       oper);
 
         if (!prompt_failed(slot))
@@ -1148,15 +1148,15 @@ static bool _swap_rings(int ring_slot)
     int melded = 0; // Both melded rings and unavailable slots.
     int available = 0;
     bool all_same = true;
-    item_def* first_ring = NULL;
+    item_def* first_ring = nullptr;
     for (auto eq : ring_types)
     {
         item_def* ring = you.slot_item(eq, true);
         if (!you_tran_can_wear(eq) || you.melded[eq])
             melded++;
-        else if (ring != NULL)
+        else if (ring != nullptr)
         {
-            if (first_ring == NULL)
+            if (first_ring == nullptr)
                 first_ring = ring;
             else if (all_same)
             {
@@ -1448,7 +1448,7 @@ bool puton_ring(int slot, bool allow_prompt)
     {
         item_slot = prompt_invent_item("Put on which piece of jewellery?",
                                         MT_INVLIST, OBJ_JEWELLERY, true, true,
-                                        true, 0, -1, NULL, OPER_PUTON);
+                                        true, 0, -1, nullptr, OPER_PUTON);
     }
 
     if (prompt_failed(item_slot))
@@ -1508,7 +1508,7 @@ bool remove_ring(int slot, bool announce)
             (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
                                              MT_INVLIST,
                                              OBJ_JEWELLERY, true, true, true,
-                                             0, -1, NULL, OPER_REMOVE,
+                                             0, -1, nullptr, OPER_REMOVE,
                                              false, false)
                         : slot;
 
@@ -1710,7 +1710,7 @@ void zap_wand(int slot)
         item_slot = prompt_invent_item("Zap which item?",
                                        MT_INVLIST,
                                        OBJ_WANDS,
-                                       true, true, true, 0, -1, NULL,
+                                       true, true, true, 0, -1, nullptr,
                                        OPER_ZAP);
     }
 
@@ -1812,7 +1812,7 @@ void zap_wand(int slot)
         }
         else if (wand.sub_type == WAND_HASTING
                  && stasis_blocks_effect(false, "%s prevents hasting.",
-                                         0, NULL, "You cannot haste."))
+                                         0, nullptr, "You cannot haste."))
         {
             return;
         }
@@ -2040,7 +2040,7 @@ void drink(int slot)
     {
         slot = prompt_invent_item("Drink which item?",
                                   MT_INVLIST, OBJ_POTIONS,
-                                  true, true, true, 0, -1, NULL,
+                                  true, true, true, 0, -1, nullptr,
                                   OPER_QUAFF);
         if (prompt_failed(slot))
         {
@@ -2306,7 +2306,7 @@ static object_selector _enchant_selector(scroll_type scroll)
     die("Invalid scroll type %d for _enchant_selector", (int)scroll);
 }
 
-// Returns NULL if no weapon was chosen.
+// Returns nullptr if no weapon was chosen.
 static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                                        scroll_type scroll)
 {
@@ -2323,7 +2323,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
 
         // The scroll is used up if we didn't know what it was originally.
         if (item_slot == PROMPT_NOTHING)
-            return NULL;
+            return nullptr;
 
         if (item_slot == PROMPT_ABORT)
         {
@@ -2332,7 +2332,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                 || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
-                return NULL;
+                return nullptr;
             }
             else
                 continue;
@@ -2417,7 +2417,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
             item_slot = prompt_invent_item(
                 "Identify which item? (\\ to view known items)",
                 MT_INVLIST, OSEL_UNIDENT, true, true, false, 0,
-                -1, NULL, OPER_ANY, true);
+                -1, nullptr, OPER_ANY, true);
         }
 
         if (item_slot == PROMPT_NOTHING)
@@ -2721,7 +2721,7 @@ void read_scroll(int slot)
                                                        MT_INVLIST,
                                                        OBJ_SCROLLS,
                                                        true, true, true, 0, -1,
-                                                       NULL, OPER_READ);
+                                                       nullptr, OPER_READ);
 
     if (prompt_failed(item_slot))
         return;

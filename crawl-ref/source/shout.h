@@ -5,7 +5,7 @@
 
 bool noisy(int loudness, const coord_def& where, mid_t who,
            noise_flag_type flags = NF_NONE);
-bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
+bool noisy(int loudness, const coord_def& where, const char *msg = nullptr,
            mid_t who = MID_NOBODY, noise_flag_type flags = NF_NONE,
            bool fake_noise = false);
 bool fake_noisy(int loudness, const coord_def& where);

@@ -178,5 +178,5 @@ const struct luaL_reg dgn_tile_dlib[] =
 { "tile_feat_changed", dgn_tile_feat_changed },
 { "tile_floor_changed", dgn_tile_floor_changed },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

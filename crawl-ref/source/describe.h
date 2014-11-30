@@ -70,7 +70,7 @@ void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);
 
 void get_spell_desc(const spell_type spell, describe_info &inf);
-void describe_spell(spell_type spelled, const item_def* item = NULL);
+void describe_spell(spell_type spelled, const item_def* item = nullptr);
 
 string short_ghost_description(const monster *mon, bool abbrev = false);
 string get_ghost_description(const monster_info &mi, bool concise = false);

@@ -1189,7 +1189,7 @@ monster* get_free_monster()
             return &env.mons[i];
         }
 
-    return NULL;
+    return nullptr;
 }
 
 void mons_add_blame(monster* mon, const string &blame_string)
@@ -1711,7 +1711,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         blame_prefix = "summoned by ";
 
-        if (mg.summoner != NULL && mg.summoner->alive()
+        if (mg.summoner != nullptr && mg.summoner->alive()
             && mg.summoner->type == MONS_MARA)
         {
             blame_prefix = "woven by ";
@@ -1744,7 +1744,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // by the Fire Storm spell); a deceased summoner's mindex might also
     // be reused to create its summon, so make sure the summon doesn't
     // think it has summoned itself.
-    else if (mg.summoner != NULL && mg.summoner->alive()
+    else if (mg.summoner != nullptr && mg.summoner->alive()
              && mg.summoner != mon)
     {
         ASSERT(mg.summoner->alive());
@@ -1977,7 +1977,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
 
     const bool need_veto = really_in_d && !for_corpse;
-    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : NULL;
+    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : nullptr;
 
     // try to grab a proper zombifiable monster
     monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
@@ -3602,7 +3602,7 @@ static monster_type _band_member(band_type band, int which)
         level_id place = level_id::current();
         return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
                                     PROX_ANYWHERE, &tmppos, 0, &tmpfeat,
-                                    &place, NULL);
+                                    &place, nullptr);
     }
 
     default:

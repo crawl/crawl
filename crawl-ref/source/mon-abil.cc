@@ -682,7 +682,7 @@ static monster *_slime_split(monster* thing, bool force_split)
     const coord_def origin  = thing->pos();
 
     const actor* foe        = thing->get_foe();
-    const bool has_foe      = (foe != NULL && thing->can_see(foe));
+    const bool has_foe      = (foe != nullptr && thing->can_see(foe));
     const coord_def foe_pos = (has_foe ? foe->position : coord_def(0,0));
     const int old_dist      = (has_foe ? grid_distance(origin, foe_pos) : 0);
 

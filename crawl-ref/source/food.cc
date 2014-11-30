@@ -160,7 +160,7 @@ bool prompt_eat_inventory_item(int slot)
         which_inventory_slot = prompt_invent_item("Eat which item?",
                                                   MT_INVLIST, OBJ_FOOD,
                                                   true, true, true, 0, -1,
-                                                  NULL, OPER_EAT);
+                                                  nullptr, OPER_EAT);
 
         if (prompt_failed(which_inventory_slot))
             return false;
@@ -621,7 +621,7 @@ bool eat_from_inventory()
         return 0;
 
     int inedible_food = 0;
-    item_def *wonteat = NULL;
+    item_def *wonteat = nullptr;
     bool found_valid = false;
 
     vector<item_def *> food_items;

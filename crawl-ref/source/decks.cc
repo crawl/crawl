@@ -768,7 +768,7 @@ static int _choose_inventory_deck(const char* prompt)
 {
     const int slot = prompt_invent_item(prompt,
                                         MT_INVLIST, OSEL_DRAW_DECK,
-                                        true, true, true, 0, -1, NULL,
+                                        true, true, true, 0, -1, nullptr,
                                         OPER_EVOKE);
 
     if (prompt_failed(slot))
@@ -1861,7 +1861,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     }
 
     if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
-                        LOS_RADIUS, true, true, false, NULL, prompt.c_str())
+                        LOS_RADIUS, true, true, false, nullptr, prompt.c_str())
         && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam))
     {
         if (you.confused())
@@ -2405,7 +2405,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     if (mon)
     {
         // Override the weapon.
-        ASSERT(mon->weapon() != NULL);
+        ASSERT(mon->weapon() != nullptr);
         item_def& wpn(*mon->weapon());
 
         if (power_level == 0)

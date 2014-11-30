@@ -516,7 +516,7 @@ void dgn_build_labyrinth_level()
 
     if (!vault || !dgn_safe_place_map(vault, true, false))
     {
-        vault = NULL;
+        vault = nullptr;
         _labyrinth_place_exit(end);
     }
     else

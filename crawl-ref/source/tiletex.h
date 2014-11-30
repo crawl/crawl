@@ -24,7 +24,7 @@ public:
     virtual ~GenericTexture();
 
     bool load_texture(const char *filename, MipMapOptions mip_opt,
-                      tex_proc_func proc = NULL,
+                      tex_proc_func proc = nullptr,
                       bool force_power_of_two = true);
     bool load_texture(unsigned char *pixels, unsigned int w, unsigned int h,
                       MipMapOptions mip_opt, int offsetx=-1, int offsety=-1);

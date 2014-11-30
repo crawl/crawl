@@ -3753,7 +3753,7 @@ void god_pitch(god_type which_god)
 
     cgotoxy(1, 18, GOTO_CRT);
     textcolour(channel_to_colour(MSGCH_PROMPT));
-    if (!yesno(info, false, 'n', true, true, false, NULL, GOTO_CRT))
+    if (!yesno(info, false, 'n', true, true, false, nullptr, GOTO_CRT))
     {
         you.turn_is_over = false; // Okay, opt out.
         redraw_screen();

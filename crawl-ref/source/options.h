@@ -90,7 +90,7 @@ public:
     bool was_included(const string &file) const;
 
     static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = NULL) throw (string);
+                            const vector<string> *rcdirs = nullptr) throw (string);
 
 #ifdef USE_TILE_WEB
     void write_webtiles_options(const string &name);
@@ -481,7 +481,7 @@ public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;
     bool        o_bool(const char *name, bool def = false) const;
-    string      o_str(const char *name, const char *def = NULL) const;
+    string      o_str(const char *name, const char *def = nullptr) const;
     int         o_colour(const char *name, int def = LIGHTGREY) const;
 
     // Fix option values if necessary, specifically file paths.

@@ -35,7 +35,7 @@ void seed_rng()
     seed_key[0] += times(&buf);
 #endif
     seed_key[1] += getpid();
-    seed_key[2] += time(NULL);
+    seed_key[2] += time(nullptr);
 
     seed_asg(seed_key, 5);
 }

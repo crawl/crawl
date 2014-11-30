@@ -170,7 +170,7 @@ static spret_type _healing_spell(int healed, int max_healed,
                                       you_worship(GOD_ELYVILON) ?
                                             TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS, false, true, true, "Heal",
-                                      NULL, false, NULL, _desc_mindless);
+                                      nullptr, false, nullptr, _desc_mindless);
     }
     else
     {
@@ -859,7 +859,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (igrd(*ai) != NON_ITEM)
             {
                 coord_def newpos;
-                get_push_space(*ai, newpos, NULL, true);
+                get_push_space(*ai, newpos, nullptr, true);
                 move_items(*ai, newpos);
             }
 
@@ -970,7 +970,7 @@ bool cast_imprison(int pow, monster* mons, int source)
 
 bool cast_smiting(int pow, monster* mons)
 {
-    if (mons == NULL || mons->submerged())
+    if (mons == nullptr || mons->submerged())
     {
         canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to invisible/submerged monsters.

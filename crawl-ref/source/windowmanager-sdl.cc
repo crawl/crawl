@@ -33,7 +33,7 @@
 #include "version.h"
 #include "windowmanager.h"
 
-WindowManager *wm = NULL;
+WindowManager *wm = nullptr;
 
 #define MIN_SDL_WINDOW_SIZE_X 800
 #define MIN_SDL_WINDOW_SIZE_Y 480
@@ -53,7 +53,7 @@ void WindowManager::create()
 void WindowManager::shutdown()
 {
     delete wm;
-    wm = NULL;
+    wm = nullptr;
 #if defined(USE_SOUND) && !defined(WINMM_PLAY_SOUNDS)
     Mix_CloseAudio();
     while (Mix_Init(0))
@@ -305,7 +305,7 @@ static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
 }
 
 SDLWrapper::SDLWrapper():
-    m_window(NULL), m_context(NULL)
+    m_window(nullptr), m_context(nullptr)
 {
 }
 
@@ -710,7 +710,7 @@ int SDLWrapper::wait_event(wm_event *event)
 unsigned int SDLWrapper::set_timer(unsigned int interval,
                                    wm_timer_callback callback)
 {
-    return SDL_AddTimer(interval, callback, NULL);
+    return SDL_AddTimer(interval, callback, nullptr);
 }
 
 void SDLWrapper::remove_timer(unsigned int timer_id)
@@ -984,7 +984,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
 
 SDL_Surface *SDLWrapper::load_image(const char *file) const
 {
-    SDL_Surface *surf = NULL;
+    SDL_Surface *surf = nullptr;
     FILE *imgfile = fopen_u(file, "rb");
     if (imgfile)
     {
@@ -998,7 +998,7 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
     }
 
     if (!surf)
-        return NULL;
+        return nullptr;
 
     return surf;
 }

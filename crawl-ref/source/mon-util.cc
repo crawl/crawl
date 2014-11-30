@@ -360,11 +360,11 @@ int get_mons_resist(const monster* mon, mon_resist_flags res)
 monster* monster_at(const coord_def &pos)
 {
     if (!in_bounds(pos))
-        return NULL;
+        return nullptr;
 
     const int mindex = mgrd(pos);
     if (mindex == NON_MONSTER)
-        return NULL;
+        return nullptr;
 
     ASSERT(mindex <= MAX_MONSTERS);
     return &menv[mindex];
@@ -921,7 +921,7 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
 {
     const bool can_place_smoke = env.cgrid(pos) == EMPTY_CLOUD;
     if (can_place_smoke)
-        place_cloud(CLOUD_BLACK_SMOKE, pos, 2 + random2(2), NULL);
+        place_cloud(CLOUD_BLACK_SMOKE, pos, 2 + random2(2), nullptr);
     if (!you.see_cell(pos))
         return;
 
@@ -1803,7 +1803,7 @@ flight_type mons_flies(const monster* mon, bool temp)
 {
     flight_type ret;
     // For dancing weapons, this function can get called before their
-    // ghost_demon is created, so check for a NULL ghost. -cao
+    // ghost_demon is created, so check for a nullptr ghost. -cao
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
         ret = mon->ghost->fly;
     else
@@ -2719,7 +2719,7 @@ string mons_type_name(monster_type mc, description_level_type desc)
     }
 
     const monsterentry *me = get_monster_data(mc);
-    if (me == NULL)
+    if (me == nullptr)
     {
         result += make_stringf("invalid monster_type %d", mc);
         return result;
@@ -2787,7 +2787,7 @@ monsterentry *get_monster_data(monster_type mc)
     if (mc >= 0 && mc < NUM_MONSTERS)
         return &mondata[mon_entry[mc]];
     else
-        return NULL;
+        return nullptr;
 }
 
 static int _mons_exp_mod(monster_type mc)
@@ -3941,7 +3941,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     string foe_species;
 
-    if (foe == NULL)
+    if (foe == nullptr)
         ;
     else if (foe->is_player())
     {
@@ -4138,7 +4138,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     msg = replace_all(msg, "@feet@", part_str);
     msg = replace_all(msg, "@Feet@", uppercase_first(part_str));
 
-    if (foe != NULL)
+    if (foe != nullptr)
     {
         const god_type god = foe->deity();
 
@@ -4359,7 +4359,7 @@ int get_dist_to_nearest_monster()
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
         const monster* mon = monster_at(*ri);
-        if (mon == NULL)
+        if (mon == nullptr)
             continue;
 
         if (!mon->visible_to(&you))
@@ -4703,7 +4703,7 @@ monster* choose_random_nearby_monster(int weight,
                                       bool (*suitable)(const monster* mon),
                                       bool prefer_named_or_priest)
 {
-    monster* chosen = NULL;
+    monster* chosen = nullptr;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
@@ -4735,7 +4735,7 @@ monster* choose_random_nearby_monster(int weight,
 monster* choose_random_monster_on_level(int weight,
                                         bool (*suitable)(const monster* mon))
 {
-    monster* chosen = NULL;
+    monster* chosen = nullptr;
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {

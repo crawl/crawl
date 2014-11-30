@@ -56,7 +56,7 @@ void TabbedRegion::reset_icons(int from_idx)
 
 int TabbedRegion::push_tab_button(command_type cmd, tileidx_t tile_tab)
 {
-    return _push_tab(NULL, cmd, tile_tab);
+    return _push_tab(nullptr, cmd, tile_tab);
 }
 int TabbedRegion::push_tab_region(GridRegion *reg, tileidx_t tile_tab)
 {
@@ -71,7 +71,7 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     ASSERT(tile_tab);
 
     TabInfo inf;
-    inf.reg = NULL;
+    inf.reg = nullptr;
     inf.cmd = CMD_NO_CMD;
     inf.tile_tab = 0;
     inf.ofs_y = 0;
@@ -108,7 +108,7 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
 GridRegion *TabbedRegion::get_tab_region(int idx)
 {
     if (invalid_index(idx))
-        return NULL;
+        return nullptr;
 
     return m_tabs[idx].reg;
 }
@@ -417,7 +417,7 @@ int TabbedRegion::find_tab(string tab_name) const
     string pluralised_name = pluralise(tab_name);
     for (int i = 0, size = m_tabs.size(); i < size; ++i)
     {
-        if (m_tabs[i].reg == NULL) continue;
+        if (m_tabs[i].reg == nullptr) continue;
 
         string reg_name = lowercase_string(m_tabs[i].reg->name());
         if (tab_name == reg_name || pluralised_name == reg_name)

@@ -71,7 +71,7 @@ enum tide_direction
 };
 
 static tide_direction _shoals_tide_direction;
-static monster* tide_caller = NULL;
+static monster* tide_caller = nullptr;
 static coord_def tide_caller_pos;
 static int tide_called_turns = 0;
 static int tide_called_peak = 0;
@@ -510,7 +510,7 @@ static void _shoals_plant_cluster(coord_def c, int nplants, int radius,
 
 static void _shoals_plant_supercluster(coord_def c,
                                        dungeon_feature_type favoured_feat,
-                                       grid_bool *verboten = NULL)
+                                       grid_bool *verboten = nullptr)
 {
     _shoals_plant_cluster(c, random_range(10, 17, 2),
                           random_range(3, 9), favoured_feat,
@@ -918,7 +918,7 @@ static void _shoals_tide_sweep_items_clear(coord_def c)
         if (item_is_stationary(item) && !one_chance_in(5))
             continue;
 
-        const coord_def target(_shoals_escape_place_from(c, NULL, &item));
+        const coord_def target(_shoals_escape_place_from(c, nullptr, &item));
         if (!target.origin())
         {
             if (item_is_stationary_net(item))
@@ -961,7 +961,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
         if (monster_habitable_grid(mvictim, DNGN_DEEP_WATER))
             return true;
     }
-    coord_def evacuation_point(_shoals_escape_place_from(c, victim, NULL));
+    coord_def evacuation_point(_shoals_escape_place_from(c, victim, nullptr));
     // The tide no longer drowns monster/player if it cannot push them
     // out of the way.
     if (evacuation_point.origin())
@@ -1187,7 +1187,7 @@ static monster* _shoals_find_tide_caller()
     for (monster_iterator mi; mi; ++mi)
         if (mi->has_ench(ENCH_TIDE))
             return *mi;
-    return NULL;
+    return nullptr;
 }
 
 void shoals_apply_tides(int turns_elapsed, bool force, bool incremental_tide)
@@ -1305,7 +1305,7 @@ void wizard_mod_tide()
              TIDE_MULTIPLIER);
         mpr("");
         const int res =
-            cancellable_get_line(buf, sizeof buf, NULL, _tidemod_keyfilter);
+            cancellable_get_line(buf, sizeof buf, nullptr, _tidemod_keyfilter);
         clear_messages(true);
         if (key_is_escape(res))
             break;

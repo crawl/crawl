@@ -64,7 +64,7 @@ const struct luaL_reg los_dlib[] =
     { "findray", los_find_ray },
     { "make_ray", los_make_ray },
     { "cell_see_cell", los_cell_see_cell },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 #define RAY(ls, n, var) \
@@ -108,7 +108,7 @@ static const struct luaL_reg ray_dlib[] =
     { "dir", ray_dir },
     { "advance", ray_advance },
     { "pos", ray_pos },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void luaopen_ray(lua_State *ls)

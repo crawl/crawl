@@ -797,7 +797,7 @@ void webtiles_send_last_messages(int n)
 }
 #endif
 
-static FILE* _msg_dump_file = NULL;
+static FILE* _msg_dump_file = nullptr;
 
 static bool suppress_messages = false;
 static msg_colour_type prepare_message(const string& imsg,
@@ -1187,9 +1187,10 @@ void msgwin_clear_temporary()
 
 static int _last_msg_turn = -1; // Turn of last message.
 
-static void _mpr(string text, msg_channel_type channel, int param, bool nojoin, bool cap)
+static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
+                 bool cap)
 {
-    if (_msg_dump_file != NULL)
+    if (_msg_dump_file != nullptr)
         fprintf(_msg_dump_file, "%s\n", text.c_str());
 
     if (crawl_state.game_crashed)
@@ -1302,7 +1303,7 @@ int msgwin_get_line(string prompt, char *buf, int len,
     if (prompt != "")
         msgwin_prompt(prompt);
 
-    int ret = cancellable_get_line(buf, len, mh, NULL, fill);
+    int ret = cancellable_get_line(buf, len, mh, nullptr, fill);
     msgwin_reply(buf);
     return ret;
 }

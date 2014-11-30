@@ -160,7 +160,7 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 // Find an allied monster to cast a beneficial beam spell at.
 static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
 {
-    monster* selected_target = NULL;
+    monster* selected_target = nullptr;
     int min_distance = INT_MAX;
 
     const monster_type caster_genus = mons_genus(caster->type);
@@ -219,7 +219,7 @@ static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
 // Note that this deliberately does not target the player.
 static bool _set_hex_target(monster* caster, bolt& pbolt)
 {
-    monster* selected_target = NULL;
+    monster* selected_target = nullptr;
     int min_distance = INT_MAX;
 
     if (!caster->get_foe())
@@ -275,7 +275,7 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
 // Find a target near our foe to hex.
 static bool _set_nearby_target(monster* caster, bolt& pbolt)
 {
-    monster* selected_target = NULL;
+    monster* selected_target = nullptr;
     int min_distance = INT_MAX;
 
     if (!caster->get_foe())
@@ -2559,7 +2559,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
         {
             vine->props["vine_awakener"].get_int() = mon->mid;
             mon->props["vines_awakened"].get_int()++;
-            mon->add_ench(mon_enchant(ENCH_AWAKEN_VINES, 1, NULL, 200));
+            mon->add_ench(mon_enchant(ENCH_AWAKEN_VINES, 1, nullptr, 200));
             --num_vines;
             if (you.can_see(vine))
                 seen = true;
@@ -2765,7 +2765,7 @@ static bool _wall_of_brambles(monster* mons)
         monster* briar = create_monster(briar_mg, false);
         if (briar)
         {
-            briar->add_ench(mon_enchant(ENCH_SHORT_LIVED, 1, NULL, 80 + random2(100)));
+            briar->add_ench(mon_enchant(ENCH_SHORT_LIVED, 1, nullptr, 80 + random2(100)));
             if (you.can_see(briar))
                 seen = true;
         }
@@ -2815,7 +2815,7 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
 
     // Abort if we failed to place the monster for some reason.
     if (!mirror)
-        return NULL;
+        return nullptr;
 
     // Don't leak the real one with the targeting interface.
     if (you.prev_targ == mons->mindex())
@@ -3416,7 +3416,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 monster* new_target = monster_at(*ri);
 
-                if (new_target == NULL
+                if (new_target == nullptr
                     || mons_is_projectile(new_target->type)
                     || mons_is_firewood(new_target))
                 {
@@ -3619,7 +3619,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
                 if (_ms_direct_nasty(spell_cast)
                     && mons_aligned(mons, (mons->foe == MHITYOU) ?
-                       &you : foe)) // foe=get_foe() is NULL for friendlies
+                       &you : foe)) // foe=get_foe() is nullptr for friendlies
                 {                   // targeting you, which is bad here.
                     spellOK = false;
                 }
@@ -3911,8 +3911,9 @@ static monster_type _pick_vermin()
 static void _do_high_level_summon(monster* mons, bool monsterNearby,
                                   spell_type spell_cast,
                                   monster_type (*mpicker)(), int nsummons,
-                                  god_type god, coord_def *target = NULL,
-                                  void (*post_hook)(monster*, coord_def) = NULL,
+                                  god_type god, coord_def *target = nullptr,
+                                  void (*post_hook)(monster*, coord_def) =
+                                        [](monster*, coord_def){},
                                   bool allow_abjure = true)
 {
     if (allow_abjure && _mons_abjured(mons, monsterNearby))
@@ -3931,7 +3932,7 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
             mgen_data(which_mons, SAME_ATTITUDE(mons), mons,
                       duration, spell_cast, target ? *target : mons->pos(),
                       mons->foe, 0, god));
-        if (summon && post_hook)
+        if (summon)
             post_hook(summon, target ? *target : mons->pos());
     }
 }
@@ -4483,7 +4484,7 @@ static coord_def _mons_fragment_target(monster *mons)
         bool temp;
         bolt beam;
         if (!setup_fragmentation_beam(beam, pow, mons, mons->target, false,
-                                      true, true, NULL, temp, temp))
+                                      true, true, nullptr, temp, temp))
         {
             return target;
         }
@@ -4501,7 +4502,7 @@ static coord_def _mons_fragment_target(monster *mons)
 
         bolt beam;
         if (!setup_fragmentation_beam(beam, pow, mons, *di, false, true, true,
-                                      NULL, temp, temp))
+                                      nullptr, temp, temp))
         {
             continue;
         }
@@ -4513,7 +4514,7 @@ static coord_def _mons_fragment_target(monster *mons)
 
         bolt beam2;
         if (!setup_fragmentation_beam(beam2, pow, mons, *di, false, false, true,
-                                      NULL, temp, temp))
+                                      nullptr, temp, temp))
         {
             continue;
         }
@@ -5312,7 +5313,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_SWARM:
         _do_high_level_summon(mons, monsterNearby, spell_cast,
                               _pick_swarmer, random_range(3, 6), god,
-                              NULL, NULL, false);
+                              nullptr, nullptr, false);
         return;
 
     case SPELL_SUMMON_UFETUBUS:
@@ -6120,7 +6121,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     {
         // Swap weapons if necessary so that that happens before the spell
         // casting message.
-        item_def *launcher = NULL;
+        item_def *launcher = nullptr;
         mons_usable_missile(mons, &launcher);
         const item_def *weapon = mons->mslot_item(MSLOT_WEAPON);
         if (launcher && launcher != weapon)
@@ -6803,7 +6804,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     // show up in the beam's path?)
     if (target == "nothing"
         && (tracer.foe_info.count + tracer.friend_info.count) == 0
-        && foe != NULL
+        && foe != nullptr
         && you.can_see(foe)
         && !mons->confused()
         && visible_path)
@@ -6918,9 +6919,9 @@ static actor* _find_goblin_to_toss(const monster &mons)
     dprf("considering goblin tossing");
     const actor *foe = mons.get_foe();
     if (!foe)
-        return NULL;
+        return nullptr;
 
-    actor *tossee = NULL;
+    actor *tossee = nullptr;
     int furthest_dist = -1;
 
     for (adjacent_iterator ai(mons.pos(), true); ai; ++ai)
@@ -7657,7 +7658,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         // the actual value and then randomising it.
         int est_magic_resist = 10000;
 
-        if (foe != NULL)
+        if (foe != nullptr)
         {
             est_magic_resist = foe->res_magic();
 

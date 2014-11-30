@@ -65,7 +65,7 @@ static const char* _fight_string(fight_data fdata, bool csv)
 static skill_type _equipped_skill()
 {
     const int weapon = you.equip[EQ_WEAPON];
-    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : NULL;
+    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
 
     if (iweap && iweap->base_type == OBJ_WEAPONS)
         return item_attack_skill(*iweap);
@@ -76,7 +76,7 @@ static skill_type _equipped_skill()
 static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
-    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : NULL;
+    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
     const int missile = you.m_quiver->get_fire_item();
 
     if (iweap)
@@ -96,7 +96,7 @@ static string _equipped_weapon_name()
 
 static string _time_string()
 {
-    time_t curr_time = time(NULL);
+    time_t curr_time = time(nullptr);
     struct tm *ltime = TIME_FN(&curr_time);
     if (ltime)
     {
@@ -239,7 +239,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 // fight simulator internals
 static monster* _init_fsim()
 {
-    monster * mon = NULL;
+    monster * mon = nullptr;
     monster_type mtype = get_monster_by_name(Options.fsim_mons, true);
 
     if (mtype == MONS_PROGRAM_BUG && monster_nearby())
@@ -267,7 +267,7 @@ static monster* _init_fsim()
             if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
             {
                 canned_msg(MSG_OK);
-                return NULL;
+                return nullptr;
             }
             mtype = get_monster_by_name(specs, true);
 
@@ -285,7 +285,7 @@ static monster* _init_fsim()
         if (!mon)
         {
             mpr("Failed to create monster.");
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -333,7 +333,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     fdata.max_dam = 0;
 
     const int weapon = you.equip[EQ_WEAPON];
-    const item_def *iweap = weapon != -1 ? &you.inv[weapon] : NULL;
+    const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
     const int missile = you.m_quiver->get_fire_item();
 
     // now make sure the player is ready
@@ -669,7 +669,7 @@ void wizard_fight_sim(bool double_scale)
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
 
-    void (*fsim_proc)(FILE * o, monster* mon, bool defense) = NULL;
+    void (*fsim_proc)(FILE * o, monster* mon, bool defense) = nullptr;
     fsim_proc = double_scale ? _fsim_double_scale : _fsim_simple_scale;
 
     if (Options.fsim_kit.empty())

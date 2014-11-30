@@ -697,7 +697,7 @@ static int _collect_connection_data(monster* start_monster,
         }
 
         bool basis = current_mon->props.exists("inwards");
-        monster* next = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : NULL;
+        monster* next = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : nullptr;
 
         if (next && next->is_child_tentacle_of(start_monster))
         {
@@ -712,7 +712,7 @@ static int _collect_connection_data(monster* start_monster,
         }
         else
         {
-            current_mon = NULL;
+            current_mon = nullptr;
 //            mprf("null at count %d", current_count);
         }
         current_count++;
@@ -792,7 +792,7 @@ void move_solo_tentacle(monster* tentacle)
     bool pull_constrictee = false;
     bool shift_constrictee = false;
     coord_def shift_pos;
-    actor* constrictee = NULL;
+    actor* constrictee = nullptr;
     if (tentacle->is_constricting())
     {
         constrictee = actor_by_mid(tentacle->constricting->begin()->first);
@@ -1001,7 +1001,7 @@ void move_child_tentacles(monster* mons)
             }
 
             bool basis = current_mon->props.exists("inwards");
-            monster* inward = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : NULL;
+            monster* inward = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : nullptr;
 
             if (inward
                 && (inward->is_child_tentacle_of(tentacle)
@@ -1016,7 +1016,7 @@ void move_child_tentacles(monster* mons)
                 }
             }
             else
-                current_mon = NULL;
+                current_mon = nullptr;
             current_count++;
         }
 
@@ -1045,7 +1045,7 @@ void move_child_tentacles(monster* mons)
         //If this tentacle is constricting a creature, attempt to pull it back
         //towards the head.
         bool pull_constrictee = false;
-        actor* constrictee = NULL;
+        actor* constrictee = nullptr;
         if (tentacle->is_constricting() && retract_found)
         {
             constrictee = actor_by_mid(tentacle->constricting->begin()->first);
@@ -1140,7 +1140,7 @@ static monster* _mons_get_parent_monster(monster* mons)
             return *mi;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // When given either a tentacle end or segment, kills the end and all segments
@@ -1154,7 +1154,7 @@ int destroy_tentacle(monster* mons)
 
     //If we tried to find the head, but failed (probably because it is already
     //dead), cancel trying to kill this tentacle
-    if (head == NULL)
+    if (head == nullptr)
         return 0;
 
     // Some issue with using monster_die leading to DEAD_MONSTER

@@ -1715,7 +1715,7 @@ void melee_attack::set_attack_verb()
     case -1: // unarmed
     {
         const FormAttackVerbs verbs = get_form(you.form)->uc_attack_verbs;
-        if (verbs.weak != NULL)
+        if (verbs.weak != nullptr)
         {
             if (damage_to_display < HIT_WEAK)
                 attack_verb = verbs.weak;
@@ -2098,7 +2098,7 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
  */
 void melee_attack::decapitate(int dam_type)
 {
-    const char *verb = NULL;
+    const char *verb = nullptr;
 
     if (dam_type == DVORP_CLAWING)
     {
@@ -3677,7 +3677,7 @@ int melee_attack::cleave_damage_mod(int dam)
 void melee_attack::chaos_affect_actor(actor *victim)
 {
     melee_attack attk(victim, victim);
-    attk.weapon = NULL;
+    attk.weapon = nullptr;
     attk.fake_chaos_attack = true;
     attk.chaos_affects_defender();
     attk.do_miscast();

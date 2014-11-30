@@ -64,7 +64,7 @@ public:
 
 private:
     actor* target;
-    // May be NULL.
+    // May be nullptr.
     actor* act_source;
     // Either a miscast_source, or GOD_MISCAST + god_type enum.
     int    special_source;

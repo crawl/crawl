@@ -43,8 +43,8 @@ public:
     virtual bool      alive() const = 0;
 
     // Should return false for perma-summoned things.
-    virtual bool is_summoned(int* duration = NULL,
-                             int* summon_type = NULL) const = 0;
+    virtual bool is_summoned(int* duration = nullptr,
+                             int* summon_type = nullptr) const = 0;
 
     virtual bool is_perm_summoned() const = 0;
 
@@ -102,7 +102,7 @@ public:
         return weapon(0);
     }
     virtual random_var attack_delay(const item_def *weapon,
-                                    const item_def *projectile = NULL,
+                                    const item_def *projectile = nullptr,
                                     bool random = true, bool scaled = true,
                                     bool shield = true)
                                    const = 0;
@@ -116,7 +116,7 @@ public:
                             bool calc_unid = true) const = 0;
     virtual int scan_artefacts(artefact_prop_type which_property,
                                bool calc_unid = true,
-                               vector<item_def> *matches = NULL) const = 0;
+                               vector<item_def> *matches = nullptr) const = 0;
 
     virtual hands_reqd_type hands_reqd(const item_def &item) const;
 
@@ -152,9 +152,9 @@ public:
     virtual string pronoun(pronoun_type which_pronoun,
                            bool force_visible = false) const = 0;
     virtual string conj_verb(const string &verb) const = 0;
-    virtual string hand_name(bool plural, bool *can_plural = NULL) const = 0;
-    virtual string foot_name(bool plural, bool *can_plural = NULL) const = 0;
-    virtual string arm_name(bool plural, bool *can_plural = NULL) const = 0;
+    virtual string hand_name(bool plural, bool *can_plural = nullptr) const = 0;
+    virtual string foot_name(bool plural, bool *can_plural = nullptr) const = 0;
+    virtual string arm_name(bool plural, bool *can_plural = nullptr) const = 0;
 
     virtual bool fumbles_attack() = 0;
 
@@ -229,7 +229,7 @@ public:
     virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
     virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
                                   bool allow_corrosion = true,
-                                  const char* hurt_msg = NULL) = 0;
+                                  const char* hurt_msg = nullptr) = 0;
 
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
@@ -314,7 +314,8 @@ public:
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;
 
     virtual bool res_corr(bool calc_unid = true, bool items = true) const;
-    bool has_notele_item(bool calc_unid = true, vector<item_def> *matches = NULL) const;
+    bool has_notele_item(bool calc_unid = true,
+                         vector<item_def> *matches = nullptr) const;
     virtual bool stasis(bool calc_unid = true, bool items = true) const;
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
@@ -420,7 +421,7 @@ public:
 
     // Map from mid to duration.
     typedef map<mid_t, int> constricting_t;
-    // Freed and set to NULL when empty.
+    // Freed and set to nullptr when empty.
     constricting_t *constricting;
 
     void start_constricting(actor &whom, int duration = 0);

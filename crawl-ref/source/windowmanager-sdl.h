@@ -53,7 +53,7 @@ public:
     virtual bool load_texture(GenericTexture *tex, const char *filename,
                               MipMapOptions mip_opt, unsigned int &orig_width,
                               unsigned int &orig_height,
-                              tex_proc_func proc = NULL,
+                              tex_proc_func proc = nullptr,
                               bool force_power_of_two = true);
 
 protected:

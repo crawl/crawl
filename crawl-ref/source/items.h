@@ -88,7 +88,7 @@ coord_def item_pos(const item_def &item);
 
 bool move_top_item(const coord_def &src, const coord_def &dest);
 
-// Get the top item in a given cell. If there are no items, return NULL.
+// Get the top item in a given cell. If there are no items, return nullptr.
 const item_def* top_item_at(const coord_def& where);
 
 // Returns whether there is more than one item in a given cell.
@@ -118,9 +118,9 @@ void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
 void origin_set_inventory(void (*oset)(item_def &item));
-bool origin_is_god_gift(const item_def& item, god_type *god = NULL);
+bool origin_is_god_gift(const item_def& item, god_type *god = nullptr);
 bool origin_is_acquirement(const item_def& item,
-                           item_source_type *type = NULL);
+                           item_source_type *type = nullptr);
 
 bool item_needs_autopickup(const item_def &);
 bool can_autopickup();

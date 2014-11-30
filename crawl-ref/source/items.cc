@@ -467,7 +467,7 @@ void unlink_item(int dest)
 
     monster* mons = mitm[dest].holding_monster();
 
-    if (mons != NULL)
+    if (mons != nullptr)
     {
         for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         {
@@ -1098,7 +1098,7 @@ bool origin_is_god_gift(const item_def& item, god_type *god)
 bool origin_is_acquirement(const item_def& item, item_source_type *type)
 {
     item_source_type junk;
-    if (type == NULL)
+    if (type == nullptr)
         type = &junk;
     *type = IT_SRC_NONE;
 
@@ -2253,7 +2253,7 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
 const item_def* top_item_at(const coord_def& where)
 {
     const int link = you.visible_igrd(where);
-    return (link == NON_ITEM) ? NULL : &mitm[link];
+    return (link == NON_ITEM) ? nullptr : &mitm[link];
 }
 
 bool multiple_items_at(const coord_def& where)
@@ -2501,7 +2501,7 @@ void drop()
 #else
     tmp_items = prompt_invent_items("Drop what? (_ for help)", MT_DROP,
 #endif
-                                     -1, NULL, true, true, 0,
+                                     -1, nullptr, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop);
 
@@ -3063,7 +3063,7 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
                     return &*si;
                 }
 
-    return NULL;
+    return nullptr;
 }
 
 int item_on_floor(const item_def &item, const coord_def& where)
@@ -3216,10 +3216,10 @@ int item_def::armour_rating() const
 monster* item_def::holding_monster() const
 {
     if (!pos.equals(-2, -2))
-        return NULL;
+        return nullptr;
     const int midx = link - NON_ITEM - 1;
     if (invalid_monster_index(midx))
-        return NULL;
+        return nullptr;
 
     return &menv[midx];
 }
@@ -4145,12 +4145,12 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         "plain",
         "ornate",
         "legendary",
-        NULL
+        nullptr
     };
 
     int rarity_val = -1;
 
-    for (int i = 0; rarities[i] != NULL; ++i)
+    for (int i = 0; rarities[i] != nullptr; ++i)
         if (specs.find(rarities[i]) != string::npos)
         {
             rarity_val = i;

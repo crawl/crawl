@@ -326,7 +326,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
             {
                 const char* msg = "You hear a mighty clap of thunder!";
                 noisy(spell_effect_noise(SPELL_CHAIN_LIGHTNING), source,
-                      (first || !see_source) ? msg : NULL);
+                      (first || !see_source) ? msg : nullptr);
                 break;
             }
             case SPELL_CHAIN_OF_CHAOS:
@@ -592,17 +592,17 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
                                  bool actual, bool added_effects, bool fail,
                                  bool allow_cancel)
 {
-    monster* mons = agent ? agent->as_monster() : NULL;
+    monster* mons = agent ? agent->as_monster() : nullptr;
 
     colour_t flash_colour = BLACK;
     const char *player_msg = nullptr, *global_msg = nullptr,
                *mons_vis_msg = nullptr, *mons_invis_msg = nullptr;
-    bool (*vulnerable)(const actor *, const actor *) = NULL;
-    bool (*vul_hitfunc)(const actor *) = NULL;
-    int (*damage_player)(actor *, int, int, bool, bool) = NULL;
-    int (*damage_monster)(actor *, monster *, int, int, bool, bool) = NULL;
-    void (*pre_hook)(actor*, bool, vector<monster *>) = NULL;
-    void (*post_hook)(actor*, bool, vector<monster *>, int, int) = NULL;
+    bool (*vulnerable)(const actor *, const actor *) = nullptr;
+    bool (*vul_hitfunc)(const actor *) = nullptr;
+    int (*damage_player)(actor *, int, int, bool, bool) = nullptr;
+    int (*damage_monster)(actor *, monster *, int, int, bool, bool) = nullptr;
+    void (*pre_hook)(actor*, bool, vector<monster *>) = nullptr;
+    void (*post_hook)(actor*, bool, vector<monster *>, int, int) = nullptr;
 
     int hurted = 0;
     int this_damage = 0;
@@ -818,7 +818,7 @@ void sonic_damage(bool scream)
 
 spret_type vampiric_drain(int pow, monster* mons, bool fail)
 {
-    if (mons == NULL || mons->submerged())
+    if (mons == nullptr || mons->submerged())
     {
         fail_check();
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
@@ -909,7 +909,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 {
     pow = min(25, pow);
 
-    if (mons == NULL || mons->submerged())
+    if (mons == nullptr || mons->submerged())
     {
         fail_check();
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
@@ -1119,7 +1119,7 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
 
-    if (mon == NULL || mon == agent)
+    if (mon == nullptr || mon == agent)
         return 0;
 
     dam_dice.num = _shatter_mon_dice(mon);
@@ -1666,7 +1666,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
     // clouds or items where it's standing!
 
     monster* mon = monster_at(where);
-    if (mon == NULL || mon == agent)
+    if (mon == nullptr || mon == agent)
         return 0;
 
     // Monsters which have poison corpses or poisonous attacks.
@@ -2216,7 +2216,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         if (!caster->is_player())
             return false; // don't let monsters blow up orcish idols
 
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "stone idol";
         // fall-through
     case DNGN_ROCK_WALL:
@@ -2224,11 +2224,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     case DNGN_STONE_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "wall";
         // fall-through
     case DNGN_GRANITE_STATUE:   // normal rock -- big explosion
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "statue";
 
         beam.name       = "blast of rock fragments";
@@ -2261,7 +2261,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "metal wall";
         // fall through
     case DNGN_GRATE:
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "iron grate";
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
@@ -2304,7 +2304,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
@@ -2337,7 +2337,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 {
     bool should_destroy_wall = false;
     bool hole                = true;
-    const char *what         = NULL;
+    const char *what         = nullptr;
     const dungeon_feature_type grid = grd(target);
 
     bolt beam;
@@ -2364,7 +2364,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
         bolt tempbeam;
         bool temp;
         setup_fragmentation_beam(tempbeam, pow, caster, target, false, true,
-                                 true, NULL, temp, temp);
+                                 true, nullptr, temp, temp);
         tempbeam.is_tracer = true;
         tempbeam.explode(false);
         if (tempbeam.beam_cancelled)
@@ -2378,7 +2378,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
     fail_check();
 
-    if (what != NULL) // Terrain explodes.
+    if (what != nullptr) // Terrain explodes.
     {
         if (you.see_cell(target))
             mprf("The %s shatters!", what);
@@ -2453,7 +2453,7 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
         break;
     }
 
-    const spret_type ret = zapping(zap, pow, beam, true, NULL, fail);
+    const spret_type ret = zapping(zap, pow, beam, true, nullptr, fail);
 
     if (ret == SPRET_SUCCESS && zap != ZAP_SMALL_SANDBLAST)
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
@@ -2563,7 +2563,7 @@ actor* forest_near_enemy(const actor *mon)
                 return foe;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Print a message only if you can see any affected trees.
@@ -2924,7 +2924,8 @@ void toxic_radiance_effect(actor* agent, int mult)
 
 spret_type cast_searing_ray(int pow, bolt &beam, bool fail)
 {
-    const spret_type ret = zapping(ZAP_SEARING_RAY_I, pow, beam, true, NULL, fail);
+    const spret_type ret = zapping(ZAP_SEARING_RAY_I, pow, beam, true, nullptr,
+                                   fail);
 
     if (ret == SPRET_SUCCESS)
     {

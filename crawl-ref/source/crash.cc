@@ -119,11 +119,11 @@ void crash_signal_handler(int sig_num)
         char name[180];
 
         snprintf(name, sizeof(name), "%scrash-recursive-%s-%s.txt", dir.c_str(),
-                you.your_name.c_str(), make_file_time(time(NULL)).c_str());
+                you.your_name.c_str(), make_file_time(time(nullptr)).c_str());
 
         FILE* file = fopen_replace(name);
 
-        if (file == NULL)
+        if (file == nullptr)
             file = stderr;
 
         write_stack_trace(file, 0);
@@ -261,7 +261,7 @@ void dump_crash_info(FILE* file)
 {
 #if defined(UNIX)
     const char *name = strsignal(_crash_signal);
-    if (name == NULL)
+    if (name == nullptr)
         name = "INVALID";
 
     fprintf(file, "Crash caused by signal #%d: %s\n\n", _crash_signal,
@@ -291,7 +291,7 @@ void write_stack_trace(FILE* file, int ignore_count)
     char **symbols = backtrace_symbols(frames, num_frames);
 
 #if !defined(TARGET_OS_MACOSX)
-    if (symbols == NULL)
+    if (symbols == nullptr)
     {
         fprintf(stderr, "Out of memory.\n");
         fprintf(file,   "Out of memory.\n");
@@ -343,7 +343,7 @@ void write_stack_trace(FILE* file, int ignore_count)
             bt += ": ";
             *lastparen = '\0';
             char *realname = abi::__cxa_demangle(firstparen + 1, 0, 0, &status);
-            if (realname != NULL)
+            if (realname != nullptr)
                 bt += realname;
             free(realname);
         }

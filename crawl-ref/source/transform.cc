@@ -62,8 +62,8 @@ static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_RING_AMULET);
 // everything
 static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
 
-static const FormAttackVerbs DEFAULT_VERBS = FormAttackVerbs(NULL, NULL,
-                                                             NULL, NULL);
+static const FormAttackVerbs DEFAULT_VERBS = FormAttackVerbs(nullptr, nullptr,
+                                                             nullptr, nullptr);
 static const FormAttackVerbs ANIMAL_VERBS = FormAttackVerbs("hit", "bite",
                                                             "maul", "maul");
 
@@ -1264,7 +1264,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
     for (const equipment_type e : removed)
     {
         item_def *equip = you.slot_item(e, true);
-        if (equip == NULL)
+        if (equip == nullptr)
             continue;
 
         bool unequip = !meld;
@@ -1305,7 +1305,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
     if (meld)
     {
         for (const equipment_type e : removed)
-            if (you.slot_item(e, true) != NULL)
+            if (you.slot_item(e, true) != nullptr)
                 unequip_effect(e, you.equip[e], true, true);
     }
 }
@@ -1518,7 +1518,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
     for (auto eq : _init_equipment_removal(which_trans))
     {
         item_def *item = you.slot_item(eq, true);
-        if (item == NULL)
+        if (item == nullptr)
             continue;
         item_info inf = get_item_info(*item);
 

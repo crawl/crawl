@@ -56,7 +56,7 @@ void luaopen_setmeta(lua_State *ls,
 
 void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
-                             int (*gcfn)(lua_State *ls) = NULL);
+                             int (*gcfn)(lua_State *ls) = nullptr);
 
 int clua_stringtable(lua_State *ls, const vector<string> &s);
 
@@ -70,7 +70,7 @@ static inline T *clua_get_lightuserdata(lua_State *ls, int ndx)
 {
     return (lua_islightuserdata(ls, ndx))?
             static_cast<T *>(lua_touserdata(ls, ndx))
-          : NULL;
+          : nullptr;
 }
 
 template <class T>

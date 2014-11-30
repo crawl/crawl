@@ -133,7 +133,7 @@ static void _debug_describe_feature_at(const coord_def &where);
 #ifdef WIZARD
 static void _wizard_make_friendly(monster* m)
 {
-    if (m == NULL)
+    if (m == nullptr)
         return;
 
     mon_attitude_type att = m->attitude;
@@ -317,20 +317,20 @@ monster* direction_chooser::targeted_monster() const
     if (m && you.can_see(m))
         return m;
     else
-        return NULL;
+        return nullptr;
 }
 
 // Return your target, if it still exists and is visible to you.
 static monster* _get_current_target()
 {
     if (invalid_monster_index(you.prev_targ))
-        return NULL;
+        return nullptr;
 
     monster* mon = &menv[you.prev_targ];
     if (mon->alive() && you.can_see(mon))
         return mon;
     else
-        return NULL;
+        return nullptr;
 }
 
 string direction_chooser::build_targeting_hint_string() const
@@ -665,7 +665,7 @@ void full_describe_view()
 #endif
             vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
-            MenuEntry *me = NULL;
+            MenuEntry *me = nullptr;
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
@@ -947,7 +947,7 @@ range_view_annotator::~range_view_annotator()
 {
     if (crawl_state.darken_range)
     {
-        crawl_state.darken_range = NULL;
+        crawl_state.darken_range = nullptr;
         viewwindow(false);
     }
 }
@@ -966,7 +966,7 @@ monster_view_annotator::~monster_view_annotator()
     if ((Options.use_animations & UA_MONSTER_IN_SIGHT)
         && crawl_state.flash_monsters)
     {
-        crawl_state.flash_monsters = NULL;
+        crawl_state.flash_monsters = nullptr;
         viewwindow(false);
     }
 }
@@ -1024,11 +1024,11 @@ bool direction_chooser::move_is_ok() const
 // Assuming the target is in view, is line-of-fire
 // blocked, and by what?
 static bool _blocked_ray(const coord_def &where,
-                         dungeon_feature_type* feat = NULL)
+                         dungeon_feature_type* feat = nullptr)
 {
     if (exists_ray(you.pos(), where, opc_solid_see))
         return false;
-    if (feat == NULL)
+    if (feat == nullptr)
         return true;
     *feat = ray_blocker(you.pos(), where);
     return true;
@@ -1055,7 +1055,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
 
     // First try to pick our previous target.
     const monster* mons_target = _get_current_target();
-    if (mons_target != NULL
+    if (mons_target != nullptr
         && (mode != TARG_EVOLVABLE_PLANTS
             && mons_attitude(mons_target) == ATT_HOSTILE
             || mode == TARG_ENEMY && !mons_target->friendly()
@@ -2101,7 +2101,7 @@ bool direction_chooser::choose_direction()
                                                  : MOUSE_MODE_TARGET);
     targetter_smite legacy_range(&you, range, 0, 0, true);
     range_view_annotator rva(hitfunc ? hitfunc :
-                             (range >= 0) ? &legacy_range : NULL);
+                             (range >= 0) ? &legacy_range : nullptr);
 
     // init
     moves.delta.reset();
@@ -2339,7 +2339,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
         return false;
 
     const monster_info* mon = env.map_knowledge(where).monsterinfo();
-    if (mon == NULL)
+    if (mon == nullptr)
         return false;
 
     int real_idx = 0;

@@ -303,7 +303,7 @@ void update_monsters_in_view()
     {
         map<monster_type, int> types;
         map<monster_type, int> genera; // This is the plural for genus!
-        const monster* target = NULL;
+        const monster* target = nullptr;
         for (const monster *mon : monsters)
         {
             const monster_type type = mon->type;

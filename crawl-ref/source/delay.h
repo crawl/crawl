@@ -27,7 +27,7 @@ struct activity_interrupt_data
     seen_context_type context;
 
     activity_interrupt_data()
-        : apt(AIP_NONE), data(NULL), context(SC_NONE)
+        : apt(AIP_NONE), data(nullptr), context(SC_NONE)
     {
     }
     activity_interrupt_data(const int *i)
@@ -86,11 +86,11 @@ bool is_delay_interruptible(delay_type delay);
 const char *delay_name(int delay);
 delay_type get_delay(const string &);
 
-void run_macro(const char *macroname = NULL);
+void run_macro(const char *macroname = nullptr);
 
 void autotoggle_autopickup(bool off);
 bool interrupt_activity(activity_interrupt_type ai,
                         const activity_interrupt_data &a
                             = activity_interrupt_data(),
-                        vector<string>* msgs_buf = NULL);
+                        vector<string>* msgs_buf = nullptr);
 #endif

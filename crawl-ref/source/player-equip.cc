@@ -723,7 +723,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                     // Makes no sense to discourage unwielding a temporarily
                     // branded weapon since you can wait it out. This also
                     // fixes problems with unwield prompts (mantis #793).
-                    MiscastEffect(&you, NULL, WIELD_MISCAST,
+                    MiscastEffect(&you, nullptr, WIELD_MISCAST,
                                   SPTYP_TRANSLOCATION, 9, 90,
                                   "a distortion unwield");
                 }
@@ -1054,7 +1054,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, NULL, meld, slot);
+        _unequip_artefact_effect(item, nullptr, meld, slot);
 }
 
 static void _remove_amulet_of_faith(item_def &item)

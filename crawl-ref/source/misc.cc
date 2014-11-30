@@ -379,7 +379,7 @@ static void monster_threat_values(double *general, double *highest,
 bool player_in_a_dangerous_place(bool *invis)
 {
     bool junk;
-    if (invis == NULL)
+    if (invis == nullptr)
         invis = &junk;
 
     const double logexp = log((double)you.experience);
@@ -570,7 +570,7 @@ void timeout_tombs(int duration)
 
             monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
-                                                      : NULL;
+                                                      : nullptr;
             // A monster's Tomb of Doroklohe spell.
             if (mon_src
                 && mon_src == mon_entombed)
@@ -1175,7 +1175,7 @@ void entered_malign_portal(actor* act)
     }
 
     act->blink(false);
-    act->hurt(NULL, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
+    act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
               "", "entering a malign gateway");
 }
 
@@ -1270,7 +1270,7 @@ string counted_monster_list::describe(description_level_type desc,
  */
 bool today_is_halloween()
 {
-    const time_t curr_time = time(NULL);
+    const time_t curr_time = time(nullptr);
     const struct tm *date = TIME_FN(&curr_time);
     // tm_mon is zero-based in case you are wondering
     return date->tm_mon == 9 && date->tm_mday == 31;

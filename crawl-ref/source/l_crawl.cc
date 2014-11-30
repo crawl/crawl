@@ -444,7 +444,7 @@ static int crawl_read_options(lua_State *ls)
 
 static int crawl_bindkey(lua_State *ls)
 {
-    const char *s = NULL;
+    const char *s = nullptr;
     if (lua_isstring(ls, 1))
         s = lua_tostring(ls, 1);
 
@@ -545,7 +545,7 @@ static const luaL_reg crawl_regex_ops[] =
 {
     { "matches",        crawl_regex_find },
     { "equals",         crawl_regex_equals },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static int crawl_message_filter(lua_State *ls)
@@ -597,7 +597,7 @@ static const luaL_reg crawl_messf_ops[] =
 {
     { "matches",        crawl_messf_matches },
     { "equals",         crawl_messf_equals },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static int crawl_trim(lua_State *ls)
@@ -949,7 +949,7 @@ static int crawl_call_dlua(lua_State *ls)
         if (!lua_isnil(dlua, -1))
         {
             const char *msg = lua_tostring(dlua, -1);
-            if (msg == NULL)
+            if (msg == nullptr)
                 msg = "(error object is not a string)";
             mprf(MSGCH_ERROR, "%s", msg);
         }
@@ -1052,7 +1052,7 @@ static const struct luaL_reg crawl_clib[] =
     { "call_dlua",          crawl_call_dlua },
 #endif
 
-    { NULL, NULL },
+    { nullptr, nullptr },
 };
 
 void cluaopen_crawl(lua_State *ls)
@@ -1256,7 +1256,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "hints_type", crawl_hints_type },
 { "unavailable_god", _crawl_unavailable_god },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };
 
 void dluaopen_crawl(lua_State *ls)

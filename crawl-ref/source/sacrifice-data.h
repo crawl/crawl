@@ -35,7 +35,7 @@ static const sacrifice_def sac_data[] =
 
   28,
   SK_NONE,
-  NULL,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_DRINK, MUT_NO_DRINK,
@@ -44,7 +44,7 @@ static const sacrifice_def sac_data[] =
 
   28,
   SK_NONE,
-  NULL,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_ESSENCE, MUT_NON_MUTATION,
@@ -71,7 +71,7 @@ static const sacrifice_def sac_data[] =
 
   15,
   SK_STEALTH,
-  NULL,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_ARTIFICE, MUT_NO_ARTIFICE,
@@ -80,7 +80,7 @@ static const sacrifice_def sac_data[] =
 
   70,
   SK_EVOCATIONS,
-  NULL,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_LOVE, MUT_NO_LOVE,
@@ -89,7 +89,7 @@ static const sacrifice_def sac_data[] =
 
   22,
   SK_NONE,
-  NULL,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_COURAGE, MUT_COWARDICE,
@@ -98,7 +98,7 @@ static const sacrifice_def sac_data[] =
 
   25,
   SK_NONE,
-  NULL,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_ARCANA, MUT_NON_MUTATION,
@@ -116,7 +116,7 @@ static const sacrifice_def sac_data[] =
 
   28,
   SK_DODGING,
-  NULL,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR,
@@ -125,7 +125,7 @@ static const sacrifice_def sac_data[] =
 
   28,
   SK_ARMOUR,
-  NULL,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,
@@ -134,6 +134,6 @@ static const sacrifice_def sac_data[] =
 
   70,
   SK_SHIELDS,
-  NULL,
+  nullptr,
 },
 };

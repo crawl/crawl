@@ -38,7 +38,7 @@ FontWrapper* FontWrapper::create()
 }
 
 FTFontWrapper::FTFontWrapper() :
-    m_glyphs(NULL),
+    m_glyphs(nullptr),
     m_glyphs_lru(0),
     m_glyphs_mru(0),
     m_glyphs_top(0),  // reinitialised to 1 in load_font
@@ -146,7 +146,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
             4 * m_ft_width * m_ft_height);
 
     // initialise empty texture of correct size
-    m_tex.load_texture(NULL, m_ft_width, m_ft_height, MIPMAP_NONE);
+    m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
 
     // Special case c = 0 for full block.
     {

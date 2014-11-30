@@ -434,7 +434,7 @@ void starcursed_merge_fineff::fire()
 
 void shock_serpent_discharge_fineff::fire()
 {
-    monster* serpent = defender() ? defender()->as_monster() : NULL;
+    monster* serpent = defender() ? defender()->as_monster() : nullptr;
     int range = min(3, power);
 
     vector <actor*> targets;

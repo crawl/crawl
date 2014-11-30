@@ -222,14 +222,14 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
 }
 
 static bool _blocked_ray(const coord_def &where,
-                         dungeon_feature_type* feat = NULL)
+                         dungeon_feature_type* feat = nullptr)
 {
     if (exists_ray(you.pos(), where, opc_solid_see)
         || !exists_ray(you.pos(), where, opc_default))
     {
         return false;
     }
-    if (feat == NULL)
+    if (feat == nullptr)
         return true;
     *feat = ray_blocker(you.pos(), where);
     return true;
@@ -1004,7 +1004,7 @@ string monster_info::common_name(description_level_type desc) const
     if (mons_class_is_chimeric(type))
     {
         ss << "chimera";
-        monsterentry *me = NULL;
+        monsterentry *me = nullptr;
         if (u.ghost.acting_part != MONS_0
             && (me = get_monster_data(u.ghost.acting_part)))
         {
