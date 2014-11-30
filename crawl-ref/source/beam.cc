@@ -5331,7 +5331,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_UNAFFECTED;
 
         obvious_effect = true;
-        const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
+        const int duration =
+            player_adjust_invoc_power(you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2);
         mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, agent(), duration * 10));
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
         return MON_AFFECTED;

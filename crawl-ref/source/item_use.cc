@@ -1627,10 +1627,16 @@ static bool _dont_use_invis()
     return false;
 }
 
+static int _wand_power()
+{
+    return player_adjust_evoc_power((15 + you.skill(SK_EVOCATIONS, 5) / 2))
+           * (player_mutation_level(MUT_MP_WANDS) + 6) / 6;
+}
+
 static targetter *_wand_targetter(const item_def *wand)
 {
     int range = _wand_range(wand->zap());
-    const int power = 15 + you.skill(SK_EVOCATIONS, 5) / 2;
+    const int power = _wand_power();
 
     switch (wand->sub_type)
     {
@@ -1844,8 +1850,7 @@ void zap_wand(int slot)
 
     const bool aimed_at_self = (beam.target == you.pos());
 
-    const int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
-        * (player_mutation_level(MUT_MP_WANDS) + 6) / 6;
+    const int power = _wand_power();
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
