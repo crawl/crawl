@@ -1964,7 +1964,14 @@ static void _give_shield(monster* mon, int level)
 
         if (shield) // gauntlets
         {
-            if (get_armour_ego_type(*shield) == SPARM_ARCHERY)
+            if (mon->mslot_item(MSLOT_ARMOUR)
+                && get_armour_ego_type(*mon->mslot_item(MSLOT_ARMOUR))
+                   != SPARM_INSULATION)
+            {
+                set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_INSULATION);
+                set_equip_desc(*shield, ISFLAG_GLOWING);
+            }
+            else if (get_armour_ego_type(*shield) == SPARM_ARCHERY)
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_NORMAL);
         }
         break;
@@ -2400,6 +2407,11 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_NIKOLA:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
+        if (coinflip())
+        {
+            item.plus = 1 + coinflip();
+            set_item_ego_type(item, OBJ_ARMOUR, SPARM_INSULATION);
+        }
         break;
 
     case MONS_MONSTROUS_DEMONSPAWN:
