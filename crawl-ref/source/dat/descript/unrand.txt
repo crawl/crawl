@@ -581,3 +581,14 @@ tiny portion of the caster’s life essence, taken alongside the magic used ever
 time its wielder casts a spell. Of course - the demon is more than happy to
 suck the life from others, as well.
 %%%%
+tinker's ring
+
+This plain iron ring is said to have been in the possession of several famous
+inventors and scientists. Those wearing it are said to have their devices
+inexplicably work better; priests and wizards that have tested this claim
+have found their own invocations and spells suddenly hindered by wearing it.
+%%%%
+talisman of the Evangelist
+
+This plain circular amulet allows its wearer access to great divine power.
+%%%%

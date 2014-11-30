@@ -1170,6 +1170,18 @@ INT:     6
 BRAND:   SPWPN_VAMPIRISM
 BOOL:    unholy
 
+ENUM:    TINKER
+NAME:    tinker's ring
+INSCRIP: Evoc Invoc- Archmagi-
+OBJ:     OBJ_JEWELLERY/RING_PROTECTION_FROM_MAGIC
+COLOUR:  CYAN
+
+ENUM:    EVANGELIST
+NAME:    talisman of the Evangelist
+INSCRIP: Invoc Archmagi-
+OBJ:     OBJ_JEWELLERY/AMU_FAITH
+COLOUR:  LIGHTGREEN
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "act-iter.h"
+#include "art-enum.h"
 #include "areas.h"
 #include "attack.h"
 #include "directn.h"
@@ -313,7 +314,12 @@ int actor::archmagi(bool calc_unid, bool items) const
     if (!items)
         return 0;
 
-    return wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid);
+    // XXX: handle non-player case?
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid)
+           - (is_player()
+              ? player_equip_unrand(UNRAND_TINKER)
+                + player_equip_unrand(UNRAND_EVANGELIST)
+              : 0);
 }
 
 /**
@@ -325,7 +331,7 @@ int actor::archmagi(bool calc_unid, bool items) const
  */
 int actor::spec_evoke(bool calc_unid, bool items) const
 {
-    return 0;
+    return items && is_player() ? player_equip_unrand(UNRAND_TINKER) : 0;
 }
 
 /**
@@ -337,7 +343,10 @@ int actor::spec_evoke(bool calc_unid, bool items) const
  */
 int actor::spec_invoc(bool calc_unid, bool items) const
 {
-    return 0;
+    return items && is_player()
+           ? player_equip_unrand(UNRAND_EVANGELIST)
+             - player_equip_unrand(UNRAND_TINKER)
+           : 0;
 }
 
 bool actor::no_cast(bool calc_unid, bool items) const
