@@ -618,10 +618,10 @@ static string _describe_demon(const string& name, flight_type fly)
         "obese ",
         "muscular ",
         "spiked ",
-        "spotty ",
-        "feminine ",
-        "tentacled ",
+        "splotchy ",
         "slender ",
+        "tentacled ",
+        "emaciated ",
         "bug-like ",
         "skeletal ",
         "mantis ",
@@ -667,7 +667,7 @@ static string _describe_demon(const string& name, flight_type fly)
         " and the head of a mouse",
         " and a ram's head",
         " and the head of a rhino",
-        " and the head of a succubus",
+        " and eerily human features",
         " and a gigantic mouth",
         " and a mass of tentacles growing from its neck",
         " and a thin, worm-like head",
@@ -716,7 +716,7 @@ static string _describe_demon(const string& name, flight_type fly)
     };
 
     ostringstream description;
-    description << "A powerful demon, " << name << " has ";
+    description << "One of the many lords of Pandemonium, " << name << " has ";
 
     const string a_body = HRANDOM_ELEMENT(body_descs, 2);
     description << article_a(a_body) << "body";
@@ -767,7 +767,7 @@ static string _describe_demon(const string& name, flight_type fly)
         }
     }
     else if (hash_rand(2, seed, 6))
-        description << RANDOM_ELEMENT(misc_descs);
+        description << HRANDOM_ELEMENT(misc_descs, 5);
 
     return description.str();
 }
