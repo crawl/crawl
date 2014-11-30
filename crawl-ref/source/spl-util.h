@@ -125,6 +125,9 @@ bool spell_direction(dist &spelld, bolt &pbolt,
 skill_type spell_type2skill(unsigned int which_spelltype);
 unsigned int skill2spell_type(skill_type spell_skill);
 
+skill_type arcane_mutation_to_skill(mutation_type mutation);
+bool cannot_use_schools(unsigned int schools);
+
 spell_type zap_type_to_spell(zap_type zap);
 
 bool spell_is_form(spell_type spell) PURE;

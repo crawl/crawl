@@ -1528,3 +1528,65 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
 
     return false;
 }
+
+
+// a map of schools to the corresponding sacrifice 'mutations'.
+static const mutation_type arcana_sacrifice_map[] = {
+    MUT_NO_CONJURATION_MAGIC,
+    MUT_NO_HEXES_MAGIC,
+    MUT_NO_CHARM_MAGIC,
+    MUT_NO_FIRE_MAGIC,
+    MUT_NO_ICE_MAGIC,
+    MUT_NO_TRANSMUTATION_MAGIC,
+    MUT_NO_NECROMANCY_MAGIC,
+    MUT_NO_SUMMONING_MAGIC,
+    NUM_MUTATIONS, // SPTYP_DIVINATION
+    MUT_NO_TRANSLOCATION_MAGIC,
+    MUT_NO_POISON_MAGIC,
+    MUT_NO_EARTH_MAGIC,
+    MUT_NO_AIR_MAGIC
+};
+
+/**
+ * Are some subset of the given schools unusable by the player?
+ * (Due to Sacrifice Arcana)
+ *
+ * @param schools   A bitfield containing a union of spschool_flag_types.
+ * @return          Whether the player is unable use any of the given schools.
+ */
+bool cannot_use_schools(unsigned int schools)
+{
+    COMPILE_CHECK(ARRAYSZ(arcana_sacrifice_map) == SPTYP_LAST_EXPONENT + 1);
+
+    // iter over every school
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    {
+        // skip schools not in the provided set
+        const int school = 1<<i;
+        if (!(schools & school))
+            continue;
+
+        // check if the player has this school locked out
+        const mutation_type lockout_mut = arcana_sacrifice_map[i];
+        if (lockout_mut != NUM_MUTATIONS && player_mutation_level(lockout_mut))
+            return true;
+    }
+
+    return false;
+}
+
+
+/**
+ * What's the spell school corresponding to the given Ru mutation?
+ *
+ * @param mutation  The variety of MUT_NO_*_MAGIC in question.
+ * @return          The skill of the appropriate school (SK_AIR_MAGIC, etc).
+ *                  If no school corresponds, returns SK_NONE.
+ */
+skill_type arcane_mutation_to_skill(mutation_type mutation)
+{
+    for (int sptyp_exp = 0; sptyp_exp <= SPTYP_LAST_EXPONENT; sptyp_exp++)
+        if (arcana_sacrifice_map[sptyp_exp] == mutation)
+            return spell_type2skill(1 << sptyp_exp);
+    return SK_NONE;
+}

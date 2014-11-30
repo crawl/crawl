@@ -5235,39 +5235,6 @@ static vector<ability_type> _get_possible_sacrifices()
     return possible_sacrifices;
 }
 
-static const skill_type _arcane_mutation_to_skill(mutation_type mutation)
-{
-    switch (mutation)
-    {
-        case MUT_NO_AIR_MAGIC:
-            return SK_AIR_MAGIC;
-        case MUT_NO_CHARM_MAGIC:
-            return SK_CHARMS;
-        case MUT_NO_CONJURATION_MAGIC:
-            return SK_CONJURATIONS;
-        case MUT_NO_EARTH_MAGIC:
-            return SK_EARTH_MAGIC;
-        case MUT_NO_FIRE_MAGIC:
-            return SK_FIRE_MAGIC;
-        case MUT_NO_HEXES_MAGIC:
-            return SK_HEXES;
-        case MUT_NO_ICE_MAGIC:
-            return SK_ICE_MAGIC;
-        case MUT_NO_NECROMANCY_MAGIC:
-            return SK_NECROMANCY;
-        case MUT_NO_POISON_MAGIC:
-            return SK_POISON_MAGIC;
-        case MUT_NO_SUMMONING_MAGIC:
-            return SK_SUMMONINGS;
-        case MUT_NO_TRANSLOCATION_MAGIC:
-            return SK_TRANSLOCATIONS;
-        case MUT_NO_TRANSMUTATION_MAGIC:
-            return SK_TRANSMUTATIONS;
-        default:
-            return SK_NONE;
-    }
-}
-
 /**
  * What's the name of the spell school corresponding to the given Ru mutation?
  *
@@ -5276,7 +5243,9 @@ static const skill_type _arcane_mutation_to_skill(mutation_type mutation)
  */
 static const char* _arcane_mutation_to_school_name(mutation_type mutation)
 {
-    const int school = skill2spell_type(_arcane_mutation_to_skill(mutation));
+    // XXX: this does a really silly dance back and forth between school &
+    // spelltype.
+    const int school = skill2spell_type(arcane_mutation_to_skill(mutation));
     return spelltype_long_name(school);
 }
 
@@ -5323,7 +5292,7 @@ static int _get_sacrifice_piety(ability_type sac)
         for (int i = 0; i < num_sacrifices; i++)
         {
             arcane_mut = AS_MUT(sacrifice_muts[i]);
-            arcane_skill = _arcane_mutation_to_skill(arcane_mut);
+            arcane_skill = arcane_mutation_to_skill(arcane_mut);
             piety_gain += _piety_for_skill(arcane_skill);
         }
     }
@@ -5727,7 +5696,7 @@ bool ru_do_sacrifice(ability_type sac)
         for (int i = 0; i < num_sacrifices; i++)
         {
             arcane_mut = AS_MUT(sacrifice_muts[i]);
-            arcane_skill = _arcane_mutation_to_skill(arcane_mut);
+            arcane_skill = arcane_mutation_to_skill(arcane_mut);
             _ru_kill_skill(arcane_skill);
         }
     }
