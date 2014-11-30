@@ -2049,6 +2049,16 @@ int player_movement_speed()
     return mv;
 }
 
+const int player_adjust_evoc_power(const int power)
+{
+    return apply_enhancement(power, you.spec_evoke());
+}
+
+const int player_adjust_invoc_power(const int power)
+{
+    return apply_enhancement(power, you.spec_invoc());
+}
+
 // This function differs from the above in that it's used to set the
 // initial time_taken value for the turn. Everything else (movement,
 // spellcasting, combat) applies a ratio to this value.
@@ -2417,7 +2427,8 @@ int player_shield_class()
     else
     {
         if (you.duration[DUR_MAGIC_SHIELD])
-            shield += 900 + you.skill(SK_EVOCATIONS, 75);
+            shield += 900 + player_adjust_evoc_power(
+                                you.skill(SK_EVOCATIONS, 75));
 
         if (you.duration[DUR_CONDENSATION_SHIELD])
             shield += 800 + you.props[CONDENSATION_SHIELD_KEY].get_int() * 15;

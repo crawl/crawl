@@ -928,7 +928,11 @@ void lose_permafly_source()
     {
         you.attribute[ATTR_PERM_FLIGHT] = 0;
         if (you.evokable_flight())
-            fly_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
+        {
+            fly_player(
+                player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 2) + 30),
+                true);
+        }
     }
 
     // since a permflight item can keep tempflight evocations going

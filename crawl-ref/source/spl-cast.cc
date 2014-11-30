@@ -76,14 +76,15 @@
 #include "viewchar.h" // stringize_glyph
 
 static int _spell_enhancement(spell_type spell);
-static int _apply_enhancement(spell_type spell, const int initial_power);
 
-static void _surge_power(spell_type spell)
+void surge_power(const int enhanced, const string adj)
 {
-    int enhanced = _spell_enhancement(spell);
-
     if (enhanced)               // one way or the other {dlb}
     {
+        const string surge_power =
+            make_stringf("surge of %s%spower!",
+                         adj.length() ? adj.c_str() : "",
+                         adj.length() ? " " : "");
         const string modifier = (enhanced  < -2) ? "extraordinarily" :
                                 (enhanced == -2) ? "extremely" :
                                 (enhanced ==  2) ? "strong" :
@@ -93,7 +94,7 @@ static void _surge_power(spell_type spell)
              !modifier.length() ? "a"
                                 : article_a(modifier).c_str(),
              (enhanced < 0) ? "numb sensation."
-                            : "surge of power!");
+                            : surge_power.c_str());
     }
 }
 
@@ -396,7 +397,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 {
     int power = 0;
     if (rod)
-        power = 5 + you.skill(SK_EVOCATIONS, 3);
+        power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
     else
     {
         const spschools_type disciplines = get_spell_disciplines(spell);
@@ -423,7 +424,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.
         if (!fail_rate_check)
-            power = _apply_enhancement(spell, power);
+            power = apply_enhancement(power, _spell_enhancement(spell));
 
         // Wild magic boosts spell power but decreases success rate.
         if (!fail_rate_check)
@@ -519,13 +520,12 @@ static int _spell_enhancement(spell_type spell)
 /**
  * Apply the effects of spell enhancers (and de-enhancers) on spellpower.
  *
- * @param spell             The spell in question.
  * @param initial_power     The power of the spell before enhancers are added.
+ * @param enhancer_levels   The number of enhancements levels to apply.
  * @return                  The power of the spell with enhancers considered.
  */
-static int _apply_enhancement(spell_type spell, const int initial_power)
+int apply_enhancement(const int initial_power, const int enhancer_levels)
 {
-    const int enhancer_levels = _spell_enhancement(spell);
     int power = initial_power;
 
     if (enhancer_levels > 0)
@@ -1354,8 +1354,8 @@ spret_type your_spells(spell_type spell, int powc,
 
     // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
-    if (allow_fail)
-        _surge_power(spell);
+    if (allow_fail || evoked)
+        surge_power(evoked ? you.spec_evoke() : _spell_enhancement(spell));
 
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
