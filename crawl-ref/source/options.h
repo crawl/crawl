@@ -366,6 +366,7 @@ public:
 
     lang_t      lang;                // Translation to use.
     const char* lang_name;           // Database name of the language.
+    bool        ungendered;          // Avoid masculine/feminine gender.
 
 #ifdef WIZARD
     // Parameters for fight simulations.

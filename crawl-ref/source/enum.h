@@ -3636,6 +3636,7 @@ enum gender_type
     GENDER_MALE,
     GENDER_FEMALE,
     GENDER_YOU, // A person, not a gender, but close enough.
+    GENDER_ANIMATE, // neuter but animate (Spivak pronouns)
     NUM_GENDERS
 };
 

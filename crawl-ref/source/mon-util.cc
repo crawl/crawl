@@ -3544,12 +3544,14 @@ bool mons_can_attack(const monster* mon)
  */
 static gender_type _mons_class_gender(monster_type mc)
 {
+    // XXX: should souled monsters default to ANIMATE rather than NEUTER?
+    // It's kind of rude to refer to a human, orc, etc. as "it".
     const bool female = mons_class_flag(mc, M_FEMALE);
     const bool male = mons_class_flag(mc, M_MALE);
     ASSERT(!(male && female));
-    return male ? GENDER_MALE :
-         female ? GENDER_FEMALE :
-                  GENDER_NEUTER;
+    return male   ? (Options.ungendered ? GENDER_ANIMATE : GENDER_MALE)
+         : female ? (Options.ungendered ? GENDER_ANIMATE : GENDER_FEMALE)
+                  : GENDER_NEUTER;
 }
 
 // Use of variant (case is irrelevant here):

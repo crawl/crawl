@@ -248,6 +248,7 @@ static const char * const _pronoun_declension[][NUM_PRONOUN_CASES] =
     { "he",  "his",  "himself",  "him" }, // masculine
     { "she", "her",  "herself",  "her" }, // feminine
     { "you", "your", "yourself", "you" }, // 2nd person
+    { "e",   "eir",  "emself",   "em" },  // neuter but animate
 };
 
 const char *decline_pronoun(gender_type gender, pronoun_type variant)

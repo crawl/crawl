@@ -1138,6 +1138,7 @@ void game_options::reset_options()
     item_glyph_cache.clear();
 
     rest_wait_both = false;
+    ungendered = false;
 
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
@@ -2547,6 +2548,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (!set_lang(field.c_str()))
             report_error("No translations for language: %s\n", field.c_str());
     }
+    else BOOL_OPTION(ungendered);
     else if (key == "default_autopickup")
     {
         if (_read_bool(field, true))
