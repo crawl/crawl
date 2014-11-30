@@ -15,6 +15,10 @@ struct sacrifice_def
                                     // multiple mutations. It is a key into
                                     // you.props, yielding a list of mutations
                                     // granted by the sacrifice.
+    bool (*valid)();                // Whether the sacrifice is currently an
+                                    // valid choice for Ru to offer. Only
+                                    // checks factors specific to this
+                                    // sacrifice, not general checks.
 };
 
 static const sacrifice_def sac_data[] =
@@ -27,6 +31,7 @@ static const sacrifice_def sac_data[] =
   0,
   SK_NONE,
   PURITY_SAC_KEY,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_WORDS, MUT_NO_READ,
@@ -35,6 +40,7 @@ static const sacrifice_def sac_data[] =
 
   28,
   SK_NONE,
+  nullptr,
   nullptr,
 },
 
@@ -45,6 +51,7 @@ static const sacrifice_def sac_data[] =
   28,
   SK_NONE,
   nullptr,
+  []() { return you.species != SP_MUMMY; },
 },
 
 { ABIL_RU_SACRIFICE_ESSENCE, MUT_NON_MUTATION,
@@ -54,6 +61,7 @@ static const sacrifice_def sac_data[] =
   0,
   SK_NONE,
   ESSENCE_SAC_KEY,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_HEALTH, MUT_NON_MUTATION,
@@ -63,6 +71,7 @@ static const sacrifice_def sac_data[] =
   20,
   SK_NONE,
   HEALTH_SAC_KEY,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_STEALTH, MUT_NO_STEALTH,
@@ -71,6 +80,7 @@ static const sacrifice_def sac_data[] =
 
   15,
   SK_STEALTH,
+  nullptr,
   nullptr,
 },
 
@@ -81,6 +91,7 @@ static const sacrifice_def sac_data[] =
   70,
   SK_EVOCATIONS,
   nullptr,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_LOVE, MUT_NO_LOVE,
@@ -89,6 +100,7 @@ static const sacrifice_def sac_data[] =
 
   22,
   SK_NONE,
+  nullptr,
   nullptr,
 },
 
@@ -99,6 +111,7 @@ static const sacrifice_def sac_data[] =
   25,
   SK_NONE,
   nullptr,
+  nullptr,
 },
 
 { ABIL_RU_SACRIFICE_ARCANA, MUT_NON_MUTATION,
@@ -108,6 +121,7 @@ static const sacrifice_def sac_data[] =
   25,
   SK_NONE,
   ARCANA_SAC_KEY,
+  []() { return !_player_sacrificed_arcana(); },
 },
 
 { ABIL_RU_SACRIFICE_NIMBLENESS, MUT_NO_DODGING,
@@ -116,6 +130,7 @@ static const sacrifice_def sac_data[] =
 
   28,
   SK_DODGING,
+  nullptr,
   nullptr,
 },
 
@@ -126,6 +141,7 @@ static const sacrifice_def sac_data[] =
   28,
   SK_ARMOUR,
   nullptr,
+  []() { return you_can_wear(EQ_BODY_ARMOUR); },
 },
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,
@@ -134,6 +150,7 @@ static const sacrifice_def sac_data[] =
 
   70,
   SK_SHIELDS,
+  nullptr,
   nullptr,
 },
 };

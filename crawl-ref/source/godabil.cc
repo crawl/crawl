@@ -80,6 +80,8 @@
 #include "viewchar.h"
 #include "view.h"
 
+static bool _player_sacrificed_arcana();
+
 // Load the sacrifice_def definition and the sac_data array.
 #include "sacrifice-data.h"
 
@@ -5210,7 +5212,7 @@ static void _choose_arcana_mutations()
 /**
  * Has the player sacrificed any arcana?
  */
-bool _player_sacrificed_arcana()
+static bool _player_sacrificed_arcana()
 {
     for (const vector<mutation_type> arcane_sacrifice_list :
                                     _arcane_sacrifice_lists)
@@ -5251,18 +5253,10 @@ static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
             return false;
     }
 
-    // XXX: move this into sacrifice-data.h itself
-    switch (sacrifice.sacrifice)
-    {
-        case ABIL_RU_SACRIFICE_DRINK:
-            return you.species != SP_MUMMY;
-        case ABIL_RU_SACRIFICE_DURABILITY:
-            return you_can_wear(EQ_BODY_ARMOUR);
-        case ABIL_RU_SACRIFICE_ARCANA:
-            return !_player_sacrificed_arcana();
-        default:
-            return true;
-    }
+    if (sacrifice.valid != nullptr && !sacrifice.valid())
+        return false;
+
+    return true;
 }
 
 /**
