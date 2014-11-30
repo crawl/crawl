@@ -40,7 +40,7 @@ bool mutate(mutation_type which_mutation, const string &reason,
             bool no_rot = false);
 
 void display_mutations();
-int mut_check_conflict(mutation_type mut);
+int mut_check_conflict(mutation_type mut, bool innate_only = false);
 mutation_activity_type mutation_activity_level(mutation_type mut);
 string describe_mutations(bool center_title);
 
