@@ -26,7 +26,7 @@ static const sacrifice_def sac_data[] =
 
   0,
   SK_NONE,
-  "current_purity_sacrifice",
+  PURITY_SAC_KEY,
 },
 
 { ABIL_RU_SACRIFICE_WORDS, MUT_NO_READ,
@@ -53,7 +53,7 @@ static const sacrifice_def sac_data[] =
 
   0,
   SK_NONE,
-  "current_essence_sacrifice",
+  ESSENCE_SAC_KEY,
 },
 
 { ABIL_RU_SACRIFICE_HEALTH, MUT_NON_MUTATION,
@@ -62,7 +62,7 @@ static const sacrifice_def sac_data[] =
 
   20,
   SK_NONE,
-  "current_health_sacrifice",
+  HEALTH_SAC_KEY,
 },
 
 { ABIL_RU_SACRIFICE_STEALTH, MUT_NO_STEALTH,
@@ -107,7 +107,7 @@ static const sacrifice_def sac_data[] =
 
   25,
   SK_NONE,
-  "current_arcane_sacrifices",
+  ARCANA_SAC_KEY,
 },
 
 { ABIL_RU_SACRIFICE_NIMBLENESS, MUT_NO_DODGING,

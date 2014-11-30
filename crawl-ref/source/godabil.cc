@@ -5061,57 +5061,51 @@ static const sacrifice_def &_get_sacrifice_def(ability_type sac)
     return *sacrifice_data_map[sac];
 }
 
-static vector<ability_type> _get_possible_sacrifices()
+/**
+ * Choose a specific health mutation that Ru will offer the player as
+ * ABIL_RU_SACRIFICE_HEALTH.
+ */
+static void _choose_health_mutation()
 {
-    vector<ability_type> possible_sacrifices;
-
-    if (!player_mutation_level(MUT_NO_READ))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_WORDS);
-    if (!player_mutation_level(MUT_NO_DRINK) && you.species != SP_MUMMY)
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DRINK);
-    if (!player_mutation_level(MUT_NO_STEALTH))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_STEALTH);
-    if (!player_mutation_level(MUT_NO_ARTIFICE))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARTIFICE);
-    if (!player_mutation_level(MUT_NO_LOVE))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_LOVE);
-    if (!player_mutation_level(MUT_COWARDICE))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_COURAGE);
-    if (!player_mutation_level(MUT_NO_DODGING))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_NIMBLENESS);
-    if (!player_mutation_level(MUT_NO_ARMOUR) && you_can_wear(EQ_BODY_ARMOUR))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_DURABILITY);
-    if (!player_mutation_level(MUT_MISSING_HAND))
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HAND);
-
-    // Determine how many health mutations are left and which one to use
-    ASSERT(you.props.exists("current_health_sacrifice"));
+    ASSERT(you.props.exists(HEALTH_SAC_KEY));
     CrawlVector &current_health_sacrifice
-        = you.props["current_health_sacrifice"].get_vector();
+        = you.props[HEALTH_SAC_KEY].get_vector();
 
+    // XXX: these should possibly check player_mutation_level(foo, false)
+    // and even then it's a little weird...
     vector<mutation_type> possible_health_mutations;
     if (player_mutation_level(MUT_FRAIL) <= 2
         && you.innate_mutation[MUT_ROBUST] == 0) // block conflicts w/ DS
+    {
         possible_health_mutations.push_back(MUT_FRAIL);
+    }
     if (player_mutation_level(MUT_PHYSICAL_VULNERABILITY) <= 2)
         possible_health_mutations.push_back(MUT_PHYSICAL_VULNERABILITY);
     if (player_mutation_level(MUT_SLOW_REFLEXES) <= 2)
         possible_health_mutations.push_back(MUT_SLOW_REFLEXES);
-    int num_health_mutations = possible_health_mutations.size();
 
-    if (num_health_mutations > 0)
-    {
-        current_health_sacrifice.push_back(
-        static_cast<int>(possible_health_mutations[
-            random2(num_health_mutations)]));
+    if (possible_health_mutations.empty())
+        return;
 
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_HEALTH);
-    }
+    // I'm nearly certain there's a better way to do this...
+    const mutation_type health_mut =
+        possible_health_mutations[random2(possible_health_mutations.size())];
 
-    // Determine how many essence mutations are left and which one to use
-    ASSERT(you.props.exists("current_essence_sacrifice"));
+    // XXX: why on earth is this a one-element vector?
+    current_health_sacrifice.push_back(static_cast<int>(health_mut));
+}
+
+/**
+ * Choose a specific essence (magic) mutation that Ru will offer the player as
+ * ABIL_RU_SACRIFICE_ESSENCE.
+ */
+static void _choose_essence_mutation()
+{
+    // XXX: this could be deduplicated with choose_health_mutation
+
+    ASSERT(you.props.exists(ESSENCE_SAC_KEY));
     CrawlVector &current_essence_sacrifice
-        = you.props["current_essence_sacrifice"].get_vector();
+        = you.props[ESSENCE_SAC_KEY].get_vector();
 
     vector<mutation_type> possible_essence_mutations;
     if (player_mutation_level(MUT_ANTI_WIZARDRY) <= 2)
@@ -5120,20 +5114,30 @@ static vector<ability_type> _get_possible_sacrifices()
         possible_essence_mutations.push_back(MUT_MAGICAL_VULNERABILITY);
     if (player_mutation_level(MUT_LOW_MAGIC) <= 2)
         possible_essence_mutations.push_back(MUT_LOW_MAGIC);
-    int num_essence_mutations = possible_essence_mutations.size();
 
-    if (num_essence_mutations > 0)
-    {
-        current_essence_sacrifice.push_back(
-            static_cast<int>(possible_essence_mutations[
-                random2(num_essence_mutations)]));
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ESSENCE);
-    }
+    if (possible_essence_mutations.empty())
+        return;
 
-    // Determine how many purity mutations are left and which one to use
-    ASSERT(you.props.exists("current_purity_sacrifice"));
+    // I'm nearly certain there's a better way to do this...
+    const mutation_type essence_mut =
+        possible_essence_mutations[random2(possible_essence_mutations.size())];
+
+    // XXX: why on earth is this a one-element vector?
+    current_essence_sacrifice.push_back(static_cast<int>(essence_mut));
+}
+
+/**
+ * Choose a specific essence (magic) mutation that Ru will offer the player as
+ * ABIL_RU_SACRIFICE_ESSENCE.
+ */
+static void _choose_purity_mutation()
+{
+    // XXX: this could be deduplicated with choose_health_mutation
+    // & choose_essence_mutation
+
+    ASSERT(you.props.exists(PURITY_SAC_KEY));
     CrawlVector &current_purity_sacrifice
-        = you.props["current_purity_sacrifice"].get_vector();
+        = you.props[PURITY_SAC_KEY].get_vector();
 
     vector<mutation_type> possible_purity_mutations;
     if (player_mutation_level(MUT_SCREAM) <= 2)
@@ -5153,84 +5157,169 @@ static vector<ability_type> _get_possible_sacrifices()
     possible_purity_mutations.push_back(MUT_CLUMSY);
     possible_purity_mutations.push_back(MUT_WEAK);
 
-    int num_purity_mutations = possible_purity_mutations.size();
-    if (num_purity_mutations > 0)
-    {
-        current_purity_sacrifice.push_back(
-            static_cast<int>(possible_purity_mutations[
-                random2(num_purity_mutations)]));
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_PURITY);
-    }
+    if (possible_purity_mutations.empty())
+        return;
 
-    ASSERT(you.props.exists("current_arcane_sacrifices"));
+    // I'm nearly certain there's a better way to do this...
+    const mutation_type purity_mut =
+        possible_purity_mutations[random2(possible_purity_mutations.size())];
+
+    // XXX: why on earth is this a one-element vector?
+    current_purity_sacrifice.push_back(static_cast<int>(purity_mut));
+}
+
+/// School-disabling mutations that will be painful for most characters.
+static const vector<mutation_type> _major_arcane_sacrifices =
+{
+    MUT_NO_CHARM_MAGIC,
+    MUT_NO_CONJURATION_MAGIC,
+    MUT_NO_SUMMONING_MAGIC,
+    MUT_NO_TRANSLOCATION_MAGIC,
+};
+
+/// School-disabling mutations that are unfortunate for most characters.
+static const vector<mutation_type> _moderate_arcane_sacrifices =
+{
+    MUT_NO_TRANSMUTATION_MAGIC,
+    MUT_NO_NECROMANCY_MAGIC,
+    MUT_NO_HEXES_MAGIC,
+};
+
+/// School-disabling mutations that are mostly easy to deal with.
+static const vector<mutation_type> _minor_arcane_sacrifices =
+{
+    MUT_NO_AIR_MAGIC,
+    MUT_NO_FIRE_MAGIC,
+    MUT_NO_ICE_MAGIC,
+    MUT_NO_EARTH_MAGIC,
+    MUT_NO_POISON_MAGIC,
+};
+
+/// The list of all lists of arcana sacrifice mutations.
+static const vector<mutation_type> _arcane_sacrifice_lists[] =
+{
+    _minor_arcane_sacrifices,
+    _moderate_arcane_sacrifices,
+    _major_arcane_sacrifices,
+};
+
+/**
+ * Choose a set of three spellschools to sacrifice: one major, one moderate,
+ * and one minor.
+ */
+static void _choose_arcana_mutations()
+{
+    ASSERT(you.props.exists(ARCANA_SAC_KEY));
     CrawlVector &current_arcane_sacrifices
-        = you.props["current_arcane_sacrifices"].get_vector();
+        = you.props[ARCANA_SAC_KEY].get_vector();
+    ASSERT(current_arcane_sacrifices.empty());
 
-    vector<mutation_type> possible_minor_mutations;
-    vector<mutation_type> possible_medium_mutations;
-    vector<mutation_type> possible_major_mutations;
-    int num_major_mutations;
-    int num_medium_mutations;
-    int num_minor_mutations;
-
-    if (!player_mutation_level(MUT_NO_CHARM_MAGIC))
-        possible_major_mutations.push_back(MUT_NO_CHARM_MAGIC);
-    if (!player_mutation_level(MUT_NO_CONJURATION_MAGIC))
-        possible_major_mutations.push_back(MUT_NO_CONJURATION_MAGIC);
-    if (!player_mutation_level(MUT_NO_SUMMONING_MAGIC)
-        && !player_mutation_level(MUT_NO_LOVE))
-        {
-            possible_major_mutations.push_back(MUT_NO_SUMMONING_MAGIC);
-        }
-    if (!player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
-        possible_major_mutations.push_back(MUT_NO_TRANSLOCATION_MAGIC);
-    num_major_mutations = possible_major_mutations.size();
-    current_arcane_sacrifices.push_back(
-        static_cast<int>(possible_major_mutations[
-            random2(num_major_mutations)]));
-
-    if (!player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
-        possible_medium_mutations.push_back(MUT_NO_TRANSMUTATION_MAGIC);
-    if (!player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
-        possible_medium_mutations.push_back(MUT_NO_NECROMANCY_MAGIC);
-    if (!player_mutation_level(MUT_NO_HEXES_MAGIC))
-        possible_medium_mutations.push_back(MUT_NO_HEXES_MAGIC);
-    num_medium_mutations = possible_medium_mutations.size();
-    current_arcane_sacrifices.push_back(
-        static_cast<int>(possible_medium_mutations[
-            random2(num_medium_mutations)]));
-
-    if (!player_mutation_level(MUT_NO_AIR_MAGIC))
-        possible_minor_mutations.push_back(MUT_NO_AIR_MAGIC);
-    if (!player_mutation_level(MUT_NO_EARTH_MAGIC))
-        possible_minor_mutations.push_back(MUT_NO_EARTH_MAGIC);
-    if (!player_mutation_level(MUT_NO_FIRE_MAGIC))
-        possible_minor_mutations.push_back(MUT_NO_FIRE_MAGIC);
-    if (!player_mutation_level(MUT_NO_ICE_MAGIC))
-        possible_minor_mutations.push_back(MUT_NO_ICE_MAGIC);
-    if (!player_mutation_level(MUT_NO_POISON_MAGIC))
-        possible_minor_mutations.push_back(MUT_NO_POISON_MAGIC);
-    num_minor_mutations = possible_minor_mutations.size();
-    current_arcane_sacrifices.push_back(
-        static_cast<int>(possible_minor_mutations[
-            random2(num_minor_mutations)]));
-
-    if (player_mutation_level(MUT_NO_AIR_MAGIC)
-        + player_mutation_level(MUT_NO_CHARM_MAGIC)
-        + player_mutation_level(MUT_NO_CONJURATION_MAGIC)
-        + player_mutation_level(MUT_NO_EARTH_MAGIC)
-        + player_mutation_level(MUT_NO_FIRE_MAGIC)
-        + player_mutation_level(MUT_NO_HEXES_MAGIC)
-        + player_mutation_level(MUT_NO_ICE_MAGIC)
-        + player_mutation_level(MUT_NO_NECROMANCY_MAGIC)
-        + player_mutation_level(MUT_NO_POISON_MAGIC)
-        + player_mutation_level(MUT_NO_SUMMONING_MAGIC)
-        + player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC)
-        + player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC)
-        < 3)
+    for (const vector<mutation_type> arcane_sacrifice_list :
+                                    _arcane_sacrifice_lists)
     {
-        possible_sacrifices.push_back(ABIL_RU_SACRIFICE_ARCANA);
+        // XXX: also combine this inner loop with sacrifice health &c?
+        vector<mutation_type> possible_arcana;
+        for (mutation_type sacrifice : arcane_sacrifice_list)
+        {
+            if (sacrifice == MUT_NO_SUMMONING_MAGIC
+                && player_mutation_level(MUT_NO_LOVE))
+            {
+                continue;
+            }
+
+            possible_arcana.emplace_back(sacrifice);
+        }
+
+        if (possible_arcana.empty())
+            return; // don't bother filling out the others, we failed
+
+        // I'm nearly certain there's a better way to do this...
+        const mutation_type arcana_mut =
+            possible_arcana[random2(possible_arcana.size())];
+        current_arcane_sacrifices.push_back(arcana_mut);
     }
+
+    ASSERT(current_arcane_sacrifices.size()
+           == ARRAYSZ(_arcane_sacrifice_lists));
+}
+
+/**
+ * Has the player sacrificed any arcana?
+ */
+bool _player_sacrificed_arcana()
+{
+    for (const vector<mutation_type> arcane_sacrifice_list :
+                                    _arcane_sacrifice_lists)
+    {
+        for (mutation_type sacrifice : arcane_sacrifice_list)
+            if (player_mutation_level(sacrifice))
+                return true;
+    }
+    return false;
+}
+
+/**
+ * Is the given sacrifice a valid one for Ru to offer to the player right now?
+ *
+ * @param sacrifice     The sacrifice in question.
+ * @return              Whether Ru can offer the player that sacrifice, or
+ *                      whether something is blocking it (e.g. no sacrificing
+ *                      armour for races that can't wear any...)
+ */
+static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
+{
+    if (sacrifice.mutation != MUT_NON_MUTATION
+        && player_mutation_level(sacrifice.mutation))
+    {
+        return false;
+    }
+
+    // XXX: move this into sacrifice-data.h itself
+    switch (sacrifice.sacrifice)
+    {
+        case ABIL_RU_SACRIFICE_DRINK:
+            return you.species != SP_MUMMY;
+        case ABIL_RU_SACRIFICE_DURABILITY:
+            return you_can_wear(EQ_BODY_ARMOUR);
+        case ABIL_RU_SACRIFICE_HEALTH:
+            // XXX: changing state in this function seems sketchy
+            _choose_health_mutation();
+            return !you.props[HEALTH_SAC_KEY].get_vector().empty();
+        case ABIL_RU_SACRIFICE_ESSENCE:
+            // XXX: changing state in this function seems sketchy
+            _choose_essence_mutation();
+            return !you.props[ESSENCE_SAC_KEY].get_vector().empty();
+        case ABIL_RU_SACRIFICE_PURITY:
+            // XXX: changing state in this function seems sketchy
+            _choose_purity_mutation();
+            return !you.props[PURITY_SAC_KEY].get_vector().empty();
+        case ABIL_RU_SACRIFICE_ARCANA:
+        {
+            // XXX: changing state in this function seems sketchy
+            _choose_arcana_mutations();
+            const int arcana_per_sacrifice = ARRAYSZ(_arcane_sacrifice_lists);
+            // don't allow multiple arcana sacrifices
+            return !_player_sacrificed_arcana()
+                   && you.props[PURITY_SAC_KEY].get_vector().size() ==
+                      arcana_per_sacrifice;
+        }
+        default:
+            return true;
+    }
+}
+
+/**
+ * Which sacrifices are valid for Ru to potentially present to the player?
+ *
+ * @return      A list of potential sacrifices (e.g. ABIL_RU_SACRIFICE_WORDS).
+ */
+static vector<ability_type> _get_possible_sacrifices()
+{
+    vector<ability_type> possible_sacrifices;
+
+    for (auto sacrifice : sac_data)
+        if (_sacrifice_is_possible(sacrifice))
+            possible_sacrifices.push_back(sacrifice.sacrifice);
 
     return possible_sacrifices;
 }
@@ -5383,22 +5472,23 @@ static int _get_sacrifice_piety(ability_type sac)
 // time or it's time to offer something new.
 static void _ru_expire_sacrifices()
 {
+    // TODO: iterate over a list
     ASSERT(you.props.exists("available_sacrifices"));
-    ASSERT(you.props.exists("current_health_sacrifice"));
-    ASSERT(you.props.exists("current_essence_sacrifice"));
-    ASSERT(you.props.exists("current_purity_sacrifice"));
-    ASSERT(you.props.exists("current_arcane_sacrifices"));
+    ASSERT(you.props.exists(ESSENCE_SAC_KEY));
+    ASSERT(you.props.exists(HEALTH_SAC_KEY));
+    ASSERT(you.props.exists(PURITY_SAC_KEY));
+    ASSERT(you.props.exists(ARCANA_SAC_KEY));
 
     CrawlVector &available_sacrifices
         = you.props["available_sacrifices"].get_vector();
     CrawlVector &current_health_sacrifice
-        = you.props["current_health_sacrifice"].get_vector();
+        = you.props[HEALTH_SAC_KEY].get_vector();
     CrawlVector &current_essence_sacrifice
-        = you.props["current_essence_sacrifice"].get_vector();
+        = you.props[ESSENCE_SAC_KEY].get_vector();
     CrawlVector &current_purity_sacrifice
-        = you.props["current_purity_sacrifice"].get_vector();
+        = you.props[PURITY_SAC_KEY].get_vector();
     CrawlVector &current_arcane_sacrifices
-        = you.props["current_arcane_sacrifices"].get_vector();
+        = you.props[ARCANA_SAC_KEY].get_vector();
 
     available_sacrifices.clear();
     current_health_sacrifice.clear();
