@@ -308,7 +308,7 @@ const stack_iterator& stack_iterator::operator ++ ()
     return *this;
 }
 
-stack_iterator stack_iterator::operator++(int dummy)
+stack_iterator stack_iterator::operator++(int)
 {
     const stack_iterator copy = *this;
     ++(*this);

@@ -79,7 +79,7 @@ void rectangle_iterator::operator ++()
         current.x++;
 }
 
-void rectangle_iterator::operator++(int dummy)
+void rectangle_iterator::operator++(int)
 {
     ++(*this);
 }
@@ -159,7 +159,7 @@ void random_rectangle_iterator::operator ++()
     }
 }
 
-void random_rectangle_iterator::operator++(int dummy)
+void random_rectangle_iterator::operator++(int)
 {
     ++(*this);
 }
@@ -287,7 +287,7 @@ void radius_iterator::operator++()
     coend(RI_DONE);
 }
 
-void radius_iterator::operator++(int dummy)
+void radius_iterator::operator++(int)
 {
     ++(*this);
 }
@@ -322,7 +322,7 @@ void adjacent_iterator::operator ++()
     }
 }
 
-void adjacent_iterator::operator++(int dummy)
+void adjacent_iterator::operator++(int)
 {
     ++(*this);
 }
@@ -436,7 +436,7 @@ const distance_iterator& distance_iterator::operator++()
     return *this;
 }
 
-void distance_iterator::operator++(int dummy)
+void distance_iterator::operator++(int)
 {
     ++(*this);
 }
