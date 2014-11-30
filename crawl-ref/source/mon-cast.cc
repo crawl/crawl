@@ -3912,8 +3912,8 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
                                   spell_type spell_cast,
                                   monster_type (*mpicker)(), int nsummons,
                                   god_type god, coord_def *target = nullptr,
-                                  void (*post_hook)(monster*, coord_def) =
-                                        [](monster*, coord_def){},
+                                  void (*post_hook)(monster*, coord_def)
+                                      = nullptr,
                                   bool allow_abjure = true)
 {
     if (allow_abjure && _mons_abjured(mons, monsterNearby))
@@ -3932,7 +3932,7 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
             mgen_data(which_mons, SAME_ATTITUDE(mons), mons,
                       duration, spell_cast, target ? *target : mons->pos(),
                       mons->foe, 0, god));
-        if (summon)
+        if (summon && post_hook)
             post_hook(summon, target ? *target : mons->pos());
     }
 }
