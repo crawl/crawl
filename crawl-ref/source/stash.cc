@@ -2353,7 +2353,7 @@ void ST_ItemIterator::new_level()
     }
 }
 
-ST_ItemIterator ST_ItemIterator::operator ++ (int dummy)
+ST_ItemIterator ST_ItemIterator::operator ++ (int)
 {
     const ST_ItemIterator copy = *this;
     ++(*this);

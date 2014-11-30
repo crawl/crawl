@@ -595,7 +595,7 @@ bool is_smart_cursor_enabled()
     return false;
 }
 
-void enable_smart_cursor(bool dummy)
+void enable_smart_cursor(bool /*cursor*/)
 {
 }
 
