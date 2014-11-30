@@ -478,7 +478,7 @@ bool mons_speaks(monster* mons)
     const actor*    foe   = (!crawl_state.game_is_arena() && mons->wont_attack()
                                 && invalid_monster_index(mons->foe)) ?
                                     &you : mons->get_foe();
-    const monster* m_foe = foe ? foe->as_monster() : NULL;
+    const monster* m_foe = foe ? foe->as_monster() : nullptr;
 
     if (!foe || foe->is_player() || mons->wont_attack())
     {
@@ -548,11 +548,11 @@ bool mons_speaks(monster* mons)
     }
 #endif
 
-    const bool no_foe      = (foe == NULL);
+    const bool no_foe      = (foe == nullptr);
     const bool no_player   = crawl_state.game_is_arena()
                              || (!mons->wont_attack()
                                  && (!foe || !foe->is_player()));
-    const bool mon_foe     = (m_foe != NULL);
+    const bool mon_foe     = (m_foe != nullptr);
     const bool no_god      = no_foe || (mon_foe && foe->deity() == GOD_NO_GOD);
     const bool named_foe   = !no_foe && (!mon_foe || (m_foe->is_named()
                                 && m_foe->type != MONS_ROYAL_JELLY));

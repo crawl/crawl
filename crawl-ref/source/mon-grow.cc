@@ -108,7 +108,7 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
             }
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void monster::upgrade_type(monster_type after, bool adjust_hd,

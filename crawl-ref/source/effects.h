@@ -42,21 +42,21 @@ int recharge_wand(bool known = true, const string &pre_msg = "");
 
 void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
 
-void yell(const actor* mon = NULL);
+void yell(const actor* mon = nullptr);
 
 void holy_word(int pow, holy_word_source_type source, const coord_def& where,
-               bool silent = false, actor *attacker = NULL);
+               bool silent = false, actor *attacker = nullptr);
 
 void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
-                        actor *attacker = NULL);
+                        actor *attacker = nullptr);
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where);
 void torment_player(actor *attacker, torment_source_type taux);
 
 void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
-                                coord_def where, actor *attacker = NULL);
+                                coord_def where, actor *attacker = nullptr);
 void cleansing_flame(int pow, int caster, coord_def where,
-                     actor *attacker = NULL);
+                     actor *attacker = nullptr);
 
 void change_labyrinth(bool msg = false);
 

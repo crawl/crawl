@@ -543,8 +543,8 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
 bool lose_stat(stat_type which_stat, int stat_loss,
                const monster* cause, bool force)
 {
-    if (cause == NULL || invalid_monster(cause))
-        return lose_stat(which_stat, stat_loss, force, NULL, true);
+    if (cause == nullptr || invalid_monster(cause))
+        return lose_stat(which_stat, stat_loss, force, nullptr, true);
 
     bool   vis  = you.can_see(cause);
     string name = cause->name(DESC_A, true);

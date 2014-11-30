@@ -765,7 +765,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
             MEL_TITLE), false);
 #endif
 
-    spell_menu.set_highlighter(NULL);
+    spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
 
     spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
@@ -1092,20 +1092,20 @@ static bool _compare_spells(spell_type a, spell_type b)
 
     if (schools_a != schools_b && schools_a != 0 && schools_b != 0)
     {
-        const char* a_type = NULL;
-        const char* b_type = NULL;
+        const char* a_type = nullptr;
+        const char* b_type = nullptr;
 
         // Find lowest/earliest school for each spell.
         for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
         {
             int mask = 1 << i;
-            if (a_type == NULL && (schools_a & mask))
+            if (a_type == nullptr && (schools_a & mask))
                 a_type = spelltype_long_name(mask);
-            if (b_type == NULL && (schools_b & mask))
+            if (b_type == nullptr && (schools_b & mask))
                 b_type = spelltype_long_name(mask);
         }
-        ASSERT(a_type != NULL);
-        ASSERT(b_type != NULL);
+        ASSERT(a_type != nullptr);
+        ASSERT(b_type != nullptr);
         return strcmp(a_type, b_type) < 0;
     }
 

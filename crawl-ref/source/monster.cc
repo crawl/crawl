@@ -147,7 +147,7 @@ void monster::reset()
     patrol_point.reset();
     travel_target = MTRAV_NONE;
     travel_path.clear();
-    ghost.reset(NULL);
+    ghost.reset(nullptr);
     seen_context = SC_NONE;
     props.clear();
     clear_constricted();
@@ -201,7 +201,7 @@ void monster::init_with(const monster& mon)
     if (mon.ghost.get())
         ghost.reset(new ghost_demon(*mon.ghost));
     else
-        ghost.reset(NULL);
+        ghost.reset(nullptr);
 }
 
 uint32_t monster::last_client_id = 0;
@@ -449,7 +449,7 @@ int monster::has_claws(bool allow_tran) const
 
 item_def *monster::missiles()
 {
-    return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : NULL;
+    return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : nullptr;
 }
 
 int monster::missile_count()
@@ -467,7 +467,7 @@ item_def *monster::launcher()
         return weap;
 
     weap = mslot_item(MSLOT_ALT_WEAPON);
-    return weap && is_range_weapon(*weap) ? weap : NULL;
+    return weap && is_range_weapon(*weap) ? weap : nullptr;
 }
 
 // Does not check whether the monster can dual-wield - that is the
@@ -483,7 +483,7 @@ item_def *monster::weapon(int which_attack) const
     if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY
         && attk.type != AT_KITE && attk.type != AT_SWOOP)
     {
-        return NULL;
+        return nullptr;
     }
 
     // Even/odd attacks use main/offhand weapon.
@@ -505,7 +505,7 @@ item_def *monster::weapon(int which_attack) const
         }
     }
 
-    return weap == NON_ITEM ? NULL : &mitm[weap];
+    return weap == NON_ITEM ? nullptr : &mitm[weap];
 }
 
 /**
@@ -530,7 +530,7 @@ item_def *monster::melee_weapon() const
         return first_weapon;
     if (secondary_is_melee)
         return second_weapon;
-    return NULL;
+    return nullptr;
 }
 
 // Give hands required to wield weapon.
@@ -565,12 +565,12 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
     if ((item.flags & ISFLAG_SUMMONED) && !is_summoned())
         return false;
 
-    item_def* weap1 = NULL;
+    item_def* weap1 = nullptr;
     if (inv[MSLOT_WEAPON] != NON_ITEM)
         weap1 = &mitm[inv[MSLOT_WEAPON]];
 
     int       avail_slots = 1;
-    item_def* weap2       = NULL;
+    item_def* weap2       = nullptr;
     if (mons_wields_two_weapons(this))
     {
         if (!weap1 || hands_reqd(*weap1) != HANDS_TWO)
@@ -589,7 +589,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
                             || hands_reqd(item) == HANDS_TWO;
 
-    item_def* _shield = NULL;
+    item_def* _shield = nullptr;
     if (inv[MSLOT_SHIELD] != NON_ITEM)
     {
         ASSERT(!(weap1 && weap2));
@@ -1154,7 +1154,7 @@ bool monster::pickup(item_def &item, int slot, int near)
 
     const monster* other_mon = item.holding_monster();
 
-    if (other_mon != NULL)
+    if (other_mon != nullptr)
     {
         if (other_mon == this)
         {
@@ -1327,7 +1327,7 @@ static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
 {
     // If the monster has no ammo then there's no redundancy problems
     // to check.
-    if (ammo == NULL)
+    if (ammo == nullptr)
         return true;
 
     const int bow_brand  = get_weapon_brand(*launcher);
@@ -2319,7 +2319,7 @@ item_def *monster::slot_item(equipment_type eq, bool include_melded) const
 item_def *monster::mslot_item(mon_inv_type mslot) const
 {
     const int mi = (mslot == NUM_MONSTER_SLOTS) ? NON_ITEM : inv[mslot];
-    return mi == NON_ITEM ? NULL : &mitm[mi];
+    return mi == NON_ITEM ? nullptr : &mitm[mi];
 }
 
 item_def *monster::shield() const
@@ -2484,7 +2484,7 @@ string monster::conj_verb(const string &verb) const
 string monster::hand_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
-    if (can_plural == NULL)
+    if (can_plural == nullptr)
         can_plural = &_can_plural;
     *can_plural = true;
 
@@ -2604,7 +2604,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
 string monster::foot_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
-    if (can_plural == NULL)
+    if (can_plural == nullptr)
         can_plural = &_can_plural;
     *can_plural = true;
 
@@ -2724,7 +2724,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     if (shape > MON_SHAPE_NAGA)
         return hand_name(plural, can_plural);
 
-    if (can_plural != NULL)
+    if (can_plural != nullptr)
         *can_plural = true;
 
     string adj;
@@ -3530,7 +3530,7 @@ int monster::base_evasion() const
  **/
 int monster::evasion(bool calc_unid) const
 {
-    return melee_evasion(NULL, calc_unid ? EV_IGNORE_NONE : EV_IGNORE_UNIDED);
+    return melee_evasion(nullptr, calc_unid ? EV_IGNORE_NONE : EV_IGNORE_UNIDED);
 }
 
 /**
@@ -3655,7 +3655,7 @@ void monster::blame_damage(const actor* attacker, int amount)
 void monster::suicide(int hp)
 {
     if (hit_points > 0)
-        blame_damage(NULL, hit_points);
+        blame_damage(nullptr, hit_points);
     hit_points = hp;
 }
 
@@ -4623,7 +4623,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)
         && type != MONS_NO_MONSTER)
     {
-        if (agent == NULL)
+        if (agent == nullptr)
             monster_die(this, KILL_MISC, NON_MONSTER);
         else if (agent->is_player())
             monster_die(this, KILL_YOU, NON_MONSTER);
@@ -5210,13 +5210,13 @@ void monster::check_speed()
 actor *monster::get_foe() const
 {
     if (foe == MHITNOT)
-        return NULL;
+        return nullptr;
     else if (foe == MHITYOU)
-        return friendly() ? NULL : &you;
+        return friendly() ? nullptr : &you;
 
     // Must be a monster!
     monster* my_foe = &menv[foe];
-    return my_foe->alive()? my_foe : NULL;
+    return my_foe->alive()? my_foe : nullptr;
 }
 
 int monster::foe_distance() const
@@ -5823,7 +5823,7 @@ int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 
 const monsterentry *monster::find_monsterentry() const
 {
-    return (type == MONS_NO_MONSTER || type == MONS_PROGRAM_BUG) ? NULL
+    return (type == MONS_NO_MONSTER || type == MONS_PROGRAM_BUG) ? nullptr
                                                     : get_monster_data(type);
 }
 
@@ -6575,7 +6575,7 @@ item_def* monster::take_item(int steal_what, int mslot)
     // Create new item.
     int index = get_mitm_slot(10);
     if (index == NON_ITEM)
-        return NULL;
+        return nullptr;
 
     item_def &new_item = mitm[index];
 
@@ -6612,7 +6612,7 @@ item_def* monster::take_item(int steal_what, int mslot)
 
 /** Disarm this monster, and preferably pull the weapon into your tile.
  *
- *  @returns a pointer to the weapon disarmed, or NULL if unsuccessful.
+ *  @returns a pointer to the weapon disarmed, or nullptr if unsuccessful.
  */
 item_def* monster::disarm()
 {
@@ -6635,7 +6635,7 @@ item_def* monster::disarm()
         || !you.can_see(this)
         || !mon_tile_ok)
     {
-        return NULL;
+        return nullptr;
     }
 
     drop_item(MSLOT_WEAPON, false);

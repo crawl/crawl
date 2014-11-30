@@ -68,7 +68,7 @@
 #include "view.h"
 
 // Initialises a corpse item using the given monster and monster type.
-// The monster pointer is optional; you may pass in NULL to bypass
+// The monster pointer is optional; you may pass in nullptr to bypass
 // per-monster checks.
 //
 // force_corpse forces creation of the corpse item even if the monster
@@ -82,7 +82,7 @@ monster_type fill_out_corpse(const monster* mons,
     corpse.clear();
 
     int summon_type;
-    if (mons && (mons->is_summoned(NULL, &summon_type)
+    if (mons && (mons->is_summoned(nullptr, &summon_type)
                     || (mons->flags & (MF_BANISHED | MF_HARD_RESET))))
     {
         return MONS_NO_MONSTER;
@@ -969,7 +969,7 @@ static void _search_dungeon(const coord_def & start,
 
     position_node temp_node;
     temp_node.pos = start;
-    temp_node.last = NULL;
+    temp_node.last = nullptr;
 
     queue<set<position_node>::iterator > fringe;
 
@@ -1259,7 +1259,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
 
     bolt beam;
     const int type = mons->type;
-    const char* sanct_msg = NULL;
+    const char* sanct_msg = nullptr;
     actor* agent = mons;
 
     if (type == MONS_GIANT_SPORE)
@@ -1788,7 +1788,7 @@ int monster_die(monster* mons, killer_type killer,
         {
             push_monster(dlua, mons);
             clua_pushcxxstring(dlua, _killer_type_name(killer));
-            dlua.callfn(NULL, 2, 0);
+            dlua.callfn(nullptr, 2, 0);
         }
         else
         {
@@ -2256,7 +2256,7 @@ int monster_die(monster* mons, killer_type killer,
                 break;
             }
 
-            monster* killer_mon = NULL;
+            monster* killer_mon = nullptr;
             if (!anon)
             {
                 killer_mon = &menv[killer_index];
@@ -2952,9 +2952,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
 {
     int  summon_type = 0;
     bool valid_mon   = false;
-    if (mons != NULL && !invalid_monster(mons))
+    if (mons != nullptr && !invalid_monster(mons))
     {
-        (void) mons->is_summoned(NULL, &summon_type);
+        (void) mons->is_summoned(nullptr, &summon_type);
         valid_mon = true;
     }
 

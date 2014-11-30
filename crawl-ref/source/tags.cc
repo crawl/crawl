@@ -93,7 +93,7 @@ extern set<pair<string, level_id> > auto_unique_annotations;
 extern abyss_state abyssal_state;
 
 reader::reader(const string &_read_filename, int minorVersion)
-    : _filename(_read_filename), _chunk(0), _pbuf(NULL), _read_offset(0),
+    : _filename(_read_filename), _chunk(0), _pbuf(nullptr), _read_offset(0),
       _minorVersion(minorVersion), _safe_read(false)
 {
     _file       = fopen_u(_filename.c_str(), "rb");
@@ -119,7 +119,7 @@ void reader::close()
 {
     if (opened_file && _file)
         fclose(_file);
-    _file = NULL;
+    _file = nullptr;
 }
 
 void reader::advance(size_t offset)
@@ -4991,7 +4991,7 @@ static void tag_read_level(reader &th)
     env.dactions_done = unmarshallInt(th);
 
     // Restore heightmap
-    env.heightmap.reset(NULL);
+    env.heightmap.reset(nullptr);
     const bool have_heightmap = unmarshallBoolean(th);
     if (have_heightmap)
     {

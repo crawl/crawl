@@ -282,7 +282,7 @@ public:
     void determine_affected_cells(explosion_map& m, const coord_def& delta,
                                   int count, int r,
                                   bool stop_at_statues, bool stop_at_walls);
-    bool can_knockback(const actor *act = NULL, int dam = -1) const;
+    bool can_knockback(const actor *act = nullptr, int dam = -1) const;
 };
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
@@ -312,7 +312,7 @@ void fire_tracer(const monster* mons, bolt &pbolt,
 bool imb_can_splash(coord_def origin, coord_def center,
                     vector<coord_def> path_taken, coord_def target);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
-                   bool needs_tracer = false, const char* msg = NULL,
+                   bool needs_tracer = false, const char* msg = nullptr,
                    bool fail = false);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
 

@@ -128,7 +128,7 @@ void MiscastEffect::init()
     ASSERT(pow != -1 && fail != -1 && level == -1
            || pow == -1 && fail == -1 && level >= 0 && level <= 3);
 
-    ASSERT(target != NULL);
+    ASSERT(target != nullptr);
     ASSERT(target->alive());
 
     ASSERT(lethality_margin == 0 || target->is_player());
@@ -492,7 +492,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         bool see_source = act_source && you.can_see(act_source);
         ouch(dam, method, act_source ? act_source->mid : MID_NOBODY,
              cause.c_str(), see_source,
-             act_source ? act_source->name(DESC_A, true).c_str() : NULL);
+             act_source ? act_source->name(DESC_A, true).c_str() : nullptr);
     }
 
     return true;
@@ -1178,7 +1178,7 @@ void MiscastEffect::_charms(int severity)
                 else if (target->is_monster())
                 {
                     debuff_monster(target->as_monster());
-                    enchant_actor_with_flavour(target->as_monster(), NULL,
+                    enchant_actor_with_flavour(target->as_monster(), nullptr,
                                                BEAM_DRAIN_MAGIC, 50 + random2avg(51, 2));
                 }
                 do_msg();
@@ -1937,7 +1937,7 @@ void MiscastEffect::_necromancy(int severity)
                 do_msg();
             }
             else
-                torment(NULL, TORMENT_MISCAST, target->pos());
+                torment(nullptr, TORMENT_MISCAST, target->pos());
             break;
 
         case 1:
@@ -3278,7 +3278,7 @@ void MiscastEffect::_zot()
             invalidate_agrid(true);
             break;
         case 13:
-            if (!mons_word_of_recall(NULL, 2 + random2(3)))
+            if (!mons_word_of_recall(nullptr, 2 + random2(3)))
                 canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }

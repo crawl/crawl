@@ -73,7 +73,7 @@ static const struct luaL_reg travel_lib[] =
     { "feature_solid", l_feature_is_solid },
     { "find_deepest_explored", l_find_deepest_explored },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_travel(lua_State *ls)

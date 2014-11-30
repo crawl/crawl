@@ -464,10 +464,10 @@ static void _pan_wave(int power)
 
 static void _zotdef_set_special_wave(int power)
 {
-    void (*wave_fn)(int) = NULL;
+    void (*wave_fn)(int) = nullptr;
     int tries = 0;
 
-    while (wave_fn == NULL && tries++ < 10000)
+    while (wave_fn == nullptr && tries++ < 10000)
     {
         int wpow = 0;
         switch (random2(21))
@@ -507,7 +507,7 @@ static void _zotdef_set_special_wave(int power)
                 break;        // keep this one
         }
         // Nope, don't keep
-        wave_fn = NULL;
+        wave_fn = nullptr;
     }
     if (wave_fn)
         wave_fn(power);
@@ -754,7 +754,7 @@ monster* zotdef_spawn(bool boss)
         return 0;
 
     // Generate a monster of the appropriate branch and strength
-    mgen_data mg(mt, BEH_SEEK, NULL, 0, 0, coord_def(), MHITYOU);
+    mgen_data mg(mt, BEH_SEEK, nullptr, 0, 0, coord_def(), MHITYOU);
     mg.proximity = PROX_NEAR_STAIRS;
     mg.flags |= MG_PERMIT_BANDS;
 

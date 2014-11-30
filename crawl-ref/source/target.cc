@@ -375,7 +375,7 @@ aff_type targetter_smite::is_affected(coord_def loc)
 }
 
 targetter_fragment::targetter_fragment(const actor* act, int power, int ran) :
-    targetter_smite(act, ran, 1, 1, true, NULL),
+    targetter_smite(act, ran, 1, 1, true, nullptr),
     pow(power)
 {
 }
@@ -388,7 +388,7 @@ bool targetter_fragment::valid_aim(coord_def a)
     bolt tempbeam;
     bool temp;
     if (!setup_fragmentation_beam(tempbeam, pow, agent, a, false,
-                                  true, true, NULL, temp, temp))
+                                  true, true, nullptr, temp, temp))
     {
         return notify_fail("You cannot affect that.");
     }
@@ -404,11 +404,11 @@ bool targetter_fragment::set_aim(coord_def a)
     bool temp;
 
     if (setup_fragmentation_beam(tempbeam, pow, agent, a, false,
-                                 false, true, NULL, temp, temp))
+                                 false, true, nullptr, temp, temp))
     {
         exp_range_min = tempbeam.ex_size;
         setup_fragmentation_beam(tempbeam, pow, agent, a, false,
-                                 true, true, NULL, temp, temp);
+                                 true, true, nullptr, temp, temp);
         exp_range_max = tempbeam.ex_size;
     }
     else

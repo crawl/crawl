@@ -571,7 +571,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_uninterruptible =",
         "interrupt_weapon_swap =",
 
-        NULL
+        nullptr
     };
 
     for (int i = 0; default_activity_interrupts[i]; ++i)
@@ -1397,7 +1397,7 @@ static string _find_crawlrc()
         { "..", "init.txt" },
         { "../settings", "init.txt" },
 #endif
-        { NULL, NULL }                // placeholder to mark end
+        { nullptr, nullptr }                // placeholder to mark end
     };
 
     // We'll look for these files in any supplied -rcdirs.
@@ -1424,10 +1424,10 @@ static string _find_crawlrc()
     }
 
     // Check all possibilities for init.txt
-    for (int i = 0; locations_data[i][1] != NULL; ++i)
+    for (int i = 0; locations_data[i][1] != nullptr; ++i)
     {
         // Don't look at unset options
-        if (locations_data[i][0] != NULL)
+        if (locations_data[i][0] != nullptr)
         {
             const string rc = catpath(locations_data[i][0],
                                       locations_data[i][1]);
@@ -4094,7 +4094,7 @@ static string _find_executable_path()
     // resources.
 #if defined (TARGET_OS_WINDOWS)
     wchar_t tempPath[MAX_PATH];
-    if (GetModuleFileNameW(NULL, tempPath, MAX_PATH))
+    if (GetModuleFileNameW(nullptr, tempPath, MAX_PATH))
         return utf16_to_8(tempPath);
     else
         return "";
@@ -4535,7 +4535,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         if (current+1 < argc)
             next_arg = argv[current+1];
         else
-            next_arg = NULL;
+            next_arg = nullptr;
 
         nextUsed = false;
 
@@ -4583,7 +4583,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         // Partially parse next argument.
         bool next_is_param = false;
-        if (next_arg != NULL
+        if (next_arg != nullptr
             && (next_arg[0] != '-' || strlen(next_arg) == 1))
         {
             next_is_param = true;

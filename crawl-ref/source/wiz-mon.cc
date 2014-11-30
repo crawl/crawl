@@ -983,7 +983,7 @@ static void _move_monster(const coord_def& where, int idx1)
 
     mgrd(where) = idx2;
 
-    if (mon2 != NULL)
+    if (mon2 != nullptr)
     {
         mon2->moveto(where);
         mon1->check_redraw(where);
@@ -1026,7 +1026,7 @@ void wizard_move_player_or_monster(const coord_def& where)
 void wizard_make_monster_summoned(monster* mon)
 {
     int summon_type = 0;
-    if (mon->is_summoned(NULL, &summon_type) || summon_type != 0)
+    if (mon->is_summoned(nullptr, &summon_type) || summon_type != 0)
     {
         mprf(MSGCH_PROMPT, "Monster is already summoned.");
         return;

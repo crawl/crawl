@@ -14,7 +14,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       NUM_FEATURES, DNGN_EXIT_DUNGEON,
       "Dungeon", "the Dungeon", "D",
-      NULL,
+      nullptr,
       LIGHTGREY, BROWN,
       'D', false, 0 },
 
@@ -22,7 +22,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_TEMPLE, DNGN_RETURN_FROM_TEMPLE,
       "Temple", "the Ecumenical Temple", "Temple",
-      NULL,
+      nullptr,
       LIGHTGREY, BROWN,
       'T', false, 0 },
 
@@ -30,7 +30,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_ORC, DNGN_RETURN_FROM_ORC,
       "Orcish Mines", "the Orcish Mines", "Orc",
-      NULL,
+      nullptr,
       BROWN, BROWN,
       'O', false, 4 },
 
@@ -38,7 +38,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_ELF, DNGN_RETURN_FROM_ELF,
       "Elven Halls", "the Elven Halls", "Elf",
-      NULL,
+      nullptr,
       WHITE, ETC_ELVEN_BRICK,
       'E', true, 0 },
 
@@ -47,7 +47,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_DWARF, DNGN_RETURN_FROM_DWARF,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
-      NULL,
+      nullptr,
       BROWN, BROWN,
       'K', false, 0 },
 #endif
@@ -56,7 +56,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
-      NULL,
+      nullptr,
       GREEN, BROWN,
       'L', false, 4 },
 
@@ -64,7 +64,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
       "Swamp", "the Swamp", "Swamp",
-      NULL,
+      nullptr,
       BROWN, BROWN,
       'S', true, 0 },
 
@@ -72,7 +72,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_ISLANDED, 0,
       DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
       "Shoals", "the Shoals", "Shoals",
-      NULL,
+      nullptr,
       BROWN, BROWN,
       'A', true, 3 },
 
@@ -80,7 +80,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_SNAKE, DNGN_RETURN_FROM_SNAKE,
       "Snake Pit", "the Snake Pit", "Snake",
-      NULL,
+      nullptr,
       LIGHTGREEN, YELLOW,
       'P', true, 0 },
 
@@ -88,7 +88,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_SPIDER, DNGN_RETURN_FROM_SPIDER,
       "Spider Nest", "the Spider Nest", "Spider",
-      NULL,
+      nullptr,
       BROWN, YELLOW,
       'N', true, 0 },
 
@@ -96,7 +96,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_SLIME, DNGN_RETURN_FROM_SLIME,
       "Slime Pits", "the Pits of Slime", "Slime",
-      NULL,
+      nullptr,
       GREEN, BROWN,
       'M', true, -5 },
 
@@ -104,7 +104,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
       "Vaults", "the Vaults", "Vaults",
-      NULL,
+      nullptr,
       LIGHTGREY, BROWN,
       'V', true, 0 },
 #if TAG_MAJOR_VERSION == 34
@@ -112,7 +112,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_BLADE, DNGN_RETURN_FROM_BLADE,
       "Hall of Blades", "the Hall of Blades", "Blade",
-      NULL,
+      nullptr,
       LIGHTGREY, BROWN,
       'B', false, -7 },
 #endif
@@ -121,7 +121,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_CRYPT, DNGN_RETURN_FROM_CRYPT,
       "Crypt", "the Crypt", "Crypt",
-      NULL,
+      nullptr,
       LIGHTGREY, BROWN,
       'C', true, -3 },
 
@@ -129,7 +129,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_ISLANDED, LFLAG_NO_TELE_CONTROL,
       DNGN_ENTER_TOMB, DNGN_RETURN_FROM_TOMB,
       "Tomb", "the Tomb of the Ancients", "Tomb",
-      NULL,
+      nullptr,
       BROWN, BROWN,
       'W', true, -10 },
 
@@ -145,7 +145,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_DIS, DNGN_ENTER_HELL,
       "Dis", "the Iron City of Dis", "Dis",
-      NULL,
+      nullptr,
       CYAN, BROWN,
       'I', true, 0 },
 
@@ -153,7 +153,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_GEHENNA, DNGN_ENTER_HELL,
       "Gehenna", "Gehenna", "Geh",
-      NULL,
+      nullptr,
       BROWN, RED,
       'G', true, 0 },
 
@@ -161,7 +161,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL,
       "Cocytus", "Cocytus", "Coc",
-      NULL,
+      nullptr,
       LIGHTBLUE, LIGHTCYAN,
       'X', true, 0 },
 
@@ -169,7 +169,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_TARTARUS, DNGN_ENTER_HELL,
       "Tartarus", "Tartarus", "Tar",
-      NULL,
+      nullptr,
       MAGENTA, MAGENTA,
       'Y', true, 0 },
 
@@ -177,7 +177,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
       "Zot", "the Realm of Zot", "Zot",
-      NULL,
+      nullptr,
       BLACK, BLACK, // set per-map
       'Z', true, 0 },
 #if TAG_MAJOR_VERSION == 34
@@ -185,7 +185,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_FOREST, DNGN_RETURN_FROM_FOREST,
       "Forest", "the Enchanted Forest", "Forest",
-      NULL,
+      nullptr,
       BROWN, BROWN,
       'F', true, 0 },
 #endif
@@ -194,7 +194,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS,
       "Abyss", "the Abyss", "Abyss",
-      NULL,
+      nullptr,
       BLACK, BLACK, // set specially
       'J', false, 0 },
 
@@ -239,7 +239,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_TROVE, DNGN_EXIT_TROVE,
       "Trove", "a treasure trove", "Trove",
-      NULL,
+      nullptr,
       DARKGREY, BLUE,
       '2', false, 0 },
 
@@ -247,7 +247,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_SEWER, DNGN_EXIT_SEWER,
       "Sewer", "a sewer", "Sewer",
-      NULL,
+      nullptr,
       LIGHTGREY, BLUE,
       '3', false, 0 },
 
@@ -255,7 +255,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_OSSUARY, DNGN_EXIT_OSSUARY,
       "Ossuary", "an ossuary", "Ossuary",
-      NULL,
+      nullptr,
       WHITE, YELLOW,
       '4', false, 0 },
 
@@ -263,7 +263,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_BAILEY, DNGN_EXIT_BAILEY,
       "Bailey", "a bailey", "Bailey",
-      NULL,
+      nullptr,
       WHITE, LIGHTRED,
       '5', false, 0 },
 
@@ -271,7 +271,7 @@ const Branch branches[NUM_BRANCHES] =
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_ICE_CAVE, DNGN_EXIT_ICE_CAVE,
       "Ice Cave", "an ice cave", "IceCv",
-      NULL,
+      nullptr,
       BLUE, WHITE,
       '6', false, 0 },
 
@@ -279,7 +279,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_VOLCANO, DNGN_EXIT_VOLCANO,
       "Volcano", "a volcano", "Volcano",
-      NULL,
+      nullptr,
       RED, RED,
       '7', false, 0 },
 
@@ -287,7 +287,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_WIZLAB, DNGN_EXIT_WIZLAB,
       "Wizlab", "a wizard's laboratory", "WizLab",
-      NULL,
+      nullptr,
       LIGHTGREY, BROWN, // set per-map
       '8', false, 0 },
 
@@ -295,7 +295,7 @@ const Branch branches[NUM_BRANCHES] =
       0, 0,
       DNGN_ENTER_DEPTHS, DNGN_RETURN_FROM_DEPTHS,
       "Depths", "the Depths", "Depths",
-      NULL,
+      nullptr,
       LIGHTGREY, BROWN,
       'U', false, 0 },
 };

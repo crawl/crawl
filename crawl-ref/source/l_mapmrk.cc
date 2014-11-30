@@ -34,7 +34,7 @@ const struct luaL_reg mapmarker_dlib[] =
 { "pos", mapmarker_pos },
 { "move", mapmarker_move },
 { "remove", mapmarker_remove },
-{ NULL, NULL }
+{ nullptr, nullptr }
 };
 
 void luaopen_mapmarker(lua_State *ls)

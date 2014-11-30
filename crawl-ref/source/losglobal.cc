@@ -22,10 +22,10 @@ static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
     COMPILE_CHECK(LOS_KNOWN * 2 <= sizeof(losfield_t) * 8);
 
     if (!map_bounds(p) || !map_bounds(q))
-        return NULL;
+        return nullptr;
     coord_def diff = q - p;
     if (diff.abs() > LOS_RADIUS_SQ)
-        return NULL;
+        return nullptr;
     // p < q iff p.x < q.x || p.x == q.x && p.y < q.y
     if (diff < coord_def(0, 0))
         return &globallos[q.x][q.y][-diff.x + o_half_x][-diff.y + o_half_y];

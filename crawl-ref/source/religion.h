@@ -137,9 +137,9 @@ int get_fuzzied_monster_difficulty(const monster *mons);
 
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
 
-void delayed_monster(const mgen_data &mg, delayed_callback callback = NULL);
+void delayed_monster(const mgen_data &mg, delayed_callback callback = nullptr);
 void delayed_monster_done(string success, string failure,
-                          delayed_callback callback = NULL);
+                          delayed_callback callback = nullptr);
 
 bool do_god_gift(bool forced = false);
 

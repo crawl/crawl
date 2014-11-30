@@ -66,7 +66,7 @@ bool is_known_branch_id(branch_type branch);
 bool is_unknown_stair(const coord_def &p);
 
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
-                     vector<coord_def>* coords = NULL);
+                     vector<coord_def>* coords = nullptr);
 
 bool is_stair_exclusion(const coord_def &p);
 
@@ -318,7 +318,7 @@ struct LevelInfo
         return excludes;
     }
 
-    // Returns the travel distance between two stairs. If either stair is NULL,
+    // Returns the travel distance between two stairs. If either stair is nullptr,
     // or does not exist in our list of stairs, returns 0.
     int distance_between(const stair_info *s1, const stair_info *s2) const;
 
@@ -384,7 +384,7 @@ public:
     LevelInfo *find_level_info(const level_id &lev)
     {
         map<level_id, LevelInfo>::iterator i = levels.find(lev);
-        return i != levels.end()? &i->second : NULL;
+        return i != levels.end()? &i->second : nullptr;
     }
 
     void erase_level_info(const level_id& lev)
@@ -465,7 +465,7 @@ public:
     // Sets the travel_distance_grid_t to use instead of travel_point_distance.
     void set_distance_grid(travel_distance_grid_t distgrid);
 
-    // Set feature vector to use; if non-NULL, also sets annotate_map to true.
+    // Set feature vector to use; if non-nullptr, also sets annotate_map to true.
     void set_feature_vector(vector<coord_def> *features);
 
     // Extract features without pathfinding

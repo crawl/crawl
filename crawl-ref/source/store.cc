@@ -27,14 +27,14 @@
 CrawlStoreValue::CrawlStoreValue()
     : type(SV_NONE), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
 }
 
 CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
 {
     ASSERT_RANGE(other.type, SV_NONE, NUM_STORE_VAL_TYPES);
 
-    val.ptr = NULL;
+    val.ptr = nullptr;
 
     type  = other.type;
     flags = other.flags;
@@ -144,7 +144,7 @@ CrawlStoreValue::CrawlStoreValue(const store_flags _flags,
     ASSERT(!(flags & SFLAG_UNSET));
 
     flags   |= SFLAG_UNSET;
-    val.ptr  = NULL;
+    val.ptr  = nullptr;
 }
 
 // Conversion constructors
@@ -187,70 +187,70 @@ CrawlStoreValue::CrawlStoreValue(const float &_val)
 CrawlStoreValue::CrawlStoreValue(const string &_val)
     : type(SV_STR), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_string() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const char* _val)
     : type(SV_STR), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_string() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const coord_def &_val)
     : type(SV_COORD), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_coord() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const item_def &_val)
     : type(SV_ITEM), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_item() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const CrawlHashTable &_val)
     : type(SV_HASH), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_table() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const CrawlVector &_val)
     : type(SV_VEC), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_vector() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const level_id &_val)
     : type(SV_LEV_ID), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_level_id() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const level_pos &_val)
     : type(SV_LEV_POS), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_level_pos() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const monster& _val)
     : type(SV_MONST), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_monster() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const dlua_chunk &_val)
     : type(SV_LUA), flags(SFLAG_UNSET)
 {
-    val.ptr = NULL;
+    val.ptr = nullptr;
     get_lua() = _val;
 }
 
@@ -299,7 +299,7 @@ void CrawlStoreValue::unset(bool force)
     {
         string* str = static_cast<string*>(val.ptr);
         delete str;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -307,7 +307,7 @@ void CrawlStoreValue::unset(bool force)
     {
         coord_def* coord = static_cast<coord_def*>(val.ptr);
         delete coord;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -315,7 +315,7 @@ void CrawlStoreValue::unset(bool force)
     {
         item_def* item = static_cast<item_def*>(val.ptr);
         delete item;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -323,7 +323,7 @@ void CrawlStoreValue::unset(bool force)
     {
         CrawlHashTable* hash = static_cast<CrawlHashTable*>(val.ptr);
         delete hash;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -331,7 +331,7 @@ void CrawlStoreValue::unset(bool force)
     {
         CrawlVector* vec = static_cast<CrawlVector*>(val.ptr);
         delete vec;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -339,7 +339,7 @@ void CrawlStoreValue::unset(bool force)
     {
         level_id* id = static_cast<level_id*>(val.ptr);
         delete id;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -347,7 +347,7 @@ void CrawlStoreValue::unset(bool force)
     {
         level_pos* pos = static_cast<level_pos*>(val.ptr);
         delete pos;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -355,7 +355,7 @@ void CrawlStoreValue::unset(bool force)
     {
         monster* mon = static_cast<monster* >(val.ptr);
         delete mon;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -363,7 +363,7 @@ void CrawlStoreValue::unset(bool force)
     {
         dlua_chunk* chunk = static_cast<dlua_chunk*>(val.ptr);
         delete chunk;
-        val.ptr = NULL;
+        val.ptr = nullptr;
         break;
     }
 
@@ -382,7 +382,7 @@ void CrawlStoreValue::unset(bool force)
 #define COPY_PTR(ptr_type) \
     { \
         ptr_type *ptr = static_cast<ptr_type*>(val.ptr); \
-        if (ptr != NULL) \
+        if (ptr != nullptr) \
             delete ptr; \
         ptr = static_cast<ptr_type*>(other.val.ptr); \
         val.ptr = (void*) new ptr_type (*ptr);  \
@@ -1235,14 +1235,14 @@ string &CrawlStoreValue::operator += (const string &_val)
 
 CrawlHashTable::CrawlHashTable()
 {
-    hash_map = NULL;
+    hash_map = nullptr;
 }
 
 CrawlHashTable::CrawlHashTable(const CrawlHashTable& other)
 {
-    if (other.hash_map == NULL)
+    if (other.hash_map == nullptr)
     {
-        hash_map = NULL;
+        hash_map = nullptr;
         return;
     }
 
@@ -1253,21 +1253,21 @@ CrawlHashTable::~CrawlHashTable()
 {
     // NOTE: Not using unique_ptr because making hash_map an unique_ptr
     // causes compile weirdness in externs.h
-    if (hash_map == NULL)
+    if (hash_map == nullptr)
         return;
 
     delete hash_map;
-    hash_map = NULL;
+    hash_map = nullptr;
 }
 
 CrawlHashTable &CrawlHashTable::operator = (const CrawlHashTable &other)
 {
-    if (hash_map != NULL)
+    if (hash_map != nullptr)
         delete hash_map;
 
-    if (other.hash_map == NULL)
+    if (other.hash_map == nullptr)
     {
-        hash_map = NULL;
+        hash_map = nullptr;
         return *this;
     }
 
@@ -1353,7 +1353,7 @@ bool CrawlHashTable::exists(const string &key) const
 void CrawlHashTable::assert_validity() const
 {
 #ifdef DEBUG
-    if (hash_map == NULL)
+    if (hash_map == nullptr)
         return;
 
     size_t actual_size = 0;
@@ -1379,12 +1379,12 @@ void CrawlHashTable::assert_validity() const
         case SV_ITEM:
         case SV_LEV_ID:
         case SV_LEV_POS:
-            ASSERT(val.val.ptr != NULL);
+            ASSERT(val.val.ptr != nullptr);
             break;
 
         case SV_HASH:
         {
-            ASSERT(val.val.ptr != NULL);
+            ASSERT(val.val.ptr != nullptr);
 
             CrawlHashTable* nested;
             nested = static_cast<CrawlHashTable*>(val.val.ptr);
@@ -1395,7 +1395,7 @@ void CrawlHashTable::assert_validity() const
 
         case SV_VEC:
         {
-            ASSERT(val.val.ptr != NULL);
+            ASSERT(val.val.ptr != nullptr);
 
             CrawlVector* nested;
             nested = static_cast<CrawlVector*>(val.val.ptr);
@@ -1455,7 +1455,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 // std::map style interface
 unsigned int CrawlHashTable::size() const
 {
-    if (hash_map == NULL)
+    if (hash_map == nullptr)
         return 0;
 
     return hash_map->size();
@@ -1463,7 +1463,7 @@ unsigned int CrawlHashTable::size() const
 
 bool CrawlHashTable::empty() const
 {
-    if (hash_map == NULL)
+    if (hash_map == nullptr)
         return true;
 
     return hash_map->empty();
@@ -1491,11 +1491,11 @@ void CrawlHashTable::erase(const string key)
 void CrawlHashTable::clear()
 {
     ASSERT_VALIDITY();
-    if (hash_map == NULL)
+    if (hash_map == nullptr)
         return;
 
     delete hash_map;
-    hash_map = NULL;
+    hash_map = nullptr;
 }
 
 CrawlHashTable::iterator CrawlHashTable::begin()
@@ -1516,7 +1516,7 @@ CrawlHashTable::iterator CrawlHashTable::end()
 
 CrawlHashTable::const_iterator CrawlHashTable::begin() const
 {
-    ASSERT(hash_map != NULL);
+    ASSERT(hash_map != nullptr);
     ASSERT_VALIDITY();
 
     return hash_map->begin();
@@ -1524,7 +1524,7 @@ CrawlHashTable::const_iterator CrawlHashTable::begin() const
 
 CrawlHashTable::const_iterator CrawlHashTable::end() const
 {
-    ASSERT(hash_map != NULL);
+    ASSERT(hash_map != nullptr);
     ASSERT_VALIDITY();
 
     return hash_map->end();
@@ -1532,7 +1532,7 @@ CrawlHashTable::const_iterator CrawlHashTable::end() const
 
 void CrawlHashTable::init_hash_map()
 {
-    if (hash_map != NULL)
+    if (hash_map != nullptr)
         return;
 
     hash_map = new hash_map_type();
@@ -1694,12 +1694,12 @@ void CrawlVector::assert_validity() const
         case SV_ITEM:
         case SV_LEV_ID:
         case SV_LEV_POS:
-            ASSERT(val.val.ptr != NULL);
+            ASSERT(val.val.ptr != nullptr);
             break;
 
         case SV_HASH:
         {
-            ASSERT(val.val.ptr != NULL);
+            ASSERT(val.val.ptr != nullptr);
 
             CrawlHashTable* nested;
             nested = static_cast<CrawlHashTable*>(val.val.ptr);
@@ -1710,7 +1710,7 @@ void CrawlVector::assert_validity() const
 
         case SV_VEC:
         {
-            ASSERT(val.val.ptr != NULL);
+            ASSERT(val.val.ptr != nullptr);
 
             CrawlVector* nested;
             nested = static_cast<CrawlVector*>(val.val.ptr);
@@ -1798,12 +1798,12 @@ void CrawlVector::push_back(CrawlStoreValue val)
     case SV_ITEM:
     case SV_LEV_ID:
     case SV_LEV_POS:
-        ASSERT(val.val.ptr != NULL);
+        ASSERT(val.val.ptr != nullptr);
         break;
 
     case SV_HASH:
     {
-        ASSERT(val.val.ptr != NULL);
+        ASSERT(val.val.ptr != nullptr);
 
         CrawlHashTable* nested;
         nested = static_cast<CrawlHashTable*>(val.val.ptr);
@@ -1814,7 +1814,7 @@ void CrawlVector::push_back(CrawlStoreValue val)
 
     case SV_VEC:
     {
-        ASSERT(val.val.ptr != NULL);
+        ASSERT(val.val.ptr != nullptr);
 
         CrawlVector* nested;
         nested = static_cast<CrawlVector*>(val.val.ptr);

@@ -891,7 +891,7 @@ static int dgn_num_matching_markers(lua_State *ls)
     const char* val_ptr = lua_tostring(ls, 2);
     const char* val;
 
-    if (val_ptr == NULL)
+    if (val_ptr == nullptr)
         val = "";
     else
         val = val_ptr;
@@ -1500,7 +1500,7 @@ LUAFN(dgn_with_map_bounds_fn)
         // happen when lua_call does its longjmp.
         err = lua_pcall(ls, 0, 1, 0);
 
-        _dgn_map_safe_bounds_fn.reset(NULL);
+        _dgn_map_safe_bounds_fn.reset(nullptr);
     }
 
     if (err)
@@ -1711,7 +1711,7 @@ LUAFN(_dgn_marker_at_pos)
 
     map_marker* marker = env.markers.find(p);
 
-    if (marker == NULL)
+    if (marker == nullptr)
         lua_pushnil(ls);
     else
         _push_mapmarker(ls, marker);
@@ -1960,7 +1960,7 @@ const struct luaL_reg dgn_dlib[] =
 
 { "apply_tide", dgn_apply_tide },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };
 
 #define VP(name) \
@@ -2008,7 +2008,7 @@ static const luaL_reg dgn_vaultplacement_ops[] =
     { "orient", _vp_orient },
     { "map", _vp_map },
     { "exits", _vp_exits },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static void _dgn_register_metatables(lua_State *ls)

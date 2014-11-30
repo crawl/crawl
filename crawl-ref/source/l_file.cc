@@ -16,7 +16,7 @@
 static const struct luaL_reg file_clib[] =
 {
     { "write", CLua::file_write },
-    { NULL, NULL },
+    { nullptr, nullptr },
 };
 
 void cluaopen_file(lua_State *ls)
@@ -212,7 +212,7 @@ static const struct luaL_reg file_dlib[] =
     { "datadir_files_recursive", _file_datadir_files_recursive },
     { "minor_version", file_minor_version },
     { "major_version", file_major_version },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void dluaopen_file(lua_State *ls)

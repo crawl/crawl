@@ -107,7 +107,7 @@ spret_type ice_armour(int pow, bool fail)
     }
 
     you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
-                          NULL);
+                          nullptr);
     you.props[ICY_ARMOUR_KEY] = pow;
     you.redraw_armour_class = true;
 

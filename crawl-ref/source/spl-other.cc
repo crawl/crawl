@@ -346,7 +346,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
     monster* mons = monster_at(where);
-    if (mons == NULL
+    if (mons == nullptr
         || mons_intel(mons) < I_NORMAL
         || mons->holiness() != MH_NATURAL
         || mons->res_poison() > 0)

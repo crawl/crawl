@@ -20,12 +20,12 @@ void dgn_event_dispatcher::clear()
     listeners.clear();
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
-            grid_triggers[x][y].reset(NULL);
+            grid_triggers[x][y].reset(nullptr);
 }
 
 void dgn_event_dispatcher::clear_listeners_at(const coord_def &pos)
 {
-    grid_triggers[pos.x][pos.y].reset(NULL);
+    grid_triggers[pos.x][pos.y].reset(nullptr);
 }
 
 void dgn_event_dispatcher::move_listeners(

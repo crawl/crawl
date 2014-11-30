@@ -2794,7 +2794,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     level_change();
 
-    if (actual_gain != NULL)
+    if (actual_gain != nullptr)
         *actual_gain = you.experience - old_exp;
 
     if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
@@ -3929,7 +3929,7 @@ static void _display_movement_speed()
 static void _display_tohit()
 {
 #ifdef DEBUG_DIAGNOSTICS
-    melee_attack attk(&you, NULL);
+    melee_attack attk(&you, nullptr);
 
     const int to_hit = attk.calc_to_hit(false);
 
@@ -3960,15 +3960,15 @@ static const char* _attack_delay_desc(int attack_delay)
  */
 static void _display_attack_delay()
 {
-    const item_def* ammo = NULL;
-    you.m_quiver->get_desired_item(&ammo, NULL);
+    const item_def* ammo = nullptr;
+    you.m_quiver->get_desired_item(&ammo, nullptr);
     const bool uses_ammo = ammo && you.weapon()
                            && ammo->launched_by(*you.weapon());
-    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
+    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : nullptr,
                                        false, false);
 
     const int no_shield_delay = you.attack_delay(you.weapon(),
-                                                 uses_ammo ? ammo : NULL,
+                                                 uses_ammo ? ammo : nullptr,
                                                  false, false, false);
     const bool at_min_delay = you.weapon()
                               && weapon_min_delay(*you.weapon())
@@ -4177,7 +4177,7 @@ int slaying_bonus(bool ranged)
 
 // Checks each equip slot for a randart, and adds up all of those with
 // a given property. Slow if any randarts are worn, so avoid where
-// possible. If `matches' is non-NULL, items with nonzero property are
+// possible. If `matches' is non-nullptr, items with nonzero property are
 // pushed onto *matches.
 int player::scan_artefacts(artefact_prop_type which_property,
                            bool calc_unid,
@@ -4825,7 +4825,7 @@ void paralyse_player(string source, int amount)
     if (!amount)
         amount = 2 + random2(6 + you.duration[DUR_PARALYSIS] / BASELINE_DELAY);
 
-    you.paralyse(NULL, amount, source);
+    you.paralyse(nullptr, amount, source);
 }
 
 bool poison_player(int amount, string source, string source_aux, bool force)
@@ -6871,7 +6871,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (crawl_state.game_is_zotdef() && orb_haloed(pos()))
         problems.emplace_back("in the halo of the Orb");
 
-    const bool stasis_block = stasis_blocks_effect(calc_unid, NULL);
+    const bool stasis_block = stasis_blocks_effect(calc_unid, nullptr);
     vector<item_def> notele_items;
     if (has_notele_item(calc_unid, &notele_items) || stasis_block)
     {
@@ -7131,7 +7131,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
 
 void player::drain_stat(stat_type s, int amount, actor *attacker)
 {
-    if (attacker == NULL)
+    if (attacker == nullptr)
         lose_stat(s, amount, false, "");
     else if (attacker->is_monster())
         lose_stat(s, amount, attacker->as_monster(), false);

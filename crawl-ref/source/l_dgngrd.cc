@@ -146,5 +146,5 @@ const struct luaL_reg dgn_grid_dlib[] =
 { "in_bounds", dgn_in_bounds },
 { "distance", dgn_distance },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

@@ -128,7 +128,7 @@ namespace arena
     static bool cycle_random     = false;
     static uint32_t cycle_random_pos = 0;
 
-    static FILE *file = NULL;
+    static FILE *file = nullptr;
     static level_id place(BRANCH_DEPTHS, 1);
 
     static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
@@ -152,7 +152,7 @@ namespace arena
 
     static void list_eq(const monster *mon)
     {
-        if (!Options.arena_list_eq || file == NULL)
+        if (!Options.arena_list_eq || file == nullptr)
             return;
 
         vector<int> items;
@@ -575,7 +575,7 @@ namespace arena
 
     static void dump_messages()
     {
-        if (!Options.arena_dump_msgs || file == NULL)
+        if (!Options.arena_dump_msgs || file == nullptr)
             return;
 
         vector<string> messages;
@@ -692,7 +692,7 @@ namespace arena
             return;
         }
 
-        if (file != NULL)
+        if (file != nullptr)
             fflush(file);
 
         cursor_control coff(true);
@@ -916,11 +916,11 @@ namespace arena
             game_ended_with_error(error);
         }
 
-        if (file != NULL)
+        if (file != nullptr)
             end(0, false, "Results file already open");
         file = fopen("arena.result", "w");
 
-        if (file != NULL)
+        if (file != nullptr)
         {
             string spec = find_monster_spec();
             fprintf(file, "%s\n", spec.c_str());
@@ -943,15 +943,15 @@ namespace arena
 
     static void global_shutdown()
     {
-        if (file != NULL)
+        if (file != nullptr)
             fclose(file);
 
-        file = NULL;
+        file = nullptr;
     }
 
     static void write_results()
     {
-        if (file != NULL)
+        if (file != nullptr)
         {
             if (Options.arena_dump_msgs || Options.arena_list_eq)
                 fprintf(file, "========================================\n");
@@ -965,12 +965,12 @@ namespace arena
 
     static void write_error(const string &error)
     {
-        if (file != NULL)
+        if (file != nullptr)
         {
             fprintf(file, "err: %s\n", error.c_str());
             fclose(file);
         }
-        file = NULL;
+        file = nullptr;
     }
 
     static void simulate()
@@ -1226,7 +1226,7 @@ void arena_monster_died(monster* mons, killer_type killer,
              && killer == KILL_MISC
              && killer_index == NON_MONSTER))
     {
-        arena::faction *fac = NULL;
+        arena::faction *fac = nullptr;
         if (mons->attitude == ATT_FRIENDLY)
             fac = &arena::faction_a;
         else if (mons->attitude == ATT_HOSTILE)

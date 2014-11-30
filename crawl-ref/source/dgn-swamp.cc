@@ -65,5 +65,5 @@ void dgn_build_swamp_level()
     _swamp_slushy_patches(swamp_depth * 3);
     dgn_smooth_heights();
     _swamp_apply_features(2);
-    env.heightmap.reset(NULL);
+    env.heightmap.reset(nullptr);
 }

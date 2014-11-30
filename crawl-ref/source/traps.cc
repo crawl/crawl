@@ -165,7 +165,7 @@ bool trap_def::is_known(const actor* act) const
 {
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
-    if (act == NULL || act->is_player())
+    if (act == nullptr || act->is_player())
         return player_knows;
     else if (act->is_monster())
     {
@@ -723,7 +723,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (!m->is_summoned())
                     bleed_onto_floor(m->pos(), m->type, damage_taken, true);
 
-                m->hurt(NULL, damage_taken);
+                m->hurt(nullptr, damage_taken);
                 if (in_sight && m->alive())
                     print_wounds(m);
 
@@ -815,7 +815,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 }
 
                 // actually try to net the monster
-                if (monster_caught_in_net(m, NULL))
+                if (monster_caught_in_net(m, nullptr))
                 {
                     // Don't try to escape the net in the same turn
                     m->props[NEWLY_TRAPPED_KEY] = true;
@@ -916,7 +916,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (!trig_knows)
                 xom_is_stimulated(25);
 
-            MiscastEffect(&you, NULL, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+            MiscastEffect(&you, nullptr, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                            3, name(DESC_A));
         }
         else if (m)
@@ -928,7 +928,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // in 99% of cases - a player can just watch who stepped where
             // and mark the trap on an external paper map.  Not good.
 
-            actor* targ = NULL;
+            actor* targ = nullptr;
             if (m->wont_attack() || crawl_state.game_is_arena())
                 targ = m;
             else if (you.see_cell_no_trans(pos) && one_chance_in(5))
@@ -949,7 +949,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     mprf("The power of Zot is invoked against %s!",
                          targ->name(DESC_THE).c_str());
                 }
-                MiscastEffect(targ, NULL, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                MiscastEffect(targ, nullptr, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                               3, "the power of Zot");
             }
         }
@@ -1105,7 +1105,7 @@ void destroy_trap(const coord_def& pos)
 trap_def* find_trap(const coord_def& pos)
 {
     if (!feat_is_trap(grd(pos), true))
-        return NULL;
+        return nullptr;
 
     unsigned short t = env.tgrid(pos);
 
@@ -1534,7 +1534,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
          trap_hit, act.melee_evasion(0), con_block, pro_block);
 
     // Determine whether projectile hits.
-    if (!force_hit && trap_hit < act.melee_evasion(NULL))
+    if (!force_hit && trap_hit < act.melee_evasion(nullptr))
     {
         if (act.is_player())
         {
@@ -1598,8 +1598,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             }
 
             if (poison)
-                act.poison(NULL, 3 + roll_dice(2, 5));
-            act.hurt(NULL, damage_taken);
+                act.poison(nullptr, 3 + roll_dice(2, 5));
+            act.hurt(nullptr, damage_taken);
         }
     }
     ammo_qty--;

@@ -1617,7 +1617,8 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_OKAWARU_FINESSE:
         if (stasis_blocks_effect(false,
-                                 quiet ? NULL : "%s makes your neck tingle."))
+                                 quiet ? nullptr
+                                       : "%s makes your neck tingle."))
         {
             return false;
         }
@@ -2131,14 +2132,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         targetter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
 
         if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, beam.range,
-                             true, true, false, NULL,
+                             true, true, false, nullptr,
                              "Aiming: <white>Delayed Fireball</white>",
                              false, &tgt))
         {
             return SPRET_ABORT;
         }
 
-        if (!zapping(ZAP_FIREBALL, power, beam, true, NULL, false))
+        if (!zapping(ZAP_FIREBALL, power, beam, true, nullptr, false))
             return SPRET_ABORT;
 
         // Only one allowed, since this is instantaneous. - bwr
@@ -2177,7 +2178,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         beam.range = 1;
         if (!spell_direction(abild, beam,
                              DIR_NONE, TARG_HOSTILE, 0, true, true, false,
-                             NULL, NULL, false,
+                             nullptr, nullptr, false,
                              &hitfunc))
         {
             return SPRET_ABORT;
@@ -2458,7 +2459,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         monster* mons = monster_at(beam.target);
 
-        if (mons == NULL || !you.can_see(mons))
+        if (mons == nullptr || !you.can_see(mons))
         {
             mpr("There is no monster there to imprison!");
             return SPRET_ABORT;
@@ -2578,7 +2579,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons == NULL || !you.can_see(mons)
+        if (mons == nullptr || !you.can_see(mons)
             || !ench_flavour_affects_monster(BEAM_ENSLAVE_SOUL, mons))
         {
             mpr("You see nothing there to enslave the soul of!");
@@ -2593,7 +2594,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         fail_check();
 
-        return zapping(ZAP_ENSLAVE_SOUL, power, beam, false, NULL, fail);
+        return zapping(ZAP_ENSLAVE_SOUL, power, beam, false, nullptr, fail);
     }
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
@@ -2834,7 +2835,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
 
         return zapping(ZAP_BANISHMENT, 16 + you.skill(SK_INVOCATIONS, 8), beam,
-                       true, NULL, fail);
+                       true, nullptr, fail);
 
     case ABIL_LUGONU_CORRUPT:
         fail_check();
@@ -3236,7 +3237,7 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost)
 
     if (abil.flags & ABFLAG_NECRO_MISCAST_MINOR)
     {
-        MiscastEffect(&you, NULL, ABIL_MISCAST, SPTYP_NECROMANCY, 5, 90,
+        MiscastEffect(&you, nullptr, ABIL_MISCAST, SPTYP_NECROMANCY, 5, 90,
                       "power out of control");
     }
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
@@ -3261,7 +3262,7 @@ int choose_ability_menu(const vector<talent>& talents)
                              | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE,
                              text_only);
 
-    abil_menu.set_highlighter(NULL);
+    abil_menu.set_highlighter(nullptr);
 #ifdef USE_TILE_LOCAL
     {
         // Hack like the one in spl-cast.cc:list_spells() to align the title.

@@ -61,7 +61,7 @@ const char *KillMaster::category_name(kill_category kc) const
 {
     if (kc >= KC_YOU && kc < KC_NCATEGORIES)
         return kill_category_names[kc];
-    return NULL;
+    return nullptr;
 }
 
 bool KillMaster::empty() const
@@ -155,7 +155,7 @@ string KillMaster::kill_info() const
         add_kill_info(killtext,
                        kills,
                        count,
-                       i == KC_YOU ? NULL
+                       i == KC_YOU ? nullptr
                                    : category_name((kill_category) i),
                        needseparator);
         needseparator = true;
@@ -175,7 +175,7 @@ string KillMaster::kill_info() const
     bool custom = false;
     unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     // Call the kill dump Lua function with null a, to tell it we're done.
-    if (!clua.callfn("c_kill_list", "ss>b", NULL, grandt.c_str(), &custom)
+    if (!clua.callfn("c_kill_list", "ss>b", nullptr, grandt.c_str(), &custom)
         || !custom)
 #endif
     {
@@ -433,7 +433,7 @@ kill_def::kill_def(const monster* mon) : kills(0), exp(0)
 // for zombies or skeletons).
 static const char *modifier_suffixes[] =
 {
-    "zombie", "skeleton", "simulacrum", NULL,
+    "zombie", "skeleton", "simulacrum", nullptr,
 };
 
 // For a non-unique monster, prefixes a suitable article if we have only one
@@ -1014,7 +1014,7 @@ static const struct luaL_reg kill_lib[] =
     { "rawwrite",   kill_lualc_rawwrite },
     { "write",      kill_lualc_write },
     { "summary",    kill_lualc_summary },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_kills(lua_State *ls)

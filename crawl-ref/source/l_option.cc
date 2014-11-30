@@ -56,7 +56,7 @@ static option_handler handlers[] =
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },
-    { "autopick_on", NULL, option_autopick }
+    { "autopick_on", nullptr, option_autopick }
 };
 
 static const option_handler *get_handler(const char *optname)
@@ -69,7 +69,7 @@ static const option_handler *get_handler(const char *optname)
                 return &handler;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 static int option_get(lua_State *ls)

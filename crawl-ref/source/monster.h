@@ -117,7 +117,7 @@ public:
 
     void mark_summoned(int longevity, bool mark_items_summoned,
                        int summon_type = 0, bool abj = true);
-    bool is_summoned(int* duration = NULL, int* summon_type = NULL) const;
+    bool is_summoned(int* duration = nullptr, int* summon_type = nullptr) const;
     bool is_perm_summoned() const;
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
@@ -247,7 +247,7 @@ public:
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
     random_var  attack_delay(const item_def *weapon,
-                             const item_def *projectile = NULL,
+                             const item_def *projectile = nullptr,
                              bool random = true, bool scaled = true,
                              bool /*shield*/ = true) const;
     int         has_claws(bool allow_tran = true) const;
@@ -256,7 +256,7 @@ public:
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
     int scan_artefacts(artefact_prop_type which_property,
                        bool calc_unid = true,
-                       vector<item_def> *_unused_matches = NULL) const;
+                       vector<item_def> *_unused_matches = nullptr) const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
     item_def *mslot_item(mon_inv_type sl) const;
@@ -318,9 +318,9 @@ public:
     string full_name(description_level_type type, bool use_comma = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
     string conj_verb(const string &verb) const;
-    string hand_name(bool plural, bool *can_plural = NULL) const;
-    string foot_name(bool plural, bool *can_plural = NULL) const;
-    string arm_name(bool plural, bool *can_plural = NULL) const;
+    string hand_name(bool plural, bool *can_plural = nullptr) const;
+    string foot_name(bool plural, bool *can_plural = nullptr) const;
+    string arm_name(bool plural, bool *can_plural = nullptr) const;
 
     bool fumbles_attack();
     bool cannot_fight() const;
@@ -470,7 +470,7 @@ public:
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
-                          const char* /*hurt_msg*/ = NULL);
+                          const char* /*hurt_msg*/ = nullptr);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              kill_method_type kill_type = KILLED_BY_MONSTER,
@@ -512,9 +512,9 @@ public:
 
     bool is_player() const { return false; }
     monster* as_monster() { return this; }
-    player* as_player() { return NULL; }
+    player* as_player() { return nullptr; }
     const monster* as_monster() const { return this; }
-    const player* as_player() const { return NULL; }
+    const player* as_player() const { return nullptr; }
 
     // Hacks, with a capital H.
     void check_speed();

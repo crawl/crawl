@@ -2158,7 +2158,7 @@ class KnownMenu : public InvMenu
 public:
     // This loads items in the order they are put into the list (sequentially)
     menu_letter load_items_seq(const vector<const item_def*> &mitems,
-                               MenuEntry *(*procfn)(MenuEntry *me) = NULL,
+                               MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                                menu_letter ckey = 'a')
     {
         for (int i = 0, count = mitems.size(); i < count; ++i)
@@ -3890,7 +3890,7 @@ string get_corpse_name(const item_def &corpse, uint64_t *name_type)
     if (!corpse.props.exists(CORPSE_NAME_KEY))
         return "";
 
-    if (name_type != NULL)
+    if (name_type != nullptr)
         *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
 
     return corpse.props[CORPSE_NAME_KEY].get_string();

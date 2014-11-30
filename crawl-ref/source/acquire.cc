@@ -1518,7 +1518,7 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     int thing_created = NON_ITEM;
 
-    if (item_index == NULL)
+    if (item_index == nullptr)
         item_index = &thing_created;
 
     *item_index = NON_ITEM;

@@ -108,7 +108,7 @@ static void _pick_float_exits(vault_placement &place,
                               vector<coord_def> &targets);
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type);
 static bool _connect_spotty(const coord_def& from,
-                            bool (*overwriteable)(dungeon_feature_type) = NULL);
+                            bool (*overwriteable)(dungeon_feature_type) = nullptr);
 static bool _connect_vault_exit(const coord_def& exit);
 
 // VAULT FUNCTIONS
@@ -171,7 +171,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place);
 static dungeon_feature_type _pick_an_altar();
 
 static vector<god_type> _temple_altar_list;
-static CrawlHashTable*       _current_temple_hash = NULL; // XXX: hack!
+static CrawlHashTable*       _current_temple_hash = nullptr; // XXX: hack!
 
 // MISC FUNCTIONS
 static void _dgn_set_floor_colours();
@@ -190,7 +190,7 @@ vector<vault_placement> Temp_Vaults;
 static FixedBitVector<NUM_MONSTERS> temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
-const map_bitmask *Vault_Placement_Mask = NULL;
+const map_bitmask *Vault_Placement_Mask = nullptr;
 
 static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
@@ -593,7 +593,7 @@ static void _dgn_map_colour_fixup()
                 env.grid_colours[x][y] = BLACK;
             }
 
-    dgn_colour_grid.reset(NULL);
+    dgn_colour_grid.reset(nullptr);
 }
 
 bool set_level_flags(uint32_t flags, bool silent)
@@ -741,7 +741,7 @@ static bool _dgn_fill_zone(
     const coord_def &start, int zone,
     point_record &record_point,
     bool (*passable)(const coord_def &) = _dgn_square_is_passable,
-    bool (*iswanted)(const coord_def &) = NULL)
+    bool (*iswanted)(const coord_def &) = nullptr)
 {
     bool ret = false;
     list<coord_def> points[2];
@@ -907,7 +907,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                                _dgn_square_is_passable,
                                choose_stairless ? (at_branch_bottom() ?
                                                    _is_upwards_exit_stair :
-                                                   _is_exit_stair) : NULL);
+                                                   _is_exit_stair) : nullptr);
 
             // If we want only stairless zones, screen out zones that did
             // have stairs.
@@ -1064,7 +1064,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     {
         const keyed_mapspec *spec = place.map.mapspec_at(*vi - place.pos);
 
-        if (spec != NULL)
+        if (spec != nullptr)
         {
             env.level_map_mask(*vi) |= (short)spec->map_mask.flags_set;
             env.level_map_mask(*vi) &= ~((short)spec->map_mask.flags_unset);
@@ -1198,18 +1198,18 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_build_method.clear();
     env.level_layout_types.clear();
     level_clear_vault_memory();
-    dgn_colour_grid.reset(NULL);
+    dgn_colour_grid.reset(nullptr);
 
     use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;
     dgn_zones        = 0;
 
     _temple_altar_list.clear();
-    _current_temple_hash = NULL;
+    _current_temple_hash = nullptr;
 
     // Forget level properties.
     env.properties.clear();
-    env.heightmap.reset(NULL);
+    env.heightmap.reset(nullptr);
 
     env.absdepth0 = absdungeon_depth(you.where_are_you, you.depth);
 
@@ -1966,7 +1966,7 @@ static void _build_overflow_temples()
 
         const int num_gods = _setup_temple_altars(temple);
 
-        const map_def *vault = NULL;
+        const map_def *vault = nullptr;
         string vault_tag = "";
         string name = "";
 
@@ -1975,7 +1975,7 @@ static void _build_overflow_temples()
             name = temple[TEMPLE_MAP_KEY].get_string();
 
             vault = find_map_by_name(name);
-            if (vault == NULL)
+            if (vault == nullptr)
             {
                 mprf(MSGCH_ERROR,
                      "Couldn't find overflow temple map '%s'!",
@@ -2018,7 +2018,7 @@ static void _build_overflow_temples()
 
                 vault = random_map_for_tag(vault_tag, true);
 #ifdef DEBUG_TEMPLES
-                if (vault == NULL)
+                if (vault == nullptr)
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Couldn't find overflow temple "
                          "for combination of tags %s", vault_tag.c_str());
@@ -2026,13 +2026,13 @@ static void _build_overflow_temples()
 #endif
             }
 
-            if (vault == NULL)
+            if (vault == nullptr)
             {
                 vault_tag = make_stringf("temple_overflow_generic_%d",
                                          num_gods);
 
                 vault = random_map_for_tag(vault_tag, true);
-                if (vault == NULL)
+                if (vault == nullptr)
                 {
                     mprf(MSGCH_ERROR,
                          "Couldn't find overflow temple tag '%s'!",
@@ -2041,7 +2041,7 @@ static void _build_overflow_temples()
             }
         }
 
-        if (vault == NULL)
+        if (vault == nullptr)
             // Might as well build the rest of the level if we couldn't
             // find the overflow temple map, so don't veto the level.
             return;
@@ -2064,7 +2064,7 @@ static void _build_overflow_temples()
              vault->name.c_str());
 #endif
     }
-    _current_temple_hash = NULL; // XXX: hack!
+    _current_temple_hash = nullptr; // XXX: hack!
 }
 
 struct coord_feat
@@ -2592,7 +2592,7 @@ static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
 
 static const map_def *_pick_layout(const map_def *vault)
 {
-    const map_def *layout = NULL;
+    const map_def *layout = nullptr;
 
     // This is intended for use with primary vaults, so...
     ASSERT(vault);
@@ -2662,7 +2662,7 @@ static bool _pan_level()
                                        + pandemon_level_names[which_demon]));
     }
 
-    const map_def *vault = NULL;
+    const map_def *vault = nullptr;
 
     if (which_demon >= 0)
     {
@@ -2741,7 +2741,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
             || crawl_state.game_is_tutorial()))
     {
         vault = find_map_by_name(crawl_state.map);
-        if (vault == NULL)
+        if (vault == nullptr)
         {
             end(1, false, "Couldn't find selected map '%s'.",
                 crawl_state.map.c_str());
@@ -2778,7 +2778,7 @@ struct map_component
 
     map_component()
     {
-        min_equivalent = NULL;
+        min_equivalent = nullptr;
     }
     map_component * min_equivalent;
 
@@ -2794,7 +2794,7 @@ struct map_component
         max_coord = pos;
 
         label = in_label;
-        min_equivalent = NULL;
+        min_equivalent = nullptr;
     }
 
     void add_coord(const coord_def & pos)
@@ -2905,7 +2905,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
     // Reindex root labels, and move them to output
     for (auto &entry : intermediate_components)
     {
-        if (entry.second.min_equivalent == NULL)
+        if (entry.second.min_equivalent == nullptr)
         {
             entry.second.label = reindexed_label++;
             components.push_back(entry.second);
@@ -3140,7 +3140,7 @@ static void _place_chance_vaults()
 
 static void _place_minivaults()
 {
-    const map_def *vault = NULL;
+    const map_def *vault = nullptr;
     // First place the vault requested with &P
     if (you.props.exists("force_minivault")
         && (vault = find_map_by_name(you.props["force_minivault"])))
@@ -3632,7 +3632,7 @@ static void _place_branch_entrances(bool use_vaults)
 
             // Otherwise place a single stair feature.
             // Try to use designated locations for entrances if possible.
-            const coord_def portal_pos = find_portal_place(NULL, false);
+            const coord_def portal_pos = find_portal_place(nullptr, false);
             if (!portal_pos.origin())
             {
                 env.grid(portal_pos) = it->entry_stairs;
@@ -4070,7 +4070,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
                                      const coord_def &where)
 {
     if (!mdef)
-        return NULL;
+        return nullptr;
 
     const dgn_colour_override_manager colour_man;
 
@@ -4082,7 +4082,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
                  "Cannot generate encompass map '%s' with check_collision=true",
                  mdef->name.c_str());
 
-            return NULL;
+            return nullptr;
         }
 
         // For encompass maps, clear the entire level.
@@ -4160,7 +4160,7 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
                 mdef = find_map_by_name(mapname);
             }
             else
-                return NULL;
+                return nullptr;
         }
     }
 }
@@ -4168,7 +4168,8 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
 vault_placement *dgn_vault_at(coord_def p)
 {
     const int map_index = env.level_map_ids(p);
-    return map_index == INVALID_MAP_INDEX ? NULL : env.level_vaults[map_index];
+    return map_index == INVALID_MAP_INDEX ? nullptr
+                                          : env.level_vaults[map_index];
 }
 
 void dgn_seen_vault_at(coord_def p)
@@ -4256,7 +4257,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
          place.pos.x, place.pos.y, place.size.x, place.size.y);
 
     if (placed_vault_orientation == MAP_NONE)
-        return NULL;
+        return nullptr;
 
     const bool is_layout = place.map.is_overwritable_layout();
 
@@ -5028,7 +5029,7 @@ static bool _dgn_place_one_monster(const vault_placement &place,
 
 /* "Oddball grids" are handled in _vault_grid. */
 static dungeon_feature_type _glyph_to_feat(int glyph,
-                                           vault_placement *place = NULL)
+                                           vault_placement *place = nullptr)
 {
     return (glyph == 'x') ? DNGN_ROCK_WALL :
            (glyph == 'X') ? DNGN_PERMAROCK_WALL :
@@ -5073,7 +5074,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
     if (rawfeat == ' ')
         return NUM_FEATURES;
 
-    keyed_mapspec *mapsp = map? map->mapspec_at(c) : NULL;
+    keyed_mapspec *mapsp = map? map->mapspec_at(c) : nullptr;
     if (mapsp)
     {
         feature_spec f = mapsp->get_feat();
@@ -5088,7 +5089,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
         else if (f.feat >= 0)
             return static_cast<dungeon_feature_type>(f.feat);
         else if (f.glyph >= 0)
-            return map_feature_at(NULL, c, f.glyph);
+            return map_feature_at(nullptr, c, f.glyph);
         else if (f.shop.get())
             return DNGN_ENTER_SHOP;
 
@@ -5448,7 +5449,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
 {
     if (_temple_altar_list.empty())
     {
-        if (_current_temple_hash != NULL)
+        if (_current_temple_hash != nullptr)
         {
             // Altar god doesn't matter, setting up the whole machinery would
             // be too much work.
@@ -6665,7 +6666,7 @@ static bool _fixup_interlevel_connectivity()
         }
 
         _dgn_fill_zone(*ri, ++nzones, _dgn_point_record_stub,
-                       dgn_square_travel_ok, NULL);
+                       dgn_square_travel_ok, nullptr);
     }
 
     int max_region = 0;
@@ -6921,7 +6922,7 @@ string vault_placement::map_name_at(const coord_def &where) const
 
 void vault_placement::reset()
 {
-    if (_current_temple_hash != NULL)
+    if (_current_temple_hash != nullptr)
         _setup_temple_altars(*_current_temple_hash);
     else
         _temple_altar_list.clear();

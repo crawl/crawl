@@ -50,14 +50,14 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
       final_attack_delay(0), special_damage_flavour(BEAM_NONE),
       stab_attempt(false), stab_bonus(0), apply_bleeding(false),
-      ev_margin(0), weapon(NULL),
+      ev_margin(0), weapon(nullptr),
       damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT),
-      shield(NULL), art_props(0), unrand_entry(NULL),
+      shield(nullptr), art_props(0), unrand_entry(nullptr),
       attacker_to_hit_penalty(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
       attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
-      defender_shield(NULL), miscast_level(-1), miscast_type(SPTYP_NONE),
-      miscast_target(NULL), fake_chaos_attack(false), simu(false),
+      defender_shield(nullptr), miscast_level(-1), miscast_type(SPTYP_NONE),
+      miscast_target(nullptr), fake_chaos_attack(false), simu(false),
       aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
     // No effective code should execute, we'll call init_attack again from
@@ -284,7 +284,7 @@ int attack::calc_to_hit(bool random)
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
-    if (defender == NULL)
+    if (defender == nullptr)
         return mhit;
 
     if (!defender->visible_to(attacker))
@@ -577,7 +577,7 @@ bool attack::distortion_affects_defender()
 void attack::antimagic_affects_defender(int pow)
 {
     obvious_effect =
-        enchant_actor_with_flavour(defender, NULL, BEAM_DRAIN_MAGIC, pow);
+        enchant_actor_with_flavour(defender, nullptr, BEAM_DRAIN_MAGIC, pow);
 }
 
 void attack::pain_affects_defender()
@@ -993,7 +993,7 @@ void attack::do_miscast()
     if (miscast_level == -1)
         return;
 
-    ASSERT(miscast_target != NULL);
+    ASSERT(miscast_target != nullptr);
     ASSERT_RANGE(miscast_level, 0, 4);
     ASSERT(count_bits(miscast_type) == 1);
 
@@ -1233,7 +1233,7 @@ string attack::def_name(description_level_type desc)
  */
 string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
 {
-    ASSERT(weapon != NULL);
+    ASSERT(weapon != nullptr);
 
     if (attacker->is_player())
         return weapon->name(desc, false, false, false, false, ignre_flags);

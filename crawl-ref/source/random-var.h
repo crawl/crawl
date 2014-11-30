@@ -17,7 +17,7 @@ class random_var
 
 public:
     random_var(int c);
-    random_var(int s, int e, weight_func w_ = NULL);
+    random_var(int s, int e, weight_func w_ = nullptr);
     random_var(int s, int e, vector<int> ws);
 
     const random_var& operator=(const random_var& other);

@@ -36,7 +36,7 @@ struct cloud_data
 {
     /// A (relatively) short name for the cloud. May be referenced from lua.
     const char* terse_name;
-    /// Another name for the cloud. If NULL, defaults to terse name.
+    /// Another name for the cloud. If nullptr, defaults to terse name.
     const char* verbose_name;
     /// The colour of the cloud in console.
     colour_t colour;
@@ -60,7 +60,7 @@ static const cloud_data clouds[] = {
        15, 46,                                  // base, expected random damage
     },
     // CLOUD_MEPHITIC,
-    { "noxious fumes", NULL,                    // terse, verbose name
+    { "noxious fumes", nullptr,                 // terse, verbose name
       GREEN,                                    // colour
       BEAM_MEPHITIC,                            // beam_effect
       0, 19,                                    // base, expected random damage
@@ -72,29 +72,29 @@ static const cloud_data clouds[] = {
       15, 46,                                   // base, expected random damage
     },
     // CLOUD_POISON,
-    { "poison gas", NULL,                       // terse, verbose name
+    { "poison gas", nullptr,                    // terse, verbose name
       LIGHTGREEN,                               // colour
       BEAM_POISON,                              // beam_effect
       0, 37,                                    // base, expected random damage
     },
     // CLOUD_BLACK_SMOKE,
-    { "black smoke",  NULL,                     // terse, verbose name
+    { "black smoke",  nullptr,                  // terse, verbose name
       DARKGREY,                                 // colour
     },
     // CLOUD_GREY_SMOKE,
-    { "grey smoke",  NULL,                      // terse, verbose name
+    { "grey smoke",  nullptr,                   // terse, verbose name
       LIGHTGREY,                                // colour
     },
     // CLOUD_BLUE_SMOKE,
-    { "blue smoke",  NULL,                      // terse, verbose name
+    { "blue smoke",  nullptr,                   // terse, verbose name
       LIGHTBLUE,                                // colour
     },
     // CLOUD_PURPLE_SMOKE,
-    { "purple smoke",  NULL,                    // terse, verbose name
+    { "purple smoke",  nullptr,                 // terse, verbose name
       MAGENTA,                                  // colour
     },
     // CLOUD_TLOC_ENERGY,
-    { "translocational energy",  NULL,          // terse, verbose name
+    { "translocational energy",  nullptr,       // terse, verbose name
       MAGENTA,                                  // colour
     },
     // CLOUD_FOREST_FIRE,
@@ -116,17 +116,17 @@ static const cloud_data clouds[] = {
     },
 #endif
     // CLOUD_INK,
-    { "ink",  NULL,                             // terse, verbose name
+    { "ink",  nullptr,                          // terse, verbose name
       DARKGREY,                                 // colour
       BEAM_INK,                                 // beam_effect
     },
     // CLOUD_PETRIFY,
-    { "calcifying dust",  NULL,                 // terse, verbose name
+    { "calcifying dust",  nullptr,              // terse, verbose name
       WHITE,                                    // colour
       BEAM_PETRIFYING_CLOUD,                    // beam_effect
     },
     // CLOUD_HOLY_FLAMES,
-    { "blessed fire", NULL,                     // terse, verbose name
+    { "blessed fire", nullptr,                  // terse, verbose name
       ETC_HOLY,                                 // colour
       BEAM_HOLY_FLAME,                          // beam_effect
       15, 46,                                   // base, expected random damage
@@ -137,11 +137,11 @@ static const cloud_data clouds[] = {
       BEAM_MIASMA,                              // beam_effect
     },
     // CLOUD_MIST,
-    { "thin mist", NULL,                        // terse, verbose name
+    { "thin mist", nullptr,                     // terse, verbose name
       ETC_MIST,                                 // colour
     },
     // CLOUD_CHAOS,
-    { "seething chaos", NULL,                   // terse, verbose name
+    { "seething chaos", nullptr,                // terse, verbose name
       ETC_RANDOM,                               // colour
       BEAM_CHAOS,                               // beam_effect
     },
@@ -150,29 +150,29 @@ static const cloud_data clouds[] = {
       ETC_MIST,                                 // colour
     },
     // CLOUD_MUTAGENIC,
-    { "mutagenic fog",  NULL,                   // terse, verbose name
+    { "mutagenic fog",  nullptr,                // terse, verbose name
       ETC_MUTAGENIC,                            // colour
     },
     // CLOUD_MAGIC_TRAIL,
-    { "magical condensation", NULL,             // terse, verbose name
+    { "magical condensation", nullptr,          // terse, verbose name
       ETC_MAGIC,                                // colour
     },
     // CLOUD_TORNADO,
-    { "raging winds", NULL,                     // terse, verbose name
+    { "raging winds", nullptr,                  // terse, verbose name
       ETC_TORNADO,                              // colour
     },
     // CLOUD_DUST_TRAIL,
-    { "sparse dust",  NULL,                     // terse, verbose name
+    { "sparse dust",  nullptr,                  // terse, verbose name
       ETC_EARTH,                                // colour
     },
     // CLOUD_GHOSTLY_FLAME,
-    { "ghostly flame", NULL,                    // terse, verbose name
+    { "ghostly flame", nullptr,                 // terse, verbose name
       ETC_ELECTRICITY,                          // colour
       BEAM_NONE,                                // beam_effect
       0, 25,                                    // base, expected random damage
     },
     // CLOUD_ACID,
-    { "acidic fog", NULL,                       // terse, verbose name
+    { "acidic fog", nullptr,                    // terse, verbose name
       YELLOW,                                   // colour
       BEAM_ACID,                                // beam_effect
       15, 46,                                   // base, random expected damage
@@ -184,7 +184,7 @@ static const cloud_data clouds[] = {
       60, 46,                                   // base, random expected damage
     },
     // CLOUD_NEGATIVE_ENERGY,
-    { "negative energy", NULL,                  // terse, verbose name
+    { "negative energy", nullptr,               // terse, verbose name
       ETC_INCARNADINE,                          // colour
       BEAM_NEG,                                 // beam_effect
       15, 46,                                   // base, random expected damage
@@ -522,7 +522,7 @@ void manage_clouds()
                 if (you_see && !you_worship(GOD_QAZLAL))
                     mpr("Lightning arcs down from a storm cloud!");
                 noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), cloud.pos,
-                      you_see || you_worship(GOD_QAZLAL) ? NULL
+                      you_see || you_worship(GOD_QAZLAL) ? nullptr
                       : "You hear a mighty clap of thunder!");
             }
             if (grd(cloud.pos) == DNGN_LAVA)
@@ -1056,7 +1056,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
                                             int final_damage)
 {
     const bool player = act->is_player();
-    monster *mons = !player? act->as_monster() : NULL;
+    monster *mons = !player? act->as_monster() : nullptr;
     switch (cloud.type)
     {
     case CLOUD_RAIN:
@@ -1329,7 +1329,7 @@ static int _actor_cloud_damage(const actor *act,
         noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT), act->pos(),
               act->is_player() || you.see_cell(act->pos())
               || you_worship(GOD_QAZLAL)
-                ? NULL
+                ? nullptr
                 : "You hear a clap of thunder!");
 
         return lightning_dam;
@@ -1352,7 +1352,7 @@ int actor_apply_cloud(actor *act)
 
     const cloud_struct &cloud(env.cloud[cl]);
     const bool player = act->is_player();
-    monster *mons = !player? act->as_monster() : NULL;
+    monster *mons = !player? act->as_monster() : nullptr;
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (actor_cloud_immune(act, cloud))
@@ -1607,7 +1607,7 @@ string cloud_type_name(cloud_type type, bool terse)
         return "buggy goodness";
 
     ASSERT(clouds[type].terse_name);
-    if (terse || clouds[type].verbose_name == NULL)
+    if (terse || clouds[type].verbose_name == nullptr)
         return clouds[type].terse_name;
     return clouds[type].verbose_name;
 }
@@ -1819,7 +1819,7 @@ static void _spread_cloud(coord_def pos, cloud_type type, int radius, int pow,
         if ((exp_map(*di - pos + centre) < INT_MAX) && env.cgrid(*di) == EMPTY_CLOUD
             && (di.radius() < radius || x_chance_in_y(ratio, 100)))
         {
-            place_cloud(type, *di, pow + random2(pow), NULL);
+            place_cloud(type, *di, pow + random2(pow), nullptr);
             --remaining;
 
             // Setting this way since the agent of the cloud may be dead before

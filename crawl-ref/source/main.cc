@@ -3179,7 +3179,7 @@ static void _move_player(coord_def move)
                  mons_genus(targ_monst->type) == MONS_FUNGUS ? "fungus"
                                                              : "plants");
         }
-        targ_monst = NULL;
+        targ_monst = nullptr;
     }
 
     bool targ_pass = you.can_pass_through(targ) && !you.is_stationary();
@@ -3218,12 +3218,12 @@ static void _move_player(coord_def move)
 
     // You cannot move away from a siren but you CAN fight monsters on
     // neighbouring squares.
-    monster* beholder = NULL;
+    monster* beholder = nullptr;
     if (!you.confused())
         beholder = you.get_beholder(targ);
 
     // You cannot move closer to a fear monger.
-    monster *fmonger = NULL;
+    monster *fmonger = nullptr;
     if (!you.confused())
         fmonger = you.get_fearmonger(targ);
 
@@ -3507,7 +3507,7 @@ static int _get_num_and_char_keyfun(int &ch)
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
 {
-    if (prompt != NULL)
+    if (prompt != nullptr)
         mprf(MSGCH_PROMPT, "%s", prompt);
 
     line_reader reader(buf, buf_len);

@@ -2346,7 +2346,7 @@ static item_def* _tran_get_eq(equipment_type eq)
     if (you_tran_can_wear(eq, true))
         return you.slot_item(eq, true);
 
-    return NULL;
+    return nullptr;
 }
 
 static void _xom_zero_miscast()
@@ -2542,7 +2542,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (_tran_get_eq(EQ_CLOAK) != NULL)
+    if (_tran_get_eq(EQ_CLOAK) != nullptr)
         messages.emplace_back("Your cloak billows in an unfelt wind.");
 
     if ((item = _tran_get_eq(EQ_HELMET)))
@@ -2775,9 +2775,9 @@ static int _xom_miscast(const int max_level, const bool nasty,
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
-    MiscastEffect(&you, NULL, GOD_MISCAST + GOD_XOM, (spschool_flag_type)school,
-                  level, cause_str, NH_DEFAULT, lethality_margin, hand_str,
-                  can_plural);
+    MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_XOM,
+                  (spschool_flag_type)school, level, cause_str, NH_DEFAULT,
+                  lethality_margin, hand_str, can_plural);
 
     // Not worth distinguishing unless debugging.
     return XOM_BAD_MISCAST_MAJOR;
@@ -3970,8 +3970,9 @@ static int _death_is_worth_saving(const kill_method_type killed_by,
     case KILLED_BY_STUPIDITY:
     case KILLED_BY_WEAKNESS:
     case KILLED_BY_CLUMSINESS:
-        if (strstr(aux, "wielding") == NULL && strstr(aux, "wearing") == NULL
-            && strstr(aux, "removing") == NULL)
+        if (strstr(aux, "wielding") == nullptr
+            && strstr(aux, "wearing") == nullptr
+            && strstr(aux, "removing") == nullptr)
         {
             return true;
         }

@@ -58,7 +58,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat);
 bool feat_is_gate(dungeon_feature_type feat);
 
 string feat_preposition(dungeon_feature_type feat, bool active = false,
-                        const actor* who = NULL);
+                        const actor* who = nullptr);
 string stair_climb_verb(dungeon_feature_type feat);
 
 bool feat_is_water(dungeon_feature_type feat);
@@ -135,7 +135,7 @@ bool is_boring_terrain(dungeon_feature_type feat);
 dungeon_feature_type orig_terrain(coord_def pos);
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type = TERRAIN_CHANGE_GENERIC,
-                         const monster* mon = NULL);
+                         const monster* mon = nullptr);
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype);
 bool is_temp_terrain(coord_def pos);
 

@@ -42,7 +42,7 @@ static const duration_def* _lookup_duration(duration_type dur)
 {
     ASSERT_RANGE(dur, 0, NUM_DURATIONS);
     if (duration_index[dur] == -1)
-        return NULL;
+        return nullptr;
     else
         return &duration_data[duration_index[dur]];
 }

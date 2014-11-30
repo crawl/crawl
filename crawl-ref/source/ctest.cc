@@ -84,7 +84,7 @@ static const struct luaL_reg crawl_test_lib[] =
     { "begin_test", crawl_begin_test },
     { "test_success", crawl_test_success },
     { "script_args", crawl_script_args },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static void _init_test_bindings()

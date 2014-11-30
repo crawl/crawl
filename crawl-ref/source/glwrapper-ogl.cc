@@ -41,7 +41,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // Static functions from GLStateManager
 
-GLStateManager *glmanager = NULL;
+GLStateManager *glmanager = nullptr;
 
 void GLStateManager::init()
 {
@@ -54,7 +54,7 @@ void GLStateManager::init()
 void GLStateManager::shutdown()
 {
     delete glmanager;
-    glmanager = NULL;
+    glmanager = nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -444,7 +444,7 @@ OGLShapeBuffer::OGLShapeBuffer(bool texture, bool colour, drawing_modes prim) :
 
 const char *OGLShapeBuffer::print_statistics() const
 {
-    return NULL;
+    return nullptr;
 }
 
 unsigned int OGLShapeBuffer::size() const

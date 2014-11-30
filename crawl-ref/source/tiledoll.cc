@@ -41,7 +41,7 @@ const dolls_data& dolls_data::operator=(const dolls_data& other)
 dolls_data::~dolls_data()
 {
     delete[] parts;
-    parts = NULL;
+    parts = nullptr;
 }
 
 bool dolls_data::operator==(const dolls_data& other) const
@@ -67,8 +67,8 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
                               || !(stFileInfo.st_mode & S_IWUSR)) ? "dolls.txt"
                             : dollsTxtString.c_str();
 
-    FILE *fp = NULL;
-    if ((fp = fopen_u(dollsTxt, "w+")) != NULL)
+    FILE *fp = nullptr;
+    if ((fp = fopen_u(dollsTxt, "w+")) != nullptr)
     {
         fprintf(fp, "MODE=%s\n",
                     (mode == TILEP_MODE_EQUIP)   ? "EQUIP" :
@@ -101,7 +101,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                     tile_doll_mode *mode, int *cur)
 {
     char fbuf[1024];
-    FILE *fp  = NULL;
+    FILE *fp  = nullptr;
 
     string dollsTxtString = datafile_path(fn, false, true);
 
@@ -114,7 +114,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                               || !(stFileInfo.st_mode & S_IRUSR)) ? "dolls.txt"
                             : dollsTxtString.c_str();
 
-    if ((fp = fopen_u(dollsTxt, "r")) == NULL)
+    if ((fp = fopen_u(dollsTxt, "r")) == nullptr)
     {
         // File doesn't exist. By default, use equipment settings.
         *mode = TILEP_MODE_EQUIP;
@@ -561,7 +561,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     // Set up mcache data based on equipment. We don't need this lookup if both
     // pairs of offsets are defined in Options.
     int draw_info_count = 0, dind = 0;
-    mcache_entry *entry = NULL;
+    mcache_entry *entry = nullptr;
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
     if (Options.tile_use_monster != MONS_0)
     {

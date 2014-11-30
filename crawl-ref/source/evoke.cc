@@ -125,7 +125,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     monster* mons = monster_at(beam.target);
     // don't allow targeting of submerged monsters (includes trapdoor spiders)
     if (mons && mons->submerged())
-        mons = NULL;
+        mons = nullptr;
 
     const int x_first_middle = you.pos().x + (delta.x)/2;
     const int y_first_middle = you.pos().y + (delta.y)/2;
@@ -213,7 +213,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         }
     }
 
-    if (mons == NULL)
+    if (mons == nullptr)
     {
         // Must return true, otherwise you get a free discovery
         // of invisible monsters.
@@ -669,7 +669,7 @@ static bool _box_of_beasts(item_def &box)
     }
 
     bool success = false;
-    monster* mons = NULL;
+    monster* mons = nullptr;
 
     if (!one_chance_in(3))
     {
@@ -1042,8 +1042,8 @@ static bool _lamp_of_fire()
 
     const int pow = 8 + you.skill_rdiv(SK_EVOCATIONS, 9, 4);
     if (spell_direction(target, base_beam, DIR_TARGET, TARG_HOSTILE, 8,
-                        true, true, false, NULL,
-                        "Aim the lamp in which direction?", true, NULL))
+                        true, true, false, nullptr,
+                        "Aim the lamp in which direction?", true, nullptr))
     {
         if (you.confused())
             target.confusion_fuzz();
@@ -1513,7 +1513,7 @@ static bool _phial_of_floods()
     beam.aimed_at_spot = true;
 
     if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
-                        LOS_RADIUS, true, true, false, NULL,
+                        LOS_RADIUS, true, true, false, nullptr,
                         "Aim the phial where?"))
     {
         if (you.confused())
@@ -1576,12 +1576,12 @@ static void _expend_xp_evoker(item_def &item)
 static spret_type _phantom_mirror()
 {
     bolt beam;
-    monster* victim = NULL;
+    monster* victim = nullptr;
     dist spd;
     targetter_smite tgt(&you, LOS_RADIUS, 0, 0);
 
     if (!spell_direction(spd, beam, DIR_TARGET, TARG_ANY,
-                         LOS_RADIUS, false, true, false, NULL,
+                         LOS_RADIUS, false, true, false, nullptr,
                          "Aiming: <white>Phantom Mirror</white>", true,
                          &tgt))
     {
@@ -1735,7 +1735,7 @@ bool evoke_item(int slot, bool check_range)
         slot = prompt_invent_item("Evoke which item? (* to show all)",
                                    MT_INVLIST,
                                    OSEL_EVOKABLE, true, true, true, 0, -1,
-                                   NULL, OPER_EVOKE);
+                                   nullptr, OPER_EVOKE);
 
         if (prompt_failed(slot))
             return false;
@@ -1759,7 +1759,7 @@ bool evoke_item(int slot, bool check_range)
     bool unevokable = false;
 
     const unrandart_entry *entry = is_unrandom_artefact(item)
-        ? get_unrand_entry(item.special) : NULL;
+        ? get_unrand_entry(item.special) : nullptr;
 
     if (entry && entry->evoke_func)
     {

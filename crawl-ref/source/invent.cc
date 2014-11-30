@@ -307,8 +307,8 @@ void InvEntry::set_show_glyph(bool doshow)
 }
 
 InvMenu::InvMenu(int mflags)
-    : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(NULL),
-      title_annotate(NULL)
+    : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(nullptr),
+      title_annotate(nullptr)
 {
 #ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
@@ -746,7 +746,7 @@ const menu_sort_condition *InvMenu::find_menu_sort_condition() const
         if (Options.sort_menus[i].matches(type))
             return &Options.sort_menus[i];
 
-    return NULL;
+    return nullptr;
 }
 
 void InvMenu::sort_menu(vector<InvEntry*> &invitems,
@@ -785,7 +785,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         inv_class[ mitems[i]->base_type ]++;
 
     vector<InvEntry*> items_in_class;
-    const menu_sort_condition *cond = NULL;
+    const menu_sort_condition *cond = nullptr;
     if (sort) cond = find_menu_sort_condition();
 
     for (int obj = 0; obj < NUM_OBJECT_CLASSES; ++obj)
@@ -821,7 +821,7 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         }
         items_in_class.clear();
 
-        InvEntry *forced_first = NULL;
+        InvEntry *forced_first = nullptr;
         for (int j = 0, count = mitems.size(); j < count; ++j)
         {
             if (mitems[j]->base_type != i)
@@ -1211,18 +1211,18 @@ bool any_items_to_select(int selector, bool msg, int excluded_slot)
     return false;
 }
 
-// Use title = NULL for stock Inventory title
+// Use title = nullptr for stock Inventory title
 // type = MT_DROP allows the multidrop toggle
-static unsigned char _invent_select(const char *title = NULL,
+static unsigned char _invent_select(const char *title = nullptr,
                                     menu_type type = MT_INVLIST,
                                     int item_selector = OSEL_ANY,
                                     int excluded_slot = -1,
                                     int flags = MF_NOSELECT,
-                                    invtitle_annotator titlefn = NULL,
-                                    vector<SelItem> *items = NULL,
-                                    vector<text_pattern> *filter = NULL,
-                                    Menu::selitem_tfn selitemfn = NULL,
-                                    const vector<SelItem> *pre_select = NULL)
+                                    invtitle_annotator titlefn = nullptr,
+                                    vector<SelItem> *items = nullptr,
+                                    vector<text_pattern> *filter = nullptr,
+                                    Menu::selitem_tfn selitemfn = nullptr,
+                                    const vector<SelItem> *pre_select = nullptr)
 {
     InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
@@ -1255,7 +1255,7 @@ unsigned char get_invent(int invent_type, bool redraw)
 
     while (true)
     {
-        select = _invent_select(NULL, MT_INVLIST, invent_type, -1, flags);
+        select = _invent_select(nullptr, MT_INVLIST, invent_type, -1, flags);
 
         if (isaalpha(select))
         {
@@ -1901,7 +1901,7 @@ int prompt_invent_item(const char *prompt,
                         excluded_slot,
                         MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
                             | MF_EASY_EXIT,
-                        NULL,
+                        nullptr,
                         &items);
 
             if (allow_list_known && keyin == '\\')
@@ -1929,7 +1929,7 @@ int prompt_invent_item(const char *prompt,
                 }
             }
         }
-        else if (count != NULL && isadigit(keyin))
+        else if (count != nullptr && isadigit(keyin))
         {
             // The "read in quantity" mode
             keyin = _get_invent_quant(keyin, *count);
@@ -1940,7 +1940,7 @@ int prompt_invent_item(const char *prompt,
             if (auto_list)
                 need_redraw = true;
         }
-        else if (count == NULL && isadigit(keyin))
+        else if (count == nullptr && isadigit(keyin))
         {
             // scan for our item
             int res = _digit_to_index(keyin, oper);

@@ -42,7 +42,7 @@ static mons_list _lua_get_mlist(lua_State *ls, int ndx)
 
 void register_monslist(lua_State *ls)
 {
-    clua_register_metatable(ls, MONSLIST_METATABLE, NULL,
+    clua_register_metatable(ls, MONSLIST_METATABLE, nullptr,
                             lua_object_gc<mons_list>);
 }
 
@@ -50,7 +50,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
 {
     const int nargs = lua_gettop(ls);
 
-    map_def *map = NULL;
+    map_def *map = nullptr;
     if (nargs > 2)
     {
         luaL_error(ls, "Too many arguments.");
@@ -68,7 +68,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
         map = *_map;
     }
 
-    int       list_pos = (map != NULL) ? 2 : 1;
+    int       list_pos = (map != nullptr) ? 2 : 1;
     mons_list mlist    = _lua_get_mlist(ls, list_pos);
 
     if (mlist.empty())
@@ -250,5 +250,5 @@ const struct luaL_reg dgn_mons_dlib[] =
 { "max_monsters", _dgn_max_monsters },
 { "dismiss_monsters", dgn_dismiss_monsters },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

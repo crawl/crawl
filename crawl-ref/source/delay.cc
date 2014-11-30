@@ -1213,7 +1213,7 @@ static string _abyss_monster_creation_message(const monster* mon)
 static inline bool _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
                                     delay_type atype,
-                                    vector<string>* msgs_buf = NULL)
+                                    vector<string>* msgs_buf = nullptr)
 {
     if (ai == AI_SENSE_MONSTER)
     {

@@ -139,7 +139,7 @@ void initialise_temples()
     // First determine main temple map to use.
     level_id ecumenical(BRANCH_TEMPLE, 1);
 
-    map_def *main_temple = NULL;
+    map_def *main_temple = nullptr;
     for (int i = 0; i < 10; i++)
     {
         int altar_count = 0;
@@ -147,7 +147,7 @@ void initialise_temples()
         main_temple
             = const_cast<map_def*>(random_map_for_place(ecumenical, false));
 
-        if (main_temple == NULL)
+        if (main_temple == nullptr)
             end(1, false, "No temples?!");
 
         if (main_temple->has_tag("temple_variable"))
@@ -166,7 +166,7 @@ void initialise_temples()
                 mprf(MSGCH_ERROR,
                      "Temple %s set as variable but has no sizes.",
                      main_temple->name.c_str());
-                main_temple = NULL;
+                main_temple = nullptr;
                 continue;
             }
             altar_count =
@@ -186,7 +186,7 @@ void initialise_temples()
         {
             mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
-            main_temple = NULL;
+            main_temple = nullptr;
             you.props.erase(TEMPLE_SIZE_KEY);
             continue;
         }
@@ -198,14 +198,14 @@ void initialise_temples()
         {
             mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
-            main_temple = NULL;
+            main_temple = nullptr;
             you.props.erase(TEMPLE_SIZE_KEY);
             continue;
         }
         break;
     }
 
-    if (main_temple == NULL)
+    if (main_temple == nullptr)
         end(1, false, "No valid temples.");
 
     you.props[TEMPLE_MAP_KEY] = main_temple->name;

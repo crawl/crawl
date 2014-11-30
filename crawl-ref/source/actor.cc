@@ -73,13 +73,13 @@ hands_reqd_type actor::hands_reqd(const item_def &item) const
 
 /**
  * Wrapper around the virtual actor::can_wield(const item_def&,bool,bool,bool,bool) const overload.
- * @param item May be NULL, in which case a dummy item will be passed in.
+ * @param item May be nullptr, in which case a dummy item will be passed in.
  */
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const
 {
-    if (item == NULL)
+    if (item == nullptr)
     {
         // Unarmed combat.
         item_def fake;
@@ -113,7 +113,7 @@ bool actor::handle_trap()
     trap_def* trap = find_trap(pos());
     if (trap)
         trap->trigger(*this);
-    return trap != NULL;
+    return trap != nullptr;
 }
 
 int actor::skill_rdiv(skill_type sk, int mult, int div) const

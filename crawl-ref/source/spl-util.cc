@@ -94,7 +94,7 @@ void init_spell_descs()
         ASSERTM(data.id >= SPELL_NO_SPELL && data.id < NUM_SPELLS,
                 "spell #%d has invalid id %d", i, data.id);
 
-        ASSERTM(data.title != NULL && *data.title,
+        ASSERTM(data.title != nullptr && *data.title,
                 "spell #%d, id %d has no name", i, data.id);
 
         ASSERTM(data.level >= 1 && data.level <= 9,
@@ -557,7 +557,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 
     for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
     {
-        if (monster_at(*ai) == NULL && *ai != you.pos())
+        if (monster_at(*ai) == nullptr && *ai != you.pos())
             continue;
 
         // Found target
@@ -713,7 +713,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
     args.target_prefix = target_prefix;
     if (top_prompt)
         args.top_prompt = top_prompt;
-    args.behaviour = NULL;
+    args.behaviour = nullptr;
     args.cancel_at_self = cancel_at_self;
     args.hitfunc = hitfunc;
     args.get_desc_func = get_desc_func;

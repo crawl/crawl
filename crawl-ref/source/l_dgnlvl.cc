@@ -138,5 +138,5 @@ const struct luaL_reg dgn_level_dlib[] =
 { "level_id", dgn_level_id },
 { "level_name", dgn_level_name },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

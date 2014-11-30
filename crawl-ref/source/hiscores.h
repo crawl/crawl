@@ -130,7 +130,7 @@ public:
     scorefile_entry();
     scorefile_entry(int damage, mid_t death_source, int death_type,
                     const char *aux, bool death_cause_only = false,
-                    const char *death_source_name = NULL,
+                    const char *death_source_name = nullptr,
                     time_t death_time = 0);
     scorefile_entry(const scorefile_entry &se);
 

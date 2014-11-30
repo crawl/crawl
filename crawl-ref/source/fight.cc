@@ -651,8 +651,8 @@ int mons_missile_damage(monster* mons, const item_def *launch,
 
 int mons_usable_missile(monster* mons, item_def **launcher)
 {
-    *launcher = NULL;
-    item_def *launch = NULL;
+    *launcher = nullptr;
+    item_def *launch = nullptr;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
@@ -664,7 +664,7 @@ int mons_usable_missile(monster* mons, item_def **launcher)
 
     const item_def *missiles = mons->missiles();
     if (launch && missiles && !missiles->launched_by(*launch))
-        launch = NULL;
+        launch = nullptr;
 
     const int fdam = mons_missile_damage(mons, launch, missiles);
 

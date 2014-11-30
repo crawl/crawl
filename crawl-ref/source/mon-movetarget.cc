@@ -50,7 +50,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
             continue;
 
         monster* const m = monster_at(*ri);
-        if (m == NULL)
+        if (m == nullptr)
             continue;
 
         // Don't restrict smarter monsters as they might find a path
@@ -789,7 +789,7 @@ static monster * _active_band_leader(monster * mon)
 {
     // Not a band member
     if (!mon->props.exists("band_leader"))
-        return NULL;
+        return nullptr;
 
     // Try to find our fearless leader.
     unsigned leader_mid = mon->props["band_leader"].get_int();
@@ -803,7 +803,7 @@ static bool _band_wander_target(monster * mon)
 {
     int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
     monster * band_leader = _active_band_leader(mon);
-    if (band_leader == NULL)
+    if (band_leader == nullptr)
         return true;
 
     int leader_dist = grid_distance(mon->pos(), band_leader->pos());
@@ -976,7 +976,7 @@ void check_wander_target(monster* mon, bool isPacified)
             need_target = _herd_wander_target(mon);
 
         if (need_target
-            && _active_band_leader(mon) != NULL)
+            && _active_band_leader(mon) != nullptr)
         {
             need_target = _band_wander_target(mon);
         }

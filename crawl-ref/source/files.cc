@@ -918,14 +918,14 @@ static void _grab_followers()
     int non_stair_using_allies = 0;
     int non_stair_using_summons = 0;
 
-    monster* dowan = NULL;
-    monster* duvessa = NULL;
+    monster* dowan = nullptr;
+    monster* duvessa = nullptr;
 
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         monster* fol = monster_at(*ai);
-        if (fol == NULL)
+        if (fol == nullptr)
             continue;
 
         if (mons_is_mons_class(fol, MONS_DUVESSA) && fol->alive())
@@ -2254,7 +2254,7 @@ static bool _ghost_version_compatible(reader &inf)
             return false;
 
         // Discard three more 32-bit words of padding.
-        inf.read(NULL, 3*4);
+        inf.read(nullptr, 3*4);
     }
     catch (short_read_exception &E)
     {
@@ -2270,7 +2270,7 @@ static bool _ghost_version_compatible(reader &inf)
  * Attempt to open a new bones file for saving ghosts.
  *
  * @param[out] return_gfilename     The name of the file created, if any.
- * @return                          A FILE object, or NULL.
+ * @return                          A FILE object, or nullptr.
  **/
 static FILE* _make_bones_file(string * return_gfilename)
 {
@@ -2296,7 +2296,7 @@ static FILE* _make_bones_file(string * return_gfilename)
         return gfil;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /**
@@ -2392,7 +2392,7 @@ bool unlock_file_handle(FILE *handle)
  *
  * @param mode      The file access mode. ('r', 'ab+', etc)
  * @param file      The path to the file to be opened.
- * @return          A handle for the specified file, if successful; else NULL.
+ * @return          A handle for the specified file, if successful; else nullptr.
  */
 FILE *lk_open(const char *mode, const string &file)
 {
@@ -2400,14 +2400,14 @@ FILE *lk_open(const char *mode, const string &file)
 
     FILE *handle = fopen_u(file.c_str(), mode);
     if (!handle)
-        return NULL;
+        return nullptr;
 
     const bool write_lock = mode[0] != 'r' || strchr(mode, '+');
     if (!lock_file_handle(handle, write_lock))
     {
         mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         fclose(handle);
-        handle = NULL;
+        handle = nullptr;
     }
 
     return handle;
@@ -2419,19 +2419,19 @@ FILE *lk_open(const char *mode, const string &file)
  *
  * @param file The path to the file to be opened.
  * @return     A locked file handle for the specified file, if
- *             successful; else NULL.
+ *             successful; else nullptr.
  */
 FILE *lk_open_exclusive(const string &file)
 {
     int fd = open_u(file.c_str(), O_WRONLY|O_BINARY|O_EXCL|O_CREAT, 0666);
     if (fd < 0)
-        return NULL;
+        return nullptr;
 
     if (!lock_file(fd, true))
     {
         mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         close(fd);
-        return NULL;
+        return nullptr;
     }
 
     return fdopen(fd, "wb");
@@ -2439,7 +2439,7 @@ FILE *lk_open_exclusive(const string &file)
 
 void lk_close(FILE *handle, const string &file)
 {
-    if (handle == NULL || handle == stdin)
+    if (handle == nullptr || handle == stdin)
         return;
 
     unlock_file_handle(handle);
@@ -2454,7 +2454,7 @@ void lk_close(FILE *handle, const string &file)
 // Locks a named file (usually an empty lock file), creating it if necessary.
 
 file_lock::file_lock(const string &s, const char *_mode, bool die_on_fail)
-    : handle(NULL), mode(_mode), filename(s)
+    : handle(nullptr), mode(_mode), filename(s)
 {
     if (!(handle = lk_open(mode, filename)) && die_on_fail)
         end(1, true, "Unable to open lock file \"%s\"", filename.c_str());

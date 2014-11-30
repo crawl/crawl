@@ -39,7 +39,7 @@ extern "C"
     extern JNIEnv *Android_JNI_GetEnv(); // sigh
 }
 
-AAssetManager *_android_asset_manager = NULL; // XXX
+AAssetManager *_android_asset_manager = nullptr; // XXX
 #endif
 
 bool lock_file(int fd, bool write, bool wait)
@@ -183,10 +183,10 @@ int mkstemp(char *dummy)
         for (int i = 0; i < 6; i++)
             filename[len + i] = 'a' + random2(26);
         filename[len + 6] = 0;
-        fh = CreateFileW(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+        fh = CreateFileW(filename, GENERIC_READ | GENERIC_WRITE, 0, nullptr,
                          CREATE_NEW,
                          FILE_FLAG_DELETE_ON_CLOSE | FILE_ATTRIBUTE_TEMPORARY,
-                         NULL);
+                         nullptr);
         if (fh != INVALID_HANDLE_VALUE)
             return _open_osfhandle((intptr_t)fh, 0);
     }
@@ -242,7 +242,7 @@ void usleep(unsigned long time)
     timer.tv_sec  = (time / 1000000L);
     timer.tv_usec = (time % 1000000L);
 
-    select(0, NULL, NULL, NULL, &timer);
+    select(0, nullptr, nullptr, nullptr, &timer);
 }
 # endif
 #endif
@@ -254,7 +254,7 @@ AAssetManager *_android_get_asset_manager()
     jclass sdlClass = env->FindClass("org/libsdl/app/SDLActivity");
 
     if (!sdlClass)
-        return NULL;
+        return nullptr;
 
     jmethodID mid =
         env->GetStaticMethodID(sdlClass, "getContext",
@@ -262,14 +262,14 @@ AAssetManager *_android_get_asset_manager()
     jobject context = env->CallStaticObjectMethod(sdlClass, mid);
 
     if (!context)
-        return NULL;
+        return nullptr;
 
     mid = env->GetMethodID(env->GetObjectClass(context), "getAssets",
                            "()Landroid/content/res/AssetManager;");
     jobject assets = env->CallObjectMethod(context, mid);
 
     if (!assets)
-        return NULL;
+        return nullptr;
 
     return AAssetManager_fromJava(env, assets);
 }
@@ -410,7 +410,7 @@ vector<string> get_dir_files(const string &dirname)
             return files;
 
         const char *file;
-        while ((file = AAssetDir_getNextFileName(adir)) != NULL)
+        while ((file = AAssetDir_getNextFileName(adir)) != nullptr)
             files.emplace_back(file);
 
         AAssetDir_close(adir);
@@ -492,7 +492,7 @@ FILE *fopen_u(const char *path, const char *mode)
     if (strstr(path, ANDROID_ASSETS) == path)
     {
         if (!mode || mode[0] == 'w')
-            return NULL;
+            return nullptr;
 
         if (!_android_asset_manager)
             _android_asset_manager = _android_get_asset_manager();
@@ -503,7 +503,7 @@ FILE *fopen_u(const char *path, const char *mode)
                                            path + strlen(ANDROID_ASSETS) + 1,
                                            AASSET_MODE_RANDOM);
         if (!asset)
-            return NULL;
+            return nullptr;
 
         return funopen(asset, _android_read, _android_write, _android_seek,
                        _android_close);

@@ -560,7 +560,7 @@ public:
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
         item_special(0), qty(0), acquirement_source(0), place(), props(),
-        _corpse_monster_spec(NULL)
+        _corpse_monster_spec(nullptr)
     {
     }
 

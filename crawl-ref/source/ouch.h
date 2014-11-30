@@ -81,8 +81,8 @@ string morgue_name(string char_name, time_t when_crawl_got_even);
 
 void reset_damage_counters();
 void ouch(int dam, kill_method_type death_type, mid_t source = MID_NOBODY,
-          const char *aux = NULL, bool see_source = true,
-          const char *death_source_name = NULL);
+          const char *aux = nullptr, bool see_source = true,
+          const char *death_source_name = nullptr);
 
 void lose_level();
 bool drain_player(int power = 25, bool announce_full = true,

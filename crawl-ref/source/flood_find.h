@@ -43,7 +43,7 @@ flood_find<fgrd, bound_check>::flood_find(const fgrd &f, const bound_check &bc,
                                      bool avoid_vaults, bool _check_traversable)
     : travel_pathfind(), point_hunt(false), want_exit(false),
       no_vault(avoid_vaults), check_traversable(_check_traversable),
-      needed_features(), needed_points(), left_vault(true), vaults(NULL),
+      needed_features(), needed_points(), left_vault(true), vaults(nullptr),
       fgrid(f), bcheck(bc)
 {
     memset(needed_features, false, sizeof needed_features);

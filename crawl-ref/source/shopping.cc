@@ -96,14 +96,15 @@ static void _shop_more()
 static bool _shop_yesno(const char* prompt, int safeanswer)
 {
 #ifdef TOUCH_UI
-    return yesno(prompt, true, safeanswer, false, false, false, NULL, GOTO_CRT);
+    return yesno(prompt, true, safeanswer, false, false, false, nullptr,
+                 GOTO_CRT);
 #else
     if (_in_shop_now)
     {
         textcolour(channel_to_colour(MSGCH_PROMPT));
         _shop_print(prompt, 1);
 
-        return yesno(NULL, true, safeanswer, false, false, true);
+        return yesno(nullptr, true, safeanswer, false, false, true);
     }
     else
         return yesno(prompt, true, safeanswer, false, false, false);
@@ -326,7 +327,7 @@ static void _shop_print_stock(const vector<int>& stock,
     ShopInfo &si  = StashTrack.get_shop(shop.pos);
     const bool id = shoptype_identifies_stock(shop.type);
 #ifdef USE_TILE_LOCAL
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
 #endif
 
     stock_order.clear();
@@ -2003,7 +2004,7 @@ void destroy_shop_at(coord_def p)
 shop_struct *get_shop(const coord_def& where)
 {
     if (grd(where) != DNGN_ENTER_SHOP)
-        return NULL;
+        return nullptr;
 
     unsigned short t = env.tgrid(where);
     ASSERT(t != NON_ENTITY);
@@ -2149,7 +2150,7 @@ ShoppingList::ShoppingList()
 #define SETUP_POS()                 \
     ASSERT(list); \
     level_pos pos;                  \
-    if (_pos != NULL)               \
+    if (_pos != nullptr)            \
         pos = *_pos;                \
     else                            \
         pos = level_pos::current(); \

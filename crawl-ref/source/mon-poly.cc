@@ -42,7 +42,7 @@ item_def* item_mimic_at(const coord_def &c)
     for (stack_iterator si(c); si; ++si)
         if (si->flags & ISFLAG_MIMIC)
             return &*si;
-    return NULL;
+    return nullptr;
 }
 
 bool mimic_at(const coord_def &c)

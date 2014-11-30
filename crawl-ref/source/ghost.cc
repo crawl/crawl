@@ -1000,7 +1000,7 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
 {
     mon_spell_slot slot;
     slot.flags = MON_SPELL_WIZARD;
-    monster* mon = caster->is_monster() ? caster->as_monster() : NULL;
+    monster* mon = caster->is_monster() ? caster->as_monster() : nullptr;
 
     int pow = mon ? 12 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
                   : calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);

@@ -1021,7 +1021,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
         return sample;
     }
 
-    if (abyssLayout == NULL)
+    if (abyssLayout == nullptr)
     {
         const level_id lid = _get_random_level();
         levelLayout = new LevelLayout(lid, 5, rivers);
@@ -1244,13 +1244,13 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         you.char_direction != GDT_GAME_START
         && _abyss_check_place_feat(p, 10000,
                                    &altars_wanted,
-                                   NULL,
+                                   nullptr,
                                    _abyss_pick_altar(),
                                    abyss_genlevel_mask)
         ||
         you.char_direction != GDT_GAME_START
         && level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 1900, NULL, NULL,
+        && _abyss_check_place_feat(p, 1900, nullptr, nullptr,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }

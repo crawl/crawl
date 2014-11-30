@@ -46,7 +46,7 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
                        msg_channel_type chan = MSGCH_PLAIN)
 {
     bool do_show = true;
-    if (show_msgs == NULL)
+    if (show_msgs == nullptr)
         show_msgs = &do_show;
 
     if (*show_msgs)
@@ -153,7 +153,7 @@ static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
     if (!unmeld)
     {
-        MiscastEffect(&you, NULL, WIELD_MISCAST, SPTYP_NECROMANCY, random2(9),
+        MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_NECROMANCY, random2(9),
                       random2(70), "the Scythe of Curses", NH_NEVER);
     }
 }
@@ -327,7 +327,7 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     bool def_show = true;
 
-    if (show_msgs == NULL)
+    if (show_msgs == nullptr)
         show_msgs = &def_show;
 
     if (!*show_msgs)
@@ -450,7 +450,7 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
 
 static void _wucad_miscast(actor* victim, int power,int fail)
 {
-    MiscastEffect(victim, NULL, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
+    MiscastEffect(victim, nullptr, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
                   "the Staff of Wucad Mu", NH_NEVER);
 }
 
@@ -628,7 +628,7 @@ static monster* _find_nearest_possible_beholder()
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 static void _DEMON_AXE_world_reacts(item_def *item)
@@ -982,7 +982,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
     if (mondied || !(x_chance_in_y(evoc, 27*27) || x_chance_in_y(evoc, 27*27)))
         return;
 
-    const char *verb = NULL;
+    const char *verb = nullptr;
     beam_type flavour = BEAM_NONE;
 
     switch (random2(4))

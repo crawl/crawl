@@ -384,7 +384,7 @@ public:
     ~precompute_travel_safety_grid()
     {
         if (did_compute)
-            _travel_safe_grid.reset(NULL);
+            _travel_safe_grid.reset(nullptr);
     }
 };
 
@@ -1159,10 +1159,10 @@ FixedVector<coord_def, GXM * GYM> travel_pathfind::circumference[2];
 travel_pathfind::travel_pathfind()
     : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
       floodout(false), double_flood(false), ignore_hostile(false),
-      ignore_danger(false), annotate_map(false), ls(NULL),
+      ignore_danger(false), annotate_map(false), ls(nullptr),
       need_for_greed(false), autopickup(false), sacrifice(false),
       unexplored_place(), greedy_place(), unexplored_dist(0), greedy_dist(0),
-      refdist(NULL), reseed_points(), features(NULL), unreachables(),
+      refdist(nullptr), reseed_points(), features(nullptr), unreachables(),
       point_distance(travel_point_distance), points(0), next_iter_points(0),
       traveled_distance(0), circ_index(0)
 {
@@ -2087,7 +2087,7 @@ static vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 
 static bool _is_valid_branch(const Branch &br)
 {
-    return br.shortname != NULL && brdepth[br.id] != -1;
+    return br.shortname != nullptr && brdepth[br.id] != -1;
 }
 
 static bool _is_disconnected_branch(const Branch &br)
@@ -2441,7 +2441,8 @@ static level_pos _prompt_travel_depth(const level_id &id)
 
         char buf[100];
         const int response =
-            cancellable_get_line(buf, sizeof buf, NULL, _travel_depth_keyfilter, "", "travel_depth");
+            cancellable_get_line(buf, sizeof buf, nullptr,
+                                 _travel_depth_keyfilter, "", "travel_depth");
 
         if (!response)
             return _parse_travel_target(buf, target);
@@ -2728,7 +2729,7 @@ static int _find_transtravel_stair(const level_id &cur,
 
     vector<stair_info> &stairs = li.get_stairs();
 
-    // this_stair being NULL is perfectly acceptable, since we start with
+    // this_stair being nullptr is perfectly acceptable, since we start with
     // coords as the player coords, and the player need not be standing on
     // stairs.
     stair_info *this_stair = li.get_stair(stair);
@@ -2759,7 +2760,7 @@ static int _find_transtravel_stair(const level_id &cur,
                 deltadist = -1;
         }
 
-        // deltadist == 0 is legal (if this_stair is NULL), since the player
+        // deltadist == 0 is legal (if this_stair is nullptr), since the player
         // may be standing on the stairs. If two stairs are disconnected,
         // deltadist has to be negative.
         if (deltadist < 0)
@@ -2860,7 +2861,7 @@ static bool _loadlev_populate_stair_distances(const level_pos &target)
 static void _populate_stair_distances(const level_pos &target)
 {
     // Populate travel_point_distance.
-    find_travel_pos(target.pos, NULL, NULL, NULL);
+    find_travel_pos(target.pos, nullptr, nullptr, nullptr);
 
     LevelInfo &li = travel_cache.get_level_info(target.id);
     const vector<stair_info> &stairs = li.get_stairs();
@@ -2891,7 +2892,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     int best_level_distance = -1;
     travel_cache.clear_distances();
 
-    find_travel_pos(you.pos(), NULL, NULL, NULL);
+    find_travel_pos(you.pos(), nullptr, nullptr, nullptr);
 
     _find_transtravel_stair(current, target,
                             0, cur_stair, closest_level,
@@ -3334,7 +3335,7 @@ void LevelInfo::update_stair_distances()
 
         // For each stair, we need to ask travel to populate the distance
         // array.
-        find_travel_pos(stairs[s].position, NULL, NULL, NULL);
+        find_travel_pos(stairs[s].position, nullptr, nullptr, nullptr);
 
         // Assume movement distance between stairs is commutative,
         // i.e. going from a->b is the same distance as b->a.
@@ -3478,7 +3479,7 @@ bool LevelInfo::know_stair(const coord_def &c) const
 stair_info *LevelInfo::get_stair(const coord_def &pos)
 {
     int index = get_stair_index(pos);
-    return index != -1? &stairs[index] : NULL;
+    return index != -1? &stairs[index] : nullptr;
 }
 
 int LevelInfo::get_stair_index(const coord_def &pos) const
@@ -4214,7 +4215,7 @@ void runrest::clear()
 explore_discoveries::explore_discoveries()
     : can_autopickup(::can_autopickup()),
       sacrifice(god_likes_items(you.religion, true)), es_flags(0),
-      current_level(NULL), items(), stairs(), portals(), shops(), altars(),
+      current_level(nullptr), items(), stairs(), portals(), shops(), altars(),
       runed_doors()
 {
 }
@@ -4467,7 +4468,7 @@ vector<string> explore_discoveries::apply_quantities(
     static const char *feature_plural_qualifiers[] =
     {
         " leading ", " back to ", " to ", " of ", " in ", " out of",
-        " from ", " back into ", NULL
+        " from ", " back into ", nullptr
     };
 
     vector<string> things;

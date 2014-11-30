@@ -53,5 +53,5 @@ const struct luaL_reg dgn_subvault_dlib[] =
 { "subvault_cell_valid", dgn_subvault_cell_valid },
 { "subvault_size", dgn_subvault_size },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

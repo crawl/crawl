@@ -7,7 +7,7 @@
  * Weights are assumed to be non-negative, but are allowed to be zero.
  * @param   choices  The vector of choice-weight pairs to choose from.
  *
- * @return  A pointer to the item in the chosen pair, or NULL if all
+ * @return  A pointer to the item in the chosen pair, or nullptr if all
  *          weights are zero.
  */
 template <typename T>

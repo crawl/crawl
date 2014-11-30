@@ -334,7 +334,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     }
 
     bool _obvious;
-    if (obvious == NULL)
+    if (obvious == nullptr)
         obvious = &_obvious;
     *obvious = false;
 
