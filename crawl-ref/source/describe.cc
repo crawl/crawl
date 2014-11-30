@@ -1326,6 +1326,10 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_ARCHERY:
             description += "It improves your effectiveness with ranged weaponry.";
             break;
+
+        case SPARM_INSULATION:
+            description += "It insulates you from electricity.";
+            break;
         }
     }
 

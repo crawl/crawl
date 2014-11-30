@@ -803,6 +803,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_LARGE_SHIELD:
     case ARM_BUCKLER:
         rc = random_choose_weighted(40, SPARM_RESISTANCE,
+                                    40, SPARM_INSULATION,
                                    120, SPARM_FIRE_RESISTANCE,
                                    120, SPARM_COLD_RESISTANCE,
                                    120, SPARM_POISON_RESISTANCE,
@@ -815,7 +816,8 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_CLOAK:
         rc = random_choose(SPARM_POISON_RESISTANCE,
                            SPARM_INVISIBILITY,
-                           SPARM_MAGIC_RESISTANCE);
+                           SPARM_MAGIC_RESISTANCE,
+                           SPARM_INSULATION);
         break;
 
     case ARM_HAT:
@@ -834,19 +836,21 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     case ARM_GLOVES:
-        rc = random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY);
+        rc = random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY,
+                           SPARM_INSULATION);
         break;
 
     case ARM_BOOTS:
     case ARM_NAGA_BARDING:
     case ARM_CENTAUR_BARDING:
     {
-        const int tmp = random2(600) + 400 * (item.sub_type != ARM_BOOTS);
+        const int tmp = random2(600) + 600 * (item.sub_type != ARM_BOOTS);
 
-        rc = (tmp < 200) ? SPARM_RUNNING :
-             (tmp < 400) ? SPARM_FLYING :
-             (tmp < 600) ? SPARM_STEALTH :
-             (tmp < 800) ? SPARM_COLD_RESISTANCE
+        rc = (tmp <  200) ? SPARM_RUNNING :
+             (tmp <  400) ? SPARM_INSULATION :
+             (tmp <  600) ? SPARM_FLYING :
+             (tmp <  800) ? SPARM_STEALTH :
+             (tmp < 1000) ? SPARM_COLD_RESISTANCE
                           : SPARM_FIRE_RESISTANCE;
         break;
     }
@@ -981,6 +985,11 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                type == ARM_CAP ||
 #endif
                slot == EQ_SHIELD || !strict;
+    case SPARM_INSULATION:
+        return !strict
+               || type == ARM_CLOAK
+               || type == ARM_BOOTS
+               || type == ARM_GLOVES;
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");

@@ -2336,6 +2336,9 @@ int get_armour_res_elec(const item_def &arm, bool check_artp)
         break;
     }
 
+    if (get_armour_ego_type(arm) == SPARM_INSULATION)
+        res += 1;
+
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_ELECTRICITY);
 

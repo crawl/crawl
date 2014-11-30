@@ -1713,6 +1713,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re += you.wearing(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR);
         re += you.wearing(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_HIDE);
 
+        // ego armours
+        re += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_INSULATION);
+
         // randart weapons:
         re += you.scan_artefacts(ARTP_ELECTRICITY, calc_unid);
 
