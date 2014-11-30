@@ -2186,9 +2186,9 @@ int monster_die(monster* mons, killer_type killer,
                     && one_chance_in(2))
             {
                 ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-                ASSERT(you.props.exists("available_sacrifices"));
+                ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
                 int sacrifice_count =
-                    you.props["available_sacrifices"].get_vector().size();
+                    you.props[AVAILABLE_SAC_KEY].get_vector().size();
                 if (sacrifice_count == 0)
                 {
                     int current_progress =

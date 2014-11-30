@@ -3,6 +3,7 @@
 #include "godconduct.h"
 
 #include "fight.h"
+#include "godabil.h" // ru sac key
 #include "godwrath.h"
 #include "libutil.h"
 #include "message.h"
@@ -798,10 +799,10 @@ static like_map divine_likes[] =
                 denom = 1;
 
                 ASSERT(you.props.exists("ru_progress_to_next_sacrifice"));
-                ASSERT(you.props.exists("available_sacrifices"));
+                ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
 
                 const int available_sacrifices =
-                    you.props["available_sacrifices"].get_vector().size();
+                    you.props[AVAILABLE_SAC_KEY].get_vector().size();
 
                 if (!available_sacrifices && one_chance_in(100))
                     you.props["ru_progress_to_next_sacrifice"].get_int()++;

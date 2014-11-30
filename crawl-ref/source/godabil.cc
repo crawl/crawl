@@ -5423,29 +5423,20 @@ static int _get_sacrifice_piety(ability_type sac)
 // time or it's time to offer something new.
 static void _ru_expire_sacrifices()
 {
-    // TODO: iterate over a list
-    ASSERT(you.props.exists("available_sacrifices"));
-    ASSERT(you.props.exists(ESSENCE_SAC_KEY));
-    ASSERT(you.props.exists(HEALTH_SAC_KEY));
-    ASSERT(you.props.exists(PURITY_SAC_KEY));
-    ASSERT(you.props.exists(ARCANA_SAC_KEY));
+    static const char *sacrifice_keys[] =
+    {
+        AVAILABLE_SAC_KEY,
+        ESSENCE_SAC_KEY,
+        HEALTH_SAC_KEY,
+        PURITY_SAC_KEY,
+        ARCANA_SAC_KEY,
+    };
 
-    CrawlVector &available_sacrifices
-        = you.props["available_sacrifices"].get_vector();
-    CrawlVector &current_health_sacrifice
-        = you.props[HEALTH_SAC_KEY].get_vector();
-    CrawlVector &current_essence_sacrifice
-        = you.props[ESSENCE_SAC_KEY].get_vector();
-    CrawlVector &current_purity_sacrifice
-        = you.props[PURITY_SAC_KEY].get_vector();
-    CrawlVector &current_arcane_sacrifices
-        = you.props[ARCANA_SAC_KEY].get_vector();
-
-    available_sacrifices.clear();
-    current_health_sacrifice.clear();
-    current_essence_sacrifice.clear();
-    current_purity_sacrifice.clear();
-    current_arcane_sacrifices.clear();
+    for (auto key : sacrifice_keys)
+    {
+        ASSERT(you.props.exists(key));
+        you.props[key].get_vector().clear();
+    }
 }
 
 // Pick three new sacrifices to offer to the player. They should be distinct
@@ -5518,9 +5509,9 @@ void ru_offer_new_sacrifices()
             || greater_sacrifice == sacrifice
             || you.piety + _get_sacrifice_piety(possible_sacrifices[greater_sacrifice]) > max_overpiety);
 
-    ASSERT(you.props.exists("available_sacrifices"));
+    ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
     CrawlVector &available_sacrifices
-        = you.props["available_sacrifices"].get_vector();
+        = you.props[AVAILABLE_SAC_KEY].get_vector();
 
     // set the new abilities
     available_sacrifices.push_back(
