@@ -2995,18 +2995,27 @@ void MiscastEffect::_poison(int severity)
             break;
 
         case 2:
-            you_msg        = "You feel more vulnerable to poison.";
-            mon_msg_seen   = "@The_monster@ grows more vulnerable to poison.";
-            do_msg();
-
-            if (target->is_player())
-                you.increase_duration(DUR_POISON_VULN, 20 + random2(11), 50);
-            else if (target->is_monster())
+            if (target->res_poison() >= 3)
             {
-                 target->as_monster()->add_ench(mon_enchant(ENCH_POISON_VULN,
-                 0, act_source, 20 + random2(11) * BASELINE_DELAY));
+                you_msg        = "You feel rather nauseous for a moment.";
+                mon_msg_seen   = "@The_monster@ looks rather nauseous for a moment.";
+                do_msg();
+                break;
             }
-            break;
+            else
+            {
+                you_msg        = "You feel more vulnerable to poison.";
+                mon_msg_seen   = "@The_monster@ grows more vulnerable to poison.";
+                do_msg();
+                if (target->is_player())
+                    you.increase_duration(DUR_POISON_VULN, 20 + random2(11), 50);
+                else if (target->is_monster())
+                {
+                     target->as_monster()->add_ench(mon_enchant(ENCH_POISON_VULN,
+                     0, act_source, 20 + random2(11) * BASELINE_DELAY));
+                }
+                break;
+            }
         }
         break;
 
