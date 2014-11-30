@@ -7,7 +7,7 @@ my @deps = qw(
 );
 
 if ($ENV{BUILD_ALL}) {
-    system "git submodule update --init --recursive" == 0
+    system("git submodule update --init --recursive") == 0
         or die "Couldn't update submodules: $?";
 
     push @deps, qw(
