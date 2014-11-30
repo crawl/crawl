@@ -987,6 +987,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                slot == EQ_SHIELD || !strict;
     case SPARM_INSULATION:
         return !strict
+               || slot == EQ_SHIELD
                || type == ARM_CLOAK
                || type == ARM_BOOTS
                || type == ARM_GLOVES;
