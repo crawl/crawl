@@ -65,6 +65,10 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_FIRE;
     if (s == "Ice")
         return RING_ICE;
+    if (s == "Air")
+        return RING_AIR;
+    if (s == "Earth")
+        return RING_EARTH;
     if (s == "+/*Tele")
         return RING_TELEPORTATION;
     if (s == "+cTele")

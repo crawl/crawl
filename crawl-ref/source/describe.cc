@@ -169,6 +169,8 @@ static const char* _jewellery_base_ability_string(int subtype)
     case RING_WIZARDRY:          return "Wiz";
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
+    case RING_AIR:               return "Air";
+    case RING_EARTH:             return "Earth";
     case RING_TELEPORTATION:     return "+/*Tele";
     case RING_TELEPORT_CONTROL:  return "+cTele";
     case AMU_CLARITY:            return "Clar";
@@ -302,6 +304,7 @@ static vector<string> _randart_propnames(const item_def& item,
             const int val = proprt[ann.prop];
 
             // Don't show rF+/rC- for =Fire, or vice versa for =Ice.
+            // Ditto rElec/AC-3 for =Air and vice versa for =Earth.
             if (item.base_type == OBJ_JEWELLERY)
             {
                 if (item.sub_type == RING_FIRE
@@ -313,6 +316,18 @@ static vector<string> _randart_propnames(const item_def& item,
                 if (item.sub_type == RING_ICE
                     && (ann.prop == ARTP_COLD && val == 1
                         || ann.prop == ARTP_FIRE && val == -1))
+                {
+                    continue;
+                }
+                if (item.sub_type == RING_AIR
+                    && (ann.prop == ARTP_ELECTRICITY && val == 1
+                        || ann.prop == ARTP_AC && val == -3))
+                {
+                    continue;
+                }
+                if (item.sub_type == RING_EARTH
+                    && (ann.prop == ARTP_AC && val == 3
+                        || ann.prop == ARTP_ELECTRICITY && val == -1))
                 {
                     continue;
                 }
@@ -386,6 +401,10 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It enhances your fire magic, and weakens your ice magic.";
     case RING_ICE:
         return "It enhances your ice magic, and weakens your fire magic.";
+    case RING_AIR:
+        return "It enhances your air magic, and weakens your earth magic.";
+    case RING_EARTH:
+        return "It enhances your earth magic, and weakens your air magic.";
     case RING_TELEPORTATION:
         return "It causes random teleportation, and can be evoked to teleport "
                "at will.";

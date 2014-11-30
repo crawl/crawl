@@ -1732,6 +1732,8 @@ unsigned int item_value(item_def item, bool ident)
 
                 case RING_FIRE:
                 case RING_ICE:
+                case RING_AIR:
+                case RING_EARTH:
                 case RING_PROTECTION_FROM_COLD:
                 case RING_PROTECTION_FROM_FIRE:
                 case RING_PROTECTION_FROM_MAGIC:

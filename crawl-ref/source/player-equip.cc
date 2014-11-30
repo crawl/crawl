@@ -1116,6 +1116,16 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         mpr("You feel more attuned to ice.");
         break;
 
+    case RING_AIR:
+        you.redraw_armour_class = true;
+        mpr("You feel more attuned to air.");
+        break;
+
+    case RING_EARTH:
+        you.redraw_armour_class = true;
+        mpr("You feel more attuned to earth.");
+        break;
+
     case RING_SEE_INVISIBLE:
         if (item_type_known(item))
             autotoggle_autopickup(false);
@@ -1301,6 +1311,8 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
         break;
 
     case RING_PROTECTION:
+    case RING_AIR:
+    case RING_EARTH:
         you.redraw_armour_class = true;
         break;
 

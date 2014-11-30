@@ -3427,14 +3427,28 @@ int monster::armour_class(bool calc_unid) const
 
     // armour from jewellery
     const item_def *ring = mslot_item(MSLOT_JEWELLERY);
-    if (ring && ring->sub_type == RING_PROTECTION
-        && (calc_unid
-            || item_ident(*ring, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES)))
+    if (ring)
     {
-        const int jewellery_plus = ring->plus;
-        ASSERT(abs(jewellery_plus) < 30); // sanity check
-        ac += jewellery_plus;
+        if (ring->sub_type == RING_PROTECTION
+            && (calc_unid
+                || item_ident(*ring, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PLUSES)))
+        {
+            const int jewellery_plus = ring->plus;
+            ASSERT(abs(jewellery_plus) < 30); // sanity check
+            ac += jewellery_plus;
+        }
+        else if (ring->sub_type == RING_EARTH
+                 && (calc_unid || item_ident(*ring, ISFLAG_KNOW_TYPE)))
+        {
+            ac += 3;
+        }
+        else if (ring->sub_type == RING_AIR
+                 && (calc_unid || item_ident(*ring, ISFLAG_KNOW_TYPE)))
+        {
+            ac -= 3;
+        }
     }
+
 
     // Extra AC for snails/turtles drawn into their shells.
     if (has_ench(ENCH_WITHDRAWN))

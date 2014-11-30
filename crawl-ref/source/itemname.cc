@@ -784,6 +784,8 @@ const char* jewellery_effect_name(int jeweltype)
     case RING_PROTECTION_FROM_MAGIC: return "protection from magic";
     case RING_FIRE:                  return "fire";
     case RING_ICE:                   return "ice";
+    case RING_AIR:                   return "air";
+    case RING_EARTH:                 return "earth";
     case RING_TELEPORT_CONTROL:      return "teleport control";
     case AMU_RAGE:              return "rage";
     case AMU_CLARITY:           return "clarity";

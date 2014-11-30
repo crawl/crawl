@@ -1706,6 +1706,12 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
     if (items)
     {
+        // ring of air
+        re += you.wearing(EQ_RINGS, RING_AIR, calc_unid);
+
+        // ring of earth
+        re -= you.wearing(EQ_RINGS, RING_EARTH, calc_unid);
+
         // staff
         re += you.wearing(EQ_STAFF, STAFF_AIR, calc_unid);
 
@@ -1976,6 +1982,9 @@ int player_spec_earth()
 {
     int se = 0;
 
+    // rings of earth:
+    se += you.wearing(EQ_RINGS, RING_EARTH);
+
     // Staves
     se += you.wearing(EQ_STAFF, STAFF_EARTH);
 
@@ -1985,6 +1994,9 @@ int player_spec_earth()
 int player_spec_air()
 {
     int sa = 0;
+
+    // rings of air:
+    sa += you.wearing(EQ_RINGS, RING_AIR);
 
     // Staves
     sa += you.wearing(EQ_STAFF, STAFF_AIR);
@@ -6384,6 +6396,9 @@ int player::armour_class(bool /*calc_unid*/) const
             AC -= ac_value / 2;
         }
     }
+
+    AC += wearing(EQ_RINGS, RING_EARTH) * 300;
+    AC -= wearing(EQ_RINGS, RING_AIR) * 300;
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 

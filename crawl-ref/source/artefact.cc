@@ -83,6 +83,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             && (item.sub_type == RING_WIZARDRY
              || item.sub_type == RING_FIRE
              || item.sub_type == RING_ICE
+             || item.sub_type == RING_AIR
+             || item.sub_type == RING_EARTH
              || item.sub_type == RING_MAGICAL_POWER))
         {
             type_bad = true;
@@ -580,6 +582,19 @@ void artefact_desc_properties(const item_def &item,
         fake_rap2  = ARTP_FIRE;
         fake_plus2 = -1;
         break;
+
+    case RING_AIR:
+        fake_rap   = ARTP_ELECTRICITY;
+        fake_rap2  = ARTP_AC;
+        fake_plus2 = -3;
+        break;
+
+    case RING_EARTH:
+        fake_rap   = ARTP_AC;
+        fake_plus  = 3;
+        fake_rap   = ARTP_ELECTRICITY;
+        fake_plus2 = -1;
+        break;
     }
 
     if (fake_rap != ARTP_NUM_PROPERTIES && fake_plus != 0)
@@ -892,6 +907,9 @@ static void _get_randart_properties(const item_def &item,
     // res_elec
     if (!done_powers
         && one_chance_in(4 + power_level)
+        && (aclass != OBJ_JEWELLERY
+            || atype != RING_AIR
+               && atype != RING_EARTH)
         && (aclass != OBJ_ARMOUR || atype != ARM_STORM_DRAGON_ARMOUR))
     {
         proprt[ARTP_ELECTRICITY] = 1;
@@ -1635,6 +1653,7 @@ static bool _randart_is_redundant(const item_def &item,
     switch (item.sub_type)
     {
     case RING_PROTECTION:
+    case RING_EARTH:
         provides = ARTP_AC;
         break;
 
@@ -1650,6 +1669,10 @@ static bool _randart_is_redundant(const item_def &item,
     case RING_ICE:
     case RING_PROTECTION_FROM_COLD:
         provides = ARTP_COLD;
+        break;
+
+    case RING_AIR:
+        provides = ARTP_ELECTRICITY;
         break;
 
     case RING_STRENGTH:
@@ -1766,6 +1789,8 @@ static bool _randart_is_conflicting(const item_def &item,
 
     case RING_FIRE:
     case RING_ICE:
+    case RING_AIR:
+    case RING_EARTH:
     case RING_WIZARDRY:
     case RING_MAGICAL_POWER:
         conflicts = ARTP_PREVENT_SPELLCASTING;

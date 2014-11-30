@@ -996,10 +996,24 @@ ring mail
 A light leather suit reinforced with a covering of metal rings. It is
 protective in combat, but slightly uncomfortable due to the added weight.
 %%%%
+ring of air
+
+This ring brings its wearer more in contact with the powers of air. The wearer
+gains resistance to electrical discharges and can use air magic more
+effectively, but becomes less effective at the use of earth magic and more
+vulnerable to the physical attacks.
+%%%%
 ring of dexterity
 
 This ring increases or decreases the dexterity of its wearer, depending on the
 degree to which it has been enchanted.
+%%%%
+ring of earth
+
+This ring brings its wearer more in contact with the powers of earth. The
+wearer gains some protection from physical attacks and can use earth magic more
+effectively, but becomes less effective at the use of air magic and more
+vulnerable to the effects of electrical discharges.
 %%%%
 ring of evasion
 

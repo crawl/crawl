@@ -2483,6 +2483,11 @@ int get_jewellery_res_elec(const item_def &ring, bool check_artp)
 
     int res = 0;
 
+    if (ring.sub_type == RING_AIR)
+        res += 1;
+    else if (ring.sub_type == RING_EARTH)
+        res -= 1;
+
     if (check_artp && is_artefact(ring))
         res += artefact_wpn_property(ring, ARTP_ELECTRICITY);
 
