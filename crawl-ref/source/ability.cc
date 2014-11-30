@@ -3917,9 +3917,9 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
     else if (you_worship(GOD_RU))
     {
 
-        ASSERT(you.props.exists("available_sacrifices"));
+        ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
         CrawlVector &available_sacrifices
-            = you.props["available_sacrifices"].get_vector();
+            = you.props[AVAILABLE_SAC_KEY].get_vector();
 
         int num_sacrifices = available_sacrifices.size();
         for (int i = 0; i < num_sacrifices; ++i)
