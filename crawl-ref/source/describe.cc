@@ -608,56 +608,41 @@ int str_to_trap(const string &s)
 //---------------------------------------------------------------
 static string _describe_demon(const string& name, flight_type fly)
 {
-    const uint32_t seed = hash32(&name[0], name.length());
+    const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_rand(ARRAYSZ(arr), seed, id)]
 
     const char* body_descs[] =
     {
-        "huge, barrel-shaped ",
-        "wispy, insubstantial ",
-        "spindly ",
-        "skeletal ",
-        "horribly deformed ",
-        "spiny ",
-        "waif-like ",
-        "scaly ",
-        "sickeningly deformed ",
-        "bruised and bleeding ",
-        "sickly ",
-        "mass of writhing tentacles for a ",
-        "mass of ropey tendrils for a ",
-        "tree trunk-like ",
-        "hairy ",
-        "furry ",
-        "fuzzy ",
-        "obese ",
-        "fat ",
-        "slimy ",
-        "wrinkled ",
-        "metallic ",
-        "glassy ",
-        "crystalline ",
-        "muscular ",
-        "icky ",
-        "swollen ",
-        "lumpy ",
         "armoured ",
-        "carapaced ",
+        "vast, spindly ",
+        "fat ",
+        "obese ",
+        "muscular ",
+        "spiked ",
+        "splotchy ",
         "slender ",
+        "tentacled ",
+        "emaciated ",
+        "bug-like ",
+        "skeletal ",
+        "mantis ",
     };
 
     const char* wing_names[] =
     {
-        " with small insectoid wings",
-        " with large insectoid wings",
-        " with moth-like wings",
-        " with butterfly wings",
-        " with huge, bat-like wings",
-        " with fleshy wings",
         " with small, bat-like wings",
-        " with hairy wings",
-        " with great feathered wings",
-        " with shiny metal wings",
+        " with bony wings",
+        " with sharp, metallic wings",
+        " with the wings of a moth",
+        " with thin, membranous wings",
+        " with dragonfly wings",
+        " with large, powerful wings",
+        " with fluttering wings",
+        " with great, sinister wings",
+        " with hideous, tattered wings",
+        " with sparrow-like wings",
+        " with hooked wings",
+        " with strange knobs attached",
     };
 
     const char* lev_names[] =
@@ -666,36 +651,35 @@ static string _describe_demon(const string& name, flight_type fly)
         " with sacs of gas hanging from its back",
     };
 
-    const char* nonfly_names[] =
+    const char* head_names[] =
     {
-        " covered in tiny crawling spiders",
-        " covered in tiny crawling insects",
-        " and the head of a crocodile",
-        " and the head of a hippopotamus",
-        " and a cruel curved beak for a mouth",
-        " and a straight sharp beak for a mouth",
-        " and no head at all",
+        " and a cubic structure in place of a head",
+        " and a brain for a head",
         " and a hideous tangle of tentacles for a mouth",
-        " and an elephantine trunk",
-        " and an evil-looking proboscis",
-        " and dozens of eyes",
-        " and two ugly heads",
-        " and a long serpentine tail",
-        " and a pair of huge tusks growing from its jaw",
-        " and a single huge eye in the centre of its forehead",
-        " and spikes of black metal for teeth",
-        " and a disc-shaped sucker for a head",
-        " and huge, flapping ears",
-        " and a huge, toothy maw in the centre of its chest",
-        " and a giant snail shell on its back",
-        " and a dozen heads",
-        " and the head of a jackal",
-        " and the head of a baboon",
-        " and a huge, slobbery tongue",
-        " which is covered in oozing lacerations",
+        " and the head of an elephant",
+        " and an eyeball for a head",
+        " and wears a helmet over its head",
+        " and a horn in place of a head",
+        " and a thick, horned head",
+        " and the head of a horse",
+        " and a vicious glare",
+        " and snakes for hair",
+        " and the face of a baboon",
+        " and the head of a mouse",
+        " and a ram's head",
+        " and the head of a rhino",
+        " and eerily human features",
+        " and a gigantic mouth",
+        " and a mass of tentacles growing from its neck",
+        " and a thin, worm-like head",
+        " and huge, compound eyes",
         " and the head of a frog",
-        " and the head of a yak",
-        " and eyes out on stalks",
+        " and an insectoid head",
+        " and a great mass of hair",
+        " and a skull for a head",
+        " and a cow's skull for a head",
+        " and the head of a bird",
+        " and a large fungus growing from its neck",
     };
 
     const char* misc_descs[] =
@@ -718,37 +702,53 @@ static string _describe_demon(const string& name, flight_type fly)
         " It shimmers before your eyes.",
         " It is surrounded by a brilliant glow.",
         " It radiates an aura of extreme power.",
+        " It seems utterly heartbroken.",
+        " It seems filled with irrepressible glee.",
+        " It constantly shivers and twitches.",
+        " Blue sparks crawl across its body.",
+        " It seems uncertain.",
+        " A cloud of flies swarms around it.",
+        " The air ripples with heat as it passes.",
+        " It appears supremely confident.",
+        " Its skin is covered in a network of cracks.",
+        " Its skin has a disgusting oily sheen.",
+        " It seems completely insane!",
+        " It seems somehow familiar."
     };
 
     ostringstream description;
-    description << "A powerful demon, " << name << " has ";
+    description << "One of the many lords of Pandemonium, " << name << " has ";
 
-    const string a_body = HRANDOM_ELEMENT(body_descs, 1);
+    const string a_body = HRANDOM_ELEMENT(body_descs, 2);
     description << article_a(a_body) << "body";
+
+    string head_desc = HRANDOM_ELEMENT(head_names, 1);
 
     switch (fly)
     {
     case FL_WINGED:
-        description << HRANDOM_ELEMENT(wing_names, 2);
+        description << HRANDOM_ELEMENT(wing_names, 3);
+        if (head_desc.find(" with") == 0)
+            description << " and";
         break;
 
     case FL_LEVITATE:
-        description << HRANDOM_ELEMENT(lev_names, 2);
+        description << HRANDOM_ELEMENT(lev_names, 3);
+        if (head_desc.find(" with") == 0)
+            description << " and";
         break;
 
-    case FL_NONE:  // does not fly
-        if (hash_rand(4, seed, 3))
-            description << HRANDOM_ELEMENT(nonfly_names, 2);
+    default:
         break;
     }
 
-    description << ".";
+    description << head_desc << ".";
 
     if (hash_rand(40, seed, 4) < 3)
     {
         if (you.can_smell())
         {
-            switch (hash_rand(3, seed, 5))
+            switch (hash_rand(4, seed, 5))
             {
             case 0:
                 description << " It stinks of brimstone.";
@@ -757,6 +757,9 @@ static string _describe_demon(const string& name, flight_type fly)
                 description << " It is surrounded by a sickening stench.";
                 break;
             case 2:
+                description << " It smells delicious!";
+                break;
+            case 3:
                 description << " It smells like rotting flesh"
                             << (you.species == SP_GHOUL ? " - yum!"
                                                        : ".");
@@ -765,7 +768,7 @@ static string _describe_demon(const string& name, flight_type fly)
         }
     }
     else if (hash_rand(2, seed, 6))
-        description << RANDOM_ELEMENT(misc_descs);
+        description << HRANDOM_ELEMENT(misc_descs, 5);
 
     return description.str();
 }
