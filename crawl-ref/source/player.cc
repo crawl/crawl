@@ -5370,15 +5370,19 @@ void dec_elixir_player(int delay)
 
 void dec_ambrosia_player(int delay)
 {
+    if (!you.duration[DUR_AMBROSIA])
+        return;
+
     // ambrosia ends when confusion does.
-    if (!you.confused() && you.duration[DUR_AMBROSIA])
+    if (!you.confused())
     {
         you.duration[DUR_AMBROSIA] = 0;
         mpr("You feel less invigorated.");
-        return;
     }
 
     you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
+    if (!you.duration[DUR_AMBROSIA])
+        return;
 
     // 3-5 per turn, 9-50 over (3-10) turns
     const int restoration = 3 + random2(3);
