@@ -3592,7 +3592,9 @@ enum potion_type
 #endif
     POT_FLIGHT,
     POT_POISON,
+#if TAG_MAJOR_VERSION == 34
     POT_SLOWING,
+#endif
     POT_CANCELLATION,
     POT_AMBROSIA,
     POT_INVISIBILITY,

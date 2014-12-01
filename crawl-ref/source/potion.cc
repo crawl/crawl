@@ -1109,12 +1109,7 @@ public:
         return true;
     }
 };
-#endif
 
-
-// Potion effects that do not come in potion form but are
-// still applied by other sources. XXX: this can
-// probably be refactored further.
 class PotionSlowing : public PotionEffect
 {
 private:
@@ -1136,7 +1131,9 @@ public:
         return slow_player(10 + random2(pow));
     }
 };
+#endif
 
+// placeholder 'buggy' potion
 class PotionStale : public PotionEffect
 {
 private:
@@ -1169,7 +1166,9 @@ static const PotionEffect* potion_effects[] =
 #endif
     &PotionFlight::instance(),
     &PotionPoison::instance(),
+#if TAG_MAJOR_VERSION == 34
     &PotionSlowing::instance(),
+#endif
     &PotionCancellation::instance(),
     &PotionAmbrosia::instance(),
     &PotionInvisibility::instance(),
@@ -1225,7 +1224,6 @@ bool quaff_potion(item_def &potion)
         mprf("It was a %s.", potion.name(DESC_QUALNAME).c_str());
         identify_healing_pots();
     }
-
 
     const potion_type ptyp = static_cast<potion_type>(potion.sub_type);
     return get_potion_effect(ptyp)->quaff(was_known);

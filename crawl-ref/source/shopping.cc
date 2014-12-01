@@ -1560,10 +1560,10 @@ unsigned int item_value(item_def item, bool ident)
 #if TAG_MAJOR_VERSION == 34
             case POT_STRONG_POISON:
             case POT_PORRIDGE:
+            case POT_SLOWING:
 #endif
             case POT_BLOOD:
             case POT_POISON:
-            case POT_SLOWING:
                 valued += 10;
                 break;
 
@@ -1909,11 +1909,11 @@ bool is_worthless_consumable(const item_def &item)
         case POT_BLOOD:
 #if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:
+        case POT_SLOWING:
 #endif
         case POT_DECAY:
         case POT_DEGENERATION:
         case POT_POISON:
-        case POT_SLOWING:
             return true;
         default:
             return false;
