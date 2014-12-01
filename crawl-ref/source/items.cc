@@ -3137,12 +3137,6 @@ bool item_def::has_spells() const
            && item_type_known(*this);
 }
 
-int item_def::book_number() const
-{
-    return base_type == OBJ_BOOKS ? sub_type
-                                  : -1;
-}
-
 bool item_def::cursed() const
 {
     return flags & ISFLAG_CURSED;
@@ -4222,8 +4216,8 @@ static bool _book_from_spell(const char* specs, item_def &item)
         return false;
 
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
-            if (which_spell_in_book(static_cast<book_type>(i), j) == type)
+        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+            if (sp == type)
             {
                 item.sub_type = i;
                 return true;

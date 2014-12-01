@@ -35,14 +35,7 @@ spellset item_spellset(const item_def &item)
     if (!item.has_spells())
         return {};
 
-    vector<spell_type> spells;
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
-    {
-        spell_type spell = which_spell_in_book(item, i);
-        if (spell != SPELL_NO_SPELL)
-            spells.emplace_back(spell);
-    }
-    return { { "", spells } };
+    return { { "", spells_in_book(item) } };
 }
 
 

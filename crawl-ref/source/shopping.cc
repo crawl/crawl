@@ -1835,33 +1835,24 @@ unsigned int item_value(item_def item, bool ident)
             {
                 // Consider spellbook as rare as the average of its
                 // three rarest spells.
-                int rarities[SPELLBOOK_SIZE];
-                int count_valid = 0;
-                for (int i = 0; i < SPELLBOOK_SIZE; i++)
+                int rarities[3] = {0};
+                int count = 0;
+                for (spell_type spell : spells_in_book(item))
                 {
-                    spell_type spell = which_spell_in_book(item, i);
-                    if (spell == SPELL_NO_SPELL)
-                    {
-                        rarities[i] = 0;
-                        continue;
-                    }
-
-                    rarities[i] = spell_rarity(spell);
-                    count_valid++;
+                    int min_index = 0;
+                    for (int i = 0; i < 3; i++)
+                        if (rarities[i] < spell_rarity(spell))
+                            min_index = i;
+                    rarities[min_index] = spell_rarity(spell);
+                    count++;
                 }
-                ASSERT(count_valid > 0);
+                ASSERT(count > 0);
 
-                if (count_valid > 3)
-                    count_valid = 3;
+                if (count > 3)
+                    count = 3;
 
-                sort(rarities, rarities + SPELLBOOK_SIZE);
-                for (int i = SPELLBOOK_SIZE - 1;
-                     i >= SPELLBOOK_SIZE - count_valid; i--)
-                {
-                    rarity += rarities[i];
-                }
-
-                rarity /= count_valid;
+                rarity = rarities[0] + rarities[1] + rarities[2];
+                rarity /= count;
 
                 // Fixed level randarts get a bonus for the really low and
                 // really high level spells.

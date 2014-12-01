@@ -5347,7 +5347,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         short num_spells = strip_number_tag(s, "numspells:");
         if (num_spells == TAG_UNFOUND)
             num_spells = -1;
-        else if (num_spells <= 0 || num_spells > SPELLBOOK_SIZE)
+        else if (num_spells <= 0 || num_spells > RANDBOOK_SIZE)
         {
             error = make_stringf("Bad spellbook size: %d", num_spells);
             return false;
