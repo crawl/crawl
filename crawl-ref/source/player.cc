@@ -5381,8 +5381,6 @@ void dec_ambrosia_player(int delay)
     }
 
     you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
-    if (!you.duration[DUR_AMBROSIA])
-        return;
 
     // 3-5 per turn, 9-50 over (3-10) turns
     const int restoration = 3 + random2(3);
