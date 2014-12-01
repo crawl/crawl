@@ -236,11 +236,11 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     }
 
     const brand_type orig_brand = get_weapon_brand(weapon);
+    const bool dangerous_disto = orig_brand == SPWPN_DISTORTION
+                                 && !has_temp_brand
+                                 && !you_worship(GOD_LUGONU);
 
-    // Can't get out of it that easily...
-    if (orig_brand == SPWPN_DISTORTION
-        && !has_temp_brand
-        && !you_worship(GOD_LUGONU))
+    if (dangerous_disto)
     {
         const string prompt =
               "Really brand " + weapon.name(DESC_INVENTORY) + "?";
@@ -249,11 +249,16 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
             canned_msg(MSG_OK);
             return SPRET_ABORT;
         }
-        MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_TRANSLOCATION,
-                      9, 90, "rebranding a weapon of distortion");
     }
 
     fail_check();
+
+    if (dangerous_disto)
+    {
+        // Can't get out of it that easily...
+        MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_TRANSLOCATION,
+                      9, 90, "rebranding a weapon of distortion");
+    }
 
     string msg = weapon.name(DESC_YOUR);
 
