@@ -977,6 +977,15 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
            || x_chance_in_y(target_hd * target_hd * target_hd, 1200);
 }
 
+/**
+ * Check to see if the given monster can be revived by lost souls (if it's a
+ * valid target for revivication & if there are any lost souls nearby), and
+ * revive it if so.
+ *
+ * @param mons  The monster in question.
+ * @return      Whether the monster was revived/reknitted, or whether it
+ *              remains dead (dying?).
+ */
 bool lost_soul_revive(monster* mons)
 {
     if (!_lost_soul_affectable(*mons))
@@ -984,52 +993,52 @@ bool lost_soul_revive(monster* mons)
 
     for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
+        if (mi->type != MONS_LOST_SOUL || !mons_aligned(mons, *mi))
+            continue;
+
+        if (!_worthy_sacrifice(*mi, mons))
+            continue;
+
+        // save this before we revive it
+        const string revivee_name = mons->name(DESC_THE);
+        const bool was_alive = mons->holiness() == MH_NATURAL;
+
+        targetter_los hitfunc(*mi, LOS_SOLID);
+        flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
+
+        mons->heal(mons->max_hit_points);
+        mons->del_ench(ENCH_CONFUSION, true);
+        mons->timeout_enchantments(10);
+
+        coord_def newpos = mi->pos();
+        if (was_alive)
         {
-            if (!_worthy_sacrifice(*mi, mons))
-                continue;
-
-            // save this before we revive it
-            const string revivee_name = mons->name(DESC_THE);
-            const bool was_alive = mons->holiness() == MH_NATURAL;
-
-            targetter_los hitfunc(*mi, LOS_SOLID);
-            flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
-
-            mons->heal(mons->max_hit_points);
-            mons->del_ench(ENCH_CONFUSION, true);
-            mons->timeout_enchantments(10);
-
-            coord_def newpos = mi->pos();
-            if (was_alive)
-            {
-                mons->move_to_pos(newpos);
-                mons->flags |= (MF_SPECTRALISED | MF_FAKE_UNDEAD);
-            }
-
-            // check if you can see the monster *after* it maybe moved
-            if (you.can_see(mons))
-            {
-                if (!was_alive)
-                {
-                    mprf("%s sacrifices itself to reknit %s!",
-                         mi->name(DESC_THE).c_str(),
-                         revivee_name.c_str());
-                }
-                else
-                {
-                    mprf("%s assumes the form of %s%s!",
-                         mi->name(DESC_THE).c_str(),
-                         revivee_name.c_str(),
-                         (mi->is_summoned() ? " and becomes anchored to this"
-                          " world" : ""));
-                }
-            }
-
-            monster_die(*mi, KILL_MISC, -1, true);
-
-            return true;
+            mons->move_to_pos(newpos);
+            mons->flags |= (MF_SPECTRALISED | MF_FAKE_UNDEAD);
         }
+
+        // check if you can see the monster *after* it maybe moved
+        if (you.can_see(mons))
+        {
+            if (!was_alive)
+            {
+                mprf("%s sacrifices itself to reknit %s!",
+                     mi->name(DESC_THE).c_str(),
+                     revivee_name.c_str());
+            }
+            else
+            {
+                mprf("%s assumes the form of %s%s!",
+                     mi->name(DESC_THE).c_str(),
+                     revivee_name.c_str(),
+                     (mi->is_summoned() ? " and becomes anchored to this"
+                      " world" : ""));
+            }
+        }
+
+        monster_die(*mi, KILL_MISC, -1, true);
+
+        return true;
     }
 
     return false;
