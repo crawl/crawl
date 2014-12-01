@@ -1769,10 +1769,16 @@ int monster_die(monster* mons, killer_type killer,
     if (player_in_branch(BRANCH_ABYSS))
         mons->flags &= ~MF_BANISHED;
 
+    const bool spectralised = testbits(mons->flags, MF_SPECTRALISED);
+
     if (!silent && !fake
         && _monster_avoided_death(mons, killer, killer_index))
     {
         mons->flags &= ~MF_EXPLODE_KILL;
+
+        // revived by a lost soul?
+        if (!spectralised && testbits(mons->flags, MF_SPECTRALISED))
+            return place_monster_corpse(mons, silent);
         return -1;
     }
 
@@ -2551,7 +2557,7 @@ int monster_die(monster* mons, killer_type killer,
 
     int corpse = -1;
     if (!mons_reset && !summoned && !fake_abjuration && !unsummoned
-        && !timeout && !was_banished)
+        && !timeout && !was_banished && !spectralised)
     {
         // Have to add case for disintegration effect here? {dlb}
         int corpse2 = -1;
