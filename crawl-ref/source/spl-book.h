@@ -6,7 +6,7 @@
 #ifndef SPL_BOOK_H
 #define SPL_BOOK_H
 
-#define SPELLBOOK_SIZE 8
+#define RANDBOOK_SIZE 8
 #include "itemprop-enum.h"
 
 class formatted_string;
@@ -34,8 +34,8 @@ string desc_cannot_memorise_reason(spell_type spell);
 bool player_can_memorise_from_spellbook(const item_def &book);
 
 spell_type spell_in_rod(rod_type rod);
-spell_type which_spell_in_book(const item_def &book, int spl);
-spell_type which_spell_in_book(book_type book, int spl);
+vector<spell_type> spellbook_template(book_type book);
+vector<spell_type> spells_in_book(const item_def &book);
 
 bool you_can_memorise(spell_type spell) PURE;
 bool has_spells_to_memorise(bool silent = true,

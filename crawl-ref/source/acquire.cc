@@ -871,12 +871,8 @@ static int _book_weight(book_type book)
     ASSERT_RANGE(book, 0, MAX_FIXED_BOOK + 1);
 
     int total_weight = 0;
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    for (spell_type stype : spellbook_template(book))
     {
-        spell_type stype = which_spell_in_book(book, i);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
         // Skip over spells already seen.
         if (you.seen_spell[stype])
             continue;

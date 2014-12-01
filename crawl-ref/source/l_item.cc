@@ -661,12 +661,8 @@ IDEF(spells)
     int index = 0;
     lua_newtable(ls);
 
-    for (size_t i = 0; i < SPELLBOOK_SIZE; ++i)
+    for (spell_type stype : spells_in_book(*item))
     {
-        const spell_type stype = which_spell_in_book(*item, i);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
         lua_pushstring(ls, spell_title(stype));
         lua_rawseti(ls, -2, ++index);
     }

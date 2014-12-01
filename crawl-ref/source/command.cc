@@ -1060,8 +1060,8 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-        for (int j = 0; j < SPELLBOOK_SIZE; j++)
-            if (which_spell_in_book(static_cast<book_type>(i), j) == type)
+        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+            if (sp == type)
             {
                 item.sub_type = i;
                 books.push_back(item.name(DESC_PLAIN));

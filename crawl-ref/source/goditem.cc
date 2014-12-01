@@ -47,12 +47,8 @@ static bool _is_bookrod_type(const item_def& item,
     int total       = 0;
     int total_liked = 0;
 
-    for (int i = 0; i < SPELLBOOK_SIZE; ++i)
+    for (spell_type spell : spells_in_book(item))
     {
-        spell_type spell = which_spell_in_book(item, i);
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
         total++;
         if (suitable(spell))
             total_liked++;
