@@ -3437,7 +3437,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
         case POT_AMBROSIA:
-            return you.clarity();
+            return you.clarity() || you.duration[DUR_DIVINE_STAMINA];
         }
 
         return false;
