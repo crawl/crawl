@@ -361,6 +361,8 @@ struct shop_struct
 
     FixedVector<uint8_t, 3> keeper_name;
 
+    vector<item_def> stock;
+
     shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
                      shop_name(""), shop_type_name(""), shop_suffix_name("") { }
 
@@ -572,7 +574,7 @@ struct item_def
     /// Index in the mitm array of the next item in the stack. NON_ITEM for
     /// the last item in a stack. For items in player inventory, instead
     /// equal to slot. For items in monster inventory, equal to
-    /// NON_ITEM + 1 + mindex
+    /// NON_ITEM + 1 + mindex. For items in shops, equal to ITEM_IN_SHOP.
     short  link;
     // Inventory letter of the item.
     short  slot;

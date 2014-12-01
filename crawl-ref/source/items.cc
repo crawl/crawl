@@ -496,13 +496,15 @@ void unlink_item(int dest)
     }
     else
     {
-        if (!is_shop_item(mitm[dest]))
-            ASSERT_IN_BOUNDS(mitm[dest].pos);
-
         // Linked item on map:
         //
         // Use the items (x,y) to access the list (igrd[x][y]) where
         // the item should be linked.
+
+#if TAG_MAJOR_VERSION == 34
+        if (mitm[dest].pos.x != 0 || mitm[dest].pos.y < 5)
+#endif
+        ASSERT_IN_BOUNDS(mitm[dest].pos);
 
         // First check the top:
         if (igrd(mitm[dest].pos) == dest)
@@ -1641,22 +1643,8 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
-/**
- * Move the given item and quantity to the player's inventory.
- *
- * @param obj The item index in mitm.
- * @param quant_got The quantity of this item to move.
- * @param quiet If true, most messages notifying the player of item pickup (or
- *              item pickup failure) aren't printed.
- * @return  Whether items were successfully picked up. May return true even on
- * failure in cases where pickup can continue; e.g. when trying to pickup
- * stationary objects, or the orb in zot defense. (I.e., when the cause of
- * failure was not a full inventory.)
-*/
-bool move_item_to_inv(int obj, int quant_got, bool quiet)
+static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_in_inv)
 {
-    item_def &it = mitm[obj];
-
     if (item_is_stationary(it))
     {
         if (!quiet)
@@ -1677,11 +1665,11 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
 
-    const coord_def old_item_pos = it.pos;
     // attempt to put the item into your inventory.
     char inv_slot;
     if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
+        put_in_inv = true;
         // if you succeeded, actually reduce the number in the original stack
         if (is_perishable_stack(it) && quant_got != it.quantity)
             for (int i = 0; i < quant_got; i++)
@@ -1695,14 +1683,46 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         }
         else
             _check_note_item(it);
+    }
 
-        if (item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
-        {
-            dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
-                                                         you.pos(), 0, obj,
-                                                         -1),
-                                               you.pos());
-        }
+    return false;
+}
+
+
+// Currently only used for moving shop items into inventory, since they are
+// not in mitm. This doesn't work with partial pickup, because that requires
+// an mitm slot...
+bool move_item_to_inv(item_def& item)
+{
+    bool junk;
+    return _put_item_in_inv(item, item.quantity, false, junk);
+}
+
+/**
+ * Move the given item and quantity to the player's inventory.
+ *
+ * @param obj The item index in mitm.
+ * @param quant_got The quantity of this item to move.
+ * @param quiet If true, most messages notifying the player of item pickup (or
+ *              item pickup failure) aren't printed.
+ * @returns false if items failed to be picked up because of a full inventory,
+ *          true otherwise (even if nothing was picked up).
+*/
+bool move_item_to_inv(int obj, int quant_got, bool quiet)
+{
+    item_def &it = mitm[obj];
+    const coord_def old_item_pos = it.pos;
+
+    bool actually_went_in = false;
+    const bool keep_going = _put_item_in_inv(it, quant_got, quiet, actually_went_in);
+
+    if ((item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
+        && actually_went_in)
+    {
+        dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
+                                                     you.pos(), 0, obj,
+                                                     -1),
+                                           you.pos());
 
         // XXX: Waiting until now to decrement the quantity may give Windows
         // tiles players the opportunity to close the window and duplicate the
@@ -1712,10 +1732,9 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         dec_mitm_item_quantity(obj, quant_got);
 
         you.turn_is_over = true;
-        return true;
     }
 
-    return false;
+    return keep_going;
 }
 
 /**

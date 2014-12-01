@@ -813,29 +813,6 @@ void wizard_unidentify_pack()
 
 void wizard_list_items()
 {
-    bool has_shops = false;
-
-    for (int i = 0; i < MAX_SHOPS; ++i)
-        if (env.shop[i].type != SHOP_UNASSIGNED)
-        {
-            has_shops = true;
-            break;
-        }
-
-    if (has_shops)
-    {
-        mpr("Shop items:");
-
-        for (int i = 0; i < MAX_SHOPS; ++i)
-            if (env.shop[i].type != SHOP_UNASSIGNED)
-            {
-                for (stack_iterator si(coord_def(0, i+5)); si; ++si)
-                    mpr(si->name(DESC_PLAIN, false, false, false));
-            }
-
-        mpr("");
-    }
-
     mpr("Item stacks (by location and top item):");
     for (int i = 0; i < MAX_ITEMS; ++i)
     {

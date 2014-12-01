@@ -5753,6 +5753,7 @@ static int _make_delicious_corpse()
  * Create an item and place it in a shop.
  *
  * FIXME: I'm pretty sure this will go into an infinite loop if mitm is full.
+ * items() uses get_mitm_slot with culling, so i think this is ok --wheals
  *
  * @param j                 The index of the item being created in the shop's
  *                          inventory.
@@ -5760,16 +5761,14 @@ static int _make_delicious_corpse()
  * @param stocked[in,out]   An array mapping book types to the # in the shop.
  * @param representative    Sorry, no idea.
  * @param spec              The specification of the shop.
- * @param shop_index        The index of the shop in env.shop.
+ * @param shop              The shop.
  */
 static void _stock_shop_item(int j, shop_type shop_type_,
                              int stocked[NUM_BOOKS], bool representative,
-                             shop_spec &spec, int shop_index)
+                             shop_spec &spec, shop_struct &shop)
 {
     const int level_number = env.absdepth0;
     const int item_level = _choose_shop_item_level(shop_type_, level_number);
-    const coord_def stock_loc = coord_def(0, 5+shop_index);
-
 
     int item_index; // index into mitm (global item array)
                     // where the generated item will be stored
@@ -5795,13 +5794,13 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         {
             // shop spec lists a random set of items; choose one
             item_index = dgn_place_item(spec.items.random_item_weighted(),
-                                        stock_loc, item_level);
+                                        coord_def(), item_level);
         }
         else if (!spec.items.empty() && spec.use_all
                  && j < (int)spec.items.size())
         {
             // shop lists ordered items; take the one at the right index
-            item_index = dgn_place_item(spec.items.get_item(j), stock_loc,
+            item_index = dgn_place_item(spec.items.get_item(j), coord_def(),
                                         item_level);
         }
         else if (spec.gozag && shop_type_ == SHOP_FOOD
@@ -5839,7 +5838,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     ASSERT(item_index != NON_ITEM);
 
-    item_def& item(mitm[item_index]);
+    item_def item = mitm[item_index];
 
     // If this is a book, note it down in the stocked books array
     // (unless it's a randbook)
@@ -5856,12 +5855,15 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         item.quantity += random2(3); // blood for the vampire friends :)
     }
 
-    // Set object 'position' (gah!) & ID status.
-    item.pos = stock_loc;
-
     // Identify the item, unless we don't do that.
     if (!_shop_sells_antiques(shop_type_))
         set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+    // Now move it into the shop!
+    dec_mitm_item_quantity(item_index, item.quantity);
+    item.pos = shop.pos;
+    item.link = ITEM_IN_SHOP;
+    shop.stock.push_back(item);
 }
 
 /**
@@ -5909,16 +5911,17 @@ void place_spec_shop(const coord_def& where, shop_spec &spec,
     // This increases the diversity of books in a shop.
     int stocked[NUM_BOOKS] = { 0 };
 
-    for (int j = 0; j < num_items; j++)
-    {
-        _stock_shop_item(j, shop_type_, stocked, representative, spec,
-                         shop_index);
-    }
-
     env.shop[shop_index].pos = where;
     env.tgrid(where) = shop_index;
 
     _set_grd(where, DNGN_ENTER_SHOP);
+
+    env.shop[shop_index].stock.clear();
+    for (int j = 0; j < num_items; j++)
+    {
+        _stock_shop_item(j, shop_type_, stocked, representative, spec,
+                         env.shop[shop_index]);
+    }
 
     activate_notes(note_status);
 }
