@@ -137,6 +137,7 @@ define(function () {
 
         tileidx.value = tileidx[0] & flagdata.mask;
         cache[[tileidx[0],tileidx[1]]] = tileidx;
+        cache.size++;
         return tileidx;
     }
 
@@ -254,18 +255,18 @@ define(function () {
 
     // Since the current flag implementation is really slow we use a trivial
     // cache system for now.
-    var fg_cache = {};
+    var fg_cache = { size : 0 };
     exports.prepare_fg_flags = function (tileidx)
     {
-        if (Object.keys(fg_cache).length >= 100)
-            fg_cache = {};
+        if (fg_cache.size >= 100)
+            fg_cache = { size : 0 };
         return prepare_flags(tileidx, fg_flags, fg_cache);
     }
-    var bg_cache = {};
+    var bg_cache = { size : 0 };
     exports.prepare_bg_flags = function (tileidx)
     {
-        if (Object.keys(bg_cache).length >= 250)
-            bg_cache = {};
+        if (bg_cache.size >= 250)
+            bg_cache = { size : 0 };
         return prepare_flags(tileidx, bg_flags, bg_cache);
     }
 
