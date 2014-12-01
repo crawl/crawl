@@ -3104,9 +3104,10 @@ bool is_bad_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
+#if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
-            if (you.species == SP_FORMICID)
-                return false;
+            return !you.stasis();
+#endif
         case POT_DEGENERATION:
             return true;
         case POT_DECAY:
@@ -3430,8 +3431,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
             return player_res_poison(false, temp) > 0;
+#if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return you.species == SP_FORMICID;
+#endif
         case POT_HEAL_WOUNDS:
             return !you.can_device_heal();
         case POT_INVISIBILITY:
