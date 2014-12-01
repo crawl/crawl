@@ -1142,7 +1142,7 @@ ITEM:       potion of mutation w:60 / potion of beneficial mutation / \
             potion of cure mutation
 ITEM:       potion of beneficial mutation, potion of cure mutation
 ITEM:       amulet of resist mutation good_item
-ITEM:       randbook disc:transmutation owner:Cigotuvi
+ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi spells:cigotuvi's_embrace
 ITEM:       book of transfigurations / randbook disc:transmutation
 ITEM:       staff of death, scroll of summoning
 SHUFFLE:    de / h~ / j|
