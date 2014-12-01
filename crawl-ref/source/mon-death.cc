@@ -712,54 +712,82 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
     return false;
 }
 
-static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
-                                        int i)
+
+/**
+ * Attempt to get a deathbed conversion for the given orc.
+ *
+ * @param mons          A dying orc.
+ * @param killer        The way in which the monster was killed (or 'killed').
+ * @return              Whether the monster's life was saved (praise Beogh)
+ */
+static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
 {
-    if (in_good_standing(GOD_BEOGH, 2)
-        && mons_genus(mons->type) == MONS_ORC
-        && !mons->is_summoned() && !mons->is_shapeshifter()
-        && mons_near(mons) && !mons_is_god_gift(mons))
-    {
-        bool convert = false;
-
-        if (YOU_KILL(killer))
-            convert = true;
-        else if (MON_KILL(killer) && !invalid_monster_index(i))
-        {
-            monster* mon = &menv[i];
-            if (is_follower(mon) && !one_chance_in(3))
-                convert = true;
-        }
-
-        // Orcs may convert to Beogh under threat of death, either from
-        // you or, less often, your followers.  In both cases, the
-        // checks are made against your stats.  You're the potential
-        // messiah, after all.
-        if (convert)
-        {
+    // Orcs may convert to Beogh under threat of death, either from
+    // you or, less often, your followers.  In both cases, the
+    // checks are made against your stats.  You're the potential
+    // messiah, after all.
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
-                 "your xl: %d",
-                 mons->name(DESC_PLAIN).c_str(),
-                 mons->get_hit_dice(),
-                 you.experience_level);
+    mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
+         "your xl: %d",
+         mons.name(DESC_PLAIN).c_str(),
+         mons.get_hit_dice(),
+         you.experience_level);
 #endif
-            if (random2(you.piety) >= piety_breakpoint(0)
-                && random2(you.experience_level) >=
-                   random2(mons->get_hit_dice())
-                // Bias beaten-up-conversion towards the stronger orcs.
-                && random2(mons->get_experience_level()) > 2)
-            {
-                beogh_convert_orc(mons, true, MON_KILL(killer));
-                return true;
-            }
-        }
+    if (random2(you.piety) >= piety_breakpoint(0)
+        && random2(you.experience_level) >= random2(mons.get_hit_dice())
+        // Bias beaten-up-conversion towards the stronger orcs.
+        && random2(mons.get_experience_level()) > 2)
+    {
+        beogh_convert_orc(&mons, true, MON_KILL(killer));
+        return true;
     }
 
     return false;
 }
 
-static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
+/**
+ * Attempt to get a deathbed conversion for the given monster.
+ *
+ * @param mons          A dying monster (not necessarily an orc)
+ * @param killer        The way in which the monster was killed (or 'killed').
+ * @param killer_index  The mindex of the killer, if known.
+ * @return              Whether the monster's life was saved (praise Beogh)
+ */
+static bool _beogh_maybe_convert_orc(monster &mons, killer_type killer,
+                                    int killer_index)
+{
+    if (!in_good_standing(GOD_BEOGH, 2)
+        || mons_genus(mons.type) != MONS_ORC
+        || mons.is_summoned() || mons.is_shapeshifter()
+        || !mons_near(&mons) || mons_is_god_gift(&mons))
+    {
+        return false;
+    }
+
+    if (YOU_KILL(killer))
+        return _beogh_forcibly_convert_orc(mons, killer);
+
+    if (MON_KILL(killer) && !invalid_monster_index(killer_index))
+    {
+        const monster* responsible_monster = &menv[killer_index];
+        if (is_follower(responsible_monster) && !one_chance_in(3))
+            return _beogh_forcibly_convert_orc(mons, killer);
+    }
+
+    return false;
+}
+
+/**
+ * Attempt to save the given monster's life at the last moment.
+ *
+ * Checks lost souls & various divine effects (Yred, Beogh, Ely).
+ *
+ * @param mons          A dying monster.
+ * @param killer        The way in which the monster was killed (or 'killed').
+ * @param killer_index  The mindex of the killer, if known.
+ */
+static bool _monster_avoided_death(monster* mons, killer_type killer,
+                                   int killer_index)
 {
     if (mons->max_hit_points <= 0 || mons->get_hit_dice() < 1)
         return false;
@@ -779,7 +807,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
         return true;
 
     // Beogh special.
-    if (_beogh_forcibly_convert_orc(mons, killer, i))
+    if (_beogh_maybe_convert_orc(*mons, killer, killer_index))
         return true;
 
     if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
@@ -788,7 +816,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
     // Elyvilon specials.
     if (_ely_protect_ally(mons, killer))
         return true;
-    if (_ely_heal_monster(mons, killer, i))
+    if (_ely_heal_monster(mons, killer, killer_index))
         return true;
 
     return false;
