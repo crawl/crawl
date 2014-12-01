@@ -5523,7 +5523,7 @@ void ru_offer_new_sacrifices()
             = _random_cheap_sacrifice(possible_sacrifices, piety_cap);
 
         ASSERT_RANGE(chosen_sacrifice,
-                     ABIL_FIRST_SACRIFICE, ABIL_FINAL_SACRIFICE);
+                     ABIL_FIRST_SACRIFICE, ABIL_FINAL_SACRIFICE+1);
 
         // add it to the list of chosen sacrifices to offer, and remove it from
         // the list of possiblities for the later sacrifices
