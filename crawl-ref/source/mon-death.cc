@@ -774,7 +774,14 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
             return true;
     }
 
-    // XXX: does this really need to exist...?
+    // Yredelemnul special.
+    if (_yred_enslave_soul(mons, killer))
+        return true;
+
+    // Beogh special.
+    if (_beogh_forcibly_convert_orc(mons, killer, i))
+        return true;
+
     if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
         return false;
 
@@ -782,14 +789,6 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
     if (_ely_protect_ally(mons, killer))
         return true;
     if (_ely_heal_monster(mons, killer, i))
-        return true;
-
-    // Yredelemnul special.
-    if (_yred_enslave_soul(mons, killer))
-        return true;
-
-    // Beogh special.
-    if (_beogh_forcibly_convert_orc(mons, killer, i))
         return true;
 
     return false;
