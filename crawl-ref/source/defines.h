@@ -78,6 +78,7 @@ enum extra_monster_index_type
 #define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
+#define ITEM_IN_SHOP (NON_ITEM + NON_ITEM)
 
 #if NON_ITEM <= MAX_ITEMS
 #error NON_ITEM must be > MAX_ITEMS

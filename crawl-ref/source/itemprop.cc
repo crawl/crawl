@@ -904,12 +904,6 @@ actor *net_holdee(const item_def &net)
     return a;
 }
 
-bool in_shop(const item_def &item)
-{
-    // yay the shop hack...
-    return item.pos.x == 0 && item.pos.y >= 5;
-}
-
 static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
@@ -921,7 +915,7 @@ static bool _is_affordable(const item_def &item)
         return true;
 
     // Disregard shop stuff above your reach.
-    if (in_shop(item))
+    if (is_shop_item(item))
         return (int)item_value(item) <= you.gold;
 
     // Explicitly marked by a vault.

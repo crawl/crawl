@@ -191,7 +191,6 @@ const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
 void seen_item(const item_def &item);
-bool in_shop(const item_def &item);
 
 static inline bool is_weapon(const item_def &item)
 {

@@ -1253,6 +1253,20 @@ void tag_read(reader &inf, tag_type tag_id)
             check_map_validity();
         }
         tag_read_level_tiles(th);
+#if TAG_MAJOR_VERSION == 34
+        // We can't do this when we unmarshall shops, since we haven't
+        // unmarshalled items yet...
+        if (th.getMinorVersion() < TAG_MINOR_SHOP_HACK)
+            for (int i = 0; i < MAX_SHOPS; ++i)
+            {
+                // Shop items were heaped up at this cell.
+                for (stack_iterator si(coord_def(0, i+5)); si; ++si)
+                {
+                    env.shop[i].stock.push_back(*si);
+                    dec_mitm_item_quantity(si.link(), si->quantity);
+                }
+            }
+#endif
         break;
     case TAG_GHOST:
         tag_read_ghost(th);
@@ -3516,6 +3530,12 @@ static int _last_used_index(const Z &thinglist, int max_things)
 
 // ------------------------------- level tags ---------------------------- //
 
+// If only you could treat optional arguments like they didn't exist in templates...
+static void _marshall_item(writer &th, const item_def& it)
+{
+    marshallItem(th, it);
+}
+
 static void tag_construct_level(writer &th)
 {
     marshallByte(th, env.floor_colour);
@@ -3596,6 +3616,8 @@ static void tag_construct_level(writer &th)
         marshallString(th, env.shop[i].shop_name);
         marshallString(th, env.shop[i].shop_type_name);
         marshallString(th, env.shop[i].shop_suffix_name);
+        marshall_iterator(th, env.shop[i].stock.begin(),
+                              env.shop[i].stock.end(), _marshall_item);
     }
 
     CANARY;
@@ -4804,6 +4826,13 @@ void tag_construct_level_tiles(writer &th)
     marshallInt(th, TILE_WALL_MAX);
 }
 
+static item_def _unmarshall_item(reader &th)
+{
+    item_def ret;
+    unmarshallItem(th, ret);
+    return ret;
+}
+
 static void tag_read_level(reader &th)
 {
     env.floor_colour = unmarshallUByte(th);
@@ -4949,6 +4978,12 @@ static void tag_read_level(reader &th)
         env.shop[i].shop_name = unmarshallString(th);
         env.shop[i].shop_type_name = unmarshallString(th);
         env.shop[i].shop_suffix_name = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_SHOP_HACK)
+            env.shop[i].stock.clear();
+        else
+#endif
+            unmarshall_vector(th, env.shop[i].stock, _unmarshall_item);
         env.tgrid(env.shop[i].pos) = i;
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)
