@@ -867,15 +867,41 @@ static bool _will_starcursed_scream(monster* mon)
     return one_chance_in(n);
 }
 
-static bool _lost_soul_affectable(const monster* mons)
+/**
+ * Can a lost soul revive the given monster, assuming one is nearby?
+ *
+ * @param mons      The monster potentially being revived.
+ * @return          Whether it's a possible target for lost souls.
+ */
+static bool _lost_soul_affectable(const monster &mons)
 {
-    return ((mons->holiness() == MH_UNDEAD
-             && mons->type != MONS_LOST_SOUL
-             && !mons_is_zombified(mons))
-            ||(mons->holiness() == MH_NATURAL
-               && !is_good_god(mons->god)))
-           && !mons->is_summoned()
-           && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
+    // zombies are boring
+    if (mons_is_zombified(&mons))
+        return false;
+
+    // undead can be reknit, naturals ghosted, everyone else is out of luck
+    if (mons.holiness() != MH_UNDEAD && mons.holiness() != MH_NATURAL)
+        return false;
+
+    // already been revived once
+    if (testbits(mons.flags, MF_SPECTRALISED))
+        return false;
+
+    // just silly
+    if (mons.type == MONS_LOST_SOUL)
+        return false;
+
+    // for ely, I guess?
+    if (is_good_god(mons.god))
+        return false;
+
+    if (mons.is_summoned())
+        return false;
+
+    if (mons_class_flag(mons.type, M_NO_EXP_GAIN))
+        return false;
+
+    return true;
 }
 
 static bool _lost_soul_teleport(monster* mons)
@@ -888,7 +914,7 @@ static bool _lost_soul_teleport(monster* mons)
     // Assemble candidate list and randomize
     for (monster_iterator mi; mi; ++mi)
     {
-        if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
+        if (_lost_soul_affectable(**mi) && mons_aligned(mons, *mi))
         {
             mon_quality m(*mi, min(mi->get_experience_level(), 18) + random2(8));
             candidates.push_back(m);
@@ -940,7 +966,7 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
     int count = 0;
     for (monster_near_iterator mi(soul, LOS_NO_TRANS); mi; ++mi)
     {
-        if (_lost_soul_affectable(*mi))
+        if (_lost_soul_affectable(**mi))
             ++count;
         else if (mi->type == MONS_LOST_SOUL)
             --count;
@@ -953,7 +979,7 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
 
 bool lost_soul_revive(monster* mons)
 {
-    if (!_lost_soul_affectable(mons))
+    if (!_lost_soul_affectable(*mons))
         return false;
 
     for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
@@ -965,6 +991,7 @@ bool lost_soul_revive(monster* mons)
 
             // save this before we revive it
             const string revivee_name = mons->name(DESC_THE);
+            const bool was_alive = mons->holiness() == MH_NATURAL;
 
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
@@ -974,7 +1001,7 @@ bool lost_soul_revive(monster* mons)
             mons->timeout_enchantments(10);
 
             coord_def newpos = mi->pos();
-            if (mons->holiness() == MH_NATURAL)
+            if (was_alive)
             {
                 mons->move_to_pos(newpos);
                 mons->flags |= (MF_SPECTRALISED | MF_FAKE_UNDEAD);
@@ -983,7 +1010,7 @@ bool lost_soul_revive(monster* mons)
             // check if you can see the monster *after* it maybe moved
             if (you.can_see(mons))
             {
-                if (mons->holiness() == MH_UNDEAD)
+                if (!was_alive)
                 {
                     mprf("%s sacrifices itself to reknit %s!",
                          mi->name(DESC_THE).c_str(),
@@ -1252,7 +1279,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             if (ai->is_monster() && mons_aligned(*ai, mons))
             {
-                if (_lost_soul_affectable(ai->as_monster()))
+                if (_lost_soul_affectable(*ai->as_monster()))
                     see_friend = true;
             }
             else

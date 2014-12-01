@@ -759,15 +759,6 @@ static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
     return false;
 }
 
-static bool _lost_soul_nearby(const coord_def pos)
-{
-    for (monster_near_iterator mi(pos, LOS_NO_TRANS); mi; ++mi)
-        if (mi->type == MONS_LOST_SOUL)
-            return true;
-
-    return false;
-}
-
 static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 {
     if (mons->max_hit_points <= 0 || mons->get_hit_dice() < 1)
@@ -775,18 +766,15 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 
     // Before the hp check since this should not care about the power of the
     // finishing blow
-    if (!mons_is_zombified(mons)
-        && (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_NATURAL)
-        && !testbits(mons->flags, MF_SPECTRALISED)
-        && killer != KILL_RESET
+    if (killer != KILL_RESET
         && killer != KILL_DISMISSED
-        && killer != KILL_BANISHED
-        && _lost_soul_nearby(mons->pos()))
+        && killer != KILL_BANISHED)
     {
         if (lost_soul_revive(mons))
             return true;
     }
 
+    // XXX: does this really need to exist...?
     if (mons->hit_points < -25 || mons->hit_points < -mons->max_hit_points)
         return false;
 
