@@ -9,6 +9,7 @@
 
 #include <queue>
 #include <sstream>
+#include <numeric>
 
 #include "act-iter.h"
 #include "areas.h"
@@ -5298,6 +5299,9 @@ static int _piety_for_skill(skill_type skill)
 
 static int _get_sacrifice_piety(ability_type sac)
 {
+    if (sac == ABIL_RU_REJECT_SACRIFICES)
+        return INT_MAX; // used as the null sacrifice
+
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     int piety_gain = sac_def.base_piety;
     ability_type sacrifice = sac_def.sacrifice;
@@ -5439,8 +5443,44 @@ static void _ru_expire_sacrifices()
     }
 }
 
-// Pick three new sacrifices to offer to the player. They should be distinct
-// from one another and not offer duplicates of some options.
+/**
+ * Choose a random sacrifice from those in the list, filtering to only those
+ * with piety values <= the given cap.
+ *
+ * @param possible_sacrifices   The list of sacrifices to choose from.
+ * @param min_piety             The maximum sac piety cost to accept.
+ * @return                      The ability_type of a valid sacrifice, or
+ *                              ABIL_RU_REJECT_SACRIFICES if none were found
+ *                              (should never happen!)
+ */
+static ability_type _random_cheap_sacrifice(
+        const vector<ability_type> &possible_sacrifices,
+                                            int piety_cap)
+{
+    // XXX: replace this with random_if when that's merged
+    ability_type chosen_sacrifice = ABIL_RU_REJECT_SACRIFICES;
+    int valid_sacrifices = 0;
+    for (auto sacrifice : possible_sacrifices)
+    {
+        if (_get_sacrifice_piety(sacrifice) + you.piety > piety_cap)
+            continue;
+
+        ++valid_sacrifices;
+        if (one_chance_in(valid_sacrifices))
+            chosen_sacrifice = sacrifice;
+    }
+
+    dprf("found %d valid sacrifices; chose %d",
+         valid_sacrifices, chosen_sacrifice);
+
+    return chosen_sacrifice;
+}
+
+/**
+ * Chooses three distinct sacrifices to offer the player, store them in
+ * available_sacrifices, and print a message to the player letting them
+ * know that their new sacrifices are ready.
+ */
 void ru_offer_new_sacrifices()
 {
     _ru_expire_sacrifices();
@@ -5450,76 +5490,54 @@ void ru_offer_new_sacrifices()
     // for now we'll just pick three at random
     int num_sacrifices = possible_sacrifices.size();
 
+    const int num_expected_offers = 3;
+
     // This can't happen outside wizmode, but may as well handle gracefully
-    if (num_sacrifices < 3)
+    if (num_sacrifices < num_expected_offers)
         return;
-
-    simple_god_message(" believes you are ready to make a new sacrifice.");
-    more();
-
-    // try to get three distinct sacrifices
-    int lesser_sacrifice;
-    int sacrifice = -1;
-    int greater_sacrifice = -1;
-    int number_of_tries = 0;
-    int max_tries = 20;
-    int max_overpiety = 170;
-
-    do
-    {
-        lesser_sacrifice = random2(num_sacrifices);
-        number_of_tries += 1;
-        if (number_of_tries == max_tries)
-        {
-            number_of_tries = 0;
-            max_overpiety += 3;
-        }
-    }
-    while (lesser_sacrifice == -1
-        || you.piety + _get_sacrifice_piety(possible_sacrifices[lesser_sacrifice]) > max_overpiety);
-
-    number_of_tries = 0;
-    do
-    {
-        sacrifice = random2(num_sacrifices);
-        number_of_tries += 1;
-        if (number_of_tries == max_tries)
-        {
-            number_of_tries = 0;
-            max_overpiety += 3;
-        }
-    }
-    while (sacrifice == -1
-            || sacrifice == lesser_sacrifice
-            || you.piety + _get_sacrifice_piety(possible_sacrifices[sacrifice]) > max_overpiety);
-
-    number_of_tries = 0;
-    do
-    {
-        greater_sacrifice = random2(num_sacrifices);
-        number_of_tries += 1;
-        if (number_of_tries == max_tries)
-        {
-            number_of_tries = 0;
-            max_overpiety += 3;
-        }
-    }
-    while (greater_sacrifice == -1
-            || greater_sacrifice == lesser_sacrifice
-            || greater_sacrifice == sacrifice
-            || you.piety + _get_sacrifice_piety(possible_sacrifices[greater_sacrifice]) > max_overpiety);
 
     ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
     CrawlVector &available_sacrifices
         = you.props[AVAILABLE_SAC_KEY].get_vector();
 
-    // set the new abilities
-    available_sacrifices.push_back(
-            static_cast<int>(possible_sacrifices[lesser_sacrifice]));
-    available_sacrifices.push_back(
-            static_cast<int>(possible_sacrifices[sacrifice]));
-    available_sacrifices.push_back(
-            static_cast<int>(possible_sacrifices[greater_sacrifice]));
+    for (int sac_num = 0; sac_num < num_expected_offers; ++sac_num)
+    {
+        // find the cheapest available sacrifice, in case we're close to ru's
+        // max piety. (minimize 'wasted' piety in those cases.)
+        const ability_type min_piety_sacrifice
+            = accumulate(possible_sacrifices.begin(),
+                         possible_sacrifices.end(),
+                         ABIL_RU_REJECT_SACRIFICES,
+                         [](ability_type a, ability_type b) {
+                             return _get_sacrifice_piety(a)
+                                  < _get_sacrifice_piety(b) ? a : b;
+                         });
+
+        const int piety_cap
+            = max(170, you.piety + _get_sacrifice_piety(min_piety_sacrifice));
+
+        dprf("cheapest sac %d (%d piety); cap %d",
+             min_piety_sacrifice, _get_sacrifice_piety(min_piety_sacrifice),
+             piety_cap);
+
+        // XXX: replace this with random_if when that's merged
+        const ability_type chosen_sacrifice
+            = _random_cheap_sacrifice(possible_sacrifices, piety_cap);
+
+        ASSERT_RANGE(chosen_sacrifice,
+                     ABIL_FIRST_SACRIFICE, ABIL_FINAL_SACRIFICE);
+
+        // add it to the list of chosen sacrifices to offer, and remove it from
+        // the list of possiblities for the later sacrifices
+        available_sacrifices.push_back(chosen_sacrifice);
+        possible_sacrifices.erase(remove(possible_sacrifices.begin(),
+                                         possible_sacrifices.end(),
+                                         chosen_sacrifice),
+                                  possible_sacrifices.end());
+    }
+
+    simple_god_message(" believes you are ready to make a new sacrifice.");
+    more();
 }
 
 static const char* _describe_sacrifice_piety_gain(int piety_gain)
