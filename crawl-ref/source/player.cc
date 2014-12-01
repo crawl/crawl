@@ -5375,10 +5375,7 @@ void dec_ambrosia_player(int delay)
 
     // ambrosia ends when confusion does.
     if (!you.confused())
-    {
         you.duration[DUR_AMBROSIA] = 0;
-        mpr("You feel less invigorated.");
-    }
 
     you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
 
@@ -5390,6 +5387,9 @@ void dec_ambrosia_player(int delay)
         inc_hp(div_rand_round(restoration * mut_factor, 3));
     }
     inc_mp(restoration);
+
+    if (!you.duration[DUR_AMBROSIA])
+        mpr("You feel less invigorated.");
 }
 
 bool flight_allowed(bool quiet)

@@ -455,7 +455,7 @@ public:
 
     bool can_quaff() const
     {
-        return !you.clarity() || you.duration[DUR_DIVINE_STAMINA];
+        return !you.clarity() && !you.duration[DUR_DIVINE_STAMINA];
     }
 
     bool effect(bool=true, int=40) const
@@ -481,6 +481,7 @@ public:
             return false;
         }
 
+        effect();
         return true;
     }
 };
