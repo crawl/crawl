@@ -963,6 +963,9 @@ bool lost_soul_revive(monster* mons)
             if (!_worthy_sacrifice(*mi, mons))
                 continue;
 
+            // save this before we revive it
+            const string revivee_name = mons->name(DESC_THE);
+
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
 
@@ -984,13 +987,13 @@ bool lost_soul_revive(monster* mons)
                 {
                     mprf("%s sacrifices itself to reknit %s!",
                          mi->name(DESC_THE).c_str(),
-                         mons->name(DESC_THE).c_str());
+                         revivee_name.c_str());
                 }
                 else
                 {
                     mprf("%s assumes the form of %s%s!",
                          mi->name(DESC_THE).c_str(),
-                         mons->name(DESC_THE).c_str(),
+                         revivee_name.c_str(),
                          (mi->is_summoned() ? " and becomes anchored to this"
                           " world" : ""));
                 }
