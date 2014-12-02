@@ -953,7 +953,8 @@ static void _handle_wizard_command()
         mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER WIZARD MODE!");
 
 #ifndef SCORE_WIZARD_CHARACTERS
-        mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
+        if (!you.explore)
+            mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
 #endif
 
         if (!yes_or_no("Do you really want to enter wizard mode?"))
@@ -1026,7 +1027,9 @@ static void _enter_explore_mode()
     if (Options.explore_mode == WIZ_NEVER)
         return;
 
-    if (!you.explore)
+    if (you.wizard)
+        _handle_wizard_command();
+    else if (!you.explore)
     {
         mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER EXPLORE MODE!");
 
