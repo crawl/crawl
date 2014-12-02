@@ -236,14 +236,14 @@ A staircase to the Tomb
 A tree
 
 “I like trees because they seem more resigned to the way they have to live than
-other things do.“
+other things do.”
     -Willa Cather, _O Pioneers_. 1913.
 %%%%
 Agony spell
 
 “Unbearable, isn't it? The suffering of strangers, the agony of friends. There
 is a secret song at the center of the world, Joey, and its sound is like razors
-through flesh.“
+through flesh.”
     -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
 %%%%
 Asterion
@@ -437,12 +437,12 @@ saying, `All these lives will I give you, ay, and many more and greater,
 through countless ages, if you will fall down and worship me!' And then a red
 cloud, like the colour of blood, seemed to close over my eyes, and before I
 knew what I was doing, I found myself opening the sash and saying to Him,
-`Come in, Lord and Master!'“
+`Come in, Lord and Master!'”
     -Bram Stoker, _Dracula_. 1897.
 %%%%
 Ensorcelled Hibernation spell
 
-“Sweet dreams are made of this; who am I to disagree?“
+“Sweet dreams are made of this; who am I to disagree?”
     -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
 %%%%
 Fire Storm spell
@@ -597,7 +597,7 @@ Orcish Mines
 “You load sixteen tons, what do you get
  Another day older and deeper in debt
  Saint Peter don't you call me 'cause I can't go
- I owe my soul to the company store."
+ I owe my soul to the company store.”
     -Merle Travis, "Sixteen Tons". 1946.
 %%%%
 Polyphemus
@@ -2066,7 +2066,7 @@ pandemonium lord
 %%%%
 Passwall spell
 
-“He says the best way out is always through.“
+“He says the best way out is always through.”
     -Robert Frost, _A Servant to Servants_. 1915.
 %%%%
 pearl dragon armour
