@@ -8937,7 +8937,7 @@ string player::hands_act(const string &plural_verb,
 
 /**
  * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit,
- * or over time (currently every ~4 turns)
+ * or over time (currently every ~8 turns)
  *
  * Chance of losing a point of ac/sh (BONE_ARMOUR_DIV) increases with current
  * number of corpses (ATTR_BONE_ARMOUR) and decreases with spellpower, both
