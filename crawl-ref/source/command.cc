@@ -1107,6 +1107,9 @@ static int _do_description(string key, string type, const string &suffix,
     god_type which_god = str_to_god(key);
     if (which_god != GOD_NO_GOD)
     {
+#ifdef USE_TILE_WEB
+        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
+#endif
         describe_god(which_god, true);
         return true;
     }
