@@ -221,6 +221,10 @@ A staircase to the Ecumenical Temple
 
 <Temple>
 %%%%
+A staircase to the Orcish Mines
+
+<Orcish Mines>
+%%%%
 A staircase to the Shoals
 
 <Shoals>
@@ -231,10 +235,16 @@ A staircase to the Tomb
 %%%%
 A tree
 
-I like trees because they seem more resigned to the way they have to live than
-other things do.
-
+“I like trees because they seem more resigned to the way they have to live than
+other things do.“
     -Willa Cather, _O Pioneers_. 1913.
+%%%%
+Agony spell
+
+“Unbearable, isn't it? The suffering of strangers, the agony of friends. There
+is a secret song at the center of the world, Joey, and its sound is like razors
+through flesh.“
+    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
 %%%%
 Asterion
 
@@ -242,7 +252,6 @@ Asterion
 interest me; like the philosopher, I think nothing is communicated by the art
 of writing. Annoying and trivial minutiae have no place in my spirit, a spirit
 which is receptive only to whatsoever is grand.”
-
   -Jorge Luis Borges, “The House of Asterion”. 1947.
    trans. Antonios Sarhanis, 2008.
 %%%%
@@ -341,6 +350,12 @@ Cause Fear spell
  Used to the noose, they obey”
     -The Mars Volta, “Miranda That Ghost Just Isn't Holy Anymore”. 2005.
 %%%%
+Chain Lightning spell
+
+“The trouble ain't that there is too many fools,
+ but that the lightning ain't distributed right.”
+    -traditionally attributed to Samuel Clemens
+%%%%
 Cigotuvi's Monster
 
 “I beheld the wretch — the miserable monster whom I had
@@ -414,6 +429,21 @@ single combat; but Canute saying that he, a man of small stature, would have
 little chance against the tall athletic Edmund, proposed, on the contrary, for
 them to divide the realm as their fathers had done.”
     -Thomas Keightley, _The History of England_. 1839.
+%%%%
+Enslavement spell
+
+“He held up his hand, and they all stopped, and I thought he seemed to be
+saying, `All these lives will I give you, ay, and many more and greater,
+through countless ages, if you will fall down and worship me!' And then a red
+cloud, like the colour of blood, seemed to close over my eyes, and before I
+knew what I was doing, I found myself opening the sash and saying to Him,
+`Come in, Lord and Master!'“
+    -Bram Stoker, _Dracula_. 1897.
+%%%%
+Ensorcelled Hibernation spell
+
+“Sweet dreams are made of this; who am I to disagree?“
+    -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
 %%%%
 Fire Storm spell
 
@@ -561,6 +591,14 @@ Norris
 “Death and death alone gives meaning to life and this meaning is entirely
 negative.”
     -Georges Poulet
+%%%%
+Orcish Mines
+
+“You load sixteen tons, what do you get
+ Another day older and deeper in debt
+ Saint Peter don't you call me 'cause I can't go
+ I owe my soul to the company store."
+    -Merle Travis, "Sixteen Tons". 1946.
 %%%%
 Polyphemus
 
@@ -2026,6 +2064,11 @@ pandemonium lord
  Of Satan and his Peers...”
     -John Milton, _Paradise Lost_,  Book I, l. 752-7. 1667.
 %%%%
+Passwall spell
+
+“He says the best way out is always through.“
+    -Robert Frost, _A Servant to Servants_. 1915.
+%%%%
 pearl dragon armour
 
 <steam dragon hide>
@@ -3141,7 +3184,7 @@ wand of confusion
 %%%%
 wand of digging
 
-<wand>
+<Passwall spell>
 %%%%
 wand of disintegration
 
@@ -3153,7 +3196,7 @@ wand of draining
 %%%%
 wand of enslavement
 
-<wand>
+<Enslavement spell>
 %%%%
 wand of fire
 
