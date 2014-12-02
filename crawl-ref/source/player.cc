@@ -8787,11 +8787,13 @@ void player_close_door(coord_def doorpos)
     {
         if (monster* mon = monster_at(dc))
         {
-            if (!you.can_see(mon))
+            const bool mons_unseen = !you.can_see(mon);
+            if (mons_unseen || mons_is_projectile(mon))
             {
                 mprf("Something is blocking the %s!", waynoun);
                 // No free detection!
-                you.turn_is_over = true;
+                if (mons_unseen)
+                    you.turn_is_over = true;
             }
             else
                 mprf("There's a creature in the %s!", waynoun);
