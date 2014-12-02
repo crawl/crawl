@@ -78,8 +78,8 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_DELAYED_FIREBALL, "Delayed Fireball",
-     SPTYP_FIRE | SPTYP_CONJURATION | SPFLAG_UTILITY,
-     SPFLAG_NONE,
+     SPTYP_FIRE | SPTYP_CONJURATION,
+     SPFLAG_UTILITY,
      7,
      0,
      -1, -1,
