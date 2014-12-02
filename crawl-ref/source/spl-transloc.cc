@@ -1221,7 +1221,7 @@ static void _move_creature_to_singularity(const monster* singularity,
                                           actor* victim, int strength)
 {
     ray_def ray;
-    if (!find_ray(singularity->pos(), victim->pos(), ray, opc_solid))
+    if (!find_ray(victim->pos(), singularity->pos(), ray, opc_solid))
     {
         // This probably shouldn't ever happen, but just in case:
         if (you.can_see(victim))
