@@ -254,7 +254,7 @@ Gods
   - Ru's abilities can be used while silenced.
 * All gods now treat followers' kills the same as the player's, for purposes of
   piety gain.
-* Makhleb and Okawaru no longer supports corpse sacrifice.
+* Makhleb and Okawaru no longer support corpse sacrifice.
 * Ashenzari's clear vision perk now also grants immunity to the negative
   effects of blurry vision mutations.
 * Dithmenos now specifically hates fire; Corona and related effects are now
