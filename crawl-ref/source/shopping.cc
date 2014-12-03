@@ -2968,17 +2968,21 @@ static const char *shop_types[] =
     "general",
 };
 
-int str_to_shoptype(const string &s)
+/** What shop type is this?
+ *
+ *  @param s the shop type, in a string.
+ *  @returns the corresponding enum, or SHOP_UNASSIGNED if none.
+ */
+shop_type str_to_shoptype(const string &s)
 {
     if (s == "random" || s == "any")
         return SHOP_RANDOM;
 
-    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
-    {
+    for (size_t i = 0; i < ARRAYSZ(shop_types); ++i)
         if (s == shop_types[i])
-            return i;
-    }
-    return -1;
+            return static_cast<shop_type>(i);
+
+    return SHOP_UNASSIGNED;
 }
 
 const char *shoptype_to_str(shop_type type)

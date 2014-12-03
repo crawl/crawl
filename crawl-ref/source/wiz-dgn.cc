@@ -476,18 +476,13 @@ bool debug_make_trap(const coord_def& pos)
 
 bool debug_make_shop(const coord_def& pos)
 {
-    char requested_shop[80];
-    int gridch = grd(pos);
-    bool have_shop_slots = false;
-    int new_shop_type = SHOP_UNASSIGNED;
-    bool representative = false;
-
-    if (gridch != DNGN_FLOOR)
+    if (grd(pos) != DNGN_FLOOR)
     {
         mpr("Insufficient floor-space for new Wal-Mart.");
         return false;
     }
 
+    bool have_shop_slots = false;
     for (int i = 0; i < MAX_SHOPS; ++i)
     {
         if (env.shop[i].type == SHOP_UNASSIGNED)
@@ -503,24 +498,22 @@ bool debug_make_shop(const coord_def& pos)
         return false;
     }
 
+    char requested_shop[80];
     msgwin_get_line("What kind of shop? ",
                     requested_shop, sizeof(requested_shop));
     if (!*requested_shop)
         return false;
 
-    string s = replace_all_of(lowercase_string(requested_shop), "*", "");
-    new_shop_type = str_to_shoptype(s);
+    const shop_type new_shop_type = str_to_shoptype(requested_shop);
 
-    if (new_shop_type == SHOP_UNASSIGNED || new_shop_type == -1)
+    if (new_shop_type == SHOP_UNASSIGNED)
     {
         mprf("Bad shop type: \"%s\"", requested_shop);
         list_shop_types();
         return false;
     }
 
-    representative = !!strchr(requested_shop, '*');
-
-    place_spec_shop(pos, new_shop_type, representative);
+    place_spec_shop(pos, new_shop_type);
     link_items();
     mpr("Done.");
     return true;
