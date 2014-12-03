@@ -65,7 +65,8 @@ public:
     // To-hit is a function of attacker/defender, inherited from attack
     int calc_to_hit(bool random = true);
 
-    static void chaos_affect_actor(actor *victim);
+    static void fake_affect_actor(actor *source, actor *victim,
+                                  beam_type flavour);
 
 private:
     /* Attack phases */

@@ -1179,7 +1179,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         if (coinflip())
         {
             // TODO: Not have this in melee_attack
-            melee_attack::chaos_affect_actor(act);
+            melee_attack::fake_affect_actor(cloud.agent(), act, BEAM_CHAOS);
             return true;
         }
         break;

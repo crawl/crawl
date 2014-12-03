@@ -90,7 +90,7 @@ public:
     int    miscast_type;
     actor* miscast_target;
 
-    bool      fake_chaos_attack;
+    bool      fake_attack;
 
     bool simu;
 

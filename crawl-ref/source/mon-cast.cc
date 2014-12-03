@@ -1221,6 +1221,15 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+    case SPELL_DISTORTION_BOLT:
+        beam.name     = "distortion bolt";
+        beam.damage   = dice_def(3, 9 + power / 13);
+        beam.colour   = ETC_WARP;
+        beam.flavour  = BEAM_DISTORTION;
+        beam.hit      = 16 + power / 35;
+        beam.pierce   = true;
+        break;
+
     default:
         if (check_validity)
         {

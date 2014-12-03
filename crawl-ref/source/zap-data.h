@@ -1195,4 +1195,20 @@ static const zap_info zap_data[] =
     6
 },
 
+{
+    ZAP_DISTORTION_BOLT,
+    "distortion bolt",
+    200,
+    new calcdice_calculator<4, 15, 3, 5>,
+    new tohit_calculator<7, 1, 40>,
+    ETC_WARP,
+    false,
+    BEAM_DISTORTION,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    6
+},
+
 };

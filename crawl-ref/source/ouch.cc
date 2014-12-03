@@ -44,6 +44,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -343,6 +344,13 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                 xom_is_stimulated(200);
             }
         }
+    }
+
+    case BEAM_DISTORTION:
+    {
+        ASSERT(beam);
+        melee_attack::fake_affect_actor(beam->agent(), &you, BEAM_DISTORTION);
+        break;
     }
 
     default:

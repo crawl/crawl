@@ -425,6 +425,7 @@ enum beam_type                  // bolt::flavour
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
     BEAM_GHOSTLY_FLAME,
+    BEAM_DISTORTION,
 
     // Enchantments
     BEAM_SLOW,
@@ -4285,6 +4286,7 @@ enum spell_type
     SPELL_GOBLIN_TOSS,
     SPELL_BONE_ARMOUR,
     SPELL_SINGULARITY,
+    SPELL_DISTORTION_BOLT,
     NUM_SPELLS
 };
 
@@ -4452,6 +4454,7 @@ enum zap_type
     ZAP_CORROSIVE_BOLT,
     ZAP_RANDOM_BOLT_TRACER,
     ZAP_SCATTERSHOT,
+    ZAP_DISTORTION_BOLT,
 
     NUM_ZAPS
 };

@@ -210,6 +210,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
+    SPELL_DISTORTION_BOLT,
 },
 
 {   // Book of Envenomations

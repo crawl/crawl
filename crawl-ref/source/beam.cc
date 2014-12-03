@@ -38,6 +38,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "los.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1738,6 +1739,14 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                 simple_monster_message(mons, " partially resists.");
             else if (hurted > original)
                 simple_monster_message(mons, " is drained terribly!");
+        }
+        break;
+
+    case BEAM_DISTORTION:
+        if (doFlavouredEffects)
+        {
+            melee_attack::fake_affect_actor(pbolt.agent(), mons,
+                                            BEAM_DISTORTION);
         }
         break;
 
@@ -4079,6 +4088,7 @@ int bolt::apply_AC(const actor *victim, int hurted)
         ac_rule = AC_NONE; break;
     case BEAM_ELECTRICITY:
     case BEAM_GHOSTLY_FLAME:
+    case BEAM_DISTORTION:
         ac_rule = AC_HALF; break;
     case BEAM_FRAG:
         ac_rule = AC_TRIPLE; break;
@@ -6507,6 +6517,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_RANDOM:                return "random";
     case BEAM_CHAOS:                 return "chaos";
     case BEAM_GHOSTLY_FLAME:         return "ghostly flame";
+    case BEAM_DISTORTION:            return "distortion";
     case BEAM_SLOW:                  return "slow";
     case BEAM_HASTE:                 return "haste";
     case BEAM_MIGHT:                 return "might";

@@ -57,7 +57,7 @@ attack::attack(actor *attk, actor *defn, actor *blame)
       no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
       attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
       defender_shield(nullptr), miscast_level(-1), miscast_type(SPTYP_NONE),
-      miscast_target(nullptr), fake_chaos_attack(false), simu(false),
+      miscast_target(nullptr), fake_attack(false), simu(false),
       aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
     // No effective code should execute, we'll call init_attack again from
@@ -549,7 +549,7 @@ bool attack::distortion_affects_defender()
         return false;
     }
 
-    if (!player_in_branch(BRANCH_ABYSS) && coinflip())
+    if (!fake_attack && !player_in_branch(BRANCH_ABYSS) && coinflip())
     {
         if (defender->is_player() && attacker_visible
             && using_weapon()
@@ -659,7 +659,7 @@ void attack::chaos_affects_defender()
         miscast_chance *= 2;
 
         // Inform player that something is up.
-        if (!fake_chaos_attack && you.see_cell(defender->pos()))
+        if (!fake_attack && you.see_cell(defender->pos()))
         {
             if (defender->is_player())
                 mpr("You give off a flash of multicoloured light!");
@@ -842,7 +842,7 @@ void attack::chaos_affects_defender()
         beam.effect_known = false;
         // Wielded brand is always known, but maybe this was from a call
         // to chaos_affect_actor.
-        beam.effect_wanton = !fake_chaos_attack;
+        beam.effect_wanton = !fake_attack;
 
         if (using_weapon() && you.can_see(attacker))
         {

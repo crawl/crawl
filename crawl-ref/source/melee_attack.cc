@@ -3674,12 +3674,23 @@ int melee_attack::cleave_damage_mod(int dam)
     return div_rand_round(dam * 3, 4);
 }
 
-void melee_attack::chaos_affect_actor(actor *victim)
+void melee_attack::fake_affect_actor(actor *source, actor *victim,
+                                     beam_type flavour)
 {
-    melee_attack attk(victim, victim);
+    melee_attack attk(source, victim);
     attk.weapon = nullptr;
-    attk.fake_chaos_attack = true;
-    attk.chaos_affects_defender();
+    attk.fake_attack = true;
+    switch (flavour)
+    {
+    case BEAM_CHAOS:
+        attk.chaos_affects_defender();
+        break;
+    case BEAM_DISTORTION:
+        attk.distortion_affects_defender();
+        break;
+    default:
+        break;
+    }
     attk.do_miscast();
     if (!attk.special_damage_message.empty()
         && you.can_see(victim))
