@@ -111,8 +111,9 @@ static string _booktype_header(mon_spell_slot_flags type, size_t num_books,
  *                          (E.g. MON_SPELL_DEMONIC, MON_SPELL_WIZARD...)
  * @param[out] all_books    An output vector of "spellbooks".
  */
-void _monster_spellbooks(const monster_info &mi, mon_spell_slot_flags type,
-                         spellset &all_books)
+static void _monster_spellbooks(const monster_info &mi,
+                                mon_spell_slot_flags type,
+                                spellset &all_books)
 {
     const unique_books books = get_unique_spells(mi, type);
     const size_t num_books = books.size();
