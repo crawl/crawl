@@ -846,13 +846,14 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 {
     actor *other = actor_at(newpos);
     ASSERT(this != other);
+    ASSERT(alive());
 
     if (is_monster())
         behaviour_event(as_monster(), ME_WHACK, agent);
 
     dice_def damage(2, 1 + pow / 10);
 
-    if (other)
+    if (other && other->alive())
     {
         if (other->is_monster())
             behaviour_event(other->as_monster(), ME_WHACK, agent);

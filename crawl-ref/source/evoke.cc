@@ -1325,7 +1325,8 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     }
 
     for (auto it : collisions)
-        it.first->collide(it.second, agent, pow);
+        if (it.first->alive())
+            it.first->collide(it.second, agent, pow);
 }
 
 static void _fan_of_gales_elementals()
