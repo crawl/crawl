@@ -1184,8 +1184,8 @@ string sub_type_string(const item_def &item, bool known)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
             return "Fen Folio";
-        else if (sub_type == BOOK_PLANE_PAPYRUS)
-            return "Plane Papyrus";
+        else if (sub_type == BOOK_AKASHIC_RECORD)
+            return "Akashic Record";
 
         return string("book of ") + _book_type_name(sub_type);
     }
