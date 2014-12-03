@@ -1680,8 +1680,11 @@ bool is_valid_shaft_level(bool known)
     // immediately above the bottom of a branch if that branch is
     // significantly more dangerous than normal.
     int min_delta = 1;
-    if (!known && env.turns_on_level == -1 && branch.dangerous_bottom_level)
+    if (!known && env.turns_on_level == -1
+        && branch.branch_flags & BFLAG_DANGEROUS_END)
+    {
         min_delta = 2;
+    }
 
     return (brdepth[place.branch] - place.depth) >= min_delta;
 }
@@ -1726,9 +1729,7 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
     // Only shafts on the level immediately above a dangerous branch
     // bottom will take you to that dangerous bottom, and shafts can't
     // be created during level generation time.
-    // Include level 27 of the main dungeon here, but don't restrict
-    // shaft creation (so don't set branch.dangerous_bottom_level).
-    if (branches[lid.branch].dangerous_bottom_level
+    if (branches[lid.branch].branch_flags & BFLAG_DANGEROUS_END
         && lid.depth == max_depth
         && (max_depth - curr_depth) > 1)
     {

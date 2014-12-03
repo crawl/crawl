@@ -301,9 +301,9 @@ for whatever reason:
     BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
     DNGN_ENTER_MYPORTAL, DNGN_EXIT_MYPORTAL,
     "NewPortal", "an awesome portal place", "NewPortal",
-    NULL,
-    false, BLUE, BLUE,
-    '7', false, 0 },
+    nullptr,
+    BLUE, BLUE,
+    '7', 0 },
 * Add code for the entrances and exits to feature-data.h, like so:
     PORTAL_ENTRANCE(DNGN_ENTER_MYPORTAL, "awesome portal in", "enter_newportal", BLUE),
     PORTAL_EXIT(DNGN_EXIT_MYPORTAL, "awesome portal out", "exit_newportal", BLUE),
