@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-2728-gd75f5fb)
+Stone Soup 0.16 (up to 0.16-a0-2936-gdb8a0b4)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -137,7 +137,10 @@ Items
   - The Iron Rod, which fires a spray of shrapnel in a wide arc. Extremely
     effective against agile, low-AC enemies, but ineffective against armoured
     enemies or at a distance.
-  - The Plane Papyrus, a new high-level Translocations book.
+  - The Akashic Record, a new high-level Translocations book.
+  - Potions of ambrosia, which give substantial health & magic regeneration for
+    a short period, but also confuse the user; if the confusion ends, so does
+    regeneration.
 * Regeneration has been moved from rings to amulets.
 * Corrosion resistance can now occur on artefact armour.
 * Scale mail now only has 10 ER, down from 11.
@@ -157,7 +160,7 @@ Items
   - Cloaks of darkness are now cloaks of invisibility.
 * Removed items:
   - Boots of jumping.
-  - Potions of porridge and coagulated blood.
+  - Potions of confusion, porridge and coagulated blood.
   - Blessed Blades.
   - Rods of Striking.
 
@@ -251,7 +254,7 @@ Gods
   - Ru's abilities can be used while silenced.
 * All gods now treat followers' kills the same as the player's, for purposes of
   piety gain.
-* Okawaru no longer supports corpse sacrifice.
+* Makhleb and Okawaru no longer supports corpse sacrifice.
 * Ashenzari's clear vision perk now also grants immunity to the negative
   effects of blurry vision mutations.
 * Dithmenos now specifically hates fire; Corona and related effects are now
@@ -278,6 +281,7 @@ Interface
   are still visible with @.)
 * A third page has been added to the god description (^) screen, listing causes
   and effects of divine wrath.
+* Xom now has a 'mood' meter, in the same place other gods have piety meters.
 * Control-direction no longer tries to open or close doors.
 * Derived undead (zombies, skeletons, &c) now have their full names displayed.
 * Corrosion now visibly (temporarily) reduces weapons' enhancement bonuses.
