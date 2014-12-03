@@ -3947,19 +3947,18 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
 #endif
 
-    formatted_string fout = formatted_string::parse_string(inf.body.str());
+    formatted_scroller fs;
+    fs.add_text(inf.body.str());
     if (crawl_state.game_is_hints())
     {
         const string hintstr = hints_describe_monster(mi, has_stat_desc);
         vector<formatted_string> hintvec;
         formatted_string::parse_string_to_multiple(hintstr, hintvec);
-        for (auto hint : hintvec)
-            fout += hint;
+        for (const auto &hint : hintvec)
+            fs.add_item_formatted_string(hint);
     }
-    fout += formatted_string::parse_string(inf.footer);
 
-    formatted_scroller fs;
-    fs.add_item_formatted_string(fout);
+    fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
     fs.show();
 
     return 'a'; //TODO
