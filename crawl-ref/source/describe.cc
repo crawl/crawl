@@ -3950,13 +3950,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     formatted_scroller fs;
     fs.add_text(inf.body.str());
     if (crawl_state.game_is_hints())
-    {
-        const string hintstr = hints_describe_monster(mi, has_stat_desc);
-        vector<formatted_string> hintvec;
-        formatted_string::parse_string_to_multiple(hintstr, hintvec);
-        for (const auto &hint : hintvec)
-            fs.add_item_formatted_string(hint);
-    }
+        fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
 
     fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
     fs.show();
