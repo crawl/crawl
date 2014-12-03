@@ -71,6 +71,7 @@ static bool _corpse_butchery(item_def& corpse,
             turn_corpse_into_skeleton_and_blood_potions(corpse);
         else
             turn_corpse_into_blood_potions(corpse);
+        autopickup();
     }
     else
     {
@@ -87,7 +88,7 @@ static bool _corpse_butchery(item_def& corpse,
 
         // Also, don't waste time picking up chunks if you're already
         // starving. (jpeg)
-        if (you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
+        if (you.hunger_state > HS_STARVING)
             autopickup();
     }
 
