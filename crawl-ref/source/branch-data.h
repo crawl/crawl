@@ -20,7 +20,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_TEMPLE, BRANCH_DUNGEON, 4, 7, 1, 5,
       BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_TEMPLE, DNGN_RETURN_FROM_TEMPLE,
+      DNGN_ENTER_TEMPLE, DNGN_EXIT_TEMPLE,
       "Temple", "the Ecumenical Temple", "Temple",
       nullptr,
       LIGHTGREY, BROWN,
@@ -28,7 +28,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_ORC, BRANCH_DUNGEON, 9, 12, 4, 8,
       0, 0,
-      DNGN_ENTER_ORC, DNGN_RETURN_FROM_ORC,
+      DNGN_ENTER_ORC, DNGN_EXIT_ORC,
       "Orcish Mines", "the Orcish Mines", "Orc",
       nullptr,
       BROWN, BROWN,
@@ -36,7 +36,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_ELF, BRANCH_ORC, 3, 4, 3, 15,
       BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_ELF, DNGN_RETURN_FROM_ELF,
+      DNGN_ENTER_ELF, DNGN_EXIT_ELF,
       "Elven Halls", "the Elven Halls", "Elf",
       nullptr,
       WHITE, ETC_ELVEN_BRICK,
@@ -45,7 +45,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_DWARF, BRANCH_ELF, -1, -1, 0, 17,
       0, 0,
-      DNGN_ENTER_DWARF, DNGN_RETURN_FROM_DWARF,
+      DNGN_ENTER_DWARF, DNGN_EXIT_DWARF,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
       nullptr,
       BROWN, BROWN,
@@ -54,7 +54,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 8, 10,
       0, 0,
-      DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
+      DNGN_ENTER_LAIR, DNGN_EXIT_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
       nullptr,
       GREEN, BROWN,
@@ -62,7 +62,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 5, 15,
       BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_SWAMP, DNGN_RETURN_FROM_SWAMP,
+      DNGN_ENTER_SWAMP, DNGN_EXIT_SWAMP,
       "Swamp", "the Swamp", "Swamp",
       nullptr,
       BROWN, BROWN,
@@ -70,7 +70,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 5, 15,
       BFLAG_ISLANDED | BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
+      DNGN_ENTER_SHOALS, DNGN_EXIT_SHOALS,
       "Shoals", "the Shoals", "Shoals",
       nullptr,
       BROWN, BROWN,
@@ -78,7 +78,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SNAKE, BRANCH_LAIR, 3, 6, 5, 15,
       BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_SNAKE, DNGN_RETURN_FROM_SNAKE,
+      DNGN_ENTER_SNAKE, DNGN_EXIT_SNAKE,
       "Snake Pit", "the Snake Pit", "Snake",
       nullptr,
       LIGHTGREEN, YELLOW,
@@ -86,7 +86,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SPIDER, BRANCH_LAIR, 3, 6, 5, 15,
       BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_SPIDER, DNGN_RETURN_FROM_SPIDER,
+      DNGN_ENTER_SPIDER, DNGN_EXIT_SPIDER,
       "Spider Nest", "the Spider Nest", "Spider",
       nullptr,
       BROWN, YELLOW,
@@ -94,7 +94,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SLIME, BRANCH_LAIR, 6, 8, 6, 17,
       BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_SLIME, DNGN_RETURN_FROM_SLIME,
+      DNGN_ENTER_SLIME, DNGN_EXIT_SLIME,
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,
       GREEN, BROWN,
@@ -102,7 +102,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
       BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
+      DNGN_ENTER_VAULTS, DNGN_EXIT_VAULTS,
       "Vaults", "the Vaults", "Vaults",
       nullptr,
       LIGHTGREY, BROWN,
@@ -110,7 +110,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_BLADE, BRANCH_VAULTS, 3, 4, 1, 21,
       BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_BLADE, DNGN_RETURN_FROM_BLADE,
+      DNGN_ENTER_BLADE, DNGN_EXIT_BLADE,
       "Hall of Blades", "the Hall of Blades", "Blade",
       nullptr,
       LIGHTGREY, BROWN,
@@ -119,7 +119,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_CRYPT, BRANCH_VAULTS, 2, 3, 3, 19,
       BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_CRYPT, DNGN_RETURN_FROM_CRYPT,
+      DNGN_ENTER_CRYPT, DNGN_EXIT_CRYPT,
       "Crypt", "the Crypt", "Crypt",
       nullptr,
       LIGHTGREY, BROWN,
@@ -127,7 +127,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_TOMB, BRANCH_CRYPT, 3, 3, 3, 21,
       BFLAG_ISLANDED | BFLAG_DANGEROUS_END, LFLAG_NO_TELE_CONTROL,
-      DNGN_ENTER_TOMB, DNGN_RETURN_FROM_TOMB,
+      DNGN_ENTER_TOMB, DNGN_EXIT_TOMB,
       "Tomb", "the Tomb of the Ancients", "Tomb",
       nullptr,
       BROWN, BROWN,
@@ -175,7 +175,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_ZOT, BRANCH_DEPTHS, 5, 5, 5, 27,
       BFLAG_DANGEROUS_END, 0,
-      DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
+      DNGN_ENTER_ZOT, DNGN_EXIT_ZOT,
       "Zot", "the Realm of Zot", "Zot",
       nullptr,
       BLACK, BLACK, // set per-map
@@ -183,7 +183,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_FOREST, BRANCH_VAULTS, 2, 3, 5, 19,
       0, 0,
-      DNGN_ENTER_FOREST, DNGN_RETURN_FROM_FOREST,
+      DNGN_ENTER_FOREST, DNGN_EXIT_FOREST,
       "Forest", "the Enchanted Forest", "Forest",
       nullptr,
       BROWN, BROWN,
@@ -293,7 +293,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
       0, 0,
-      DNGN_ENTER_DEPTHS, DNGN_RETURN_FROM_DEPTHS,
+      DNGN_ENTER_DEPTHS, DNGN_EXIT_DEPTHS,
       "Depths", "the Depths", "Depths",
       nullptr,
       LIGHTGREY, BROWN,

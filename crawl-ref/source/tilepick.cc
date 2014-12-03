@@ -345,38 +345,38 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
     // branch exit stairs
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
-    case DNGN_RETURN_FROM_FOREST:
-    case DNGN_RETURN_FROM_BLADE:
+    case DNGN_EXIT_DWARF:
+    case DNGN_EXIT_FOREST:
+    case DNGN_EXIT_BLADE:
         return TILE_DNGN_RETURN;
 #endif
-    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_EXIT_TEMPLE:
         return TILE_DNGN_EXIT_TEMPLE;
-    case DNGN_RETURN_FROM_ORC:
+    case DNGN_EXIT_ORC:
         return TILE_DNGN_EXIT_ORC;
-    case DNGN_RETURN_FROM_ELF:
+    case DNGN_EXIT_ELF:
         return TILE_DNGN_EXIT_ELF;
-    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_EXIT_LAIR:
         return TILE_DNGN_EXIT_LAIR;
-    case DNGN_RETURN_FROM_SNAKE:
+    case DNGN_EXIT_SNAKE:
         return TILE_DNGN_EXIT_SNAKE;
-    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_EXIT_SWAMP:
         return TILE_DNGN_EXIT_SWAMP;
-    case DNGN_RETURN_FROM_SPIDER:
+    case DNGN_EXIT_SPIDER:
         return TILE_DNGN_EXIT_SPIDER;
-    case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_EXIT_SHOALS:
         return TILE_DNGN_EXIT_SHOALS;
-    case DNGN_RETURN_FROM_SLIME:
+    case DNGN_EXIT_SLIME:
         return TILE_DNGN_EXIT_SLIME;
-    case DNGN_RETURN_FROM_DEPTHS:
+    case DNGN_EXIT_DEPTHS:
         return TILE_DNGN_RETURN_DEPTHS;
-    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_EXIT_VAULTS:
         return TILE_DNGN_EXIT_VAULTS;
-    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_EXIT_CRYPT:
         return TILE_DNGN_EXIT_CRYPT;
-    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_EXIT_TOMB:
         return TILE_DNGN_EXIT_TOMB;
-    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_EXIT_ZOT:
         return TILE_DNGN_RETURN_ZOT;
 
     case DNGN_EXIT_ZIGGURAT:
