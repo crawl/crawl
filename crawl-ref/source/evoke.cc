@@ -1622,6 +1622,9 @@ static spret_type _phantom_mirror()
     mon->summoner = MID_PLAYER;
     mons_add_blame(mon, "mirrored by the player character");
     mon->add_ench(ENCH_PHANTOM_MIRROR);
+    mon->add_ench(mon_enchant(ENCH_DRAINED,
+                              div_rand_round(mon->get_experience_level(), 3),
+                              &you, INFINITE_DURATION));
 
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
