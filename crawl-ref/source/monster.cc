@@ -3370,6 +3370,8 @@ static int _zombie_ac_modifier(monster_type type)
  */
 int monster::base_armour_class() const
 {
+    ASSERT(!invalid_monster_type(type));
+
     // ghost demon struct overrides the monster values.
     if (mons_is_ghost_demon(type))
         return ghost->ac;
@@ -3396,7 +3398,10 @@ int monster::base_armour_class() const
 
     // demonspawn & draconians combine base & class ac values.
     if (mons_is_job(type))
+    {
+        ASSERT(!invalid_monster_type(base_monster));
         return base_ac + get_monster_data(base_monster)->AC;
+    }
 
     return base_ac;
 }
