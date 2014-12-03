@@ -926,7 +926,7 @@ static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
     bolt *expl   = new bolt(*beam);
     expl->flavour = BEAM_HELLFIRE;
     expl->is_explosion = true;
-    expl->damage = dice_def(2, 5);
+    expl->damage = dice_def(3, 8);
     expl->name   = "hellfire";
 
     beam->special_explosion = expl;
