@@ -180,7 +180,6 @@ syn match desEntry "\<overflow_altar_\w*\>"  contains=desGod
 syn match desEntry "\<enter_\w*\>"       contains=desBranchname
 syn match desEntry "\<exit_\w*\>"        contains=desBranchname
 syn match desEntry "\<ruin_\w*\>"        contains=desBranchname
-syn match desEntry "\<return_from_\w*\>" contains=desBranchname
 
 " 'transparent' is a Vim syntax keyword
 syn match desTransparent "\<transparent\>"
