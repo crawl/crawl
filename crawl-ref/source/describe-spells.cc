@@ -289,6 +289,45 @@ static string _spell_schools(spell_type spell)
 }
 
 /**
+ * Should spells from the given source be listed in two columns instead of
+ * one?
+ *
+ * @param source_item   The source of the spells; a book, rod, or nullptr in
+ *                      the case of monster spellbooks.
+ * @return              source_item == nullptr
+ */
+static bool _list_spells_doublecolumn(const item_def* const source_item)
+{
+    return !source_item;
+}
+
+/**
+ * Produce a mapping from characters (used as indices) to spell types in
+ * the given spellset.
+ *
+ * @param spells        A list of 'books' of spells.
+ * @param source_item   The source of the spells (book or rod),, or nullptr in
+ *                      the case of monster spellbooks.
+ * @return              A list of all unique spells in the given set, ordered
+ *                      either in original order or column-major order, the
+ *                      latter in the case of a double-column layout.
+ */
+vector<spell_type> map_chars_to_spells(const spellset &spells,
+                                       const item_def* const source_item)
+{
+    const vector<spell_type> flat_spells = _spellset_contents(spells);
+    if (!_list_spells_doublecolumn(source_item))
+        return flat_spells;
+
+    vector<spell_type> column_spells;
+    for (int i = 0; i < flat_spells.size(); i += 2)
+        column_spells.emplace_back(flat_spells[i]);
+    for (int i = 1; i < flat_spells.size(); i += 2)
+        column_spells.emplace_back(flat_spells[i]);
+    return column_spells;
+}
+
+/**
  * Describe a given set of spells.
  *
  * @param book              A labeled set of spells, corresponding to a book,
@@ -328,7 +367,7 @@ static void _describe_book(const spellbook_contents &book,
                             chop_string(spell_title(spell), 29).c_str());
 
         // only display type & level for book/rod spells
-        if (!source_item)
+        if (_list_spells_doublecolumn(source_item))
         {
             // print monster spells in two columns
             if (first_line_element)
@@ -361,7 +400,8 @@ void describe_spellset(const spellset &spells,
                        formatted_string &description)
 {
     // make a map of characters to spells...
-    const vector<spell_type> flat_spells = _spellset_contents(spells);
+    const vector<spell_type> flat_spells = map_chars_to_spells(spells,
+                                                               source_item);
     // .. and spells to characters.
     map<spell_type, char> spell_letters;
     // TODO: support more than 26 spells
@@ -398,7 +438,8 @@ void list_spellset(const spellset &spells, const item_def *source_item,
                    formatted_string &initial_desc)
 {
     // make a map of characters to spells.
-    const vector<spell_type> flat_spells = _spellset_contents(spells);
+    const vector<spell_type> flat_spells = map_chars_to_spells(spells,
+                                                               source_item);
 
     const bool can_memorize =
         source_item && source_item->base_type == OBJ_BOOKS
