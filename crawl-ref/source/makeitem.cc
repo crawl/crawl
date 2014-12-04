@@ -838,18 +838,14 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     case ARM_BOOTS:
+        rc = random_choose(SPARM_RUNNING, SPARM_FLYING, SPARM_STEALTH);
+        break;
+
     case ARM_NAGA_BARDING:
     case ARM_CENTAUR_BARDING:
-    {
-        const int tmp = random2(600) + 400 * (item.sub_type != ARM_BOOTS);
-
-        rc = (tmp < 200) ? SPARM_RUNNING :
-             (tmp < 400) ? SPARM_FLYING :
-             (tmp < 600) ? SPARM_STEALTH :
-             (tmp < 800) ? SPARM_COLD_RESISTANCE
-                          : SPARM_FIRE_RESISTANCE;
+        rc = random_choose(SPARM_FLYING, SPARM_STEALTH, SPARM_COLD_RESISTANCE,
+                           SPARM_FIRE_RESISTANCE);
         break;
-    }
 
     case ARM_ROBE:
         rc = random_choose_weighted(1, SPARM_RESISTANCE,
