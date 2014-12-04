@@ -343,6 +343,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_JEWELLERY_ON:      // one turn
     case DELAY_UNINTERRUPTIBLE:   // never stoppable
+    case DELAY_BLURRY_SCROLL:     // would be nice if this was interruptible
+                                  // but it currently always interrupts itself
     default:
         break;
     }
@@ -433,6 +435,29 @@ bool already_learning_spell(int spell)
     return false;
 }
 
+/**
+ * Can the player currently read the scroll in the given inventory slot?
+ *
+ * Prints corresponding messages if the answer is false.
+ *
+ * @param inv_slot      The inventory slot in question.
+ * @return              false if the player is confused, berserk, silenced,
+ *                      has no scroll in the given slot, etc; true otherwise.
+ */
+static bool _can_read_scroll(int inv_slot)
+{
+    // prints its own messages
+    if (!player_can_read())
+        return false;
+
+    const string illiteracy_reason = cannot_read_item_reason(you.inv[inv_slot]);
+    if (illiteracy_reason.empty())
+        return true;
+
+    mpr(illiteracy_reason);
+    return false;
+}
+
 // Xom is amused by a potential food source going to waste, and is
 // more amused the hungrier you are.
 static void _xom_check_corpse_waste()
@@ -489,6 +514,10 @@ void handle_delay()
 
         case DELAY_SHAFT_SELF:
             mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
+            break;
+
+        case DELAY_BLURRY_SCROLL:
+            mprf(MSGCH_MULTITURN_ACTION, "You begin reading the scroll.");
             break;
 
         default:
@@ -553,6 +582,14 @@ void handle_delay()
             you.time_taken = 0;
             return;
         }
+    } else if (delay.type == DELAY_BLURRY_SCROLL)
+    {
+        if (!_can_read_scroll(delay.parm1))
+        {
+            _pop_delay();
+            you.time_taken = 0;
+            return;
+        }
     }
 
     // Handle delay:
@@ -596,6 +633,10 @@ void handle_delay()
 
         case DELAY_SHAFT_SELF:
             mprf(MSGCH_MULTITURN_ACTION, "You continue digging a shaft.");
+            break;
+
+        case DELAY_BLURRY_SCROLL:
+            mprf(MSGCH_MULTITURN_ACTION, "You continue reading the scroll.");
             break;
 
         case DELAY_MULTIDROP:
@@ -803,6 +844,12 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_SHAFT_SELF:
         you.do_shaft_ability();
+        break;
+
+    case DELAY_BLURRY_SCROLL:
+        // Make sure the scroll still exists, the player isn't confused, etc
+        if (_can_read_scroll(delay.parm1))
+            read_scroll(delay.parm1);
         break;
 
     case DELAY_DROP_ITEM:
@@ -1543,6 +1590,7 @@ static const char *delay_names[] =
 #endif
     "run", "rest", "travel", "macro",
     "macro_process_key", "interruptible", "uninterruptible", "shaft self",
+    "blurry vision",
 };
 
 // Gets a delay given its name.

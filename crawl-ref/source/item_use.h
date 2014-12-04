@@ -22,6 +22,8 @@ bool puton_ring(int slot = -1, bool allow_prompt = true);
 
 void read(int slot = -1);
 void read_scroll(int slot);
+bool player_can_read();
+string cannot_read_item_reason(const item_def &item);
 
 bool remove_ring(int slot = -1, bool announce = false);
 

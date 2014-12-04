@@ -2689,7 +2689,7 @@ static bool _is_cancellable_scroll(scroll_type scroll)
  *
  * Prints corresponding messages. (Thanks, canned_msg().)
  */
-static bool _player_can_read()
+bool player_can_read()
 {
     if (you.berserk())
     {
@@ -2729,7 +2729,7 @@ static string _no_items_reason(object_selector type)
  * reason why. Otherwise (if they are able to read it), returns "", the empty
  * string.
  */
-static string _cannot_read_item_reason(const item_def &item)
+string cannot_read_item_reason(const item_def &item)
 {
     // can read books, except for manuals...
     if (item.base_type == OBJ_BOOKS)
@@ -2829,7 +2829,7 @@ static string _cannot_read_item_reason(const item_def &item)
  */
 void read(int slot)
 {
-    if (!_player_can_read())
+    if (!player_can_read())
         return;
 
     int item_slot = (slot != -1) ? slot
@@ -2843,7 +2843,7 @@ void read(int slot)
         return;
 
     const item_def& scroll = you.inv[item_slot];
-    const string failure_reason = _cannot_read_item_reason(scroll);
+    const string failure_reason = cannot_read_item_reason(scroll);
     if (!failure_reason.empty())
     {
         mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
@@ -2863,21 +2863,22 @@ void read(int slot)
 
     if (you.stat_zero[STAT_INT] && !one_chance_in(5))
     {
-        // mpr("You stumble in your attempt to read the scroll. Nothing happens!");
-        // mpr("Your reading takes too long for the scroll to take effect.");
-        // mpr("Your low mental capacity makes reading really difficult. You give up!");
-        mpr("You almost manage to decipher the scroll, but fail in this attempt.");
+        mpr("You almost manage to decipher the scroll,"
+            " but fail in this attempt.");
         return;
     }
 
-    // Imperfect vision prevents players from reading actual content {dlb}:
-    if (does_vision_blur())
+    // if we have blurry vision, we need to start a delay before the actual
+    // scroll effect kicks in.
+    if (player_mutation_level(MUT_BLURRY_VISION)
+        && !in_good_standing(GOD_ASHENZARI, 2))
     {
-        mpr("The writing blurs in front of your eyes.");
-        return;
+        // takes 1, 2, 3 extra turns
+        const int turns = player_mutation_level(MUT_BLURRY_VISION);
+        start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
     }
-
-    read_scroll(item_slot);
+    else
+        read_scroll(item_slot);
 }
 
 
