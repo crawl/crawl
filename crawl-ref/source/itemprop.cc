@@ -1288,9 +1288,25 @@ static set<armour_type> _hide_armour_set = _make_hide_armour_set();
 bool armour_is_hide(const item_def &item, bool inc_made)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
+    return armour_type_is_hide(static_cast<armour_type>(item.sub_type),
+                               inc_made);
+}
 
-    const armour_type type = static_cast<armour_type>(item.sub_type);
-
+/**
+ * Is the given armour a type that changes when enchanted (i.e. dragon or troll
+ * hide?
+ *
+ * @param type      The armour_type of armour in question.
+ * @param inc_made  Whether to also accept armour that has already been
+ *                  enchanted & transformed (e.g. fda in addition to fire
+ *                  dragon hides, etc)
+ * @return          Whether the given item type is (or was?) a hide.
+ *                  (Note that ARM_ANIMAL_SKIN cannot be enchanted & so doesn't
+ *                  count.)
+ */
+bool armour_type_is_hide(int _type, bool inc_made)
+{
+    const armour_type type = static_cast<armour_type>(_type);
     // actual hides?
     if (_hide_armours.count(type))
         return true;

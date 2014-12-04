@@ -1106,7 +1106,9 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
 
     if (spell == SPELL_VIRULENCE
         && !_lich_has_spell_of_school(spells, SPTYP_POISON))
+    {
         return false;
+    }
 
     if (spells.size() > 2
         && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
