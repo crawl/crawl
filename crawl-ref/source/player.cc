@@ -8309,18 +8309,6 @@ bool player_has_orb()
     return you.char_direction == GDT_ASCENDING;
 }
 
-/**
- * Invoke this each time you wish to test MUT_BLURRY_VISION.0
- * @return  True if the player fails to read things.
- */
-bool does_vision_blur()
-{
-    // "Ashenzari keeps your vision clear" corrects for blurry vision.
-    return player_mutation_level(MUT_BLURRY_VISION)
-        && !in_good_standing(GOD_ASHENZARI, 2)
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5);
-}
-
 bool player::form_uses_xl() const
 {
     // No body parts that translate in any way to something fisticuffs could

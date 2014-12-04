@@ -1169,6 +1169,7 @@ enum delay_type
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
 
     DELAY_SHAFT_SELF, // Formicid ability
+    DELAY_BLURRY_SCROLL,
 
     NUM_DELAYS
 };
