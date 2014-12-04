@@ -88,7 +88,7 @@ static bool _player_sacrificed_arcana();
 
 static void _zin_saltify(monster* mon);
 
-static const char * const book_of_zin[27][3] =
+static const char * const book_of_zin[][3] =
 {
     {
         "It was the word of Zin that there would not be @sin_noun@...",
@@ -254,7 +254,7 @@ static const char * const book_of_zin[27][3] =
     },
 };
 
-static const char * const sinner_text[12] =
+static const char * const sinner_text[] =
 {
     "hordes of the Abyss",
     "bastard children of Xom",
@@ -271,7 +271,7 @@ static const char * const sinner_text[12] =
 };
 
 // First column is adjective, then noun.
-static const char * const sin_text[12][2] =
+static const char * const sin_text[][2] =
 {
     { "chaotic",      "chaos" },
     { "discordant",   "discord" },
@@ -288,7 +288,7 @@ static const char * const sin_text[12][2] =
 };
 
 // First column is adjective, then noun.
-static const char * const virtue_text[12][2] =
+static const char * const virtue_text[][2] =
 {
     { "ordered",   "order" },
     { "harmonic",  "harmony" },
@@ -305,7 +305,7 @@ static const char * const virtue_text[12][2] =
 };
 
 // First column is infinitive, then gerund.
-static const char * const smite_text[9][2] =
+static const char * const smite_text[][2] =
 {
     { "purify",      "purified" },
     { "censure",     "censured" },
@@ -337,9 +337,10 @@ string zin_recite_text(const int seed, const int prayertype, int step)
     const int trits[7] = { seed % 3, (seed / 3) % 3, (seed / 9) % 3,
                            (seed / 27) % 3, (seed / 81) % 3, (seed / 243) % 3,
                            (seed / 729) % 3};
+
+    COMPILE_CHECK(ARRAYSZ(book_of_zin) == 27);
     const int chapter = 1 + trits[0] + trits[1] * 3 + trits[2] * 9;
     const int verse = 1 + trits[3] + trits[4] * 3 + trits[5] * 9 + trits[6] * 27;
-
 
     // Change step to turn 1, turn 2, or turn 3.
     if (step > -1)
@@ -362,9 +363,14 @@ string zin_recite_text(const int seed, const int prayertype, int step)
         return bookname + " " + numbers.str();
     }
 
+    COMPILE_CHECK(ARRAYSZ(sinner_text) == 12);
+    COMPILE_CHECK(ARRAYSZ(sin_text) == 12);
+    COMPILE_CHECK(ARRAYSZ(virtue_text) == 12);
     const int sinner_seed = trits[3] + prayertype * 3;
     const int sin_seed = trits[6] + prayertype * 3;
     const int virtue_seed = trits[6] + prayertype * 3;
+
+    COMPILE_CHECK(ARRAYSZ(smite_text) == 9);
     const int smite_seed = trits[4] + trits[5] * 3;
 
     string recite = book_of_zin[chapter-1][step-1];
