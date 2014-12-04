@@ -328,19 +328,12 @@ static const char * const smite_text[][2] =
  */
 string zin_recite_text(const int seed, const int prayertype, int step)
 {
-    // 'trits':
-    // To have deterministic passages we need to store a random seed.
-    // Ours consists of an array of trinary bits.
-
-    // Yes, really.
-
-    const int trits[7] = { seed % 3, (seed / 3) % 3, (seed / 9) % 3,
-                           (seed / 27) % 3, (seed / 81) % 3, (seed / 243) % 3,
-                           (seed / 729) % 3};
+    // To have deterministic passages we extract portions of the seed.
+    // We use trits: "digits" in the base-3 expansion of seed.
 
     COMPILE_CHECK(ARRAYSZ(book_of_zin) == 27);
-    const int chapter = 1 + trits[0] + trits[1] * 3 + trits[2] * 9;
-    const int verse = 1 + trits[3] + trits[4] * 3 + trits[5] * 9 + trits[6] * 27;
+    const int chapter = seed % 27;
+    const int verse = (seed/27) % 81;
 
     // Change step to turn 1, turn 2, or turn 3.
     if (step > -1)
@@ -357,23 +350,27 @@ string zin_recite_text(const int seed, const int prayertype, int step)
                                 (prayertype == RECITE_UNHOLY)   ?  "Anathema"     :
                                                                    "Bugginess";
         ostringstream numbers;
-        numbers << chapter;
+        numbers << (chapter + 1);
         numbers << ":";
-        numbers << verse;
+        numbers << (verse + 1);
         return bookname + " " + numbers.str();
     }
 
+    // These mad-libs are deterministically derived from the verse number
+    // and prayer type. Sins and virtues are paired, so use the same sub-
+    // seed. Sinners, sins, and smites are uncorrelated so do not share
+    // trits.
     COMPILE_CHECK(ARRAYSZ(sinner_text) == 12);
     COMPILE_CHECK(ARRAYSZ(sin_text) == 12);
     COMPILE_CHECK(ARRAYSZ(virtue_text) == 12);
-    const int sinner_seed = trits[3] + prayertype * 3;
-    const int sin_seed = trits[6] + prayertype * 3;
-    const int virtue_seed = trits[6] + prayertype * 3;
+    const int sinner_seed = verse % 3 + prayertype * 3;
+    const int sin_seed = (verse/27) % 3 + prayertype * 3;
+    const int virtue_seed = sin_seed;
 
     COMPILE_CHECK(ARRAYSZ(smite_text) == 9);
-    const int smite_seed = trits[4] + trits[5] * 3;
+    const int smite_seed = (verse/27) % 9;
 
-    string recite = book_of_zin[chapter-1][step-1];
+    string recite = book_of_zin[chapter][step-1];
 
     //XXX: deduplicate this with database code
     recite = replace_all(recite, "@sinners@", sinner_text[sinner_seed]);
