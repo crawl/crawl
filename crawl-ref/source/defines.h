@@ -78,7 +78,10 @@ enum extra_monster_index_type
 #define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
-#define ITEM_IN_SHOP (NON_ITEM + NON_ITEM)
+#define ITEM_IN_SHOP 32767
+// NON_ITEM + mindex + 1 is used as the item link for monster inventory;
+// make sure we're not colliding with that.
+COMPILE_CHECK(ITEM_IN_SHOP > NON_ITEM + MAX_MONSTERS);
 
 #if NON_ITEM <= MAX_ITEMS
 #error NON_ITEM must be > MAX_ITEMS
