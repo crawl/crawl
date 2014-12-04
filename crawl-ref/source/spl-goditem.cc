@@ -608,7 +608,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
 
     while (1)
     {
-        if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
+        if (!any_items_of_type(OSEL_CURSED_WORN) && used)
         {
             mpr("You have uncursed all your worn items.");
             return used;
