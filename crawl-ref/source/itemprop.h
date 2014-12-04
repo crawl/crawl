@@ -48,6 +48,7 @@ special_missile_type get_ammo_brand(const item_def &item) PURE;
 
 // armour functions:
 int armour_max_enchant(const item_def &item) PURE;
+bool armour_type_is_hide(int type, bool inc_made = false) PURE;
 bool armour_is_hide(const item_def &item, bool inc_made = false) PURE;
 bool armour_is_special(const item_def &item) PURE;
 
