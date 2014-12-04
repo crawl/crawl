@@ -25,12 +25,6 @@
 #endif
 #endif
 
-#ifndef _lint
-# define COMPILE_CHECK(expr) static_assert((expr), #expr)
-#else
-# define COMPILE_CHECK(expr)
-#endif
-
 #if defined(DEBUG) && !defined(ASSERTS)
 #define ASSERTS
 #endif
