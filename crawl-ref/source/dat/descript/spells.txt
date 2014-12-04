@@ -626,6 +626,13 @@ and unleashes it after a short while as a violent explosion of arcane force. Be
 warned that the prism is extremely fragile and any damage caused to it may
 result in premature detonation!
 %%%%
+Gell's Gravitas spell
+
+For the briefest of instants, this spell increases the mass of the target by
+several orders of magnitude, causing it to pull nearby creatures towards it.
+Generally, this will cause those enemies to collide with the unfortunate
+victim - or each other.
+%%%%
 Ghostly Fireball spell
 
 This spell allows the caster to throw an exploding ball of necromantic energy.

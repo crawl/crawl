@@ -1195,4 +1195,20 @@ static const zap_info zap_data[] =
     6
 },
 
+{
+    ZAP_GRAVITAS,
+    "",
+    200,
+    nullptr,
+    nullptr,
+    BLACK,
+    true,
+    BEAM_ATTRACT,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
+
 };
