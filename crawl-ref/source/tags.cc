@@ -1263,7 +1263,7 @@ void tag_read(reader &inf, tag_type tag_id)
                 for (stack_iterator si(coord_def(0, i+5)); si; ++si)
                 {
                     env.shop[i].stock.push_back(*si);
-                    dec_mitm_item_quantity(si.link(), si->quantity);
+                    dec_mitm_item_quantity(si.index(), si->quantity);
                 }
             }
 #endif

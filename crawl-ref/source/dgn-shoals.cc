@@ -924,7 +924,7 @@ static void _shoals_tide_sweep_items_clear(coord_def c)
             if (item_is_stationary_net(item))
                 _clear_net_trapping_status(c);
 
-            int id = si.link();
+            int id = si.index();
             move_item_to_grid(&id, target);
         }
     }

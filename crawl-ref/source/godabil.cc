@@ -1380,7 +1380,7 @@ bool trog_burn_spellbooks()
             dprf("Burned spellbook rarity: %d", rarity);
             destroy_spellbook(*si);
             item_was_destroyed(*si);
-            destroy_item(si.link());
+            destroy_item(si.index());
             count++;
         }
 

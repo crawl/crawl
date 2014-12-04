@@ -295,7 +295,7 @@ item_def* stack_iterator::operator->() const
     return &mitm[cur_link];
 }
 
-int stack_iterator::link() const
+int stack_iterator::index() const
 {
     return cur_link;
 }
