@@ -1296,7 +1296,7 @@ void singularity_pull(const monster *singularity)
                  singularity->name(DESC_THE).c_str(),
                  ai->name(DESC_THE).c_str());
         }
-        ai->hurt(singularity, roll_dice(strength, 6), BEAM_MMISSILE,
+        ai->hurt(singularity, roll_dice(strength, 12), BEAM_MMISSILE,
                  KILLED_BY_BEAM, "", GRAVITY);
 
         if (ai->alive() && !ai->is_stationary())
