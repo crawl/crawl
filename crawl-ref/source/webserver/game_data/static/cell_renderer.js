@@ -741,7 +741,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
 
             // gozag gold sparkles, only if there's no creature in tile
-            if (cell.gold_aura && fg_idx < main.MAIN_MAX)
+            if (cell.gold_aura && (!fg_idx || fg_idx > main.MAIN_MAX))
                 this.draw_dngn(icons.GOLD_SPARKLES + cell.gold_aura - 1, x, y);
 
             if (fg.NET)
