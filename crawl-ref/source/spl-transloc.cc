@@ -1213,15 +1213,13 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
     return SPRET_SUCCESS;
 }
 
-#define COLLISION_DAMAGE \
-    roll_dice(strength / 2, singularity->get_hit_dice() / 2)
 #define GRAVITY "by gravitational forces"
 
-static void _move_creature_to_singularity(const monster* singularity,
-                                          actor* victim, int strength)
+void attract_actor(const actor* agent, actor* victim, const coord_def pos,
+                   int pow, int strength)
 {
     ray_def ray;
-    if (!find_ray(victim->pos(), singularity->pos(), ray, opc_solid))
+    if (!find_ray(victim->pos(), pos, ray, opc_solid))
     {
         // This probably shouldn't ever happen, but just in case:
         if (you.can_see(victim))
@@ -1230,8 +1228,8 @@ static void _move_creature_to_singularity(const monster* singularity,
                  victim->name(DESC_THE).c_str(),
                  victim->conj_verb("stop").c_str());
         }
-        victim->hurt(singularity, COLLISION_DAMAGE, BEAM_MMISSILE,
-                     KILLED_BY_BEAM, "", GRAVITY);
+        victim->hurt(agent, roll_dice(strength / 2, pow / 20),
+                     BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
         return;
     }
 
@@ -1242,8 +1240,7 @@ static void _move_creature_to_singularity(const monster* singularity,
 
         if (!victim->can_pass_through_feat(grd(newpos)))
         {
-            victim->collide(newpos, singularity,
-                            10 * singularity->get_hit_dice());
+            victim->collide(newpos, agent, pow);
             break;
         }
         else if (actor* act_at_space = actor_at(newpos))
@@ -1251,8 +1248,7 @@ static void _move_creature_to_singularity(const monster* singularity,
             if (victim != act_at_space
                 && act_at_space->type != MONS_SINGULARITY)
             {
-                victim->collide(newpos, singularity,
-                                10 * singularity->get_hit_dice());
+                victim->collide(newpos, agent, pow);
             }
             break;
         }
@@ -1304,6 +1300,30 @@ void singularity_pull(const monster *singularity)
                  KILLED_BY_BEAM, "", GRAVITY);
 
         if (ai->alive() && !ai->is_stationary())
-            _move_creature_to_singularity(singularity, *ai, strength);
+        {
+            attract_actor(singularity, *ai, singularity->pos(),
+                          10 * singularity->get_hit_dice(), strength);
+        }
     }
+}
+
+bool fatal_attraction(actor *victim, actor *agent, int pow)
+{
+    bool affected = false;
+    for (actor_near_iterator ai(victim, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (*ai == victim || *ai == agent || ai->is_stationary())
+            continue;
+
+        const int range = isqrt((victim->pos() - ai->pos()).abs());
+        const int strength =
+            min(4, (pow / 10) / (range*range));
+        if (strength <= 0)
+            continue;
+
+        affected = true;
+        attract_actor(agent, *ai, victim->pos(), pow, strength);
+    }
+
+    return affected;
 }

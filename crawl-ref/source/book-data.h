@@ -114,6 +114,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_ENGLACIATION,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_GRAVITAS,
 },
 
 {   // Book of Changes
@@ -210,6 +211,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
+    SPELL_GRAVITAS,
 },
 
 {   // Book of Envenomations

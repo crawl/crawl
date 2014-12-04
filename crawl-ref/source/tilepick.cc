@@ -4776,6 +4776,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_GOLUBRIAS_PASSAGE:        return TILEG_PASSAGE_OF_GOLUBRIA;
     case SPELL_SHROUD_OF_GOLUBRIA:       return TILEG_SHROUD_OF_GOLUBRIA;
     case SPELL_SINGULARITY:              return TILEG_SINGULARITY;
+    case SPELL_GRAVITAS:         return TILEG_GRAVITAS;
 
     // Summoning
     case SPELL_SUMMON_BUTTERFLIES:       return TILEG_SUMMON_BUTTERFLIES;
