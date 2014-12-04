@@ -1836,9 +1836,12 @@ bool load_ghost(bool creating_level, bool delete_file)
 #endif
 
     // Translate ghost to monster and place.
-    monster* mons;
-    while (!ghosts.empty() && (mons = get_free_monster()))
+    while (!ghosts.empty())
     {
+        monster * const mons = get_free_monster();
+        if (!mons)
+            break;
+
         mons->set_new_monster_id();
         mons->set_ghost(ghosts[0]);
         mons->type = MONS_PLAYER_GHOST;
