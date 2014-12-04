@@ -1905,7 +1905,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 
             const bool was_draining = is_being_drained(*si);
 
-            success = _raise_remains(a, si.link(), beha, hitting, as, nas,
+            success = _raise_remains(a, si.index(), beha, hitting, as, nas,
                                      god, actual, force_beh, mon,
                                      &motions);
 

@@ -168,7 +168,7 @@ public:
     operator bool() const;
     item_def& operator *() const;
     item_def* operator->() const;
-    int link() const;
+    int index() const;
 
     const stack_iterator& operator ++ ();
     stack_iterator operator ++ (int);
