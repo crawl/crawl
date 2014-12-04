@@ -1645,6 +1645,7 @@ void note_inscribe_item(item_def &item)
 
 static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_in_inv)
 {
+    put_in_inv = false;
     if (item_is_stationary(it))
     {
         if (!quiet)
