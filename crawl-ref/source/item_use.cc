@@ -2793,13 +2793,12 @@ string cannot_read_item_reason(const item_def &item)
             if (!you.weapon())
                 return "This scroll only affects a wielded weapon!";
 
-            if (you.weapon()->cursed()
-                && you.weapon()->flags & ISFLAG_KNOW_CURSE)
-            {
+            // assumption: wielded weapons always have their curse & brand known
+            if (you.weapon()->cursed())
                 return "Your weapon is already cursed!";
-            }
 
-            // TODO: check for known holy wrath
+            if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
+                return "Holy weapons cannot be cursed!";
             return "";
 
         case SCR_ENCHANT_ARMOUR:
