@@ -2917,8 +2917,7 @@ ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
 ## Plants or water monsters
 KMONS:    f = plant / fungus
-KMONS:    R = electric eel / water elemental
-KMONS:    S = electric eel / water elemental
+KMONS:    RS = electric eel / water elemental
 ## Main monster sets
 KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
               / minotaur / satyr / merfolk impaler / deep elf knight
@@ -2926,23 +2925,24 @@ KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
               / octopode crusher
 KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
 KMONS:    4 = ice statue / w:5 orange crystal statue
-KMONS:    5 = catoblepas / dire elephant / emperor scorpion \
+KMONS:    5Z = catoblepas / dire elephant / emperor scorpion \
               / alligator snapping turtle / shambling mangrove / thorn hunter
 KMONS:    6 = merfolk avatar
 KMONS:    7 = water nymph / wind drake / sphinx
 KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
               / spriggan air mage
-KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon
+KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon \
+              / w:5 caustic shrike
 KMONS:    O = the Enchantress band
 ## The loot items need this to be placed in water
 KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
 KITEM:    E| = |
-KFEAT:    f567DER%$*| = W
+KFEAT:    f5Z67DER%$*| = W
 KFEAT:    S = w
 KFEAT:    m = t
-KPROP:    ~`5R = no_rtele_into
+KPROP:    ~`ZR = no_rtele_into
 SHUFFLE:  HI / JK
 NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
 SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
@@ -2961,7 +2961,7 @@ MAP
   ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
   ccc'.GcccBBccccccccccccccc''''wwc
   ccGR.cc~``cccccUGUccccc""'5x'''Sc
- cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
+ cccc'.n~Z`cccc''*E*''cccc"'m'm''wcc
  cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
  ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
  cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
@@ -2975,7 +2975,7 @@ cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
  cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
  ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
  cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
- cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
+ cccc'.n~Z`cccc''*E*''cccc"'m'm''wcc
   ccGR.cc~``cccccUGUccccc""'5x'''Sc
   ccc'.GcccCCccccccccccccccc''''wwc
   ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
