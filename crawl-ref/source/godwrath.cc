@@ -317,7 +317,7 @@ static bool _zin_retribution()
         switch (random2(3))
         {
         case 0:
-            confuse_player(3 + random2(10));
+            confuse_player(5 + random2(3));
             break;
         case 1:
             you.put_to_sleep(nullptr, 30 + random2(20));
@@ -408,7 +408,7 @@ static bool _elyvilon_retribution()
     {
     case 0:
     case 1:
-        confuse_player(3 + random2(10));
+        confuse_player(5 + random2(3));
         break;
 
     case 2: // mostly flavour messages
@@ -1041,7 +1041,7 @@ static bool _sif_muna_retribution()
     case 2:
     case 3:
     case 4:
-        confuse_player(3 + random2(10));
+        confuse_player(5 + random2(3));
         break;
 
     case 5:
@@ -1820,7 +1820,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         if (coinflip())
         {
             mprf(MSGCH_WARN, "The divine experience confuses you!");
-            confuse_player(3 + random2(10));
+            confuse_player(5 + random2(3));
         }
         else
         {

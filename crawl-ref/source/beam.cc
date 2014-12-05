@@ -3514,7 +3514,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_CONFUSION:
-        confuse_player(3 + random2(ench_power));
+        confuse_player(5 + random2(3));
         obvious_effect = true;
         break;
 
@@ -3541,7 +3541,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_ENSLAVE:
         mprf(MSGCH_WARN, "Your will is overpowered!");
-        confuse_player(3 + random2(ench_power));
+        confuse_player(5 + random2(3));
         obvious_effect = true;
         break;     // enslavement - confusion?
 

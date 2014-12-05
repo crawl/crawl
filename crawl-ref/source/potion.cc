@@ -460,7 +460,7 @@ public:
 
     bool effect(bool=true, int=40) const
     {
-        const int ambrosia_turns = 3+random2(8);
+        const int ambrosia_turns = 3 + random2(8);
         if (confuse_player(ambrosia_turns))
         {
             mprf("You feel%s invigorated.",
