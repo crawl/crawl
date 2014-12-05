@@ -1996,6 +1996,8 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
+    const char* no_space = "...but the skeleton had no space to rise!";
+
     // First, we try to animate a skeleton if there is one.
     const int animate_skel_result = animate_remains(you.pos(), CORPSE_SKELETON,
                                                     BEH_FRIENDLY, MHITYOU,
@@ -2003,7 +2005,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     if (animate_skel_result != -1)
     {
         if (animate_skel_result == 0)
-            mpr("...but the skeleton had no space to rise!");
+            mpr(no_space);
         return SPRET_SUCCESS;
     }
 
@@ -2033,7 +2035,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
             mpr("There is no skeleton here to animate!");
             break;
         case 0:
-            mpr("...but the skeleton had no space to rise!");
+            mpr(no_space);
             break;
         default:
             // success, messages already printed
