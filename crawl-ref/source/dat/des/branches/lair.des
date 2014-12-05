@@ -25,7 +25,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     else
         if you.absdepth() >= 14 then
             e.mons("centaur warrior / hill giant")
-            e.mons("orange rat")
+            e.mons("hell rat")
         elseif you.absdepth() >= 8 then
             e.mons("centaur / troll")
             e.mons("porcupine")
@@ -212,7 +212,7 @@ ORIENT:  float
 MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          komodo dragon / basilisk w:5
-MONS:    river rat / porcupine / orange rat / quokka / rat
+MONS:    river rat / porcupine / hell rat / quokka / rat
 MONS:    w:90 nothing / w:30 giant frog / blink frog / spiny frog
 SHUFFLE: 1234
 KFEAT:   O = enter_lair
@@ -506,7 +506,7 @@ NAME:    lemuel_ratsnest
 ORIENT:  northeast
 DEPTH:   D:5-8, Lair
 SHUFFLE: 23, 34
-MONS:    rat, rat / river rat w:5, river rat, orange rat
+MONS:    rat, rat / river rat w:5, river rat, hell rat
 ITEM:    slice of pizza w:80 / fruit
 SUBST:   d = d$..., e = d$
 : if you.branch() == "Lair" then
@@ -1554,7 +1554,7 @@ NAME:   kennysheep_rathole
 TAGS:   no_monster_gen
 DEPTH:  Lair
 ORIENT: float
-MONS:   river rat band, orange rat, river rat / rat
+MONS:   river rat band, hell rat, river rat / rat
 KMONS:  P = plant / fungus w:2
 KITEM:  d = slice of pizza / beef jerky / bread ration
 NSUBST: W = 1:1 / 2:P / 2:2 / 2:3 / 2:d
@@ -1570,12 +1570,12 @@ xxxWWWWWxx
      @  @
 ENDMAP
 
-# contains food and one ok item to make the orange rats a little more worth it
+# contains food and one ok item to make the hell rats a little more worth it
 NAME:   kennysheep_abandoned_house
 TAGS:   ruin
 DEPTH:  Lair
 ORIENT: float
-MONS:   river rat / rat, orange rat, rat
+MONS:   river rat / rat, hell rat, rat
 KITEM:  d = slice of pizza / beef jerky / bread ration
 SUBST:  d = d123..., 2 = 2.
 NSUBST: 1 = *:1
