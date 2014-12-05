@@ -2808,7 +2808,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
     bool rc = false;
     const bool conf = you.confused();
 
-    if (confuse_player(min(random2(sever) + 1, 20), true))
+    if (confuse_player(5 + random2(3), true))
     {
         god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
         mprf(MSGCH_WARN, "You are %sconfused.",
