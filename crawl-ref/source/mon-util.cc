@@ -233,7 +233,7 @@ monster_type get_monster_by_name(string name, bool substring)
     }
 
     size_t idx = find_earliest_match(name, (size_t) 0, ARRAYSZ(mondata),
-                                     _always_true<size_t>, _mon_entry_name);
+                                     always_true<size_t>, _mon_entry_name);
     return idx == ARRAYSZ(mondata) ? MONS_PROGRAM_BUG
                                    : (monster_type) mondata[idx].mc;
 }

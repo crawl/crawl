@@ -6,7 +6,7 @@
 #ifndef MONPOLY_H
 #define MONPOLY_H
 
-#include "libutil.h" // _always_true
+#include "libutil.h" // always_true
 
 bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
@@ -25,7 +25,7 @@ enum poly_power_type
 void monster_drop_things(
     monster* mons,
     bool mark_item_origins = false,
-    bool (*suitable)(const item_def& item) = _always_true<const item_def &>);
+    bool (*suitable)(const item_def& item) = always_true<const item_def &>);
 
 void change_monster_type(monster* mons, monster_type targetc);
 bool monster_polymorph(monster* mons, monster_type targetc,
