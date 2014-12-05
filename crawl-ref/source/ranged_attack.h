@@ -46,7 +46,7 @@ private:
     /* Attack Effects */
     bool mons_attack_effects();
     void player_stab_check();
-    int  player_stab_tier();
+    bool player_good_stab();
 
     /* Output */
     void set_attack_verb();

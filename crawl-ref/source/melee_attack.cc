@@ -1899,21 +1899,6 @@ bool melee_attack::player_monattk_hit_effects()
             defender->expose_to_element(special_damage_flavour, 2);
     }
 
-    if (stab_attempt && stab_bonus > 0 && weapon
-        && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
-        && damage_done + special_damage > random2(defender->get_hit_dice())
-        && defender->alive()
-        && !defender->as_monster()->has_ench(ENCH_CONFUSION)
-        && mons_class_is_confusable(defender->type))
-    {
-        if (!defender->as_monster()->check_clarity(false) &&
-            defender->as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-            &you, 20+random2(30)))) // 1-3 turns
-        {
-            mprf("%s is stunned!", defender->name(DESC_THE).c_str());
-        }
-    }
-
     return true;
 }
 
@@ -2383,28 +2368,14 @@ void melee_attack::player_stab_check()
 }
 
 /**
- * How good of a stab can we get with this weapon?
+ * Can we get a good stab with this weapon?
  */
-int melee_attack::player_stab_tier()
+bool melee_attack::player_good_stab()
 {
-    if (wpn_skill == SK_SHORT_BLADES
-        || player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
-           && (!weapon || is_melee_weapon(*weapon)))
-    {
-        return 2;
-    }
-    if (wpn_skill == SK_LONG_BLADES
-        || weapon && weapon->base_type == OBJ_WEAPONS
-             && (weapon->sub_type == WPN_CLUB
-                 || weapon->sub_type == WPN_SPEAR
-                 || weapon->sub_type == WPN_TRIDENT
-                 || weapon->sub_type == WPN_DEMON_TRIDENT
-                 || weapon->sub_type == WPN_TRISHULA)
-        || !weapon && you.species == SP_FELID)
-    {
-        return 1;
-    }
-    return 0;
+    return wpn_skill == SK_SHORT_BLADES
+           || you.species == SP_FELID
+           || player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
+              && (!weapon || is_melee_weapon(*weapon));
 }
 
 bool melee_attack::attack_warded_off()
