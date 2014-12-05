@@ -130,10 +130,10 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                    || mon->props.exists(ORIG_MONSTER_KEY));
 
     case DACT_BRIBE_TIMEOUT:
-        return mon->has_ench(ENCH_BRIBED)
-               || mon->has_ench(ENCH_PERMA_BRIBED)
-               || mon->props.exists(GOZAG_BRIBE_KEY)
-               || mon->props.exists(GOZAG_PERMABRIBE_KEY);
+        return mon->has_ench(ENCH_NEUTRAL_BRIBED)
+               || mon->has_ench(ENCH_FRIENDLY_BRIBED)
+               || mon->props.exists(NEUTRAL_BRIBE_KEY)
+               || mon->props.exists(FRIENDLY_BRIBE_KEY);
 
     case DACT_SET_BRIBES:
         return !testbits(mon->flags, MF_WAS_IN_VIEW);
@@ -247,17 +247,17 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_BRIBE_TIMEOUT:
-            if (mon->del_ench(ENCH_BRIBED)
-                || mon->del_ench(ENCH_PERMA_BRIBED))
+            if (mon->del_ench(ENCH_NEUTRAL_BRIBED)
+                || mon->del_ench(ENCH_FRIENDLY_BRIBED))
             {
                 mon->attitude = ATT_NEUTRAL;
                 mon->flags   |= MF_WAS_NEUTRAL;
                 mons_att_changed(mon);
             }
-            if (mon->props.exists(GOZAG_BRIBE_KEY))
-                mon->props.erase(GOZAG_BRIBE_KEY);
-            if (mon->props.exists(GOZAG_PERMABRIBE_KEY))
-                mon->props.erase(GOZAG_PERMABRIBE_KEY);
+            if (mon->props.exists(NEUTRAL_BRIBE_KEY))
+                mon->props.erase(NEUTRAL_BRIBE_KEY);
+            if (mon->props.exists(FRIENDLY_BRIBE_KEY))
+                mon->props.erase(FRIENDLY_BRIBE_KEY);
             break;
 
         case DACT_SET_BRIBES:

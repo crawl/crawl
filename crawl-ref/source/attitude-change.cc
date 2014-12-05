@@ -420,19 +420,19 @@ void gozag_set_bribe(monster* traitor)
 
         if (leader)
         {
-            if (leader->has_ench(ENCH_PERMA_BRIBED)
-                || leader ->props.exists(GOZAG_PERMABRIBE_KEY))
+            if (leader->has_ench(ENCH_FRIENDLY_BRIBED)
+                || leader->props.exists(FRIENDLY_BRIBE_KEY))
             {
                 gozag_deduct_bribe(br, 2*cost);
-                traitor->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
+                traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
             }
-            else if (leader->has_ench(ENCH_BRIBED)
-                     || leader->props.exists(GOZAG_BRIBE_KEY))
+            else if (leader->has_ench(ENCH_NEUTRAL_BRIBED)
+                     || leader->props.exists(NEUTRAL_BRIBE_KEY))
             {
                 gozag_deduct_bribe(br, cost);
                 // Don't continue if we exhausted our funds.
                 if (branch_bribe[br] > 0)
-                    traitor->props[GOZAG_BRIBE_KEY].get_bool() = true;
+                    traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
             }
         }
         else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
@@ -441,14 +441,14 @@ void gozag_set_bribe(monster* traitor)
             if (branch_bribe[br] > 2*cost && one_chance_in(3))
             {
                 gozag_deduct_bribe(br, 2*cost);
-                traitor->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
+                traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
             }
             else
             {
                 gozag_deduct_bribe(br, cost);
                 // Don't continue if we exhausted our funds.
                 if (branch_bribe[br] > 0)
-                    traitor->props[GOZAG_BRIBE_KEY].get_bool() = true;
+                    traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
             }
         }
     }
@@ -457,19 +457,19 @@ void gozag_set_bribe(monster* traitor)
 void gozag_check_bribe(monster* traitor)
 {
     string msg;
-    if (traitor->props.exists(GOZAG_PERMABRIBE_KEY))
+    if (traitor->props.exists(FRIENDLY_BRIBE_KEY))
     {
-        traitor->props.erase(GOZAG_PERMABRIBE_KEY);
-        traitor->add_ench(ENCH_PERMA_BRIBED);
+        traitor->props.erase(FRIENDLY_BRIBE_KEY);
+        traitor->add_ench(ENCH_FRIENDLY_BRIBED);
         msg = getSpeakString(traitor->name(DESC_DBNAME, true)
                              + " Gozag permabribe");
         if (msg.empty())
             msg = getSpeakString("Gozag permabribe");
     }
-    else if (traitor->props.exists(GOZAG_BRIBE_KEY))
+    else if (traitor->props.exists(NEUTRAL_BRIBE_KEY))
     {
-        traitor->props.erase(GOZAG_BRIBE_KEY);
-        traitor->add_ench(ENCH_BRIBED);
+        traitor->props.erase(NEUTRAL_BRIBE_KEY);
+        traitor->add_ench(ENCH_NEUTRAL_BRIBED);
         msg = getSpeakString(traitor->name(DESC_DBNAME, true)
                              + " Gozag bribe");
         if (msg.empty())
@@ -487,10 +487,10 @@ void gozag_check_bribe(monster* traitor)
 
 void gozag_break_bribe(monster* victim)
 {
-    if (!victim->has_ench(ENCH_BRIBED)
-        && !victim->has_ench(ENCH_PERMA_BRIBED)
-        && !victim->props.exists(GOZAG_BRIBE_KEY)
-        && !victim->props.exists(GOZAG_PERMABRIBE_KEY))
+    if (!victim->has_ench(ENCH_NEUTRAL_BRIBED)
+        && !victim->has_ench(ENCH_FRIENDLY_BRIBED)
+        && !victim->props.exists(NEUTRAL_BRIBE_KEY)
+        && !victim->props.exists(FRIENDLY_BRIBE_KEY))
     {
         return;
     }
@@ -504,11 +504,11 @@ void gozag_break_bribe(monster* victim)
 
     // Un-bribe the victim.
     victim->props[GOZAG_BRIBE_BROKEN_KEY].get_bool() = true;
-    victim->del_ench(ENCH_BRIBED);
-    victim->del_ench(ENCH_PERMA_BRIBED);
+    victim->del_ench(ENCH_NEUTRAL_BRIBED);
+    victim->del_ench(ENCH_FRIENDLY_BRIBED);
     victim->props.erase(GOZAG_BRIBE_BROKEN_KEY);
-    victim->props.erase(GOZAG_BRIBE_KEY);
-    victim->props.erase(GOZAG_PERMABRIBE_KEY);
+    victim->props.erase(NEUTRAL_BRIBE_KEY);
+    victim->props.erase(FRIENDLY_BRIBE_KEY);
 
     // Make other nearby bribed monsters un-bribed, too.
     for (monster_iterator mi; mi; ++mi)
