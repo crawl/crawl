@@ -25,8 +25,7 @@ enum poly_power_type
 void monster_drop_things(
     monster* mons,
     bool mark_item_origins = false,
-    bool (*suitable)(const item_def& item) = _always_true<const item_def &>,
-    int owner_id = NON_ITEM);
+    bool (*suitable)(const item_def& item) = _always_true<const item_def &>);
 
 void change_monster_type(monster* mons, monster_type targetc);
 bool monster_polymorph(monster* mons, monster_type targetc,

@@ -52,8 +52,7 @@ bool mimic_at(const coord_def &c)
 
 void monster_drop_things(monster* mons,
                           bool mark_item_origins,
-                          bool (*suitable)(const item_def& item),
-                          int owner_id)
+                          bool (*suitable)(const item_def& item))
 {
     // Drop weapons and missiles last (i.e., on top), so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
