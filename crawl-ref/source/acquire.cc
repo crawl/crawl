@@ -1399,12 +1399,14 @@ int acquirement_create_item(object_class_type class_wanted,
                  && !is_unrandom_artefact(acq_item)
                  && acq_item.sub_type != WPN_BLOWGUN)
         {
-            // These can never get egos, and mundane versions are quite common, so
-            // guarantee artefact status.  Rarity is a bit low to compensate.
-            if (is_giant_club_type(acq_item.sub_type))
+            // These can never get egos, and mundane versions are quite common,
+            // so guarantee artefact status.  Rarity is a bit low to compensate.
+            // ...except actually, trog can give them antimagic brand, so...
+            if (is_giant_club_type(acq_item.sub_type)
+                && get_weapon_brand(acq_item) == SPWPN_NORMAL
+                && !one_chance_in(25))
             {
-                if (!one_chance_in(25))
-                    make_item_randart(acq_item, true);
+                make_item_randart(acq_item, true);
             }
 
             if (agent == GOD_TROG || agent == GOD_OKAWARU)
