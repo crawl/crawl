@@ -1194,7 +1194,7 @@ static bool _shout_fits_monster(monster_type mc, int shout)
     // For Pandemonium lords, almost everything is fair game.  It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
     if (mc != MONS_HELL_BEAST)
-        return shout != S_BUZZ && shout != S_CROAK;
+        return true;
 
     switch (shout)
     {
