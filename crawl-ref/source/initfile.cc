@@ -1279,6 +1279,27 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     return md;
 }
 
+void game_options::remove_mon_glyph_override(const string &text, bool prepend)
+{
+    vector<string> override = split_string(":", text);
+
+    set<monster_type> matches;
+    if (override[0].length() == 1)
+        matches = _mons_classes_by_glyph(override[0][0]);
+    else
+    {
+        const monster_type m = _mons_class_by_string(override[0]);
+        if (m == MONS_0)
+        {
+            report_error("Unknown monster: \"%s\"", text.c_str());
+            return;
+        }
+        matches.insert(m);
+    }
+    for (monster_type m : matches)
+        mon_glyph_overrides.erase(m);;
+}
+
 void game_options::add_mon_glyph_override(const string &text, bool prepend)
 {
     vector<string> override = split_string(":", text);
@@ -1317,6 +1338,19 @@ void game_options::add_mon_glyph_override(const string &text, bool prepend)
             mon_glyph_overrides[m] = mdisp;
 }
 
+void game_options::remove_item_glyph_override(const string &text, bool prepend)
+{
+    string key = text;
+    trim_string(key);
+
+    item_glyph_overrides.erase(
+        remove_if(item_glyph_overrides.begin(),
+                  item_glyph_overrides.end(),
+                  [&key](const item_glyph_override_type& arg)
+                  { return key == arg.first; }),
+        item_glyph_overrides.end());
+}
+
 void game_options::add_item_glyph_override(const string &text, bool prepend)
 {
     vector<string> override = split_string(":", text);
@@ -1331,6 +1365,25 @@ void game_options::add_item_glyph_override(const string &text, bool prepend)
                                                override[0],mdisp);
         else
             item_glyph_overrides.emplace_back(override[0], mdisp);
+    }
+}
+
+void game_options::remove_feature_override(const string &text, bool prepend)
+{
+    string fname;
+    string::size_type epos = text.rfind("}");
+    if(epos != string::npos)
+        fname = text.substr(0, text.rfind("{",epos));
+    else
+        fname = text;
+
+    trim_string(fname);
+
+    vector<dungeon_feature_type> feats = features_by_desc(text_pattern(fname));
+    for(dungeon_feature_type f : feats)
+    {
+        feature_colour_overrides.erase(f);
+        feature_symbol_overrides.erase(f);
     }
 }
 
@@ -2700,11 +2753,38 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
     }
     else if (key == "feature" || key == "dungeon")
-        split_parse(field, ";", &game_options::add_feature_override);
+    {
+        if(plain)
+           clear_feature_overrides();
+
+        if(minus_equal)
+            split_parse(field, ";", &game_options::remove_feature_override);
+        else
+            split_parse(field, ";", &game_options::add_feature_override);
+    }
     else if (key == "mon_glyph")
-        split_parse(field, ",", &game_options::add_mon_glyph_override);
+    {
+        if(plain)
+           mon_glyph_overrides.clear();
+
+        if(minus_equal)
+            split_parse(field, ",", &game_options::remove_mon_glyph_override);
+        else
+            split_parse(field, ",", &game_options::add_mon_glyph_override);
+    }
     else if (key == "item_glyph")
-        split_parse(field, ",", &game_options::add_item_glyph_override, caret_equal);
+    {
+        if(plain)
+        {
+           item_glyph_overrides.clear();
+           item_glyph_cache.clear();
+        }
+
+        if(minus_equal)
+            split_parse(field, ",", &game_options::remove_item_glyph_override);
+        else
+            split_parse(field, ",", &game_options::add_item_glyph_override, caret_equal);
+    }
     else CURSES_OPTION(friend_brand);
     else CURSES_OPTION(neutral_brand);
     else CURSES_OPTION(stab_brand);

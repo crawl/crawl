@@ -106,7 +106,8 @@ public:
     map<dungeon_feature_type, FixedVector<ucs_t, 2> > feature_symbol_overrides;
     map<monster_type, cglyph_t> mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
-    vector<pair<string, cglyph_t> > item_glyph_overrides;
+    typedef pair<string, cglyph_t> item_glyph_override_type;
+    vector<item_glyph_override_type > item_glyph_overrides;
     map<string, cglyph_t> item_glyph_cache;
 
     string      save_dir;       // Directory where saves and bones go.
@@ -497,6 +498,7 @@ private:
     void clear_cset_overrides();
     void add_cset_override(dungeon_char_type dc, int symbol);
     void add_feature_override(const string &, bool prepend);
+    void remove_feature_override(const string &, bool prepend);
 
     void add_message_colour_mappings(const string &, bool, bool);
     void add_message_colour_mapping(const string &, bool, bool);
@@ -523,8 +525,10 @@ private:
                      void (game_options::*add)(const string &, bool),
                      bool prepend = false);
     void add_mon_glyph_override(const string &, bool prepend);
+    void remove_mon_glyph_override(const string &, bool prepend);
     cglyph_t parse_mon_glyph(const string &s) const;
     void add_item_glyph_override(const string &, bool prepend);
+    void remove_item_glyph_override(const string &, bool prepend);
     void set_option_fragment(const string &s, bool prepend);
     bool set_lang(const char *s);
     void set_player_tile(const string &s);
