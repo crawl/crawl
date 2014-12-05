@@ -820,7 +820,7 @@ bool ranged_attack::mons_attack_effects()
 
 void ranged_attack::player_stab_check()
 {
-    if (player_stab_tier() > 0)
+    if (player_good_stab())
     {
         attack::player_stab_check();
         // Sometimes the blowgun of the Assassin lets you stab an aware target.
@@ -838,16 +838,11 @@ void ranged_attack::player_stab_check()
     }
 }
 
-int ranged_attack::player_stab_tier()
+bool ranged_attack::player_good_stab()
 {
-    if (using_weapon()
-        && projectile->base_type == OBJ_MISSILES
-        && projectile->sub_type == MI_NEEDLE)
-    {
-        return 2;
-    }
-
-    return 0;
+    return using_weapon()
+           && projectile->base_type == OBJ_MISSILES
+           && projectile->sub_type == MI_NEEDLE;
 }
 
 void ranged_attack::set_attack_verb()
