@@ -43,9 +43,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     else if (!coloured)
     {
         if (cell.flags & MAP_EMPHASIZE)
-            colour = fdef.seen_em_colour;
+            colour = fdef.seen_em_colour();
         else
-            colour = fdef.seen_colour;
+            colour = fdef.seen_colour();
 
         if (colour)
         {
@@ -90,12 +90,12 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
         colour = cell.feat_colour();
     else
     {
-        colour = fdef.colour;
+        colour = fdef.colour();
 
-        if (fdef.em_colour && fdef.em_colour != fdef.colour
+        if (fdef.em_colour() && fdef.em_colour() != fdef.colour()
             && cell.flags & MAP_EMPHASIZE)
         {
-            colour = fdef.em_colour;
+            colour = fdef.em_colour();
         }
     }
 
@@ -115,7 +115,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             else if (cell.flags & MAP_SILENCED)
                 colour = LIGHTCYAN;
             else if (cell.flags & MAP_UMBRAED)
-                colour = fdef.colour; // Cancels out!
+                colour = fdef.colour(); // Cancels out!
             else
                 colour = YELLOW;
         }

@@ -1428,11 +1428,11 @@ void game_options::add_feature_override(const string &text, bool prepend)
         feature_def &fov(feature_colour_overrides[feat]);
 #define COL(n, field) if (colour_t c = str_to_colour(iprops[n], BLACK)) \
                           fov.field = c;
-        COL(2, colour);
-        COL(3, map_colour);
-        COL(4, seen_colour);
-        COL(5, em_colour);
-        COL(6, seen_em_colour);
+        COL(2, dcolour);
+        COL(3, map_dcolour);
+        COL(4, seen_dcolour);
+        COL(5, em_dcolour);
+        COL(6, seen_em_dcolour);
 #undef COL
     }
 }
