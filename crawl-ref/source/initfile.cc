@@ -1279,7 +1279,7 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     return md;
 }
 
-void game_options::add_mon_glyph_override(const string &text)
+void game_options::add_mon_glyph_override(const string &text, bool prepend)
 {
     vector<string> override = split_string(":", text);
     if (override.size() != 2u)
@@ -1317,7 +1317,7 @@ void game_options::add_mon_glyph_override(const string &text)
             mon_glyph_overrides[m] = mdisp;
 }
 
-void game_options::add_item_glyph_override(const string &text)
+void game_options::add_item_glyph_override(const string &text, bool prepend)
 {
     vector<string> override = split_string(":", text);
     if (override.size() != 2u)
@@ -1325,10 +1325,16 @@ void game_options::add_item_glyph_override(const string &text)
 
     cglyph_t mdisp = parse_mon_glyph(override[1]);
     if (mdisp.ch || mdisp.col)
-        item_glyph_overrides.emplace_back(override[0], mdisp);
+    {
+        if(prepend)
+            item_glyph_overrides.emplace(item_glyph_overrides.begin(),
+                                               override[0],mdisp);
+        else
+            item_glyph_overrides.emplace_back(override[0], mdisp);
+    }
 }
 
-void game_options::add_feature_override(const string &text)
+void game_options::add_feature_override(const string &text, bool prepend)
 {
     string::size_type epos = text.rfind("}");
     if (epos == string::npos)
@@ -2213,15 +2219,26 @@ void game_options::set_menu_sort(string field)
     sort_menus.push_back(cond);
 }
 
+// Lots of things use split parse, for some ^= and += should do different things,
+// for others they should not. Split parse just pases them along.
 void game_options::split_parse(const string &s, const string &separator,
-                               void (game_options::*add)(const string &))
+                               void (game_options::*add)(const string &, bool),
+                               bool prepend)
 {
     const vector<string> defs = split_string(separator, s);
-    for (int i = 0, size = defs.size(); i < size; ++i)
-        (this->*add)(defs[i]);
+    if(prepend)
+    {
+        for ( auto it = defs.rbegin() ; it != defs.rend(); ++it)
+            (this->*add)(*it, prepend);
+    }
+    else
+    {
+        for ( auto it = defs.begin() ; it != defs.end(); ++it)
+            (this->*add)(*it, prepend);
+    }
 }
 
-void game_options::set_option_fragment(const string &s)
+void game_options::set_option_fragment(const string &s, bool prepend)
 {
     if (s.empty())
         return;
@@ -2687,7 +2704,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "mon_glyph")
         split_parse(field, ",", &game_options::add_mon_glyph_override);
     else if (key == "item_glyph")
-        split_parse(field, ",", &game_options::add_item_glyph_override);
+        split_parse(field, ",", &game_options::add_item_glyph_override, caret_equal);
     else CURSES_OPTION(friend_brand);
     else CURSES_OPTION(neutral_brand);
     else CURSES_OPTION(stab_brand);
