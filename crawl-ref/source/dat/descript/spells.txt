@@ -628,10 +628,10 @@ result in premature detonation!
 %%%%
 Gell's Gravitas spell
 
-For the briefest of instants, this spell increases the mass of the target by
-several orders of magnitude, causing it to pull nearby creatures towards it.
-Generally, this will cause those enemies to collide with the unfortunate
-victim - or each other.
+For a brief moment, this spell redirects space around the target, making 'down'
+become exactly where the target is standing. All nearby creatures, save the
+caster, fall helplessly toward the victim - typically colliding with it, or
+with each other!
 %%%%
 Ghostly Fireball spell
 
