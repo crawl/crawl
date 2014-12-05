@@ -234,9 +234,9 @@ mon_attitude_type monster::temp_attitude() const
         }
         return ATT_HOSTILE; // ???
     }
-    if (has_ench(ENCH_CHARM) || has_ench(ENCH_PERMA_BRIBED))
+    if (has_ench(ENCH_CHARM) || has_ench(ENCH_FRIENDLY_BRIBED))
         return ATT_FRIENDLY;
-    else if (has_ench(ENCH_BRIBED))
+    else if (has_ench(ENCH_NEUTRAL_BRIBED))
         return ATT_GOOD_NEUTRAL; // ???
     else
         return attitude;
