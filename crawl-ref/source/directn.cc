@@ -3803,6 +3803,6 @@ vector<string> targeting_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
     if (get_desc_func)
-        _append_container(descs, (*get_desc_func)(mi));
+        _append_container(descs, (get_desc_func)(mi));
     return descs;
 }

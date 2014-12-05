@@ -1147,6 +1147,41 @@ static void _spellcasting_corruption(spell_type spell)
     ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, source);
 }
 
+// Returns the nth triangular number.
+static int _triangular_number(int n)
+{
+    return n * (n+1) / 2;
+}
+
+// Computes success chance for MR-checking spells and abilities.
+static double _success_chance(const int mr, const int powc)
+{
+    const int target = mr + 100 - powc;
+
+    if (target <= 0)
+        return 1.0;
+    if (target > 200)
+        return 0.0;
+    if (target <= 100)
+        return 1.0 - (double) _triangular_number(target) / (101 * 100);
+    return (double) _triangular_number(201 - target) / (101 * 100);
+}
+
+// Include success chance in targeter for spells checking monster MR.
+vector<string> desc_success_chance(const monster_info& mi, int pow)
+{
+    vector<string> descs;
+    const int mr = mi.res_magic();
+    if (mr == MAG_IMMUNE)
+        descs.push_back("magic immune");
+    else
+        descs.push_back(
+            make_stringf("chance %d%%",
+                (int) (100 * _success_chance(mr, pow))
+            ).c_str());
+    return descs;
+}
+
 /**
  * Targets and fires player-cast spells & spell-like effects.
  *
@@ -1222,6 +1257,14 @@ spret_type your_spells(spell_type spell, int powc,
 
         targetter *hitfunc = _spell_targetter(spell, powc, range);
 
+        // Add success chance to targetted spells checking monster MR
+        const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
+                              && testbits(flags, SPFLAG_DIR_OR_TARGET)
+                              && !testbits(flags, SPFLAG_HELPFUL);
+        desc_filter additional_desc = NULL;
+        if (mr_check)
+            additional_desc = bind(desc_success_chance, placeholders::_1, powc);
+
         string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
@@ -1230,7 +1273,8 @@ spret_type your_spells(spell_type spell, int powc,
                              needs_path, true, dont_cancel_me, prompt,
                              title.c_str(),
                              testbits(flags, SPFLAG_NOT_SELF),
-                             hitfunc))
+                             hitfunc,
+                             additional_desc))
         {
             if (hitfunc)
                 delete hitfunc;

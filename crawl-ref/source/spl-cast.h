@@ -72,6 +72,7 @@ bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
+vector<string> desc_success_chance(const monster_info& mi, int pow);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
     bool evoked = false);
 
