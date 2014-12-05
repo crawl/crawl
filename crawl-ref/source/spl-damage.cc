@@ -2996,16 +2996,37 @@ void end_searing_ray()
     you.props.erase("searing_ray_aimed_at_spot");
 }
 
+/**
+ * Can a casting of Glaciate by the player injure the given creature?
+ *
+ * @param victim        The potential victim.
+ * @return              Whether Glaciate can harm that victim.
+ *                      (False for IOODs or friendly battlespheres.)
+ */
+static bool _player_glaciate_affects(const actor *victim)
+{
+    // TODO: deduplicate this with beam::ignores
+    if (!victim)
+        return false;
+
+    const monster* mon = victim->as_monster();
+    if (!mon) // player
+        return true;
+
+    return !mons_is_projectile(mon)
+            && (!mons_is_avatar(mon->type) || !mons_aligned(&you, mon));
+}
+
 spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
     const int range = spell_range(SPELL_GLACIATE, pow);
     targetter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
 
-    if (caster->is_player())
+    if (caster->is_player()
+        && stop_attack_prompt(hitfunc, "glaciate", _player_glaciate_affects))
     {
-        if (stop_attack_prompt(hitfunc, "glaciate"))
-            return SPRET_ABORT;
+        return SPRET_ABORT;
     }
 
     fail_check();
