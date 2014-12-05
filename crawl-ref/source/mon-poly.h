@@ -5,6 +5,9 @@
 
 #ifndef MONPOLY_H
 #define MONPOLY_H
+
+#include "libutil.h" // _always_true
+
 bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);
@@ -19,11 +22,10 @@ enum poly_power_type
     PPT_SAME,
 };
 
-bool is_any_item(const item_def& item);
 void monster_drop_things(
     monster* mons,
     bool mark_item_origins = false,
-    bool (*suitable)(const item_def& item) = is_any_item,
+    bool (*suitable)(const item_def& item) = _always_true<const item_def &>,
     int owner_id = NON_ITEM);
 
 void change_monster_type(monster* mons, monster_type targetc);
