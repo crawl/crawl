@@ -392,7 +392,7 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
         {
             god_type god = find_earliest_match(lowercase_string(tokens[k+1]),
                                                (god_type) 1, NUM_GODS,
-                                               _always_true<god_type>,
+                                               always_true<god_type>,
                                                bind(god_name, placeholders::_1,
                                                     false));
             if (!you_worship(god))
