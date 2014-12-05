@@ -792,8 +792,9 @@ Sacrifices cannot be taken back.
 %%%%
 Sacrifice a Hand ability
 
-Adherents who choose to sacrifice a hand lose the ability to use two-handed
-weapons and shields, and also may only wear one ring.
+Adherents of every species who choose to sacrifice a hand lose the ability to
+use shields and can wear one fewer ring. Non-formicids also lose the ability
+to wield two-handed weapons.
 
 If you make this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new powers as well.
