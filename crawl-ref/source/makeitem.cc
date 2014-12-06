@@ -1737,7 +1737,16 @@ void squash_plusses(int item_slot)
 }
 
 /**
- * Create an item. This function does too much.
+ * Create an item.
+ *
+ * Various parameters determine whether the item can be an artifact, set the
+ * item class (ex. weapon, wand), set the item subtype (ex.
+ * hand axe, wand of fire), set the item ego (ex. of flaming, of running), set
+ * the rough power level of the item, and set the agent of the item (which
+ * affects what artefacts can be generated, and also non-artefact items if the
+ * agent is Xom). Item class, Item type, and Item ego can also be randomly
+ * selected (by setting those parameters to OBJ_RANDOM, OBJ_RANDOM, and 0
+ * respectively).
  *
  * @param allow_uniques Can the item generated be an artefact?
  * @param force_class The desired OBJECTS class (Example: OBJ_ARMOUR)
