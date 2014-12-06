@@ -166,8 +166,8 @@ int FormDuration::power_bonus(int pow) const
     {
         case PS_NONE:
             return 0;
-        case PS_TENTH:
-            return random2(pow)/10;
+        case PS_STABLE_TENTH:
+            return (random2(pow) + pow)/20;
         case PS_SINGLE:
             return random2(pow);
         case PS_ONE_AND_A_HALF:
