@@ -8960,7 +8960,7 @@ void player::maybe_degrade_bone_armour()
         return;
 
     const int numerator = attribute[ATTR_BONE_ARMOUR] + 5 * BONE_ARMOUR_DIV;
-    const int power = max(1, calc_spell_power(SPELL_BONE_ARMOUR, true));
+    const int power = max(1, calc_spell_power(SPELL_CIGOTUVIS_EMBRACE, true));
     const int denom = min(power * 3, numerator * 27);
     const bool degrade_armour = x_chance_in_y(numerator, denom);
     if (!degrade_armour)
