@@ -217,6 +217,12 @@ static bool _build_dungeon()
     return true;
 }
 
+/**
+ * Build dungeon levels for mapstat or objstat.
+ * 
+ * The exact branches/levels built and number of build iterations is set by the
+ * command-line options for mapstat/objstat.
+*/
 bool mapstat_build_levels()
 {
     if (!generated_levels.size())
