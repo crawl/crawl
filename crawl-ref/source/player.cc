@@ -2443,6 +2443,51 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     return prescaled_ev;
 }
 
+/**
+ * What is the player's bonus to EV from dodging when not paralyzed, after
+ * accounting for size & body armour penalties?
+ *
+ * First, calculate base dodge bonus (linear with dodging * stepdowned dex),
+ * and armour dodge penalty (base armour evp, increased for small races &
+ * decreased for large, then with a magic "3" subtracted from it to make the
+ * penalties not too harsh).
+ *
+ * If the player's strength is greater than the armour dodge penalty, return
+ *      base dodge * (1 - dodge_pen / (str*2)).
+ * E.g., if str is twice dodge penalty, return 3/4 of base dodge. If
+ * str = dodge_pen * 4, return 7/8...
+ *
+ * If str is less than dodge penalty, return
+ *      base_dodge * str / (dodge_pen * 2).
+ * E.g., if str = dodge_pen / 2, return 1/4 of base dodge. if
+ * str = dodge_pen / 4, return 1/8...
+ *
+ * For either equation, if str = dodge_pen, the result is base_dodge/2.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A bonus to EV, multiplied by the scale.
+ */
+static int _player_armour_adjusted_dodge_bonus(int scale)
+{
+    // stepdowns at 10 and 24 dex; the last two parameters are not important.
+    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
+
+    const int dodge_bonus =
+        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
+        / (20 - _player_evasion_size_factor()) / 10;
+
+    const int armour_dodge_penalty = you.unadjusted_body_armour_penalty() - 3;
+    dprf("ev_dex %d, dodge_bonus %d, dodge_pen %d", ev_dex, dodge_bonus,
+         armour_dodge_penalty);
+    if (armour_dodge_penalty <= 0)
+        return dodge_bonus;
+
+    const int str = max(1, you.strength());
+    if (armour_dodge_penalty >= str)
+        return dodge_bonus * str / (armour_dodge_penalty * 2);
+    return dodge_bonus - dodge_bonus * armour_dodge_penalty / (str * 2);
+}
+
 // Total EV for player using the revised 0.6 evasion model.
 int player_evasion(ev_ignore_type evit)
 {
@@ -2463,21 +2508,10 @@ int player_evasion(ev_ignore_type evit)
     const int adjusted_evasion_penalty =
         _player_adjusted_evasion_penalty(scale);
 
-    // The last two parameters are not important.
-    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
-
-    const int dodge_bonus =
-        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
-        / (20 - size_factor) / 10;
-
-    const int armour_dodge_penalty = max(0,
-        (10 * you.armour_dodge_penalty(scale)
-         - 30 * scale)
-        / max(1, (int) you.strength()));
-
     // Adjust dodge bonus for the effects of being suited up in armour.
     const int armour_adjusted_dodge_bonus =
-        max(0, dodge_bonus - armour_dodge_penalty);
+        _player_armour_adjusted_dodge_bonus(scale);
+    dprf("aadb: %d", armour_adjusted_dodge_bonus);
 
     const int adjusted_shield_penalty = you.adjusted_shield_penalty(scale);
 
@@ -6218,29 +6252,6 @@ int player::unadjusted_body_armour_penalty() const
         return 0;
 
     return -property(*body_armour, PARM_EVASION);
-}
-
-/**
- * [ds] Dodging penalty for being in high EVP armour, almost
- * identical to v0.5/4.1 penalty, but with the EVP discount being
- * 1 instead of 0.5 so that leather armour is fully discounted.
- *
- * A penalty to EV that scales linearly with encumbrance, not quadratically.
- * Will later be capped to not exceed the player's EV bonus from Dodging.
- *
- * @param scale     A scale to multiply the result by, to avoid precision loss.
- * @return          A penalty to EV based linearly on body armour encumbrance.
- */
-int player::armour_dodge_penalty(int scale) const
-{
-    const int base_ev_penalty = unadjusted_body_armour_penalty();
-
-    const int size = body_size(PSIZE_BODY);
-
-    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
-
-    return max(0, scale * base_ev_penalty
-               - size_bonus_factor * base_ev_penalty);
 }
 
 /**

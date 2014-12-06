@@ -748,7 +748,6 @@ public:
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty() const;
     int adjusted_body_armour_penalty(int scale = 1) const;
-    int armour_dodge_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
     int armour_tohit_penalty(bool random_factor, int scale = 1) const;
     int shield_tohit_penalty(bool random_factor, int scale = 1) const;
