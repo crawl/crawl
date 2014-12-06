@@ -359,13 +359,6 @@ This unholy book describes a variety of magical methods for the creation and
 command of undead servants. The dreadful book radiates a malignant aura, and
 its parchment pages sometimes twitch and shudder on their own.
 %%%%
-book of wizardry
-
-A book of various magic spells, useful for any sufficiently-talented
-spellcaster. Mages of a scholarly nature consider it a point of pride to have
-contributed in some way to this work, though more than a few of them have been
-slain by jealous rivals using their own spells against them.
-%%%%
 box of beasts
 
 A box filled with the bizarre leftovers of a depraved wizard's magical
