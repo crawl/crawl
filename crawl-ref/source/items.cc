@@ -35,6 +35,7 @@
 #include "effects.h"
 #include "env.h"
 #include "food.h"
+#include "godconduct.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "godwrath.h"
@@ -1782,6 +1783,8 @@ static void _get_rune(const item_def& it, bool quiet)
 
     // Release backtracking status
     set_stair_backtracking_status(true);
+
+    did_god_conduct(DID_COLLECT_RUNE, 2, true);
 }
 
 /**

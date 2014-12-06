@@ -679,8 +679,11 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_RU:
-      likes.emplace_back("you make personal sacrifices");
-      break;
+        likes.emplace_back("you make personal sacrifices");
+        break;
+
+    case GOD_WULNDRASTE:
+        likes.emplace_back("you collect runes");
 
     default:
         break;
@@ -702,6 +705,7 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_NEMELEX_XOBEH:
+    case GOD_WULNDRASTE:
         snprintf(info, INFO_SIZE, "you explore the world");
         likes.emplace_back(info);
         break;

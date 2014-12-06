@@ -66,7 +66,7 @@ static const char *conducts[] =
     "Souled Friend Died", "Attack In Sanctuary",
     "Kill Artificial", "Destroy Spellbook",
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Fire", "Kill Fiery", "Sacrificed Love", "Backtrack"
+    "Fire", "Kill Fiery", "Sacrificed Love", "Backtrack", "Collect Rune"
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -604,6 +604,8 @@ static const like_response OKAWARU_KILL = {
     }
 };
 
+static const like_response COLLECT_RUNE_RESPONSE = { 100, 1, 0,
+        " greatly appreciates the souvenir!"};
 
 typedef map<conduct_type, like_response> like_map;
 
@@ -818,7 +820,17 @@ static like_map divine_likes[] =
         } },
     },
     // GOD_WULNDRASTE,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 14;
+            }
+        } },
+        { DID_COLLECT_RUNE, COLLECT_RUNE_RESPONSE },
+    },
 };
 
 /**

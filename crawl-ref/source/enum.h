@@ -1111,6 +1111,7 @@ enum conduct_type
     DID_KILL_FIERY,                       // Dithmenos
     DID_SACRIFICE_LOVE,                   // Ru
     DID_BACKTRACK,                        // Wulndraste
+    DID_COLLECT_RUNE,                     // Wulndraste
 
     NUM_CONDUCTS
 };
