@@ -891,13 +891,15 @@ ru_interference get_ru_attack_interference_level()
 int wulndraste_point_mod()
 {
     int mod = 0;
+    if (you.penance[GOD_WULNDRASTE]) // under penance, give a penalty
+        return -30;
     if (!you_worship(GOD_WULNDRASTE))
         return mod;
     if (you.piety >= piety_breakpoint(4) && !you.penance[GOD_WULNDRASTE])
-        mod = 3;
+        mod = 30;
     else if (you.piety >= piety_breakpoint(2) && !you.penance[GOD_WULNDRASTE])
-        mod = 2;
+        mod = 20;
     else if (you.piety >= piety_breakpoint(0) && !you.penance[GOD_WULNDRASTE])
-        mod = 1;
-    return mod * 10;
+        mod = 10;
+    return mod;
 }

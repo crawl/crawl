@@ -447,7 +447,7 @@ static peeve_map divine_peeves[] =
     //GOD_WULNDRASTE
     {
         { DID_BACKTRACK, {
-            4, 10, "",
+            4, 5, "",
             " does not appreciate your retracing your steps when you could still press onward!",
             NULL, -5
         } },

@@ -1104,6 +1104,9 @@ void dec_penance(god_type god, int val)
 
         take_note(Note(NOTE_MOLLIFY_GOD, god));
 
+        calc_hp();
+        calc_mp();
+
         if (you_worship(god))
         {
             // Redraw piety display and, in case the best skill is Invocations,
@@ -2297,6 +2300,8 @@ void dock_piety(int piety_loss, int penance)
         }
         last_penance_lecture = you.num_turns;
         _inc_penance(penance);
+        calc_hp();
+        calc_mp();
     }
 }
 

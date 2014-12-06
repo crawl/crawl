@@ -61,6 +61,7 @@
 #include "output.h"
 #include "place.h"
 #include "prompt.h"
+#include "religion.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stringutil.h"
@@ -1537,8 +1538,16 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Maybe make a note if we reached a new level.
     // Don't do so if we are just moving around inside Pan, though.
-    if (just_created_level && stair_taken != DNGN_TRANSIT_PANDEMONIUM)
-        take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+    if (just_created_level)
+    {
+        if (stair_taken != DNGN_TRANSIT_PANDEMONIUM)
+            take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+        if (you.penance[GOD_WULNDRASTE])
+        {
+            dec_penance(GOD_WULNDRASTE, 6 + random2(5));
+            mprf("Penance: %d", you.penance[GOD_WULNDRASTE]);
+        }
+    }
 
     // If the player entered the level from a different location than they last
     // exited it, have monsters lose track of where they are
