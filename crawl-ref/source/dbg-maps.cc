@@ -219,7 +219,7 @@ static bool _build_dungeon()
 
 /**
  * Build dungeon levels for mapstat or objstat.
- * 
+ *
  * The exact branches/levels built and number of build iterations is set by the
  * command-line options for mapstat/objstat.
 
