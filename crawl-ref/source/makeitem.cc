@@ -1426,12 +1426,6 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         {
             item.sub_type = random2(NUM_FIXED_BOOKS);
 
-            if (book_rarity(static_cast<book_type>(item.sub_type)) != 100
-                && one_chance_in(25))
-            {
-                item.sub_type = coinflip() ? BOOK_WIZARDRY : BOOK_POWER;
-            }
-
             if (!one_chance_in(100)
                 && x_chance_in_y(book_rarity(static_cast<book_type>(item.sub_type))-1, item_level+1))
             {
