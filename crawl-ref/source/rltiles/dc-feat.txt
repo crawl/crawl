@@ -134,6 +134,7 @@ statue_tengu
 statue_centaur
 %syn DNGN_STATUE_CENTAUR
 statue_snail
+%syn DNGN_STATUE_SNAIL
 statue_cat
 %syn DNGN_STATUE_CAT
 statue_princess
