@@ -111,7 +111,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CONFUSING_TOUCH,
     SPELL_CONFUSE,
     SPELL_PETRIFY,
-    SPELL_LEDAS_LIQUEFACTION,
     SPELL_ENGLACIATION,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_GRAVITAS,
