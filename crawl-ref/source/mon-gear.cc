@@ -2147,6 +2147,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_MAUD:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_JORY:
+    case MONS_FREDERICK:
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
     case MONS_IRONHEART_PRESERVER:
@@ -2159,11 +2160,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_IRONBRAND_CONVOKER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_RING_MAIL,   ARM_SCALE_MAIL);
-        break;
-
-    case MONS_FREDERICK:
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = random_choose(ARM_SCALE_MAIL,   ARM_CHAIN_MAIL);
         break;
 
     case MONS_MARGERY:

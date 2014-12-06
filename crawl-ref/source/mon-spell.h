@@ -1056,7 +1056,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 24, MON_SPELL_WIZARD },
+       { SPELL_SPELLFORGED_SERVITOR, 24, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
       }
     },
