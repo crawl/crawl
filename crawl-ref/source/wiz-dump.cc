@@ -120,7 +120,7 @@ static item_kind _find_real_item_kind(string &s)
         item_kind amulet = {OBJ_JEWELLERY, NUM_JEWELLERY, 0, 0};
         return amulet;
     }
-    else if (s.substr(0, 5) == "ring ")
+    else if (s.substr(0, 5) == "ring " && s.substr(0, 9) != "ring mail")
     {
         item_kind ring = {OBJ_JEWELLERY, NUM_JEWELLERY, 0, 0};
         return ring;
@@ -133,12 +133,8 @@ static item_kind _find_real_item_kind(string &s)
         item_kind kind = item_kind_by_name(s.substr(0, end));
         if (kind.base_type != OBJ_UNASSIGNED)
         {
-            end = s.rfind(' ', end - 1);
-            if (end == string::npos)
-                end = 0;
-            else
-                end = end + 1;
-            s = s.substr(end);
+            if (s.substr(0, 8) == "pair of ")
+                s = s.substr(8);
             return kind;
         }
     }
@@ -396,7 +392,7 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
         {
             god_type god = find_earliest_match(lowercase_string(tokens[k+1]),
                                                (god_type) 1, NUM_GODS,
-                                               _always_true<god_type>,
+                                               always_true<god_type>,
                                                bind(god_name, placeholders::_1,
                                                     false));
             if (!you_worship(god))

@@ -160,7 +160,7 @@ bool prompt_eat_inventory_item(int slot)
         which_inventory_slot = prompt_invent_item("Eat which item?",
                                                   MT_INVLIST, OBJ_FOOD,
                                                   true, true, true, 0, -1,
-                                                  NULL, OPER_EAT);
+                                                  nullptr, OPER_EAT);
 
         if (prompt_failed(which_inventory_slot))
             return false;
@@ -621,7 +621,7 @@ bool eat_from_inventory()
         return 0;
 
     int inedible_food = 0;
-    item_def *wonteat = NULL;
+    item_def *wonteat = nullptr;
     bool found_valid = false;
 
     vector<item_def *> food_items;
@@ -1124,8 +1124,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
     // Duration depends on corpse weight.
     const int max_chunks = get_max_corpse_chunks(mons_type);
-    int chunk_amount     = 1 + max_chunks/3;
-        chunk_amount     = stepdown_value(chunk_amount, 6, 6, 12, 12);
+    const int chunk_amount = stepdown_value(1 + max_chunks/3, 6, 6, 12, 12);
 
     // Add 1 for the artificial extra call at the start of draining.
     const int duration   = 1 + chunk_amount;

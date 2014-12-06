@@ -125,7 +125,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     monster* mons = monster_at(beam.target);
     // don't allow targeting of submerged monsters (includes trapdoor spiders)
     if (mons && mons->submerged())
-        mons = NULL;
+        mons = nullptr;
 
     const int x_first_middle = you.pos().x + (delta.x)/2;
     const int y_first_middle = you.pos().y + (delta.y)/2;
@@ -213,7 +213,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         }
     }
 
-    if (mons == NULL)
+    if (mons == nullptr)
     {
         // Must return true, otherwise you get a free discovery
         // of invisible monsters.
@@ -423,12 +423,6 @@ void tome_of_power(int slot)
                 << weird_writing() << '.' << endl;
 
     you.turn_is_over = true;
-
-    if (does_vision_blur())
-    {
-        mpr("The page is too blurry for you to read.");
-        return;
-    }
 
     mpr("You find yourself reciting the magical words!");
     practise(EX_WILL_READ_TOME);
@@ -669,7 +663,7 @@ static bool _box_of_beasts(item_def &box)
     }
 
     bool success = false;
-    monster* mons = NULL;
+    monster* mons = nullptr;
 
     if (!one_chance_in(3))
     {
@@ -1042,8 +1036,8 @@ static bool _lamp_of_fire()
 
     const int pow = 8 + you.skill_rdiv(SK_EVOCATIONS, 9, 4);
     if (spell_direction(target, base_beam, DIR_TARGET, TARG_HOSTILE, 8,
-                        true, true, false, NULL,
-                        "Aim the lamp in which direction?", true, NULL))
+                        true, true, false, nullptr,
+                        "Aim the lamp in which direction?", true, nullptr))
     {
         if (you.confused())
             target.confusion_fuzz();
@@ -1168,6 +1162,8 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
     wind_beam.range           = LOS_RADIUS;
     wind_beam.is_tracer       = true;
 
+    map<actor *, coord_def> collisions;
+
     bool player_affected = false;
     counted_monster_list affected_monsters;
 
@@ -1195,6 +1191,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                 }
                 else //Try to find an alternate route to push
                 {
+                    bool success = false;
                     for (adjacent_iterator di(newpos); di; ++di)
                     {
                         if (adjacent(*di, act->pos())
@@ -1211,9 +1208,14 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
                             // Adjust wind path for moved monster
                             wind_beam.target = *di;
                             wind_beam.fire();
+                            success = true;
                             break;
                         }
                     }
+
+                    // If no luck, they slam into something.
+                    if (!success)
+                        collisions.insert(make_pair(act, newpos));
                 }
             }
         }
@@ -1315,6 +1317,10 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
         else
             mpr("The monsters around you are blown away!");
     }
+
+    for (auto it : collisions)
+        if (it.first->alive())
+            it.first->collide(it.second, agent, pow);
 }
 
 static void _fan_of_gales_elementals()
@@ -1502,7 +1508,7 @@ static bool _phial_of_floods()
     beam.aimed_at_spot = true;
 
     if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
-                        LOS_RADIUS, true, true, false, NULL,
+                        LOS_RADIUS, true, true, false, nullptr,
                         "Aim the phial where?"))
     {
         if (you.confused())
@@ -1565,12 +1571,12 @@ static void _expend_xp_evoker(item_def &item)
 static spret_type _phantom_mirror()
 {
     bolt beam;
-    monster* victim = NULL;
+    monster* victim = nullptr;
     dist spd;
     targetter_smite tgt(&you, LOS_RADIUS, 0, 0);
 
     if (!spell_direction(spd, beam, DIR_TARGET, TARG_ANY,
-                         LOS_RADIUS, false, true, false, NULL,
+                         LOS_RADIUS, false, true, false, nullptr,
                          "Aiming: <white>Phantom Mirror</white>", true,
                          &tgt))
     {
@@ -1603,12 +1609,16 @@ static spret_type _phantom_mirror()
     int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
                              * (100 - victim->check_res_magic(power)) / 100));
 
-    mon->attitude = ATT_FRIENDLY;
+    mon->attitude =
+            player_mutation_level(MUT_NO_LOVE) ? ATT_HOSTILE : ATT_FRIENDLY;
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
 
     mon->summoner = MID_PLAYER;
     mons_add_blame(mon, "mirrored by the player character");
     mon->add_ench(ENCH_PHANTOM_MIRROR);
+    mon->add_ench(mon_enchant(ENCH_DRAINED,
+                              div_rand_round(mon->get_experience_level(), 3),
+                              &you, INFINITE_DURATION));
 
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);
@@ -1623,7 +1633,7 @@ static bool _rod_spell(item_def& irod, bool check_range)
 {
     ASSERT(irod.base_type == OBJ_RODS);
 
-    const spell_type spell = spell_in_rod(irod.sub_type);
+    const spell_type spell = spell_in_rod(static_cast<rod_type>(irod.sub_type));
     int mana = spell_mana(spell) * ROD_CHARGE_MULT;
     int power = calc_spell_power(spell, false, false, true, true);
 
@@ -1723,7 +1733,7 @@ bool evoke_item(int slot, bool check_range)
         slot = prompt_invent_item("Evoke which item? (* to show all)",
                                    MT_INVLIST,
                                    OSEL_EVOKABLE, true, true, true, 0, -1,
-                                   NULL, OPER_EVOKE);
+                                   nullptr, OPER_EVOKE);
 
         if (prompt_failed(slot))
             return false;
@@ -1747,7 +1757,7 @@ bool evoke_item(int slot, bool check_range)
     bool unevokable = false;
 
     const unrandart_entry *entry = is_unrandom_artefact(item)
-        ? get_unrand_entry(item.special) : NULL;
+        ? get_unrand_entry(item.special) : nullptr;
 
     if (entry && entry->evoke_func)
     {

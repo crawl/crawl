@@ -57,7 +57,7 @@ void setup_environment_effects();
 // Lava smokes, swamp water mists.
 void run_environment_effects();
 
-bool player_in_a_dangerous_place(bool *invis = NULL);
+bool player_in_a_dangerous_place(bool *invis = nullptr);
 void bring_to_safety();
 void revive();
 
@@ -110,7 +110,7 @@ struct position_node
     {
         pos.x=0;
         pos.y=0;
-        last = NULL;
+        last = nullptr;
         estimate = 0;
         path_distance = 0;
         connect_level = 0;
@@ -268,7 +268,7 @@ void search_astar(const coord_def & start,
 {
     position_node temp_node;
     temp_node.pos = start;
-    temp_node.last = NULL;
+    temp_node.last = nullptr;
     temp_node.path_distance = 0;
 
     search_astar(temp_node, valid_target, expand_node, visited, candidates);

@@ -96,7 +96,7 @@ struct direction_chooser_args
     coord_def default_place;
 
     direction_chooser_args() :
-        hitfunc(NULL),
+        hitfunc(nullptr),
         restricts(DIR_NONE),
         mode(TARG_ANY),
         range(-1),
@@ -104,11 +104,11 @@ struct direction_chooser_args
         needs_path(true),
         may_target_monster(true),
         may_target_self(false),
-        target_prefix(NULL),
-        behaviour(NULL),
+        target_prefix(nullptr),
+        behaviour(nullptr),
         cancel_at_self(false),
         show_floor_desc(false),
-        get_desc_func(NULL),
+        get_desc_func(nullptr),
         default_place(0, 0) {}
 };
 
@@ -246,7 +246,7 @@ private:
     bool may_target_self;       // If true then player won't be prompted
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window
-    targeting_behaviour *behaviour; // Can be NULL for default
+    targeting_behaviour *behaviour; // Can be nullptr for default
     bool cancel_at_self;        // Disallow self-targeting?
     bool show_floor_desc;       // Describe the floor of the current target
     targetter *hitfunc;         // Determine what would be hit.

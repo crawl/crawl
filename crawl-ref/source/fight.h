@@ -24,7 +24,7 @@ enum stab_type
     NUM_STAB
 };
 
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit = NULL,
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
                  bool simu = false);
 
 int resist_adjust_damage(const actor *defender, beam_type flavour,

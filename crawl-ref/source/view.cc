@@ -303,7 +303,7 @@ void update_monsters_in_view()
     {
         map<monster_type, int> types;
         map<monster_type, int> genera; // This is the plural for genus!
-        const monster* target = NULL;
+        const monster* target = nullptr;
         for (const monster *mon : monsters)
         {
             const monster_type type = mon->type;
@@ -1061,7 +1061,8 @@ static void _draw_los(screen_cell_t *cell,
 #endif
 }
 
-class shake_viewport_animation: public animation {
+class shake_viewport_animation: public animation
+{
 public:
     shake_viewport_animation() { frames = 5; frame_delay = 40; }
 
@@ -1079,7 +1080,8 @@ private:
     coord_def offset;
 };
 
-class checkerboard_animation: public animation {
+class checkerboard_animation: public animation
+{
 public:
     checkerboard_animation() { frame_delay = 100; frames = 5; }
     void init_frame(int frame)
@@ -1098,7 +1100,8 @@ public:
     int current_frame;
 };
 
-class banish_animation: public animation {
+class banish_animation: public animation
+{
 public:
     banish_animation(): remaining(false) { }
 
@@ -1147,7 +1150,8 @@ public:
     int current_frame;
 };
 
-class slideout_animation: public animation {
+class slideout_animation: public animation
+{
 public:
     void init_frame(int frame)
     {
@@ -1173,7 +1177,8 @@ public:
     int current_frame;
 };
 
-class orb_animation: public animation {
+class orb_animation: public animation
+{
 public:
     void init_frame(int frame)
     {

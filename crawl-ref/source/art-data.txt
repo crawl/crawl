@@ -124,9 +124,9 @@
 # AC:       Armour class modifier (for non-armour artefacts).
 # ANGRY     Each time the wielder of the weapon strikes a victim there's
 #           a num-in-100 chance of the wielder going berserk.
-# APPEAR:   Unidentified appearance of artifact.
+# APPEAR:   Unidentified appearance of artefact.
 # COLD:     Cold resistance/vulnerability.
-# COLOUR:   The colour of the artifact, either as listed in defines.h
+# COLOUR:   The colour of the artefact, either as listed in defines.h
 #           (e.g., LIGHTRED) or as listed under element_type in view.h
 #           (e.g., ETC_FIRE)
 # CURSED:   The artefact has a one-in-num chance of becoming cursed each

@@ -369,6 +369,8 @@ enum attribute_type
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
+    ATTR_BONE_ARMOUR,          // Current amount of boney armour (from the spell)
+    ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     NUM_ATTRIBUTES
 };
 
@@ -468,7 +470,8 @@ enum beam_type                  // bolt::flavour
     BEAM_DRAIN_MAGIC,
     BEAM_TUKIMAS_DANCE,
     BEAM_RESISTANCE,
-    BEAM_LAST_ENCHANTMENT = BEAM_RESISTANCE,
+    BEAM_ATTRACT,
+    BEAM_LAST_ENCHANTMENT = BEAM_ATTRACT,
 
     BEAM_MEPHITIC,
     BEAM_INK,
@@ -529,12 +532,14 @@ enum book_type
 #endif
     BOOK_GEOMANCY,
     BOOK_EARTH,
+#if TAG_MAJOR_VERSION == 34
     BOOK_WIZARDRY,
+#endif
     BOOK_POWER,
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,
 #if TAG_MAJOR_VERSION == 34
-    BOOK_STALKING,
+    BOOK_AKASHIC_RECORD,
 #endif
     BOOK_DEBILITATION,
     BOOK_DRAGON,
@@ -546,8 +551,15 @@ enum book_type
     BOOK_ANNIHILATIONS,
     BOOK_GRAND_GRIMOIRE,
     BOOK_NECRONOMICON,
+#if TAG_MAJOR_VERSION > 34
+    BOOK_AKASHIC_RECORD,
+#endif
 
+#if TAG_MAJOR_VERSION == 34
     MAX_FIXED_BOOK = BOOK_NECRONOMICON,
+#else
+    MAX_FIXED_BOOK = BOOK_AKASHIC_RECORD,
+#endif
 
     BOOK_RANDART_LEVEL,
     BOOK_RANDART_THEME,
@@ -665,6 +677,7 @@ enum canned_message_type
     MSG_DECK_EXHAUSTED,
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
+    MSG_GHOSTLY_OUTLINE,
 };
 
 enum char_set_type
@@ -745,6 +758,15 @@ enum command_type
     CMD_RUN_DOWN_LEFT,
     CMD_RUN_UP_RIGHT,
     CMD_RUN_DOWN_RIGHT,
+    CMD_SAFE_WAIT,
+    CMD_SAFE_MOVE_LEFT,
+    CMD_SAFE_MOVE_DOWN,
+    CMD_SAFE_MOVE_UP,
+    CMD_SAFE_MOVE_RIGHT,
+    CMD_SAFE_MOVE_UP_LEFT,
+    CMD_SAFE_MOVE_DOWN_LEFT,
+    CMD_SAFE_MOVE_UP_RIGHT,
+    CMD_SAFE_MOVE_DOWN_RIGHT,
     CMD_ATTACK_LEFT,
     CMD_ATTACK_DOWN,
     CMD_ATTACK_UP,
@@ -823,6 +845,7 @@ enum command_type
     CMD_SUSPEND_GAME,
     CMD_QUIT,
     CMD_WIZARD,
+    CMD_EXPLORE_MODE,
 
     CMD_SEARCH_STASHES,
     CMD_EXPLORE,
@@ -1123,9 +1146,9 @@ enum delay_type
     DELAY_ARMOUR_OFF,
     DELAY_JEWELLERY_ON,
     DELAY_MEMORISE,
+#if TAG_MAJOR_VERSION == 34
     DELAY_BUTCHER,
     DELAY_BOTTLE_BLOOD,
-#if TAG_MAJOR_VERSION == 34
     DELAY_WEAPON_SWAP,
 #endif
     DELAY_PASSWALL,
@@ -1153,6 +1176,7 @@ enum delay_type
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
 
     DELAY_SHAFT_SELF, // Formicid ability
+    DELAY_BLURRY_SCROLL,
 
     NUM_DELAYS
 };
@@ -1423,28 +1447,28 @@ enum dungeon_feature_type
     // Exits from various branches
     // Order must be the same as above
 #if TAG_MAJOR_VERSION == 34
-    DNGN_RETURN_FROM_DWARF,
+    DNGN_EXIT_DWARF,
 #endif
-    DNGN_RETURN_FROM_ORC,
-    DNGN_RETURN_FROM_LAIR,
-    DNGN_RETURN_FROM_SLIME,
-    DNGN_RETURN_FROM_VAULTS,
-    DNGN_RETURN_FROM_CRYPT,
+    DNGN_EXIT_ORC,
+    DNGN_EXIT_LAIR,
+    DNGN_EXIT_SLIME,
+    DNGN_EXIT_VAULTS,
+    DNGN_EXIT_CRYPT,
 #if TAG_MAJOR_VERSION == 34
-    DNGN_RETURN_FROM_BLADE,
+    DNGN_EXIT_BLADE,
 #endif
-    DNGN_RETURN_FROM_ZOT,
-    DNGN_RETURN_FROM_TEMPLE,
-    DNGN_RETURN_FROM_SNAKE,
-    DNGN_RETURN_FROM_ELF,
-    DNGN_RETURN_FROM_TOMB,
-    DNGN_RETURN_FROM_SWAMP,
-    DNGN_RETURN_FROM_SHOALS,
-    DNGN_RETURN_FROM_SPIDER,
+    DNGN_EXIT_ZOT,
+    DNGN_EXIT_TEMPLE,
+    DNGN_EXIT_SNAKE,
+    DNGN_EXIT_ELF,
+    DNGN_EXIT_TOMB,
+    DNGN_EXIT_SWAMP,
+    DNGN_EXIT_SHOALS,
+    DNGN_EXIT_SPIDER,
 #if TAG_MAJOR_VERSION == 34
-    DNGN_RETURN_FROM_FOREST,
+    DNGN_EXIT_FOREST,
 #endif
-    DNGN_RETURN_FROM_DEPTHS,
+    DNGN_EXIT_DEPTHS,
 
     DNGN_ALTAR_ZIN,
     DNGN_ALTAR_SHINING_ONE,
@@ -1633,7 +1657,9 @@ enum duration_type
     DUR_TORNADO_COOLDOWN,
 #if TAG_MAJOR_VERSION == 34
     DUR_NAUSEA,
+#endif
     DUR_AMBROSIA,
+#if TAG_MAJOR_VERSION == 34
     DUR_TEMP_MUTATIONS,
 #endif
     DUR_DISJUNCTION,
@@ -1837,6 +1863,7 @@ enum enchant_type
     ENCH_CONDENSATION_SHIELD,
     ENCH_RESISTANCE,
     ENCH_HEXED,
+    ENCH_BONE_ARMOUR,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2002,8 +2029,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
-                             //0x00000200,  // was: ISFLAG_BLESSED
-    ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
+    ISFLAG_HANDLED           = 0x00000200,  // player has handled this item
+                             //0x00000400,  // was: ISFLAG_SEEN_CURSED
     ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
@@ -3030,6 +3057,7 @@ enum monster_type                      // menv[].type
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
 #if TAG_MAJOR_VERSION > 34
     MONS_FULMINANT_PRISM,
+    MONS_SINGULARITY,
     MONS_BATTLESPHERE,
 #endif
     MONS_PILLAR_OF_SALT,
@@ -3197,6 +3225,7 @@ enum monster_type                      // menv[].type
     MONS_ROBIN,
 
     MONS_SHARD_SHRIKE,
+    MONS_SINGULARITY,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3574,9 +3603,11 @@ enum potion_type
 #endif
     POT_FLIGHT,
     POT_POISON,
+#if TAG_MAJOR_VERSION == 34
     POT_SLOWING,
+#endif
     POT_CANCELLATION,
-    POT_CONFUSION,
+    POT_AMBROSIA,
     POT_INVISIBILITY,
 #if TAG_MAJOR_VERSION == 34
     POT_PORRIDGE,
@@ -4263,6 +4294,9 @@ enum spell_type
     SPELL_SCATTERSHOT,
     SPELL_CLEANSING_FLAME,
     SPELL_GOBLIN_TOSS,
+    SPELL_BONE_ARMOUR,
+    SPELL_SINGULARITY,
+    SPELL_GRAVITAS,
     NUM_SPELLS
 };
 
@@ -4430,6 +4464,7 @@ enum zap_type
     ZAP_CORROSIVE_BOLT,
     ZAP_RANDOM_BOLT_TRACER,
     ZAP_SCATTERSHOT,
+    ZAP_GRAVITAS,
 
     NUM_ZAPS
 };
@@ -4550,12 +4585,19 @@ enum seen_context_type
 
 enum los_type
 {
-    LOS_NONE         = 0,
-    LOS_ARENA        = LOS_NONE,
-    LOS_DEFAULT      = (1 << 0),
-    LOS_NO_TRANS     = (1 << 1),
-    LOS_SOLID        = (1 << 2),
-    LOS_SOLID_SEE    = (1 << 3),
+    LOS_NONE         = 0,        // w g s c
+    LOS_ARENA        = LOS_NONE, // -------  See key below
+    LOS_DEFAULT      = (1 << 0), // o T T h
+    LOS_NO_TRANS     = (1 << 1), // o o T h
+    LOS_SOLID        = (1 << 2), // o o o T
+    LOS_SOLID_SEE    = (1 << 3), // o o o h
+    // KEY:
+    //   o: opaque, T: transparent, h: half-opaque (two cells block LOS)
+    // Columns:
+    //   w: FFT_OPAQUE features: rock walls, closed doors, trees, etc.
+    //   g: glass (transparent walls)
+    //   s: other FFT_SOLID features: grate, statue/idol, open/lava sea
+    //   c: semi-opaque clouds (fog, etc.); bushes
 };
 
 enum ac_type

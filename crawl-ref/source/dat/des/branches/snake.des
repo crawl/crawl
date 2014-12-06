@@ -197,8 +197,7 @@ WEIGHT: 5
 KMONS:  123 = water moccasin / black mamba / nothing
 KMONS:  4 = guardian serpent
 KMONS:  5 = naga mage / nothing
-KITEM:  1235 = potion of poison w:20 / \
-               potion of confusion / nothing w:20
+KITEM:  1235 = potion of poison w:30 ident:type / nothing w:20
 KITEM:  4 = any weapon good_item ego:venom q:1 / \
             any weapon good_item ego:venom q:2
 KFEAT:  1234 = shallow_water
@@ -907,6 +906,27 @@ MAP
 .w1.....1w.
 .wwwwwwwww.
 ...........
+ENDMAP
+
+# Somewhat vaguely inspired by a vault shape in
+# a draft of evilmike's for something else entirely.
+NAME:    hangedman_snake_pattern
+TAGS:    transparent decor extra
+DEPTH:   Snake
+# Pillars, door positions, entrances.
+SHUFFLE: XYZ, aA-+ / aA-+ / aA-+ / Aa+- / Aa+-, ABCDE
+SUBST:   X : cx.., Y : cx...., Z = ., a = x, - : xx+, + : +++..
+SUBST:   A : @@+, B : @@++..x, C : @+...xxx, DE = x
+MAP
+   xxBxxxxxxxCxxxxxxxDxxxxxxxxExxxxxx
+  xx...xx.........xx...xx.........xx
+ xx.....xx.......xx.....xx.......xx
+aa...X...xx..Z..--...X...xx..Z..aa
+ AA...Y...++..Y..++...Y...++..Y..AA
+  xx...Z...--..X..xx...Z...--..X..xx
+   xx.....xx.......xx.....xx.......xx
+    xx...xx.........xx...xx.........xx
+     xxExxxxxxDxxxxxxxxCxxxxxxBxxxxxxx
 ENDMAP
 
 ################################################################################

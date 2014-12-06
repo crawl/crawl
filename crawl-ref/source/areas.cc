@@ -152,6 +152,18 @@ static void _actor_areas(actor *a)
         no_areas = false;
     }
 #endif
+
+    // XXX: make this a proper function
+    if (a->type == MONS_SINGULARITY)
+    {
+        r = a->get_experience_level();
+
+        _agrid_centres.push_back(area_centre(AREA_DISJUNCTION, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
+            _set_agrid_flag(*ri, APROP_DISJUNCTION);
+        no_areas = false;
+    }
 }
 
 /**
@@ -179,7 +191,6 @@ static void _update_agrid()
 
     if (you_worship(GOD_GOZAG))
     {
-        const int r = 2;
         for (rectangle_iterator ri(0); ri; ++ri)
         {
             // ASSUMPTION: gold will always be on the top of the pile.
@@ -187,12 +198,8 @@ static void _update_agrid()
                 && mitm[igrd(*ri)].special > 0)
             {
                 no_areas = false;
-                _agrid_centres.emplace_back(AREA_GOLD, *ri, r);
-                for (radius_iterator rdi(*ri, r, C_CIRCLE, LOS_NO_TRANS);
-                     rdi; ++rdi)
-                {
-                    _set_agrid_flag(*rdi, APROP_GOLD);
-                }
+                _agrid_centres.emplace_back(AREA_GOLD, *ri, 0);
+                _set_agrid_flag(*ri, APROP_GOLD);
             }
         }
     }
@@ -409,7 +416,7 @@ void create_sanctuary(const coord_def& center, int time)
     int       trap_count  = 0;
     int       scare_count = 0;
     int       cloud_count = 0;
-    monster* seen_mon    = NULL;
+    monster* seen_mon    = nullptr;
 
     // Since revealing mimics can move monsters, we do it first.
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
@@ -513,7 +520,7 @@ void create_sanctuary(const coord_def& center, int time)
     if (blood_count > 0)
         mprf(MSGCH_GOD, "By Zin's power, all blood is cleared from the sanctuary.");
 
-    if (scare_count == 1 && seen_mon != NULL)
+    if (scare_count == 1 && seen_mon != nullptr)
         simple_monster_message(seen_mon, " turns to flee the light!");
     else if (scare_count > 0)
         mpr("The monsters scatter in all directions!");
@@ -609,7 +616,7 @@ int monster::halo_radius2() const
         return size;
     // The values here depend on 1. power, 2. sentience.  Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
-    // small ones.
+    // little or none.
     switch (type)
     {
     case MONS_ANGEL:
@@ -618,9 +625,9 @@ int monster::halo_radius2() const
         return 29;
     case MONS_DAEVA:
         return 32;
-    case MONS_SERAPH:
-        return 50;
     case MONS_OPHAN:
+        return 50;
+    case MONS_SERAPH:
         return 65; // highest rank among sentient ones
     case MONS_HOLY_SWINE:
         return 2;  // only notionally holy

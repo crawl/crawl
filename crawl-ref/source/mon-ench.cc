@@ -151,7 +151,7 @@ bool monster::add_ench(const mon_enchant &ench)
     // If the duration is not set, we must calculate it (depending on the
     // enchantment).
     if (!ench.duration)
-        added->set_duration(this, new_enchantment ? NULL : &ench);
+        added->set_duration(this, new_enchantment ? nullptr : &ench);
 
     if (new_enchantment)
         add_enchantment_effect(ench);
@@ -248,7 +248,8 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_CHARM:
     case ENCH_BRIBED:
     case ENCH_PERMA_BRIBED:
-    case ENCH_HEXED: {
+    case ENCH_HEXED:
+    {
         behaviour = BEH_SEEK;
 
         actor *source_actor = actor_by_mid(ench.source, true);
@@ -366,7 +367,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     if (mons_is_lurking(mon))
     {
         const actor* foe = mon->get_foe();
-        if (foe != NULL && mon->can_see(foe)
+        if (foe != nullptr && mon->can_see(foe)
             && !adjacent(mon->pos(), foe->pos()))
         {
             return false;
@@ -993,7 +994,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         dam = min(dam, hit_points - 1);
         if (dam > 0)
-            hurt(NULL, dam);
+            hurt(nullptr, dam);
         if (!quiet)
             simple_monster_message(this, " looks less vigorous.");
         break;
@@ -1213,7 +1214,9 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
                 del_ench(entry.first);
-            if (!is_stationary())
+            // That triggered a behaviour_event, which could have made a
+            // pacified monster leave the level.
+            if (alive() && !is_stationary())
                 monster_blink(this, true);
             break;
 
@@ -1335,7 +1338,7 @@ static void _entangle_actor(actor* act)
     else
     {
         monster* mact = act->as_monster();
-        mact->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 1, NULL, INFINITE_DURATION));
+        mact->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 1, nullptr, INFINITE_DURATION));
     }
 }
 
@@ -1372,7 +1375,7 @@ static bool _apply_grasping_roots(monster* mons)
             if (x_chance_in_y(3, 5))
                 continue;
 
-            if (x_chance_in_y(10, 50 - ai->melee_evasion(NULL)))
+            if (x_chance_in_y(10, 50 - ai->melee_evasion(nullptr)))
             {
                 if (ai->is_player())
                     mpr("Roots rise up to grasp you, but you nimbly evade.");
@@ -1879,27 +1882,21 @@ void monster::apply_enchantment(const mon_enchant &me)
         // spawn a spore and re-add the enchantment.
         if (decay_enchantment(en))
         {
-            // Search for an open adjacent square to place a spore on
-            int indices[] = {0, 1, 2, 3, 4, 5, 6, 7};
-            shuffle_array(indices);
-
             bool re_add = true;
 
-            for (int idx : indices)
+            for (fair_adjacent_iterator ai(pos()); ai; ++ai)
             {
-                coord_def adjacent = pos() + Compass[idx];
-
-                if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
-                                        && !actor_at(adjacent))
+                if (mons_class_can_pass(MONS_GIANT_SPORE, grd(*ai))
+                    && !actor_at(*ai))
                 {
                     beh_type plant_attitude = SAME_ATTITUDE(this);
 
                     if (monster *plant = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                             plant_attitude,
-                                                            NULL,
+                                                            nullptr,
                                                             0,
                                                             0,
-                                                            adjacent,
+                                                            *ai,
                                                             MHITNOT,
                                                             MG_FORCE_PLACE)))
                     {
@@ -1918,15 +1915,15 @@ void monster::apply_enchantment(const mon_enchant &me)
                         plant->behaviour = BEH_WANDER;
                         plant->spore_cooldown = 20;
 
-                        if (you.see_cell(adjacent) && you.see_cell(pos()))
+                        if (you.see_cell(*ai) && you.see_cell(pos()))
                             mpr("A ballistomycete spawns a giant spore.");
 
                         // Decrease the count and maybe become inactive
                         // again.
-                        if (number)
+                        if (ballisto_activity)
                         {
-                            number--;
-                            if (number == 0)
+                            ballisto_activity--;
+                            if (ballisto_activity == 0)
                             {
                                 colour = MAGENTA;
                                 del_ench(ENCH_SPORE_PRODUCTION);
@@ -2144,7 +2141,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_INJURY_BOND:
         // It's hard to absorb someone else's injuries when you're dead
         if (!me.agent() || !me.agent()->alive()
-            || me.agent()->mindex() == ANON_FRIENDLY_MONSTER)
+            || me.agent()->mid == MID_ANON_FRIEND)
         {
             del_ench(ENCH_INJURY_BOND, true, false);
         }
@@ -2213,7 +2210,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TORNADO_COOLDOWN:
         if (decay_enchantment(en))
         {
-            remove_tornado_clouds(mindex());
+            remove_tornado_clouds(mid);
             if (you.can_see(this))
                 mprf("The winds around %s calm down.", name(DESC_THE).c_str());
         }
@@ -2283,25 +2280,25 @@ bool monster::is_summoned(int* duration, int* summon_type) const
     const mon_enchant abj = get_ench(ENCH_ABJ);
     if (abj.ench == ENCH_NONE)
     {
-        if (duration != NULL)
+        if (duration != nullptr)
             *duration = -1;
-        if (summon_type != NULL)
+        if (summon_type != nullptr)
             *summon_type = 0;
 
         return false;
     }
-    if (duration != NULL)
+    if (duration != nullptr)
         *duration = abj.duration;
 
     const mon_enchant summ = get_ench(ENCH_SUMMON);
     if (summ.ench == ENCH_NONE)
     {
-        if (summon_type != NULL)
+        if (summon_type != nullptr)
             *summon_type = 0;
 
         return true;
     }
-    if (summon_type != NULL)
+    if (summon_type != nullptr)
         *summon_type = summ.degree;
 
     if (mons_is_conjured(type))
@@ -2418,7 +2415,7 @@ static const char *enchant_names[] =
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
     "deflect missiles", "negative_vuln", "condensation_shield", "resistant",
-    "hexed", "buggy",
+    "hexed", "corpse_armour", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

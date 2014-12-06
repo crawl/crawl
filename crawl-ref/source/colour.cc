@@ -647,6 +647,12 @@ void init_element_colours()
                             60,  MAGENTA,
                             60,  RED,
                         0));
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_SHINING, "shining",
+                            // no YELLOW - always make this visually distinct
+                            60,  WHITE,
+                            60,  BROWN,
+                        0));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random
@@ -793,7 +799,7 @@ int str_to_colour(const string &str, int default_colour, bool accept_number)
     {
         // Check if we have a direct colour index.
         const char *s = str.c_str();
-        char *es = NULL;
+        char *es = nullptr;
         const int ci = static_cast<int>(strtol(s, &es, 10));
         if (s != es && es && ci >= 0 && ci < 16)
             ret = ci;

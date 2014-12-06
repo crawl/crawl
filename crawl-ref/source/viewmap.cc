@@ -385,7 +385,7 @@ static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
     features.clear();
 
     if (on_level)
-        find_travel_pos(you.pos(), NULL, NULL, &features);
+        find_travel_pos(you.pos(), nullptr, nullptr, &features);
     else
     {
         travel_pathfind tp;
@@ -1178,7 +1178,8 @@ bool show_map(level_pos &lpos,
                                                     : RMODE_EXPLORE);
                     _reset_travel_colours(features, on_level);
 
-                    if (!whereto.zero()) {
+                    if (!whereto.zero())
+                    {
                         move_x = whereto.x - lpos.pos.x;
                         move_y = whereto.y - lpos.pos.y;
                     }

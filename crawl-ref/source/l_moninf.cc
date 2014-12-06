@@ -278,7 +278,7 @@ LUAFN(moninf_get_desc)
 LUAFN(moninf_get_status)
 {
     MONINF(ls, 1, mi);
-    const char* which = NULL;
+    const char* which = nullptr;
     if (lua_gettop(ls) >= 2)
         which = luaL_checkstring(ls, 2);
 
@@ -339,7 +339,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_shock),
     MIREG(res_corr),
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 // XXX: unify with directn.cc/h
@@ -369,7 +369,7 @@ static const struct luaL_reg mon_lib[] =
 {
     { "get_monster_at", mi_get_monster_at },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_moninf(lua_State *ls)

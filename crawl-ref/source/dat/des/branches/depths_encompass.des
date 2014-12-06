@@ -494,7 +494,7 @@ TAGS: grunt_profane_temple no_monster_gen
 NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMONS: 4 = blue devil / simulacrum w:20 / freezing wraith
 KMONS: 5 = ice devil
-KMONS: 6 = blizzard demon / ice dragon
+KMONS: 6 = blizzard demon / shard shrike
 KMONS: 8 = ice statue
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
@@ -821,7 +821,7 @@ MONS:    fire dragon w:16 / ice dragon w:16 / swamp dragon w:5              / \
          hydra w:5 / anaconda w:5 / shock serpent w:5                       / \
          snapping turtle w:5 / harpy w:5 / hell beast
 MONS:    storm dragon w:20 / shadow dragon w:20 / iron dragon               / \
-         golden dragon / quicksilver dragon w:15                            / \
+         golden dragon / quicksilver dragon w:15 / caustic shrike           / \
          torpor snail / emperor scorpion w:5 / hellephant w:5               / \
          ghost moth w:3 / death drake w:2 / alligator snapping turtle w:5
 MONS:    great orb of eyes / eye of draining / ugly thing                   / \

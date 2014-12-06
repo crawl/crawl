@@ -85,7 +85,7 @@ void lua_push_floor_items(lua_State *ls, int link)
     }
 }
 
-static void _lua_push_inv_items(lua_State *ls = NULL)
+static void _lua_push_inv_items(lua_State *ls = nullptr)
 {
     if (!ls)
         ls = clua.state();
@@ -280,7 +280,7 @@ static int l_item_do_subtype(lua_State *ls)
         return 1;
     }
 
-    const char *s = NULL;
+    const char *s = nullptr;
     if (item->base_type == OBJ_ARMOUR)
         s = item_slot_name(get_armour_slot(*item));
     if (item->base_type == OBJ_BOOKS)
@@ -661,12 +661,8 @@ IDEF(spells)
     int index = 0;
     lua_newtable(ls);
 
-    for (size_t i = 0; i < SPELLBOOK_SIZE; ++i)
+    for (spell_type stype : spells_in_book(*item))
     {
-        const spell_type stype = which_spell_in_book(*item, i);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
         lua_pushstring(ls, spell_title(stype));
         lua_rawseti(ls, -2, ++index);
     }
@@ -1255,7 +1251,7 @@ static const struct luaL_reg item_lib[] =
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
     { "get_items_at",      l_item_get_items_at },
-    { NULL, NULL },
+    { nullptr, nullptr },
 };
 
 static int _delete_wrapped_item(lua_State *ls)

@@ -217,7 +217,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
     // Look for conditions like berserking that could prevent wielding
     // weapons.
-    if (!can_wield(NULL, true, false, slot == SLOT_BARE_HANDS))
+    if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
         return false;
 
     int item_slot = 0;          // default is 'a'
@@ -250,7 +250,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
-                            true, true, true, '-', -1, NULL, OPER_WIELD);
+                            true, true, true, '-', -1, nullptr, OPER_WIELD);
         }
         else
             item_slot = SLOT_BARE_HANDS;
@@ -374,7 +374,7 @@ bool item_is_worn(int inv_slot)
 //---------------------------------------------------------------
 bool armour_prompt(const string & mesg, int *index, operation_types oper)
 {
-    ASSERT(index != NULL);
+    ASSERT(index != nullptr);
 
     if (inv_count() < 1)
         canned_msg(MSG_NOTHING_CARRIED);
@@ -386,7 +386,7 @@ bool armour_prompt(const string & mesg, int *index, operation_types oper)
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
         int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector,
-                                      true, true, true, 0, -1, NULL,
+                                      true, true, true, 0, -1, nullptr,
                                       oper);
 
         if (!prompt_failed(slot))
@@ -1148,15 +1148,15 @@ static bool _swap_rings(int ring_slot)
     int melded = 0; // Both melded rings and unavailable slots.
     int available = 0;
     bool all_same = true;
-    item_def* first_ring = NULL;
+    item_def* first_ring = nullptr;
     for (auto eq : ring_types)
     {
         item_def* ring = you.slot_item(eq, true);
         if (!you_tran_can_wear(eq) || you.melded[eq])
             melded++;
-        else if (ring != NULL)
+        else if (ring != nullptr)
         {
-            if (first_ring == NULL)
+            if (first_ring == nullptr)
                 first_ring = ring;
             else if (all_same)
             {
@@ -1448,7 +1448,7 @@ bool puton_ring(int slot, bool allow_prompt)
     {
         item_slot = prompt_invent_item("Put on which piece of jewellery?",
                                         MT_INVLIST, OBJ_JEWELLERY, true, true,
-                                        true, 0, -1, NULL, OPER_PUTON);
+                                        true, 0, -1, nullptr, OPER_PUTON);
     }
 
     if (prompt_failed(item_slot))
@@ -1508,7 +1508,7 @@ bool remove_ring(int slot, bool announce)
             (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
                                              MT_INVLIST,
                                              OBJ_JEWELLERY, true, true, true,
-                                             0, -1, NULL, OPER_REMOVE,
+                                             0, -1, nullptr, OPER_REMOVE,
                                              false, false)
                         : slot;
 
@@ -1700,9 +1700,8 @@ void zap_wand(int slot)
     }
 
     const int mp_cost = wand_mp_cost();
-    if (!enough_mp(mp_cost, false)) {
+    if (!enough_mp(mp_cost, false))
         return;
-    }
 
     if (slot != -1)
         item_slot = slot;
@@ -1711,7 +1710,7 @@ void zap_wand(int slot)
         item_slot = prompt_invent_item("Zap which item?",
                                        MT_INVLIST,
                                        OBJ_WANDS,
-                                       true, true, true, 0, -1, NULL,
+                                       true, true, true, 0, -1, nullptr,
                                        OPER_ZAP);
     }
 
@@ -1813,7 +1812,7 @@ void zap_wand(int slot)
         }
         else if (wand.sub_type == WAND_HASTING
                  && stasis_blocks_effect(false, "%s prevents hasting.",
-                                         0, NULL, "You cannot haste."))
+                                         0, nullptr, "You cannot haste."))
         {
             return;
         }
@@ -2041,7 +2040,7 @@ void drink(int slot)
     {
         slot = prompt_invent_item("Drink which item?",
                                   MT_INVLIST, OBJ_POTIONS,
-                                  true, true, true, 0, -1, NULL,
+                                  true, true, true, 0, -1, nullptr,
                                   OPER_QUAFF);
         if (prompt_failed(slot))
         {
@@ -2061,6 +2060,7 @@ void drink(int slot)
         return;
     }
 
+    // TODO: merge the following checks into potion.cc's can_quaff functions
     const bool alreadyknown = item_type_known(potion);
 
     if (alreadyknown && you.hunger_state == HS_ENGORGED
@@ -2115,11 +2115,8 @@ void drink(int slot)
         return;
     }
 
-    if (!potion_effect(static_cast<potion_type>(potion.sub_type),
-                       40, &potion, alreadyknown))
-    {
+    if (!quaff_potion(potion))
         return;
-    }
 
     if (!alreadyknown && dangerous)
     {
@@ -2307,7 +2304,7 @@ static object_selector _enchant_selector(scroll_type scroll)
     die("Invalid scroll type %d for _enchant_selector", (int)scroll);
 }
 
-// Returns NULL if no weapon was chosen.
+// Returns nullptr if no weapon was chosen.
 static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                                        scroll_type scroll)
 {
@@ -2324,7 +2321,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
 
         // The scroll is used up if we didn't know what it was originally.
         if (item_slot == PROMPT_NOTHING)
-            return NULL;
+            return nullptr;
 
         if (item_slot == PROMPT_ABORT)
         {
@@ -2333,7 +2330,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, const string &pre_msg,
                 || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
-                return NULL;
+                return nullptr;
             }
             else
                 continue;
@@ -2418,7 +2415,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
             item_slot = prompt_invent_item(
                 "Identify which item? (\\ to view known items)",
                 MT_INVLIST, OSEL_UNIDENT, true, true, false, 0,
-                -1, NULL, OPER_ANY, true);
+                -1, nullptr, OPER_ANY, true);
         }
 
         if (item_slot == PROMPT_NOTHING)
@@ -2646,31 +2643,7 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
-    while (true)
-    {
-        // Spellbook
-        const int ltr = read_book(book);
-
-        if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
-        {
-            clear_messages();
-            return;
-        }
-
-        const spell_type spell = which_spell_in_book(book,
-                                                     letter_to_index(ltr));
-        if (spell == SPELL_NO_SPELL)
-        {
-            clear_messages();
-            return;
-        }
-
-        describe_spell(spell, &book);
-
-        // Player memorised spell which was being looked at.
-        if (you.turn_is_over)
-            return;
-    }
+    read_book(book);
 }
 
 static void _vulnerability_scroll()
@@ -2709,140 +2682,186 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_ENCHANT_WEAPON;
 }
 
-void read_scroll(int slot)
+/**
+ * Is the player currently able to use the 'r' command (to read books or
+ * scrolls). Being too berserk, confused, or having no reading material will
+ * prevent this.
+ *
+ * Prints corresponding messages. (Thanks, canned_msg().)
+ */
+bool player_can_read()
 {
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
+        return false;
     }
 
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
-        return;
-    }
-
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
-    {
-        mpr("You cannot read scrolls while unable to breathe!");
-        return;
-    }
-
-    if (you.duration[DUR_NO_SCROLLS])
-    {
-        mpr("You cannot read scrolls in your current state!");
-        return;
+        return false;
     }
 
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
-        return;
-    }
-
-    int item_slot = (slot != -1) ? slot
-                                 : prompt_invent_item("Read which item?",
-                                                       MT_INVLIST,
-                                                       OBJ_SCROLLS,
-                                                       true, true, true, 0, -1,
-                                                       NULL, OPER_READ);
-
-    if (prompt_failed(item_slot))
-        return;
-
-    item_def& scroll = you.inv[item_slot];
-
-    if ((scroll.base_type != OBJ_BOOKS || scroll.sub_type == BOOK_MANUAL)
-        && scroll.base_type != OBJ_SCROLLS)
-    {
-        mpr("You can't read that!");
-        crawl_state.zero_turns_taken();
-        return;
-    }
-
-    // Here we try to read a book {dlb}:
-    if (scroll.base_type == OBJ_BOOKS)
-    {
-        _handle_read_book(item_slot);
-        return;
+        return false;
     }
 
     if (silenced(you.pos()))
     {
         mpr("Magic scrolls do not work when you're silenced!");
-        crawl_state.zero_turns_taken();
-        return;
+        return false;
+    }
+
+    // water elementals
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot read scrolls while unable to breathe!");
+        return false;
+    }
+
+    // ru
+    if (you.duration[DUR_NO_SCROLLS])
+    {
+        mpr("You cannot read scrolls in your current state!");
+        return false;
     }
 
 #if TAG_MAJOR_VERSION == 34
     // Prevent hot lava orcs reading scrolls
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
     {
-        crawl_state.zero_turns_taken();
-        return mpr("You'd burn any scroll you tried to read!");
+        mpr("You'd burn any scroll you tried to read!");
+        return false;
     }
 #endif
 
-    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
-    const bool alreadyknown = item_type_known(scroll);
+    return true;
+}
 
-    if (alreadyknown)
+/**
+ * If the player has no items matching the given selector, give an appropriate
+ * response to print. Otherwise, if they do have such items, return the empty
+ * string.
+ */
+static string _no_items_reason(object_selector type)
+{
+    if (!any_items_of_type(type))
+        return no_selectables_message(type);
+    return "";
+}
+
+/**
+ * If the player is unable to (r)ead the item in the given slot, return the
+ * reason why. Otherwise (if they are able to read it), returns "", the empty
+ * string.
+ */
+string cannot_read_item_reason(const item_def &item)
+{
+    // can read books, except for manuals...
+    if (item.base_type == OBJ_BOOKS)
     {
-        switch (which_scroll)
-        {
+        if (item.sub_type == BOOK_MANUAL)
+            return "You can't read that!";
+        return "";
+    }
+
+    // and scrolls - but nothing else.
+    if (item.base_type != OBJ_SCROLLS)
+        return "You can't read that!";
+
+    // don't waste the player's time reading known scrolls in situations where
+    // they'd be useless
+
+    if (!item_type_known(item))
+        return "";
+
+    switch (item.sub_type)
+    {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            if (you.no_tele_print_reason(false, which_scroll == SCR_BLINKING))
-                return;
-            break;
-
-        case SCR_ENCHANT_ARMOUR:
-            if (!any_items_to_select(OSEL_ENCH_ARM, true))
-                return;
-            break;
-
-        case SCR_ENCHANT_WEAPON:
-            if (!any_items_to_select(OSEL_ENCHANTABLE_WEAPON, true))
-                return;
-            break;
-
-        case SCR_IDENTIFY:
-            if (!any_items_to_select(OSEL_UNIDENT, true))
-                return;
-            break;
-
-        case SCR_RECHARGING:
-            if (!any_items_to_select(OSEL_RECHARGE, true))
-                return;
-            break;
+            return you.no_tele_reason(false, item.sub_type == SCR_BLINKING);
 
         case SCR_AMNESIA:
             if (you.spell_no == 0)
-            {
-                canned_msg(MSG_NO_SPELLS);
-                return;
-            }
-            break;
+                return "You have no spells to forget!";
+            return "";
+
+        case SCR_CURSE_WEAPON:
+            if (!you.weapon())
+                return "This scroll only affects a wielded weapon!";
+
+            // assumption: wielded weapons always have their curse & brand known
+            if (you.weapon()->cursed())
+                return "Your weapon is already cursed!";
+
+            if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
+                return "Holy weapons cannot be cursed!";
+            return "";
+
+        case SCR_ENCHANT_ARMOUR:
+            return _no_items_reason(OSEL_ENCH_ARM);
+
+        case SCR_ENCHANT_WEAPON:
+            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON);
+
+        case SCR_IDENTIFY:
+            return _no_items_reason(OSEL_UNIDENT);
+
+        case SCR_RECHARGING:
+            return _no_items_reason(OSEL_RECHARGE);
 
         case SCR_REMOVE_CURSE:
-            if (!any_items_to_select(OSEL_CURSED_WORN, true))
-                return;
-            break;
+            return _no_items_reason(OSEL_CURSED_WORN);
 
         case SCR_CURSE_ARMOUR:
-            if (!any_items_to_select(OSEL_UNCURSED_WORN_ARMOUR, true))
-                return;
-            break;
+            return _no_items_reason(OSEL_UNCURSED_WORN_ARMOUR);
 
         case SCR_CURSE_JEWELLERY:
-            if (!any_items_to_select(OSEL_UNCURSED_WORN_JEWELLERY, true))
-                return;
-            break;
+            return _no_items_reason(OSEL_UNCURSED_WORN_JEWELLERY);
 
         default:
-            break;
-        }
+            return "";
+    }
+}
+
+/**
+ * Check to see if the player can read the item in the given slot, and if so,
+ * reads it. (Examining books, evoking the tome of destruction, & using
+ * scrolls.)
+ *
+ * @param slot      The slot of the item in the player's inventory. If -1, the
+ *                  player is prompted to choose a slot.
+ */
+void read(int slot)
+{
+    if (!player_can_read())
+        return;
+
+    int item_slot = (slot != -1) ? slot
+                                 : prompt_invent_item("Read which item?",
+                                                       MT_INVLIST,
+                                                       OBJ_SCROLLS,
+                                                       true, true, true, 0, -1,
+                                                       nullptr, OPER_READ);
+
+    if (prompt_failed(item_slot))
+        return;
+
+    const item_def& scroll = you.inv[item_slot];
+    const string failure_reason = cannot_read_item_reason(scroll);
+    if (!failure_reason.empty())
+    {
+        mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
+        return;
+    }
+
+    if (scroll.base_type == OBJ_BOOKS)
+    {
+        _handle_read_book(item_slot);
+        return;
     }
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
@@ -2850,24 +2869,43 @@ void read_scroll(int slot)
 
     zin_recite_interrupt();
 
-    // ... but some scrolls may still be cancelled afterwards.
-    bool cancel_scroll = false;
-
     if (you.stat_zero[STAT_INT] && !one_chance_in(5))
     {
-        // mpr("You stumble in your attempt to read the scroll. Nothing happens!");
-        // mpr("Your reading takes too long for the scroll to take effect.");
-        // mpr("Your low mental capacity makes reading really difficult. You give up!");
-        mpr("You almost manage to decipher the scroll, but fail in this attempt.");
+        mpr("You almost manage to decipher the scroll,"
+            " but fail in this attempt.");
         return;
     }
 
-    // Imperfect vision prevents players from reading actual content {dlb}:
-    if (does_vision_blur())
+    // if we have blurry vision, we need to start a delay before the actual
+    // scroll effect kicks in.
+    if (player_mutation_level(MUT_BLURRY_VISION)
+        && !in_good_standing(GOD_ASHENZARI, 2))
     {
-        mpr("The writing blurs in front of your eyes.");
-        return;
+        // takes 1, 2, 3 extra turns
+        const int turns = player_mutation_level(MUT_BLURRY_VISION);
+        start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
     }
+    else
+        read_scroll(item_slot);
+}
+
+
+/**
+ * Read the provided scroll.
+ *
+ * Does NOT check whether the player can currently read, whether the scroll is
+ * currently useless, etc. Likewise doesn't handle blurry vision, setting
+ * you.turn_is_over, and other externals. DOES destroy one scroll, unless the
+ * player chooses to cancel at the last moment.
+ *
+ * @param slot      The slot of the item in the player's inventory.
+ */
+void read_scroll(int item_slot)
+{
+    item_def& scroll = you.inv[item_slot];
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
+    const int prev_quantity = scroll.quantity;
+    const bool alreadyknown = item_type_known(scroll);
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
@@ -2882,9 +2920,9 @@ void read_scroll(int slot)
 
     const bool dangerous = player_in_a_dangerous_place();
 
+    // ... but some scrolls may still be cancelled afterwards.
+    bool cancel_scroll = false;
     bool bad_effect = false; // for Xom: result is bad (or at least dangerous)
-
-    int prev_quantity = you.inv[item_slot].quantity;
 
     switch (which_scroll)
     {
@@ -3355,7 +3393,7 @@ void tile_item_use(int idx)
 
         case OBJ_SCROLLS:
             if (check_warning_inscriptions(item, OPER_READ))
-                read_scroll(idx);
+                read(idx);
             return;
 
         case OBJ_JEWELLERY:

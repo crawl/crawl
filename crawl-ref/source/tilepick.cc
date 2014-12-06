@@ -345,38 +345,38 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
     // branch exit stairs
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
-    case DNGN_RETURN_FROM_FOREST:
-    case DNGN_RETURN_FROM_BLADE:
+    case DNGN_EXIT_DWARF:
+    case DNGN_EXIT_FOREST:
+    case DNGN_EXIT_BLADE:
         return TILE_DNGN_RETURN;
 #endif
-    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_EXIT_TEMPLE:
         return TILE_DNGN_EXIT_TEMPLE;
-    case DNGN_RETURN_FROM_ORC:
+    case DNGN_EXIT_ORC:
         return TILE_DNGN_EXIT_ORC;
-    case DNGN_RETURN_FROM_ELF:
+    case DNGN_EXIT_ELF:
         return TILE_DNGN_EXIT_ELF;
-    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_EXIT_LAIR:
         return TILE_DNGN_EXIT_LAIR;
-    case DNGN_RETURN_FROM_SNAKE:
+    case DNGN_EXIT_SNAKE:
         return TILE_DNGN_EXIT_SNAKE;
-    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_EXIT_SWAMP:
         return TILE_DNGN_EXIT_SWAMP;
-    case DNGN_RETURN_FROM_SPIDER:
+    case DNGN_EXIT_SPIDER:
         return TILE_DNGN_EXIT_SPIDER;
-    case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_EXIT_SHOALS:
         return TILE_DNGN_EXIT_SHOALS;
-    case DNGN_RETURN_FROM_SLIME:
+    case DNGN_EXIT_SLIME:
         return TILE_DNGN_EXIT_SLIME;
-    case DNGN_RETURN_FROM_DEPTHS:
+    case DNGN_EXIT_DEPTHS:
         return TILE_DNGN_RETURN_DEPTHS;
-    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_EXIT_VAULTS:
         return TILE_DNGN_EXIT_VAULTS;
-    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_EXIT_CRYPT:
         return TILE_DNGN_EXIT_CRYPT;
-    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_EXIT_TOMB:
         return TILE_DNGN_EXIT_TOMB;
-    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_EXIT_ZOT:
         return TILE_DNGN_RETURN_ZOT;
 
     case DNGN_EXIT_ZIGGURAT:
@@ -1998,6 +1998,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_BATTLESPHERE;
     case MONS_FULMINANT_PRISM:
         return _mon_random(TILEP_MONS_FULMINANT_PRISM);
+    case MONS_SINGULARITY:
+        return _mon_cycle(TILEP_MONS_SINGULARITY, tile_num_prop);
 
     // other symbols
     case MONS_SHADOW:
@@ -4775,6 +4777,8 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
     case SPELL_GOLUBRIAS_PASSAGE:        return TILEG_PASSAGE_OF_GOLUBRIA;
     case SPELL_SHROUD_OF_GOLUBRIA:       return TILEG_SHROUD_OF_GOLUBRIA;
+    case SPELL_SINGULARITY:              return TILEG_SINGULARITY;
+    case SPELL_GRAVITAS:         return TILEG_GRAVITAS;
 
     // Summoning
     case SPELL_SUMMON_BUTTERFLIES:       return TILEG_SUMMON_BUTTERFLIES;
@@ -4812,6 +4816,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DISPEL_UNDEAD:            return TILEG_DISPEL_UNDEAD;
     case SPELL_HAUNT:                    return TILEG_HAUNT;
     case SPELL_BORGNJORS_REVIVIFICATION: return TILEG_BORGNJORS_REVIVIFICATION;
+    case SPELL_BONE_ARMOUR:              return TILEG_CIGOTUVIS_EMBRACE;
     case SPELL_AGONY:                    return TILEG_AGONY;
     case SPELL_TWISTED_RESURRECTION:     return TILEG_TWISTED_RESURRECTION;
     case SPELL_EXCRUCIATING_WOUNDS:      return TILEG_EXCRUCIATING_WOUNDS;

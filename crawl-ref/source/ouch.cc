@@ -296,7 +296,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     case BEAM_HOLY:
     {
         // Cleansing flame.
-        const int rhe = you.res_holy_energy(NULL);
+        const int rhe = you.res_holy_energy(nullptr);
         if (rhe > 0)
             hurted = 0;
         else if (rhe == 0)
@@ -692,11 +692,11 @@ static void _powered_by_pain(int dam)
         }
         case 2:
             mpr("You focus on the pain.");
-            potion_effect(POT_MIGHT, level * 20);
+            potionlike_effect(POT_MIGHT, level * 20);
             break;
         case 3:
             mpr("You focus on the pain.");
-            potion_effect(POT_AGILITY, level * 20);
+            potionlike_effect(POT_AGILITY, level * 20);
             break;
         }
     }
@@ -833,15 +833,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)
     {
-        dam = do_shave_damage(dam);
-
-        if (dam <= 0)
-        {
-            // Rotting and costs may lower hp directly.
-            if (you.hp > 0)
-                return;
-            dam = 0;
-        }
+        dam = max(0, do_shave_damage(dam));
     }
 
     if (dam != INSTANT_DEATH)
@@ -907,6 +899,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
+        you.maybe_degrade_bone_armour();
+
         if (you.spirit_shield() && death_type != KILLED_BY_POISON
             && !(aux && strstr(aux, "flay_damage")))
         {
@@ -991,7 +985,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         && crawl_state.other_gods_acting().empty())
     {
         you.escaped_death_cause = death_type;
-        you.escaped_death_aux   = aux == NULL ? "" : aux;
+        you.escaped_death_aux   = aux == nullptr ? "" : aux;
 
         // Xom should only kill his worshippers if they're under penance
         // or Xom is bored.
@@ -1013,12 +1007,12 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         you.reset_escaped_death();
 
         // Ensure some minimal information about Xom's involvement.
-        if (aux == NULL || !*aux)
+        if (aux == nullptr || !*aux)
         {
             if (death_type != KILLED_BY_XOM)
                 aux = "Xom";
         }
-        else if (strstr(aux, "Xom") == NULL)
+        else if (strstr(aux, "Xom") == nullptr)
             death_type = KILLED_BY_XOM;
     }
     // Xom may still try to save your life.
@@ -1042,7 +1036,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 #ifdef WIZARD
     if (!non_death)
     {
-        if (crawl_state.test || you.wizard)
+        if (crawl_state.test || you.wizard || (you.explore && !you.lives))
         {
             const string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
@@ -1105,7 +1099,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     activate_notes(false);
 
 #ifndef SCORE_WIZARD_CHARACTERS
-    if (!you.wizard)
+    if (!you.wizard && !you.explore)
 #endif
     {
         // Add this highscore to the score file.

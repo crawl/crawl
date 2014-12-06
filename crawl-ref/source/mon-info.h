@@ -134,6 +134,7 @@ enum monster_info_flags
     MB_CONDENSATION_SHIELD,
     MB_RESISTANCE,
     MB_HEXED,
+    MB_BONE_ARMOUR,
     NUM_MB_FLAGS
 };
 
@@ -145,7 +146,8 @@ struct monster_info_base
     monster_type type;
     monster_type base_type;
     monster_type draco_type;
-    union {
+    union
+    {
         unsigned number; ///< General purpose number variable
         int num_heads;   ///< # of hydra heads
         int slime_size;  ///< # of slimes in this one

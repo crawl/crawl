@@ -44,6 +44,7 @@
 #include "transform.h"
 #include "viewchar.h"
 #include "view.h"
+#include "xom.h"
 
 
 #ifdef USE_TILE_LOCAL
@@ -276,7 +277,9 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 #define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf
 #endif
 
-static string _god_powers(bool simple = false);
+static string _god_powers();
+static string _god_asterisks();
+static int _god_status_colour(int default_colour);
 
 // Colour for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOUR Options.status_caption_colour
@@ -492,7 +495,8 @@ static bool _boosted_ac()
     return you.duration[DUR_ICY_ARMOUR]
            || player_stoneskin()
            || player_icemail_armour_class()
-           || you.duration[DUR_QAZLAL_AC];
+           || you.duration[DUR_QAZLAL_AC]
+           || you.attribute[ATTR_BONE_ARMOUR] > 0;
 }
 
 static bool _boosted_ev()
@@ -506,7 +510,8 @@ static bool _boosted_sh()
     return you.duration[DUR_CONDENSATION_SHIELD]
            || you.duration[DUR_MAGIC_SHIELD]
            || you.duration[DUR_DIVINE_SHIELD]
-           || qazlal_sh_boost() > 0;
+           || qazlal_sh_boost() > 0
+           || you.attribute[ATTR_BONE_ARMOUR] > 0;
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
@@ -1172,6 +1177,16 @@ static void _redraw_title(const string &your_name, const string &job_name)
         CGOTOXY(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
         CPRINTF(" *WIZARD*");
     }
+#ifdef USE_TILE_LOCAL
+    else if (you.explore && !tiles.is_using_small_layout())
+#else
+    else if (you.explore)
+#endif
+    {
+        textcolour(LIGHTBLUE);
+        CGOTOXY(1 + crawl_view.hudsz.x-10, 1, GOTO_STAT);
+        CPRINTF(" *EXPLORE*");
+    }
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
 #endif
@@ -1186,12 +1201,11 @@ static void _redraw_title(const string &your_name, const string &job_name)
     {
         string god = " of ";
         god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
-                                         : god_name(you.religion);
+                                      : god_name(you.religion);
         NOWRAP_EOL_CPRINTF("%s", god.c_str());
 
-        string piety = _god_powers(true);
-        if (player_under_penance())
-            textcolour(RED);
+        string piety = _god_asterisks();
+        textcolour(_god_status_colour(YELLOW));
         if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
             <= WIDTH)
         {
@@ -1879,7 +1893,8 @@ static int _stealth_breakpoint(int stealth)
         return 1 + stealth / STEALTH_PIP;
 }
 
-static string _stealth_bar(int sw) {
+static string _stealth_bar(int sw)
+{
     string bar;
     //no colouring
     bar += _determine_colour_string(0, 5);
@@ -1941,8 +1956,6 @@ static void _print_overview_screen_equip(column_composer& cols,
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
 
         char slot[15] = "";
-        // uncomment (and change 42 to 33) to bring back slot names
-        // snprintf(slot, sizeof slot, "%-7s: ", equip_slot_to_name(eqslot);
 
         if (you.equip[ e_order[i] ] != -1)
         {
@@ -2081,45 +2094,61 @@ static string _wiz_god_powers()
 }
 #endif
 
-static string _god_powers(bool simple)
+static string _god_powers()
 {
-    string godpowers = simple ? "" : god_name(you.religion) ;
+    if (you_worship(GOD_NO_GOD))
+        return "";
+
+    const string name = god_name(you.religion);
+    if (you_worship(GOD_GOZAG))
+        return colour_string(name, _god_status_colour(god_colour(you.religion)));
+
+    return colour_string(chop_string(name, 20, false)
+              + " [" + _god_asterisks() + "]",
+              _god_status_colour(god_colour(you.religion)));
+}
+
+static string _god_asterisks()
+{
+    if (you_worship(GOD_NO_GOD))
+        return "";
+
+    if (player_under_penance())
+        return "*";
+
+    if (you_worship(GOD_GOZAG))
+        return "";
+
     if (you_worship(GOD_XOM))
     {
-        if (!you.gift_timeout)
-            godpowers += simple ? "- BORED" : " - BORED";
-        else if (you.gift_timeout == 1)
-            godpowers += simple ? "- getting BORED" : " - getting BORED";
-        return simple ? godpowers
-                      : colour_string(godpowers, god_colour(you.religion));
-    }
-    else if (you_worship(GOD_GOZAG))
-    {
-        return simple ? godpowers
-                      : colour_string(godpowers, god_colour(you.religion));
-    }
-    else if (!you_worship(GOD_NO_GOD))
-    {
-        if (player_under_penance())
-            return simple ? "*" : colour_string("*" + godpowers, RED);
+        const int p_rank = xom_favour_rank() - 1;
+        if (p_rank >= 0)
+            return string(p_rank, '.') + "*" + string(5 - p_rank, '.');
         else
-        {
-            // piety rankings
-            int prank = piety_rank() - 1;
-            if (prank < 0 || you_worship(GOD_XOM))
-                prank = 0;
-
-            // Careful about overflow. We erase some of the god's name
-            // if necessary.
-            string asterisks = string(prank, '*') + string(6 - prank, '.');
-            if (simple)
-                return asterisks;
-            godpowers = chop_string(godpowers, 20, false)
-                      + " [" + asterisks + "]";
-            return colour_string(godpowers, god_colour(you.religion));
-        }
+            return "......"; // very special plaything
     }
-    return "";
+    else
+    {
+        const int prank = piety_rank() - 1;
+        return string(prank, '*') + string(6 - prank, '.');
+    }
+}
+
+/**
+ * What colour should the god status display be?
+ *
+ * @param default_colour   The default colour, if not under penance or boredom.
+ * @return                 A colour for the god status display.
+ */
+static int _god_status_colour(int default_colour)
+{
+    if (player_under_penance())
+        return RED;
+
+    if (you_worship(GOD_XOM) && you.gift_timeout <= 1)
+        return you.gift_timeout ? RED : LIGHTRED;
+
+    return default_colour;
 }
 
 static bool _player_statrotted()
@@ -2291,7 +2320,7 @@ static vector<formatted_string> _get_overview_stats()
 
     entry.textcolour(HUD_VALUE_COLOUR);
 
-    string godpowers = _god_powers(false);
+    string godpowers = _god_powers();
 #ifdef WIZARD
     if (you.wizard)
         godpowers = _wiz_god_powers();

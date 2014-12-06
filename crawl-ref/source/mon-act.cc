@@ -53,6 +53,7 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -232,35 +233,12 @@ static bool _swap_monsters(monster* mover, monster* moved)
         return false;
     }
 
-    if (!mover->can_pass_through(moved->pos())
-        || !moved->can_pass_through(mover->pos()))
-    {
+    // Okay, we can probably do the swap.
+    if (!mover->swap_with(moved))
         return false;
-    }
-
-    if (!monster_habitable_grid(mover, grd(moved->pos()))
-            && !mover->can_cling_to(moved->pos())
-        || !monster_habitable_grid(moved, grd(mover->pos()))
-            && !moved->can_cling_to(mover->pos()))
-    {
-        return false;
-    }
-
-    // Okay, we can do the swap.
-    const coord_def mover_pos = mover->pos();
-    const coord_def moved_pos = moved->pos();
-
-    mover->set_position(moved_pos);
-    moved->set_position(mover_pos);
-
-    mover->clear_far_constrictions();
-    moved->clear_far_constrictions();
 
     mover->check_clinging(true);
     moved->check_clinging(true);
-
-    mgrd(mover->pos()) = mover->mindex();
-    mgrd(moved->pos()) = moved->mindex();
 
     if (you.can_see(mover) && you.can_see(moved))
     {
@@ -323,7 +301,7 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
             break;
 
         const monster* ally = monster_at(pos);
-        if (ally == NULL)
+        if (ally == nullptr)
             continue;
 
         if (mons_aligned(mon, ally))
@@ -358,7 +336,7 @@ static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
             continue;
 
         const monster* ally = monster_at(pos);
-        if (ally == NULL)
+        if (ally == nullptr)
             continue;
 
         if (ally->is_stationary() || ally->reach_range() > REACH_NONE)
@@ -405,12 +383,12 @@ static bool _mon_on_interesting_grid(monster* mon)
     // stairway from and to the Orcish Mines.
     case DNGN_ALTAR_BEOGH:
     case DNGN_ENTER_ORC:
-    case DNGN_RETURN_FROM_ORC:
+    case DNGN_EXIT_ORC:
         return mons_is_native_in_branch(mon, BRANCH_ORC);
 
     // Same for elves and the Elven Halls.
     case DNGN_ENTER_ELF:
-    case DNGN_RETURN_FROM_ELF:
+    case DNGN_EXIT_ELF:
         return mons_is_native_in_branch(mon, BRANCH_ELF);
 
     // Spiders...
@@ -1317,7 +1295,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // was the player visible when we started?
     bool was_visible = you.can_see(mons);
 
-    spell_type mzap = spell_in_rod(rod.sub_type);
+    spell_type mzap = spell_in_rod(static_cast<rod_type>(rod.sub_type));
     int rate        = spell_difficulty(mzap) * ROD_CHARGE_MULT;
 
     if (rod.plus < rate)
@@ -1611,8 +1589,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
     if (mons_is_fleeing(mons) || mons->pacified())
         return false;
 
-    item_def *launcher = NULL;
-    const item_def *weapon = NULL;
+    item_def *launcher = nullptr;
+    const item_def *weapon = nullptr;
     const int mon_item = mons_usable_missile(mons, &launcher);
 
     if (mon_item == NON_ITEM || !mitm[mon_item].defined())
@@ -1676,7 +1654,7 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
             {
                 monster* new_target = monster_at(*ri);
 
-                if (new_target == NULL
+                if (new_target == nullptr
                     || mons_is_projectile(new_target->type)
                     || mons_is_firewood(new_target))
                 {
@@ -1806,7 +1784,7 @@ static void _pre_monster_move(monster* mons)
     }
 
     int sumtype = 0;
-    if (mons->summoner && (mons->is_summoned(NULL, &sumtype)
+    if (mons->summoner && (mons->is_summoned(nullptr, &sumtype)
                            || sumtype == MON_SUMM_CLONE))
     {
         const actor * const summoner = actor_by_mid(mons->summoner);
@@ -2119,6 +2097,24 @@ void handle_monster_move(monster* mons)
     }
 #endif
 
+    if (mons->type == MONS_SINGULARITY)
+    {
+        const actor * const summoner = actor_by_mid(mons->summoner);
+        if (!summoner || !summoner->alive())
+        {
+            mons->suicide();
+            return;
+        }
+        if (--mons->countdown <= 0)
+            mons->suicide();
+        else
+        {
+            singularity_pull(mons);
+            mons->speed_increment -= 10;
+        }
+        return;
+    }
+
     if (mons->is_projectile())
     {
         if (iood_act(*mons))
@@ -2211,7 +2207,7 @@ void handle_monster_move(monster* mons)
             simple_monster_message(mons,
                     " is distracted by the nearby gold.");
             mons->add_ench(
-                mon_enchant(ENCH_GOLD_LUST, 1, NULL,
+                mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
                             random_range(1, 5) * BASELINE_DELAY));
             mons->foe = MHITNOT;
             mons->target = mons->pos();
@@ -2477,7 +2473,7 @@ void handle_monster_move(monster* mons)
                             for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
                             {
                                 monster* candidate = monster_at(*ai);
-                                if (candidate == NULL
+                                if (candidate == nullptr
                                     || mons_is_projectile(candidate->type)
                                     || mons_is_firewood(candidate))
                                 {
@@ -2522,12 +2518,12 @@ void handle_monster_move(monster* mons)
         if (targ && mons_tentacle_adjacent(mons, targ))
         {
             const bool basis = targ->props.exists("outwards");
-            monster* outward =  basis ? monster_by_mid(targ->props["outwards"].get_int()) : NULL;
+            monster* outward =  basis ? monster_by_mid(targ->props["outwards"].get_int()) : nullptr;
             if (outward)
                 outward->props["inwards"].get_int() = mons->mid;
 
             monster_die(targ, KILL_MISC, NON_MONSTER, true);
-            targ = NULL;
+            targ = nullptr;
         }
 
         if (targ
@@ -3015,13 +3011,13 @@ static bool _jelly_divide(monster* parent)
     if (parent->hit_points < reqd)
         return false;
 
-    monster* child = NULL;
+    monster* child = nullptr;
     coord_def child_spot;
     int num_spots = 0;
 
     // First, find a suitable spot for the child {dlb}:
     for (adjacent_iterator ai(parent->pos()); ai; ++ai)
-        if (actor_at(*ai) == NULL && parent->can_pass_through(*ai)
+        if (actor_at(*ai) == nullptr && parent->can_pass_through(*ai)
             && one_chance_in(++num_spots))
         {
             child_spot = *ai;
@@ -3050,10 +3046,8 @@ static bool _jelly_divide(monster* parent)
     *child = *parent;
     child->max_hit_points  = child->hit_points;
     child->speed_increment = 70 + random2(5);
-    child->moveto(child_spot);
     child->set_new_monster_id();
-
-    mgrd(child->pos()) = child->mindex();
+    child->move_to_pos(child_spot);
 
     if (!simple_monster_message(parent, " splits in two!")
         && (player_can_hear(parent->pos()) || player_can_hear(child->pos())))
@@ -3159,7 +3153,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         else if (is_perishable_stack(*si))
             for (int i = 0; i < quant; ++i)
                 remove_oldest_perishable_item(*si);
-        dec_mitm_item_quantity(si.link(), quant);
+        dec_mitm_item_quantity(si.index(), quant);
     }
 
     if (eaten > 0)
@@ -3168,7 +3162,10 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         hps_changed = min(hps_changed, 50);
 
         if (death_ooze_ate_good)
-            mons->hurt(NULL, hps_changed, BEAM_NONE, false);
+        {
+            mons->hurt(nullptr, hps_changed, BEAM_NONE, KILLED_BY_SOMETHING,
+                       "", "", false);
+        }
         else
         {
             // This is done manually instead of using heal_monster(),
@@ -3823,7 +3820,7 @@ static void _ballisto_on_move(monster* mons, const coord_def& position)
     // try to make a ballistomycete.
     const beh_type attitude = attitude_creation_behavior(mons->attitude);
     monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE, attitude,
-                                              NULL, 0, 0, position, MHITNOT,
+                                              nullptr, 0, 0, position, MHITNOT,
                                               MG_FORCE_PLACE));
 
     if (!plant)
@@ -3878,50 +3875,31 @@ bool monster_swaps_places(monster* mon, const coord_def& delta, bool takes_time)
         return false;
     }
 
-    // Check that both monsters will be happy at their proposed new locations.
-    const coord_def c = mon->pos();
-    const coord_def n = mon->pos() + delta;
-
-    if (!monster_habitable_grid(mon, grd(n)) && !mon->can_cling_to(n)
-        || !monster_habitable_grid(m2, grd(c)) && !m2->can_cling_to(c))
-    {
+    if (!mon->swap_with(m2))
         return false;
-    }
 
-    // Okay, do the swap!
     if (takes_time)
     {
 #ifdef EUCLIDEAN
         _swim_or_move_energy(mon, delta.abs() == 2);
+        _swim_or_move_energy(m2, delta.abs() == 2);
 #else
         _swim_or_move_energy(mon);
+        _swim_or_move_energy(m2);
 #endif
     }
 
-    mon->set_position(n);
-    mgrd(n) = mon->mindex();
-    m2->set_position(c);
-
-    mon->clear_far_constrictions();
-    m2->clear_far_constrictions();
-
-    const int m2i = m2->mindex();
-    ASSERT_RANGE(m2i, 0, MAX_MONSTERS);
-    mgrd(c) = m2i;
-    if (takes_time)
-        _swim_or_move_energy(m2);
-
-    mon->check_redraw(c, false);
+    mon->check_redraw(m2->pos(), false);
     if (mon->is_wall_clinging())
         mon->check_clinging(true);
     else
-        mon->apply_location_effects(c);
+        mon->apply_location_effects(m2->pos());
 
-    m2->check_redraw(n, false);
+    m2->check_redraw(mon->pos(), false);
     if (m2->is_wall_clinging())
         m2->check_clinging(true);
     else
-        m2->apply_location_effects(n);
+        m2->apply_location_effects(mon->pos());
 
     // The seen context no longer applies if the monster is moving normally.
     mon->seen_context = SC_NONE;
@@ -4042,21 +4020,17 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         // er, what?  Seems impossible.
         mons->seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
     }
-    mgrd(mons->pos()) = NON_MONSTER;
 
     coord_def old_pos = mons->pos();
 
-    mons->set_position(f);
-
-    mgrd(mons->pos()) = mons->mindex();
+    mons->move_to_pos(f, false);
 
     mons->check_clinging(true);
     _ballisto_on_move(mons, old_pos);
 
     // Let go of all constrictees; only stop *being* constricted if we are now
-    // too far away.
+    // too far away (done in move_to_pos above).
     mons->stop_constricting_all(true);
-    mons->clear_far_constrictions();
 
     mons->check_redraw(mons->pos() - delta);
     mons->apply_location_effects(mons->pos() - delta);

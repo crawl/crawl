@@ -75,7 +75,7 @@ MenuEntry* Popup::next_entry()
     if (m_curr >= m_entries.size())
     {
         m_curr = 0;
-        return NULL;
+        return nullptr;
     }
     MenuEntry *me = m_entries[m_curr];
     m_curr ++;
@@ -110,7 +110,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
     if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
     {
         formatted_string::parse_string(me->get_text(needs_cursor),
-                                       true, NULL, col).display();
+                                       true, nullptr, col).display();
     }
     else
     {
@@ -162,9 +162,9 @@ void MenuDisplayTile::set_num_columns(int columns)
 #endif
 
 Menu::Menu(int _flags, const string& tagname, bool text_only)
-  : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),
-    action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(NULL),
-    title2(NULL), flags(_flags), tag(tagname), first_entry(0), y_offset(0),
+  : f_selitem(nullptr), f_drawitem(nullptr), f_keyfilter(nullptr),
+    action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(nullptr),
+    title2(nullptr), flags(_flags), tag(tagname), first_entry(0), y_offset(0),
     pagesize(0), max_pagesize(0), more("-more-", true), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
     alive(false), last_selected(-1)
@@ -1810,13 +1810,13 @@ void column_composer::compose_formatted_column(
 
 formatted_scroller::formatted_scroller() : Menu()
 {
-    set_highlighter(NULL);
+    set_highlighter(nullptr);
 }
 
 formatted_scroller::formatted_scroller(int _flags, const string& s) :
     Menu(_flags)
 {
-    set_highlighter(NULL);
+    set_highlighter(nullptr);
     add_text(s);
 }
 
@@ -1854,7 +1854,7 @@ void formatted_scroller::add_item_string(const string& s, int hotkey)
 
 void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
 {
-    if (me->data == NULL)
+    if (me->data == nullptr)
         Menu::draw_index_item(index, me);
     else
         static_cast<formatted_string*>(me->data)->display();
@@ -1863,7 +1863,7 @@ void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
 #ifdef USE_TILE_WEB
 void formatted_scroller::webtiles_write_item(int index, const MenuEntry* me) const
 {
-    if (me->data == NULL)
+    if (me->data == nullptr)
         Menu::webtiles_write_item(index, me);
     else
     {
@@ -2162,7 +2162,7 @@ static bool _AABB_intersection(const coord_def& item_start,
     return true;
 }
 
-PrecisionMenu::PrecisionMenu() : m_active_object(NULL),
+PrecisionMenu::PrecisionMenu() : m_active_object(nullptr),
     m_select_type(PRECISION_SINGLESELECT)
 {
 }
@@ -2200,7 +2200,7 @@ void PrecisionMenu::clear()
  */
 bool PrecisionMenu::process_key(int key)
 {
-    if (m_active_object == NULL)
+    if (m_active_object == nullptr)
     {
         if (m_attached_objects.empty())
         {
@@ -2278,9 +2278,9 @@ bool PrecisionMenu::process_key(int key)
     {
         MenuObject* find_object = _find_object_by_direction(m_active_object,
                                                             focus_direction);
-        if (find_object != NULL)
+        if (find_object != nullptr)
         {
-            m_active_object->set_active_item((MenuItem*)NULL);
+            m_active_object->set_active_item((MenuItem*)nullptr);
             m_active_object = find_object;
             if (focus_direction == PrecisionMenu::UP)
                 m_active_object->activate_last_item();
@@ -2292,7 +2292,7 @@ bool PrecisionMenu::process_key(int key)
     for (MenuObject *obj : m_attached_objects)
     {
         MenuItem* tmp = obj->select_item_by_hotkey(key);
-        if (tmp != NULL)
+        if (tmp != nullptr)
         {
             // was it a toggle?
             if (!tmp->selected())
@@ -2354,7 +2354,7 @@ void PrecisionMenu::clear_selections()
 /**
  * Finds the closest rectangle to given entry start on a cardinal
  * direction from it.
- * If no entries are found, NULL is returned.
+ * If no entries are found, nullptr is returned.
  *
  * TODO: This is exact duplicate of MenuObject::_find_item_by_direction();
  * maybe somehow generalize it and detach it from class?
@@ -2362,8 +2362,8 @@ void PrecisionMenu::clear_selections()
 MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
                                                    Direction dir)
 {
-    if (start == NULL)
-        return NULL;
+    if (start == nullptr)
+        return nullptr;
 
     coord_def aabb_start(0,0);
     coord_def aabb_end(0,0);
@@ -2407,7 +2407,7 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
 
     // loop through the entries
     // save the currently closest to the index in a variable
-    MenuObject* closest = NULL;
+    MenuObject* closest = nullptr;
     for (MenuObject *obj : m_attached_objects)
     {
         if (!obj->can_be_focused())
@@ -2424,7 +2424,7 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
 
         // intersects
         // check if it's closer than current
-        if (closest == NULL)
+        if (closest == nullptr)
             closest = obj;
 
         switch (dir)
@@ -2464,7 +2464,7 @@ vector<MenuItem*> PrecisionMenu::get_selected_items()
 
 void PrecisionMenu::attach_object(MenuObject* item)
 {
-    ASSERT(item != NULL);
+    ASSERT(item != nullptr);
     m_attached_objects.push_back(item);
 }
 
@@ -2483,9 +2483,9 @@ MenuObject* PrecisionMenu::get_object_by_name(const string &search)
 
 MenuItem* PrecisionMenu::get_active_item()
 {
-    if (m_active_object != NULL)
+    if (m_active_object != nullptr)
         return m_active_object->get_active_item();
-    return NULL;
+    return nullptr;
 }
 
 void PrecisionMenu::set_active_object(MenuObject* object)
@@ -2515,8 +2515,8 @@ void PrecisionMenu::draw_menu()
 
 MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
                       m_allow_highlight(true), m_dirty(false), m_visible(false),
-                      m_link_left(NULL), m_link_right(NULL), m_link_up(NULL),
-                      m_link_down(NULL), m_item_id(-1)
+                      m_link_left(nullptr), m_link_right(nullptr),
+                      m_link_up(nullptr), m_link_down(nullptr), m_item_id(-1)
 {
 #ifdef USE_TILE_LOCAL
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
@@ -2875,7 +2875,7 @@ void FormattedTextItem::render()
         // FIXME: m_fg_colour doesn't work here while it works in console.
         textcolour(m_fg_colour);
         m_font_buf.add(formatted_string::parse_string(m_render_text, true,
-                                                      NULL, m_fg_colour),
+                                                      nullptr, m_fg_colour),
                        m_min_coord.x, m_min_coord.y + get_vertical_offset());
         m_dirty = false;
     }
@@ -3202,7 +3202,7 @@ bool MenuObject::is_visible() const
     return m_visible;
 }
 
-MenuFreeform::MenuFreeform(): m_active_item(NULL), m_default_item(NULL)
+MenuFreeform::MenuFreeform(): m_active_item(nullptr), m_default_item(nullptr)
 {
 }
 
@@ -3226,14 +3226,14 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
     if (!m_allow_focus || !m_visible)
         return INPUT_NO_ACTION;
 
-    if (m_active_item == NULL)
+    if (m_active_item == nullptr)
     {
         if (m_entries.empty())
         {
             // nothing to process
             return MenuObject::INPUT_NO_ACTION;
         }
-        else if (m_default_item == NULL)
+        else if (m_default_item == nullptr)
         {
             // pick the first item possible
             for (auto mentry : m_entries)
@@ -3247,7 +3247,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
     }
 
-    if (m_active_item == NULL && m_default_item != NULL)
+    if (m_active_item == nullptr && m_default_item != nullptr)
     {
         switch (key)
         {
@@ -3261,11 +3261,11 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         }
     }
 
-    MenuItem* find_entry = NULL;
+    MenuItem* find_entry = nullptr;
     switch (key)
     {
     case CK_ENTER:
-        if (m_active_item == NULL)
+        if (m_active_item == nullptr)
             return MenuObject::INPUT_NO_ACTION;
 
         select_item(m_active_item);
@@ -3276,7 +3276,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         break;
     case CK_UP:
         find_entry = _find_item_by_direction(m_active_item, UP);
-        if (find_entry != NULL)
+        if (find_entry != nullptr)
         {
             set_active_item(find_entry);
             return MenuObject::INPUT_ACTIVE_CHANGED;
@@ -3286,7 +3286,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         break;
     case CK_DOWN:
         find_entry = _find_item_by_direction(m_active_item, DOWN);
-        if (find_entry != NULL)
+        if (find_entry != nullptr)
         {
             set_active_item(find_entry);
             return MenuObject::INPUT_ACTIVE_CHANGED;
@@ -3296,7 +3296,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         break;
     case CK_LEFT:
         find_entry = _find_item_by_direction(m_active_item, LEFT);
-        if (find_entry != NULL)
+        if (find_entry != nullptr)
         {
             set_active_item(find_entry);
             return MenuObject::INPUT_ACTIVE_CHANGED;
@@ -3306,7 +3306,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         break;
     case CK_RIGHT:
         find_entry = _find_item_by_direction(m_active_item, RIGHT);
-        if (find_entry != NULL)
+        if (find_entry != nullptr)
         {
             set_active_item(find_entry);
             return MenuObject::INPUT_ACTIVE_CHANGED;
@@ -3316,7 +3316,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         break;
     default:
         find_entry = select_item_by_hotkey(key);
-        if (find_entry != NULL)
+        if (find_entry != nullptr)
         {
             if (find_entry->selected())
                 return MenuObject::INPUT_SELECTED;
@@ -3336,7 +3336,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
 
     if (!_is_mouse_in_bounds(coord_def(me.px, me.py)))
     {
-        if (m_active_item != NULL)
+        if (m_active_item != nullptr)
         {
             _set_active_item_by_index(-1);
             return INPUT_FOCUS_LOST;
@@ -3351,9 +3351,9 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         return MenuObject::INPUT_SELECTED; // The object handled the event
     else if (me.event == MouseEvent::MOVE)
     {
-        if (find_item == NULL)
+        if (find_item == nullptr)
         {
-            if (m_active_item != NULL)
+            if (m_active_item != nullptr)
             {
                 _set_active_item_by_index(-1);
                 return INPUT_NO_ACTION;
@@ -3371,7 +3371,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
     }
     if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
-        if (find_item != NULL)
+        if (find_item != nullptr)
         {
             select_item(find_item);
             if (find_item->selected())
@@ -3445,7 +3445,7 @@ void MenuFreeform::_set_active_item_by_index(int index)
         }
     }
     // Clear active selection
-    m_active_item = NULL;
+    m_active_item = nullptr;
     m_dirty = true;
 }
 
@@ -3502,7 +3502,7 @@ bool MenuFreeform::select_item(int index)
 
 bool MenuFreeform::select_item(MenuItem* item)
 {
-    ASSERT(item != NULL);
+    ASSERT(item != nullptr);
 
     // Is the given item in menu?
     auto find_val = find(m_entries.begin(), m_entries.end(), item);
@@ -3542,8 +3542,8 @@ bool MenuFreeform::attach_item(MenuItem* item)
 MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
                                                 MenuObject::Direction dir)
 {
-    if (start == NULL)
-        return NULL;
+    if (start == nullptr)
+        return nullptr;
 
     coord_def aabb_start(0,0);
     coord_def aabb_end(0,0);
@@ -3620,7 +3620,7 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
 
         // intersects
         // check if it's closer than current
-        if (closest == NULL)
+        if (closest == nullptr)
             closest = item;
 
         switch (dir)
@@ -3689,7 +3689,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
         }
     }
 
-    MenuItem* find_entry = NULL;
+    MenuItem* find_entry = nullptr;
     switch (key)
     {
     case CK_ENTER:
@@ -3706,7 +3706,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
     case CONTROL('K'):
     case CONTROL('P'):
         find_entry = _find_item_by_direction(m_currently_active, UP);
-        if (find_entry != NULL)
+        if (find_entry != nullptr)
         {
             set_active_item(find_entry);
             return MenuObject::INPUT_ACTIVE_CHANGED;
@@ -3718,7 +3718,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
     case CONTROL('J'):
     case CONTROL('N'):
         find_entry = _find_item_by_direction(m_currently_active, DOWN);
-        if (find_entry != NULL)
+        if (find_entry != nullptr)
         {
             set_active_item(find_entry);
             return MenuObject::INPUT_ACTIVE_CHANGED;
@@ -3771,7 +3771,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
     }
     default:
         find_entry = select_item_by_hotkey(key);
-        if (find_entry != NULL)
+        if (find_entry != nullptr)
         {
             if (find_entry->selected())
                 return MenuObject::INPUT_SELECTED;
@@ -3800,12 +3800,12 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
             return INPUT_NO_ACTION;
     }
 
-    MenuItem* find_item = NULL;
+    MenuItem* find_item = nullptr;
 
     if (me.event == MouseEvent::MOVE)
     {
         find_item = _find_item_by_mouse_coords(coord_def(me.px, me.py));
-        if (find_item == NULL)
+        if (find_item == nullptr)
         {
             if (m_currently_active >= 0)
             {
@@ -3842,7 +3842,7 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
     {
         find_item = _find_item_by_mouse_coords(coord_def(me.px,
                                                         me.py));
-        if (find_item != NULL)
+        if (find_item != nullptr)
         {
             select_item(find_item);
             if (find_item->selected())
@@ -3897,7 +3897,7 @@ MenuItem* MenuScroller::get_active_item()
     {
         return m_entries.at(m_currently_active);
     }
-    return NULL;
+    return nullptr;
 }
 
 void MenuScroller::set_active_item(int ID)
@@ -3942,7 +3942,7 @@ void MenuScroller::_set_active_item_by_index(int index)
 
 void MenuScroller::set_active_item(MenuItem* item)
 {
-    if (item == NULL)
+    if (item == nullptr)
     {
         _set_active_item_by_index(-1);
         return;
@@ -4004,7 +4004,7 @@ bool MenuScroller::select_item(int index)
 
 bool MenuScroller::select_item(MenuItem* item)
 {
-    ASSERT(item != NULL);
+    ASSERT(item != nullptr);
     // Is the item in the menu?
     for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
     {
@@ -4110,7 +4110,7 @@ void MenuScroller::_place_items()
 MenuItem* MenuScroller::_find_item_by_direction(int start_index,
                                           MenuObject::Direction dir)
 {
-    MenuItem* find_item = NULL;
+    MenuItem* find_item = nullptr;
     switch (dir)
     {
     case UP:
@@ -4128,9 +4128,9 @@ MenuItem* MenuScroller::_find_item_by_direction(int start_index,
 }
 
 MenuDescriptor::MenuDescriptor(PrecisionMenu* parent): m_parent(parent),
-    m_active_item(NULL)
+    m_active_item(nullptr)
 {
-    ASSERT(m_parent != NULL);
+    ASSERT(m_parent != nullptr);
 }
 
 MenuDescriptor::~MenuDescriptor()
@@ -4198,7 +4198,7 @@ void MenuDescriptor::_place_items()
         textcolour(LIGHTGRAY);
 #endif
 
-        if (tmp == NULL)
+        if (tmp == nullptr)
              m_desc_item.set_text("");
         else
             m_desc_item.set_text(m_active_item->get_description_text());
@@ -4206,9 +4206,9 @@ void MenuDescriptor::_place_items()
 }
 
 BoxMenuHighlighter::BoxMenuHighlighter(PrecisionMenu *parent): m_parent(parent),
-    m_active_item(NULL)
+    m_active_item(nullptr)
 {
-    ASSERT(parent != NULL);
+    ASSERT(parent != nullptr);
 }
 
 BoxMenuHighlighter::~BoxMenuHighlighter()
@@ -4247,7 +4247,7 @@ void BoxMenuHighlighter::render()
 #ifdef USE_TILE_LOCAL
     m_line_buf.draw();
 #else
-    if (m_active_item != NULL)
+    if (m_active_item != nullptr)
         m_active_item->render();
 #endif
 }
@@ -4260,7 +4260,7 @@ void BoxMenuHighlighter::_place_items()
 
 #ifdef USE_TILE_LOCAL
     m_line_buf.clear();
-    if (tmp != NULL)
+    if (tmp != nullptr)
     {
         m_line_buf.add_square(tmp->get_min_coord().x, tmp->get_min_coord().y,
                               tmp->get_max_coord().x, tmp->get_max_coord().y,
@@ -4268,14 +4268,14 @@ void BoxMenuHighlighter::_place_items()
     }
 #else
     // we had an active item before
-    if (m_active_item != NULL)
+    if (m_active_item != nullptr)
     {
         // clear the background highlight trickery
         m_active_item->set_bg_colour(m_old_bg_colour);
         // redraw the old item
         m_active_item->render();
     }
-    if (tmp != NULL)
+    if (tmp != nullptr)
     {
         m_old_bg_colour = tmp->get_bg_colour();
         tmp->set_bg_colour(tmp->get_highlight_colour());
@@ -4287,7 +4287,7 @@ void BoxMenuHighlighter::_place_items()
 BlackWhiteHighlighter::BlackWhiteHighlighter(PrecisionMenu* parent):
     BoxMenuHighlighter(parent)
 {
-    ASSERT(m_parent != NULL);
+    ASSERT(m_parent != nullptr);
 }
 
 BlackWhiteHighlighter::~BlackWhiteHighlighter()
@@ -4301,7 +4301,7 @@ void BlackWhiteHighlighter::render()
 
     _place_items();
 
-    if (m_active_item != NULL)
+    if (m_active_item != nullptr)
     {
 #ifdef USE_TILE_LOCAL
         m_shape_buf.draw();
@@ -4320,7 +4320,7 @@ void BlackWhiteHighlighter::_place_items()
     m_shape_buf.clear();
 #endif
     // we had an active item before
-    if (m_active_item != NULL)
+    if (m_active_item != nullptr)
     {
         // clear the highlight trickery
         m_active_item->set_fg_colour(m_old_fg_colour);
@@ -4328,7 +4328,7 @@ void BlackWhiteHighlighter::_place_items()
         // redraw the old item
         m_active_item->render();
     }
-    if (tmp != NULL)
+    if (tmp != nullptr)
     {
 #ifdef USE_TILE_LOCAL
         m_shape_buf.add(tmp->get_min_coord().x, tmp->get_min_coord().y,

@@ -90,7 +90,7 @@ public:
     bool was_included(const string &file) const;
 
     static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = NULL) throw (string);
+                            const vector<string> *rcdirs = nullptr) throw (string);
 
 #ifdef USE_TILE_WEB
     void write_webtiles_options(const string &name);
@@ -171,7 +171,6 @@ public:
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     int         confirm_butcher; // When to prompt for butchery
-    bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
@@ -215,7 +214,8 @@ public:
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
 #ifdef WIZARD
-    int            wiz_mode;   // no, never, start in wiz mode
+    int            wiz_mode;      // no, never, start in wiz mode
+    int            explore_mode;  // no, never, start in explore mode
 #endif
     vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
@@ -481,7 +481,7 @@ public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;
     bool        o_bool(const char *name, bool def = false) const;
-    string      o_str(const char *name, const char *def = NULL) const;
+    string      o_str(const char *name, const char *def = nullptr) const;
     int         o_colour(const char *name, int def = LIGHTGREY) const;
 
     // Fix option values if necessary, specifically file paths.
@@ -545,7 +545,8 @@ static inline short macro_colour(short col)
     return col < 0 ? col : Options.colour[ col ];
 }
 
-enum use_animation_type {
+enum use_animation_type
+{
     UA_NONE             = 0,
     // projectile animations, from throwing weapons, fireball, etc
     UA_BEAM             = (1 << 0),

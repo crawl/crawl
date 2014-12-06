@@ -86,8 +86,8 @@ static FixedArray<vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellray
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
 // Allocated when doing the precomputations.
-static bit_vector *dead_rays     = NULL;
-static bit_vector *smoke_rays    = NULL;
+static bit_vector *dead_rays     = nullptr;
+static bit_vector *smoke_rays    = nullptr;
 
 class quadrant_iterator : public rectangle_iterator
 {

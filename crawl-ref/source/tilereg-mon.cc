@@ -144,11 +144,11 @@ bool MonsterRegion::update_alt_text(string &alt)
 const monster_info* MonsterRegion::get_monster(unsigned int idx) const
 {
     if (idx >= m_items.size())
-        return NULL;
+        return nullptr;
 
     const InventoryTile &item = m_items[idx];
     if (item.idx >= static_cast<int>(m_mon_info.size()))
-        return NULL;
+        return nullptr;
 
     return &(m_mon_info[item.idx]);
 }

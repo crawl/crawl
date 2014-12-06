@@ -161,7 +161,7 @@ bool yred_slaves_abandon_you()
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster* mons = monster_at(*ri);
-        if (mons == NULL)
+        if (mons == nullptr)
             continue;
 
         if (is_yred_undead_slave(mons))
@@ -212,7 +212,7 @@ bool beogh_followers_abandon_you()
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster* mons = monster_at(*ri);
-        if (mons == NULL)
+        if (mons == nullptr)
             continue;
 
         // Note that orc high priests' summons are gifts of Beogh,
@@ -414,7 +414,7 @@ void gozag_set_bribe(monster* traitor)
         const monster* leader =
             traitor->props.exists("band_leader")
             ? monster_by_mid(traitor->props["band_leader"].get_int())
-            : NULL;
+            : nullptr;
 
         int cost = max(1, exper_value(traitor) / 20);
 

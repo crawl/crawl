@@ -183,7 +183,7 @@ int dlua_chunk::run(CLua &interp)
     if (err)
         return err;
     // callfn returns true on success, but we want to return 0 on success.
-    return check_op(interp, !interp.callfn(NULL, 0, 0));
+    return check_op(interp, !interp.callfn(nullptr, 0, 0));
 }
 
 int dlua_chunk::load_call(CLua &interp, const char *fn)

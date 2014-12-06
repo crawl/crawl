@@ -1189,7 +1189,7 @@ monster* get_free_monster()
             return &env.mons[i];
         }
 
-    return NULL;
+    return nullptr;
 }
 
 void mons_add_blame(monster* mon, const string &blame_string)
@@ -1560,6 +1560,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->has_spell(SPELL_DEFLECT_MISSILES))
         mon->add_ench(ENCH_DEFLECT_MISSILES);
 
+    if (mon->has_spell(SPELL_BONE_ARMOUR))
+        mon->add_ench(ENCH_BONE_ARMOUR);
+
     if (mon->has_spell(SPELL_CONDENSATION_SHIELD))
     {
         const int power = (mon->spell_hd(SPELL_CONDENSATION_SHIELD) * 15) / 10;
@@ -1708,7 +1711,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         blame_prefix = "summoned by ";
 
-        if (mg.summoner != NULL && mg.summoner->alive()
+        if (mg.summoner != nullptr && mg.summoner->alive()
             && mg.summoner->type == MONS_MARA)
         {
             blame_prefix = "woven by ";
@@ -1741,7 +1744,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // by the Fire Storm spell); a deceased summoner's mindex might also
     // be reused to create its summon, so make sure the summon doesn't
     // think it has summoned itself.
-    else if (mg.summoner != NULL && mg.summoner->alive()
+    else if (mg.summoner != nullptr && mg.summoner->alive()
              && mg.summoner != mon)
     {
         ASSERT(mg.summoner->alive());
@@ -1974,7 +1977,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
 
     const bool need_veto = really_in_d && !for_corpse;
-    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : NULL;
+    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : nullptr;
 
     // try to grab a proper zombifiable monster
     monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
@@ -2164,7 +2167,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_SHARD_SHRIKE:
         band = BAND_SHARD_SHRIKE;
-        band_size = 2 + random2(3);
+        band_size = 1 + random2(3);
         break;
 
     case MONS_FLYING_SKULL:
@@ -2276,7 +2279,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_INSUBSTANTIAL_WISP:
         band = BAND_INSUBSTANTIAL_WISPS;
-        band_size = 3 + random2(4);
+        band_size = 2 + random2(4);
         break;
     case MONS_OGRE_MAGE:
         natural_leader = true;
@@ -3599,7 +3602,7 @@ static monster_type _band_member(band_type band, int which)
         level_id place = level_id::current();
         return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
                                     PROX_ANYWHERE, &tmppos, 0, &tmpfeat,
-                                    &place, NULL);
+                                    &place, nullptr);
     }
 
     default:
@@ -3731,7 +3734,7 @@ monster* mons_place(mgen_data mg)
     {
         mg.behaviour = (mg.summoner && mg.summoner->is_player())
                         ? BEH_FRIENDLY
-                        : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+                        : SAME_ATTITUDE(mg.summoner->as_monster());
     }
 
     monster* creation = place_monster(mg);

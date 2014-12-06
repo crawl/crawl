@@ -64,7 +64,7 @@ public:
 
 private:
     actor* target;
-    // May be NULL.
+    // May be nullptr.
     actor* act_source;
     // Either a miscast_source, or GOD_MISCAST + god_type enum.
     int    special_source;
@@ -118,12 +118,11 @@ private:
     bool _big_cloud(cloud_type cl_type, int cloud_pow, int size,
                     int spread_rate = -1);
     bool _lose_stat(stat_type which_stat, int8_t stat_loss);
-    void _potion_effect(potion_type pot_eff, int pot_pow);
     bool _paralyse(int dur);
     bool _sleep(int dur);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     bool _send_to_abyss();
-    bool _malign_gateway();
+    bool _malign_gateway(bool hostile = true);
     void _do_poison(int amount);
     void _malmutate();
 

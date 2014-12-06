@@ -18,6 +18,7 @@
 #include "command.h"
 #include "coordit.h"
 #include "describe.h"
+#include "describe-spells.h"
 #include "directn.h"
 #include "env.h"
 #include "feature.h"
@@ -69,8 +70,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
     if (item->has_spells())
     {
         formatted_string fs;
-        item_def dup = *item;
-        spellbook_contents(dup, &fs);
+        describe_spellset(item_spellset(*item), item, fs);
         text += "\n";
         text += fs.tostring(2, -2);
     }
@@ -371,7 +371,7 @@ void Stash::update()
 
 static bool _is_rottable(const item_def &item)
 {
-    if (in_shop(item))
+    if (is_shop_item(item))
         return false;
     return item.base_type == OBJ_CORPSES
            || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK;
@@ -1762,7 +1762,7 @@ void StashTracker::search_stashes()
 
     vector<stash_search_result> results;
 
-    base_pattern *search = NULL;
+    base_pattern *search = nullptr;
 
     text_pattern tpat(csearch, true);
     search = &tpat;
@@ -2225,7 +2225,7 @@ ST_ItemIterator::ST_ItemIterator()
 
 ST_ItemIterator::operator bool() const
 {
-    return m_item != NULL;
+    return m_item != nullptr;
 }
 
 const item_def& ST_ItemIterator::operator *() const
@@ -2255,8 +2255,8 @@ unsigned        ST_ItemIterator::price()
 
 const ST_ItemIterator& ST_ItemIterator::operator ++ ()
 {
-    m_item = NULL;
-    m_shop = NULL;
+    m_item = nullptr;
+    m_shop = nullptr;
 
     const LevelStashes &ls = m_stash_level_it->second;
 
@@ -2313,8 +2313,8 @@ const ST_ItemIterator& ST_ItemIterator::operator ++ ()
 
 void ST_ItemIterator::new_level()
 {
-    m_item  = NULL;
-    m_shop  = NULL;
+    m_item  = nullptr;
+    m_shop  = nullptr;
     m_price = 0;
 
     if (m_stash_level_it == StashTrack.levels.end())
@@ -2342,7 +2342,7 @@ void ST_ItemIterator::new_level()
 
         m_shop_item_it = si.items.begin();
 
-        if (m_item == NULL && m_shop_item_it != si.items.end())
+        if (m_item == nullptr && m_shop_item_it != si.items.end())
         {
             const ShopInfo::shop_item &item = *m_shop_item_it++;
             m_item  = &(item.item);
@@ -2353,7 +2353,7 @@ void ST_ItemIterator::new_level()
     }
 }
 
-ST_ItemIterator ST_ItemIterator::operator ++ (int dummy)
+ST_ItemIterator ST_ItemIterator::operator ++ (int)
 {
     const ST_ItemIterator copy = *this;
     ++(*this);

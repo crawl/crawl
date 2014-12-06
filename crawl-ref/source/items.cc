@@ -295,7 +295,7 @@ item_def* stack_iterator::operator->() const
     return &mitm[cur_link];
 }
 
-int stack_iterator::link() const
+int stack_iterator::index() const
 {
     return cur_link;
 }
@@ -308,7 +308,7 @@ const stack_iterator& stack_iterator::operator ++ ()
     return *this;
 }
 
-stack_iterator stack_iterator::operator++(int dummy)
+stack_iterator stack_iterator::operator++(int)
 {
     const stack_iterator copy = *this;
     ++(*this);
@@ -467,7 +467,7 @@ void unlink_item(int dest)
 
     monster* mons = mitm[dest].holding_monster();
 
-    if (mons != NULL)
+    if (mons != nullptr)
     {
         for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         {
@@ -496,13 +496,15 @@ void unlink_item(int dest)
     }
     else
     {
-        if (!is_shop_item(mitm[dest]))
-            ASSERT_IN_BOUNDS(mitm[dest].pos);
-
         // Linked item on map:
         //
         // Use the items (x,y) to access the list (igrd[x][y]) where
         // the item should be linked.
+
+#if TAG_MAJOR_VERSION == 34
+        if (mitm[dest].pos.x != 0 || mitm[dest].pos.y < 5)
+#endif
+        ASSERT_IN_BOUNDS(mitm[dest].pos);
 
         // First check the top:
         if (igrd(mitm[dest].pos) == dest)
@@ -1098,7 +1100,7 @@ bool origin_is_god_gift(const item_def& item, god_type *god)
 bool origin_is_acquirement(const item_def& item, item_source_type *type)
 {
     item_source_type junk;
-    if (type == NULL)
+    if (type == nullptr)
         type = &junk;
     *type = IT_SRC_NONE;
 
@@ -1577,6 +1579,7 @@ static void _got_item(item_def& item)
 {
     seen_item(item);
     shopping_list.cull_identical_items(item);
+    item.flags |= ISFLAG_HANDLED;
 
     if (item.props.exists("needs_autopickup"))
         item.props.erase("needs_autopickup");
@@ -1640,22 +1643,9 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
-/**
- * Move the given item and quantity to the player's inventory.
- *
- * @param obj The item index in mitm.
- * @param quant_got The quantity of this item to move.
- * @param quiet If true, most messages notifying the player of item pickup (or
- *              item pickup failure) aren't printed.
- * @return  Whether items were successfully picked up. May return true even on
- * failure in cases where pickup can continue; e.g. when trying to pickup
- * stationary objects, or the orb in zot defense. (I.e., when the cause of
- * failure was not a full inventory.)
-*/
-bool move_item_to_inv(int obj, int quant_got, bool quiet)
+static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_in_inv)
 {
-    item_def &it = mitm[obj];
-
+    put_in_inv = false;
     if (item_is_stationary(it))
     {
         if (!quiet)
@@ -1676,11 +1666,11 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
 
-    const coord_def old_item_pos = it.pos;
     // attempt to put the item into your inventory.
     char inv_slot;
     if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
+        put_in_inv = true;
         // if you succeeded, actually reduce the number in the original stack
         if (is_perishable_stack(it) && quant_got != it.quantity)
             for (int i = 0; i < quant_got; i++)
@@ -1694,14 +1684,47 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         }
         else
             _check_note_item(it);
+        return true;
+    }
 
-        if (item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
-        {
-            dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
-                                                         you.pos(), 0, obj,
-                                                         -1),
-                                               you.pos());
-        }
+    return false;
+}
+
+
+// Currently only used for moving shop items into inventory, since they are
+// not in mitm. This doesn't work with partial pickup, because that requires
+// an mitm slot...
+bool move_item_to_inv(item_def& item)
+{
+    bool junk;
+    return _put_item_in_inv(item, item.quantity, false, junk);
+}
+
+/**
+ * Move the given item and quantity to the player's inventory.
+ *
+ * @param obj The item index in mitm.
+ * @param quant_got The quantity of this item to move.
+ * @param quiet If true, most messages notifying the player of item pickup (or
+ *              item pickup failure) aren't printed.
+ * @returns false if items failed to be picked up because of a full inventory,
+ *          true otherwise (even if nothing was picked up).
+*/
+bool move_item_to_inv(int obj, int quant_got, bool quiet)
+{
+    item_def &it = mitm[obj];
+    const coord_def old_item_pos = it.pos;
+
+    bool actually_went_in = false;
+    const bool keep_going = _put_item_in_inv(it, quant_got, quiet, actually_went_in);
+
+    if ((item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
+        && actually_went_in)
+    {
+        dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
+                                                     you.pos(), 0, obj,
+                                                     -1),
+                                           you.pos());
 
         // XXX: Waiting until now to decrement the quantity may give Windows
         // tiles players the opportunity to close the window and duplicate the
@@ -1711,10 +1734,9 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         dec_mitm_item_quantity(obj, quant_got);
 
         you.turn_is_over = true;
-        return true;
     }
 
-    return false;
+    return keep_going;
 }
 
 /**
@@ -2255,7 +2277,7 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
 const item_def* top_item_at(const coord_def& where)
 {
     const int link = you.visible_igrd(where);
-    return (link == NON_ITEM) ? NULL : &mitm[link];
+    return (link == NON_ITEM) ? nullptr : &mitm[link];
 }
 
 bool multiple_items_at(const coord_def& where)
@@ -2503,7 +2525,7 @@ void drop()
 #else
     tmp_items = prompt_invent_items("Drop what? (_ for help)", MT_DROP,
 #endif
-                                     -1, NULL, true, true, 0,
+                                     -1, nullptr, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop);
 
@@ -2633,6 +2655,13 @@ void autoinscribe()
     will_autoinscribe = false;
 }
 
+/**
+ * Resolve an item's subtype to an appropriate value for autopickup.
+ * @param item The item to check.
+ * @returns The actual sub_type for items that either have an identified
+ * sub_type or where the sub_type is always known. Otherwise the value of the
+ * max subtype.
+*/
 static int _autopickup_subtype(const item_def &item)
 {
     // Sensed items.
@@ -2657,9 +2686,7 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
     case OBJ_MISCELLANY:
-        return (item.sub_type == MISC_RUNE_OF_ZOT
-                || item.sub_type == MISC_PHANTOM_MIRROR)
-               ? item.sub_type : max_type;
+        return item.sub_type == MISC_RUNE_OF_ZOT ? item.sub_type : max_type;
     case OBJ_BOOKS:
         if (item.sub_type == BOOK_MANUAL || item_type_known(item))
             return item.sub_type;
@@ -3060,7 +3087,7 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
                     return &*si;
                 }
 
-    return NULL;
+    return nullptr;
 }
 
 int item_on_floor(const item_def &item, const coord_def& where)
@@ -3132,12 +3159,6 @@ bool item_def::has_spells() const
 {
     return (item_is_spellbook(*this) || base_type == OBJ_RODS)
            && item_type_known(*this);
-}
-
-int item_def::book_number() const
-{
-    return base_type == OBJ_BOOKS ? sub_type
-                                  : -1;
 }
 
 bool item_def::cursed() const
@@ -3213,10 +3234,10 @@ int item_def::armour_rating() const
 monster* item_def::holding_monster() const
 {
     if (!pos.equals(-2, -2))
-        return NULL;
+        return nullptr;
     const int midx = link - NON_ITEM - 1;
     if (invalid_monster_index(midx))
-        return NULL;
+        return nullptr;
 
     return &menv[midx];
 }
@@ -3873,7 +3894,7 @@ colour_t item_def::get_colour() const
         case OBJ_MISCELLANY:
             return miscellany_colour();
         case OBJ_GOLD:
-            return YELLOW;
+            return special > 0 ? static_cast<colour_t>(ETC_SHINING) : (YELLOW);
         case OBJ_DETECTED:
             return Options.detected_item_colour;
         case NUM_OBJECT_CLASSES:
@@ -4142,12 +4163,12 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         "plain",
         "ornate",
         "legendary",
-        NULL
+        nullptr
     };
 
     int rarity_val = -1;
 
-    for (int i = 0; rarities[i] != NULL; ++i)
+    for (int i = 0; rarities[i] != nullptr; ++i)
         if (specs.find(rarities[i]) != string::npos)
         {
             rarity_val = i;
@@ -4219,8 +4240,8 @@ static bool _book_from_spell(const char* specs, item_def &item)
         return false;
 
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        for (int j = 0; j < 8; ++j)
-            if (which_spell_in_book(i, j) == type)
+        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+            if (sp == type)
             {
                 item.sub_type = i;
                 return true;
@@ -4521,7 +4542,7 @@ item_info get_item_info(const item_def& item)
     ii.quantity = item.quantity;
     ii.inscription = item.inscription;
     ii.flags = item.flags & (0
-            | ISFLAG_IDENT_MASK | ISFLAG_SEEN_CURSED
+            | ISFLAG_IDENT_MASK
             | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
             | ISFLAG_COSMETIC_MASK);
 
@@ -4722,10 +4743,14 @@ item_info get_item_info(const item_def& item)
             ii.props["card_flags"] = info_card_flags;
         }
         break;
-    case OBJ_ORBS:
     case OBJ_GOLD:
+        ii.special = item.special;
+        ii.sub_type = item.sub_type;
+        break;
+    case OBJ_ORBS:
     default:
         ii.sub_type = item.sub_type;
+        break;
     }
 
     if (item_ident(item, ISFLAG_KNOW_CURSE))

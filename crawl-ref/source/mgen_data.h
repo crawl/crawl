@@ -30,7 +30,7 @@ struct mgen_data
     beh_type        behaviour;
 
     // Who summoned this monster?  Important to know for death accounting
-    // and the summon cap, if and when it goes in.  NULL is no summoner.
+    // and the summon cap, if and when it goes in.  nullptr is no summoner.
     const actor*    summoner;
 
     // For summoned monsters, this is a measure of how long the summon will
@@ -153,7 +153,8 @@ struct mgen_data
                || summon_type == SPELL_DEATH_CHANNEL
                || summon_type == SPELL_SIMULACRUM
                || summon_type == SPELL_AWAKEN_VINES
-               || summon_type == SPELL_FULMINANT_PRISM);
+               || summon_type == SPELL_FULMINANT_PRISM
+               || summon_type == SPELL_SINGULARITY);
     }
 
     bool permit_bands() const       { return flags & MG_PERMIT_BANDS; }

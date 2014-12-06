@@ -78,7 +78,7 @@
 #define SAP_MAGIC_CHANCE() x_chance_in_y(7, 10)
 
 // Helper functions (some of these should probably be public).
-static void _ench_animation(int flavour, const monster* mon = NULL,
+static void _ench_animation(int flavour, const monster* mon = nullptr,
                             bool force = false);
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
@@ -141,7 +141,7 @@ kill_category bolt::whose_kill() const
 
 // A simple animated flash from Rupert Smith (expanded to be more
 // generic).
-static void _zap_animation(int colour, const monster* mon = NULL,
+static void _zap_animation(int colour, const monster* mon = nullptr,
                            bool force = false)
 {
     coord_def p = you.pos();
@@ -357,7 +357,7 @@ public:
 struct zap_info
 {
     zap_type ztype;
-    const char* name;           // NULL means handled specially
+    const char* name;           // nullptr means handled specially
     int power_cap;
     dam_deducer* damage;
     tohit_deducer* tohit;       // Enchantments have power modifier here
@@ -388,7 +388,7 @@ static const zap_info* _seek_zap(zap_type z_type)
 {
     ASSERT_RANGE(z_type, 0, NUM_ZAPS);
     if (zap_index[z_type] == -1)
-        return NULL;
+        return nullptr;
     else
         return &zap_data[zap_index[z_type]];
 }
@@ -405,7 +405,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     const zap_info* zinfo = _seek_zap(z_type);
 
     // None found?
-    if (zinfo == NULL)
+    if (zinfo == nullptr)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_ERROR, "Couldn't find zap type %d", z_type);
@@ -428,11 +428,13 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
+    if (zinfo->is_enchantment && zinfo->tohit)
+        pbolt.ench_power = (*zinfo->tohit)(power);
+    else
+        pbolt.ench_power = power;
+
     if (zinfo->is_enchantment)
-    {
-        pbolt.ench_power = (zinfo->tohit ? (*zinfo->tohit)(power) : power);
         pbolt.hit = AUTOMATIC_HIT;
-    }
     else
     {
         pbolt.hit = (*zinfo->tohit)(power);
@@ -442,9 +444,6 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     if (zinfo->damage)
         pbolt.damage = (*zinfo->damage)(power);
-
-    if (z_type == ZAP_EXPLOSIVE_BOLT)
-        pbolt.ench_power = power;
 
     pbolt.origin_spell = zap_to_spell(z_type);
 
@@ -546,11 +545,11 @@ void bolt::initialise_fire()
     use_target_as_pos  = false;
     hit_count.clear();
 
-    if (special_explosion != NULL)
+    if (special_explosion != nullptr)
     {
         ASSERT(!is_explosion);
         ASSERT(special_explosion->is_explosion);
-        ASSERT(special_explosion->special_explosion == NULL);
+        ASSERT(special_explosion->special_explosion == nullptr);
         special_explosion->in_explosion_phase = false;
         special_explosion->use_target_as_pos  = false;
     }
@@ -1210,12 +1209,12 @@ void bolt::fire()
     if (is_tracer)
     {
         bolt boltcopy = *this;
-        if (special_explosion != NULL)
+        if (special_explosion != nullptr)
             boltcopy.special_explosion = new bolt(*special_explosion);
 
         do_fire();
 
-        if (special_explosion != NULL)
+        if (special_explosion != nullptr)
         {
             _undo_tracer(*special_explosion, *boltcopy.special_explosion);
             delete boltcopy.special_explosion;
@@ -1226,7 +1225,7 @@ void bolt::fire()
     else
         do_fire();
 
-    if (special_explosion != NULL)
+    if (special_explosion != nullptr)
     {
         seen           = seen  || special_explosion->seen;
         heard          = heard || special_explosion->heard;
@@ -1253,7 +1252,8 @@ void bolt::do_fire()
 #ifdef USE_TILE
     tile_beam = -1;
 
-    if (item && !is_tracer && flavour == BEAM_MISSILE)
+    if (item && !is_tracer && (flavour == BEAM_MISSILE
+                               || flavour == BEAM_VISUAL))
     {
         const coord_def diff = target - source;
         tile_beam = tileidx_item_throw(get_item_info(*item), diff.x, diff.y);
@@ -1839,8 +1839,8 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 }
 
 // Enchants all monsters in player's sight.
-// If m_succumbed is non-NULL, will be set to the number of monsters that
-// were enchanted. If m_attempted is non-NULL, will be set to the number of
+// If m_succumbed is non-nullptr, will be set to the number of monsters that
+// were enchanted. If m_attempted is not nullptr, will be set to the number of
 // monsters that we tried to enchant.
 spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 {
@@ -1879,7 +1879,7 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
             case ENCH_FEAR:      msg = " looks frightened!";      break;
             case ENCH_CONFUSION: msg = " looks rather confused."; break;
             case ENCH_CHARM:     msg = " submits to your will.";  break;
-            default:             msg = NULL;                      break;
+            default:             msg = nullptr;                   break;
             }
             if (msg && simple_monster_message(*mi, msg))
                 did_msg = true;
@@ -2368,10 +2368,8 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     coord_def c = victim->pos();
 
     mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
-    if (victim->is_player())
-        ouch(damage, KILLED_BY_BEAM, agent->mid, "by a malign offering");
-    else
-        damage = victim->hurt(agent, damage, BEAM_NEG);
+    damage = victim->hurt(agent, damage, BEAM_NEG, KILLED_BY_BEAM,
+                          "", "by a malign offering");
 
     // Actors that had LOS to the victim (blocked by glass, clouds, etc),
     // even if they couldn't actually see each other because of blindness
@@ -2622,7 +2620,7 @@ bool bolt::stop_at_target() const
 
 void bolt::drop_object()
 {
-    ASSERT(item != NULL);
+    ASSERT(item != nullptr);
     ASSERT(item->defined());
 
     // Conditions: beam is missile and not tracer.
@@ -2707,7 +2705,7 @@ void bolt::affect_ground()
 
             if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                          beh,
-                                         NULL,
+                                         nullptr,
                                          0,
                                          0,
                                          pos(),
@@ -2902,7 +2900,7 @@ void bolt::affect_place_explosion_clouds()
                          p, MHITNOT, 0, god);
 
             // Spell-summoned monsters need to have a live summoner.
-            if (summ == NULL || !summ->alive())
+            if (summ == nullptr || !summ->alive())
             {
                 if (!source_name.empty())
                     mg.non_actor_summoner = source_name;
@@ -2918,7 +2916,7 @@ void bolt::affect_place_explosion_clouds()
 // A little helper function to handle the calling of ouch()...
 void bolt::internal_ouch(int dam)
 {
-    monster* monst = NULL;
+    monster* monst = nullptr;
     monst = monster_by_mid(source_id);
 
     const char *what = aux_source.empty() ? name.c_str() : aux_source.c_str();
@@ -2931,8 +2929,8 @@ void bolt::internal_ouch(int dam)
         && !monst->mname.empty())
     {
         ouch(dam, KILLED_BY_DIVINE_WRATH, MID_NOBODY,
-             aux_source.empty() ? NULL : aux_source.c_str(), true,
-             source_name.empty() ? NULL : source_name.c_str());
+             aux_source.empty() ? nullptr : aux_source.c_str(), true,
+             source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (monst && (monst->type == MONS_GIANT_SPORE
                        || monst->type == MONS_BALL_LIGHTNING
@@ -2943,12 +2941,12 @@ void bolt::internal_ouch(int dam)
     {
         ouch(dam, KILLED_BY_SPORE, source_id,
              aux_source.c_str(), true,
-             source_name.empty() ? NULL : source_name.c_str());
+             source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
     {
         ouch(dam, KILLED_BY_DISINT, source_id, what, true,
-             source_name.empty() ? NULL : source_name.c_str());
+             source_name.empty() ? nullptr : source_name.c_str());
     }
     else if (YOU_KILL(thrower) && aux_source.empty())
     {
@@ -2967,7 +2965,7 @@ void bolt::internal_ouch(int dam)
     else if (MON_KILL(thrower) || aux_source == "exploding inner flame")
         ouch(dam, KILLED_BY_BEAM, source_id,
              aux_source.c_str(), true,
-             source_name.empty() ? NULL : source_name.c_str());
+             source_name.empty() ? nullptr : source_name.c_str());
     else // KILL_MISC || (YOU_KILL && aux_source)
         ouch(dam, KILLED_BY_WILD_MAGIC, source_id, aux_source.c_str());
 }
@@ -3448,7 +3446,7 @@ void bolt::affect_player_enchantment(bool resistible)
     {
     case BEAM_HIBERNATION:
     case BEAM_SLEEP:
-        you.put_to_sleep(NULL, ench_power, flavour == BEAM_HIBERNATION);
+        you.put_to_sleep(nullptr, ench_power, flavour == BEAM_HIBERNATION);
         break;
 
     case BEAM_CORONA:
@@ -3468,12 +3466,13 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_SLOW:
-        potion_effect(POT_SLOWING, ench_power, nullptr, blame_player);
+        slow_player(10 + random2(ench_power));
         obvious_effect = true;
         break;
 
     case BEAM_HASTE:
-        potion_effect(POT_HASTE, ench_power, nullptr, blame_player);
+        haste_player(40 + random2(ench_power));
+        did_god_conduct(DID_HASTY, 10, blame_player);
         contaminate_player(1000, blame_player);
         obvious_effect = true;
         nasty = false;
@@ -3481,14 +3480,14 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_HEALING:
-        potion_effect(POT_HEAL_WOUNDS, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_HEAL_WOUNDS, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
         break;
 
     case BEAM_MIGHT:
-        potion_effect(POT_MIGHT, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_MIGHT, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3496,7 +3495,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_INVISIBILITY:
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
-        potion_effect(POT_INVISIBILITY, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_INVISIBILITY, ench_power);
         contaminate_player(1000 + random2(1000), blame_player);
         obvious_effect = true;
         nasty = false;
@@ -3514,7 +3513,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_CONFUSION:
-        potion_effect(POT_CONFUSION, ench_power, nullptr, blame_player);
+        confuse_player(5 + random2(3));
         obvious_effect = true;
         break;
 
@@ -3541,7 +3540,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_ENSLAVE:
         mprf(MSGCH_WARN, "Your will is overpowered!");
-        potion_effect(POT_CONFUSION, ench_power, nullptr, blame_player);
+        confuse_player(5 + random2(3));
         obvious_effect = true;
         break;     // enslavement - confusion?
 
@@ -3643,7 +3642,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_BERSERK:
-        potion_effect(POT_BERSERK_RAGE, ench_power, nullptr, blame_player);
+        you.go_berserk(blame_player, true);
         obvious_effect = true;
         break;
 
@@ -3706,7 +3705,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_AGILITY:
-        potion_effect(POT_AGILITY, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_AGILITY, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3756,10 +3755,15 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_RESISTANCE:
-        potion_effect(POT_RESISTANCE, ench_power, nullptr, blame_player);
+        potionlike_effect(POT_RESISTANCE, ench_power);
         obvious_effect = true;
         nasty = false;
         nice  = true;
+        break;
+
+    case BEAM_ATTRACT:
+        if (fatal_attraction(&you, agent(), ench_power))
+            obvious_effect = true;
         break;
 
     default:
@@ -3937,8 +3941,7 @@ void bolt::affect_player()
         && you.holiness() != MH_UNDEAD
         && !you.is_unbreathing())
     {
-        potion_effect(POT_CONFUSION, 1, nullptr,
-                      god_cares() && YOU_KILL(thrower));
+        confuse_player(3);
     }
 
     // handling of missiles
@@ -4580,8 +4583,14 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 void bolt::beam_hits_actor(actor *act)
 {
     const coord_def oldpos(act->pos());
+    coord_def newpos(act->pos());
 
-    if (knockback_actor(act))
+    const int distance =
+        (origin_spell == SPELL_FORCE_LANCE)
+            ? 1 + div_rand_round(ench_power, 40) :
+        (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
+
+    if (knockback_actor(act, distance, newpos))
     {
         if (you.can_see(act))
         {
@@ -4590,7 +4599,6 @@ void bolt::beam_hits_actor(actor *act)
                 mprf("%s %s blown backwards by the freezing wind.",
                      act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
-                knockback_actor(act);
             }
             else
             {
@@ -4601,9 +4609,8 @@ void bolt::beam_hits_actor(actor *act)
             }
         }
 
-        // Force lance can knockback up to two spaces
-        if (origin_spell == SPELL_FORCE_LANCE && coinflip())
-            knockback_actor(act);
+        if (act->pos() != newpos)
+            act->collide(newpos, agent(), ench_power);
 
         // Stun the monster briefly so that it doesn't look as though it wasn't
         // knocked back at all
@@ -4652,6 +4659,8 @@ void bolt::hit_shield(actor* blocker) const
                 you.props[MELT_SHIELD_KEY] = true;
         }
     }
+    if (blocker->is_player())
+        you.maybe_degrade_bone_armour();
 }
 
 // Return true if the block succeeded (including reflections.)
@@ -4971,7 +4980,7 @@ void bolt::affect_monster(monster* mon)
             bleed_onto_floor(mon->pos(), mon->type, blood, true);
         }
         // Now hurt monster.
-        mon->hurt(agent(), final, flavour, false);
+        mon->hurt(agent(), final, flavour, KILLED_BY_BEAM, "", "", false);
     }
 
     if (mon->alive())
@@ -5029,7 +5038,7 @@ bool bolt::ignores_monster(const monster* mon) const
     if (flavour == BEAM_DIGGING)
         return true;
 
-    // The targetters might call us with NULL in the event of a remembered
+    // The targetters might call us with nullptr in the event of a remembered
     // monster that is no longer there. Treat it as opaque.
     if (!mon)
         return false;
@@ -5093,6 +5102,7 @@ bool bolt::has_saving_throw() const
     case BEAM_IGNITE_POISON:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+    case BEAM_ATTRACT:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5162,6 +5172,11 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_INNER_FLAME:
         rc = !(mon->is_summoned() || mon->has_ench(ENCH_INNER_FLAME));
+        break;
+
+    case BEAM_CORONA:
+        rc = !mon->glows_naturally()
+             && !mons_class_flag(mon->type, M_SHADOW);
         break;
 
     default:
@@ -5714,6 +5729,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_ATTRACT:
+    {
+        const bool could_see = you.can_see(mon);
+        if (fatal_attraction(mon, agent(), ench_power)
+            && (could_see || you.can_see(mon)))
+        {
+            obvious_effect = true;
+        }
+        return MON_AFFECTED;
+    }
+
     default:
         break;
     }
@@ -5759,37 +5785,50 @@ int bolt::range_used_on_hit() const
 // Checks whether the beam knocks back the supplied actor. The actor
 // should have already failed their EV check, so the save is entirely
 // body-mass-based.
-bool bolt::knockback_actor(actor *act)
+bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
 {
     // We can't do knockback if the beam starts and ends on the same space
     if (source == act->pos())
         return false;
 
+    if (act->is_stationary())
+        return false;
+
+    const int roll = origin_spell == SPELL_FORCE_LANCE
+                     ? 1000 + 40 * ench_power
+                     : 2500;
+    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
+
     ASSERT(ray.pos() == act->pos());
 
-    const coord_def oldpos(ray.pos());
-    const ray_def ray_copy(ray);
-    ray.advance();
-
-    const coord_def newpos(ray.pos());
-    if (newpos == oldpos
-        || actor_at(newpos)
-        || act->is_stationary()
-        || cell_is_solid(newpos)
-        || !act->can_pass_through(newpos)
-        || !act->is_habitable(newpos)
-        // Save is based on target's body weight.
-        || random2(2500) < act->body_weight())
+    const coord_def initial_pos(ray.pos());
+    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
     {
-        ray = ray_copy;
-        return false;
-    }
+        // Save is based on target's body weight.
+        if (random2(roll) < weight)
+            continue;
 
-    act->move_to_pos(newpos);
+        const ray_def ray_copy(ray);
+
+        ray.advance();
+
+        newpos = ray.pos();
+        if (newpos == ray_copy.pos()
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !act->can_pass_through(newpos)
+            || !act->is_habitable(newpos))
+        {
+            ray = ray_copy;
+            return newpos != initial_pos;
+        }
+
+        act->move_to_pos(newpos);
+    }
 
     // Knockback cannot ever kill the actor directly - caller must do
     // apply_location_effects after messaging.
-    return true;
+    return ray.pos() != initial_pos;
 }
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -5799,8 +5838,8 @@ void bolt::refine_for_explosion()
 {
     ASSERT(!special_explosion);
 
-    const char *seeMsg  = NULL;
-    const char *hearMsg = NULL;
+    const char *seeMsg  = nullptr;
+    const char *hearMsg = nullptr;
 
     if (ex_size == 0)
         ex_size = 1;
@@ -5812,7 +5851,7 @@ void bolt::refine_for_explosion()
     // tmp needed so that what c_str() points to doesn't go out of scope
     // before the function ends.
     string tmp;
-    if (item != NULL)
+    if (item != nullptr)
     {
         tmp  = "The " + item->name(DESC_PLAIN, false, false, false)
                + " explodes!";
@@ -5889,7 +5928,7 @@ void bolt::refine_for_explosion()
         ex_size = 1;
     }
 
-    if (seeMsg == NULL)
+    if (seeMsg == nullptr)
     {
         seeMsg  = "The beam explodes into a cloud of software bugs!";
         hearMsg = "You hear the sound of one hand!";
@@ -6298,7 +6337,7 @@ bool bolt::nice_to(const monster* mon) const
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                range(-2), glyph('*'), colour(BLACK), flavour(BEAM_MAGIC),
-               real_flavour(BEAM_MAGIC), drop_item(false), item(NULL),
+               real_flavour(BEAM_MAGIC), drop_item(false), item(nullptr),
                source(), target(), damage(0, 0), ench_power(0), hit(0),
                thrower(KILL_MISC), ex_size(0), source_id(MID_NOBODY),
                source_name(), name(), short_name(), hit_verb(),
@@ -6307,7 +6346,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                affects_nothing(false), affects_items(true), effect_known(true),
                effect_wanton(false),
                draw_delay(15), explode_delay(50),
-               special_explosion(NULL), was_missile(false),
+               special_explosion(nullptr), was_missile(false),
                animate(Options.use_animations & UA_BEAM),
                ac_rule(AC_NORMAL),
 #ifdef DEBUG_DIAGNOSTICS
@@ -6378,7 +6417,7 @@ void bolt::setup_retrace()
 
 void bolt::set_agent(actor *actor)
 {
-    // NULL actor is fine by us.
+    // nullptr actor is fine by us.
     if (!actor)
         return;
 
@@ -6419,7 +6458,7 @@ string bolt::get_short_name() const
     if (!short_name.empty())
         return short_name;
 
-    if (item != NULL && item->defined())
+    if (item != nullptr && item->defined())
     {
         return item->name(DESC_A, false, false, false, false,
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
@@ -6533,6 +6572,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";
     case BEAM_RESISTANCE:            return "resistance";
+    case BEAM_ATTRACT:               return "attraction";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
@@ -6555,7 +6595,7 @@ string bolt::get_source_name() const
  * The bolts that knockback flying actors or actors only when damage
  * is dealt will return when.
  *
- * @param act The target actor. If not-NULL, check if the actor is flying for
+ * @param act The target actor. If not-nullptr, check if the actor is flying for
  *            bolts that knockback flying actors.
  * @param dam The damage dealt. If non-negative, check that dam > 0 for bolts
  *             like force bolt that only push back upon damage.

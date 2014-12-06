@@ -95,7 +95,7 @@ void jiyva_eat_offlevel_items()
                 mpr("You hear a distant slurping noise.");
                 sacrifice_item_stack(*si, &js);
                 item_was_destroyed(*si);
-                destroy_item(si.link());
+                destroy_item(si.index());
                 jiyva_slurp_message(js);
             }
             return;

@@ -62,8 +62,8 @@ static const int EQF_AMULETS = SLOTF(EQ_AMULET) | SLOTF(EQ_RING_AMULET);
 // everything
 static const int EQF_ALL = EQF_PHYSICAL | EQF_RINGS | EQF_AMULETS;
 
-static const FormAttackVerbs DEFAULT_VERBS = FormAttackVerbs(NULL, NULL,
-                                                             NULL, NULL);
+static const FormAttackVerbs DEFAULT_VERBS = FormAttackVerbs(nullptr, nullptr,
+                                                             nullptr, nullptr);
 static const FormAttackVerbs ANIMAL_VERBS = FormAttackVerbs("hit", "bite",
                                                             "maul", "maul");
 
@@ -95,6 +95,7 @@ Form::Form(const form_entry &fe)
       shout_verb(fe.shout_verb),
       shout_volume_modifier(fe.shout_volume_modifier),
       hand_name(fe.hand_name), foot_name(fe.foot_name),
+      flesh_equivalent(fe.flesh_equivalent),
       long_name(fe.long_name), description(fe.description),
       resists(fe.resists), stealth_mod(fe.stealth_mod),
       base_unarmed_damage(fe.base_unarmed_damage),
@@ -165,8 +166,8 @@ int FormDuration::power_bonus(int pow) const
     {
         case PS_NONE:
             return 0;
-        case PS_TENTH:
-            return random2(pow)/10;
+        case PS_STABLE_TENTH:
+            return (random2(pow) + pow)/20;
         case PS_SINGLE:
             return random2(pow);
         case PS_ONE_AND_A_HALF:
@@ -343,6 +344,14 @@ bool Form::res_acid() const
 bool Form::res_sticky_flame() const
 {
     return get_resist(resists, MR_RES_STICKY_FLAME);
+}
+
+/**
+ * Does this form provide resistance to petrification?
+ */
+bool Form::res_petrify() const
+{
+    return get_resist(resists, MR_RES_PETRIFY);
 }
 
 
@@ -1255,7 +1264,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
     for (const equipment_type e : removed)
     {
         item_def *equip = you.slot_item(e, true);
-        if (equip == NULL)
+        if (equip == nullptr)
             continue;
 
         bool unequip = !meld;
@@ -1296,7 +1305,7 @@ static void _remove_equipment(const set<equipment_type>& removed,
     if (meld)
     {
         for (const equipment_type e : removed)
-            if (you.slot_item(e, true) != NULL)
+            if (you.slot_item(e, true) != nullptr)
                 unequip_effect(e, you.equip[e], true, true);
     }
 }
@@ -1509,7 +1518,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
     for (auto eq : _init_equipment_removal(which_trans))
     {
         item_def *item = you.slot_item(eq, true);
-        if (item == NULL)
+        if (item == nullptr)
             continue;
         item_info inf = get_item_info(*item);
 

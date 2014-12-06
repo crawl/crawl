@@ -326,7 +326,7 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
             {
                 const char* msg = "You hear a mighty clap of thunder!";
                 noisy(spell_effect_noise(SPELL_CHAIN_LIGHTNING), source,
-                      (first || !see_source) ? msg : NULL);
+                      (first || !see_source) ? msg : nullptr);
                 break;
             }
             case SPELL_CHAIN_OF_CHAOS:
@@ -349,7 +349,9 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
         {
             case SPELL_CHAIN_LIGHTNING:
                 beam.colour = LIGHTBLUE;
-                beam.damage = calc_dice(5, 10 + pow * 2 / 3);
+                beam.damage = caster->is_player()
+                    ? calc_dice(5, 10 + pow * 2 / 3)
+                    : calc_dice(5, 46 + pow / 6);
                 break;
             case SPELL_CHAIN_OF_CHAOS:
                 beam.colour       = ETC_RANDOM;
@@ -592,17 +594,17 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
                                  bool actual, bool added_effects, bool fail,
                                  bool allow_cancel)
 {
-    monster* mons = agent ? agent->as_monster() : NULL;
+    monster* mons = agent ? agent->as_monster() : nullptr;
 
     colour_t flash_colour = BLACK;
     const char *player_msg = nullptr, *global_msg = nullptr,
                *mons_vis_msg = nullptr, *mons_invis_msg = nullptr;
-    bool (*vulnerable)(const actor *, const actor *) = NULL;
-    bool (*vul_hitfunc)(const actor *) = NULL;
-    int (*damage_player)(actor *, int, int, bool, bool) = NULL;
-    int (*damage_monster)(actor *, monster *, int, int, bool, bool) = NULL;
-    void (*pre_hook)(actor*, bool, vector<monster *>) = NULL;
-    void (*post_hook)(actor*, bool, vector<monster *>, int, int) = NULL;
+    bool (*vulnerable)(const actor *, const actor *) = nullptr;
+    bool (*vul_hitfunc)(const actor *) = nullptr;
+    int (*damage_player)(actor *, int, int, bool, bool) = nullptr;
+    int (*damage_monster)(actor *, monster *, int, int, bool, bool) = nullptr;
+    void (*pre_hook)(actor*, bool, vector<monster *>) = nullptr;
+    void (*post_hook)(actor*, bool, vector<monster *>, int, int) = nullptr;
 
     int hurted = 0;
     int this_damage = 0;
@@ -818,7 +820,7 @@ void sonic_damage(bool scream)
 
 spret_type vampiric_drain(int pow, monster* mons, bool fail)
 {
-    if (mons == NULL || mons->submerged())
+    if (mons == nullptr || mons->submerged())
     {
         fail_check();
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
@@ -909,7 +911,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 {
     pow = min(25, pow);
 
-    if (mons == NULL || mons->submerged())
+    if (mons == nullptr || mons->submerged())
     {
         fail_check();
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
@@ -1042,7 +1044,7 @@ static bool _player_hurt_monster(monster& m, int damage,
 {
     if (damage > 0)
     {
-        m.hurt(&you, damage, flavour, false);
+        m.hurt(&you, damage, flavour, KILLED_BY_BEAM, "", "", false);
 
         if (m.alive())
         {
@@ -1119,7 +1121,7 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
 
-    if (mon == NULL || mon == agent)
+    if (mon == nullptr || mon == agent)
         return 0;
 
     dam_dice.num = _shatter_mon_dice(mon);
@@ -1427,6 +1429,28 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 }
 
 /**
+ * Is it OK for the player to cast Irradiate right now, or will they end up
+ * injuring a monster they didn't mean to?
+ *
+ * @return  true if it's ok to go ahead with the spell; false if the player
+ *          wants to abort.
+ */
+static bool _irradiate_is_safe()
+{
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        const monster *mon = monster_at(*ai);
+        if (!mon)
+            continue;
+
+        if (stop_attack_prompt(mon, false, you.pos()))
+            return false;
+    }
+
+    return true;
+}
+
+/**
  * Irradiate the given cell. (Per the spell.)
  *
  * @param where     The cell in question.
@@ -1470,10 +1494,15 @@ static int _irradiate_cell(coord_def where, int pow, int aux, actor *agent)
  * @param pow   The power at which the spell is being cast.
  * @param who   The actor doing the irradiating.
  * @param fail  Whether the player has failed to cast the spell.
- * @return      The result of casting the spell. (Success or failure.)
+ * @return      SPRET_ABORT if the player changed their mind about casting after
+ *              realizing they would hit an ally; SPRET_FAIL if they failed the
+ *              cast chance; SPRET_SUCCESS otherwise.
  */
 spret_type cast_irradiate(int powc, actor* who, bool fail)
 {
+    if (!_irradiate_is_safe())
+        return SPRET_ABORT;
+
     fail_check();
 
     ASSERT(who);
@@ -1639,7 +1668,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
     // clouds or items where it's standing!
 
     monster* mon = monster_at(where);
-    if (mon == NULL || mon == agent)
+    if (mon == nullptr || mon == agent)
         return 0;
 
     // Monsters which have poison corpses or poisonous attacks.
@@ -1743,8 +1772,9 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
             else
                 mpr("The poison in your system burns!");
 
-            ouch(damage, KILLED_BY_MONSTER, agent->mid,
-                agent->as_monster()->name(DESC_A).c_str());
+            ouch(damage, KILLED_BY_BEAM, agent->mid,
+                 "by burning poison", you.can_see(agent),
+                 agent->as_monster()->name(DESC_A, true).c_str());
 
             if (you.duration[DUR_POISONING] > 0)
             {
@@ -2188,7 +2218,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         if (!caster->is_player())
             return false; // don't let monsters blow up orcish idols
 
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "stone idol";
         // fall-through
     case DNGN_ROCK_WALL:
@@ -2196,11 +2226,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     case DNGN_STONE_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "wall";
         // fall-through
     case DNGN_GRANITE_STATUE:   // normal rock -- big explosion
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "statue";
 
         beam.name       = "blast of rock fragments";
@@ -2233,7 +2263,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "metal wall";
         // fall through
     case DNGN_GRATE:
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "iron grate";
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
@@ -2276,7 +2306,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
-        if (what && *what == NULL)
+        if (what && *what == nullptr)
             *what = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
@@ -2309,7 +2339,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 {
     bool should_destroy_wall = false;
     bool hole                = true;
-    const char *what         = NULL;
+    const char *what         = nullptr;
     const dungeon_feature_type grid = grd(target);
 
     bolt beam;
@@ -2336,7 +2366,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
         bolt tempbeam;
         bool temp;
         setup_fragmentation_beam(tempbeam, pow, caster, target, false, true,
-                                 true, NULL, temp, temp);
+                                 true, nullptr, temp, temp);
         tempbeam.is_tracer = true;
         tempbeam.explode(false);
         if (tempbeam.beam_cancelled)
@@ -2350,7 +2380,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
     fail_check();
 
-    if (what != NULL) // Terrain explodes.
+    if (what != nullptr) // Terrain explodes.
     {
         if (you.see_cell(target))
             mprf("The %s shatters!", what);
@@ -2425,7 +2455,7 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
         break;
     }
 
-    const spret_type ret = zapping(zap, pow, beam, true, NULL, fail);
+    const spret_type ret = zapping(zap, pow, beam, true, nullptr, fail);
 
     if (ret == SPRET_SUCCESS && zap != ZAP_SMALL_SANDBLAST)
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
@@ -2535,7 +2565,7 @@ actor* forest_near_enemy(const actor *mon)
                 return foe;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // Print a message only if you can see any affected trees.
@@ -2620,13 +2650,8 @@ void forest_damage(const actor *mon)
                 if (dmg <= 0)
                     break;
 
-                if (foe->is_player())
-                {
-                    ouch(dmg, KILLED_BY_BEAM, mon->mid,
-                         "by angry trees", true);
-                }
-                else
-                    foe->hurt(mon, dmg);
+                foe->hurt(mon, dmg, BEAM_MISSILE, KILLED_BY_BEAM, "",
+                          "by angry trees");
 
                 break;
             }
@@ -2901,7 +2926,8 @@ void toxic_radiance_effect(actor* agent, int mult)
 
 spret_type cast_searing_ray(int pow, bolt &beam, bool fail)
 {
-    const spret_type ret = zapping(ZAP_SEARING_RAY_I, pow, beam, true, NULL, fail);
+    const spret_type ret = zapping(ZAP_SEARING_RAY_I, pow, beam, true, nullptr,
+                                   fail);
 
     if (ret == SPRET_SUCCESS)
     {
@@ -2970,16 +2996,37 @@ void end_searing_ray()
     you.props.erase("searing_ray_aimed_at_spot");
 }
 
+/**
+ * Can a casting of Glaciate by the player injure the given creature?
+ *
+ * @param victim        The potential victim.
+ * @return              Whether Glaciate can harm that victim.
+ *                      (False for IOODs or friendly battlespheres.)
+ */
+static bool _player_glaciate_affects(const actor *victim)
+{
+    // TODO: deduplicate this with beam::ignores
+    if (!victim)
+        return false;
+
+    const monster* mon = victim->as_monster();
+    if (!mon) // player
+        return true;
+
+    return !mons_is_projectile(mon)
+            && (!mons_is_avatar(mon->type) || !mons_aligned(&you, mon));
+}
+
 spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
     const int range = spell_range(SPELL_GLACIATE, pow);
     targetter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
 
-    if (caster->is_player())
+    if (caster->is_player()
+        && stop_attack_prompt(hitfunc, "glaciate", _player_glaciate_affects))
     {
-        if (stop_attack_prompt(hitfunc, "glaciate"))
-            return SPRET_ABORT;
+        return SPRET_ABORT;
     }
 
     fail_check();

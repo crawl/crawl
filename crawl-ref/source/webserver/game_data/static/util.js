@@ -69,14 +69,12 @@ function () {
         return filtered;
     }
 
-    function init_canvas(element, x, y) {
+    function init_canvas(element, w, h) {
         var ratio = window.devicePixelRatio;
-        element.width = x * ratio;
-        element.height = y * ratio;
-        element.style.width = x + 'px';
-        element.style.height = y + 'px';
-        element.getContext("2d").setTransform(ratio, 0, 0,
-                                              ratio, 0, 0);
+        element.width = w;
+        element.height = h;
+        element.style.width = (w / ratio) + 'px';
+        element.style.height = (h / ratio) + 'px';
     }
 
     return {

@@ -786,7 +786,6 @@ void do_curse_item(item_def &item, bool quiet)
 
         // If we get the message, we know the item is cursed now.
         item.flags |= ISFLAG_KNOW_CURSE;
-        item.flags |= ISFLAG_SEEN_CURSED;
     }
 
     item.flags |= ISFLAG_CURSED;
@@ -828,7 +827,6 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
 {
     if (!item.cursed())
     {
-        item.flags &= ~ISFLAG_SEEN_CURSED;
         if (in_inventory(item))
             item.flags |= ISFLAG_KNOW_CURSE;
         return;
@@ -850,7 +848,6 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         item.flags |= ISFLAG_KNOW_CURSE;
     }
     item.flags &= (~ISFLAG_CURSED);
-    item.flags &= (~ISFLAG_SEEN_CURSED);
 
     if (check_bondage)
         ash_check_bondage();
@@ -907,12 +904,6 @@ actor *net_holdee(const item_def &net)
     return a;
 }
 
-bool in_shop(const item_def &item)
-{
-    // yay the shop hack...
-    return item.pos.x == 0 && item.pos.y >= 5;
-}
-
 static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
@@ -924,7 +915,7 @@ static bool _is_affordable(const item_def &item)
         return true;
 
     // Disregard shop stuff above your reach.
-    if (in_shop(item))
+    if (is_shop_item(item))
         return (int)item_value(item) <= you.gold;
 
     // Explicitly marked by a vault.
@@ -1297,9 +1288,25 @@ static set<armour_type> _hide_armour_set = _make_hide_armour_set();
 bool armour_is_hide(const item_def &item, bool inc_made)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
+    return armour_type_is_hide(static_cast<armour_type>(item.sub_type),
+                               inc_made);
+}
 
-    const armour_type type = static_cast<armour_type>(item.sub_type);
-
+/**
+ * Is the given armour a type that changes when enchanted (i.e. dragon or troll
+ * hide?
+ *
+ * @param type      The armour_type of armour in question.
+ * @param inc_made  Whether to also accept armour that has already been
+ *                  enchanted & transformed (e.g. fda in addition to fire
+ *                  dragon hides, etc)
+ * @return          Whether the given item type is (or was?) a hide.
+ *                  (Note that ARM_ANIMAL_SKIN cannot be enchanted & so doesn't
+ *                  count.)
+ */
+bool armour_type_is_hide(int _type, bool inc_made)
+{
+    const armour_type type = static_cast<armour_type>(_type);
     // actual hides?
     if (_hide_armours.count(type))
         return true;

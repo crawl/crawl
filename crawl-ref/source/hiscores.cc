@@ -101,12 +101,12 @@ void hiscores_new_entry(const scorefile_entry &ne)
     int i, total_entries;
     bool inserted = false;
 
-    // open highscore file (reading) -- NULL is fatal!
+    // open highscore file (reading) -- nullptr is fatal!
     //
     // Opening as a+ instead of r+ to force an exclusive lock (see
     // hs_open) and to create the file if it's not there already.
     scores = _hs_open("a+", _score_file_name());
-    if (scores == NULL)
+    if (scores == nullptr)
         end(1, true, "failed to open score file for writing");
 
     // we're at the end of the file, seek back to beginning.
@@ -170,7 +170,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     for (i = 0; i < total_entries; i++)
     {
         _hs_write(scores, *hs_list[i]);
-        hs_list[i].reset(NULL);
+        hs_list[i].reset(nullptr);
     }
 
     // close scorefile.
@@ -184,9 +184,9 @@ void logfile_new_entry(const scorefile_entry &ne)
     FILE *logfile;
     scorefile_entry le = ne;
 
-    // open logfile (appending) -- NULL *is* fatal here.
+    // open logfile (appending) -- nullptr *is* fatal here.
     logfile = _hs_open("a", _log_file_name());
-    if (logfile == NULL)
+    if (logfile == nullptr)
     {
         mprf(MSGCH_ERROR, "ERROR: failure writing to the logfile.");
         return;
@@ -225,7 +225,7 @@ void hiscores_print_all(int display_count, int format)
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
 
     FILE *scores = _hs_open("r", _score_file_name());
-    if (scores == NULL)
+    if (scores == nullptr)
     {
         // will only happen from command line
         puts("No scores.");
@@ -261,7 +261,7 @@ void hiscores_print_list(int display_count, int format)
 
     // open highscore file (reading)
     scores = _hs_open("r", _score_file_name());
-    if (scores == NULL)
+    if (scores == nullptr)
         return;
 
     // read highscore file
@@ -303,7 +303,7 @@ void hiscores_print_list(int display_count, int format)
 
 static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)
 {
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     tmp = new TextItem();
 
     coord_def min_coord(1,1);
@@ -326,7 +326,7 @@ static void _construct_hiscore_table(MenuScroller* scroller)
     FILE *scores = _hs_open("r", _score_file_name());
     int i;
 
-    if (scores == NULL)
+    if (scores == nullptr)
         return;
 
     // read highscore file
@@ -365,7 +365,7 @@ static void _show_morgue(scorefile_entry& se)
     char buf[200];
     string morgue_text = "";
 
-    while (fgets(buf, sizeof buf, morgue) != NULL)
+    while (fgets(buf, sizeof buf, morgue) != nullptr)
     {
         string line = string(buf);
         size_t newline_pos = line.find_last_of('\n');
@@ -460,7 +460,7 @@ void show_hiscore_table()
     menu.attach_object(highlighter);
 
     menu.set_active_object(score_entries);
-    score_entries->set_active_item((MenuItem*) NULL);
+    score_entries->set_active_item((MenuItem*) nullptr);
     score_entries->activate_first_item();
 
     enable_smart_cursor(false);
@@ -620,6 +620,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
+    "collision",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -721,6 +722,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     piety             = se.piety;
     penance           = se.penance;
     wiz_mode          = se.wiz_mode;
+    explore_mode      = se.explore_mode;
     birth_time        = se.birth_time;
     death_time        = se.death_time;
     real_time         = se.real_time;
@@ -940,10 +942,11 @@ void scorefile_entry::init_with_fields()
     ev    = fields->int_field("ev");
     sh    = fields->int_field("sh");
 
-    god      = str_to_god(fields->str_field("god"));
-    piety    = fields->int_field("piety");
-    penance  = fields->int_field("pen");
-    wiz_mode = fields->int_field("wiz");
+    god          = str_to_god(fields->str_field("god"));
+    piety        = fields->int_field("piety");
+    penance      = fields->int_field("pen");
+    wiz_mode     = fields->int_field("wiz");
+    explore_mode = fields->int_field("explore");
 
     birth_time = _parse_time(fields->str_field("start"));
     death_time = _parse_time(fields->str_field("end"));
@@ -1029,6 +1032,8 @@ void scorefile_entry::set_base_xlog_fields() const
 
     if (wiz_mode)
         fields->add_field("wiz", "%d", wiz_mode);
+    if (explore_mode)
+        fields->add_field("explore", "%d", explore_mode);
 
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
     fields->add_field("dur",   "%d", (int)real_time);
@@ -1192,7 +1197,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
     // Set the default aux data value...
     // If aux is passed in (ie for a trap), we'll default to that.
-    if (aux == NULL)
+    if (aux == nullptr)
         auxkilldata.clear();
     else
         auxkilldata = aux;
@@ -1212,7 +1217,8 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             || death_type == KILLED_BY_ROLLING
             || death_type == KILLED_BY_SPINES
             || death_type == KILLED_BY_WATER
-            || death_type == KILLED_BY_BEING_THROWN)
+            || death_type == KILLED_BY_BEING_THROWN
+            || death_type == KILLED_BY_COLLISION)
         && monster_by_mid(death_source))
     {
         const monster* mons = monster_by_mid(death_source);
@@ -1251,6 +1257,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
         if (mons_is_player_shadow(mons))
             death_source_name = "their own shadow"; // heh
+
+        if (mons->mid == MID_YOU_FAULTLESS)
+            death_source_name = "themself";
 
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
@@ -1370,6 +1379,7 @@ void scorefile_entry::reset()
     piety                = -1;
     penance              = -1;
     wiz_mode             = 0;
+    explore_mode         = 0;
     birth_time           = 0;
     death_time           = 0;
     real_time            = -1;
@@ -1476,7 +1486,7 @@ void scorefile_entry::init(time_t dt)
 
     dlua.pushglobal("dgn.persist.calc_score");
     lua_pushboolean(dlua, death_type == KILLED_BY_WINNING);
-    if (dlua.callfn(NULL, 1, 2))
+    if (dlua.callfn(nullptr, 1, 2))
         dlua.fnreturns(">db", &points, &base_score);
 
     // If calc_score didn't exist, or returned true as its second value,
@@ -1587,7 +1597,7 @@ void scorefile_entry::init(time_t dt)
     }
 
     birth_time = you.birth_time;     // start time of game
-    death_time = (dt != 0 ? dt : time(NULL)); // end time of game
+    death_time = (dt != 0 ? dt : time(nullptr)); // end time of game
 
     handle_real_time(death_time);
     real_time = you.real_time;
@@ -1617,6 +1627,7 @@ void scorefile_entry::init(time_t dt)
             potions_used += you.action_count[p][i];
 
     wiz_mode = (you.wizard ? 1 : 0);
+    explore_mode = (you.explore ? 1 : 0);
 }
 
 string scorefile_entry::hiscore_line(death_desc_verbosity verbosity) const
@@ -1764,7 +1775,7 @@ string scorefile_entry::single_cdesc() const
     scname = chop_string(name, 10);
 
     return make_stringf("%8d %s %s-%02d%s", points, scname.c_str(),
-                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "");
+                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : (explore_mode == 1) ? "E" : "");
 }
 
 static string _append_sentence_delimiter(const string &sentence,
@@ -1823,7 +1834,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         desc += " HPs";
     }
 
-    desc += wiz_mode? ") *WIZ*" : ")";
+    desc += wiz_mode ? ") *WIZ*" : explore_mode ? ") *EXPLORE*" : ")";
     desc += _hiscore_newline_string();
 
     if (verbose)
@@ -2454,6 +2465,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         needs_damage = true;
         break;
 
+    case KILLED_BY_COLLISION:
+        if (terse)
+            desc += auxkilldata + " collision";
+        else
+        {
+            desc += "Collided with " + auxkilldata;
+            needs_called_by_monster_line = true;
+        }
+        needs_damage = true;
+        break;
 
     default:
         desc += terse? "program bug" : "Nibbled to death by software bugs";
@@ -2581,8 +2602,9 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else if (needs_called_by_monster_line)
             {
                 snprintf(scratch, sizeof(scratch), "... %s by %s",
-                         auxkilldata == "by angry trees" ? "awakened"
-                                                         : "invoked",
+                         death_type == KILLED_BY_COLLISION ? "caused" :
+                         auxkilldata == "by angry trees"   ? "awakened"
+                                                           : "invoked",
                          death_source_name.c_str());
                 desc += scratch;
                 desc += _hiscore_newline_string();
@@ -2803,8 +2825,8 @@ void mark_milestone(const string &type, const string &milestone,
             && lasttype == type
             && lastmilestone == milestone)
 #ifndef SCORE_WIZARD_CHARACTERS
-        // Don't mark normal milestones in wizmode
-        || you.wizard && type != "crash"
+        // Don't mark normal milestones in wizmode or explore mode
+        || (type != "crash" && (you.wizard || you.explore))
 #endif
         )
     {
@@ -2817,7 +2839,7 @@ void mark_milestone(const string &type, const string &milestone,
 
     const string milestone_file =
         (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
-    const scorefile_entry se(0, MID_NOBODY, KILL_MISC, NULL);
+    const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
     if (!origin_level.empty())
@@ -2845,10 +2867,10 @@ void mark_milestone(const string &type, const string &milestone,
 #ifdef DGL_WHEREIS
 string xlog_status_line()
 {
-    const scorefile_entry se(0, MID_NOBODY, KILL_MISC, NULL);
+    const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
-    xl.add_field("time", "%s", make_date_string(time(NULL)).c_str());
+    xl.add_field("time", "%s", make_date_string(time(nullptr)).c_str());
     return xl.xlog_line();
 }
 #endif // DGL_WHEREIS

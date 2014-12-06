@@ -192,7 +192,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
             "Range           " + "Hunger" + "    Level",
             MEL_TITLE));
 #endif
-    spell_menu.set_highlighter(NULL);
+    spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
     spell_menu.add_toggle_key('!');
 
@@ -1060,6 +1060,9 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_fragment(&you, pow, range);
     case SPELL_FULMINANT_PRISM:
         return new targetter_smite(&you, range, 0, 2);
+    case SPELL_SINGULARITY:
+        return new targetter_smite(&you, range, singularity_range(pow, 2),
+                                                singularity_range(pow));
     case SPELL_DAZZLING_SPRAY:
         return new targetter_spray(&you, range, ZAP_DAZZLING_SPRAY);
     case SPELL_EXPLOSIVE_BOLT:
@@ -1070,6 +1073,10 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_shotgun(&you, CLOUD_CONE_BEAM_COUNT, range);
     case SPELL_SCATTERSHOT:
         return new targetter_shotgun(&you, shotgun_beam_count(pow), range);
+    case SPELL_GRAVITAS:
+        return new targetter_beam(&you, range, spell_to_zap(spell), pow,
+                                  singularity_range(pow, 2),
+                                  singularity_range(pow));
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1130,7 +1137,7 @@ static void _spellcasting_corruption(spell_type spell)
 {
     // never kill the player (directly)
     int hp_cost = min(you.spell_hp_cost() * spell_mana(spell), you.hp - 1);
-    const char * source = NULL;
+    const char * source = nullptr;
     if (player_equip_unrand(UNRAND_MAJIN))
         source = "the Majin-Bo"; // for debugging
     ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, source);
@@ -1242,7 +1249,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spell == SPELL_HASTE && spd.isMe()
             && stasis_blocks_effect(false, "%s prevents hasting.",
-                                    0, NULL, "You cannot haste."))
+                                    0, nullptr, "You cannot haste."))
         {
             return SPRET_ABORT;
         }
@@ -1288,7 +1295,7 @@ spret_type your_spells(spell_type spell, int powc,
                                "death!", GOD_KIKUBAAQUDGHA);
 
             // The spell still goes through, but you get a miscast anyway.
-            MiscastEffect(&you, NULL, GOD_MISCAST + GOD_KIKUBAAQUDGHA,
+            MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_KIKUBAAQUDGHA,
                           SPTYP_NECROMANCY,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
@@ -1303,7 +1310,7 @@ spret_type your_spells(spell_type spell, int powc,
                                "destruction!", GOD_VEHUMET);
 
             // The spell still goes through, but you get a miscast anyway.
-            MiscastEffect(&you, NULL, GOD_MISCAST + GOD_VEHUMET,
+            MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_VEHUMET,
                           SPTYP_CONJURATION,
                           (you.experience_level / 2) + (spell_difficulty(spell) * 2),
                           random2avg(88, 3), "the malice of Vehumet");
@@ -1380,7 +1387,7 @@ spret_type your_spells(spell_type spell, int powc,
         // miscasts are uncontrolled
         contaminate_player(cont_points, true);
 
-        MiscastEffect(&you, NULL, SPELL_MISCAST, spell,
+        MiscastEffect(&you, nullptr, SPELL_MISCAST, spell,
                       spell_difficulty(spell), fail);
 
         return SPRET_FAIL;
@@ -1444,7 +1451,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     if (zap != NUM_ZAPS)
     {
         spret_type ret = zapping(zap, spell_zap_power(spell, powc), beam, true,
-                                 NULL, fail);
+                                 nullptr, fail);
 
         if (ret == SPRET_SUCCESS)
             _spell_zap_effect(spell);
@@ -1643,8 +1650,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SIMULACRUM:
         return cast_simulacrum(powc, god, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_TWISTED_RESURRECTION:
-        return cast_twisted_resurrection(powc, god, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_HAUNT:
         return cast_haunt(powc, beam.target, god, fail);
@@ -1799,6 +1809,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_OZOCUBUS_ARMOUR:
         return ice_armour(powc, fail);
 
+    case SPELL_BONE_ARMOUR:
+        return corpse_armour(powc, fail);
+
     case SPELL_PHASE_SHIFT:
         return cast_phase_shift(powc, fail);
 
@@ -1878,6 +1891,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(&you, powc, beam.target, fail);
+
+    case SPELL_SINGULARITY:
+        return cast_singularity(&you, powc, beam.target, fail);
 
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);

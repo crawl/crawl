@@ -524,7 +524,7 @@ void handle_behaviour(monster* mon)
 
         if (mon->foe == MHITYOU)
         {
-            // monster::get_foe returns NULL for friendly monsters with
+            // monster::get_foe returns nullptr for friendly monsters with
             // foe == MHITYOU, so make afoe point to the player here.
             // -cao
             afoe = &you;

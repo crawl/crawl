@@ -221,6 +221,10 @@ A staircase to the Ecumenical Temple
 
 <Temple>
 %%%%
+A staircase to the Orcish Mines
+
+<Orcish Mines>
+%%%%
 A staircase to the Shoals
 
 <Shoals>
@@ -231,10 +235,16 @@ A staircase to the Tomb
 %%%%
 A tree
 
-I like trees because they seem more resigned to the way they have to live than
-other things do.
-
+“I like trees because they seem more resigned to the way they have to live than
+other things do.”
     -Willa Cather, _O Pioneers_. 1913.
+%%%%
+Agony spell
+
+“Unbearable, isn't it? The suffering of strangers, the agony of friends. There
+is a secret song at the center of the world, Joey, and its sound is like razors
+through flesh.”
+    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
 %%%%
 Asterion
 
@@ -242,7 +252,6 @@ Asterion
 interest me; like the philosopher, I think nothing is communicated by the art
 of writing. Annoying and trivial minutiae have no place in my spirit, a spirit
 which is receptive only to whatsoever is grand.”
-
   -Jorge Luis Borges, “The House of Asterion”. 1947.
    trans. Antonios Sarhanis, 2008.
 %%%%
@@ -341,6 +350,12 @@ Cause Fear spell
  Used to the noose, they obey”
     -The Mars Volta, “Miranda That Ghost Just Isn't Holy Anymore”. 2005.
 %%%%
+Chain Lightning spell
+
+“The trouble ain't that there is too many fools,
+ but that the lightning ain't distributed right.”
+    -traditionally attributed to Samuel Clemens
+%%%%
 Cigotuvi's Monster
 
 “I beheld the wretch — the miserable monster whom I had
@@ -415,6 +430,21 @@ little chance against the tall athletic Edmund, proposed, on the contrary, for
 them to divide the realm as their fathers had done.”
     -Thomas Keightley, _The History of England_. 1839.
 %%%%
+Enslavement spell
+
+“He held up his hand, and they all stopped, and I thought he seemed to be
+saying, `All these lives will I give you, ay, and many more and greater,
+through countless ages, if you will fall down and worship me!' And then a red
+cloud, like the colour of blood, seemed to close over my eyes, and before I
+knew what I was doing, I found myself opening the sash and saying to Him,
+`Come in, Lord and Master!'”
+    -Bram Stoker, _Dracula_. 1897.
+%%%%
+Ensorcelled Hibernation spell
+
+“Sweet dreams are made of this; who am I to disagree?”
+    -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
+%%%%
 Fire Storm spell
 
 “Some have said there is no subtlety to destruction. You know what? They're
@@ -445,6 +475,14 @@ Ilsuiw
  Till human voices wake us, and we drown.”
     -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. lines 129-131. 1915.
 %%%%
+Irradiate spell
+
+“Reflex in the sky warn you you're gonna die
+ Storm coming, you'd better hide from the atomic tide
+ Flashes in the sky turns houses into sties
+ Turns people into clay, radiation minds decay”
+    -Black Sabbath, “Electric Funeral”. 1970.
+%%%%
 Khufu
 
 “And then I looked farther, beyond the pallid line of the sands, and I saw a
@@ -463,6 +501,22 @@ Kirke
 close-barred sties. And art thou come to release them? Nay, I tell thee, thou
 shalt not thyself return, but shalt remain there with the others.”
     -Homer, Odysseia
+%%%%
+Lee's Rapid Deconstruction spell
+
+“Now the house was full of men and women; and all the lords of the Philistines
+were there; and there were upon the roof about three thousand men and women,
+that beheld while Samson made sport.
+
+And Samson called unto the LORD, and said, O Lord GOD, remember me, I pray
+thee, and strengthen me, I pray thee, only this once, O God, that I may be at
+once avenged of the Philistines for my two eyes.
+
+And Samson said, Let me die with the Philistines. And he bowed himself with all
+his might; and the house fell upon the lords, and upon all the people that were
+therein. So the dead which he slew at his death were more than they which he
+slew in his life.”
+    -KJV Bible, Judges 16:28-30.
 %%%%
 Mara
 
@@ -538,6 +592,14 @@ Norris
 negative.”
     -Georges Poulet
 %%%%
+Orcish Mines
+
+“You load sixteen tons, what do you get
+ Another day older and deeper in debt
+ Saint Peter don't you call me 'cause I can't go
+ I owe my soul to the company store.”
+    -Merle Travis, "Sixteen Tons". 1946.
+%%%%
 Polyphemus
 
 “...as soon as he had got through with all his work, he clutched up two more of
@@ -573,6 +635,15 @@ Psyche
  And darkness eke as thrall to him remain.”
     -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
     trans. William Adlington, 1566.
+%%%%
+Shatter spell
+
+“And it happened when the people heard the sound of the trumpet, and the people
+shouted with a great shout, that the wall fell down flat. Then the people went
+up into the city, every man straight before him, and they took the city. And
+they utterly destroyed all that was in the city, both man and woman, young and
+old, ox and sheep and donkey, with the edge of the sword.”
+    -KJV Bible, Joshua 6:20-21.
 %%%%
 Shoals
 
@@ -730,7 +801,7 @@ amulet of stasis
 amulet of the gourmand
 
 “put a knife to thy throat, if thou be a man given to appetite.”
-    -KJV Bible, Proverbs 23:2
+    -KJV Bible, Proverbs 23:2.
 %%%%
 amulet of warding
 
@@ -808,8 +879,12 @@ cult image.”
 %%%%
 battlesphere
 
-Rule 4: Close air support covereth a multitude of sins.
-    -The Seven Habits of Highly Effective Pirates
+“I'm your only friend
+ I'm not your only friend
+ But I'm a little glowing friend
+ But really I'm not actually your friend
+ But I am”
+    -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
 %%%%
 blowgun
 
@@ -1593,6 +1668,12 @@ insubstantial wisp
  There swallow'd up and lost, from succour farr.”
     -John Milton, _Paradise Lost_
 %%%%
+Iskenderun's Battlesphere spell
+
+“Rule 4: Close air support covereth a multitude of sins.”
+    -Howard Tayler, _The Seven Habits of Highly Effective Pirates_,
+     in _Schlock Mercenary_. 2008.
+%%%%
 jackal
 
 Always ready to take advantage of every favourable opportunity, the Jackal is a
@@ -1982,6 +2063,11 @@ pandemonium lord
  At Pandaemonium, the high Capital
  Of Satan and his Peers...”
     -John Milton, _Paradise Lost_,  Book I, l. 752-7. 1667.
+%%%%
+Passwall spell
+
+“He says the best way out is always through.”
+    -Robert Frost, _A Servant to Servants_. 1915.
 %%%%
 pearl dragon armour
 
@@ -2782,6 +2868,18 @@ staff of wizardry
 
 <staff>
 %%%%
+starcursed mass
+
+“Did you see that star go out?
+ I seen it burn.
+
+ That little star went out,
+ your little eyes went out.
+
+ Our burnt little dreams are hid
+ up where the stars get lit.”
+    -Thee Silver Mt. Zion, “I Built Myself a Metal Bird”. 2010.
+%%%%
 steam dragon armour
 
 <steam dragon hide>
@@ -3086,7 +3184,7 @@ wand of confusion
 %%%%
 wand of digging
 
-<wand>
+<Passwall spell>
 %%%%
 wand of disintegration
 
@@ -3098,7 +3196,7 @@ wand of draining
 %%%%
 wand of enslavement
 
-<wand>
+<Enslavement spell>
 %%%%
 wand of fire
 

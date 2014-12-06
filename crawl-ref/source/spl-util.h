@@ -100,7 +100,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
 
 int apply_random_around_square(cell_func cf, const coord_def& where,
                                bool hole_in_middle, int power, int max_targs,
-                               actor *agent = NULL);
+                               actor *agent = nullptr);
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
@@ -116,14 +116,17 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       int range = 0,
                       bool needs_path = true, bool may_target_monster = true,
                       bool may_target_self = false,
-                      const char *target_prefix = NULL,
-                      const char *prompt = NULL,
+                      const char *target_prefix = nullptr,
+                      const char *prompt = nullptr,
                       bool cancel_at_self = false,
-                      targetter *hitfunc = NULL,
-                      desc_filter get_desc_func = NULL);
+                      targetter *hitfunc = nullptr,
+                      desc_filter get_desc_func = nullptr);
 
 skill_type spell_type2skill(unsigned int which_spelltype);
 unsigned int skill2spell_type(skill_type spell_skill);
+
+skill_type arcane_mutation_to_skill(mutation_type mutation);
+bool cannot_use_schools(unsigned int schools);
 
 spell_type zap_type_to_spell(zap_type zap);
 

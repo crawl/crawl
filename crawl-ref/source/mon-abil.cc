@@ -271,7 +271,7 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 // Create a new slime creature at 'target', and split 'thing''s hp and
 // merge count with the new monster.
 // Now it returns index of new slime (-1 if it fails).
-static monster* _do_split(monster* thing, coord_def & target)
+static monster* _do_split(monster* thing, const coord_def & target)
 {
     ASSERT(thing->alive());
 
@@ -491,7 +491,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
 // Actually merge two slime creatures, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
-static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
+static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 {
     // Combine enchantment durations.
     merge_ench_durations(initial_slime, merge_to);
@@ -541,8 +541,6 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
 
     // Have to 'kill' the slime doing the merging.
     monster_die(initial_slime, KILL_DISMISSED, NON_MONSTER, true);
-
-    return true;
 }
 
 // Slime creatures can split but not merge under these conditions.
@@ -574,35 +572,29 @@ static bool _slime_merge(monster* thing)
         return false;
 
     int max_slime_merge = 5;
-    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
-    coord_def origin = thing->pos();
-
     int target_distance = grid_distance(thing->target, thing->pos());
 
-    monster* merge_target = NULL;
     // Check for adjacent slime creatures.
-    for (int i = 0; i < 8; ++i)
+    monster* merge_target = nullptr;
+    for (fair_adjacent_iterator ai(thing->pos()); ai; ++ai)
     {
-        coord_def target = origin + Compass[compass_idx[i]];
-
         // If this square won't reduce the distance to our target, don't
         // look for a potential merge, and don't allow this square to
         // prevent a merge if empty.
-        if (grid_distance(thing->target, target) >= target_distance)
+        if (grid_distance(thing->target, *ai) >= target_distance)
             continue;
 
         // Don't merge if there is an open square that reduces distance
         // to target, even if we found a possible slime to merge with.
-        if (!actor_at(target)
-            && mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target)))
+        if (!actor_at(*ai)
+            && mons_class_can_pass(MONS_SLIME_CREATURE, grd(*ai)))
         {
             return false;
         }
 
         // Is there a slime creature on this square we can consider
         // merging with?
-        monster* other_thing = monster_at(target);
+        monster* other_thing = monster_at(*ai);
         if (!merge_target
             && other_thing
             && other_thing->type == MONS_SLIME_CREATURE
@@ -624,7 +616,10 @@ static bool _slime_merge(monster* thing)
     // We found a merge target and didn't find an open square that
     // would reduce distance to target, so we can actually merge.
     if (merge_target)
-        return _do_merge_slimes(thing, merge_target);
+    {
+        _do_merge_slimes(thing, merge_target);
+        return true;
+    }
 
     // No adjacent slime creatures we could merge with.
     return false;
@@ -654,24 +649,14 @@ static bool _crawling_corpse_merge(monster *crawlie)
     if (!crawlie || _disabled_merge(crawlie))
         return false;
 
-    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
-    coord_def origin = crawlie->pos();
-
-    monster* merge_target = NULL;
     // Check for adjacent crawlies
-    for (int i = 0; i < 8; ++i)
+    for (fair_adjacent_iterator ai(crawlie->pos()); ai; ++ai)
     {
-        coord_def target = origin + Compass[compass_idx[i]];
-
-        // Is there a crawlie/abomination on this square we can merge with?
-        monster* other_thing = monster_at(target);
-        if (!merge_target && _crawlie_is_mergeable(other_thing))
-            merge_target = other_thing;
+        monster * const mon = monster_at(*ai);
+        // If there is a crawlie we can merge with, try to do so.
+        if (_crawlie_is_mergeable(mon) && _do_merge_crawlies(crawlie, mon))
+            return true;
     }
-
-    if (merge_target)
-        return _do_merge_crawlies(crawlie, merge_target);
 
     // No adjacent crawlies.
     return false;
@@ -697,7 +682,7 @@ static monster *_slime_split(monster* thing, bool force_split)
     const coord_def origin  = thing->pos();
 
     const actor* foe        = thing->get_foe();
-    const bool has_foe      = (foe != NULL && thing->can_see(foe));
+    const bool has_foe      = (foe != nullptr && thing->can_see(foe));
     const coord_def foe_pos = (has_foe ? foe->position : coord_def(0,0));
     const int old_dist      = (has_foe ? grid_distance(origin, foe_pos) : 0);
 
@@ -715,27 +700,22 @@ static monster *_slime_split(monster* thing, bool force_split)
         }
     }
 
-    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
-
     // Anywhere we can place an offspring?
-    for (int i = 0; i < 8; ++i)
+    for (fair_adjacent_iterator ai(origin); ai; ++ai)
     {
-        coord_def target = origin + Compass[compass_idx[i]];
-
         // Don't split if this increases the distance to the target.
-        if (has_foe && grid_distance(target, foe_pos) > old_dist
+        if (has_foe && grid_distance(*ai, foe_pos) > old_dist
             && !force_split)
         {
             continue;
         }
 
-        if (_slime_can_spawn(target))
+        if (_slime_can_spawn(*ai))
         {
             // This can fail if placing a new monster fails.  That
             // probably means we have too many monsters on the level,
             // so just return in that case.
-            return _do_split(thing, target);
+            return _do_split(thing, *ai);
         }
     }
 
@@ -783,27 +763,16 @@ bool slime_creature_polymorph(monster* slime)
 
 static bool _starcursed_split(monster* mon)
 {
-    if (!mon
-        || mon->blob_size <= 1
-        || mon->type != MONS_STARCURSED_MASS)
-    {
+    if (!mon || mon->blob_size <= 1 || mon->type != MONS_STARCURSED_MASS)
         return false;
-    }
-
-    const coord_def origin = mon->pos();
-
-    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx);
 
     // Anywhere we can place an offspring?
-    for (int i = 0; i < 8; ++i)
+    for (fair_adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
-        coord_def target = origin + Compass[compass_idx[i]];
-
-        if (mons_class_can_pass(MONS_STARCURSED_MASS, env.grid(target))
-            && !actor_at(target))
+        if (mons_class_can_pass(MONS_STARCURSED_MASS, env.grid(*ai))
+            && !actor_at(*ai))
         {
-            return _do_split(mon, target);
+            return _do_split(mon, *ai);
         }
     }
 
@@ -864,13 +833,11 @@ static void _starcursed_scream(monster* mon, actor* target)
                  target->name(DESC_THE).c_str(),
                  target->pronoun(PRONOUN_POSSESSIVE).c_str());
         }
-        target->hurt(mon, dam);
     }
     else
-    {
         mprf(MSGCH_MONSTER_SPELL, "%s", message);
-        ouch(dam, KILLED_BY_BEAM, mon->mid, "accursed screaming");
-    }
+    target->hurt(mon, dam, BEAM_MISSILE, KILLED_BY_BEAM, "",
+                 "accursed screaming");
 
     if (stun && target->alive())
         target->paralyse(mon, stun, "accursed screaming");
@@ -900,15 +867,41 @@ static bool _will_starcursed_scream(monster* mon)
     return one_chance_in(n);
 }
 
-static bool _lost_soul_affectable(const monster* mons)
+/**
+ * Can a lost soul revive the given monster, assuming one is nearby?
+ *
+ * @param mons      The monster potentially being revived.
+ * @return          Whether it's a possible target for lost souls.
+ */
+static bool _lost_soul_affectable(const monster &mons)
 {
-    return ((mons->holiness() == MH_UNDEAD
-             && mons->type != MONS_LOST_SOUL
-             && !mons_is_zombified(mons))
-            ||(mons->holiness() == MH_NATURAL
-               && !is_good_god(mons->god)))
-           && !mons->is_summoned()
-           && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
+    // zombies are boring
+    if (mons_is_zombified(&mons))
+        return false;
+
+    // undead can be reknit, naturals ghosted, everyone else is out of luck
+    if (mons.holiness() != MH_UNDEAD && mons.holiness() != MH_NATURAL)
+        return false;
+
+    // already been revived once
+    if (testbits(mons.flags, MF_SPECTRALISED))
+        return false;
+
+    // just silly
+    if (mons.type == MONS_LOST_SOUL)
+        return false;
+
+    // for ely, I guess?
+    if (is_good_god(mons.god))
+        return false;
+
+    if (mons.is_summoned())
+        return false;
+
+    if (mons_class_flag(mons.type, M_NO_EXP_GAIN))
+        return false;
+
+    return true;
 }
 
 static bool _lost_soul_teleport(monster* mons)
@@ -921,7 +914,7 @@ static bool _lost_soul_teleport(monster* mons)
     // Assemble candidate list and randomize
     for (monster_iterator mi; mi; ++mi)
     {
-        if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
+        if (_lost_soul_affectable(**mi) && mons_aligned(mons, *mi))
         {
             mon_quality m(*mi, min(mi->get_experience_level(), 18) + random2(8));
             candidates.push_back(m);
@@ -973,7 +966,7 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
     int count = 0;
     for (monster_near_iterator mi(soul, LOS_NO_TRANS); mi; ++mi)
     {
-        if (_lost_soul_affectable(*mi))
+        if (_lost_soul_affectable(**mi))
             ++count;
         else if (mi->type == MONS_LOST_SOUL)
             --count;
@@ -984,55 +977,68 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
            || x_chance_in_y(target_hd * target_hd * target_hd, 1200);
 }
 
+/**
+ * Check to see if the given monster can be revived by lost souls (if it's a
+ * valid target for revivication & if there are any lost souls nearby), and
+ * revive it if so.
+ *
+ * @param mons  The monster in question.
+ * @return      Whether the monster was revived/reknitted, or whether it
+ *              remains dead (dying?).
+ */
 bool lost_soul_revive(monster* mons)
 {
-    if (!_lost_soul_affectable(mons))
+    if (!_lost_soul_affectable(*mons))
         return false;
 
     for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
+        if (mi->type != MONS_LOST_SOUL || !mons_aligned(mons, *mi))
+            continue;
+
+        if (!_worthy_sacrifice(*mi, mons))
+            continue;
+
+        // save this before we revive it
+        const string revivee_name = mons->name(DESC_THE);
+        const bool was_alive = mons->holiness() == MH_NATURAL;
+
+        targetter_los hitfunc(*mi, LOS_SOLID);
+        flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
+
+        mons->heal(mons->max_hit_points);
+        mons->del_ench(ENCH_CONFUSION, true);
+        mons->timeout_enchantments(10);
+
+        coord_def newpos = mi->pos();
+        if (was_alive)
         {
-            if (!_worthy_sacrifice(*mi, mons))
-                continue;
-
-            targetter_los hitfunc(*mi, LOS_SOLID);
-            flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
-
-            mons->heal(mons->max_hit_points);
-            mons->del_ench(ENCH_CONFUSION, true);
-            mons->timeout_enchantments(10);
-
-            coord_def newpos = mi->pos();
-            if (mons->holiness() == MH_NATURAL)
-            {
-                mons->move_to_pos(newpos);
-                mons->flags |= (MF_SPECTRALISED | MF_FAKE_UNDEAD);
-            }
-
-            // check if you can see the monster *after* it maybe moved
-            if (you.can_see(mons))
-            {
-                if (mons->holiness() == MH_UNDEAD)
-                {
-                    mprf("%s sacrifices itself to reknit %s!",
-                         mi->name(DESC_THE).c_str(),
-                         mons->name(DESC_THE).c_str());
-                }
-                else
-                {
-                    mprf("%s assumes the form of %s%s!",
-                         mi->name(DESC_THE).c_str(),
-                         mons->name(DESC_THE).c_str(),
-                         (mi->is_summoned() ? " and becomes anchored to this"
-                          " world" : ""));
-                }
-            }
-
-            monster_die(*mi, KILL_MISC, -1, true);
-
-            return true;
+            mons->move_to_pos(newpos);
+            mons->flags |= (MF_SPECTRALISED | MF_FAKE_UNDEAD);
         }
+
+        // check if you can see the monster *after* it maybe moved
+        if (you.can_see(mons))
+        {
+            if (!was_alive)
+            {
+                mprf("%s sacrifices itself to reknit %s!",
+                     mi->name(DESC_THE).c_str(),
+                     revivee_name.c_str());
+            }
+            else
+            {
+                mprf("%s assumes the form of %s%s!",
+                     mi->name(DESC_THE).c_str(),
+                     revivee_name.c_str(),
+                     (mi->is_summoned() ? " and becomes anchored to this"
+                      " world" : ""));
+            }
+        }
+
+        monster_die(*mi, KILL_MISC, -1, true);
+
+        return true;
     }
 
     return false;
@@ -1282,7 +1288,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             if (ai->is_monster() && mons_aligned(*ai, mons))
             {
-                if (_lost_soul_affectable(ai->as_monster()))
+                if (_lost_soul_affectable(*ai->as_monster()))
                     see_friend = true;
             }
             else

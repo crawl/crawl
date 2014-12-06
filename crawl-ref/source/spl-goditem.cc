@@ -170,7 +170,7 @@ static spret_type _healing_spell(int healed, int max_healed,
                                       you_worship(GOD_ELYVILON) ?
                                             TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS, false, true, true, "Heal",
-                                      NULL, false, NULL, _desc_mindless);
+                                      nullptr, false, nullptr, _desc_mindless);
     }
     else
     {
@@ -491,10 +491,6 @@ int detect_items(int pow)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
-        // Don't you love the 0,5 shop hack?
-        if (!in_bounds(*ri))
-            continue;
-
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
@@ -612,7 +608,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
 
     while (1)
     {
-        if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
+        if (!any_items_of_type(OSEL_CURSED_WORN) && used)
         {
             mpr("You have uncursed all your worn items.");
             return used;
@@ -859,7 +855,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (igrd(*ai) != NON_ITEM)
             {
                 coord_def newpos;
-                get_push_space(*ai, newpos, NULL, true);
+                get_push_space(*ai, newpos, nullptr, true);
                 move_items(*ai, newpos);
             }
 
@@ -970,7 +966,7 @@ bool cast_imprison(int pow, monster* mons, int source)
 
 bool cast_smiting(int pow, monster* mons)
 {
-    if (mons == NULL || mons->submerged())
+    if (mons == nullptr || mons->submerged())
     {
         canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to invisible/submerged monsters.

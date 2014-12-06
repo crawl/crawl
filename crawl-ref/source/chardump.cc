@@ -102,7 +102,7 @@ struct dump_params
     const scorefile_entry *se;
 
     dump_params(string &_text, const string &sec = "",
-                bool id = false, const scorefile_entry *s = NULL)
+                bool id = false, const scorefile_entry *s = nullptr)
         : text(_text), section(sec), full_id(id), se(s)
     {
     }
@@ -141,9 +141,9 @@ static dump_section_handler dump_handlers[] =
     { "-",              _sdump_separator     },
 
 #ifdef CLUA_BINDINGS
-    { NULL,             _sdump_lua           }
+    { nullptr,          _sdump_lua           }
 #else
-    { NULL,             NULL                }
+    { nullptr,          nullptr              }
 #endif
 };
 
@@ -1410,7 +1410,7 @@ static bool _write_dump(const string &fname, dump_params &par, bool quiet)
 
     dprf("File name: %s", file_name.c_str());
 
-    if (handle != NULL)
+    if (handle != nullptr)
     {
         fputs(OUTS(par.text), handle);
         fclose(handle);
@@ -1532,7 +1532,7 @@ static bool _dgl_unknown_timestamp_file(const string &filename)
     return false;
 }
 
-// Returns a filehandle to use to write turn timestamps, NULL if
+// Returns a filehandle to use to write turn timestamps, nullptr if
 // timestamps should not be written.
 static FILE *_dgl_timestamp_filehandle()
 {
@@ -1602,7 +1602,7 @@ static void _dgl_record_timestamp(int turn)
 {
     if (turn && turn < TIMESTAMP_TURN_MAX && !(turn % TIMESTAMP_TURN_INTERVAL))
     {
-        const time_t now = time(NULL);
+        const time_t now = time(nullptr);
         const unsigned long offset =
             (VERSION_SIZE +
              (turn / TIMESTAMP_TURN_INTERVAL - 1) * TIMESTAMP_SIZE);

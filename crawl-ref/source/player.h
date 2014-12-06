@@ -37,6 +37,9 @@ static const int MR_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
+/// The number of ATTR_BONE_ARMOUR points required for a point of AC/SH
+static const int BONE_ARMOUR_DIV = 3;
+
 /// The minimum aut cost for a player move (before haste)
 static const int FASTEST_PLAYER_MOVE_SPEED = 6;
 // relevant for swiftness, etc
@@ -60,8 +63,9 @@ public:
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
-  bool          wizard;               // true if player has entered wiz mode.
-  time_t        birth_time;           // start time of game
+  bool          wizard;            // true if player has entered wiz mode.
+  bool          explore;           // true if player has entered explore mode.
+  time_t        birth_time;        // start time of game
 
 
   // ----------------
@@ -416,7 +420,8 @@ public:
     void set_position(const coord_def &c);
     // Low-level move the player. Use this instead of changing pos directly.
     void moveto(const coord_def &c, bool clear_net = true);
-    bool move_to_pos(const coord_def &c, bool clear_net = true);
+    bool move_to_pos(const coord_def &c, bool clear_net = true,
+                     bool /*force*/ = false);
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false);
@@ -500,6 +505,8 @@ public:
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
 
+    void maybe_degrade_bone_armour();
+
     // actor
     int mindex() const;
     int get_hit_dice() const;
@@ -511,14 +518,15 @@ public:
 #endif
         return true;
     }
-    monster* as_monster() { return NULL; }
+    monster* as_monster() { return nullptr; }
     player* as_player() { return this; }
-    const monster* as_monster() const { return NULL; }
+    const monster* as_monster() const { return nullptr; }
     const player* as_player() const { return this; }
 
     god_type  deity() const;
     bool      alive() const;
-    bool      is_summoned(int* duration = NULL, int* summon_type = NULL) const;
+    bool      is_summoned(int* duration = nullptr,
+                          int* summon_type = nullptr) const;
     bool      is_perm_summoned() const { return false; };
 
     bool        swimming() const;
@@ -533,7 +541,7 @@ public:
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
     random_var  attack_delay(const item_def *weapon, const
-                             item_def *projectile = NULL,
+                             item_def *projectile = nullptr,
                              bool random = true, bool scaled = true,
                              bool do_shield = true) const;
     int         constriction_damage() const;
@@ -558,7 +566,7 @@ public:
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
     int scan_artefacts(artefact_prop_type which_property,
                        bool calc_unid = true,
-                       vector<item_def> *matches = NULL) const;
+                       vector<item_def> *matches = nullptr) const;
 
     item_def *weapon(int which_attack = -1) const;
     item_def *shield() const;
@@ -579,11 +587,11 @@ public:
                 bool force_article = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
     string conj_verb(const string &verb) const;
-    string hand_name(bool plural, bool *can_plural = NULL) const;
+    string hand_name(bool plural, bool *can_plural = nullptr) const;
     string hands_verb(const string &plural_verb) const;
     string hands_act(const string &plural_verb, const string &subject) const;
-    string foot_name(bool plural, bool *can_plural = NULL) const;
-    string arm_name(bool plural, bool *can_plural = NULL) const;
+    string foot_name(bool plural, bool *can_plural = nullptr) const;
+    string arm_name(bool plural, bool *can_plural = nullptr) const;
     string unarmed_attack_name() const;
 
     bool fumbles_attack();
@@ -630,10 +638,13 @@ public:
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
-                          const char* hurt_msg = NULL);
+                          const char* hurt_msg = nullptr);
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
+             kill_method_type kill_type = KILLED_BY_MONSTER,
+             string source = "",
+             string aux = "",
              bool cleanup_dead = true,
              bool attacker_effects = true);
 
@@ -736,8 +747,8 @@ public:
 
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty() const;
-    int adjusted_body_armour_penalty(int scale = 1,
-                                     bool use_size = false) const;
+    int adjusted_body_armour_penalty(int scale = 1) const;
+    int armour_dodge_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
     int armour_tohit_penalty(bool random_factor, int scale = 1) const;
     int shield_tohit_penalty(bool random_factor, int scale = 1) const;
@@ -779,9 +790,9 @@ public:
     void set_gold(int amount);
 
     void increase_duration(duration_type dur, int turns, int cap = 0,
-                           const char* msg = NULL);
+                           const char* msg = nullptr);
     void set_duration(duration_type dur, int turns, int cap = 0,
-                      const char *msg = NULL);
+                      const char *msg = nullptr);
 
     bool attempt_escape(int attempts = 1);
     int usable_tentacles() const;
@@ -959,7 +970,7 @@ void display_char_status();
 void forget_map(bool rot = false);
 
 int get_exp_progress();
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = nullptr);
 
 bool player_can_open_doors();
 
@@ -986,7 +997,7 @@ bool enough_zp(int minimum, bool suppress_msg);
 void calc_hp();
 void calc_mp();
 
-void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
+void dec_hp(int hp_loss, bool fatal, const char *aux = nullptr);
 void dec_mp(int mp_loss, bool silent = false);
 void drain_mp(int mp_loss);
 
@@ -1033,6 +1044,7 @@ bool miasma_player(actor *who, string source_aux = "");
 bool napalm_player(int amount, string source, string source_aux = "");
 void dec_napalm_player(int delay);
 
+bool spell_slow_player(int pow);
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void dec_exhaust_player(int delay);
@@ -1040,6 +1052,7 @@ void dec_exhaust_player(int delay);
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void dec_elixir_player(int delay);
+void dec_ambrosia_player(int delay);
 bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
@@ -1065,7 +1078,6 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 void count_action(caction_type type, int subtype = 0);
 bool player_has_orb();
-bool does_vision_blur();
 
 #if TAG_MAJOR_VERSION == 34
 enum temperature_level

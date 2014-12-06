@@ -129,15 +129,38 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
     }
 };
 
+/**
+ * How much does Xom like you right now?
+ *
+ * Doesn't account for boredom, or whether or not you actually worship Xom.
+ *
+ * @return An index mapping to an entry in xom_moods.
+ */
+int xom_favour_rank()
+{
+    static const int breakpoints[] = { 20, 50, 80, 120, 150, 180};
+    for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
+        if (you.piety <= breakpoints[i])
+            return i;
+    return ARRAYSZ(breakpoints);
+}
+
+static const char* xom_moods[] = {
+    "a very special plaything of Xom.",
+    "a special plaything of Xom.",
+    "a plaything of Xom.",
+    "a toy of Xom.",
+    "a favourite toy of Xom.",
+    "a beloved toy of Xom.",
+    "Xom's teddy bear."
+};
+
 static const char *describe_xom_mood()
 {
-    return (you.piety > 180) ? "Xom's teddy bear." :
-           (you.piety > 150) ? "a beloved toy of Xom." :
-           (you.piety > 120) ? "a favourite toy of Xom." :
-           (you.piety >  80) ? "a toy of Xom." :
-           (you.piety >  50) ? "a plaything of Xom." :
-           (you.piety >  20) ? "a special plaything of Xom."
-                             : "a very special plaything of Xom.";
+    const int mood = xom_favour_rank();
+    ASSERT(mood >= 0);
+    ASSERT((size_t) mood < ARRAYSZ(xom_moods));
+    return xom_moods[mood];
 }
 
 const string describe_xom_favour()
@@ -298,6 +321,7 @@ void xom_tick()
 
         you.piety = HALF_MAX_PIETY + (good ? size : -size);
         string new_xom_favour = describe_xom_favour();
+        you.redraw_title = true; // redraw piety/boredom display
         if (old_xom_favour != new_xom_favour)
         {
             // If we entered another favour state, take a big step into
@@ -326,16 +350,10 @@ void xom_tick()
         {
             const string msg = "You are now " + new_xom_favour;
             god_speaks(you.religion, msg.c_str());
-            //updating piety status line
-            you.redraw_title = true;
         }
 
         if (you.gift_timeout == 1)
-        {
             simple_god_message(" is getting BORED.");
-            //updating piety status line
-            you.redraw_title = true;
-        }
     }
 
     if (x_chance_in_y(2 + you.faith(), 6))
@@ -1060,7 +1078,7 @@ static int _xom_do_potion(bool debug = false)
         return XOM_GOOD_POTION;
 
     potion_type pot = POT_CURING;
-    while (true)
+    do
     {
         pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC, POT_HASTE,
                             POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
@@ -1068,37 +1086,8 @@ static int _xom_do_potion(bool debug = false)
 
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
             pot = POT_BERSERK_RAGE;
-
-        bool has_effect = true;
-        // Don't pick something that won't have an effect.
-        // Extending an existing effect is okay, though.
-        switch (pot)
-        {
-        case POT_CURING:
-            if (you.duration[DUR_POISONING] || you.rotting || you.disease
-                || you.duration[DUR_CONF])
-            {
-                break;
-            }
-            // else fall through
-        case POT_HEAL_WOUNDS:
-            if (you.hp == you.hp_max && player_rotted() == 0)
-                has_effect = false;
-            break;
-        case POT_MAGIC:
-            if (you.magic_points == you.max_magic_points)
-                has_effect = false;
-            break;
-        case POT_BERSERK_RAGE:
-            if (!you.can_go_berserk(false))
-                has_effect = false;
-            break;
-        default:
-            break;
-        }
-        if (has_effect)
-            break;
     }
+    while (!get_potion_effect(pot)->can_quaff());
 
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
 
@@ -1110,9 +1099,9 @@ static int _xom_do_potion(bool debug = false)
 
     _note_potion_effect(pot);
 
-    potion_effect(pot, 150, nullptr, false);
+    get_potion_effect(pot)->effect(true, 150);
 
-    level_change(); // potion_effect() doesn't do this anymore
+    level_change(); // need this for !xp - see mantis #3245
 
     return XOM_GOOD_POTION;
 }
@@ -1330,20 +1319,11 @@ bool swap_monsters(monster* m1, monster* m2)
     const bool mon1_caught = mon1.caught();
     const bool mon2_caught = mon2.caught();
 
-    const coord_def mon1_pos = mon1.pos();
-    const coord_def mon2_pos = mon2.pos();
-
-    if (!mon2.is_habitable(mon1_pos) || !mon1.is_habitable(mon2_pos))
-        return false;
-
     // Make submerged monsters unsubmerge.
     mon1.del_ench(ENCH_SUBMERGED);
     mon2.del_ench(ENCH_SUBMERGED);
 
-    mgrd(mon1_pos) = mon2.mindex();
-    mon1.moveto(mon2_pos);
-    mgrd(mon2_pos) = mon1.mindex();
-    mon2.moveto(mon1_pos);
+    mon1.swap_with(m2);
 
     if (mon1_caught && !mon2_caught)
     {
@@ -2337,7 +2317,7 @@ static item_def* _tran_get_eq(equipment_type eq)
     if (you_tran_can_wear(eq, true))
         return you.slot_item(eq, true);
 
-    return NULL;
+    return nullptr;
 }
 
 static void _xom_zero_miscast()
@@ -2533,7 +2513,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (_tran_get_eq(EQ_CLOAK) != NULL)
+    if (_tran_get_eq(EQ_CLOAK) != nullptr)
         messages.emplace_back("Your cloak billows in an unfelt wind.");
 
     if ((item = _tran_get_eq(EQ_HELMET)))
@@ -2766,9 +2746,9 @@ static int _xom_miscast(const int max_level, const bool nasty,
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
 
-    MiscastEffect(&you, NULL, GOD_MISCAST + GOD_XOM, (spschool_flag_type)school,
-                  level, cause_str, NH_DEFAULT, lethality_margin, hand_str,
-                  can_plural);
+    MiscastEffect(&you, nullptr, GOD_MISCAST + GOD_XOM,
+                  (spschool_flag_type)school, level, cause_str, NH_DEFAULT,
+                  lethality_margin, hand_str, can_plural);
 
     // Not worth distinguishing unless debugging.
     return XOM_BAD_MISCAST_MAJOR;
@@ -2828,7 +2808,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
     bool rc = false;
     const bool conf = you.confused();
 
-    if (confuse_player(min(random2(sever) + 1, 20), true))
+    if (confuse_player(5 + random2(3), true))
     {
         god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
         mprf(MSGCH_WARN, "You are %sconfused.",
@@ -3828,6 +3808,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     {
         const string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY + 1);
+        you.redraw_title = true; // redraw piety/boredom display
         const string new_xom_favour = describe_xom_favour();
         if (was_bored || old_xom_favour != new_xom_favour)
         {
@@ -3960,8 +3941,9 @@ static int _death_is_worth_saving(const kill_method_type killed_by,
     case KILLED_BY_STUPIDITY:
     case KILLED_BY_WEAKNESS:
     case KILLED_BY_CLUMSINESS:
-        if (strstr(aux, "wielding") == NULL && strstr(aux, "wearing") == NULL
-            && strstr(aux, "removing") == NULL)
+        if (strstr(aux, "wielding") == nullptr
+            && strstr(aux, "wearing") == nullptr
+            && strstr(aux, "removing") == nullptr)
         {
             return true;
         }

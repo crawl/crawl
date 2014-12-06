@@ -454,7 +454,7 @@ LUAFN(you_train_skill)
 
 LUAFN(you_status)
 {
-    const char* which = NULL;
+    const char* which = nullptr;
     if (lua_gettop(ls) >= 1)
         which = luaL_checkstring(ls, 1);
 
@@ -602,7 +602,7 @@ static const struct luaL_reg you_clib[] =
     { "have_rune",          _you_have_rune },
     { "have_orb",           you_have_orb},
 
-    { NULL, NULL },
+    { nullptr, nullptr },
 };
 
 void cluaopen_you(lua_State *ls)
@@ -791,7 +791,7 @@ LUAFN(you_init)
     ng.weapon = str_to_weapon(luaL_checkstring(ls, 2));
     setup_game(ng);
     you.save->unlink();
-    you.save = NULL;
+    you.save = nullptr;
     PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
@@ -833,7 +833,7 @@ static const struct luaL_reg you_dlib[] =
 { "skill_points",       you_skill_points },
 { "zigs_completed",     you_zigs_completed },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };
 
 void dluaopen_you(lua_State *ls)

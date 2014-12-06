@@ -82,7 +82,7 @@ int player_quiver::get_fire_item(string* no_item_reason) const
     // Felids have no use for the quiver.
     if (you.species == SP_FELID)
     {
-        if (no_item_reason != NULL)
+        if (no_item_reason != nullptr)
             *no_item_reason = "You can't grasp things well enough to throw them.";
         return -1;
     }
@@ -105,7 +105,7 @@ int player_quiver::get_fire_item(string* no_item_reason) const
     {
         vector<int> full_fire_order;
         _get_fire_order(full_fire_order, true, you.weapon(), false);
-        if (no_item_reason == NULL)
+        if (no_item_reason == nullptr)
         {
             // nothing
         }
@@ -178,7 +178,7 @@ void choose_item_for_quiver()
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
                                   MT_INVLIST,
                                   OSEL_THROWABLE, true, true, true, '-',
-                                  -1, NULL, OPER_QUIVER, false);
+                                  -1, nullptr, OPER_QUIVER, false);
 
     if (prompt_failed(slot))
         return;
@@ -266,7 +266,7 @@ void player_quiver::on_weapon_changed()
 {
     // Only switch m_last_used_type if weapon really changed
     const item_def* weapon = you.weapon();
-    if (weapon == NULL)
+    if (weapon == nullptr)
     {
         if (m_last_weapon.base_type != OBJ_UNASSIGNED)
         {
@@ -584,7 +584,7 @@ static int _get_pack_slot(const item_def& item)
 // or AMMO_THROW if it's not a launcher.
 static ammo_t _get_weapon_ammo_type(const item_def* weapon)
 {
-    if (weapon == NULL)
+    if (weapon == nullptr)
         return AMMO_THROW;
     if (weapon->base_type != OBJ_WEAPONS)
         return AMMO_THROW;

@@ -1715,7 +1715,7 @@ void melee_attack::set_attack_verb()
     case -1: // unarmed
     {
         const FormAttackVerbs verbs = get_form(you.form)->uc_attack_verbs;
-        if (verbs.weak != NULL)
+        if (verbs.weak != nullptr)
         {
             if (damage_to_display < HIT_WEAK)
                 attack_verb = verbs.weak;
@@ -2098,7 +2098,7 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
  */
 void melee_attack::decapitate(int dam_type)
 {
-    const char *verb = NULL;
+    const char *verb = nullptr;
 
     if (dam_type == DVORP_CLAWING)
     {
@@ -2186,16 +2186,17 @@ void melee_attack::attacker_sustain_passive_damage()
         if (x_chance_in_y(acid_strength + 1, 30))
             corrode_actor(attacker);
     }
-    else if (attacker->is_player())
-    {
-        mprf("Your %s burn!", you.hand_name(true).c_str());
-        ouch(roll_dice(1, acid_strength), KILLED_BY_ACID, defender->mid);
-    }
     else
     {
-        simple_monster_message(attacker->as_monster(), " is burned by acid!");
+        if (attacker->is_player())
+            mprf("Your %s burn!", you.hand_name(true).c_str());
+        else
+        {
+            simple_monster_message(attacker->as_monster(),
+                                   " is burned by acid!");
+        }
         attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
-                       false);
+                       KILLED_BY_ACID, "", "", false);
     }
 }
 
@@ -3487,10 +3488,7 @@ void melee_attack::do_spines()
                      defender->type == MONS_BRIAR_PATCH ? "thorns"
                                                         : "spines");
             }
-            if (attacker->is_player())
-                ouch(hurt, KILLED_BY_SPINES, defender->mid);
-            else
-                attacker->hurt(defender, hurt);
+            attacker->hurt(defender, hurt, BEAM_MISSILE, KILLED_BY_SPINES);
         }
     }
 }
@@ -3552,10 +3550,8 @@ void melee_attack::do_minotaur_retaliation()
             }
             if (hurt > 0)
             {
-                if (attacker->is_player())
-                    ouch(hurt, KILLED_BY_HEADBUTT, defender->mid);
-                else
-                    attacker->hurt(defender, hurt);
+                attacker->hurt(defender, hurt, BEAM_MISSILE,
+                               KILLED_BY_HEADBUTT);
             }
         }
         return;
@@ -3681,7 +3677,7 @@ int melee_attack::cleave_damage_mod(int dam)
 void melee_attack::chaos_affect_actor(actor *victim)
 {
     melee_attack attk(victim, victim);
-    attk.weapon = NULL;
+    attk.weapon = nullptr;
     attk.fake_chaos_attack = true;
     attk.chaos_affects_defender();
     attk.do_miscast();

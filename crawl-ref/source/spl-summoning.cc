@@ -492,8 +492,8 @@ static bool _place_dragon()
         // Now try to create the actual dragon
         if (spots.size() <= 0)
             continue;
-            const coord_def pos = spots[random2(spots.size())];
 
+        const coord_def pos = spots[random2(spots.size())];
         monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
                                                    2, SPELL_DRAGON_CALL,
                                                    pos, MHITYOU,
@@ -1888,7 +1888,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
         return 0;
 
     int number_found = 0;
-    bool success = false;
+    bool any_success = false;
     int motions = 0;
 
     // Search all the items on the ground for a corpse.
@@ -1904,30 +1904,27 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                 continue;
 
             const bool was_draining = is_being_drained(*si);
-            const bool was_butchering = is_being_butchered(*si);
 
-            success = _raise_remains(a, si.link(), beha, hitting, as, nas,
-                                     god, actual, force_beh, mon,
-                                     &motions);
+            const bool success = _raise_remains(a, si.index(), beha, hitting,
+                                                as, nas, god, actual,
+                                                force_beh, mon, &motions);
 
             if (actual && success)
             {
                 // Ignore quiet.
-                if (was_butchering || was_draining)
+                if (was_draining)
                 {
-                    mprf("The corpse you are %s rises to %s!",
-                         was_draining ? "drinking from"
-                                      : "butchering",
+                    mprf("The corpse you are drinking from rises to %s!",
                          beha == BEH_FRIENDLY ? "join your ranks"
                                               : "attack");
+                    xom_is_stimulated(200);
                 }
 
                 if (!quiet && you.see_cell(a))
                     _display_undead_motions(motions);
-
-                if (was_butchering)
-                    xom_is_stimulated(200);
             }
+
+            any_success |= success;
 
             break;
         }
@@ -1939,7 +1936,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     if (number_found == 0)
         return -1;
 
-    if (!success)
+    if (!any_success)
         return 0;
 
     return 1;
@@ -1999,10 +1996,16 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
+    const char* no_space = "...but the skeleton had no space to rise!";
+
     // First, we try to animate a skeleton if there is one.
-    if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
-                        MHITYOU, &you, "", god) != -1)
+    const int animate_skel_result = animate_remains(you.pos(), CORPSE_SKELETON,
+                                                    BEH_FRIENDLY, MHITYOU,
+                                                    &you, "", god);
+    if (animate_skel_result != -1)
     {
+        if (animate_skel_result == 0)
+            mpr(no_space);
         return SPRET_SUCCESS;
     }
 
@@ -2015,18 +2018,28 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
         {
             butcher_corpse(*si, MB_TRUE);
             mpr("Before your eyes, flesh is ripped from the corpse!");
-            if (Options.chunks_autopickup)
-                request_autopickup();
+            request_autopickup();
             // Only convert the top one.
             break;
         }
     }
 
     // Now we try again to animate a skeleton.
-    if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
-                        MHITYOU, &you, "", god) < 0)
-    {
-        mpr("There is no skeleton here to animate!");
+    // this return type is insanely stupid
+    const int animate_result = animate_remains(you.pos(), CORPSE_SKELETON,
+                                               BEH_FRIENDLY, MHITYOU, &you, "",
+                                               god);
+    dprf("result: %d", animate_result);
+    switch (animate_result) {
+        case -1:
+            mpr("There is no skeleton here to animate!");
+            break;
+        case 0:
+            mpr(no_space);
+            break;
+        default:
+            // success, messages already printed
+            break;
     }
 
     return SPRET_SUCCESS;
@@ -2167,7 +2180,6 @@ bool monster_simulacrum(monster *mon, bool actual)
             int how_many = 1 + random2(mons_weight(mitm[co].mon_type) / 300);
             how_many  = stepdown_value(how_many, 2, 2, 6, 6);
             bool was_draining = is_being_drained(*si);
-            bool was_butchering = is_being_butchered(*si);
             bool was_successful = false;
             for (int i = 0; i < how_many; ++i)
             {
@@ -2194,10 +2206,9 @@ bool monster_simulacrum(monster *mon, bool actual)
                 did_creation = true;
                 turn_corpse_into_skeleton(mitm[co]);
                 // Ignore quiet.
-                if (was_butchering || was_draining)
+                if (was_draining)
                 {
-                    mprf("The flesh of the corpse you are %s vaporises!",
-                         was_draining ? "drinking from" : "butchering");
+                    mpr("The flesh of the corpse you are drinking from vaporises!");
                     xom_is_stimulated(200);
                 }
 
@@ -2381,22 +2392,11 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     return true;
 }
 
-spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
-{
-    if (twisted_resurrection(&you, pow, BEH_FRIENDLY, MHITYOU, god, !fail))
-        return fail ? SPRET_FAIL : SPRET_SUCCESS;
-    else
-    {
-        mpr("There are no corpses nearby!");
-        return SPRET_ABORT;
-    }
-}
-
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
     monster* m = monster_at(where);
 
-    if (m == NULL)
+    if (m == nullptr)
     {
         fail_check();
         mpr("An evil force gathers, but it quickly dissipates.");
@@ -2696,7 +2696,7 @@ monster* find_battlesphere(const actor* agent)
     if (agent->props.exists("battlesphere"))
         return monster_by_mid(agent->props["battlesphere"].get_int());
     else
-        return NULL;
+        return nullptr;
 }
 
 spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
@@ -3175,7 +3175,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                                victim->conj_verb("twitch").c_str());
             }
             else
-                mpr("You see a ghostly outline there, and the spell fizzles.");
+                canned_msg(MSG_GHOSTLY_OUTLINE);
         }
         return SPRET_SUCCESS;      // Don't give free detection!
     }
@@ -3215,7 +3215,7 @@ monster* find_spectral_weapon(const actor* agent)
     if (agent->props.exists("spectral_weapon"))
         return monster_by_mid(agent->props["spectral_weapon"].get_int());
     else
-        return NULL;
+        return nullptr;
 }
 
 spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
@@ -3695,7 +3695,7 @@ int count_summons(const actor *summoner, spell_type spell)
             continue;
 
         int stype    = 0;
-        const bool summoned = mi->is_summoned(NULL, &stype);
+        const bool summoned = mi->is_summoned(nullptr, &stype);
         if (summoned && stype == spell && summoner->mid == mi->summoner
             && mons_aligned(summoner, *mi))
         {

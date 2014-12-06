@@ -644,7 +644,7 @@ void SkillMenuSwitch::update()
 
 #define TILES_COL 6
 SkillMenu::SkillMenu() : PrecisionMenu(), m_min_coord(), m_max_coord(),
-                         m_help_button(NULL)
+                         m_help_button(nullptr)
 {
 }
 
@@ -952,7 +952,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
     case SKM_DO:
         you.skill_menu_do = get_state(SKM_DO);
         refresh_names();
-        if (m_ff->get_active_item() != NULL
+        if (m_ff->get_active_item() != nullptr
             && !m_ff->get_active_item()->can_be_highlighted())
         {
             m_ff->activate_default_item();
@@ -978,7 +978,7 @@ SkillMenuEntry* SkillMenu::find_entry(skill_type sk)
             if (m_skills[ln][col].get_skill() == sk)
                 return &m_skills[ln][col];
 
-    return NULL;
+    return nullptr;
 }
 
 void SkillMenu::init_flags()
@@ -1154,7 +1154,7 @@ void SkillMenu::refresh_names()
             skme.set_name(false);
         }
     set_links();
-    if (m_ff->get_active_item() != NULL
+    if (m_ff->get_active_item() != nullptr
         && !m_ff->get_active_item()->can_be_highlighted())
     {
         m_ff->activate_default_item();
@@ -1219,7 +1219,7 @@ void SkillMenu::set_help(string msg)
 void SkillMenu::set_skills()
 {
     int previous_active;
-    if (m_ff->get_active_item() != NULL)
+    if (m_ff->get_active_item() != nullptr)
         previous_active = m_ff->get_active_item()->get_id();
     else
         previous_active = -1;
@@ -1286,9 +1286,9 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
         int letter;
         letter = hotkeys[0];
         MenuItem* next_item = m_ff->find_item_by_hotkey(++letter);
-        if (next_item != NULL)
+        if (next_item != nullptr)
         {
-            if (m_ff->get_active_item() != NULL && keyn == CK_ENTER)
+            if (m_ff->get_active_item() != nullptr && keyn == CK_ENTER)
                 m_ff->set_active_item(next_item);
             else
                 m_ff->set_default_item(next_item);
@@ -1348,7 +1348,7 @@ TextItem* SkillMenu::find_closest_selectable(int start_ln, int col)
         else if (m_skills[ln_down][col].is_selectable())
             return m_skills[ln_down][col].get_name_item();
         else if (ln_up == 0 && ln_down == SK_ARR_LN)
-            return NULL;
+            return nullptr;
 
         ++delta;
     }
@@ -1356,40 +1356,40 @@ TextItem* SkillMenu::find_closest_selectable(int start_ln, int col)
 
 void SkillMenu::set_links()
 {
-    TextItem* top_left = NULL;
-    TextItem* top_right = NULL;
-    TextItem* bottom_left = NULL;
-    TextItem* bottom_right = NULL;
+    TextItem* top_left = nullptr;
+    TextItem* top_right = nullptr;
+    TextItem* bottom_left = nullptr;
+    TextItem* bottom_right = nullptr;
 
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
     {
         if (m_skills[ln][0].is_selectable())
         {
             TextItem* left = m_skills[ln][0].get_name_item();
-            left->set_link_up(NULL);
-            left->set_link_down(NULL);
+            left->set_link_up(nullptr);
+            left->set_link_down(nullptr);
             left->set_link_right(find_closest_selectable(ln, 1));
-            if (top_left == NULL)
+            if (top_left == nullptr)
                 top_left = left;
             bottom_left = left;
         }
         if (m_skills[ln][1].is_selectable())
         {
             TextItem* right = m_skills[ln][1].get_name_item();
-            right->set_link_up(NULL);
-            right->set_link_down(NULL);
+            right->set_link_up(nullptr);
+            right->set_link_down(nullptr);
             right->set_link_left(find_closest_selectable(ln, 0));
-            if (top_right == NULL)
+            if (top_right == nullptr)
                 top_right = right;
             bottom_right = right;
         }
     }
-    if (top_left != NULL)
+    if (top_left != nullptr)
     {
         top_left->set_link_up(bottom_right);
         bottom_left->set_link_down(top_right);
     }
-    if (top_right != NULL)
+    if (top_right != nullptr)
     {
         top_right->set_link_up(bottom_left);
         bottom_right->set_link_down(top_left);
@@ -1421,7 +1421,7 @@ void skill_menu(int flag, int exp)
     // Calling a user lua function here to let players automatically accept
     // the given skill distribution for a potion of experience.
     if (skm.is_set(SKMF_EXPERIENCE)
-        && clua.callbooleanfn(false, "auto_experience", NULL)
+        && clua.callbooleanfn(false, "auto_experience", nullptr)
         && skm.exit())
     {
         return;

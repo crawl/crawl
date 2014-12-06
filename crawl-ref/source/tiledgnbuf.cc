@@ -341,6 +341,10 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         }
     }
 
+    // gozag gold sparkles, only if there's no creature in tile (not ideal)
+    if (cell.gold_aura && fg_idx < TILE_MAIN_MAX)
+        m_buf_icons.add(TILEI_GOLD_SPARKLES + cell.gold_aura - 1, x, y);
+
     if (fg & TILE_FLAG_NET)
         m_buf_icons.add(TILEI_TRAP_NET, x, y);
 

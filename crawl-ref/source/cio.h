@@ -55,8 +55,8 @@ void nowrap_eol_cprintf(PRINTF(0, ));
 // pressed Escape
 int cancellable_get_line(char *buf,
                          int len,
-                         input_history *mh = NULL,
-                         int (*keyproc)(int &c) = NULL,
+                         input_history *mh = nullptr,
+                         int (*keyproc)(int &c) = nullptr,
                          const string &fill = "",
                          const string &tag = "");
 
@@ -192,7 +192,7 @@ enum KEYS
 #endif
 
     // Mouse codes.
-    CK_MOUSE_MOVE  = -10009,
+    CK_MOUSE_MOVE  = -9999,
     CK_MOUSE_CMD,
     CK_MOUSE_B1,
     CK_MOUSE_B2,

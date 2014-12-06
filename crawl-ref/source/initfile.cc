@@ -571,7 +571,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_uninterruptible =",
         "interrupt_weapon_swap =",
 
-        NULL
+        nullptr
     };
 
     for (int i = 0; default_activity_interrupts[i]; ++i)
@@ -794,7 +794,6 @@ void game_options::reset_options()
     equip_unequip          = false;
     jewellery_prompt       = false;
     confirm_butcher        = CONFIRM_AUTO;
-    chunks_autopickup      = true;
     easy_eat_chunks        = false;
     auto_eat_chunks        = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
@@ -948,9 +947,13 @@ void game_options::reset_options()
 #ifdef WIZARD
 #ifdef DGAMELAUNCH
     if (wiz_mode != WIZ_NO)
+    {
         wiz_mode         = WIZ_NEVER;
+        explore_mode     = WIZ_NEVER;
+    }
 #else
     wiz_mode             = WIZ_NO;
+    explore_mode         = WIZ_NO;
 #endif
 #endif
     terp_files.clear();
@@ -1394,7 +1397,7 @@ static string _find_crawlrc()
         { "..", "init.txt" },
         { "../settings", "init.txt" },
 #endif
-        { NULL, NULL }                // placeholder to mark end
+        { nullptr, nullptr }                // placeholder to mark end
     };
 
     // We'll look for these files in any supplied -rcdirs.
@@ -1421,10 +1424,10 @@ static string _find_crawlrc()
     }
 
     // Check all possibilities for init.txt
-    for (int i = 0; locations_data[i][1] != NULL; ++i)
+    for (int i = 0; locations_data[i][1] != nullptr; ++i)
     {
         // Don't look at unset options
-        if (locations_data[i][0] != NULL)
+        if (locations_data[i][0] != nullptr)
         {
             const string rc = catpath(locations_data[i][0],
                                       locations_data[i][1]);
@@ -2601,7 +2604,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "auto")
             confirm_butcher = CONFIRM_AUTO;
     }
-    else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(auto_eat_chunks);
     else if (key == "lua_file" && runscript)
@@ -2902,6 +2904,21 @@ void game_options::read_option_line(const string &str, bool runscript)
             wiz_mode = WIZ_YES;
         else
             report_error("Unknown wiz_mode option: %s\n", field.c_str());
+    #endif
+#endif
+    }
+    else if (key == "explore_mode")
+    {
+#ifdef WIZARD
+    #ifndef DGAMELAUNCH
+        if (field == "never")
+            explore_mode = WIZ_NEVER;
+        else if (field == "no")
+            explore_mode = WIZ_NO;
+        else if (field == "yes")
+            explore_mode = WIZ_YES;
+        else
+            report_error("Unknown explore_mode option: %s\n", field.c_str());
     #endif
 #endif
     }
@@ -4037,6 +4054,7 @@ enum commandline_option_type
     CLO_ZOTDEF,
     CLO_TUTORIAL,
     CLO_WIZARD,
+    CLO_EXPLORE,
     CLO_NO_SAVE,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
@@ -4058,7 +4076,7 @@ static const char *cmd_ops[] =
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef", "tutorial", "wizard", "no-save",
+    "print-charset", "zotdef", "tutorial", "wizard", "explore", "no-save",
     "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
@@ -4076,7 +4094,7 @@ static string _find_executable_path()
     // resources.
 #if defined (TARGET_OS_WINDOWS)
     wchar_t tempPath[MAX_PATH];
-    if (GetModuleFileNameW(NULL, tempPath, MAX_PATH))
+    if (GetModuleFileNameW(nullptr, tempPath, MAX_PATH))
         return utf16_to_8(tempPath);
     else
         return "";
@@ -4517,7 +4535,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         if (current+1 < argc)
             next_arg = argv[current+1];
         else
-            next_arg = NULL;
+            next_arg = nullptr;
 
         nextUsed = false;
 
@@ -4565,7 +4583,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         // Partially parse next argument.
         bool next_is_param = false;
-        if (next_arg != NULL
+        if (next_arg != nullptr
             && (next_arg[0] != '-' || strlen(next_arg) == 1))
         {
             next_is_param = true;
@@ -4846,6 +4864,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
 #ifdef WIZARD
             if (!rc_only)
                 Options.wiz_mode = WIZ_NO;
+#endif
+            break;
+
+        case CLO_EXPLORE:
+#ifdef WIZARD
+            if (!rc_only)
+                Options.explore_mode = WIZ_NO;
 #endif
             break;
 

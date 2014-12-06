@@ -111,6 +111,7 @@
 {'~', CMD_MACRO_ADD},
 #ifdef WIZARD
 {'&', CMD_WIZARD},
+{'+', CMD_EXPLORE_MODE},
 #endif
 {'"', CMD_LIST_JEWELLERY},
 {'{', CMD_INSCRIBE_ITEM},

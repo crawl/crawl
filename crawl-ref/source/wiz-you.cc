@@ -415,6 +415,7 @@ void wizard_set_piety_to(int newpiety, bool force)
     if (you_worship(GOD_XOM))
     {
         you.piety = newpiety;
+        you.redraw_title = true; // redraw piety display
 
         int newinterest;
         if (!force)
@@ -867,7 +868,7 @@ void wizard_edit_durations()
                 choice = dur;
                 break;
             }
-            if (strstr(duration_name(dur), buf) != NULL)
+            if (strstr(duration_name(dur), buf) != nullptr)
             {
                 matches.push_back(dur);
                 match_names.emplace_back(duration_name(dur));

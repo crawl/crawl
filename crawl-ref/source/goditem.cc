@@ -39,7 +39,7 @@ static bool _is_bookrod_type(const item_def& item,
     }
 
     if (item.base_type == OBJ_RODS)
-        return suitable(spell_in_rod(item.sub_type));
+        return suitable(spell_in_rod(static_cast<rod_type>(item.sub_type)));
 
     if (!item_is_spellbook(item))
         return false;
@@ -47,12 +47,8 @@ static bool _is_bookrod_type(const item_def& item,
     int total       = 0;
     int total_liked = 0;
 
-    for (int i = 0; i < SPELLBOOK_SIZE; ++i)
+    for (spell_type spell : spells_in_book(item))
     {
-        spell_type spell = which_spell_in_book(item, i);
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
         total++;
         if (suitable(spell))
             total_liked++;

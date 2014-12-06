@@ -214,20 +214,22 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_RESISTANCE;
     case ENCH_HEXED:
         return MB_HEXED;
+    case ENCH_BONE_ARMOUR:
+        return MB_BONE_ARMOUR;
     default:
         return NUM_MB_FLAGS;
     }
 }
 
 static bool _blocked_ray(const coord_def &where,
-                         dungeon_feature_type* feat = NULL)
+                         dungeon_feature_type* feat = nullptr)
 {
     if (exists_ray(you.pos(), where, opc_solid_see)
         || !exists_ray(you.pos(), where, opc_default))
     {
         return false;
     }
-    if (feat == NULL)
+    if (feat == nullptr)
         return true;
     *feat = ray_blocker(you.pos(), where);
     return true;
@@ -1002,7 +1004,7 @@ string monster_info::common_name(description_level_type desc) const
     if (mons_class_is_chimeric(type))
     {
         ss << "chimera";
-        monsterentry *me = NULL;
+        monsterentry *me = nullptr;
         if (u.ghost.acting_part != MONS_0
             && (me = get_monster_data(u.ghost.acting_part)))
         {
@@ -1582,6 +1584,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("unusually resistant");
     if (is(MB_HEXED))
         v.emplace_back("control wrested from you");
+    if (is(MB_BONE_ARMOUR))
+        v.emplace_back("corpse armoured");
     return v;
 }
 

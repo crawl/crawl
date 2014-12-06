@@ -697,7 +697,7 @@ static int _collect_connection_data(monster* start_monster,
         }
 
         bool basis = current_mon->props.exists("inwards");
-        monster* next = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : NULL;
+        monster* next = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : nullptr;
 
         if (next && next->is_child_tentacle_of(start_monster))
         {
@@ -712,7 +712,7 @@ static int _collect_connection_data(monster* start_monster,
         }
         else
         {
-            current_mon = NULL;
+            current_mon = nullptr;
 //            mprf("null at count %d", current_count);
         }
         current_count++;
@@ -726,8 +726,6 @@ void move_solo_tentacle(monster* tentacle)
 {
     if (!tentacle || !mons_is_solo_tentacle(mons_base_type(tentacle)))
         return;
-
-    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
     vector<coord_def> foe_positions;
 
@@ -761,15 +759,12 @@ void move_solo_tentacle(monster* tentacle)
 
     if (severed)
     {
-        shuffle_array(compass_idx);
-        for (int idx : compass_idx)
+        for (fair_adjacent_iterator ai(base_position); ai; ++ai)
         {
-            coord_def new_base = base_position + Compass[idx];
-            if (!actor_at(new_base)
-                && tentacle->is_habitable(new_base))
+            if (!actor_at(*ai) && tentacle->is_habitable(*ai))
             {
-                tentacle->props["base_position"].get_coord() = new_base;
-                base_position = new_base;
+                tentacle->props["base_position"].get_coord() = *ai;
+                base_position = *ai;
                 break;
             }
         }
@@ -797,7 +792,7 @@ void move_solo_tentacle(monster* tentacle)
     bool pull_constrictee = false;
     bool shift_constrictee = false;
     coord_def shift_pos;
-    actor* constrictee = NULL;
+    actor* constrictee = nullptr;
     if (tentacle->is_constricting())
     {
         constrictee = actor_by_mid(tentacle->constricting->begin()->first);
@@ -857,38 +852,33 @@ void move_solo_tentacle(monster* tentacle)
         // todo: set a random position?
 
         dprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
-        shuffle_array(compass_idx);
-        for (int i=0; i < 8; ++i)
+        for (fair_adjacent_iterator ai(old_pos); ai; ++ai)
         {
-            coord_def test = old_pos + Compass[compass_idx[i]];
-            if (!in_bounds(test) || is_sanctuary(test)
-                || actor_at(test))
-            {
+            if (!in_bounds(*ai) || is_sanctuary(*ai) || actor_at(*ai))
                 continue;
-            }
 
             int escalated = 0;
-            auto constraint = map_find(connection_data, test);
+            auto constraint = map_find(connection_data, *ai);
             ASSERT(constraint);
 
             while (constraint->count(escalated + 1))
                 escalated++;
 
             if (!severed
-                && tentacle->is_habitable(test)
+                && tentacle->is_habitable(*ai)
                 && escalated == *constraint->rbegin()
                 && (visited_count < demonic_max_dist
                     || constraint->size() > 1))
             {
-                new_pos = test;
+                new_pos = *ai;
                 break;
             }
-            else if (tentacle->is_habitable(test)
+            else if (tentacle->is_habitable(*ai)
                      && visited_count > 1
                      && escalated == *constraint->rbegin()
                      && constraint->size() > 1)
             {
-                new_pos = test;
+                new_pos = *ai;
                 break;
             }
         }
@@ -899,27 +889,18 @@ void move_solo_tentacle(monster* tentacle)
     if (new_pos != old_pos)
     {
         // Did we path into a target?
-        actor * blocking_actor = actor_at(new_pos);
-        if (blocking_actor)
+        if (actor* blocking_actor = actor_at(new_pos))
         {
             tentacle->target = new_pos;
-            monster* mtemp = monster_at(new_pos);
-            if (mtemp)
-                tentacle->foe = mtemp->mindex();
-            else if (new_pos == you.pos())
-                tentacle->foe = MHITYOU;
-
+            tentacle->foe = blocking_actor->mindex();
             new_pos = old_pos;
         }
     }
 
-    mgrd(tentacle->pos()) = NON_MONSTER;
-
     // Why do I have to do this move? I don't get it.
     // specifically, if tentacle isn't registered at its new position on mgrd
     // the search fails (sometimes), Don't know why. -cao
-    tentacle->set_position(new_pos);
-    mgrd(tentacle->pos()) = tentacle->mindex();
+    tentacle->move_to_pos(new_pos);
 
     if (pull_constrictee)
     {
@@ -1020,7 +1001,7 @@ void move_child_tentacles(monster* mons)
             }
 
             bool basis = current_mon->props.exists("inwards");
-            monster* inward = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : NULL;
+            monster* inward = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : nullptr;
 
             if (inward
                 && (inward->is_child_tentacle_of(tentacle)
@@ -1035,7 +1016,7 @@ void move_child_tentacles(monster* mons)
                 }
             }
             else
-                current_mon = NULL;
+                current_mon = nullptr;
             current_count++;
         }
 
@@ -1064,7 +1045,7 @@ void move_child_tentacles(monster* mons)
         //If this tentacle is constricting a creature, attempt to pull it back
         //towards the head.
         bool pull_constrictee = false;
-        actor* constrictee = NULL;
+        actor* constrictee = nullptr;
         if (tentacle->is_constricting() && retract_found)
         {
             constrictee = actor_by_mid(tentacle->constricting->begin()->first);
@@ -1098,26 +1079,17 @@ void move_child_tentacles(monster* mons)
         }
 
         // Did we path into a target?
-        actor * blocking_actor = actor_at(new_pos);
-        if (blocking_actor)
+        if (actor* blocking_actor = actor_at(new_pos))
         {
             tentacle->target = new_pos;
-            monster* mtemp = monster_at(new_pos);
-            if (mtemp)
-                tentacle->foe = mtemp->mindex();
-            else if (new_pos == you.pos())
-                tentacle->foe = MHITYOU;
-
+            tentacle->foe = blocking_actor->mindex();
             new_pos = old_pos;
         }
-
-        mgrd(tentacle->pos()) = NON_MONSTER;
 
         // Why do I have to do this move? I don't get it.
         // specifically, if tentacle isn't registered at its new position on
         // mgrd the search fails (sometimes), Don't know why. -cao
-        tentacle->set_position(new_pos);
-        mgrd(tentacle->pos()) = tentacle->mindex();
+        tentacle->move_to_pos(new_pos);
 
         if (pull_constrictee)
         {
@@ -1168,7 +1140,7 @@ static monster* _mons_get_parent_monster(monster* mons)
             return *mi;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 // When given either a tentacle end or segment, kills the end and all segments
@@ -1182,7 +1154,7 @@ int destroy_tentacle(monster* mons)
 
     //If we tried to find the head, but failed (probably because it is already
     //dead), cancel trying to kill this tentacle
-    if (head == NULL)
+    if (head == nullptr)
         return 0;
 
     // Some issue with using monster_die leading to DEAD_MONSTER

@@ -53,7 +53,7 @@ CLua::CLua(bool managed)
       throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
       lua_call_depth(0), max_mixed_call_depth(8),
       max_lua_call_depth(100), memory_used(0),
-      _state(NULL), sourced_files(), uniqindex(0)
+      _state(nullptr), sourced_files(), uniqindex(0)
 {
 }
 
@@ -473,7 +473,7 @@ int CLua::return_count(lua_State *ls, const char *format)
     const char *cs = strchr(format, ':');
     if (cs && isdigit(*format))
     {
-        char *es = NULL;
+        char *es = nullptr;
         int ci = strtol(format, &es, 10);
         // We're capping return at 10 here, which is arbitrary, but avoids
         // blowing the stack.
@@ -560,7 +560,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
 
 bool CLua::proc_returns(const char *par) const
 {
-    return strchr(par, '>') != NULL;
+    return strchr(par, '>') != nullptr;
 }
 
 // Identical to lua_getglobal for simple names, but will look up
@@ -790,7 +790,7 @@ void CLua::print_stack()
         lua_getinfo(L, "lnuS", &dbg);
 
         char* file = strrchr(dbg.short_src, '/');
-        if (file == NULL)
+        if (file == nullptr)
             file = dbg.short_src;
         else
             file++;
@@ -910,7 +910,7 @@ bool lua_text_pattern::translate() const
 
     string textp;
     string luafn;
-    const lua_pat_op *currop = NULL;
+    const lua_pat_op *currop = nullptr;
     for (string::size_type i = 0; i < pattern.length(); ++i)
     {
         bool match = false;
@@ -996,13 +996,13 @@ static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
     if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024
         && cl->mixed_call_depth)
     {
-        return NULL;
+        return nullptr;
     }
 
     if (!nsize)
     {
         free(ptr);
-        return NULL;
+        return nullptr;
     }
     else
         return realloc(ptr, nsize);

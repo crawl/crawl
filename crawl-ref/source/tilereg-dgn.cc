@@ -164,7 +164,7 @@ void DungeonRegion::pack_buffers()
 
 struct tag_def
 {
-    tag_def() { text = NULL; left = right = 0; }
+    tag_def() { text = nullptr; left = right = 0; }
 
     const char* text;
     char left, right;
@@ -512,7 +512,7 @@ static item_def* _get_evokable_item(const actor* target)
     redraw_screen();
 
     if (sel.empty())
-        return NULL;
+        return nullptr;
 
     return const_cast<item_def*>(sel[0].item);
 }
@@ -527,7 +527,7 @@ static bool _evoke_item_on_target(actor* target)
         item = _get_evokable_item(target);
     }
 
-    if (item == NULL)
+    if (item == nullptr)
         return false;
 
     if (is_known_empty_wand(*item))
@@ -565,7 +565,7 @@ static bool _spell_in_range(spell_type spell, actor* target)
     return range >= grid_distance(you.pos(), target->pos());
 }
 
-static actor* _spell_target = NULL;
+static actor* _spell_target = nullptr;
 
 static bool _spell_selector(spell_type spell)
 {
@@ -595,7 +595,7 @@ static bool _cast_spell_on_target(actor* target)
                                  _spell_selector);
         }
 
-        _spell_target = NULL;
+        _spell_target = nullptr;
 
         if (letter == 0)
             return false;

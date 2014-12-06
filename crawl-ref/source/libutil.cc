@@ -46,7 +46,7 @@
     #else
         #include <SDL2/SDL_mixer.h>
     #endif
-    Mix_Chunk* sdl_sound_to_play = NULL;
+    Mix_Chunk* sdl_sound_to_play = nullptr;
 #endif
 
 unsigned int isqrt(unsigned int a)
@@ -127,7 +127,7 @@ void play_sound(const char *file)
 #elif defined(USE_SDL)
     if (Mix_Playing(0))
         Mix_HaltChannel(0);
-    if (sdl_sound_to_play != NULL)
+    if (sdl_sound_to_play != nullptr)
         Mix_FreeChunk(sdl_sound_to_play);
     sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
     Mix_PlayChannel(0, sdl_sound_to_play, 0);
@@ -496,7 +496,7 @@ static bool _is_aero()
 taskbar_pos get_taskbar_pos()
 {
     RECT rect;
-    HWND taskbar = FindWindow("Shell_traywnd", NULL);
+    HWND taskbar = FindWindow("Shell_traywnd", nullptr);
     if (taskbar && GetWindowRect(taskbar, &rect))
     {
         if (rect.right - rect.left > rect.bottom - rect.top)
@@ -522,7 +522,7 @@ int get_taskbar_size()
     RECT rect;
     int size;
     taskbar_pos tpos = get_taskbar_pos();
-    HWND taskbar = FindWindow("Shell_traywnd", NULL);
+    HWND taskbar = FindWindow("Shell_traywnd", nullptr);
 
     if (taskbar && GetWindowRect(taskbar, &rect))
     {

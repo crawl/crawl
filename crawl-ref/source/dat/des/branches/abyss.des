@@ -144,6 +144,27 @@ bA_Ab
   @
 ENDMAP
 
+NAME:    hangedman_abyss_entry_splay
+TAGS:    nolayout_encompass transparent
+SHUFFLE: ABCDE
+SUBST:   A : cxxx.., B : cxxx.., CDE = x, F : ccxxb
+: abyss_entry(_G, 'O')
+MAP
+        xx..
+        x.A.
+        xx..
+        x.C......
+        xF.D.E.B.
+      xxx.F.x.x.x
+xxxxxxx.O.xxxxxxx
+x.x.x.F.xxx
+.B.E.D.Fx
+......C.x
+     ..xx
+     .A.x
+     ..xx
+ENDMAP
+
 ###############################################################################
 # abyss random vaults
 ###############################################################################

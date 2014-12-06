@@ -54,7 +54,7 @@ static unsigned int get_milliseconds()
 {
     // This is Unix-only, but so is Webtiles at the moment.
     timeval tv;
-    gettimeofday(&tv, NULL);
+    gettimeofday(&tv, nullptr);
 
     return ((unsigned int) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
@@ -340,7 +340,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         first.check(JSON_NUMBER);
         // last visible item is sent too, but currently unused
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().menu != NULL)
+        if (!m_menu_stack.empty() && m_menu_stack.back().menu != nullptr)
             m_menu_stack.back().menu->webtiles_scroll((int) first->number_);
     }
     else if (msgtype == "*request_menu_range")
@@ -350,7 +350,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         JsonWrapper end = json_find_member(obj.node, "end");
         end.check(JSON_NUMBER);
 
-        if (!m_menu_stack.empty() && m_menu_stack.back().menu != NULL)
+        if (!m_menu_stack.empty() && m_menu_stack.back().menu != nullptr)
         {
             m_menu_stack.back().menu->webtiles_handle_item_request((int) start->number_,
                                                                    (int) end->number_);
@@ -385,7 +385,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             if (block)
             {
                 tiles.flush_messages();
-                result = select(maxfd + 1, &fds, NULL, NULL, NULL);
+                result = select(maxfd + 1, &fds, nullptr, nullptr, nullptr);
             }
             else
             {
@@ -393,7 +393,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
                 timeout.tv_sec = 0;
                 timeout.tv_usec = 0;
 
-                result = select(maxfd + 1, &fds, NULL, NULL, &timeout);
+                result = select(maxfd + 1, &fds, nullptr, nullptr, &timeout);
             }
         }
         while (result == -1 && errno == EINTR);
@@ -496,7 +496,7 @@ void TilesFramework::push_menu(Menu* m)
 void TilesFramework::push_crt_menu(string tag)
 {
     MenuInfo mi;
-    mi.menu = NULL;
+    mi.menu = nullptr;
     mi.tag = tag;
     m_menu_stack.push_back(mi);
 
@@ -510,7 +510,7 @@ void TilesFramework::push_crt_menu(string tag)
 
 bool TilesFramework::is_in_crt_menu()
 {
-    return is_in_menu(NULL);
+    return is_in_menu(nullptr);
 }
 
 bool TilesFramework::is_in_menu(Menu* m)
@@ -1446,7 +1446,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         new_monster_locs[m->client_id] = gc;
     }
 
-    const monster_info* last = NULL;
+    const monster_info* last = nullptr;
     auto it = m_monster_locs.find(m->client_id);
     if (m->client_id == 0 || it == m_monster_locs.end())
     {
@@ -1463,7 +1463,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
             json_treat_as_nonempty(); // As above
     }
 
-    if (last == NULL)
+    if (last == nullptr)
         force_full = true;
 
     if (force_full || (last->full_name() != m->full_name()))
@@ -1639,7 +1639,7 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         switch (m_crt_mode)
         {
         case CRT_DISABLED:
-            m_print_area = NULL;
+            m_print_area = nullptr;
             break;
         case CRT_NORMAL:
             set_ui_state(UI_CRT);
@@ -1653,10 +1653,10 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     case GOTO_STAT:
     case GOTO_MSG:
         set_ui_state(UI_NORMAL);
-        m_print_area = NULL;
+        m_print_area = nullptr;
         break;
     default:
-        m_print_area = NULL;
+        m_print_area = nullptr;
         break;
     }
     m_cursor_region = region;
@@ -1830,7 +1830,7 @@ void TilesFramework::textbackground(int col)
 
 void TilesFramework::put_ucs_string(ucs_t *str)
 {
-    if (m_print_area == NULL)
+    if (m_print_area == nullptr)
         return;
 
     while (*str)
@@ -1867,7 +1867,7 @@ void TilesFramework::put_ucs_string(ucs_t *str)
 
 void TilesFramework::clear_to_end_of_line()
 {
-    if (m_print_area == NULL || m_print_y >= m_print_area->my)
+    if (m_print_area == nullptr || m_print_y >= m_print_area->my)
         return;
 
     for (int x = m_print_x; x < m_print_area->mx; ++x)

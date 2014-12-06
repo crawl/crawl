@@ -43,7 +43,7 @@ static item_list _lua_get_ilist(lua_State *ls, int ndx)
 
 void register_itemlist(lua_State *ls)
 {
-    clua_register_metatable(ls, ITEMLIST_METATABLE, NULL,
+    clua_register_metatable(ls, ITEMLIST_METATABLE, nullptr,
                             lua_object_gc<item_list>);
 }
 
@@ -256,5 +256,5 @@ const struct luaL_reg dgn_item_dlib[] =
     { "item_spec", _dgn_item_spec },
     { "stash_items", dgn_stash_items },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };

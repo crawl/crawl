@@ -298,10 +298,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
                                + victim->name(DESC_THE) + "!").c_str());
 
         int dam = victim->apply_ac(roll_dice(3, 20));
-        if (victim->is_player())
-            ouch(dam, KILLED_BY_ROLLING, mon.mid);
-        else
-            victim->hurt(&mon, dam);
+        victim->hurt(&mon, dam, BEAM_MISSILE, KILLED_BY_ROLLING);
     }
 
     noisy(5, pos);
@@ -563,16 +560,9 @@ move_again:
         if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
         {
             // Try to swap with the submerged creature.
-            if (mons->is_habitable(mon.pos()))
+            if (mon.swap_with(mons))
             {
                 dprf("iood: Swapping with a submerged monster.");
-                mons->set_position(mon.pos());
-                mon.set_position(pos);
-                ASSERT(!mons->is_constricted());
-                ASSERT(!mons->is_constricting());
-                mgrd(mons->pos()) = mons->mindex();
-                mgrd(pos) = mon.mindex();
-
                 return false;
             }
             else // if swap fails, move ahead

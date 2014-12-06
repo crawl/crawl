@@ -92,7 +92,7 @@ void formatted_string::parse_string_to_multiple(const string &s,
         out.emplace_back();
         formatted_string& fs = out.back();
         fs.textcolour(colour_stack.back());
-        parse_string1(lines[i], fs, colour_stack, NULL);
+        parse_string1(lines[i], fs, colour_stack, nullptr);
         if (colour_stack.back() != colour_stack.front())
             fs.textcolour(colour_stack.front());
     }

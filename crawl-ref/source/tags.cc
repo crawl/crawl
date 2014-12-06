@@ -93,7 +93,7 @@ extern set<pair<string, level_id> > auto_unique_annotations;
 extern abyss_state abyssal_state;
 
 reader::reader(const string &_read_filename, int minorVersion)
-    : _filename(_read_filename), _chunk(0), _pbuf(NULL), _read_offset(0),
+    : _filename(_read_filename), _chunk(0), _pbuf(nullptr), _read_offset(0),
       _minorVersion(minorVersion), _safe_read(false)
 {
     _file       = fopen_u(_filename.c_str(), "rb");
@@ -119,7 +119,7 @@ void reader::close()
 {
     if (opened_file && _file)
         fclose(_file);
-    _file = NULL;
+    _file = nullptr;
 }
 
 void reader::advance(size_t offset)
@@ -1253,6 +1253,20 @@ void tag_read(reader &inf, tag_type tag_id)
             check_map_validity();
         }
         tag_read_level_tiles(th);
+#if TAG_MAJOR_VERSION == 34
+        // We can't do this when we unmarshall shops, since we haven't
+        // unmarshalled items yet...
+        if (th.getMinorVersion() < TAG_MINOR_SHOP_HACK)
+            for (int i = 0; i < MAX_SHOPS; ++i)
+            {
+                // Shop items were heaped up at this cell.
+                for (stack_iterator si(coord_def(0, i+5)); si; ++si)
+                {
+                    env.shop[i].stock.push_back(*si);
+                    dec_mitm_item_quantity(si.index(), si->quantity);
+                }
+            }
+#endif
         break;
     case TAG_GHOST:
         tag_read_ghost(th);
@@ -1284,6 +1298,7 @@ static void tag_construct_char(writer &th)
     marshallString2(th, you.jiyva_second_name);
 
     marshallByte(th, you.wizard);
+    marshallByte(th, you.explore);
 
     marshallByte(th, crawl_state.type);
     if (crawl_state.game_is_tutorial())
@@ -2047,6 +2062,10 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     you.jiyva_second_name = unmarshallString2(th);
 
     you.wizard            = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 34
+    if (minor >= TAG_MINOR_EXPLORE_MODE)
+#endif
+        you.explore       = unmarshallBoolean(th);
 
     crawl_state.type = (game_type) unmarshallUByte(th);
     if (crawl_state.game_is_tutorial())
@@ -3090,7 +3109,17 @@ static void tag_read_you_items(reader &th)
     count = unmarshallByte(th);
     ASSERT(count == ENDOFPACK); // not supposed to change
     for (i = 0; i < count; ++i)
+    {
         unmarshallItem(th, you.inv[i]);
+#if TAG_MAJOR_VERSION == 34
+        // Items in inventory have already been handled.
+        if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED
+            && you.inv[i].defined())
+        {
+            you.inv[i].flags |= ISFLAG_HANDLED;
+        }
+#endif
+    }
 
     // Initialize cache of equipped unrand functions
     for (i = 0; i < NUM_EQUIP; ++i)
@@ -3501,6 +3530,12 @@ static int _last_used_index(const Z &thinglist, int max_things)
 
 // ------------------------------- level tags ---------------------------- //
 
+// If only you could treat optional arguments like they didn't exist in templates...
+static void _marshall_item(writer &th, const item_def& it)
+{
+    marshallItem(th, it);
+}
+
 static void tag_construct_level(writer &th)
 {
     marshallByte(th, env.floor_colour);
@@ -3581,6 +3616,8 @@ static void tag_construct_level(writer &th)
         marshallString(th, env.shop[i].shop_name);
         marshallString(th, env.shop[i].shop_type_name);
         marshallString(th, env.shop[i].shop_suffix_name);
+        marshall_iterator(th, env.shop[i].stock.begin(),
+                              env.shop[i].stock.end(), _marshall_item);
     }
 
     CANARY;
@@ -3695,6 +3732,12 @@ void unmarshallItem(reader &th, item_def &item)
     item.pos.y       = unmarshallShort(th);
     item.flags       = unmarshallInt(th);
     item.link        = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    // ITEM_IN_SHOP was briefly NON_ITEM + NON_ITEM (1e85cf0), but that
+    // doesn't fit in a short.
+    if (item.link == static_cast<signed short>(54000))
+        item.link = ITEM_IN_SHOP;
+#endif
 
     unmarshallShort(th);  // igrd[item.x][item.y] -- unused
 
@@ -3766,7 +3809,7 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
-        item.sub_type = POT_CONFUSION;
+        item.sub_type = POT_POISON;
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_CHANNELING)
         item.sub_type = STAFF_ENERGY;
 
@@ -4037,6 +4080,13 @@ void unmarshallItem(reader &th, item_def &item)
             item.props.erase("never_hide");
             item.props[MANGLED_CORPSE_KEY] = true;
         }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_ISFLAG_HANDLED
+        && item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
+    {
+       // Items we've dropped or thrown have been handled already.
+       item.flags |= ISFLAG_HANDLED;
     }
 #endif
 
@@ -4782,6 +4832,13 @@ void tag_construct_level_tiles(writer &th)
     marshallInt(th, TILE_WALL_MAX);
 }
 
+static item_def _unmarshall_item(reader &th)
+{
+    item_def ret;
+    unmarshallItem(th, ret);
+    return ret;
+}
+
 static void tag_read_level(reader &th)
 {
     env.floor_colour = unmarshallUByte(th);
@@ -4927,6 +4984,12 @@ static void tag_read_level(reader &th)
         env.shop[i].shop_name = unmarshallString(th);
         env.shop[i].shop_type_name = unmarshallString(th);
         env.shop[i].shop_suffix_name = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_SHOP_HACK)
+            env.shop[i].stock.clear();
+        else
+#endif
+            unmarshall_vector(th, env.shop[i].stock, _unmarshall_item);
         env.tgrid(env.shop[i].pos) = i;
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)
@@ -4969,7 +5032,7 @@ static void tag_read_level(reader &th)
     env.dactions_done = unmarshallInt(th);
 
     // Restore heightmap
-    env.heightmap.reset(NULL);
+    env.heightmap.reset(nullptr);
     const bool have_heightmap = unmarshallBoolean(th);
     if (have_heightmap)
     {
@@ -5391,6 +5454,17 @@ void unmarshallMonster(reader &th, monster& m)
         m.ghost_demon_init();
         parts |= MP_GHOST_DEMON;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_RANDLICHES
+        && mons_is_ghost_demon(m.type)
+        && (m.type == MONS_LICH || m.type == MONS_ANCIENT_LICH))
+    {
+        ghost_demon ghost;
+        ghost.init_lich(m.type);
+        ghost.spells = m.spells; // ???
+        m.set_ghost(ghost);
+        parts |= MP_GHOST_DEMON;
+    }
 #endif
 
     if (m.props.exists("monster_tile_name"))
@@ -5801,6 +5875,11 @@ static void unmarshallSpells(reader &th, monster_spells &spells
         spells[j].freq = unmarshallByte(th);
         spells[j].flags = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
+        }
+        else
+        {
+            // initialize freq to something so fixup_spells works properly
+            spells[j].freq = 12;
         }
 #endif
     }

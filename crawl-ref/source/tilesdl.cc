@@ -166,18 +166,18 @@ void TilesFramework::shutdown()
     delete m_region_crt;
     delete m_region_menu;
 
-    m_region_tile  = NULL;
-    m_region_stat  = NULL;
-    m_region_msg   = NULL;
-    m_region_map   = NULL;
-    m_region_tab   = NULL;
-    m_region_inv   = NULL;
-    m_region_spl   = NULL;
-    m_region_mem   = NULL;
-    m_region_abl   = NULL;
-    m_region_mon   = NULL;
-    m_region_crt   = NULL;
-    m_region_menu  = NULL;
+    m_region_tile  = nullptr;
+    m_region_stat  = nullptr;
+    m_region_msg   = nullptr;
+    m_region_map   = nullptr;
+    m_region_tab   = nullptr;
+    m_region_inv   = nullptr;
+    m_region_spl   = nullptr;
+    m_region_mem   = nullptr;
+    m_region_abl   = nullptr;
+    m_region_mon   = nullptr;
+    m_region_crt   = nullptr;
+    m_region_menu  = nullptr;
 
     for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
         delete it->second;
@@ -1110,7 +1110,7 @@ bool TilesFramework::zoom_from_minimap()
     if (!m_region_map || !tiles.is_using_small_layout())
         return false;
     delete m_region_map;
-    m_region_map = NULL;
+    m_region_map = nullptr;
 
     // remove minimap from layers again (was at top of vector)
     m_layers[LAYER_NORMAL].m_regions.erase(m_layers[LAYER_NORMAL].m_regions.begin());
@@ -1151,7 +1151,7 @@ void TilesFramework::place_minimap()
     if (m_region_map->dy * GYM > m_statcol_bottom - m_statcol_top)
     {
         delete m_region_map;
-        m_region_map = NULL;
+        m_region_map = nullptr;
         return;
     }
 
@@ -1269,7 +1269,7 @@ void TilesFramework::layout_statcol()
     if (m_region_map)
     {
         delete m_region_map;
-        m_region_map = NULL;
+        m_region_map = nullptr;
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
 
@@ -1351,7 +1351,7 @@ void TilesFramework::layout_statcol()
 
 void TilesFramework::clrscr()
 {
-    TextRegion::cursor_region = NULL;
+    TextRegion::cursor_region = nullptr;
 
     if (m_region_stat)
         m_region_stat->clear();

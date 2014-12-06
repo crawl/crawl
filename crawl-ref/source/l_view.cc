@@ -161,7 +161,7 @@ static const struct luaL_reg view_lib[] =
 
     { "update_monsters", view_update_monsters },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_view(lua_State *ls)

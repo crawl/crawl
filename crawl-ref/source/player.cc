@@ -178,7 +178,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
         if (!yes_or_no("%s", prompt.c_str()))
         {
             canned_msg(MSG_OK);
-                return false;
+            return false;
         }
     }
     else if (!trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
@@ -2473,13 +2473,8 @@ int player_evasion(ev_ignore_type evit)
         (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
         / (20 - size_factor) / 10;
 
-    // [ds] Dodging penalty for being in high EVP armour, almost
-    // identical to v0.5/4.1 penalty, but with the EVP discount being
-    // 1 instead of 0.5 so that leather armour is fully discounted.
-    // The 1 EVP of leather armour may still incur an
-    // adjusted_evasion_penalty, however.
     const int armour_dodge_penalty = max(0,
-        (10 * you.adjusted_body_armour_penalty(scale, true)
+        (10 * you.armour_dodge_penalty(scale)
          - 30 * scale)
         / max(1, (int) you.strength()));
 
@@ -2600,6 +2595,12 @@ int player_shield_class()
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
+    if (you.attribute[ATTR_BONE_ARMOUR])
+    {
+        // make sure bone armour always gives at least one point of sh.
+        shield += (you.attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 200
+                   / BONE_ARMOUR_DIV;
+    }
 
     return (shield + 50) / 100;
 }
@@ -2791,7 +2792,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     level_change();
 
-    if (actual_gain != NULL)
+    if (actual_gain != nullptr)
         *actual_gain = you.experience - old_exp;
 
     if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
@@ -3628,8 +3629,8 @@ int check_stealth()
     {
         // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
         // Now 2 * EP^2 / 3 after EP rescaling.
-        const int ep = -property(*arm, PARM_EVASION);
-        const int penalty = 2 * ep * ep / 3;
+        const int evp = you.unadjusted_body_armour_penalty();
+        const int penalty = evp * evp * 2 / 3;
 #if 0
         dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
 #endif
@@ -3926,7 +3927,7 @@ static void _display_movement_speed()
 static void _display_tohit()
 {
 #ifdef DEBUG_DIAGNOSTICS
-    melee_attack attk(&you, NULL);
+    melee_attack attk(&you, nullptr);
 
     const int to_hit = attk.calc_to_hit(false);
 
@@ -3957,15 +3958,15 @@ static const char* _attack_delay_desc(int attack_delay)
  */
 static void _display_attack_delay()
 {
-    const item_def* ammo = NULL;
-    you.m_quiver->get_desired_item(&ammo, NULL);
+    const item_def* ammo = nullptr;
+    you.m_quiver->get_desired_item(&ammo, nullptr);
     const bool uses_ammo = ammo && you.weapon()
                            && ammo->launched_by(*you.weapon());
-    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
+    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : nullptr,
                                        false, false);
 
     const int no_shield_delay = you.attack_delay(you.weapon(),
-                                                 uses_ammo ? ammo : NULL,
+                                                 uses_ammo ? ammo : nullptr,
                                                  false, false, false);
     const bool at_min_delay = you.weapon()
                               && weapon_min_delay(*you.weapon())
@@ -4174,7 +4175,7 @@ int slaying_bonus(bool ranged)
 
 // Checks each equip slot for a randart, and adds up all of those with
 // a given property. Slow if any randarts are worn, so avoid where
-// possible. If `matches' is non-NULL, items with nonzero property are
+// possible. If `matches' is non-nullptr, items with nonzero property are
 // pushed onto *matches.
 int player::scan_artefacts(artefact_prop_type which_property,
                            bool calc_unid,
@@ -4198,7 +4199,8 @@ int player::scan_artefacts(artefact_prop_type which_property,
 
         bool known;
         int val = artefact_wpn_property(inv[eq], which_property, known);
-        if (calc_unid || known) {
+        if (calc_unid || known)
+        {
             retval += val;
             if (matches && val)
                 matches->push_back(inv[eq]);
@@ -4817,7 +4819,7 @@ bool curare_hits_player(int death_source, int levels, string name,
         }
     }
 
-    potion_effect(POT_SLOWING, levels + random2(3*levels));
+    slow_player(10 + random2(levels + random2(3 * levels)));
 
     return hurted > 0;
 }
@@ -4827,7 +4829,7 @@ void paralyse_player(string source, int amount)
     if (!amount)
         amount = 2 + random2(6 + you.duration[DUR_PARALYSIS] / BASELINE_DELAY);
 
-    you.paralyse(NULL, amount, source);
+    you.paralyse(nullptr, amount, source);
 }
 
 bool poison_player(int amount, string source, string source_aux, bool force)
@@ -5115,7 +5117,7 @@ bool miasma_player(actor *who, string source_aux)
 
     if (one_chance_in(3))
     {
-        potion_effect(POT_SLOWING, 5);
+        slow_player(10 + random2(5));
         success = true;
     }
 
@@ -5370,6 +5372,30 @@ void dec_elixir_player(int delay)
         _dec_elixir_mp(delay);
 }
 
+void dec_ambrosia_player(int delay)
+{
+    if (!you.duration[DUR_AMBROSIA])
+        return;
+
+    // ambrosia ends when confusion does.
+    if (!you.confused())
+        you.duration[DUR_AMBROSIA] = 0;
+
+    you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
+
+    // 3-5 per turn, 9-50 over (3-10) turns
+    const int restoration = 3 + random2(3);
+    if (!you.duration[DUR_DEATHS_DOOR])
+    {
+        const int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
+        inc_hp(div_rand_round(restoration * mut_factor, 3));
+    }
+    inc_mp(restoration);
+
+    if (!you.duration[DUR_AMBROSIA])
+        mpr("You feel less invigorated.");
+}
+
 bool flight_allowed(bool quiet)
 {
     if (get_form()->forbids_flight())
@@ -5576,8 +5602,10 @@ void player::init()
 
 #ifdef WIZARD
     wizard = Options.wiz_mode == WIZ_YES;
+    explore = Options.explore_mode == WIZ_YES;
 #else
     wizard = false;
+    explore = false;
 #endif
     birth_time       = time(0);
 
@@ -5958,10 +5986,6 @@ bool player::can_swim(bool permanently) const
 
 int player::visible_igrd(const coord_def &where) const
 {
-    // shop hack, etc.
-    if (where.x == 0)
-        return NON_ITEM;
-
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
             && !species_likes_water(species)))
@@ -6104,6 +6128,8 @@ bool player::liquefied_ground() const
 
 /**
  * Returns whether the player currently has any kind of shield.
+ *
+ * XXX: why does this function exist?
  */
 bool player::shielded() const
 {
@@ -6112,7 +6138,8 @@ bool player::shielded() const
            || duration[DUR_MAGIC_SHIELD]
            || duration[DUR_DIVINE_SHIELD]
            || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-           || qazlal_sh_boost() > 0;
+           || qazlal_sh_boost() > 0
+           || attribute[ATTR_BONE_ARMOUR] > 0;
 }
 
 int player::shield_block_penalty() const
@@ -6181,32 +6208,57 @@ void player::ablate_deflection()
     }
 }
 
+/**
+ * What's the base value of the penalties the player recieves from their
+ * body armour?
+ *
+ * Used as the base for adjusted armour penalty calculations, as well as for
+ * stealth penalty calculations.
+ *
+ * @return  The player's body armour's PARM_EVASION, if any.
+ */
 int player::unadjusted_body_armour_penalty() const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
     if (!body_armour)
         return 0;
 
-    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
-    return base_ev_penalty;
+    return -property(*body_armour, PARM_EVASION);
 }
 
-// The EV penalty to the player for their worn body armour.
-int player::adjusted_body_armour_penalty(int scale, bool use_size) const
+/**
+ * [ds] Dodging penalty for being in high EVP armour, almost
+ * identical to v0.5/4.1 penalty, but with the EVP discount being
+ * 1 instead of 0.5 so that leather armour is fully discounted.
+ *
+ * A penalty to EV that scales linearly with encumbrance, not quadratically.
+ * Will later be capped to not exceed the player's EV bonus from Dodging.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based linearly on body armour encumbrance.
+ */
+int player::armour_dodge_penalty(int scale) const
 {
     const int base_ev_penalty = unadjusted_body_armour_penalty();
-    if (!base_ev_penalty)
-        return 0;
 
-    if (use_size)
-    {
-        const int size = body_size(PSIZE_BODY);
+    const int size = body_size(PSIZE_BODY);
 
-        const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
+    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
 
-        return max(0, scale * base_ev_penalty
-                      - size_bonus_factor * base_ev_penalty);
-    }
+    return max(0, scale * base_ev_penalty
+               - size_bonus_factor * base_ev_penalty);
+}
+
+/**
+ * The encumbrance penalty to the player for their worn body armour.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based quadratically on body armour
+ *                  encumbrance.
+ */
+int player::adjusted_body_armour_penalty(int scale) const
+{
+    const int base_ev_penalty = unadjusted_body_armour_penalty();
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
     return 2 * base_ev_penalty * base_ev_penalty
@@ -6216,7 +6268,12 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
            / 450;
 }
 
-// The EV penalty to the player for wearing their current shield.
+/**
+ * The encumbrance penalty to the player for their worn shield.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based on shield weight.
+ */
 int player::adjusted_shield_penalty(int scale) const
 {
     const item_def *shield_l = slot_item(EQ_SHIELD, false);
@@ -6404,8 +6461,15 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
 
-    if (you.duration[DUR_CORROSION])
+    if (duration[DUR_CORROSION])
         AC -= 500 * you.props["corrosion_amount"].get_int();
+
+    if (attribute[ATTR_BONE_ARMOUR])
+    {
+        // make sure bone armour always gives at least one point of ac.
+        AC += (attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 100
+              / BONE_ARMOUR_DIV;
+    }
 
     AC += get_form()->get_ac_bonus();
 
@@ -6743,13 +6807,8 @@ bool player::res_wind() const
 
 bool player::res_petrify(bool temp) const
 {
-    if (player_mutation_level(MUT_PETRIFICATION_RESISTANCE))
-        return true;
-
-    if (temp && (form == TRAN_STATUE || form == TRAN_WISP))
-        return true;
-
-    return false;
+    return player_mutation_level(MUT_PETRIFICATION_RESISTANCE)
+           || temp && get_form()->res_petrify();
 }
 
 int player::res_constrict() const
@@ -6866,7 +6925,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     if (crawl_state.game_is_zotdef() && orb_haloed(pos()))
         problems.emplace_back("in the halo of the Orb");
 
-    const bool stasis_block = stasis_blocks_effect(calc_unid, NULL);
+    const bool stasis_block = stasis_blocks_effect(calc_unid, nullptr);
     vector<item_def> notele_items;
     if (has_notele_item(calc_unid, &notele_items) || stasis_block)
     {
@@ -7096,7 +7155,8 @@ void player::teleport(bool now, bool wizard_tele)
 }
 
 int player::hurt(const actor *agent, int amount, beam_type flavour,
-                 bool cleanup_dead, bool /*attacker_effects*/)
+                 kill_method_type kill_type, string source, string aux,
+                 bool /*cleanup_dead*/, bool /*attacker_effects*/)
 {
     // We ignore cleanup_dead here.
     if (!agent)
@@ -7105,20 +7165,13 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         // to a player from a dead monster.  We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
-        ouch(amount, KILLED_BY_MONSTER, MID_NOBODY, "",
-             false, "posthumous revenge");
-    }
-    else if (agent->is_monster())
-    {
-        const monster* mon = agent->as_monster();
-        ouch(amount,
-             flavour == BEAM_WATER ? KILLED_BY_WATER : KILLED_BY_MONSTER,
-             mon->mid, "", mon->visible_to(this), NULL);
+        ouch(amount, kill_type, MID_NOBODY, aux.c_str(),
+             false, source.empty() ? "posthumous revenge" : source.c_str());
     }
     else
     {
-        // Should never happen!
-        die("player::hurt() called for self-damage");
+        ouch(amount, kill_type, agent->mid, aux.c_str(),
+             agent->visible_to(this), source.c_str());
     }
 
     if ((flavour == BEAM_DEVASTATION || flavour == BEAM_DISINTEGRATION)
@@ -7132,7 +7185,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
 
 void player::drain_stat(stat_type s, int amount, actor *attacker)
 {
-    if (attacker == NULL)
+    if (attacker == nullptr)
         lose_stat(s, amount, false, "");
     else if (attacker->is_monster())
         lose_stat(s, amount, attacker->as_monster(), false);
@@ -8290,18 +8343,6 @@ bool player_has_orb()
     return you.char_direction == GDT_ASCENDING;
 }
 
-/**
- * Invoke this each time you wish to test MUT_BLURRY_VISION.0
- * @return  True if the player fails to read things.
- */
-bool does_vision_blur()
-{
-    // "Ashenzari keeps your vision clear" corrects for blurry vision.
-    return player_mutation_level(MUT_BLURRY_VISION)
-        && !in_good_standing(GOD_ASHENZARI, 2)
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5);
-}
-
 bool player::form_uses_xl() const
 {
     // No body parts that translate in any way to something fisticuffs could
@@ -8764,11 +8805,13 @@ void player_close_door(coord_def doorpos)
     {
         if (monster* mon = monster_at(dc))
         {
-            if (!you.can_see(mon))
+            const bool mons_unseen = !you.can_see(mon);
+            if (mons_unseen || mons_is_object(mon->type))
             {
                 mprf("Something is blocking the %s!", waynoun);
                 // No free detection!
-                you.turn_is_over = true;
+                if (mons_unseen)
+                    you.turn_is_over = true;
             }
             else
                 mprf("There's a creature in the %s!", waynoun);
@@ -8908,4 +8951,37 @@ string player::hands_act(const string &plural_verb,
                          const string &subject) const
 {
     return "Your " + hands_verb(plural_verb) + " " + subject;
+}
+
+/**
+ * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit,
+ * or over time (currently every ~8 turns)
+ *
+ * Chance of losing a point of ac/sh (BONE_ARMOUR_DIV) increases with current
+ * number of corpses (ATTR_BONE_ARMOUR) and decreases with spellpower, both
+ * linearly. 50->100 power halves the chance; 1->5 corpses (roughly) doubles it.
+ * at 50 power and 5 SH+EV, there's a 1/5 chance of losing a point on hit.
+ * chance floored at 1/27.
+ */
+void player::maybe_degrade_bone_armour()
+{
+    if (attribute[ATTR_BONE_ARMOUR] <= 0)
+        return;
+
+    const int numerator = attribute[ATTR_BONE_ARMOUR] + 5 * BONE_ARMOUR_DIV;
+    const int power = max(1, calc_spell_power(SPELL_BONE_ARMOUR, true));
+    const int denom = min(power * 3, numerator * 27);
+    const bool degrade_armour = x_chance_in_y(numerator, denom);
+    if (!degrade_armour)
+        return;
+
+    you.attribute[ATTR_BONE_ARMOUR]
+        = max(0, you.attribute[ATTR_BONE_ARMOUR] - BONE_ARMOUR_DIV);
+
+    if (you.attribute[ATTR_BONE_ARMOUR])
+        mpr("A chunk of your corpse armour falls away.");
+    else
+        mpr("The last of your corpse armour falls away.");
+
+    redraw_armour_class = true;
 }

@@ -213,7 +213,7 @@ void input_history::new_input(const string &s)
 const string *input_history::prev()
 {
     if (history.empty())
-        return NULL;
+        return nullptr;
 
     if (pos == history.begin())
         pos = history.end();
@@ -224,7 +224,7 @@ const string *input_history::prev()
 const string *input_history::next()
 {
     if (history.empty())
-        return NULL;
+        return nullptr;
 
     if (pos == history.end() || ++pos == history.end())
         pos = history.begin();
@@ -247,9 +247,9 @@ void input_history::clear()
 // line_reader
 
 line_reader::line_reader(char *buf, size_t sz, int wrap)
-    : buffer(buf), bufsz(sz), history(NULL), region(GOTO_CRT),
-      start(coord_def(0,0)), keyfn(NULL), wrapcol(wrap),
-      cur(NULL), length(0), pos(-1)
+    : buffer(buf), bufsz(sz), history(nullptr), region(GOTO_CRT),
+      start(coord_def(0,0)), keyfn(nullptr), wrapcol(wrap),
+      cur(nullptr), length(0), pos(-1)
 {
 }
 

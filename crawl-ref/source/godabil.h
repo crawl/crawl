@@ -13,6 +13,12 @@
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
 #define BEOGH_SH_GIFT_KEY "given beogh shield"
 
+#define AVAILABLE_SAC_KEY "available_sacrifices"
+#define HEALTH_SAC_KEY "current_health_sacrifice"
+#define ESSENCE_SAC_KEY "current_essence_sacrifice"
+#define PURITY_SAC_KEY "current_purity_sacrifice"
+#define ARCANA_SAC_KEY "current_arcane_sacrifices"
+
 struct bolt;
 class stack_iterator;
 

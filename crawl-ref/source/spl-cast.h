@@ -59,7 +59,7 @@ typedef bool (*spell_selector)(spell_type spell);
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
                 const string &title = "Your Spells",
-                spell_selector selector = NULL);
+                spell_selector selector = nullptr);
 int spell_fail(spell_type spell);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
@@ -72,7 +72,7 @@ void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-    bool evoked = true);
+    bool evoked = false);
 
 double get_miscast_chance(spell_type spell, int severity = 2);
 int fail_severity(spell_type spell);

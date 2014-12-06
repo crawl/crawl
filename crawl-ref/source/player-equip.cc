@@ -723,7 +723,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                     // Makes no sense to discourage unwielding a temporarily
                     // branded weapon since you can wait it out. This also
                     // fixes problems with unwield prompts (mantis #793).
-                    MiscastEffect(&you, NULL, WIELD_MISCAST,
+                    MiscastEffect(&you, nullptr, WIELD_MISCAST,
                                   SPTYP_TRANSLOCATION, 9, 90,
                                   "a distortion unwield");
                 }
@@ -850,6 +850,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_FLYING:
+            // If you weren't flying when you took off the boots, don't restart.
+            if (you.attribute[ATTR_LAST_FLIGHT_STATUS] == 0)
+                break;
+
             if (you.airborne())
             {
                 you.attribute[ATTR_PERM_FLIGHT] = 1;
@@ -986,6 +990,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_FLYING:
+        // Save current flight status so we can restore it on reequip
+        you.attribute[ATTR_LAST_FLIGHT_STATUS] =
+            you.attribute[ATTR_PERM_FLIGHT];
+
         if (you.attribute[ATTR_PERM_FLIGHT]
             && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
             && !you.racial_permanent_flight())
@@ -1046,7 +1054,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, NULL, meld, slot);
+        _unequip_artefact_effect(item, nullptr, meld, slot);
 }
 
 static void _remove_amulet_of_faith(item_def &item)

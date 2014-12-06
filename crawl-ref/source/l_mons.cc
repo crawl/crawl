@@ -654,7 +654,7 @@ static int mons_behaviour(lua_State *ls)
 static const struct luaL_reg mons_lib[] =
 {
     { "behaviour", mons_behaviour },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void dluaopen_monsters(lua_State *ls)

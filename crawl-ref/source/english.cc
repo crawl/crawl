@@ -16,7 +16,7 @@
 
 const char * const standard_plural_qualifiers[] =
 {
-    " of ", " labeled ", NULL
+    " of ", " labeled ", nullptr
 };
 
 bool is_vowel(const ucs_t chr)

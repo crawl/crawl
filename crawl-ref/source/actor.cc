@@ -7,11 +7,13 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "attack.h"
+#include "directn.h"
 #include "env.h"
 #include "fprop.h"
 #include "itemprop.h"
 #include "los.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "mon-death.h"
 #include "religion.h"
 #include "stepdown.h"
@@ -71,13 +73,13 @@ hands_reqd_type actor::hands_reqd(const item_def &item) const
 
 /**
  * Wrapper around the virtual actor::can_wield(const item_def&,bool,bool,bool,bool) const overload.
- * @param item May be NULL, in which case a dummy item will be passed in.
+ * @param item May be nullptr, in which case a dummy item will be passed in.
  */
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const
 {
-    if (item == NULL)
+    if (item == nullptr)
     {
         // Unarmed combat.
         item_def fake;
@@ -111,7 +113,7 @@ bool actor::handle_trap()
     trap_def* trap = find_trap(pos());
     if (trap)
         trap->trigger(*this);
-    return trap != NULL;
+    return trap != nullptr;
 }
 
 int actor::skill_rdiv(skill_type sk, int mult, int div) const
@@ -663,7 +665,8 @@ void actor::handle_constriction()
         damage = timescale_damage(this, damage);
         DIAG_ONLY(const int timescale_dam = damage);
 
-        damage = defender->hurt(this, damage, BEAM_MISSILE, false);
+        damage = defender->hurt(this, damage, BEAM_MISSILE,
+                                KILLED_BY_MONSTER, "", "", false);
         DIAG_ONLY(const int infdam = damage);
 
         string exclamations;
@@ -837,4 +840,61 @@ string actor::resist_margin_phrase(int margin) const
 
     return make_stringf(resist_messages[index][0].c_str(),
                         conj_verb(resist_messages[index][1]).c_str());
+}
+
+void actor::collide(coord_def newpos, const actor *agent, int pow)
+{
+    actor *other = actor_at(newpos);
+    ASSERT(this != other);
+    ASSERT(alive());
+
+    if (is_monster())
+        behaviour_event(as_monster(), ME_WHACK, agent);
+
+    dice_def damage(2, 1 + pow / 10);
+
+    if (other && other->alive())
+    {
+        if (other->is_monster())
+            behaviour_event(other->as_monster(), ME_WHACK, agent);
+        if (you.can_see(this) || you.can_see(other))
+        {
+            mprf("%s %s with %s!",
+                 name(DESC_THE).c_str(),
+                 conj_verb("collide").c_str(),
+                 other->name(DESC_THE).c_str());
+        }
+        const string thisname = name(DESC_A, true);
+        const string othername = other->name(DESC_A, true);
+        other->hurt(agent, other->apply_ac(damage.roll()),
+                    BEAM_MISSILE, KILLED_BY_COLLISION,
+                    othername, thisname);
+        if (alive())
+        {
+            hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+                 KILLED_BY_COLLISION, thisname, othername);
+        }
+        return;
+    }
+
+    if (you.can_see(this))
+    {
+        if (!can_pass_through_feat(grd(newpos)))
+        {
+            mprf("%s %s into %s!",
+                 name(DESC_THE).c_str(), conj_verb("slam").c_str(),
+                 env.map_knowledge(newpos).known()
+                 ? feature_description_at(newpos, false, DESC_THE, false)
+                       .c_str()
+                 : "something");
+        }
+        else
+        {
+            mprf("%s violently %s moving!",
+                 name(DESC_THE).c_str(), conj_verb("stop").c_str());
+        }
+    }
+    hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+         KILLED_BY_COLLISION, "",
+         feature_description_at(newpos, false, DESC_A, false));
 }

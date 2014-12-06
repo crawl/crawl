@@ -78,7 +78,7 @@ monster* player::get_fearmonger(const coord_def &target) const
         if (olddist > newdist)
             return mon;
     }
-    return NULL;
+    return nullptr;
 }
 
 monster* player::get_any_fearmonger() const
@@ -86,7 +86,7 @@ monster* player::get_any_fearmonger() const
     if (!fearmongers.empty())
         return monster_by_mid(fearmongers[0]);
     else
-        return NULL;
+        return nullptr;
 }
 
 // Removes a monster from the list of fearmongers if present.

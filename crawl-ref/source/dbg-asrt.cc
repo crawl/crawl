@@ -416,9 +416,9 @@ static void _debug_marker_scan()
     {
         map_marker* marker = markers[i];
 
-        if (marker == NULL)
+        if (marker == nullptr)
         {
-            mprf(MSGCH_ERROR, "Marker #%d is NULL", i);
+            mprf(MSGCH_ERROR, "Marker #%d is nullptr", i);
             continue;
         }
 
@@ -455,9 +455,9 @@ static void _debug_marker_scan()
         {
             map_marker *marker = at_pos[i];
 
-            if (marker == NULL)
+            if (marker == nullptr)
             {
-                mprf(MSGCH_ERROR, "Marker #%d at (%d, %d) NULL",
+                mprf(MSGCH_ERROR, "Marker #%d at (%d, %d) nullptr",
                      i, ri->x, ri->y);
                 continue;
             }
@@ -483,7 +483,7 @@ static void _debug_dump_markers()
     {
         map_marker* marker = markers[i];
 
-        if (marker == NULL || marker->get_type() == MAT_LUA_MARKER)
+        if (marker == nullptr || marker->get_type() == MAT_LUA_MARKER)
             continue;
 
         mprf(MSGCH_DIAGNOSTICS, "Marker %d at (%d, %d): %s",
@@ -500,7 +500,7 @@ static void _debug_dump_lua_markers(FILE *file)
     {
         map_marker* marker = markers[i];
 
-        if (marker == NULL || marker->get_type() != MAT_LUA_MARKER)
+        if (marker == nullptr || marker->get_type() != MAT_LUA_MARKER)
             continue;
 
         map_lua_marker* lua_marker = dynamic_cast<map_lua_marker*>(marker);
@@ -612,7 +612,7 @@ void do_crash_dump()
     }
 
     // Want same time for file name and crash milestone.
-    const time_t t = time(NULL);
+    const time_t t = time(nullptr);
 
     string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
                   !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
@@ -639,7 +639,7 @@ void do_crash_dump()
 
     // The errno values are only relevant when the function in
     // question has returned a value indicating (possible) failure, so
-    // only freak out if freopen() returned NULL!
+    // only freak out if freopen() returned nullptr!
     if (!file)
     {
         fprintf(stdout, "\nUnable to open file '%s' for writing: %s\n",
@@ -649,7 +649,7 @@ void do_crash_dump()
 
     // Unbuffer the file, since if we recursively crash buffered lines
     // won't make it to the file.
-    setvbuf(file, NULL, _IONBF, 0);
+    setvbuf(file, nullptr, _IONBF, 0);
 
     set_msg_dump_file(file);
 
@@ -751,7 +751,7 @@ void do_crash_dump()
     _debug_dump_lua_markers(file);
     fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
 
-    set_msg_dump_file(NULL);
+    set_msg_dump_file(nullptr);
 
     mark_milestone("crash", _assert_msg, "", t);
 
@@ -794,7 +794,7 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 
 #if defined(TARGET_OS_MACOSX)
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
-    int* p = NULL;              // but this gives us a stack crawl...
+    int* p = nullptr;           // but this gives us a stack crawl...
     *p = 0;
 #endif
 

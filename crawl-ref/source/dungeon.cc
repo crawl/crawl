@@ -108,7 +108,7 @@ static void _pick_float_exits(vault_placement &place,
                               vector<coord_def> &targets);
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type);
 static bool _connect_spotty(const coord_def& from,
-                            bool (*overwriteable)(dungeon_feature_type) = NULL);
+                            bool (*overwriteable)(dungeon_feature_type) = nullptr);
 static bool _connect_vault_exit(const coord_def& exit);
 
 // VAULT FUNCTIONS
@@ -170,7 +170,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place);
 static dungeon_feature_type _pick_an_altar();
 
 static vector<god_type> _temple_altar_list;
-static CrawlHashTable*       _current_temple_hash = NULL; // XXX: hack!
+static CrawlHashTable*       _current_temple_hash = nullptr; // XXX: hack!
 
 // MISC FUNCTIONS
 static void _dgn_set_floor_colours();
@@ -189,7 +189,7 @@ vector<vault_placement> Temp_Vaults;
 static FixedBitVector<NUM_MONSTERS> temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
-const map_bitmask *Vault_Placement_Mask = NULL;
+const map_bitmask *Vault_Placement_Mask = nullptr;
 
 static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
@@ -592,7 +592,7 @@ static void _dgn_map_colour_fixup()
                 env.grid_colours[x][y] = BLACK;
             }
 
-    dgn_colour_grid.reset(NULL);
+    dgn_colour_grid.reset(nullptr);
 }
 
 bool set_level_flags(uint32_t flags, bool silent)
@@ -740,7 +740,7 @@ static bool _dgn_fill_zone(
     const coord_def &start, int zone,
     point_record &record_point,
     bool (*passable)(const coord_def &) = dgn_square_is_passable,
-    bool (*iswanted)(const coord_def &) = NULL)
+    bool (*iswanted)(const coord_def &) = nullptr)
 {
     bool ret = false;
     list<coord_def> points[2];
@@ -906,7 +906,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
                                dgn_square_is_passable,
                                choose_stairless ? (at_branch_bottom() ?
                                                    _is_upwards_exit_stair :
-                                                   _is_exit_stair) : NULL);
+                                                   _is_exit_stair) : nullptr);
 
             // If we want only stairless zones, screen out zones that did
             // have stairs.
@@ -1063,7 +1063,7 @@ dgn_register_place(const vault_placement &place, bool register_vault)
     {
         const keyed_mapspec *spec = place.map.mapspec_at(*vi - place.pos);
 
-        if (spec != NULL)
+        if (spec != nullptr)
         {
             env.level_map_mask(*vi) |= (short)spec->map_mask.flags_set;
             env.level_map_mask(*vi) &= ~((short)spec->map_mask.flags_unset);
@@ -1197,18 +1197,18 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_build_method.clear();
     env.level_layout_types.clear();
     level_clear_vault_memory();
-    dgn_colour_grid.reset(NULL);
+    dgn_colour_grid.reset(nullptr);
 
     use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;
     dgn_zones        = 0;
 
     _temple_altar_list.clear();
-    _current_temple_hash = NULL;
+    _current_temple_hash = nullptr;
 
     // Forget level properties.
     env.properties.clear();
-    env.heightmap.reset(NULL);
+    env.heightmap.reset(nullptr);
 
     env.absdepth0 = absdungeon_depth(you.where_are_you, you.depth);
 
@@ -1965,7 +1965,7 @@ static void _build_overflow_temples()
 
         const int num_gods = _setup_temple_altars(temple);
 
-        const map_def *vault = NULL;
+        const map_def *vault = nullptr;
         string vault_tag = "";
         string name = "";
 
@@ -1974,7 +1974,7 @@ static void _build_overflow_temples()
             name = temple[TEMPLE_MAP_KEY].get_string();
 
             vault = find_map_by_name(name);
-            if (vault == NULL)
+            if (vault == nullptr)
             {
                 mprf(MSGCH_ERROR,
                      "Couldn't find overflow temple map '%s'!",
@@ -2017,7 +2017,7 @@ static void _build_overflow_temples()
 
                 vault = random_map_for_tag(vault_tag, true);
 #ifdef DEBUG_TEMPLES
-                if (vault == NULL)
+                if (vault == nullptr)
                 {
                     mprf(MSGCH_DIAGNOSTICS, "Couldn't find overflow temple "
                          "for combination of tags %s", vault_tag.c_str());
@@ -2025,13 +2025,13 @@ static void _build_overflow_temples()
 #endif
             }
 
-            if (vault == NULL)
+            if (vault == nullptr)
             {
                 vault_tag = make_stringf("temple_overflow_generic_%d",
                                          num_gods);
 
                 vault = random_map_for_tag(vault_tag, true);
-                if (vault == NULL)
+                if (vault == nullptr)
                 {
                     mprf(MSGCH_ERROR,
                          "Couldn't find overflow temple tag '%s'!",
@@ -2040,7 +2040,7 @@ static void _build_overflow_temples()
             }
         }
 
-        if (vault == NULL)
+        if (vault == nullptr)
             // Might as well build the rest of the level if we couldn't
             // find the overflow temple map, so don't veto the level.
             return;
@@ -2063,7 +2063,7 @@ static void _build_overflow_temples()
              vault->name.c_str());
 #endif
     }
-    _current_temple_hash = NULL; // XXX: hack!
+    _current_temple_hash = nullptr; // XXX: hack!
 }
 
 struct coord_feat
@@ -2591,7 +2591,7 @@ static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
 
 static const map_def *_pick_layout(const map_def *vault)
 {
-    const map_def *layout = NULL;
+    const map_def *layout = nullptr;
 
     // This is intended for use with primary vaults, so...
     ASSERT(vault);
@@ -2661,7 +2661,7 @@ static bool _pan_level()
                                        + pandemon_level_names[which_demon]));
     }
 
-    const map_def *vault = NULL;
+    const map_def *vault = nullptr;
 
     if (which_demon >= 0)
     {
@@ -2740,7 +2740,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
             || crawl_state.game_is_tutorial()))
     {
         vault = find_map_by_name(crawl_state.map);
-        if (vault == NULL)
+        if (vault == nullptr)
         {
             end(1, false, "Couldn't find selected map '%s'.",
                 crawl_state.map.c_str());
@@ -2777,7 +2777,7 @@ struct map_component
 
     map_component()
     {
-        min_equivalent = NULL;
+        min_equivalent = nullptr;
     }
     map_component * min_equivalent;
 
@@ -2793,7 +2793,7 @@ struct map_component
         max_coord = pos;
 
         label = in_label;
-        min_equivalent = NULL;
+        min_equivalent = nullptr;
     }
 
     void add_coord(const coord_def & pos)
@@ -2904,7 +2904,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
     // Reindex root labels, and move them to output
     for (auto &entry : intermediate_components)
     {
-        if (entry.second.min_equivalent == NULL)
+        if (entry.second.min_equivalent == nullptr)
         {
             entry.second.label = reindexed_label++;
             components.push_back(entry.second);
@@ -3139,7 +3139,7 @@ static void _place_chance_vaults()
 
 static void _place_minivaults()
 {
-    const map_def *vault = NULL;
+    const map_def *vault = nullptr;
     // First place the vault requested with &P
     if (you.props.exists("force_minivault")
         && (vault = find_map_by_name(you.props["force_minivault"])))
@@ -3631,7 +3631,7 @@ static void _place_branch_entrances(bool use_vaults)
 
             // Otherwise place a single stair feature.
             // Try to use designated locations for entrances if possible.
-            const coord_def portal_pos = find_portal_place(NULL, false);
+            const coord_def portal_pos = find_portal_place(nullptr, false);
             if (!portal_pos.origin())
             {
                 env.grid(portal_pos) = it->entry_stairs;
@@ -4069,7 +4069,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
                                      const coord_def &where)
 {
     if (!mdef)
-        return NULL;
+        return nullptr;
 
     const dgn_colour_override_manager colour_man;
 
@@ -4081,7 +4081,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
                  "Cannot generate encompass map '%s' with check_collision=true",
                  mdef->name.c_str());
 
-            return NULL;
+            return nullptr;
         }
 
         // For encompass maps, clear the entire level.
@@ -4159,7 +4159,7 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
                 mdef = find_map_by_name(mapname);
             }
             else
-                return NULL;
+                return nullptr;
         }
     }
 }
@@ -4167,7 +4167,8 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
 vault_placement *dgn_vault_at(coord_def p)
 {
     const int map_index = env.level_map_ids(p);
-    return map_index == INVALID_MAP_INDEX ? NULL : env.level_vaults[map_index];
+    return map_index == INVALID_MAP_INDEX ? nullptr
+                                          : env.level_vaults[map_index];
 }
 
 void dgn_seen_vault_at(coord_def p)
@@ -4255,7 +4256,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
          place.pos.x, place.pos.y, place.size.x, place.size.y);
 
     if (placed_vault_orientation == MAP_NONE)
-        return NULL;
+        return nullptr;
 
     const bool is_layout = place.map.is_overwritable_layout();
 
@@ -5027,7 +5028,7 @@ static bool _dgn_place_one_monster(const vault_placement &place,
 
 /* "Oddball grids" are handled in _vault_grid. */
 static dungeon_feature_type _glyph_to_feat(int glyph,
-                                           vault_placement *place = NULL)
+                                           vault_placement *place = nullptr)
 {
     return (glyph == 'x') ? DNGN_ROCK_WALL :
            (glyph == 'X') ? DNGN_PERMAROCK_WALL :
@@ -5072,7 +5073,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
     if (rawfeat == ' ')
         return NUM_FEATURES;
 
-    keyed_mapspec *mapsp = map? map->mapspec_at(c) : NULL;
+    keyed_mapspec *mapsp = map? map->mapspec_at(c) : nullptr;
     if (mapsp)
     {
         feature_spec f = mapsp->get_feat();
@@ -5087,7 +5088,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
         else if (f.feat >= 0)
             return static_cast<dungeon_feature_type>(f.feat);
         else if (f.glyph >= 0)
-            return map_feature_at(NULL, c, f.glyph);
+            return map_feature_at(nullptr, c, f.glyph);
         else if (f.shop.get())
             return DNGN_ENTER_SHOP;
 
@@ -5447,7 +5448,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
 {
     if (_temple_altar_list.empty())
     {
-        if (_current_temple_hash != NULL)
+        if (_current_temple_hash != nullptr)
         {
             // Altar god doesn't matter, setting up the whole machinery would
             // be too much work.
@@ -5552,11 +5553,10 @@ static bool _shop_sells_antiques(shop_type type)
             || type == SHOP_GENERAL_ANTIQUE;
 }
 
-void place_spec_shop(const coord_def& where,
-                     int force_s_type, bool representative)
+void place_spec_shop(const coord_def& where, shop_type force_type)
 {
-    shop_spec spec(static_cast<shop_type>(force_s_type));
-    place_spec_shop(where, spec, representative);
+    shop_spec spec(force_type);
+    place_spec_shop(where, spec);
 }
 
 int greed_for_shop_type(shop_type shop, int level_number)
@@ -5625,13 +5625,11 @@ static int _shop_greed(shop_type type, int level_number, int spec_greed)
  * How many items should be placed in a given shop?
  *
  * @param type              The type of the shop. (E.g. SHOP_FOOD.)
- * @param representative    No idea, sorry.
  * @param spec              A vault shop spec; may override default results.
  * @return                  The number of items the shop should be generated
  *                          to hold.
  */
-static int _shop_num_items(shop_type type, bool representative,
-                           const shop_spec &spec)
+static int _shop_num_items(shop_type type, const shop_spec &spec)
 {
     if (spec.num_items != -1)
     {
@@ -5646,9 +5644,6 @@ static int _shop_num_items(shop_type type, bool representative,
              (unsigned int)spec.items.size());
         return (int) spec.items.size();
     }
-
-    if (representative)
-        return type == SHOP_EVOKABLES ? NUM_WANDS : 16;
 
     return 5 + random2avg(12, 3);
 }
@@ -5751,23 +5746,21 @@ static int _make_delicious_corpse()
  * Create an item and place it in a shop.
  *
  * FIXME: I'm pretty sure this will go into an infinite loop if mitm is full.
+ * items() uses get_mitm_slot with culling, so i think this is ok --wheals
  *
  * @param j                 The index of the item being created in the shop's
  *                          inventory.
  * @param shop_type_        The type of shop. (E.g. SHOP_FOOD.)
  * @param stocked[in,out]   An array mapping book types to the # in the shop.
- * @param representative    Sorry, no idea.
  * @param spec              The specification of the shop.
- * @param shop_index        The index of the shop in env.shop.
+ * @param shop              The shop.
  */
 static void _stock_shop_item(int j, shop_type shop_type_,
-                             int stocked[NUM_BOOKS], bool representative,
-                             shop_spec &spec, int shop_index)
+                             int stocked[NUM_BOOKS],
+                             shop_spec &spec, shop_struct &shop)
 {
     const int level_number = env.absdepth0;
     const int item_level = _choose_shop_item_level(shop_type_, level_number);
-    const coord_def stock_loc = coord_def(0, 5+shop_index);
-
 
     int item_index; // index into mitm (global item array)
                     // where the generated item will be stored
@@ -5778,10 +5771,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
     while (true)
     {
         object_class_type basetype = item_in_shop(shop_type_);
-        if (representative && shop_type_ == SHOP_EVOKABLES)
-            basetype = OBJ_WANDS;
-
-        int subtype = representative? j : OBJ_RANDOM;
+        int subtype = OBJ_RANDOM;
 
         if (spec.gozag && shop_type_ == SHOP_FOOD && you.species == SP_VAMPIRE)
         {
@@ -5793,13 +5783,13 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         {
             // shop spec lists a random set of items; choose one
             item_index = dgn_place_item(spec.items.random_item_weighted(),
-                                        stock_loc, item_level);
+                                        coord_def(), item_level);
         }
         else if (!spec.items.empty() && spec.use_all
                  && j < (int)spec.items.size())
         {
             // shop lists ordered items; take the one at the right index
-            item_index = dgn_place_item(spec.items.get_item(j), stock_loc,
+            item_index = dgn_place_item(spec.items.get_item(j), coord_def(),
                                         item_level);
         }
         else if (spec.gozag && shop_type_ == SHOP_FOOD
@@ -5837,16 +5827,12 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     ASSERT(item_index != NON_ITEM);
 
-    item_def& item(mitm[item_index]);
+    item_def item = mitm[item_index];
 
     // If this is a book, note it down in the stocked books array
     // (unless it's a randbook)
     if (shop_type_ == SHOP_BOOK && !is_artefact(item))
         stocked[item.sub_type]++;
-
-    // please don't ask me what this does
-    if (representative && item.base_type == OBJ_WANDS)
-        item.plus = 7;
 
     if (spec.gozag && shop_type_ == SHOP_FOOD && you.species == SP_VAMPIRE)
     {
@@ -5854,12 +5840,15 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         item.quantity += random2(3); // blood for the vampire friends :)
     }
 
-    // Set object 'position' (gah!) & ID status.
-    item.pos = stock_loc;
-
     // Identify the item, unless we don't do that.
     if (!_shop_sells_antiques(shop_type_))
         set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+    // Now move it into the shop!
+    dec_mitm_item_quantity(item_index, item.quantity);
+    item.pos = shop.pos;
+    item.link = ITEM_IN_SHOP;
+    shop.stock.push_back(item);
 }
 
 /**
@@ -5868,14 +5857,9 @@ static void _stock_shop_item(int j, shop_type shop_type_,
  * @param where             The location to place the shop.
  * @param spec              The details of the shop.
  *                          Would be const if not for list method nonsense.
- * @param representative    No idea, sorry.
  */
-void place_spec_shop(const coord_def& where, shop_spec &spec,
-                     bool representative)
+void place_spec_shop(const coord_def& where, shop_spec &spec)
 {
-    const int level_number = env.absdepth0;
-    const int force_s_type = static_cast<int>(spec.sh_type);
-
     const bool note_status = notes_are_active();
     activate_notes(false);
 
@@ -5883,40 +5867,34 @@ void place_spec_shop(const coord_def& where, shop_spec &spec,
     if (shop_index == MAX_SHOPS)
         return;
 
+    shop_struct& shop = env.shop[shop_index];
+
+    const int level_number = env.absdepth0;
+
     for (int j = 0; j < 3; j++)
-        env.shop[shop_index].keeper_name[j] = 1 + random2(200);
+        shop.keeper_name[j] = 1 + random2(200);
+    shop.shop_name = spec.name;
+    shop.shop_type_name = spec.type;
+    shop.shop_suffix_name = spec.suffix;
+    shop.level = level_number * 2;
+    shop.type = spec.sh_type;
+    if (shop.type == SHOP_RANDOM)
+        shop.type = static_cast<shop_type>(random2(NUM_SHOPS));
+    shop.greed = _shop_greed(shop.type, level_number, spec.greed);
+    shop.pos = where;
 
-    env.shop[shop_index].shop_name = spec.name;
-    env.shop[shop_index].shop_type_name = spec.type;
-    env.shop[shop_index].shop_suffix_name = spec.suffix;
-    env.shop[shop_index].level = level_number * 2;
+    env.tgrid(where) = shop_index;
+    _set_grd(where, DNGN_ENTER_SHOP);
 
-    const shop_type shop_type_ = static_cast<shop_type>(
-                                                  force_s_type != SHOP_RANDOM ?
-                                                  force_s_type :
-                                                  random2(NUM_SHOPS)
-                                                  );
-    env.shop[shop_index].type = shop_type_;
-
-    env.shop[shop_index].greed = _shop_greed(shop_type_, level_number,
-                                             spec.greed);
-
-    const int num_items = _shop_num_items(shop_type_, representative, spec);
+    const int num_items = _shop_num_items(shop.type, spec);
 
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
     int stocked[NUM_BOOKS] = { 0 };
 
+    shop.stock.clear();
     for (int j = 0; j < num_items; j++)
-    {
-        _stock_shop_item(j, shop_type_, stocked, representative, spec,
-                         shop_index);
-    }
-
-    env.shop[shop_index].pos = where;
-    env.tgrid(where) = shop_index;
-
-    _set_grd(where, DNGN_ENTER_SHOP);
+        _stock_shop_item(j, shop.type, stocked, spec, shop);
 
     activate_notes(note_status);
 }
@@ -6665,7 +6643,7 @@ static bool _fixup_interlevel_connectivity()
         }
 
         _dgn_fill_zone(*ri, ++nzones, _dgn_point_record_stub,
-                       dgn_square_travel_ok, NULL);
+                       dgn_square_travel_ok, nullptr);
     }
 
     int max_region = 0;
@@ -6921,7 +6899,7 @@ string vault_placement::map_name_at(const coord_def &where) const
 
 void vault_placement::reset()
 {
-    if (_current_temple_hash != NULL)
+    if (_current_temple_hash != nullptr)
         _setup_temple_altars(*_current_temple_hash);
     else
         _temple_altar_list.clear();

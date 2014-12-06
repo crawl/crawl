@@ -871,12 +871,8 @@ static int _book_weight(book_type book)
     ASSERT_RANGE(book, 0, MAX_FIXED_BOOK + 1);
 
     int total_weight = 0;
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    for (spell_type stype : spellbook_template(book))
     {
-        spell_type stype = which_spell_in_book(book, i);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
         // Skip over spells already seen.
         if (you.seen_spell[stype])
             continue;
@@ -995,12 +991,13 @@ static bool _do_book_acquirement(item_def &book, int agent)
             }
 
 #if TAG_MAJOR_VERSION == 34
-            if (bk == BOOK_STALKING)
+            if (bk == BOOK_WIZARDRY)
             {
                 weights[bk] = 0;
                 continue;
             }
 #endif
+
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
         }
@@ -1410,12 +1407,14 @@ int acquirement_create_item(object_class_type class_wanted,
                  && !is_unrandom_artefact(acq_item)
                  && acq_item.sub_type != WPN_BLOWGUN)
         {
-            // These can never get egos, and mundane versions are quite common, so
-            // guarantee artefact status.  Rarity is a bit low to compensate.
-            if (is_giant_club_type(acq_item.sub_type))
+            // These can never get egos, and mundane versions are quite common,
+            // so guarantee artefact status.  Rarity is a bit low to compensate.
+            // ...except actually, trog can give them antimagic brand, so...
+            if (is_giant_club_type(acq_item.sub_type)
+                && get_weapon_brand(acq_item) == SPWPN_NORMAL
+                && !one_chance_in(25))
             {
-                if (!one_chance_in(25))
-                    make_item_randart(acq_item, true);
+                make_item_randart(acq_item, true);
             }
 
             if (agent == GOD_TROG || agent == GOD_OKAWARU)
@@ -1525,7 +1524,7 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     int thing_created = NON_ITEM;
 
-    if (item_index == NULL)
+    if (item_index == nullptr)
         item_index = &thing_created;
 
     *item_index = NON_ITEM;

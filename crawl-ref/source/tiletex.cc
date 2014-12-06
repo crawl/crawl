@@ -75,7 +75,7 @@ void GenericTexture::bind() const
 }
 
 TilesTexture::TilesTexture() :
-    GenericTexture(), m_tile_max(0), m_info_func(NULL)
+    GenericTexture(), m_tile_max(0), m_info_func(nullptr)
 {
 }
 

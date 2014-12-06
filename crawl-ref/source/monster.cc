@@ -147,7 +147,7 @@ void monster::reset()
     patrol_point.reset();
     travel_target = MTRAV_NONE;
     travel_path.clear();
-    ghost.reset(NULL);
+    ghost.reset(nullptr);
     seen_context = SC_NONE;
     props.clear();
     clear_constricted();
@@ -201,7 +201,7 @@ void monster::init_with(const monster& mon)
     if (mon.ghost.get())
         ghost.reset(new ghost_demon(*mon.ghost));
     else
-        ghost.reset(NULL);
+        ghost.reset(nullptr);
 }
 
 uint32_t monster::last_client_id = 0;
@@ -449,7 +449,7 @@ int monster::has_claws(bool allow_tran) const
 
 item_def *monster::missiles()
 {
-    return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : NULL;
+    return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : nullptr;
 }
 
 int monster::missile_count()
@@ -467,7 +467,7 @@ item_def *monster::launcher()
         return weap;
 
     weap = mslot_item(MSLOT_ALT_WEAPON);
-    return weap && is_range_weapon(*weap) ? weap : NULL;
+    return weap && is_range_weapon(*weap) ? weap : nullptr;
 }
 
 // Does not check whether the monster can dual-wield - that is the
@@ -483,7 +483,7 @@ item_def *monster::weapon(int which_attack) const
     if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY
         && attk.type != AT_KITE && attk.type != AT_SWOOP)
     {
-        return NULL;
+        return nullptr;
     }
 
     // Even/odd attacks use main/offhand weapon.
@@ -505,7 +505,7 @@ item_def *monster::weapon(int which_attack) const
         }
     }
 
-    return weap == NON_ITEM ? NULL : &mitm[weap];
+    return weap == NON_ITEM ? nullptr : &mitm[weap];
 }
 
 /**
@@ -530,7 +530,7 @@ item_def *monster::melee_weapon() const
         return first_weapon;
     if (secondary_is_melee)
         return second_weapon;
-    return NULL;
+    return nullptr;
 }
 
 // Give hands required to wield weapon.
@@ -565,12 +565,12 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
     if ((item.flags & ISFLAG_SUMMONED) && !is_summoned())
         return false;
 
-    item_def* weap1 = NULL;
+    item_def* weap1 = nullptr;
     if (inv[MSLOT_WEAPON] != NON_ITEM)
         weap1 = &mitm[inv[MSLOT_WEAPON]];
 
     int       avail_slots = 1;
-    item_def* weap2       = NULL;
+    item_def* weap2       = nullptr;
     if (mons_wields_two_weapons(this))
     {
         if (!weap1 || hands_reqd(*weap1) != HANDS_TWO)
@@ -589,7 +589,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
                             || hands_reqd(item) == HANDS_TWO;
 
-    item_def* _shield = NULL;
+    item_def* _shield = nullptr;
     if (inv[MSLOT_SHIELD] != NON_ITEM)
     {
         ASSERT(!(weap1 && weap2));
@@ -1154,7 +1154,7 @@ bool monster::pickup(item_def &item, int slot, int near)
 
     const monster* other_mon = item.holding_monster();
 
-    if (other_mon != NULL)
+    if (other_mon != nullptr)
     {
         if (other_mon == this)
         {
@@ -1327,7 +1327,7 @@ static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
 {
     // If the monster has no ammo then there's no redundancy problems
     // to check.
-    if (ammo == NULL)
+    if (ammo == nullptr)
         return true;
 
     const int bow_brand  = get_weapon_brand(*launcher);
@@ -1728,11 +1728,11 @@ static int _get_monster_armour_value(const monster *mon,
     // Each resistance/property counts as much as 1 point of AC.
     // Steam has been excluded because of its general uselessness.
     // Well, the same's true for sticky flame but... (jpeg)
-    int value  = item.armour_rating();
-        value += get_armour_res_fire(item, true);
-        value += get_armour_res_cold(item, true);
-        value += get_armour_res_elec(item, true);
-        value += get_armour_res_sticky_flame(item);
+    int value = item.armour_rating()
+              + get_armour_res_fire(item, true)
+              + get_armour_res_cold(item, true)
+              + get_armour_res_elec(item, true)
+              + get_armour_res_sticky_flame(item);
 
     // Give a simple bonus, no matter the size of the MR bonus.
     if (get_armour_res_magic(item, true) > 0)
@@ -2319,7 +2319,7 @@ item_def *monster::slot_item(equipment_type eq, bool include_melded) const
 item_def *monster::mslot_item(mon_inv_type mslot) const
 {
     const int mi = (mslot == NUM_MONSTER_SLOTS) ? NON_ITEM : inv[mslot];
-    return mi == NON_ITEM ? NULL : &mitm[mi];
+    return mi == NON_ITEM ? nullptr : &mitm[mi];
 }
 
 item_def *monster::shield() const
@@ -2484,7 +2484,7 @@ string monster::conj_verb(const string &verb) const
 string monster::hand_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
-    if (can_plural == NULL)
+    if (can_plural == nullptr)
         can_plural = &_can_plural;
     *can_plural = true;
 
@@ -2604,7 +2604,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
 string monster::foot_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
-    if (can_plural == NULL)
+    if (can_plural == nullptr)
         can_plural = &_can_plural;
     *can_plural = true;
 
@@ -2724,7 +2724,7 @@ string monster::arm_name(bool plural, bool *can_plural) const
     if (shape > MON_SHAPE_NAGA)
         return hand_name(plural, can_plural);
 
-    if (can_plural != NULL)
+    if (can_plural != nullptr)
         *can_plural = true;
 
     string adj;
@@ -3218,7 +3218,8 @@ bool monster::pacified() const
  */
 bool monster::shielded() const
 {
-    return shield() || has_ench(ENCH_CONDENSATION_SHIELD);
+    return shield() || has_ench(ENCH_CONDENSATION_SHIELD)
+                    || has_ench(ENCH_BONE_ARMOUR);
 }
 
 int monster::shield_bonus() const
@@ -3238,12 +3239,15 @@ int monster::shield_bonus() const
     }
     if (has_ench(ENCH_CONDENSATION_SHIELD))
     {
-        int condensation_shield = get_hit_dice() / 2;
-        if (sh < 0)
-            sh = condensation_shield;
-        else
-            sh += condensation_shield;
+        const int condensation_shield = get_hit_dice() / 2;
+        sh = max(sh + condensation_shield, condensation_shield);
     }
+    if (has_ench(ENCH_BONE_ARMOUR))
+    {
+        const int bone_armour = 6 + get_hit_dice() / 3;
+        sh = max(sh + bone_armour, bone_armour);
+    }
+
     return sh;
 }
 
@@ -3257,6 +3261,11 @@ void monster::shield_block_succeeded(actor *attacker)
     actor::shield_block_succeeded(attacker);
 
     ++shield_blocks;
+    if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
+    {
+        del_ench(ENCH_BONE_ARMOUR);
+        simple_monster_message(this, "'s corpse armour sloughs away.");
+    }
 }
 
 int monster::shield_bypass_ability(int) const
@@ -3361,6 +3370,8 @@ static int _zombie_ac_modifier(monster_type type)
  */
 int monster::base_armour_class() const
 {
+    ASSERT(!invalid_monster_type(type));
+
     // ghost demon struct overrides the monster values.
     if (mons_is_ghost_demon(type))
         return ghost->ac;
@@ -3387,7 +3398,10 @@ int monster::base_armour_class() const
 
     // demonspawn & draconians combine base & class ac values.
     if (mons_is_job(type))
+    {
+        ASSERT(!invalid_monster_type(base_monster));
         return base_ac + get_monster_data(base_monster)->AC;
+    }
 
     return base_ac;
 }
@@ -3434,6 +3448,8 @@ int monster::armour_class(bool calc_unid) const
         ac += 4 + get_hit_dice() / 3;
     if (has_ench(ENCH_ICEMAIL))
         ac += ICEMAIL_MAX;
+    if (has_ench(ENCH_BONE_ARMOUR))
+        ac += 6 + get_hit_dice() / 3;
 
     // Penalty due to bad temp mutations.
     if (has_ench(ENCH_WRETCHED))
@@ -3518,7 +3534,7 @@ int monster::base_evasion() const
  **/
 int monster::evasion(bool calc_unid) const
 {
-    return melee_evasion(NULL, calc_unid ? EV_IGNORE_NONE : EV_IGNORE_UNIDED);
+    return melee_evasion(nullptr, calc_unid ? EV_IGNORE_NONE : EV_IGNORE_UNIDED);
 }
 
 /**
@@ -3643,7 +3659,7 @@ void monster::blame_damage(const actor* attacker, int amount)
 void monster::suicide(int hp)
 {
     if (hit_points > 0)
-        blame_damage(NULL, hit_points);
+        blame_damage(nullptr, hit_points);
     hit_points = hp;
 }
 
@@ -4407,11 +4423,7 @@ bool monster::shift(coord_def p)
     }
 
     if (count > 0)
-    {
-        mgrd(pos()) = NON_MONSTER;
-        moveto(result);
-        mgrd(result) = mindex();
-    }
+        move_to_pos(result);
 
     return count > 0;
 }
@@ -4444,7 +4456,7 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
         mprf("%s is drained!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.
-    hurt(agent, 2 + random2(3), BEAM_NEG, !quiet);
+    hurt(agent, 2 + random2(3), BEAM_NEG, KILLED_BY_DRAINING, "", "", !quiet);
 
     if (alive())
     {
@@ -4476,7 +4488,7 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
     {
         // If quiet, don't clean up the monster in order to credit
         // properly.
-        hurt(agent, immediate, BEAM_MISSILE, !quiet);
+        hurt(agent, immediate, BEAM_MISSILE, KILLED_BY_BEAM, "", "", !quiet);
 
         if (alive())
         {
@@ -4517,11 +4529,11 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
-                   bool cleanup_dead, bool attacker_effects)
+                   kill_method_type /*kill_type*/, string /*source*/,
+                   string /*aux*/, bool cleanup_dead, bool attacker_effects)
 {
-    if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER
-        || mindex() == YOU_FAULTLESS || type == MONS_DIAMOND_OBELISK
-        || type == MONS_PLAYER_SHADOW)
+    if (mons_is_projectile(type) || mid == MID_ANON_FRIEND
+        || type == MONS_SINGULARITY || type == MONS_PLAYER_SHADOW)
     {
         return 0;
     }
@@ -4615,7 +4627,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     if (cleanup_dead && (hit_points <= 0 || get_hit_dice() <= 0)
         && type != MONS_NO_MONSTER)
     {
-        if (agent == NULL)
+        if (agent == nullptr)
             monster_die(this, KILL_MISC, NON_MONSTER);
         else if (agent->is_player())
             monster_die(this, KILL_YOU, NON_MONSTER);
@@ -5202,13 +5214,13 @@ void monster::check_speed()
 actor *monster::get_foe() const
 {
     if (foe == MHITNOT)
-        return NULL;
+        return nullptr;
     else if (foe == MHITYOU)
-        return friendly() ? NULL : &you;
+        return friendly() ? nullptr : &you;
 
     // Must be a monster!
     monster* my_foe = &menv[foe];
-    return my_foe->alive()? my_foe : NULL;
+    return my_foe->alive()? my_foe : nullptr;
 }
 
 int monster::foe_distance() const
@@ -5271,6 +5283,10 @@ bool monster::needs_berserk(bool check_spells) const
     {
         for (const mon_spell_slot &slot : spells)
         {
+            // Don't count natural abilities for this purpose.
+            if (slot.flags & MON_SPELL_NATURAL)
+                continue;
+
             const int spell = slot.spell;
             if (spell != SPELL_BERSERKER_RAGE)
                 return false;
@@ -5643,10 +5659,17 @@ bool monster::self_destructs()
     return false;
 }
 
-bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
+/** A higher-level moving method than moveto().
+ *
+ *  @param newpos    where to move this monster
+ *  @param clear_net whether to clear any trapping nets
+ *  @param force     whether to move it even if you're standing there
+ *  @returns whether the move took place.
+ */
+bool monster::move_to_pos(const coord_def &newpos, bool clear_net, bool force)
 {
     const actor* a = actor_at(newpos);
-    if (a && (!a->is_player() || !fedhas_passthrough(this)))
+    if (a && !(a->is_player() && (fedhas_passthrough(this) || force)))
         return false;
 
     const int index = mindex();
@@ -5660,6 +5683,43 @@ bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
 
     // Set new monster grid pointer to this monster.
     mgrd(newpos) = index;
+
+    return true;
+}
+
+/** Swap positions with another monster.
+ *
+ *  move_to_pos can't be used in this case, since it can't move something
+ *  to a spot that's occupied. This will abort if either monster can't survive
+ *  in the new place.
+ *
+ *  @param other the monster to swap with
+ *  @returns whether they ended up moving.
+ */
+bool monster::swap_with(monster* other)
+{
+    const coord_def old_pos = pos();
+    const coord_def new_pos = other->pos();
+
+    if (!can_pass_through(new_pos)
+        || !other->can_pass_through(old_pos))
+    {
+        return false;
+    }
+
+    if (!monster_habitable_grid(this, grd(new_pos))
+         && !can_cling_to(new_pos)
+        || !monster_habitable_grid(other, grd(old_pos))
+            && !other->can_cling_to(old_pos))
+    {
+        return false;
+    }
+
+    moveto(new_pos);
+    other->moveto(old_pos);
+
+    mgrd(old_pos) = other->mindex();
+    mgrd(new_pos) = mindex();
 
     return true;
 }
@@ -5767,7 +5827,7 @@ int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 
 const monsterentry *monster::find_monsterentry() const
 {
-    return (type == MONS_NO_MONSTER || type == MONS_PROGRAM_BUG) ? NULL
+    return (type == MONS_NO_MONSTER || type == MONS_PROGRAM_BUG) ? nullptr
                                                     : get_monster_data(type);
 }
 
@@ -6298,6 +6358,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             props["emergency_clone"].get_bool() = true;
         }
     }
+
+    if (alive() && has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
+    {
+        del_ench(ENCH_BONE_ARMOUR);
+        mprf("%s corpse armour sloughs away.",
+             apostrophise(name(DESC_THE)).c_str());
+    }
 }
 
 reach_type monster::reach_range() const
@@ -6512,7 +6579,7 @@ item_def* monster::take_item(int steal_what, int mslot)
     // Create new item.
     int index = get_mitm_slot(10);
     if (index == NON_ITEM)
-        return NULL;
+        return nullptr;
 
     item_def &new_item = mitm[index];
 
@@ -6549,7 +6616,7 @@ item_def* monster::take_item(int steal_what, int mslot)
 
 /** Disarm this monster, and preferably pull the weapon into your tile.
  *
- *  @returns a pointer to the weapon disarmed, or NULL if unsuccessful.
+ *  @returns a pointer to the weapon disarmed, or nullptr if unsuccessful.
  */
 item_def* monster::disarm()
 {
@@ -6572,7 +6639,7 @@ item_def* monster::disarm()
         || !you.can_see(this)
         || !mon_tile_ok)
     {
-        return NULL;
+        return nullptr;
     }
 
     drop_item(MSLOT_WEAPON, false);
@@ -6663,9 +6730,7 @@ bool monster::shove(const char* feat_name)
     for (distance_iterator di(pos()); di; ++di)
         if (monster_space_valid(this, *di, false))
         {
-            mgrd(pos()) = NON_MONSTER;
-            moveto(*di);
-            mgrd(*di) = mindex();
+            move_to_pos(*di);
             simple_monster_message(this,
                 make_stringf(" is pushed out of the %s.", feat_name).c_str());
             dprf("Moved to (%d, %d).", pos().x, pos().y);

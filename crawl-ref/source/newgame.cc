@@ -640,14 +640,14 @@ static void _construct_species_menu(const newgame_def* ng,
                                     const newgame_def& defaults,
                                     MenuFreeform* menu)
 {
-    ASSERT(menu != NULL);
+    ASSERT(menu != nullptr);
     int items_in_column = 0;
     for (int i = 0; i < NUM_SPECIES; ++i)
         if (is_species_valid_choice((species_type)i))
             items_in_column++;
     items_in_column = (items_in_column + 2) / 3;
     // Construct the menu, 3 columns
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
@@ -883,7 +883,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(highlighter);
 
     // Did we have a previous species?
-    if (menu.get_active_item() == NULL)
+    if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
 
 #ifdef USE_TILE_LOCAL
@@ -1282,7 +1282,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(highlighter);
 
     // Did we have a previous background?
-    if (menu.get_active_item() == NULL)
+    if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
 
 #ifdef USE_TILE_LOCAL
@@ -1415,7 +1415,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
                                    MenuFreeform* menu)
 {
     static const int ITEMS_START_Y = 5;
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
@@ -1604,7 +1604,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(highlighter);
 
     // Did we have a previous weapon?
-    if (menu.get_active_item() == NULL)
+    if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
@@ -1864,7 +1864,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
 {
     static const int ITEMS_START_Y = 5;
     static const int MENU_COLUMN_WIDTH = get_number_of_cols();
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
@@ -2042,7 +2042,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(highlighter);
 
     // Did we have a previous sprint map?
-    if (menu.get_active_item() == NULL)
+    if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
 
     _print_character_info(ng); // calls clrscr() so needs to be before attach()

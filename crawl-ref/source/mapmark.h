@@ -222,7 +222,7 @@ public:
                               cloud_type type = CLOUD_NONE,
                               int speed = 10, int amount = 35,
                               int max_radius = LOS_RADIUS, int dur = 10,
-                              actor* agent = NULL);
+                              actor* agent = nullptr);
 
     void write(writer &) const;
     void read(reader &);

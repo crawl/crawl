@@ -52,7 +52,7 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
 actor* actor_at(const coord_def& c)
 {
     if (!in_bounds(c))
-        return NULL;
+        return nullptr;
     if (c == you.pos())
         return &you;
     return monster_at(c);
@@ -106,9 +106,9 @@ bool feat_is_staircase(dungeon_feature_type feat)
 
     // All branch entries/exits are staircases, except for Zot and Vaults entry.
     if (feat == DNGN_ENTER_VAULTS
-        || feat == DNGN_RETURN_FROM_VAULTS
+        || feat == DNGN_EXIT_VAULTS
         || feat == DNGN_ENTER_ZOT
-        || feat == DNGN_RETURN_FROM_ZOT)
+        || feat == DNGN_EXIT_ZOT)
     {
         return false;
     }
@@ -262,9 +262,9 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_ENTER_VAULTS:
-    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_EXIT_VAULTS:
     case DNGN_ENTER_ZOT:
-    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_EXIT_ZOT:
     case DNGN_ENTER_HELL:
     case DNGN_EXIT_HELL:
     case DNGN_ENTER_DIS:
@@ -534,8 +534,8 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
     return get_feature_dchar(feat) == DCHAR_ARCH
            && feat_stair_direction(feat) != CMD_NO_CMD
            && feat != DNGN_ENTER_ZOT
-           && feat != DNGN_RETURN_FROM_ZOT
-           && feat != DNGN_RETURN_FROM_VAULTS
+           && feat != DNGN_EXIT_ZOT
+           && feat != DNGN_EXIT_VAULTS
            && feat != DNGN_EXIT_HELL
            && feat != DNGN_ENTER_HELL;
 }
@@ -734,7 +734,7 @@ unwind_slime_wall_precomputer::unwind_slime_wall_precomputer(bool docompute)
 unwind_slime_wall_precomputer::~unwind_slime_wall_precomputer()
 {
     if (did_compute_mask)
-        _slime_wall_precomputed_neighbour_mask.reset(NULL);
+        _slime_wall_precomputed_neighbour_mask.reset(nullptr);
 }
 
 bool slime_wall_neighbour(const coord_def& c)
@@ -785,7 +785,7 @@ static coord_def _dgn_find_nearest_square(
     const coord_def &pos,
     void *thing,
     bool (*acceptable)(const coord_def &, void *thing),
-    bool (*traversable)(const coord_def &) = NULL)
+    bool (*traversable)(const coord_def &) = nullptr)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
@@ -992,7 +992,7 @@ static bool _dgn_shift_feature(const coord_def &pos)
         return false;
 
     const coord_def dest =
-        _dgn_find_nearest_square(pos, NULL, _is_feature_shift_target);
+        _dgn_find_nearest_square(pos, nullptr, _is_feature_shift_target);
 
     dgn_move_entities_at(pos, dest, false, false, false);
     return true;
@@ -1654,13 +1654,13 @@ vector<string> dungeon_feature_matches(const string &name)
 /** Get the lua/wizmode name for a feature.
  *
  *  @param rfeat The feature type to be found.
- *  @returns NULL if rfeat is not defined, the vaultname of the corresponding
+ *  @returns nullptr if rfeat is not defined, the vaultname of the corresponding
  *           feature_def otherwise.
  */
 const char *dungeon_feature_name(dungeon_feature_type rfeat)
 {
     if (!is_valid_feature_type(rfeat))
-        return NULL;
+        return nullptr;
 
     return get_feature_def(rfeat).vaultname;
 }

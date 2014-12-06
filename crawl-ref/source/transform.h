@@ -44,7 +44,7 @@ public:
 enum duration_power_scaling
 {
     PS_NONE,                ///< no bonus
-    PS_TENTH,               ///< bonus based on rand2(power)/10
+    PS_STABLE_TENTH,        ///< bonus based on (random2(pow) + pow)/20
     PS_SINGLE,              ///< bonus based on rand2(power)
     PS_ONE_AND_A_HALF,      ///< bonus based on r(power) + r(power/2)
     PS_DOUBLE               ///< bonus based on r(power) + r(power)
@@ -124,6 +124,7 @@ public:
     bool res_rot() const;
     bool res_acid() const;
     bool res_sticky_flame() const;
+    bool res_petrify() const;
 
     /**
      * A multiplier to Stealth skill for player stealth calculations.
@@ -207,6 +208,8 @@ public:
     const string hand_name;
     /// The name of this form's foot-equivalents; "" defaults to species.
     const string foot_name;
+    /// The name of this form's flesh-equivalent; "" defaults to species.
+    const string flesh_equivalent;
 
 protected:
     /// See Form::get_long_name().

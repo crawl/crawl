@@ -10,7 +10,7 @@
 
 void gift_ammo_to_orc(monster* orc, bool initial_gift = false);
 
-bool bless_follower(monster* follower = NULL,
+bool bless_follower(monster* follower = nullptr,
                     god_type god = you.religion,
                     bool force = false);
 

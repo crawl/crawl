@@ -42,7 +42,7 @@ item_def* item_mimic_at(const coord_def &c)
     for (stack_iterator si(c); si; ++si)
         if (si->flags & ISFLAG_MIMIC)
             return &*si;
-    return NULL;
+    return nullptr;
 }
 
 bool mimic_at(const coord_def &c)
@@ -50,16 +50,9 @@ bool mimic_at(const coord_def &c)
     return feature_mimic_at(c) || item_mimic_at(c);
 }
 
-// The default suitable() function for monster_drop_things().
-bool is_any_item(const item_def& item)
-{
-    return true;
-}
-
 void monster_drop_things(monster* mons,
                           bool mark_item_origins,
-                          bool (*suitable)(const item_def& item),
-                          int owner_id)
+                          bool (*suitable)(const item_def& item))
 {
     // Drop weapons and missiles last (i.e., on top), so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)

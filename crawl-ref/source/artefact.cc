@@ -1113,13 +1113,8 @@ static bool _redo_book(item_def &book)
     int num_spells  = 0;
     int num_unknown = 0;
 
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    for (spell_type spell : spellbook_template(static_cast<book_type>(book.sub_type)))
     {
-        spell_type spell = which_spell_in_book(book, i);
-
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
         num_spells++;
         if (!you.seen_spell[spell])
             num_unknown++;

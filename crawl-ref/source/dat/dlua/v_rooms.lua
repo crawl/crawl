@@ -287,7 +287,7 @@ local function analyse_vault_post_placement(usage_grid,room,result,options)
       (feat.is_stone_stair(p.x,p.y)) or
       -- On V:1 the branch entrant stairs don't count as stone_stair; we need to check specifically for the V exit stairs
       -- to avoid overwriting e.g. Crypt or Blade entrance stairs!
-      dgn.feature_name(dgn.grid(p.x,p.y)) == "return_from_vaults" then
+      dgn.feature_name(dgn.grid(p.x,p.y)) == "exit_vaults" then
       -- Remove the stair and remember it
       dgn.grid(p.x,p.y,"floor") --TODO: Be more intelligent about how to replace it
       table.insert(result.stairs, { pos = { x = p.x, y = p.y } })

@@ -1064,7 +1064,7 @@ static const map_def *
 _random_map_in_list(const map_selector &sel,
                     const vault_indices &filtered)
 {
-    const map_def *chosen_map = NULL;
+    const map_def *chosen_map = nullptr;
     int rollsize = 0;
 
     // First build a list of vaults that could be used:
@@ -1114,7 +1114,7 @@ _random_map_in_list(const map_selector &sel,
     if (!sel.preserve_dummy && chosen_map
         && chosen_map->has_tag("dummy"))
     {
-        chosen_map = NULL;
+        chosen_map = nullptr;
     }
 
     sel.announce(chosen_map);
@@ -1516,7 +1516,7 @@ void run_map_global_preludes()
         dlua_chunk &chunk = global_preludes[i];
         if (!chunk.empty())
         {
-            if (chunk.load_call(dlua, NULL))
+            if (chunk.load_call(dlua, nullptr))
                 mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
         }
     }

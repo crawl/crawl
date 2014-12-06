@@ -42,7 +42,7 @@ private:
 
 template <typename Z>
 Matrix<Z>::Matrix(int _width, int _height, const Z &initial)
-    : data(NULL), mwidth(_width), mheight(_height), size(_width * _height)
+    : data(nullptr), mwidth(_width), mheight(_height), size(_width * _height)
 {
     data = new Z [ size ];
     init(initial);
@@ -50,7 +50,7 @@ Matrix<Z>::Matrix(int _width, int _height, const Z &initial)
 
 template <typename Z>
 Matrix<Z>::Matrix(int _width, int _height)
-    : data(NULL), mwidth(_width), mheight(_height), size(_width * _height)
+    : data(nullptr), mwidth(_width), mheight(_height), size(_width * _height)
 {
     data = new Z [ size ];
 }

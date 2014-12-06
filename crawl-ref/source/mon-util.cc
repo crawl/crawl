@@ -233,7 +233,7 @@ monster_type get_monster_by_name(string name, bool substring)
     }
 
     size_t idx = find_earliest_match(name, (size_t) 0, ARRAYSZ(mondata),
-                                     _always_true<size_t>, _mon_entry_name);
+                                     always_true<size_t>, _mon_entry_name);
     return idx == ARRAYSZ(mondata) ? MONS_PROGRAM_BUG
                                    : (monster_type) mondata[idx].mc;
 }
@@ -360,11 +360,11 @@ int get_mons_resist(const monster* mon, mon_resist_flags res)
 monster* monster_at(const coord_def &pos)
 {
     if (!in_bounds(pos))
-        return NULL;
+        return nullptr;
 
     const int mindex = mgrd(pos);
     if (mindex == NON_MONSTER)
-        return NULL;
+        return nullptr;
 
     ASSERT(mindex <= MAX_MONSTERS);
     return &menv[mindex];
@@ -921,7 +921,7 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
 {
     const bool can_place_smoke = env.cgrid(pos) == EMPTY_CLOUD;
     if (can_place_smoke)
-        place_cloud(CLOUD_BLACK_SMOKE, pos, 2 + random2(2), NULL);
+        place_cloud(CLOUD_BLACK_SMOKE, pos, 2 + random2(2), nullptr);
     if (!you.see_cell(pos))
         return;
 
@@ -1194,7 +1194,7 @@ static bool _shout_fits_monster(monster_type mc, int shout)
     // For Pandemonium lords, almost everything is fair game.  It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
     if (mc != MONS_HELL_BEAST)
-        return shout != S_BUZZ && shout != S_CROAK;
+        return true;
 
     switch (shout)
     {
@@ -1238,7 +1238,9 @@ bool mons_is_ghost_demon(monster_type mc)
             || mons_class_is_animated_weapon(mc)
             || mc == MONS_PANDEMONIUM_LORD
             || mons_class_is_chimeric(mc)
-            || mc == MONS_SPELLFORGED_SERVITOR;
+            || mc == MONS_SPELLFORGED_SERVITOR
+            || mc == MONS_LICH
+            || mc == MONS_ANCIENT_LICH;
 }
 
 bool mons_is_pghost(monster_type mc)
@@ -1801,7 +1803,7 @@ flight_type mons_flies(const monster* mon, bool temp)
 {
     flight_type ret;
     // For dancing weapons, this function can get called before their
-    // ghost_demon is created, so check for a NULL ghost. -cao
+    // ghost_demon is created, so check for a nullptr ghost. -cao
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
         ret = mon->ghost->fly;
     else
@@ -2127,10 +2129,6 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
     {
     case MONS_HELL_KNIGHT:
         return { MST_HELL_KNIGHT_I, MST_HELL_KNIGHT_II };
-
-    case MONS_LICH:
-    case MONS_ANCIENT_LICH:
-        return { MST_LICH_I, MST_LICH_II, MST_LICH_III, MST_LICH_IV };
 
     case MONS_NECROMANCER:
         return { MST_NECROMANCER_I, MST_NECROMANCER_II };
@@ -2550,6 +2548,18 @@ void define_monster(monster* mons)
         break;
     }
 
+    case MONS_LICH:
+    case MONS_ANCIENT_LICH:
+    {
+        ghost_demon ghost;
+        ghost.init_lich(mcls);
+        mons->set_ghost(ghost);
+        mons->ghost_demon_init();
+        mons->bind_melee_flags();
+        mons->bind_spell_flags();
+        break;
+    }
+
     default:
         break;
     }
@@ -2709,7 +2719,7 @@ string mons_type_name(monster_type mc, description_level_type desc)
     }
 
     const monsterentry *me = get_monster_data(mc);
-    if (me == NULL)
+    if (me == nullptr)
     {
         result += make_stringf("invalid monster_type %d", mc);
         return result;
@@ -2777,7 +2787,7 @@ monsterentry *get_monster_data(monster_type mc)
     if (mc >= 0 && mc < NUM_MONSTERS)
         return &mondata[mon_entry[mc]];
     else
-        return NULL;
+        return nullptr;
 }
 
 static int _mons_exp_mod(monster_type mc)
@@ -3931,7 +3941,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     string foe_species;
 
-    if (foe == NULL)
+    if (foe == nullptr)
         ;
     else if (foe->is_player())
     {
@@ -4128,7 +4138,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     msg = replace_all(msg, "@feet@", part_str);
     msg = replace_all(msg, "@Feet@", uppercase_first(part_str));
 
-    if (foe != NULL)
+    if (foe != nullptr)
     {
         const god_type god = foe->deity();
 
@@ -4349,7 +4359,7 @@ int get_dist_to_nearest_monster()
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
     {
         const monster* mon = monster_at(*ri);
-        if (mon == NULL)
+        if (mon == nullptr)
             continue;
 
         if (!mon->visible_to(&you))
@@ -4693,7 +4703,7 @@ monster* choose_random_nearby_monster(int weight,
                                       bool (*suitable)(const monster* mon),
                                       bool prefer_named_or_priest)
 {
-    monster* chosen = NULL;
+    monster* chosen = nullptr;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
@@ -4725,7 +4735,7 @@ monster* choose_random_nearby_monster(int weight,
 monster* choose_random_monster_on_level(int weight,
                                         bool (*suitable)(const monster* mon))
 {
-    monster* chosen = NULL;
+    monster* chosen = nullptr;
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -4757,7 +4767,7 @@ void update_monster_symbol(monster_type mtype, cglyph_t md)
 void fixup_spells(monster_spells &spells, int hd)
 {
     unsigned count = 0;
-    for (unsigned int i = 0; i < spells.size(); i++)
+    for (size_t i = 0; i < spells.size(); i++)
     {
         if (spells[i].spell == SPELL_NO_SPELL)
             continue;
@@ -4776,13 +4786,28 @@ void fixup_spells(monster_spells &spells, int hd)
         return;
     }
 
-    unsigned one_freq = (hd + 50) / count;
-    for (unsigned int i = 0; i < spells.size(); i++)
-        spells[i].freq = one_freq;
-
     erase_if(spells, [](const mon_spell_slot &t) {
         return t.spell == SPELL_NO_SPELL;
     });
+
+    if (!spells.size())
+        return;
+
+    for (auto& slot : spells)
+        slot.freq = (hd + 50) / spells.size();
+
+    normalize_spell_freq(spells, hd);
+}
+
+void normalize_spell_freq(monster_spells &spells, int hd)
+{
+    unsigned int total_freq = (hd + 50);
+    unsigned int total_given_freq = 0;
+    for (size_t i = 0; i < spells.size(); ++i)
+        total_given_freq += spells[i].freq;
+    ASSERT(total_given_freq > 0);
+    for (size_t i = 0; i < spells.size(); ++i)
+        spells[i].freq = total_freq * spells[i].freq / total_given_freq;
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)

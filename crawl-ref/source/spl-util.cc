@@ -38,7 +38,7 @@
 
 struct spell_desc
 {
-    int id;
+    spell_type id;
     const char  *title;
     unsigned int disciplines; // bitfield
     unsigned int flags;       // bitfield
@@ -94,7 +94,7 @@ void init_spell_descs()
         ASSERTM(data.id >= SPELL_NO_SPELL && data.id < NUM_SPELLS,
                 "spell #%d has invalid id %d", i, data.id);
 
-        ASSERTM(data.title != NULL && *data.title,
+        ASSERTM(data.title != nullptr && *data.title,
                 "spell #%d, id %d has no name", i, data.id);
 
         ASSERTM(data.level >= 1 && data.level <= 9,
@@ -106,6 +106,9 @@ void init_spell_descs()
         ASSERTM(!(data.flags & SPFLAG_TARGETING_MASK)
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
+
+        ASSERTM(!(data.flags & SPFLAG_MONSTER && is_player_spell(data.id)),
+                "spell '%s' is declared as a monster spell but is a player spell", data.title);
 
         spell_list[data.id] = i;
     }
@@ -557,7 +560,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 
     for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
     {
-        if (monster_at(*ai) == NULL && *ai != you.pos())
+        if (monster_at(*ai) == nullptr && *ai != you.pos())
             continue;
 
         // Found target
@@ -713,7 +716,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
     args.target_prefix = target_prefix;
     if (top_prompt)
         args.top_prompt = top_prompt;
-    args.behaviour = NULL;
+    args.behaviour = nullptr;
     args.cancel_at_self = cancel_at_self;
     args.hitfunc = hitfunc;
     args.get_desc_func = get_desc_func;
@@ -1403,6 +1406,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_LRD:
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_SINGULARITY:
 
     // Shock and Lightning Bolt are no longer here, as the code below can
     // account for possible bounces.
@@ -1526,4 +1530,66 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         return true;
 
     return false;
+}
+
+
+// a map of schools to the corresponding sacrifice 'mutations'.
+static const mutation_type arcana_sacrifice_map[] = {
+    MUT_NO_CONJURATION_MAGIC,
+    MUT_NO_HEXES_MAGIC,
+    MUT_NO_CHARM_MAGIC,
+    MUT_NO_FIRE_MAGIC,
+    MUT_NO_ICE_MAGIC,
+    MUT_NO_TRANSMUTATION_MAGIC,
+    MUT_NO_NECROMANCY_MAGIC,
+    MUT_NO_SUMMONING_MAGIC,
+    NUM_MUTATIONS, // SPTYP_DIVINATION
+    MUT_NO_TRANSLOCATION_MAGIC,
+    MUT_NO_POISON_MAGIC,
+    MUT_NO_EARTH_MAGIC,
+    MUT_NO_AIR_MAGIC
+};
+
+/**
+ * Are some subset of the given schools unusable by the player?
+ * (Due to Sacrifice Arcana)
+ *
+ * @param schools   A bitfield containing a union of spschool_flag_types.
+ * @return          Whether the player is unable use any of the given schools.
+ */
+bool cannot_use_schools(unsigned int schools)
+{
+    COMPILE_CHECK(ARRAYSZ(arcana_sacrifice_map) == SPTYP_LAST_EXPONENT + 1);
+
+    // iter over every school
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    {
+        // skip schools not in the provided set
+        const int school = 1<<i;
+        if (!(schools & school))
+            continue;
+
+        // check if the player has this school locked out
+        const mutation_type lockout_mut = arcana_sacrifice_map[i];
+        if (lockout_mut != NUM_MUTATIONS && player_mutation_level(lockout_mut))
+            return true;
+    }
+
+    return false;
+}
+
+
+/**
+ * What's the spell school corresponding to the given Ru mutation?
+ *
+ * @param mutation  The variety of MUT_NO_*_MAGIC in question.
+ * @return          The skill of the appropriate school (SK_AIR_MAGIC, etc).
+ *                  If no school corresponds, returns SK_NONE.
+ */
+skill_type arcane_mutation_to_skill(mutation_type mutation)
+{
+    for (int sptyp_exp = 0; sptyp_exp <= SPTYP_LAST_EXPONENT; sptyp_exp++)
+        if (arcana_sacrifice_map[sptyp_exp] == mutation)
+            return spell_type2skill(1 << sptyp_exp);
+    return SK_NONE;
 }

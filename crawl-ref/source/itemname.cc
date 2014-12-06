@@ -693,7 +693,7 @@ const char* potion_type_name(int potiontype)
     case POT_POISON:            return "poison";
     case POT_SLOWING:           return "slowing";
     case POT_CANCELLATION:      return "cancellation";
-    case POT_CONFUSION:         return "confusion";
+    case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
     case POT_DEGENERATION:      return "degeneration";
     case POT_DECAY:             return "decay";
@@ -1039,13 +1039,12 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONTROL:                return "Control";
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_WIZARDRY:               return "Wizardry";
+#endif
     case BOOK_POWER:                  return "Power";
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
-#if TAG_MAJOR_VERSION == 34
-    case BOOK_STALKING:               return "Stalking";
-#endif
     case BOOK_DEBILITATION:           return "Debilitation";
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
@@ -1187,6 +1186,8 @@ string sub_type_string(const item_def &item, bool known)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
             return "Fen Folio";
+        else if (sub_type == BOOK_AKASHIC_RECORD)
+            return "Akashic Record";
 
         return string("book of ") + _book_type_name(sub_type);
     }
@@ -2159,7 +2160,7 @@ class KnownMenu : public InvMenu
 public:
     // This loads items in the order they are put into the list (sequentially)
     menu_letter load_items_seq(const vector<const item_def*> &mitems,
-                               MenuEntry *(*procfn)(MenuEntry *me) = NULL,
+                               MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                                menu_letter ckey = 'a')
     {
         for (int i = 0, count = mitems.size(); i < count; ++i)
@@ -2395,9 +2396,6 @@ void check_item_knowledge(bool unknown_items)
 
             if (i == OBJ_STAVES && j == STAFF_CHANNELING)
                 continue;
-
-            if (i == OBJ_BOOKS && j == BOOK_STALKING)
-                continue;
 #endif
 
             if (unknown_items ? you.type_ids[i][j] != ID_KNOWN_TYPE
@@ -2480,13 +2478,12 @@ void check_item_knowledge(bool unknown_items)
         {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
-            OBJ_MISCELLANY, OBJ_MISCELLANY, OBJ_MISCELLANY
+            OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] =
         {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BEEF_JERKY, FOOD_BREAD_RATION, FOOD_FRUIT, FOOD_PIZZA, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
-            MISC_PHANTOM_MIRROR,
             NUM_MISCELLANY
         };
         COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
@@ -3109,10 +3106,10 @@ bool is_bad_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
+#if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
-            if (you.species == SP_FORMICID)
-                return false;
-        case POT_CONFUSION:
+            return !you.stasis();
+#endif
         case POT_DEGENERATION:
             return true;
         case POT_DECAY:
@@ -3165,6 +3162,10 @@ bool is_dangerous_item(const item_def &item, bool temp)
     if (!item_type_known(item))
         return false;
 
+    // useless items can hardly be dangerous.
+    if (is_useless_item(item, temp))
+        return false;
+
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
@@ -3187,13 +3188,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_MUTATION:
-            // Non-vampire undead can't be mutated.
-            return you.can_safely_mutate(temp);
         case POT_LIGNIFY:
-            // Only living characters can change form.
-            return you.undead_state() == US_ALIVE
-                   || temp && you.species == SP_VAMPIRE
-                      && you.hunger_state >= HS_SATIATED;
+        case POT_AMBROSIA:
+            return true;
         default:
             return false;
         }
@@ -3436,12 +3433,16 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
             return player_res_poison(false, temp) > 0;
+#if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return you.species == SP_FORMICID;
+#endif
         case POT_HEAL_WOUNDS:
             return !you.can_device_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
+        case POT_AMBROSIA:
+            return you.clarity() || you.duration[DUR_DIVINE_STAMINA];
         }
 
         return false;
@@ -3614,9 +3615,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_RUNE_OF_ZOT:
             return false;
 
+        // Purely summoning misc items don't work w/ sac love
         case MISC_SACK_OF_SPIDERS:
         case MISC_BOX_OF_BEASTS:
         case MISC_HORN_OF_GERYON:
+        case MISC_PHANTOM_MIRROR:
             return player_mutation_level(MUT_NO_LOVE)
                 || player_mutation_level(MUT_NO_ARTIFICE);
 
@@ -3748,6 +3751,11 @@ string item_prefix(const item_def &item, bool temp)
         {
             prefixes.push_back("spellbook");
         }
+        break;
+
+    case OBJ_GOLD:
+        if (item.special)
+            prefixes.push_back("distracting"); // better name for this?
         break;
 
     default:
@@ -3888,7 +3896,7 @@ string get_corpse_name(const item_def &corpse, uint64_t *name_type)
     if (!corpse.props.exists(CORPSE_NAME_KEY))
         return "";
 
-    if (name_type != NULL)
+    if (name_type != nullptr)
         *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
 
     return corpse.props[CORPSE_NAME_KEY].get_string();

@@ -86,7 +86,7 @@ void clua_register_metatable(lua_State *ls, const char *tn,
     }
 
     if (lr)
-        luaL_openlib(ls, NULL, lr, 0);
+        luaL_openlib(ls, nullptr, lr, 0);
 }
 
 int clua_pushcxxstring(lua_State *ls, const string &s)

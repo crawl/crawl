@@ -46,9 +46,9 @@ map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
 {
     &map_feature_marker::parse,
     &map_lua_marker::parse,
-    NULL,
-    NULL,
-    NULL
+    nullptr,
+    nullptr,
+    nullptr
 };
 
 map_marker::map_marker(map_marker_type t, const coord_def &p)
@@ -86,7 +86,7 @@ map_marker *map_marker::read_marker(reader &inf)
 {
     const map_marker_type mtype =
         static_cast<map_marker_type>(unmarshallShort(inf));
-    return readers[mtype]? (*readers[mtype])(inf, mtype) : NULL;
+    return readers[mtype]? (*readers[mtype])(inf, mtype) : nullptr;
 }
 
 map_marker *map_marker::parse_marker(const string &s,
@@ -100,7 +100,7 @@ map_marker *map_marker::parse_marker(const string &s,
                 return m;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,7 @@ map_marker *map_feature_marker::parse(const string &s,
                                       const string &) throw (string)
 {
     if (s.find("feat:") != 0)
-        return NULL;
+        return nullptr;
     string raw = s;
     strip_tag(raw, "feat:", true);
 
@@ -432,7 +432,7 @@ map_marker *map_lua_marker::parse(const string &s,
         mapdef_marker = false;
     }
     else
-        return NULL;
+        return nullptr;
 
     map_lua_marker *mark = new map_lua_marker(raw, ctx, mapdef_marker);
     if (!mark->initialised)
@@ -1080,7 +1080,7 @@ map_marker *map_markers::find(map_marker_type type)
         if (type == MAT_ANY || entry.second->get_type() == type)
             return entry.second;
 
-    return NULL;
+    return nullptr;
 }
 
 void map_markers::move(const coord_def &from, const coord_def &to)

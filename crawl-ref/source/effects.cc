@@ -151,7 +151,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
         // because it can kill them, and because hostile
         // monsters don't use it.
         // Tolerate unknown scroll, to not annoy Yred worshippers too much.
-        if (attacker != NULL
+        if (attacker != nullptr
             && (attacker != &you
                 || source != HOLY_WORD_SCROLL
                 || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
@@ -593,14 +593,8 @@ void direct_effect(monster* source, spell_type spell,
             }
         }
 
-        if (defender->is_player())
-        {
-            // Bypassing ::hurt so that flay damage can ignore guardian spirit
-            ouch(damage_taken, KILLED_BY_MONSTER, source->mid,
-                 "flay_damage", you.can_see(source));
-        }
-        else
-            defender->hurt(source, damage_taken, BEAM_NONE, true);
+        defender->hurt(source, damage_taken, BEAM_NONE,
+                       KILLED_BY_MONSTER, "", "flay_damage", true);
         defender->props["flay_damage"].get_int() += damage_taken;
 
         vector<coord_def> old_blood;
@@ -668,11 +662,9 @@ void direct_effect(monster* source, spell_type spell,
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
     {
-        if (def)
-            def->hurt(source, damage_taken);
-        else
-            ouch(damage_taken, KILLED_BY_BEAM, pbolt.source_id,
-                 pbolt.aux_source.c_str());
+        actor *victim = def ? (actor *)def : (actor *)&you;
+        victim->hurt(source, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
+                     "", pbolt.aux_source);
     }
 }
 
@@ -949,7 +941,7 @@ void yell(const actor* mon)
     int mons_targd = MHITNOT;
     dist targ;
 
-    const string shout_verb = you.shout_verb(mon != NULL);
+    const string shout_verb = you.shout_verb(mon != nullptr);
     string cap_shout = shout_verb;
     cap_shout[0] = toupper(cap_shout[0]);
     const int noise_level = you.shout_volume();
@@ -1106,7 +1098,7 @@ void yell(const actor* mon)
             if (!cancel)
             {
                 const monster* m = monster_at(targ.target);
-                cancel = (m == NULL || !you.can_see(m));
+                cancel = (m == nullptr || !you.can_see(m));
                 if (!cancel)
                     mons_targd = m->mindex();
             }
@@ -1243,7 +1235,7 @@ static void _hell_effects(int /*time_delta*/)
         else                // 1 in 8 odds {dlb}
             which_miscast = coinflip() ? SPTYP_HEXES : SPTYP_CHARMS;
 
-        MiscastEffect(&you, NULL, HELL_EFFECT_MISCAST, which_miscast,
+        MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
                       4 + random2(6), random2avg(97, 3),
                       "the effects of Hell");
     }
@@ -1286,7 +1278,7 @@ static void _hell_effects(int /*time_delta*/)
         }
         else
         {
-            MiscastEffect(&you, NULL, HELL_EFFECT_MISCAST, which_miscast,
+            MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
                           4 + random2(6), random2avg(97, 3),
                           "the effects of Hell");
         }
@@ -2111,16 +2103,16 @@ static struct timed_effect timed_effects[] =
     { TIMER_DETERIORATION, _deteriorate,                  100,   300, false },
     { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_SCREAM, NULL,                                   0,     0, false },
+    { TIMER_SCREAM, nullptr,                                0,     0, false },
 #endif
-    { TIMER_FOOD_ROT,      rot_inventory_food,           100,   300, false },
+    { TIMER_FOOD_ROT,      rot_inventory_food,            100,   300, false },
     { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
     { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
     { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
     { TIMER_JIYVA,         _jiyva_effects,                100,   300, false },
     { TIMER_EVOLUTION,     _evolve,                      5000, 15000, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_BRIBE_TIMEOUT, NULL,                            0,     0, false },
+    { TIMER_BRIBE_TIMEOUT, nullptr,                         0,     0, false },
 #endif
 };
 
@@ -2706,8 +2698,6 @@ int spawn_corpse_mushrooms(item_def& corpse,
     if (target_count == 0)
         return 0;
 
-    int permutation[] = {0, 1, 2, 3, 4, 5, 6, 7};
-
     int placed_targets = 0;
 
     queue<coord_def> fringe;
@@ -2817,21 +2807,13 @@ int spawn_corpse_mushrooms(item_def& corpse,
         if (placed_targets == target_count)
             break;
 
-        // Wish adjacent_iterator had a random traversal.
-        shuffle_array(permutation);
-
-        for (int idx : permutation)
+        for (fair_adjacent_iterator ai(current); ai; ++ai)
         {
-            coord_def temp = current + Compass[idx];
-
-            int index = temp.x + temp.y * X_WIDTH;
-
-            if (!visited_indices.count(index)
-                && in_bounds(temp)
-                && mons_class_can_pass(MONS_TOADSTOOL, grd(temp)))
+            if (in_bounds(*ai) && mons_class_can_pass(MONS_TOADSTOOL, grd(*ai)))
             {
-                visited_indices.insert(index);
-                fringe.push(temp);
+                const int index = ai->x + ai->y * X_WIDTH;
+                if (visited_indices.insert(index).second)
+                    fringe.push(*ai); // Not previously visited.
             }
         }
     }
@@ -3020,7 +3002,7 @@ void slime_wall_damage(actor* act, int delay)
     {
         if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
         {
-            you.splash_with_acid(NULL, strength, false,
+            you.splash_with_acid(nullptr, strength, false,
                                 (walls > 1) ? "The walls burn you!"
                                             : "The wall burns you!");
         }
@@ -3040,7 +3022,7 @@ void slime_wall_damage(actor* act, int delay)
             mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
                   mon->name(DESC_THE).c_str());
         }
-        mon->hurt(NULL, dam, BEAM_ACID);
+        mon->hurt(nullptr, dam, BEAM_ACID);
     }
 }
 

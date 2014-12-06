@@ -87,7 +87,7 @@ monster* player::get_beholder(const coord_def &target) const
         if (olddist < newdist)
             return mon;
     }
-    return NULL;
+    return nullptr;
 }
 
 monster* player::get_any_beholder() const
@@ -95,7 +95,7 @@ monster* player::get_any_beholder() const
     if (!beholders.empty())
         return monster_by_mid(beholders[0]);
     else
-        return NULL;
+        return nullptr;
 }
 
 // Removes a monster from the list of beholders if present.

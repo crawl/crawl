@@ -1053,9 +1053,9 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
     {
         text += uppercase_first(god_name(which_god));
         text += " strongly dislikes it when ";
-                text += comma_separated_line(really_dislikes.begin(),
-                                             really_dislikes.end(),
-                                             " or ", ", ");
+        text += comma_separated_line(really_dislikes.begin(),
+                                     really_dislikes.end(),
+                                     " or ", ", ");
         text += ".";
     }
 
@@ -1106,8 +1106,8 @@ void dec_penance(god_type god, int val)
 
         if (you_worship(god))
         {
-            // In case the best skill is Invocations, redraw the god
-            // title.
+            // Redraw piety display and, in case the best skill is Invocations,
+            // redraw the god title.
             you.redraw_title = true;
         }
 
@@ -1320,8 +1320,8 @@ static void _inc_penance(god_type god, int val)
 
         if (you_worship(god))
         {
-            // In case the best skill is Invocations, redraw the god
-            // title.
+            // Redraw piety display and, in case the best skill is Invocations,
+            // redraw the god title.
             you.redraw_title = true;
         }
     }
@@ -1891,8 +1891,8 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-            int gift;
-            gift = NUM_BOOKS;
+        {
+            book_type gift = NUM_BOOKS;
             // Break early if giving a gift now means it would be lost.
             if (!feat_has_solid_floor(grd(you.pos())))
                 break;
@@ -1915,56 +1915,50 @@ bool do_god_gift(bool forced)
             else if (forced || you.piety >= piety_breakpoint(5)
                                && random2(you.piety) > 100)
             {
+                // Sif Muna special: Keep quiet if acquirement fails
+                // because the player already has seen all spells.
                 if (you_worship(GOD_SIF_MUNA))
-                    gift = OBJ_RANDOM;
+                    success = acquirement(OBJ_BOOKS, you.religion, true);
             }
 
             if (gift != NUM_BOOKS)
             {
-                if (gift == OBJ_RANDOM)
+                int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
+                                          you.religion);
+                // Replace a Kiku gift by a custom-random book.
+                if (you_worship(GOD_KIKUBAAQUDGHA))
                 {
-                    // Sif Muna special: Keep quiet if acquirement fails
-                    // because the player already has seen all spells.
-                    success = acquirement(OBJ_BOOKS, you.religion, true);
+                    make_book_Kiku_gift(mitm[thing_created],
+                                        gift == BOOK_NECROMANCY);
                 }
-                else
-                {
-                    int thing_created = items(true, OBJ_BOOKS, gift, 1, 0,
-                                              you.religion);
-                    // Replace a Kiku gift by a custom-random book.
-                    if (you_worship(GOD_KIKUBAAQUDGHA))
-                    {
-                        make_book_Kiku_gift(mitm[thing_created],
-                                            gift == BOOK_NECROMANCY);
-                    }
-                    if (thing_created == NON_ITEM)
-                        return false;
+                if (thing_created == NON_ITEM)
+                    return false;
 
-                    // Mark the book type as known to avoid duplicate
-                    // gifts if players don't read their gifts for some
-                    // reason.
-                    mark_had_book(gift);
+                // Mark the book type as known to avoid duplicate
+                // gifts if players don't read their gifts for some
+                // reason.
+                mark_had_book(gift);
 
-                    move_item_to_grid(&thing_created, you.pos(), true);
+                move_item_to_grid(&thing_created, you.pos(), true);
 
-                    if (thing_created != NON_ITEM)
-                        success = true;
-                }
+                if (thing_created != NON_ITEM)
+                    success = true;
+            }
 
-                if (success)
-                {
-                    simple_god_message(" grants you a gift!");
-                    more();
+            if (success)
+            {
+                simple_god_message(" grants you a gift!");
+                more();
 
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-                    // Timeouts are meaningless for Kiku.
-                    if (!you_worship(GOD_KIKUBAAQUDGHA))
-                        _inc_gift_timeout(40 + random2avg(19, 2));
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
-                }
-            }                   // End of giving books.
-            break;              // End of book gods.
+                you.num_current_gifts[you.religion]++;
+                you.num_total_gifts[you.religion]++;
+                // Timeouts are meaningless for Kiku.
+                if (!you_worship(GOD_KIKUBAAQUDGHA))
+                    _inc_gift_timeout(40 + random2avg(19, 2));
+                take_note(Note(NOTE_GOD_GIFT, you.religion));
+            }
+            break;
+        }              // End of book gods.
 
         case GOD_VEHUMET:
             const int gifts = you.num_total_gifts[you.religion];
@@ -2424,8 +2418,8 @@ static void _gain_piety_point()
         {
             take_note(Note(NOTE_GOD_POWER, you.religion, i));
 
-            // In case the best skill is Invocations, redraw the god
-            // title.
+            // Redraw piety display and, in case the best skill is Invocations,
+            // redraw the god title.
             you.redraw_title = true;
 
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
@@ -2494,7 +2488,8 @@ static void _gain_piety_point()
 
     if (you.piety >= piety_breakpoint(5) && old_piety < piety_breakpoint(5))
     {
-        // In case the best skill is Invocations, redraw the god title.
+        // Redraw piety display and, in case the best skill is Invocations,
+        // redraw the god title.
         you.redraw_title = true;
 
         if (!you.one_time_ability_used[you.religion])
@@ -2626,8 +2621,8 @@ void lose_piety(int pgn)
         if (you.piety < piety_breakpoint(5)
             && old_piety >= piety_breakpoint(5))
         {
-            // In case the best skill is Invocations, redraw the god
-            // title.
+            // Redraw piety display and, in case the best skill is Invocations,
+            // redraw the god title.
             you.redraw_title = true;
 
             if (!you.one_time_ability_used[you.religion])
@@ -2660,8 +2655,8 @@ void lose_piety(int pgn)
             if (you.piety < piety_breakpoint(i)
                 && old_piety >= piety_breakpoint(i))
             {
-                // In case the best skill is Invocations, redraw the god
-                // title.
+                // Redraw piety display and, in case the best skill is
+                // Invocations, redraw the god title.
                 you.redraw_title = true;
 
                 _abil_chg_message(god_lose_power_messages[you.religion][i],
@@ -3397,6 +3392,8 @@ static void _make_empty_vec(CrawlStoreValue &v, store_val_type vectype)
 
 void join_religion(god_type which_god, bool immediate)
 {
+    ASSERT(which_god != GOD_NO_GOD);
+
     redraw_screen();
 
     const god_type old_god = you.religion;
@@ -3422,10 +3419,10 @@ void join_religion(god_type which_god, bool immediate)
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         _make_empty_vec(you.props["available_sacrifices"], SV_INT);
-        _make_empty_vec(you.props["current_health_sacrifice"], SV_INT);
-        _make_empty_vec(you.props["current_essence_sacrifice"], SV_INT);
-        _make_empty_vec(you.props["current_purity_sacrifice"], SV_INT);
-        _make_empty_vec(you.props["current_arcane_sacrifices"], SV_INT);
+        _make_empty_vec(you.props[HEALTH_SAC_KEY], SV_INT);
+        _make_empty_vec(you.props[ESSENCE_SAC_KEY], SV_INT);
+        _make_empty_vec(you.props[PURITY_SAC_KEY], SV_INT);
+        _make_empty_vec(you.props[ARCANA_SAC_KEY], SV_INT);
         you.props["ru_progress_to_next_sacrifice"] = 0;
         // offer the first sacrifice faster than normal;
         int delay = 50;
@@ -3792,7 +3789,7 @@ void god_pitch(god_type which_god)
 
     cgotoxy(1, 18, GOTO_CRT);
     textcolour(channel_to_colour(MSGCH_PROMPT));
-    if (!yesno(info, false, 'n', true, true, false, NULL, GOTO_CRT))
+    if (!yesno(info, false, 'n', true, true, false, nullptr, GOTO_CRT))
     {
         you.turn_is_over = false; // Okay, opt out.
         redraw_screen();
@@ -3829,7 +3826,7 @@ god_type choose_god(god_type def_god)
     string spec = lowercase_string(specs);
 
     return find_earliest_match(spec, GOD_NO_GOD, NUM_GODS,
-                               _always_true<god_type>,
+                               always_true<god_type>,
                                bind(god_name, placeholders::_1, false));
 }
 
@@ -3930,8 +3927,7 @@ bool god_likes_fresh_corpses(god_type god)
     if (god == GOD_LUGONU)
         return !player_in_branch(BRANCH_ABYSS);
 
-    return god == GOD_MAKHLEB
-           || god == GOD_TROG;
+    return god == GOD_TROG;
 }
 
 bool god_likes_spell(spell_type spell, god_type god)
@@ -4330,6 +4326,7 @@ int piety_rank(int piety)
     if (piety < 0)
         piety = you.piety;
 
+    // XXX: when is this used?
     if (you_worship(GOD_XOM))
     {
         const int breakpoints[] = { 20, 50, 80, 120, 180, INT_MAX };

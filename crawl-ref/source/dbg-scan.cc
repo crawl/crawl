@@ -160,7 +160,7 @@ void debug_item_scan()
         // (except to make sure that the monster is alive).
         if (mitm[i].pos.origin())
             _dump_item(name, i, mitm[i], "Unlinked temporary item:");
-        else if (mon != NULL && mon->type == MONS_NO_MONSTER)
+        else if (mon != nullptr && mon->type == MONS_NO_MONSTER)
             _dump_item(name, i, mitm[i], "Unlinked item held by dead monster:");
         else if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
         {
@@ -202,10 +202,10 @@ void debug_item_scan()
         //
         // Theoretically some of these could match random names.
         //
-        if (strstr(name, "questionable") != NULL
-            || strstr(name, "eggplant") != NULL
-            || strstr(name, "buggy") != NULL
-            || strstr(name, "buggi") != NULL)
+        if (strstr(name, "questionable") != nullptr
+            || strstr(name, "eggplant") != nullptr
+            || strstr(name, "buggy") != nullptr
+            || strstr(name, "buggi") != nullptr)
         {
             _dump_item(name, i, mitm[i], "Bad item:");
         }
@@ -461,7 +461,7 @@ void debug_mons_scan()
 
             const monster* holder = item.holding_monster();
 
-            if (holder == NULL)
+            if (holder == nullptr)
             {
                 _announce_level_prob(warned);
                 warned = true;
@@ -738,7 +738,8 @@ const static char *stat_out_ext = ".txt";
 #define STAT_PRECISION 2
 
 // This must match the order of item_fields
-enum item_base_type {
+enum item_base_type
+{
     ITEM_FOOD,
     ITEM_GOLD,
     ITEM_SCROLLS,
@@ -759,7 +760,8 @@ enum item_base_type {
     ITEM_IGNORE = 100,
 };
 
-enum antiquity_level {
+enum antiquity_level
+{
     ANTIQ_ORDINARY,
     ANTIQ_ARTEFACT,
     ANTIQ_ALL,

@@ -224,11 +224,9 @@ void run_map_epilogues();
 bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
 
 struct shop_spec;
-void place_spec_shop(const coord_def& where,
-                     int force_s_type, bool representative = false);
+void place_spec_shop(const coord_def& where, shop_type force_type);
+void place_spec_shop(const coord_def& where, shop_spec &spec);
 int greed_for_shop_type(shop_type shop, int level_number);
-void place_spec_shop(const coord_def& where, shop_spec &spec,
-                     bool representative = false);
 object_class_type item_in_shop(shop_type shop_type);
 bool seen_replace_feat(dungeon_feature_type replace,
                        dungeon_feature_type feature);
@@ -296,7 +294,7 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
                    unsigned mmask,
-                   bool (*overwriteable)(dungeon_feature_type) = NULL);
+                   bool (*overwriteable)(dungeon_feature_type) = nullptr);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);

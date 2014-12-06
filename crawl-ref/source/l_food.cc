@@ -160,7 +160,7 @@ static const struct luaL_reg food_lib[] =
     { "isveggie",          food_isveggie },
     { "bottleable",        food_bottleable },
     { "edible",            food_edible },
-    { NULL, NULL },
+    { nullptr, nullptr },
 };
 
 void cluaopen_food(lua_State *ls)

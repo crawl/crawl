@@ -30,7 +30,6 @@
 #include "stepdown.h"
 #include "stringutil.h"
 #include "terrain.h"
-#include "unwind.h"
 #include "view.h"
 
 static bool _offer_items();
@@ -141,11 +140,11 @@ static bool _bless_weapon(god_type god, brand_type brand, colour_t colour)
     calc_mp(); // in case the old brand was antimagic,
     you.redraw_armour_class = true; // protection,
     you.redraw_evasion = true;      // or evasion
-    string desc  = old_name + " ";
-            desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
-                     god == GOD_LUGONU        ? "corrupted by Lugonu" :
-                     god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
-                                              : "touched by the gods");
+    string desc  = old_name + " "
+                 + (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
+                    god == GOD_LUGONU        ? "corrupted by Lugonu" :
+                    god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
+                                             : "touched by the gods");
 
     take_note(Note(NOTE_ID_ITEM, 0, 0,
               wpn.name(DESC_A).c_str(), desc.c_str()));
@@ -277,24 +276,17 @@ static bool _altar_prayer()
                 continue;
             }
 
-            string message = "";
-            {
-                unwind_var<short int> old_quant = j->quantity;
-                j->quantity = 1;
+            prompted = true;
 
-                prompted = true;
+            string prompt =
+                make_stringf("Do you wish to duplicate %s?",
+                             j->name(DESC_THE).c_str());
 
-                string prompt =
-                    make_stringf("Do you wish to duplicate %s?",
-                                 j->name(old_quant.original_value() > 1
-                                         ? DESC_A : DESC_THE).c_str());
+            if (!yesno(prompt.c_str(), true, 'n'))
+                continue;
 
-                if (!yesno(prompt.c_str(), true, 'n'))
-                    continue;
-
-                message = " duplicates " + j->name(DESC_YOUR) + "!";
-            }
-            if (!copy_item_to_grid(*j, you.pos(), 1))
+            string message = " duplicates " + j->name(DESC_YOUR) + "!";
+            if (!copy_item_to_grid(*j, you.pos()))
             {
                 mprf("Something went wrong!");
                 return false;

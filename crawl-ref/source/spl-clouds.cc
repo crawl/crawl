@@ -75,7 +75,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
 
         // FIXME: maybe should do _paranoid_option_disable() here?
         if (agent->is_player())
-            mpr("You see a ghostly outline there, and the spell fizzles.");
+            canned_msg(MSG_GHOSTLY_OUTLINE);
         return SPRET_SUCCESS;      // Don't give free detection!
     }
 

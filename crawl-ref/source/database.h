@@ -34,9 +34,9 @@ string getQuoteString(const string &key);
 string getLongDescription(const string &key);
 
 vector<string> getLongDescKeysByRegex(const string &regex,
-                                      db_find_filter filter = NULL);
+                                      db_find_filter filter = nullptr);
 vector<string> getLongDescBodiesByRegex(const string &regex,
-                                        db_find_filter filter = NULL);
+                                        db_find_filter filter = nullptr);
 
 string getGameStartDescription(const string &key);
 

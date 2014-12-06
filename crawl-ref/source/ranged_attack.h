@@ -34,7 +34,7 @@ private:
     int calc_mon_to_hit_base();
     int apply_damage_modifiers(int damage, int damage_max, bool &half_ac);
     bool attack_ignores_shield(bool verbose);
-    bool apply_damage_brand(const char *what = NULL);
+    bool apply_damage_brand(const char *what = nullptr);
     special_missile_type random_chaos_missile_brand();
     bool blowgun_check(special_missile_type type);
     int blowgun_duration_roll(special_missile_type type);

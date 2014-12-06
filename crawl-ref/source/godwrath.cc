@@ -51,9 +51,9 @@
 #include "view.h"
 #include "xom.h"
 
-static void _god_smites_you(god_type god, const char *message = NULL,
+static void _god_smites_you(god_type god, const char *message = nullptr,
                             kill_method_type death_type = NUM_KILLBY);
-static void _tso_blasts_cleansing_flame(const char *message = NULL);
+static void _tso_blasts_cleansing_flame(const char *message = nullptr);
 
 static const char *_god_wrath_adjectives[] =
 {
@@ -318,10 +318,10 @@ static bool _zin_retribution()
         switch (random2(3))
         {
         case 0:
-            confuse_player(3 + random2(10));
+            confuse_player(5 + random2(3));
             break;
         case 1:
-            you.put_to_sleep(NULL, 30 + random2(20));
+            you.put_to_sleep(nullptr, 30 + random2(20));
             break;
         case 2:
             paralyse_player(_god_wrath_name(god));
@@ -351,7 +351,7 @@ static void _ely_dull_inventory_weapons()
     int num_dulled = 0;
     int quiver_link;
 
-    you.m_quiver->get_desired_item(NULL, &quiver_link);
+    you.m_quiver->get_desired_item(nullptr, &quiver_link);
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -409,11 +409,11 @@ static bool _elyvilon_retribution()
     {
     case 0:
     case 1:
-        confuse_player(3 + random2(10));
+        confuse_player(5 + random2(3));
         break;
 
     case 2: // mostly flavour messages
-        MiscastEffect(&you, NULL, GOD_MISCAST + god, SPTYP_POISON,
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_POISON,
                       one_chance_in(3) ? 1 : 0, _god_wrath_name(god));
         break;
 
@@ -459,14 +459,14 @@ static bool _cheibriados_retribution()
     // Very high tension wrath
     case 4:
         simple_god_message(" adjusts the clock.", god);
-        MiscastEffect(&you, NULL, GOD_MISCAST + god, SPTYP_RANDOM, 8, 90,
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_RANDOM, 8, 90,
                       _god_wrath_name(god));
         if (one_chance_in(wrath_type - 1))
             break;
     // High tension wrath
     case 3:
         mpr("You lose track of time.");
-        you.put_to_sleep(NULL, 30 + random2(20));
+        you.put_to_sleep(nullptr, 30 + random2(20));
         dec_penance(god, 1);
         if (one_chance_in(wrath_type - 2))
             break;
@@ -559,13 +559,13 @@ static spell_type _makhleb_destruction_type()
  * destructive magic at foolish players.
  *
  * @param god           The god doing the wrath-hurling.
- * @return              An avatar monster, or NULL if none could be set up.
+ * @return              An avatar monster, or nullptr if none could be set up.
  */
 static monster* get_avatar(god_type god)
 {
     monster* avatar = shadow_monster(false);
     if (!avatar)
-        return NULL;
+        return nullptr;
 
     avatar->mname = _god_wrath_name(god);
     avatar->flags |= MF_NAME_REPLACE;
@@ -587,7 +587,7 @@ static bool _makhleb_call_down_destruction()
     monster* avatar = get_avatar(god);
     // can't be const because mons_cast() doesn't accept const monster*
 
-    if (avatar == NULL)
+    if (avatar == nullptr)
     {
         simple_god_message("has no time to deal with you just now.", god);
         return false; // not a very dazzling divine experience...
@@ -705,7 +705,7 @@ static bool _kikubaaqudgha_retribution()
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (!count_corpses_in_los(NULL) || random2(you.experience_level) > 4)
+    if (!count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
     {
         // Either zombies, or corpse rot + skeletons.
         kiku_receive_corpses(you.experience_level * 4);
@@ -718,12 +718,13 @@ static bool _kikubaaqudgha_retribution()
     {
         // torment, or 3 necromancy miscasts
         if (!player_res_torment(false))
-            torment(NULL, TORMENT_KIKUBAAQUDGHA, you.pos());
+            torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
             for (int i = 0; i < 3; ++i)
             {
-                MiscastEffect(&you, NULL, GOD_MISCAST + god, SPTYP_NECROMANCY,
+                MiscastEffect(&you, nullptr, GOD_MISCAST + god,
+                              SPTYP_NECROMANCY,
                               2 + div_rand_round(you.experience_level, 9),
                               random2avg(88, 3), _god_wrath_name(god));
             }
@@ -734,7 +735,7 @@ static bool _kikubaaqudgha_retribution()
         // necromancy miscast, 20% chance of additional miscast
         do
         {
-            MiscastEffect(&you, NULL, GOD_MISCAST + god, SPTYP_NECROMANCY,
+            MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_NECROMANCY,
                           2 + div_rand_round(you.experience_level, 9),
                           random2avg(88, 3), _god_wrath_name(god));
         }
@@ -788,7 +789,7 @@ static bool _yredelemnul_retribution()
     else
     {
         simple_god_message("'s anger turns toward you for a moment.", god);
-        MiscastEffect(&you, NULL, GOD_MISCAST + god, SPTYP_NECROMANCY,
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_NECROMANCY,
                       2 + div_rand_round(you.experience_level, 9),
                       random2avg(88, 3), _god_wrath_name(god));
     }
@@ -846,7 +847,7 @@ static bool _trog_retribution()
         switch (random2(6))
         {
         case 0:
-            potion_effect(POT_DECAY, 100);
+            potionlike_effect(POT_DECAY, 100);
             break;
 
         case 1:
@@ -884,7 +885,7 @@ static bool _trog_retribution()
         //    fire magic. -- bwr
         dec_penance(god, 2);
         mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
-        MiscastEffect(&you, NULL, GOD_MISCAST + god, SPTYP_FIRE,
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_FIRE,
                       8 + you.experience_level, random2avg(98, 3),
                       _god_wrath_name(god));
     }
@@ -925,7 +926,7 @@ static bool _beogh_retribution()
                         _god_wrath_name(god),
                         true, 0, 0, you.pos(), 0, god)))
             {
-                ASSERT(mon->weapon() != NULL);
+                ASSERT(mon->weapon() != nullptr);
                 item_def& wpn(*mon->weapon());
 
                 set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
@@ -1041,12 +1042,12 @@ static bool _sif_muna_retribution()
     case 2:
     case 3:
     case 4:
-        confuse_player(3 + random2(10));
+        confuse_player(5 + random2(3));
         break;
 
     case 5:
     case 6:
-        MiscastEffect(&you, NULL, GOD_MISCAST + god, SPTYP_DIVINATION, 9, 90,
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_DIVINATION, 9, 90,
                       _god_wrath_name(god));
         break;
 
@@ -1086,7 +1087,7 @@ static void _lugonu_transloc_retribution()
     if (coinflip())
     {
         simple_god_message("'s wrath finds you!", god);
-        MiscastEffect(&you, NULL, GOD_MISCAST + god, SPTYP_TRANSLOCATION, 9,
+        MiscastEffect(&you, nullptr, GOD_MISCAST + god, SPTYP_TRANSLOCATION, 9,
                       90, "Lugonu's touch");
     }
     else if (coinflip())
@@ -1301,7 +1302,7 @@ static void _jiyva_mutate_player()
  */
 static void _jiyva_slimify()
 {
-    monster* mon = NULL;
+    monster* mon = nullptr;
 
     const int max_tries = 10;
     bool success = false;
@@ -1421,7 +1422,7 @@ static void _fedhas_elemental_miscast()
 
     const spschool_flag_type stype = random_choose(SPTYP_ICE, SPTYP_FIRE,
                                                    SPTYP_EARTH, SPTYP_AIR);
-    MiscastEffect(&you, NULL, GOD_MISCAST + god, stype,
+    MiscastEffect(&you, nullptr, GOD_MISCAST + god, stype,
                   5 + you.experience_level, random2avg(88, 3),
                   _god_wrath_name(god));
 }
@@ -1550,7 +1551,7 @@ static bool _fedhas_retribution()
     case 1:
     default:
         _fedhas_elemental_miscast();
-            return true;
+        return true;
 
     case 2:
         return _fedhas_summon_plants();
@@ -1608,7 +1609,7 @@ static bool _dithmenos_retribution()
     {
         // This is possibly kind of underwhelming?
         god_speaks(god, "You feel overwhelmed by the shadows around you.");
-        you.put_to_sleep(NULL, 30 + random2(20));
+        you.put_to_sleep(nullptr, 30 + random2(20));
         break;
     }
     case 3:
@@ -1820,7 +1821,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         if (coinflip())
         {
             mprf(MSGCH_WARN, "The divine experience confuses you!");
-            confuse_player(3 + random2(10));
+            confuse_player(5 + random2(3));
         }
         else
         {
@@ -2025,13 +2026,13 @@ void gozag_incite(monster *mon)
  */
 int gozag_goldify(const item_def &it, int quant_got, bool quiet)
 {
-    if (it.base_type != OBJ_POTIONS
-        && it.base_type != OBJ_SCROLLS
-        && it.base_type != OBJ_FOOD)
+    if ((it.base_type != OBJ_POTIONS
+         && it.base_type != OBJ_SCROLLS
+         && it.base_type != OBJ_FOOD)
+        || it.flags & ISFLAG_HANDLED)
     {
         return 0;
     }
-
 
     const int val = item_value(it, true) / it.quantity;
     double prob = (double)(val - 20) / 100.0;

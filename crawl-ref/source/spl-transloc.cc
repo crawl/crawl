@@ -22,10 +22,16 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "los.h"
 #include "losglobal.h"
+#include "losparam.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-death.h"
+#include "mon-place.h"
+#include "mon-util.h"
 #include "orb.h"
 #include "output.h"
 #include "prompt.h"
@@ -1126,6 +1132,198 @@ spret_type cast_dispersal(int pow, bool fail)
     {
         mpr("The air shimmers briefly around you.");
     }
+    return SPRET_SUCCESS;
+}
+
+int singularity_range(int pow, int strength)
+{
+    // XXX: unify some of this functionality.
+    // A singularity is HD (pow / 10) + 1; its strength is
+    // (HD / (range^2)) for a given range, so for a given strength the
+    // range is sqrt(pow/10 + 1) / strength.
+
+    return max(0, min(LOS_RADIUS, (int)isqrt((pow/10 + 1) / strength)));
+}
+
+spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
+                            bool fail)
+{
+    if (cell_is_solid(where))
+    {
+        if (agent->is_player())
+            mpr("You can't place that within a solid object!");
+        return SPRET_ABORT;
+    }
+
+    actor* victim = actor_at(where);
+    if (victim)
+    {
+        if (you.can_see(victim))
+        {
+            if (agent->is_player())
+                mpr("You can't place the singularity on a creature.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        if (agent->is_player())
+            canned_msg(MSG_GHOSTLY_OUTLINE);
+        else if (you.can_see(victim))
+        {
+            mprf("%s %s for a moment.",
+                 victim->name(DESC_THE).c_str(),
+                 victim->conj_verb("distort").c_str());
+        }
+        return SPRET_SUCCESS;
+    }
+
+    fail_check();
+
+    monster* singularity = create_monster(
+                                mgen_data(MONS_SINGULARITY,
+                                          agent->is_player()
+                                          ? BEH_FRIENDLY
+                                          : SAME_ATTITUDE(agent->as_monster()),
+                                          agent,
+                                          // It's summoned, but it uses
+                                          // its own mechanic to time out.
+                                          0, SPELL_SINGULARITY,
+                                          where, MHITNOT, MG_FORCE_PLACE,
+                                          GOD_NO_GOD, MONS_NO_MONSTER,
+                                          pow / 20, COLOUR_INHERIT,
+                                          PROX_ANYWHERE,
+                                          level_id::current(),
+                                          (pow / 10) + 1));
+
+    if (singularity)
+    {
+        if (you.can_see(singularity))
+        {
+            const bool friendly = singularity->wont_attack();
+            mprf("Space collapses on itself with a %s crunch%s",
+                 friendly ? "satisfying" : "horrifying",
+                 friendly ? "." : "!");
+        }
+        invalidate_agrid(true);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
+}
+
+#define GRAVITY "by gravitational forces"
+
+void attract_actor(const actor* agent, actor* victim, const coord_def pos,
+                   int pow, int strength)
+{
+    ray_def ray;
+    if (!find_ray(victim->pos(), pos, ray, opc_solid))
+    {
+        // This probably shouldn't ever happen, but just in case:
+        if (you.can_see(victim))
+        {
+            mprf("%s violently %s moving!",
+                 victim->name(DESC_THE).c_str(),
+                 victim->conj_verb("stop").c_str());
+        }
+        victim->hurt(agent, roll_dice(strength / 2, pow / 20),
+                     BEAM_MMISSILE, KILLED_BY_BEAM, "", GRAVITY);
+        return;
+    }
+
+    for (int i = 0; i < strength; i++)
+    {
+        ray.advance();
+        const coord_def newpos = ray.pos();
+
+        if (!victim->can_pass_through_feat(grd(newpos)))
+        {
+            victim->collide(newpos, agent, pow);
+            break;
+        }
+        else if (actor* act_at_space = actor_at(newpos))
+        {
+            if (victim != act_at_space
+                && act_at_space->type != MONS_SINGULARITY)
+            {
+                victim->collide(newpos, agent, pow);
+            }
+            break;
+        }
+        else
+            victim->move_to_pos(newpos, false);
+    }
+}
+
+void singularity_pull(const monster *singularity)
+{
+    actor *agent = actor_by_mid(singularity->summoner);
+
+    for (actor_near_iterator ai(singularity, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (*ai == singularity
+            || agent && mons_aligned(*ai, agent))
+        {
+            continue;
+        }
+
+        const int range = isqrt((singularity->pos() - ai->pos()).abs());
+        const int strength =
+            min(4, (singularity->get_hit_dice()) / (range*range));
+        if (strength <= 0)
+            continue;
+
+        static const char *messages[] =
+        {
+            "%s pulls at %s.",
+            "%s crushes %s!",
+            "%s violently warps %s!",
+            "%s twists %s apart!",
+        };
+
+        if (ai->is_monster())
+            behaviour_event(ai->as_monster(), ME_ANNOY, singularity);
+
+        if (you.can_see(*ai))
+        {
+            // Note that we don't care if you see the singularity if
+            // you can see its impact on the monster; "Something
+            // violently warps Sigmund!" is perfectly acceptable,
+            // after all.
+            mprf(messages[strength - 1],
+                 singularity->name(DESC_THE).c_str(),
+                 ai->name(DESC_THE).c_str());
+        }
+        ai->hurt(singularity, roll_dice(strength, 12), BEAM_MMISSILE,
+                 KILLED_BY_BEAM, "", GRAVITY);
+
+        if (ai->alive() && !ai->is_stationary())
+        {
+            attract_actor(singularity, *ai, singularity->pos(),
+                          10 * singularity->get_hit_dice(), strength);
+        }
+    }
+}
+
+bool fatal_attraction(actor *victim, actor *agent, int pow)
+{
+    bool affected = false;
+    for (actor_near_iterator ai(victim, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (*ai == victim || *ai == agent || ai->is_stationary())
+            continue;
+
+        const int range = isqrt((victim->pos() - ai->pos()).abs());
+        const int strength =
+            min(4, (pow / 10) / (range*range));
+        if (strength <= 0)
+            continue;
+
+        affected = true;
+        attract_actor(agent, *ai, victim->pos(), pow, strength);
+    }
+
+    return affected;
 }

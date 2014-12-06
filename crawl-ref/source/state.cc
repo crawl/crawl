@@ -39,8 +39,8 @@ game_state::game_state()
 #else
       throttle(false),
 #endif
-      show_more_prompt(true), terminal_resize_handler(NULL),
-      terminal_resize_check(NULL), doing_prev_cmd_again(false),
+      show_more_prompt(true), terminal_resize_handler(nullptr),
+      terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
       cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
       stat_gain_prompt(false), level_annotation_shown(false),
@@ -51,7 +51,7 @@ game_state::game_state()
       tiles_disabled(false),
       title_screen(true),
 #endif
-      darken_range(NULL), unsaved_macros(false), mon_act(NULL)
+      darken_range(nullptr), unsaved_macros(false), mon_act(nullptr)
 {
     reset_cmd_repeat();
     reset_cmd_again();
@@ -410,7 +410,7 @@ vector<god_act_state> game_state::other_gods_acting() const
 
 bool game_state::is_mon_acting() const
 {
-    return mon_act != NULL;
+    return mon_act != nullptr;
 }
 
 monster* game_state::which_mon_acting() const
@@ -422,7 +422,7 @@ void game_state::inc_mon_acting(monster* mon)
 {
     ASSERT(!invalid_monster(mon));
 
-    if (mon_act != NULL)
+    if (mon_act != nullptr)
         mon_act_stack.push_back(mon_act);
 
     mon_act = mon;
@@ -432,7 +432,7 @@ void game_state::dec_mon_acting(monster* mon)
 {
     ASSERT(mon_act == mon);
 
-    mon_act = NULL;
+    mon_act = nullptr;
 
     const unsigned int size = mon_act_stack.size();
     if (size > 0)
@@ -445,7 +445,7 @@ void game_state::dec_mon_acting(monster* mon)
 
 void game_state::clear_mon_acting()
 {
-    mon_act = NULL;
+    mon_act = nullptr;
     mon_act_stack.clear();
 }
 
@@ -533,7 +533,7 @@ void game_state::dump()
         fprintf(stderr, "\n\n");
     }
 
-    if (mon_act != NULL)
+    if (mon_act != nullptr)
     {
         fprintf(stderr, "%s currently acting:\n\n",
                 debug_mon_str(mon_act).c_str());

@@ -361,6 +361,8 @@ struct shop_struct
 
     FixedVector<uint8_t, 3> keeper_name;
 
+    vector<item_def> stock;
+
     shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
                      shop_name(""), shop_type_name(""), shop_suffix_name("") { }
 
@@ -523,7 +525,8 @@ struct item_def
     object_class_type base_type:8; ///< basic class (eg OBJ_WEAPON)
     uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
-    union {
+    union
+    {
         short plus;                 ///< + to hit/dam (weapons, rods)
         monster_type mon_type:16;   ///< corpse/chunk monster type
         skill_type skill:16;        ///< the skill provided by a manual
@@ -534,13 +537,13 @@ struct item_def
         short net_durability;       ///< damage dealt to a net
         short book_param;           ///< level of spells in a monolevel book
     };
-    union {
+    union
+    {
         short plus2;        ///< legacy/generic name for this union
         short evoker_debt;  ///< xp~ required for evoker to finish recharging
         short used_count;   ///< the # of known times it was used (decks, wands)
                             // for wands, may hold negative ZAPCOUNT knowledge
                             // info (e.g. "recharged", "empty", "unknown")
-        short butcher_amount;   ///< progress made on butchering
         bool net_placed;    ///< is this throwing net trapping something?
         short skill_points; ///< # of skill points a manual gives
         short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
@@ -571,7 +574,7 @@ struct item_def
     /// Index in the mitm array of the next item in the stack. NON_ITEM for
     /// the last item in a stack. For items in player inventory, instead
     /// equal to slot. For items in monster inventory, equal to
-    /// NON_ITEM + 1 + mindex
+    /// NON_ITEM + 1 + mindex. For items in shops, equal to ITEM_IN_SHOP.
     short  link;
     // Inventory letter of the item.
     short  slot;
@@ -598,7 +601,6 @@ public:
     bool has_spells() const;
     bool cursed() const;
     colour_t get_colour() const;
-    int book_number() const;
     zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
     /**

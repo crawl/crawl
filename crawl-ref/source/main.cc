@@ -204,6 +204,7 @@ NORETURN static void _launch_game();
 static void _do_berserk_no_combat_penalty();
 static void _do_searing_ray();
 static void _input();
+static void _safe_move_player(int move_x, int move_y);
 static void _move_player(int move_x, int move_y);
 static void _move_player(coord_def move);
 static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
@@ -237,6 +238,7 @@ static void _compile_time_asserts();
 
 #ifdef WIZARD
 static void _handle_wizard_command();
+static void _enter_explore_mode();
 #endif
 
 //
@@ -497,6 +499,7 @@ static void _show_commandline_options_help()
     puts("  -zotdef               select Zot Defence");
 #ifdef WIZARD
     puts("  -wizard               allow access to wizard mode");
+    puts("  -explore              allow access to explore mode");
 #endif
 #ifdef DGAMELAUNCH
     puts("  -no-throttle          disable throttling of user Lua scripts");
@@ -578,7 +581,8 @@ static void _wanderer_note_items()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item(you.inv[i]);
-        if (item.defined()) {
+        if (item.defined())
+        {
             if (!first_item)
                 equip_str << ", ";
             equip_str << item.name(DESC_A, false, true);
@@ -698,11 +702,10 @@ static void _set_removed_types_as_identified()
     you.type_ids[OBJ_POTIONS][POT_WATER] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_STRONG_POISON] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_SLOWING] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_II] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_WEAPON_III] = ID_KNOWN_TYPE;
 #endif
-    // not generated, but the enum value is still used
-    you.type_ids[OBJ_POTIONS][POT_SLOWING] = ID_KNOWN_TYPE;
 }
 
 #ifdef WIZARD
@@ -950,7 +953,8 @@ static void _handle_wizard_command()
         mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER WIZARD MODE!");
 
 #ifndef SCORE_WIZARD_CHARACTERS
-        mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
+        if (!you.explore)
+            mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
 #endif
 
         if (!yes_or_no("Do you really want to enter wizard mode?"))
@@ -1011,6 +1015,46 @@ static void _handle_wizard_command()
     }
 
     _do_wizard_command(wiz_command, false);
+}
+
+static void _enter_explore_mode()
+{
+    // WIZ_NEVER gives protection for those who have wiz compiles,
+    // and don't want to risk their characters. Also, and hackishly,
+    // it's used to prevent access for non-authorised users to wizard
+    // builds in dgamelaunch builds unless the game is started with the
+    // -wizard flag.
+    if (Options.explore_mode == WIZ_NEVER)
+        return;
+
+    if (you.wizard)
+        _handle_wizard_command();
+    else if (!you.explore)
+    {
+        mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER EXPLORE MODE!");
+
+#ifndef SCORE_WIZARD_CHARACTERS
+        mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
+#endif
+
+        if (!yes_or_no("Do you really want to enter explore mode?"))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Entered explore mode."));
+
+        you.explore = true;
+        save_game(false);
+        redraw_screen();
+
+        if (crawl_state.cmd_repeat_start)
+        {
+            crawl_state.cancel_cmd_repeat("Can't repeat entering explore mode");
+            return;
+        }
+    }
 }
 #endif
 
@@ -1147,6 +1191,15 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 
     case CMD_REST:
     case CMD_WAIT:
+    case CMD_SAFE_WAIT:
+    case CMD_SAFE_MOVE_LEFT:
+    case CMD_SAFE_MOVE_DOWN:
+    case CMD_SAFE_MOVE_UP:
+    case CMD_SAFE_MOVE_RIGHT:
+    case CMD_SAFE_MOVE_UP_LEFT:
+    case CMD_SAFE_MOVE_DOWN_LEFT:
+    case CMD_SAFE_MOVE_UP_RIGHT:
+    case CMD_SAFE_MOVE_DOWN_RIGHT:
         return i_feel_safe(true);
 
     case CMD_MOVE_LEFT:
@@ -1896,6 +1949,15 @@ void process_command(command_type cmd)
     case CMD_MOVE_DOWN_RIGHT: _move_player(1,  1); break;
     case CMD_MOVE_RIGHT:      _move_player(1,  0); break;
 
+    case CMD_SAFE_MOVE_DOWN_LEFT:  _safe_move_player(-1,  1); break;
+    case CMD_SAFE_MOVE_DOWN:       _safe_move_player(0,  1); break;
+    case CMD_SAFE_MOVE_UP_RIGHT:   _safe_move_player(1, -1); break;
+    case CMD_SAFE_MOVE_UP:         _safe_move_player(0, -1); break;
+    case CMD_SAFE_MOVE_UP_LEFT:    _safe_move_player(-1, -1); break;
+    case CMD_SAFE_MOVE_LEFT:       _safe_move_player(-1,  0); break;
+    case CMD_SAFE_MOVE_DOWN_RIGHT: _safe_move_player(1,  1); break;
+    case CMD_SAFE_MOVE_RIGHT:      _safe_move_player(1,  0); break;
+
     case CMD_RUN_DOWN_LEFT: _start_running(RDIR_DOWN_LEFT, RMODE_START); break;
     case CMD_RUN_DOWN:      _start_running(RDIR_DOWN, RMODE_START);      break;
     case CMD_RUN_UP_RIGHT:  _start_running(RDIR_UP_RIGHT, RMODE_START);  break;
@@ -1972,6 +2034,10 @@ void process_command(command_type cmd)
     case CMD_SHOW_TERRAIN: toggle_show_terrain(); break;
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
+    case CMD_SAFE_WAIT:
+        if (!i_feel_safe(true))
+            break;
+        // else fall-through
     case CMD_WAIT:
         you.turn_is_over = true;
         extract_manticore_spikes("You carefully extract the manticore spikes "
@@ -1993,7 +2059,7 @@ void process_command(command_type cmd)
     case CMD_LOOK_AROUND:          do_look_around();         break;
     case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
-    case CMD_READ:                 read_scroll();            break;
+    case CMD_READ:                 read();                   break;
     case CMD_REMOVE_ARMOUR:        _do_remove_armour();      break;
     case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
     case CMD_SHOUT:                yell();                   break;
@@ -2125,6 +2191,7 @@ void process_command(command_type cmd)
 
 #ifdef WIZARD
     case CMD_WIZARD: _handle_wizard_command(); break;
+    case CMD_EXPLORE_MODE: _enter_explore_mode(); break;
 #endif
 
         // Game commands.
@@ -2834,9 +2901,8 @@ static void _close_door()
 //
 static void _do_berserk_no_combat_penalty()
 {
-    // Butchering/eating a corpse will maintain a blood rage.
-    const int delay = current_delay_action();
-    if (delay == DELAY_BUTCHER || delay == DELAY_EAT)
+    // Eating a corpse will maintain a blood rage.
+    if (current_delay_action() == DELAY_EAT)
         return;
 
     if (you.berserk_penalty == NO_BERSERK_PENALTY)
@@ -2885,11 +2951,16 @@ static void _do_searing_ray()
     }
 
     if (crawl_state.prev_cmd == CMD_WAIT)
-    {
         handle_searing_ray();
-    }
     else
         end_searing_ray();
+}
+
+static void _safe_move_player(int move_x, int move_y)
+{
+    if (!i_feel_safe(true))
+        return;
+    _move_player(move_x, move_y);
 }
 
 // Called when the player moves by walking/running. Also calls attack
@@ -2922,15 +2993,9 @@ static void _swap_places(monster* mons, const coord_def &loc)
 
     mpr("You swap places.");
 
-    mgrd(mons->pos()) = NON_MONSTER;
-
     const coord_def old_loc = mons->pos();
-    mons->moveto(loc);
+    mons->move_to_pos(loc, true, true);
     mons->apply_location_effects(old_loc);
-
-    if (mons->alive())
-        mgrd(mons->pos()) = mons->mindex();
-
     return;
 }
 
@@ -3116,7 +3181,7 @@ static void _move_player(coord_def move)
                  mons_genus(targ_monst->type) == MONS_FUNGUS ? "fungus"
                                                              : "plants");
         }
-        targ_monst = NULL;
+        targ_monst = nullptr;
     }
 
     bool targ_pass = you.can_pass_through(targ) && !you.is_stationary();
@@ -3155,12 +3220,12 @@ static void _move_player(coord_def move)
 
     // You cannot move away from a siren but you CAN fight monsters on
     // neighbouring squares.
-    monster* beholder = NULL;
+    monster* beholder = nullptr;
     if (!you.confused())
         beholder = you.get_beholder(targ);
 
     // You cannot move closer to a fear monger.
-    monster *fmonger = NULL;
+    monster *fmonger = nullptr;
     if (!you.confused())
         fmonger = you.get_fearmonger(targ);
 
@@ -3371,7 +3436,8 @@ static void _move_player(coord_def move)
         _open_door(move);
         you.prev_move = move;
     }
-    else if (!targ_pass && grd(targ) == DNGN_MALIGN_GATEWAY && !attacking)
+    else if (!targ_pass && grd(targ) == DNGN_MALIGN_GATEWAY
+             && !attacking && !you.is_stationary())
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !_prompt_dangerous_portal(grd(targ)))
@@ -3443,7 +3509,7 @@ static int _get_num_and_char_keyfun(int &ch)
 
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
 {
-    if (prompt != NULL)
+    if (prompt != nullptr)
         mprf(MSGCH_PROMPT, "%s", prompt);
 
     line_reader reader(buf, buf_len);

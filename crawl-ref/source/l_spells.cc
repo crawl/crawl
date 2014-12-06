@@ -17,13 +17,13 @@
 LUAFN(l_spells_memorised)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    PLUARET(boolean, is_memorised(spell));
+    PLUARET(boolean, you.has_spell(spell));
 }
 
 LUAFN(l_spells_letter)
 {
     spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
-    if (!is_memorised(spell))
+    if (!you.has_spell(spell))
     {
         lua_pushnil(ls);
         return 1;
@@ -186,7 +186,7 @@ static const struct luaL_reg spells_clib[] =
     { "god_likes"     , l_spells_god_likes },
     { "god_hates"     , l_spells_god_hates },
     { "god_loathes"   , l_spells_god_loathes },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_spells(lua_State *ls)
@@ -196,14 +196,14 @@ void cluaopen_spells(lua_State *ls)
 
 LUAWRAP(_refrigeration,
         cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION,
-                              luaL_checkint(ls, 1), NULL, true))
+                              luaL_checkint(ls, 1), nullptr, true))
 LUAWRAP(_toxic_radiance,
         cast_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE,
-                              luaL_checkint(ls, 1), NULL, true))
+                              luaL_checkint(ls, 1), nullptr, true))
 
 const struct luaL_reg spells_dlib[] =
 {
 { "refrigeration", _refrigeration },
 { "toxic_radiance", _toxic_radiance },
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

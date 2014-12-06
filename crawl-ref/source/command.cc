@@ -20,6 +20,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "describe-god.h"
+#include "describe-spells.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -155,11 +156,7 @@ static string _get_version_changes()
         {
         highlight:
             // Highlight the Highlights, so to speak.
-            string text  = "<w>";
-                   text += help;
-                   text += "</w>";
-                   text += "\n";
-            result += text;
+            result += "<w>" + help + "</w>\n";
             // And start printing from now on.
             start = true;
         }
@@ -701,7 +698,7 @@ static help_file help_files[] =
 #ifdef USE_TILE_LOCAL
     { "tiles_help.txt",    'T', false },
 #endif
-    { NULL, 0, false }
+    { nullptr, 0, false }
 };
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
@@ -746,7 +743,7 @@ public:
         : Menu(_flags, "", _text_only), sort_alpha(true),
           showing_monsters(_show_mon)
         {
-            set_highlighter(NULL);
+            set_highlighter(nullptr);
 
             if (_show_mon)
                 toggle_sorting();
@@ -841,7 +838,7 @@ static vector<string> _get_monster_keys(ucs_t showchar)
 
         const monsterentry *me = get_monster_data(i);
 
-        if (me == NULL || me->name == NULL || me->name[0] == '\0')
+        if (me == nullptr || me->name == nullptr || me->name[0] == '\0')
             continue;
 
         if (me->mc != i)
@@ -920,7 +917,7 @@ static bool _skill_filter(string key, string body)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
-        // There are a couple of NULL entries in the skill set.
+        // There are a couple of nullptr entries in the skill set.
         if (!skill_name(sk))
             continue;
 
@@ -1017,7 +1014,7 @@ static bool _is_rod_spell(spell_type spell)
         return false;
 
     for (int i = 0; i < NUM_RODS; i++)
-        if (spell_in_rod(i) == spell)
+        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
             return true;
 
     return false;
@@ -1063,8 +1060,8 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(i, j) == type)
+        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+            if (sp == type)
             {
                 item.sub_type = i;
                 books.push_back(item.name(DESC_PLAIN));
@@ -1074,7 +1071,7 @@ static bool _append_books(string &desc, item_def &item, string key)
     for (int i = 0; i < NUM_RODS; i++)
     {
         item.sub_type = i;
-        if (spell_in_rod(i) == type)
+        if (spell_in_rod(static_cast<rod_type>(i)) == type)
             rods.push_back(item.name(DESC_BASENAME));
     }
 
@@ -1110,6 +1107,9 @@ static int _do_description(string key, string type, const string &suffix,
     god_type which_god = str_to_god(key);
     if (which_god != GOD_NO_GOD)
     {
+#ifdef USE_TILE_WEB
+        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
+#endif
         describe_god(which_god, true);
         return true;
     }
@@ -1168,7 +1168,7 @@ static int _do_description(string key, string type, const string &suffix,
                     desc += "This book is beyond your current level "
                             "of understanding.";
                 }
-                append_spells(desc, mitm[thing_created]);
+                desc += describe_item_spells(mitm[thing_created]);
             }
         }
     }
@@ -1300,8 +1300,8 @@ static void _find_description(bool *again, string *error_inout)
     string    type;
     string    extra;
     string    suffix;
-    db_find_filter filter     = NULL;
-    db_keys_recap  recap      = NULL;
+    db_find_filter filter     = nullptr;
+    db_keys_recap  recap      = nullptr;
     bool           want_regex = true;
     bool           want_sort  = true;
 
@@ -1359,13 +1359,13 @@ static void _find_description(bool *again, string *error_inout)
         break;
     case 'G':
         type       = "god";
-        filter     = NULL;
+        filter     = nullptr;
         want_regex = false;
         doing_gods = true;
         break;
     case 'B':
         type           = "branch";
-        filter         = NULL;
+        filter         = nullptr;
         want_regex     = false;
         want_sort      = false;
         doing_branches = true;
@@ -1435,7 +1435,7 @@ static void _find_description(bool *again, string *error_inout)
     else
         key_list = _get_desc_keys(regex, filter);
 
-    if (recap != NULL)
+    if (recap != nullptr)
         (*recap)(key_list);
 
     if (key_list.empty())
@@ -1517,7 +1517,7 @@ static void _find_description(bool *again, string *error_inout)
         if (ends_with(str, suffix)) // perhaps we should assert this?
             str.erase(str.length() - suffix.length());
 
-        MenuEntry *me = NULL;
+        MenuEntry *me = nullptr;
 
         if (doing_mons)
         {
@@ -1806,7 +1806,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
 
     if (with_manual)
     {
-        for (int i = 0; help_files[i].name != NULL; ++i)
+        for (int i = 0; help_files[i].name != nullptr; ++i)
         {
             // Attempt to open this file, skip it if unsuccessful.
             string fname = canonicalise_file_separator(help_files[i].name);

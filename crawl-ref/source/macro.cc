@@ -133,13 +133,13 @@ static bool is_userfunction(const keyseq &seq)
 string get_userfunction(int key)
 {
     int index = userfunc_index(key);
-    return index == -1 ? NULL : userfunctions[index];
+    return index == -1 ? nullptr : userfunctions[index];
 }
 
 static string get_userfunction(const keyseq &seq)
 {
     int index = userfunc_index(seq);
-    return index == -1 ? NULL : userfunctions[index];
+    return index == -1 ? nullptr : userfunctions[index];
 }
 
 static bool userfunc_referenced(int index, const macromap &mm)
@@ -694,7 +694,7 @@ void macro_save()
  * Reads as many keypresses as are available (waiting for at least one),
  * and returns them as a single keyseq.
  */
-static keyseq _getch_mul(int (*rgetch)() = NULL)
+static keyseq _getch_mul(int (*rgetch)() = nullptr)
 {
     keyseq keys;
     int    a;
@@ -1162,7 +1162,7 @@ void init_keybindings()
     int i;
 
     for (i = 0; _command_name_list[i].cmd != CMD_NO_CMD
-                && _command_name_list[i].name != NULL; i++)
+                && _command_name_list[i].name != nullptr; i++)
     {
         command_name &data = _command_name_list[i];
 
