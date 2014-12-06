@@ -2470,13 +2470,8 @@ int player_evasion(ev_ignore_type evit)
         (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
         / (20 - size_factor) / 10;
 
-    // [ds] Dodging penalty for being in high EVP armour, almost
-    // identical to v0.5/4.1 penalty, but with the EVP discount being
-    // 1 instead of 0.5 so that leather armour is fully discounted.
-    // The 1 EVP of leather armour may still incur an
-    // adjusted_evasion_penalty, however.
     const int armour_dodge_penalty = max(0,
-        (10 * you.adjusted_body_armour_penalty(scale, true)
+        (10 * you.armour_dodge_penalty(scale)
          - 30 * scale)
         / max(1, (int) you.strength()));
 
@@ -3631,8 +3626,8 @@ int check_stealth()
     {
         // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
         // Now 2 * EP^2 / 3 after EP rescaling.
-        const int ep = -property(*arm, PARM_EVASION);
-        const int penalty = 2 * ep * ep / 3;
+        const int evp = you.unadjusted_body_armour_penalty();
+        const int penalty = evp * evp * 2 / 3;
 #if 0
         dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
 #endif
@@ -6204,32 +6199,57 @@ void player::ablate_deflection()
     }
 }
 
+/**
+ * What's the base value of the penalties the player recieves from their
+ * body armour?
+ *
+ * Used as the base for adjusted armour penalty calculations, as well as for
+ * stealth penalty calculations.
+ *
+ * @return  The player's body armour's PARM_EVASION, if any.
+ */
 int player::unadjusted_body_armour_penalty() const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
     if (!body_armour)
         return 0;
 
-    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
-    return base_ev_penalty;
+    return -property(*body_armour, PARM_EVASION);
 }
 
-// The EV penalty to the player for their worn body armour.
-int player::adjusted_body_armour_penalty(int scale, bool use_size) const
+/**
+ * [ds] Dodging penalty for being in high EVP armour, almost
+ * identical to v0.5/4.1 penalty, but with the EVP discount being
+ * 1 instead of 0.5 so that leather armour is fully discounted.
+ *
+ * A penalty to EV that scales linearly with encumbrance, not quadratically.
+ * Will later be capped to not exceed the player's EV bonus from Dodging.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based linearly on body armour encumbrance.
+ */
+int player::armour_dodge_penalty(int scale) const
 {
     const int base_ev_penalty = unadjusted_body_armour_penalty();
-    if (!base_ev_penalty)
-        return 0;
 
-    if (use_size)
-    {
-        const int size = body_size(PSIZE_BODY);
+    const int size = body_size(PSIZE_BODY);
 
-        const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
+    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
 
-        return max(0, scale * base_ev_penalty
-                      - size_bonus_factor * base_ev_penalty);
-    }
+    return max(0, scale * base_ev_penalty
+               - size_bonus_factor * base_ev_penalty);
+}
+
+/**
+ * The encumbrance penalty to the player for their worn body armour.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based quadratically on body armour
+ *                  encumbrance.
+ */
+int player::adjusted_body_armour_penalty(int scale) const
+{
+    const int base_ev_penalty = unadjusted_body_armour_penalty();
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
     return 2 * base_ev_penalty * base_ev_penalty
@@ -6239,7 +6259,12 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
            / 450;
 }
 
-// The EV penalty to the player for wearing their current shield.
+/**
+ * The encumbrance penalty to the player for their worn shield.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based on shield weight.
+ */
 int player::adjusted_shield_penalty(int scale) const
 {
     const item_def *shield_l = slot_item(EQ_SHIELD, false);
