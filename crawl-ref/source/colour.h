@@ -61,6 +61,7 @@ enum element_type
     ETC_ELEMENTAL,      // Cycling elemental colours
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
     ETC_SHINING,        // shining gold (Gozag)
+    ETC_WULNDRASTE,     // Wulndraste altar colors
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 

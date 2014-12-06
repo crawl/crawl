@@ -271,7 +271,7 @@ public:
     bool      guessed_pos;  // true if we're not sure that 'destination' is
                             // correct.
     stair_type type;
-    bool      backtracking; // if true, Backtrackticus currently considers
+    bool      backtracking; // if true, Wulndraste currently considers
                             // this stair backtracking and thus hates it
 
     stair_info()

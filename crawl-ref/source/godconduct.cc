@@ -444,7 +444,7 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_RU,
     peeve_map(),
-    //GOD_BACKTRACKTICUS
+    //GOD_WULNDRASTE
     {
         { DID_BACKTRACK, {
             4, 10, "",
@@ -817,7 +817,7 @@ static like_map divine_likes[] =
             }
         } },
     },
-    // GOD_BACKTRACKTICUS,
+    // GOD_WULNDRASTE,
     like_map(),
 };
 

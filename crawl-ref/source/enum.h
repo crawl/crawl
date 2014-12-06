@@ -216,9 +216,9 @@ enum ability_type
     ABIL_RU_SACRIFICE_HAND,
         ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_HAND,
     ABIL_RU_REJECT_SACRIFICES,
-    // Backtrackticus
-    ABIL_W_BLEND_IN,
-    ABIL_W_CHANGE_OF_SCENERY,
+    // Wulndraste
+    ABIL_WULNDRASTE_BLEND_IN,
+    ABIL_WULNDRASTE_CHANGE_OF_SCENERY,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -1110,7 +1110,7 @@ enum conduct_type
     DID_FIRE,                             // Dithmenos
     DID_KILL_FIERY,                       // Dithmenos
     DID_SACRIFICE_LOVE,                   // Ru
-    DID_BACKTRACK,                        // Backtrackticus
+    DID_BACKTRACK,                        // Wulndraste
 
     NUM_CONDUCTS
 };
@@ -1493,7 +1493,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
-    DNGN_ALTAR_BACKTRACKTICUS,
+    DNGN_ALTAR_WULNDRASTE,
 #endif
 
     DNGN_FOUNTAIN_BLUE,
@@ -1552,7 +1552,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
-    DNGN_ALTAR_BACKTRACKTICUS,
+    DNGN_ALTAR_WULNDRASTE,
 #endif
 
     NUM_FEATURES
@@ -1984,7 +1984,7 @@ enum god_type
     GOD_GOZAG,
     GOD_QAZLAL,
     GOD_RU,
-    GOD_BACKTRACKTICUS,
+    GOD_WULNDRASTE,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

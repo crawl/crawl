@@ -193,9 +193,9 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ru
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_RU_DRAW_OUT_POWER,
       ABIL_RU_POWER_LEAP, ABIL_RU_APOCALYPSE },
-    // Backtrackticus
-    { ABIL_NON_ABILITY, ABIL_W_BLEND_IN, ABIL_NON_ABILITY,
-      ABIL_W_CHANGE_OF_SCENERY, ABIL_NON_ABILITY }
+    // Wulndraste
+    { ABIL_NON_ABILITY, ABIL_WULNDRASTE_BLEND_IN, ABIL_NON_ABILITY,
+      ABIL_WULNDRASTE_CHANGE_OF_SCENERY, ABIL_NON_ABILITY }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -457,9 +457,9 @@ static const ability_def Ability_List[] =
     { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area", 7, 0, 0,
       generic_cost::range(10, 14), 0, ABFLAG_NONE },
 
-    // Backtrackticus
-    { ABIL_W_BLEND_IN, "Blend In", 3, 0, 200, 2, 0, ABFLAG_NONE},
-    { ABIL_W_CHANGE_OF_SCENERY, "Change of Scenery", 7, 0, 600, 10, 0,
+    // Wulndraste
+    { ABIL_WULNDRASTE_BLEND_IN, "Blend In", 3, 0, 200, 2, 0, ABFLAG_NONE},
+    { ABIL_WULNDRASTE_CHANGE_OF_SCENERY, "Change of Scenery", 7, 0, 600, 10, 0,
       ABFLAG_NONE},
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
@@ -1210,7 +1210,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_PLANT_RING:
     case ABIL_QAZLAL_UPHEAVAL:
-    case ABIL_W_BLEND_IN:
+    case ABIL_WULNDRASTE_BLEND_IN:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
         break;
@@ -1268,7 +1268,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_ABYSS_ENTER:
     case ABIL_CHEIBRIADOS_TIME_STEP:
     case ABIL_DITHMENOS_SHADOW_FORM:
-    case ABIL_W_CHANGE_OF_SCENERY:
+    case ABIL_WULNDRASTE_CHANGE_OF_SCENERY:
         invoc = true;
         failure = 80 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
         break;
@@ -3153,13 +3153,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
-    case ABIL_W_BLEND_IN:
+    case ABIL_WULNDRASTE_BLEND_IN:
         fail_check();
         if (!w_blend_in())
             return SPRET_ABORT;
         break;
 
-    case ABIL_W_CHANGE_OF_SCENERY:
+    case ABIL_WULNDRASTE_CHANGE_OF_SCENERY:
         fail_check();
         if (!w_change_of_scenery())
             return SPRET_ABORT;

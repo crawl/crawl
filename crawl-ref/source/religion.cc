@@ -219,11 +219,11 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " disappears in a burst of power",
         " disappears in an immense burst of power",
     },
-    // Backtrackticus
+    // Wulndraste
     {
-        " disappears in a small burst of something.",
-        " disappears in a burst of something",
-        " disappears in an immense burst of something",
+        " disappears in a small cloud of dust.",
+        " disappears in a cloud of dust",
+        " disappears in an immense cloud of dust",
     },
 };
 
@@ -370,7 +370,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "gather your power into a mighty leap",
       "wreak a terrible wrath on your foes"
     },
-    // Backtrackticus
+    // Wulndraste
     { "You have increased endurance.",
       "walk through enemies",
       "You have significantly increased endurance.",
@@ -522,7 +522,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "gather your power into a mighty leap",
       "wreak a terrible wrath on all visible foes"
     },
-    // Backtrackticus
+    // Wulndraste
     { "Your endurance wanes.",
       "walk through enemies",
       "Your endurance wanes.",
@@ -2074,7 +2074,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_GOZAG:         return "Gozag";
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
-    case GOD_BACKTRACKTICUS:return "BACKTRACKTICUS";
+    case GOD_WULNDRASTE:    return "Wulndraste";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -2339,7 +2339,7 @@ void set_piety(int piety)
     }
     while (diff != 0);
 
-    if (you_worship(GOD_BACKTRACKTICUS))
+    if (you_worship(GOD_WULNDRASTE))
     {
       calc_hp();
       calc_mp();
@@ -2574,7 +2574,7 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
         you.piety_max[you.religion] = you.piety;
     }
 
-    if (you_worship(GOD_BACKTRACKTICUS))
+    if (you_worship(GOD_WULNDRASTE))
     {
       calc_hp();
       calc_mp();
@@ -2710,7 +2710,7 @@ void lose_piety(int pgn)
         invalidate_agrid(true);
     }
 
-    if (you_worship(GOD_BACKTRACKTICUS))
+    if (you_worship(GOD_WULNDRASTE))
     {
       calc_hp();
       calc_mp();
@@ -3031,7 +3031,7 @@ void excommunication(god_type new_god, bool immediate)
         }
         _set_penance(old_god, 25);
         break;
-    case GOD_BACKTRACKTICUS:
+    case GOD_WULNDRASTE:
         calc_hp();
         calc_mp();
         break;
@@ -4130,7 +4130,7 @@ void handle_god_time(int /*time_delta*/)
 
         case GOD_SHINING_ONE:
         case GOD_NEMELEX_XOBEH:
-        case GOD_BACKTRACKTICUS:
+        case GOD_WULNDRASTE:
             if (one_chance_in(35))
                 lose_piety(1);
             break;
@@ -4211,6 +4211,7 @@ int god_colour(god_type god) // mv - added
         return LIGHTMAGENTA;
 
     case GOD_SIF_MUNA:
+    case GOD_WULNDRASTE:
         return LIGHTBLUE;
 
     case GOD_JIYVA:
@@ -4225,9 +4226,6 @@ int god_colour(god_type god) // mv - added
     case GOD_QAZLAL:
     case GOD_RU:
         return BROWN;
-
-    case GOD_BACKTRACKTICUS:
-        return LIGHTBLUE;
 
     case GOD_NO_GOD:
     case NUM_GODS:
@@ -4309,8 +4307,8 @@ colour_t god_message_altar_colour(god_type god)
     case GOD_GOZAG:
         return coinflip() ? YELLOW : BROWN;
 
-    case GOD_BACKTRACKTICUS:
-        return LIGHTCYAN;
+    case GOD_WULNDRASTE:
+        return coinflip() ? LIGHTBLUE : LIGHTRED;
 
     case GOD_QAZLAL:
     case GOD_RU:

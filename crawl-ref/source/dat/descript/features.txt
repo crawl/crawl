@@ -85,6 +85,10 @@ A dry fountain
 
 A dried-up fountain that has seen better days.
 %%%%
+A flag-altar of Wulndraste
+
+A flag serving as the altar to Wulndraste the Wayfarer.
+%%%%
 A fountain of clear blue water
 
 A decorative fountain, flowing with clear water.
@@ -270,10 +274,6 @@ A sacrificial altar of Ru
 
 An altar to Ru the Awakened in the shape of a scales with a heart in
 one scale and a pictogram representing power and enlightenment in the other.
-%%%%
-A something altar of BACKTRACKTICUS
-
-This exists.
 %%%%
 A sealed door
 

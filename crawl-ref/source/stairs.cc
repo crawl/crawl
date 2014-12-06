@@ -352,11 +352,11 @@ void up_stairs(dungeon_feature_type force_stair, bool wizard)
     if (_stair_moves_pre(stair_find))
         return;
 
-    if (you_worship(GOD_BACKTRACKTICUS))
+    if (you_worship(GOD_WULNDRASTE))
     {
         if (valid_downward_path_exists(stair_find))
         {
-            if (!yesno("Backtrackticus compels you to press onward! Really ascend?",
+            if (!yesno("Wulndraste compels you to press onward! Really ascend?",
                    false, 'n'))
             {
                 canned_msg(MSG_OK);

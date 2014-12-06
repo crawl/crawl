@@ -188,9 +188,12 @@ Ru, but rather given up freely and permanently. Initiates can redirect would-be
 attackers and retaliate against their enemies, replenish their health and
 magic, perform a mighty leap, and unleash a massive wave of power against foes.
 %%%%
-Backtrackticus
+Wulndraste
 
-Backtrackticus exists.
+Wulndraste the Wayfarer is a god of exploration and travel who expects followers
+to always push onwards, never heading back until they have seen the sights and gotten what they came for. Wulndraste blesses adherents with enhanced physical
+and magical stamina that grows with devotion. Followers can blend in to a local population and thereby move quickly past a crowd, confusing them in the process.
+Devoted explorers can instantly teleport themselves away from danger.
 %%%%
 Zin powers
 
@@ -399,9 +402,13 @@ elementals whose loyalty depends on the origin of the cloud. Followers can
 gain temporary resistances against the elements on taking damage from that
 element.
 %%%%
-Backtrackticus powers
+Wulndraste powers
 
-Backtrackticus has powers.
+Followers of Wulndraste have increased health and regeneration, and increased
+mana reserves without any cap. More devoted followers can blend in to a local population and thereby move quickly past a crowd, confusing them in the process.
+Devoted explorers can instantly teleport themselves away from danger, but after
+teleporting are prevented from teleporting again for a period that decreases as
+Invocations skill increases.
 %%%%
 Zin wrath
 
@@ -549,7 +556,8 @@ Qazlal's wrath is swift and unmistakable. Sinners are stripped of their
 resistances, assaulted by furious elementals, and surrounded by waves of
 molten lava.
 %%%%
-Backtrackticus wrath
+Wulndraste wrath
 
-Backtrackticus has wrath.
+Wulndraste, when angered, removes the blessing of endurance and instead saps
+the endurance of the victim until mollified.
 %%%%

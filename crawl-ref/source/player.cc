@@ -1234,8 +1234,8 @@ static int _player_bonus_regen()
         rr += 100;
     }
 
-    // Passive bonus from Backtrackticus -- will be 0 if not worshipping
-    rr += backtrackticus_point_mod() * 2;
+    // Passive bonus from Wulndraste -- will be 0 if not worshipping
+    rr += wulndraste_point_mod() * 2;
 
     // Jewellery.
     rr += 40 * you.wearing(EQ_AMULET, AMU_REGENERATION);
@@ -4564,7 +4564,7 @@ int get_real_hp(bool trans, bool rotted)
 
     // Mutations that increase HP by a percentage
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
-                + backtrackticus_point_mod()
+                + wulndraste_point_mod()
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
@@ -4590,8 +4590,8 @@ int get_real_hp(bool trans, bool rotted)
 
 int get_real_mp(bool include_items)
 {
-    // GOD_BACKTRACKTICUS removes MP limits
-    bool enforce_limit = (backtrackticus_point_mod() > 0) ? false : true;
+    // GOD_WULNDRASTE removes MP limits
+    bool enforce_limit = (wulndraste_point_mod() > 0) ? false : true;
     int enp = you.experience_level;
     enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
@@ -4616,7 +4616,7 @@ int get_real_mp(bool include_items)
 
     // Analogous to ROBUST/FRAIL
     enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
-               + backtrackticus_point_mod()
+               + wulndraste_point_mod()
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (player_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100;

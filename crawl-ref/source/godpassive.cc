@@ -884,20 +884,20 @@ ru_interference get_ru_attack_interference_level()
 }
 
 /**
- * Determine amount of hp/mp boost Backtrackticus gives.
+ * Determine amount of hp/mp boost Wulndraste gives.
  *
  * @return int
  */
-int backtrackticus_point_mod()
+int wulndraste_point_mod()
 {
     int mod = 0;
-    if (!you_worship(GOD_BACKTRACKTICUS))
+    if (!you_worship(GOD_WULNDRASTE))
         return mod;
-    if (you.piety >= piety_breakpoint(4) && !you.penance[GOD_BACKTRACKTICUS])
+    if (you.piety >= piety_breakpoint(4) && !you.penance[GOD_WULNDRASTE])
         mod = 3;
-    else if (you.piety >= piety_breakpoint(2) && !you.penance[GOD_BACKTRACKTICUS])
+    else if (you.piety >= piety_breakpoint(2) && !you.penance[GOD_WULNDRASTE])
         mod = 2;
-    else if (you.piety >= piety_breakpoint(0) && !you.penance[GOD_BACKTRACKTICUS])
+    else if (you.piety >= piety_breakpoint(0) && !you.penance[GOD_WULNDRASTE])
         mod = 1;
     return mod * 10;
 }
