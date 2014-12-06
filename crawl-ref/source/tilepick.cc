@@ -4814,7 +4814,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DISPEL_UNDEAD:            return TILEG_DISPEL_UNDEAD;
     case SPELL_HAUNT:                    return TILEG_HAUNT;
     case SPELL_BORGNJORS_REVIVIFICATION: return TILEG_BORGNJORS_REVIVIFICATION;
-    case SPELL_BONE_ARMOUR:              return TILEG_CIGOTUVIS_EMBRACE;
+    case SPELL_CIGOTUVIS_EMBRACE:        return TILEG_CIGOTUVIS_EMBRACE;
     case SPELL_AGONY:                    return TILEG_AGONY;
     case SPELL_TWISTED_RESURRECTION:     return TILEG_TWISTED_RESURRECTION;
     case SPELL_EXCRUCIATING_WOUNDS:      return TILEG_EXCRUCIATING_WOUNDS;

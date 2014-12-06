@@ -224,7 +224,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RECALL,
     SPELL_ANIMATE_DEAD,
     SPELL_CONTROL_UNDEAD,
-    SPELL_BONE_ARMOUR,
+    SPELL_CIGOTUVIS_EMBRACE,
     SPELL_DEATH_CHANNEL,
     SPELL_SIMULACRUM,
 },

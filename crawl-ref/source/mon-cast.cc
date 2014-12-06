@@ -1338,7 +1338,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MONSTROUS_MENAGERIE:
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
-    case SPELL_BONE_ARMOUR:
+    case SPELL_CIGOTUVIS_EMBRACE:
     case SPELL_SIMULACRUM:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_MINOR_DEMON:
@@ -5262,7 +5262,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                              mons->foe, god);
         return;
 
-    case SPELL_BONE_ARMOUR:
+    case SPELL_CIGOTUVIS_EMBRACE:
         harvest_corpses(*mons);
         mprf("The bodies of the dead form a shell around %s.",
              mons->name(DESC_THE).c_str());
@@ -7903,7 +7903,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || monspell == SPELL_SIMULACRUM
                   && !monster_simulacrum(mon, false);
 
-    case SPELL_BONE_ARMOUR:
+    case SPELL_CIGOTUVIS_EMBRACE:
         if (friendly && !_animate_dead_okay(monspell))
             return true;
         if (mon->has_ench(ENCH_BONE_ARMOUR))
