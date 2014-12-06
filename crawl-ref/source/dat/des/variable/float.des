@@ -6609,7 +6609,7 @@ NSUBST: 4 = 3:D / 6:0 / 1:T / *:.
 NSUBST: 5 = 1:9 / *:.
 # sanctum: 5/7 0s, 2/3 9s, an 8, and a torpor snail on the altar
 NSUBST: 6 = 2:E / 3:F / *:.
-NSUBST: 7 = 2:G / *:.
+NSUBST: 7 = 2:H / *:.
 KMONS: _ = torpor snail patrolling
 KFEAT: _ = altar_cheibriados
 KITEM: _ = plate armour good_item ego:ponderousness no_pickup /\
