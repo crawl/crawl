@@ -297,7 +297,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_INTOXICATE,
 },
 
-{   // Plane Papyrus
+{   // Akashic Record
     SPELL_DISPERSAL,
     SPELL_CONTROLLED_BLINK,
     SPELL_MALIGN_GATEWAY,
