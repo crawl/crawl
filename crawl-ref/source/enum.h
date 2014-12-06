@@ -529,7 +529,9 @@ enum book_type
 #endif
     BOOK_GEOMANCY,
     BOOK_EARTH,
+#if TAG_MAJOR_VERSION == 34
     BOOK_WIZARDRY,
+#endif
     BOOK_POWER,
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,

@@ -126,7 +126,6 @@ int book_rarity(book_type which_book)
     case BOOK_CONJURATIONS:
     case BOOK_NECROMANCY:
     case BOOK_CALLINGS:
-    case BOOK_WIZARDRY:
         return 3;
 
     case BOOK_FLAMES:
@@ -186,6 +185,11 @@ int book_rarity(book_type which_book)
 
     case BOOK_DESTRUCTION:
         return 30;
+
+#if TAG_MAJOR_VERSION == 34
+    case BOOK_WIZARDRY:
+        return 100;
+#endif
 
     default:
         return 1;

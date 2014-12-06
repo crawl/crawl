@@ -265,6 +265,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SHATTER,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Wizardry
     SPELL_AGONY,
     SPELL_FORCE_LANCE,
@@ -272,6 +273,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
 },
+#endif
 
 {   // Book of Power
     SPELL_FULMINANT_PRISM,
@@ -280,6 +282,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
     SPELL_IOOD,
+    SPELL_SPELLFORGED_SERVITOR,
 },
 
 {   // Book of Cantrips
