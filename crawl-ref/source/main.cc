@@ -2786,6 +2786,8 @@ static void _open_door(coord_def move)
             mpr("The door is shut tight!");
         else
             mpr(door_veto_message);
+        if (you.confused())
+            you.turn_is_over = true;
 
         return;
     }
@@ -2820,6 +2822,8 @@ static void _open_door(coord_def move)
         mpr("There isn't anything that you can open there!");
         break;
     }
+    if (you.confused())
+        you.turn_is_over = true;
 }
 
 static void _close_door()
@@ -2887,6 +2891,8 @@ static void _close_door()
         mpr("There isn't anything that you can close there!");
         break;
     }
+    if (you.confused())
+        you.turn_is_over = true;
 }
 
 // An attempt to tone down berserk a little bit. -- bwross
