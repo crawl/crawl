@@ -368,7 +368,7 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Wulndraste -- travel theme
     {"Homesick",           "Curious",               "Sightseer",                "Tourist",
-        "Nomad",              "Wayfarer",               "Voyager",                  "Omnipresent"},
+        "Nomad",              "Traveler",               "Voyager",                  "Omnipresent"},
 };
 
 string god_title(god_type which_god, species_type which_species, int piety)
