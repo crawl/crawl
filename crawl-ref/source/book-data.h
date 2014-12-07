@@ -294,9 +294,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_APPORTATION,
-    SPELL_BLINK,
     SPELL_TUKIMAS_DANCE,
     SPELL_INTOXICATE,
+    SPELL_INVISIBILITY
 },
 
 {   // Akashic Record
