@@ -1931,7 +1931,7 @@ int attack::player_stab_weapon_bonus(int damage)
     {
         // We might be unarmed if we're using the boots of the Assassin.
         const bool extra_good = using_weapon() && weapon->sub_type == WPN_DAGGER;
-        int bonus = you.dex() * (stab_skill + 100) / (extra_good ? 1000 : 500);
+        int bonus = you.dex() * (stab_skill + 100) / (extra_good ? 500 : 1000);
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
         damage += bonus;
