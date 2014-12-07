@@ -3899,9 +3899,6 @@ bool god_hates_eating(god_type god, monster_type mc)
 
 bool god_likes_fresh_corpses(god_type god)
 {
-    if (god == GOD_LUGONU)
-        return !player_in_branch(BRANCH_ABYSS);
-
     return god == GOD_TROG;
 }
 
