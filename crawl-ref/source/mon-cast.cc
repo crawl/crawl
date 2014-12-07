@@ -7060,6 +7060,9 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
                                           goblin.name(DESC_A).c_str(),
                                           tosser.name(DESC_PLAIN).c_str());
     foe.hurt(&tosser, dam, BEAM_NONE, KILLED_BY_BEAM, "", killed_by, true);
+
+    // wake sleepy goblins
+    behaviour_event(&goblin, ME_DISTURB, &tosser, goblin.pos());
 }
 
 /**
