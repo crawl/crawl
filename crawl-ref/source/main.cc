@@ -2691,10 +2691,7 @@ static void _swing_at_target(coord_def move)
     else
     {
         list<actor*> cleave_targets;
-        const skill_type wpn_skl = you.weapon() ?
-                                          item_attack_skill(*you.weapon()) :
-                                           SK_UNARMED_COMBAT;
-        if (actor_can_cleave(you, wpn_skl))
+        if (you.can_cleave())
             get_all_cleave_targets(&you, target, cleave_targets);
 
         if (!cleave_targets.empty())
