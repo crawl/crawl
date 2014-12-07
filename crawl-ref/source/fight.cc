@@ -483,30 +483,6 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     return result;
 }
 
-/**
- * Can the given actor 'cleave' (hit surrounding targets) when attacking
- * using the given skill?
- *
- * @param attacker      The player or monster in question.
- * @param attack_skill  The skill used for the attack. (e.g. axes, etc)
- * @return              Whether the attacker is allowed to cleave with this
- *                      attack.
- */
-bool actor_can_cleave(const actor &attacker, skill_type attack_skill)
-{
-    if (attacker.confused())
-        return false;
-
-    if (attacker.is_player()
-        && (you.form == TRAN_HYDRA && you.heads() > 1
-            || you.duration[DUR_CLEAVE]))
-    {
-        return true;
-    }
-
-    return attack_skill == SK_AXES;
-}
-
 // Used by cleave to determine if multi-hit targets will be attacked.
 static bool _dont_harm(const actor* attacker, const actor* defender)
 {

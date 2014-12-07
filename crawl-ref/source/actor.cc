@@ -898,3 +898,22 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
          KILLED_BY_COLLISION, "",
          feature_description_at(newpos, false, DESC_A, false));
 }
+
+bool actor::can_cleave() const
+{
+    if (confused())
+        return false;
+
+    if (is_player()
+        && (you.form == TRAN_HYDRA && you.heads() > 1
+            || you.duration[DUR_CLEAVE]))
+    {
+        return true;
+    }
+
+    const item_def* weap = weapon();
+    if (!weap)
+        return false;
+
+    return item_attack_skill(*weap) == SK_AXES;
+}
