@@ -5375,13 +5375,16 @@ void dec_ambrosia_player(int delay)
     you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
 
     // 3-5 per turn, 9-50 over (3-10) turns
-    const int restoration = 3 + random2(3);
+    const int hp_restoration = 3 + random2(3);
+    const int mp_restoration = 3 + random2(3);
+
     if (!you.duration[DUR_DEATHS_DOOR])
     {
         const int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
-        inc_hp(div_rand_round(restoration * mut_factor, 3));
+        inc_hp(div_rand_round(hp_restoration * mut_factor, 3));
     }
-    inc_mp(restoration);
+
+    inc_mp(mp_restoration);
 
     if (!you.duration[DUR_AMBROSIA])
         mpr("You feel less invigorated.");
