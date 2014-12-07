@@ -1088,7 +1088,7 @@ static armour_type _get_random_armour_type(int item_level)
     }
     else if (x_chance_in_y(11 + item_level, 60))
     {
-        // All the "mundane" armours, generally if the player will find at least
+        // All the "mundane" armours. Generally the player will find at least
         // one copy of these by the Lair.
         armtype = random_choose(ARM_ROBE,
                                 ARM_LEATHER_ARMOUR,
