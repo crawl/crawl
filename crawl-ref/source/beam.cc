@@ -3599,17 +3599,6 @@ void bolt::affect_player_enchantment(bool resistible)
         if (aux_source.empty())
             aux_source = "by dispel undead";
 
-        // reduce damage for non-hungry vampires
-        if (you.undead_state() == US_SEMI_UNDEAD)
-        {
-            if (you.hunger_state == HS_ENGORGED)
-                damage.size /= 2;
-            else if (you.hunger_state > HS_SATIATED)
-            {
-                damage.size *= 2;
-                damage.size /= 3;
-            }
-        }
         internal_ouch(damage.roll());
         obvious_effect = true;
         break;
