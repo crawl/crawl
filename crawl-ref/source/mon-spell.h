@@ -91,9 +91,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VAMPIRE,
       {
-       { SPELL_VAMPIRIC_DRAINING, 0, MON_SPELL_WIZARD },
-       { SPELL_CONFUSE, 0, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 0, MON_SPELL_WIZARD },
+       { SPELL_VAMPIRIC_DRAINING, 28, MON_SPELL_WIZARD },
+       { SPELL_CONFUSE, 14, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
       }
     },
 
