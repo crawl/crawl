@@ -6541,14 +6541,14 @@ void monster::steal_item_from_player()
 
     const int orig_qty = you.inv[steal_what].quantity;
 
+    mprf("%s steals %s!",
+         name(DESC_THE).c_str(),
+         you.inv[steal_what].name(DESC_YOUR).c_str());
+
     item_def* tmp = take_item(steal_what, mslot);
     if (!tmp)
         return;
     item_def& new_item = *tmp;
-
-    mprf("%s steals %s!",
-         name(DESC_THE).c_str(),
-         new_item.name(DESC_YOUR).c_str());
 
     // You'll want to autopickup it after killing Maurice.
     new_item.flags |= ISFLAG_THROWN;
