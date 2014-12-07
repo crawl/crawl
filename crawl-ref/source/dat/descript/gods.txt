@@ -442,7 +442,13 @@ oklobs.
 %%%%
 Gozag wrath
 
-#TBD
+Gozag considers taking actions against unfaithful business partners necessary
+for the good of the Gozag monopoly. Former followers will find that any new
+items in the dungeon may be bought for an insultingly low sum, and any gold
+found in its pure form will be taxed by the Greedy. Furthermore, Gozag bribes
+and incites the monster of the dungeon, giving them potion effects such as
+berserking or invisibility, while petitioning for any potions consumed by
+victims to fail in their effects.
 %%%%
 Jiyva wrath
 
