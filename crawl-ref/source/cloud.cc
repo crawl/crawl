@@ -970,15 +970,16 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
-        return act->is_fiery()
-                || player &&
-                   (you.duration[DUR_FIRE_SHIELD]
-                    || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]);
+        if (!player)
+            return act->res_fire() >= 3;
+        return you.duration[DUR_FIRE_SHIELD]
+               || you.mutation[MUT_FLAME_CLOUD_IMMUNITY];
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_energy(cloud.agent()) > 0;
     case CLOUD_COLD:
-        return act->is_icy()
-               || (player && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]);
+        if (!player)
+            return act->res_cold() >= 3;
+        return you.mutation[MUT_FREEZING_CLOUD_IMMUNITY];
     case CLOUD_MEPHITIC:
         return act->res_poison() > 0 || act->is_unbreathing();
     case CLOUD_POISON:
