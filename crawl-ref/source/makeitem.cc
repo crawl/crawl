@@ -2103,46 +2103,28 @@ jewellery_type get_random_ring_type()
 // FIXME: Need to clean up this mess.
 static armour_type _get_random_armour_type(int item_level)
 {
-    // Default (lowest-level) armours.
-    const armour_type defarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                       ARM_RING_MAIL };
 
-    int armtype = RANDOM_ELEMENT(defarmours);
+    // Dummy value for initilization, always changed by the conditional
+    // (and not changing it would trigger an ASSERT)
+    armour_type armtype = NUM_ARMOURS;
 
-    if (x_chance_in_y(11 + item_level, 35))
+    // Secondary armours.
+    if (one_chance_in(5))
     {
-        // Low-level armours.
-        const armour_type lowarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL };
-
-        armtype = RANDOM_ELEMENT(lowarmours);
+                       // Total weight is 30, each slot has a weight of 6
+        armtype = random_choose_weighted(6, ARM_BOOTS,
+                                         6, ARM_CLOAK,
+                                         6, ARM_GLOVES,
+                                         // Head slot
+                                         5, ARM_HELMET,
+                                         1, ARM_HAT,
+                                         // Shield slot
+                                         2, ARM_SHIELD,
+                                         3, ARM_BUCKLER,
+                                         1, ARM_LARGE_SHIELD,
+                                         0);
     }
-
-    if (x_chance_in_y(11 + item_level, 60))
-    {
-        // Medium-level armours.
-        const armour_type medarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR };
-
-        armtype = RANDOM_ELEMENT(medarmours);
-    }
-
-    if (one_chance_in(20) && x_chance_in_y(11 + item_level, 400))
-    {
-        // High-level armours, including troll and some dragon armours.
-        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_ARMOUR,
-                                          ARM_TROLL_HIDE,
-                                          ARM_TROLL_LEATHER_ARMOUR,
-                                          ARM_FIRE_DRAGON_HIDE, ARM_FIRE_DRAGON_ARMOUR,
-                                          ARM_ICE_DRAGON_HIDE,
-                                          ARM_ICE_DRAGON_ARMOUR };
-
-        armtype = RANDOM_ELEMENT(hiarmours);
-    }
-
-    if (one_chance_in(20) && x_chance_in_y(11 + item_level, 500))
+    else if (x_chance_in_y(11 + item_level, 10000))
     {
         // Animal skins and high-level armours, including the rest of
         // the dragon armours.
@@ -2168,31 +2150,50 @@ static armour_type _get_random_armour_type(int item_level)
         if (one_chance_in(200))
             armtype = ARM_CRYSTAL_PLATE_ARMOUR;
     }
-
-    // Secondary armours.
-    if (one_chance_in(5))
+    else if (x_chance_in_y(11 + item_level, 8000))
     {
-        const armour_type secarmours[] = { ARM_SHIELD, ARM_CLOAK, ARM_HELMET,
-                                           ARM_GLOVES, ARM_BOOTS };
+        // High-level armours, including troll and some dragon armours.
+        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_ARMOUR,
+                                          ARM_TROLL_HIDE,
+                                          ARM_TROLL_LEATHER_ARMOUR,
+                                          ARM_FIRE_DRAGON_HIDE,
+                                          ARM_FIRE_DRAGON_ARMOUR,
+                                          ARM_ICE_DRAGON_HIDE,
+                                          ARM_ICE_DRAGON_ARMOUR };
 
-        armtype = RANDOM_ELEMENT(secarmours);
+        armtype = RANDOM_ELEMENT(hiarmours);
+    }
+    else if (x_chance_in_y(11 + item_level, 60))
+    {
+        // Medium-level armours.
+        const armour_type medarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
+                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
+                                           ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR };
 
-        if (armtype == ARM_HELMET && one_chance_in(3))
-        {
-            const armour_type hats[] = { ARM_HAT, ARM_HELMET };
+        armtype = RANDOM_ELEMENT(medarmours);
+    }
+    else if (x_chance_in_y(11 + item_level, 35))
+    {
+        // Low-level armours.
+        const armour_type lowarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
+                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
+                                           ARM_CHAIN_MAIL };
 
-            armtype = RANDOM_ELEMENT(hats);
-        }
-        else if (armtype == ARM_SHIELD)
-        {
-            armtype = random_choose_weighted(333, ARM_SHIELD,
-                                             500, ARM_BUCKLER,
-                                             167, ARM_LARGE_SHIELD,
-                                               0);
-        }
+        armtype = RANDOM_ELEMENT(lowarmours);
+    }
+    else
+    {
+
+        // Default (lowest-level) armours.
+        const armour_type defarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
+                                           ARM_RING_MAIL };
+
+        armtype = RANDOM_ELEMENT(defarmours);
     }
 
-    return static_cast<armour_type>(armtype);
+    ASSERT(armtype != NUM_ARMOURS);
+
+    return armtype;
 }
 
 // Sets item appearance to match brands, if any.
