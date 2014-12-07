@@ -2477,8 +2477,6 @@ static int _player_armour_adjusted_dodge_bonus(int scale)
         / (20 - _player_evasion_size_factor()) / 10;
 
     const int armour_dodge_penalty = you.unadjusted_body_armour_penalty() - 3;
-    dprf("ev_dex %d, dodge_bonus %d, dodge_pen %d", ev_dex, dodge_bonus,
-         armour_dodge_penalty);
     if (armour_dodge_penalty <= 0)
         return dodge_bonus;
 
@@ -2505,21 +2503,11 @@ int player_evasion(ev_ignore_type evit)
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
-    const int adjusted_evasion_penalty =
-        _player_adjusted_evasion_penalty(scale);
-
-    // Adjust dodge bonus for the effects of being suited up in armour.
-    const int armour_adjusted_dodge_bonus =
-        _player_armour_adjusted_dodge_bonus(scale);
-    dprf("aadb: %d", armour_adjusted_dodge_bonus);
-
-    const int adjusted_shield_penalty = you.adjusted_shield_penalty(scale);
-
     const int prestepdown_evasion =
         size_base_ev
-        + armour_adjusted_dodge_bonus
-        - adjusted_evasion_penalty
-        - adjusted_shield_penalty;
+        + _player_armour_adjusted_dodge_bonus(scale)
+        - _player_adjusted_evasion_penalty(scale)
+        - you.adjusted_shield_penalty(scale);
 
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
