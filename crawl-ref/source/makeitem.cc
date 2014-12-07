@@ -2146,9 +2146,6 @@ static armour_type _get_random_armour_type(int item_level)
                                               ARM_QUICKSILVER_DRAGON_ARMOUR, };
 
         armtype = RANDOM_ELEMENT(morehiarmours);
-
-        if (one_chance_in(200))
-            armtype = ARM_CRYSTAL_PLATE_ARMOUR;
     }
     else if (x_chance_in_y(11 + item_level, 8000))
     {
