@@ -846,10 +846,11 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
 
     case ARM_ROBE:
         // Archmagi depends on depth, unlike everything else, because ???
-        if (x_chance_in_y(11, 100) && x_chance_in_y(11 + item_level, 50))
+        if (x_chance_in_y(12, 100) && x_chance_in_y(11 + item_level, 50))
             return SPARM_ARCHMAGI;
 
         return random_choose_weighted(1, SPARM_RESISTANCE,
+                                      2, SPARM_NORMAL,
                                       2, SPARM_COLD_RESISTANCE,
                                       2, SPARM_FIRE_RESISTANCE,
                                       2, SPARM_POSITIVE_ENERGY,
