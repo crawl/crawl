@@ -2160,7 +2160,7 @@ MAP
 ENDMAP
 
 NAME:    xom_butterflies
-TAGS:    temple_overflow_1 temple_overflow_xom transparent partolling
+TAGS:    temple_overflow_1 temple_overflow_xom transparent patrolling
 KFEAT:   _ = altar_xom
 KITEM:   _ = wand of random effects w:40 / any wand
 COLOUR:  . = random
