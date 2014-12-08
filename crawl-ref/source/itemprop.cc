@@ -1086,12 +1086,12 @@ bool is_hard_helmet(const item_def &item)
  */
 brand_type choose_weapon_brand(weapon_type wpn_type)
 {
-    vector<brand_weight_tuple> weights
+    const vector<brand_weight_tuple> weights
         = Weapon_prop[ Weapon_index[wpn_type] ].brand_weights;
     if (!weights.size())
         return SPWPN_NORMAL;
 
-    brand_type *brand = random_choose_weighted(weights);
+    const brand_type *brand = random_choose_weighted(weights);
     ASSERT(brand);
     return *brand;
 }
