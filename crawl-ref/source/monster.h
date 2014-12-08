@@ -178,6 +178,7 @@ public:
     bool gain_exp(int exp, int max_levels_to_gain = 2);
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
+    void maybe_degrade_bone_armour();
 
     void forget_random_spell();
 
