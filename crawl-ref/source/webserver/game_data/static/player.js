@@ -309,12 +309,13 @@ function ($, comm, enums, map_knowledge, messages, options) {
             species_god += " of " + player.god;
         if (player.god == "Xom")
         {
-            if (player.piety_rank == 1)
-                $("#stats_piety").text("- getting BORED");
-            else if (player.piety_rank == 2)
-                $("#stats_piety").text("- BORED");
+            if (player.piety_rank >=0)
+            {
+                $("#stats_piety").text(repeat_string(".",player.piety_rank) + "*"
+                                       + repeat_string(".",5-player.piety_rank));
+            }
             else
-                $("#stats_piety").text("");
+                $("#stats_piety").text("......"); // very special plaything
         }
         else if ((player.piety_rank > 0 || player.god != "")
                  && player.god != "Gozag")
