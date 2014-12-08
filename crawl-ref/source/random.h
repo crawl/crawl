@@ -30,7 +30,7 @@ int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);
 int biased_random2(int max, int n);
 int random2limit(int max, int limit);
-int binomial_generator(unsigned n_trials, unsigned trial_prob);
+int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale = 100);
 bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
 int roll_dice(int num, int size);

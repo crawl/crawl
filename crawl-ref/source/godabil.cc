@@ -2044,7 +2044,7 @@ int fedhas_fungal_bloom()
                 corpse_on_pos = true;
 
                 const int trial_prob = mushroom_prob(*j);
-                const int target_count = 1 + binomial_generator(20, trial_prob);
+                const int target_count = 1 + binomial(20, trial_prob);
                 int seen_per;
                 spawn_corpse_mushrooms(*j, target_count, seen_per,
                                        BEH_GOOD_NEUTRAL, true);

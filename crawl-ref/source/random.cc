@@ -280,17 +280,22 @@ int random2limit(int max, int limit)
     return sum;
 }
 
-// Generate samples from a binomial distribution with n_trials and trial_prob
-// probability of success per trial. trial_prob is an integer less than 100
-// representing the % chance of success.
-// This just evaluates all n trials, there is probably an efficient way of
-// doing this but I'm not much of a statistician. -CAO
-// [0, n_trials]
-int binomial_generator(unsigned n_trials, unsigned trial_prob)
+/** Sample from a binomial distribution.
+ *
+ * This is the number of successes in a sequence of independent trials with
+ * fixed probability.
+ *
+ * @param n_trials The number of trials.
+ * @param trial_prob The numerator of the probability of success of each trial.
+ *                   If greater than scale, the probability is 1.0.
+ * @param scale The denominator of trial_prob, default 100.
+ * @return the number of successes, range [0, n_trials]
+ */
+int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale)
 {
     int count = 0;
     for (unsigned i = 0; i < n_trials; ++i)
-        if (::x_chance_in_y(trial_prob, 100))
+        if (::x_chance_in_y(trial_prob, scale))
             count++;
 
     return count;
