@@ -84,7 +84,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
 
-    can_cleave = attacker != defender && attacker->can_cleave();
+    can_cleave = attacker != defender && attacker->can_cleave(attack_number);
 
     attack_position = attacker->pos();
 }

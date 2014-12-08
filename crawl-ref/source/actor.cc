@@ -900,7 +900,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
          feature_description_at(newpos, false, DESC_A, false));
 }
 
-bool actor::can_cleave() const
+bool actor::can_cleave(int which_attack) const
 {
     if (confused())
         return false;
@@ -912,7 +912,7 @@ bool actor::can_cleave() const
         return true;
     }
 
-    const item_def* weap = weapon();
+    const item_def* weap = weapon(which_attack);
     if (!weap)
         return false;
 
