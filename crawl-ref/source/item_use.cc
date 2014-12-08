@@ -2931,9 +2931,13 @@ void read_scroll(int item_slot)
         break;
 
     case SCR_BLINKING:
+    {
+        const bool safely_cancellable
+            = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
         cancel_scroll = (blink(1000, false, false,
-                               pre_succ_msg, alreadyknown) == -1
+                               pre_succ_msg, safely_cancellable) == -1
                         && alreadyknown);
+    }
         break;
 
     case SCR_TELEPORTATION:
