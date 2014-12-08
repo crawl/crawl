@@ -272,11 +272,7 @@ spret_type cast_revivification(int pow, bool fail)
         fail_check();
         mpr("Your body is healed in an amazingly painful way.");
 
-        int loss = 6;
-        for (int i = 0; i < 9; ++i)
-            if (x_chance_in_y(8, pow))
-                loss++;
-
+        const int loss = 6 + binomial(9, 8, pow);
         dec_max_hp(loss * you.hp_max / 100);
         set_hp(you.hp_max);
 
