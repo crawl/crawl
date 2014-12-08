@@ -507,6 +507,13 @@ void get_cleave_targets(const actor* attacker, const coord_def& def,
     if (!attacker->alive())
         return;
 
+    if (attacker->weapon()
+        && is_unrandom_artefact(*attacker->weapon(), UNRAND_GYRE))
+    {
+        if (actor * target = actor_at(def))
+            targets.push_back(target);
+    }
+
     const coord_def atk = attacker->pos();
     coord_def atk_vector = def - atk;
     const int dir = coinflip() ? -1 : 1;

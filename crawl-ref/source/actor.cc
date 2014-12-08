@@ -6,6 +6,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "attack.h"
 #include "directn.h"
 #include "env.h"
@@ -914,6 +915,9 @@ bool actor::can_cleave() const
     const item_def* weap = weapon();
     if (!weap)
         return false;
+
+    if (is_unrandom_artefact(*weap, UNRAND_GYRE))
+        return true;
 
     return item_attack_skill(*weap) == SK_AXES;
 }

@@ -560,7 +560,6 @@ lajatang of Order
 Long ago Zin bestowed this gift upon a favoured worshipper. It became the
 most prized weapon of the many priests of Zin; after their order was destroyed,
 it fell into disuse and vanished from history.
-
 %%%%
 great mace "Firestarter"
 
@@ -580,4 +579,9 @@ ago. To survive, she now offers tremendous arcane power at a small price: a
 tiny portion of the caster’s life essence, taken alongside the magic used every
 time its wielder casts a spell. Of course - the demon is more than happy to
 suck the life from others, as well.
+%%%%
+quick blades "Gyre" and "Gimble"
+
+Two quick blades joined by a chain. Swinging one compels the wielder to swing
+the other, as if they have minds of their own.
 %%%%
