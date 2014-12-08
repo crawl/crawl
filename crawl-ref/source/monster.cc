@@ -3251,6 +3251,21 @@ int monster::shield_bonus() const
     return sh;
 }
 
+/**
+ * After being hit or blocking an attack, possibly remove the monster's bone
+ * armour (if it has any).
+ *
+ * Currently a 1/4 chance each time.
+ */
+void monster::maybe_degrade_bone_armour()
+{
+    if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
+    {
+        del_ench(ENCH_BONE_ARMOUR);
+        simple_monster_message(this, "'s corpse armour sloughs away.");
+    }
+}
+
 int monster::shield_block_penalty() const
 {
     return 4 * shield_blocks * shield_blocks;
@@ -3261,11 +3276,7 @@ void monster::shield_block_succeeded(actor *attacker)
     actor::shield_block_succeeded(attacker);
 
     ++shield_blocks;
-    if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
-    {
-        del_ench(ENCH_BONE_ARMOUR);
-        simple_monster_message(this, "'s corpse armour sloughs away.");
-    }
+    maybe_degrade_bone_armour();
 }
 
 int monster::shield_bypass_ability(int) const
@@ -6359,12 +6370,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
 
-    if (alive() && has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
-    {
-        del_ench(ENCH_BONE_ARMOUR);
-        mprf("%s corpse armour sloughs away.",
-             apostrophise(name(DESC_THE)).c_str());
-    }
+    if (alive())
+        maybe_degrade_bone_armour();
 }
 
 reach_type monster::reach_range() const
