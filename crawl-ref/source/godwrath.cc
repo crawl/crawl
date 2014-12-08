@@ -2033,15 +2033,9 @@ int gozag_goldify(const item_def &it, int quant_got, bool quiet)
         return 0;
     }
 
-    const int val = item_value(it, true) / it.quantity;
-    double prob = (double)(val - 20) / 100.0;
-    if (prob > 1.0)
-        prob = 1.0;
-
-    int goldified_count = 0;
-    for (int i = 0; i < quant_got; i++)
-        if (decimal_chance(prob))
-            goldified_count++;
+    const unsigned val = item_value(it, true) / it.quantity;
+    // (val - 20)% chance for each item to be goldified.
+    const int goldified_count = binomial(quant_got, val - 20, 100);
 
     if (!goldified_count)
         return goldified_count;
