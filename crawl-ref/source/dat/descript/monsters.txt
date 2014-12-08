@@ -1401,7 +1401,7 @@ accompanied by other unsavoury beings of its ilk.
 %%%%
 hell rat
 
-A unusually large rat with weird knobbly orange skin, glowing with the infernal
+A unusually large rat. Its weird, knobbly orange skin glows with the infernal
 energies that spawned it.
 %%%%
 Hell Sentinel
