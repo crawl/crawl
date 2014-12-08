@@ -775,6 +775,20 @@ bool melee_attack::attack()
     if (can_cleave && !cleaving)
         cleave_setup();
 
+    string dummy;
+    const bool gyre = weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE);
+    if (gyre && !weapon->props.exists(ARTEFACT_NAME_KEY))
+       weapon->props[ARTEFACT_NAME_KEY].get_string() = "quick blades \"Gyre\" and \"Gimble\"";
+    unwind_var<string> gyre_name(gyre ? weapon->props[ARTEFACT_NAME_KEY].get_string()
+                                      : dummy);
+    if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
+    {
+        if (!cleaving)
+            set_artefact_name(*attacker->weapon(), "quick blade \"Gyre\"");
+        else
+            set_artefact_name(*attacker->weapon(), "quick blade \"Gimble\"");
+    }
+
     // Attacker might have died from effects of cleaving handled prior to this
     if (!attacker->alive())
         return false;
