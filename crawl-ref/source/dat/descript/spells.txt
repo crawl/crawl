@@ -1220,6 +1220,7 @@ Singularity spell
 
 This spell compresses space into a gravitational singularity, pulling nearby
 enemies of the caster towards it and warping them violently in the process.
+The caster can only maintain one singularity at a time.
 %%%%
 Siren Song spell
 

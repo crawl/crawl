@@ -39,6 +39,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
+#include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "traps.h"
@@ -1179,6 +1180,13 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
     }
 
     fail_check();
+
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->type == MONS_SINGULARITY && mi->summoner == agent->mid)
+        {
+            simple_monster_message(*mi, " implodes!");
+            monster_die(*mi, KILL_RESET, NON_MONSTER);
+        }
 
     monster* singularity = create_monster(
                                 mgen_data(MONS_SINGULARITY,
