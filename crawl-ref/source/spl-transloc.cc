@@ -1261,7 +1261,7 @@ void singularity_pull(const monster *singularity)
 {
     actor *agent = actor_by_mid(singularity->summoner);
 
-    for (actor_near_iterator ai(singularity, LOS_NO_TRANS); ai; ++ai)
+    for (actor_near_iterator ai(singularity->pos(), LOS_NO_TRANS); ai; ++ai)
     {
         if (*ai == singularity
             || agent && mons_aligned(*ai, agent))
@@ -1310,7 +1310,7 @@ void singularity_pull(const monster *singularity)
 bool fatal_attraction(actor *victim, actor *agent, int pow)
 {
     bool affected = false;
-    for (actor_near_iterator ai(victim, LOS_NO_TRANS); ai; ++ai)
+    for (actor_near_iterator ai(victim->pos(), LOS_NO_TRANS); ai; ++ai)
     {
         if (*ai == victim || *ai == agent || ai->is_stationary())
             continue;
