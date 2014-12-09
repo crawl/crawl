@@ -114,6 +114,7 @@ enum band_type
     BAND_ANUBIS_GUARD,
     BAND_HOLIES,
     BAND_ROBIN,
+    BAND_SPARK_WASPS,
     BAND_RANDOM_SINGLE,
     NUM_BANDS                   // always last
 };

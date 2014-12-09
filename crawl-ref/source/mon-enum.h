@@ -125,6 +125,7 @@ enum attack_flavour
     AF_FIREBRAND,
     AF_CORRODE,
     AF_SCARAB,
+    AF_SHOCK,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

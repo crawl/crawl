@@ -169,6 +169,7 @@ torpor_snail MONS_TORPOR_SNAIL
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
 yellow_wasp MONS_YELLOW_WASP
 red_wasp MONS_RED_WASP
+spark_wasp MONS_SPARK_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
 %rim 0

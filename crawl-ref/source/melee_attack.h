@@ -131,6 +131,8 @@ private:
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
     void apply_black_mark_effects();
+    void electrocute();
+    void paralyse(attack_flavour flavour);
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.

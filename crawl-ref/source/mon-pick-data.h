@@ -365,6 +365,7 @@ static const pop_entry pop_spider[] =
   {  1,  7,   52, SEMI, MONS_BORING_BEETLE },
   {  2,  7,  190, SEMI, MONS_EMPEROR_SCORPION },
   {  2,  7,  155, SEMI, MONS_MOTH_OF_WRATH },
+  {  2, 10,  260, PEAK, MONS_SPARK_WASP },
   {  2, 10,  200, PEAK, MONS_GHOST_MOTH },
   { -1,  5,  193, SEMI, MONS_NO_MONSTER}, // Old worm/cockroach/mite weight
   { 0,0,0,FLAT,MONS_0 }
@@ -1086,6 +1087,7 @@ static const pop_entry pop_depths[] =
   {  1,  7,   50, DOWN, MONS_TENGU_CONJURER },
   {  1,  8,  600, DOWN, MONS_STONE_GIANT },
   {  1,  8,  370, DOWN, MONS_ETTIN },
+  {  1, 10,  250, SEMI, MONS_SPARK_WASP },
   {  1, 12,   60, FLAT, MONS_LICH },
   {  1, 12,   40, FLAT, MONS_FLAYED_GHOST },
   {  1, 14,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },

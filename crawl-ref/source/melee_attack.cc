@@ -2765,6 +2765,78 @@ bool melee_attack::mons_attack_effects()
     return true;
 }
 
+void melee_attack::electrocute()
+{
+    int base_damage = attacker->get_hit_dice()
+                      + random2(attacker->get_hit_dice() / 2);
+
+    special_damage =
+        resist_adjust_damage(defender,
+                             BEAM_ELECTRICITY,
+                             defender->res_elec(),
+                             base_damage);
+    special_damage_flavour = BEAM_ELECTRICITY;
+
+    if (needs_message && base_damage)
+    {
+        mprf("%s %s %s%s",
+             atk_name(DESC_THE).c_str(),
+             attacker->conj_verb("shock").c_str(),
+             defender_name(true).c_str(),
+             attack_strength_punctuation(special_damage).c_str());
+
+        _print_resist_messages(defender, base_damage, BEAM_ELECTRICITY);
+    }
+
+    dprf(DIAG_COMBAT, "Shock damage: %d", special_damage);
+    defender->expose_to_element(BEAM_ELECTRICITY, 2);
+}
+
+void melee_attack::paralyse(attack_flavour flavour)
+{
+    const bool poisonous = flavour == AF_PARALYSE;
+    const int res = poisonous           ? defender->res_poison() :
+                    flavour == AF_SHOCK ? defender->res_elec()
+                                        : 0;
+
+    // Only wasps at the moment, so Zin vitalisation
+    // protects from the paralysis and slow.
+    if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
+    {
+        mprf("Your divine stamina protects you from %s!",
+             poisonous ? "poison" : "paralysis");
+        return;
+    }
+
+    // doesn't affect poison-immune enemies
+    if (poisonous
+        && (defender->res_poison() >= 3
+            || defender->is_monster() && defender->res_poison() >= 1))
+    {
+        return;
+    }
+
+    if (poisonous
+        && (attacker->type == MONS_RED_WASP || one_chance_in(3)))
+    {
+        int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
+                               attacker->get_hit_dice() * 5 / 2);
+        defender->poison(attacker, dmg);
+    }
+
+    int paralyse_roll = (damage_done + special_damage > 4 ? 3 : 20);
+    if (attacker->type == MONS_YELLOW_WASP)
+        paralyse_roll += 3;
+
+    const int flat_bonus  = attacker->type == MONS_YELLOW_WASP ? 0 : 1;
+    const bool strong_result = one_chance_in(paralyse_roll);
+
+    if (strong_result && res <= 0)
+        defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
+    else if (poisonous && (strong_result || res <= 0))
+        defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
+}
+
 void melee_attack::mons_apply_attack_flavour()
 {
     // Most of this is from BWR 4.1.2.
@@ -2850,29 +2922,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ELEC:
-        base_damage = attacker->get_hit_dice()
-                      + random2(attacker->get_hit_dice() / 2);
-
-        special_damage =
-            resist_adjust_damage(defender,
-                                 BEAM_ELECTRICITY,
-                                 defender->res_elec(),
-                                 base_damage);
-        special_damage_flavour = BEAM_ELECTRICITY;
-
-        if (needs_message && base_damage)
-        {
-            mprf("%s %s %s%s",
-                 atk_name(DESC_THE).c_str(),
-                 attacker->conj_verb("shock").c_str(),
-                 defender_name(true).c_str(),
-                 attack_strength_punctuation(special_damage).c_str());
-
-            _print_resist_messages(defender, base_damage, BEAM_ELECTRICITY);
-        }
-
-        dprf(DIAG_COMBAT, "Shock damage: %d", special_damage);
-        defender->expose_to_element(BEAM_ELECTRICITY, 2);
+        electrocute();
         break;
 
     case AF_SCARAB:
@@ -2996,43 +3046,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_PARALYSE:
-    {
-        // Only wasps at the moment, so Zin vitalisation
-        // protects from the paralysis and slow.
-        if (you.duration[DUR_DIVINE_STAMINA] > 0)
-        {
-            mpr("Your divine stamina protects you from poison!");
-            break;
-        }
-
-        // doesn't affect poison-immune enemies
-        if (defender->res_poison() >= 3
-            || defender->is_monster() && defender->res_poison() >= 1)
-        {
-            break;
-        }
-
-        if (attacker->type == MONS_RED_WASP || one_chance_in(3))
-        {
-            int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
-                                   attacker->get_hit_dice() * 5 / 2);
-            defender->poison(attacker, dmg);
-        }
-
-        int paralyse_roll = (damage_done > 4 ? 3 : 20);
-        if (attacker->type == MONS_YELLOW_WASP)
-            paralyse_roll += 3;
-
-        const int flat_bonus  = attacker->type == MONS_RED_WASP ? 1 : 0;
-        const bool strong_result = one_chance_in(paralyse_roll);
-
-        if (strong_result && defender->res_poison() <= 0)
-            defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
-        else if (strong_result || defender->res_poison() <= 0)
-            defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
-
+        paralyse(flavour);
         break;
-    }
 
     case AF_ACID:
         splash_defender_with_acid(3);
@@ -3306,6 +3321,11 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         defender->expose_to_element(BEAM_FIRE, 2);
+        break;
+
+    case AF_SHOCK:
+        electrocute();
+        paralyse(flavour);
         break;
     }
 }
