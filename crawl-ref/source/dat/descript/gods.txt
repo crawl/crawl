@@ -442,13 +442,13 @@ oklobs.
 %%%%
 Gozag wrath
 
-Gozag considers taking actions against unfaithful business partners necessary
-for the good of the Gozag monopoly. Former followers will find that any new
-items in the dungeon may be bought for an insultingly low sum, and any gold
-found in its pure form will be taxed by the Greedy. Furthermore, Gozag bribes
-and incites the monster of the dungeon, giving them potion effects such as
-berserking or invisibility, while petitioning for any potions consumed by
-victims to fail in their effects.
+The first of Gozag's punishments is commercial: all shops opened through
+Gozag's intervention shut their doors forever. The disloyal are advised to
+finish their shopping before they launch their betrayal. Other punishments are
+more pertinent to the penurious: potions fail when they are needed most, or are
+used to aid heretics' enemies. Newly-found gold is stolen out of their hands,
+and other, useful items are transformed *into* gold - little use that it is
+without Gozag's sponsorship!
 %%%%
 Jiyva wrath
 
