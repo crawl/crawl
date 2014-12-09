@@ -3679,7 +3679,7 @@ int check_stealth()
             // Merfolk can sneak up on monsters underwater -- bwr
             if (you.fishtail || you.species == SP_OCTOPODE)
                 stealth += STEALTH_PIP;
-            else if (!you.can_swim())
+            else if (!you.can_swim() && !you.extra_balanced())
                 stealth /= 2;       // splashy-splashy
         }
 
