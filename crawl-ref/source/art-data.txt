@@ -1175,8 +1175,7 @@ NAME:    quick blades "Gyre" and "Gimble"
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
-# XXX
-TILE_EQ: knife_of_accuracy
+TILE_EQ: gyre
 PLUS:    5
 BRAND:   SPWPN_VORPAL
 DEX:     -3
