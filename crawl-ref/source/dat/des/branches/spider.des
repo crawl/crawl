@@ -1441,7 +1441,7 @@ PLACE:  Spider:$
 WEIGHT: 20
 ORIENT: northwest
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
-MONS:   ghost moth, hornet / w:5 wasp, emperor scorpion
+MONS:   ghost moth, hornet / w:5 wasp, emperor scorpion / w:5 spark wasp
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   trapdoor spider / nothing
 MONS:   ghost moth
@@ -1540,7 +1540,7 @@ KITEM:  *d = potion of ambrosia ident:type
 KMONS:  * = emperor scorpion
 MONS:   ghost moth, ghost moth / moth of wrath
 MONS:   wasp / hornet / w:5 nothing
-MONS:   w:2 demonic crawler / w:4 emperor scorpion
+MONS:   w:2 demonic crawler / w:4 emperor scorpion / w:1 spark wasp
 MONS:   tarantella / w:22 wolf spider / jumping spider / w:8 demonic crawler / \
         w:7 nothing
 MONS:   trapdoor spider / nothing
@@ -1586,7 +1586,7 @@ ORIENT: east
 NSUBST: O = 1:O / *:P
 KITEM:  O = gossamer rune of Zot
 KITEM:  P = potion of ambrosia ident:type
-MONS:   ghost moth, moth of wrath, emperor scorpion
+MONS:   ghost moth, moth of wrath, emperor scorpion / w:5 spark wasp
 MONS:   wolf spider w:11 / redback / tarantella / jumping spider
 MONS:   orb spider / hornet, trapdoor spider
 NSUBST: 1 = 2:1 / 1:1.. / *:4, 4 = 20:4 / 16:. / * = 44...
@@ -1635,7 +1635,7 @@ ORIENT:  west
 NSUBST:  d = 1:O / 3:d / *:.
 KITEM:   O = gossamer rune of Zot
 ITEM:    potion of ambrosia ident:type
-MONS:    ghost moth, moth of wrath, emperor scorpion
+MONS:    ghost moth, moth of wrath, emperor scorpion / w:5 spark wasp
 MONS:    hornet / wasp w:2, orb spider
 MONS:    wolf spider, redback / tarantella
 KMONS:   8 = jumping spider / demonic crawler
@@ -1689,7 +1689,7 @@ ENDMAP
 #Arachne Lair Rune Vault
 NAME:   johnstein_spider_rune_arachne_lair
 TAGS:   no_monster_gen
-KMONS:  e = emperor scorpion
+KMONS:  e = emperor scorpion / spark wasp w:5
 KMONS:  m = moth of wrath / ghost moth w:40 / nothing w:10
 KMONS:  p = wasp w:30 / hornet
 KMONS:  o = orb spider w:40 / demonic crawler

@@ -1432,6 +1432,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_VAMPIRE_MOSQUITO;
     case MONS_HORNET:
         return TILEP_MONS_HORNET;
+    case MONS_SPARK_WASP:
+        return TILEP_MONS_SPARK_WASP;
     case MONS_GHOST_MOTH:
         return TILEP_MONS_GHOST_MOTH;
     case MONS_MOTH_OF_WRATH:
@@ -3722,6 +3724,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_YELLOW_WASP;
     case MONS_HORNET:
         return TILE_CORPSE_RED_WASP;
+    case MONS_SPARK_WASP:
+        return TILE_CORPSE_SPARK_WASP;
     case MONS_GHOST_MOTH:
         return TILE_CORPSE_GHOST_MOTH;
     case MONS_MOTH_OF_WRATH:

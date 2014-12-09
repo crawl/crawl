@@ -2233,6 +2233,13 @@ soul eater
 This demon looks like a malignantly shifting shadow gliding through the air. It
 radiates an intense aura of negative force.
 %%%%
+spark wasp
+
+A profoundly unnatural insect covered in vaguely metallic plates. Its stinger
+crackles with electricity, capable of delivering a powerful shock to unwary
+victims, and is capable of closing the distance with them at shockingly
+lethal speed.
+%%%%
 spatial maelstrom
 
 A malevolent rift in reality, dissolving all terrain it passes by into swirling

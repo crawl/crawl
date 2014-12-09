@@ -2930,6 +2930,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = random_range(2, 4);
         break;
 
+    case MONS_SPARK_WASP:
+        if (you.where_are_you != BRANCH_DEPTHS)
+            break;
+        band = BAND_SPARK_WASPS;
+        band_size = 2 + random2(4);
+        break;
+
     default: ;
     }
 
@@ -3566,6 +3573,9 @@ static monster_type _band_member(band_type band, int which,
                                        1, MONS_FIRE_GIANT,
                                        1, MONS_FROST_GIANT,
                                        0);
+
+    case BAND_SPARK_WASPS:
+        return MONS_SPARK_WASP;
 
     case BAND_RANDOM_SINGLE:
     {
