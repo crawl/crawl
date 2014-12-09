@@ -6825,9 +6825,9 @@ bool monster::is_projectile() const
 
 bool monster::is_jumpy() const
 {
-    return type == MONS_JUMPING_SPIDER
+    return mons_class_flag(type, M_JUMPY)
         || mons_class_is_chimeric(type)
-            && get_chimera_legs(this) == MONS_JUMPING_SPIDER;
+            && mons_class_flag(get_chimera_legs(this), M_JUMPY);
 }
 
 int monster::aug_amount() const

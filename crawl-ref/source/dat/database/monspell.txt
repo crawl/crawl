@@ -598,6 +598,10 @@ insubstantial wisp cast
 Blink insubstantial wisp cast
 
 __NONE
+%%%%%
+Electrical Bolt storm strider cast
+
+@The_monster@ spits a bolt of @beam@ @at@ @target@!
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

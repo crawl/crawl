@@ -131,6 +131,7 @@ wolf_spider MONS_WOLF_SPIDER
 trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
 orb_spider MONS_ORB_SPIDER
+storm_strider MONS_STORM_STRIDER
 %sdir mon/demons
 demonic_crawler MONS_DEMONIC_CRAWLER
 %sdir mon/undead

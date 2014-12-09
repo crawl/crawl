@@ -2554,6 +2554,9 @@ enum monster_type                      // menv[].type
     MONS_ORB_SPIDER,
     MONS_TARANTELLA,
     MONS_REDBACK,
+#if TAG_MAJOR_VERSION > 34
+    MONS_STORM_STRIDER,
+#endif
     MONS_SCORPION,
     MONS_EMPEROR_SCORPION,
     MONS_MOTH,                  // genus
@@ -3308,6 +3311,7 @@ enum monster_type                      // menv[].type
     MONS_SINGULARITY,
 
     MONS_SPARK_WASP,
+    MONS_STORM_STRIDER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

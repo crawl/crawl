@@ -2389,6 +2389,13 @@ A huge and very powerful dragon, with hide of thick matte scales, almost like
 blue rubber, and enormous scaly wings, along which sparks are continually
 crackling.
 %%%%
+storm strider
+
+An unnaturally large insect, born from lands of harsh storm-ravaged
+permafrost. They are capable of gliding effortlessly across water,
+outstripping most of their prey before tearing them apart with a furious
+blizzard of ice and electricity.
+%%%%
 sun demon
 
 A demonic figure shining with the heat and fury of a fallen star.

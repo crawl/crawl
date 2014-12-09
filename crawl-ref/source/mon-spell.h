@@ -2107,4 +2107,13 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DISCHARGE, 32, MON_SPELL_NATURAL },
       }
     },
+
+    {  MST_STORM_STRIDER,
+      {
+       { SPELL_ELECTRICAL_BOLT, 29, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+       { SPELL_FLASH_FREEZE, 29, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+       { SPELL_BLINK_CLOSE, 29, MON_SPELL_NATURAL },
+       { SPELL_BLINK_AWAY, 29, MON_SPELL_NATURAL },
+      }
+    },
 };

@@ -364,6 +364,7 @@ static const pop_entry pop_spider[] =
   {  1,  7,   89, SEMI, MONS_BOULDER_BEETLE },
   {  1,  7,   52, SEMI, MONS_BORING_BEETLE },
   {  2,  7,  190, SEMI, MONS_EMPEROR_SCORPION },
+  {  2,  7,  190, SEMI, MONS_STORM_STRIDER },
   {  2,  7,  155, SEMI, MONS_MOTH_OF_WRATH },
   {  2, 10,  260, PEAK, MONS_SPARK_WASP },
   {  2, 10,  200, PEAK, MONS_GHOST_MOTH },

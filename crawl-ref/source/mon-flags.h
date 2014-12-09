@@ -151,7 +151,8 @@ const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
 // hybridized monster composed of other monster parts
 const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
-                                   //(uint64_t)1<<50;
+// jumps instead of blinks
+const uint64_t M_JUMPY             = (uint64_t)1<<50;
 
 // monster is a projectile (just OOD right now)
 const uint64_t M_PROJECTILE        = (uint64_t)1<<51;
