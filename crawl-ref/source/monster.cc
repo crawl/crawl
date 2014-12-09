@@ -272,21 +272,6 @@ bool monster::submerged() const
     return has_ench(ENCH_SUBMERGED);
 }
 
-bool monster::extra_balanced_at(const coord_def p) const
-{
-    const dungeon_feature_type grid = grd(p);
-    return (mons_genus(type) == MONS_DRACONIAN
-            && draco_or_demonspawn_subspecies(this) == MONS_GREY_DRACONIAN)
-                || grid == DNGN_SHALLOW_WATER
-                   && (mons_genus(type) == MONS_NAGA // tails, not feet
-                       || body_size(PSIZE_BODY) >= SIZE_LARGE);
-}
-
-bool monster::extra_balanced() const
-{
-    return extra_balanced_at(pos());
-}
-
 /**
  * Monster floundering conditions.
  *
@@ -306,8 +291,7 @@ bool monster::floundering_at(const coord_def p) const
                 && mons_primary_habitat(this) != HT_WATER
                 // Use real_amphibious to detect giant non-water monsters in
                 // deep water, who flounder despite being treated as amphibious.
-                && mons_habitat(this, true) != HT_AMPHIBIOUS
-                && !extra_balanced_at(p)))
+                && mons_habitat(this, true) != HT_AMPHIBIOUS))
            && !cannot_fight()
            && ground_level();
 }

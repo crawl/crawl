@@ -237,8 +237,6 @@ public:
     bool        can_drown() const;
     bool        floundering_at(const coord_def p) const;
     bool        floundering() const;
-    bool        extra_balanced_at(const coord_def p) const;
-    bool        extra_balanced() const;
     bool        can_pass_through_feat(dungeon_feature_type grid) const;
     bool        is_habitable_feat(dungeon_feature_type actual_grid) const;
     bool        shove(const char* name = "");
