@@ -5432,7 +5432,8 @@ bool monster::can_mutate() const
     if (type == MONS_CHAOS_SPAWN)
         return false;
 
-    // cosmetic tile mutations
+    // Abominations re-randomize their tile when mutated. They do not gain the
+    // malmutate status or experience any other non-cosmetic effect.
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
         return true;
 
@@ -5452,7 +5453,8 @@ bool monster::can_polymorph() const
     if (type == MONS_CHAOS_SPAWN)
         return true;
 
-    // like all undead, can't be polymorphed (but can 'mutate')
+    // Abominations re-randomize their tile when mutated, so can_mutate returns
+    // true for them. Like all undead, they can't be polymorphed.
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
         return false;
 
@@ -5482,7 +5484,8 @@ bool monster::malmutate(const string &/*reason*/)
     if (!can_mutate())
         return false;
 
-    // tile change, already mutated wrecks
+    // Abominations re-randomize their tile when mutated. They do not gain the
+    // malmutate status or experience any other non-cosmetic effect.
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
     {
 #ifdef USE_TILE
