@@ -345,6 +345,7 @@ static const pop_entry pop_spider[] =
   {  1,  6,  155, SEMI, MONS_MOTH_OF_WRATH },
   {  1,  9,  300, SEMI, MONS_ENTROPY_WEAVER },
   {  1,  9,  200, PEAK, MONS_GHOST_MOTH },
+  {  2, 10,  260, PEAK, MONS_SPARK_WASP },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1040,6 +1041,7 @@ static const pop_entry pop_depths[] =
   {  1,  7,  100, FALL, MONS_TENGU_CONJURER },
   {  1,  8,  600, FALL, MONS_STONE_GIANT },
   {  1,  8,  370, FALL, MONS_ETTIN },
+  {  1, 10,  250, SEMI, MONS_SPARK_WASP },
   {  1, 12,   60, FLAT, MONS_LICH },
   {  1, 12,   40, FLAT, MONS_FLAYED_GHOST },
   {  1, 14,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },
