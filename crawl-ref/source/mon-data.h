@@ -2326,9 +2326,6 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 {
-    // A demonically controlled mass of undead flesh theme-wise, this makes
-    // them MH_DEMONIC|MH_UNDEAD, but this is mostly the same as just
-    // MH_UNDEAD (save for some god interactions).
     MONS_ABOMINATION_SMALL, 'x', LIGHTRED, "small abomination",
     M_NO_REGEN,
     MR_NO_FLAGS,
@@ -2341,7 +2338,6 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 {
-    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_CRAWLING_CORPSE, 'x', BROWN, "crawling corpse",
     M_NO_EXP_GAIN | M_NO_REGEN,
     mrd(MR_RES_COLD, 2),
@@ -2354,7 +2350,6 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 {
-    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_MACABRE_MASS, 'x', BROWN, "macabre mass",
     M_NO_EXP_GAIN | M_NO_REGEN,
     mrd(MR_RES_COLD, 2),
@@ -4232,7 +4227,6 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 // large abominations ('X')
 {
-    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_ABOMINATION_LARGE, 'X', LIGHTRED, "large abomination",
     M_NO_REGEN,
     MR_NO_FLAGS,
