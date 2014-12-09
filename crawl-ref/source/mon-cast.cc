@@ -1546,6 +1546,10 @@ static bool _animate_dead_okay(spell_type spell)
     if (god_hates_spell(spell, you.religion))
         return false;
 
+    // Annoying to drag around hordes of the undead as well as the living.
+    if (you_worship(GOD_BEOGH))
+        return false;
+
     return true;
 }
 
