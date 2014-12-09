@@ -413,7 +413,7 @@ static void _grunt(string &txt)
          "smash puny caster"},
         {"appreciates your killing of a holy being",
          "smash puny angel"},
-        {"appreciates your kill", "screams: ANNIHILATED"},
+        {"is honoured by your kill", "screams: ANNIHILATED"},
         {"You pass out from exhaustion.", "POWER NAP!!!"},
         {"You die...", "rip"},
         {"LOW HITPOINT WARNING", "don't die"},
