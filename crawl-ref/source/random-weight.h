@@ -8,7 +8,7 @@
  * @tparam  V  A map, vector of pairs, etc., with the values of the
  *             map or the second elements of the pairs being integer
  *             weights.
- *             
+ *
  * @param   choices  The collection of choice-weight pairs to choose from.
  *
  * @return  A pointer to the item in the chosen pair, or nullptr if all
