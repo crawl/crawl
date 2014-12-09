@@ -532,7 +532,6 @@ public:
     bool        swimming() const;
     bool        submerged() const;
     bool        floundering() const;
-    bool        extra_balanced() const;
     bool        shove(const char* feat_name = "");
     bool        can_pass_through_feat(dungeon_feature_type grid) const;
     bool        is_habitable_feat(dungeon_feature_type actual_grid) const;

@@ -132,20 +132,7 @@ bool player::submerged() const
 
 bool player::floundering() const
 {
-    return in_water() && !can_swim() && !extra_balanced();
-}
-
-bool player::extra_balanced() const
-{
-    const dungeon_feature_type grid = grd(pos());
-    return species == SP_GREY_DRACONIAN
-              || form == TRAN_TREE
-              || grid == DNGN_SHALLOW_WATER
-                  && (species == SP_NAGA // tails, not feet
-                      || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                  && (form == TRAN_LICH || form == TRAN_STATUE
-                      || form == TRAN_SHADOW
-                      || !form_changed_physiology());
+    return in_water() && !can_swim();
 }
 
 int player::get_hit_dice() const
