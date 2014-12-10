@@ -1334,7 +1334,7 @@ enum dungeon_char_type
 //      update docs/develop/levels/syntax.txt with the new symbol.
 enum dungeon_feature_type
 {
-    DNGN_UNSEEN,
+    DNGN_UNSEEN = 0,                   // must be zero
     DNGN_CLOSED_DOOR,
     DNGN_RUNED_DOOR,
     DNGN_SEALED_DOOR,
