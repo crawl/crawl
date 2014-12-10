@@ -1926,32 +1926,21 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
 int attack::player_stab_weapon_bonus(int damage)
 {
     int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
-    const int tier = player_stab_tier();
 
-    switch (tier)
+    if (player_good_stab())
     {
-    case 2:
-    {
-        int bonus = (you.dex() * (stab_skill + 100)) / 500;
-
         // We might be unarmed if we're using the boots of the Assassin.
-        if (!using_weapon() || weapon->sub_type != WPN_DAGGER)
-            bonus /= 2;
+        const bool extra_good = using_weapon() && weapon->sub_type == WPN_DAGGER;
+        int bonus = you.dex() * (stab_skill + 100) / (extra_good ? 500 : 1000);
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
         damage += bonus;
-    }
-    // fall through
-    case 1:
-        damage *= 10 + div_rand_round(stab_skill, 100 *
-                       (stab_bonus + (tier == 2 ? 0 : 2)));
+        damage *= 10 + div_rand_round(stab_skill, 100 * stab_bonus);
         damage /= 10;
-        // fall through
-    default:
-        damage *= 12 + div_rand_round(stab_skill, 100 * stab_bonus);
-        damage /= 12;
-        break;
     }
+
+    damage *= 12 + div_rand_round(stab_skill, 100 * stab_bonus);
+    damage /= 12;
 
     return damage;
 }

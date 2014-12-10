@@ -3514,7 +3514,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_CONFUSION:
-        confuse_player(3 + random2(ench_power));
+        confuse_player(5 + random2(3));
         obvious_effect = true;
         break;
 
@@ -3541,7 +3541,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_ENSLAVE:
         mprf(MSGCH_WARN, "Your will is overpowered!");
-        confuse_player(3 + random2(ench_power));
+        confuse_player(5 + random2(3));
         obvious_effect = true;
         break;     // enslavement - confusion?
 
@@ -3599,17 +3599,6 @@ void bolt::affect_player_enchantment(bool resistible)
         if (aux_source.empty())
             aux_source = "by dispel undead";
 
-        // reduce damage for non-hungry vampires
-        if (you.undead_state() == US_SEMI_UNDEAD)
-        {
-            if (you.hunger_state == HS_ENGORGED)
-                damage.size /= 2;
-            else if (you.hunger_state > HS_SATIATED)
-            {
-                damage.size *= 2;
-                damage.size /= 3;
-            }
-        }
         internal_ouch(damage.roll());
         obvious_effect = true;
         break;
@@ -3760,6 +3749,11 @@ void bolt::affect_player_enchantment(bool resistible)
         obvious_effect = true;
         nasty = false;
         nice  = true;
+        break;
+
+    case BEAM_ATTRACT:
+        if (fatal_attraction(&you, agent(), ench_power))
+            obvious_effect = true;
         break;
 
     default:
@@ -5098,6 +5092,7 @@ bool bolt::has_saving_throw() const
     case BEAM_IGNITE_POISON:
     case BEAM_AGILITY:
     case BEAM_RESISTANCE:
+    case BEAM_ATTRACT:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5723,6 +5718,17 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                 obvious_effect = true;
         }
         return MON_AFFECTED;
+
+    case BEAM_ATTRACT:
+    {
+        const bool could_see = you.can_see(mon);
+        if (fatal_attraction(mon, agent(), ench_power)
+            && (could_see || you.can_see(mon)))
+        {
+            obvious_effect = true;
+        }
+        return MON_AFFECTED;
+    }
 
     default:
         break;
@@ -6556,6 +6562,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
     case BEAM_DEATH_RATTLE:          return "breath of the dead";
     case BEAM_RESISTANCE:            return "resistance";
+    case BEAM_ATTRACT:               return "attraction";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

@@ -111,9 +111,9 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CONFUSING_TOUCH,
     SPELL_CONFUSE,
     SPELL_PETRIFY,
-    SPELL_LEDAS_LIQUEFACTION,
     SPELL_ENGLACIATION,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_GRAVITAS,
 },
 
 {   // Book of Changes
@@ -210,6 +210,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
     SPELL_SUMMON_FOREST,
+    SPELL_GRAVITAS,
 },
 
 {   // Book of Envenomations
@@ -223,7 +224,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RECALL,
     SPELL_ANIMATE_DEAD,
     SPELL_CONTROL_UNDEAD,
-    SPELL_BONE_ARMOUR,
+    SPELL_CIGOTUVIS_EMBRACE,
     SPELL_DEATH_CHANNEL,
     SPELL_SIMULACRUM,
 },
@@ -263,6 +264,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SHATTER,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Wizardry
     SPELL_AGONY,
     SPELL_FORCE_LANCE,
@@ -270,6 +272,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
 },
+#endif
 
 {   // Book of Power
     SPELL_FULMINANT_PRISM,
@@ -278,6 +281,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
     SPELL_IOOD,
+    SPELL_SPELLFORGED_SERVITOR,
 },
 
 {   // Book of Cantrips
@@ -290,12 +294,12 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_APPORTATION,
-    SPELL_BLINK,
     SPELL_TUKIMAS_DANCE,
     SPELL_INTOXICATE,
+    SPELL_INVISIBILITY
 },
 
-{   // Plane Papyrus
+{   // Akashic Record
     SPELL_DISPERSAL,
     SPELL_CONTROLLED_BLINK,
     SPELL_MALIGN_GATEWAY,

@@ -42,6 +42,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p,
                         bool silent = false);
 void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
+bool move_item_to_inv(item_def& item);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
 bool merge_items_into_inv(const item_def &it, int quant_got, char &inv_slot,
                           bool quiet = false);
@@ -167,7 +168,7 @@ public:
     operator bool() const;
     item_def& operator *() const;
     item_def* operator->() const;
-    int link() const;
+    int index() const;
 
     const stack_iterator& operator ++ ();
     stack_iterator operator ++ (int);

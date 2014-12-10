@@ -2894,9 +2894,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     case HINT_CLOUD_WARNING:
         text << "Rather than step into this cloud and hurt yourself, you should "
-                "try to step around it or wait it out with <w>%</w> or <w>%</w>.";
+                "say <w>N</w>o and either wait for a few turns to see if it "
+                "vanishes (with <w>%</w>), or just step around it.";
         cmd.push_back(CMD_WAIT);
-        cmd.push_back(CMD_REST);
         break;
     case HINT_ANIMATE_CORPSE_SKELETON:
         text << "As long as a monster has a skeleton, Animate Skeleton also "

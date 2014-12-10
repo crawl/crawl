@@ -2443,6 +2443,49 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     return prescaled_ev;
 }
 
+/**
+ * What is the player's bonus to EV from dodging when not paralyzed, after
+ * accounting for size & body armour penalties?
+ *
+ * First, calculate base dodge bonus (linear with dodging * stepdowned dex),
+ * and armour dodge penalty (base armour evp, increased for small races &
+ * decreased for large, then with a magic "3" subtracted from it to make the
+ * penalties not too harsh).
+ *
+ * If the player's strength is greater than the armour dodge penalty, return
+ *      base dodge * (1 - dodge_pen / (str*2)).
+ * E.g., if str is twice dodge penalty, return 3/4 of base dodge. If
+ * str = dodge_pen * 4, return 7/8...
+ *
+ * If str is less than dodge penalty, return
+ *      base_dodge * str / (dodge_pen * 2).
+ * E.g., if str = dodge_pen / 2, return 1/4 of base dodge. if
+ * str = dodge_pen / 4, return 1/8...
+ *
+ * For either equation, if str = dodge_pen, the result is base_dodge/2.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A bonus to EV, multiplied by the scale.
+ */
+static int _player_armour_adjusted_dodge_bonus(int scale)
+{
+    // stepdowns at 10 and 24 dex; the last two parameters are not important.
+    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
+
+    const int dodge_bonus =
+        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
+        / (20 - _player_evasion_size_factor()) / 10;
+
+    const int armour_dodge_penalty = you.unadjusted_body_armour_penalty() - 3;
+    if (armour_dodge_penalty <= 0)
+        return dodge_bonus;
+
+    const int str = max(1, you.strength());
+    if (armour_dodge_penalty >= str)
+        return dodge_bonus * str / (armour_dodge_penalty * 2);
+    return dodge_bonus - dodge_bonus * armour_dodge_penalty / (str * 2);
+}
+
 // Total EV for player using the revised 0.6 evasion model.
 int player_evasion(ev_ignore_type evit)
 {
@@ -2460,37 +2503,11 @@ int player_evasion(ev_ignore_type evit)
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
-    const int adjusted_evasion_penalty =
-        _player_adjusted_evasion_penalty(scale);
-
-    // The last two parameters are not important.
-    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
-
-    const int dodge_bonus =
-        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
-        / (20 - size_factor) / 10;
-
-    // [ds] Dodging penalty for being in high EVP armour, almost
-    // identical to v0.5/4.1 penalty, but with the EVP discount being
-    // 1 instead of 0.5 so that leather armour is fully discounted.
-    // The 1 EVP of leather armour may still incur an
-    // adjusted_evasion_penalty, however.
-    const int armour_dodge_penalty = max(0,
-        (10 * you.adjusted_body_armour_penalty(scale, true)
-         - 30 * scale)
-        / max(1, (int) you.strength()));
-
-    // Adjust dodge bonus for the effects of being suited up in armour.
-    const int armour_adjusted_dodge_bonus =
-        max(0, dodge_bonus - armour_dodge_penalty);
-
-    const int adjusted_shield_penalty = you.adjusted_shield_penalty(scale);
-
     const int prestepdown_evasion =
         size_base_ev
-        + armour_adjusted_dodge_bonus
-        - adjusted_evasion_penalty
-        - adjusted_shield_penalty;
+        + _player_armour_adjusted_dodge_bonus(scale)
+        - _player_adjusted_evasion_penalty(scale)
+        - you.adjusted_shield_penalty(scale);
 
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
@@ -3631,8 +3648,8 @@ int check_stealth()
     {
         // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
         // Now 2 * EP^2 / 3 after EP rescaling.
-        const int ep = -property(*arm, PARM_EVASION);
-        const int penalty = 2 * ep * ep / 3;
+        const int evp = you.unadjusted_body_armour_penalty();
+        const int penalty = evp * evp * 2 / 3;
 #if 0
         dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
 #endif
@@ -5380,13 +5397,16 @@ void dec_ambrosia_player(int delay)
     you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
 
     // 3-5 per turn, 9-50 over (3-10) turns
-    const int restoration = 3 + random2(3);
+    const int hp_restoration = 3 + random2(3);
+    const int mp_restoration = 3 + random2(3);
+
     if (!you.duration[DUR_DEATHS_DOOR])
     {
         const int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
-        inc_hp(div_rand_round(restoration * mut_factor, 3));
+        inc_hp(div_rand_round(hp_restoration * mut_factor, 3));
     }
-    inc_mp(restoration);
+
+    inc_mp(mp_restoration);
 
     if (!you.duration[DUR_AMBROSIA])
         mpr("You feel less invigorated.");
@@ -5982,10 +6002,6 @@ bool player::can_swim(bool permanently) const
 
 int player::visible_igrd(const coord_def &where) const
 {
-    // shop hack, etc.
-    if (where.x == 0)
-        return NON_ITEM;
-
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
             && !species_likes_water(species)))
@@ -6208,32 +6224,34 @@ void player::ablate_deflection()
     }
 }
 
+/**
+ * What's the base value of the penalties the player recieves from their
+ * body armour?
+ *
+ * Used as the base for adjusted armour penalty calculations, as well as for
+ * stealth penalty calculations.
+ *
+ * @return  The player's body armour's PARM_EVASION, if any.
+ */
 int player::unadjusted_body_armour_penalty() const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
     if (!body_armour)
         return 0;
 
-    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
-    return base_ev_penalty;
+    return -property(*body_armour, PARM_EVASION);
 }
 
-// The EV penalty to the player for their worn body armour.
-int player::adjusted_body_armour_penalty(int scale, bool use_size) const
+/**
+ * The encumbrance penalty to the player for their worn body armour.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based quadratically on body armour
+ *                  encumbrance.
+ */
+int player::adjusted_body_armour_penalty(int scale) const
 {
     const int base_ev_penalty = unadjusted_body_armour_penalty();
-    if (!base_ev_penalty)
-        return 0;
-
-    if (use_size)
-    {
-        const int size = body_size(PSIZE_BODY);
-
-        const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
-
-        return max(0, scale * base_ev_penalty
-                      - size_bonus_factor * base_ev_penalty);
-    }
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
     return 2 * base_ev_penalty * base_ev_penalty
@@ -6243,7 +6261,12 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
            / 450;
 }
 
-// The EV penalty to the player for wearing their current shield.
+/**
+ * The encumbrance penalty to the player for their worn shield.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based on shield weight.
+ */
 int player::adjusted_shield_penalty(int scale) const
 {
     const item_def *shield_l = slot_item(EQ_SHIELD, false);
@@ -8313,18 +8336,6 @@ bool player_has_orb()
     return you.char_direction == GDT_ASCENDING;
 }
 
-/**
- * Invoke this each time you wish to test MUT_BLURRY_VISION.0
- * @return  True if the player fails to read things.
- */
-bool does_vision_blur()
-{
-    // "Ashenzari keeps your vision clear" corrects for blurry vision.
-    return player_mutation_level(MUT_BLURRY_VISION)
-        && !in_good_standing(GOD_ASHENZARI, 2)
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5);
-}
-
 bool player::form_uses_xl() const
 {
     // No body parts that translate in any way to something fisticuffs could
@@ -8788,7 +8799,7 @@ void player_close_door(coord_def doorpos)
         if (monster* mon = monster_at(dc))
         {
             const bool mons_unseen = !you.can_see(mon);
-            if (mons_unseen || mons_is_projectile(mon))
+            if (mons_unseen || mons_is_object(mon->type))
             {
                 mprf("Something is blocking the %s!", waynoun);
                 // No free detection!
@@ -8951,7 +8962,7 @@ void player::maybe_degrade_bone_armour()
         return;
 
     const int numerator = attribute[ATTR_BONE_ARMOUR] + 5 * BONE_ARMOUR_DIV;
-    const int power = max(1, calc_spell_power(SPELL_BONE_ARMOUR, true));
+    const int power = max(1, calc_spell_power(SPELL_CIGOTUVIS_EMBRACE, true));
     const int denom = min(power * 3, numerator * 27);
     const bool degrade_armour = x_chance_in_y(numerator, denom);
     if (!degrade_armour)

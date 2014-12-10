@@ -2116,8 +2116,9 @@ DEPTH:  D:2-, Depths
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
 TAGS:   uniq_altar_xom
 KFEAT:  _ = altar_xom
-MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
-MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
+MONS:   orc; club ego:chaos ident:type / orc; dagger ego:chaos ident:type
+MONS:   orc; spear ego:chaos ident:type / gnoll; club ego:chaos ident:type
+MONS:   gnoll; dagger ego:chaos ident:type / gnoll; spear ego:chaos ident:type
 MONS:   place:D:1-8
 NSUBST: ' = 1:_ / *:.
 SUBST:  . = .:200 ~:10 W:60 w:50 x:80 n:80 v b l Z T U M:20
@@ -2159,11 +2160,11 @@ MAP
 ENDMAP
 
 NAME:    xom_butterflies
-TAGS:    temple_overflow_1 temple_overflow_xom transparent
+TAGS:    temple_overflow_1 temple_overflow_xom transparent patrolling
 KFEAT:   _ = altar_xom
 KITEM:   _ = wand of random effects w:40 / any wand
 COLOUR:  . = random
-SUBST:   . = 11.
+NSUBST:  . = 2: 1/ *: .
 MONS:    butterfly
 : interest_check(_G)
 MAP

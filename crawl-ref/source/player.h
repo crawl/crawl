@@ -747,8 +747,7 @@ public:
 
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty() const;
-    int adjusted_body_armour_penalty(int scale = 1,
-                                     bool use_size = false) const;
+    int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
     int armour_tohit_penalty(bool random_factor, int scale = 1) const;
     int shield_tohit_penalty(bool random_factor, int scale = 1) const;
@@ -1078,7 +1077,6 @@ bool need_expiration_warning(coord_def p = you.pos());
 
 void count_action(caction_type type, int subtype = 0);
 bool player_has_orb();
-bool does_vision_blur();
 
 #if TAG_MAJOR_VERSION == 34
 enum temperature_level

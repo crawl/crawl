@@ -1098,10 +1098,17 @@ static bool _lich_has_spell_of_school(const monster_spells &spells,
 }
 
 static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
-                                int *weights, int total_weight)
+                                int *weights, int total_weight,
+                                bool use_weights)
 {
     if (_lich_spell_is_used(spells, spell))
         return false;
+
+    if (spell == SPELL_VIRULENCE
+        && !_lich_has_spell_of_school(spells, SPTYP_POISON))
+    {
+        return false;
+    }
 
     if (spells.size() > 2
         && !_lich_has_spell_of_school(spells, SPTYP_CONJURATION))
@@ -1110,6 +1117,9 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
             && spell != SPELL_BATTLESPHERE
             && spell != SPELL_SPELLFORGED_SERVITOR;
     }
+
+    if (!use_weights)
+        return true;
 
     unsigned int disciplines = get_spell_disciplines(spell);
     int num_disciplines = count_bits(disciplines);
@@ -1166,7 +1176,7 @@ static void _add_lich_spell(monster_spells &spells, const mon_spell_slot *set,
     do {
        next_spell = set[random2(set_len)];
     } while (!_lich_spell_is_good(spells, next_spell.spell, weights,
-                                  total_weight));
+                                  total_weight, set == lich_secondary_spells));
 
     next_spell.freq = next_spell.freq - 4 + random2(9);
     spells.push_back(next_spell);

@@ -1195,7 +1195,110 @@ bool vitrify_area(int radius)
     return something_happened;
 }
 
-// Nasty things happen to people who spend too long in Hell.
+/**
+ * Choose a random, spooky hell effect message, print it, and make a loud noise
+ * if appropriate. (1/6 chance of loud noise.)
+ */
+static void _hell_effect_noise()
+{
+    const bool loud = one_chance_in(6) && !silenced(you.pos());
+    string msg = getMiscString(loud ? "hell_effect_noisy"
+                                    : "hell_effect_quiet");
+    if (msg.empty())
+        msg = "Something hellishly buggy happens.";
+
+    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
+    if (loud)
+        noisy(15, you.pos());
+}
+
+/**
+ * Choose a random miscast effect (from a weighted list) & apply it to the
+ * player.
+ */
+static void _random_hell_miscast()
+{
+    const spschool_flag_type which_miscast
+        = random_choose_weighted(8, SPTYP_NECROMANCY,
+                                 4, SPTYP_SUMMONING,
+                                 2, SPTYP_CONJURATION,
+                                 1, SPTYP_CHARMS,
+                                 1, SPTYP_HEXES,
+                                 0);
+
+    MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
+                  4 + random2(6), random2avg(97, 3),
+                  "the effects of Hell");
+}
+
+/// The thematically appropriate hell effects for a given hell branch.
+struct hell_effect_spec
+{
+    /// The type of greater demon to spawn from hell effects.
+    monster_type fiend_type;
+    /// The appropriate theme of miscast effects to toss at the player.
+    spschool_flag_type miscast_type;
+};
+
+/// Hell effects for each branch of hell
+static map<branch_type, hell_effect_spec> hell_effects_by_branch =
+{
+    { BRANCH_DIS, { RANDOM_DEMON_GREATER, SPTYP_EARTH}},
+    { BRANCH_GEHENNA, { MONS_BRIMSTONE_FIEND, SPTYP_FIRE }},
+    { BRANCH_COCYTUS, { MONS_ICE_FIEND, SPTYP_ICE }},
+    { BRANCH_TARTARUS, { MONS_SHADOW_FIEND, SPTYP_NECROMANCY }},
+};
+
+/**
+ * Either dump a fiend or a hell-appropriate miscast effect on the player.
+ *
+ * 40% chance of fiend, 60% chance of miscast.
+ */
+static void _themed_hell_summon_or_miscast()
+{
+    const hell_effect_spec *spec = map_find(hell_effects_by_branch,
+                                            you.where_are_you);
+    if (!spec)
+        die("Attempting to call down a hell effect in a non-hellish branch.");
+
+    if (x_chance_in_y(2, 5))
+    {
+        create_monster(
+                       mgen_data::hostile_at(spec->fiend_type,
+                                             "the effects of Hell",
+                                             true, 0, 0, you.pos()));
+    }
+    else
+    {
+        MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, spec->miscast_type,
+                      4 + random2(6), random2avg(97, 3),
+                      "the effects of Hell");
+    }
+}
+
+/**
+ * Try to summon at some number of random spawns from the current branch, to
+ * harass the player & give them easy xp/TSO piety. Occasionally, to kill them.
+ *
+ * Min zero, max five, average 1.67.
+ *
+ * Can and does summon bands as individual spawns.
+ */
+static void _minor_hell_summons()
+{
+    // Try to summon at least one and up to five random monsters. {dlb}
+    mgen_data mg;
+    mg.pos = you.pos();
+    mg.foe = MHITYOU;
+    mg.non_actor_summoner = "the effects of Hell";
+    create_monster(mg);
+
+    for (int i = 0; i < 4; ++i)
+        if (one_chance_in(3))
+            create_monster(mg);
+}
+
+/// Nasty things happen to people who spend too long in Hell.
 static void _hell_effects(int /*time_delta*/)
 {
     if (!player_in_hell())
@@ -1209,99 +1312,15 @@ static void _hell_effects(int /*time_delta*/)
         return;
     }
 
-    string msg = getMiscString("hell_effect");
-    if (msg.empty())
-        msg = "Something hellishly buggy happens.";
-    bool loud = starts_with(msg, "SOUND:");
-    if (loud)
-        msg.erase(0, 6);
-    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
-    if (loud)
-        noisy(15, you.pos());
+    _hell_effect_noise();
 
-    spschool_flag_type which_miscast = SPTYP_RANDOM;
-
-    int temp_rand = random2(27);
-    if (temp_rand > 17)     // 9 in 27 odds {dlb}
-    {
-        temp_rand = random2(8);
-
-        if (temp_rand > 3)  // 4 in 8 odds {dlb}
-            which_miscast = SPTYP_NECROMANCY;
-        else if (temp_rand > 1)     // 2 in 8 odds {dlb}
-            which_miscast = SPTYP_SUMMONING;
-        else if (temp_rand > 0)     // 1 in 8 odds {dlb}
-            which_miscast = SPTYP_CONJURATION;
-        else                // 1 in 8 odds {dlb}
-            which_miscast = coinflip() ? SPTYP_HEXES : SPTYP_CHARMS;
-
-        MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
-                      4 + random2(6), random2avg(97, 3),
-                      "the effects of Hell");
-    }
-    else if (temp_rand > 7) // 10 in 27 odds {dlb}
-    {
-        monster_type which_beastie;
-
-        // 60:40 miscast:summon split {dlb}
-        switch (you.where_are_you)
-        {
-        case BRANCH_DIS:
-            which_beastie = RANDOM_DEMON_GREATER;
-            which_miscast = SPTYP_EARTH;
-            break;
-
-        case BRANCH_GEHENNA:
-            which_beastie = MONS_BRIMSTONE_FIEND;
-            which_miscast = SPTYP_FIRE;
-            break;
-
-        case BRANCH_COCYTUS:
-            which_beastie = MONS_ICE_FIEND;
-            which_miscast = SPTYP_ICE;
-            break;
-
-        case BRANCH_TARTARUS:
-            which_beastie = MONS_SHADOW_FIEND;
-            which_miscast = SPTYP_NECROMANCY;
-            break;
-
-        default:
-            die("unknown hell branch");
-        }
-
-        if (x_chance_in_y(2, 5))
-        {
-            create_monster(
-                mgen_data::hostile_at(which_beastie, "the effects of Hell",
-                    true, 0, 0, you.pos()));
-        }
-        else
-        {
-            MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
-                          4 + random2(6), random2avg(97, 3),
-                          "the effects of Hell");
-        }
-    }
-
-    // NB: No "else" - 8 in 27 odds that nothing happens through
-    //                 first chain. {dlb}
-    // Also note that the following is distinct from and in
-    // addition to the above chain.
-
-    // Try to summon at least one and up to five random monsters. {dlb}
     if (one_chance_in(3))
-    {
-        mgen_data mg;
-        mg.pos = you.pos();
-        mg.foe = MHITYOU;
-        mg.non_actor_summoner = "the effects of Hell";
-        create_monster(mg);
+        _random_hell_miscast();
+    else if (x_chance_in_y(5, 9))
+        _themed_hell_summon_or_miscast();
 
-        for (int i = 0; i < 4; ++i)
-            if (one_chance_in(3))
-                create_monster(mg);
-    }
+    if (one_chance_in(3))   // NB: No "else"
+        _minor_hell_summons();
 }
 
 // This function checks whether we can turn a wall into a floor space and

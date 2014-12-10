@@ -245,7 +245,7 @@ static const pop_entry pop_lair[] =
   {  1, 11,  455, SEMI, MONS_BLACK_MAMBA },
   {  1, 11,  275, PEAK, MONS_FIRE_DRAKE },
   {  2,  6,    8, PEAK, MONS_YELLOW_WASP },
-  {  2,  8,   25, PEAK, MONS_ORANGE_RAT },
+  {  2,  8,   25, PEAK, MONS_HELL_RAT },
   {  2,  8,   25, PEAK, MONS_STEAM_DRAGON },
   {  2,  8,   52, SEMI, MONS_POLAR_BEAR },
   {  2, 10,   89, PEAK, MONS_WYVERN },
@@ -522,7 +522,7 @@ static const pop_entry pop_tomb[] =
 
 static const pop_entry pop_hell[] =
 { // Hell
-  {  1,  1,   89, FLAT, MONS_ORANGE_RAT },
+  {  1,  1,   89, FLAT, MONS_HELL_RAT },
   {  1,  1,   89, FLAT, MONS_DEMONIC_CRAWLER },
   {  1,  1,   89, FLAT, MONS_HELL_HOUND },
   {  1,  1,  136, FLAT, MONS_HELL_HOG },

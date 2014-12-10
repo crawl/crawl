@@ -233,7 +233,7 @@ monster_type get_monster_by_name(string name, bool substring)
     }
 
     size_t idx = find_earliest_match(name, (size_t) 0, ARRAYSZ(mondata),
-                                     _always_true<size_t>, _mon_entry_name);
+                                     always_true<size_t>, _mon_entry_name);
     return idx == ARRAYSZ(mondata) ? MONS_PROGRAM_BUG
                                    : (monster_type) mondata[idx].mc;
 }
@@ -1194,7 +1194,7 @@ static bool _shout_fits_monster(monster_type mc, int shout)
     // For Pandemonium lords, almost everything is fair game.  It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
     if (mc != MONS_HELL_BEAST)
-        return shout != S_BUZZ && shout != S_CROAK;
+        return true;
 
     switch (shout)
     {

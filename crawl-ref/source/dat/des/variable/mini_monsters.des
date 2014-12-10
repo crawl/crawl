@@ -458,7 +458,7 @@ ENDMAP
 NAME:  rats_and_rats_again
 DEPTH: D:8-14
 MONS:  shadow imp
-MONS:  rat w:40 / river rat w:20 / orange rat w:1 / nothing
+MONS:  rat w:40 / river rat w:20 / hell rat w:1 / nothing
 MAP
 ...........
 .xxx+++xxx.
@@ -1014,7 +1014,7 @@ KMONS:   E = goliath beetle
 KMONS:   F = worker ant
 KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
-KMONS:   I = orange rat
+KMONS:   I = hell rat
 KMONS:   J = unseen horror
 KMONS:   K = alligator
 KMONS:   L = lindwurm
@@ -3581,7 +3581,7 @@ KMONS:   e = chaos spawn
 KMONS:   f = demonic crawler
 KMONS:   g = glowing shapeshifter
 KMONS:   h = shadow wraith
-KMONS:   i = orange rat
+KMONS:   i = hell rat
 KMONS:   j = giant cockroach
 KMONS:   k = phantom
 KMONS:   l = large abomination

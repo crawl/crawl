@@ -417,7 +417,15 @@ static bool _has_hand_evokable()
     return false;
 }
 
-static string _no_selectables_message(int item_selector)
+/**
+ * What message should the player be given when they look for items matching
+ * the given selector and don't find any?
+ *
+ * @param selector      The given type of object_selector.
+ * @return              A message such as "You aren't carrying any weapons."
+ *                      "Your armour is currently melded into you.", etc.
+ */
+string no_selectables_message(int item_selector)
 {
     switch (item_selector)
     {
@@ -490,7 +498,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
     load_items(tobeshown, procfn);
 
     if (!item_count())
-        set_title(_no_selectables_message(item_selector));
+        set_title(no_selectables_message(item_selector));
     else
         set_title("");
 }
@@ -1192,7 +1200,16 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
     }
 }
 
-bool any_items_to_select(int selector, bool msg, int excluded_slot)
+
+/**
+ * Does the player have any items of the given type?
+ *
+ * @param selector          A object_selector.
+ * @param excluded_slot     An item slot to ignore.
+ * @return                  Whether there are any items matching the given
+ *                          selector in the player's inventory.
+ */
+bool any_items_of_type(int selector, int excluded_slot)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -1203,11 +1220,7 @@ bool any_items_to_select(int selector, bool msg, int excluded_slot)
             return true;
         }
     }
-    if (msg)
-    {
-        mprf(MSGCH_PROMPT, "%s",
-             _no_selectables_message(selector).c_str());
-    }
+
     return false;
 }
 
@@ -1827,7 +1840,7 @@ int prompt_invent_item(const char *prompt,
                        bool allow_list_known,
                        bool do_warning)
 {
-    if (!any_items_to_select(type_expect, false, excluded_slot)
+    if (!any_items_of_type(type_expect, excluded_slot)
         && type_expect == OSEL_THROWABLE
         && (oper == OPER_FIRE || oper == OPER_QUIVER)
         && mtype == MT_INVLIST)
@@ -1835,11 +1848,11 @@ int prompt_invent_item(const char *prompt,
         type_expect = OSEL_ANY;
     }
 
-    if (!any_items_to_select(type_expect, false, excluded_slot)
+    if (!any_items_of_type(type_expect, excluded_slot)
         && type_expect != OSEL_WIELD)
     {
         mprf(MSGCH_PROMPT, "%s",
-             _no_selectables_message(type_expect).c_str());
+             no_selectables_message(type_expect).c_str());
         return PROMPT_NOTHING;
     }
 
@@ -1854,7 +1867,7 @@ int prompt_invent_item(const char *prompt,
     {
         need_getch = false;
 
-        if (any_items_to_select(type_expect))
+        if (any_items_of_type(type_expect))
             keyin = '?';
         else
             keyin = '*';

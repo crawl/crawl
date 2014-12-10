@@ -85,7 +85,7 @@ string unwrap_desc(string desc);
  *
  * @return true
  */
-template<class T> bool _always_true(T) { return true; }
+template<class T> bool always_true(T) { return true; }
 
 /** Remove an element from a vector without preserving order.
  *  The indicated element is replaced by the last element of the vector.

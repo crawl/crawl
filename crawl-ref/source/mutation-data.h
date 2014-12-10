@@ -613,9 +613,9 @@ static const mutation_def mut_data[] =
 { MUT_BLURRY_VISION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
   "blurry vision",
 
-  {"Your vision is a little blurry.",
-   "Your vision is quite blurry.",
-   "Your vision is extremely blurry."},
+  {"Scrolls take you a little longer to read.",
+   "Scrolls take you longer to read.",
+   "Scrolls take you much longer to read."},
 
   {"Your vision blurs.",
    "Your vision blurs.",

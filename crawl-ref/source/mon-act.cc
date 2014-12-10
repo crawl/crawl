@@ -383,12 +383,12 @@ static bool _mon_on_interesting_grid(monster* mon)
     // stairway from and to the Orcish Mines.
     case DNGN_ALTAR_BEOGH:
     case DNGN_ENTER_ORC:
-    case DNGN_RETURN_FROM_ORC:
+    case DNGN_EXIT_ORC:
         return mons_is_native_in_branch(mon, BRANCH_ORC);
 
     // Same for elves and the Elven Halls.
     case DNGN_ENTER_ELF:
-    case DNGN_RETURN_FROM_ELF:
+    case DNGN_EXIT_ELF:
         return mons_is_native_in_branch(mon, BRANCH_ELF);
 
     // Spiders...
@@ -3153,7 +3153,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         else if (is_perishable_stack(*si))
             for (int i = 0; i < quant; ++i)
                 remove_oldest_perishable_item(*si);
-        dec_mitm_item_quantity(si.link(), quant);
+        dec_mitm_item_quantity(si.index(), quant);
     }
 
     if (eaten > 0)

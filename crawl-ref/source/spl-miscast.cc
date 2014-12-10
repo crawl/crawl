@@ -1013,7 +1013,7 @@ void MiscastEffect::_hexes(int severity)
                 reroll = !_sleep(3 + random2(7));
                 break;
             case 1:
-                target->confuse(act_source, 10);
+                target->confuse(act_source, 5 + random2(3));
                 reroll = false;
                 break;
             case 2:
@@ -1156,7 +1156,7 @@ void MiscastEffect::_charms(int severity)
                 reroll = !_paralyse(2 + random2(6));
                 break;
             case 1:
-                target->confuse(act_source, 10);
+                target->confuse(act_source, 5 + random2(3));
                 reroll = false;
                 break;
             case 2:
@@ -1308,7 +1308,7 @@ void MiscastEffect::_translocation(int severity)
                         target->blink(false);
                 }
                 if (target->alive())
-                    target->confuse(act_source, 40);
+                    target->confuse(act_source, 5 + random2(3));
             }
             break;
         case 5:
@@ -1361,7 +1361,7 @@ void MiscastEffect::_translocation(int severity)
                 if (!target->no_tele())
                     target->teleport(true);
                 if (target->alive())
-                    target->confuse(act_source, 60);
+                    target->confuse(act_source, 5 + random2(3));
             }
             break;
         case 2:
@@ -1622,7 +1622,7 @@ void MiscastEffect::_divination_you(int severity)
             mpr("You feel a little dazed.");
             break;
         case 1:
-            target->confuse(act_source, 60);
+            target->confuse(act_source, 5 + random2(3));
             break;
         }
         break;
@@ -3213,9 +3213,9 @@ void MiscastEffect::_zot()
         case 6:
             roll = random2(3); // Give 2 of 3 effects.
             if (roll != 0)
-                target->confuse(act_source, 15);
+                target->confuse(act_source, 5 + random2(3));
             if (roll != 1)
-                target->slow_down(act_source, 15);
+                target->slow_down(act_source, 5 + random2(3));
             if (roll != 2)
             {
                 you_msg        = "Space warps around you!";

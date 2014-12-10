@@ -491,10 +491,6 @@ int detect_items(int pow)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
-        // Don't you love the 0,5 shop hack?
-        if (!in_bounds(*ri))
-            continue;
-
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
@@ -612,7 +608,7 @@ static bool _selectively_remove_curse(const string &pre_msg)
 
     while (1)
     {
-        if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
+        if (!any_items_of_type(OSEL_CURSED_WORN) && used)
         {
             mpr("You have uncursed all your worn items.");
             return used;

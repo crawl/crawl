@@ -5554,11 +5554,10 @@ static bool _shop_sells_antiques(shop_type type)
             || type == SHOP_GENERAL_ANTIQUE;
 }
 
-void place_spec_shop(const coord_def& where,
-                     int force_s_type, bool representative)
+void place_spec_shop(const coord_def& where, shop_type force_type)
 {
-    shop_spec spec(static_cast<shop_type>(force_s_type));
-    place_spec_shop(where, spec, representative);
+    shop_spec spec(force_type);
+    place_spec_shop(where, spec);
 }
 
 int greed_for_shop_type(shop_type shop, int level_number)
@@ -5627,13 +5626,11 @@ static int _shop_greed(shop_type type, int level_number, int spec_greed)
  * How many items should be placed in a given shop?
  *
  * @param type              The type of the shop. (E.g. SHOP_FOOD.)
- * @param representative    No idea, sorry.
  * @param spec              A vault shop spec; may override default results.
  * @return                  The number of items the shop should be generated
  *                          to hold.
  */
-static int _shop_num_items(shop_type type, bool representative,
-                           const shop_spec &spec)
+static int _shop_num_items(shop_type type, const shop_spec &spec)
 {
     if (spec.num_items != -1)
     {
@@ -5648,9 +5645,6 @@ static int _shop_num_items(shop_type type, bool representative,
              (unsigned int)spec.items.size());
         return (int) spec.items.size();
     }
-
-    if (representative)
-        return type == SHOP_EVOKABLES ? NUM_WANDS : 16;
 
     return 5 + random2avg(12, 3);
 }
@@ -5753,23 +5747,21 @@ static int _make_delicious_corpse()
  * Create an item and place it in a shop.
  *
  * FIXME: I'm pretty sure this will go into an infinite loop if mitm is full.
+ * items() uses get_mitm_slot with culling, so i think this is ok --wheals
  *
  * @param j                 The index of the item being created in the shop's
  *                          inventory.
  * @param shop_type_        The type of shop. (E.g. SHOP_FOOD.)
  * @param stocked[in,out]   An array mapping book types to the # in the shop.
- * @param representative    Sorry, no idea.
  * @param spec              The specification of the shop.
- * @param shop_index        The index of the shop in env.shop.
+ * @param shop              The shop.
  */
 static void _stock_shop_item(int j, shop_type shop_type_,
-                             int stocked[NUM_BOOKS], bool representative,
-                             shop_spec &spec, int shop_index)
+                             int stocked[NUM_BOOKS],
+                             shop_spec &spec, shop_struct &shop)
 {
     const int level_number = env.absdepth0;
     const int item_level = _choose_shop_item_level(shop_type_, level_number);
-    const coord_def stock_loc = coord_def(0, 5+shop_index);
-
 
     int item_index; // index into mitm (global item array)
                     // where the generated item will be stored
@@ -5780,10 +5772,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
     while (true)
     {
         object_class_type basetype = item_in_shop(shop_type_);
-        if (representative && shop_type_ == SHOP_EVOKABLES)
-            basetype = OBJ_WANDS;
-
-        int subtype = representative? j : OBJ_RANDOM;
+        int subtype = OBJ_RANDOM;
 
         if (spec.gozag && shop_type_ == SHOP_FOOD && you.species == SP_VAMPIRE)
         {
@@ -5795,13 +5784,13 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         {
             // shop spec lists a random set of items; choose one
             item_index = dgn_place_item(spec.items.random_item_weighted(),
-                                        stock_loc, item_level);
+                                        coord_def(), item_level);
         }
         else if (!spec.items.empty() && spec.use_all
                  && j < (int)spec.items.size())
         {
             // shop lists ordered items; take the one at the right index
-            item_index = dgn_place_item(spec.items.get_item(j), stock_loc,
+            item_index = dgn_place_item(spec.items.get_item(j), coord_def(),
                                         item_level);
         }
         else if (spec.gozag && shop_type_ == SHOP_FOOD
@@ -5839,16 +5828,12 @@ static void _stock_shop_item(int j, shop_type shop_type_,
 
     ASSERT(item_index != NON_ITEM);
 
-    item_def& item(mitm[item_index]);
+    item_def item = mitm[item_index];
 
     // If this is a book, note it down in the stocked books array
     // (unless it's a randbook)
     if (shop_type_ == SHOP_BOOK && !is_artefact(item))
         stocked[item.sub_type]++;
-
-    // please don't ask me what this does
-    if (representative && item.base_type == OBJ_WANDS)
-        item.plus = 7;
 
     if (spec.gozag && shop_type_ == SHOP_FOOD && you.species == SP_VAMPIRE)
     {
@@ -5856,12 +5841,15 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         item.quantity += random2(3); // blood for the vampire friends :)
     }
 
-    // Set object 'position' (gah!) & ID status.
-    item.pos = stock_loc;
-
     // Identify the item, unless we don't do that.
     if (!_shop_sells_antiques(shop_type_))
         set_ident_flags(item, ISFLAG_IDENT_MASK);
+
+    // Now move it into the shop!
+    dec_mitm_item_quantity(item_index, item.quantity);
+    item.pos = shop.pos;
+    item.link = ITEM_IN_SHOP;
+    shop.stock.push_back(item);
 }
 
 /**
@@ -5870,14 +5858,9 @@ static void _stock_shop_item(int j, shop_type shop_type_,
  * @param where             The location to place the shop.
  * @param spec              The details of the shop.
  *                          Would be const if not for list method nonsense.
- * @param representative    No idea, sorry.
  */
-void place_spec_shop(const coord_def& where, shop_spec &spec,
-                     bool representative)
+void place_spec_shop(const coord_def& where, shop_spec &spec)
 {
-    const int level_number = env.absdepth0;
-    const int force_s_type = static_cast<int>(spec.sh_type);
-
     const bool note_status = notes_are_active();
     activate_notes(false);
 
@@ -5885,40 +5868,34 @@ void place_spec_shop(const coord_def& where, shop_spec &spec,
     if (shop_index == MAX_SHOPS)
         return;
 
+    shop_struct& shop = env.shop[shop_index];
+
+    const int level_number = env.absdepth0;
+
     for (int j = 0; j < 3; j++)
-        env.shop[shop_index].keeper_name[j] = 1 + random2(200);
+        shop.keeper_name[j] = 1 + random2(200);
+    shop.shop_name = spec.name;
+    shop.shop_type_name = spec.type;
+    shop.shop_suffix_name = spec.suffix;
+    shop.level = level_number * 2;
+    shop.type = spec.sh_type;
+    if (shop.type == SHOP_RANDOM)
+        shop.type = static_cast<shop_type>(random2(NUM_SHOPS));
+    shop.greed = _shop_greed(shop.type, level_number, spec.greed);
+    shop.pos = where;
 
-    env.shop[shop_index].shop_name = spec.name;
-    env.shop[shop_index].shop_type_name = spec.type;
-    env.shop[shop_index].shop_suffix_name = spec.suffix;
-    env.shop[shop_index].level = level_number * 2;
+    env.tgrid(where) = shop_index;
+    _set_grd(where, DNGN_ENTER_SHOP);
 
-    const shop_type shop_type_ = static_cast<shop_type>(
-                                                  force_s_type != SHOP_RANDOM ?
-                                                  force_s_type :
-                                                  random2(NUM_SHOPS)
-                                                  );
-    env.shop[shop_index].type = shop_type_;
-
-    env.shop[shop_index].greed = _shop_greed(shop_type_, level_number,
-                                             spec.greed);
-
-    const int num_items = _shop_num_items(shop_type_, representative, spec);
+    const int num_items = _shop_num_items(shop.type, spec);
 
     // For books shops, store how many copies of a given book are on display.
     // This increases the diversity of books in a shop.
     int stocked[NUM_BOOKS] = { 0 };
 
+    shop.stock.clear();
     for (int j = 0; j < num_items; j++)
-    {
-        _stock_shop_item(j, shop_type_, stocked, representative, spec,
-                         shop_index);
-    }
-
-    env.shop[shop_index].pos = where;
-    env.tgrid(where) = shop_index;
-
-    _set_grd(where, DNGN_ENTER_SHOP);
+        _stock_shop_item(j, shop.type, stocked, spec, shop);
 
     activate_notes(note_status);
 }

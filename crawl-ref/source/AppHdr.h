@@ -24,6 +24,15 @@
 namespace std {};
 using namespace std;
 
+// Define COMPILE_CHECK before including any of our headers, so even things
+// like externs.h can use it.  platform.h a few lines up is standalone, so
+// doesn't count.
+#ifndef _lint
+# define COMPILE_CHECK(expr) static_assert((expr), #expr)
+#else
+# define COMPILE_CHECK(expr)
+#endif
+
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
     TypeName(const TypeName&) = delete;   \
     void operator=(const TypeName&) = delete

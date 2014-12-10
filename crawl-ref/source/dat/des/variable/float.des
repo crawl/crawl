@@ -1155,7 +1155,7 @@ KITEM:   + = damaged eveningstar, damaged short sword, \
 KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
 MONS:    giant mite, scorpion
-MONS:    rat / porcupine, river rat / orange rat
+MONS:    rat / porcupine, river rat / hell rat
 MONS:    bat
 KFEAT:   w = web
 SHUFFLE: ?!+
@@ -1316,7 +1316,7 @@ ENDMAP
 NAME:    lemuel_vampire_tower
 ORIENT:  float
 DEPTH:   D:12-, Depths, !Depths:$, Crypt
-MONS:    rat / porcupine / w:6 river rat / w:3 orange rat / w:20 bat
+MONS:    rat / porcupine / w:6 river rat / w:3 hell rat / w:20 bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item
@@ -2917,8 +2917,7 @@ ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
 ## Plants or water monsters
 KMONS:    f = plant / fungus
-KMONS:    R = electric eel / water elemental
-KMONS:    S = electric eel / water elemental
+KMONS:    RS = electric eel / water elemental
 ## Main monster sets
 KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
               / minotaur / satyr / merfolk impaler / deep elf knight
@@ -2926,23 +2925,24 @@ KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
               / octopode crusher
 KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
 KMONS:    4 = ice statue / w:5 orange crystal statue
-KMONS:    5 = catoblepas / dire elephant / emperor scorpion \
+KMONS:    5Z = catoblepas / dire elephant / emperor scorpion \
               / alligator snapping turtle / shambling mangrove / thorn hunter
 KMONS:    6 = merfolk avatar
 KMONS:    7 = water nymph / wind drake / sphinx
 KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
               / spriggan air mage
-KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon
+KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon \
+              / w:5 caustic shrike
 KMONS:    O = the Enchantress band
 ## The loot items need this to be placed in water
 KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
 KITEM:    E| = |
-KFEAT:    f567DER%$*| = W
+KFEAT:    f5Z67DER%$*| = W
 KFEAT:    S = w
 KFEAT:    m = t
-KPROP:    ~`5R = no_rtele_into
+KPROP:    ~`ZR = no_rtele_into
 SHUFFLE:  HI / JK
 NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
 SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
@@ -2961,7 +2961,7 @@ MAP
   ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
   ccc'.GcccBBccccccccccccccc''''wwc
   ccGR.cc~``cccccUGUccccc""'5x'''Sc
- cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
+ cccc'.n~Z`cccc''*E*''cccc"'m'm''wcc
  cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
  ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
  cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
@@ -2975,7 +2975,7 @@ cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
  cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
  ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
  cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
- cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
+ cccc'.n~Z`cccc''*E*''cccc"'m'm''wcc
   ccGR.cc~``cccccUGUccccc""'5x'''Sc
   ccc'.GcccCCccccccccccccccc''''wwc
   ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
@@ -6592,4 +6592,62 @@ MAP
   wwwt.""""""""""".twww
    wwwt...G"""G...twww
     www     @     www
+ENDMAP
+
+NAME: pf_snail_temple
+DEPTH: Depths, !Depths:$
+ORIENT: float
+TAGS: no_monster_gen
+TILE: G = dngn_statue_snail
+# foyer: 6/10 0s
+NSUBST: 1 = 5:0 / 1:T / *:.
+# 2nd corridor: 5/7 0s and 1/2 9s
+NSUBST: 2 = 2:D / 2:0 / 1:T / *:.
+NSUBST: 3 = 1:9 / *:.
+# 3rd corridor: 10/17 0s and 1/2 9s
+NSUBST: 4 = 3:D / 6:0 / 1:T / *:.
+NSUBST: 5 = 1:9 / *:.
+# sanctum: 5/7 0s, 2/3 9s, an 8, and a torpor snail on the altar
+NSUBST: 6 = 2:E / 3:F / *:.
+NSUBST: 7 = 2:H / *:.
+KMONS: _ = torpor snail patrolling
+KFEAT: _ = altar_cheibriados
+KITEM: _ = plate armour good_item ego:ponderousness no_pickup /\
+           crystal plate armour good_item ego:ponderousness no_pickup w:5 /\
+           gold dragon armour good_item ego:ponderousness no_pickup w:5
+# general settings
+KMONS: T = torpor snail
+KMONS: D = 0 band
+KMONS: 9 = 9 band
+KMONS: E = 0 band patrolling
+KMONS: F = 0 patrolling
+KMONS: H = 9 band patrolling
+KMONS: 8 = 8 patrolling
+#loot
+KITEM: 8 = acquire any
+KITEM: 7 = *
+MAP
+                    ccc
+                ccccccccccc
+              ccccccc4cccccc
+ ...        ccccc.G4G.4c.cccc
+ .m..      cccc......4.+..cccc
+..cc..     ccc.......4.+...cccc
+.mccc.    ccc.5....G4G4c.2..ccc
+...cc..  ccc...5..cccccc.....ccc
+  ..cc.. ccc....ccc*GG*cc....ccc
+   .ccc. cc4..4cc|7..6.6cc2..2cc
+   ..cc. ccG44GcG8.._.6.*cG..Gcc
+   ..cc..cc4..4cc|7.....Gc....cc
+   ..cc..ccc....cc*GG6..Gc2..2cc
+   ..ccc.0cc....4ccc+.6.7cG..Gcc
+    ..cc0*ccc.4.....+.6.cc....cc
+   ..ccccccccc...4..c6.cc..3.ccc
+  ..cccccccccccccccccccc....cccc
+ ..ccc.G..1G...G1..G1.c2.3..ccc
+  .@++......1....1....+....ccc
+   @++......1....1....+...cccc
+   ccc.G..1G...G1..G1.c2cccc
+   cccccccccccccccccccccccc
+    ccccccccccccccccccccc
 ENDMAP

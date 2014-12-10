@@ -75,6 +75,7 @@ Monsters
 * Renamed monsters:
   - Silver statues -> obsidian statues.
   - Green rats -> river rats.
+  - Orange rats -> hell rats.
   - Mermaids -> sirens.
   - Sirens -> merfolk avatars.
 * Ghost crabs have been moved from Crypt to Swamp.
@@ -86,7 +87,8 @@ Monsters
 * Xtahua's breath now creates a cloud of flames, like red draconians'.
 * Tiamat can now be any colour of draconian, except grey.
 * Fannar can now cast Condensation Shield.
-* Frederick is now a demigod.
+* Frederick is now a demigod; his armour has been upgraded & his spellset has
+  been tweaked.
 * Sense invisibility has been simplified; monsters that had it now have see
   invisible + blindness immunity instead.
 * Magic immunity no longer confers confusion immunity to monsters.
@@ -99,6 +101,8 @@ Spells
 * New spells:
   - Singularity (L9 Translocation), which summons a singularity & sucks in all
     nearby enemies, severely damaging them in the process.
+  - Gell's Gravitas (L6 Hexes/Translocation), which pulls nearby creatures
+    toward the target, causing damage if they collide.
   - Hydra Form (L6 Transmutation), a short-duration form that attacks all
     adjacent foes & devours slain foes for nutrition and healing.
   - Irradiate (L5 Transmutation/Conjuration), which deals heavy damage &
@@ -128,6 +132,8 @@ Items
   - Wand type is auto-identified on pickup.
   - Many weak wands have had their max charge count increased.
 * New items:
+  - Gyre & Gimble, a pair of quickblades linked by a chain; they take two hands
+    to use, but each attack made with them strikes twice.
   - Shadow Dragon Armour: as heavy as Storm Dragon Armour, but has Stlth++++
     in place of rElec.
   - Quicksilver Dragon Armour: slightly heavier than Mottled Dragon Armour,
@@ -148,10 +154,13 @@ Items
   - The Ring of Vitality is now the Amulet of Vitality.
   - The captain's cutlass is now +5 (was +10) and can disarm enemies.
   - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
+  - The arbalest Hellfire has had its explosion damage roughly doubled.
 * All food other than rations, chunks, and royal jellies now takes one turn
   to eat.
 * Potions of blood no longer give nutrition for non-vampires.
 * All short blades now do piercing damage.
+* Weapons other than short blades & felid claws are all now equally good at
+  stabbing.
 * The Box of Beasts and Rod of Shadows are now considerably stronger.
 * Renamed items:
   - Cutlasses are now rapiers.
@@ -163,6 +172,7 @@ Items
   - Potions of confusion, porridge and coagulated blood.
   - Blessed Blades.
   - Rods of Striking.
+  - The book of Wizardry.
 
 
 Cards

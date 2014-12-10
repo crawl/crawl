@@ -1888,7 +1888,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
         return 0;
 
     int number_found = 0;
-    bool success = false;
+    bool any_success = false;
     int motions = 0;
 
     // Search all the items on the ground for a corpse.
@@ -1905,9 +1905,9 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 
             const bool was_draining = is_being_drained(*si);
 
-            success = _raise_remains(a, si.link(), beha, hitting, as, nas,
-                                     god, actual, force_beh, mon,
-                                     &motions);
+            const bool success = _raise_remains(a, si.index(), beha, hitting,
+                                                as, nas, god, actual,
+                                                force_beh, mon, &motions);
 
             if (actual && success)
             {
@@ -1924,6 +1924,8 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     _display_undead_motions(motions);
             }
 
+            any_success |= success;
+
             break;
         }
     }
@@ -1934,7 +1936,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     if (number_found == 0)
         return -1;
 
-    if (!success)
+    if (!any_success)
         return 0;
 
     return 1;
@@ -1994,10 +1996,16 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
+    const char* no_space = "...but the skeleton had no space to rise!";
+
     // First, we try to animate a skeleton if there is one.
-    if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
-                        MHITYOU, &you, "", god) != -1)
+    const int animate_skel_result = animate_remains(you.pos(), CORPSE_SKELETON,
+                                                    BEH_FRIENDLY, MHITYOU,
+                                                    &you, "", god);
+    if (animate_skel_result != -1)
     {
+        if (animate_skel_result == 0)
+            mpr(no_space);
         return SPRET_SUCCESS;
     }
 
@@ -2017,10 +2025,21 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     }
 
     // Now we try again to animate a skeleton.
-    if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
-                        MHITYOU, &you, "", god) < 0)
-    {
-        mpr("There is no skeleton here to animate!");
+    // this return type is insanely stupid
+    const int animate_result = animate_remains(you.pos(), CORPSE_SKELETON,
+                                               BEH_FRIENDLY, MHITYOU, &you, "",
+                                               god);
+    dprf("result: %d", animate_result);
+    switch (animate_result) {
+        case -1:
+            mpr("There is no skeleton here to animate!");
+            break;
+        case 0:
+            mpr(no_space);
+            break;
+        default:
+            // success, messages already printed
+            break;
     }
 
     return SPRET_SUCCESS;

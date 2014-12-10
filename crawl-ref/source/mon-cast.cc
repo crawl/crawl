@@ -1221,6 +1221,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.pierce   = true;
         break;
 
+    case SPELL_GRAVITAS:
+        beam.flavour  = BEAM_ATTRACT;
+        beam.pierce   = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1333,7 +1338,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MONSTROUS_MENAGERIE:
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
-    case SPELL_BONE_ARMOUR:
+    case SPELL_CIGOTUVIS_EMBRACE:
     case SPELL_SIMULACRUM:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_MINOR_DEMON:
@@ -3886,7 +3891,7 @@ static monster_type _pick_undead_summon()
 
 static monster_type _pick_vermin()
 {
-    return random_choose_weighted(8, MONS_ORANGE_RAT,
+    return random_choose_weighted(8, MONS_HELL_RAT,
                                   5, MONS_REDBACK,
                                   2, MONS_TARANTELLA,
                                   2, MONS_JUMPING_SPIDER,
@@ -5257,7 +5262,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                              mons->foe, god);
         return;
 
-    case SPELL_BONE_ARMOUR:
+    case SPELL_CIGOTUVIS_EMBRACE:
         harvest_corpses(*mons);
         mprf("The bodies of the dead form a shell around %s.",
              mons->name(DESC_THE).c_str());
@@ -7055,6 +7060,9 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
                                           goblin.name(DESC_A).c_str(),
                                           tosser.name(DESC_PLAIN).c_str());
     foe.hurt(&tosser, dam, BEAM_NONE, KILLED_BY_BEAM, "", killed_by, true);
+
+    // wake sleepy goblins
+    behaviour_event(&goblin, ME_DISTURB, &tosser, goblin.pos());
 }
 
 /**
@@ -7898,7 +7906,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                || monspell == SPELL_SIMULACRUM
                   && !monster_simulacrum(mon, false);
 
-    case SPELL_BONE_ARMOUR:
+    case SPELL_CIGOTUVIS_EMBRACE:
         if (friendly && !_animate_dead_okay(monspell))
             return true;
         if (mon->has_ench(ENCH_BONE_ARMOUR))
@@ -8038,6 +8046,19 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         fire_tracer(mon, tracer, true);
         return !mons_should_fire(tracer);
     }
+
+    case SPELL_GRAVITAS:
+        if (!foe)
+            return true;
+
+        for (actor_near_iterator ai(foe); ai; ++ai)
+            if (*ai != mon && *ai != foe && !ai->is_stationary()
+                && mon->can_see(*ai))
+            {
+                return false;
+            }
+
+        return true;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

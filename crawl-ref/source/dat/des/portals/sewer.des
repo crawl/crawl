@@ -1113,8 +1113,9 @@ ENDMAP
 # these will be filled with rats. Only two of the paths will be generated
 # each map, but all three pipes will be accessible on all instances.
 # One map in three, will end in a harder rat nest containing a dangerous
-# orange rat. The harder rat nest also contains cheese and more loot.
+# hell rat. The harder rat nest also contains cheese and more loot.
 #
+# XXX: there doesn't seem to be a chance for a hell rat anymore?
 NAME:    sewer_co_cracked_pipes
 TAGS:    no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
@@ -1268,7 +1269,7 @@ TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 WEIGHT: 3
 KMONS:  1  = rat
-KMONS:  4  = rat w:85 / river rat w:13 / orange rat w:2
+KMONS:  4  = rat w:85 / river rat w:13 / hell rat w:2
 KMONS:  23 = big kobold spells:animate_dead.55.wizard name:necromancer n_suf \
              col:white ; dagger | club . robe
 : dgn.delayed_decay(_G, '%', 'rat skeleton w:60 / rat corpse w:20')
@@ -1276,7 +1277,7 @@ KMONS:  23 = big kobold spells:animate_dead.55.wizard name:necromancer n_suf \
 :    'river rat skeleton w:15 / river rat corpse w:5')
 : dgn.delayed_decay(_G, '&', 'river rat skeleton w:36 /' ..
 :    'river rat corpse w:12 /' ..
-:    'orange rat skeleton w:3 / orange rat corpse w:1')
+:    'hell rat skeleton w:3 / hell rat corpse w:1')
 KITEM:  ?  = potion of curing / potion of heal wounds / potion of might /\
              potion of magic / potion of haste w:5 /\
              potion of brilliance w:5

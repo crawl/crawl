@@ -106,9 +106,9 @@ bool feat_is_staircase(dungeon_feature_type feat)
 
     // All branch entries/exits are staircases, except for Zot and Vaults entry.
     if (feat == DNGN_ENTER_VAULTS
-        || feat == DNGN_RETURN_FROM_VAULTS
+        || feat == DNGN_EXIT_VAULTS
         || feat == DNGN_ENTER_ZOT
-        || feat == DNGN_RETURN_FROM_ZOT)
+        || feat == DNGN_EXIT_ZOT)
     {
         return false;
     }
@@ -262,9 +262,9 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_ENTER_VAULTS:
-    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_EXIT_VAULTS:
     case DNGN_ENTER_ZOT:
-    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_EXIT_ZOT:
     case DNGN_ENTER_HELL:
     case DNGN_EXIT_HELL:
     case DNGN_ENTER_DIS:
@@ -533,8 +533,8 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
     return get_feature_dchar(feat) == DCHAR_ARCH
            && feat_stair_direction(feat) != CMD_NO_CMD
            && feat != DNGN_ENTER_ZOT
-           && feat != DNGN_RETURN_FROM_ZOT
-           && feat != DNGN_RETURN_FROM_VAULTS
+           && feat != DNGN_EXIT_ZOT
+           && feat != DNGN_EXIT_VAULTS
            && feat != DNGN_EXIT_HELL
            && feat != DNGN_ENTER_HELL;
 }

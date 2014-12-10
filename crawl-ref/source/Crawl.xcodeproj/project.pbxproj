@@ -2120,8 +2120,8 @@
 				E5D6406610BD494500A99626 /* random-weight.h */,
 				E5D6406710BD494500A99626 /* random.cc */,
 				E5D6406810BD494500A99626 /* random.h */,
-				7BDE8457116D24E600974D63 /* ranged_attack.cc */
-				7BDE8458116D24E600974D63 /* ranged_attack.h */
+				7BDE8457116D24E600974D63 /* ranged_attack.cc */,
+				7BDE8458116D24E600974D63 /* ranged_attack.h */,
 				E5D6406910BD494500A99626 /* ray.cc */,
 				E5D6406A10BD494500A99626 /* ray.h */,
 				7B5165B911859D82005B23ED /* religion-enum.h */,

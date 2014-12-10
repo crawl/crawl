@@ -2682,37 +2682,163 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_ENCHANT_WEAPON;
 }
 
-void read_scroll(int slot)
+/**
+ * Is the player currently able to use the 'r' command (to read books or
+ * scrolls). Being too berserk, confused, or having no reading material will
+ * prevent this.
+ *
+ * Prints corresponding messages. (Thanks, canned_msg().)
+ */
+bool player_can_read()
 {
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
-        return;
+        return false;
     }
 
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
-        return;
-    }
-
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
-    {
-        mpr("You cannot read scrolls while unable to breathe!");
-        return;
-    }
-
-    if (you.duration[DUR_NO_SCROLLS])
-    {
-        mpr("You cannot read scrolls in your current state!");
-        return;
+        return false;
     }
 
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
-        return;
+        return false;
     }
+
+    if (silenced(you.pos()))
+    {
+        mpr("Magic scrolls do not work when you're silenced!");
+        return false;
+    }
+
+    // water elementals
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        mpr("You cannot read scrolls while unable to breathe!");
+        return false;
+    }
+
+    // ru
+    if (you.duration[DUR_NO_SCROLLS])
+    {
+        mpr("You cannot read scrolls in your current state!");
+        return false;
+    }
+
+#if TAG_MAJOR_VERSION == 34
+    // Prevent hot lava orcs reading scrolls
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    {
+        mpr("You'd burn any scroll you tried to read!");
+        return false;
+    }
+#endif
+
+    return true;
+}
+
+/**
+ * If the player has no items matching the given selector, give an appropriate
+ * response to print. Otherwise, if they do have such items, return the empty
+ * string.
+ */
+static string _no_items_reason(object_selector type)
+{
+    if (!any_items_of_type(type))
+        return no_selectables_message(type);
+    return "";
+}
+
+/**
+ * If the player is unable to (r)ead the item in the given slot, return the
+ * reason why. Otherwise (if they are able to read it), returns "", the empty
+ * string.
+ */
+string cannot_read_item_reason(const item_def &item)
+{
+    // can read books, except for manuals...
+    if (item.base_type == OBJ_BOOKS)
+    {
+        if (item.sub_type == BOOK_MANUAL)
+            return "You can't read that!";
+        return "";
+    }
+
+    // and scrolls - but nothing else.
+    if (item.base_type != OBJ_SCROLLS)
+        return "You can't read that!";
+
+    // don't waste the player's time reading known scrolls in situations where
+    // they'd be useless
+
+    if (!item_type_known(item))
+        return "";
+
+    switch (item.sub_type)
+    {
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            return you.no_tele_reason(false, item.sub_type == SCR_BLINKING);
+
+        case SCR_AMNESIA:
+            if (you.spell_no == 0)
+                return "You have no spells to forget!";
+            return "";
+
+        case SCR_CURSE_WEAPON:
+            if (!you.weapon())
+                return "This scroll only affects a wielded weapon!";
+
+            // assumption: wielded weapons always have their curse & brand known
+            if (you.weapon()->cursed())
+                return "Your weapon is already cursed!";
+
+            if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
+                return "Holy weapons cannot be cursed!";
+            return "";
+
+        case SCR_ENCHANT_ARMOUR:
+            return _no_items_reason(OSEL_ENCH_ARM);
+
+        case SCR_ENCHANT_WEAPON:
+            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON);
+
+        case SCR_IDENTIFY:
+            return _no_items_reason(OSEL_UNIDENT);
+
+        case SCR_RECHARGING:
+            return _no_items_reason(OSEL_RECHARGE);
+
+        case SCR_REMOVE_CURSE:
+            return _no_items_reason(OSEL_CURSED_WORN);
+
+        case SCR_CURSE_ARMOUR:
+            return _no_items_reason(OSEL_UNCURSED_WORN_ARMOUR);
+
+        case SCR_CURSE_JEWELLERY:
+            return _no_items_reason(OSEL_UNCURSED_WORN_JEWELLERY);
+
+        default:
+            return "";
+    }
+}
+
+/**
+ * Check to see if the player can read the item in the given slot, and if so,
+ * reads it. (Examining books, evoking the tome of destruction, & using
+ * scrolls.)
+ *
+ * @param slot      The slot of the item in the player's inventory. If -1, the
+ *                  player is prompted to choose a slot.
+ */
+void read(int slot)
+{
+    if (!player_can_read())
+        return;
 
     int item_slot = (slot != -1) ? slot
                                  : prompt_invent_item("Read which item?",
@@ -2724,98 +2850,18 @@ void read_scroll(int slot)
     if (prompt_failed(item_slot))
         return;
 
-    item_def& scroll = you.inv[item_slot];
-
-    if ((scroll.base_type != OBJ_BOOKS || scroll.sub_type == BOOK_MANUAL)
-        && scroll.base_type != OBJ_SCROLLS)
+    const item_def& scroll = you.inv[item_slot];
+    const string failure_reason = cannot_read_item_reason(scroll);
+    if (!failure_reason.empty())
     {
-        mpr("You can't read that!");
-        crawl_state.zero_turns_taken();
+        mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
         return;
     }
 
-    // Here we try to read a book {dlb}:
     if (scroll.base_type == OBJ_BOOKS)
     {
         _handle_read_book(item_slot);
         return;
-    }
-
-    if (silenced(you.pos()))
-    {
-        mpr("Magic scrolls do not work when you're silenced!");
-        crawl_state.zero_turns_taken();
-        return;
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    // Prevent hot lava orcs reading scrolls
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
-    {
-        crawl_state.zero_turns_taken();
-        return mpr("You'd burn any scroll you tried to read!");
-    }
-#endif
-
-    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
-    const bool alreadyknown = item_type_known(scroll);
-
-    if (alreadyknown)
-    {
-        switch (which_scroll)
-        {
-        case SCR_BLINKING:
-        case SCR_TELEPORTATION:
-            if (you.no_tele_print_reason(false, which_scroll == SCR_BLINKING))
-                return;
-            break;
-
-        case SCR_ENCHANT_ARMOUR:
-            if (!any_items_to_select(OSEL_ENCH_ARM, true))
-                return;
-            break;
-
-        case SCR_ENCHANT_WEAPON:
-            if (!any_items_to_select(OSEL_ENCHANTABLE_WEAPON, true))
-                return;
-            break;
-
-        case SCR_IDENTIFY:
-            if (!any_items_to_select(OSEL_UNIDENT, true))
-                return;
-            break;
-
-        case SCR_RECHARGING:
-            if (!any_items_to_select(OSEL_RECHARGE, true))
-                return;
-            break;
-
-        case SCR_AMNESIA:
-            if (you.spell_no == 0)
-            {
-                canned_msg(MSG_NO_SPELLS);
-                return;
-            }
-            break;
-
-        case SCR_REMOVE_CURSE:
-            if (!any_items_to_select(OSEL_CURSED_WORN, true))
-                return;
-            break;
-
-        case SCR_CURSE_ARMOUR:
-            if (!any_items_to_select(OSEL_UNCURSED_WORN_ARMOUR, true))
-                return;
-            break;
-
-        case SCR_CURSE_JEWELLERY:
-            if (!any_items_to_select(OSEL_UNCURSED_WORN_JEWELLERY, true))
-                return;
-            break;
-
-        default:
-            break;
-        }
     }
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
@@ -2823,24 +2869,43 @@ void read_scroll(int slot)
 
     zin_recite_interrupt();
 
-    // ... but some scrolls may still be cancelled afterwards.
-    bool cancel_scroll = false;
-
     if (you.stat_zero[STAT_INT] && !one_chance_in(5))
     {
-        // mpr("You stumble in your attempt to read the scroll. Nothing happens!");
-        // mpr("Your reading takes too long for the scroll to take effect.");
-        // mpr("Your low mental capacity makes reading really difficult. You give up!");
-        mpr("You almost manage to decipher the scroll, but fail in this attempt.");
+        mpr("You almost manage to decipher the scroll,"
+            " but fail in this attempt.");
         return;
     }
 
-    // Imperfect vision prevents players from reading actual content {dlb}:
-    if (does_vision_blur())
+    // if we have blurry vision, we need to start a delay before the actual
+    // scroll effect kicks in.
+    if (player_mutation_level(MUT_BLURRY_VISION)
+        && !in_good_standing(GOD_ASHENZARI, 2))
     {
-        mpr("The writing blurs in front of your eyes.");
-        return;
+        // takes 1, 2, 3 extra turns
+        const int turns = player_mutation_level(MUT_BLURRY_VISION);
+        start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
     }
+    else
+        read_scroll(item_slot);
+}
+
+
+/**
+ * Read the provided scroll.
+ *
+ * Does NOT check whether the player can currently read, whether the scroll is
+ * currently useless, etc. Likewise doesn't handle blurry vision, setting
+ * you.turn_is_over, and other externals. DOES destroy one scroll, unless the
+ * player chooses to cancel at the last moment.
+ *
+ * @param slot      The slot of the item in the player's inventory.
+ */
+void read_scroll(int item_slot)
+{
+    item_def& scroll = you.inv[item_slot];
+    const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
+    const int prev_quantity = scroll.quantity;
+    const bool alreadyknown = item_type_known(scroll);
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
@@ -2855,9 +2920,9 @@ void read_scroll(int slot)
 
     const bool dangerous = player_in_a_dangerous_place();
 
+    // ... but some scrolls may still be cancelled afterwards.
+    bool cancel_scroll = false;
     bool bad_effect = false; // for Xom: result is bad (or at least dangerous)
-
-    int prev_quantity = you.inv[item_slot].quantity;
 
     switch (which_scroll)
     {
@@ -2866,9 +2931,13 @@ void read_scroll(int slot)
         break;
 
     case SCR_BLINKING:
+    {
+        const bool safely_cancellable
+            = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
         cancel_scroll = (blink(1000, false, false,
-                               pre_succ_msg, alreadyknown) == -1
+                               pre_succ_msg, safely_cancellable) == -1
                         && alreadyknown);
+    }
         break;
 
     case SCR_TELEPORTATION:
@@ -3328,7 +3397,7 @@ void tile_item_use(int idx)
 
         case OBJ_SCROLLS:
             if (check_warning_inscriptions(item, OPER_READ))
-                read_scroll(idx);
+                read(idx);
             return;
 
         case OBJ_JEWELLERY:

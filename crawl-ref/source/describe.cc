@@ -855,8 +855,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
                            " around the wielder.";
             break;
         case SK_SHORT_BLADES:
-            // TODO: should we mention stabbing for "ok" stabbing weapons?
-            // (long blades, piercing polearms, and clubs)
             {
                 string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
                                                            : "particularly";
@@ -2446,7 +2444,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
     case CMD_READ:
         if (item.base_type != OBJ_BOOKS || item.sub_type == BOOK_DESTRUCTION)
             redraw_screen();
-        read_scroll(slot);
+        read(slot);
         // In case of a book, stay in the inventory to see the content.
         return item.base_type == OBJ_BOOKS && item.sub_type != BOOK_DESTRUCTION;
     case CMD_WEAR_JEWELLERY:

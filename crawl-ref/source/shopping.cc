@@ -77,7 +77,7 @@ static const char * const shopping_order_names[NUM_ORDER_MODES] =
     "default", "price", "name", "type"
 };
 
-static bool _purchase(int shop, int item_got, int cost, bool id);
+static bool _purchase(shop_struct& shop, int item_got, int cost, bool id);
 
 static void _shop_print(const char *shoppy, int line)
 {
@@ -254,16 +254,6 @@ static void _list_shop_keys(bool viewing, int total_stock
     fs.display();
 }
 
-static vector<int> _shop_get_stock(int shopidx)
-{
-    vector<int> result;
-    // Shop items are heaped up at this cell.
-    const coord_def stack_location(0, 5 + shopidx);
-    for (stack_iterator si(stack_location); si; ++si)
-        result.push_back(si.link());
-    return result;
-}
-
 static int _shop_get_item_value(const item_def& item, int greed, bool id)
 {
     int result = (greed * item_value(item, id) / 10);
@@ -276,15 +266,15 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
 class ShopSorter
 {
 public:
-    ShopSorter(const shop_struct &shop, const vector<int>& stocklist)
-        : stock(stocklist), id(shoptype_identifies_stock(shop.type)),
+    ShopSorter(const shop_struct &shop)
+        : stock(shop.stock), id(shoptype_identifies_stock(shop.type)),
           greed(shop.greed)
     {}
 
     bool operator()(int a_index, int b_index) const
     {
-        item_def& a = mitm[stock[a_index]];
-        item_def& b = mitm[stock[b_index]];
+        const item_def& a = stock[a_index];
+        const item_def& b = stock[b_index];
 
         switch (shopping_order)
         {
@@ -307,15 +297,15 @@ public:
         }
     }
 private:
-    const vector<int>& stock;
+    const vector<item_def>& stock;
     const bool id;
     const int greed;
 };
 
+// Index into shop.stock from the letters in the shopping menu.
 static vector<int> stock_order;
 
-static void _shop_print_stock(const vector<int>& stock,
-                              const vector<bool>& selected,
+static void _shop_print_stock(const vector<bool>& selected,
                               const vector<bool>& in_list,
                               const shop_struct& shop,
                               int total_cost, bool viewing
@@ -331,14 +321,13 @@ static void _shop_print_stock(const vector<int>& stock,
 #endif
 
     stock_order.clear();
-    for (unsigned int i = 0; i < stock.size(); ++i)
+    for (size_t i = 0; i < shop.stock.size(); ++i)
         stock_order.push_back(i);
     stable_sort(stock_order.begin(), stock_order.end(),
-                ShopSorter(shop, stock));
-    for (unsigned int index = 0; index < stock_order.size(); ++index)
+                ShopSorter(shop));
+    for (size_t index = 0; index < stock_order.size(); ++index)
     {
-        unsigned int i = stock_order[index];
-        const item_def& item = mitm[stock[i]];
+        const item_def& item = shop.stock[stock_order[index]];
         const int gp_value = _shop_get_item_value(item, shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
 
@@ -355,20 +344,23 @@ static void _shop_print_stock(const vector<int>& stock,
 
         // Is this too complicated? (jpeg)
 
-        if (in_list[i])
+        if (in_list[index])
             textcolour(LIGHTCYAN);
-        else if (total_cost > you.gold && selected[i])
+        else if (total_cost > you.gold && selected[index])
             textcolour(LIGHTRED);
-        else if (gp_value <= you.gold - total_cost || selected[i] && can_afford)
+        else if (gp_value <= you.gold - total_cost
+                 || selected[index] && can_afford)
+        {
             textcolour(LIGHTGREEN);
+        }
         else if (!can_afford)
             textcolour(RED);
         else
             textcolour(YELLOW);
 
-        if (in_list[i])
+        if (in_list[index])
             cprintf("%c $ ", c);
-        else if (selected[i])
+        else if (selected[index])
             cprintf("%c + ", c);
         else
             cprintf("%c - ", c);
@@ -403,11 +395,11 @@ static void _shop_print_stock(const vector<int>& stock,
     textcolour(LIGHTGREY);
 }
 
-static int _count_identical(const vector<int>& stock, const item_def& item)
+static int _count_identical(const vector<item_def>& stock, const item_def& item)
 {
     int count = 0;
-    for (int stidx : stock)
-        if (ShoppingList::items_are_same(item, mitm[stidx]))
+    for (const item_def& other : stock)
+        if (ShoppingList::items_are_same(item, other))
             count++;
 
     return count;
@@ -426,7 +418,7 @@ static int _count_identical(const vector<int>& stock, const item_def& item)
 //  * ! toggles examination mode (where letter keys view items)
 static bool _in_a_shop(int shopidx, int &num_in_list)
 {
-    const shop_struct& shop = env.shop[shopidx];
+    shop_struct& shop = env.shop[shopidx];
 
     unwind_bool in_shop(_in_shop_now, true);
     unwind_var<ordering_mode> default_order(shopping_order);
@@ -443,7 +435,6 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
     bool first = true;
     int total_cost = 0;
 
-    vector<int> stock = _shop_get_stock(shopidx);
     vector<bool> selected;
     vector<bool> in_list;
 
@@ -476,27 +467,25 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
         StashTrack.get_shop(shop.pos).reset();
 
-        stock = _shop_get_stock(shopidx);
-
         in_list.clear();
-        in_list.resize(stock.size(), false);
-        for (unsigned int i = 0; i < stock.size(); i++)
+        in_list.resize(shop.stock.size(), false);
+        for (size_t i = 0; i < shop.stock.size(); i++)
         {
-            const item_def& item = mitm[stock[i]];
+            const item_def& item = shop.stock[i];
             in_list[i] = shopping_list.is_on_list(item);
         }
 
         // If items have been bought...
-        if (stock.size() != selected.size())
+        if (shop.stock.size() != selected.size())
         {
             total_cost = 0;
             selected.clear();
-            selected.resize(stock.size(), false);
+            selected.resize(shop.stock.size(), false);
         }
 
         num_in_list  = 0;
         int num_selected = 0;
-        for (unsigned int i = 0; i < stock.size(); i++)
+        for (size_t i = 0; i < shop.stock.size(); i++)
         {
             if (in_list[i])
                 num_in_list++;
@@ -505,19 +494,19 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
 
         clrscr();
-        if (stock.empty())
+        if (shop.stock.empty())
         {
             _shop_print("I'm sorry, my shop is empty now.", 1);
             _shop_more();
             return bought_something;
         }
 
-        _shop_print_stock(stock, selected, in_list, shop, total_cost, viewing
+        _shop_print_stock(selected, in_list, shop, total_cost, viewing
 #ifdef USE_TILE_LOCAL
                           , freeform
 #endif
                           );
-        _list_shop_keys(viewing, stock.size()
+        _list_shop_keys(viewing, shop.stock.size()
 #ifdef USE_TILE_LOCAL
                         , freeform
 #endif
@@ -531,9 +520,9 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
             unsigned int culled = 0;
 
-            for (unsigned int i = 0; i < stock.size(); i++)
+            for (size_t i = 0; i < shop.stock.size(); i++)
             {
-                const item_def& item = mitm[stock[i]];
+                const item_def& item = shop.stock[i];
                 const int cost = _shop_get_item_value(item, shop.greed,
                                                       id_stock);
 
@@ -637,11 +626,11 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                 {
                     to_buy = in_list;
 
-                    for (unsigned int i = 0; i < to_buy.size(); i++)
+                    for (size_t i = 0; i < to_buy.size(); i++)
                     {
                         if (to_buy[i])
                         {
-                            const item_def& item = mitm[stock[i]];
+                            const item_def& item = shop.stock[i];
 
                             total_purchase +=
                                 _shop_get_item_value(item, shop.greed,
@@ -677,7 +666,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                     {
                         if (to_buy[i])
                         {
-                            item_def& item = mitm[stock[i]];
+                            item_def& item = shop.stock[i];
 
                             // Remove from shopping list if it's unique
                             // (i.e., if the shop has multiple scrolls of
@@ -685,7 +674,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                             // from the shopping list if there's any
                             // left).
                             if (in_list[i]
-                                && _count_identical(stock, item) == 1)
+                                && _count_identical(shop.stock, item) == 1)
                             {
                                 shopping_list.del_thing(item);
                             }
@@ -706,8 +695,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                             quant = item.quantity;
                             num_items += quant;
 
-                            if (!_purchase(shopidx, stock[i], gp_value,
-                                           id_stock))
+                            if (!_purchase(shop, i, gp_value, id_stock))
                             {
                                 // The purchased item didn't fit into your
                                 // knapsack.
@@ -748,9 +736,9 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             if (num_selected > 0)
             {
                 // Move selected to shopping list.
-                for (unsigned int i = 0; i < stock.size(); i++)
+                for (size_t i = 0; i < shop.stock.size(); i++)
                 {
-                    const item_def &item = mitm[stock[i]];
+                    const item_def &item = shop.stock[i];
                     if (selected[i])
                     {
                         if (!shopping_list.is_on_list(item))
@@ -768,9 +756,9 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             else
             {
                 // Move shopping list to selected.
-                for (unsigned int i = 0; i < stock.size(); i++)
+                for (size_t i = 0; i < shop.stock.size(); i++)
                 {
-                    const item_def &item = mitm[stock[i]];
+                    const item_def &item = shop.stock[i];
                     if (in_list[i])
                     {
                         in_list[i]  = false;
@@ -800,7 +788,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             // (unmarking for purchase if it was marked).
             bool to_shoplist = isaupper(key);
             key = toalower(key) - 'a';
-            if (key >= static_cast<int>(stock.size()))
+            if ((size_t) key >= shop.stock.size())
             {
                 _shop_print("No such item.", 1);
                 _shop_more();
@@ -808,7 +796,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             }
             key = stock_order[key];
 
-            item_def& item = mitm[stock[key]];
+            item_def& item = shop.stock[key];
             if (viewing && !to_shoplist)
             {
                 // A hack to make the description more useful.
@@ -889,13 +877,22 @@ bool shoptype_identifies_stock(shop_type type)
            && type != SHOP_GENERAL_ANTIQUE;
 }
 
-static bool _purchase(int shop, int item_got, int cost, bool id)
+/** Buy an item from a shop!
+ *
+ *  @param shop  the shop to purchase from.
+ *  @param index the index of the item to buy in shop.stock
+ *  @param cost  the price of the item being payed
+ *  @param id    whether to ID the item
+ *  @returns whether true if it went in your inventory, false otherwise.
+ */
+static bool _purchase(shop_struct& shop, int index, int cost, bool id)
 {
+    item_def item = shop.stock[index];
+    shop.stock.erase(shop.stock.begin() + index);
+
     you.del_gold(cost);
 
     you.attribute[ATTR_PURCHASES] += cost;
-
-    item_def& item = mitm[item_got];
 
     origin_purchased(item);
 
@@ -907,12 +904,11 @@ static bool _purchase(int shop, int item_got, int cost, bool id)
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
-    // Shopkeepers will now place goods you can't carry outside the shop.
-    if (item_is_stationary(mitm[item_got])
-        || !move_item_to_inv(item_got, item.quantity, false))
+    // Shopkeepers will place goods you can't carry outside the shop.
+    if (item_is_stationary(item)
+        || !move_item_to_inv(item))
     {
-        move_item_to_grid(&item_got, env.shop[shop].pos);
-        return false;
+        copy_item_to_grid(item, shop.pos);
     }
     return true;
 }
@@ -1957,21 +1953,22 @@ void shop()
         return;
     }
 
+    const shop_struct& shop = env.shop[i];
+    const string shopname   = shop_name(shop.pos);
+
     // Quick out, if no inventory
-    if (_shop_get_stock(i).empty())
+    if (shop.stock.empty())
     {
-        const shop_struct& shop = env.shop[i];
-        mprf("%s appears to be closed.", shop_name(shop.pos).c_str());
+        mprf("%s appears to be closed.", shopname.c_str());
         _delete_shop(i);
         return;
     }
 
-          int  num_in_list      = 0;
+    int  num_in_list      = 0;
     const bool bought_something = _in_a_shop(i, num_in_list);
-    const string shopname       = shop_name(env.shop[i].pos);
 
     // If the shop is now empty, erase it from the overview.
-    if (_shop_get_stock(i).empty())
+    if (shop.stock.empty())
         _delete_shop(i);
 
     redraw_screen();
@@ -2006,14 +2003,6 @@ shop_struct *get_shop(const coord_def& where)
     ASSERT(env.shop[t].type != SHOP_UNASSIGNED);
 
     return &env.shop[t];
-}
-
-string shop_name(const coord_def& where, bool add_stop)
-{
-    string name(shop_name(where));
-    if (add_stop)
-        name += ".";
-    return name;
 }
 
 string shop_type_name(shop_type type)
@@ -2064,7 +2053,7 @@ static string _shop_type_suffix(shop_type type, const coord_def &where)
     return string(suffixnames[temp]);
 }
 
-string shop_name(const coord_def& where)
+string shop_name(const coord_def& where, bool add_stop)
 {
     const shop_struct *cshop = get_shop(where);
 
@@ -2106,12 +2095,15 @@ string shop_name(const coord_def& where)
             sh_name += " " + sh_suffix;
     }
 
+    if (add_stop)
+        sh_name += ".";
+
     return sh_name;
 }
 
 bool is_shop_item(const item_def &item)
 {
-    return item.pos.x == 0 && item.pos.y >= 5 && item.pos.y < (MAX_SHOPS + 5);
+    return item.link == ITEM_IN_SHOP;
 }
 
 bool shop_item_unknown(const item_def &item)
@@ -2976,17 +2968,21 @@ static const char *shop_types[] =
     "general",
 };
 
-int str_to_shoptype(const string &s)
+/** What shop type is this?
+ *
+ *  @param s the shop type, in a string.
+ *  @returns the corresponding enum, or SHOP_UNASSIGNED if none.
+ */
+shop_type str_to_shoptype(const string &s)
 {
     if (s == "random" || s == "any")
         return SHOP_RANDOM;
 
-    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
-    {
+    for (size_t i = 0; i < ARRAYSZ(shop_types); ++i)
         if (s == shop_types[i])
-            return i;
-    }
-    return -1;
+            return static_cast<shop_type>(i);
+
+    return SHOP_UNASSIGNED;
 }
 
 const char *shoptype_to_str(shop_type type)

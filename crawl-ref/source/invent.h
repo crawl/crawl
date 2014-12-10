@@ -180,7 +180,8 @@ protected:
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
 bool is_item_selected(const item_def &item, int selector);
-bool any_items_to_select(int type_expect, bool msg = false, int excluded_slot = -1);
+bool any_items_of_type(int type_expect, int excluded_slot = -1);
+string no_selectables_message(int item_selector);
 
 int prompt_invent_item(const char *prompt,
                        menu_type type,

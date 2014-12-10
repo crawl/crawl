@@ -3570,13 +3570,24 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_BONE_ARMOUR, "Cigotuvi's Embrace",
+    SPELL_CIGOTUVIS_EMBRACE, "Cigotuvi's Embrace",
     SPTYP_NECROMANCY,
     SPFLAG_CHAOTIC | SPFLAG_CORPSE_VIOLATING | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
     5,
     200,
     -1, -1,
     4, 0,
+    nullptr,
+},
+
+{
+    SPELL_GRAVITAS, "Gell's Gravitas",
+    SPTYP_TRANSLOCATION | SPTYP_HEXES,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
+    6,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    3, 0,
     nullptr,
 },
 

@@ -1039,7 +1039,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONTROL:                return "Control";
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_WIZARDRY:               return "Wizardry";
+#endif
     case BOOK_POWER:                  return "Power";
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";

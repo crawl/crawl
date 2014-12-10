@@ -178,6 +178,7 @@ public:
     bool gain_exp(int exp, int max_levels_to_gain = 2);
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
+    void maybe_degrade_bone_armour();
 
     void forget_random_spell();
 
@@ -505,7 +506,7 @@ public:
 
     // Combat-related class methods
     int     unadjusted_body_armour_penalty() const { return 0; }
-    int     adjusted_body_armour_penalty(int, bool) const { return 0; }
+    int     adjusted_body_armour_penalty(int) const { return 0; }
     int     adjusted_shield_penalty(int) const { return 0; }
     int     armour_tohit_penalty(bool, int) const { return 0; }
     int     shield_tohit_penalty(bool, int) const { return 0; }

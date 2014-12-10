@@ -3784,7 +3784,7 @@ god_type choose_god(god_type def_god)
     string spec = lowercase_string(specs);
 
     return find_earliest_match(spec, GOD_NO_GOD, NUM_GODS,
-                               _always_true<god_type>,
+                               always_true<god_type>,
                                bind(god_name, placeholders::_1, false));
 }
 

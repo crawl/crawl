@@ -5975,8 +5975,8 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
     vector<string> parts = split_string(";", s);
     string main_part = parts[0];
 
-    const int shop = str_to_shoptype(main_part);
-    if (shop == -1)
+    const shop_type shop = str_to_shoptype(main_part);
+    if (shop == SHOP_UNASSIGNED)
         err = make_stringf("bad shop type: '%s'", s.c_str());
 
     if (parts.size() > 2)
@@ -5996,8 +5996,8 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
     }
 
     feature_spec fspec(-1, weight, mimic, no_mimic);
-    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name,
-                                   shop_type_name, shop_suffix_name, greed,
+    fspec.shop.reset(new shop_spec(shop, shop_name, shop_type_name,
+                                   shop_suffix_name, greed,
                                    num_items, use_all, gozag));
     fspec.shop->items = items;
     return fspec;

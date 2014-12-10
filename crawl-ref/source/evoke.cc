@@ -424,12 +424,6 @@ void tome_of_power(int slot)
 
     you.turn_is_over = true;
 
-    if (does_vision_blur())
-    {
-        mpr("The page is too blurry for you to read.");
-        return;
-    }
-
     mpr("You find yourself reciting the magical words!");
     practise(EX_WILL_READ_TOME);
     count_action(CACT_EVOKE, EVOC_TOME);
@@ -1622,6 +1616,9 @@ static spret_type _phantom_mirror()
     mon->summoner = MID_PLAYER;
     mons_add_blame(mon, "mirrored by the player character");
     mon->add_ench(ENCH_PHANTOM_MIRROR);
+    mon->add_ench(mon_enchant(ENCH_DRAINED,
+                              div_rand_round(mon->get_experience_level(), 3),
+                              &you, INFINITE_DURATION));
 
     mon->behaviour = BEH_SEEK;
     set_nearest_monster_foe(mon);

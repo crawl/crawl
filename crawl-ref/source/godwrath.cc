@@ -317,7 +317,7 @@ static bool _zin_retribution()
         switch (random2(3))
         {
         case 0:
-            confuse_player(3 + random2(10));
+            confuse_player(5 + random2(3));
             break;
         case 1:
             you.put_to_sleep(nullptr, 30 + random2(20));
@@ -408,7 +408,7 @@ static bool _elyvilon_retribution()
     {
     case 0:
     case 1:
-        confuse_player(3 + random2(10));
+        confuse_player(5 + random2(3));
         break;
 
     case 2: // mostly flavour messages
@@ -1041,7 +1041,7 @@ static bool _sif_muna_retribution()
     case 2:
     case 3:
     case 4:
-        confuse_player(3 + random2(10));
+        confuse_player(5 + random2(3));
         break;
 
     case 5:
@@ -1820,7 +1820,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         if (coinflip())
         {
             mprf(MSGCH_WARN, "The divine experience confuses you!");
-            confuse_player(3 + random2(10));
+            confuse_player(5 + random2(3));
         }
         else
         {
@@ -2033,15 +2033,9 @@ int gozag_goldify(const item_def &it, int quant_got, bool quiet)
         return 0;
     }
 
-    const int val = item_value(it, true) / it.quantity;
-    double prob = (double)(val - 20) / 100.0;
-    if (prob > 1.0)
-        prob = 1.0;
-
-    int goldified_count = 0;
-    for (int i = 0; i < quant_got; i++)
-        if (decimal_chance(prob))
-            goldified_count++;
+    const unsigned val = item_value(it, true) / it.quantity;
+    // (val - 20)% chance for each item to be goldified.
+    const int goldified_count = binomial(quant_got, val - 20, 100);
 
     if (!goldified_count)
         return goldified_count;
