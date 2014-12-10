@@ -1122,6 +1122,7 @@ void game_options::reset_options()
     note_skill_levels.set(15);
     note_skill_levels.set(27);
     auto_spell_letters.clear();
+    auto_item_letters.clear();
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
@@ -2501,6 +2502,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "levels" && key != "level" && key != "entries"
         && key != "include" && key != "bindkey"
         && key != "spell_slot"
+        && key != "item_slot"
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -3212,26 +3214,30 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
-    else if (key == "spell_slot")
+    else if (key == "spell_slot"
+             || key == "item_slot")
+
     {
+        const bool item = key == "item_slot";
+        auto& auto_letters = item ? auto_item_letters : auto_spell_letters;
         if (plain)
-            auto_spell_letters.clear();
+            auto_letters.clear();
 
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
         {
-            return report_error("Error parsing spell lettering string: %s\n",
-                                field.c_str());
+            return report_error("Error parsing %s lettering string: %s\n",
+                                item ? "item" : "spell", field.c_str());
         }
         pair<text_pattern,string> entry(lowercase_string(thesplit[0]),
                                         thesplit[1]);
 
         if (minus_equal)
-            remove_matching(auto_spell_letters, entry);
+            remove_matching(auto_letters, entry);
         else if (caret_equal)
-            auto_spell_letters.insert(auto_spell_letters.begin(), entry);
+            auto_letters.insert(auto_letters.begin(), entry);
         else
-            auto_spell_letters.push_back(entry);
+            auto_letters.push_back(entry);
     }
     else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD

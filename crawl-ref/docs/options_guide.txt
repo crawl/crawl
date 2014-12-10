@@ -1126,6 +1126,13 @@ spell_slot ^= <regex>:<list of spell letters>
           spell_slot lines):
             spell_slot += .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
+item_slot ^= <regex>:<inventory letter>
+        (Ordered list option, one value per line)
+        Uses the same interface as spell_slot.
+        Additionally, the item_slot option is applied on an item when it is
+        identified, so it can be moved to the right place even if it was
+        picked up unidentified.
+
 autofight_stop = 30
         Autofight will not act if your HP is at or lower than this
         percentage of your max HP. For example, to remove this stop

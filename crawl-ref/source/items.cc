@@ -22,6 +22,7 @@
 #include "cio.h"
 #include "clua.h"
 #include "colour.h"
+#include "command.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dactions.h"
@@ -1855,7 +1856,38 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 }
 
 /**
+ * Maybe move an item to the slot given by the item_slot option.
+ *
+ * @param item the item to be checked.
+ * @returns whether the item was moved anywhere.
+ */
+bool auto_assign_item_slot(item_def& item)
+{
+    int newslot = -1;
+    // check to see whether we've chosen an automatic label:
+    for (auto& mapping : Options.auto_item_letters)
+    {
+        if (!mapping.first.matches(item.name(DESC_QUALNAME)))
+            continue;
+        for (char i : mapping.second)
+            if (isaalpha(i) && !you.inv[letter_to_index(i)].defined())
+            {
+                newslot = letter_to_index(i);
+                break;
+            }
+        if (newslot != -1 && newslot != item.link)
+        {
+            swap_inv_slots(item.link, newslot, true);
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Move the given item and quantity to a free slot in the player's inventory.
+ * If the item_slot option tells us to put it in a specific slot, it will move
+ * there and push out the item that was in it before instead.
  *
  * @param it[in]          The item to be placed into the player's inventory.
  * @param quant_got       The quantity of this item to place.
@@ -1879,6 +1911,10 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
 
+    bool message_given = false;
+    if (auto_assign_item_slot(item))
+        message_given = true;
+
     god_id_item(item);
     if (item.base_type == OBJ_WANDS)
         set_ident_type(item, ID_KNOWN_TYPE);
@@ -1892,7 +1928,7 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     if (is_perishable_stack(it) && quant_got != it.quantity)
         remove_newest_perishable_item(item);
 
-    if (!quiet)
+    if (!quiet && !message_given)
     {
         mprf_nocap("%s", get_menu_colour_prefix_tags(you.inv[freeslot],
                                                      DESC_INVENTORY).c_str());
