@@ -15,6 +15,7 @@
 #include "invent.h"
 #include "libutil.h"
 #include "macro.h"
+#include "menu.h"
 #include "mon-book.h"
 #include "prompt.h"
 #include "spl-book.h"
@@ -24,6 +25,19 @@
 #include "unicode.h"
 
 extern const spell_type serpent_of_hell_breaths[4][3];
+
+class spell_scroller : public formatted_scroller
+{
+public:
+    spell_scroller(const spellset &_spells, const item_def *_source_item);
+public:
+    char last_keypress;
+protected:
+    bool process_key(int keyin);
+protected:
+    spellset spells;
+    const item_def *source_item;
+};
 
 /**
  * Returns a spellset containing the spells for the given item.
@@ -437,10 +451,6 @@ string describe_item_spells(const item_def &item)
 void list_spellset(const spellset &spells, const item_def *source_item,
                    formatted_string &initial_desc)
 {
-    // make a map of characters to spells.
-    const vector<spell_type> flat_spells = map_chars_to_spells(spells,
-                                                               source_item);
-
     const bool can_memorize =
         source_item && source_item->base_type == OBJ_BOOKS
         && in_inventory(*source_item)
@@ -456,30 +466,44 @@ void list_spellset(const spellset &spells, const item_def *source_item,
         description.cprintf(", to memorize it or to forget it");
     description.cprintf(".\n");
 
-    // don't examine spellbooks that have been destroyed (by tearing out a
-    // page for amnesia), and break out of the loop if you start to memorize
-    // something.
-    while ((!source_item || source_item->is_valid())
-           && !already_learning_spell())
-    {
-        if (!crawl_state.is_replaying_keys())
-        {
-            cursor_control coff(false);
-            clrscr();
+    spell_scroller ssc(spells, source_item);
+    ssc.add_item_formatted_string(description);
+    ssc.show();
+}
 
-            description.display();
-        }
+spell_scroller::spell_scroller(const spellset &_spells,
+                               const item_def *_source_item)
+                       : formatted_scroller() {
+    spells = _spells;
+    source_item = _source_item;
+    last_keypress = 0;
+}
 
-        const char input_char = toalower(getchm(KMC_MENU));
-        if (input_char < 'a' || input_char > 'z')
-            return; // TOOD: support more than 26 spells
+bool spell_scroller::process_key(int keyin)
+{
+    last_keypress = keyin;
 
-        const int spell_index = letter_to_index(input_char);
-        ASSERT(spell_index >= 0);
-        if ((size_t) spell_index >= flat_spells.size())
-            return;
+    // TOOD: support more than 26 spells
+    if (keyin < 'a' || keyin > 'z')
+        return formatted_scroller::process_key(keyin);
 
-        const spell_type chosen_spell = flat_spells[spell_index];
-        describe_spell(chosen_spell, source_item);
-    }
+    // make a map of characters to spells.
+    const vector<spell_type> flat_spells = map_chars_to_spells(spells,
+                                                               source_item);
+
+    const int spell_index = letter_to_index(keyin);
+    ASSERT(spell_index >= 0);
+    if ((size_t) spell_index >= flat_spells.size())
+        return formatted_scroller::process_key(keyin);
+
+    const spell_type chosen_spell = flat_spells[spell_index];
+    describe_spell(chosen_spell, source_item);
+
+    const bool used_amnesia = source_item && !source_item->is_valid();
+    const bool memorized = already_learning_spell();
+    const bool exit_menu = used_amnesia || memorized;
+
+    if (!exit_menu)
+        draw_menu();
+    return !exit_menu;
 }
