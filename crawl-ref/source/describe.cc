@@ -2100,34 +2100,38 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     inf.quote = getQuoteString(db_name);
 }
 
-// Returns the pressed key in key
+/**
+ * If the given description has an associated quote, print a message at the
+ * bottom of the screen explaining how the player can toggle between viewing
+ * that quote & the description, and then check whether the input corresponds
+ * to such a toggle.
+ *
+ * @param inf[in]       The description in question.
+ * @param key[in,out]   The input command. If zero, is set to getchm().
+ * @return              Whether the description & quote should be toggled.
+ */
 static int _print_toggle_message(const describe_info &inf, int& key)
 {
+    mouse_control mc(MOUSE_MODE_MORE);
+    if (!key)
+        key = getchm();
+
     if (inf.quote.empty())
-    {
-        mouse_control mc(MOUSE_MODE_MORE);
-        key = getchm();
         return false;
-    }
-    else
-    {
-        const int bottom_line = min(30, get_number_of_lines());
-        cgotoxy(1, bottom_line);
-        formatted_string::parse_string(
-            "Press '<w>!</w>'"
+
+    const int bottom_line = min(30, get_number_of_lines());
+    cgotoxy(1, bottom_line);
+    formatted_string::parse_string(
+                                   "Press '<w>!</w>'"
 #ifdef USE_TILE_LOCAL
-            " or <w>Right-click</w>"
+                                   " or <w>Right-click</w>"
 #endif
-            " to toggle between the description and quote.").display();
+                                   " to toggle between the description and quote.").display();
 
-        mouse_control mc(MOUSE_MODE_MORE);
-        key = getchm();
+    if (key == '!' || key == CK_MOUSE_CMD)
+        return true;
 
-        if (key == '!' || key == CK_MOUSE_CMD)
-            return true;
-
-        return false;
-    }
+    return false;
 }
 
 void describe_feature_wide(const coord_def& pos, bool show_quote)
@@ -2147,7 +2151,7 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
-    int key;
+    int key = 0;
     if (_print_toggle_message(inf, key))
         describe_feature_wide(pos, !show_quote);
 }
@@ -3954,9 +3958,21 @@ int describe_monsters(const monster_info &mi, bool force_seen,
         fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
 
     fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
-    fs.show();
 
-    return fs.get_lastch();
+    bool show_quote = false;
+    while (true)
+    {
+        if (show_quote)
+            _print_quote(inf);
+        else
+            fs.show();
+
+        int keyin = show_quote ? 0 : fs.get_lastch();
+        if (_print_toggle_message(inf, keyin))
+            show_quote = !show_quote;
+        else
+            return keyin;
+    }
 }
 
 static const char* xl_rank_names[] =
