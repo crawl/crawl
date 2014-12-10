@@ -83,6 +83,8 @@ static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 static void _multidrop(vector<SelItem> tmp_items);
+static bool _merge_items_into_inv(const item_def &it, int quant_got,
+                                  char &inv_slot, bool quiet);
 
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
@@ -1669,7 +1671,7 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
 
     // attempt to put the item into your inventory.
     char inv_slot;
-    if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
+    if (_merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
         put_in_inv = true;
         // if you succeeded, actually reduce the number in the original stack
@@ -1959,8 +1961,8 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
  *              item pickup failure) aren't printed.
  * @return Whether something was successfully picked up.
  */
-bool merge_items_into_inv(const item_def &it, int quant_got, char &inv_slot,
-                          bool quiet)
+static bool _merge_items_into_inv(const item_def &it, int quant_got,
+                                  char &inv_slot, bool quiet)
 {
     inv_slot = -1;
 
