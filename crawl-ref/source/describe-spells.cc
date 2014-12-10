@@ -26,19 +26,6 @@
 
 extern const spell_type serpent_of_hell_breaths[4][3];
 
-class spell_scroller : public formatted_scroller
-{
-public:
-    spell_scroller(const spellset &_spells, const item_def *_source_item);
-public:
-    char last_keypress;
-protected:
-    bool process_key(int keyin);
-protected:
-    spellset spells;
-    const item_def *source_item;
-};
-
 /**
  * Returns a spellset containing the spells for the given item.
  *
@@ -364,6 +351,9 @@ static void _describe_book(const spellbook_contents &book,
         description.cprintf("\n Spells                             Type                      Level");
     description.cprintf("\n");
 
+    // list spells in two columns, instead of one? (monster books)
+    const bool doublecolumn = _list_spells_doublecolumn(source_item);
+
     bool first_line_element = true;
     for (auto spell : book.spells)
     {
@@ -381,7 +371,7 @@ static void _describe_book(const spellbook_contents &book,
                             chop_string(spell_title(spell), 29).c_str());
 
         // only display type & level for book/rod spells
-        if (_list_spells_doublecolumn(source_item))
+        if (doublecolumn)
         {
             // print monster spells in two columns
             if (first_line_element)
@@ -399,6 +389,10 @@ static void _describe_book(const spellbook_contents &book,
                             chop_string(schools, 30).c_str(),
                             spell_difficulty(spell));
     }
+
+    // are we halfway through a column?
+    if (doublecolumn && book.spells.size() % 2)
+        description.cprintf("\n");
 }
 
 
@@ -476,12 +470,21 @@ spell_scroller::spell_scroller(const spellset &_spells,
                        : formatted_scroller() {
     spells = _spells;
     source_item = _source_item;
-    last_keypress = 0;
 }
 
+/**
+ * Handle a keypress while looking at a scrollable list of spells.
+ *
+ * @param keyin     The character corresponding to the pressed key.
+ * @return          True if the menu should continue running; false if the
+ *                  menu should exit & return control to its caller.
+ */
 bool spell_scroller::process_key(int keyin)
 {
-    last_keypress = keyin;
+    lastch = keyin;
+
+    if (keyin == ' ')
+        return false; // in ?/m, indicates you're looking for an inexact match
 
     // TOOD: support more than 26 spells
     if (keyin < 'a' || keyin > 'z')
@@ -507,3 +510,7 @@ bool spell_scroller::process_key(int keyin)
         draw_menu();
     return !exit_menu;
 }
+
+int spell_scroller::get_lastch() { return lastch; }
+
+spell_scroller::~spell_scroller() { }
