@@ -484,7 +484,7 @@ bool spell_scroller::process_key(int keyin)
     lastch = keyin;
 
     if (keyin == ' ')
-        return false; // in ?/m, indicates
+        return false; // in ?/m, indicates you're looking for an inexact match
 
     // TOOD: support more than 26 spells
     if (keyin < 'a' || keyin > 'z')
