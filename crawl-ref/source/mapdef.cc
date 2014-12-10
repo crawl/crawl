@@ -6023,27 +6023,15 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
         feature_spec fsp(-1, weight, mimic, no_mimic);
         fsp.glyph = s[0];
         list.push_back(fsp);
-        return list;
     }
-
-    if (strip_tag(s, "trap") || s == "web")
-    {
+    else if (strip_tag(s, "trap") || s == "web")
         list.push_back(parse_trap(s, weight));
-        return list;
-    }
-
-    if (strip_tag(s, "shop"))
-    {
+    else if (strip_tag(s, "shop"))
         list.push_back(parse_shop(s, weight, mimic, no_mimic));
-        return list;
-    }
-
-    const dungeon_feature_type ftype = dungeon_feature_by_name(s);
-
-    if (ftype == DNGN_UNSEEN)
-        err = make_stringf("no features matching \"%s\"", str.c_str());
-    else
+    else if (auto ftype = dungeon_feature_by_name(s)) // DNGN_UNSEEN == 0
         list.emplace_back(ftype, weight, mimic, no_mimic);
+    else
+        err = make_stringf("no features matching \"%s\"", str.c_str());
 
     return list;
 }
