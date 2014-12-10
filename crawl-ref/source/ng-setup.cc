@@ -1255,7 +1255,7 @@ static void _setup_generic(const newgame_def& ng)
         if (!you.inv[i].defined())
             continue;
         // link properly
-        you.inv[i].pos.set(-1, -1);
+        you.inv[i].pos = ITEM_IN_INVENTORY;
         you.inv[i].link = i;
         you.inv[i].slot = index_to_letter(you.inv[i].link);
         item_colour(you.inv[i]);  // set correct special and colour
