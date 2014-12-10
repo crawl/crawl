@@ -6026,14 +6026,13 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
         return list;
     }
 
-    if (s.find("trap") != string::npos || s == "web")
+    if (strip_tag(s, "trap") || s == "web")
     {
         list.push_back(parse_trap(s, weight));
         return list;
     }
 
-    if (s.find("shop") != string::npos && s != "abandoned_shop"
-        || s.find("store") != string::npos)
+    if (strip_tag(s, "shop"))
     {
         list.push_back(parse_shop(s, weight, mimic, no_mimic));
         return list;
