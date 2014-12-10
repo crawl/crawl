@@ -321,9 +321,9 @@ vector<spell_type> map_chars_to_spells(const spellset &spells,
         return flat_spells;
 
     vector<spell_type> column_spells;
-    for (int i = 0; i < flat_spells.size(); i += 2)
+    for (size_t i = 0; i < flat_spells.size(); i += 2)
         column_spells.emplace_back(flat_spells[i]);
-    for (int i = 1; i < flat_spells.size(); i += 2)
+    for (size_t i = 1; i < flat_spells.size(); i += 2)
         column_spells.emplace_back(flat_spells[i]);
     return column_spells;
 }
@@ -463,13 +463,6 @@ void list_spellset(const spellset &spells, const item_def *source_item,
     spell_scroller ssc(spells, source_item);
     ssc.add_item_formatted_string(description);
     ssc.show();
-}
-
-spell_scroller::spell_scroller(const spellset &_spells,
-                               const item_def *_source_item)
-                       : formatted_scroller() {
-    spells = _spells;
-    source_item = _source_item;
 }
 
 /**
