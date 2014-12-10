@@ -45,8 +45,6 @@ void note_inscribe_item(item_def &item);
 bool move_item_to_inv(item_def& item);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
 bool auto_assign_item_slot(item_def& item);
-bool merge_items_into_inv(const item_def &it, int quant_got, char &inv_slot,
-                          bool quiet = false);
 void mark_items_non_pickup_at(const coord_def &pos);
 void mark_items_non_visit_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);
