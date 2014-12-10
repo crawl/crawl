@@ -2100,6 +2100,14 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     inf.quote = getQuoteString(db_name);
 }
 
+/// A message explaining how the player can toggle between quote &
+static const string _toggle_message =
+    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    " or <w>Right-click</w>"
+#endif
+    " to toggle between the description and quote.";
+
 /**
  * If the given description has an associated quote, print a message at the
  * bottom of the screen explaining how the player can toggle between viewing
@@ -2121,12 +2129,7 @@ static int _print_toggle_message(const describe_info &inf, int& key)
 
     const int bottom_line = min(30, get_number_of_lines());
     cgotoxy(1, bottom_line);
-    formatted_string::parse_string(
-                                   "Press '<w>!</w>'"
-#ifdef USE_TILE_LOCAL
-                                   " or <w>Right-click</w>"
-#endif
-                                   " to toggle between the description and quote.").display();
+    formatted_string::parse_string(_toggle_message).display();
 
     if (key == '!' || key == CK_MOUSE_CMD)
         return true;
@@ -3956,6 +3959,11 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     fs.add_text(inf.body.str());
     if (crawl_state.game_is_hints())
         fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
+    if (!inf.quote.empty())
+    {
+        fs.add_item_formatted_string(
+                formatted_string::parse_string("\n" + _toggle_message));
+    }
 
     fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
 
@@ -3968,6 +3976,8 @@ int describe_monsters(const monster_info &mi, bool force_seen,
             fs.show();
 
         int keyin = show_quote ? 0 : fs.get_lastch();
+        // this is never actually displayed to the player
+        // we just use it to check whether we should toggle.
         if (_print_toggle_message(inf, keyin))
             show_quote = !show_quote;
         else

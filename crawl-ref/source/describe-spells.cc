@@ -465,13 +465,6 @@ void list_spellset(const spellset &spells, const item_def *source_item,
     ssc.show();
 }
 
-spell_scroller::spell_scroller(const spellset &_spells,
-                               const item_def *_source_item)
-                       : formatted_scroller() {
-    spells = _spells;
-    source_item = _source_item;
-}
-
 /**
  * Handle a keypress while looking at a scrollable list of spells.
  *

@@ -28,7 +28,12 @@ typedef vector<spellbook_contents> spellset;
 class spell_scroller : public formatted_scroller
 {
 public:
-    spell_scroller(const spellset &_spells, const item_def *_source_item);
+    spell_scroller(const spellset &_spells, const item_def *_source_item,
+                   bool _show_quote_toggle = false) :
+    formatted_scroller(), spells(_spells), source_item(_source_item),
+    show_quote_toggle(_show_quote_toggle)
+    { };
+
     int get_lastch();
     virtual ~spell_scroller();
 protected:
@@ -36,6 +41,7 @@ protected:
 protected:
     spellset spells;
     const item_def *source_item;
+    bool show_quote_toggle;
 };
 
 spellset item_spellset(const item_def &item);
