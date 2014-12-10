@@ -1909,7 +1909,7 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     item.link     = freeslot;
     item.quantity = quant_got;
     item.slot     = index_to_letter(item.link);
-    item.pos.set(-1, -1);
+    item.pos = ITEM_IN_INVENTORY;
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
 

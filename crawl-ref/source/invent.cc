@@ -983,7 +983,7 @@ unsigned char InvMenu::getkey() const
 
 bool in_inventory(const item_def &i)
 {
-    return i.pos.x == -1 && i.pos.y == -1;
+    return i.pos == ITEM_IN_INVENTORY;
 }
 
 const char *item_class_name(int type, bool terse)
