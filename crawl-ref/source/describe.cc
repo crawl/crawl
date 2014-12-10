@@ -2776,7 +2776,9 @@ static int _get_spell_description(const spell_type spell,
         + "\n";
     }
 
-    _append_spell_stats(spell, description, rod);
+    // only list stats for player spells
+    if (item)
+        _append_spell_stats(spell, description, rod);
 
     if (crawl_state.player_is_dead())
         return BOOK_NEITHER;
@@ -3192,7 +3194,8 @@ static string _monster_spells_description(const monster_info& mi)
         return "";
 
     formatted_string description;
-    describe_spellset(monster_spellset(mi), NULL, description);
+    describe_spellset(monster_spellset(mi), nullptr, description);
+    description.cprintf("Select a spell to read its description.\n");
     return description.tostring();
 }
 
@@ -3947,7 +3950,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
 #endif
 
-    formatted_scroller fs;
+    spell_scroller fs(monster_spellset(mi), nullptr);
     fs.add_text(inf.body.str());
     if (crawl_state.game_is_hints())
         fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
@@ -3955,7 +3958,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
     fs.show();
 
-    return 'a'; //TODO
+    return fs.get_lastch();
 }
 
 static const char* xl_rank_names[] =
