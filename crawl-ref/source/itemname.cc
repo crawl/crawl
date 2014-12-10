@@ -16,6 +16,7 @@
 #include "art-enum.h"
 #include "butcher.h"
 #include "colour.h"
+#include "command.h"
 #include "decks.h"
 #include "describe.h"
 #include "english.h"
@@ -2058,6 +2059,7 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
         shopping_list.cull_identical_items(item);
         if (setting == ID_KNOWN_TYPE)
             item_skills(item, you.start_train);
+        auto_assign_item_slot(item);
     }
 
     if (setting == ID_KNOWN_TYPE && notes_are_active()
