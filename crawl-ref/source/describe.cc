@@ -3956,7 +3956,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
 #endif
 
     spell_scroller fs(monster_spellset(mi), nullptr);
-    fs.add_text(inf.body.str());
+    fs.add_text(inf.body.str(), false, get_number_of_cols() - 1);
     if (crawl_state.game_is_hints())
         fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
     if (!inf.quote.empty())
