@@ -1947,6 +1947,7 @@ static void _make_faerie_armour(item_def &item)
 
     doodad.props[ARTEFACT_APPEAR_KEY].get_string()
         = item.props[ARTEFACT_APPEAR_KEY].get_string();
+    doodad.props.erase(ARTEFACT_NAME_KEY);
     item.props = doodad.props;
     item.plus = random2(6) + random2(6) - 2;
 }
