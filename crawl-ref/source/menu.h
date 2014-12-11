@@ -554,7 +554,8 @@ public:
     virtual void add_item_formatted_string(const formatted_string& s,
                                            int hotkey = 0);
     virtual void add_item_string(const string& s, int hotkey = 0);
-    virtual void add_text(const string& s, bool new_line = false);
+    virtual void add_text(const string& s, bool new_line = false,
+                          int wrap_col = 0);
     virtual bool jump_to_hotkey(int keyin);
     virtual vector<MenuEntry *> show(bool reuse_selections = false);
     virtual ~formatted_scroller();
