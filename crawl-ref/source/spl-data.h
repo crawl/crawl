@@ -2123,6 +2123,7 @@ static const struct spell_desc spelldata[] =
     nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_IRON_ELEMENTALS, "Summon Iron Elementals",
     SPTYP_SUMMONING,
@@ -2133,6 +2134,7 @@ static const struct spell_desc spelldata[] =
     4, 0,
     nullptr,
 },
+#endif
 
 {
     SPELL_SLEEP, "Sleep",
@@ -3443,7 +3445,7 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_TENTACLE_THROW, "Tentacle Throw",
+    SPELL_THROW, "Throw",
     SPTYP_TRANSLOCATION,
     SPFLAG_MONSTER | SPFLAG_NOT_SELF,
     5,

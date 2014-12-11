@@ -2900,6 +2900,7 @@ enum monster_type                      // menv[].type
     MONS_TITAN,
 #if TAG_MAJOR_VERSION > 34
     MONS_JUGGERNAUT,
+    MONS_IRON_GIANT,
 #endif
     MONS_HUMAN,
     MONS_SLAVE,
@@ -3242,7 +3243,9 @@ enum monster_type                      // menv[].type
 #endif
     // Sprint uniques:
     MONS_CHUCK,
+#if TAG_MAJOR_VERSION == 34
     MONS_IRON_GIANT,
+#endif
     MONS_NELLIE,
 #if TAG_MAJOR_VERSION == 34
     MONS_IRON_ELEMENTAL,
@@ -4351,7 +4354,9 @@ enum spell_type
 #endif
     SPELL_AWAKEN_FOREST,
     SPELL_DRUIDS_CALL,
+#if TAG_MAJOR_VERSION == 34
     SPELL_IRON_ELEMENTALS,
+#endif
     SPELL_SUMMON_SPECTRAL_ORCS,
 #if TAG_MAJOR_VERSION == 34
     SPELL_RESURRECT,
@@ -4503,7 +4508,7 @@ enum spell_type
     SPELL_SEAL_DOORS,
     SPELL_FLAY,
     SPELL_BERSERK_OTHER,
-    SPELL_TENTACLE_THROW,
+    SPELL_THROW,
     SPELL_CORRUPTING_PULSE,
     SPELL_SIREN_SONG,
     SPELL_AVATAR_SONG,

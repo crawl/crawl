@@ -2924,6 +2924,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = random_range(1, 3); // same as panlords
         break;
 
+    case MONS_IRON_GIANT:
+        natural_leader = true;
+        band = BAND_IRON_GIANT;
+        band_size = random_range(2, 4);
+        break;
+
     default: ;
     }
 
@@ -3555,6 +3561,12 @@ static monster_type _band_member(band_type band, int which,
                                        50, MONS_DAEVA,
                                         1, MONS_OPHAN,
                                         0);
+
+    case BAND_IRON_GIANT:
+        return random_choose_weighted(10, MONS_STONE_GIANT,
+                                       1, MONS_FIRE_GIANT,
+                                       1, MONS_FROST_GIANT,
+                                       0);
 
     case BAND_RANDOM_SINGLE:
     {

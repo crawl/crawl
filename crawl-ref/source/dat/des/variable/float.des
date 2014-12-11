@@ -2693,15 +2693,8 @@ NAME: lightli_tower_of_babel
 ORIENT: float
 # Random interlopers look badly out of place here.
 TAGS: no_monster_gen no_item_gen
-DEPTH: Dis, !D:$, Depths, !Depths:$
-: if you.in_branch("Depths") then
-# A more worthy adversary badly wanted.
-# What about an obvious up-HD rename of hell knight? *duck*
-MONS: fire giant
-: else
-MONS: Hell Sentinel
-: end
-MONS: flying skull
+DEPTH: Dis, !Dis:$, Depths, !Depths:$
+MONS: patrolling iron giant, flying skull
 ITEM: bolt ego:exploding q:5
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
