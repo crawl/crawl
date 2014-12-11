@@ -474,6 +474,7 @@ bool mons_is_player_shadow(const monster* mon);
 
 void reset_all_monsters();
 void debug_mondata();
+void debug_monspells();
 
 bool choose_any_monster(const monster* mon);
 monster *choose_random_nearby_monster(
