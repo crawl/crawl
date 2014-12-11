@@ -63,7 +63,7 @@ def loads(s):
         sl = list(s)
         openarr = 0
         openstring = False
-        arrayoftables = True
+        arrayoftables = False
         beginline = True
         keygroup = False
         delnum = 1
