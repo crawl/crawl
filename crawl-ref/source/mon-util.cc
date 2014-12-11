@@ -16,6 +16,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -2174,6 +2175,17 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         return { MST_DEEP_ELF_KNIGHT_I, MST_DEEP_ELF_KNIGHT_II,
                  MST_DEEP_ELF_KNIGHT_III };
 
+    case MONS_BORIS:
+        if (you.where_are_you == BRANCH_DUNGEON)
+            return { MST_BORIS_DUNGEON };
+        if (you.where_are_you == BRANCH_LAIR
+            || branches[you.where_are_you].parent_branch == BRANCH_LAIR)
+        {
+            return { MST_BORIS_LAIR };
+        }
+
+        return { MST_BORIS };
+
     default:
         return { static_cast<mon_spellbook_type>(
                      get_monster_data(mon_type)->sec) };
@@ -2557,6 +2569,25 @@ void define_monster(monster* mons)
         mons->ghost_demon_init();
         mons->bind_melee_flags();
         mons->bind_spell_flags();
+        break;
+    }
+
+    // Set custom_spells so Boris always shows his current spell set.
+    // Also adjust his HD and HP depending on his location.
+    case MONS_BORIS:
+    {
+        if (you.where_are_you == BRANCH_DUNGEON)
+        {
+            mons->set_hit_dice(14);
+            mons->max_hit_points = mons->hit_points = 98;
+        }
+        else if (you.where_are_you == BRANCH_LAIR
+                 || branches[you.where_are_you].parent_branch == BRANCH_LAIR)
+        {
+            mons->set_hit_dice(18);
+            mons->max_hit_points = mons->hit_points = 126;
+        }
+        mons->props["custom_spells"].get_bool() = true;
         break;
     }
 
