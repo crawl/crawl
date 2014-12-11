@@ -1820,10 +1820,11 @@ formatted_scroller::formatted_scroller(int _flags, const string& s) :
     add_text(s);
 }
 
-void formatted_scroller::add_text(const string& s, bool new_line)
+void formatted_scroller::add_text(const string& s, bool new_line, int wrap_col)
 {
     vector<formatted_string> parts;
-    formatted_string::parse_string_to_multiple(s, parts);
+
+    formatted_string::parse_string_to_multiple(s, parts, wrap_col);
     for (const formatted_string &part : parts)
         add_item_formatted_string(part);
 
