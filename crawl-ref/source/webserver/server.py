@@ -93,8 +93,8 @@ def daemonize():
 
 def write_pidfile():
     pidfile = config.get("pidfile")
-    uid = config.get("uid", 0)
-    gid = config.get("gid", 0)
+    uid = config.get("uid", -1)
+    gid = config.get("gid", -1)
     if not pidfile:
         return
     if os.path.exists(pidfile):
