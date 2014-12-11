@@ -93,7 +93,7 @@ void formatted_string::parse_string_to_multiple(const string &s,
         for (string &line : pre_split)
         {
             if (line.empty())
-                lines.emplace_back("");
+                lines.emplace_back(" ");
             while (!line.empty())
                 lines.push_back(wordwrap_line(line, wrap_col, true, true));
         }
