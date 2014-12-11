@@ -598,7 +598,7 @@ Orcish Mines
  Another day older and deeper in debt
  Saint Peter don't you call me 'cause I can't go
  I owe my soul to the company store.”
-    -Merle Travis, "Sixteen Tons". 1946.
+    -Merle Travis, “Sixteen Tons”. 1946.
 %%%%
 Polyphemus
 
@@ -1682,10 +1682,10 @@ Iskenderun's Battlesphere spell
 %%%%
 jackal
 
-Always ready to take advantage of every favourable opportunity, the Jackal is a
-sad parasite, and hangs on the skirts of the larger carnivora as they roam the
-country for prey, in the hope of securing some share of the creatures which
-they destroy or wound."
+“Always ready to take advantage of every favourable opportunity, the Jackal is
+a sad parasite, and hangs on the skirts of the larger carnivora as they roam
+the country for prey, in the hope of securing some share of the creatures
+which they destroy or wound.”
     -John George Wood, _The Illustrated Natural History: Mammalia_. 1865.
 %%%%
 javelin
@@ -2131,7 +2131,7 @@ potion
 %%%%
 potion of poison
 
-“If when you say "whiskey" you mean the devil's brew, the poison
+“If when you say ‘whiskey’ you mean the devil's brew, the poison
  scourge, the bloody monster, that defiles innocence, dethrones
  reason, destroys the home, creates misery and poverty, yea,
  literally takes the bread from the mouths of little children...
@@ -2140,7 +2140,7 @@ potion of poison
 %%%%
 potion of curing
 
-“But if when you say "whiskey" you mean the oil of conversation,
+“But if when you say ‘whiskey’ you mean the oil of conversation,
  the philosophic wine, the ale that is consumed when good fellows
  get together, that puts a song in their hearts and laughter on
  their lips, and the warm glow of contentment in their eyes...
