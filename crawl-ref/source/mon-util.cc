@@ -4615,7 +4615,7 @@ void debug_monspells()
                     ;
                 }
                 ASSERT(book_index < mons_books.size());
-                book_name = make_stringf("%s-%d", mons_name, book_index);
+                book_name = make_stringf("%s-%d", mons_name, (int)book_index);
             }
             else
                 book_name = make_stringf("%s", mons_name);
