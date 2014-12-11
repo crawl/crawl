@@ -512,6 +512,7 @@ void get_cleave_targets(const actor* attacker, const coord_def& def,
     {
         if (actor * target = actor_at(def))
             targets.push_back(target);
+        return;
     }
 
     const coord_def atk = attacker->pos();
