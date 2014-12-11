@@ -1412,13 +1412,13 @@ Teleport Other spell
 
 Randomly translocates a targeted creature.
 %%%%
-Tentacle Throw spell
-
-Hurls a tentacle-constricted foe a considerable distance, injuring them.
-%%%%
 Teleport Self spell
 
 Teleports the caster to a random location.
+%%%%
+Throw spell
+
+Hurls a constricted foe a considerable distance, injuring them.
 %%%%
 Throw Barbs spell
 

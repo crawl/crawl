@@ -1097,8 +1097,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_IRON_GIANT,
       {
-       { SPELL_IRON_SHOT, 36, MON_SPELL_MAGICAL },
-       { SPELL_IRON_ELEMENTALS, 36, MON_SPELL_MAGICAL },
+       { SPELL_IRON_SHOT, 40, MON_SPELL_MAGICAL },
+       { SPELL_THROW, 80, MON_SPELL_NATURAL },
       }
     },
 
@@ -1717,7 +1717,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_OCTOPODE_CRUSHER,
       {
        { SPELL_IRON_SHOT, 26, MON_SPELL_WIZARD },
-       { SPELL_TENTACLE_THROW, 80, MON_SPELL_NATURAL },
+       { SPELL_THROW, 80, MON_SPELL_NATURAL },
       }
     },
 

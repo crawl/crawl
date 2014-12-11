@@ -406,7 +406,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "storm dragon / air elemental / w:5 wind drake / spriggan air mage /\
                     insubstantial wisp / w:3 titan / w:1 nikola",
                 "earth elemental / w:5 iron golem / stone giant /\
-                    rust devil / w:5 iron troll / w:1 the iron giant /\
+                    rust devil / w:5 iron troll / w:1 iron giant /\
                     w:2 iron dragon / w:3 iron elemental / w:2 quicksilver dragon",
                 "hydra simulacrum / stone giant simulacrum /\
                     golden dragon simulacrum / spriggan simulacrum / water elemental /\
@@ -473,7 +473,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Hell w:25 / geryon w:2 / nellie w:2",
                 -- Elements/hells, Holy
                 "place:Dis:$ w:20 / hell sentinel / iron dragon / quicksilver dragon /\
-                    iron elemental / stone giant / the iron giant",
+                    iron elemental / stone giant / iron giant",
                 "w:5 orb of fire / brimstone fiend / balrug / hellion /\
                     fire giant / sun demon / fire vortex",
                 "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil",

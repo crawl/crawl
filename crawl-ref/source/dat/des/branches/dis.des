@@ -40,7 +40,7 @@ function dis_divider(e, water)
    e.orient("north")
    e.depth("Dis:$")
    e.kmons("1 = hell sentinel")
-   e.kmons("2 = iron dragon")
+   e.kmons("2 = iron dragon / iron giant w:5")
    if water then
       e.kfeat("2w = deep_water")
       e.kmask("w = no_monster_gen")
@@ -683,7 +683,7 @@ ENDMAP
 
 NAME:    dis_old
 MONS:    patrolling Dispater, brimstone fiend, Ice Fiend
-MONS:    rust devil, war gargoyle, iron dragon
+MONS:    rust devil, war gargoyle, iron dragon / iron giant w:5
 KMONS:   7 = hell sentinel
 KMONS:   8 = quicksilver dragon
 : serpent_of_hell_setup(_G)
@@ -726,7 +726,7 @@ ENDMAP
 NAME:    dis_mu
 KFEAT:   o = granite_statue
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, rust devil
-MONS:    war gargoyle, iron dragon, iron troll
+MONS:    war gargoyle, iron dragon / iron giant w:5, iron troll
 KMONS:   8 = iron golem
 KMONS:   9 = hell sentinel
 KMONS:   0 = quicksilver dragon
@@ -782,7 +782,7 @@ MAP
 ENDMAP
 
 NAME:   dis_grunt
-MONS:   patrolling Dispater, Hell Sentinel, iron dragon
+MONS:   patrolling Dispater, Hell Sentinel, iron dragon / iron giant w:5
 MONS:   rust devil / iron imp w:20
 MONS:   iron troll, quicksilver dragon, cacodemon
 NSUBST: G = 4:8 / *:G
@@ -958,7 +958,7 @@ ENDMAP
 NAME:    dis_st
 ORIENT:  encompass
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, hell sentinel
-MONS:    iron troll, iron dragon, cacodemon
+MONS:    iron troll, iron dragon / iron giant w:5, cacodemon
 SUBST:   5=5.,6=6.,7=7.,8=4:15 67...,0=09988...
 SHUFFLE: 67
 NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
@@ -1053,7 +1053,8 @@ TAGS:    no_monster_gen
 ORIENT:  encompass
 MONS:    rust devil w:40 / skeletal warrior
 MONS:    war gargoyle, brimstone fiend, ice fiend, hell sentinel
-MONS:    patrolling iron dragon w:15 / patrolling quicksilver dragon
+MONS:    patrolling iron dragon / patrolling quicksilver dragon / \
+         patrolling iron giant w:5
 MONS:    patrolling Dispater
 KMONS:   8 = vampire knight w:8 / hell knight band w:8 / ancient champion w:18 / \
          reaper w:6 / cacodemon w:2 / executioner w:6 / balrug w:4 / \
@@ -1144,7 +1145,7 @@ ENDMAP
 NAME:    dis_grunt_layers
 ORIENT:  encompass
 MONS:    patrolling Dispater, Hell Sentinel
-MONS:    iron dragon / quicksilver dragon w:5
+MONS:    iron dragon / iron giant w:5 / quicksilver dragon w:5
 MONS:    rust devil / iron imp w:20, iron troll
 MONS:    brimstone fiend, ice fiend
 SHUFFLE: {([<

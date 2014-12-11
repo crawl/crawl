@@ -1507,7 +1507,7 @@ iron elemental
 A rare and powerful spirit from the elemental plane of earth, it exists in this
 world by inhabiting a hulking mass of iron.
 %%%%
-the iron giant
+iron giant
 
 Huge, lumbering, and particularly dull, this rusting monolith packs quite the
 punch. It is quite possibly the largest giant you have ever seen.

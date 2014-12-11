@@ -589,7 +589,6 @@ mennas MONS_MENNAS
 %rim 0
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
-iron_giant MONS_IRON_GIANT
 %sdir mon
 hill_giant MONS_HILL_GIANT
 ettin MONS_ETTIN
@@ -599,6 +598,7 @@ frost_giant MONS_FROST_GIANT
 stone_giant MONS_STONE_GIANT
 titan MONS_TITAN
 juggernaut MONS_JUGGERNAUT
+iron_giant MONS_IRON_GIANT
 %rim 1
 
 ## Drakes (also 'l')

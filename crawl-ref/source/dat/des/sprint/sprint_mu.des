@@ -1270,7 +1270,7 @@ ENDMAP
 NAME: sprint_mu_dis_giant
 TAGS: sprint_mu_dis no_rotate no_hmirror no_vmirror
 MONS: patrolling iron elemental
-MONS: patrolling the iron giant ; giant club unrand:skullcrusher
+MONS: patrolling iron giant ; giant club unrand:skullcrusher
 MONS: iron dragon, rust devil, patrolling hell sentinel, war gargoyle, iron golem
 KMONS: & = dispater
 KITEM: * = superb_item, superb_item, superb_item

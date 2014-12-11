@@ -1402,8 +1402,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FIRE_ELEMENTALS:
     case SPELL_AIR_ELEMENTALS:
     case SPELL_EARTH_ELEMENTALS:
-    case SPELL_IRON_ELEMENTALS:
 #if TAG_MAJOR_VERSION == 34
+    case SPELL_IRON_ELEMENTALS:
     case SPELL_SUMMON_ELEMENTAL:
 #endif
     case SPELL_CREATE_TENTACLES:
@@ -1483,7 +1483,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SEAL_DOORS:
     case SPELL_BERSERK_OTHER:
     case SPELL_SPELLFORGED_SERVITOR:
-    case SPELL_TENTACLE_THROW:
+    case SPELL_THROW:
     case SPELL_THROW_ALLY:
     case SPELL_CORRUPTING_PULSE:
     case SPELL_SIREN_SONG:
@@ -5339,9 +5339,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _mons_summon_elemental(mons, spell_cast, MONS_EARTH_ELEMENTAL, god);
         return;
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_IRON_ELEMENTALS:
         _mons_summon_elemental(mons, spell_cast, MONS_IRON_ELEMENTAL, god);
         return;
+#endif
 
     case SPELL_AIR_ELEMENTALS:
         _mons_summon_elemental(mons, spell_cast, MONS_AIR_ELEMENTAL, god);
@@ -6358,7 +6360,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         _corrupting_pulse(mons);
         return;
 
-    case SPELL_TENTACLE_THROW:
+    case SPELL_THROW:
         _mons_consider_tentacle_throwing(*mons);
         return;
 
@@ -7857,7 +7859,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_MASS_CONFUSION:
         return _mons_mass_confuse(mon, false) < 0;
 
-    case SPELL_TENTACLE_THROW:
+    case SPELL_THROW:
         return _get_tentacle_throw_victim(*mon) == MID_NOBODY;
 
     case SPELL_THROW_ALLY:

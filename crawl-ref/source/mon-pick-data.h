@@ -562,6 +562,7 @@ static const pop_entry pop_dis[] =
   {  2,  8,   25, PEAK, MONS_IRON_DRAGON },
   {  1, 12,   60, FALL, MONS_IRON_GOLEM },
   {  1,  7,   25, PEAK, MONS_DANCING_WEAPON },
+  {  1,  7,  270, RISE, MONS_IRON_GIANT },
   { 0,0,0,FLAT,MONS_0 }
 };
 
