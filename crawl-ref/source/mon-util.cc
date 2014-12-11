@@ -4606,7 +4606,7 @@ void debug_monspells()
             const char* mons_name = get_monster_data(sample_mons)->name;
             if (mons_books.size() > 1)
             {
-                int book_index;
+                size_t book_index;
                 for (book_index = 0;
                      book_index < mons_books.size()
                         && mons_books[book_index] != spbook.type;
