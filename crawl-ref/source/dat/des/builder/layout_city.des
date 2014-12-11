@@ -223,9 +223,10 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
   end
 
   -- Create doors
-  connect_adjacent_rooms { replace = "+", min = 100, max = 400, check_empty = true }
+  connect_adjacent_rooms { replace = "+", min = 100, max = 400 }
   -- Create a small number of extra doors (allowing more than one door on some wall)
-  connect_adjacent_rooms { replace = "+", min = 0, max = 10 }
+  connect_adjacent_rooms { replace = "+", min = 0, max = 400,
+                           check_distance = 3 }
 
   -- Fill disconnects
   zonify.map_fill_zones(_G, 1, 'x')
@@ -351,7 +352,7 @@ ENDMAP
 #
 NAME:   layout_onion_city
 DEPTH:  Elf, Pan
-WEIGHT: 20 (Elf), 5 (Pan)
+WEIGHT: 10 (Elf), 5 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
 TAGS:   unrand no_rotate no_hmirror no_vmirror
@@ -473,6 +474,60 @@ TAGS:   unrand no_rotate no_hmirror no_vmirror
     end
   end
 
+  -- This function adds windows to walls near doors
+  function add_windows (x1, y1, x2, y2, window_chance)
+    for x = x1, x2 do
+      for y = y1, y2 do
+        if (mapgrd[x][y] == '+') then
+          local xmm = x - 2
+          local xm  = x - 1
+          local xp  = x + 1
+          local xpp = x + 2
+          local ymm = y - 2
+          local ym  = y - 1
+          local yp  = y + 1
+          local ypp = y + 2
+
+          if (mapgrd[xm][y] == '.' and mapgrd[xp][y] == '.') then
+            -- north window
+            if (mapgrd[xm][ym ] == '.' and
+                mapgrd[x ][ym ] == 'x' and mapgrd[xp][ym ] == '.' and
+                mapgrd[xm][ymm] == '.' and
+                mapgrd[x ][ymm] == 'x' and mapgrd[xp][ymm] == '.' and
+                crawl.random_real() < window_chance) then
+              mapgrd[x][ymm] = 'm'
+            end
+            -- south window
+            if (mapgrd[xm][yp ] == '.' and
+                mapgrd[x ][yp ] == 'x' and mapgrd[xp][yp ] == '.' and
+                mapgrd[xm][ypp] == '.' and
+                mapgrd[x ][ypp] == 'x' and mapgrd[xp][ypp] == '.' and
+                crawl.random_real() < window_chance) then
+              mapgrd[x][ypp] = 'm'
+            end
+          else
+            -- west window
+            if (mapgrd[xm ][ym]  == '.' and
+                mapgrd[xm ][y ]  == 'x' and mapgrd[xm ][yp]  == '.' and
+                mapgrd[xmm][ym]  == '.' and
+                mapgrd[xmm][y ]  == 'x' and mapgrd[xmm][yp]  == '.' and
+                crawl.random_real() < window_chance) then
+              mapgrd[xmm][y] = 'm'
+            end
+            -- easy window
+            if (mapgrd[xp ][ym]  == '.' and
+                mapgrd[xp ][y ]  == 'x' and mapgrd[xp ][yp]  == '.' and
+                mapgrd[xpp][ym]  == '.' and
+                mapgrd[xpp][y ]  == 'x' and mapgrd[xpp][yp]  == '.' and
+                crawl.random_real() < window_chance) then
+              mapgrd[xpp][y] = 'm'
+            end
+          end
+        end
+      end
+    end
+  end
+
 
   local gxm, gym = dgn.max_bounds()
   extend_map{width = gxm, height = gym, fill = 'x'}
@@ -517,13 +572,12 @@ TAGS:   unrand no_rotate no_hmirror no_vmirror
   end
 
   -- the map is already connected in a tree, but more doors is nice
-  connect_adjacent_rooms { max = crawl.random_range(100, 250),
-                           min = 50, replace = '+', check_empty = true }
+  connect_adjacent_rooms { min = 200, max = 500, replace = '+',
+                          check_distance = crawl.random_range(5, 8) }
 
-  -- add windows in Elf
-  if (you.in_branch("elf")) then
-    connect_adjacent_rooms { max = 400, min = 100,
-                             replace = 'm', check_empty = false }
+  -- add windows to Elf
+  if (you.in_branch("Elf")) then
+    add_windows (1, 1, gxm - 2, gym - 2, 0.2 + crawl.random_real() * 0.3)
   end
 }}
 MAP

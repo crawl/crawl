@@ -4,6 +4,8 @@
 #          Coc (order: Dis, Geh, Coc, Tar)
 ##############################################################################
 
+: require('dlua/vault.lua')
+
 {{
 function coc_setup(e)
    e.place("Coc:7")
@@ -19,26 +21,6 @@ function coc_setup(e)
    e.set_feature_name("rock_wall", "ice-covered rock wall")
    e.set_feature_name("stone_wall", "ice-covered stone wall")
    e.set_feature_name("floor", "Frost-covered floor")
-end
-
--- the Serpent should appear in exactly one hell end
--- XXX: are things like shafts going to break this?
-function hell_branches_remaining()
-   local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
-   local ret = #hell_branches
-   for _, branch in pairs(hell_branches) do
-      if travel.find_deepest_explored(branch) == 7 then
-         ret = ret - 1
-      end
-   end
-   return ret
-end
-
-function serpent_of_hell_setup(e)
-   if not you.uniques("the Serpent of Hell") and
-      crawl.one_chance_in(hell_branches_remaining()) then
-      e.kmons('D = the Serpent of Hell')
-   end
 end
 }}
 
@@ -215,12 +197,14 @@ ENDMAP
 NAME:    coc_dpeg
 ORIENT:  encompass
 MONS:    patrolling Antaeus, Ice Fiend, ice dragon, blizzard demon
+KMONS:   E = elemental wellspring
 : serpent_of_hell_setup(_G)
-ITEM:    any, any misc, any misc, any misc
+KMONS:   defg = ice devil w:5 / Ice Fiend / nothing w:5
+KITEM:   defg = any misc
+KFEAT:   E = w
 SHUFFLE: O1dD / e4%H / f9*I / g8|J
-KMONS:   d = ice devil w:5 / Ice Fiend / nothing w:5
-KITEM:   d = any
 SUBST:   ' = w ., 3 = 3 ., HIJ = 4 4 .
+NSUBST:  w = 2:E / 2 = E w / *:w
 : coc_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -295,6 +279,8 @@ MONS:    patrolling Antaeus, Ice Fiend, ice dragon, blizzard demon
 KMONS:   0 = ice devil w:14 / blue devil / freezing wraith w:6 / \
          ice dragon skeleton w:8 / anaconda simulacrum w:6 / \
          titan simulacrum w:6 / hydra simulacrum w:6 / storm dragon simulacrum w:6
+KMONS:   E = elemental wellspring
+KFEAT:   E = w
 SHUFFLE: 1O26Y$| / 8~47Z%*, 1O, 8~, $|, %*, {[( / <<<
 SHUFFLE: 5X, 6Y, 7Z, AB
 SUBST:   % = $, ~ = |, 3 = 3:6 .:4
@@ -334,7 +320,7 @@ xx....cc..www.cc...wwwwwwc%%%+4cccc2+$$$cwwwww....cc.www..cc....xx
 xx....cc..www.cc...wwwwwwc%%%c+cccc+c$$$cwwwwww...cc.www..cc....xx
 xx.00.cc..www3.c..wwwwwwwccccc.7cc6.cccccwwwwwww..c.3www..cc.00.xx
 xx.00.cc..wwww.c.wwwwwww3+.Z.+.8cc1.+.Y.+3wwwwwww.c.wwww..cc.00.xx
-xx.00.cc..wwww3c.wwwwwww3+.Z.+.~ccO.+.Y.+3wwwwwww.c3wwww..cc.00.xx
+xx.00.cc..wwww3c.wEwwwww3+.Z.+.~ccO.+.Y.+3wwwwwEw.c3wwww..cc.00.xx
 xx....cc..wwww.c.wwwwwwwwccccc.7cc6.cccccwwwwwwww.c.wwww..cc....xx
 xx....cc..www3.c..wwwwwwwc***c+cccc+c|||cwwwwwww..c.3www..cc....xx
 xx....cc..www.cc...wwwwwwc***+4cccc2+|||cwwwwww...cc.www..cc....xx
@@ -376,10 +362,11 @@ MONS:    ice devil, blue devil, white imp, ice dragon, freezing wraith
 KMONS:   8 = ice statue
 KMONS:   9 = frost giant
 KMONS:   0 = blizzard demon
+KMONS:   e = water elemental
+KMONS:   E = elemental wellspring
+KFEAT:   eE = w
 SUBST:   3 = 3:5 4:4 5:4 6:2 7:2 9:1
 NSUBST:  0 = 5:0 / *:3
-KMONS:   E = water elemental
-KFEAT:   E = w
 : serpent_of_hell_setup(_G)
 SUBST:   ^ : ^^^W. , ^ = W.
 SUBST:   X : XXXc. , X = c.
@@ -393,19 +380,19 @@ NSUBST:  - = 1:+ / *:c
 MAP
 ########################################################################
 #ccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc#
-#ccccc............wwwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......cccccccc#
+#ccccc............Ewwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......cccccccc#
 #cccccc............wwwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......ccccccc#
 #ccccc..............wwwwwwwwwwwwwwwwxxxxxxxwwwwwwww.3.3......c...cccccc#
-#cccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwxxxwwwwwwww....3.0D.cccc....'.ccc#
-#cccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwww...3..3...cccccc..c..cc#
+#cccc...wwwwwwwwww..wwwwwwwwwwwewwwwwwxxxwwwwwwww....3.0D.cccc....'.ccc#
+#cccc..wwwwww8www.2.wwwwwwwwwew.wewwwwwwwwwwwwww...3..3...cccccc..c..cc#
 #cccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwww......ccccccc...cc.cx#
-#cccc..ww$O$....1..............8..Ewwwwwwwwwwwwwwww...ccccc"c"c.cccc.'x#
+#cccc..ww$O$....1..............8..ewwwwwwwwwwwwwwww...ccccc"c"c.cccc.'x#
 #cccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwwww.cccccc....c.cccc.'x#
-#cccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwwwwwwccccc...cc...."cc.cx#
-#cccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwwwwwwwwwwwwccccccc...ccccccccc.cx#
+#cccc..wwwwww8www.2.wwwwwwwwwew.wewwwwwwwwwwwwwwwwwccccc...cc...."cc.cx#
+#cccc...wwwwwwwwww..wwwwwwwwwwwewwwwwwwwwwwwwwwwwccccccc...ccccccccc.cx#
 #ccccc..............wwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccc......cccccc"...x#
 #cccccc............wwwwwwwwwwwwwwwwwwwwwwwwwwwwccccc..........ccccc"c.x#
-#ccccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwccccc.....3330.....ccccc.x#
+#ccccccccccccccccccEwwwwwwwwwwwwwwwwwwwwwwwwwccccc.....3330.....ccccc.x#
 #cccccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwcccc........333.......cc..x#
 #ccccccccccccccccccc;wwwwwwwwwwwwwwwwwwwwwwcccc..................ccc.cx#
 #ccccccc"c$.....ccc;cccwwwwwwwwwwwwwwwwwwccccc....................cc.cx#
@@ -466,6 +453,7 @@ MONS:    patrolling Antaeus, Ice Fiend, ice dragon / nothing
 MONS:    ice devil w:6 / blue devil w:4 / bog body w:4 / ice dragon w:3 / \
          freezing wraith w:2 / frost giant w:1
 KMONS:   8 = ice statue
+KMONS:   9 = elemental wellspring
 KMONS:   de = Ice Fiend
 KMONS:   fg = blizzard demon
 KITEM:   df = superb_item
@@ -473,6 +461,7 @@ KITEM:   egh = gold
 : serpent_of_hell_setup(_G)
 KFEAT:   D = floor
 KFEAT:   X = open_sea
+KFEAT:   9 = w
 : set_border_fill_type('open_sea')
 SHUFFLE: 1O|d$e / 5!*f%g, |d / $e
 NSUBST:  H = 1:D / *:8
@@ -481,7 +470,7 @@ SUBST:   * = |, % = $, 5 = 2
 : coc_setup(_G)
 MAP
 XXXXXXXXXXXcccccccccccXXXXXXXXXXXcccccccccXXXXXXXXXXXXXXX
-XwwwwwwwwwwwcccccccccwwwwwwwwwwwwwcccccccwwwwwwwwwwwwwwwX
+Xwwwwwwwwww9cccccccccwwwwwwwwwwwwwccccccc9wwwwwwwwwwwwwwX
 XwwwwwwwwwwwcccccccccwwwwwwwwwwwwwwcccccwwwwwwwwwwwwwwwwX
 XwwwwwwwwwwwwccccccccwwwwwwwwwwwwwwccccwwwwwwwwwwwwwwwwwX
 Xwwww...wwwwwccccccccwwwwwww.[.wwwwwcccwwwwwww...wwwwwwwX
@@ -564,7 +553,8 @@ MONS:    ice devil w:12 / blue devil / bog body
 MONS:    anaconda simulacrum / titan simulacrum / \
          hydra simulacrum / storm dragon simulacrum
 KMONS:   6 = ice statue
-KMONS:   7 = patrolling kraken simulacrum w:15
+KMONS:   7 = patrolling kraken simulacrum / \
+             patrolling elemental wellspring
 KMONS:   89 = ice dragon / frost giant w:4
 KMONS:   & = patrolling ice fiend
 : serpent_of_hell_setup(_G)
@@ -574,77 +564,77 @@ KFEAT:   8 = w
 SHUFFLE: O1AB / eEFG, {([, !?^~
 SUBST:   AE = 2, B = 2333, F = 339, G = 995, !? = &,  ^~ = 6
 SUBST:   e = |, y : yY, y = xxw, Y = xww
-NSUBST:  = = 1:+ / c, - = 1:+ / c, 6 = 3:6 / 2:677 / *:7
+NSUBST:  = = 1:+ / c, - = 1:+ / c, 6 = 2:6 / 2 = 677 / *:7
 : coc_setup(_G)
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-cccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccccccccccccccccccc
-cccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccccccccccccccccccccccccc
-cccccccxxwyyyyyyyyyyyyyyyyyyyyyyyyyyywxxcccccccccccccccccccccccccccccc
-cccccccxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccccccccccccccccccccccccc
-cccccccxxW8wwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccccccccccccccccccccccccc
-cccccccxxdwwwwwwwww..w..wwwwwwwwwwwwwWxxcccccccccccccccccccccccccccccc
-cxxxxxxxxdwwwwwwww.cc.cc.wwwwwwwwwwwwWxxxxxxxxcccccccccccccccccccccccc
-cxxxxxxxxd!wwwwww.c..c..c.wwwwwwwwwwww6xxxxxxxcccccccccccccccccccccccc
-cxxwwWddddwwwwww.c.......c.wwwwwwwwwwwwWWwwwxxcccccccccccccccccccccccc
-cxxyw8ww?wwwwww.c....5....c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
-cxxywwwwwwwwwww.c...535...c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
-cxxywwwwwwwwwww.c...x5x...c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
-cxxywwwwwwwwwww.c.........c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
-cxxywwwwwwwwwwww.c.......c.wwwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
-cxxywwwwww....wWw.c.....c.wWw....wwwwwwwwwwyxxcccccccccccccccccccccccc
-cxxywwwww.cccc.w.cccc-cccc.w.cccc.wwwwwwwwwyxxcccccccccccccccccccccccc
-cxxywwww.c....c.cccc...cccc.c....c.wwwwwwwwyxxcccccccccccccccccccccccc
-cxxywww.c......cccB.....Bccc......c.wwwwwwwyxxcccccccccccccccccccccccc
-cxxyww.c........cc....x|.cc........c.wwwwwwyxxcccccccccccccccccccccccc
-cxxyww.c...5x...c...1xAx.cc...x4...c.wwwwwwyxxcccccccccccccccccccccccc
-cxxywww.c.535...-...xxx|$cc....4..c.wwwwwwwyxxcccccccccccccccccccccccc
-cxxyww.c...5x...c..xAxO$|cc...x4...c.wwwwwwwxxcccccccccccccccccccccccc
-cxxyww.c........cc.|x|$B|cc........c.wwwwww^xxcccccccccccccccccccccccc
-cxxywww.c......cccB..$||cccc......c.wwwwwwwWxxxxxxxxxxxxxxxxxxcccccccc
-cxxywwww.c....c.ccccccccccc.c....c.wwwwwwwwWxxxxxxxxxxxxxxxxxxcccccccc
-cxxywwwww.cccc.w.ccccccccc.w.cccc.8wwwwwwwwWWW^wyyyyyyyyyyywxxcccccccc
-cxxywwwwww....wWw.c.....c.www....wwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
-cxxywwwwwwwwwwww.c.......c.w.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
-cxxywwwwwwwwwww.c.........c.W.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
-cxxywwwwwwwwwww.c...x.x...c.wW.WwwwwwwwwwwwwwwwwwwwwwwwwwwwWxxxccccccc
-cxxywwwwwwwwwww.c...444...c.wwW.WxxwxxwwwwwwwwwwwwwwwwwwwwwWxxxxxxxxxc
-cxxywwwwwwwwwww.c.........c.wwwWx..x.Dxwwwwwwwwwwwwwwwwwwwww6xxxxxxxxc
-cxxywwwwwwwwwwww.c.......c.wwwwx......xwwwwwww..w..wwwwwwwwwwWWwwwwxxc
-cxxywwwwwwwwwwwww.c..c..c.8wwwwx...W.xwwwwwww.cc.cc.wwwwwwwwwwwwwwyxxc
-cxxywwwwwwwwwwwwww.cc.cc.wwwwwwwx.W...xwwww8.c..c..c.wwwwwwwwwwwwwyxxc
-cxxwwwwWWwwwwwwwwww..w..wwwwwwwx......xwwww.c.......c.wwwwwwwwwwwwyxxc
-cxxxxxxxx6wwwwwwwwwwwwwwwwwwwcwx..x..xWwww.c.........c.wwwwwwwwwwwyxxc
-cxxxxxxxxxWwwwwwwwwwwwwwwwwwccW.xxwxxW.Www.c...444...c.wwwwwwwwwwwyxxc
-cccccccxxxWwwwwwwwwwwwwwwwwccW.WwwwwwwW.Ww.c....x....c.wwwwwwwwwwwyxxc
-ccccccccxxwwwwwwwwwwwwwwwwccW.WccwwwwwwW.W.c.....x...c.wwwwwwwwwwwyxxc
-ccccccccxxwwwwwwwwwwwwwWWccW.WccwwwwwwwwW.w.c.......c.wwwwwwwwwwwwyxxc
-ccccccccxxwwwwwwwwwwwwWcccW.Wccwwwwww....www.c.....c.wWw....wwwwwwyxxc
-ccccccccxxwyyyyyyyyywW~cWW.Wccwwwww8.cccc.w.ccccccccc.w.cccc.wwwwwyxxc
-cccccccccccccccccccccccc.2Wccwwwwww.c....c.ccccccccccc.c....c.wwwwyxxc
-ccccccccccccccccccccccc...WcWwwwww.c......cccc||$..Gccc......c.wwwyxxc
-ccxx8w.......xx44........cccWwwww.c........cc||$Gx|.cc........c.wwyxxc
-ccxx8w.......xxx.x......cc~Wwwwww.c...4....cc|$exFx..c....5x..c.wwyxxc
-ccxxww.wxx....xxxwx.....ccWwwwwwww.c..4x...cc$Gxxx...=...535.c.wwwyxxc
-ccxxx...wxx....xxwwx....ccwwwwwww.c...4.x..cc.xFxE...c...x5...c.wwyxxc
-cccxxx...wxx..xwwww.x...ccywwwwww.c........cc.|x....cc........c.wwyxxc
-ccccxxx...wxx..xww.wwx..ccywwwwwww.c......cccG.....|ccc......c.wwwyxxc
-cccccxxx...wxx..x.wwwwx.ccywwwwwwww.c....c.cccc...cccc.c....c.wwwwyxxc
-ccccccxxx...wxx..xwwxx.4ccywwwwwwwww.cccc.w.cccc=cccc.w.cccc.wwwwwyxxc
-cccccccxxx...wxx..xwxxx4ccywwwwwwwwww....wWw.c.....c.wWw....wwwwwwyxxc
-ccccccccxxx[..wxx..x.xxxccywwwwwwwwwwwwwwww.c.......c.wwwwwwwwwwwwyxxc
-cccccccccxxx.{.wxx....xxccywwwwwwwwwwwwwww.c.........c.wwwwwwwwwwwyxxc
-ccccccccccxxx...wxx.....ccywwwwwwwwwwwwwww.c....5x...c.wwwwwwwwwwwyxxc
-cccccccccccxxx(..wxx....ccywwwwwwwwwwwwwww.c...535...c.wwwwwwwwwwwyxxc
-ccccccccccccxxx...wxx...ccwwwwWWwwwwwwwwww.c...x5....c.wwwwwWd!wwwyxxc
-cccccccccccccxxx...wxx..ccxxxxxx6wwwwwwwwww.c.......c.wwwwwWddd8wwwxxc
-ccccccccccccccxxx...wx..ccxxxxxxxWwwwwwwwwww.c..c..c.wwwwwwddxxxxxxxxc
-cccccccccccccccxxx...w..ccccccxxxWwwwwwwwwwww.cc.cc.wwwwwww?dxxxxxxxxc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccccccccc
+cccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccccccccc
+cccccccxxwyyyyyyyyywwwwwyyyyyyyyyyyywxxccccccccccccccccccccccccccccccc
+cccccccxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxccccccccccccccccccccccccccccccc
+cccccccxxd8wwwwwwww..w..wwwwwwwwwwwwWxxccccccccccccccccccccccccccccccc
+ccxxxxxxxdwwwwwwww.cc.cc.wwwwwwwwwwwWxxxxxxxxxcccccccccccccccccccccccc
+ccxxxxxxxd!wwwwww.c..c..c.wwwwwwwwwww6xxxxxxxxcccccccccccccccccccccccc
+ccxxwwddddwwwwww.c.......c.wwwwwwwwwwwWWwwwwxxcccccccccccccccccccccccc
+ccxxyw8w?wwwwww.c....5....c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
+ccxxywwwwwwwwww.c...535...c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
+ccxxywwwwwwwwww.c...x5x...c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
+ccxxywwwwwwwwww.c.........c.wwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
+ccxxywwwwwwwwwww.c.......c.wwwwwwwwwwwwwwwwyxxcccccccccccccccccccccccc
+ccxxywwwww....wWw.c.....c.wWw....wwwwwwwwwwyxxcccccccccccccccccccccccc
+ccxxywwww.c..c.w.cccc-cccc.w.cccc.wwwwwwwwwyxxcccccccccccccccccccccccc
+ccxxywww.c....c.cccc...cccc.c....c.wwwwwwwwyxxcccccccccccccccccccccccc
+ccxxyww.c......cccB.....Bccc......c.wwwwwwwyxxcccccccccccccccccccccccc
+ccxxww.c........cc.A..x|.cc........c.wwwwwwyxxcccccccccccccccccccccccc
+ccxxww.c...5x...c...1xAx.cc...x4...c.wwwwwwyxxcccccccccccccccccccccccc
+ccxxwww.c.535...-...xxx|$cc...54..c.wwwwwwwyxxcccccccccccccccccccccccc
+ccxxww.c...5x...c..xAxO$|cc...x4...c.wwwwwwwxxcccccccccccccccccccccccc
+ccxxww.c........cc.|x|$B|cc........c.wwwwww^xxcccccccccccccccccccccccc
+ccxxyww.c......cccB..$||cccc......c.wwwwwwwWxxxxxxxxxxxxxxxxxxcccccccc
+ccxxywww.c....c.ccccccccccc.c....c.wwwwwwwwWxxxxxxxxxxxxxxxxxxcccccccc
+ccxxywwww.cccc.w.ccccccccc.w.cccc.8wwwwwwwwWWW^wyyyyyyyyyyywxxcccccccc
+ccxxywwwww....wWw.c.....c.www....wwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
+ccxxywwwwwwwwwww.c.......c.w.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
+ccxxywwwwwwwwww.c.........c.W.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
+ccxxywwwwwwwwww.c...x5x...c.wW.Wwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxcccccccc
+ccxxywwwwwwwwww.c...444...c.wwW.WxxwxxwwwwwwwwwwwwwwwwwwwwwWxxcccccccc
+ccxxywwwwwwwwww.c.........c.wwwWx..x.DxwwwwwwwwwwwwwwwwwwwwWxxxxxxxxcc
+ccxxywwwwwwwwwww.c.......c.wwwwx......xwwwwwww..w..wwwwwwwww6xxxxxxxcc
+ccxxywwwwwwwwwwww.c..c..c.8wwwwx...W.xwwwwwww.cc.cc.wwwwwwwwwWWwwwxxcc
+ccxxywwwwwwwwwwwww.cc.cc.wwwwwwwx.W...xwwww8.c..c..c.wwwwwwwwwwwwyxxcc
+ccxxwwwWWwwwwwwwwww..w..wwwwwwwx......xwwww.c.......c.wwwwwwwwwwwyxxcc
+ccxxxxxxx6wwwwwwwwwwwwwwwwwwwcwW..x..xWwww.c.........c.wwwwwwwwwwyxxcc
+ccxxxxxxxxWwwwwwwwwwwwwwwwwwccW.WxwxxW.Www.c...444...c.wwwwwwwwwwyxxcc
+cccccccxxxWwwwwwwwwwwwwwwwwccW.WwwwwwwW.Ww.c....x....c.wwwwwwwwwwyxxcc
+ccccccccxxwwwwwwwwwwwwwwwwccW.WccwwwwwwW.W.c....5x...c.wwwwwwwwwwyxxcc
+ccccccccxxwwwwwwwwwwwwwWWccW.WccwwwwwwwwW.w.c.......c.wwwwwwwwwwwyxxcc
+ccccccccxxwwwwwwwwwwwwWcccW.Wccwwwwww....www.c.....c.wWw....wwwwwyxxcc
+ccccccccxxwyyyyyyyyywW~cWW.Wccwwwww8.cccc.w.ccccccccc.w.cccc.wwwwyxxcc
+cccccccccccccccccccccccc.2Wccwwwwww.c....c.ccccccccccc.c....c.wwwyxxcc
+ccccccccccccccccccccccc...WcWwwwww.c......cccc||$..Gccc......c.wwyxxcc
+ccxx8w.......xx44........cccWwwww.c........cc||$Gx|.cc........c.wwxxcc
+ccxx8w.......xxx.x......cc~Wwwwww.c...4....cc|$exFx..c....5x..c.wwxxcc
+ccxxww.wxx....xxxwx.....ccWwwwwwww.c..4x5..cc$Gxxx...=...535.c.wwwxxcc
+ccxxx...wxx....xxww.x...ccwwwwwww.c...4.x..cc.xFxE...c...x5...c.wwxxcc
+cccxxx...wxx..xwwww.....ccywwwwww.c........cc.|x..F.cc........c.wwxxcc
+ccccxxx...wxx..xww.wwx..ccywwwwwww.c......cccG.....|ccc......c.wwyxxcc
+cccccxxx...wxx....wwwwx.ccywwwwwwww.c....c.cccc...cccc.c....c.wwwyxxcc
+ccccccxxx...wxx...wwxx.4ccywwwwwwwww.cccc.w.cccc=cccc.w.cccc.wwwwyxxcc
+cccccccxxx...wxx..xwxxx4ccywwwwwwwwww....wWw.c.....c.wWw....wwwwwyxxcc
+ccccccccxxx[..wxx..x.xxxccywwwwwwwwwwwwwwww.c.......c.wwwwwwwwwwwyxxcc
+cccccccccxxx.{.wxx....xxccywwwwwwwwwwwwwww.c.........c.wwwwwwwwwwyxxcc
+ccccccccccxxx...wxx.....ccywwwwwwwwwwwwwww.c....5x...c.wwwwwwwwwwyxxcc
+cccccccccccxxx(..wxx....ccywwwwwwwwwwwwwww.c...535...c.wwwwwwwwwwyxxcc
+ccccccccccccxxx...wxx...ccwwwwWWwwwwwwwwww.c...x5....c.wwwwwWd!wwyxxcc
+cccccccccccccxxx...wxx..ccxxxxxx6wwwwwwwwww.c.......c.wwwwwWddd8wwxxcc
+ccccccccccccccxxx...wx..ccxxxxxxxWwwwwwwwwww.c..c..c.wwwwwwddxxxxxxxcc
+cccccccccccccccxxx...w..ccccccxxxWwwwwwwwwwww.cc.cc.wwwwwww?dxxxxxxxcc
 ccccccccccccccccxxx.....cccccccxxwwwwwwwwwwwww..w..wwwwwwwww8xxccccccc
 cccccccccccccccccxxx.wwwcccccccxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxccccccc
-ccccccccccccccccccxxxw88cccccccxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxccccccc
-cccccccccccccccccccxxxxxcccccccxxwyyyyyyyyyyyyyyyyyyyyyyyyyywxxccccccc
+ccccccccccccccccccxxxw88cccccccxxwyyyyyyyyyyyywwwwwyyyyyyyyywxxccccccc
+cccccccccccccccccccxxxxxcccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc
 ccccccccccccccccccccxxxxcccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc
-cccccccccccccccccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP

@@ -4,6 +4,9 @@
 
 #include "dgl-message.h"
 
+#include <cerrno>
+#include <sys/stat.h>
+
 #include "files.h"
 #include "format.h"
 #include "initfile.h"
@@ -12,10 +15,8 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
+#include "stringutil.h"
 #include "syscalls.h"
-
-#include <errno.h>
-#include <sys/stat.h>
 
 static struct stat mfilestat;
 
@@ -23,16 +24,16 @@ static void _show_message_line(string line)
 {
     const string::size_type sender_pos = line.find(":");
     if (sender_pos == string::npos)
-        mpr(line.c_str());
+        mpr(line);
     else
     {
         string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
         formatted_string fs;
-        fs.textcolor(WHITE);
+        fs.textcolour(WHITE);
         fs.cprintf("%s: ", sender.c_str());
-        fs.textcolor(LIGHTGREY);
+        fs.textcolour(LIGHTGREY);
         fs.cprintf("%s", line.c_str());
         formatted_mpr(fs, MSGCH_DGL_MESSAGE, 0);
         if (Options.note_dgl_messages)

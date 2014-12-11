@@ -7,20 +7,18 @@
 
 #include "godblessing.h"
 
-#include "artefact.h"   // if_artefact()
-#include "env.h"        // mitm
-#include "itemprop.h"   // do_uncurse()
+#include "artefact.h"
+#include "env.h"
+#include "itemprop.h"
+#include "items.h"
 #include "item_use.h"
-#include "items.h"      // items_stack()
-#include "libutil.h"   // make_stringf()
-#include "makeitem.h"   // item_set_appearance()
-#include "mgen_data.h"
-#include "monster.h"
-#include "mon-gear.h"   // give_specific_item()
-#include "mon-place.h"  // create_monster()
-#include "mon-util.h"   // give_monster_proper_name()
+#include "makeitem.h"
+#include "message.h"
+#include "mon-gear.h"
+#include "mon-place.h"
 #include "religion.h"
-#include "view.h"       // flash_monster_colour
+#include "stringutil.h"
+#include "view.h"
 
 /**
  * Given the weapon type, find an upgrade.
@@ -46,20 +44,22 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
 
         case WPN_DAGGER:      return WPN_FALCHION;
         case WPN_SHORT_SWORD: return WPN_LONG_SWORD;
-        case WPN_CUTLASS:     return WPN_SCIMITAR;
+        case WPN_RAPIER:      return WPN_SCIMITAR;
         case WPN_FALCHION:    return WPN_LONG_SWORD;
         case WPN_LONG_SWORD:  return WPN_SCIMITAR;
         case WPN_SCIMITAR:    return !has_shield ? WPN_GREAT_SWORD   :
-                                     highlevel   ? WPN_BASTARD_SWORD :
+                                     highlevel   ? WPN_DOUBLE_SWORD :
                                                    WPN_SCIMITAR;
-        case WPN_GREAT_SWORD: return highlevel ? WPN_CLAYMORE : WPN_GREAT_SWORD;
+        case WPN_GREAT_SWORD: return highlevel ? WPN_TRIPLE_SWORD :
+                                                 WPN_GREAT_SWORD;
 
         case WPN_HAND_AXE:    return WPN_WAR_AXE;
             // Low level orcs shouldn't get fairly rare items.
         case WPN_WAR_AXE:     return !highlevel  ? WPN_WAR_AXE   :
                                      has_shield  ? WPN_BROAD_AXE :
                                                    WPN_BATTLEAXE;
-        case WPN_BATTLEAXE:   return highlevel ? WPN_EXECUTIONERS_AXE : WPN_BATTLEAXE;
+        case WPN_BATTLEAXE:   return highlevel ? WPN_EXECUTIONERS_AXE :
+                                                 WPN_BATTLEAXE;
 
         case WPN_SPEAR:       return WPN_TRIDENT;
         case WPN_TRIDENT:     return has_shield ? WPN_TRIDENT : WPN_HALBERD;
@@ -178,7 +178,7 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
 static string _beogh_bless_melee_weapon(monster* mon)
 {
     item_def* wpn_ptr = mon->melee_weapon();
-    ASSERT(wpn_ptr != NULL);
+    ASSERT(wpn_ptr != nullptr);
     item_def& wpn = *wpn_ptr;
 
     const int old_weapon_type = wpn.sub_type;
@@ -227,11 +227,11 @@ static string _beogh_bless_ranged_weapon(monster* mon)
 {
     // if they already have a launcher, restock it.
     // likewise if they have a shield but no launcher (give tomahawks)
-    const bool mon_has_launcher = mon->launcher() != NULL;
-    if (mon_has_launcher || mon->shield() != NULL)
+    const bool mon_has_launcher = mon->launcher() != nullptr;
+    if (mon_has_launcher || mon->shield() != nullptr)
     {
         gift_ammo_to_orc(mon);
-        if (mon->missiles() != NULL)
+        if (mon->missiles() != nullptr)
             return mon_has_launcher ? "ammunition" : "ranged armament";
 
         dprf("Couldn't give ammo to follower!");
@@ -240,14 +240,14 @@ static string _beogh_bless_ranged_weapon(monster* mon)
 
     // no launcher, no shield: give them a crossbow & some ammo.
     _gift_weapon_to_orc(mon, WPN_ARBALEST);
-    if (mon->launcher() == NULL)
+    if (mon->launcher() == nullptr)
     {
         dprf("Couldn't give crossbow to follower!");
         return ""; // ?
     }
 
     gift_ammo_to_orc(mon, true);
-    if (mon->missiles() == NULL)
+    if (mon->missiles() == nullptr)
         dprf("Couldn't give initial ammo to follower");
     return "ranged armament";
 }
@@ -261,10 +261,10 @@ static string _beogh_bless_ranged_weapon(monster* mon)
 static string _beogh_bless_weapon(monster* mon)
 {
     const item_def* wpn_ptr = mon->melee_weapon();
-    if (wpn_ptr == NULL)
+    if (wpn_ptr == nullptr)
     {
         _gift_weapon_to_orc(mon, _orc_weapon_gift_type(mon->type));
-        if (mon->weapon() != NULL)
+        if (mon->weapon() != nullptr)
             return "armament";
 
         dprf("Couldn't give a weapon to follower!");
@@ -273,10 +273,10 @@ static string _beogh_bless_weapon(monster* mon)
 
     const item_def* launch_ptr = mon->launcher();
     const item_def* ammo_ptr = mon->missiles();
-    if (launch_ptr != NULL && ammo_ptr == NULL)
+    if (launch_ptr != nullptr && ammo_ptr == nullptr)
     {
         gift_ammo_to_orc(mon);
-        if (mon->missiles() != NULL)
+        if (mon->missiles() != nullptr)
             return "ammunition";
 
         dprf("Couldn't give ammo to follower!");
@@ -355,9 +355,9 @@ static string _beogh_bless_armour(monster* mon)
     // Pick either a monster's armour or its shield.
     const item_def* melee_weap = mon->melee_weapon();
     const item_def* launcher = mon->launcher();
-    const bool can_use_shield = (melee_weap == NULL
+    const bool can_use_shield = (melee_weap == nullptr
                                  || mon->hands_reqd(*melee_weap) != HANDS_TWO)
-                                && (launcher == NULL
+                                && (launcher == nullptr
                                    || mon->hands_reqd(*launcher) != HANDS_TWO);
     const int slot = coinflip() && can_use_shield ? shield : armour;
 
@@ -480,7 +480,7 @@ static string _tso_bless_weapon(monster* mon)
     }
 
     item_def* wpn_ptr = mon->weapon();
-    if (wpn_ptr == NULL)
+    if (wpn_ptr == nullptr)
     {
         dprf("Couldn't bless follower's weapon; they have none!");
         return "";

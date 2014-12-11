@@ -7,9 +7,10 @@
 
 #ifndef USE_TILE_LOCAL
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "libconsole.h"
+
 void fakecursorxy(int x, int y);
 
 #ifdef USE_TILE_WEB

@@ -5,29 +5,25 @@
 
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
 #include "act-iter.h"
-#include "beam.h"
 #include "branch.h"
 #include "chardump.h"
+#include "cluautil.h"
 #include "coordit.h"
 #include "dungeon.h"
-#include "env.h"
 #include "files.h"
 #include "godwrath.h"
-#include "libutil.h"
 #include "los.h"
 #include "message.h"
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-poly.h"
-#include "mon-util.h"
-#include "place.h"
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
+#include "stringutil.h"
 #include "tileview.h"
 #include "view.h"
 #include "wiz-dgn.h"
@@ -50,6 +46,18 @@ LUAFN(debug_goto_place)
         const level_id id = level_id::parse_level_id(luaL_checkstring(ls, 1));
         const int bind_entrance =
             lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
+
+        if (is_connected_branch(id.branch))
+            you.level_stack.clear();
+        else
+        {
+            for (int i = you.level_stack.size() - 1; i >= 0; i--)
+                if (you.level_stack[i].id == id)
+                    you.level_stack.resize(i);
+            if (!player_in_branch(id.branch))
+                you.level_stack.push_back(level_pos::current());
+        }
+
         you.goto_place(id);
         if (bind_entrance != -1)
             brentry[you.where_are_you].depth = bind_entrance;
@@ -99,7 +107,7 @@ LUAFN(debug_reveal_mimics)
 {
     for (rectangle_iterator ri(1); ri; ++ri)
         if (mimic_at(*ri))
-            discover_mimic(*ri, false);
+            discover_mimic(*ri);
     return 0;
 }
 
@@ -147,7 +155,7 @@ LUAFN(debug_bouncy_beam)
     beam.flavour    = BEAM_ELECTRICITY;
     beam.source     = source;
     beam.target     = target;
-    beam.is_beam    = true;
+    beam.pierce     = true;
     beam.draw_delay = 0;
 
     if (findray)
@@ -385,5 +393,5 @@ const struct luaL_reg debug_dlib[] =
 { "viewwindow", debug_viewwindow },
 { "seen_monsters_react", debug_seen_monsters_react },
 { "disable", debug_disable },
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

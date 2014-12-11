@@ -6,7 +6,6 @@
 #ifndef BEAM_H
 #define BEAM_H
 
-#include "externs.h"
 #include "random.h"
 #include "ray.h"
 #include "spl-cast.h"
@@ -42,15 +41,6 @@ struct tracer_info
     const tracer_info &operator += (const tracer_info &other);
 };
 
-struct bolt;
-
-typedef bool (*range_used_func)(const bolt& beam, int &used);
-typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
-                                 string &dmg_msg);
-typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg);
-typedef bool (*explosion_aoe_func)(bolt& beam, const coord_def& target);
-typedef bool (*beam_affect_func)(const bolt &beam, const actor *victim);
-
 struct bolt
 {
     // INPUT parameters set by caller
@@ -58,7 +48,7 @@ struct bolt
                                        // beams.
     int         range;
     unsigned    glyph;                 // missile gfx
-    int         colour;
+    colour_t    colour;
     beam_type   flavour;
     beam_type   real_flavour;          // for random and chaos beams this
                                        // will remain the same while flavour
@@ -72,9 +62,9 @@ struct bolt
     killer_type thrower;               // what kind of thing threw this?
     int         ex_size;               // explosion radius (0==none)
 
-    // beam_source can be -GOD_ENUM_VALUE besides monster indices
-    // and MHITNOT, MHITYOU.
-    int         beam_source;           // NON_MONSTER or monster index #
+    mid_t       source_id;             // The mid of the source (MID_NOBODY
+                                       // if not coming from a player or a
+                                       // monster).
     string      source_name;           // The name of the source, if it
                                        // should be different from
                                        // actor->name(), or the actor dies
@@ -88,9 +78,9 @@ struct bolt
     int         loudness;              // Noise level on hitting or exploding.
     string      noise_msg;             // Message to give player if the hit
                                        // or explosion isn't in view.
-    bool        is_beam;               // beam? (can hit multiple targets?)
+    bool        pierce;                // Can the beam pass through a target and
+                                       // hit another target behind the first?
     bool        is_explosion;
-    bool        is_big_cloud;          // expands into big_cloud at endpoint
     bool        aimed_at_spot;         // aimed at (x, y), should not cross
     string      aux_source;            // source of KILL_MISC beams
 
@@ -114,16 +104,6 @@ struct bolt
     bool        quiet_debug;           // Disable any debug spam.
 #endif
 
-    // Various callbacks.
-    vector<range_used_func>  range_funcs;
-    vector<beam_damage_func> damage_funcs;
-    vector<beam_hit_func>    hit_funcs;
-    vector<explosion_aoe_func> aoe_funcs; // Function for if the explosion only
-                                          // affects certain grid positions.
-
-    // Test if the beam can affect a particular actor.
-    beam_affect_func affect_func;
-
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
 
@@ -142,8 +122,6 @@ struct bolt
     bool        passed_target;   // Beam progressed beyond target.
     bool     in_explosion_phase; // explosion phase (as opposed to beam phase)
     bool        smart_monster;   // tracer firer can guess at other mons. resists?
-    bool        can_see_invis;   // tracer firer can see invisible?
-    bool        nightvision;     // tracer firer has nightvision?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
     map<mid_t, int> hit_count;   // how many times targets were affected
@@ -160,7 +138,7 @@ struct bolt
                                  // reset if a reflection happens
 
     int         reflections;     // # times beam reflected off shields
-    int         reflector;       // latest thing to reflect beam
+    mid_t       reflector;       // latest thing to reflect beam
 
     bool        use_target_as_pos; // pos() should return ::target()
     bool        auto_hit;
@@ -199,14 +177,13 @@ public:
 
     // Return whether any affected cell was seen.
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
-    bool knockback_actor(actor *actor);
+    bool knockback_actor(actor *actor, int distance, coord_def &newpos);
 
     bool visible() const;
 
     bool can_affect_actor(const actor *act) const;
+    bool can_affect_wall(dungeon_feature_type feat) const;
     bool ignores_monster(const monster* mon) const;
-
-    maybe_bool affects_wall(dungeon_feature_type wall) const;
 
     int range_used_on_hit() const;
 
@@ -219,8 +196,6 @@ private:
     bool is_blockable() const;
     bool is_fiery() const;
     bool is_superhot() const;
-    bool can_affect_wall(dungeon_feature_type feat) const;
-    bool can_affect_wall_actor(const actor *act) const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
     bool has_saving_throw() const;
@@ -231,18 +206,16 @@ private:
     bool nice_to(const monster* mon) const;
     bool found_player() const;
     bool need_regress() const;
-
-    const actor* beam_source_as_target() const;
-
-    string zapper() const;
+    bool can_see_invis() const;
+    bool nightvision() const;
+    bool is_big_cloud() const; // expands into big_cloud at endpoint
 
     set<string> message_cache;
     void emit_message(const char* msg);
     void step();
     bool hit_wall();
+    void hit_shield(actor* victim) const;
 
-    bool apply_hit_funcs(actor* victim, int dmg);
-    bool apply_dmg_funcs(actor* victim, int &dmg, vector<string> &messages);
     int apply_AC(const actor* victim, int hurted);
 
     cloud_type get_cloud_type();
@@ -309,7 +282,7 @@ public:
     void determine_affected_cells(explosion_map& m, const coord_def& delta,
                                   int count, int r,
                                   bool stop_at_statues, bool stop_at_walls);
-    bool can_knockback(const actor *act = NULL, int dam = -1) const;
+    bool can_knockback(const actor *act = nullptr, int dam = -1) const;
 };
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
@@ -339,9 +312,11 @@ void fire_tracer(const monster* mons, bolt &pbolt,
 bool imb_can_splash(coord_def origin, coord_def center,
                     vector<coord_def> path_taken, coord_def target);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
-                   bool needs_tracer = false, const char* msg = NULL,
+                   bool needs_tracer = false, const char* msg = nullptr,
                    bool fail = false);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
+
+void create_feat_splash(coord_def center, int radius, int nattempts);
 
 void init_zap_index();
 void clear_zap_info_on_exit();
@@ -349,4 +324,6 @@ void clear_zap_info_on_exit();
 int zap_power_cap(zap_type ztype);
 void zappy(zap_type z_type, int power, bolt &pbolt);
 void bolt_parent_init(bolt *parent, bolt *child);
+
+int explosion_noise(int rad);
 #endif

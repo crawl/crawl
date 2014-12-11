@@ -252,7 +252,6 @@
 		7B09F5FA1133D6AB004F149D /* show.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407510BD494500A99626 /* show.cc */; };
 		7B09F5FB1133D6AB004F149D /* showsymb.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407710BD494500A99626 /* showsymb.cc */; };
 		7B09F5FC1133D6AB004F149D /* skills.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407910BD494500A99626 /* skills.cc */; };
-		7B09F5FD1133D6AB004F149D /* skills2.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407B10BD494500A99626 /* skills2.cc */; };
 		7B09F5FE1133D6AB004F149D /* species.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407D10BD494500A99626 /* species.cc */; };
 		7B09F6031133D6AB004F149D /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408710BD494500A99626 /* spl-book.cc */; };
 		7B09F6041133D6AB004F149D /* spl-cast.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408910BD494500A99626 /* spl-cast.cc */; };
@@ -608,7 +607,6 @@
 		E5D6414D10BD494500A99626 /* show.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407510BD494500A99626 /* show.cc */; };
 		E5D6414E10BD494500A99626 /* showsymb.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407710BD494500A99626 /* showsymb.cc */; };
 		E5D6414F10BD494500A99626 /* skills.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407910BD494500A99626 /* skills.cc */; };
-		E5D6415010BD494500A99626 /* skills2.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407B10BD494500A99626 /* skills2.cc */; };
 		E5D6415110BD494500A99626 /* species.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6407D10BD494500A99626 /* species.cc */; };
 		E5D6415610BD494500A99626 /* spl-book.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408710BD494500A99626 /* spl-book.cc */; };
 		E5D6415710BD494500A99626 /* spl-cast.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6408910BD494500A99626 /* spl-cast.cc */; };
@@ -1471,7 +1469,7 @@
 		E5D6403C10BD494400A99626 /* mon-place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-place.h"; sourceTree = "<group>"; };
 		E5D6403D10BD494400A99626 /* mon-speak.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-speak.cc"; sourceTree = "<group>"; };
 		E5D6403E10BD494400A99626 /* mon-speak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-speak.h"; sourceTree = "<group>"; };
-		E5D6403F10BD494400A99626 /* mon-spll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-spll.h"; sourceTree = "<group>"; };
+		E5D6403F10BD494400A99626 /* mon-spell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-spell.h"; sourceTree = "<group>"; };
 		E5D6404010BD494400A99626 /* mon-stuff.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-stuff.cc"; sourceTree = "<group>"; };
 		E5D6404110BD494400A99626 /* mon-stuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-stuff.h"; sourceTree = "<group>"; };
 		E5D6404210BD494400A99626 /* mon-transit.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-transit.cc"; sourceTree = "<group>"; };
@@ -1527,8 +1525,6 @@
 		E5D6407810BD494500A99626 /* showsymb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = showsymb.h; sourceTree = "<group>"; };
 		E5D6407910BD494500A99626 /* skills.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skills.cc; sourceTree = "<group>"; };
 		E5D6407A10BD494500A99626 /* skills.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skills.h; sourceTree = "<group>"; };
-		E5D6407B10BD494500A99626 /* skills2.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = skills2.cc; sourceTree = "<group>"; };
-		E5D6407C10BD494500A99626 /* skills2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = skills2.h; sourceTree = "<group>"; };
 		E5D6407D10BD494500A99626 /* species.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = species.cc; sourceTree = "<group>"; };
 		E5D6407E10BD494500A99626 /* species.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = species.h; sourceTree = "<group>"; };
 		E5D6408710BD494500A99626 /* spl-book.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "spl-book.cc"; sourceTree = "<group>"; };
@@ -2056,7 +2052,7 @@
 				7B09F64F1133DA4D004F149D /* mon-project.h */,
 				E5D6403D10BD494400A99626 /* mon-speak.cc */,
 				E5D6403E10BD494400A99626 /* mon-speak.h */,
-				E5D6403F10BD494400A99626 /* mon-spll.h */,
+				E5D6403F10BD494400A99626 /* mon-spell.h */,
 				1F909B39148B244F00084E83 /* mon-stealth.cc */,
 				E5D6404010BD494400A99626 /* mon-stuff.cc */,
 				E5D6404110BD494400A99626 /* mon-stuff.h */,
@@ -2124,8 +2120,8 @@
 				E5D6406610BD494500A99626 /* random-weight.h */,
 				E5D6406710BD494500A99626 /* random.cc */,
 				E5D6406810BD494500A99626 /* random.h */,
-				7BDE8457116D24E600974D63 /* ranged_attack.cc */
-				7BDE8458116D24E600974D63 /* ranged_attack.h */
+				7BDE8457116D24E600974D63 /* ranged_attack.cc */,
+				7BDE8458116D24E600974D63 /* ranged_attack.h */,
 				E5D6406910BD494500A99626 /* ray.cc */,
 				E5D6406A10BD494500A99626 /* ray.h */,
 				7B5165B911859D82005B23ED /* religion-enum.h */,
@@ -2145,8 +2141,6 @@
 				1F909B09148B242D00084E83 /* skill_menu.h */,
 				E5D6407910BD494500A99626 /* skills.cc */,
 				E5D6407A10BD494500A99626 /* skills.h */,
-				E5D6407B10BD494500A99626 /* skills2.cc */,
-				E5D6407C10BD494500A99626 /* skills2.h */,
 				E5D6407D10BD494500A99626 /* species.cc */,
 				E5D6407E10BD494500A99626 /* species.h */,
 				E5D6408710BD494500A99626 /* spl-book.cc */,
@@ -3118,7 +3112,6 @@
 				7B09F5FB1133D6AB004F149D /* showsymb.cc in Sources */,
 				1F909BE3148B450000084E83 /* skill_menu.cc in Sources */,
 				7B09F5FC1133D6AB004F149D /* skills.cc in Sources */,
-				7B09F5FD1133D6AB004F149D /* skills2.cc in Sources */,
 				7B09F5FE1133D6AB004F149D /* species.cc in Sources */,
 				7B09F6031133D6AB004F149D /* spl-book.cc in Sources */,
 				7B09F6041133D6AB004F149D /* spl-cast.cc in Sources */,
@@ -3366,7 +3359,6 @@
 				E5D6414E10BD494500A99626 /* showsymb.cc in Sources */,
 				1F909B25148B242D00084E83 /* skill_menu.cc in Sources */,
 				E5D6414F10BD494500A99626 /* skills.cc in Sources */,
-				E5D6415010BD494500A99626 /* skills2.cc in Sources */,
 				E5D6415110BD494500A99626 /* species.cc in Sources */,
 				E5D6415610BD494500A99626 /* spl-book.cc in Sources */,
 				E5D6415710BD494500A99626 /* spl-cast.cc in Sources */,

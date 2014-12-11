@@ -1,15 +1,12 @@
 #include "AppHdr.h"
 
-#include <math.h>
-#include "asg.h"
 #include "random.h"
-#include "syscalls.h"
 
+#include <cmath>
 #ifdef UNIX
 // for times()
 #include <sys/times.h>
 #endif
-
 // for getpid()
 #include <sys/types.h>
 #ifndef TARGET_COMPILER_VC
@@ -17,6 +14,9 @@
 #else
 # include <process.h>
 #endif
+
+#include "asg.h"
+#include "syscalls.h"
 
 void seed_rng(uint32_t seed)
 {
@@ -35,7 +35,7 @@ void seed_rng()
     seed_key[0] += times(&buf);
 #endif
     seed_key[1] += getpid();
-    seed_key[2] += time(NULL);
+    seed_key[2] += time(nullptr);
 
     seed_asg(seed_key, 5);
 }
@@ -58,33 +58,6 @@ int random_range(int low, int high, int nrolls)
     ASSERT(nrolls > 0);
     const int roll = random2avg(high - low + 1, nrolls);
     return low + roll;
-}
-
-// Chooses one of the strings passed in at random. The list of strings
-// must be terminated with NULL.  NULL is not -1, and 0 is popular
-// value for enums, so we need to copy the function.
-template <>
-const char* random_choose<const char*>(const char* first, ...)
-{
-    va_list args;
-    va_start(args, first);
-
-    const char* chosen = first;
-    int count = 1, nargs = 100;
-
-    while (nargs-- > 0)
-    {
-        char* pick = va_arg(args, char*);
-        if (pick == NULL)
-            break;
-        if (one_chance_in(++count))
-            chosen = pick;
-    }
-
-    ASSERT(nargs > 0);
-
-    va_end(args);
-    return chosen;
 }
 
 const char* random_choose_weighted(int weight, const char* first, ...)
@@ -242,6 +215,11 @@ int div_rand_round(int num, int den)
         return num / den;
 }
 
+int div_round_up(int num, int den)
+{
+    return num / den + (num % den != 0);
+}
+
 // [0, max)
 int bestroll(int max, int rolls)
 {
@@ -302,17 +280,22 @@ int random2limit(int max, int limit)
     return sum;
 }
 
-// Generate samples from a binomial distribution with n_trials and trial_prob
-// probability of success per trial. trial_prob is an integer less than 100
-// representing the % chance of success.
-// This just evaluates all n trials, there is probably an efficient way of
-// doing this but I'm not much of a statistician. -CAO
-// [0, n_trials]
-int binomial_generator(unsigned n_trials, unsigned trial_prob)
+/** Sample from a binomial distribution.
+ *
+ * This is the number of successes in a sequence of independent trials with
+ * fixed probability.
+ *
+ * @param n_trials The number of trials.
+ * @param trial_prob The numerator of the probability of success of each trial.
+ *                   If greater than scale, the probability is 1.0.
+ * @param scale The denominator of trial_prob, default 100.
+ * @return the number of successes, range [0, n_trials]
+ */
+int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale)
 {
     int count = 0;
     for (unsigned i = 0; i < n_trials; ++i)
-        if (::x_chance_in_y(trial_prob, 100))
+        if (::x_chance_in_y(trial_prob, scale))
             count++;
 
     return count;
@@ -358,9 +341,9 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
     return val + random2avg(lfuzz + hfuzz + 1, naverage) - lfuzz;
 }
 
-bool decimal_chance(double percent)
+bool decimal_chance(double chance)
 {
-    return random_real() < percent;
+    return random_real() < chance;
 }
 
 // This is used when the front-end randomness is inconclusive.  There are

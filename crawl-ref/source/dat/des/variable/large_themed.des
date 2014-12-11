@@ -9,6 +9,8 @@
 # vaults.des.
 ###############################################################################
 
+: require('dlua/util.lua')
+
 default-depth: D:12-, !D:$, Depths, !Depths:$
 # be careful to adapt these numbers for new vaults (using DEPTH)
 
@@ -901,7 +903,7 @@ TILE:   c = DNGN_STONE_WALL_DARKGRAY
 # This is to mark the wall clearly diggable.
 TILE:   y = WALL_NORMAL
 MONS:   patrolling silent spectre
-MONS:   curse skull, soul eater
+MONS:   patrolling curse skull, soul eater
 # Inmates are monsters capable of blinking, summoning or airstriking.
 MONS:   ogre mage / deep elf mage / wizard / necromancer / \
         merfolk aquamancer / spriggan air mage / orc sorcerer / \
@@ -1166,8 +1168,8 @@ MARKER: ! = lua:fog_machine { \
             }
 KFEAT:  _ = altar_vehumet
 ## Made to be always the same hd for consistency. - HangedMan
-MONS:   statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
-        name:conjurer n_adj
+MONS:   statue hd:12 spells:orb_of_destruction.62.magical \
+        tile:mons_statue_mage col:vehumet name:conjurer n_adj
 : if you.absdepth() < 22 then
 MONS:   w:6 deep elf conjurer / w:2 wizard / w:1 spriggan air mage / w:1 deep elf annihilator
 MONS:   w:3 deep elf annihilator / w:1 deep elf conjurer
@@ -1284,14 +1286,14 @@ MONS:    oklob plant
 MONS:    jelly
 MONS:    trapdoor spider / wolf spider
 MONS:    guardian serpent
-MONS:    curse skull
+MONS:    obsidian statue
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb
 KFEAT:   = = closed_door
 COLOUR:  ' = red
 FTILE:   ' = floor_rough_red
 SUBST:   ' = .
-# With 25% chance, have lava and curse skull instead of water and oklobs:
+# With 25% chance, have lava and obsidian statue instead of water and oklobs:
 SUBST:   w : Ww.
 SUBST:   w = W.
 SHUFFLE: wU3 / wU3 / wU3 / l7L
@@ -1614,14 +1616,46 @@ NAME:   kennysheep_goblin_castle
 TAGS:   no_monster_gen no_pool_fixup
 ORIENT: northwest
 DEPTH:  D:2-4
-KMONS:  O = Ijyb / hobgoblin w:1, hobgoblin
+## this gives a chance for Ijyb and Robin to appear as the boss if they
+## haven't been placed, selecting from who is available.
+{{
+  -- Default for when we're only map validating.
+  if not crawl.game_started() then
+    kmons("O = Ijyb / Robin / hobgoblin w:1")
+    subst("B = 1")
+    return
+  end
+
+  -- hobgoblin bosses and their weights
+  bossw = {hobgoblin = 1, Ijyb = 10, Robin = 10}
+  bosses = {"hobgoblin"}
+
+  -- Find out which hobgoblin uniques we can use
+  if not you.uniques("Ijyb") then
+    bosses[#bosses + 1] = "Ijyb"
+  end
+  if not you.uniques("Robin") then
+    bosses[#bosses + 1] = "Robin"
+  end
+
+  -- Choose a boss, and remove the supporting goblins if we select Robin, since
+  -- she has her own band.
+  boss = util.random_weighted_from(bossw, bosses)
+  if boss == "Robin" then
+    subst("B = .")
+    boss = "Robin band"
+  else
+    subst("B = 1")
+  end
+  kmons("O = " .. boss)
+}}
 MONS:   goblin, goblin ; hunting sling . stone, jackal
-NSUBST: . = 1:6 / 3:3 / *:.
+NSUBST: . = 1:0 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx
-x...+....1..x%%*xww
+x...+....B..x%%*xww
 x...+......O+%%%xww
-x...x....1..xxxxxww
+x...x....B..xxxxxww
 x...xxxxxxxxxx...ww
 x............x...ww
 x.....1.1....x.2.ww
@@ -1646,9 +1680,9 @@ WEIGHT: 5
 FTILE:  *|c.12${} = floor_infernal_blank
 TILE:   c = dngn_stone_dark
 SUBST:  *=*|
-MONS:   blue devil w:1 / hellwing w:3 / iron devil w:1 / orange demon w:1 /\
+MONS:   blue devil w:1 / hellwing w:3 / rust devil w:1 / orange demon w:1 /\
         red devil w:1 / demonic crawler / sixfirhy w:1
-MONS:   lesser demon, green rat / giant cockroach
+MONS:   lesser demon, river rat / giant cockroach
 NSUBST: . = 6:3 / 6:! / 56:' / .
 KPROP:  !' = bloody
 : dgn.delayed_decay(_G, '!', 'human corpse / human skeleton')
@@ -1763,4 +1797,39 @@ xxxwxxxx......xxxw.xx..xxx..xxx
               xxw.xx
               xx.xxx
               xx@xxx
+ENDMAP
+
+NAME:    kennysheep_kobold_grotto
+DEPTH:   D:13-, !D:$
+TAGS:    no_monster_gen
+ORIENT:  northwest
+MONS:    big kobold, patrolling kobold demonologist, kobold, plant
+MONS:    lesser demon, obsidian statue
+: dgn.delayed_decay(_G, 'C', 'halfling corpse / halfling skeleton')
+KMONS:   g = bush
+SHUFFLE: !'
+NSUBST:  ! = 3:C / 4:- / 2:5 / *:.
+NSUBST:  ' = 2:C / *:.
+NSUBST:  . = 10:3 / 4:5
+SUBST:  .z = .:200 W:35 4:20
+KPROP:  -C = bloody
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx!!xxxx'''xxxx'''xxxxxx
+xxxx!!!xxx''''xx'''''xxxxx
+xxxxxgxxxxggxxxxxggxxxx!!x
+xxxxx................xx!!x
+xxxx...w..............g!xx
+x'x...www.............xxx
+x'g....w.........w...xx
+x'g..........x1.wWw.1xx
+xxx....w....xx.wW6Ww..x
+xx....wGw...xx..wWw..xx
+xxx.w1.w.1wxxx...w...xx
+xxxxww.1.wwxx.1.....1xx
+ xxxx2***2xxx.......xxx
+ xxxx**|**1xxxx.....xxx
+  xxxxxxxxxxxxx.....xxx
+    xxxxxxxxxxxx....xx
+              xxx@.xx
 ENDMAP

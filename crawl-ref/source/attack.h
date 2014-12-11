@@ -45,8 +45,6 @@ public:
 
     bool    apply_bleeding;
 
-    int     noise_factor;
-
     // Fetched/Calculated from the attacker, stored to save execution time
     int             ev_margin;
 
@@ -80,11 +78,6 @@ public:
     string     special_damage_message;
     string     aux_attack, aux_verb;
 
-    // Adjusted EV penalties for defender and attacker
-    int             defender_body_armour_penalty;
-    int             defender_shield_penalty;
-    int             attacker_body_armour_penalty;
-    int             attacker_shield_penalty;
     // Combined to-hit penalty from armour and shield.
     int             attacker_armour_tohit_penalty;
     int             attacker_shield_tohit_penalty;
@@ -148,11 +141,11 @@ protected:
     // Determine if we're blocking (partially or entirely)
     virtual bool attack_shield_blocked(bool verbose);
     virtual bool attack_ignores_shield(bool verbose) = 0;
-    virtual bool apply_damage_brand(const char *what = NULL);
+    virtual bool apply_damage_brand(const char *what = nullptr);
     void calc_elemental_brand_damage(beam_type flavour,
                                      int res,
                                      const char *verb,
-                                     const char *what = NULL);
+                                     const char *what = nullptr);
 
     /* Weapon Effects */
     virtual bool check_unrand_effects() = 0;
@@ -167,6 +160,7 @@ protected:
     brand_type random_chaos_brand();
     void do_miscast();
     void drain_defender();
+    void drain_defender_speed();
 
     virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
                                bool clean = false);
@@ -176,7 +170,6 @@ protected:
     string attack_strength_punctuation(int dmg);
     string evasion_margin_adverb();
 
-    virtual void adjust_noise() = 0;
     virtual void set_attack_verb() = 0;
     virtual void announce_hit() = 0;
 
@@ -188,12 +181,10 @@ protected:
                     iflags_t ignore_flags = ISFLAG_KNOW_CURSE
                                             | ISFLAG_KNOW_PLUSES);
 
-    int modify_blood_amount(const int damage, const int dam_type);
-    // TODO: Used in elemental brand dmg, definitely want to get rid of this
-    // which we can't really do until we refactor the whole pronoun / desc
-    // usage from these lowly classes all the way up to monster/player (and
-    // actor) classes.
-    string defender_name();
+    // TODO: Definitely want to get rid of this, which we can't really do
+    // until we refactor the whole pronoun / desc usage from these lowly
+    // classes all the way up to monster/player (and actor) classes.
+    string defender_name(bool allow_reflexive);
 
     attack_flavour random_chaos_attack_flavour();
 
@@ -206,7 +197,7 @@ protected:
 
     virtual void player_exercise_combat_skills();
 
-    virtual int  player_stab_tier() = 0;
+    virtual bool player_good_stab() = 0;
     virtual int  player_stab_weapon_bonus(int damage);
     virtual int  player_stab(int damage);
     virtual void player_stab_check();

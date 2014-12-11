@@ -15,17 +15,13 @@
 #include "env.h"
 #include "fprop.h"
 #include "libutil.h"
-#include "los.h"
 #include "losglobal.h"
-#include "monster.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "player.h"
-#include "random.h"
+#include "mon-tentacle.h"
 #include "random-weight.h"
-#include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "view.h"
 
@@ -216,11 +212,6 @@ void mons_relocated(monster* mons)
     // If the main body teleports get rid of the tentacles
     if (mons_is_tentacle_head(mons_base_type(mons)))
     {
-        int headnum = mons->mindex();
-
-        if (invalid_monster_index(headnum))
-            return;
-
         for (monster_iterator mi; mi; ++mi)
         {
             if (mi->is_child_tentacle_of(mons))
@@ -237,42 +228,28 @@ void mons_relocated(monster* mons)
     // If a tentacle/segment is relocated just kill the tentacle
     else if (mons->is_child_monster())
     {
-        int base_id = mons->mindex();
-
-        monster* tentacle = mons;
-
-        if (mons->is_child_tentacle_segment()
-                && !::invalid_monster_index(base_id)
-                && menv[base_id].is_parent_monster_of(mons))
-        {
-            tentacle = &menv[base_id];
-        }
-
         for (monster_iterator connect; connect; ++connect)
         {
-            if (connect->is_child_tentacle_of(tentacle))
+            if (connect->is_child_tentacle_of(mons))
                 monster_die(*connect, KILL_RESET, -1, true, false);
         }
 
-        monster_die(tentacle, KILL_RESET, -1, true, false);
+        monster_die(mons, KILL_RESET, -1, true, false);
     }
+    // Kill an eldritch tentacle and all its segments.
     else if (mons->type == MONS_ELDRITCH_TENTACLE
              || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
-        int base_id = mons->type == MONS_ELDRITCH_TENTACLE
-                      ? mons->mindex() : mons->number;
-
-        monster_die(&menv[base_id], KILL_RESET, -1, true, false);
+        monster* tentacle = mons->type == MONS_ELDRITCH_TENTACLE
+                            ? mons : monster_by_mid(mons->tentacle_connect);
 
         for (monster_iterator mit; mit; ++mit)
         {
-            if (mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && (int) mit->number == base_id)
-            {
+            if (mit->is_child_tentacle_of(tentacle))
                 monster_die(*mit, KILL_RESET, -1, true, false);
-            }
         }
 
+        monster_die(tentacle, KILL_RESET, -1, true, false);
     }
 
     mons->clear_clinging();
@@ -314,14 +291,8 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     const coord_def oldplace = mons->pos();
 
-    // Pick the monster up.
-    mgrd(oldplace) = NON_MONSTER;
-
     // Move it to its new home.
-    mons->moveto(newpos, true);
-
-    // And slot it back into the grid.
-    mgrd(mons->pos()) = mons->mindex();
+    mons->move_to_pos(newpos);
 
     const bool now_visible = mons_near(mons);
     if (!silent && now_visible)
@@ -384,7 +355,7 @@ static coord_def random_space_weighted(actor* moved, actor* target,
             weight = dist;
         if (weight < 0)
             weight = 0;
-        dests.push_back(coord_weight(*ri, weight));
+        dests.emplace_back(*ri, weight);
     }
 
     coord_def* choice = random_choose_weighted(dests);
@@ -443,7 +414,7 @@ void blink_range(monster* mon)
         return;
     bool success = mon->blink_to(dest);
     ASSERT(success || mon->is_constricted());
-#ifndef DEBUG
+#ifndef ASSERTS
     UNUSED(success);
 #endif
 }
@@ -459,7 +430,7 @@ void blink_close(monster* mon)
         return;
     bool success = mon->blink_to(dest, false);
     ASSERT(success || mon->is_constricted());
-#ifndef DEBUG
+#ifndef ASSERTS
     UNUSED(success);
 #endif
 }

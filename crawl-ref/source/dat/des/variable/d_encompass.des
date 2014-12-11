@@ -32,8 +32,9 @@ SUBST:   X = xx', y= x'', Z = xx., z = x..
 SUBST:   ;` = ., :~ = x, T = TTV, U = TUU
 SUBST:   7? = ., 36! = 0, Y : 09, 5 = 09, 4 = 9
 SUBST:   " : WW', _  = C, @ = G
-NSUBST:  ' = 7:S / 2:# / 6 = S:2 #:1 .:2 / *:.
+NSUBST:  ' = 7:S / 2:# / 6 = S:3 .:2 / *:.
 : if you.absdepth() > 20 then
+: kmons('9 = place:Depths:' .. you.depth() - 1 .. ' 9')
 SUBST:   & : a:45 c:8 vb x:2, a : c:15 vb
 MARKER:  ^ = lua:props_marker { portal=1 }
 :    if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
@@ -98,8 +99,8 @@ xxX''''''........aaaaaaaaaaaaaaaaaaaaaaaaa..x.x';:;'x.x.Zxx
 xxX''''''2....''''''''''''''''''''''''''....;.x':0:'x.;.Zxx
 xxX'2'^'''''.cde''efc''''''''''''LMJ''BAD...x.x';:;'x.x.Zxx
 xxX'''""'''2.fgd''dgd''pqn''CDA''KNK''CEA...:.;''''x:.x.Zxx
-xxX'''""^'''.efc''cfe''oro''BEB''JML''DCB...x.x;xxx:..x.Zxx
-xxX''^''''''..'''''''''nqp''ADC'''''''''....;........x;.Zxx
+xxX''^""^'''.efc''cfe''oro''BEB''JML''DCB...x.x;xxx:..x.Zxx
+xxX'''^'''''..'''''''''nqp''ADC'''''''''....;........x;.Zxx
 xxX'''''2'''ZZZXXXXXXX''''''''''XXXXXXXXZZ..x;x:x;x:x;..Zxx
 xxxX'''''''XxxxxxxxxxxXXXXXXXXXXxxxxxxxxxxZ............Zxxx
  xxxXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxZZZZZZZZZZZZxxx
@@ -159,9 +160,9 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 : end
 : kmons("s = " .. table.concat(kmonsters, " / "))
 KITEM:   ? = any ring randart w:390 / ring of loudness unrand:ring_of_the_octopus_king
-KITEM:   ! = ring of invisibility / ring of regeneration / \
-             ring of teleport control / ring of slaying / \
-             ring of wizardry / any good_item ring no_uniq w:75
+KITEM:   ! = ring of invisibility / ring of teleport control / \
+             ring of slaying /  ring of wizardry / \
+             any good_item ring no_uniq w:75
 KITEM:   | = | / any good_item
 KFEAT:   ^ = known permanent teleport trap
 KFEAT:   ~ = teleport trap
@@ -174,7 +175,8 @@ KFEAT:   C : C / any shop
 KFEAT:   Z = enter_zot
 SHUFFLE: <d` / {e1 / (f2 / [g3, >h4 / }i5 / )j6 / ]k7, (f2 / )j6, 15
 : if you.absdepth() > 17 then
-SUBST:   ( = D
+SUBST:   ( = D, ) = C
+MARKER:  C = lua:props_marker { portal=1 }
 MARKER:  D = lua:props_marker { portal=1 }
 :     if crawl.random2(you.depth()-15) > (you.depth()-18) then
 SUBST:   A&@ = a, _ = -, l = W
@@ -182,24 +184,24 @@ SUBST:   A&@ = a, _ = -, l = W
 SHUFFLE: aA&@
 :     end
 :     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-NSUBST:  ( = 1:Z / *:(
+NSUBST:  (D = 1:Z / *:D
 SUBST:   f = ', 2 = t
 :     end
 : else
 SUBST:   A&@ = a, _ = -, l = W
 :     if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
-NSUBST:  ( = 1:B / *:(
+NSUBST:  ( = 1:B / *:T
 SUBST:   f = ', 2 = r
 :     end
 : end
-SUBST:   {} = **|||, ( = T, ) : TTCCC, [ = !, ] = ?
+SUBST:   {} = **|||, ) = C, [ = !, ] = ?
 NSUBST:  < = 1:{ / 1:( / 1:[, > = 1:} / 1:) / 1:]
 SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0
 SUBST:   ` = >, 1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
 SHUFFLE: })]` / {([>, ?!, no / pq, pq / pq / pq / qp / pp / qq
-SHUFFLE: LM / LM / LM / LM / LM / LM / LM / ML / ML / MM
-SHUFFLE: NO / NO / NO / NO / NO / NO / NO / ON / ON / OO
-SHUFFLE: PQ / PQ / PQ / PQ / PQ / QP, RS / RS / RS / RS / SR
+SHUFFLE: LM / LM / LM / LM / LM / LM / ML / ML / MM
+SHUFFLE: NO / NO / NO / NO / NO / NO / ON / ON / OO
+SHUFFLE: PQ / PQ / PQ / PQ / QP, RS / RS / RS / SR
 SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
 NSUBST:  ~ = 2:~ / 1:~. / 75 = ~ .:4490 / 225 = ~ .:9990 / *:.
 COLOUR:  "-_ = green
@@ -546,7 +548,7 @@ ENDMAP
 NAME: grunt_runaround_loot
 TAGS: grunt_runaround_loot allow_dup unrand
 SHUFFLE: }>de
-SUBST: de = %
+SUBST: d = %, e = A
 NSUBST: % = 4:| / 8:* / *=%
 KMONS: 9 = 9 band
 KMONS: 8 = 8 band

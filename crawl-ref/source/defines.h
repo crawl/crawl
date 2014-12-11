@@ -12,6 +12,7 @@
 #define MIN_COLS  79
 #define MIN_LINES 24
 
+// remove me when TAG_MAJOR_VERSION > 34
 #define NUM_MONSTER_SPELL_SLOTS  6
 
 #define ESCAPE '\x1b'           // most ansi-friendly way I can think of defining this.
@@ -62,12 +63,6 @@ enum extra_monster_index_type
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
-
-    ZOT_TRAP_MISCAST,
-    HELL_EFFECT_MISCAST,
-    WIELD_MISCAST,
-    MELEE_MISCAST,
-    MISC_MISCAST,
 };
 
 // number of monster attack specs
@@ -83,6 +78,11 @@ enum extra_monster_index_type
 #define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
+#define ITEM_IN_INVENTORY (coord_def(-1, -1))
+#define ITEM_IN_SHOP 32767
+// NON_ITEM + mindex + 1 is used as the item link for monster inventory;
+// make sure we're not colliding with that.
+COMPILE_CHECK(ITEM_IN_SHOP > NON_ITEM + MAX_MONSTERS);
 
 #if NON_ITEM <= MAX_ITEMS
 #error NON_ITEM must be > MAX_ITEMS
@@ -139,7 +139,7 @@ const int LABYRINTH_BORDER = 4;
 #define ENV_SHOW_OFFSET LOS_MAX_RANGE
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 
-#define VIEW_BASE_WIDTH 33      // FIXME: never used
+#define VIEW_BASE_WIDTH 33
 #define VIEW_MIN_WIDTH  ENV_SHOW_DIAMETER
 #define VIEW_MIN_HEIGHT ENV_SHOW_DIAMETER
 #define MSG_MIN_HEIGHT  5
@@ -191,11 +191,9 @@ const int MAG_IMMUNE = 5000;
 // This is the damage amount used to signal insta-death
 const int INSTANT_DEATH = -9999;
 
-// Maximum enchantment on weapons/armour/secondary armours
-const int MAX_WPN_ENCHANT = 9;
-
+// Maximum enchantment on weapons/secondary armours
 // Note: use armour_max_enchant(item) to get the correct limit for item
-const int MAX_ARM_ENCHANT = 8;
+const int MAX_WPN_ENCHANT = 9;
 const int MAX_SEC_ENCHANT = 2;
 
 // The time (in aut) for a staff of power to decay 1 mp.
@@ -232,7 +230,6 @@ const int AGILITY_BONUS = 5;
 #define berserk_div(x) div_rand_round((x) * 2, 3)
 
 #define MAX_MONSTER_HP 10000
-#define DJ_MP_RATE 2
 
 #define GRAND_AVATAR_DAMAGE 15
 
@@ -243,11 +240,13 @@ const int AGILITY_BONUS = 5;
 #define mgrd   env.mgrid
 #define igrd   env.igrid
 
-// colors, such pretty colors ...
+// colours, such pretty colours ...
 // The order is important (IRGB bit patterns).
-enum COLORS
+enum COLOURS
 {
+    COLOUR_INHERIT = -1,
     BLACK,
+    COLOUR_UNDEF = BLACK,
     BLUE,
     GREEN,
     CYAN,
@@ -335,8 +334,8 @@ const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
 const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
-const char * const GOZAG_BRIBE_KEY           = "gozag_bribed";
-const char * const GOZAG_PERMABRIBE_KEY      = "gozag_permabribed";
+const char * const NEUTRAL_BRIBE_KEY         = "gozag_bribed";
+const char * const FRIENDLY_BRIBE_KEY        = "gozag_permabribed";
 const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
 
 #define GOZAG_POTION_BASE_MULTIPLIER 25
@@ -344,8 +343,7 @@ const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
 #define GOZAG_SHOP_MOD_MULTIPLIER 20
 #define GOZAG_BRIBE_AMOUNT 3000
 #define GOZAG_MAX_BRIBABILITY 8
-#define GOZAG_MAX_POTIONS 4
-#define GOZAG_MAX_SHOPS 3
+#define GOZAG_MAX_POTIONS 3
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10
@@ -380,5 +378,9 @@ enum mouse_mode
 const int DEFAULT_VIEW_DELAY = 600;
 
 #define PI 3.14159265359f
+
+#ifdef __ANDROID__
+#define ANDROID_ASSETS "ANDROID_ASSETS"
+#endif
 
 #endif

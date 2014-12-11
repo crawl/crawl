@@ -9,13 +9,14 @@
 #include "food.h"
 #include "libutil.h"
 #include "misc.h"
+#include "player.h"
 #include "options.h"
 #include "tilesdl.h"
 #include "travel.h"
 #include "viewgeom.h"
 
 MapRegion::MapRegion(int pixsz) :
-    m_buf(NULL),
+    m_buf(nullptr),
     m_dirty(true),
     m_far_view(false)
 {
@@ -47,9 +48,9 @@ void MapRegion::init_colours()
     m_colours[MF_MAP_WALL]      = Options.tile_mapped_wall_col;
     m_colours[MF_DOOR]          = Options.tile_door_col;
     m_colours[MF_ITEM]          = Options.tile_item_col;
-    m_colours[MF_MONS_FRIENDLY] = Options.tile_friendly_col;
-    m_colours[MF_MONS_PEACEFUL] = Options.tile_peaceful_col;
-    m_colours[MF_MONS_NEUTRAL]  = Options.tile_neutral_col;
+    m_colours[MF_MONS_FRIENDLY] = VColour(238,  92, 238); // buggy
+    m_colours[MF_MONS_PEACEFUL] = VColour(238,  92, 238); // buggy
+    m_colours[MF_MONS_NEUTRAL]  = VColour(238,  92, 238); // buggy
     m_colours[MF_MONS_HOSTILE]  = Options.tile_monster_col;
     m_colours[MF_MONS_NO_EXP]   = Options.tile_plant_col;
     m_colours[MF_STAIR_UP]      = Options.tile_upstairs_col;

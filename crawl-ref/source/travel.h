@@ -5,15 +5,13 @@
 #ifndef TRAVEL_H
 #define TRAVEL_H
 
-#include "exclude.h"
-
-// For travel_distance_col and travel_distance_grid_t
-#include "travel_defs.h"
-
-#include <stdio.h>
+#include <cstdio>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
+
+#include "exclude.h"
+#include "travel_defs.h"
 
 class reader;
 class writer;
@@ -68,7 +66,7 @@ bool is_known_branch_id(branch_type branch);
 bool is_unknown_stair(const coord_def &p);
 
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
-                     vector<coord_def>* coords = NULL);
+                     vector<coord_def>* coords = nullptr);
 
 bool is_stair_exclusion(const coord_def &p);
 
@@ -85,18 +83,15 @@ void do_explore_cmd();
 
 struct level_pos;
 class level_id;
-struct travel_target;
 
 level_id find_up_level(level_id curr, bool up_branch = false);
 level_id find_down_level(level_id curr);
 
-void start_translevel_travel(const travel_target &pos);
+void start_translevel_travel(const level_pos &pos);
 
 void start_travel(const coord_def& p);
 
 command_type travel();
-
-int travel_direction(uint8_t branch, int subdungeondepth);
 
 void prevent_travel_to(const string &dungeon_feature_name);
 
@@ -124,7 +119,7 @@ enum translevel_prompt_flags
                                                 | TPF_REMEMBER_TARGET,
 };
 
-travel_target prompt_translevel_target(int prompt_flags, string& dest_name);
+level_pos prompt_translevel_target(int prompt_flags, string& dest_name);
 
 // Magic numbers for point_distance:
 
@@ -203,34 +198,6 @@ enum explore_stop_type
 
 ////////////////////////////////////////////////////////////////////////////
 // Structs for interlevel travel.
-
-struct travel_target
-{
-    level_pos p;
-    bool      entrance_only;
-
-    travel_target(const level_pos &_pos, bool entry = false)
-        : p(_pos), entrance_only(entry)
-    {
-    }
-    travel_target()
-        : p(), entrance_only(false)
-    {
-    }
-    void clear()
-    {
-        p.clear();
-        entrance_only = false;
-    }
-    bool operator == (const travel_target &other) const
-    {
-        return p == other.p && entrance_only == other.entrance_only;
-    }
-    bool operator != (const travel_target &other) const
-    {
-        return !operator == (other);
-    }
-};
 
 // Tracks items discovered by explore in this turn.
 class LevelStashes;
@@ -326,7 +293,7 @@ struct LevelInfo
 {
     LevelInfo() : stairs(), excludes(), stair_distances(), id()
     {
-        da_counters.init(0);
+        daction_counters.init(0);
     }
 
     void save(writer&) const;
@@ -351,7 +318,7 @@ struct LevelInfo
         return excludes;
     }
 
-    // Returns the travel distance between two stairs. If either stair is NULL,
+    // Returns the travel distance between two stairs. If either stair is nullptr,
     // or does not exist in our list of stairs, returns 0.
     int distance_between(const stair_info *s1, const stair_info *s2) const;
 
@@ -370,7 +337,7 @@ struct LevelInfo
     // current level.
     bool is_known_branch(uint8_t branch) const;
 
-    FixedVector<int, NUM_DA_COUNTERS> da_counters;
+    FixedVector<int, NUM_DACTION_COUNTERS> daction_counters;
 
 private:
     // Gets a list of coordinates of all player-known stairs on the current
@@ -417,7 +384,7 @@ public:
     LevelInfo *find_level_info(const level_id &lev)
     {
         map<level_id, LevelInfo>::iterator i = levels.find(lev);
-        return i != levels.end()? &i->second : NULL;
+        return i != levels.end()? &i->second : nullptr;
     }
 
     void erase_level_info(const level_id& lev)
@@ -455,10 +422,10 @@ public:
 
     bool is_known_branch(uint8_t branch) const;
 
-    void update_da_counters(); // of the current level
+    void update_daction_counters(); // of the current level
 
-    unsigned int query_da_counter(daction_type c);
-    void clear_da_counter(daction_type c);
+    unsigned int query_daction_counter(daction_type c);
+    void clear_daction_counter(daction_type c);
 
 private:
     void fixup_levels();
@@ -498,7 +465,7 @@ public:
     // Sets the travel_distance_grid_t to use instead of travel_point_distance.
     void set_distance_grid(travel_distance_grid_t distgrid);
 
-    // Set feature vector to use; if non-NULL, also sets annotate_map to true.
+    // Set feature vector to use; if non-nullptr, also sets annotate_map to true.
     void set_feature_vector(vector<coord_def> *features);
 
     // Extract features without pathfinding

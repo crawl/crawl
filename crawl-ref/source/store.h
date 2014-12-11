@@ -7,7 +7,7 @@
 #ifndef STORE_H
 #define STORE_H
 
-#include <limits.h>
+#include <climits>
 #include <map>
 #include <string>
 #include <vector>

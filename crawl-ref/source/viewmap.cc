@@ -10,33 +10,28 @@
 #include <algorithm>
 
 #include "branch.h"
-#include "cio.h"
 #include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dgn-overview.h"
 #include "env.h"
-#include "map_knowledge.h"
-#include "message.h"
-#include "fprop.h"
-#include "exclude.h"
-#include "feature.h"
 #include "files.h"
 #include "format.h"
+#include "fprop.h"
 #include "libutil.h"
 #include "macro.h"
-#include "mon-util.h"
+#include "message.h"
 #include "options.h"
-#include "place.h"
-#include "player.h"
+#include "output.h"
 #include "showsymb.h"
-#include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tileview.h"
 #include "travel.h"
+#include "unicode.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
@@ -121,12 +116,12 @@ static bool _is_explore_horizon(const coord_def& c)
 #ifndef USE_TILE_LOCAL
 static ucs_t _get_sightmap_char(dungeon_feature_type feat)
 {
-    return get_feature_def(feat).symbol;
+    return get_feature_def(feat).symbol();
 }
 
 static ucs_t _get_magicmap_char(dungeon_feature_type feat)
 {
-    return get_feature_def(feat).magic_symbol;
+    return get_feature_def(feat).magic_symbol();
 }
 #endif
 
@@ -161,82 +156,15 @@ bool is_feature(ucs_t feature, const coord_def& where)
         return feat_is_gate(grid) || grid == DNGN_ENTER_SHOP
                || grid == DNGN_UNKNOWN_PORTAL;
     case '<':
-        switch (grid)
-        {
-        case DNGN_ENTER_HELL:
-            return player_in_hell();
-        case DNGN_ESCAPE_HATCH_UP:
-        case DNGN_STONE_STAIRS_UP_I:
-        case DNGN_STONE_STAIRS_UP_II:
-        case DNGN_STONE_STAIRS_UP_III:
-        case DNGN_EXIT_DUNGEON:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_RETURN_FROM_DWARF:
-        case DNGN_RETURN_FROM_FOREST:
-        case DNGN_RETURN_FROM_BLADE:
-#endif
-        case DNGN_RETURN_FROM_ORC:
-        case DNGN_RETURN_FROM_LAIR:
-        case DNGN_RETURN_FROM_SLIME:
-        case DNGN_RETURN_FROM_VAULTS:
-        case DNGN_RETURN_FROM_CRYPT:
-        case DNGN_RETURN_FROM_TEMPLE:
-        case DNGN_RETURN_FROM_SNAKE:
-        case DNGN_RETURN_FROM_ELF:
-        case DNGN_RETURN_FROM_TOMB:
-        case DNGN_RETURN_FROM_SWAMP:
-        case DNGN_RETURN_FROM_SHOALS:
-        case DNGN_RETURN_FROM_SPIDER:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_EXIT_PORTAL_VAULT:
-#endif
-            return true;
-        default:
-            return false;
-        }
+        return feat_stair_direction(grid) == CMD_GO_UPSTAIRS
+                && !feat_is_portal_exit(grid)
+                && grid != DNGN_ENTER_SHOP;
     case '>':
-        switch (grid)
-        {
-        case DNGN_ESCAPE_HATCH_DOWN:
-        case DNGN_STONE_STAIRS_DOWN_I:
-        case DNGN_STONE_STAIRS_DOWN_II:
-        case DNGN_STONE_STAIRS_DOWN_III:
-        case DNGN_ABYSSAL_STAIR:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_ENTER_DWARF:
-        case DNGN_ENTER_FOREST:
-        case DNGN_ENTER_BLADE:
-#endif
-        case DNGN_ENTER_ORC:
-        case DNGN_ENTER_LAIR:
-        case DNGN_ENTER_SLIME:
-        case DNGN_ENTER_VAULTS:
-        case DNGN_ENTER_CRYPT:
-        case DNGN_ENTER_TEMPLE:
-        case DNGN_ENTER_SNAKE:
-        case DNGN_ENTER_ELF:
-        case DNGN_ENTER_TOMB:
-        case DNGN_ENTER_SWAMP:
-        case DNGN_ENTER_SHOALS:
-        case DNGN_ENTER_SPIDER:
-            return true;
-        default:
-            return false;
-        }
+        return feat_stair_direction(grid) == CMD_GO_DOWNSTAIRS
+                && !feat_is_portal_entrance(grid)
+                && grid != DNGN_ENTER_SHOP;
     case '^':
-        switch (grid)
-        {
-        case DNGN_TRAP_MECHANICAL:
-        case DNGN_TRAP_TELEPORT:
-        case DNGN_TRAP_ALARM:
-        case DNGN_TRAP_ZOT:
-        case DNGN_TRAP_SHAFT:
-        case DNGN_TRAP_WEB:
-        case DNGN_PASSAGE_OF_GOLUBRIA:
-            return true;
-        default:
-            return false;
-        }
+        return feat_is_trap(grid);
     default:
         return get_cell_glyph(where).ch == feature;
     }
@@ -252,40 +180,15 @@ static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
 
     if (glyph == '<')
     {
-        if (grd(where) >= DNGN_EXIT_FIRST_PORTAL && grd(where) <= DNGN_EXIT_LAST_PORTAL)
-            return true;
-        switch (grd(where))
-        {
-        case DNGN_EXIT_HELL:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_EXIT_PORTAL_VAULT:
-#endif
-        case DNGN_EXIT_ABYSS:
-        case DNGN_EXIT_PANDEMONIUM:
-        case DNGN_RETURN_FROM_DEPTHS:
-        case DNGN_RETURN_FROM_ZOT:
-            return true;
-        default:
-            return false;
-        }
+        return feat_is_portal_exit(grd(where))
+               || grd(where) == DNGN_EXIT_ABYSS
+               || grd(where) == DNGN_EXIT_PANDEMONIUM
+               || grd(where) == DNGN_ENTER_HELL && player_in_hell();
     }
     else if (glyph == '>')
     {
-        if (grd(where) >= DNGN_ENTER_FIRST_PORTAL && grd(where) <= DNGN_ENTER_LAST_PORTAL)
-            return true;
-        switch (grd(where))
-        {
-        case DNGN_ENTER_DIS:
-        case DNGN_ENTER_GEHENNA:
-        case DNGN_ENTER_COCYTUS:
-        case DNGN_ENTER_TARTARUS:
-        case DNGN_TRANSIT_PANDEMONIUM:
-        case DNGN_ENTER_DEPTHS:
-        case DNGN_ENTER_ZOT:
-            return true;
-        default:
-            return false;
-        }
+        return feat_is_portal_entrance(grd(where))
+               || grd(where) == DNGN_TRANSIT_PANDEMONIUM;
     }
 
     return false;
@@ -361,10 +264,8 @@ static int _find_feature(const vector<coord_def>& features,
     int firstx = -1, firsty = -1, firstmatch = -1;
     int matchcount = 0;
 
-    for (unsigned feat = 0; feat < features.size(); ++feat)
+    for (coord_def coord : features)
     {
-        const coord_def& coord = features[feat];
-
         if (_is_feature_fudged(feature, coord))
         {
             ++matchcount;
@@ -435,7 +336,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 if (show == SH_NOTHING && _is_explore_horizon(c))
                 {
                     const feature_def& fd = get_feature_def(DNGN_EXPLORE_HORIZON);
-                    cell->glyph = fd.symbol;
+                    cell->glyph = fd.symbol();
                     cell->colour = fd.colour;
                 }
 
@@ -484,7 +385,7 @@ static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
     features.clear();
 
     if (on_level)
-        find_travel_pos(you.pos(), NULL, NULL, &features);
+        find_travel_pos(you.pos(), nullptr, nullptr, &features);
     else
     {
         travel_pathfind tp;
@@ -555,20 +456,20 @@ class feature_list
 public:
     void init()
     {
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            data[i].clear();
+        for (vector<cglyph_t> &groupdata : data)
+            groupdata.clear();
         for (rectangle_iterator ri(0); ri; ++ri)
             maybe_add(*ri);
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            sort(data[i].begin(), data[i].end(), _comp_glyphs);
+        for (vector<cglyph_t> &groupdata : data)
+            sort(begin(groupdata), end(groupdata), _comp_glyphs);
     }
 
     formatted_string format() const
     {
         formatted_string s;
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            for (unsigned int j = 0; j < data[i].size(); ++j)
-                s.add_glyph(data[i][j]);
+        for (const vector<cglyph_t> &groupdata : data)
+            for (cglyph_t gly : groupdata)
+                s.add_glyph(gly);
         return s;
     }
 };
@@ -600,16 +501,16 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
 #endif // WIZARD
 
     cgotoxy(1, 1);
-    textcolor(WHITE);
+    textcolour(WHITE);
 
-    cprintf("%s", chop_string(uppercase_first(place_name(
-                          get_packed_place(), true, true)) + pstr,
-                      columns - helplen).c_str());
+    cprintf("%s", chop_string(
+                    uppercase_first(level_id::current().describe(true, true))
+                      + pstr, columns - helplen).c_str());
 
     cgotoxy(max(1, (columns - titlelen) / 2), 1);
     title.display();
 
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     cgotoxy(max(1, columns - helplen + 1), 1);
     help.display();
 }
@@ -761,7 +662,7 @@ bool show_map(level_pos &lpos,
         const int top = 2;
         clrscr();
 #endif
-        textcolor(DARKGREY);
+        textcolour(DARKGREY);
 
         bool on_level = false;
 
@@ -941,6 +842,13 @@ bool show_map(level_pos &lpos,
 #endif
             }
 
+            if (key == CK_REDRAW)
+            {
+                viewwindow();
+                display_message_window();
+                continue;
+            }
+
             c_input_reset(false);
 
             switch (cmd)
@@ -1083,7 +991,7 @@ bool show_map(level_pos &lpos,
 
                 string name;
                 const level_pos pos
-                    = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
+                    = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name);
 
                 if (pos.id.depth < 1
                     || pos.id.depth > brdepth[pos.id.branch]
@@ -1259,6 +1167,25 @@ bool show_map(level_pos &lpos,
                 redraw_map = true;
                 break;
 
+            case CMD_MAP_EXPLORE:
+                if (on_level && !player_in_branch(BRANCH_LABYRINTH))
+                {
+                    travel_pathfind tp;
+                    tp.set_floodseed(you.pos(), true);
+
+                    coord_def whereto = tp.pathfind(Options.explore_greedy
+                                                    ? RMODE_EXPLORE_GREEDY
+                                                    : RMODE_EXPLORE);
+                    _reset_travel_colours(features, on_level);
+
+                    if (!whereto.zero())
+                    {
+                        move_x = whereto.x - lpos.pos.x;
+                        move_y = whereto.y - lpos.pos.y;
+                    }
+                }
+                break;
+
 #ifdef WIZARD
             case CMD_MAP_WIZARD_TELEPORT:
                 if (!you.wizard || !on_level || !in_bounds(lpos.pos))
@@ -1354,6 +1281,7 @@ bool emphasise(const coord_def& where)
 #ifndef USE_TILE_LOCAL
 // Get glyph for feature list; here because it's so similar
 // to get_map_col.
+// Except that that function doesn't exist...
 static cglyph_t _get_feat_glyph(const coord_def& gc)
 {
     // XXX: it's unclear whether we want to display all features
@@ -1362,7 +1290,7 @@ static cglyph_t _get_feat_glyph(const coord_def& gc)
     const bool terrain_seen = env.map_knowledge(gc).seen();
     const feature_def &fdef = get_feature_def(feat);
     cglyph_t g;
-    g.ch  = terrain_seen ? fdef.symbol : fdef.magic_symbol;
+    g.ch  = terrain_seen ? fdef.symbol() : fdef.magic_symbol();
     unsigned col;
     if (_travel_colour_override(gc))
         col = _get_travel_colour(gc);

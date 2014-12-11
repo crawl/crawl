@@ -9,34 +9,26 @@
 
 #include "act-iter.h"
 #include "branch.h"
-#include "cio.h"
-#include "coord.h"
 #include "coordit.h"
-#include "delay.h"
 #include "dactions.h"
+#include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
-#include "effects.h"
-#include "env.h"
 #include "files.h"
 #include "items.h"
-#include "l_defs.h"
 #include "libutil.h"
-#include "mapmark.h"
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
-#include "options.h"
 #include "place.h"
-#include "player.h"
+#include "prompt.h"
 #include "religion.h"
 #include "stairs.h"
 #include "state.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tileview.h"
-#include "travel.h"
 #include "traps.h"
 #include "view.h"
 #include "wiz-mon.h"
@@ -44,7 +36,7 @@
 #ifdef WIZARD
 static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
-    if (you.where_are_you == BRANCH_PANDEMONIUM)
+    if (player_in_branch(BRANCH_PANDEMONIUM))
         if (down)
             return DNGN_TRANSIT_PANDEMONIUM;
         else
@@ -75,8 +67,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
 
         dungeon_feature_type stairs = your_branch().exit_stairs;
 
-        if (stairs < DNGN_RETURN_FROM_FIRST_BRANCH
-            || stairs > DNGN_RETURN_FROM_LAST_BRANCH)
+        if (!feat_is_branch_exit(stairs))
         {
             mpr("This branch has no exit stairs defined.");
             return DNGN_UNSEEN;
@@ -125,9 +116,9 @@ void wizard_level_travel(bool down)
     }
 
     if (down)
-        down_stairs(stairs);
+        down_stairs(stairs, false, true);
     else
-        up_stairs(stairs);
+        up_stairs(stairs, true);
 }
 
 static void _wizard_go_to_level(const level_pos &pos)
@@ -139,7 +130,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     if (pos.id.depth == brdepth[pos.id.branch])
         stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
-    if (pos.id.branch != you.where_are_you && pos.id.depth == 1
+    if (!player_in_branch(pos.id.branch) && pos.id.depth == 1
         && pos.id.branch != BRANCH_DUNGEON)
     {
         stair_taken = branches[pos.id.branch].entry_stairs;
@@ -152,7 +143,7 @@ static void _wizard_go_to_level(const level_pos &pos)
         for (int i = you.level_stack.size() - 1; i >= 0; i--)
             if (you.level_stack[i].id == pos.id)
                 you.level_stack.resize(i);
-        if (you.where_are_you != pos.id.branch)
+        if (!player_in_branch(pos.id.branch))
             you.level_stack.push_back(level_pos::current());
     }
 
@@ -178,7 +169,7 @@ void wizard_interlevel_travel()
 {
     string name;
     const level_pos pos =
-        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES, name).p;
+        prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES, name);
 
     if (pos.id.depth < 1 || pos.id.depth > brdepth[pos.id.branch])
     {
@@ -254,7 +245,7 @@ bool wizard_create_feature(const coord_def& pos)
         }
     }
 
-    if (mimic && !is_valid_mimic_feat(feat)
+    if (mimic && !feat_is_mimicable(feat, false)
         && !yesno("This isn't a valid feature mimic. Create it anyway? ",
                   true, 'n'))
     {
@@ -286,24 +277,30 @@ bool wizard_create_feature(const coord_def& pos)
     if (pos == you.pos() && cell_is_solid(pos))
         you.wizmode_teleported_into_rock = true;
 
+    if (mimic)
+        env.level_map_mask(pos) |= MMT_MIMIC;
+
+    if (you.see_cell(pos))
+        view_update_at(pos);
+
     return true;
 }
 
 void wizard_list_branches()
 {
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        if (parent_branch((branch_type)i) == NUM_BRANCHES)
+        if (parent_branch(it->id) == NUM_BRANCHES)
             continue;
-        else if (brentry[i].is_valid())
+        else if (brentry[it->id].is_valid())
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on %s",
-                 i, branches[i].longname, brentry[i].describe().c_str());
+                 it->id, it->longname, brentry[it->id].describe().c_str());
         }
-        else if (is_random_subbranch((branch_type)i))
+        else if (is_random_subbranch(it->id))
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
-                 "this game", i, branches[i].longname);
+                 "this game", it->id, it->longname);
         }
     }
 
@@ -333,10 +330,9 @@ void wizard_list_branches()
 
         temple_strings.clear();
 
-        for (unsigned int j = 0; j < temples.size(); j++)
+        for (CrawlHashTable &temple_hash : temples)
         {
             god_names.clear();
-            CrawlHashTable &temple_hash = temples[j];
             CrawlVector    &gods        = temple_hash[TEMPLE_GODS_KEY];
 
             for (unsigned int k = 0; k < gods.size(); k++)
@@ -464,9 +460,10 @@ bool debug_make_trap(const coord_def& pos)
     bool success = place_specific_trap(you.pos(), trap);
     if (success)
     {
-        mprf("Created a %s, marked it undiscovered.",
-             (trap == TRAP_RANDOM) ? "random trap"
-                                   : full_trap_name(trap).c_str());
+        mprf("Created %s, marked it undiscovered.",
+             (trap == TRAP_RANDOM)
+                ? "a random trap"
+                : env.trap[env.tgrid(you.pos())].name(DESC_A).c_str());
     }
     else
         mpr("Could not create trap - too many traps on level.");
@@ -479,18 +476,13 @@ bool debug_make_trap(const coord_def& pos)
 
 bool debug_make_shop(const coord_def& pos)
 {
-    char requested_shop[80];
-    int gridch = grd(pos);
-    bool have_shop_slots = false;
-    int new_shop_type = SHOP_UNASSIGNED;
-    bool representative = false;
-
-    if (gridch != DNGN_FLOOR)
+    if (grd(pos) != DNGN_FLOOR)
     {
         mpr("Insufficient floor-space for new Wal-Mart.");
         return false;
     }
 
+    bool have_shop_slots = false;
     for (int i = 0; i < MAX_SHOPS; ++i)
     {
         if (env.shop[i].type == SHOP_UNASSIGNED)
@@ -506,24 +498,22 @@ bool debug_make_shop(const coord_def& pos)
         return false;
     }
 
+    char requested_shop[80];
     msgwin_get_line("What kind of shop? ",
                     requested_shop, sizeof(requested_shop));
     if (!*requested_shop)
         return false;
 
-    string s = replace_all_of(lowercase_string(requested_shop), "*", "");
-    new_shop_type = str_to_shoptype(s);
+    const shop_type new_shop_type = str_to_shoptype(requested_shop);
 
-    if (new_shop_type == SHOP_UNASSIGNED || new_shop_type == -1)
+    if (new_shop_type == SHOP_UNASSIGNED)
     {
         mprf("Bad shop type: \"%s\"", requested_shop);
         list_shop_types();
         return false;
     }
 
-    representative = !!strchr(requested_shop, '*');
-
-    place_spec_shop(pos, new_shop_type, representative);
+    place_spec_shop(pos, new_shop_type);
     link_items();
     mpr("Done.");
     return true;
@@ -533,11 +523,10 @@ static void _free_all_vaults()
 {
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         env.level_map_ids(*ri) = INVALID_MAP_INDEX;
-    for (vault_placement_refv::const_iterator vp = env.level_vaults.begin();
-         vp != env.level_vaults.end(); ++vp)
-    {
-        (*vp)->seen = false;
-    }
+
+    for (auto vp : env.level_vaults)
+        vp->seen = false;
+
     dgn_erase_unused_vault_placements();
 }
 
@@ -757,7 +746,7 @@ void wizard_list_levels()
         }
     }
 
-    travel_cache.update_da_counters();
+    travel_cache.update_daction_counters();
 
     vector<level_id> levs = travel_cache.known_levels();
 
@@ -768,10 +757,10 @@ void wizard_list_levels()
         ASSERT(lv);
 
         string cnts = "";
-        for (int j = 0; j < NUM_DA_COUNTERS; j++)
+        for (int j = 0; j < NUM_DACTION_COUNTERS; j++)
         {
             char num[20];
-            sprintf(num, "%d/", lv->da_counters[j]);
+            sprintf(num, "%d/", lv->daction_counters[j]);
             cnts += num;
         }
         mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
@@ -779,10 +768,10 @@ void wizard_list_levels()
     }
 
     string cnts = "";
-    for (int j = 0; j < NUM_DA_COUNTERS; j++)
+    for (int j = 0; j < NUM_DACTION_COUNTERS; j++)
     {
         char num[20];
-        sprintf(num, "%d/", query_da_counter((daction_type)j));
+        sprintf(num, "%d/", query_daction_counter((daction_type)j));
         cnts += num;
     }
     mprf("%-10s : %s", "`- total", cnts.c_str());

@@ -6,9 +6,42 @@
 #ifndef POTION_H
 #define POTION_H
 
-#include "externs.h"
+class PotionEffect
+{
+private:
+    PotionEffect() = delete;
+    DISALLOW_COPY_AND_ASSIGN(PotionEffect);
+protected:
+    PotionEffect(potion_type);
+public:
+    virtual bool can_quaff() const;
 
-bool potion_effect(potion_type pot_eff, int pow,
-                   item_def *potion = nullptr, bool was_known = true);
+    /**
+     * Elsewhere in the code there are things that can have the effect
+     * effect of a potion without actually being potions, there
+     * are even some legacy 'potions' around in this code that
+     * nowadays only provide the potion-like effect.
+     *
+     * Doesn't currently handle conducts, but possibly it should.
+     *
+     * @param was_known     Whether the player should be held responsible.
+     * @param pow           The 'power' of the effect. Mostly disused.
+     * @return              Whether or not the potion had an effect.
+     */
+    virtual bool effect(bool was_known = true, int pow = 40) const = 0;
+
+    // Quaff also handles god-conduct and potion-specific
+    // uncancellability
+    // Returns whether or not the potion was actually quaffed
+    virtual bool quaff(bool was_known) const;
+
+    const string potion_name;
+    const potion_type kind;
+};
+
+const PotionEffect* get_potion_effect(potion_type pot);
+
+bool quaff_potion(item_def &potion);
+void potionlike_effect(potion_type effect, int pow, bool was_known = true);
 
 #endif

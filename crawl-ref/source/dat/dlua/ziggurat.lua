@@ -202,13 +202,13 @@ end
 
 mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "catoblepas w:12 / hellephant w:6 / spriggan druid w:1 / " ..
-                "guardian serpent w:1 / deep troll shaman w:1 / " ..
-                "raiju w:1 / hell beast w:1", { weight = 5 }),
-     with_props("place:Shoals:$ w:125 / merfolk aquamancer / water nymph w:5 / " ..
-                "merfolk impaler w:5 / merfolk javelineer", { weight = 5 }),
+                "caustic shrike w:4", { weight = 5 }),
+     with_props("place:Shoals:$ w:125 band / merfolk aquamancer / " ..
+                "water nymph w:5 / merfolk impaler w:5 / " ..
+                "merfolk javelineer / octopode crusher w:12", { weight = 5 }),
      "place:Spider:$ w:115 / ghost moth w:15 / red wasp / " ..
                 "orb spider",
-     "place:Crypt:$ w:260 / curse skull w:5 / profane servitor w:5 / " ..
+     "place:Crypt:$ 9 w:260 / curse skull w:5 / profane servitor w:5 / " ..
                 "bone dragon / ancient lich / revenant",
      "place:Abyss:$ w:1990 / corrupter",
      with_props("place:Slime:$", { jelly_protect = true }),
@@ -217,7 +217,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
      with_props("place:Geh:$ w:460 / Brimstone Fiend / " ..
                  "balrug w:30", { weight = 5 }),
      with_props("place:Dis:$ w:460 / Hell Sentinel / " ..
-                 "dancing weapon / iron dragon w:20", { weight = 5 }),
+                 "dancing weapon / war gargoyle w:20", { weight = 5 }),
      with_props("place:Tar:$ w:460 / Shadow Fiend / " ..
                  "curse toe / shadow demon w:20", { weight = 5 }),
      with_props("daeva / angel / cherub / pearl dragon / " ..
@@ -226,16 +226,19 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "frost giant / ettin / titan", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
                 "fire dragon / fire giant / orb of fire", { weight = 2 }),
-     with_props("ice beast / freezing wraith / ice dragon / " ..
-                "frost giant / ice devil / ice fiend / simulacrum / " ..
-                "white draconian knight / blizzard demon", { weight = 2 }),
+     with_props("ice beast / ice dragon / frost giant / " ..
+                "ice devil / blizzard demon / ice fiend / simulacrum / " ..
+                "white draconian knight / shard shrike", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / titan / raiju / " ..
                 "storm dragon / electric golem / spriggan air mage / " ..
                 "shock serpent", { weight = 2 }),
-     with_props("spectral thing / shadow wraith / eidolon w:4 / shadow dragon / " ..
-                "deep elf death mage w:6 / death knight w:4 / " ..
-                "revenant w:4 / profane servitor w:6 / soul eater / " ..
-                "shadow fiend / black sun", { weight = 2 }),
+     with_props("gargoyle / earth elemental / torpor snail / boulder beetle / " ..
+                "stone giant / iron dragon / crystal guardian / " ..
+                "war gargoyle / iron golem / hell sentinel", { weight = 2 }),
+     with_props("spectral thing / shadow wraith / eidolon w:4 / " ..
+                "shadow dragon / deep elf death mage w:6 / " ..
+                "death knight w:4 / revenant w:4 / profane servitor w:6 / " ..
+                "soul eater / shadow fiend / black sun", { weight = 2 }),
      with_props("swamp drake / fire drake / wind drake w:2 / death drake / " ..
                 "wyvern w:5 / hydra w:5 / steam dragon / mottled dragon / " ..
                 "swamp dragon / fire dragon / ice dragon / storm dragon / " ..
@@ -261,7 +264,7 @@ mset(spec_fn(function ()
                local d = 290 - 10 * you.depth()
                local e = math.max(0, you.depth() - 20)
                return "place:Orc:$ w:" .. d .. " / orc warlord / " ..
-                 "orc high priest band / orc sorcerer w:5 / stone giant / " ..
+                 "orc high priest / orc sorcerer w:5 / stone giant / " ..
                  "iron troll w:5 / moth of wrath w:" .. e
              end))
 
@@ -273,30 +276,32 @@ mset(spec_fn(function ()
              end))
 
 mset(spec_fn(function ()
-               local d = math.max(3, you.depth() - 1)
-               local e = math.max(1, you.depth() - 20)
-               return "place:Snake:$ w:65 / guardian serpent w:5 / " ..
+               local d = math.max(6, you.depth() * 2 - 2)
+               local e = math.max(1, you.depth() - 18)
+               return "place:Snake:$ w:130 / guardian serpent w:5 / " ..
                  "greater naga w:" .. d .. " / quicksilver dragon w:" .. e
              end))
 
 mset(spec_fn(function ()
                local d = math.max(120, 280 - 10 * you.depth())
                local e = math.max(1, you.depth() - 9)
-               return "place:Swamp:$ w:" .. d .. " / hydra / " ..
-                 "swamp dragon / green death w:6 / death drake w:1 / " ..
-                 "golden dragon w:1 / tentacled monstrosity w:" .. e
+               local f = math.max(1, math.floor((you.depth() - 9) / 3))
+               return "place:Swamp:$ w:" .. d .. " / hydra w:8 / " ..
+                 "swamp dragon w:8 / tentacled monstrosity w:" .. e ..
+                 " / shambling mangrove w:" .. f .. " / green death w:6 / " ..
+                 "death drake w:1 / golden dragon w:1"
              end))
 
 mset(spec_fn(function ()
                local d = math.max(1, you.depth() - 11)
-               return "place:Vaults:$ 9 w:30 / place:Vaults:$ w:60 / " ..
+               return "place:Vaults:$ w:60 / place:Vaults:$ 9 w:30 / " ..
                  "titan w:" .. d .. " / golden dragon w:" .. d ..
                  " / ancient lich w:" .. d
              end))
 
 mset(spec_fn(function ()
                local d = you.depth() + 5
-               return "place:Tomb:$ w:200 / greater mummy w:" .. d
+               return "place:Tomb:$ 9 w:195 / bennu w:5 / greater mummy w:" .. d
              end))
 
 mset(spec_fn(function ()
@@ -304,9 +309,10 @@ mset(spec_fn(function ()
                local e = math.min(8, math.floor((you.depth()) / 5) + 4)
                local f = math.max(1, you.depth() - 5)
                return "chaos spawn w:" .. d .. " / ugly thing w:" .. d ..
-                 " / very ugly thing w:5 / apocalypse crab w:5 / " ..
+                 " / very ugly thing w:4 / apocalypse crab w:4 / " ..
                  "shapeshifter hd:16 w:" ..e .. " / glowing shapeshifter w:" .. e ..
-                 " / killer klown w:8 / chaos champion w:2 / pandemonium lord w:" .. f
+                 " / killer klown w:8 / chaos champion w:2 / " ..
+                 "greater demon w:2 / pandemonium lord w:" .. f
              end))
 
 mset(spec_fn(function ()
@@ -333,8 +339,10 @@ mset_if(depth_ge(14), with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
                       "greater naga w:12 / guardian serpent w:8 / hydra w:5 / " ..
                       "swamp dragon w:5 / tentacled monstrosity / " ..
                       "merfolk aquamancer w:6 / merfolk javelineer w:8 / " ..
-                      "alligator snapping turtle w:6 / ghost moth w:8 / " ..
-                      "emperor scorpion w:8 / moth of wrath w:4", { weight = 5 }))
+                      "alligator snapping turtle w:6 / " ..
+                      "octopode crusher / ghost moth w:8 / " ..
+                      "emperor scorpion w:8 / moth of wrath w:4",
+                      { weight = 5 }))
 
 function ziggurat_monster_creators()
   return util.map(monster_creator_fn, mons_populations)
@@ -375,8 +383,10 @@ end
 -- Function to find travel-safe squares, excluding closed doors.
 local dgn_passable = dgn.passable_excluding("closed_door")
 
-local function ziggurat_create_monsters(p, mfn)
-  local hd_pool = you.depth() * (you.depth() + 8) + 10
+local function ziggurat_create_monsters(entry, exit, mfn)
+  local depth = you.depth()
+  local completed = you.zigs_completed() + 1
+  local hd_pool = math.floor(10 + completed * completed + (depth * (depth + 8 * completed )) * math.max(1, completed * 0.75))
 
   local nth = 1
 
@@ -401,19 +411,23 @@ local function ziggurat_create_monsters(p, mfn)
   local function mons_place(point)
     if hd_pool <= 0 then
       return true
-    elseif not dgn.mons_at(point.x, point.y) then
+    elseif not dgn.mons_at(point.x, point.y) and entry ~= point then
       mons_do_place(point)
     end
   end
 
-  dgn.find_adjacent_point(p, mons_place, dgn_passable)
+  dgn.find_adjacent_point(exit, mons_place, dgn_passable)
 end
 
 local function ziggurat_create_loot_at(c)
-  -- Basically, loot grows linearly with depth.
+  -- Basically, loot grows linearly with depth & zigs finished.
   local depth = you.depth()
-  local nloot = depth
-  local nloot = depth + crawl.random2(math.floor(nloot * 0.5))
+  local completed = you.zigs_completed()
+  local nloot = depth + crawl.random2(math.floor(depth * 0.5))
+
+  if completed > 0 then
+    nloot = math.min(nloot + crawl.random2(math.floor(completed * depth / 4)), map_area() / 9)
+  end
 
   local function find_free_space(nspaces)
     local spaces = { }
@@ -430,13 +444,16 @@ local function ziggurat_create_loot_at(c)
   end
 
   -- dgn.good_scrolls is a list of items with total weight 1000
-  local good_loot = dgn.item_spec("* no_pickup no_mimic w:7000 / " .. dgn.good_scrolls)
+  local good_loot = dgn.item_spec("* no_pickup no_mimic w:6960 /" ..
+                                  "potion of restore abilities no_pickup no_mimic w:40 /" ..
+                                  dgn.good_scrolls)
   local super_loot = dgn.item_spec("| no_pickup no_mimic w:7000 /" ..
-                                   "potion of experience no_pickup no_mimic w:200 /" ..
-                                   "potion of cure mutation no_pickup no_mimic w:200 /" ..
-                                   "potion of porridge no_pickup no_mimic w:100 /" ..
-                                   "wand of heal wounds no_pickup no_mimic w:10 / " ..
-                                   "wand of hasting no_pickup no_mimic w:10 / " ..
+                                   "potion of experience no_pickup no_mimic w:190 /" ..
+                                   "potion of cure mutation no_pickup no_mimic w:190 /" ..
+                                   "potion of beneficial mutation no_pickup no_mimic w:40 /" ..
+                                   "royal jelly q:3 no_pickup no_mimic w:80 /" ..
+                                   "wand of heal wounds no_pickup no_mimic / " ..
+                                   "wand of hasting no_pickup no_mimic / " ..
                                    dgn.good_scrolls)
 
   local loot_spots = find_free_space(nloot * 4)
@@ -631,19 +648,38 @@ local function ziggurat_furnish(centre, entry, exit)
     dgn.set_random_mon_list(monster_generation.spec)
   end
 
+  local need_lootvault = monster_generation.jelly_protect
+
+  -- zig 1: always start on one side
+  -- zig 2+: A chance of starting in the centre, increasing with zigs completed
+  -- & depth; 50% chance at zig2 + depth 27, 50% @ zig3 + depth21, etc
+  local completed = you.zigs_completed()
+  local place_centre = crawl.x_chance_in_y(completed * 6 + you.depth(),
+                                           completed * 6 + you.depth() + 6+27)
+                       and completed > 0
+
+
+
+  -- If we can (since there won't be a loot vault in the way), place the player
+  -- in the centre.
+  if not need_lootvault and place_centre then
+    entry = centre
+  end
+
+  ziggurat_stairs(entry, exit)
+
   -- Identify where we're going to place loot, but don't actually put
   -- anything down until we've placed pillars.
-  local lootspot = ziggurat_locate_loot(entry, exit,
-    monster_generation.jelly_protect)
+  local lootspot = ziggurat_locate_loot(entry, exit, need_lootvault)
 
-  if not has_loot_chamber then
-    -- Place pillars if we did not create a loot chamber.
+  if not has_loot_chamber and entry ~= centre then
+    -- Place pillars if we didn't put anything else in the middle.
     ziggurat_place_pillars(centre)
   end
 
   ziggurat_create_loot_at(lootspot)
 
-  ziggurat_create_monsters(exit, monster_generation.fn)
+  ziggurat_create_monsters(entry, exit, monster_generation.fn)
 
   local function needs_colour(p)
     return not dgn.in_vault(p.x, p.y)
@@ -695,7 +731,6 @@ local function ziggurat_rectangle_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
@@ -732,7 +767,6 @@ local function ziggurat_ellipse_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
@@ -778,7 +812,6 @@ local function ziggurat_hexagon_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(c, entry, exit)
 end
 

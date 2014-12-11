@@ -5,8 +5,6 @@
 #include "libutil.h"
 #include "random.h"
 
-#include "version.h"
-
 // March 2008: change order of species and jobs on character selection
 // screen as suggested by Markus Maier.
 // We have subsequently added a few new categories.
@@ -87,6 +85,9 @@ species_type get_species_by_abbrev(const char *abbrev)
     COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES);
     for (i = 0; i < NUM_SPECIES; i++)
     {
+        // XXX: this is so Dr works
+        if (i == SP_RED_DRACONIAN)
+            i = SP_BASE_DRACONIAN;
         // This assumes untranslated abbreviations.
         if (toalower(abbrev[0]) == toalower(Species_Abbrev_List[i][0])
             && toalower(abbrev[1]) == toalower(Species_Abbrev_List[i][1]))
@@ -233,6 +234,28 @@ string species_name(species_type speci, bool genus, bool adj)
     return res;
 }
 
+/** What walking-like thing does this species do?
+ *
+ *  @param sp what kind of species to look at
+ *  @returns a "word" to which "-er" or "-ing" can be appended.
+ */
+string species_walking_verb(species_type sp)
+{
+    switch (sp)
+    {
+    case SP_NAGA:
+        return "Slid";
+    case SP_TENGU:
+        return "Glid";
+    case SP_OCTOPODE:
+        return "Wriggl";
+    case SP_VINE_STALKER:
+        return "Stalk";
+    default:
+        return "Walk";
+    }
+}
+
 int species_has_claws(species_type species, bool mut_level)
 {
     if (species == SP_TROLL)
@@ -249,10 +272,36 @@ int species_has_claws(species_type species, bool mut_level)
     return 0;
 }
 
+/**
+ * Where does a given species fall on the Undead Spectrum?
+ *
+ * @param species   The species in question.
+ * @return          What class of undead the given species falls on, if any.
+ */
+undead_state_type species_undead_type(species_type species)
+{
+    switch (species)
+    {
+        case SP_MUMMY:
+            return US_UNDEAD;
+        case SP_GHOUL:
+            return US_HUNGRY_DEAD;
+        case SP_VAMPIRE:
+            return US_SEMI_UNDEAD;
+        default:
+            return US_ALIVE;
+    }
+}
+
+/**
+ * Is a given species undead?
+ *
+ * @param species   The species in question.
+ * @return          Whether that species is undead.
+ */
 bool species_is_undead(species_type species)
 {
-    return species == SP_MUMMY || species == SP_GHOUL
-    || species == SP_VAMPIRE;
+    return species_undead_type(species) != US_ALIVE;
 }
 
 bool species_is_unbreathing(species_type species)
@@ -443,6 +492,31 @@ monster_type player_species_to_mons_species(species_type species)
         die("player of an invalid species");
     default:
         return MONS_PROGRAM_BUG;
+    }
+}
+
+/**
+ * What message should be printed when a character of the specified species
+ * prays at an altar, if not in some form?
+ * To be inserted into "You %s the altar of foo."
+ *
+ * @param species   The species in question.
+ * @return          An action to be printed when the player prays at an altar.
+ *                  E.g., "coil in front of", "kneel at", etc.
+ */
+string species_prayer_action(species_type species)
+{
+    switch (species)
+    {
+        case SP_NAGA:
+            return "coil in front of";
+        case SP_OCTOPODE:
+            return "curl up in front of";
+        case SP_FELID:
+            // < TGWi> you curl up on the altar and go to sleep
+            return "sit before";
+        default:
+            return "kneel at";
     }
 }
 

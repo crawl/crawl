@@ -336,11 +336,6 @@ maximalen Lebens- und Magiepunkte sind dafür permanente Kosten. Nur die
 Bemühung diese Fähigkeit zu benutzen wird deine Lebens- und Magiepunkte
 verbrauchen.
 %%%%
-Draw One ability
-
-Wähle einen beliebigen Kartenstapel in deinem Inventar und ziehe eine Karte
-davon.
-%%%%
 Triple Draw ability
 
 Ziehe drei Karten von einem Deck in deinem Inventar und siehe sie dir an, dann
@@ -544,7 +539,7 @@ Make lightning spire ability
 Erbaut einen Blitz-Turm mit der Fähigkeit Blitze auf die gewählte Position zu
 werfen.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 Erbaue eine Statue auf der gewählten Position, mit der Fähigkeit freundliche
 Dämonen zu beschwören.

@@ -6,13 +6,11 @@
 #ifndef STASH_H
 #define STASH_H
 
-#include "shopping.h"
-#include <string>
-
 #include <map>
+#include <string>
 #include <vector>
 
-#include "externs.h"
+#include "shopping.h"
 
 class input_history;
 class reader;
@@ -26,10 +24,9 @@ public:
     Stash(int xp = -1, int yp = -1);
     Stash(const Stash &other) { *this = other; };
 
-    static bool is_boring_feature(dungeon_feature_type feat);
-
     static string stash_item_name(const item_def &item);
     void update();
+    bool unmark_trapping_nets();
     void save(writer&) const;
     void load(reader&);
 
@@ -38,7 +35,7 @@ public:
     vector<item_def> get_items() const;
 
     bool show_menu(const level_pos &place, bool can_travel,
-                   const vector<item_def>* matching_items = NULL) const;
+                   const vector<item_def>* matching_items = nullptr) const;
 
     // Returns true if this Stash contains items that are eligible for
     // autopickup.
@@ -189,7 +186,7 @@ struct stash_search_result
     vector<item_def> matching_items;
 
     stash_search_result() : pos(), player_distance(0), matches(0),
-                            count(0), match(), stash(NULL), shop(NULL),
+                            count(0), match(), stash(nullptr), shop(nullptr),
                             matching_items()
     {
     }
@@ -239,9 +236,11 @@ public:
     void get_matching_stashes(const base_pattern &search,
                               vector<stash_search_result> &results) const;
 
-    // Update stash at (x,y) on current level, defaulting to player's current
-    // location if no parameters are supplied.
+    // Update stash at (x,y).
     bool  update_stash(const coord_def& c);
+
+    // Mark nets at (x,y) as no longer trapping an actor.
+    bool unmark_trapping_nets(const coord_def &c);
 
     // Returns true if the square at c contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
@@ -324,11 +323,13 @@ public:
 
     void update_visible_stashes();
 
-    // Update stash at (x,y) on current level, defaulting to player's current
-    // location if no parameters are supplied, return true if a stash was
+    // Update stash at (x,y) on current level, returning true if a stash was
     // updated.
     bool update_stash(const coord_def& c);
     void move_stash(const coord_def& from, const coord_def& to);
+
+    // Mark nets at (x,y) on current level as no longer trapping an actor.
+    bool unmark_trapping_nets(const coord_def &c);
 
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied.

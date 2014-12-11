@@ -5,13 +5,15 @@
 
 #ifndef MONPOLY_H
 #define MONPOLY_H
-const item_def *give_mimic_item(monster* mimic);
-dungeon_feature_type get_mimic_feat(const monster* mimic);
+
+#include "libutil.h" // always_true
+
 bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);
 
 #define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
+#define ORIGINAL_TYPE_KEY "original_type"
 
 enum poly_power_type
 {
@@ -20,12 +22,10 @@ enum poly_power_type
     PPT_SAME,
 };
 
-bool is_any_item(const item_def& item);
 void monster_drop_things(
     monster* mons,
     bool mark_item_origins = false,
-    bool (*suitable)(const item_def& item) = is_any_item,
-    int owner_id = NON_ITEM);
+    bool (*suitable)(const item_def& item) = always_true<const item_def &>);
 
 void change_monster_type(monster* mons, monster_type targetc);
 bool monster_polymorph(monster* mons, monster_type targetc,

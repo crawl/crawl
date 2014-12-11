@@ -15,6 +15,7 @@ enum branch_flag_type
     BFLAG_ISLANDED        = (1 << 1), // May have isolated zones with no stairs.
     BFLAG_NO_XLEV_TRAVEL  = (1 << 2), // Can't cross-level travel to or from it.
     BFLAG_NO_ITEMS        = (1 << 3), // Branch gets no random items.
+    BFLAG_DANGEROUS_END   = (1 << 4), // bottom level is more dangerous than normal
 };
 
 struct Branch
@@ -36,12 +37,25 @@ struct Branch
     const char* longname;       // "The Pits of Slime"
     const char* abbrevname;     // "Slime"
     const char* entry_message;
-    bool has_uniques;
     colour_t floor_colour;          // Zot needs special handling.
     colour_t rock_colour;
     int travel_shortcut;         // Which key to press for travel.
-    bool dangerous_bottom_level; // bottom level is more dangerous than normal
     int ambient_noise;           // affects noise loudness and player stealth
+};
+
+class branch_iterator
+{
+public:
+    branch_iterator();
+
+    operator bool() const;
+    const Branch* operator*() const;
+    const Branch* operator->() const;
+    branch_iterator& operator++();
+    branch_iterator operator++(int);
+
+protected:
+    int i;
 };
 
 extern const Branch branches[NUM_BRANCHES];
@@ -55,13 +69,13 @@ const Branch& your_branch();
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);
 bool is_random_subbranch(branch_type branch);
+bool is_connected_branch(const Branch *branch);
 bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
 level_id current_level_parent();
 
 branch_type str_to_branch(const string &branch, branch_type err = NUM_BRANCHES);
 
-bool branch_has_monsters(branch_type branch);
 int current_level_ambient_noise();
 
 branch_type get_branch_at(const coord_def& pos);

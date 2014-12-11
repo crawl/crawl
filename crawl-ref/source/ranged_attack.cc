@@ -7,21 +7,17 @@
 
 #include "ranged_attack.h"
 
-#include "actor.h"
 #include "art-enum.h"
-#include "beam.h"
 #include "coord.h"
-#include "exercise.h"
+#include "english.h"
 #include "godconduct.h"
-#include "itemname.h"
 #include "itemprop.h"
-#include "libutil.h"
+#include "message.h"
 #include "mon-behv.h"
-#include "mon-message.h"
+#include "mon-util.h"
 #include "monster.h"
 #include "player.h"
-#include "random.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "teleport.h"
 #include "traps.h"
 
@@ -137,8 +133,6 @@ bool ranged_attack::attack()
 
     // TODO: sanctuary
 
-    // TODO: adjust_noise
-
     if (should_alert_defender)
         alert_defender();
 
@@ -193,7 +187,7 @@ bool ranged_attack::handle_phase_blocked()
     if (needs_message)
     {
         mprf("%s %s %s%s",
-             def_name(DESC_THE).c_str(),
+             defender_name(false).c_str(),
              defender->conj_verb(verb).c_str(),
              projectile->name(DESC_THE).c_str(),
              punctuation.c_str());
@@ -224,6 +218,8 @@ bool ranged_attack::handle_phase_dodged()
             }
             else
                 mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
+
+            defender->ablate_deflection();
         }
 
         return true;
@@ -252,7 +248,7 @@ bool ranged_attack::handle_phase_dodged()
         mprf("%s%s misses %s%s",
              projectile->name(DESC_THE).c_str(),
              evasion_margin_adverb().c_str(),
-             defender_name().c_str(),
+             defender_name(false).c_str(),
              attack_strength_punctuation(damage_done).c_str());
     }
 
@@ -348,7 +344,7 @@ int ranged_attack::weapon_damage()
     }
     if (using_weapon())
         dam += property(*weapon, PWPN_DAMAGE);
-    else
+    else if (attacker->is_player())
         dam += calc_base_unarmed_damage();
 
     return dam;
@@ -401,7 +397,7 @@ bool ranged_attack::attack_ignores_shield(bool verbose)
         {
             mprf("%s pierces through %s %s!",
                  projectile->name(DESC_THE).c_str(),
-                 apostrophise(defender_name()).c_str(),
+                 apostrophise(defender_name(false)).c_str(),
                  defender_shield ? defender_shield->name(DESC_PLAIN).c_str()
                                  : "shielding");
         }
@@ -422,6 +418,7 @@ bool ranged_attack::apply_damage_brand(const char *what)
     if (attacker->type != MONS_NESSOS
         && projectile->base_type == OBJ_MISSILES
         && get_ammo_brand(*projectile) != SPMSL_NORMAL
+        && get_ammo_brand(*projectile) != SPMSL_PENETRATION
         && (brand == SPWPN_FLAMING
             || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH
@@ -587,7 +584,7 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
     const int resist_roll = 2 + random2(4 + skill + enchantment);
 
-    dprf("Brand rolled %d against defender HD: %d.",
+    dprf(DIAG_COMBAT, "Brand rolled %d against defender HD: %d.",
          resist_roll, defender->get_hit_dice());
 
     if (resist_roll < defender->get_hit_dice())
@@ -649,6 +646,7 @@ bool ranged_attack::apply_missile_brand()
     if (projectile->base_type != OBJ_MISSILES)
         return false;
 
+    special_damage = 0;
     special_missile_type brand = get_ammo_brand(*projectile);
     if (brand == SPMSL_CHAOS)
         brand = random_chaos_missile_brand();
@@ -667,7 +665,7 @@ bool ranged_attack::apply_missile_brand()
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_FIRE);
-        attacker->god_conduct(DID_FIRE, 2);
+        attacker->god_conduct(DID_FIRE, 1);
         break;
     case SPMSL_FROST:
         if (using_weapon()
@@ -675,7 +673,7 @@ bool ranged_attack::apply_missile_brand()
         {
             break;
         }
-        calc_elemental_brand_damage(BEAM_COLD, defender->res_fire(), "freeze",
+        calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_COLD, 2);
         break;
@@ -795,7 +793,7 @@ bool ranged_attack::apply_missile_brand()
 
     if (needs_message && !special_damage_message.empty())
     {
-        mprf("%s", special_damage_message.c_str());
+        mpr(special_damage_message);
 
         special_damage_message.clear();
         // Don't do message-only miscasts along with a special
@@ -822,12 +820,11 @@ bool ranged_attack::mons_attack_effects()
 
 void ranged_attack::player_stab_check()
 {
-    if (player_stab_tier() > 0)
+    if (player_good_stab())
     {
         attack::player_stab_check();
         // Sometimes the blowgun of the Assassin lets you stab an aware target.
-        if (!stab_attempt && is_unrandom_artefact(*weapon)
-            && weapon->special == UNRAND_BLOWGUN_ASSASSIN
+        if (!stab_attempt && is_unrandom_artefact(*weapon, UNRAND_BLOWGUN_ASSASSIN)
             && one_chance_in(3))
         {
             stab_attempt = true;
@@ -841,20 +838,11 @@ void ranged_attack::player_stab_check()
     }
 }
 
-int ranged_attack::player_stab_tier()
+bool ranged_attack::player_good_stab()
 {
-    if (using_weapon()
-        && projectile->base_type == OBJ_MISSILES
-        && projectile->sub_type == MI_NEEDLE)
-    {
-        return 2;
-    }
-
-    return 0;
-}
-
-void ranged_attack::adjust_noise()
-{
+    return using_weapon()
+           && projectile->base_type == OBJ_MISSILES
+           && projectile->sub_type == MI_NEEDLE;
 }
 
 void ranged_attack::set_attack_verb()
@@ -870,8 +858,7 @@ void ranged_attack::announce_hit()
     mprf("%s %s %s%s%s%s",
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
-         // Not defender_name because reflexive is bad here.
-         def_name(DESC_THE).c_str(),
+         defender_name(false).c_str(),
          damage_done > 0 && stab_attempt && stab_bonus > 0
              ? " in a vulnerable spot"
              : "",

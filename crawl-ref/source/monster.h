@@ -8,6 +8,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
 
 #define MAX_DAMAGE_COUNTER 10000
+#define ZOMBIE_BASE_AC_KEY "zombie_base_ac"
+#define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
 
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
@@ -29,8 +31,6 @@ public:
 
     int hit_points;
     int max_hit_points;
-    int ac;
-    int ev;
     int speed;
     int speed_increment;
 
@@ -51,7 +51,24 @@ public:
 
     unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour
-    unsigned int  number;              // #heads (hydra), etc.
+    union
+    {
+        unsigned int number;   ///< General purpose number variable
+        int blob_size;         ///< # of slimes/masses in this one
+        int num_heads;         ///< Hydra-like head number
+        int ballisto_activity; ///< How active is this ballistomycete?
+        int spore_cooldown;    ///< Can this make ballistos (if 0)
+        int mangrove_pests;    ///< # of animals in shambling mangrove
+        int prism_charge;      ///< Turns this prism has existed
+        int battlecharge;      ///< Charges of battlesphere
+        int move_spurt;        ///< Sixfirhy/jiangshi/kraken black magic
+        int swift_cooldown;    ///< When alligator last casted Swift
+        monster_type orc_type; ///< Orc type of Nergalle's spectral orc.
+        mid_t tentacle_connect;///< mid of monster this tentacle is
+                               //   connected to: for segments, this is the
+                               //   tentacle; for tentacles, the head.
+        int countdown;         ///< Actions till singularity dies.
+    };
     int           colour;
     mid_t         summoner;
 
@@ -100,7 +117,7 @@ public:
 
     void mark_summoned(int longevity, bool mark_items_summoned,
                        int summon_type = 0, bool abj = true);
-    bool is_summoned(int* duration = NULL, int* summon_type = NULL) const;
+    bool is_summoned(int* duration = nullptr, int* summon_type = nullptr) const;
     bool is_perm_summoned() const;
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
@@ -110,7 +127,9 @@ public:
     bool self_destructs();
 
     void moveto(const coord_def& c, bool clear_net = true);
-    bool move_to_pos(const coord_def &newpos, bool clear_net = true);
+    bool move_to_pos(const coord_def &newpos, bool clear_net = true,
+                     bool force = false);
+    bool swap_with(monster* other);
     bool blink_to(const coord_def& c, bool quiet = false);
     bool blink_to(const coord_def& c, bool quiet, bool jump);
     kill_category kill_alignment() const;
@@ -118,12 +137,10 @@ public:
     int  foe_distance() const;
     bool needs_berserk(bool check_spells = true) const;
 
-    // Has a hydra-like variable number of attacks based on mons->number.
+    // Has a hydra-like variable number of attacks based on num_heads.
     bool has_hydra_multi_attack() const;
+    int  heads() const;
     bool has_multitargeting() const;
-
-    // Has the 'spellcaster' flag (may not actually have any spells).
-    bool can_use_spells() const;
 
     // Has the 'priest' flag.
     bool is_priest() const;
@@ -161,6 +178,7 @@ public:
     bool gain_exp(int exp, int max_levels_to_gain = 2);
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
+    void maybe_degrade_bone_armour();
 
     void forget_random_spell();
 
@@ -171,7 +189,7 @@ public:
 
     bool can_drink_potion(potion_type ptype) const;
     bool should_drink_potion(potion_type ptype) const;
-    item_type_id_state_type drink_potion_effect(potion_type pot_eff);
+    item_type_id_state_type drink_potion_effect(potion_type pot_eff, bool card = false);
 
     bool can_evoke_jewellery(jewellery_type jtype) const;
     bool should_evoke_jewellery(jewellery_type jtype) const;
@@ -198,7 +216,7 @@ public:
     void ghost_init(bool need_pos = true);
     void ghost_demon_init();
     void uglything_init(bool only_mutate = false);
-    void uglything_mutate(colour_t force_colour = BLACK);
+    void uglything_mutate(colour_t force_colour = COLOUR_UNDEF);
     void uglything_upgrade();
     void destroy_inventory();
     void load_ghost_spells();
@@ -230,14 +248,16 @@ public:
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
     random_var  attack_delay(const item_def *weapon,
-                             const item_def *projectile = NULL,
-                             bool random = true, bool scaled = true) const;
+                             const item_def *projectile = nullptr,
+                             bool random = true, bool scaled = true,
+                             bool /*shield*/ = true) const;
     int         has_claws(bool allow_tran = true) const;
 
     int wearing(equipment_type slot, int type, bool calc_unid = true) const;
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
     int scan_artefacts(artefact_prop_type which_property,
-                       bool calc_unid = true) const;
+                       bool calc_unid = true,
+                       vector<item_def> *_unused_matches = nullptr) const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
     item_def *mslot_item(mon_inv_type sl) const;
@@ -265,9 +285,9 @@ public:
 
     bool      pickup_item(item_def &item, int near = -1, bool force = false);
     void      pickup_message(const item_def &item, int near);
-    bool      pickup_wand(item_def &item, int near);
+    bool      pickup_wand(item_def &item, int near, bool force = false);
     bool      pickup_scroll(item_def &item, int near);
-    bool      pickup_potion(item_def &item, int near);
+    bool      pickup_potion(item_def &item, int near, bool force = false);
     bool      pickup_gold(item_def &item, int near);
     bool      pickup_launcher(item_def &launcher, int near, bool force = false);
     bool      pickup_melee_weapon(item_def &item, int near);
@@ -282,10 +302,12 @@ public:
                       bool force = false);
     void      steal_item_from_player();
     item_def* take_item(int steal_what, int mslot);
+    item_def* disarm();
 
     bool      can_use_missile(const item_def &item) const;
 
-    string name(description_level_type type, bool force_visible = false) const;
+    string name(description_level_type type, bool force_visible = false,
+                bool force_article = false) const;
 
     // Base name of the monster, bypassing any mname setting. For an orc priest
     // named Arbolt, name() will return "Arbolt", but base_name() will return
@@ -297,11 +319,11 @@ public:
     string full_name(description_level_type type, bool use_comma = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
     string conj_verb(const string &verb) const;
-    string hand_name(bool plural, bool *can_plural = NULL) const;
-    string foot_name(bool plural, bool *can_plural = NULL) const;
-    string arm_name(bool plural, bool *can_plural = NULL) const;
+    string hand_name(bool plural, bool *can_plural = nullptr) const;
+    string foot_name(bool plural, bool *can_plural = nullptr) const;
+    string arm_name(bool plural, bool *can_plural = nullptr) const;
 
-    bool fumbles_attack(bool verbose = true);
+    bool fumbles_attack();
     bool cannot_fight() const;
 
     int  skill(skill_type skill, int scale = 1,
@@ -310,18 +332,18 @@ public:
     void attacking(actor *other, bool ranged);
     bool can_go_frenzy() const;
     bool can_go_berserk() const;
-    bool can_jump() const;
     bool go_berserk(bool intentional, bool potion = false);
     bool go_frenzy(actor *source);
     bool berserk() const;
     bool berserk_or_insane() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
-    bool can_safely_mutate() const;
+    bool can_safely_mutate(bool temp = true) const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool is_stationary() const;
-    bool malmutate(const string &reason);
+    bool malmutate(const string &/*reason*/);
+    void corrupt();
     bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,
@@ -329,7 +351,7 @@ public:
 
     monster_type mons_species(bool zombie_base = false) const;
 
-    mon_holy_type holiness() const;
+    mon_holy_type holiness(bool /*temp*/ = true) const;
     bool undead_or_demonic() const;
     bool holy_wrath_susceptible() const;
     bool is_holy(bool check_spells = true) const;
@@ -338,30 +360,31 @@ public:
     int how_unclean(bool check_god = true) const;
     int known_chaos(bool check_spells_god = false) const;
     int how_chaotic(bool check_spells_god = false) const;
-    bool is_artificial() const;
+    bool is_artificial(bool temp = true) const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
-    int res_hellfire() const;
+    bool res_hellfire() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
     int res_poison(bool temp = true) const;
-    int res_rotting(bool temp = true) const;
-    int res_asphyx() const;
+    int res_rotting(bool /*temp*/ = true) const;
+    bool res_asphyx() const;
     int res_water_drowning() const;
-    int res_sticky_flame() const;
+    bool res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
     int res_negative_energy(bool intrinsic_only = false) const;
-    int res_torment() const;
+    bool res_torment() const;
     int res_acid(bool calc_unid = true) const;
-    int res_wind() const;
-    int res_petrify(bool temp = true) const;
+    bool res_wind() const;
+    bool res_petrify(bool /*temp*/ = true) const;
     int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
                  bool blink = false) const;
     bool res_corr(bool calc_unid = true, bool items = true) const;
+    bool antimagic_susceptible() const;
 
     bool stasis(bool calc_unid = true, bool items = true) const;
 
@@ -414,6 +437,7 @@ public:
     bool rolling() const { return has_ench(ENCH_ROLLING); } ;
     bool has_spells() const;
     bool has_spell(spell_type spell) const;
+    unsigned short spell_slot_flags(spell_type spell) const;
     bool has_unholy_spell() const;
     bool has_evil_spell() const;
     bool has_unclean_spell() const;
@@ -426,13 +450,17 @@ public:
 
     bool can_throw_large_rocks() const;
     bool can_speak();
+    bool is_silenced() const;
 
-    int armour_class() const;
+    int base_armour_class() const;
+    int armour_class(bool calc_unid = true) const;
     int gdr_perc() const { return 0; }
-    int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
+    int base_evasion() const;
+    int evasion(bool calc_unid = true) const;
+    int melee_evasion(const actor* /*attacker*/, ev_ignore_type evit) const;
 
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int strength, bool unused = true, bool quiet = false);
+    bool sicken(int strength);
     bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *, bool force = false);
@@ -441,9 +469,14 @@ public:
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
-    void splash_with_acid(const actor* evildoer);
+    void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
+                          bool /*allow_corrosion*/ = true,
+                          const char* /*hurt_msg*/ = nullptr);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
+             kill_method_type kill_type = KILLED_BY_MONSTER,
+             string source = "",
+             string aux = "",
              bool cleanup_dead = true,
              bool attacker_effects = true);
     bool heal(int amount, bool max_too = false);
@@ -469,19 +502,20 @@ public:
     void    shield_block_succeeded(actor *foe);
     int     shield_bypass_ability(int tohit) const;
     int     missile_deflection() const;
+    void    ablate_deflection();
 
     // Combat-related class methods
     int     unadjusted_body_armour_penalty() const { return 0; }
-    int     adjusted_body_armour_penalty(int, bool) const { return 0; }
+    int     adjusted_body_armour_penalty(int) const { return 0; }
     int     adjusted_shield_penalty(int) const { return 0; }
     int     armour_tohit_penalty(bool, int) const { return 0; }
     int     shield_tohit_penalty(bool, int) const { return 0; }
 
-    actor_type atype() const { return ACT_MONSTER; }
+    bool is_player() const { return false; }
     monster* as_monster() { return this; }
-    player* as_player() { return NULL; }
+    player* as_player() { return nullptr; }
     const monster* as_monster() const { return this; }
-    const player* as_player() const { return NULL; }
+    const player* as_player() const { return nullptr; }
 
     // Hacks, with a capital H.
     void check_speed();
@@ -506,7 +540,6 @@ public:
 
     bool is_child_tentacle() const;
     bool is_child_tentacle_of(const monster* mons) const;
-    bool has_child_tentacles() const;
     bool is_child_monster() const;
     bool is_parent_monster_of(const monster* mons) const;
     bool is_child_tentacle_segment() const;
@@ -535,12 +568,12 @@ private:
     bool level_up_change();
     bool pickup(item_def &item, int slot, int near);
     void equip_weapon(item_def &item, int near, bool msg = true);
-    void equip_armour(item_def &item, int near);
+    void equip_armour(item_def &item, int slot, int near);
     void equip_jewellery(item_def &item, int near);
     void unequip_weapon(item_def &item, int near, bool msg = true);
     void unequip_armour(item_def &item, int near);
     void unequip_jewellery(item_def &item, int near);
-    int armour_bonus(const item_def &item);
+    int armour_bonus(const item_def &item, bool calc_unid = true) const;
 
     void id_if_worn(mon_inv_type mslot, object_class_type base_type,
                     int sub_type) const;
@@ -554,6 +587,8 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
+    bool search_slots(function<bool (const mon_spell_slot &)> func) const;
+    bool search_spells(function<bool (spell_type)> func) const;
 };
 
 #endif

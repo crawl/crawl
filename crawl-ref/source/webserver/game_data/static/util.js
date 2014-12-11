@@ -69,7 +69,16 @@ function () {
         return filtered;
     }
 
+    function init_canvas(element, w, h) {
+        var ratio = window.devicePixelRatio;
+        element.width = w;
+        element.height = h;
+        element.style.width = (w / ratio) + 'px';
+        element.style.height = (h / ratio) + 'px';
+    }
+
     return {
-        formatted_string_to_html: formatted_string_to_html
+        formatted_string_to_html: formatted_string_to_html,
+        init_canvas: init_canvas
     };
 });

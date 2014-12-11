@@ -12,9 +12,8 @@ Contents:  I. Conditionalising levels
            M. Portal vaults
            N. Lua reference
            O. Lua hooks
-           P. Feature names
-           Q. Map statistics
-           R. Map generation
+           P. Map statistics
+           Q. Map generation
 
 This document describes the advanced features of vault making. This includes
 usage of lua and how to create portal vaults. Triggerables are covered in a
@@ -286,23 +285,34 @@ c. Timers and other listeners in an abyssal vault may be discarded at
 M.   Portal Vaults
 ==================
 
-Portal vaults are vaults accessed by portals in the dungeon (labyrinths
-and bazaars are special cases of portal vaults). You can create custom
-portal vaults in the following steps (no compilation is necessary):
+Portal vaults are branches accessed by portals in the dungeon. You can
+create custom portal vaults in the following steps (note that compilation
+is necessary), assuming that you want to call your new portal "NewPortal"
+for whatever reason:
 
-* Create a new file name.des in the dat/ folder. Rules:
-  The "name" should be descriptive of the vault you're adding.
-  The "name" should not exceed eight letters.
-  The ending must be "des".
-* "name.des" should contain a comment at the top, explaining flavour and
+* Create a new file newportal.des in the dat/portals/ folder.
+* "newportal.des" should contain a comment at the top, explaining flavour and
   gameplay goals of the portal vault (and perhaps additional ideas etc.)
 * Define at least one vault containing the portal (see below).
 * Define at least one destination map (see below).
-* Add a short in-game description for the string "desc" (see below) to
-  dat/descript/features.txt.
+* Add a short in-game description for the branch to dat/descript/branches.txt
+* Add code for the branch in branch-data.h, like so:
+    { BRANCH_MYPORTAL, NUM_BRANCHES, -1, -1, 1, 14,
+    BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+    DNGN_ENTER_MYPORTAL, DNGN_EXIT_MYPORTAL,
+    "NewPortal", "an awesome portal place", "NewPortal",
+    nullptr,
+    BLUE, BLUE,
+    '7', 0 },
+* Add code for the entrances and exits to feature-data.h, like so:
+    PORTAL_ENTRANCE(DNGN_ENTER_MYPORTAL, "awesome portal in", "enter_newportal", BLUE),
+    PORTAL_EXIT(DNGN_EXIT_MYPORTAL, "awesome portal out", "exit_newportal", BLUE),
+* Add BRANCH_MYPORTAL, DNGN_ENTER_MYPORTAL, and DNGN_EXIT_MYPORTAL to enum.h
+  in the appropriate places (copy and paste from another portal vault is fine
+  for this).
 
 Before going into the details of portal vault creation, some words about
-their uses: Portal vaults are different from branches in that they are
+their uses: Portal vaults are different from other branches in that they are
 not guaranteed. Also, there is only one go at a portal vault - if you
 leave, it's gone for good. You can apply special rules to a portal vault,
 like enforcing maprot.
@@ -325,46 +335,15 @@ Define a vault to hold the portal itself
 # Bare-bones portal vault entry
 NAME: portal_generic_entry
 TAGS: allow_dup
-ORIENT: float
-MARKER: O = lua:one_way_stair { desc = "A portal to places unknown", \
-                                dst = "generic_portal" }
-KFEAT: O = enter_portal_vault
+KFEAT: O = enter_newportal # name defined in feature-data.h
 MAP
 O
 ENDMAP
-
-Portal entries must contain a portal vault entry (enter_portal_vault).
-This feature must always have a marker that provides the portal with a
-description ("A portal to places unknown") and a destination
-("generic_portal").
 
 In case you want to make sure that the portal vault entry is only used
 once, you add a TAGS: uniq_BAR line. It should be noted that the label
 BAR may *not* end in _entry (otherwise the level builder assumes that
 the vault is a branch entry).
-
-If you want the place name displayed while in the vault to be different
-than the destination name, then you can give one_way_stair() a "dstname"
-parameter. If you want the place origin for items in a character
-dump to be different than the default you can give one_way_stair a
-"dstorigin" parameter (i.e., dstname = "garden", dstorigin = "in the gardens").
-If you want the place name abbreviation used when displaying notes to be
-different than than the default you can use the "dstname_abbrev" parameter.
-
-You can dynamically change the origin string using the lua function
-dgn.set_level_type_origin(), and dynamically change the place name
-abbreviation with dgn.set_set_level_name_abbrev().
-
-Known portal vault entries will be displayed on the overmap. By default
-the name shown on the overmap will be the "dstname" parameter, or if
-that isn't present the "dst" parameter. It can be set to something else
-with the "overmap" parameter. A note can be made to accompany the
-portal's position on the overmap with the "overmap_note" parameter.
-
-Bones files for characters killed in the portal vault will normally
-use an extension derived from the first three letters of the 'dst'
-property. You can override this by setting the 'dstext' property to
-your preferred extension.
 
 This will produce a portal, but attempting to use it will trigger an
 ASSERT since there's no map for the destination. So we create a
@@ -374,11 +353,11 @@ Define a destination map
 ------------------------
 
 NAME: portal_generic_generic
-# Tag must match dst value of portal in entry.
-TAGS: generic_portal allow_dup
+DEPTH: NewPortal # name defined in branch-data.h
+TAGS: allow_dup
 ORIENT: encompass
 MONS: ancient lich
-KFEAT: > = exit_portal_vault
+KFEAT: > = exit_newportal # name defined in feature-data.h
 MAP
 xxxxxxxxxxx
 x111111111x
@@ -388,73 +367,17 @@ xxxxxxxxxxx
 ENDMAP
 
 Note that the entry point into the map will be a stone arch. You must
-provide an exit to the dungeon explicitly (KFEAT: > = exit_portal_vault)
-or the player will not be able to leave.
+provide an exit to the dungeon explicitly (KFEAT: > = exit_newportal)
+or the player will not be able to leave. Simple stairs will not work right
+as exits.
 
-Stairs will not work right in portal vaults, do not use them.
-
-You can use multiple maps with the destination tag (generic_portal),
-and the dungeon builder will pick one at random.
-
-The MARKER parameters
----------------------
-
-The lines
-        MARKER: O = lua:one_way_stair { desc = "A portal to places unknown", \
-                                        dst = "generic_portal" }
-        KFEAT: O = enter_portal_vault
-ensure that an 'O' glyph will be turned into a portal. Upon leaving the portal
-vault, you will be placed on its entry which has been turned into a floor. You
-can turn it into something different (usually an empty stone arch), by adding
-        floor = 'stone_arch'
-to the lua:one_way_stair parameters.
-
-Note that the desc string is what you will see upon examining the portal.
-The dst string is used for Crawl's right hand stat area; it will show
-  Place: generic portal
-in the above example. Here is a lost of the parameters that can be used
-within one_way_stair (taken from icecave.des):
-        desc = "A frozen archway",    # description of the portal before entry
-        dst = "ice_cave",             # label used for maps and entry vaults
-        dstname = "Ice Cave",         # used for PLACE: on the main screen
-        dstname_abbrev = "IceCv",     # used in the notes
-        dstorigin = "in an ice cave", # appendix for items picked up there
-        overmap = "frozen archway",   # used on the overmap (X)
-        floor = "stone_arch"          # feature left after escaping the portal
-
-The dst string is also used to link the destination maps to the entry maps.
-In case dstname is missing, dst will be used.
-
-You can replace lua:one_way_stair by lua:timed_marker in order to make timed
-portal vaults (which will disappear after some time). bazaar.des and lab.des
-contain examples. For timed portals, you may want to add messages to the file
-dat/dlua/lm_tmsg.lua.
-
-Using lua functions as shortcuts
---------------------------------
-
-If you are making several entry and destination vaults, you will note a
-lot of duplicated header statements. This can be lessened using lua.
-Define a lua block right at the top (after your comments) as follows:
-
-{{
-function generic_portal(e)
-  e.marker([[O = lua:one_way_stair { desc = "A portal to places unknown",
-                                     dst = "generic_portal",
-                                     floor = "stone_arch" }]])
-  e.kfeat("O = enter_portal_vault")
-  e.colour("O = magenta")
-end
-}}
-
-Instead of the MARKER and KFEAT lines introduced above you now just use
-  :generic_portal(_G)
-and the resulting portal glyphs will even be magenta!
+You can use multiple maps with DEPTH: NEWPORTAL, and the dungeon builder
+will pick one at random.
 
 Defining a random monster set
 -----------------------------
 
-Portal vaults require a defined random monster set to make the Shadow
+Portal vaults may use a defined random monster set to make the Shadow
 Creatures spell work. This is done by calling dgn.set_random_mon_list()
 manually. Here's an example from ice_cave_small_02 in icecave.des:
   : dgn.set_random_mon_list("ice beast w:90 / ice dragon / nothing")
@@ -477,28 +400,8 @@ You can then use this line in the map definition to execute the lua block:
 You can also set env.spawn_random_rate() to have monsters generated from the
 list during play.
 
-Milestones for portal vaults
-----------------------------
-
-This example is from icecave.des, defined in the lua preludes:
-
-{{
-function ice_cave_milestone(e)
-  crawl.mark_milestone("br.enter", "entered an Ice Cave.")
-end
-}}
-
-The function is called from each of the destination map definitions:
-
-epilogue{{
-ice_cave_milestone(_G)
-}}
-
-This marks down entering the portal vault in the server milestones and causes
-it to be announced by the IRC bots. Notice the use of an epilogue block. The
-epilogues are only run after the map is validated, that is, it ensures that
-the map was actually used.
-
+You can also edit mon-pick-data.h, but that is more complicated, and not
+necessary if you have a random monster list set in the vault.
 
 N.    Lua reference
 ===================
@@ -1049,49 +952,12 @@ errors will still be displayed to the end user. The only exception is
 the "post_place" hook -- errors in the post_place hook will cause the
 dungeon builder to veto its current level and retry level generation.
 
-
-P.   Feature Names
-==================
-
-These are the feature names usable in MARKER declarations:
-
-unseen, rock_wall, stone_wall, closed_door, metal_wall, runed_door,
-green_crystal_wall, orcish_idol, wax_wall, permarock_wall,
-silver_statue, granite_statue, orange_crystal_statue,
-statue_reserved_1, statue_reserved_2, lava, deep_water, shallow_water,
-water_stuck, floor, exit_hell, enter_hell, open_door, trap_mechanical,
-trap_magical, trap_iii, undiscovered_trap, enter_shop,
-enter_labyrinth, stone_stairs_down_i, stone_stairs_down_ii,
-stone_stairs_down_iii, escape_hatch_down, stone_stairs_up_i,
-stone_stairs_up_ii, stone_stairs_up_iii, escape_hatch_up, enter_dis,
-enter_gehenna, enter_cocytus, enter_tartarus, enter_abyss, exit_abyss,
-stone_arch, enter_pandemonium, exit_pandemonium, transit_pandemonium,
-builder_special_wall, builder_special_floor, enter_orcish_mines,
-enter_hive, enter_lair, enter_slime_pits, enter_vaults, enter_crypt,
-enter_hall_of_blades, enter_zot, enter_temple, enter_snake_pit,
-enter_elven_halls, enter_tomb, enter_swamp, enter_shoals,
-enter_reserved_2, enter_reserved_3, enter_reserved_4,
-return_from_orcish_mines, return_from_hive, return_from_lair,
-return_from_slime_pits, return_from_vaults, return_from_crypt,
-return_from_hall_of_blades, return_from_zot, return_from_temple,
-return_from_snake_pit, return_from_elven_halls, return_from_tomb,
-return_from_swamp, return_from_shoals, return_reserved_2,
-return_reserved_3, return_reserved_4, enter_portal_vault,
-exit_portal_vault, altar_zin, altar_the_shining_one,
-altar_kikubaaqudgha, altar_yredelemnul, altar_xom, altar_vehumet,
-altar_okawaru, altar_makhleb, altar_sif_muna, altar_trog,
-altar_nemelex_xobeh, altar_elyvilon, altar_lugonu, altar_beogh,
-fountain_blue, fountain_sparkling, fountain_blood, dry_fountain_blue,
-dry_fountain_sparkling, dry_fountain_blood, permadry_fountain
-
-
-Q.   Map Statistics
+P.   Map Statistics
 ===================
 
-Full-debug Crawl builds (this does not include normal Crawl builds
-that have wizard-mode - you must build Crawl with "make debug", not
-"make wizard") can produce map generation statistics. To generate
-statistics, run crawl from the command-line as:
+Full-debug Crawl builds (i.e., ones built with "make debug") can produce
+map generation statistics. To generate statistics, run crawl from the
+command-line as:
 
 crawl -mapstat
 
@@ -1110,14 +976,14 @@ crawl -mapstat 1
 You can instead limit the levels to operate on by providing a comma
 separated list of level ranges, with same syntax as in DEPTH: stanzas:
 
-crawl -mapstat D:27,Zot,!Zot:5
+crawl -mapstat D:15,Zot,!Zot:5
 
 Mapstat tends to take large amounts of time, so remember you can have
 optimized debug builds by 'make debug CFOPTIMIZE="-Ofast"' if you're not
 after backtraces (mapstat is quite good for finding map generation crashes).
 CFOPTIMIZE is also a good place for inserting -pg into.
 
-R.   Map Generation
+Q.   Map Generation
 ===================
 
 Full-debug Crawl builds (see above for more information) include a test for

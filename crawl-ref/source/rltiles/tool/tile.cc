@@ -3,11 +3,11 @@
 #include <stdio.h>
 #include <memory.h>
 
-#include <assert.h>
 #ifdef USE_TILE
-  #include <SDL.h>
-  #include <SDL_image.h>
+ #include <png.h>
 #endif
+
+#include <assert.h>
 
 tile::tile() : m_width(0), m_height(0), m_pixels(NULL), m_shrink(true)
 {
@@ -378,100 +378,99 @@ bool tile::load(const string &new_filename)
         unload();
 
 #ifdef USE_TILE
-    SDL_Surface *img = IMG_Load(new_filename.c_str());
-    if (!img)
+    FILE* fp = fopen(new_filename.c_str(), "rb");
+    if (!fp)
         return false;
 
-    m_width  = img->w;
-    m_height = img->h;
+    // Read and check PNG signature
+    const unsigned sig_bytes = 8;
+    png_byte sig[sig_bytes];
+    if (fread(sig, 1, sig_bytes, fp) < sig_bytes
+        || png_sig_cmp(sig, 0, sig_bytes))
+    {
+        fclose(fp);
+        return false;
+    }
 
-    // Blow out all formats to non-palettised RGBA.
+    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
+                                                 NULL, NULL, NULL);
+    png_infop info_ptr = png_create_info_struct(png_ptr);
+
+    // libpng error handling!
+    if (setjmp(png_jmpbuf(png_ptr)))
+    {
+        png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+        fclose(fp);
+        return false;
+    }
+
+    png_init_io(png_ptr, fp);
+
+    // let libpng know we already read the first 8 bytes
+    png_set_sig_bytes(png_ptr, sig_bytes);
+
+    png_read_info(png_ptr, info_ptr);
+
+    // get some info
+    int bit_depth, color_type;
+    png_uint_32 w, h;
+
+    png_get_IHDR(png_ptr, info_ptr, &w, &h, &bit_depth, &color_type,
+                 NULL, NULL, NULL);
+
+    // enable various transformations to get 8-bit RGBA pixels
+    if (color_type == PNG_COLOR_TYPE_PALETTE)
+        png_set_palette_to_rgb(png_ptr);
+
+    if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+        png_set_expand_gray_1_2_4_to_8(png_ptr);
+
+    if (bit_depth == 16)
+        png_set_strip_16(png_ptr);
+
+    if (color_type == PNG_COLOR_TYPE_GRAY ||
+        color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+    {
+        png_set_gray_to_rgb(png_ptr);
+    }
+
+    if (png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
+        png_set_tRNS_to_alpha(png_ptr);
+
+    if ((color_type & PNG_COLOR_MASK_ALPHA) == 0)
+        png_set_add_alpha(png_ptr, 255, PNG_FILLER_AFTER);
+
+    png_read_update_info(png_ptr, info_ptr);
+
+    m_width = (int) w;
+    m_height = (int) h;
+
     m_pixels = new tile_colour[m_width * m_height];
-    const unsigned int bpp = img->format->BytesPerPixel;
-    if (bpp == 1)
-    {
-        SDL_Palette *pal = img->format->palette;
-        assert(pal);
-        assert(pal->colors);
-#if SDL_MAJOR_VERSION == 1
-        bool ck_enabled = img->flags & SDL_SRCCOLORKEY;
-#endif
 
-        int dest = 0;
-        for (int y = 0; y < img->h; y++)
-            for (int x = 0; x < img->w; x++)
-            {
-                unsigned int index = ((unsigned char*)img->pixels)[y*img->pitch + x];
-                m_pixels[dest].r = pal->colors[index].r;
-                m_pixels[dest].g = pal->colors[index].g;
-                m_pixels[dest].b = pal->colors[index].b;
-#if SDL_MAJOR_VERSION == 1 && SDL_MINOR_VERSION == 2
-                if (ck_enabled)
-                    m_pixels[dest].a = (index != img->format->colorkey ? 255 : 0);
-                else
-                    m_pixels[dest].a = 255;
-#elif (SDL_MAJOR_VERSION == 1) && SDL_MINOR_VERSION == 3
-                Uint32 key;
-                if (ck_enabled && !SDL_GetColorKey(img, &key))
-                    m_pixels[dest].a = (index != key ? 255 : 0);
-                else
-                    m_pixels[dest].a = 255;
-#else
-                m_pixels[dest].a = pal->colors[index].a;
-#endif
-                dest++;
-            }
-    }
-    else
-    {
-        SDL_LockSurface(img);
+    png_uint_32 rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 
-        int dest = 0;
-        for (int y = 0; y < img->h; y++)
-            for (int x = 0; x < img->w; x++)
-            {
-                unsigned char *p = (unsigned char*)img->pixels
-                                   + y*img->pitch + x*bpp;
+    assert(rowbytes == m_width * sizeof (tile_colour));
 
-                unsigned int pixel;
-                switch (img->format->BytesPerPixel)
-                {
-                case 1:
-                    pixel = *p;
-                    break;
-                case 2:
-                    pixel = *(unsigned short*)p;
-                    break;
-                case 3:
-                    if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-                        pixel = p[0] << 16 | p[1] << 8 | p[2];
-                    else
-                        pixel = p[0] | p[1] << 8 | p[2] << 16;
-                    break;
-                case 4:
-                    pixel = *(unsigned int*)p;
-                    break;
-                default:
-                    assert(!"Invalid bpp");
-                    SDL_UnlockSurface(img);
-                    SDL_FreeSurface(img);
-                    return false;
-                }
+    // init row pointer buffer
 
-                SDL_GetRGBA(pixel, img->format, &m_pixels[dest].r,
-                            &m_pixels[dest].g, &m_pixels[dest].b,
-                            &m_pixels[dest].a);
-                dest++;
-            }
+    // Note that with the transformations above and because the color
+    // channels in PNG files are always ordered RGBA, we get the
+    // pixels in exactly the format tile_colour expects them in, so we
+    // can just cast the tile_colour* to png_bytep and everything
+    // works; but it's admittedly a bit dangerous.
+    png_bytep row_pointers[h];
+    for (png_uint_32 i = 0; i < h; ++i)
+        row_pointers[i] = ((png_bytep) m_pixels) + i * rowbytes;
 
-        SDL_UnlockSurface(img);
-    }
+    // and read it
+    png_read_image(png_ptr, row_pointers);
 
-    SDL_FreeSurface(img);
+    fclose(fp);
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 
     replace_colour(tile_colour::background, tile_colour::transparent);
 #else
-    FILE* fp = fopen(new_filename.c_str(), "r");
+    FILE* fp = fopen(new_filename.c_str(), "rb");
     if (!fp)
         return false;
     fclose(fp);

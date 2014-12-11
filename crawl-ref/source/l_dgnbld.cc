@@ -5,21 +5,19 @@
 
 #include "AppHdr.h"
 
+#include "l_libs.h"
+
 #include <cmath>
 #include <vector>
 
-#include "dungeon.h"
+#include "cluautil.h"
+#include "coordit.h"
 #include "dgn-delve.h"
 #include "dgn-irregular-box.h"
+#include "dgn-layouts.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
-#include "dgn-layouts.h"
-#include "cluautil.h"
-#include "coord.h"
-#include "coordit.h"
-#include "l_libs.h"
-#include "mapdef.h"
-#include "random.h"
+#include "dungeon.h"
 
 static const char *exit_glyphs = "{}()[]<>@";
 
@@ -202,7 +200,7 @@ static vector<coord_def> _get_pool_seed_positions(
         for (unsigned int y = 0; y < pool_index[x].size(); y++)
         {
             if (pool_index[x][y] == NO_POOL)
-                floor_positions.push_back(coord_def(x, y));
+                floor_positions.emplace_back(x, y);
         }
 
     // 2. Choose the pool seed positions
@@ -229,10 +227,10 @@ static vector<coord_def> _get_pool_seed_positions(
 
         // check if it is too close to another seed
         bool too_close = false;
-        for (unsigned int j = 0; j < seeds.size(); j++)
+        for (coord_def seed : seeds)
         {
-            int diff_x = chosen_coord.x - seeds[j].x;
-            int diff_y = chosen_coord.y - seeds[j].y;
+            int diff_x = chosen_coord.x - seed.x;
+            int diff_y = chosen_coord.y - seed.y;
             int distance_squared = diff_x * diff_x + diff_y * diff_y;
 
             if (distance_squared < min_separation_squared)
@@ -311,7 +309,8 @@ static vector<char> _pool_fill_glyphs_from_table(lua_State *ls,
 static bool _wall_is_empty(map_lines &lines,
                            int x, int y,
                            const char* wall, const char* floor,
-                           bool horiz = false)
+                           bool horiz = false,
+                           int max_check = 9999)
 {
     coord_def normal(horiz ? 0 : 1, horiz ? 1 : 0);
     for (int d = 1; d >= -1; d-=2)
@@ -319,7 +318,7 @@ static bool _wall_is_empty(map_lines &lines,
         coord_def length(horiz ? d : 0, horiz ? 0 : d);
         int n = 1;
 
-        while (true)
+        while (n <= max_check)
         {
             coord_def pos(x + length.x*n,y + length.y*n);
             if (!lines.in_bounds(coord_def(pos.x + normal.x, pos.y + normal.y))
@@ -340,8 +339,167 @@ static bool _wall_is_empty(map_lines &lines,
         }
     }
 
-    // hit the edge of the map, so this is good
+    // hit the end of the wall, so this is good
     return true;
+}
+
+// Only used for the join_the_dots command.
+struct join_the_dots_path
+{
+    vector<coord_def> cells;
+    int hit_vault_count;
+    int avoid_vault_count;
+};
+
+/**
+ * Calculates a possible path joining the provided coordinates.
+ *
+ * @param from              The start of the path to be calculated.
+ * @param to                The end of the path to be calculated.
+ * @param force_straight    Whether the path must be a straight line.
+ * @param allow_diagonals   Whether the path can travel diagonally.
+ * @return A data structure containing (1) the path, & (2) the number of times
+ * it hit or almost hit an existing vault.
+ */
+static join_the_dots_path _calculate_join_the_dots_path (const coord_def& from,
+                                                         const coord_def& to,
+                                                         bool force_straight,
+                                                         bool allow_diagonals)
+{
+    join_the_dots_path path;
+    path.hit_vault_count = 0;
+    path.avoid_vault_count = 0;
+
+    coord_def at = from;
+    while (true) // loop breaks below
+    {
+        // 1. Handle this position
+
+        path.cells.push_back(at);
+        if (env.level_map_mask(at) & MMT_VAULT)
+            path.hit_vault_count++;
+
+        // check done after recording position
+        if (at == to)
+            break;  // exit loop
+
+        // 2. Identify good moves
+
+        // possible next positions
+        int x_move = (at.x < to.x) ? 1 : ((at.x > to.x) ? -1 : 0);
+        int y_move = (at.y < to.y) ? 1 : ((at.y > to.y) ? -1 : 0);
+
+        coord_def next_x  = coord_def(at.x + x_move, at.y);
+        coord_def next_y  = coord_def(at.x,          at.y + y_move);
+        coord_def next_xy = coord_def(at.x + x_move, at.y + y_move);
+
+        // moves that get you closer
+        bool good_x  = (x_move != 0);
+        bool good_y  = (y_move != 0);
+        bool good_xy = (x_move != 0) && (y_move != 0) && allow_diagonals;
+
+        // avoid vaults if possible
+        bool vault_x  = env.level_map_mask(next_x)  & MMT_VAULT;
+        bool vault_y  = env.level_map_mask(next_y)  & MMT_VAULT;
+        bool vault_xy = env.level_map_mask(next_xy) & MMT_VAULT;
+        if (   (!vault_x  && good_x)
+            || (!vault_y  && good_y)
+            || (!vault_xy && good_xy))
+        {
+            // if there is a good path the doesn't hit a vault,
+            //  disable the otherwise-good paths that do
+
+            if (vault_x)  path.avoid_vault_count++;
+            if (vault_y)  path.avoid_vault_count++;
+            if (vault_xy) path.avoid_vault_count++;
+
+            // There is no &&= operator because short-circut
+            //  evaluation can do strange and terrible things
+            //  when combined with function calls.
+            good_x  &= !vault_x;
+            good_y  &= !vault_y;
+            good_xy &= !vault_xy;
+        }
+        else
+        {
+            // there is no way to avoid vaults, so hitting one is OK
+            path.avoid_vault_count += 3;
+        }
+
+        // 3. Choose the next move
+        if (force_straight)
+        {
+            if (good_xy)
+                at = next_xy;
+            else if (good_x)
+                at = next_x;
+            else
+                at = next_y;
+        }
+        else
+        {
+            // allow irregular paths
+
+            // used for movement ratios; our goal is to make a
+            //  path approximately straight in any direction
+            int x_diff = abs(at.x - to.x);
+            int y_diff = abs(at.y - to.y);
+            int sum_diff = x_diff + y_diff;
+            int min_diff = (x_diff < y_diff) ? x_diff : y_diff;
+            int max_diff = sum_diff - min_diff;
+
+            // halve chance because a diagonal is worth 2 other moves
+            if (good_xy && (x_chance_in_y(min_diff, max_diff * 2)
+                            || (!good_x && !good_y)))
+            {
+                at = next_xy;
+            }
+            else if (good_x && (x_chance_in_y(x_diff, sum_diff) || !good_y))
+                at = next_x;
+            else
+                at = next_y;
+        }
+    }
+
+    // path is finished
+    return path;
+}
+
+
+/**
+ * Calculates a possible path joining the provided coordinates.
+ *
+ * @param from              The start of the path to be calculated.
+ * @param to                The end of the path to be calculated.
+ * @param force_straight    Whether the path must be a straight line.
+ * @param allow_diagonals   Whether the path can travel diagonally.
+ * @return A data structure containing (1) the path, & (2) the number of times
+ * it hit or almost hit an existing vault.
+ */
+static void _draw_join_the_dots_path (map_lines &lines,
+                                      const join_the_dots_path& path,
+                                      const char* passable,
+                                      int thickness, char fill)
+{
+    int delta_min = -thickness / 2;
+    int delta_max = delta_min + thickness;
+    for (coord_def center : path.cells)
+    {
+        for (int dx = delta_min; dx < delta_max; dx++)
+            for (int dy = delta_min; dy < delta_max; dy++)
+            {
+                int x = center.x + dx;
+                int y = center.y + dy;
+
+                // we never change the border
+                if (x >= 1 && x < lines.width()  - 1 &&
+                    y >= 1 && y < lines.height() - 1 &&
+                    !strchr(passable, lines(x, y)))
+                {
+                    lines(x, y) = fill;
+                }
+            }
+    }
 }
 
 
@@ -566,7 +724,9 @@ LUAFN(dgn_height)
 
 LUAFN(dgn_primary_vault_dimensions)
 {
-    LINES(ls, 1, lines);
+    // we don't need this because this function doesn't use the
+    //  current map
+    // LINES(ls, 1, lines);
 
     static const int NO_PRIMARY_VAULT = 99999;
 
@@ -575,8 +735,8 @@ LUAFN(dgn_primary_vault_dimensions)
     int y_min =  NO_PRIMARY_VAULT;
     int y_max = -NO_PRIMARY_VAULT;
 
-    for (int y = 0; y < lines.height(); y++)
-        for (int x = 0; x < lines.width(); x++)
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
         {
             if (env.level_map_mask(coord_def(x,y)) & MMT_VAULT)
             {
@@ -633,6 +793,9 @@ LUAFN(dgn_join_the_dots)
     TABLE_INT(ls, y2, -1);
     TABLE_STR(ls, passable, traversable_glyphs);
     TABLE_CHAR(ls, fill, '.');
+    TABLE_BOOL(ls, force_straight, false);
+    TABLE_BOOL(ls, allow_diagonals, false);
+    TABLE_INT(ls, thickness, 1);
 
     if (!_valid_coord(ls, lines, x1, y1))
         return 0;
@@ -645,45 +808,26 @@ LUAFN(dgn_join_the_dots)
     if (from == to)
         return 0;
 
-    coord_def at = from;
-    do
-    {
-        char glyph = lines(at);
+    // calculate possible paths
+    join_the_dots_path path1 =
+        _calculate_join_the_dots_path(from, to,
+                                      force_straight, allow_diagonals);
+    join_the_dots_path path2 =
+        _calculate_join_the_dots_path(to, from,
+                                      force_straight, allow_diagonals);
 
-        if (!strchr(passable, glyph))
-            lines(at) = fill;
-
-        if (at == to)
-            break;
-
-        if (at.y == to.y || coinflip())
-        {
-            if (at.x < to.x)
-            {
-                at.x++;
-                continue;
-            }
-
-            if (at.x > to.x)
-            {
-                at.x--;
-                continue;
-            }
-        }
-
-        if (at.y > to.y)
-        {
-            at.y--;
-            continue;
-        }
-
-        if (at.y < to.y)
-        {
-            at.y++;
-            continue;
-        }
-    }
-    while (true);
+    // add better path
+    // prefer fewer vaults hit, then fewer vaults avoided, then toss a coin
+    const bool first_path_better =
+        path1.hit_vault_count < path2.hit_vault_count
+        || (path1.hit_vault_count == path2.hit_vault_count
+            && (path1.avoid_vault_count < path2.avoid_vault_count
+                || path1.avoid_vault_count == path2.avoid_vault_count
+                   && coinflip()
+                )
+            );
+    _draw_join_the_dots_path(lines, first_path_better ? path1 : path2,
+                             passable, thickness, fill);
 
     return 0;
 }
@@ -1040,14 +1184,14 @@ LUAFN(dgn_make_round_box)
                         && (y - 1 < 0
                             || new_glyphs[x][y - 1] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                     else if (real_y + 1 < lines.height()
                              && strchr(passable, lines(real_x, real_y + 1))
                              && (y + 1 >= size_y
                                  || new_glyphs[x][y + 1] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                 }
 
@@ -1060,14 +1204,14 @@ LUAFN(dgn_make_round_box)
                         && (x - 1 < 0
                             || new_glyphs[x - 1][y] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                     else if (real_x + 1 < lines.width()
                              && strchr(passable, lines(real_x + 1, real_y))
                              && (x + 1 >= size_x
                                  || new_glyphs[x + 1][y] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                 }
             }
@@ -1268,12 +1412,12 @@ LUAFN(dgn_widen_paths)
 
                 // store this coordinate if needed
                 if (x_chance_in_y(percent_for_neighbours[neighbour_count], 100))
-                    coord_to_replace.push_back(coord_def(x, y));
+                    coord_to_replace.emplace_back(x, y);
             }
 
     // now go through and actually replace the positions
-    for (unsigned int i = 0; i < coord_to_replace.size(); i++)
-        lines(coord_to_replace[i]) = replace;
+    for (coord_def c : coord_to_replace)
+        lines(c) = replace;
 
     return 0;
 }
@@ -1287,7 +1431,7 @@ LUAFN(dgn_connect_adjacent_rooms)
     TABLE_CHAR(ls, replace, '.');
     TABLE_INT(ls, max, 1);
     TABLE_INT(ls, min, max);
-    TABLE_BOOL(ls, check_empty, false);
+    TABLE_INT(ls, check_distance, 9999);
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
@@ -1304,10 +1448,10 @@ LUAFN(dgn_connect_adjacent_rooms)
         y2 = lines.height() - 2;
 
     if (min < 0)
-        return luaL_error(ls, "Invalid min connections: %i", min);
+        return luaL_error(ls, "Invalid min connections: %d", min);
     if (max < min)
     {
-        return luaL_error(ls, "Invalid max connections: %i (min is %i)",
+        return luaL_error(ls, "Invalid max connections: %d (min is %d)",
                           max, min);
     }
 
@@ -1328,17 +1472,15 @@ LUAFN(dgn_connect_adjacent_rooms)
         {
             if (strchr(floor, lines(x, y - 1))
                 && strchr(floor, lines(x, y + 1))
-                && (check_empty ? _wall_is_empty(lines, x, y, wall, floor, true)
-                   : (strchr(wall, lines(x - 1, y))
-                      && strchr(wall, lines(x + 1, y)))))
+                && (_wall_is_empty(lines, x, y, wall, floor,
+                                   true, check_distance)))
             {
                 lines(*ri) = replace;
             }
             else if (strchr(floor, lines(x - 1, y))
                      && strchr(floor, lines(x + 1, y))
-                     && (check_empty ? _wall_is_empty(lines, x, y, wall, floor, false)
-                        : (strchr(wall, lines(x, y - 1))
-                           && strchr(wall, lines(x, y + 1)))))
+                     && (_wall_is_empty(lines, x, y, wall, floor,
+                                        false, check_distance)))
             {
                 lines(*ri) = replace;
             }
@@ -1414,8 +1556,8 @@ LUAFN(dgn_remove_disconnected_doors)
                 //
                 if (!south && !north
                     && (east || west)
-                    && (east || southeast or northeast)
-                    && (west || southwest or northwest))
+                    && (east || southeast || northeast)
+                    && (west || southwest || northwest))
                 {
                     continue;
                 }
@@ -1429,8 +1571,8 @@ LUAFN(dgn_remove_disconnected_doors)
                 //
                 if (!east && !west
                     && (south || north)
-                    && (south || northeast or northwest)
-                    && (north || southeast or southwest))
+                    && (south || northeast || northwest)
+                    && (north || southeast || southwest))
                 {
                     continue;
                 }
@@ -1680,7 +1822,7 @@ LUAFN(dgn_replace_random)
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
             if (lines(x, y) == find)
-                loc.push_back(coord_def(x, y));
+                loc.emplace_back(x, y);
 
     if (loc.empty())
     {
@@ -2007,8 +2149,8 @@ LUAFN(dgn_add_pools)
     // Step 4: Add the pools to the map
 
     vector<char> pool_glyphs(pool_seeds.size(), '\0');
-    for (unsigned int i = 0; i < pool_glyphs.size(); i++)
-        pool_glyphs[i] = fill_glyphs[random2(fill_glyphs.size())];
+    for (char &gly : pool_glyphs)
+        gly = fill_glyphs[random2(fill_glyphs.size())];
 
     for (int x = 0; x < size_x; x++)
         for (int y = 0; y < size_y; y++)
@@ -2189,5 +2331,5 @@ const struct luaL_reg dgn_build_dlib[] =
     { "layout_shoals", &dgn_layout_shoals },
     { "layout_swamp", &dgn_layout_swamp },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };

@@ -86,12 +86,7 @@ function wizlab_portal (e)
         finalmsg = "The crackle of the magical portal is almost imperceptible now.",
 
         verb = 'crackle',
-        noisemaker = 'magical portal',
-        ranges = {
-          { 5000, 'rapid ' },  { 4000, '' },
-          { 2500, 'slow ' }, { 1500, 'irregular ' },
-          { 0, 'erratic ' }
-        }
+        noisemaker = 'magical portal'
     }
 
     e.lua_marker('O',
@@ -730,7 +725,7 @@ lua_marker('?', tukima_marker)
 }}
 SUBST:      ? = .
 COLOUR:     +cA< = darkgrey
-KMONS:      789 = statue spells:blink_other;.;.;.;.;blink_other \
+KMONS:      789 = statue spells:blink_other.63.magical \
                   col:silver name:strange_machine n_rpl n_des \
                   hd:13 hp:70 tile:mons_statue_guardian
 # please make sure this is the book with Tukima's Dance
@@ -740,7 +735,7 @@ SHUFFLE:    XxLl / HhIi, YyRr / JjKK
 SUBST:      XYik = +, xyIK = ., HJRrLl = c, hj = m
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
-LFLOORTILE: floor_pebble_white
+LFLOORTILE: floor_w_marble
 COLOUR:     mMV = silver
 TILE:       m = dngn_mirror_wall
 :           set_feature_name("clear_rock_wall", "crystal clear mirror")
@@ -1147,7 +1142,7 @@ ITEM:       potion of mutation w:60 / potion of beneficial mutation / \
             potion of cure mutation
 ITEM:       potion of beneficial mutation, potion of cure mutation
 ITEM:       amulet of resist mutation good_item
-ITEM:       randbook disc:transmutation owner:Cigotuvi
+ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi spells:cigotuvi's_embrace
 ITEM:       book of transfigurations / randbook disc:transmutation
 ITEM:       staff of death, scroll of summoning
 SHUFFLE:    de / h~ / j|
@@ -1244,10 +1239,12 @@ ENDMAP
 #
 NAME:       wizlab_iskenderun
 TAGS:       no_rotate patrolling
-MONS:       deep elf mage spells:magic_dart;force_lance;iskenderun's_battlesphere;\
-            iskenderun's_mystic_blast;iskenderun's_battlesphere;.
-MONS:       statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
-            name:conjurer n_adj
+MONS:       deep elf mage spells:magic_dart.11.wizard;\
+                                 force_lance.11.wizard;\
+                                 iskenderun's_battlesphere.22.wizard;\
+                                 iskenderun's_mystic_blast.11.wizard
+MONS:       statue hd:12 spells:orb_of_destruction.62.magical \
+            tile:mons_statue_mage col:vehumet name:conjurer n_adj
 KMONS:      3DEF = purple draconian
 KITEM:      D = robe ego:archmagi ident:type, star_item / superb_item, star_item
 KITEM:      E = any book, randbook disc:conjuration owner:Iskenderun \
@@ -1325,7 +1322,7 @@ LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
 NSUBST:     d = 2:e / 1:f / * = d:20 e:2
 ITEM:       any scroll / any potion, any book w:2
-ITEM:       bastard sword unrand:sword_of_zonguldrok
+ITEM:       double sword unrand:sword_of_zonguldrok
 KFEAT:      GW = G no_mimic
 KPROP:      12'def$ZL+ = no_rtele_into
 {{
@@ -1440,8 +1437,10 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:80 tile:mons_wucad_mu_statue \
-                spells:brain_feed;drain_magic;mass_confusion;\
-                       shadow_creatures;shadow_creatures;.
+                spells:brain_feed.40.natural;\
+                       draining_gaze.40.natural;\
+                       mass_confusion.40.natural;\
+                       shadow_creatures.80.natural
 KITEM:      8 = staff of energy unrand:staff_of_wucad_mu, \
                 potion of restore abilities ident:type
 COLOUR:     c = darkgrey
@@ -1592,12 +1591,12 @@ KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:
               thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
               hellwing / chaos spawn w:5 / orange demon / blue devil /  \
               hell hound / red devil w:5 / lesser demon w:25 / mana viper w:5 / \
-              ugly thing w:30 / fire elemental w:5 / air elemental w:5
+              worldbinder w:30 / fire elemental w:5 / air elemental w:5
 KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
               soul eater w:5 / hell knight w:5 / demonic crawler / raiju / \
               ancient zyme w:20 / lurking horror / tentacled starspawn w:30 / \
               wind drake w:5 / earth elemental w:5 / water elemental / \
-              very ugly thing / base draconian / guardian serpent / brain worm / \
+              ugly thing / base draconian / guardian serpent / brain worm / \
               eidolon w:5 / shadow wraith / anaconda skeleton w:5 / \
               great orb of eyes w:5 / giant orange brain
 KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w:5 / \
@@ -1606,18 +1605,19 @@ KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w
              death drake w:5 / tentacled monstrosity w:20 / draconian shifter w:20 / \
              starcursed mass w:30 / apocalypse crab w:20
 KMONS:   7 = eldritch tentacle
-KMONS:   8 = silver statue
+KMONS:   8 = obsidian statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
 KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
              wand of teleportation w:5 / any scroll w:1
 KITEM:   e = ring of teleport control w:9 / ring of teleportation w:20 / any ring w:1
 KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
-             manual of translocations w:5 / randbook disc:translocation numspells:5 / \
+             plane papyrus w:5 / manual of translocations w:5 / \
+             randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:shroud_of_golubria|passage_of_golubria
 KITEM:   g = ring of flight / potion of flight q:2 / \
              lantern of shadows / potion of haste w:5 / \
-             scroll of fog / potion of porridge / \
+             scroll of fog / royal jelly q:3 / \
              any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
@@ -1641,7 +1641,7 @@ NSUBST:  @ = 1:w / 1:Y / 1:Q / *:<, 4 = 4:5 / *:4, ` = 4:d / 3:| / 1:|j / 1:i / 
 NSUBST:  a = 1:_ / 1:_" / *:a, + = 1:+ / *:c, ( = 1:} / 1:( / *:<
 NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / * = 2:9 3:1 9:2, 1 = 2:0 / *:1, 0 = 2:9 / *:0
 NSUBST:  [ = 1:< / *:d, d = 2:k / 2:e / 2:f / 3:g / 2:eegghhj
-NSUBST:  7 = 1:7 / 1 = 7:4 `:6 / *:`, A = 1:) / 1:< / 1:{ / 1:A
+NSUBST:  7 = 1:7 / *:`, A = 1:) / 1:< / 1:{ / 1:A
 SUBST:   H = O, I = P, J = Q, K = R, L = S, M = T, Y = U, z = V, Z = W, ? = &
 SUBST:   a = ":70 x:40 ccCC~, - = ':50 x:40 ccCC~, E = nccCC, c = cccb, C = cb
 SUBST:   B = ccbn..., e = de, j = jjjjg., k = kkj
@@ -1653,7 +1653,7 @@ COLOUR:  X = darkgrey
 LFLOORCOL: green
 FTILE:   '"Gbca-n45_+ = floor_demonic_green
 FTILE:   .012369AB< = floor_rough_green / floor_pebble_green w:15
-FTILE:   `~78m = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
+FTILE:   `~^78m = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
 FTILE:   defghijk| = floor_rough_green
 LROCKTILE: wall_zot_green
 TILE:    b = dngn_crystal_green / dngn_crystal_cyan w:5
@@ -1686,7 +1686,7 @@ set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spa
                     boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
                     raiju / ynoxinul / neqoxec / chaos spawn / giant orange brain /
                     large abomination w:15 / small abomination w:15 / skeleton w:20 /
-                    hellwing w:5 / smoke demon w:5 / hell hound w:5 / very ugly thing w:5 /
+                    hellwing w:5 / smoke demon w:5 / hell hound w:5 / ugly thing w:5 /
                     golden eye w:5 / executioner w:3 / shadow demon w:4 / hellion w:3 /
                     thrashing horror w:25 / tentacled starspawn w:25 / ]])
 
@@ -1927,7 +1927,7 @@ MARKER:     h = lua:fog_machine { \
 KMONS:      2 = lorocyproca w:1 / hell beast w:15 / reaper /\
             green death / soul eater w:20 / tormentor w:5
 KMONS:      3u = ice devil / red devil / orange demon / blue devil / \
-            iron devil w:5 / ynoxinul / sun demon
+            rust devil w:5 / ynoxinul / sun demon
 KMONS:      4 = kobold demonologist
 KMONS:      5 = deep elf demonologist
 KMONS:      6 = balrug / cacodemon / blizzard demon / hellion
@@ -1941,8 +1941,9 @@ KITEM:      i = rod of shadows / ring of fire / ring of protection from fire /\
             scroll of torment / scroll of summoning / demon blade w:1 /\
             demon whip w:1 / demon trident w:1 / gold / wand of fire /\
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
+KITEM:      j = quarterstaff ego:vampirism ident:all unrand:majin-bo
 KITEM:      B = randbook disc:summoning
-NSUBST:     i = 2:B / *:i
+NSUBST:     i = 2:B / 1:j / *:i
 SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
 SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
 :           set_random_mon_list([[lesser demon w:50 / red devil / blue devil / ]]

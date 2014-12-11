@@ -26,9 +26,9 @@ function ossuary_portal(e)
       -- This is always preceded by an article, so...
       noisemaker = 'avalanche of sand',
       ranges = {
-        { 5000, 'rapid ' },  { 4000, '' },
-        { 2500, 'slow ' }, { 1500, 'irregular ' },
-        { 0, 'erratic ' }
+        { 5000, 'slow ' },  { 4000, '' },
+        { 2500, 'brisk ' }, { 1500, 'quick ' },
+        { 0, 'rapid ' }
       }
     }
 
@@ -487,14 +487,13 @@ MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
 # mix of good items with useless ones
 ITEM:    scroll of random uselessness w:20 / scroll of immolation / \
          scroll of identify / scroll of remove curse / \
-         potion of mutation w:5 / potion of confusion w:5 / \
+         potion of mutation w:5 / potion of ambrosia w:5 / \
          potion of degeneration / potion of lignification / \
          potion of restore abilities / potion of curing w:15
 # and sometimes mostly useless ones
 ITEM:    scroll of noise / scroll of random uselessness w:20 / \
          scroll of immolation / potion of mutation w:5 / \
-         potion of poison / potion of degeneration / \
-         potion of confusion w:20
+         potion of poison w:30 / potion of degeneration
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing
 SHUFFLE: hjkl
@@ -670,7 +669,9 @@ SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
 MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
-         bog body hd:3 spells:throw_frost;slow;corpse_rot name:decayed n_adj n_noc /\
+         bog body hd:3 \
+         spells:throw_frost.18.wizard;slow.18.wizard;corpse_rot.18.wizard \
+         name:decayed n_adj n_noc /\
          w:5 plant col:lightgrey name:withered n_adj tile:mons_withered_plant /\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1

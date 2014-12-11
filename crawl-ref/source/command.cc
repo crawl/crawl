@@ -7,56 +7,50 @@
 
 #include "command.h"
 
-#include <stdio.h>
-#include <string.h>
+#include <cctype>
+#include <cstdio>
+#include <cstring>
 #include <sstream>
-#include <ctype.h>
-
-#include "externs.h"
-#include "options.h"
 
 #include "ability.h"
 #include "branch.h"
 #include "chardump.h"
-#include "cio.h"
 #include "colour.h"
 #include "database.h"
 #include "decks.h"
 #include "describe.h"
+#include "describe-god.h"
+#include "describe-spells.h"
 #include "directn.h"
+#include "english.h"
+#include "env.h"
 #include "files.h"
 #include "godmenu.h"
 #include "invent.h"
-#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
-#include "menu.h"
 #include "message.h"
-#include "mon-util.h"
-#include "ouch.h"
-#include "player.h"
+#include "mon-tentacle.h"
+#include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "showsymb.h"
-#include "skills2.h"
-#include "species.h"
+#include "skills.h"
 #include "spl-book.h"
-#include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
-#include "env.h"
+#include "stringutil.h"
 #include "syscalls.h"
 #include "terrain.h"
 #ifdef USE_TILE
-#include "tilepick.h"
+ #include "tilepick.h"
 #endif
-#include "transform.h"
-#include "hints.h"
+#include "unicode.h"
 #include "version.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 
 static void _adjust_item();
 static void _adjust_spell();
@@ -108,13 +102,13 @@ static string _get_version_information()
 
 static string _get_version_features()
 {
-    string result  = "<w>Features</w>\n";
-           result += "--------\n";
+    string result = "<w>Features</w>\n"
+                    "--------\n";
 
-    for (unsigned int i = 0; i < ARRAYSZ(features); i++)
+    for (const char *feature : features)
     {
         result += " * ";
-        result += features[i];
+        result += feature;
         result += "\n";
     }
 
@@ -162,11 +156,7 @@ static string _get_version_changes()
         {
         highlight:
             // Highlight the Highlights, so to speak.
-            string text  = "<w>";
-                   text += help;
-                   text += "</w>";
-                   text += "\n";
-            result += text;
+            result += "<w>" + help + "</w>\n";
             // And start printing from now on.
             start = true;
         }
@@ -545,7 +535,12 @@ void list_jewellery()
                            split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
         item = colour_string(item, colour);
 
-        if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
+        if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
+                player_mutation_level(MUT_MISSING_HAND))
+        {
+            mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
+        }
+        else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else
             mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
@@ -613,6 +608,7 @@ static const char *targeting_help_wiz =
     "<w>\"</w>: get debugging information about a portal\n"
     "<w>~</w>: polymorph monster to specific type\n"
     "<w>,</w>: bring down the monster to 1 hp\n"
+    "<w>(</w>: place a mimic\n"
     "<w>Ctrl-B</w>: banish monster\n"
     "<w>Ctrl-K</w>: kill monster\n"
 ;
@@ -702,7 +698,7 @@ static help_file help_files[] =
 #ifdef USE_TILE_LOCAL
     { "tiles_help.txt",    'T', false },
 #endif
-    { NULL, 0, false }
+    { nullptr, 0, false }
 };
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
@@ -747,7 +743,7 @@ public:
         : Menu(_flags, "", _text_only), sort_alpha(true),
           showing_monsters(_show_mon)
         {
-            set_highlighter(NULL);
+            set_highlighter(nullptr);
 
             if (_show_mon)
                 toggle_sorting();
@@ -842,7 +838,7 @@ static vector<string> _get_monster_keys(ucs_t showchar)
 
         const monsterentry *me = get_monster_data(i);
 
-        if (me == NULL || me->name == NULL || me->name[0] == '\0')
+        if (me == nullptr || me->name == nullptr || me->name[0] == '\0')
             continue;
 
         if (me->mc != i)
@@ -875,16 +871,13 @@ static vector<string> _get_branch_keys()
 {
     vector<string> names;
 
-    for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        branch_type which_branch = static_cast<branch_type>(i);
-        const Branch &branch     = branches[which_branch];
-
         // Skip unimplemented branches
-        if (branch_is_unfinished(which_branch))
+        if (branch_is_unfinished(it->id))
             continue;
 
-        names.push_back(branch.shortname);
+        names.push_back(it->shortname);
     }
     return names;
 }
@@ -906,7 +899,7 @@ static bool _spell_filter(string key, string body)
     if (spell == SPELL_NO_SPELL)
         return true;
 
-    if (get_spell_flags(spell) & (SPFLAG_MONSTER | SPFLAG_TESTING))
+    if (get_spell_flags(spell) & SPFLAG_TESTING)
         return !you.wizard;
 
     return false;
@@ -924,7 +917,7 @@ static bool _skill_filter(string key, string body)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
-        // There are a couple of NULL entries in the skill set.
+        // There are a couple of nullptr entries in the skill set.
         if (!skill_name(sk))
             continue;
 
@@ -1021,22 +1014,8 @@ static bool _is_rod_spell(spell_type spell)
         return false;
 
     for (int i = 0; i < NUM_RODS; i++)
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(i + NUM_FIXED_BOOKS, j) == spell)
-                return true;
-
-    return false;
-}
-
-static bool _is_book_spell(spell_type spell)
-{
-    if (spell == SPELL_NO_SPELL)
-        return false;
-
-    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(i, j) == spell)
-                return true;
+        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
+            return true;
 
     return false;
 }
@@ -1072,12 +1051,8 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     desc += make_stringf("\nLevel:      %d", spell_difficulty(type));
 
-    bool form = false;
-    if (you_cannot_memorise(type, form))
-    {
-        desc += "\n";
-        desc += desc_cannot_memorise_reason(form);
-    }
+    if (!you_can_memorise(type))
+        desc += "\n" + desc_cannot_memorise_reason(type);
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);
     vector<string> books;
@@ -1085,23 +1060,19 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(i, j) == type)
+        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+            if (sp == type)
             {
                 item.sub_type = i;
                 books.push_back(item.name(DESC_PLAIN));
             }
 
     item.base_type = OBJ_RODS;
-    int book;
     for (int i = 0; i < NUM_RODS; i++)
     {
         item.sub_type = i;
-        book = item.book_number();
-
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(book, j) == type)
-                rods.push_back(item.name(DESC_BASENAME));
+        if (spell_in_rod(static_cast<rod_type>(i)) == type)
+            rods.push_back(item.name(DESC_BASENAME));
     }
 
     if (!books.empty())
@@ -1133,105 +1104,86 @@ static bool _append_books(string &desc, item_def &item, string key)
 static int _do_description(string key, string type, const string &suffix,
                            string footer = "")
 {
+    god_type which_god = str_to_god(key);
+    if (which_god != GOD_NO_GOD)
+    {
+#ifdef USE_TILE_WEB
+        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
+#endif
+        describe_god(which_god, true);
+        return true;
+    }
+
     describe_info inf;
     inf.quote = getQuoteString(key);
 
     string desc = getLongDescription(key);
     int width = min(80, get_number_of_cols());
 
-    god_type which_god = str_to_god(key);
-    if (which_god != GOD_NO_GOD)
+    monster_type mon_num = get_monster_by_name(key);
+    // Don't attempt to get more information on ghost demon
+    // monsters, as the ghost struct has not been initialised, which
+    // will cause a crash.  Similarly for zombified monsters, since
+    // they require a base monster.
+    if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
+        && !mons_class_is_zombified(mon_num))
     {
-        if (is_good_god(which_god))
+        monster_info mi(mon_num);
+        // Avoid slime creature being described as "buggy"
+        if (mi.type == MONS_SLIME_CREATURE)
+            mi.slime_size = 1;
+        return describe_monsters(mi, true, footer);
+    }
+
+    int thing_created = get_mitm_slot();
+    if (thing_created != NON_ITEM
+        && (type == "item" || type == "spell"))
+    {
+        char name[80];
+        strncpy(name, key.c_str(), sizeof(name));
+        if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
         {
-            inf.suffix = "\n\n" + god_name(which_god) +
-                         " won't accept worship from undead or evil beings.";
-        }
-        string help = get_god_powers(which_god);
-        if (!help.empty())
-        {
+            append_weapon_stats(desc, mitm[thing_created]);
             desc += "\n";
-            desc += help;
         }
-        desc += "\n";
-        desc += get_god_likes(which_god);
-
-        help = get_god_dislikes(which_god);
-        if (!help.empty())
+        else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
         {
-            desc += "\n\n";
-            desc += help;
+            append_armour_stats(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
+        {
+            append_missile_info(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (type == "spell"
+                 || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
+                 || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
+        {
+            if (!_append_books(desc, mitm[thing_created], key))
+            {
+                // FIXME: Duplicates messages from describe.cc.
+                if (!player_can_memorise_from_spellbook(mitm[thing_created]))
+                {
+                    desc += "This book is beyond your current level "
+                            "of understanding.";
+                }
+                desc += describe_item_spells(mitm[thing_created]);
+            }
         }
     }
-    else
+    else if (type == "card")
     {
-        monster_type mon_num = get_monster_by_name(key);
-        // Don't attempt to get more information on ghost demon
-        // monsters, as the ghost struct has not been initialised, which
-        // will cause a crash.  Similarly for zombified monsters, since
-        // they require a base monster.
-        if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
-            && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
-        {
-            monster_info mi(mon_num);
-            // Avoid slime creature being described as "buggy"
-            if (mi.type == MONS_SLIME_CREATURE)
-                mi.number = 1;
-            return describe_monsters(mi, true, footer);
-        }
-        else
-        {
-            int thing_created = get_mitm_slot();
-            if (thing_created != NON_ITEM
-                && (type == "item" || type == "spell"))
-            {
-                char name[80];
-                strncpy(name, key.c_str(), sizeof(name));
-                if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
-                {
-                    append_weapon_stats(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
-                {
-                    append_armour_stats(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
-                {
-                    append_missile_info(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (type == "spell"
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
-                {
-                    if (!_append_books(desc, mitm[thing_created], key))
-                    {
-                        // FIXME: Duplicates messages from describe.cc.
-                        if (!player_can_memorise_from_spellbook(mitm[thing_created]))
-                        {
-                            desc += "This book is beyond your current level "
-                                    "of understanding.";
-                        }
-                        append_spells(desc, mitm[thing_created]);
-                    }
-                }
-            }
-            else if (type == "card")
-            {
-                // 5 - " card"
-                card_type which_card =
-                     name_to_card(key.substr(0, key.length() - 5));
-                if (which_card != NUM_CARDS)
-                    desc += which_decks(which_card) + "\n";
-            }
-
-            // Now we don't need the item anymore.
-            if (thing_created != NON_ITEM)
-                destroy_item(thing_created);
-        }
+        // 5 - " card"
+        card_type which_card =
+        name_to_card(key.substr(0, key.length() - 5));
+        if (which_card != NUM_CARDS)
+            desc += which_decks(which_card) + "\n";
     }
+
+    // Now we don't need the item anymore.
+    if (thing_created != NON_ITEM)
+        destroy_item(thing_created);
 
     inf.body << desc;
 
@@ -1348,8 +1300,8 @@ static void _find_description(bool *again, string *error_inout)
     string    type;
     string    extra;
     string    suffix;
-    db_find_filter filter     = NULL;
-    db_keys_recap  recap      = NULL;
+    db_find_filter filter     = nullptr;
+    db_keys_recap  recap      = nullptr;
     bool           want_regex = true;
     bool           want_sort  = true;
 
@@ -1407,13 +1359,13 @@ static void _find_description(bool *again, string *error_inout)
         break;
     case 'G':
         type       = "god";
-        filter     = NULL;
+        filter     = nullptr;
         want_regex = false;
         doing_gods = true;
         break;
     case 'B':
         type           = "branch";
-        filter         = NULL;
+        filter         = nullptr;
         want_regex     = false;
         want_sort      = false;
         doing_branches = true;
@@ -1483,7 +1435,7 @@ static void _find_description(bool *again, string *error_inout)
     else
         key_list = _get_desc_keys(regex, filter);
 
-    if (recap != NULL)
+    if (recap != nullptr)
         (*recap)(key_list);
 
     if (key_list.empty())
@@ -1565,18 +1517,13 @@ static void _find_description(bool *again, string *error_inout)
         if (ends_with(str, suffix)) // perhaps we should assert this?
             str.erase(str.length() - suffix.length());
 
-        MenuEntry *me = NULL;
+        MenuEntry *me = nullptr;
 
         if (doing_mons)
         {
             // Create and store fake monsters, so the menu code will
             // have something valid to refer to.
             monster_type m_type = get_monster_by_name(str);
-
-            // Not worth the effort handling the item; also, it would
-            // puzzle the players.  Thus, only unique matches work.
-            if (mons_is_mimic(m_type))
-                continue;
 
             // No proper monster, and causes crashes in Tiles.
             if (mons_is_tentacle_segment(m_type))
@@ -1629,9 +1576,9 @@ static void _find_description(bool *again, string *error_inout)
                 if (spell != SPELL_NO_SPELL)
                     me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
-                me->colour = _is_book_spell(spell) ? WHITE
-                           : _is_rod_spell(spell)  ? LIGHTGREY
-                                                   : DARKGREY; // monster-only
+                me->colour = is_player_spell(spell) ? WHITE
+                           : _is_rod_spell(spell)   ? LIGHTGREY
+                                                    : DARKGREY; // monster-only
             }
 
             me->data = &key_list[i];
@@ -1691,7 +1638,7 @@ static void _keyhelp_query_descriptions()
 
     viewwindow();
     if (!error.empty())
-        mprf("%s", error.c_str());
+        mpr(error);
 }
 
 static int _keyhelp_keyfilter(int ch)
@@ -1859,7 +1806,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
 
     if (with_manual)
     {
-        for (int i = 0; help_files[i].name != NULL; ++i)
+        for (int i = 0; help_files[i].name != nullptr; ++i)
         {
             // Attempt to open this file, skip it if unsuccessful.
             string fname = canonicalise_file_separator(help_files[i].name);
@@ -2048,7 +1995,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  \\|/        \\|/", 0);
     _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
-                         CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+                         CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  /|\\        /|\\", 0);
     _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
@@ -2058,7 +2005,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Rest/Search:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>.</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
@@ -2080,13 +2027,20 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
-            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : open/close door, \n"
-            "         untrap, attack without move\n",
+            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : attack without move \n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             0,
-            "\n"
+            "<h>Autofight:\n"
+            "<w>Tab</w>       : attack nearest monster,\n"
+            "            moving if necessary\n"
+            "<w>Shift-Tab</w> : attack nearest monster\n"
+            "            without moving\n",
+            true, true, _cmdhelp_textfilter);
+
+    cols.add_formatted(
+            0,
             "<h>Item types (and common commands)\n",
             true, true, _cmdhelp_textfilter);
 
@@ -2336,7 +2290,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  \\|/        \\|/", 0);
     _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
-                         CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+                         CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  /|\\        /|\\", 0);
     _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
@@ -2353,7 +2307,7 @@ static void _add_formatted_hints_help(column_composer &cols)
             "<h>Rest/Search:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>.</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
@@ -2438,7 +2392,7 @@ static void _add_formatted_hints_help(column_composer &cols)
 
     item_types =
                   "<console><brown>";
-    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE));
+    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF));
     item_types +=
         "</brown> : </console>"
         "staves and rods (<w>%</w>ield and e<w>%</w>oke)";
@@ -2510,25 +2464,27 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>A</w>      set all skills to level\n"
                        "<w>Ctrl-D</w> change enchantments/durations\n"
                        "<w>g</w>      exercise a skill\n"
-                       "<w>Ctrl-L</w> change experience level\n"
-                       "<w>p</w>      list props\n"
+                       "<w>l</w>      change experience level\n"
+                       "<w>Ctrl-P</w> list props\n"
                        "<w>r</w>      change character's species\n"
                        "<w>s</w>      gain 20000 skill points\n"
                        "<w>S</w>      set skill to level\n"
                        "<w>x</w>      gain an experience level\n"
                        "<w>$</w>      get 1000 gold\n"
+                       "<w>n</w>      lose all gold\n"
                        "<w>]</w>      get a mutation\n"
                        "<w>_</w>      gain religion\n"
                        "<w>^</w>      set piety to a value\n"
                        "<w>@</w>      set Str Int Dex\n"
                        "<w>#</w>      load character from a dump file\n"
-                       "<w>Z</w>      gain lots of Zot Points\n"
+                       "<w>Ctrl-Z</w> gain lots of Zot Points\n"
                        "<w>&</w>      list all divine followers\n"
+                       "<w>=</w>      show info about skill points\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
                        "<w>L</w>      place a vault by name\n"
                        "<w>T</w>      make a trap\n"
-                       "<w><<</w>/<w>></w>    create up/down staircase\n"
+                       "<w>,</w>/<w>.</w>    create up/down staircase\n"
                        "<w>(</w>      turn cell into feature\n"
                        "<w>\\</w>      make a shop\n"
                        "<w>Ctrl-K</w> mark all vaults as unused\n"
@@ -2536,8 +2492,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<yellow>Other level related commands</yellow>\n"
                        "<w>Ctrl-A</w> generate new Abyss area\n"
                        "<w>b</w>      controlled blink\n"
-                       "<w>Ctrl-B</w> controlled teleport\n"
-                       "<w>B</w>      banish yourself to the Abyss\n"
+                       "<w>B</w>      controlled teleport\n"
+                       "<w>Ctrl-B</w> banish yourself to the Abyss\n"
                        "<w>k</w>      shift section of a labyrinth\n"
                        "<w>R</w>      change monster spawn rate\n"
                        "<w>Ctrl-S</w> change Abyss speed\n"
@@ -2548,7 +2504,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>;</w>      list known levels and counters\n"
                        "<w>{</w>      magic mapping\n"
                        "<w>}</w>      detect all traps on level\n"
-                       "<w>)</w>      change Shoals' tide speed\n"
+                       "<w>Ctrl-W</w> change Shoals' tide speed\n"
                        "<w>Ctrl-E</w> dump level builder information\n"
                        "<w>Ctrl-R</w> regenerate current level\n"
                        "<w>P</w>      create a level based on a vault\n",
@@ -2561,19 +2517,19 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-G</w> save/load ghost (bones file)\n"
 #endif
                        "<w>h</w>/<w>H</w>    heal yourself (super-Heal)\n"
-                       "<w>Ctrl-H</w> set hunger state\n"
+                       "<w>e</w>      set hunger state\n"
                        "<w>X</w>      make Xom do something now\n"
                        "<w>z</w>      cast spell by number/name\n"
-                       "<w>Ctrl-M</w> memorise spell\n"
+                       "<w>!</w>      memorise spell\n"
                        "<w>W</w>      god wrath\n"
                        "<w>w</w>      god mollification\n"
-                       "<w>Ctrl-P</w> polymorph into a form\n"
-                       "<w>Ctrl-V</w> toggle xray vision\n"
+                       "<w>p</w>      polymorph into a form\n"
+                       "<w>V</w>      toggle xray vision\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
                        "<w>D</w>      detect all monsters\n"
                        "<w>G</w>      dismiss all monsters\n"
-                       "<w>m</w>/<w>M</w>    create monster by number/name\n"
+                       "<w>m</w>/<w>M</w>    create monster by name/number\n"
                        "<w>\"</w>      list monsters\n"
                        "\n"
                        "<yellow>Item related commands</yellow>\n"

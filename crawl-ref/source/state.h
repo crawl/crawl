@@ -6,12 +6,14 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include "player.h"
 #include <vector>
+
+#include "player.h"
 
 class monster;
 class mon_acting;
 class targetter;
+struct activity_interrupt_data;
 
 struct god_act_state
 {
@@ -66,6 +68,8 @@ struct game_state
     vector<string> tests_selected; // Tests to be run.
     vector<string> script_args;    // Arguments to scripts.
 
+    bool throttle;
+
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 
     string sprint_map;      // Sprint map set on command line, if any.
@@ -99,11 +103,15 @@ struct game_state
     // drawing.
     bool mlist_targeting;
 #else
+    bool tiles_disabled;
     bool title_screen;
 #endif
 
     // Area beyond which view should be darkened,  0 = disabled.
     targetter *darken_range;
+
+    // Monsters to highlight on the screen, 0 = disabled.
+    vector<monster *> *flash_monsters;
 
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
@@ -238,5 +246,8 @@ public:
 private:
     monster* mon;
 };
+
+bool interrupt_cmd_repeat(activity_interrupt_type ai,
+                          const activity_interrupt_data &at);
 
 #endif

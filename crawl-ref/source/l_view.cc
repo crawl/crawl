@@ -6,17 +6,17 @@
 #include "AppHdr.h"
 
 #include "l_libs.h"
-#include "l_defs.h"
 
+#include "cloud.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "env.h"
-#include "libutil.h"
+#include "l_defs.h"
 #include "mon-death.h"
 #include "player.h"
 #include "religion.h"
+#include "stringutil.h"
 #include "terrain.h"
-#include "cloud.h"
 #include "travel.h"
 #include "view.h"
 
@@ -34,6 +34,25 @@ LUAFN(view_feature_at)
     return 1;
 }
 
+LUAFN(view_cloud_at)
+{
+    COORDSHOW(s, 1, 2)
+    const coord_def p = player2grid(s);
+    if (!map_bounds(p))
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    cloud_type c = env.map_knowledge(p).cloud();
+    if (c == CLOUD_NONE)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+    lua_pushstring(ls, cloud_type_name(c).c_str());
+    return 1;
+}
+
 LUAFN(view_is_safe_square)
 {
     COORDSHOW(s, 1, 2)
@@ -45,10 +64,7 @@ LUAFN(view_is_safe_square)
     }
     cloud_type c = env.map_knowledge(p).cloud();
     if (c != CLOUD_NONE
-        && is_damaging_cloud(c, true)
-        && (!you_worship(GOD_QAZLAL)
-            || player_under_penance()
-            || !YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
+        && is_damaging_cloud(c, true, YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
     {
         PLUARET(boolean, false);
         return 1;
@@ -113,8 +129,23 @@ LUAFN(view_withheld)
     return 1;
 }
 
+LUAFN(view_invisible_monster)
+{
+    COORDSHOW(s, 1, 2)
+    const coord_def p = player2grid(s);
+    if (!map_bounds(p))
+    {
+        PLUARET(boolean, false);
+        return 1;
+    }
+    PLUARET(boolean, env.map_knowledge(p).flags & MAP_INVISIBLE_MONSTER);
+    return 1;
+}
+
 LUAFN(view_update_monsters)
 {
+    ASSERT_DLUA;
+
     update_monsters_in_view();
     return 0;
 }
@@ -122,13 +153,15 @@ LUAFN(view_update_monsters)
 static const struct luaL_reg view_lib[] =
 {
     { "feature_at", view_feature_at },
+    { "cloud_at", view_cloud_at },
     { "is_safe_square", view_is_safe_square },
     { "can_reach", view_can_reach },
     { "withheld", view_withheld },
+    { "invisible_monster", view_invisible_monster },
 
     { "update_monsters", view_update_monsters },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_view(lua_State *ls)

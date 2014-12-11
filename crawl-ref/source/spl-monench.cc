@@ -7,14 +7,10 @@
 #include "AppHdr.h"
 
 #include "spl-monench.h"
-#include "externs.h"
 
-#include "areas.h"
 #include "env.h"
 #include "message.h"
-#include "random.h"
 #include "spl-util.h"
-#include "stuff.h"
 #include "terrain.h"
 
 int englaciate(coord_def where, int pow, int, actor *agent)
@@ -69,21 +65,19 @@ spret_type cast_englaciation(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-bool backlight_monsters(coord_def where, int pow, int garbage)
+/** Corona a monster.
+ *
+ *  @param mons the monster to get a backlight.
+ *  @returns true if it got backlit (even if it was already).
+ */
+bool backlight_monster(monster* mons)
 {
-    UNUSED(pow);
-    UNUSED(garbage);
-
-    monster* mons = monster_at(where);
-    if (mons == NULL)
-        return false;
-
     // Already glowing, or shadowy.
     if (mons->glows_naturally() || mons_class_flag(mons->type, M_SHADOW))
         return false;
 
-    mon_enchant bklt = mons->get_ench(ENCH_CORONA);
-    mon_enchant zin_bklt = mons->get_ench(ENCH_SILVER_CORONA);
+    const mon_enchant bklt = mons->get_ench(ENCH_CORONA);
+    const mon_enchant zin_bklt = mons->get_ench(ENCH_SILVER_CORONA);
     const int lvl = bklt.degree + zin_bklt.degree;
 
     mons->add_ench(mon_enchant(ENCH_CORONA, 1));

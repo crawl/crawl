@@ -7,7 +7,7 @@
 #define THROW_H
 
 #include <string>
-#include "externs.h"
+
 #include "enum.h"
 
 enum fire_type
@@ -36,14 +36,9 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 void fire_thing(int item = -1);
 void throw_item_no_quiver();
 
-bool silver_damages_victim(bolt &beam, actor* victim, int &dmg,
-                           string &dmg_msg);
-
-bool throw_it(bolt &pbolt, int throw_2, dist *target = NULL);
+bool throw_it(bolt &pbolt, int throw_2, dist *target = nullptr);
 
 bool thrown_object_destroyed(item_def *item, const coord_def& where);
-int launcher_final_speed(const item_def &launcher,
-                         const item_def *shield, bool scaled = true);
 
 void setup_monster_throw_beam(monster* mons, bolt &beam);
 bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport = false);

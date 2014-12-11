@@ -6,7 +6,6 @@
 #ifndef DIRECT_H
 #define DIRECT_H
 
-#include "externs.h"
 #include "enum.h"
 #include "mon-info.h"
 
@@ -17,6 +16,13 @@ class range_view_annotator
 public:
     range_view_annotator(targetter *range);
     virtual ~range_view_annotator();
+};
+
+class monster_view_annotator
+{
+public:
+    monster_view_annotator(vector<monster *> *monsters);
+    virtual ~monster_view_annotator();
 };
 
 // An object that modifies the behaviour of the direction prompt.
@@ -90,7 +96,7 @@ struct direction_chooser_args
     coord_def default_place;
 
     direction_chooser_args() :
-        hitfunc(NULL),
+        hitfunc(nullptr),
         restricts(DIR_NONE),
         mode(TARG_ANY),
         range(-1),
@@ -98,11 +104,11 @@ struct direction_chooser_args
         needs_path(true),
         may_target_monster(true),
         may_target_self(false),
-        target_prefix(NULL),
-        behaviour(NULL),
+        target_prefix(nullptr),
+        behaviour(nullptr),
         cancel_at_self(false),
         show_floor_desc(false),
-        get_desc_func(NULL),
+        get_desc_func(nullptr),
         default_place(0, 0) {}
 };
 
@@ -240,7 +246,7 @@ private:
     bool may_target_self;       // If true then player won't be prompted
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window
-    targeting_behaviour *behaviour; // Can be NULL for default
+    targeting_behaviour *behaviour; // Can be nullptr for default
     bool cancel_at_self;        // Disallow self-targeting?
     bool show_floor_desc;       // Describe the floor of the current target
     targetter *hitfunc;         // Determine what would be hit.
@@ -251,8 +257,10 @@ private:
     bool show_beam;             // Does the user want the beam displayed?
     bool have_beam;             // Is the currently stored beam valid?
     coord_def objfind_pos, monsfind_pos; // Cycling memory
-    bool valid_jump;            // If jumping, do we currently have a monster
-                                // target with a valid landing position?
+
+    bool valid_shadow_step;     // If shadow-stepping, do we currently have a
+                                // monster target with a valid landing
+                                // position?
 
     // What we need to redraw.
     bool need_beam_redraw;
@@ -279,9 +287,6 @@ char mlist_index_to_letter(int index);
 
 void direction(dist &moves, const direction_chooser_args& args);
 
-string thing_do_grammar(description_level_type dtype, bool add_stop,
-                        bool force_article, string desc);
-
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
 void full_describe_square(const coord_def &c);
@@ -293,8 +298,6 @@ string get_monster_equipment_desc(const monster_info& mi,
                                   mons_equip_desc_level_type level = DESC_FULL,
                                   description_level_type mondtype = DESC_A,
                                   bool print_attitude = false);
-
-int dos_direction_unmunge(int doskey);
 
 string feature_description_at(const coord_def& where, bool covering = false,
                               description_level_type dtype = DESC_A,

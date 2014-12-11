@@ -13,7 +13,7 @@
 # ENDMAP
 #
 # This assumes that the unique is defined as a monster in the files
-#   enum.h, mon-gear.cc, mon-data.h,  mon-spll.h, tilemcache.cc, tilepick.cc
+#   enum.h, mon-gear.cc, mon-data.h,  mon-spell.h, tilemcache.cc, tilepick.cc
 # Their speech is defined in
 #   dat/database/monspeak.txt
 #
@@ -46,11 +46,6 @@
 # Note also that uniques are never placed on D:1, so specifying placement there
 # will only cause confusion.
 #
-# As a final caveat, you.branches[you.where_are_you].has_uniques is still
-# checked before vaults are even considered; unique vaults with depths that
-# could go in Lair should be specified !Lair, !Slime (unless you want them in
-# lair).
-#
 # You can define DEBUG_UNIQUE_PLACEMENT and get a per-level unique generation
 # report in "unique_placement.log" in debug mode.
 #
@@ -64,7 +59,7 @@ require('dlua/vault.lua')
 function place_unique(e, monster)
    e.mons(monster)
    e.tags("place_unique")
-   e.tags("transparent overwrite_floor_cell")
+   e.tags("transparent overwrite_floor_cell no_exits")
    e.map("1")
 end
 }}
@@ -259,6 +254,10 @@ NAME:   uniq_terence
 DEPTH:  D:2-3
 : place_unique(_G, "Terence")
 
+NAME:   uniq_robin
+DEPTH:  D:2-4
+: place_unique(_G, "Robin band")
+
 NAME:   uniq_urug
 DEPTH:  D:10-, Orc:2-, Elf:1, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Urug")
@@ -311,9 +310,20 @@ DEPTH:  Depths:1-4, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-, 
 : place_unique(_G, "Mara")
 
 NAME:   uniq_mennas
-# would be cool to get him wandering around Pan too
 DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Mennas")
+
+NAME:   uniq_mennas_pan
+DEPTH:  Pan
+CHANCE: 5%
+TAGS:   transparent extra allow_dup luniq_mennas
+veto {{
+  return you.uniques("Mennas")
+}}
+MONS: generate_awake Mennas
+MAP
+1
+ENDMAP
 
 NAME:   uniq_nikola
 DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
@@ -384,6 +394,66 @@ DEPTH:  Tomb, Crypt
 NAME:   uniq_tiamat
 DEPTH:  Zot
 : place_unique(_G, "Tiamat band")
+
+NAME:   uniq_cerebov
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   transparent extra allow_dup luniq_cerebov
+veto {{
+  if you.uniques("Cerebov") or not you.have_rune("fiery") then
+    return true
+  end
+  return false
+}}
+MONS: generate_awake Cerebov band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_gloorx_vloq
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   transparent extra allow_dup luniq_gloorx_vloq
+veto {{
+  if you.uniques("Gloorx Vloq") or not you.have_rune("dark") then
+    return true
+  end
+  return false
+}}
+MONS: generate_awake Gloorx Vloq band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_mnoleg
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   transparent extra allow_dup luniq_mnoleg
+veto {{
+  if you.uniques("Mnoleg") or not you.have_rune("glowing") then
+    return true
+  end
+  return false
+}}
+MONS: generate_awake Mnoleg band
+MAP
+1
+ENDMAP
+
+NAME:   uniq_lom_lobon
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   transparent extra allow_dup luniq_lom_lobon
+veto {{
+  if you.uniques("Lom Lobon") or not you.have_rune("magical") then
+    return true
+  end
+  return false
+}}
+MONS: generate_awake Lom Lobon band
+MAP
+1
+ENDMAP
 
 NAME:   uniq_ignacio
 DEPTH:  Pan

@@ -1,4 +1,11 @@
 %%%%
+akashic record
+
+The last and greatest work of the Warper Golubria, detailing the most powerful
+Translocations spells in existence. It is notoriously difficult to track down
+and understand, as copies of the book and their contents have a tendency to
+shift between planes at a moment's notice.
+%%%%
 amulet of clarity
 
 This amulet protects its wearer from some forms of mental confusion, including
@@ -24,6 +31,11 @@ monsters via ranged attacks or spells.
 amulet of rage
 
 This amulet enables its wearer to attempt to enter a state of berserk rage.
+%%%%
+amulet of regeneration
+
+This amulet greatly increases the recuperative powers of its wearer, but also
+considerably speeds their metabolism while doing so.
 %%%%
 amulet of resist corrosion
 
@@ -76,10 +88,6 @@ bardiche
 
 A long pole with an enormous, cleaving blade on one end.
 %%%%
-bastard sword
-
-A long, large sword.
-%%%%
 battleaxe
 
 A large war axe with a formidable double-sided head.
@@ -88,13 +96,15 @@ beef jerky
 
 A strip of preserved dead cow or bull.
 %%%%
-blessed bastard sword
+blessed double sword
 
-A long, large sword, enhanced by the Shining One's power.
+A magical weapon with two razor-sharp blades, enhanced by the Shining One's
+power.
 %%%%
-blessed claymore
+blessed triple sword
 
-A massive sword, enhanced by the Shining One's power.
+A magical weapon with three great razor-sharp blades, enhanced by the Shining
+One's power.
 %%%%
 blessed falchion
 
@@ -349,13 +359,6 @@ This unholy book describes a variety of magical methods for the creation and
 command of undead servants. The dreadful book radiates a malignant aura, and
 its parchment pages sometimes twitch and shudder on their own.
 %%%%
-book of wizardry
-
-A book of various magic spells, useful for any sufficiently-talented
-spellcaster. Mages of a scholarly nature consider it a point of pride to have
-contributed in some way to this work, though more than a few of them have been
-slain by jealous rivals using their own spells against them.
-%%%%
 box of beasts
 
 A box filled with the bizarre leftovers of a depraved wizard's magical
@@ -390,10 +393,6 @@ movement.
 chunk of flesh
 
 A piece of raw meat found in the dungeon. It won't stay fresh for long.
-%%%%
-claymore
-
-A massive sword, requiring great skill to use effectively.
 %%%%
 cloak
 
@@ -489,6 +488,10 @@ This extremely powerful item can unleash a destructive storm of electricity.
 Its effectiveness greatly improves in the hands of one skilled in using magical
 devices.
 %%%%
+double sword
+
+A magical weapon with two razor-sharp blades.
+%%%%
 eggplant
 
 A rotten eggplant which you can throw at the Crawl developers. It's a bug if
@@ -518,6 +521,12 @@ fan of gales
 An enchanted fan inhabited by benevolent air spirits. Swinging the fan
 unleashes a blast of wind around the bearer and sets the spirits free to sweep
 away the bearer's enemies.
+%%%%
+fen folio
+
+A collection of spells once used by the great swamp civilizations. Their towers
+have crumbled and decayed, but this book remains, pages flecked with peat
+and moss.
 %%%%
 fire dragon armour
 
@@ -580,9 +589,9 @@ An enormous metal war club, of great cumbrousness.
 %%%%
 greatsling
 
-A large piece of cloth and reinforced leather, meant for launching stones. Does
-more damage when launching purpose-made projectiles, rather than rocks found on
-the floor.
+A large piece of cloth and leather, reinforced with a rigid frame for extra
+rock-lobbing power. Does more damage when launching purpose-made projectiles,
+rather than stones found on the floor.
 %%%%
 great sword
 
@@ -638,6 +647,10 @@ The scaly skin of a cold-breathing dragon. It can be fashioned into proper
 armour, but even in its raw form it provides great protection from the effects
 of cold while rendering its wearer susceptible to fire.
 %%%%
+iron rod
+
+This rod allows its wielder to fire powerful blasts of metallic shrapnel.
+%%%%
 javelin
 
 This lightweight spear is designed for throwing and can cause serious injury.
@@ -673,7 +686,6 @@ large rock
 A very large and very heavy stone. {{
     if you.race() == "Ogre"
        or you.race() == "Troll"
-       or you.race() == "Formicid"
    then
        return ""
    else
@@ -750,6 +762,10 @@ The weirdly-patterned scaly skin of a mottled dragon. It may be turned into
 proper armour by magical means. Its smooth surface lets sticky flames flow off
 it like water.
 %%%%
+mutagenic chunk of flesh
+
+<chunk of flesh>
+%%%%
 naga barding
 
 A special armour made for nagas, to wear over their tails.
@@ -787,8 +803,15 @@ resistance to negative energies.
 pearl dragon hide
 
 The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
-form it does not provide much protection, but by magical means it may be used
-to make excellent armour.
+form it does not provide much protection, beyond resistance to negative energy.
+By magical means, however, it may be used to make excellent armour.
+%%%%
+phantom mirror
+
+A hand mirror which can create a reflection of a nearby creature, shattering
+in the process. The reflection's duration increases with Evocations skill and
+decreases with the magic resistance of the target. It is, invariably, slightly
+weaker than the creature it mirrors.
 %%%%
 phial of floods
 
@@ -801,10 +824,20 @@ plate armour
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. It provides excellent protection.
 %%%%
+poisonous chunk of flesh
+
+<chunk of flesh>
+%%%%
 potion of agility
 
 A magic potion which greatly increases the dexterity and evasiveness of one who
 drinks it.
+%%%%
+potion of ambrosia
+
+A strange substance, produced by ghost moths. Consuming it causes regeneration
+of health and magic, along with total befuddlement. The two effects are
+fundamentally linked - the regeneration ends the moment the confusion does.
 %%%%
 potion of beneficial mutation
 
@@ -816,9 +849,7 @@ A potion which can send one into an incoherent rage.
 %%%%
 potion of blood
 
-A potion containing the essence of life. It is vital for all living creatures,
-as well as some undead ones. It can also provide nutrition for those capable of
-eating meat.
+A potion containing the essence of life. Vampires find it... vital.
 %%%%
 potion of brilliance
 
@@ -829,16 +860,12 @@ potion of cancellation
 
 A potion which ends most magical effects, good or bad, affecting you.
 %%%%
+# if TAG_MAJOR_VERSION == 34
 potion of coagulated blood
 
-A potion containing the essence of life. It is vital for all living creatures,
-as well as some undead ones. It can also provide nutrition for those capable of
-eating meat. The blood within won't be palatable for much longer.
-%%%%
-potion of confusion
-
-A potion which confuses your perceptions and reduces your control over your own
-actions.
+A potion containing the essence of life. Vampires find it... vital. The blood
+within won't be palatable for much longer.
+# endif
 %%%%
 potion of cure mutation
 
@@ -906,7 +933,8 @@ A filling potion of sludge, high in cereal fibre.
 %%%%
 potion of resistance
 
-A potion which grants you temporary resistance to the elements and poison.
+A potion which grants you temporary resistance to a variety of harmful effects:
+fire, cold, electricity, poison, and acid.
 %%%%
 potion of restore abilities
 
@@ -921,6 +949,10 @@ potion of haste
 
 An enchanted beverage which speeds the actions of anyone who drinks it.
 %%%%
+putrefying chunk of flesh
+
+<chunk of flesh>
+%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the
@@ -931,10 +963,28 @@ quarterstaff
 
 A sturdy wooden pole, meant for fighting.
 %%%%
+quicksilver dragon armour
+
+Armour made from the scales of a quicksilver dragon. Although it does not
+provide its wearer with as much protection as the armour made from the scales
+of some heavier dragons, it is somewhat lighter and less encumbering. It is
+excellent at repelling enchantments - and therefore cannot be enchanted
+beyond its current form.
+%%%%
+quicksilver dragon hide
+
+The sinuous hide of a quicksilver dragon, covered in mercurial scales. In its
+raw form it does not provide much protection, but with magical means, it may
+be used to make excellent armour.
+%%%%
 quick blade
 
-This carefully wrought short sword is preternaturally well-balanced, making it
+This carefully wrought dagger is preternaturally well-balanced, making it
 much easier for even inexperienced handlers to attack with it quickly.
+%%%%
+rapier
+
+A slender, sharply pointed sword, with an uncommonly elegant design.
 %%%%
 ring mail
 
@@ -989,6 +1039,10 @@ ring of magical power
 
 This ring increases its wearer's reserves of magical power.
 %%%%
+ring of obsoleteness
+
+Sadly, this item seems to have been removed!
+%%%%
 ring of poison resistance
 
 This ring provides protection from the effects of poisons and venom.
@@ -1014,11 +1068,6 @@ This ring provides protection from fire.
 ring of protection from magic
 
 This ring increases its wearer's resistance to hostile enchantments.
-%%%%
-ring of regeneration
-
-This ring greatly increases the recuperative powers of its wearer, but also
-considerably speeds their metabolism while doing so.
 %%%%
 ring of see invisible
 
@@ -1090,12 +1139,6 @@ rod of shadows
 
 This rod weaves creatures from shadows and ethereal matter.
 %%%%
-rod of striking
-
-This rod is designed for melee combat, releasing its charges to deal additional
-damage dependent on Evocations skill when it strikes a foe. Maces & Flails
-skill will help improve your basic effectiveness with the weapon.
-%%%%
 rod of the swarm
 
 This rod allows its wielder to summon a swarm of insects.
@@ -1151,6 +1194,9 @@ scroll of brand weapon
 This scroll enchants an unbranded weapon so as to make it far more effective
 at inflicting harm on its wielder's enemies. The scroll can also be used on a
 weapon that is already permanently branded to randomly select a new brand.
+
+Unlike temporary branding spells, this scroll causes no ill effects if the
+reader uses it to change the brand of a weapon of distortion.
 %%%%
 scroll of curse armour
 
@@ -1279,7 +1325,7 @@ A curved piece of wood and string, for shooting arrows.
 %%%%
 short sword
 
-A small, double-edged blade with a short grip.
+Also known as a 'small sword'; a personal stabbing weapon with a short grip.
 %%%%
 slice of pizza
 
@@ -1364,12 +1410,13 @@ steam dragon armour
 
 Armour made from the scales of a steam-breathing dragon. Unlike armour made
 from the scales of some larger dragons, it does not provide its wearer with
-much protection, but it is extremely light and supple.
+much protection (beyond a resistance to scalding steam), but it is extremely
+light and supple.
 %%%%
 steam dragon hide
 
-The soft and supple scaly skin of a steam dragon. It may be turned into proper
-armour by magical means.
+The soft and supple scaly skin of a steam dragon. It provides protection
+against scalding steam, and may be turned into proper armour by magical means.
 %%%%
 stone
 
@@ -1383,6 +1430,19 @@ send powerful shockwaves through the dungeon as the spirits seek solid form
 within its rock. Those creatures standing near to walls will be pelted with
 falling rubble as the rocky surface heaves and crumbles, while others may be
 swallowed up by cracks in the earth itself.
+%%%%
+shadow dragon armour
+
+Armour made from the scales of a great umbral dragon. It is heavier than most
+dragon-scale armours, but despite this, blends in so well with the shadows
+as to provide a substantial benefit to the wearer's stealth.
+%%%%
+shadow dragon hide
+
+The hide of a great umbral dragon, covered in extremely hard blue-black scales.
+In its raw form it does not provide much protection beyond the ability to blend
+with the shadows. With magical means, however, it may be used to make excellent
+armour.
 %%%%
 storm dragon armour
 
@@ -1437,6 +1497,11 @@ triple crossbow
 Initially designed as a siege weapon and then scaled down, this crossbow uses
 three strings arranged in series to provide exceptional power. It takes a
 considerable amount of time to load and fire.
+%%%%
+triple sword
+
+A magical weapon with three great razor-sharp blades, requiring great skill to
+use effectively.
 %%%%
 trishula
 

@@ -2,10 +2,10 @@
 
 #include "viewgeom.h"
 
+#include "end.h"
 #include "options.h"
-#include "player.h"
 #include "state.h"
-#include "stuff.h"
+
 
 // ----------------------------------------------------------------------
 // Layout helper classes
@@ -239,12 +239,12 @@ public:
 
 crawl_view_buffer::crawl_view_buffer()
     : m_size(0, 0)
-    , m_buffer(NULL)
+    , m_buffer(nullptr)
 {
 }
 crawl_view_buffer::crawl_view_buffer(const coord_def &sz)
     : m_size(0, 0)
-    , m_buffer(NULL)
+    , m_buffer(nullptr)
 {
     resize(sz);
 }
@@ -280,7 +280,7 @@ const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer 
 void crawl_view_buffer::clear()
 {
     delete [] m_buffer;
-    m_buffer = NULL;
+    m_buffer = nullptr;
     m_size = coord_def(0,0);
 }
 
@@ -290,7 +290,7 @@ void crawl_view_buffer::clear()
 
 crawl_view_geometry::crawl_view_geometry()
     : termp(1, 1), termsz(80, 24),
-      viewp(1, 1), viewsz(33, 17),
+      viewp(1, 1), viewsz(VIEW_BASE_WIDTH, 17),
       hudp(40, 1), hudsz(-1, -1),
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       mlistp(hudp.x, hudp.y + hudsz.y),

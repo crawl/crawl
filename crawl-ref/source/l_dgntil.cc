@@ -5,17 +5,14 @@
 
 #include "AppHdr.h"
 
-#include "cluautil.h"
-#include "libutil.h"
 #include "l_libs.h"
 
-#include "branch.h"
+#include "cluautil.h"
 #include "coord.h"
-#include "mapdef.h"
-
 #include "env.h"
+#include "mapdef.h"
+#include "stringutil.h"
 #include "tiledef-dngn.h"
-#include "tileview.h"
 
 tileidx_t get_tile_idx(lua_State *ls, int arg)
 {
@@ -38,28 +35,6 @@ tileidx_t get_tile_idx(lua_State *ls, int arg)
     }
 
     return idx;
-}
-
-LUAFN(dgn_lev_floortile)
-{
-    LEVEL(br, 1);
-
-    tile_flavour flv;
-    tile_default_flv(br, flv);
-
-    const char *tile_name = tile_dngn_name(flv.floor);
-    PLUARET(string, tile_name);
-}
-
-LUAFN(dgn_lev_rocktile)
-{
-    LEVEL(br, 1);
-
-    tile_flavour flv;
-    tile_default_flv(br, flv);
-
-    const char *tile_name = tile_dngn_name(flv.wall);
-    PLUARET(string, tile_name);
 }
 
 LUAFN(dgn_lrocktile)
@@ -200,10 +175,8 @@ const struct luaL_reg dgn_tile_dlib[] =
 { "tile", dgn_tile },
 { "change_rock_tile", dgn_change_rock_tile },
 { "change_floor_tile", dgn_change_floor_tile },
-{ "lev_floortile", dgn_lev_floortile },
-{ "lev_rocktile", dgn_lev_rocktile },
 { "tile_feat_changed", dgn_tile_feat_changed },
 { "tile_floor_changed", dgn_tile_floor_changed },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

@@ -150,7 +150,7 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
         return;
     }
 
-    if (feat <= DNGN_LAVA)
+    if (feat_is_solid(feat) || feat == DNGN_LAVA)
         return;
 
     const bool ink_only = (feat == DNGN_DEEP_WATER);
@@ -430,8 +430,8 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
 static bool _is_seen_wall(coord_def gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
-    return feat != DNGN_UNSEEN && feat <= DNGN_MAXWALL
-           && feat != DNGN_TREE;
+    return (feat_is_opaque(feat) || feat_is_wall(feat))
+           && feat != DNGN_TREE && feat != DNGN_UNSEEN;
 }
 
 static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell,

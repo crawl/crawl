@@ -343,18 +343,3 @@ aggiungere del misterioso ad un mistero; ciononostante il suo potere di rapida
 rigenerazione all'occasionale costo del potere magico dell'indossatore, è
 difficile da discutere.
 %%%%
-milk chocolate
-
-Quest'oggetto aiuta al debugging, poiché da una tanti degli effetti più utili
-degli artefatti.
-
-Semmai lo vedessi in una vera partita, è un bug.
-%%%%
-dark chocolate
-
-Quest'oggetto aiuta al debugging, poiché da una tanti degli effetti più utili
-degli artefatti. Si distingue dalla sua controparte di latte poiché alcuni
-effetti vanno in conflitto fra loro.
-
-Semmai lo vedessi in una vera partita, è un bug.
-%%%%

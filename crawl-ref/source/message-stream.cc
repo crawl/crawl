@@ -1,9 +1,10 @@
 #include "AppHdr.h"
 
+#include "libutil.h" // deleteAll
 #include "message.h"
 
-#include <streambuf>
 #include <iostream>
+#include <streambuf>
 
 namespace msg
 {
@@ -35,12 +36,8 @@ namespace msg
 
     void deinitialise_mpr_streams()
     {
-        for (unsigned int i = 0; i < stream_ptrs.size(); ++i)
-            delete stream_ptrs[i];
-        stream_ptrs.clear();
-        for (unsigned int i = 0; i < stream_buffers.size(); ++i)
-            delete stream_buffers[i];
-        stream_buffers.clear();
+        deleteAll(stream_ptrs);
+        deleteAll(stream_buffers);
     }
 
     setparam::setparam(int param)

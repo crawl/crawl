@@ -17,7 +17,6 @@
 #include "options.h"
 #include "player.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
@@ -67,10 +66,10 @@ void tile_new_level(bool first_time, bool init_unseen)
 
 void tile_init_default_flavour()
 {
-    tile_default_flv(you.where_are_you, env.tile_default);
+    tile_default_flv(you.where_are_you, you.depth, env.tile_default);
 }
 
-void tile_default_flv(branch_type br, tile_flavour &flv)
+void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
 {
     flv.wall    = TILE_WALL_NORMAL;
     flv.floor   = TILE_FLOOR_NORMAL;
@@ -168,10 +167,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
     case BRANCH_SNAKE:
         flv.wall  = TILE_WALL_SNAKE;
-        flv.floor = random_choose(TILE_FLOOR_SNAKE_A,
-                                  TILE_FLOOR_SNAKE_C,
-                                  TILE_FLOOR_SNAKE_D,
-                                  -1);
+        flv.floor = TILE_FLOOR_MOSAIC;
         return;
 
     case BRANCH_SWAMP:
@@ -223,33 +219,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_PANDEMONIUM:
-        switch (random2(9))
-        {
-            default:
-            case 0: flv.wall = TILE_WALL_BARS_RED; break;
-            case 1: flv.wall = TILE_WALL_BARS_BLUE; break;
-            case 2: flv.wall = TILE_WALL_BARS_CYAN; break;
-            case 3: flv.wall = TILE_WALL_BARS_GREEN; break;
-            case 4: flv.wall = TILE_WALL_BARS_MAGENTA; break;
-            case 5: flv.wall = TILE_WALL_BARS_BROWN; break;
-            case 6: flv.wall = TILE_WALL_BARS_LIGHTGRAY; break;
-            case 7: flv.wall = TILE_WALL_BARS_DARKGRAY; break;
-            // Wall_flesh used to have a 1/3 chance
-            case 8: flv.wall = TILE_WALL_FLESH; break;
-        }
-
-        switch (random2(8))
-        {
-            default:
-            case 0: flv.floor = TILE_FLOOR_DEMONIC_RED; break;
-            case 1: flv.floor = TILE_FLOOR_DEMONIC_BLUE; break;
-            case 2: flv.floor = TILE_FLOOR_DEMONIC_GREEN; break;
-            case 3: flv.floor = TILE_FLOOR_DEMONIC_CYAN; break;
-            case 4: flv.floor = TILE_FLOOR_DEMONIC_MAGENTA; break;
-            case 5: flv.floor = TILE_FLOOR_DEMONIC_BROWN; break;
-            case 6: flv.floor = TILE_FLOOR_DEMONIC_LIGHTGRAY; break;
-            case 7: flv.floor = TILE_FLOOR_DEMONIC_DARKGRAY; break;
-        }
+        flv.floor = tile_dngn_coloured(TILE_FLOOR_DEMONIC, env.floor_colour);
+        if (env.rock_colour == LIGHTRED)
+            flv.wall = TILE_WALL_FLESH;
+        else
+            flv.wall = tile_dngn_coloured(TILE_WALL_BARS, env.rock_colour);
         break;
 
     case BRANCH_ZIGGURAT:
@@ -362,7 +336,7 @@ static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
 }
 
-static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
+static tileidx_t _pick_dngn_tile(tileidx_t idx, int value)
 {
     ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     const int count = tile_dngn_count(idx);
@@ -370,7 +344,7 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
         return idx;
 
     const int total = tile_dngn_probs(idx + count - 1);
-    const int rand  = (value == -1 ? random2(total) : value % total);
+    const int rand  = value % total;
 
     for (int i = 0; i < count; ++i)
     {
@@ -382,27 +356,27 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
     return idx;
 }
 
-static tileidx_t _pick_random_dngn_tile_multi(vector<tileidx_t> candidates, int value = -1)
+static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
 {
     ASSERT(!candidates.empty());
 
     int total = 0;
-    for (unsigned int i = 0; i < candidates.size(); ++i)
+    for (tileidx_t tidx : candidates)
     {
-        const unsigned int count = tile_dngn_count(candidates[i]);
-        total += tile_dngn_probs(candidates[i] + count - 1);
+        const unsigned int count = tile_dngn_count(tidx);
+        total += tile_dngn_probs(tidx + count - 1);
     }
-    int rand = (value == -1 ? random2(total) : value % total);
+    int rand = value % total;
 
-    for (unsigned int i = 0; i < candidates.size(); ++i)
+    for (tileidx_t tidx : candidates)
     {
-        const unsigned int count = tile_dngn_count(candidates[i]);
+        const unsigned int count = tile_dngn_count(tidx);
         for (unsigned int j = 0; j < count; ++j)
         {
-            if (rand < tile_dngn_probs(candidates[i] + j))
-                return candidates[i] + j;
+            if (rand < tile_dngn_probs(tidx + j))
+                return tidx + j;
         }
-        rand -= tile_dngn_probs(candidates[i] + count - 1);
+        rand -= tile_dngn_probs(tidx + count - 1);
     }
 
     // Should never reach this place
@@ -425,20 +399,26 @@ void tile_init_flavour(const coord_def &gc)
     if (!map_bounds(gc))
         return;
 
+    uint32_t seed = you.birth_time + you.where_are_you +
+        (you.depth << 8) + (gc.x << 16) + (gc.y << 24);
+
+    int rand1 = hash_rand(INT_MAX, seed, 0);
+    int rand2 = hash_rand(INT_MAX, seed, 1);
+
     if (!env.tile_flv(gc).floor)
     {
         tileidx_t floor_base = env.tile_default.floor;
         int colour = env.grid_colours(gc);
         if (colour)
             floor_base = tile_dngn_coloured(floor_base, colour);
-        env.tile_flv(gc).floor = _pick_random_dngn_tile(floor_base);
+        env.tile_flv(gc).floor = _pick_dngn_tile(floor_base, rand1);
     }
     else if (env.tile_flv(gc).floor != TILE_HALO_GRASS
              && env.tile_flv(gc).floor != TILE_HALO_GRASS2
              && env.tile_flv(gc).floor != TILE_HALO_VAULT
              && env.tile_flv(gc).floor != TILE_HALO_DIRT)
     {
-        env.tile_flv(gc).floor = _pick_random_dngn_tile(env.tile_flv(gc).floor);
+        env.tile_flv(gc).floor = _pick_dngn_tile(env.tile_flv(gc).floor, rand1);
     }
 
     if (!env.tile_flv(gc).wall)
@@ -451,7 +431,7 @@ void tile_init_flavour(const coord_def &gc)
                 _get_depths_wall_tiles_by_depth(you.depth, tile_candidates);
             else
                 _get_dungeon_wall_tiles_by_depth(you.depth, tile_candidates);
-            env.tile_flv(gc).wall = _pick_random_dngn_tile_multi(tile_candidates);
+            env.tile_flv(gc).wall = _pick_dngn_tile_multi(tile_candidates, rand2);
         }
         else
         {
@@ -459,11 +439,11 @@ void tile_init_flavour(const coord_def &gc)
             int colour = env.grid_colours(gc);
             if (colour)
                 wall_base = tile_dngn_coloured(wall_base, colour);
-            env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
+            env.tile_flv(gc).wall = _pick_dngn_tile(wall_base, rand2);
         }
     }
     else
-        env.tile_flv(gc).wall = _pick_random_dngn_tile(env.tile_flv(gc).wall);
+        env.tile_flv(gc).wall = _pick_dngn_tile(env.tile_flv(gc).wall, rand2);
 
     if (feat_is_stone_stair(grd(gc)) && player_in_branch(BRANCH_SHOALS))
     {
@@ -505,7 +485,7 @@ void tile_init_flavour(const coord_def &gc)
             env.tile_flv(gc).special = 0;
     }
     else if (!env.tile_flv(gc).special)
-        env.tile_flv(gc).special = random2(256);
+        env.tile_flv(gc).special = hash_rand(256, seed, 10);
 }
 
 enum SpecialIdx
@@ -545,15 +525,15 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
     {
         for (int y = 0; y < GYM; y++)
         {
-            if (grd[x][y] < DNGN_FLOOR)
+            if (!feat_has_dry_floor(grd[x][y]))
                 continue;
             if (!_adjacent_target(target, x, y))
                 continue;
 
-            bool l_flr = (x > 0 && grd[x-1][y] >= DNGN_FLOOR);
-            bool r_flr = (x < GXM - 1 && grd[x+1][y] >= DNGN_FLOOR);
-            bool u_flr = (y > 0 && grd[x][y-1] >= DNGN_FLOOR);
-            bool d_flr = (y < GYM - 1 && grd[x][y+1] >= DNGN_FLOOR);
+            bool l_flr = (x > 0 && feat_has_dry_floor(grd[x-1][y]));
+            bool r_flr = (x < GXM - 1 && feat_has_dry_floor(grd[x+1][y]));
+            bool u_flr = (y > 0 && feat_has_dry_floor(grd[x][y-1]));
+            bool d_flr = (y < GYM - 1 && feat_has_dry_floor(grd[x][y+1]));
 
             bool l_target = _adjacent_target(target, x-1, y);
             bool r_target = _adjacent_target(target, x+1, y);
@@ -1263,20 +1243,17 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_STONE_WALL_VAULT;
     }
 
-
-    const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);
-
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
     else if (orig == TILE_DNGN_STONE_WALL)
     {
-        *bg = _pick_random_dngn_tile(tile_dngn_coloured(orig,
-                                                        env.grid_colours(gc)),
-                                     flv.special);
+        *bg = _pick_dngn_tile(tile_dngn_coloured(orig,
+                                                 env.grid_colours(gc)),
+                              flv.special);
     }
-    else if (is_door_tile(orig) && !mimic)
+    else if (is_door_tile(orig))
     {
         tileidx_t override = flv.feat;
         /*
@@ -1301,7 +1278,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = orig + 6 + flv.special % 6;
     }
     else if (orig < TILE_DNGN_MAX)
-        *bg = _pick_random_dngn_tile(orig, flv.special);
+        *bg = _pick_dngn_tile(orig, flv.special);
 
     *bg |= flag;
 }

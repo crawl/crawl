@@ -1,19 +1,19 @@
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
 #include "areas.h"
+#include "cluautil.h"
 #include "database.h"
-#include "delay.h"
 #include "dlua.h"
 #include "libutil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-util.h"
 #include "mon-speak.h"
 #include "monster.h"
+#include "mon-util.h"
+#include "stringutil.h"
 
 #define WRAPPED_MONSTER(ls, name)                                       \
     MonsterWrap *___mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE); \
@@ -213,6 +213,7 @@ static const char *_moneat_names[] =
 #if TAG_MAJOR_VERSION == 34
     "food",
 #endif
+    "doors"
 };
 
 static const char *_moneat_to_str(mon_itemeat_type etyp)
@@ -555,9 +556,9 @@ static int monster_get(lua_State *ls)
     if (!attr)
         return 0;
 
-    for (unsigned i = 0; i < ARRAYSZ(mons_attrs); ++i)
-        if (!strcmp(attr, mons_attrs[i].attribute))
-            return mons_attrs[i].accessor(ls, mons, attr);
+    for (const MonsAccessor &ma : mons_attrs)
+        if (!strcmp(attr, ma.attribute))
+            return ma.accessor(ls, mons, attr);
 
     return 0;
 }
@@ -653,7 +654,7 @@ static int mons_behaviour(lua_State *ls)
 static const struct luaL_reg mons_lib[] =
 {
     { "behaviour", mons_behaviour },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void dluaopen_monsters(lua_State *ls)

@@ -12,15 +12,12 @@
 #include "colour.h"
 #include "env.h"
 #include "itemname.h"
-#include "libutil.h"
-#include "map_knowledge.h"
-#include "mon-util.h"
-#include "monster.h"
+#include "libutil.h" // map_find
 #include "options.h"
 #include "religion.h"
-#include "show.h"
 #include "stash.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "travel.h"
 #include "viewchar.h"
@@ -34,9 +31,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     const feature_def &fdef = get_feature_def(feat);
 
     // These do not obey vault recolouring.
-    const bool no_vault_recolour = feat > DNGN_OPEN_DOOR
-                                 // unknown traps won't get here
-                                 || feat == DNGN_MALIGN_GATEWAY;
+    const bool no_vault_recolour = feat_has_dry_floor(feat)
+                                   && feat != DNGN_FLOOR
+                                   && feat != DNGN_OPEN_DOOR;
 
     // These aren't shown mossy/bloody/slimy in console.
     const bool norecolour = feat_is_door(feat) || no_vault_recolour;
@@ -58,13 +55,13 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             return colour;
         }
     }
-    else if (feat >= DNGN_MINMOVE && cell.flags & MAP_WITHHELD)
+    else if (!feat_is_solid(feat) && cell.flags & MAP_WITHHELD)
     {
         // Colour grids that cannot be reached due to beholders
         // dark grey.
         colour = DARKGREY;
     }
-    else if (feat >= DNGN_MINMOVE
+    else if (!feat_is_solid(feat)
              && (cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))
     {
         if (cell.flags & MAP_SANCTUARY_1)
@@ -151,7 +148,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
 static monster_type _show_mons_type(const monster_info& mi)
 {
-    if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
+    if (mi.type == MONS_SLIME_CREATURE && mi.slime_size > 1)
         return MONS_MERGED_SLIME_CREATURE;
     else if (mi.type == MONS_ZOMBIE)
     {
@@ -184,7 +181,7 @@ static int _get_mons_colour(const monster_info& mi)
         return dam_colour(mi) | COLFLAG_ITEM_HEAP;
     }
 
-    int col = mi.colour;
+    int col = mi.colour();
 
     // We really shouldn't store unmodified colour.  This hack compares
     // effective type, but really, all redefinitions should work instantly,
@@ -192,6 +189,9 @@ static int _get_mons_colour(const monster_info& mi)
     monster_type stype = _show_mons_type(mi);
     if (stype != mi.type && mi.type != MONS_SENSED)
         col = mons_class_colour(stype);
+
+    if (mi.is(MB_ROLLING))
+        col = ETC_BONE;
 
     if (mi.is(MB_BERSERK))
         col = RED;
@@ -258,25 +258,22 @@ static cglyph_t _get_item_override(const item_def &item)
 
     {
         // Check the cache...
-        map<string, cglyph_t>::const_iterator ir = Options.item_glyph_cache.find(name);
-        if (ir != Options.item_glyph_cache.end())
-            return ir->second;
+        if (cglyph_t *gly = map_find(Options.item_glyph_cache, name))
+            return *gly;
     }
 
-    for (vector<pair<string, cglyph_t> >::const_iterator ir =
-         Options.item_glyph_overrides.begin();
-         ir != Options.item_glyph_overrides.end(); ++ir)
+    for (auto ir : Options.item_glyph_overrides)
     {
-        text_pattern tpat(ir->first);
+        text_pattern tpat(ir.first);
         if (tpat.matches(name))
         {
             // You may have a rule that sets the glyph but not colour for
             // axes, then another that sets colour only for artefacts
             // (useless items, etc).  Thus, apply only parts that apply.
-            if (ir->second.ch)
-                g.ch = ir->second.ch;
-            if (ir->second.col)
-                g.col = ir->second.col;
+            if (ir.second.ch)
+                g.ch = ir.second.ch;
+            if (ir.second.col)
+                g.col = ir.second.col;
         }
     }
 
@@ -306,12 +303,14 @@ show_class get_cell_show_class(const map_cell& cell,
         return SH_CLOUD;
 
     const dungeon_feature_type feat = cell.feat();
-    if (feat && feat < DNGN_MINMOVE
-        || feat > DNGN_OPEN_DOOR
+    if (feat && feat_is_solid(feat)
+        || feat_has_dry_floor(feat)
+           && feat != DNGN_FLOOR
+           && feat != DNGN_OPEN_DOOR
            && feat != DNGN_ABANDONED_SHOP
            && feat != DNGN_STONE_ARCH
            && feat != DNGN_EXPIRED_PORTAL
-           && (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_DRY_FOUNTAIN))
+           && !feat_is_fountain(feat))
     {
         return SH_FEATURE;
     }
@@ -389,17 +388,10 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             g.col = _get_mons_colour(*mi);
 
         monster_type stype = _show_mons_type(*mi);
-        const bool override = Options.mon_glyph_overrides.find(stype)
-                              != Options.mon_glyph_overrides.end();
-        if (mi->props.exists("glyph") && !override)
-            g.ch = mi->props["glyph"].get_int();
-        else if (show.mons == MONS_SENSED)
+        if (show.mons == MONS_SENSED)
             g.ch = mons_char(mi->base_type);
         else
             g.ch = mons_char(stype);
-
-        if (mi->props.exists("glyph") && override)
-            g.col = mons_class_colour(stype);
 
         // If we want to show weapons, overwrite all of that.
         item_def* weapon = mi->inv[MSLOT_WEAPON].get();
@@ -408,7 +400,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             show = *weapon;
             g = _get_item_override(*weapon);
             if (!g.col)
-                g.col = weapon->colour;
+                g.col = weapon->get_colour();
         }
 
         break;
@@ -433,8 +425,8 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         if (cell.item())
         {
             if (Options.feature_item_brand
-                && (is_critical_feature(cell.feat())
-                 || cell.feat() < DNGN_MINMOVE))
+                && (feat_is_critical(cell.feat())
+                    || feat_is_solid(cell.feat())))
             {
                 g.col |= COLFLAG_FEATURE_ITEM;
             }
@@ -454,7 +446,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         if (feat_is_water(cell.feat()))
             g.col = _cell_feat_show_colour(cell, loc, coloured);
         else if (!g.col)
-            g.col = eitem->colour;
+            g.col = eitem->get_colour();
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
         if (cell.flags & MAP_MORE_ITEMS)
@@ -472,7 +464,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
     if (!g.ch)
     {
         const feature_def &fdef = get_feature_def(show);
-        g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
+        g.ch = cell.seen() ? fdef.symbol() : fdef.magic_symbol();
     }
 
     if (g.col)
@@ -494,21 +486,21 @@ cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
 
 ucs_t get_feat_symbol(dungeon_feature_type feat)
 {
-    return get_feature_def(feat).symbol;
+    return get_feature_def(feat).symbol();
 }
 
 ucs_t get_item_symbol(show_item_type it)
 {
-    return get_feature_def(show_type(it)).symbol;
+    return get_feature_def(show_type(it)).symbol();
 }
 
 cglyph_t get_item_glyph(const item_def *item)
 {
     cglyph_t g = _get_item_override(*item);
     if (!g.ch)
-        g.ch = get_feature_def(show_type(*item)).symbol;
+        g.ch = get_feature_def(show_type(*item)).symbol();
     if (!g.col)
-        g.col = item->colour;
+        g.col = item->get_colour();
     return g;
 }
 
@@ -516,17 +508,9 @@ cglyph_t get_mons_glyph(const monster_info& mi)
 {
     monster_type stype = _show_mons_type(mi);
     cglyph_t g;
-    const bool override = Options.mon_glyph_overrides.find(stype)
-                          != Options.mon_glyph_overrides.end();
-    if (mi.props.exists("glyph") && !override)
-        g.ch = mi.props["glyph"].get_int();
-    else
-        g.ch = mons_char(stype);
 
-    if (mi.props.exists("glyph") && override)
-        g.col = mons_class_colour(stype);
-    else
-        g.col = _get_mons_colour(mi);
+    g.ch = mons_char(stype);
+    g.col = _get_mons_colour(mi);
     g.col = real_colour(g.col);
     return g;
 }

@@ -53,10 +53,17 @@ local function vector_move(dx, dy)
   return str
 end
 
+local function is_safe_square(dx, dy)
+    if view.feature_at(dx, dy) == "trap_web" then
+        return false
+    end
+    return view.is_safe_square(dx, dy)
+end
+
 local function try_move(dx, dy)
   m = monster.get_monster_at(dx, dy)
   -- attitude > ATT_NEUTRAL should mean you can push past the monster
-  if view.is_safe_square(dx, dy) and (not m or m:attitude() > ATT_NEUTRAL) then
+  if is_safe_square(dx, dy) and (not m or m:attitude() > ATT_NEUTRAL) then
     return delta_to_vi(dx, dy)
   else
     return nil

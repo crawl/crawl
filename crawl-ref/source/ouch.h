@@ -8,15 +8,16 @@
 
 #define DEATH_NAME_LENGTH 10
 
-#include "enum.h"
 #include "beam.h"
+#include "enum.h"
 
 /**
  * Key for <tt>you.props</tt> indicating that the player already received a
  * message about melting Ozocubu's Armour this turn.  The value does not
- * matter, only the key's existance in the hash.
+ * matter, only the key's existence in the hash.
  */
 #define MELT_ARMOUR_KEY "melt_armour"
+#define MELT_SHIELD_KEY "melt_shield"
 
 // Keep in sync with names in hiscores.cc.
 // Note that you can't ever remove entries from here -- not even when a major
@@ -65,14 +66,13 @@ enum kill_method_type
     KILLED_BY_FRAILTY,
     KILLED_BY_BARBS,
     KILLED_BY_BEING_THROWN,
+    KILLED_BY_COLLISION,
     NUM_KILLBY
 };
 
 void maybe_melt_player_enchantments(beam_type flavour, int damage);
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam = 0, bool doEffects = true);
-void splash_with_acid(int acid_strength, int death_source,
-                      bool allow_corrosion = true, const char* hurt_msg = nullptr);
 
 class actor;
 int actor_to_death_source(const actor* agent);
@@ -80,17 +80,18 @@ int actor_to_death_source(const actor* agent);
 string morgue_name(string char_name, time_t when_crawl_got_even);
 
 void reset_damage_counters();
-void ouch(int dam, int death_source, kill_method_type death_type,
-          const char *aux = NULL, bool see_source = true,
-          const char *death_source_name = NULL, bool attacker_effects = true);
+void ouch(int dam, kill_method_type death_type, mid_t source = MID_NOBODY,
+          const char *aux = nullptr, bool see_source = true,
+          const char *death_source_name = nullptr);
 
-void lose_level(int death_source, const char* aux);
+void lose_level();
 bool drain_player(int power = 25, bool announce_full = true,
                   bool ignore_protection = false);
 
 void expose_player_to_element(beam_type flavour, int strength = 0,
                               bool slow_cold_blooded = true);
 
-NORETURN void screen_end_game(string text);
 int timescale_damage(const actor *act, int damage);
+bool can_shave_damage();
+int do_shave_damage(int dam);
 #endif

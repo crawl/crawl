@@ -68,6 +68,17 @@ kraken_tentacle_segment_E_SW MONS_KRAKEN_TENTACLE_SEGMENT_E_SW
 kraken_tentacle_segment_W_NE MONS_KRAKEN_TENTACLE_SEGMENT_W_NE
 kraken_tentacle_segment_W_SE MONS_KRAKEN_TENTACLE_SEGMENT_W_SE
 
+### (d) connections at acute angles (can't actually occur for krakens)
+%sdir misc
+error MONS_KRAKEN_TENTACLE_SEGMENT_N_NW
+error MONS_KRAKEN_TENTACLE_SEGMENT_N_NE
+error MONS_KRAKEN_TENTACLE_SEGMENT_E_NE
+error MONS_KRAKEN_TENTACLE_SEGMENT_E_SE
+error MONS_KRAKEN_TENTACLE_SEGMENT_S_SE
+error MONS_KRAKEN_TENTACLE_SEGMENT_S_SW
+error MONS_KRAKEN_TENTACLE_SEGMENT_W_SW
+error MONS_KRAKEN_TENTACLE_SEGMENT_W_NW
+
 ## Eldritch tentacles
 
 ## Tentacle ends
@@ -212,3 +223,12 @@ vine_segment_E_NW MONS_VINE_SEGMENT_E_NW
 vine_segment_E_SW MONS_VINE_SEGMENT_E_SW
 vine_segment_W_NE MONS_VINE_SEGMENT_W_NE
 vine_segment_W_SE MONS_VINE_SEGMENT_W_SE
+### (d) connecting at acute angles
+vine_segment_N_NW MONS_VINE_SEGMENT_N_NW
+vine_segment_N_NE MONS_VINE_SEGMENT_N_NE
+vine_segment_E_NE MONS_VINE_SEGMENT_E_NE
+vine_segment_E_SE MONS_VINE_SEGMENT_E_SE
+vine_segment_S_SE MONS_VINE_SEGMENT_S_SE
+vine_segment_S_SW MONS_VINE_SEGMENT_S_SW
+vine_segment_W_SW MONS_VINE_SEGMENT_W_SW
+vine_segment_W_NW MONS_VINE_SEGMENT_W_NW

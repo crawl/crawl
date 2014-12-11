@@ -1,6 +1,6 @@
 # This file contains the definitions of undrandarts (and what used to be
 # fixed artefacts).  util/art-data.pl translates this file into
-# art-data.h, and also updates the enumeration and NO_UNRANDARTS in
+# art-data.h, and also updates the enumeration and NUM_UNRANDARTS in
 # artefact.h.  C/C++ functions which give unrandarts non-standard
 # behaviour are in art-func.h; util/art-data.pl scans art-func.h and
 # puts the function names found into art-data.h.
@@ -124,9 +124,9 @@
 # AC:       Armour class modifier (for non-armour artefacts).
 # ANGRY     Each time the wielder of the weapon strikes a victim there's
 #           a num-in-100 chance of the wielder going berserk.
-# APPEAR:   Unidentified appearance of artifact.
+# APPEAR:   Unidentified appearance of artefact.
 # COLD:     Cold resistance/vulnerability.
-# COLOUR:   The colour of the artifact, either as listed in defines.h
+# COLOUR:   The colour of the artefact, either as listed in defines.h
 #           (e.g., LIGHTRED) or as listed under element_type in view.h
 #           (e.g., ETC_FIRE)
 # CURSED:   The artefact has a one-in-num chance of becoming cursed each
@@ -139,7 +139,7 @@
 # MAGIC:    Magic resistance/vulnerability.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
-# REGEN:    Provides regeneration (40 = ring of regen, 100 = the spell).
+# REGEN:    Provides regeneration (40 = amulet of regen, 100 = the spell).
 # STEALTH:  Stealth modifier.
 # STR:      Strength modifier.
 # TILE:     The file containing the artefact's tile, with file type png.
@@ -161,7 +161,7 @@ COLOUR: BLACK
 ####################### First come the old fixed arts.
 
 NAME:    Singing Sword
-OBJ:     OBJ_WEAPONS/WPN_BASTARD_SWORD
+OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +7
 COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
@@ -224,7 +224,6 @@ COLOUR:  ETC_MAGIC
 TILE:    spwpn_wucad_mu
 TILE_EQ: wucad_mu
 VALUE:   1000
-BOOL:    special
 
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
@@ -235,7 +234,6 @@ TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRISM
 VALUE:   1000
-BOOL:    special
 
 NAME:    Scythe of Curses
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
@@ -258,7 +256,7 @@ VALUE:   1200
 BOOL:    special, evil
 
 NAME:    Sword of Zonguldrok
-OBJ:     OBJ_WEAPONS/WPN_BASTARD_SWORD
+OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9
 COLOUR:  ETC_BONE
 TILE:    spwpn_sword_of_zonguldrok
@@ -280,7 +278,7 @@ TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    tilerim, unholy, nogen
+BOOL:    unholy, nogen
 
 NAME:    Staff of Dispater
 APPEAR:  golden staff
@@ -290,7 +288,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
-BOOL:    special, unholy, nogen
+BOOL:    unholy, nogen
 
 NAME:    Sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -300,7 +298,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
-BOOL:    special, unholy, nogen
+BOOL:    unholy, nogen
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
@@ -345,8 +343,7 @@ TILE_EQ: mace_of_brilliance
 BRAND:   SPWPN_HOLY_WRATH
 AC:      5
 INT:     5
-STEALTH: -1
-BOOL:    life, seeinv
+BOOL:    life
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -570,14 +567,13 @@ PLUS:     +7
 COLOUR:   LIGHTCYAN
 TILE:     urand_spriggans_knife
 TILE_EQ:  spriggans_knife
-BOOL:     tilerim
 EV:       4
 DEX:      4
 MAGIC:    1
 STEALTH:  1
 
 NAME:    plutonium sword
-OBJ:     OBJ_WEAPONS/WPN_CLAYMORE
+OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
 PLUS:    +14
 COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
@@ -601,7 +597,7 @@ COLOUR:  DARKGREY
 TILE:    urand_snakebite
 TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
-BOOL:    poison, tilerim
+BOOL:    poison
 
 # TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy
@@ -625,9 +621,10 @@ TILE_EQ:  crystal_spear
 INT:      3
 BOOL:     nogen
 
+ENUM:     CAPTAIN
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
-PLUS:     +10
+PLUS:     +5
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  capt_cutlass
@@ -831,14 +828,14 @@ MAGIC:   1
 
 NAME:    hat of the Alchemist
 OBJ:     OBJ_ARMOUR/ARM_HAT
-PLUS:    +2
+PLUS:    -2
 COLOUR:  LIGHTMAGENTA
 TILE:    urand_alchemist
 TILE_EQ: turban_purple
 FIRE:    1
 COLD:    1
 MAGIC:   1
-BOOL:    elec
+BOOL:    elec, poison, life, rMut, rCorr
 
 NAME:    fencer's gloves
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
@@ -997,8 +994,8 @@ COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
 BOOL:     life, poison, evil
 
-NAME:     ring of Vitality
-OBJ:      OBJ_JEWELLERY/RING_REGENERATION
+NAME:     amulet of Vitality
+OBJ:      OBJ_JEWELLERY/AMU_REGENERATION
 HP:       +15
 COLOUR:   ETC_MUTAGENIC
 TILE:     urand_vitality
@@ -1114,7 +1111,7 @@ STEALTH: -1
 
 NAME:     arc blade
 INSCRIP:  discharge,
-OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+OBJ:      OBJ_WEAPONS/WPN_RAPIER
 PLUS:     +4
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_arc_blade
@@ -1132,12 +1129,13 @@ TILE_EQ:  spellbinder
 MAGIC:    1
 
 NAME:    lajatang of Order
-INSCRIP: silver, rMut
+INSCRIP: silver,
 OBJ:     OBJ_WEAPONS/WPN_LAJATANG
 COLOUR:  ETC_SILVER
 TILE:    urand_order
 TILE_EQ: order
 PLUS:    +7
+BOOL:    rMut
 
 ENUM:     FIRESTARTER
 NAME:     great mace "Firestarter"
@@ -1172,49 +1170,15 @@ INT:     6
 BRAND:   SPWPN_VAMPIRISM
 BOOL:    unholy
 
-# This is the first of two amulets used to test suppression aura.
-# Together, they confer every randart effect except for a few that are
-# determined explicitly by checking whether a certain amulet is worn
-# (such as stasis is).
-# The first amulet tests all properties, but since some properties can have
-# either positive or negative levels (or some properties are mutually
-# exclusive), the second amulet tests negative and exclusive effects.
-# Obviously, because it contains every positive property in the game,
-# this should never be randomly generated!
-NAME:    milk chocolate
-OBJ:     OBJ_JEWELLERY/AMU_STASIS
-COLOUR:  BROWN
-TILE:    urand_air
-ANGRY:   100
-COLD:    3
-SLAY:    60
-DEX:     3
-EV:      3
-FIRE:    3
-INT:     3
-MAGIC:   3
-HP:      10
-MP:      10
-STEALTH: 2
-STR:     3
-BOOL:    nogen, berserk, blink, clarity, elec, inv, fly, life, nospell, notelep, poison, seeinv, mutate
-
-# This is the second of two amulets used to test suppression. See above.
-NAME:    dark chocolate
-OBJ:     OBJ_JEWELLERY/AMU_RESIST_CORROSION
-COLOUR:  DARKGREY
-TILE:    urand_bloodlust
-COLD:    -3
-SLAY:    -60
+ENUM:    GYRE
+NAME:    quick blades "Gyre" and "Gimble"
+OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+COLOUR:  ETC_ENCHANT
+TILE:    urand_gyre
+TILE_EQ: gyre
+PLUS:    5
+BRAND:   SPWPN_VORPAL
 DEX:     -3
-EV:      -3
-FIRE:    -3
-INT:     -3
-HP:      -10
-MP:      -10
-STEALTH: -2
-STR:     -3
-BOOL:    nogen, rnd_tele
 
 # This entry must always be last.
 ENUM:   DUMMY2

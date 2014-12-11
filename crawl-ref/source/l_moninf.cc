@@ -6,20 +6,18 @@
 #include "AppHdr.h"
 
 #include "l_libs.h"
-#include "l_defs.h"
+
+#include <algorithm>
 
 #include "cluautil.h"
 #include "coord.h"
-#include "defines.h"
 #include "env.h"
-#include "libutil.h"
-#include "mon-info.h"
+#include "l_defs.h"
+#include "libutil.h" // map_find
 #include "mon-book.h"
-#include "player.h"
 #include "spl-util.h"
+#include "stringutil.h"
 #include "transform.h"
-
-#include <algorithm>
 
 #define MONINF_METATABLE "monster.info"
 
@@ -54,8 +52,31 @@ MIRET1(string, mname, mname.c_str())
 MIRET1(number, type, type)
 MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
-MIRET1(number, colour, colour)
 MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
+MIRET1(string, speed_description, speed_description().c_str())
+
+static int moninf_get_colour(lua_State *ls)
+{
+    MONINF(ls, 1, mi);
+    lua_pushnumber(ls, mi->colour());
+    return 1;
+}
+
+#define MIRES1(field, resist) \
+    static int moninf_get_##field(lua_State *ls) \
+    { \
+        MONINF(ls, 1, mi); \
+        lua_pushnumber(ls, get_resist(mi->resists(), resist)); \
+        return 1; \
+    }
+
+// Named for consistency with the player resists.
+MIRES1(res_poison, MR_RES_POISON)
+MIRES1(res_fire, MR_RES_FIRE)
+MIRES1(res_cold, MR_RES_COLD)
+MIRES1(res_draining, MR_RES_NEG)
+MIRES1(res_shock, MR_RES_ELEC)
+MIRES1(res_corr, MR_RES_ACID)
 
 // const char* here would save a tiny bit of memory, but every map
 // for an unique pair of types costs 35KB of code.  We have
@@ -80,14 +101,14 @@ LUAFN(moninf_get_is)
         if (mi_flags.empty())
             _init_mi_flags();
         string flag = luaL_checkstring(ls, 2);
-        const map<string, int>::const_iterator f = mi_flags.find(lowercase(flag));
-        if (f == mi_flags.end())
+        if (int *flagnum = map_find(mi_flags, lowercase(flag)))
+            num = *flagnum;
+        else
         {
             luaL_argerror(ls, 2, (string("no such moninf flag: '")
                                   + flag + "'").c_str());
             return 0;
         }
-        num = f->second;
     }
     if (num < 0 || num >= NUM_MB_FLAGS)
     {
@@ -119,7 +140,7 @@ LUAFN(moninf_get_spells)
         for (size_t j = 0; j < unique_spells.size(); ++j)
         {
             const spell_type spell = unique_spells[j];
-            spell_titles.push_back(spell_title(spell));
+            spell_titles.emplace_back(spell_title(spell));
         }
 
         clua_stringtable(ls, spell_titles);
@@ -133,11 +154,6 @@ static bool cant_see_you(const monster_info *mi)
 {
     if (mons_class_flag(mi->type, M_SEE_INVIS))
         return false;
-    if (mons_class_flag(mi->type, M_SENSE_INVIS)
-        && (you.pos() - mi->pos).abs() <= 17)
-    {
-        return false;
-    }
     if (you.in_water())
         return false;
     return you.invisible() || mi->is(MB_BLIND);
@@ -259,6 +275,26 @@ LUAFN(moninf_get_desc)
     return 1;
 }
 
+LUAFN(moninf_get_status)
+{
+    MONINF(ls, 1, mi);
+    const char* which = nullptr;
+    if (lua_gettop(ls) >= 2)
+        which = luaL_checkstring(ls, 2);
+
+    vector<string> status = mi->attributes();
+    if (!which)
+    {
+        PLUARET(string, comma_separated_line(status.begin(),
+                                             status.end(), ", ").c_str());
+    }
+    for (const auto &st : status)
+        if (st == which)
+            PLUARET(boolean, true);
+
+    PLUARET(boolean, false);
+}
+
 LUAFN(moninf_get_name)
 {
     MONINF(ls, 1, mi);
@@ -291,11 +327,19 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),
+    MIREG(status),
     MIREG(name),
     MIREG(has_known_ranged_attack),
+    MIREG(speed_description),
     MIREG(spells),
+    MIREG(res_poison),
+    MIREG(res_fire),
+    MIREG(res_cold),
+    MIREG(res_draining),
+    MIREG(res_shock),
+    MIREG(res_corr),
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 // XXX: unify with directn.cc/h
@@ -325,7 +369,7 @@ static const struct luaL_reg mon_lib[] =
 {
     { "get_monster_at", mi_get_monster_at },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_moninf(lua_State *ls)

@@ -1,32 +1,30 @@
 #include "AppHdr.h"
-#include <math.h>
 
 #include "godpassive.h"
 
-#include "art-enum.h"
+#include <cmath>
+
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "cloud.h"
-#include "coord.h"
 #include "coordit.h"
-#include "defines.h"
 #include "env.h"
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
 #include "goditem.h"
 #include "godprayer.h"
-#include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
-#include "player.h"
 #include "religion.h"
 #include "shout.h"
-#include "skills2.h"
+#include "skills.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
-#include "travel.h"
 
 int chei_stat_boost(int piety)
 {
@@ -97,7 +95,7 @@ void jiyva_eat_offlevel_items()
                 mpr("You hear a distant slurping noise.");
                 sacrifice_item_stack(*si, &js);
                 item_was_destroyed(*si);
-                destroy_item(si.link());
+                destroy_item(si.index());
                 jiyva_slurp_message(js);
             }
             return;
@@ -183,9 +181,15 @@ void ash_check_bondage(bool msg)
             s = ET_SHIELD;
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
+        // Missing hands mean fewer rings
+        else if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING &&
+                    player_mutation_level(MUT_MISSING_HAND))
+            continue;
         // Octopodes don't count these slots:
         else if (you.species == SP_OCTOPODE &&
-                 (i == EQ_LEFT_RING || i == EQ_RIGHT_RING))
+                 ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
+                    || (i == EQ_RING_EIGHT
+                        && player_mutation_level(MUT_MISSING_HAND))))
         {
             continue;
         }
@@ -207,7 +211,8 @@ void ash_check_bondage(bool msg)
                 const item_def& item = you.inv[you.equip[i]];
                 if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
                 {
-                    if (s == ET_WEAPON && _two_handed())
+                    if (s == ET_WEAPON && (_two_handed() ||
+                        player_mutation_level(MUT_MISSING_HAND)))
                     {
                         cursed[ET_WEAPON] = 3;
                         cursed[ET_SHIELD] = 3;
@@ -215,11 +220,8 @@ void ash_check_bondage(bool msg)
                     else
                     {
                         cursed[s]++;
-                        if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item)
-                            && item.special == UNRAND_LEAR)
-                        {
+                        if (i == EQ_BODY_ARMOUR && is_unrandom_artefact(item, UNRAND_LEAR))
                             cursed[s] += 3;
-                        }
                     }
                 }
             }
@@ -273,12 +275,11 @@ void ash_check_bondage(bool msg)
     {
         you.bondage[s] = new_bondage[s];
         map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(s));
-        for (map<skill_type, int8_t>::iterator it = boosted_skills.begin();
-             it != boosted_skills.end(); ++it)
+        for (const auto &entry : boosted_skills)
         {
-            you.skill_boost[it->first] += it->second;
-            if (you.skill_boost[it->first] > 3)
-                you.skill_boost[it->first] = 3;
+            you.skill_boost[entry.first] += entry.second;
+            if (you.skill_boost[entry.first] > 3)
+                you.skill_boost[entry.first] = 3;
         }
 
     }
@@ -499,21 +500,17 @@ void ash_id_monster_equipment(monster* mon)
 
 static bool is_ash_portal(dungeon_feature_type feat)
 {
-    if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL)
+    if (feat_is_portal_entrance(feat))
         return true;
     switch (feat)
     {
     case DNGN_ENTER_HELL:
-    case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_ABYSS: // for completeness
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     // DNGN_TRANSIT_PANDEMONIUM is too mundane
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_PORTAL_VAULT:
-#endif
         return true;
     default:
         return false;
@@ -527,7 +524,7 @@ static bool _check_portal(coord_def where)
     if (feat != env.map_knowledge(where).feat() && is_ash_portal(feat))
     {
         env.map_knowledge(where).set_feature(feat);
-        env.map_knowledge(where).flags |= MAP_MAGIC_MAPPED_FLAG;
+        set_terrain_mapped(where);
 
         if (!testbits(env.pgrid(where), FPROP_SEEN_OR_NOEXP))
         {
@@ -659,6 +656,10 @@ int ash_skill_boost(skill_type sk, int scale)
     // high bonus   -> factor = 7
 
     unsigned int skill_points = you.skill_points[sk];
+
+    for (skill_type cross : get_crosstrain_skills(sk))
+        skill_points += you.skill_points[cross] * 2 / 5;
+
     skill_points += (you.skill_boost[sk] * 2 + 1) * piety_rank()
                     * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
 
@@ -673,7 +674,7 @@ int ash_skill_boost(skill_type sk, int scale)
 
 int gozag_gold_in_los(actor *who)
 {
-    if (!you_worship(GOD_GOZAG) || player_under_penance())
+    if (!in_good_standing(GOD_GOZAG))
         return 0;
 
     int gold_count = 0;
@@ -693,24 +694,27 @@ int gozag_gold_in_los(actor *who)
 
 int qazlal_sh_boost(int piety)
 {
-    if (!you_worship(GOD_QAZLAL)
-        || player_under_penance(GOD_QAZLAL)
-        || piety < piety_breakpoint(0))
-    {
+    if (!in_good_standing(GOD_QAZLAL, 0))
         return 0;
-    }
 
     return min(piety, piety_breakpoint(5)) / 10;
 }
 
+// Not actually passive, but placing it here so that it can be easily compared
+// with Qazlal's boost. Here you.attribute[ATTR_DIVINE_SHIELD] was set
+// to 3 + you.skill_rdiv(SK_INVOCATIONS, 1, 5) (and decreases at end of dur).
+int tso_sh_boost()
+{
+    if (!you.duration[DUR_DIVINE_SHIELD])
+        return 0;
+
+    return you.attribute[ATTR_DIVINE_SHIELD] * 4;
+}
+
 void qazlal_storm_clouds()
 {
-    if (!you_worship(GOD_QAZLAL)
-        || player_under_penance(GOD_QAZLAL)
-        || you.piety < piety_breakpoint(0))
-    {
+    if (!in_good_standing(GOD_QAZLAL, 0))
         return;
-    }
 
     // You are a *storm*. You are pretty loud!
     noisy(min((int)you.piety, piety_breakpoint(5)) / 10, you.pos());
@@ -755,7 +759,7 @@ void qazlal_storm_clouds()
         do
         {
             ctype = random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
-                                       CLOUD_DUST_TRAIL, -1);
+                                       CLOUD_DUST_TRAIL);
         } while (water && ctype == CLOUD_FIRE);
 
         place_cloud(ctype, candidates[i], random_range(3, 5), &you);
@@ -766,9 +770,7 @@ void qazlal_storm_clouds()
 void qazlal_element_adapt(beam_type flavour, int strength)
 {
     if (strength <= 0
-        || !you_worship(GOD_QAZLAL)
-        || player_under_penance(GOD_QAZLAL)
-        || you.piety < piety_breakpoint(4)
+        || !in_good_standing(GOD_QAZLAL, 4)
         || !x_chance_in_y(strength, 12 - piety_rank()))
     {
         return;
@@ -840,4 +842,43 @@ void qazlal_element_adapt(beam_type flavour, int strength)
 
     if (what == BEAM_MISSILE)
         you.redraw_armour_class = true;
+}
+
+/**
+ * Determine whether a Ru worshipper will attempt to interfere with an attack
+ * against the player.
+ *
+ * @return bool Whether or not whether the worshipper will attempt to interfere.
+ */
+bool does_ru_wanna_redirect(monster* mon)
+{
+    return you_worship(GOD_RU)
+            && you.piety >= piety_breakpoint(0)
+            && !mon->friendly()
+            && you.see_cell(mon->pos())
+            && !mons_is_firewood(mon)
+            && !mon->submerged()
+            && !mons_is_projectile(mon->type);
+}
+
+/**
+ * Determine which, if any, action Ru takes on a possible attack.
+ *
+ * @return ru_interference
+ */
+ru_interference get_ru_attack_interference_level()
+{
+    int r = random2(100);
+    int chance = div_rand_round(you.piety, 16);
+
+    // 10% chance of stopping any attack at max piety
+    if (r < chance)
+        return DO_BLOCK_ATTACK;
+
+    // 5% chance of redirect at max piety
+    else if (r < chance + div_rand_round(chance, 2))
+        return DO_REDIRECT_ATTACK;
+
+    else
+        return DO_NOTHING;
 }

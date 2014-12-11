@@ -2,7 +2,8 @@
 #define MON_INFO_H
 
 #include "mon-util.h"
-#include "mon-message.h"
+
+#define SPECIAL_WEAPON_KEY "special_weapon_name"
 
 enum monster_info_flags
 {
@@ -128,6 +129,12 @@ enum monster_info_flags
     MB_SLOW_MOVEMENT,
     MB_LIGHTLY_DRAINED,
     MB_HEAVILY_DRAINED,
+    MB_REPEL_MSL,
+    MB_NEGATIVE_VULN,
+    MB_CONDENSATION_SHIELD,
+    MB_RESISTANCE,
+    MB_HEXED,
+    MB_BONE_ARMOUR,
     NUM_MB_FLAGS
 };
 
@@ -139,8 +146,14 @@ struct monster_info_base
     monster_type type;
     monster_type base_type;
     monster_type draco_type;
-    unsigned number;
-    unsigned colour;
+    union
+    {
+        unsigned number; ///< General purpose number variable
+        int num_heads;   ///< # of hydra heads
+        int slime_size;  ///< # of slimes in this one
+        bool is_active;  ///< Whether this ballisto is active or not
+    };
+    int _colour;
     mon_attitude_type attitude;
     mon_threat_level_type threat;
     mon_dam_level_type dam;
@@ -150,6 +163,9 @@ struct monster_info_base
     string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
+    int ac;
+    int ev;
+    int base_ev;
     resists_t mresists;
     mon_itemuse_type mitemuse;
     int mbase_speed;
@@ -192,7 +208,6 @@ struct monster_info : public monster_info_base
             if (mi.inv[i].get())
                 inv[i].reset(new item_def(*mi.inv[i]));
         }
-        props = mi.props;
     }
 
     monster_info& operator=(const monster_info& p)
@@ -245,9 +260,6 @@ struct monster_info : public monster_info_base
 
     string db_name() const;
     bool has_proper_name() const;
-    dungeon_feature_type get_mimic_feature() const;
-    const item_def* get_mimic_item() const;
-    string mimic_name() const;
     string pluralised_name(bool fullname = true) const;
     string common_name(description_level_type desc = DESC_PLAIN) const;
     string proper_name(description_level_type desc = DESC_PLAIN) const;
@@ -294,6 +306,8 @@ struct monster_info : public monster_info_base
         return mbase_speed;
     }
 
+    string speed_description() const;
+
     bool wields_two_weapons() const;
     bool can_regenerate() const;
     reach_type reach_range() const;
@@ -311,27 +325,19 @@ struct monster_info : public monster_info_base
         return !mname.empty() || mons_is_unique(type);
     }
 
-    bool is_spellcaster() const
-    {
-        return mons_class_flag(this->type, M_SPELLCASTER) || this->props.exists("custom_spells");
-    }
-
     bool is_actual_spellcaster() const
     {
-        return mons_class_flag(this->type, M_ACTUAL_SPELLS) || this->props.exists("actual_spellcaster");
+        return props.exists("actual_spellcaster");
     }
 
     bool is_priest() const
     {
-        return mons_class_flag(this->type, M_PRIEST) || this->props.exists("priest");
-    }
-
-    bool is_natural_caster() const
-    {
-        return mons_class_flag(this->type, M_FAKE_SPELLS) || this->props.exists("fake_spells");
+        return props.exists("priest");
     }
 
     bool has_spells() const;
+    unsigned colour(bool base_colour = false) const;
+    void set_colour(int colour);
 
 protected:
     string _core_name() const;

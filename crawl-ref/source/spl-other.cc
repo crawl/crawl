@@ -7,34 +7,22 @@
 #include "AppHdr.h"
 
 #include "spl-other.h"
-#include "externs.h"
 
 #include "act-iter.h"
-#include "coord.h"
 #include "delay.h"
 #include "env.h"
 #include "food.h"
 #include "godcompanions.h"
-#include "godconduct.h"
-#include "itemname.h"
-#include "itemprop.h"
-#include "items.h"
 #include "libutil.h"
-#include "makeitem.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"
-#include "mon-util.h"
 #include "place.h"
-#include "player.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "religion.h"
-#include "rot.h"
 #include "spl-util.h"
-#include "stuff.h"
 #include "terrain.h"
-#include "transform.h"
 
 spret_type cast_cure_poison(int pow, bool fail)
 {
@@ -76,7 +64,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
         const int minhp = max(div_rand_round(you.hp, 10), 1);
 
         while (you.magic_points < you.max_magic_points && you.hp > minhp
-               && (you.is_undead != US_SEMI_UNDEAD
+               && (you.undead_state() != US_SEMI_UNDEAD
                    || you.hunger - food >= HUNGER_SATIATED))
         {
             fail_check();
@@ -85,10 +73,10 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             inc_mp(1);
             dec_hp(1, false);
 
-            if (you.is_undead == US_SEMI_UNDEAD)
+            if (you.undead_state() == US_SEMI_UNDEAD)
                 food += 15;
 
-            for (int loopy = 0; loopy < (you.hp > minhp ? 3 : 0); ++loopy)
+            for (int i = 0; i < (you.hp > minhp ? 3 : 0); ++i)
                 if (x_chance_in_y(6, pow))
                     dec_hp(1, false);
 
@@ -128,15 +116,11 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
 spret_type cast_recall(bool fail)
 {
     fail_check();
-    start_recall(0);
+    start_recall(RECALL_SPELL);
     return SPRET_SUCCESS;
 }
 
-// Type recalled:
-// 0 = anything
-// 1 = undead only (Yred religion ability)
-// 2 = orcs only (Beogh religion ability)
-void start_recall(int type)
+void start_recall(recall_t type)
 {
     // Assemble the recall list.
     typedef pair<mid_t, int> mid_hd;
@@ -148,12 +132,12 @@ void start_recall(int type)
         if (!mons_is_recallable(&you, *mi))
             continue;
 
-        if (type == 1) // undead
+        if (type == RECALL_YRED)
         {
             if (mi->holiness() != MH_UNDEAD)
                 continue;
         }
-        else if (type == 2) // Beogh
+        else if (type == RECALL_BEOGH)
         {
             if (!is_orcish_follower(*mi))
                 continue;
@@ -163,19 +147,19 @@ void start_recall(int type)
         rlist.push_back(m);
     }
 
-    if (type > 0 && branch_allows_followers(you.where_are_you))
+    if (type != RECALL_SPELL && branch_allows_followers(you.where_are_you))
         populate_offlevel_recall_list(rlist);
 
     if (!rlist.empty())
     {
-        // Sort the recall list roughly by HD, randomizing a little
-        for (unsigned int i = 0; i < rlist.size(); ++i)
-            rlist[i].second += random2(10);
+        // Sort the recall list roughly
+        for (mid_hd &entry : rlist)
+            entry.second += random2(10);
         sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
 
         you.recall_list.clear();
-        for (unsigned int i = 0; i < rlist.size(); ++i)
-            you.recall_list.push_back(rlist[i].first);
+        for (mid_hd &entry : rlist)
+            you.recall_list.push_back(entry.first);
 
         you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
         you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
@@ -333,9 +317,10 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 
     // Below here, failing to cast yields information to the
     // player, so we don't make the spell abort (return true).
+    monster *mon = monster_at(dest);
     if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
-    else if (cell_is_solid(dest))
+    else if (cell_is_solid(dest) || (mon && mon->is_stationary()))
         mpr("Something is blocking your path through the rock.");
     else if (walls > maxrange)
         mpr("This rock feels extremely deep.");
@@ -361,7 +346,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
     monster* mons = monster_at(where);
-    if (mons == NULL
+    if (mons == nullptr
         || mons_intel(mons) < I_NORMAL
         || mons->holiness() != MH_NATURAL
         || mons->res_poison() > 0)
@@ -385,7 +370,7 @@ spret_type cast_intoxicate(int pow, bool fail)
     fail_check();
     mpr("You radiate an intoxicating aura.");
     if (x_chance_in_y(60 - pow/3, 100))
-        potion_effect(POT_CONFUSION, 10 + (100 - pow) / 10);
+        confuse_player(3+random2(10 + (100 - pow) / 10));
 
     if (one_chance_in(20)
         && lose_stat(STAT_INT, 1 + random2(3), false,
@@ -409,7 +394,7 @@ spret_type cast_condensation_shield(int pow, bool fail)
 {
     if (you.shield())
     {
-        canned_msg(MSG_SPELL_FIZZLES);
+        mpr("You can't cast this spell while wearing a shield.");
         return SPRET_ABORT;
     }
 
@@ -467,6 +452,12 @@ spret_type cast_stoneskin(int pow, bool fail)
         mpr("Your stone body feels more resilient.");
     else
         mpr("Your skin hardens.");
+
+    if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+    {
+        you.attribute[ATTR_BONE_ARMOUR] = 0;
+        mpr("Your corpse armour falls away.");
+    }
 
     you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
     you.props[STONESKIN_KEY] = pow;

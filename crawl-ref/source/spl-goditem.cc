@@ -5,16 +5,12 @@
 
 #include "AppHdr.h"
 
-#include "externs.h"
 #include "spl-goditem.h"
 
-#include "artefact.h"
-#include "attitude-change.h"
 #include "cloud.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
-#include "decks.h"
+#include "directn.h"
 #include "env.h"
 #include "godconduct.h"
 #include "godpassive.h"
@@ -22,25 +18,20 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
-#include "map_knowledge.h"
 #include "mapdef.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-death.h"
-#include "mon-util.h"
-#include "options.h"
-#include "random.h"
+#include "mon-tentacle.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "status.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
-#include "tilepick.h"
-#include "transform.h"
 #include "traps.h"
 #include "view.h"
 
@@ -157,10 +148,10 @@ static int _can_pacify_monster(const monster* mon, const int healed,
 
 static vector<string> _desc_mindless(const monster_info& mi)
 {
-    vector<string> descs;
     if (mi.intel() <= I_INSECT)
-        descs.push_back("mindless");
-    return descs;
+        return { "mindless" };
+    else
+        return {};
 }
 
 static spret_type _healing_spell(int healed, int max_healed,
@@ -179,7 +170,7 @@ static spret_type _healing_spell(int healed, int max_healed,
                                       you_worship(GOD_ELYVILON) ?
                                             TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS, false, true, true, "Heal",
-                                      NULL, false, NULL, _desc_mindless);
+                                      nullptr, false, nullptr, _desc_mindless);
     }
     else
     {
@@ -343,52 +334,7 @@ spret_type cast_healing(int pow, int max_pow, bool divine_ability,
  */
 void debuff_player()
 {
-    duration_type dur_list[] =
-    {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_SLOW,
-        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_CONFUSING_TOUCH,
-        DUR_SURE_BLADE, DUR_CORONA, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR,
-        DUR_SWIFTNESS, DUR_CONTROL_TELEPORT, DUR_DEATH_CHANNEL,
-        DUR_PHASE_SHIFT, DUR_WEAPON_BRAND, DUR_SILENCE,
-        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_RESISTANCE,
-        DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING,
-        DUR_DARKNESS, DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION,
-        DUR_SENTINEL_MARK, DUR_ANTIMAGIC /*!*/, DUR_REGENERATION,
-        DUR_TOXIC_RADIANCE, DUR_FIRE_VULN, DUR_POISON_VULN,
-        DUR_SAP_MAGIC, DUR_MAGIC_SAPPED,
-        DUR_PORTAL_PROJECTILE, DUR_DIMENSION_ANCHOR,
-    };
-
-    bool need_msg = false;
-
-    // don't instakill the player by removing flight
-    if (!you.permanent_flight())
-    {
-        if (you.duration[DUR_FLIGHT] > 11)
-        {
-            you.duration[DUR_FLIGHT] = 11;
-            need_msg = true;
-        }
-
-        // too many forms; confusing to players & devs both to special case.
-        if (you.duration[DUR_TRANSFORMATION] > 11)
-        {
-            you.duration[DUR_TRANSFORMATION] = 11;
-            need_msg = true;
-        }
-    }
-
-    if (you.duration[DUR_TELEPORT] > 0)
-    {
-        you.duration[DUR_TELEPORT] = 0;
-        mprf(MSGCH_DURATION, "You feel strangely stable.");
-    }
-
-    if (you.duration[DUR_PETRIFYING] > 0)
-    {
-        you.duration[DUR_PETRIFYING] = 0;
-        mprf(MSGCH_DURATION, "You feel limber!");
-    }
+    bool need_msg = false, danger = false;
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
     {
@@ -397,24 +343,52 @@ void debuff_player()
     }
 
     if (you.attribute[ATTR_REPEL_MISSILES])
-        you.attribute[ATTR_REPEL_MISSILES] = 0;
-
-    if (you.attribute[ATTR_DEFLECT_MISSILES])
-        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
-
-    if (you.attribute[ATTR_SWIFTNESS] > 0)
-        you.attribute[ATTR_SWIFTNESS] = 0;
-
-    for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
     {
-        if (you.duration[dur_list[i]] > 1)
-        {
-            you.duration[dur_list[i]] = 1;
-            need_msg = true;
-        }
+        you.attribute[ATTR_REPEL_MISSILES] = 0;
+        need_msg = true;
     }
 
-    bool danger = need_expiration_warning(you.pos());
+    if (you.attribute[ATTR_DEFLECT_MISSILES])
+    {
+        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+        need_msg = true;
+    }
+
+    if (you.attribute[ATTR_SWIFTNESS] > 0)
+    {
+        you.attribute[ATTR_SWIFTNESS] = 0;
+        need_msg = true;
+    }
+
+    for (unsigned int i = 0; i < NUM_DURATIONS; ++i)
+    {
+        int& dur = you.duration[i];
+        if (duration_dispellable((duration_type) i) && dur > 0)
+        {
+            if ((i == DUR_FLIGHT || i == DUR_TRANSFORMATION) && dur > 11)
+            {
+                dur = 11;
+                need_msg = true;
+                danger = need_expiration_warning(you.pos());
+            }
+            else if (i == DUR_TELEPORT)
+            {
+                dur = 0;
+                mprf(MSGCH_DURATION, "You feel strangely stable.");
+            }
+            else if (i == DUR_PETRIFYING)
+            {
+                dur = 0;
+                mprf(MSGCH_DURATION, "You feel limber!");
+                you.redraw_evasion = true;
+            }
+            else if (dur > 1)
+            {
+                dur = 1;
+                need_msg = true;
+            }
+        }
+    }
 
     if (need_msg)
     {
@@ -429,12 +403,13 @@ void debuff_player()
 void debuff_monster(monster* mon)
 {
     // List of magical enchantments which will be dispelled.
-    const enchant_type lost_enchantments[] =
+    static const enchant_type lost_enchantments[] =
     {
         ENCH_SLOW,
         ENCH_HASTE,
         ENCH_SWIFT,
         ENCH_MIGHT,
+        ENCH_AGILE,
         ENCH_FEAR,
         ENCH_CONFUSION,
         ENCH_INVIS,
@@ -447,34 +422,39 @@ void debuff_monster(monster* mon)
         ENCH_STICKY_FLAME,
         ENCH_TP,
         ENCH_INNER_FLAME,
-        ENCH_OZOCUBUS_ARMOUR
+        ENCH_OZOCUBUS_ARMOUR,
+        ENCH_INJURY_BOND,
+        ENCH_DIMENSION_ANCHOR,
+        ENCH_CONTROL_WINDS,
+        ENCH_TOXIC_RADIANCE,
+        ENCH_AGILE,
+        ENCH_EPHEMERAL_INFUSION,
+        ENCH_BLACK_MARK,
+        ENCH_SHROUD,
+        ENCH_SAP_MAGIC,
+        ENCH_REPEL_MISSILES,
+        ENCH_DEFLECT_MISSILES,
+        ENCH_CONDENSATION_SHIELD,
+        ENCH_RESISTANCE,
+        ENCH_HEXED,
     };
 
     bool dispelled = false;
 
     // Dispel all magical enchantments...
-    for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
+    for (enchant_type ench : lost_enchantments)
     {
-        if (lost_enchantments[i] == ENCH_INVIS)
-        {
-            // ...except for natural invisibility.
-            if (mons_class_flag(mon->type, M_INVIS))
-                continue;
-        }
-        if (lost_enchantments[i] == ENCH_CONFUSION)
-        {
-            // Don't dispel permaconfusion.
-            if (mons_class_flag(mon->type, M_CONFUSED))
-                continue;
-        }
-        if (lost_enchantments[i] == ENCH_REGENERATION)
-        {
-            // Don't dispel regen if it's from Trog.
-            if (mon->has_ench(ENCH_RAISED_MR))
-                continue;
-        }
+        // ...except for natural invisibility...
+        if (ench == ENCH_INVIS && mons_class_flag(mon->type, M_INVIS))
+            continue;
+        // ...permaconfusion...
+        if (ench == ENCH_CONFUSION && mons_class_flag(mon->type, M_CONFUSED))
+            continue;
+        // ...and regeneration from Trog.
+        if (ench == ENCH_REGENERATION && mon->has_ench(ENCH_RAISED_MR))
+            continue;
 
-        if (mon->del_ench(lost_enchantments[i], true, true))
+        if (mon->del_ench(ench, true, true))
             dispelled = true;
     }
     if (dispelled)
@@ -511,10 +491,6 @@ int detect_items(int pow)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
-        // Don't you love the 0,5 shop hack?
-        if (!in_bounds(*ri))
-            continue;
-
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
@@ -611,7 +587,7 @@ int detect_creatures(int pow, bool telepathic)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
-        discover_mimic(*ri, false);
+        discover_mimic(*ri);
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
@@ -626,13 +602,13 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _selectively_remove_curse(string *pre_msg)
+static bool _selectively_remove_curse(const string &pre_msg)
 {
     bool used = false;
 
     while (1)
     {
-        if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
+        if (!any_items_of_type(OSEL_CURSED_WORN) && used)
         {
             mpr("You have uncursed all your worn items.");
             return used;
@@ -654,15 +630,15 @@ static bool _selectively_remove_curse(string *pre_msg)
             continue;
         }
 
-        if (!used && pre_msg)
-            mprf("%s", pre_msg->c_str());
+        if (!used && !pre_msg.empty())
+            mpr(pre_msg);
 
         do_uncurse_item(item, true, false, false);
         used = true;
     }
 }
 
-bool remove_curse(bool alreadyknown, string *pre_msg)
+bool remove_curse(bool alreadyknown, const string &pre_msg)
 {
     if (you_worship(GOD_ASHENZARI) && alreadyknown)
     {
@@ -701,8 +677,8 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
 
     if (success)
     {
-        if (pre_msg)
-            mprf("%s", pre_msg->c_str());
+        if (!pre_msg.empty())
+            mpr(pre_msg);
         mpr("You feel as if something is helping you.");
         learned_something_new(HINT_REMOVED_CURSE);
     }
@@ -710,15 +686,15 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
         mprf(MSGCH_PROMPT, "None of your equipped items are cursed.");
     else
     {
-        if (pre_msg)
-            mprf("%s", pre_msg->c_str());
+        if (!pre_msg.empty())
+            mpr(pre_msg);
         mpr("You feel blessed for a moment.");
     }
 
     return success;
 }
 
-static bool _selectively_curse_item(bool armour, string *pre_msg)
+static bool _selectively_curse_item(bool armour, const string &pre_msg)
 {
     while (1)
     {
@@ -742,15 +718,15 @@ static bool _selectively_curse_item(bool armour, string *pre_msg)
             continue;
         }
 
-        if (pre_msg)
-            mprf("%s", pre_msg->c_str());
+        if (!pre_msg.empty())
+            mpr(pre_msg);
         do_curse_item(item, false);
         learned_something_new(HINT_YOU_CURSED);
         return true;
     }
 }
 
-bool curse_item(bool armour, string *pre_msg)
+bool curse_item(bool armour, const string &pre_msg)
 {
     // Make sure there's something to curse first.
     bool found = false;
@@ -782,9 +758,9 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     // as more or less the theoretical maximum.
     int number_built = 0;
 
-    const dungeon_feature_type safe_tiles[] =
+    static const set<dungeon_feature_type> safe_tiles =
     {
-        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
+        DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
     };
 
     bool proceed;
@@ -864,9 +840,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         proceed = false;
         if (!zin && !monster_at(*ai))
         {
-            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
-                    proceed = true;
+            if (feat_is_trap(grd(*ai), true) || feat_is_stone_stair(grd(*ai))
+                || safe_tiles.count(grd(*ai)))
+            {
+                proceed = true;
+            }
         }
         else if (zin && !cell_is_solid(*ai))
             proceed = true;
@@ -877,7 +855,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (igrd(*ai) != NON_ITEM)
             {
                 coord_def newpos;
-                get_push_space(*ai, newpos, NULL, true);
+                get_push_space(*ai, newpos, nullptr, true);
                 move_items(*ai, newpos);
             }
 
@@ -988,7 +966,7 @@ bool cast_imprison(int pow, monster* mons, int source)
 
 bool cast_smiting(int pow, monster* mons)
 {
-    if (mons == NULL || mons->submerged())
+    if (mons == nullptr || mons->submerged())
     {
         canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to invisible/submerged monsters.

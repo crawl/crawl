@@ -7,13 +7,13 @@
 
 #include "player.h"
 
+#include "areas.h"
 #include "coord.h"
 #include "env.h"
 #include "fprop.h"
-#include "mon-util.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "state.h"
-#include "areas.h"
 
 // Add a monster to the list of fearmongers.
 bool player::add_fearmonger(const monster* mon)
@@ -34,7 +34,7 @@ bool player::add_fearmonger(const monster* mon)
     if (!duration[DUR_AFRAID])
     {
         set_duration(DUR_AFRAID, 7, 12);
-        fearmongers.push_back(mon->mindex());
+        fearmongers.push_back(mon->mid);
         mprf(MSGCH_WARN, "You are terrified of %s!",
                          mon->name(DESC_THE).c_str());
     }
@@ -42,7 +42,7 @@ bool player::add_fearmonger(const monster* mon)
     {
         increase_duration(DUR_AFRAID, 5, 12);
         if (!afraid_of(mon))
-            fearmongers.push_back(mon->mindex());
+            fearmongers.push_back(mon->mid);
     }
 
     return true;
@@ -58,41 +58,42 @@ bool player::afraid() const
 // Whether player is afraid of the given monster.
 bool player::afraid_of(const monster* mon) const
 {
-    for (unsigned int i = 0; i < fearmongers.size(); i++)
-        if (fearmongers[i] == mon->mindex())
-            return true;
-    return false;
+    return find(begin(fearmongers), end(fearmongers), mon->mid)
+               != end(fearmongers);
 }
 
 // Checks whether a fearmonger keeps you from moving to
 // target, and returns one if it exists.
 monster* player::get_fearmonger(const coord_def &target) const
 {
-    for (unsigned int i = 0; i < fearmongers.size(); i++)
+    for (mid_t monger : fearmongers)
     {
-        monster* mon = &menv[fearmongers[i]];
+        monster* mon = monster_by_mid(monger);
+        // The monster may have died.
+        if (!mon)
+            continue;
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
         if (olddist > newdist)
             return mon;
     }
-    return NULL;
+    return nullptr;
 }
 
 monster* player::get_any_fearmonger() const
 {
     if (!fearmongers.empty())
-        return &menv[fearmongers[0]];
+        return monster_by_mid(fearmongers[0]);
     else
-        return NULL;
+        return nullptr;
 }
 
 // Removes a monster from the list of fearmongers if present.
 void player::remove_fearmonger(const monster* mon)
 {
     for (unsigned int i = 0; i < fearmongers.size(); i++)
-        if (fearmongers[i] == mon->mindex())
+        if (fearmongers[i] == mon->mid)
         {
             fearmongers.erase(fearmongers.begin() + i);
             _removed_fearmonger();
@@ -134,7 +135,7 @@ void player::update_fearmongers()
     bool removed = false;
     for (int i = fearmongers.size() - 1; i >= 0; i--)
     {
-        const monster* mon = &menv[fearmongers[i]];
+        const monster* mon = monster_by_mid(fearmongers[i]);
         if (!_possible_fearmonger(mon))
         {
             fearmongers.erase(fearmongers.begin() + i);
@@ -157,9 +158,12 @@ void player::update_fearmonger(const monster* mon)
     if (_possible_fearmonger(mon))
         return;
     for (unsigned int i = 0; i < fearmongers.size(); i++)
-        if (fearmongers[i] == mon->mindex())
+        if (fearmongers[i] == mon->mid)
         {
             fearmongers.erase(fearmongers.begin() + i);
+            // Do this dance to clear the duration before printing messages
+            // (#8844), but still print all messages in the right order.
+            _removed_fearmonger(true);
             _removed_fearmonger_msg(mon);
             _removed_fearmonger();
             return;
@@ -185,7 +189,7 @@ bool player::_possible_fearmonger(const monster* mon) const
     if (crawl_state.game_is_arena())
         return false;
 
-    return mon->alive()
+    return mon && mon->alive()
         && !silenced(pos()) && !silenced(mon->pos())
         && see_cell(mon->pos()) && mon->see_cell(pos())
         && !mon->submerged() && !mon->confused()

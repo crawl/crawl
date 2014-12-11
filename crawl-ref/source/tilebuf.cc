@@ -8,6 +8,7 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilebuf.h"
+
 #include "tilefont.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -294,7 +295,7 @@ void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 /////////////////////////////////////////////////////////////////////////////
 // LineBuffer
 
-LineBuffer::LineBuffer() : VertBuffer(false, true, NULL, GLW_LINES)
+LineBuffer::LineBuffer() : VertBuffer(false, true, nullptr, GLW_LINES)
 {
     m_state.array_colour = true;
 }

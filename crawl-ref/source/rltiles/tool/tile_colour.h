@@ -63,6 +63,7 @@ public:
     // Get the HSL luminance, from 0..1.
     float get_lum() const;
 
+    // The order of these fields is significant -- see tile::load
     unsigned char r;
     unsigned char g;
     unsigned char b;

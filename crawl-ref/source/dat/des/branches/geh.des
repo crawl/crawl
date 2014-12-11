@@ -4,8 +4,9 @@
 #          Geh (order: Dis, Geh, Coc, Tar)
 ##############################################################################
 
-{{
+: require('dlua/vault.lua')
 
+{{
 function geh_setup(e)
    e.place("Geh:7")
    e.lflags("no_tele_control")
@@ -18,41 +19,6 @@ function geh_setup(e)
    e.set_feature_name("floor", "Ashen ground")
    e.set_feature_name("metal_wall", "tempered metal wall")
 end
-
--- the Serpent should appear in exactly one hell end
--- XXX: are things like shafts going to break this?
-function hell_branches_remaining()
-   local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
-   local ret = #hell_branches
-   for _, branch in pairs(hell_branches) do
-      if travel.find_deepest_explored(branch) == 7 then
-         ret = ret - 1
-      end
-   end
-   return ret
-end
-
-function serpent_of_hell_setup(e)
-   if not you.uniques("the Serpent of Hell") and
-      crawl.one_chance_in(hell_branches_remaining()) then
-      e.kmons('D = the Serpent of Hell')
-   end
-end
-
-function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
-    if not dgn.persist.grunt_iron_hall_animated then
-        dgn.persist.grunt_iron_hall_animated = true
-        for slave in iter.slave_iterator("trap_statue", 1) do
-        if crawl.one_chance_in(4) then
-            dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
-            dgn.create_monster(slave.x, slave.y,
-                               "patrolling iron golem generate_awake")
-        end
-    end
-    crawl.mpr("You hear the creaking of ancient metal!", "warning")
-    end
-end
-
 }}
 
 
@@ -189,13 +155,13 @@ KPROP:   l = no_cloud_gen
 KMONS:   1 = ice fiend
 KMONS:   2 = blizzard demon
 KMONS:   34 = ice devil / blue devil
-KMONS:   56 = reaper ; scythe ego:freezing ident:type
+KMONS:   56 = reaper ; scythe ego:freezing ident:type / shard shrike w:5
 KMONS:   7 = alligator snapping turtle skeleton / anaconda simulacrum / \
          golden dragon simulacrum w:5 / iron troll simulacrum w:5 / hydra simulacrum
 KMONS:   0 = skeletal warrior ; hunting sling ego:freezing ident:type . sling bullet
 SUBST:   l = w, W = .
 :  else
-KMONS:   1 = kraken simulacrum
+KMONS:   1 = shard shrike
 KMONS:   2 = seven-headed hydra simulacrum / eight-headed hydra simulacrum
 KMONS:   3 = orb of fire / hellephant w:5
 KMONS:   4 = draconian scorcher
@@ -230,11 +196,12 @@ TAGS:    no_monster_gen no_pool_fixup allow_dup
 DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
 SHUFFLE: 123456, }] / }] / {[ / **
 :  if you.branch() == "Geh" then
-MONS:    brimstone fiend / balrug / hellion, sun demon / smoke demon / \
-         hell knight
+MONS:    brimstone fiend / balrug / hellion
+MONS:    sun demon / smoke demon / hell knight
 SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
 :  elseif you.branch() == "Coc" then
-MONS:    ice fiend / blizzard demon / reaper ; scythe ego:freezing ident:type
+MONS:    ice fiend / blizzard demon / shard shrike / \
+         reaper ; scythe ego:freezing ident:type
 MONS:    eight-headed hydra simulacrum w:2 / \
          seven-headed hydra simulacrum w:2 / \
          ice dragon simulacrum w:3 / freezing wraith w:3 / ice devil
@@ -286,6 +253,8 @@ xxcclccclccccc4..wccx
           xxcc...cx
            xxx+++xx
 ENDMAP
+
+##############################################################################
 
 NAME:    nicolae_geh_sunburst
 DEPTH:   Geh, !Geh:$
@@ -382,15 +351,52 @@ Cbbc
 Cbbc
 ENDMAP
 
+NAME:    hangedman_gehenna_grave_pits
+TAGS:    transparent extra decor allow_dup luniq
+DEPTH:   Geh, !Geh:$
+KFEAT:   ' = open_door
+# Randomized: lava pit edges, extra entrance, door pair openness.
+SUBST:   ! = {[(<}])> ':40 +:40 .:120
+SUBST:   d : ++++', e : +++++'", f : +++++'", g : +++++'"
+SHUFFLE: C`D- / C`D- / C`D- / E~F_, GH / GH / HG, JK / JK / KJ
+SUBST:   CFHK = c, - : ccc+, ~E = ., GJ = l
+CLEAR:   D`
+MARKER:  " = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 8, pow_max = 10, delay = 100, \
+             size_min = 1, size_max = 1, start_clouds = 1, excl_rad = 0 }
+FTILE:   " = floor_volcanic
+MAP
+       cc@.c
+   DDDcc...cc
+  DD``C.....c
+  D```C.....ccccccc
+  ccc-cc+c+cccccGGc
+  cclllc........llc
+cccclllc..."....llc
+cKKccecccdcccfccHHc
+cll...."...clllcccc
+cll........clllcccc
+cJJccgccc!cccgccJJc
+cccclllc........llc
+cccclllc..."....llc
+cHHccfcccdccceccKKc
+cll...."...clllcccc
+cll........clllcc
+cGGccccc+c+cc-ccc
+ccccccc.....C```D
+      c.....C``DD
+      cc...ccDDD
+       c.@cc
+ENDMAP
+
 ##############################################################################
 # Asmodeus (Gehenna) - the original
 ##############################################################################
 
 NAME:   geh_old
-ORIENT: encompass
 TAGS:   no_rotate
+ORIENT: encompass
 MONS:   patrolling Asmodeus, brimstone fiend, Balrug, molten gargoyle
-MONS:   nothing, random, random
 : serpent_of_hell_setup(_G)
 : geh_setup(_G)
 MAP
@@ -746,8 +752,8 @@ ENDMAP
 ##############################################################################
 
 NAME: lightli_geh_unto_the_cruel
+TAGS: no_vmirror no_monster_gen
 WEIGHT: 0
-TAGS: no_vmirror
 ORIENT: encompass
 MONS: patrolling Asmodeus
 MONS: smoke demon w:9 / sun demon w:9 / hellion w:1 / balrug w:1
@@ -801,4 +807,105 @@ cc7.c.....6....6......cccccccccccccccccccccccccccccccccc...2...2...2....cccccccc
 ccc..6.......6.......cccccccccccccccccccccccccccccccccA+.2...2...2...ccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# Asmodeus (Gehenna) by hangedman
+##############################################################################
+
+NAME:    geh_hangedman
+ORIENT:  encompass
+MONS:    patrolling Asmodeus, brimstone fiend, balrug, hellion
+MONS:    fire giant, salamander firebrand, hell knight
+KMONS:   y = red devil w:20 / fire elemental / salamander
+KMONS:   Y = molten gargoyle
+KMONS:   zZ = sun demon / efreet / smoke demon w:5 / \
+              fire dragon skeleton w:5
+KITEM:   $ = $ no_pickup
+KFEAT:   yYZ = lava
+KFEAT:   L = endless_lava
+SHUFFLE: 56, O1 / |0, =- / =- / -=, !? / !? / ?!
+# Just some pillar, door, and floor/wall/lava edge randomization.
+SHUFFLE: ef, hi, def / def / edf / fed, ghi / ghi / hgi / ihg
+SHUFFLE: EF / EF / FE, GH / GH / HG, IJ / IJ / JI
+SHUFFLE: PQ / PQ / QP, RS / RS / SR, TU / TU / UT
+SUBST:   X : ^<>, ^ = xxx., < = xx., > = x.
+SUBST:   ` : `'", ` = ll., ' = l., " = l..
+SUBST:   =! = +, -? = ., dg = v, efhi = .
+SUBST:   EGIPRT = x, FHJQSU = l
+KMASK:   l = no_monster_gen
+: serpent_of_hell_setup(_G)
+: set_border_fill_type("endless_lava")
+: geh_setup(_G)
+MAP
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+LLllllllllllllllllllllllllllllccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxLL
+LLllllllllllllll..............+....4....ccxXXXXXXXXXXXXXXXXXXXXXXXxxLL
+LLlll.........................c++cc+cc++cccX..................[..XXxLL
+LLll.6...........ll````````llcc.........ccc..```````x```````x...{.XxLL
+LLll..vv-vvvvvvvvllllllllllll+...vd3dv...cc..llllllllllllllllll...XxLL
+LLll..v...v$$$.vvYlllllllllllc..f..e..f..cc..lllllllllllllllllll.(XxLL
+LLll..-.$..$.2$vvllllllFFllllc..f..e..f..cc..lllllllllllllllllll..XxLL
+LLll..v...v$..$vvYlllllxxllll+...vd.dv...cc.xlllllll.xllllllllllx.XxLL
+LLll..vv.vv.$$$vvllllllEEllllc.....v.....cc..llxllll.xlllllxllll`.XxLL
+LLll..v$$$.vv=vvvYlllllllllllccc...v...cccc..lllllllllllllllllll`.XxLL
+LLll..v$..$v%%.vvlll..llllllllccv+++++vccc7.lllllxxlllllxxllllll`.XxLL
+LLll..v$2.$=%0%vvlllxx.lllllllc....v....cc..lllllxxlllllxxllllll`.XxLL
+LLll..v.$$$v.%|vvlllxx.llHHlll+.ef*z*fe.cc..lllllllylll.llllllll`.XxLL
+LLll..vvvvvvvvvvvllllllllxxllyc.fdededf.cc..llllllll.$.lllllllll`.XxLL
+LLll..vvvvvvvvvvvl.3lllllGGlll+.ef*+*fe.cc..llxxllll$.$llllxxlll`.XxLL
+LLl..llYlYlYllllll*.llllllllllc....v....cc.xll..llll3$.llll..lllx.XxLL
+LLl..lllllllllll.**.Zlllllllllccc..v..cccc..lllllll.lllyllllllll`.XxLL
+LLl..`llllllllll3..2lllllllllllccv+++vccc7..lllllxxlllllxxllllll`.XxLL
+LLl..`llllll.xxlllZllllllllllllc...v...cc..llllllxxlllllxxllllll`.XxLL
+LLl..`llllll.xxllllllllllllllll+...v...cc..lllllllllllllllllllll`.XxLL
+LLl..`lllllll..lllllllEElllllll+..v7v..cc..llxxxllll.xlllllxllll`.XxLL
+LLl..`llFxElllllllllllExFllllllc...v...cc.xllxxxllll.xllllllllll`.XxLL
+LLl..`llFxEllllllllllllFFllllllccc.v.cccc..llxxxllllllllllllllll`.XxLL
+LLl..`llllllllGxHlllllllllllllllcc+v+ccc7..lllllllllllllll..x.....XxLL
+LLl..`llllllllGxHlllllllllllllllc..5..cc..llllllll..x............XXxLL
+LLl..lllllllllllllllllllllllllll+..v..cc..ll..x..........7ccccccccxxLL
+LLl..lllllllllllllllllllllllllllc.....cc.........7ccccccccccccccccccLL
+LLl..c+cc+cclllyllllllllllllllllccc.ccc....7ccccccccccccccc.....ccccLL
+LLc+cc.....ccc+c+cclllllllllllxxxzc+c....ccccccccccc..7..cc......+.cLL
+LLc.+......cc.....ccc++cclllllx6........cccccc....cc.ivh.+...ii..c.cLL
+LLc.c..ii...+.ivh.cc....ccc+ccx.........c...cc.hg.+..*g*.c..v..v.+.cLL
+LLc.+.v..v..c.*g*..+.gh.cc...cz..d..e..cc...+..iv.c..hvi.+..g..g.c.cLL
+LLc.c.g..g..+.hvi..c.iv..+.v.cc....f...+..v5c...7.+...z..c...hh3.+4cLL
+LLc4+.3hh...c..z...+.7...c5...+...f....cc...+..iv.c..ivh.+..g..g.c.cLL
+LLc.c.g..g..+.ivh..c.iv..+.v.cc..e..d..zc...cc.hg.+..*g*.c..v..v.+.cLL
+LLc.+.v..v..c.*g*..+.gh.cc...c.........xcc+ccc....cc.hvi.+...ii..c.cLL
+LLc.c..ii...+.hvi.cc....ccc+ccxD......6xlllllcc++ccc.....cc......+.cLL
+LLc.+......cc.....ccc++cclllllxx.c+czxxxlllllllllllcc+c+ccc.....cc+cLL
+LLc+cc.....ccc+c+ccllllllllllllccc.cccllllllllllllllllylllcc+cc+c..lLL
+LLl..c+cc+cclllylllllllllllllllc.....clllllllllllllllllllllllllll..lLL
+LLl..llllllllllllllllllllllllll+.v.v.+lllllllllllllllllllllllllll..lLL
+LLl..`llldlllllllllllllllllllllc..5..clllllllllllllllSxRllllllll`..lLL
+LLl..`lldllllllllllllllllllllllcc+v+cclllllllllllllllSxRllllllll`..lLL
+LLll..llllllllllllllllllllllllccc.v.cccllllllUUllllllllllllPxQll`..lLL
+LLll..`llellllllllllllllllllllc...v...cllllllUxTlllllllllllPxQll`..lLL
+LLll..`lelllllllllllllllllllll+..v7v..+lllllllTTlllllll..lllllll`..lLL
+LLll..`lllllllllllllllllllllll+...v...+llllllllllllllllxx.llllll`..lLL
+LLlll..lllflllllllllllllllllllc...v...cllllllllllllZlllxx.llllll`..lLL
+LLlll..`lfllllllllllllllllllllccv+++vcclllllllllll2..3llllllllll`..lLL
+LLlll..`lllZlllllllllllllllllccc..v..ccclllllllllZ.**.lllllllllll..lLL
+LLlll..`llgllllllllllllllllllc....v....cllllllllll.*llllllYlYlYll..lLL
+LLlll..`lglllllllllllllllllllc.ef*+*fe.+lllSSlllll3.lvvvvvvvvvvv..llLL
+LLllll..lllllllllllllllllllly+.fdededf.cyllxxllllllllvvvvvvvvvvv..llLL
+LLllll..`llhlllllllllllllllllc.ef*z*fe.+lllRRll.xxlllvvO%.v$$$.v..llLL
+LLllll..`lhllllllllllllllllllc....v....clllllll.xxlllvv%1%!$.2$v..llLL
+LLllll..`llllllllllllllllllllccv+++++vccllllllll..lllvv.%%v$..$v..llLL
+LLllll..`llillhlllZlllllllllccc...v...ccclllllllllllYvvv!vv.$$$v..llLL
+LLllll..`lillhlllgllflllllllc.....v.....cllllPPllllllvv$$$.vv.vv..llLL
+LLlllll..lllllllgllflllelldl+...vd.dv...+llllxxlllllYvv$..$v...v..llLL
+LLlllll.2.`````lllllllelldllc..f..e..f..cllllQQllllllvv$2.$..$.?..llLL
+LLllv+vv........````llllllllc..f..e..f..clllllllllllYvv.$$$v...v..llLL
+LLllv..vll...........```llll+...vd3dv...+llllllllllllvvvvvvvv?vv..llLL
+LLllv*.+llllllll.........``lcc.........ccll````````ll...........6.llLL
+LLllvvvvlllllllllllll........cc++c+c++cc.........................lllLL
+LLlllllllllllllllllllllll....+....4....+..............llllllllllllllLL
+LLlllllllllllllllllllllllllllcccccccccccllllllllllllllllllllllllllllLL
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 ENDMAP

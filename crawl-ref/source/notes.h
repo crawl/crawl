@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <stdio.h>
+#include <cstdio>
 
 #define MAX_NOTE_PLACE_LEN 8
 
@@ -69,7 +69,7 @@ struct Note
     NOTE_TYPES type;
     int first, second;
     int turn;
-    unsigned short packed_place;
+    level_id place;
 
     string name;
     string desc;

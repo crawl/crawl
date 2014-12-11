@@ -12,19 +12,15 @@
 #include "coordit.h"
 #include "decks.h"
 #include "dungeon.h"
-#include "env.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-transit.h"
-#include "mon-util.h"
-#include "player.h"
 #include "religion.h"
-#include "show.h"
 #include "state.h"
-#include "travel.h"
 #include "view.h"
 
 static void _daction_hog_to_human(monster *mon, bool in_transit);
@@ -69,6 +65,8 @@ static const char *daction_names[] =
     "bribe timeout",
     "remove Gozag shops",
     "apply Gozag bribes",
+    "Makhleb's servants go hostile",
+    "make all monsters hate you",
 };
 #endif
 
@@ -102,6 +100,8 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     // Not a stored counter:
     case DACT_ALLY_TROG:
         return mon->friendly() && mons_is_god_gift(mon, GOD_TROG);
+    case DACT_ALLY_MAKHLEB:
+        return mon->friendly() && mons_is_god_gift(mon, GOD_MAKHLEB);
     case DACT_HOLY_PETS_GO_NEUTRAL:
         return mon->friendly()
                && !mon->has_ench(ENCH_CHARM)
@@ -130,10 +130,10 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                    || mon->props.exists(ORIG_MONSTER_KEY));
 
     case DACT_BRIBE_TIMEOUT:
-        return mon->has_ench(ENCH_BRIBED)
-               || mon->has_ench(ENCH_PERMA_BRIBED)
-               || mon->props.exists(GOZAG_BRIBE_KEY)
-               || mon->props.exists(GOZAG_PERMABRIBE_KEY);
+        return mon->has_ench(ENCH_NEUTRAL_BRIBED)
+               || mon->has_ench(ENCH_FRIENDLY_BRIBED)
+               || mon->props.exists(NEUTRAL_BRIBE_KEY)
+               || mon->props.exists(FRIENDLY_BRIBE_KEY);
 
     case DACT_SET_BRIBES:
         return !testbits(mon->flags, MF_WAS_IN_VIEW);
@@ -143,15 +143,15 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     }
 }
 
-void update_da_counters(LevelInfo *lev)
+void update_daction_counters(LevelInfo *lev)
 {
-    for (int act = 0; act < NUM_DA_COUNTERS; act++)
-        lev->da_counters[act] = 0;
+    for (int act = 0; act < NUM_DACTION_COUNTERS; act++)
+        lev->daction_counters[act] = 0;
 
     for (monster_iterator mi; mi; ++mi)
-        for (int act = 0; act < NUM_DA_COUNTERS; act++)
+        for (int act = 0; act < NUM_DACTION_COUNTERS; act++)
             if (mons_matches_daction(*mi, static_cast<daction_type>(act)))
-                lev->da_counters[act]++;
+                lev->daction_counters[act]++;
 }
 
 void add_daction(daction_type act)
@@ -165,8 +165,8 @@ void add_daction(daction_type act)
 
     // If we're removing a counted monster type, zero the counter even though
     // it hasn't been actually removed from the levels yet.
-    if (act < NUM_DA_COUNTERS)
-        travel_cache.clear_da_counter(act);
+    if (act < NUM_DACTION_COUNTERS)
+        travel_cache.clear_daction_counter(act);
 
     // Immediately apply it to the current level.
     catchup_dactions();
@@ -193,6 +193,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
         case DACT_ALLY_TROG:
+        case DACT_ALLY_MAKHLEB:
             dprf("going hostile: %s", mon->name(DESC_PLAIN, true).c_str());
             mon->attitude = ATT_HOSTILE;
             mon->del_ench(ENCH_CHARM, true);
@@ -206,9 +207,12 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             if (act == DACT_ALLY_PLANT || act == DACT_ALLY_SLIME)
                 mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
-            // No global message for Trog.
-            if (act == DACT_ALLY_TROG && local)
+            // No global message for Trog, Makhleb, or Ru.
+            if (local && (act == DACT_ALLY_TROG
+                          || act == DACT_ALLY_MAKHLEB))
+            {
                 simple_monster_message(mon, " turns against you!");
+            }
             break;
 
         case DACT_OLD_ENSLAVED_SOULS_POOF:
@@ -243,12 +247,17 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             break;
 
         case DACT_BRIBE_TIMEOUT:
-            mon->del_ench(ENCH_BRIBED);
-            mon->del_ench(ENCH_PERMA_BRIBED);
-            if (mon->props.exists(GOZAG_BRIBE_KEY))
-                mon->props.erase(GOZAG_BRIBE_KEY);
-            if (mon->props.exists(GOZAG_PERMABRIBE_KEY))
-                mon->props.erase(GOZAG_PERMABRIBE_KEY);
+            if (mon->del_ench(ENCH_NEUTRAL_BRIBED)
+                || mon->del_ench(ENCH_FRIENDLY_BRIBED))
+            {
+                mon->attitude = ATT_NEUTRAL;
+                mon->flags   |= MF_WAS_NEUTRAL;
+                mons_att_changed(mon);
+            }
+            if (mon->props.exists(NEUTRAL_BRIBE_KEY))
+                mon->props.erase(NEUTRAL_BRIBE_KEY);
+            if (mon->props.exists(FRIENDLY_BRIBE_KEY))
+                mon->props.erase(FRIENDLY_BRIBE_KEY);
             break;
 
         case DACT_SET_BRIBES:
@@ -276,6 +285,7 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_SLIME:
     case DACT_ALLY_PLANT:
     case DACT_ALLY_TROG:
+    case DACT_ALLY_MAKHLEB:
     case DACT_OLD_ENSLAVED_SOULS_POOF:
     case DACT_SLIME_NEW_ATTEMPT:
     case DACT_HOLY_PETS_GO_NEUTRAL:
@@ -362,8 +372,9 @@ static void _apply_daction(daction_type act)
 #if TAG_MAJOR_VERSION == 34
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:
+    case DACT_ALLY_SACRIFICE_LOVE:
 #endif
-    case NUM_DA_COUNTERS:
+    case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:
         ;
     }
@@ -375,9 +386,9 @@ void catchup_dactions()
         _apply_daction(you.dactions[env.dactions_done++]);
 }
 
-unsigned int query_da_counter(daction_type c)
+unsigned int query_daction_counter(daction_type c)
 {
-    return travel_cache.query_da_counter(c) + count_daction_in_transit(c);
+    return travel_cache.query_daction_counter(c) + count_daction_in_transit(c);
 }
 
 static void _daction_hog_to_human(monster *mon, bool in_transit)

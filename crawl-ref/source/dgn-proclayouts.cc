@@ -4,18 +4,15 @@
  **/
 #include "AppHdr.h"
 
+#include "dgn-proclayouts.h"
+
 #include <cmath>
 
-#include "dgn-proclayouts.h"
 #include "coord.h"
 #include "coordit.h"
 #include "files.h"
-#include "hash.h"
 #include "perlin.h"
 #include "terrain.h"
-#include "worley.h"
-
-#include "mpr.h"
 
 static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
 {
@@ -591,7 +588,7 @@ double WorleyFunction::operator()(const coord_def &p, const uint32_t offset) con
 
 double WorleyFunction::operator()(double x, double y, double z) const
 {
-    worley::noise_datum d = this->datum(x,y,z);
+    worley::noise_datum d = datum(x,y,z);
     return d.distance[1]-d.distance[0];
 }
 

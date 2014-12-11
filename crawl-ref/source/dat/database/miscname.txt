@@ -211,6 +211,8 @@ pill bug
 
 slug
 
+wumpus
+
 yak
 %%%%
 # random uselessness: "You hear XXX."
@@ -307,6 +309,18 @@ The destiny of this world depends on the Orb of Zot. Go down and get it!
 
 They say that the Orb of Zot exists deep within this dungeon, but nobody has ever found it.
 %%%%
+welcome_spam Halloween
+
+They say the Orb is deep down, but nobody ever got it. Be careful! Halloween tonight.
+
+The monsters here aren't big trick-or-treat fans. If they won't give you the Orb of Zot, you'll have to take it.
+
+A terrible geas has sent you after the Orb of Zot. What a horrible night to have a curse!
+
+As you descend in search of the Orb, ghosts and spectres flock about you. This place is haunted!
+
+You hear a witch cackle, and suddenly arrive in the dungeon. If you don't find the Orb of Zot, you'll turn into a toad!
+%%%%
 welcome_spam Zot Defence
 
 They are going to get your Orb!
@@ -315,7 +329,7 @@ Stand and defend the Orb!
 
 The safety of the most sacred Orb of Zot relies on you.
 %%%%
-hell_effect
+hell_effect_quiet
 
 {{
 if you.can_smell() then
@@ -352,12 +366,14 @@ You sense a hostile presence.
 "Leave now, before it is too late!"
 
 "We have you now!"
+%%%%
+hell_effect_noisy
 
-SOUND:A gut-wrenching scream fills the air!
+A gut-wrenching scream fills the air!
 
-SOUND:You hear words spoken in a strange and terrible language...
+You hear words spoken in a strange and terrible language...
 
-SOUND:You hear diabolical laughter!
+You hear diabolical laughter!
 %%%%
 eating_pizza
 
@@ -372,6 +388,8 @@ eating_pizza
 {{
 if you.race() == "Ghoul" then
     return "Anchovies... pretty bad, even for you."
+elseif you.race() == "Felid" then
+    return "Anchovies! Purrfect..."
 else
     return "Yeuchh! Anchovies."
 end

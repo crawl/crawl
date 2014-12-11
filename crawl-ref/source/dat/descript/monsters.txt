@@ -173,8 +173,10 @@ symbol of shame.
 %%%%
 Frederick
 
-A svelte fighter-mage who wears a gold-rimmed monocle and seeks a suitable and
-worthy opponent. You likely do not fit the bill.
+A svelte fighter-mage with a gold-rimmed monocle, a keen sense of tradition,
+and the blood of the gods running through his veins. He's here looking for a
+worthy opponent, but he's yet to find one - and he's been looking for quite a
+long time.
 %%%%
 Gastronok
 
@@ -398,6 +400,13 @@ An unusually thin troll.
 
 You feel a lump in the pit of your stomach.
 %%%%
+Robin
+
+A mountain hobgoblin, recently come in search of the legendary Orb. Not
+foolhardy or reckless enough to delve into the depths of the Dungeon alone,
+Robin has built a small army of minions. Potential competitors will quickly
+find a stream of screaming goblins flying toward them - watch out!
+%%%%
 Roxanne
 
 A strikingly realistic sapphire statue of a famous earth mage who disappeared
@@ -437,9 +446,8 @@ daring leaps! But watch out for her knives!
 Terence
 
 A violent murderer who kills for both pleasure and profit, Terence has been
-forced into hiding after a botched job, and can't really afford to risk letting
-anyone who has seen him leave the dungeon alive — there is a price on his head,
-after all.
+forced into hiding after a botched job. There's a price on his head, and he
+can't afford to leave anyone who sees him alive!
 %%%%
 Tiamat
 
@@ -476,24 +484,24 @@ An ancient and mighty dragon.
 %%%%
 the Serpent of Hell gehenna
 
-A huge red glowing dragon, burning with hellfire. It seems to be possessed by
-the very essence of Gehenna and its eternal fire.
+A huge red glowing three-headed dragon, burning with hellfire. It seems to be
+possessed by the very essence of Gehenna and its eternal fire.
 %%%%
 the Serpent of Hell cocytus
 
-A massive white dragon, covered with shards of gleaming ice, wholly possessed
-by the nightmarish cold of Cocytus.
+A massive white three-headed dragon, covered with shards of gleaming ice,
+wholly possessed by the nightmarish cold of Cocytus.
 %%%%
 the Serpent of Hell dis
 
-A towering beast with an army's worth of swords for teeth. Each of its scales
-is a shield with a razored edge.
+A towering three-headed beast with an army's worth of swords for teeth. Each of
+its scales is a shield with a razored edge.
 %%%%
 the Serpent of Hell tartarus
 
-Seemingly a pair of lurid magenta eyes hanging in the darkness, the outline of
-a vast, sinuous dragon is just barely perceptible behind. Its malice is
-palpable.
+Seemingly three pairs of lurid magenta eyes hanging in the darkness, the
+outline of a vast, sinuous dragon is just barely perceptible behind. Its malice
+is palpable.
 %%%%
 # Non-unique monsters
 acid blob
@@ -542,6 +550,13 @@ angel
 A divine warrior of the Shining One, it is a towering winged figure of
 unnatural beauty surrounded by an aura of brilliant white light. It appears to
 be weightless and quite agile while flying, despite wearing heavy armour.
+%%%%
+anubis guard
+
+A jackal-headed humanoid charged with preventing trespassers from defiling
+sacred burial grounds and with keeping unruly denizens therein under control.
+They are conditioned to be insensitive to extreme amounts of pain, and can
+alert their brethren to an intruder's whereabouts with their howling cries.
 %%%%
 apis
 
@@ -606,6 +621,13 @@ A small globe of magical energy that follows a spellcaster. It cannot operate
 on its own, yet it will provide fire support, assaulting whatever its conjurer
 casts at with magical missiles that never miss.
 %%%%
+bennu
+
+Sacred, self-created sunbirds, representative of rebirth. They have ascended
+past the cycles of life and death, and readily call upon aspects of both.
+Famously, they may rise forth from death in a burst of flame, though common
+portrayals leaves out how unholy these flames are.
+%%%%
 big kobold
 
 A kobold that is bigger and tougher than the ordinary kobold, and often armed.
@@ -666,8 +688,8 @@ first.
 bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many
-dragons by powerful necromantic magic. Fortunately for you, whatever organ
-produces a dragon's fearsome breath was lost in the process.
+dragons by powerful necromantic magic. Fortunately, whatever organ produces a
+dragon's fearsome breath was lost in the process.
 %%%%
 boring beetle
 
@@ -723,6 +745,11 @@ hog-like head just above the ground, protected by a stiff mane of bristles,
 joined to its body by a neck as long and loose as an emptied intestine. Man and
 beast alike would be wise to steer clear of this creature, as its fearsome
 breath is known to turn flesh into stone.
+%%%%
+caustic shrike
+
+A swift, nightmarish bird whose razor-sharp metallic feathers drip with
+corrosive acid.
 %%%%
 centaur
 
@@ -830,6 +857,13 @@ and calls forth the dead.
 death ooze
 
 A putrid undead mass of decaying flesh that spurts pestilent slime.
+%%%%
+death scarab
+
+A hideous swarming undead insect, exuding death and decay and feeding on the
+life energies of those unfortunate enough to encounter them. Their bites have
+the peculiar property of making their victims suffer even more greatly from
+unholy effects.
 %%%%
 death yak
 
@@ -1044,6 +1078,12 @@ electric eel
 Despite its name, the electric eel is actually a variety of fish. This breed,
 however, generates far more voltage than its seagoing siblings.
 %%%%
+elemental wellspring
+
+A swirling conflux of elemental water streaming from the elemental plane into
+this one. Floods and the spirits who dwell within them seem to issue from it,
+at the expense of the gateway's stability itself.
+%%%%
 elephant
 
 A large, thick-hided pachyderm. It crushes its foes and then thrashes them with
@@ -1085,10 +1125,6 @@ faun
 A hybrid with the torso of a human atop the forelegs of a goat. They are fabled
 for their ability to play with the minds of those who intrude into their
 domains.
-%%%%
-feature mimic
-
-A vicious beast masquerading as an ordinary dungeon feature.
 %%%%
 felid
 
@@ -1307,11 +1343,6 @@ green draconian
 
 A muscular green-scaled humanoid with a reptilian tail and small wings.
 %%%%
-green rat
-
-A rodent with hair of a most peculiar green colour, and a powerful bite. It
-tends to form great swarms with its kin.
-%%%%
 grey draconian
 
 A muscular grey-scaled humanoid with a reptilian tail and small wings.
@@ -1367,6 +1398,11 @@ hell knight
 
 A heavily armoured warrior, in league with the powers of Hell, and usually
 accompanied by other unsavoury beings of its ilk.
+%%%%
+hell rat
+
+A unusually large rat. Its weird, knobbly orange skin glows with the infernal
+energies that spawned it.
 %%%%
 Hell Sentinel
 
@@ -1476,23 +1512,10 @@ infernal demonspawn
 
 <demonspawn>
 %%%%
-inept feature mimic
-
-A predator masquerading as an ordinary dungeon feature.
-%%%%
-inept item mimic
-
-An apparently abandoned item, actually a small beast in disguise.
-%%%%
 insubstantial wisp
 
 A thin wisp of floating gas, flickering, disappearing and reforming in a
-disconcertingly random fashion.
-%%%%
-iron devil
-
-A hideous humanoid figure with metal skin. While it lacks magical attacks and
-is slow of foot, it makes up for these failings with brute strength.
+disconcertingly random fashion while building up an electrical charge.
 %%%%
 iron dragon
 
@@ -1534,10 +1557,6 @@ ironheart preserver
 
 Towering figures sheathed in heavy armour, preservers safeguard their allies by
 selflessly accepting a portion of the injuries inflicted upon them.
-%%%%
-item mimic
-
-An apparently abandoned item, actually a vicious little beast in disguise.
 %%%%
 jackal
 
@@ -1664,6 +1683,11 @@ merfolk aquamancer
 A slender merfolk mystic with unusually webby hands. Its form shifts and
 glistens as if seen through ocean spray.
 %%%%
+merfolk avatar
+
+A beguiling merfolk whose voice mesmerizes listeners. It carries no weapon,
+but its song summons drowned souls to defend the sea against intruders.
+%%%%
 merfolk impaler
 
 A powerfully muscled merfolk warrior, bearing a deadly weapon.
@@ -1672,16 +1696,6 @@ merfolk javelineer
 
 A fearsome merfolk champion with a piercing gaze and a large bundle of
 javelins.
-%%%%
-mermaid
-
-A young merfolk woman who has become an acolyte of the sunken god. As a
-consequence of her worship, she has begun the transformation into an avatar of
-the mystery and danger of the sea's depths. Her voice can instill the same
-single-minded fascination that grabs hold of sailors on a long voyage.
-
-Why only female merfolk are called to become avatars of the sunken god is a
-mystery understood only by the avatars themselves.
 %%%%
 minotaur
 
@@ -1764,6 +1778,11 @@ neqoxec
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly
 distended with the devoured brains of its victims.
 %%%%
+obsidian statue
+
+A beautiful statue of an unknown creature, jet-black like a tear in reality.
+Its eyes glow with an otherworldly, malignant radiance.
+%%%%
 octopode
 
 A more intelligent cousin of the mighty kraken, capable of using tools and
@@ -1818,11 +1837,6 @@ orange demon
 
 An amber-coloured demon with a tail not unlike that of a scorpion. It contains
 a potent venom that can render its victims weak and their blows feeble.
-%%%%
-orange rat
-
-A unusually large rat with weird knobbly orange skin, glowing with unholy
-energies.
 %%%%
 Orb Guardian
 
@@ -2010,18 +2024,6 @@ An opportunistic scavenger bird that is quite proactive in the production of
 carrion. It has a particularly unhealthy fascination with eyeballs and things
 resembling eyeballs, such as pickled onions, walnuts and olives.
 %%%%
-ravenous feature mimic
-
-A deadly venomous tentacled predator with an ability to shapeshift and
-masquerade as an ordinary-looking dungeon feature, in order to catch foolish
-passers-by and crush them in its deadly grasp.
-%%%%
-ravenous item mimic
-
-A deadly venomous tentacled predator with an ability to shapeshift into a small
-item. While not of a formidable size, it is not a living creature and its
-tentacles are harder than steel.
-%%%%
 reaper
 
 A skeletal form wielding a giant scythe.
@@ -2051,10 +2053,20 @@ revenant
 A skeletal form wreathed in cold blue fire, standing astride this life and the
 next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
+river rat
+
+A rodent with hair of a most peculiar green colour, and a powerful bite. It
+tends to form great swarms with its kin.
+%%%%
 the royal jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
 just below its surface, ready to burst forth at the slightest touch.
+%%%%
+rust devil
+
+A hideous humanoid figure with rust-spotted metal skin. Its touch causes armour
+and weapons to rust and decay, becoming nearly useless until repaired.
 %%%%
 salamander
 
@@ -2143,6 +2155,12 @@ shapeshifter
 A disturbing creature with the power to change its form. It is very rarely
 observed alive in its natural state.
 %%%%
+shard shrike
+
+An incredibly fast-moving bird, known for impaling its prey on shards of ice
+before tearing them to pieces. They have acclimated to the desolate wastes of
+Cocytus, and its accursed chill now envelopes them.
+%%%%
 sheep
 
 A dim-witted, fluffy ovine, better known for its woolly hide than its
@@ -2166,25 +2184,18 @@ The bane of wizards, these terrible spirits bring an unearthly silence to the
 area around them, making it impossible to recite the magical incantations
 involved with casting spells or reading scrolls.
 %%%%
-silver statue
-
-A beautiful statue of an unknown creature, glistening with a silvery hue. Its
-eyes glow with an otherworldly, malignant radiance. If approached, it may call
-forth demons to defend itself.
-%%%%
 simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
 %%%%
+singularity
+
+A gravitational singularity, which pulls in enemies of its creator and
+violently warps them in the process.
+%%%%
 siren
 
-Once a merfolk woman, she has become an avatar of the sunken god. Her voice can
-instill the same single-minded fascination that grabs hold of sailors on a long
-voyage. Her song also can call up the souls of others who have drowned in her
-waters in order to bring you the same watery bliss.
-
-Why only female merfolk are called to become avatars of the sunken god is a
-mystery understood only by the avatars themselves.
+A beguiling merfolk whose voice can mesmerize listeners.
 %%%%
 sixfirhy
 
@@ -2274,7 +2285,8 @@ A hideous glowing apparition.
 %%%%
 spectral weapon
 
-A spirit drawn from a weapon — it never strikes on its own.
+A spirit drawn from a weapon — it never strikes on its own. Damage done to it
+will be partially mirrored onto the caster.
 %%%%
 spellforged servitor
 
@@ -2469,7 +2481,7 @@ able to inflict torturous agony on those foolish enough to gaze upon it.
 %%%%
 torpor snail
 
-A huge gastropod with a lime-green shell. Torpor snails are said to be in some
+A huge gastropod with a rock-hard shell. Torpor snails are said to be in some
 way connected with the god Cheibriados; just being near them is enough to slow
 the movements of unwary adventurers, leaving them easy prey for the snails'
 terrifying, ever-gnashing radulae.
@@ -2519,7 +2531,15 @@ even beyond death.
 unseen horror
 
 A creature rarely seen by anyone; those few who have seen one would rather they
-hadn't.
+hadn't. Among the few bemused reports, the single common element is the
+creatures' bat-like movement.
+%%%%
+ushabti
+
+A funerary stone figurine kept in tombs to serve the deceased as they passed
+through the afterlife. Inscribed with spells to answer divine calls for manual
+labour in the afterlife, the ushabti are magically animated to slavishly
+protect the interred for eternity.
 %%%%
 vampire
 
@@ -2920,12 +2940,10 @@ mad acolyte of Lugonu
 An insane follower of Lugonu. Years of living in the abyss have clearly taken
 their toll on this one's feeble mind.
 %%%%
-malarious mermaid
+malarious merfolk avatar
 
-Like other mermaids, this young merfolk woman who has become an acolyte of the
-sunken god, and is undergoing a transformation into an avatar. She looks deeply
-ill, but her voice still has the power to instill a powerful fascination in her
-victims.
+This young merfolk looks deeply ill, but still capable of bespelling its
+audience.
 %%%%
 master elementalist
 
@@ -3021,8 +3039,8 @@ This bat is well past its sell-by date.
 %%%%
 sickly siren
 
-A young woman with a fish tail in place of legs. She looks quite sick, but
-still capable of bespelling her audience.
+This young merfolk looks quite sick, but its voice still has the power to
+mesmerize its victims.
 %%%%
 skeletal archer
 

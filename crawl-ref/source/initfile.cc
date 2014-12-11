@@ -12,50 +12,57 @@
 #include "AppHdr.h"
 
 #include "initfile.h"
-#include "options.h"
 
 #include <algorithm>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <set>
 #include <string>
-#include <ctype.h>
 
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
-#include "dlua.h"
+#include "defines.h"
 #include "delay.h"
 #include "directn.h"
+#include "dlua.h"
+#include "end.h"
 #include "errors.h"
-#include "kills.h"
 #include "files.h"
-#include "defines.h"
-#ifdef USE_TILE_WEB
- #include "tileweb.h"
-#endif
 #include "invent.h"
 #include "itemprop.h"
+#include "items.h"
+#include "jobs.h"
+#include "kills.h"
 #include "libutil.h"
 #include "macro.h"
 #include "mapdef.h"
 #include "message.h"
 #include "mon-util.h"
-#include "jobs.h"
+#include "options.h"
 #include "player.h"
+#include "prompt.h"
 #include "species.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "syscalls.h"
 #include "tags.h"
 #include "throw.h"
 #include "travel.h"
-#include "items.h"
 #include "unwind.h"
 #include "version.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
+#ifdef USE_TILE
+#include "tilepick.h"
+#include "tiledef-player.h"
+#ifdef USE_TILE_WEB
+#include "tileweb.h"
+#endif
+#endif
 
 // For finding the executable's path
 #ifdef TARGET_OS_WINDOWS
@@ -197,44 +204,35 @@ string channel_to_str(int channel)
     return message_channel_names[channel];
 }
 
-/**
- * Populate the map used to interpret a crawlrc entry as a starting weapon
- * type.  For most entries, we can just look up which weapon has the entry as
- * its name; this map contains the exceptions.
- *
- * @return  The special starting weapon type map.
- */
-static map<string, weapon_type> _create_special_weapon_map()
-{
-    map<string, weapon_type> weapon_map;
+
+// The map used to interpret a crawlrc entry as a starting weapon
+// type.  For most entries, we can just look up which weapon has the entry as
+// its name; this map contains the exceptions.
+// This should be const, but operator[] on maps isn't const.
+static map<string, weapon_type> _special_weapon_map = {
 
     // "staff" normally refers to a magical staff, but here we want to
     // interpret it as a quarterstaff.
-    weapon_map["staff"]        = WPN_QUARTERSTAFF;
+    {"staff",       WPN_QUARTERSTAFF},
 
     // These weapons' base names have changed; we want to interpret the old
     // names correctly.
-    weapon_map["sling"]        = WPN_HUNTING_SLING;
-    weapon_map["crossbow"]     = WPN_HAND_CROSSBOW;
+    {"sling",       WPN_HUNTING_SLING},
+    {"crossbow",    WPN_HAND_CROSSBOW},
 
     // Pseudo-weapons.
-    weapon_map["unarmed"]      = WPN_UNARMED;
-    weapon_map["claws"]        = WPN_UNARMED;
+    {"unarmed",     WPN_UNARMED},
+    {"claws",       WPN_UNARMED},
 
-    weapon_map["thrown"]       = WPN_THROWN;
-    weapon_map["rocks"]        = WPN_THROWN;
-    weapon_map["javelins"]     = WPN_THROWN;
-    weapon_map["tomahawks"]    = WPN_THROWN;
+    {"thrown",      WPN_THROWN},
+    {"rocks",       WPN_THROWN},
+    {"tomahawks",   WPN_THROWN},
+    {"javelins",    WPN_THROWN},
 
-    weapon_map["random"]       = WPN_RANDOM;
+    {"random",      WPN_RANDOM},
 
-    weapon_map["viable"]       = WPN_VIABLE;
-
-    return weapon_map;
-}
-
-// This should be const, but operator[] on maps isn't const.
-static map<string, weapon_type> _special_weapon_map = _create_special_weapon_map();
+    {"viable",      WPN_VIABLE},
+};
 
 /**
  * Interpret a crawlrc entry as a starting weapon type.
@@ -394,7 +392,7 @@ static string _job_to_str(job_type job)
         return get_job_name(job);
 }
 
-static job_type _str_to_job(const string &str)
+job_type str_to_job(const string &str)
 {
     if (str == "random")
         return JOB_RANDOM;
@@ -550,7 +548,7 @@ void game_options::set_default_activity_interrupts()
 
     const char *default_activity_interrupts[] =
     {
-        "interrupt_armour_on = hp_loss, monster_attack, monster",
+        "interrupt_armour_on = hp_loss, monster_attack, monster, mimic",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
@@ -573,7 +571,7 @@ void game_options::set_default_activity_interrupts()
         "interrupt_uninterruptible =",
         "interrupt_weapon_swap =",
 
-        NULL
+        nullptr
     };
 
     for (int i = 0; default_activity_interrupts[i]; ++i)
@@ -690,6 +688,12 @@ void game_options::reset_options()
 
 #ifdef DEBUG_DIAGNOSTICS
     quiet_debug_messages.reset();
+#ifdef DEBUG_MONSPEAK
+    quiet_debug_messages.set(DIAG_SPEECH);
+#endif
+# ifdef DEBUG_MONINDEX
+    quiet_debug_messages.set(DIAG_MONINDEX);
+# endif
 #endif
 
 #if defined(USE_TILE_LOCAL)
@@ -697,6 +701,7 @@ void game_options::reset_options()
 #else
     restart_after_game = false;
 #endif
+    restart_after_save = false;
 
     macro_dir = SysEnv.macro_dir;
 
@@ -738,7 +743,7 @@ void game_options::reset_options()
 
     mouse_input = false;
 
-    view_max_width   = max(33, VIEW_MIN_WIDTH);
+    view_max_width   = max(VIEW_BASE_WIDTH, VIEW_MIN_WIDTH);
     view_max_height  = max(21, VIEW_MIN_HEIGHT);
     mlist_min_height = 4;
     msg_min_height   = max(7, MSG_MIN_HEIGHT);
@@ -789,9 +794,6 @@ void game_options::reset_options()
     equip_unequip          = false;
     jewellery_prompt       = false;
     confirm_butcher        = CONFIRM_AUTO;
-    chunks_autopickup      = true;
-    prompt_for_swap        = true;
-    auto_drop_chunks       = ADC_NEVER;
     easy_eat_chunks        = false;
     auto_eat_chunks        = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
@@ -800,6 +802,8 @@ void game_options::reset_options()
     hp_warning             = 30;
     magic_point_warning    = 0;
     skill_focus            = SKM_FOCUS_ON;
+    cloud_status           = !is_tiles();
+    trapwalk_safe_hp       = true;
 
     user_note_prefix       = "";
     note_all_skill_levels  = false;
@@ -873,7 +877,6 @@ void game_options::reset_options()
 #endif
     use_fake_player_cursor = true;
     show_player_species    = false;
-
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_GREEDY_PICKUP_SMART
@@ -893,8 +896,6 @@ void game_options::reset_options()
     explore_improved       = false;
     travel_key_stop        = true;
     auto_sacrifice         = AS_NO;
-
-    darken_beyond_range    = true;
 
     dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
@@ -946,9 +947,13 @@ void game_options::reset_options()
 #ifdef WIZARD
 #ifdef DGAMELAUNCH
     if (wiz_mode != WIZ_NO)
+    {
         wiz_mode         = WIZ_NEVER;
+        explore_mode     = WIZ_NEVER;
+    }
 #else
     wiz_mode             = WIZ_NO;
+    explore_mode         = WIZ_NO;
 #endif
 #endif
     terp_files.clear();
@@ -962,9 +967,6 @@ void game_options::reset_options()
     // minimap colours
     tile_player_col       = str_to_tile_colour("white");
     tile_monster_col      = str_to_tile_colour("#660000");
-    tile_neutral_col      = str_to_tile_colour("#660000");
-    tile_peaceful_col     = str_to_tile_colour("#664400");
-    tile_friendly_col     = str_to_tile_colour("#664400");
     tile_plant_col        = str_to_tile_colour("#446633");
     tile_item_col         = str_to_tile_colour("#005544");
     tile_unseen_col       = str_to_tile_colour("black");
@@ -1056,7 +1058,12 @@ void game_options::reset_options()
     tile_water_anim          = true;
 #endif
     tile_misc_anim           = true;
-    tile_show_player_species = false;
+    tile_use_monster         = MONS_PROGRAM_BUG;
+    tile_player_tile         = 0;
+    tile_weapon_offsets.first  = INT_MAX;
+    tile_weapon_offsets.second = INT_MAX;
+    tile_shield_offsets.first  = INT_MAX;
+    tile_shield_offsets.second = INT_MAX;
 #endif
 
 #ifdef USE_TILE_WEB
@@ -1080,14 +1087,17 @@ void game_options::reset_options()
                     "skills,spells,overview,mutations,messages,"
                     "screenshot,monlist,kills,notes,action_counts");
 
+    use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
+                      | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY);
+
     hp_colour.clear();
-    hp_colour.push_back(pair<int,int>(50, YELLOW));
-    hp_colour.push_back(pair<int,int>(25, RED));
+    hp_colour.emplace_back(50, YELLOW);
+    hp_colour.emplace_back(25, RED);
     mp_colour.clear();
-    mp_colour.push_back(pair<int, int>(50, YELLOW));
-    mp_colour.push_back(pair<int, int>(25, RED));
+    mp_colour.emplace_back(50, YELLOW);
+    mp_colour.emplace_back(25, RED);
     stat_colour.clear();
-    stat_colour.push_back(pair<int, int>(3, RED));
+    stat_colour.emplace_back(3, RED);
     enemy_hp_colour.clear();
     // I think these defaults are pretty ugly but apparently OS X has problems
     // with lighter colours
@@ -1104,7 +1114,6 @@ void game_options::reset_options()
     note_monsters.clear();
     note_messages.clear();
     autoinscriptions.clear();
-    autoinscribe_cursed = true;
     note_items.clear();
     note_skill_levels.reset();
     note_skill_levels.set(1);
@@ -1113,6 +1122,7 @@ void game_options::reset_options()
     note_skill_levels.set(15);
     note_skill_levels.set(27);
     auto_spell_letters.clear();
+    auto_item_letters.clear();
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
@@ -1151,19 +1161,14 @@ void game_options::clear_cset_overrides()
 
 void game_options::clear_feature_overrides()
 {
-    feature_overrides.clear();
+    feature_colour_overrides.clear();
+    feature_symbol_overrides.clear();
 }
 
 ucs_t get_glyph_override(int c)
 {
     if (c < 0)
-    {
         c = -c;
-        if (Options.char_set == CSET_IBM)
-            c = (c & ~0xff) ? 0 : charset_cp437[c & 0xff];
-        else if (Options.char_set == CSET_DEC)
-            c = (c & 0x80) ? charset_vt100[c & 0x7f] : c;
-    }
     if (wcwidth(c) != 1)
     {
         mprf(MSGCH_ERROR, "Invalid glyph override: %X", c);
@@ -1197,7 +1202,7 @@ static int read_symbol(string s)
     }
 
     char *tail;
-    return -strtoul(s.c_str(), &tail, base);
+    return strtoul(s.c_str(), &tail, base);
 }
 
 void game_options::set_fire_order(const string &s, bool append, bool prepend)
@@ -1227,29 +1232,34 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
     }
 }
 
-void game_options::add_mon_glyph_overrides(const string &mons,
-                                           cglyph_t &mdisp)
+static monster_type _mons_class_by_string(const string &name)
 {
-    // If one character, this is a monster letter.
-    int letter = -1;
-    if (mons.length() == 1)
-        letter = mons[0] == '_' ? ' ' : mons[0];
-
-    bool found = false;
+    const string match = lowercase_string(name);
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
             continue;
 
-        if (me->basechar == letter || me->name == mons)
-        {
-            found = true;
-            mon_glyph_overrides[i] = mdisp;
-        }
+        if (lowercase_string(me->name) == match)
+            return i;
     }
-    if (!found)
-        report_error("Unknown monster: \"%s\"", mons.c_str());
+    return MONS_0;
+}
+
+static set<monster_type> _mons_classes_by_glyph(const char letter)
+{
+    set<monster_type> matches;
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
+    {
+        const monsterentry *me = get_monster_data(i);
+        if (!me || me->mc == MONS_PROGRAM_BUG)
+            continue;
+
+        if (me->basechar == letter)
+            matches.insert(i);
+    }
+    return matches;
 }
 
 cglyph_t game_options::parse_mon_glyph(const string &s) const
@@ -1261,7 +1271,7 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     {
         const string &p = phrases[i];
         const int col = str_to_colour(p, -1, false);
-        if (col != -1 && colour)
+        if (col != -1)
             md.col = col;
         else
             md.ch = p == "_"? ' ' : read_symbol(p);
@@ -1275,9 +1285,36 @@ void game_options::add_mon_glyph_override(const string &text)
     if (override.size() != 2u)
         return;
 
-    cglyph_t mdisp = parse_mon_glyph(override[1]);
+    set<monster_type> matches;
+    if (override[0].length() == 1)
+        matches = _mons_classes_by_glyph(override[0][0]);
+    else
+    {
+        const monster_type m = _mons_class_by_string(override[0]);
+        if (m == MONS_0)
+        {
+            report_error("Unknown monster: \"%s\"", text.c_str());
+            return;
+        }
+        matches.insert(m);
+    }
+
+    cglyph_t mdisp;
+
+    // Look for monsters first so that "blue devil" works right.
+    const monster_type n = _mons_class_by_string(override[1]);
+    if (n != MONS_0)
+    {
+        const monsterentry *me = get_monster_data(n);
+        mdisp.ch = me->basechar;
+        mdisp.col = me->colour;
+    }
+    else
+        mdisp = parse_mon_glyph(override[1]);
+
     if (mdisp.ch || mdisp.col)
-        add_mon_glyph_overrides(override[0], mdisp);
+        for (monster_type m : matches)
+            mon_glyph_overrides[m] = mdisp;
 }
 
 void game_options::add_item_glyph_override(const string &text)
@@ -1288,7 +1325,7 @@ void game_options::add_item_glyph_override(const string &text)
 
     cglyph_t mdisp = parse_mon_glyph(override[1]);
     if (mdisp.ch || mdisp.col)
-        item_glyph_overrides.push_back(pair<string, cglyph_t>(override[0], mdisp));
+        item_glyph_overrides.emplace_back(override[0], mdisp);
 }
 
 void game_options::add_feature_override(const string &text)
@@ -1318,45 +1355,30 @@ void game_options::add_feature_override(const string &text)
 
     for (int i = 0, size = feats.size(); i < size; ++i)
     {
-        if (feats[i] >= NUM_FEATURES)
+        dungeon_feature_type feat = feats[i];
+        if (feat >= NUM_FEATURES)
             continue; // TODO: handle other object types.
-        feature_def &fov(feature_overrides[feats[i]]);
-        init_fd(fov);
+
 #define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
-                          fov.field = s;
-#define COL(n, field) if (unsigned short c = str_to_colour(iprops[n], BLACK)) \
-                          fov.field = c;
+                          feature_symbol_overrides[feat][n] = s; \
+                      else \
+                          feature_symbol_overrides[feat][n] = '\0';
         SYM(0, symbol);
         SYM(1, magic_symbol);
+#undef SYM
+        feature_def &fov(feature_colour_overrides[feat]);
+#define COL(n, field) if (colour_t c = str_to_colour(iprops[n], BLACK)) \
+                          fov.field = c;
         COL(2, colour);
         COL(3, map_colour);
         COL(4, seen_colour);
         COL(5, em_colour);
         COL(6, seen_em_colour);
-#undef SYM
 #undef COL
     }
 }
 
-void game_options::add_cset_override(char_set_type set, const string &overrides)
-{
-    vector<string> overs = split_string(",", overrides);
-    for (int i = 0, size = overs.size(); i < size; ++i)
-    {
-        vector<string> mapping = split_string(":", overs[i]);
-        if (mapping.size() != 2)
-            continue;
-
-        dungeon_char_type dc = dchar_by_name(mapping[0]);
-        if (dc == NUM_DCHAR_TYPES)
-            continue;
-
-        add_cset_override(set, dc, read_symbol(mapping[1]));
-    }
-}
-
-void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
-                                     int symbol)
+void game_options::add_cset_override(dungeon_char_type dc, int symbol)
 {
     cset_override[dc] = get_glyph_override(symbol);
 }
@@ -1376,7 +1398,7 @@ static string _find_crawlrc()
         { "..", "init.txt" },
         { "../settings", "init.txt" },
 #endif
-        { NULL, NULL }                // placeholder to mark end
+        { nullptr, nullptr }                // placeholder to mark end
     };
 
     // We'll look for these files in any supplied -rcdirs.
@@ -1392,21 +1414,21 @@ static string _find_crawlrc()
 
     // If we have any rcdirs, look in them for files from the
     // rc_dir_names list.
-    for (int i = 0, size = SysEnv.rcdirs.size(); i < size; ++i)
+    for (const string &rc_dir : SysEnv.rcdirs)
     {
-        for (unsigned n = 0; n < ARRAYSZ(rc_dir_filenames); ++n)
+        for (const string &rc_fn : rc_dir_filenames)
         {
-            const string rc(catpath(SysEnv.rcdirs[i], rc_dir_filenames[n]));
+            const string rc(catpath(rc_dir, rc_fn));
             if (file_exists(rc))
                 return rc;
         }
     }
 
     // Check all possibilities for init.txt
-    for (int i = 0; locations_data[i][1] != NULL; ++i)
+    for (int i = 0; locations_data[i][1] != nullptr; ++i)
     {
         // Don't look at unset options
-        if (locations_data[i][0] != NULL)
+        if (locations_data[i][0] != nullptr)
         {
             const string rc = catpath(locations_data[i][0],
                                       locations_data[i][1]);
@@ -1423,10 +1445,7 @@ static string _find_crawlrc()
 static const char* lua_builtins[] =
 {
     "clua/stash.lua",
-    "clua/wield.lua",
     "clua/runrest.lua",
-    "clua/gearset.lua",
-    "clua/trapwalk.lua",
     "clua/autofight.lua",
     "clua/automagic.lua",
     "clua/kills.lua",
@@ -1439,6 +1458,7 @@ static const char* config_defaults[] =
     "defaults/standard_colours.txt",
     "defaults/food_colouring.txt",
     "defaults/menu_colours.txt",
+    "defaults/glyph_colours.txt",
     "defaults/messages.txt",
     "defaults/misc.txt",
 };
@@ -1452,17 +1472,17 @@ string read_init_file(bool runscript)
 #ifdef CLUA_BINDINGS
     if (runscript)
     {
-        for (unsigned int i = 0; i < ARRAYSZ(lua_builtins); ++i)
+        for (const char *builtin : lua_builtins)
         {
-            clua.execfile(lua_builtins[i], false, false);
+            clua.execfile(builtin, false, false);
             if (!clua.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
     }
 
     // Load default options.
-    for (unsigned int i = 0; i < ARRAYSZ(config_defaults); ++i)
-        Options.include(datafile_path(config_defaults[i]), false, runscript);
+    for (const char *def_file : config_defaults)
+        Options.include(datafile_path(def_file), false, runscript);
 #else
     UNUSED(lua_builtins);
     UNUSED(config_defaults);
@@ -1472,10 +1492,10 @@ string read_init_file(bool runscript)
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
     Options.line_num     = 0;
-    for (unsigned int i = 0; i < SysEnv.extra_opts_first.size(); i++)
+    for (const string &extra : SysEnv.extra_opts_first)
     {
         Options.line_num++;
-        Options.read_option_line(SysEnv.extra_opts_first[i], true);
+        Options.read_option_line(extra, true);
     }
 
     // Load init.txt.
@@ -1510,10 +1530,10 @@ string read_init_file(bool runscript)
     Options.filename     = "extra opts last";
     Options.basefilename = "extra opts last";
     Options.line_num     = 0;
-    for (unsigned int i = 0; i < SysEnv.extra_opts_last.size(); i++)
+    for (const string &extra : SysEnv.extra_opts_last)
     {
         Options.line_num++;
-        Options.read_option_line(SysEnv.extra_opts_last[i], false);
+        Options.read_option_line(extra, false);
     }
 
     Options.filename     = init_file_name;
@@ -1533,6 +1553,12 @@ newgame_def read_startup_prefs()
     game_options temp;
     temp.read_options(fl, false);
 
+    if (!temp.game.allowed_species.empty())
+        temp.game.species = temp.game.allowed_species[0];
+    if (!temp.game.allowed_jobs.empty())
+        temp.game.job = temp.game.allowed_jobs[0];
+    if (!temp.game.allowed_weapons.empty())
+        temp.game.weapon = temp.game.allowed_weapons[0];
     return temp.game;
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
@@ -1616,14 +1642,14 @@ game_options::game_options()
 {
     lang = LANG_EN;
     lang_name = 0;
-#ifndef TARGET_OS_WINDOWS
+#if 0
     if (Version::ReleaseType == VER_ALPHA)
     {
         set_lang(getenv("LC_ALL"))
         || set_lang(getenv("LC_MESSAGES"))
         || set_lang(getenv("LANG"));
     }
-#elif defined USE_TILE_LOCAL
+//#elif defined USE_TILE_LOCAL
     if (Version::ReleaseType == VER_ALPHA)
     {
         char ln[30];
@@ -1841,12 +1867,143 @@ static int _str_to_killcategory(const string &s)
     return -1;
 }
 
+#ifdef USE_TILE
+void game_options::set_player_tile(const string &field)
+{
+    if (field == "normal")
+    {
+        tile_use_monster = MONS_0;
+        tile_player_tile = 0;
+        return;
+    }
+    else if (field == "playermons")
+    {
+        tile_use_monster = MONS_PLAYER;
+        tile_player_tile = 0;
+        return;
+    }
+
+    vector<string> fields = split_string(":", field);
+    // Handle tile:<tile-name> values
+    if (fields.size() == 2 && fields[0] == "tile")
+    {
+        // A variant tile. We have to find the base tile to look this up inthe
+        // tile index.
+        if (isdigit(*(fields[1].rbegin())))
+        {
+            string base_tname = fields[1];
+            size_t found = base_tname.rfind('_');
+            int offset = 0;
+            tileidx_t base_tile = 0;
+            if (found != std::string::npos
+                && parse_int(fields[1].substr(found + 1).c_str(), offset))
+            {
+                base_tname = base_tname.substr(0, found);
+                if (!tile_player_index(base_tname.c_str(), &base_tile))
+                {
+                    report_error("Can't find base tile \"%s\" of variant "
+                                 "tile \"%s\"", base_tname.c_str(),
+                                 fields[1].c_str());
+                    return;
+                }
+                tile_player_tile = tileidx_mon_clamp(base_tile, offset);
+            }
+        }
+        else if (!tile_player_index(fields[1].c_str(), &tile_player_tile))
+        {
+            report_error("Unknown tile: \"%s\"", fields[1].c_str());
+            return;
+        }
+        tile_use_monster = MONS_PLAYER;
+    }
+    else if (fields.size() == 2 && fields[0] == "mons")
+    {
+        // Handle mons:<monster-name> values
+        const monster_type m = _mons_class_by_string(fields[1]);
+        if (m == MONS_0)
+            report_error("Unknown monster: \"%s\"", fields[1].c_str());
+        else
+        {
+            tile_use_monster = m;
+            tile_player_tile = 0;
+        }
+    }
+    else
+    {
+        report_error("Invalid setting for tile_player_tile: \"%s\"",
+                     field.c_str());
+    }
+}
+
+void game_options::set_tile_offsets(const string &field, bool set_shield)
+{
+    bool error = false;
+    pair<int, int> *offsets;
+    if (set_shield)
+        offsets = &tile_shield_offsets;
+    else
+        offsets = &tile_weapon_offsets;
+
+    if (field == "reset")
+    {
+        offsets->first = INT_MAX;
+        offsets->second = INT_MAX;
+        return;
+    }
+
+    vector<string> offs = split_string(",", field);
+    if (offs.size() != 2
+        || !parse_int(offs[0].c_str(), offsets->first)
+        || abs(offsets->first) > 32
+        || !parse_int(offs[1].c_str(), offsets->second)
+        || abs(offsets->second) > 32)
+    {
+        report_error("Invalid %s tile offsets: \"%s\"",
+                     set_shield ? "shield" : "weapon", field.c_str());
+        error = true;
+    }
+
+    if (error)
+    {
+        offsets->first = INT_MAX;
+        offsets->second = INT_MAX;
+    }
+}
+#endif // USE_TILE
+
 void game_options::do_kill_map(const string &from, const string &to)
 {
     int ifrom = _str_to_killcategory(from),
         ito   = _str_to_killcategory(to);
     if (ifrom != -1 && ito != -1)
         kill_map[ifrom] = ito;
+}
+
+int game_options::read_use_animations(const string &field) const
+{
+    int animations = 0;
+    vector<string> types = split_string(",", field);
+    for (const auto &type : types)
+    {
+        if (type == "beam")
+            animations |= UA_BEAM;
+        else if (type == "range")
+            animations |= UA_RANGE;
+        else if (type == "hp")
+            animations |= UA_HP;
+        else if (type == "monster_in_sight")
+            animations |= UA_MONSTER_IN_SIGHT;
+        else if (type == "pickup")
+            animations |= UA_PICKUP;
+        else if (type == "monster")
+            animations |= UA_MONSTER;
+        else if (type == "player")
+            animations |= UA_PLAYER;
+        else if (type == "branch_entry")
+            animations |= UA_BRANCH_ENTRY;
+    }
+
+    return animations;
 }
 
 int game_options::read_explore_stop_conditions(const string &field) const
@@ -1924,8 +2081,7 @@ void game_options::add_alias(const string &key, const string &val)
 
 string game_options::unalias(const string &key) const
 {
-    string_map::const_iterator i = aliases.find(key);
-    return i == aliases.end()? key : i->second;
+    return lookup(aliases, key, key);
 }
 
 #define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
@@ -1950,7 +2106,7 @@ string game_options::expand_vars(const string &field) const
             continue;
 
         string::size_type end_pos;
-        for (end_pos = start_pos; end_pos < field_out.size(); end_pos++)
+        for (end_pos = start_pos; end_pos + 1 < field_out.size(); end_pos++)
         {
             if (!IS_VAR_CHAR(field_out[end_pos + 1]))
                 break;
@@ -1958,7 +2114,7 @@ string game_options::expand_vars(const string &field) const
 
         string var_name = field_out.substr(start_pos, end_pos - start_pos + 1);
 
-        string_map::const_iterator x = variables.find(var_name);
+        auto x = variables.find(var_name);
 
         if (x == variables.end())
         {
@@ -2046,11 +2202,11 @@ void game_options::set_menu_sort(string field)
         sort_menus.clear();
 
     // Override existing values, if necessary.
-    for (unsigned int i = 0; i < sort_menus.size(); i++)
-        if (sort_menus[i].mtype == cond.mtype)
+    for (menu_sort_condition &m_cond : sort_menus)
+        if (m_cond.mtype == cond.mtype)
         {
-            sort_menus[i].sort = cond.sort;
-            sort_menus[i].cmp  = cond.cmp;
+            m_cond.sort = cond.sort;
+            m_cond.cmp  = cond.cmp;
             return;
         }
 
@@ -2176,17 +2332,15 @@ static void _handle_list(vector<T> &value_list, string field,
         value_list.clear();
 
     vector<T> new_entries;
-    vector<string> parts = split_string(",", field);
-    for (vector<string>::iterator part = parts.begin();
-         part != parts.end(); ++part)
+    for (const auto &part : split_string(",", field))
     {
-        if (part->empty())
+        if (part.empty())
             continue;
 
         if (subtract)
-            remove_matching(value_list, *part);
+            remove_matching(value_list, part);
         else
-            new_entries.push_back(*part);
+            new_entries.push_back(part);
     }
     _merge_lists(value_list, new_entries, prepend);
 }
@@ -2239,6 +2393,20 @@ void game_options::read_option_line(const string &str, bool runscript)
         _handle_list(_opt_var, field, plus_equal, caret_equal, minus_equal); \
     } while (false)
 #define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt)
+#define NEWGAME_OPTION(_opt, _conv, _type)                                     \
+    if (plain)                                                                 \
+        _opt.clear();                                                          \
+    for (const auto &part : split_string(",", field))                          \
+    {                                                                          \
+        if (minus_equal)                                                       \
+        {                                                                      \
+            auto it2 = find(_opt.begin(), _opt.end(), _conv(part));            \
+            if (it2 != _opt.end())                                             \
+                _opt.erase(it2);                                               \
+        }                                                                      \
+        else                                                                   \
+            _opt.push_back(_conv(part));                                       \
+    }
     string key    = "";
     string subkey = "";
     string field  = "";
@@ -2314,6 +2482,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     const string orig_field = field;
 
     if (key != "name" && key != "crawl_dir" && key != "macro_dir"
+        && key != "combo"
         && key != "species" && key != "background" && key != "job"
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
@@ -2323,15 +2492,17 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "drop_filter" && key != "lua_file" && key != "terp_file"
         && key != "note_items" && key != "autoinscribe"
         && key != "note_monsters" && key != "note_messages"
-        && key.find("cset") != 0 && key != "dungeon"
-        && key != "feature" && key != "fire_items_start"
+        && key != "display_char" && key.find("cset") != 0 // compatibility
+        && key != "dungeon" && key != "feature"
         && key != "mon_glyph" && key != "item_glyph"
+        && key != "fire_items_start"
         && key != "opt" && key != "option"
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries"
         && key != "include" && key != "bindkey"
         && key != "spell_slot"
+        && key != "item_slot"
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -2368,12 +2539,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         if (field == "ascii")
             char_set = CSET_ASCII;
-        else if (field == "ibm")
-            char_set = CSET_IBM;
-        else if (field == "dec")
-            char_set = CSET_DEC;
-        else if (field == "utf" || field == "unicode")
-            char_set = CSET_OLD_UNICODE;
         else if (field == "default")
             char_set = CSET_DEFAULT;
         else
@@ -2401,6 +2566,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
 #ifndef DGAMELAUNCH
     else BOOL_OPTION(restart_after_game);
+    else BOOL_OPTION(restart_after_save);
 #endif
     else BOOL_OPTION(auto_switch);
     else BOOL_OPTION(suppress_startup_errors);
@@ -2440,21 +2606,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "auto")
             confirm_butcher = CONFIRM_AUTO;
     }
-    else BOOL_OPTION(chunks_autopickup);
-    else BOOL_OPTION(prompt_for_swap);
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(auto_eat_chunks);
-    else if (key == "auto_drop_chunks")
-    {
-        if (field == "never")
-            auto_drop_chunks = ADC_NEVER;
-        else if (field == "rotten")
-            auto_drop_chunks = ADC_ROTTEN;
-        else if (field == "yes" || field == "true")
-            auto_drop_chunks = ADC_YES;
-        else
-            report_error("Invalid auto_drop_chunks: \"%s\"", field.c_str());
-    }
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
@@ -2494,6 +2647,17 @@ void game_options::read_option_line(const string &str, bool runscript)
     else COLOUR_OPTION(detected_item_colour);
     else COLOUR_OPTION(detected_monster_colour);
     else COLOUR_OPTION(remembered_monster_colour);
+    else if (key == "use_animations")
+    {
+        if (plain)
+            use_animations = UA_NONE;
+
+        const int new_animations = read_use_animations(field);
+        if (minus_equal)
+            use_animations &= ~new_animations;
+        else
+            use_animations |= new_animations;
+    }
     else if (key.find(interrupt_prefix) == 0)
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()),
@@ -2501,19 +2665,22 @@ void game_options::read_option_line(const string &str, bool runscript)
                                plus_equal || caret_equal,
                                minus_equal);
     }
-    else if (key.find("cset") == 0)
+    else if (key == "display_char"
+             || key.find("cset") == 0) // compatibility with old rcfiles
     {
-        string cset = key.substr(4);
-        if (!cset.empty() && cset[0] == '_')
-            cset = cset.substr(1);
+        vector<string> overs = split_string(",", field);
+        for (int i = 0, size = overs.size(); i < size; ++i)
+        {
+            vector<string> mapping = split_string(":", overs[i]);
+            if (mapping.size() != 2)
+                continue;
 
-        char_set_type cs = NUM_CSET;
-        if (cset == "ibm")
-            cs = CSET_IBM;
-        else if (cset == "dec")
-            cs = CSET_DEC;
+            dungeon_char_type dc = dchar_by_name(mapping[0]);
+            if (dc == NUM_DCHAR_TYPES)
+                continue;
 
-        add_cset_override(cs, field);
+            add_cset_override(dc, read_symbol(mapping[1]));
+        }
     }
     else if (key == "feature" || key == "dungeon")
         split_parse(field, ";", &game_options::add_feature_override);
@@ -2551,14 +2718,29 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.type = _str_to_gametype(field);
 #endif
     }
+    else if (key == "combo")
+    {
+        game.allowed_species.clear();
+        game.allowed_jobs.clear();
+        game.allowed_weapons.clear();
+        NEWGAME_OPTION(game.allowed_combos, string, string);
+    }
     else if (key == "species" || key == "race")
-        game.species = _str_to_species(field);
+    {
+        game.allowed_combos.clear();
+        NEWGAME_OPTION(game.allowed_species, _str_to_species,
+                       species_type);
+    }
     else if (key == "background" || key == "job" || key == "class")
-        game.job = _str_to_job(field);
+    {
+        game.allowed_combos.clear();
+        NEWGAME_OPTION(game.allowed_jobs, str_to_job, job_type);
+    }
     else if (key == "weapon")
     {
         // Choose this weapon for backgrounds that get choice.
-        game.weapon = str_to_weapon(field);
+        game.allowed_combos.clear();
+        NEWGAME_OPTION(game.allowed_weapons, str_to_weapon, weapon_type);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
@@ -2727,6 +2909,21 @@ void game_options::read_option_line(const string &str, bool runscript)
     #endif
 #endif
     }
+    else if (key == "explore_mode")
+    {
+#ifdef WIZARD
+    #ifndef DGAMELAUNCH
+        if (field == "never")
+            explore_mode = WIZ_NEVER;
+        else if (field == "no")
+            explore_mode = WIZ_NO;
+        else if (field == "yes")
+            explore_mode = WIZ_YES;
+        else
+            report_error("Unknown explore_mode option: %s\n", field.c_str());
+    #endif
+#endif
+    }
     else if (key == "ban_pickup")
     {
         if (plain)
@@ -2833,7 +3030,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             autoinscriptions.push_back(entry);
     }
-    else BOOL_OPTION(autoinscribe_cursed);
 #ifndef DGAMELAUNCH
     else if (key == "map_file_name")
         map_file_name = field;
@@ -3018,26 +3214,30 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
-    else if (key == "spell_slot")
+    else if (key == "spell_slot"
+             || key == "item_slot")
+
     {
+        const bool item = key == "item_slot";
+        auto& auto_letters = item ? auto_item_letters : auto_spell_letters;
         if (plain)
-            auto_spell_letters.clear();
+            auto_letters.clear();
 
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
         {
-            return report_error("Error parsing spell lettering string: %s\n",
-                                field.c_str());
+            return report_error("Error parsing %s lettering string: %s\n",
+                                item ? "item" : "spell", field.c_str());
         }
         pair<text_pattern,string> entry(lowercase_string(thesplit[0]),
                                         thesplit[1]);
 
         if (minus_equal)
-            remove_matching(auto_spell_letters, entry);
+            remove_matching(auto_letters, entry);
         else if (caret_equal)
-            auto_spell_letters.insert(auto_spell_letters.begin(), entry);
+            auto_letters.insert(auto_letters.begin(), entry);
         else
-            auto_spell_letters.push_back(entry);
+            auto_letters.push_back(entry);
     }
     else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD
@@ -3275,9 +3475,10 @@ void game_options::read_option_line(const string &str, bool runscript)
             colour_mapping mapping;
             mapping.tag     = tagname;
             mapping.pattern = patname;
-            mapping.colour  = str_to_colour(colname);
+            const int col = str_to_colour(colname);
+            mapping.colour = col;
 
-            if (mapping.colour == -1)
+            if (col == -1)
                 continue;
             else if (minus_equal)
                 remove_matching(menu_colour_mappings, mapping);
@@ -3332,6 +3533,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
     }
     else BOOL_OPTION(rest_wait_both);
+    else BOOL_OPTION(cloud_status);
     else if (key == "dump_message_count")
     {
         // Capping is implicit
@@ -3384,8 +3586,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             dump_item_origin_price = -1;
     }
     else BOOL_OPTION(dump_book_spells);
-    else if (key == "darken_beyond_range")
-        darken_beyond_range = _read_bool(field, darken_beyond_range);
     else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {
@@ -3406,10 +3606,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
         tile_monster_col = str_to_tile_colour(field);
-    else if (key == "tile_neutral_col")
-        tile_neutral_col = str_to_tile_colour(field);
-    else if (key == "tile_friendly_col")
-        tile_friendly_col = str_to_tile_colour(field);
     else if (key == "tile_plant_col")
         tile_plant_col = str_to_tile_colour(field);
     else if (key == "tile_item_col")
@@ -3511,8 +3707,18 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(tile_show_demon_tier);
     else BOOL_OPTION(tile_water_anim);
     else BOOL_OPTION(tile_misc_anim);
-    else BOOL_OPTION(tile_show_player_species);
+    else if (key == "tile_show_player_species" && field == "true")
+    {
+        field = "playermons";
+        set_player_tile(field);
+    }
     else LIST_OPTION(tile_layout_priority);
+    else if (key == "tile_player_tile")
+        set_player_tile(field);
+    else if (key == "tile_weapon_offsets")
+        set_tile_offsets(field, false);
+    else if (key == "tile_shield_offsets")
+        set_tile_offsets(field, true);
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #ifdef USE_TILE_WEB
@@ -3637,10 +3843,6 @@ bool game_options::set_lang(const char *lc)
         lang = LANG_KRAUT;
     else if (l == "futhark" || l == "runes" || l == "runic")
         lang = LANG_FUTHARK;
-/*
-    else if (l == "cyr" || l == "cyrillic" || l == "commie" || l == "кириллица")
-        lang = LANG_CYRILLIC;
-*/
     else if (l == "wide" || l == "doublewidth" || l == "fullwidth")
         lang = LANG_WIDE;
     else if (l == "grunt" || l == "sgrunt" || l == "!!!")
@@ -3829,7 +4031,6 @@ enum commandline_option_type
     CLO_NAME,
     CLO_RACE,
     CLO_CLASS,
-    CLO_PLAIN,
     CLO_DIR,
     CLO_RC,
     CLO_RCDIR,
@@ -3859,9 +4060,12 @@ enum commandline_option_type
     CLO_ZOTDEF,
     CLO_TUTORIAL,
     CLO_WIZARD,
+    CLO_EXPLORE,
     CLO_NO_SAVE,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
+    CLO_THROTTLE,
+    CLO_NO_THROTTLE,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -3873,13 +4077,13 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "scores", "name", "species", "background", "plain", "dir", "rc",
+    "scores", "name", "species", "background", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef", "tutorial", "wizard", "no-save",
-    "gdb", "no-gdb", "nogdb",
+    "print-charset", "zotdef", "tutorial", "wizard", "explore", "no-save",
+    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -3896,7 +4100,7 @@ static string _find_executable_path()
     // resources.
 #if defined (TARGET_OS_WINDOWS)
     wchar_t tempPath[MAX_PATH];
-    if (GetModuleFileNameW(NULL, tempPath, MAX_PATH))
+    if (GetModuleFileNameW(nullptr, tempPath, MAX_PATH))
         return utf16_to_8(tempPath);
     else
         return "";
@@ -3996,15 +4200,15 @@ static void _edit_save(int argc, char **argv)
     es_command_type cmd = NUM_ES;
     bool rw;
 
-    for (unsigned int nc = 0; nc < ARRAYSZ(es_commands); nc++)
-        if (!strcmp(es_commands[nc].name, cmdn))
+    for (const es_command &ec : es_commands)
+        if (!strcmp(ec.name, cmdn))
         {
-            if (argc < es_commands[nc].min_args + 2)
+            if (argc < ec.min_args + 2)
                 FAIL("Too few arguments for %s.\n", cmdn);
-            else if (argc > es_commands[nc].max_args + 2)
+            else if (argc > ec.max_args + 2)
                 FAIL("Too many arguments for %s.\n", cmdn);
-            cmd = es_commands[nc].cmd;
-            rw = es_commands[nc].rw;
+            cmd = ec.cmd;
+            rw = ec.rw;
             break;
         }
     if (cmd == NUM_ES)
@@ -4022,8 +4226,8 @@ static void _edit_save(int argc, char **argv)
         {
             vector<string> list = save.list_chunks();
             sort(list.begin(), list.end(), numcmpstr);
-            for (size_t i = 0; i < list.size(); i++)
-                printf("%s\n", list[i].c_str());
+            for (const string &s : list)
+                printf("%s\n", s.c_str());
         }
         else if (cmd == ES_GET)
         {
@@ -4090,13 +4294,12 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_REPACK)
         {
             package save2((filename + ".tmp").c_str(), true, true);
-            vector<string> list = save.list_chunks();
-            for (size_t i = 0; i < list.size(); i++)
+            for (const string &chunk : save.list_chunks())
             {
                 char buf[16384];
 
-                chunk_reader in(&save, list[i]);
-                chunk_writer out(&save2, list[i]);
+                chunk_reader in(&save, chunk);
+                chunk_writer out(&save2, chunk);
 
                 while (plen_t s = in.read(buf, sizeof(buf)))
                     out.write(buf, s);
@@ -4114,18 +4317,18 @@ static void _edit_save(int argc, char **argv)
             plen_t flen = save.get_size();
             plen_t slack = save.get_slack();
             printf("Chunks: (size compressed/uncompressed, fragments, name)\n");
-            for (size_t i = 0; i < list.size(); i++)
+            for (const string &chunk : list)
             {
-                int cfrag = save.get_chunk_fragmentation(list[i]);
+                int cfrag = save.get_chunk_fragmentation(chunk);
                 frag += cfrag;
-                int cclen = save.get_chunk_compressed_length(list[i]);
+                int cclen = save.get_chunk_compressed_length(chunk);
 
                 char buf[16384];
-                chunk_reader in(&save, list[i]);
+                chunk_reader in(&save, chunk);
                 plen_t clen = 0;
                 while (plen_t s = in.read(buf, sizeof(buf)))
                     clen += s;
-                printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, list[i].c_str());
+                printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, chunk.c_str());
             }
             // the directory is not a chunk visible from the outside
             printf("Fragmentation:    %u/%u (%4.2f)\n", frag, nchunks + 1,
@@ -4148,11 +4351,11 @@ static void _write_colour_list(const vector<pair<int, int> > variable,
         const string &name)
 {
     tiles.json_open_array(name);
-    for (unsigned int i = 0; i < variable.size(); i++)
+    for (const auto &entry : variable)
     {
         tiles.json_open_object();
-        tiles.json_write_int("value", variable[i].first);
-        tiles.json_write_string("colour", colour_to_str(variable[i].second));
+        tiles.json_write_int("value", entry.first);
+        tiles.json_write_string("colour", colour_to_str(entry.second));
         tiles.json_close_object();
     }
     tiles.json_close_array();
@@ -4173,9 +4376,6 @@ static void _write_minimap_colours()
 {
     _write_vcolour("tile_player_col", Options.tile_player_col);
     _write_vcolour("tile_monster_col", Options.tile_monster_col);
-    _write_vcolour("tile_neutral_col", Options.tile_neutral_col);
-    _write_vcolour("tile_peaceful_col", Options.tile_peaceful_col);
-    _write_vcolour("tile_friendly_col", Options.tile_friendly_col);
     _write_vcolour("tile_plant_col", Options.tile_plant_col);
     _write_vcolour("tile_item_col", Options.tile_item_col);
     _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
@@ -4329,7 +4529,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
     if (SysEnv.cmd_args.empty())
     {
         for (int i = 1; i < argc; ++i)
-            SysEnv.cmd_args.push_back(argv[i]);
+            SysEnv.cmd_args.emplace_back(argv[i]);
     }
 
     while (current < argc)
@@ -4341,7 +4541,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         if (current+1 < argc)
             next_arg = argv[current+1];
         else
-            next_arg = NULL;
+            next_arg = nullptr;
 
         nextUsed = false;
 
@@ -4378,15 +4578,18 @@ bool parse_args(int argc, char **argv, bool rc_only)
         }
 
         // Disallow options specified more than once.
-        if (arg_seen[o] == true)
+        if (arg_seen[o])
+        {
+            fprintf(stderr, "Duplicate option: %s\n\n", argv[current]);
             return false;
+        }
 
         // Set arg to 'seen'.
         arg_seen[o] = true;
 
         // Partially parse next argument.
         bool next_is_param = false;
-        if (next_arg != NULL
+        if (next_arg != nullptr
             && (next_arg[0] != '-' || strlen(next_arg) == 1))
         {
             next_is_param = true;
@@ -4432,6 +4635,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 crawl_state.map_stat_gen = true;
             else
                 crawl_state.obj_stat_gen = true;
+#ifdef USE_TILE_LOCAL
+            crawl_state.tiles_disabled = true;
+#endif
 
             if (!SysEnv.map_gen_iters)
                 SysEnv.map_gen_iters = 100;
@@ -4506,7 +4712,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             {
                 crawl_state.tests_selected = split_string(",", next_arg);
                 for (int extra = current + 2; extra < argc; ++extra)
-                    crawl_state.script_args.push_back(argv[extra]);
+                    crawl_state.script_args.emplace_back(argv[extra]);
                 current = argc;
             }
             else
@@ -4518,6 +4724,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (next_is_param)
                 return false;
             crawl_state.build_db = true;
+#ifdef USE_TILE_LOCAL
+            crawl_state.tiles_disabled = true;
+#endif
             break;
 
         case CLO_GDB:
@@ -4571,20 +4780,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
                     Options.game.species = _str_to_species(string(next_arg));
 
                 if (o == 3)
-                    Options.game.job = _str_to_job(string(next_arg));
+                    Options.game.job = str_to_job(string(next_arg));
             }
             nextUsed = true;
-            break;
-
-        case CLO_PLAIN:
-            if (next_is_param)
-                return false;
-
-            if (!rc_only)
-            {
-                Options.char_set = CSET_ASCII;
-                init_char_table(Options.char_set);
-            }
             break;
 
         case CLO_RCDIR:
@@ -4675,6 +4873,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
 #endif
             break;
 
+        case CLO_EXPLORE:
+#ifdef WIZARD
+            if (!rc_only)
+                Options.explore_mode = WIZ_NO;
+#endif
+            break;
+
         case CLO_NO_SAVE:
             if (!rc_only)
                 Options.no_save = true;
@@ -4712,6 +4917,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
             end(0);
             break;
 
+        case CLO_THROTTLE:
+            crawl_state.throttle = true;
+            break;
+
+        case CLO_NO_THROTTLE:
+            crawl_state.throttle = false;
+            break;
+
         case CLO_EXTRA_OPT_FIRST:
             if (!next_is_param)
                 return false;
@@ -4720,7 +4933,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!_check_extra_opt(next_arg))
                 return true;
 
-            SysEnv.extra_opts_first.push_back(next_arg);
+            SysEnv.extra_opts_first.emplace_back(next_arg);
             nextUsed = true;
 
             // Can be used multiple times.
@@ -4735,7 +4948,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!_check_extra_opt(next_arg))
                 return true;
 
-            SysEnv.extra_opts_last.push_back(next_arg);
+            SysEnv.extra_opts_last.emplace_back(next_arg);
             nextUsed = true;
 
             // Can be used multiple times.
@@ -4758,30 +4971,22 @@ bool parse_args(int argc, char **argv, bool rc_only)
 int game_options::o_int(const char *name, int def) const
 {
     int val = def;
-    opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-        val = atoi(i->second.c_str());
+    if (const string *value = map_find(named_options, name))
+        val = atoi(value->c_str());
     return val;
 }
 
 bool game_options::o_bool(const char *name, bool def) const
 {
     bool val = def;
-    opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-        val = _read_bool(i->second, val);
+    if (const string *value = map_find(named_options, name))
+        val = _read_bool(*value, val);
     return val;
 }
 
 string game_options::o_str(const char *name, const char *def) const
 {
-    string val;
-    opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-        val = i->second;
-    else if (def)
-        val = def;
-    return val;
+    return lookup(named_options, name, def ? def : "");
 }
 
 int game_options::o_colour(const char *name, int def) const
@@ -4842,13 +5047,13 @@ void menu_sort_condition::set_menu_type(string &s)
           { "know:",   MT_KNOW      }
       };
 
-    for (unsigned mi = 0; mi < ARRAYSZ(menu_type_map); ++mi)
+    for (const auto &mi : menu_type_map)
     {
-        const string &name = menu_type_map[mi].mname;
+        const string &name = mi.mname;
         if (s.find(name) == 0)
         {
             s = s.substr(name.length());
-            mtype = menu_type_map[mi].mtype;
+            mtype = mi.mtype;
             break;
         }
     }

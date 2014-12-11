@@ -9,17 +9,17 @@
 
 int TextRegion::print_x;
 int TextRegion::print_y;
-TextRegion *TextRegion::text_mode = NULL;
+TextRegion *TextRegion::text_mode = nullptr;
 int TextRegion::text_col = 0;
 
-TextRegion *TextRegion::cursor_region= NULL;
+TextRegion *TextRegion::cursor_region= nullptr;
 int TextRegion::cursor_flag = 0;
 int TextRegion::cursor_x;
 int TextRegion::cursor_y;
 
 TextRegion::TextRegion(FontWrapper *font) :
-    cbuf(NULL),
-    abuf(NULL),
+    cbuf(nullptr),
+    abuf(nullptr),
     cx_ofs(0),
     cy_ofs(0),
     m_font(font)
@@ -145,14 +145,14 @@ void TextRegion::putwch(ucs_t ch)
     addstr_aux(&ch, 1);
 }
 
-void TextRegion::textcolor(int color)
+void TextRegion::textcolour(int colour)
 {
-    text_col = color;
+    text_col = colour;
 }
 
 void TextRegion::textbackground(int col)
 {
-    textcolor(col*16 + (text_col & 0xf));
+    textcolour(col*16 + (text_col & 0xf));
 }
 
 void TextRegion::cgotoxy(int x, int y)
@@ -163,11 +163,11 @@ void TextRegion::cgotoxy(int x, int y)
     print_y = y-1;
 
 #if 0
-    if (cursor_region != NULL && cursor_flag)
+    if (cursor_region != nullptr && cursor_flag)
     {
         cursor_x = -1;
         cursor_y = -1;
-        cursor_region = NULL;
+        cursor_region = nullptr;
     }
 #endif
     if (cursor_flag)
@@ -191,7 +191,7 @@ int TextRegion::wherey()
 void TextRegion::_setcursortype(int curstype)
 {
     cursor_flag = curstype;
-    if (cursor_region != NULL)
+    if (cursor_region != nullptr)
     {
         cursor_x = -1;
         cursor_y = -1;

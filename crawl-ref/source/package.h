@@ -3,12 +3,15 @@
 
 #define USE_ZLIB
 
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
-
 #ifdef USE_ZLIB
 #include <zlib.h>
+#endif
+
+#if !defined(DGAMELAUNCH) && !defined(__ANDROID__) && !defined(DEBUG_DIAGNOSTICS)
+#define DO_FSYNC
 #endif
 
 #define MAX_CHUNK_NAME_LENGTH 255
@@ -88,7 +91,9 @@ private:
     int n_users;
     bool dirty;
     bool aborted;
+#ifdef DO_FSYNC
     bool tmp;
+#endif
     map<string, plen_t> directory;
     map<plen_t, plen_t> free_blocks;
     vector<plen_t> unlinked_blocks;

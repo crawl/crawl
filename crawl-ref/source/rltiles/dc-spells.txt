@@ -104,6 +104,7 @@ sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
 twisted_resurrection TWISTED_RESURRECTION
 vampiric_draining VAMPIRIC_DRAINING
+cigotuvis_embrace CIGOTUVIS_EMBRACE
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
@@ -154,10 +155,14 @@ portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
 shroud_of_golubria SHROUD_OF_GOLUBRIA
+singularity SINGULARITY
+gravitas GRAVITAS
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
 beastly_appendage BEASTLY_APPENDAGE
+irradiate IRRADIATE
+hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
 
 # rod spells
@@ -210,9 +215,9 @@ error CONTROL_WINDS
 error CORRUPT_BODY
 error CREATE_TENTACLES
 error CRYSTAL_BOLT
+error DEATH_RATTLE
 error DIMENSION_ANCHOR
 error DISINTEGRATE
-error DRACONIAN_BREATH
 error DRUIDS_CALL
 %sdir gui/spells/monster
 earth_elementals EARTH_ELEMENTALS

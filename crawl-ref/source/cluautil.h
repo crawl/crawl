@@ -56,7 +56,7 @@ void luaopen_setmeta(lua_State *ls,
 
 void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
-                             int (*gcfn)(lua_State *ls) = NULL);
+                             int (*gcfn)(lua_State *ls) = nullptr);
 
 int clua_stringtable(lua_State *ls, const vector<string> &s);
 
@@ -70,7 +70,7 @@ static inline T *clua_get_lightuserdata(lua_State *ls, int ndx)
 {
     return (lua_islightuserdata(ls, ndx))?
             static_cast<T *>(lua_touserdata(ls, ndx))
-          : NULL;
+          : nullptr;
 }
 
 template <class T>
@@ -124,8 +124,6 @@ int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t);
 class map_def;
 void clua_push_map(lua_State *ls, map_def *map);
 
-void clua_push_coord(lua_State *ls, const coord_def &c);
-
 class dgn_event;
 void clua_push_dgn_event(lua_State *ls, const dgn_event *devent);
 
@@ -145,7 +143,6 @@ dungeon_feature_type check_lua_feature(lua_State *ls, int idx,
                                        bool optional = false);
 tileidx_t get_tile_idx(lua_State *ls, int arg);
 level_id dlua_level_id(lua_State *ls, int ndx);
-void push_item(lua_State *ls, item_def *item);
 
 #define GETCOORD(c, p1, p2, boundfn)                      \
     coord_def c;                                          \

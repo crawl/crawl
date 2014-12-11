@@ -3,12 +3,12 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-dgn.h"
-#include "process_desc.h"
 
 #include "cio.h"
 #include "cloud.h"
 #include "command.h"
 #include "coord.h"
+#include "directn.h"
 #include "dgn-height.h"
 #include "env.h"
 #include "invent.h"
@@ -21,15 +21,17 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
+#include "process_desc.h"
+#include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stash.h"
-#include "stuff.h"
 #include "terrain.h"
+#include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
-#include "tiledef-dngn.h"
 #include "tilefont.h"
 #include "tilepick.h"
 #include "traps.h"
@@ -144,25 +146,25 @@ void DungeonRegion::pack_buffers()
                                  m_cursor[CURSOR_TUTORIAL].y);
     }
 
-    for (unsigned int i = 0; i < m_overlays.size(); i++)
+    for (const tile_overlay &overlay : m_overlays)
     {
         // overlays must be from the main image and must be in LOS.
-        if (!crawl_view.in_los_bounds_g(m_overlays[i].gc))
+        if (!crawl_view.in_los_bounds_g(overlay.gc))
             continue;
 
-        tileidx_t idx = m_overlays[i].idx;
+        tileidx_t idx = overlay.idx;
         if (idx >= TILE_MAIN_MAX)
             continue;
 
-        const coord_def ep(m_overlays[i].gc.x - m_cx_to_gx,
-                           m_overlays[i].gc.y - m_cy_to_gy);
+        const coord_def ep(overlay.gc.x - m_cx_to_gx,
+                           overlay.gc.y - m_cy_to_gy);
         m_buf_dngn.add_main_tile(idx, ep.x, ep.y);
     }
 }
 
 struct tag_def
 {
-    tag_def() { text = NULL; left = right = 0; }
+    tag_def() { text = nullptr; left = right = 0; }
 
     const char* text;
     char left, right;
@@ -192,17 +194,17 @@ void DungeonRegion::render()
 
     for (int t = TAG_MAX - 1; t >= 0; t--)
     {
-        for (unsigned int i = 0; i < m_tags[t].size(); i++)
+        for (const TextTag &tag : m_tags[t])
         {
-            if (!crawl_view.in_los_bounds_g(m_tags[t][i].gc))
+            if (!crawl_view.in_los_bounds_g(tag.gc))
                 continue;
 
-            const coord_def ep = grid2show(m_tags[t][i].gc);
+            const coord_def ep = grid2show(tag.gc);
 
             if (tag_show(ep).text)
                 continue;
 
-            const char *str = m_tags[t][i].tag.c_str();
+            const char *str = tag.tag.c_str();
 
             int width    = m_tag_font->string_width(str);
             tag_def &def = tag_show(ep);
@@ -311,9 +313,9 @@ void DungeonRegion::draw_minibars()
             const int hp_percent = (you.hp * 100) / you.hp_max;
 
             int hp_colour = GREEN;
-            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
-                if (hp_percent <= Options.hp_colour[i].first)
-                    hp_colour = Options.hp_colour[i].second;
+            for (const auto &entry : Options.hp_colour)
+                if (hp_percent <= entry.first)
+                    hp_colour = entry.second;
 
             static const VColour healthy(   0, 255, 0, 255); // green
             static const VColour damaged( 255, 255, 0, 255); // yellow
@@ -510,7 +512,7 @@ static item_def* _get_evokable_item(const actor* target)
     redraw_screen();
 
     if (sel.empty())
-        return NULL;
+        return nullptr;
 
     return const_cast<item_def*>(sel[0].item);
 }
@@ -525,17 +527,13 @@ static bool _evoke_item_on_target(actor* target)
         item = _get_evokable_item(target);
     }
 
-    if (item == NULL)
+    if (item == nullptr)
         return false;
 
-    if (item->base_type == OBJ_WANDS)
+    if (is_known_empty_wand(*item))
     {
-        if (item->plus2 == ZAPCOUNT_EMPTY
-            || item_type_known(*item) && item->plus <= 0)
-        {
-            mpr("That wand is empty.");
-            return false;
-        }
+        mpr("That wand is empty.");
+        return false;
     }
 
     macro_buf_add_cmd(CMD_EVOKE);
@@ -567,7 +565,7 @@ static bool _spell_in_range(spell_type spell, actor* target)
     return range >= grid_distance(you.pos(), target->pos());
 }
 
-static actor* _spell_target = NULL;
+static actor* _spell_target = nullptr;
 
 static bool _spell_selector(spell_type spell)
 {
@@ -597,7 +595,7 @@ static bool _cast_spell_on_target(actor* target)
                                  _spell_selector);
         }
 
-        _spell_target = NULL;
+        _spell_target = nullptr;
 
         if (letter == 0)
             return false;
@@ -632,10 +630,8 @@ static bool _cast_spell_on_target(actor* target)
 
 static bool _have_appropriate_spell(const actor* target)
 {
-    for (size_t i = 0; i < you.spells.size(); i++)
+    for (spell_type spell : you.spells)
     {
-        spell_type spell = you.spells[i];
-
         if (!is_valid_spell(spell))
             continue;
 
@@ -871,7 +867,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
                         }
                     }
                     // otherwise wait
-                    return command_to_key(CMD_MOVE_NOWHERE);
+                    return command_to_key(CMD_WAIT);
                 }
                 else
                 {
@@ -1253,7 +1249,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
             {
                 // otherwise wait
                 _add_tip(tip, "[L-Click] Wait one turn (%)");
-                cmd.push_back(CMD_MOVE_NOWHERE);
+                cmd.push_back(CMD_WAIT);
             }
         }
         else

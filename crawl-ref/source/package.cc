@@ -20,24 +20,21 @@ Notes:
 
 #include "AppHdr.h"
 
-#include <stdio.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sstream>
-
 #include "package.h"
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "endianness.h"
 #include "errors.h"
 #include "syscalls.h"
-
-#if !defined(DGAMELAUNCH) && !defined(__ANDROID__) && !defined(DEBUG_DIAGNOSTICS)
-#define DO_FSYNC
-#endif
+#include "libutil.h" // map_find
 
 // debugging defines
 #undef  FSCK_VERBOSE
@@ -82,7 +79,10 @@ typedef map<plen_t, bm_p> bm_t;
 typedef map<plen_t, plen_t> fb_t;
 
 package::package(const char* file, bool writeable, bool empty)
-  : n_users(0), dirty(false), aborted(false), tmp(false)
+  : n_users(0), dirty(false), aborted(false)
+#ifdef DO_FSYNC
+    , tmp(false)
+#endif
 {
     dprintf("package: initializing file=\"%s\" rw=%d\n", file, writeable);
     ASSERT(writeable || !empty);
@@ -126,7 +126,10 @@ package::package(const char* file, bool writeable, bool empty)
 }
 
 package::package()
-  : rw(true), n_users(0), dirty(false), aborted(false), tmp(true)
+  : rw(true), n_users(0), dirty(false), aborted(false)
+#ifdef DO_FSYNC
+    , tmp(true)
+#endif
 {
     dprintf("package: initializing tmp file\n");
     filename = "[tmp]";
@@ -186,11 +189,9 @@ void package::load_traces()
 
     free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
 
-    for (directory_t::iterator ch = directory.begin();
-        ch != directory.end(); ++ch)
-    {
-        trace_chunk(ch->second);
-    }
+    for (const auto &entry : directory)
+        trace_chunk(entry.second);
+
 #ifdef COSTLY_ASSERTS
     // any inconsitency in the save is guaranteed to be already found
     // by this time -- this checks only for internal bugs
@@ -279,10 +280,9 @@ chunk_writer* package::writer(const string name)
 
 chunk_reader* package::reader(const string name)
 {
-    directory_t::iterator ch = directory.find(name);
-    if (ch == directory.end())
-        return 0;
-    return new chunk_reader(this, ch->second);
+    if (plen_t *ch = map_find(directory, name))
+        return new chunk_reader(this, *ch);
+    return 0;
 }
 
 plen_t package::extend_block(plen_t at, plen_t size, plen_t by)
@@ -296,7 +296,7 @@ plen_t package::extend_block(plen_t at, plen_t size, plen_t by)
         return by;
     }
 
-    fb_t::iterator bl = free_blocks.find(at + size);
+    auto bl = free_blocks.find(at + size);
     if (bl == free_blocks.end())
         return 0;
 
@@ -363,7 +363,7 @@ void package::finish_chunk(const string name, plen_t at)
 
 void package::free_chunk(const string name)
 {
-    directory_t::iterator ci = directory.find(name);
+    auto ci = directory.find(name);
     if (ci == directory.end())
         return;
 
@@ -387,13 +387,12 @@ plen_t package::write_directory()
     delete_chunk("");
 
     stringstream dir;
-    for (directory_t::iterator i = directory.begin();
-         i != directory.end(); ++i)
+    for (const auto &entry : directory)
     {
-        uint8_t name_len = i->first.length();
+        uint8_t name_len = entry.first.length();
         dir.write((const char*)&name_len, sizeof(name_len));
-        dir.write(&i->first[0], i->first.length());
-        plen_t start = htole(i->second);
+        dir.write(&entry.first[0], entry.first.length());
+        plen_t start = htole(entry.second);
         dir.write((const char*)&start, sizeof(plen_t));
     }
 
@@ -432,7 +431,7 @@ void package::free_block_chain(plen_t at)
     dprintf("freeing an unlinked chain at %d\n", at);
     while (at)
     {
-        bm_t::iterator bl = block_map.find(at);
+        auto bl = block_map.find(at);
         ASSERT(bl != block_map.end());
         dprintf("+- at %d size=%d+header\n", at, bl->second.first);
         free_block(at, bl->second.first + sizeof(block_header));
@@ -446,9 +445,7 @@ void package::free_block(plen_t at, plen_t size)
     ASSERT(at >= sizeof(file_header));
     ASSERT(at + size <= file_len);
 
-    fb_t::iterator neigh;
-
-    neigh = free_blocks.lower_bound(at);
+    auto neigh = free_blocks.lower_bound(at);
     if (neigh != free_blocks.begin())
     {
         --neigh;
@@ -490,19 +487,15 @@ void package::fsck()
            (unsigned int)directory.size(), (unsigned int)block_map.size(),
            (unsigned int)free_blocks.size(), file_len);
 
-    for (fb_t::const_iterator bl = free_blocks.begin(); bl != free_blocks.end();
-        ++bl)
-    {
-        printf("<at %u size %u>\n", bl->first, bl->second);
-    }
+    for (const auto &bl : free_blocks)
+        printf("<at %u size %u>\n", bl.first, bl.second);
 #endif
-    for (bm_t::const_iterator bl = block_map.begin(); bl != block_map.end();
-        ++bl)
+    for (const auto &bl : block_map)
     {
 #ifdef FSCK_VERBOSE
-        printf("[at %u size %u+header]\n", bl->first, bl->second.first);
+        printf("[at %u size %u+header]\n", bl.first, bl.second.first);
 #endif
-        free_block(bl->first, bl->second.first + sizeof(block_header));
+        free_block(bl.first, bl.second.first + sizeof(block_header));
     }
     // after freeing everything, the file should be empty
     ASSERT(free_blocks.empty());
@@ -572,12 +565,10 @@ vector<string> package::list_chunks()
 {
     vector<string> list;
     list.reserve(directory.size());
-    for (directory_t::iterator i = directory.begin();
-         i != directory.end(); ++i)
-    {
-        if (!i->first.empty())
-            list.push_back(i->first);
-    }
+    for (const auto &entry : directory)
+        if (!entry.first.empty())
+            list.push_back(entry.first);
+
     return list;
 }
 
@@ -598,7 +589,7 @@ void package::trace_chunk(plen_t start)
         plen_t end  = start + len + sizeof(block_header);
         dprintf("{at %u size %u+header}\n", start, len);
 
-        fb_t::iterator sp = free_blocks.upper_bound(start);
+        auto sp = free_blocks.upper_bound(start);
         if (sp == free_blocks.begin())
             corrupted("save file corrupted -- overlapping blocks");
         --sp;
@@ -639,8 +630,8 @@ plen_t package::get_slack()
     load_traces();
 
     plen_t slack = 0;
-    for (fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
-        slack += bl->second;
+    for (const auto &bl : free_blocks)
+        slack += bl.second;
     return slack;
 }
 
@@ -652,7 +643,7 @@ plen_t package::get_chunk_fragmentation(const string name)
     plen_t at = directory[name];
     while (at)
     {
-        bm_t::iterator bl = block_map.find(at);
+        auto bl = block_map.find(at);
         ASSERT(bl != block_map.end());
         frags ++;
         at = bl->second.second;
@@ -668,7 +659,7 @@ plen_t package::get_chunk_compressed_length(const string name)
     plen_t at = directory[name];
     while (at)
     {
-        bm_t::iterator bl = block_map.find(at);
+        auto bl = block_map.find(at);
         ASSERT(bl != block_map.end());
         len += bl->second.first;
         at = bl->second.second;

@@ -2,18 +2,19 @@
 
 #include "clua.h"
 
+#include <algorithm>
+
 #include "cluautil.h"
 #include "dlua.h"
-#include "l_libs.h"
-
+#include "end.h"
 #include "files.h"
 #include "libutil.h"
+#include "l_libs.h"
+#include "misc.h" // erase_val
 #include "state.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "syscalls.h"
 #include "unicode.h"
-
-#include <algorithm>
 
 #define BUGGY_PCALL_ERROR  "667: Malformed response to guarded pcall."
 #define BUGGY_SCRIPT_ERROR "666: Killing badly-behaved Lua script."
@@ -52,7 +53,7 @@ CLua::CLua(bool managed)
       throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
       lua_call_depth(0), max_mixed_call_depth(8),
       max_lua_call_depth(100), memory_used(0),
-      _state(NULL), sourced_files(), uniqindex(0)
+      _state(nullptr), sourced_files(), uniqindex(0)
 {
 }
 
@@ -180,6 +181,9 @@ void CLua::set_error(int err, lua_State *ls)
 void CLua::init_throttle()
 {
     if (!managed_vm)
+        return;
+
+    if (!crawl_state.throttle)
         return;
 
     if (throttle_unit_lines <= 0)
@@ -469,7 +473,7 @@ int CLua::return_count(lua_State *ls, const char *format)
     const char *cs = strchr(format, ':');
     if (cs && isdigit(*format))
     {
-        char *es = NULL;
+        char *es = nullptr;
         int ci = strtol(format, &es, 10);
         // We're capping return at 10 here, which is arbitrary, but avoids
         // blowing the stack.
@@ -495,6 +499,11 @@ bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
     return !err;
 }
 
+static maybe_bool _frombool(bool b)
+{
+    return b ? MB_TRUE : MB_FALSE;
+}
+
 maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
                                 va_list args)
 {
@@ -516,7 +525,7 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     if (!ret)
         CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
 
-    maybe_bool r = frombool(lua_toboolean(ls, -1));
+    maybe_bool r = _frombool(lua_toboolean(ls, -1));
     CL_RESETSTACK_RETURN(ls, stacktop, r);
 }
 
@@ -527,17 +536,31 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
     return callmbooleanfn(fn, params, args);
 }
 
+static bool _tobool(maybe_bool mb, bool def)
+{
+    switch (mb)
+    {
+    case MB_TRUE:
+        return true;
+    case MB_FALSE:
+        return false;
+    case MB_MAYBE:
+    default:
+        return def;
+    }
+}
+
 bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
 {
     va_list args;
     va_start(args, params);
     maybe_bool r = callmbooleanfn(fn, params, args);
-    return tobool(r, def);
+    return _tobool(r, def);
 }
 
 bool CLua::proc_returns(const char *par) const
 {
-    return strchr(par, '>') != NULL;
+    return strchr(par, '>') != nullptr;
 }
 
 // Identical to lua_getglobal for simple names, but will look up
@@ -750,10 +773,7 @@ void CLua::add_shutdown_listener(lua_shutdown_listener *listener)
 
 void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
 {
-    vector<lua_shutdown_listener*>::iterator i =
-        find(shutdown_listeners.begin(), shutdown_listeners.end(), listener);
-    if (i != shutdown_listeners.end())
-        shutdown_listeners.erase(i);
+    erase_val(shutdown_listeners, listener);
 }
 
 // Can be called from within a debugger to look at the current Lua
@@ -770,7 +790,7 @@ void CLua::print_stack()
         lua_getinfo(L, "lnuS", &dbg);
 
         char* file = strrchr(dbg.short_src, '/');
-        if (file == NULL)
+        if (file == nullptr)
             file = dbg.short_src;
         else
             file++;
@@ -812,12 +832,9 @@ unsigned int lua_text_pattern::lfndx = 0;
 
 bool lua_text_pattern::is_lua_pattern(const string &s)
 {
-    for (int i = 0, size = ARRAYSZ(pat_ops); i < size; ++i)
-    {
-        if (s.find(pat_ops[i].token) != string::npos)
-            return true;
-    }
-    return false;
+    return any_of(begin(pat_ops), end(pat_ops),
+            [&s] (const lua_pat_op &op)
+            { return s.find(op.token) != string::npos; });
 }
 
 lua_text_pattern::lua_text_pattern(const string &_pattern)
@@ -893,7 +910,7 @@ bool lua_text_pattern::translate() const
 
     string textp;
     string luafn;
-    const lua_pat_op *currop = NULL;
+    const lua_pat_op *currop = nullptr;
     for (string::size_type i = 0; i < pattern.length(); ++i)
     {
         bool match = false;
@@ -979,13 +996,13 @@ static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
     if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024
         && cl->mixed_call_depth)
     {
-        return NULL;
+        return nullptr;
     }
 
     if (!nsize)
     {
         free(ptr);
-        return NULL;
+        return nullptr;
     }
     else
         return realloc(ptr, nsize);
@@ -1037,8 +1054,7 @@ lua_call_throttle::~lua_call_throttle()
 
 CLua *lua_call_throttle::find_clua(lua_State *ls)
 {
-    lua_clua_map::iterator i = lua_map.find(ls);
-    return i != lua_map.end()? i->second : NULL;
+    return lookup(lua_map, ls, nullptr);
 }
 
 // This function is a replacement for Lua's in-built pcall function. It behaves

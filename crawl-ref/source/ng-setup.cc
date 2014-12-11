@@ -5,6 +5,7 @@
 #include "ability.h"
 #include "decks.h"
 #include "dungeon.h"
+#include "end.h"
 #include "files.h"
 #include "food.h"
 #include "godcompanions.h"
@@ -14,22 +15,16 @@
 #include "items.h"
 #include "item_use.h"
 #include "jobs.h"
-#include "maps.h"
 #include "mutation.h"
-#include "newgame.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
 #include "options.h"
-#include "player.h"
+#include "prompt.h"
 #include "religion.h"
-#include "rot.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
-#include "tutorial.h"
 
 #define MIN_START_STAT       3
 
@@ -139,7 +134,6 @@ static void _jobs_stat_init(job_type which_job)
 
     case JOB_SKALD:             s =  4; i =  4; d =  4; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; break;
-    case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; break;
 
     case JOB_HEALER:            s =  4; i =  4; d =  4; break;
@@ -235,6 +229,9 @@ void give_basic_mutations(species_type speci)
     case SP_MINOTAUR:
         you.mutation[MUT_HORNS]  = 2;
         break;
+    case SP_DEMIGOD:
+        you.mutation[MUT_SUSTAIN_ABILITIES] = 1;
+        break;
     case SP_SPRIGGAN:
         you.mutation[MUT_ACUTE_VISION]    = 1;
         you.mutation[MUT_FAST]            = 3;
@@ -268,7 +265,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE]          = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        you.mutation[MUT_SAPROVOROUS]                = 3;
         you.mutation[MUT_CARNIVOROUS]                = 3;
         you.mutation[MUT_SLOW_HEALING]               = 1;
         break;
@@ -286,7 +282,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 2;
         you.mutation[MUT_REGENERATION]    = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
-        you.mutation[MUT_SAPROVOROUS]     = 2;
         you.mutation[MUT_GOURMAND]        = 1;
         you.mutation[MUT_SHAGGY_FUR]      = 1;
         break;
@@ -304,7 +299,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_FAST]            = 1;
         you.mutation[MUT_CARNIVOROUS]     = 3;
         you.mutation[MUT_SLOW_METABOLISM] = 1;
-        you.mutation[MUT_JUMP]            = 1;
         break;
     case SP_OCTOPODE:
         you.mutation[MUT_CAMOUFLAGE]      = 1;
@@ -582,12 +576,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_UNARMED_COMBAT] = 4;
         you.skills[SK_DODGING]        = 3;
         you.skills[SK_STEALTH]        = 2;
-
-        if (you.species == SP_FELID)
-        {
-            you.skills[SK_FIGHTING]       = 2;
-            you.skills[SK_UNARMED_COMBAT] = 3;
-        }
         break;
 
     case JOB_BERSERKER:
@@ -636,23 +624,6 @@ static void _give_items_skills(const newgame_def& ng)
         else
             you.skills[SK_ARMOUR]++;
         weap_skill = 3;
-        break;
-
-    case JOB_DEATH_KNIGHT:
-        you.religion = GOD_YREDELEMNUL;
-        you.piety = 35;
-
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, +1);
-        _update_weapon(ng);
-
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                              ARM_ROBE);
-
-        you.skills[SK_FIGHTING]    = 2;
-        you.skills[SK_ARMOUR]      = 1;
-        you.skills[SK_DODGING]     = 1;
-        you.skills[SK_INVOCATIONS] = 3;
-        weap_skill = 2;
         break;
 
     case JOB_ABYSSAL_KNIGHT:
@@ -721,7 +692,8 @@ static void _give_items_skills(const newgame_def& ng)
         // One free escape.
         newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
         newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1, 5);
-        set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
+        set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_DISPERSAL);
+        autopickup_starting_ammo(MI_TOMAHAWK);
 
         you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
@@ -739,11 +711,11 @@ static void _give_items_skills(const newgame_def& ng)
         // And give them a book
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_DEBILITATION);
 
-        you.skills[SK_FIGHTING]             = 1;
-        you.skills[range_skill(you.inv[1])] = 2;
-        you.skills[SK_DODGING]              = 2;
-        you.skills[SK_SPELLCASTING]         = 1;
-        you.skills[SK_HEXES]                = 3;
+        you.skills[SK_FIGHTING]                   = 1;
+        you.skills[item_attack_skill(you.inv[1])] = 2;
+        you.skills[SK_DODGING]                    = 2;
+        you.skills[SK_SPELLCASTING]               = 1;
+        you.skills[SK_HEXES]                      = 3;
         break;
 
     case JOB_WIZARD:
@@ -775,9 +747,6 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, +1);
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, +1);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
-
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
-            you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
         you.skills[SK_HEXES]        = 3;
@@ -813,6 +782,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 12);
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
+
+        // keep picking up sticks
+        autopickup_starting_ammo(MI_ARROW);
 
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
@@ -895,9 +867,6 @@ static void _give_items_skills(const newgame_def& ng)
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
         autopickup_starting_ammo(MI_NEEDLE);
 
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
-            you.inv[0].sub_type = WPN_CLUB;
-
         weap_skill = 2;
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_DODGING]      = 1;
@@ -908,31 +877,17 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_HUNTER:
         // Equipment.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        if (you.has_claws())
-            _newgame_clear_item(0);
         _update_weapon(ng);
 
         newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
 
-        // This is meant to match the En/As start change-up, but Trolls have
-        // claws, so they don't get a starting melee weapon (see above).
-        // The +1 is meant to make this less sucky; it could be a better
-        // base type, but whips don't seem very hunter-ish.
-        if (you.species == SP_OGRE)
-        {
-            you.inv[0].sub_type = WPN_CLUB;
-            you.inv[0].plus = 1;
-        }
-
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING]  = 2;
         you.skills[SK_STEALTH]  = 1;
-        weap_skill = 1;
 
-        you.skills[range_skill(you.inv[1])] = 4;
+        you.skills[item_attack_skill(you.inv[1])] = 4;
         break;
 
     case JOB_WANDERER:
@@ -943,9 +898,6 @@ static void _give_items_skills(const newgame_def& ng)
         // Equipment. Short sword, wands, and armour or robe.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
 
-        if (you.has_claws())
-            _newgame_clear_item(0);
-
         newgame_make_item(1, EQ_NONE, OBJ_WANDS, WAND_FLAME,
                            -1, 1, 15, 0);
         newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_ENSLAVEMENT,
@@ -955,13 +907,6 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                            ARM_LEATHER_ARMOUR, ARM_ROBE);
-
-        // See Hunter notes above.
-        if (you.species == SP_OGRE)
-        {
-            you.inv[0].sub_type = WPN_CLUB;
-            you.inv[0].plus = 1;
-        }
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
@@ -986,10 +931,11 @@ static void _give_items_skills(const newgame_def& ng)
 
     if (weap_skill)
     {
-        if (!you.weapon())
+        item_def *weap = you.weapon();
+        if (!weap)
             you.skills[SK_UNARMED_COMBAT] = weap_skill;
         else
-            you.skills[melee_skill(*you.weapon())] = weap_skill;
+            you.skills[item_attack_skill(*weap)] = weap_skill;
     }
 
     if (you.species == SP_FELID)
@@ -1020,12 +966,7 @@ static void _give_starting_food()
 
     item_def item;
     item.quantity = 1;
-    if (you.species == SP_SPRIGGAN)
-    {
-        item.base_type = OBJ_POTIONS;
-        item.sub_type  = POT_PORRIDGE;
-    }
-    else if (you.species == SP_VAMPIRE)
+    if (you.species == SP_VAMPIRE)
     {
         item.base_type = OBJ_POTIONS;
         item.sub_type  = POT_BLOOD;
@@ -1142,7 +1083,7 @@ static void _give_basic_spells(job_type which_job)
 
     string temp;
     if (which_spell != SPELL_NO_SPELL
-        && !spell_is_uncastable(which_spell, temp))
+        && !spell_is_uncastable(which_spell, temp, false))
     {
         add_spell_to_memory(which_spell);
     }
@@ -1164,8 +1105,10 @@ static void _give_basic_knowledge(job_type which_job)
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = ID_KNOWN_TYPE;
+#if TAG_MAJOR_VERSION == 34
     you.type_ids[OBJ_POTIONS][POT_BLOOD_COAGULATED] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = ID_KNOWN_TYPE;
+#endif
 
     // Won't appear unidentified anywhere.
     you.type_ids[OBJ_SCROLLS][SCR_CURSE_WEAPON] = ID_KNOWN_TYPE;
@@ -1264,8 +1207,6 @@ static void _setup_generic(const newgame_def& ng)
 
     _species_stat_init(you.species);     // must be down here {dlb}
 
-    you.is_undead = get_undead_state(you.species);
-
     // Before we get into the inventory init, set light radius based
     // on species vision. Currently, all species see out to 8 squares.
     update_vision_range();
@@ -1311,13 +1252,17 @@ static void _setup_generic(const newgame_def& ng)
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (you.inv[i].defined())
+        if (!you.inv[i].defined())
+            continue;
+        // link properly
+        you.inv[i].pos = ITEM_IN_INVENTORY;
+        you.inv[i].link = i;
+        you.inv[i].slot = index_to_letter(you.inv[i].link);
+        item_colour(you.inv[i]);  // set correct special and colour
+        if (!you.inv[i].props.exists("adjusted"))
         {
-            // link properly
-            you.inv[i].pos.set(-1, -1);
-            you.inv[i].link = i;
-            you.inv[i].slot = index_to_letter(you.inv[i].link);
-            item_colour(you.inv[i]);  // set correct special and colour
+            you.inv[i].props["adjusted"] = true;
+            auto_assign_item_slot(you.inv[i]);
         }
     }
 

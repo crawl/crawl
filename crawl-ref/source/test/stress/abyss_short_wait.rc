@@ -7,7 +7,7 @@
 name = Abyss_waiter
 species = mu
 background = fi
-weapon = mace
+weapon = flail
 restart_after_game = false
 show_more = false
 autofight_stop = 0
@@ -28,8 +28,8 @@ function ready()
                    "debug.disable('death')" .. eol ..
                    "debug.disable('spawns')" .. eol .. esc)
     crawl.sendkeys("&Y" .. esc)
-    crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
-    crawl.sendkeys("&B")
+    crawl.sendkeys("&l27" .. eol .. "N")
+    crawl.sendkeys("&" .. string.char(2))
   end
   if you.turns() < 1000 then
     crawl.sendkeys('5')

@@ -352,7 +352,7 @@ TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   trapdoor spider, patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
-ITEM:   royal jelly
+ITEM:   potion of ambrosia ident:type
 MAP
      ........
     ..xxxxxx..
@@ -376,7 +376,7 @@ NAME:   spiders_nest_ghost_moth_duel
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   ghost moth, tarantella
-ITEM:   royal jelly
+ITEM:   potion of ambrosia ident:type
 MAP
     ........
    ..xx..xx..
@@ -432,7 +432,7 @@ SUBST:   6 = 6 *:2
 KMONS:   6 = spider / wolf spider w:4 / jumping spider w:1
 SUBST:   7 = 7 .:50
 KMONS:   7 = trapdoor spider
-KITEM:   t = royal jelly
+KITEM:   t = potion of ambrosia ident:type
 MAP
      ..........   ......  ........
      .xwxxxxxx3....xxxx....xxxxwx..
@@ -464,7 +464,7 @@ ENDMAP
 
 NAME:   hangedman_spider_trapstep
 TAGS:   no_monster_gen no_pool_fixup patrolling allow_dup
-DEPTH:  Spider:1-3, Zot:1-4
+DEPTH:  Spider:1-3, Zot, !Zot:$
 KMONS:  0 = patrolling spider
 KMONS:  1 = tarantella
 : if you.branch() == "Zot" then
@@ -473,7 +473,11 @@ KMONS:  3| = ghost moth / moth of wrath
 KITEM:  | = acquire any w:5 / any good_item
 KFEAT:  ` = known zot trap
 KFEAT:  ^ = web w:7 / known web trap w:1 / any trap w:1 / . w:7
+:   if you.depth() == dgn.br_depth("Zot") - 1 then
+KFEAT:  ~ = zot trap w:20 / web w:8 / known web trap w:2 / . w:5
+:   else
 KFEAT:  ~ = zot trap w:15 / shaft trap / web w:4 / known web trap w:1 / . w:5
+:   end
 NSUBST: 4 = 1:122 / 1:112
 SUBST:  X = c
 : else
@@ -1292,6 +1296,98 @@ xxWWWxxWxxx
   xxxxxxx
 ENDMAP
 
+NAME:   hangedman_spider_mandibles
+TAGS:   extra transparent decor
+DEPTH:  Spider
+# 59 inside blocks, 59 outside blocks.
+NSUBST: x = 6:. / 9 = xx. / *:x
+NSUBST: z = 4:. / 4:' / 9 = xxx''. / *:x
+CLEAR:  '
+MAP
+      zzzzzzz
+     zz.....zz
+    zz...x...zz
+    z...xxx...z
+   zzx...x...xzz
+  @z.x.......x.z@
+ @z...xx...xx...z@
+ z.....xx.xx.....z
+ zx..xxx...xxx..xz
+zz.x.x.......x.x.zz
+z..xxx.......xxx..z
+z..xx....x....xx..z
+ z.x....xxx....x.z
+z..x....xxx....x..z
+z..xx....x....xx..z
+zz..xx.......xx..zz
+ zz.............zz
+  zzzz..@.@..zzzz
+ENDMAP
+
+# Bah, bu bah, bu ba-ba-ba ba-ba-ba baa, bu ba-ba-ba buh.
+NAME:    hangedman_spider_tarantella_strand
+TAGS:    extra transparent decor
+DEPTH:   Spider
+ORIENT:  north
+MONS:    tarantella
+# The size of the vault means this upped weight is actually akin
+# to the usual vault weight. The vault is highly random and ends
+# up being very unobtrusive for most Spider layouts, anyway.
+WEIGHT:  25
+# Very selectively, partially ruin the edge of the beats.
+NSUBST:  A = 1:. / 2 = X / *:x, B = 1:. / 2 = X / *:x
+NSUBST:  C = 1:. / 2 = X / *:x, D = 4:. / 4 = X / *:x
+NSUBST:  E = 1:X / *:x, F = 1:X / *:x, G = 1:X / *:x
+NSUBST:  H = 1:X / *:x, I = 1:X / *:x, J = 1:X / *:x
+NSUBST:  K = 1:X / *:x, L = 1:X / *:x, M = 1:X / *:x
+NSUBST:  N = 1:X / *:x, O = 1:X / *:x, P = 1:X / *:x
+# Even random trimming can have weighed styles to it.
+SUBST:   z : ^<>, ^ = xx', < = xx''', > = x'
+SUBST:   y : XYZ, X = xx., Y = xx..., Z = x.
+SUBST:   X : %*|, % = xxx.., * = x., | = xx...
+SUBST:   " : "`;, " = ..', ` = ...', ; = .'
+CLEAR:   '
+# The string here pushes the vault from the level border.
+MAP
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+                             '
+xzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzx
+xyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+.................yzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+.................xyyyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzz
+.AAAA....BBBB.............1.........yzzzzzzzzzzzzzzzzzzzzzzzzz
+"AxxA.EE.BxxB.FF....................xyyyyyyyyyyyyyyyyyxzzzzzzz
+"AxxA.EE.BxxB.FF..GG.......JJ.........................yzzzzzzz
+.AAAA....BBBB.....GG.HH....JJ.KK......................xyyyyyyx
+.....................HH.II....KK.LL..CCCC....NN...............
+ .""..""..""..""........II.......LL..CxxC.MM.NN.OO.....DDDDDD.
+                 ....................CxxC.MM....OO.PP..DxxxxD.
+                 @"".""."".""."".""..CCCC..........PP..DxxxxD"
+                                    ...................DxxxxD"
+                                    @."".."".""."".""..DxxxxD.
+                                                      .DDDDDD.
+                                                      ...""..
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################
@@ -1300,7 +1396,7 @@ NAME:   spider_rune_water
 PLACE:  Spider:$
 WEIGHT: 20
 ORIENT: northwest
-KITEM:  O = royal jelly q:3, gossamer rune of Zot
+KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
 MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   trapdoor spider / nothing
@@ -1356,49 +1452,38 @@ NAME:   grunt_spider_rune_circles
 TAGS:   no_pool_fixup
 WEIGHT: 20
 PLACE:  Spider:$
-ORIENT: northwest
+ORIENT: float
 KITEM:  O = gossamer rune of Zot
-ITEM:   royal jelly
+ITEM:   potion of ambrosia ident:type
 MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   orb spider / nothing, trapdoor spider / nothing
+NSUBST: 4 = 3:3
 NSUBST: 7 = 3:1 / 1:2
 SUBST:  W = W..
 SUBST:  - = ....WWW^
 KFEAT:  ^ = known web trap
 TILE:   c = wall_brick_gray
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcx
-xxxxxxxxxxxxwwxWxxxxxxxxwwxxxxxxwxxxwxxxxxxxxxxxxcx
-xxxxxxxxxx.W..4..x..x........x..4.--.-wxxxxxxxxxxcx
-xxxxxxxxw.4....x......4.xx....5WxW.4..xxxxxxxxxxxcx
-xxxxxxxx..4.xcxxx.xxxxxxxxxxxwxxxwxx...Wxxxxxxxxxcx
-xxxxxxxW4W.4WcccxxxccxxxccccxxxcxxxxxW..--xxxxxxxcx
-xxxxxxx...4W6W6ccccWWccccWWcccccccccxxxx4.-xxxxxxcx
-xxxxxxW54.x6W6WcWWW.4..........444.ccccxx..Wxxxxxcx
-xxxxxxwW.xcccW666....W5.W....WWWWW..cccxx.W.xxxxxcx
-xxxxxxx4Wxcc66..wwwwcccccccc..444....cccxx...Wxxxcx
-xxxxxx.WxxcW-..wwcccc--575dccccc..-.-.cccxx..-xxxcx
-xxxxxx..xxcW-4.wcc-.575dwww4.--ccc.-..cccxx.4-xxxcx
-xxxxxx.4WxcW-..5cd4wwwww3Oww474-3c..W5cccxxxW.xxxcx
-xxxxxw..xxccW.4.c-74.wwwwwww4..ccc6-.Wcccxx..Wxxxcx
-xxxxxx.4.xxccW4Wcccc...4...4---6-6-6ccccxx..-xxxxcx
-xxxxxxx...xxcW45..-cccc-3cc-66-6-ccccxxxx4.Wxxxxxcx
-xxxxxxxxW..xcccW-...44cccc6-6-6-ccxxxxxx..Wxxxxxxcx
-xxxxxxxxwW4xxxcccccc4.....-6-ccccxxWWxx.Wxxxxxxxxcx
-xxxxxxxxxx-..xxxxxxccc-----cccxxxx..4..Wxxxxxxxxxcx
-xxxxxxxxxxx-.W..--xxxcccccccxxx6x4.xxwwxxxxxxxxxxcx
-xxxxxxxxxxxxx-.4..--xxxxxxxxx-6-66xxxxxxxxxxxxxxxcx
-xxxxxxxxxxxxxxxx-.4.W.x..xxx-6-w-xxxxxxxxxxxxxxxxcx
-xxxxxxxxxxxxxxxxxxxx-...4....xx-4.xxxxxxxxxxxxxxxcx
-xxxxxxxxxxxxxxxxxxxxx--xx-W-xxxx.4xxxxxxxxxxxxxxxcx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4xxxxxxxxxxxxxxcx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx4.xxxxxxxxxxxxxxcx
-xcccccccccccccccccccccccccccccxx4.4.xxccccccccccccx
-xccccccccccccccccccccccccccccxx..4.4.xxcccccccccccx
-xcccccccccccccccccccccccccccxx........xxccccccccccx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@@@@@@@@xxxxxxxxxxxxx
+    4    x       xx       x
+  ..4@xcxxx xxxxxxxxxxx xxx xx
+ W4W.4Wcccxxxccxxxccccxxxcxxxxx
+ @..4W6W6ccccWWccccWWcccccccccxxxx
+W54.x6W6WcWWW.4..........444.ccccxx
+wW.xcccW666....W5.W....WWWWW..cccxx
+ 4Wxcc66..wwwwcccccccc..444....cccxx
+@WxxcW-..wwcccc--575dccccc..-.-.cccxx
+  xxcW-4.wcc-.575dwww4.--ccc.-..cccxx
+  WxcW-..5cd4wwwww3Oww474-3c..W5cccxxx
+  xxccW.4.c-74.wwwwwww4..ccc6-.Wcccxx
+   xxccW4Wcccc...4...4---6-6-6ccccxx
+    xxcW45..-cccc-3cc-66-6-ccccxxxx
+     xcccW-...44cccc6-6-6-ccxxxxxx
+     xxxcccccc4.....-6-ccccxx  xx
+       xxxxxxccc-----cccxxxx
+            xxxcccccccxxx
+              xxxxxxxxx
+                   xxx
 ENDMAP
 
 NAME:   guppyfry_spider_rune
@@ -1407,7 +1492,7 @@ TAGS:   no_pool_fixup
 ORIENT: southwest
 KITEM:  O = gossamer rune of zot
 KMONS:  O = ghost moth
-KITEM:  *d = royal jelly
+KITEM:  *d = potion of ambrosia ident:type
 KMONS:  * = emperor scorpion
 MONS:   ghost moth, ghost moth / moth of wrath
 MONS:   yellow wasp / red wasp / w:5 nothing
@@ -1456,7 +1541,7 @@ PLACE:  Spider:$
 ORIENT: east
 NSUBST: O = 1:O / *:P
 KITEM:  O = gossamer rune of Zot
-KITEM:  P = royal jelly
+KITEM:  P = potion of ambrosia ident:type
 MONS:   ghost moth, moth of wrath, emperor scorpion
 MONS:   wolf spider w:11 / redback / tarantella / jumping spider
 MONS:   orb spider / red wasp, trapdoor spider
@@ -1502,10 +1587,10 @@ ENDMAP
 NAME:    grunt_spider_rune_island
 TAGS:    no_monster_gen
 PLACE:   Spider:$
-ORIENT:  north
+ORIENT:  west
 NSUBST:  d = 1:O / 3:d / *:.
 KITEM:   O = gossamer rune of Zot
-ITEM:    royal jelly
+ITEM:    potion of ambrosia ident:type
 MONS:    ghost moth, moth of wrath, emperor scorpion
 MONS:    red wasp / yellow wasp w:2, orb spider
 MONS:    wolf spider, redback / tarantella
@@ -1520,50 +1605,38 @@ SUBST:   0 = 4678..
 SUBST:   + = ^^^+
 SUBST:   " = ...xxW^
 SUBST:   - = ...cWW^^^
+SUBST:   . = .:20 x:2 ^:1
 KFEAT:   ^ = known web trap
+KFEAT:   _ = .
 SUBST:   c : cx
 SUBST:   C : c
 TILE:    c = wall_brick_gray
 MAP
-               xxxxxxxxxxx
-             xxxxxxxxxxxxxxxxxx
-           xxxxxxcccccccccxxxxxxxxxxx
-          xxxxcccc-------cccccccccxxxx
-        xxxxccc--.....e.....-----cxxxxxx
-       xxxxcc---.....e.e....."""-ccxxxxxx
-       xxxcc--".......x...5..""..-ccxxxxx
-      xxxxc--""......e.e.....""..--cccxxx
-     xxxccc-."""......e....."""...---cccx
-   xxxxxc--..."""...........""......--"cx
-  xxxxccc-...5.""...........""......-"---
- xxxxcc---..5..."".........""......f-"-.@
-xxxccc--k........WWWWWWWWWWW"....f..-"-.@
-xxxc---..k......WWwwwwwwwwwWWW....5.-"-..
-xxcc-.....k....WWwwwwwwwwwwwwWW..f..-"-..
-xxc--......k..WWwwwCCCCCCwwwwwW...f.-"-.x
-xxc-k.........WwwwCC----CCCwwwW...g.-"-.x
-xxc-..........WwwCC--0.---CwwwW.....-"-.x
-xxc-....j....-WwwC--3.9..-CCwwW..0..-"-.x
-xxc--..j.j..-"-"wC-0.0d0.--CwwW.....-"-..
-xxc--......-"---.+3.9ddd9-CCwwW...f.-"-..
-xxcc-..j.j..-"-"wC-0.0d0--CwwwW...g.-"-.@
-xxxc-...j...."WwwC--3.9--CCwwwW..g..-"-.@
-xxxc-.........WwwCC--0.-CCwwwWW.....-"---
- xxc--........WwwwCC----CwwwwW....5.-"--x
- xxcc-........WwwwwCCCCCCwwwWW...g..-"--x
- xxxc-........WWwwwwwwwwwwwWW......g-"--x
-  xxc-i.....i...WwwwwwwwwwWW........-"-cx
-  xxc--....i....WWWWWWWWWWW.........---cx
-  xxcc--..i......"........".........--ccx
-  xxxcc--i......""........""........-ccxx
-   xxxcc-.i.....""........"".......--cxxx
-    xxxc-...5.."""...h.....""....---ccxxx
-    xxxcc--..5."""..h.h..5."""...-cccxxx
-     xxxcc--...""....x......"".--ccxxxx
-      xxxcc--..""...h.h.....----ccxxxx
-       xxxcc----.....h...----ccccxxxx
-        xxxcccc-----------ccccxxxxxx
-         xxxxxcccccccccccccxxxxxxxx
-          xxxxxxxxxxxxxxxxxxxxxx
-             xxxxxxxxxxxxxxxx
+  xxxxc--"""""@"""x""@5""""""--ccc
+ xxxccc-.""".....e.e...."""...--"c
+ xxxc--...""".....e....."".....-""
+xxccc-...5.""..........."".....-"-
+xcc---..5...""...e.e...""......f"-
+xc--k........WWWWWWWWWWW"....f.-"-
+xcc..k......WWwwwwwwwwwWWW....5-"-
+xcc...k.k..WWwwwwwwwwwwwwWW..f.-"@
+xcc....k..WWwwwCCCCCCwwwwwW...f-"-
+xcck......WwwwCC----CCCwwwW...g-"-
+xc-......_WwwCC--0.---CwwwW....-"-
+xc-..j.._-WwwC--3_9__-CCwwW..0.-"-
+xc-.j.j_-"-"wC-0_0d0_--CwwW....-"-
+xc-..._-"---_+3.9ddd9-CCwwW...f-"-
+xc- j.j_-"-"wC-0_0d0--CwwwW...g-"-
+xc-. j.._"WwwC--3_9--CCwwwW..g.-"@
+xcc......_WwwCC--0_-CCwwwWW....-"-
+xcc.......WwwwCC----CwwwwW....5-"-
+xcc.......WwwwwCCCCCCwwwWW...g.-"-
+xcc.......WWwwwwwwwwwwwWW......g"-
+xc-i....i...WwwwwwwwwwWW.......-"-
+xc-....i....WWWWWWWWWWW........-"-
+xc--..i......"..h.h..."........-""
+xcc--i......""........"".......-"c
+xxcc-.i.5...""...h...."".......-"c
+ xxc"""""5""""""h"h""5""""""""""cc
+  xc----@-"-----x------""-@----ccx
 ENDMAP

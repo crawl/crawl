@@ -4,26 +4,22 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-clone.h"
 
 #include "act-iter.h"
 #include "arena.h"
 #include "artefact.h"
 #include "directn.h"
-#include "externs.h"
 #include "env.h"
 #include "items.h"
-#include "libutil.h"
+#include "message.h"
 #include "mgen_data.h"
-#include "monster.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-enum.h"
 #include "mon-place.h"
-#include "mon-util.h"
-#include "player.h"
-#include "random.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
 #include "unwind.h"
@@ -117,6 +113,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         clone->del_ench(ENCH_STICKY_FLAME);
         clone->del_ench(ENCH_CORONA);
         clone->del_ench(ENCH_SILVER_CORONA);
+        clone->del_ench(ENCH_HEXED);
 
         behaviour_event(clone, ME_ALERT, 0, caster->pos());
 
@@ -210,8 +207,6 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
             else
                 mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
 
-            // Change type from player ghost.
-            clone->type = MONS_PLAYER_ILLUSION;
             _init_player_illusion_properties(
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
@@ -308,11 +303,14 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
 
     *mons          = *orig;
     mons->set_new_monster_id();
-    mons->set_position(pos);
+    mons->move_to_pos(pos);
     // The monster copy constructor doesn't copy constriction, so no need to
     // worry about that.
 
-    mgrd(pos)    = mons->mindex();
+    // Don't copy death triggers - phantom royal jellies should not open the
+    // Slime vaults on death.
+    if (mons->props.exists(MONSTER_DIES_LUA_KEY))
+        mons->props.erase(MONSTER_DIES_LUA_KEY);
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
@@ -336,7 +334,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     }
 
     bool _obvious;
-    if (obvious == NULL)
+    if (obvious == nullptr)
         obvious = &_obvious;
     *obvious = false;
 

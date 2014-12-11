@@ -7,45 +7,52 @@
 
 #include "wiz-item.h"
 
-#include <errno.h>
+#include <cerrno>
 
 #include "acquire.h"
 #include "act-iter.h"
-#include "art-enum.h"
 #include "artefact.h"
-#include "coordit.h"
-#include "message.h"
+#include "art-enum.h"
 #include "cio.h"
+#include "coordit.h"
 #include "dbg-util.h"
 #include "decks.h"
 #include "effects.h"
 #include "env.h"
 #include "godpassive.h"
+#include "invent.h"
 #include "itemprop.h"
 #include "items.h"
-#include "invent.h"
 #include "libutil.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "mapdef.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-death.h"
 #include "options.h"
 #include "output.h"
 #include "player-equip.h"
+#include "prompt.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stash.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "terrain.h"
+#include "unicode.h"
 
 #ifdef WIZARD
 static void _make_all_books()
 {
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
-        int thing = items(0, OBJ_BOOKS, i, true, 0, 0, 0, AQ_WIZMODE);
+#if TAG_MAJOR_VERSION == 34
+        if (i == BOOK_WIZARDRY)
+            continue;
+#endif
+        int thing = items(false, OBJ_BOOKS, i, 0, 0, AQ_WIZMODE);
         if (thing == NON_ITEM)
             continue;
 
@@ -60,7 +67,7 @@ static void _make_all_books()
         set_ident_flags(book, ISFLAG_KNOW_TYPE);
         set_ident_flags(book, ISFLAG_IDENT_MASK);
 
-        mprf("%s", book.name(DESC_PLAIN).c_str());
+        mpr(book.name(DESC_PLAIN));
     }
 }
 
@@ -157,7 +164,7 @@ void wizard_create_spec_object()
             return;
         }
 
-        if (mons_weight(mon) == 0)
+        if (!mons_class_can_leave_corpse(mon))
         {
             if (!yesno("That monster doesn't leave corpses; make one "
                        "anyway?", true, 'y'))
@@ -167,7 +174,7 @@ void wizard_create_spec_object()
             }
         }
 
-        if (mon >= MONS_FIRST_NONBASE_DRACONIAN && mon <= MONS_LAST_DRACONIAN)
+        if (mons_is_draconian_job(mon))
         {
             mpr("You can't make a draconian corpse by its background.");
             mon = MONS_DRACONIAN;
@@ -177,7 +184,7 @@ void wizard_create_spec_object()
         dummy.type = mon;
 
         if (mons_genus(mon) == MONS_HYDRA)
-            dummy.number = prompt_for_int("How many heads? ", false);
+            dummy.num_heads = prompt_for_int("How many heads? ", false);
 
         if (fill_out_corpse(&dummy, dummy.type,
                             mitm[thing_created], true) == MONS_NO_MONSTER)
@@ -221,9 +228,7 @@ void wizard_create_spec_object()
         }
     }
 
-    // Deck colour (which control rarity) already set.
-    if (!is_deck(mitm[thing_created]))
-        item_colour(mitm[thing_created]);
+    item_colour(mitm[thing_created]);
 
     move_item_to_grid(&thing_created, you.pos());
 
@@ -260,7 +265,7 @@ static const char* _prop_name[] =
 #if TAG_MAJOR_VERSION > 34
     "+Fog",
 #endif
-    "+Blnk",
+    "+Blink",
     "+Rage",
     "Noisy",
     "-Cast",
@@ -268,9 +273,9 @@ static const char* _prop_name[] =
     "-Tele",
     "*Rage",
 #if TAG_MAJOR_VERSION == 34
-    "Hungr",
+    "Hunger",
 #endif
-    "Contm",
+    "Contam",
     "Acc",
     "Dam",
     "Curse",
@@ -287,7 +292,9 @@ static const char* _prop_name[] =
 #endif
     "Regen",
     "SustAb",
-    "noupg",
+    "noupgr",
+    "rCorr",
+    "rMut",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -344,6 +351,8 @@ static int8_t _prop_type[] =
     ARTP_VAL_ANY,  //REGENERATION
     ARTP_VAL_BOOL, //SUSTAB
     ARTP_VAL_BOOL, //NO_UPGRADE
+    ARTP_VAL_BOOL, //RCORR
+    ARTP_VAL_BOOL, //RMUT
 };
 
 static void _tweak_randart(item_def &item)
@@ -371,7 +380,7 @@ static void _tweak_randart(item_def &item)
             continue;
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
-            prompt += "\n";
+            *(prompt.rend()) = '\n'; // Replace the space
 
         char choice;
         char buf[80];
@@ -386,10 +395,11 @@ static void _tweak_randart(item_def &item)
         else
             choice = '-'; // Too many choices!
 
-        if (props[i])
-            snprintf(buf, sizeof(buf), "%c) <w>%-5s</w> ", choice, _prop_name[i]);
-        else
-            snprintf(buf, sizeof(buf), "%c) %-5s ", choice, _prop_name[i]);
+        snprintf(buf, sizeof(buf), "%s) %s%-6s%s ",
+                choice == '<' ? "<<" : string(1, choice).c_str(),
+                 props[i] ? "<w>" : "",
+                 _prop_name[i],
+                 props[i] ? "</w>" : "");
 
         prompt += buf;
 
@@ -588,7 +598,7 @@ void wizard_value_artefact()
         if (!is_artefact(item))
             mpr("That item is not an artefact!");
         else
-            mprf("%s", debug_art_val_str(item).c_str());
+            mpr(debug_art_val_str(item));
     }
 }
 
@@ -598,7 +608,7 @@ void wizard_create_all_artefacts()
     int octorings = 8;
 
     // Create all unrandarts.
-    for (int i = 0; i < NO_UNRANDARTS; ++i)
+    for (int i = 0; i < NUM_UNRANDARTS; ++i)
     {
         const int              index = i + UNRAND_START;
         const unrandart_entry* entry = get_unrand_entry(index);
@@ -807,29 +817,6 @@ void wizard_unidentify_pack()
 
 void wizard_list_items()
 {
-    bool has_shops = false;
-
-    for (int i = 0; i < MAX_SHOPS; ++i)
-        if (env.shop[i].type != SHOP_UNASSIGNED)
-        {
-            has_shops = true;
-            break;
-        }
-
-    if (has_shops)
-    {
-        mpr("Shop items:");
-
-        for (int i = 0; i < MAX_SHOPS; ++i)
-            if (env.shop[i].type != SHOP_UNASSIGNED)
-            {
-                for (stack_iterator si(coord_def(0, i+5)); si; ++si)
-                    mpr(si->name(DESC_PLAIN, false, false, false).c_str());
-            }
-
-        mpr("");
-    }
-
     mpr("Item stacks (by location and top item):");
     for (int i = 0; i < MAX_ITEMS; ++i)
     {
@@ -909,7 +896,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     int last_percent = 0;
     int acq_calls    = 0;
     int total_quant  = 0;
-    int max_plus     = -127;
+    short max_plus   = -127;
     int total_plus   = 0;
     int num_arts     = 0;
 
@@ -944,8 +931,8 @@ static void _debug_acquirement_stats(FILE *ostat)
         total_quant += item.quantity;
         subtype_quants[item.sub_type] += item.quantity;
 
-        max_plus    = max(max_plus, item.plus + item.plus2);
-        total_plus += item.plus + item.plus2;
+        max_plus    = max(max_plus, item.plus);
+        total_plus += item.plus;
 
         if (is_artefact(item))
         {
@@ -1012,7 +999,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     if (!you_worship(GOD_NO_GOD))
         godname += " of " + god_name(you.religion);
 
-    fprintf(ostat, "%s the %s, Level %d %s %s%s\n\n",
+    fprintf(ostat, "%s %s, Level %d %s %s%s\n\n",
             you.your_name.c_str(), player_title().c_str(),
             you.experience_level,
             species_name(you.species).c_str(),
@@ -1069,7 +1056,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             if (!is_valid_spell(spell))
                 continue;
 
-            if (you_cannot_memorise(spell))
+            if (!you_can_memorise(spell))
                 continue;
 
             // Only use spells available in books you might find lying about
@@ -1187,13 +1174,13 @@ static void _debug_acquirement_stats(FILE *ostat)
             "cold resistance",
             "poison resistance",
             "see invis",
-            "darkness",
+            "invisibility",
             "strength",
             "dexterity",
             "intelligence",
             "ponderous",
             "flight",
-            "magic reistance",
+            "magic resistance",
             "protection",
             "stealth",
             "resistance",
@@ -1205,7 +1192,9 @@ static void _debug_acquirement_stats(FILE *ostat)
             "reflection",
             "spirit shield",
             "archery",
+#if TAG_MAJOR_VERSION == 34
             "jumping",
+#endif
         };
 
         const int non_art = acq_calls - num_arts;
@@ -1405,6 +1394,8 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_REGENERATION
          1, //ARTP_SUSTAB,
          0, //ARTP_NO_UPGRADE
+         1, //ARTP_RCORR
+         1, //ARTP_RMUT
     };
     COMPILE_CHECK(ARRAYSZ(good_or_bad) == ARTP_NUM_PROPERTIES);
 
@@ -1565,6 +1556,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_REGENERATION",
         "ARTP_SUSTAB",
         "ARTP_NO_UPGRADE",
+        "ARTP_RCORR",
+        "ARTP_RMUT",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

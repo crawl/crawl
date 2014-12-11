@@ -32,7 +32,7 @@ function ready()
                    --# don't let them stop us gearing up
                    "debug.disable('mon_act')" .. eol .. esc)
     crawl.sendkeys("&Y" .. esc)
-    crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
+    crawl.sendkeys("&l27" .. eol .. "N")
     crawl.sendkeys("&A27" .. eol)
     crawl.sendkeys("&@72 72 72" .. eol)
     crawl.sendkeys("&o)demon whip" .. eol .. "chaos" .. eol)
@@ -52,11 +52,12 @@ function ready()
     crawl.sendkeys("&tga2" .. eol .. esc)
     crawl.sendkeys("&tha2" .. eol .. esc)
     crawl.sendkeys("&tia2" .. eol .. esc)
+    crawl.sendkeys("&~J5" .. eol)
     --# re-enable monsters
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('mon_act', false)" .. eol .. esc)
     --# exit the Abyss then go back, so it's not the special starting Abyss
-    crawl.sendkeys("&B")
+    --crawl.sendkeys("&" .. string.char(2))
   elseif bot_start then
     bot_start = false
     crawl.enable_more(false)
@@ -67,6 +68,15 @@ function ready()
                    "debug.disable('death')" .. eol ..
                    "debug.disable('hunger')" .. eol ..
                    "debug.disable('afflictions')" .. eol .. esc)
+    crawl.call_dlua("dgn.set_random_mon_list('place:Abyss:$ /" ..
+                       "place:D:$ / place:Depths:$ /" ..
+                       "place:Orc:$ / place:Elf:$ / place:Lair:$ /" ..
+                       "place:Swamp:$ / place:Shoals:$ / place:Snake:$ /" ..
+                       "place:Spider:$ / place:Slime:$ / place:Vaults:$ /" ..
+                       "place:Crypt / place:Tomb:$ /" ..
+                       "place:Hell w:5 / place:Coc:$ w:5 / place:Tar:$ w:5 /" ..
+                       "place:Dis:$ w:5 / place:Geh:$ w:5 /" ..
+                       "place:Zot:$ w:20 / place:Pan w:20')")
   end
   if you.turns() ~= last_turn then
     command = 1

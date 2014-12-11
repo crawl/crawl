@@ -13,26 +13,17 @@
 #include "coordit.h"
 #include "dgnevent.h"
 #include "dgn-overview.h"
-#include "directn.h"
 #include "dungeon.h"
-#include "env.h"
-#include "exclude.h"
-#include "fprop.h"
 #include "itemprop.h"
 #include "libutil.h"
 #include "mon-place.h"
-#include "mon-util.h"
-#include "monster.h"
 #include "options.h"
-#include "random.h"
-#include "stash.h"
 #include "state.h"
-#include "areas.h"
 #include "terrain.h"
+#include "tiledef-main.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
-#include "tiledef-main.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
@@ -173,8 +164,8 @@ static void _update_feat_at(const coord_def &gp)
     if (you.made_nervous_by(gp))
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
-    if (feat >= DNGN_STONE_STAIRS_DOWN_I
-        && feat <= DNGN_ESCAPE_HATCH_UP
+    if ((feat_is_stone_stair(feat)
+         || feat_is_escape_hatch(feat))
         && is_exclude_root(gp))
     {
         env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;
@@ -220,14 +211,18 @@ static show_item_type _item_to_show_code(const item_def &item)
         return jewellery_is_amulet(item) ? SHOW_ITEM_AMULET : SHOW_ITEM_RING;
     case OBJ_POTIONS:    return SHOW_ITEM_POTION;
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
-    case OBJ_STAVES:     return SHOW_ITEM_STAVE;
-    case OBJ_RODS:       return SHOW_ITEM_STAVE;
+    case OBJ_STAVES:     return SHOW_ITEM_STAFF;
+    case OBJ_RODS:       return SHOW_ITEM_ROD;
     case OBJ_MISCELLANY:
         if (item.sub_type == MISC_RUNE_OF_ZOT)
             return SHOW_ITEM_RUNE;
         else
             return SHOW_ITEM_MISCELLANY;
-    case OBJ_CORPSES:    return SHOW_ITEM_CORPSE;
+    case OBJ_CORPSES:
+        if (item.sub_type == CORPSE_SKELETON)
+            return SHOW_ITEM_SKELETON;
+        else
+            return SHOW_ITEM_CORPSE;
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
     default:             return SHOW_ITEM_ORB; // bad item character
@@ -390,8 +385,8 @@ static void _mark_invisible_at(const coord_def &where,
 }
 
 /**
- * Mark monsters that have transitioned from seen to unseen in the last turn get
- * an invisible monster indicator.
+ * Mark invisible monsters with a known position with an invisible monster
+ * indicator.
  * @param mons      The monster to check.
  * @param hash_ind  The random hash index, combined with the mid to make a
  *                  unique hash for this roll.  Needed for when we can't mark
@@ -400,20 +395,21 @@ static void _mark_invisible_at(const coord_def &where,
 */
 static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
 {
-    // Monster didn't go unseen last turn.
+    // Monster position is unknown.
     if (mons->unseen_pos.origin())
         return;
 
-
-    // We expire these unseen invis markers after one turn.
-    if (you.turn_is_over && !mons->went_unseen_this_turn)
+    // We expire these unseen invis markers after one turn if the monster
+    // has moved away.
+    if (you.turn_is_over && !mons->went_unseen_this_turn
+        && mons->pos() != mons->unseen_pos)
     {
         mons->unseen_pos = coord_def(0, 0);
         return;
     }
 
     bool do_tiles_draw;
-    // Try to use the original position where the monster became unseen.
+    // Try to use the unseen position.
     if (_valid_invisible_spot(mons->unseen_pos, mons))
     {
         do_tiles_draw = mons->unseen_pos != mons->pos();
@@ -422,6 +418,7 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
     }
 
     // Fall back to a random position adjacent to the unseen position.
+    // This can only happen if the monster just became unseen.
     vector <coord_def> adj_unseen;
     for (adjacent_iterator ai(mons->unseen_pos, false); ai; ai++)
     {
@@ -483,6 +480,7 @@ static void _update_monster(monster* mons)
         && !mons->is_insubstantial())
     {
         _mark_invisible_at(gp);
+        mons->unseen_pos = gp;
         return;
     }
 
@@ -495,6 +493,7 @@ static void _update_monster(monster* mons)
         || (range2 > 1 && (you.pos() - mons->pos()).abs() <= range2))
     {
         _mark_invisible_at(gp);
+        mons->unseen_pos = gp;
         return;
     }
 
@@ -505,6 +504,7 @@ static void _update_monster(monster* mons)
         && (mons->stealth() <= -2 || !_hashed_rand(mons, 1, 4)))
     {
         _mark_invisible_at(gp);
+        mons->unseen_pos = gp;
     }
     else
         _handle_unseen_mons(mons, 2);
@@ -577,8 +577,8 @@ void show_init(bool terrain_only)
     }
 
     // Need to clear these update flags now so they don't persist.
-    for (unsigned int i = 0; i < update_locs.size(); i++)
-        env.map_knowledge(update_locs[i]).flags &= ~MAP_INVISIBLE_UPDATE;
+    for (coord_def loc : update_locs)
+        env.map_knowledge(loc).flags &= ~MAP_INVISIBLE_UPDATE;
 }
 
 // Emphasis may change while off-level (precisely, after
@@ -593,7 +593,7 @@ void show_update_emphasis()
     // stairs are now known. (see is_unknown_stair(), emphasise())
     LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
     vector<stair_info> stairs = level_info.get_stairs();
-    for (unsigned i = 0; i < stairs.size(); ++i)
-        if (stairs[i].destination.is_valid())
-            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
+    for (const stair_info &stair : stairs)
+        if (stair.destination.is_valid())
+            env.map_knowledge(stair.position).flags &= ~MAP_EMPHASIZE;
 }

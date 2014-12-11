@@ -18,16 +18,6 @@ enum corpse_effect_type
     CE_POISONOUS,
     CE_ROT,
     CE_MUTAGEN,
-    CE_ROTTEN,
-};
-
-enum gender_type
-{
-    GENDER_NEUTER,
-    GENDER_MALE,
-    GENDER_FEMALE,
-    GENDER_YOU, // A person, not a gender, but close enough.
-    NUM_GENDERS
 };
 
 // TODO: Unify this and a player_equivalent (if applicable)
@@ -36,6 +26,7 @@ enum attack_type
 {
     AT_NONE,
     AT_HIT,         // Including weapon attacks.
+    AT_FIRST_ATTACK = AT_HIT,
     AT_BITE,
     AT_STING,
     AT_SPORE,
@@ -58,6 +49,10 @@ enum attack_type
 #endif
     AT_POUNCE,
     AT_REACH_STING,
+    AT_KITE,  // Hops backwards if attacking with a polearm.
+    AT_SWOOP, // Swoops in to perform a melee attack if far away.
+    AT_LAST_REAL_ATTACK = AT_SWOOP,
+
     AT_CHERUB,
 #if TAG_MAJOR_VERSION == 34
     AT_SHOOT,
@@ -128,6 +123,8 @@ enum attack_flavour
     AF_SHADOWSTAB,
     AF_DROWN,
     AF_FIREBRAND,
+    AF_CORRODE,
+    AF_SCARAB,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -189,6 +186,7 @@ enum mon_itemeat_type
 #if TAG_MAJOR_VERSION == 34
     MONEAT_FOOD,
 #endif
+    MONEAT_DOORS,
 
     NUM_MONEAT
 };
@@ -214,6 +212,8 @@ enum mon_resist_flags
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
 
+    MR_RES_TORMENT       = 1 << 22,
+    MR_RES_PETRIFY       = 1 << 23,
     MR_RES_ASPHYX        = 1 << 24,
 #if TAG_MAJOR_VERSION == 34
     MR_OLD_RES_ACID      = 1 << 25,
@@ -221,7 +221,7 @@ enum mon_resist_flags
     // unused 1 << 25,
 #endif
     MR_RES_STICKY_FLAME  = 1 << 26,
-    // unused 1 << 27,
+    MR_RES_WIND          = 1 << 27,
     MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
@@ -246,13 +246,13 @@ enum shout_type
     S_BUZZ,                 // buzz
     S_MOAN,                 // moan
     S_GURGLE,               // gurgle
-    S_WHINE,                // irritating whine (mosquitos)
     S_CROAK,                // frog croak
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CAW,                  // for ravens
     S_CHERUB,               // for cherubs
+    S_RUMBLE,               // for ushabti
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
@@ -286,6 +286,7 @@ enum mon_body_shape
     MON_SHAPE_HUMANOID_WINGED_TAILED,
     MON_SHAPE_CENTAUR,
     MON_SHAPE_NAGA,
+    // Everything before this should have arms
     MON_SHAPE_QUADRUPED,
     MON_SHAPE_QUADRUPED_TAILLESS,
     MON_SHAPE_QUADRUPED_WINGED,

@@ -1,8 +1,7 @@
 ###############################################################################
-# vaults.des: Entries to the Vaults branch.
+# vaults.des: Entries to the Vaults branch, and Vaults:$ set-up.
 #
-# Note the regular (mini)vaults are no longer in vaults.des, they have been
-# moved to mini.des, float.des and large.des. Portal vaults live in portal.des.
+# Vaults are scattered according to purpose across the rest of dat/des.
 ###############################################################################
 
 {{
@@ -193,7 +192,7 @@ ENDMAP
 NAME:    erik_vaults_2
 TAGS:    vaults_entry
 MONS:    vault guard
-SUBST:   v = vxx, b = bcc
+SUBST:   v : vxx, b : bcc
 KFEAT:   O = enter_vaults
 MAP
 vvvvvv.vvvvvv
@@ -1843,6 +1842,40 @@ x.....*xxxxxxxxxxxxxxxx..9x
   xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+############################################################
+# 16 * (2.667 |), 10 monsters, 8 $
+NAME:   johnstein_vaults_end_maze
+TAGS:   vaults_end_quadrant unrand
+SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:*
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+  xxxxxxxxxxxxxxxxxxxxxxx
+ ........................
+x.xxx.................xxx.x
+x.x*xxxxxx...9...xxxxxx*x.x
+x.xx*$9..xxxx.xxxx..9$*xx.x
+x..x$.......x.x.......$x..x
+x..x9...xxx..9..xxx...9x..x
+x..xx.x.xOxxxxxxxOx.x.xx..x
+x...x.x.xx..xxx..xx.x.x...x
+x...x.x.x..x.9.x..x.x.x...x
+x...x.x.x.x9*x*9x.x.x.x...x
+x....9x...x.xOx.x...x9....x
+x...x.x.x.x9*x*9x.x.x.x...x
+x...x.x.x..x.9.x..x.x.x...x
+x...x.x.xx..xxx..xx.x.x...x
+x..xx.x.xOxxxxxxxOx.x.xx..x
+x..x9...xxx..9..xxx...9x..x
+x..x$.......x.x.......$x..x
+x.xx*$9..xxxx.xxxx..9$*xx.x
+x.x*xxxxxx...9...xxxxxx*x.x
+x.xxx.................xxx.x
+ .........................
+  xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 # Vaults:$ prize quadrants
 ###############################################################################
@@ -1857,7 +1890,7 @@ NSUBST: O = 1:O / *:|
 : vaults_end_rune(_G)
 MAP
   xxxxxxxxxxxxxxxxxxxxxxx
- ......x|****...9xxx......
+ ......x|****...9xxx.....
 x......xO|*||...xx9.......x
 x......xx|*....9x........xx
 x...x...xxx....xx........xx
@@ -1866,7 +1899,7 @@ x...x9........9x.....9xxx9x
 x...xx........xx...xxxx9..x
 x....x9......9x..xxx9.....x
 x....xx9....9xx.xx9.......x
-x.....xxx99xxx..x9.......|*x
+x.....xxx99xxx..x9......|*x
 x.......xxxx...xx.......|*x
 x..............x9.....x***x
 x...xxxx.......x9.....x||*x
@@ -2651,6 +2684,39 @@ x|9.x.9.x.9.x.9.x.9.x.9.xxx
 xx.x.x.x.x.x.x.x.x.x.x.x.xx
 x.x.9.x.9.x.9.x.9.x.9.x.9.x
  ..x|xxx|xxx|xxx|xxx|xxx..
+  xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################
+# 18 *, 8 | (11 total), 20 monsters, 8 $
+NAME:   johnstein_vaults_end_asymmetric
+TAGS:   vaults_end_quadrant_prize unrand
+SUBST:  9 = 8 9 *:10
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+  xxxxxxxxxxxxxxxxxxxxxxx
+ ........................
+x.xxxxx.9.xxxxxxxxx.9.xxx.x
+x.xxxxxx...xxxxxxx...xxxx.x
+x..xxxxxx...xxxxx...xxxx..x
+x.9.xxxxxx...xxx...xxxx.9.x
+x.x..xxxxxx...xx..xxxx..x.x
+x.xx..xxxxxx*9999*xxx..xx.x
+x.xxx..xxxxxx$99$xxx..xxx.x
+x.xxx..xxxxxxx||xxxx..xxx.x
+x.xxx..xxxxxx9*9xxxxx..xx.x
+x......9*9$|9O99|$9*9.....x
+x.xxx..xxxxx9*9xxxxxx..xx.x
+x.xxx..xxx||||xxxxxx..xxx.x
+x.xx..xxx$99$xxxxxx..xxx9.x
+x.x..xx*999*xxxxxx..xxx...x
+x.9.xxx...xxxxxxx..xxx..x.x
+x..xxx...xxxxxxx..xxx..xx.x
+x.xxxx...xxxxxx..xxx..xxx.x
+x.xxxx...xxxxx..xxx..xxxx.x
+x.xxxx.9.xxxx.9.xx..xxxxx.x
+ .........................
   xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

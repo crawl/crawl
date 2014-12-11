@@ -1,8 +1,8 @@
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "cluautil.h"
 #include "env.h"
 #include "mapmark.h"
 
@@ -34,7 +34,7 @@ const struct luaL_reg mapmarker_dlib[] =
 { "pos", mapmarker_pos },
 { "move", mapmarker_move },
 { "remove", mapmarker_remove },
-{ NULL, NULL }
+{ nullptr, nullptr }
 };
 
 void luaopen_mapmarker(lua_State *ls)

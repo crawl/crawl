@@ -6,11 +6,13 @@
 #ifndef INVENT_H
 #define INVENT_H
 
-#include <stddef.h>
+#include <cstddef>
 #include <vector>
-#include "menu.h"
+
 #include "enum.h"
 #include "itemname.h"
+#include "itemprop-enum.h"
+#include "menu.h"
 
 enum object_selector
 {
@@ -34,12 +36,14 @@ enum object_selector
     OSEL_BLESSABLE_WEAPON        = -18,
 };
 
-#define SLOT_BARE_HANDS      -2
-
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
 #define PROMPT_NOTHING       -3
 #define PROMPT_INAPPROPRIATE -4
+
+#define SLOT_BARE_HANDS      PROMPT_GOT_SPECIAL
+
+extern FixedVector<int, NUM_OBJECT_CLASSES> inv_order;
 
 struct SelItem
 {
@@ -47,8 +51,8 @@ struct SelItem
     int quantity;
     const item_def *item;
 
-    SelItem() : slot(0), quantity(0), item(NULL) { }
-    SelItem(int s, int q, const item_def *it = NULL)
+    SelItem() : slot(0), quantity(0), item(nullptr) { }
+    SelItem(int s, int q, const item_def *it = nullptr)
         : slot(s), quantity(q), item(it)
     {
     }
@@ -100,7 +104,6 @@ public:
     bool         is_item_ego() const;
     bool         is_item_art() const;
     bool         is_item_equipped() const;
-    int          item_freshness() const;
 
     virtual int highlight_colour() const
     {
@@ -142,14 +145,14 @@ public:
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
     menu_letter load_items(const vector<const item_def*> &items,
-                           MenuEntry *(*procfn)(MenuEntry *me) = NULL,
+                           MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                            menu_letter ckey = 'a', bool sort = true);
 
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
-                        MenuEntry *(*procfn)(MenuEntry *me) = NULL);
+                        MenuEntry *(*procfn)(MenuEntry *me) = nullptr);
 
     vector<SelItem> get_selitems() const;
 
@@ -177,7 +180,8 @@ protected:
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
 bool is_item_selected(const item_def &item, int selector);
-bool any_items_to_select(int type_expect, bool msg = false, int excluded_slot = -1);
+bool any_items_of_type(int type_expect, int excluded_slot = -1);
+string no_selectables_message(int item_selector);
 
 int prompt_invent_item(const char *prompt,
                        menu_type type,
@@ -187,7 +191,7 @@ int prompt_invent_item(const char *prompt,
                        bool allow_easy_quit = true,
                        const char other_valid_char = '\0',
                        int excluded_slot = -1,
-                       int *const count = NULL,
+                       int *const count = nullptr,
                        operation_types oper = OPER_ANY,
                        bool allow_list_known = false,
                        bool do_warning = true);
@@ -196,26 +200,26 @@ vector<SelItem> select_items(
                         const vector<const item_def*> &items,
                         const char *title, bool noselect = false,
                         menu_type mtype = MT_PICKUP,
-                        invtitle_annotator titlefn = NULL);
+                        invtitle_annotator titlefn = nullptr);
 
 vector<SelItem> prompt_invent_items(
                         const char *prompt,
                         menu_type type,
                         int type_expect,
-                        invtitle_annotator titlefn = NULL,
+                        invtitle_annotator titlefn = nullptr,
                         bool auto_list = true,
                         bool allow_easy_quit = true,
                         const char other_valid_char = '\0',
-                        vector<text_pattern> *filter = NULL,
-                        Menu::selitem_tfn fn = NULL,
-                        const vector<SelItem> *pre_select = NULL);
+                        vector<text_pattern> *filter = nullptr,
+                        Menu::selitem_tfn fn = nullptr,
+                        const vector<SelItem> *pre_select = nullptr);
 
 unsigned char get_invent(int invent_type, bool redraw = true);
 
 bool in_inventory(const item_def &i);
 
-string item_class_name(int type, bool terse = false);
-const char* item_slot_name(equipment_type type, bool terse);
+const char *item_class_name(int type, bool terse = false);
+const char *item_slot_name(equipment_type type);
 
 bool check_old_item_warning(const item_def& item, operation_types oper);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);
@@ -225,9 +229,13 @@ void init_item_sort_comparators(item_sort_comparators &list,
 
 bool prompt_failed(int retval);
 
+void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers);
+bool evoker_is_charging(const item_def &item);
+
 bool item_is_wieldable(const item_def &item);
 bool item_is_evokable(const item_def &item, bool reach = true,
                       bool known = false, bool all_wands = false,
                       bool msg = false, bool equip = true);
+bool nasty_stasis(const item_def &item, operation_types oper);
 bool needs_handle_warning(const item_def &item, operation_types oper);
 #endif

@@ -25,10 +25,19 @@ ae += forbidden
 # Ignore books that you have already seen
 ae += [^n]identified.*spellbook
 
+: add_autopickup_func(function (it, name)
+:         if you.god() == "Trog" then
+:             if it.subtype() == "spellbook" then
+:                 return true
+:             end
+:         end
+: end)
+
+
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.
 # Some items may already be excluded as bad_item, e.g. inaccuracy.
-ae += amulet of (inaccuracy|the gourmand|warding)
+ae += amulet of (inaccuracy|the gourmand|warding|regeneration)
 ae += amulet of (resist .*|clarity|rage|guardian spirit|faith|stasis)
 # Rings of teleportation are not redundant -- double *Tele is pretty good in
 # the Abyss. Still, they're more in line with lanterns of shadow, so you can

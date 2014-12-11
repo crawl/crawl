@@ -15,13 +15,13 @@ class text_pattern : public base_pattern
 {
 public:
     text_pattern(const string &s, bool icase = false)
-        : pattern(s), compiled_pattern(NULL),
+        : pattern(s), compiled_pattern(nullptr),
           isvalid(true), ignore_case(icase)
     {
     }
 
     text_pattern()
-        : pattern(), compiled_pattern(NULL),
+        : pattern(), compiled_pattern(nullptr),
          isvalid(false), ignore_case(false)
     {
     }
@@ -29,7 +29,7 @@ public:
     text_pattern(const text_pattern &tp)
         : base_pattern(tp),
           pattern(tp.pattern),
-          compiled_pattern(NULL),
+          compiled_pattern(nullptr),
           isvalid(tp.isvalid),
           ignore_case(tp.ignore_case)
     {

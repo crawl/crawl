@@ -4,16 +4,14 @@
 **/
 
 #include "AppHdr.h"
+
 #include "tutorial.h"
 
-#include "externs.h"
 #include "hints.h"
 #include "message.h"
-#include "mpr.h"
-#include "player.h"
 #include "skills.h"
 #include "state.h"
-#include "stuff.h"
+
 
 void set_tutorial_hunger(int hunger)
 {
@@ -56,8 +54,6 @@ void tutorial_init_hint(const char* hintstr)
         hint = HINT_REMOVED_CURSE;
     else if (strcmp(hintstr, "HINT_MULTI_PICKUP") == 0)
         hint = HINT_MULTI_PICKUP;
-    else if (strcmp(hintstr, "HINT_ROTTEN_FOOD") == 0)
-        hint = HINT_ROTTEN_FOOD;
 
     if (hint != HINT_EVENTS_NUM)
         Hints.hints_events[hint] = true;

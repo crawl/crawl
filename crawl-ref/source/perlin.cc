@@ -32,12 +32,13 @@
 #include "AppHdr.h"
 
 #include "perlin.h"
+
 #include <cmath>
 #include <stdint.h>
 
 namespace perlin
 {
-    // Inner class to speed upp gradient computations
+    // Inner class to speed up gradient computations
     // ([in Java,] array access is a lot slower than member access)
     class Grad
     {

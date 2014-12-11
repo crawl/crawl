@@ -4,15 +4,16 @@
 #ifdef USE_GL
 
 #include "glwrapper-ogl.h"
-#include "options.h"
 
 // How do we get access to the GL calls?
 // If other UI types use the -ogl wrapper they should
 // include more conditional includes here.
 #ifdef USE_SDL
 # ifdef USE_GLES
-#  include <SDL.h>
-#  ifndef __ANDROID__
+#  ifdef __ANDROID__
+#   include <SDL.h>
+#  else
+#   include <SDL2/SDL.h>
 #   include <SDL_gles.h>
 #  endif
 #  include <GLES/gl.h>
@@ -21,10 +22,17 @@
 #   include <SDL.h>
 #   include <GLES/gl.h>
 #  else
-#   include <SDL_opengl.h>
+#   include <SDL2/SDL_opengl.h>
+#   if defined(__MACOSX__)
+#    include <OpenGL/glu.h>
+#   else
+#    include <GL/glu.h>
+#   endif
 #  endif
 # endif
 #endif
+
+#include "options.h"
 
 #ifdef __ANDROID__
 # include <android/log.h>
@@ -33,7 +41,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // Static functions from GLStateManager
 
-GLStateManager *glmanager = NULL;
+GLStateManager *glmanager = nullptr;
 
 void GLStateManager::init()
 {
@@ -46,7 +54,7 @@ void GLStateManager::init()
 void GLStateManager::shutdown()
 {
     delete glmanager;
-    glmanager = NULL;
+    glmanager = nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -197,8 +205,11 @@ void OGLStateManager::set_transform(const GLW_3VF &trans, const GLW_3VF &scale)
     glScalef(scale.x, scale.y, scale.z);
 }
 
-void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz)
+void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz,
+                                            const coord_def &m_drawablesz)
 {
+    glViewport(0, 0, m_drawablesz.x, m_drawablesz.y);
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -433,7 +444,7 @@ OGLShapeBuffer::OGLShapeBuffer(bool texture, bool colour, drawing_modes prim) :
 
 const char *OGLShapeBuffer::print_statistics() const
 {
-    return NULL;
+    return nullptr;
 }
 
 unsigned int OGLShapeBuffer::size() const

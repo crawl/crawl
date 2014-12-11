@@ -330,10 +330,6 @@ Enter the Abyss ability
 あなた自身を即座にルゴヌの領域に転移させる。しかしこの能力を使用する試みですら、
 あなたの体力と魔力を激減させる。
 %%%%
-Draw One ability
-
-あなたのインベントリ内から任意のデッキを選び、そこからカードを1枚引く。
-%%%%
 Triple Draw ability
 
 インベントリ内のデッキからカードを3枚引き、それを確認し1枚を選び2枚を捨てる。
@@ -526,7 +522,7 @@ Make lightning spire ability
 
 指定した位置に電撃を放射する稲光の尖塔を建築する。
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 友好的な悪魔を召喚する能力を持った像を指定した位置に建てる。
 %%%%

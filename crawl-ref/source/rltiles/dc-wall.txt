@@ -402,16 +402,20 @@ vault_stone00 STONE_WALL_VAULT
 vault_stone01
 vault_stone02
 vault_stone03
-%weight 4
 vault_stone04
 vault_stone05
 vault_stone06
 vault_stone07
-%weight 1
+%weight 7
 vault_stone08
 vault_stone09
 vault_stone10
 vault_stone11
+%weight 4
+vault_stone12
+vault_stone13
+vault_stone14
+vault_stone15
 
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
@@ -1515,6 +1519,46 @@ bars_red08
 %desat 0
 %lum 0 -30
 %repeat WALL_BARS WALL_BARS_DARKGRAY
+%resetcol
+
+%variation WALL_BARS lightblue
+%hue 0 210
+%lum 0 5
+%repeat WALL_BARS WALL_BARS_LIGHTBLUE
+%resetcol
+
+%variation WALL_BARS lightgreen
+%hue 0 110
+%repeat WALL_BARS WALL_BARS_LIGHTGREEN
+%resetcol
+
+%variation WALL_BARS lightcyan
+%hue 0 180
+%repeat WALL_BARS WALL_BARS_LIGHTCYAN
+%resetcol
+
+%variation WALL_BARS lightred
+%hue 0 0
+%lum 0 10
+%repeat WALL_BARS WALL_BARS_LIGHTRED
+%resetcol
+
+%variation WALL_BARS lightmagenta
+%hue 0 290
+%lum 0 5
+%repeat WALL_BARS WALL_BARS_LIGHTMAGENTA
+%resetcol
+
+%variation WALL_BARS yellow
+%hue 0 50
+%lum 0 5
+%repeat WALL_BARS WALL_BARS_YELLOW
+%resetcol
+
+%variation WALL_BARS white
+%desat 0
+%lum 0 30
+%repeat WALL_BARS WALL_BARS_WHITE
 %resetcol
 
 %rim 0

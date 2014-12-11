@@ -4,11 +4,13 @@
 
 #include "tilereg-tab.h"
 
-#include "libutil.h"
-#include "state.h"
-#include "tiledef-gui.h"
 #include "cio.h"
+#include "english.h"
+#include "libutil.h"
 #include "macro.h"
+#include "state.h"
+#include "stringutil.h"
+#include "tiledef-gui.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
@@ -54,7 +56,7 @@ void TabbedRegion::reset_icons(int from_idx)
 
 int TabbedRegion::push_tab_button(command_type cmd, tileidx_t tile_tab)
 {
-    return _push_tab(NULL, cmd, tile_tab);
+    return _push_tab(nullptr, cmd, tile_tab);
 }
 int TabbedRegion::push_tab_region(GridRegion *reg, tileidx_t tile_tab)
 {
@@ -69,7 +71,7 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     ASSERT(tile_tab);
 
     TabInfo inf;
-    inf.reg = NULL;
+    inf.reg = nullptr;
     inf.cmd = CMD_NO_CMD;
     inf.tile_tab = 0;
     inf.ofs_y = 0;
@@ -106,7 +108,7 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
 GridRegion *TabbedRegion::get_tab_region(int idx)
 {
     if (invalid_index(idx))
-        return NULL;
+        return nullptr;
 
     return m_tabs[idx].reg;
 }
@@ -228,11 +230,9 @@ void TabbedRegion::update()
 
 void TabbedRegion::clear()
 {
-    for (size_t i = 0; i < m_tabs.size(); ++i)
-    {
-        if (m_tabs[i].reg)
-            m_tabs[i].reg->clear();
-    }
+    for (TabInfo &tab : m_tabs)
+        if (tab.reg)
+            tab.reg->clear();
 }
 
 void TabbedRegion::pack_buffers()
@@ -304,21 +304,21 @@ void TabbedRegion::on_resize()
     int reg_sx = sx + ox;
     int reg_sy = sy;
 
-    for (size_t i = 0; i < m_tabs.size(); ++i)
+    for (const TabInfo &tab : m_tabs)
     {
-        if (!m_tabs[i].reg)
+        if (!tab.reg)
             continue;
 
         // on small layout we want to draw tab from top-right corner inwards (down and left)
         if (m_use_small_layout)
         {
-            reg_sx = (sx+ox) - ox*dx/32 - mx*m_tabs[i].reg->dx;
-            m_tabs[i].reg->dx = dx;
-            m_tabs[i].reg->dy = dy;
+            reg_sx = (sx+ox) - ox*dx/32 - mx*tab.reg->dx;
+            tab.reg->dx = dx;
+            tab.reg->dy = dy;
         }
 
-        m_tabs[i].reg->place(reg_sx, reg_sy);
-        m_tabs[i].reg->resize(mx, my);
+        tab.reg->place(reg_sx, reg_sy);
+        tab.reg->resize(mx, my);
     }
 }
 
@@ -417,7 +417,7 @@ int TabbedRegion::find_tab(string tab_name) const
     string pluralised_name = pluralise(tab_name);
     for (int i = 0, size = m_tabs.size(); i < size; ++i)
     {
-        if (m_tabs[i].reg == NULL) continue;
+        if (m_tabs[i].reg == nullptr) continue;
 
         string reg_name = lowercase_string(m_tabs[i].reg->name());
         if (tab_name == reg_name || pluralised_name == reg_name)

@@ -19,14 +19,6 @@ ifdef ANDROID
 endif
 
 ifdef TILES
-  ifndef CONTRIB_SDL
-    SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
-    SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a")
-  else
-    SDL_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL
-    SDL_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a
-  endif
-
   ifndef NO_PKGCONFIG
     PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
     PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
@@ -35,8 +27,8 @@ ifdef TILES
     PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
   endif
 
-  CFLAGS += $(SDL_CFLAGS) $(PNG_INCLUDE)
-  LDFLAGS += $(SDL_LDFLAGS) $(PNG_LIB)
+  CFLAGS += $(PNG_INCLUDE)
+  LDFLAGS += $(PNG_LIB)
 
   CFLAGS += -DUSE_TILE
 endif
@@ -46,10 +38,10 @@ CFLAGS += -O0 -DDEBUG -ggdb
 endif
 
 ifneq (,$(findstring MINGW,$(uname_S)))
-LDFLAGS += -lgdi32 -lwinmm
+LDFLAGS += -lgdi32 -lwinmm -lole32 -loleaut32 -limm32 -lshell32 -lversion -luuid 
 endif
 ifeq ($(uname_S),Darwin)
-LDFLAGS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL
+LDFLAGS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL
 endif
 ifeq ($(uname_S),Linux)
 LDFLAGS += -ldl -lpthread

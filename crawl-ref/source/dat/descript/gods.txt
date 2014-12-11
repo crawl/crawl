@@ -2,115 +2,13 @@
 # Why should they worship this god? What are the advantages & limitations?
 # What's 'cool' about this god?
 %%%%
-Zin
+Ashenzari
 
-Zin is a god of discipline. Followers must remain pure of body and soul,
-refraining from dark magic and chaotic acts, and never consuming the flesh of
-intelligent beings. They must also tithe a fraction of all gold gained,
-preferably followed by donations of more. In exchange, worshippers may invoke
-Zin's wrath upon sinners, and eventually gain various divine protections. Zin's
-followers can convert to Elyvilon or the Shining One while keeping some piety.
-%%%%
-the Shining One
-
-Followers of the Shining One are bound to the code of the honourable warrior,
-soldiers in their god's eternal crusade against evil. For forsaking dark magic
-and underhanded tactics, the Shining One rewards them and their allies with the
-power they need to slay demons and the undead. Especially devout warriors can
-even call upon angels in times of need. The Shining One's followers can convert
-to Elyvilon or Zin while keeping some piety.
-%%%%
-Kikubaaqudgha
-
-Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in
-the powers of death. An evil god, Kikubaaqudgha requires the deaths of living
-creatures and demons as often as possible. In exchange, Kikubaaqudgha offers
-great assistance to the aspiring necromancer: spellbooks filled with dark
-magic, protection against necromantic backlash, and an endless supply of bodies
-taken from Kikubaaqudgha's vast mausoleum.
-%%%%
-Yredelemnul
-
-Yredelemnul the Dark is a god worshipped by those who seek powers over death
-and the undead. Followers, who must oppose all things holy, can raise legions
-of servile undead, and gain a number of other useful (if unpleasant) powers.
-Yredelemnul appreciates killing, but has no interest in sacrifices, preferring
-corpses to be put to use. Destroying artificial beings is also appreciated, as
-they are neither truly alive nor subject to death or undeath.
-%%%%
-Xom
-
-Xom is a wild and unpredictable god of chaos, who seeks not worshippers but
-playthings with which to toy. Many choose to follow Xom in the hope of
-receiving fabulous rewards and mighty powers, but Xom is nothing if not
-capricious. There is nothing a follower can do to influence Xom's mood.
-%%%%
-Vehumet
-
-Vehumet is a god of the destructive powers of magic. Followers gain various
-useful powers to enhance their command of the hermetic arts, and the most
-favoured stand to gain access to some of the fearsome spells in Vehumet's
-library. One's devotion to Vehumet can be proven by the causing of as much
-carnage and destruction as possible.
-%%%%
-Okawaru
-
-Okawaru is a dangerous and powerful god of battle. Followers can gain a number
-of powers useful in combat as well as various rewards, but must constantly
-prove themselves through battle and the sacrifice of corpses. Okawaru prefers
-heroic feats against much stronger enemies, and pays little heed to easier
-victories. Furthermore, while fair fights are not required, harming one's
-allies will incur Okawaru's wrath.
-%%%%
-Makhleb
-
-Makhleb the Destroyer is a fearsome deity of bloodshed and mortification of the
-flesh. Followers are expected to cleanse others by inflicting suffering and
-death on them in Makhleb's name, and can gain further favour by sacrificing the
-freshly dead. Dedicated followers may also access the raw energies and
-hell-spawned servants of chaos, so that they may better break the impure world
-and its false laws for their evil god's glory.
-%%%%
-Sif Muna
-
-Sif Muna the Loreminder is a contemplative but powerful deity, served by those
-who seek magical knowledge. The Loreminder appreciates the training of
-spellcasting skills, and will reward faithful followers with a supply of
-spellbooks taken directly from Sif Muna's legendary library.
-%%%%
-Trog
-
-Trog is an ancient god of anger and violence. Followers are expected to kill in
-Trog's name and sacrifice the dead. In return, worshippers of Trog gain the
-ability to go berserk at will in combat, and will be granted gifts of powerful
-weapons. Trog hates all wizards, and loves to see their spellbooks burn.
-Followers are absolutely forbidden the use of spell magic.
-%%%%
-Nemelex Xobeh
-
-Nemelex is a strange and unpredictable trickster god, whose powers are invoked
-through magical packs of cards painted in the ichor of demons. Followers are
-expected to explore the world, and will recieve decks of cards in return.
-Followers are encouraged to trust in the cards and use them as
-much as possible. However, the Trickster can ensure that fortune favours the
-bold.
-%%%%
-Elyvilon
-
-Elyvilon the Healer welcomes all kind souls prepared to help others. Those
-individuals can expect to gain powerful healing abilities, by which they can
-avoid bloodshed. Elyvilon appreciates the destruction of weapons, though more
-pious worshippers must find and destroy unholy or evil weapons to gain piety
-in this way. Elyvilon's followers can convert to the Shining One or Zin while
-keeping some piety.
-%%%%
-Lugonu
-
-Banished to the chaotic realm of the Abyss, Lugonu the Unformed seeks followers
-to spread bloodshed and corruption in the overworld. Those who gain Lugonu's
-favour will be granted some of the power of the Abyss itself, allowing them to
-call forth eldritch horrors, and even to travel between the overworld and the
-Abyss at will.
+While it seems inconceivable that the divine could be shackled, Ashenzari is
+just that: bound to the sky for eternity, the unbudging god is all-knowing,
+all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge
+and foresight, but be warned: to Ashenzari, power and blessing and curse are
+all the same thing.
 %%%%
 Beogh
 
@@ -119,15 +17,6 @@ orcs may devote their service to Beogh, and they must prove their devotion with
 bloodshed. Especially fervent devotees of Beogh will find orcish followers
 flocking to their banner: it is an age of signs and portents, and the orcs have
 become increasingly certain that the coming of their Messiah is nigh.
-%%%%
-Fedhas
-
-The god of plant and fungal life, Fedhas Madash demands that followers
-encourage the decomposition of corpses. Fedhas also forbids followers from
-harming any species under Fedhas' protection, and from using any necromantic
-effects that interfere with corpses. In return Fedhas grants a number of
-abilities that promote the growth of plants and fungi. These abilities may
-incidentally prove useful to adventurers.
 %%%%
 Cheibriados
 
@@ -138,13 +27,39 @@ attain perfection of mind and body, and the mysteries of time unfold before
 them. Especially devout followers may even momentarily abandon the flow of
 time and its needless disturbances.
 %%%%
-Ashenzari
+Dithmenos
 
-While it seems inconceivable that the divine could be shackled, Ashenzari is
-just that: bound to the sky for eternity, the unbudging god is all-knowing,
-all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge
-and foresight, but be warned: to Ashenzari, power and blessing and curse are
-all the same thing.
+Dithmenos the Shadowed desires all to be darkness. Followers of Dithmenos gain
+a strange and otherwordly affinity to the shadows of their environment. This
+god despises fire, which long ago freed mortals from the tyranny of shadow; its
+use is forbidden by worshippers. Dithmenos favours those who would instead
+destroy sources of fire.
+%%%%
+Elyvilon
+
+Elyvilon the Healer welcomes all kind souls prepared to help others. Those
+individuals can expect to gain powerful healing abilities, by which they can
+avoid bloodshed. Elyvilon appreciates the destruction of weapons, though more
+pious worshippers must find and destroy unholy or evil weapons to gain piety
+in this way. Elyvilon's followers can convert to the Shining One or Zin while
+keeping some piety.
+%%%%
+Fedhas
+
+The god of plant and fungal life, Fedhas Madash demands that followers
+encourage the decomposition of corpses. Fedhas also forbids followers from
+harming any species under Fedhas' protection, and from using any necromantic
+effects that interfere with corpses. In return Fedhas grants a number of
+abilities that promote the growth of plants and fungi. These abilities may
+incidentally prove useful to adventurers.
+%%%%
+Gozag
+
+Gozag Ym Sagoz the Greedy teaches that the world belongs to the rich. Those
+accepting this principle may exchange their gold for divine assistance.
+Followers of Gozag do not earn piety; the only way to impress this god is by
+amassing a fortune, and worshippers may request as much assistance as they can
+afford. Fortunately, Gozag's worshippers are said to have the touch of gold.
 %%%%
 Jiyva
 
@@ -155,21 +70,49 @@ occasionally consume items left elsewhere in the dungeon by followers.
 Especially favoured followers will become as shapeless as their god, as their
 attributes and mutations shift around under Jiyva's influence.
 %%%%
-Dithmenos
+Kikubaaqudgha
 
-Dithmenos the Shadowed desires all to be darkness. Followers of Dithmenos gain
-a strange and otherwordly affinity to the shadows of their environment. This
-god despises fire, the ancient enemy of the shadows, and forbids its use by
-worshippers; Dithmenos favours those who would instead destroy sources of
-light.
+Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in
+the powers of death. An evil god, Kikubaaqudgha requires the deaths of living
+creatures and demons as often as possible. In exchange, Kikubaaqudgha offers
+great assistance to the aspiring necromancer: spellbooks filled with dark
+magic, protection against necromantic backlash, and an endless supply of bodies
+taken from Kikubaaqudgha's vast mausoleum.
 %%%%
-Gozag
+Lugonu
 
-Gozag Ym Sagoz the Greedy teaches that the world belongs to the rich. Those
-accepting this principle may exchange their gold for divine assistance.
-Followers of Gozag do not earn piety; the only way to impress this god is by
-amassing a fortune, and worshippers may request as much assistance as they can
-afford. Fortunately, Gozag's worshippers are said to have the touch of gold.
+Banished to the chaotic realm of the Abyss, Lugonu the Unformed seeks followers
+to spread bloodshed and corruption in the overworld. Those who gain Lugonu's
+favour will be granted some of the power of the Abyss itself, allowing them to
+call forth eldritch horrors, and even to travel between the overworld and the
+Abyss at will.
+%%%%
+Makhleb
+
+Makhleb the Destroyer is a fearsome deity of bloodshed and mortification of the
+flesh. Followers are expected to cleanse others by inflicting suffering and
+death on them in Makhleb's name, particularly if they kill natural creatures
+which require blood to survive. Dedicated followers may also access the raw
+energies and hell-spawned servants of chaos, so that they may better break the
+impure world and its false laws for their evil god's glory.
+%%%%
+Nemelex Xobeh
+
+Nemelex is a strange and unpredictable trickster god, whose powers are invoked
+through magical packs of cards painted in the ichor of demons. Followers are
+expected to explore the world, and will receive decks of cards in return.
+Followers are encouraged to trust in the cards and use them as
+much as possible. However, the Trickster can ensure that fortune favours the
+bold.
+%%%%
+Okawaru
+
+Okawaru is a dangerous and powerful god of battle. Followers can gain a number
+of powers useful in combat as well as various rewards, but must constantly
+prove themselves by defeating other creatures. Okawaru prefers heroic feats
+against much stronger enemies, and pays little heed to easier victories.
+Furthermore, while fair fights are not required, harming one's allies will
+incur Okawaru's wrath.
 %%%%
 Qazlal
 
@@ -179,15 +122,218 @@ will find themselves the eye in a storm of elemental destruction, from which
 only their God can protect them. Pious worshippers of Qazlal will gain the
 ability to direct and control the destructive might of the storm.
 %%%%
-Zin powers
+Ru
 
-Zin grants followers the ability to preach to the unenlightened masses, and
-powers to vitalise their bodies and gain divine stamina, protecting them from
-various afflictions as well as giving sustenance to the hungry. Later,
-followers gain the ability to imprison their foes temporarily. Followers can
-eventually find temporary safety in a divine refuge. As piety grows, followers
-will be protected from mutation, and Zin may even occasionally directly
-intervene to save a follower's life.
+Of all the gods, only Ru opposed creation. Not as folly, but as distraction.
+Initiates of Ru can open channels to the powers underlying the visible world by
+renouncing the fetters that bind them here. These sacrifices are not made to
+Ru, but rather given up freely and permanently. Initiates can redirect would-be
+attackers and retaliate against their enemies, replenish their health and
+magic, perform a mighty leap, and unleash a massive wave of power against foes.
+%%%%
+Sif Muna
+
+Sif Muna the Loreminder is a contemplative but powerful deity, served by those
+who seek magical knowledge. The Loreminder appreciates the training of
+spellcasting skills, and will reward faithful followers with a supply of
+spellbooks taken directly from Sif Muna's legendary library.
+%%%%
+the Shining One
+
+Followers of the Shining One are bound to the code of the honourable warrior,
+soldiers in their god's eternal crusade against evil. For forsaking dark magic
+and underhanded tactics, the Shining One rewards them and their allies with the
+power they need to slay demons and the undead. Especially devout warriors can
+even call upon angels in times of need. The Shining One's followers can convert
+to Elyvilon or Zin while keeping some piety.
+%%%%
+Trog
+
+Trog is an ancient god of anger and violence. Followers are expected to kill in
+Trog's name and sacrifice the dead. In return, worshippers of Trog gain the
+ability to go berserk at will in combat, and will be granted gifts of powerful
+weapons. Trog hates all wizards, and loves to see their spellbooks burn.
+Followers are absolutely forbidden the use of spell magic.
+%%%%
+Vehumet
+
+Vehumet is a god of the destructive powers of magic. Followers gain various
+useful powers to enhance their command of the hermetic arts, and the most
+favoured stand to gain access to some of the fearsome spells in Vehumet's
+library. One's devotion to Vehumet can be proven by the causing of as much
+carnage and destruction as possible.
+%%%%
+Xom
+
+Xom is a wild and unpredictable god of chaos, who seeks not worshippers but
+playthings with which to toy. Many choose to follow Xom in the hope of
+receiving fabulous rewards and mighty powers, but Xom is nothing if not
+capricious. There is nothing a follower can do to influence Xom's mood.
+%%%%
+Yredelemnul
+
+Yredelemnul the Dark is a god worshipped by those who seek powers over death
+and the undead. Followers, who must oppose all things holy, can raise legions
+of servile undead, and gain a number of other useful (if unpleasant) powers.
+Yredelemnul appreciates killing, but has no interest in sacrifices, preferring
+corpses to be put to use. Destroying artificial beings is also appreciated, as
+they are neither truly alive nor subject to death or undeath.
+%%%%
+Zin
+
+Zin is a god of discipline. Followers must remain pure of body and soul,
+refraining from dark magic and chaotic acts, and never consuming the flesh of
+intelligent beings. They must also tithe a fraction of all gold gained,
+preferably followed by donations of more. In exchange, worshippers may invoke
+Zin's wrath upon sinners, and eventually gain various divine protections. Zin's
+followers can convert to Elyvilon or the Shining One while keeping some piety.
+%%%%
+Ashenzari powers
+
+Ashenzari exhorts followers to garb themselves with curses, and provides
+rewards for time spent using cursed armour, jewellery or weapons. Ashenzari
+will increase followers' skills depending on how cursed they are, and grants
+clear sight and clarity of mind. Followers will later gain the ability to scry
+through walls, and eventually will be able to transfer a portion of their
+knowledge from one skill to another.
+%%%%
+Beogh powers
+
+Followers of Beogh can smite their foes, and will even gain orcish followers of
+their own, who may be blessed by Beogh in battle and can be recalled as needed.
+Eventually, followers will gain the power to walk on water. Beogh will
+sometimes directly intervene to save a follower's life.
+%%%%
+Cheibriados powers
+
+Followers of Cheibriados move more slowly as they gain favour, and are rewarded
+for killing creatures who are faster than they are. Moving too quickly or using
+magically hastened weapons is frowned upon. Cheibriados rewards the faithful
+with a slowed metabolism, the power to slow other creatures, the power to
+distort the flow of time, the power to harm those who move more quickly than
+they do, and, finally, the ability to step out of the flow of time entirely.
+%%%%
+Dithmenos powers
+
+Followers of Dithmenos are constantly surrounded in an aura of shadow, the
+extent of which is reflective of their level of devotion. Dithmenos grants
+followers the ability to instantly step into the shadow of nearby creatures,
+provided the shadow is still enough to do so. Dithmenos protects followers by
+occasionally shrouding those struck by attacks in dark smoke. Sufficiently
+pious followers of Dithmenos will find their own shadow will begin to attack on
+its own, and eventually gain the ability to assume the form of a shadow
+themself.
+%%%%
+Elyvilon powers
+
+The Healer offers followers means to heal themselves from damage and other ill
+effects. Elyvilon also allows healing of hostile monsters, trying to turn them
+neutral. Elyvilon may directly intervene to save a follower's life, especially
+when called upon; highly pious followers can be sure of such aid.
+%%%%
+Fedhas powers
+
+Plants and fungi will not attack Fedhas' worshippers without provocation.
+Fedhas' worshippers may walk through plants or fungi, and even fire missiles or
+spells through them without causing harm. Fedhas grants the ability to promote
+plants and fungi into stronger species. Followers can eventually grow a wall of
+plants and create explosive spores from corpses. They are also granted some
+control over the weather, being able to call sunlight and eventually
+rainstorms.
+%%%%
+Gozag powers
+
+For Gozag, both flesh and food are inferior to wealth, and therefore all
+corpses are turned into gold piles. These piles of gold may briefly distract
+nearby monsters. Stalwarts can order immediate help in the form of potions,
+with prices being dictated by the Greedy. Particularly well-off adherents may
+attract shopkeepers into the dungeon, and even bribe entire branches of the
+dungeon. Gozag will also duplicate any one non-artefact item for a servant.
+%%%%
+Jiyva powers
+
+Jiyva's followers can request jellies, turn monsters to slime, and eventually
+remove their harmful mutations. Followers of Jiyva may also pray alongside
+visible slimes, preventing items from being eaten for a while. As their piety
+grows, Jiyva will, with increasing frequency, drop jellies into the dungeon;
+rearrange followers' attributes based on their skills and armour; and grant
+mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands
+the same conduct in return.
+%%%%
+Kikubaaqudgha powers
+
+Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
+prowess with gifts of spellbooks. Kikubaaqudgha will protect followers from the
+effects of necromantic miscasts, and may even shield them from unholy torment.
+Especially fervent followers may invoke torment themselves by sacrificing a
+cadaver, and Kikubaaqudgha will eventually allow followers to either receive
+the Necronomicon, or to have their weapon imbued with pain.
+%%%%
+Lugonu powers
+
+Followers of Lugonu gain powers to depart the Abyss at will, to bend space
+around themselves, and to banish monsters to the Abyss. Later they will be able
+to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
+through, and to gate themselves directly into this realm of chaos. Lugonu will
+eventually offer to corrupt a follower's weapon, imbuing it with the distorting
+energies of the Abyss, and will protect the follower from the normally harmful
+effects of unwielding such a weapon. Lugonu expects followers to spread
+unceasing chaos in the overworld, and as such does not grant piety to
+worshippers while they remain in the Abyss itself.
+%%%%
+Makhleb powers
+
+Makhleb offers followers means to inflict immense damage through chaotic,
+destructive attacks. Followers will also be able to call in help from powerful
+demons. Makhleb's powers come with a price in blood. However, Makhleb will
+grant followers renewed health in return for killing beings of all kinds.
+%%%%
+Nemelex Xobeh powers
+
+The Trickster's followers gain various ways to influence fate when playing
+cards. They will quickly find that the effects of cards will be more powerful
+for them, increasingly so with higher piety. Later, followers will gain
+powerful abilities to manipulate the cards, allowing them to choose one of
+three drawn cards, to gain the effects of multiple cards at once, and finally
+to stack decks and re-order their contents.
+%%%%
+Okawaru powers
+
+Followers of Okawaru will gain the ability to temporarily increase their skills
+in combat, and, much later, to deal much faster blows. Okawaru will eventually
+gift followers with weapons and armour.
+%%%%
+Qazlal powers
+
+Followers of Qazlal are protected from the clouds they create. As a follower of
+Qazlal gains divine favour, they are slowly surrounded by a loud storm, causing
+elemental clouds to appear near them, blocking attacks, and (for the
+particularly devout) deflecting incoming projectiles. Qazlal allows followers
+to incite nature against their foes, causing a localised natural disturbance
+or, for particularly devout followers, a more widespread disaster.
+Followers of Qazlal can give life to elemental clouds, turning them into
+elementals whose loyalty depends on the origin of the cloud. Followers can
+gain temporary resistances against the elements on taking damage from that
+element.
+%%%%
+Ru powers
+
+Ru leads you to gain immense power which initially will cause foes to
+falter and become stricken with maladies if they harm you. As you make further
+sacrifices, you will be able to draw on this power to restore your health and
+magic and make a lightning-fast explosive leap. Exceptional sacrificiants can
+unleash their power in a massive strike against all their foes.
+
+Once you begin worship, Ru will monitor your progress as you explore the
+dungeon and defeat its inhabitants. Ru will, on judging you ready, offer you
+three sacrifices which you can make in order to achieve greater power.
+%%%%
+Sif Muna powers
+
+Followers of Sif Muna can channel magical energy when they need it the most,
+and they gain a power to forget any spell at will, so as to learn new ones. Sif
+Muna protects spellcasters against the negative effects of miscasting a spell.
+Over time, followers will receive spellbooks containing a vast range of spells.
 %%%%
 the Shining One powers
 
@@ -202,14 +348,28 @@ beings as temporary allies. Highly pious followers may request the Shining
 One's blessing upon a weapon. The Shining One may occasionally directly
 intervene to save a follower's life.
 %%%%
-Kikubaaqudgha powers
+Trog powers
 
-Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
-prowess with gifts of spellbooks. Kikubaaqudgha will protect followers from the
-effects of necromantic miscasts, and may even shield them from unholy torment.
-Especially fervent followers may invoke torment themselves by sacrificing a
-cadaver, and Kikubaaqudgha will eventually allow followers to either receive
-the Necronomicon, or to have their weapon imbued with pain.
+Trog offers various powers to help followers in battle. Followers will gain the
+ability to go berserk at will, and to rapidly heal their wounds while
+increasing resistance to hostile enchantments. Later, followers may call in
+powerful raging allies. Eventually, Trog will gift followers with weapons
+focused on damage.
+%%%%
+Vehumet powers
+
+Worshippers of Vehumet will quickly be able to recover their magical energy
+upon killing beings. As they gain favour, they will also gain enhancements to
+their destructive spells — first assistance in casting such spells and then
+increased range for conjurations. Vehumet will offer followers the knowledge of
+increasingly powerful destructive spells as they gain piety.
+%%%%
+Xom powers
+
+To worship Xom is to live riskily. In a good mood Xom may shower you with
+gifts, while at other times this capricious god could decide to “spice things
+up a little” and send you to your doom. If you prove yourself the stronger, so
+much the better; if not, well, there'll be other playthings...
 %%%%
 Yredelemnul powers
 
@@ -221,156 +381,165 @@ the power to bind a monster's soul, and make it fight for them instead.
 Yredelemnul will sporadically gift followers increasingly powerful undead
 servants.
 %%%%
-Xom powers
+Zin powers
 
-To worship Xom is to live riskily. In a good mood Xom may shower you with
-gifts, while at other times this capricious god could decide to “spice things
-up a little” and send you to your doom. If you prove yourself the stronger, so
-much the better; if not, well, there'll be other playthings...
+Zin grants followers the ability to preach to the unenlightened masses, and
+powers to vitalise their bodies and gain divine stamina, protecting them from
+various afflictions as well as giving sustenance to the hungry. Later,
+followers gain the ability to imprison their foes temporarily. Followers can
+eventually find temporary safety in a divine refuge. As piety grows, followers
+will be protected from mutation, and Zin may even occasionally directly
+intervene to save a follower's life.
 %%%%
-Vehumet powers
+Ashenzari wrath
 
-Worshippers of Vehumet will quickly be able to recover their magical energy
-upon killing beings. As they gain favour, they will also gain enhancements to
-their destructive spells — first assistance in casting such spells and then
-increased range for conjurations. Vehumet will offer followers the knowledge of
-increasingly powerful destructive spells as they gain piety.
+Ashenzari's wrath is not like other gods'; it is constant and unrelenting for
+its duration. Victims find their skills impaired, and their enemies divinely
+guided - never losing track of them, never ending the hunt.
 %%%%
-Okawaru powers
+Beogh wrath
 
-Followers of Okawaru will gain the ability to temporarily increase their skills
-in combat, and, much later, to deal much faster blows. Okawaru will eventually
-gift followers with weapons and armour.
+Blasphemers against the word of Beogh find themselves confronted with direct
+and physical opposition. Those who still worship Beogh find their followers
+regularly deserting them; they, and others, are further assaulted by waves of
+orcish warriors. When working through intermediaries fails, Beogh hurls
+dancing electric weapons at offenders, or simply smites them - and when smiting
+true sinners, Beogh has a heavy hand indeed!
 %%%%
-Makhleb powers
+Cheibriados wrath
 
-Makhleb offers followers means to inflict immense damage through chaotic,
-destructive attacks. Followers will also be able to call in help from powerful
-demons. Makhleb's powers come with a price in blood. However, Makhleb will
-grant followers renewed health in return for killing beings of all kinds.
+Offenders against Cheibriados are given one last chance to take it easy. They
+may find themselves slowed and exhausted, or stepping from time at unexpected
+moments. In dangerous moments, Chei provides them with refreshing naps. And in
+very dangerous situations... in the full depth of time, almost anything can
+happen. (But for those who offend Cheibriados, probably not anything good!)
 %%%%
-Sif Muna powers
+Dithmenos wrath
 
-Followers of Sif Muna can channel magical energy when they need it the most,
-and they gain a power to forget any spell at will, so as to learn new ones. Sif
-Muna protects spellcasters against the negative effects of miscasting a spell.
-Over time, followers will receive spellbooks containing a vast range of spells.
+When angered, Dithmenos turns the shadows against victims. Monsters emerge
+from the darkness, both illusions woven from shadow and the very shadows
+themselves turning against sinners. Novices are swarmed by flitting shadows and
+illusionary trolls; experts by shadow fiends and illusionary dragons.
+Dithmenos's subtle punishments are, if anything, more dangerous: victims find
+the shadows ripped away from them, hunted with nowhere to hide; or find
+themselves smothered in shadow and sleeping, perhaps forever.
 %%%%
-Trog powers
+Elyvilon wrath
 
-Trog offers various powers to help followers in battle. Followers will gain the
-ability to go berserk at will, and to rapidly heal their wounds while
-increasing resistance to hostile enchantments. Later, followers may call in
-powerful raging allies. Eventually, Trog will gift followers with weapons
-focused on damage.
+Elyvilon is not a god known for wrath. Still, those earning Elyvilon's ire will
+find themselves irritated in various ways; their weapons will be blunted, their
+blows blocked, their thoughts confused, and, occasionally, they'll be lightly
+poisoned, to cap it all off.
 %%%%
-Nemelex Xobeh powers
+Fedhas wrath
 
-The Trickster's followers gain various ways to influence fate when playing
-cards. They will quickly gain the ability to draw from decks without needing to
-wield them, and to peek at the contents of decks in order to identify them.
-Later, followers will gain much more powerful abilities to manipulate the
-cards, allowing them to choose one of three drawn cards, to gain the effects of
-multiple cards at once, and finally to stack decks and re-order their contents.
+It is Fedhas's considered opinion that offenders against the natural order
+(Fedhas) simply need more exposure to nature to realize the error of their
+ways. Accordingly, Fedhas provides said nature, in the form of pure elemental
+destruction, waves of giant spores rising from nearby corpses, and, for the
+truly incorrigible, surrounding rings of animate mushrooms and acid-spitting
+oklobs.
 %%%%
-Elyvilon powers
+Gozag wrath
 
-The Healer offers followers means to heal themselves from damage and other ill
-effects. Elyvilon also allows healing of hostile monsters, trying to turn them
-neutral. Elyvilon may directly intervene to save a follower's life, especially
-when called upon; highly pious followers can be sure of such aid.
+The first of Gozag's punishments is commercial: all shops opened through
+Gozag's intervention shut their doors forever. The disloyal are advised to
+finish their shopping before they launch their betrayal. Other punishments are
+more pertinent to the penurious: potions fail when they are needed most, or are
+used to aid heretics' enemies. Newly-found gold is stolen out of their hands,
+and other, useful items are transformed *into* gold - little use that it is
+without Gozag's sponsorship!
 %%%%
-Lugonu powers
+Jiyva wrath
 
-Followers of Lugonu gain powers to depart the Abyss at will, to bend space
-around themselves, and to banish monsters to the Abyss. Later they will be able
-to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
-through, and to gate themselves directly into this realm of chaos. Lugonu will
-eventually offer to corrupt a follower's weapon, imbuing it with the distorting
-energies of the Abyss, and will protect the follower from the normally harmful
-effects of unwielding such a weapon. Lugonu expects followers to spread
-unceasing chaos in the overworld, and as such does not grant piety to
-worshippers while they remain in the Abyss itself.
+Jiyva's vengeance is swift and gurgling. All slimes turn against those who
+offend Jiyva, and Jiyva ensures a plentiful supply of slimes, both by calling
+jellies to ooze from the cracks in the walls and floor, and turning other
+nearby enemies into dangerous slimes. Victims, too, will find their own bodies
+becoming unstable; regularly transmuting into strange forms and acquiring
+debilitating mutations.
 %%%%
-Beogh powers
+Kikubaaqudgha wrath
 
-Followers of Beogh can smite their foes, and will even gain orcish followers of
-their own, who may be blessed by Beogh in battle and can be recalled as needed.
-Eventually, followers will gain the power to walk on water. Beogh will
-sometimes directly intervene to save a follower's life. {{
-    if you.race() == "Lava Orc" then
-        return "Beogh suppresses the heat aura of Lava Orc followers."
-    end
-}}
+Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
+are wracked with torment, assailed by the undead, smothered in miasma, and
+afflicted with a host of other necromantic ailments. Further, Kikubaaqudgha's
+gifts become tainted; those that attempt to use necromantic magic to fend off
+wrath will find it backfiring on them when least expected.
 %%%%
-Fedhas powers
+Lugonu wrath
 
-Plants and fungi will not attack Fedhas' worshippers without provocation.
-Fedhas' worshippers may walk through plants or fungi, and even fire missiles or
-spells through them without causing harm. Fedhas grants the ability to promote
-plants and fungi into stronger species. Followers can eventually grow a wall of
-plants and create explosive spores from corpses. They are also granted some
-control over the weather, being able to call sunlight and eventually
-rainstorms.
+Lugonu's ire renders the barrier between reality and the Abyss weak and
+permeable. Space warps, hurling victims across the dungeon, or even directly
+into the Abyss; and when that's not enough, Lugonu reaches out and sends
+minions out from the Abyss to assault the offender directly. Inexperienced
+adventurers face small abominations and thrashing horrors; veterans fight
+tentacled starspawn and starcursed masses.
 %%%%
-Cheibriados powers
+Makhleb wrath
 
-Followers of Cheibriados move more slowly as they gain favour, and are rewarded
-for killing creatures who are faster than they are. Moving too quickly or using
-magically hastened weapons is frowned upon. Cheibriados rewards the faithful
-with a slowed metabolism, the power to slow other creatures, the power to
-distort the flow of time, the power to harm those who move more quickly than
-they do, and, finally, the ability to step out of the flow of time entirely.
+Those who invite the fury of Makhleb are buried in demons and destruction.
+The greatest punishments are reserved for the strongest sinners; crystal spears
+and Executioners are hurled with abandon only at those Makhleb finds truly
+deserving!
 %%%%
-Jiyva powers
+Nemelex Xobeh wrath
 
-Jiyva's followers can request jellies, turn monsters to slime, and eventually
-remove their harmful mutations. Followers of Jiyva may also pray alongside
-visible slimes, preventing items from being eaten for a while. As their piety
-grows, Jiyva will, with increasing frequency, drop jellies into the dungeon;
-rearrange followers' attributes based on their skills and armour; and grant
-mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands
-the same conduct in return.
+Nemelex Xobeh forces sinners to rely on the luck of the draw. Stacked decks are
+immediately shuffled, and offenders are regularly forced to draw from the Deck
+of Punishment, inflicting almost every unpleasant effect imaginable. Further,
+attempting to draw from other decks may instead lead to drawing from the Deck
+of Punishment.
 %%%%
-Ashenzari powers
+Okawaru wrath
 
-Ashenzari exhorts followers to garb themselves with curses, and provides
-rewards for time spent using cursed armour, jewellery or weapons. Ashenzari
-will increase followers' skills depending on how cursed they are, and grants
-clear sight and clarity of mind. Followers will later gain the ability to scry
-through walls, and eventually will be able to transfer a portion of their
-knowledge from one skill to another.
+Okawaru's most vicious warriors are sent against rebellious servants. Novices
+find themselves swarmed by packs of ogres and gnolls, while champions are
+surrounded by titans and elvish blademasters.
 %%%%
-Dithmenos powers
+Qazlal wrath
 
-Followers of Dithmenos are constantly surrounded in an aura of shadow, the
-extent of which is reflective of their level of devotion. Dithmenos grants
-followers the ability to instantly step into the shadow of nearby creatures,
-provided the shadow is still enough to do so. Dithmenos protects followers by
-occasionally shrouding those struck by attacks in dark smoke. Sufficiently
-pious followers of Dithmenos will find their own shadow will begin to attack on
-its own, and eventually gain the ability to assume the form of a shadow
-themself.
+Qazlal's wrath is swift and unmistakable. Sinners are stripped of their
+resistances, assaulted by furious elementals, and surrounded by waves of
+molten lava.
 %%%%
-Gozag powers
+Sif Muna wrath
 
-For Gozag, both flesh and food are inferior to wealth, and therefore all
-corpses are turned into gold piles. These piles of gold may briefly distract
-nearby monsters. Stalwarts can order immediate help in the form of potions,
-with prices being dictated by the Greedy. Particularly well-off adherents may
-attract shopkeepers into the dungeon, and even bribe entire branches of the
-dungeon. Gozag will also duplicate any one non-artefact item for a servant.
+Those in Sif Muna's ill graces find the very forces of magic rebelling against
+them. They are confused and stupefied, their magical reserves drained, their
+enchantments unravelled. Casting spells, too, becomes unreliable - and even
+dangerous.
 %%%%
-Qazlal powers
+the Shining One wrath
 
-Followers of Qazlal are protected from the clouds they create. As a follower of
-Qazlal gains divine favour, they are slowly surrounded by a loud storm, causing
-elemental clouds to appear near them, blocking attacks, and (for the
-particularly devout) deflecting incoming projectiles. Qazlal allows followers
-to incite nature against their foes, causing a localised natural disturbance
-or, for particularly devout followers, a more widespread disaster.
-Followers of Qazlal can give life to elemental clouds, turning them into
-elementals whose loyalty depends on the origin of the cloud. Followers can
-gain temporary resistances against the elements on taking damage from that
-element.
+The Shining One's wrath is straightforward and unmistakable. Its victims find
+themselves smote with holy fire, beset with holy warriors, and alternately
+shouted at and silenced.
+%%%%
+Trog wrath
+
+Trog's wrath at betrayers is incandescent. Offenders find themselves swarmed
+by berserkers - from packs of bears to, for the most powerful, mobs of giants
+and trolls. Their bodies decay, slow, and collapse - and sometimes, they're
+just blasted by Trog's fiery rage directly.
+%%%%
+Vehumet wrath
+
+Those that anger Vehumet find destruction amply heaped upon them. Novices are
+struck by flame and frost; archmages by firestorms and hellfire. Their own
+conjurations, too, are wont to misfire at the worst possible moments.
+%%%%
+Yredelemnul wrath
+
+Those who anger Yredelemnul find themselves beset by legions of the dead.
+Novice adventurers will be assaulted by wights and zombified trolls; veterans
+by profane servitors and skeletal dragons. The victims' own undead servants
+desert them and crumble into dust. A variety of necromantic maladies also
+afflict those stricken by Yredremnul's wrath.
+%%%%
+Zin wrath
+
+Those under Zin's wrath will find their beneficial mutations stripped away,
+their bellies empty, their enemies alerted, and their senses confounded by the
+axioms of Law; confusion, fainting and complete paralysis will be their lot.
 %%%%

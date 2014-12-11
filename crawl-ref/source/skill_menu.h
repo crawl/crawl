@@ -8,7 +8,7 @@
 
 #include "enum.h"
 #include "menu.h"
-#include "skills2.h"
+#include "skills.h"
 
 // Skill Menu
 
@@ -88,7 +88,7 @@ private:
     FormattedTextItem* m_aptitude;
 
     void _clear();
-    COLORS get_colour() const;
+    COLOURS get_colour() const;
     string get_prefix();
     void set_aptitude();
     void set_level();

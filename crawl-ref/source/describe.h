@@ -6,9 +6,9 @@
 #ifndef DESCRIBE_H
 #define DESCRIBE_H
 
-#include <string>
 #include <sstream>
-#include "externs.h"
+#include <string>
+
 #include "enum.h"
 #include "mon-util.h"
 
@@ -22,7 +22,9 @@ enum item_description_type
     IDESC_POTIONS,
     IDESC_SCROLLS,                      // special field (like the others)
     IDESC_RINGS,
+#if TAG_MAJOR_VERSION == 34
     IDESC_SCROLLS_II,
+#endif
     IDESC_STAVES,
     NUM_IDESC
 };
@@ -44,15 +46,10 @@ struct describe_info
     string quote;
 };
 
-void append_spells(string &desc, const item_def &item);
-
-bool is_dumpable_artefact(const item_def &item, bool verbose);
+bool is_dumpable_artefact(const item_def &item);
 
 string get_item_description(const item_def &item, bool verbose,
                             bool dump = false, bool noquote = false);
-
-string god_title(god_type which_god, species_type which_species, int piety);
-void describe_god(god_type which_god, bool give_title);
 
 void describe_feature_wide(const coord_def& pos, bool show_quote = false);
 void get_feature_desc(const coord_def &gc, describe_info &inf);
@@ -73,7 +70,7 @@ void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);
 
 void get_spell_desc(const spell_type spell, describe_info &inf);
-void describe_spell(spell_type spelled, const item_def* item = NULL);
+void describe_spell(spell_type spelled, const item_def* item = nullptr);
 
 string short_ghost_description(const monster *mon, bool abbrev = false);
 string get_ghost_description(const monster_info &mi, bool concise = false);

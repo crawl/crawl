@@ -7,11 +7,11 @@ extern "C" {
 #include <lualib.h>
 }
 
-#include <cstdio>
 #include <cstdarg>
-#include <string>
+#include <cstdio>
 #include <map>
 #include <set>
+#include <string>
 
 #ifndef CLUA_MAX_MEMORY_USE
 #define CLUA_MAX_MEMORY_USE (6 * 1024)
@@ -174,7 +174,7 @@ private:
 
 private:
     void init_lua();
-    void set_error(int err, lua_State *ls = NULL);
+    void set_error(int err, lua_State *ls = nullptr);
     void load_cmacro();
     void load_chooks();
     void init_throttle();
@@ -186,12 +186,12 @@ private:
     bool proc_returns(const char *par) const;
 
     bool calltopfn(lua_State *ls, const char *format, va_list args,
-                   int retc = -1, va_list *fnr = NULL);
+                   int retc = -1, va_list *fnr = nullptr);
     maybe_bool callmbooleanfn(const char *fn, const char *params,
                               va_list args);
 
     int push_args(lua_State *ls, const char *format, va_list args,
-                    va_list *cpto = NULL);
+                    va_list *cpto = nullptr);
     int return_count(lua_State *ls, const char *format);
 
     struct CLuaSave
@@ -237,8 +237,6 @@ private:
 #define clua (*real_clua)
 #endif
 extern CLua clua;
-
-void lua_set_exclusive_item(const item_def *item = NULL);
 
 string quote_lua_string(const string &s);
 

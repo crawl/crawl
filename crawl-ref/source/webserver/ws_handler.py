@@ -241,6 +241,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
         return True
 
+    def check_origin(self, origin):
+        return True
+
     def idle_time(self):
         return self.process.idle_time()
 

@@ -4,37 +4,29 @@
 **/
 
 #include "AppHdr.h"
-#include "bitary.h"
+
+#include "zotdef.h"
+
 #include <functional>
 
 #include "branch.h"
 #include "coordit.h"
 #include "describe.h"
 #include "directn.h"
-#include "dungeon.h" // for Zotdef unique placement
-#include "env.h"
-#include "externs.h"
+#include "dungeon.h"
 #include "files.h"
-#include "godprayer.h"
-#include "items.h"
-#include "itemname.h" // for make_name
+#include "itemname.h"
 #include "itemprop.h"
-#include "makeitem.h"
+#include "items.h"
 #include "message.h"
-#include "mgen_data.h"
-#include "mon-place.h"
 #include "mon-pick.h"
-#include "mon-util.h"
+#include "mon-place.h"
 #include "place.h"
-#include "player.h"
-#include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "stuff.h"
-#include "terrain.h"
+#include "stringutil.h"
 #include "traps.h"
-#include "libutil.h"
-#include "zotdef.h"
+#include "terrain.h"
 
 // Size of the mons_alloc array (or at least the bit of
 // it that we use).
@@ -104,7 +96,9 @@ static branch_type _zotdef_random_branch()
     branch_type pb;
 
     do
+    {
          pb = static_cast<branch_type>(random2(NUM_BRANCHES));
+    }
     while (!_is_branch_fitting(pb, wavenum));
 
     // strong bias to main dungeon and depths
@@ -260,8 +254,8 @@ static void _gnoll_wave(int power)
 static void _rat_wave(int power)
 {
     wave_name("RAT WAVE");
-    monster_type rats[] = {MONS_RAT, MONS_GREEN_RAT, MONS_ORANGE_RAT, END};
-    monster_type boss[] = {MONS_ORANGE_RAT, END};
+    monster_type rats[] = {MONS_RAT, MONS_RIVER_RAT, MONS_HELL_RAT, END};
+    monster_type boss[] = {MONS_HELL_RAT, END};
     _zotdef_fill_from_list(rats, 0, power); // full power
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You hear distant squeaking!");
@@ -470,10 +464,10 @@ static void _pan_wave(int power)
 
 static void _zotdef_set_special_wave(int power)
 {
-    void (*wave_fn)(int) = NULL;
+    void (*wave_fn)(int) = nullptr;
     int tries = 0;
 
-    while (wave_fn == NULL && tries++ < 10000)
+    while (wave_fn == nullptr && tries++ < 10000)
     {
         int wpow = 0;
         switch (random2(21))
@@ -513,7 +507,7 @@ static void _zotdef_set_special_wave(int power)
                 break;        // keep this one
         }
         // Nope, don't keep
-        wave_fn = NULL;
+        wave_fn = nullptr;
     }
     if (wave_fn)
         wave_fn(power);
@@ -564,8 +558,6 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             continue;        // No uniques here!
         if (mons_class_is_stationary(mon_type))
             continue;        // Must be able to move!
-        if (mons_is_mimic(mon_type))
-            continue;
 
         int strength = _mon_strength(mon_type);
 
@@ -762,7 +754,7 @@ monster* zotdef_spawn(bool boss)
         return 0;
 
     // Generate a monster of the appropriate branch and strength
-    mgen_data mg(mt, BEH_SEEK, NULL, 0, 0, coord_def(), MHITYOU);
+    mgen_data mg(mt, BEH_SEEK, nullptr, 0, 0, coord_def(), MHITYOU);
     mg.proximity = PROX_NEAR_STAIRS;
     mg.flags |= MG_PERMIT_BANDS;
 
@@ -822,45 +814,45 @@ static monster_type _choose_unique_by_depth(int step)
     {
     case 0: // depth <= 3
         ret = random_choose(MONS_TERENCE, MONS_JESSICA, MONS_IJYB,
-                            MONS_SIGMUND, -1);
+                            MONS_SIGMUND);
         break;
     case 1: // depth <= 7
         ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
                             MONS_EDMUND, MONS_PRINCE_RIBBIT, MONS_PURGY,
-                            MONS_MENKAURE, MONS_DUVESSA, MONS_PIKEL, -1);
+                            MONS_MENKAURE, MONS_DUVESSA, MONS_PIKEL);
         break;
     case 2: // depth <= 9
         ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE, MONS_JOSEPH,
                             MONS_EROLCHA, MONS_PRINCE_RIBBIT, MONS_GRUM,
                             MONS_GASTRONOK, MONS_GRINDER, MONS_MAURICE,
-                            MONS_PIKEL, -1);
+                            MONS_PIKEL);
         break;
     case 3: // depth <= 13
         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
                             MONS_EUSTACHIO, MONS_SONJA, MONS_GRUM, MONS_NIKOLA,
                             MONS_ERICA, MONS_JOSEPHINE,
                             MONS_HAROLD, MONS_GASTRONOK, MONS_ILSUIW,
-                            MONS_MAURICE, -1);
+                            MONS_MAURICE);
         break;
     case 4: // depth <= 16
         ret = random_choose(MONS_URUG, MONS_EUSTACHIO, MONS_SONJA,
                             MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
                             MONS_ROXANNE, MONS_RUPERT, MONS_NIKOLA,
                             MONS_AZRAEL, MONS_NESSOS, MONS_AGNES, MONS_AIZUL,
-                            MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, MONS_KIRKE, -1);
+                            MONS_MAUD, MONS_LOUISE, MONS_NERGALLE, MONS_KIRKE);
         break;
     case 5: // depth <= 19
         ret = random_choose(MONS_SNORG, MONS_LOUISE, MONS_FRANCES, MONS_KHUFU,
                             MONS_RUPERT, MONS_NORRIS, MONS_AGNES,
                             MONS_AZRAEL, MONS_NESSOS, MONS_NERGALLE,
                             MONS_ROXANNE, MONS_SAINT_ROKA, MONS_KIRKE,
-                            MONS_WIGLAF, -1);
+                            MONS_WIGLAF);
         break;
     case 6: // depth > 19
     default:
         ret = random_choose(MONS_FRANCES, MONS_MARA, MONS_WIGLAF, MONS_MENNAS,
                             MONS_XTAHUA, MONS_NORRIS, MONS_FREDERICK, MONS_TIAMAT,
-                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, -1);
+                            MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA);
     }
 
     return ret;
@@ -897,12 +889,15 @@ bool create_trap(trap_type spec_type)
             canned_msg(MSG_OK);
         return false;
     }
-    // only try to create on floor squares
-    if (grd(abild.target) != DNGN_FLOOR)
+    // only try to create on floor squares or other traps.
+    if (trap_def* tr = find_trap(abild.target))
+        tr->destroy();
+    else if (grd(abild.target) != DNGN_FLOOR)
     {
         mpr("You can't create a trap there!");
         return false;
     }
+
     bool result = place_specific_trap(abild.target, spec_type);
 
     if (result)
@@ -911,36 +906,26 @@ bool create_trap(trap_type spec_type)
     return result;
 }
 
-static bool _can_make_altar(god_type g, bool wizmode)
+static bool _can_make_altar(god_type g)
 {
-    return wizmode || !is_unavailable_god(g);
+    return !is_unavailable_god(g);
 }
 
 /**
  * Create an altar to the god of the player's choice.
- * @param wizmode if true, bypass some checks.
  */
-bool zotdef_create_altar(bool wizmode)
+bool zotdef_create_altar()
 {
-    char specs[80];
-
-    if (!wizmode && grd(you.pos()) != DNGN_FLOOR)
+    if (grd(you.pos()) != DNGN_FLOOR)
         return false;
 
-    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
+    god_type god = choose_god();
 
-    if (specs[0] == '\0')
+    // "No god" or a bad god name (including pressing escape)
+    if (god == GOD_NO_GOD || god == NUM_GODS)
         return false;
 
-    string spec = lowercase_string(specs);
-
-    // Skip GOD_NO_GOD
-    god_type god = find_earliest_match(
-                       spec, (god_type) 1, NUM_GODS,
-                       bind2nd(ptr_fun(_can_make_altar), wizmode),
-                       bind2nd(ptr_fun(god_name), false));
-
-    if (god == NUM_GODS)
+    if (!_can_make_altar(god))
     {
         mpr("That god doesn't seem to be taking followers today.");
         return false;
@@ -950,11 +935,8 @@ bool zotdef_create_altar(bool wizmode)
         dungeon_feature_type feat = altar_for_god(god);
         dungeon_terrain_changed(you.pos(), feat, false);
 
-        if (wizmode)
-            pray();
-        else
-            mprf("An altar to %s grows from the floor before you!",
-                 god_name(god).c_str());
+        mprf("An altar to %s grows from the floor before you!",
+             god_name(god).c_str());
 
         return true;
     }
@@ -1018,7 +1000,7 @@ void zotdef_bosses_check()
             const char *msg = "You sense that a powerful threat has arrived.";
             if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
-                int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true, 0);
+                int ip = items(true, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, 0);
                 int *const item_made = &ip;
                 if (*item_made != NON_ITEM && *item_made != -1)
                 {

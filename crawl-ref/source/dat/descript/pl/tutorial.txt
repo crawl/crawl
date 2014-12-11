@@ -68,7 +68,7 @@ lub odpoczywaniu (with <input>$cmd[CMD_REST]</input>)!
 tutorial2 wait
 
 Zamiast wchodzić w pomieszczenie pełne potworów, które po chwili cię otoczą
-możesz poczekać(with <input>$cmd[CMD_MOVE_NOWHERE]</input>) aż same do ciebie
+możesz poczekać(with <input>$cmd[CMD_WAIT]</input>) aż same do ciebie
 podejdą.
 %%%%
 tutorial2 resting_reminder
@@ -136,7 +136,7 @@ tutorial5 burn_book
 Trogowi się spodoba jeśli podpalisz tą księgę (przez
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> lub przycisk <w>zdolności</w>
 w panelu czynności</localtiles>). Czasem, możesz woleć poczekać chwilę
-(<input>$cmd[CMD_MOVE_NOWHERE]<input>) aż ktoś stanie na księdze która ma
+(<input>$cmd[CMD_WAIT]<input>) aż ktoś stanie na księdze która ma
 stanąć w płomieniach.
 %%%%
 tutorial5 berserk
@@ -180,7 +180,7 @@ tutorial5 exit
   Kliknięcie <input>prawym przyciskiem myszy</input> na twej postaci też przejdzie do ekranu religii.</localtiles>
 
 <yellow>Odpoczynek:</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  czekaj i odpoczywaj przez jedną turę
+  <input>$cmd[CMD_WAIT]</input>  czekaj i odpoczywaj przez jedną turę
   <input>$cmd[CMD_REST]</input>  czekaj i odpoczywaj przez do 100 tur
 
 <yellow>Inne:</yellow>

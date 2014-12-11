@@ -1717,7 +1717,7 @@ var requirejs, require, define, xpcUtil;
                         //in array so that the splices do not
                         //mess up the iteration.
                         eachReverse(defQueue, function(args, i) {
-                            if(args[0] === id) {
+                            if (args[0] === id) {
                                 defQueue.splice(i, 1);
                             }
                         });
@@ -2696,7 +2696,7 @@ define('lang', function () {
         _mixin: function(dest, source, override){
             var name;
             for (name in source) {
-                if(source.hasOwnProperty(name) &&
+                if (source.hasOwnProperty(name) &&
                     (override || !dest.hasOwnProperty(name))) {
                     dest[name] = source[name];
                 }
@@ -3021,7 +3021,7 @@ var prim;
         module.exports = prim;
     }
 }());
-if(env === 'browser') {
+if (env === 'browser') {
 /**
  * @license RequireJS Copyright (c) 2012-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3038,7 +3038,7 @@ define('browser/assert', function () {
 
 }
 
-if(env === 'node') {
+if (env === 'node') {
 /**
  * @license RequireJS Copyright (c) 2012-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3055,7 +3055,7 @@ define('node/assert', ['assert'], function (assert) {
 
 }
 
-if(env === 'rhino') {
+if (env === 'rhino') {
 /**
  * @license RequireJS Copyright (c) 2013-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3072,7 +3072,7 @@ define('rhino/assert', function () {
 
 }
 
-if(env === 'xpconnect') {
+if (env === 'xpconnect') {
 /**
  * @license RequireJS Copyright (c) 2013-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3089,7 +3089,7 @@ define('xpconnect/assert', function () {
 
 }
 
-if(env === 'browser') {
+if (env === 'browser') {
 /**
  * @license Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3106,7 +3106,7 @@ define('browser/args', function () {
 
 }
 
-if(env === 'node') {
+if (env === 'node') {
 /**
  * @license Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3130,7 +3130,7 @@ define('node/args', function () {
 
 }
 
-if(env === 'rhino') {
+if (env === 'rhino') {
 /**
  * @license Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3155,7 +3155,7 @@ define('rhino/args', function () {
 
 }
 
-if(env === 'xpconnect') {
+if (env === 'xpconnect') {
 /**
  * @license Copyright (c) 2013-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3180,7 +3180,7 @@ define('xpconnect/args', function () {
 
 }
 
-if(env === 'browser') {
+if (env === 'browser') {
 /**
  * @license RequireJS Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3200,7 +3200,7 @@ define('browser/load', ['./file'], function (file) {
 
 }
 
-if(env === 'node') {
+if (env === 'node') {
 /**
  * @license RequireJS Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3221,7 +3221,7 @@ define('node/load', ['fs'], function (fs) {
 
 }
 
-if(env === 'rhino') {
+if (env === 'rhino') {
 /**
  * @license RequireJS Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3237,7 +3237,7 @@ define('rhino/load', function () {
 
 }
 
-if(env === 'xpconnect') {
+if (env === 'xpconnect') {
 /**
  * @license RequireJS Copyright (c) 2013-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3253,7 +3253,7 @@ define('xpconnect/load', function () {
 
 }
 
-if(env === 'browser') {
+if (env === 'browser') {
 /**
  * @license Copyright (c) 2012-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3431,7 +3431,7 @@ define('browser/file', ['prim'], function (prim) {
 
 }
 
-if(env === 'node') {
+if (env === 'node') {
 /**
  * @license Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -3741,7 +3741,7 @@ define('node/file', ['fs', 'path', 'prim'], function (fs, path, prim) {
 
 }
 
-if(env === 'rhino') {
+if (env === 'rhino') {
 /**
  * @license RequireJS Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -4035,7 +4035,7 @@ define('rhino/file', ['prim'], function (prim) {
 
 }
 
-if(env === 'xpconnect') {
+if (env === 'xpconnect') {
 /**
  * @license RequireJS Copyright (c) 2013-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -4297,7 +4297,7 @@ define('xpconnect/file', ['prim'], function (prim) {
 
 }
 
-if(env === 'browser') {
+if (env === 'browser') {
 /*global process */
 define('browser/quit', function () {
     'use strict';
@@ -4306,7 +4306,7 @@ define('browser/quit', function () {
 });
 }
 
-if(env === 'node') {
+if (env === 'node') {
 /*global process */
 define('node/quit', function () {
     'use strict';
@@ -4333,7 +4333,7 @@ define('node/quit', function () {
 
 }
 
-if(env === 'rhino') {
+if (env === 'rhino') {
 /*global quit */
 define('rhino/quit', function () {
     'use strict';
@@ -4344,7 +4344,7 @@ define('rhino/quit', function () {
 
 }
 
-if(env === 'xpconnect') {
+if (env === 'xpconnect') {
 /*global quit */
 define('xpconnect/quit', function () {
     'use strict';
@@ -4355,7 +4355,7 @@ define('xpconnect/quit', function () {
 
 }
 
-if(env === 'browser') {
+if (env === 'browser') {
 /**
  * @license RequireJS Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -4375,7 +4375,7 @@ define('browser/print', function () {
 
 }
 
-if(env === 'node') {
+if (env === 'node') {
 /**
  * @license RequireJS Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -4395,7 +4395,7 @@ define('node/print', function () {
 
 }
 
-if(env === 'rhino') {
+if (env === 'rhino') {
 /**
  * @license RequireJS Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -4411,7 +4411,7 @@ define('rhino/print', function () {
 
 }
 
-if(env === 'xpconnect') {
+if (env === 'xpconnect') {
 /**
  * @license RequireJS Copyright (c) 2013-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -10232,7 +10232,7 @@ function tokenizer($TEXT) {
     function with_eof_error(eof_error, cont) {
         try {
             return cont();
-        } catch(ex) {
+        } catch (ex) {
             if (ex === EX_EOF) parse_error(eof_error);
             else throw ex;
         }
@@ -11738,7 +11738,7 @@ function ast_mangle(ast, options) {
    - if (cond) foo(); else bar();  ==>  cond?foo():bar();
    - if (cond) foo();  ==>  cond&&foo();
    - if (foo) return bar(); else return baz();  ==> return foo?bar():baz(); // also for throw
-   - if (foo) return bar(); else something();  ==> {if(foo)return bar();something()}
+   - if (foo) return bar(); else something();  ==> {if (foo)return bar();something()}
    ]----- */
 
 var warn = function(){};
@@ -11870,7 +11870,7 @@ var when_constant = (function(){
                 throw new Error("Can't handle constant of type: " + (typeof val));
             }
             return yes.call(expr, ast, val);
-        } catch(ex) {
+        } catch (ex) {
             if (ex === $NOT_CONSTANT) {
                 if (expr[0] == "binary"
                     && (expr[1] == "===" || expr[1] == "!==")
@@ -11886,7 +11886,7 @@ var when_constant = (function(){
                         expr = ((expr[1] == "&&" && (lval ? expr[3] : lval))    ||
                                 (expr[1] == "||" && (lval ? lval    : expr[3])) ||
                                 expr);
-                    } catch(ex2) {
+                    } catch (ex2) {
                         // IGNORE... lval is not constant
                     }
                 }
@@ -12019,7 +12019,7 @@ function for_side_effects(ast, handler) {
         while (true) try {
             walk(ast);
             break;
-        } catch(ex) {
+        } catch (ex) {
             if (ex === $stop) break;
             if (ex === $restart) continue;
             throw ex;
@@ -12205,7 +12205,7 @@ function squeeze_1(ast, options) {
     // 2. join consecutive var declarations
     // 3. remove obviously dead code
     // 4. transform consecutive statements using the comma operator
-    // 5. if block_type == "lambda" and it detects constructs like if(foo) return ... - rewrite like if (!foo) { ... }
+    // 5. if block_type == "lambda" and it detects constructs like if (foo) return ... - rewrite like if (!foo) { ... }
     function tighten(statements, block_type) {
         statements = MAP(statements, walk);
 
@@ -12441,9 +12441,9 @@ function squeeze_1(ast, options) {
                 return best_of(walk(c), this);
             }, function no() {
                 return function(){
-                    if(op != "==" && op != "!=") return;
+                    if (op != "==" && op != "!=") return;
                     var l = walk(left), r = walk(right);
-                    if(l && l[0] == "unary-prefix" && l[1] == "!" && l[2][0] == "num")
+                    if (l && l[0] == "unary-prefix" && l[1] == "!" && l[2][0] == "num")
                         left = ['num', +!l[2][1]];
                     else if (r && r[0] == "unary-prefix" && r[1] == "!" && r[2][0] == "num")
                         right = ['num', +!r[2][1]];
@@ -12779,7 +12779,7 @@ function gen_code(ast, options) {
                     }, function(){
                         w.walk(expr);
                     });
-                } catch(ex) {
+                } catch (ex) {
                     if (ex === has_call)
                         return true;
                     throw ex;
@@ -12977,7 +12977,7 @@ function gen_code(ast, options) {
         if (th[0] == "do") {
             // https://github.com/mishoo/UglifyJS/issues/#issue/57
             // IE croaks with "syntax error" on code like this:
-            //     if (foo) do ... while(cond); else ...
+            //     if (foo) do ... while (cond); else ...
             // we need block brackets around do/while
             return make_block([ th ]);
         }
@@ -14754,7 +14754,7 @@ define('source-map/source-node', function (require, exports, module) {
       if (original.source !== null
           && original.line !== null
           && original.column !== null) {
-        if(lastOriginalSource !== original.source
+        if (lastOriginalSource !== original.source
            || lastOriginalLine !== original.line
            || lastOriginalColumn !== original.column
            || lastOriginalName !== original.name) {
@@ -15257,7 +15257,7 @@ function makePredicate(words) {
     }
     function compareTo(arr) {
         if (arr.length == 1) return f += "return str === " + JSON.stringify(arr[0]) + ";";
-        f += "switch(str){";
+        f += "switch (str){";
         for (var i = 0; i < arr.length; ++i) f += "case " + JSON.stringify(arr[i]) + ":";
         f += "return true}return false;";
     }
@@ -15265,7 +15265,7 @@ function makePredicate(words) {
     // switch first dispatches on the lengths, to save on comparisons.
     if (cats.length > 3) {
         cats.sort(function(a, b) {return b.length - a.length;});
-        f += "switch(str.length){";
+        f += "switch (str.length){";
         for (var i = 0; i < cats.length; ++i) {
             var cat = cats[i];
             f += "case " + cat[0].length + ":";
@@ -16829,7 +16829,7 @@ function tokenizer($TEXT, filename, html5_comments) {
         return function(x) {
             try {
                 return cont(x);
-            } catch(ex) {
+            } catch (ex) {
                 if (ex === EX_EOF) parse_error(eof_error);
                 else throw ex;
             }
@@ -18841,7 +18841,7 @@ function OutputStream(options) {
                 token.line, token.col,
                 (!name && token.type == "name") ? token.value : name
             );
-        } catch(ex) {
+        } catch (ex) {
             AST_Node.warn("Couldn't figure out mapping for {file}:{line},{col} → {cline},{ccol} [{name}]", {
                 file: token.file,
                 line: token.line,
@@ -19064,7 +19064,7 @@ function OutputStream(options) {
                 this.walk(new TreeWalker(function(node){
                     if (node instanceof AST_Call) throw p;
                 }));
-            } catch(ex) {
+            } catch (ex) {
                 if (ex !== p) throw ex;
                 return true;
             }
@@ -19334,7 +19334,7 @@ function OutputStream(options) {
             && !output.option("screw_ie8")) {
             // https://github.com/mishoo/UglifyJS/issues/#issue/57 IE
             // croaks with "syntax error" on code like this: if (foo)
-            // do ... while(cond); else ...  we need block brackets
+            // do ... while (cond); else ...  we need block brackets
             // around do/while
             make_block(self.body, output);
             return;
@@ -19472,7 +19472,7 @@ function OutputStream(options) {
                     throw output;
             }));
             node.print(output);
-        } catch(ex) {
+        } catch (ex) {
             if (ex !== output) throw ex;
             node.print(output, true);
         }
@@ -20351,7 +20351,7 @@ merge(Compressor.prototype, {
                                 stat.init = prev.body;
                                 ret.pop();
                             }
-                        } catch(ex) {
+                        } catch (ex) {
                             if (ex !== opera) throw ex;
                         }
                     }
@@ -20540,7 +20540,7 @@ merge(Compressor.prototype, {
             try {
                 var val = this._eval(compressor);
                 return [ best_of(make_node_from_constant(compressor, val, this), this), val ];
-            } catch(ex) {
+            } catch (ex) {
                 if (ex !== def) throw ex;
                 return [ this ];
             }
@@ -21383,7 +21383,7 @@ merge(Compressor.prototype, {
                 body: self.expression
             }).transform(compressor);
         }
-        for(;;) {
+        for (;;) {
             var last_branch = self.body[self.body.length - 1];
             if (last_branch) {
                 var stat = last_branch.body[last_branch.body.length - 1]; // last statement
@@ -21466,7 +21466,7 @@ merge(Compressor.prototype, {
             });
             tt.stack = compressor.stack.slice(); // so that's able to see parent nodes
             self = self.transform(tt);
-        } catch(ex) {
+        } catch (ex) {
             if (ex !== self) throw ex;
         }
         return self;
@@ -21588,7 +21588,7 @@ merge(Compressor.prototype, {
                                         throw ast;
                                     }
                                 }));
-                            } catch(ex) {
+                            } catch (ex) {
                                 if (ex !== ast) throw ex;
                             };
                             var args = fun.argnames.map(function(arg, i){
@@ -21604,7 +21604,7 @@ merge(Compressor.prototype, {
                             }));
                             self.args = args;
                             return self;
-                        } catch(ex) {
+                        } catch (ex) {
                             if (ex instanceof JS_Parse_Error) {
                                 compressor.warn("Error parsing code passed to new Function [{file}:{line},{col}]", self.args[self.args.length - 1].start);
                                 compressor.warn(ex.toString());
@@ -22901,7 +22901,7 @@ define('parse', ['./esprimaAdapter', 'lang'], function (esprima, lang) {
             return;
         }
 
-        //If has replacement has resulted in if(true){} or if(false){}, take
+        //If has replacement has resulted in if (true){} or if (false){}, take
         //the appropriate branch and skip the other one.
         if (hasHas && object.type === 'IfStatement' && object.test.type &&
                 object.test.type === 'Literal') {
@@ -24328,7 +24328,7 @@ define('pragma', ['parse', 'logger'], function (parse, logger) {
 
     return pragma;
 });
-if(env === 'browser') {
+if (env === 'browser') {
 /**
  * @license Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -24342,7 +24342,7 @@ define('browser/optimize', {});
 
 }
 
-if(env === 'node') {
+if (env === 'node') {
 /**
  * @license Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -24356,7 +24356,7 @@ define('node/optimize', {});
 
 }
 
-if(env === 'rhino') {
+if (env === 'rhino') {
 /**
  * @license Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -24530,7 +24530,7 @@ define('rhino/optimize', ['logger', 'env!env/file'], function (logger, file) {
 });
 }
 
-if(env === 'xpconnect') {
+if (env === 'xpconnect') {
 define('xpconnect/optimize', {});
 }
 /**

@@ -201,7 +201,7 @@ ENDMAP
 NAME:   statue_bzr
 KPROP:  O = no_rtele_into
 SUBST:  G = G111
-MONS:   orange crystal statue / silver statue / ice statue
+MONS:   orange crystal statue / obsidian statue / ice statue
 : place_bazaar_portal(_G, true)
 MAP
  @

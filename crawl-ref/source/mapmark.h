@@ -6,12 +6,13 @@
 #ifndef __MAPMARK_H__
 #define __MAPMARK_H__
 
-#include "dgnevent.h"
-#include "clua.h"
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
+
+#include "clua.h"
+#include "dgnevent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Map markers
@@ -221,7 +222,7 @@ public:
                               cloud_type type = CLOUD_NONE,
                               int speed = 10, int amount = 35,
                               int max_radius = LOS_RADIUS, int dur = 10,
-                              actor* agent = NULL);
+                              actor* agent = nullptr);
 
     void write(writer &) const;
     void read(reader &);

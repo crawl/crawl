@@ -5,26 +5,24 @@
 
 #include "AppHdr.h"
 
-#include <vector>
-#include <sstream>
-#include <iomanip>
-
 #include "notes.h"
 
+#include <iomanip>
+#include <sstream>
+#include <vector>
+
 #include "branch.h"
-#include "files.h"
-#include "kills.h"
+#include "english.h"
 #include "hiscores.h"
-#include "libutil.h"
 #include "message.h"
 #include "mutation.h"
 #include "options.h"
-#include "place.h"
 #include "religion.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-util.h"
 #include "state.h"
-#include "tags.h"
+#include "stringutil.h"
+#include "unicode.h"
 
 #define NOTES_VERSION_NUMBER 1002
 
@@ -70,10 +68,10 @@ static int _dungeon_branch_depth(uint8_t branch)
     return brdepth[branch];
 }
 
-static bool _is_noteworthy_dlevel(unsigned short place)
+static bool _is_noteworthy_dlevel(level_id place)
 {
-    branch_type branch = place_branch(place);
-    int lev = place_depth(place);
+    branch_type branch = place.branch;
+    int lev = place.depth;
 
     // Entering the Abyss is noted a different way, since we care mostly about
     // the cause.
@@ -85,7 +83,7 @@ static bool _is_noteworthy_dlevel(unsigned short place)
         return false;
 
     // Other portal levels are always interesting.
-    if (!is_connected_branch(static_cast<branch_type>(branch)))
+    if (!is_connected_branch(branch))
         return true;
 
     return lev == _dungeon_branch_depth(branch)
@@ -169,14 +167,14 @@ static bool _is_noteworthy(const Note& note)
     }
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
-        return _is_noteworthy_dlevel(note.packed_place);
+        return _is_noteworthy_dlevel(note.place);
 
-    for (unsigned i = 0; i < note_list.size(); ++i)
+    for (const Note &oldnote : note_list)
     {
-        if (note_list[i].type != note.type)
+        if (oldnote.type != note.type)
             continue;
 
-        const Note& rnote(note_list[i]);
+        const Note& rnote(oldnote);
         switch (note.type)
         {
         case NOTE_GOD_POWER:
@@ -224,8 +222,9 @@ string Note::describe(bool when, bool where, bool what) const
 
     if (where)
     {
-        result << "| " << chop_string(short_place_name(packed_place),
-                                      MAX_NOTE_PLACE_LEN) << " | ";
+        result << "| "
+               << chop_string(place.describe(), MAX_NOTE_PLACE_LEN)
+               << " | ";
     }
 
     if (what)
@@ -257,7 +256,8 @@ string Note::describe(bool when, bool where, bool what) const
             if (!desc.empty())
                 result << desc;
             else
-                result << "Entered " << place_name(packed_place, true, true);
+                result << "Entered "
+                       << place.describe(true, true);
             break;
         case NOTE_LEARN_SPELL:
             result << "Learned a level "
@@ -407,8 +407,8 @@ string Note::describe(bool when, bool where, bool what) const
 
 Note::Note()
 {
-    turn         = you.num_turns;
-    packed_place = get_packed_place();
+    turn  = you.num_turns;
+    place = level_id::current();
 }
 
 Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
@@ -419,8 +419,8 @@ Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
     if (d)
         desc = string(d);
 
-    turn         = you.num_turns;
-    packed_place = get_packed_place();
+    turn  = you.num_turns;
+    place = level_id::current();
 }
 
 void Note::check_milestone() const
@@ -430,14 +430,15 @@ void Note::check_milestone() const
 
     if (type == NOTE_DUNGEON_LEVEL_CHANGE)
     {
-        const int br = place_branch(packed_place),
-                 dep = place_depth(packed_place);
+        const int br = place.branch,
+                 dep = place.depth;
 
         // Wizlabs report their milestones on their own.
         if (br != -1 && br != BRANCH_WIZLAB)
         {
             ASSERT_RANGE(br, 0, NUM_BRANCHES);
-            string branch = place_name(packed_place, true, false).c_str();
+            string branch = place.describe(true, false);
+
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);
 
@@ -449,14 +450,12 @@ void Note::check_milestone() const
             else if (dep == _dungeon_branch_depth(br)
                      || br == BRANCH_ZIGGURAT)
             {
-                string level = place_name(packed_place, true, true);
+                string level = place.describe(true, true);
                 if (level.find("Level ") == 0)
                     level[0] = tolower(level[0]);
 
-                ostringstream branch_finale;
-                branch_finale << "reached " << level << ".";
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" : "br.end",
-                               branch_finale.str());
+                               "reached " + level + ".");
             }
         }
     }
@@ -466,7 +465,7 @@ void Note::save(writer& outf) const
 {
     marshallInt(outf, type);
     marshallInt(outf, turn);
-    marshallShort(outf, packed_place);
+    place.save(outf);
     marshallInt(outf, first);
     marshallInt(outf, second);
     marshallString4(outf, name);
@@ -477,7 +476,12 @@ void Note::load(reader& inf)
 {
     type = static_cast<NOTE_TYPES>(unmarshallInt(inf));
     turn = unmarshallInt(inf);
-    packed_place = unmarshallShort(inf);
+#if TAG_MAJOR_VERSION == 34
+    if (inf.getMinorVersion() < TAG_MINOR_PLACE_UNPACK)
+        place = level_id::from_packed_place(unmarshallShort(inf));
+    else
+#endif
+    place.load(inf);
     first  = unmarshallInt(inf);
     second = unmarshallInt(inf);
     unmarshallString4(inf, name);
@@ -509,8 +513,8 @@ void save_notes(writer& outf)
 {
     marshallInt(outf, NOTES_VERSION_NUMBER);
     marshallInt(outf, note_list.size());
-    for (unsigned i = 0; i < note_list.size(); ++i)
-        note_list[i].save(outf);
+    for (const Note &note : note_list)
+        note.save(outf);
 }
 
 void load_notes(reader& inf)

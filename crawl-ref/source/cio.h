@@ -6,11 +6,11 @@
 #ifndef CIO_H
 #define CIO_H
 
-#include "enum.h"
-
 #include <cctype>
 #include <string>
 #include <vector>
+
+#include "enum.h"
 
 class input_history
 {
@@ -55,8 +55,8 @@ void nowrap_eol_cprintf(PRINTF(0, ));
 // pressed Escape
 int cancellable_get_line(char *buf,
                          int len,
-                         input_history *mh = NULL,
-                         int (*keyproc)(int &c) = NULL,
+                         input_history *mh = nullptr,
+                         int (*keyproc)(int &c) = nullptr,
                          const string &fill = "",
                          const string &tag = "");
 
@@ -192,7 +192,7 @@ enum KEYS
 #endif
 
     // Mouse codes.
-    CK_MOUSE_MOVE  = -10009,
+    CK_MOUSE_MOVE  = -9999,
     CK_MOUSE_CMD,
     CK_MOUSE_B1,
     CK_MOUSE_B2,
@@ -201,6 +201,7 @@ enum KEYS
     CK_MOUSE_B5,
     CK_MOUSE_CLICK,
     CK_TOUCH_DUMMY, // so a non-event can be passed from handle_mouse to the controlling code
+    CK_REDRAW, // no-op to force redraws of things
     CK_NO_KEY // so that the handle_mouse loop can be broken from early (for popups)
 };
 

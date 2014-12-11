@@ -43,7 +43,8 @@ enum xom_event_type
     XOM_GOOD_SNAKES,
     XOM_GOOD_DESTRUCTION,
     XOM_GOOD_ENCHANT_MONSTER,
-    XOM_LAST_GOOD_ACT = XOM_GOOD_ENCHANT_MONSTER,
+    XOM_GOOD_FOG,
+    XOM_LAST_GOOD_ACT = XOM_GOOD_FOG,
 
     // bad acts
     XOM_BAD_NOTHING,  // bad act suppressed
@@ -68,7 +69,8 @@ enum xom_event_type
     XOM_BAD_NOISE,
     XOM_BAD_ENCHANT_MONSTER,
     XOM_BAD_BLINK_MONSTERS,
-    XOM_LAST_BAD_ACT = XOM_BAD_BLINK_MONSTERS,
+    XOM_BAD_CHAOS_CLOUD,
+    XOM_LAST_BAD_ACT = XOM_BAD_CHAOS_CLOUD,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS
@@ -83,6 +85,7 @@ void xom_is_stimulated(int maxinterestingness, const string& message,
 bool xom_is_nice(int tension = -1);
 int xom_acts(bool niceness, int sever, int tension = -1, bool debug = false);
 const string describe_xom_favour();
+int xom_favour_rank();
 
 static inline int xom_acts(int sever, int tension = -1)
 {
@@ -91,7 +94,7 @@ static inline int xom_acts(int sever, int tension = -1)
 
 int xom_maybe_reverts_banishment(bool xom_banished = true, bool debug = false);
 void xom_check_lost_item(const item_def& item);
-void xom_check_destroyed_item(const item_def& item, int cause = -1);
+void xom_check_destroyed_item(const item_def& item);
 void xom_death_message(const kill_method_type killed_by);
 bool xom_saves_your_life(const kill_method_type death_type, const char *aux);
 void xom_new_level_noise_or_stealth();

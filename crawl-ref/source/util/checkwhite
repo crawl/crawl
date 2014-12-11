@@ -22,6 +22,7 @@ for (@files)
 {
     chomp;
     next if -d $_;
+    next if -l $_;
     -f $_ or (print(STDERR "Can't read $_\n"), next);
     next if /webserver\/static\/scripts\/contrib\//i;
     next if /\.(png|gif|ttf|ico|icns|fig|tex|eps|pdf)$/i;

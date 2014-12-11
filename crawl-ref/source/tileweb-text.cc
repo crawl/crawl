@@ -3,18 +3,19 @@
 
 #ifdef USE_TILE_WEB
 
-#include "libutil.h"
 #include "tileweb-text.h"
+
+#include "stringutil.h"
 #include "tileweb.h"
 #include "unicode.h"
 
 WebTextArea::WebTextArea(string name) :
     mx(0),
     my(0),
-    m_cbuf(NULL),
-    m_abuf(NULL),
-    m_old_cbuf(NULL),
-    m_old_abuf(NULL),
+    m_cbuf(nullptr),
+    m_abuf(nullptr),
+    m_old_cbuf(nullptr),
+    m_old_abuf(nullptr),
     m_client_side_name(name),
     m_dirty(true)
 {
@@ -22,7 +23,7 @@ WebTextArea::WebTextArea(string name) :
 
 WebTextArea::~WebTextArea()
 {
-    if (m_cbuf != NULL)
+    if (m_cbuf != nullptr)
     {
         delete[] m_cbuf;
         delete[] m_abuf;
@@ -39,7 +40,7 @@ void WebTextArea::resize(int x, int y)
     mx = x;
     my = y;
 
-    if (m_cbuf != NULL)
+    if (m_cbuf != nullptr)
     {
         delete[] m_cbuf;
         delete[] m_abuf;
@@ -92,7 +93,7 @@ void WebTextArea::put_character(ucs_t chr, int fg, int bg, int x, int y)
 
 void WebTextArea::send(bool force)
 {
-    if (m_cbuf == NULL) return;
+    if (m_cbuf == nullptr) return;
     if (!force && !m_dirty) return;
     m_dirty = false;
 

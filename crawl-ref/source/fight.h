@@ -8,8 +8,6 @@
 
 #include <list>
 
-#include "random-var.h"
-
 enum stab_type
 {
     STAB_NO_STAB,                    //    0
@@ -26,25 +24,19 @@ enum stab_type
     NUM_STAB
 };
 
-bool fight_melee(actor *attacker, actor *defender, bool *did_hit = NULL,
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
                  bool simu = false);
-
-bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
-                coord_def landing_pos, set<coord_def> landing_sites,
-                bool jump_blocked, bool *did_hit = NULL);
 
 int resist_adjust_damage(const actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
-int calc_heavy_armour_penalty(bool random_factor);
 
 stab_type find_stab_type(const actor *attacker,
                          const actor *defender);
 
-void chaos_affect_actor(actor *victim);
-void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
-                        list<actor*> &targets, bool behind);
+void get_cleave_targets(const actor* attacker, const coord_def& def,
+                        list<actor*> &targets);
 void get_all_cleave_targets(const actor* attacker, const coord_def& def,
                             list<actor*> &targets);
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,

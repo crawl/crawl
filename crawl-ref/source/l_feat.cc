@@ -5,13 +5,12 @@
 
 #include "AppHdr.h"
 
-#include "clua.h"
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "cluautil.h"
 #include "coord.h"
 #include "env.h"
-#include "libutil.h"
+#include "stringutil.h"
 #include "terrain.h"
 
 #define FEATF(name, val) \
@@ -37,8 +36,7 @@ FEATF(_feat_has_solid_floor, feat_has_solid_floor)
 FEATF(_feat_is_opaque, feat_is_opaque)
 FEATF(_feat_is_door, feat_is_door)
 FEATF(_feat_is_closed_door, feat_is_closed_door)
-FEATF(_feat_is_statue_or_idol, feat_is_statue_or_idol)
-FEATF(_feat_is_rock, feat_is_rock)
+FEATF(_feat_is_statue_or_idol, feat_is_statuelike)
 FEATF(_feat_is_permarock, feat_is_permarock)
 FEATF(_feat_is_stone_stair, feat_is_stone_stair)
 FEATF(_feat_is_staircase, feat_is_staircase)
@@ -53,8 +51,8 @@ FEATF(_feat_is_watery, feat_is_watery)
 FEATF(_feat_is_lava, feat_is_lava)
 FEATF(_feat_is_altar, feat_is_altar)
 FEATF(_feat_is_player_altar, feat_is_player_altar)
-FEATF(_feat_is_branch_stairs, feat_is_branch_stairs)
-FEATF(_feat_is_critical, is_critical_feature)
+FEATF(_feat_is_branch_entrance, feat_is_branch_entrance)
+FEATF(_feat_is_critical, feat_is_critical)
 
 const struct luaL_reg feat_dlib[] =
 {
@@ -65,7 +63,6 @@ const struct luaL_reg feat_dlib[] =
 { "is_door", _feat_is_door },
 { "is_closed_door", _feat_is_closed_door },
 { "is_statue_or_idol", _feat_is_statue_or_idol },
-{ "is_rock", _feat_is_rock },
 { "is_permarock", _feat_is_permarock },
 { "is_stone_stair", _feat_is_stone_stair },
 { "is_staircase", _feat_is_staircase },
@@ -80,8 +77,8 @@ const struct luaL_reg feat_dlib[] =
 { "is_lava", _feat_is_lava },
 { "is_altar", _feat_is_altar },
 { "is_player_altar", _feat_is_player_altar },
-{ "is_branch_stairs", _feat_is_branch_stairs },
+{ "is_branch_entrance", _feat_is_branch_entrance },
 { "is_critical", _feat_is_critical },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

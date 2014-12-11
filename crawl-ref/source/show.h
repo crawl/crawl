@@ -17,9 +17,11 @@ enum show_item_type
     SHOW_ITEM_POTION,
     SHOW_ITEM_MISSILE,
     SHOW_ITEM_BOOK,
-    SHOW_ITEM_STAVE,
+    SHOW_ITEM_STAFF,
+    SHOW_ITEM_ROD,
     SHOW_ITEM_MISCELLANY,
     SHOW_ITEM_CORPSE,
+    SHOW_ITEM_SKELETON,
     SHOW_ITEM_GOLD,
     SHOW_ITEM_AMULET,
     NUM_SHOW_ITEMS
@@ -42,7 +44,7 @@ struct show_type
     dungeon_feature_type feat;
     show_item_type item;
     monster_type mons;
-    unsigned short colour;
+    colour_t colour;
 
     show_type();
     show_type(dungeon_feature_type f);

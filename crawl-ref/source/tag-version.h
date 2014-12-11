@@ -113,9 +113,41 @@ enum tag_minor_version
     TAG_MINOR_WEAPON_PLUSES,       // Combine to-hit/to-dam enchantment on weapons.
     TAG_MINOR_SAVE_TERRAIN_COLOUR, // Save colour in terrain-change markers.
     TAG_MINOR_REMOVE_BASE_MP,      // Remove base MP bonus.
+    TAG_MINOR_METABOLISM,          // Remove random fast/slow meta mutations
+    TAG_MINOR_RU_SACRIFICES,       // Store Ru sacrifices in an array for coloration
+    TAG_MINOR_IS_UNDEAD,           // Remove the old "is_undead" player field
+    TAG_MINOR_REMOVE_MON_AC_EV,    // Remove the old "ac" & "ev" monster fields
+    TAG_MINOR_DISPLAY_MON_AC_EV,   // Marshall & unmarshall ac/ev in monster_info
+    TAG_MINOR_PLACE_UNPACK,        // Some packed places are level_ids.
+    TAG_MINOR_NO_JUMP,             // Removal of jump-attack.
+    TAG_MINOR_MONSTER_SPELL_SLOTS, // Introduce monster spell slot flags/freqs
+    TAG_MINOR_ARB_SPELL_SLOTS,     // Arbitrary number of monster spell slots.
+    TAG_MINOR_CUT_CUTLASSES,       // Turn crummy cutlasses into real rapiers.
+    TAG_MINOR_NO_GHOST_SPELLCASTER,// Remove an unused field in ghost_demon
+    TAG_MINOR_MID_BEHOLDERS,       // you.beholders and fearmongers store mids
+    TAG_MINOR_REMOVE_ITEM_COLOUR,  // don't store item colour as state
+    TAG_MINOR_CORPSE_CRASH,        // don't crash when loading corpses
+    TAG_MINOR_INIT_RND,            // initialize rnd in more places
+    TAG_MINOR_RING_PLUSSES,        // don't generate +144 rings
+    TAG_MINOR_BLESSED_WPNS,        // Remove blessed long blade base types
+    TAG_MINOR_MON_COLOUR_LOOKUP,   // monster colour lookup when possible
+    TAG_MINOR_CONSUM_APPEARANCE,   // Stop storing item appearance in .plus
+    TAG_MINOR_NEG_IDESC,           // Fix a sign conversion error
+    TAG_MINOR_GHOST_ENERGY,        // ghost_demon has move_energy field
+    TAG_MINOR_TENTACLE_MID,        // Use mids for tentacle code
+    TAG_MINOR_CORPSE_COLOUR,       // Fix corpses with invalid colour.
+    TAG_MINOR_MANGLE_CORPSES,      // Turn NEVER_HIDE corpses into MANGLED_CORPSEs
+    TAG_MINOR_ZOT_OPEN,            // Don't store whether you opened Zot
+    TAG_MINOR_EXPLORE_MODE,        // Store whether you are in explore mode
+    TAG_MINOR_RANDLICHES,          // Liches are now GHOST_DEMONs
+    TAG_MINOR_ISFLAG_HANDLED,      // Game tracks which items player has handled
+    TAG_MINOR_SHOP_HACK,           // The shop hack is dead!
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
+
+// Marshalled as a byte in several places.
+COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
 
 #endif

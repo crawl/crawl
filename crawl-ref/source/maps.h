@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "mapdef.h"  // for typedef depth_ranges
+#include "mapdef.h"
 #include "unwind.h"
 
 struct level_range;

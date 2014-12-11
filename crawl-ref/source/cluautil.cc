@@ -1,10 +1,9 @@
 #include "AppHdr.h"
 
 #include "cluautil.h"
-#include "clua.h"
-#include "l_libs.h"
 
 #include "delay.h"
+#include "l_libs.h"
 
 int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
 {
@@ -87,7 +86,7 @@ void clua_register_metatable(lua_State *ls, const char *tn,
     }
 
     if (lr)
-        luaL_openlib(ls, NULL, lr, 0);
+        luaL_openlib(ls, nullptr, lr, 0);
 }
 
 int clua_pushcxxstring(lua_State *ls, const string &s)

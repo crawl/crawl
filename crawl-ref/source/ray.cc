@@ -13,11 +13,11 @@
 
 #include "AppHdr.h"
 
+#include "ray.h"
+
 #include <cmath>
 
 #include "los.h"
-#include "ray.h"
-#include "geom2d.h"
 
 static geom::grid diamonds(geom::lineseq(1, 1, 0.5, 1),
                            geom::lineseq(1, -1, -0.5, 1));

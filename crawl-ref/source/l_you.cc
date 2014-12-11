@@ -1,6 +1,5 @@
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
 #include "ability.h"
@@ -8,33 +7,34 @@
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
-#include "coord.h"
+#include "cluautil.h"
 #include "delay.h"
+#include "english.h"
 #include "env.h"
 #include "food.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "libutil.h"
-#include "ng-setup.h"
+#include "jobs.h"
 #include "mapmark.h"
 #include "misc.h"
-#include "mon-util.h"
 #include "mutation.h"
 #include "newgame_def.h"
-#include "jobs.h"
+#include "ng-setup.h"
 #include "ouch.h"
 #include "place.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
-#include "species.h"
 #include "skills.h"
-#include "skills2.h"
+#include "spl-book.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "stuff.h"
+#include "status.h"
+#include "stringutil.h"
 #include "transform.h"
+#include "traps.h"
 #include "travel.h"
 
 /*
@@ -95,7 +95,9 @@ LUARET1(you_god_likes_fresh_corpses, boolean,
         god_likes_fresh_corpses(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
+LUARET1(you_rot, number, player_rotted())
 LUARET1(you_poison_survival, number, poison_survival())
+LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
 LUARET1(you_hunger, number, you.hunger_state)
 LUARET1(you_hunger_name, string, hunger_level())
 LUARET2(you_strength, number, you.strength(false), you.max_strength())
@@ -110,6 +112,8 @@ LUARET1(you_skill_progress, number,
 LUARET1(you_can_train_skill, boolean,
         lua_isstring(ls, 1) ? you.can_train[str_to_skill(lua_tostring(ls, 1))]
                             : false)
+LUARET1(you_best_skill, string,
+        skill_name(best_skill(SK_FIRST_SKILL, SK_LAST_SKILL)))
 LUARET1(you_res_poison, number, player_res_poison(false))
 LUARET1(you_res_fire, number, player_res_fire(false))
 LUARET1(you_res_cold, number, player_res_cold(false))
@@ -123,7 +127,6 @@ LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
 LUARET1(you_gourmand, boolean, you.gourmand(false))
 LUARET1(you_res_corr, boolean, you.res_corr(false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
-LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
 LUARET1(you_flying, boolean, you.flight_mode())
 LUARET1(you_transform, string, you.form ? transform_name() : "")
 LUARET1(you_berserk, boolean, you.berserk())
@@ -178,6 +181,7 @@ LUARET1(you_taking_stairs, boolean,
         || current_delay_action() == DELAY_DESCENDING_STAIRS)
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_time, number, you.elapsed_time)
+LUARET1(you_spell_levels, number, player_spell_levels())
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 
@@ -264,6 +268,27 @@ static int l_you_spell_table(lua_State *ls)
     return 1;
 }
 
+static int l_you_mem_spells(lua_State *ls)
+{
+    lua_newtable(ls);
+
+    char buf[2];
+    buf[1] = 0;
+
+    vector<int> books;
+    vector<spell_type> mem_spells = get_mem_spell_list(books);
+
+    for (size_t i = 0; i < mem_spells.size(); ++i)
+    {
+        buf[0] = index_to_letter(i);
+
+        lua_pushstring(ls, buf);
+        lua_pushstring(ls, spell_title(mem_spells[i]));
+        lua_rawset(ls, -3);
+    }
+    return 1;
+}
+
 static int l_you_abils(lua_State *ls)
 {
     lua_newtable(ls);
@@ -330,8 +355,8 @@ static int you_gold(lua_State *ls)
 static int you_can_consume_corpses(lua_State *ls)
 {
     lua_pushboolean(ls,
-                    can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false)
-                    || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false)
+                     player_mutation_level(MUT_HERBIVOROUS) < 3
+                     && !you_foodless(true)
                   );
     return 1;
 }
@@ -408,6 +433,13 @@ LUAFN(you_skill)
     PLUARET(number, you.skill(sk, 10) * 0.1);
 }
 
+LUAFN(you_base_skill)
+{
+    skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
+
+    PLUARET(number, you.skill(sk, 10, true) * 0.1);
+}
+
 LUAFN(you_train_skill)
 {
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
@@ -420,6 +452,36 @@ LUAFN(you_train_skill)
     PLUARET(number, you.train[sk]);
 }
 
+LUAFN(you_status)
+{
+    const char* which = nullptr;
+    if (lua_gettop(ls) >= 1)
+        which = luaL_checkstring(ls, 1);
+
+    string status_effects = "";
+    status_info inf;
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
+    {
+        if (fill_status_info(i, &inf) && !inf.short_text.empty())
+        {
+            if (which)
+            {
+                if (inf.short_text == which)
+                    PLUARET(boolean, true);
+            }
+            else
+            {
+                if (!status_effects.empty())
+                    status_effects += ",";
+                status_effects += inf.short_text;
+            }
+        }
+    }
+    if (which)
+        PLUARET(boolean, false);
+    PLUARET(string, status_effects.c_str());
+}
+
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
@@ -428,6 +490,8 @@ static const struct luaL_reg you_clib[] =
     { "spells"      , l_you_spells },
     { "spell_letters", l_you_spell_letters },
     { "spell_table" , l_you_spell_table },
+    { "spell_levels", you_spell_levels },
+    { "mem_spells", l_you_mem_spells },
     { "abilities"   , l_you_abils },
     { "ability_letters", l_you_abil_letters },
     { "ability_table", l_you_abil_table },
@@ -442,15 +506,18 @@ static const struct luaL_reg you_clib[] =
     { "evil_god"    , you_evil_god },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
+    { "rot"         , you_rot },
     { "hunger"      , you_hunger },
     { "hunger_name" , you_hunger_name },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
+    { "base_skill"  , you_base_skill },
     { "skill_progress", you_skill_progress },
     { "can_train_skill", you_can_train_skill },
-    { "train_skill", you_train_skill },
+    { "best_skill",   you_best_skill },
+    { "train_skill",  you_train_skill },
     { "xl"          , you_xl },
     { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
@@ -462,7 +529,6 @@ static const struct luaL_reg you_clib[] =
     { "res_mutation", you_res_mutation },
     { "see_invisible", you_see_invisible },
     { "spirit_shield", you_spirit_shield },
-    { "saprovorous",  you_saprovorous },
     { "like_chunks",  you_like_chunks },
     { "gourmand",     you_gourmand },
     { "res_corr",     you_res_corr },
@@ -484,6 +550,7 @@ static const struct luaL_reg you_clib[] =
     { "rooted",       you_rooted },
     { "poisoned",     you_poisoned },
     { "poison_survival", you_poison_survival },
+    { "corrosion",    you_corrosion },
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
     { "on_fire",      you_on_fire },
@@ -506,6 +573,7 @@ static const struct luaL_reg you_clib[] =
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
     { "antimagic",    you_antimagic },
+    { "status",       you_status },
 
     { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },
@@ -534,7 +602,7 @@ static const struct luaL_reg you_clib[] =
     { "have_rune",          _you_have_rune },
     { "have_orb",           you_have_orb},
 
-    { NULL, NULL },
+    { nullptr, nullptr },
 };
 
 void cluaopen_you(lua_State *ls)
@@ -606,7 +674,7 @@ static int _you_uniques(lua_State *ls)
     return 1;
 }
 
-LUAWRAP(_you_die,ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_SOMETHING))
+LUAWRAP(_you_die,ouch(INSTANT_DEATH, KILLED_BY_SOMETHING))
 
 static int _you_piety(lua_State *ls)
 {
@@ -618,27 +686,42 @@ static int _you_piety(lua_State *ls)
     PLUARET(number, you.piety);
 }
 
+static int you_dock_piety(lua_State *ls)
+{
+    const int piety_loss = luaL_checkint(ls, 1);
+    const int penance = luaL_checkint(ls, 2);
+    dock_piety(piety_loss, penance);
+    return 0;
+}
+
+static int you_lose_piety(lua_State *ls)
+{
+    const int piety_loss = luaL_checkint(ls, 1);
+    lose_piety(piety_loss);
+    return 0;
+}
+
 LUAFN(you_in_branch)
 {
     const char* name = luaL_checkstring(ls, 1);
 
     int br = NUM_BRANCHES;
 
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    for (branch_iterator it; it; ++it)
     {
-        if (strcasecmp(name, branches[i].shortname) == 0
-            || strcasecmp(name, branches[i].longname) == 0
-            || strcasecmp(name, branches[i].abbrevname) == 0)
+        if (strcasecmp(name, it->shortname) == 0
+            || strcasecmp(name, it->longname) == 0
+            || strcasecmp(name, it->abbrevname) == 0)
         {
             if (br != NUM_BRANCHES)
             {
                 string err = make_stringf(
                     "'%s' matches both branch '%s' and '%s'",
                     name, branches[br].abbrevname,
-                    branches[i].abbrevname);
+                    it->abbrevname);
                 return luaL_argerror(ls, 1, err.c_str());
             }
-            br = i;
+            br = it->id;
         }
     }
 
@@ -708,7 +791,7 @@ LUAFN(you_init)
     ng.weapon = str_to_weapon(luaL_checkstring(ls, 2));
     setup_game(ng);
     you.save->unlink();
-    you.save = NULL;
+    you.save = nullptr;
     PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
@@ -717,6 +800,7 @@ LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1));
 LUARET1(you_skill_cost_level, number, you.skill_cost_level);
 LUARET1(you_skill_points, number,
         you.skill_points[str_to_skill(luaL_checkstring(ls, 1))]);
+LUARET1(you_zigs_completed, number, you.zigs_completed);
 
 static const struct luaL_reg you_dlib[] =
 {
@@ -733,6 +817,8 @@ static const struct luaL_reg you_dlib[] =
 { "uniques",            _you_uniques },
 { "die",                _you_die },
 { "piety",              _you_piety },
+{ "dock_piety",         you_dock_piety },
+{ "lose_piety",         you_lose_piety },
 { "in_branch",          you_in_branch },
 { "shopping_list_has",  _you_shopping_list_has },
 { "shopping_list_add",  _you_shopping_list_add },
@@ -745,8 +831,9 @@ static const struct luaL_reg you_dlib[] =
 { "exercise",           you_exercise },
 { "skill_cost_level",   you_skill_cost_level },
 { "skill_points",       you_skill_points },
+{ "zigs_completed",     you_zigs_completed },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };
 
 void dluaopen_you(lua_State *ls)

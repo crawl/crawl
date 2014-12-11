@@ -67,12 +67,11 @@ int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
 int spell_range(spell_type spell, int pow, bool player_spell = true);
 int spell_noise(spell_type spell);
+int spell_effect_noise(spell_type spell);
 
 const char *get_spell_target_prompt(spell_type which_spell);
 
-bool spell_needs_tracer(spell_type spell);
 bool spell_is_direct_explosion(spell_type spell);
-bool spell_needs_foe(spell_type spell);
 bool spell_harms_target(spell_type spell);
 bool spell_harms_area(spell_type spell);
 int spell_levels_required(spell_type which_spell);
@@ -97,11 +96,11 @@ typedef int cloud_func(coord_def where, int pow, int spreadrate,
 int apply_area_visible(cell_func cf, int power, actor *agent);
 
 int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                 int power);
+                                 int power, int radius = 1);
 
 int apply_random_around_square(cell_func cf, const coord_def& where,
                                bool hole_in_middle, int power, int max_targs,
-                               actor *agent = NULL);
+                               actor *agent = nullptr);
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
@@ -117,20 +116,29 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       int range = 0,
                       bool needs_path = true, bool may_target_monster = true,
                       bool may_target_self = false,
-                      const char *target_prefix = NULL,
-                      const char *prompt = NULL,
+                      const char *target_prefix = nullptr,
+                      const char *prompt = nullptr,
                       bool cancel_at_self = false,
-                      targetter *hitfunc = NULL,
-                      desc_filter get_desc_func = NULL);
+                      targetter *hitfunc = nullptr,
+                      desc_filter get_desc_func = nullptr);
 
 skill_type spell_type2skill(unsigned int which_spelltype);
+unsigned int skill2spell_type(skill_type spell_skill);
+
+skill_type arcane_mutation_to_skill(mutation_type mutation);
+bool cannot_use_schools(unsigned int schools);
 
 spell_type zap_type_to_spell(zap_type zap);
 
-bool spell_is_useless(spell_type spell, bool transient = false);
+bool spell_is_form(spell_type spell) PURE;
+
+bool spell_is_useless(spell_type spell, bool temp = true,
+                      bool prevent = false, bool evoked = false) PURE;
+string spell_uselessness_reason(spell_type spell, bool temp = true,
+                                bool prevent = false, bool evoked = false) PURE;
 
 int spell_highlight_by_utility(spell_type spell,
-                                int default_color = COL_UNKNOWN,
+                                int default_colour = COL_UNKNOWN,
                                 bool transient = false,
                                 bool rod_spell = false);
 bool spell_no_hostile_in_range(spell_type spell, bool rod = false);

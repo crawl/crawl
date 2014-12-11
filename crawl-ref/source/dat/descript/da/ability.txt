@@ -82,14 +82,6 @@ Begynd at flyve. Mens du flyver kan du trygt krydse vand og lignende
 forhindringer. Men vær dog opmærksom på, at evnen til at flyve kan udløbe på
 uheldige tidspunkter og lade dig styrte i døden.
 %%%%
-Jump Attack ability
-
-Du springer efter en fjende, udfører et nærkampsangreb og lander i nærheden af
-målet. Du kan ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpe
-fjender, der er nedsunket i lava eller dybt vand. Du kan heller ikke bruge
-denne evne, hvis du står eller svømmer i vand, lava eller flydende jord. Katte
-er naturlige springere og bliver endnu bedre, når de når niveau 6 og 12.
-%%%%
 Hellfire ability
 
 Hærger dine fjender med helvedesild.
@@ -146,13 +138,6 @@ være usynlig og kan i sidste ende forårsage gløden.
 Turn Visible ability
 
 Bliv synlig igen.
-%%%%
-Evoke Jump Attack ability
-
-Du springer efter en fjende, udfører et nærkampsangreb og lander i nærheden af
-målet. Du kan ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpe
-fjender, der er nedsunket i lava eller dybt vand. Du kan heller ikke bruge
-denne evne, hvis du står eller svømmer i vand, lava eller flydende jord.
 %%%%
 Stop Flying ability
 
@@ -443,16 +428,6 @@ Enter the Abyss ability
 Overfører dig øjeblikkeligt til Lugonus rige. Bare det at bruge den evne vil
 tappe dit helbred og din energi.
 %%%%
-Draw One ability
-
-Vælg et hvilket som helst spil kort i din oppakning, og træk et kort fra det.
-%%%%
-Peek at Two ability
-
-Kasserer et kort fra et valgfrit spil i din oppakning for at trække to kort fra
-spillet, se på dem og blande dem ind i spillet igen. Spillet bliver indskrevet
-med de to kort, og hvis de er forskellige identificerer det spil.
-%%%%
 Triple Draw ability
 
 Træk tre kort fra en vilkårlig stak i din oppakning, se på dem og vælg, hvilket
@@ -679,7 +654,7 @@ Make lightning spire ability
 
 Bygger et lynspir, som kan udslynge elektricitet, på det valgte sted.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 Bygger en statue med evnen til at hidkalde venlige dæmoner på det valgte sted.
 %%%%

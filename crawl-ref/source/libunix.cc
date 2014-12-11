@@ -15,33 +15,26 @@
 
 #include "AppHdr.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdarg.h>
-#include <ctype.h>
-#include <term.h>
 #define _LIBUNIX_IMPLEMENTATION
 #include "libunix.h"
-#include "defines.h"
+
+#include <cctype>
+#include <clocale>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cwchar>
+#include <langinfo.h>
+#include <term.h>
+#include <termios.h>
+#include <unistd.h>
 
 #include "cio.h"
 #include "crash.h"
-#include "enum.h"
-#include "externs.h"
-#include "libutil.h"
-#include "options.h"
-#include "files.h"
 #include "state.h"
 #include "unicode.h"
 #include "view.h"
-#include "viewgeom.h"
-
-#include <wchar.h>
-#include <locale.h>
-#include <langinfo.h>
-#include <termios.h>
 
 static struct termios def_term;
 static struct termios game_term;
@@ -63,7 +56,7 @@ static struct termios game_term;
     #include CURSES_INCLUDE_FILE
 #endif
 
-// Globals holding current text/backg. colors
+// Globals holding current text/backg. colours
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
 static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);
@@ -85,11 +78,6 @@ static unsigned int convert_to_curses_attr(int chattr)
     case CHATTR_DIM:            return A_DIM;
     default:                    return A_NORMAL;
     }
-}
-
-static inline short macro_colour(short col)
-{
-    return Options.colour[ col ];
 }
 
 // Translate DOS colors to curses.
@@ -546,7 +534,7 @@ void update_screen()
 
 void clear_to_end_of_line()
 {
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     textbackground(BLACK);
     clrtoeol();
 
@@ -572,7 +560,7 @@ int num_to_lines(int num)
 
 void clrscr()
 {
-    textcolor(LIGHTGREY);
+    textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
 #ifdef DGAMELAUNCH
@@ -607,7 +595,7 @@ bool is_smart_cursor_enabled()
     return false;
 }
 
-void enable_smart_cursor(bool dummy)
+void enable_smart_cursor(bool /*cursor*/)
 {
 }
 
@@ -680,12 +668,12 @@ static int curs_fg_attr(int col)
     return COLOR_PAIR(pair) | flags;
 }
 
-void textcolor(int col)
+void textcolour(int col)
 {
     (void)attrset(Current_Colour = curs_fg_attr(col));
 
 #ifdef USE_TILE_WEB
-    tiles.textcolor(col);
+    tiles.textcolour(col);
 #endif
 }
 

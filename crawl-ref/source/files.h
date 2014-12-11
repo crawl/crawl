@@ -6,11 +6,10 @@
 #ifndef FILES_H
 #define FILES_H
 
-#include "externs.h"
-#include <stdio.h>
+#include <cstdio>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
 
 struct player_save_info;
 
@@ -68,7 +67,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level);
 void delete_level(const level_id &level);
 
-void save_game(bool leave_game, const char *bye = NULL);
+void save_game(bool leave_game, const char *bye = nullptr);
 
 // Save game without exiting (used when changing levels).
 void save_game_state();
@@ -94,7 +93,7 @@ public:
 };
 
 void save_ghost(bool force = false);
-bool load_ghost(bool creating_level);
+bool load_ghost(bool creating_level, bool delete_file = true);
 
 FILE *lk_open(const char *mode, const string &file);
 FILE *lk_open_exclusive(const string &file);

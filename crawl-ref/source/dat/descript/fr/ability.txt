@@ -81,16 +81,6 @@ Commencer à voler. En vol, vous pouvez traverser en toute sécurité les eaux
 profondes et les obstacles similaires. Soyez conscient que le vol peut
 s'achever à un moment inopportun et vous faire chuter vers votre mort.
 %%%%
-Jump Attack ability
-
-Un talent qui utilise l'énergie cinétique d'une créature pour déclencher une
-attaque sautée très rapide, qui vous fait atterrir à proximité en toute
-sécurité. Vous ne pouvez pas sauter sur les ennemis volants et ne pouvez sauter
-sur des ennemis géants que s'ils sont plongés dans la lave ou de l'eau
-profonde. Être dans l'eau profonde, la lave, ou sur un sol liquéfié vous
-empêcher également d'utiliser ce talent. Les Felids sont des sauteurs naturels
-et bondiront encore mieux après avoir atteint les niveaux d'expérience 6 et 12.
-%%%%
 Hellfire ability
 
 Frappe vos ennemis avec des flammes infernales.
@@ -149,15 +139,6 @@ contamination magique et peut vous rendre luminescent.
 Turn Visible ability
 
 Redevenir à nouveau visible.
-%%%%
-Evoke Jump Attack ability
-
-Un talent qui utilise l'énergie cinétique d'une créature pour déclencher une
-attaque sautée très rapide, qui vous fait atterrir à proximité en toute
-sécurité. Vous ne pouvez pas sauter sur les ennemis volants et ne pouvez sauter
-sur des ennemis géants que s'ils sont plongés dans la lave ou de l'eau
-profonde. Être dans l'eau profonde, la lave, ou sur un sol liquéfié vous
-empêcher également d'utiliser ce talent.
 %%%%
 Stop Flying ability
 
@@ -465,18 +446,6 @@ Enter the Abyss ability
 Vous transfère instantanément dans le royaume de Lugonu. L'effort d'avoir
 recours à cette aptitude entamera votre santé et vos réserves magiques.
 %%%%
-Draw One ability
-
-Choisissez n'importe quel paquet de votre inventaire et tirez une carte de
-celui-ci.
-%%%%
-Peek at Two ability
-
-Défaussez une carte de n'importe quel paquet de votre inventaire et tirer deux
-cartes de votre paquet, regardez-les, puis mélangez les dans le paquet. Le
-paquet sera alors marqué comme contenant ces deux cartes. Si elles sont
-différentes, cela identifiera le paquet.
-%%%%
 Triple Draw ability
 
 Piochez trois cartes de n'importe quel paquet de votre inventaire, regardez-les
@@ -712,7 +681,7 @@ Make lightning spire ability
 Construit une lance de foudre , qui peut tirer des éclairs, sur la position
 ciblée.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 Construit une statue, avec la capacité d'invoquer des démons familiers, sur la
 position ciblée.

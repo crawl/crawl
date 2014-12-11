@@ -9,9 +9,9 @@
 #include <algorithm>
 #include <cstring>
 #include <queue>
+#include "end.h"
 #include "mapdef.h"
 #include "levcomp.tab.h"
-#include "stuff.h"
 
 static bool alloced = false;
 

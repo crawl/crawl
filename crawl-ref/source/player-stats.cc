@@ -5,27 +5,30 @@
 #include "artefact.h"
 #include "clua.h"
 #include "delay.h"
-#include "godpassive.h"
 #include "files.h"
+#include "godpassive.h"
+#include "hints.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
+#ifdef TOUCH_UI
+#include "menu.h"
+#endif
+#include "message.h"
 #include "misc.h"
-#include "mon-util.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
 #include "state.h"
-#include "transform.h"
-#include "hints.h"
-
+#include "stringutil.h"
 #ifdef TOUCH_UI
-#include "menu.h"
 #include "tiledef-gui.h"
 #include "tilepick.h"
 #endif
+#include "transform.h"
 
 // Don't make this larger than 255 without changing the type of you.stat_zero
 // in player.h as well as the associated marshalling code in tags.cc
@@ -74,10 +77,15 @@ int player::max_dex() const
     return max_stat(STAT_DEX);
 }
 
-static void _handle_stat_change(stat_type stat, const char *aux = NULL,
-                                bool see_source = true);
-static void _handle_stat_change(const char *aux = NULL, bool see_source = true);
+static void _handle_stat_change(stat_type stat, bool see_source = true);
+static void _handle_stat_change(bool see_source = true);
 
+/**
+ * Handle manual, permanent character stat increases. (Usually from every third
+ * XL.
+ *
+ * @return Whether the stat was actually increased (HUPs can interrupt this).
+ */
 bool attribute_increase()
 {
     crawl_state.stat_gain_prompt = true;
@@ -100,9 +108,20 @@ bool attribute_increase()
 #else
     mprf(MSGCH_INTRINSIC_GAIN, "Your experience leads to an increase in your attributes!");
     learned_something_new(HINT_CHOOSE_STAT);
+    if (you.base_stats[STAT_STR] != you.strength()
+        || you.base_stats[STAT_INT] != you.intel()
+        || you.base_stats[STAT_DEX] != you.dex())
+    {
+        mprf(MSGCH_PROMPT, "Your base attributes are Str %d, Int %d, Dex %d.",
+             you.base_stats[STAT_STR],
+             you.base_stats[STAT_INT],
+             you.base_stats[STAT_DEX]);
+    }
     mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
+
+    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
 
     bool tried_lua = false;
     int keyin;
@@ -139,17 +158,20 @@ bool attribute_increase()
 
         case 's':
         case 'S':
-            modify_stat(STAT_STR, 1, false, "level gain");
+            for (int i = 0; i < statgain; i++)
+                modify_stat(STAT_STR, 1, false, "level gain");
             return true;
 
         case 'i':
         case 'I':
-            modify_stat(STAT_INT, 1, false, "level gain");
+            for (int i = 0; i < statgain; i++)
+                modify_stat(STAT_INT, 1, false, "level gain");
             return true;
 
         case 'd':
         case 'D':
-            modify_stat(STAT_DEX, 1, false, "level gain");
+            for (int i = 0; i < statgain; i++)
+                modify_stat(STAT_DEX, 1, false, "level gain");
             return true;
 #ifdef TOUCH_UI
         default:
@@ -250,11 +272,8 @@ void jiyva_stat_action()
     if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
-        const string cause = "the 'helpfulness' of " + god_name(you.religion);
-        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true,
-                    cause.c_str());
-        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true,
-                    cause.c_str());
+        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true);
+        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true);
     }
 }
 
@@ -286,7 +305,7 @@ const char* stat_desc(stat_type stat, stat_desc_type desc)
 }
 
 void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
-                 const char *cause, bool see_source)
+                 bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -310,11 +329,11 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
 
     you.base_stats[which_stat] += amount;
 
-    _handle_stat_change(which_stat, cause, see_source);
+    _handle_stat_change(which_stat, see_source);
 }
 
 void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
-                        const char *cause, bool see_source)
+                        bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -336,49 +355,12 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
-    _handle_stat_change(which_stat, cause, see_source);
+    _handle_stat_change(which_stat, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
-                        const item_def &cause, bool removed)
+void notify_stat_change()
 {
-    string name = cause.name(DESC_THE, false, true, false, false,
-                             ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-    string verb;
-
-    switch (cause.base_type)
-    {
-    case OBJ_ARMOUR:
-    case OBJ_JEWELLERY:
-        if (removed)
-            verb = "removing";
-        else
-            verb = "wearing";
-        break;
-
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-    case OBJ_RODS:
-        if (removed)
-            verb = "unwielding";
-        else
-            verb = "wielding";
-        break;
-
-    case OBJ_WANDS:   verb = "zapping";  break;
-    case OBJ_FOOD:    verb = "eating";   break;
-    case OBJ_SCROLLS: verb = "reading";  break;
-    case OBJ_POTIONS: verb = "drinking"; break;
-    default:          verb = "using";
-    }
-
-    notify_stat_change(which_stat, amount, suppress_msg,
-                       (verb + " " + name).c_str(), true);
-}
-
-void notify_stat_change(const char* cause)
-{
-    _handle_stat_change(cause);
+    _handle_stat_change();
 }
 
 static int _strength_modifier()
@@ -413,14 +395,7 @@ static int _strength_modifier()
               - player_mutation_level(MUT_FLEXIBLE_WEAK);
 #endif
 
-    // transformations
-    switch (you.form)
-    {
-    case TRAN_STATUE:          result +=  2; break;
-    case TRAN_DRAGON:          result += 10; break;
-    case TRAN_BAT:             result -=  5; break;
-    default:                                 break;
-    }
+    result += get_form()->str_mod;
 
     return result;
 }
@@ -484,14 +459,7 @@ static int _dex_modifier()
     result += 2 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     result -= player_mutation_level(MUT_ROUGH_BLACK_SCALES);
 
-    // transformations
-    switch (you.form)
-    {
-    case TRAN_SPIDER: result +=  5; break;
-    case TRAN_STATUE: result -=  2; break;
-    case TRAN_BAT:    result +=  5; break;
-    default:                        break;
-    }
+    result += get_form()->dex_mod;
 
     return result;
 }
@@ -558,15 +526,14 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
         if (you.stat_zero[which_stat])
         {
             mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(which_stat, SD_NAME));
-            ouch(5 + random2(you.hp_max / 10), NON_MONSTER, _statloss_killtype(which_stat), cause);
+            ouch(5 + random2(you.hp_max / 10), _statloss_killtype(which_stat), MID_NOBODY, cause);
         }
-        _handle_stat_change(which_stat, cause, see_source);
+        _handle_stat_change(which_stat, see_source);
         return true;
     }
     else
         return false;
 }
-
 bool lose_stat(stat_type which_stat, int stat_loss, bool force,
                const string cause, bool see_source)
 {
@@ -576,8 +543,8 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
 bool lose_stat(stat_type which_stat, int stat_loss,
                const monster* cause, bool force)
 {
-    if (cause == NULL || invalid_monster(cause))
-        return lose_stat(which_stat, stat_loss, force, NULL, true);
+    if (cause == nullptr || invalid_monster(cause))
+        return lose_stat(which_stat, stat_loss, force, nullptr, true);
 
     bool   vis  = you.can_see(cause);
     string name = cause->name(DESC_A, true);
@@ -651,7 +618,7 @@ static void _normalize_stat(stat_type stat)
     you.base_stats[stat] = min<int8_t>(you.base_stats[stat], 72);
 }
 
-static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
+static void _handle_stat_change(stat_type stat, bool see_source)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
@@ -689,10 +656,10 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     }
 }
 
-static void _handle_stat_change(const char* aux, bool see_source)
+static void _handle_stat_change(bool see_source)
 {
     for (int i = 0; i < NUM_STATS; ++i)
-        _handle_stat_change(static_cast<stat_type>(i), aux, see_source);
+        _handle_stat_change(static_cast<stat_type>(i), see_source);
 }
 
 // Called once per turn.

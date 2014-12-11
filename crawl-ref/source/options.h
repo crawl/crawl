@@ -2,8 +2,8 @@
 #define OPTIONS_H
 
 #include "feature.h"
-#include "pattern.h"
 #include "newgame_def.h"
+#include "pattern.h"
 
 enum autosac_type
 {
@@ -54,7 +54,7 @@ struct colour_mapping
 {
     string tag;
     text_pattern pattern;
-    int colour;
+    colour_t colour;
     bool operator== (const colour_mapping &o) const
     {
         return tag == o.tag && pattern == o.pattern && colour == o.colour;
@@ -90,7 +90,7 @@ public:
     bool was_included(const string &file) const;
 
     static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = NULL) throw (string);
+                            const vector<string> *rcdirs = nullptr) throw (string);
 
 #ifdef USE_TILE_WEB
     void write_webtiles_options(const string &name);
@@ -102,7 +102,8 @@ public:
     int         line_num;     // Current line number being processed.
 
     // View options
-    map<dungeon_feature_type, feature_def> feature_overrides;
+    map<dungeon_feature_type, feature_def> feature_colour_overrides;
+    map<dungeon_feature_type, FixedVector<ucs_t, 2> > feature_symbol_overrides;
     map<monster_type, cglyph_t> mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
     vector<pair<string, cglyph_t> > item_glyph_overrides;
@@ -170,10 +171,6 @@ public:
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     int         confirm_butcher; // When to prompt for butchery
-    bool        chunks_autopickup; // Autopickup chunks after butchering
-    bool        prompt_for_swap; // Prompt to switch back from butchering
-                                 // tool if hostile monsters are around.
-    chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
@@ -192,7 +189,7 @@ public:
     int         colour[16];      // macro fg colours to other colours
     int         background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
-    bool        darken_beyond_range; // for whether targeting is out of range
+    int         use_animations; // which animations to show
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
@@ -204,6 +201,7 @@ public:
     bool        no_dark_brand;    // Attribute for branding friendly monsters
     bool        macro_meta_entry; // Allow user to use numeric sequences when
                                   // creating macros
+    bool        cloud_status;     // Whether to show a cloud status light
 
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
@@ -216,7 +214,8 @@ public:
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
 #ifdef WIZARD
-    int            wiz_mode;   // no, never, start in wiz mode
+    int            wiz_mode;      // no, never, start in wiz mode
+    int            explore_mode;  // no, never, start in explore mode
 #endif
     vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
@@ -238,9 +237,8 @@ public:
     vector<pair<text_pattern, string> > autoinscriptions;
     vector<text_pattern> note_items;     // Objects to note
     FixedBitVector<27+1> note_skill_levels;   // Skill levels to note
-    vector<pair<text_pattern, string> > auto_spell_letters;
-
-    bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
+    vector<pair<text_pattern, string>> auto_spell_letters;
+    vector<pair<text_pattern, string>> auto_item_letters;
 
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
@@ -335,6 +333,7 @@ public:
     maybe_bool  show_god_gift;      // Show {god gift} in item names
 
     bool        restart_after_game; // If true, Crawl will not close on game-end
+    bool        restart_after_save; // .. or on save
 
     vector<text_pattern> drop_filter;
 
@@ -360,6 +359,9 @@ public:
     // If the player prefers to merge kill records, this option can do that.
     int         kill_map[KC_NCATEGORIES];
 
+    bool        trapwalk_safe_hp; // Whether to prompt when walking onto mechanical
+                                  // traps at low hp.
+
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
 
@@ -384,9 +386,6 @@ public:
     // minimap colours
     VColour     tile_player_col;
     VColour     tile_monster_col;
-    VColour     tile_neutral_col;
-    VColour     tile_peaceful_col;
-    VColour     tile_friendly_col;
     VColour     tile_plant_col;
     VColour     tile_item_col;
     VColour     tile_unseen_col;
@@ -453,8 +452,11 @@ public:
     bool        tile_show_demon_tier;
     bool        tile_water_anim;
     bool        tile_misc_anim;
-    bool        tile_show_player_species;
     vector<string> tile_layout_priority;
+    monster_type tile_use_monster;
+    tileidx_t   tile_player_tile;
+    pair<int, int> tile_weapon_offsets;
+    pair<int, int> tile_shield_offsets;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
     string      tile_display_mode;
@@ -480,7 +482,7 @@ public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;
     bool        o_bool(const char *name, bool def = false) const;
-    string      o_str(const char *name, const char *def = NULL) const;
+    string      o_str(const char *name, const char *def = nullptr) const;
     int         o_colour(const char *name, int def = LIGHTGREY) const;
 
     // Fix option values if necessary, specifically file paths.
@@ -493,8 +495,7 @@ private:
 
     void clear_feature_overrides();
     void clear_cset_overrides();
-    void add_cset_override(char_set_type set, const string &overrides);
-    void add_cset_override(char_set_type set, dungeon_char_type dc, int symbol);
+    void add_cset_override(dungeon_char_type dc, int symbol);
     void add_feature_override(const string &);
 
     void add_message_colour_mappings(const string &, bool, bool);
@@ -516,15 +517,17 @@ private:
                          bool prepend = false);
     void do_kill_map(const string &from, const string &to);
     int  read_explore_stop_conditions(const string &) const;
+    int  read_use_animations(const string &) const;
 
     void split_parse(const string &s, const string &separator,
                      void (game_options::*add)(const string &));
-    void add_mon_glyph_overrides(const string &mons, cglyph_t &mdisp);
     void add_mon_glyph_override(const string &);
     cglyph_t parse_mon_glyph(const string &s) const;
     void add_item_glyph_override(const string &);
     void set_option_fragment(const string &s);
     bool set_lang(const char *s);
+    void set_player_tile(const string &s);
+    void set_tile_offsets(const string &s, bool set_shield);
 
     static const string interrupt_prefix;
 };
@@ -536,5 +539,32 @@ object_class_type item_class_by_sym(ucs_t c);
 #define Options (*real_Options)
 #endif
 extern game_options  Options;
+
+static inline short macro_colour(short col)
+{
+    ASSERT(col < MAX_TERM_COLOUR);
+    return col < 0 ? col : Options.colour[ col ];
+}
+
+enum use_animation_type
+{
+    UA_NONE             = 0,
+    // projectile animations, from throwing weapons, fireball, etc
+    UA_BEAM             = (1 << 0),
+    // flashes the screen when trying to cast a spell beyond its range
+    UA_RANGE            = (1 << 1),
+    // flashes the screen on low hitpoint warning
+    UA_HP               = (1 << 2),
+    // flashes the screen on attempt to travel or rest with a monster in view
+    UA_MONSTER_IN_SIGHT = (1 << 3),
+    // various animations for picking up runes and the orb
+    UA_PICKUP           = (1 << 4),
+    // various monster spell/ability effects (slime creature merging, etc)
+    UA_MONSTER          = (1 << 5),
+    // various player spell/ability animation effects (shatter, etc)
+    UA_PLAYER           = (1 << 6),
+    // animation when entering certain branches (abyss, zot, etc)
+    UA_BRANCH_ENTRY     = (1 << 7),
+};
 
 #endif

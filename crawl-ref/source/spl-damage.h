@@ -24,13 +24,12 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail);
 spret_type cast_freeze(int pow, monster* mons, bool fail);
 spret_type cast_airstrike(int pow, const dist &beam, bool fail);
 spret_type cast_shatter(int pow, bool fail);
+spret_type cast_irradiate(int powc, actor* who, bool fail);
 bool ignite_poison_affects(const actor* act);
 spret_type cast_ignite_poison(actor *agent, int pow, bool fail, bool mon_tracer = false);
 void local_ignite_poison(coord_def pos, int pow, actor* agent);
 int discharge_monsters(coord_def where, int pow, int, actor *agent);
 spret_type cast_discharge(int pow, bool fail);
-int disperse_monsters(coord_def where, int pow);
-spret_type cast_dispersal(int pow, bool fail = false);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool allow_random,
                               bool get_max_distance, bool quiet,
@@ -68,4 +67,8 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim,
                          bool fail = false);
 
 spret_type cast_random_bolt(int pow, bolt& beam, bool fail = false);
+
+size_t shotgun_beam_count(int pow);
+spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
+                            bool fail = false);
 #endif

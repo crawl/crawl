@@ -3,7 +3,6 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-inv.h"
-#include "process_desc.h"
 
 #include "butcher.h"
 #include "cio.h"
@@ -20,8 +19,10 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "options.h"
+#include "output.h"
+#include "process_desc.h"
+#include "rot.h"
 #include "spl-book.h"
-#include "stuff.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-icons.h"
@@ -244,7 +245,6 @@ static bool _can_use_item(const item_def &item, bool equipped)
     {
         return you.species == SP_VAMPIRE
                && item.sub_type != CORPSE_SKELETON
-               && !food_is_rotten(item)
                && mons_has_blood(item.mon_type);
     }
 
@@ -356,8 +356,7 @@ bool InventoryRegion::update_tip_text(string& tip)
             }
         }
         if (item.base_type == OBJ_CORPSES
-            && item.sub_type != CORPSE_SKELETON
-            && !food_is_rotten(item))
+            && item.sub_type != CORPSE_SKELETON)
         {
             tip += "\n[Shift + L-Click] ";
             if (can_bottle_blood_from_corpse(item.mon_type))
@@ -374,7 +373,7 @@ bool InventoryRegion::update_tip_text(string& tip)
             }
         }
         else if (item.base_type == OBJ_FOOD
-                 && you.is_undead != US_UNDEAD
+                 && you.undead_state() != US_UNDEAD
                  && you.species != SP_VAMPIRE)
         {
             tip += "\n[Shift + R-Click] Eat (e)";
@@ -667,20 +666,19 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     desc.tile = tileidx_item(item);
 
     int type = item.base_type;
-    if (type == OBJ_FOOD || type == OBJ_SCROLLS
-        || type == OBJ_POTIONS || type == OBJ_MISSILES)
+    if (is_stackable_item(item))
     {
         // -1 specifies don't display anything
         desc.quantity = (item.quantity == 1) ? -1 : item.quantity;
     }
     else if (type == OBJ_WANDS
              && ((item.flags & ISFLAG_KNOW_PLUSES)
-                 || item.plus2 == ZAPCOUNT_EMPTY))
+                 || item.used_count == ZAPCOUNT_EMPTY))
     {
-        desc.quantity = item.plus;
+        desc.quantity = item.charges;
     }
     else if (type == OBJ_RODS && item.flags & ISFLAG_KNOW_PLUSES)
-        desc.quantity = item.plus / ROD_CHARGE_MULT;
+        desc.quantity = item.charges / ROD_CHARGE_MULT;
     else
         desc.quantity = -1;
 

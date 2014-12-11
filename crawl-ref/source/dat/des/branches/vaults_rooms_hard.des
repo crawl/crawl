@@ -843,7 +843,7 @@ ENDMAP
 
 NAME: nicolae_vaults_statue_guard
 TAGS: vaults_hard vaults_orient_e
-MONS: silver statue / ice statue / orange crystal statue
+MONS: obsidian statue / ice statue / orange crystal statue
 KPROP: % = no_rtele_into
 SUBST: % = %%%*
 MAP
@@ -1163,4 +1163,41 @@ x$$$x1x$$$x
 x$*$x^x$*$x
 x$$$x.x$$$x
 xxxxx+xxxxx
+ENDMAP
+
+####
+
+NAME:   kennysheep_vaults_gozag_temple
+TAGS:   vaults_hard no_item_gen uniq_kennysheep_gozag_temple
+KMONS:  2 = vault warden
+KMONS:  1 = ironheart preserver
+KITEM:  | = gold good_item
+KITEM:  21 = gold
+KFEAT:  B = altar_gozag
+KFEAT:  D = granite_statue
+TILE:   GD = dngn_golden_statue
+: set_feature_name("granite_statue", "golden statue")
+COLOUR: cGD = yellow
+FTILE:  $|B}+nc21-D = floor_limestone
+FTILE:  " = floor_hall
+KFEAT:  _ = antiques shop name:Gozag greed:100 /\
+            antique weapon shop name:Gozag greed:100 /\
+            antique armour shop name:Gozag greed:100
+MAP
+...............
+.G.""c+++c"".G.
+..""cc---cc""..
+..""cD---Dc""..
+.9""cc+++cc""9.
+.""Gcc$$$ccG"".
+.""cc$$$$$cc"".
+.""n$$2|1$$n"".
+."_n$$|B|$$n_".
+9""n$$1|2$$n""9
+.""cc$$$$$cc"".
+.""Gcc$$$ccG"".
+."""0cnnnc0""".
+.."""""_"""""..
+.G.""""""""".G.
+...............
 ENDMAP

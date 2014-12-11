@@ -3,15 +3,10 @@
 #include "map_knowledge.h"
 
 #include "coordit.h"
-#include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
-#include "feature.h"
-#include "mon-util.h"
 #include "notes.h"
-#include "options.h"
 #include "religion.h"
-#include "show.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
@@ -87,7 +82,7 @@ static int _map_quality()
     int passive = player_mutation_level(MUT_PASSIVE_MAPPING);
     // the explanation of this 51 vs max_piety of 200 is left as
     // an exercise to the reader
-    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
+    if (in_good_standing(GOD_ASHENZARI))
         passive = max(passive, you.piety / 51);
     return passive;
 }
@@ -141,8 +136,8 @@ void set_terrain_visible(const coord_def c)
 
 void clear_terrain_visibility()
 {
-    for (set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
-        env.map_knowledge(*i).flags &= ~MAP_VISIBLE_FLAG;
+    for (auto c : env.visible)
+        env.map_knowledge(c).flags &= ~MAP_VISIBLE_FLAG;
     env.visible.clear();
 }
 
@@ -152,7 +147,7 @@ void map_cell::set_detected_item()
     flags |= MAP_DETECTED_ITEM;
     _item = new item_info();
     _item->base_type = OBJ_DETECTED;
-    _item->colour    = Options.detected_item_colour;
+    _item->rnd       = 1;
 }
 
 static bool _floor_mf(map_feature mf)
@@ -161,60 +156,66 @@ static bool _floor_mf(map_feature mf)
            || mf == MF_LAVA;
 }
 
+/**
+ * What map feature is present in the given map cell, for minimap purposes?
+ *
+ * @param cell  The cell in question.
+ * @return      The most important feature in the given cell.
+ */
 map_feature get_cell_map_feature(const map_cell& cell)
 {
-    map_feature mf = MF_SKIP;
-    bool mf_mons_no_exp = false;
-    if (cell.invisible_monster())
-        mf = MF_MONS_HOSTILE;
-    else if (cell.monster() != MONS_NO_MONSTER)
+    // known but not seen monster
+    if (cell.detected_monster())
+        return MF_MONS_HOSTILE; // hostile by default
+
+    // known but not seen item
+    if (cell.detected_item())
+        return MF_ITEM;
+
+    const map_feature base_feature = get_feature_def(cell.feat()).minimap;
+
+    // handle magic mapping etc effects (known but not seen)
+    if ((base_feature == MF_WALL || base_feature == MF_FLOOR)
+        && cell.known() && !cell.seen())
     {
-        switch (cell.monsterinfo() ? cell.monsterinfo()->attitude : ATT_HOSTILE)
-        {
-        case ATT_FRIENDLY:
-            mf = MF_MONS_FRIENDLY;
-            break;
-        case ATT_GOOD_NEUTRAL:
-            mf = MF_MONS_PEACEFUL;
-            break;
-        case ATT_NEUTRAL:
-        case ATT_STRICT_NEUTRAL:
-            mf = MF_MONS_NEUTRAL;
-            break;
-        case ATT_HOSTILE:
-        default:
-            if (mons_class_flag(cell.monster(), M_NO_EXP_GAIN))
-                mf_mons_no_exp = true;
-            else
-                mf = MF_MONS_HOSTILE;
-            break;
-        }
+        return (base_feature == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
     }
-    else if (cell.cloud())
+
+    // exciting features get precedence...
+    if (!_floor_mf(base_feature))
+        return base_feature;
+
+    // ... but some things can take precedence over the floor
+
+    // first clouds...
+    // XXX: should items have higher priority? (pro: easier to spot un-grabbed
+    // items, con: harder to spot what's blocking auto-travel)
+    if (cell.cloud())
     {
         show_type show;
         show.cls = SH_CLOUD;
-        mf = get_feature_def(show).minimap;
+        const map_feature cloud_feature = get_feature_def(show).minimap;
+        if (cloud_feature != MF_SKIP) // XXX: does this ever happen?
+            return cloud_feature;
     }
 
-    if (mf == MF_SKIP)
-        mf = get_feature_def(cell.feat()).minimap;
-    if ((mf == MF_SKIP || _floor_mf(mf)) && cell.item())
-        mf = get_feature_def(*cell.item()).minimap;
-    if ((mf == MF_SKIP || _floor_mf(mf)) && mf_mons_no_exp)
-        mf = MF_MONS_NO_EXP;
-    if (mf == MF_SKIP)
-        mf = MF_UNSEEN;
-
-    if (mf == MF_WALL || mf == MF_FLOOR)
+    // then items...
+    if (cell.item())
     {
-        if (cell.known() && !cell.seen()
-            || cell.detected_item()
-            || cell.detected_monster())
-        {
-            mf = (mf == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
-        }
+        const map_feature item_feature = get_feature_def(*cell.item()).minimap;
+        if (item_feature != MF_SKIP) // can this happen?
+            return item_feature;
     }
 
-    return mf;
+    // then firewood.
+    if (cell.monster() != MONS_NO_MONSTER
+        && mons_class_flag(cell.monster(), M_NO_EXP_GAIN)
+        && mons_class_flag(cell.monster(), M_STATIONARY))
+    {
+        return MF_MONS_NO_EXP;
+    }
+
+    if (base_feature == MF_SKIP) // can this happen?
+        return MF_UNSEEN;
+    return base_feature;
 }

@@ -75,8 +75,8 @@ defender's fire resistance.
 %%%%
 Staff of Dispater
 
-This legendary item can unleash the fury of Hell. The unholy hellfire it evokes
-may cost a portion of your life and your soul, but since when have such details
+This legendary item can unleash the fires of Hell. All but Dispater will find
+the flames sear their own flesh, as well - but since when have such details
 stopped anyone in their quest for power?
 %%%%
 Sceptre of Asmodeus
@@ -99,13 +99,6 @@ scimitar of Flaming Death
 
 A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
 covering opponents in magical flame.
-%%%%
-# TAG_MAJOR_VERSION == 34
-mace of Brilliance
-
-This mace illuminates the dungeon's recesses, but its halo may alert enemies to
-your presence. Its light is hated by the undead, and can reveal any
-machinations of those who try to stay invisible.
 %%%%
 eveningstar "Brilliance"
 
@@ -131,12 +124,6 @@ called Boris. He got lost in the Dungeon while seeking the Orb.
 scythe "Finisher"
 
 A long and sharp scythe, specially modified to be quickly swung in combat.
-%%%%
-# TAG_MAJOR_VERSION == 34
-sling "Punk"
-
-A sling made of weird blue leather. Originally the weapon of a notorious
-mischief-maker and general scamp, it's since fallen into less savoury hands.
 %%%%
 greatsling "Punk"
 
@@ -169,13 +156,6 @@ sword of Jihad
 A long sword made of one huge piece of crystal. Legend says it was the Shining
 One's gift to a worshipper. This blade is notorious for inducing bloodthirsty
 rage in both the wielder and all of his or her mortal followers.
-%%%%
-# TAG_MAJOR_VERSION == 34
-crossbow "Hellfire"
-
-A flaming crossbow, forged in the fires of the Hells; it imbues bolts it fires
-with the raw power of its namesake, irresistible by any mortal armour or
-fireproofing.
 %%%%
 arbalest "Hellfire"
 
@@ -214,12 +194,6 @@ This powerful staff used to belong to the leader of the Guild of Five Elements.
 In addition to the protection it provides, those skilled in Evocations may
 use it to discharge powerful blasts of elemental energy with their strikes.
 %%%%
-# TAG_MAJOR_VERSION == 34
-crossbow "Sniper"
-
-A crossbow made of some black material. It is highly damaging but extremely
-cumbersome to load.
-%%%%
 heavy crossbow "Sniper"
 
 A huge crossbow made of some black material. It is highly damaging, but
@@ -247,7 +221,7 @@ from Spriggans. Anyway, it's in some way associated with those fey folk.
 %%%%
 plutonium sword
 
-A claymore made of weird glowing metal. Anyone hit with it stands a good chance
+A triple sword made of weird glowing metal. Anyone hit with it stands a good chance
 of enjoying a variety of exciting new medical conditions... if they survive
 the impact of the blade itself, that is.
 %%%%
@@ -282,6 +256,9 @@ captain's cutlass
 This infamous weapon was used by a vile pirate captain to slaughter countless
 innocents. He finally met his destiny when a kraken swallowed his ship, and the
 cutlass was thought to be lost with him.
+
+This weapon is perfectly suited for relieving opponents of their weapons, just
+before it relieves them of their lives.
 %%%%
 storm bow
 
@@ -423,7 +400,7 @@ from rats of all kinds.
 %%%%
 shield of the gong
 
-This is a large bronze gong that can be worn as a shield. According to certain
+This is a heavy bronze gong that can be worn as a shield. According to certain
 mystics, beating on such a gong can grant you spiritual protection.
 
 And this shield will surely be heard!
@@ -505,9 +482,9 @@ with massive plates of black diamond. The weight of metal and stone slows the
 steed it protects. It offers more than protection against blows; the adamant
 bears an enchantment that makes its wearer partially undead.
 %%%%
-ring of Vitality
+amulet of Vitality
 
-This famed ring greatly improves its wearer's health.
+This famed amulet greatly improves its wearer's health.
 %%%%
 autumn katana
 
@@ -583,7 +560,6 @@ lajatang of Order
 Long ago Zin bestowed this gift upon a favoured worshipper. It became the
 most prized weapon of the many priests of Zin; after their order was destroyed,
 it fell into disuse and vanished from history.
-
 %%%%
 great mace "Firestarter"
 
@@ -604,18 +580,8 @@ tiny portion of the caster’s life essence, taken alongside the magic used ever
 time its wielder casts a spell. Of course - the demon is more than happy to
 suck the life from others, as well.
 %%%%
-milk chocolate
+quick blades "Gyre" and "Gimble"
 
-This item is a debugging aid, granting a vast array of mostly beneficial
-artefact properties.
-
-If you see this in a real game, it's a bug.
-%%%%
-dark chocolate
-
-This item is a debugging aid, granting a vast array of mostly harmful artefact
-properties. It's distinct from its milky counterpart as some props conflict
-with each other.
-
-If you see this in a real game, it's a bug.
+Two quick blades joined by a chain. Swinging one compels the wielder to swing
+the other, as if they have minds of their own.
 %%%%

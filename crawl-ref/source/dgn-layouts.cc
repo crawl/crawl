@@ -10,9 +10,8 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
-#include "libutil.h"
+#include "stringutil.h"
 #include "terrain.h"
-#include "traps.h"
 
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask);
 static int _count_antifeature_in_box(int x0, int y0, int x1, int y1,
@@ -49,9 +48,6 @@ static void _build_lake(dungeon_feature_type lake_type);
 void dgn_build_basic_level()
 {
     int level_number = env.absdepth0;
-
-    env.level_build_method += " basic";
-    env.level_layout_types.insert("basic");
 
     int corrlength = 2 + random2(14);
     int no_corr = (one_chance_in(100) ? 500 + random2(500)
@@ -97,10 +93,10 @@ void dgn_build_basic_level()
         upstairs.push_back(begin);
     }
 
-    for (vector<coord_def>::iterator pathstart = upstairs.begin();
+    for (auto pathstart = upstairs.begin();
          pathstart != upstairs.end(); pathstart++)
     {
-        vector<coord_def>::iterator pathend = pathstart;
+        auto pathend = pathstart;
         pathend++;
         for (; pathend != upstairs.end(); pathend++)
             join_the_dots(*pathstart, *pathend, MMT_VAULT);
@@ -129,9 +125,6 @@ void dgn_build_basic_level()
 
 void dgn_build_bigger_room_level()
 {
-    env.level_build_method += " bigger_room";
-    env.level_layout_types.insert("open");
-
     for (rectangle_iterator ri(10); ri; ++ri)
         if (grd(*ri) == DNGN_ROCK_WALL
             && !map_masked(*ri, MMT_VAULT))
@@ -160,9 +153,10 @@ void dgn_build_bigger_room_level()
 // A more chaotic version of city level.
 void dgn_build_chaotic_city_level(dungeon_feature_type force_wall)
 {
-    env.level_build_method += make_stringf(" chaotic_city [%s]",
+        // TODO: Attach this information to the vault name string
+        //       instead of the build method string.
+    env.level_build_method += make_stringf(" [%s]",
         force_wall == NUM_FEATURES ? "any" : dungeon_feature_name(force_wall));
-    env.level_layout_types.insert("city");
 
     int number_boxes = 5000;
     dungeon_feature_type drawing = DNGN_ROCK_WALL;
@@ -433,7 +427,9 @@ static void _builder_extras(int level_number)
 static bool _octa_room(dgn_region& region, int oblique_max,
                        dungeon_feature_type type_floor)
 {
-    env.level_build_method += make_stringf(" octa_room [%d %s]", oblique_max,
+        // TODO: Attach this information to the vault name string
+        //       instead of the build method string.
+    env.level_build_method += make_stringf(" octa_room [oblique %d, %s]", oblique_max,
                                            dungeon_feature_name(type_floor));
 
     int x,y;
@@ -850,13 +846,8 @@ static void _diamond_rooms(int level_number)
 
 static int _good_door_spot(int x, int y)
 {
-    if (!feat_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM
-        || feat_is_closed_door(grd[x][y]))
-    {
-        return 1;
-    }
-
-    return 0;
+    return (!feat_is_solid(grd[x][y]) || feat_is_closed_door(grd[x][y]))
+            && !feat_is_critical(grd[x][y]);
 }
 
 // Returns TRUE if a room was made successfully.
@@ -895,7 +886,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     for (rx = sx; rx <= ex; rx++)
         for (ry = sy; ry <= ey; ry++)
         {
-            if (grd[rx][ry] <= DNGN_FLOOR)
+            if (!feat_has_dry_floor(grd[rx][ry]))
                 grd[rx][ry] = DNGN_FLOOR;
         }
 
@@ -1049,6 +1040,8 @@ static void _many_pools(dungeon_feature_type pool_type)
     const int num_pools = 20 + random2avg(9, 2);
     int pools = 0;
 
+        // TODO: Attach this information to the vault name string
+        //       instead of the build method string.
     env.level_build_method += make_stringf(" many_pools [%s %d]",
         dungeon_feature_name(pool_type), num_pools);
 
@@ -1078,9 +1071,9 @@ static bool _may_overwrite_pos(coord_def c)
     const dungeon_feature_type grid = grd(c);
 
     // Don't overwrite any stairs or branch entrances.
-    if (grid >= DNGN_ENTER_SHOP && grid <= DNGN_TELEPORTER
-        || grid >= DNGN_ENTER_FIRST_PORTAL && grid <= DNGN_EXIT_LAST_PORTAL
-        || grid == DNGN_EXIT_HELL)
+    if (feat_is_stair(grid)
+        || grid == DNGN_ENTER_SHOP
+        || grid == DNGN_TELEPORTER)
     {
         return false;
     }
@@ -1098,6 +1091,8 @@ static void _build_river(dungeon_feature_type river_type) //mv
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
+        // TODO: Attach this information to the vault name string
+        //       instead of the build method string.
     env.level_build_method += make_stringf(" river [%s]",
                                            dungeon_feature_name(river_type));
 
@@ -1146,6 +1141,8 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
+        // TODO: Attach this information to the vault name string
+        //       instead of the build method string.
     env.level_build_method += make_stringf(" lake [%s]",
                                            dungeon_feature_name(lake_type));
 

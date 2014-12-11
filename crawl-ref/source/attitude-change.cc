@@ -16,38 +16,34 @@
 #include "env.h"
 #include "godabil.h"
 #include "godcompanions.h"
-#include "goditem.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-util.h"
-#include "monster.h"
-#include "player.h"
-#include "random.h"
+#include "mon-tentacle.h"
 #include "religion.h"
 #include "state.h"
 #include "travel.h"
-#include "transform.h"
 
 // Called whenever an already existing monster changes its attitude, possibly
 // temporarily.
 void mons_att_changed(monster* mon)
 {
     const mon_attitude_type att = mon->temp_attitude();
+    const monster_type mc = mons_base_type(mon);
 
-    if (mons_is_tentacle_head(mons_base_type(mon))
-        || mon->type == MONS_ELDRITCH_TENTACLE)
+    if (mons_is_tentacle_head(mc)
+        || mons_is_solo_tentacle(mc))
     {
         for (monster_iterator mi; mi; ++mi)
             if (mi->is_child_tentacle_of(mon))
             {
                 mi->attitude = att;
-                if (mon->type != MONS_ELDRITCH_TENTACLE)
+                if (!mons_is_solo_tentacle(mc))
                 {
                     for (monster_iterator connect; connect; ++connect)
                     {
-                        if (connect->is_child_tentacle_of(mi->as_monster()))
+                        if (connect->is_child_tentacle_of(*mi))
                             connect->attitude = att;
                     }
                 }
@@ -90,7 +86,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
         const int hd = mons->get_experience_level();
 
-        if (you.piety >= piety_breakpoint(2) && !player_under_penance()
+        if (in_good_standing(GOD_BEOGH, 2)
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
                  > random2(hd) + hd + random2(5))
         {
@@ -119,11 +115,10 @@ void slime_convert(monster* mons)
 
 void fedhas_neutralise(monster* mons)
 {
-    if (you_worship(GOD_FEDHAS)
+    if (in_good_standing(GOD_FEDHAS)
         && mons->attitude == ATT_HOSTILE
         && fedhas_neutralises(mons)
-        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !player_under_penance())
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         _fedhas_neutralise_plant(mons);
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
@@ -166,7 +161,7 @@ bool yred_slaves_abandon_you()
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster* mons = monster_at(*ri);
-        if (mons == NULL)
+        if (mons == nullptr)
             continue;
 
         if (is_yred_undead_slave(mons))
@@ -217,7 +212,7 @@ bool beogh_followers_abandon_you()
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster* mons = monster_at(*ri);
-        if (mons == NULL)
+        if (mons == nullptr)
             continue;
 
         // Note that orc high priests' summons are gifts of Beogh,
@@ -419,25 +414,25 @@ void gozag_set_bribe(monster* traitor)
         const monster* leader =
             traitor->props.exists("band_leader")
             ? monster_by_mid(traitor->props["band_leader"].get_int())
-            : NULL;
+            : nullptr;
 
         int cost = max(1, exper_value(traitor) / 20);
 
         if (leader)
         {
-            if (leader->has_ench(ENCH_PERMA_BRIBED)
-                || leader ->props.exists(GOZAG_PERMABRIBE_KEY))
+            if (leader->has_ench(ENCH_FRIENDLY_BRIBED)
+                || leader->props.exists(FRIENDLY_BRIBE_KEY))
             {
                 gozag_deduct_bribe(br, 2*cost);
-                traitor->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
+                traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
             }
-            else if (leader->has_ench(ENCH_BRIBED)
-                     || leader->props.exists(GOZAG_BRIBE_KEY))
+            else if (leader->has_ench(ENCH_NEUTRAL_BRIBED)
+                     || leader->props.exists(NEUTRAL_BRIBE_KEY))
             {
                 gozag_deduct_bribe(br, cost);
                 // Don't continue if we exhausted our funds.
                 if (branch_bribe[br] > 0)
-                    traitor->props[GOZAG_BRIBE_KEY].get_bool() = true;
+                    traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
             }
         }
         else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
@@ -446,14 +441,14 @@ void gozag_set_bribe(monster* traitor)
             if (branch_bribe[br] > 2*cost && one_chance_in(3))
             {
                 gozag_deduct_bribe(br, 2*cost);
-                traitor->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
+                traitor->props[FRIENDLY_BRIBE_KEY].get_bool() = true;
             }
             else
             {
                 gozag_deduct_bribe(br, cost);
                 // Don't continue if we exhausted our funds.
                 if (branch_bribe[br] > 0)
-                    traitor->props[GOZAG_BRIBE_KEY].get_bool() = true;
+                    traitor->props[NEUTRAL_BRIBE_KEY].get_bool() = true;
             }
         }
     }
@@ -462,19 +457,19 @@ void gozag_set_bribe(monster* traitor)
 void gozag_check_bribe(monster* traitor)
 {
     string msg;
-    if (traitor->props.exists(GOZAG_PERMABRIBE_KEY))
+    if (traitor->props.exists(FRIENDLY_BRIBE_KEY))
     {
-        traitor->props.erase(GOZAG_PERMABRIBE_KEY);
-        traitor->add_ench(ENCH_PERMA_BRIBED);
+        traitor->props.erase(FRIENDLY_BRIBE_KEY);
+        traitor->add_ench(ENCH_FRIENDLY_BRIBED);
         msg = getSpeakString(traitor->name(DESC_DBNAME, true)
                              + " Gozag permabribe");
         if (msg.empty())
             msg = getSpeakString("Gozag permabribe");
     }
-    else if (traitor->props.exists(GOZAG_BRIBE_KEY))
+    else if (traitor->props.exists(NEUTRAL_BRIBE_KEY))
     {
-        traitor->props.erase(GOZAG_BRIBE_KEY);
-        traitor->add_ench(ENCH_BRIBED);
+        traitor->props.erase(NEUTRAL_BRIBE_KEY);
+        traitor->add_ench(ENCH_NEUTRAL_BRIBED);
         msg = getSpeakString(traitor->name(DESC_DBNAME, true)
                              + " Gozag bribe");
         if (msg.empty())
@@ -492,10 +487,10 @@ void gozag_check_bribe(monster* traitor)
 
 void gozag_break_bribe(monster* victim)
 {
-    if (!victim->has_ench(ENCH_BRIBED)
-        && !victim->has_ench(ENCH_PERMA_BRIBED)
-        && !victim->props.exists(GOZAG_BRIBE_KEY)
-        && !victim->props.exists(GOZAG_PERMABRIBE_KEY))
+    if (!victim->has_ench(ENCH_NEUTRAL_BRIBED)
+        && !victim->has_ench(ENCH_FRIENDLY_BRIBED)
+        && !victim->props.exists(NEUTRAL_BRIBE_KEY)
+        && !victim->props.exists(FRIENDLY_BRIBE_KEY))
     {
         return;
     }
@@ -509,11 +504,11 @@ void gozag_break_bribe(monster* victim)
 
     // Un-bribe the victim.
     victim->props[GOZAG_BRIBE_BROKEN_KEY].get_bool() = true;
-    victim->del_ench(ENCH_BRIBED);
-    victim->del_ench(ENCH_PERMA_BRIBED);
+    victim->del_ench(ENCH_NEUTRAL_BRIBED);
+    victim->del_ench(ENCH_FRIENDLY_BRIBED);
     victim->props.erase(GOZAG_BRIBE_BROKEN_KEY);
-    victim->props.erase(GOZAG_BRIBE_KEY);
-    victim->props.erase(GOZAG_PERMABRIBE_KEY);
+    victim->props.erase(NEUTRAL_BRIBE_KEY);
+    victim->props.erase(FRIENDLY_BRIBE_KEY);
 
     // Make other nearby bribed monsters un-bribed, too.
     for (monster_iterator mi; mi; ++mi)

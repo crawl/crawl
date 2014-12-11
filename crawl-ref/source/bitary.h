@@ -9,9 +9,9 @@
 #ifndef BITARY_H
 #define BITARY_H
 
-#include "defines.h"
-
 #include <bitset>
+
+#include "defines.h"
 
 class bit_vector
 {

@@ -1,10 +1,10 @@
 #include "AppHdr.h"
-#include <math.h>
-#include <cfloat>
 
 #include "spl-damage.h"
 
-#include "areas.h"
+#include <cfloat>
+#include <cmath>
+
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -12,23 +12,21 @@
 #include "fineff.h"
 #include "godconduct.h"
 #include "libutil.h"
-#include "los.h"
+#include "message.h"
 #include "mon-behv.h"
+#include "mon-tentacle.h"
 #include "ouch.h"
+#include "prompt.h"
 #include "shout.h"
-#include "spl-cast.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 
 static bool _airtight(coord_def c)
 {
-    // Broken by 6f473416 -- we should re-allow the wind through grates; this
-    // simplicistic check allows moving people through trees which is no good
-    // either.
+    // Broken by 6f473416 -- we should re-allow the wind through grates.
 
-    // return grd(c) <= DNGN_MAXWALL && grd(c);
-    return grd(c) <= DNGN_GRATE;
+    // return (feat_is_wall(grd(c)) || feat_is_opaque(grd(c))) && grd(c);
+    return !feat_is_reachable_past(grd(c));
 }
 
 /* Explanation of the algorithm:
@@ -105,7 +103,7 @@ static void _set_tornado_durations(int powc)
 {
     int dur = 60;
     you.duration[DUR_TORNADO] = dur;
-    if (you.form != TRAN_TREE)
+    if (!get_form()->forbids_flight())
     {
         you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
@@ -121,7 +119,7 @@ spret_type cast_tornado(int powc, bool fail)
         if (!m)
             continue;
         if (mons_att_wont_attack(m->attitude)
-            && mons_class_res_wind(m->type) <= 0
+            && !mons_class_res_wind(m->type)
             && !mons_is_projectile(m->type))
         {
             friendlies = true;
@@ -139,7 +137,7 @@ spret_type cast_tornado(int powc, bool fail)
     fail_check();
 
     mprf("A great vortex of raging winds %s.",
-         (you.airborne() || you.form == TRAN_TREE) ?
+         (you.airborne() || get_form()->forbids_flight()) ?
          "appears around you" : "appears and lifts you up");
 
     if (you.fishtail)
@@ -180,16 +178,16 @@ static coord_def _rotate(coord_def org, coord_def from,
     double ang0 = atan2(from.x - org.x, from.y - org.y) + rdur * 0.01;
     if (ang0 > PI)
         ang0 -= 2 * PI;
-    for (unsigned int i = 0; i < avail.size(); i++)
+    for (coord_def pos : avail)
     {
-        double dist = sqrt((avail[i] - org).abs());
+        double dist = sqrt((pos - org).abs());
         double distdiff = fabs(dist - dist0);
-        double ang = atan2(avail[i].x - org.x, avail[i].y - org.y);
+        double ang = atan2(pos.x - org.x, pos.y - org.y);
         double angdiff = min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
 
         double score = distdiff + angdiff * 2;
         if (score < hiscore)
-            best = avail[i], hiscore = score;
+            best = pos, hiscore = score;
     }
 
     // must find _something_, the original space might be already taken
@@ -315,7 +313,7 @@ void tornado_damage(actor *caster, int dur)
                     // really complex.  Let's not go there.
                     continue;
                 }
-                if (victim->is_player() && you.form == TRAN_TREE)
+                if (victim->is_player() && get_form()->forbids_flight())
                     continue;
 
                 leda = victim->liquefied_ground()
@@ -356,10 +354,8 @@ void tornado_damage(actor *caster, int dur)
                                     div_rand_round(roll_dice(9, rpow), 15),
                                     0, AC_PROPORTIONAL);
                         dprf("damage done: %d", dmg);
-                        if (victim->is_player())
-                            ouch(dmg, caster->mindex(), KILLED_BY_BEAM, "tornado");
-                        else
-                            victim->hurt(caster, dmg);
+                        victim->hurt(caster, dmg, BEAM_AIR, KILLED_BY_BEAM,
+                                     "", "tornado");
                     }
                 }
 
@@ -384,22 +380,22 @@ void tornado_damage(actor *caster, int dur)
         }
     }
 
-    noisy(noise, org, caster->mindex());
+    noisy(noise, org, caster->mid);
 
     if (dur <= 0)
         return;
 
     // Gather actors who are to be moved.
-    for (unsigned int i = 0; i < move_act.size(); i++)
-        if (move_act[i]->alive()) // shouldn't ever change...
+    for (actor *act : move_act)
+        if (act->alive()) // shouldn't ever change...
         {
             // Record the old position.
-            move_dest[move_act[i]->mid] = move_act[i]->pos();
+            move_dest[act->mid] = act->pos();
 
             // Temporarily move to (0,0) to allow permutations.
-            if (mgrd(move_act[i]->pos()) == move_act[i]->mindex())
-                mgrd(move_act[i]->pos()) = NON_MONSTER;
-            move_act[i]->moveto(coord_def());
+            if (mgrd(act->pos()) == act->mindex())
+                mgrd(act->pos()) = NON_MONSTER;
+            act->moveto(coord_def());
         }
 
     // Need to check available positions again, as the damage call could
@@ -409,9 +405,9 @@ void tornado_damage(actor *caster, int dur)
             erase_any(move_avail, i);
 
     // Calculate destinations.
-    for (unsigned int i = 0; i < move_act.size(); i++)
+    for (actor *act : move_act)
     {
-        coord_def pos = move_dest[move_act[i]->mid];
+        coord_def pos = move_dest[act->mid];
         int r = pos.range(org);
         coord_def dest = _rotate(org, pos, move_avail, rdurs[r]);
         for (unsigned int j = 0; j < move_avail.size(); j++)
@@ -421,17 +417,17 @@ void tornado_damage(actor *caster, int dur)
                 erase_any(move_avail, j);
                 break;
             }
-        move_dest[move_act[i]->mid] = dest;
+        move_dest[act->mid] = dest;
     }
 
     // Actually move actors into place.
-    for (unsigned int i = 0; i < move_act.size(); i++)
-        if (move_act[i]->alive())
+    for (actor *act : move_act)
+        if (act->alive())
         {
-            coord_def newpos = move_dest[move_act[i]->mid];
+            coord_def newpos = move_dest[act->mid];
             ASSERT(!actor_at(newpos));
-            move_act[i]->move_to_pos(newpos);
-            ASSERT(move_act[i]->pos() == newpos);
+            act->move_to_pos(newpos);
+            ASSERT(act->pos() == newpos);
         }
 
     if (caster->is_player())

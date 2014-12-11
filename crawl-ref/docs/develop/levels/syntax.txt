@@ -27,7 +27,7 @@ Terrain
  o - clear permanent rock wall - always undiggable (DNGN_CLEAR_PERMAROCK_WALL)
  v - metal wall - grounds electricity                    (DNGN_METAL_WALL)
  b - crystal wall - reflects cold and fire       (DNGN_GREEN_CRYSTAL_WALL)
- t - tree - a single square doesn't block LOS                  (DNGN_TREE)
+ t - tree - combustible                                        (DNGN_TREE)
 
  . - floor                                                    (DNGN_FLOOR)
  + - closed door                                        (DNGN_CLOSED_DOOR)
@@ -94,14 +94,9 @@ Monsters
 --------
  0 - normal monster
  9 - +5 depth monster
- 8 - (+2) * 2 depth monster (aargh!). Can get golden dragons and titans
-     this way.[*]
+ 8 - (+2) * 2 depth monster (aargh!).
  1-7 - monster array monster. See section below on MONS: arrays for more
      information
-
-[*]  (using '0', '9', and '8' in portal vaults will use monsters from the
-      level that the portal was entered from, unless a random monster list
-      has been set)
 
 H.   Header information
 =======================
@@ -136,10 +131,9 @@ ORDER:    <integer>
 
 ORIENT:   (float | encompass | north | northwest | ... | southeast)
 
-          Some kind of ORIENT: line is mandatory for vaults; skipping
-          ORIENT: makes your map a minivault. As a rule of thumb, if
-          you're writing a small random map, skip the ORIENT: line and
-          make it a minivault.
+          A ORIENT: line is not mandatory for vaults; skipping ORIENT: makes
+          your map a minivault. As a rule of thumb, if you're writing a small
+          random map, skip the ORIENT: line and make it a minivault.
 
           * "float": The dungeon builder puts your vault wherever it wants to.
           * "some_direction": The vault lies along that side of the map:
@@ -159,18 +153,12 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           specifies the range of levels where the vault may be placed
           in the dungeon. E.g.
 
-            DEPTH: 7-20
+            DEPTH: D:7-13
 
           DEPTH: does not force a map to be placed in a particular place; it
           applies only when the dungeon builder is looking for a random vault
           or minivault, so you can control at what depths your vault gets
           placed.
-
-          A simple DEPTH: declaration that does not specify a branch applies
-          to all branches. A map declared with depth 7-20 could be used in the
-          Lair, for instance (Lair:1 will be treated as a depth of 12 if the
-          Lair entrance is on D:11). In general, you should avoid using such
-          unconstrained DEPTHs unless you know what you are doing.
 
           You can constrain a map by branch:
 
@@ -178,22 +166,20 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
 
           (Anywhere between levels 3-6 of the Lair, inclusive.)
 
-          You can apply multiple constraints in one DEPTH line,
-          comma-separated:
-
-            DEPTH: 7-20, !12-14
-
-          (Anywhere in the dungeon between depths 7-20, but not on levels
-          12-14.)
-
-            DEPTH: 7-20, !Orc
-
-          (Anywhere in the dungeon between depths 7-20, but never in the Orcish
-          Mines.)
-
             DEPTH: Lair
 
           (Anywhere in the Lair. Can also be expressed as "DEPTH: Lair:*".)
+
+          You can apply multiple constraints in one DEPTH line,
+          comma-separated:
+
+            DEPTH: Lair, !Lair:4-6
+
+          (Anywhere in the Lair, except for Lair:4, Lair:5, or Lair:6.)
+
+            DEPTH: Orc, !Orc:$
+
+          (Anywhere in Orc except for the last level.)
 
           Maps that do not specify a DEPTH: attribute will inherit their depth
           constraints from the closest preceding default-depth: line. If there
@@ -208,6 +194,11 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           for an example. When doing this, make sure that there is no
           default-depth line handing out a depth! (This can mean that you are
           better off with a new des file for elaborate vaults.)
+
+          A plain DEPTH: declaration that does not specify a branch applies
+          to all branches. A map declared with depth 7-20 could be used in the
+          Lair, for instance (Lair is treated as depth 10 for this purpose.)
+          In general, you should avoid using such unconstrained DEPTHs.
 
 CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
 
@@ -531,8 +522,11 @@ ITEM:     (list of items, separated by comma)
             "good_item"). If set to -2 then the object's item level will
             be the same as a "*" symbol item (five plus twice the
             vault's level number).
-          * "damaged" sets the item plusses to -1..-4.
-          * "cursed" gets a curse plus plusses as in "damaged".
+          * "damaged" sets the item plusses to -1..-4. This modifier (and
+            the corresponding effect of the "cursed" modifier) does not
+            affect jewellery.
+          * "cursed" gets a curse plus plusses as in "damaged"; but the latter
+            may be overridden with "mundane", "good_item", "level:N", etc.
           * "not_cursed" forces an item to have any curse placed on it to be
             removed.
           * "any" by itself gives a random choice; you can combine "any" with
@@ -601,21 +595,11 @@ ITEM:     (list of items, separated by comma)
           "griffon chunk".
 
           Corpses, skeletons and chunks are by default created with maximum
-          freshness (210). They can be created already-rotting (freshness
-          99) with the "rotting" property:
-
-          ITEM: rotting griffon corpse
-
-          Corpses may still rot away before the player finds your vault.
-          To prevent corpses from decaying, you can define them using a
+          freshness (210). They may still rot away before the player finds your
+          vault. To prevent corpses from decaying, you can define them using a
           "never_decay" property as:
 
           ITEM: never_decay griffon corpse
-
-          Or combining the two, for a corpse that starts out rotten but
-          never rots away:
-
-          ITEM: rotting never_decay griffon corpse
 
           However, direct use of "never_decay" is not recommended,
           since such items will not behave as the player expects.
@@ -949,53 +933,42 @@ MONS:     (list of monsters)
           Monster spell sets can be overridden with a spells: tag,
           used as follows:
 
-              MONS: goblin spells:throw_flame
-              MONS: ancient lich spells:symbol_of_torment;ice_storm;ice_storm
+              MONS: goblin spells:throw_flame.50.wizard
+              MONS: ancient lich spells:symbol_of_torment.26.wizard;\
+                                        glaciate.51.wizard
 
-          (a list of spell names, spaces replaced with underscores,
-          and names separated by ';' with no spaces around the ';' or
-          after the spell: prefix)
-
-          Monster spells currently use a limited spell-slot system,
-          with these slots:
-              1. Bolt spell
-              2. Enchantment
-              3. Self-enchantment
-              4. Misc(1)
-              5. Misc(2)
-              6. Emergency/escape
-
-          These slots are not hard and fast rules, but it is sometimes
-          useful to drop a spell in a specific slot, for instance the
-          emergency/escape slot:
-              MONS: hobgoblin spells:.;.;.;.;.;teleport_self
+          (a list of spell slots, consisting of a spell name with
+          spaces replaced with underscores, a frequency of casting and
+          set of spell slot flags specified afterwards with .,
+          with slots separated by ';' with no spaces around the ';' or
+          after the spells: prefix)
 
           Spell names must exactly match the names in spl-data.h, with
-          spaces replaced by underscores. You may use "." or an empty
-          string to specify that a slot should be left empty. You can
-          force a spell-less monster with:
-              MONS: orc wizard spells:.
-          (although why you'd want to do this is open to question.)
+          spaces replaced by underscores. Spell frequencies are an
+          (x in 200) chance that that spell will be cast. Spell flags
+          include:
+          - "natural", "magical", "demonic", "wizard", or "priest" -
+            the manner in which this spell is being cast. Wizards and
+            priests can be silenced and will trigger appropriate conducts
+            (Trog will appreciate killing wizards, Beogh will appreciate
+            killing priests). Magical, demonic, and wizard spells
+            are subject to anti-magic effects. Natural spells do not
+            generate noise.
+          - "emergency" - the monster will only cast the spell when low
+            on health.
+          - "breath" - the spell is a breath weapon, and using it
+            triggers a breath timeout during which the spell cannot be
+            cast again.
+          - "no_silent" - the spell cannot be used while silent, even if
+            it is an ability type normally not subject to silence.
+          - "instant" - the spell does not expend the monster's energy;
+            they may take another action on the same turn.
+          - "noisy" - forces the spell to make noise even if it is a
+            natural ability.
 
-          If you define spells for a monster that cannot cast spells
-          normally, you may want to mark the monster as a real
-          spellcaster with 'actual_spells':
-              MONS: goblin spells:throw_flame actual_spells
-
-          Or as a priestly (divine) caster with 'priest_spells':
-              MONS: goblin spells:smiting priest_spells
-
-          Real spellcasters and priests can be silenced and will
-          trigger appropriate conducts (Trog will appreciate killing
-          spellcasters, Beogh will appreciate killing priests). If you
-          define spells without specifying 'actual_spells' or
-          'priest_spells', and the monster cannot cast spells
-          normally, the spells will be treated as innate abilities, so
-          the monster can use these spells even when silenced.
-          Treating spells as innate abilities may produce odd casting
-          message (such as: "the rat throws fire at you"). If you find
-          the messages you get unsatisfactory, add suitable entries to
-          source/dat/database/monspell.txt.
+          You may use "none" specify that a slot should be left empty.
+          You can force a spell-less monster with:
+              MONS: orc wizard spells:none
 
           Setting enchantments:
           ---------------------
@@ -1248,9 +1221,9 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           You'll notice that 'G' is the symbol of a granite statue. Kxxx
           directives allow you to assign arbitrary definitions to any symbol.
 
-          KFEAT features are specified as a feature name (see section N
-          for a full list of feature names). As another example, you can
-          place a portal to the Abyss as:
+          KFEAT features are specified as a feature name (see feature-data.h
+          in the source/ directory for a full list of feature names). As
+          another example, you can place a portal to the Abyss as:
 
           KFEAT: A = enter_abyss
 

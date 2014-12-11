@@ -7,7 +7,7 @@
 #define ITEM_USE_H
 
 #include <string>
-#include "externs.h"
+
 #include "enum.h"
 
 bool armour_prompt(const string & mesg, int *index, operation_types oper);
@@ -20,7 +20,10 @@ bool safe_to_remove(const item_def &item, bool quiet = false);
 
 bool puton_ring(int slot = -1, bool allow_prompt = true);
 
-void read_scroll(int slot = -1);
+void read(int slot = -1);
+void read_scroll(int slot);
+bool player_can_read();
+string cannot_read_item_reason(const item_def &item);
 
 bool remove_ring(int slot = -1, bool announce = false);
 
@@ -41,6 +44,7 @@ bool wield_weapon(bool auto_wield, int slot = -1,
 
 bool item_is_worn(int inv_slot);
 
+int wand_mp_cost();
 void zap_wand(int slot = -1);
 
 bool enchant_weapon(item_def &wpn, bool quiet);
@@ -50,7 +54,8 @@ void prompt_inscribe_item();
 
 bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise = 0,
-                          const char *silencedmsg = NULL);
+                          const char *silenced_msg = nullptr,
+                          const char *formicid_msg = nullptr);
 
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);

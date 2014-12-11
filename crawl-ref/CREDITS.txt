@@ -83,6 +83,7 @@
     Max Bane
     Bill Beher
     Alexander Beisig
+    Edgar A. Bering IV
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
@@ -94,12 +95,12 @@
     Mike Boutin
     Daniel Mark Brownrigg
     Andre Bubel
-    Corin Buchanan-Howland
     Trent W. Buck
     Joe Buzzelli
     Policarpo Caballero
     Cedor
     Rahul Chandra
+    Thom Chiovoloni
     Henry Cipolla
     Vitor 'Baconkid' Costa
     Aaron Curtis
@@ -128,6 +129,7 @@
     Chris Hamons
     Taylor Hedberg
     Anders Heggestøyl
+    Alex Henry
     R. Dan Henry
     Chris Honey
     Sylvia 'Onia' Hörnke
@@ -153,6 +155,7 @@
     Vambola Kotkas
     Ryan Kusnery
     Jukka Kuusisto
+    Lorenzo Lami
     Lantier
     Maciej Lapinski
     Jordan Lewis
@@ -160,12 +163,12 @@
     Dom Light
     Rob Lund
     Michael Lynn
+    Peter McLarnan
     Lain I. W. Madreisz
     Markus Maier
     Arien Malec
     Paul Maloney
     Wille Mäntylä
-    John McCartney
     James 'Eronarn' Meickle
     mikee
     Andrew Minton
@@ -209,10 +212,12 @@
     Alex Smith
     Keanan Smith
     Richard Soderberg
+    Ryan Svoboda
     Solf
     Michael Spang
     David Speare
     Jan 'heftig' Steffens
+    Timothy Stiles
     Johan Strandell
     Ben Striegel
     Derrick Sund
@@ -239,6 +244,7 @@ The Dungeon Crawl Stone Soup development team is:
     Adam Borowski
     Samuel Bronson
     Jude Brown
+    Corin Buchanan-Howland
     James Bulgin
     Robert Burnham
     Chris Campbell
@@ -258,6 +264,7 @@ The Dungeon Crawl Stone Soup development team is:
     Nat Lanza
     Jesse Luehrs
     Shmuale Mark
+    John McCartney
     Steve Melenchuk
     Neil Middleton
     Neil Moore

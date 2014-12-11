@@ -1,8 +1,8 @@
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "cluautil.h"
 #include "dgnevent.h"
 
 /*
@@ -57,7 +57,7 @@ static const struct luaL_reg dgnevent_dlib[] =
 { "ticks", dgnevent_ticks },
 { "arg1",  dgnevent_arg1 },
 { "arg2",  dgnevent_arg2 },
-{ NULL, NULL }
+{ nullptr, nullptr }
 };
 
 void luaopen_dgnevent(lua_State *ls)
@@ -148,5 +148,5 @@ const struct luaL_reg dgn_event_dlib[] =
 { "dgn_event_is_global",   dgn_dgn_event_is_global },
 { "dgn_event_is_position", dgn_dgn_event_is_position},
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

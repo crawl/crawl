@@ -92,11 +92,15 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         if (data.cells)
             map_knowledge.merge(data.cells);
 
-        // Mark cells above high cells as dirty
+        // Mark cells overlapped by dirty cells as dirty
         $.each(map_knowledge.dirty().slice(), function (i, loc) {
             var cell = map_knowledge.get(loc.x, loc.y);
+            // high cell
             if (cell.t && cell.t.sy && cell.t.sy < 0)
                 map_knowledge.touch(loc.x, loc.y - 1);
+            // left overlap
+            if (cell.t && cell.t.left_overlap && cell.t.left_overlap < 0)
+                map_knowledge.touch(loc.x - 1, loc.y);
         });
 
         display();

@@ -6,18 +6,15 @@
 #include "AppHdr.h"
 
 #include "spl-wpnench.h"
-#include "externs.h"
 
 #include "areas.h"
-#include "artefact.h"
 #include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shout.h"
-#include "skills2.h"
 #include "spl-miscast.h"
-#include "stuff.h"
 
 // We need to know what brands equate with what missile brands to know if
 // we should disallow temporary branding or not.
@@ -77,7 +74,7 @@ static string _get_brand_msg(brand_type which_brand, bool is_range_weapon)
     case SPWPN_DISTORTION:
         msg = " seems to ";
         msg += random_choose("twist", "bend", "vibrate",
-                             "flex", "wobble", "twang", NULL);
+                             "flex", "wobble", "twang");
         msg += (coinflip() ? " oddly." : " strangely.");
         return msg;
     case SPWPN_PAIN:
@@ -107,11 +104,11 @@ void end_weapon_brand(item_def &weapon, bool verbose)
 {
     ASSERT(you.duration[DUR_WEAPON_BRAND]);
 
-    const int temp_effect = get_weapon_brand(weapon);
+    const brand_type temp_effect = get_weapon_brand(weapon);
     set_item_ego_type(weapon, OBJ_WEAPONS, you.props[ORIGINAL_BRAND_KEY]);
-    you.wield_change = true;
     you.props.erase(ORIGINAL_BRAND_KEY);
     you.duration[DUR_WEAPON_BRAND] = 0;
+
     if (verbose)
     {
         const char *msg = nullptr;
@@ -142,6 +139,13 @@ void end_weapon_brand(item_def &weapon, bool verbose)
 
         mprf(MSGCH_DURATION, "%s%s", weapon.name(DESC_YOUR).c_str(), msg);
     }
+
+    you.wield_change = true;
+    const brand_type real_brand = get_weapon_brand(weapon);
+    if (real_brand == SPWPN_PROTECTION || temp_effect == SPWPN_PROTECTION)
+        you.redraw_armour_class = true;
+    else if (real_brand == SPWPN_EVASION || temp_effect == SPWPN_EVASION)
+        you.redraw_evasion = true;
 }
 
 /**
@@ -214,7 +218,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         // XXX: To deal with the fact that is_missile_brand_ok will be
         // unhappy if we attempt to brand stones, tell it we're using
         // sling bullets instead.
-        if (range_skill(weapon) == SK_SLINGS)
+        if (item_attack_skill(weapon) == SK_SLINGS)
             missile = MI_SLING_BULLET;
 
         if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand), true))
@@ -231,10 +235,12 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         }
     }
 
-    // Can't get out of it that easily...
-    if (get_weapon_brand(weapon) == SPWPN_DISTORTION
-        && !has_temp_brand
-        && !you_worship(GOD_LUGONU))
+    const brand_type orig_brand = get_weapon_brand(weapon);
+    const bool dangerous_disto = orig_brand == SPWPN_DISTORTION
+                                 && !has_temp_brand
+                                 && !you_worship(GOD_LUGONU);
+
+    if (dangerous_disto)
     {
         const string prompt =
               "Really brand " + weapon.name(DESC_INVENTORY) + "?";
@@ -243,15 +249,20 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
             canned_msg(MSG_OK);
             return SPRET_ABORT;
         }
-        MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
-                      9, 90, "a distortion unwield");
     }
 
     fail_check();
 
+    if (dangerous_disto)
+    {
+        // Can't get out of it that easily...
+        MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_TRANSLOCATION,
+                      9, 90, "rebranding a weapon of distortion");
+    }
+
     string msg = weapon.name(DESC_YOUR);
 
-    bool extending = has_temp_brand && get_weapon_brand(weapon) == which_brand;
+    bool extending = has_temp_brand && orig_brand == which_brand;
     bool emit_special_message = !extending;
     int duration_affected = _get_brand_duration(which_brand);
     msg += _get_brand_msg(which_brand, is_range_weapon(weapon));
@@ -260,7 +271,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         power /= 2;
     else if (which_brand == SPWPN_PAIN && !silenced(you.pos()))
     {
-        noisy(15, you.pos());
+        noisy(spell_effect_noise(SPELL_EXCRUCIATING_WOUNDS), you.pos());
         // We must repeat the special message here (as there's a side effect.)
         emit_special_message = true;
     }
@@ -269,13 +280,18 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     {
         if (has_temp_brand)
             end_weapon_brand(weapon);
-        you.props[ORIGINAL_BRAND_KEY] = get_weapon_brand(weapon);
+        you.props[ORIGINAL_BRAND_KEY] = orig_brand;
+
         set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
         you.wield_change = true;
+        if (orig_brand == SPWPN_PROTECTION || which_brand == SPWPN_PROTECTION)
+            you.redraw_armour_class = true;
+        else if (orig_brand == SPWPN_EVASION || which_brand == SPWPN_EVASION)
+            you.redraw_evasion = true;
     }
 
     if (emit_special_message)
-        mpr(msg.c_str());
+        mpr(msg);
     else
         mprf("%s flashes.", weapon.name(DESC_YOUR).c_str());
 
@@ -290,14 +306,14 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 spret_type cast_confusing_touch(int power, bool fail)
 {
     fail_check();
-    msg::stream << "Your " << you.hand_name(true) << " begin to glow "
+    msg::stream << you.hands_act("begin", "to glow ")
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
                 << "." << endl;
 
     you.set_duration(DUR_CONFUSING_TOUCH,
                      max(10 + random2(power) / 5,
                          you.duration[DUR_CONFUSING_TOUCH]),
-                     20, NULL);
+                     20, nullptr);
 
     return SPRET_SUCCESS;
 }
@@ -306,11 +322,8 @@ spret_type cast_sure_blade(int power, bool fail)
 {
     if (!you.weapon())
         mpr("You aren't wielding a weapon!");
-    else if (melee_skill(you.weapon()->base_type,
-                          you.weapon()->sub_type) != SK_SHORT_BLADES)
-    {
+    else if (item_attack_skill(*you.weapon()) != SK_SHORT_BLADES)
         mpr("You cannot bond with this weapon.");
-    }
     else
     {
         fail_check();
@@ -320,7 +333,7 @@ spret_type cast_sure_blade(int power, bool fail)
             mpr("Your bond becomes stronger.");
 
         you.increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10),
-                              25, NULL);
+                              25, nullptr);
         return SPRET_SUCCESS;
     }
 

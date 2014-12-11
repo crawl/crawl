@@ -1,31 +1,29 @@
 #include "AppHdr.h"
 
 #include "l_libs.h"
-#include "cluautil.h"
 
 #include <cmath>
 
 #include "branch.h"
 #include "cloud.h"
+#include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dgn-shoals.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "dgn-shoals.h"
-#include "env.h"
 #include "flood_find.h"
 #include "l_defs.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "maps.h"
-#include "random.h"
 #include "shout.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stringutil.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
-#include "unwind.h"
 #include "view.h"
 
 static const char *VAULT_PLACEMENT_METATABLE = "crawl.vault-placement";
@@ -893,7 +891,7 @@ static int dgn_num_matching_markers(lua_State *ls)
     const char* val_ptr = lua_tostring(ls, 2);
     const char* val;
 
-    if (val_ptr == NULL)
+    if (val_ptr == nullptr)
         val = "";
     else
         val = val_ptr;
@@ -1034,7 +1032,7 @@ static int lua_dgn_set_border_fill_type(lua_State *ls)
         return 0;
     }
 
-    if (is_valid_border_feat(fill_type))
+    if (feat_is_valid_border(fill_type))
         map->border_fill_type = fill_type;
     else
         luaL_error(ls, ("set_border_fill_type cannot be the feature '" +
@@ -1142,7 +1140,7 @@ static int dgn_random_walk(lua_State *ls)
     // Fourth param being true means that we can move past
     // statues.
     const dungeon_feature_type minmove =
-    lua_isnil(ls, 4) ? DNGN_MINMOVE : DNGN_ORCISH_IDOL;
+    lua_isnil(ls, 4) ? DNGN_LAVA : DNGN_ORCISH_IDOL;
 
     if (!in_bounds(x, y))
     {
@@ -1234,12 +1232,10 @@ static int lua_cloud_pow_min;
 static int lua_cloud_pow_max;
 static int lua_cloud_pow_rolls;
 
-static int make_a_lua_cloud(coord_def where, int garbage, int spread_rate,
+static int make_a_lua_cloud(coord_def where, int /*garbage*/, int spread_rate,
                             cloud_type ctype, const actor *agent, int colour,
                             string name, string tile, int excl_rad)
 {
-    UNUSED(garbage);
-
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
@@ -1504,7 +1500,7 @@ LUAFN(dgn_with_map_bounds_fn)
         // happen when lua_call does its longjmp.
         err = lua_pcall(ls, 0, 1, 0);
 
-        _dgn_map_safe_bounds_fn.reset(NULL);
+        _dgn_map_safe_bounds_fn.reset(nullptr);
     }
 
     if (err)
@@ -1530,8 +1526,8 @@ LUAFN(dgn_with_map_anchors)
         {
             if (lua_isnumber(ls, i) && lua_isnumber(ls, i + 1))
             {
-                map_anchor_points.push_back(coord_def(lua_tointeger(ls, i),
-                                                      lua_tointeger(ls, i + 1)));
+                map_anchor_points.emplace_back(lua_tointeger(ls, i),
+                                               lua_tointeger(ls, i + 1));
             }
         }
 
@@ -1715,7 +1711,7 @@ LUAFN(_dgn_marker_at_pos)
 
     map_marker* marker = env.markers.find(p);
 
-    if (marker == NULL)
+    if (marker == nullptr)
         lua_pushnil(ls);
     else
         _push_mapmarker(ls, marker);
@@ -1743,9 +1739,8 @@ LUAFN(_dgn_resolve_map)
 
     // Save the vault_placement into Temp_Vaults because the map_def
     // will need to be alive through to the end of dungeon gen.
-    Temp_Vaults.push_back(vault_placement());
-
-    vault_placement &place(Temp_Vaults[Temp_Vaults.size() - 1]);
+    Temp_Vaults.emplace_back();
+    vault_placement &place(Temp_Vaults.back());
 
     if (vault_main(place, map, check_collisions) != MAP_NONE)
     {
@@ -1965,7 +1960,7 @@ const struct luaL_reg dgn_dlib[] =
 
 { "apply_tide", dgn_apply_tide },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };
 
 #define VP(name) \
@@ -2013,7 +2008,7 @@ static const luaL_reg dgn_vaultplacement_ops[] =
     { "orient", _vp_orient },
     { "map", _vp_map },
     { "exits", _vp_exits },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 static void _dgn_register_metatables(lua_State *ls)

@@ -11,7 +11,7 @@ banana
 
 En läcker gul frukt.
 %%%%
-bastard sword
+double sword
 
 En lång, stort svärd.
 %%%%

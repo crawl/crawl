@@ -3,6 +3,8 @@
 #ifdef USE_TILE_LOCAL
 #ifdef USE_FT
 
+#include "fontwrapper-ft.h"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -10,13 +12,12 @@
 #include "errno.h"
 #include "files.h"
 #include "format.h"
-#include "fontwrapper-ft.h"
 #include "glwrapper.h"
+#include "options.h"
 #include "syscalls.h"
 #include "tilebuf.h"
 #include "tilefont.h"
 #include "unicode.h"
-#include "options.h"
 
 // maximum number of unique glyphs that can be rendered with this font at once; e.g. 4096, 256, 36
 #define MAX_GLYPHS 256
@@ -37,7 +38,7 @@ FontWrapper* FontWrapper::create()
 }
 
 FTFontWrapper::FTFontWrapper() :
-    m_glyphs(NULL),
+    m_glyphs(nullptr),
     m_glyphs_lru(0),
     m_glyphs_mru(0),
     m_glyphs_top(0),  // reinitialised to 1 in load_font
@@ -58,10 +59,13 @@ FTFontWrapper::~FTFontWrapper()
 }
 
 bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
-                              bool outline)
+                              bool outline, int sc_num, int sc_den)
 {
     FT_Library library;
     FT_Error error;
+
+    this->scale_num = sc_num;
+    this->scale_den = sc_den;
 
     outl = outline;
 
@@ -93,9 +97,13 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     if (error == FT_Err_Unknown_File_Format)
         die_noline("Unknown font format for file '%s'\n", font_path.c_str());
     else if (error)
-        die_noline("Invalid font from file '%s'\n", font_path.c_str());
+    {
+        die_noline("Invalid font from file '%s' (size %lu): 0x%0x\n",
+                   font_path.c_str(), size, error);
+    }
 
-    error = FT_Set_Pixel_Sizes(face, font_size, font_size);
+    error = FT_Set_Pixel_Sizes(face, font_size * scale_num / scale_den,
+                                     font_size * scale_num / scale_den);
     ASSERT(!error);
 
     // Get maximum advance and other global metrics
@@ -138,7 +146,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
             4 * m_ft_width * m_ft_height);
 
     // initialise empty texture of correct size
-    m_tex.load_texture(NULL, m_ft_width, m_ft_height, MIPMAP_NONE);
+    m_tex.load_texture(nullptr, m_ft_width, m_ft_height, MIPMAP_NONE);
 
     // Special case c = 0 for full block.
     {
@@ -448,7 +456,8 @@ void FTFontWrapper::draw_m_buf(unsigned int x_pos, unsigned int y_pos,
     m_tex.bind();
 
     GLW_3VF trans(x_pos, y_pos, 0.0f);
-    GLW_3VF scale(1, 1, 1);
+    GLW_3VF scale((float)scale_den / (float)scale_num,
+                  (float)scale_den / (float)scale_num, 1);
 
     if (drop_shadow)
     {
@@ -464,6 +473,8 @@ void FTFontWrapper::draw_m_buf(unsigned int x_pos, unsigned int y_pos,
 
     glmanager->set_transform(trans, scale);
     m_buf->draw(state);
+
+    glmanager->reset_transform();
 }
 
 static void _draw_box(int x_pos, int y_pos, float width, float height,
@@ -538,12 +549,14 @@ unsigned int FTFontWrapper::string_width(const char *text)
     }
 
     max_width = max(width + adjust, max_width);
-    return max_width;
+    return max_width * scale_den / scale_num;
 }
 
 int FTFontWrapper::find_index_before_width(const char *text, int max_width)
 {
     int width = max(-m_min_offset, 0);
+
+    max_width *= scale_num / scale_den;
 
     for (int i = 0; text[i]; i++)
     {
@@ -740,7 +753,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
         if (c == '\n')
         {
             x = orig_x;
-            y += m_max_advance.y;
+            y += m_max_advance.y * scale_den / scale_num;
         }
         else
             store(buf, x, y, c, col);
@@ -757,16 +770,16 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const formatted_string &fs, float orig_x)
 {
     int colour = LIGHTGREY;
-    for (unsigned int i = 0; i < fs.ops.size(); i++)
+    for (const formatted_string::fs_op &op : fs.ops)
     {
-        switch (fs.ops[i].type)
+        switch (op.type)
         {
             case FSOP_COLOUR:
                 // Only foreground colors for now...
-                colour = fs.ops[i].x & 0xF;
+                colour = op.x & 0xF;
                 break;
             case FSOP_TEXT:
-                store(buf, x, y, fs.ops[i].text, term_colours[colour], orig_x);
+                store(buf, x, y, op.text, term_colours[colour], orig_x);
                 break;
             default:
                 break;
@@ -780,16 +793,18 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     unsigned int c = map_unicode(ch);
     if (!m_glyphs[c].renderable)
     {
-        x += m_glyphs[c].advance;
+        x += m_glyphs[c].advance * scale_den / scale_num;
         return;
     }
 
     int this_width = m_glyphs[c].width;
 
-    float pos_sx = x + m_glyphs[c].offset;
-    float pos_sy = y - m_glyphs[c].ascender + m_ascender;
-    float pos_ex = pos_sx + this_width;
-    float pos_ey = y + m_max_height - m_glyphs[c].ascender + m_ascender;
+    float pos_sx = x + m_glyphs[c].offset * (float)scale_den / (float)scale_num;
+    float pos_sy = y - (m_glyphs[c].ascender - m_ascender) * (float)scale_den
+                                                           / (float)scale_num;
+    float pos_ex = pos_sx + this_width * (float)scale_den / (float)scale_num;
+    float pos_ey = y + (m_max_height - m_glyphs[c].ascender + m_ascender)
+                   * (float)scale_den / (float)scale_num;
 
     float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_sy = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
@@ -801,17 +816,17 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     rect.set_col(col);
     buf.add_primitive(rect);
 
-    x += m_glyphs[c].advance;
+    x += m_glyphs[c].advance * (float)scale_den / (float)scale_num;
 }
 
 unsigned int FTFontWrapper::char_width() const
 {
-    return m_max_advance.x;
+    return m_max_advance.x * scale_den / scale_num;
 }
 
 unsigned int FTFontWrapper::char_height() const
 {
-    return m_max_advance.y;
+    return m_max_advance.y * scale_den / scale_num;
 }
 
 const GenericTexture *FTFontWrapper::font_tex() const

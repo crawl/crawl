@@ -7,52 +7,44 @@
 
 #include "files.h"
 
-#include <errno.h>
-#include <string.h>
-#include <string>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-
 #include <algorithm>
+#include <cctype>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <functional>
-
+#include <string>
 #include <fcntl.h>
+#include <sys/stat.h>
+#ifdef HAVE_UTIMES
+#include <sys/time.h>
+#endif
+#include <sys/types.h>
 #ifdef UNIX
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_UTIMES
-#include <sys/time.h>
-#endif
-
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include "externs.h"
-
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
-#include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
-#include "clua.h"
-#include "coord.h"
 #include "coordit.h"
-#include "delay.h"
 #include "dactions.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "effects.h"
-#include "env.h"
+#include "end.h"
 #include "errors.h"
 #include "fineff.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "godcompanions.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "initfile.h"
 #include "items.h"
 #include "jobs.h"
@@ -65,40 +57,33 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-util.h"
-#include "mon-transit.h"
 #include "notes.h"
-#include "options.h"
 #include "output.h"
 #include "place.h"
-#include "player.h"
-#include "random.h"
-#include "show.h"
-#include "shopping.h"
+#include "prompt.h"
 #include "spl-summoning.h"
-#include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "syscalls.h"
-#include "tags.h"
+#include "teleport.h"
+#include "terrain.h"
 #ifdef USE_TILE
  // TODO -- dolls
  #include "tiledef-player.h"
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"
-#include "teleport.h"
-#include "terrain.h"
-#include "travel.h"
-#include "hints.h"
 #include "unwind.h"
 #include "version.h"
 #include "view.h"
-#include "viewgeom.h"
 #include "xom.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
+#endif
+
+#ifndef F_OK // MSVC for example
+#define F_OK 0
 #endif
 
 static void _save_level(const level_id& lid);
@@ -401,6 +386,7 @@ static vector<string> _get_base_dirs()
         SysEnv.crawl_base + "../Resources/",
 #endif
 #ifdef __ANDROID__
+        ANDROID_ASSETS,
         "/sdcard/Android/data/org.develz.crawl/files/",
 #endif
     };
@@ -426,9 +412,8 @@ static vector<string> _get_base_dirs()
     };
 
     vector<string> bases;
-    for (unsigned i = 0; i < ARRAYSZ(rawbases); ++i)
+    for (string base : rawbases)
     {
-        string base = rawbases[i];
         if (base.empty())
             continue;
 
@@ -452,11 +437,9 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     if (test_base_path && thing_exists(basename))
         return basename;
 
-    vector<string> bases = _get_base_dirs();
-
-    for (unsigned b = 0, size = bases.size(); b < size; ++b)
+    for (const string &basedir : _get_base_dirs())
     {
-        string name = bases[b] + basename;
+        string name = basedir + basename;
 #ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO,"Crawl","Looking for %s as '%s'",basename.c_str(),name.c_str());
 #endif
@@ -658,11 +641,8 @@ static vector<player_save_info> _find_saved_characters()
     if (searchpath.empty())
         searchpath = ".";
 
-    vector<string> allfiles = get_dir_files(searchpath);
-    for (unsigned int i = 0; i < allfiles.size(); ++i)
+    for (const string &filename : get_dir_files(searchpath))
     {
-        string filename = allfiles[i];
-
         string::size_type point_pos = filename.find_first_of('.');
         string basename = filename.substr(0, point_pos);
 
@@ -747,8 +727,8 @@ string get_prefs_filename()
 
 static void _write_ghost_version(writer &outf)
 {
-    marshallByte(outf, TAG_MAJOR_VERSION);
-    marshallByte(outf, TAG_MINOR_VERSION);
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
 
     // extended_version just pads the version out to four 32-bit words.
     // This makes the bones file compatible with Hearse with no extra
@@ -772,8 +752,8 @@ static void _write_tagged_chunk(const string &chunkname, tag_type tag)
     writer outf(you.save, chunkname);
 
     // write version
-    marshallByte(outf, TAG_MAJOR_VERSION);
-    marshallByte(outf, TAG_MINOR_VERSION);
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
 
     tag_write(tag, outf);
 }
@@ -795,57 +775,53 @@ static int _get_dest_stair_type(branch_type old_branch,
     if (stair_taken == DNGN_ENTER_HELL)
         return DNGN_EXIT_HELL;
 
-    if (player_in_hell() && stair_taken >= DNGN_STONE_STAIRS_DOWN_I
-                         && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
+    if (player_in_hell() && feat_is_stone_stair_down(stair_taken))
     {
         find_first = false;
         return DNGN_ENTER_HELL;
     }
 
-    if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
-        && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
+    if (feat_is_stone_stair(stair_taken))
     {
-        // Look for corresponding up stair.
-        return stair_taken + DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I;
-    }
+        switch (stair_taken)
+        {
+        case DNGN_STONE_STAIRS_UP_I: return DNGN_STONE_STAIRS_DOWN_I;
+        case DNGN_STONE_STAIRS_UP_II: return DNGN_STONE_STAIRS_DOWN_II;
+        case DNGN_STONE_STAIRS_UP_III: return DNGN_STONE_STAIRS_DOWN_III;
 
-    if (stair_taken >= DNGN_STONE_STAIRS_UP_I
-        && stair_taken <= DNGN_STONE_STAIRS_UP_III)
-    {
-        // Look for coresponding down stair.
-        return stair_taken + DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I;
+        case DNGN_STONE_STAIRS_DOWN_I: return DNGN_STONE_STAIRS_UP_I;
+        case DNGN_STONE_STAIRS_DOWN_II: return DNGN_STONE_STAIRS_UP_II;
+        case DNGN_STONE_STAIRS_DOWN_III: return DNGN_STONE_STAIRS_UP_III;
+
+        default: die("unknown stone stair %d", stair_taken);
+        }
     }
 
     if (feat_is_escape_hatch(stair_taken))
         return stair_taken;
 
-    if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
-        && stair_taken <= DNGN_RETURN_FROM_LAST_BRANCH)
+    if (stair_taken == DNGN_ENTER_DIS
+        || stair_taken == DNGN_ENTER_GEHENNA
+        || stair_taken == DNGN_ENTER_COCYTUS
+        || stair_taken == DNGN_ENTER_TARTARUS)
     {
-        // Find entry point to subdungeon when leaving.
-        return stair_taken + DNGN_ENTER_FIRST_BRANCH
-                           - DNGN_RETURN_FROM_FIRST_BRANCH;
-    }
-
-    if (stair_taken >= DNGN_ENTER_FIRST_BRANCH
-        && stair_taken < DNGN_RETURN_FROM_FIRST_BRANCH)
-    {
-        // Find exit staircase from subdungeon when entering.
-        return stair_taken + DNGN_RETURN_FROM_FIRST_BRANCH
-                           - DNGN_ENTER_FIRST_BRANCH;
-    }
-
-    if (stair_taken >= DNGN_ENTER_DIS && stair_taken <= DNGN_ENTER_TARTARUS)
         return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
+    }
 
-    if (
-#if TAG_MAJOR_VERSION == 34
-        stair_taken == DNGN_ENTER_PORTAL_VAULT ||
-#endif
-        stair_taken >= DNGN_ENTER_FIRST_PORTAL
-        && stair_taken <= DNGN_ENTER_LAST_PORTAL)
+    if (feat_is_branch_exit(stair_taken))
     {
-        return DNGN_STONE_ARCH;
+        for (branch_iterator it; it; it++)
+            if (it->exit_stairs == stair_taken)
+                return it->entry_stairs;
+        die("entrance corresponding to exit %d not found", stair_taken);
+    }
+
+    if (feat_is_branch_entrance(stair_taken))
+    {
+        for (branch_iterator it; it; it++)
+            if (it->entry_stairs == stair_taken)
+                return it->exit_stairs;
+        die("return corresponding to entry %d not found", stair_taken);
     }
 
     if (stair_taken == DNGN_ENTER_LABYRINTH)
@@ -853,6 +829,9 @@ static int _get_dest_stair_type(branch_type old_branch,
         // dgn_find_nearby_stair uses special logic for labyrinths.
         return DNGN_ENTER_LABYRINTH;
     }
+
+    if (feat_is_portal_entrance(stair_taken))
+        return DNGN_STONE_ARCH;
 
     // Note: stair_taken can equal things like DNGN_FLOOR
     // Just find a nice empty square.
@@ -939,20 +918,20 @@ static void _grab_followers()
     int non_stair_using_allies = 0;
     int non_stair_using_summons = 0;
 
-    monster* dowan = NULL;
-    monster* duvessa = NULL;
+    monster* dowan = nullptr;
+    monster* duvessa = nullptr;
 
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         monster* fol = monster_at(*ai);
-        if (fol == NULL)
+        if (fol == nullptr)
             continue;
 
-        if (mons_is_duvessa(fol) && fol->alive())
+        if (mons_is_mons_class(fol, MONS_DUVESSA) && fol->alive())
             duvessa = fol;
 
-        if (mons_is_dowan(fol) && fol->alive())
+        if (mons_is_mons_class(fol, MONS_DOWAN) && fol->alive())
             dowan = fol;
 
         if (fol->wont_attack() && !mons_can_use_stairs(fol))
@@ -1012,9 +991,8 @@ static void _grab_followers()
             }
         }
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-        vector<coord_def> places[2];
+        vector<coord_def> places[2] = { { you.pos() }, {} };
         int place_set = 0;
-        places[place_set].push_back(you.pos());
         while (!places[place_set].empty())
         {
             for (int i = 0, size = places[place_set].size(); i < size; ++i)
@@ -1117,8 +1095,8 @@ static bool _leave_level(dungeon_feature_type stair_taken,
         && !player_in_branch(BRANCH_ABYSS))
     {
         vector<string> stack;
-        for (unsigned int i = 0; i < you.level_stack.size(); i++)
-            stack.push_back(you.level_stack[i].id.describe());
+        for (level_pos lvl : you.level_stack)
+            stack.push_back(lvl.id.describe());
         if (you.wizard)
         {
             // warn about breakage so testers know it's an abnormal situation.
@@ -1141,6 +1119,26 @@ static bool _leave_level(dungeon_feature_type stair_taken,
     return popped;
 }
 
+/**
+ * Warn the player that two ghost files have been loaded into the current
+ * level, resulting in somewhere between two and twenty ghosts being present.
+ *
+ * Warnings may be more spooky than actually useful.
+ *
+ * @return  A message that will send shivers down players' spines, assuming
+ *          they aren't in wisp form!
+ */
+static const char* _double_ghost_spookmessage()
+{
+    static const char* spookmessages[] = {
+        "You are filled with an overwhelming sense of foreboding!",
+        "You feel a terrible frisson of fear!",
+        "You are flooded with an inexplicable sense of dread!",
+        "You feel that you have entered a very terrible place...",
+        "There is something very spooky about this place!"
+    };
+    return RANDOM_ELEMENT(spookmessages);
+}
 
 /**
  * Generate a new level.
@@ -1180,14 +1178,26 @@ static void _make_level(dungeon_feature_type stair_taken,
     _clear_env_map();
     builder(true, stair_type);
 
+    const bool is_halloween = today_is_halloween();
+
     if (!crawl_state.game_is_tutorial()
         && !crawl_state.game_is_zotdef()
         && !Options.seed
         && !player_in_branch(BRANCH_ABYSS)
         && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
-        && one_chance_in(3))
+        && one_chance_in(is_halloween ? 2 : 3))
     {
-        load_ghost(true);
+        // are we loading more than one ghost? (or trying, anyway)
+        bool doubleghost = is_halloween && coinflip();
+        if (doubleghost)
+            doubleghost = load_ghost(true);
+
+        const bool delete_ghost = !is_halloween;
+        doubleghost = load_ghost(true, delete_ghost) && doubleghost;
+
+        // did we actually manage to load more than one ghost (file)?
+        if (doubleghost)
+            mpr(_double_ghost_spookmessage());
     }
     env.turns_on_level = 0;
     // sanctuary
@@ -1226,13 +1236,23 @@ static void _place_player(dungeon_feature_type stair_taken,
         }
 
     // This should fix the "monster occurring under the player" bug.
-    if (monster* mon = monster_at(you.pos()))
+    monster *mon = monster_at(you.pos());
+    if (mon && !fedhas_passthrough(mon))
+    {
         for (distance_iterator di(you.pos()); di; ++di)
+        {
             if (!monster_at(*di) && mon->is_habitable(*di))
             {
                 mon->move_to_pos(*di);
-                break;
+                return;
             }
+        }
+
+        dprf("%s under player and can't be moved anywhere; killing",
+             mon->name(DESC_PLAIN).c_str());
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        // XXX: do we need special handling for uniques...?
+    }
 }
 
 
@@ -1340,13 +1360,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     show_update_emphasis();
 
     // Shouldn't happen, but this is too unimportant to assert.
-    for (vector<final_effect *>::iterator i = env.final_effects.begin();
-         i != env.final_effects.end(); ++i)
-    {
-        if (*i)
-            delete *i;
-    }
-    env.final_effects.clear();
+    deleteAll(env.final_effects);
+
     los_changed();
 
     // Markers must be activated early, since they may rely on
@@ -1496,7 +1511,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 string verb = stair_climb_verb(feat);
 
                 if (coinflip()
-                    && slide_feature_over(you.pos(), coord_def(-1, -1), false))
+                    && slide_feature_over(you.pos()))
                 {
                     mprf("%s slides away from you right after you %s it!",
                          stair_str.c_str(), verb.c_str());
@@ -1658,6 +1673,12 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
+    if (Options.restart_after_game && Options.restart_after_save
+        && !crawl_state.seen_hups)
+    {
+        throw game_ended_condition();
+    }
+
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
         farewellmsg? farewellmsg : you.your_name.c_str());
 }
@@ -1691,14 +1712,9 @@ static vector<string> _list_bones()
 
     vector<string> filenames = get_dir_files(bonefile_dir);
     vector<string> bonefiles;
-    for (std::vector<string>::iterator it = filenames.begin();
-         it != filenames.end(); ++it)
-    {
-        const string &filename = *it;
-
+    for (const auto &filename : filenames)
         if (starts_with(filename, underscored_filename))
             bonefiles.push_back(bonefile_dir + filename);
-    }
 
     string old_bonefile = _get_old_bonefile_directory() + base_filename;
     if (access(old_bonefile.c_str(), F_OK) == 0)
@@ -1727,9 +1743,10 @@ static string _find_ghost_file()
  * Attempt to load one or more ghosts into the level.
  *
  * @param creating_level    Whether a level is currently being generated.
+ * @param delete_file       Whether to delete the ghost file after loading it.
  * @return                  Whether ghosts were actually generated.
  */
-bool load_ghost(bool creating_level)
+bool load_ghost(bool creating_level, bool delete_file)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
 
@@ -1790,8 +1807,11 @@ bool load_ghost(bool creating_level)
     }
     inf.close();
 
-    // Remove bones file - ghosts are hardly permanent.
-    unlink(ghost_filename.c_str());
+    if (delete_file)
+    {
+        // Remove bones file - ghosts are hardly permanent.
+        unlink(ghost_filename.c_str());
+    }
 
     if (!debug_check_ghosts())
     {
@@ -1816,11 +1836,15 @@ bool load_ghost(bool creating_level)
 #endif
 
     // Translate ghost to monster and place.
-    monster* mons;
-    while (!ghosts.empty() && (mons = get_free_monster()))
+    while (!ghosts.empty())
     {
+        monster * const mons = get_free_monster();
+        if (!mons)
+            break;
+
         mons->set_new_monster_id();
         mons->set_ghost(ghosts[0]);
+        mons->type = MONS_PLAYER_GHOST;
         mons->ghost_init();
         mons->bind_melee_flags();
         if (mons->has_spells())
@@ -2233,7 +2257,7 @@ static bool _ghost_version_compatible(reader &inf)
             return false;
 
         // Discard three more 32-bit words of padding.
-        inf.read(NULL, 3*4);
+        inf.read(nullptr, 3*4);
     }
     catch (short_read_exception &E)
     {
@@ -2249,7 +2273,7 @@ static bool _ghost_version_compatible(reader &inf)
  * Attempt to open a new bones file for saving ghosts.
  *
  * @param[out] return_gfilename     The name of the file created, if any.
- * @return                          A FILE object, or NULL.
+ * @return                          A FILE object, or nullptr.
  **/
 static FILE* _make_bones_file(string * return_gfilename)
 {
@@ -2275,7 +2299,7 @@ static FILE* _make_bones_file(string * return_gfilename)
         return gfil;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /**
@@ -2371,7 +2395,7 @@ bool unlock_file_handle(FILE *handle)
  *
  * @param mode      The file access mode. ('r', 'ab+', etc)
  * @param file      The path to the file to be opened.
- * @return          A handle for the specified file, if successful; else NULL.
+ * @return          A handle for the specified file, if successful; else nullptr.
  */
 FILE *lk_open(const char *mode, const string &file)
 {
@@ -2379,14 +2403,14 @@ FILE *lk_open(const char *mode, const string &file)
 
     FILE *handle = fopen_u(file.c_str(), mode);
     if (!handle)
-        return NULL;
+        return nullptr;
 
     const bool write_lock = mode[0] != 'r' || strchr(mode, '+');
     if (!lock_file_handle(handle, write_lock))
     {
         mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         fclose(handle);
-        handle = NULL;
+        handle = nullptr;
     }
 
     return handle;
@@ -2398,19 +2422,19 @@ FILE *lk_open(const char *mode, const string &file)
  *
  * @param file The path to the file to be opened.
  * @return     A locked file handle for the specified file, if
- *             successful; else NULL.
+ *             successful; else nullptr.
  */
 FILE *lk_open_exclusive(const string &file)
 {
     int fd = open_u(file.c_str(), O_WRONLY|O_BINARY|O_EXCL|O_CREAT, 0666);
     if (fd < 0)
-        return NULL;
+        return nullptr;
 
     if (!lock_file(fd, true))
     {
         mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         close(fd);
-        return NULL;
+        return nullptr;
     }
 
     return fdopen(fd, "wb");
@@ -2418,7 +2442,7 @@ FILE *lk_open_exclusive(const string &file)
 
 void lk_close(FILE *handle, const string &file)
 {
-    if (handle == NULL || handle == stdin)
+    if (handle == nullptr || handle == stdin)
         return;
 
     unlock_file_handle(handle);
@@ -2433,7 +2457,7 @@ void lk_close(FILE *handle, const string &file)
 // Locks a named file (usually an empty lock file), creating it if necessary.
 
 file_lock::file_lock(const string &s, const char *_mode, bool die_on_fail)
-    : handle(NULL), mode(_mode), filename(s)
+    : handle(nullptr), mode(_mode), filename(s)
 {
     if (!(handle = lk_open(mode, filename)) && die_on_fail)
         end(1, true, "Unable to open lock file \"%s\"", filename.c_str());
@@ -2462,21 +2486,26 @@ FILE *fopen_replace(const char *name)
 // Returns the size of the opened file with the give FILE* handle.
 off_t file_size(FILE *handle)
 {
+#ifdef __ANDROID__
+    off_t pos = ftello(handle);
+    if (fseeko(handle, 0, SEEK_END) < 0)
+        return 0;
+    off_t ret = ftello(handle);
+    fseeko(handle, pos, SEEK_SET);
+    return ret;
+#else
     struct stat fs;
     const int err = fstat(fileno(handle), &fs);
     return err? 0 : fs.st_size;
+#endif
 }
 
 vector<string> get_title_files()
 {
-    vector<string> bases = _get_base_dirs();
     vector<string> titles;
-    for (unsigned int i = 0; i < bases.size(); ++i)
-    {
-        vector<string> files = get_dir_files(bases[i]);
-        for (unsigned int j = 0; j < files.size(); ++j)
-            if (files[j].substr(0, 6) == "title_")
-                titles.push_back(files[j]);
-    }
+    for (const string &dir : _get_base_dirs())
+        for (const string &file : get_dir_files(dir))
+            if (file.substr(0, 6) == "title_")
+                titles.push_back(file);
     return titles;
 }

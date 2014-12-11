@@ -4,11 +4,13 @@
 **/
 
 #include "AppHdr.h"
+
+#include "dgn-irregular-box.h"
+
 #include <vector>
 
 #include "mapdef.h"
 #include "random.h"
-#include "dgn-irregular-box.h"
 
 // Adds a simple hollow box to the map with the specified
 //  coordinates, glyphs, and number of doors.  This is the
@@ -40,13 +42,13 @@ static void _make_simple_box(map_lines& map, int x1, int y1, int x2, int y2,
         vector<coord_def> cells;
         for (int x = x1; x <= x2; x++)
         {
-            cells.push_back(coord_def(x, y1));
-            cells.push_back(coord_def(x, y2));
+            cells.emplace_back(x, y1);
+            cells.emplace_back(x, y2);
         }
         for (int y = y1 + 1; y < y2; y++)
         {
-            cells.push_back(coord_def(x1, y));
-            cells.push_back(coord_def(x2, y));
+            cells.emplace_back(x1, y);
+            cells.emplace_back(x2, y);
         }
 
         for (int i = 0; i < door_count && !cells.empty(); i++)
@@ -184,7 +186,7 @@ static void _draw_wall_t(vector<vector<char> >& map,
             for (int y = ym + 1; y < yp; y++)
             {
                 map[x][y] = wall_glyph;
-                wall_cells.push_back(coord_def(x, y));
+                wall_cells.emplace_back(x, y);
             }
         }
 
@@ -195,7 +197,7 @@ static void _draw_wall_t(vector<vector<char> >& map,
         for (int x = di_t[i] + 1; x < di_t[i + 1]; x++)
         {
             map[x][y] = wall_glyph;
-            wall_cells.push_back(coord_def(x, y));
+            wall_cells.emplace_back(x, y);
         }
     }
 }
@@ -220,7 +222,7 @@ static void _draw_wall_b(vector<vector<char> >& map,
             for (int y = ym + 1; y < yp; y++)
             {
                 map[x][y] = wall_glyph;
-                wall_cells.push_back(coord_def(x, y));
+                wall_cells.emplace_back(x, y);
             }
         }
 
@@ -231,7 +233,7 @@ static void _draw_wall_b(vector<vector<char> >& map,
         for (int x = di_b[i] + 1; x < di_b[i + 1]; x++)
         {
             map[x][y] = wall_glyph;
-            wall_cells.push_back(coord_def(x, y));
+            wall_cells.emplace_back(x, y);
         }
     }
 }
@@ -255,7 +257,7 @@ static void _draw_wall_l(vector<vector<char> >& map,
             for (int x = xm + 1; x < xp; x++)
             {
                 map[x][y] = wall_glyph;
-                wall_cells.push_back(coord_def(x, y));
+                wall_cells.emplace_back(x, y);
             }
         }
 
@@ -266,7 +268,7 @@ static void _draw_wall_l(vector<vector<char> >& map,
         for (int y = di_l[i] + 1; y < di_l[i + 1]; y++)
         {
             map[x][y] = wall_glyph;
-            wall_cells.push_back(coord_def(x, y));
+            wall_cells.emplace_back(x, y);
         }
     }
 }
@@ -291,7 +293,7 @@ static void _draw_wall_r(vector<vector<char> >& map,
             for (int x = xm + 1; x < xp; x++)
             {
                 map[x][y] = wall_glyph;
-                wall_cells.push_back(coord_def(x, y));
+                wall_cells.emplace_back(x, y);
             }
         }
 
@@ -302,7 +304,7 @@ static void _draw_wall_r(vector<vector<char> >& map,
         for (int y = di_r[i] + 1; y < di_r[i + 1]; y++)
         {
             map[x][y] = wall_glyph;
-            wall_cells.push_back(coord_def(x, y));
+            wall_cells.emplace_back(x, y);
         }
     }
 }
@@ -327,7 +329,7 @@ static void _flood_fill(vector<vector<char> >& map, int start_x, int start_y,
     vector<coord_def> stack;
 
     map[start_x][start_y] = new_glyph;
-    stack.push_back(coord_def(start_x, start_y));
+    stack.emplace_back(start_x, start_y);
     while (!stack.empty())
     {
         int x = stack.back().x;
@@ -338,22 +340,22 @@ static void _flood_fill(vector<vector<char> >& map, int start_x, int start_y,
         if (x > 0 && map[x - 1][y] == old_glyph)
         {
             map[x - 1][y] = new_glyph;
-            stack.push_back(coord_def(x - 1, y));
+            stack.emplace_back(x - 1, y);
         }
         if (x + 1 < (int)(map.size()) && map[x + 1][y] == old_glyph)
         {
             map[x + 1][y] = new_glyph;
-            stack.push_back(coord_def(x + 1, y));
+            stack.emplace_back(x + 1, y);
         }
         if (y > 0 && map[x][y - 1] == old_glyph)
         {
             map[x][y - 1] = new_glyph;
-            stack.push_back(coord_def(x, y - 1));
+            stack.emplace_back(x, y - 1);
         }
         if (y + 1 < (int)(map[0].size()) && map[x][y + 1] == old_glyph)
         {
             map[x][y + 1] = new_glyph;
-            stack.push_back(coord_def(x, y + 1));
+            stack.emplace_back(x, y + 1);
         }
     }
 }

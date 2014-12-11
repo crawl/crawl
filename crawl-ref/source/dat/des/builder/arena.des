@@ -17,7 +17,7 @@ function randomise_colours(e)
 
     local floors = {
         "floor_normal", "floor_hall", "floor_ice", "floor_lair",
-        "floor_orc", "floor_snake", "floor_swamp", "floor_tomb", "floor_vault",
+        "floor_orc", "floor_mosaic", "floor_swamp", "floor_tomb", "floor_vault",
         "floor_vines", "floor_rough_red", "floor_sand", "floor_grass",
         "floor_nerves", "floor_dirt", "floor_moss",
     }

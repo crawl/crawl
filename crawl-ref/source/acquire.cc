@@ -7,19 +7,18 @@
 
 #include "acquire.h"
 
-#include <cstdlib>
-#include <string.h>
-#include <stdio.h>
 #include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <queue>
 #include <set>
-#include <cmath>
 
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "decks.h"
 #include "dungeon.h"
-#include "externs.h"
 #include "food.h"
 #include "goditem.h"
 #include "itemname.h"
@@ -27,24 +26,22 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
-#include "makeitem.h"
+#include "macro.h"
 #include "message.h"
-#include "player.h"
-#include "random.h"
+#include "output.h"
 #include "random-weight.h"
 #include "religion.h"
-#include "rot.h"
-#include "skills2.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "terrain.h"
 
 static armour_type _random_nonbody_armour_type()
 {
     return random_choose(ARM_SHIELD, ARM_CLOAK, ARM_HELMET, ARM_GLOVES,
-                         ARM_BOOTS, -1);
+                         ARM_BOOTS);
 }
 
 static armour_type _pick_wearable_armour(const armour_type arm)
@@ -91,7 +88,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
             || arm == ARM_CENTAUR_BARDING
             || arm == ARM_NAGA_BARDING)
         {
-            result = random_choose(ARM_HELMET, ARM_GLOVES, ARM_BOOTS, -1);
+            result = random_choose(ARM_HELMET, ARM_GLOVES, ARM_BOOTS);
         }
         else if (arm == ARM_SHIELD)
         {
@@ -251,10 +248,11 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
                         ARM_STEAM_DRAGON_ARMOUR,
                         ARM_MOTTLED_DRAGON_ARMOUR,
                         ARM_STORM_DRAGON_ARMOUR,
+                        ARM_SHADOW_DRAGON_ARMOUR,
                         ARM_GOLD_DRAGON_ARMOUR,
                         ARM_SWAMP_DRAGON_ARMOUR,
                         ARM_PEARL_DRAGON_ARMOUR,
-                        -1);
+                        ARM_QUICKSILVER_DRAGON_ARMOUR);
             }
         }
         else
@@ -320,8 +318,10 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
                                             10, ARM_FIRE_DRAGON_ARMOUR,
                                             10, ARM_ICE_DRAGON_ARMOUR,
                                              5, ARM_STORM_DRAGON_ARMOUR,
+                                             5, ARM_SHADOW_DRAGON_ARMOUR,
                                              5, ARM_GOLD_DRAGON_ARMOUR,
                                              5, ARM_PEARL_DRAGON_ARMOUR,
+                                             5, ARM_QUICKSILVER_DRAGON_ARMOUR,
                                              0);
         }
     }
@@ -410,7 +410,7 @@ static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
     if (type_wanted == FOOD_FRUIT)
         quantity = 8 + random2avg(15, 2);
     else if (type_wanted == FOOD_ROYAL_JELLY || type_wanted == FOOD_CHUNK)
-        quantity += random2avg(10, 2);
+        quantity += 2 + random2avg(10, 2);
     else if (type_wanted == POT_BLOOD)
         quantity = 8 + random2(5);
 
@@ -453,11 +453,14 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     item_def item_considered;
     item_considered.base_type = OBJ_WEAPONS;
     // Let's guess the percentage of shield use the player did, this is
-    // based on empirical data where pure-shield MDs get skills like 17 sh 25 m&f
-    // and pure-shield Spriggans 7 sh 18 m&f.
-    int shield_sk = you.skills[SK_SHIELDS] * species_apt_factor(SK_SHIELDS);
-    int want_shield = min(2 * shield_sk, best_sk) + 10;
-    int dont_shield = max(best_sk - shield_sk, 0) + 10;
+    // based on empirical data where pure-shield MDs get skills like 17 sh
+    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f.  Pretend formicid
+    // shield skill is 0 so they always weight towards 2H.
+    const int shield_sk = you.species == SP_FORMICID
+        ? 0
+        : you.skills[SK_SHIELDS] * species_apt_factor(SK_SHIELDS);
+    const int want_shield = min(2 * shield_sk, best_sk) + 10;
+    const int dont_shield = max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
     // opposite handedness 1/2, assuming your shields usage is respectively
     // 0% or 100% in the above formula.  At skill 25 that's *3.5 .
@@ -469,7 +472,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
             continue;
         item_considered.sub_type = i;
 
-        // Can't get blessed blades through acquirement, only from TSO
+        // Can't get blessed weapons through acquirement, only from TSO
         if (is_blessed(item_considered))
             continue;
 
@@ -479,6 +482,9 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
             continue;
 
         const bool two_handed = you.hands_reqd(item_considered) == HANDS_TWO;
+
+        if (two_handed && player_mutation_level(MUT_MISSING_HAND))
+            continue;
 
         // For non-Trog/Okawaru acquirements, give a boost to high-end items.
         if (!divine && !is_range_weapon(item_considered))
@@ -538,17 +544,17 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
             // Only give needles if they have a blowgun in inventory.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.push_back(make_pair(MI_TOMAHAWK, 75));
+            missile_weights.emplace_back(MI_TOMAHAWK, 75);
 
             // Include the possibility of needles if they have some stealth skill.
             if (x_chance_in_y(you.skills[SK_STEALTH], 15))
-                missile_weights.push_back(make_pair(MI_NEEDLE, 100));
+                missile_weights.emplace_back(MI_NEEDLE, 100);
 
             if (you.body_size() >= SIZE_MEDIUM)
-                missile_weights.push_back(make_pair(MI_JAVELIN, 100));
+                missile_weights.emplace_back(MI_JAVELIN, 100);
 
             if (you.can_throw_large_rocks())
-                missile_weights.push_back(make_pair(MI_LARGE_ROCK, 100));
+                missile_weights.emplace_back(MI_LARGE_ROCK, 100);
 
             result = *random_choose_weighted(missile_weights);
         }
@@ -564,13 +570,16 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int result = 0;
 
+    // Rings are (number of usable rings) times as common as amulets.
+    // XXX: unify this with the actual check for ring slots
+    const int ring_num = (you.species == SP_OCTOPODE ? 8 : 2)
+                       - (player_mutation_level(MUT_MISSING_HAND) ? 1 : 0);
+
     // Try ten times to give something the player hasn't seen.
     for (int i = 0; i < 10; i++)
     {
-        // 1/3 amulets, 2/3 rings.
-        result = (one_chance_in(you.species == SP_OCTOPODE ? 9 : 3)
-                                   ? get_random_amulet_type()
-                                   : get_random_ring_type());
+        result = one_chance_in(ring_num + 1) ? get_random_amulet_type()
+                                             : get_random_ring_type();
 
         // If we haven't seen this yet, we're done.
         if (get_ident_type(OBJ_JEWELLERY, result) == ID_UNKNOWN_TYPE)
@@ -599,7 +608,9 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     int result = 0;
 #if TAG_MAJOR_VERSION == 34
     do
+    {
         result = random2(NUM_STAVES);
+    }
     while (result == STAFF_ENCHANTMENT || result == STAFF_CHANNELING);
 #else
     result = random2(NUM_STAVES);
@@ -641,15 +652,18 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
 
 static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
 {
-#if TAG_MAJOR_VERSION == 34
     int result;
     do
+    {
         result = random2(NUM_RODS);
-    while (result == ROD_WARDING || result == ROD_VENOM);
-    return result;
-#else
-    return random2(NUM_RODS);
+    }
+    while (player_mutation_level(MUT_NO_LOVE)
+              && (result == ROD_SWARM || result == ROD_SHADOWS)
+#if TAG_MAJOR_VERSION == 34
+           || result == ROD_WARDING || result == ROD_VENOM
 #endif
+          );
+    return result;
 }
 
 /**
@@ -660,9 +674,9 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Total weight if none have been seen is 100.
     int result = random_choose_weighted(           // Decks given lowest weight.
-                                                   2, MISC_DECK_OF_WONDERS,
-                                                   3, MISC_DECK_OF_CHANGES,
-                                                   3, MISC_DECK_OF_DEFENCE,
+                                                   1, MISC_DECK_OF_WONDERS,
+                                                   2, MISC_DECK_OF_CHANGES,
+                                                   2, MISC_DECK_OF_DEFENCE,
                                                    // The player might want
                                                    // multiple of these.
     (you.seen_misc[MISC_LAMP_OF_FIRE] ?       8 : 15), MISC_LAMP_OF_FIRE,
@@ -672,12 +686,13 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
                                                    // These have charges, so
                                                    // give them a constant
                                                    // weight.
-                                                   8, MISC_BOX_OF_BEASTS,
-                                                   8, MISC_SACK_OF_SPIDERS,
+    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_BOX_OF_BEASTS,
+    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_SACK_OF_SPIDERS,
+    (player_mutation_level(MUT_NO_LOVE) ?     0 :  7), MISC_PHANTOM_MIRROR,
                                                    // The player never needs
                                                    // more than one.
-    (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  8), MISC_DISC_OF_STORMS,
-    (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  8), MISC_LANTERN_OF_SHADOWS,
+    (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  7), MISC_DISC_OF_STORMS,
+    (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  7), MISC_LANTERN_OF_SHADOWS,
                                                    0);
 
     // Give a crystal ball based on both evocations and either spellcasting or
@@ -706,11 +721,27 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         switch (type)
         {
         case WAND_HEAL_WOUNDS:
-            w = (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3 ? 5 : 25); break;
+            if (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3
+                && player_mutation_level(MUT_NO_LOVE))
+            {
+                w = 0; // with no allies, totally useless
+            }
+            else
+                w = (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3 ? 5 : 25);
+            break;
         case WAND_HASTING:          // each 17.9%, group unknown each 26.3%
-            w = (you.species == SP_FORMICID ? 5 : 25); break;
+            if (you.species == SP_FORMICID
+                && player_mutation_level(MUT_NO_LOVE))
+            {
+                w = 0; // with no allies, totally useless
+            }
+            else
+                w = (you.species == SP_FORMICID ? 5 : 25);
+            break;
         case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
-            w = (you.species == SP_FORMICID ? 1 : 15); break;
+            w = you.species == SP_FORMICID || crawl_state.game_is_sprint()
+                ? 1 : 15;
+            break;
         case WAND_FIRE:             // each 5.7%, group unknown each 9.3%
         case WAND_COLD:
         case WAND_LIGHTNING:
@@ -721,8 +752,9 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
         case WAND_DIGGING:          // each 3.6%, group unknown each 6.25%
         case WAND_DISINTEGRATION:
         case WAND_POLYMORPH:
-        case WAND_ENSLAVEMENT:
             w = 5; break;
+        case WAND_ENSLAVEMENT:      // useless under Sacrifice Love
+            w = (player_mutation_level(MUT_NO_LOVE) ? 0 : 5); break;
         case WAND_FLAME:            // each 0.7%, group unknown each 1.4%
         case WAND_FROST:
         case WAND_CONFUSION:
@@ -839,12 +871,8 @@ static int _book_weight(book_type book)
     ASSERT_RANGE(book, 0, MAX_FIXED_BOOK + 1);
 
     int total_weight = 0;
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    for (spell_type stype : spellbook_template(book))
     {
-        spell_type stype = which_spell_in_book(book, i);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
         // Skip over spells already seen.
         if (you.seen_spell[stype])
             continue;
@@ -955,19 +983,21 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int weights[MAX_FIXED_BOOK+1];
         for (int bk = 0; bk <= MAX_FIXED_BOOK; bk++)
         {
-            if (bk > MAX_NORMAL_BOOK && agent == GOD_SIF_MUNA)
+            if (is_rare_book(static_cast<book_type>(bk))
+                && agent == GOD_SIF_MUNA)
             {
                 weights[bk] = 0;
                 continue;
             }
 
 #if TAG_MAJOR_VERSION == 34
-            if (bk == BOOK_STALKING || bk == BOOK_WAR_CHANTS)
+            if (bk == BOOK_WIZARDRY)
             {
                 weights[bk] = 0;
                 continue;
             }
 #endif
+
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
         }
@@ -992,7 +1022,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     case BOOK_RANDART_LEVEL:
     {
         book.sub_type  = BOOK_RANDART_LEVEL;
-        if (!make_book_level_randart(book, level, -1, owner))
+        if (!make_book_level_randart(book, level, owner))
             return false;
         break;
     }
@@ -1046,9 +1076,10 @@ static bool _do_book_acquirement(item_def &book, int agent)
             return false;
 
         book.sub_type = BOOK_MANUAL;
-        book.plus     = choose_random_weighted(weights, weights + NUM_SKILLS);
+        book.skill = static_cast<skill_type>(
+                        choose_random_weighted(weights, weights + NUM_SKILLS));
         // Set number of bonus skill points.
-        book.plus2    = random_range(2000, 3000);
+        book.skill_points = random_range(2000, 3000);
         break;
     } // manuals
     } // switch book choice
@@ -1117,9 +1148,7 @@ static bool _is_armour_plain(const item_def &item)
     if (is_artefact(item))
         return false;
 
-    if (item.sub_type != ARM_ANIMAL_SKIN
-        && item.sub_type >= ARM_MIN_UNBRANDED
-        && item.sub_type <= ARM_MAX_UNBRANDED)
+    if (armour_is_special(item))
     {
         // These are always interesting, even with no brand.
         // May still be redundant, but that has another check.
@@ -1153,8 +1182,8 @@ int acquirement_create_item(object_class_type class_wanted,
         if (agent == GOD_TROG && !one_chance_in(3))
             want_arts = false;
 
-        thing_created = items(want_arts, class_wanted, type_wanted, true,
-                              ITEM_LEVEL, 0, 0, agent);
+        thing_created = items(want_arts, class_wanted, type_wanted,
+                              ITEM_LEVEL, 0, agent);
 
         if (thing_created == NON_ITEM)
             continue;
@@ -1217,8 +1246,8 @@ int acquirement_create_item(object_class_type class_wanted,
                 if (at != NUM_ARMOURS)
                 {
                     destroy_item(thing_created, true);
-                    thing_created = items(true, OBJ_ARMOUR, at, true,
-                                          ITEM_LEVEL, 0, 0, agent);
+                    thing_created = items(true, OBJ_ARMOUR, at,
+                                          ITEM_LEVEL, 0, agent);
                 }
                 else if (agent != GOD_XOM && one_chance_in(3))
                 {
@@ -1254,9 +1283,20 @@ int acquirement_create_item(object_class_type class_wanted,
 
             int brand = get_weapon_brand(acq_item);
             if (brand == SPWPN_PAIN
-                || is_unrandom_artefact(acq_item)
-                   && (acq_item.special == UNRAND_TROG
-                       || acq_item.special == UNRAND_WUCAD_MU))
+                || is_unrandom_artefact(acq_item, UNRAND_TROG)
+                || is_unrandom_artefact(acq_item, UNRAND_WUCAD_MU)
+                || is_unrandom_artefact(acq_item, UNRAND_MAJIN))
+            {
+                destroy_item(thing_created, true);
+                thing_created = NON_ITEM;
+                continue;
+            }
+        }
+
+        // Pain brand is useless if you've sacrificed Necromacy.
+        if (player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+        {
+            if (get_weapon_brand(acq_item) == SPWPN_PAIN)
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
@@ -1288,8 +1328,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // Sif Muna shouldn't gift special books.
         // (The spells therein are still fair game for randart books.)
         if (agent == GOD_SIF_MUNA
-            && acq_item.sub_type >= MIN_RARE_BOOK
-            && acq_item.sub_type <= MAX_RARE_BOOK)
+            && is_rare_book(static_cast<book_type>(acq_item.sub_type)))
         {
             ASSERT(acq_item.base_type == OBJ_BOOKS);
 
@@ -1368,12 +1407,14 @@ int acquirement_create_item(object_class_type class_wanted,
                  && !is_unrandom_artefact(acq_item)
                  && acq_item.sub_type != WPN_BLOWGUN)
         {
-            // These can never get egos, and mundane versions are quite common, so
-            // guarantee artefact status.  Rarity is a bit low to compensate.
-            if (is_giant_club_type(acq_item.sub_type))
+            // These can never get egos, and mundane versions are quite common,
+            // so guarantee artefact status.  Rarity is a bit low to compensate.
+            // ...except actually, trog can give them antimagic brand, so...
+            if (is_giant_club_type(acq_item.sub_type)
+                && get_weapon_brand(acq_item) == SPWPN_NORMAL
+                && !one_chance_in(25))
             {
-                if (!one_chance_in(25))
-                    make_item_randart(acq_item, true);
+                make_item_randart(acq_item, true);
             }
 
             if (agent == GOD_TROG || agent == GOD_OKAWARU)
@@ -1455,6 +1496,12 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_STAVES);
         bad_class.set(OBJ_RODS);
     }
+    if (player_mutation_level(MUT_NO_ARTIFICE))
+    {
+        bad_class.set(OBJ_MISCELLANY);
+        bad_class.set(OBJ_WANDS);
+    }
+
     bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
     static struct { object_class_type type; const char* name; } acq_classes[] =
@@ -1477,7 +1524,7 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     int thing_created = NON_ITEM;
 
-    if (item_index == NULL)
+    if (item_index == nullptr)
         item_index = &thing_created;
 
     *item_index = NON_ITEM;
@@ -1501,7 +1548,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (i == ARRAYSZ(acq_classes) / 2 - 1 || i == ARRAYSZ(acq_classes) - 1)
             {
                 line.erase(0, 1);
-                mpr(line.c_str());
+                mpr(line);
                 line.clear();
             }
         }

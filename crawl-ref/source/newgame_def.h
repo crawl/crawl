@@ -18,6 +18,11 @@ struct newgame_def
 
     string arena_teams;
 
+    vector<string> allowed_combos;
+    vector<species_type> allowed_species;
+    vector<job_type> allowed_jobs;
+    vector<weapon_type> allowed_weapons;
+
     species_type species;
     job_type job;
 

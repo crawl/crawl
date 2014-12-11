@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "version.h"
+
 #include "build.h"
 #include "compflag.h"
 

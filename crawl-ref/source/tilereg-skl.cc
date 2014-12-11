@@ -3,18 +3,16 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-skl.h"
-#include "process_desc.h"
 
 #include "cio.h"
 #include "libutil.h"
 #include "options.h"
+#include "output.h"
+#include "process_desc.h"
 #include "skills.h"
-#include "skills2.h"
-#include "stuff.h"
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
-
 #ifdef WIZARD
 #include "wiz-you.h"
 #endif
@@ -205,7 +203,7 @@ void SkillRegion::pack_buffers()
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
 
             if (item.quantity > 0)
-                draw_number(x, y, item.quantity, true);
+                draw_number(x, y, item.quantity);
 
             const int apt = species_apt(skill, you.species);
             m_buf.add_icons_tile(_get_aptitude_tile(apt), x, y);

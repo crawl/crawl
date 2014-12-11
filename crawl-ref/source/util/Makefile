@@ -17,6 +17,7 @@ clean:
 
 %.lex.cc: %.lpp
 	$(QUIET_LEX)$(LEX) -o$@ $<
+	@perl -pi.orig -e's/register //' $@
 
 %.tab.cc: %.ypp
 	$(QUIET_YACC)$(YACC) --defines=$*.tab.h -b $* -o $@ $<

@@ -22,7 +22,7 @@
 #define NOLSTRING         /* lstr* string management routines */
 #define NODBCS            /* Double-byte character set routines */
 #define NOKEYBOARDINFO    /* Keyboard driver routines */
-#define NOCOLOR           /* COLOR_* color values */
+#define NOCOLOR           /* COLOR_* colour values */
 #define NODRAWTEXT        /* DrawText() and related definitions */
 #define NOSCALABLEFONT    /* Truetype scalable font support */
 #define NOMETAFILE        /* Metafile support */
@@ -59,6 +59,7 @@
 
 #include <string.h>
 #include <stdio.h>
+
 #include "cio.h"
 #include "defines.h"
 #include "libutil.h"
@@ -66,15 +67,15 @@
 #include "state.h"
 #include "unicode.h"
 #include "version.h"
-#include "view.h"
 #include "viewgeom.h"
+#include "view.h"
 
 wchar_t oldTitle[80];
 
-static HANDLE inbuf = NULL;
-static HANDLE outbuf = NULL;
-static HANDLE old_outbuf = NULL;
-static int current_color = -1;
+static HANDLE inbuf = nullptr;
+static HANDLE outbuf = nullptr;
+static HANDLE old_outbuf = nullptr;
+static int current_colour = -1;
 static bool cursor_is_enabled = false;
 static CONSOLE_CURSOR_INFO initial_cci;
 static bool have_initial_cci = false;
@@ -84,7 +85,7 @@ static int chsx = 0, chex = 0, chy = -1;
 static int cx = 0, cy = 0;
 
 // and now, for the screen buffer
-static CHAR_INFO *screen = NULL;
+static CHAR_INFO *screen = nullptr;
 static COORD screensize;
 #define SCREENINDEX(x,y) ((x)+screensize.X*(y))
 static unsigned InputCP, OutputCP;
@@ -92,7 +93,7 @@ static const unsigned PREFERRED_CODEPAGE = 437;
 
 static bool w32_smart_cursor = true;
 
-// we can do straight translation of DOS color to win32 console color.
+// we can do straight translation of DOS colour to win32 console colour.
 #define WIN32COLOR(col) (WORD)(col)
 static void writeChar(ucs_t c);
 static void bFlush();
@@ -154,7 +155,7 @@ void writeChar(ucs_t c)
     if (c > 0xFFFF)
         c = 0xBF; // '¿'
 
-    int tc = WIN32COLOR(current_color);
+    int tc = WIN32COLOR(current_colour);
     pci = &screen[SCREENINDEX(cx,cy)];
 
     // is this a no-op?
@@ -310,7 +311,7 @@ static void set_w32_screen_size()
     if (screen)
     {
         delete [] screen;
-        screen = NULL;
+        screen = nullptr;
     }
 
     screen = new CHAR_INFO[screensize.X * screensize.Y];
@@ -358,9 +359,9 @@ void console_startup()
     outbuf = CreateConsoleScreenBuffer(
         GENERIC_READ |GENERIC_WRITE,
         FILE_SHARE_READ | FILE_SHARE_WRITE, // shared
-        NULL,                    // default security attributes
+        nullptr,                    // default security attributes
         CONSOLE_TEXTMODE_BUFFER, // must be TEXTMODE
-        NULL);                   // reserved; must be NULL
+        nullptr);                   // reserved; must be nullptr
 
     SetConsoleActiveScreenBuffer(outbuf);
 
@@ -390,8 +391,8 @@ void console_startup()
     // set up screen size
     set_w32_screen_size();
 
-    // initialise text color
-    textcolor(DARKGREY);
+    // initialise text colour
+    textcolour(DARKGREY);
 
     // initialise cursor to NONE.
     _setcursortype_internal(false);
@@ -417,7 +418,7 @@ void console_startup()
 void console_shutdown()
 {
     // don't do anything if we were never initted
-    if (inbuf == NULL && outbuf == NULL && old_outbuf == NULL)
+    if (inbuf == nullptr && outbuf == nullptr && old_outbuf == nullptr)
         return;
 
     // JWM, 06/12/2004: Code page stuff.  If it was the preferred code page, it
@@ -431,14 +432,14 @@ void console_shutdown()
     // restore console attributes for normal function
     _set_string_input(true);
 
-    // set cursor and normal textcolor
+    // set cursor and normal textcolour
     _setcursortype_internal(true);
-    textcolor(DARKGREY);
+    textcolour(DARKGREY);
 
-    inbuf = NULL;
+    inbuf = nullptr;
 
     delete [] screen;
-    screen = NULL;
+    screen = nullptr;
 
     // finally, restore title
     if (*oldTitle)
@@ -553,31 +554,31 @@ void gotoxy_sys(int x, int y)
     }
 }
 
-void textcolor(int c)
+void textcolour(int c)
 {
-    // change current color used to stamp chars
+    // change current colour used to stamp chars
     short fg = c & 0xF;
     short bg = (c >> 4) & 0xF;
     short macro_fg = Options.colour[fg];
     short macro_bg = Options.colour[bg];
 
-    current_color = macro_fg | (macro_bg << 4);
+    current_colour = macro_fg | (macro_bg << 4);
 }
 
 void textbackground(int c)
 {
-    // change current background color used to stamp chars
+    // change current background colour used to stamp chars
     // parameter does NOT come bitshifted by four
     short bg = c & 0xF;
     short macro_bg = Options.colour[bg];
 
-    current_color = current_color | (macro_bg << 4);
+    current_colour = current_colour | (macro_bg << 4);
 }
 
 static void cprintf_aux(const char *s)
 {
     // early out -- not initted yet
-    if (outbuf == NULL)
+    if (outbuf == nullptr)
     {
         printf("%S", OUTW(s));
         return;
@@ -885,13 +886,13 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
         cgotoxy(x1, y1 + y);
         for (int x = 0; x < size.x; ++x)
         {
-            textcolor(cell->colour);
+            textcolour(cell->colour);
             putwch(cell->glyph);
             cell++;
         }
     }
     update_screen();
-    textcolor(WHITE);
+    textcolour(WHITE);
 }
 
 void update_screen()

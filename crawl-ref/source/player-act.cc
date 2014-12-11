@@ -7,14 +7,14 @@
 
 #include "player.h"
 
-#include <math.h>
+#include <cmath>
 
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
-#include "artefact.h"
 #include "coordit.h"
 #include "dgnevent.h"
+#include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "food.h"
@@ -23,17 +23,12 @@
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "items.h"
 #include "item_use.h"
-#include "libutil.h"
-#include "misc.h"
-#include "monster.h"
-#include "mon-util.h" // for decline_pronoun
+#include "message.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "spl-damage.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -63,9 +58,9 @@ bool player::alive() const
 
 bool player::is_summoned(int* _duration, int* summon_type) const
 {
-    if (_duration != NULL)
+    if (_duration != nullptr)
         *_duration = -1;
-    if (summon_type != NULL)
+    if (summon_type != nullptr)
         *summon_type = 0;
 
     return false;
@@ -83,7 +78,7 @@ void player::moveto(const coord_def &c, bool clear_net)
     end_searing_ray();
 }
 
-bool player::move_to_pos(const coord_def &c, bool clear_net)
+bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
 {
     actor *target = actor_at(c);
     if (!target || target->submerged())
@@ -200,7 +195,7 @@ size_type player::body_size(size_part_type psize, bool base) const
         return species_size(species, psize);
     else
     {
-        size_type tf_size = transform_size(form, psize);
+        size_type tf_size = get_form()->size;
         return tf_size == SIZE_CHARACTER ? species_size(species, psize)
                                          : tf_size;
     }
@@ -243,45 +238,25 @@ int player::damage_type(int)
     return DVORP_CRUSHING;
 }
 
+/**
+ * What weapon brand does the player attack with in melee?
+ */
 brand_type player::damage_brand(int)
 {
-    brand_type ret = SPWPN_NORMAL;
     const int wpn = equip[EQ_WEAPON];
-
     if (wpn != -1 && !melded[EQ_WEAPON])
     {
-        if (!is_range_weapon(inv[wpn]))
-            ret = get_weapon_brand(inv[wpn]);
-    }
-    else if (duration[DUR_CONFUSING_TOUCH] || form == TRAN_FUNGUS)
-        ret = SPWPN_CONFUSE;
-    else
-    {
-        switch (form)
-        {
-        case TRAN_SPIDER:
-            ret = SPWPN_VENOM;
-            break;
-
-        case TRAN_ICE_BEAST:
-            ret = SPWPN_FREEZING;
-            break;
-
-        case TRAN_LICH:
-            ret = SPWPN_DRAINING;
-            break;
-
-        case TRAN_BAT:
-            if (species == SP_VAMPIRE && one_chance_in(8))
-                ret = SPWPN_VAMPIRISM;
-            break;
-
-        default:
-            break;
-        }
+        if (is_range_weapon(inv[wpn]))
+            return SPWPN_NORMAL; // XXX: check !is_melee_weapon instead?
+        return get_weapon_brand(inv[wpn]);
     }
 
-    return ret;
+    // unarmed
+
+    if (duration[DUR_CONFUSING_TOUCH])
+        return SPWPN_CONFUSE;
+
+    return get_form()->get_uc_brand();
 }
 
 
@@ -291,18 +266,22 @@ brand_type player::damage_brand(int)
  * @param weap          The weapon to be used; may be null.
  * @param projectile    The projectile to be fired/thrown; may be null.
  * @param random        Whether to randomize delay, or provide a fixed value
- *                      for display.
+ *                      for display (the worst-case scenario).
  * @param scaled        Whether to apply special delay modifiers (finesse)
+ * @param shield        Whether to apply shield penalties.
  * @return              The time taken by an attack with the given weapon &
  *                      projectile, in aut.
  */
 random_var player::attack_delay(const item_def *weap,
                                 const item_def *projectile, bool random,
-                                bool scaled) const
+                                bool scaled, bool do_shield) const
 {
     random_var attk_delay = constant(15);
-    const int armour_penalty = adjusted_body_armour_penalty(20);
-    const int base_shield_penalty = adjusted_shield_penalty(20);
+    // a semi-arbitrary multiplier, to minimize loss of precision from integer
+    // math.
+    const int DELAY_SCALE = 20;
+    const int armour_penalty = adjusted_body_armour_penalty(DELAY_SCALE);
+    const int base_shield_penalty = adjusted_shield_penalty(DELAY_SCALE);
 
     bool check_weapon = (!projectile && !!weap)
                         || projectile
@@ -319,17 +298,15 @@ random_var player::attack_delay(const item_def *weap,
         }
         else
         {
-            attk_delay =
-                rv::max(constant(10),
-                        (rv::roll_dice(1, 10) +
-                         div_rand_round(
-                             rv::roll_dice(2, armour_penalty),
-                             20)));
+            // UC/throwing attacks are slowed by heavy armour (aevp)
+            attk_delay = max(10, 7 + div_rand_round(armour_penalty,
+                                                    DELAY_SCALE));
 
+            // ...and sped up by skill (min delay (10 - 270/54) = 5)
             skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
             attk_delay -= div_rand_round(constant(you.skill(sk, 10)), 54);
 
-            // Bats are faster (for what good it does them).
+            // Bats are faster (for whatever good it does them).
             if (you.form == TRAN_BAT && !projectile)
                 attk_delay = div_rand_round(attk_delay * constant(3), 5);
         }
@@ -344,7 +321,8 @@ random_var player::attack_delay(const item_def *weap,
             const skill_type wpn_skill = item_attack_skill(*weap);
             attk_delay = constant(property(*weap, PWPN_SPEED));
             attk_delay -=
-                div_rand_round(constant(you.skill(wpn_skill, 10)), 20);
+                div_rand_round(constant(you.skill(wpn_skill, 10)),
+                               DELAY_SCALE);
 
             // apply minimum to weapon skill modification
             attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
@@ -368,14 +346,17 @@ random_var player::attack_delay(const item_def *weap,
         shield_penalty =
             div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
                                    rv::roll_dice(1, base_shield_penalty)),
-                           20);
+                           DELAY_SCALE);
     }
     // Give unarmed shield-users a slight penalty always.
     if (!weap && player_wearing_slot(EQ_SHIELD))
         shield_penalty += rv::random2(2);
 
+    if (!do_shield)
+        shield_penalty = constant(0);
+
     int final_delay = random ? attk_delay.roll() + shield_penalty.roll()
-                             : attk_delay.expected() + shield_penalty.expected();
+                             : attk_delay.max() + shield_penalty.max();
     // Stop here if we just want the unmodified value.
     if (!scaled)
         return final_delay;
@@ -384,7 +365,7 @@ random_var player::attack_delay(const item_def *weap,
     return max(2, div_rand_round(scaling * final_delay, 10));
 }
 
-// Returns the item in the given equipment slot, NULL if the slot is empty.
+// Returns the item in the given equipment slot, nullptr if the slot is empty.
 // eq must be in [EQ_WEAPON, EQ_RING_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
@@ -392,7 +373,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded) const
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
-        return NULL;
+        return nullptr;
     return const_cast<item_def *>(&inv[item]);
 }
 
@@ -400,7 +381,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded) const
 item_def *player::weapon(int /* which_attack */) const
 {
     if (melded[EQ_WEAPON])
-        return NULL;
+        return nullptr;
 
     return slot_item(EQ_WEAPON, false);
 }
@@ -428,8 +409,12 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
                             || hands_reqd(item) == HANDS_TWO;
 
-    if (two_handed && !ignore_shield && player_wearing_slot(EQ_SHIELD))
+    if (two_handed && (
+        (!ignore_shield && player_wearing_slot(EQ_SHIELD))
+        || player_mutation_level(MUT_MISSING_HAND)))
+    {
         return false;
+    }
 
     return could_wield(item, ignore_brand, ignore_transform);
 }
@@ -463,7 +448,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
             if (!quiet)
-                mprf("You can't wield %s.", base_type_string(item).c_str());
+                mprf("You can't wield %s.", base_type_string(item));
             return false;
         }
 
@@ -484,6 +469,12 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return false;
     }
 
+    if (player_mutation_level(MUT_MISSING_HAND)
+        && you.hands_reqd(item) == HANDS_TWO)
+    {
+        return false;
+    }
+
     // don't let undead/demonspawn wield holy weapons/scrolls (out of spite)
     if (!ignore_brand && undead_or_demonic() && is_holy_item(item))
     {
@@ -495,7 +486,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     return true;
 }
 
-// Returns the shield the player is wearing, or NULL if none.
+// Returns the shield the player is wearing, or nullptr if none.
 item_def *player::shield() const
 {
     return slot_item(EQ_SHIELD, false);
@@ -509,7 +500,7 @@ void player::make_hungry(int hunger_increase, bool silent)
         ::lessen_hunger(-hunger_increase, silent);
 }
 
-string player::name(description_level_type dt, bool) const
+string player::name(description_level_type dt, bool, bool) const
 {
     switch (dt)
     {
@@ -531,104 +522,112 @@ string player::pronoun(pronoun_type pro, bool /*force_visible*/) const
 
 string player::conj_verb(const string &verb) const
 {
-    return verb;
+    return conjugate_verb(verb, true);
 }
 
+/**
+ * What's the singular form of a name for the player's current hands?
+ *
+ * @return A string describing the player's current hand or hand-equivalents.
+ */
+static string _hand_name_singular()
+{
+    if (!get_form()->hand_name.empty())
+        return get_form()->hand_name;
+
+    if (you.species == SP_FELID)
+        return "paw";
+
+    if (you.has_usable_claws())
+        return "claw";
+
+    if (you.has_usable_tentacles())
+        return "tentacle";
+
+    return "hand";
+}
+
+/**
+ * What's the the name for the player's hands?
+ *
+ * @param plural                Whether to use the plural, if possible.
+ * @param can_plural[in,out]    Whether this name can be pluralized.
+ * @return A string describing the player's current hand or hand-equivalents.
+ */
 string player::hand_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
-    if (can_plural == NULL)
+    if (can_plural == nullptr)
         can_plural = &_can_plural;
-    *can_plural = true;
+    *can_plural = !player_mutation_level(MUT_MISSING_HAND);
 
-    string str;
-
-    if (form == TRAN_BAT || form == TRAN_DRAGON)
-        str = "foreclaw";
-    else if (form == TRAN_PIG)
-        str = "front trotter";
-    else if (form == TRAN_SPIDER || form == TRAN_PORCUPINE)
-        str = "front leg";
-    else if (form == TRAN_ICE_BEAST)
-        str = "paw";
-    else if (form == TRAN_BLADE_HANDS)
-        str = "scythe-like blade";
-    else if (form == TRAN_TREE)
-        str = "branch";
-    else if (form == TRAN_WISP)
-        str = "misty tendril";
-    else if (form == TRAN_LICH || form == TRAN_STATUE
-             || form == TRAN_SHADOW
-             || !form_changed_physiology())
-    {
-        if (species == SP_FELID)
-            str = "paw";
-        else if (has_usable_claws())
-            str = "claw";
-        else if (has_usable_tentacles())
-            str = "tentacle";
-    }
-
-    if (str.empty())
-        return plural ? "hands" : "hand";
-
+    const string singular = _hand_name_singular();
     if (plural && *can_plural)
-        str = pluralise(str);
+        return pluralise(singular);
 
-    return str;
+    return singular;
 }
 
+/**
+ * What's the singular form of a name for the player's current feet?
+ *
+ * @param can_plural[in,out]    Whether this name can be pluralized.
+ * @return A string describing the player's current feet or feet-equivalents.
+ */
+static string _foot_name_singular(bool *can_plural)
+{
+    if (!get_form()->foot_name.empty())
+        return get_form()->foot_name;
+
+    if (player_mutation_level(MUT_HOOVES) >= 3)
+        return "hoof";
+
+    if (you.has_usable_talons())
+        return "talon";
+
+    if (you.has_usable_tentacles())
+    {
+        *can_plural = false;
+        return "tentacles";
+    }
+
+    if (you.species == SP_NAGA)
+    {
+        *can_plural = false;
+        return "underbelly";
+    }
+
+    if (you.species == SP_FELID)
+        return "paw";
+
+    if (you.fishtail)
+    {
+        *can_plural = false;
+        return "tail";
+    }
+
+    return "foot";
+}
+
+/**
+ * What's the the name for the player's feet?
+ *
+ * @param plural                Whether to use the plural, if possible.
+ * @param can_plural[in,out]    Whether this name can be pluralized.
+ * @return A string describing the player's current feet or feet-equivalents.
+ */
 string player::foot_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
-    if (can_plural == NULL)
+    if (can_plural == nullptr)
         can_plural = &_can_plural;
     *can_plural = true;
 
-    string str;
-
-    if (form == TRAN_SPIDER)
-        str = "hind leg";
-    else if (form == TRAN_PIG)
-        str = "trotter";
-    else if (form == TRAN_TREE)
-        str = "root";
-    else if (form == TRAN_WISP)
-        str = "strand";
-    else if (form == TRAN_LICH || form == TRAN_STATUE
-             || form == TRAN_SHADOW
-             || !form_changed_physiology())
-    {
-        if (player_mutation_level(MUT_HOOVES) >= 3)
-            str = "hoof";
-        else if (has_usable_talons())
-            str = "talon";
-        else if (has_usable_tentacles())
-        {
-            str         = "tentacles";
-            *can_plural = false;
-        }
-        else if (species == SP_NAGA)
-        {
-            str         = "underbelly";
-            *can_plural = false;
-        }
-        else if (species == SP_FELID)
-            str = "paw";
-        else if (fishtail)
-        {
-            str         = "tail";
-            *can_plural = false;
-        }
-    }
-
-    if (str.empty())
-        return plural ? "feet" : "foot";
-
+    const string singular = _foot_name_singular(can_plural);
     if (plural && *can_plural)
-        str = pluralise(str);
+        return pluralise(singular);
 
-    return str;
+    return singular;
 }
 
 string player::arm_name(bool plural, bool *can_plural) const
@@ -636,7 +635,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     if (form_changed_physiology())
         return hand_name(plural, can_plural);
 
-    if (can_plural != NULL)
+    if (can_plural != nullptr)
         *can_plural = true;
 
     string adj;
@@ -665,59 +664,31 @@ string player::arm_name(bool plural, bool *can_plural) const
     return str;
 }
 
+/**
+ * What name should be used for the player's means of unarmed attack?
+ *
+ * (E.g. for display in the top-right of the UI.)
+ *
+ * @return  A string describing the player's UC attack 'weapon'.
+ */
 string player::unarmed_attack_name() const
 {
-    string text = "Nothing wielded"; // Default
+    string default_name = "Nothing wielded";
 
-    if (species == SP_FELID)
-        text = "Teeth and claws";
-    else if (has_usable_claws(true))
-        text = "Claws";
-    else if (has_usable_tentacles(true))
-        text = "Tentacles";
-
-    switch (form)
+    if (has_usable_claws(true))
     {
-    case TRAN_SPIDER:
-        text = "Fangs (venom)";
-        break;
-    case TRAN_BLADE_HANDS:
-        text = "Blade " + blade_parts(true);
-        break;
-    case TRAN_STATUE:
-        if (has_usable_claws(true))
-            text = "Stone claws";
-        else if (has_usable_tentacles(true))
-            text = "Stone tentacles";
+        if (species == SP_FELID)
+            default_name = "Teeth and claws";
         else
-            text = "Stone fists";
-        break;
-    case TRAN_ICE_BEAST:
-        text = "Ice fists (freeze)";
-        break;
-    case TRAN_DRAGON:
-        text = "Teeth and claws";
-        break;
-    case TRAN_LICH:
-        text += " (drain)";
-        break;
-    case TRAN_BAT:
-    case TRAN_PIG:
-    case TRAN_PORCUPINE:
-        text = "Teeth";
-        break;
-    case TRAN_TREE:
-        text = "Branches";
-        break;
-    case TRAN_NONE:
-    case TRAN_APPENDAGE:
-    default:
-        break;
+            default_name = "Claws";
     }
-    return text;
+    else if (has_usable_tentacles(true))
+        default_name = "Tentacles";
+
+    return get_form()->get_uc_attack_name(default_name);
 }
 
-bool player::fumbles_attack(bool verbose)
+bool player::fumbles_attack()
 {
     bool did_fumble = false;
 
@@ -726,8 +697,7 @@ bool player::fumbles_attack(bool verbose)
     {
         if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
-            if (verbose)
-                mpr("Your unstable footing causes you to fumble your attack.");
+            mpr("Your unstable footing causes you to fumble your attack.");
             did_fumble = true;
         }
         if (floundering())
@@ -844,7 +814,7 @@ bool player::go_berserk(bool intentional, bool potion)
     deflate_hp(you.hp_max, false);
 
     if (!you.duration[DUR_MIGHT])
-        notify_stat_change(STAT_STR, 5, true, "going berserk");
+        notify_stat_change(STAT_STR, 5, true);
 
     if (you.berserk_penalty != NO_BERSERK_PENALTY)
         you.berserk_penalty = 0;
@@ -963,58 +933,6 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
     return true;
 }
 
-bool player::can_jump(bool quiet) const
-{
-    if (duration[DUR_EXHAUSTED])
-    {
-        if (!quiet)
-            mpr("You're too exhausted to jump.");
-        return false;
-    }
-    if (in_water())
-    {
-        if (!quiet)
-            mpr("You can't jump while in water.");
-        return false;
-    }
-    if (in_lava())
-    {
-        if (!quiet)
-            mpr("You can't jump while standing in lava.");
-        return false;
-    }
-    if (liquefied_ground())
-    {
-        if (!quiet)
-            mpr("You can't jump while stuck in this mess.");
-        return false;
-    }
-    if (is_constricted())
-    {
-        if (!quiet)
-            mpr("You can't jump while being constricted.");
-        return false;
-    }
-    if (caught())
-    {
-        if (!quiet)
-            mprf("You can't jump while %s.", held_status());
-        return false;
-    }
-    if (form == TRAN_TREE || form == TRAN_WISP)
-    {
-        if (!quiet)
-            canned_msg(MSG_PRESENT_FORM);
-        return false;
-    }
-    return true;
-}
-
-bool player::can_jump() const
-{
-    return can_jump(false);
-}
-
 bool player::berserk() const
 {
     return duration[DUR_BERSERK];
@@ -1023,6 +941,12 @@ bool player::berserk() const
 bool player::can_cling_to_walls() const
 {
     return false;
+}
+
+bool player::antimagic_susceptible() const
+{
+    // Maybe check for having non-zero (max) MP?
+    return true;
 }
 
 bool player::is_web_immune() const
@@ -1049,4 +973,16 @@ bool player::shove(const char* feat_name)
 int player::constriction_damage() const
 {
     return roll_dice(2, div_rand_round(strength(), 5));
+}
+
+/**
+ * How many heads does the player have, in their current form?
+ *
+ * Currently only checks for hydra form.
+ */
+int player::heads() const
+{
+    if (props.exists(HYDRA_FORM_HEADS_KEY))
+        return props[HYDRA_FORM_HEADS_KEY].get_int();
+    return 1; // not actually always true
 }

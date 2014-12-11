@@ -4,46 +4,41 @@
 **/
 
 #include "AppHdr.h"
-#include "mon-behv.h"
 
-#include "externs.h"
+#include "mon-behv.h"
 
 #include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
-#include "env.h"
-#include "fprop.h"
 #include "exclude.h"
+#include "hints.h"
 #include "itemprop.h"
-#include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
+#include "message.h"
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-movetarget.h"
-#include "mon-pathfind.h"
 #include "mon-speak.h"
 #include "ouch.h"
-#include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
-#include "hints.h"
 #include "view.h"
-#include "shout.h"
 
 static void _guess_invis_foe_pos(monster* mon)
 {
     const actor* foe          = mon->get_foe();
-    const int    guess_radius = mons_sense_invis(mon) ? 3 : 2;
+    const int    guess_radius = 2;
 
     vector<coord_def> possibilities;
 
@@ -168,8 +163,8 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
                 // Get to firing range even if we are close.
                 _set_firing_pos(mon, you.pos());
             }
-        else if (mon->type == MONS_SIREN && !ignore_special_firing_AI)
-            find_siren_water_target(mon);
+        else if (mon->type == MONS_MERFOLK_AVATAR && !ignore_special_firing_AI)
+            find_merfolk_avatar_water_target(mon);
         else if (!mon->firing_pos.zero()
                  && mon->see_cell_no_trans(mon->target))
         {
@@ -286,7 +281,7 @@ void handle_behaviour(monster* mon)
                 // If the rot would reduce us to <= 0 max HP, attribute the
                 // kill to the monster.
                 if (loss >= you.hp_max)
-                    ouch(loss, mon->mindex(), KILLED_BY_ROTTING);
+                    ouch(loss, KILLED_BY_ROTTING, mon->mid);
 
                 rot_hp(loss);
             }
@@ -529,7 +524,7 @@ void handle_behaviour(monster* mon)
 
         if (mon->foe == MHITYOU)
         {
-            // monster::get_foe returns NULL for friendly monsters with
+            // monster::get_foe returns nullptr for friendly monsters with
             // foe == MHITYOU, so make afoe point to the player here.
             // -cao
             afoe = &you;
@@ -627,7 +622,7 @@ void handle_behaviour(monster* mon)
                     }
                 }
 
-                if (mon->travel_target == MTRAV_SIREN)
+                if (mon->travel_target == MTRAV_MERFOLK_AVATAR)
                     mon->travel_target = MTRAV_NONE;
 
                 // Spectral weapons simply seek back to their owner if
@@ -1128,6 +1123,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     string msg;
     int src_idx           = src ? src->mindex() : MHITNOT; // AXE ME
 
+    // Monsters know to blame you for reflecting things at them.
+    if (src_idx == YOU_FAULTLESS)
+        src_idx = MHITYOU;
+
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {
         mon->behaviour = BEH_FLEE;
@@ -1204,11 +1203,16 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
         else if (mon->has_ench(ENCH_FEAR))
         {
+            // self-attacks probably shouldn't break fear.
+            if (src == mon)
+                break;
+
             if (you.can_see(mon))
             {
-                mprf("%s attack snaps %s out of its fear.",
+                mprf("%s attack snaps %s out of %s fear.",
                         src ? src->name(DESC_ITS).c_str() : "the",
-                        mon->name(DESC_THE).c_str());
+                        mon->name(DESC_THE).c_str(),
+                        mon->pronoun(PRONOUN_POSSESSIVE).c_str());
             }
             mon->del_ench(ENCH_FEAR, true);
         }
@@ -1598,7 +1602,7 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
         return false;
 
     const item_def *weapon = mons->weapon();
-    return weapon && melee_skill(*weapon) == SK_POLEARMS;
+    return weapon && item_attack_skill(*weapon) == SK_POLEARMS;
 }
 
 // Friendly summons can't attack out of the player's LOS, it's too abusable.

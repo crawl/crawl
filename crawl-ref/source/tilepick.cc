@@ -2,8 +2,8 @@
 
 #include "tilepick.h"
 
-#include "art-enum.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
@@ -17,11 +17,15 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "mon-death.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
+#include "rot.h"
 #include "shopping.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
@@ -30,6 +34,7 @@
 #include "tiledef-unrand.h"
 #include "tilemcache.h"
 #include "tileview.h"
+#include "transform.h"
 #include "traps.h"
 #include "viewgeom.h"
 
@@ -88,14 +93,6 @@ TextureID get_dngn_tex(tileidx_t idx)
     else
         return TEX_FEAT;
 }
-
-#ifdef USE_TILE
-static tileidx_t _tileidx_monster_base(int type,
-                                       bool in_water = false,
-                                       int colour = 0,
-                                       int number = 0,
-                                       int tile_num_prop = 0);
-#endif
 
 static tileidx_t _tileidx_trap(trap_type type)
 {
@@ -280,7 +277,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_ABYSS:
         return TILE_DNGN_EXIT_ABYSS;
     case DNGN_STONE_ARCH:
-        if (you.where_are_you == BRANCH_VESTIBULE)
+        if (player_in_branch(BRANCH_VESTIBULE))
             return TILE_DNGN_STONE_ARCH_HELL;
         return TILE_DNGN_STONE_ARCH;
     case DNGN_ENTER_PANDEMONIUM:
@@ -325,7 +322,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_TOMB:
         return TILE_DNGN_ENTER_TOMB;
     case DNGN_ENTER_ZOT:
-        return you.opened_zot ? TILE_DNGN_ENTER_ZOT_OPEN
+        return is_existing_level(level_id(BRANCH_ZOT, 1)) ? TILE_DNGN_ENTER_ZOT_OPEN
                               : TILE_DNGN_ENTER_ZOT_CLOSED;
     case DNGN_ENTER_ZIGGURAT:
         return TILE_DNGN_PORTAL_ZIGGURAT;
@@ -348,38 +345,38 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
     // branch exit stairs
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
-    case DNGN_RETURN_FROM_FOREST:
-    case DNGN_RETURN_FROM_BLADE:
+    case DNGN_EXIT_DWARF:
+    case DNGN_EXIT_FOREST:
+    case DNGN_EXIT_BLADE:
         return TILE_DNGN_RETURN;
 #endif
-    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_EXIT_TEMPLE:
         return TILE_DNGN_EXIT_TEMPLE;
-    case DNGN_RETURN_FROM_ORC:
+    case DNGN_EXIT_ORC:
         return TILE_DNGN_EXIT_ORC;
-    case DNGN_RETURN_FROM_ELF:
+    case DNGN_EXIT_ELF:
         return TILE_DNGN_EXIT_ELF;
-    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_EXIT_LAIR:
         return TILE_DNGN_EXIT_LAIR;
-    case DNGN_RETURN_FROM_SNAKE:
+    case DNGN_EXIT_SNAKE:
         return TILE_DNGN_EXIT_SNAKE;
-    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_EXIT_SWAMP:
         return TILE_DNGN_EXIT_SWAMP;
-    case DNGN_RETURN_FROM_SPIDER:
+    case DNGN_EXIT_SPIDER:
         return TILE_DNGN_EXIT_SPIDER;
-    case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_EXIT_SHOALS:
         return TILE_DNGN_EXIT_SHOALS;
-    case DNGN_RETURN_FROM_SLIME:
+    case DNGN_EXIT_SLIME:
         return TILE_DNGN_EXIT_SLIME;
-    case DNGN_RETURN_FROM_DEPTHS:
+    case DNGN_EXIT_DEPTHS:
         return TILE_DNGN_RETURN_DEPTHS;
-    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_EXIT_VAULTS:
         return TILE_DNGN_EXIT_VAULTS;
-    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_EXIT_CRYPT:
         return TILE_DNGN_EXIT_CRYPT;
-    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_EXIT_TOMB:
         return TILE_DNGN_EXIT_TOMB;
-    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_EXIT_ZOT:
         return TILE_DNGN_RETURN_ZOT;
 
     case DNGN_EXIT_ZIGGURAT:
@@ -449,6 +446,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_GOZAG;
     case DNGN_ALTAR_QAZLAL:
         return TILE_DNGN_ALTAR_QAZLAL;
+    case DNGN_ALTAR_RU:
+        return TILE_DNGN_ALTAR_RU;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
@@ -484,10 +483,6 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_UNSEEN;
     if (override && can_override)
         return override;
-
-    const monster_info* mimic = env.map_knowledge(gc).monsterinfo();
-    if (mimic && mons_is_feat_mimic(mimic->type))
-        return mimic->props["tile_idx"].get_int();
 
     // Any grid-specific tiles.
     switch (feat)
@@ -636,7 +631,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     if (env.map_knowledge(gc).detected_monster())
     {
         ASSERT(cell.monster() == MONS_SENSED);
-        *fg = _tileidx_monster_base(cell.monsterinfo()->base_type);
+        *fg = tileidx_monster_base(cell.monsterinfo()->base_type);
     }
     else if (env.map_knowledge(gc).detected_item())
         *fg = tileidx_item(*cell.item());
@@ -893,7 +888,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         else if (mons_genus(subtype) == MONS_HYDRA)
         {
             z_tile = TILEP_MONS_ZOMBIE_HYDRA
-                     + min((int)mon.number, 5) - 1;
+                     + min(mon.num_heads, 5) - 1;
             break;
         }
         else if ((mons_genus(subtype) == MONS_GIANT_LIZARD
@@ -1008,7 +1003,7 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
     return tile + offset % count;
 }
 
-static tileidx_t _mon_clamp(tileidx_t tile, int offset)
+tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
     return tile + min(max(offset, 0), count - 1);
@@ -1045,8 +1040,8 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 // To avoid needless duplication of a cases in tileidx_monster, some
 // extra parameters that have reasonable defaults for monsters where
 // only the type is known are pushed here.
-static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
-                                       int number, int tile_num_prop)
+tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
+                               int tile_num_prop)
 {
     switch (type)
     {
@@ -1084,11 +1079,17 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_VAMPIRE_BAT:
         return TILEP_MONS_VAMPIRE_BAT;
     case MONS_BUTTERFLY:
-        return _mon_mod(TILEP_MONS_BUTTERFLY, colour);
+        return _mon_mod(TILEP_MONS_BUTTERFLY, tile_num_prop);
     case MONS_FIRE_BAT:
         return TILEP_MONS_FIRE_BAT;
     case MONS_RAVEN:
         return TILEP_MONS_RAVEN;
+    case MONS_BENNU:
+        return TILEP_MONS_BENNU;
+    case MONS_CAUSTIC_SHRIKE:
+        return TILEP_MONS_CAUSTIC_SHRIKE;
+    case MONS_SHARD_SHRIKE:
+        return TILEP_MONS_SHARD_SHRIKE;
 
     // centaurs ('c')
     case MONS_CENTAUR:
@@ -1239,16 +1240,16 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
             return TILEP_MONS_MERFOLK_JAVELINEER_WATER;
         else
             return TILEP_MONS_MERFOLK_JAVELINEER;
-    case MONS_MERMAID:
-        if (in_water)
-            return TILEP_MONS_MERMAID_WATER;
-        else
-            return TILEP_MONS_MERMAID;
     case MONS_SIREN:
         if (in_water)
             return TILEP_MONS_SIREN_WATER;
         else
             return TILEP_MONS_SIREN;
+    case MONS_MERFOLK_AVATAR:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_AVATAR_WATER;
+        else
+            return TILEP_MONS_MERFOLK_AVATAR;
     case MONS_DRYAD:
         return TILEP_MONS_DRYAD;
     case MONS_WATER_NYMPH:
@@ -1306,9 +1307,9 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_RAT;
     case MONS_QUOKKA:
         return TILEP_MONS_QUOKKA;
-    case MONS_GREEN_RAT:
-        return TILEP_MONS_GREEN_RAT;
-    case MONS_ORANGE_RAT:
+    case MONS_RIVER_RAT:
+        return TILEP_MONS_RIVER_RAT;
+    case MONS_HELL_RAT:
         return TILEP_MONS_ORANGE_RAT;
     case MONS_PORCUPINE:
         return TILEP_MONS_PORCUPINE;
@@ -1356,7 +1357,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         const tileidx_t ugly_tile = (type == MONS_VERY_UGLY_THING) ?
             TILEP_MONS_VERY_UGLY_THING : TILEP_MONS_UGLY_THING;
         int colour_offset = ugly_thing_colour_offset(colour);
-        return _mon_clamp(ugly_tile, colour_offset);
+        return tileidx_mon_clamp(ugly_tile, colour_offset);
     }
 
     // vortices ('v')
@@ -1380,6 +1381,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_WATER_ELEMENTAL;
     case MONS_IRON_ELEMENTAL:
         return TILEP_MONS_IRON_ELEMENTAL;
+    case MONS_ELEMENTAL_WELLSPRING:
+        return TILEP_MONS_ELEMENTAL_WELLSPRING;
 
     // worms ('w')
     case MONS_WORM:
@@ -1481,6 +1484,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BOULDER_BEETLE;
     case MONS_BORING_BEETLE:
         return TILEP_MONS_BORING_BEETLE;
+    case MONS_DEATH_SCARAB:
+        return TILEP_MONS_DEATH_SCARAB;
 
     // cyclopes and giants ('C')
     case MONS_GIANT:
@@ -1506,7 +1511,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_FIRE_DRAGON;
     case MONS_HYDRA:
         // Number of heads
-        return _mon_clamp(TILEP_MONS_HYDRA, number - 1);
+        return tileidx_mon_clamp(TILEP_MONS_HYDRA, number - 1);
     case MONS_ICE_DRAGON:
         return TILEP_MONS_ICE_DRAGON;
     case MONS_STEAM_DRAGON:
@@ -1587,6 +1592,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TENGU_WARRIOR;
     case MONS_TENGU_REAVER:
         return TILEP_MONS_TENGU_REAVER;
+    case MONS_ANUBIS_GUARD:
+        return TILEP_MONS_ANUBIS_GUARD;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -1601,7 +1608,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_JELLY;
     case MONS_SLIME_CREATURE:
     case MONS_MERGED_SLIME_CREATURE:
-        return _mon_clamp(TILEP_MONS_SLIME_CREATURE, number - 1);
+        return tileidx_mon_clamp(TILEP_MONS_SLIME_CREATURE, number - 1);
     case MONS_AZURE_JELLY:
         return TILEP_MONS_AZURE_JELLY;
     case MONS_DEATH_OOZE:
@@ -1835,7 +1842,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_GLOWING_SHAPESHIFTER:
         return TILEP_MONS_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
-        return _mon_mod(TILEP_MONS_KILLER_KLOWN, colour);
+        return _mon_random(TILEP_MONS_KILLER_KLOWN);
     case MONS_SLAVE:
         return TILEP_MONS_SLAVE;
     case MONS_DEMIGOD:
@@ -1844,15 +1851,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_HALFLING;
 
     // mimics
-    case MONS_ITEM_MIMIC:
-        return 0;
     case MONS_DANCING_WEAPON:
         return TILE_UNSEEN_WEAPON;
-
-    // Feature mimics actually get drawn with the dungeon code.
-    // See tileidx_feature.
-    case MONS_FEATURE_MIMIC:
-        return 0;
 
     // demonspawn ('6')
     case MONS_DEMONSPAWN:
@@ -1889,8 +1889,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TORMENTOR;
     case MONS_BLUE_DEVIL:
         return TILEP_MONS_BLUE_DEVIL;
-    case MONS_IRON_DEVIL:
-        return TILEP_MONS_IRON_DEVIL;
+    case MONS_RUST_DEVIL:
+        return TILEP_MONS_RUST_DEVIL;
     case MONS_NEQOXEC:
         return TILEP_MONS_NEQOXEC;
     case MONS_ORANGE_DEMON:
@@ -1950,6 +1950,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ELECTRIC_GOLEM;
     case MONS_GUARDIAN_GOLEM:
         return TILEP_MONS_GUARDIAN_GOLEM;
+    case MONS_USHABTI:
+        return TILEP_MONS_USHABTI;
 
     // statues and statue-like things (also '8')
     case MONS_PILLAR_OF_SALT:
@@ -1960,8 +1962,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TRAINING_DUMMY;
     case MONS_ICE_STATUE:
         return TILEP_MONS_ICE_STATUE;
-    case MONS_SILVER_STATUE:
-        return TILEP_MONS_SILVER_STATUE;
+    case MONS_OBSIDIAN_STATUE:
+        return TILEP_MONS_OBSIDIAN_STATUE;
     case MONS_ORANGE_STATUE:
         return TILEP_MONS_ORANGE_STATUE;
     case MONS_DIAMOND_OBELISK:
@@ -1994,6 +1996,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BATTLESPHERE;
     case MONS_FULMINANT_PRISM:
         return _mon_random(TILEP_MONS_FULMINANT_PRISM);
+    case MONS_SINGULARITY:
+        return _mon_cycle(TILEP_MONS_SINGULARITY, tile_num_prop);
 
     // other symbols
     case MONS_SHADOW:
@@ -2042,6 +2046,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // goblins and gnolls ('g')
     case MONS_IJYB:
         return TILEP_MONS_IJYB;
+    case MONS_ROBIN:
+        return TILEP_MONS_ROBIN;
     case MONS_CRAZY_YIUF:
         return TILEP_MONS_CRAZY_YIUF;
     case MONS_GRUM:
@@ -2113,9 +2119,9 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         // Step down the number of heads to get the appropriate tile:
         // For the last five heads, use tiles 1-5, for greater amounts
         // use the next tile for every 5 more heads.
-        return _mon_clamp(TILEP_MONS_LERNAEAN_HYDRA,
-                          number <= 5 ? number - 1
-                                      : 4 + (number - 1)/5);
+        return tileidx_mon_clamp(TILEP_MONS_LERNAEAN_HYDRA,
+                                 number <= 5 ?
+                                 number - 1 : 4 + (number - 1)/5);
     case MONS_XTAHUA:
         return TILEP_MONS_XTAHUA;
 
@@ -2280,6 +2286,16 @@ static void _add_tentacle_overlay(const coord_def pos,
                                   const main_dir dir,
                                   tentacle_type type)
 {
+    /* This adds the corner overlays; e.g. in the following situation:
+         .#
+         #.
+        we need to add corners to the floor tiles since the tentacle
+        will otherwise look weird. So when placing the upper tentacle
+        tile, this function is called with dir WEST, so the upper
+        floor tile gets a corner in the south-east; and similarly,
+        when placing the lower tentacle tile, we get called with dir
+        EAST to give the lower floor tile a NW overlay.
+     */
     coord_def next = pos;
     switch (dir)
     {
@@ -2438,6 +2454,45 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         }
     }
 
+    // Is there a connection to the given direction?
+    // (either through head or next)
+    bool north = false, east = false,
+        south = false, west = false,
+        north_east = false, south_east = false,
+        south_west = false, north_west = false;
+
+    if (!no_head_connect)
+    {
+        if (h_pos.x == t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north = true;
+            else
+                south = true;
+        }
+        else if (h_pos.y == t_pos.y)
+        {
+            if (h_pos.x < t_pos.x)
+                west = true;
+            else
+                east = true;
+        }
+        else if (h_pos.x < t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north_west = true;
+            else
+                south_west = true;
+        }
+        else if (h_pos.x > t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                north_east = true;
+            else
+                south_east = true;
+        }
+    }
+
     // Tentacle only requires checking of head position.
     if (mons_is_tentacle(mon.type))
     {
@@ -2449,34 +2504,22 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         }
 
         // Different handling according to relative positions.
-        if (h_pos.x == t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_N;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_S;
-        }
-        else if (h_pos.y == t_pos.y)
-        {
-            if (h_pos.x < t_pos.x)
-                return TILEP_MONS_KRAKEN_TENTACLE_W;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_E;
-        }
-        else if (h_pos.x < t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_NW;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SW;
-        }
-        else if (h_pos.x > t_pos.x)
-        {
-            if (h_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_NE;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SE;
-        }
+        if (north)
+            return TILEP_MONS_KRAKEN_TENTACLE_N;
+        if (south)
+            return TILEP_MONS_KRAKEN_TENTACLE_S;
+        if (west)
+            return TILEP_MONS_KRAKEN_TENTACLE_W;
+        if (east)
+            return TILEP_MONS_KRAKEN_TENTACLE_E;
+        if (north_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_NW;
+        if (south_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SW;
+        if (north_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_NE;
+        if (south_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SE;
         die("impossible kraken direction");
     }
     // Only tentacle segments from now on.
@@ -2494,40 +2537,59 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
     }
 
+    if (!no_next_connect)
+    {
+        if (n_pos.x == t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north = true;
+            else
+                south = true;
+        }
+        else if (n_pos.y == t_pos.y)
+        {
+            if (n_pos.x < t_pos.x)
+                west = true;
+            else
+                east = true;
+        }
+        else if (n_pos.x < t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north_west = true;
+            else
+                south_west = true;
+        }
+        else if (n_pos.x > t_pos.x)
+        {
+            if (n_pos.y < t_pos.y)
+                north_east = true;
+            else
+                south_east = true;
+        }
+    }
+
     if (no_head_connect || no_next_connect)
     {
         // One segment end goes into water, the other
         // into the direction of head or next.
-        const coord_def s_pos = (no_head_connect ? n_pos : h_pos);
 
-        if (s_pos.x == t_pos.x)
-        {
-            if (s_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S;
-        }
-        else if (s_pos.y == t_pos.y)
-        {
-            if (s_pos.x < t_pos.x)
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E;
-        }
-        else if (s_pos.x < t_pos.x)
-        {
-            if (s_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW;
-        }
-        else if (s_pos.x > t_pos.x)
-        {
-            if (s_pos.y < t_pos.y)
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE;
-            else
-                return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
-        }
+        if (north)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
+        if (south)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S;
+        if (west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W;
+        if (east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E;
+        if (north_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW;
+        if (south_west)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SW;
+        if (north_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE;
+        if (south_east)
+            return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE;
         die("impossible kraken direction");
     }
 
@@ -2535,143 +2597,70 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     // Compare all three positions.
 
     // Straight lines first: Vertical.
-    if (h_pos.x == t_pos.x && t_pos.x == n_pos.x)
+    if (north && south)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_S;
     // Horizontal.
-    if (h_pos.y == t_pos.y && t_pos.y == n_pos.y)
+    if (east && west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_W;
     // Diagonals.
-    if (h_pos.x < t_pos.x && t_pos.x < n_pos.x
-           && h_pos.y < t_pos.y && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && t_pos.x < h_pos.x
-           && n_pos.y < t_pos.y && t_pos.y < h_pos.y)
-    {
+    if (north_west && south_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SE;
-    }
-    if (n_pos.x < t_pos.x && t_pos.x < h_pos.x
-           && h_pos.y < t_pos.y && t_pos.y < n_pos.y
-        || h_pos.x < t_pos.x && t_pos.x < n_pos.x
-           && n_pos.y < t_pos.y && t_pos.y < h_pos.y)
-    {
+    if (north_east && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SW;
-    }
 
     // Curved segments.
-    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x == n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x == h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (east && north)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_N;
-    }
-    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x == n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x == h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (east && south)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_S;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x == n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x == h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (south && west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_W;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x == n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x == h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (north && west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_W;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (north_east && north_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_NW;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y > t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y > t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (south_east && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_SE_SW;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (north_west && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NW_SW;
-    }
-    if (h_pos.x > t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (north_east && south_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_NE_SE;
-    }
 
     // Connect corners and edges.
-    if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x == t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
-    {
-        _add_tentacle_overlay(t_pos, WEST, _get_tentacle_type(mon.type));
+    if (north && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SW;
-    }
-    if (h_pos.x == t_pos.x && h_pos.y < t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x == t_pos.x && n_pos.y < t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (north && south_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_SE;
-    }
-    if (h_pos.x == t_pos.x && h_pos.y > t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x == t_pos.x && n_pos.y > t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (south && north_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NW;
-    }
-    if (h_pos.x == t_pos.x && h_pos.y > t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x == t_pos.x && n_pos.y > t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (south && north_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_NE;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (west && north_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NE;
-    }
-    if (h_pos.x < t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x < n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x < t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x < h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (west && south_east)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE;
-    }
-    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y > n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y > h_pos.y)
-    {
+    if (east && north_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NW;
-    }
-    if (h_pos.x > t_pos.x && h_pos.y == t_pos.y
-           && t_pos.x > n_pos.x && t_pos.y < n_pos.y
-        || n_pos.x > t_pos.x && n_pos.y == t_pos.y
-           && t_pos.x > h_pos.x && t_pos.y < h_pos.y)
-    {
+    if (east && south_west)
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SW;
-    }
+
+    // Connections at acute angles; can currently only happen for vines.
+    if (north && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_NW;
+    if (north && north_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N_NE;
+    if (east && north_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_NE;
+    if (east && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_E_SE;
+    if (south && south_east)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_SE;
+    if (south && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_S_SW;
+    if (west && south_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SW;
+    if (west && north_west)
+        return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NW;
 
     return TILEP_MONS_PROGRAM_BUG;
 }
@@ -2704,8 +2693,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
     else
     {
         int tile_num = 0;
-        if (mon.props.exists("tile_num"))
-            tile_num = mon.props["tile_num"].get_short();
+        if (mon.props.exists(TILE_NUM_KEY))
+            tile_num = mon.props[TILE_NUM_KEY].get_short();
 
         int type = mon.type;
 
@@ -2730,7 +2719,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             else
                 return _mon_mod(TILEP_MONS_BUSH, tile_num);
         case MONS_BALLISTOMYCETE:
-            if (mon.number)
+            if (mon.is_active)
                 return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
             else
                 return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
@@ -2750,21 +2739,6 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
                    : TILEP_MONS_BOULDER_BEETLE;
 
-        case MONS_INEPT_ITEM_MIMIC:
-            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_INEPT;
-        case MONS_ITEM_MIMIC:
-            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC;
-        case MONS_RAVENOUS_ITEM_MIMIC:
-            return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_RAVEN;
-
-        // Feature mimics get drawn with the dungeon, see tileidx_feature.
-        case MONS_INEPT_FEATURE_MIMIC:
-            return TILE_FLAG_MIMIC_INEPT;
-        case MONS_FEATURE_MIMIC:
-            return TILE_FLAG_MIMIC;
-        case MONS_RAVENOUS_FEATURE_MIMIC:
-            return TILE_FLAG_MIMIC_RAVEN;
-
         case MONS_DANCING_WEAPON:
         {
             // Use item tile.
@@ -2779,7 +2753,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
             // Tiles exist for each class of weapon.
             const item_def& item = *mon.inv[MSLOT_WEAPON];
-            switch (melee_skill(item))
+            switch (item_attack_skill(item))
             {
             case SK_LONG_BLADES:
                 return TILEP_MONS_SPECTRAL_LBL;
@@ -2816,7 +2790,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
             if (!_mons_is_kraken_tentacle(mon.type)
                 && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
-                && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
+                && (tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE
+                    || tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_NW &&
+                       mon.type == MONS_SNAPLASHER_VINE_SEGMENT))
             {
                 tile += TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
@@ -2848,8 +2824,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             if (!mon.inv[MSLOT_SHIELD].get() && weapon
                 && (weapon->base_type == OBJ_STAVES
                       && weapon->sub_type == STAFF_POISON
-                    || weapon->base_type == OBJ_WEAPONS
-                      && weapon->special == UNRAND_OLGREB))
+                    || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
                 return TILEP_MONS_ARACHNE;
             }
@@ -2857,19 +2832,30 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_ARACHNE_STAVELESS;
         }
 
+        case MONS_DUVESSA:
+        case MONS_DOWAN:
+        {
+            const tileidx_t t = tileidx_monster_base(type, in_water,
+                                                     mon.colour(true),
+                                                     mon.number, tile_num);
+            return (mon.props.exists(ELVEN_IS_ENERGIZED_KEY)) ? t + 1
+                                                                 : t;
+        }
+
         case MONS_SENSED:
         {
             // Should be always out of LOS, though...
-            const tileidx_t t = _tileidx_monster_base(type, in_water,
-                                    mon.colour, mon.number, tile_num);
+            const tileidx_t t = tileidx_monster_base(type, in_water,
+                                                     mon.colour(true),
+                                                     mon.number, tile_num);
             if (t == TILEP_MONS_PROGRAM_BUG)
                 return TILE_UNSEEN_MONSTER;
             return t;
         }
 
         default:
-            return _tileidx_monster_base(type, in_water, mon.colour,
-                                         mon.number, tile_num);
+            return tileidx_monster_base(type, in_water, mon.colour(true),
+                                        mon.number, tile_num);
         }
     }
 }
@@ -3064,12 +3050,39 @@ tileidx_t tileidx_demonspawn_job(const monster_info& mon)
     }
 }
 
+/**
+ * Return the monster tile used for the player based on a monster type.
+ *
+ * When using the player species monster or a monster in general instead of an
+ * explicit tile name, this function cleans up the tiles for certain monsters
+ * where there's an alternate tile that's better than the base one for doll
+ * purposes.
+ * @returns The tile id of the tile that will be used.
+*/
 tileidx_t tileidx_player_mons()
 {
-    const monster_type mons = player_mons(false);
+    ASSERT(Options.tile_use_monster != MONS_0);
+
+    monster_type mons;
+    if (Options.tile_player_tile)
+        return Options.tile_player_tile;
+
+    if (Options.tile_use_monster == MONS_PLAYER)
+        mons = player_mons(false);
+    else
+        mons = Options.tile_use_monster;
+
     if (mons_is_base_draconian(mons))
         return tileidx_draco_base(mons);
-    return _tileidx_monster_base(player_mons(false));
+
+    switch (mons)
+    {
+    case MONS_CENTAUR:         return TILEP_MONS_CENTAUR_MELEE;
+    case MONS_CENTAUR_WARRIOR: return TILEP_MONS_CENTAUR_WARRIOR_MELEE;
+    case MONS_YAKTAUR:         return TILEP_MONS_YAKTAUR_MELEE;
+    case MONS_YAKTAUR_CAPTAIN: return TILEP_MONS_YAKTAUR_CAPTAIN_MELEE;
+    default:                   return tileidx_monster_base(mons);
+    }
 }
 
 static tileidx_t _tileidx_unrand_artefact(int idx)
@@ -3085,13 +3098,13 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_DAGGER:                return TILE_WPN_DAGGER;
     case WPN_SHORT_SWORD:           return TILE_WPN_SHORT_SWORD;
     case WPN_QUICK_BLADE:           return TILE_WPN_QUICK_BLADE;
-    case WPN_CUTLASS:               return TILE_WPN_CUTLASS;
+    case WPN_RAPIER:                return TILE_WPN_RAPIER;
     case WPN_FALCHION:              return TILE_WPN_FALCHION;
     case WPN_LONG_SWORD:            return TILE_WPN_LONG_SWORD;
     case WPN_GREAT_SWORD:           return TILE_WPN_GREAT_SWORD;
     case WPN_SCIMITAR:              return TILE_WPN_SCIMITAR;
-    case WPN_BASTARD_SWORD:         return TILE_WPN_BASTARD_SWORD;
-    case WPN_CLAYMORE:              return TILE_WPN_CLAYMORE;
+    case WPN_DOUBLE_SWORD:          return TILE_WPN_DOUBLE_SWORD;
+    case WPN_TRIPLE_SWORD:          return TILE_WPN_TRIPLE_SWORD;
     case WPN_HAND_AXE:              return TILE_WPN_HAND_AXE;
     case WPN_WAR_AXE:               return TILE_WPN_WAR_AXE;
     case WPN_BROAD_AXE:             return TILE_WPN_BROAD_AXE;
@@ -3133,12 +3146,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_LONGBOW:               return TILE_WPN_LONGBOW;
     case WPN_LAJATANG:              return TILE_WPN_LAJATANG;
     case WPN_BARDICHE:              return TILE_WPN_BARDICHE;
-    case WPN_BLESSED_FALCHION:      return TILE_WPN_FALCHION;
-    case WPN_BLESSED_LONG_SWORD:    return TILE_WPN_LONG_SWORD;
-    case WPN_BLESSED_SCIMITAR:      return TILE_WPN_SCIMITAR;
-    case WPN_BLESSED_GREAT_SWORD:   return TILE_WPN_GREAT_SWORD;
-    case WPN_BLESSED_BASTARD_SWORD: return TILE_WPN_BLESSED_BASTARD_SWORD;
-    case WPN_BLESSED_CLAYMORE:      return TILE_WPN_BLESSED_CLAYMORE;
     }
 
     return TILE_ERROR;
@@ -3318,11 +3325,23 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_MOTTLED_DRAGON_ARMOUR:
         return TILE_ARM_MOTTLED_DRAGON_ARMOUR;
 
+    case ARM_QUICKSILVER_DRAGON_HIDE:
+        return TILE_ARM_QUICKSILVER_DRAGON_HIDE;
+
+    case ARM_QUICKSILVER_DRAGON_ARMOUR:
+        return TILE_ARM_QUICKSILVER_DRAGON_ARMOUR;
+
     case ARM_STORM_DRAGON_HIDE:
         return TILE_ARM_STORM_DRAGON_HIDE;
 
     case ARM_STORM_DRAGON_ARMOUR:
         return TILE_ARM_STORM_DRAGON_ARMOUR;
+
+    case ARM_SHADOW_DRAGON_HIDE:
+        return TILE_ARM_SHADOW_DRAGON_HIDE;
+
+    case ARM_SHADOW_DRAGON_ARMOUR:
+        return TILE_ARM_SHADOW_DRAGON_ARMOUR;
 
     case ARM_GOLD_DRAGON_HIDE:
         return TILE_ARM_GOLD_DRAGON_HIDE;
@@ -3354,28 +3373,6 @@ static tileidx_t _tileidx_armour(const item_def &item)
 
 static tileidx_t _tileidx_chunk(const item_def &item)
 {
-    if (food_is_rotten(item))
-    {
-        if (!is_inedible(item))
-        {
-            if (is_poisonous(item))
-                return TILE_FOOD_CHUNK_ROTTEN_POISONED;
-
-            if (is_mutagenic(item))
-                return TILE_FOOD_CHUNK_ROTTEN_MUTAGENIC;
-
-            if (causes_rot(item))
-                return TILE_FOOD_CHUNK_ROTTEN_ROTTING;
-
-            if (is_forbidden_food(item))
-                return TILE_FOOD_CHUNK_ROTTEN_FORBIDDEN;
-
-            if (is_contaminated(item))
-                return TILE_FOOD_CHUNK_ROTTEN_CONTAMINATED;
-        }
-        return TILE_FOOD_CHUNK_ROTTEN;
-    }
-
     if (is_inedible(item))
         return TILE_FOOD_CHUNK;
 
@@ -3390,9 +3387,6 @@ static tileidx_t _tileidx_chunk(const item_def &item)
 
     if (is_forbidden_food(item))
         return TILE_FOOD_CHUNK_FORBIDDEN;
-
-    if (is_contaminated(item))
-        return TILE_FOOD_CHUNK_CONTAMINATED;
 
     return TILE_FOOD_CHUNK;
 }
@@ -3472,6 +3466,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BUTTERFLY;
     case MONS_RAVEN:
         return TILE_CORPSE_RAVEN;
+    case MONS_CAUSTIC_SHRIKE:
+        return TILE_CORPSE_CAUSTIC_SHRIKE;
+    case MONS_SHARD_SHRIKE:
+        return TILE_CORPSE_SHARD_SHRIKE;
 
     // centaurs ('c')
     case MONS_CENTAUR:
@@ -3605,10 +3603,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // merfolk ('m')
     case MONS_MERFOLK:
         return TILE_CORPSE_MERFOLK;
-    case MONS_MERMAID:
-        return TILE_CORPSE_MERMAID;
     case MONS_SIREN:
         return TILE_CORPSE_SIREN;
+    case MONS_MERFOLK_AVATAR:
+        return TILE_CORPSE_MERFOLK_AVATAR;
     case MONS_DRYAD:
         return TILE_CORPSE_DRYAD;
     case MONS_WATER_NYMPH:
@@ -3633,6 +3631,25 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_ORC_HIGH_PRIEST:
         return TILE_CORPSE_ORC;
 
+    // humans ('p')
+    case MONS_HUMAN:
+    case MONS_HELL_KNIGHT:
+    case MONS_NECROMANCER:
+    case MONS_WIZARD:
+    case MONS_DEMIGOD: // haloed corpse looks abysmal
+        return TILE_CORPSE_HUMAN;
+    case MONS_HALFLING:
+        return TILE_CORPSE_HALFLING;
+    case MONS_SHAPESHIFTER:
+        return TILE_CORPSE_SHAPESHIFTER;
+    case MONS_GLOWING_SHAPESHIFTER:
+        return TILE_CORPSE_GLOWING_SHAPESHIFTER;
+    case MONS_KILLER_KLOWN:
+    {
+        const int count = tile_main_count(TILE_CORPSE_KILLER_KLOWN);
+        return TILE_CORPSE_KILLER_KLOWN + ui_random(count);
+    }
+
     // dwarves ('q')
     case MONS_DWARF:
         return TILE_CORPSE_DWARF;
@@ -3644,9 +3661,9 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_RAT;
     case MONS_QUOKKA:
         return TILE_CORPSE_QUOKKA;
-    case MONS_GREEN_RAT:
+    case MONS_RIVER_RAT:
         return TILE_CORPSE_GREEN_RAT;
-    case MONS_ORANGE_RAT:
+    case MONS_HELL_RAT:
         return TILE_CORPSE_ORANGE_RAT;
     case MONS_PORCUPINE:
         return TILE_CORPSE_PORCUPINE;
@@ -3699,7 +3716,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     {
         const tileidx_t ugly_corpse_tile = (type == MONS_VERY_UGLY_THING) ?
             TILE_CORPSE_VERY_UGLY_THING : TILE_CORPSE_UGLY_THING;
-        int colour_offset = ugly_thing_colour_offset(item.colour);
+        int colour_offset = ugly_thing_colour_offset(item.get_colour());
 
         if (colour_offset == -1)
             colour_offset = 0;
@@ -3738,6 +3755,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BOULDER_BEETLE;
     case MONS_BORING_BEETLE:
         return TILE_CORPSE_BORING_BEETLE;
+    case MONS_DEATH_SCARAB:
+        return TILE_CORPSE_DEATH_SCARAB;
 
     // giants ('C')
     case MONS_HILL_GIANT:
@@ -3820,6 +3839,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_TENGU;
     case MONS_SPHINX:
         return TILE_CORPSE_SPHINX;
+    case MONS_ANUBIS_GUARD:
+        return TILE_CORPSE_ANUBIS_GUARD;
     case MONS_ARACHNE:
         return TILE_CORPSE_ARACHNE;
 
@@ -3929,20 +3950,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_ELECTRIC_EEL:
         return TILE_CORPSE_ELECTRIC_EEL;
 
-    // humans ('@')
-    case MONS_HUMAN:
-    case MONS_HELL_KNIGHT:
-    case MONS_NECROMANCER:
-    case MONS_WIZARD:
-    case MONS_DEMIGOD: // haloed corpse looks abysmal
-        return TILE_CORPSE_HUMAN;
-    case MONS_HALFLING:
-        return TILE_CORPSE_HALFLING;
-    case MONS_SHAPESHIFTER:
-        return TILE_CORPSE_SHAPESHIFTER;
-    case MONS_GLOWING_SHAPESHIFTER:
-        return TILE_CORPSE_GLOWING_SHAPESHIFTER;
-
     default:
         return TILE_ERROR;
     }
@@ -3992,16 +3999,20 @@ static tileidx_t _tileidx_misc(const item_def &item)
 #endif
 
     case MISC_FAN_OF_GALES:
-        return TILE_MISC_AIR_ELEMENTAL_FAN;
+        return evoker_is_charged(item) ? TILE_MISC_FAN_OF_GALES
+                                       : TILE_MISC_FAN_OF_GALES_INERT;
 
     case MISC_LAMP_OF_FIRE:
-        return TILE_MISC_LAMP_OF_FIRE;
+        return evoker_is_charged(item) ? TILE_MISC_LAMP_OF_FIRE
+                                       : TILE_MISC_LAMP_OF_FIRE_INERT;
 
     case MISC_STONE_OF_TREMORS:
-        return TILE_MISC_STONE_OF_EARTH_ELEMENTALS;
+        return evoker_is_charged(item) ? TILE_MISC_STONE_OF_TREMORS
+                                       : TILE_MISC_STONE_OF_TREMORS_INERT;
 
     case MISC_PHIAL_OF_FLOODS:
-        return TILE_MISC_PHIAL_OF_FLOODS;
+        return evoker_is_charged(item) ? TILE_MISC_PHIAL_OF_FLOODS
+                                       : TILE_MISC_PHIAL_OF_FLOODS_INERT;
 
     case MISC_LANTERN_OF_SHADOWS:
         return TILE_MISC_LANTERN_OF_SHADOWS;
@@ -4021,6 +4032,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_SACK_OF_SPIDERS:
         return TILE_MISC_SACK_OF_SPIDERS;
 
+    case MISC_PHANTOM_MIRROR:
+        return TILE_MISC_PHANTOM_MIRROR;
+
     case MISC_DECK_OF_ESCAPE:
     case MISC_DECK_OF_DESTRUCTION:
 #if TAG_MAJOR_VERSION == 34
@@ -4032,7 +4046,7 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_DECK_OF_WAR:
     case MISC_DECK_OF_CHANGES:
     case MISC_DECK_OF_DEFENCE:
-    case NUM_MISCELLANY: // indicates unidentified deck
+    case MISC_DECK_UNKNOWN:
     {
         tileidx_t ch = TILE_ERROR;
         switch (item.special)
@@ -4084,10 +4098,11 @@ tileidx_t tileidx_item(const item_def &item)
     if (item.props.exists("item_tile"))
         return item.props["item_tile"].get_short();
 
-    int clas    = item.base_type;
-    int type    = item.sub_type;
-    int special = item.special;
-    int colour  = item.colour;
+    const int clas        = item.base_type;
+    const int type        = item.sub_type;
+    const int subtype_rnd = item.subtype_rnd;
+    const int rnd         = item.rnd;
+    const int colour      = item.get_colour();
 
     switch (clas)
     {
@@ -4110,7 +4125,7 @@ tileidx_t tileidx_item(const item_def &item)
         if (item.flags & ISFLAG_KNOW_TYPE)
             return TILE_WAND_ID_FIRST + type;
         else
-            return TILE_WAND_OFFSET + special % NDSC_WAND_PRI;
+            return TILE_WAND_OFFSET + subtype_rnd % NDSC_WAND_PRI;
 
     case OBJ_FOOD:
         return _tileidx_food(item);
@@ -4126,66 +4141,79 @@ tileidx_t tileidx_item(const item_def &item)
     case OBJ_JEWELLERY:
         if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
             return _tileidx_unrand_artefact(find_unrandart_index(item));
-        else if (type <= NUM_RINGS)
+
+        // rings
+        if (!jewellery_is_amulet(item))
         {
             if (is_artefact(item))
             {
-                int offset = item.rnd % tile_main_count(TILE_RING_RANDART_OFFSET);
+                const int offset = item.rnd
+                                   % tile_main_count(TILE_RING_RANDART_OFFSET);
                 return TILE_RING_RANDART_OFFSET + offset;
             }
-            else if (item.flags & ISFLAG_KNOW_TYPE)
-                return TILE_RING_ID_FIRST + type - RING_FIRST_RING;
-            else
-                return TILE_RING_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
-        }
-        else
-        {
-            if (is_artefact(item))
+
+            if (item.flags & ISFLAG_KNOW_TYPE)
             {
-                int offset = item.rnd % tile_main_count(TILE_AMU_RANDOM_OFFSET);
-                return TILE_AMU_RANDOM_OFFSET + offset;
+                return TILE_RING_ID_FIRST + type - RING_FIRST_RING
+#if TAG_MAJOR_VERSION == 34
+                       + 1 // we have a save-compat ring tile before FIRST_RING
+#endif
+                    ;
             }
-            else if (item.flags & ISFLAG_KNOW_TYPE)
-                return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
-            else
-                return TILE_AMU_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
+
+            return TILE_RING_NORMAL_OFFSET + subtype_rnd % NDSC_JEWEL_PRI;
         }
+
+        // amulets
+        if (is_artefact(item))
+        {
+            const int offset = item.rnd
+                               % tile_main_count(TILE_AMU_RANDOM_OFFSET);
+            return TILE_AMU_RANDOM_OFFSET + offset;
+        }
+
+        if (item.flags & ISFLAG_KNOW_TYPE)
+            return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
+        return TILE_AMU_NORMAL_OFFSET + subtype_rnd % NDSC_JEWEL_PRI;
 
     case OBJ_POTIONS:
         if (item.flags & ISFLAG_KNOW_TYPE)
             return TILE_POT_ID_FIRST + type;
         else
-            return TILE_POTION_OFFSET + item.plus % NDSC_POT_PRI;
+            return TILE_POTION_OFFSET + item.subtype_rnd % NDSC_POT_PRI;
 
     case OBJ_BOOKS:
         if (is_random_artefact(item))
         {
-            int offset = special % tile_main_count(TILE_BOOK_RANDART_OFFSET);
+            const int offset = rnd % tile_main_count(TILE_BOOK_RANDART_OFFSET);
             return TILE_BOOK_RANDART_OFFSET + offset;
         }
 
         if (item.sub_type == BOOK_MANUAL)
-            return TILE_BOOK_MANUAL + special % tile_main_count(TILE_BOOK_MANUAL);
+            return TILE_BOOK_MANUAL + rnd % tile_main_count(TILE_BOOK_MANUAL);
 
-        switch (special % NDSC_BOOK_PRI)
+        switch (rnd % NDSC_BOOK_PRI)
         {
-        default:
         case 0:
+            return TILE_BOOK_LEATHER_OFFSET
+                   + rnd % tile_main_count(TILE_BOOK_LEATHER_OFFSET);
         case 1:
-            return TILE_BOOK_PAPER_OFFSET + colour;
+            return TILE_BOOK_METAL_OFFSET
+                   + rnd % tile_main_count(TILE_BOOK_METAL_OFFSET);
         case 2:
-            return TILE_BOOK_LEATHER_OFFSET + special / NDSC_BOOK_PRI;
-        case 3:
-            return TILE_BOOK_METAL_OFFSET + special / NDSC_BOOK_PRI;
-        case 4:
             return TILE_BOOK_PAPYRUS;
+        case 3:
+        case 4:
+        default:
+            return TILE_BOOK_PAPER_OFFSET + colour;
         }
 
     case OBJ_STAVES:
         if (item.flags & ISFLAG_KNOW_TYPE)
             return TILE_STAFF_ID_FIRST + type;
 
-        return TILE_STAFF_OFFSET + (special/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+        return TILE_STAFF_OFFSET
+               + (subtype_rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
     case OBJ_RODS:
         return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
@@ -4321,7 +4349,11 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
 
     if (label >= TILE_RING_ID_FIRST && label <= TILE_RING_ID_LAST)
     {
-        int type = label - TILE_RING_ID_FIRST + RING_FIRST_RING;
+        int type = label - TILE_RING_ID_FIRST + RING_FIRST_RING
+#if TAG_MAJOR_VERSION == 34
+                   + 1 // we have a save-compat ring tile before FIRST_RING
+#endif
+            ;
         int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
 
         if (get_ident_type(OBJ_JEWELLERY, type) != ID_KNOWN_TYPE)
@@ -4743,6 +4775,8 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
     case SPELL_GOLUBRIAS_PASSAGE:        return TILEG_PASSAGE_OF_GOLUBRIA;
     case SPELL_SHROUD_OF_GOLUBRIA:       return TILEG_SHROUD_OF_GOLUBRIA;
+    case SPELL_SINGULARITY:              return TILEG_SINGULARITY;
+    case SPELL_GRAVITAS:         return TILEG_GRAVITAS;
 
     // Summoning
     case SPELL_SUMMON_BUTTERFLIES:       return TILEG_SUMMON_BUTTERFLIES;
@@ -4780,6 +4814,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DISPEL_UNDEAD:            return TILEG_DISPEL_UNDEAD;
     case SPELL_HAUNT:                    return TILEG_HAUNT;
     case SPELL_BORGNJORS_REVIVIFICATION: return TILEG_BORGNJORS_REVIVIFICATION;
+    case SPELL_CIGOTUVIS_EMBRACE:        return TILEG_CIGOTUVIS_EMBRACE;
     case SPELL_AGONY:                    return TILEG_AGONY;
     case SPELL_TWISTED_RESURRECTION:     return TILEG_TWISTED_RESURRECTION;
     case SPELL_EXCRUCIATING_WOUNDS:      return TILEG_EXCRUCIATING_WOUNDS;
@@ -4795,7 +4830,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
     case SPELL_ICE_FORM:                 return TILEG_ICE_FORM;
     case SPELL_BLADE_HANDS:              return TILEG_BLADE_HANDS;
+    case SPELL_IRRADIATE:                return TILEG_IRRADIATE;
     case SPELL_STATUE_FORM:              return TILEG_STATUE_FORM;
+    case SPELL_HYDRA_FORM:               return TILEG_HYDRA_FORM;
     case SPELL_DRAGON_FORM:              return TILEG_DRAGON_FORM;
     case SPELL_NECROMUTATION:            return TILEG_NECROMUTATION;
 
@@ -4814,7 +4851,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_BOLT_OF_INACCURACY:       return TILEG_BOLT_OF_INACCURACY;
     case SPELL_SUMMON_SWARM:             return TILEG_SUMMON_SWARM;
     case SPELL_THUNDERBOLT:              return TILEG_THUNDERBOLT;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_MELEE:                    return TILEG_MELEE;
+#endif
     case SPELL_EXPLOSIVE_BOLT:           return TILEG_EXPLOSIVE_BOLT;
     case SPELL_WEAVE_SHADOWS:            return TILEG_WEAVE_SHADOWS;
     case SPELL_CLOUD_CONE:               return TILEG_CLOUD_CONE;
@@ -4864,14 +4903,15 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CHAIN_OF_CHAOS:           return TILEG_CHAIN_OF_CHAOS;
     case SPELL_CHAOS_BREATH:             return TILEG_CHAOS_BREATH;
     case SPELL_CHAOTIC_MIRROR:           return TILEG_CHAOTIC_MIRROR;
+    case SPELL_CHILLING_BREATH:
     case SPELL_COLD_BREATH:              return TILEG_COLD_BREATH;
     case SPELL_CONTROL_WINDS:            return TILEG_CONTROL_WINDS;
     case SPELL_CORRUPT_BODY:             return TILEG_CORRUPT_BODY;
     case SPELL_CREATE_TENTACLES:         return TILEG_CREATE_TENTACLES;
     case SPELL_CRYSTAL_BOLT:             return TILEG_CRYSTAL_BOLT;
+    case SPELL_DEATH_RATTLE:             return TILEG_DEATH_RATTLE;
     case SPELL_DIMENSION_ANCHOR:         return TILEG_DIMENSION_ANCHOR;
     case SPELL_DISINTEGRATE:             return TILEG_DISINTEGRATE;
-    case SPELL_DRACONIAN_BREATH:         return TILEG_DRACONIAN_BREATH;
     case SPELL_DRUIDS_CALL:              return TILEG_DRUIDS_CALL;
     case SPELL_EARTH_ELEMENTALS:         return TILEG_EARTH_ELEMENTALS;
     case SPELL_ENERGY_BOLT:              return TILEG_ENERGY_BOLT;
@@ -4881,6 +4921,7 @@ tileidx_t tileidx_spell(spell_type spell)
 #if TAG_MAJOR_VERSION == 34
     case SPELL_FAKE_RAKSHASA_SUMMON:     return TILEG_FAKE_RAKSHASA_SUMMON;
 #endif
+    case SPELL_SEARING_BREATH:
     case SPELL_FIRE_BREATH:              return TILEG_FIRE_BREATH;
     case SPELL_FIRE_ELEMENTALS:          return TILEG_FIRE_ELEMENTALS;
     case SPELL_FIRE_SUMMON:              return TILEG_FIRE_SUMMON;
@@ -5106,6 +5147,10 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_MAP_FIND_ALTAR;
     case CMD_MAP_FIND_STASH:
         return TILEG_CMD_MAP_FIND_STASH;
+#ifdef TOUCH_UI
+    case CMD_SHOW_KEYBOARD:
+        return TILEG_CMD_KEYBOARD;
+#endif
     default:
         return TILEG_TODO;
     }
@@ -5163,8 +5208,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SPIT_ACID;
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
-    case ABIL_JUMP:
-        return TILEG_ABILITY_JUMP;
 
     // Others
     case ABIL_DELAYED_FIREBALL:
@@ -5217,8 +5260,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
     case ABIL_EVOKE_FLIGHT:
         return TILEG_ABILITY_EVOKE_FLIGHT;
-    case ABIL_EVOKE_JUMP:
-        return TILEG_ABILITY_JUMP;
     case ABIL_EVOKE_FOG:
         return TILEG_ABILITY_EVOKE_FOG;
 
@@ -5319,10 +5360,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_LUGONU_ABYSS_ENTER:
         return TILEG_ABILITY_LUGONU_ENTER_ABYSS;
     // Nemelex
-    case ABIL_NEMELEX_DRAW_ONE:
-        return TILEG_ABILITY_NEMELEX_DRAW_ONE;
-    case ABIL_NEMELEX_PEEK_TWO:
-        return TILEG_ABILITY_NEMELEX_PEEK_AT_TWO;
     case ABIL_NEMELEX_TRIPLE_DRAW:
         return TILEG_ABILITY_NEMELEX_TRIPLE_DRAW;
     case ABIL_NEMELEX_DEAL_FOUR:
@@ -5393,6 +5430,42 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_QAZLAL_ELEMENTAL_FORCE;
     case ABIL_QAZLAL_DISASTER_AREA:
         return TILEG_ABILITY_QAZLAL_DISASTER_AREA;
+    // Ru
+    case ABIL_RU_DRAW_OUT_POWER:
+        return TILEG_ABILITY_RU_DRAW_OUT_POWER;
+    case ABIL_RU_POWER_LEAP:
+        return TILEG_ABILITY_RU_POWER_LEAP;
+    case ABIL_RU_APOCALYPSE:
+        return TILEG_ABILITY_RU_APOCALYPSE;
+
+    case ABIL_RU_SACRIFICE_PURITY:
+        return TILEG_ABILITY_RU_SACRIFICE_PURITY;
+    case ABIL_RU_SACRIFICE_WORDS:
+        return TILEG_ABILITY_RU_SACRIFICE_WORDS;
+    case ABIL_RU_SACRIFICE_DRINK:
+        return TILEG_ABILITY_RU_SACRIFICE_DRINK;
+    case ABIL_RU_SACRIFICE_ESSENCE:
+        return TILEG_ABILITY_RU_SACRIFICE_ESSENCE;
+    case ABIL_RU_SACRIFICE_HEALTH:
+        return TILEG_ABILITY_RU_SACRIFICE_HEALTH;
+    case ABIL_RU_SACRIFICE_STEALTH:
+        return TILEG_ABILITY_RU_SACRIFICE_STEALTH;
+    case ABIL_RU_SACRIFICE_ARTIFICE:
+        return TILEG_ABILITY_RU_SACRIFICE_ARTIFICE;
+    case ABIL_RU_SACRIFICE_LOVE:
+        return TILEG_ABILITY_RU_SACRIFICE_LOVE;
+    case ABIL_RU_SACRIFICE_COURAGE:
+        return TILEG_ABILITY_RU_SACRIFICE_COURAGE;
+    case ABIL_RU_SACRIFICE_ARCANA:
+        return TILEG_ABILITY_RU_SACRIFICE_ARCANA;
+    case ABIL_RU_SACRIFICE_NIMBLENESS:
+        return TILEG_ABILITY_RU_SACRIFICE_NIMBLENESS;
+    case ABIL_RU_SACRIFICE_DURABILITY:
+        return TILEG_ABILITY_RU_SACRIFICE_DURABILITY;
+    case ABIL_RU_SACRIFICE_HAND:
+        return TILEG_ABILITY_RU_SACRIFICE_HAND;
+    case ABIL_RU_REJECT_SACRIFICES:
+        return TILEG_ABILITY_RU_REJECT_SACRIFICES;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
@@ -5409,8 +5482,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZOTDEF_ICE_STATUE;
     case ABIL_MAKE_OCS:
         return TILEG_ABILITY_ZOTDEF_OCS;
-    case ABIL_MAKE_SILVER_STATUE:
-        return TILEG_ABILITY_ZOTDEF_SILVER_STATUE;
+    case ABIL_MAKE_OBSIDIAN_STATUE:
+        return TILEG_ABILITY_ZOTDEF_OBSIDIAN_STATUE;
     case ABIL_MAKE_CURSE_SKULL:
         return TILEG_ABILITY_ZOTDEF_CURSE_SKULL;
     case ABIL_MAKE_TELEPORT:
@@ -5529,19 +5602,8 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return 0;
 
-    const bool rotten       = food_is_rotten(item);
-    const bool saprovorous  = player_mutation_level(MUT_SAPROVOROUS);
-
     // Vampires are only interested in fresh blood.
-    if (you.species == SP_VAMPIRE
-        && (rotten || !mons_has_blood(item.mon_type)))
-    {
-        return TILE_FOOD_INEDIBLE;
-    }
-
-    // Rotten corpses' chunk effects are meaningless if we are not
-    // saprovorous.
-    if (rotten && !saprovorous)
+    if (you.species == SP_VAMPIRE && !mons_has_blood(item.mon_type))
         return TILE_FOOD_INEDIBLE;
 
     // Harmful chunk effects > religious rules > reduced nutrition.
@@ -5556,14 +5618,6 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
 
     if (is_forbidden_food(item))
         return TILE_FOOD_FORBIDDEN;
-
-    if (is_contaminated(item))
-        return TILE_FOOD_CONTAMINATED;
-
-    // If no special chunk effects, mark corpse as inedible
-    // unless saprovorous.
-    if (rotten && !saprovorous)
-        return TILE_FOOD_INEDIBLE;
 
     return 0;
 }
@@ -5615,6 +5669,8 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
 
     const int etype = enchant_to_int(item);
 
+    // XXX: only helmets and robes have variants, but it would be nice
+    // if this weren't hardcoded.
     if (tile == TILE_THELM_HELM)
     {
         switch (etype)
@@ -5629,6 +5685,24 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
                 break;
             default:
                 tile = _modrng(item.rnd, TILE_THELM_FIRST, TILE_THELM_LAST);
+        }
+        return tile;
+    }
+
+    if (tile == TILE_ARM_ROBE)
+    {
+        switch (etype)
+        {
+            case 1:
+            case 2:
+            case 3:
+                tile = _modrng(item.rnd, TILE_ARM_ROBE_EGO_FIRST, TILE_ARM_ROBE_EGO_LAST);
+                break;
+            case 4:
+                tile = _modrng(item.rnd, TILE_ARM_ROBE_ART_FIRST, TILE_ARM_ROBE_ART_LAST);
+                break;
+            default:
+                tile = _modrng(item.rnd, TILE_ARM_ROBE_FIRST, TILE_ARM_ROBE_LAST);
         }
         return tile;
     }
@@ -5735,21 +5809,29 @@ void bind_item_tile(item_def &item)
 void tile_init_props(monster* mon)
 {
     // Only monsters using mon_mod or mon_cycle need a tile_num.
-    if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
-        && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS
-        && mon->type != MONS_BUSH
-        && mon->type != MONS_FIRE_VORTEX && mon->type != MONS_TWISTER
-        && mon->type != MONS_SPATIAL_VORTEX && mon->type != MONS_SPATIAL_MAELSTROM
-        && mon->type != MONS_ABOMINATION_SMALL
-        && mon->type != MONS_ABOMINATION_LARGE
-        && mon->type != MONS_BLOCK_OF_ICE)
+    switch (mon->type)
     {
-        return;
+        case MONS_SLAVE:
+        case MONS_TOADSTOOL:
+        case MONS_FUNGUS:
+        case MONS_PLANT:
+        case MONS_BUSH:
+        case MONS_FIRE_VORTEX:
+        case MONS_TWISTER:
+        case MONS_SPATIAL_VORTEX:
+        case MONS_SPATIAL_MAELSTROM:
+        case MONS_ABOMINATION_SMALL:
+        case MONS_ABOMINATION_LARGE:
+        case MONS_BLOCK_OF_ICE:
+        case MONS_BUTTERFLY:
+            break;
+        default:
+            return;
     }
 
     // Already overridden or set.
-    if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
+    if (mon->props.exists("monster_tile") || mon->props.exists(TILE_NUM_KEY))
         return;
 
-    mon->props["tile_num"] = short(random2(256));
+    mon->props[TILE_NUM_KEY] = short(random2(256));
 }

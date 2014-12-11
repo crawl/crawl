@@ -48,8 +48,6 @@ void alert_nearby_monsters();
 
 void make_mons_stop_fleeing(monster* mon);
 
-void set_random_target(monster* mon);
-
 void make_mons_leave_level(monster* mon);
 
 bool monster_can_hit_monster(monster* mons, const monster* targ);

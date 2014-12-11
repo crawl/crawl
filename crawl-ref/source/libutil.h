@@ -6,30 +6,16 @@
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
 
-#include "enum.h"
 #include <cctype>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
-#include "config.h"
 
-extern const char *standard_plural_qualifiers[];
-
-// Applies a description type to a name, but does not pluralise! You
-// must pluralise the name if needed. The quantity is used to prefix the
-// name with a quantity if appropriate.
-string apply_description(description_level_type desc, const string &name,
-                         int quantity = 1, bool num_in_words = false);
-
-description_level_type description_type_by_name(const char *desc);
-
-string lowercase_string(string s);
-string &lowercase(string &s);
-string &uppercase(string &s);
-string uppercase_first(string);
-string lowercase_first(string);
+#include "enum.h"
 
 bool key_is_escape(int key);
+
+// numeric string functions
 
 #define CASE_ESCAPE case ESCAPE: case CONTROL('G'): case -1:
 
@@ -74,183 +60,54 @@ static inline ucs_t toalower(ucs_t c)
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(string a, string b);
 
-#ifdef CRAWL_HAVE_STRLCPY
-#include <cstring>
-#else
-size_t strlcpy(char *dst, const char *src, size_t n);
-#endif
-
-int strwidth(const char *s);
-int strwidth(const string &s);
-string chop_string(const char *s, int width, bool spaces = true);
-string chop_string(const string &s, int width, bool spaces = true);
-string wordwrap_line(string &s, int cols, bool tags = false,
-                     bool indent = false);
-
 bool version_is_stable(const char *ver);
 
 // String "tags"
 #define TAG_UNFOUND -20404
 bool strip_tag(string &s, const string &tag, bool nopad = false);
-bool strip_suffix(string &s, const string &suffix);
 int strip_number_tag(string &s, const string &tagprefix);
 vector<string> strip_multiple_tag_prefix(string &s, const string &tagprefix);
 string strip_tag_prefix(string &s, const string &tagprefix);
 bool parse_int(const char *s, int &i);
 
-string article_a(const string &name, bool lowercase = true);
-string pluralise(const string &name,
-                 const char *stock_plural_quals[] = standard_plural_qualifiers,
-                 const char *no_of[] = NULL);
-string apostrophise(const string &name);
-string apostrophise_fixup(const string &msg);
-
-string number_in_words(unsigned number, int pow = 0);
+// String 'descriptions'
+description_level_type description_type_by_name(const char *desc);
 
 bool shell_safe(const char *file);
 
-/**
- * Returns 1 + the index of the first suffix that matches the given string,
- * 0 if no suffixes match.
- */
-int ends_with(const string &s, const char *suffixes[]);
-
-string strip_filename_unsafe_chars(const string &s);
-
-string vmake_stringf(const char *format, va_list args);
-string make_stringf(PRINTF(0, ));
-
-string replace_all(string s, const string &tofind, const string &replacement);
-
-string replace_all_of(string s, const string &tofind, const string &replacement);
-
-string maybe_capitalise_substring(string s);
-string maybe_pick_random_substring(string s);
-
-int count_occurrences(const string &text, const string &searchfor);
-
+#ifdef USE_SOUND
 void play_sound(const char *file);
-
-string &trim_string(string &str);
-string &trim_string_right(string &str);
-string trimmed_string(string s);
-
-static inline bool starts_with(const string &s, const string &prefix)
-{
-    return s.rfind(prefix, 0) != string::npos;
-}
-
-static inline bool ends_with(const string &s, const string &suffix)
-{
-    if (s.length() < suffix.length())
-        return false;
-    return s.find(suffix, s.length() - suffix.length()) != string::npos;
-}
-
-// Splits string 's' on the separator 'sep'. If trim == true, trims each
-// segment. If accept_empties == true, accepts empty segments. If nsplits >= 0,
-// splits on the first nsplits occurrences of the separator, and stores the
-// remainder of the string as the last segment; negative values of nsplits
-// split on all occurrences of the separator.
-vector<string> split_string(const string &sep, string s, bool trim = true,
-                            bool accept_empties = false, int nsplits = -1);
-
-template <typename Z>
-string comma_separated_line(Z start, Z end, const string &andc = " and ",
-                            const string &comma = ", ")
-{
-    string text;
-    for (Z i = start; i != end; ++i)
-    {
-        if (i != start)
-        {
-            Z tmp = i;
-            if (++tmp != end)
-                text += comma;
-            else
-                text += andc;
-        }
-
-        text += *i;
-    }
-    return text;
-}
+#endif
 
 string unwrap_desc(string desc);
 
-template<class T> bool _always_true(T) { return true; }
-
-/**
- * Find the enumerator e between begin and end that satisfies pred(e) and
- * whose name, as given by namefunc(e), has the earliest occurrence of the
- * substring spec.
+/** Ignore an argument and return true.
  *
- * @param spec      The substring to search for.
- * @param begin     The beginning of the enumerator range to search in.
- * @param end       One past the end of the enum range to search in.
- * @param pred      A function from Enum to bool. Enumerators that do not
- *                  satisfy the predicate are ignored.
- * @param namefunc  A function from Enum to string or const char * giving
- *                  the name of the enumerator.
- * @return The enumerator that satisfies pred and whose name contains the
- *         spec substring beginning at the earliest position. If no such
- *         enumerator exists, returns end. If there are multiple strings
- *         containing the spec as a prefix, returns the shortest such string
- *         (so exact matches are preferred); otherwise ties are broken in
- *         an unspecified manner.
+ * @return true
  */
-template<class Enum, class Pred, class NameFunc>
-Enum find_earliest_match(string spec, Enum begin, Enum end,
-                         Pred pred, NameFunc namefunc)
-{
-    Enum selected = end;
-    const size_t speclen = spec.length();
-    size_t bestpos = string::npos;
-    size_t bestlen = string::npos;
-    for (size_t i = begin; i < (size_t) end; ++i)
-    {
-        const Enum curr = static_cast<Enum>(i);
+template<class T> bool always_true(T) { return true; }
 
-        if (!pred(curr))
-            continue;
-
-        const string name = lowercase_string(namefunc(curr));
-        const size_t pos = name.find(spec);
-        const size_t len = name.length();
-
-        if (pos < bestpos || pos == 0 && len < bestlen)
-        {
-            // Exit early if we found an exact match.
-            if (pos == 0 && len == speclen)
-                return curr;
-
-            // npos is never less than bestpos, so the spec was found.
-            bestpos = pos;
-            if (pos == 0)
-                bestlen = len;
-            selected = curr;
-        }
-    }
-    return selected;
-}
-
+/** Remove an element from a vector without preserving order.
+ *  The indicated element is replaced by the last element of the vector.
+ *
+ * @tparam Z The value type of the vector.
+ * @param vec The vector to modify.
+ * @param which The index of the element to remove.
+ */
 template <typename Z>
 void erase_any(vector<Z> &vec, unsigned long which)
 {
     if (which != vec.size() - 1)
-        vec[which] = vec[vec.size() - 1];
+        vec[which] = std::move(vec[vec.size() - 1]);
     vec.pop_back();
 }
 
-template <typename Z>
-static inline void swapv(Z &a, Z &b)
-{
-    Z tmp = a;
-    a = b;
-    b = tmp;
-}
-
-// A comparator for pairs.
+/** A comparator to compare pairs by their second elements.
+ *
+ * @tparam T  The type of the pairs (not the second element!)
+ * @param left,right  The pairs to be compared.
+ * @return true if left.second > right.second, false otherwise.
+ */
 template<typename T>
 struct greater_second
 {
@@ -260,6 +117,56 @@ struct greater_second
     }
 };
 
+/** Delete all the pointers in a container and clear the container.
+ *
+ * @tparam T The type of the container; must be a container of pointers
+ *           to non-arrays.
+ * @param collection The container to clear.
+ */
+template<class T>
+static void deleteAll(T& collection)
+{
+    for (auto ptr : collection)
+        delete ptr;
+    collection.clear();
+}
+
+/** Find a map element by key, and return a pointer to its value.
+ *
+ * @tparam M The type of the map; may be const.
+ * @param map The map in which to do the lookup.
+ * @param obj The key to search for.
+ * @return a pointer to the value associated with obj if found,
+ *         otherwise null. The pointer is const if the map is.
+ */
+template<class M>
+auto map_find(M &map, const typename M::key_type &obj)
+    -> decltype(&map.begin()->second)
+{
+    auto it = map.find(obj);
+    return it == map.end() ? nullptr : &it->second;
+}
+
+/** Find a map element by key, and return its value or a default.
+ *  Only intended for use with simple map values where copying is not
+ *  a concern; use map_find if the returned value should not be
+ *  copied.
+ *
+ * @tparam M The type of the map; may be const.
+ * @param map The map in which to do the lookup.
+ * @param key The key to search for.
+ * @param unfound The object to return if the key was not found.
+ *
+ * @return a copy of the value associated with key if found, otherwise
+ *         a copy of unfound.
+ */
+template<class M>
+typename M::mapped_type lookup(M &map, const typename M::key_type &key,
+                               const typename M::mapped_type &unfound)
+{
+    auto it = map.find(key);
+    return it == map.end() ? unfound : it->second;
+}
 
 static inline int sqr(int x)
 {

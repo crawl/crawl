@@ -6,9 +6,9 @@
 #ifndef __DGNEVENT_H__
 #define __DGNEVENT_H__
 
-#include "externs.h"
-#include "player.h"
 #include <list>
+
+#include "player.h"
 
 // Keep event names in l_dgnevt.cc in sync.
 enum dgn_event_type

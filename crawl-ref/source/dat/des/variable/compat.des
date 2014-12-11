@@ -1,5 +1,5 @@
-# Please remove the following on a TAG_MAJOR_VERSION bump.
-
+# Please remove the following code when the next line is false.
+# TAG_MAJOR_VERSION == 34
 {{
 function callback.grunt_victim_ignite(data, triggerable, triggerer, marker, ev)
   -- the victims don't spawn before; do nothing
@@ -105,6 +105,13 @@ end
 
 function callback.xom_item_pickup(data, triggerable, triggerer, marker, ev)
   -- do nothing
+end
+
+function callback.amethyst_srp_altar(data, triggerable, triggerer, marker, ev)
+  local slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                   data.teleport_spot)
+  you.teleport_to(slaves[1].x, slaves[1].y)
+  crawl.mpr("Your surroundings suddenly seem different.")
 end
 
 }}

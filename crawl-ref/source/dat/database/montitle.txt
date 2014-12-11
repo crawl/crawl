@@ -17,7 +17,7 @@ Antaeus, Guardian of Cocytus
 %%%%
 Arachne title
 
-Arachne the Spider Queen
+Arachne the Weaver
 %%%%
 Asmodeus title
 
@@ -53,7 +53,7 @@ Dispater, Lord of the Iron City
 %%%%
 Dissolution title
 
-High Priest Dissolution
+Dissolution, High Priest of Jiyva
 %%%%
 Donald title
 
@@ -97,7 +97,7 @@ Frances, Duchess of Pandemonium
 %%%%
 Frederick title
 
-Frederick the Vigilant
+Frederick the Flawless
 %%%%
 Gastronok title
 
@@ -153,7 +153,7 @@ Josephine the Decaying Necromancer
 %%%%
 Khufu title
 
-The Undying Pharaoh, Khufu
+Khufu the Undying Pharaoh
 %%%%
 Kirke title
 
@@ -239,6 +239,10 @@ Purgy title
 
 Purgy the Meek
 %%%%
+Robin title
+
+Robin of the Strong Arm
+%%%%
 Roxanne title
 
 Roxanne, Geomancer Emeritus
@@ -285,7 +289,7 @@ Vashnia the Elite Marksnaga
 %%%%
 Wiglaf title
 
-Wiglaf the dwarf
+Wiglaf the Dwarf
 %%%%
 Xtahua title
 

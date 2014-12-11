@@ -6,15 +6,15 @@
 
 #include "AppHdr.h"
 
-#include <locale.h>
-#include <stdio.h>
-#include <string>
-#include <string.h>
-#include <limits.h>
-
-#include "libutil.h"
-#include "syscalls.h"
 #include "unicode.h"
+
+#include <climits>
+#include <clocale>
+#include <cstdio>
+#include <cstring>
+#include <string>
+
+#include "syscalls.h"
 
 // there must be at least 4 bytes free, NOT CHECKED!
 int wctoutf8(char *d, ucs_t s)
@@ -525,8 +525,10 @@ char *next_glyph(char *s)
     if (!c)
         return 0;
     do
+    {
         s += utf8towc(&c, s_cur = s);
         // And any combining ones after it.
+    }
     while (c && !wcwidth(c));
     return s_cur;
 }

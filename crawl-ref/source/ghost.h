@@ -22,14 +22,13 @@ public:
     short best_skill_level;
     short xl;
 
-    short max_hp, ev, ac, damage, speed;
+    short max_hp, ev, ac, damage, speed, move_energy;
     bool see_invis;
     brand_type brand;
     attack_type att_type;
     attack_flavour att_flav;
     resists_t resists;
 
-    bool spellcaster, cycle_colours;
     colour_t colour;
     flight_type fly;
 
@@ -42,8 +41,8 @@ public:
     ghost_demon();
     bool has_spells() const;
     void reset();
-    void init_random_demon();
-    void init_player_ghost();
+    void init_pandemonium_lord();
+    void init_player_ghost(bool actual_ghost = true);
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
                          colour_t force_colour = BLACK);
     void init_dancing_weapon(const item_def& weapon, int power);
@@ -52,8 +51,9 @@ public:
     bool init_chimera_for_place(monster* mon, level_id place,
                                 monster_type chimera_type, coord_def pos);
 
-    void init_spellforged_servitor();
-    bool populate_servitor_spells(spell_type* spells, bool primary, skill_type best_skill);
+    void init_spellforged_servitor(actor* caster);
+
+    void init_lich(monster_type type);
 
     void ugly_thing_to_very_ugly_thing();
 
@@ -67,16 +67,17 @@ private:
     static void announce_ghost(const ghost_demon &g);
 
 private:
-    void add_spells();
+    void add_spells(bool actual_ghost);
     spell_type translate_spell(spell_type playerspell) const;
     void ugly_thing_add_resistance(bool very_ugly,
                                    attack_flavour u_att_flav);
 
-    void _apply_chimera_part(monster* mon, monster_type part, int partnum);
+    bool _apply_chimera_part(monster* mon, monster_type part, int partnum);
 };
 
 bool debug_check_ghosts();
 int ghost_level_to_rank(const int xl);
+int ghost_rank_to_level(const int rank);
 
 extern vector<ghost_demon> ghosts;
 

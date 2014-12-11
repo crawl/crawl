@@ -420,41 +420,36 @@ ENDMAP
 
 NAME:    erik_arrival_cave_to_temple
 # Intentionally higher chances for the non-Temple gods.
-TAGS:    cave_to_temple_subvault no_rotate
+TAGS:    cave_to_temple_subvault no_rotate no_trap_gen
 SUBST:   X : nnG
 NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
 KPROP:   'tCD> = no_rtele_into
 : local rnd = crawl.random2(9)
 : if rnd == 0 then
 KFEAT:   C = altar_beogh
-SUBST:   D=I, G=I
-KMONS:   3 = orc warrior
+SUBST:   DG = I
 KMONS:   1 = orc / nothing
 KMONS:   2 = orc wizard / orc / nothing
+KMONS:   3 = orc warrior
 : elseif rnd == 1 then
 KFEAT:   C = altar_lugonu
 KFEAT:   D = enter_abyss
 KMONS:   1 = quasit / iron imp / ufetubus / demonic crawler w:5
-SUBST:   t : U....
+SUBST:   t : U...., 23 = 0
 : elseif rnd == 2 then
 KFEAT:   C = altar_jiyva
 SUBST:   D = .
-SUBST:   t : U....
 KMONS:   1 = jelly / ooze
-:else
+SUBST:   t : U...., 23 = 0
+: else
 SUBST:   D = C
 SHUFFLE: VCd
 KITEM:   d = any scroll
-: if crawl.coinflip() then
-KMONS:   1 : gnoll / orc
-: elseif crawl.coinflip() then
-KMONS:   2 : big kobold / ogre
-: else
-KMONS:   3 : troll
-: end
-: end
+KMONS:   1 : gnoll / orc / 0 w:20
+KMONS:   2 : big kobold / ogre / 0 w:60
+KMONS:   3 : troll / 0 w:70
 SUBST:   t = T
-KMASK:   T = no_monster_gen
+: end
 MAP
 ...T....ccc.
 ............

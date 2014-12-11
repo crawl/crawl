@@ -36,22 +36,28 @@ DEPTH:   Depths, Crypt:1-4
 ORIENT:  float
 TAGS:    no_item_gen no_monster_gen
 KFEAT:   ABCDEFG = metal_wall
-KMONS:   1 = ancient champion spells:iron_shot;.;haste;pain;.;. actual_spells \
+KMONS:   1 = ancient champion \
+         spells:iron_shot.21.wizard;haste.21.wizard;pain.21.wizard \
          ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
          great sword ego:pain | great sword ego:draining | great sword \
-         ego:flaming | w:3 claymore ego:vorpal
-KMONS:   2 = ancient champion spells:bolt_of_draining;.;haste;throw_frost;.;. \
-         actual_spells ; plate armour ego:fire_resistance | plate armour \
+         ego:flaming | w:3 triple sword ego:vorpal
+KMONS:   2 = ancient champion \
+         spells:bolt_of_draining.21.wizard;haste.21.wizard;\
+                throw_frost.21.wizard \
+         ; plate armour ego:fire_resistance | plate armour \
          ego:cold_resistance . great mace ego:vorpal | great mace ego:draining
-KMONS:   3 = ancient champion spells:venom_bolt;.;haste;haunt;.;. actual_spells \
+KMONS:   3 = ancient champion \
+         spells:venom_bolt.21.wizard;haste.21.wizard;haunt.21.wizard \
          ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
          battleaxe ego:vorpal | battleaxe ego:pain | \
          w:3 executioner's axe ego:vorpal
-KMONS:   4 = ancient champion spells:iskenderun's_mystic_blast;slow;haste;.;.;. \
-         actual_spells ; plate armour ego:fire_resistance | plate armour \
+KMONS:   4 = ancient champion \
+         spells:iskenderun's_mystic_blast.21.wizard;slow.21.wizard;\
+                haste.21.wizard \
+         ; plate armour ego:fire_resistance | plate armour \
          ego:cold_resistance . great sword ego:pain | great sword ego:draining \
          | great sword ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain \
-         | claymore ego:vorpal | executioner's axe ego:vorpal
+         | triple sword ego:vorpal | executioner's axe ego:vorpal
 SHUFFLE: 123
 KPROP:   ]v.1234+ABCDEFG!n$wr|" = no_tele_into
 KITEM:   w = acquire weapon

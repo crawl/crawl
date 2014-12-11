@@ -1,7 +1,9 @@
 #include "AppHdr.h"
 
-#include "clua.h"
 #include "l_libs.h"
+
+#include "clua.h"
+#include "libutil.h" // map_find
 
 //////////////////////////////////////////////////////////////////////
 // Miscellaneous globals
@@ -13,9 +15,8 @@ static pattern_map pattern_cache;
 
 static text_pattern &get_text_pattern(const string &s, bool checkcase)
 {
-    pattern_map::iterator i = pattern_cache.find(s);
-    if (i != pattern_cache.end())
-        return i->second;
+    if (text_pattern *pat = map_find(pattern_cache, s))
+        return *pat;
 
     if (pattern_cache.size() > PATTERN_FLUSH_CEILING)
         pattern_cache.clear();

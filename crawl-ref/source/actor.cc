@@ -1,28 +1,26 @@
 #include "AppHdr.h"
+
+#include "actor.h"
+
 #include <sstream>
 
 #include "act-iter.h"
-#include "actor.h"
 #include "areas.h"
-#include "artefact.h"
 #include "art-enum.h"
 #include "attack.h"
-#include "coord.h"
+#include "directn.h"
 #include "env.h"
 #include "fprop.h"
 #include "itemprop.h"
-#include "libutil.h"
 #include "los.h"
 #include "misc.h"
-#include "mon-abil.h"
+#include "mon-behv.h"
 #include "mon-death.h"
-#include "ouch.h"
-#include "player.h"
 #include "religion.h"
-#include "random.h"
-#include "state.h"
-#include "stuff.h"
+#include "stepdown.h"
+#include "stringutil.h"
 #include "terrain.h"
+#include "transform.h"
 #include "traps.h"
 
 actor::~actor()
@@ -76,13 +74,13 @@ hands_reqd_type actor::hands_reqd(const item_def &item) const
 
 /**
  * Wrapper around the virtual actor::can_wield(const item_def&,bool,bool,bool,bool) const overload.
- * @param item May be NULL, in which case a dummy item will be passed in.
+ * @param item May be nullptr, in which case a dummy item will be passed in.
  */
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const
 {
-    if (item == NULL)
+    if (item == nullptr)
     {
         // Unarmed combat.
         item_def fake;
@@ -116,7 +114,7 @@ bool actor::handle_trap()
     trap_def* trap = find_trap(pos());
     if (trap)
         trap->trigger(*this);
-    return trap != NULL;
+    return trap != nullptr;
 }
 
 int actor::skill_rdiv(skill_type sk, int mult, int div) const
@@ -174,7 +172,7 @@ bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
     {
         // The monster is cold-resistant and can't be hibernated.
         if (intrinsic_only && is_monster()
-                ? get_mons_resist(this->as_monster(), MR_RES_COLD) > 0
+                ? get_mons_resist(as_monster(), MR_RES_COLD) > 0
                 : res_cold() > 0)
         {
             return false;
@@ -255,16 +253,17 @@ bool actor::gourmand(bool calc_unid, bool items) const
 
 bool actor::res_corr(bool calc_unid, bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid);
+    return items && (wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid)
+                     || scan_artefacts(ARTP_RCORR, calc_unid));
 }
 
 // This is a bit confusing. This is not the function that determines whether or
 // not an actor is capable of teleporting, only whether they are specifically
-// under the influence of the "notele" effect. See item_blocks_teleport() in
-// item_use.cc for a superset of this function.
-bool actor::has_notele_item(bool calc_unid) const
+// under the influence of the "notele" effect. See actor::no_tele() for a
+// superset of this function.
+bool actor::has_notele_item(bool calc_unid, vector<item_def> *matches) const
 {
-    return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
+    return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
 }
 
 bool actor::stasis(bool calc_unid, bool items) const
@@ -326,7 +325,7 @@ bool actor::no_cast(bool calc_unid, bool items) const
 bool actor::rmut_from_item(bool calc_unid) const
 {
     return wearing(EQ_AMULET, AMU_RESIST_MUTATION, calc_unid)
-           || is_player() && player_equip_unrand(UNRAND_ORDER);
+           || scan_artefacts(ARTP_RMUT, calc_unid);
 }
 
 bool actor::evokable_berserk(bool calc_unid) const
@@ -338,24 +337,19 @@ bool actor::evokable_berserk(bool calc_unid) const
 bool actor::evokable_invis(bool calc_unid) const
 {
     return wearing(EQ_RINGS, RING_INVISIBILITY, calc_unid)
-           || wearing_ego(EQ_CLOAK, SPARM_DARKNESS, calc_unid)
+           || wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
            || scan_artefacts(ARTP_INVISIBLE, calc_unid);
 }
 
 // Return an int so we know whether an item is the sole source.
 int actor::evokable_flight(bool calc_unid) const
 {
-    if (is_player() && you.form == TRAN_TREE)
+    if (is_player() && get_form()->forbids_flight())
         return 0;
 
     return wearing(EQ_RINGS, RING_FLIGHT, calc_unid)
            + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING, calc_unid)
            + scan_artefacts(ARTP_FLY, calc_unid);
-}
-
-int actor::evokable_jump(bool calc_unid) const
-{
-    return wearing_ego(EQ_ALL_ARMOUR, SPARM_JUMPING, calc_unid);
 }
 
 int actor::spirit_shield(bool calc_unid, bool items) const
@@ -469,8 +463,9 @@ bool actor::check_clinging(bool stepped, bool door)
     {
         if (you.can_see(this))
         {
-            mprf("%s fall%s off the %s.", name(DESC_THE).c_str(),
-                 is_player() ? "" : "s", door ? "door" : "wall");
+            mprf("%s %s off the %s.", name(DESC_THE).c_str(),
+                 conj_verb("fall").c_str(),
+                 door ? "door" : "wall");
         }
         apply_location_effects(pos());
     }
@@ -492,10 +487,9 @@ void actor::clear_constricted()
 
 // End my constriction of i->first, but don't yet update my constricting map,
 // so as not to invalidate i.
-void actor::end_constriction(actor::constricting_t::iterator i,
-                             bool intentional, bool quiet)
+void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
 {
-    actor *const constrictee = actor_by_mid(i->first);
+    actor *const constrictee = actor_by_mid(whom);
 
     if (!constrictee)
         return;
@@ -518,11 +512,11 @@ void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
     if (!constricting)
         return;
 
-    constricting_t::iterator i = constricting->find(whom);
+    auto i = constricting->find(whom);
 
     if (i != constricting->end())
     {
-        end_constriction(i, intentional, quiet);
+        end_constriction(whom, intentional, quiet);
         constricting->erase(i);
 
         if (constricting->empty())
@@ -538,10 +532,8 @@ void actor::stop_constricting_all(bool intentional, bool quiet)
     if (!constricting)
         return;
 
-    constricting_t::iterator i;
-
-    for (i = constricting->begin(); i != constricting->end(); ++i)
-        end_constriction(i, intentional, quiet);
+    for (const auto &entry : *constricting)
+        end_constriction(entry.first, intentional, quiet);
 
     delete constricting;
     constricting = 0;
@@ -571,17 +563,15 @@ void actor::clear_far_constrictions()
         return;
 
     vector<mid_t> need_cleared;
-    constricting_t::iterator i;
-    for (i = constricting->begin(); i != constricting->end(); ++i)
+    for (const auto &entry : *constricting)
     {
-        actor* const constrictee = actor_by_mid(i->first);
+        actor* const constrictee = actor_by_mid(entry.first);
         if (!constrictee || !adjacent(pos(), constrictee->pos()))
-            need_cleared.push_back(i->first);
+            need_cleared.push_back(entry.first);
     }
 
-    vector<mid_t>::iterator j;
-    for (j = need_cleared.begin(); j != need_cleared.end(); ++j)
-        stop_constricting(*j, false, false);
+    for (mid_t whom : need_cleared)
+        stop_constricting(whom, false, false);
 }
 
 void actor::start_constricting(actor &whom, int dur)
@@ -616,9 +606,8 @@ void actor::accum_has_constricted()
     if (!constricting)
         return;
 
-    constricting_t::iterator i;
-    for (i = constricting->begin(); i != constricting->end(); ++i)
-        i->second += you.time_taken;
+    for (auto &entry : *constricting)
+        entry.second += you.time_taken;
 }
 
 bool actor::can_constrict(actor* defender)
@@ -652,7 +641,7 @@ void actor::handle_constriction()
     if (!constricting || !constriction_damage())
         return;
 
-    actor::constricting_t::iterator i = constricting->begin();
+    auto i = constricting->begin();
     // monster_die() can cause constricting() to go away.
     while (constricting && i != constricting->end())
     {
@@ -677,7 +666,8 @@ void actor::handle_constriction()
         damage = timescale_damage(this, damage);
         DIAG_ONLY(const int timescale_dam = damage);
 
-        damage = defender->hurt(this, damage, BEAM_MISSILE, false);
+        damage = defender->hurt(this, damage, BEAM_MISSILE,
+                                KILLED_BY_MONSTER, "", "", false);
         DIAG_ONLY(const int infdam = damage);
 
         string exclamations;
@@ -750,7 +740,7 @@ string actor::describe_props() const
     if (props.size() == 0)
         return "";
 
-    for (CrawlHashTable::const_iterator i = props.begin(); i != props.end(); ++i)
+    for (auto i = props.begin(); i != props.end(); ++i)
     {
         if (i != props.begin())
             oss <<  ", ";
@@ -809,7 +799,7 @@ bool actor::torpor_slowed() const
 {
     if (!props.exists(TORPOR_SLOWED_KEY) || is_sanctuary(pos())
         || is_stationary()
-        || (is_monster() && this->as_monster()->check_stasis(true))
+        || (is_monster() && as_monster()->check_stasis(true))
         || (!is_monster() && stasis()))
     {
         return false;
@@ -829,4 +819,105 @@ bool actor::torpor_slowed() const
     }
 
     return false;
+}
+
+string actor::resist_margin_phrase(int margin) const
+{
+    if (res_magic() == MAG_IMMUNE)
+        return " " + conj_verb("are") + " unaffected.";
+
+    static const string resist_messages[][2] =
+    {
+      { " barely %s.",                  "resist" },
+      { " %s to resist.",               "struggle" },
+      { " %s with significant effort.", "resist" },
+      { " %s with some effort.",        "resist" },
+      { " easily %s.",                  "resist" },
+      { " %s with almost no effort.",   "resist" },
+    };
+
+    const int index = max(0, min((int)ARRAYSZ(resist_messages) - 1,
+                                 ((margin + 45) / 15)));
+
+    return make_stringf(resist_messages[index][0].c_str(),
+                        conj_verb(resist_messages[index][1]).c_str());
+}
+
+void actor::collide(coord_def newpos, const actor *agent, int pow)
+{
+    actor *other = actor_at(newpos);
+    ASSERT(this != other);
+    ASSERT(alive());
+
+    if (is_monster())
+        behaviour_event(as_monster(), ME_WHACK, agent);
+
+    dice_def damage(2, 1 + pow / 10);
+
+    if (other && other->alive())
+    {
+        if (other->is_monster())
+            behaviour_event(other->as_monster(), ME_WHACK, agent);
+        if (you.can_see(this) || you.can_see(other))
+        {
+            mprf("%s %s with %s!",
+                 name(DESC_THE).c_str(),
+                 conj_verb("collide").c_str(),
+                 other->name(DESC_THE).c_str());
+        }
+        const string thisname = name(DESC_A, true);
+        const string othername = other->name(DESC_A, true);
+        other->hurt(agent, other->apply_ac(damage.roll()),
+                    BEAM_MISSILE, KILLED_BY_COLLISION,
+                    othername, thisname);
+        if (alive())
+        {
+            hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+                 KILLED_BY_COLLISION, thisname, othername);
+        }
+        return;
+    }
+
+    if (you.can_see(this))
+    {
+        if (!can_pass_through_feat(grd(newpos)))
+        {
+            mprf("%s %s into %s!",
+                 name(DESC_THE).c_str(), conj_verb("slam").c_str(),
+                 env.map_knowledge(newpos).known()
+                 ? feature_description_at(newpos, false, DESC_THE, false)
+                       .c_str()
+                 : "something");
+        }
+        else
+        {
+            mprf("%s violently %s moving!",
+                 name(DESC_THE).c_str(), conj_verb("stop").c_str());
+        }
+    }
+    hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
+         KILLED_BY_COLLISION, "",
+         feature_description_at(newpos, false, DESC_A, false));
+}
+
+bool actor::can_cleave(int which_attack) const
+{
+    if (confused())
+        return false;
+
+    if (is_player()
+        && (you.form == TRAN_HYDRA && you.heads() > 1
+            || you.duration[DUR_CLEAVE]))
+    {
+        return true;
+    }
+
+    const item_def* weap = weapon(which_attack);
+    if (!weap)
+        return false;
+
+    if (is_unrandom_artefact(*weap, UNRAND_GYRE))
+        return true;
+
+    return item_attack_skill(*weap) == SK_AXES;
 }

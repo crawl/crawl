@@ -19,22 +19,17 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
-#include "libutil.h"
-#include "player.h"
 #include "makeitem.h"
 #include "message.h"
-#include "monster.h"
 #include "notes.h"
-#include "options.h"
-#include "random.h"
+#include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
-#include "skills2.h"
-#include "state.h"
 #include "spl-wpnench.h"
-#include "stuff.h"
+#include "state.h"
+#include "stepdown.h"
+#include "stringutil.h"
 #include "terrain.h"
-#include "unwind.h"
 #include "view.h"
 
 static bool _offer_items();
@@ -82,7 +77,7 @@ string god_prayer_reaction()
     return result;
 }
 
-static bool _bless_weapon(god_type god, brand_type brand, int colour)
+static bool _bless_weapon(god_type god, brand_type brand, colour_t colour)
 {
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
                                        OSEL_BLESSABLE_WEAPON, true, true, false);
@@ -121,7 +116,6 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
-    wpn.colour = colour;
 
     const bool is_cursed = wpn.cursed();
 
@@ -136,35 +130,30 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         convert2good(wpn);
 
         if (is_blessed_convertible(wpn))
-        {
             origin_acquired(wpn, GOD_SHINING_ONE);
-            wpn.flags |= ISFLAG_BLESSED_WEAPON;
-        }
     }
     else if (is_evil_god(god))
-    {
         convert2bad(wpn);
-        wpn.flags &= ~ISFLAG_BLESSED_WEAPON;
-    }
 
     you.wield_change = true;
     you.one_time_ability_used.set(god);
     calc_mp(); // in case the old brand was antimagic,
     you.redraw_armour_class = true; // protection,
     you.redraw_evasion = true;      // or evasion
-    string desc  = old_name + " ";
-            desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
-                     god == GOD_LUGONU        ? "corrupted by Lugonu" :
-                     god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
-                                              : "touched by the gods");
+    string desc  = old_name + " "
+                 + (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
+                    god == GOD_LUGONU        ? "corrupted by Lugonu" :
+                    god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
+                                             : "touched by the gods");
 
     take_note(Note(NOTE_ID_ITEM, 0, 0,
               wpn.name(DESC_A).c_str(), desc.c_str()));
     wpn.flags |= ISFLAG_NOTED_ID;
+    wpn.props[FORCED_ITEM_COLOUR_KEY] = colour;
 
     mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
 
-    flash_view(colour);
+    flash_view(UA_PLAYER, colour);
 
     simple_god_message(" booms: Use this gift wisely!");
 
@@ -200,11 +189,12 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     return true;
 }
 
-static bool _god_will_brand_weapon(god_type god)
+/** Would a god currently allow using a one-time six-star ability?
+ * Does not check whether the god actually grants such an ability.
+ */
+bool can_do_capstone_ability(god_type god)
 {
-   return you_worship(god) && !player_under_penance()
-          && you.piety >= piety_breakpoint(5)
-          && !you.one_time_ability_used[god];
+   return in_good_standing(god, 5) && !you.one_time_ability_used[god];
 }
 
 static bool _altar_prayer()
@@ -218,9 +208,8 @@ static bool _altar_prayer()
     if (you_worship(GOD_ZIN))
         return _zin_donate_gold();
 
-    // TSO blesses weapons with holy wrath, and long blades and demon
-    // whips specially.
-    else if (_god_will_brand_weapon(GOD_SHINING_ONE))
+    // TSO blesses weapons with holy wrath, and demon weapons specially.
+    else if (can_do_capstone_ability(GOD_SHINING_ONE))
     {
         simple_god_message(" will bless one of your weapons.");
         more();
@@ -228,7 +217,7 @@ static bool _altar_prayer()
     }
 
     // Lugonu blesses weapons with distortion.
-    else if (_god_will_brand_weapon(GOD_LUGONU))
+    else if (can_do_capstone_ability(GOD_LUGONU))
     {
         simple_god_message(" will brand one of your weapons with the corruption of the Abyss.");
         more();
@@ -236,7 +225,7 @@ static bool _altar_prayer()
     }
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
-    else if (_god_will_brand_weapon(GOD_KIKUBAAQUDGHA))
+    else if (can_do_capstone_ability(GOD_KIKUBAAQUDGHA))
     {
         if (you.species != SP_FELID)
         {
@@ -256,8 +245,8 @@ static bool _altar_prayer()
             }
         }
 
-        int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1, 0,
-                                  0, you.religion);
+        int thing_created = items(true, OBJ_BOOKS, BOOK_NECRONOMICON, 1, 0,
+                                  you.religion);
 
         if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
             return false;
@@ -271,8 +260,8 @@ static bool _altar_prayer()
         return true;
     }
 
-    else if (you_worship(GOD_GOZAG) && !player_under_penance()
-        && !you.one_time_ability_used[GOD_GOZAG])
+    else if (in_good_standing(GOD_GOZAG)
+             && !you.one_time_ability_used[GOD_GOZAG])
     {
         bool found = false;
         bool prompted = false;
@@ -287,24 +276,17 @@ static bool _altar_prayer()
                 continue;
             }
 
-            string message = "";
-            {
-                unwind_var<short int> old_quant = j->quantity;
-                j->quantity = 1;
+            prompted = true;
 
-                prompted = true;
+            string prompt =
+                make_stringf("Do you wish to duplicate %s?",
+                             j->name(DESC_THE).c_str());
 
-                string prompt =
-                    make_stringf("Do you wish to duplicate %s?",
-                                 j->name(old_quant.original_value() > 1
-                                         ? DESC_A : DESC_THE).c_str());
+            if (!yesno(prompt.c_str(), true, 'n'))
+                continue;
 
-                if (!yesno(prompt.c_str(), true, 'n'))
-                    continue;
-
-                message = " duplicates " + j->name(DESC_YOUR) + "!";
-            }
-            if (!copy_item_to_grid(*j, you.pos(), 1))
+            string message = " duplicates " + j->name(DESC_YOUR) + "!";
+            if (!copy_item_to_grid(*j, you.pos()))
             {
                 mprf("Something went wrong!");
                 return false;
@@ -373,21 +355,21 @@ static void _zen_meditation()
  * Pray. (To your god, or the god of the altar you're at, or to Beogh, if
  * you're an orc being preached at.)
  */
-void pray()
+void pray(bool allow_altar_prayer)
 {
     // only successful prayer takes time
     you.turn_is_over = false;
 
     // try to pray to an altar (if any is present)
-    if (_altar_pray_or_convert())
+    if (allow_altar_prayer && _altar_pray_or_convert())
     {
         you.turn_is_over = true;
         return;
     }
 
     // convert to beogh via priest.
-    if (you_worship(GOD_NO_GOD) && env.level_state & LSTATE_BEOGH
-        && can_convert_to_beogh())
+    if (allow_altar_prayer && you_worship(GOD_NO_GOD)
+        && (env.level_state & LSTATE_BEOGH) && can_convert_to_beogh())
     {
         // TODO: deduplicate this with the code in _altar_pray_or_convert.
         you.turn_is_over = true;
@@ -557,7 +539,7 @@ static bool _zin_donate_gold()
                                                      : "noncommittal";
         result += (donation >= 30 && you.piety < piety_breakpoint(5)) ? "!" : ".";
 
-        mpr(result.c_str());
+        mpr(result);
     }
 
     zin_recite_interrupt();
@@ -586,7 +568,7 @@ static void _ashenzari_sac_scroll(const item_def& item)
                                          jwl, SCR_CURSE_JEWELLERY,
                                          0);
         }
-        int it = items(0, OBJ_SCROLLS, scr, true, 0, 0, 0, GOD_ASHENZARI);
+        int it = items(false, OBJ_SCROLLS, scr, 0);
         if (it == NON_ITEM)
         {
             mpr("You feel the world is against you.");
@@ -620,38 +602,6 @@ static bool _destroyed_valuable_weapon(int value, int type)
 
 static piety_gain_t _sac_corpse(const item_def& item)
 {
-    if (you_worship(GOD_OKAWARU))
-    {
-        monster dummy;
-        dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum
-                                                     : item.plus);
-        if (item.props.exists(MONSTER_NUMBER))
-            dummy.number   = item.props[MONSTER_NUMBER].get_short();
-        define_monster(&dummy);
-
-        // Hit dice are overridden by define_monster, so only set them now.
-        if (item.props.exists(MONSTER_HIT_DICE))
-        {
-            int hd = item.props[MONSTER_HIT_DICE].get_short();
-            const monsterentry *m = get_monster_data(dummy.type);
-            int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
-
-            dummy.set_hit_dice(hd);
-            dummy.max_hit_points = hp;
-        }
-        int gain = get_fuzzied_monster_difficulty(&dummy);
-        dprf("fuzzied corpse difficulty: %4.2f", gain*0.01);
-
-        // Shouldn't be needed, but just in case an XL:1 spriggan diver walks
-        // into a minotaur corpses vault on D:10 ...
-        if (item.props.exists("cap_sacrifice"))
-            gain = min(gain, 700 * 3);
-
-        gain_piety(gain, 700);
-        gain = div_rand_round(gain, 700);
-        return (gain <= 0) ? PIETY_NONE : (gain < 4) ? PIETY_SOME : PIETY_LOTS;
-    }
-
     gain_piety(13, 19);
 
     // The feedback is not accurate any longer on purpose; it only reveals
@@ -729,9 +679,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         else if (item_orig == MONS_ORC_PRIEST)
             chance += 4;
 
-        if (food_is_rotten(item))
-            chance--;
-        else if (item.sub_type == CORPSE_SKELETON)
+        if (item.sub_type == CORPSE_SKELETON)
             chance -= 2;
 
         gain_piety(chance, 20);

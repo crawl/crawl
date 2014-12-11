@@ -26,6 +26,21 @@ enum unarmed_attack_type
     UNAT_LAST_ATTACK = UNAT_TENTACLES
 };
 
+class AuxAttackType
+{
+public:
+    AuxAttackType(int _damage, string _name) :
+    damage(_damage), name(_name) { };
+public:
+    virtual int get_damage() const { return damage; };
+    virtual int get_brand() const { return SPWPN_NORMAL; };
+    virtual string get_name() const { return name; };
+    virtual string get_verb() const { return get_name(); };
+protected:
+    const int damage;
+    const string name;
+};
+
 class melee_attack : public attack
 {
 public:
@@ -36,15 +51,12 @@ public:
     bool         can_cleave;
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
-    bool jumping_attack;
-    bool jump_blocked;
     coord_def attack_position;
 
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = -1, int effective_attack_num = -1,
-                 bool is_cleaving = false, bool is_jump_attack = false,
-                 bool is_jump_blocked = false,
+                 bool is_cleaving = false,
                  coord_def attack_pos = coord_def(0, 0));
 
     // Applies attack damage and other effects.
@@ -62,6 +74,7 @@ private:
     bool handle_phase_hit();
     bool handle_phase_damaged();
     bool handle_phase_aux();
+    bool handle_phase_killed();
     bool handle_phase_end();
 
     /* Combat Calculations */
@@ -79,10 +92,10 @@ private:
 
     void rot_defender(int amount, int immediate = 0);
     void splash_defender_with_acid(int strength);
-    bool decapitate_hydra(int damage_done, int damage_type = -1);
-    bool chop_hydra_head(int damage_done,
-                         int dam_type,
-                         brand_type wpn_brand);
+
+    bool consider_decapitation(int damage_done, int damage_type = -1);
+    bool attack_chops_heads(int damage_done, int damage_type, int wpn_brand);
+    void decapitate(int dam_type);
 
     /* Axe cleaving */
     void cleave_setup();
@@ -95,17 +108,14 @@ private:
     void do_passive_heat();
 #endif
     void emit_foul_stench();
-    void tendril_disarm();
     /* Race Effects */
     void do_minotaur_retaliation();
 
     /* Brand / Attack Effects */
-    void chaos_affects_attacker();
     bool do_knockback(bool trample = true);
     bool attack_warded_off();
 
     /* Output methods */
-    void adjust_noise();
     void set_attack_verb();
     void announce_hit();
 
@@ -126,7 +136,7 @@ private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
     bool player_aux_unarmed();
-    unarmed_attack_type player_aux_choose_uc_attack();
+    bool player_gets_aux_punch();
     void player_aux_setup(unarmed_attack_type atk);
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
@@ -141,7 +151,7 @@ private:
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
     void player_stab_check();
-    int  player_stab_tier();
+    bool player_good_stab();
     void player_announce_aux_hit();
     string player_why_missed();
     void player_warn_miss();
@@ -149,8 +159,7 @@ private:
     void _defender_die();
 
     // Added in, were previously static methods of fight.cc
-    bool _tran_forbid_aux_attack(unarmed_attack_type atk);
-    bool _extra_aux_attack(unarmed_attack_type atk, bool is_uc);
+    bool _extra_aux_attack(unarmed_attack_type atk);
     int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
                                  bool vampiric = false);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,

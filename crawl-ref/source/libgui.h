@@ -9,7 +9,7 @@
 #define LIBGUI_H
 #ifdef USE_TILE
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "libconsole.h"
 

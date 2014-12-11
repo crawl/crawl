@@ -3,9 +3,8 @@
 #include "dgn-swamp.h"
 
 #include "coordit.h"
-#include "dungeon.h"
 #include "dgn-height.h"
-#include "random.h"
+#include "dungeon.h"
 
 static void _swamp_slushy_patches(int depth_multiplier)
 {
@@ -61,13 +60,10 @@ static void _swamp_apply_features(int margin)
 
 void dgn_build_swamp_level()
 {
-    env.level_build_method += " swamp";
-    env.level_layout_types.insert("swamp");
-
     const int swamp_depth = you.depth - 1;
     dgn_initialise_heightmap(-19);
     _swamp_slushy_patches(swamp_depth * 3);
     dgn_smooth_heights();
     _swamp_apply_features(2);
-    env.heightmap.reset(NULL);
+    env.heightmap.reset(nullptr);
 }

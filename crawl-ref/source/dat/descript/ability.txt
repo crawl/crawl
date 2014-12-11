@@ -1,3 +1,4 @@
+
 %%%%
 No ability ability
 
@@ -80,15 +81,6 @@ Start flying. During flight you can safely cross water and similar obstacles.
 Be warned, though, that flight may time out at inopportune moments and cause
 you to fall to your death.
 %%%%
-Jump Attack ability
-
-Leap at a nearby enemy and perform a melee attack, landing somewhere adjacent
-to the target. You cannot jump over flying enemies and can only leap giant
-enemies submerged in lava or deep water. Standing or swimming in water, lava,
-or liquefied ground will also prevent you from using this ability. Felids are
-natural jumpers and will become more skilled at pouncing upon reaching
-experience levels 6 and 12.
-%%%%
 Hellfire ability
 
 Blast your enemies with hellfire. This ball of unholy flames explodes on
@@ -157,13 +149,6 @@ Evoke Flight ability
 
 <Fly ability>
 %%%%
-Evoke Jump Attack ability
-
-Leap at a nearby enemy and perform a melee attack, landing somewhere adjacent
-to the target. You cannot jump over flying enemies and can only leap giant
-enemies submerged in lava or deep water. Standing or swimming in water, lava,
-or liquefied ground will also prevent you from using this ability.
-%%%%
 Stop Flying ability
 
 Stop flying.
@@ -228,8 +213,8 @@ Cure all your mutations — but only once.
 Divine Shield ability
 
 The Shining One grants you a divine shield. Because it is held aloft by godly
-power, it does not interfere with your equipment. However, it is controlled by
-your willpower, and your skill with Shields will improve it.
+power, it does not interfere with your equipment. The strength and duration
+of the shield are increased by Invocations skill.
 %%%%
 Cleansing Flame ability
 
@@ -462,18 +447,6 @@ Transfer yourself to Lugonu's realm instantly. The effort of even using the
 ability will leave your health and magic depleted.
 %%%%
 # Nemelex Xobeh
-Draw One ability
-
-Choose any deck in your inventory and draw a card from it.
-%%%%
-Peek at Two ability
-
-Discard one card from any deck in your inventory to draw two cards from the
-deck, look at them, and place them back on top of the deck. The deck will be
-identified and inscribed as containing those two cards. Note that once
-peeked at, a deck cannot be used with any of Nemelex's other abilities
-(except Draw One).
-%%%%
 Triple Draw ability
 
 Draw three cards from any deck in your inventory, look at them, and decide
@@ -621,9 +594,8 @@ your skills will be further drained when taking damage.
 Potion Petition ability
 
 Petition Gozag to sell you the effects of a set of potions. Gozag will offer
-four lists at a time, with varying prices. One of the potion sets will always
-solely consist of a potion of porridge, which will always be affordable if the
-ability is usable. Prices will slowly increase as you purchase potions.
+three lists at a time, with varying prices. Prices will slowly increase as you
+purchase potions.
 %%%%
 Call Merchant ability
 
@@ -631,16 +603,20 @@ Through Gozag, send funds to a merchant to help them set up shop in the
 dungeon. The shop may appear in an unvisited area of the dungeon, or near your
 location if there are no other appropriate locations for a store. The cost of
 funding a shop increases with the number of shops funded.
+
+You will always have the option to fund a food shop, provided you are a race
+that requires food. Ghouls and vampires will find corpses and blood in their
+respective food shops.
 %%%%
 Bribe Branch ability
 
 Give 3000 gold to Gozag to spread throughout the inhabitants of the current
 branch, only possible if the branch has intelligent native monsters. Those
 native to a bribed branch will occasionally become uninterested in fighting you
-(with tougher inhabitants having an increasing chance of being bribed),
-and more rarely will join your ranks subject to continued payment. Upon
-exhaustion of the bribe fund, bribed enemies who have not joined you will
-resume hostilities.
+(with tougher inhabitants having an increasing chance of being bribed), and
+more rarely will join your ranks. Enemies' becoming less hostile will lower the
+remaining bribe fund; upon its exhaustion, bribed enemies will resume
+hostilities.
 %%%%
 # Qazlal
 Upheaval ability
@@ -657,6 +633,183 @@ natural clouds create neutral elementals.
 Disaster Area ability
 
 Blasts the entire area around you with powerful natural forces.
+%%%%
+# Ru
+Draw Out Power ability
+
+Tap into your inner power to restore health and magic, as well as freeing your
+body and mind from external constraints, including nets, webs, constriction,
+petrification, slowness, and confusion. The amount of health and magic restored
+increases with piety.
+
+Using this ability exhausts and slightly drains you.
+%%%%
+Power Leap ability
+
+Use the power that infuses you to perform an incredibly fast leap. On landing,
+that power explodes outward, damaging all foes adjacent to you. The amount of
+damage done increases with your piety and experience level.
+
+Using this ability exhausts you.
+%%%%
+Apocalypse ability
+
+You reveal Ru's truth to your enemies. All enemies in your line of sight are
+dealt severe damage and may be rendered mute or paralyzed or slowed. The damage
+dealt by this power increases with your piety and experience level.
+
+Using this ability exhausts and severely drains you.
+%%%%
+Sacrifice Purity ability
+
+Adherents who choose to sacrifice their purity will be offered a single
+mutation. The mutation can be one of deterioration, deformed body, uncontrolled
+shouting, worse device healing, clumsiness, weakness or dopiness.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Words ability
+
+Adherents who choose to sacrifice their words lose the ability to use magical
+scrolls while threatened.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Drink ability
+
+Adherents who choose to sacrifice drink lose the ability to drink potions while
+threatened.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Essence ability
+
+Adherents who choose to sacrifice their essence will be given the choice to
+accept or deny a sacrifice. The sacrifice offered is one of the following:
+reduced magic pool, MR-, or increased spellcasting difficulty.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Health ability
+
+Adherents who choose to sacrifice their health will be given the choice to
+accept or deny a sacrifice. The sacrifice offered is one of the following:
+reduced health, penalties to Evasion, or penalties to AC.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Stealth ability
+
+Adherents who choose to sacrifice their stealth will always be noticed by foes
+and cannot have ranks in the Stealth skill.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Artifice ability
+
+Adherents who choose to sacrifice artifice may not evoke the latent power of
+magical objects and their Evocations skill is set to 0.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Love ability
+
+Adherents who choose to sacrifice love are despised by all. All creatures,
+even those summoned by the adherent, become hostile. Monsters that are spell
+residue and which do not act independently, such as orbs of destruction and
+spectral weapons, are the only things which can remain friendly.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Courage ability
+
+Adherents who choose to sacrifice their courage become terrified of dangerous
+monsters. Such monsters fill them with horror, which reduces the adherents'
+ability to hit and damage monsters in combat, and the power of the adherents'
+spells.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Arcana ability
+
+Adherents who choose to sacrifice their arcana lose the ability to use certain
+schools of magic. Any magic that includes a sacrificed school cannot be cast.
+Those magic skills cannot be trained.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Nimbleness ability
+
+Adherents who choose to sacrifice their nimbleness lose the ability to train
+the Dodging skill and have that skill set to 0. This sacrifice is worth more
+if you cannot train Armour.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Durability ability
+
+Adherents who choose to sacrifice their durability lose the ability to train
+the Armour skill and have that skill set to 0. This sacrifice is worth more
+if you cannot train Dodging.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice a Hand ability
+
+Adherents of every species who choose to sacrifice a hand lose the ability to
+use shields and can wear one fewer ring. Non-formicids also lose the ability
+to wield two-handed weapons.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Reject Sacrifices ability
+
+Adherents who cannot bring themselves to make any offered sacrifice may reject
+the offers. Doing so means Ru will take more time evaluating the adherent's
+readiness for future sacrifices. Ru will not offer more sacrifices while there
+is an existing offer still extended.
+
+Each consecutive rejection increases the sacrifice timer significantly.
+Accepting a sacrifice will reset the timer to the standard length.
 %%%%
 Renounce Religion ability
 
@@ -754,7 +907,7 @@ Make lightning spire ability
 Construct a lightning spire with the ability to throw electricity at the
 targeted location.
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 Construct a statue with the ability to summon friendly demons at the targeted
 location.

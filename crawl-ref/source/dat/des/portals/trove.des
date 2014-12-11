@@ -130,7 +130,7 @@ function trove.get_trove_item(e, value, base_item)
 
        {base="potion", type="cure mutation", quant=2, weight=potion_weight},
        {base="scroll", type="acquirement", quant=2, weight=1},
-       {base="scroll", type="identify", quant=12+d(4)+d(4), weight=1},
+       {base="scroll", type="identify", quant=15+d(5)+d(5), weight=1},
 
        {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot", weight=1},
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot", weight=1},
@@ -153,12 +153,29 @@ function trove.get_trove_item(e, value, base_item)
   return item
 end
 
+function trove.get_trove_toll(e)
+  if crawl.one_chance_in(20) and you.race() ~= "Demigod" and you.god() ~= "Gozag" then
+    return trove.get_toll_nopiety()
+  else
+    return trove.get_trove_toll_with_item(
+        trove.get_trove_item(e, 10000))
+  end
+end
+
+function trove.get_trove_toll_with_item(item)
+  return { item = item }
+end
+
+function trove.get_toll_nopiety()
+  return { nopiety = true }
+end
+
 function trove.portal(e)
-    local item = trove.get_trove_item(e, 1000)
+    local toll = trove.get_trove_toll(e, 1000)
 
     local function stair ()
         return trove_marker  {
-            toll_item = item,
+            toll = toll,
             entity = "portal",
             toll_desc = "to enter a treasure trove",
             floor = "expired_portal",

@@ -177,7 +177,6 @@ HINT_CONVERT
 # Not the case for Chei, but not sure if we need to go into that much
 # detail here.
 #
-# TODO: use $cmd for ^
 You've just converted to worshipping <w>{{ return you.god() }}</w>. Your piety
 (divine favour) will gradually decrease over time, and if it runs out {{ return
 you.god() }} will excommunicate you and punish you. You can prevent this,
@@ -186,8 +185,9 @@ things to please {{ return you.god() }}. But don't panic: you start out with a
 decent amount of piety, so any danger of excommunication is far off.
 
 You can check your god's likes and dislikes, as well as your current standing
-and divine abilities, by typing <input>^</input><localtiles> (alternatively
-press <input>Shift-right-click</input> on your avatar)</localtiles>.
+and divine abilities, by typing
+<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles> (alternatively press
+<input>Shift-right-click</input> on your avatar)</localtiles>.
 %%%%
 HINT_SEEN_FIRST_OBJECT
 

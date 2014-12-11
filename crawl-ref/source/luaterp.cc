@@ -96,7 +96,7 @@ static int _report(lua_State *ls, int status)
     if (status && !lua_isnil(ls, -1))
     {
         const char *msg = lua_tostring(ls, -1);
-        if (msg == NULL)
+        if (msg == nullptr)
             msg = "(error object is not a string)";
         mprf(MSGCH_ERROR, "%s", msg);
         lua_pop(ls, 1);
@@ -145,9 +145,9 @@ void debug_terp_dlua(CLua &vm)
     if (!_loaded_terp_files)
     {
         vm.execfile("dlua/debug.lua", false, false);
-        for (unsigned int i = 0; i < Options.terp_files.size(); i++)
+        for (const string &file : Options.terp_files)
         {
-            vm.execfile(Options.terp_files[i].c_str(), false, false);
+            vm.execfile(file.c_str(), false, false);
             if (!vm.error.empty())
                 mprf(MSGCH_ERROR, "Lua error: %s", vm.error.c_str());
         }

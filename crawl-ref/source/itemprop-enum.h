@@ -11,6 +11,9 @@ enum armour_type
     ARM_CHAIN_MAIL,
     ARM_PLATE_ARMOUR,
     ARM_LAST_MUNDANE_BODY = ARM_PLATE_ARMOUR,
+#if TAG_MAJOR_VERSION > 34
+    ARM_CRYSTAL_PLATE_ARMOUR,
+#endif
 
     ARM_CLOAK,
 
@@ -30,8 +33,9 @@ enum armour_type
     ARM_LARGE_SHIELD,
     ARM_LAST_SHIELD = ARM_LARGE_SHIELD,
 
+#if TAG_MAJOR_VERSION == 34
     ARM_CRYSTAL_PLATE_ARMOUR,
-    ARM_MIN_UNBRANDED = ARM_CRYSTAL_PLATE_ARMOUR,
+#endif
 
     ARM_ANIMAL_SKIN,
 
@@ -54,10 +58,22 @@ enum armour_type
     ARM_SWAMP_DRAGON_ARMOUR,
     ARM_PEARL_DRAGON_HIDE,
     ARM_PEARL_DRAGON_ARMOUR,
-    ARM_MAX_UNBRANDED = ARM_PEARL_DRAGON_ARMOUR,
+#if TAG_MAJOR_VERSION > 34
+    ARM_SHADOW_DRAGON_HIDE,
+    ARM_SHADOW_DRAGON_ARMOUR,
+    ARM_QUICKSILVER_DRAGON_HIDE,
+    ARM_QUICKSILVER_DRAGON_ARMOUR,
+#endif
 
     ARM_CENTAUR_BARDING,
     ARM_NAGA_BARDING,
+
+#if TAG_MAJOR_VERSION == 34
+    ARM_SHADOW_DRAGON_HIDE,
+    ARM_SHADOW_DRAGON_ARMOUR,
+    ARM_QUICKSILVER_DRAGON_HIDE,
+    ARM_QUICKSILVER_DRAGON_ARMOUR,
+#endif
 
     NUM_ARMOURS
 };
@@ -105,7 +121,7 @@ enum brand_type // item_def.special
     SPWPN_CHAOS,
     SPWPN_EVASION,
 
-    MAX_PAN_LORD_BRANDS = SPWPN_EVASION,
+    MAX_GHOST_BRAND = SPWPN_EVASION,
 
 #if TAG_MAJOR_VERSION == 34
     SPWPN_CONFUSE, // XXX not a real weapon brand, only for Confusing Touch
@@ -138,9 +154,11 @@ enum hands_reqd_type
 
 enum jewellery_type
 {
+#if TAG_MAJOR_VERSION == 34
     RING_REGENERATION,
-    RING_FIRST_RING = RING_REGENERATION,
+#endif
     RING_PROTECTION,
+    RING_FIRST_RING = RING_PROTECTION,
     RING_PROTECTION_FROM_FIRE,
     RING_POISON_RESISTANCE,
     RING_PROTECTION_FROM_COLD,
@@ -168,6 +186,7 @@ enum jewellery_type
     // RINGS after num_rings are for unique types for artefacts
     //   (no non-artefact version).
     // Currently none.
+    // XXX: trying to add one doesn't actually work
 
     AMU_RAGE = 35,
     AMU_FIRST_AMULET = AMU_RAGE,
@@ -184,6 +203,7 @@ enum jewellery_type
     AMU_GUARDIAN_SPIRIT,
     AMU_FAITH,
     AMU_STASIS,
+    AMU_REGENERATION,
 
     NUM_JEWELLERY
 };
@@ -234,7 +254,10 @@ enum misc_item_type
     MISC_PHIAL_OF_FLOODS,
     MISC_SACK_OF_SPIDERS,
 
-    NUM_MISCELLANY, // mv: used for random generation
+    MISC_PHANTOM_MIRROR,
+
+    NUM_MISCELLANY,
+    MISC_DECK_UNKNOWN = NUM_MISCELLANY,
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
     MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,
 };
@@ -334,7 +357,7 @@ enum special_armour_type
     SPARM_COLD_RESISTANCE,
     SPARM_POISON_RESISTANCE,
     SPARM_SEE_INVISIBLE,
-    SPARM_DARKNESS,
+    SPARM_INVISIBILITY,
     SPARM_STRENGTH,
     SPARM_DEXTERITY,
     SPARM_INTELLIGENCE,
@@ -352,7 +375,9 @@ enum special_armour_type
     SPARM_REFLECTION,
     SPARM_SPIRIT_SHIELD,
     SPARM_ARCHERY,
+#if TAG_MAJOR_VERSION == 34
     SPARM_JUMPING,
+#endif
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };
@@ -426,7 +451,7 @@ enum rod_type
     ROD_WARDING,
 #endif
     ROD_SHADOWS,
-    ROD_STRIKING,
+    ROD_IRON,
 #if TAG_MAJOR_VERSION == 34
     ROD_VENOM,
 #endif
@@ -449,7 +474,10 @@ enum weapon_type
     WPN_DAGGER,
     WPN_QUICK_BLADE,
     WPN_SHORT_SWORD,
+    WPN_RAPIER,
+#if TAG_MAJOR_VERSION > 34
     WPN_CUTLASS,
+#endif
 
     WPN_FALCHION,
     WPN_LONG_SWORD,
@@ -491,8 +519,8 @@ enum weapon_type
     WPN_GIANT_SPIKED_CLUB,
 
     WPN_DEMON_BLADE,
-    WPN_BASTARD_SWORD,
-    WPN_CLAYMORE,
+    WPN_DOUBLE_SWORD,
+    WPN_TRIPLE_SWORD,
 
     WPN_DEMON_TRIDENT,
     WPN_SCYTHE,
@@ -503,15 +531,17 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION == 34
     WPN_HUNTING_SLING,
-#endif
 
     WPN_BLESSED_FALCHION,
     WPN_BLESSED_LONG_SWORD,
     WPN_BLESSED_SCIMITAR,
     WPN_BLESSED_GREAT_SWORD,
+#endif
     WPN_EUDEMON_BLADE,
-    WPN_BLESSED_BASTARD_SWORD,
-    WPN_BLESSED_CLAYMORE,
+#if TAG_MAJOR_VERSION == 34
+    WPN_BLESSED_DOUBLE_SWORD,
+    WPN_BLESSED_TRIPLE_SWORD,
+#endif
     WPN_SACRED_SCOURGE,
     WPN_TRISHULA,
 
@@ -519,6 +549,8 @@ enum weapon_type
     WPN_GREATSLING,
     WPN_HAND_CROSSBOW,
     WPN_TRIPLE_CROSSBOW,
+
+    WPN_CUTLASS,
 #endif
 
     NUM_WEAPONS,
@@ -549,7 +581,7 @@ enum vorpal_damage_type
     DAM_BLUDGEON        = 0x0001,       // crushing
     DAM_SLICE           = 0x0002,       // slicing/chopping
     DAM_PIERCE          = 0x0004,       // stabbing/piercing
-    DAM_WHIP            = 0x0008,       // whip slashing (no butcher)
+    DAM_WHIP            = 0x0008,       // whip slashing
     DAM_MAX_TYPE        = DAM_WHIP,
 
     // These are used for vorpal weapon descriptions.  You shouldn't set
@@ -560,10 +592,9 @@ enum vorpal_damage_type
     DVORP_PIERCING      = 0x3000,
     DVORP_CHOPPING      = 0x4000,       // used for axes
     DVORP_SLASHING      = 0x5000,       // used for whips
-    DVORP_STABBING      = 0x6000,       // used for knives/daggers
 
-    DVORP_CLAWING       = 0x7000,       // claw damage
-    DVORP_TENTACLE      = 0x8000,       // tentacle damage
+    DVORP_CLAWING       = 0x6000,       // claw damage
+    DVORP_TENTACLE      = 0x7000,       // tentacle damage
 
     // These are shortcuts to tie vorpal/damage types for easy setting...
     // as above, setting more than one vorpal type is trouble.
@@ -573,7 +604,6 @@ enum vorpal_damage_type
     DAMV_PIERCING       = DVORP_PIERCING | DAM_PIERCE,
     DAMV_CHOPPING       = DVORP_CHOPPING | DAM_SLICE,
     DAMV_SLASHING       = DVORP_SLASHING | DAM_WHIP,
-    DAMV_STABBING       = DVORP_STABBING | DAM_PIERCE,
 
     DAM_MASK            = 0x0fff,       // strips vorpal specification
     DAMV_MASK           = 0xf000,       // strips non-vorpal specification

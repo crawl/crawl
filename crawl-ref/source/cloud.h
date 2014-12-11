@@ -6,11 +6,10 @@
 #ifndef CLOUD_H
 #define CLOUD_H
 
-#include "externs.h"
-
 cloud_type random_smoke_type();
 
 cloud_type cloud_type_at(const coord_def &pos);
+bool cloud_is_yours_at(const coord_def &pos);
 
 void delete_cloud(int cloud);
 void delete_cloud_at(coord_def p);
@@ -32,18 +31,17 @@ void manage_clouds();
 
 bool is_opaque_cloud(int cloud_idx);
 
-int resist_fraction(int resist, int bonus_res = 0);
 int max_cloud_damage(cloud_type cl_type, int power = -1);
 int actor_apply_cloud(actor *act);
 
 string cloud_name_at_index(int cloudno);
 string cloud_type_name(cloud_type type, bool terse = true);
-int get_cloud_colour(int cloudno);
+colour_t get_cloud_colour(int cloudno);
 coord_def get_cloud_originator(const coord_def& pos);
 
-bool is_damaging_cloud(cloud_type type, bool temp = false);
+bool actor_cloud_immune(const actor *act, const cloud_struct &cloud);
+bool is_damaging_cloud(cloud_type type, bool temp = false, bool yours = false);
 bool is_harmless_cloud(cloud_type type);
-bool in_what_cloud(cloud_type type);
 
 bool mons_avoids_cloud(const monster* mons, int cloud_num,
                        bool placement = false);

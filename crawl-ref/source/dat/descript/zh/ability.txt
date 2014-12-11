@@ -308,10 +308,6 @@ Enter the Abyss ability
 立刻将你自己传送到卢格努的领域中；代价是永久性减少你的最大生命值和魔法值。
 仅仅是使用该异能就会将你的生命力和魔力消耗殆尽。
 %%%%
-Draw One ability
-
-选定你背包中的一副卡组，从中抽取一张卡牌。
-%%%%
 Triple Draw ability
 
 从你背包中的任意一副牌组中抽三张牌。你看清它们的花色，选择一张留下，
@@ -492,7 +488,7 @@ Make lightning spire ability
 
 在目标地点建造一座会发射电流束的闪电塔。
 %%%%
-Make silver statue ability
+Make obsidian statue ability
 
 在目标地点建造一尊会召唤恶魔来协助战斗的雕像。
 %%%%

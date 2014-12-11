@@ -7,11 +7,10 @@
 
 #include "coordit.h"
 
-#include "coord-circle.h"
 #include "coord.h"
 #include "libutil.h"
-#include "los.h"
 #include "losglobal.h"
+#include "los.h"
 #include "random.h"
 
 rectangle_iterator::rectangle_iterator(const coord_def& corner1,
@@ -80,7 +79,7 @@ void rectangle_iterator::operator ++()
         current.x++;
 }
 
-void rectangle_iterator::operator++(int dummy)
+void rectangle_iterator::operator++(int)
 {
     ++(*this);
 }
@@ -98,7 +97,7 @@ random_rectangle_iterator::random_rectangle_iterator(const coord_def& corner1,
 
     for (int y = top; y <= bottom; y++)
         for (int x = left; x <= right; x++)
-            remaining.push_back(coord_def(x, y));
+            remaining.emplace_back(x, y);
 
     if (remaining.empty())
         current = 0;
@@ -120,7 +119,7 @@ random_rectangle_iterator::random_rectangle_iterator(int x_border_dist,
 
     for (int y = y_border_dist; y <= bottom; y++)
         for (int x = x_border_dist; x <= right; x++)
-            remaining.push_back(coord_def(x, y));
+            remaining.emplace_back(x, y);
 
     if (remaining.empty())
         current = 0;
@@ -160,7 +159,7 @@ void random_rectangle_iterator::operator ++()
     }
 }
 
-void random_rectangle_iterator::operator++(int dummy)
+void random_rectangle_iterator::operator++(int)
 {
     ++(*this);
 }
@@ -288,7 +287,7 @@ void radius_iterator::operator++()
     coend(RI_DONE);
 }
 
-void radius_iterator::operator++(int dummy)
+void radius_iterator::operator++(int)
 {
     ++(*this);
 }
@@ -323,7 +322,7 @@ void adjacent_iterator::operator ++()
     }
 }
 
-void adjacent_iterator::operator++(int dummy)
+void adjacent_iterator::operator++(int)
 {
     ++(*this);
 }
@@ -343,7 +342,7 @@ distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
     for (int dx = -1; dx <= 1; dx++)
         for (int dy = -1; dy <= 1; dy++)
             if (dx || dy)
-                vnear->push_back(coord_def(dx, dy));
+                vnear->emplace_back(dx, dy);
 
     if (exclude_center)
         advance();
@@ -437,7 +436,7 @@ const distance_iterator& distance_iterator::operator++()
     return *this;
 }
 
-void distance_iterator::operator++(int dummy)
+void distance_iterator::operator++(int)
 {
     ++(*this);
 }

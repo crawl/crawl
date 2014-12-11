@@ -6,10 +6,11 @@
 #ifndef KILLS_H
 #define KILLS_H
 
-#include <vector>
-#include <string>
+#include <cstdio>
 #include <map>
-#include <stdio.h>
+#include <string>
+#include <vector>
+
 #include "enum.h"
 
 class monster;
@@ -60,19 +61,19 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    void add_kill(const monster* mon, unsigned short place);
-    void add_place(unsigned short place, bool force = false);
+    void add_kill(const monster* mon, level_id place);
+    void add_place(level_id place, bool force = false);
 
     void merge(const kill_def &k, bool unique_monster);
 
     string info(const kill_monster_desc &md) const;
     string base_name(const kill_monster_desc &md) const;
 
-    unsigned short kills;           // How many kills does the player have?
-    int            exp;             // Experience gained for slaying the beast.
-                                    // Only set *once*, even for shapeshifters.
+    unsigned short kills;    // How many kills does the player have?
+    int            exp;      // Experience gained for slaying the beast.
+                             // Only set *once*, even for shapeshifters.
 
-    vector<unsigned short> places; // Places where we've killed the beast.
+    vector<level_id> places; // Places where we've killed the beast.
 private:
     string append_places(const kill_monster_desc &md, const string &name) const;
 };
@@ -91,7 +92,7 @@ public:
 
     string ghost_name;
     int exp;
-    unsigned short place;
+    level_id place;
 };
 
 // This is the structure that Lua sees.
@@ -105,7 +106,7 @@ struct kill_exp
     monster_type monnum; // Number of the beast
     int modifier;        // Nature of the beast
 
-    vector<unsigned short> places;
+    vector<level_id> places;
 
     kill_exp(const kill_def &k, const kill_monster_desc &md)
         : nkills(k.kills), exp(k.exp), base_name(k.base_name(md)),

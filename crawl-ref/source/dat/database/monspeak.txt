@@ -154,8 +154,6 @@ _mercenary_guard_common_
 
 VISUAL:@The_monster@ looks very unfriendly.
 
-VISUAL:@The_monster@ looks very cold.
-
 VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ screams @at_foe@, "One false step and I'll kill you."
@@ -1531,6 +1529,7 @@ w:5
 dragon
 %%%%
 _laughs_
+# also used by mimics
 
 snickers
 
@@ -1727,13 +1726,9 @@ Arachne
 
 @The_monster@ says @to_foe@, "Come closer, little fly."
 
-@The_monster@ says @to_foe@, "You don't care about a little bondage, do you?"
-
 @The_monster@ says @to_foe@, "You'll find yourself a bit attached to my weave."
 
 @The_monster@ says @to_foe@, "No one escapes my webs."
-
-@The_monster@ says @to_foe@, "You can be the slave of me, the spider queen... or food for my pets."
 %%%%
 ############ ASTERION ### Minotaur of Makhleb
 Asterion
@@ -1995,6 +1990,10 @@ _Boris_return_rare_
 Boris unsummoned
 
 @The_monster@ says, "You can't fire me, I quit!"
+%%%%
+friendly Boris unsummoned
+
+@Boris unsummoned@
 ## END Boris ##
 %%%%
 ############ CHUCK ### An avid rock collector.
@@ -2430,6 +2429,12 @@ unthinkable
 high
 
 action
+
+pizzabubble
+
+noodlescoop
+
+mumblescurry
 %%%%
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
@@ -2501,7 +2506,7 @@ w:50
 @The_monster@ says, "So-called 'good' gods are just as evil as the rest. I hate hypocrisy."
 
 %%%%
-Orcish Mines Donald
+Orc Donald
 
 w:50
 @_generic_Donald_@
@@ -2536,7 +2541,7 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 
 @The_monster@ says, "I hate complainers so much."
 %%%%
-Elven Halls Donald
+Elf Donald
 
 w:50
 @_generic_Donald_@
@@ -2553,7 +2558,7 @@ w:50
 
 @The_monster@ says, "I don't get the difference between high elves and deep elves."
 
-@The monster@ says, "Why do these elves have so many gross rats and spiders?"
+@The_monster@ says, "Why do these elves have so many gross rats and spiders?"
 
 @The_monster@ says, "None of these elves know how to fight. I hate that."
 %%%%
@@ -2631,7 +2636,7 @@ w:50
 
 @The_monster@ says, "This tentacle just came out of nowhere and touched me. I hate tentacles!"
 %%%%
-Spider Nest Donald
+Spider Donald
 
 w:50
 @_generic_Donald_@
@@ -2660,7 +2665,7 @@ w:50
 
 # TODO: If the Hellspider is added, you know what to do.
 %%%%
-Slime Pits Donald
+Slime Donald
 
 w:50
 @_generic_Donald_@
@@ -2709,7 +2714,7 @@ w:50
 
 @The_monster@ says, "I hate that squelching noise."
 %%%%
-Snake Pit Donald
+Snake Donald
 
 w:50
 @_generic_Donald_@
@@ -2780,7 +2785,7 @@ w:50
 
 @The_monster@ says, "I saw a dragon earlier, but I didn't get too close - it seemed pretty mercurial."
 %%%%
-Hall of Blades Donald
+Blade Donald
 
 w:50
 @_generic_Donald_@
@@ -2884,7 +2889,7 @@ w:50
 
 @The_monster@ says, "All these vampires have me hopping mad!"
 %%%%
-Labyrinth Donald
+Lab Donald
 
 w:50
 @_generic_Donald_@
@@ -3437,7 +3442,7 @@ w:50
 
 @The_monster@ says, "I saw some gold over there. Quick, better go get it!"
 
-@The monster@ says, "I bet you can make some really great dragon armour out of gold."
+@The_monster@ says, "I bet you can make some really great dragon armour out of gold."
 %%%%
 Qazlal Donald
 
@@ -4000,7 +4005,7 @@ w:1
 
 @The_monster@ says, "I will defeat you, of this I have no doubt!" @player_only@
 %%%%
-############ FREDERICK ### A mercenary guarding the dungeon
+############ FREDERICK ### An extremely smug (& powerful) demigod
 Frederick
 
 @_Frederick_common_@
@@ -4036,8 +4041,6 @@ VISUAL:@The_monster@ yawns in an exaggerated manner.
 
 @The_monster@ says, "In my day, to be a hero meant something. Now, it just means you die quicker."
 
-@The_monster@ says, "You are rather slow, aren't you? Would you like a potion?"
-
 @The_monster@ says, "You call yourself an adventurer? Hah!"
 
 @The_monster@ says, "I've killed five 'adventurers' today. Will you be the sixth?"
@@ -4058,6 +4061,8 @@ VISUAL:@The_monster@ sighs.
 
 @The_monster@ says, "All of you adventurers look the same to me! Bumbling weaklings, the lot!" @player_only@
 
+# extra-silly
+w:5
 @The_monster@ says, "For you, today is the most challenging fight of your life. For me... well, I will have lunch shortly." @player_only@
 
 @The_monster@ says, "Perhaps I should have been a lumberjack. The trees might put up more of a fight."
@@ -5171,8 +5176,6 @@ VISUAL:@The_monster@ is caught in a moment of prayer.
 %%%%
 silenced Mennas
 
-VISUAL:@The_monster@ gestures frantically.
-
 @Mennas@
 %%%%
 ############ MURRAY ### A disembodied skull.
@@ -5298,6 +5301,48 @@ confused Natasha killed
 confused Natasha permanently killed
 
 @Natasha permanently killed@
+%%%%
+############ ROBIN ### A hobgoblin with a plan.
+Robin
+
+@_Robin_common_@
+
+w:5
+@_Robin_rare_@
+
+%%%%
+_Robin_common_
+@The_monster@ says, "Kneel, worm!"
+
+@The_monster@ says, "My army is invincible!"
+
+@The_monster@ says, "Feeling lonely?"
+
+@The_monster@ says, "Duck!"
+
+@The_monster@ laughs in a distinctly smug fashion.
+
+VISUAL:@The_monster@'s bangles clink loudly.
+
+VISUAL:@The_monster@'s horned helmet rattles.
+
+VISUAL:@The_monster@ flexes a bicep menacingly.
+
+# YOU ARE VIOLATING AREA SECURITY!
+@The_monster@ points @at_foe@. "Kill!"
+
+%%%%
+_Robin_rare_
+@The_monster@ says, "A pitiful @player_genus@ like you will never find the ORB!"
+
+# You can be the slave of me, the Spider Queen!
+@The_monster@ says, "Bow before me, strongest of all the hobgoblins!"
+
+# ...or food for my pets!
+@The_monster@ says, "My goblins will feast on your bones."
+
+w:2
+@The_monster@ says, "We wiped out the hill dwarves - you're next!"
 %%%%
 ############ NELLIE ### An escaped circus (h)elephant.
 Nellie
@@ -6302,6 +6347,34 @@ _Xtahua_rare_
 ##########################################
 # Specific non-unique monsters
 ##########################################
+################## Bennu ###################################
+%%%%
+bennu
+
+VISUAL:@The_monster@'s plumage briefly flares with an otherwordly flame.
+
+VISUAL:@The_monster@ jubilantly flits about.
+%%%%
+Bennu killed
+
+@_Bennu_death_@
+%%%%
+_Bennu_death_
+
+VISUAL:@The_monster@ renews itself in a burst of flame!
+%%%%
+Bennu permanently killed
+
+VISUAL:@The_monster@, emptied of spiritual energy, fades out from this realm.
+%%%%
+confused Bennu killed
+
+@Bennu killed@
+%%%%
+confused Bennu permanently killed
+
+@Bennu permanently killed@
+%%%%
 ################## Chaos spawn #############################
 # Chaos spawns shouldn't have coherent speech, since that would be too
 # orderly for beings of pure chaos.
@@ -6494,9 +6567,9 @@ default orange crystal statue
 
 VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 %%%%
-default silver statue
+default obsidian statue
 
-VISUAL:@The_monster@ glitters argentine in the dim dungeon light.
+VISUAL:@The_monster@ slips into the dungeon's darkness for a moment.
 %%%%
 ################## Sheep ###################################
 sheep

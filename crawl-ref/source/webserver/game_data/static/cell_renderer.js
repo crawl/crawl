@@ -135,7 +135,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 return;
             }
 
+            // track whether this cell overlaps to the top or left
             this.current_sy = 0;
+            this.current_left_overlap = 0;
 
             cell.fg = enums.prepare_fg_flags(cell.fg || 0);
             cell.bg = enums.prepare_bg_flags(cell.bg || 0);
@@ -164,11 +166,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             // draw clouds
             if (cell.cloud.value && cell.cloud.value < dngn.FEAT_MAX)
             {
+                this.ctx.save();
                 // If there will be a front/back cloud pair, draw
                 // the underlying one with correct alpha
                 if (fg_idx)
                 {
-                    this.ctx.save();
                     try
                     {
                         this.ctx.globalAlpha = 0.6;
@@ -219,9 +221,23 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             {
                 if ((fg_idx >= main.MAIN_MAX) && cell.doll)
                 {
+                    var mcache_map = {};
+                    if (cell.mcache)
+                    {
+                        for (var i = 0; i < cell.mcache.length; ++i)
+                            mcache_map[cell.mcache[i][0]] = i;
+                    }
                     $.each(cell.doll, function (i, doll_part) {
+                        var xofs = 0;
+                        var yofs = 0;
+                        if (mcache_map[doll_part[0]] !== undefined)
+                        {
+                            var mind = mcache_map[doll_part[0]];
+                            xofs = cell.mcache[mind][1];
+                            yofs = cell.mcache[mind][2];
+                        }
                         renderer.draw_player(doll_part[0],
-                                             x, y, 0, 0, doll_part[1]);
+                                             x, y, xofs, yofs, doll_part[1]);
                     });
                 }
 
@@ -334,6 +350,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
 
             cell.sy = this.current_sy;
+            cell.left_overlap = this.current_left_overlap;
         },
 
         // adapted from DungeonRegion::draw_minibars in tilereg_dgn.cc
@@ -718,6 +735,10 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.render_glyph(x, y, map_cell, true);
             }
 
+            // gozag gold sparkles, only if there's no creature in tile
+            if (cell.gold_aura && fg_idx < main.MAIN_MAX)
+                this.draw_icon(icons.GOLD_SPARKLES + cell.gold_aura - 1, x, y);
+
             if (fg.NET)
                 this.draw_icon(icons.TRAP_NET, x, y);
 
@@ -953,11 +974,17 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
             if (sy >= ey) return;
 
+            var total_x_offset = ((ofsx || 0) + info.ox + size_ox);
+
+            if (total_x_offset < this.current_left_overlap)
+                this.current_left_overlap = total_x_offset;
+
             if (sy < this.current_sy)
                 this.current_sy = sy;
 
             var w = info.ex - info.sx;
             var h = info.ey - info.sy;
+
             this.ctx.imageSmoothingEnabled = options.get("tile_filter_scaling");
             this.ctx.webkitImageSmoothingEnabled =
                 options.get("tile_filter_scaling");
@@ -966,7 +993,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             this.ctx.drawImage(img,
                                info.sx, info.sy + sy - pos_sy_adjust,
                                w, h + ey - pos_ey_adjust,
-                               x + ((ofsx || 0) + info.ox + size_ox) * this.x_scale,
+                               x + total_x_offset * this.x_scale,
                                y + sy * this.y_scale,
                                w * this.x_scale,
                                (h + ey - pos_ey_adjust) * this.y_scale)

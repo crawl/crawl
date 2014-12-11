@@ -4,10 +4,12 @@
  **/
 
 #include "AppHdr.h"
+
 #include "lang-fake.h"
 
 #include "libutil.h"
 #include "options.h"
+#include "stringutil.h"
 #include "unicode.h"
 
 #define UPPER "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -146,56 +148,6 @@ static const char* jager[][4] =
   {"okay","hokay"},
   {"^ok$","hokay"},
   {"just","chust"},
-  {0}
-};
-
-static const char* cyrillic[][4] =
-{
-  {"a",   "а"},
-  {"b",   "б"},
-  {"v",   "в"},
-  {"wr",  "р"},
-  {"w",   "у"},
-  {"g",   "г"},
-  {"d",   "д"},
-  {"ye",  "е"},
-  {"ie",  "е"},
-  {"eu",  "ев"},
-  {"e",   "е"},
-  {"io",  "ё"},
-  {"yo",  "ё"},
-  {"zh",  "ж"},
-  {"z",   "з"},
-  {"j",   "й"},
-  {"x",   "кс"},
-  {"q",   "к"},
-  {"l",   "л"},
-  {"m",   "м"},
-  {"n",   "н"},
-  {"o",   "о"},
-  {"p",   "п"},
-  {"rr",  "р"},
-  {"r",   "р"},
-  {"s",   "с"},
-  {"t",   "т"},
-  {"u",   "у"},
-  {"f",   "ф"},
-  {"kh",  "х"},
-  {"h",   "х"},
-  {"k",   "к"},
-  {"ts",  "ц"},
-  {"chr", "кр"},
-  {"ch",  "ч"},
-  {"c",   "ц"},
-  {"shch","щ"},
-  {"sh",  "ш"},
-  {"e",   "э"},
-  {"yu",  "ю"},
-  {"iu",  "ю"},
-  {"ya",  "я"},
-  {"ia",  "я"},
-  {"i",   "и"},
-  {"y",   "ы"},
   {0}
 };
 
@@ -423,19 +375,19 @@ static void _wide(string &txt)
 {
     string out;
 
-    for (size_t i = 0; i < txt.length(); i++)
+    for (char ch : txt)
     {
-        if (txt[i] == ' ')
+        if (ch == ' ')
             out += "　"; // U+3000 rather than U+FF00
-        else if (txt[i] > 32 && txt[i] < 127)
+        else if (ch > 32 && ch < 127)
         {
             char buf[4];
-            int r = wctoutf8(buf, txt[i] + 0xFF00 - 32);
+            int r = wctoutf8(buf, ch + 0xFF00 - 32);
             for (int j = 0; j < r; j++)
                 out.push_back(buf[j]);
         }
         else
-            out.push_back(txt[i]);
+            out.push_back(ch);
     }
 
     txt = out;
@@ -461,7 +413,7 @@ static void _grunt(string &txt)
          "smash puny caster"},
         {"appreciates your killing of a holy being",
          "smash puny angel"},
-        {"appreciates your kill", "screams: ANNIHILATED"},
+        {"is honoured by your kill", "screams: ANNIHILATED"},
         {"You pass out from exhaustion.", "POWER NAP!!!"},
         {"You die...", "rip"},
         {"LOW HITPOINT WARNING", "don't die"},
@@ -498,9 +450,6 @@ void filter_lang(string &str)
         break;
     case LANG_KRAUT:
         _german(str), repl = german;
-        break;
-    case LANG_CYRILLIC:
-        repl = cyrillic;
         break;
     case LANG_WIDE:
         return _wide(str);

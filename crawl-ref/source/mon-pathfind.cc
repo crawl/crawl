@@ -2,15 +2,12 @@
 
 #include "mon-pathfind.h"
 
-#include "coord.h"
 #include "directn.h"
 #include "env.h"
 #include "los.h"
 #include "mon-movetarget.h"
 #include "mon-place.h"
-#include "mon-util.h"
-#include "monster.h"
-#include "random.h"
+#include "religion.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
@@ -77,7 +74,7 @@ int mons_tracking_range(const monster* mon)
 
 //#define DEBUG_PATHFIND
 monster_pathfind::monster_pathfind()
-    : mons(NULL), start(), target(), pos(), allow_diagonals(true),
+    : mons(nullptr), start(), target(), pos(), allow_diagonals(true),
       traverse_unmapped(false), range(0), min_length(0), max_length(0),
       dist(), prev(), hash()
 {

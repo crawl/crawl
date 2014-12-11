@@ -8,15 +8,14 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
-#include "items.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "los_def.h"
 #include "losglobal.h"
 #include "mon-behv.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
-#include "random.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
@@ -51,7 +50,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
             continue;
 
         monster* const m = monster_at(*ri);
-        if (m == NULL)
+        if (m == nullptr)
             continue;
 
         // Don't restrict smarter monsters as they might find a path
@@ -310,10 +309,10 @@ bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
     return false;
 }
 
-// Assesses how desirable a spot is to a siren (preferring spaces surrounded
-// by water, at least one of which is deep, and with at least one neighbour
-// which is inhabitable without swimming or flight)
-static int _siren_water_score(coord_def p, bool& deep)
+// Assesses how desirable a spot is to a merfolk avatar (preferring spaces
+// surrounded by water, at least one of which is deep, and with at least one
+// neighbour which is inhabitable without swimming or flight)
+static int _merfolk_avatar_water_score(coord_def p, bool& deep)
 {
     int score = 0;
     bool near_floor = false;
@@ -352,9 +351,9 @@ static int _siren_water_score(coord_def p, bool& deep)
 
 // Pick the nearest water grid that is surrounded by the most
 // water squares within LoS.
-bool find_siren_water_target(monster* mon)
+bool find_merfolk_avatar_water_target(monster* mon)
 {
-    ASSERT(mon->type == MONS_SIREN);
+    ASSERT(mon->type == MONS_MERFOLK_AVATAR);
 
     // Moving away could break the entrancement, so don't do this.
     if (distance2(mon->pos(), you.pos()) >= 6 * 6 + 1)
@@ -367,18 +366,18 @@ bool find_siren_water_target(monster* mon)
 
     // If our current location is good enough, don't bother moving towards
     // some other spot which might be somewhat better
-    if (_siren_water_score(mon->pos(), deep) >= 12 && deep
+    if (_merfolk_avatar_water_score(mon->pos(), deep) >= 12 && deep
         && grd(mon->pos()) == DNGN_DEEP_WATER)
     {
         mon->firing_pos = mon->pos();
         return true;
     }
 
-    if (mon->travel_target == MTRAV_SIREN)
+    if (mon->travel_target == MTRAV_MERFOLK_AVATAR)
     {
         coord_def targ_pos(mon->travel_path[mon->travel_path.size() - 1]);
 #ifdef DEBUG_PATHFIND
-        mprf("siren target is (%d, %d), dist = %d",
+        mprf("merfolk avatar target is (%d, %d), dist = %d",
              targ_pos.x, targ_pos.y, (int) (mon->pos() - targ_pos).rdist());
 #endif
         if ((mon->pos() - targ_pos).rdist() > 2)
@@ -401,12 +400,12 @@ bool find_siren_water_target(monster* mon)
                 continue;
 
             // In the first iteration only count water grids that are
-            // not closer to the player than to the siren.
+            // not closer to the player than to the merfolk avatar.
             if (first && (mon->pos() - *ri).rdist() > (you.pos() - *ri).rdist())
                 continue;
 
             // Counts deep water twice.
-            const int water_count = _siren_water_score(*ri, deep);
+            const int water_count = _merfolk_avatar_water_score(*ri, deep);
             if (water_count < best_water_count)
                 continue;
 
@@ -466,8 +465,10 @@ bool find_siren_water_target(monster* mon)
         {
 #ifdef WIZARD
             if (you.wizard)
-                for (unsigned int i = 0; i < mon->travel_path.size(); i++)
-                    env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
+            {
+                for (coord_def pos : mon->travel_path)
+                    env.pgrid(pos) |= FPROP_HIGHLIGHT;
+            }
 #endif
 #ifdef DEBUG_PATHFIND
             mprf("Found a path to (%d, %d) with %d surrounding water squares",
@@ -475,7 +476,7 @@ bool find_siren_water_target(monster* mon)
 #endif
             // Okay then, we found a path.  Let's use it!
             mon->firing_pos = mon->travel_path[0];
-            mon->travel_target = MTRAV_SIREN;
+            mon->travel_target = MTRAV_MERFOLK_AVATAR;
             return true;
         }
     }
@@ -788,7 +789,7 @@ static monster * _active_band_leader(monster * mon)
 {
     // Not a band member
     if (!mon->props.exists("band_leader"))
-        return NULL;
+        return nullptr;
 
     // Try to find our fearless leader.
     unsigned leader_mid = mon->props["band_leader"].get_int();
@@ -802,7 +803,7 @@ static bool _band_wander_target(monster * mon)
 {
     int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
     monster * band_leader = _active_band_leader(mon);
-    if (band_leader == NULL)
+    if (band_leader == nullptr)
         return true;
 
     int leader_dist = grid_distance(mon->pos(), band_leader->pos());
@@ -859,7 +860,7 @@ static bool _herd_wander_target(monster * mon)
 
     for (monster_iterator mit; mit; ++mit)
     {
-        if (mit->mindex() == mon->mindex()
+        if (*mit == mon
             || mons_genus(mit->type) != mons_genus(mon->type)
             || grid_distance(mit->pos(), mon->pos()) > dist_thresh)
         {
@@ -878,10 +879,10 @@ static bool _herd_wander_target(monster * mon)
             continue;
 
         int count = 0;
-        for (unsigned i = 0; i < friends.size(); i++)
+        for (monster_iterator &fr_it : friends)
         {
-            if (grid_distance(friends[i]->pos(), *r_it) < HERD_COMFORT_RANGE
-                && friends[i]->see_cell_no_trans(*r_it))
+            if (grid_distance(fr_it->pos(), *r_it) < HERD_COMFORT_RANGE
+                && fr_it->see_cell_no_trans(*r_it))
             {
                 count++;
             }
@@ -908,7 +909,7 @@ static bool _herd_ok(monster * mon)
     // herdlings magically know others even out of LOS
     for (monster_iterator mit; mit; ++mit)
     {
-        if (mit->mindex() == mon->mindex())
+        if (*mit == mon)
             continue;
 
         if (mons_genus(mit->type) == mons_genus(mon->type))
@@ -975,7 +976,7 @@ void check_wander_target(monster* mon, bool isPacified)
             need_target = _herd_wander_target(mon);
 
         if (need_target
-            && _active_band_leader(mon) != NULL)
+            && _active_band_leader(mon) != nullptr)
         {
             need_target = _band_wander_target(mon);
         }

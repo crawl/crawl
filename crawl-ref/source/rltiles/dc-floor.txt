@@ -38,10 +38,15 @@ grey_dirt_b_7
 
 # The colorized versions of FLOOR_PEBBLE were made from
 # pebble_gray*.png, by colorizing the non-border color
-# with hue 30, sat 50, lum +20 in GIMP.
-%desat 28
-%desat 29
-%desat 30
+# with hues from 28 to 37, sat 54 to 68, lum 7 to 18 in GIMP.
+%desat 31
+%desat 32
+%desat 33
+%desat 34
+%desat 35
+%desat 36
+%desat 37
+%desat 39
 pebble_brown0 FLOOR_PEBBLE FLOOR_PEBBLE_LIGHTGRAY
 pebble_brown1
 pebble_brown2
@@ -54,8 +59,8 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE brown
-%hue 28 30
-%hue 29 30
+%hue 32 30
+%hue 34 30
 # Can't just use %repeat here, as we want the coloured versions.
 pebble_brown0 FLOOR_PEBBLE_BROWN
 pebble_brown1
@@ -69,125 +74,100 @@ pebble_brown8
 %resetcol
 
 %variation FLOOR_PEBBLE blue
+%hue 27 240
 %hue 28 240
 %hue 29 240
-%hue 30 240
+%hue 31 240
+%hue 32 240
+%hue 33 240
+%hue 34 240
+%hue 35 240
+%hue 36 240
+%hue 37 240
+%hue 38 240
+%hue 39 240
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_BLUE
 %resetcol
 
 %variation FLOOR_PEBBLE green
-%hue 28 140
-%hue 29 140
-%hue 30 140
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_GREEN
+%hue 240 140
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_GREEN
 %resetcol
 
 %variation FLOOR_PEBBLE cyan
-%hue 28 180
-%hue 29 180
-%hue 30 180
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_CYAN
+%hue 240 180
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_CYAN
 %resetcol
 
 %variation FLOOR_PEBBLE red
-%hue 28 0
-%hue 29 0
-%hue 30 0
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_RED
+%hue 240 0
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_RED
 %resetcol
 
 %variation FLOOR_PEBBLE magenta
-%hue 28 270
-%hue 29 270
-%hue 30 270
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_MAGENTA
+%hue 240 270
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_MAGENTA
 %resetcol
 
 %variation FLOOR_PEBBLE darkgray
-%desat 28
-%desat 29
-%desat 30
-%lum 28 -7
-%lum 29 -7
-%lum 30 -7
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_DARKGRAY
+%lum 0 -5
+%repeat FLOOR_PEBBLE_LIGHTGRAY FLOOR_PEBBLE_DARKGRAY
 %resetcol
 
 %variation FLOOR_PEBBLE lightblue
-%hue 28 210
-%hue 29 210
-%hue 30 210
-%lum 28 7
-%lum 29 7
-%lum 30 7
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTBLUE
+%lum 240 5
+%hue 240 210
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTBLUE
 %resetcol
 
 %variation FLOOR_PEBBLE lightgreen
-%hue 28 110
-%hue 29 110
-%hue 30 110
-%lum 28 7
-%lum 29 7
-%lum 30 7
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTGREEN
+%lum 240 5
+%hue 240 110
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTGREEN
 %resetcol
 
 %variation FLOOR_PEBBLE lightcyan
-%hue 28 180
-%hue 29 180
-%hue 30 180
-%lum 28 7
-%lum 29 7
-%lum 30 7
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTCYAN
+%lum 240 5
+%hue 240 180
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTCYAN
 %resetcol
 
 %variation FLOOR_PEBBLE lightred
-%hue 28 0
-%hue 29 0
-%hue 30 0
-%lum 28 7
-%lum 29 7
-%lum 30 7
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTRED
+%lum 240 5
+%hue 240 0
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTRED
 %resetcol
 
 %variation FLOOR_PEBBLE lightmagenta
-%hue 28 290
-%hue 29 290
-%hue 30 290
-%lum 28 7
-%lum 29 7
-%lum 30 7
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTMAGENTA
+%lum 240 5
+%hue 240 290
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_LIGHTMAGENTA
 %resetcol
 
 %variation FLOOR_PEBBLE yellow
-%hue 28 50
-%hue 29 50
-%hue 30 50
-%lum 28 7
-%lum 29 7
-%lum 30 7
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_YELLOW
+%lum 240 7
+%hue 240 50
+%repeat FLOOR_PEBBLE_BLUE FLOOR_PEBBLE_YELLOW
 %resetcol
 
 %variation FLOOR_PEBBLE white
-%desat 28
-%desat 29
-%desat 30
-%lum 0 25
-%lum 28 40
-%lum 29 40
-%lum 30 40
-%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_WHITE
+%lum 0 9
+%repeat FLOOR_PEBBLE_LIGHTGRAY FLOOR_PEBBLE_WHITE
 %resetcol
 
 # Additional variants for D cave layouts
-%lum 28 -7
-%lum 29 -7
-%lum 30 -7
+%lum 27 -3
+%lum 28 -3
+%lum 29 -3
+%lum 31 -3
+%lum 32 -3
+%lum 33 -3
+%lum 34 -3
+%lum 35 -3
+%lum 36 -3
+%lum 37 -3
+%lum 38 -3
+%lum 39 -3
 %repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_DARKBROWN
 %resetcol
 
@@ -520,30 +500,40 @@ floor_nerves6
 %variation FLOOR_NERVES blue
 %hue 0 240
 %hue 15 255
+%hue 17 257
+%hue 18 258
 %repeat FLOOR_NERVES FLOOR_NERVES_BLUE
 %resetcol
 
 %variation FLOOR_NERVES green
 %hue 0 140
 %hue 15 155
+%hue 17 157
+%hue 18 158
 %repeat FLOOR_NERVES FLOOR_NERVES_GREEN
 %resetcol
 
 %variation FLOOR_NERVES cyan
 %hue 0 180
 %hue 15 195
+%hue 17 197
+%hue 18 198
 %repeat FLOOR_NERVES FLOOR_NERVES_CYAN
 %resetcol
 
 %variation FLOOR_NERVES magenta
 %hue 0 270
 %hue 15 285
+%hue 17 287
+%hue 18 288
 %repeat FLOOR_NERVES FLOOR_NERVES_MAGENTA
 %resetcol
 
 %variation FLOOR_NERVES brown
 %hue 0 30
 %hue 15 45
+%hue 17 47
+%hue 18 48
 %repeat FLOOR_NERVES FLOOR_NERVES_BROWN
 %resetcol
 
@@ -552,28 +542,40 @@ floor_nerves6
 %desat 0
 %lum 15 10
 %desat 15
+%desat 17
+%desat 18
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTGRAY
 %resetcol
 
 %variation FLOOR_NERVES darkgray
 %lum 0 -10
 %desat 0
+%lum 13 -5
 %lum 15 -5
 %desat 15
+%lum 18 -5
+%desat 18
+%lum 31 -10
+%lum 32 -10
+%desat 17
 %repeat FLOOR_NERVES FLOOR_NERVES_DARKGRAY
 %resetcol
 
 %variation FLOOR_NERVES lightblue
 %hue 0 210
-%hue 15 200
-%lum 0 5
 %lum 15 5
+%hue 15 203
+%hue 17 202
+%hue 18 200
+%lum 0 5
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTBLUE
 %resetcol
 
 %variation FLOOR_NERVES lightgreen
 %hue 0 110
 %hue 15 125
+%hue 17 127
+%hue 18 128
 %lum 0 3
 %lum 15 5
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTGREEN
@@ -582,6 +584,8 @@ floor_nerves6
 %variation FLOOR_NERVES lightcyan
 %hue 0 180
 %hue 15 195
+%hue 17 197
+%hue 18 198
 %lum 0 4
 %lum 15 7
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTCYAN
@@ -590,22 +594,29 @@ floor_nerves6
 %variation FLOOR_NERVES lightred
 %lum 0 4
 %lum 15 7
+%lum 31 10
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTRED
 %resetcol
 
 %variation FLOOR_NERVES lightmagenta
 %hue 0 290
 %hue 15 305
+%hue 17 307
+%hue 18 308
 %lum 0 5
 %lum 15 5
+%lum 31 8
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTMAGENTA
 %resetcol
 
 %variation FLOOR_NERVES yellow
 %hue 0 40
 %hue 15 55
+%hue 17 57
+%hue 18 58
 %lum 0 5
 %lum 15 5
+%lum 31 8
 %repeat FLOOR_NERVES FLOOR_NERVES_YELLOW
 %resetcol
 
@@ -613,7 +624,10 @@ floor_nerves6
 %lum 0 15
 %desat 0
 %lum 15 25
+%lum 31 41
 %desat 15
+%desat 17
+%desat 18
 %repeat FLOOR_NERVES FLOOR_NERVES_WHITE
 %resetcol
 
@@ -714,6 +728,18 @@ limestone6
 limestone7
 limestone8
 limestone9
+
+%sdir dngn/floor
+white_marble0 FLOOR_W_MARBLE
+white_marble1
+white_marble2
+white_marble3
+white_marble4
+white_marble5
+white_marble6
+white_marble7
+white_marble8
+white_marble9
 
 sigil_curve_N_E SIGIL_CURVE_N_E
 sigil_curve_N_W SIGIL_CURVE_N_W
@@ -882,6 +908,46 @@ demonic_red9
 %desat 0
 %lum 0 -17
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_DARKGRAY
+%resetcol
+
+%variation FLOOR_DEMONIC lightblue
+%hue 0 210
+%lum 0 5
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTBLUE
+%resetcol
+
+%variation FLOOR_DEMONIC lightgreen
+%hue 0 110
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTGREEN
+%resetcol
+
+%variation FLOOR_DEMONIC lightcyan
+%hue 0 180
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTCYAN
+%resetcol
+
+%variation FLOOR_DEMONIC lightred
+%hue 0 0
+%lum 0 10
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTRED
+%resetcol
+
+%variation FLOOR_DEMONIC lightmagenta
+%hue 0 290
+%lum 0 5
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTMAGENTA
+%resetcol
+
+%variation FLOOR_DEMONIC yellow
+%hue 0 50
+%lum 0 5
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_YELLOW
+%resetcol
+
+%variation FLOOR_DEMONIC white
+%desat 0
+%lum 0 30
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_WHITE
 %resetcol
 
 %weight 10

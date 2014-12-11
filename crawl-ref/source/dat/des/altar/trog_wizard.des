@@ -31,8 +31,16 @@ function callback.trog_wizard_convert_wizard(data, triggerable,
     end
 
     dgn.place_cloud(_x, _y, "flame", 15)
-    crawl.god_speaks("Trog", "Flames erupt from the bowels of the wizard! "
-                          .. "Trog roars with satisfaction!")
+    local mons = dgn.mons_at(_x, _y)
+    if mons and mons.base_name == "wizard" then
+        crawl.god_speaks("Trog", "Flames erupt from the bowels of the wizard! "
+                              .. "Trog roars with satisfaction!")
+    else
+        crawl.god_speaks("Trog", "Flames erupt from the wizard's "
+                              .. (mons and "" or "empty ")
+                              .. "cell! "
+                              .. "Trog roars with frustration!")
+    end
     data.triggered = true
   end
 end

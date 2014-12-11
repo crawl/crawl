@@ -7,41 +7,31 @@
 
 #include "shout.h"
 
+#include <sstream>
+
 #include "act-iter.h"
-#include "art-enum.h"
+#include "areas.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
-#include "cluautil.h"
-#include "coord.h"
 #include "database.h"
-#include "dlua.h"
+#include "english.h"
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"
+#include "hints.h"
 #include "jobs.h"
 #include "libutil.h"
-#include "los.h"
 #include "message.h"
-#include "misc.h"
 #include "mon-behv.h"
 #include "mon-chimera.h"
 #include "mon-place.h"
 #include "mon-poly.h"
-#include "mon-pathfind.h"
-#include "mon-util.h"
-#include "monster.h"
-#include "noise.h"
-#include "player.h"
-#include "random.h"
 #include "religion.h"
-#include "skills.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
-#include "areas.h"
-#include "hints.h"
 #include "view.h"
-
-#include <sstream>
 
 extern int stealth;             // defined in main.cc
 
@@ -127,9 +117,6 @@ void handle_monster_shouts(monster* mons, bool force)
     case S_GURGLE:
         default_msg_key = "__GURGLE";
         break;
-    case S_WHINE:
-        default_msg_key = "__WHINE";
-        break;
     case S_CROAK:
         default_msg_key = "__CROAK";
         break;
@@ -147,6 +134,9 @@ void handle_monster_shouts(monster* mons, bool force)
         break;
     case S_CHERUB:
         default_msg_key = "__CHERUB";
+        break;
+    case S_RUMBLE:
+        default_msg_key = "__RUMBLE";
         break;
     default:
         default_msg_key = "__BUGGY"; // S_LOUD, S_VERY_SOFT, etc. (loudness)
@@ -279,7 +269,7 @@ void handle_monster_shouts(monster* mons, bool force)
     }
 
     const int  noise_level = get_shout_noise_level(s_type);
-    const bool heard       = noisy(noise_level, mons->pos(), mons->mindex());
+    const bool heard       = noisy(noise_level, mons->pos(), mons->mid);
 
     if (crawl_state.game_is_hints() && (heard || you.can_see(mons)))
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
@@ -301,9 +291,12 @@ bool check_awaken(monster* mons)
     if (you.berserk())
         return true;
 
-    // I assume that creatures who can sense invisible are very perceptive.
-    int mons_perc = 10 + (mons_intel(mons) * 4) + mons->get_hit_dice()
-                       + mons_sense_invis(mons) * 5;
+    // If you've sacrificed stealth, you always alert monsters.
+    if (player_mutation_level(MUT_NO_STEALTH))
+        return true;
+
+
+    int mons_perc = 10 + (mons_intel(mons) * 4) + mons->get_hit_dice();
 
     bool unnatural_stealthy = false; // "stealthy" only because of invisibility?
 
@@ -424,6 +417,9 @@ void item_noise(const item_def &item, string msg, int loudness)
     msg = replace_all(msg, "@player_genus_plural@",
                       pluralise(species_name(you.species, true)));
 
+    msg = maybe_pick_random_substring(msg);
+    msg = maybe_capitalise_substring(msg);
+
     mprf(channel, "%s", msg.c_str());
 
     if (channel != MSGCH_TALK_VISUAL)
@@ -454,9 +450,6 @@ void noisy_equipment()
     if (msg.empty())
         msg = getSpeakString("noisy weapon");
 
-    msg = maybe_pick_random_substring(msg);
-    msg = maybe_capitalise_substring(msg);
-
     item_noise(*weapon, msg, 20);
 }
 
@@ -478,8 +471,8 @@ void apply_noises()
 // noisy() has a messaging service for giving messages to the player
 // as appropriate.
 bool noisy(int original_loudness, const coord_def& where,
-           const char *msg, int who,
-           bool mermaid, bool message_if_unseen, bool fake_noise)
+           const char *msg, mid_t who, noise_flag_type flags,
+           bool fake_noise)
 {
     ASSERT_IN_BOUNDS(where);
 
@@ -492,7 +485,7 @@ bool noisy(int original_loudness, const coord_def& where,
         ambient < 0? original_loudness + random2avg(abs(ambient), 3)
                    : original_loudness - random2avg(abs(ambient), 3);
 
-    dprf("Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
+    dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
          loudness, original_loudness, ambient, where.x, where.y);
 
     if (loudness <= 0)
@@ -512,12 +505,7 @@ bool noisy(int original_loudness, const coord_def& where,
     // sound of loudness 1 will hear the sound.
     const string noise_msg(msg? msg : "");
     _noise_grid.register_noise(
-        noise_t(where,
-                noise_msg,
-                (scaled_loudness + 1) * 1000,
-                who,
-                0 | (mermaid ? NF_MERMAID : 0)
-                | (message_if_unseen ? NF_MESSAGE_IF_UNSEEN : 0)));
+        noise_t(where, noise_msg, (scaled_loudness + 1) * 1000, who, flags));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means
@@ -537,16 +525,16 @@ bool noisy(int original_loudness, const coord_def& where,
     return false;
 }
 
-bool noisy(int loudness, const coord_def& where, int who,
-           bool mermaid, bool message_if_unseen)
+bool noisy(int loudness, const coord_def& where, mid_t who,
+           noise_flag_type flags)
 {
-    return noisy(loudness, where, NULL, who, mermaid, message_if_unseen);
+    return noisy(loudness, where, nullptr, who, flags);
 }
 
 // This fakes noise even through silence.
 bool fake_noisy(int loudness, const coord_def& where)
 {
-    return noisy(loudness, where, NULL, -1, false, false, true);
+    return noisy(loudness, where, nullptr, MID_NOBODY, NF_NONE, true);
 }
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where)
@@ -573,7 +561,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                 {
                     if (coinflip())
                     {
-                        dprf("disturbing %s (%d, %d)",
+                        dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
                              mi->name(DESC_PLAIN).c_str(),
                              mi->pos().x, mi->pos().y);
                         behaviour_event(*mi, ME_DISTURB, 0, where);
@@ -581,7 +569,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                     break;
                 }
             }
-            dprf("alerting %s (%d, %d)",
+            dprf(DIAG_NOISE, "alerting %s (%d, %d)",
                             mi->name(DESC_PLAIN).c_str(),
                             mi->pos().x, mi->pos().y);
             behaviour_event(*mi, ME_ALERT, 0, where);
@@ -596,14 +584,14 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
             {
                 if (coinflip())
                 {
-                    dprf("disturbing %s (%d, %d)",
+                    dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
                          mi->name(DESC_PLAIN).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_DISTURB, 0, where);
                 }
                 else
                 {
-                    dprf("alerting %s (%d, %d)",
+                    dprf(DIAG_NOISE, "alerting %s (%d, %d)",
                          mi->name(DESC_PLAIN).c_str(),
                          mi->pos().x, mi->pos().y);
                     behaviour_event(*mi, ME_ALERT, 0, where);
@@ -631,24 +619,16 @@ void blood_smell(int strength, const coord_def& where)
 static int _noise_attenuation_millis(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
-    switch (feat)
-    {
-    // Closed doors are excellent at cutting off sound.
-    case DNGN_CLOSED_DOOR:
-    case DNGN_RUNED_DOOR:
-    case DNGN_SEALED_DOOR:
-        return BASE_NOISE_ATTENUATION_MILLIS * 8;
-    case DNGN_TREE:
-        return BASE_NOISE_ATTENUATION_MILLIS * 3;
-    default:
-        if (feat_is_statue_or_idol(feat))
-            return BASE_NOISE_ATTENUATION_MILLIS * 2;
-        if (feat_is_permarock(feat))
-            return NOISE_ATTENUATION_COMPLETE;
-        if (feat_is_wall(feat))
-            return BASE_NOISE_ATTENUATION_MILLIS * 12;
-        return BASE_NOISE_ATTENUATION_MILLIS;
-    }
+
+    if (feat_is_permarock(feat))
+        return NOISE_ATTENUATION_COMPLETE;
+
+    return BASE_NOISE_ATTENUATION_MILLIS *
+            (feat_is_wall(feat)        ? 12 :
+             feat_is_closed_door(feat) ?  8 :
+             feat_is_tree(feat)        ?  3 :
+             feat_is_statuelike(feat)  ?  2 :
+                                          1);
 }
 
 noise_cell::noise_cell()
@@ -728,7 +708,8 @@ void noise_grid::propagate_noise()
         return;
 
 #ifdef DEBUG_NOISE_PROPAGATION
-    dprf("noise_grid: %u noises to apply", (unsigned int)noises.size());
+    dprf(DIAG_NOISE, "noise_grid: %u noises to apply",
+         (unsigned int)noises.size());
 #endif
     vector<coord_def> noise_perimeter[2];
     int circ_index = 0;
@@ -856,7 +837,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
     {
         if (mons->alive()
             && !mons_just_slept(mons)
-            && mons->mindex() != noise.noise_producer_id)
+            && mons->mid != noise.noise_producer_mid)
         {
             const coord_def perceived_position =
                 noise_perceived_position(mons, pos, noise);
@@ -935,8 +916,8 @@ coord_def noise_grid::noise_perceived_position(actor *act,
         : perceived_point;
 
 #ifdef DEBUG_NOISE_PROPAGATION
-    dprf("[NOISE] Noise perceived by %s at (%d,%d) centroid (%d,%d) "
-         "source (%d,%d) "
+    dprf(DIAG_NOISE, "[NOISE] Noise perceived by %s at (%d,%d) "
+         "centroid (%d,%d) source (%d,%d) "
          "heard at (%d,%d), distance: %d (traveled %d)",
          act->name(DESC_PLAIN, true).c_str(),
          final_perceived_point.x, final_perceived_point.y,
@@ -950,9 +931,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 
 #ifdef DEBUG_NOISE_PROPAGATION
 
-#include "options.h"
-#include "viewchar.h"
-#include <math.h>
+#include <cmath>
 
 // Return HTML RGB triple given a hue and assuming chroma of 0.86 (220)
 static string _hue_rgb(int hue)
@@ -1034,7 +1013,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
             if (you.pos() == coord_def(x, y))
                 write_cell(outf, p, '@');
             else
-                write_cell(outf, p, get_feature_def(grd[x][y]).symbol);
+                write_cell(outf, p, get_feature_def(grd[x][y]).symbol());
         }
         fprintf(outf, "<br>\n");
     }
@@ -1060,7 +1039,7 @@ static void _actor_apply_noise(actor *act,
                                int noise_travel_distance)
 {
 #ifdef DEBUG_NOISE_PROPAGATION
-    dprf("[NOISE] Actor %s (%d,%d) perceives noise (%d) "
+    dprf(DIAG_NOISE, "[NOISE] Actor %s (%d,%d) perceives noise (%d) "
          "from (%d,%d), real source (%d,%d), distance: %d, noise traveled: %d",
          act->name(DESC_PLAIN, true).c_str(),
          act->pos().x, act->pos().y,
@@ -1076,7 +1055,7 @@ static void _actor_apply_noise(actor *act,
     {
         const int loudness = div_rand_round(noise_intensity_millis, 1000);
         act->check_awaken(loudness);
-        if (!(noise.noise_flags & NF_MERMAID))
+        if (!(noise.noise_flags & NF_SIREN))
         {
             you.beholders_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
             you.fearmongers_check_noise(loudness, player_equip_unrand(UNRAND_DEMON_AXE));
@@ -1085,15 +1064,26 @@ static void _actor_apply_noise(actor *act,
     else
     {
         monster *mons = act->as_monster();
+        actor *source = actor_by_mid(noise.noise_producer_mid);
         // If the noise came from the character, any nearby monster
         // will be jumping on top of them.
         if (grid_distance(apparent_source, you.pos()) <= 3)
             behaviour_event(mons, ME_ALERT, &you, apparent_source);
-        else if ((noise.noise_flags & NF_MERMAID)
+        else if ((noise.noise_flags & NF_SIREN)
                  && mons_secondary_habitat(mons) == HT_WATER
                  && !mons->friendly())
         {
-            // Mermaids/sirens call (hostile) aquatic monsters.
+            // Sirens/merfolk avatar call (hostile) aquatic monsters.
+            behaviour_event(mons, ME_ALERT, 0, apparent_source);
+        }
+        else if ((noise.noise_flags & NF_HUNTING_CRY)
+                 && source
+                 && (mons_genus(mons->type) == mons_genus(source->type)
+                     || mons->holiness() == MH_HOLY
+                        && source->holiness() == MH_HOLY))
+        {
+            // Hunting cries alert monsters of the same genus, or other
+            // holy creatures if the source is holy.
             behaviour_event(mons, ME_ALERT, 0, apparent_source);
         }
         else

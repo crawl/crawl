@@ -7,33 +7,32 @@
 
 #include "wiz-you.h"
 
-#include "abyss.h"
+#include <algorithm>
+#include <functional>
 
-#include "chardump.h"
-#include "cio.h"
+#include "abyss.h"
 #include "dbg-util.h"
 #include "food.h"
-#include "godprayer.h"
+#include "godabil.h"
 #include "godwrath.h"
+#include "jobs.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "mutation.h"
-#include "newgame.h"
 #include "ng-setup.h"
-#include "player.h"
+#include "output.h"
+#include "prompt.h"
 #include "religion.h"
 #include "skills.h"
-#include "skills2.h"
 #include "spl-book.h"
-#include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
-#include "terrain.h"
+#include "stringutil.h"
 #include "transform.h"
-#include "view.h"
 #include "unicode.h"
+#include "view.h"
 #include "xom.h"
 
 #ifdef WIZARD
@@ -45,16 +44,37 @@ static void _swap_equip(equipment_type a, equipment_type b)
     you.melded.set(b, tmp);
 }
 
-void wizard_change_species()
+job_type find_job_from_string(const string &job)
 {
-    char specs[80];
+    string spec = lowercase_string(job);
 
-    msgwin_get_line("What species would you like to be now? " ,
-                    specs, sizeof(specs));
+    job_type j = JOB_UNKNOWN;
 
-    if (specs[0] == '\0')
-        return;
-    string spec = lowercase_string(specs);
+    for (int i = 0; i < NUM_JOBS; ++i)
+    {
+        const job_type ji = static_cast<job_type>(i);
+        const string name = lowercase_string(get_job_name(ji));
+
+        string::size_type pos = name.find(spec);
+        if (pos != string::npos)
+        {
+            if (pos == 0)
+            {
+                // We prefer prefixes over partial matches.
+                j = ji;
+                break;
+            }
+            else
+                j = ji;
+        }
+    }
+
+    return j;
+}
+
+species_type find_species_from_string(const string &species)
+{
+    string spec = lowercase_string(species);
 
     species_type sp = SP_UNKNOWN;
 
@@ -77,6 +97,11 @@ void wizard_change_species()
         }
     }
 
+    return sp;
+}
+
+void wizard_change_species_to(species_type sp)
+{
     // Can't use magic cookies or placeholder species.
     if (!is_valid_species(sp))
     {
@@ -94,7 +119,7 @@ void wizard_change_species()
 
     species_type old_sp = you.species;
     you.species = sp;
-    you.is_undead = get_undead_state(sp);
+    you.species_name = species_name(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
@@ -225,6 +250,27 @@ void wizard_change_species()
 #endif
     redraw_screen();
 }
+
+void wizard_change_job_to(job_type job)
+{
+    you.char_class = job;
+    you.class_name = get_job_name(job);
+}
+
+void wizard_change_species()
+{
+    char specs[80];
+
+    msgwin_get_line("What species would you like to be now? " ,
+                    specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return;
+
+    species_type sp = find_species_from_string(specs);
+
+    wizard_change_species_to(sp);
+}
 #endif
 
 #ifdef WIZARD
@@ -294,13 +340,17 @@ void wizard_heal(bool super_heal)
 {
     if (super_heal)
     {
-        // Clear more stuff and give a HP boost.
+        // Clear more stuff.
         unrot_hp(9999);
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
-        inc_max_hp(10);
         you.attribute[ATTR_XP_DRAIN] = 0;
+        you.duration[DUR_PETRIFIED] = 0;
+        you.duration[DUR_PETRIFYING] = 0;
+        you.duration[DUR_CORROSION] = 0;
+        you.props["corrosion_amount"] = 0;
+        you.duration[DUR_BREATH_WEAPON] = 0;
     }
 
     // Clear most status ailments.
@@ -349,6 +399,77 @@ void wizard_set_hunger_state()
         mpr("Ghouls can never be full or above!");
 }
 
+void wizard_set_piety_to(int newpiety, bool force)
+{
+    if (newpiety < 0 || newpiety > MAX_PIETY)
+    {
+        mprf("Piety needs to be between 0 and %d.", MAX_PIETY);
+        return;
+    }
+    if (newpiety > piety_breakpoint(5) && you_worship(GOD_RU))
+    {
+        mprf("Ru piety can't be greater than %d.", piety_breakpoint(5));
+        return;
+    }
+
+    if (you_worship(GOD_XOM))
+    {
+        you.piety = newpiety;
+        you.redraw_title = true; // redraw piety display
+
+        int newinterest;
+        if (!force)
+        {
+            char buf[30];
+
+            // For Xom, also allow setting interest.
+            mprf(MSGCH_PROMPT,
+                 "Enter new interest (current = %d, Enter for 0): ",
+                 you.gift_timeout);
+
+            if (cancellable_get_line_autohist(buf, sizeof buf))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
+
+            newinterest = atoi(buf);
+        }
+        else
+            newinterest = newpiety;
+
+        if (newinterest >= 0 && newinterest < 256)
+            you.gift_timeout = newinterest;
+        else
+            mpr("Interest must be between 0 and 255.");
+
+        mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
+
+        const string new_xom_favour = describe_xom_favour();
+        const string msg = "You are now " + new_xom_favour;
+        god_speaks(you.religion, msg.c_str());
+        return;
+    }
+
+    if (newpiety < 1 && !force)
+    {
+        if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
+        {
+            you.piety = 0;
+            excommunication();
+        }
+        else
+            canned_msg(MSG_OK);
+        return;
+    }
+    mprf("Setting piety to %d.", newpiety);
+    set_piety(newpiety);
+
+    // Automatically reduce penance to 0.
+    if (player_under_penance())
+        dec_penance(you.penance[you.religion]);
+}
+
 void wizard_set_piety()
 {
     if (you_worship(GOD_NO_GOD))
@@ -366,57 +487,7 @@ void wizard_set_piety()
         return;
     }
 
-    const int newpiety = atoi(buf);
-    if (newpiety < 0 || newpiety > MAX_PIETY)
-    {
-        mprf("Piety needs to be between 0 and %d.", MAX_PIETY);
-        return;
-    }
-
-    if (you_worship(GOD_XOM))
-    {
-        you.piety = newpiety;
-
-        // For Xom, also allow setting interest.
-        mprf(MSGCH_PROMPT, "Enter new interest (current = %d, Enter for 0): ",
-             you.gift_timeout);
-
-        if (cancellable_get_line_autohist(buf, sizeof buf))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        const int newinterest = atoi(buf);
-        if (newinterest >= 0 && newinterest < 256)
-            you.gift_timeout = newinterest;
-        else
-            mpr("Interest must be between 0 and 255.");
-
-        mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
-
-        const string new_xom_favour = describe_xom_favour();
-        const string msg = "You are now " + new_xom_favour;
-        god_speaks(you.religion, msg.c_str());
-        return;
-    }
-
-    if (newpiety < 1)
-    {
-        if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
-        {
-            you.piety = 0;
-            excommunication();
-        }
-        else
-            canned_msg(MSG_OK);
-        return;
-    }
-    mprf("Setting piety to %d.", newpiety);
-    set_piety(newpiety);
-
-    // Automatically reduce penance to 0.
-    if (player_under_penance())
-        dec_penance(you.penance[you.religion]);
+    wizard_set_piety_to(atoi(buf));
 }
 
 //---------------------------------------------------------------
@@ -641,8 +712,8 @@ bool wizard_add_mutation()
         {
             vector<string> matches;
 
-            for (unsigned int i = 0; i < partial_matches.size(); ++i)
-                matches.push_back(mutation_name(partial_matches[i]));
+            for (mutation_type mut : partial_matches)
+                matches.emplace_back(mutation_name(mut));
 
             string prefix = "No exact match for mutation '" +
                             spec +  "', possible matches are: ";
@@ -797,10 +868,10 @@ void wizard_edit_durations()
                 choice = dur;
                 break;
             }
-            if (strstr(duration_name(dur), buf) != NULL)
+            if (strstr(duration_name(dur), buf) != nullptr)
             {
                 matches.push_back(dur);
-                match_names.push_back(duration_name(dur));
+                match_names.emplace_back(duration_name(dur));
             }
         }
         if (choice != NUM_DURATIONS)
@@ -849,7 +920,7 @@ static void debug_uptick_xl(int newxl, bool train)
         train_skills();
     }
     you.experience = exp_needed(newxl);
-    level_change(NON_MONSTER, NULL, true);
+    level_change(true);
 }
 
 /**
@@ -917,6 +988,13 @@ void wizard_get_god_gift()
         return;
     }
 
+    if (you_worship(GOD_RU))
+    {
+        ru_offer_new_sacrifices();
+        you.props["ru_progress_to_next_sacrifice"] = 0;
+        return;
+    }
+
     if (!do_god_gift(true))
         mpr("Nothing happens.");
 }
@@ -929,15 +1007,16 @@ void wizard_toggle_xray_vision()
 
 void wizard_god_wrath()
 {
-    if (you_worship(GOD_NO_GOD))
-    {
+    const god_type god = choose_god(you.religion);
+    if (god == NUM_GODS)
+        mpr("That god doesn't seem to exist!");
+    else if (god == GOD_NO_GOD)
         mpr("You suffer the terrible wrath of No God.");
-        return;
+    else if (!divine_retribution(god, true, true))
+    {
+        // Dead Jiyva, or Ru/Gozag/Ashenzari.
+        mprf("%s is not feeling wrathful today.", god_name(god).c_str());
     }
-
-    if (!divine_retribution(you.religion, true, true))
-        // Currently only dead Jiyva.
-        mpr("You're not eligible for wrath.");
 }
 
 void wizard_god_mollify()
@@ -956,7 +1035,7 @@ void wizard_transform()
     while (true)
     {
         string line;
-        for (int i = 0; i <= LAST_FORM; i++)
+        for (int i = 0; i < NUM_TRANSFORMS; i++)
         {
 #if TAG_MAJOR_VERSION == 34
             if (i == TRAN_JELLY)
@@ -964,7 +1043,7 @@ void wizard_transform()
 #endif
             line += make_stringf("[%c] %-10s ", i + 'a',
                                  transform_name((transformation_type)i));
-            if (i % 5 == 4 || i == LAST_FORM)
+            if (i % 5 == 4 || i == NUM_TRANSFORMS - 1)
             {
                 mprf(MSGCH_PROMPT, "%s", line.c_str());
                 line.clear();
@@ -981,7 +1060,7 @@ void wizard_transform()
             return;
         }
 
-        if (keyin < 'a' || keyin > 'a' + LAST_FORM)
+        if (keyin < 'a' || keyin > 'a' + NUM_TRANSFORMS - 1)
             continue;
 
 #if TAG_MAJOR_VERSION == 34
@@ -999,111 +1078,24 @@ void wizard_transform()
         mpr("Transformation failed.");
 }
 
-static void _wizard_modify_character(string inputdata)
-// for now this just sets skill levels and str dex int
-// (this should be enough to debug with)
+void wizard_join_religion()
 {
-    vector<string>  tokens = split_string(" ", inputdata);
-    int size = tokens.size();
-    if (size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
+    god_type god = choose_god();
+    if (god == NUM_GODS)
+        mpr("That god doesn't seem to exist!");
+    else if (god == GOD_NO_GOD)
     {
-        skill_type skill = skill_from_name(lowercase_string(tokens[3]).c_str());
-        double amount = atof(tokens[2].c_str());
-        set_skill_level(skill, amount);
-        if (tokens[0] == "+")
-            you.train[skill] = 1;
-        else if (tokens[0] == "*")
-            you.train[skill] = 2;
+        if (you_worship(GOD_NO_GOD))
+            mpr("You already have no god!");
         else
-            you.train[skill] = 0;
-
-        redraw_skill(skill);
-
-        return;
+            excommunication();
     }
-
-    if (size > 5 && tokens[0] == "HP") // HP 23/23 AC 3 Str 21 XL: 1 Next: 0%
+    else if (you_worship(god))
+        mpr("You already worship that god!");
+    else
     {
-        for (int k = 1; k < size; k++)
-        {
-            if (tokens[k] == "Str")
-            {
-                you.base_stats[STAT_STR] = debug_cap_stat(atoi(tokens[k+1].c_str()));
-                you.redraw_stats.init(true);
-                you.redraw_evasion = true;
-                return;
-            }
-        }
-    }
-
-    if (size > 5 && tokens[0] == "MP")
-    {
-        for (int k = 1; k < size; k++)
-        {
-            if (tokens[k] == "Int")
-            {
-                you.base_stats[STAT_INT] = debug_cap_stat(atoi(tokens[k+1].c_str()));
-                you.redraw_stats.init(true);
-                you.redraw_evasion = true;
-                return;
-            }
-        }
-    }
-    if (size > 5 && tokens[0] == "Gold")
-    {
-        for (int k = 1; k < size; k++)
-        {
-            if (tokens[k] == "Dex")
-            {
-                you.base_stats[STAT_DEX] = debug_cap_stat(atoi(tokens[k+1].c_str()));
-                you.redraw_stats.init(true);
-                you.redraw_evasion = true;
-                return;
-            }
-        }
-    }
-
-    return;
-}
-
-/**
- * Load a character from a dump file.
- *
- * @param filename The name of the file to open.
- * @pre The file either does not exist, or is a complete
- *      dump or morgue file.
- * @returns True if the file existed and could be opened.
- * @post The player's stats, level, skills, training, and gold are
- *       those listed in the dump file.
- */
-static bool _load_dump_file(const char *filename)
-{
-    FileLineInput f(filename);
-    if (f.eof())
-        return false;
-
-    you.init_skills();
-
-    while (!f.eof())
-        _wizard_modify_character(f.get_line());
-
-    init_skill_order();
-    init_can_train();
-    init_train();
-    init_training();
-    return true;
-}
-
-void wizard_load_dump_file()
-{
-    char filename[80];
-    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
-
-    if (filename[0] == '\0')
-        canned_msg(MSG_OK);
-    else if (!_load_dump_file(filename)
-             && !_load_dump_file((morgue_directory() + filename).c_str()))
-    {
-        canned_msg(MSG_NOTHING_THERE);
+        if (god == GOD_GOZAG)
+            you.gold = max(you.gold, gozag_service_fee());
+        join_religion(god, true);
     }
 }

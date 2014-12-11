@@ -1,10 +1,11 @@
 #ifndef ENV_H
 #define ENV_H
 
+#include <set>
+
 #include "map_knowledge.h"
 #include "monster.h"
 #include "trap_def.h"
-#include <set>
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
 typedef uint32_t terrain_property_t;

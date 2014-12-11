@@ -4,43 +4,33 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-poly.h"
 
 #include "artefact.h"
 #include "attitude-change.h"
-#include "butcher.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
-#include "env.h"
 #include "exclude.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "monster.h"
-#include "mon-flags.h"
+#include "message.h"
 #include "mon-death.h"
-#include "mon-message.h"
 #include "mon-place.h"
-#include "mon-util.h"
+#include "mon-tentacle.h"
 #include "notes.h"
-#include "player.h"
 #include "religion.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
+#include "view.h"
 #include "xom.h"
-
-dungeon_feature_type get_mimic_feat(const monster* mimic)
-{
-    if (mimic->props.exists("feat_type"))
-        return static_cast<dungeon_feature_type>(mimic->props["feat_type"].get_short());
-    else
-        return DNGN_FLOOR;
-}
 
 bool feature_mimic_at(const coord_def &c)
 {
@@ -52,7 +42,7 @@ item_def* item_mimic_at(const coord_def &c)
     for (stack_iterator si(c); si; ++si)
         if (si->flags & ISFLAG_MIMIC)
             return &*si;
-    return NULL;
+    return nullptr;
 }
 
 bool mimic_at(const coord_def &c)
@@ -60,16 +50,9 @@ bool mimic_at(const coord_def &c)
     return feature_mimic_at(c) || item_mimic_at(c);
 }
 
-// The default suitable() function for monster_drop_things().
-bool is_any_item(const item_def& item)
-{
-    return true;
-}
-
 void monster_drop_things(monster* mons,
                           bool mark_item_origins,
-                          bool (*suitable)(const item_def& item),
-                          int owner_id)
+                          bool (*suitable)(const item_def& item))
 {
     // Drop weapons and missiles last (i.e., on top), so others pick up.
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
@@ -82,7 +65,7 @@ void monster_drop_things(monster* mons,
                 testbits(mitm[item].flags, ISFLAG_SUMMONED);
             if (summoned_item)
             {
-                item_was_destroyed(mitm[item], mons->mindex());
+                item_was_destroyed(mitm[item]);
                 destroy_item(item);
             }
             else
@@ -128,6 +111,15 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         return false;
     }
 
+    // [hm] Lower base draconian chances since there are nine of them,
+    // and they shouldn't each count for a full chance.
+    if (mons_genus(new_mclass) == MONS_DRACONIAN
+        && new_mclass != MONS_DRACONIAN
+        && !one_chance_in(9))
+    {
+        return false;
+    }
+
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
@@ -157,8 +149,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_is_projectile(new_mclass)
         || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
-        // Don't polymorph things without Gods into priests.
-        || (mons_class_flag(new_mclass, MF_PRIEST) && mons->god == GOD_NO_GOD)
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
             && (mons->type == MONS_PRINCE_RIBBIT
@@ -219,7 +209,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // player into a different type which can also behold the player,
     // the polymorph disrupts the beholding process.  Do this before
     // changing mons->type, since unbeholding can only happen while
-    // the monster is still a mermaid/siren.
+    // the monster is still a siren/merfolk avatar.
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
 
@@ -233,7 +223,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
-                           | MF_MELEE_MASK | MF_SPELL_MASK);
+                           | MF_MELEE_MASK);
     flags |= MF_POLYMORPHED;
     string name;
 
@@ -299,15 +289,13 @@ void change_monster_type(monster* mons, monster_type targetc)
     const bool old_mon_caught     = mons->caught();
     const char old_ench_countdown = mons->ench_countdown;
 
-    // XXX: mons_is_unique should be converted to monster::is_unique, and that
-    // function should be testing the value of props["original_was_unique"]
-    // which would make things a lot simpler.
-    // See also record_monster_defeat.
-    bool old_mon_unique           = mons_is_unique(mons->type);
-    if (mons->props.exists("original_was_unique")
-        && mons->props["original_was_unique"].get_bool())
+    const bool old_mon_unique = mons_is_or_was_unique(*mons);
+
+    if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
-        old_mon_unique = true;
+        mons->props[ORIGINAL_TYPE_KEY].get_int() = mons->type;
+        if (mons->mons_species() == MONS_HYDRA)
+            mons->props["old_heads"].get_int() = mons->num_heads;
     }
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
@@ -320,12 +308,13 @@ void change_monster_type(monster* mons, monster_type targetc)
     mon_enchant tp        = mons->get_ench(ENCH_TP);
     mon_enchant vines     = mons->get_ench(ENCH_AWAKEN_VINES);
     mon_enchant forest    = mons->get_ench(ENCH_AWAKEN_FOREST);
+    mon_enchant hexed     = mons->get_ench(ENCH_HEXED);
 
     monster_spells spl    = mons->spells;
     const bool need_save_spells
-            = (!name.empty()
-               && (!mons->can_use_spells() || mons->is_actual_spellcaster())
-               && !slimified);
+            =  old_mon_unique && !slimified
+               && mons_class_intel(targetc) >= I_NORMAL
+               && (!mons->has_spells() || mons->is_actual_spellcaster());
 
     mons->number       = 0;
 
@@ -340,8 +329,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     }
 
     mons->mname = name;
-    mons->props["original_name"] = name;
-    mons->props["original_was_unique"] = old_mon_unique;
+    mons->props["no_annotate"] = slimified && old_mon_unique;
     mons->god   = god;
     mons->props.erase("dbname");
 
@@ -353,16 +341,13 @@ void change_monster_type(monster* mons, monster_type targetc)
     // Forget various speech/shout Lua functions.
     mons->props.erase("speech_prefix");
 
-    // Don't allow polymorphing monsters for hides.
-    mons->props[NEVER_HIDE_KEY] = true;
-
     // Keep spells for named monsters, but don't override innate ones
     // for dragons and the like. This means that Sigmund polymorphed
     // into a goblin will still cast spells, but if he ends up as a
     // swamp drake he'll breathe fumes and, if polymorphed further,
     // won't remember his spells anymore.
     if (need_save_spells
-        && (!mons->can_use_spells() || mons->is_actual_spellcaster()))
+        && (!mons->has_spells() || mons->is_actual_spellcaster()))
     {
         mons->spells = spl;
     }
@@ -376,6 +361,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->add_ench(tp);
     mons->add_ench(vines);
     mons->add_ench(forest);
+    mons->add_ench(hexed);
 
     // Allows for handling of submerged monsters which polymorph into
     // monsters that can't submerge on this square.
@@ -495,21 +481,20 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (targetc == RANDOM_TOUGHER_MONSTER)
     {
         vector<monster_type> target_types;
-        for (int mc = 0; mc < NUM_MONSTERS; ++mc)
+        for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
         {
-            const monsterentry *me = get_monster_data((monster_type) mc);
+            const monsterentry *me = get_monster_data(mc);
             int delta = (int) me->hpdice[0] - mons->get_hit_dice();
             if (delta != 1)
                 continue;
-            if (!_valid_morph(mons, (monster_type) mc))
+            if (!_valid_morph(mons, mc))
                 continue;
-            target_types.push_back((monster_type) mc);
+            target_types.push_back(mc);
         }
         if (target_types.empty())
             return false;
 
-        shuffle_array(target_types);
-        targetc = target_types[0];
+        targetc = target_types[random2(target_types.size())];
     }
 
     if (!_valid_morph(mons, targetc))
@@ -621,6 +606,8 @@ void slimify_monster(monster* mon, bool hostile)
         return;
     }
 
+    remove_unique_annotation(mon);
+
     monster_polymorph(mon, target);
 
     if (!mons_eats_items(mon))
@@ -650,17 +637,10 @@ void seen_monster(monster* mons)
     item_def* weapon = mons->weapon();
     if (weapon && is_range_weapon(*weapon))
         mons->flags |= MF_SEEN_RANGED;
+    mark_mon_equipment_seen(mons);
 
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;
-
-    // mark items as seen.
-    for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
-    {
-        int item_id = mons->inv[slot];
-        if (item_id != NON_ITEM)
-            mitm[item_id].flags |= ISFLAG_SEEN;
-    }
 
     if (mons->flags & MF_SEEN)
         return;
@@ -668,23 +648,18 @@ void seen_monster(monster* mons)
     // First time we've seen this particular monster.
     mons->flags |= MF_SEEN;
 
-    if (!mons_is_mimic(mons->type))
-    {
-        if (crawl_state.game_is_hints())
-            hints_monster_seen(*mons);
+    if (crawl_state.game_is_hints())
+        hints_monster_seen(*mons);
 
-        if (MONST_INTERESTING(mons))
+    if (MONST_INTERESTING(mons))
+    {
+        string name = mons->name(DESC_A, true);
+        if (mons->type == MONS_PLAYER_GHOST)
         {
-            string name = mons->name(DESC_A, true);
-            if (mons->type == MONS_PLAYER_GHOST)
-            {
-                name += make_stringf(" (%s)",
-                        short_ghost_description(mons, true).c_str());
-            }
-            take_note(
-                      Note(NOTE_SEEN_MONSTER, mons->type, 0,
-                           name.c_str()));
+            name += make_stringf(" (%s)",
+                                 short_ghost_description(mons, true).c_str());
         }
+        take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name.c_str()));
     }
 
     if (!(mons->flags & MF_TSO_SEEN))

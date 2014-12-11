@@ -1,8 +1,9 @@
 #include "AppHdr.h"
 
-#include "clua.h"
 #include "l_libs.h"
 
+#include "clua.h"
+#include "libutil.h" // map_find
 #include "options.h"
 
 ////////////////////////////////////////////////////////////////
@@ -55,20 +56,20 @@ static option_handler handlers[] =
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },
-    { "autopick_on", NULL, option_autopick }
+    { "autopick_on", nullptr, option_autopick }
 };
 
 static const option_handler *get_handler(const char *optname)
 {
     if (optname)
     {
-        for (int i = 0, count = ARRAYSZ(handlers); i < count; ++i)
+        for (const option_handler &handler : handlers)
         {
-            if (!strcmp(handlers[i].option, optname))
-                return &handlers[i];
+            if (!strcmp(handler.option, optname))
+                return &handler;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 static int option_get(lua_State *ls)
@@ -78,11 +79,9 @@ static int option_get(lua_State *ls)
         return 0;
 
     // Is this a Lua named option?
-    game_options::opt_map::iterator i = Options.named_options.find(opt);
-    if (i != Options.named_options.end())
+    if (string *value = map_find(Options.named_options, opt))
     {
-        const string &ov = i->second;
-        lua_pushstring(ls, ov.c_str());
+        lua_pushstring(ls, value->c_str());
         return 1;
     }
 

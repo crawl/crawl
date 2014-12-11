@@ -74,6 +74,6 @@ local function run_findray_tests(depth, nlevels, tests_per_level)
   end
 end
 
-for depth = 1, 16 do
+for depth = 1, 15 do
   run_findray_tests(depth, 1, 10)
 end

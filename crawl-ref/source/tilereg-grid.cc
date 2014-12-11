@@ -26,7 +26,7 @@ bool InventoryTile::empty() const
 
 GridRegion::GridRegion(const TileRegionInit &init) :
     TileRegion(init),
-    m_flavour(NULL),
+    m_flavour(nullptr),
     m_cursor(NO_CURSOR),
     m_last_clicked_item(-1),
     m_grid_page(0),
@@ -37,7 +37,7 @@ GridRegion::GridRegion(const TileRegionInit &init) :
 GridRegion::~GridRegion()
 {
     delete[] m_flavour;
-    m_flavour = NULL;
+    m_flavour = nullptr;
 }
 
 void GridRegion::clear()
@@ -51,7 +51,7 @@ void GridRegion::on_resize()
     if (m_flavour)
     {
         delete[] m_flavour;
-        m_flavour = NULL;
+        m_flavour = nullptr;
     }
 
     if (mx * my <= 0)
@@ -137,11 +137,11 @@ bool GridRegion::place_cursor(MouseEvent &event, unsigned int &item_idx)
 }
 
 int GridRegion::add_quad_char(char c, int x, int y,
-                              int ofs_x, int ofs_y, bool outline)
+                              int ofs_x, int ofs_y)
 {
     int num = c - '0';
     ASSERT_RANGE(num, 0, 9 + 1);
-    tileidx_t idx = (outline ? TILEI_NUM0_OUTLINE : TILEI_NUM0) + num;
+    tileidx_t idx = TILEI_NUM0 + num;
 
     m_buf.add_icons_tile(idx, x, y, ofs_x, ofs_y);
     return tile_icons_info(idx).width;
@@ -169,13 +169,13 @@ void GridRegion::render()
     draw_tag();
 }
 
-void GridRegion::draw_number(int x, int y, int num, bool outln)
+void GridRegion::draw_number(int x, int y, int num)
 {
     // If you have that many, who cares.
     if (num > 9999)
         num = 9999;
 
-    int offset_x = 2;
+    int offset_x = num > 1999 ? 0 : 3;
     int offset_y = 1;
 
     int help = num;
@@ -183,20 +183,20 @@ void GridRegion::draw_number(int x, int y, int num, bool outln)
     help -= c1000*1000;
 
     if (c1000)
-        offset_x += add_quad_char('0' + c1000, x, y, offset_x, offset_y, outln);
+        offset_x += add_quad_char('0' + c1000, x, y, offset_x, offset_y);
 
     int c100 = help/100;
     help -= c100*100;
 
     if (c100 || c1000)
-        offset_x += add_quad_char('0' + c100, x, y, offset_x, offset_y, outln);
+        offset_x += add_quad_char('0' + c100, x, y, offset_x, offset_y);
 
     int c10 = help/10;
     if (c10 || c100 || c1000)
-        offset_x += add_quad_char('0' + c10, x, y, offset_x, offset_y, outln);
+        offset_x += add_quad_char('0' + c10, x, y, offset_x, offset_y);
 
     int c1 = help % 10;
-    add_quad_char('0' + c1, x, y, offset_x, offset_y, outln);
+    add_quad_char('0' + c1, x, y, offset_x, offset_y);
 }
 
 #endif

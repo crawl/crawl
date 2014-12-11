@@ -46,7 +46,8 @@ default-depth: Depths, D:21-
 
 # This one is the backup and the one used in encompass vaults.
 NAME: abyss_entry
-TAGS: allow_dup overwrite_floor_cell replace_portal transparent fallback_enter_abyss
+TAGS: allow_dup overwrite_floor_cell no_exits replace_portal transparent
+TAGS: fallback_enter_abyss
 WEIGHT: 50
 : abyss_entry(_G, 'O')
 MAP
@@ -114,7 +115,7 @@ KPROP:   T = no_rtele_into
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
-KFEAT:   X : malign_gateway
+KFEAT:   X : stone_arch
 MAP
 nnn nnn
 nTn.nTn
@@ -141,6 +142,27 @@ MAP
 bbObb
 bA_Ab
   @
+ENDMAP
+
+NAME:    hangedman_abyss_entry_splay
+TAGS:    nolayout_encompass transparent
+SHUFFLE: ABCDE
+SUBST:   A : cxxx.., B : cxxx.., CDE = x, F : ccxxb
+: abyss_entry(_G, 'O')
+MAP
+        xx..
+        x.A.
+        xx..
+        x.C......
+        xF.D.E.B.
+      xxx.F.x.x.x
+xxxxxxx.O.xxxxxxx
+x.x.x.F.xxx
+.B.E.D.Fx
+......C.x
+     ..xx
+     .A.x
+     ..xx
 ENDMAP
 
 ###############################################################################
@@ -197,7 +219,7 @@ TAGS:    no_rotate
 NSUBST:  . = 3:1 / 2:2 / *:.
 SUBST:   ' = .
 COLOUR:  " : white w:5 / none
-TILE:    " : floor_limestone w:5 / floor_nerves
+FTILE:   "ABCDEFGHIJKLMNOPRQS : floor_limestone w:5 / floor_nerves
 SUBST:   " = .
 MONS:    plant, bush
 SHUFFLE: ABCDEFHIJKLMNOPQRS
@@ -267,8 +289,8 @@ MONS:   worker ant w:40 / goliath beetle w:20 / vampire mosquito
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
-            small abomination w:15 / ugly thing w:15 / chaos spawn
-KMONS:  E = very ugly thing
+            small abomination w:15 / chaos spawn
+KMONS:  E = ugly thing
 KMONS:  F = large abomination / glowing shapeshifter w:7
 SHUFFLE: 123 / 456 / 789 / DEF
 SUBST:  C = xccv, w : w:8 l:1 .:1, W : .:9 W:1
@@ -510,6 +532,7 @@ DEPTH:   D, Depths, Abyss
 MONS:    butterfly, plant, unseen horror, shadow wraith, wind drake
 SHUFFLE: 34GT, GTt
 : if you.branch() == "Abyss" then
+TAGS:    no_exits
 SHUFFLE: 345", ABCD / ACBD / ADCB
 SUBST:   + = M, ' = x:5 c:2 v:1 b:1, " = ., % = %%***|
 SUBST:   AB : wwl, CD : wll
@@ -538,7 +561,7 @@ ENDMAP
 NAME:    hangedman_shadowy_showcase
 TAGS:    transparent no_monster_gen
 MONS:    shadow wraith / unseen horror / thrashing horror, lurking horror
-MONS:    shapeshifter / very ugly thing / large abomination w:2, wretched star
+MONS:    shapeshifter / ugly thing / large abomination w:2, wretched star
 MONS:    large abomination / ghoul / death ooze w:2, ancient zyme
 MONS:    large slime creature w:12 / very large slime creature w:8 / rakshasa w:2
 KMONS:   8 = starcursed mass
@@ -573,7 +596,7 @@ ENDMAP
 
 NAME:    hangedman_relentless_pull
 TAGS:    no_monster_gen no_item_gen
-MONS:    very ugly thing / large abomination / ynoxinul / unseen horror / smoke demon
+MONS:    ugly thing / large abomination / ynoxinul / unseen horror / smoke demon
 MONS:    tentacled starspawn / starcursed mass
 MONS:    very ugly thing, wretched star, lurking horror, ancient zyme
 SHUFFLE: 2d, 34eAB / 34eAB / '''CD, 34 / 56
@@ -599,7 +622,7 @@ NAME:    hangedman_steaming_rock
 TAGS:    transparent
 MONS:    eye of devastation w:9 / nothing w:1
 KMONS:   2 = ynoxinul / smoke demon / thrashing horror / unseen horror / \
-             very ugly thing w:5/ rakshasa w:5 / chaos spawn w:5
+             ugly thing w:5/ rakshasa w:5 / chaos spawn w:5
 KMONS:   3 = smoke demon / green death / catoblepas w:8 / ophan w:7 / \
              fire crab w:5
 KMONS:   4 = apocalypse crab / death drake w:5
@@ -643,7 +666,7 @@ NAME:    hangedman_classic_abyss_death
 TAGS:    transparent no_monster_gen
 MONS:    large abomination / ynoxinul / unseen horror / \
          skeleton / sixfirhy / smoke demon / neqoxec / \
-         efreet / rakshasa / giant orange brain / very ugly thing / \
+         efreet / rakshasa / giant orange brain / ugly thing / \
          golden eye / hell hog
 MONS:    lich / hellephant / tentacled monstrosity / profane servitor / \
          death drake / daeva / angel / bone dragon / balrug w:4 / \
@@ -892,7 +915,7 @@ TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / wizard / base draconian w:5 / \
          guardian serpent w:1 / vampire w:3 / necromancer w:3
-MONS:    thrashing horror / blink frog / very ugly thing / \
+MONS:    thrashing horror / blink frog / ugly thing / \
          large abomination / unseen horror / shapeshifter / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
@@ -1073,7 +1096,7 @@ ENDMAP
 
 NAME:  evilmike_abyss_rune_siren
 TAGS:  abyss_rune unrand patrolling
-MONS:  generate_awake siren, blink frog
+MONS:  generate_awake merfolk avatar, blink frog
 KMONS: O = starcursed mass
 KITEM: O = abyssal rune of Zot
 SUBST: X = c., c = ccv, N : n.
@@ -1100,8 +1123,12 @@ TAGS:   abyss_rune unrand no_monster_gen
 WEIGHT: 6
 KMONS:  O = tentacled monstrosity / thrashing horror / tentacled starspawn
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
-            tile:mons_hell_wizard priest_spells \
-            spells:smiting;blink_other;invisibility;malign_gateway;blink ; \
+            tile:mons_hell_wizard \
+            spells:smiting.11.priest;\
+                   blink_other.11.priest;\
+                   invisibility.11.priest;\
+                   malign_gateway.11.priest;\
+                   blink.11.priest ; \
             robe good_item . quarterstaff ego:distortion ident:type | \
                              dagger ego:distortion ident:type
 KITEM:  O = abyssal rune of Zot
@@ -1128,8 +1155,12 @@ TAGS:   abyss_rune unrand no_monster_gen
 WEIGHT: 4
 KMONS:  O : tentacled monstrosity / thrashing horror / tentacled starspawn
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
-            tile:mons_hell_wizard priest_spells \
-            spells:smiting;blink_other;invisibility;malign_gateway;blink ; \
+            tile:mons_hell_wizard \
+            spells:smiting.11.priest;\
+                   blink_other.11.priest;\
+                   invisibility.11.priest;\
+                   malign_gateway.11.priest;\
+                   blink.11.priest ; \
             robe good_item . quarterstaff ego:distortion ident:type | \
                              dagger ego:distortion ident:type
 KITEM:  O = abyssal rune of Zot
@@ -1374,8 +1405,8 @@ KITEM:   24d = scroll of random uselessness w:15 q:1 / fruit q:1 w:5 / \
 KITEM:   13e = wand of slowing / wand of confusion / wand of magic darts / \
          wand of flame w:5 / wand of frost w:5 / plain deck w:5 / \
          whip not_cursed w:2 / hat not_cursed mundane w:5
-KITEM:   f = abyssal rune of zot mimic, abyssal rune of zot mimic
-KITEM:   g = abyssal rune of zot mimic, abyssal rune of zot
+KITEM:   f = abyssal rune of zot mimic
+KITEM:   g = abyssal rune of zot
 SHUFFLE: 14 / 23
 NSUBST:  f = 1:g / *:f, d = 2:e / 2 = de / *:d
 SUBST:   x = xxxxc, c = cccvb
@@ -1798,11 +1829,11 @@ XxxxxxxxX
 XXXxxxXXX
 ENDMAP
 
-# Orange crystal and silver statue are very rare here...
+# Orange crystal and obsidian statue are very rare here...
 # I want most characters to be able to actually use this exit
 NAME:  evilmike_abyss_exit_13
 TAGS:  abyss_exit unrand allow_dup
-KMONS: O = w:1 orange crystal statue / w:2 silver statue / w: 20 ice statue / w: 15 oklob plant
+KMONS: O = w:1 orange crystal statue / w:2 obsidian statue / w: 20 ice statue / w: 15 oklob plant
 : init_abyss_exit(_G, "O")
 MAP
 O
@@ -1960,8 +1991,7 @@ ENDMAP
 # This one is really, really weird...
 NAME:  evilmike_abyss_exit_smiterflies
 TAGS:  abyss_exit
-KMONS: O = generate_awake statue spells:summon_butterflies;summon_butterflies;\
-           summon_butterflies;summon_butterflies;summon_butterflies; \
+KMONS: O = generate_awake statue spells:summon_butterflies.100.magical \
            tile:mons_statue_mage col:lightblue
 MONS:  smoke demon, deep elf priest
 : init_abyss_exit(_G, "O")
@@ -2004,9 +2034,9 @@ ENDMAP
 
 NAME:    hangedman_abyss_exit_choices
 TAGS:    abyss_exit unrand no_monster_gen
-MONS:    death yak, giant leech, great orb of eyes
-MONS:    giant orange brain, swamp drake, wind drake, hell hound
-KMONS:   8 = raiju
+MONS:    hell hound, raiju, great orb of eyes
+MONS:    giant orange brain, swamp drake, wind drake, torpor snail
+KMONS:   8 = giant leech
 KMONS:   9 = mana viper
 KMONS:   0 = anaconda
 KMONS:   A = ball lightning
@@ -2040,9 +2070,9 @@ MARKER: P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
              size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
              spread_rate=3, start_clouds=1, colour="blue" }
 KFEAT:  _ = altar_lugonu
-KMONS:  1 = big kobold w:80 ; short sword | cutlass | quick blade w:3 /\
+KMONS:  1 = big kobold w:80 ; short sword | rapier | quick blade w:3 /\
             big kobold w:10 ; quick blade ego:distortion w:6 | \
-                              cutlass ego:distortion | short sword ego:distortion
+                              rapier ego:distortion | short sword ego:distortion
 : init_abyss_exit(_G, "P")
 MAP
   ccccc

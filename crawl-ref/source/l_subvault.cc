@@ -5,9 +5,9 @@
 
 #include "AppHdr.h"
 
-#include "cluautil.h"
-#include "libutil.h"
 #include "l_libs.h"
+
+#include "cluautil.h"
 #include "mapdef.h"
 
 static int dgn_is_subvault(lua_State *ls)
@@ -53,5 +53,5 @@ const struct luaL_reg dgn_subvault_dlib[] =
 { "subvault_cell_valid", dgn_subvault_cell_valid },
 { "subvault_size", dgn_subvault_size },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

@@ -5,16 +5,15 @@
 
 #include "AppHdr.h"
 
-#include "clua.h"
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "cluautil.h"
 #include "coord.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "env.h"
 #include "libutil.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 
 static int dgn_feature_number(lua_State *ls)
@@ -147,5 +146,5 @@ const struct luaL_reg dgn_grid_dlib[] =
 { "in_bounds", dgn_in_bounds },
 { "distance", dgn_distance },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

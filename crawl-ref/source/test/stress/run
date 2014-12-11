@@ -1,43 +1,57 @@
 #!/bin/sh
 set -e
 
-CRAWL=${CRAWL:-./crawl -seed 1 -no-save}
+CRAWL=${CRAWL:-timeout 595 ./crawl -seed 1 -no-save -name test -wizard -no-throttle}
 
 run_one()
 {
     case "$*" in
     1|woken_rest)
+        echo "rc: test/stress/woken_rest.rc" 1>&2
         $CRAWL -rc test/stress/woken_rest.rc -sprint -sprint-map dungeon_sprint_1
     ;;
     2|unwoken_rest)
-        $CRAWL -rc test/stress/unwoken_rest.rc -sprint -sprint-map dungeon_sprint_1 -name CPU_hog2
+        echo "rc: test/stress/unwoken_rest.rc" 1>&2
+        $CRAWL -rc test/stress/unwoken_rest.rc -sprint -sprint-map dungeon_sprint_1
     ;;
     3|fireworks)
+        echo "rc: test/stress/fireworks.rc" 1>&2
         $CRAWL -rc test/stress/fireworks.rc
     ;;
     4|cerebov)
+        echo "arena: cerebov v test spawner delay:0" 1>&2
         $CRAWL -arena 'cerebov v test spawner delay:0'
     ;;
     5|pan_lords)
+        echo "arena: cerebov, lom lobon, mnoleg, gloorx vloq v ereshkigal, asmodeus, antaeus, dispater delay:0 t:6" 1>&2
         $CRAWL -arena 'cerebov, lom lobon, mnoleg, gloorx vloq v ereshkigal, asmodeus, antaeus, dispater delay:0 t:6'
     ;;
     6|miscasts)
+        echo "arena: miscasts 5 pandemonium lord v 20 20-headed hydra delay:0 t:10" 1>&2
         $CRAWL -arena 'miscasts 5 pandemonium lord v 20 20-headed hydra delay:0 t:10'
     ;;
     7|kraken)
+        echo "arena: kraken v spectral kraken arena:small_deep_pool delay:0 t:20" 1>&2
         $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:20'
     ;;
     8|abyss_rest)
+        echo "rc: test/stress/abyss_short_wait.rc" 1>&2
         $CRAWL -rc test/stress/abyss_short_wait.rc
     ;;
     9|abyss_walk)
+        echo "rc: test/stress/abyss_short_run.rc" 1>&2
         $CRAWL -rc test/stress/abyss_short_run.rc
     ;;
+    10|qw)
+        echo "rc: test/stress/qw.rc" 1>&2
+        $CRAWL -rc test/stress/qw.rc
+    ;;
     test) # Not in "all".
+        echo "crawl -test" 1>&2
         $CRAWL -test
     ;;
     *)
-        echo "No such test."
+        echo "No such test." 1>&2
         exit 1
     esac
 }
@@ -45,6 +59,11 @@ run_one()
 if [ "$*" = "all" ]
   then
     for x in 1 2 3 4 5 6 7 8 9; do run_one "$x";done
+    exit $?
+elif [ "$*" = "nonwiz" ]
+  then
+    # only run the tests that don't require wizmode
+    for x in 4 5 6 7; do run_one "$x";done
     exit $?
 fi
 

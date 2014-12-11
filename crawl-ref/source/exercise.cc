@@ -6,13 +6,11 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
 #include "exercise.h"
 
+#include <algorithm>
+
 #include "itemprop.h"
-#include "player.h"
-#include "random.h"
 #include "skills.h"
 #include "spl-util.h"
 
@@ -27,11 +25,8 @@ skill_type abil_skill(ability_type abil)
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_FOG:
     case ABIL_EVOKE_TELEPORT_CONTROL:
-    case ABIL_EVOKE_JUMP:
         return SK_EVOCATIONS;
 
-    case ABIL_NEMELEX_DRAW_ONE:
-    case ABIL_NEMELEX_PEEK_TWO:
     case ABIL_NEMELEX_TRIPLE_DRAW:
     case ABIL_NEMELEX_DEAL_FOUR:
     case ABIL_NEMELEX_STACK_FIVE:
@@ -105,13 +100,8 @@ static int _abil_degree(ability_type abil)
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_FOG:
     case ABIL_EVOKE_TELEPORT_CONTROL:
-    case ABIL_EVOKE_JUMP:
         return 1;
 
-    case ABIL_NEMELEX_DRAW_ONE:
-        return 1 + random2(2);
-    case ABIL_NEMELEX_PEEK_TWO:
-        return 2 + random2(2);
     case ABIL_NEMELEX_TRIPLE_DRAW:
         return 3 + random2(3);
     case ABIL_NEMELEX_DEAL_FOUR:
@@ -197,7 +187,6 @@ static int _abil_degree(ability_type abil)
 static void _exercise_spell(spell_type spell, bool success)
 {
     // (!success) reduces skill increase for miscast spells
-    skill_type skill;
     int workout = 0;
 
     unsigned int disciplines = get_spell_disciplines(spell);
@@ -219,7 +208,7 @@ static void _exercise_spell(spell_type spell, bool success)
         if (!spell_typematch(spell, 1 << ndx))
             continue;
 
-        skill = spell_type2skill(1 << ndx);
+        skill_type skill = spell_type2skill(1 << ndx);
         if (skill == SK_CONJURATIONS)
             conj = true;
 
@@ -232,9 +221,8 @@ static void _exercise_spell(spell_type spell, bool success)
 
     shuffle_array(disc);
 
-    for (unsigned int k = 0; k < disc.size(); ++k)
+    for (const skill_type skill : disc)
     {
-        skill = disc[k];
         workout = (random2(1 + diff) / skillcount);
 
         if (!one_chance_in(5))

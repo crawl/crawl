@@ -38,14 +38,6 @@ function interest_check(e)
   end
 end
 
-function callback.amethyst_srp_altar(data, triggerable, triggerer, marker, ev)
-  local pos = dgn.point(marker:pos())
-  slaves = dgn.find_marker_positions_by_prop("teleport_spot",
-                                             data.teleport_spot)
-  you.teleport_to(slaves[1].x, slaves[1].y)
-  crawl.mpr("Your surroundings suddenly seem different.")
-end
-
 }}
 
 default-depth: D, Depths
@@ -182,41 +174,6 @@ MAP
 ...........
 ENDMAP
 
-NAME:  amethyst_srp_altar
-TAGS:  transparent decor
-DEPTH: D:2-, Vaults
-WEIGHT: 5
-KFEAT: MNOP = teleporter
-KFEAT: mnop = floor
-{{
-for i, char in ipairs({ 'm', 'n', 'o', 'p' }) do
-  local markerval = "altar_" .. char
-  local tele_marker = TriggerableFunction:new {
-    func="callback.amethyst_srp_altar",
-    data = { teleport_spot = markerval },
-    repeated = true
-  }
-  tele_marker:add_triggerer(DgnTriggerer:new { type = "player_move" })
-
-  lua_marker(char:upper(), tele_marker)
-  lua_marker(char, portal_desc { teleport_spot = markerval })
-end
-}}
-KMASK: _Cp = opaque
-MAP
-.....o.....
-.xxxxPxxxx.
-.x_______x.
-.x_______x.
-.x_______x.
-nO___C__pM.
-.x_______x.
-.x_______x.
-.x_______x.
-.xxxxNxxxx.
-.....m.....
-ENDMAP
-
 NAME:  lemuel_statue_altar
 TAGS:  transparent decor
 DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt, Forest
@@ -224,7 +181,7 @@ DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt, Forest
 SUBST: F = G
 : end
 SUBST: F = G:99 F:1
-KMONS: F = orange crystal statue / silver statue / ice statue
+KMONS: F = orange crystal statue / obsidian statue / ice statue
 : interest_check(_G)
 KMASK: _>C = opaque
 MAP
@@ -289,7 +246,7 @@ DEPTH: D:3-, Vaults
 TAGS:  no_trap_gen
 : if you.absdepth() > 12 then
 MONS: patrolling Daeva / patrolling Angel
-KFEAT:  m = iron_grate
+KFEAT:  n = iron_grate
 : else
 MONS:  patrolling Angel
 : end
@@ -298,15 +255,15 @@ KPROP: >"1_ = no_rtele_into
 SUBST: " = .
 MAP
    .....
-  ..xmx..
- ..xx>xx..
-..xxx"xxx..
-.xxxx1xxxx.
-.m>""_"">m.
-.xxxx"xxxx.
-..xxx"xxx..
- ..xx>xx..
-  ..xmx..
+  ..cnc..
+ ..xc>cx..
+..xxc"cxx..
+.ccc=1cccc.
+.n>""_"">n.
+.cccc"cccc.
+..xxc"cxx..
+ ..xc>cx..
+  ..cnc..
    .....
 ENDMAP
 
@@ -325,7 +282,7 @@ ENDMAP
 NAME:  lemuel_hellish_altar
 DEPTH: D:8-, Crypt, Geh
 TAGS:  no_monster_gen
-MONS:  iron devil/orange demon
+MONS:  rust devil/orange demon
 MONS:  hell beast/red devil
 MONS:  iron imp
 MONS:  hellion
@@ -371,8 +328,8 @@ MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
 KFEAT:      _ = altar_lugonu
 KFEAT:      P = enter_abyss
 : kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
-:       "w:6 | cutlass ego:distortion | short sword ego:distortion / kobold "   ..
-:       "w:80 ; short sword | cutlass | quick blade w:3")
+:       "w:6 | rapier ego:distortion | short sword ego:distortion / kobold "   ..
+:       "w:80 ; short sword | rapier | quick blade w:3")
 : else
 KFEAT:      _ = altar_xom
 :   if crawl.one_chance_in(4) then
@@ -381,8 +338,8 @@ KMONS:      P = orange crystal statue
 KFEAT:      P = enter_abyss / fountain_sparkling / stone_arch
 :   end
 : kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:chaos " ..
-:       "w:6 | cutlass ego:chaos | short sword ego:chaos / kobold w:80 ;"  ..
-:       "short sword | cutlass | quick blade w:3")
+:       "w:6 | rapier ego:chaos | short sword ego:chaos / kobold w:80 ;"  ..
+:       "short sword | rapier | quick blade w:3")
 : end
 MAP
   ccccc

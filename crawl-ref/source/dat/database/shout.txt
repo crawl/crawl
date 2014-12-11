@@ -98,21 +98,13 @@ __MOAN seen
 
 SOUND:@The_monster@ gives a chilling moan.
 %%%%
-__GURGLE seen
-
-SOUND:@The_monster@ gurgles horribly!
-%%%%
 __GURGLE unseen
 
 SOUND:You hear a horrible gurgling sound!
 %%%%
-__WHINE unseen
+__GURGLE seen
 
-SOUND:You hear an irritating high-pitched whine.
-%%%%
-__WHINE seen
-
-SOUND:@The_monster@ gives an irritating high-pitched whine.
+SOUND:@The_monster@ gurgles horribly!
 %%%%
 __CROAK unseen
 
@@ -173,6 +165,14 @@ SOUND:You hear a screech.
 SOUND:You hear a roar.
 
 SOUND:You hear a low.
+%%%%
+__RUMBLE seen
+
+SOUND:@The_monster@ rumbles deeply!
+%%%%
+__RUMBLE unseen
+
+SOUND:You hear a deep rumbling!
 %%%%
 ############################################
 # End of default shouts

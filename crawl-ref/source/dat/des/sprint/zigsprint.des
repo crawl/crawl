@@ -86,7 +86,7 @@ function setup_room(e, id)
     e.tile("X = wall_stone_white")
 
     -- Create items
-    e.kitem("1 = superb_item ident:all w:590 / potion of porridge ident:all w:2 /\
+e.kitem("1 = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
             wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
             potion of heal wounds ident:all q:2 w:2 / scroll of recharging ident:all w:1 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
@@ -122,7 +122,7 @@ function choose_mset_1(e)
     e.kmons("1 = ball python / adder / water moccasin w:5 / naga w:2")
 -- Lair
   elseif rnd < 29 then
-    e.kmons("1 = green rat / sheep / iguana / porcupine / yak w:5 /\
+    e.kmons("1 = river rat / sheep / iguana / porcupine / yak w:5 /\
                jackal / wolf w:5 / giant frog w:5")
 -- Spider
   elseif rnd < 39 then
@@ -212,7 +212,7 @@ function choose_mset_2(e)
                black mamba w:5 / naga mage w:5")
 -- Lair
   elseif rnd < 29 then
-    e.kmons("1 =  green rat / sheep / iguana / porcupine / yak /\
+    e.kmons("1 =  river rat / sheep / iguana / porcupine / yak /\
                jackal / wolf / giant frog / spiny frog w:5 /\
                komodo dragon w:5 / basilisk w:5 / place:Lair:1 w:30")
 -- Spider
@@ -331,7 +331,8 @@ function choose_mset_3(e)
   elseif rnd < 49 then
     e.kmons("1 = place:Shoals:3 / place:Shoals:$ w:45 / merfolk javelineer /\
                  merfolk impaler / merfolk aquamancer")
-    e.subst(". = W.., 1 = W")
+    e.subst(". = W..")
+    e.kfeat("1 = shallow_water")
 -- Cocytus
   elseif rnd < 54 then
     e.kmons("1 = place:Coc:1")
@@ -713,10 +714,12 @@ KFEAT:  r = altar_cheibriados
 KFEAT:  s = altar_dithmenos
 KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
+KFEAT:  v = altar_ru
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
               storm dragon armour mundane not_cursed ident:all plus:5, \
+              shadow dragon armour mundane not_cursed ident:all plus:5, \
               gold dragon armour mundane not_cursed ident:all plus:5, \
               crystal plate armour mundane not_cursed ident:all plus:5
 KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
@@ -732,12 +735,12 @@ KITEM:    F = demon whip mundane not_cursed ident:all plus:5, \
               giant club mundane not_cursed ident:all plus:5, \
               giant spiked club mundane not_cursed ident:all plus:5
 KITEM:    G = dagger mundane not_cursed ident:all plus:5, \
-              cutlass mundane not_cursed ident:all plus:5, \
+              rapier mundane not_cursed ident:all plus:5, \
               quick blade mundane not_cursed ident:all plus:5
 KITEM:    H = demon blade mundane not_cursed ident:all plus:5, \
-              bastard sword mundane not_cursed ident:all plus:5, \
+              double sword mundane not_cursed ident:all plus:5, \
               great sword mundane not_cursed ident:all plus:5, \
-              claymore mundane not_cursed ident:all plus:5
+              triple sword mundane not_cursed ident:all plus:5
 KITEM:    I = lajatang mundane not_cursed ident:all plus:5
 KITEM:    J = hand crossbow mundane not_cursed ident:all plus:5, \
               bolt q:1000 mundane ident:all, \
@@ -785,16 +788,19 @@ KITEM:    P = ring of strength not_cursed ident:all plus:6, \
 KITEM:    R = broad axe unrand:obsidian_axe ident:all, \
               shield unrand:shield_of_the_gong ident:all, \
               plate armour unrand:maxwells_patent_armour ident:all, \
-              great mace unrand:dark_maul ident:all
+              great mace unrand:dark_maul ident:all, \
+              triple crossbow unrand:sniper ident:all, \
+              quarterstaff unrand:majin-bo ident:all
 KITEM:    T = longbow unrand:piercer ident:all, \
               long sword unrand:singing_sword ident:all, \
               great mace unrand:mace_of_variability ident:all, \
               great sword unrand:sword_of_power ident:all, \
               scythe unrand:scythe_of_curses ident:all, \
-              bastard sword unrand:sword_of_zonguldrok ident:all, \
+              double sword unrand:sword_of_zonguldrok ident:all, \
               spear unrand:wyrmbane ident:all, \
-              claymore unrand:plutonium_sword ident:all, \
-              club unrand:devastator ident:all
+              triple sword unrand:plutonium_sword ident:all, \
+              club unrand:devastator ident:all, \
+              great mace unrand:firestarter ident:all
 KITEM:    S = disc of storms ident:all, \
               tome of destruction ident:all, tome of destruction ident:all
 KFEAT:    ^ = granite_statue
@@ -809,9 +815,9 @@ d..JE.....S...m
 ^...D..M..P...^
 c......L..O...n
 ^...C..K..N...^
-b...B.........o
+b...B.{.......o
 ^.............^
-a^r^t^{^u^s^q^p
+a^r^t^v^u^s^q^p
 ENDMAP
 
 NAME:  room_1

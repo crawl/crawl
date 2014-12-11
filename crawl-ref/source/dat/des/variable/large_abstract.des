@@ -21,39 +21,40 @@ NAME:   minmay_octagon_city
 TAGS:   no_rotate
 ORIENT: north
 DEPTH:  Depths, !Depths:$
-NSUBST: A = 1:+ / *:xxxx+, B = 1:+ / *:xxxx+, C = 1:+ / *:xxxx+
-NSUBST: D = 1:+ / *:xxxx+, E = 1:+ / *:xxxx+, F = 1:+ / *:xxxx+
-NSUBST: H = 1:+ / *:xxxx+, I = 1:+ / *:xxxx+, J = 1:+ / *:xxxx+
-SUBST:  1 : *., 2 : *., 3 : *., 4 : *., 5 : *., 6 : *.
+NSUBST: A = 1:+ / *:xxxx+, B = 1:+ / *:xxxx+, C = 1:+ / *:cccc+
+NSUBST: D = 1:+ / *:xxxx+, E = 1:+ / *:xxxx+, F = 1:+ / *:cccc+
+NSUBST: H = 1:+ / *:cccc+, I = 1:+ / *:cccc+, J = 1:+ / *:cccc+
+SUBST:  d : *., e : *., f : *., g : *., h : *., i : *.
 MAP
                                xxxxxxx
-                              xx22222xx
-                             xx9.....9xx
-                            xx.........xx
-           xxxxxxx         xx.0.......0.xx  xxxxxx
-          xx.....xx       xx.............xxxx||||xx                    xxxxxx
-         xx.......xx xxxxxx0.............0xx.8..9.xx        xxxxxxx   xx3333xx
-  xxxxx xx.........xxx|||xx......0.0......x........x       xx66666xx xx......xx
- xx111xxx...........x.....x.......G.......H...8....xxxxxx xx.......xxx..0..0..x
-xx.....xx....0.0....J..8..J......0.0......x....9...xx...xxx.........xx....9...x
-x..0.0..x.....9.....x.....x0.............0x........H.0.0.x...9...9...I...9....x
-x...9...F....0.0....xx9.9xxx.............xxx.9..8.xx..9..+...........x..0..0..xx
-x..0.0..x...........xxxxxx.xx.0.......0.xx.xx****xxx.0.0.x.....8.....xx......xxx
-xx.....xxx.........xx.......xx.........xx...xxxxxx.xx...xx...........xxx....xx.x
-xxx...xx.xx.......xx.........xx.......xx............xxxxxx...9...9...x.xx++xx..x
-x.xx+xx...xx.....xx...xxExx...xx.....xx...xxxCxxx........xx.........xx.........x
-x..........xxxFxxx...xx...xx...xxx+xxx...xx.....xx........xx.......xx..........x
-x....................x.9.9.x............xx.......xx........xx.....xx..xxxxxx...x
-x.............xxxxxx.E..8..E..xxBxx....xx.........xx........xxxIxxx..xx9..9xx..x
-x....xxAxx...xx$$$$xxx.9.9.x.xx...xx...x...0...0...x..xxDxx.........xx......xx.x
-x...xx...xx.xx$$$$$$x.x...xx.x.0.0.x...x....959....x.xx...xx........x9......9x.x
-x...x.0.0.x.x$$$$$$$$xxxExx..B..9..B...C....555....C.x.0.0.x........x...44...x.x
-x...A..9..A.x$$$$$$$$x.......x.0.0.x...x....959....x.D..9..D........x...44...x.x
-x...x.0.0.x.x$$$$$$$$x.......xx...xx...x...0...0...x.x.0.0.x........x........x.x
-x...xx...xx.x$$$$$$$$x........xxBxx....xx.........xx.xx...xx........xx......xx.x
-x....xxAxx..xx$$$$$$xx..................xx.......xx...xxDxx..........xx....xx..x
-x............xx$$$$xx....................xx.....xx....................xx++xx...x
-x.............xxxxxx......      ..........xxxCxxx............    ..............x
+                               ccccccc
+                              cceeeeecc
+                             cc9.....9cc
+                            cc.........cc
+           ccccccc         cc.0.......0.cc  xxxxxx
+          cc.....cc       cc.............ccxx||||xx                    xxxxxx
+         cc.......cc xxxxxc0.............0cx.8..9.xx        ccccccc   xxffffxx
+  xxxxx cc.........ccx|||xc......0.0......c........x       cciiiiicc xx......xx
+ xxdddxxc...........c.....c.......G.......H...8....xxxxxx cc.......ccx..0..0..x
+xx.....xc....0.0....J..8..J......0.0......c....9...xx...xcc.........cc....9...x
+x..0.0..c.....9.....c.....c0.............0c........H.0.0.c...9...9...I...9....x
+x...9...F....0.0....cx9.9xcc.............ccx.9..8.xx..9..+...........c..0..0..xx
+x..0.0..c...........cxxxxx.cc.0.......0.cc.xx****xxx.0.0.c.....8.....cx......xxx
+xx.....xcc.........cc.......cc.........cc...xxxxxx.xx...xc...........cxx....xx.x
+xxx...xx.cc.......cc.........cc.......cc............xxxxxc...9...9...c.xx++xx..x
+x.xx+xx...cc.....cc...xxExx...cc.....cc...cccCccc........cc.........cc.........x
+x..........cccFccc...xx...xx...ccc+ccc...cc.....cc........cc.......cc..........x
+x....................x.9.9.x............cc.......cc........cc.....cc..xxxxxx...x
+x.............xxxxxx.E..8..E..xxBxx....cc.........cc........cccIccc..xx9..9xx..x
+x....xxAxx...xx$$$$xxx.9.9.x.xx...xx...c...0...0...c..xxDxx.........xx......xx.x
+x...xx...xx.xx$$$$$$x.x...xx.x.0.0.x...c....9h9....c.xx...xx........x9......9x.x
+x...x.0.0.x.x$$$$$$$$xxxExx..B..9..B...C....hhh....C.x.0.0.x........x...gg...x.x
+x...A..9..A.x$$$$$$$$x.......x.0.0.x...c....9h9....c.D..9..D........x...gg...x.x
+x...x.0.0.x.x$$$$$$$$x.......xx...xx...c...0...0...c.x.0.0.x........x........x.x
+x...xx...xx.x$$$$$$$$x........xxBxx....cc.........cc.xx...xx........xx......xx.x
+x....xxAxx..xx$$$$$$xx..................cc.......cc...xxDxx..........xx....xx..x
+x............xx$$$$xx....................cc.....cc....................xx++xx...x
+x.............xxxxxx......      ..........cccCccc............    ..............x
         .................         ..................                   ........x
 ENDMAP
 
@@ -89,7 +90,7 @@ NAME:    vault_1
 ORIENT:  north
 DEPTH:   Depths, !Depths:$
 MONS:    shapeshifter, shapeshifter, glowing shapeshifter
-MONS:    silver statue, nothing
+MONS:    obsidian statue, nothing
 SUBST:   E=E.
 SHUFFLE: abcd, $*, |ABCDE, nm, 45
 SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0
@@ -187,13 +188,13 @@ NAME:   little_maze_vault
 DEPTH:  Depths, !Depths:$
 ORIENT: northeast
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x900x..............x..........x
-x999x.xxxxxxxxxxxx.x.xxxxxxxx.x
-x000x.x............x.x......x.x
-xx.xx.xxxxxxxxxxxxxx.x.xxxx.x.x
-xx.x..............xx.x.88|x.x.x
-xx.x.x.xxxxxxxxxx.xx.xxxxxx.x.x
+cccccxxxxxxxxxxxxxxxxxxxxxxxxxx
+c900c..............x..........x
+c999c.xxxxxxxxxxxx.x.xxxxxxxx.x
+c000c.x............x.x......x.x
+cc.cc.xxxxxxxxxxxxxx.x.cccc.x.x
+xx.x..............xx.x.88|c.x.x
+xx.x.x.xxxxxxxxxx.xx.cccccc.x.x
 xx.x.x.x........x...........x.x
 xx.x.x.x.xxxxxx.xxxxxxxxxxxxx.x
 xx.xxx.x.x$$$$x...............x
@@ -203,18 +204,18 @@ x........x$$$$x.xxxxxxxxxxxxx.x
 x.xxxxxx.xxxx.x.............x.x
 x.xxxxxx.xxxx.xxxxxxxxxxxxx.x.x
 x.x.......xxx.x...........x.x.x
-x.x.xxxxx.....x.x.xxxxx...x.x.x
-x.x.x999xxxxxxx.x.x***x...x.x.x
-x.x.x889........x.x|||xxxxx.x.x
-x.x.x899x.xxxxx.x.x***xxxxx.x.x
-x.x.xxxxx.xxxxx.x.xx.xxxxxx.x.x
+x.x.ccccc.....x.x.xxxxx...x.x.x
+x.x.c999cxxxxxx.x.x***x...x.x.x
+x.x.c889........x.x|||xxxxx.x.x
+x.x.c899c.xxxxx.x.x***xxxxx.x.x
+x.x.ccccc.xxxxx.x.xx.xxxxxx.x.x
 x.x..........xx.x.xx........x.x
-x.xxxxxxx.xx.xx.x.xxxxx.xxxxx.x
-x.xxx000x.xx.xx.x.x$$$x.xxxxx.x
-x|||x000x.x$$$x.x.x$$$x%%x%%%.x
-x|||x000..x$8$x.x.x$$$x%%x%8%xx
-x|||xxxxxxx$$$x.x..$$$xxxx%%%xx
-xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
+x.xxccccc.cx.xc.x.xxxxx.xxxxx.x
+x.xxc000c.cx.xc.x.x$$$x.xcccc.c
+x|||c000c.c$$$c.x.x$$$x%%c%%%.c
+x|||c000..c$8$c.x.x$$$x%%c%8%cc
+x|||cccccxc$$$c.x..$$$xxxc%%%cx
+xxxxxxxxxxccccc@xxxxxxxxxcccccx
 ENDMAP
 
 ##############################################################################
@@ -340,31 +341,32 @@ DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: northwest
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxx......................xxxxx
-xxxxx...xxxxxxxx..xxxxxxxx...xxxx
-xxxx...xxxxxxxxx..xxxxxxxxx...xxx
-xxx...xx$*....xx..xx....$$xx...xx
-xx...xx$*$....xx..xx....$*$xx...x
-xx..xx*$*$....xx..xx....*$$$xx..x
-xx..xx$$$.00..xx..xx..00.*$*xx..x
-xx..xx....09..xx..xx..90....xx..x
-xx..xx......+xx....xx+......xx..x
-xx..xx......x........x......xx..x
-xx..xxxxxxxxx........xxxxxxxxx..x
-xx..xxxxxxxx..........xxxxxxxx..x
+xxxxx...cccccccc..cccccccc...xxxx
+xxxx...ccxxxxxxc..cxxxxxxcc...xxx
+xxx...cc$*....xc..cx....$$cc...xx
+xx...cc$*$....xc..cx....$*$cc...x
+xx..cc*$*$....xc..cx....*$$$cc..x
+xx..cx$$$.00..xc..cx..00.*$*xc..x
+xx..cx....09..xc..cx..90....xc..x
+xx..cx......+xx....xx+......xc..x
+xx..cx......x........x......xc..x
+xx..cxxxxxxxx........xxxxxxxxc..x
+xx..cccccccc..........cccccccc..x
 xx..............TT..............x
 xx..............TT..............x
-xx..xxxxxxxx..........xxxxxxxx..x
-xx..xxxxxxxxx........xxxxxxxxx..x
-xx..xx......x........x......xx..x
-xx..xx......+xx....xx+......xx..x
-xx..xx....09..xx..xx..90....xx..x
-xx..xx$$*.00..xx..xx..00.*$$xx..x
-xx..xx*$*$....xx..xx....*$$*xx..x
-xx...xx*$*....xx..xx....$$$xx...x
-xxx...xx*$....xx..xx....*$xx...xx
-xxxx...xxxxxxxxx..xxxxxxxxx...xxx
-xxxxx...xxxxxxxx..xxxxxxxx...xxxx
+xx..cccccccc..........cccccccc..x
+xx..cxxxxxxxx........xxxxxxxxc..x
+xx..cx......x........x......xc..x
+xx..cx......+xx....xx+......xc..x
+xx..cx....09..xc..cx..90....xc..x
+xx..cx$$*.00..xc..cx..00.*$$xc..x
+xx..cc*$*$....xc..cx....*$$*cc..x
+xx...cc*$*....xc..cx....$$$cc...x
+xxx...cc*$....xc..cx....*$cc...xx
+xxxx...ccxxxxxxc..cxxxxxxcc...xxx
+xxxxx...cccccccc..cccccccc...xxxx
 xxxxxx......................xxxxx
 xxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx++xxxxxxxxxxxxxxx
@@ -490,7 +492,7 @@ ENDMAP
 NAME:   mludivico_vault
 ORIENT: southwest
 DEPTH:  Depths, !Depths:$
-MONS:   hell hound, necromancer, wizard, orange demon, iron devil
+MONS:   hell hound, necromancer, wizard, orange demon, rust devil
 MONS:   hell knight, great orb of eyes
 MAP
 xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -737,28 +739,29 @@ NAME:   minmay_expanding_squares
 ORIENT: southeast
 DEPTH:  D:12-, !D:$, Depths
 MAP
-@xxxxxxxxxxxxxxxxxxxxx
-x.0xxxxxxxxxxxxxxxxxxx
-x0.xxxxxxxxxxxxxxxxxxx
-xxx..0xxxxxxxxxxxxxxxx
-xxx.0.xxxxxxxxxxxxxxxx
-xxx0..xxxxxxxxxxxxxxxx
-xxxxxx...0xxxxxxxxxxxx
-xxxxxx..9.xxxxxxxxxxxx
-xxxxxx.9..xxxxxxxxxxxx
-xxxxxx0...xxxxxxxxxxxx
-xxxxxxxxxx....0xxxxxxx
-xxxxxxxxxx...9.xxxxxxx
-xxxxxxxxxx..9..xxxxxxx
-xxxxxxxxxx.9...xxxxxxx
-xxxxxxxxxx0....xxxxxxx
-xxxxxxxxxxxxxxx.....9x
-xxxxxxxxxxxxxxx....9.x
-xxxxxxxxxxxxxxx...8..x
-xxxxxxxxxxxxxxx..8..*x
-xxxxxxxxxxxxxxx.9..*|x
-xxxxxxxxxxxxxxx9..*||x
-xxxxxxxxxxxxxxxxxxxxxx
+@xxxxxxxxxxxxxxxxxxxxxx
+x.0ccxxxxxxxxxxxxxxxxxx
+x0.ccxxxxxxxxxxxxxxxxxx
+xcc..0xxxxxxxxxxxxxxxxx
+xcc.0.ccxxxxxxxxxxxxxxx
+xxx0..ccxxxxxxxxxxxxxxx
+xxxxcc...0xxxxxxxxxxxxx
+xxxxcc..9.xxxxxxxxxxxxx
+xxxxxx.9..ccxxxxxxxxxxx
+xxxxxx0...ccxxxxxxxxxxx
+xxxxxxxxcc....0xxxxxxxx
+xxxxxxxxcc...9.xxxxxxxx
+xxxxxxxxxx..9..xxxxxxxx
+xxxxxxxxxx.9...ccxxxxxx
+xxxxxxxxxx0....ccxxxxxx
+xxxxxxxxxxxxxcc.....9xx
+xxxxxxxxxxxxxcc....9.xx
+xxxxxxxxxxxxxxx...8..xx
+xxxxxxxxxxxxxxx..8..*xx
+xxxxxxxxxxxxxxx.9..*|xx
+xxxxxxxxxxxxxxx9..*||xx
+xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_expanding_circles
@@ -1059,24 +1062,25 @@ ENDMAP
 NAME:   minmay_three_patterns
 ORIENT: north
 DEPTH:  Depths, !Depths:$
-SUBST:  x : x:7 c:1 b:1 v:1
+SUBST:  x : x:7 c:3, c : c:8 b:1 v:1
 SUBST:  9 = 9., 8 = 8...
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x*9xxx*9.xxxxx...xxxxxxx.......xx.......xx..xxx.x....x.xx...x9....x99x
 x9..xxx9..xxx.....xxxxx...x....xx..xxx..xx..xxx........xx...x9.x.....x
-xx...xxx...x...x...xxx..x8x8x......xxx......xxx...xx........xx.xxxxx.x
-xxx...xxx.....xxx...x..xxxxxxx.....xxx.x..........xx..x...x....x*9...x
-xxxx...xxx...xxx.......8x***x8..xx...........xx......xx8x8xx...x*9x..x
-x*xxx...x...xxx...x...xxx***xxx.xx.x....xxx..xx.xxx.xxxxxxxxx..xxxx..x
-x99xxx.....xxx...xxx...8x***+........xx.xxx.....xxx...+***x8..9x.....x
-x...xxx...xxx.....xxx..xxxxxxx...xxx.xx.xxx.x...xxx..xx***xx..9x.xxxxx
-xx...x...xxx...x...xxx..x8x8x....xxx.................8x***x8...x.....x
-xxx.....xxx...xxx...xxx...x...xx.xxx..x......xxx.x..xxxxxxxxx..x99x..x
-xxxx...xxx...xxx.....xxx......xx.........xx..xxx.....xx8x8xx...xxxxx.x
-xxx...xxx9..xxx9..x..9xxx...x........xx..xx..xxx..xx..x...x....**x...x
-xx...xxx*9.xxx*9.xxx.9*xxx.......x...xx...........xx.........99**x...x
-x@..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@..x
+xx...xxx...x...c...xxx..x8x8x......xxx......xxx...xx........xx.cxxxx.x
+xxx...xxx.....ccc...x..xxxxxxx.....xxx.x..........xx..x...x....c*9...x
+xxxx...xxx...ccc.......8x***x8..xx...........xx......xx8x8xx...c*9x..x
+x*xxx...x...ccc...x...xxx***xxx.xx.x....xxx..xx.xxx.xxxxxxxxx..cxxx..x
+x99xxx.....ccc...xxx...8x***+........xx.xxx.....xxx...+***x8..9c.....x
+x...xxx...ccc.....xxx..xxxxxxx...xxx.xx.xxx.x...xxx..xx***xx..9c.xxxxx
+xx...x...ccc...x...xxx..x8x8x....xxx.................8x***x8...c.....x
+xxx.....ccc...xxx...xxx...x...xx.xxx..x......xxx.x..xxxxxxxxx..c99x..x
+xxxx...ccc...xxx.....xxx......xx.........xx..xxx.....xx8x8xx...cccxx.x
+xxx...ccc9..xxx9..x..9xxx...x........xx..xx..xxx..xx..x...x....**c...x
+xx...ccc*9.xxx*9.xxx.9*xxx.......x...xx...........xx.........99**c...x
+x@..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc@..x
 ENDMAP
 
 NAME:    minmay_broken_ring
@@ -1293,36 +1297,37 @@ KMONS:  0 = 0 band
 KMONS:  9 = 9 band
 KMONS:  8 = 8 band
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxx@
-xxxxxx........xxxxxxxxxxxx.@
-xxxxx.0........xxxxxxxxxx...@
-xxxx.0.xxxxxxx9.xxxxxxxx..G..@
-xxxx..xxxxxxxxx.xxxxxxx.....xx
-xxxx..xx.+.9*xx.xxxxxx.....xxx
-xxxx..xx.x98|xx.xxxxx.....xxxx
-xxxx..xx.x*||xx.xxxx.....xxxxx
-xxxx..xx.xxxxx..xxx.....xxxxxx
-xxxx..xx.9xxx.9xxx.....xxxxxxx
-xxxx..xxx.....xxx.....xxxxxxxx
-xxxx.0.xxxxxxxxx.....xxxxxxxxx
-xxxxx.0.xxxxxxx.....xxxxxxxxxx
-xxxxxx.......x.....xxxxxxxxxxx
-xxxxxxxx....0.....xxx......xxx
-xxxxxxxxxxxx..9..xxx9.xxxx9.xx
-xxxx$......x+...xxx..xxxxxx..x
-xxx*0.....0.++.0.xx.xx||*xx..x
-xx*9.......9.xx..xx.xx|89xx..x
-x$0..ccccc..0.x..xx.xx*9.xx..x
-x...cc*||cc...x..xx.9xxx+xx..x
-x...c.8*||c...x..xxx.....xx..x
-x...c9.8*|c...xx..xxxxxxxxx..x
-x...c.9.8*c...xx.0.xxxxxxx.0.x
-x...++.9.cc...xxx.0.......0.xx
-x$0..+cccc..0$xxxx.........xxx
-xx*9.......9*xxxxxxxxxxxxxxxxx
-xxx*0.....0*xxxxxxxxxxxxxxxxxx
-xxxx$.....$xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxc@
+xxxxxxx........ccxxxxxxxxxx.@
+xxxxxx.0........ccxxxxxxxx...@
+xxxxx.0.xxxxxxx9.cxxxxxxx..G..@
+xxxxx..xxxxxxxxx.cxxxxxx.....xx
+xxxxx..xx.+.9*xx.cxxxxx.....xxx
+xxxxx..xx.x98|xx.cxxxx.....xxxx
+xxxxx..xx.x*||xx.cxxx.....xxxxx
+xxxxx..xx.xxxxx..cxx.....xxxxxx
+xxxxx..xx.9xxx.9ccx.....xxxxxxx
+xxxxx..xxx.....ccx.....xxxxxxxx
+xxxxx.0.xcccccccx.....xxxxxxxxx
+xxxxxx.0.xxxxxxx.....xxxxxxxxxx
+xxxxxxx.......x.....cccccccccxx
+xxxxxxxxx....0.....ccx......ccx
+xxxxccccccccc..9..xcx9.xxxx9.cx
+xxxcc$......c+...xxc..xxxxxx..x
+xxcc*0.....0.++.0.xc.xx||*xx..x
+xcc*9.......9.cc..xc.xx|89xx..x
+xc$0..ccccc..0.c..xc.xx*9.xx..x
+xc...cc*||cc...c..xc.9xxx+xx..x
+xc...c.8*||c...c..xcx.....xx..x
+xc...c9.8*|c...cx..xxxxxxxxx..x
+xc...c.9.8*c...cx.0.xxxxxxx.0.x
+xc...++.9.cc...cxx.0.......0.xx
+xc$0..+cccc..0$cxxx.........xxx
+xcc*9.......9*ccxxxxxxxxxxxxxxx
+xxcc*0.....0*ccxxxxxxxxxxxxxxxx
+xxxcc$.....$ccxxxxxxxxxxxxxxxxx
+xxxxcccccccccxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###############################################################################

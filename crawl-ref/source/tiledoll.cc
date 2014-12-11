@@ -1,8 +1,3 @@
-/**
- * @file
- * @brief Region system implementations
-**/
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE
@@ -12,11 +7,15 @@
 #include <sys/stat.h>
 
 #include "files.h"
+#include "mon-info.h"
+#include "options.h"
 #include "syscalls.h"
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
 #include "tiledef-player.h"
+#include "tilemcache.h"
+#include "tilepick.h"
 #include "tilepick-p.h"
 #include "transform.h"
 
@@ -42,7 +41,7 @@ const dolls_data& dolls_data::operator=(const dolls_data& other)
 dolls_data::~dolls_data()
 {
     delete[] parts;
-    parts = NULL;
+    parts = nullptr;
 }
 
 bool dolls_data::operator==(const dolls_data& other) const
@@ -68,8 +67,8 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
                               || !(stFileInfo.st_mode & S_IWUSR)) ? "dolls.txt"
                             : dollsTxtString.c_str();
 
-    FILE *fp = NULL;
-    if ((fp = fopen_u(dollsTxt, "w+")) != NULL)
+    FILE *fp = nullptr;
+    if ((fp = fopen_u(dollsTxt, "w+")) != nullptr)
     {
         fprintf(fp, "MODE=%s\n",
                     (mode == TILEP_MODE_EQUIP)   ? "EQUIP" :
@@ -102,7 +101,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                     tile_doll_mode *mode, int *cur)
 {
     char fbuf[1024];
-    FILE *fp  = NULL;
+    FILE *fp  = nullptr;
 
     string dollsTxtString = datafile_path(fn, false, true);
 
@@ -115,7 +114,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                               || !(stFileInfo.st_mode & S_IRUSR)) ? "dolls.txt"
                             : dollsTxtString.c_str();
 
-    if ((fp = fopen_u(dollsTxt, "r")) == NULL)
+    if ((fp = fopen_u(dollsTxt, "r")) == nullptr)
     {
         // File doesn't exist. By default, use equipment settings.
         *mode = TILEP_MODE_EQUIP;
@@ -320,6 +319,20 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_CLOAK]   = 0;
         break;
     default:
+        // A monster tile is being used for the player.
+        if (Options.tile_use_monster != MONS_0)
+        {
+            result.parts[TILEP_PART_BASE]    = tileidx_player_mons();
+            result.parts[TILEP_PART_DRCHEAD] = 0;
+            result.parts[TILEP_PART_HAIR]    = 0;
+            result.parts[TILEP_PART_BEARD]   = 0;
+            result.parts[TILEP_PART_LEG]     = 0;
+            result.parts[TILEP_PART_HELM]    = 0;
+            result.parts[TILEP_PART_BOOTS]   = 0;
+            result.parts[TILEP_PART_BODY]    = 0;
+            result.parts[TILEP_PART_ARM]     = 0;
+            result.parts[TILEP_PART_CLOAK]   = 0;
+        }
         break;
     }
 
@@ -332,7 +345,13 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.melded[EQ_WEAPON] ? -1 : you.equip[EQ_WEAPON];
         if (you.form == TRAN_BLADE_HANDS)
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
+        {
+            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
+                result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+                result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
+            else result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
+        }
         else if (item == -1)
             result.parts[TILEP_PART_HAND1] = 0;
         else
@@ -343,7 +362,13 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.melded[EQ_SHIELD] ? -1 : you.equip[EQ_SHIELD];
         if (you.form == TRAN_BLADE_HANDS)
-            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_BLADEHAND;
+        {
+            if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
+                result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_OP;
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
+                result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_FE;
+            else result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND;
+        }
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
         else
@@ -533,6 +558,33 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
+    // Set up mcache data based on equipment. We don't need this lookup if both
+    // pairs of offsets are defined in Options.
+    int draw_info_count = 0, dind = 0;
+    mcache_entry *entry = nullptr;
+    tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
+    if (Options.tile_use_monster != MONS_0)
+    {
+        monster_info minfo(MONS_PLAYER, MONS_PLAYER);
+        minfo.props["monster_tile"] = short(doll.parts[TILEP_PART_BASE]);
+        item_def *item;
+        if (you.slot_item(EQ_WEAPON))
+        {
+            item = new item_def(get_item_info(*you.slot_item(EQ_WEAPON)));
+            minfo.inv[MSLOT_WEAPON].reset(item);
+        }
+        if (you.slot_item(EQ_SHIELD))
+        {
+            item = new item_def(get_item_info(*you.slot_item(EQ_SHIELD)));
+            minfo.inv[MSLOT_SHIELD].reset(item);
+        }
+        tileidx_t mcache_idx = mcache.register_monster(minfo);
+        if (mcache_idx)
+        {
+            entry = mcache.get(mcache_idx);
+            draw_info_count = entry->info(&dinfo[0]);
+        }
+    }
     // A higher index here means that the part should be drawn on top.
     // This is drawn in reverse order because this could be a ghost
     // or being drawn in water, in which case we want the top-most part
@@ -556,8 +608,16 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         {
             ymax = 18;
         }
-
-        buf.add(doll.parts[p], x, y, i, submerged, ghost, 0, 0, ymax);
+        int ofs_x = 0, ofs_y = 0;
+        if ((p == TILEP_PART_HAND1 && you.slot_item(EQ_WEAPON)
+             || p == TILEP_PART_HAND2 && you.slot_item(EQ_SHIELD))
+            && dind < draw_info_count - 1)
+        {
+                ofs_x = dinfo[draw_info_count - dind - 1].ofs_x;
+                ofs_y = dinfo[draw_info_count - dind - 1].ofs_y;
+                ++dind;
+        }
+        buf.add(doll.parts[p], x, y, i, submerged, ghost, ofs_x, ofs_y, ymax);
     }
 }
 #endif

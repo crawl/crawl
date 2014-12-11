@@ -1,27 +1,24 @@
 #include "AppHdr.h"
 
 #include "status.h"
+#include "duration-data.h"
 
 #include "areas.h"
 #include "branch.h"
+#include "cloud.h"
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
 #include "godabil.h"
-#include "godpassive.h"
-#include "libutil.h"
-#include "misc.h"
+#include "itemprop.h"
 #include "mutation.h"
-#include "player.h"
+#include "options.h"
 #include "player-stats.h"
 #include "religion.h"
-#include "skills2.h"
-#include "terrain.h"
-#include "transform.h"
 #include "spl-transloc.h"
-#include "stuff.h"
-
-#include "duration-data.h"
+#include "stringutil.h"
+#include "transform.h"
+#include "traps.h"
 
 static int duration_index[NUM_DURATIONS];
 
@@ -45,7 +42,7 @@ static const duration_def* _lookup_duration(duration_type dur)
 {
     ASSERT_RANGE(dur, 0, NUM_DURATIONS);
     if (duration_index[dur] == -1)
-        return NULL;
+        return nullptr;
     else
         return &duration_data[duration_index[dur]];
 }
@@ -53,6 +50,11 @@ static const duration_def* _lookup_duration(duration_type dur)
 const char *duration_name(duration_type dur)
 {
     return _lookup_duration(dur)->name();
+}
+
+bool duration_dispellable(duration_type dur)
+{
+    return _lookup_duration(dur)->duration_has_flag(D_DISPELLABLE);
 }
 
 static void _reset_status_info(status_info* inf)
@@ -106,6 +108,33 @@ static void _mark_expiring(status_info* inf, bool expiring)
     }
 }
 
+/**
+ * Populate a status_info struct from the duration_data struct corresponding
+ * to the given duration_type.
+ *
+ * @param[in] dur    The duration in question.
+ * @param[out] inf   The status_info struct to be filled.
+ * @return           Whether a duration_data struct was found.
+ */
+static bool _fill_inf_from_ddef(duration_type dur, status_info* inf)
+{
+    const duration_def* ddef = _lookup_duration(dur);
+    if (!ddef)
+        return false;
+
+    inf->light_colour = ddef->light_colour;
+    inf->light_text   = ddef->light_text;
+    inf->short_text   = ddef->short_text;
+    inf->long_text    = ddef->long_text;
+    if (ddef->duration_has_flag(D_EXPIRES))
+    {
+        inf->light_colour = _dur_colour(inf->light_colour, dur_expiring(dur));
+        _mark_expiring(inf, dur_expiring(dur));
+    }
+
+    return true;
+}
+
 static void _describe_airborne(status_info* inf);
 static void _describe_glow(status_info* inf);
 static void _describe_hunger(status_info* inf);
@@ -135,21 +164,7 @@ bool fill_status_info(int status, status_info* inf)
         if (!you.duration[dur])
             return false;
 
-        const duration_def* ddef = _lookup_duration(dur);
-        if (ddef)
-        {
-            found = true;
-            inf->light_colour = ddef->light_colour;
-            inf->light_text   = ddef->light_text;
-            inf->short_text   = ddef->short_text;
-            inf->long_text    = ddef->long_text;
-            if (ddef->expire)
-            {
-                inf->light_colour = _dur_colour(inf->light_colour,
-                                                 dur_expiring(dur));
-                _mark_expiring(inf, dur_expiring(dur));
-            }
-        }
+        found = _fill_inf_from_ddef(dur, inf);
     }
 
     // Now treat special status types and durations, possibly
@@ -330,7 +345,7 @@ bool fill_status_info(int status, status_info* inf)
     case DUR_SURE_BLADE:
     {
         inf->light_colour = BLUE;
-        inf->light_text   = "Blade";
+        inf->light_text   = "SBlade";
         inf->short_text   = "bonded with blade";
         string desc;
         if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY)
@@ -364,6 +379,14 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_text   = "Fball";
             inf->short_text   = "delayed fireball";
             inf->long_text    = "You have a stored fireball ready to release.";
+        }
+        break;
+
+    case STATUS_BONE_ARMOUR:
+        if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+        {
+            inf->short_text = "corpse armour";
+            inf->long_text = "You are enveloped in carrion and bones.";
         }
         break;
 
@@ -524,7 +547,7 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_BRIBE:
     {
         int bribe = 0;
-        vector<string> places;
+        vector<const char *> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
             if (branch_bribe[i] > 0)
@@ -554,6 +577,55 @@ bool fill_status_info(int status, status_info* inf)
                                                     places.end())
                              + ".";
         }
+        break;
+    }
+
+    case DUR_HORROR:
+    {
+        const int horror = you.props[HORROR_PENALTY_KEY].get_int();
+        inf->light_text = make_stringf("Horr(%d)", -1 * horror);
+        if (horror >= HORROR_LVL_OVERWHELMING)
+        {
+            inf->light_colour = RED;
+            inf->short_text   = "overwhelmed with horror";
+            inf->long_text    = "Horror overwhelms you!";
+        }
+        else if (horror >= HORROR_LVL_EXTREME)
+        {
+            inf->light_colour = LIGHTRED;
+            inf->short_text   = "extremely horrified";
+            inf->long_text    = "You are extremely horrified!";
+        }
+        else if (horror)
+        {
+            inf->light_colour = YELLOW;
+            inf->short_text   = "horrified";
+            inf->long_text    = "You are horrified!";
+        }
+        break;
+    }
+
+    case STATUS_CLOUD:
+    {
+        cloud_type cloud = cloud_type_at(you.pos());
+        if (Options.cloud_status && cloud != CLOUD_NONE)
+        {
+            inf->light_text = "Cloud";
+            // TODO: make the colour based on the cloud's color; requires elemental
+            // status lights, though.
+            inf->light_colour =
+                is_damaging_cloud(cloud, true, cloud_is_yours_at(you.pos())) ? LIGHTRED : DARKGREY;
+        }
+        break;
+    }
+
+    case DUR_CLEAVE:
+    {
+        const item_def* weapon = you.weapon();
+
+        if (weapon && item_attack_skill(*weapon) == SK_AXES)
+            inf->light_colour = DARKGREY;
+
         break;
     }
 
@@ -615,30 +687,35 @@ static void _describe_hunger(status_info* inf)
 
 static void _describe_glow(status_info* inf)
 {
-    const int cont = get_contamination_level();
-    if (cont > 0)
-    {
-        inf->light_colour = DARKGREY;
-        if (cont > 1)
-            inf->light_colour = _bad_ench_colour(cont, 3, 4);
-#if TAG_MAJOR_VERSION == 34
-        if (cont > 1 || you.species != SP_DJINNI)
-#endif
-        inf->light_text = "Contam";
-    }
+    const int signed_cont = get_contamination_level();
+    if (signed_cont <= 0)
+        return;
 
-    if (cont > 0)
+    const unsigned int cont = signed_cont; // so we don't get compiler warnings
+    inf->light_colour = DARKGREY;
+    if (cont > 1)
+        inf->light_colour = _bad_ench_colour(cont, 3, 4);
+#if TAG_MAJOR_VERSION == 34
+    if (cont > 1 || you.species != SP_DJINNI)
+#endif
+    inf->light_text = "Contam";
+
+    /// Mappings from contamination levels to descriptions.
+    static const string contam_adjectives[] =
     {
-        inf->short_text =
-                 (cont == 1) ? "very slightly " :
-                 (cont == 2) ? "slightly " :
-                 (cont == 3) ? "" :
-                 (cont == 4) ? "moderately " :
-                 (cont == 5) ? "heavily "
-                             : "really heavily ";
-        inf->short_text += "contaminated";
-        inf->long_text = describe_contamination(cont);
-    }
+        "",
+        "very slightly ",
+        "",
+        "heavily ",
+        "very heavily ",
+        "very very heavily ", // this is silly but no one will ever see it
+        "impossibly ",        // (likewise)
+    };
+    ASSERT(cont >= 0);
+
+    const int adj_i = min((size_t) cont, ARRAYSZ(contam_adjectives) - 1);
+    inf->short_text = contam_adjectives[adj_i] + "contaminated";
+    inf->long_text = describe_contamination(cont);
 }
 
 static void _describe_regen(status_info* inf)
@@ -805,96 +882,24 @@ static void _describe_sickness(status_info* inf)
     }
 }
 
+/**
+ * Populate a status info struct with a description of the player's current
+ * form.
+ *
+ * @param[out] inf  The status info struct to be populated.
+ */
 static void _describe_transform(status_info* inf)
 {
+    if (you.form == TRAN_NONE)
+        return;
+
+    const Form * const form = get_form();
+    inf->light_text = form->short_name;
+    inf->short_text = form->get_long_name();
+    inf->long_text = form->get_description();
+
     const bool vampbat = (you.species == SP_VAMPIRE && you.form == TRAN_BAT);
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
-
-    switch (you.form)
-    {
-    case TRAN_BAT:
-        inf->light_text     = "Bat";
-        inf->short_text     = "bat-form";
-        inf->long_text      = "You are in ";
-        if (vampbat)
-            inf->long_text += "vampire ";
-        inf->long_text     += "bat-form.";
-        break;
-    case TRAN_BLADE_HANDS:
-        inf->light_text = "Blades";
-        inf->short_text = "blade " + blade_parts(true);
-        inf->long_text  = "You have blades for " + blade_parts() + ".";
-        break;
-    case TRAN_DRAGON:
-        inf->light_text = "Dragon";
-        inf->short_text = "dragon-form";
-        inf->long_text  = "You are in dragon-form.";
-        break;
-    case TRAN_ICE_BEAST:
-        inf->light_text = "Ice";
-        inf->short_text = "ice-form";
-        inf->long_text  = "You are an ice creature.";
-        break;
-    case TRAN_LICH:
-        inf->light_text = "Lich";
-        inf->short_text = "lich-form";
-        inf->long_text  = "You are in lich-form.";
-        break;
-    case TRAN_PIG:
-        inf->light_text = "Pig";
-        inf->short_text = "pig-form";
-        inf->long_text  = "You are a filthy swine.";
-        break;
-    case TRAN_SPIDER:
-        inf->light_text = "Spider";
-        inf->short_text = "spider-form";
-        inf->long_text  = "You are in spider-form.";
-        break;
-    case TRAN_STATUE:
-        inf->light_text = "Statue";
-        inf->short_text = "statue-form";
-        inf->long_text  = "You are a statue.";
-        break;
-    case TRAN_APPENDAGE:
-        inf->light_text = "App";
-        inf->short_text = "appendage";
-        inf->long_text  = "You have a beastly appendage.";
-        break;
-    case TRAN_FUNGUS:
-        inf->light_text = "Fungus";
-        inf->short_text = "fungus-form";
-        inf->long_text  = "You are a sentient fungus.";
-        break;
-    case TRAN_TREE:
-        inf->light_text = "Tree";
-        inf->short_text = "tree-form";
-        inf->long_text  = "You are an animated tree.";
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case TRAN_JELLY:
-        inf->light_text = "Jelly";
-        inf->short_text = "jelly-form";
-        inf->long_text  = "You are a lump of jelly.";
-        break;
-#endif
-    case TRAN_PORCUPINE:
-        inf->light_text = "Porc";
-        inf->short_text = "porcupine-form";
-        inf->long_text  = "You are a porcupine.";
-        break;
-    case TRAN_WISP:
-        inf->light_text = "Wisp";
-        inf->short_text = "wisp-form";
-        inf->long_text  = "You are an insubstantial wisp.";
-        break;
-    case TRAN_SHADOW:
-        inf->light_text = "Shadow",
-        inf->short_text = "shadow form";
-        inf->long_text  = "You are a swirling mass of dark shadows.";
-        break;
-    case TRAN_NONE:
-        break;
-    }
 
     inf->light_colour = _dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
@@ -944,10 +949,7 @@ static void _describe_missiles(status_info* inf)
 
     if (level > 1)
     {
-        bool perm = false;
-                    /* you_worship(GOD_QAZLAL)
-                       && !player_under_penance(GOD_QAZLAL)
-                       && you.piety >= piety_breakpoint(4); */
+        bool perm = false; /* in_good_standing(GOD_QAZLAL, 4) */
         inf->light_colour = perm ? WHITE : LIGHTMAGENTA;
         inf->light_text   = "DMsl";
         inf->short_text   = "deflect missiles";
@@ -957,9 +959,7 @@ static void _describe_missiles(status_info* inf)
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
                     || you.scan_artefacts(ARTP_RMSL)
-                    || you_worship(GOD_QAZLAL)
-                       && !player_under_penance(GOD_QAZLAL)
-                       && you.piety >= piety_breakpoint(3);
+                    || in_good_standing(GOD_QAZLAL, 3);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";

@@ -6,18 +6,16 @@
 #include "AppHdr.h"
 
 #include "mon-pick.h"
+#include "mon-pick-data.h"
 
-#include "externs.h"
 #include "branch.h"
 #include "coord.h"
 #include "env.h"
 #include "errors.h"
 #include "libutil.h"
 #include "mon-place.h"
-#include "mon-util.h"
 #include "place.h"
-
-#include "mon-pick-data.h"
+#include "stringutil.h"
 
 int branch_ood_cap(branch_type branch)
 {
@@ -33,6 +31,7 @@ int branch_ood_cap(branch_type branch)
         return 12;
     case BRANCH_ELF:
         return 7;
+    case BRANCH_CRYPT:
     case BRANCH_TOMB:
         return 5;
     default:
@@ -143,7 +142,7 @@ bool positioned_monster_picker::veto(monster_type mon)
 {
     // Actually pick a monster that is happy where we want to put it.
     // Fish zombies on land are helpless and uncool.
-    if (!in_bounds(pos) || !monster_habitable_grid(mon, grd(pos)))
+    if (in_bounds(pos) && !monster_habitable_grid(mon, grd(pos)))
         return true;
     // Optional positional veto
     if (posveto && posveto(mon, pos)) return true;
@@ -168,13 +167,13 @@ monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
     memset(rarities, 0, sizeof(rarities));
     int nvalid = 0;
 
-    for (int br = 0; br < NUM_BRANCHES; br++)
+    for (branch_iterator it; it; ++it)
     {
-        int depth = absdepth0 - absdungeon_depth((branch_type)br, 0);
-        if (depth < 1 || depth > branch_ood_cap((branch_type)br))
+        int depth = absdepth0 - absdungeon_depth(it->id, 0);
+        if (depth < 1 || depth > branch_ood_cap(it->id))
             continue;
 
-        for (const pop_entry *pop = population[br].pop; pop->value; pop++)
+        for (const pop_entry *pop = population[it->id].pop; pop->value; pop++)
         {
             if (depth < pop->minr || depth > pop->maxr)
                 continue;
@@ -253,9 +252,9 @@ void debug_monpick()
     string fails;
 
     // Tests for the legacy interface; shouldn't ever happen.
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        branch_type br = (branch_type)i;
+        branch_type br = it->id;
 
         for (monster_type m = MONS_0; m < NUM_MONSTERS; ++m)
         {
@@ -265,22 +264,22 @@ void debug_monpick()
             if (lev < DEPTH_NOWHERE && !rare)
             {
                 fails += make_stringf("%s: no rarity for %s\n",
-                                      branches[i].abbrevname,
+                                      it->abbrevname,
                                       mons_class_name(m));
             }
             if (rare && lev >= DEPTH_NOWHERE)
             {
                 fails += make_stringf("%s: no depth for %s\n",
-                                      branches[i].abbrevname,
+                                      it->abbrevname,
                                       mons_class_name(m));
             }
         }
     }
     // Legacy tests end.
 
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    for (branch_iterator it; it; ++it)
     {
-        branch_type br = (branch_type)i;
+        branch_type br = it->id;
 
         for (int d = 1; d <= branch_ood_cap(br); d++)
         {

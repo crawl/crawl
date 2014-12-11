@@ -163,6 +163,8 @@ protected:
 
     // screen pixel dimensions
     coord_def m_windowsz;
+    // screen pixel density ratio
+    int densityNum, densityDen;
     // screen pixels per view cell
     coord_def m_viewsc;
 
@@ -263,7 +265,7 @@ protected:
     struct cursor_loc
     {
         cursor_loc() { reset(); }
-        void reset() { reg = NULL; cx = cy = -1; mode = MOUSE_MODE_MAX; }
+        void reset() { reg = nullptr; cx = cy = -1; mode = MOUSE_MODE_MAX; }
         bool operator==(const cursor_loc &rhs) const
         {
             return rhs.reg == reg

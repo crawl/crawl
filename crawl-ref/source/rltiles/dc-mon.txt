@@ -24,6 +24,8 @@ lernaean_hydra07
 lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
+%sdir mon/holy
+seraph MONS_SERAPH
 %sdir mon/sprint
 unspeakable MONS_UNSPEAKABLE
 
@@ -58,10 +60,11 @@ butterfly9
 butterfly10
 %rim 0
 fire_bat MONS_FIRE_BAT
-%rim 1
 raven MONS_RAVEN
+bennu MONS_BENNU
+caustic_shrike MONS_CAUSTIC_SHRIKE
+shard_shrike MONS_SHARD_SHRIKE
 %sdir mon/vault
-%rim 0
 microbat MONS_MICROBAT
 %rim 1
 megabat MONS_MEGABAT
@@ -108,7 +111,7 @@ gastronok MONS_GASTRONOK
 %sdir mon/animals
 %rim 0
 rat MONS_RAT
-green_rat MONS_GREEN_RAT
+green_rat MONS_RIVER_RAT
 orange_rat MONS_ORANGE_RAT
 porcupine MONS_PORCUPINE
 %rim 1
@@ -128,9 +131,13 @@ redback MONS_REDBACK
 orb_spider MONS_ORB_SPIDER
 %sdir mon/demons
 demonic_crawler MONS_DEMONIC_CRAWLER
+%sdir mon/undead
+%rim 0
+death_scarab MONS_DEATH_SCARAB
 
 ## Turtles and crocodiles ('t')
 %sdir mon/animals
+%rim 1
 crocodile MONS_CROCODILE
 alligator_baby MONS_BABY_ALLIGATOR
 alligator MONS_ALLIGATOR
@@ -152,7 +159,9 @@ swamp_worm MONS_SWAMP_WORM
 worm MONS_WORM
 brain_worm MONS_BRAIN_WORM
 giant_leech MONS_GIANT_LEECH
+%rim 0
 torpor_snail MONS_TORPOR_SNAIL
+%rim 1
 
 ## Flying insects ('y')
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
@@ -229,6 +238,7 @@ fire_elemental MONS_FIRE_ELEMENTAL
 water_elemental MONS_WATER_ELEMENTAL
 air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
+wellspring MONS_ELEMENTAL_WELLSPRING
 %rim 0
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2
@@ -255,6 +265,10 @@ fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3
 fulminant_prism4
+singularity1 MONS_SINGULARITY /*'*'*/
+singularity2
+singularity3
+singularity4
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir mon/undead
@@ -270,8 +284,8 @@ tentacled_starspawn MONS_TENTACLED_STARSPAWN
 thrashing_horror MONS_THRASHING_HORROR
 %rim 0
 worldbinder MONS_WORLDBINDER
-%rim 1
 wretched_star MONS_WRETCHED_STAR
+%rim 1
 
 ### Demonic monsters
 ## Arch demons ('&')
@@ -312,7 +326,7 @@ chaos_spawn3
 chaos_spawn4
 chaos_spawn5
 hellion MONS_HELLION
-iron_devil MONS_IRON_DEVIL
+rust_devil MONS_RUST_DEVIL
 neqoxec MONS_NEQOXEC
 orange_demon MONS_ORANGE_DEMON
 shadow_demon MONS_SHADOW_DEMON
@@ -419,6 +433,9 @@ guardian_golem MONS_GUARDIAN_GOLEM
 %rim 1
 iron_golem MONS_IRON_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
+%rim 0
+ushabti MONS_USHABTI
+%rim 1
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
 # For the Eringya WizLab
@@ -433,7 +450,7 @@ block_of_ice MONS_BLOCK_OF_ICE
 block_of_ice2
 training_dummy MONS_TRAINING_DUMMY
 ice_statue MONS_ICE_STATUE
-silver_statue MONS_SILVER_STATUE
+obsidian_statue MONS_OBSIDIAN_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 %sdir mon/vault
@@ -567,7 +584,6 @@ demigod MONS_DEMIGOD
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
-seraph MONS_SERAPH
 %sdir mon/undead
 profane_servitor MONS_PROFANE_SERVITOR
 %sdir mon/unique
@@ -593,6 +609,10 @@ fire_drake MONS_FIRE_DRAKE
 lindwurm MONS_LINDWURM
 death_drake MONS_DEATH_DRAKE
 wind_drake MONS_WIND_DRAKE
+## For tile_player_tile
+%sdir mon/unique
+jormungandr MONS_JORMUNGANDR
+
 
 ## Dragons ('D')
 %sdir mon/unique
@@ -656,6 +676,7 @@ manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
+anubis_guard MONS_ANUBIS_GUARD
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
@@ -814,9 +835,11 @@ phantasmal_warrior MONS_PHANTASMAL_WARRIOR
 %rim 1
 eidolon MONS_EIDOLON
 
+## Orb guardians ('X')
 %sdir mon
 %rim 0
-orb_guardian MONS_ORB_GUARDIAN /*'X'*/
+orb_guardian MONS_ORB_GUARDIAN
+orb_guardian_fetus MONS_ORB_GUARDIAN_FETUS
 
 ## Centaurs ('c')
 %rim 1
@@ -838,7 +861,9 @@ satyr MONS_SATYR
 ## Elves ('e')
 %sdir mon/unique
 dowan MONS_DOWAN
+dowan2
 duvessa MONS_DUVESSA
+duvessa2
 fannar MONS_FANNAR
 %rim 1
 %sdir mon
@@ -885,6 +910,9 @@ deathcap MONS_DEATHCAP
 ## Goblins ('g')
 %sdir mon/unique
 ijyb MONS_IJYB
+%rim 0
+robin MONS_ROBIN
+%rim 1
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
 %sdir mon
@@ -922,10 +950,10 @@ merfolk_impaler MONS_MERFOLK_IMPALER
 merfolk_impaler_water MONS_MERFOLK_IMPALER_WATER
 merfolk_aquamancer MONS_MERFOLK_AQUAMANCER
 merfolk_aquamancer_water MONS_MERFOLK_AQUAMANCER_WATER
-mermaid MONS_MERMAID
-mermaid_water MONS_MERMAID_WATER
 siren MONS_SIREN
 siren_water MONS_SIREN_WATER
+merfolk_avatar MONS_MERFOLK_AVATAR
+merfolk_avatar_water MONS_MERFOLK_AVATAR_WATER
 dryad MONS_DRYAD
 water_nymph MONS_WATER_NYMPH
 %rim 1
@@ -966,8 +994,8 @@ ghost MONS_PLAYER_GHOST
 silent_spectre MONS_SILENT_SPECTRE
 lost_soul MONS_LOST_SOUL /*'*'*/
 drowned_soul MONS_DROWNED_SOUL
-%rim 1
 flayed_ghost MONS_FLAYED_GHOST
+%rim 1
 hungry_ghost MONS_HUNGRY_GHOST
 %sdir mon/unique
 %sdir mon/nonliving

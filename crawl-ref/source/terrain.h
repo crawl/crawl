@@ -6,8 +6,9 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-#include "enum.h"
 #include <memory>
+
+#include "enum.h"
 
 class  actor;
 struct coord_def;
@@ -27,10 +28,6 @@ private:
 
 actor* actor_at(const coord_def& c);
 
-int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
-
-void fall_into_a_pool(dungeon_feature_type terrain);
-
 bool cell_is_solid(const coord_def &c);
 
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat);
@@ -42,9 +39,11 @@ bool feat_has_dry_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
 bool feat_is_sealed(dungeon_feature_type feat);
-bool feat_is_statue_or_idol(dungeon_feature_type feat);
-bool feat_is_rock(dungeon_feature_type feat);
+bool feat_is_statuelike(dungeon_feature_type feat);
 bool feat_is_permarock(dungeon_feature_type feat);
+
+bool feat_is_stone_stair_down(dungeon_feature_type feat);
+bool feat_is_stone_stair_up(dungeon_feature_type feat);
 bool feat_is_stone_stair(dungeon_feature_type feat);
 bool feat_is_staircase(dungeon_feature_type feat);
 bool feat_is_escape_hatch(dungeon_feature_type feat);
@@ -59,7 +58,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat);
 bool feat_is_gate(dungeon_feature_type feat);
 
 string feat_preposition(dungeon_feature_type feat, bool active = false,
-                        const actor* who = NULL);
+                        const actor* who = nullptr);
 string stair_climb_verb(dungeon_feature_type feat);
 
 bool feat_is_water(dungeon_feature_type feat);
@@ -71,11 +70,21 @@ dungeon_feature_type altar_for_god(god_type god);
 bool feat_is_altar(dungeon_feature_type feat);
 bool feat_is_player_altar(dungeon_feature_type grid);
 
-bool feat_is_branch_stairs(dungeon_feature_type feat);
-bool feat_is_branchlike(dungeon_feature_type feat);
+bool feat_is_branch_entrance(dungeon_feature_type feat);
+bool feat_is_branch_exit(dungeon_feature_type feat);
+bool feat_is_portal_entrance(dungeon_feature_type feat);
+bool feat_is_portal_exit(dungeon_feature_type feat);
+
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
 bool feat_is_reachable_past(dungeon_feature_type feat);
+
+bool feat_is_critical(dungeon_feature_type feat);
+bool feat_is_valid_border(dungeon_feature_type feat);
+bool feat_is_mimicable(dungeon_feature_type feat, bool strict = true);
+
+int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
+
 void find_connected_identical(const coord_def& d, set<coord_def>& out);
 coord_def get_random_stair();
 
@@ -106,12 +115,9 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
 bool slide_feature_over(const coord_def &src,
                         coord_def preferred_dest = coord_def(-1, -1),
-                        bool announce = true);
+                        bool announce = false);
 
-bool is_critical_feature(dungeon_feature_type feat);
-bool is_valid_border_feat(dungeon_feature_type feat);
-bool is_valid_mimic_feat(dungeon_feature_type feat);
-bool feat_cannot_be_mimic(dungeon_feature_type feat);
+void fall_into_a_pool(dungeon_feature_type terrain);
 
 void                 init_feat_desc_cache();
 dungeon_feature_type feat_by_desc(string desc);
@@ -129,7 +135,7 @@ bool is_boring_terrain(dungeon_feature_type feat);
 dungeon_feature_type orig_terrain(coord_def pos);
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type = TERRAIN_CHANGE_GENERIC,
-                         const monster* mon = NULL);
+                         const monster* mon = nullptr);
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype);
 bool is_temp_terrain(coord_def pos);
 

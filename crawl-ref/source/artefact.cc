@@ -8,13 +8,11 @@
 #include "artefact.h"
 #include "art-enum.h"
 
-#include <cstdlib>
-#include <climits>
-#include <string.h>
-#include <stdio.h>
 #include <algorithm>
-
-#include "externs.h"
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "areas.h"
 #include "branch.h"
@@ -26,14 +24,12 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "player.h"
-#include "random.h"
 #include "religion.h"
 #include "shout.h"
-#include "species.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stuff.h"
+#include "stringutil.h"
+#include "unicode.h"
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
@@ -295,7 +291,9 @@ string replace_name_parts(const string &name_in, const item_def& item)
         else
         {
             do
+            {
                 which_god = random_god(false); // Fedhas in ZotDef only
+            }
             while (!_god_fits_artefact(which_god, item, true));
         }
 
@@ -342,10 +340,17 @@ bool is_random_artefact(const item_def &item)
     return item.flags & ISFLAG_RANDART;
 }
 
-// returns true if item in an unrandart
-bool is_unrandom_artefact(const item_def &item)
+/** Is this an unrandart, and if so which one?
+ *
+ *  @param item The item to be checked.
+ *  @param which The unrand enum to be checked against (default 0).
+ *  @returns true if item is an unrand, and if which is not 0, if it is the unrand
+ *           specfied by enum in which.
+ */
+bool is_unrandom_artefact(const item_def &item, int which)
 {
-    return item.flags & ISFLAG_UNRANDART;
+    return item.flags & ISFLAG_UNRANDART
+           && (!which || which == item.special);
 }
 
 bool is_special_unrandom_artefact(const item_def &item)
@@ -391,16 +396,6 @@ void set_unique_item_status(const item_def& item,
         _set_unique_item_status(item.special, status);
 }
 
-void reveal_randapp_artefact(item_def &item)
-{
-    ASSERT(is_unrandom_artefact(item));
-    const unrandart_entry *unrand = _seekunrandart(item);
-    ASSERT(unrand);
-    ASSERT(unrand->flags & UNRAND_FLAG_RANDAPP);
-    // name and tile update themselves
-    item.colour = unrand->colour;
-}
-
 void artefact_desc_properties(const item_def &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known,
@@ -416,6 +411,9 @@ void artefact_desc_properties(const item_def &item,
     {
         switch (item.sub_type)
         {
+        case ARM_QUICKSILVER_DRAGON_ARMOUR:
+            ++proprt[ARTP_MAGIC];
+            break;
         case ARM_SWAMP_DRAGON_ARMOUR:
             ++proprt[ARTP_POISON];
             break;
@@ -432,6 +430,9 @@ void artefact_desc_properties(const item_def &item,
             break;
         case ARM_STORM_DRAGON_ARMOUR:
             ++proprt[ARTP_ELECTRICITY];
+            break;
+        case ARM_SHADOW_DRAGON_ARMOUR:
+            proprt[ARTP_STEALTH] += 4;
             break;
         case ARM_GOLD_DRAGON_ARMOUR:
             ++proprt[ARTP_POISON];
@@ -501,6 +502,10 @@ void artefact_desc_properties(const item_def &item,
         fake_rap = ARTP_NEGATIVE_ENERGY;
         break;
 
+    case AMU_REGENERATION:
+        fake_rap = ARTP_REGENERATION;
+        break;
+
     case RING_PROTECTION:
         fake_rap  = ARTP_AC;
         fake_plus = item.plus;
@@ -534,10 +539,6 @@ void artefact_desc_properties(const item_def &item,
 
     case RING_STEALTH:
         fake_rap = ARTP_STEALTH;
-        break;
-
-    case RING_REGENERATION:
-        fake_rap = ARTP_REGENERATION;
         break;
 
     case RING_EVASION:
@@ -731,7 +732,7 @@ static void _get_randart_properties(const item_def &item,
 
             if (atype == WPN_BLOWGUN)
                 proprt[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
-            else if (range_skill(item) == SK_CROSSBOWS)
+            else if (item_attack_skill(item) == SK_CROSSBOWS)
             {
                 // Penetration and electrocution are only allowed on
                 // crossbows.  This may change in future.
@@ -750,8 +751,7 @@ static void _get_randart_properties(const item_def &item,
                 SPWPN_ELECTROCUTION,
                 SPWPN_VAMPIRISM,
                 SPWPN_PAIN,
-                SPWPN_VENOM,
-                -1);
+                SPWPN_VENOM);
             power_level++; // Demon weapons get an extra penalty -- why?
             // fall back to regular melee brands 2/9 of the time
         }
@@ -924,7 +924,8 @@ static void _get_randart_properties(const item_def &item,
     // res magic
     if (!done_powers
         && one_chance_in(4 + power_level)
-        && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION_FROM_MAGIC))
+        && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION_FROM_MAGIC)
+        && (aclass != OBJ_ARMOUR || atype != ARM_QUICKSILVER_DRAGON_ARMOUR))
     {
         proprt[ARTP_MAGIC] = one_chance_in(3) ? 2 : 1;
         power_level++;
@@ -937,6 +938,15 @@ static void _get_randart_properties(const item_def &item,
         && (aclass != OBJ_ARMOUR || atype != ARM_NAGA_BARDING))
     {
         proprt[ARTP_EYESIGHT] = 1;
+        power_level++;
+    }
+
+    // res_corr, only on armour
+    if (!done_powers
+        && one_chance_in(4 + power_level)
+        && aclass == OBJ_ARMOUR)
+    {
+        proprt[ARTP_RCORR] = 1;
         power_level++;
     }
 
@@ -1054,8 +1064,9 @@ static void _get_randart_properties(const item_def &item,
             proprt[ARTP_COLD] = -1;
             break;
         case 7:                     // less stealthy
-            if (aclass == OBJ_JEWELLERY
+            if ((aclass == OBJ_JEWELLERY
                 && (atype == RING_LOUDNESS || atype == RING_STEALTH))
+                || (aclass == OBJ_ARMOUR && atype == ARM_SHADOW_DRAGON_ARMOUR))
             {
                 break;
             }
@@ -1102,13 +1113,8 @@ static bool _redo_book(item_def &book)
     int num_spells  = 0;
     int num_unknown = 0;
 
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    for (spell_type spell : spellbook_template(static_cast<book_type>(book.sub_type)))
     {
-        spell_type spell = which_spell_in_book(book, i);
-
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
         num_spells++;
         if (!you.seen_spell[spell])
             num_unknown++;
@@ -1126,27 +1132,23 @@ static bool _init_artefact_book(item_def &book)
 {
     ASSERT(book.sub_type == BOOK_RANDART_LEVEL
            || book.sub_type == BOOK_RANDART_THEME);
-    ASSERT(book.plus != 0);
+    ASSERT(book.book_param != 0);
 
     god_type god;
     bool redo = (!origin_is_god_gift(book, &god) || god != GOD_XOM);
 
-    // Plus and plus2 contain parameters to make_book_foo_randart(),
-    // which might get changed after the book has been made into a
-    // randart, so reset them on each iteration of the loop.
-    int  plus  = book.plus;
-    int  plus2 = book.plus2;
+    // plus contains a parameter to make_book_foo_randart(), which might get
+    // changed after the book has been made into a randart, so reset it on each
+    // iteration of the loop.
+    // XXX: ...is this really necessary...?
+    const int book_param = book.book_param;
     bool book_good = false;
     for (int i = 0; i < 4; i++)
     {
-        book.plus  = plus;
-        book.plus2 = plus2;
+        book.book_param = book_param;
 
         if (book.sub_type == BOOK_RANDART_LEVEL)
-        {
-            // The parameters to this call are in book.plus and plus2.
-            book_good = make_book_level_randart(book, book.plus);
-        }
+            book_good = make_book_level_randart(book, book.book_param);
         else
             book_good = make_book_theme_randart(book);
 
@@ -1162,13 +1164,13 @@ static bool _init_artefact_book(item_def &book)
     return book_good;
 }
 
-void setup_unrandart(item_def &item)
+void setup_unrandart(item_def &item, bool creating)
 {
     ASSERT(is_unrandom_artefact(item));
     CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
     const unrandart_entry *unrand = _seekunrandart(item);
 
-    if (unrand->prpty[ARTP_NO_UPGRADE] && item.props.exists(ARTEFACT_NAME_KEY))
+    if (unrand->prpty[ARTP_NO_UPGRADE] && !creating)
         return; // don't mangle mutable items
 
     for (int i = 0; i < ART_PROPERTIES; i++)
@@ -1177,7 +1179,6 @@ void setup_unrandart(item_def &item)
     item.base_type = unrand->base_type;
     item.sub_type  = unrand->sub_type;
     item.plus      = unrand->plus;
-    item.colour    = unrand->colour;
 }
 
 static bool _init_artefact_properties(item_def &item)
@@ -1498,6 +1499,11 @@ string make_artefact_name(const item_def &item, bool appearance)
     return result;
 }
 
+static const unrandart_entry *_seekunrandart(const item_def &item)
+{
+    return get_unrand_entry(item.special);
+}
+
 string get_artefact_name(const item_def &item, bool force_known)
 {
     ASSERT(is_artefact(item));
@@ -1507,6 +1513,9 @@ string get_artefact_name(const item_def &item, bool force_known)
         // print artefact's real name
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
+        // unrands don't use cached names
+        if (is_unrandom_artefact(item))
+            return _seekunrandart(item)->name;
         return make_artefact_name(item, false);
     }
     // print artefact appearance
@@ -1531,15 +1540,10 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
 {
     unrand_index -= UNRAND_START;
 
-    if (unrand_index <= -1 || unrand_index >= NO_UNRANDARTS)
+    if (unrand_index <= -1 || unrand_index >= NUM_UNRANDARTS)
         return &unranddata[0];  // dummy unrandart
     else
         return &unranddata[unrand_index];
-}
-
-static const unrandart_entry *_seekunrandart(const item_def &item)
-{
-    return get_unrand_entry(item.special);
 }
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
@@ -1548,7 +1552,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 
     // Pick randomly among not-yet-existing unrandarts with the proper
     // base_type and sub_type.
-    for (int i = 0, count = 0; i < NO_UNRANDARTS; i++)
+    for (int i = 0, count = 0; i < NUM_UNRANDARTS; i++)
     {
         const int              index = i + UNRAND_START;
         const unrandart_entry* entry = &unranddata[i];
@@ -1688,7 +1692,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case RING_LIFE_PROTECTION:
-        provides = ARTP_AC;
+        provides = ARTP_NEGATIVE_ENERGY;
         break;
 
     case RING_PROTECTION_FROM_MAGIC:
@@ -1705,6 +1709,10 @@ static bool _randart_is_redundant(const item_def &item,
 
     case AMU_STASIS:
         provides = ARTP_PREVENT_TELEPORTATION;
+        break;
+
+    case AMU_REGENERATION:
+        provides = ARTP_REGENERATION;
         break;
     }
 
@@ -1937,8 +1945,6 @@ static void _make_faerie_armour(item_def &item)
     ASSERT(is_artefact(doodad));
     ASSERT(doodad.sub_type == item.sub_type);
 
-    doodad.props[ARTEFACT_NAME_KEY].get_string()
-        = item.props[ARTEFACT_NAME_KEY].get_string();
     doodad.props[ARTEFACT_APPEAR_KEY].get_string()
         = item.props[ARTEFACT_APPEAR_KEY].get_string();
     item.props = doodad.props;
@@ -1947,7 +1953,7 @@ static void _make_faerie_armour(item_def &item)
 
 static jewellery_type octoring_types[8] =
 {
-    RING_REGENERATION, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
+    RING_SEE_INVISIBLE, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
     RING_SUSTAIN_ABILITIES, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
     RING_LIFE_PROTECTION
 };
@@ -1976,7 +1982,7 @@ static void _make_octoring(item_def &item)
 
 bool make_item_unrandart(item_def &item, int unrand_index)
 {
-    ASSERT_RANGE(unrand_index, UNRAND_START + 1, (UNRAND_START + NO_UNRANDARTS));
+    ASSERT_RANGE(unrand_index, UNRAND_START + 1, (UNRAND_START + NUM_UNRANDARTS));
 
     item.special = unrand_index;
 
@@ -1988,10 +1994,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     if (unrand->prpty[ARTP_CURSED] != 0)
         do_curse_item(item);
-
-    // get true artefact name
-    ASSERT(!item.props.exists(ARTEFACT_NAME_KEY));
-    item.props[ARTEFACT_NAME_KEY].get_string() = unrand->name;
 
     // get artefact appearance
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));

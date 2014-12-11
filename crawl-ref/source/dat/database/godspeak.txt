@@ -397,6 +397,14 @@ Xom shushes you conspicuously.
 
 Xom whispers "Shhh!"
 %%%%
+Xom cloud
+
+"The weather's been a little too boring around here."
+
+Xom asks Qazlal to spice things up a little.
+
+"Forecast: mostly cloudy."
+%%%%
 Xom life saving general
 
 "What? Wait, NO!"
@@ -406,6 +414,8 @@ Xom life saving general
 "NOOOOOOO, not my @_xom_plaything_@!"
 
 "Not here, not now."
+
+"Just one more try."
 
 Xom is feeling generous.
 %%%%
@@ -433,6 +443,15 @@ Xom yawns loudly!
 "I guess I need a new plaything now."
 
 "Huh? Did I miss anything?"
+
+"It was about time."
+
+"This toy is broken."
+
+"It's only fun and games until someone loses an eye."
+
+w:1
+"It's not fun and games unless someone loses an eye."
 %%%%
 # Xom laughing
 # (Currently only used post-game in response to "You die...")
@@ -754,6 +773,10 @@ Fedhas says: Spread life and death.
 Gozag welcome
 
 Gozag says: Greed is good.
+%%%%
+Ru welcome
+
+Ru says: Sacrifice that you might gain great power!
 %%%%
 Jiyva welcome
 

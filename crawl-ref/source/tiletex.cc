@@ -2,6 +2,8 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include "tiletex.h"
+
 #include "files.h"
 #include "glwrapper.h"
 #include "tiledef-dngn.h"
@@ -9,7 +11,6 @@
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
-#include "tiletex.h"
 #include "windowmanager.h"
 
 GenericTexture::GenericTexture() :
@@ -74,7 +75,7 @@ void GenericTexture::bind() const
 }
 
 TilesTexture::TilesTexture() :
-    GenericTexture(), m_tile_max(0), m_info_func(NULL)
+    GenericTexture(), m_tile_max(0), m_info_func(nullptr)
 {
 }
 

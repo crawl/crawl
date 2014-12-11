@@ -36,8 +36,10 @@ private:
     vector<bool> prev_pause_status;
 };
 
-int getchm(int (*rgetch)() = NULL);       // keymaps applied (ie for prompts)
-int getchm(KeymapContext context, int (*rgetch)() = NULL);
+int getchm(int (*rgetch)() = nullptr);       // keymaps applied (ie for prompts)
+int getchm(KeymapContext context, int (*rgetch)() = nullptr);
+
+int get_ch();
 
 int getch_with_command_macros();  // keymaps and macros (ie for commands)
 

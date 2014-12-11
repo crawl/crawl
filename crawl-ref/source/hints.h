@@ -6,12 +6,10 @@
 #ifndef HINTS_H
 #define HINTS_H
 
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <vector>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "externs.h"
 
 class formatted_string;
 class writer;
@@ -154,7 +152,6 @@ void tutorial_init_hints();
 void pick_hints(newgame_def* choice);
 void hints_load_game();
 
-formatted_string hints_starting_info2();
 void hints_starting_screen();
 void hints_new_turn();
 void print_hint(string key, const string arg1 = "", const string arg2 = "");

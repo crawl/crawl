@@ -1,8 +1,12 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
+#include <algorithm>  // shuffle
+#include <iterator>   // advance
 #include <map>
 #include <vector>
+
+#include "asg.h" // AsgKISS::generator
 #include "hash.h"
 
 void seed_rng();
@@ -26,7 +30,7 @@ int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);
 int biased_random2(int max, int n);
 int random2limit(int max, int limit);
-int binomial_generator(unsigned n_trials, unsigned trial_prob);
+int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale = 100);
 bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
 int roll_dice(int num, int size);
@@ -34,36 +38,24 @@ bool decimal_chance(double percent);
 
 int ui_random(int max);
 
-/**
- * Chooses one of the numbers passed in at random. The list of numbers
- * must be terminated with -1.
+/** Chooses one of the objects passed in at random (by value).
+ *  @return One of the arguments.
  */
-template <typename T>
-T random_choose(T first, ...)
+template <typename T, typename... Ts>
+T random_choose(T first, Ts... rest)
 {
-    va_list args;
-    va_start(args, first);
-
-    T chosen = first;
-    int count = 1;
-    int nargs = 100; // a hard limit to catch unterminated uses
-
-    while (nargs-- > 0)
-    {
-        const int pick = va_arg(args, int);
-        if (pick == -1)
-            break;
-        if (one_chance_in(++count))
-            chosen = static_cast<T>(pick);
-    }
-
-    va_end(args);
-    ASSERT(nargs > 0);
-    return chosen;
+    const T elts[] = { first, rest... };
+    return elts[random2(1 + sizeof...(rest))];
 }
 
-template <>
-const char* random_choose<const char*>(const char* first, ...);
+template <typename C>
+auto random_iterator(C &container) -> decltype(container.begin())
+{
+    int pos = random2(container.size());
+    auto it = container.begin();
+    advance(it, pos);
+    return it;
+}
 
 template <typename T>
 T random_choose_weighted(int weight, T first, ...)
@@ -107,22 +99,13 @@ dice_def calc_dice(int num_dice, int max_damage);
 template <typename T>
 void shuffle_array(T* arr, int n)
 {
-    while (n > 1)
-    {
-        int i = random2(n);
-        n--;
-        T tmp = arr[i];
-        arr[i] = arr[n];
-        arr[n] = tmp;
-    }
+    shuffle(arr, arr+n, AsgKISS::generator(0));
 }
 
 template <typename T>
-void shuffle_array(vector<T> &vec)
+void shuffle_array(T &vec)
 {
-    // &vec[0] is undefined behaviour, and vec.data() is C++11-only.
-    if (!vec.empty())
-        shuffle_array(&vec[0], vec.size());
+    shuffle(begin(vec), end(vec), AsgKISS::generator(0));
 }
 
 /**

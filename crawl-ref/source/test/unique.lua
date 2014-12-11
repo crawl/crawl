@@ -39,15 +39,15 @@ local function test_uniques_random(branch, depth, nlevels)
 end
 
 local function run_unique_tests()
-  test_uniques_branch("D", 16)
-  test_uniques_branch("Depths", 6)
+  test_uniques_branch("D", 15)
+  test_uniques_branch("Depths", 5)
   test_uniques_branch("Dis", 7)
 
-  for depth = 1, 16 do
+  for depth = 1, 15 do
     test_uniques_blank("D", depth, 3)
     test_uniques_random("D", depth, 3)
   end
-  for depth = 1, 6 do
+  for depth = 1, 5 do
     test_uniques_blank("Depths", depth, 3)
     test_uniques_random("Depths", depth, 3)
   end

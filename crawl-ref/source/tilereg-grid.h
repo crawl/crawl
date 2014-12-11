@@ -51,9 +51,8 @@ protected:
     // If click was invalid, return false.
     bool place_cursor(MouseEvent &event, unsigned int &idx);
     unsigned int cursor_index() const;
-    int add_quad_char(char c, int x, int y, int ox, int oy,
-                      bool outline = false);
-    void draw_number(int x, int y, int number, bool outline = false);
+    int add_quad_char(char c, int x, int y, int ox, int oy);
+    void draw_number(int x, int y, int number);
     void draw_desc(const char *desc);
 
     unsigned char *m_flavour;

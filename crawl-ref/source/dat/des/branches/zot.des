@@ -967,6 +967,7 @@ SUBST:   F = 3
 ITEM:    disc of storms, fan of gales, staff of air, book of the sky
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
+KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
@@ -975,6 +976,7 @@ SUBST:   w = l
 SUBST:   W = l..
 : else
 MONS:    fire giant, fire dragon
+KMONS:   F = salamander firebrand
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
@@ -1036,7 +1038,7 @@ DEPTH:  Zot, !Zot:$
 ORIENT: float
 MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
         w:6 lightning spire / nothing
-MONS:   ice statue / silver statue / orange crystal statue / \
+MONS:   ice statue / obsidian statue / orange crystal statue / \
         curse skull / w:5 nothing
 SUBST:  3 = 11.
 # Not quite the orb, but but close enough
@@ -1086,7 +1088,7 @@ KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
         randart arbalest ego:chaos | hunting sling | shortbow | arbalest | \
         nothing w:15 . sling bullet | arrow | bolt . \
         lightning rod w:6 | rod of shadows w:4 | rod of the swarm w:4 | \
-        rod of destruction w:2 | rod of striking w:6 | wand of hasting w:16 | \
+        rod of destruction w:2 | iron rod w:6 | wand of hasting w:16 | \
         wand of confusion | wand of random effects w:6 | \
         wand of polymorph w:6 | any wand w:28 | any rod w:2 | \
         scroll of summoning w:45 . randart ring mail | \
@@ -1666,7 +1668,7 @@ KFEAT: _ = altar_xom / altar_lugonu / altar_zin / altar_the_shining_one / \
 SUBST: 1 = 1.
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
-KITEM: Z = randbook spells:summon_demon|fireball|twisted_resurrection|airstrike title:the_Zealot
+KITEM: Z = randbook spells:summon_demon|fireball|animate_dead|airstrike title:the_Zealot
 KITEM: F = randbook spells:bolt_of_fire|fireball|sticky_flame|conjure_flame title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta
@@ -1714,7 +1716,7 @@ KMONS:   H = green draconian
 KMONS:   I = green death / nonbase green draconian w:6
 KMONS:   J = white very ugly thing
 KMONS:   K = white draconian
-KMONS:   L = white draconian knight / nonbase white draconian w:6
+KMONS:   L = shard shrike / nonbase white draconian w:6
 KMONS:   M = brown very ugly thing
 KMONS:   N = yellow draconian
 KMONS:   O = acid blob / nonbase yellow draconian w:6
@@ -2290,6 +2292,141 @@ Be..x...Ck..x.Et......
    Ci...qD
 ENDMAP
 
+NAME:    hangedman_moon_palace_of_the_dragon_emperor
+TAGS:    extra decor no_pool_fixup
+DEPTH:   Zot, !Zot:$
+ORIENT:  float
+MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
+ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup, mundane cloak no_pickup
+ITEM:    scroll of random uselessness q:1 ident:type no_pickup
+ITEM:    needle ego:poisoned q:1 no_pickup, mundane dagger no_pickup
+ITEM:    potion of poison q:1 ident:type no_pickup
+KFEAT:   A = stone_arch
+: dgn.delayed_decay(_G, 'j', 'draconian skeleton')
+SHUFFLE: {}, tT'"
+SUBST:   t = T, " = '
+SUBST:   l : l+mv, G : Gc1, T : TUAdefg, ' : hijk'
+KPROP:   ' = bloody
+KMASK:   defghij = no_item_gen
+TILE:    c : dngn_stone_wall_red / wall_icy_stone / wall_cobalt_stone
+COLOUR:  G = cyan
+TILE:    G = dngn_statue_iron
+: set_feature_name("granite_statue", "iron statue")
+MAP
+                            bbbbbbbbbbbbb
+                  bbbbbbbbbbbbb...l...bbb
+          bbbbbbbbbbb..l..bbbb.........bb
+    bbbbbbbb..l..bbb.......bb...........b
+bbbbbb.l.bb.......b.........b...........b
+btl'b.t.'.b..t.'..b...t.'...b....t.'....b
+b.{....C......C...0....C..........}.....b
+bTG"b.T.".b..T."..b...T."...b....T."....b
+bbbbbb.G.bb.......b.........b...........b
+    bbbbbbbb..G..bbb.......bb...........b
+          bbbbbbbbbbb..G..bbbb.........bb
+                  bbbbbbbbbbbbb...G...bbb
+                            bbbbbbbbbbbbb
+ENDMAP
+
+# Inspired by a distant submission from nicolae-,
+# a revelation: nothing in Zot makes any sense!
+NAME:    hangedman_orp_of_zott
+TAGS:    no_monster_gen
+DEPTH:   Zot, !Zot:$
+ORIENT:  northwest
+WEIGHT:  5
+# Cheap plastic imitations, mostly. Well, maybe not cheap...
+MONS:    ugly thing w:15 / raiju / guardian serpent / harpy zombie / \
+         base draconian perm_ench:shapeshifter / boggart / \
+         orb spider w:5 / great orb of eyes w:5 / rakshasa w:5
+MONS:    very ugly thing w:20 / deep elf annihilator w:15 / \
+         deep elf death mage w:15 / balrug w:15 / octopode crusher / \
+         quicksilver dragon / unborn / crystal guardian
+MONS:    curse skull w:15 / apocalypse crab / lorocyproca / acid blob
+MONS:    butterfly
+ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
+ITEM:    sling bullet q:1 no_pickup, crystal ball of energy no_pickup
+# Altars obliquely refer to those temple maps.
+KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / C w:20
+KFEAT:   ~ = known zot trap
+SHUFFLE: Xy / Xy / Xy / Aa
+NSUBST:  A = 1:. / 19 = X:9 .:1 / *:X
+SUBST:   X : X Y Z:4, X = bbbbvnc, Y = bvvvvnc, Z = bbvnncc
+SUBST:   az = bbvc, y = x, B : x.
+NSUBST:  2 = 4 = 2223 / *:2, . = 3:0 / 3 = 9. / 1:4 / *:., 1 = 1:1.. / *:1
+# 1/15 chance for two downward staircases, 9/15 for (only) one.
+SHUFFLE: ])defG, fgGCD~
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx1.............+''''''''''''''''''''''''''''''
+xx1.............+'''''''''''''''''''''''''''''''
+xXX......XXXXXXXXXXXXXXX''''''XXXXXXXXXXXXXX'''''
+xzXX......XyyyyyyyyyyyX''''''XXyyyyyyyyyyyyXX''''
+xyyXX.....XXyxxxxxxxyXX'''''XXyyxxxxxxxxxxyyXX'''
+xxyyXX....%XyxxBBBxxyX1....XXyyxxxxxxxxxxxxyyXX''
+xxxyyX....1zzxxxBxxxzz.....XyyxxxxxxxxxxxxxxyyX''
+xxxxyX....%z2.x.1.x.2z1....XyxxxxxxxxxxxBxxxxyX'
+xxxxyX....Xzx...]...xzX....XyxxxxxxxxxBBxBxxxyX'
+xxxyyX....Xz%.x...x.%zX....XyyxxxxxxBBxxxxBxxyX''
+xxyyXX...Xzzzzzz+zzzzzzX...XXyyxxxd........2zzX''
+xxyXX...zzz1.........1zzz...XXyxxxxx......%zzX'''
+xxyX...zzX1...........1Xzz...Xyyyyyyyy1..1zzX''''
+xxXX+++z.................z+++XXXXXXXzzzz+zzX''''
+xx1...................................+112z1'''
+xxXX.........................XXXXXXXzzzz+zzX''''
+xxyXXXX...................XXXXyyyyyyy1...1zzX''''
+xxxyyyXXX...............XXXyyyyxxx%.......%zzX'''
+xxxxxyyyXX.............XXyyyxxxe...........2zzX'
+xxxxxxxyyX...zzz1zzz...XyyxxxxxxxxBBBxxxxxByyXX'
+xxxxxxxxyX..Xz1z+z1zX..XyxxxxxxxxxxxxBBBxBxyXX'''
+xxxxxxxxyX.2zzX%%%Xzz2.XyxxxxxxxxxxxxxxxBxyyX'''
+xxxxxxxxyzzzz1.%)%.1zzzzyxxxxxxxxxxxxxxxxxyX1''
+xxxxxxxxyX'1zzX%%%Xzz1'XyxxxxxxxxxxxxxxxxxyyX'''
+xxxxxxxxyX''Xz2zzz2zX''XyxxxxxxxxxxxxxxxxxxyXX'''
+xxxxxxxyyX'''zzz1zzz'''XyyxxxxxxxxxxxxxxxxxyyXX'
+xxxxxyyyXX'''''''''''''XXyyyxxxxxxxxxxxxxxxyyXX'
+xxyyyyXXX'''''''''''''''XXXyyyyxxxxxxxxxyyyyXX'''
+xyyXXXX'''''''''''''''''''XXXXyyyyyyyyyyyXXXX'''
+xXXX'''''''''''''''''''''''''XXXXXXXXXXXXX'''''
+xx''''''''''''''''''''''''''''''''''''''''''''
+   ''''''   ''''@''''   '''''''''   '''''''''
+ENDMAP
+
+NAME:    hangedman_zot_wheel_spokes
+TAGS:    transparent extra decor
+DEPTH:   Zot, !Zot:$
+# Swap positions in unit's potential spots
+# with the spokes and / or the center, maybe.
+SHUFFLE: AGMBHN / AHMBGN / AGNBJM
+SHUFFLE: CIOFLR / CLOFIR / CIRFLO
+SHUFFLE: DJPEKQ / DJQEKP / DJQEKP
+SHUFFLE: AGM / BHN / CIO / DJP / EKQ / FLR
+# Make those slots random walls or floor.
+SUBST:   AGM : xxxxcccbbv, BHN : xxxxcccbbv
+SUBST:   CIO : xxxxcccbbv .:100
+SUBST:   DJP : xxxxcccbbv .:100, EFKLQR = .
+MAP
+      ...CDEF...
+      ..F.AB.C..
+........EB..AD..
+........DA..BE..
+.IJKL...C.BA.F..
+L.GH.I...FEDC...
+KH..GJ.OPQR.......
+JG..HKR.MN.O......
+I.HG.LQN..MP.IJKL.
+.LKJI.PM..NQL.GH.I
+......O.NM.RKH..GJ
+.......RQPO.JG..HK
+  ...CEDF...I.HG.L
+  ..F.AB.C...LKJI.
+  ..EB..AE........
+  ..DA..BD........
+  ..C.BA.F..
+  ...FEDC...
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
@@ -2324,7 +2461,7 @@ SUBST:    F = .
 
 #monsters
 MONS:     patrolling Orb Guardian, Killer Klown, electric golem, orb of fire
-MONS:     ancient lich, orange crystal statue / silver statue / ice statue
+MONS:     ancient lich, orange crystal statue / obsidian statue / ice statue
 SUBST:    8=8..., 5=5.
 SHUFFLE:  234
 SUBST:    ? = .:8 ?

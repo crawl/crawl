@@ -4,13 +4,13 @@
 
 #include "tilereg-menu.h"
 
+#ifdef TOUCH_UI
+#include "cio.h"
+#endif
 #include "menu.h"
 #include "options.h"
 #include "tilebuf.h"
 #include "tilefont.h"
-#ifdef TOUCH_UI
-#include "cio.h"
-#endif
 
 MenuRegion::MenuRegion(ImageManager *im, FontWrapper *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),
@@ -40,14 +40,12 @@ int MenuRegion::mouse_entry(int x, int y)
 
     for (unsigned int i = 0; i < m_entries.size(); i++)
     {
-        if (!m_entries[i].valid)
+        const auto &entry = m_entries[i];
+        if (!entry.valid)
             continue;
 
-        if (x >= m_entries[i].sx && x <= m_entries[i].ex
-            && y >= m_entries[i].sy && y <= m_entries[i].ey)
-        {
+        if (x >= entry.sx && x <= entry.ex && y >= entry.sy && y <= entry.ey)
             return i;
-        }
     }
 
     return -1;
@@ -163,14 +161,14 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
     const int max_entry_height = max((int)m_font_entry->char_height() * 2,
                                      max_tile_height);
 
-    for (unsigned int i = 0; i < m_entries.size(); i++)
+    for (MenuRegionEntry &entry : m_entries)
     {
-        if (!m_entries[i].valid)
+        if (!entry.valid)
         {
-            m_entries[i].sx = 0;
-            m_entries[i].sy = 0;
-            m_entries[i].ex = 0;
-            m_entries[i].ey = 0;
+            entry.sx = 0;
+            entry.sy = 0;
+            entry.ex = 0;
+            entry.ey = 0;
             continue;
         }
 
@@ -180,69 +178,67 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
             column++;
         }
 
-        int text_width  = m_font_entry->string_width(m_entries[i].text);
+        int text_width  = m_font_entry->string_width(entry.text);
         int text_height = m_font_entry->char_height();
 
-        if (m_entries[i].heading)
+        if (entry.heading)
         {
-            m_entries[i].sx = heading_indent + column * column_width + left_offset;
-            m_entries[i].ex = m_entries[i].sx + text_width + left_offset;
-            m_entries[i].sy = height;
-            m_entries[i].ey = m_entries[i].sy + text_height;
+            entry.sx = heading_indent + column * column_width + left_offset;
+            entry.ex = entry.sx + text_width + left_offset;
+            entry.sy = height;
+            entry.ey = entry.sy + text_height;
 
             // wrap titles to two lines if they don't fit
             if (Options.tile_menu_icons
-                && m_entries[i].ex > m_entries[i].sx + column_width)
+                && entry.ex > entry.sx + column_width)
             {
                 int w = column_width;
                 int h = m_font_entry->char_height() * 2;
-                formatted_string split = m_font_entry->split(m_entries[i].text, w, h);
+                formatted_string split = m_font_entry->split(entry.text, w, h);
                 int string_height = m_font_entry->string_height(split);
 
-                m_entries[i].ex = w;
-                m_entries[i].ey = m_entries[i].sy + string_height;
+                entry.ex = w;
+                entry.ey = entry.sy + string_height;
 
-                m_font_buf.add(split, m_entries[i].sx, m_entries[i].sy);
+                m_font_buf.add(split, entry.sx, entry.sy);
                 height += string_height;
             }
             else
             {
-                m_font_buf.add(m_entries[i].text, m_entries[i].sx, m_entries[i].sy);
+                m_font_buf.add(entry.text, entry.sx, entry.sy);
                 height += text_height;
             }
         }
         else
         {
-            m_entries[i].sy = height;
+            entry.sy = height;
             int entry_start = column * column_width + left_offset;
             int text_sx = text_indent + entry_start;
 
             int entry_height;
 
-            if (!m_entries[i].tiles.empty())
+            if (!entry.tiles.empty())
             {
-                m_entries[i].sx = entry_start + tile_indent;
+                entry.sx = entry_start + tile_indent;
                 entry_height = max(max_tile_height, text_height);
 
-                for (unsigned int t = 0; t < m_entries[i].tiles.size(); t++)
+                for (const tile_def &tile : entry.tiles)
                 {
                     // NOTE: This is not perfect. Tiles will be drawn
                     // sorted by texture first, e.g. you can never draw
                     // a dungeon tile over a monster tile.
-                    tileidx_t tile = m_entries[i].tiles[t].tile;
-                    TextureID tex  = m_entries[i].tiles[t].tex;
-                    m_tile_buf[tex].add_unscaled(tile, m_entries[i].sx,
-                                                 m_entries[i].sy,
-                                                 m_entries[i].tiles[t].ymax);
+                    TextureID tex  = tile.tex;
+                    m_tile_buf[tex].add_unscaled(tile.tile, entry.sx, entry.sy,
+                                                 tile.ymax);
                 }
             }
             else
             {
-                m_entries[i].sx = text_sx;
+                entry.sx = text_sx;
                 entry_height = text_height;
             }
 
-            int text_sy = m_entries[i].sy;
+            int text_sy = entry.sy;
             text_sy += (entry_height - m_font_entry->char_height()) / 2;
             // Split menu entries that don't fit into a single line into
             // two lines.
@@ -251,7 +247,7 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
             {
                 // [enne] - Ugh, hack.  Maybe MenuEntry could specify the
                 // presence and length of this substring?
-                string unfm = m_entries[i].text.tostring();
+                string unfm = entry.text.tostring();
                 bool let = (unfm[1] >= 'a' && unfm[1] <= 'z'
                             || unfm[1] >= 'A' && unfm[1] <= 'Z');
                 bool plus = (unfm[3] == '-' || unfm[3] == '+');
@@ -260,16 +256,16 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
                 if (let && plus && unfm[0] == ' ' && unfm[2] == ' '
                     && unfm[4] == ' ')
                 {
-                    formatted_string header = m_entries[i].text.chop(5);
+                    formatted_string header = entry.text.chop(5);
                     m_font_buf.add(header, text_sx, text_sy);
                     text_sx += m_font_entry->string_width(header);
-                    text = m_entries[i].text;
+                    text = entry.text;
                     // remove hotkeys.  As Enne said above, this is a monstrosity.
                     for (int k = 0; k < 5; k++)
                         text.del_char();
                 }
                 else
-                    text += m_entries[i].text;
+                    text += entry.text;
 
                 int w = entry_start + column_width - text_sx - tile_indent;
                 int h = m_font_entry->char_height() * 2;
@@ -277,26 +273,26 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
 
                 int string_height = m_font_entry->string_height(split);
                 if (string_height > entry_height)
-                    text_sy = m_entries[i].sy;
+                    text_sy = entry.sy;
 
                 m_font_buf.add(split, text_sx, text_sy);
 
                 entry_height = max(entry_height, string_height);
-                m_entries[i].ex = entry_start + column_width - tile_indent;
+                entry.ex = entry_start + column_width - tile_indent;
             }
             else
             {
-                m_entries[i].ex = entry_start + column_width - tile_indent;
-                m_font_buf.add(m_entries[i].text, text_sx, text_sy);
+                entry.ex = entry_start + column_width - tile_indent;
+                m_font_buf.add(entry.text, text_sx, text_sy);
             }
 
-            m_entries[i].ey = m_entries[i].sy + entry_height;
-            height = m_entries[i].ey;
+            entry.ey = entry.sy + entry_height;
+            height = entry.ey;
         }
-        if (m_entries[i].selected)
+        if (entry.selected)
         {
-            m_shape_buf.add(m_entries[i].sx-1, m_entries[i].sy-1,
-                            m_entries[i].ex+1, m_entries[i].ey+1,
+            m_shape_buf.add(entry.sx-1, entry.sy-1,
+                            entry.ex+1, entry.ey+1,
                             selected_colour);
         }
 
@@ -335,8 +331,8 @@ void MenuRegion::clear()
 
     m_more.clear();
 
-    for (unsigned int i = 0; i < m_entries.size(); i++)
-        m_entries[i].valid = false;
+    for (MenuRegionEntry &entry : m_entries)
+        entry.valid = false;
 
     m_mouse_idx = -1;
 }
@@ -359,7 +355,7 @@ void MenuRegion::set_entry(int idx, const string &str, int colour,
     MenuRegionEntry &e = m_entries[idx];
     e.valid = true;
     e.text.clear();
-    e.text.textcolor(colour);
+    e.text.textcolour(colour);
     e.text += formatted_string::parse_string(str);
     e.colour   = colour;
     e.heading  = (me->level == MEL_TITLE || me->level == MEL_SUBTITLE);

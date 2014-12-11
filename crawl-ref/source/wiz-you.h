@@ -13,6 +13,7 @@ void wizard_memorise_spec_spell();
 void wizard_heal(bool super_heal);
 void wizard_set_hunger_state();
 void wizard_set_piety();
+void wizard_set_piety_to(int new_piety, bool force = false);
 void wizard_exercise_skill();
 void wizard_set_abyss();
 void wizard_set_skill_level(skill_type skill = SK_NONE);
@@ -29,6 +30,10 @@ void wizard_toggle_xray_vision();
 void wizard_god_wrath();
 void wizard_god_mollify();
 void wizard_transform();
-void wizard_load_dump_file();
+void wizard_join_religion();
+species_type find_species_from_string(const string &species_str);
+void wizard_change_species_to(species_type sp);
+job_type find_job_from_string(const string &job_str);
+void wizard_change_job_to(job_type job);
 
 #endif

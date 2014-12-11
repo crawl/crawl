@@ -3,13 +3,15 @@
  * @brief Handling of error conditions that are not program bugs.
 **/
 
-#include <stdarg.h>
-#include <errno.h>
-#include <string.h>
-
 #include "AppHdr.h"
+
 #include "errors.h"
-#include "libutil.h"
+
+#include <cerrno>
+#include <cstdarg>
+#include <cstring>
+
+#include "stringutil.h"
 
 NORETURN void fail(const char *msg, ...)
 {

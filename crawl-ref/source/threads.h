@@ -1,7 +1,6 @@
 #ifndef THREADS_H
 #define THREADS_H
 
-#include "platform.h"
 #ifndef TARGET_OS_WINDOWS
 
 #include <pthread.h>

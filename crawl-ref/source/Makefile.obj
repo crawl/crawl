@@ -38,6 +38,8 @@ dbg-util.o \
 decks.o \
 delay.o \
 describe.o \
+describe-god.o \
+describe-spells.o \
 dgl-message.o \
 dgn-delve.o \
 dgn-height.o \
@@ -53,6 +55,8 @@ directn.o \
 dlua.o \
 dungeon.o \
 effects.o \
+end.o \
+english.o \
 errors.o \
 evoke.o \
 exclude.o \
@@ -145,7 +149,6 @@ mon-ench.o \
 mon-gear.o \
 mon-grow.o \
 mon-info.o \
-mon-message.o \
 mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
@@ -154,6 +157,7 @@ mon-poly.o \
 mon-project.o \
 mon-speak.o \
 mon-stealth.o \
+mon-tentacle.o \
 mon-transit.o \
 mon-util.o \
 monster.o \
@@ -179,6 +183,7 @@ player-reacts.o \
 player-stats.o \
 player.o \
 potion.o \
+prompt.o \
 quiver.o \
 random.o \
 random-var.o \
@@ -192,7 +197,6 @@ show.o \
 showsymb.o \
 skill_menu.o \
 skills.o \
-skills2.o \
 species.o \
 spl-book.o \
 spl-cast.o \
@@ -217,8 +221,9 @@ startup.o \
 stash.o \
 state.o \
 status.o \
+stepdown.o \
 store.o \
-stuff.o \
+stringutil.o \
 syscalls.o \
 tags.o \
 target.o \
@@ -237,6 +242,7 @@ viewgeom.o \
 viewmap.o \
 wcwidth.o \
 wiz-dgn.o \
+wiz-dump.o \
 wiz-fsim.o \
 wiz-item.o \
 wiz-mon.o \

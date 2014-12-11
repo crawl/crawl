@@ -7,27 +7,19 @@
 
 #include "player.h"
 
+#include "areas.h"
 #include "art-enum.h"
 #include "coord.h"
 #include "env.h"
 #include "fprop.h"
-#include "mon-util.h"
-#include "monster.h"
-#include "random.h"
 #include "state.h"
-#include "areas.h"
-
-static bool _mermaid_beholder(const monster* mons)
-{
-    return mons_genus(mons->type) == MONS_MERMAID;
-}
 
 // Add a monster to the list of beholders.
 void player::add_beholder(const monster* mon, bool axe)
 {
     if (is_sanctuary(pos()) && !axe)
     {
-        if (_mermaid_beholder(mon))
+        if (mons_is_siren_beholder(mon))
         {
             if (can_see(mon))
             {
@@ -51,7 +43,7 @@ void player::add_beholder(const monster* mon, bool axe)
     if (!duration[DUR_MESMERISED])
     {
         set_duration(DUR_MESMERISED, random_range(7, 15), 15);
-        beholders.push_back(mon->mindex());
+        beholders.push_back(mon->mid);
         if (!axe)
         {
             mprf(MSGCH_WARN, "You are mesmerised by %s!",
@@ -62,7 +54,7 @@ void player::add_beholder(const monster* mon, bool axe)
     {
         increase_duration(DUR_MESMERISED, random_range(5, 8), 15);
         if (!beheld_by(mon))
-            beholders.push_back(mon->mindex());
+            beholders.push_back(mon->mid);
     }
 }
 
@@ -76,41 +68,41 @@ bool player::beheld() const
 // Whether player is mesmerised by the given monster.
 bool player::beheld_by(const monster* mon) const
 {
-    for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] == mon->mindex())
-            return true;
-    return false;
+    return find(begin(beholders), end(beholders), mon->mid) != end(beholders);
 }
 
 // Checks whether a beholder keeps you from moving to
 // target, and returns one if it exists.
 monster* player::get_beholder(const coord_def &target) const
 {
-    for (unsigned int i = 0; i < beholders.size(); i++)
+    for (mid_t beh : beholders)
     {
-        monster* mon = &menv[beholders[i]];
+        monster* mon = monster_by_mid(beh);
+        // The monster may have died.
+        if (!mon)
+            continue;
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
         if (olddist < newdist)
             return mon;
     }
-    return NULL;
+    return nullptr;
 }
 
 monster* player::get_any_beholder() const
 {
     if (!beholders.empty())
-        return &menv[beholders[0]];
+        return monster_by_mid(beholders[0]);
     else
-        return NULL;
+        return nullptr;
 }
 
 // Removes a monster from the list of beholders if present.
 void player::remove_beholder(const monster* mon)
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] == mon->mindex())
+        if (beholders[i] == mon->mid)
         {
             beholders.erase(beholders.begin() + i);
             _removed_beholder();
@@ -142,7 +134,7 @@ void player::beholders_check_noise(int loudness, bool axe)
 
 static void _removed_beholder_msg(const monster* mon)
 {
-    if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID
+    if (!mon || !mon->alive() || !mons_is_siren_beholder(mon)
         || mon->submerged() || !you.see_cell(mon->pos()))
     {
         return;
@@ -150,7 +142,7 @@ static void _removed_beholder_msg(const monster* mon)
 
     if (is_sanctuary(you.pos()) && !mons_is_fleeing(mon))
     {
-        if (_mermaid_beholder(mon))
+        if (mons_is_siren_beholder(mon))
         {
             if (you.can_see(mon))
             {
@@ -175,7 +167,7 @@ static void _removed_beholder_msg(const monster* mon)
     {
         if (silenced(you.pos()) || silenced(mon->pos()))
         {
-            if (_mermaid_beholder(mon))
+            if (mons_is_siren_beholder(mon))
             {
                 mprf("You can no longer hear %s's singing!",
                      mon->name(DESC_THE).c_str());
@@ -185,7 +177,7 @@ static void _removed_beholder_msg(const monster* mon)
             return;
         }
 
-        if (_mermaid_beholder(mon))
+        if (mons_is_siren_beholder(mon))
             mprf("%s stops singing.", mon->name(DESC_THE).c_str());
         else
             mprf("%s is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
@@ -193,7 +185,7 @@ static void _removed_beholder_msg(const monster* mon)
         return;
     }
 
-    if (_mermaid_beholder(mon))
+    if (mons_is_siren_beholder(mon))
         mpr("Something stops singing.");
     else
         mpr("Your mesmeriser is now quite boring!");
@@ -207,7 +199,7 @@ void player::update_beholders()
     bool removed = false;
     for (int i = beholders.size() - 1; i >= 0; i--)
     {
-        const monster* mon = &menv[beholders[i]];
+        const monster* mon = monster_by_mid(beholders[i]);
         if (!possible_beholder(mon))
         {
             beholders.erase(beholders.begin() + i);
@@ -230,9 +222,12 @@ void player::update_beholder(const monster* mon)
     if (possible_beholder(mon))
         return;
     for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] == mon->mindex())
+        if (beholders[i] == mon->mid)
         {
             beholders.erase(beholders.begin() + i);
+            // Do this dance to clear the duration before printing messages
+            // (#8844), but still print all messages in the right order.
+            _removed_beholder(true);
             _removed_beholder_msg(mon);
             _removed_beholder();
             return;
@@ -263,10 +258,10 @@ bool player::possible_beholder(const monster* mon) const
     if (crawl_state.game_is_arena())
         return false;
 
-    return mon->alive() && !mon->submerged()
+    return mon && mon->alive() && !mon->submerged()
         && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())
         && !mon->wont_attack() && !mon->pacified()
-        && ((mons_genus(mon->type) == MONS_MERMAID
+        && ((mons_is_siren_beholder(mon->type)
              || mon->has_spell(SPELL_MESMERISE))
             && !silenced(pos()) && !silenced(mon->pos())
             && !mon->has_ench(ENCH_MUTE)

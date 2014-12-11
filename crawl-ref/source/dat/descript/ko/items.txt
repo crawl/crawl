@@ -56,11 +56,11 @@ beef jerky
 소고기를 훈제해서 만든 고기조각이다. 그러고 보니, 미노타우르스도 어떻게 보면
 소라고 할 수 있는데..
 %%%%
-blessed bastard sword
+blessed double sword
 
 '샤이닝 원'의 권능이 부여된, 길고 커다란 검이다.
 %%%%
-blessed claymore
+blessed triple sword
 
 '샤이닝 원'의 권능이 부여된, 거대한 검이다.
 %%%%

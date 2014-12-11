@@ -62,10 +62,8 @@ static void _labyrinth_maze_recurse(const coord_def &c, const dgn_region &where)
     _find_maze_neighbours(c, where, neighbours);
 
     coord_list deferred;
-    for (coord_list::iterator i = neighbours.begin();
-         i != neighbours.end(); ++i)
+    for (auto nc : neighbours)
     {
-        const coord_def &nc = *i;
         if (grd(nc) != DNGN_ROCK_WALL)
             continue;
 
@@ -78,8 +76,8 @@ static void _labyrinth_maze_recurse(const coord_def &c, const dgn_region &where)
             deferred.push_back(nc);
     }
 
-    for (coord_list::iterator i = deferred.begin(); i != deferred.end(); ++i)
-        _labyrinth_maze_recurse(*i, where);
+    for (auto dc : deferred)
+        _labyrinth_maze_recurse(dc, where);
 }
 
 static void _labyrinth_build_maze(coord_def &e, const dgn_region &lab)
@@ -87,7 +85,9 @@ static void _labyrinth_build_maze(coord_def &e, const dgn_region &lab)
     _labyrinth_maze_recurse(lab.random_point(), lab);
 
     do
+    {
         e = lab.random_point();
+    }
     while (grd(e) != DNGN_FLOOR);
 }
 
@@ -110,7 +110,7 @@ static void _labyrinth_place_items(const coord_def &end)
                                        0);
 
         const int treasure_item =
-            items(1, glopop, OBJ_RANDOM, true,
+            items(true, glopop, OBJ_RANDOM,
                   one_chance_in(3) ? env.absdepth0 * 3 : MAKE_GOOD_ITEM);
 
         if (treasure_item != NON_ITEM)
@@ -231,7 +231,7 @@ static void _change_walls_from_centre(const dgn_region &region,
         const dungeon_feature_type feat =
             static_cast<dungeon_feature_type>(va_arg(args, int));
 
-        ldist.push_back(dist_feat(dist, feat));
+        ldist.emplace_back(dist, feat);
     }
 
     _change_walls_from_centre(region, c, rectangular, MMT_VAULT, wall, ldist);
@@ -516,7 +516,7 @@ void dgn_build_labyrinth_level()
 
     if (!vault || !dgn_safe_place_map(vault, true, false))
     {
-        vault = NULL;
+        vault = nullptr;
         _labyrinth_place_exit(end);
     }
     else

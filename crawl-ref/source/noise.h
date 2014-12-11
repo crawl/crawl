@@ -3,8 +3,6 @@
 #ifndef NOISE_H
 #define NOISE_H
 
-#include "externs.h"
-
 // [ds] The old noise system was pretty simple: noise level (loudness) ==
 // distance covered. Since the new system considers terrain when propagating
 // sound, using the same noise attenuation of 1 unit per square traveled would
@@ -29,8 +27,9 @@ static inline int noise_is_audible(int noise_intensity_millis)
 enum noise_flag_type
 {
     NF_NONE    = 0,
-    NF_MERMAID = 0x1,
+    NF_SIREN   = 0x1,
     NF_MESSAGE_IF_UNSEEN = 0x2,
+    NF_HUNTING_CRY = 0x4,
 };
 
 struct noise_t
@@ -45,20 +44,20 @@ struct noise_t
 
     int16_t noise_id;
 
-    int16_t noise_producer_id;
+    mid_t noise_producer_mid;
 
     uint16_t noise_flags;
 
     noise_t(coord_def _noise_source = coord_def(),
             string _noise_player_msg = "",
             int _noise_intensity_millis = 0,
-            int16_t _noise_producer_id = -1,
+            mid_t _noise_producer_mid = MID_NOBODY,
             uint16_t _flags = 0)
         : noise_source(_noise_source),
           noise_player_msg(_noise_player_msg),
           noise_intensity_millis(_noise_intensity_millis),
           noise_id(-1),
-          noise_producer_id(_noise_producer_id),
+          noise_producer_mid(_noise_producer_mid),
           noise_flags(_flags)
     {
     }

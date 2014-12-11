@@ -7,19 +7,14 @@
 #define MISC_H
 
 #include "coord.h"
-#include "directn.h"
-#include "externs.h"
+#include "target.h"
 
 #include <algorithm>
 #include <queue>
 
-struct bolt;
-class dist;
-struct activity_interrupt_data;
+extern const struct coord_def Compass[9];
 
 void trackers_init_new_level(bool transit);
-string get_desc_quantity(const int quant, const int total,
-                         string whose = "your");
 
 string weird_glowing_colour();
 
@@ -62,16 +57,11 @@ void setup_environment_effects();
 // Lava smokes, swamp water mists.
 void run_environment_effects();
 
-bool player_in_a_dangerous_place(bool *invis = NULL);
+bool player_in_a_dangerous_place(bool *invis = nullptr);
 void bring_to_safety();
 void revive();
 
-coord_def pick_adjacent_free_square(const coord_def& p);
-
 int speed_to_duration(int speed);
-
-bool interrupt_cmd_repeat(activity_interrupt_type ai,
-                          const activity_interrupt_data &at);
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance,
@@ -90,7 +80,6 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
 
 void swap_with_monster(monster *mon_to_swap);
 
-bool maybe_id_weapon(item_def &item, const char *msg = 0);
 void auto_id_inventory();
 
 int apply_chunked_AC(int dam, int ac);
@@ -101,8 +90,6 @@ void handle_real_time(time_t t = time(0));
 string part_stack_string(const int num, const int total);
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
-
-bool move_stairs(coord_def orig, coord_def dest);
 
 #define DISCONNECT_DIST (INT_MAX - 1000)
 
@@ -123,7 +110,7 @@ struct position_node
     {
         pos.x=0;
         pos.y=0;
-        last = NULL;
+        last = nullptr;
         estimate = 0;
         path_distance = 0;
         connect_level = 0;
@@ -247,12 +234,12 @@ void search_astar(position_node & start,
         vector<position_node> expansion;
         expand_node(*current, expansion);
 
-        for (unsigned i=0;i < expansion.size(); ++i)
+        for (position_node &exp : expansion)
         {
-            expansion[i].last = &(*current);
+            exp.last = &(*current);
 
             pair<set<position_node>::iterator, bool > res;
-            res = visited.insert(expansion[i]);
+            res = visited.insert(exp);
 
             if (!res.second)
                 continue;
@@ -281,7 +268,7 @@ void search_astar(const coord_def & start,
 {
     position_node temp_node;
     temp_node.pos = start;
-    temp_node.last = NULL;
+    temp_node.last = nullptr;
     temp_node.path_distance = 0;
 
     search_astar(temp_node, valid_target, expand_node, visited, candidates);
@@ -315,6 +302,46 @@ struct counted_monster_list
     void add(const monster* mons);
     int count();
     bool empty() { return list.empty(); }
-    string describe(description_level_type desc = DESC_THE);
+    string describe(description_level_type desc = DESC_THE,
+                    bool force_article = false);
 };
+
+bool today_is_halloween();
+
+/** Remove from a container all elements matching a predicate.
+ *
+ * @tparam C the container type. Must be reorderable (not a map or set!),
+ *           and must provide an erase() method taking two iterators.
+ * @tparam P the predicate type, typically but not necessarily
+ *           function<bool (const C::value_type &)>
+ * @param container The container to modify.
+ * @param pred The predicate to test.
+ *
+ * @post The container contains only those elements for which pred(elt)
+ *       returns false, in the same relative order.
+ */
+template<class C, class P>
+void erase_if(C &container, P pred)
+{
+    container.erase(remove_if(begin(container), end(container), pred),
+                    end(container));
+}
+
+/** Remove from a container all elements with a given value.
+ *
+ * @tparam C the container type. Must be reorderable (not a map or set!),
+ *           must provide an erase() method taking two iterators, and
+ *           must provide a value_type type member.
+ * @param container The container to modify.
+ * @param val The value to remove.
+ *
+ * @post The container contains only those elements not equal to val, in the
+ *       in the same relative order.
+ */
+template<class C>
+void erase_val(C &container, const typename C::value_type &val)
+{
+    container.erase(remove(begin(container), end(container), val),
+                    end(container));
+}
 #endif

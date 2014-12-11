@@ -6,52 +6,49 @@
 #include "AppHdr.h"
 
 #include "spl-clouds.h"
-#include "externs.h"
 
 #include <algorithm>
 
-#include "act-iter.h"
-#include "beam.h"
 #include "butcher.h"
 #include "cloud.h"
-#include "coord.h"
 #include "coordit.h"
+#include "english.h"
 #include "env.h"
 #include "fprop.h"
 #include "godconduct.h"
 #include "items.h"
-#include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-behv.h"
-#include "mon-util.h"
 #include "ouch.h"
-#include "player.h"
+#include "prompt.h"
 #include "random-pick.h"
+#include "shout.h"
 #include "spl-util.h"
-#include "stuff.h"
 #include "target.h"
 #include "terrain.h"
-#include "transform.h"
 #include "viewchar.h"
-#include "shout.h"
 
-spret_type conjure_flame(int pow, const coord_def& where, bool fail)
+spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
+                         bool fail)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
-    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_CONJURE_FLAME,
-                                                      pow))
+    if (distance2(where, agent->pos()) > dist_range(
+            spell_range(SPELL_CONJURE_FLAME, pow))
         || !in_bounds(where))
     {
-        mpr("That's too far away.");
+        if (agent->is_player())
+            mpr("That's too far away.");
         return SPRET_ABORT;
     }
 
     if (cell_is_solid(where))
     {
-        const char *feat = feat_type_name(grd(where));
-        mprf("You can't place the cloud on %s.", article_a(feat).c_str());
+        if (agent->is_player())
+        {
+            const char *feat = feat_type_name(grd(where));
+            mprf("You can't place the cloud on %s.", article_a(feat).c_str());
+        }
         return SPRET_ABORT;
     }
 
@@ -59,47 +56,61 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
 
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
     {
-        mpr("There's already a cloud there!");
+        if (agent->is_player())
+            mpr("There's already a cloud there!");
         return SPRET_ABORT;
     }
 
-    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
-    monster* mons = monster_at(where);
-    if (mons)
+    actor* victim = actor_at(where);
+    if (victim)
     {
-        if (you.can_see(mons))
+        if (agent->can_see(victim))
         {
-            mpr("You can't place the cloud on a creature.");
+            if (agent->is_player())
+                mpr("You can't place the cloud on a creature.");
             return SPRET_ABORT;
         }
 
         fail_check();
 
         // FIXME: maybe should do _paranoid_option_disable() here?
-        mpr("You see a ghostly outline there, and the spell fizzles.");
+        if (agent->is_player())
+            canned_msg(MSG_GHOSTLY_OUTLINE);
         return SPRET_SUCCESS;      // Don't give free detection!
     }
 
     fail_check();
 
-    did_god_conduct(DID_FIRE, min(5 + pow/2, 23));
+    if (agent->is_player())
+        did_god_conduct(DID_FIRE, min(5 + pow/2, 23));
 
     if (cloud != EMPTY_CLOUD)
     {
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
-        mpr("The fire roars with new energy!");
+        if (you.see_cell(where))
+            mpr("The fire roars with new energy!");
         const int extra_dur = 2 + min(random2(pow) / 2, 20);
         env.cloud[cloud].decay += extra_dur * 5;
-        env.cloud[cloud].set_whose(KC_YOU);
+        env.cloud[cloud].source = agent->mid;
+        if (agent->is_player())
+            env.cloud[cloud].set_whose(KC_YOU);
+        else
+            env.cloud[cloud].set_killer(KILL_MON_MISSILE);
     }
     else
     {
         const int durat = min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
-        place_cloud(CLOUD_FIRE, where, durat, &you);
-        mpr("The fire roars!");
+        place_cloud(CLOUD_FIRE, where, durat, agent);
+        if (you.see_cell(where))
+        {
+            if (agent->is_player())
+                mpr("The fire roars!");
+            else
+                mpr("A cloud of flames roars to life!");
+        }
     }
-    noisy(2, where);
+    noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
 
     return SPRET_SUCCESS;
 }
@@ -114,15 +125,15 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
     beem.flavour     = BEAM_MEPHITIC;
     beem.ench_power  = pow;
-    beem.beam_source = MHITYOU;
+    beem.source_id   = MID_PLAYER;
     beem.thrower     = KILL_YOU;
-    beem.is_beam     = false;
+    beem.pierce      = false;
     beem.is_explosion = true;
+    beem.origin_spell = SPELL_MEPHITIC_CLOUD;
     beem.aux_source.clear();
 
     // Fire tracer.
     beem.source            = you.pos();
-    beem.can_see_invis     = you.can_see_invisible();
     beem.smart_monster     = true;
     beem.attitude          = ATT_FRIENDLY;
     beem.friend_info.count = 0;
@@ -145,7 +156,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
+spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
                       bool fail)
 {
     if (distance2(beam.target, you.pos()) > dist_range(beam.range)
@@ -162,20 +173,24 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
         return SPRET_ABORT;
     }
 
+    cloud_type cty = CLOUD_NONE;
     //XXX: there should be a better way to specify beam cloud types
-    switch (cty)
+    switch (spl)
     {
-        case CLOUD_POISON:
+        case SPELL_POISONOUS_CLOUD:
             beam.flavour = BEAM_POISON;
             beam.name = "blast of poison";
+            cty = CLOUD_POISON;
             break;
-        case CLOUD_HOLY_FLAMES:
+        case SPELL_HOLY_BREATH:
             beam.flavour = BEAM_HOLY;
             beam.origin_spell = SPELL_HOLY_BREATH;
+            cty = CLOUD_HOLY_FLAMES;
             break;
-        case CLOUD_COLD:
+        case SPELL_FREEZING_CLOUD:
             beam.flavour = BEAM_COLD;
             beam.name = "freezing blast";
+            cty = CLOUD_COLD;
             break;
         default:
             mpr("That kind of cloud doesn't exist!");
@@ -185,9 +200,9 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
     beam.thrower           = KILL_YOU;
     beam.hit               = AUTOMATIC_HIT;
     beam.damage            = dice_def(42, 1); // just a convenient non-zero
-    beam.is_big_cloud      = true;
     beam.is_tracer         = true;
     beam.use_target_as_pos = true;
+    beam.origin_spell      = spl;
     beam.affect_endpoint();
     if (beam.beam_cancelled)
         return SPRET_ABORT;
@@ -195,7 +210,7 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
     fail_check();
 
     big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
-    noisy(2, beam.target);
+    noisy(spell_effect_noise(spl), beam.target);
     return SPRET_SUCCESS;
 }
 
@@ -388,7 +403,7 @@ void apply_control_winds(const monster* mon)
 
     bolt wind_beam;
     wind_beam.hit = AUTOMATIC_HIT;
-    wind_beam.is_beam = true;
+    wind_beam.pierce  = true;
     wind_beam.affects_nothing = true;
     wind_beam.source = mon->pos();
     wind_beam.range = LOS_RADIUS;
@@ -470,7 +485,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
 
     const int range = spell_range(SPELL_CLOUD_CONE, pow);
 
-    targetter_shotgun hitfunc(caster, range);
+    targetter_shotgun hitfunc(caster, CLOUD_CONE_BEAM_COUNT, range);
 
     hitfunc.set_aim(pos);
 
@@ -485,12 +500,11 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
     cloud_type cloud = cloud_picker.pick(cloud_cone_clouds, pow, CLOUD_NONE);
 
-    for (map<coord_def, int>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (const auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
-        place_cloud(cloud, p->first,
+        place_cloud(cloud, entry.first,
                     5 + random2avg(12 + div_rand_round(pow * 3, 4), 3),
                     caster);
     }

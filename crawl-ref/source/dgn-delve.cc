@@ -1,14 +1,13 @@
 #include "AppHdr.h"
+
+#include "dgn-delve.h"
+
 #include <deque>
 
-#include "env.h"
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "mapdef.h"
-#include "random.h"
-#include "dgn-delve.h"
 
 /* Original algorithm by Kusigrosz.
  * Kusigrosz' description:
@@ -246,6 +245,11 @@ void delve(map_lines *map, int ngb_min, int ngb_max, int connchance, int cellnum
 
     if (cellnum < 0)
         cellnum = cellnum_est(world, ngb_min, ngb_max);
+
+    if (cellnum > world)
+        cellnum = world;
+    if (cellnum == 0) // no digging needed
+        return;
 
     ASSERT(cellnum <= world);
 

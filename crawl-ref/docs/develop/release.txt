@@ -11,8 +11,8 @@ for those the list begins with step 3.
     cheap.
 
 1.  Branch master into the new version
-    git branch stone_soup.0.X
-    git push origin stone_soup.0.X
+    git branch stone_soup-0.X
+    git push origin stone_soup-0.X
 
 2.  Tag the branch point
     git tag -s 0.X-b1

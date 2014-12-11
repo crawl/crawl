@@ -6,9 +6,7 @@
 #include "AppHdr.h"
 
 #include "los_def.h"
-#include "losglobal.h"
 
-#include "coord-circle.h"
 
 los_def::los_def()
     : show(0), opc(opc_default.clone()), bds(BDS_DEFAULT)

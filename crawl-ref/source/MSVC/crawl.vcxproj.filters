@@ -39,6 +39,8 @@
     <ClCompile Include="..\decks.cc" />
     <ClCompile Include="..\delay.cc" />
     <ClCompile Include="..\describe.cc" />
+    <ClCompile Include="..\describe-god.cc" />
+    <ClCompile Include="..\describe-spells.cc" />
     <ClCompile Include="..\dgl-message.cc" />
     <ClCompile Include="..\dgn-delve.cc" />
     <ClCompile Include="..\dgn-height.cc" />
@@ -53,6 +55,8 @@
     <ClCompile Include="..\dlua.cc" />
     <ClCompile Include="..\dungeon.cc" />
     <ClCompile Include="..\effects.cc" />
+    <ClCompile Include="..\end.cc" />
+    <ClCompile Include="..\english.cc" />
     <ClCompile Include="..\errors.cc" />
     <ClCompile Include="..\evoke.cc" />
     <ClCompile Include="..\exclude.cc" />
@@ -135,6 +139,7 @@
     <ClCompile Include="..\potion.cc" />
     <ClCompile Include="..\prebuilt\levcomp.lex.cc" />
     <ClCompile Include="..\prebuilt\levcomp.tab.cc" />
+    <ClCompile Include="..\prompt.cc" />
     <ClCompile Include="..\libgui.cc" />
     <ClCompile Include="..\libutil.cc" />
     <ClCompile Include="..\libw32c.cc" />
@@ -161,7 +166,6 @@
     <ClCompile Include="..\mon-gear.cc" />
     <ClCompile Include="..\mon-grow.cc" />
     <ClCompile Include="..\mon-info.cc" />
-    <ClCompile Include="..\mon-message.cc" />
     <ClCompile Include="..\mon-movetarget.cc" />
     <ClCompile Include="..\mon-pathfind.cc" />
     <ClCompile Include="..\mon-pick.cc" />
@@ -169,6 +173,7 @@
     <ClCompile Include="..\mon-poly.cc" />
     <ClCompile Include="..\mon-project.cc" />
     <ClCompile Include="..\mon-speak.cc" />
+    <ClCompile Include="..\mon-tentacle.cc" />
     <ClCompile Include="..\mon-transit.cc" />
     <ClCompile Include="..\mon-util.cc" />
     <ClCompile Include="..\monster.cc" />
@@ -193,13 +198,11 @@
     <ClCompile Include="..\rltiles\tiledef-floor.cc" />
     <ClCompile Include="..\rltiles\tiledef-icons.cc" />
     <ClCompile Include="..\rltiles\tiledef-wall.cc" />
-    <ClCompile Include="..\rng.cc" />
     <ClCompile Include="..\shopping.cc" />
     <ClCompile Include="..\shout.cc" />
     <ClCompile Include="..\show.cc" />
     <ClCompile Include="..\showsymb.cc" />
     <ClCompile Include="..\skills.cc" />
-    <ClCompile Include="..\skills2.cc" />
     <ClCompile Include="..\skill_menu.cc" />
     <ClCompile Include="..\species.cc" />
     <ClCompile Include="..\spl-book.cc" />
@@ -224,11 +227,11 @@
     <ClCompile Include="..\stash.cc" />
     <ClCompile Include="..\state.cc" />
     <ClCompile Include="..\status.cc" />
+    <ClCompile Include="..\stepdown.cc" />
     <ClCompile Include="..\store.cc" />
-    <ClCompile Include="..\stuff.cc" />
+    <ClCompile Include="..\stringutil.cc" />
     <ClCompile Include="..\syscalls.cc" />
     <ClCompile Include="..\tags.cc" />
-    <ClCompile Include="..\tagstring.cc" />
     <ClCompile Include="..\target.cc" />
     <ClCompile Include="..\teleport.cc" />
     <ClCompile Include="..\terrain.cc" />
@@ -284,6 +287,7 @@
     <ClCompile Include="..\wcwidth.cc" />
     <ClCompile Include="..\windowmanager-sdl.cc" />
     <ClCompile Include="..\wiz-dgn.cc" />
+    <ClCompile Include="..\wiz-dump.cc" />
     <ClCompile Include="..\wiz-fsim.cc" />
     <ClCompile Include="..\wiz-item.cc" />
     <ClCompile Include="..\wiz-mon.cc" />
@@ -295,6 +299,7 @@
     <ClCompile Include="..\json.cc" />
     <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\spl-pick.cc" />
+    <ClCompile Include="..\hash.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ability.h" />
@@ -345,6 +350,8 @@
     <ClInclude Include="..\defines.h" />
     <ClInclude Include="..\delay.h" />
     <ClInclude Include="..\describe.h" />
+    <ClInclude Include="..\describe-god.h" />
+    <ClInclude Include="..\describe-spells.h" />
     <ClInclude Include="..\dgl-message.h" />
     <ClInclude Include="..\dgn-delve.h" />
     <ClInclude Include="..\dgn-height.h" />
@@ -359,7 +366,9 @@
     <ClInclude Include="..\dlua.h" />
     <ClInclude Include="..\dungeon.h" />
     <ClInclude Include="..\effects.h" />
+    <ClInclude Include="..\end.h" />
     <ClInclude Include="..\endianness.h" />
+    <ClInclude Include="..\english.h" />
     <ClInclude Include="..\enum.h" />
     <ClInclude Include="..\env.h" />
     <ClInclude Include="..\errors.h" />
@@ -378,6 +387,7 @@
     <ClInclude Include="..\flood_find.h" />
     <ClInclude Include="..\fontwrapper-ft.h" />
     <ClInclude Include="..\food.h" />
+    <ClInclude Include="..\form-data.h" />
     <ClInclude Include="..\format.h" />
     <ClInclude Include="..\fprop.h" />
     <ClInclude Include="..\geom2d.h" />
@@ -437,6 +447,7 @@
     <ClInclude Include="..\player-stats.h" />
     <ClInclude Include="..\potion.h" />
     <ClInclude Include="..\prebuilt\levcomp.tab.h" />
+    <ClInclude Include="..\prompt.h" />
     <ClInclude Include="..\libgui.h" />
     <ClInclude Include="..\libutil.h" />
     <ClInclude Include="..\libw32c.h" />
@@ -465,7 +476,6 @@
     <ClInclude Include="..\mon-gear.h" />
     <ClInclude Include="..\mon-grow.h" />
     <ClInclude Include="..\mon-info.h" />
-    <ClInclude Include="..\mon-message.h" />
     <ClInclude Include="..\mon-movetarget.h" />
     <ClInclude Include="..\mon-pathfind.h" />
     <ClInclude Include="..\mon-pick.h" />
@@ -473,7 +483,8 @@
     <ClInclude Include="..\mon-poly.h" />
     <ClInclude Include="..\mon-project.h" />
     <ClInclude Include="..\mon-speak.h" />
-    <ClInclude Include="..\mon-spll.h" />
+    <ClInclude Include="..\mon-spell.h" />
+    <ClInclude Include="..\mon-tentacle.h" />
     <ClInclude Include="..\mon-transit.h" />
     <ClInclude Include="..\mon-util.h" />
     <ClInclude Include="..\monster.h" />
@@ -505,14 +516,13 @@
     <ClInclude Include="..\rltiles\tiledef-icons.h" />
     <ClInclude Include="..\rltiles\tiledef-wall.h" />
     <ClInclude Include="..\rltiles\tiledef_defines.h" />
-    <ClInclude Include="..\rng.h" />
     <ClInclude Include="..\SDLMain.h" />
+    <ClInclude Include="..\sacrifice-data.h" />
     <ClInclude Include="..\shopping.h" />
     <ClInclude Include="..\shout.h" />
     <ClInclude Include="..\show.h" />
     <ClInclude Include="..\showsymb.h" />
     <ClInclude Include="..\skills.h" />
-    <ClInclude Include="..\skills2.h" />
     <ClInclude Include="..\skill_menu.h" />
     <ClInclude Include="..\species.h" />
     <ClInclude Include="..\spl-book.h" />
@@ -537,12 +547,12 @@
     <ClInclude Include="..\stash.h" />
     <ClInclude Include="..\state.h" />
     <ClInclude Include="..\status.h" />
+    <ClInclude Include="..\stepdown.h" />
     <ClInclude Include="..\store.h" />
-    <ClInclude Include="..\stuff.h" />
+    <ClInclude Include="..\stringutil.h" />
     <ClInclude Include="..\syscalls.h" />
     <ClInclude Include="..\tag-version.h" />
     <ClInclude Include="..\tags.h" />
-    <ClInclude Include="..\tagstring.h" />
     <ClInclude Include="..\target.h" />
     <ClInclude Include="..\teleport.h" />
     <ClInclude Include="..\terrain.h" />
@@ -605,6 +615,7 @@
     <ClInclude Include="..\windowmanager.h" />
     <ClInclude Include="..\winhdr.h" />
     <ClInclude Include="..\wiz-dgn.h" />
+    <ClInclude Include="..\wiz-dump.h" />
     <ClInclude Include="..\wiz-fsim.h" />
     <ClInclude Include="..\wiz-item.h" />
     <ClInclude Include="..\wiz-mon.h" />
@@ -618,5 +629,6 @@
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\spl-pick.h" />
     <ClInclude Include="..\data-index.h" />
+    <ClInclude Include="..\mon-book.h" />
   </ItemGroup>
 </Project>

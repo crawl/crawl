@@ -54,11 +54,11 @@ beef jerky
 
 Et stykke konserveret, død ko.
 %%%%
-blessed bastard sword
+blessed double sword
 
 Et langt, stort sværd, som er bestyrket af Den Strålendes kraft.
 %%%%
-blessed claymore
+blessed triple sword
 
 Et enormt sværd, som er bestyrket af Den Strålendes kraft.
 %%%%

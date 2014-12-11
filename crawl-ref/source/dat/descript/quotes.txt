@@ -221,6 +221,10 @@ A staircase to the Ecumenical Temple
 
 <Temple>
 %%%%
+A staircase to the Orcish Mines
+
+<Orcish Mines>
+%%%%
 A staircase to the Shoals
 
 <Shoals>
@@ -231,10 +235,16 @@ A staircase to the Tomb
 %%%%
 A tree
 
-I like trees because they seem more resigned to the way they have to live than
-other things do.
-
+“I like trees because they seem more resigned to the way they have to live than
+other things do.”
     -Willa Cather, _O Pioneers_. 1913.
+%%%%
+Agony spell
+
+“Unbearable, isn't it? The suffering of strangers, the agony of friends. There
+is a secret song at the center of the world, Joey, and its sound is like razors
+through flesh.”
+    -Pinhead, _Hellraiser 3: Hell on Earth_. 1992.
 %%%%
 Asterion
 
@@ -242,7 +252,6 @@ Asterion
 interest me; like the philosopher, I think nothing is communicated by the art
 of writing. Annoying and trivial minutiae have no place in my spirit, a spirit
 which is receptive only to whatsoever is grand.”
-
   -Jorge Luis Borges, “The House of Asterion”. 1947.
    trans. Antonios Sarhanis, 2008.
 %%%%
@@ -306,10 +315,33 @@ black sun
     -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
      trans. Ruth White, 1969.
 %%%%
+basilisk
+
+“Be thou like the imperial Basilisk
+ Killing thy foe with unapparent wounds!
+ Gaze on Oppression, till at that dread risk
+ Aghast she pass from the Earth's disk:
+ Fear not, but gaze—for freemen mightier grow,
+ And slaves more feeble, gazing on their foe:—
+ If Hope, and Truth, and Justice may avail,
+ Thou shalt be great—All hail!”
+    -Percy Bysshe Shelley, “Posthumous Poems”. 1824.
+%%%%
 Banishment spell
 
 “An immense river of oblivion is sweeping us away into a nameless abyss.”
     -Ernest Renan, Souvenirs
+%%%%
+bow of Krishna "Sharnga"
+
+"What will you do if Karna is able to kill me?" Arjun asked Krishna. Krishna
+smiled and replied, "The sun will fall, the earth shatter into a thousand
+fragments, and fire lose its heat before he kills you. But if he does, it is a
+sign that the end of the world has come. As for me, I shall kill him with my
+bare hands."
+    -Vyasa, _Mahabharata_, Book Eight: Karna.
+    trans. P. Lal, 1986.
+
 %%%%
 Cause Fear spell
 
@@ -317,6 +349,12 @@ Cause Fear spell
  Everyone turned away
  Used to the noose, they obey”
     -The Mars Volta, “Miranda That Ghost Just Isn't Holy Anymore”. 2005.
+%%%%
+Chain Lightning spell
+
+“The trouble ain't that there is too many fools,
+ but that the lightning ain't distributed right.”
+    -traditionally attributed to Samuel Clemens
 %%%%
 Cigotuvi's Monster
 
@@ -392,6 +430,21 @@ little chance against the tall athletic Edmund, proposed, on the contrary, for
 them to divide the realm as their fathers had done.”
     -Thomas Keightley, _The History of England_. 1839.
 %%%%
+Enslavement spell
+
+“He held up his hand, and they all stopped, and I thought he seemed to be
+saying, `All these lives will I give you, ay, and many more and greater,
+through countless ages, if you will fall down and worship me!' And then a red
+cloud, like the colour of blood, seemed to close over my eyes, and before I
+knew what I was doing, I found myself opening the sash and saying to Him,
+`Come in, Lord and Master!'”
+    -Bram Stoker, _Dracula_. 1897.
+%%%%
+Ensorcelled Hibernation spell
+
+“Sweet dreams are made of this; who am I to disagree?”
+    -Eurythmics, “Sweet Dreams (Are Made of This)”. 1983.
+%%%%
 Fire Storm spell
 
 “Some have said there is no subtlety to destruction. You know what? They're
@@ -422,6 +475,14 @@ Ilsuiw
  Till human voices wake us, and we drown.”
     -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. lines 129-131. 1915.
 %%%%
+Irradiate spell
+
+“Reflex in the sky warn you you're gonna die
+ Storm coming, you'd better hide from the atomic tide
+ Flashes in the sky turns houses into sties
+ Turns people into clay, radiation minds decay”
+    -Black Sabbath, “Electric Funeral”. 1970.
+%%%%
 Khufu
 
 “And then I looked farther, beyond the pallid line of the sands, and I saw a
@@ -440,6 +501,22 @@ Kirke
 close-barred sties. And art thou come to release them? Nay, I tell thee, thou
 shalt not thyself return, but shalt remain there with the others.”
     -Homer, Odysseia
+%%%%
+Lee's Rapid Deconstruction spell
+
+“Now the house was full of men and women; and all the lords of the Philistines
+were there; and there were upon the roof about three thousand men and women,
+that beheld while Samson made sport.
+
+And Samson called unto the LORD, and said, O Lord GOD, remember me, I pray
+thee, and strengthen me, I pray thee, only this once, O God, that I may be at
+once avenged of the Philistines for my two eyes.
+
+And Samson said, Let me die with the Philistines. And he bowed himself with all
+his might; and the house fell upon the lords, and upon all the people that were
+therein. So the dead which he slew at his death were more than they which he
+slew in his life.”
+    -KJV Bible, Judges 16:28-30.
 %%%%
 Mara
 
@@ -515,6 +592,14 @@ Norris
 negative.”
     -Georges Poulet
 %%%%
+Orcish Mines
+
+“You load sixteen tons, what do you get
+ Another day older and deeper in debt
+ Saint Peter don't you call me 'cause I can't go
+ I owe my soul to the company store.”
+    -Merle Travis, "Sixteen Tons". 1946.
+%%%%
 Polyphemus
 
 “...as soon as he had got through with all his work, he clutched up two more of
@@ -551,10 +636,30 @@ Psyche
     -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
     trans. William Adlington, 1566.
 %%%%
+Shatter spell
+
+“And it happened when the people heard the sound of the trumpet, and the people
+shouted with a great shout, that the wall fell down flat. Then the people went
+up into the city, every man straight before him, and they took the city. And
+they utterly destroyed all that was in the city, both man and woman, young and
+old, ox and sheep and donkey, with the edge of the sword.”
+    -KJV Bible, Joshua 6:20-21.
+%%%%
 Shoals
 
-“No man is island, except Lo Wang.”
-    -Shadow Warrior
+“I often think about that old metaphor, the one that says we are all islands on
+a wide sea. Especially these days, now that things are more difficult than
+before and the world appears to be harsher than we once imagined it to be.
+
+We are all like islands, the philosopher said. Perhaps it’s true. Yet I cannot
+help but remember an older saying scratched on a cave wall somewhere by a long-
+forgotten prophet: In the end the sea will claim everything.
+
+The ancient words crash into my mind like waves, waking me from sleep, filling
+me with feelings I cannot fully understand. We are like islands. Does it mean
+we are connected? Do we share a common origin? Or just the common fate of
+sinking?”
+    -“The Sea Will Claim Everything”. 2012.
 %%%%
 Sigmund
 
@@ -576,8 +681,7 @@ Sticky Flame spell
 
 “Give a man a fire and he's warm for a day, but set fire to him and he's warm
 for the rest of his life.”
-
-    -Terry Pratchett, “Jingo”
+    -Terry Pratchett, “Jingo”. 1997.
 %%%%
 Summon Demon spell
 
@@ -678,6 +782,10 @@ amulet of rage
 
 <amulet>
 %%%%
+amulet of regeneration
+
+<amulet>
+%%%%
 amulet of resist corrosion
 
 <amulet>
@@ -693,7 +801,7 @@ amulet of stasis
 amulet of the gourmand
 
 “put a knife to thy throat, if thou be a man given to appetite.”
-    -KJV Bible, Proverbs 23:2
+    -KJV Bible, Proverbs 23:2.
 %%%%
 amulet of warding
 
@@ -771,8 +879,12 @@ cult image.”
 %%%%
 battlesphere
 
-Rule 4: Close air support covereth a multitude of sins.
-    -The Seven Habits of Highly Effective Pirates
+“I'm your only friend
+ I'm not your only friend
+ But I'm a little glowing friend
+ But really I'm not actually your friend
+ But I am”
+    -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
 %%%%
 blowgun
 
@@ -937,7 +1049,7 @@ of the brightness of Yahweh’s glory.
 the voice of God Almighty when he speaks.”
     -WEB Bible, Ezekiel 10:4-5
 %%%%
-claymore
+triple sword
 
 <demon blade>
 %%%%
@@ -981,13 +1093,6 @@ crocodile
  And welcomes little fishes in
   With gently smiling jaws!”
     -Lewis Carroll, _Alice's Adventures in Wonderland_, 1865.
-%%%%
-cutlass
-
-“Who was the first that forged the deadly blade?
- Of rugged steel his savage soul was made...”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
-     trans. James Grainger, 1822.
 %%%%
 daeva
 
@@ -1049,6 +1154,23 @@ dire flail
 “‘Ah! ah! ah!’ laughed his two men, ‘how the Norman villains will be humbled
 when they see their doughty knight's skull beaten in by our brave countryman.’”
     -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
+%%%%
+Dragon's Call spell
+
+ “This is where the dragons went.
+ They lie...
+ Not dead, not asleep. Not waiting, because waiting implies expectation.
+ Possibly the word we're looking for here is...
+ ...dormant.
+ And although the space they occupy isn't like normal space, nevertheless
+   they are packed in tightly. Not a cubic inch there but is filled by a claw,
+   a talon, a scale, the tip of a tail, so the effect is like one of those
+   trick drawings and your eyeballs eventually realise that the space between
+   each dragon is, in fact, another dragon.
+ They could put you in mind of a can of sardines, if you thought sardines
+   were huge and scaly and proud and arrogant.
+ And presumably, somewhere, there's the key.”
+    -Terry Pratchett, “Guards! Guards!”. 1990.
 %%%%
 dryad
 
@@ -1380,6 +1502,22 @@ griffon
  His guarded gold.”
     -Milton, _Paradise Lost_, Book II. 1667.
 %%%%
+guardian golem
+
+“‘Listen Reb _Golem_,’ the old man said, wagging his finger. ‘Pay attention to
+  what I say—you understand?’
+ ‘Understand...’
+ ‘If you want to stay here, you got to do like Mr. Gumbeiner says.’
+ ‘Do-like-Mr.-Gumbeiner-says...’
+ ‘_That's_ the way I like to hear a golem talk. Malka, give here the mirror
+  from the pocketbook. Look, you see your face? You see on the forehead, what's
+  written? If you don't do like Mr. Gumbeiner says, he'll wipe out what's
+  written and you'll be no more alive.’
+ ‘No-more-alive...’
+ ‘_That's_ right. Now, listen. Under the porch you'll find a lawnmower. Take
+  it. And cut the lawn. Then come back. Go.’”
+    -Avram Davidson, “The Golem”, 1955.
+%%%%
 halberd
 
 “And Diarmid oh, Diarmid he perished in the strife;
@@ -1530,6 +1668,18 @@ insubstantial wisp
  There swallow'd up and lost, from succour farr.”
     -John Milton, _Paradise Lost_
 %%%%
+iron rod
+
+"At this particular moment in time, I don't believe I have a healthier or more
+deeply-felt respect for any object in the universe than this here shotgun..."
+-Steven 'Body Bag' Behling and Michael 'Splatter' Steward, _Doom_. 1996.
+%%%%
+Iskenderun's Battlesphere spell
+
+“Rule 4: Close air support covereth a multitude of sins.”
+    -Howard Tayler, _The Seven Habits of Highly Effective Pirates_,
+     in _Schlock Mercenary_. 2008.
+%%%%
 jackal
 
 Always ready to take advantage of every favourable opportunity, the Jackal is a
@@ -1561,6 +1711,22 @@ kobold
 
 “Kobolds are harmless.”
     -Bearand the Bold, epitaph (Magic: the Gathering)
+
+%%%%
+komodo dragon
+
+“The three of us were sitting ashen faced as if we had just witnessed a foul
+and malignant murder. At least if we had been watching a murder the murderer
+wouldn't have been looking us impassively in the eye as he did it. Maybe it was
+the feeling of cold unflinching arrogance that so disturbed us. But whatever
+malign emotions we tried to pin on to the lizard, we knew that they weren't the
+lizard's emotions at all, only ours. The lizard was simply going about its
+lizardly business in a simple, straightforward lizardly way. It didn't know
+anything about the horror, the guilt, the shame, the ugliness that we,
+uniquely guilty and ashamed animals, were trying to foist on it. So we got it
+all straight back at us, as if reflected in the mirror of its single
+unwavering and disinterested eye.”
+    -Douglas Adams, “Last Chance to See”. 1990.
 %%%%
 kraken
 
@@ -1861,6 +2027,24 @@ ophan
  high and awesome, and all four rims were full of eyes all around.”
     -Ezekiel 1:15-18 (New International Version)
 %%%%
+the open sea
+
+“I mused upon the mystery of fish, their strange and mindless beauty, how—
+innocently evil—they prey upon each other, devouring the weaker and smaller
+without rage or shout or change of countenance. There, in the realm of water,
+which is also earth and air to them, the great fish passed up and down, growing
+old without aging and enjoying eternal growth without the softness of obesity.
+It was a world without morality, a world without choices, a world of eating and
+spawning and growing great. I envied the great fish, and (in other, smaller
+ponds) the lesser fish, darting and flashing and sparkling gold.
+
+They speak of ‘the beast in man,’ and of ‘the law of the jungle.’ Might they
+not (so I reflected, strolling underneath a sky of clouds as blue and as white
+as the tiles and marble of the Altar of Heaven), might they not better speak of
+‘the fish in man’? And of ‘the law of the sea’? The sea, from which they say we
+came...?”
+    -Avram Davidson, “Dagon”, 1959.
+%%%%
 orange demon
 
 “In Sparkill buried lies that man of mark
@@ -1885,6 +2069,11 @@ pandemonium lord
  At Pandaemonium, the high Capital
  Of Satan and his Peers...”
     -John Milton, _Paradise Lost_,  Book I, l. 752-7. 1667.
+%%%%
+Passwall spell
+
+“He says the best way out is always through.”
+    -Robert Frost, _A Servant to Servants_. 1915.
 %%%%
 pearl dragon armour
 
@@ -2030,6 +2219,13 @@ and his features were frightful.”
     -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
      trans. Kisari Mohan Ganguli, 1883.
 %%%%
+rapier
+
+“Who was the first that forged the deadly blade?
+ Of rugged steel his savage soul was made...”
+    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
+     trans. James Grainger, 1822.
+%%%%
 raven
 
 “The Hatter opened his eyes very wide on hearing this; but all he said was ‘Why
@@ -2124,10 +2320,6 @@ ring of protection from magic
 
 <ring>
 %%%%
-ring of regeneration
-
-<ring>
-%%%%
 ring of see invisible
 
 “Here is my secret. It is very simple: It is only with the heart that one can
@@ -2167,12 +2359,6 @@ robe
 “CLEOPATRA: Give me my robe, put on my crown; I have
  Immortal longings in me”
     -William Shakespeare, _Anthony & Cleopatra_, V, ii. ca. 1605.
-%%%%
-rod of striking
-
-“He that spares his rod hates his son: but he that loves him chastens him
- early.”
-    -King James 2000 Bible, Proverbs 13:24
 %%%%
 rotten bat
 
@@ -2682,6 +2868,18 @@ staff of wizardry
 
 <staff>
 %%%%
+starcursed mass
+
+“Did you see that star go out?
+ I seen it burn.
+
+ That little star went out,
+ your little eyes went out.
+
+ Our burnt little dreams are hid
+ up where the stars get lit.”
+    -Thee Silver Mt. Zion, “I Built Myself a Metal Bird”. 2010.
+%%%%
 steam dragon armour
 
 <steam dragon hide>
@@ -2912,6 +3110,19 @@ individual ought to acquiesce in his own sentiment, without pretending to
 regulate those of others.”
     -David Hume
 %%%%
+Urug
+
+U r u g, tumbled down, fallen by crumbling down. Slipped down, as earth from a
+hill-side, stones which have been piled up or the like. To fall as water at a
+cascade. To fill up a hollow by putting earth into it. To lay gravel or
+materials on a road. A landslip.
+
+U r u r u g a n, apparently a plaural from of 'Urug'. To go with a number of
+men to any work. To make war, to attack with an army. To set upon in numbers,
+as it were to timble upon in masses.
+
+   -Jonathan Rigg, A dictionary of the Sunda language of Java. 1862.
+%%%%
 unseen horror
 
 “The awful shadow of some unseen Power
@@ -2946,6 +3157,16 @@ very ugly thing
  And yet I needs must curse. ”
     -William Shakespeare, _The Tempest_, II, 2. 1611.
 %%%%
+vine stalker
+
+“The monstrous plant bud . . . had grown again with preternatural rapidity,
+from Falmer's head. A loathsome pale-green stem was mounting thickly, and had
+started to branch like antlers after attaining a height of six or seven inches.
+ “More dreadful than this, if possible, similar growths had issued from the
+eyes; and their stems, climbing vertically across the forehead, had entirely
+displaced the eyeballs.”
+    -Clark Ashton Smith, “The Seed from the Sepulcher”. 1933.
+%%%%
 wand
 
 “[The principle of selection] is the magician’s wand, by means of which he may
@@ -2963,7 +3184,7 @@ wand of confusion
 %%%%
 wand of digging
 
-<wand>
+<Passwall spell>
 %%%%
 wand of disintegration
 
@@ -2975,7 +3196,7 @@ wand of draining
 %%%%
 wand of enslavement
 
-<wand>
+<Enslavement spell>
 %%%%
 wand of fire
 

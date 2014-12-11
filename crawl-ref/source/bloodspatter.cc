@@ -12,9 +12,9 @@
 #include "env.h"
 #include "fprop.h"
 #include "losglobal.h"
+#include "religion.h"
 #include "shout.h"
 #include "terrain.h"
-#include "religion.h"
 
 static bool allow_bleeding_on_square(const coord_def& where)
 {
@@ -24,7 +24,7 @@ static bool allow_bleeding_on_square(const coord_def& where)
         return false;
 
     // No spattering into lava or water.
-    if (grd(where) >= DNGN_LAVA && grd(where) < DNGN_FLOOR)
+    if (feat_is_lava(grd(where)) || feat_is_water(grd(where)))
         return false;
 
     // No spattering into fountains (other than blood).

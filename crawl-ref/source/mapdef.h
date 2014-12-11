@@ -13,20 +13,21 @@
 #ifndef __MAPDEF_H__
 #define __MAPDEF_H__
 
-#include <string>
-#include <vector>
 #include <cstdio>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "dlua.h"
 #include "enum.h"
-#include "externs.h"
-#include "matrix.h"
 #include "fprop.h"
 #include "makeitem.h"
+#include "matrix.h"
 #include "mon-ench.h"
 #include "tags.h"
 #include "travel_defs.h"
+
+#define NEVER_CORPSE_KEY "never_corpse"
 
 class mon_enchant;
 extern const char *traversable_glyphs;
@@ -498,7 +499,7 @@ private:
             no_random(false), last_tile(false), property(0), height(INVALID_HEIGHT),
             keyspec_idx(0)
         {}
-        int colour;
+        colour_t colour;
         string rocktile;
         string floortile;
         string tile;
@@ -559,7 +560,7 @@ public:
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
         item_special(0), qty(0), acquirement_source(0), place(), props(),
-        _corpse_monster_spec(NULL)
+        _corpse_monster_spec(nullptr)
     {
     }
 
@@ -613,12 +614,12 @@ private:
     item_spec item_by_specifier(const string &spec);
     item_spec_slot parse_item_spec(string spec);
     void build_deck_spec(string s, item_spec* spec);
-    item_spec parse_single_spec(string s);
+    bool parse_single_spec(item_spec &result, string s);
     int parse_acquirement_source(const string &source);
     void parse_raw_name(string name, item_spec &spec);
     void parse_random_by_class(string c, item_spec &spec);
     item_spec pick_item(item_spec_slot &slot);
-    item_spec parse_corpse_spec(item_spec &result, string s);
+    bool parse_corpse_spec(item_spec &result, string s);
     bool monster_corpse_is_valid(monster_type *, const string &name,
                                  bool corpse, bool skeleton, bool chunk);
 
@@ -640,7 +641,8 @@ public:
     bool generate_awake;
     bool patrolling;
     bool band;
-    int colour;
+    int colour; // either COLOUR_INHERIT for "default", COLOUR_INDEF for any
+                // colour upon creation, or an otherwise valid colour_t value.
 
     god_type god;
     bool god_gift;
@@ -671,8 +673,8 @@ public:
         : type(t), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
           quantity(1), genweight(10),
           generate_awake(false), patrolling(false), band(false),
-          colour(BLACK), god(GOD_NO_GOD), god_gift(false), hd(0), hp(0),
-          abjuration_duration(0), summon_type(0), items(), monname(""),
+          colour(COLOUR_INHERIT), god(GOD_NO_GOD), god_gift(false), hd(0),
+          hp(0), abjuration_duration(0), summon_type(0), items(), monname(""),
           non_actor_summoner(""), explicit_spells(false), spells(),
           extra_monster_flags(0), initial_shifter(RANDOM_MONSTER), props()
     {
@@ -779,10 +781,15 @@ struct shop_spec
 
     bool use_all;       /**< True if all items in `items` should be used. */
 
+    bool gozag;         /**< True if this shop was created by Gozag's Call
+                         *   Merchant ability (and therefore should have better
+                         *   stock).
+                         *   */
+
     shop_spec(shop_type sh, string n="", string t="",
-              string s="", int g=-1, int ni=-1, bool u=false)
+              string s="", int g=-1, int ni=-1, bool u=false, bool goz=false)
         : sh_type(sh), name(n), type(t), suffix(s),
-          greed(g), num_items(ni), items(), use_all(u) { }
+          greed(g), num_items(ni), items(), use_all(u), gozag(goz) { }
 };
 
 /**
@@ -842,6 +849,7 @@ struct map_flags
 
     map_flags();
     void clear();
+    map_flags &operator |= (const map_flags &o);
 
     static map_flags parse(const string flag_list[],
                            const string &s) throw(string);
@@ -866,8 +874,7 @@ public:
     string set_feat(const string &s, bool fix);
     string set_mons(const string &s, bool fix);
     string set_item(const string &s, bool fix);
-    string set_mask(const string &s, bool garbage);
-    string set_height(const string &s, bool garbage);
+    string set_mask(const string &s, bool /*garbage*/);
 
     // Copy from the given mapspec.  If that entry is fixed,
     // it should be pre-selected prior to the copy.
@@ -1308,8 +1315,6 @@ const int CHANCE_ROLL = 10000;
 void clear_subvault_stack();
 
 void map_register_flag(const string &flag);
-
-string escape_string(string in, const string &toesc, const string &escapewith);
 
 string mapdef_split_key_item(const string &s, string *key, int *separator,
                              string *arg, int key_max_len = 1);

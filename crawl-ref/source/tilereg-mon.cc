@@ -1,22 +1,23 @@
 #include "AppHdr.h"
 
 #ifdef USE_TILE_LOCAL
-#include <algorithm>
 
 #include "tilereg-mon.h"
-#include "process_desc.h"
+
+#include <algorithm>
 
 #include "cio.h"
 #include "directn.h"
 #include "env.h"
 #include "libutil.h"
 #include "monster.h"
-#include "stuff.h"
+#include "output.h"
+#include "process_desc.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-player.h"
-#include "tilereg-dgn.h"
 #include "tilepick.h"
+#include "tilereg-dgn.h"
 #include "tileview.h"
 #include "viewgeom.h"
 
@@ -143,11 +144,11 @@ bool MonsterRegion::update_alt_text(string &alt)
 const monster_info* MonsterRegion::get_monster(unsigned int idx) const
 {
     if (idx >= m_items.size())
-        return NULL;
+        return nullptr;
 
     const InventoryTile &item = m_items[idx];
     if (item.idx >= static_cast<int>(m_mon_info.size()))
-        return NULL;
+        return nullptr;
 
     return &(m_mon_info[item.idx]);
 }

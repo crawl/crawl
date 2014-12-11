@@ -5,30 +5,32 @@
 
 #include "AppHdr.h"
 
-#include "externs.h"
 #include "terrain.h"
 
 #include <algorithm>
 #include <sstream>
 
 #include "areas.h"
+#include "branch.h"
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
-#include "dgn-overview.h"
 #include "dgnevent.h"
+#include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "map_knowledge.h"
+#include "env.h"
 #include "feature.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "map_knowledge.h"
+#include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"
-#include "coord.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
@@ -36,64 +38,67 @@
 #include "religion.h"
 #include "species.h"
 #include "spl-transloc.h"
-#include "env.h"
 #include "state.h"
+#include "stringutil.h"
 #include "tileview.h"
-#include "travel.h"
 #include "transform.h"
 #include "traps.h"
-#include "view.h"
+#include "travel.h"
 #include "viewchar.h"
-#include "mapmark.h"
+#include "view.h"
 
 static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat);
 
 actor* actor_at(const coord_def& c)
 {
     if (!in_bounds(c))
-        return NULL;
+        return nullptr;
     if (c == you.pos())
         return &you;
     return monster_at(c);
 }
 
-int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
-{
-    int count = 0;
-    for (adjacent_iterator ai(c); ai; ++ai)
-    {
-        if (checker(grd(*ai)))
-            count++;
-    }
-    return count;
-}
-
+/** Can a malign gateway be placed on this feature?
+ */
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 {
     return feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER;
 }
 
+/** Is this feature a type of wall?
+ */
 bool feat_is_wall(dungeon_feature_type feat)
 {
-    return feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL;
+    return get_feature_def(feat).flags & FFT_WALL;
 }
 
+/** Is this feature one of the main stone downstairs of a level?
+ */
+bool feat_is_stone_stair_down(dungeon_feature_type feat)
+{
+     return feat == DNGN_STONE_STAIRS_DOWN_I
+            || feat == DNGN_STONE_STAIRS_DOWN_II
+            || feat == DNGN_STONE_STAIRS_DOWN_III;
+}
+
+/** Is this feature one of the main stone upstairs of a level?
+ */
+bool feat_is_stone_stair_up(dungeon_feature_type feat)
+{
+    return feat == DNGN_STONE_STAIRS_UP_I
+           || feat == DNGN_STONE_STAIRS_UP_II
+           || feat == DNGN_STONE_STAIRS_UP_III;
+}
+
+/** Is this feature one of the main stone stairs of a level?
+ */
 bool feat_is_stone_stair(dungeon_feature_type feat)
 {
-    switch (feat)
-    {
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III:
-        return true;
-    default:
-        return false;
-    }
+    return feat_is_stone_stair_up(feat) || feat_is_stone_stair_down(feat);
 }
 
+/** Is it possible to call this feature a staircase? (purely cosmetic)
+ */
 bool feat_is_staircase(dungeon_feature_type feat)
 {
     if (feat_is_stone_stair(feat))
@@ -101,132 +106,165 @@ bool feat_is_staircase(dungeon_feature_type feat)
 
     // All branch entries/exits are staircases, except for Zot and Vaults entry.
     if (feat == DNGN_ENTER_VAULTS
-        || feat == DNGN_RETURN_FROM_VAULTS
+        || feat == DNGN_EXIT_VAULTS
         || feat == DNGN_ENTER_ZOT
-        || feat == DNGN_RETURN_FROM_ZOT)
+        || feat == DNGN_EXIT_ZOT)
     {
         return false;
     }
 
-    if (feat == DNGN_EXIT_DUNGEON)
-        return true;
-
-    return feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
-           || feat >= DNGN_RETURN_FROM_FIRST_BRANCH
-              && feat <= DNGN_RETURN_FROM_LAST_BRANCH;
+    return feat_is_branch_entrance(feat)
+           || feat_is_branch_exit(feat)
+           || feat == DNGN_ABYSSAL_STAIR;
 }
 
+/** Is this feature a branch entrance that should show up on ^O?
+ */
+bool feat_is_branch_entrance(dungeon_feature_type feat)
+{
+    if (feat == DNGN_ENTER_HELL)
+        return false;
+
+    for (branch_iterator it; it; it++)
+    {
+        if (it->entry_stairs == feat
+            && is_connected_branch(it->id))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/** Counterpart to feat_is_branch_entrance.
+ */
+bool feat_is_branch_exit(dungeon_feature_type feat)
+{
+    if (feat == DNGN_ENTER_HELL || feat == DNGN_EXIT_HELL)
+        return false;
+
+    for (branch_iterator it; it; it++)
+    {
+        if (it->exit_stairs == feat
+            && is_connected_branch(it->id))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/** Is this feature an entrance to a portal branch?
+ */
+bool feat_is_portal_entrance(dungeon_feature_type feat)
+{
+    // These are have different rules from normal connected branches, but they
+    // also have different rules from "portal vaults," and are more similar to
+    // real branches in some respects.
+    if (feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM)
+        return false;
+
+    for (branch_iterator it; it; it++)
+    {
+        if (it->entry_stairs == feat
+            && !is_connected_branch(it->id))
+        {
+            return true;
+        }
+    }
+#if TAG_MAJOR_VERSION == 34
+    if (feat == DNGN_ENTER_PORTAL_VAULT)
+        return true;
+#endif
+
+    return false;
+}
+
+/** Counterpart to feat_is_portal_entrance.
+ */
+bool feat_is_portal_exit(dungeon_feature_type feat)
+{
+    if (feat == DNGN_EXIT_ABYSS || feat == DNGN_EXIT_PANDEMONIUM)
+        return false;
+
+    for (branch_iterator it; it; it++)
+    {
+        if (it->exit_stairs == feat
+            && !is_connected_branch(it->id))
+        {
+            return true;
+        }
+    }
+#if TAG_MAJOR_VERSION == 34
+    if (feat == DNGN_EXIT_PORTAL_VAULT)
+        return true;
+#endif
+
+    return false;
+}
+
+/** Is this feature a kind of portal?
+ */
 bool feat_is_portal(dungeon_feature_type feat)
 {
     return feat == DNGN_MALIGN_GATEWAY
-#if TAG_MAJOR_VERSION == 34
-        || feat == DNGN_ENTER_PORTAL_VAULT
-        || feat == DNGN_EXIT_PORTAL_VAULT
-#endif
-        || feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL
-        || feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL;
+        || feat_is_portal_entrance(feat)
+        || feat_is_portal_exit(feat);
 }
 
-// Returns true if the given dungeon feature is a stair, i.e., a level
-// exit.
+/** Is this feature a kind of level exit?
+ */
 bool feat_is_stair(dungeon_feature_type gridc)
 {
     return feat_is_travelable_stair(gridc) || feat_is_gate(gridc);
 }
 
-// Returns true if the given dungeon feature is a travelable stair, i.e.,
-// it's a level exit with a consistent endpoint.
+/** Is this feature a level exit stair with a consistent endpoint?
+ */
 bool feat_is_travelable_stair(dungeon_feature_type feat)
 {
-    switch (feat)
-    {
-    case DNGN_STONE_STAIRS_DOWN_I:
-    case DNGN_STONE_STAIRS_DOWN_II:
-    case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_STONE_STAIRS_UP_I:
-    case DNGN_STONE_STAIRS_UP_II:
-    case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ESCAPE_HATCH_UP:
-    case DNGN_EXIT_DUNGEON:
-    case DNGN_ENTER_HELL:
-    case DNGN_EXIT_HELL:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_DWARF:
-    case DNGN_RETURN_FROM_DWARF:
-    case DNGN_ENTER_FOREST:
-    case DNGN_RETURN_FROM_FOREST:
-    case DNGN_ENTER_BLADE:
-    case DNGN_RETURN_FROM_BLADE:
-#endif
-    case DNGN_ENTER_ORC:
-    case DNGN_ENTER_LAIR:
-    case DNGN_ENTER_SLIME:
-    case DNGN_ENTER_VAULTS:
-    case DNGN_ENTER_CRYPT:
-    case DNGN_ENTER_ZOT:
-    case DNGN_ENTER_TEMPLE:
-    case DNGN_ENTER_SNAKE:
-    case DNGN_ENTER_ELF:
-    case DNGN_ENTER_TOMB:
-    case DNGN_ENTER_SWAMP:
-    case DNGN_ENTER_SHOALS:
-    case DNGN_ENTER_SPIDER:
-    case DNGN_ENTER_DEPTHS:
-    case DNGN_RETURN_FROM_ORC:
-    case DNGN_RETURN_FROM_LAIR:
-    case DNGN_RETURN_FROM_SLIME:
-    case DNGN_RETURN_FROM_VAULTS:
-    case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_ZOT:
-    case DNGN_RETURN_FROM_TEMPLE:
-    case DNGN_RETURN_FROM_SNAKE:
-    case DNGN_RETURN_FROM_ELF:
-    case DNGN_RETURN_FROM_TOMB:
-    case DNGN_RETURN_FROM_SWAMP:
-    case DNGN_RETURN_FROM_SHOALS:
-    case DNGN_RETURN_FROM_SPIDER:
-    case DNGN_RETURN_FROM_DEPTHS:
-        return true;
-    default:
-        return false;
-    }
+    return feat_is_stone_stair(feat)
+           || feat_is_escape_hatch(feat)
+           || feat_is_branch_entrance(feat)
+           || feat_is_branch_exit(feat)
+           || feat == DNGN_ENTER_HELL
+           || feat == DNGN_EXIT_HELL;
 }
 
-// Returns true if the given dungeon feature is an escape hatch.
+/** Is this feature an escape hatch?
+ */
 bool feat_is_escape_hatch(dungeon_feature_type feat)
 {
-    switch (feat)
-    {
-    case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_ESCAPE_HATCH_UP:
-        return true;
-    default:
-        return false;
-    }
+    return feat == DNGN_ESCAPE_HATCH_DOWN
+           || feat == DNGN_ESCAPE_HATCH_UP;
 }
 
-// Returns true if the given dungeon feature can be considered a gate.
+/** Is this feature a gate?
+  * XXX: Why does this matter??
+ */
 bool feat_is_gate(dungeon_feature_type feat)
 {
+    if (feat_is_portal_entrance(feat)
+        || feat_is_portal_exit(feat))
+    {
+        return true;
+    }
+
     switch (feat)
     {
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
     case DNGN_ABYSSAL_STAIR:
-    case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_ENTER_VAULTS:
-    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_EXIT_VAULTS:
     case DNGN_ENTER_ZOT:
-    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_EXIT_ZOT:
     case DNGN_ENTER_HELL:
     case DNGN_EXIT_HELL:
     case DNGN_ENTER_DIS:
@@ -234,53 +272,47 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
         return true;
-    case DNGN_MALIGN_GATEWAY:
-        return false;
     default:
-        return feat_is_portal(feat);
+        return false;
     }
 }
 
+/** What command do you use to traverse this feature?
+ *
+ *  @param feat the feature.
+ *  @returns CMD_GO_UPSTAIRS if it's a stair up, CMD_GO_DOWNSTAIRS if it's a
+ *           stair down, and CMD_NO_CMD if it can't be used to move.
+ */
 command_type feat_stair_direction(dungeon_feature_type feat)
 {
-    if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL
-        || feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
+    if (feat_is_portal_entrance(feat)
+        || feat_is_branch_entrance(feat))
     {
         return CMD_GO_DOWNSTAIRS;
     }
-    if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL
-        || feat >= DNGN_RETURN_FROM_FIRST_BRANCH && feat <= DNGN_RETURN_FROM_LAST_BRANCH)
+    if (feat_is_portal_exit(feat)
+        || feat_is_branch_exit(feat))
     {
         return CMD_GO_UPSTAIRS;
     }
 
     switch (feat)
     {
+    case DNGN_ENTER_HELL:
+        return player_in_hell() ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS;
+
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
-    case DNGN_EXIT_DUNGEON:
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_EXIT_PORTAL_VAULT:
-#endif
         return CMD_GO_UPSTAIRS;
 
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_PORTAL_VAULT:
-#endif
-    case DNGN_ENTER_HELL:
-    case DNGN_ENTER_LABYRINTH:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
     case DNGN_ESCAPE_HATCH_DOWN:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS:
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
@@ -295,72 +327,86 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     }
 }
 
+/** Can you normally see through this feature?
+ */
 bool feat_is_opaque(dungeon_feature_type feat)
 {
-    return feat <= DNGN_MAXOPAQUE
-#if TAG_MAJOR_VERSION == 34
-                || feat == DNGN_TREE
-#endif
-    ;
+    return get_feature_def(feat).flags & FFT_OPAQUE;
 }
 
+/** Can you move into this feature in normal play?
+ */
 bool feat_is_solid(dungeon_feature_type feat)
 {
-    return feat <= DNGN_MAXSOLID;
+    return get_feature_def(feat).flags & FFT_SOLID;
 }
 
+/** Can you move into this cell in normal play?
+ */
 bool cell_is_solid(const coord_def &c)
 {
     return feat_is_solid(grd(c));
 }
 
+/** Can a human stand on this feature without flying?
+ */
 bool feat_has_solid_floor(dungeon_feature_type feat)
 {
     return !feat_is_solid(feat) && feat != DNGN_DEEP_WATER
            && feat != DNGN_LAVA;
 }
 
+/** Is there enough dry floor on this feature to stand without penalty?
+ */
 bool feat_has_dry_floor(dungeon_feature_type feat)
 {
-    return feat_has_solid_floor(feat) && feat != DNGN_SHALLOW_WATER;
+    return feat_has_solid_floor(feat) && !feat_is_water(feat);
 }
 
+/** Is this feature a variety of door?
+ */
 bool feat_is_door(dungeon_feature_type feat)
 {
     return feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
            || feat == DNGN_OPEN_DOOR || feat == DNGN_SEALED_DOOR;
 }
 
+/** Is this feature a variety of closed door?
+ */
 bool feat_is_closed_door(dungeon_feature_type feat)
 {
     return feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
            || feat == DNGN_SEALED_DOOR;
 }
 
+/** Has this feature been sealed by a vault warden?
+ */
 bool feat_is_sealed(dungeon_feature_type feat)
 {
     return feat == DNGN_SEALED_STAIRS_DOWN || feat == DNGN_SEALED_STAIRS_UP
            || feat == DNGN_SEALED_DOOR;
 }
 
-bool feat_is_statue_or_idol(dungeon_feature_type feat)
+/** Is this feature a type of statue, i.e., granite or an idol?
+ */
+bool feat_is_statuelike(dungeon_feature_type feat)
 {
     return feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
 }
 
-bool feat_is_rock(dungeon_feature_type feat)
-{
-    return feat == DNGN_ORCISH_IDOL
-           || feat == DNGN_GRANITE_STATUE
-           || feat >= DNGN_ROCK_WALL
-              && feat <= DNGN_CLEAR_PERMAROCK_WALL;
-}
-
+/** Is this feature permanent, unalterable rock?
+ */
 bool feat_is_permarock(dungeon_feature_type feat)
 {
     return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
 }
 
+/** Is this feature a type of trap?
+ *
+ *  @param feat the feature.
+ *  @param undiscovered_too whether a trap not yet found counts.
+ *  @returns true if it's a trap.
+ */
 bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too)
 {
     return feat == DNGN_TRAP_MECHANICAL || feat == DNGN_TRAP_TELEPORT
@@ -370,6 +416,8 @@ bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too)
            || undiscovered_too && feat == DNGN_UNDISCOVERED_TRAP;
 }
 
+/** Is this feature a type of water, with the concomitant dangers/bonuss?
+ */
 bool feat_is_water(dungeon_feature_type feat)
 {
     return feat == DNGN_SHALLOW_WATER
@@ -377,104 +425,206 @@ bool feat_is_water(dungeon_feature_type feat)
            || feat == DNGN_OPEN_SEA;
 }
 
+/** Does this feature have enough water to keep water-only monsters alive in it?
+ */
 bool feat_is_watery(dungeon_feature_type feat)
 {
     return feat_is_water(feat) || feat == DNGN_FOUNTAIN_BLUE;
 }
 
+/** Is this feature a kind of lava?
+ */
 bool feat_is_lava(dungeon_feature_type feat)
 {
     return feat == DNGN_LAVA || feat == DNGN_LAVA_SEA;
 }
 
-// Returns GOD_NO_GOD if feat is not an altar, otherwise returns the
-// GOD_* type.
+static int _god_altars[][2] =
+{
+    { GOD_ZIN, DNGN_ALTAR_ZIN },
+    { GOD_SHINING_ONE, DNGN_ALTAR_SHINING_ONE },
+    { GOD_KIKUBAAQUDGHA, DNGN_ALTAR_KIKUBAAQUDGHA },
+    { GOD_YREDELEMNUL, DNGN_ALTAR_YREDELEMNUL },
+    { GOD_XOM, DNGN_ALTAR_XOM },
+    { GOD_VEHUMET, DNGN_ALTAR_VEHUMET },
+    { GOD_OKAWARU, DNGN_ALTAR_OKAWARU },
+    { GOD_MAKHLEB, DNGN_ALTAR_MAKHLEB },
+    { GOD_SIF_MUNA, DNGN_ALTAR_SIF_MUNA },
+    { GOD_TROG, DNGN_ALTAR_TROG },
+    { GOD_NEMELEX_XOBEH, DNGN_ALTAR_NEMELEX_XOBEH },
+    { GOD_ELYVILON, DNGN_ALTAR_ELYVILON },
+    { GOD_LUGONU, DNGN_ALTAR_LUGONU },
+    { GOD_BEOGH, DNGN_ALTAR_BEOGH },
+    { GOD_JIYVA, DNGN_ALTAR_JIYVA },
+    { GOD_FEDHAS, DNGN_ALTAR_FEDHAS },
+    { GOD_CHEIBRIADOS, DNGN_ALTAR_CHEIBRIADOS },
+    { GOD_ASHENZARI, DNGN_ALTAR_ASHENZARI },
+    { GOD_DITHMENOS, DNGN_ALTAR_DITHMENOS },
+    { GOD_GOZAG, DNGN_ALTAR_GOZAG },
+    { GOD_QAZLAL, DNGN_ALTAR_QAZLAL },
+    { GOD_RU, DNGN_ALTAR_RU },
+};
+
+COMPILE_CHECK(ARRAYSZ(_god_altars) == NUM_GODS - 1);
+
+/** Whose altar is this feature?
+ *
+ *  @param feat the feature.
+ *  @returns GOD_NO_GOD if not an altar, otherwise the god_type of the god.
+ */
 god_type feat_altar_god(dungeon_feature_type feat)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (feat == DNGN_ALTAR_GOZAG)
-        return GOD_GOZAG;
-    if (feat == DNGN_ALTAR_QAZLAL)
-        return GOD_QAZLAL;
-#endif
-    if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
-        return static_cast<god_type>(feat - DNGN_ALTAR_FIRST_GOD + 1);
+    for (const int (&altar)[2] : _god_altars)
+        if ((dungeon_feature_type) altar[1] == feat)
+            return (god_type) altar[0];
 
     return GOD_NO_GOD;
 }
 
-// Returns DNGN_FLOOR for non-gods, otherwise returns the altar for the
-// god.
+/** What feature is the altar of this god?
+ *
+ *  @param god the god.
+ *  @returns DNGN_FLOOR for an invalid god, the god's altar otherwise.
+ */
 dungeon_feature_type altar_for_god(god_type god)
 {
-    if (god == GOD_NO_GOD || god >= NUM_GODS)
-        return DNGN_FLOOR;  // Yeah, lame. Tell me about it.
+    for (const int (&altar)[2] : _god_altars)
+        if ((god_type) altar[0] == god)
+            return (dungeon_feature_type) altar[1];
 
-#if TAG_MAJOR_VERSION == 34
-    if (god == GOD_GOZAG)
-        return DNGN_ALTAR_GOZAG;
-    if (god == GOD_QAZLAL)
-        return DNGN_ALTAR_QAZLAL;
-#endif
-
-    return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
+    return DNGN_FLOOR;
 }
 
-// Returns true if the dungeon feature supplied is an altar.
+/** Is this feature an altar to any god?
+ */
 bool feat_is_altar(dungeon_feature_type grid)
 {
     return feat_altar_god(grid) != GOD_NO_GOD;
 }
 
+/** Is this feature an altar to the player's god?
+ *
+ *  @param feat the feature.
+ *  @returns true if the player has a god and this is its altar.
+ */
 bool feat_is_player_altar(dungeon_feature_type grid)
 {
-    // An ugly hack, but that's what religion.cc does.
-    return !you_worship(GOD_NO_GOD) && feat_altar_god(grid) == you.religion;
+    return !you_worship(GOD_NO_GOD) && you_worship(feat_altar_god(grid));
 }
 
-bool feat_is_branch_stairs(dungeon_feature_type feat)
-{
-    return feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
-        || feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS;
-}
-
-bool feat_is_branchlike(dungeon_feature_type feat)
-{
-    return feat_is_branch_stairs(feat)
-        || feat == DNGN_ENTER_HELL
-        || feat == DNGN_ENTER_ABYSS
-        || feat == DNGN_EXIT_THROUGH_ABYSS
-        || feat == DNGN_ENTER_PANDEMONIUM;
-}
-
+/** Is this feature a tree?
+ */
 bool feat_is_tree(dungeon_feature_type feat)
 {
     return feat == DNGN_TREE;
 }
 
+/** Is this feature made of metal?
+ */
 bool feat_is_metal(dungeon_feature_type feat)
 {
     return feat == DNGN_METAL_WALL || feat == DNGN_GRATE;
 }
 
+/** XXX: not sure what this means
+ */
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 {
     return get_feature_dchar(feat) == DCHAR_ARCH
            && feat_stair_direction(feat) != CMD_NO_CMD
            && feat != DNGN_ENTER_ZOT
-           && feat != DNGN_RETURN_FROM_ZOT
-           && feat != DNGN_RETURN_FROM_VAULTS
-           && feat != DNGN_EXIT_HELL;
+           && feat != DNGN_EXIT_ZOT
+           && feat != DNGN_EXIT_VAULTS
+           && feat != DNGN_EXIT_HELL
+           && feat != DNGN_ENTER_HELL;
 }
 
+/** Is this feature a type of fountain?
+ */
 bool feat_is_fountain(dungeon_feature_type feat)
 {
-    return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN;
+    return feat == DNGN_FOUNTAIN_BLUE
+           || feat == DNGN_FOUNTAIN_SPARKLING
+           || feat == DNGN_FOUNTAIN_BLOOD
+           || feat == DNGN_DRY_FOUNTAIN;
 }
 
+/** Is this feature non-solid enough that you can reach past it?
+ */
 bool feat_is_reachable_past(dungeon_feature_type feat)
 {
-    return feat > DNGN_MAX_NONREACH;
+    return !feat_is_opaque(feat) && !feat_is_wall(feat) && feat != DNGN_GRATE;
+}
+
+/** Is this feature important to the game?
+ *
+ *  @param feat the feature.
+ *  @returns true for altars, stairs/portals, and malign gateways (???).
+ */
+bool feat_is_critical(dungeon_feature_type feat)
+{
+    return feat_stair_direction(feat) != CMD_NO_CMD
+           || feat_altar_god(feat) != GOD_NO_GOD
+           || feat == DNGN_MALIGN_GATEWAY;
+}
+
+/** Can you use this feature for a map border?
+ */
+bool feat_is_valid_border(dungeon_feature_type feat)
+{
+    return feat_is_wall(feat)
+           || feat_is_tree(feat)
+           || feat == DNGN_OPEN_SEA
+           || feat == DNGN_LAVA_SEA;
+}
+
+/** Can this feature be a mimic?
+ *
+ *  @param feat the feature
+ *  @param strict if true, disallow features for which being a mimic would be bad in
+                  normal generation; vaults can still use such mimics.
+ *  @returns whether this could make a valid mimic type.
+ */
+bool feat_is_mimicable(dungeon_feature_type feat, bool strict)
+{
+    if (!strict && feat != DNGN_FLOOR && feat != DNGN_SHALLOW_WATER
+        && feat != DNGN_DEEP_WATER)
+    {
+        return true;
+    }
+
+    // Don't risk trapping the player inside a portal vault.
+    if (feat_is_portal_exit(feat))
+        return false;
+
+    // There's only one branch exit.
+    if (feat_is_branch_exit(feat))
+        return false;
+
+    if (feat == DNGN_ENTER_ZIGGURAT)
+        return false;
+
+    if (feat_is_portal(feat) || feat_is_gate(feat))
+        return true;
+
+    if (feat_is_stone_stair(feat) || feat_is_branch_entrance(feat))
+        return true;
+
+    if (feat == DNGN_ENTER_SHOP)
+        return true;
+
+    return false;
+}
+
+int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
+{
+    int count = 0;
+    for (adjacent_iterator ai(c); ai; ++ai)
+    {
+        if (checker(grd(*ai)))
+            count++;
+    }
+    return count;
 }
 
 // For internal use by find_connected_identical only.
@@ -583,7 +733,7 @@ unwind_slime_wall_precomputer::unwind_slime_wall_precomputer(bool docompute)
 unwind_slime_wall_precomputer::~unwind_slime_wall_precomputer()
 {
     if (did_compute_mask)
-        _slime_wall_precomputed_neighbour_mask.reset(NULL);
+        _slime_wall_precomputed_neighbour_mask.reset(nullptr);
 }
 
 bool slime_wall_neighbour(const coord_def& c)
@@ -634,7 +784,7 @@ static coord_def _dgn_find_nearest_square(
     const coord_def &pos,
     void *thing,
     bool (*acceptable)(const coord_def &, void *thing),
-    bool (*traversable)(const coord_def &) = NULL)
+    bool (*traversable)(const coord_def &) = nullptr)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
@@ -646,11 +796,8 @@ static coord_def _dgn_find_nearest_square(
     {
         // Iterate each layer of BFS in random order to avoid bias.
         shuffle_array(points[iter]);
-        for (vector<coord_def>::iterator i = points[iter].begin();
-             i != points[iter].end(); ++i)
+        for (const auto &p : points[iter])
         {
-            const coord_def &p = *i;
-
             if (p != pos && acceptable(p, thing))
                 return p;
 
@@ -705,65 +852,6 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     {
         int index = item.index();
         move_item_to_grid(&index, np);
-        return true;
-    }
-    return false;
-}
-
-bool is_critical_feature(dungeon_feature_type feat)
-{
-    return feat_stair_direction(feat) != CMD_NO_CMD
-           || feat_altar_god(feat) != GOD_NO_GOD
-           || feat == DNGN_MALIGN_GATEWAY;
-}
-
-bool is_valid_border_feat(dungeon_feature_type feat)
-{
-    return feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL
-        || feat_is_tree(feat)
-        || feat == DNGN_OPEN_SEA
-        || feat == DNGN_LAVA_SEA;
-}
-
-// This is for randomly generated mimics.
-// Other features can be defined as mimic in vaults.
-bool is_valid_mimic_feat(dungeon_feature_type feat)
-{
-    // Don't risk trapping the player inside a portal vault.
-    if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL
-#if TAG_MAJOR_VERSION == 34
-        || feat == DNGN_EXIT_PORTAL_VAULT
-#endif
-        )
-    {
-        return false;
-    }
-
-    // There's only one branch exit.
-    if (you.depth == 1 && feat_is_travelable_stair(feat)
-        && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
-    {
-        return false;
-    }
-
-    if (feat_is_portal(feat) || feat_is_gate(feat))
-        return true;
-
-    if (feat_is_stone_stair(feat) || feat_is_branch_stairs(feat))
-        return true;
-
-    if (feat == DNGN_ENTER_SHOP)
-        return true;
-
-    return false;
-}
-
-// Those can never be mimiced.
-bool feat_cannot_be_mimic(dungeon_feature_type feat)
-{
-    if (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER
-        || feat == DNGN_DEEP_WATER)
-    {
         return true;
     }
     return false;
@@ -862,7 +950,14 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     if (move_items)
         move_item_stack_to_grid(src, dst);
 
-    move_cloud_to(src, dst);
+    if (cell_is_solid(dst))
+    {
+        int cl = env.cgrid(dst);
+        if (cl != EMPTY_CLOUD)
+            delete_cloud(cl);
+    }
+    else
+        move_cloud_to(src, dst);
 
     // Move terrain colours and properties.
     env.pgrid(dst) = env.pgrid(src);
@@ -892,11 +987,11 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 static bool _dgn_shift_feature(const coord_def &pos)
 {
     const dungeon_feature_type dfeat = grd(pos);
-    if (!is_critical_feature(dfeat) && !env.markers.find(pos, MAT_ANY))
+    if (!feat_is_critical(dfeat) && !env.markers.find(pos, MAT_ANY))
         return false;
 
     const coord_def dest =
-        _dgn_find_nearest_square(pos, NULL, _is_feature_shift_target);
+        _dgn_find_nearest_square(pos, nullptr, _is_feature_shift_target);
 
     dgn_move_entities_at(pos, dest, false, false, false);
     return true;
@@ -960,7 +1055,7 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
     {
         if (feat_is_solid(old_feat) != feat_is_solid(new_feat)
             || feat_is_water(new_feat) || new_feat == DNGN_LAVA
-            || is_critical_feature(new_feat))
+            || feat_is_critical(new_feat))
         {
             env.pgrid(pos) &= ~(FPROP_BLOODY);
             remove_mold(pos);
@@ -1008,7 +1103,7 @@ void dungeon_terrain_changed(const coord_def &pos,
             seen_notable_thing(nfeat, pos);
 
         // Don't destroy a trap which was just placed.
-        if (nfeat < DNGN_TRAP_MECHANICAL || nfeat > DNGN_UNDISCOVERED_TRAP)
+        if (feat_is_trap(nfeat))
             destroy_trap(pos);
     }
 
@@ -1075,7 +1170,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
             str << " to " << prep << " " << dest_actor;
     }
     str << "!";
-    mpr(str.str().c_str());
+    mpr(str.str());
 }
 
 static void _announce_swap(coord_def pos1, coord_def pos2)
@@ -1373,18 +1468,18 @@ void fall_into_a_pool(dungeon_feature_type terrain)
             mpr("You burn to ash...");
         else
             mpr("The lava burns you to a cinder!");
-        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
+        ouch(INSTANT_DEATH, KILLED_BY_LAVA);
     }
     else if (terrain == DNGN_DEEP_WATER)
     {
         mpr("You sink like a stone!");
 
-        if (you.is_artificial() || you.is_undead)
+        if (you.is_artificial() || you.undead_state())
             mpr("You fall apart...");
         else
             mpr("You drown...");
 
-        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WATER);
+        ouch(INSTANT_DEATH, KILLED_BY_WATER);
     }
 }
 
@@ -1411,12 +1506,7 @@ dungeon_feature_type feat_by_desc(string desc)
     if (desc[desc.size() - 1] != '.')
         desc += ".";
 
-    feat_desc_map::iterator i = feat_desc_cache.find(desc);
-
-    if (i != feat_desc_cache.end())
-        return i->second;
-
-    return DNGN_UNSEEN;
+    return lookup(feat_desc_cache, desc, DNGN_UNSEEN);
 }
 
 // If active is true, the player is just stepping onto the feature, with the
@@ -1554,7 +1644,7 @@ vector<string> dungeon_feature_matches(const string &name)
 
         const char *featname = get_feature_def(feat).vaultname;
         if (strstr(featname, name.c_str()))
-            matches.push_back(featname);
+            matches.emplace_back(featname);
     }
 
     return matches;
@@ -1563,13 +1653,13 @@ vector<string> dungeon_feature_matches(const string &name)
 /** Get the lua/wizmode name for a feature.
  *
  *  @param rfeat The feature type to be found.
- *  @returns NULL if rfeat is not defined, the vaultname of the corresponding
+ *  @returns nullptr if rfeat is not defined, the vaultname of the corresponding
  *           feature_def otherwise.
  */
 const char *dungeon_feature_name(dungeon_feature_type rfeat)
 {
     if (!is_valid_feature_type(rfeat))
-        return NULL;
+        return nullptr;
 
     return get_feature_def(rfeat).vaultname;
 }
@@ -1662,7 +1752,7 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "grate";
     if (feat_is_tree(feat))
         return "tree";
-    if (feat_is_statue_or_idol(feat))
+    if (feat_is_statuelike(feat))
         return "statue";
     if (feat_is_water(feat))
         return "water";

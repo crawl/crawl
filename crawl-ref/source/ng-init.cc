@@ -13,18 +13,16 @@
 #include "branch.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "end.h"
 #include "itemname.h"
 #include "libutil.h"
 #include "maps.h"
-#include "player.h"
-#include "random.h"
 #include "random-weight.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
-#include "store.h"
-#include "stuff.h"
-#include "version.h"
+#include "stringutil.h"
+#include "unicode.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES
@@ -58,8 +56,8 @@ void initialise_branch_depths()
     // XXX: Should this go elsewhere?
     branch_bribe.init(0);
 
-    for (int br = 0; br < NUM_BRANCHES; ++br)
-        brentry[br].clear();
+    for (branch_iterator it; it; ++it)
+        brentry[it->id].clear();
 
     if (crawl_state.game_is_sprint())
     {
@@ -81,10 +79,15 @@ void initialise_branch_depths()
     {
         const Branch *b = &branches[branch];
         ASSERT(b->id == branch);
-        if (!branch_is_unfinished(b->id) && b->parent_branch != NUM_BRANCHES)
+    }
+
+    for (branch_iterator it; it; ++it)
+    {
+        if (!branch_is_unfinished(it->id) && it->parent_branch != NUM_BRANCHES)
         {
-            brentry[branch] = level_id(b->parent_branch,
-                                       random_range(b->mindepth, b->maxdepth));
+            brentry[it->id] = level_id(it->parent_branch,
+                                       random_range(it->mindepth,
+                                                    it->maxdepth));
         }
     }
 
@@ -92,18 +95,18 @@ void initialise_branch_depths()
     // This way you get one "water" branch and one "poison" branch.
     branch_type disabled_branch[] =
     {
-        random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
-        random_choose(BRANCH_SNAKE, BRANCH_SPIDER, -1),
+        random_choose(BRANCH_SWAMP, BRANCH_SHOALS),
+        random_choose(BRANCH_SNAKE, BRANCH_SPIDER),
     };
 
-    for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
+    for (branch_type disabled : disabled_branch)
     {
-        dprf("Disabling branch: %s", branches[disabled_branch[i]].shortname);
-        brentry[disabled_branch[i]].clear();
+        dprf("Disabling branch: %s", branches[disabled].shortname);
+        brentry[disabled].clear();
     }
 
-    for (int i = 0; i < NUM_BRANCHES; i++)
-        brdepth[i] = branches[i].numlevels;
+    for (branch_iterator it; it; ++it)
+        brdepth[it->id] = it->numlevels;
 }
 
 #define MAX_OVERFLOW_LEVEL 9
@@ -136,7 +139,7 @@ void initialise_temples()
     // First determine main temple map to use.
     level_id ecumenical(BRANCH_TEMPLE, 1);
 
-    map_def *main_temple = NULL;
+    map_def *main_temple = nullptr;
     for (int i = 0; i < 10; i++)
     {
         int altar_count = 0;
@@ -144,21 +147,18 @@ void initialise_temples()
         main_temple
             = const_cast<map_def*>(random_map_for_place(ecumenical, false));
 
-        if (main_temple == NULL)
+        if (main_temple == nullptr)
             end(1, false, "No temples?!");
 
         if (main_temple->has_tag("temple_variable"))
         {
             vector<int> sizes;
-            vector<string> tag_list = main_temple->get_tags();
-            for (unsigned int j = 0; j < tag_list.size(); j++)
+            for (string &tag : main_temple->get_tags())
             {
-                if (starts_with(tag_list[j], "temple_altars_"))
+                if (starts_with(tag, "temple_altars_"))
                 {
                     sizes.push_back(
-                        atoi(
-                            strip_tag_prefix(
-                                tag_list[j], "temple_altars_").c_str()));
+                        atoi(strip_tag_prefix(tag, "temple_altars_").c_str()));
                 }
             }
             if (sizes.empty())
@@ -166,7 +166,7 @@ void initialise_temples()
                 mprf(MSGCH_ERROR,
                      "Temple %s set as variable but has no sizes.",
                      main_temple->name.c_str());
-                main_temple = NULL;
+                main_temple = nullptr;
                 continue;
             }
             altar_count =
@@ -178,15 +178,15 @@ void initialise_temples()
 
         // Without all this find_glyph() returns 0.
         string err;
-              main_temple->load();
-              main_temple->reinit();
+        main_temple->load();
+        main_temple->reinit();
         err = main_temple->run_lua(true);
 
         if (!err.empty())
         {
             mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
-            main_temple = NULL;
+            main_temple = nullptr;
             you.props.erase(TEMPLE_SIZE_KEY);
             continue;
         }
@@ -198,14 +198,14 @@ void initialise_temples()
         {
             mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
-            main_temple = NULL;
+            main_temple = nullptr;
             you.props.erase(TEMPLE_SIZE_KEY);
             continue;
         }
         break;
     }
 
-    if (main_temple == NULL)
+    if (main_temple == nullptr)
         end(1, false, "No valid temples.");
 
     you.props[TEMPLE_MAP_KEY] = main_temple->name;
@@ -264,12 +264,11 @@ void initialise_temples()
         if (!maps.empty())
         {
             int chance = 0;
-            for (mapref_vector::iterator map = maps.begin();
-                 map != maps.end(); map++)
+            for (auto map : maps)
             {
                 // XXX: this should handle level depth better
-                chance += (*map)->weight(level_id(BRANCH_DUNGEON,
-                                                  MAX_OVERFLOW_LEVEL));
+                chance += map->weight(level_id(BRANCH_DUNGEON,
+                                               MAX_OVERFLOW_LEVEL));
             }
             overflow_weights[i] = chance;
         }
@@ -315,11 +314,10 @@ multi_overflow:
         if (overflow_weights[num] > 0)
         {
             int chance = 0;
-            for (mapref_vector::iterator map = maps.begin(); map != maps.end();
-                 map++)
+            for (auto map : maps)
             {
-                chance += (*map)->weight(level_id(BRANCH_DUNGEON,
-                                                  MAX_OVERFLOW_LEVEL));
+                chance += map->weight(level_id(BRANCH_DUNGEON,
+                                               MAX_OVERFLOW_LEVEL));
             }
             if (!x_chance_in_y(chance, overflow_weights[num] + chance))
                 continue;
@@ -351,13 +349,9 @@ multi_overflow:
 
             // Randomly choose from the sizes which have maps.
             for (unsigned int j = 2; j <= remaining_size; j++)
-            {
                 if (overflow_weights[j] > 0)
-                {
-                    num_weights.push_back(
-                        pair<unsigned int, int>(j, overflow_weights[j]));
-                }
-            }
+                    num_weights.emplace_back(j, overflow_weights[j]);
+
             if (!num_weights.empty())
                 num_gods = *(random_choose_weighted(num_weights));
 
@@ -370,6 +364,7 @@ multi_overflow:
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 static int _get_random_porridge_desc()
 {
     return PDESCQ(PDQ_GLUGGY, one_chance_in(3) ? PDC_BROWN
@@ -399,12 +394,13 @@ static int _get_random_coagulated_blood_desc()
         potion_description_colour_type colour = (coinflip() ? PDC_RED
                                                             : PDC_BROWN);
 
-        int desc = PDESCQ(qualifier, colour);
+        uint32_t desc = PDESCQ(qualifier, colour);
 
         if (you.item_description[IDESC_POTIONS][POT_BLOOD] != desc)
             return desc;
     }
 }
+#endif
 
 static int _get_random_blood_desc()
 {
@@ -418,12 +414,14 @@ void initialise_item_descriptions()
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
 
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
-        = _get_random_porridge_desc();
     you.item_description[IDESC_POTIONS][POT_BLOOD]
         = _get_random_blood_desc();
+#if TAG_MAJOR_VERSION == 34
     you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
         = _get_random_coagulated_blood_desc();
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
+        = _get_random_porridge_desc();
+#endif
 
     // The order here must match that of IDESC in describe.h
     const int max_item_number[6] = { NUM_WANDS,
@@ -458,10 +456,21 @@ void initialise_item_descriptions()
                     you.item_description[i][j] = _random_potion_description();
                     break;
 
+
+#if TAG_MAJOR_VERSION == 34
+                case IDESC_SCROLLS_II: // unused but validated
+#endif
                 case IDESC_SCROLLS: // scrolls: random seed for the name
-                case IDESC_SCROLLS_II:
-                    you.item_description[i][j] = random2(151);
+                {
+                    // this is very weird and probably a linleyism.
+                    const int seed_1 = random2(151); // why 151?
+                    const int seed_2 = random2(151);
+                    const int seed_3 = OBJ_SCROLLS; // yes, really
+                    you.item_description[i][j] =   seed_1
+                                                | (seed_2 << 8)
+                                                | (seed_3 << 16);
                     break;
+                }
 
                 case IDESC_RINGS: // rings and amulets
                     you.item_description[i][j] = random2(NDSC_JEWEL_PRI
@@ -501,7 +510,9 @@ void initialise_item_descriptions()
 void fix_up_jiyva_name()
 {
     do
+    {
         you.jiyva_second_name = make_name(random_int(), false, 8, 'J');
+    }
     while (strncmp(you.jiyva_second_name.c_str(), "J", 1) != 0);
 
     you.jiyva_second_name = replace_all(you.jiyva_second_name, " ", "");

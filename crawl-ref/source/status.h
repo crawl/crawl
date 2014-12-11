@@ -43,7 +43,9 @@ enum status_type
     STATUS_GOLDEN,
 #endif
     STATUS_BRIBE,
-    STATUS_LAST_STATUS = STATUS_BRIBE
+    STATUS_CLOUD,
+    STATUS_BONE_ARMOUR,
+    STATUS_LAST_STATUS = STATUS_BONE_ARMOUR
 };
 
 struct status_info
@@ -61,6 +63,7 @@ struct status_info
 bool fill_status_info(int status, status_info* info);
 
 const char *duration_name(duration_type dur);
+bool duration_dispellable(duration_type dur);
 void init_duration_index();
 
 #endif

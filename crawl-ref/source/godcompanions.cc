@@ -5,17 +5,15 @@
 
 #include "AppHdr.h"
 
-#include <algorithm>
-
 #include "godcompanions.h"
 
-#include "actor.h"
-#include "mon-message.h"
+#include <algorithm>
+
+#include "branch.h"
+#include "message.h"
 #include "mon-util.h"
 #include "religion.h"
-#include "stuff.h"
 #include "spl-other.h"
-#include "branch.h"
 
 map<mid_t, companion> companion_list;
 
@@ -44,12 +42,11 @@ void remove_companion(monster* mons)
 
 void remove_enslaved_soul_companion()
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end(); ++i)
+    for (auto &entry : companion_list)
     {
-        monster* mons = monster_by_mid(i->first);
+        monster* mons = monster_by_mid(entry.first);
         if (!mons)
-            mons = &i->second.mons.mons;
+            mons = &entry.second.mons.mons;
         if (mons_enslaved_soul(mons))
         {
             remove_companion(mons);
@@ -60,8 +57,7 @@ void remove_enslaved_soul_companion()
 
 void remove_all_companions(god_type god)
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end();)
+    for (auto i = companion_list.begin(); i != companion_list.end();)
     {
         monster* mons = monster_by_mid(i->first);
         if (!mons)
@@ -88,17 +84,16 @@ void move_companion_to(const monster* mons, const level_id lid)
 
 void update_companions()
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end(); ++i)
+    for (auto &entry : companion_list)
     {
-        monster* mons = monster_by_mid(i->first);
+        monster* mons = monster_by_mid(entry.first);
         if (mons)
         {
             if (mons->is_divine_companion())
             {
                 ASSERT(mons->alive());
-                i->second.mons = follower(*mons);
-                i->second.timestamp = you.elapsed_time;
+                entry.second.mons = follower(*mons);
+                entry.second.timestamp = you.elapsed_time;
             }
         }
     }
@@ -106,20 +101,17 @@ void update_companions()
 
 void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list)
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end(); ++i)
+    for (auto &entry : companion_list)
     {
-        int mid = i->first;
-        companion* comp = &i->second;
+        int mid = entry.first;
+        companion &comp = entry.second;
         if (companion_is_elsewhere(mid, true))
         {
             // Recall can't pull monsters out of the Abyss
-            if (comp->level.branch == BRANCH_ABYSS)
+            if (comp.level.branch == BRANCH_ABYSS)
                 continue;
 
-            pair<mid_t, int> p = make_pair(mid,
-                                           comp->mons.mons.get_experience_level());
-            recall_list.push_back(p);
+            recall_list.emplace_back(mid, comp.mons.mons.get_experience_level());
         }
     }
 }
@@ -203,13 +195,12 @@ void wizard_list_companions()
         return;
     }
 
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-        i != companion_list.end(); ++i)
+    for (auto &entry : companion_list)
     {
-        companion* comp = &i->second;
-        monster* mon = &comp->mons.mons;
-        mprf("%s (%d)(%s:%d)", mon->name(DESC_PLAIN, true).c_str(),
-                mon->mid, branches[comp->level.branch].abbrevname, comp->level.depth);
+        companion &comp = entry.second;
+        monster &mon = comp.mons.mons;
+        mprf("%s (%d)(%s:%d)", mon.name(DESC_PLAIN, true).c_str(), mon.mid,
+             branches[comp.level.branch].abbrevname, comp.level.depth);
     }
 }
 
@@ -219,8 +210,7 @@ void wizard_list_companions()
 // allow the creation of these invalid companions are fully mopped up
 void fixup_bad_companions()
 {
-    for (map<mid_t, companion>::iterator i = companion_list.begin();
-         i != companion_list.end();)
+    for (auto i = companion_list.begin(); i != companion_list.end();)
     {
         if (invalid_monster_type(i->second.mons.mons.type))
             companion_list.erase(i++);

@@ -5,16 +5,14 @@
 
 #include "AppHdr.h"
 
-#include "cluautil.h"
 #include "l_libs.h"
 
+#include "cluautil.h"
 #include "coord.h"
 #include "dungeon.h"
-#include "env.h"
 #include "items.h"
-#include "libutil.h"
-#include "mapdef.h"
 #include "stash.h"
+#include "stringutil.h"
 
 #define ITEMLIST_METATABLE "crawldgn.item_list"
 
@@ -45,7 +43,7 @@ static item_list _lua_get_ilist(lua_State *ls, int ndx)
 
 void register_itemlist(lua_State *ls)
 {
-    clua_register_metatable(ls, ITEMLIST_METATABLE, NULL,
+    clua_register_metatable(ls, ITEMLIST_METATABLE, nullptr,
                             lua_object_gc<item_list>);
 }
 
@@ -229,18 +227,18 @@ static int dgn_stash_items(lua_State *ls)
     lua_newtable(ls);
     int index = 0;
 
-    for (unsigned int i = 0; i < floor_items.size(); i++)
+    for (const item_def *item : floor_items)
     {
-        clua_push_item(ls, const_cast<item_def*>(floor_items[i]));
+        clua_push_item(ls, const_cast<item_def*>(item));
         lua_rawseti(ls, -2, ++index);
     }
 
     lua_newtable(ls);
     index = 0;
 
-    for (unsigned int i = 0; i < shop_items.size(); i++)
+    for (const item_def *item : shop_items)
     {
-        clua_push_item(ls, const_cast<item_def*>(shop_items[i]));
+        clua_push_item(ls, const_cast<item_def*>(item));
         lua_rawseti(ls, -2, ++index);
     }
 
@@ -258,5 +256,5 @@ const struct luaL_reg dgn_item_dlib[] =
     { "item_spec", _dgn_item_spec },
     { "stash_items", dgn_stash_items },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };

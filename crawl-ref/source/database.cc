@@ -5,23 +5,23 @@
 
 #include "AppHdr.h"
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdlib.h>
+#include "database.h"
+
 #include <cstdlib>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
 
 #include "clua.h"
-#include "database.h"
-#include "errors.h"
+#include "end.h"
 #include "files.h"
 #include "libutil.h"
 #include "options.h"
 #include "random.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "syscalls.h"
 #include "threads.h"
 #include "unicode.h"
@@ -84,12 +84,12 @@ static TextDB AllDBs[] =
             "ability.txt",
             "cards.txt",
             "commands.txt",
-            NULL),
+            nullptr),
 
     TextDB("gamestart", "descript/",
             "species.txt",
             "backgrounds.txt",
-            NULL),
+            nullptr),
 
     TextDB("randart", "database/",
             "randname.txt",
@@ -99,7 +99,7 @@ static TextDB AllDBs[] =
             "randbook.txt", // artefact books
             // This doesn't really belong here, but they *are* god gifts...
             "monname.txt",  // orcish names for Beogh to choose from
-            NULL),
+            nullptr),
 
     TextDB("speak", "database/",
             "monspeak.txt", // monster speech
@@ -108,35 +108,35 @@ static TextDB AllDBs[] =
             "wpnnoise.txt", // noisy weapon speech
             "insult.txt",   // imp/demon taunts
             "godspeak.txt", // god speech
-            NULL),
+            nullptr),
 
     TextDB("shout", "database/",
             "shout.txt",
             "insult.txt",   // imp/demon taunts, again
-            NULL),
+            nullptr),
 
     TextDB("misc", "database/",
             "miscname.txt", // names for miscellaneous things
             "godname.txt",  // god-related names (mostly His Xomminess)
             "montitle.txt", // titles for monsters (i.e. uniques)
-            NULL),
+            nullptr),
 
     TextDB("quotes", "descript/",
             "quotes.txt",   // quotes for items and monsters
-            NULL),
+            nullptr),
 
     TextDB("help", "database/",
             "help.txt",     // database for outsourced help texts
-            NULL),
+            nullptr),
 
     TextDB("FAQ", "database/",
             "FAQ.txt",      // database for Frequently Asked Questions
-            NULL),
+            nullptr),
 
     TextDB("hints", "descript/",
             "hints.txt",    // hints mode
             "tutorial.txt", // tutorial mode
-            NULL),
+            nullptr),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -163,7 +163,7 @@ static string _db_cache_path(string db, const char *lang)
 
 TextDB::TextDB(const char* db_name, const char* dir, ...)
     : _db_name(db_name), _directory(dir),
-      _db(NULL), timestamp(""), _parent(0), translation(0)
+      _db(nullptr), timestamp(""), _parent(0), translation(0)
 {
     va_list args;
     va_start(args, dir);
@@ -183,7 +183,7 @@ TextDB::TextDB(const char* db_name, const char* dir, ...)
 
 TextDB::TextDB(TextDB *parent)
     : _db_name(parent->_db_name),
-      _db(NULL), timestamp(""), _parent(parent), translation(0)
+      _db(nullptr), timestamp(""), _parent(parent), translation(0)
 {
     _directory = parent->_directory + Options.lang_name + "/";
     _input_files = parent->_input_files; // FIXME: pointless copy
@@ -232,7 +232,7 @@ void TextDB::shutdown(bool recursive)
     if (_db)
     {
         dbm_close(_db);
-        _db = NULL;
+        _db = nullptr;
     }
     if (recursive && translation)
         translation->shutdown(recursive);
@@ -243,12 +243,16 @@ bool TextDB::_needs_update() const
     string ts;
     bool no_files = true;
 
-    for (unsigned int i = 0; i < _input_files.size(); i++)
+    for (const string &file : _input_files)
     {
-        string full_input_path = _directory + _input_files[i];
+        string full_input_path = _directory + file;
         full_input_path = datafile_path(full_input_path, !_parent);
         time_t mtime = file_modtime(full_input_path);
+#ifdef __ANDROID__
+        if (file_exists(full_input_path))
+#else
         if (mtime)
+#endif
             no_files = false;
         char buf[20];
         snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
@@ -296,16 +300,24 @@ void TextDB::_regenerate_db()
     string ts;
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
         end(1, true, "Unable to open DB: %s", db_path.c_str());
-    for (unsigned int i = 0; i < _input_files.size(); i++)
+    for (const string &file : _input_files)
     {
-        string full_input_path = _directory + _input_files[i];
+        string full_input_path = _directory + file;
         full_input_path = datafile_path(full_input_path, !_parent);
         char buf[20];
         time_t mtime = file_modtime(full_input_path);
         snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
         ts += buf;
-        if (mtime || !_parent) // english is mandatory
+        if (
+#ifdef __ANDROID__
+            file_exists(full_input_path)
+#else
+            mtime
+#endif
+            || !_parent) // english is mandatory
+        {
             _store_text_db(full_input_path, _db);
+        }
     }
     _add_entry(_db, "TIMESTAMP", ts);
 
@@ -364,7 +376,7 @@ void databaseSystemShutdown()
 static datum _database_fetch(DBM *database, const string &key)
 {
     datum result;
-    result.dptr = NULL;
+    result.dptr = nullptr;
     result.dsize = 0;
     datum dbKey;
 
@@ -381,20 +393,20 @@ static datum _database_fetch(DBM *database, const string &key)
 static vector<string> _database_find_keys(DBM *database,
                                           const string &regex,
                                           bool ignore_case,
-                                          db_find_filter filter = NULL)
+                                          db_find_filter filter = nullptr)
 {
     text_pattern             tpat(regex, ignore_case);
     vector<string> matches;
 
     datum dbKey = dbm_firstkey(database);
 
-    while (dbKey.dptr != NULL)
+    while (dbKey.dptr != nullptr)
     {
         string key((const char *)dbKey.dptr, dbKey.dsize);
 
         if (tpat.matches(key)
             && key.find("__") == string::npos
-            && (filter == NULL || !(*filter)(key, "")))
+            && (filter == nullptr || !(*filter)(key, "")))
         {
             matches.push_back(key);
         }
@@ -408,14 +420,14 @@ static vector<string> _database_find_keys(DBM *database,
 static vector<string> _database_find_bodies(DBM *database,
                                             const string &regex,
                                             bool ignore_case,
-                                            db_find_filter filter = NULL)
+                                            db_find_filter filter = nullptr)
 {
     text_pattern             tpat(regex, ignore_case);
     vector<string> matches;
 
     datum dbKey = dbm_firstkey(database);
 
-    while (dbKey.dptr != NULL)
+    while (dbKey.dptr != nullptr)
     {
         string key((const char *)dbKey.dptr, dbKey.dsize);
 
@@ -424,7 +436,7 @@ static vector<string> _database_find_bodies(DBM *database,
 
         if (tpat.matches(body)
             && key.find("__") == string::npos
-            && (filter == NULL || !(*filter)(key, body)))
+            && (filter == nullptr || !(*filter)(key, body)))
         {
             matches.push_back(key);
         }

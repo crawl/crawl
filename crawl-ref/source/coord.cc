@@ -3,7 +3,6 @@
 #include "coord.h"
 
 #include "libutil.h"
-#include "random.h"
 #include "state.h"
 #include "viewgeom.h"
 

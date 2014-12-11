@@ -2,26 +2,56 @@
 # "The wizard mumbles some strange words."  The messages are looked
 # up in the following order by the following keys:
 #
-# 1) If the monster is a wizard or priest which has been polymorphed into
-#    a wizard without hands which is trying to cast a spell it kept across
-#    the polymorph, then the first key will be "polymorphed wizard" or
-#    "polymorphed priest".
-# 2) The name of the spell being cast:
-#   a) If being cast by a wizard or priest monster with arms, first try
+# 1) The name of the spell being cast:
+#   a) First try with the type, then the species, the the genus.
+#   b) If a wizard, "wizard"; similarly for priest, demon, and innate.
+#   c) If being cast by a wizard or priest monster with arms, first try
 #      with the suffix "real".
-#   b) If being cast by a monster of normal or higher intelligence with arms,
+#   d) If being cast by a monster of normal or higher intelligence with arms,
 #      try with the suffix "gestures".
-#   c) Next, try without any suffix.
-# 3) The name of the monster's type.
-# 4) The name of the monster's species.
-# 5) The name of the monster's genus.
-# 6) "priest" if the monster is a priest type, "wizard" if it's a wizard type,
+#   e) Next, try without any suffix.
+# 2) The name of the monster's type, then species, then genus.
+# 3) "priest" if the spell is an invocation, "wizard" if it's a wizard spell,
 #    or "demon" if it's demonic.
-# 7) If the spell uses a targeted, visible beam, it will try
-#    "<beam_short_name> beam cast", then "beam catchall cast".
+# 4) If the spell uses a targeted, visible beam:
+#   a) "<beam_short_name> beam".
+#   b) "beam catchall".
 #
-# For 1 and 3 to 6, if the spell has a target it will first add the suffix
+# For 2 and 3, if the spell has a target it will first add the suffix
 # "targeted" to the lookup key before trying without the suffix.
+#
+# For any of them, if a wizard has no arms, it will use "non-humanoid wizard"
+# instead of "wizard."
+#
+# For example, a greater naga casting Teleport Self:
+# * Teleport Self greater naga cast
+# * Teleport Self naga cast
+# * Teleport Self naga cast
+# * Teleport Self wizard cast
+# * Teleport Self cast real
+# * Teleport Self cast gestures
+# * Teleport Self cast
+# * greater naga cast
+# * naga cast
+# * naga cast
+# * wizard cast
+#
+# And one "casting" Spit Poison:
+# * Spit Poison greater naga cast
+# * Spit Poison naga cast
+# * Spit Poison naga cast
+# * Spit Poison naga cast
+# * Spit Poison innate cast
+# * Spit Poison cast gestures
+# * Spit Poison cast
+# * greater naga cast targeted
+# * greater naga cast
+# * naga cast targeted
+# * naga cast
+# * naga cast targeted
+# * naga cast
+# * poison beam cast
+# * catchall beam cast
 #
 # For all lookups, if the monster is unseen by the player it will add the
 # prefix "unseen" to the key, or if the player or monster is silenced
@@ -30,8 +60,7 @@
 # no results it will try again without the prefix, assuming that the
 # spell has no sound component.
 #
-# To give no message use the string "__NONE", and to skip the current
-# lookup method and move onto the next one use the string "__NEXT".
+# To give no message use the string "__NONE".
 
 #####################################################
 # Individual spells.
@@ -61,6 +90,10 @@ Animate Dead cast gestures
 
 @The_monster@ throws @possessive@ @arms@ wide.
 %%%%
+Battlecry cast
+
+@The_monster@ roars a battlecry!
+%%%%
 Blinkbolt cast
 
 @The_monster@ bursts into living lightning!
@@ -73,29 +106,6 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
-Lesser Healing cast real
-
-__NEXT
-%%%%
-Lesser Healing cast gestures
-
-@The_monster@ briefly glows while making a small gesture.
-%%%%
-Lesser Healing cast
-
-@The_monster@ briefly glows.
-%%%%
-Greater Healing cast real
-
-__NEXT
-%%%%
-Greater Healing cast gestures
-
-@The_monster@ briefly glows brightly while making a large gesture.
-%%%%
-Greater Healing cast
-
-@The_monster@ briefly glows brightly.
 %%%%
 Mara Summon cast
 
@@ -174,6 +184,18 @@ Phantom Mirror cast
 # Individual innate spells (breathing and spitting).
 #####################################################
 %%%%
+unseen Signal Horn cast
+
+You hear a note loudly blown on a horn!
+%%%%
+Signal Horn cast
+
+@The_monster@ blows a loud note on a signal horn!
+%%%%
+Seal Doors cast
+
+@The_monster@ activates a sealing rune.
+%%%%
 Spit Acid cast
 
 @The_monster@ spits acid @at@ @target@.
@@ -189,8 +211,33 @@ You hear a roar.
 Cold Breath cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
-%%%%%
-Draconian Breath cast
+%%%%
+unseen Chilling Breath cast
+
+You hear a roar.
+%%%%
+Chilling Breath cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+# Drac ghost breath
+Bolt of Draining innate cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Lightning Bolt innate cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Steam Ball innate cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Quicksilver Bolt innate cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Poisonous Cloud innate cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
 %%%%
@@ -201,10 +248,22 @@ You hear a roar.
 Fire Breath cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
-%%%%%
-unseen Draconian Breath cast
+%%%%
+unseen Searing Breath cast
 
 You hear a roar.
+%%%%
+Searing Breath cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%%
+Electrical Bolt cast
+
+@The_monster@ shoots out a bolt of @beam@ @at@ @target@!
+%%%%%
+Spit Lava cast
+
+@The_monster@ spits lava @at@ @target@.
 %%%%
 Spit Poison cast
 
@@ -233,6 +292,10 @@ Frenzy cast
 Volley of Thorns cast
 
 @The_monster@ fires a volley of thorns @at@ @target@.
+%%%%
+Hunting Cry cast
+
+@The_monster@ howls a hunting cry!
 ########################################################################
 # Unique monsters
 ########################################################################
@@ -300,6 +363,10 @@ Roxanne cast
 
 @sphinx cast@
 %%%%
+silent Berserker Rage Rupert cast
+
+@The_monster@ flies into a rage!
+%%%%
 Berserker Rage Rupert cast
 
 @The_monster@ roars madly and goes into a rage!
@@ -320,6 +387,14 @@ unseen Ensnare Arachne cast
 
 A stream of webbing shoots out from thin air.
 %%%%
+Lehudib's Crystal Spear the Serpent of Hell cast
+
+@The_monster@ spits crystal @at@ @target@.
+%%%%
+Mennas cast
+
+VISUAL:@The_monster@ gestures frantically.
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
@@ -330,6 +405,24 @@ brain worm cast
 giant orange brain cast
 
 @The_monster@ pulsates.
+%%%%
+silent flayed ghost cast
+
+@The_monster@ moans in silent anguish.
+
+@The_monster@ stares @at@ @foe@ with tortured malice.
+%%%%
+flayed ghost cast
+
+@The_monster@ stares @at@ @foe@ with tortured malice.
+
+@The_monster@ cries, "Suffer as I suffered!"
+
+@The_monster@ cries, "Feel what I felt!"
+%%%%
+manticore cast
+
+@The_monster@ flicks its tail.
 %%%%
 orange crystal statue cast
 
@@ -351,7 +444,7 @@ orb of fire cast
 
 @The_monster@ emits a lurid red light.
 %%%%
-silver statue cast
+obsidian statue cast
 
 @The_monster@'s eyes glow briefly.
 %%%%
@@ -382,13 +475,25 @@ Airstrike wind drake cast
 
 @The_monster@ flaps its wings @at@ @target@.
 %%%%
+Wind Blast wind drake cast
+
+@The_monster@ exhales a fierce blast of wind!
+%%%%
 dryad cast
 
 @The_monster@ calls out to the forest.
 %%%%
+Battlecry cherub cast
+
+@The_monster@ sings a powerful hymn!
+%%%%
 Minor Healing dryad cast
 
 @The_monster@ draws upon the vitality of nature.
+%%%%
+Battlecry satyr cast
+
+@The_monster@ plays a rousing melody on his pipes!
 %%%%
 Cause Fear satyr cast
 
@@ -417,6 +522,82 @@ Stone Arrow gargoyle cast
 Bolt of Magma molten gargoyle cast
 
 @The_monster@ blasts magma @at@ @target@!
+%%%%
+Primal Wave elemental wellspring cast
+
+A great wave of water rises up through @the_monster@!
+%%%%
+Invisibility shadow cast
+
+@The_monster@ slips into darkness.
+%%%%
+ghost moth cast targeted
+
+@The_monster@ stares @at@ @target@.
+%%%%
+ghost moth cast
+
+@The_monster@ looks around.
+%%%%
+unseen ghost moth cast targeted
+
+You feel you are being watched by something. @player_only@
+%%%%
+golden eye cast targeted
+
+@The_monster@ blinks @at@ @target@.
+%%%%
+Blink golden eye cast
+
+__NONE
+%%%%
+ushabti cast
+
+@The_monster@ shakes and rattles.
+%%%%
+Bolt of Draining anubis guard cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Ghostly Flames revenant cast
+
+@The_monster@ lashes out with ghostly flames.
+%%%%
+Ghostly Fireball revenant cast
+
+@ghostly flames revenant cast@
+%%%%
+Dispel Undead revenant cast
+
+@The_monster@ gestures violently @at@ @target@.
+%%%%
+Blink Away revenant cast
+
+__NONE
+%%%%
+Hunting Cry seraph cast
+
+@The_monster@ shouts a warning to @possessive@ allies!
+%%%%
+Battlecry seraph cast
+
+@The_monster@ sings a powerful hymn!
+%%%%
+Throw Icicle shard shrike cast
+
+@The_monster@ spits a shard of ice @at@ @target@.
+%%%%
+Lightning Bolt electric golem cast
+
+@The_monster@ hurls @beam@ @at@ @target@.
+%%%%
+insubstantial wisp cast
+
+@The_monster@ thrums sharply.
+%%%%
+Blink insubstantial wisp cast
+
+__NONE
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -465,6 +646,10 @@ giant eyeball cast
 
 @The_monster@ looks around.
 %%%%
+unseen giant eyeball cast targeted
+
+You feel you are being watched by something. @player_only@
+%%%%
 guardian serpent cast targeted
 
 @The_monster@ coils @reflexive@ and waves @possessive@ upper body @at@ @target@.
@@ -496,6 +681,10 @@ Shock shock serpent cast
 Static Discharge shock serpent cast
 
 @The_monster@ crackles with electricity!
+%%%%
+Corrupting Pulse wretched star cast
+
+@The_monster@ pulses with an eldritch light!
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

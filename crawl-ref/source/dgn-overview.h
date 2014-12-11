@@ -6,8 +6,9 @@
 #ifndef OVERMAP_H
 #define OVERMAP_H
 
-#include "stash.h"
 #include <vector>
+
+#include "stash.h"
 
 void overview_clear();
 
@@ -21,6 +22,7 @@ string overview_description_string(bool display);
 void enter_branch(branch_type branch, level_id from);
 void mark_offlevel_shop(level_id lid, shop_type type);
 void unmark_offlevel_shop(level_id lid);
+void mark_corrupted_level(level_id li);
 
 ///////////////////////////////////////////////////////////
 void set_level_exclusion_annotation(string str,

@@ -49,7 +49,7 @@ public:
     };
 
     virtual int info(tile_draw_info *dinfo) const { return 0; }
-    virtual const dolls_data *doll() const { return NULL; }
+    virtual const dolls_data *doll() const { return nullptr; }
 
     virtual bool transparent() const { return false; }
 

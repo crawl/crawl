@@ -76,22 +76,29 @@ enum msg_colour_type
     MSGCOL_NONE,                // parsing failure, etc
 };
 
+// Be sure to change diag_names in dbg-util.cc to match.
 enum diag_type
 {
     DIAG_NORMAL,
+    DIAG_DNGN,
+    DIAG_SKILLS,
     DIAG_COMBAT,
     DIAG_BEAM,
+    DIAG_NOISE,
     DIAG_ABYSS,
     DIAG_MONPLACE,
 #ifdef DEBUG_MONSPEAK
     DIAG_SPEECH,
+#endif
+#ifdef DEBUG_MONINDEX
+    DIAG_MONINDEX,
 #endif
     NUM_DIAGNOSTICS
 };
 
 msg_colour_type msg_colour(int colour);
 
-void mpr(const char *text);
+void mpr(const string &text);
 void mpr_nojoin(msg_channel_type channel, string text);
 
 // 4.1-style mpr, currently named mprf for minimal disruption.

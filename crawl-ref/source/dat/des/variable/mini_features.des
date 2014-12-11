@@ -92,7 +92,7 @@ TAGS:   uniq_statue_alley transparent extra decor
 DEPTH:  D:10-
 WEIGHT: 7
 SUBST:  F = G:99 F:1
-KMONS:  F = orange crystal statue / silver statue / ice statue
+KMONS:  F = orange crystal statue / obsidian statue / ice statue
 MAP
   xxxxxxx
 xxxcccccx
@@ -267,7 +267,8 @@ xxxxxxx
 ENDMAP
 
 NAME:  nrook_mini_backslash
-TAGS:  extra decor
+# "transparent" for connectivity checks, so neither side is isolated.
+TAGS:  transparent extra decor
 DEPTH: D, Depths, Elf
 MAP
 ..xxx....
@@ -2653,6 +2654,17 @@ MAP
       ......      ......
 ENDMAP
 
+NAME: amethyst_killhole
+TAGS: extra decor
+DEPTH: D, Elf
+MAP
+x@xx
+xx.xxxx
+ xx.x.x
+  xx.xx
+   xxx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -3196,11 +3208,11 @@ MAP
          _
           _
            ..aaa..
-           .cxxxc.
-           .xiiix.
-           .xi>ix.
-           .xiiix.
-           .cxxxc.
+           .cmmmc.
+           .miiim.
+           .mi>im.
+           .miiim.
+           .cmmmc.
            .......
                   _
                    _
@@ -3238,17 +3250,6 @@ xttttttttttZWWWx.....x
 xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   dk_noncrumbling_1
-TAGS:   extra decor
-DEPTH:  D, Depths, Elf
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxx
-xxxGxGxGxGxGxGxGxGxGxGxx
-x*.....................+
-xxxGxGxGxGxGxGxGxGxGxGxx
-xxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
 NAME:   dk_noncrumbling_2
 TAGS:   extra decor
 DEPTH:  D, Depths, Elf
@@ -3257,21 +3258,21 @@ MAP
        xx.xx
        xG.Gx
        xx.xx
-       xG.Gx
        xx.xx
        xG.Gx
+       xx.xx
        xx.xx
        xG.Gx
 xxxxxxxxx.xxxxxxxxxxx
-xxGxGxGxx.xxGxGxGxGxx
+xxGxxxGxx.xxGxxGxxGxx
 +........*..........+
-xxGxGxGxx.xxGxGxGxGxx
+xxGxxxGxx.xxGxxGxxGxx
 xxxxxxxxx.xxxxxxxxxxx
        xG.Gx
        xx.xx
-       xG.Gx
        xx.xx
        xG.Gx
+       xx.xx
        xx.xx
        xG.Gx
        xx.xx
@@ -3286,11 +3287,11 @@ MAP
    xx...xx
   xx.....xx
  xx.G...G.xx
-xx.G.....G.xx
+xx.x.....x.xx
 x...G...G...x
 +.....*.....+
 x...G...G...x
-xx.G.....G.xx
+xx.x.....x.xx
  xx.G...G.xx
   xx.....xx
    xx...xx
@@ -3303,15 +3304,15 @@ DEPTH:  D, Depths, Elf
 MAP
     xx+xx
    xxG.Gxx
-  xxG...Gxx
+  xx.....xx
  xxG.....Gxx
-xxG.......Gxx
+xx.........xx
 xG.........Gx
 +.....*.....+
 xG.........Gx
-xxG.......Gxx
+xx.........xx
  xxG.....Gxx
-  xxG...Gxx
+  xx.....xx
    xxG.Gxx
     xx+xx
 ENDMAP
@@ -3648,10 +3649,6 @@ ccccccccccccccccccccccc
 ENDMAP
 
 # A poor man's Radiant Cavern (1KB)
-#
-# Without an amulet of rMut, in my tests, the cost was 4-6 bad
-# mutations -- certainly not worth most of the loot. With rMut,
-# it's still a gamble.
 NAME:  kilobyte_mutagenic_chamber
 DEPTH: Depths, Elf, Abyss
 TAGS:  ruin_abyss

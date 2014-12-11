@@ -6,10 +6,11 @@
 #ifndef GOD_COMPANION_H
 #define GOD_COMPANION_H
 
+#include <list>
+#include <map>
+
 #include "monster.h"
 #include "mon-transit.h"
-#include <map>
-#include <list>
 
 struct companion
 {
@@ -32,7 +33,6 @@ void move_companion_to(const monster* mons, const level_id lid);
 
 void update_companions();
 
-void list_companions();
 bool companion_is_elsewhere(mid_t mid, bool must_exist = false);
 
 void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list);

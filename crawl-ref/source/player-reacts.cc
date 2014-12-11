@@ -7,29 +7,24 @@
 
 #include "player-reacts.h"
 
-// Later #includes are copy-pasted from main.cc
-// since I didn't have an automated include-
-// what-you-use program when I wrote this. -reaverb
-
-#include <string>
 #include <algorithm>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <list>
+#include <sstream>
+#include <string>
 
-#include <errno.h>
 #ifndef TARGET_OS_WINDOWS
 # ifndef __ANDROID__
 #  include <langinfo.h>
 # endif
 #endif
-#include <stdlib.h>
-#include <string.h>
 #include <fcntl.h>
-#include <stdio.h>
-#include <list>
-#include <sstream>
-#include <iostream>
-
 #ifdef USE_UNIX_SIGNALS
-#include <signal.h>
+#include <csignal>
 #endif
 
 #include "act-iter.h"
@@ -47,6 +42,9 @@
 #include "dbg-util.h"
 #include "delay.h"
 #include "describe.h"
+#ifdef DGL_SIMPLE_MESSAGING
+#include "dgl-message.h"
+#endif
 #include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "dlua.h"
@@ -55,7 +53,6 @@
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"
-#include "externs.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
@@ -70,10 +67,10 @@
 #include "hints.h"
 #include "initfile.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "macro.h"
@@ -86,21 +83,21 @@
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
-#include "player-stats.h"
 #include "player.h"
+#include "player-stats.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
 #include "shout.h"
 #include "skills.h"
-#include "skills2.h"
 #include "species.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
@@ -116,29 +113,24 @@
 #include "startup.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
+#include "stringutil.h"
 #include "tags.h"
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
-#include "transform.h"
-#include "traps.h"
-#include "travel.h"
-#include "version.h"
-#include "view.h"
-#include "viewchar.h"
-#include "viewgeom.h"
-#include "viewmap.h"
-#include "xom.h"
-
 #ifdef USE_TILE
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #endif
-
-#ifdef DGL_SIMPLE_MESSAGING
-#include "dgl-message.h"
-#endif
+#include "transform.h"
+#include "traps.h"
+#include "travel.h"
+#include "version.h"
+#include "viewchar.h"
+#include "viewgeom.h"
+#include "view.h"
+#include "viewmap.h"
+#include "xom.h"
 
 /**
  * Decrement a duration by the given delay.
@@ -214,10 +206,14 @@ static void _decrement_petrification(int delay)
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
         you.redraw_evasion = true;
+        // implicit assumption: all races that can be petrified are made of
+        // flesh when not petrified
+        const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
+                                            "flesh" :
+                                            get_form()->flesh_equivalent;
+
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
-             you.form == TRAN_LICH ? "bone" :
-             you.form == TRAN_ICE_BEAST ? "ice" :
-             "flesh");
+             flesh_equiv.c_str());
     }
 
     if (you.duration[DUR_PETRIFYING])
@@ -232,7 +228,7 @@ static void _decrement_petrification(int delay)
             // magical, inluding tengu, as there's no flapping of wings.  Should
             // we be nasty to dragon and bat forms?  For now, let's not instakill
             // them even if it's inconsistent.
-            you.fully_petrify(NULL);
+            you.fully_petrify(nullptr);
         }
         else if (dur < 15 && old_dur >= 15)
             mpr("Your limbs are stiffening.");
@@ -260,6 +256,140 @@ static void _decrement_paralysis(int delay)
 }
 
 /**
+ * Check whether the player's ice (ozocubu's) armour and/or condensation shield
+ * were melted this turn; if so, print the appropriate message.
+ */
+static void _maybe_melt_armour()
+{
+    // We have to do the messaging here, because a simple wand of flame will
+    // call _maybe_melt_player_enchantments twice. It also avoids duplicate
+    // messages when melting because of several heat sources.
+    string what;
+    if (you.props.exists(MELT_ARMOUR_KEY))
+    {
+        what = "armour";
+        you.props.erase(MELT_ARMOUR_KEY);
+    }
+
+    if (you.props.exists(MELT_SHIELD_KEY))
+    {
+        if (what != "")
+            what += " and ";
+        what += "shield";
+        you.props.erase(MELT_SHIELD_KEY);
+    }
+
+    if (what != "")
+        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
+}
+
+/**
+ * How much horror does the player character feel in the current situation?
+ *
+ * (For Ru's MUT_COWARDICE.)
+ *
+ * Penalties are based on the "scariness" (threat level) of monsters currently
+ * visible.
+ */
+static int _current_horror_level()
+{
+    const coord_def& center = you.pos();
+    const int radius = 8;
+    int horror_level = 0;
+
+    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+    {
+        const monster* const mon = monster_at(*ri);
+
+        if (mon == nullptr
+            || mons_aligned(mon, &you)
+            || mons_is_firewood(mon)
+            || !you.can_see(mon))
+        {
+            continue;
+        }
+
+        ASSERT(mon);
+
+        const mon_threat_level_type threat_level = mons_threat_level(mon);
+        if (threat_level == MTHRT_NASTY)
+            horror_level += 3;
+        else if (threat_level == MTHRT_TOUGH)
+            horror_level += 1;
+    }
+    // Subtract one from the horror level so that you don't get a message
+    // when a single tough monster appears.
+    horror_level = max(0, horror_level - 1);
+    return horror_level;
+}
+
+/**
+ * What was the player's most recent horror level?
+ *
+ * (For Ru's MUT_COWARDICE.)
+ */
+static int _old_horror_level()
+{
+    if (you.duration[DUR_HORROR])
+        return you.props[HORROR_PENALTY_KEY].get_int();
+    return 0;
+}
+
+/**
+ * When the player should no longer be horrified, end the DUR_HORROR if it
+ * exists & cleanup the corresponding prop.
+ */
+static void _end_horror()
+{
+    if (!you.duration[DUR_HORROR])
+        return;
+
+    you.props.erase(HORROR_PENALTY_KEY);
+    you.set_duration(DUR_HORROR, 0);
+}
+
+/**
+ * Update penalties for cowardice based on the current situation, if the player
+ * has Ru's MUT_COWARDICE.
+ */
+static void _update_cowardice()
+{
+    if (!player_mutation_level(MUT_COWARDICE))
+    {
+        // If the player somehow becomes sane again, handle that
+        _end_horror();
+        return;
+    }
+
+    const int horror_level = _current_horror_level();
+
+    if (horror_level <= 0)
+    {
+        // If you were horrified before & aren't now, clean up.
+        _end_horror();
+        return;
+    }
+
+    // Lookup the old value before modifying it
+    const int old_horror_level = _old_horror_level();
+
+    // as long as there's still scary enemies, keep the horror going
+    you.props[HORROR_PENALTY_KEY] = horror_level;
+    you.set_duration(DUR_HORROR, 1);
+
+    // only show a message on increase
+    if (horror_level <= old_horror_level)
+        return;
+
+    if (horror_level >= HORROR_LVL_OVERWHELMING)
+        mpr("Monsters! Monsters everywhere! You have to get out of here!");
+    else if (horror_level >= HORROR_LVL_EXTREME)
+        mpr("You reel with horror at the sight of these foes!");
+    else
+        mpr("You feel a twist of horror at the sight of this foe.");
+}
+
+/**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
 void player_reacts_to_monsters()
@@ -273,11 +403,8 @@ void player_reacts_to_monsters()
 
     check_monster_detect();
 
-    if ((you_worship(GOD_ASHENZARI) && !player_under_penance())
-        || you.mutation[MUT_JELLY_GROWTH])
-    {
+    if (in_good_standing(GOD_ASHENZARI) || you.mutation[MUT_JELLY_GROWTH])
         detect_items(-1);
-    }
 
     if (you.duration[DUR_TELEPATHY])
     {
@@ -285,32 +412,13 @@ void player_reacts_to_monsters()
                          (2 * BASELINE_DELAY), true);
     }
 
-    // We have to do the messaging here, because a simple wand of flame will
-    // call _maybe_melt_player_enchantments twice. It also avoid duplicate
-    // messages when melting because of several heating sources.
-    string what;
-    if (you.props.exists(MELT_ARMOUR_KEY))
-    {
-        what = "armour";
-        you.props.erase(MELT_ARMOUR_KEY);
-    }
-
-    if (you.props.exists("melt_shield"))
-    {
-        if (what != "")
-            what += " and ";
-        what += "shield";
-        you.props.erase("melt_shield");
-    }
-
-    if (what != "")
-        mprf(MSGCH_DURATION, "The heat melts your icy %s.", what.c_str());
-
     handle_starvation();
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awake();
+    _maybe_melt_armour();
+    _update_cowardice();
 }
 
 static bool _check_recite()
@@ -445,7 +553,7 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
 
     if (_decrement_a_duration(DUR_TROGS_HAND, delay,
-                              NULL, coinflip(),
+                              nullptr, coinflip(),
                               "You feel the effects of Trog's Hand fading."))
     {
         trog_remove_trogs_hand();
@@ -507,7 +615,7 @@ static void _decrement_durations()
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY
         || you.transform_uncancellable)
     {
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, NULL, random2(3),
+        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
                                   "Your transformation is almost over."))
         {
             untransform();
@@ -516,7 +624,7 @@ static void _decrement_durations()
 
     // Must come after transformation duration.
     _decrement_a_duration(DUR_BREATH_WEAPON, delay,
-                          "You have got your breath back.", 0, NULL,
+                          "You have got your breath back.", 0, nullptr,
                           MSGCH_RECOVERY);
 
     if (you.attribute[ATTR_SWIFTNESS] >= 0)
@@ -599,7 +707,7 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
 
-    if (_decrement_a_duration(DUR_INVIS, delay, NULL,
+    if (_decrement_a_duration(DUR_INVIS, delay, nullptr,
                               coinflip(), "You flicker for a moment."))
     {
         if (you.invisible())
@@ -609,11 +717,16 @@ static void _decrement_durations()
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     }
 
+    // Decrement ambrosia before confusion, otherwise confusion ending
+    // will cancel ambrosia early. Might be a bad coupling, but ambrosia
+    // needs to use DUR_CONF otherwise it won't behave right if a player
+    // gets confused after eating ambrosia.
+    dec_ambrosia_player(delay);
     _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
     _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
-    if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
+    if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, nullptr, 0,
                               "Quad Damage is wearing off."))
     {
         invalidate_agrid(true);
@@ -626,11 +739,12 @@ static void _decrement_durations()
         you.redraw_evasion      = true;
         you.redraw_armour_class = true;
     }
-    _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
+
+    _decrement_a_duration(DUR_FINESSE, delay,
+                          you.hands_act("slow", "down.").c_str());
 
     _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
-                          ((string("Your ") + you.hand_name(true)) +
-                           " stop glowing.").c_str());
+                          you.hands_act("stop", "glowing.").c_str());
 
     _decrement_a_duration(DUR_SURE_BLADE, delay,
                           "The bond with your blade fades away.");
@@ -640,7 +754,7 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_MESMERISED, delay,
                               "You break out of your daze.",
-                              0, NULL, MSGCH_RECOVERY))
+                              0, nullptr, MSGCH_RECOVERY))
     {
         you.clear_beholders();
     }
@@ -649,19 +763,23 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_AFRAID, delay,
                               "Your fear fades away.",
-                              0, NULL, MSGCH_RECOVERY))
+                              0, nullptr, MSGCH_RECOVERY))
     {
         you.clear_fearmongers();
     }
 
     _decrement_a_duration(DUR_FROZEN, delay,
                           "The ice encasing you melts away.",
-                          0, NULL, MSGCH_RECOVERY);
+                          0, nullptr, MSGCH_RECOVERY);
 
     _decrement_a_duration(DUR_NO_POTIONS, delay,
-                          you_foodless(true) ? NULL
+                          you_foodless(true) ? nullptr
                                              : "You can drink potions again.",
-                          0, NULL, MSGCH_RECOVERY);
+                          0, nullptr, MSGCH_RECOVERY);
+
+    _decrement_a_duration(DUR_NO_SCROLLS, delay,
+                          "You can read scrolls again.",
+                          0, nullptr, MSGCH_RECOVERY);
 
     dec_slow_player(delay);
     dec_exhaust_player(delay);
@@ -679,26 +797,26 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_FORTITUDE, delay,
                               "Your fortitude fades away."))
     {
-        notify_stat_change(STAT_STR, -10, true, "Fortitude card running out");
+        notify_stat_change(STAT_STR, -10, true);
     }
 
 
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
     {
-        notify_stat_change(STAT_STR, -5, true, "might running out");
+        notify_stat_change(STAT_STR, -5, true);
     }
 
     if (_decrement_a_duration(DUR_AGILITY, delay,
                               "You feel a little less agile now."))
     {
-        notify_stat_change(STAT_DEX, -5, true, "agility running out");
+        notify_stat_change(STAT_DEX, -5, true);
     }
 
     if (_decrement_a_duration(DUR_BRILLIANCE, delay,
                               "You feel a little less clever now."))
     {
-        notify_stat_change(STAT_INT, -5, true, "brilliance running out");
+        notify_stat_change(STAT_INT, -5, true);
     }
 
     if (you.duration[DUR_BERSERK]
@@ -720,8 +838,7 @@ static void _decrement_durations()
         {
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
-            if (you_worship(GOD_TROG)
-                && !player_under_penance()
+            if (in_good_standing(GOD_TROG)
                 && x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
                 mpr("Trog's vigour flows through your veins.");
@@ -750,7 +867,7 @@ static void _decrement_durations()
         // duration.
         you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
-        notify_stat_change(STAT_STR, -5, true, "berserk running out");
+        notify_stat_change(STAT_STR, -5, true);
 
         // Don't trigger too many hints mode messages.
         const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
@@ -955,6 +1072,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SAP_MAGIC, delay,
                           "Your magic seems less tainted.");
 
+    _decrement_a_duration(DUR_CLEAVE, delay,
+                          "Your cleaving frenzy subsides.");
+
     if (_decrement_a_duration(DUR_CORROSION, delay,
                           "You repair your equipment."))
     {
@@ -1031,6 +1151,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_POISON_VULN, delay,
                           "You feel less vulnerable to poison.");
 
+    _decrement_a_duration(DUR_NEGATIVE_VULN, delay,
+                          "You feel less vulnerable to negative energy.");
+
     if (_decrement_a_duration(DUR_PORTAL_PROJECTILE, delay,
                               "You are no longer teleporting projectiles to their destination."))
     {
@@ -1078,6 +1201,9 @@ static void _decrement_durations()
 
     dec_elixir_player(delay);
 
+    if (x_chance_in_y(delay, 80))
+        you.maybe_degrade_bone_armour();
+
     if (!env.sunlight.empty())
         process_sunlights();
 }
@@ -1088,23 +1214,18 @@ static void _check_equipment_conducts()
 {
     if (you_worship(GOD_DITHMENOS) && one_chance_in(10))
     {
-        bool illuminating = false, fiery = false;
+        bool fiery = false;
         const item_def* item;
         for (int i = EQ_MIN_ARMOUR; i < NUM_EQUIP; i++)
         {
             item = you.slot_item(static_cast<equipment_type>(i));
-            if (!item)
-                continue;
-            if (is_illuminating_item(*item))
-                illuminating = true;
-            else if (is_fiery_item(*item))
+            if (item && is_fiery_item(*item))
+            {
                 fiery = true;
-            if (illuminating && fiery)
                 break;
+            }
         }
-        if (illuminating)
-            did_god_conduct(DID_ILLUMINATE, 1, true);
-        else if (fiery)
+        if (fiery)
             did_god_conduct(DID_FIRE, 1, true);
     }
 }
@@ -1217,7 +1338,7 @@ void player_reacts()
 
     // Singing makes a continuous noise
     if (you.duration[DUR_SONG_OF_SLAYING])
-        noisy(8, you.pos());
+        noisy(spell_effect_noise(SPELL_SONG_OF_SLAYING), you.pos());
 
     if (one_chance_in(10))
     {
@@ -1306,5 +1427,7 @@ void extract_manticore_spikes(const char* endmsg)
         // Otherwise, this prevents the damage.
 
         you.attribute[ATTR_BARBS_POW] = 0;
+
+        you.props.erase(BARBS_MOVE_KEY);
     }
 }

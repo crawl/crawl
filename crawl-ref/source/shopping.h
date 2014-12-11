@@ -6,8 +6,6 @@
 #ifndef SHOPPING_H
 #define SHOPPING_H
 
-#include "externs.h"
-
 int artefact_value(const item_def &item);
 
 // ident == true overrides the item ident level and gives the price
@@ -24,8 +22,7 @@ shop_struct *get_shop(const coord_def& where);
 
 void destroy_shop_at(coord_def p);
 
-string shop_name(const coord_def& where);
-string shop_name(const coord_def& where, bool add_stop);
+string shop_name(const coord_def& where, bool add_stop = false);
 string shop_type_name(shop_type type);
 
 bool shoptype_identifies_stock(shop_type type);
@@ -33,7 +30,7 @@ bool shoptype_identifies_stock(shop_type type);
 bool is_shop_item(const item_def &item);
 bool shop_item_unknown(const item_def &item);
 
-int str_to_shoptype(const string &s);
+shop_type str_to_shoptype(const string &s);
 const char *shoptype_to_str(shop_type type);
 void list_shop_types();
 
@@ -48,15 +45,15 @@ public:
     ShoppingList();
 
     bool add_thing(const item_def &item, int cost,
-                   const level_pos* pos = NULL);
+                   const level_pos* pos = nullptr);
     bool add_thing(string desc, string buy_verb, int cost,
-                   const level_pos* pos = NULL);
+                   const level_pos* pos = nullptr);
 
-    bool is_on_list(const item_def &item, const level_pos* pos = NULL) const;
-    bool is_on_list(string desc, const level_pos* pos = NULL) const;
+    bool is_on_list(const item_def &item, const level_pos* pos = nullptr) const;
+    bool is_on_list(string desc, const level_pos* pos = nullptr) const;
 
-    bool del_thing(const item_def &item, const level_pos* pos = NULL);
-    bool del_thing(string desc, const level_pos* pos = NULL);
+    bool del_thing(const item_def &item, const level_pos* pos = nullptr);
+    bool del_thing(string desc, const level_pos* pos = nullptr);
 
     void del_things_from(const level_id &lid);
 

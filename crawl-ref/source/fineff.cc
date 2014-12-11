@@ -5,17 +5,24 @@
 **/
 
 #include "AppHdr.h"
-#include "bloodspatter.h"
-#include "coord.h"
-#include "dactions.h"
-#include "effects.h"
-#include "env.h"
+
 #include "fineff.h"
+
+#include "act-iter.h"
+#include "bloodspatter.h"
+#include "coordit.h"
+#include "dactions.h"
+#include "directn.h"
+#include "english.h"
+#include "env.h"
+#include "godabil.h"
 #include "libutil.h"
-#include "mgen_data.h"
+#include "message.h"
 #include "mon-abil.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
@@ -23,25 +30,31 @@
 #include "transform.h"
 #include "view.h"
 
-void final_effect::schedule()
+/*static*/ void final_effect::schedule(final_effect *eff)
 {
-    for (vector<final_effect *>::iterator fi = env.final_effects.begin();
-         fi != env.final_effects.end(); ++fi)
+    for (auto fe : env.final_effects)
     {
-        if ((*fi)->mergeable(*this))
+        if (fe->mergeable(*eff))
         {
-            (*fi)->merge(*this);
-            delete this;
+            fe->merge(*eff);
+            delete eff;
             return;
         }
     }
-    env.final_effects.push_back(this);
+    env.final_effects.push_back(eff);
 }
 
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
 {
     const mirror_damage_fineff *o =
         dynamic_cast<const mirror_damage_fineff *>(&fe);
+    return o && att == o->att && def == o->def;
+}
+
+bool ru_retribution_fineff::mergeable(const final_effect &fe) const
+{
+    const ru_retribution_fineff *o =
+        dynamic_cast<const ru_retribution_fineff *>(&fe);
     return o && att == o->att && def == o->def;
 }
 
@@ -117,6 +130,14 @@ void mirror_damage_fineff::merge(const final_effect &fe)
     damage += mdfe->damage;
 }
 
+void ru_retribution_fineff::merge(const final_effect &fe)
+{
+    const ru_retribution_fineff *mdfe =
+        dynamic_cast<const ru_retribution_fineff *>(&fe);
+    ASSERT(mdfe);
+    ASSERT(mergeable(*mdfe));
+}
+
 void trj_spawn_fineff::merge(const final_effect &fe)
 {
     const trj_spawn_fineff *trjfe =
@@ -162,7 +183,7 @@ void mirror_damage_fineff::fire()
     if (att == MID_PLAYER)
     {
         mpr("Your damage is reflected back at you!");
-        ouch(damage, NON_MONSTER, KILLED_BY_MIRROR_DAMAGE);
+        ouch(damage, KILLED_BY_MIRROR_DAMAGE);
     }
     else if (def == MID_PLAYER)
     {
@@ -183,6 +204,15 @@ void mirror_damage_fineff::fire()
         simple_monster_message(monster_by_mid(att), " suffers a backlash!");
         attack->hurt(defender(), damage);
     }
+}
+
+void ru_retribution_fineff::fire()
+{
+    actor *attack = attacker();
+    if (!attack || attack == defender() || !attack->alive())
+        return;
+    if (def == MID_PLAYER)
+        ru_do_retribution(monster_by_mid(att), damage);
 }
 
 void trample_follow_fineff::fire()
@@ -307,22 +337,137 @@ void deferred_damage_fineff::fire()
             damage = min(damage, df_hp - 1);
         }
 
-        df->hurt(attacker(), damage, BEAM_MISSILE, true, attacker_effects);
+        df->hurt(attacker(), damage, BEAM_MISSILE, KILLED_BY_MONSTER, "", "",
+                 true, attacker_effects);
     }
+}
+
+static void _do_merge_masses(monster* initial_mass, monster* merge_to)
+{
+    // Combine enchantment durations.
+    merge_ench_durations(initial_mass, merge_to);
+
+    merge_to->blob_size += initial_mass->blob_size;
+    merge_to->max_hit_points += initial_mass->max_hit_points;
+    merge_to->hit_points += initial_mass->hit_points;
+
+    // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
+    // passed on if the merged slime subsequently splits.  Hopefully
+    // this won't do anything weird.
+    merge_to->flags |= initial_mass->flags;
+
+    // Overwrite the state of the slime getting merged into, because it
+    // might have been resting or something.
+    merge_to->behaviour = initial_mass->behaviour;
+    merge_to->foe = initial_mass->foe;
+
+    behaviour_event(merge_to, ME_EVAL);
+
+    // Have to 'kill' the slime doing the merging.
+    monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
 }
 
 void starcursed_merge_fineff::fire()
 {
     actor *defend = defender();
-    if (defend && defend->alive())
-        starcursed_merge(defender()->as_monster(), true);
+    if (!defend || !defend->alive())
+        return;
+
+    monster *mon = defend->as_monster();
+
+    // Find a random adjacent starcursed mass and merge with it.
+    for (fair_adjacent_iterator ai(mon->pos()); ai; ++ai)
+    {
+        monster* mergee = monster_at(*ai);
+        if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
+        {
+            simple_monster_message(mon,
+                    " shudders and is absorbed by its neighbour.");
+            _do_merge_masses(mon, mergee);
+            return;
+        }
+    }
+
+    // If there was nothing adjacent to merge with, at least try to move toward
+    // another starcursed mass
+    for (distance_iterator di(mon->pos(), true, true, 8); di; ++di)
+    {
+        monster* ally = monster_at(*di);
+        if (ally && ally->alive() && ally->type == MONS_STARCURSED_MASS
+            && mon->can_see(ally))
+        {
+            bool moved = false;
+
+            coord_def sgn = (*di - mon->pos()).sgn();
+            if (mon_can_move_to_pos(mon, sgn))
+            {
+                mon->move_to_pos(mon->pos()+sgn, false);
+                moved = true;
+            }
+            else if (abs(sgn.x) != 0)
+            {
+                coord_def dx(sgn.x, 0);
+                if (mon_can_move_to_pos(mon, dx))
+                {
+                    mon->move_to_pos(mon->pos()+dx, false);
+                    moved = true;
+                }
+            }
+            else if (abs(sgn.y) != 0)
+            {
+                coord_def dy(0, sgn.y);
+                if (mon_can_move_to_pos(mon, dy))
+                {
+                    mon->move_to_pos(mon->pos()+dy, false);
+                    moved = true;
+                }
+            }
+
+            if (moved)
+            {
+                simple_monster_message(mon, " shudders and withdraws towards its neighbour.");
+                mon->speed_increment -= 10;
+            }
+        }
+    }
 }
 
 void shock_serpent_discharge_fineff::fire()
 {
-    actor *defend = defender();
-    shock_serpent_discharge((defend ? defend->as_monster() : NULL), position,
-                             power, attitude);
+    monster* serpent = defender() ? defender()->as_monster() : nullptr;
+    int range = min(3, power);
+
+    vector <actor*> targets;
+    for (actor_near_iterator ai(position); ai; ++ai)
+    {
+        if (ai->pos().distance_from(position) <= range
+            && !mons_atts_aligned(attitude, ai->is_player() ? ATT_FRIENDLY
+                                                            : mons_attitude(ai->as_monster()))
+            && ai->res_elec() < 3)
+        {
+            targets.push_back(*ai);
+        }
+    }
+
+    if (serpent && you.can_see(serpent))
+    {
+        mprf("%s electric aura discharges%s!", serpent->name(DESC_ITS).c_str(),
+             power < 4 ? "" : " violently");
+    }
+    else if (you.see_cell(position))
+        mpr("The air sparks with electricity!");
+
+    // FIXME: should merge the messages.
+    for (actor *act : targets)
+    {
+        int amount = roll_dice(3, 4 + power * 3 / 2);
+        amount = act->apply_ac(amount, 0, AC_HALF);
+
+        if (you.see_cell(act->pos()))
+            mprf("The lightning shocks %s.", act->name(DESC_THE).c_str());
+        act->hurt(serpent, amount, BEAM_ELECTRICITY, KILLED_BY_BEAM,
+                  "a shock serpent", "electric aura");
+    }
 }
 
 void delayed_action_fineff::fire()
@@ -371,11 +516,8 @@ void fire_final_effects()
     while (!env.final_effects.empty())
     {
         // Remove it first so nothing can merge with it.
-        final_effect *eff = env.final_effects.back();
+        unique_ptr<final_effect> eff(env.final_effects.back());
         env.final_effects.pop_back();
-
         eff->fire();
-
-        delete eff;
     }
 }

@@ -91,13 +91,9 @@ A fountain of sparkling water
 
 Une fontaine décorative, d'où s'écoule de l'eau brillante et pétillante.
 %%%%
-A gate leading back out of here
-
-Ce portail peut vous ramener d'où vous venez.
-%%%%
 A gate leading back out of this place
 
-Ce portail reconduit au Donjon.
+Ce portail peut vous ramener d'où vous venez.
 %%%%
 A gate leading out of Pandemonium
 

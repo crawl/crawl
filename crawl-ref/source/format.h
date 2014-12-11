@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "externs.h"
-
 // Definitions for formatted_string
 
 enum fs_op_type
@@ -28,7 +26,7 @@ public:
     void cprintf(PRINTF(1, ));
     void cprintf(const string &s);
     void add_glyph(cglyph_t g);
-    void textcolor(int color);
+    void textcolour(int colour);
     formatted_string chop(int length) const;
     void del_char();
     void all_caps();
@@ -51,7 +49,7 @@ public:
     static formatted_string parse_string(
             const string &s,
             bool  eot_ends_format = true,
-            bool (*process_tag)(const string &tag) = NULL,
+            bool (*process_tag)(const string &tag) = nullptr,
             int main_colour = LIGHTGREY);
 
     static void parse_string_to_multiple(const string &s,
@@ -74,8 +72,8 @@ public:
         bool relative;
         string text;
 
-        fs_op(int color)
-            : type(FSOP_COLOUR), x(color), y(-1), relative(false), text()
+        fs_op(int colour)
+            : type(FSOP_COLOUR), x(colour), y(-1), relative(false), text()
         {
         }
 

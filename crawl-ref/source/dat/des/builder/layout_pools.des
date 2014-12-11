@@ -148,6 +148,9 @@ ENDMAP
 #  directly beside each other.  They are sometimes connected
 #  by doors and sometimes just by holes in the wall.
 #
+# TODO: Bigger pools and more doors on Depths to reduce
+#       connectivity failures when adding vaults
+#
 NAME:   layout_honeycomb
 DEPTH:  Snake:1-4, Depths, Tar
 WEIGHT: 10 (Snake), 15 (Depths), 10 (Tar)
@@ -176,12 +179,10 @@ TAGS:   no_rotate no_vmirror no_hmirror
                 pool_size = 25 + crawl.random2(25),
                 border = 'x' }
     connect_adjacent_rooms { wall = "x", floor = ".", replace = connection,
-                             min = 900, max = 1300, check_empty = true }
-    connect_adjacent_rooms { wall = "x", floor = ".", replace = connection,
-                             min = 100, max = 200, check_empty = false }
+                             min = 1000, max = 1500, check_distance = 3 }
     zonify.map_fill_zones(_G, 1, 'x')
 
-    if connection == '.' and you.in_branch("D") then
+    if connection == '.' and you.in_branch("Depths") then
       theme.D.caves(_G)
     else
       theme.level_material(_G)

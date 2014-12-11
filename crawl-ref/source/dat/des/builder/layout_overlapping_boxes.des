@@ -54,7 +54,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     end
 
     connect_adjacent_rooms { wall = "x", floor = ".", replace = '+',
-                             max = 1000, check_empty = true }
+                             max = 1000 }
     zonify.map_fill_zones(_G, 1, 'x')
 }}
 # Enforce minimum floor size

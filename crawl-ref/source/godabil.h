@@ -7,21 +7,27 @@
 #define GODABIL_H
 
 #include "enum.h"
-#include "externs.h"
 #include "spl-cast.h"
 
 #define BEOGH_WPN_GIFT_KEY "given beogh weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
 #define BEOGH_SH_GIFT_KEY "given beogh shield"
 
+#define AVAILABLE_SAC_KEY "available_sacrifices"
+#define HEALTH_SAC_KEY "current_health_sacrifice"
+#define ESSENCE_SAC_KEY "current_essence_sacrifice"
+#define PURITY_SAC_KEY "current_purity_sacrifice"
+#define ARCANA_SAC_KEY "current_arcane_sacrifices"
+
 struct bolt;
 class stack_iterator;
 
 string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
-int zin_check_recite_to_monsters();
+int zin_check_recite_to_monsters(bool quiet = false);
 bool zin_recite_to_single_monster(const coord_def& where);
 void zin_recite_interrupt();
+int zin_recite_power();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
 bool zin_remove_all_mutations();
@@ -49,7 +55,7 @@ bool beogh_gift_item();
 
 bool yred_injury_mirror();
 bool yred_can_animate_dead();
-void yred_animate_remains_or_dead();
+bool yred_animate_remains_or_dead();
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow);
@@ -91,7 +97,7 @@ void dithmenos_shadow_melee(actor* target);
 void dithmenos_shadow_throw(coord_def target, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
-int gozag_porridge_price();
+int gozag_potion_price();
 bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);
@@ -109,4 +115,15 @@ spret_type qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false);
 void qazlal_elemental_force();
 bool qazlal_disaster_area();
+
+void init_sac_index();
+void ru_offer_new_sacrifices();
+bool ru_do_sacrifice(ability_type sac);
+bool ru_reject_sacrifices();
+void ru_reset_sacrifice_timer(bool clear_timer = false);
+bool will_ru_retaliate();
+void ru_do_retribution(monster* mons, int damage);
+void ru_draw_out_power();
+bool ru_power_leap();
+bool ru_apocalypse();
 #endif

@@ -5,26 +5,30 @@
  * Get a random weighted choice.
  *
  * Weights are assumed to be non-negative, but are allowed to be zero.
- * @param   choices  The vector of choice-weight pairs to choose from.
+ * @tparam  V  A map, vector of pairs, etc., with the values of the
+ *             map or the second elements of the pairs being integer
+ *             weights.
  *
- * @return  A pointer to the item in the chosen pair, or NULL if all
- *          weights are zero.
+ * @param   choices  The collection of choice-weight pairs to choose from.
+ *
+ * @return  A pointer to the item in the chosen pair, or nullptr if all
+ *          weights are zero.  The pointer is const only if necessary.
  */
-template <typename T>
-T* random_choose_weighted(vector<pair<T, int> >& choices)
+template <typename V>
+auto random_choose_weighted(V &choices) -> decltype(&(begin(choices)->first))
 {
     int total = 0;
-    for (unsigned int i = 0; i < choices.size(); i++)
-        total += choices[i].second;
+    for (const auto &entry : choices)
+        total += entry.second;
     int r = random2(total);
     int sum = 0;
-    for (unsigned int i = 0; i < choices.size(); i++)
+    for (auto &entry : choices)
     {
-        sum += choices[i].second;
+        sum += entry.second;
         if (sum > r)
-            return &choices[i].first;
+            return &entry.first;
     }
-    return NULL;
+    return nullptr;
 }
 
 /**
@@ -38,7 +42,7 @@ T* random_choose_weighted(vector<pair<T, int> >& choices)
  *          weights were skipped.
  */
 template <typename T, int SIZE>
-int random_choose_weighted(FixedVector<T, SIZE>& choices)
+int random_choose_weighted(const FixedVector<T, SIZE>& choices)
 {
     int total = 0;
     for (int i = 0; i < SIZE; ++i)

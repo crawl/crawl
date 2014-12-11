@@ -1,4 +1,4 @@
-Some useful git aliases (add them to the [auto] section of your ~/.gitconfig
+Some useful git aliases (add them to the [alias] section of your ~/.gitconfig
 file):
 
 co  = checkout

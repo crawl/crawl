@@ -5,43 +5,14 @@
 # TAG_MAJOR_VERSION >= 35. (i.e, it is only necessary if the TAG_MAJOR_VERSION
 # is 34)
 ##############################################################################
-# Guarantee two rare base types with a brand
-{{
-
-function hall_of_blades_weapon(e)
-
-  local long_blade_type = crawl.one_chance_in(2) and "bastard sword"
-                                                  or "claymore"
-  local types = {"quick blade", long_blade_type,
-                 "executioner's axe", "eveningstar", "bardiche",
-                 "lajatang"}
-  local egos = {"flaming", "freezing", "electrocution", "venom",
-              "holy_wrath", "pain", "vampirism", "draining",
-              "antimagic", "distortion"}
-  local weapon1 = util.random_from(types)
-  local weapon2 = weapon1
-  while weapon2 == weapon1 do
-    weapon2 = util.random_from(types)
-  end
-  local ego1 = util.random_from(egos)
-  local ego2 = ego1
-  while ego2 == ego1 do
-    ego2 = util.random_from(egos)
-  end
-
-  e.mons("dancing weapon; good_item " .. weapon1 .. " ego:" .. ego1)
-  e.mons("dancing weapon; good_item " .. weapon2 .. " ego:" .. ego2)
-end
-
-}}
+: require('dlua/vault.lua')
 
 # Main layout
-
 NAME:    hall_of_blades
 TAGS:    no_dump no_monster_gen
 PLACE:   Blade
 ORIENT:  encompass
-: hall_of_blades_weapon(_G)
+: halls_of_blades_weapon(_G)
 SHUFFLE: C{D[ / C{D[ / D{C[ / D[C{ / D{D[
 SUBST:   C = c, D[ = ., E : c.., F : c.., c : cv
 NSUBST:  { : 1:{ / *:., . : 6:0 / 6 = 0. / 6 = 0... / *:.

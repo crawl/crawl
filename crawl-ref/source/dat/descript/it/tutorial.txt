@@ -54,7 +54,7 @@ tutorial2 exit
   Puoi anche fare fuoco <input>cliccandoci</input> e confermando il bersagli con <input>Invio</input>.</localtiles>
 
 <yellow>Riposarsi</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  aspetta e riposati per un singolo turno
+  <input>$cmd[CMD_WAIT]</input>  aspetta e riposati per un singolo turno
   <input>$cmd[CMD_REST]</input>  aspetta e riposati per 100 turni
 
 <yellow>Cadaveri<console> <brown>%</brown></console></yellow>
@@ -182,7 +182,7 @@ tutorial5 exit
   Anche un <input>click destro</input> sul giocatore farà apparire il menu della religione</localtiles>
 
 <yellow>Riposarsi</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  aspetta e riposati per un singolo turno
+  <input>$cmd[CMD_WAIT]</input>  aspetta e riposati per un singolo turno
   <input>$cmd[CMD_REST]</input>  aspetta e riposati per 100 turni
 
 <yellow>Altri comandi</yellow>

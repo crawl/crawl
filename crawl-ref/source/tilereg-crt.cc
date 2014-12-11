@@ -2,13 +2,14 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include "tilereg-crt.h"
+
 #include "cio.h"
 #include "menu.h"
 #include "tilefont.h"
-#include "tilereg-crt.h"
 #include "viewgeom.h"
 
-CRTRegion::CRTRegion(FontWrapper *font) : TextRegion(font), m_attached_menu(NULL)
+CRTRegion::CRTRegion(FontWrapper *font) : TextRegion(font), m_attached_menu(nullptr)
 {
 }
 
@@ -20,7 +21,7 @@ CRTRegion::~CRTRegion()
 int CRTRegion::handle_mouse(MouseEvent &event)
 {
     int ret_val = 0;
-    if (m_attached_menu == NULL)
+    if (m_attached_menu == nullptr)
     {
         if (event.event == MouseEvent::PRESS
             && event.button == MouseEvent::LEFT)
@@ -57,7 +58,7 @@ void CRTRegion::render()
     TextRegion::render();
 
     // render the attached menu if it exists
-    if (m_attached_menu != NULL)
+    if (m_attached_menu != nullptr)
         m_attached_menu->draw_menu();
 }
 
@@ -72,7 +73,7 @@ void CRTRegion::detach_menu()
 {
     // Tiles has no rights over the menu, thus the user must delete it
     // Via other means
-    m_attached_menu = NULL;
+    m_attached_menu = nullptr;
 }
 
 #endif

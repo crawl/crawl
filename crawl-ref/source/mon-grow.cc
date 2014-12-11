@@ -5,13 +5,12 @@
 
 #include "AppHdr.h"
 
-#include "enum.h"
 #include "mon-grow.h"
-#include "mon-message.h"
-#include "mon-util.h"
+
+#include "message.h"
 #include "mon-place.h"
 #include "monster.h"
-#include "random.h"
+#include "mon-util.h"
 
 // Base experience required by a monster to reach HD 1.
 const int monster_xp_base       = 15;
@@ -64,7 +63,7 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
 
     monster_level_up(MONS_MERFOLK, MONS_MERFOLK_IMPALER),
-    monster_level_up(MONS_MERMAID, MONS_SIREN),
+    monster_level_up(MONS_SIREN, MONS_MERFOLK_AVATAR),
 
     // Spriggan -> rider is no good (no mount), -> defender would be an insane
     // power jump, -> druid or -> air mage would require magic training,
@@ -97,9 +96,8 @@ mons_experience_levels::mons_experience_levels()
 static const monster_level_up *_monster_level_up_target(monster_type type,
                                                         int hit_dice)
 {
-    for (unsigned i = 0; i < ARRAYSZ(mon_grow); ++i)
+    for (const monster_level_up &mlup : mon_grow)
     {
-        const monster_level_up &mlup(mon_grow[i]);
         if (mlup.before == type)
         {
             const monsterentry *me = get_monster_data(mlup.after);
@@ -110,13 +108,12 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
             }
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void monster::upgrade_type(monster_type after, bool adjust_hd,
                             bool adjust_hp)
 {
-    const monsterentry *orig = get_monster_data(type);
     // Ta-da!
     type   = after;
 
@@ -131,10 +128,6 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     speed  = dummy.speed;
     spells = dummy.spells;
     calc_speed();
-
-    const monsterentry *m = get_monster_data(after);
-    ac += m->AC - orig->AC;
-    ev += m->ev - orig->ev;
 
     if (adjust_hd)
         set_hit_dice(max(get_experience_level(), dummy.get_hit_dice()));

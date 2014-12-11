@@ -172,7 +172,7 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
     if (cell.is_liquefied && !is_wall)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
-        m_buf_feat.add(TILE_LIQUEFACTION + offset, x, y);
+        m_buf_floor.add(TILE_LIQUEFACTION + offset, x, y);
     }
     else if (cell.is_bloody)
     {
@@ -341,6 +341,10 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         }
     }
 
+    // gozag gold sparkles, only if there's no creature in tile (not ideal)
+    if (cell.gold_aura && fg_idx < TILE_MAIN_MAX)
+        m_buf_icons.add(TILEI_GOLD_SPARKLES + cell.gold_aura - 1, x, y);
+
     if (fg & TILE_FLAG_NET)
         m_buf_icons.add(TILEI_TRAP_NET, x, y);
 
@@ -351,19 +355,6 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
 
     int status_shift = 0;
-    switch (fg & TILE_FLAG_MIMIC_MASK)
-    {
-    case TILE_FLAG_MIMIC_INEPT:
-        m_buf_icons.add(TILEI_INEPT_MIMIC, x, y);
-        break;
-    case TILE_FLAG_MIMIC:
-        m_buf_icons.add(TILEI_MIMIC, x, y);
-        break;
-    case TILE_FLAG_MIMIC_RAVEN:
-        m_buf_icons.add(TILEI_RAVENOUS_MIMIC, x, y);
-        break;
-    default: ;
-    }
 
     //The berserk icon is in the lower right, so status_shift doesn't need changing.
     if (fg & TILE_FLAG_BERSERK)

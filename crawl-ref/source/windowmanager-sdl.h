@@ -7,7 +7,8 @@
 #include "windowmanager.h"
 
 struct SDL_Surface;
-struct SDL_VideoInfo;
+struct SDL_Window;
+typedef void* SDL_GLContext;
 
 class SDLWrapper : public WindowManager
 {
@@ -16,7 +17,7 @@ public:
     ~SDLWrapper();
 
     // Class functions
-    virtual int init(coord_def *m_windowsz);
+    virtual int init(coord_def *m_windowsz, int *densityNum, int *densityDen);
 
     // Environment state functions
     virtual void set_window_title(const char *title);
@@ -28,8 +29,9 @@ public:
     virtual void set_mod_state(key_mod mod);
 
     // System time functions
-    virtual void set_timer(unsigned int interval,
-                           wm_timer_callback callback);
+    virtual unsigned int set_timer(unsigned int interval,
+                                   wm_timer_callback callback);
+    virtual void remove_timer(unsigned int timer_id);
     virtual unsigned int get_ticks() const;
     virtual void delay(unsigned int ms);
 
@@ -37,6 +39,7 @@ public:
     virtual int raise_custom_event();
     virtual int wait_event(wm_event *event);
     virtual unsigned int get_event_count(wm_event_type type);
+    virtual void show_keyboard();
 
     // Display functions
     virtual void resize(coord_def &m_windowsz);
@@ -50,21 +53,15 @@ public:
     virtual bool load_texture(GenericTexture *tex, const char *filename,
                               MipMapOptions mip_opt, unsigned int &orig_width,
                               unsigned int &orig_height,
-                              tex_proc_func proc = NULL,
+                              tex_proc_func proc = nullptr,
                               bool force_power_of_two = true);
-
-#ifdef __ANDROID__
-    // Android background/foreground functions
-    static void appPutToForeground();
-    static void appPutToBackground();
-#endif
 
 protected:
     // Helper functions
     SDL_Surface *load_image(const char *file) const;
 
-    SDL_Surface *m_context;
-    const SDL_VideoInfo* video_info;
+    SDL_Window *m_window;
+    SDL_GLContext m_context;
     int _desktop_width;
     int _desktop_height;
 

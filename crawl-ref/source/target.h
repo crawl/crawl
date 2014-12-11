@@ -11,7 +11,7 @@ enum aff_type // sign and non-zeroness matters
     AFF_YES,         // intended/likely to affect
     // If you want to extend this to pass the probability somehow, feel free to,
     // just keep AFF_YES the minimal "bright" value.
-    AFF_LANDING,     // Valid jump attack landing site
+    AFF_LANDING,     // Valid shadow step landing site
 };
 
 class targetter
@@ -190,27 +190,24 @@ private:
     int range2;
 };
 
-enum jump_block_reason
+enum shadow_step_block_reason
 {
     BLOCKED_NONE,
     BLOCKED_OCCUPIED,
-    BLOCKED_FLYING,
-    BLOCKED_GIANT,
     BLOCKED_MOVE,
     BLOCKED_PATH,
     BLOCKED_NO_TARGET,
     BLOCKED_MOBILE,
 };
 
-class targetter_jump : public targetter
+class targetter_shadow_step : public targetter
 {
 public:
-    targetter_jump(const actor* act, int r2, bool clear_path = true,
-                   bool immobile = false);
+    targetter_shadow_step(const actor* act, int r2);
 
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
-    bool jump_is_blocked;
+    bool step_is_blocked;
     aff_type is_affected(coord_def loc);
     bool has_additional_sites(coord_def a);
     set<coord_def> additional_sites;
@@ -219,12 +216,10 @@ private:
     void set_additional_sites(coord_def a);
     void get_additional_sites(coord_def a);
     bool valid_landing(coord_def a, bool check_invis = true);
-    jump_block_reason no_landing_reason;
-    jump_block_reason blocked_landing_reason;
+    shadow_step_block_reason no_landing_reason;
+    shadow_step_block_reason blocked_landing_reason;
     set<coord_def> temp_sites;
     int range2;
-    bool clear_path;
-    bool immobile;
 };
 
 class targetter_explosive_bolt : public targetter_beam
@@ -251,18 +246,19 @@ private:
     int range2;
 };
 
-#define SHOTGUN_BEAMS 11
+#define CLOUD_CONE_BEAM_COUNT 11
 
 class targetter_shotgun : public targetter
 {
 public:
-    targetter_shotgun(const actor* act, int range);
+    targetter_shotgun(const actor* act, size_t beam_count, int range);
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
-    FixedVector<ray_def, SHOTGUN_BEAMS> rays;
-    map<coord_def, int> zapped;
+    vector<ray_def> rays;
+    map<coord_def, size_t> zapped;
 private:
+    size_t num_beams;
     int range2;
 };
 

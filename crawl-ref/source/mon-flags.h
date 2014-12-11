@@ -8,14 +8,11 @@
 // constants.
 const uint64_t M_NO_FLAGS = 0;
 
-// any non-physical-attack powers,
-const uint64_t M_SPELLCASTER       = 1<< 0;
+                                   //1<< 0;
 
-// monster is a wizard (hated by Trog; affected by silence)
-const uint64_t M_ACTUAL_SPELLS     = 1<< 1;
+                                   //1<< 1;
 
-// monster is a priest
-const uint64_t M_PRIEST            = 1<< 2;
+                                   //1<< 2;
 
 // monster is skilled fighter
 const uint64_t M_FIGHTER           = 1<< 3;
@@ -32,8 +29,8 @@ const uint64_t M_INVIS             = 1<< 6;
 // can see invis
 const uint64_t M_SEE_INVIS         = 1<< 7;
 
-// can sense invisible things
-const uint64_t M_SENSE_INVIS       = 1<< 8;
+// can't be blinded
+const uint64_t M_UNBLINDABLE       = 1<< 8;
 
 // uses talking code
 const uint64_t M_SPEAKS            = 1<< 9;
@@ -92,13 +89,11 @@ const uint64_t M_FAST_REGEN        = 1<<26;
 // cannot regenerate
 const uint64_t M_NO_REGEN          = 1<<27;
 
-// cannot cast spells when silenced; even though it's not a priest or
-// wizard
-const uint64_t M_SPELL_NO_SILENT   = 1<<28;
+// uses male pronouns
+const uint64_t M_MALE              = 1<<28;
 
-// can cast spells when silenced; but casting makes noise when not
-// silenced
-const uint64_t M_NOISY_SPELLS      = 1<<29;
+// uses female pronouns
+const uint64_t M_FEMALE            = 1<<29;
 
 // boneless corpses
 const uint64_t M_NO_SKELETON       = 1<<30;
@@ -106,8 +101,7 @@ const uint64_t M_NO_SKELETON       = 1<<30;
 // worth 0 xp
 const uint64_t M_NO_EXP_GAIN       = (uint64_t)1<<31;
 
-// has a deflection effect
-const uint64_t M_DEFLECT_MISSILES  = (uint64_t)1<<32;
+                                   //(uint64_t)1<<32;
 
 // phase shift (EV bonus not included)
 const uint64_t M_PHASE_SHIFT       = (uint64_t)1<<33;
@@ -115,13 +109,13 @@ const uint64_t M_PHASE_SHIFT       = (uint64_t)1<<33;
 // not a valid polymorph target (but can be polymorphed)
 const uint64_t M_NO_POLY_TO        = (uint64_t)1<<34;
 
-// has special abilities coded as spells which are entirely non-magical
-const uint64_t M_FAKE_SPELLS       = (uint64_t)1<<35;
+                                   //(uint64_t)1<<35;
 
 // always leaves a corpse
 const uint64_t M_ALWAYS_CORPSE     = (uint64_t)1<<36;
 
-// 1<<37
+// mostly doesn't try to melee
+const uint64_t M_DONT_MELEE        = (uint64_t)1<<37;
 
 // is an artificial being
 const uint64_t M_ARTIFICIAL        = (uint64_t)1<<38;
@@ -152,22 +146,24 @@ const uint64_t M_CANT_SPAWN        = (uint64_t)1<<46;
 // derived undead can't be randomly generated
 const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
 
-// 1<<48
+                                   //(uint64_t)1<<48;
 
 // hybridized monster composed of other monster parts
 const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
-// blinks around randomly (was M_VIGILANT)
-const uint64_t M_BLINKER           = (uint64_t)1<<50;
+                                   //(uint64_t)1<<50;
 
-// monster starts with Ozocubu's Armour
-const uint64_t M_OZOCUBUS_ARMOUR   = (uint64_t)1<<51;
+// monster is a projectile (just OOD right now)
+const uint64_t M_PROJECTILE        = (uint64_t)1<<51;
 
-// monster starts with a Shroud of Golubria
-const uint64_t M_SHROUD            = (uint64_t)1<<52;
+// monster is an "avatar" (no independent attacks, only support)
+const uint64_t M_AVATAR            = (uint64_t)1<<52;
 
 // monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
 const uint64_t M_SHADOW            = (uint64_t)1<<53;
+
+// monster is a proxy for a charm/conjuration spell (ball lightning, etc.)
+const uint64_t M_CONJURED          = (uint64_t)1<<54;
 
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
@@ -214,14 +210,9 @@ const uint64_t MF_TWO_WEAPONS        = BIT(21); // Monster wields two weapons.
 const uint64_t MF_ARCHER             = BIT(22); // Monster gets various archery boosts.
 const uint64_t MF_MELEE_MASK         = MF_FIGHTER|MF_TWO_WEAPONS|MF_ARCHER;
 
-    // These are based on the flags in monster class, but can be set for
-    // monsters that are not normally spellcasters (in vaults).
-const uint64_t MF_SPELLCASTER        = BIT(23);
-const uint64_t MF_ACTUAL_SPELLS      = BIT(24); // Can use spells and is a spellcaster for
-                                     // Trog purposes.
-const uint64_t MF_PRIEST             = BIT(25); // Is a priest (divine spells)
-                                     // for the conduct.
-const uint64_t MF_SPELL_MASK         = MF_SPELLCASTER|MF_ACTUAL_SPELLS|MF_PRIEST;
+                                     //BIT(23);
+                                     //BIT(24);
+                                     //BIT(25);
 
 const uint64_t MF_NO_REGEN           = BIT(26); // This monster cannot regenerate.
 

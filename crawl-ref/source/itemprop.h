@@ -39,6 +39,7 @@ bool  is_helmet(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
 // ego items:
+brand_type choose_weapon_brand(weapon_type wpn_type);
 bool set_item_ego_type(item_def &item, object_class_type item_type,
                        int ego_type);
 brand_type get_weapon_brand(const item_def &item) PURE;
@@ -47,7 +48,9 @@ special_missile_type get_ammo_brand(const item_def &item) PURE;
 
 // armour functions:
 int armour_max_enchant(const item_def &item) PURE;
+bool armour_type_is_hide(int type, bool inc_made = false) PURE;
 bool armour_is_hide(const item_def &item, bool inc_made = false) PURE;
+bool armour_is_special(const item_def &item) PURE;
 
 equipment_type get_armour_slot(const item_def &item) PURE;
 equipment_type get_armour_slot(armour_type arm) IMMUTABLE;
@@ -55,6 +58,8 @@ equipment_type get_armour_slot(armour_type arm) IMMUTABLE;
 bool jewellery_is_amulet(const item_def &item) PURE;
 bool jewellery_is_amulet(int sub_type) IMMUTABLE;
 
+armour_type hide_for_monster(monster_type mc) PURE;
+armour_type armour_for_hide(armour_type hide_type) PURE;
 bool  hide2armour(item_def &item);
 
 int   fit_armour_size(const item_def &item, size_type size) PURE;
@@ -63,13 +68,14 @@ bool  check_armour_size(const item_def &item, size_type size) PURE;
 bool item_is_rechargeable(const item_def &it, bool hide_charged = false) PURE;
 int wand_charge_value(int type) PURE;
 int wand_max_charges(int type) PURE;
+bool is_known_empty_wand(const item_def &item) PURE;
 bool is_offensive_wand(const item_def &item) PURE;
 bool is_enchantable_armour(const item_def &arm, bool uncurse,
                            bool unknown = false) PURE;
 
 bool is_shield(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
-                            const item_def *shield = NULL) PURE;
+                            const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
 void ident_reflector(item_def *item);
 
@@ -77,7 +83,6 @@ void ident_reflector(item_def *item);
 // weapon functions:
 int weapon_rarity(int w_type) IMMUTABLE;
 
-int   cmp_weapon_size(const item_def &item, size_type size) PURE;
 bool  is_weapon_wieldable(const item_def &item, size_type size) PURE;
 
 hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
@@ -106,12 +111,6 @@ int weapon_str_weight(const item_def &wpn) PURE;
 
 skill_type item_attack_skill(const item_def &item) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
-
-skill_type melee_skill(const item_def &item) PURE;
-skill_type melee_skill(object_class_type wclass, int wtype) IMMUTABLE;
-
-skill_type range_skill(const item_def &item) PURE;
-skill_type range_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
 bool item_skills(const item_def &item, set<skill_type> &skills);
 
@@ -158,7 +157,6 @@ bool food_is_veggie(const item_def &item) PURE;
 int food_value(const item_def &item) PURE;
 int food_turns(const item_def &item) PURE;
 bool can_cut_meat(const item_def &item) PURE;
-bool food_is_rotten(const item_def &item) PURE;
 bool is_fruit(const item_def &item) PURE;
 
 // generic item property functions:

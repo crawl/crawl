@@ -6,19 +6,18 @@
 #ifndef EXTERNS_H
 #define EXTERNS_H
 
-#include <vector>
-#include <list>
-#include <string>
-#include <map>
-#include <set>
-#include <memory>
-#include <cstdlib>
-#include <deque>
-
-#include <time.h>
-#include <stdint.h>
 #define __STDC_FORMAT_MACROS
-#include <inttypes.h>
+#include <cinttypes>
+#include <cstdint>
+#include <cstdlib>
+#include <ctime>
+#include <deque>
+#include <list>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+#include <vector>
 
 #include "bitary.h"
 #include "enum.h"
@@ -26,7 +25,6 @@
 #include "mpr.h"
 #include "pattern.h"
 #include "store.h"
-
 #include "tiledef_defines.h"
 
 struct tile_flavour
@@ -72,7 +70,7 @@ const int kFileNameLen = 250;
 const int kPathLen = 256;
 
 // This value is used to mark that the current berserk is free from
-// penalty (Xom's granted or from a deck of cards).
+// penalty (used for Xom's special berserk).
 #define NO_BERSERK_PENALTY    -1
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
@@ -267,13 +265,29 @@ struct run_check_dir
     coord_def delta;
 };
 
+/**
+ * Persistent unique identifier for an actor.
+ *
+ * An mid_t is a persistent (across levels and across save/restore)
+ * and unique (within a given game) identifier for a monster, player,
+ * or fake actor.  The value 0 indicates "no actor", and any value
+ * greater than or equal to MID_FIRST_NON_MONSTER indicates an actor
+ * other than a monster.
+ *
+ * mid_t should be used for anything that needs to remember monster
+ * identity from one turn to the next, as mindexes may be reused
+ * if a monster dies, and are not unique across levels.
+ */
 typedef uint32_t mid_t;
 #define PRImidt PRIu32
-#define MID_PLAYER      ((mid_t)0xffffffff)
+#define MID_NOBODY        ((mid_t)0x00000000)
+#define MID_PLAYER        ((mid_t)0xffffffff)
 // the numbers are meaningless, there's just plenty of space for gods, env,
 // and whatever else we want to have, while keeping all monster ids smaller.
-#define MID_ANON_FRIEND ((mid_t)0xffff0000)
+#define MID_ANON_FRIEND   ((mid_t)0xffff0000)
 #define MID_YOU_FAULTLESS ((mid_t)0xffff0001)
+/// Upper bound on the number of monsters that can ever exist in a game.
+#define MID_FIRST_NON_MONSTER MID_ANON_FRIEND
 
 static inline monster_type operator++(monster_type &x)
 {
@@ -347,6 +361,8 @@ struct shop_struct
 
     FixedVector<uint8_t, 3> keeper_name;
 
+    vector<item_def> stock;
+
     shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
                      shop_name(""), shop_type_name(""), shop_suffix_name("") { }
 
@@ -384,6 +400,7 @@ public:
     // 'pos' on the current level leads to.
     static level_id get_next_level_id(const coord_def &pos);
 
+    // Important that if run after this, ::valid() is false.
     level_id()
         : branch(BRANCH_DUNGEON), depth(-1)
     {
@@ -394,9 +411,10 @@ public:
     }
 
     static level_id parse_level_id(const string &s) throw (string);
+#if TAG_MAJOR_VERSION == 34
     static level_id from_packed_place(const unsigned short place);
+#endif
 
-    unsigned short packed_place() const;
     string describe(bool long_name = false, bool with_number = true) const;
 
     void clear()
@@ -428,16 +446,6 @@ public:
     bool operator <(const level_id &id) const
     {
         return branch < id.branch || (branch==id.branch && depth < id.depth);
-    }
-
-    bool operator == (const branch_type _branch) const
-    {
-        return branch == _branch;
-    }
-
-    bool operator != (const branch_type _branch) const
-    {
-        return !operator == (_branch);
     }
 
     void save(writer&) const;
@@ -517,30 +525,62 @@ struct item_def
     object_class_type base_type:8; ///< basic class (eg OBJ_WEAPON)
     uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
-    /// +to hit/dam, charges, corpse mon id
-    union { short plus; monster_type mon_type:16; };
+    union
+    {
+        short plus;                 ///< + to hit/dam (weapons, rods)
+        monster_type mon_type:16;   ///< corpse/chunk monster type
+        skill_type skill:16;        ///< the skill provided by a manual
+        short charges;              ///< # of charges held by a wand, etc
+                                    // for rods, is charge * ROD_CHARGE_MULT
+        short initial_cards;        ///< the # of cards a deck *started* with
+        short rune_enum;            ///< rune_type; enum for runes of zot
+        short net_durability;       ///< damage dealt to a net
+        short book_param;           ///< level of spells in a monolevel book
+    };
+    union
+    {
+        short plus2;        ///< legacy/generic name for this union
+        short evoker_debt;  ///< xp~ required for evoker to finish recharging
+        short used_count;   ///< the # of known times it was used (decks, wands)
+                            // for wands, may hold negative ZAPCOUNT knowledge
+                            // info (e.g. "recharged", "empty", "unknown")
+        bool net_placed;    ///< is this throwing net trapping something?
+        short skill_points; ///< # of skill points a manual gives
+        short charge_cap;   ///< max charges stored by a rod * ROD_CHARGE_MULT
+        short stash_freshness; ///< where stash.cc stores corpse freshness
+    };
 #pragma pack(pop)
-    short          plus2;          ///< sub-sub type for boots/helms, net wear
-    int            special;        ///< special stuff
-    colour_t       colour;         ///< item colour
-    uint8_t        rnd;            ///< random number, used for tile choice
+    union
+    {
+        int special;        ///< special stuff
+        deck_rarity_type deck_rarity;    ///< plain, ornate, legendary
+        int rod_plus;           ///< rate at which a rod recharges; +slay
+        uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
+                                /// jewellery, scroll, staff, wand, potions
+                                // see comment in item_colour()
+        int brand;          ///< weapon and armour brands; also marks artefacts
+        int freshness;      ///< remaining time until a corpse rots
+    };
+    uint8_t        rnd;            ///< random number, used for tile choice,
+                                   /// randart colours, and other per-item
+                                   /// random cosmetics. 0 = uninitialized
     short          quantity;       ///< number of items
     iflags_t       flags;          ///< item status flags
 
     /// The location of the item. Items in player inventory are indicated by
-    /// pos (-1, -1), items in monster inventory by (-2, -2), and and items
+    /// pos (-1, -1), items in monster inventory by (-2, -2), and items
     /// in shops by (0, y) for y >= 5.
     coord_def pos;
     /// Index in the mitm array of the next item in the stack. NON_ITEM for
     /// the last item in a stack. For items in player inventory, instead
     /// equal to slot. For items in monster inventory, equal to
-    /// NON_ITEM + 1 + mindex
+    /// NON_ITEM + 1 + mindex. For items in shops, equal to ITEM_IN_SHOP.
     short  link;
     // Inventory letter of the item.
     short  slot;
 
-    unsigned short orig_place;
-    short          orig_monnum;
+    level_id orig_place;
+    short    orig_monnum;
 
     string inscription;
 
@@ -548,8 +588,8 @@ struct item_def
 
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
-                 special(0), colour(0), rnd(0), quantity(0), flags(0),
-                 pos(), link(NON_ITEM), slot(0), orig_place(0),
+                 special(0), rnd(0), quantity(0), flags(0),
+                 pos(), link(NON_ITEM), slot(0), orig_place(),
                  orig_monnum(0), inscription()
     {
     }
@@ -560,7 +600,7 @@ public:
                 iflags_t ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
-    int book_number() const;
+    colour_t get_colour() const;
     zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
     /**
@@ -600,6 +640,7 @@ public:
     bool held_by_monster() const;
 
     bool defined() const;
+    bool appearance_initialized() const;
     bool is_valid(bool info = false) const;
 
     /** Should this item be preserved as far as possible? */
@@ -614,6 +655,24 @@ public:
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
                     bool with_inscription, iflags_t ignore_flags) const;
+
+    colour_t randart_colour() const;
+
+    colour_t ring_colour() const;
+    colour_t amulet_colour() const;
+
+    colour_t rune_colour() const;
+
+    colour_t weapon_colour() const;
+    colour_t missile_colour() const;
+    colour_t armour_colour() const;
+    colour_t wand_colour() const;
+    colour_t food_colour() const;
+    colour_t jewellery_colour() const;
+    colour_t potion_colour() const;
+    colour_t book_colour() const;
+    colour_t miscellany_colour() const;
+    colour_t corpse_colour() const;
 };
 
 typedef item_def item_info;
@@ -668,14 +727,14 @@ private:
 
 typedef vector<delay_queue_item> delay_queue_type;
 
-class monster_spells : public FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>
+struct mon_spell_slot
 {
-public:
-    monster_spells()
-        : FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>(SPELL_NO_SPELL)
-    { }
-    void clear() { init(SPELL_NO_SPELL); }
+    spell_type spell;
+    uint8_t freq;
+    unsigned short flags;
 };
+
+typedef vector<mon_spell_slot> monster_spells;
 
 class reader;
 class writer;

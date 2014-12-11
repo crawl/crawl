@@ -58,8 +58,8 @@ syn match desVaultname /\w*/ contained
 
 syn match desGod contained /ashenzari\|beogh\|cheibriados\|dithmenos\|elyvilon/
 syn match desGod contained /fedhas\|gozag\|jiyva\|kikubaaqudgha\|lugonu/
-syn match desGod contained /makhleb\|nemelex_xobeh\|okawaru\|qazlal\|sif_muna/
-syn match desGod contained /trog\|vehumet\|xom\|yredelemnul\|zin/
+syn match desGod contained /makhleb\|nemelex_xobeh\|okawaru\|qazlal\|ru/
+syn match desGod contained /sif_muna\|trog\|vehumet\|xom\|yredelemnul\|zin/
 syn match desGod contained /the_shining_one/
 
 syn keyword desDeclarator ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT:
@@ -180,7 +180,6 @@ syn match desEntry "\<overflow_altar_\w*\>"  contains=desGod
 syn match desEntry "\<enter_\w*\>"       contains=desBranchname
 syn match desEntry "\<exit_\w*\>"        contains=desBranchname
 syn match desEntry "\<ruin_\w*\>"        contains=desBranchname
-syn match desEntry "\<return_from_\w*\>" contains=desBranchname
 
 " 'transparent' is a Vim syntax keyword
 syn match desTransparent "\<transparent\>"

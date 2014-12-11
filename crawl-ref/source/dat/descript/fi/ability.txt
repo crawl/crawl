@@ -55,10 +55,6 @@ Banish ability
 
 Yritä karkottaa hirviö Syvänteeseen.
 %%%%
-Draw One ability
-
-Valitse jokin pakka inventaariossasi ja nosta siitä kortti.
-%%%%
 Cure Bad Mutation ability
 
 Poista satunnainen huono mutaatio.

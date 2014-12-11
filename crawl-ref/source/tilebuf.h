@@ -1,10 +1,10 @@
 #ifndef TILEBUF_H
 #define TILEBUF_H
 
-#include "glwrapper.h"
-
 #include <string>
 #include <vector>
+
+#include "glwrapper.h"
 
 class FontWrapper;
 class formatted_string;
@@ -14,12 +14,12 @@ class TilesTexture;
 class VertBuffer
 {
 public:
-    VertBuffer(bool texture, bool colour, const GenericTexture *tex = NULL,
+    VertBuffer(bool texture, bool colour, const GenericTexture *tex = nullptr,
                drawing_modes prim = GLW_RECTANGLE);
     ~VertBuffer();
 
     // Rendering
-    // void draw(const GLW_3VF *pt = NULL, const GLW_3VF *ps = NULL) const;
+    // void draw(const GLW_3VF *pt = nullptr, const GLW_3VF *ps = nullptr) const;
     void draw() const;
 
     // State query
@@ -60,7 +60,7 @@ protected:
 class TileBuffer : public VertBuffer
 {
 public:
-    TileBuffer(const TilesTexture *tex = NULL);
+    TileBuffer(const TilesTexture *tex = nullptr);
 
     void add_unscaled(tileidx_t idx, float x, float y, int ymax = TILE_Y,
                       float scale = 1.0f);
@@ -72,7 +72,7 @@ public:
 class ColouredTileBuffer : public VertBuffer
 {
 public:
-    ColouredTileBuffer(const TilesTexture *tex = NULL);
+    ColouredTileBuffer(const TilesTexture *tex = nullptr);
 
     void add(tileidx_t idx, int x, int y, int z,
              int ox, int oy, int ymin, int ymax,

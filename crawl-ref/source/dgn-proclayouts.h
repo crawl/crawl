@@ -6,11 +6,9 @@
 #ifndef PROC_LAYOUTS_H
 #define PROC_LAYOUTS_H
 
-#include "fixedvector.h"
-
 #include "dungeon.h"
 #include "enum.h"
-#include "externs.h"
+#include "fixedvector.h"
 #include "worley.h"
 
 dungeon_feature_type sanitize_feature(dungeon_feature_type feature,

@@ -1,0 +1,39 @@
+language: cpp
+compiler:
+    - clang
+    - gcc
+before_install:
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    - sudo add-apt-repository ppa:zoogie/sdl2-snapshots -y
+    - sudo apt-get update -qq
+    - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq libstdc++-4.8-dev; fi
+    - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+env:
+    - NOTHING=1
+    - FULLDEBUG=1
+    - TILES=1
+    - TILES=1 FULLDEBUG=1
+    - WEBTILES=1
+    - WEBTILES=1 FULLDEBUG=1
+    - USE_DGAMELAUNCH=1
+    - USE_DGAMELAUNCH=1 WEBTILES=1
+    - TILES=1 BUILD_ALL=1
+    - WEBTILES=1 BUILD_ALL=1
+git:
+    submodules: false
+install: perl .travis/deps.pl
+script: perl .travis/build.pl
+notifications:
+    email:
+        on_success: change
+        on_failure: always
+#        recipients:
+#          - crawl-ref-commits@lists.sourceforge.net
+    irc:
+        channels: "chat.freenode.net##crawl-dev"
+        on_success: change
+        on_failure: always
+        use_notice: true
+        template:
+            - "%{message} (%{branch} - %{commit} #%{build_number} : %{author}): %{build_url}"

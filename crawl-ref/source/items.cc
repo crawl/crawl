@@ -6,29 +6,30 @@
 #include "AppHdr.h"
 
 #include "items.h"
+
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+#include "areas.h"
+#include "arena.h"
+#include "artefact.h"
+#include "art-enum.h"
+#include "beam.h"
 #include "bitary.h"
+#include "butcher.h"
 #include "cio.h"
 #include "clua.h"
-
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-
-#include "externs.h"
-
-#include "arena.h"
-#include "art-enum.h"
-#include "artefact.h"
-#include "beam.h"
 #include "colour.h"
+#include "command.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dactions.h"
-#include "describe.h"
 #include "dbg-util.h"
 #include "decks.h"
 #include "delay.h"
+#include "describe.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -39,12 +40,14 @@
 #include "godprayer.h"
 #include "godwrath.h"
 #include "hints.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "libutil.h"
+#include "macro.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -52,9 +55,11 @@
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
+#include "output.h"
 #include "place.h"
-#include "player.h"
 #include "player-equip.h"
+#include "player.h"
+#include "prompt.h"
 #include "quiver.h"
 #include "religion.h"
 #include "rot.h"
@@ -62,23 +67,24 @@
 #include "showsymb.h"
 #include "spl-book.h"
 #include "spl-util.h"
-#include "state.h"
-#include "stuff.h"
-#include "areas.h"
 #include "stash.h"
 #include "state.h"
+#include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
+#include "throw.h"
 #include "travel.h"
-#include "hints.h"
 #include "unwind.h"
-#include "view.h"
 #include "viewchar.h"
+#include "view.h"
 #include "xom.h"
 
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 static void _multidrop(vector<SelItem> tmp_items);
+static bool _merge_items_into_inv(const item_def &it, int quant_got,
+                                  char &inv_slot, bool quiet);
 
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
@@ -186,7 +192,7 @@ static bool _item_preferred_to_clean(int item)
     }
 
     if (mitm[item].base_type == OBJ_MISSILES
-        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
+        && mitm[item].plus <= 0 && !mitm[item].net_placed // XXX: plus...?
         && !is_artefact(mitm[item]))
     {
         return true;
@@ -292,7 +298,7 @@ item_def* stack_iterator::operator->() const
     return &mitm[cur_link];
 }
 
-int stack_iterator::link() const
+int stack_iterator::index() const
 {
     return cur_link;
 }
@@ -305,7 +311,7 @@ const stack_iterator& stack_iterator::operator ++ ()
     return *this;
 }
 
-stack_iterator stack_iterator::operator++(int dummy)
+stack_iterator stack_iterator::operator++(int)
 {
     const stack_iterator copy = *this;
     ++(*this);
@@ -464,7 +470,7 @@ void unlink_item(int dest)
 
     monster* mons = mitm[dest].holding_monster();
 
-    if (mons != NULL)
+    if (mons != nullptr)
     {
         for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         {
@@ -493,13 +499,15 @@ void unlink_item(int dest)
     }
     else
     {
-        if (!is_shop_item(mitm[dest]))
-            ASSERT_IN_BOUNDS(mitm[dest].pos);
-
         // Linked item on map:
         //
         // Use the items (x,y) to access the list (igrd[x][y]) where
         // the item should be linked.
+
+#if TAG_MAJOR_VERSION == 34
+        if (mitm[dest].pos.x != 0 || mitm[dest].pos.y < 5)
+#endif
+        ASSERT_IN_BOUNDS(mitm[dest].pos);
 
         // First check the top:
         if (igrd(mitm[dest].pos) == dest)
@@ -614,7 +622,7 @@ void destroy_item(int dest, bool never_created)
 static void _handle_gone_item(const item_def &item)
 {
     if (player_in_branch(BRANCH_ABYSS)
-        && place_branch(item.orig_place) == BRANCH_ABYSS)
+        && item.orig_place.branch == BRANCH_ABYSS)
     {
         if (is_unrandom_artefact(item))
             set_unique_item_status(item, UNIQ_LOST_IN_ABYSS);
@@ -627,12 +635,10 @@ void item_was_lost(const item_def &item)
     xom_check_lost_item(item);
 }
 
-void item_was_destroyed(const item_def &item, int cause)
+void item_was_destroyed(const item_def &item)
 {
-    if (item.props.exists("destroy_xp"))
-        gain_exp(item.props["destroy_xp"].get_int());
     _handle_gone_item(item);
-    xom_check_destroyed_item(item, cause);
+    xom_check_destroyed_item(item);
 }
 
 void lose_item_stack(const coord_def& where)
@@ -752,7 +758,7 @@ static void _maybe_give_corpse_hint(const item_def item)
     }
 }
 
-void item_check(bool verbose)
+void item_check()
 {
     describe_floor();
     origin_set(you.pos());
@@ -764,11 +770,7 @@ void item_check(bool verbose)
     item_list_on_square(items, you.visible_igrd(you.pos()));
 
     if (items.empty())
-    {
-        if (verbose)
-            strm << "There are no items here." << endl;
         return;
-    }
 
     if (items.size() == 1)
     {
@@ -826,15 +828,14 @@ void item_check(bool verbose)
         done_init_line = true;
     }
 
-    if (verbose || items.size() <= msgwin_lines() - 1)
+    if (items.size() <= msgwin_lines() - 1)
     {
         if (!done_init_line)
             mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
-        for (unsigned int i = 0; i < items.size(); ++i)
+        for (const item_def *it : items)
         {
-            item_def it(*items[i]);
-            mprf_nocap("%s", get_menu_colour_prefix_tags(it, DESC_A).c_str());
-            _maybe_give_corpse_hint(it);
+            mprf_nocap("%s", get_menu_colour_prefix_tags(*it, DESC_A).c_str());
+            _maybe_give_corpse_hint(*it);
         }
     }
     else if (!done_init_line)
@@ -845,10 +846,9 @@ void item_check(bool verbose)
         // If there are 2 or more non-corpse items here, we might need
         // a hint.
         int count = 0;
-        for (unsigned int i = 0; i < items.size(); ++i)
+        for (const item_def *it : items)
         {
-            item_def it(*items[i]);
-            if (it.base_type == OBJ_CORPSES)
+            if (it->base_type == OBJ_CORPSES)
                 continue;
 
             if (++count > 1)
@@ -926,7 +926,7 @@ void pickup_menu(int item_link)
 
     if (!pickup_warning.empty())
     {
-        mpr(pickup_warning.c_str());
+        mpr(pickup_warning);
         learned_something_new(HINT_FULL_INVENTORY);
     }
 
@@ -936,12 +936,12 @@ void pickup_menu(int item_link)
 
 bool origin_known(const item_def &item)
 {
-    return item.orig_place != 0;
+    return item.orig_place != level_id();
 }
 
 void origin_reset(item_def &item)
 {
-    item.orig_place  = 0;
+    item.orig_place.clear();
     item.orig_monnum = 0;
 }
 
@@ -950,7 +950,7 @@ void origin_set_unknown(item_def &item)
 {
     if (!origin_known(item))
     {
-        item.orig_place  = 0xFFFF;
+        item.orig_place  = level_id(BRANCH_DUNGEON, 0);
         item.orig_monnum = 0;
     }
 }
@@ -960,7 +960,7 @@ void origin_set_startequip(item_def &item)
 {
     if (!origin_known(item))
     {
-        item.orig_place  = 0xFFFF;
+        item.orig_place  = level_id(BRANCH_DUNGEON, 0);
         item.orig_monnum = -IT_SRC_START;
     }
 }
@@ -971,21 +971,21 @@ void origin_set_monster(item_def &item, const monster* mons)
     {
         if (!item.orig_monnum)
             item.orig_monnum = mons->type;
-        item.orig_place = get_packed_place();
+        item.orig_place = level_id::current();
     }
 }
 
 void origin_purchased(item_def &item)
 {
     // We don't need to check origin_known if it's a shop purchase
-    item.orig_place  = get_packed_place();
+    item.orig_place  = level_id::current();
     item.orig_monnum = -IT_SRC_SHOP;
 }
 
 void origin_acquired(item_def &item, int agent)
 {
     // We don't need to check origin_known if it's a divine gift
-    item.orig_place  = get_packed_place();
+    item.orig_place  = level_id::current();
     item.orig_monnum = -agent;
 }
 
@@ -1030,13 +1030,12 @@ static void _check_note_item(item_def &item)
 
 void origin_set(const coord_def& where)
 {
-    unsigned short pplace = get_packed_place();
     for (stack_iterator si(where); si; ++si)
     {
         if (origin_known(*si))
             continue;
 
-        si->orig_place  = pplace;
+        si->orig_place = level_id::current();
     }
 }
 
@@ -1044,7 +1043,7 @@ static void _origin_freeze(item_def &item, const coord_def& where)
 {
     if (!origin_known(item))
     {
-        item.orig_place = get_packed_place();
+        item.orig_place = level_id::current();
         _check_note_item(item);
     }
 }
@@ -1064,10 +1063,15 @@ static string _origin_place_desc(const item_def &item)
     return prep_branch_level_name(item.orig_place);
 }
 
+static bool _origin_is_special(const item_def &item)
+{
+    return item.orig_place == level_id(BRANCH_DUNGEON, 0);
+}
+
 bool origin_describable(const item_def &item)
 {
     return origin_known(item)
-           && item.orig_place != 0xFFFFU
+           && !_origin_is_special(item)
            && !is_stackable_item(item)
            && item.quantity == 1
            && item.base_type != OBJ_CORPSES
@@ -1082,7 +1086,7 @@ static string _article_it(const item_def &item)
 
 static bool _origin_is_original_equip(const item_def &item)
 {
-    return item.orig_place == 0xFFFFU && item.orig_monnum == -IT_SRC_START;
+    return _origin_is_special(item) && item.orig_monnum == -IT_SRC_START;
 }
 
 bool origin_is_god_gift(const item_def& item, god_type *god)
@@ -1099,7 +1103,7 @@ bool origin_is_god_gift(const item_def& item, god_type *god)
 bool origin_is_acquirement(const item_def& item, item_source_type *type)
 {
     item_source_type junk;
-    if (type == NULL)
+    if (type == nullptr)
         type = &junk;
     *type = IT_SRC_NONE;
 
@@ -1371,7 +1375,7 @@ void pickup(bool partial_quantity)
         }
 
         if (!pickup_warning.empty())
-            mpr(pickup_warning.c_str());
+            mpr(pickup_warning);
     }
     if (you.last_pickup.empty())
         you.last_pickup = tmp_l_p;
@@ -1387,6 +1391,12 @@ bool is_stackable_item(const item_def &item)
         || item.base_type == OBJ_SCROLLS
         || item.base_type == OBJ_POTIONS
         || item.base_type == OBJ_GOLD)
+    {
+        return true;
+    }
+
+    if (item.base_type == OBJ_MISCELLANY
+        && item.sub_type == MISC_PHANTOM_MIRROR)
     {
         return true;
     }
@@ -1411,20 +1421,24 @@ bool items_similar(const item_def &item1, const item_def &item2)
         return false;
     }
 
-    // These classes also require pluses and special.
-    if (item1.base_type == OBJ_MISSILES || item1.base_type == OBJ_FOOD)
+    // Missiles with different egos shouldn't merge.
+    if (item1.base_type == OBJ_MISSILES && item1.special != item2.special)
+        return false;
+
+    // Don't merge trapping nets with other nets.
+    if (item1.base_type == OBJ_MISSILES && item1.sub_type == MI_THROWING_NET
+        && item1.net_placed != item2.net_placed)
     {
-        if (item1.plus != item2.plus
-            || item1.plus2 != item2.plus2
-            || ((item1.base_type == OBJ_FOOD && item2.sub_type == FOOD_CHUNK) ?
-                // Reject chunk merge if chunk ages differ by more than 5
-                abs(item1.special - item2.special) > 5
-                // Non-chunk item specials must match exactly.
-                : item1.special != item2.special))
-        {
-            return false;
-        }
+        return false;
     }
+
+    if (item1.base_type == OBJ_FOOD && item2.sub_type == FOOD_CHUNK
+        && determine_chunk_effect(item1, true) !=
+           determine_chunk_effect(item2, true))
+    {
+        return false;
+    }
+
 
 #define NO_MERGE_FLAGS (ISFLAG_MIMIC | ISFLAG_SUMMONED)
     if ((item1.flags & NO_MERGE_FLAGS) != (item2.flags & NO_MERGE_FLAGS))
@@ -1474,8 +1488,8 @@ void merge_item_stacks(const item_def &source, item_def &dest, int quant)
 
     ASSERT_RANGE(quant, 0 + 1, source.quantity + 1);
 
-    if (is_blood_potion(source) && is_blood_potion(dest))
-        merge_blood_potion_stacks(source, dest, quant);
+    if (is_perishable_stack(source) && is_perishable_stack(dest))
+        merge_perishable_stacks(source, dest, quant);
     if (source.base_type == OBJ_GOLD) // Gozag
         dest.special = max(source.special, dest.special);
 }
@@ -1568,6 +1582,7 @@ static void _got_item(item_def& item)
 {
     seen_item(item);
     shopping_list.cull_identical_items(item);
+    item.flags |= ISFLAG_HANDLED;
 
     if (item.props.exists("needs_autopickup"))
         item.props.erase("needs_autopickup");
@@ -1631,25 +1646,13 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
-/**
- * Move the given item and quantity to the player's inventory.
- *
- * @param obj The item index in mitm.
- * @param quant_got The quantity of this item to move.
- * @param quiet If true, most messages notifying the player of item pickup (or
- *              item pickup failure) aren't printed.
- * @return  Whether items were successfully picked up. May return true even on
- * failure in cases where pickup can continue; e.g. when trying to pickup
- * stationary objects, or the orb in zot defense. (I.e., when the cause of
- * failure was not a full inventory.)
-*/
-bool move_item_to_inv(int obj, int quant_got, bool quiet)
+static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_in_inv)
 {
-    item_def &it = mitm[obj];
-
+    put_in_inv = false;
     if (item_is_stationary(it))
     {
-        mpr("You can't pick that up.");
+        if (!quiet)
+            mpr("You can't pick that up.");
         // Fake a successful pickup (return 1), so we can continue to
         // pick up anything else that might be on this square.
         return true;
@@ -1666,15 +1669,15 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
 
-    const coord_def old_item_pos = it.pos;
     // attempt to put the item into your inventory.
-    int inv_slot;
-    if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
+    char inv_slot;
+    if (_merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
+        put_in_inv = true;
         // if you succeeded, actually reduce the number in the original stack
-        if (is_blood_potion(it) && quant_got != it.quantity)
+        if (is_perishable_stack(it) && quant_got != it.quantity)
             for (int i = 0; i < quant_got; i++)
-                remove_oldest_blood_potion(it);
+                remove_oldest_perishable_item(it);
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
         if (inv_slot != -1)
@@ -1684,14 +1687,47 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         }
         else
             _check_note_item(it);
+        return true;
+    }
 
-        if (item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
-        {
-            dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
-                                                         you.pos(), 0, obj,
-                                                         -1),
-                                               you.pos());
-        }
+    return false;
+}
+
+
+// Currently only used for moving shop items into inventory, since they are
+// not in mitm. This doesn't work with partial pickup, because that requires
+// an mitm slot...
+bool move_item_to_inv(item_def& item)
+{
+    bool junk;
+    return _put_item_in_inv(item, item.quantity, false, junk);
+}
+
+/**
+ * Move the given item and quantity to the player's inventory.
+ *
+ * @param obj The item index in mitm.
+ * @param quant_got The quantity of this item to move.
+ * @param quiet If true, most messages notifying the player of item pickup (or
+ *              item pickup failure) aren't printed.
+ * @returns false if items failed to be picked up because of a full inventory,
+ *          true otherwise (even if nothing was picked up).
+*/
+bool move_item_to_inv(int obj, int quant_got, bool quiet)
+{
+    item_def &it = mitm[obj];
+    const coord_def old_item_pos = it.pos;
+
+    bool actually_went_in = false;
+    const bool keep_going = _put_item_in_inv(it, quant_got, quiet, actually_went_in);
+
+    if ((item_is_rune(it) || item_is_orb(it) || in_bounds(old_item_pos))
+        && actually_went_in)
+    {
+        dungeon_events.fire_position_event(dgn_event(DET_ITEM_PICKUP,
+                                                     you.pos(), 0, obj,
+                                                     -1),
+                                           you.pos());
 
         // XXX: Waiting until now to decrement the quantity may give Windows
         // tiles players the opportunity to close the window and duplicate the
@@ -1701,10 +1737,9 @@ bool move_item_to_inv(int obj, int quant_got, bool quiet)
         dec_mitm_item_quantity(obj, quant_got);
 
         you.turn_is_over = true;
-        return true;
     }
 
-    return false;
+    return keep_going;
 }
 
 /**
@@ -1720,7 +1755,7 @@ static void _get_rune(const item_def& it, bool quiet)
 
     if (!quiet)
     {
-        flash_view_delay(rune_colour(it.plus), 300);
+        flash_view_delay(UA_PICKUP, rune_colour(it.plus), 300);
         mprf("You pick up the %s rune and feel its power.",
              rune_type_name(it.plus));
         int nrunes = runes_in_pack();
@@ -1757,6 +1792,8 @@ static void _get_rune(const item_def& it, bool quiet)
  */
 static void _get_orb(const item_def &it, bool quiet)
 {
+    run_animation(ANIMATION_ORB, UA_PICKUP);
+
     mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
     you.char_direction = GDT_ASCENDING;
 
@@ -1785,7 +1822,7 @@ static void _get_orb(const item_def &it, bool quiet)
  * @param quiet             Whether to suppress pickup messages.
  */
 static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
-                                           int &inv_slot, bool quiet)
+                                           char &inv_slot, bool quiet)
 {
     for (inv_slot = 0; inv_slot < ENDOFPACK; inv_slot++)
     {
@@ -1821,7 +1858,38 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 }
 
 /**
+ * Maybe move an item to the slot given by the item_slot option.
+ *
+ * @param item the item to be checked.
+ * @returns whether the item was moved anywhere.
+ */
+bool auto_assign_item_slot(item_def& item)
+{
+    int newslot = -1;
+    // check to see whether we've chosen an automatic label:
+    for (auto& mapping : Options.auto_item_letters)
+    {
+        if (!mapping.first.matches(item.name(DESC_QUALNAME)))
+            continue;
+        for (char i : mapping.second)
+            if (isaalpha(i) && !you.inv[letter_to_index(i)].defined())
+            {
+                newslot = letter_to_index(i);
+                break;
+            }
+        if (newslot != -1 && newslot != item.link)
+        {
+            swap_inv_slots(item.link, newslot, true);
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Move the given item and quantity to a free slot in the player's inventory.
+ * If the item_slot option tells us to put it in a specific slot, it will move
+ * there and push out the item that was in it before instead.
  *
  * @param it[in]          The item to be placed into the player's inventory.
  * @param quant_got       The quantity of this item to place.
@@ -1841,11 +1909,17 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     item.link     = freeslot;
     item.quantity = quant_got;
     item.slot     = index_to_letter(item.link);
-    item.pos.set(-1, -1);
+    item.pos = ITEM_IN_INVENTORY;
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
 
+    bool message_given = false;
+    if (auto_assign_item_slot(item))
+        message_given = true;
+
     god_id_item(item);
+    if (item.base_type == OBJ_WANDS)
+        set_ident_type(item, ID_KNOWN_TYPE);
     maybe_identify_base_type(item);
     if (item.base_type == OBJ_BOOKS)
         maybe_id_book(item, true);
@@ -1853,10 +1927,10 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     note_inscribe_item(item);
 
     // avoid blood potion timer/stack size mismatch
-    if (is_blood_potion(it) && quant_got != it.quantity)
-        remove_newest_blood_potion(item);
+    if (is_perishable_stack(it) && quant_got != it.quantity)
+        remove_newest_perishable_item(item);
 
-    if (!quiet)
+    if (!quiet && !message_given)
     {
         mprf_nocap("%s", get_menu_colour_prefix_tags(you.inv[freeslot],
                                                      DESC_INVENTORY).c_str());
@@ -1887,8 +1961,8 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
  *              item pickup failure) aren't printed.
  * @return Whether something was successfully picked up.
  */
-bool merge_items_into_inv(const item_def &it, int quant_got, int &inv_slot,
-                          bool quiet)
+static bool _merge_items_into_inv(const item_def &it, int quant_got,
+                                  char &inv_slot, bool quiet)
 {
     inv_slot = -1;
 
@@ -1933,7 +2007,7 @@ bool merge_items_into_inv(const item_def &it, int quant_got, int &inv_slot,
     }
 
     // Can't combine, check for slot space.
-    if (inv_count() >= ENDOFPACK && !drop_spoiled_chunks())
+    if (inv_count() >= ENDOFPACK)
         return false;
 
     inv_slot = _place_item_in_free_slot(it, quant_got, quiet);
@@ -2008,7 +2082,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 
     if (feat_destroys_item(grd(p), mitm[ob], !silenced(p) && !silent))
     {
-        item_was_destroyed(item, NON_MONSTER);
+        item_was_destroyed(item);
         destroy_item(ob);
         ob = NON_ITEM;
 
@@ -2133,7 +2207,7 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
         if (item_is_spellbook(item))
             destroy_spellbook(item);
 
-        item_was_destroyed(item, NON_MONSTER);
+        item_was_destroyed(item);
 
         return true;
     }
@@ -2191,12 +2265,11 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
     }
 
     move_item_to_grid(&new_item_idx, p, true);
-    if (is_blood_potion(item)
-        && item.quantity != quant_drop) // partial drop only
+    if (is_perishable_stack(item) && item.quantity != quant_drop)
     {
-        // Since only the oldest potions have been dropped,
-        // remove the newest ones.
-        remove_newest_blood_potion(new_item);
+        // In the case of a partial drop, since only the oldest items have
+        // been dropped, remove the newest ones.
+        remove_newest_perishable_item(new_item);
     }
 
     return true;
@@ -2239,7 +2312,7 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
 const item_def* top_item_at(const coord_def& where)
 {
     const int link = you.visible_igrd(where);
-    return (link == NON_ITEM) ? NULL : &mitm[link];
+    return (link == NON_ITEM) ? nullptr : &mitm[link];
 }
 
 bool multiple_items_at(const coord_def& where)
@@ -2346,12 +2419,12 @@ bool drop_item(int item_dropped, int quant_drop)
 
     feat_destroys_item(my_grid, you.inv[item_dropped], !quiet);
 
-    if (is_blood_potion(you.inv[item_dropped])
+    if (is_perishable_stack(you.inv[item_dropped])
         && you.inv[item_dropped].quantity != quant_drop)
     {
         // Oldest potions have been dropped.
         for (int i = 0; i < quant_drop; i++)
-            remove_oldest_blood_potion(you.inv[item_dropped]);
+            remove_oldest_perishable_item(you.inv[item_dropped]);
     }
 
     dec_inv_item_quantity(item_dropped, quant_drop);
@@ -2367,12 +2440,11 @@ void drop_last()
 {
     vector<SelItem> items_to_drop;
 
-    for (map<int,int>::iterator it = you.last_pickup.begin();
-        it != you.last_pickup.end(); ++it)
+    for (const auto &entry : you.last_pickup)
     {
-        const item_def* item = &you.inv[it->first];
+        const item_def* item = &you.inv[entry.first];
         if (item->quantity > 0)
-            items_to_drop.push_back(SelItem(it->first, it->second, item));
+            items_to_drop.emplace_back(entry.first, entry.second, item);
     }
 
     if (items_to_drop.empty())
@@ -2488,7 +2560,7 @@ void drop()
 #else
     tmp_items = prompt_invent_items("Drop what? (_ for help)", MT_DROP,
 #endif
-                                     -1, NULL, true, true, 0,
+                                     -1, nullptr, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop);
 
@@ -2513,10 +2585,8 @@ static void _multidrop(vector<SelItem> tmp_items)
     // then remove it from the list of items to drop by not copying it
     // over to items_for_multidrop.
     items_for_multidrop.clear();
-    for (unsigned int i = 0; i < tmp_items.size(); ++i)
+    for (SelItem& si : tmp_items)
     {
-        SelItem& si(tmp_items[i]);
-
         const int item_quant = si.item->quantity;
 
         // EVIL HACK: Fix item quantity to match the quantity we will drop,
@@ -2562,16 +2632,16 @@ static void _autoinscribe_item(item_def& item)
 
     string iname = _autopickup_item_name(item);
 
-    for (unsigned i = 0; i < Options.autoinscriptions.size(); ++i)
+    for (const auto &ai_entry : Options.autoinscriptions)
     {
-        if (Options.autoinscriptions[i].first.matches(iname))
+        if (ai_entry.first.matches(iname))
         {
             // Don't autoinscribe dropped items on ground with
             // "=g".  If the item matches a rule which adds "=g",
             // "=g" got added to it before it was dropped, and
             // then the user explicitly removed it because they
             // don't want to autopickup it again.
-            string str = Options.autoinscriptions[i].second;
+            string str = ai_entry.second;
             if ((item.flags & ISFLAG_DROPPED) && !in_inventory(item))
                 str = replace_all(str, "=g", "");
 
@@ -2620,6 +2690,13 @@ void autoinscribe()
     will_autoinscribe = false;
 }
 
+/**
+ * Resolve an item's subtype to an appropriate value for autopickup.
+ * @param item The item to check.
+ * @returns The actual sub_type for items that either have an identified
+ * sub_type or where the sub_type is always known. Otherwise the value of the
+ * max subtype.
+*/
 static int _autopickup_subtype(const item_def &item)
 {
     // Sensed items.
@@ -2643,13 +2720,8 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_POTIONS:
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
-    case OBJ_FOOD:
-        return (item.sub_type == FOOD_CHUNK) ? item.sub_type
-             : food_is_meaty(item)           ? FOOD_MEAT_RATION
-             : is_fruit(item)                ? FOOD_FRUIT
-                                             : FOOD_ROYAL_JELLY;
     case OBJ_MISCELLANY:
-        return (item.sub_type == MISC_RUNE_OF_ZOT) ? item.sub_type : max_type;
+        return item.sub_type == MISC_RUNE_OF_ZOT ? item.sub_type : max_type;
     case OBJ_BOOKS:
         if (item.sub_type == BOOK_MANUAL || item_type_known(item))
             return item.sub_type;
@@ -2663,10 +2735,9 @@ static int _autopickup_subtype(const item_def &item)
     }
 }
 
-static bool _is_option_autopickup(const item_def &item, string &iname)
+static bool _is_option_autopickup(const item_def &item)
 {
-    if (iname.empty())
-        iname = _autopickup_item_name(item);
+    string iname = _autopickup_item_name(item);
 
     if (item.base_type < NUM_OBJECT_CLASSES)
     {
@@ -2676,11 +2747,6 @@ static bool _is_option_autopickup(const item_def &item, string &iname)
     }
     else
         return false;
-
-    //Check for initial settings
-    for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)
-        if (Options.force_autopickup[i].first.matches(iname))
-            return Options.force_autopickup[i].second;
 
 #ifdef CLUA_BINDINGS
     bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
@@ -2706,6 +2772,11 @@ static bool _is_option_autopickup(const item_def &item, string &iname)
         return false;
 #endif
 
+    //Check for initial settings
+    for (int i = 0; i < (int)Options.force_autopickup.size(); ++i)
+        if (Options.force_autopickup[i].first.matches(iname))
+            return Options.force_autopickup[i].second;
+
     return Options.autopickups[item.base_type];
 }
 
@@ -2726,8 +2797,7 @@ bool item_needs_autopickup(const item_def &item)
     if (item.props.exists("needs_autopickup"))
         return true;
 
-    string itemname;
-    return _is_option_autopickup(item, itemname);
+    return _is_option_autopickup(item);
 }
 
 bool can_autopickup()
@@ -2781,12 +2851,8 @@ static bool _similar_equip(const item_def& pickup_item,
     if (pickup_item.base_type == OBJ_ARMOUR)
         return true;
 
-    // Launchers of the same type are similar.
-    if (is_ranged_weapon_type(pickup_item.sub_type))
-        return pickup_item.sub_type != inv_item.sub_type;
-
-    return (melee_skill(pickup_item) == melee_skill(inv_item))
-           && (get_damage_type(pickup_item) == get_damage_type(inv_item));
+    return item_attack_skill(pickup_item) == item_attack_skill(inv_item)
+           && get_damage_type(pickup_item) == get_damage_type(inv_item);
 }
 
 static bool _similar_wands(const item_def& pickup_item,
@@ -2799,9 +2865,7 @@ static bool _similar_wands(const item_def& pickup_item,
         return false;
 
     // Not similar if wand in inventory is known to be empty.
-    return inv_item.plus2 != ZAPCOUNT_EMPTY
-           || (item_ident(inv_item, ISFLAG_KNOW_PLUSES)
-               && inv_item.plus > 0);
+    return !is_known_empty_wand(inv_item);
 }
 
 static bool _similar_jewellery(const item_def& pickup_item,
@@ -2857,8 +2921,8 @@ static bool _interesting_explore_pickup(const item_def& item)
     {
         const string name = item.name(DESC_PLAIN);
 
-        for (unsigned int i = 0; i < ignores.size(); i++)
-            if (ignores[i].matches(name))
+        for (const text_pattern &pat : ignores)
+            if (pat.matches(name))
                 return false;
     }
 
@@ -2961,7 +3025,7 @@ static void _do_autopickup()
 
     if (!can_autopickup())
     {
-        item_check(false);
+        item_check();
         return;
     }
 
@@ -3016,7 +3080,7 @@ static void _do_autopickup()
     }
 
     if (!pickup_warning.empty())
-        mpr(pickup_warning.c_str());
+        mpr(pickup_warning);
 
     if (did_pickup)
         you.turn_is_over = true;
@@ -3024,7 +3088,7 @@ static void _do_autopickup()
     if (you.last_pickup.empty())
         you.last_pickup = tmp_l_p;
 
-    item_check(false);
+    item_check();
 
     explore_pickup_event(n_did_pickup, n_tried_pickup);
 }
@@ -3058,7 +3122,7 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
                     return &*si;
                 }
 
-    return NULL;
+    return nullptr;
 }
 
 int item_on_floor(const item_def &item, const coord_def& where)
@@ -3093,7 +3157,7 @@ int get_max_subtype(object_class_type base_type)
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
-    ASSERT(base_type < NUM_OBJECT_CLASSES);
+    ASSERT_RANGE(base_type, 0, NUM_OBJECT_CLASSES);
 
     return max_subtype[base_type];
 }
@@ -3114,8 +3178,7 @@ equipment_type item_equip_slot(const item_def& item)
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
     return item_equip_slot(item) != EQ_NONE
-           || quiver_too && in_inventory(item)
-              && item.link == you.m_quiver->get_fire_item();
+           || quiver_too && item_is_quivered(item);
 }
 
 bool item_is_melded(const item_def& item)
@@ -3129,15 +3192,8 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return item_is_spellbook(*this) && item_type_known(*this)
-           || count_rod_spells(*this, true) > 0;
-}
-
-int item_def::book_number() const
-{
-    return base_type == OBJ_BOOKS  ? sub_type :
-           base_type == OBJ_RODS   ? sub_type + NUM_FIXED_BOOKS
-                                   : -1;
+    return (item_is_spellbook(*this) || base_type == OBJ_RODS)
+           && item_type_known(*this);
 }
 
 bool item_def::cursed() const
@@ -3213,10 +3269,10 @@ int item_def::armour_rating() const
 monster* item_def::holding_monster() const
 {
     if (!pos.equals(-2, -2))
-        return NULL;
+        return nullptr;
     const int midx = link - NON_ITEM - 1;
     if (invalid_monster_index(midx))
-        return NULL;
+        return nullptr;
 
     return &menv[midx];
 }
@@ -3243,6 +3299,646 @@ bool item_def::defined() const
 {
     return base_type != OBJ_UNASSIGNED && quantity > 0;
 }
+/**
+ * Has this item's appearance been initialized?
+ */
+bool item_def::appearance_initialized() const
+{
+    return rnd != 0 || is_unrandom_artefact(*this);
+}
+
+
+/**
+ * Assuming this item is a randart weapon/armour, what colour is it?
+ */
+colour_t item_def::randart_colour() const
+{
+    ASSERT(is_artefact(*this));
+    static colour_t colours[] = { YELLOW, LIGHTGREEN, LIGHTRED, LIGHTMAGENTA };
+    return colours[rnd % ARRAYSZ(colours)];
+}
+
+/**
+ * Assuming this item is a weapon, what colour is it?
+ */
+colour_t item_def::weapon_colour() const
+{
+    ASSERT(base_type == OBJ_WEAPONS);
+
+    // random artefact
+    if (is_artefact(*this))
+        return randart_colour();
+
+    if (is_demonic(*this))
+        return LIGHTRED;
+
+    switch (item_attack_skill(*this))
+    {
+        case SK_BOWS:
+            return BLUE;
+        case SK_CROSSBOWS:
+            return LIGHTBLUE;
+        case SK_THROWING:
+            return WHITE;
+        case SK_SLINGS:
+            return BROWN;
+        case SK_SHORT_BLADES:
+            return CYAN;
+        case SK_LONG_BLADES:
+            return LIGHTCYAN;
+        case SK_AXES:
+            return MAGENTA;
+        case SK_MACES_FLAILS:
+            return LIGHTGREY;
+        case SK_POLEARMS:
+            return RED;
+        case SK_STAVES:
+            return GREEN;
+        default:
+            die("Unknown weapon attack skill %d", item_attack_skill(*this));
+            // XXX: give more info!
+    }
+}
+
+/**
+ * Assuming this item is a missile (stone/arrow/bolt/etc), what colour is it?
+ */
+colour_t item_def::missile_colour() const
+{
+    ASSERT(base_type == OBJ_MISSILES);
+
+    // TODO: move this into itemprop.cc
+    switch (sub_type)
+    {
+        case MI_STONE:
+            return BROWN;
+#if TAG_MAJOR_VERSION == 34
+        case MI_DART:
+#endif
+        case MI_SLING_BULLET:
+            return CYAN;
+        case MI_LARGE_ROCK:
+            return LIGHTGREY;
+        case MI_ARROW:
+            return BLUE;
+        case MI_NEEDLE:
+            return WHITE;
+        case MI_BOLT:
+            return LIGHTBLUE;
+        case MI_JAVELIN:
+            return RED;
+        case MI_THROWING_NET:
+            return MAGENTA;
+        case MI_TOMAHAWK:
+            return GREEN;
+        case NUM_SPECIAL_MISSILES:
+        case NUM_REAL_SPECIAL_MISSILES:
+        default:
+            die("invalid missile type");
+    }
+}
+
+/**
+ * Assuming this item is a piece of armour, what colour is it?
+ */
+colour_t item_def::armour_colour() const
+{
+    ASSERT(base_type == OBJ_ARMOUR);
+
+    if (is_artefact(*this))
+        return randart_colour();
+
+    // TODO: move (some of?) this into itemprop.cc
+    switch (sub_type)
+    {
+        case ARM_FIRE_DRAGON_HIDE:
+        case ARM_FIRE_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_FIRE_DRAGON);
+        case ARM_TROLL_HIDE:
+        case ARM_TROLL_LEATHER_ARMOUR:
+            return mons_class_colour(MONS_TROLL);
+        case ARM_ICE_DRAGON_HIDE:
+        case ARM_ICE_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_ICE_DRAGON);
+        case ARM_STEAM_DRAGON_HIDE:
+        case ARM_STEAM_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_STEAM_DRAGON);
+        case ARM_MOTTLED_DRAGON_HIDE:
+        case ARM_MOTTLED_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_MOTTLED_DRAGON);
+        case ARM_STORM_DRAGON_HIDE:
+        case ARM_STORM_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_STORM_DRAGON);
+        case ARM_GOLD_DRAGON_HIDE:
+        case ARM_GOLD_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_GOLDEN_DRAGON);
+        case ARM_SWAMP_DRAGON_HIDE:
+        case ARM_SWAMP_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_SWAMP_DRAGON);
+        case ARM_PEARL_DRAGON_HIDE:
+        case ARM_PEARL_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_PEARL_DRAGON);
+        case ARM_SHADOW_DRAGON_HIDE:
+        case ARM_SHADOW_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_SHADOW_DRAGON);
+        case ARM_QUICKSILVER_DRAGON_HIDE:
+        case ARM_QUICKSILVER_DRAGON_ARMOUR:
+            return mons_class_colour(MONS_QUICKSILVER_DRAGON);
+        case ARM_CLOAK:
+            return WHITE;
+        case ARM_NAGA_BARDING:
+        case ARM_CENTAUR_BARDING:
+            return GREEN;
+        case ARM_ROBE:
+            return RED;
+#if TAG_MAJOR_VERSION == 34
+        case ARM_CAP:
+#endif
+        case ARM_HAT:
+        case ARM_HELMET:
+            return MAGENTA;
+        case ARM_BOOTS:
+            return BLUE;
+        case ARM_GLOVES:
+            return LIGHTBLUE;
+        case ARM_LEATHER_ARMOUR:
+            return BROWN;
+        case ARM_ANIMAL_SKIN:
+            return LIGHTGREY;
+        case ARM_CRYSTAL_PLATE_ARMOUR:
+            return WHITE;
+        case ARM_SHIELD:
+        case ARM_LARGE_SHIELD:
+        case ARM_BUCKLER:
+            return CYAN;
+        default:
+            return LIGHTCYAN;
+    }
+}
+
+/**
+ * Assuming this item is a wand, what colour is it?
+ */
+colour_t item_def::wand_colour() const
+{
+    ASSERT(base_type == OBJ_WANDS);
+
+    // this is very odd... a linleyism?
+    // TODO: associate colours directly with names
+    // (use an array of [name, colour] tuples/structs)
+    switch (subtype_rnd % NDSC_WAND_PRI)
+    {
+        case 0:         //"iron wand"
+            return CYAN;
+        case 1:         //"brass wand"
+        case 5:         //"gold wand"
+            return YELLOW;
+        case 3:         //"wooden wand"
+        case 4:         //"copper wand"
+        case 7:         //"bronze wand"
+            return BROWN;
+        case 6:         //"silver wand"
+            return WHITE;
+        case 11:        //"fluorescent wand"
+            return LIGHTGREEN;
+        case 2:         //"bone wand"
+        case 8:         //"ivory wand"
+        case 9:         //"glass wand"
+        case 10:        //"lead wand"
+        default:
+            return LIGHTGREY;
+    }
+}
+
+/**
+ * Assuming this item is a potion, what colour is it?
+ */
+colour_t item_def::potion_colour() const
+{
+    ASSERT(base_type == OBJ_POTIONS);
+
+    // TODO: associate colours directly with names
+    // (use an array of [name, colour] tuples/structs)
+    static const COLOURS potion_colours[] =
+    {
+#if TAG_MAJOR_VERSION == 34
+        // clear
+        LIGHTGREY,
+#endif
+        // blue, black, silvery, cyan, purple, orange
+        BLUE, LIGHTGREY, WHITE, CYAN, MAGENTA, LIGHTRED,
+        // inky, red, yellow, green, brown, pink, white
+        BLUE, RED, YELLOW, GREEN, BROWN, LIGHTMAGENTA, WHITE,
+        // emerald, grey, pink, copper, gold, dark, puce
+        LIGHTGREEN, LIGHTGREY, LIGHTRED, YELLOW, YELLOW, BROWN, BROWN,
+        // amethyst, sapphire
+        MAGENTA, BLUE
+    };
+    COMPILE_CHECK(ARRAYSZ(potion_colours) == NDSC_POT_PRI);
+    return potion_colours[subtype_rnd % NDSC_POT_PRI];
+}
+
+/**
+ * Assuming this item is a piece of food, what colour is it?
+ */
+colour_t item_def::food_colour() const
+{
+    ASSERT(base_type == OBJ_FOOD);
+
+    switch (sub_type)
+    {
+        case FOOD_ROYAL_JELLY:
+        case FOOD_PIZZA:
+            return YELLOW;
+        case FOOD_FRUIT:
+            return LIGHTGREEN;
+        case FOOD_CHUNK:
+        {
+            const colour_t class_colour = mons_class_colour(mon_type);
+            if (class_colour == BLACK)
+                return LIGHTRED;
+            return class_colour;
+        }
+        case FOOD_BEEF_JERKY:
+        case FOOD_BREAD_RATION:
+        case FOOD_MEAT_RATION:
+        default:
+            return BROWN;
+    }
+}
+
+/**
+ * Assuming this item is a ring, what colour is it?
+ */
+colour_t item_def::ring_colour() const
+{
+    ASSERT(!jewellery_is_amulet(*this));
+    // jewellery_is_amulet asserts base type
+
+    // TODO: associate colours directly with names
+    // (use an array of [name, colour] tuples/structs)
+    switch (subtype_rnd % NDSC_JEWEL_PRI)
+    {
+        case 1:                 // "silver ring"
+        case 8:                 // "granite ring"
+        case 9:                 // "ivory ring"
+        case 15:                // "bone ring"
+        case 16:                // "diamond ring"
+        case 20:                // "opal ring"
+        case 21:                // "pearl ring"
+        case 26:                // "onyx ring"
+            return LIGHTGREY;
+        case 3:                 // "iron ring"
+        case 4:                 // "steel ring"
+        case 13:                // "glass ring"
+            return CYAN;
+        case 5:                 // "tourmaline ring"
+        case 22:                // "coral ring"
+            return MAGENTA;
+        case 10:                // "ruby ring"
+        case 19:                // "garnet ring"
+            return RED;
+        case 11:                // "marble ring"
+        case 12:                // "jade ring"
+        case 14:                // "agate ring"
+        case 17:                // "emerald ring"
+        case 18:                // "peridot ring"
+            return GREEN;
+        case 23:                // "sapphire ring"
+        case 24:                // "cabochon ring"
+        case 28:                // "moonstone ring"
+            return BLUE;
+        case 0:                 // "wooden ring"
+        case 2:                 // "golden ring"
+        case 6:                 // "brass ring"
+        case 7:                 // "copper ring"
+        case 25:                // "gilded ring"
+        case 27:                // "bronze ring"
+        default:
+            return BROWN;
+    }
+}
+
+/**
+ * Assuming this item is an amulet, what colour is it?
+ */
+colour_t item_def::amulet_colour() const
+{
+    ASSERT(jewellery_is_amulet(*this));
+    // jewellery_is_amulet asserts base type
+
+    // TODO: associate colours directly with names
+    // (use an array of [name, colour] tuples/structs)
+    switch (subtype_rnd % NDSC_JEWEL_PRI)
+    {
+        case 0:             // "zirconium amulet"
+        case 9:             // "ivory amulet"
+        case 10:            // "bone amulet"
+        case 11:            // "platinum amulet"
+        case 16:            // "pearl amulet"
+        case 20:            // "diamond amulet"
+        case 24:            // "silver amulet"
+            return LIGHTGREY;
+        case 1:             // "sapphire amulet"
+        case 17:            // "blue amulet"
+        case 26:            // "lapis lazuli amulet"
+            return BLUE;
+        case 3:             // "emerald amulet"
+        case 12:            // "jade amulet"
+        case 18:            // "peridot amulet"
+        case 21:            // "malachite amulet"
+        case 25:            // "soapstone amulet"
+        case 28:            // "beryl amulet"
+            return GREEN;
+        case 4:             // "garnet amulet"
+        case 8:             // "ruby amulet"
+        case 19:            // "jasper amulet"
+        case 15:            // "cameo amulet"
+            return RED;
+        case 22:            // "steel amulet"
+        case 23:            // "cabochon amulet"
+        case 27:            // "filigree amulet"
+            return CYAN;
+        case 13:            // "fluorescent amulet"
+        case 14:            // "crystal amulet"
+            return MAGENTA;
+        case 2:             // "golden amulet"
+        case 5:             // "bronze amulet"
+        case 6:             // "brass amulet"
+        case 7:             // "copper amulet"
+        default:
+            return BROWN;
+    }
+}
+
+/**
+ * Assuming this is a piece of jewellery (ring or amulet), what colour is it?
+ */
+colour_t item_def::jewellery_colour() const
+{
+    ASSERT(base_type == OBJ_JEWELLERY);
+
+    //randarts are bright, normal jewellery is dark
+    if (is_random_artefact(*this))
+        return LIGHTGREEN + (rnd % (WHITE - LIGHTGREEN + 1));
+
+    if (jewellery_is_amulet(*this))
+        return amulet_colour();
+    return ring_colour();
+}
+
+/**
+ * Assuming this item is a book, what colour is it?
+ */
+colour_t item_def::book_colour() const
+{
+    ASSERT(base_type == OBJ_BOOKS);
+
+    if (sub_type == BOOK_MANUAL)
+        return WHITE;
+
+    switch (rnd % NDSC_BOOK_PRI)
+    {
+        case 0:
+            return BROWN;
+        case 1:
+            return CYAN;
+        case 2:
+            return LIGHTGREY;
+        case 3:
+        case 4:
+        default:
+        {
+            /// everything but BLACK, WHITE (manuals), and DARKGREY (useless)
+            static const colour_t colours[] = {
+                BLUE, GREEN, CYAN, RED, MAGENTA, BROWN, LIGHTGREY, LIGHTBLUE,
+                LIGHTGREEN, LIGHTCYAN, LIGHTRED, LIGHTMAGENTA, YELLOW
+            };
+            return colours[rnd % ARRAYSZ(colours)];
+        }
+    }
+}
+
+/**
+ * Assuming this item is a Rune of Zot, what colour is it?
+ */
+colour_t item_def::rune_colour() const
+{
+    ASSERT(item_is_rune(*this));
+
+    switch (rune_enum)
+    {
+        case RUNE_DIS:                      // iron
+            return ETC_IRON;
+
+        case RUNE_COCYTUS:                  // icy
+            return ETC_ICE;
+
+        case RUNE_TARTARUS:                 // bone
+        case RUNE_SPIDER:
+            return ETC_BONE;
+
+        case RUNE_SLIME:                    // slimy
+            return ETC_SLIME;
+
+        case RUNE_SNAKE:                    // serpentine
+            return ETC_POISON;
+
+        case RUNE_ELF:                      // elven
+            return ETC_ELVEN;
+
+        case RUNE_VAULTS:                   // silver
+            return ETC_SILVER;
+
+        case RUNE_TOMB:                     // golden
+            return ETC_GOLD;
+
+        case RUNE_SWAMP:                    // decaying
+            return ETC_DECAY;
+
+        case RUNE_SHOALS:                   // barnacled
+            return ETC_WATER;
+
+            // This one is hardly unique, but colour isn't used for
+            // stacking, so we don't have to worry too much about this.
+            // - bwr
+        case RUNE_DEMONIC:                  // random Pandemonium lords
+        {
+            static const element_type types[] =
+            {ETC_EARTH, ETC_ELECTRICITY, ETC_ENCHANT, ETC_HEAL, ETC_BLOOD,
+             ETC_DEATH, ETC_UNHOLY, ETC_VEHUMET, ETC_BEOGH, ETC_CRYSTAL,
+             ETC_SMOKE, ETC_DWARVEN, ETC_ORCISH, ETC_FLASH, ETC_KRAKEN};
+
+            return types[rnd % ARRAYSZ(types)];
+        }
+
+        case RUNE_ABYSSAL:
+            return ETC_RANDOM;
+
+        case RUNE_MNOLEG:                   // glowing
+            return ETC_MUTAGENIC;
+
+        case RUNE_LOM_LOBON:                // magical
+            return ETC_MAGIC;
+
+        case RUNE_CEREBOV:                  // fiery
+            return ETC_FIRE;
+
+        case RUNE_GEHENNA:                  // obsidian
+        case RUNE_GLOORX_VLOQ:              // dark
+        default:
+            return ETC_DARK;
+    }
+}
+
+/**
+ * Assuming this item is a miscellaneous item (evocations item or a rune), what
+ * colour is it?
+ */
+colour_t item_def::miscellany_colour() const
+{
+    ASSERT(base_type == OBJ_MISCELLANY);
+
+    if (is_deck(*this) || sub_type == MISC_DECK_UNKNOWN)
+        return deck_rarity_to_colour(deck_rarity);
+
+    if (item_is_rune(*this))
+        return rune_colour();
+
+    switch (sub_type)
+    {
+        case MISC_LANTERN_OF_SHADOWS:
+            return BLUE;
+        case MISC_FAN_OF_GALES:
+            return CYAN;
+#if TAG_MAJOR_VERSION == 34
+        case MISC_BOTTLED_EFREET:
+            return RED;
+#endif
+        case MISC_PHANTOM_MIRROR:
+            return RED;
+        case MISC_STONE_OF_TREMORS:
+            return BROWN;
+        case MISC_DISC_OF_STORMS:
+            return LIGHTGREY;
+        case MISC_PHIAL_OF_FLOODS:
+            return LIGHTBLUE;
+        case MISC_BOX_OF_BEASTS:
+            return LIGHTGREEN; // ugh, but we're out of other options
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
+            return LIGHTCYAN;
+        case MISC_HORN_OF_GERYON:
+            return LIGHTRED;
+        case MISC_LAMP_OF_FIRE:
+            return YELLOW;
+        case MISC_SACK_OF_SPIDERS:
+            return WHITE;
+#if TAG_MAJOR_VERSION == 34
+        case MISC_BUGGY_EBONY_CASKET:
+            return DARKGREY;
+#endif
+        case MISC_QUAD_DAMAGE:
+            return ETC_DARK;
+        default:
+            return LIGHTGREEN;
+    }
+}
+
+/**
+ * Assuming this item is a corpse, what colour is it?
+ */
+colour_t item_def::corpse_colour() const
+{
+    ASSERT(base_type == OBJ_CORPSES);
+
+    switch (sub_type)
+    {
+        case CORPSE_SKELETON:
+            return LIGHTGREY;
+        case CORPSE_BODY:
+        {
+            const colour_t class_colour = mons_class_colour(mon_type);
+#if TAG_MAJOR_VERSION == 34
+            if (class_colour == COLOUR_UNDEF)
+                return LIGHTRED;
+#else
+            ASSERT(class_colour != COLOUR_UNDEF);
+#endif
+            return class_colour;
+        }
+        default:
+            die("Unknown corpse type: %d", sub_type); // XXX: add more info
+    }
+}
+
+/**
+ * What colour is this item?
+ *
+ * @return The colour that the item should be displayed as.
+ *         Used for console glyphs.
+ */
+colour_t item_def::get_colour() const
+{
+    // props take first priority
+    if (props.exists(FORCED_ITEM_COLOUR_KEY))
+    {
+        const colour_t colour = props[FORCED_ITEM_COLOUR_KEY].get_int();
+        ASSERT(colour);
+        return colour;
+    }
+
+    // unrands get to override everything else (wrt colour)
+    // ...except for un-ID'd random-appearance artefacts (Misfortune)
+    if (is_unrandom_artefact(*this) && !is_randapp_artefact(*this))
+    {
+        const unrandart_entry *unrand = get_unrand_entry(
+                                            find_unrandart_index(*this));
+        ASSERT(unrand);
+        ASSERT(unrand->colour);
+        return unrand->colour;
+    }
+
+    switch (base_type)
+    {
+        case OBJ_WEAPONS:
+            return weapon_colour();
+        case OBJ_MISSILES:
+            return missile_colour();
+        case OBJ_ARMOUR:
+            return armour_colour();
+        case OBJ_WANDS:
+            return wand_colour();
+        case OBJ_POTIONS:
+            return potion_colour();
+        case OBJ_FOOD:
+            return food_colour();
+        case OBJ_JEWELLERY:
+            return jewellery_colour();
+        case OBJ_SCROLLS:
+            return LIGHTGREY;
+        case OBJ_BOOKS:
+            return book_colour();
+        case OBJ_RODS:
+            return YELLOW;
+        case OBJ_STAVES:
+            return BROWN;
+        case OBJ_ORBS:
+            return ETC_MUTAGENIC;
+        case OBJ_CORPSES:
+            return corpse_colour();
+        case OBJ_MISCELLANY:
+            return miscellany_colour();
+        case OBJ_GOLD:
+            return special > 0 ? static_cast<colour_t>(ETC_SHINING) : (YELLOW);
+        case OBJ_DETECTED:
+            return Options.detected_item_colour;
+        case NUM_OBJECT_CLASSES:
+        case OBJ_UNASSIGNED:
+        case OBJ_RANDOM: // not sure what to do with these three
+        default:
+            return LIGHTGREY;
+    }
+}
 
 bool item_type_has_unidentified(object_class_type base_type)
 {
@@ -3261,17 +3957,40 @@ bool item_type_has_unidentified(object_class_type base_type)
 bool item_def::is_valid(bool iinfo) const
 {
     if (base_type == OBJ_DETECTED)
+    {
+        if (!iinfo)
+            dprf("weird detected item");
         return iinfo;
+    }
     else if (!defined())
+    {
+        dprf("undefined");
         return false;
+    }
     const int max_sub = get_max_subtype(base_type);
     if (max_sub != -1 && sub_type >= max_sub)
     {
         if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
+        {
+            if (!iinfo)
+                dprf("weird subtype and no info");
+            if (sub_type > max_sub)
+                dprf("huge subtype");
+            if (!item_type_has_unidentified(base_type))
+                dprf("unided item of a type that can't be");
             return false;
+        }
     }
-    if (colour == 0)
+    if (get_colour() == 0)
+    {
+        dprf("black item");
         return false; // No black items.
+    }
+    if (!appearance_initialized())
+    {
+        dprf("no rnd");
+        return false; // no items with uninitialized rnd
+    }
     return true;
 }
 
@@ -3325,10 +4044,10 @@ bool item_def::is_greedy_sacrificeable() const
     if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
         || item_needs_autopickup(*this)
         || item_is_stationary_net(*this)
-        || this->inscription.find("!p") != string::npos
-        || this->inscription.find("=p") != string::npos
-        || this->inscription.find("!*") != string::npos
-        || this->inscription.find("!D") != string::npos)
+        || inscription.find("!p") != string::npos
+        || inscription.find("=p") != string::npos
+        || inscription.find("!*") != string::npos
+        || inscription.find("!D") != string::npos)
     {
         return false;
     }
@@ -3424,15 +4143,15 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         MISC_DECK_OF_WAR,
         MISC_DECK_OF_CHANGES,
         MISC_DECK_OF_DEFENCE,
-        NUM_MISCELLANY
+        MISC_DECK_UNKNOWN,
     };
 
     item.special  = DECK_RARITY_COMMON;
-    item.sub_type = NUM_MISCELLANY;
+    item.sub_type = MISC_DECK_UNKNOWN;
 
     if (!type_str.empty())
     {
-        for (int i = 0; types[i] != NUM_MISCELLANY; ++i)
+        for (int i = 0; types[i] != MISC_DECK_UNKNOWN; ++i)
         {
             item.sub_type = types[i];
             item.plus     = 1;
@@ -3446,7 +4165,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         }
     }
 
-    if (item.sub_type == NUM_MISCELLANY)
+    if (item.sub_type == MISC_DECK_UNKNOWN)
     {
         while (true)
         {
@@ -3479,12 +4198,12 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         "plain",
         "ornate",
         "legendary",
-        NULL
+        nullptr
     };
 
     int rarity_val = -1;
 
-    for (int i = 0; rarities[i] != NULL; ++i)
+    for (int i = 0; rarities[i] != nullptr; ++i)
         if (specs.find(rarities[i]) != string::npos)
         {
             rarity_val = i;
@@ -3556,8 +4275,8 @@ static bool _book_from_spell(const char* specs, item_def &item)
         return false;
 
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        for (int j = 0; j < 8; ++j)
-            if (which_spell_in_book(i, j) == type)
+        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+            if (sp == type)
             {
                 item.sub_type = i;
                 return true;
@@ -3612,7 +4331,7 @@ bool get_item_by_name(item_def *item, char* specs,
                 if (pos < best_index)
                 {
                     if (create_for_real)
-                        mpr(item->name(DESC_PLAIN).c_str());
+                        mpr(item->name(DESC_PLAIN));
                     type_wanted = i;
                     best_index = pos;
                 }
@@ -3640,7 +4359,7 @@ bool get_item_by_name(item_def *item, char* specs,
             case OBJ_ARMOUR:
             case OBJ_JEWELLERY:
             {
-                for (int unrand = 0; unrand < NO_UNRANDARTS; ++unrand)
+                for (int unrand = 0; unrand < NUM_UNRANDARTS; ++unrand)
                 {
                     int index = unrand + UNRAND_START;
                     const unrandart_entry* entry = get_unrand_entry(index);
@@ -3713,7 +4432,7 @@ bool get_item_by_name(item_def *item, char* specs,
                     if (pos < best_index)
                     {
                         if (create_for_real)
-                            mpr(item->name(DESC_PLAIN).c_str());
+                            mpr(item->name(DESC_PLAIN));
                         special_wanted = i;
                         best_index = pos;
                     }
@@ -3733,8 +4452,8 @@ bool get_item_by_name(item_def *item, char* specs,
 
             if (skill != SK_NONE)
             {
-                item->plus  = skill;
-                item->plus2 = random_range(2000, 3000);
+                item->skill        = skill;
+                item->skill_points = random_range(2000, 3000);
             }
             else
                 mpr("Sorry, no books on that skill today.");
@@ -3753,8 +4472,8 @@ bool get_item_by_name(item_def *item, char* specs,
         break;
 
     case OBJ_RODS:
-        item->plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-        item->plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        item->charges    = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        item->charge_cap = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
         init_rod_mp(*item);
         break;
 
@@ -3762,10 +4481,8 @@ bool get_item_by_name(item_def *item, char* specs,
         if (item->sub_type == MISC_BOX_OF_BEASTS
             || item->sub_type == MISC_SACK_OF_SPIDERS)
         {
-            item->plus = 50;
+            item->charges = 50;
         }
-        else if (!item_is_rune(*item) && !is_deck(*item) && !is_xp_evoker(*item))
-            item->plus2 = 50;
         break;
 
     case OBJ_POTIONS:
@@ -3773,24 +4490,13 @@ bool get_item_by_name(item_def *item, char* specs,
         if (is_blood_potion(*item))
         {
             const char* prompt;
-            if (item->sub_type == POT_BLOOD)
-            {
-                prompt = "# turns away from coagulation? "
-                         "[ENTER for fully fresh] ";
-            }
-            else
-            {
-                prompt = "# turns away from rotting? "
-                         "[ENTER for fully fresh] ";
-            }
+            prompt = "# turns away from rotting? "
+                     "[ENTER for fully fresh] ";
             int age = prompt_for_int(prompt, false);
 
             if (age <= 0)
                 age = -1;
-            else if (item->sub_type == POT_BLOOD)
-                age += ROTTING_BLOOD;
-
-            init_stack_blood_potions(*item, age);
+            init_perishable_stack(*item, age);
         }
         break;
 
@@ -3869,10 +4575,9 @@ item_info get_item_info(const item_def& item)
 
     ii.base_type = item.base_type;
     ii.quantity = item.quantity;
-    ii.colour = item.colour;
     ii.inscription = item.inscription;
     ii.flags = item.flags & (0
-            | ISFLAG_IDENT_MASK | ISFLAG_BLESSED_WEAPON | ISFLAG_SEEN_CURSED
+            | ISFLAG_IDENT_MASK
             | ISFLAG_ARTEFACT_MASK | ISFLAG_DROPPED | ISFLAG_THROWN
             | ISFLAG_COSMETIC_MASK);
 
@@ -3884,6 +4589,10 @@ item_info get_item_info(const item_def& item)
     }
     else
         ii.pos = item.pos;
+
+    ii.rnd = item.rnd; // XXX: may (?) leak cosmetic (?) info...?
+    if (ii.rnd == 0)
+        ii.rnd = 1; // don't leave "uninitialized" item infos around
 
     // keep god number
     if (item.orig_monnum < 0)
@@ -3910,63 +4619,58 @@ item_info get_item_info(const item_def& item)
     {
     case OBJ_MISSILES:
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.plus2 = item.plus2;
+            ii.net_placed = item.net_placed;
         // intentional fall-through
     case OBJ_WEAPONS:
         ii.sub_type = item.sub_type;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;
         if (item_type_known(item))
-            ii.special = item.special; // brand
+            ii.brand = item.brand;
         break;
     case OBJ_ARMOUR:
         ii.sub_type = item.sub_type;
-        ii.plus2    = item.plus2;      // sub-subtype (helmets, etc)
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;
         if (item_type_known(item))
-            ii.special = item.special; // brand
-        ii.rnd = item.rnd; // used for appearance
+            ii.brand = item.brand;
         break;
     case OBJ_WANDS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_WANDS;
-        ii.special = item.special; // appearance
+        ii.subtype_rnd = item.subtype_rnd;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-            ii.plus = item.plus; // charges
-        ii.plus2 = item.plus2; // num zapped/recharged or empty
+            ii.charges = item.charges;
+        ii.used_count = item.used_count; // num zapped/recharged or empty
         break;
     case OBJ_POTIONS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_POTIONS;
-        ii.plus = item.plus; // appearance
+        ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_FOOD:
         ii.sub_type = item.sub_type;
         if (ii.sub_type == FOOD_CHUNK)
         {
-            ii.plus = item.plus; // monster
-            ii.special = food_is_rotten(item) ? 99 : 100;
+            ii.mon_type = item.mon_type;
+            ii.freshness = 100;
         }
-        if (ii.sub_type == FOOD_FRUIT)
-            ii.rnd = item.rnd; //appearance
         break;
     case OBJ_CORPSES:
         ii.sub_type = item.sub_type;
-        ii.plus = item.plus; // monster
-        ii.special = food_is_rotten(item) ? 99 : 100;
+        ii.mon_type = item.mon_type;
+        ii.freshness = 100;
         break;
     case OBJ_SCROLLS:
         if (item_type_known(item))
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_SCROLLS;
-        ii.special = item.special; // name seed, part 1
-        ii.plus = item.plus;  // name seed, part 2
+        ii.subtype_rnd = item.subtype_rnd;    // name seed
         break;
     case OBJ_JEWELLERY:
         if (item_type_known(item))
@@ -3975,17 +4679,16 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;   // str/dex/int/ac/ev ring plus
-        ii.special = item.special; // appearance
-        ii.rnd = item.rnd; // randart appearance
+        ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_BOOKS:
         if (item_type_known(item) || !item_is_spellbook(item))
             ii.sub_type = item.sub_type;
         else
             ii.sub_type = NUM_BOOKS;
-        ii.special = item.special; // appearance
+        ii.subtype_rnd = item.subtype_rnd;
         if (item.sub_type == BOOK_MANUAL && item_type_known(item))
-            ii.plus = item.plus; // manual skill
+            ii.skill = item.skill; // manual skill
         break;
     case OBJ_RODS:
         if (item_type_known(item))
@@ -3993,18 +4696,17 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
             if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             {
-                ii.special = item.special;
-                ii.plus = item.plus;
-                ii.plus2 = item.plus2;
+                ii.rod_plus = item.rod_plus;
+                ii.charges = item.charges;
+                ii.charge_cap = item.charge_cap;
             }
         }
         else
             ii.sub_type = NUM_RODS;
-        ii.rnd = item.rnd; // appearance
         break;
     case OBJ_STAVES:
         ii.sub_type = item_type_known(item) ? item.sub_type : NUM_STAVES;
-        ii.special = item.special; // appearance
+        ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_MISCELLANY:
         if (item_type_known(item))
@@ -4016,21 +4718,25 @@ item_info get_item_info(const item_def& item)
             {
                 // Needs to be changed if we add other miscellaneous items
                 // that can be non-identified.
-                ii.sub_type = NUM_MISCELLANY;
+                ii.sub_type = MISC_DECK_UNKNOWN;
             }
             else
                 ii.sub_type = item.sub_type;
         }
 
         if (ii.sub_type == MISC_RUNE_OF_ZOT)
-            ii.plus = item.plus; // which rune
+            ii.rune_enum = item.rune_enum; // which rune
 
-        if (ii.sub_type == NUM_MISCELLANY)
-            ii.special = item.special; // deck rarity
+        if (ii.sub_type == MISC_DECK_UNKNOWN)
+            ii.deck_rarity = item.deck_rarity;
+
+        // Preserve inert/charged state but not the actual numbers.
+        if (is_xp_evoker(item))
+            ii.evoker_debt = !!item.evoker_debt;
 
         if (is_deck(item))
         {
-            ii.special = item.special;
+            ii.deck_rarity = item.deck_rarity;
 
             const int num_cards = cards_in_deck(item);
             CrawlVector info_cards (SV_BYTE);
@@ -4072,10 +4778,14 @@ item_info get_item_info(const item_def& item)
             ii.props["card_flags"] = info_card_flags;
         }
         break;
-    case OBJ_ORBS:
     case OBJ_GOLD:
+        ii.special = item.special;
+        ii.sub_type = item.sub_type;
+        break;
+    case OBJ_ORBS:
     default:
         ii.sub_type = item.sub_type;
+        break;
     }
 
     if (item_ident(item, ISFLAG_KNOW_CURSE))
@@ -4091,25 +4801,23 @@ item_info get_item_info(const item_def& item)
     else if (item_type_tried(item))
         ii.flags |= ISFLAG_TRIED;
 
-    const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY,
-                                CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY,
-                                "drawn_cards", "item_tile", "item_tile_name",
-                                "worn_tile", "worn_tile_name",
-                                "needs_autopickup"};
-    for (unsigned i = 0; i < ARRAYSZ(copy_props); ++i)
+    static const char* copy_props[] =
     {
-        if (item.props.exists(copy_props[i]))
-            ii.props[copy_props[i]] = item.props[copy_props[i]];
-    }
+        ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
+        CORPSE_NAME_TYPE_KEY, "drawn_cards", "item_tile", "item_tile_name",
+        "worn_tile", "worn_tile_name", "needs_autopickup",
+        FORCED_ITEM_COLOUR_KEY, MANGLED_CORPSE_KEY
+    };
+    for (const char *prop : copy_props)
+        if (item.props.exists(prop))
+            ii.props[prop] = item.props[prop];
 
-    const char* copy_ident_props[] = {"spell_list"};
+    static const char* copy_ident_props[] = {"spell_list"};
     if (item_ident(item, ISFLAG_KNOW_TYPE))
     {
-        for (unsigned i = 0; i < ARRAYSZ(copy_ident_props); ++i)
-        {
-            if (item.props.exists(copy_ident_props[i]))
-                ii.props[copy_ident_props[i]] = item.props[copy_ident_props[i]];
-        }
+        for (const char *prop : copy_ident_props)
+            if (item.props.exists(prop))
+                ii.props[prop] = item.props[prop];
     }
 
     if (item.props.exists(ARTEFACT_PROPS_KEY))
@@ -4162,11 +4870,10 @@ object_class_type get_item_mimic_type()
     clear_messages();
     map<char, object_class_type> choices;
     char letter = 'a';
-    for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
+    for (object_class_type cls : _mimic_item_classes)
     {
-        mprf("[%c] %s ", letter,
-             item_class_name(_mimic_item_classes[i], true).c_str());
-        choices[letter++] = _mimic_item_classes[i];
+        mprf("[%c] %s ", letter, item_class_name(cls, true));
+        choices[letter++] = cls;
     }
     mprf("[%c] random", letter);
     choices[letter] = OBJ_RANDOM;
@@ -4187,14 +4894,91 @@ bool is_valid_mimic_item(const item_def &item)
     if (item_is_orb(item) || item_is_horn_of_geryon(item) || item_is_rune(item))
         return false;
 
-    for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
-        if (item.base_type == _mimic_item_classes[i])
-            return true;
-    return false;
+    return find(begin(_mimic_item_classes), end(_mimic_item_classes),
+                item.base_type) != end(_mimic_item_classes);
 }
 
-// If there is only one unidentified subtype left in the item's object type,
-// automatically identify it.
+/**
+ * How many types of identifiable item exist in the same category as the
+ * given item? (E.g., wands, scrolls, rings, etc.)
+ *
+ * @param item      The item in question.
+ * @return          The number of item enums in the same category.
+ *                  If the item isn't in a category of identifiable items,
+ *                  returns 0.
+ */
+static int _items_in_category(const item_def &item)
+{
+    switch (item.base_type)
+    {
+        case OBJ_WANDS:
+            return NUM_WANDS;
+        case OBJ_STAVES:
+            return NUM_STAVES;
+        case OBJ_POTIONS:
+            return NUM_POTIONS;
+        case OBJ_SCROLLS:
+            return NUM_SCROLLS;
+        case OBJ_JEWELLERY:
+            if (jewellery_is_amulet(item.sub_type))
+                return NUM_JEWELLERY - AMU_FIRST_AMULET;
+            return NUM_RINGS - RING_FIRST_RING;
+        default:
+            return 0;
+    }
+}
+
+/**
+ * What's the first enum for the given item's category?
+ *
+ * @param item  The item in question.
+ * @return      The enum value for the first item of the given type.
+ */
+static int _get_item_base(const item_def &item)
+{
+    if (item.base_type != OBJ_JEWELLERY)
+        return 0; // XXX: dubious
+    if (jewellery_is_amulet(item))
+        return AMU_FIRST_AMULET;
+    return RING_FIRST_RING;
+}
+
+/**
+ * Autoidentify the (given) last item in its category.
+ *
+ 8 @param item  The item to identify.
+ */
+static void _identify_last_item(item_def &item)
+{
+    if (!in_inventory(item) && item_needs_autopickup(item)
+        && (item.base_type == OBJ_STAVES
+            || item.base_type == OBJ_JEWELLERY))
+    {
+        item.props["needs_autopickup"] = true;
+    }
+
+    set_ident_type(item, ID_KNOWN_TYPE);
+
+    if (item.props.exists("needs_autopickup") && is_useless_item(item))
+        item.props.erase("needs_autopickup");
+
+    const string class_name = item.base_type == OBJ_JEWELLERY ?
+                                    item_base_name(item) :
+                                    item_class_name(item.base_type, true);
+    mprf("You have identified the last %s.", class_name.c_str());
+
+    if (in_inventory(item))
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+}
+
+
+/**
+ * Check to see if there's only one unidentified subtype left in the given
+ * item's object type. If so, automatically identify it.
+ *
+ * @param item  The item in question.
+ * @return      Whether the item was identified.
+ */
 bool maybe_identify_base_type(item_def &item)
 {
     if (is_artefact(item))
@@ -4202,69 +4986,25 @@ bool maybe_identify_base_type(item_def &item)
     if (get_ident_type(item) == ID_KNOWN_TYPE)
         return false;
 
-    int item_count; // Number of objects in an enum
-    bool is_amulet = false;
+    const int item_count = _items_in_category(item);
+    if (!item_count)
+        return false;
 
-    switch (item.base_type)
-    {
-        case OBJ_WANDS:
-            item_count = NUM_WANDS; break;
-        case OBJ_STAVES:
-            item_count = NUM_STAVES; break;
-        case OBJ_POTIONS:
-            item_count = NUM_POTIONS; break;
-        case OBJ_SCROLLS:
-            item_count = NUM_SCROLLS; break;
-        case OBJ_JEWELLERY:
-            if (item.sub_type >= RING_FIRST_RING && item.sub_type < NUM_RINGS)
-                item_count = NUM_RINGS;
-            else
-            {
-                item_count = NUM_JEWELLERY - AMU_FIRST_AMULET;
-                is_amulet = true;
-            }
-            break;
-
-        default:
-            return false;
-    }
+    // What's the enum of the first item in the category?
+    const int item_base = _get_item_base(item);
 
     int ident_count = 0;
 
-    for (int i = (is_amulet ? AMU_FIRST_AMULET : 0);
-         i < item_count + (is_amulet ? AMU_FIRST_AMULET : 0);
-         i++)
+    for (int i = item_base; i < item_count + item_base; i++)
     {
-        bool identified = you.type_ids[item.base_type][i] == ID_KNOWN_TYPE;
+        const bool identified = you.type_ids[item.base_type][i]
+                                == ID_KNOWN_TYPE;
         ident_count += identified ? 1 : 0;
     }
 
-    if (ident_count == item_count - 1)
-    {
-        if (!in_inventory(item) && item_needs_autopickup(item)
-            && (item.base_type == OBJ_STAVES
-                || item.base_type == OBJ_JEWELLERY))
-        {
-            item.props["needs_autopickup"] = true;
-        }
+    if (ident_count < item_count - 1)
+        return false;
 
-        set_ident_type(item, ID_KNOWN_TYPE);
-
-        if (item.props.exists("needs_autopickup") && is_useless_item(item))
-            item.props.erase("needs_autopickup");
-
-        string class_name;
-        if (item.base_type == OBJ_JEWELLERY)
-            class_name = is_amulet ? "amulet" : "ring";
-        else
-            class_name = item_class_name(item.base_type, true);
-
-        mprf("You have identified the last %s.", class_name.c_str());
-        if (in_inventory(item))
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-
-        return true;
-    }
-
-    return false;
+    _identify_last_item(item);
+    return true;
 }

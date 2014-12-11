@@ -36,7 +36,7 @@ KMONS:   N = spriggan ; robe . quarterstaff
 KMONS:   O = dire elephant / death yak / emperor scorpion / anaconda w:5
 KMONS:   Q = bush
 KMONS:   R = plant
-ITEM:    dagger / short sword / cutlass / flail / whip / blowgun / shortbow
+ITEM:    dagger / short sword / rapier / flail / whip / blowgun / shortbow
 ITEM:    robe / cloak / hat / buckler / steam dragon armour w:1
 ITEM:    bread ration q:3
 KFEAT:   _ = altar_trog

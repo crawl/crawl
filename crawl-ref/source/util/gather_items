@@ -1,16 +1,32 @@
 #!/usr/bin/perl -w
 
 my $db = grep /^-d$/, @ARGV;
+my %jewellery_prefixes;
+
+sub jewellery_name($$)
+{
+    my ($enum, $name) = @_;
+    my $prefix = $jewellery_prefixes{$enum} || "";
+    my $type = $enum =~ /^AMU_/ ? "amulet" : "ring";
+    return "$type of $prefix$name";
+}
 
 open IN, "util/cpp_version itemname.cc|" or die "Can't read itemname.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 
+# Remove this from the input so the main jewellery pattern doesn't match.
+s/^static [^\n]*_jewellery_effect_prefix\([^\n]*\)\n(.*?)^}//ms;
+my $prefixes = $1;
+$jewellery_prefixes{$1} = $2
+    while $prefixes =~ /((?:RING|AMU)_[A-Z_]+): *return "([^"]+)";/g;
+
 $items{"wand of $_"} = 1 for /WAND_[A-Z_]+: *return "([^"]+)";/g;
 $items{"potion of $_"} = 1 for /POT_[A-Z_]+: *return "([^"]+)";/g;
 $items{"scroll of $_"} = 1 for /SCR_[A-Z_]+: *return "([^"]+)";/g;
-$items{$_} = 1 for /RING_[A-Z_]+: *return "([^"]+)";/g;
-$items{$_} = 1 for /AMU_[A-Z_]+: *return "([^"]+)";/g;
+$items{jewellery_name($1, $2)} = 1
+    while /((?:RING|AMU)_[A-Z_]+): *return "([^"]+)";/g;
+
 unless ($db)
 {
     $items{"$_ rune of Zot"} = 1 for /RUNE_[A-Z_]+: *return "([^"]+)";/g;

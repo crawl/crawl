@@ -384,7 +384,6 @@ jacket2 JACKET2
 jacket3 JACKET3
 leather_stud LEATHER_STUD
 jacket_stud JACKET_STUD
-chainmail CHAINMAIL2
 half_plate HALF_PLATE
 half_plate2 HALF_PLATE2
 half_plate3 HALF_PLATE3
@@ -395,14 +394,21 @@ bplate_green BPLATE_GREEN
 bplate_metal1 BPLATE_METAL1
 armour_blue_gold
 ringmail RINGMAIL
-chainmail3 CHAINMAIL
+ringmail2
+ringmail3
+chainmail CHAINMAIL
+chainmail2
+chainmail3
 plate_and_cloth PLATE_AND_CLOTH
 plate_and_cloth2 PLATE_AND_CLOTH2
 scalemail SCALEMAIL
-scalemail2 SCALEMAIL2
-leather_metal SCALEMAIL3
+scalemail2
+scalemail3
+scalemail_light SCALEMAIL_LIGHT
+leather_metal LEATHER_METAL
 plate PLATE
-plate2 PLATE2
+plate2
+plate3
 plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
 crystal_plate2
@@ -413,17 +419,21 @@ armour_mummy ARMOUR_MUMMY
 dragonsc_green DRAGONSC_GREEN
 dragonsc_white DRAGONSC_WHITE
 dragonsc_magenta DRAGONSC_MAGENTA
+dragonsc_quicksilver DRAGONSC_QUICKSILVER
 dragonsc_cyan DRAGONSC_CYAN
 dragonsc_brown DRAGONSC_BROWN
 dragonsc_blue DRAGONSC_BLUE
+dragonsc_shadow DRAGONSC_SHADOW
 dragonsc_gold DRAGONSC_GOLD
 dragonsc_pearl DRAGONSC_PEARL
 dragonarm_green DRAGONARM_GREEN
 dragonarm_white DRAGONARM_WHITE
 dragonarm_magenta DRAGONARM_MAGENTA
+dragonarm_quicksilver DRAGONARM_QUICKSILVER
 dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
 dragonarm_blue DRAGONARM_BLUE
+dragonarm_shadow DRAGONARM_SHADOW
 dragonarm_gold DRAGONARM_GOLD
 dragonarm_pearl DRAGONARM_PEARL
 
@@ -498,6 +508,7 @@ vampires_tooth VAMPIRES_TOOTH
 spriggans_knife SPRIGGANS_KNIFE
 capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
+gyre GYRE
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
@@ -547,18 +558,16 @@ short_sword_slant SHORT_SWORD_SLANT
 short_sword_slant2
 short_sword_two SHORT_SWORD2
 sword_thief SWORD_THIEF
-bastard_sword BASTARD_SWORD
-bastard_sword2
-bastard_sword3
-bastard_sword_blessed BASTARD_SWORD_BLESSED
+double_sword DOUBLE_SWORD
+double_sword2
+double_sword3
 long_sword_slant LONG_SWORD_SLANT
 long_sword_slant2
 blessed_blade BLESSED_BLADE
 great_sword_slant GREAT_SWORD_SLANT
 great_sword_slant2
-claymore CLAYMORE
-claymore2
-claymore_blessed CLAYMORE_BLESSED
+triple_sword TRIPLE_SWORD
+triple_sword2
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
 scimitar2
@@ -571,8 +580,8 @@ sword_black SWORD_BLACK
 sword_twist SWORD_TWIST
 knife KNIFE
 heavy_sword HEAVY_SWORD
-cutlass CUTLASS
-cutlass2
+rapier RAPIER
+rapier2
 sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
@@ -718,15 +727,18 @@ axe_short AXE_SHORT
 
 ## launchers
 sling HUNTING_SLING
+greatsling GREATSLING
 bow BOW
 bow_two BOW2
 bow_three BOW3
 great_bow GREAT_BOW
 storm_bow STORM_BOW
+hand_crossbow HAND_CROSSBOW
 arbalest ARBALEST
 arbalest_two ARBALEST2
 arbalest_three ARBALEST3
 arbalest_four ARBALEST4
+triple_crossbow TRIPLE_CROSSBOW
 blowgun BLOWGUN
 
 ##missiles
@@ -772,6 +784,8 @@ fire_dark FIRE_DARK
 fire_white2 FIRE_WHITE2
 
 bladehands BLADEHAND
+bladehands_op BLADEHAND_OP
+bladehands_fe BLADEHAND_FE
 %end_ctg
 
 ### Hand 2
@@ -880,8 +894,8 @@ bladehands BLADEHAND
 # enums and become TILEP_GREAT_FLAIL_1 and TILEP_GREAT_MACE_1 respectively.
 dagger DAGGER
 dagger2 DAGGER_1
-cutlass CUTLASS
-cutlass2 CUTLASS_1
+rapier RAPIER
+rapier2 RAPIER_1
 short_sword_slant SHORT_SWORD_SLANT
 short_sword_slant2 SHORT_SWORD_SLANT_1
 flail_great GREAT_FLAIL
@@ -1024,6 +1038,7 @@ wizard_white WIZARD_WHITE
 turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
+pumpkin PUMPKIN
 
 ## Mutations
 horns1 HORNS1

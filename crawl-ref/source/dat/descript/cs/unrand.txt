@@ -322,18 +322,3 @@ Pokud budete držet tuto sekeru, ve své mysli se nebudete cítit úplně sami. 
 tělo začne vykazovat sílu, daleko za svými možnostmi, a vaše pohyby budou
 vedeny Makhleb.
 %%%%
-milk chocolate
-
-Tento předmět slouží jako pomůcka při debuggovaní, a poskytuje řadu povětšinou
-kladných vlastností.
-
-Pokud jsi ji našel během běžného hraní, jedná se o bug.
-%%%%
-dark chocolate
-
-Tento předmět slouží jako pomůcka při debuggovaní, a poskytuje řadu povětšinou
-záporných vlastností. Odlišuje se od svého mléčného protějšku, protože některé
-vlastnosti se vzájemně vylučují.
-
-Pokud jsi ji našel během běžného hraní, jedná se o bug.
-%%%%

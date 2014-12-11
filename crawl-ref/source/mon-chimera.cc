@@ -4,18 +4,16 @@
 **/
 
 #include "AppHdr.h"
+
 #include "mon-chimera.h"
 
-#include "externs.h"
-#include "enum.h"
+#include <sstream>
+
 #include "ghost.h"
 #include "mgen_data.h"
 #include "mon-info.h"
-#include "mon-util.h"
 #include "mon-pick.h"
 #include "monster.h"
-
-#include <sstream>
 
 static bool is_bad_chimera_part(monster_type part);
 static bool is_valid_chimera_part(monster_type part);
@@ -47,9 +45,19 @@ void ghost_demon::init_chimera(monster* mon, monster_type parts[])
     mon->props["chimera_part_3"] = parts[2];
 
     resists = 0;
-    _apply_chimera_part(mon, parts[0], 1);
-    _apply_chimera_part(mon, parts[1], 2);
-    _apply_chimera_part(mon, parts[2], 3);
+    size_t spellcount = 0;
+    for (int i = 0; i < 3; i++)
+        if (_apply_chimera_part(mon, parts[i], i+1))
+            spellcount++;
+
+    // Scale spell/ability frequencies; if we don't do this, a chimera might
+    // end up with a sum of spell frequencies greater than 200, preventing
+    // some from being used.
+    if (spellcount > 1)
+    {
+        for (auto &slot : spells)
+            slot.freq /= spellcount;
+    }
 
     // If one part has wings, take an average of base speed and the
     // speed of the winged monster.
@@ -121,7 +129,15 @@ static bool is_bad_chimera_part(monster_type part)
            || mons_is_unique(part);
 }
 
-void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
+/**
+ * Apply the characteristics of a chimera part to the chimera.
+ *
+ * @param  chimera    The chimera.
+ * @param  part       The type of monster this part is.
+ * @param  partnum    Which part of the chimera this is.
+ * @return            Whether this part of the chimera had abilities/spells.
+ */
+bool ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
                                       int partnum)
 {
     // TODO: Enforce more rules about the Chimera parts so things
@@ -143,7 +159,7 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     if (dummy.is_jumpy()
         || (dummy.can_cling_to_walls() && !mon->props.exists("chimera_legs")))
     {
-        ev = dummy.ev;
+        ev = dummy.evasion();
         mon->props["chimera_legs"].get_int() = partnum;
     }
 
@@ -154,11 +170,10 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     const static mon_resist_flags resist_list[] =
         { MR_RES_FIRE, MR_RES_COLD, MR_RES_ELEC, MR_RES_POISON, MR_RES_NEG,
           MR_RES_ACID, MR_RES_STEAM, MR_RES_STICKY_FLAME, MR_RES_ASPHYX,
-          MR_RES_ROTTING };
+          MR_RES_ROTTING, MR_RES_PETRIFY, MR_RES_WIND, MR_RES_TORMENT };
 
-    for (unsigned int n = 0; n < ARRAYSZ(resist_list); ++n)
+    for (const mon_resist_flags res_flag : resist_list)
     {
-        const mon_resist_flags res_flag = resist_list[n];
         const int part_resist = get_mons_resist(&dummy, res_flag);
         const int cur_resist = get_resist(resists, res_flag);
         const int new_resist = res_flag > MR_LAST_MULTI
@@ -174,43 +189,23 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     if (partnum == 1)
     {
         // Always AC/EV on the first part
-        ac = dummy.ac;
-        ev = dummy.ev;
+        ac = dummy.armour_class();
+        ev = dummy.evasion();
         max_hp = dummy.max_hit_points;
         xl = dummy.get_hit_dice();
         // Copy all spells from first part
-        for (int n = 0; n < NUM_MONSTER_SPELL_SLOTS; ++n)
-            spells[n] = dummy.spells[n];
-        return;
+        spells = dummy.spells;
+        return spells.size() > 0;
     }
-    // Make sure resulting chimera can use spells
-    // TODO: Spell usage might still be a bit of a mess, especially with
-    // things like human/animal hybrids. Could perhaps do with some kind
-    // of ghost demon structure to manage and track everything better.
-    if (dummy.can_use_spells())
-        spellcaster = true;
 
-    // XXX: It'd be nice to flood fill all available spell slots with spells
-    // from parts 2 and 3. But since this would conflict with special
-    // slots (emergency, enchantment, etc.) some juggling is needed, until
-    // spell slots can be made more sensible.
+    // Add spells and abilities from the current part.
+    for (const auto &slot : dummy.spells)
+    {
+        if (slot.spell != SPELL_NO_SPELL)
+            spells.push_back(slot);
+    }
 
-    // Use misc slots (3+4) for the primary spells of parts 1 & 2
-    const int boltslot = partnum + 1;
-    // Overwrite the base monster's misc spells if they had any
-    if (dummy.spells[0] != SPELL_NO_SPELL)
-        spells[boltslot] = dummy.spells[0];
-
-    // Other spell slots overwrite if the base monster(s) didn't have one
-    // Enchantment
-    if (spells[1] == SPELL_NO_SPELL && dummy.spells[1] != SPELL_NO_SPELL)
-        spells[1] = dummy.spells[1];
-    // Self-enchantment
-    if (spells[2] == SPELL_NO_SPELL && dummy.spells[2] != SPELL_NO_SPELL)
-        spells[2] = dummy.spells[2];
-    // Emergency
-    if (spells[5] == SPELL_NO_SPELL && dummy.spells[5] != SPELL_NO_SPELL)
-        spells[5] = dummy.spells[5];
+    return dummy.spells.size() > 0;
 }
 
 monster_type get_chimera_part(const monster* mon, int partnum)

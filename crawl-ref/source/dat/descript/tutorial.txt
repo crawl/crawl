@@ -2,8 +2,9 @@
 tutorial intro
 
 You can reread all messages at any time with
-<input>$cmd[CMD_REPLAY_MESSAGES]</input>. Also, press <input>Space</input> to
-clear the <cyan>--more--</cyan> prompts.
+<input>$cmd[CMD_REPLAY_MESSAGES]</input>. Also, press <input>Space</input>
+<localtiles> or <input>left click</input> with mouse</localtiles> to clear the
+<cyan>--more--</cyan> prompts.
 %%%%
 ##############################################
 # Tutorial map 1: Movement and exploration   #
@@ -41,7 +42,7 @@ tutorial1 downstairs
 
 When standing on a staircase leading downwards, you can enter the next level
 with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or with
-<input>Shift-Click</input> on your character</localtiles>.
+a <input>left click</input> on your character</localtiles>.
 %%%%
 tutorial1 levelmap
 
@@ -81,7 +82,7 @@ Congratulations! You've completed the first lesson!
 
 To exit the tutorial, simply go up these stairs with
 <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or by
-<input>Shift-clicking</input> on your character</localtiles>. Confirm the
+<input>left clicking</input> on your character</localtiles>. Confirm the
 resulting prompt with an uppercase <input>Y</input>.
 %%%%
 tutorial1 newlevel
@@ -107,7 +108,7 @@ tutorial1 upstairs
 
 When standing on a staircase leading upwards, you can enter the previous level
 with <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or by
-<input>Shift-clicking</input> on your character</localtiles>.
+<input>left clicking</input> on your character</localtiles>.
 %%%%
 tutorial1 exit
 
@@ -182,7 +183,8 @@ Don't forget about chopping corpses for food (with
 tutorial2 wait
 
 Rather than storm the room and get swarmed by monsters, you can also step back
-and wait (with <input>$cmd[CMD_MOVE_NOWHERE]</input>) for them to come to you.
+and wait (with <input>$cmd[CMD_WAIT]</input><localtiles> or by
+<input>clicking</input> on your character</localtiles>) for them to come to you.
 %%%%
 tutorial2 resting_reminder
 
@@ -205,7 +207,8 @@ Examine these monsters (<localtiles>via <input>mouseover</input></localtiles><no
 tutorial2 downstairs
 
 Well done! After resting to full health continue to the next level with
-<input>$cmd[CMD_GO_DOWNSTAIRS]</input>.
+<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or by <input>clicking</input>
+on your character</localtiles>.
 %%%%
 tutorial2 newlevel
 
@@ -273,7 +276,7 @@ tutorial2 exit
   You can also fire an item by <input>clicking</input> on it and the confirming the target with <input>Enter</input>.</localtiles>
 
 <yellow>Resting</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  wait and rest a single turn
+  <input>$cmd[CMD_WAIT]</input>  wait and rest a single turn
   <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
 
 <yellow>Corpses<console> <brown>%</brown></console></yellow>
@@ -344,7 +347,7 @@ tutorial3 downstairs
 
 Well fought! If necessary, rest up with <input>$cmd[CMD_REST]</input>, the
 continue downwards with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or
-with <input>Shift-Click</input> on your character</localtiles>.
+with a <input>click</input> on your character</localtiles>.
 %%%%
 tutorial3 command_help
 
@@ -386,17 +389,14 @@ types.
 tutorial3 amulet
 
 Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
-or with <input>mouseclick</input> in the inventory panel</localtiles>. Some
-types of jewellery are identified when you put them on. For others, you'll need
-another way of identifying them.
+or with <input>mouseclick</input> in the inventory panel</localtiles>.
 %%%%
-tutorial3 scroll_id
+tutorial3 scroll_remove_curse
 
-An important way to identify unknown items is by reading scrolls of identify.
-Try this scroll on your amulet by reading it with <input>$cmd[CMD_READ]</input>
-<localtiles> or by <input>clicking</input> it in the inventory
-panel</localtiles>, and then choosing the amulet from the item list with its
-assigned letter<localtiles> or by <input>mouseclick</input></localtiles>.
+The amulet is cursed and will not come off on its own. This scroll will remove
+all curses that are placed upon you. Try reading it with
+<input>$cmd[CMD_READ]</input><localtiles> or by <input>clicking</input> it in
+the inventory panel</localtiles>.
 %%%%
 tutorial3 drop
 
@@ -417,7 +417,7 @@ tutorial3 enter_shop
 # TODO: Everything else except how to enter the shop should be told in the
 #       shopping screen.
 To enter this shop, press <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> or
-<input>Shift-leftclick</input> on your character</localtiles>. To buy items,
+<input>click</input> on your character</localtiles>. To buy items,
 select them with their hotkey, hit <input>Enter</input> and confirm with
 <input>y</input>es. You can switch to description mode with <input>!</input>.
 %%%%
@@ -525,7 +525,7 @@ tutorial4 spell_success
 
 To check your spell proficiency, press <input>$cmd[CMD_DISPLAY_SPELLS]</input>
 <localtiles> or <input>mouseover</input> over your memorised
-spells</localtiles>. Compare your spell success rates before and after wielding
+spells</localtiles>. Compare your spell failure rates before and after wielding
 this staff.
 %%%%
 tutorial4 mephitic_cloud
@@ -580,7 +580,7 @@ tutorial4 order_allies
 
 Try to let your allies do the killing! If necessary, you can order them about
 with <input>$cmd[CMD_SHOUT]</input>. Before opening this gate, you may want to
-wait with <input>$cmd[CMD_MOVE_NOWHERE]</input> until your allies have caught
+wait with <input>$cmd[CMD_WAIT]</input> until your allies have caught
 up with you.
 %%%%
 tutorial4 heavy_armour
@@ -589,7 +589,7 @@ tutorial4 heavy_armour
 Heavy armour really hampers spellcasting. Try putting on that mail and shield
 (with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or by
 <input>clicking</input> on them</localtiles>), and compare your spellcasting
-success rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
+failure rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
 <input>mouseovering</input> your memorised spells</localtiles>. You can take
 armour off again with <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> or,
 again, via <input>mouseclick</input></localtiles>.
@@ -644,7 +644,7 @@ found so far.
 tutorial5 altar
 
 You can pray on an altar with <input>$cmd[CMD_PRAY]</input><localtiles> (or by
-<input>clicking in the command panel</input> or <input>Shift-clicking</input>
+<input>clicking in the command panel</input> or <input>left clicking</input>
 on your character)</localtiles> to get an idea what a god offers you, and to
 join the faith. If you press <input>!</input><localtiles> or
 <input>rightclick</input></localtiles> on the religion screen, you can see a
@@ -676,7 +676,7 @@ tutorial5 burn_book
 Trog will like it if you burn that book (with
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> or via the <w>command
 panel</w></localtiles>). Sometimes, you might want to wait (with
-<input>$cmd[CMD_MOVE_NOWHERE]</input>) for a monster to step on it before doing
+<input>$cmd[CMD_WAIT]</input>) for a monster to step on it before doing
 so.
 %%%%
 tutorial5 berserk
@@ -721,7 +721,7 @@ tutorial5 exit
   A <input>rightclick</input> on the player tile will also bring up the religion screen.</localtiles>
 
 <yellow>Resting</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  wait and rest a single turn
+  <input>$cmd[CMD_WAIT]</input>  wait and rest a single turn
   <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
 
 <yellow>Other commands</yellow>

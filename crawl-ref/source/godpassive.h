@@ -19,6 +19,13 @@ enum jiyva_slurp_results
     JS_MP   = 4,
 };
 
+enum ru_interference
+{
+    DO_NOTHING,
+    DO_BLOCK_ATTACK,
+    DO_REDIRECT_ATTACK
+};
+
 int chei_stat_boost(int piety = you.piety);
 void jiyva_eat_offlevel_items();
 void jiyva_slurp_bonus(int item_value, int *js);
@@ -34,7 +41,9 @@ int ash_skill_boost(skill_type sk, int scale);
 map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
 int gozag_gold_in_los(actor* who);
 int qazlal_sh_boost(int piety = you.piety);
+int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
-
+bool does_ru_wanna_redirect(monster* mon);
+ru_interference get_ru_attack_interference_level();
 #endif
