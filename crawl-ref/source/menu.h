@@ -558,6 +558,7 @@ public:
                           int wrap_col = 0);
     virtual bool jump_to_hotkey(int keyin);
     virtual vector<MenuEntry *> show(bool reuse_selections = false);
+    int get_lastch() { return lastch; }
     virtual ~formatted_scroller();
 protected:
     virtual bool page_down();

@@ -504,6 +504,4 @@ bool spell_scroller::process_key(int keyin)
     return !exit_menu;
 }
 
-int spell_scroller::get_lastch() { return lastch; }
-
 spell_scroller::~spell_scroller() { }

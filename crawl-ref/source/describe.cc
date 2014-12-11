@@ -3959,9 +3959,16 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     fs.add_text(inf.body.str(), false, get_number_of_cols() - 1);
     if (crawl_state.game_is_hints())
         fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
+
+    formatted_scroller qs;
+
     if (!inf.quote.empty())
     {
         fs.add_item_formatted_string(
+                formatted_string::parse_string("\n" + _toggle_message));
+
+        qs.add_text(inf.quote, false, get_number_of_cols() - 1);
+        qs.add_item_formatted_string(
                 formatted_string::parse_string("\n" + _toggle_message));
     }
 
@@ -3971,11 +3978,11 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     while (true)
     {
         if (show_quote)
-            _print_quote(inf);
+            qs.show();
         else
             fs.show();
 
-        int keyin = show_quote ? 0 : fs.get_lastch();
+        int keyin = (show_quote ? qs : fs).get_lastch();
         // this is never actually displayed to the player
         // we just use it to check whether we should toggle.
         if (_print_toggle_message(inf, keyin))
