@@ -1331,6 +1331,9 @@ bool fatal_attraction(actor *victim, actor *agent, int pow)
 
         affected = true;
         attract_actor(agent, *ai, victim->pos(), pow, strength);
+
+        if (ai->alive() && ai->check_res_magic(pow / 2) <= 0)
+            ai->confuse(agent, random2avg(pow / 20, 2));
     }
 
     return affected;
