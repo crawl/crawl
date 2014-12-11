@@ -1215,15 +1215,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-#if TAG_MAJOR_VERSION == 34
-    {  MST_SILVER_STAR,
-      {
-       { SPELL_HOLY_LIGHT, 40, MON_SPELL_DEMONIC },
-       { SPELL_SILVER_BLAST, 40, MON_SPELL_DEMONIC },
-      }
-    },
-#endif
-
     {  MST_GNOLL_SHAMAN,
       {
        { SPELL_CORONA, 11, MON_SPELL_PRIEST },
@@ -1884,12 +1875,6 @@ static const mon_spellbook mspell_list[] =
     {  MST_GHOST_CRAB,
       {
        { SPELL_GHOSTLY_FLAMES, 62, MON_SPELL_NATURAL },
-      }
-    },
-
-    {  MST_COLD_BREATH,
-      {
-       { SPELL_COLD_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH },
       }
     },
 
