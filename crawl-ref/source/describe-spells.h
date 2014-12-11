@@ -34,7 +34,6 @@ public:
     show_quote_toggle(_show_quote_toggle)
     { };
 
-    int get_lastch();
     virtual ~spell_scroller();
 protected:
     bool process_key(int keyin);
