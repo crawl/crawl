@@ -4587,7 +4587,15 @@ void debug_monspells()
         string book_name;
         if (monsters_using_book.empty())
         {
-            fails += make_stringf("Book #%d is unused\n", spbook.type);
+            string spells;
+            if (spbook.spells.empty())
+                spells = "no spells";
+            else
+                for (const mon_spell_slot &spslot : spbook.spells)
+                    if (is_valid_spell(spslot.spell))
+                        spells += make_stringf(",%s", spell_title(spslot.spell));
+            fails += make_stringf("Book #%d is unused (%s)\n", spbook.type,
+                                  spells.c_str());
             book_name = make_stringf("#%d", spbook.type);
         }
         else
