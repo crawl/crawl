@@ -313,6 +313,20 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         }
         break;
 
+    case DELAY_BLURRY_SCROLL:
+        if (delay.duration <= 1 || delay.parm3)
+            break;
+
+        if (!yesno("Keep reading the scroll?", false, 0, false))
+        {
+            mpr("You stop reading the scroll.");
+            _pop_delay();
+        }
+        else
+            you.delay_queue.front().parm3 = 1;
+
+        break;
+
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
     case DELAY_DESCENDING_STAIRS: // short... and probably what people want
         if (stop_stair_travel)
@@ -343,8 +357,6 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     case DELAY_DROP_ITEM:         // one turn... only used for easy armour drops
     case DELAY_JEWELLERY_ON:      // one turn
     case DELAY_UNINTERRUPTIBLE:   // never stoppable
-    case DELAY_BLURRY_SCROLL:     // would be nice if this was interruptible
-                                  // but it currently always interrupts itself
     default:
         break;
     }
