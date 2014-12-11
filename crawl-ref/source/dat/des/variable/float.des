@@ -2910,7 +2910,7 @@ x`````````@`````````x
 ENDMAP
 
 ## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
-## the worship of a life-bringing water diety.
+## the worship of a life-bringing water deity.
 NAME:     gammafunk_depths_water_palace
 DEPTH:    Depths:2-, !Depths:$
 ORIENT:   float
