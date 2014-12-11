@@ -3014,10 +3014,10 @@ MAP
 vvvv@vvvv
 ENDMAP
 
-NAME:  minmay_gold_behind_plants
+NAME:  minmay_gold_behind_fungi
 TAGS:  extra no_monster_gen
 DEPTH: D, Depths
-MONS:  plant
+MONS:  fungus
 MAP
 11111
 1$$$1
