@@ -560,13 +560,7 @@ wand quite easily. It is too strong to be breakable by hand, however.
 %%%%
 An open door
 
-A wooden door. You can close it by standing next to it and {{
-    if crawl.is_tiles() then
-        return "either doing Ctrl-L-Click on the door or pressing 'C'."
-    else
-        return "pressing 'C'."
-    end
-}}
+A wooden door. You can close it by standing next to it and pressing 'C'."
 %%%%
 An opulent altar of Gozag
 
