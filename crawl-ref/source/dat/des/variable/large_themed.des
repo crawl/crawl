@@ -9,8 +9,6 @@
 # vaults.des.
 ###############################################################################
 
-: require('dlua/util.lua')
-
 default-depth: D:12-, !D:$, Depths, !Depths:$
 # be careful to adapt these numbers for new vaults (using DEPTH)
 
@@ -1626,21 +1624,21 @@ DEPTH:  D:2-4
     return
   end
 
-  -- hobgoblin bosses and their weights
+  -- possible hobgoblin bosses and their weights
   bossw = {hobgoblin = 1, Ijyb = 10, Robin = 10}
   bosses = {"hobgoblin"}
 
   -- Find out which hobgoblin uniques we can use
   if not you.uniques("Ijyb") then
-    bosses[#bosses + 1] = "Ijyb"
+    bosses["Ijyb"] = bossw["Ijyb"]
   end
   if not you.uniques("Robin") then
-    bosses[#bosses + 1] = "Robin"
+    bosses["Robin"] = bossw["Robin"]
   end
 
   -- Choose a boss, and remove the supporting goblins if we select Robin, since
   -- she has her own band.
-  boss = util.random_weighted_from(bossw, bosses)
+  boss = crawl.random_element(bosses)
   if boss == "Robin" then
     subst("B = .")
     boss = "Robin band"
