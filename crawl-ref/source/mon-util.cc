@@ -4576,16 +4576,24 @@ void debug_monspells()
 {
     string fails;
 
+    // first, build a map from spellbooks to the first monster that uses them.
+
+    monster_type mon_book_map[NUM_MSTYPES];
+    for (int i = 0; i < ARRAYSZ(mon_book_map); i++)
+         mon_book_map[i] = MONS_PROGRAM_BUG;
+    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
+        if (!invalid_monster_type(mc))
+            for (mon_spellbook_type mon_book : _mons_spellbook_list(mc))
+                if (mon_book <= ARRAYSZ(mon_book_map) && !mon_book_map[mon_book])
+                    mon_book_map[mon_book] = mc;
+
+    // then, check every spellbook for errors.
+
     for (const mon_spellbook &spbook : mspell_list)
     {
-        vector<monster_type> monsters_using_book;
-        for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
-            for (mon_spellbook_type mon_book : _mons_spellbook_list(mc))
-                if (mon_book == spbook.type)
-                    monsters_using_book.emplace_back(mc);
-
         string book_name;
-        if (monsters_using_book.empty())
+        const monster_type sample_mons = mon_book_map[spbook.type];
+        if (sample_mons == MONS_PROGRAM_BUG)
         {
             string spells;
             if (spbook.spells.empty())
@@ -4600,7 +4608,6 @@ void debug_monspells()
         }
         else
         {
-            const monster_type sample_mons = monsters_using_book[0];
             vector<mon_spellbook_type> mons_books
                 = _mons_spellbook_list(sample_mons);
             const char* mons_name = get_monster_data(sample_mons)->name;
