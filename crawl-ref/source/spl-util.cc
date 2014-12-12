@@ -40,7 +40,7 @@ struct spell_desc
 {
     spell_type id;
     const char  *title;
-    unsigned int disciplines; // bitfield
+    enum_bitfield<spschool_flag_type> disciplines;
     unsigned int flags;       // bitfield
     unsigned int level;
 
@@ -443,7 +443,7 @@ bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 //jmf: next two for simple bit handling
 unsigned int get_spell_disciplines(spell_type spell)
 {
-    return _seekspell(spell)->disciplines;
+    return _seekspell(spell)->disciplines.flags;
 }
 
 int count_bits(unsigned int bits)
