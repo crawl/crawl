@@ -4576,15 +4576,13 @@ void debug_monspells()
 {
     string fails;
 
-    // first, build a map from spellbooks to the first monster that uses them.
-
-    monster_type mon_book_map[NUM_MSTYPES];
-    for (int i = 0; i < ARRAYSZ(mon_book_map); i++)
-         mon_book_map[i] = MONS_PROGRAM_BUG;
+    // first, build a map from spellbooks to the first monster that uses them
+    // (zero-initialised, where 0 == MONS_PROGRAM_BUG).
+    monster_type mon_book_map[NUM_MSTYPES] = { };
     for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
         if (!invalid_monster_type(mc))
             for (mon_spellbook_type mon_book : _mons_spellbook_list(mc))
-                if (mon_book <= ARRAYSZ(mon_book_map) && !mon_book_map[mon_book])
+                if (mon_book < ARRAYSZ(mon_book_map) && !mon_book_map[mon_book])
                     mon_book_map[mon_book] = mc;
 
     // then, check every spellbook for errors.
@@ -4593,7 +4591,7 @@ void debug_monspells()
     {
         string book_name;
         const monster_type sample_mons = mon_book_map[spbook.type];
-        if (sample_mons == MONS_PROGRAM_BUG)
+        if (!sample_mons)
         {
             string spells;
             if (spbook.spells.empty())
@@ -4602,33 +4600,28 @@ void debug_monspells()
                 for (const mon_spell_slot &spslot : spbook.spells)
                     if (is_valid_spell(spslot.spell))
                         spells += make_stringf(",%s", spell_title(spslot.spell));
+
             fails += make_stringf("Book #%d is unused (%s)\n", spbook.type,
                                   spells.c_str());
             book_name = make_stringf("#%d", spbook.type);
         }
         else
         {
-            vector<mon_spellbook_type> mons_books
+            const vector<mon_spellbook_type> mons_books
                 = _mons_spellbook_list(sample_mons);
-            const char* mons_name = get_monster_data(sample_mons)->name;
+            const char * const mons_name = get_monster_data(sample_mons)->name;
             if (mons_books.size() > 1)
             {
-                size_t book_index;
-                for (book_index = 0;
-                     book_index < mons_books.size()
-                        && mons_books[book_index] != spbook.type;
-                     ++book_index)
-                {
-                    ;
-                }
-                ASSERT(book_index < mons_books.size());
-                book_name = make_stringf("%s-%d", mons_name, (int)book_index);
+                auto it = find(begin(mons_books), end(mons_books), spbook.type);
+                ASSERT(it != end(mons_books));
+                book_name = make_stringf("%s-%d", mons_name,
+                                         (int) (it - begin(mons_books)));
             }
             else
                 book_name = make_stringf("%s", mons_name);
         }
 
-        const char* bknm = book_name.c_str();
+        const char * const bknm = book_name.c_str();
 
         if (!spbook.spells.size())
             fails += make_stringf("Empty book %s\n", bknm);
