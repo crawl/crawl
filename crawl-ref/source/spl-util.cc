@@ -1329,11 +1329,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         {
             return "You have no blood to sublime.";
         }
+        if (you.magic_points == you.max_magic_points && temp)
+            return "Your magic capacity is already full.";
         break;
 
     case SPELL_ENSLAVEMENT:
         if (player_mutation_level(MUT_NO_LOVE))
             return "You cannot make allies.";
+        break;
 
     case SPELL_MALIGN_GATEWAY:
         if (temp && !can_cast_malign_gateway())
