@@ -8,6 +8,70 @@
 
 #include "tag-version.h"
 
+template<class E>
+class enum_bitfield
+{
+public:
+    typedef typename underlying_type<E>::type underlying_type;
+    underlying_type flags;
+
+    enum_bitfield() : flags(0) {}
+    enum_bitfield(E flag) : flags(flag) {}
+    template<class ... Es>
+    enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
+
+    operator underlying_type () const { return flags; }
+
+    enum_bitfield<E> &operator|=(enum_bitfield<E> other)
+    {
+        flags |= other.flags;
+        return *this;
+    }
+
+    enum_bitfield<E> &operator&=(enum_bitfield<E> other)
+    {
+        flags &= other.flags;
+        return *this;
+    }
+
+    enum_bitfield<E> operator|(enum_bitfield<E> other) const
+    {
+        enum_bitfield<E> me(*this);
+        return (me |= other);
+    }
+    
+    enum_bitfield<E> operator|(E other) const
+    {
+        enum_bitfield<E> me(*this);
+        return (me |= other);
+    }
+
+    enum_bitfield<E> operator&(enum_bitfield<E> other) const
+    {
+        enum_bitfield<E> me(*this);
+        return (me &= other);
+    }
+    
+    enum_bitfield<E> operator&(E other) const
+    {
+        enum_bitfield<E> me(*this);
+        return (me &= other);
+    }
+
+    enum_bitfield<E> operator~() const
+    {
+        enum_bitfield<E> me(*this);
+        me.flags = ~me.flags;
+        return me;
+    }
+};
+
+template <class E, class ... Es>
+enum_bitfield<E> bitfield(E e1, Es... args)
+{
+    return bitfield<E>(e1, args...);
+}
+
 enum lang_t
 {
     LANG_EN = 0,
