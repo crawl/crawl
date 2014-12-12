@@ -16,12 +16,12 @@ unless (@files)
 {
     if ($modified_only)
     {
-	open FLIST, "git diff-index -M --name-only --cached HEAD|"
-	    or die "Can't run git diff-index";
+        open FLIST, "git diff-index -M --name-only --cached HEAD|"
+            or die "Can't run git diff-index";
     }
     else
     {
-	open FLIST, "git ls-files|" or die "Can't run git ls-files";
+        open FLIST, "git ls-files|" or die "Can't run git ls-files";
     }
     @files = <FLIST>;
     close FLIST;
