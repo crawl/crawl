@@ -2124,8 +2124,13 @@ monster_type random_demonspawn_monster_species()
 // If a monster has only one spellbook, it is specified in mon-data.h.
 // If it has multiple books, mon-data.h sets the book to MST_NO_SPELLS,
 // and the books are accounted for here.
-static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
+static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type,
+                                                       branch_type where
+                                                            = NUM_BRANCHES)
 {
+    if (where == NUM_BRANCHES)
+        where = you.where_are_you;
+
     switch (mon_type)
     {
     case MONS_HELL_KNIGHT:
@@ -2176,10 +2181,10 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
                  MST_DEEP_ELF_KNIGHT_III };
 
     case MONS_BORIS:
-        if (you.where_are_you == BRANCH_DUNGEON)
+        if (where == BRANCH_DUNGEON)
             return { MST_BORIS_DUNGEON };
-        if (you.where_are_you == BRANCH_LAIR
-            || branches[you.where_are_you].parent_branch == BRANCH_LAIR)
+        if (where == BRANCH_LAIR
+            || branches[where].parent_branch == BRANCH_LAIR)
         {
             return { MST_BORIS_LAIR };
         }
@@ -4613,8 +4618,8 @@ void debug_monspells()
     for (int i = 0; i < ARRAYSZ(mon_book_map); i++)
          mon_book_map[i] = MONS_PROGRAM_BUG;
     for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
-        if (!invalid_monster_type(mc))
-            for (mon_spellbook_type mon_book : _mons_spellbook_list(mc))
+        for (branch_iterator it; it; ++it)
+            for (mon_spellbook_type mon_book : _mons_spellbook_list(mc, (*it)->id))
                 if (mon_book <= ARRAYSZ(mon_book_map) && !mon_book_map[mon_book])
                     mon_book_map[mon_book] = mc;
 
