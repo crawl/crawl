@@ -3745,7 +3745,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_RESISTANCE:
-        potionlike_effect(POT_RESISTANCE, ench_power);
+        potionlike_effect(POT_RESISTANCE, min(ench_power, 200));
         obvious_effect = true;
         nasty = false;
         nice  = true;
