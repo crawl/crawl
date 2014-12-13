@@ -4558,7 +4558,7 @@ void debug_mondata()
 
     if (!fails.empty())
     {
-        printf("%s", fails.c_str());
+        fprintf(stderr, "%s", fails.c_str());
 
         FILE *f = fopen("mon-data.out", "w");
         if (!f)
@@ -4705,7 +4705,7 @@ void debug_monspells()
 
     if (!fails.empty())
     {
-        printf("%s", fails.c_str());
+        fprintf(stderr, "%s", fails.c_str());
 
         FILE *f = fopen("mon-spell.out", "w");
         if (!f)
