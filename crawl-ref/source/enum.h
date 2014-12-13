@@ -70,6 +70,27 @@ enum_bitfield<E> bitfield(E e1, Es... args)
     return bitfield<E>(e1, args...);
 }
 
+/**
+ * Define fieldT as a bitfield of the enum flagT, and make bitwise
+ * operators on flagT yield a fieldT.
+ *
+ * This macro produces a typedef and several inline function definitions;
+ * use it only at file/namespace scope. It requires a trailing semicolon.
+ *
+ * @param fieldT An identifier naming the bitfield type to define.
+ * @param flagT  An identifier naming the enum type to use as a flag.
+ *               Could theoretically be a
+ */
+#define DEF_BITFIELD(fieldT, flagT) typedef enum_bitfield<flagT> fieldT;  \
+    inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
+    inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
+    inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
+    inline fieldT operator&(flagT a, fieldT b) { return fieldT(a) &= b; } \
+    inline fieldT operator~(flagT a) { return ~fieldT(a); } \
+    COMPILE_CHECK(is_enum<flagT>::value)
+// The last line above is really just to eat a semicolon; template
+// substitution of enum_bitfield would have already failed.
+
 enum lang_t
 {
     LANG_EN = 0,

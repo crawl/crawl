@@ -29,33 +29,7 @@ enum spschool_flag_type
   SPTYP_LAST_SCHOOL    = 1<<SPTYP_LAST_EXPONENT,
   SPTYP_RANDOM         = 1<<(SPTYP_LAST_EXPONENT + 1),
 };
-typedef enum_bitfield<spschool_flag_type> spschools_type;
-
-// Bitwise operations yield a typed bitfield, not a plain integer.
-inline spschools_type operator|(spschool_flag_type a, spschool_flag_type b)
-{
-    return spschools_type(a) |= b;
-}
-
-inline spschools_type operator|(spschool_flag_type a, spschools_type b)
-{
-    return spschools_type(a) |= b;
-}
-
-inline spschools_type operator&(spschool_flag_type a, spschool_flag_type b)
-{
-    return spschools_type(a) &= b;
-}
-
-inline spschools_type operator&(spschool_flag_type a, spschools_type b)
-{
-    return spschools_type(a) &= b;
-}
-
-inline spschools_type operator~(spschool_flag_type a)
-{
-    return ~spschools_type(a);
-}
+DEF_BITFIELD(spschools_type, spschool_flag_type);
 
 struct bolt;
 class dist;
