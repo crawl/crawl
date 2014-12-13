@@ -153,12 +153,10 @@ int harvest_corpses(const actor &harvester, bool dry_run)
             beam.draw_delay = 3;
             beam.fire();
             destroy_item(item.index());
+
+            viewwindow();
         }
     }
-
-    // don't cover the screen with corpses if we get a more()
-    if (harvested)
-        viewwindow();
 
     return harvested;
 }
