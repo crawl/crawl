@@ -38,26 +38,22 @@ public:
 
     enum_bitfield<E> operator|(enum_bitfield<E> other) const
     {
-        enum_bitfield<E> me(*this);
-        return (me |= other);
+        return enum_bitfield<E>(*this) |= other;
     }
 
     enum_bitfield<E> operator|(E other) const
     {
-        enum_bitfield<E> me(*this);
-        return (me |= other);
+        return enum_bitfield<E>(*this) |= other;
     }
 
     enum_bitfield<E> operator&(enum_bitfield<E> other) const
     {
-        enum_bitfield<E> me(*this);
-        return (me &= other);
+        return enum_bitfield<E>(*this) &= other;
     }
 
     enum_bitfield<E> operator&(E other) const
     {
-        enum_bitfield<E> me(*this);
-        return (me &= other);
+        return enum_bitfield<E>(*this) &= other;
     }
 
     enum_bitfield<E> operator~() const
