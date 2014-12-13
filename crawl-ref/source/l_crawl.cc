@@ -836,6 +836,16 @@ LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_c
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1)))
 
+/**
+ * A random choice function crawl.random_element for clua.
+ *
+ * @param[in] list A lua array or table of elements to choose from. If list is
+ * an array, a random element is chosen from list. If list is a table, the
+ * values should be numeric or convertible to numeric and give the weights for
+ * their corresponding keys. A value with no key will default to a weight of
+ * 1. A random key is then returned based on these weights.
+ * @returns A random element from list.
+*/
 static int crawl_random_element(lua_State *ls)
 {
     const int table_idx = 1;
