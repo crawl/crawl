@@ -443,22 +443,7 @@ static void _check_abil_skills()
 
 string skill_names(const skill_set &skills)
 {
-    string s;
-    int i = 0;
-    int size = skills.size();
-    for (skill_type sk : skills)
-    {
-        ++i;
-        s += skill_name(sk);
-        if (i < size)
-        {
-            if (i == size - 1)
-                s += " and ";
-            else
-                s+= ", ";
-        }
-    }
-    return s;
+    return comma_separated_fn(begin(skills), end(skills), skill_name);
 }
 
 static void _check_start_train()

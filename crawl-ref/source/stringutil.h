@@ -107,6 +107,15 @@ template <typename Z>
 string comma_separated_line(Z start, Z end, const string &andc = " and ",
                             const string &comma = ", ")
 {
+    return comma_separated_fn(start, end, [] (const string &s) { return s; },
+                              andc, comma);
+}
+
+template <typename Z, typename F>
+string comma_separated_fn(Z start, Z end, F stringify,
+                          const string &andc = " and ",
+                          const string &comma = ", ")
+{
     string text;
     for (Z i = start; i != end; ++i)
     {
@@ -119,7 +128,7 @@ string comma_separated_line(Z start, Z end, const string &andc = " and ",
                 text += andc;
         }
 
-        text += *i;
+        text += stringify(*i);
     }
     return text;
 }
