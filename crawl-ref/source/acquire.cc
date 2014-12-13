@@ -1012,8 +1012,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
     }
     case BOOK_RANDART_THEME:
         book.sub_type = BOOK_RANDART_THEME;
-        if (!make_book_theme_randart(book, 0, 0, 5 + coinflip(), 20,
-                                     SPELL_NO_SPELL, owner))
+        if (!make_book_theme_randart(book, SPTYP_NONE, SPTYP_NONE,
+                                     5 + coinflip(), 20, SPELL_NO_SPELL, owner))
         {
             return false;
         }

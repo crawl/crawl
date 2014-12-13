@@ -1097,7 +1097,7 @@ static bool _compare_spells(spell_type a, spell_type b)
 }
 
 static void _get_spell_list(vector<spell_type> &spells, int level,
-                            unsigned int disc1, unsigned int disc2,
+                            spschool_flag_type disc1, spschool_flag_type disc2,
                             god_type god, bool avoid_uncastable,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
@@ -1158,7 +1158,7 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
         else
         {
             // themed randart: only include spells of the given disciplines
-            const unsigned int disciplines = get_spell_disciplines(spell);
+            const spschools_type disciplines = get_spell_disciplines(spell);
             if ((!(disciplines & disc1) && !(disciplines & disc2))
                  || disciplines_conflict(disc1, disciplines)
                  || disciplines_conflict(disc2, disciplines))
@@ -1185,7 +1185,7 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
 }
 
 static void _get_spell_list(vector<spell_type> &spells,
-                            unsigned int disc1, unsigned int disc2,
+                            spschool_flag_type disc1, spschool_flag_type disc2,
                             god_type god, bool avoid_uncastable,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
@@ -1436,16 +1436,17 @@ bool make_book_level_randart(item_def &book, int level, string owner)
 }
 
 static bool _get_weighted_discs(bool completely_random, god_type god,
-                                int &disc1, int &disc2)
+                                spschool_flag_type &disc1,
+                                spschool_flag_type &disc2)
 {
     // Eliminate disciplines that the god dislikes or from which all
     // spells are discarded.
-    vector<int> ok_discs;
+    vector<spschool_flag_type> ok_discs;
     vector<skill_type> skills;
     vector<int> spellcount;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
-        int disc = 1 << i;
+        spschool_flag_type disc = static_cast<spschool_flag_type>(1 << i);
         if (disc & SPTYP_DIVINATION)
             continue;
 
@@ -1688,7 +1689,8 @@ static void _add_included_spells(spell_type (&chosen_spells)[RANDBOOK_SIZE],
 // has to be included, and the name of whomever the book should be named after.
 // With all that information the book is turned into a random artefact
 // containing random spells of the given disciplines (random if none set).
-bool make_book_theme_randart(item_def &book, int disc1, int disc2,
+bool make_book_theme_randart(item_def &book,
+                             spschool_flag_type disc1, spschool_flag_type disc2,
                              int num_spells, int max_levels,
                              spell_type incl_spell, string owner,
                              string title, bool exact_level)
@@ -1703,7 +1705,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
 bool make_book_theme_randart(item_def &book,
                              vector<spell_type> incl_spells,
-                             int disc1, int disc2,
+                             spschool_flag_type disc1, spschool_flag_type disc2,
                              int num_spells, int max_levels,
                              string owner, string title, bool exact_level)
 {
@@ -1849,11 +1851,11 @@ bool make_book_theme_randart(item_def &book,
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     // ... and change disc1 and disc2 accordingly.
-    disc1 = 1 << max1;
+    disc1 = static_cast<spschool_flag_type>(1 << max1);
     if (max1 == max2)
         disc2 = disc1;
     else
-        disc2 = 1 << max2;
+        disc2 = static_cast<spschool_flag_type>(1 << max2);
 
     int highest_level = 0;
     int lowest_level  = 10;
@@ -2047,8 +2049,8 @@ bool make_book_theme_randart(item_def &book,
 // that includes Statue Form and is named after her.
 void make_book_Roxanne_special(item_def *book)
 {
-    int disc =  coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
-    make_book_theme_randart(*book, disc, 0, 5, 19,
+    spschool_flag_type disc = coinflip() ? SPTYP_TRANSMUTATION : SPTYP_EARTH;
+    make_book_theme_randart(*book, disc, SPTYP_NONE, 5, 19,
                             SPELL_STATUE_FORM, "Roxanne");
 }
 

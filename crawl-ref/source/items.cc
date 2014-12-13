@@ -4459,7 +4459,10 @@ bool get_item_by_name(item_def *item, char* specs,
                 mpr("Sorry, no books on that skill today.");
         }
         else if (type_wanted == BOOK_RANDART_THEME)
-            make_book_theme_randart(*item, 0, 0, 5 + coinflip(), 20);
+        {
+            make_book_theme_randart(*item, SPTYP_NONE, SPTYP_NONE,
+                                    5 + coinflip(), 20);
+        }
         else if (type_wanted == BOOK_RANDART_LEVEL)
         {
             int level = random_range(1, 9);

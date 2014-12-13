@@ -5301,8 +5301,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         // spell: <include this spell>, owner:<name of owner>
         // None of these are required, but if you don't intend on using any
         // of them, use "any fixed theme book" instead.
-        short disc1 = 0;
-        short disc2 = 0;
+        spschool_flag_type disc1 = SPTYP_NONE;
+        spschool_flag_type disc2 = SPTYP_NONE;
 
         string st_disc1 = strip_tag_prefix(s, "disc:");
         if (!st_disc1.empty())
@@ -5336,12 +5336,11 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             }
         }
 
-        if (disc1 == 0 && disc2 != 0)
+        if (disc1 == SPTYP_NONE && disc2 != 0)
         {
             // Don't fail, just quietly swap. Any errors in disc1's syntax will
             // have been caught above, anyway.
-            disc1 = disc2;
-            disc2 = 0;
+            swap(disc1, disc2);
         }
 
         short num_spells = strip_number_tag(s, "numspells:");
