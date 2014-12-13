@@ -718,7 +718,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
         return discipline & SPTYP_POISON;
 
     case GOD_ELYVILON:
-        return discipline & bitfield(SPTYP_CONJURATION, SPTYP_SUMMONING);
+        return discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING);
 
     case GOD_DITHMENOS:
         return discipline & SPTYP_FIRE;
