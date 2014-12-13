@@ -6,6 +6,8 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+#include <type_traits> // underlying_type<>
+
 #include "tag-version.h"
 
 template<class E>
@@ -39,7 +41,7 @@ public:
         enum_bitfield<E> me(*this);
         return (me |= other);
     }
-    
+
     enum_bitfield<E> operator|(E other) const
     {
         enum_bitfield<E> me(*this);
@@ -51,7 +53,7 @@ public:
         enum_bitfield<E> me(*this);
         return (me &= other);
     }
-    
+
     enum_bitfield<E> operator&(E other) const
     {
         enum_bitfield<E> me(*this);
