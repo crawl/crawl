@@ -103,14 +103,6 @@ Enum find_earliest_match(const string &spec, Enum begin, Enum end,
     return selected;
 }
 
-template <typename Z>
-string comma_separated_line(Z start, Z end, const string &andc = " and ",
-                            const string &comma = ", ")
-{
-    return comma_separated_fn(start, end, [] (const string &s) { return s; },
-                              andc, comma);
-}
-
 template <typename Z, typename F>
 string comma_separated_fn(Z start, Z end, F stringify,
                           const string &andc = " and ",
@@ -131,6 +123,14 @@ string comma_separated_fn(Z start, Z end, F stringify,
         text += stringify(*i);
     }
     return text;
+}
+
+template <typename Z>
+string comma_separated_line(Z start, Z end, const string &andc = " and ",
+                            const string &comma = ", ")
+{
+    return comma_separated_fn(start, end, [] (const string &s) { return s; },
+                              andc, comma);
 }
 
 static inline bool starts_with(const string &s, const string &prefix)
