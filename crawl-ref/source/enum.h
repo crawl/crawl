@@ -79,7 +79,8 @@ enum_bitfield<E> bitfield(E e1, Es... args)
  *
  * @param fieldT An identifier naming the bitfield type to define.
  * @param flagT  An identifier naming the enum type to use as a flag.
- *               Could theoretically be a
+ *               Could theoretically be a more complex type expression, but
+ *               I wouldn't try anything trickier than scope resolution.
  */
 #define DEF_BITFIELD(fieldT, flagT) typedef enum_bitfield<flagT> fieldT;  \
     inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
