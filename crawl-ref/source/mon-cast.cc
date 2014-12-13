@@ -3409,7 +3409,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
                 if (new_target == nullptr
                     || mons_is_projectile(new_target->type)
-                    || mons_is_firewood(new_target))
+                    || mons_is_firewood(new_target)
+                    || new_target->friendly())
                 {
                     continue;
                 }
