@@ -5384,6 +5384,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
         const string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
                                             "_", " ");
+
+        COMPILE_CHECK(SPTYP_LAST_SCHOOL < SHRT_MAX);
         result.props["randbook_disc1"].get_short() = disc1;
         result.props["randbook_disc2"].get_short() = disc2;
         result.props["randbook_num_spells"] = num_spells;
