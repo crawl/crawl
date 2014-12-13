@@ -4558,6 +4558,8 @@ void debug_mondata()
 
     if (!fails.empty())
     {
+        printf("%s", fails.c_str());
+
         FILE *f = fopen("mon-data.out", "w");
         if (!f)
             sysfail("can't write test output");
@@ -4703,6 +4705,8 @@ void debug_monspells()
 
     if (!fails.empty())
     {
+        printf("%s", fails.c_str());
+
         FILE *f = fopen("mon-spell.out", "w");
         if (!f)
             sysfail("can't write test output");
