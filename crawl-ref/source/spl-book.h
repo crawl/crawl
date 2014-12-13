@@ -8,6 +8,7 @@
 
 #define RANDBOOK_SIZE 8
 #include "itemprop-enum.h"
+#include "spl-util.h" // spschool_flag_type
 
 class formatted_string;
 
@@ -45,14 +46,16 @@ vector<spell_type> get_mem_spell_list(vector<int> &books);
 bool make_book_level_randart(item_def &book, int level = -1,
                              string owner = "");
 bool make_book_theme_randart(item_def &book,
-                             int disc1 = 0, int disc2 = 0,
+                             spschool_flag_type disc1 = SPTYP_NONE,
+                             spschool_flag_type disc2 = SPTYP_NONE,
                              int num_spells = -1, int max_levels = -1,
                              spell_type incl_spell = SPELL_NO_SPELL,
                              string owner = "", string title = "",
                              bool exact_level = false);
 bool make_book_theme_randart(item_def &book,
                              vector<spell_type> incl_spells,
-                             int disc1 = 0, int disc2 = 0,
+                             spschool_flag_type disc1 = SPTYP_NONE,
+                             spschool_flag_type disc2 = SPTYP_NONE,
                              int num_spells = -1, int max_levels = -1,
                              string owner = "", string title = "",
                              bool exact_level = false);

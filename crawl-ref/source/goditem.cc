@@ -496,7 +496,7 @@ bool is_corpse_violating_spell(spell_type spell)
 
 bool is_evil_spell(spell_type spell)
 {
-    unsigned int disciplines = get_spell_disciplines(spell);
+    const spschools_type disciplines = get_spell_disciplines(spell);
 
     return disciplines & SPTYP_NECROMANCY;
 }
@@ -524,7 +524,7 @@ bool is_hasty_spell(spell_type spell)
 
 bool is_fiery_spell(spell_type spell)
 {
-    unsigned int disciplines = get_spell_disciplines(spell);
+    const spschools_type disciplines = get_spell_disciplines(spell);
 
     return disciplines & SPTYP_FIRE;
 }
@@ -651,7 +651,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         return true;
 
     unsigned int flags       = get_spell_flags(spell);
-    unsigned int disciplines = get_spell_disciplines(spell);
+    spschools_type disciplines = get_spell_disciplines(spell);
 
     switch (god)
     {
@@ -718,7 +718,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
         return discipline & SPTYP_POISON;
 
     case GOD_ELYVILON:
-        return discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING);
+        return discipline & bitfield(SPTYP_CONJURATION, SPTYP_SUMMONING);
 
     case GOD_DITHMENOS:
         return discipline & SPTYP_FIRE;

@@ -382,13 +382,13 @@ static void _give_wanderer_minor_book(skill_type skill, int & slot)
         skill = skill_type(SK_FIRST_MAGIC_SCHOOL + random2(value));
     }
 
-    int school = skill2spell_type(skill);
+    spschool_flag_type school = skill2spell_type(skill);
 
     newgame_make_item(slot, EQ_NONE, OBJ_BOOKS, BOOK_RANDART_THEME);
     item_def &item(you.inv[slot]);
 
-    make_book_theme_randart(item, school, 0, 2, 4, SPELL_NO_SPELL, "", "",
-        true);
+    make_book_theme_randart(item, school, SPTYP_NONE, 2, 4, SPELL_NO_SPELL,
+                            "", "", true);
 }
 
 static void _give_wanderer_item(object_class_type base, int sub, int & slot)
