@@ -2666,25 +2666,8 @@ static void _print_resist_messages(actor* defender, int base_damage,
 
 bool melee_attack::mons_attack_effects()
 {
-    // Monsters attacking themselves don't get attack flavour.
-    // The message sequences look too weird.  Also, stealing
-    // attacks aren't handled until after the damage msg. Also,
-    // no attack flavours for dead defenders
     if (attacker != defender && defender->alive())
     {
-        mons_apply_attack_flavour();
-
-        if (needs_message && !special_damage_message.empty())
-            mpr(special_damage_message);
-
-        if (special_damage > 0)
-        {
-            inflict_damage(special_damage, special_damage_flavour);
-            special_damage = 0;
-            special_damage_message.clear();
-            special_damage_flavour = BEAM_NONE;
-        }
-
         apply_staff_damage();
 
         if (needs_message && !special_damage_message.empty())
@@ -2765,7 +2748,7 @@ bool melee_attack::mons_attack_effects()
     return true;
 }
 
-void melee_attack::mons_apply_attack_flavour()
+void melee_attack::apply_attack_flavour()
 {
     // Most of this is from BWR 4.1.2.
     int base_damage = 0;

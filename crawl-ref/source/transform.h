@@ -9,6 +9,7 @@
 #include <set>
 
 #include "enum.h"
+#include "mon-enum.h"
 #include "player.h"
 
 #define HYDRA_FORM_HEADS_KEY "hydra_form_heads"
@@ -144,6 +145,12 @@ public:
     virtual brand_type get_uc_brand() const { return uc_brand; }
 
     virtual string get_uc_attack_name(string default_name) const;
+
+    /**
+     * The attack flavour this form grants.
+     */
+    virtual attack_flavour get_attack_flavour() const { return attk_flavour; }
+
     virtual int get_ac_bonus() const;
 
     bool enables_flight() const;
@@ -255,6 +262,9 @@ private:
     const brand_type uc_brand;
     /// the name of the uc 'weapon' in the HUD; "" uses species defaults.
     const string uc_attack;
+
+    /// See Form::get_attack_flavour().
+    const attack_flavour attk_flavour;
 
     /// Altar prayer action; "" uses defaults. See Form::player_prayer_action()
     const string prayer_action;

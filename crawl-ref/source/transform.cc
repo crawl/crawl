@@ -102,6 +102,7 @@ Form::Form(const form_entry &fe)
       can_fly(fe.can_fly), can_swim(fe.can_swim),
       flat_ac(fe.flat_ac), power_ac(fe.power_ac), xl_ac(fe.xl_ac),
       uc_brand(fe.uc_brand), uc_attack(fe.uc_attack),
+      attk_flavour(fe.attk_flavour),
       prayer_action(fe.prayer_action), equivalent_mons(fe.equivalent_mons)
 { }
 

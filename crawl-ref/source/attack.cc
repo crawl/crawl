@@ -119,11 +119,29 @@ bool attack::handle_phase_damaged()
             }
         }
     }
-    else
+
+    // Monsters attacking themselves don't get attack flavour.
+    // The message sequences look too weird.  Also, stealing
+    // attacks aren't handled until after the damage msg. Also,
+    // no attack flavours for dead defenders
+    if (attacker != defender && defender->alive())
     {
-        if (!mons_attack_effects())
-            return false;
+        apply_attack_flavour();
+
+        if (needs_message && !special_damage_message.empty())
+            mpr(special_damage_message);
+
+        if (special_damage > 0)
+        {
+            inflict_damage(special_damage, special_damage_flavour);
+            special_damage = 0;
+            special_damage_message.clear();
+            special_damage_flavour = BEAM_NONE;
+        }
     }
+
+    if (attacker->is_monster() && !mons_attack_effects())
+        return false;
 
     // It's okay if a monster took lethal damage, but we should stop
     // the combat if it was already reset (e.g. a spectral weapon that
@@ -446,7 +464,9 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     else
     {
         attk_type    = AT_HIT;
-        attk_flavour = AF_PLAIN;
+        attk_flavour = you.equip[EQ_WEAPON] == -1
+                       ? AF_PLAIN
+                       : get_form()->get_attack_flavour();
     }
 }
 

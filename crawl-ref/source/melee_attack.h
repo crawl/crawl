@@ -123,7 +123,7 @@ private:
 private:
     // Monster-attack specific stuff
     bool mons_attack_effects();
-    void mons_apply_attack_flavour();
+    void apply_attack_flavour();
     string mons_attack_verb();
     string mons_attack_desc();
     // TODO: Unify do_poison and poison_monster
