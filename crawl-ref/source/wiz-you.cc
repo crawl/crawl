@@ -215,16 +215,10 @@ void wizard_change_species_to(species_type sp)
 
     case SP_SALAMANDER:
         if (you.experience_level >= 7)
-        {
             perma_mutate(MUT_HEAT_RESISTANCE, 1, "wizard race change");
-            perma_mutate(MUT_SLOW, 1, "wizard race change");
-        }
 
         if (you.experience_level >= 14)
-        {
             perma_mutate(MUT_HEAT_RESISTANCE, 1, "wizard race change");
-            perma_mutate(MUT_SLOW, 1, "wizard race change");
-        }
 
         break;
 

@@ -323,6 +323,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ROT_IMMUNITY]   = 1;
         break;
     case SP_SALAMANDER:
+        you.mutation[MUT_SLOW]               = 2;
         you.mutation[MUT_TOUGH_SKIN]         = 2; // cf. salamander hide armour
         you.mutation[MUT_COLD_VULNERABILITY] = 1;
         break;
