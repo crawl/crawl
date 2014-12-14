@@ -819,7 +819,7 @@ void bolt::digging_wall_effect()
     }
 }
 
-void bolt::fire_wall_effect()
+void bolt::burn_wall_effect()
 {
     dungeon_feature_type feat = grd(pos());
     // Fire only affects trees.
@@ -861,11 +861,6 @@ void bolt::fire_wall_effect()
 
 
     finish_beam();
-}
-
-void bolt::elec_wall_effect()
-{
-    fire_wall_effect();
 }
 
 static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
@@ -1026,10 +1021,8 @@ void bolt::affect_wall()
 
     if (flavour == BEAM_DIGGING)
         digging_wall_effect();
-    else if (is_fiery())
-        fire_wall_effect();
-    else if (flavour == BEAM_ELECTRICITY)
-        elec_wall_effect();
+    else if (is_fiery() || flavour == BEAM_ELECTRICITY)
+        burn_wall_effect();
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
         destroy_wall_effect();
 
@@ -2445,7 +2438,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     return false;
 }
 
-cloud_type bolt::get_cloud_type()
+cloud_type bolt::get_cloud_type() const
 {
     if (origin_spell == SPELL_NOXIOUS_CLOUD)
         return CLOUD_MEPHITIC;
@@ -2474,7 +2467,7 @@ cloud_type bolt::get_cloud_type()
     return CLOUD_NONE;
 }
 
-int bolt::get_cloud_pow()
+int bolt::get_cloud_pow() const
 {
     if (origin_spell == SPELL_FREEZING_CLOUD
         || origin_spell == SPELL_POISONOUS_CLOUD)
@@ -2488,7 +2481,7 @@ int bolt::get_cloud_pow()
     return 0;
 }
 
-int bolt::get_cloud_size(bool min, bool max)
+int bolt::get_cloud_size(bool min, bool max) const
 {
     if (origin_spell == SPELL_MEPHITIC_CLOUD
         || origin_spell == SPELL_MIASMA_BREATH
@@ -3257,9 +3250,9 @@ void bolt::tracer_affect_player()
 }
 
 // Magical penetrating projectiles should pass through shields.
-static bool _shield_piercing(bolt *pbolt)
+bool bolt::pierces_shields() const
 {
-    return pbolt->range_used_on_hit() == 0;
+    return range_used_on_hit() == 0;
 }
 
 bool bolt::misses_player()
@@ -3324,7 +3317,7 @@ bool bolt::misses_player()
                       name.c_str());
                 reflect();
             }
-            else if (_shield_piercing(this))
+            else if (pierces_shields())
             {
                 penet = true;
                 mprf("The %s pierces through your %s!",
@@ -4035,10 +4028,9 @@ void bolt::affect_player()
 
     extra_range_used += range_used_on_hit();
 
-    if (can_knockback(&you, hurted))
-        beam_hits_actor(&you);
+    knockback_actor(&you, hurted);
 
-    else if (_is_explosive_bolt(this))
+    if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, you.pos());
     else if (origin_spell == SPELL_FLASH_FREEZE
              || name == "blast of ice"
@@ -4534,9 +4526,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (dmg)
         beogh_follower_convert(mon, true);
 
-    if (can_knockback(mon, dmg))
-        beam_hits_actor(mon);
-    else if (_is_explosive_bolt(this))
+    knockback_actor(mon, dmg);
+    if (_is_explosive_bolt(this))
         _explosive_bolt_explode(this, mon->pos());
 
     if (origin_spell == SPELL_DAZZLING_SPRAY)
@@ -4570,8 +4561,10 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 }
 
-void bolt::beam_hits_actor(actor *act)
+void bolt::knockback_actor(actor *act, int dam)
 {
+    if (!can_knockback(act, dam))
+        return;
     const coord_def oldpos(act->pos());
     coord_def newpos(act->pos());
 
@@ -4580,36 +4573,77 @@ void bolt::beam_hits_actor(actor *act)
             ? 1 + div_rand_round(ench_power, 40) :
         (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
 
-    if (knockback_actor(act, distance, newpos))
+    // We can't do knockback if the beam starts and ends on the same space
+    if (source == oldpos)
+        return;
+
+    if (act->is_stationary())
+        return;
+
+    const int roll = origin_spell == SPELL_FORCE_LANCE
+                     ? 1000 + 40 * ench_power
+                     : 2500;
+    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
+
+    ASSERT(ray.pos() == oldpos);
+
+    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
     {
-        if (you.can_see(act))
+        // Save is based on target's body weight.
+        if (random2(roll) < weight)
+            continue;
+
+        const ray_def ray_copy(ray);
+
+        ray.advance();
+
+        newpos = ray.pos();
+        if (newpos == ray_copy.pos()
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !act->can_pass_through(newpos)
+            || !act->is_habitable(newpos))
         {
-            if (origin_spell == SPELL_CHILLING_BREATH)
-            {
-                mprf("%s %s blown backwards by the freezing wind.",
-                     act->name(DESC_THE).c_str(),
-                     act->conj_verb("are").c_str());
-            }
-            else
-            {
-                mprf("%s %s knocked back by the %s.",
-                     act->name(DESC_THE).c_str(),
-                     act->conj_verb("are").c_str(),
-                     name.c_str());
-            }
+            ray = ray_copy;
+            if (newpos == oldpos)
+                return;
         }
 
-        if (act->pos() != newpos)
-            act->collide(newpos, agent(), ench_power);
-
-        // Stun the monster briefly so that it doesn't look as though it wasn't
-        // knocked back at all
-        if (act->is_monster())
-            act->as_monster()->speed_increment -= random2(6) + 4;
-
-        act->apply_location_effects(oldpos, killer(),
-                                    actor_to_death_source(agent()));
+        act->move_to_pos(newpos);
     }
+
+    // Knockback cannot ever kill the actor directly - caller must do
+    // apply_location_effects after messaging.
+    if (ray.pos() == oldpos)
+        return;
+
+    if (you.can_see(act))
+    {
+        if (origin_spell == SPELL_CHILLING_BREATH)
+        {
+            mprf("%s %s blown backwards by the freezing wind.",
+                 act->name(DESC_THE).c_str(),
+                 act->conj_verb("are").c_str());
+        }
+        else
+        {
+            mprf("%s %s knocked back by the %s.",
+                 act->name(DESC_THE).c_str(),
+                 act->conj_verb("are").c_str(),
+                 name.c_str());
+        }
+    }
+
+    if (act->pos() != newpos)
+        act->collide(newpos, agent(), ench_power);
+
+    // Stun the monster briefly so that it doesn't look as though it wasn't
+    // knocked back at all
+    if (act->is_monster())
+        act->as_monster()->speed_increment -= random2(6) + 4;
+
+    act->apply_location_effects(oldpos, killer(),
+                                actor_to_death_source(agent()));
 }
 
 // Return true if the player's god will be unforgiving about the effects
@@ -4681,7 +4715,7 @@ bool bolt::attempt_block(monster* mon)
 
                 reflect();
             }
-            else if (_shield_piercing(this))
+            else if (pierces_shields())
             {
                 rc = false;
                 mprf("The %s pierces through %s %s!",
@@ -5770,55 +5804,6 @@ int bolt::range_used_on_hit() const
         return used;
 
     return used;
-}
-
-// Checks whether the beam knocks back the supplied actor. The actor
-// should have already failed their EV check, so the save is entirely
-// body-mass-based.
-bool bolt::knockback_actor(actor *act, int distance, coord_def &newpos)
-{
-    // We can't do knockback if the beam starts and ends on the same space
-    if (source == act->pos())
-        return false;
-
-    if (act->is_stationary())
-        return false;
-
-    const int roll = origin_spell == SPELL_FORCE_LANCE
-                     ? 1000 + 40 * ench_power
-                     : 2500;
-    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
-
-    ASSERT(ray.pos() == act->pos());
-
-    const coord_def initial_pos(ray.pos());
-    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
-    {
-        // Save is based on target's body weight.
-        if (random2(roll) < weight)
-            continue;
-
-        const ray_def ray_copy(ray);
-
-        ray.advance();
-
-        newpos = ray.pos();
-        if (newpos == ray_copy.pos()
-            || cell_is_solid(newpos)
-            || actor_at(newpos)
-            || !act->can_pass_through(newpos)
-            || !act->is_habitable(newpos))
-        {
-            ray = ray_copy;
-            return newpos != initial_pos;
-        }
-
-        act->move_to_pos(newpos);
-    }
-
-    // Knockback cannot ever kill the actor directly - caller must do
-    // apply_location_effects after messaging.
-    return ray.pos() != initial_pos;
 }
 
 // Takes a bolt and refines it for use in the explosion function.
