@@ -2185,8 +2185,8 @@ feature += <regex> { <symbol>, <magicmap symbol>, <view colour>,
                     <levelmap_magic_colour>, <levelmap_seen_colour>,
                     <emphasised_colour>, <levelmap_emphasised_colour> } ;
            <regex> { ... }
-        -= <regex> , <regex>
-        (list-like option)
+feature -= <regex> , <regex>
+        (List-like option)
         where <regex> is a regular expression describing a dungeon
         feature. This regex should match the description when using the
         'x' command. In case the regex matches several descriptions, all
@@ -2213,9 +2213,9 @@ feature += <regex> { <symbol>, <magicmap symbol>, <view colour>,
         feature descriptions strung together on the same line separated
         by semicolons.
 
-        Feature options can be cleared using -=. This will restore
-        all features whose descriptions match the regex to the default
-        apperance.
+        Feature overrides can be cleared using -=, providing a regex only
+        (and not an appearance). This will restore all features whose
+        descriptions match the regex to their default appearances.
 
         Examples:
          * Colour rock walls red:
@@ -2234,7 +2234,8 @@ feature += <regex> { <symbol>, <magicmap symbol>, <view colour>,
 
 mon_glyph += <monster name or symbol> : (<colour> <glyph> | <monster name>) ,
              <monster name or symbol> : <replacement>
-        (list option)
+mon_glyph -= <monster name or symbol>
+        (List option)
         The mon_glyph option allows you to customise the symbol and
         colour used to display a monster.
 
@@ -2283,8 +2284,13 @@ mon_glyph += <monster name or symbol> : (<colour> <glyph> | <monster name>) ,
         Playable species that normally have no monster of the same name can
         also be redefined, for use with show_player_species = true.
 
+        Monster glyph overrides can be cleared using -=, which restores
+        the named monster (or all monsters of the given glyph) to its default
+        appearance. Specify only the monster name or glyph for -=, not the
+        replacement being removed.
+
 item_glyph ^= <regexp> : <colour> <glyph>
-           -= <regexp>
+item_glyph -= <regexp>
         (Ordered list option)
         Customizes the symbol and/or colour of all items matching the regexp.
         Unlike mon_glyph, this is a partial name match.
@@ -2300,7 +2306,7 @@ item_glyph ^= <regexp> : <colour> <glyph>
         Rules are applied in order, so later rules are higher priority.
 
         Removing a rule with -= removes all rules using the exact regexp
-        provided.
+        provided; do not specify a colour or glyph in that case.
 
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the
