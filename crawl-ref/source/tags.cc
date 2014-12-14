@@ -2706,6 +2706,12 @@ static void tag_read_you(reader &th)
         you.mutation[MUT_JUMP] = 0;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_SALAMANDER_SLOW
+        && you.species == SP_SALAMANDER)
+    {
+        you.mutation[MUT_SLOW] = you.innate_mutation[MUT_SLOW] = 2;
+    }
+
 #endif
 
     count = unmarshallUByte(th);
