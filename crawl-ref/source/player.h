@@ -81,7 +81,8 @@ public:
 
   int magic_points;
   int max_magic_points;
-  int mp_max_adj;             // max MP loss (ability costs, tutorial bonus)
+  int mp_max_adj_temp;        // temporary max MP loss (active charms)
+  int mp_max_adj_perm;        // max MP loss (ability costs, tutorial bonus)
 
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;

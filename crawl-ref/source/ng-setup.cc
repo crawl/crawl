@@ -1007,7 +1007,7 @@ static void _setup_tutorial_miscs()
     you.gold = 0;
 
     // Give them some mana to play around with.
-    you.mp_max_adj += 2;
+    you.mp_max_adj_perm += 2;
 
     _newgame_make_item_tutorial(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 

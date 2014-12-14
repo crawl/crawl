@@ -1373,7 +1373,8 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.hp_max_adj_temp);
     marshallShort(th, you.hp_max_adj_perm);
-    marshallShort(th, you.mp_max_adj);
+    marshallShort(th, you.mp_max_adj_temp);
+    marshallShort(th, you.mp_max_adj_perm);
 
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
@@ -2227,12 +2228,20 @@ static void tag_read_you(reader &th)
 
     you.hp_max_adj_temp           = unmarshallShort(th);
     you.hp_max_adj_perm           = unmarshallShort(th);
-    you.mp_max_adj                = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_CAST_FROM_MAX_MP)
+#endif
+        you.mp_max_adj_temp       = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    else
+        you.mp_max_adj_temp       = 0;
+#endif
+    you.mp_max_adj_perm           = unmarshallShort(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_REMOVE_BASE_MP)
     {
         int baseadj = unmarshallShort(th);
-        you.mp_max_adj += baseadj;
+        you.mp_max_adj_perm += baseadj;
     }
     if (th.getMinorVersion() < TAG_MINOR_CLASS_HP_0)
         you.hp_max_adj_perm -= 8;

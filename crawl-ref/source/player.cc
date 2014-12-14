@@ -4497,7 +4497,7 @@ int player_rotted()
 
 void rot_mp(int mp_loss)
 {
-    you.mp_max_adj -= mp_loss;
+    you.mp_max_adj_perm -= mp_loss;
     calc_mp();
 
     you.redraw_magic_points = true;
@@ -4621,7 +4621,7 @@ int get_real_mp(bool include_items)
     enp = stepdown_value(enp, 9, 18, 45, 100);
 
     // This is our "rotted" base (applied after scaling):
-    enp += you.mp_max_adj;
+    enp += you.mp_max_adj_perm;
 
     // Yes, we really do want this duplication... this is so the stepdown
     // doesn't truncate before we apply the rotted base.  We're doing this
@@ -5636,7 +5636,8 @@ void player::init()
 
     magic_points     = 0;
     max_magic_points = 0;
-    mp_max_adj       = 0;
+    mp_max_adj_temp  = 0;
+    mp_max_adj_perm  = 0;
 
     stat_loss.init(0);
     base_stats.init(0);
