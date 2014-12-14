@@ -237,6 +237,9 @@ static const ability_def Ability_List[] =
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
       1, 0, 0, 0, 0, ABFLAG_PERMANENT_MP},
 
+    { ABIL_STOP_DEFLECTION, "Stop Deflection",
+      0, 0, 0, 0, 0, ABFLAG_NONE},
+
     { ABIL_DIG, "Dig", 0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, ABFLAG_DELAY},
 
@@ -977,6 +980,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
     case ABIL_STOP_SINGING:
+    case ABIL_STOP_DEFLECTION:
         failure = 0;
         break;
 
@@ -1781,6 +1785,7 @@ bool activate_talent(const talent& tal)
         case ABIL_END_TRANSFORMATION:
         case ABIL_DELAYED_FIREBALL:
         case ABIL_STOP_SINGING:
+        case ABIL_STOP_DEFLECTION:
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
         case ABIL_ASHENZARI_END_TRANSFER:
@@ -2405,6 +2410,26 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         you.duration[DUR_SONG_OF_SLAYING] = 0;
         mpr("You stop singing.");
+        break;
+
+    case ABIL_STOP_DEFLECTION:
+        fail_check();
+        if (you.attribute[ATTR_REPEL_MISSILES])
+        {
+            you.attribute[ATTR_REPEL_MISSILES] = 0;
+            const int cost = spell_mana(SPELL_REPEL_MISSILES);
+            inc_mp(cost, true, true);
+            dec_mp(cost, true);
+            mpr("You stop repelling missiles.");
+        }
+        if (you.attribute[ATTR_DEFLECT_MISSILES])
+        {
+            you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+            const int cost = spell_mana(SPELL_DEFLECT_MISSILES);
+            inc_mp(cost, true, true);
+            dec_mp(cost, true);
+            mpr("You stop deflecting missiles.");
+        }
         break;
 
     case ABIL_STOP_FLYING:
@@ -3626,6 +3651,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         _add_talent(talents, ABIL_STOP_SINGING, check_confused);
+
+    if (you.attribute[ATTR_REPEL_MISSILES]
+        || you.attribute[ATTR_DEFLECT_MISSILES])
+        _add_talent(talents, ABIL_STOP_DEFLECTION, check_confused);
 
     // Evocations from items.
     if (you.scan_artefacts(ARTP_BLINK)

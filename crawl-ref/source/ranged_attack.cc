@@ -218,8 +218,6 @@ bool ranged_attack::handle_phase_dodged()
             }
             else
                 mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
-
-            defender->ablate_deflection();
         }
 
         return true;

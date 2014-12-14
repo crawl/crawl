@@ -142,6 +142,7 @@ enum ability_type
     ABIL_DELAYED_FIREBALL,
     ABIL_END_TRANSFORMATION,
     ABIL_STOP_SINGING, // From song of slaying
+    ABIL_STOP_DEFLECTION, // From repel and deflect missiles
 
     // Species-specific abilities.
     // Demonspawn-only

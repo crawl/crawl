@@ -3362,7 +3362,6 @@ bool bolt::misses_player()
         // active voice to imply stronger effect
         mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
              name.c_str());
-        you.ablate_deflection();
     }
     else if (!_test_beam_hit(real_tohit, dodge, pierce, defl, r))
     {
@@ -4865,7 +4864,6 @@ void bolt::affect_monster(monster* mon)
     // 4.0 to-hit system (which had very little love for monsters).
     if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, pierce, defl, r))
     {
-        const bool deflected = _test_beam_hit(beam_hit, rand_ev, pierce, 0, r);
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable() && name != "burst of metal fragments")
         {
@@ -4891,8 +4889,6 @@ void bolt::affect_monster(monster* mon)
                             << mon->name(DESC_THE) << '.' << endl;
             }
         }
-        if (deflected)
-            mon->ablate_deflection();
         return;
     }
 

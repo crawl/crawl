@@ -3294,21 +3294,6 @@ int monster::missile_deflection() const
         return 0;
 }
 
-void monster::ablate_deflection()
-{
-    // TODO: deduplicate this code
-    if (has_ench(ENCH_DEFLECT_MISSILES))
-    {
-        if (one_chance_in(2 + spell_hd(SPELL_DEFLECT_MISSILES)))
-            del_ench(ENCH_DEFLECT_MISSILES);
-    }
-    else if (has_ench(ENCH_REPEL_MISSILES))
-    {
-        if (one_chance_in(2 + spell_hd(SPELL_REPEL_MISSILES)))
-            del_ench(ENCH_REPEL_MISSILES);
-    }
-}
-
 /**
  * How many weapons of the given brand does this monster currently wield?
  *
