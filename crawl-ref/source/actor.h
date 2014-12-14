@@ -101,7 +101,6 @@ public:
     {
         return weapon(0);
     }
-    bool can_cleave(int which_attack = -1) const;
     virtual random_var attack_delay(const item_def *weapon,
                                     const item_def *projectile = nullptr,
                                     bool random = true, bool scaled = true,

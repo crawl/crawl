@@ -84,8 +84,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
 
-    can_cleave = attacker != defender && attacker->can_cleave(attack_number);
-
     attack_position = attacker->pos();
 }
 
@@ -133,7 +131,7 @@ bool melee_attack::handle_phase_attempted()
                 return false;
             }
         }
-        else if (can_cleave)
+        else if (!cleave_targets.empty())
         {
             targetter_cleave hitfunc(attacker, defender->pos());
             if (stop_attack_prompt(hitfunc, "attack"))
@@ -772,21 +770,21 @@ bool melee_attack::attack()
     if (attacker != defender && attacker->self_destructs())
         return did_hit = perceived_attack = true;
 
-    if (can_cleave && !cleaving)
+    if (!cleaving)
         cleave_setup();
 
     string dummy;
     const bool gyre = weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE);
     if (gyre && !weapon->props.exists(ARTEFACT_NAME_KEY))
-       weapon->props[ARTEFACT_NAME_KEY].get_string() = "quick blades \"Gyre\" and \"Gimble\"";
+       set_artefact_name(*weapon, get_artefact_name(*weapon));
     unwind_var<string> gyre_name(gyre ? weapon->props[ARTEFACT_NAME_KEY].get_string()
                                       : dummy);
-    if (weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE))
+    if (gyre)
     {
         if (!cleaving)
-            set_artefact_name(*attacker->weapon(), "quick blade \"Gyre\"");
+            set_artefact_name(*weapon, "quick blade \"Gyre\"");
         else
-            set_artefact_name(*attacker->weapon(), "quick blade \"Gimble\"");
+            set_artefact_name(*weapon, "quick blade \"Gimble\"");
     }
 
     // Attacker might have died from effects of cleaving handled prior to this
@@ -3636,20 +3634,19 @@ bool melee_attack::do_knockback(bool trample)
 }
 
 /**
- * Find the list of targets to cleave (after hitting the main target).
+ * Find the list of targets to cleave after hitting the main target.
  */
 void melee_attack::cleave_setup()
 {
-    if (cell_is_solid(defender->pos()))
-        return;
-
     // Don't cleave on a self-attack.
     if (attacker->pos() == defender->pos())
         return;
 
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
-    get_cleave_targets(attacker, defender->pos(), cleave_targets);
+    get_cleave_targets(attacker, defender->pos(), cleave_targets, attack_number);
+    // We're already attacking this guy.
+    cleave_targets.pop_front();
 }
 
 // cleave damage modifier for additional attacks: 75% of base damage
