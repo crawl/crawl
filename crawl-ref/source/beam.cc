@@ -609,6 +609,13 @@ void bolt::initialise_fire()
     if (you.see_cell(source) && target == source && visible())
         seen = true;
 
+    // The agent may die during the beam's firing, need to save this
+    // now.
+    if (agent() && agent()->nightvision())
+        nightvision = true;
+    if (agent() && agent()->can_see_invisible())
+        can_see_invis = true;
+
 #ifdef DEBUG_DIAGNOSTICS
     // Not a "real" tracer, merely a range/reachability check.
     if (quiet_debug)
@@ -2659,7 +2666,7 @@ void bolt::drop_object()
 // for monsters without see invis firing tracers at the player.
 bool bolt::found_player() const
 {
-    const bool needs_fuzz = (is_tracer && !can_see_invis()
+    const bool needs_fuzz = (is_tracer && !can_see_invis
                              && you.invisible() && !YOU_KILL(thrower));
     const int dist = needs_fuzz? 2 : 0;
 
@@ -3150,16 +3157,6 @@ bool bolt::is_reflectable(const item_def *it) const
     return it && is_shield(*it) && shield_reflects(*it);
 }
 
-bool bolt::nightvision() const
-{
-    return agent() && agent()->alive() && agent()->nightvision();
-}
-
-bool bolt::can_see_invis() const
-{
-    return agent() && agent()->alive() && agent()->can_see_invisible();
-}
-
 bool bolt::is_big_cloud() const
 {
     return get_spell_flags(origin_spell) & SPFLAG_CLOUD;
@@ -3229,7 +3226,7 @@ void bolt::tracer_affect_player()
             }
         }
     }
-    else if (can_see_invis() || !you.invisible() || fuzz_invis_tracer())
+    else if (can_see_invis || !you.invisible() || fuzz_invis_tracer())
     {
         if (mons_att_wont_attack(attitude))
         {
@@ -3281,7 +3278,7 @@ bool bolt::misses_player()
     if (real_tohit != AUTOMATIC_HIT)
     {
         // Monsters shooting at an invisible player are very inaccurate.
-        if (you.invisible() && !can_see_invis())
+        if (you.invisible() && !can_see_invis)
             real_tohit /= 2;
 
         // Backlit is easier to hit:
@@ -3289,7 +3286,7 @@ bool bolt::misses_player()
             real_tohit += 2 + random2(8);
 
         // Umbra is harder to hit:
-        if (!nightvision() && you.umbra())
+        if (!nightvision && you.umbra())
             real_tohit -= 2 + random2(4);
     }
 
@@ -4091,7 +4088,7 @@ void bolt::update_hurt_or_helped(monster* mon)
             if (!is_tracer && !effect_known && !mons_is_firewood(mon))
             {
                 const int interest =
-                    (flavour == BEAM_INVISIBILITY && can_see_invis()) ? 25 : 100;
+                    (flavour == BEAM_INVISIBILITY && can_see_invis) ? 25 : 100;
                 xom_is_stimulated(interest);
             }
         }
@@ -4874,7 +4871,7 @@ void bolt::affect_monster(monster* mon)
 
     if (beam_hit != AUTOMATIC_HIT)
     {
-        if (mon->invisible() && !can_see_invis())
+        if (mon->invisible() && !can_see_invis)
             beam_hit /= 2;
 
         // Backlit is easier to hit:
@@ -4882,7 +4879,7 @@ void bolt::affect_monster(monster* mon)
             beam_hit += 2 + random2(8);
 
         // Umbra is harder to hit:
-        if (!nightvision() && mon->umbra())
+        if (!nightvision && mon->umbra())
             beam_hit -= 2 + random2(4);
     }
 
