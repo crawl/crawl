@@ -1845,6 +1845,12 @@ void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
     add_entry(me);
 }
 
+void formatted_scroller::wrap_formatted_string(const formatted_string& fs,
+                                               int width)
+{
+    add_text(fs.to_colour_string(), false, width);
+}
+
 void formatted_scroller::add_item_string(const string& s, int hotkey)
 {
     MenuEntry* me = new MenuEntry(s);

@@ -461,7 +461,7 @@ void list_spellset(const spellset &spells, const item_def *source_item,
     description.cprintf(".\n");
 
     spell_scroller ssc(spells, source_item);
-    ssc.add_item_formatted_string(description);
+    ssc.wrap_formatted_string(description);
     ssc.show();
 }
 
