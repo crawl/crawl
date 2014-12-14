@@ -8948,23 +8948,36 @@ string player::hands_act(const string &plural_verb,
 
 /**
  * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit,
- * or over time (currently every ~8 turns)
+ * or over time.
  *
  * Chance of losing a point of ac/sh (BONE_ARMOUR_DIV) increases with current
- * number of corpses (ATTR_BONE_ARMOUR) and decreases with spellpower, both
- * linearly. 50->100 power halves the chance; 1->5 corpses (roughly) doubles it.
- * at 50 power and 5 SH+EV, there's a 1/5 chance of losing a point on hit.
- * chance floored at 1/27.
+ * number of corpses (ATTR_BONE_ARMOUR). Each added corpse increases the chance
+ * of losing a bit by 5/4x. (So ten corpses are a 9x chance, twenty are 87x...)
+ *
+ * Base chance is 1/500 (per aut) - 2% per turn, 63% within 50 turns.
+ * At 10 corpses, that becomes a 17% per-turn chance, 61% within 5 turns.
+ * At 20 corpses, that's 20% per-aut, 90% per-turn...
+ *
+ * Getting hit/blocking has a higher (BONE_ARMOUR_HIT_RATIO *) chance;
+ * at BONE_ARMOUR_HIT_RATIO = 50, that's 10% at one corpse, 30% at five,
+ * 90% at ten...
+ *
+ * @param       A multiplier to base chance. Used for BONE_ARMOUR_HIT_RATIO.
  */
-void player::maybe_degrade_bone_armour()
+void player::maybe_degrade_bone_armour(int mult)
 {
     if (attribute[ATTR_BONE_ARMOUR] <= 0)
         return;
 
-    const int numerator = attribute[ATTR_BONE_ARMOUR] + 5 * BONE_ARMOUR_DIV;
-    const int power = max(1, calc_spell_power(SPELL_CIGOTUVIS_EMBRACE, true));
-    const int denom = min(power * 3, numerator * 27);
-    const bool degrade_armour = x_chance_in_y(numerator, denom);
+    const int base_denom = 50 * BASELINE_DELAY;
+    int denom = base_denom;
+    for (int i = 1; i < attribute[ATTR_BONE_ARMOUR]; i += BONE_ARMOUR_DIV)
+        denom = div_rand_round(denom * 4, 5);
+    denom = div_rand_round(denom, mult);
+
+    const bool degrade_armour = one_chance_in(denom);
+    dprf("degraded armour? (%d armour, 1/%d): %d", attribute[ATTR_BONE_ARMOUR],
+         denom, degrade_armour);
     if (!degrade_armour)
         return;
 
