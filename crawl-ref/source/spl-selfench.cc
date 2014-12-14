@@ -245,7 +245,12 @@ spret_type deflection(int pow, bool fail)
     mpr("You feel very safe from missiles.");
     // Replace RMsl, if active.
     if (you.attribute[ATTR_REPEL_MISSILES])
+    {
+        const int cost = spell_mana(SPELL_REPEL_MISSILES);
+        inc_mp(cost, true, true);
+        dec_mp(cost, true);
         you.attribute[ATTR_REPEL_MISSILES] = 0;
+    }
 
     return SPRET_SUCCESS;
 }
