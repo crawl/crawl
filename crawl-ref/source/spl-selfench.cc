@@ -337,11 +337,10 @@ spret_type cast_fly(int power, bool fail)
         return SPRET_ABORT;
 
     fail_check();
-    const int dur_change = 25 + random2(power) + random2(power);
     const bool was_flying = you.airborne();
 
-    you.increase_duration(DUR_FLIGHT, dur_change, 100);
-    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
+    you.attribute[ATTR_PERM_FLIGHT] = 1;
+    you.attribute[ATTR_FLIGHT_FROM_SPELL] = 1;
 
     if (!was_flying)
         float_player();

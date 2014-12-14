@@ -1038,7 +1038,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FLY, "Flight",
      SPTYP_CHARMS | SPTYP_AIR,
-     SPFLAG_UTILITY,
+     SPFLAG_UTILITY | SPFLAG_MAX_MP,
      3,
      200,
      -1, -1,

@@ -2436,6 +2436,13 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         you.duration[DUR_FLIGHT] = 0;
         you.attribute[ATTR_PERM_FLIGHT] = 0;
+        if (you.attribute[ATTR_FLIGHT_FROM_SPELL])
+        {
+            const int cost = spell_mana(SPELL_FLY);
+            inc_mp(cost, true, true);
+            dec_mp(cost, true);
+            you.attribute[ATTR_FLIGHT_FROM_SPELL] = 0;
+        }
         land_player();
         break;
 
@@ -3611,7 +3618,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_FLY, check_confused);
     }
 
-    if (you.attribute[ATTR_PERM_FLIGHT] && you.racial_permanent_flight())
+    if (you.attribute[ATTR_PERM_FLIGHT]
+        && (you.racial_permanent_flight()
+            || you.attribute[ATTR_FLIGHT_FROM_SPELL]))
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
 
     // Mutations

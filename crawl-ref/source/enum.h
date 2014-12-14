@@ -407,6 +407,7 @@ enum attribute_type
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
 #endif
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
+    ATTR_FLIGHT_FROM_SPELL,    // Casting flight used max mp
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
     ATTR_PERM_FLIGHT,          // Tengu flight or boots of flying are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
