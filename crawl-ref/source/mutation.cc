@@ -604,6 +604,7 @@ string describe_mutations(bool center_title)
     }
 
     case SP_SALAMANDER:
+        result += "Your melee attacks set your foes ablaze.\n";
         result += "You cannot wear boots.\n";
         if (you.experience_level >= 14)
             result += "You can swim through lava.\n";

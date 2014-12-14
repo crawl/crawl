@@ -2786,8 +2786,10 @@ void melee_attack::apply_attack_flavour()
         break;
 
     case AF_FIRE:
-        base_damage = attacker->get_hit_dice()
-                      + random2(attacker->get_hit_dice());
+        base_damage = attacker->is_player()
+                      ? 1 + random2(attacker->get_hit_dice() / 3)
+                      : attacker->get_hit_dice()
+                        + random2(attacker->get_hit_dice());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,

@@ -468,6 +468,26 @@ public:
      * as the one used to describe this form in @.
      */
     string get_transform_description() const { return "your old self."; }
+
+    /**
+     * What brand type does this form attack with when unarmed?
+     */
+    brand_type get_uc_brand() const
+    {
+        if (you.species == SP_SALAMANDER)
+            return SPWPN_FLAMING;
+        return Form::get_uc_brand();
+    }
+
+    /**
+     * What attack flavour does this form use?
+     */
+    attack_flavour get_attack_flavour() const
+    {
+        if (you.species == SP_SALAMANDER)
+            return AF_FIRE;
+        return Form::get_attack_flavour();
+    }
 };
 
 class FormSpider : public Form
