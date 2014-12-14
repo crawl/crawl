@@ -53,8 +53,8 @@ ucs_t feature_def::magic_symbol() const
 colour_t feature_def::colour() const
 {
     auto ofeat = map_find(Options.feature_colour_overrides, feat);
-    if (ofeat && (*ofeat).dcolour)
-        return (*ofeat).dcolour;
+    if (ofeat && ofeat->dcolour)
+        return ofeat->dcolour;
 
     return dcolour;
 }
@@ -67,8 +67,8 @@ colour_t feature_def::colour() const
 colour_t feature_def::map_colour() const
 {
     auto ofeat = map_find(Options.feature_colour_overrides, feat);
-    if (ofeat && (*ofeat).map_dcolour)
-        return (*ofeat).map_dcolour;
+    if (ofeat && ofeat->map_dcolour)
+        return ofeat->map_dcolour;
 
     return map_dcolour;
 }
@@ -81,8 +81,8 @@ colour_t feature_def::map_colour() const
 colour_t feature_def::seen_colour() const
 {
     auto ofeat = map_find(Options.feature_colour_overrides, feat);
-    if (ofeat && (*ofeat).seen_dcolour)
-        return (*ofeat).seen_dcolour;
+    if (ofeat && ofeat->seen_dcolour)
+        return ofeat->seen_dcolour;
 
     return seen_dcolour;
 }
@@ -95,8 +95,8 @@ colour_t feature_def::seen_colour() const
 colour_t feature_def::seen_em_colour() const
 {
     auto ofeat = map_find(Options.feature_colour_overrides, feat);
-    if (ofeat && (*ofeat).seen_em_dcolour)
-        return (*ofeat).seen_em_dcolour;
+    if (ofeat && ofeat->seen_em_dcolour)
+        return ofeat->seen_em_dcolour;
 
     return seen_em_dcolour;
 }
@@ -109,8 +109,8 @@ colour_t feature_def::seen_em_colour() const
 colour_t feature_def::em_colour() const
 {
     auto ofeat = map_find(Options.feature_colour_overrides, feat);
-    if (ofeat && (*ofeat).em_dcolour)
-        return (*ofeat).em_dcolour;
+    if (ofeat && ofeat->em_dcolour)
+        return ofeat->em_dcolour;
 
     return em_dcolour;
 }
