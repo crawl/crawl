@@ -4,8 +4,8 @@ struct mutation_def
     short       weight;     // Commonality of the mutation; bigger = appears
                             // more often.
     short       levels;     // The number of levels of the mutation.
-    unsigned int  uses;     // Bitfield holding types of effects that grant
-                            // this mutation. (MFLAG)
+    mut_flags_type uses;    // Bitfield holding types of effects that grant
+                            // this mutation (MUTFLAG_*)
     bool        form_based; // A mutation that is suppressed when shapechanged.
     const char* short_desc; // What appears on the '%' screen.
     const char* have[3];    // What appears on the 'A' screen.
