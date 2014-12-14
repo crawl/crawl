@@ -7,7 +7,7 @@
 struct zap_info
 {
     zap_type ztype;
-    const char* name;           // nullptr means handled specially
+    const char* name;
     int power_cap;
     dam_deducer* damage;
     tohit_deducer* tohit;       // Enchantments have power modifier here
