@@ -142,14 +142,14 @@ public:
     /**
      * The brand of this form's unarmed attacks (SPWPN_FREEZING, etc).
      */
-    virtual brand_type get_uc_brand() const { return uc_brand; }
+    virtual brand_type get_uc_brand() const;
 
     virtual string get_uc_attack_name(string default_name) const;
 
     /**
      * The attack flavour this form grants.
      */
-    virtual attack_flavour get_attack_flavour() const { return attk_flavour; }
+    virtual attack_flavour get_attack_flavour() const;
 
     virtual int get_ac_bonus() const;
 

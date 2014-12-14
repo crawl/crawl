@@ -266,8 +266,16 @@ static string _brand_suffix(int brand)
     return make_stringf(" (%s)", brand_type_name(brand, true));
 }
 
+brand_type Form::get_uc_brand() const
+{
+    if (get_equivalent_mons() == MONS_PLAYER && you.species == SP_SALAMANDER)
+        return SPWPN_FLAMING;
+
+    return uc_brand;
+}
+
 /**
- * What name should be used for the player's means of unarmed attack while
+ * What name should be used for the player's means of unarmed attack whiltrane
  * in this form?
  *
  * (E.g. for display in the top-right of the UI.)
@@ -281,6 +289,14 @@ string Form::get_uc_attack_name(string default_name) const
     if (uc_attack == "")
         return default_name + brand_suffix;
     return uc_attack + brand_suffix;
+}
+
+attack_flavour Form::get_attack_flavour() const
+{
+    if (get_equivalent_mons() == MONS_PLAYER && you.species == SP_SALAMANDER)
+        return AF_FIRE;
+
+    return attk_flavour;
 }
 
 /**
