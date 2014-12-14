@@ -149,6 +149,10 @@ struct bolt
     int         tile_beam;
 #endif
 
+private:
+    bool can_see_invis;
+    bool nightvision;
+
 public:
     bolt();
 
@@ -217,8 +221,6 @@ private:
     bool nice_to(const monster* mon) const;
     bool found_player() const;
     bool need_regress() const;
-    bool can_see_invis() const;
-    bool nightvision() const;
     bool is_big_cloud() const; // expands into big_cloud at endpoint
     int range_used_on_hit() const;
     bool pierces_shields() const;
