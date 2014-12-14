@@ -31,6 +31,50 @@ enum spschool_flag_type
 };
 DEF_BITFIELD(spschools_type, spschool_flag_type);
 
+
+enum spres_type
+{
+    SPRES_HARMLESS,
+    SPRES_AC,
+    SPRES_EV,
+    SPRES_SH,
+    SPRES_RF,
+    SPRES_RSTEAM,
+    SPRES_RC,
+    SPRES_RN,
+    SPRES_RELEC,
+    SPRES_RPOIS,
+    SPRES_RCORR,
+    SPRES_RMUT,
+    SPRES_RROT,
+    SPRES_SUSTAB,
+    SPRES_CLARITY,
+    SPRES_STASIS,
+    SPRES_MR,
+    SPRES_XL,
+    SPRES_NUM_RESISTS
+};
+
+struct spell_resistance
+{
+    spres_type type;
+    uint percent;
+    spell_resistance(spres_type _type = SPRES_HARMLESS, int _percent = 100) :
+        type(_type), percent(_percent)
+    { }
+};
+
+inline int beam_ac_res(spres_type type)
+{
+    return type == SPRES_RELEC ? 50 : 100;
+}
+
+#define SPRVEC_HARMLESS     {{}}
+#define SPRVEC_IRRESISTIBLE {}
+#define SPRVEC_BOLT {SPRES_AC, SPRES_EV}
+#define SPRVEC_BEAM(beam_res) {beam_res, SPRES_EV, {SPRES_AC, beam_ac_res(beam_res)}}
+#define SPRREST_PROJECTILE SPRES_AC, SPRES_EV, SPRES_SH
+
 struct bolt;
 class dist;
 
