@@ -803,16 +803,24 @@ bool cast_a_spell(bool check_range, spell_type spell)
     }
 
     const bool staff_energy = player_energy();
+    const bool from_max_mp = testbits(get_spell_flags(spell), SPFLAG_MAX_MP);
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
-    dec_mp(cost, true);
+    dec_mp(cost, true, from_max_mp);
 
     const spret_type cast_result = your_spells(spell, 0, true);
+
+    if (cast_result == SPRET_ABORT
+        || (from_max_mp && cast_result != SPRET_SUCCESS))
+    {
+        inc_mp(cost, true, from_max_mp);
+        if (from_max_mp && cast_result != SPRET_ABORT)
+            dec_mp(cost, true, false);
+    }
+
     if (cast_result == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
-        // Return the MP since the spell is aborted.
-        inc_mp(cost, true);
         return false;
     }
 

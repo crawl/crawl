@@ -4295,9 +4295,12 @@ void flush_mp()
     you.redraw_magic_points = true;
 }
 
-void dec_mp(int mp_loss, bool silent)
+void dec_mp(int mp_loss, bool silent, bool from_max_mp)
 {
     ASSERT(!crawl_state.game_is_arena());
+
+    if (from_max_mp && !player_rotted_mp() && mp_loss > 0)
+        you.redraw_hit_points = true;
 
     if (mp_loss < 1)
         return;
@@ -4310,6 +4313,13 @@ void dec_mp(int mp_loss, bool silent)
     you.magic_points -= mp_loss;
 
     you.magic_points = max(0, you.magic_points);
+
+    if (from_max_mp)
+    {
+        you.mp_max_adj_temp -= mp_loss;
+        calc_mp();
+    }
+
     if (!silent)
         flush_mp();
 }
@@ -4410,7 +4420,7 @@ bool enough_zp(int minimum, bool suppress_msg)
     return true;
 }
 
-void inc_mp(int mp_gain, bool silent)
+void inc_mp(int mp_gain, bool silent, bool from_max_mp)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4422,9 +4432,14 @@ void inc_mp(int mp_gain, bool silent)
         return inc_hp(mp_gain * DJ_MP_RATE);
 #endif
 
-    bool wasnt_max = (you.magic_points < you.max_magic_points);
+    bool wasnt_max = !from_max_mp && (you.magic_points < you.max_magic_points);
 
     you.magic_points += mp_gain;
+    if (from_max_mp)
+    {
+        you.mp_max_adj_temp += mp_gain;
+        calc_mp();
+    }
 
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
@@ -4435,6 +4450,8 @@ void inc_mp(int mp_gain, bool silent)
             interrupt_activity(AI_FULL_MP);
         you.redraw_magic_points = true;
     }
+    if (!player_rotted_mp())
+        you.redraw_hit_points = true;
 }
 
 // Note that "max_too" refers to the base potential, the actual
