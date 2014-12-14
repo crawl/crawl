@@ -10,6 +10,7 @@
 #include "food.h"
 #include "godcompanions.h"
 #include "hints.h"
+#include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1093,15 +1094,7 @@ static void _give_basic_spells(job_type which_job)
 
 static void _give_basic_knowledge(job_type which_job)
 {
-    // Identify all items in pack.
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (you.inv[i].defined())
-        {
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
-        }
-    }
+    identify_inventory();
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = ID_KNOWN_TYPE;
