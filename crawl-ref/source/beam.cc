@@ -4681,7 +4681,7 @@ void bolt::hit_shield(actor* blocker) const
         }
     }
     if (blocker->is_player())
-        you.maybe_degrade_bone_armour();
+        you.maybe_degrade_bone_armour(BONE_ARMOUR_HIT_RATIO);
 }
 
 // Return true if the block succeeded (including reflections.)
