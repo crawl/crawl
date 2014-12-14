@@ -2045,21 +2045,20 @@ bool item_type_tried(const item_def &item)
     return you.type_ids[item.base_type][item.sub_type] != ID_UNKNOWN_TYPE;
 }
 
-void set_ident_type(item_def &item, item_type_id_state_type setting,
+bool set_ident_type(item_def &item, item_type_id_state_type setting,
                     bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
-        return;
+        return false;
 
     if (!set_ident_type(item.base_type, item.sub_type, setting, force))
-        return;
+        return false;
 
     if (in_inventory(item))
     {
         shopping_list.cull_identical_items(item);
         if (setting == ID_KNOWN_TYPE)
             item_skills(item, you.start_train);
-        auto_assign_item_slot(item);
     }
 
     if (setting == ID_KNOWN_TYPE && notes_are_active()
@@ -2074,6 +2073,8 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
         // don't note twice in those cases.
         item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     }
+
+    return true;
 }
 
 bool set_ident_type(object_class_type basetype, int subtype,
