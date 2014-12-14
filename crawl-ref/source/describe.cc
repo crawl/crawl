@@ -2755,36 +2755,44 @@ static int _get_spell_description(const spell_type spell,
                        + " creature" + (limit > 1 ? "s" : "") + " summoned by this spell.\n";
     }
 
-    const bool rod = item && item->base_type == OBJ_RODS;
-
-    if (god_hates_spell(spell, you.religion, rod))
-    {
-        description += uppercase_first(god_name(you.religion))
-                       + " frowns upon the use of this spell.\n";
-        if (god_loathes_spell(spell, you.religion))
-            description += "You'd be excommunicated if you dared to cast it!\n";
-    }
-    else if (god_likes_spell(spell, you.religion))
-    {
-        description += uppercase_first(god_name(you.religion))
-                       + " supports the use of this spell.\n";
-    }
-    if (item && !player_can_memorise_from_spellbook(*item))
-    {
-        description += "The spell is scrawled in ancient runes that are beyond "
-                       "your current level of understanding.\n";
-    }
-    if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
-    {
-        description += "\nThis spell will have no effect right now: "
-        + spell_uselessness_reason(spell, true, false, rod)
-        + "\n";
-    }
-
-    // only list stats for player spells
     if (item)
-        _append_spell_stats(spell, description, rod);
+    {
+        const bool rod = item && item->base_type == OBJ_RODS;
 
+        if (god_hates_spell(spell, you.religion, rod))
+        {
+            description += uppercase_first(god_name(you.religion))
+                            + " frowns upon the use of this spell.\n";
+            if (god_loathes_spell(spell, you.religion))
+            {
+                description += "You'd be excommunicated if you dared to cast "
+                               "it!\n";
+            }
+        }
+        else if (god_likes_spell(spell, you.religion))
+        {
+            description += uppercase_first(god_name(you.religion))
+                           + " supports the use of this spell.\n";
+        }
+
+        if (item && !player_can_memorise_from_spellbook(*item))
+        {
+            description += "The spell is scrawled in ancient runes that are "
+                           "beyond your current level of understanding.\n";
+        }
+
+        if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
+        {
+            description += "\nThis spell will have no effect right now: "
+                           + spell_uselessness_reason(spell, true, false, rod)
+                           + "\n";
+        }
+
+        _append_spell_stats(spell, description, rod);
+    }
+
+    // Don't allow memorization or amnesia after death.
+    // (In the post-game inventory screen.)
     if (crawl_state.player_is_dead())
         return BOOK_NEITHER;
 
