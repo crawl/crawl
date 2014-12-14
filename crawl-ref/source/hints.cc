@@ -3124,7 +3124,7 @@ void hints_describe_item(const item_def &item)
             }
 
             item_def *weap = you.slot_item(EQ_WEAPON, false);
-            bool wielded = (weap && (*weap).slot == item.slot);
+            bool wielded = (weap && weap->slot == item.slot);
             bool long_text = false;
 
             if (!wielded)
