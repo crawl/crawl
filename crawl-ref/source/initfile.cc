@@ -1360,9 +1360,11 @@ void game_options::add_item_glyph_override(const string &text, bool prepend)
     cglyph_t mdisp = parse_mon_glyph(override[1]);
     if (mdisp.ch || mdisp.col)
     {
-        if(prepend)
+        if (prepend)
+        {
             item_glyph_overrides.emplace(item_glyph_overrides.begin(),
                                                override[0],mdisp);
+        }
         else
             item_glyph_overrides.emplace_back(override[0], mdisp);
     }
@@ -1372,7 +1374,7 @@ void game_options::remove_feature_override(const string &text, bool prepend)
 {
     string fname;
     string::size_type epos = text.rfind("}");
-    if(epos != string::npos)
+    if (epos != string::npos)
         fname = text.substr(0, text.rfind("{",epos));
     else
         fname = text;
@@ -1380,7 +1382,7 @@ void game_options::remove_feature_override(const string &text, bool prepend)
     trim_string(fname);
 
     vector<dungeon_feature_type> feats = features_by_desc(text_pattern(fname));
-    for(dungeon_feature_type f : feats)
+    for (dungeon_feature_type f : feats)
     {
         feature_colour_overrides.erase(f);
         feature_symbol_overrides.erase(f);
@@ -2279,7 +2281,7 @@ void game_options::split_parse(const string &s, const string &separator,
                                bool prepend)
 {
     const vector<string> defs = split_string(separator, s);
-    if(prepend)
+    if (prepend)
     {
         for ( auto it = defs.rbegin() ; it != defs.rend(); ++it)
             (this->*add)(*it, prepend);
@@ -2754,33 +2756,33 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "feature" || key == "dungeon")
     {
-        if(plain)
+        if (plain)
            clear_feature_overrides();
 
-        if(minus_equal)
+        if (minus_equal)
             split_parse(field, ";", &game_options::remove_feature_override);
         else
             split_parse(field, ";", &game_options::add_feature_override);
     }
     else if (key == "mon_glyph")
     {
-        if(plain)
+        if (plain)
            mon_glyph_overrides.clear();
 
-        if(minus_equal)
+        if (minus_equal)
             split_parse(field, ",", &game_options::remove_mon_glyph_override);
         else
             split_parse(field, ",", &game_options::add_mon_glyph_override);
     }
     else if (key == "item_glyph")
     {
-        if(plain)
+        if (plain)
         {
            item_glyph_overrides.clear();
            item_glyph_cache.clear();
         }
 
-        if(minus_equal)
+        if (minus_equal)
             split_parse(field, ",", &game_options::remove_item_glyph_override);
         else
             split_parse(field, ",", &game_options::add_item_glyph_override, caret_equal);
