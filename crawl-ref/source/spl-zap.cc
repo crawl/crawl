@@ -56,6 +56,7 @@ static int _spl_zaps[][2] =
     { SPELL_CRYSTAL_BOLT, ZAP_CRYSTAL_BOLT },
     { SPELL_TUKIMAS_DANCE, ZAP_TUKIMAS_DANCE },
     { SPELL_CORROSIVE_BOLT, ZAP_CORROSIVE_BOLT },
+    { SPELL_GRAVITAS, ZAP_GRAVITAS },
     { SPELL_DEBUGGING_RAY, ZAP_DEBUGGING_RAY },
 
     // These are all for zap -> spell lookup.
@@ -77,18 +78,18 @@ zap_type spell_to_zap(spell_type spell)
     if (spell == SPELL_DAZZLING_SPRAY)
         return NUM_ZAPS;
 
-    for (size_t i = 0; i < ARRAYSZ(_spl_zaps); i++)
-        if (_spl_zaps[i][0] == spell)
-            return (zap_type) _spl_zaps[i][1];
+    for (const int (&spzap)[2] : _spl_zaps)
+        if (spzap[0] == spell)
+            return (zap_type) spzap[1];
 
     return NUM_ZAPS;
 }
 
 spell_type zap_to_spell(zap_type zap)
 {
-    for (size_t i = 0; i < ARRAYSZ(_spl_zaps); i++)
-        if (_spl_zaps[i][1] == zap)
-            return (spell_type) _spl_zaps[i][0];
+    for (const int (&spzap)[2] : _spl_zaps)
+        if (spzap[1] == zap)
+            return (spell_type) spzap[0];
 
     return SPELL_NO_SPELL;
 }

@@ -2,17 +2,23 @@
 use Getopt::Std;
 use strict;
 
-our ($opt_A, $opt_n);
-getopts('nA');
+our ($opt_m, $opt_A, $opt_n);
+getopts('nAm');
 my $dry_run = $opt_n;
 my $add_braces = !$opt_A;
+my $modified_only = $opt_m;
 my $any_bad = 0;
 
 my @files = @ARGV;
 undef $/;
 unless (@files)
 {
-    @files = (grep /\.(cc|h)$/ && !/(^|\/)prebuilt\//, split /\n/, `git ls-files`);
+    my $git_cmd = "git ls-files";
+    if ($modified_only)
+    {
+        $git_cmd = "git diff-index -M --name-only --cached HEAD";
+    }
+    @files = (grep /\.(cc|h)$/ && !/(^|\/)prebuilt\//, split /\n/, `$git_cmd`);
 }
 
 sub rebrace($$$)
@@ -21,7 +27,7 @@ sub rebrace($$$)
     my $orig = "$condition$body";
 
     # Don't add braces if it's only two lines.
-    return $orig unless $orig =~ /\n.*\n.*\n/;
+    return $orig unless ($orig =~ /\n.*\n.*\n/) or ($condition =~ /^ *do/);
 
     # Don't add braces if the "body" consists of only comments.
     return $orig unless $body =~ m&^\s++(?!//)&s;
@@ -36,13 +42,13 @@ for my $f (@files)
     close F;
 
     # Eliminate braces around one-line blocks.
-    s&^( +(?:if|while|for|do|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
+    s&^( +(?:if|while|for|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
 
     # Add braces in blocks that need them.
     s/# $1 = the keyword and condition
       (
         # $2 = first-line indent
-        ^(\s+)   (?:if|while|for|do|else)\b \s*
+        ^(\s+)   (?:if|while|for|else)\b \s*
                  # $3 = nested parenthesised expression, possibly multi-line
                  (
                    \(
@@ -61,6 +67,22 @@ for my $f (@files)
         (?: \2 \s+ [^\n]* \n)*
       )
     /rebrace($1,$2,$4)/egsmx if $add_braces;
+
+    s/# $1 = the keyword
+      (
+        # $2 = first-line indent
+        ^(\s+) do\b \s*\n
+      )
+      # $3 = the body
+      (
+        # Higher indent than the keyword.
+        \2 \s++
+        # Not another flow control statement or braces
+        (?! { | (?:if|while|for|do|else)\b) [^\n]*\n
+        # And possibly more lines of higher indent than the keyword
+        (?: \2 \s+ [^\n]* \n)*
+      )
+    /rebrace($1,$2,$3)/egsmx if $add_braces;
 
     # return is not a function, eliminate totally enclosing parentheses.
     # This part handles parenthese-less payloads.

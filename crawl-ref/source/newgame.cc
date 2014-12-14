@@ -210,7 +210,9 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
         {
             // any valid species will do
             do
+            {
                 ng->species = get_species(random2(ng_num_species()));
+            }
             while (!is_species_valid_choice(ng->species));
         }
         else
@@ -269,7 +271,9 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
         {
             // any valid job will do
             do
+            {
                 ng->job = job_type(random2(NUM_JOBS));
+            }
             while (!is_job_valid_choice(ng->job));
         }
         else
@@ -636,14 +640,14 @@ static void _construct_species_menu(const newgame_def* ng,
                                     const newgame_def& defaults,
                                     MenuFreeform* menu)
 {
-    ASSERT(menu != NULL);
+    ASSERT(menu != nullptr);
     int items_in_column = 0;
     for (int i = 0; i < NUM_SPECIES; ++i)
         if (is_species_valid_choice((species_type)i))
             items_in_column++;
     items_in_column = (items_in_column + 2) / 3;
     // Construct the menu, 3 columns
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
@@ -879,7 +883,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(highlighter);
 
     // Did we have a previous species?
-    if (menu.get_active_item() == NULL)
+    if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
 
 #ifdef USE_TILE_LOCAL
@@ -1002,9 +1006,8 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-    for (unsigned int i = 0; i < ARRAYSZ(jobs); ++i)
+    for (job_type &job : jobs)
     {
-        job_type &job = jobs[i];
         if (job == JOB_UNKNOWN)
             break;
 
@@ -1074,7 +1077,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
             "Zealot",
             coord_def(15, 0), 20,
             {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
-             JOB_DEATH_KNIGHT, JOB_HEALER, JOB_UNKNOWN, JOB_UNKNOWN,
+             JOB_HEALER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
@@ -1093,8 +1096,8 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     };
 
     menu_letter letter = 'a';
-    for (unsigned int i = 0; i < ARRAYSZ(jobs_order); ++i)
-        jobs_order[i].attach(ng, defaults, menu, letter);
+    for (job_group &group : jobs_order)
+        group.attach(ng, defaults, menu, letter);
 
     // Add all the special button entries
     TextItem* tmp = new TextItem();
@@ -1279,7 +1282,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(highlighter);
 
     // Did we have a previous background?
-    if (menu.get_active_item() == NULL)
+    if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
 
 #ifdef USE_TILE_LOCAL
@@ -1400,8 +1403,8 @@ static weapon_type _fixup_weapon(weapon_type wp,
 {
     if (wp == WPN_UNKNOWN || wp == WPN_RANDOM || wp == WPN_VIABLE)
         return wp;
-    for (unsigned int i = 0; i < weapons.size(); ++i)
-        if (wp == weapons[i].first)
+    for (weapon_choice choice : weapons)
+        if (wp == choice.first)
             return wp;
     return WPN_UNKNOWN;
 }
@@ -1412,7 +1415,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
                                    MenuFreeform* menu)
 {
     static const int ITEMS_START_Y = 5;
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
@@ -1601,7 +1604,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(highlighter);
 
     // Did we have a previous weapon?
-    if (menu.get_active_item() == NULL)
+    if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
@@ -1785,12 +1788,12 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
     case WPN_VIABLE:
     {
         int good_choices = 0;
-        for (unsigned int i = 0; i < weapons.size(); i++)
+        for (weapon_choice choice : weapons)
         {
-            if (weapons[i].second == CC_UNRESTRICTED
+            if (choice.second == CC_UNRESTRICTED
                 && one_chance_in(++good_choices))
             {
-                ng->weapon = weapons[i].first;
+                ng->weapon = choice.first;
             }
         }
         if (good_choices)
@@ -1825,7 +1828,6 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_GLADIATOR:
     case JOB_BERSERKER:
     case JOB_CHAOS_KNIGHT:
-    case JOB_DEATH_KNIGHT:
     case JOB_ABYSSAL_KNIGHT:
     case JOB_SKALD:
     case JOB_WARPER:
@@ -1862,7 +1864,7 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
 {
     static const int ITEMS_START_Y = 5;
     static const int MENU_COLUMN_WIDTH = get_number_of_cols();
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
@@ -2040,7 +2042,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(highlighter);
 
     // Did we have a previous sprint map?
-    if (menu.get_active_item() == NULL)
+    if (menu.get_active_item() == nullptr)
         freeform->activate_first_item();
 
     _print_character_info(ng); // calls clrscr() so needs to be before attach()

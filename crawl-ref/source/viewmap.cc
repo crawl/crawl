@@ -31,6 +31,7 @@
 #include "tileview.h"
 #include "travel.h"
 #include "unicode.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
@@ -263,10 +264,8 @@ static int _find_feature(const vector<coord_def>& features,
     int firstx = -1, firsty = -1, firstmatch = -1;
     int matchcount = 0;
 
-    for (unsigned feat = 0; feat < features.size(); ++feat)
+    for (coord_def coord : features)
     {
-        const coord_def& coord = features[feat];
-
         if (_is_feature_fudged(feature, coord))
         {
             ++matchcount;
@@ -338,7 +337,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 {
                     const feature_def& fd = get_feature_def(DNGN_EXPLORE_HORIZON);
                     cell->glyph = fd.symbol();
-                    cell->colour = fd.colour;
+                    cell->colour = fd.colour();
                 }
 
                 if (travel_mode && _travel_colour_override(c))
@@ -386,7 +385,7 @@ static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
     features.clear();
 
     if (on_level)
-        find_travel_pos(you.pos(), NULL, NULL, &features);
+        find_travel_pos(you.pos(), nullptr, nullptr, &features);
     else
     {
         travel_pathfind tp;
@@ -457,20 +456,20 @@ class feature_list
 public:
     void init()
     {
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            data[i].clear();
+        for (vector<cglyph_t> &groupdata : data)
+            groupdata.clear();
         for (rectangle_iterator ri(0); ri; ++ri)
             maybe_add(*ri);
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            sort(data[i].begin(), data[i].end(), _comp_glyphs);
+        for (vector<cglyph_t> &groupdata : data)
+            sort(begin(groupdata), end(groupdata), _comp_glyphs);
     }
 
     formatted_string format() const
     {
         formatted_string s;
-        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            for (unsigned int j = 0; j < data[i].size(); ++j)
-                s.add_glyph(data[i][j]);
+        for (const vector<cglyph_t> &groupdata : data)
+            for (cglyph_t gly : groupdata)
+                s.add_glyph(gly);
         return s;
     }
 };
@@ -843,6 +842,13 @@ bool show_map(level_pos &lpos,
 #endif
             }
 
+            if (key == CK_REDRAW)
+            {
+                viewwindow();
+                display_message_window();
+                continue;
+            }
+
             c_input_reset(false);
 
             switch (cmd)
@@ -1172,7 +1178,8 @@ bool show_map(level_pos &lpos,
                                                     : RMODE_EXPLORE);
                     _reset_travel_colours(features, on_level);
 
-                    if (!whereto.zero()) {
+                    if (!whereto.zero())
+                    {
                         move_x = whereto.x - lpos.pos.x;
                         move_y = whereto.y - lpos.pos.y;
                     }
@@ -1288,9 +1295,9 @@ static cglyph_t _get_feat_glyph(const coord_def& gc)
     if (_travel_colour_override(gc))
         col = _get_travel_colour(gc);
     else if (emphasise(gc))
-        col = fdef.seen_em_colour;
+        col = fdef.seen_em_colour();
     else
-        col = fdef.seen_colour;
+        col = fdef.seen_colour();
     g.col = real_colour(col);
     return g;
 }

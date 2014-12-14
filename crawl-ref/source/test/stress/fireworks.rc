@@ -23,8 +23,8 @@ show_more = false
 :     crawl.sendkeys("&" .. string.char(20) ..
 :                    "require('dlua/stress.lua')" .. eol ..
 :                    "stress.fill_level('floor')" .. eol ..
-:                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
 :                    "you.teleport_to(40, 32)" .. eol ..
+:                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
 :                    "you.piety(200)" .. eol .. esc)
 :     crawl.sendkeys("X" .. string.char(6) .. "y" .. esc)
 :     crawl.sendkeys("&l27" .. eol .. "N")

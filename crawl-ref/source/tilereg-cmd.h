@@ -14,7 +14,7 @@ static const command_type ct_system_commands[] =
     CMD_DISPLAY_CHARACTER_STATUS, CMD_DISPLAY_KNOWN_OBJECTS,
 
     // meta commands
-    CMD_SAVE_GAME_NOW, CMD_EDIT_PLAYER_TILE, CMD_DISPLAY_COMMANDS
+    CMD_SAVE_GAME_NOW, CMD_EDIT_PLAYER_TILE, CMD_DISPLAY_COMMANDS,
 };
 
 static const command_type ct_map_commands[] =
@@ -57,7 +57,11 @@ static const command_type ct_action_commands[] =
     CMD_INTERLEVEL_TRAVEL, CMD_WAIT, CMD_SEARCH_STASHES,
 
     // commonly used screens
-    CMD_DISPLAY_SKILLS, CMD_MEMORISE_SPELL
+    CMD_DISPLAY_SKILLS, CMD_MEMORISE_SPELL,
+
+#ifdef TOUCH_UI
+    CMD_SHOW_KEYBOARD,
+#endif
 };
 
 class CommandRegion : public GridRegion

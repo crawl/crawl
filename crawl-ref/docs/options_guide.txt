@@ -24,7 +24,7 @@ The contents of this text are:
 3-  Interface.
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                pickup_thrown, chunks_autopickup, assign_item_slot,
+                pickup_thrown, assign_item_slot,
                 pickup_menu_limit, drop_filter
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
@@ -49,7 +49,7 @@ The contents of this text are:
                 runrest_safe_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
 3-g     Command Enhancements.
-                auto_switch, easy_open, easy_unequip, equip_unequip,
+                auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
@@ -79,7 +79,7 @@ The contents of this text are:
                 multiturn, examine, examine_filter, diagnostics, error,
                 tutorial, orb, hell_effect
 3-l     Inscriptions.
-                autoinscribe, autoinscribe_cursed
+                autoinscribe, show_god_gift
 3-m     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 additional_macro_file, bindkey
@@ -121,9 +121,9 @@ The contents of this text are:
                 note_chat_messages, note_dgl_messages
 5-  Miscellaneous.
 5-a     All OS.
-                mouse_input, wiz_mode, char_set, colour, display_char, feature,
-                mon_glyph, item_glyph, use_fake_player_cursor,
-                show_player_species
+                mouse_input, wiz_mode, explore_mode, char_set, colour,
+                display_char, feature, mon_glyph, item_glyph,
+                use_fake_player_cursor, show_player_species
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -360,7 +360,7 @@ restart_after_game = true/false
 
 restart_after_save = false
         When the game is saved, return to the main menu. This option
-        is only effective if restart_after_game is also enabled.
+        has no effect unless restart_after_game is also enabled.
 
 default_manual_training = false
         When set to true, new characters will start with skill training
@@ -474,14 +474,6 @@ pickup_thrown = true
         missiles, which can make life much easier for hunter types. Be
         aware that autopickup uses a turn, though it won't trigger if
         there are hostile monsters in sight.
-
-chunks_autopickup = true
-        If true then butchered flesh will be automatically picked up
-        right after they're generated.
-        Respects all of the autopickup options. Requires '%' to be
-        in the autopickup line.
-        Does not apply to Vampires who will pick up bottled potions
-        of blood regardless of this option, and not pick up chunks.
 
 assign_item_slot = (forward | backward)
         When picking up items, the inventory slot into which the item
@@ -1134,6 +1126,13 @@ spell_slot ^= <regex>:<list of spell letters>
           spell_slot lines):
             spell_slot += .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
+item_slot ^= <regex>:<inventory letter>
+        (Ordered list option, one value per line)
+        Uses the same interface as spell_slot.
+        Additionally, the item_slot option is applied on an item when it is
+        identified, so it can be moved to the right place even if it was
+        picked up unidentified.
+
 autofight_stop = 30
         Autofight will not act if your HP is at or lower than this
         percentage of your max HP. For example, to remove this stop
@@ -1610,10 +1609,6 @@ autoinscribe += <regex>:<inscription>
 
         Unlike most ordered list options, multiple matching entries all have
         an effect: the order only determines the order of the inscriptions.
-
-autoinscribe_cursed = true
-        Automatically inscribes items with "was cursed" when using a scroll of
-        remove curse.
 
 show_god_gift = unident|yes|no
         Appends {god gift} to items that originated as one. If set to
@@ -2125,6 +2120,13 @@ wiz_mode = (no | never | yes)
                    of game
           never -- never allow a wizard command to be used
 
+explore_mode = (no | never | yes)
+        Explore mode options (available only in WIZARD compiles):
+          yes   -- start games in explore mode (game will not be scored)
+          no    -- still allows player to enter explore mode after start
+                   of game
+          never -- never allow explore mode to be entered
+
 char_set = (default | ascii)
         Chooses different pre-set character sets for the game play screen.
         Unlike previous versions of Crawl, this does not select the I/O
@@ -2179,9 +2181,12 @@ display_char = <dungeon_character_name : symbol>
         Symbols can be specified using a letter, or by its ASCII/Unicode
         code: a decimal number or a hexadecimal one (prefixed with x).
 
-feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
+feature += <regex> { <symbol>, <magicmap symbol>, <view colour>,
                     <levelmap_magic_colour>, <levelmap_seen_colour>,
-                    <emphasised_colour>, <levelmap_emphasised_colour> }
+                    <emphasised_colour>, <levelmap_emphasised_colour> } ;
+           <regex> { ... }
+feature -= <regex> , <regex>
+        (List-like option)
         where <regex> is a regular expression describing a dungeon
         feature. This regex should match the description when using the
         'x' command. In case the regex matches several descriptions, all
@@ -2208,6 +2213,10 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
         feature descriptions strung together on the same line separated
         by semicolons.
 
+        Feature overrides can be cleared using -=, providing a regex only
+        (and not an appearance). This will restore all features whose
+        descriptions match the regex to their default appearances.
+
         Examples:
          * Colour rock walls red:
              feature = rock wall { , , red }
@@ -2223,8 +2232,10 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
              feature = metal wall {x23}
         all do the same thing.
 
-mon_glyph = <monster name or symbol> : <colour> <glyph>
-            <monster name or symbol> : <monster name>
+mon_glyph += <monster name or symbol> : (<colour> <glyph> | <monster name>) ,
+             <monster name or symbol> : <replacement>
+mon_glyph -= <monster name or symbol>
+        (List option)
         The mon_glyph option allows you to customise the symbol and
         colour used to display a monster.
 
@@ -2232,16 +2243,16 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
         existing symbols. For instance, if you want to put elves on E
         and elementals on e, you can do this:
 
-             mon_glyph = e : E
-             mon_glyph = E : e
+             mon_glyph += e : E
+             mon_glyph += E : e
 
         You can specify a different symbol, or a colour, or both, in any
         order. Here are more examples:
 
-             mon_glyph = deep elf annihilator : E lightmagenta
-             mon_glyph = Xtahua : lightmagenta D
-             mon_glyph = large zombie : darkgrey
-             mon_glyph = small simulacrum : x
+             mon_glyph += deep elf annihilator : E lightmagenta
+             mon_glyph += Xtahua : lightmagenta D
+             mon_glyph += large zombie : darkgrey
+             mon_glyph += small simulacrum : x
 
         (The left hand side of the : is case-sensitive.)
 
@@ -2249,19 +2260,19 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
         symbol and colour of that monster (this is not transitive). For
         example, if you think that slime creature colours are backwards:
 
-            mon_glyph = slime creature : merged slime creature
-            mon_glyph = merged slime creature : slime creature
+            mon_glyph += slime creature : merged slime creature
+            mon_glyph += merged slime creature : slime creature
 
         You can specify symbols using their code points using the syntax
         as shown in the "feature" option. You can also use Unicode code
         points:
 
-             mon_glyph = draconian scorcher : x6e9
+             mon_glyph += draconian scorcher : x6e9
 
         A single _ is treated as a space; if you want a real underscore,
         put a \ in front of it like this:
 
-             mon_glyph = player ghost : \_
+             mon_glyph += player ghost : \_
 
         You can also redefine several "pseudo" monsters, them being:
 
@@ -2273,7 +2284,14 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
         Playable species that normally have no monster of the same name can
         also be redefined, for use with show_player_species = true.
 
-item_glyph = <regexp> : <colour> <glyph>
+        Monster glyph overrides can be cleared using -=, which restores
+        the named monster (or all monsters of the given glyph) to its default
+        appearance. Specify only the monster name or glyph for -=, not the
+        replacement being removed.
+
+item_glyph ^= <regexp> : <colour> <glyph>
+item_glyph -= <regexp>
+        (Ordered list option)
         Customizes the symbol and/or colour of all items matching the regexp.
         Unlike mon_glyph, this is a partial name match.
 
@@ -2284,6 +2302,11 @@ item_glyph = <regexp> : <colour> <glyph>
         to change the colour and glyph separately:
             item_glyph += corpse : x625
             item_glyph += poisonous.* corpse : lightgreen
+
+        Rules are applied in order, so later rules are higher priority.
+
+        Removing a rule with -= removes all rules using the exact regexp
+        provided; do not specify a colour or glyph in that case.
 
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the

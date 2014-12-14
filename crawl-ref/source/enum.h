@@ -6,7 +6,91 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+#include <type_traits> // underlying_type<>
+
 #include "tag-version.h"
+
+template<class E>
+class enum_bitfield
+{
+public:
+    typedef typename underlying_type<E>::type underlying_type;
+    underlying_type flags;
+
+    enum_bitfield() : flags(0) {}
+    enum_bitfield(E flag) : flags(flag) {}
+    template<class ... Es>
+    enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
+
+    operator underlying_type () const { return flags; }
+
+    enum_bitfield<E> &operator|=(enum_bitfield<E> other)
+    {
+        flags |= other.flags;
+        return *this;
+    }
+
+    enum_bitfield<E> &operator&=(enum_bitfield<E> other)
+    {
+        flags &= other.flags;
+        return *this;
+    }
+
+    enum_bitfield<E> operator|(enum_bitfield<E> other) const
+    {
+        return enum_bitfield<E>(*this) |= other;
+    }
+
+    enum_bitfield<E> operator|(E other) const
+    {
+        return enum_bitfield<E>(*this) |= other;
+    }
+
+    enum_bitfield<E> operator&(enum_bitfield<E> other) const
+    {
+        return enum_bitfield<E>(*this) &= other;
+    }
+
+    enum_bitfield<E> operator&(E other) const
+    {
+        return enum_bitfield<E>(*this) &= other;
+    }
+
+    enum_bitfield<E> operator~() const
+    {
+        enum_bitfield<E> me(*this);
+        me.flags = ~me.flags;
+        return me;
+    }
+};
+
+template <class E, class ... Es>
+enum_bitfield<E> bitfield(E e1, Es... args)
+{
+    return bitfield<E>(e1, args...);
+}
+
+/**
+ * Define fieldT as a bitfield of the enum flagT, and make bitwise
+ * operators on flagT yield a fieldT.
+ *
+ * This macro produces a typedef and several inline function definitions;
+ * use it only at file/namespace scope. It requires a trailing semicolon.
+ *
+ * @param fieldT An identifier naming the bitfield type to define.
+ * @param flagT  An identifier naming the enum type to use as a flag.
+ *               Could theoretically be a more complex type expression, but
+ *               I wouldn't try anything trickier than scope resolution.
+ */
+#define DEF_BITFIELD(fieldT, flagT) typedef enum_bitfield<flagT> fieldT;  \
+    inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
+    inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
+    inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
+    inline fieldT operator&(flagT a, fieldT b) { return fieldT(a) &= b; } \
+    inline fieldT operator~(flagT a) { return ~fieldT(a); } \
+    COMPILE_CHECK(is_enum<flagT>::value)
+// The last line above is really just to eat a semicolon; template
+// substitution of enum_bitfield would have already failed.
 
 enum lang_t
 {
@@ -72,7 +156,9 @@ enum ability_type
     ABIL_MUMMY_RESTORATION,
     // Vampires
     ABIL_TRAN_BAT,
+#if TAG_MAJOR_VERSION == 34
     ABIL_BOTTLE_BLOOD,
+#endif
     // Deep Dwarves
     ABIL_RECHARGING,
     // Formicids
@@ -263,6 +349,7 @@ enum ability_type
     NUM_ABILITIES
 };
 
+// Be sure to change activity_interrupt_names in delay.cc to match!
 enum activity_interrupt_type
 {
     AI_FORCE_INTERRUPT = 0,         // Forcibly kills any activity that can be
@@ -363,6 +450,8 @@ enum attribute_type
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
+    ATTR_BONE_ARMOUR,          // Current amount of boney armour (from the spell)
+    ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     NUM_ATTRIBUTES
 };
 
@@ -461,7 +550,9 @@ enum beam_type                  // bolt::flavour
     BEAM_CHAOTIC_REFLECTION,
     BEAM_DRAIN_MAGIC,
     BEAM_TUKIMAS_DANCE,
-    BEAM_LAST_ENCHANTMENT = BEAM_TUKIMAS_DANCE,
+    BEAM_RESISTANCE,
+    BEAM_ATTRACT,
+    BEAM_LAST_ENCHANTMENT = BEAM_ATTRACT,
 
     BEAM_MEPHITIC,
     BEAM_INK,
@@ -522,12 +613,14 @@ enum book_type
 #endif
     BOOK_GEOMANCY,
     BOOK_EARTH,
+#if TAG_MAJOR_VERSION == 34
     BOOK_WIZARDRY,
+#endif
     BOOK_POWER,
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,
 #if TAG_MAJOR_VERSION == 34
-    BOOK_STALKING,
+    BOOK_AKASHIC_RECORD,
 #endif
     BOOK_DEBILITATION,
     BOOK_DRAGON,
@@ -535,15 +628,19 @@ enum book_type
     BOOK_DREAMS,
     BOOK_ALCHEMY,
     BOOK_BEASTS,
-    MAX_NORMAL_BOOK = BOOK_BEASTS,
 
-    MIN_RARE_BOOK,
-    BOOK_ANNIHILATIONS = MIN_RARE_BOOK,
+    BOOK_ANNIHILATIONS,
     BOOK_GRAND_GRIMOIRE,
     BOOK_NECRONOMICON,
-    MAX_RARE_BOOK = BOOK_NECRONOMICON,
+#if TAG_MAJOR_VERSION > 34
+    BOOK_AKASHIC_RECORD,
+#endif
 
-    MAX_FIXED_BOOK = MAX_RARE_BOOK,
+#if TAG_MAJOR_VERSION == 34
+    MAX_FIXED_BOOK = BOOK_NECRONOMICON,
+#else
+    MAX_FIXED_BOOK = BOOK_AKASHIC_RECORD,
+#endif
 
     BOOK_RANDART_LEVEL,
     BOOK_RANDART_THEME,
@@ -661,6 +758,7 @@ enum canned_message_type
     MSG_DECK_EXHAUSTED,
     MSG_CANNOT_MOVE,
     MSG_YOU_DIE,
+    MSG_GHOSTLY_OUTLINE,
 };
 
 enum char_set_type
@@ -725,7 +823,6 @@ enum command_type
 {
     CMD_NO_CMD = 2000,
     CMD_NO_CMD_DEFAULT, // hack to allow assignment of keys to CMD_NO_CMD
-    CMD_MOVE_NOWHERE,
     CMD_MOVE_LEFT,
     CMD_MOVE_DOWN,
     CMD_MOVE_UP,
@@ -742,14 +839,23 @@ enum command_type
     CMD_RUN_DOWN_LEFT,
     CMD_RUN_UP_RIGHT,
     CMD_RUN_DOWN_RIGHT,
-    CMD_OPEN_DOOR_LEFT,
-    CMD_OPEN_DOOR_DOWN,
-    CMD_OPEN_DOOR_UP,
-    CMD_OPEN_DOOR_RIGHT,
-    CMD_OPEN_DOOR_UP_LEFT,
-    CMD_OPEN_DOOR_DOWN_LEFT,
-    CMD_OPEN_DOOR_UP_RIGHT,
-    CMD_OPEN_DOOR_DOWN_RIGHT,
+    CMD_SAFE_WAIT,
+    CMD_SAFE_MOVE_LEFT,
+    CMD_SAFE_MOVE_DOWN,
+    CMD_SAFE_MOVE_UP,
+    CMD_SAFE_MOVE_RIGHT,
+    CMD_SAFE_MOVE_UP_LEFT,
+    CMD_SAFE_MOVE_DOWN_LEFT,
+    CMD_SAFE_MOVE_UP_RIGHT,
+    CMD_SAFE_MOVE_DOWN_RIGHT,
+    CMD_ATTACK_LEFT,
+    CMD_ATTACK_DOWN,
+    CMD_ATTACK_UP,
+    CMD_ATTACK_RIGHT,
+    CMD_ATTACK_UP_LEFT,
+    CMD_ATTACK_DOWN_LEFT,
+    CMD_ATTACK_UP_RIGHT,
+    CMD_ATTACK_DOWN_RIGHT,
     CMD_OPEN_DOOR,
     CMD_CLOSE_DOOR,
     CMD_REST,
@@ -820,6 +926,7 @@ enum command_type
     CMD_SUSPEND_GAME,
     CMD_QUIT,
     CMD_WIZARD,
+    CMD_EXPLORE_MODE,
 
     CMD_SEARCH_STASHES,
     CMD_EXPLORE,
@@ -853,6 +960,9 @@ enum command_type
     // zoom on dungeon
     CMD_ZOOM_IN,
     CMD_ZOOM_OUT,
+
+    // bring up the on-screen keyboard if needed
+    CMD_SHOW_KEYBOARD,
 #endif
 
     // Repeat previous command
@@ -1053,16 +1163,6 @@ enum conduct_type
     DID_KILL_PRIEST,                      // Beogh
     DID_KILL_HOLY,
     DID_KILL_FAST,                        // Cheibriados
-    DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
-    DID_LIVING_KILLED_BY_SERVANT,
-    DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE,
-    DID_UNDEAD_KILLED_BY_SERVANT,
-    DID_DEMON_KILLED_BY_UNDEAD_SLAVE,
-    DID_DEMON_KILLED_BY_SERVANT,
-    DID_NATURAL_UNHOLY_KILLED_BY_SERVANT, // TSO
-    DID_NATURAL_EVIL_KILLED_BY_SERVANT,   // TSO
-    DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
-    DID_HOLY_KILLED_BY_SERVANT,
     DID_BANISH,
     DID_SPELL_MEMORISE,
     DID_SPELL_CASTING,
@@ -1078,17 +1178,12 @@ enum conduct_type
     DID_DESTROY_ORCISH_IDOL,              // Beogh
     DID_KILL_SLIME,                       // Jiyva
     DID_KILL_PLANT,                       // Fedhas
-    DID_PLANT_KILLED_BY_SERVANT,          // Fedhas
     DID_HASTY,                            // Cheibriados
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
     DID_SOULED_FRIEND_DIED,               // Zin
-    DID_UNCLEAN_KILLED_BY_SERVANT,        // Zin
-    DID_CHAOTIC_KILLED_BY_SERVANT,        // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
     DID_KILL_ARTIFICIAL,                  // Yredelemnul
-    DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE,// Yredelemnul
-    DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
     DID_DESTROY_SPELLBOOK,                // Sif Muna
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
@@ -1131,9 +1226,9 @@ enum delay_type
     DELAY_ARMOUR_OFF,
     DELAY_JEWELLERY_ON,
     DELAY_MEMORISE,
+#if TAG_MAJOR_VERSION == 34
     DELAY_BUTCHER,
     DELAY_BOTTLE_BLOOD,
-#if TAG_MAJOR_VERSION == 34
     DELAY_WEAPON_SWAP,
 #endif
     DELAY_PASSWALL,
@@ -1161,6 +1256,7 @@ enum delay_type
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
 
     DELAY_SHAFT_SELF, // Formicid ability
+    DELAY_BLURRY_SCROLL,
 
     NUM_DELAYS
 };
@@ -1322,7 +1418,7 @@ enum dungeon_char_type
 //      update docs/develop/levels/syntax.txt with the new symbol.
 enum dungeon_feature_type
 {
-    DNGN_UNSEEN,
+    DNGN_UNSEEN = 0,                   // must be zero
     DNGN_CLOSED_DOOR,
     DNGN_RUNED_DOOR,
     DNGN_SEALED_DOOR,
@@ -1431,28 +1527,28 @@ enum dungeon_feature_type
     // Exits from various branches
     // Order must be the same as above
 #if TAG_MAJOR_VERSION == 34
-    DNGN_RETURN_FROM_DWARF,
+    DNGN_EXIT_DWARF,
 #endif
-    DNGN_RETURN_FROM_ORC,
-    DNGN_RETURN_FROM_LAIR,
-    DNGN_RETURN_FROM_SLIME,
-    DNGN_RETURN_FROM_VAULTS,
-    DNGN_RETURN_FROM_CRYPT,
+    DNGN_EXIT_ORC,
+    DNGN_EXIT_LAIR,
+    DNGN_EXIT_SLIME,
+    DNGN_EXIT_VAULTS,
+    DNGN_EXIT_CRYPT,
 #if TAG_MAJOR_VERSION == 34
-    DNGN_RETURN_FROM_BLADE,
+    DNGN_EXIT_BLADE,
 #endif
-    DNGN_RETURN_FROM_ZOT,
-    DNGN_RETURN_FROM_TEMPLE,
-    DNGN_RETURN_FROM_SNAKE,
-    DNGN_RETURN_FROM_ELF,
-    DNGN_RETURN_FROM_TOMB,
-    DNGN_RETURN_FROM_SWAMP,
-    DNGN_RETURN_FROM_SHOALS,
-    DNGN_RETURN_FROM_SPIDER,
+    DNGN_EXIT_ZOT,
+    DNGN_EXIT_TEMPLE,
+    DNGN_EXIT_SNAKE,
+    DNGN_EXIT_ELF,
+    DNGN_EXIT_TOMB,
+    DNGN_EXIT_SWAMP,
+    DNGN_EXIT_SHOALS,
+    DNGN_EXIT_SPIDER,
 #if TAG_MAJOR_VERSION == 34
-    DNGN_RETURN_FROM_FOREST,
+    DNGN_EXIT_FOREST,
 #endif
-    DNGN_RETURN_FROM_DEPTHS,
+    DNGN_EXIT_DEPTHS,
 
     DNGN_ALTAR_ZIN,
     DNGN_ALTAR_SHINING_ONE,
@@ -1639,7 +1735,9 @@ enum duration_type
     DUR_TORNADO_COOLDOWN,
 #if TAG_MAJOR_VERSION == 34
     DUR_NAUSEA,
+#endif
     DUR_AMBROSIA,
+#if TAG_MAJOR_VERSION == 34
     DUR_TEMP_MUTATIONS,
 #endif
     DUR_DISJUNCTION,
@@ -1698,6 +1796,7 @@ enum duration_type
     DUR_HORROR,
     DUR_NO_SCROLLS,
     DUR_NEGATIVE_VULN,
+    DUR_CLEAVE,
     NUM_DURATIONS
 };
 
@@ -1831,8 +1930,8 @@ enum enchant_type
     ENCH_SAP_MAGIC,
     ENCH_SHROUD,
     ENCH_PHANTOM_MIRROR,
-    ENCH_BRIBED,
-    ENCH_PERMA_BRIBED,
+    ENCH_NEUTRAL_BRIBED,
+    ENCH_FRIENDLY_BRIBED,
     ENCH_CORROSION,
     ENCH_GOLD_LUST,
     ENCH_DRAINED,
@@ -1840,6 +1939,9 @@ enum enchant_type
     ENCH_DEFLECT_MISSILES,
     ENCH_NEGATIVE_VULN,
     ENCH_CONDENSATION_SHIELD,
+    ENCH_RESISTANCE,
+    ENCH_HEXED,
+    ENCH_BONE_ARMOUR,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -1914,16 +2016,6 @@ enum eq_type_flags
     ETF_ARMOUR = 0x4,
     ETF_JEWELS = 0x8,
     ETF_ALL    = 0xF
-};
-
-enum feature_flag_type
-{
-    FFT_NONE          = 0,
-    FFT_NOTABLE       = 1<< 0,           // should be noted for dungeon overview
-    FFT_EXAMINE_HINT  = 1<< 1,           // could get an "examine-this" hint.
-    FFT_OPAQUE        = 1<< 2,           // Does this feature block LOS?
-    FFT_WALL          = 1<< 3,           // Is this a "wall"?
-    FFT_SOLID         = 1<< 4,           // Does this feature block beams / normal movement?
 };
 
 enum flush_reason_type
@@ -2014,8 +2106,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
-                             //0x00000200,  // was: ISFLAG_BLESSED
-    ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
+    ISFLAG_HANDLED           = 0x00000200,  // player has handled this item
+                             //0x00000400,  // was: ISFLAG_SEEN_CURSED
     ISFLAG_TRIED             = 0x00000800,  // tried but not (usually) ided
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
@@ -2096,7 +2188,9 @@ enum job_type
     JOB_WANDERER,
     JOB_ARTIFICER,                     //   Greenberg/Bane
     JOB_ARCANE_MARKSMAN,
+#if TAG_MAJOR_VERSION == 34
     JOB_DEATH_KNIGHT,
+#endif
     JOB_ABYSSAL_KNIGHT,
 #if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
@@ -2292,8 +2386,8 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_GREY_RAT,
 #endif
-    MONS_GREEN_RAT,
-    MONS_ORANGE_RAT,
+    MONS_RIVER_RAT,
+    MONS_HELL_RAT,
 #if TAG_MAJOR_VERSION == 34
     MONS_LABORATORY_RAT,
 #endif
@@ -2408,6 +2502,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_BENNU,
     MONS_CAUSTIC_SHRIKE,
+    MONS_SHARD_SHRIKE,
 
     MONS_ANUBIS_GUARD,
 #endif
@@ -3022,6 +3117,7 @@ enum monster_type                      // menv[].type
     MONS_ASTERION,
     MONS_NATASHA,
     MONS_VASHNIA,
+    MONS_ROBIN,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -3038,6 +3134,7 @@ enum monster_type                      // menv[].type
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
 #if TAG_MAJOR_VERSION > 34
     MONS_FULMINANT_PRISM,
+    MONS_SINGULARITY,
     MONS_BATTLESPHERE,
 #endif
     MONS_PILLAR_OF_SALT,
@@ -3201,6 +3298,11 @@ enum monster_type                      // menv[].type
     MONS_DEATH_SCARAB,
     MONS_ANUBIS_GUARD,
     MONS_CAUSTIC_SHRIKE,
+
+    MONS_ROBIN,
+
+    MONS_SHARD_SHRIKE,
+    MONS_SINGULARITY,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3578,11 +3680,15 @@ enum potion_type
 #endif
     POT_FLIGHT,
     POT_POISON,
+#if TAG_MAJOR_VERSION == 34
     POT_SLOWING,
+#endif
     POT_CANCELLATION,
-    POT_CONFUSION,
+    POT_AMBROSIA,
     POT_INVISIBILITY,
+#if TAG_MAJOR_VERSION == 34
     POT_PORRIDGE,
+#endif
     POT_DEGENERATION,
     POT_DECAY,
 #if TAG_MAJOR_VERSION == 34
@@ -4113,8 +4219,8 @@ enum spell_type
     SPELL_RESURRECT,
     SPELL_HOLY_LIGHT,
     SPELL_HOLY_WORD,
-    SPELL_SUMMON_HOLIES,
 #endif
+    SPELL_SUMMON_HOLIES,
     SPELL_HEAL_OTHER,
 #if TAG_MAJOR_VERSION == 34
     SPELL_SACRIFICE,
@@ -4142,7 +4248,9 @@ enum spell_type
     SPELL_SUMMON_HYDRA,
     SPELL_DARKNESS,
     SPELL_MESMERISE,
+#if TAG_MAJOR_VERSION == 34
     SPELL_MELEE, // like SPELL_NO_SPELL, but doesn't cause a re-roll
+#endif
     SPELL_FIRE_SUMMON,
     SPELL_SHROUD_OF_GOLUBRIA,
     SPELL_INNER_FLAME,
@@ -4261,6 +4369,12 @@ enum spell_type
     SPELL_HUNTING_CRY,
     SPELL_SEARING_BREATH,
     SPELL_CHILLING_BREATH,
+    SPELL_SCATTERSHOT,
+    SPELL_CLEANSING_FLAME,
+    SPELL_GOBLIN_TOSS,
+    SPELL_CIGOTUVIS_EMBRACE,
+    SPELL_SINGULARITY,
+    SPELL_GRAVITAS,
     NUM_SPELLS
 };
 
@@ -4427,6 +4541,8 @@ enum zap_type
     ZAP_QUICKSILVER_BOLT,
     ZAP_CORROSIVE_BOLT,
     ZAP_RANDOM_BOLT_TRACER,
+    ZAP_SCATTERSHOT,
+    ZAP_GRAVITAS,
 
     NUM_ZAPS
 };
@@ -4547,12 +4663,19 @@ enum seen_context_type
 
 enum los_type
 {
-    LOS_NONE         = 0,
-    LOS_ARENA        = LOS_NONE,
-    LOS_DEFAULT      = (1 << 0),
-    LOS_NO_TRANS     = (1 << 1),
-    LOS_SOLID        = (1 << 2),
-    LOS_SOLID_SEE    = (1 << 3),
+    LOS_NONE         = 0,        // w g s c
+    LOS_ARENA        = LOS_NONE, // -------  See key below
+    LOS_DEFAULT      = (1 << 0), // o T T h
+    LOS_NO_TRANS     = (1 << 1), // o o T h
+    LOS_SOLID        = (1 << 2), // o o o T
+    LOS_SOLID_SEE    = (1 << 3), // o o o h
+    // KEY:
+    //   o: opaque, T: transparent, h: half-opaque (two cells block LOS)
+    // Columns:
+    //   w: FFT_OPAQUE features: rock walls, closed doors, trees, etc.
+    //   g: glass (transparent walls)
+    //   s: other FFT_SOLID features: grate, statue/idol, open/lava sea
+    //   c: semi-opaque clouds (fog, etc.); bushes
 };
 
 enum ac_type

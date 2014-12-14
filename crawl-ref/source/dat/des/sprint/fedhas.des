@@ -46,7 +46,7 @@ KMONS:  f = oklob plant name:annihilator n_suf \
                    orb_of_destruction.20.wizard;bolt_of_cold.20.wizard
 KMONS:  g = the Enchantress
 KMONS:  h = moth of wrath
-KMONS:  m = green rat
+KMONS:  m = river rat
 KMONS:  n = worker ant
 KMONS:  u = rat
 KITEM:  j = royal jelly q:3
@@ -117,6 +117,7 @@ KFEAT:  P = altar_makhleb
 KFEAT:  Q = altar_dithmenos
 KFEAT:  R = altar_gozag
 KFEAT:  S = altar_qazlal
+KFEAT:  U = altar_ru
 KMONS:  X = oklob sapling name:priest n_suf \
             spells:spit_acid.50.natural;cantrip.36.priest;smiting.18.priest
 
@@ -125,5 +126,5 @@ MAP
 .A.B.C.D.E.F.
 M.N.OXP.Q.R.S
 .G.H.I.J.K.L.
-.T.........T.
+.T....U....T.
 ENDMAP

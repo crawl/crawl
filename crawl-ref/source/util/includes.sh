@@ -104,7 +104,7 @@ cleanup ()
             /^ghost.h kills.cc$/d;
             /^cmd-name.h macro.cc$/d;
             /^cmd-keys.h macro.cc$/d;
-            /^mon-spll.h monster.cc$/d;
+            /^mon-spell.h monster.cc$/d;
             /^AppHdr.h /d;
             / artefact.cc/d'
 }

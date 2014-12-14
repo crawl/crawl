@@ -49,11 +49,12 @@ public:
     static formatted_string parse_string(
             const string &s,
             bool  eot_ends_format = true,
-            bool (*process_tag)(const string &tag) = NULL,
+            bool (*process_tag)(const string &tag) = nullptr,
             int main_colour = LIGHTGREY);
 
     static void parse_string_to_multiple(const string &s,
-                                         vector<formatted_string> &out);
+                                         vector<formatted_string> &out,
+                                         int wrap_col = 0);
 
     static int get_colour(const string &tag);
 

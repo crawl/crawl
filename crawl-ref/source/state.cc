@@ -27,41 +27,36 @@
 #include "unwind.h"
 
 game_state::game_state()
-    : game_crashed(false),
-      mouse_enabled(false), waiting_for_command(false),
+    : game_crashed(false), mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), last_winch(0), io_inited(false),
-      need_save(false),
-      saving_game(false), updating_scores(false), seen_hups(0),
-      map_stat_gen(false), type(GAME_TYPE_NORMAL),
-      last_type(GAME_TYPE_UNSPECIFIED), arena_suspended(false),
-      generating_level(false),
-      dump_maps(false), test(false), script(false), build_db(false),
-      tests_selected(),
+      need_save(false), saving_game(false), updating_scores(false),
+      seen_hups(0), map_stat_gen(false), obj_stat_gen(false),
+      type(GAME_TYPE_NORMAL), last_type(GAME_TYPE_UNSPECIFIED),
+      arena_suspended(false), generating_level(false), dump_maps(false),
+      test(false), script(false), build_db(false), tests_selected(),
 #ifdef DGAMELAUNCH
       throttle(true),
 #else
       throttle(false),
 #endif
-      show_more_prompt(true),
-      terminal_resize_handler(NULL), terminal_resize_check(NULL),
-      doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
-      repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
-      lua_calls_no_turn(0), stat_gain_prompt(false),
-      level_annotation_shown(false), viewport_monster_hp(false),
-      viewport_weapons(false),
+      show_more_prompt(true), terminal_resize_handler(nullptr),
+      terminal_resize_check(nullptr), doing_prev_cmd_again(false),
+      prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
+      cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
+      stat_gain_prompt(false), level_annotation_shown(false),
+      viewport_monster_hp(false), viewport_weapons(false),
 #ifndef USE_TILE_LOCAL
       mlist_targeting(false),
 #else
+      tiles_disabled(false),
       title_screen(true),
 #endif
-      darken_range(NULL), unsaved_macros(false), mon_act(NULL)
+      darken_range(nullptr), unsaved_macros(false), mon_act(nullptr)
 {
     reset_cmd_repeat();
     reset_cmd_again();
 #ifdef TARGET_OS_WINDOWS
     no_gdb = "Non-UNIX Platform -> not running gdb.";
-#elif defined DEBUG_DIAGNOSTICS
-    no_gdb = "Debug build -> run gdb yourself.";
 #else
     no_gdb = access("/usr/bin/gdb", 1) ? "GDB not installed." : 0;
 #endif
@@ -134,7 +129,7 @@ void game_state::cancel_cmd_repeat(string reason)
     reset_cmd_repeat();
 
     if (!reason.empty())
-        mpr(reason.c_str());
+        mpr(reason);
 }
 
 void game_state::cancel_cmd_again(string reason)
@@ -150,7 +145,7 @@ void game_state::cancel_cmd_again(string reason)
     reset_cmd_again();
 
     if (!reason.empty())
-        mpr(reason.c_str());
+        mpr(reason);
 }
 
 void game_state::cancel_cmd_all(string reason)
@@ -259,8 +254,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
     // If command repetition is being used to imitate the rest command,
     // then everything interrupts it.
-    if (crawl_state.repeat_cmd == CMD_MOVE_NOWHERE
-        || crawl_state.repeat_cmd == CMD_WAIT)
+    if (crawl_state.repeat_cmd == CMD_WAIT)
     {
         if (ai == AI_FULL_MP)
             crawl_state.cancel_cmd_repeat("Magic restored.");
@@ -416,7 +410,7 @@ vector<god_act_state> game_state::other_gods_acting() const
 
 bool game_state::is_mon_acting() const
 {
-    return mon_act != NULL;
+    return mon_act != nullptr;
 }
 
 monster* game_state::which_mon_acting() const
@@ -428,7 +422,7 @@ void game_state::inc_mon_acting(monster* mon)
 {
     ASSERT(!invalid_monster(mon));
 
-    if (mon_act != NULL)
+    if (mon_act != nullptr)
         mon_act_stack.push_back(mon_act);
 
     mon_act = mon;
@@ -438,7 +432,7 @@ void game_state::dec_mon_acting(monster* mon)
 {
     ASSERT(mon_act == mon);
 
-    mon_act = NULL;
+    mon_act = nullptr;
 
     const unsigned int size = mon_act_stack.size();
     if (size > 0)
@@ -451,7 +445,7 @@ void game_state::dec_mon_acting(monster* mon)
 
 void game_state::clear_mon_acting()
 {
-    mon_act = NULL;
+    mon_act = nullptr;
     mon_act_stack.clear();
 }
 
@@ -500,8 +494,8 @@ void game_state::dump()
     if (!startup_errors.empty())
     {
         fprintf(stderr, "Startup errors:\n");
-        for (unsigned int i = 0; i < startup_errors.size(); i++)
-            fprintf(stderr, "%s\n", startup_errors[i].c_str());
+        for (const string &err : startup_errors)
+            fprintf(stderr, "%s\n", err.c_str());
         fprintf(stderr, "\n");
     }
 
@@ -510,12 +504,12 @@ void game_state::dump()
     if (doing_prev_cmd_again)
     {
         fprintf(stderr, "Doing prev_cmd again with keys: ");
-        for (unsigned int i = 0; i < prev_cmd_keys.size(); i++)
-            fprintf(stderr, "%d, ", prev_cmd_keys[i]);
+        for (int key : prev_cmd_keys)
+            fprintf(stderr, "%d, ", key);
         fprintf(stderr, "\n");
         fprintf(stderr, "As ASCII keys: ");
-        for (unsigned int i = 0; i < prev_cmd_keys.size(); i++)
-            fprintf(stderr, "%c", (char) prev_cmd_keys[i]);
+        for (int key : prev_cmd_keys)
+            fprintf(stderr, "%c", (char) key);
         fprintf(stderr, "\n\n");
     }
     fprintf(stderr, "repeat_cmd = %s\n", command_to_name(repeat_cmd).c_str());
@@ -531,16 +525,15 @@ void game_state::dump()
     if (!god_act_stack.empty())
     {
         fprintf(stderr, "Other gods acting:\n");
-        for (unsigned int i = 0; i < god_act_stack.size(); i++)
+        for (const god_act_state &godact : god_act_stack)
         {
             fprintf(stderr, "God %s with depth %d\n",
-                    god_name(god_act_stack[i].which_god).c_str(),
-                    god_act_stack[i].depth);
+                    god_name(godact.which_god).c_str(), godact.depth);
         }
         fprintf(stderr, "\n\n");
     }
 
-    if (mon_act != NULL)
+    if (mon_act != nullptr)
     {
         fprintf(stderr, "%s currently acting:\n\n",
                 debug_mon_str(mon_act).c_str());
@@ -550,11 +543,8 @@ void game_state::dump()
     if (!mon_act_stack.empty())
     {
         fprintf(stderr, "Others monsters acting:\n");
-        for (unsigned int i = 0; i < mon_act_stack.size(); i++)
-        {
-            fprintf(stderr, "    %s\n",
-                    debug_mon_str(mon_act_stack[i]).c_str());
-        }
+        for (const monster *mon : mon_act_stack)
+            fprintf(stderr, "    %s\n", debug_mon_str(mon).c_str());
     }
 }
 

@@ -96,7 +96,7 @@ void wizard_create_spec_monster_name()
 
         if (!newerr.empty())
         {
-            mpr(err.c_str());
+            mpr(err);
             return;
         }
     }
@@ -319,7 +319,7 @@ void debug_list_monsters()
         snprintf(buf, sizeof(buf), "%d %s", count, pluralise(prev_name).c_str());
     else
         snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
-    mons.push_back(buf);
+    mons.emplace_back(buf);
 
     mpr_comma_separated_list("Monsters: ", mons);
 
@@ -555,6 +555,8 @@ void debug_stethoscope(int mon)
             spl << "buggy spell";
         else
             spl << spell_title(hspell_pass[k].spell);
+
+        spl << "." << (int)hspell_pass[k].freq;
 
         spl << " (" << static_cast<int>(hspell_pass[k].spell) << ")";
     }
@@ -981,7 +983,7 @@ static void _move_monster(const coord_def& where, int idx1)
 
     mgrd(where) = idx2;
 
-    if (mon2 != NULL)
+    if (mon2 != nullptr)
     {
         mon2->moveto(where);
         mon1->check_redraw(where);
@@ -1024,7 +1026,7 @@ void wizard_move_player_or_monster(const coord_def& where)
 void wizard_make_monster_summoned(monster* mon)
 {
     int summon_type = 0;
-    if (mon->is_summoned(NULL, &summon_type) || summon_type != 0)
+    if (mon->is_summoned(nullptr, &summon_type) || summon_type != 0)
     {
         mprf(MSGCH_PROMPT, "Monster is already summoned.");
         return;
@@ -1184,17 +1186,17 @@ void debug_pathfind(int idx)
         vector<coord_def> path = mp.backtrack();
         env.travel_trail = path;
 #ifdef USE_TILE_WEB
-        for (unsigned int i = 0; i < env.travel_trail.size(); ++i)
-            tiles.update_minimap(env.travel_trail[i]);
+        for (coord_def pos : env.travel_trail)
+            tiles.update_minimap(pos);
 #endif
         string path_str;
         mpr("Here's the shortest path: ");
-        for (unsigned int i = 0; i < path.size(); ++i)
+        for (coord_def pos : path)
         {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", pos.x, pos.y);
             path_str += info;
         }
-        mpr(path_str.c_str());
+        mpr(path_str);
         mprf("-> path length: %u", (unsigned int)path.size());
 
         mpr("");
@@ -1202,12 +1204,12 @@ void debug_pathfind(int idx)
         path_str = "";
         mpr("");
         mpr("And here are the needed waypoints: ");
-        for (unsigned int i = 0; i < path.size(); ++i)
+        for (coord_def pos : path)
         {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", path[i].x, path[i].y);
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", pos.x, pos.y);
             path_str += info;
         }
-        mpr(path_str.c_str());
+        mpr(path_str);
         mprf("-> #waypoints: %u", (unsigned int)path.size());
     }
 }
@@ -1356,20 +1358,20 @@ void debug_miscast(int target_index)
 
     if (spell != SPELL_NO_SPELL)
     {
-        miscast = new MiscastEffect(target, target_index, spell, pow, fail,
-                                    "", nothing);
+        miscast = new MiscastEffect(target, target, WIZARD_MISCAST, spell, pow,
+                                    fail, "", nothing);
     }
     else
     {
         if (level != -1)
         {
-            miscast = new MiscastEffect(target, target_index, school,
+            miscast = new MiscastEffect(target, target, WIZARD_MISCAST, school,
                                         level, "wizard testing miscast",
                                         nothing);
         }
         else
         {
-            miscast = new MiscastEffect(target, target_index, school,
+            miscast = new MiscastEffect(target, target, WIZARD_MISCAST, school,
                                         pow, fail, "wizard testing miscast",
                                         nothing);
         }

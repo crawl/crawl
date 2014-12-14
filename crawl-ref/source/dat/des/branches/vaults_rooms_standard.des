@@ -249,7 +249,7 @@ MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
 MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
         Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
         Wiglaf / Norris / goblin
-KITEM:  ! = any potion / potion of confusion, \
+KITEM:  ! = any potion / potion of mutation, \
             any potion / potion of poison, any potion
 KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
 MAP
@@ -1134,8 +1134,8 @@ xxxC.BABBAABBA.
 ENDMAP
 
 NAME:    hangedman_vaults_river_flow
-SHUFFLE: abcdefghijkl
-SUBST:   ab = x, c : xx., d : x., e : x:1 .:9, fgh = .
+SHUFFLE: abcdefghij
+SUBST:   ab = x, c : xx., d : x., e : x:1 .:9, fghij = .
 : vaults_room_setup(_G, "0", "small")
 MAP
       x.......x

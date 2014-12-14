@@ -329,7 +329,7 @@ Stand and defend the Orb!
 
 The safety of the most sacred Orb of Zot relies on you.
 %%%%
-hell_effect
+hell_effect_quiet
 
 {{
 if you.can_smell() then
@@ -366,12 +366,14 @@ You sense a hostile presence.
 "Leave now, before it is too late!"
 
 "We have you now!"
+%%%%
+hell_effect_noisy
 
-SOUND:A gut-wrenching scream fills the air!
+A gut-wrenching scream fills the air!
 
-SOUND:You hear words spoken in a strange and terrible language...
+You hear words spoken in a strange and terrible language...
 
-SOUND:You hear diabolical laughter!
+You hear diabolical laughter!
 %%%%
 eating_pizza
 

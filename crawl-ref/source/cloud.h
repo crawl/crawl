@@ -36,7 +36,7 @@ int actor_apply_cloud(actor *act);
 
 string cloud_name_at_index(int cloudno);
 string cloud_type_name(cloud_type type, bool terse = true);
-int get_cloud_colour(int cloudno);
+colour_t get_cloud_colour(int cloudno);
 coord_def get_cloud_originator(const coord_def& pos);
 
 bool actor_cloud_immune(const actor *act, const cloud_struct &cloud);

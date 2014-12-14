@@ -103,6 +103,8 @@ makefile.dep
 /source/rltiles/*.d
 /source/.cflags
 /source/rltiles/.cflags
+/source/.android-cflags
+/source/.android-cxxflags
 /source/.contrib-ok
 /source/.contrib-libs
 /source/compflag.h
@@ -196,8 +198,9 @@ source/.tx/config
 .metadata/
 
 # generated files for android
-bin/
-AndroidData/
 icon.png
-libapplication.so
-source/crawl_tiles_android-*
+/source/android-project/AndroidManifest.xml
+/source/android-project/assets
+/source/android-project/gen
+/source/android-project/libs
+/source/android-project/obj

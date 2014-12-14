@@ -7,7 +7,7 @@
 
 #include "wiz-item.h"
 
-#include <errno.h>
+#include <cerrno>
 
 #include "acquire.h"
 #include "act-iter.h"
@@ -49,7 +49,7 @@ static void _make_all_books()
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
 #if TAG_MAJOR_VERSION == 34
-        if (i == BOOK_STALKING)
+        if (i == BOOK_WIZARDRY)
             continue;
 #endif
         int thing = items(false, OBJ_BOOKS, i, 0, 0, AQ_WIZMODE);
@@ -67,7 +67,7 @@ static void _make_all_books()
         set_ident_flags(book, ISFLAG_KNOW_TYPE);
         set_ident_flags(book, ISFLAG_IDENT_MASK);
 
-        mprf("%s", book.name(DESC_PLAIN).c_str());
+        mpr(book.name(DESC_PLAIN));
     }
 }
 
@@ -228,9 +228,7 @@ void wizard_create_spec_object()
         }
     }
 
-    // Deck colour (which control rarity) already set.
-    if (!is_deck(mitm[thing_created]))
-        item_colour(mitm[thing_created]);
+    item_colour(mitm[thing_created]);
 
     move_item_to_grid(&thing_created, you.pos());
 
@@ -600,7 +598,7 @@ void wizard_value_artefact()
         if (!is_artefact(item))
             mpr("That item is not an artefact!");
         else
-            mprf("%s", debug_art_val_str(item).c_str());
+            mpr(debug_art_val_str(item));
     }
 }
 
@@ -768,15 +766,7 @@ void wizard_uncurse_item()
 void wizard_identify_pack()
 {
     mpr("You feel a rush of knowledge.");
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def& item = you.inv[i];
-        if (item.defined())
-        {
-            set_ident_type(item, ID_KNOWN_TYPE);
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
-        }
-    }
+    identify_inventory();
     you.wield_change  = true;
     you.redraw_quiver = true;
 }
@@ -819,29 +809,6 @@ void wizard_unidentify_pack()
 
 void wizard_list_items()
 {
-    bool has_shops = false;
-
-    for (int i = 0; i < MAX_SHOPS; ++i)
-        if (env.shop[i].type != SHOP_UNASSIGNED)
-        {
-            has_shops = true;
-            break;
-        }
-
-    if (has_shops)
-    {
-        mpr("Shop items:");
-
-        for (int i = 0; i < MAX_SHOPS; ++i)
-            if (env.shop[i].type != SHOP_UNASSIGNED)
-            {
-                for (stack_iterator si(coord_def(0, i+5)); si; ++si)
-                    mpr(si->name(DESC_PLAIN, false, false, false).c_str());
-            }
-
-        mpr("");
-    }
-
     mpr("Item stacks (by location and top item):");
     for (int i = 0; i < MAX_ITEMS; ++i)
     {

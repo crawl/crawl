@@ -1292,8 +1292,6 @@ donkey
 
 four-legs
 
-gelding
-
 hack
 
 half-breed
@@ -1376,8 +1374,6 @@ roll of bandages
 
 bundle of gauze
 
-wound roll
-
 cotton waste
 
 wrapping tissue
@@ -1411,8 +1407,4 @@ rubbish heap
 garbage dump
 
 walking corpse
-
-corpse eater
-
-scavenger
 %%%%

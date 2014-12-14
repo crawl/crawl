@@ -61,7 +61,7 @@ const char *KillMaster::category_name(kill_category kc) const
 {
     if (kc >= KC_YOU && kc < KC_NCATEGORIES)
         return kill_category_names[kc];
-    return NULL;
+    return nullptr;
 }
 
 bool KillMaster::empty() const
@@ -155,7 +155,7 @@ string KillMaster::kill_info() const
         add_kill_info(killtext,
                        kills,
                        count,
-                       i == KC_YOU ? NULL
+                       i == KC_YOU ? nullptr
                                    : category_name((kill_category) i),
                        needseparator);
         needseparator = true;
@@ -175,7 +175,7 @@ string KillMaster::kill_info() const
     bool custom = false;
     unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     // Call the kill dump Lua function with null a, to tell it we're done.
-    if (!clua.callfn("c_kill_list", "ss>b", NULL, grandt.c_str(), &custom)
+    if (!clua.callfn("c_kill_list", "ss>b", nullptr, grandt.c_str(), &custom)
         || !custom)
 #endif
     {
@@ -292,12 +292,11 @@ void Kills::merge(const Kills &k)
     ghosts.insert(ghosts.end(), k.ghosts.begin(), k.ghosts.end());
 
     // Regular kills are messier to merge.
-    for (kill_map::const_iterator i = k.kills.begin();
-            i != k.kills.end(); ++i)
+    for (const auto &entry : k.kills)
     {
-        const kill_monster_desc &kmd = i->first;
+        const kill_monster_desc &kmd = entry.first;
         kill_def &ki = kills[kmd];
-        const kill_def &ko = i->second;
+        const kill_def &ko = entry.second;
         bool uniq = mons_is_unique(kmd.monnum);
         ki.merge(ko, uniq);
     }
@@ -327,18 +326,16 @@ void Kills::record_kill(const monster* mon)
 int Kills::get_kills(vector<kill_exp> &all_kills) const
 {
     int count = 0;
-    kill_map::const_iterator iter = kills.begin();
-    for (; iter != kills.end(); ++iter)
+    for (const auto &entry : kills)
     {
-        const kill_monster_desc &md = iter->first;
-        const kill_def &k = iter->second;
-        all_kills.push_back(kill_exp(k, md));
+        const kill_monster_desc &md = entry.first;
+        const kill_def &k = entry.second;
+        all_kills.emplace_back(k, md);
         count += k.kills;
     }
 
-    ghost_vec::const_iterator gi = ghosts.begin();
-    for (; gi != ghosts.end(); ++gi)
-        all_kills.push_back(kill_exp(*gi));
+    for (const kill_ghost &gh : ghosts)
+        all_kills.emplace_back(gh);
     count += ghosts.size();
 
     sort(all_kills.begin(), all_kills.end());
@@ -350,20 +347,16 @@ void Kills::save(writer& outf) const
     // How many kill records do we have?
     marshallInt(outf, kills.size());
 
-    for (kill_map::const_iterator iter = kills.begin();
-          iter != kills.end(); ++iter)
+    for (const auto &entry : kills)
     {
-        iter->first.save(outf);
-        iter->second.save(outf);
+        entry.first.save(outf);
+        entry.second.save(outf);
     }
 
     // How many ghosts do we have?
     marshallShort(outf, ghosts.size());
-    for (ghost_vec::const_iterator iter = ghosts.begin();
-         iter != ghosts.end(); ++iter)
-    {
-        iter->save(outf);
-    }
+    for (const auto &ghost : ghosts)
+        ghost.save(outf);
 }
 
 void Kills::load(reader& inf)
@@ -393,8 +386,7 @@ void Kills::record_ghost_kill(const monster* mon)
     // We should never get to this point, but just in case... {due}
     if (mon->is_summoned())
         return;
-    kill_ghost ghostk(mon);
-    ghosts.push_back(ghostk);
+    ghosts.emplace_back(mon);
 }
 
 int Kills::num_kills(const monster* mon) const
@@ -411,7 +403,7 @@ int Kills::num_kills(const monster_info& mon) const
 
 int Kills::num_kills(kill_monster_desc desc) const
 {
-    kill_map::const_iterator iter = kills.find(desc);
+    auto iter = kills.find(desc);
     int total = (iter == kills.end() ? 0 : iter->second.kills);
 
     if (desc.modifier == kill_monster_desc::M_SHAPESHIFTER)
@@ -441,7 +433,7 @@ kill_def::kill_def(const monster* mon) : kills(0), exp(0)
 // for zombies or skeletons).
 static const char *modifier_suffixes[] =
 {
-    "zombie", "skeleton", "simulacrum", NULL,
+    "zombie", "skeleton", "simulacrum", nullptr,
 };
 
 // For a non-unique monster, prefixes a suitable article if we have only one
@@ -490,8 +482,8 @@ void kill_def::merge(const kill_def &k, bool uniq)
     else
     {
         kills += k.kills;
-        for (size_t i = 0, size = k.places.size(); i < size; ++i)
-            add_place(k.places[i], uniq);
+        for (level_id lvl : k.places)
+            add_place(lvl, uniq);
     }
 }
 
@@ -504,9 +496,8 @@ void kill_def::add_kill(const monster* mon, level_id place)
 
 void kill_def::add_place(level_id place, bool force)
 {
-    for (size_t i = 0; i < places.size(); ++i)
-        if (places[i] == place)
-            return;
+    if (find(begin(places), end(places), place) != end(places))
+        return; // Already there
 
     if (force || places.size() < PLACE_LIMIT)
         places.push_back(place);
@@ -583,8 +574,7 @@ string kill_def::append_places(const kill_monster_desc &md,
     {
         string augmented = name;
         augmented += " (";
-        for (vector<level_id>::const_iterator iter = places.begin();
-             iter != places.end(); ++iter)
+        for (auto iter = places.begin(); iter != places.end(); ++iter)
         {
             if (iter != places.begin())
                 augmented += " ";
@@ -602,11 +592,8 @@ void kill_def::save(writer& outf) const
     marshallShort(outf, exp);
 
     marshallShort(outf, places.size());
-    for (vector<level_id>::const_iterator iter = places.begin();
-         iter != places.end(); ++iter)
-    {
-        iter->save(outf);
-    }
+    for (auto lvl : places)
+        lvl.save(outf);
 }
 
 void kill_def::load(reader& inf)
@@ -1027,7 +1014,7 @@ static const struct luaL_reg kill_lib[] =
     { "rawwrite",   kill_lualc_rawwrite },
     { "write",      kill_lualc_write },
     { "summary",    kill_lualc_summary },
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_kills(lua_State *ls)

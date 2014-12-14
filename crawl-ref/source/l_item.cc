@@ -85,17 +85,17 @@ void lua_push_floor_items(lua_State *ls, int link)
     }
 }
 
-static void _lua_push_inv_items(lua_State *ls = NULL)
+static void _lua_push_inv_items(lua_State *ls = nullptr)
 {
     if (!ls)
         ls = clua.state();
     lua_newtable(ls);
     int index = 0;
-    for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
+    for (item_def &item : you.inv)
     {
-        if (you.inv[slot].defined())
+        if (item.defined())
         {
-            clua_push_item(ls, &you.inv[slot]);
+            clua_push_item(ls, &item);
             lua_rawseti(ls, -2, ++index);
         }
     }
@@ -280,9 +280,9 @@ static int l_item_do_subtype(lua_State *ls)
         return 1;
     }
 
-    const char *s = NULL;
+    const char *s = nullptr;
     if (item->base_type == OBJ_ARMOUR)
-        s = item_slot_name(get_armour_slot(*item), true);
+        s = item_slot_name(get_armour_slot(*item));
     if (item->base_type == OBJ_BOOKS)
     {
         if (item->sub_type == BOOK_MANUAL)
@@ -301,12 +301,8 @@ static int l_item_do_subtype(lua_State *ls)
 #if TAG_MAJOR_VERSION == 34
             else if (item->sub_type == POT_BLOOD_COAGULATED)
                 s = "coagulated blood";
-#endif
             else if (item->sub_type == POT_PORRIDGE)
                 s = "porridge";
-            else if (item->sub_type == POT_BERSERK_RAGE)
-                s = "berserk";
-#if TAG_MAJOR_VERSION == 34
             else if (item->sub_type == POT_GAIN_STRENGTH
                         || item->sub_type == POT_GAIN_DEXTERITY
                         || item->sub_type == POT_GAIN_INTELLIGENCE)
@@ -314,6 +310,8 @@ static int l_item_do_subtype(lua_State *ls)
                 s = "gain ability";
             }
 #endif
+            else if (item->sub_type == POT_BERSERK_RAGE)
+                s = "berserk";
             else if (item->sub_type == POT_CURE_MUTATION)
                 s = "cure mutation";
         }
@@ -663,12 +661,8 @@ IDEF(spells)
     int index = 0;
     lua_newtable(ls);
 
-    for (size_t i = 0; i < SPELLBOOK_SIZE; ++i)
+    for (spell_type stype : spells_in_book(*item))
     {
-        const spell_type stype = which_spell_in_book(*item, i);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
         lua_pushstring(ls, spell_title(stype));
         lua_rawseti(ls, -2, ++index);
     }
@@ -903,7 +897,7 @@ IDEF(base_type)
 {
     ASSERT_DLUA;
 
-    lua_pushstring(ls, base_type_string(*item).c_str());
+    lua_pushstring(ls, base_type_string(*item));
     return 1;
 }
 
@@ -1156,10 +1150,9 @@ static int l_item_get_items_at(lua_State *ls)
 
     const vector<item_def> items = item_list_in_stash(p);
     int index = 0;
-    for (vector<item_def>::const_iterator i = items.begin();
-         i != items.end(); ++i)
+    for (const auto &item : items)
     {
-        _clua_push_item_temp(ls, *i);
+        _clua_push_item_temp(ls, item);
         lua_rawseti(ls, -2, ++index);
     }
 
@@ -1240,9 +1233,9 @@ static int item_get(lua_State *ls)
     if (!attr)
         return 0;
 
-    for (unsigned i = 0; i < ARRAYSZ(item_attrs); ++i)
-        if (!strcmp(attr, item_attrs[i].attribute))
-            return item_attrs[i].accessor(ls, iw, attr);
+    for (const ItemAccessor &ia : item_attrs)
+        if (!strcmp(attr, ia.attribute))
+            return ia.accessor(ls, iw, attr);
 
     return 0;
 }
@@ -1258,7 +1251,7 @@ static const struct luaL_reg item_lib[] =
     { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
     { "get_items_at",      l_item_get_items_at },
-    { NULL, NULL },
+    { nullptr, nullptr },
 };
 
 static int _delete_wrapped_item(lua_State *ls)

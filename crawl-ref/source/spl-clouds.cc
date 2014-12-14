@@ -75,7 +75,7 @@ spret_type conjure_flame(const actor *agent, int pow, const coord_def& where,
 
         // FIXME: maybe should do _paranoid_option_disable() here?
         if (agent->is_player())
-            mpr("You see a ghostly outline there, and the spell fizzles.");
+            canned_msg(MSG_GHOSTLY_OUTLINE);
         return SPRET_SUCCESS;      // Don't give free detection!
     }
 
@@ -127,7 +127,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
     beem.ench_power  = pow;
     beem.source_id   = MID_PLAYER;
     beem.thrower     = KILL_YOU;
-    beem.is_beam     = false;
+    beem.pierce      = false;
     beem.is_explosion = true;
     beem.origin_spell = SPELL_MEPHITIC_CLOUD;
     beem.aux_source.clear();
@@ -200,7 +200,6 @@ spret_type cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     beam.thrower           = KILL_YOU;
     beam.hit               = AUTOMATIC_HIT;
     beam.damage            = dice_def(42, 1); // just a convenient non-zero
-    beam.is_big_cloud      = true;
     beam.is_tracer         = true;
     beam.use_target_as_pos = true;
     beam.origin_spell      = spl;
@@ -404,7 +403,7 @@ void apply_control_winds(const monster* mon)
 
     bolt wind_beam;
     wind_beam.hit = AUTOMATIC_HIT;
-    wind_beam.is_beam = true;
+    wind_beam.pierce  = true;
     wind_beam.affects_nothing = true;
     wind_beam.source = mon->pos();
     wind_beam.range = LOS_RADIUS;
@@ -486,7 +485,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
 
     const int range = spell_range(SPELL_CLOUD_CONE, pow);
 
-    targetter_shotgun hitfunc(caster, range);
+    targetter_shotgun hitfunc(caster, CLOUD_CONE_BEAM_COUNT, range);
 
     hitfunc.set_aim(pos);
 
@@ -501,12 +500,11 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
     cloud_type cloud = cloud_picker.pick(cloud_cone_clouds, pow, CLOUD_NONE);
 
-    for (map<coord_def, int>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (const auto &entry : hitfunc.zapped)
     {
-        if (p->second <= 0)
+        if (entry.second <= 0)
             continue;
-        place_cloud(cloud, p->first,
+        place_cloud(cloud, entry.first,
                     5 + random2avg(12 + div_rand_round(pow * 3, 4), 3),
                     caster);
     }

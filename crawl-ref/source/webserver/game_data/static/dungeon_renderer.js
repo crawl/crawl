@@ -1,5 +1,5 @@
-define(["jquery", "./cell_renderer", "./map_knowledge", "./options", "./tileinfo-dngn"],
-function ($, cr, map_knowledge, options, dngn) {
+define(["jquery", "./cell_renderer", "./map_knowledge", "./options", "./tileinfo-dngn", "./util"],
+function ($, cr, map_knowledge, options, dngn, util) {
     "use strict";
 
     var global_anim_counter = 0;
@@ -80,14 +80,15 @@ function ($, cr, map_knowledge, options, dngn) {
             this.rows = r;
             this.view.x = this.view_center.x - Math.floor(c / 2);
             this.view.y = this.view_center.y - Math.floor(r / 2);
-            this.element.width = c * this.cell_width;
-            this.element.height = r * this.cell_height;
+            util.init_canvas(this.element,
+                             c * this.cell_width,
+                             r * this.cell_height);
             this.init(this.element);
             // The canvas is completely transparent after resizing;
             // make it opaque to prevent display errors when shifting
             // around parts of it later.
             this.ctx.fillStyle = "black";
-            this.ctx.fillRect(0, 0, this.element.width, this.element.height);
+            this.ctx.fillRect(0, 0, c * this.cell_width, r * this.cell_height);
         },
 
         set_view_center: function(x, y)
@@ -146,8 +147,12 @@ function ($, cr, map_knowledge, options, dngn) {
             {
                 var floor = Math.floor;
                 this.ctx.drawImage(this.element,
-                                   floor(sx * cw), floor(sy * ch), w, h,
-                                   floor(dx * cw), floor(dy * ch), w, h);
+                                   floor(sx * cw),
+                                   floor(sy * ch),
+                                   w, h,
+                                   floor(dx * cw),
+                                   floor(dy * ch),
+                                   w, h);
             }
 
             // Render cells that came into view
@@ -174,9 +179,10 @@ function ($, cr, map_knowledge, options, dngn) {
 
         fit_to: function(width, height, min_diameter)
         {
+            var ratio = window.devicePixelRatio;
             var cell_size = {
-                w: options.get("tile_cell_pixels"),
-                h: options.get("tile_cell_pixels")
+                w: Math.floor(options.get("tile_cell_pixels") * ratio),
+                h: Math.floor(options.get("tile_cell_pixels") * ratio)
             };
 
             if (options.get("tile_display_mode") == "glyphs")
@@ -185,19 +191,19 @@ function ($, cr, map_knowledge, options, dngn) {
                 var metrics = this.ctx.measureText("@");
                 this.set_cell_size(metrics.width + 2, this.glyph_mode_font_size + 2);
             }
-            else if ((min_diameter * cell_size.w > width)
-                || (min_diameter * cell_size.h > height))
+            else if ((min_diameter * cell_size.w / ratio > width)
+                || (min_diameter * cell_size.h / ratio > height))
             {
-                var scale = Math.min(width / (min_diameter * cell_size.w),
-                                     height / (min_diameter * cell_size.h));
+                var scale = Math.min(width * ratio / (min_diameter * cell_size.w),
+                                     height * ratio / (min_diameter * cell_size.h));
                 this.set_cell_size(Math.floor(cell_size.w * scale),
                                    Math.floor(cell_size.h * scale));
             }
             else
                 this.set_cell_size(cell_size.w, cell_size.h);
 
-            var view_width = Math.floor(width / this.cell_width);
-            var view_height = Math.floor(height / this.cell_height);
+            var view_width = Math.floor(width * ratio / this.cell_width);
+            var view_height = Math.floor(height * ratio / this.cell_height);
             this.set_size(view_width, view_height);
         },
 
@@ -281,8 +287,7 @@ function ($, cr, map_knowledge, options, dngn) {
             var canvas = $("<canvas>");
             renderer.set_cell_size(this.cell_width,
                                    this.cell_height);
-            canvas[0].width = renderer.cell_width;
-            canvas[0].height = renderer.cell_height;
+            util.init_canvas(canvas[0], this.cell_width, this.cell_height);
             renderer.init(canvas[0]);
             renderer.draw_tiles(tiles);
 

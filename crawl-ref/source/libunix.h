@@ -7,7 +7,7 @@
 
 #ifndef USE_TILE_LOCAL
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "libconsole.h"
 

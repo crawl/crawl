@@ -80,5 +80,5 @@ const struct luaL_reg feat_dlib[] =
 { "is_branch_entrance", _feat_is_branch_entrance },
 { "is_critical", _feat_is_critical },
 
-{ NULL, NULL }
+{ nullptr, nullptr }
 };

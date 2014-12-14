@@ -430,6 +430,7 @@ void wizard_set_piety_to(int newpiety, bool force)
     if (you_worship(GOD_XOM))
     {
         you.piety = newpiety;
+        you.redraw_title = true; // redraw piety display
 
         int newinterest;
         if (!force)
@@ -726,8 +727,8 @@ bool wizard_add_mutation()
         {
             vector<string> matches;
 
-            for (unsigned int i = 0; i < partial_matches.size(); ++i)
-                matches.push_back(mutation_name(partial_matches[i]));
+            for (mutation_type mut : partial_matches)
+                matches.emplace_back(mutation_name(mut));
 
             string prefix = "No exact match for mutation '" +
                             spec +  "', possible matches are: ";
@@ -882,10 +883,10 @@ void wizard_edit_durations()
                 choice = dur;
                 break;
             }
-            if (strstr(duration_name(dur), buf) != NULL)
+            if (strstr(duration_name(dur), buf) != nullptr)
             {
                 matches.push_back(dur);
-                match_names.push_back(duration_name(dur));
+                match_names.emplace_back(duration_name(dur));
             }
         }
         if (choice != NUM_DURATIONS)

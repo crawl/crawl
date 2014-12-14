@@ -8,9 +8,9 @@
 #include "melee_attack.h"
 
 #include <algorithm>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "areas.h"
 #include "art-enum.h"
@@ -35,6 +35,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-summoning.h"
@@ -83,9 +84,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
 
-    can_cleave = attacker != defender
-        && actor_can_cleave(*attacker, wpn_skill);
-
     attack_position = attacker->pos();
 }
 
@@ -133,7 +131,7 @@ bool melee_attack::handle_phase_attempted()
                 return false;
             }
         }
-        else if (can_cleave)
+        else if (!cleave_targets.empty())
         {
             targetter_cleave hitfunc(attacker, defender->pos());
             if (stop_attack_prompt(hitfunc, "attack"))
@@ -772,8 +770,22 @@ bool melee_attack::attack()
     if (attacker != defender && attacker->self_destructs())
         return did_hit = perceived_attack = true;
 
-    if (can_cleave && !cleaving)
+    if (!cleaving)
         cleave_setup();
+
+    string dummy;
+    const bool gyre = weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE);
+    if (gyre && !weapon->props.exists(ARTEFACT_NAME_KEY))
+       set_artefact_name(*weapon, get_artefact_name(*weapon));
+    unwind_var<string> gyre_name(gyre ? weapon->props[ARTEFACT_NAME_KEY].get_string()
+                                      : dummy);
+    if (gyre)
+    {
+        if (!cleaving)
+            set_artefact_name(*weapon, "quick blade \"Gyre\"");
+        else
+            set_artefact_name(*weapon, "quick blade \"Gimble\"");
+    }
 
     // Attacker might have died from effects of cleaving handled prior to this
     if (!attacker->alive())
@@ -874,7 +886,6 @@ bool melee_attack::attack()
     if (attacker->is_player())
         do_miscast();
 
-    adjust_noise();
     // don't crash on banishment
     if (!defender->pos().origin())
         handle_noise(defender->pos());
@@ -900,99 +911,6 @@ bool melee_attack::attack()
     enable_attack_conducts(conducts);
 
     return attack_occurred;
-}
-
-/* Initialises the noise_factor
- *
- * For both players and monsters, separately sets the noise_factor for weapon
- * attacks based on damage type or attack_type/attack_flavour respectively.
- * Sets an average noise value for unarmed combat regardless of atype().
- */
-// TODO: Unify attack_type and unarmed_attack_type, the former includes the latter
-// however formerly, attack_type was mons_attack_type and used exclusively for monster use.
-void melee_attack::adjust_noise()
-{
-    if (attacker->is_player() && weapon != NULL)
-    {
-        switch (single_damage_type(*weapon))
-        {
-        case DAM_BLUDGEON:
-        case DAM_WHIP:
-            noise_factor = 125;
-            break;
-        case DAM_SLICE:
-            noise_factor = 100;
-            break;
-        case DAM_PIERCE:
-            noise_factor = 75;
-            break;
-        }
-    }
-    else if (attacker->is_monster() && weapon == NULL)
-    {
-        switch (attk_type)
-        {
-        case AT_HEADBUTT:
-        case AT_TENTACLE_SLAP:
-        case AT_TAIL_SLAP:
-        case AT_TRAMPLE:
-        case AT_TRUNK_SLAP:
-            noise_factor = 150;
-            break;
-
-        case AT_HIT:
-        case AT_PUNCH:
-        case AT_KICK:
-        case AT_CLAW:
-        case AT_GORE:
-#if TAG_MAJOR_VERSION == 34
-        case AT_SNAP:
-        case AT_SPLASH:
-#endif
-        case AT_CHERUB:
-            noise_factor = 125;
-            break;
-
-        case AT_BITE:
-        case AT_PECK:
-        case AT_CONSTRICT:
-        case AT_POUNCE:
-            noise_factor = 100;
-            break;
-
-        case AT_STING:
-        case AT_SPORE:
-        case AT_ENGULF:
-        case AT_REACH_STING:
-            noise_factor = 75;
-            break;
-
-        case AT_TOUCH:
-            noise_factor = 0;
-            break;
-
-        case AT_WEAP_ONLY:
-            break;
-
-        // To prevent compiler warnings.
-        case AT_NONE:
-        case AT_RANDOM:
-#if TAG_MAJOR_VERSION == 34
-        case AT_SHOOT:
-#endif
-            die("Invalid attack type for noise_factor");
-            break;
-
-        default:
-            die("%d Unhandled attack type for noise_factor", attk_type);
-            break;
-        }
-
-        if (attk_flavour == AF_ELEC)
-            noise_factor += 100;
-    }
-    else if (weapon == NULL)
-        noise_factor = 150;
 }
 
 void melee_attack::check_autoberserk()
@@ -1049,20 +967,18 @@ bool melee_attack::check_unrand_effects()
     return false;
 }
 
-
-
 class AuxConstrict: public AuxAttackType
 {
 public:
     AuxConstrict()
-    : AuxAttackType(0, 10, "grab") { };
+    : AuxAttackType(0, "grab") { };
 };
 
 class AuxKick: public AuxAttackType
 {
 public:
     AuxKick()
-    : AuxAttackType(-1, 100, "kick") { };
+    : AuxAttackType(-1, "kick") { };
 
     int get_damage() const
     {
@@ -1104,7 +1020,7 @@ class AuxHeadbutt: public AuxAttackType
 {
 public:
     AuxHeadbutt()
-    : AuxAttackType(5, 100, "headbutt") { };
+    : AuxAttackType(5, "headbutt") { };
 
     int get_damage() const
     {
@@ -1116,14 +1032,14 @@ class AuxPeck: public AuxAttackType
 {
 public:
     AuxPeck()
-    : AuxAttackType(6, 75, "peck") { };
+    : AuxAttackType(6, "peck") { };
 };
 
 class AuxTailslap: public AuxAttackType
 {
 public:
     AuxTailslap()
-    : AuxAttackType(6, 125, "tail-slap") { };
+    : AuxAttackType(6, "tail-slap") { };
 
     int get_damage() const
     {
@@ -1140,7 +1056,7 @@ class AuxPunch: public AuxAttackType
 {
 public:
     AuxPunch()
-    : AuxAttackType(5, 100, "punch") { };
+    : AuxAttackType(5, "punch") { };
 
     int get_damage() const
     {
@@ -1169,23 +1085,13 @@ public:
         return name;
     }
 
-    int get_noise_factor() const
-    {
-        if (you.form == TRAN_BLADE_HANDS)
-            return 75;
-
-        if (you.has_usable_tentacles())
-            return 125;
-
-        return noise_factor;
-    }
 };
 
 class AuxBite: public AuxAttackType
 {
 public:
     AuxBite()
-    : AuxAttackType(0, 75, "bite") { };
+    : AuxAttackType(0, "bite") { };
 
     int get_damage() const
     {
@@ -1217,7 +1123,7 @@ class AuxPseudopods: public AuxAttackType
 {
 public:
     AuxPseudopods()
-    : AuxAttackType(4, 125, "bludgeon") { };
+    : AuxAttackType(4, "bludgeon") { };
 
     int get_damage() const { return damage * you.has_usable_pseudopods(); }
 };
@@ -1226,7 +1132,7 @@ class AuxTentacles: public AuxAttackType
 {
 public:
     AuxTentacles()
-    : AuxAttackType(12, 100, "squeeze") { };
+    : AuxAttackType(12, "squeeze") { };
 };
 
 
@@ -1271,7 +1177,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     aux_damage = aux->get_damage();
     damage_brand = (brand_type)aux->get_brand();
-    noise_factor = aux->get_noise_factor();
     aux_attack = aux->get_name();
     aux_verb = aux->get_verb();
 
@@ -1779,6 +1684,11 @@ void melee_attack::set_attack_verb()
             attack_verb = "shatter";
             verb_degree = "into splinters";
         }
+        else if (defender->type == MONS_GREAT_ORB_OF_EYES)
+        {
+            attack_verb = "splatter";
+            verb_degree = "into a gooey mess";
+        }
         else
         {
             const char* pierce_desc[][2] = {{"crush",   "like a grape"},
@@ -1816,7 +1726,7 @@ void melee_attack::set_attack_verb()
     case -1: // unarmed
     {
         const FormAttackVerbs verbs = get_form(you.form)->uc_attack_verbs;
-        if (verbs.weak != NULL)
+        if (verbs.weak != nullptr)
         {
             if (damage_to_display < HIT_WEAK)
                 attack_verb = verbs.weak;
@@ -2000,21 +1910,6 @@ bool melee_attack::player_monattk_hit_effects()
             defender->expose_to_element(special_damage_flavour, 2);
     }
 
-    if (stab_attempt && stab_bonus > 0 && weapon
-        && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
-        && damage_done + special_damage > random2(defender->get_hit_dice())
-        && defender->alive()
-        && !defender->as_monster()->has_ench(ENCH_CONFUSION)
-        && mons_class_is_confusable(defender->type))
-    {
-        if (!defender->as_monster()->check_clarity(false) &&
-            defender->as_monster()->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-            &you, 20+random2(30)))) // 1-3 turns
-        {
-            mprf("%s is stunned!", defender->name(DESC_THE).c_str());
-        }
-    }
-
     return true;
 }
 
@@ -2040,48 +1935,21 @@ void melee_attack::rot_defender(int amount, int immediate)
     }
 }
 
-// XXX:
-//  * Noise should probably scale non-linearly with damage_done, and
-//    maybe even non-linearly with noise_factor.
-//
-//  * Damage reduction via armour of the defender reduces noise,
-//    but shouldn't.
-//
-//  * Damage reduction because of negative damage modifiers on the
-//    weapon reduce noise, but probably shouldn't.
-//
-//  * Might want a different formula for noise generated by the
-//    player.
-//
-//  Ideas:
-//  * Each weapon type has a noise rating, like it does an accuracy
-//    rating and base delay.
-//
-//  * For player, stealth skill and/or weapon skill reducing noise.
-//
-//  * Randart property to make randart weapons louder or softer when
-//    they hit.
 void melee_attack::handle_noise(const coord_def & pos)
 {
     // Successful stabs make no noise.
     if (stab_attempt)
-    {
-        noise_factor = 0;
         return;
-    }
 
-    int level = noise_factor * damage_done / 100 / 4;
+    int loudness = damage_done / 4;
 
-    if (noise_factor > 0)
-        level = max(1, level);
+    // All non-stab melee attacks make some noise.
+    loudness = max(1, loudness);
 
     // Cap melee noise at shouting volume.
-    level = min(12, level);
+    loudness = min(12, loudness);
 
-    if (level > 0)
-        noisy(level, pos, attacker->mid);
-
-    noise_factor = 0;
+    noisy(loudness, pos, attacker->mid);
 }
 
 /**
@@ -2226,7 +2094,7 @@ bool melee_attack::attack_chops_heads(int dam, int dam_type, int wpn_brand)
  */
 void melee_attack::decapitate(int dam_type)
 {
-    const char *verb = NULL;
+    const char *verb = nullptr;
 
     if (dam_type == DVORP_CLAWING)
     {
@@ -2314,16 +2182,17 @@ void melee_attack::attacker_sustain_passive_damage()
         if (x_chance_in_y(acid_strength + 1, 30))
             corrode_actor(attacker);
     }
-    else if (attacker->is_player())
-    {
-        mprf("Your %s burn!", you.hand_name(true).c_str());
-        ouch(roll_dice(1, acid_strength), KILLED_BY_ACID, defender->mid);
-    }
     else
     {
-        simple_monster_message(attacker->as_monster(), " is burned by acid!");
+        if (attacker->is_player())
+            mprf("Your %s burn!", you.hand_name(true).c_str());
+        else
+        {
+            simple_monster_message(attacker->as_monster(),
+                                   " is burned by acid!");
+        }
         attacker->hurt(defender, roll_dice(1, acid_strength), BEAM_ACID,
-                       false);
+                       KILLED_BY_ACID, "", "", false);
     }
 }
 
@@ -2345,20 +2214,6 @@ void melee_attack::apply_staff_damage()
 
     if (player_mutation_level(MUT_NO_ARTIFICE))
         return;
-
-    if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_STRIKING)
-    {
-        if (weapon->plus < ROD_CHARGE_MULT)
-            return;
-
-        weapon->plus -= ROD_CHARGE_MULT;
-        if (attacker->is_player())
-            you.wield_change = true;
-
-        special_damage = 1 + random2(attacker->skill(SK_EVOCATIONS, 150)) / 100;
-        special_damage = apply_defender_ac(special_damage);
-        return;
-    }
 
     if (weapon->base_type != OBJ_STAVES)
         return;
@@ -2524,28 +2379,14 @@ void melee_attack::player_stab_check()
 }
 
 /**
- * How good of a stab can we get with this weapon?
+ * Can we get a good stab with this weapon?
  */
-int melee_attack::player_stab_tier()
+bool melee_attack::player_good_stab()
 {
-    if (wpn_skill == SK_SHORT_BLADES
-        || player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
-           && (!weapon || is_melee_weapon(*weapon)))
-    {
-        return 2;
-    }
-    if (wpn_skill == SK_LONG_BLADES
-        || weapon && weapon->base_type == OBJ_WEAPONS
-             && (weapon->sub_type == WPN_CLUB
-                 || weapon->sub_type == WPN_SPEAR
-                 || weapon->sub_type == WPN_TRIDENT
-                 || weapon->sub_type == WPN_DEMON_TRIDENT
-                 || weapon->sub_type == WPN_TRISHULA)
-        || !weapon && you.species == SP_FELID)
-    {
-        return 1;
-    }
-    return 0;
+    return wpn_skill == SK_SHORT_BLADES
+           || you.species == SP_FELID
+           || player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
+              && (!weapon || is_melee_weapon(*weapon));
 }
 
 bool melee_attack::attack_warded_off()
@@ -2621,13 +2462,9 @@ string melee_attack::mons_attack_verb()
     if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
         return RANDOM_ELEMENT(klown_attack);
 
-    if (attk_type == AT_TENTACLE_SLAP
-        && (attacker->type == MONS_KRAKEN_TENTACLE
-            || attacker->type == MONS_ELDRITCH_TENTACLE
-            || attacker->type == MONS_MNOLEG_TENTACLE))
-    {
+    //XXX: then why give them it in the first place?
+    if (attk_type == AT_TENTACLE_SLAP && mons_is_tentacle(attacker->type))
         return "slap";
-    }
 
     static const char *attack_types[] =
     {
@@ -2657,6 +2494,8 @@ string melee_attack::mons_attack_verb()
 #endif
         "pounce on",
         "sting",
+        "kite",  // should never display
+        "swoop", // ditto
     };
     COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
 
@@ -2836,7 +2675,7 @@ bool melee_attack::mons_attack_effects()
         mons_apply_attack_flavour();
 
         if (needs_message && !special_damage_message.empty())
-            mprf("%s", special_damage_message.c_str());
+            mpr(special_damage_message);
 
         if (special_damage > 0)
         {
@@ -2849,7 +2688,7 @@ bool melee_attack::mons_attack_effects()
         apply_staff_damage();
 
         if (needs_message && !special_damage_message.empty())
-            mprf("%s", special_damage_message.c_str());
+            mpr(special_damage_message);
 
         if (special_damage > 0
             && inflict_damage(special_damage, special_damage_flavour))
@@ -3631,10 +3470,7 @@ void melee_attack::do_spines()
                      defender->type == MONS_BRIAR_PATCH ? "thorns"
                                                         : "spines");
             }
-            if (attacker->is_player())
-                ouch(hurt, KILLED_BY_SPINES, defender->mid);
-            else
-                attacker->hurt(defender, hurt);
+            attacker->hurt(defender, hurt, BEAM_MISSILE, KILLED_BY_SPINES);
         }
     }
 }
@@ -3696,10 +3532,8 @@ void melee_attack::do_minotaur_retaliation()
             }
             if (hurt > 0)
             {
-                if (attacker->is_player())
-                    ouch(hurt, KILLED_BY_HEADBUTT, defender->mid);
-                else
-                    attacker->hurt(defender, hurt);
+                attacker->hurt(defender, hurt, BEAM_MISSILE,
+                               KILLED_BY_HEADBUTT);
             }
         }
         return;
@@ -3800,20 +3634,19 @@ bool melee_attack::do_knockback(bool trample)
 }
 
 /**
- * Find the list of targets to cleave (after hitting the main target).
+ * Find the list of targets to cleave after hitting the main target.
  */
 void melee_attack::cleave_setup()
 {
-    if (cell_is_solid(defender->pos()))
-        return;
-
     // Don't cleave on a self-attack.
     if (attacker->pos() == defender->pos())
         return;
 
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
-    get_cleave_targets(attacker, defender->pos(), cleave_targets);
+    get_cleave_targets(attacker, defender->pos(), cleave_targets, attack_number);
+    // We're already attacking this guy.
+    cleave_targets.pop_front();
 }
 
 // cleave damage modifier for additional attacks: 75% of base damage
@@ -3825,14 +3658,14 @@ int melee_attack::cleave_damage_mod(int dam)
 void melee_attack::chaos_affect_actor(actor *victim)
 {
     melee_attack attk(victim, victim);
-    attk.weapon = NULL;
+    attk.weapon = nullptr;
     attk.fake_chaos_attack = true;
     attk.chaos_affects_defender();
     attk.do_miscast();
     if (!attk.special_damage_message.empty()
         && you.can_see(victim))
     {
-        mprf("%s", attk.special_damage_message.c_str());
+        mpr(attk.special_damage_message);
     }
 }
 

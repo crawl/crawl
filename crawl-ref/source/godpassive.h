@@ -19,7 +19,8 @@ enum jiyva_slurp_results
     JS_MP   = 4,
 };
 
-enum ru_interference {
+enum ru_interference
+{
     DO_NOTHING,
     DO_BLOCK_ATTACK,
     DO_REDIRECT_ATTACK

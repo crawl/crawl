@@ -45,8 +45,6 @@ public:
 
     bool    apply_bleeding;
 
-    int     noise_factor;
-
     // Fetched/Calculated from the attacker, stored to save execution time
     int             ev_margin;
 
@@ -143,11 +141,11 @@ protected:
     // Determine if we're blocking (partially or entirely)
     virtual bool attack_shield_blocked(bool verbose);
     virtual bool attack_ignores_shield(bool verbose) = 0;
-    virtual bool apply_damage_brand(const char *what = NULL);
+    virtual bool apply_damage_brand(const char *what = nullptr);
     void calc_elemental_brand_damage(beam_type flavour,
                                      int res,
                                      const char *verb,
-                                     const char *what = NULL);
+                                     const char *what = nullptr);
 
     /* Weapon Effects */
     virtual bool check_unrand_effects() = 0;
@@ -172,7 +170,6 @@ protected:
     string attack_strength_punctuation(int dmg);
     string evasion_margin_adverb();
 
-    virtual void adjust_noise() = 0;
     virtual void set_attack_verb() = 0;
     virtual void announce_hit() = 0;
 
@@ -200,7 +197,7 @@ protected:
 
     virtual void player_exercise_combat_skills();
 
-    virtual int  player_stab_tier() = 0;
+    virtual bool player_good_stab() = 0;
     virtual int  player_stab_weapon_bonus(int damage);
     virtual int  player_stab(int damage);
     virtual void player_stab_check();

@@ -184,7 +184,7 @@ Vergiss nicht das du die Leichen, um Nahrung zu bekommen, (mit
 tutorial2 wait
 
 Besser als einen Raum zu stürmen und von Monstern überrannt zu werden kannst du
-auch zurückweichen und (mit <input>$cmd[CMD_MOVE_NOWHERE]</input>) warten, bis
+auch zurückweichen und (mit <input>$cmd[CMD_WAIT]</input>) warten, bis
 sie zu dir vordringen.
 %%%%
 tutorial2 resting_reminder
@@ -276,7 +276,7 @@ tutorial2 exit
   Du kannst einen Gegenstand auch mit einem <input>klick</input> darauf abfeuern und das Ziel mit <input>Eingabe</input> bestätigen.</localtiles>
 
 <yellow>Rasten</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  warte und raste eine einzige Runde
+  <input>$cmd[CMD_WAIT]</input>  warte und raste eine einzige Runde
   <input>$cmd[CMD_REST]</input>  warte und raste bis zu 100 Runden
 
 <yellow>Leichen<console> <brown>%</brown></console></yellow>
@@ -551,7 +551,7 @@ tutorial4 order_allies
 
 Versuche das Töten deinen Verbündeten zu überlassen! Wenn notwendig kannst du
 sie mit <input>$cmd[CMD_SHOUT]</input> rufen. Bevor du diese Pforte öffnest
-kannst du mit <input>$cmd[CMD_MOVE_NOWHERE]</input> so lange warten bis sie zu
+kannst du mit <input>$cmd[CMD_WAIT]</input> so lange warten bis sie zu
 dir aufgeschlossen haben.
 %%%%
 tutorial4 heavy_armour
@@ -646,7 +646,7 @@ tutorial5 burn_book
 Trog wird es mögen wenn du dieses Buch verbrennst (mit
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> oder über das
 <w>Befehls-Feld</w></localtiles>). Manchmal möchtest du vielleicht warten (mit
-<input>$cmd[CMD_MOVE_NOWHERE]</input>) bis ein Monster drauf tritt, bevor du
+<input>$cmd[CMD_WAIT]</input>) bis ein Monster drauf tritt, bevor du
 das tust.
 %%%%
 tutorial5 berserk
@@ -692,7 +692,7 @@ tutorial5 exit
   Ein <input>Rechts-Klick</input> auf deine Spielfigur zeigt öffnet ebenfall den Religions-Bildschirm.</localtiles>
 
 <yellow>Rasten</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  warte und raste eine einzige Runde
+  <input>$cmd[CMD_WAIT]</input>  warte und raste eine einzige Runde
   <input>$cmd[CMD_REST]</input>  warte und raste bis zu 100 Runden
 
 <yellow>Andere Befehle</yellow>

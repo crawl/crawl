@@ -24,7 +24,7 @@ virsū.
 tutorial2 wait
 
 Tā vietā, lai gāztos iekšā telpā un tikt briesmoņu aplenktam, Jūs varat arī
-pakāpties atpakaļ un nogaidīt (ar <input>$cmd[CMD_MOVE_NOWHERE]</input>) līdz
+pakāpties atpakaļ un nogaidīt (ar <input>$cmd[CMD_WAIT]</input>) līdz
 tie nāk pēc Jums.
 %%%%
 tutorial2 tutorial_end

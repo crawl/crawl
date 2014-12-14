@@ -9,11 +9,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <queue>
 #include <set>
-#include <stdio.h>
-#include <string.h>
 
 #include "artefact.h"
 #include "art-enum.h"
@@ -41,7 +41,7 @@
 static armour_type _random_nonbody_armour_type()
 {
     return random_choose(ARM_SHIELD, ARM_CLOAK, ARM_HELMET, ARM_GLOVES,
-                         ARM_BOOTS, -1);
+                         ARM_BOOTS);
 }
 
 static armour_type _pick_wearable_armour(const armour_type arm)
@@ -88,7 +88,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
             || arm == ARM_CENTAUR_BARDING
             || arm == ARM_NAGA_BARDING)
         {
-            result = random_choose(ARM_HELMET, ARM_GLOVES, ARM_BOOTS, -1);
+            result = random_choose(ARM_HELMET, ARM_GLOVES, ARM_BOOTS);
         }
         else if (arm == ARM_SHIELD)
         {
@@ -256,8 +256,7 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
                         ARM_GOLD_DRAGON_ARMOUR,
                         ARM_SWAMP_DRAGON_ARMOUR,
                         ARM_PEARL_DRAGON_ARMOUR,
-                        ARM_QUICKSILVER_DRAGON_ARMOUR,
-                        -1);
+                        ARM_QUICKSILVER_DRAGON_ARMOUR);
             }
         }
         else
@@ -549,17 +548,17 @@ static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
             // Only give needles if they have a blowgun in inventory.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.push_back(make_pair(MI_TOMAHAWK, 75));
+            missile_weights.emplace_back(MI_TOMAHAWK, 75);
 
             // Include the possibility of needles if they have some stealth skill.
             if (x_chance_in_y(you.skills[SK_STEALTH], 15))
-                missile_weights.push_back(make_pair(MI_NEEDLE, 100));
+                missile_weights.emplace_back(MI_NEEDLE, 100);
 
             if (you.body_size() >= SIZE_MEDIUM)
-                missile_weights.push_back(make_pair(MI_JAVELIN, 100));
+                missile_weights.emplace_back(MI_JAVELIN, 100);
 
             if (you.can_throw_large_rocks())
-                missile_weights.push_back(make_pair(MI_LARGE_ROCK, 100));
+                missile_weights.emplace_back(MI_LARGE_ROCK, 100);
 
             result = *random_choose_weighted(missile_weights);
         }
@@ -613,7 +612,9 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
     int result = 0;
 #if TAG_MAJOR_VERSION == 34
     do
+    {
         result = random2(NUM_STAVES);
+    }
     while (result == STAFF_ENCHANTMENT || result == STAFF_CHANNELING);
 #else
     result = random2(NUM_STAVES);
@@ -657,7 +658,9 @@ static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int result;
     do
+    {
         result = random2(NUM_RODS);
+    }
     while (player_mutation_level(MUT_NO_LOVE)
               && (result == ROD_SWARM || result == ROD_SHADOWS)
 #if TAG_MAJOR_VERSION == 34
@@ -872,12 +875,8 @@ static int _book_weight(book_type book)
     ASSERT_RANGE(book, 0, MAX_FIXED_BOOK + 1);
 
     int total_weight = 0;
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    for (spell_type stype : spellbook_template(book))
     {
-        spell_type stype = which_spell_in_book(book, i);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
         // Skip over spells already seen.
         if (you.seen_spell[stype])
             continue;
@@ -988,19 +987,21 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int weights[MAX_FIXED_BOOK+1];
         for (int bk = 0; bk <= MAX_FIXED_BOOK; bk++)
         {
-            if (bk > MAX_NORMAL_BOOK && agent == GOD_SIF_MUNA)
+            if (is_rare_book(static_cast<book_type>(bk))
+                && agent == GOD_SIF_MUNA)
             {
                 weights[bk] = 0;
                 continue;
             }
 
 #if TAG_MAJOR_VERSION == 34
-            if (bk == BOOK_STALKING)
+            if (bk == BOOK_WIZARDRY)
             {
                 weights[bk] = 0;
                 continue;
             }
 #endif
+
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
         }
@@ -1015,8 +1016,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
     }
     case BOOK_RANDART_THEME:
         book.sub_type = BOOK_RANDART_THEME;
-        if (!make_book_theme_randart(book, 0, 0, 5 + coinflip(), 20,
-                                     SPELL_NO_SPELL, owner))
+        if (!make_book_theme_randart(book, SPTYP_NONE, SPTYP_NONE,
+                                     5 + coinflip(), 20, SPELL_NO_SPELL, owner))
         {
             return false;
         }
@@ -1331,8 +1332,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // Sif Muna shouldn't gift special books.
         // (The spells therein are still fair game for randart books.)
         if (agent == GOD_SIF_MUNA
-            && acq_item.sub_type >= MIN_RARE_BOOK
-            && acq_item.sub_type <= MAX_RARE_BOOK)
+            && is_rare_book(static_cast<book_type>(acq_item.sub_type)))
         {
             ASSERT(acq_item.base_type == OBJ_BOOKS);
 
@@ -1411,12 +1411,14 @@ int acquirement_create_item(object_class_type class_wanted,
                  && !is_unrandom_artefact(acq_item)
                  && acq_item.sub_type != WPN_BLOWGUN)
         {
-            // These can never get egos, and mundane versions are quite common, so
-            // guarantee artefact status.  Rarity is a bit low to compensate.
-            if (is_giant_club_type(acq_item.sub_type))
+            // These can never get egos, and mundane versions are quite common,
+            // so guarantee artefact status.  Rarity is a bit low to compensate.
+            // ...except actually, trog can give them antimagic brand, so...
+            if (is_giant_club_type(acq_item.sub_type)
+                && get_weapon_brand(acq_item) == SPWPN_NORMAL
+                && !one_chance_in(25))
             {
-                if (!one_chance_in(25))
-                    make_item_randart(acq_item, true);
+                make_item_randart(acq_item, true);
             }
 
             if (agent == GOD_TROG || agent == GOD_OKAWARU)
@@ -1526,7 +1528,7 @@ bool acquirement(object_class_type class_wanted, int agent,
 
     int thing_created = NON_ITEM;
 
-    if (item_index == NULL)
+    if (item_index == nullptr)
         item_index = &thing_created;
 
     *item_index = NON_ITEM;
@@ -1550,7 +1552,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (i == ARRAYSZ(acq_classes) / 2 - 1 || i == ARRAYSZ(acq_classes) - 1)
             {
                 line.erase(0, 1);
-                mpr(line.c_str());
+                mpr(line);
                 line.clear();
             }
         }

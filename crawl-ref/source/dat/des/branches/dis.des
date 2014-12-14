@@ -968,6 +968,7 @@ NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
 NSUBST:  _ = 4:4 / *:.
 COLOUR:  G = cyan
 TILE:    G = dngn_statue_iron
+KMASK:   W = no_monster_gen
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
 : dis_rune(_G)
@@ -1063,7 +1064,7 @@ NSUBST:  - = 1:+ / 1 : v:14 +:1 / *:v, = = 1:+ / 1 : v:14 +:1 / *:v
 NSUBST:  0 = 2:8 / 5 = 0:29 8:1 / 2:. / * = 0:49 .:1
 NSUBST:  9 = 3:8 / 3 = 9:4 8:1 / *:9
 SHUFFLE: {([, 34, %$, ab, cd, ef / ef / fe, gh / gh / hg, ij / ij / ji
-SUBST:   acegi = v, bdfhj = ., k : vvv., l : vvv., m : vvv.
+SUBST:   acegi = v, bdfhj = ., k : vvv., l : vvv., m : vvv., ` : 12
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
 : dis_rune(_G)
@@ -1106,7 +1107,7 @@ vvv0....v..........0vvvvv0............v..........................vv
 vvvvvvvvv..........vvvvvvv............vv.v.v.v...................vv
 vv..................vvvvv............vvv...v...v.vv.v.vv.........vv
 vv...................v0v............D.vv...v...v....v....v.vvv.vvvv
-vvv.........................vv.....v.5vv.91v.91v.92.v.92.v..92.vvvv
+vvv.........................vv.....v.5vv.91v.91v.9`.v.92.v..92.vvvv
 vvv.........................vv..vvvvvvvvv=vvv=vvvv=vvv=vvvvv=vvvvvv
 vv................................vvvvv....5...................Gvvv
 vv....................................v.............888........Gvvv
@@ -1119,7 +1120,7 @@ vvv......vvmvv.....cv+vvvv...........1v..v...vvvvvvvvvvvvvvvvv..vvv
 vv..................c.d.v..........vvvv..v...vvO.v|v...v$v.$vv.Gvvv
 vv...v.v..............................v..v...vv.v....v......vv..vvv
 vvvvvvvvvvv..jj.ii.................v.9v..v.v.vvv.|v.|v$.$v.vvv..vvv
-vvv$......v..jj.ii.................v.2=..v...vv|.v7.vvv.4$.$vv..vvv
+vvv$......v..jj.ii.................v.`=..v...vv|.v7.vvv.4$.$vv..vvv
 vvv$......v...........................v..v.v.vvv.....v.....vvv..vvv
 vvv$..v...v..ii.jj...v0v...........vvvv.8v.6.vv..|v.....v$..vv..vvv
 vvv$..v...v..ii.jj..vvvvv.............v.8v8.8vv.vvvv...vvvv.vv.Gvvv

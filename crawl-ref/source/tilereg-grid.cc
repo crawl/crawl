@@ -26,7 +26,7 @@ bool InventoryTile::empty() const
 
 GridRegion::GridRegion(const TileRegionInit &init) :
     TileRegion(init),
-    m_flavour(NULL),
+    m_flavour(nullptr),
     m_cursor(NO_CURSOR),
     m_last_clicked_item(-1),
     m_grid_page(0),
@@ -37,7 +37,7 @@ GridRegion::GridRegion(const TileRegionInit &init) :
 GridRegion::~GridRegion()
 {
     delete[] m_flavour;
-    m_flavour = NULL;
+    m_flavour = nullptr;
 }
 
 void GridRegion::clear()
@@ -51,7 +51,7 @@ void GridRegion::on_resize()
     if (m_flavour)
     {
         delete[] m_flavour;
-        m_flavour = NULL;
+        m_flavour = nullptr;
     }
 
     if (mx * my <= 0)

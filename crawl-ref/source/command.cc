@@ -7,10 +7,10 @@
 
 #include "command.h"
 
+#include <cctype>
+#include <cstdio>
+#include <cstring>
 #include <sstream>
-#include <ctype.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "ability.h"
 #include "branch.h"
@@ -19,6 +19,8 @@
 #include "database.h"
 #include "decks.h"
 #include "describe.h"
+#include "describe-god.h"
+#include "describe-spells.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -100,13 +102,13 @@ static string _get_version_information()
 
 static string _get_version_features()
 {
-    string result  = "<w>Features</w>\n";
-           result += "--------\n";
+    string result = "<w>Features</w>\n"
+                    "--------\n";
 
-    for (unsigned int i = 0; i < ARRAYSZ(features); i++)
+    for (const char *feature : features)
     {
         result += " * ";
-        result += features[i];
+        result += feature;
         result += "\n";
     }
 
@@ -154,11 +156,7 @@ static string _get_version_changes()
         {
         highlight:
             // Highlight the Highlights, so to speak.
-            string text  = "<w>";
-                   text += help;
-                   text += "</w>";
-                   text += "\n";
-            result += text;
+            result += "<w>" + help + "</w>\n";
             // And start printing from now on.
             start = true;
         }
@@ -702,7 +700,7 @@ static help_file help_files[] =
 #ifdef USE_TILE_LOCAL
     { "tiles_help.txt",    'T', false },
 #endif
-    { NULL, 0, false }
+    { nullptr, 0, false }
 };
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
@@ -747,7 +745,7 @@ public:
         : Menu(_flags, "", _text_only), sort_alpha(true),
           showing_monsters(_show_mon)
         {
-            set_highlighter(NULL);
+            set_highlighter(nullptr);
 
             if (_show_mon)
                 toggle_sorting();
@@ -842,7 +840,7 @@ static vector<string> _get_monster_keys(ucs_t showchar)
 
         const monsterentry *me = get_monster_data(i);
 
-        if (me == NULL || me->name == NULL || me->name[0] == '\0')
+        if (me == nullptr || me->name == nullptr || me->name[0] == '\0')
             continue;
 
         if (me->mc != i)
@@ -921,7 +919,7 @@ static bool _skill_filter(string key, string body)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
-        // There are a couple of NULL entries in the skill set.
+        // There are a couple of nullptr entries in the skill set.
         if (!skill_name(sk))
             continue;
 
@@ -1018,7 +1016,7 @@ static bool _is_rod_spell(spell_type spell)
         return false;
 
     for (int i = 0; i < NUM_RODS; i++)
-        if (spell_in_rod(i) == spell)
+        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
             return true;
 
     return false;
@@ -1064,8 +1062,8 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
-        for (int j = 0; j < 8; j++)
-            if (which_spell_in_book(i, j) == type)
+        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+            if (sp == type)
             {
                 item.sub_type = i;
                 books.push_back(item.name(DESC_PLAIN));
@@ -1075,7 +1073,7 @@ static bool _append_books(string &desc, item_def &item, string key)
     for (int i = 0; i < NUM_RODS; i++)
     {
         item.sub_type = i;
-        if (spell_in_rod(i) == type)
+        if (spell_in_rod(static_cast<rod_type>(i)) == type)
             rods.push_back(item.name(DESC_BASENAME));
     }
 
@@ -1108,105 +1106,86 @@ static bool _append_books(string &desc, item_def &item, string key)
 static int _do_description(string key, string type, const string &suffix,
                            string footer = "")
 {
+    god_type which_god = str_to_god(key);
+    if (which_god != GOD_NO_GOD)
+    {
+#ifdef USE_TILE_WEB
+        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
+#endif
+        describe_god(which_god, true);
+        return true;
+    }
+
     describe_info inf;
     inf.quote = getQuoteString(key);
 
     string desc = getLongDescription(key);
     int width = min(80, get_number_of_cols());
 
-    god_type which_god = str_to_god(key);
-    if (which_god != GOD_NO_GOD)
+    monster_type mon_num = get_monster_by_name(key);
+    // Don't attempt to get more information on ghost demon
+    // monsters, as the ghost struct has not been initialised, which
+    // will cause a crash.  Similarly for zombified monsters, since
+    // they require a base monster.
+    if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
+        && !mons_class_is_zombified(mon_num))
     {
-        if (is_good_god(which_god))
+        monster_info mi(mon_num);
+        // Avoid slime creature being described as "buggy"
+        if (mi.type == MONS_SLIME_CREATURE)
+            mi.slime_size = 1;
+        return describe_monsters(mi, true, footer);
+    }
+
+    int thing_created = get_mitm_slot();
+    if (thing_created != NON_ITEM
+        && (type == "item" || type == "spell"))
+    {
+        char name[80];
+        strncpy(name, key.c_str(), sizeof(name));
+        if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
         {
-            inf.suffix = "\n\n" + god_name(which_god) +
-                         " won't accept worship from undead or evil beings.";
-        }
-        string help = get_god_powers(which_god);
-        if (!help.empty())
-        {
+            append_weapon_stats(desc, mitm[thing_created]);
             desc += "\n";
-            desc += help;
         }
-        desc += "\n";
-        desc += get_god_likes(which_god);
-
-        help = get_god_dislikes(which_god);
-        if (!help.empty())
+        else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
         {
-            desc += "\n\n";
-            desc += help;
+            append_armour_stats(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
+        {
+            append_missile_info(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (type == "spell"
+                 || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
+                 || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
+        {
+            if (!_append_books(desc, mitm[thing_created], key))
+            {
+                // FIXME: Duplicates messages from describe.cc.
+                if (!player_can_memorise_from_spellbook(mitm[thing_created]))
+                {
+                    desc += "This book is beyond your current level "
+                            "of understanding.";
+                }
+                desc += describe_item_spells(mitm[thing_created]);
+            }
         }
     }
-    else
+    else if (type == "card")
     {
-        monster_type mon_num = get_monster_by_name(key);
-        // Don't attempt to get more information on ghost demon
-        // monsters, as the ghost struct has not been initialised, which
-        // will cause a crash.  Similarly for zombified monsters, since
-        // they require a base monster.
-        if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
-            && !mons_class_is_zombified(mon_num))
-        {
-            monster_info mi(mon_num);
-            // Avoid slime creature being described as "buggy"
-            if (mi.type == MONS_SLIME_CREATURE)
-                mi.slime_size = 1;
-            return describe_monsters(mi, true, footer);
-        }
-        else
-        {
-            int thing_created = get_mitm_slot();
-            if (thing_created != NON_ITEM
-                && (type == "item" || type == "spell"))
-            {
-                char name[80];
-                strncpy(name, key.c_str(), sizeof(name));
-                if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
-                {
-                    append_weapon_stats(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
-                {
-                    append_armour_stats(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
-                {
-                    append_missile_info(desc, mitm[thing_created]);
-                    desc += "\n";
-                }
-                else if (type == "spell"
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
-                {
-                    if (!_append_books(desc, mitm[thing_created], key))
-                    {
-                        // FIXME: Duplicates messages from describe.cc.
-                        if (!player_can_memorise_from_spellbook(mitm[thing_created]))
-                        {
-                            desc += "This book is beyond your current level "
-                                    "of understanding.";
-                        }
-                        append_spells(desc, mitm[thing_created]);
-                    }
-                }
-            }
-            else if (type == "card")
-            {
-                // 5 - " card"
-                card_type which_card =
-                     name_to_card(key.substr(0, key.length() - 5));
-                if (which_card != NUM_CARDS)
-                    desc += which_decks(which_card) + "\n";
-            }
-
-            // Now we don't need the item anymore.
-            if (thing_created != NON_ITEM)
-                destroy_item(thing_created);
-        }
+        // 5 - " card"
+        card_type which_card =
+        name_to_card(key.substr(0, key.length() - 5));
+        if (which_card != NUM_CARDS)
+            desc += which_decks(which_card) + "\n";
     }
+
+    // Now we don't need the item anymore.
+    if (thing_created != NON_ITEM)
+        destroy_item(thing_created);
 
     inf.body << desc;
 
@@ -1323,8 +1302,8 @@ static void _find_description(bool *again, string *error_inout)
     string    type;
     string    extra;
     string    suffix;
-    db_find_filter filter     = NULL;
-    db_keys_recap  recap      = NULL;
+    db_find_filter filter     = nullptr;
+    db_keys_recap  recap      = nullptr;
     bool           want_regex = true;
     bool           want_sort  = true;
 
@@ -1382,13 +1361,13 @@ static void _find_description(bool *again, string *error_inout)
         break;
     case 'G':
         type       = "god";
-        filter     = NULL;
+        filter     = nullptr;
         want_regex = false;
         doing_gods = true;
         break;
     case 'B':
         type           = "branch";
-        filter         = NULL;
+        filter         = nullptr;
         want_regex     = false;
         want_sort      = false;
         doing_branches = true;
@@ -1458,7 +1437,7 @@ static void _find_description(bool *again, string *error_inout)
     else
         key_list = _get_desc_keys(regex, filter);
 
-    if (recap != NULL)
+    if (recap != nullptr)
         (*recap)(key_list);
 
     if (key_list.empty())
@@ -1540,7 +1519,7 @@ static void _find_description(bool *again, string *error_inout)
         if (ends_with(str, suffix)) // perhaps we should assert this?
             str.erase(str.length() - suffix.length());
 
-        MenuEntry *me = NULL;
+        MenuEntry *me = nullptr;
 
         if (doing_mons)
         {
@@ -1661,7 +1640,7 @@ static void _keyhelp_query_descriptions()
 
     viewwindow();
     if (!error.empty())
-        mprf("%s", error.c_str());
+        mpr(error);
 }
 
 static int _keyhelp_keyfilter(int ch)
@@ -1829,7 +1808,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
 
     if (with_manual)
     {
-        for (int i = 0; help_files[i].name != NULL; ++i)
+        for (int i = 0; help_files[i].name != nullptr; ++i)
         {
             // Attempt to open this file, skip it if unsuccessful.
             string fname = canonicalise_file_separator(help_files[i].name);
@@ -2018,7 +1997,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  \\|/        \\|/", 0);
     _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
-                         CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+                         CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  /|\\        /|\\", 0);
     _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
@@ -2028,7 +2007,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Rest/Search:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>.</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
@@ -2050,8 +2029,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             0,
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
-            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : open/close door, \n"
-            "         untrap, attack without move\n",
+            "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : attack without move \n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -2314,7 +2292,7 @@ static void _add_formatted_hints_help(column_composer &cols)
                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  \\|/        \\|/", 0);
     _add_insert_commands(cols, 0, "                 <w>4</w>-<w>5</w>-<w>6</w>      <w>%</w>-<w>%</w>-<w>%</w>",
-                         CMD_MOVE_LEFT, CMD_MOVE_NOWHERE, CMD_MOVE_RIGHT, 0);
+                         CMD_MOVE_LEFT, CMD_WAIT, CMD_MOVE_RIGHT, 0);
     _add_insert_commands(cols, 0, "                  /|\\        /|\\", 0);
     _add_insert_commands(cols, 0, "                 <w>1 2 3      % % %",
                          CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT, 0);
@@ -2331,7 +2309,7 @@ static void _add_formatted_hints_help(column_composer &cols)
             "<h>Rest/Search:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>.</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>s</w>, <w>Del</w>)", 2);
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,

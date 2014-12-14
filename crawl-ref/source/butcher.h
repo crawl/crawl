@@ -6,9 +6,9 @@
 #ifndef BUTCHER_H
 #define BUTCHER_H
 
-#define NEVER_HIDE_KEY "never_hide"
+#define MANGLED_CORPSE_KEY "mangled_corpse"
 
-bool butchery(int which_corpse = -1, bool bottle_blood = false);
+bool butchery(int which_corpse = -1);
 
 void maybe_drop_monster_hide(const item_def corpse);
 int get_max_corpse_chunks(monster_type mons_class);

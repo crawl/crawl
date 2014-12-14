@@ -8,11 +8,11 @@
 #include "spl-util.h"
 
 #include <algorithm>
-#include <ctype.h>
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cctype>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "areas.h"
 #include "coordit.h"
@@ -38,9 +38,9 @@
 
 struct spell_desc
 {
-    int id;
+    spell_type id;
     const char  *title;
-    unsigned int disciplines; // bitfield
+    spschools_type disciplines;
     unsigned int flags;       // bitfield
     unsigned int level;
 
@@ -73,7 +73,7 @@ struct spell_desc
 
 static int spell_list[NUM_SPELLS];
 
-#define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
+#define SPELLDATASIZE ARRAYSZ(spelldata)
 
 static const struct spell_desc *_seekspell(spell_type spellid);
 
@@ -94,7 +94,7 @@ void init_spell_descs()
         ASSERTM(data.id >= SPELL_NO_SPELL && data.id < NUM_SPELLS,
                 "spell #%d has invalid id %d", i, data.id);
 
-        ASSERTM(data.title != NULL && *data.title,
+        ASSERTM(data.title != nullptr && *data.title,
                 "spell #%d, id %d has no name", i, data.id);
 
         ASSERTM(data.level >= 1 && data.level <= 9,
@@ -106,6 +106,9 @@ void init_spell_descs()
         ASSERTM(!(data.flags & SPFLAG_TARGETING_MASK)
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
+
+        ASSERTM(!(data.flags & SPFLAG_MONSTER && is_player_spell(data.id)),
+                "spell '%s' is declared as a monster spell but is a player spell", data.title);
 
         spell_list[data.id] = i;
     }
@@ -138,14 +141,7 @@ spell_type spell_by_name(string name, bool partial_match)
     lowercase(name);
 
     if (!partial_match)
-    {
-        spell_name_map::iterator i = spell_name_cache.find(name);
-
-        if (i != spell_name_cache.end())
-            return i->second;
-
-        return SPELL_NO_SPELL;
-    }
+        return lookup(spell_name_cache, name, SPELL_NO_SPELL);
 
     const spell_type sp = find_earliest_match(name, SPELL_NO_SPELL, NUM_SPELLS,
                                               is_valid_spell, spell_title);
@@ -217,11 +213,8 @@ int get_spell_slot_by_letter(char letter)
 
 static int _get_spell_slot(spell_type spell)
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-        if (you.spells[i] == spell)
-            return i;
-
-    return -1;
+    auto i = find(begin(you.spells), end(you.spells), spell);
+    return i == end(you.spells) ? -1 : i - begin(you.spells);
 }
 
 int get_spell_letter(spell_type spell)
@@ -255,17 +248,19 @@ bool add_spell_to_memory(spell_type spell)
 
     // now we find an available label:
     // first check to see whether we've chosen an automatic label:
-    for (unsigned k = 0; k < Options.auto_spell_letters.size(); ++k)
+    for (const auto &entry : Options.auto_spell_letters)
     {
-        if (!Options.auto_spell_letters[k].first.matches(sname))
+        if (!entry.first.matches(sname))
             continue;
-        for (unsigned l = 0; l < Options.auto_spell_letters[k].second.length(); ++l)
-            if (isaalpha(Options.auto_spell_letters[k].second[l]) &&
-                you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
+        for (char ch : entry.second)
+        {
+            if (isaalpha(ch)
+                && you.spell_letter_table[letter_to_index(ch)] == -1)
             {
-                j = letter_to_index(Options.auto_spell_letters[k].second[l]);
+                j = letter_to_index(ch);
                 break;
             }
+        }
         if (j != -1)
             break;
     }
@@ -446,7 +441,7 @@ bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 }
 
 //jmf: next two for simple bit handling
-unsigned int get_spell_disciplines(spell_type spell)
+spschools_type get_spell_disciplines(spell_type spell)
 {
     return _seekspell(spell)->disciplines;
 }
@@ -465,9 +460,9 @@ int count_bits(unsigned int bits)
 
 // NOTE: Assumes that any single spell won't belong to conflicting
 // disciplines.
-bool disciplines_conflict(unsigned int disc1, unsigned int disc2)
+bool disciplines_conflict(spschools_type disc1, spschools_type disc2)
 {
-    const unsigned int combined = disc1 | disc2;
+    const spschools_type combined = disc1 | disc2;
 
     return (combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
            || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE);
@@ -525,13 +520,13 @@ static int _apply_area_around_square(cell_func cf, const coord_def& where,
 // Like apply_area_around_square, but for monsters in those squares,
 // and takes care not to affect monsters twice that change position.
 int apply_monsters_around_square(monster_func mf, const coord_def& where,
-                                  int power)
+                                  int power, int radius)
 {
     int rv = 0;
     set<const monster*> affected;
-    for (adjacent_iterator ai(where, true); ai; ++ai)
+    for (radius_iterator ri(where, radius, C_ROUND, true); ri; ++ri)
     {
-        monster* mon = monster_at(*ai);
+        monster* mon = monster_at(*ri);
         if (mon && !affected.count(mon))
         {
             rv += mf(mon, power);
@@ -565,7 +560,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 
     for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
     {
-        if (monster_at(*ai) == NULL && *ai != you.pos())
+        if (monster_at(*ai) == nullptr && *ai != you.pos())
             continue;
 
         // Found target
@@ -721,7 +716,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
     args.target_prefix = target_prefix;
     if (top_prompt)
         args.top_prompt = top_prompt;
-    args.behaviour = NULL;
+    args.behaviour = nullptr;
     args.cancel_at_self = cancel_at_self;
     args.hitfunc = hitfunc;
     args.get_desc_func = get_desc_func;
@@ -839,7 +834,7 @@ skill_type spell_type2skill(unsigned int spelltype)
     }
 }
 
-unsigned int skill2spell_type(skill_type spell_skill)
+spschool_flag_type skill2spell_type(skill_type spell_skill)
 {
     switch (spell_skill)
     {
@@ -1334,11 +1329,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         {
             return "You have no blood to sublime.";
         }
+        if (you.magic_points == you.max_magic_points && temp)
+            return "Your magic capacity is already full.";
         break;
 
     case SPELL_ENSLAVEMENT:
         if (player_mutation_level(MUT_NO_LOVE))
             return "You cannot make allies.";
+        break;
 
     case SPELL_MALIGN_GATEWAY:
         if (temp && !can_cast_malign_gateway())
@@ -1411,6 +1409,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     case SPELL_LRD:
     case SPELL_FULMINANT_PRISM:
     case SPELL_SUMMON_LIGHTNING_SPIRE:
+    case SPELL_SINGULARITY:
 
     // Shock and Lightning Bolt are no longer here, as the code below can
     // account for possible bounces.
@@ -1438,14 +1437,13 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
             if (!tgt.valid_aim(*ri))
                 continue;
             tgt.set_aim(*ri);
-            for (map<coord_def, aff_type>::iterator it = tgt.seen.begin();
-                 it != tgt.seen.end(); it++)
+            for (const auto &entry : tgt.seen)
             {
-                if (it->second == AFF_NO || it->second == AFF_TRACER)
+                if (entry.second == AFF_NO || entry.second == AFF_TRACER)
                     continue;
 
                 // Checks here are from get_dist_to_nearest_monster().
-                const monster* mons = monster_at(it->first);
+                const monster* mons = monster_at(entry.first);
                 if (mons && !mons->wont_attack()
                     && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
                         || mons->type == MONS_BALLISTOMYCETE
@@ -1494,7 +1492,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         beam.hit = 20;
         beam.thrower = KILL_YOU;
         beam.ench_power = calc_spell_power(spell, true, false, true, rod);
-        beam.is_beam = false;
+        beam.pierce  = false;
         beam.is_explosion = true;
     }
 
@@ -1535,4 +1533,66 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
         return true;
 
     return false;
+}
+
+
+// a map of schools to the corresponding sacrifice 'mutations'.
+static const mutation_type arcana_sacrifice_map[] = {
+    MUT_NO_CONJURATION_MAGIC,
+    MUT_NO_HEXES_MAGIC,
+    MUT_NO_CHARM_MAGIC,
+    MUT_NO_FIRE_MAGIC,
+    MUT_NO_ICE_MAGIC,
+    MUT_NO_TRANSMUTATION_MAGIC,
+    MUT_NO_NECROMANCY_MAGIC,
+    MUT_NO_SUMMONING_MAGIC,
+    NUM_MUTATIONS, // SPTYP_DIVINATION
+    MUT_NO_TRANSLOCATION_MAGIC,
+    MUT_NO_POISON_MAGIC,
+    MUT_NO_EARTH_MAGIC,
+    MUT_NO_AIR_MAGIC
+};
+
+/**
+ * Are some subset of the given schools unusable by the player?
+ * (Due to Sacrifice Arcana)
+ *
+ * @param schools   A bitfield containing a union of spschool_flag_types.
+ * @return          Whether the player is unable use any of the given schools.
+ */
+bool cannot_use_schools(unsigned int schools)
+{
+    COMPILE_CHECK(ARRAYSZ(arcana_sacrifice_map) == SPTYP_LAST_EXPONENT + 1);
+
+    // iter over every school
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    {
+        // skip schools not in the provided set
+        const int school = 1<<i;
+        if (!(schools & school))
+            continue;
+
+        // check if the player has this school locked out
+        const mutation_type lockout_mut = arcana_sacrifice_map[i];
+        if (lockout_mut != NUM_MUTATIONS && player_mutation_level(lockout_mut))
+            return true;
+    }
+
+    return false;
+}
+
+
+/**
+ * What's the spell school corresponding to the given Ru mutation?
+ *
+ * @param mutation  The variety of MUT_NO_*_MAGIC in question.
+ * @return          The skill of the appropriate school (SK_AIR_MAGIC, etc).
+ *                  If no school corresponds, returns SK_NONE.
+ */
+skill_type arcane_mutation_to_skill(mutation_type mutation)
+{
+    for (int sptyp_exp = 0; sptyp_exp <= SPTYP_LAST_EXPONENT; sptyp_exp++)
+        if (arcana_sacrifice_map[sptyp_exp] == mutation)
+            return spell_type2skill(1 << sptyp_exp);
+    return SK_NONE;
 }

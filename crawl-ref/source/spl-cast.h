@@ -41,6 +41,7 @@ enum spflag_type
                                                  // target self
     SPFLAG_UTILITY             = 0x1000000,      // usable no matter what foe is
     SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
+    SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
 };
 
 enum spret_type
@@ -58,7 +59,7 @@ typedef bool (*spell_selector)(spell_type spell);
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
                 const string &title = "Your Spells",
-                spell_selector selector = NULL);
+                spell_selector selector = nullptr);
 int spell_fail(spell_type spell);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
@@ -71,7 +72,7 @@ void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-    bool evoked = true);
+    bool evoked = false);
 
 double get_miscast_chance(spell_type spell, int severity = 2);
 int fail_severity(spell_type spell);

@@ -195,7 +195,7 @@ tutorial2 rest_and_chop_reminder
 tutorial2 wait
 
 적진 한가운데로 무모하게 돌진하는 것은 자살행위입니다! 여기서는 뒤로 물러나서
-적들이 올 때까지 기다리세요. (<input>$cmd[CMD_MOVE_NOWHERE]</input> 키로
+적들이 올 때까지 기다리세요. (<input>$cmd[CMD_WAIT]</input> 키로
 제자리에서 대기할 수 있습니다.) 1:1 상황을 만드는 것은 근접전에서 가장 중요한
 생존전략입니다.
 %%%%
@@ -290,7 +290,7 @@ tutorial2 exit
   발사하고 싶은 탄환에 <input>왼쪽 마우스버튼</input> 을 클릭해서 적을 조준하고, <input>엔터</input> 키로 발사할 수 있습니다.</localtiles>
 
 <yellow>휴식</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  1턴동안 휴식하면서 주변을 살핍니다.
+  <input>$cmd[CMD_WAIT]</input>  1턴동안 휴식하면서 주변을 살핍니다.
   <input>$cmd[CMD_REST]</input>  100턴동안 휴식하면서 주변을 살핍니다.
 
 <yellow>시체<console> <brown>%</brown></console></yellow>
@@ -567,7 +567,7 @@ tutorial4 order_allies
 
 당신이 소환한 해골 군단을 지위하여 적들을 처치해봅시다! 필요에 따라, 당신은
 <input>$cmd[CMD_SHOUT]</input>키를 눌러 당신의 동료들에게 명령을 내릴 수
-있습니다. 이 관문을 열기 전에, <input>$cmd[CMD_MOVE_NOWHERE]</input>키를 눌러
+있습니다. 이 관문을 열기 전에, <input>$cmd[CMD_WAIT]</input>키를 눌러
 대기한 후, 당신의 동료들이 다시 당신에게 오기를 기다리는 것이 좋을 것입니다.
 %%%%
 tutorial4 heavy_armour
@@ -702,7 +702,7 @@ tutorial5 exit
   캐릭터에 <input>오른쪽 마우스버튼</input>을 클릭해서 볼 수도 있습니다.</localtiles>
 
 <yellow>휴식</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  1턴동안 휴식하면서 주변을 살핍니다.
+  <input>$cmd[CMD_WAIT]</input>  1턴동안 휴식하면서 주변을 살핍니다.
   <input>$cmd[CMD_REST]</input>  100턴동안 휴식하면서 주변을 살핍니다.
 
 <yellow>기타 명령어</yellow>

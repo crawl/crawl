@@ -57,7 +57,7 @@ void setup_environment_effects();
 // Lava smokes, swamp water mists.
 void run_environment_effects();
 
-bool player_in_a_dangerous_place(bool *invis = NULL);
+bool player_in_a_dangerous_place(bool *invis = nullptr);
 void bring_to_safety();
 void revive();
 
@@ -110,7 +110,7 @@ struct position_node
     {
         pos.x=0;
         pos.y=0;
-        last = NULL;
+        last = nullptr;
         estimate = 0;
         path_distance = 0;
         connect_level = 0;
@@ -234,12 +234,12 @@ void search_astar(position_node & start,
         vector<position_node> expansion;
         expand_node(*current, expansion);
 
-        for (unsigned i=0;i < expansion.size(); ++i)
+        for (position_node &exp : expansion)
         {
-            expansion[i].last = &(*current);
+            exp.last = &(*current);
 
             pair<set<position_node>::iterator, bool > res;
-            res = visited.insert(expansion[i]);
+            res = visited.insert(exp);
 
             if (!res.second)
                 continue;
@@ -268,7 +268,7 @@ void search_astar(const coord_def & start,
 {
     position_node temp_node;
     temp_node.pos = start;
-    temp_node.last = NULL;
+    temp_node.last = nullptr;
     temp_node.path_distance = 0;
 
     search_astar(temp_node, valid_target, expand_node, visited, candidates);
@@ -307,4 +307,41 @@ struct counted_monster_list
 };
 
 bool today_is_halloween();
+
+/** Remove from a container all elements matching a predicate.
+ *
+ * @tparam C the container type. Must be reorderable (not a map or set!),
+ *           and must provide an erase() method taking two iterators.
+ * @tparam P the predicate type, typically but not necessarily
+ *           function<bool (const C::value_type &)>
+ * @param container The container to modify.
+ * @param pred The predicate to test.
+ *
+ * @post The container contains only those elements for which pred(elt)
+ *       returns false, in the same relative order.
+ */
+template<class C, class P>
+void erase_if(C &container, P pred)
+{
+    container.erase(remove_if(begin(container), end(container), pred),
+                    end(container));
+}
+
+/** Remove from a container all elements with a given value.
+ *
+ * @tparam C the container type. Must be reorderable (not a map or set!),
+ *           must provide an erase() method taking two iterators, and
+ *           must provide a value_type type member.
+ * @param container The container to modify.
+ * @param val The value to remove.
+ *
+ * @post The container contains only those elements not equal to val, in the
+ *       in the same relative order.
+ */
+template<class C>
+void erase_val(C &container, const typename C::value_type &val)
+{
+    container.erase(remove(begin(container), end(container), val),
+                    end(container));
+}
 #endif

@@ -222,7 +222,7 @@ function arena_sprint_get_monster_set(round, boss)
             mon_set = {
                 "place:D:3 / place:D:5 / w:4 sigmund / w:2 jessica / w:2 terence",
                 "goblin / hobgoblin / kobold / big kobold / ijyb w:6 / pikel w:4",
-                "rat / quokka / green rat / porcupine / w:2 orange rat / w:6 purgy",
+                "rat / quokka / river rat / porcupine / w:2 hell rat / w:6 purgy",
                 "ball python / adder w:15 / water moccasin w:5",
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
                 "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",
@@ -245,7 +245,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:2 place:Elf / deep elf fighter / deep elf priest /\
                     w:2 deep elf conjurer / w:2 deep elf summoner",
                 "place:Lair / sheep / w:5 yak / w:5 crocodile / w:3 basilisk /\
-                    w:1 death yak / green rat / orange rat / porcupine",
+                    w:1 death yak / river rat / hell rat / porcupine",
                 "w:20 merfolk / w:5 siren / hippogriff / centaur / w:5 griffon /\
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 giant leech / insubstantial wisp / w:5 swamp drake /\
@@ -993,7 +993,7 @@ LROCKTILE:  wall_hall
 # Both would be rather useless if you picked them, though. Positions are random,
 # and you don't have enough time to reach an altar before the game starts.
 NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / i / j / k / l / n / \
-            o / p / q / *:.
+            o / p / q / r / *:.
 KFEAT:  0 = altar_zin
 KFEAT:  1 = altar_the_shining_one
 KFEAT:  2 = altar_lugonu
@@ -1013,6 +1013,7 @@ KFEAT:  n = altar_fedhas
 KFEAT:  o = altar_dithmenos
 KFEAT:  p = altar_gozag
 KFEAT:  q = altar_qazlal
+KFEAT:  r = altar_ru
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of fire charges:5 ident:all, \
@@ -1044,14 +1045,14 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of silence q:3 | scroll of brand weapon | scroll of vulnerability q:3 |\
             scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon q:8 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
-KFEAT:  FS = distillery shop use_all count:17 greed:10 ; \
+KFEAT:  FS = distillery shop use_all count:17 greed:7 ; \
              potion of haste q:3 | potion of haste q:4 | potion of haste q:5 |\
              potion of agility q:6 | potion of might q:6 | potion of brilliance q:6 |\
              potion of cure mutation | potion of cure mutation q:2 | potion of cure mutation q:3 |\
              potion of resistance q:6 | potion of resistance q:6 | potion of magic q:6 |\
              potion of magic q:6 | potion of berserk rage q:5 | potion of berserk rage q:5 |\
              potion of restore abilities q:10 | potion of restore abilities q:10
-KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all greed:10 ; \
+KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all greed:7 ; \
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\

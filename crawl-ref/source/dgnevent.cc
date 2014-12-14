@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "coord.h"
+#include "misc.h" // erase_val
 
 dgn_event_dispatcher dungeon_events;
 
@@ -19,12 +20,12 @@ void dgn_event_dispatcher::clear()
     listeners.clear();
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
-            grid_triggers[x][y].reset(NULL);
+            grid_triggers[x][y].reset(nullptr);
 }
 
 void dgn_event_dispatcher::clear_listeners_at(const coord_def &pos)
 {
-    grid_triggers[pos.x][pos.y].reset(NULL);
+    grid_triggers[pos.x][pos.y].reset(nullptr);
 }
 
 void dgn_event_dispatcher::move_listeners(
@@ -53,12 +54,9 @@ bool dgn_event_dispatcher::fire_vetoable_position_event(
     if (alarm && (alarm->eventmask & et.type))
     {
         dgn_square_alarm alcopy(*alarm);
-        for (list<dgn_event_listener*>::iterator i = alcopy.listeners.begin();
-             i != alcopy.listeners.end(); ++i)
-        {
-            if (!(*i)->notify_dgn_event(et))
+        for (auto listener : alcopy.listeners)
+            if (!listener->notify_dgn_event(et))
                 return false;
-        }
     }
     return true;
 }
@@ -77,11 +75,8 @@ void dgn_event_dispatcher::fire_position_event(
     if (alarm && (alarm->eventmask & et.type))
     {
         dgn_square_alarm alcopy = *alarm;
-        for (list<dgn_event_listener*>::iterator i = alcopy.listeners.begin();
-             i != alcopy.listeners.end(); ++i)
-        {
-            (*i)->notify_dgn_event(et);
-        }
+        for (auto listener : alcopy.listeners)
+            listener->notify_dgn_event(et);
     }
 }
 
@@ -89,13 +84,10 @@ void dgn_event_dispatcher::fire_event(const dgn_event &e)
 {
     if (global_event_mask & e.type)
     {
-        list<dgn_listener_def> lcopy = listeners;
-        for (list<dgn_listener_def>::iterator i = lcopy.begin();
-             i != lcopy.end(); ++i)
-        {
-            if (i->eventmask & e.type)
-                i->listener->notify_dgn_event(e);
-        }
+        auto copy = listeners;
+        for (const auto &ldef : copy)
+            if (ldef.eventmask & e.type)
+                ldef.listener->notify_dgn_event(e);
     }
 }
 
@@ -113,16 +105,15 @@ void dgn_event_dispatcher::register_listener(unsigned mask,
     else
     {
         global_event_mask |= mask;
-        for (list<dgn_listener_def>::iterator i = listeners.begin();
-             i != listeners.end(); ++i)
+        for (auto &ldef : listeners)
         {
-            if (i->listener == listener)
+            if (ldef.listener == listener)
             {
-                i->eventmask |= mask;
+                ldef.eventmask |= mask;
                 return;
             }
         }
-        listeners.push_back(dgn_listener_def(mask, listener));
+        listeners.emplace_back(mask, listener);
     }
 }
 
@@ -149,8 +140,7 @@ void dgn_event_dispatcher::remove_listener(dgn_event_listener *listener,
         remove_listener_at(pos, listener);
     else
     {
-        for (list<dgn_listener_def>::iterator i = listeners.begin();
-             i != listeners.end(); ++i)
+        for (auto i = listeners.begin(); i != listeners.end(); ++i)
         {
             if (i->listener == listener)
             {
@@ -165,13 +155,7 @@ void dgn_event_dispatcher::remove_listener_at(const coord_def &pos,
                                               dgn_event_listener *listener)
 {
     if (dgn_square_alarm *alarm = grid_triggers[pos.x][pos.y].get())
-    {
-        list<dgn_event_listener*>::iterator i = find(alarm->listeners.begin(),
-                                                     alarm->listeners.end(),
-                                                     listener);
-        if (i != alarm->listeners.end())
-            alarm->listeners.erase(i);
-    }
+        erase_val(alarm->listeners, listener);
 }
 
 /////////////////////////////////////////////////////////////////////////////

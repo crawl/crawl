@@ -17,7 +17,12 @@ $ENV{TRAVIS} = 1;
 $ENV{FORCE_CC} = $ENV{CC};
 $ENV{FORCE_CXX} = $ENV{CXX};
 
-try("make -j2");
+if ($ENV{FULLDEBUG}) {
+    try("make -j2 debug");
+}
+else {
+    try("make -j2");
+}
 
 if (!$ENV{TILES}) {
     if ($ENV{FULLDEBUG}) {
@@ -37,12 +42,12 @@ sub try {
             error(1);
         }
         elsif ($? & 127) {
-            printf "'$cmd' died with signal %d", ($? & 127);
+            printf "'$cmd' died with signal %d\n", ($? & 127);
             error(1);
         }
         elsif ($?) {
             my $exit = $? >> 8;
-            printf "'$cmd' returned exit value %d", $exit;
+            printf "'$cmd' returned exit value %d\n", $exit;
             error($exit);
         }
     }

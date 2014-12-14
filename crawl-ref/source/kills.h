@@ -6,10 +6,10 @@
 #ifndef KILLS_H
 #define KILLS_H
 
+#include <cstdio>
 #include <map>
 #include <string>
 #include <vector>
-#include <stdio.h>
 
 #include "enum.h"
 

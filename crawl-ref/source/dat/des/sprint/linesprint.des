@@ -97,9 +97,9 @@ KMONS:     c = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
                Xtahua / Jory / Mennas / Mara
 NSUBST:    b = 1:c. / 1:cb. / 1:cb.. / 1:cbb.. / * = .:70 c:1
 MAP
-xxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
-x{....AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
-xxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
+xxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
+x{...AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
+xxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
 x..........a.........a..........a.........a.............a............x
 x.xxxxxxEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHHxxxxxx
 x.......EEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHH&....x
@@ -196,14 +196,15 @@ KFEAT:    q = altar_cheibriados
 KFEAT:    r = altar_dithmenos
 KFEAT:    s = altar_qazlal
 KFEAT:    t = altar_gozag
+KFEAT:    u = altar_ru
 : line_setup(_G)
 : lua_marker('~', props_marker {
 :           door_description_suffix=" to the Temple",
 :           })
 MAP
-xxxxxxxxxxxxxxxxxxxxx
-~abcdefghijklmnopqrst
-xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+~abcdefghijklmnopqrstu
+xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 

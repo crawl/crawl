@@ -339,8 +339,8 @@ DEPTH:   D:12-, Depths
 KMONS:   1 = vampire / bat
 KMONS:   2 = vampire / vampire mage / vampire knight
 KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
-         w:60 potion of blood | w:20 potion of coagulated blood | \
-         w:10 any weapon ego:vampirism | w:9 randbook disc:necromancy | w:1 book of annihilations
+         w:70 potion of blood | w:10 any weapon ego:vampirism | \
+         w:9 randbook disc:necromancy | w:1 book of annihilations
 SUBST:   ? = 2.Y
 : if you.branch() == "D" then
 SUBST:   2 = 1
@@ -467,7 +467,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    wand of fire | wand of fireball | wand of flame | wand of disintegration | \
    wand of frost | wand of cold | wand of lightning | wand of magic darts | \
    staff of conjuration | lightning rod | rod of inaccuracy | \
-   rod of destruction | rod of striking | large rock ego:exploding | \
+   rod of destruction | iron rod | large rock ego:exploding | \
    arrow ego:exploding | bolt ego:exploding | tome of destruction | \
    sling bullet ego:exploding | scroll of immolation | book of flames | \
    book of fire | book of air | manual of conjurations

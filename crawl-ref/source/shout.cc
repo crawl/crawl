@@ -117,9 +117,6 @@ void handle_monster_shouts(monster* mons, bool force)
     case S_GURGLE:
         default_msg_key = "__GURGLE";
         break;
-    case S_WHINE:
-        default_msg_key = "__WHINE";
-        break;
     case S_CROAK:
         default_msg_key = "__CROAK";
         break;
@@ -531,13 +528,13 @@ bool noisy(int original_loudness, const coord_def& where,
 bool noisy(int loudness, const coord_def& where, mid_t who,
            noise_flag_type flags)
 {
-    return noisy(loudness, where, NULL, who, flags);
+    return noisy(loudness, where, nullptr, who, flags);
 }
 
 // This fakes noise even through silence.
 bool fake_noisy(int loudness, const coord_def& where)
 {
-    return noisy(loudness, where, NULL, MID_NOBODY, NF_NONE, true);
+    return noisy(loudness, where, nullptr, MID_NOBODY, NF_NONE, true);
 }
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where)
@@ -934,7 +931,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 
 #ifdef DEBUG_NOISE_PROPAGATION
 
-#include <math.h>
+#include <cmath>
 
 // Return HTML RGB triple given a hue and assuming chroma of 0.86 (220)
 static string _hue_rgb(int hue)
@@ -1081,9 +1078,12 @@ static void _actor_apply_noise(actor *act,
         }
         else if ((noise.noise_flags & NF_HUNTING_CRY)
                  && source
-                 && mons_genus(mons->type) == mons_genus(source->type))
+                 && (mons_genus(mons->type) == mons_genus(source->type)
+                     || mons->holiness() == MH_HOLY
+                        && source->holiness() == MH_HOLY))
         {
-            // Hunting cries alert monsters of the same genus.
+            // Hunting cries alert monsters of the same genus, or other
+            // holy creatures if the source is holy.
             behaviour_event(mons, ME_ALERT, 0, apparent_source);
         }
         else

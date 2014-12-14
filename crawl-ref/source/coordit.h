@@ -141,6 +141,15 @@ private:
     void push_neigh(coord_def from, int dx, int dy);
 };
 
+// If this becomes performance-critical, reimplement it as adjacent_iterator
+// with a permutation array.
+class fair_adjacent_iterator : public distance_iterator
+{
+public:
+    fair_adjacent_iterator(coord_def _center, bool _exclude_center = true)
+        : distance_iterator(_center, true, _exclude_center, 1) {}
+};
+
 # ifdef DEBUG_TESTS
 void coordit_tests();
 # endif

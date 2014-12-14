@@ -32,15 +32,17 @@ static inline void scaled_delay(unsigned int ms)
 }
 
 // beware, flash_view is broken for USE_TILE_LOCAL
-void flash_view(use_animation_type a, colour_t colour, targetter *where = NULL);
+void flash_view(use_animation_type a, colour_t colour,
+                targetter *where = nullptr);
 void flash_view_delay(use_animation_type a, colour_t colour, int delay,
-                      targetter *where = NULL);
+                      targetter *where = nullptr);
 #ifndef USE_TILE_LOCAL
 void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay);
 #endif
 
-enum animation_type {
+enum animation_type
+{
     ANIMATION_SHAKE_VIEWPORT,
     ANIMATION_CHECKERBOARD,
     ANIMATION_BANISH,
@@ -49,7 +51,8 @@ enum animation_type {
     NUM_ANIMATIONS
 };
 
-class animation {
+class animation
+{
 public:
     animation(): frames(10), frame_delay(50) { }
     virtual ~animation() { }
@@ -64,14 +67,14 @@ public:
 void run_animation(animation_type anim, use_animation_type type,
                    bool cleanup = true);
 void viewwindow(bool show_updates = true, bool tiles_only = false,
-                animation *a = NULL);
+                animation *a = nullptr);
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour);
 
 void update_monsters_in_view();
-bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = NULL);
+bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = nullptr);
 void flush_comes_into_view();
-
+void mark_mon_equipment_seen(const monster *mons);
 void toggle_show_terrain();
 void reset_show_terrain();
 

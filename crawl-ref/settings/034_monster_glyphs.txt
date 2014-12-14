@@ -37,125 +37,125 @@
 # features
 ###########################
 
-feature = granite statue { , , lightgrey}
-feature = orcish idol { , , darkgrey}
+feature += granite statue { , , lightgrey}
+feature += orcish idol { , , darkgrey}
 
 ###########################
 # monsters
 ###########################
 
 # orcs
-mon_glyph = orc priest : lightgreen
-mon_glyph = orc knight : lightcyan
-mon_glyph = orc high priest : green
-mon_glyph = orc sorcerer : darkgrey
-mon_glyph = orc warlord : red
+mon_glyph += orc priest : lightgreen
+mon_glyph += orc knight : lightcyan
+mon_glyph += orc high priest : green
+mon_glyph += orc sorcerer : darkgrey
+mon_glyph += orc warlord : red
 
 # elves
-mon_glyph = elf : darkgrey
-mon_glyph = deep elf soldier : cyan
-mon_glyph = deep elf mage : lightred
-mon_glyph = deep elf fighter : lightblue
-mon_glyph = deep elf summoner : yellow
-mon_glyph = deep elf knight : blue
-mon_glyph = deep elf conjurer : lightgreen
-mon_glyph = deep elf priest : lightgrey
-mon_glyph = deep elf high priest : darkgrey
-mon_glyph = deep elf demonologist : magenta
-mon_glyph = deep elf sorcerer : red
-mon_glyph = deep elf annihilator : green
-mon_glyph = deep elf master archer : lightmagenta
+mon_glyph += elf : darkgrey
+mon_glyph += deep elf soldier : cyan
+mon_glyph += deep elf mage : lightred
+mon_glyph += deep elf fighter : lightblue
+mon_glyph += deep elf summoner : yellow
+mon_glyph += deep elf knight : blue
+mon_glyph += deep elf conjurer : lightgreen
+mon_glyph += deep elf priest : lightgrey
+mon_glyph += deep elf high priest : darkgrey
+mon_glyph += deep elf demonologist : magenta
+mon_glyph += deep elf sorcerer : red
+mon_glyph += deep elf annihilator : green
+mon_glyph += deep elf master archer : lightmagenta
 
 # lizards
-mon_glyph = giant newt : lightgreen
-mon_glyph = crocodile : green
+mon_glyph += giant newt : lightgreen
+mon_glyph += crocodile : green
 # black means randomly coloured
-mon_glyph = gila monster : black
+mon_glyph += gila monster : black
 
 # snakes and nagas
-mon_glyph = small snake : lightgreen
-mon_glyph = snake : green
-mon_glyph = black mamba : darkgrey
-mon_glyph = greater naga : red
-mon_glyph = naga mage : lightred
+mon_glyph += small snake : lightgreen
+mon_glyph += snake : green
+mon_glyph += black mamba : darkgrey
+mon_glyph += greater naga : red
+mon_glyph += naga mage : lightred
 
 # draconians and dragons
-mon_glyph = lindwurm : lightgreen d
-mon_glyph = black draconian : darkgrey
-mon_glyph = green draconian : lightgreen
-mon_glyph = draconian zealot : lightblue
-mon_glyph = draconian annihilator : green
-mon_glyph = steam dragon : lightgrey
-mon_glyph = mottled dragon : magenta
-mon_glyph = shadow dragon : darkgrey
-mon_glyph = death drake : darkgrey
+mon_glyph += lindwurm : lightgreen d
+mon_glyph += black draconian : darkgrey
+mon_glyph += green draconian : lightgreen
+mon_glyph += draconian zealot : lightblue
+mon_glyph += draconian annihilator : green
+mon_glyph += steam dragon : lightgrey
+mon_glyph += mottled dragon : magenta
+mon_glyph += shadow dragon : darkgrey
+mon_glyph += death drake : darkgrey
 
 # hounds
-mon_glyph = hound : brown
-mon_glyph = warg : darkgrey
-mon_glyph = hog : lightred
-mon_glyph = hell hound : darkgrey
-mon_glyph = hell hog : red
-mon_glyph = jackal : yellow j
+mon_glyph += hound : brown
+mon_glyph += warg : darkgrey
+mon_glyph += hog : lightred
+mon_glyph += hell hound : darkgrey
+mon_glyph += hell hog : red
+mon_glyph += jackal : yellow j
 
 # slugs and snails
-mon_glyph = elephant slug : lightgrey m
-mon_glyph = giant slug : green m
-mon_glyph = giant snail : lightgreen m
+mon_glyph += elephant slug : lightgrey m
+mon_glyph += giant slug : green m
+mon_glyph += giant snail : lightgreen m
 
 # other natural monsters
-mon_glyph = worker ant : darkgrey
-mon_glyph = queen ant : darkgrey
-mon_glyph = giant bat : darkgrey
-mon_glyph = yaktaur : lightred
-mon_glyph = yaktaur captain : red
-mon_glyph = manticore : brown m
-mon_glyph = minotaur : lightred m
-mon_glyph = quokka : lightgrey
-mon_glyph = scorpion : darkgrey
-mon_glyph = killer bee larva : lightgrey
-mon_glyph = spiny worm : darkgrey
-mon_glyph = goliath beetle : darkgrey
-mon_glyph = vampire mosquito : darkgrey
-mon_glyph = cyclops : brown
-mon_glyph = death ooze : darkgrey
-mon_glyph = big kobold : red
-mon_glyph = deep troll : darkgrey
-mon_glyph = black bear : darkgrey
-mon_glyph = death yak : darkgrey
+mon_glyph += worker ant : darkgrey
+mon_glyph += queen ant : darkgrey
+mon_glyph += giant bat : darkgrey
+mon_glyph += yaktaur : lightred
+mon_glyph += yaktaur captain : red
+mon_glyph += manticore : brown m
+mon_glyph += minotaur : lightred m
+mon_glyph += quokka : lightgrey
+mon_glyph += scorpion : darkgrey
+mon_glyph += killer bee larva : lightgrey
+mon_glyph += spiny worm : darkgrey
+mon_glyph += goliath beetle : darkgrey
+mon_glyph += vampire mosquito : darkgrey
+mon_glyph += cyclops : brown
+mon_glyph += death ooze : darkgrey
+mon_glyph += big kobold : red
+mon_glyph += deep troll : darkgrey
+mon_glyph += black bear : darkgrey
+mon_glyph += death yak : darkgrey
 
 # unnatural monsters
-mon_glyph = toenail golem : lightgrey
-mon_glyph = crystal golem : white
-mon_glyph = gargoyle : darkgrey g
-mon_glyph = metal gargoyle : cyan g
-mon_glyph = molten gargoyle : red g
+mon_glyph += toenail golem : lightgrey
+mon_glyph += crystal golem : white
+mon_glyph += gargoyle : darkgrey g
+mon_glyph += metal gargoyle : cyan g
+mon_glyph += molten gargoyle : red g
 
 # undead and demons
-mon_glyph = shadow demon : darkgrey
-mon_glyph = shadow imp : darkgrey
-mon_glyph = Shadow Fiend : darkgrey
-mon_glyph = soul eater : darkgrey
-mon_glyph = neqoxec : magenta
-mon_glyph = demonic crawler : darkgrey
-mon_glyph = necromancer : darkgrey
-mon_glyph = quasit : lightgrey q
-mon_glyph = boggart : darkgrey
-mon_glyph = curse skull : darkgrey
-mon_glyph = necrophage : darkgrey
-mon_glyph = lich : white
-mon_glyph = ancient lich : darkgrey
-mon_glyph = mummy : white
-mon_glyph = greater mummy : darkgrey
-mon_glyph = wraith : darkgrey
-mon_glyph = player ghost : darkgrey
-mon_glyph = small simulacrum : white
-mon_glyph = large simulacrum : white
+mon_glyph += shadow demon : darkgrey
+mon_glyph += shadow imp : darkgrey
+mon_glyph += Shadow Fiend : darkgrey
+mon_glyph += soul eater : darkgrey
+mon_glyph += neqoxec : magenta
+mon_glyph += demonic crawler : darkgrey
+mon_glyph += necromancer : darkgrey
+mon_glyph += quasit : lightgrey q
+mon_glyph += boggart : darkgrey
+mon_glyph += curse skull : darkgrey
+mon_glyph += necrophage : darkgrey
+mon_glyph += lich : white
+mon_glyph += ancient lich : darkgrey
+mon_glyph += mummy : white
+mon_glyph += greater mummy : darkgrey
+mon_glyph += wraith : darkgrey
+mon_glyph += player ghost : darkgrey
+mon_glyph += small simulacrum : white
+mon_glyph += large simulacrum : white
 
 # unique monsters
-mon_glyph = Gloorx Vloq : darkgrey
-mon_glyph = Margery : red
-mon_glyph = Frederick : darkgrey
+mon_glyph += Gloorx Vloq : darkgrey
+mon_glyph += Margery : red
+mon_glyph += Frederick : darkgrey
 
 
 #########################################################

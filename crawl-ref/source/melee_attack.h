@@ -29,17 +29,15 @@ enum unarmed_attack_type
 class AuxAttackType
 {
 public:
-    AuxAttackType(int _damage, int _noise_factor, string _name) :
-    damage(_damage), noise_factor(_noise_factor), name(_name) { };
+    AuxAttackType(int _damage, string _name) :
+    damage(_damage), name(_name) { };
 public:
     virtual int get_damage() const { return damage; };
     virtual int get_brand() const { return SPWPN_NORMAL; };
-    virtual int get_noise_factor() const { return noise_factor; };
     virtual string get_name() const { return name; };
     virtual string get_verb() const { return get_name(); };
 protected:
     const int damage;
-    const int noise_factor;
     const string name;
 };
 
@@ -50,7 +48,6 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
-    bool         can_cleave;
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     coord_def attack_position;
@@ -118,7 +115,6 @@ private:
     bool attack_warded_off();
 
     /* Output methods */
-    void adjust_noise();
     void set_attack_verb();
     void announce_hit();
 
@@ -154,7 +150,7 @@ private:
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
     void player_stab_check();
-    int  player_stab_tier();
+    bool player_good_stab();
     void player_announce_aux_hit();
     string player_why_missed();
     void player_warn_miss();

@@ -100,6 +100,7 @@ private:
     int         piety;              // piety
     int         penance;            // penance
     uint8_t     wiz_mode;           // character used wiz mode
+    uint8_t     explore_mode;       // character used explore mode
     time_t      birth_time;         // start time of character
     time_t      death_time;         // end time of character
     time_t      real_time;          // real playing time in seconds
@@ -129,7 +130,7 @@ public:
     scorefile_entry();
     scorefile_entry(int damage, mid_t death_source, int death_type,
                     const char *aux, bool death_cause_only = false,
-                    const char *death_source_name = NULL,
+                    const char *death_source_name = nullptr,
                     time_t death_time = 0);
     scorefile_entry(const scorefile_entry &se);
 

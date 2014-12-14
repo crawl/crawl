@@ -32,12 +32,11 @@
 
 /*static*/ void final_effect::schedule(final_effect *eff)
 {
-    for (vector<final_effect *>::iterator fi = env.final_effects.begin();
-         fi != env.final_effects.end(); ++fi)
+    for (auto fe : env.final_effects)
     {
-        if ((*fi)->mergeable(*eff))
+        if (fe->mergeable(*eff))
         {
-            (*fi)->merge(*eff);
+            fe->merge(*eff);
             delete eff;
             return;
         }
@@ -338,11 +337,12 @@ void deferred_damage_fineff::fire()
             damage = min(damage, df_hp - 1);
         }
 
-        df->hurt(attacker(), damage, BEAM_MISSILE, true, attacker_effects);
+        df->hurt(attacker(), damage, BEAM_MISSILE, KILLED_BY_MONSTER, "", "",
+                 true, attacker_effects);
     }
 }
 
-static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
+static void _do_merge_masses(monster* initial_mass, monster* merge_to)
 {
     // Combine enchantment durations.
     merge_ench_durations(initial_mass, merge_to);
@@ -365,8 +365,6 @@ static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
 
     // Have to 'kill' the slime doing the merging.
     monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
-
-    return true;
 }
 
 void starcursed_merge_fineff::fire()
@@ -376,19 +374,17 @@ void starcursed_merge_fineff::fire()
         return;
 
     monster *mon = defend->as_monster();
-    //Find a random adjacent starcursed mass
-    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    shuffle_array(compass_idx, 8);
 
-    for (int i = 0; i < 8; ++i)
+    // Find a random adjacent starcursed mass and merge with it.
+    for (fair_adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
-        coord_def target = mon->pos() + Compass[compass_idx[i]];
-        monster* mergee = monster_at(target);
+        monster* mergee = monster_at(*ai);
         if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
         {
-            simple_monster_message(mon, " shudders and is absorbed by its neighbour.");
-            if (_do_merge_masses(mon, mergee))
-                return;
+            simple_monster_message(mon,
+                    " shudders and is absorbed by its neighbour.");
+            _do_merge_masses(mon, mergee);
+            return;
         }
     }
 
@@ -438,7 +434,7 @@ void starcursed_merge_fineff::fire()
 
 void shock_serpent_discharge_fineff::fire()
 {
-    monster* serpent = defender() ? defender()->as_monster() : NULL;
+    monster* serpent = defender() ? defender()->as_monster() : nullptr;
     int range = min(3, power);
 
     vector <actor*> targets;
@@ -462,14 +458,15 @@ void shock_serpent_discharge_fineff::fire()
         mpr("The air sparks with electricity!");
 
     // FIXME: should merge the messages.
-    for (unsigned int i = 0; i < targets.size(); ++i)
+    for (actor *act : targets)
     {
         int amount = roll_dice(3, 4 + power * 3 / 2);
-        amount = targets[i]->apply_ac(amount, 0, AC_HALF);
+        amount = act->apply_ac(amount, 0, AC_HALF);
 
-        if (you.see_cell(targets[i]->pos()))
-            mprf("The lightning shocks %s.", targets[i]->name(DESC_THE).c_str());
-        targets[i]->hurt(serpent, amount, BEAM_ELECTRICITY);
+        if (you.see_cell(act->pos()))
+            mprf("The lightning shocks %s.", act->name(DESC_THE).c_str());
+        act->hurt(serpent, amount, BEAM_ELECTRICITY, KILLED_BY_BEAM,
+                  "a shock serpent", "electric aura");
     }
 }
 

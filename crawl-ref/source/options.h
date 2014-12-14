@@ -90,7 +90,7 @@ public:
     bool was_included(const string &file) const;
 
     static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = NULL) throw (string);
+                            const vector<string> *rcdirs = nullptr) throw (string);
 
 #ifdef USE_TILE_WEB
     void write_webtiles_options(const string &name);
@@ -106,7 +106,8 @@ public:
     map<dungeon_feature_type, FixedVector<ucs_t, 2> > feature_symbol_overrides;
     map<monster_type, cglyph_t> mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
-    vector<pair<string, cglyph_t> > item_glyph_overrides;
+    typedef pair<string, cglyph_t> item_glyph_override_type;
+    vector<item_glyph_override_type > item_glyph_overrides;
     map<string, cglyph_t> item_glyph_cache;
 
     string      save_dir;       // Directory where saves and bones go.
@@ -171,7 +172,6 @@ public:
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     int         confirm_butcher; // When to prompt for butchery
-    bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
@@ -215,7 +215,8 @@ public:
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
 #ifdef WIZARD
-    int            wiz_mode;   // no, never, start in wiz mode
+    int            wiz_mode;      // no, never, start in wiz mode
+    int            explore_mode;  // no, never, start in explore mode
 #endif
     vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
@@ -237,9 +238,8 @@ public:
     vector<pair<text_pattern, string> > autoinscriptions;
     vector<text_pattern> note_items;     // Objects to note
     FixedBitVector<27+1> note_skill_levels;   // Skill levels to note
-    vector<pair<text_pattern, string> > auto_spell_letters;
-
-    bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
+    vector<pair<text_pattern, string>> auto_spell_letters;
+    vector<pair<text_pattern, string>> auto_item_letters;
 
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
@@ -483,7 +483,7 @@ public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;
     bool        o_bool(const char *name, bool def = false) const;
-    string      o_str(const char *name, const char *def = NULL) const;
+    string      o_str(const char *name, const char *def = nullptr) const;
     int         o_colour(const char *name, int def = LIGHTGREY) const;
 
     // Fix option values if necessary, specifically file paths.
@@ -497,7 +497,8 @@ private:
     void clear_feature_overrides();
     void clear_cset_overrides();
     void add_cset_override(dungeon_char_type dc, int symbol);
-    void add_feature_override(const string &);
+    void add_feature_override(const string &, bool prepend);
+    void remove_feature_override(const string &, bool prepend);
 
     void add_message_colour_mappings(const string &, bool, bool);
     void add_message_colour_mapping(const string &, bool, bool);
@@ -521,11 +522,14 @@ private:
     int  read_use_animations(const string &) const;
 
     void split_parse(const string &s, const string &separator,
-                     void (game_options::*add)(const string &));
-    void add_mon_glyph_override(const string &);
+                     void (game_options::*add)(const string &, bool),
+                     bool prepend = false);
+    void add_mon_glyph_override(const string &, bool prepend);
+    void remove_mon_glyph_override(const string &, bool prepend);
     cglyph_t parse_mon_glyph(const string &s) const;
-    void add_item_glyph_override(const string &);
-    void set_option_fragment(const string &s);
+    void add_item_glyph_override(const string &, bool prepend);
+    void remove_item_glyph_override(const string &, bool prepend);
+    void set_option_fragment(const string &s, bool prepend);
     bool set_lang(const char *s);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
@@ -547,7 +551,8 @@ static inline short macro_colour(short col)
     return col < 0 ? col : Options.colour[ col ];
 }
 
-enum use_animation_type {
+enum use_animation_type
+{
     UA_NONE             = 0,
     // projectile animations, from throwing weapons, fireball, etc
     UA_BEAM             = (1 << 0),

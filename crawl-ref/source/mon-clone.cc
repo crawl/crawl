@@ -113,6 +113,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         clone->del_ench(ENCH_STICKY_FLAME);
         clone->del_ench(ENCH_CORONA);
         clone->del_ench(ENCH_SILVER_CORONA);
+        clone->del_ench(ENCH_HEXED);
 
         behaviour_event(clone, ME_ALERT, 0, caster->pos());
 
@@ -302,7 +303,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
 
     *mons          = *orig;
     mons->set_new_monster_id();
-    mons->set_position(pos);
+    mons->move_to_pos(pos);
     // The monster copy constructor doesn't copy constriction, so no need to
     // worry about that.
 
@@ -310,8 +311,6 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     // Slime vaults on death.
     if (mons->props.exists(MONSTER_DIES_LUA_KEY))
         mons->props.erase(MONSTER_DIES_LUA_KEY);
-
-    mgrd(pos)    = mons->mindex();
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
@@ -335,7 +334,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     }
 
     bool _obvious;
-    if (obvious == NULL)
+    if (obvious == nullptr)
         obvious = &_obvious;
     *obvious = false;
 

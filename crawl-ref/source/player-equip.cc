@@ -723,8 +723,9 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                     // Makes no sense to discourage unwielding a temporarily
                     // branded weapon since you can wait it out. This also
                     // fixes problems with unwield prompts (mantis #793).
-                    MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
-                                  9, 90, "a distortion unwield");
+                    MiscastEffect(&you, nullptr, WIELD_MISCAST,
+                                  SPTYP_TRANSLOCATION, 9, 90,
+                                  "a distortion unwield");
                 }
                 break;
 
@@ -849,6 +850,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_FLYING:
+            // If you weren't flying when you took off the boots, don't restart.
+            if (you.attribute[ATTR_LAST_FLIGHT_STATUS] == 0)
+                break;
+
             if (you.airborne())
             {
                 you.attribute[ATTR_PERM_FLIGHT] = 1;
@@ -985,6 +990,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_FLYING:
+        // Save current flight status so we can restore it on reequip
+        you.attribute[ATTR_LAST_FLIGHT_STATUS] =
+            you.attribute[ATTR_PERM_FLIGHT];
+
         if (you.attribute[ATTR_PERM_FLIGHT]
             && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
             && !you.racial_permanent_flight())
@@ -1045,7 +1054,7 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, NULL, meld, slot);
+        _unequip_artefact_effect(item, nullptr, meld, slot);
 }
 
 static void _remove_amulet_of_faith(item_def &item)
@@ -1155,13 +1164,20 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_FAITH:
-        if (!(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5)))
+        if (you.species == SP_DEMIGOD)
+            mpr("You feel a surge of self-confidence.");
+        else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
+        {
+            simple_god_message(" says: An ascetic of your devotion"
+                               " has no use for such trinkets.");
+        }
+        else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
-                (you_worship(GOD_NO_GOD))
-                ? "strange " : "");
+                            you_worship(GOD_NO_GOD) ? "strange " : "");
         }
-        else if (you_worship(GOD_GOZAG))
+
+        if (you_worship(GOD_GOZAG))
             simple_god_message(" discounts your offered prices.");
         break;
 
@@ -1216,6 +1232,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mprf("You feel %s static.", you.species == SP_FORMICID ? "familiarly" : "strangely");
     }
 
+    bool new_ident = false;
     // Artefacts have completely different appearance than base types
     // so we don't allow them to make the base types known.
     if (artefact)
@@ -1227,7 +1244,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     }
     else
     {
-        set_ident_type(item, ID_KNOWN_TYPE);
+        new_ident = set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
@@ -1254,6 +1271,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     if (!unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+    if (new_ident)
+        auto_assign_item_slot(item);
 }
 
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,

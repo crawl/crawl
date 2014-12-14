@@ -400,6 +400,13 @@ An unusually thin troll.
 
 You feel a lump in the pit of your stomach.
 %%%%
+Robin
+
+A mountain hobgoblin, recently come in search of the legendary Orb. Not
+foolhardy or reckless enough to delve into the depths of the Dungeon alone,
+Robin has built a small army of minions. Potential competitors will quickly
+find a stream of screaming goblins flying toward them - watch out!
+%%%%
 Roxanne
 
 A strikingly realistic sapphire statue of a famous earth mage who disappeared
@@ -1336,11 +1343,6 @@ green draconian
 
 A muscular green-scaled humanoid with a reptilian tail and small wings.
 %%%%
-green rat
-
-A rodent with hair of a most peculiar green colour, and a powerful bite. It
-tends to form great swarms with its kin.
-%%%%
 grey draconian
 
 A muscular grey-scaled humanoid with a reptilian tail and small wings.
@@ -1396,6 +1398,11 @@ hell knight
 
 A heavily armoured warrior, in league with the powers of Hell, and usually
 accompanied by other unsavoury beings of its ilk.
+%%%%
+hell rat
+
+A unusually large rat. Its weird, knobbly orange skin glows with the infernal
+energies that spawned it.
 %%%%
 Hell Sentinel
 
@@ -1508,7 +1515,7 @@ infernal demonspawn
 insubstantial wisp
 
 A thin wisp of floating gas, flickering, disappearing and reforming in a
-disconcertingly random fashion.
+disconcertingly random fashion while building up an electrical charge.
 %%%%
 iron dragon
 
@@ -1771,6 +1778,11 @@ neqoxec
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly
 distended with the devoured brains of its victims.
 %%%%
+obsidian statue
+
+A beautiful statue of an unknown creature, jet-black like a tear in reality.
+Its eyes glow with an otherworldly, malignant radiance.
+%%%%
 octopode
 
 A more intelligent cousin of the mighty kraken, capable of using tools and
@@ -1825,11 +1837,6 @@ orange demon
 
 An amber-coloured demon with a tail not unlike that of a scorpion. It contains
 a potent venom that can render its victims weak and their blows feeble.
-%%%%
-orange rat
-
-A unusually large rat with weird knobbly orange skin, glowing with unholy
-energies.
 %%%%
 Orb Guardian
 
@@ -2046,6 +2053,11 @@ revenant
 A skeletal form wreathed in cold blue fire, standing astride this life and the
 next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
+river rat
+
+A rodent with hair of a most peculiar green colour, and a powerful bite. It
+tends to form great swarms with its kin.
+%%%%
 the royal jelly
 
 A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
@@ -2143,6 +2155,12 @@ shapeshifter
 A disturbing creature with the power to change its form. It is very rarely
 observed alive in its natural state.
 %%%%
+shard shrike
+
+An incredibly fast-moving bird, known for impaling its prey on shards of ice
+before tearing them to pieces. They have acclimated to the desolate wastes of
+Cocytus, and its accursed chill now envelopes them.
+%%%%
 sheep
 
 A dim-witted, fluffy ovine, better known for its woolly hide than its
@@ -2166,14 +2184,14 @@ The bane of wizards, these terrible spirits bring an unearthly silence to the
 area around them, making it impossible to recite the magical incantations
 involved with casting spells or reading scrolls.
 %%%%
-obsidian statue
-
-A beautiful statue of an unknown creature, jet-black like a tear in reality.
-Its eyes glow with an otherworldly, malignant radiance.
-%%%%
 simulacrum
 
 An ice replica of a monster, animated by the powers of necromancy.
+%%%%
+singularity
+
+A gravitational singularity, which pulls in enemies of its creator and
+violently warps them in the process.
 %%%%
 siren
 

@@ -9,7 +9,7 @@
 #include "trap_def.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 
 #include "areas.h"
 #include "bloodspatter.h"
@@ -64,6 +64,7 @@ bool trap_def::type_has_ammo() const
     return false;
 }
 
+// Used for when traps run out of ammo.
 void trap_def::disarm()
 {
     if (type == TRAP_NET)
@@ -164,7 +165,7 @@ bool trap_def::is_known(const actor* act) const
 {
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
-    if (act == NULL || act->is_player())
+    if (act == nullptr || act->is_player())
         return player_knows;
     else if (act->is_monster())
     {
@@ -214,10 +215,6 @@ bool trap_def::is_safe(actor* act) const
 {
     if (!act)
         act = &you;
-
-    // Shaft and mechanical traps are safe when flying or clinging.
-    if ((act->airborne() || act->can_cling_to(pos)) && ground_only())
-        return true;
 
     // TODO: For now, just assume they're safe; they don't damage outright,
     // and the messages get old very quickly
@@ -486,18 +483,17 @@ vector<coord_def> find_golubria_on_level()
 
 static bool _find_other_passage_side(coord_def& to)
 {
-    vector<coord_def> passages = find_golubria_on_level();
     vector<coord_def> clear_passages;
-    for (unsigned int i = 0; i < passages.size(); i++)
+    for (coord_def passage : find_golubria_on_level())
     {
-        if (passages[i] != to && !actor_at(passages[i]))
-            clear_passages.push_back(passages[i]);
+        if (passage != to && !actor_at(passage))
+            clear_passages.push_back(passage);
     }
     const int choices = clear_passages.size();
     if (choices < 1)
         return false;
     to = clear_passages[random2(choices)];
-        return true;
+    return true;
 }
 
 // Returns a direction string from you.pos to the
@@ -562,13 +558,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (crawl_state.game_is_zotdef() && m && m->friendly() && trig_knows)
     {
         simple_monster_message(m," carefully avoids a trap.");
-        return;
-    }
-    // Only magical traps and webs affect flying critters.
-    if (!triggerer.ground_level() && ground_only())
-    {
-        if (you_know && m && triggerer.airborne())
-            simple_monster_message(m, " flies safely over a trap.");
         return;
     }
 
@@ -726,7 +715,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                         msg += m->name(DESC_THE);
                     }
                     msg += "!";
-                    mpr(msg.c_str());
+                    mpr(msg);
                 }
 
                 int damage_taken = m->apply_ac(10 + random2avg(29, 2));
@@ -734,7 +723,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (!m->is_summoned())
                     bleed_onto_floor(m->pos(), m->type, damage_taken, true);
 
-                m->hurt(NULL, damage_taken);
+                m->hurt(nullptr, damage_taken);
                 if (in_sight && m->alive())
                     print_wounds(m);
 
@@ -826,7 +815,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 }
 
                 // actually try to net the monster
-                if (monster_caught_in_net(m, NULL))
+                if (monster_caught_in_net(m, nullptr))
                 {
                     // Don't try to escape the net in the same turn
                     m->props[NEWLY_TRAPPED_KEY] = true;
@@ -927,7 +916,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (!trig_knows)
                 xom_is_stimulated(25);
 
-            MiscastEffect(&you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+            MiscastEffect(&you, nullptr, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                            3, name(DESC_A));
         }
         else if (m)
@@ -939,7 +928,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // in 99% of cases - a player can just watch who stepped where
             // and mark the trap on an external paper map.  Not good.
 
-            actor* targ = NULL;
+            actor* targ = nullptr;
             if (m->wont_attack() || crawl_state.game_is_arena())
                 targ = m;
             else if (you.see_cell_no_trans(pos) && one_chance_in(5))
@@ -960,7 +949,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     mprf("The power of Zot is invoked against %s!",
                          targ->name(DESC_THE).c_str());
                 }
-                MiscastEffect(targ, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                MiscastEffect(targ, nullptr, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                               3, "the power of Zot");
             }
         }
@@ -1067,7 +1056,7 @@ int trap_def::difficulty()
 {
     switch (type)
     {
-    // To-hit and disarming:
+    // To-hit:
     case TRAP_ARROW:
         return 7;
     case TRAP_SPEAR:
@@ -1078,19 +1067,6 @@ int trap_def::difficulty()
         return 5;
     case TRAP_NEEDLE:
         return 8;
-    // Disarming only:
-    case TRAP_BLADE:
-        return 20;
-    case TRAP_PLATE:
-        return 15;
-    case TRAP_WEB:
-        return 12;
-#if TAG_MAJOR_VERSION == 34
-    case TRAP_GAS:
-        return 15;
-    case TRAP_DART:
-        return 3;
- #endif
     // Irrelevant:
     default:
         return 0;
@@ -1129,7 +1105,7 @@ void destroy_trap(const coord_def& pos)
 trap_def* find_trap(const coord_def& pos)
 {
     if (!feat_is_trap(grd(pos), true))
-        return NULL;
+        return nullptr;
 
     unsigned short t = env.tgrid(pos);
 
@@ -1147,15 +1123,6 @@ trap_type get_trap_type(const coord_def& pos)
         return ptrap->type;
 
     return TRAP_UNASSIGNED;
-}
-
-static bool _disarm_is_deadly(trap_def& trap)
-{
-    int dam = trap.max_damage(you);
-    if (trap.type == TRAP_NEEDLE && you.res_poison() <= 1)
-        dam += 15; // arbitrary
-
-    return you.hp <= dam;
 }
 
 void search_around()
@@ -1204,80 +1171,6 @@ void search_around()
                  ptrap->name(DESC_A).c_str());
             learned_something_new(HINT_SEEN_TRAP, *ri);
         }
-    }
-}
-
-// where *must* point to a valid, discovered trap.
-void disarm_trap(const coord_def& where)
-{
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    trap_def& trap = *find_trap(where);
-
-    switch (trap.category())
-    {
-    case DNGN_TRAP_ALARM:
-        // Zotdef - allow alarm traps to be disarmed
-        if (crawl_state.game_is_zotdef())
-            break;
-    case DNGN_TRAP_TELEPORT:
-    case DNGN_TRAP_ZOT:
-        mpr("You can't disarm magical traps.");
-        return;
-    case DNGN_PASSAGE_OF_GOLUBRIA:
-        mpr("You can't disarm passages of Golubria.");
-        return;
-    case DNGN_TRAP_SHAFT:
-        // Only shafts for now.
-        mpr("You can't disarm shafts.");
-        return;
-    default:
-        break;
-    }
-
-    // Prompt for any trap for which you might not survive setting it off.
-    if (_disarm_is_deadly(trap))
-    {
-        string prompt = make_stringf("Really try disarming that %s?",
-                                     feature_description_at(where, false,
-                                                            DESC_BASENAME,
-                                                            false).c_str());
-
-        if (!yesno(prompt.c_str(), true, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-    }
-
-    // Make the actual attempt
-    you.turn_is_over = true;
-    if (random2(div_rand_round(you.experience_level, 3) + 2) <= random2(trap.difficulty() + 5))
-    {
-        mpr("You failed to disarm the trap.");
-        if (random2(you.dex()) <= 5 + random2(5 + trap.difficulty()))
-        {
-            if ((trap.type == TRAP_NET || trap.type == TRAP_WEB)
-                && trap.pos != you.pos())
-            {
-                if (coinflip())
-                {
-                    mpr("You stumble into the trap!");
-                    move_player_to_grid(trap.pos, true);
-                }
-            }
-            else
-                trap.trigger(you, true);
-        }
-    }
-    else
-    {
-        mpr("You have disarmed the trap.");
-        trap.disarm();
     }
 }
 
@@ -1641,7 +1534,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
          trap_hit, act.melee_evasion(0), con_block, pro_block);
 
     // Determine whether projectile hits.
-    if (!force_hit && trap_hit < act.melee_evasion(NULL))
+    if (!force_hit && trap_hit < act.melee_evasion(nullptr))
     {
         if (act.is_player())
         {
@@ -1705,8 +1598,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             }
 
             if (poison)
-                act.poison(NULL, 3 + roll_dice(2, 5));
-            act.hurt(NULL, damage_taken);
+                act.poison(nullptr, 3 + roll_dice(2, 5));
+            act.hurt(nullptr, damage_taken);
         }
     }
     ammo_qty--;
@@ -1755,11 +1648,6 @@ dungeon_feature_type trap_category(trap_type type)
     }
 }
 
-bool trap_def::ground_only() const
-{
-    return type == TRAP_SHAFT || category() == DNGN_TRAP_MECHANICAL;
-}
-
 bool is_valid_shaft_level(bool known)
 {
     const level_id place = level_id::current();
@@ -1792,8 +1680,11 @@ bool is_valid_shaft_level(bool known)
     // immediately above the bottom of a branch if that branch is
     // significantly more dangerous than normal.
     int min_delta = 1;
-    if (!known && env.turns_on_level == -1 && branch.dangerous_bottom_level)
+    if (!known && env.turns_on_level == -1
+        && branch.branch_flags & BFLAG_DANGEROUS_END)
+    {
         min_delta = 2;
+    }
 
     return (brdepth[place.branch] - place.depth) >= min_delta;
 }
@@ -1838,9 +1729,7 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
     // Only shafts on the level immediately above a dangerous branch
     // bottom will take you to that dangerous bottom, and shafts can't
     // be created during level generation time.
-    // Include level 27 of the main dungeon here, but don't restrict
-    // shaft creation (so don't set branch.dangerous_bottom_level).
-    if (branches[lid.branch].dangerous_bottom_level
+    if (branches[lid.branch].branch_flags & BFLAG_DANGEROUS_END
         && lid.depth == max_depth
         && (max_depth - curr_depth) > 1)
     {

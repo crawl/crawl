@@ -77,21 +77,20 @@ spret_type cast_forceful_dismissal(int pow, bool fail);
 
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
-                    actor *as = NULL, string nas = "",
+                    actor *as = nullptr, string nas = "",
                     god_type god = GOD_NO_GOD, bool actual = true,
                     bool quiet = false, bool force_beh = false,
-                    monster** mon = NULL, int* motions = NULL);
+                    monster** mon = nullptr, int* motions = nullptr);
 
 spret_type cast_animate_skeleton(god_type god, bool fail);
 spret_type cast_animate_dead(int pow, god_type god, bool fail);
-int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
-                 actor *as = NULL, string nas = "",
+int animate_dead(actor *caster, int /*pow*/, beh_type beha,
+                 unsigned short hitting, actor *as = nullptr, string nas = "",
                  god_type god = GOD_NO_GOD, bool actual = true);
 
 spret_type cast_simulacrum(int pow, god_type god, bool fail);
 bool monster_simulacrum(monster *caster, bool actual);
 
-spret_type cast_twisted_resurrection(int pow, god_type god, bool fail);
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual = true);
 
@@ -110,7 +109,8 @@ bool trigger_battlesphere(actor* agent, bolt& beam);
 bool fire_battlesphere(monster* mons);
 void reset_battlesphere(monster* mons);
 
-spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail);
+spret_type cast_fulminating_prism(actor* caster, int pow,
+                                  const coord_def& where, bool fail);
 
 monster* find_spectral_weapon(const actor* agent);
 spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail);
@@ -122,7 +122,7 @@ void reset_spectral_weapon(monster* mons);
 void grand_avatar_reset(monster* mons);
 bool grand_avatar_check_melee(monster* mons, actor* target);
 void end_grand_avatar(monster* mons, bool killed);
-void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
+void trigger_grand_avatar(monster* mons, const actor* victim, spell_type spell,
                           const int old_hp);
 
 void summoned_monster(const monster* mons, const actor* caster,

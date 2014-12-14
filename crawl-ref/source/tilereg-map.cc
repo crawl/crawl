@@ -16,7 +16,7 @@
 #include "viewgeom.h"
 
 MapRegion::MapRegion(int pixsz) :
-    m_buf(NULL),
+    m_buf(nullptr),
     m_dirty(true),
     m_far_view(false)
 {

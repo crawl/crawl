@@ -3,6 +3,7 @@
 #include "feature.h"
 
 #include "colour.h"
+#include "libutil.h"
 #include "options.h"
 #include "viewchar.h"
 
@@ -19,13 +20,11 @@ static feature_def invis_fd, cloud_fd;
  */
 ucs_t feature_def::symbol() const
 {
-    typedef map<dungeon_feature_type, FixedVector<ucs_t, 2> > fso_t;
-    const fso_t &fso = Options.feature_symbol_overrides;
-    fso_t::const_iterator i;
-    if (feat && (i = fso.find(feat)) != fso.end() && i->second[0])
-        return get_glyph_override(i->second[0]);
-    else
-        return dchar_glyph(dchar);
+    auto over = map_find(Options.feature_symbol_overrides, feat);
+    if (over && (*over)[0])
+        return get_glyph_override((*over)[0]);
+
+    return dchar_glyph(dchar);
 }
 
 /** What symbol should be used for this feature when magic mapped?
@@ -36,15 +35,84 @@ ucs_t feature_def::symbol() const
  */
 ucs_t feature_def::magic_symbol() const
 {
-    typedef map<dungeon_feature_type, FixedVector<ucs_t, 2> > fso_t;
-    const fso_t &fso = Options.feature_symbol_overrides;
-    fso_t::const_iterator i;
-    if (feat && (i = fso.find(feat)) != fso.end() && i->second[1])
-        return get_glyph_override(i->second[1]);
-    else if (magic_dchar != NUM_DCHAR_TYPES)
+    auto over = map_find(Options.feature_symbol_overrides, feat);
+    if (over && (*over)[1])
+        return get_glyph_override((*over)[1]);
+
+    if (magic_dchar != NUM_DCHAR_TYPES)
         return dchar_glyph(magic_dchar);
     else
         return symbol();
+}
+
+/** What colour should be used for this feature?
+ *
+ *  @returns The colour from the feature option if given, otherwise
+ *           the normal colour.
+ */
+colour_t feature_def::colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->dcolour)
+        return ofeat->dcolour;
+
+    return dcolour;
+}
+
+/** What colour should be used for this feature when out of LOS?
+ *
+ *  @returns The map_colour from the feature option if given, otherwise
+ *           the normal map_colour.
+ */
+colour_t feature_def::map_colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->map_dcolour)
+        return ofeat->map_dcolour;
+
+    return map_dcolour;
+}
+
+/** What colour should be used for this feature when we have knowledge of it?
+ *
+ *  @returns The seen_colour from the feature option if given, otherwise
+ *           the normal seen_colour.
+ */
+colour_t feature_def::seen_colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->seen_dcolour)
+        return ofeat->seen_dcolour;
+
+    return seen_dcolour;
+}
+
+/** Emphasised colour when out of LoS?
+ *
+ *  @returns The seen_em_colour from the feature option if given, otherwise
+ *           the normal seen_em_colour.
+ */
+colour_t feature_def::seen_em_colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->seen_em_dcolour)
+        return ofeat->seen_em_dcolour;
+
+    return seen_em_dcolour;
+}
+
+/** Emphasised colour in LOS?
+ *
+ *  @returns The em_colour from the feature option if given, otherwise
+*            the normal em_colour.
+ */
+colour_t feature_def::em_colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->em_dcolour)
+        return ofeat->em_dcolour;
+
+    return em_dcolour;
 }
 
 /** Do the default colour relations on a feature_def.
@@ -53,41 +121,14 @@ ucs_t feature_def::magic_symbol() const
  */
 static void _create_colours(feature_def &f)
 {
-    if (f.seen_colour == BLACK)
-        f.seen_colour = f.map_colour;
+    if (f.seen_dcolour == BLACK)
+        f.seen_dcolour = f.map_dcolour;
 
-    if (f.seen_em_colour == BLACK)
-        f.seen_em_colour = f.seen_colour;
+    if (f.seen_em_dcolour == BLACK)
+        f.seen_em_dcolour = f.seen_dcolour;
 
-    if (f.em_colour == BLACK)
-        f.em_colour = f.colour;
-}
-
-/** Put the feature overrides from the 'feature' option, stored in
- *  Options.feature_overrides, into feat_defs.
- */
-static void _apply_feature_overrides()
-{
-    for (map<dungeon_feature_type, feature_def>::const_iterator fo
-         = Options.feature_colour_overrides.begin();
-         fo != Options.feature_colour_overrides.end();
-         ++fo)
-    {
-        const feature_def           &ofeat  = fo->second;
-        // Replicating get_feature_def since we need not-const.
-        feature_def                 &feat   = feat_defs[feat_index[fo->first]];
-
-        if (ofeat.colour)
-            feat.colour = ofeat.colour;
-        if (ofeat.map_colour)
-            feat.map_colour = ofeat.map_colour;
-        if (ofeat.seen_colour)
-            feat.seen_colour = ofeat.seen_colour;
-        if (ofeat.seen_em_colour)
-            feat.seen_em_colour = ofeat.seen_em_colour;
-        if (ofeat.em_colour)
-            feat.em_colour = ofeat.em_colour;
-    }
+    if (f.em_dcolour == BLACK)
+        f.em_dcolour = f.dcolour;
 }
 
 static void _init_feature_index()
@@ -110,7 +151,6 @@ static void _init_feature_index()
 void init_show_table()
 {
     _init_feature_index();
-    _apply_feature_overrides();
 
     for (int i = 0; i < NUM_SHOW_ITEMS; i++)
     {

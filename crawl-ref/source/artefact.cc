@@ -10,9 +10,9 @@
 
 #include <algorithm>
 #include <climits>
+#include <cstdio>
 #include <cstdlib>
-#include <stdio.h>
-#include <string.h>
+#include <cstring>
 
 #include "areas.h"
 #include "branch.h"
@@ -291,7 +291,9 @@ string replace_name_parts(const string &name_in, const item_def& item)
         else
         {
             do
+            {
                 which_god = random_god(false); // Fedhas in ZotDef only
+            }
             while (!_god_fits_artefact(which_god, item, true));
         }
 
@@ -749,8 +751,7 @@ static void _get_randart_properties(const item_def &item,
                 SPWPN_ELECTROCUTION,
                 SPWPN_VAMPIRISM,
                 SPWPN_PAIN,
-                SPWPN_VENOM,
-                -1);
+                SPWPN_VENOM);
             power_level++; // Demon weapons get an extra penalty -- why?
             // fall back to regular melee brands 2/9 of the time
         }
@@ -1112,13 +1113,8 @@ static bool _redo_book(item_def &book)
     int num_spells  = 0;
     int num_unknown = 0;
 
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    for (spell_type spell : spellbook_template(static_cast<book_type>(book.sub_type)))
     {
-        spell_type spell = which_spell_in_book(book, i);
-
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
         num_spells++;
         if (!you.seen_spell[spell])
             num_unknown++;
@@ -1514,12 +1510,12 @@ string get_artefact_name(const item_def &item, bool force_known)
 
     if (item_type_known(item) || force_known)
     {
-        // unrands don't use cached names
-        if (is_unrandom_artefact(item))
-            return _seekunrandart(item)->name;
         // print artefact's real name
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
+        // unrands don't use cached names
+        if (is_unrandom_artefact(item))
+            return _seekunrandart(item)->name;
         return make_artefact_name(item, false);
     }
     // print artefact appearance
@@ -1951,6 +1947,7 @@ static void _make_faerie_armour(item_def &item)
 
     doodad.props[ARTEFACT_APPEAR_KEY].get_string()
         = item.props[ARTEFACT_APPEAR_KEY].get_string();
+    doodad.props.erase(ARTEFACT_NAME_KEY);
     item.props = doodad.props;
     item.plus = random2(6) + random2(6) - 2;
 }

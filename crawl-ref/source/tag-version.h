@@ -136,9 +136,18 @@ enum tag_minor_version
     TAG_MINOR_GHOST_ENERGY,        // ghost_demon has move_energy field
     TAG_MINOR_TENTACLE_MID,        // Use mids for tentacle code
     TAG_MINOR_CORPSE_COLOUR,       // Fix corpses with invalid colour.
+    TAG_MINOR_MANGLE_CORPSES,      // Turn NEVER_HIDE corpses into MANGLED_CORPSEs
+    TAG_MINOR_ZOT_OPEN,            // Don't store whether you opened Zot
+    TAG_MINOR_EXPLORE_MODE,        // Store whether you are in explore mode
+    TAG_MINOR_RANDLICHES,          // Liches are now GHOST_DEMONs
+    TAG_MINOR_ISFLAG_HANDLED,      // Game tracks which items player has handled
+    TAG_MINOR_SHOP_HACK,           // The shop hack is dead!
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
+
+// Marshalled as a byte in several places.
+COMPILE_CHECK(TAG_MINOR_VERSION <= 0xff);
 
 #endif

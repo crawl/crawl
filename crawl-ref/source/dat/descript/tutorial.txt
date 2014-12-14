@@ -183,7 +183,7 @@ Don't forget about chopping corpses for food (with
 tutorial2 wait
 
 Rather than storm the room and get swarmed by monsters, you can also step back
-and wait (with <input>$cmd[CMD_MOVE_NOWHERE]</input><localtiles> or by
+and wait (with <input>$cmd[CMD_WAIT]</input><localtiles> or by
 <input>clicking</input> on your character</localtiles>) for them to come to you.
 %%%%
 tutorial2 resting_reminder
@@ -276,7 +276,7 @@ tutorial2 exit
   You can also fire an item by <input>clicking</input> on it and the confirming the target with <input>Enter</input>.</localtiles>
 
 <yellow>Resting</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  wait and rest a single turn
+  <input>$cmd[CMD_WAIT]</input>  wait and rest a single turn
   <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
 
 <yellow>Corpses<console> <brown>%</brown></console></yellow>
@@ -525,7 +525,7 @@ tutorial4 spell_success
 
 To check your spell proficiency, press <input>$cmd[CMD_DISPLAY_SPELLS]</input>
 <localtiles> or <input>mouseover</input> over your memorised
-spells</localtiles>. Compare your spell success rates before and after wielding
+spells</localtiles>. Compare your spell failure rates before and after wielding
 this staff.
 %%%%
 tutorial4 mephitic_cloud
@@ -580,7 +580,7 @@ tutorial4 order_allies
 
 Try to let your allies do the killing! If necessary, you can order them about
 with <input>$cmd[CMD_SHOUT]</input>. Before opening this gate, you may want to
-wait with <input>$cmd[CMD_MOVE_NOWHERE]</input> until your allies have caught
+wait with <input>$cmd[CMD_WAIT]</input> until your allies have caught
 up with you.
 %%%%
 tutorial4 heavy_armour
@@ -589,7 +589,7 @@ tutorial4 heavy_armour
 Heavy armour really hampers spellcasting. Try putting on that mail and shield
 (with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or by
 <input>clicking</input> on them</localtiles>), and compare your spellcasting
-success rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
+failure rates with <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or by
 <input>mouseovering</input> your memorised spells</localtiles>. You can take
 armour off again with <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> or,
 again, via <input>mouseclick</input></localtiles>.
@@ -676,7 +676,7 @@ tutorial5 burn_book
 Trog will like it if you burn that book (with
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> or via the <w>command
 panel</w></localtiles>). Sometimes, you might want to wait (with
-<input>$cmd[CMD_MOVE_NOWHERE]</input>) for a monster to step on it before doing
+<input>$cmd[CMD_WAIT]</input>) for a monster to step on it before doing
 so.
 %%%%
 tutorial5 berserk
@@ -721,7 +721,7 @@ tutorial5 exit
   A <input>rightclick</input> on the player tile will also bring up the religion screen.</localtiles>
 
 <yellow>Resting</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  wait and rest a single turn
+  <input>$cmd[CMD_WAIT]</input>  wait and rest a single turn
   <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
 
 <yellow>Other commands</yellow>

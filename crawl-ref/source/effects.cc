@@ -9,11 +9,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <queue>
 #include <set>
-#include <stdio.h>
-#include <string.h>
 
 #include "abyss.h"
 #include "act-iter.h"
@@ -151,7 +151,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
         // because it can kill them, and because hostile
         // monsters don't use it.
         // Tolerate unknown scroll, to not annoy Yred worshippers too much.
-        if (attacker != NULL
+        if (attacker != nullptr
             && (attacker != &you
                 || source != HOLY_WORD_SCROLL
                 || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
@@ -309,32 +309,18 @@ void torment(actor *attacker, torment_source_type taux, const coord_def& where)
         _torment_stuff_at(*ri, attacker, taux);
 }
 
-void cleansing_flame(int pow, int caster, coord_def where,
-                     actor *attacker)
+void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+                                coord_def where, actor *attacker)
 {
-    ASSERT(!crawl_state.game_is_arena());
-
-    const char *aux = "cleansing flame";
-
-    bolt beam;
-
-    if (caster < 0)
-    {
-        switch (caster)
-        {
-        case CLEANSING_FLAME_TSO:
-            aux = "the Shining One's cleansing flame";
-            break;
-        }
-    }
-
     beam.flavour      = BEAM_HOLY;
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(2, pow);
-    beam.target       = you.pos();
+    beam.target       = where;
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
-    beam.aux_source   = aux;
+    beam.aux_source   = (caster == CLEANSING_FLAME_TSO)
+                        ? "the Shining One's cleansing flame"
+                        : "cleansing flame";
     beam.ex_size      = 2;
     beam.is_explosion = true;
 
@@ -357,7 +343,13 @@ void cleansing_flame(int pow, int caster, coord_def where,
         beam.thrower   = KILL_MON;
         beam.source_id = attacker->mid;
     }
+}
 
+void cleansing_flame(int pow, int caster, coord_def where,
+                     actor *attacker)
+{
+    bolt beam;
+    setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
     beam.explode();
 }
 
@@ -524,17 +516,17 @@ void direct_effect(monster* source, spell_type spell,
     case SPELL_CHAOTIC_MIRROR:
         if (x_chance_in_y(4, 10))
         {
-            pbolt.name = "reflection of chaos";
-            pbolt.source_id = source->mid;
-            pbolt.aux_source = "chaotic mirror";
-            pbolt.hit = AUTOMATIC_HIT;
-            pbolt.is_beam = true;
-            pbolt.ench_power = MAG_IMMUNE;
-            pbolt.real_flavour = BEAM_CHAOTIC_REFLECTION;
+            pbolt.name                  = "reflection of chaos";
+            pbolt.source_id             = source->mid;
+            pbolt.aux_source            = "chaotic mirror";
+            pbolt.hit                   = AUTOMATIC_HIT;
+            pbolt.pierce                = true;
+            pbolt.ench_power            = MAG_IMMUNE;
+            pbolt.real_flavour          = BEAM_CHAOTIC_REFLECTION;
             pbolt.fake_flavour();
-            pbolt.real_flavour = pbolt.flavour;
-            pbolt.damage = dice_def(1, 6);
-            pbolt.use_target_as_pos = true;
+            pbolt.real_flavour          = pbolt.flavour;
+            pbolt.damage                = dice_def(1, 6);
+            pbolt.use_target_as_pos     = true;
             pbolt.source = pbolt.target = defender->pos();
             pbolt.affect_actor(defender);
             pbolt.source = pbolt.target = source->pos();
@@ -601,14 +593,8 @@ void direct_effect(monster* source, spell_type spell,
             }
         }
 
-        if (defender->is_player())
-        {
-            // Bypassing ::hurt so that flay damage can ignore guardian spirit
-            ouch(damage_taken, KILLED_BY_MONSTER, source->mid,
-                 "flay_damage", you.can_see(source));
-        }
-        else
-            defender->hurt(source, damage_taken, BEAM_NONE, true);
+        defender->hurt(source, damage_taken, BEAM_NONE,
+                       KILLED_BY_MONSTER, "", "flay_damage", true);
         defender->props["flay_damage"].get_int() += damage_taken;
 
         vector<coord_def> old_blood;
@@ -651,13 +637,11 @@ void direct_effect(monster* source, spell_type spell,
                                       * confuse_power);
         if (res_margin > 0)
         {
-            if (defender->is_player())
-                canned_msg(MSG_YOU_RESIST);
-            else // if (defender->is_monster())
+            if (you.can_see(defender))
             {
-                const monster* foe = defender->as_monster();
-                simple_monster_message(foe,
-                                       mons_resist_string(foe, res_margin));
+                mprf("%s%s",
+                     defender->name(DESC_THE).c_str(),
+                     defender->resist_margin_phrase(res_margin).c_str());
             }
             break;
         }
@@ -678,11 +662,9 @@ void direct_effect(monster* source, spell_type spell,
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
     {
-        if (def)
-            def->hurt(source, damage_taken);
-        else
-            ouch(damage_taken, KILLED_BY_BEAM, pbolt.source_id,
-                 pbolt.aux_source.c_str());
+        actor *victim = def ? (actor *)def : (actor *)&you;
+        victim->hurt(source, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
+                     "", pbolt.aux_source);
     }
 }
 
@@ -755,7 +737,7 @@ void random_uselessness(int scroll_slot)
     }
 }
 
-int recharge_wand(bool known, string *pre_msg)
+int recharge_wand(bool known, const string &pre_msg)
 {
     int item_slot = -1;
     do
@@ -821,8 +803,8 @@ int recharge_wand(bool known, string *pre_msg)
                 desc = info;
             }
 
-            if (known && pre_msg)
-                mpr(pre_msg->c_str());
+            if (known && !pre_msg.empty())
+                mpr(pre_msg);
 
             mprf("%s %s for a moment%s.",
                  wand.name(DESC_YOUR).c_str(),
@@ -871,8 +853,8 @@ int recharge_wand(bool known, string *pre_msg)
             if (!work)
                 return 0;
 
-            if (known && pre_msg)
-                mpr(pre_msg->c_str());
+            if (known && !pre_msg.empty())
+                mpr(pre_msg);
 
             mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());
         }
@@ -959,7 +941,7 @@ void yell(const actor* mon)
     int mons_targd = MHITNOT;
     dist targ;
 
-    const string shout_verb = you.shout_verb(mon != NULL);
+    const string shout_verb = you.shout_verb(mon != nullptr);
     string cap_shout = shout_verb;
     cap_shout[0] = toupper(cap_shout[0]);
     const int noise_level = you.shout_volume();
@@ -1116,7 +1098,7 @@ void yell(const actor* mon)
             if (!cancel)
             {
                 const monster* m = monster_at(targ.target);
-                cancel = (m == NULL || !you.can_see(m));
+                cancel = (m == nullptr || !you.can_see(m));
                 if (!cancel)
                     mons_targd = m->mindex();
             }
@@ -1213,10 +1195,112 @@ bool vitrify_area(int radius)
     return something_happened;
 }
 
-// Nasty things happen to people who spend too long in Hell.
-static void _hell_effects(int time_delta)
+/**
+ * Choose a random, spooky hell effect message, print it, and make a loud noise
+ * if appropriate. (1/6 chance of loud noise.)
+ */
+static void _hell_effect_noise()
 {
-    UNUSED(time_delta);
+    const bool loud = one_chance_in(6) && !silenced(you.pos());
+    string msg = getMiscString(loud ? "hell_effect_noisy"
+                                    : "hell_effect_quiet");
+    if (msg.empty())
+        msg = "Something hellishly buggy happens.";
+
+    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
+    if (loud)
+        noisy(15, you.pos());
+}
+
+/**
+ * Choose a random miscast effect (from a weighted list) & apply it to the
+ * player.
+ */
+static void _random_hell_miscast()
+{
+    const spschool_flag_type which_miscast
+        = random_choose_weighted(8, SPTYP_NECROMANCY,
+                                 4, SPTYP_SUMMONING,
+                                 2, SPTYP_CONJURATION,
+                                 1, SPTYP_CHARMS,
+                                 1, SPTYP_HEXES,
+                                 0);
+
+    MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, which_miscast,
+                  4 + random2(6), random2avg(97, 3),
+                  "the effects of Hell");
+}
+
+/// The thematically appropriate hell effects for a given hell branch.
+struct hell_effect_spec
+{
+    /// The type of greater demon to spawn from hell effects.
+    monster_type fiend_type;
+    /// The appropriate theme of miscast effects to toss at the player.
+    spschool_flag_type miscast_type;
+};
+
+/// Hell effects for each branch of hell
+static map<branch_type, hell_effect_spec> hell_effects_by_branch =
+{
+    { BRANCH_DIS, { RANDOM_DEMON_GREATER, SPTYP_EARTH}},
+    { BRANCH_GEHENNA, { MONS_BRIMSTONE_FIEND, SPTYP_FIRE }},
+    { BRANCH_COCYTUS, { MONS_ICE_FIEND, SPTYP_ICE }},
+    { BRANCH_TARTARUS, { MONS_SHADOW_FIEND, SPTYP_NECROMANCY }},
+};
+
+/**
+ * Either dump a fiend or a hell-appropriate miscast effect on the player.
+ *
+ * 40% chance of fiend, 60% chance of miscast.
+ */
+static void _themed_hell_summon_or_miscast()
+{
+    const hell_effect_spec *spec = map_find(hell_effects_by_branch,
+                                            you.where_are_you);
+    if (!spec)
+        die("Attempting to call down a hell effect in a non-hellish branch.");
+
+    if (x_chance_in_y(2, 5))
+    {
+        create_monster(
+                       mgen_data::hostile_at(spec->fiend_type,
+                                             "the effects of Hell",
+                                             true, 0, 0, you.pos()));
+    }
+    else
+    {
+        MiscastEffect(&you, nullptr, HELL_EFFECT_MISCAST, spec->miscast_type,
+                      4 + random2(6), random2avg(97, 3),
+                      "the effects of Hell");
+    }
+}
+
+/**
+ * Try to summon at some number of random spawns from the current branch, to
+ * harass the player & give them easy xp/TSO piety. Occasionally, to kill them.
+ *
+ * Min zero, max five, average 1.67.
+ *
+ * Can and does summon bands as individual spawns.
+ */
+static void _minor_hell_summons()
+{
+    // Try to summon at least one and up to five random monsters. {dlb}
+    mgen_data mg;
+    mg.pos = you.pos();
+    mg.foe = MHITYOU;
+    mg.non_actor_summoner = "the effects of Hell";
+    create_monster(mg);
+
+    for (int i = 0; i < 4; ++i)
+        if (one_chance_in(3))
+            create_monster(mg);
+}
+
+/// Nasty things happen to people who spend too long in Hell.
+static void _hell_effects(int /*time_delta*/)
+{
     if (!player_in_hell())
         return;
 
@@ -1228,99 +1312,15 @@ static void _hell_effects(int time_delta)
         return;
     }
 
-    string msg = getMiscString("hell_effect");
-    if (msg.empty())
-        msg = "Something hellishly buggy happens.";
-    bool loud = starts_with(msg, "SOUND:");
-    if (loud)
-        msg.erase(0, 6);
-    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
-    if (loud)
-        noisy(15, you.pos());
+    _hell_effect_noise();
 
-    spschool_flag_type which_miscast = SPTYP_RANDOM;
-
-    int temp_rand = random2(27);
-    if (temp_rand > 17)     // 9 in 27 odds {dlb}
-    {
-        temp_rand = random2(8);
-
-        if (temp_rand > 3)  // 4 in 8 odds {dlb}
-            which_miscast = SPTYP_NECROMANCY;
-        else if (temp_rand > 1)     // 2 in 8 odds {dlb}
-            which_miscast = SPTYP_SUMMONING;
-        else if (temp_rand > 0)     // 1 in 8 odds {dlb}
-            which_miscast = SPTYP_CONJURATION;
-        else                // 1 in 8 odds {dlb}
-            which_miscast = coinflip() ? SPTYP_HEXES : SPTYP_CHARMS;
-
-        MiscastEffect(&you, HELL_EFFECT_MISCAST, which_miscast,
-                      4 + random2(6), random2avg(97, 3),
-                      "the effects of Hell");
-    }
-    else if (temp_rand > 7) // 10 in 27 odds {dlb}
-    {
-        monster_type which_beastie;
-
-        // 60:40 miscast:summon split {dlb}
-        switch (you.where_are_you)
-        {
-        case BRANCH_DIS:
-            which_beastie = RANDOM_DEMON_GREATER;
-            which_miscast = SPTYP_EARTH;
-            break;
-
-        case BRANCH_GEHENNA:
-            which_beastie = MONS_BRIMSTONE_FIEND;
-            which_miscast = SPTYP_FIRE;
-            break;
-
-        case BRANCH_COCYTUS:
-            which_beastie = MONS_ICE_FIEND;
-            which_miscast = SPTYP_ICE;
-            break;
-
-        case BRANCH_TARTARUS:
-            which_beastie = MONS_SHADOW_FIEND;
-            which_miscast = SPTYP_NECROMANCY;
-            break;
-
-        default:
-            die("unknown hell branch");
-        }
-
-        if (x_chance_in_y(2, 5))
-        {
-            create_monster(
-                mgen_data::hostile_at(which_beastie, "the effects of Hell",
-                    true, 0, 0, you.pos()));
-        }
-        else
-        {
-            MiscastEffect(&you, HELL_EFFECT_MISCAST, which_miscast,
-                          4 + random2(6), random2avg(97, 3),
-                          "the effects of Hell");
-        }
-    }
-
-    // NB: No "else" - 8 in 27 odds that nothing happens through
-    //                 first chain. {dlb}
-    // Also note that the following is distinct from and in
-    // addition to the above chain.
-
-    // Try to summon at least one and up to five random monsters. {dlb}
     if (one_chance_in(3))
-    {
-        mgen_data mg;
-        mg.pos = you.pos();
-        mg.foe = MHITYOU;
-        mg.non_actor_summoner = "the effects of Hell";
-        create_monster(mg);
+        _random_hell_miscast();
+    else if (x_chance_in_y(5, 9))
+        _themed_hell_summon_or_miscast();
 
-        for (int i = 0; i < 4; ++i)
-            if (one_chance_in(3))
-                create_monster(mg);
-    }
+    if (one_chance_in(3))   // NB: No "else"
+        _minor_hell_summons();
 }
 
 // This function checks whether we can turn a wall into a floor space and
@@ -1339,8 +1339,8 @@ static bool _feat_is_flanked_by_walls(const coord_def &p)
                                coord_def(p.x  ,p.y+1) };
 
     // paranoia!
-    for (unsigned int i = 0; i < ARRAYSZ(adjs); ++i)
-        if (!in_bounds(adjs[i]))
+    for (coord_def c : adjs)
+        if (!in_bounds(c))
             return false;
 
     return feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
@@ -1560,9 +1560,9 @@ void change_labyrinth(bool msg)
 
         string path_str = "";
         mprf(MSGCH_DIAGNOSTICS, "Here's the list of targets: ");
-        for (unsigned int i = 0; i < targets.size(); i++)
+        for (coord_def target : targets)
         {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", targets[i].x, targets[i].y);
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", target.x, target.y);
             path_str += info;
         }
         mprf(MSGCH_DIAGNOSTICS, "%s", path_str.c_str());
@@ -1627,9 +1627,8 @@ void change_labyrinth(bool msg)
         // Add all floor grids meeting a couple of conditions to a vector
         // of potential switch points.
         vector<coord_def> points;
-        for (unsigned int i = 0; i < path.size(); i++)
+        for (const coord_def p : path)
         {
-            const coord_def p(path[i]);
             // The point must be inside the changed area.
             if (p.x < c1.x || p.x > c2.x || p.y < c1.y || p.y > c2.y)
                 continue;
@@ -1755,15 +1754,15 @@ void change_labyrinth(bool msg)
     // The directions are used to randomly decide where to place items that
     // have ended up in walls during the switching.
     vector<coord_def> dirs;
-    dirs.push_back(coord_def(-1,-1));
-    dirs.push_back(coord_def(0,-1));
-    dirs.push_back(coord_def(1,-1));
-    dirs.push_back(coord_def(-1, 0));
+    dirs.emplace_back(-1,-1);
+    dirs.emplace_back(0,-1);
+    dirs.emplace_back(1,-1);
+    dirs.emplace_back(-1, 0);
 
-    dirs.push_back(coord_def(1, 0));
-    dirs.push_back(coord_def(-1, 1));
-    dirs.push_back(coord_def(0, 1));
-    dirs.push_back(coord_def(1, 1));
+    dirs.emplace_back(1, 0);
+    dirs.emplace_back(-1, 1);
+    dirs.emplace_back(0, 1);
+    dirs.emplace_back(1, 1);
 
     // Search the entire shifted area for stacks of items now stuck in walls
     // and move them to a random adjacent non-wall grid.
@@ -1780,9 +1779,9 @@ void change_labyrinth(bool msg)
         }
         // Search the eight possible directions in random order.
         shuffle_array(dirs);
-        for (unsigned int i = 0; i < dirs.size(); i++)
+        for (coord_def dir : dirs)
         {
-            const coord_def p = *ri + dirs[i];
+            const coord_def p = *ri + dir;
             if (!in_bounds(p))
                 continue;
 
@@ -1911,10 +1910,8 @@ static void _magic_contamination_effects()
 }
 // Checks if the player should be hit with magic contaimination effects,
 // then actually does it if they should be.
-static void _handle_magic_contamination(int time_delta)
+static void _handle_magic_contamination(int /*time_delta*/)
 {
-    UNUSED(time_delta);
-
     // [ds] Move magic contamination effects closer to b26 again.
     const bool glow_effect = get_contamination_level() > 1
             && x_chance_in_y(you.magic_contamination, 12000);
@@ -1932,9 +1929,8 @@ static void _handle_magic_contamination(int time_delta)
 }
 
 // Adjust the player's stats if s/he's diseased (or recovering).
-static void _recover_stats(int time_delta)
+static void _recover_stats(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (!you.disease)
     {
         bool recovery = true;
@@ -1978,9 +1974,8 @@ static void _recover_stats(int time_delta)
 }
 
 // Adjust the player's stats if s/he has the deterioration mutation.
-static void _deteriorate(int time_delta)
+static void _deteriorate(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (player_mutation_level(MUT_DETERIORATION)
         && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
     {
@@ -1989,24 +1984,21 @@ static void _deteriorate(int time_delta)
 }
 
 // Exercise armour *xor* stealth skill: {dlb}
-static void _wait_practice(int time_delta)
+static void _wait_practice(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     practise(EX_WAIT);
 }
 
-static void _lab_change(int time_delta)
+static void _lab_change(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (player_in_branch(BRANCH_LABYRINTH))
         change_labyrinth();
 }
 
 // Update the abyss speed. This place is unstable and the speed can
 // fluctuate. It's not a constant increase.
-static void _abyss_speed(int time_delta)
+static void _abyss_speed(int /*time_delta*/)
 {
-    UNUSED(time_delta);
     if (!player_in_branch(BRANCH_ABYSS))
         return;
 
@@ -2018,10 +2010,8 @@ static void _abyss_speed(int time_delta)
         --you.abyss_speed;
 }
 
-static void _jiyva_effects(int time_delta)
+static void _jiyva_effects(int /*time_delta*/)
 {
-    UNUSED(time_delta);
-
     if (!you_worship(GOD_JIYVA))
         return;
 
@@ -2034,7 +2024,9 @@ static void _jiyva_effects(int time_delta)
             // Spread jellies around the level.
             coord_def newpos;
             do
+            {
                 newpos = random_in_bounds();
+            }
             while (grd(newpos) != DNGN_FLOOR
                        && grd(newpos) != DNGN_SHALLOW_WATER
                    || monster_at(newpos)
@@ -2130,16 +2122,16 @@ static struct timed_effect timed_effects[] =
     { TIMER_DETERIORATION, _deteriorate,                  100,   300, false },
     { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_SCREAM, NULL,                                   0,     0, false },
+    { TIMER_SCREAM, nullptr,                                0,     0, false },
 #endif
-    { TIMER_FOOD_ROT,      rot_inventory_food,           100,   300, false },
+    { TIMER_FOOD_ROT,      rot_inventory_food,            100,   300, false },
     { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
     { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
     { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
     { TIMER_JIYVA,         _jiyva_effects,                100,   300, false },
     { TIMER_EVOLUTION,     _evolve,                      5000, 15000, false },
 #if TAG_MAJOR_VERSION == 34
-    { TIMER_BRIBE_TIMEOUT, NULL,                            0,     0, false },
+    { TIMER_BRIBE_TIMEOUT, nullptr,                         0,     0, false },
 #endif
 };
 
@@ -2725,9 +2717,6 @@ int spawn_corpse_mushrooms(item_def& corpse,
     if (target_count == 0)
         return 0;
 
-    int c_size = 8;
-    int permutation[] = {0, 1, 2, 3, 4, 5, 6, 7};
-
     int placed_targets = 0;
 
     queue<coord_def> fringe;
@@ -2837,21 +2826,13 @@ int spawn_corpse_mushrooms(item_def& corpse,
         if (placed_targets == target_count)
             break;
 
-        // Wish adjacent_iterator had a random traversal.
-        shuffle_array(permutation, c_size);
-
-        for (int count = 0; count < c_size; ++count)
+        for (fair_adjacent_iterator ai(current); ai; ++ai)
         {
-            coord_def temp = current + Compass[permutation[count]];
-
-            int index = temp.x + temp.y * X_WIDTH;
-
-            if (!visited_indices.count(index)
-                && in_bounds(temp)
-                && mons_class_can_pass(MONS_TOADSTOOL, grd(temp)))
+            if (in_bounds(*ai) && mons_class_can_pass(MONS_TOADSTOOL, grd(*ai)))
             {
-                visited_indices.insert(index);
-                fringe.push(temp);
+                const int index = ai->x + ai->y * X_WIDTH;
+                if (visited_indices.insert(index).second)
+                    fringe.push(*ai); // Not previously visited.
             }
         }
     }
@@ -3040,7 +3021,7 @@ void slime_wall_damage(actor* act, int delay)
     {
         if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
         {
-            you.splash_with_acid(NULL, strength, false,
+            you.splash_with_acid(nullptr, strength, false,
                                 (walls > 1) ? "The walls burn you!"
                                             : "The wall burns you!");
         }
@@ -3060,7 +3041,7 @@ void slime_wall_damage(actor* act, int delay)
             mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
                   mon->name(DESC_THE).c_str());
         }
-        mon->hurt(NULL, dam, BEAM_ACID);
+        mon->hurt(nullptr, dam, BEAM_ACID);
     }
 }
 

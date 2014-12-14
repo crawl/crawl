@@ -7,11 +7,11 @@
 
 #include "libutil.h"
 
+#include <cctype>
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
 #include <sstream>
-#include <ctype.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "colour.h"
 #include "files.h"
@@ -32,7 +32,7 @@
 #endif
 
 #ifdef UNIX
-    #include <signal.h>
+    #include <csignal>
 #endif
 
 #ifdef DGL_ENABLE_CORE_DUMP
@@ -40,9 +40,13 @@
     #include <sys/resource.h>
 #endif
 
-#ifdef __ANDROID__
-    #include <SDL_mixer.h>
-    Mix_Chunk* android_sound_to_play = NULL;
+#if defined(USE_SOUND) && defined(USE_SDL) && !defined(WINMM_PLAY_SOUNDS)
+    #ifdef __ANDROID__
+        #include <SDL_mixer.h>
+    #else
+        #include <SDL2/SDL_mixer.h>
+    #endif
+    Mix_Chunk* sdl_sound_to_play = nullptr;
 #endif
 
 unsigned int isqrt(unsigned int a)
@@ -103,6 +107,7 @@ bool shell_safe(const char *file)
     return match < 0 || !file[match];
 }
 
+#ifdef USE_SOUND
 void play_sound(const char *file)
 {
 #if defined(WINMM_PLAY_SOUNDS)
@@ -119,15 +124,16 @@ void play_sound(const char *file)
         snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
         system(OUTS(command));
     }
-#elif defined(__ANDROID__)
+#elif defined(USE_SDL)
     if (Mix_Playing(0))
         Mix_HaltChannel(0);
-    if (android_sound_to_play != NULL)
-        Mix_FreeChunk(android_sound_to_play);
-    android_sound_to_play = Mix_LoadWAV(OUTS(file));
-    Mix_PlayChannel(0, android_sound_to_play, 0);
+    if (sdl_sound_to_play != nullptr)
+        Mix_FreeChunk(sdl_sound_to_play);
+    sdl_sound_to_play = Mix_LoadWAV(OUTS(file));
+    Mix_PlayChannel(0, sdl_sound_to_play, 0);
 #endif
 }
+#endif
 
 bool key_is_escape(int key)
 {
@@ -490,7 +496,7 @@ static bool _is_aero()
 taskbar_pos get_taskbar_pos()
 {
     RECT rect;
-    HWND taskbar = FindWindow("Shell_traywnd", NULL);
+    HWND taskbar = FindWindow("Shell_traywnd", nullptr);
     if (taskbar && GetWindowRect(taskbar, &rect))
     {
         if (rect.right - rect.left > rect.bottom - rect.top)
@@ -516,7 +522,7 @@ int get_taskbar_size()
     RECT rect;
     int size;
     taskbar_pos tpos = get_taskbar_pos();
-    HWND taskbar = FindWindow("Shell_traywnd", NULL);
+    HWND taskbar = FindWindow("Shell_traywnd", nullptr);
 
     if (taskbar && GetWindowRect(taskbar, &rect))
     {

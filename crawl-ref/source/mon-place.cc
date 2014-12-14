@@ -1189,7 +1189,7 @@ monster* get_free_monster()
             return &env.mons[i];
         }
 
-    return NULL;
+    return nullptr;
 }
 
 void mons_add_blame(monster* mon, const string &blame_string)
@@ -1283,7 +1283,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     mon->set_new_monster_id();
     mon->type         = mg.cls;
     mon->base_monster = mg.base_type;
-    mon->number       = mg.number;
 
     // Set pos and link monster into monster grid.
     if (!dont_place && !mon->move_to_pos(fpos))
@@ -1378,6 +1377,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Asterion belongs to Mahkleb.
         else if (mg.cls == MONS_ASTERION)
             mon->god = GOD_MAKHLEB;
+        // Seraphim follow the Shining One.
+        else if (mg.cls == MONS_SERAPH)
+            mon->god = GOD_SHINING_ONE;
         else
         {
             switch (mons_genus(mg.cls))
@@ -1449,6 +1451,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.mname != "")
         mon->mname = mg.mname;
 
+    if (mg.number != 0)
+        mon->number = mg.number;
+
     if (mg.hd != 0)
     {
         int bonus1 = 0, bonus2 = 0, bonus3 = 0;
@@ -1490,6 +1495,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // Store the extra flags here.
     mon->flags       |= mg.extra_flags;
+
+    // "Prince Ribbit returns to his original shape as he dies."
+    if (mg.cls == MONS_PRINCE_RIBBIT)
+        mon->props[ORIGINAL_TYPE_KEY].get_int() = MONS_PRINCE_RIBBIT;
 
     // The return of Boris is now handled in monster_die().  Not setting
     // this for Boris here allows for multiple Borises in the dungeon at
@@ -1550,6 +1559,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mon->has_spell(SPELL_DEFLECT_MISSILES))
         mon->add_ench(ENCH_DEFLECT_MISSILES);
+
+    if (mon->has_spell(SPELL_CIGOTUVIS_EMBRACE))
+        mon->add_ench(ENCH_BONE_ARMOUR);
 
     if (mon->has_spell(SPELL_CONDENSATION_SHIELD))
     {
@@ -1699,7 +1711,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         blame_prefix = "summoned by ";
 
-        if (mg.summoner != NULL && mg.summoner->alive()
+        if (mg.summoner != nullptr && mg.summoner->alive()
             && mg.summoner->type == MONS_MARA)
         {
             blame_prefix = "woven by ";
@@ -1732,7 +1744,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // by the Fire Storm spell); a deceased summoner's mindex might also
     // be reused to create its summon, so make sure the summon doesn't
     // think it has summoned itself.
-    else if (mg.summoner != NULL && mg.summoner->alive()
+    else if (mg.summoner != nullptr && mg.summoner->alive()
              && mg.summoner != mon)
     {
         ASSERT(mg.summoner->alive());
@@ -1747,11 +1759,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             if (sum->props.exists("blame"))
             {
                 const CrawlVector& oldblame = sum->props["blame"].get_vector();
-                for (CrawlVector::const_iterator i = oldblame.begin();
-                     i != oldblame.end(); ++i)
-                {
-                    mons_add_blame(mon, i->get_string());
-                }
+                for (const auto &bl : oldblame)
+                    mons_add_blame(mon, bl.get_string());
             }
         }
     }
@@ -1913,14 +1922,38 @@ bool zombie_picker::veto(monster_type mt)
         return true;
     if (mons_class_holiness(corpse_type) != MH_NATURAL)
         return true;
+    if (!_good_zombie(corpse_type, zombie_kind, pos))
+        return true;
+    return positioned_monster_picker::veto(mt);
+}
 
-    return !_good_zombie(corpse_type, zombie_kind, pos);
+static bool _mc_too_slow_for_zombies(monster_type mon)
+{
+    // zombies slower than the player are boring!
+    return mons_class_zombie_base_speed(mons_species(mon)) < BASELINE_DELAY;
+}
+
+/**
+ * Pick a local monster type that's suitable for turning into a corpse.
+ *
+ * @param place     The branch/level that the monster type should come from,
+ *                  if possible. (Not guaranteed for e.g. branches with no
+ *                  corpses.)
+ * @return          A monster type that can be used to fill out a corpse.
+ */
+monster_type pick_local_corpsey_monster(level_id place)
+{
+    return pick_local_zombifiable_monster(place, MONS_NO_MONSTER, coord_def(),
+                                          true);
 }
 
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
-                                            const coord_def& pos)
+                                            const coord_def& pos,
+                                            bool for_corpse)
 {
+    const bool really_in_d = place.branch == BRANCH_DUNGEON;
+
     if (crawl_state.game_is_zotdef())
     {
         place = level_id(BRANCH_DUNGEON,
@@ -1943,14 +1976,19 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
 
-    if (monster_type mt =
-            picker.pick_with_veto(zombie_population(place.branch),
-                                  place.depth, MONS_0))
-    {
-        return mt;
-    }
+    const bool need_veto = really_in_d && !for_corpse;
+    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : nullptr;
 
-    return pick_monster_all_branches(place.absdepth(), picker);
+    // try to grab a proper zombifiable monster
+    monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
+                                            place.depth, MONS_0, veto);
+    // there might not be one in this branch - if we can't find one, try
+    // elsewhere
+    if (!mt)
+        mt = pick_monster_all_branches(place.absdepth(), picker);
+
+    ASSERT(mons_class_can_be_zombified(mons_species(mt)));
+    return mt;
 }
 
 void roll_zombie_hp(monster* mon)
@@ -2013,9 +2051,9 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
     // able to make tentacles!
     monster_spells oldspells = mon->spells;
     mon->spells.clear();
-    for (size_t i = 0; i < oldspells.size(); i++)
-        if (oldspells[i].spell == SPELL_CREATE_TENTACLES)
-            mon->spells.push_back(oldspells[i]);
+    for (const mon_spell_slot &slot : oldspells)
+        if (slot.spell == SPELL_CREATE_TENTACLES)
+            mon->spells.push_back(slot);
 
     // handle zombies with jobs & ghostdemon zombies; they otherwise
     // wouldn't store enough information for us to recreate them right.
@@ -2123,15 +2161,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_CAUSTIC_SHRIKE:
-        switch (you.where_are_you)
-        {
-            case BRANCH_DUNGEON:
-                break;
-            default:
-                band = BAND_CAUSTIC_SHRIKE;
-                band_size = 2 + random2(3);
-                break;
-        }
+        band = BAND_CAUSTIC_SHRIKE;
+        band_size = 2 + random2(4);
+        break;
+
+    case MONS_SHARD_SHRIKE:
+        band = BAND_SHARD_SHRIKE;
+        band_size = 1 + random2(3);
         break;
 
     case MONS_FLYING_SKULL:
@@ -2243,7 +2279,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_INSUBSTANTIAL_WISP:
         band = BAND_INSUBSTANTIAL_WISPS;
-        band_size = 3 + random2(4);
+        band_size = 2 + random2(4);
         break;
     case MONS_OGRE_MAGE:
         natural_leader = true;
@@ -2350,13 +2386,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(4);
         break;
 
-    case MONS_GREEN_RAT:
+    case MONS_RIVER_RAT:
         band = BAND_GREEN_RATS;
         band_size = 4 + random2(6);
         break;
 
-    case MONS_ORANGE_RAT:
-        band = BAND_ORANGE_RATS;
+    case MONS_HELL_RAT:
+        band = BAND_HELL_RATS;
         band_size = 3 + random2(4);
         break;
 
@@ -2822,6 +2858,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 3 + random2(3);
         break;
 
+    case MONS_ROBIN:
+        natural_leader = true;
+        band = BAND_ROBIN;
+        band_size = 10 + random2(3);
+        break;
+
     case MONS_RAKSHASA:
         if ((branch_has_monsters(you.where_are_you)
              || !vault_mon_types.empty())
@@ -2913,6 +2955,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_SERAPH:
+        natural_leader = true;
+        band = BAND_HOLIES;
+        band_size = random_range(1, 3); // same as panlords
+        break;
+
     default: ;
     }
 
@@ -2975,6 +3023,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_CAUSTIC_SHRIKE:
         return MONS_CAUSTIC_SHRIKE;
+
+    case BAND_SHARD_SHRIKE:
+        return MONS_SHARD_SHRIKE;
 
     case BAND_FLYING_SKULLS:
         return MONS_FLYING_SKULL;
@@ -3148,9 +3199,9 @@ static monster_type _band_member(band_type band, int which)
     case BAND_WOLVES:
         return MONS_WOLF;
     case BAND_GREEN_RATS:
-        return MONS_GREEN_RAT;
-    case BAND_ORANGE_RATS:
-        return MONS_ORANGE_RAT;
+        return MONS_RIVER_RAT;
+    case BAND_HELL_RATS:
+        return MONS_HELL_RAT;
     case BAND_SHEEP:
         return MONS_SHEEP;
     case BAND_GHOULS:
@@ -3166,8 +3217,7 @@ static monster_type _band_member(band_type band, int which)
         if (one_chance_in(4))
         {
             return random_choose(MONS_DEEP_TROLL_EARTH_MAGE,
-                                 MONS_DEEP_TROLL_SHAMAN,
-                                 -1);
+                                 MONS_DEEP_TROLL_SHAMAN);
         }
         return MONS_DEEP_TROLL;
     case BAND_HOGS:
@@ -3318,8 +3368,7 @@ static monster_type _band_member(band_type band, int which)
         {
             return random_choose(MONS_SPRIGGAN_AIR_MAGE,
                                  MONS_SPRIGGAN_BERSERKER,
-                                 MONS_SPRIGGAN_RIDER,
-                                 -1);
+                                 MONS_SPRIGGAN_RIDER);
         }
         return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
@@ -3482,6 +3531,11 @@ static monster_type _band_member(band_type band, int which)
     case BAND_VASHNIA:
         return MONS_NAGA_SHARPSHOOTER;
 
+    case BAND_ROBIN:
+        return random_choose_weighted(3, MONS_GOBLIN,
+                                      1, MONS_HOBGOBLIN,
+                                      0);
+
     case BAND_CEREBOV:
         if (which == 1)
             return MONS_BRIMSTONE_FIEND;
@@ -3532,6 +3586,14 @@ static monster_type _band_member(band_type band, int which)
     case BAND_ANUBIS_GUARD:
         return MONS_ANUBIS_GUARD;
 
+    case BAND_HOLIES:
+        // same as Summon Holies right now
+        return random_choose_weighted(100, MONS_ANGEL,
+                                       80, MONS_CHERUB,
+                                       50, MONS_DAEVA,
+                                        1, MONS_OPHAN,
+                                        0);
+
     case BAND_RANDOM_SINGLE:
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
@@ -3540,7 +3602,7 @@ static monster_type _band_member(band_type band, int which)
         level_id place = level_id::current();
         return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
                                     PROX_ANYWHERE, &tmppos, 0, &tmpfeat,
-                                    &place, NULL);
+                                    &place, nullptr);
     }
 
     default:
@@ -3576,9 +3638,9 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     else if (!Options.note_monsters.empty())
     {
         const string iname = mons_type_name(mons->type, DESC_A);
-        for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
+        for (const text_pattern &pat : Options.note_monsters)
         {
-            if (Options.note_monsters[i].matches(iname))
+            if (pat.matches(iname))
             {
                 interesting = true;
                 break;
@@ -3610,6 +3672,10 @@ static monster_type _pick_zot_exit_defender()
                 return static_cast<monster_type>(MONS_MNOLEG + i);
             }
         }
+
+        if (one_chance_in(11))
+            return MONS_SERAPH;
+
         return MONS_PANDEMONIUM_LORD;
     }
 
@@ -3668,7 +3734,7 @@ monster* mons_place(mgen_data mg)
     {
         mg.behaviour = (mg.summoner && mg.summoner->is_player())
                         ? BEH_FRIENDLY
-                        : SAME_ATTITUDE((&menv[mg.summoner->mindex()]));
+                        : SAME_ATTITUDE(mg.summoner->as_monster());
     }
 
     monster* creation = place_monster(mg);
@@ -3868,7 +3934,7 @@ conduct_type player_will_anger_monster(monster_type type)
 conduct_type player_will_anger_monster(monster* mon)
 {
     if (player_mutation_level(MUT_NO_LOVE)
-        && !mons_class_flag(mon->type, M_SPELL_PROXY))
+        && !mons_is_conjured(mon->type))
     {
         // Player angers all real monsters
         return DID_SACRIFICE_LOVE;
@@ -4077,7 +4143,7 @@ monster_type summon_any_demon(monster_type dct)
     if (dct == RANDOM_DEMON)
     {
         dct = random_choose(RANDOM_DEMON_LESSER, RANDOM_DEMON_COMMON,
-                            RANDOM_DEMON_GREATER, -1);
+                            RANDOM_DEMON_GREATER);
     }
 
     switch (dct)
@@ -4090,8 +4156,7 @@ monster_type summon_any_demon(monster_type dct)
             MONS_WHITE_IMP,
             MONS_UFETUBUS,
             MONS_IRON_IMP,
-            MONS_SHADOW_IMP,
-            -1);
+            MONS_SHADOW_IMP);
 
     case RANDOM_DEMON_COMMON:
         if (x_chance_in_y(6, 10))
@@ -4103,8 +4168,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_ORANGE_DEMON,
                 MONS_RED_DEVIL,
                 MONS_SIXFIRHY,
-                MONS_HELLWING,
-                -1);
+                MONS_HELLWING);
         }
         else
         {
@@ -4116,8 +4180,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_SMOKE_DEMON,
                 MONS_NEQOXEC,
                 MONS_YNOXINUL,
-                MONS_CHAOS_SPAWN,
-                -1);
+                MONS_CHAOS_SPAWN);
         }
 
     case RANDOM_DEMON_GREATER:
@@ -4134,8 +4197,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_REAPER,
                 MONS_LOROCYPROCA,
                 MONS_TORMENTOR,
-                MONS_SHADOW_DEMON,
-                -1);
+                MONS_SHADOW_DEMON);
         }
         else
         {
@@ -4145,8 +4207,7 @@ monster_type summon_any_demon(monster_type dct)
                 MONS_ICE_FIEND,
                 MONS_SHADOW_FIEND,
                 MONS_HELL_SENTINEL,
-                MONS_EXECUTIONER,
-                -1);
+                MONS_EXECUTIONER);
         }
 
     default:
@@ -4184,8 +4245,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
             MONS_FIRE_DRAGON,
             MONS_ICE_DRAGON,
             MONS_SWAMP_DRAGON,
-            MONS_SHADOW_DRAGON,
-            -1);
+            MONS_SHADOW_DRAGON);
         break;
 
     default:

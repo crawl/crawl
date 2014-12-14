@@ -169,12 +169,12 @@ static bool _is_noteworthy(const Note& note)
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
         return _is_noteworthy_dlevel(note.place);
 
-    for (unsigned i = 0; i < note_list.size(); ++i)
+    for (const Note &oldnote : note_list)
     {
-        if (note_list[i].type != note.type)
+        if (oldnote.type != note.type)
             continue;
 
-        const Note& rnote(note_list[i]);
+        const Note& rnote(oldnote);
         switch (note.type)
         {
         case NOTE_GOD_POWER:
@@ -513,8 +513,8 @@ void save_notes(writer& outf)
 {
     marshallInt(outf, NOTES_VERSION_NUMBER);
     marshallInt(outf, note_list.size());
-    for (unsigned i = 0; i < note_list.size(); ++i)
-        note_list[i].save(outf);
+    for (const Note &note : note_list)
+        note.save(outf);
 }
 
 void load_notes(reader& inf)

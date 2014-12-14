@@ -46,9 +46,9 @@ map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
 {
     &map_feature_marker::parse,
     &map_lua_marker::parse,
-    NULL,
-    NULL,
-    NULL
+    nullptr,
+    nullptr,
+    nullptr
 };
 
 map_marker::map_marker(map_marker_type t, const coord_def &p)
@@ -86,7 +86,7 @@ map_marker *map_marker::read_marker(reader &inf)
 {
     const map_marker_type mtype =
         static_cast<map_marker_type>(unmarshallShort(inf));
-    return readers[mtype]? (*readers[mtype])(inf, mtype) : NULL;
+    return readers[mtype]? (*readers[mtype])(inf, mtype) : nullptr;
 }
 
 map_marker *map_marker::parse_marker(const string &s,
@@ -100,7 +100,7 @@ map_marker *map_marker::parse_marker(const string &s,
                 return m;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,7 @@ map_marker *map_feature_marker::parse(const string &s,
                                       const string &) throw (string)
 {
     if (s.find("feat:") != 0)
-        return NULL;
+        return nullptr;
     string raw = s;
     strip_tag(raw, "feat:", true);
 
@@ -432,7 +432,7 @@ map_marker *map_lua_marker::parse(const string &s,
         mapdef_marker = false;
     }
     else
-        return NULL;
+        return nullptr;
 
     map_lua_marker *mark = new map_lua_marker(raw, ctx, mapdef_marker);
     if (!mark->initialised)
@@ -502,11 +502,10 @@ void map_wiz_props_marker::write(writer &outf) const
 {
     map_marker::write(outf);
     marshallShort(outf, properties.size());
-    for (map<string, string>::const_iterator i = properties.begin();
-         i != properties.end(); ++i)
+    for (const auto &entry : properties)
     {
-        marshallString(outf, i->first);
-        marshallString(outf, i->second);
+        marshallString(outf, entry.first);
+        marshallString(outf, entry.second);
     }
 }
 
@@ -529,12 +528,7 @@ string map_wiz_props_marker::property(const string &pname) const
     if (pname == "desc")
         return property("feature_description");
 
-    map<string, string>::const_iterator i = properties.find(pname);
-
-    if (i != properties.end())
-        return i->second;
-    else
-        return "";
+    return lookup(properties, pname, "");
 }
 
 string map_wiz_props_marker::set_property(const string &key, const string &val)
@@ -978,11 +972,8 @@ map_markers::~map_markers()
 
 void map_markers::init_from(const map_markers &c)
 {
-    for (dgn_marker_map::const_iterator i = c.markers.begin();
-         i != c.markers.end(); ++i)
-    {
-        add(i->second->clone());
-    }
+    for (const auto &entry : c.markers)
+        add(entry.second->clone());
     have_inactive_markers = c.have_inactive_markers;
 }
 
@@ -993,16 +984,14 @@ void map_markers::clear_need_activate()
 
 void map_markers::activate_all(bool verbose)
 {
-    for (dgn_marker_map::iterator i = markers.begin();
-         i != markers.end();)
+    for (auto i = markers.begin(); i != markers.end();)
     {
         map_marker *marker = i->second;
         ++i;
         marker->activate(verbose);
     }
 
-    for (dgn_marker_map::iterator i = markers.begin();
-         i != markers.end();)
+    for (auto i = markers.begin(); i != markers.end();)
     {
         map_marker *marker = i->second;
         ++i;
@@ -1036,9 +1025,8 @@ void map_markers::add(map_marker *marker)
 
 void map_markers::unlink_marker(const map_marker *marker)
 {
-    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = markers.equal_range(marker->pos);
-    for (dgn_marker_map::iterator i = els.first; i != els.second; ++i)
+    auto els = markers.equal_range(marker->pos);
+    for (auto i = els.first; i != els.second; ++i)
     {
         if (i->second == marker)
         {
@@ -1064,11 +1052,10 @@ void map_markers::remove(map_marker *marker)
 void map_markers::remove_markers_at(const coord_def &c,
                                     map_marker_type type)
 {
-    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = markers.equal_range(c);
-    for (dgn_marker_map::iterator i = els.first; i != els.second;)
+    auto els = markers.equal_range(c);
+    for (auto i = els.first; i != els.second;)
     {
-        dgn_marker_map::iterator todel = i++;
+        auto todel = i++;
         if (type == MAT_ANY || todel->second->get_type() == type)
         {
             delete todel->second;
@@ -1080,44 +1067,39 @@ void map_markers::remove_markers_at(const coord_def &c,
 
 map_marker *map_markers::find(const coord_def &c, map_marker_type type)
 {
-    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = markers.equal_range(c);
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
+    auto els = markers.equal_range(c);
+    for (auto i = els.first; i != els.second; ++i)
         if (type == MAT_ANY || i->second->get_type() == type)
             return i->second;
-    return NULL;
+    return nullptr;
 }
 
 map_marker *map_markers::find(map_marker_type type)
 {
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
-    {
-        if (type == MAT_ANY || i->second->get_type() == type)
-            return i->second;
-    }
-    return NULL;
+    for (const auto &entry : markers)
+        if (type == MAT_ANY || entry.second->get_type() == type)
+            return entry.second;
+
+    return nullptr;
 }
 
 void map_markers::move(const coord_def &from, const coord_def &to)
 {
     unwind_bool inactive(have_inactive_markers);
-    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
-        els = markers.equal_range(from);
+    auto els = markers.equal_range(from);
 
     list<map_marker*> tmarkers;
-    for (dgn_marker_map::iterator i = els.first; i != els.second;)
+    for (auto i = els.first; i != els.second;)
     {
-        dgn_marker_map::iterator curr = i++;
+        auto curr = i++;
         tmarkers.push_back(curr->second);
         markers.erase(curr);
     }
 
-    for (list<map_marker*>::iterator i = tmarkers.begin();
-         i != tmarkers.end(); ++i)
+    for (auto mark : tmarkers)
     {
-        (*i)->pos = to;
-        add(*i);
+        mark->pos = to;
+        add(mark);
     }
 }
 
@@ -1132,11 +1114,10 @@ void map_markers::move_marker(map_marker *marker, const coord_def &to)
 vector<map_marker*> map_markers::get_all(map_marker_type mat)
 {
     vector<map_marker*> rmarkers;
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (const auto &entry : markers)
     {
-        if (mat == MAT_ANY || i->second->get_type() == mat)
-            rmarkers.push_back(i->second);
+        if (mat == MAT_ANY || entry.second->get_type() == mat)
+            rmarkers.push_back(entry.second);
     }
     return rmarkers;
 }
@@ -1145,10 +1126,9 @@ vector<map_marker*> map_markers::get_all(const string &key, const string &val)
 {
     vector<map_marker*> rmarkers;
 
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (const auto &entry : markers)
     {
-        map_marker*  marker = i->second;
+        map_marker*  marker = entry.second;
         const string prop   = marker->property(key);
 
         if (val.empty() && !prop.empty() || !val.empty() && val == prop)
@@ -1160,10 +1140,9 @@ vector<map_marker*> map_markers::get_all(const string &key, const string &val)
 
 vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
 {
-    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = markers.equal_range(c);
+    auto els = markers.equal_range(c);
     vector<map_marker*> rmarkers;
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
+    for (auto i = els.first; i != els.second; ++i)
         rmarkers.push_back(i->second);
     return rmarkers;
 }
@@ -1171,11 +1150,10 @@ vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
 string map_markers::property_at(const coord_def &c, map_marker_type type,
                                 const string &key)
 {
-    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
-        els = markers.equal_range(c);
-    for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
+    auto els = markers.equal_range(c);
+    for (auto i = els.first; i != els.second; ++i)
     {
-        const string prop = i->second->property(key);
+        const string &prop = i->second->property(key);
         if (!prop.empty())
             return prop;
     }
@@ -1184,8 +1162,8 @@ string map_markers::property_at(const coord_def &c, map_marker_type type,
 
 void map_markers::clear()
 {
-    for (dgn_marker_map::iterator i = markers.begin(); i != markers.end(); ++i)
-        delete i->second;
+    for (auto &entry : markers)
+        delete entry.second;
     markers.clear();
     check_empty();
 }
@@ -1198,20 +1176,16 @@ void map_markers::write(writer &outf) const
     vector<unsigned char> buf;
 
     marshallShort(outf, markers.size());
-    for (dgn_marker_map::const_iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (const auto &entry : markers)
     {
         buf.clear();
         writer tmp_outf(&buf);
-        i->second->write(tmp_outf);
+        entry.second->write(tmp_outf);
 
         // Write the marker data, prefixed by a size
         marshallInt(outf, buf.size());
-        for (vector<unsigned char>::const_iterator bi = buf.begin();
-              bi != buf.end(); ++bi)
-        {
-            outf.writeByte(*bi);
-        }
+        for (auto byte : buf)
+            outf.writeByte(byte);
     }
 }
 
@@ -1278,14 +1252,12 @@ vector<map_marker*> find_markers_by_prop(const string &prop,
     vector<map_marker*> markers;
     for (rectangle_iterator pos(0, 0); pos; ++pos)
     {
-        const vector<map_marker*> markers_here =
-            env.markers.get_markers_at(*pos);
-        for (unsigned i = 0, size = markers_here.size(); i < size; ++i)
+        for (map_marker *mark : env.markers.get_markers_at(*pos))
         {
-            const string value(markers_here[i]->property(prop));
+            const string value(mark->property(prop));
             if (!value.empty() && (expected.empty() || value == expected))
             {
-                markers.push_back(markers_here[i]);
+                markers.push_back(mark);
                 if (maxresults && markers.size() >= maxresults)
                     return markers;
             }

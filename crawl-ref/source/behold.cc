@@ -68,19 +68,16 @@ bool player::beheld() const
 // Whether player is mesmerised by the given monster.
 bool player::beheld_by(const monster* mon) const
 {
-    for (unsigned int i = 0; i < beholders.size(); i++)
-        if (beholders[i] == mon->mid)
-            return true;
-    return false;
+    return find(begin(beholders), end(beholders), mon->mid) != end(beholders);
 }
 
 // Checks whether a beholder keeps you from moving to
 // target, and returns one if it exists.
 monster* player::get_beholder(const coord_def &target) const
 {
-    for (unsigned int i = 0; i < beholders.size(); i++)
+    for (mid_t beh : beholders)
     {
-        monster* mon = monster_by_mid(beholders[i]);
+        monster* mon = monster_by_mid(beh);
         // The monster may have died.
         if (!mon)
             continue;
@@ -90,7 +87,7 @@ monster* player::get_beholder(const coord_def &target) const
         if (olddist < newdist)
             return mon;
     }
-    return NULL;
+    return nullptr;
 }
 
 monster* player::get_any_beholder() const
@@ -98,7 +95,7 @@ monster* player::get_any_beholder() const
     if (!beholders.empty())
         return monster_by_mid(beholders[0]);
     else
-        return NULL;
+        return nullptr;
 }
 
 // Removes a monster from the list of beholders if present.

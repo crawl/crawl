@@ -525,7 +525,7 @@ Bolt of Magma molten gargoyle cast
 %%%%
 Primal Wave elemental wellspring cast
 
-A great wave of water rises up through @The_monster@!
+A great wave of water rises up through @the_monster@!
 %%%%
 Invisibility shadow cast
 
@@ -558,6 +558,46 @@ ushabti cast
 Bolt of Draining anubis guard cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Ghostly Flames revenant cast
+
+@The_monster@ lashes out with ghostly flames.
+%%%%
+Ghostly Fireball revenant cast
+
+@ghostly flames revenant cast@
+%%%%
+Dispel Undead revenant cast
+
+@The_monster@ gestures violently @at@ @target@.
+%%%%
+Blink Away revenant cast
+
+__NONE
+%%%%
+Hunting Cry seraph cast
+
+@The_monster@ shouts a warning to @possessive@ allies!
+%%%%
+Battlecry seraph cast
+
+@The_monster@ sings a powerful hymn!
+%%%%
+Throw Icicle shard shrike cast
+
+@The_monster@ spits a shard of ice @at@ @target@.
+%%%%
+Lightning Bolt electric golem cast
+
+@The_monster@ hurls @beam@ @at@ @target@.
+%%%%
+insubstantial wisp cast
+
+@The_monster@ thrums sharply.
+%%%%
+Blink insubstantial wisp cast
+
+__NONE
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

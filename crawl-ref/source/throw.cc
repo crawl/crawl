@@ -7,8 +7,8 @@
 
 #include "throw.h"
 
+#include <cmath>
 #include <sstream>
-#include <math.h>
 
 #include "artefact.h"
 #include "command.h"
@@ -118,7 +118,7 @@ void fire_target_behaviour::update_top_prompt(string* p_top_prompt)
 const item_def* fire_target_behaviour::active_item() const
 {
     if (m_slot == -1)
-        return NULL;
+        return nullptr;
     else
         return &you.inv[m_slot];
 }
@@ -201,7 +201,7 @@ void fire_target_behaviour::pick_fire_item_from_inventory()
     }
     else if (!err.empty())
     {
-        mprf("%s", err.c_str());
+        mpr(err);
         more();
     }
     set_prompt();
@@ -238,7 +238,7 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     if (const item_def* item = active_item())
     {
         if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
-            descs.push_back("chaotic");
+            descs.emplace_back("chaotic");
     }
     return descs;
 }
@@ -254,7 +254,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         string warn;
         if (!_fire_validate_item(slot, warn))
         {
-            mpr(warn.c_str());
+            mpr(warn);
             return false;
         }
         // Force item to be the prechosen one.
@@ -304,7 +304,7 @@ static int _fire_prompt_for_item()
     int slot = prompt_invent_item("Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
                                    OSEL_THROWABLE, true, true, true, 0, -1,
-                                   NULL, OPER_FIRE);
+                                   nullptr, OPER_FIRE);
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
         return -1;
@@ -423,7 +423,7 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
     string warn;
     if (!_fire_validate_item(item, warn))
     {
-        mpr(warn.c_str());
+        mpr(warn);
         return -1;
     }
     return item;
@@ -479,7 +479,7 @@ void throw_item_no_quiver()
 
     if (!_fire_validate_item(slot, warn))
     {
-        mpr(warn.c_str());
+        mpr(warn);
         return;
     }
 
@@ -512,7 +512,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
     if (launcher && !item.launched_by(*launcher))
-        launcher = NULL;
+        launcher = nullptr;
 
     if (agent->is_player())
     {
@@ -535,14 +535,14 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.source       = agent->pos();
     beam.colour       = item.get_colour();
     beam.flavour      = BEAM_MISSILE;
-    beam.is_beam      = false;
+    beam.pierce       = false;
     beam.aux_source.clear();
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
     ammo_name = item.name(DESC_PLAIN);
 
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
-        ? get_unrand_entry(launcher->special) : NULL;
+        ? get_unrand_entry(launcher->special) : nullptr;
 
     if (entry && entry->launch)
     {
@@ -602,7 +602,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 {
     const item_def* launcher = act->weapon();
 
-    if (launcher == NULL || launcher->base_type != OBJ_WEAPONS)
+    if (launcher == nullptr || launcher->base_type != OBJ_WEAPONS)
         return;
 
     if (is_launched(act, launcher, ammo) != LRET_LAUNCHED)
@@ -610,7 +610,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 
     // Throwing and blowguns are silent...
     int         level = 0;
-    const char* msg   = NULL;
+    const char* msg   = nullptr;
 
     switch (launcher->sub_type)
     {
@@ -652,7 +652,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         return;
     }
     if (act->is_player() || you.can_see(act))
-        msg = NULL;
+        msg = nullptr;
 
     noisy(level, act->pos(), msg, act->mid);
 }
@@ -662,7 +662,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
 // Note: If teleport is true, assume that pbolt is already set up,
 // and teleport the projectile onto the square.
 //
-// Return value is only relevant if dummy_target is non-NULL, and returns
+// Return value is only relevant if dummy_target is non-nullptr, and returns
 // true if dummy_target is hit.
 bool throw_it(bolt &pbolt, int throw_2, dist *target)
 {
@@ -757,7 +757,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Need to clear this if unknown to avoid giving away the explosion.
     bolt* expl = pbolt.special_explosion;
     if (!pbolt.effect_known)
-        pbolt.special_explosion = NULL;
+        pbolt.special_explosion = nullptr;
 
     // Don't trace at all when confused.
     // Give the player a chance to be warned about helpless targets when using
@@ -803,7 +803,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     if (cancelled)
     {
         you.turn_is_over = false;
-        if (expl != NULL)
+        if (expl != nullptr)
             delete expl;
         return false;
     }
@@ -893,7 +893,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
           ammo_name.c_str());
 
     // Ensure we're firing a 'missile'-type beam.
-    pbolt.is_beam   = false;
+    pbolt.pierce    = false;
     pbolt.is_tracer = false;
 
     pbolt.loudness = int(sqrt(item_mass(item))/3 + 0.5);
@@ -981,7 +981,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
     you.turn_is_over = true;
 
-    if (pbolt.special_explosion != NULL)
+    if (pbolt.special_explosion != nullptr)
         delete pbolt.special_explosion;
 
     if (!teleport
@@ -1006,7 +1006,7 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
     beam.flavour = BEAM_MISSILE;
     beam.thrower = KILL_MON_MISSILE;
     beam.aux_source.clear();
-    beam.is_beam = false;
+    beam.pierce  = false;
 }
 
 // msl is the item index of the thrown missile (or weapon).
@@ -1030,7 +1030,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     {
         const int energy = mons->action_energy(EUT_MISSILE);
         const int delay = mons->attack_delay(weapon != NON_ITEM ? &mitm[weapon]
-                                                                : NULL,
+                                                                : nullptr,
                                              &mitm[msl]);
         ASSERT(energy > 0);
         ASSERT(delay > 0);
@@ -1095,7 +1095,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     if (mons->observable())
     {
         mons->flags |= MF_SEEN_RANGED;
-        mpr(msg.c_str());
+        mpr(msg);
     }
 
     _throw_noise(mons, beam, item);
@@ -1154,7 +1154,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     else if (dec_mitm_item_quantity(msl, 1))
         mons->inv[slot] = NON_ITEM;
 
-    if (beam.special_explosion != NULL)
+    if (beam.special_explosion != nullptr)
         delete beam.special_explosion;
 
     if (mons->has_ench(ENCH_GRAND_AVATAR))
@@ -1170,7 +1170,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
 bool thrown_object_destroyed(item_def *item, const coord_def& where)
 {
-    ASSERT(item != NULL);
+    ASSERT(item != nullptr);
 
     if (item->base_type != OBJ_MISSILES)
         return false;

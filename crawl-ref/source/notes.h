@@ -8,7 +8,7 @@
 
 #include <string>
 #include <vector>
-#include <stdio.h>
+#include <cstdio>
 
 #define MAX_NOTE_PLACE_LEN 8
 

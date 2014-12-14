@@ -200,7 +200,7 @@ static vector<coord_def> _get_pool_seed_positions(
         for (unsigned int y = 0; y < pool_index[x].size(); y++)
         {
             if (pool_index[x][y] == NO_POOL)
-                floor_positions.push_back(coord_def(x, y));
+                floor_positions.emplace_back(x, y);
         }
 
     // 2. Choose the pool seed positions
@@ -227,10 +227,10 @@ static vector<coord_def> _get_pool_seed_positions(
 
         // check if it is too close to another seed
         bool too_close = false;
-        for (unsigned int j = 0; j < seeds.size(); j++)
+        for (coord_def seed : seeds)
         {
-            int diff_x = chosen_coord.x - seeds[j].x;
-            int diff_y = chosen_coord.y - seeds[j].y;
+            int diff_x = chosen_coord.x - seed.x;
+            int diff_y = chosen_coord.y - seed.y;
             int distance_squared = diff_x * diff_x + diff_y * diff_y;
 
             if (distance_squared < min_separation_squared)
@@ -483,10 +483,8 @@ static void _draw_join_the_dots_path (map_lines &lines,
 {
     int delta_min = -thickness / 2;
     int delta_max = delta_min + thickness;
-    unsigned int count = path.cells.size();
-    for (unsigned int i = 0; i < count; i++)
+    for (coord_def center : path.cells)
     {
-        coord_def center = path.cells[i];
         for (int dx = delta_min; dx < delta_max; dx++)
             for (int dy = delta_min; dy < delta_max; dy++)
             {
@@ -1186,14 +1184,14 @@ LUAFN(dgn_make_round_box)
                         && (y - 1 < 0
                             || new_glyphs[x][y - 1] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                     else if (real_y + 1 < lines.height()
                              && strchr(passable, lines(real_x, real_y + 1))
                              && (y + 1 >= size_y
                                  || new_glyphs[x][y + 1] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                 }
 
@@ -1206,14 +1204,14 @@ LUAFN(dgn_make_round_box)
                         && (x - 1 < 0
                             || new_glyphs[x - 1][y] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                     else if (real_x + 1 < lines.width()
                              && strchr(passable, lines(real_x + 1, real_y))
                              && (x + 1 >= size_x
                                  || new_glyphs[x + 1][y] == OUTSIDE))
                     {
-                        door_positions.push_back(coord_def(x, y));
+                        door_positions.emplace_back(x, y);
                     }
                 }
             }
@@ -1414,12 +1412,12 @@ LUAFN(dgn_widen_paths)
 
                 // store this coordinate if needed
                 if (x_chance_in_y(percent_for_neighbours[neighbour_count], 100))
-                    coord_to_replace.push_back(coord_def(x, y));
+                    coord_to_replace.emplace_back(x, y);
             }
 
     // now go through and actually replace the positions
-    for (unsigned int i = 0; i < coord_to_replace.size(); i++)
-        lines(coord_to_replace[i]) = replace;
+    for (coord_def c : coord_to_replace)
+        lines(c) = replace;
 
     return 0;
 }
@@ -1824,7 +1822,7 @@ LUAFN(dgn_replace_random)
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
             if (lines(x, y) == find)
-                loc.push_back(coord_def(x, y));
+                loc.emplace_back(x, y);
 
     if (loc.empty())
     {
@@ -2151,8 +2149,8 @@ LUAFN(dgn_add_pools)
     // Step 4: Add the pools to the map
 
     vector<char> pool_glyphs(pool_seeds.size(), '\0');
-    for (unsigned int i = 0; i < pool_glyphs.size(); i++)
-        pool_glyphs[i] = fill_glyphs[random2(fill_glyphs.size())];
+    for (char &gly : pool_glyphs)
+        gly = fill_glyphs[random2(fill_glyphs.size())];
 
     for (int x = 0; x < size_x; x++)
         for (int y = 0; y < size_y; y++)
@@ -2333,5 +2331,5 @@ const struct luaL_reg dgn_build_dlib[] =
     { "layout_shoals", &dgn_layout_shoals },
     { "layout_swamp", &dgn_layout_swamp },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };

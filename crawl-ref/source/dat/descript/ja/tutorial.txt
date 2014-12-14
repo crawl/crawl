@@ -175,7 +175,7 @@ tutorial2 rest_and_chop_reminder
 tutorial2 wait
 
 突撃してモンスターに囲まれるのではなく、
-一歩引いて彼らが近づいてくるまで待つ(<input>$cmd[CMD_MOVE_NOWHERE]</input>)
+一歩引いて彼らが近づいてくるまで待つ(<input>$cmd[CMD_WAIT]</input>)
 こともできます。
 %%%%
 tutorial2 resting_reminder
@@ -265,7 +265,7 @@ tutorial2 exit
   インベントリ内の矢弾を <input>クリック</input> することでも射撃ができ、 <input>Enter</input>でターゲットを決定できます。</localtiles>
 
 <yellow>休息</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  1ターン待機して休息する
+  <input>$cmd[CMD_WAIT]</input>  1ターン待機して休息する
   <input>$cmd[CMD_REST]</input>  100ターン待機して休息する
 
 <yellow>死体<console> <brown>%</brown></console></yellow>
@@ -533,7 +533,7 @@ tutorial4 order_allies
 
 しもべに敵を殺害させてみましょう!必要であれば、
 <input>$cmd[CMD_SHOUT]</input>でしもべに命令することができます。
-この門を開ける前に<input>$cmd[CMD_MOVE_NOWHERE]</input>で待機してしもべがあなたに追いつくまで待つこともできます。
+この門を開ける前に<input>$cmd[CMD_WAIT]</input>で待機してしもべがあなたに追いつくまで待つこともできます。
 %%%%
 tutorial4 heavy_armour
 
@@ -627,7 +627,7 @@ tutorial5 burn_book
 
 トログは本を燃やすことを喜ぶだろう(<input>$cmd[CMD_USE_ABILITY]</input>
 <localtiles>または<w>command panel</w></localtiles>)。時には、
-本を燃やす前に(<input>$cmd[CMD_MOVE_NOWHERE]</input>で)モンスターが本の上に乗ることを待つことになるだろう。
+本を燃やす前に(<input>$cmd[CMD_WAIT]</input>で)モンスターが本の上に乗ることを待つことになるだろう。
 %%%%
 tutorial5 berserk
 
@@ -669,7 +669,7 @@ tutorial5 exit
   キャラクターを<input>右クリック</input>することでも信仰画面が表示される。</localtiles>
 
 <yellow>休息</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  1ターン待機し、休息する
+  <input>$cmd[CMD_WAIT]</input>  1ターン待機し、休息する
   <input>$cmd[CMD_REST]</input>  100ターン待機し、休息する
 
 <yellow>その他のコマンド</yellow>

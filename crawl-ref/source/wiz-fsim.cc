@@ -7,7 +7,7 @@
 
 #include "wiz-fsim.h"
 
-#include <errno.h>
+#include <cerrno>
 
 #include "beam.h"
 #include "bitary.h"
@@ -46,7 +46,6 @@
 
 fight_data null_fight = {0.0, 0, 0, 0.0, 0, 0.0, 0.0};
 typedef map<skill_type, int8_t> skill_map;
-typedef map<skill_type, int8_t>::iterator skill_map_iterator;
 
 static const char* _title_line =
     "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvSpeed | AvEffDam"; // 64 columns
@@ -66,7 +65,7 @@ static const char* _fight_string(fight_data fdata, bool csv)
 static skill_type _equipped_skill()
 {
     const int weapon = you.equip[EQ_WEAPON];
-    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : NULL;
+    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
 
     if (iweap && iweap->base_type == OBJ_WEAPONS)
         return item_attack_skill(*iweap);
@@ -77,7 +76,7 @@ static skill_type _equipped_skill()
 static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
-    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : NULL;
+    const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
     const int missile = you.m_quiver->get_fire_item();
 
     if (iweap)
@@ -97,7 +96,7 @@ static string _equipped_weapon_name()
 
 static string _time_string()
 {
-    time_t curr_time = time(NULL);
+    time_t curr_time = time(nullptr);
     struct tm *ltime = TIME_FN(&curr_time);
     if (ltime)
     {
@@ -240,7 +239,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 // fight simulator internals
 static monster* _init_fsim()
 {
-    monster * mon = NULL;
+    monster * mon = nullptr;
     monster_type mtype = get_monster_by_name(Options.fsim_mons, true);
 
     if (mtype == MONS_PROGRAM_BUG && monster_nearby())
@@ -268,7 +267,7 @@ static monster* _init_fsim()
             if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
             {
                 canned_msg(MSG_OK);
-                return NULL;
+                return nullptr;
             }
             mtype = get_monster_by_name(specs, true);
 
@@ -286,7 +285,7 @@ static monster* _init_fsim()
         if (!mon)
         {
             mpr("Failed to create monster.");
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -334,7 +333,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     fdata.max_dam = 0;
 
     const int weapon = you.equip[EQ_WEAPON];
-    const item_def *iweap = weapon != -1 ? &you.inv[weapon] : NULL;
+    const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
     const int missile = you.m_quiver->get_fire_item();
 
     // now make sure the player is ready
@@ -496,8 +495,8 @@ static string _init_scale(skill_map &scale, bool &xl_mode)
     if (xl_mode)
     {
         you.training.init(0);
-        for (skill_map_iterator it = scale.begin(); it != scale.end(); ++it)
-            you.training[it->first] = it->second;
+        for (const auto &entry : scale)
+            you.training[entry.first] = entry.second;
     }
 
     return ret;
@@ -525,7 +524,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     else
         fprintf(o, "%s\n", title.c_str());
 
-    mpr(title.c_str());
+    mpr(title);
 
     const int iter_limit = Options.fsim_rounds;
     for (int i = xl_mode ? 1 : 0; i <= 27; i++)
@@ -535,13 +534,15 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         if (xl_mode)
             set_xl(i, true);
         else
-            for (skill_map_iterator it = scale.begin(); it != scale.end(); ++it)
-                set_skill_level(it->first, i / it->second);
+        {
+            for (const auto &entry : scale)
+                set_skill_level(entry.first, i / entry.second);
+        }
 
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
         const string line = make_stringf("        %2d | %s", i,
                                          _fight_string(fdata, false));
-        mprf("%s", line.c_str());
+        mpr(line);
         if (Options.fsim_csv)
             fprintf(o, "%d\t%s\n", i, _fight_string(fdata, true));
         else
@@ -668,7 +669,7 @@ void wizard_fight_sim(bool double_scale)
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
 
-    void (*fsim_proc)(FILE * o, monster* mon, bool defense) = NULL;
+    void (*fsim_proc)(FILE * o, monster* mon, bool defense) = nullptr;
     fsim_proc = double_scale ? _fsim_double_scale : _fsim_simple_scale;
 
     if (Options.fsim_kit.empty())
@@ -687,7 +688,7 @@ void wizard_fight_sim(bool double_scale)
             {
                 mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
                 if (error != "")
-                    mpr(error.c_str());
+                    mpr(error);
                 break;
             }
         }

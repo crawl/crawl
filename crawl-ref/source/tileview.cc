@@ -78,8 +78,6 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
     flv.wall_idx = 0;
     flv.floor_idx = 0;
 
-    uint32_t seed = you.birth_time + br + (depth << 8);
-
     switch (br)
     {
     case BRANCH_DUNGEON:
@@ -221,33 +219,11 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         return;
 
     case BRANCH_PANDEMONIUM:
-        switch (hash_rand(9, seed, 0))
-        {
-            default:
-            case 0: flv.wall = TILE_WALL_BARS_RED; break;
-            case 1: flv.wall = TILE_WALL_BARS_BLUE; break;
-            case 2: flv.wall = TILE_WALL_BARS_CYAN; break;
-            case 3: flv.wall = TILE_WALL_BARS_GREEN; break;
-            case 4: flv.wall = TILE_WALL_BARS_MAGENTA; break;
-            case 5: flv.wall = TILE_WALL_BARS_BROWN; break;
-            case 6: flv.wall = TILE_WALL_BARS_LIGHTGRAY; break;
-            case 7: flv.wall = TILE_WALL_BARS_DARKGRAY; break;
-            // Wall_flesh used to have a 1/3 chance
-            case 8: flv.wall = TILE_WALL_FLESH; break;
-        }
-
-        switch (hash_rand(8, seed, 1))
-        {
-            default:
-            case 0: flv.floor = TILE_FLOOR_DEMONIC_RED; break;
-            case 1: flv.floor = TILE_FLOOR_DEMONIC_BLUE; break;
-            case 2: flv.floor = TILE_FLOOR_DEMONIC_GREEN; break;
-            case 3: flv.floor = TILE_FLOOR_DEMONIC_CYAN; break;
-            case 4: flv.floor = TILE_FLOOR_DEMONIC_MAGENTA; break;
-            case 5: flv.floor = TILE_FLOOR_DEMONIC_BROWN; break;
-            case 6: flv.floor = TILE_FLOOR_DEMONIC_LIGHTGRAY; break;
-            case 7: flv.floor = TILE_FLOOR_DEMONIC_DARKGRAY; break;
-        }
+        flv.floor = tile_dngn_coloured(TILE_FLOOR_DEMONIC, env.floor_colour);
+        if (env.rock_colour == LIGHTRED)
+            flv.wall = TILE_WALL_FLESH;
+        else
+            flv.wall = tile_dngn_coloured(TILE_WALL_BARS, env.rock_colour);
         break;
 
     case BRANCH_ZIGGURAT:
@@ -385,22 +361,22 @@ static tileidx_t _pick_dngn_tile_multi(vector<tileidx_t> candidates, int value)
     ASSERT(!candidates.empty());
 
     int total = 0;
-    for (unsigned int i = 0; i < candidates.size(); ++i)
+    for (tileidx_t tidx : candidates)
     {
-        const unsigned int count = tile_dngn_count(candidates[i]);
-        total += tile_dngn_probs(candidates[i] + count - 1);
+        const unsigned int count = tile_dngn_count(tidx);
+        total += tile_dngn_probs(tidx + count - 1);
     }
     int rand = value % total;
 
-    for (unsigned int i = 0; i < candidates.size(); ++i)
+    for (tileidx_t tidx : candidates)
     {
-        const unsigned int count = tile_dngn_count(candidates[i]);
+        const unsigned int count = tile_dngn_count(tidx);
         for (unsigned int j = 0; j < count; ++j)
         {
-            if (rand < tile_dngn_probs(candidates[i] + j))
-                return candidates[i] + j;
+            if (rand < tile_dngn_probs(tidx + j))
+                return tidx + j;
         }
-        rand -= tile_dngn_probs(candidates[i] + count - 1);
+        rand -= tile_dngn_probs(tidx + count - 1);
     }
 
     // Should never reach this place

@@ -181,7 +181,7 @@ tutorial2 rest_and_chop_reminder
 tutorial2 wait
 
 Вместо того, чтобы бросаться в комнату и быть окруженным монстрами, вы можете
-сделать шаг назад и подождать (с помощью <input>$cmd[CMD_MOVE_NOWHERE]</input>)
+сделать шаг назад и подождать (с помощью <input>$cmd[CMD_WAIT]</input>)
 пока они не подойдут к вам.
 %%%%
 tutorial2 resting_reminder
@@ -263,7 +263,7 @@ tutorial2 exit
   Вы также можете выстрелить по предмету <input>clicking</input> на нем и подтвердив цель с помощью <input>Enter</input>.</localtiles>
 
 <yellow>Отдых</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  ждать и отдохнуть 1 ход
+  <input>$cmd[CMD_WAIT]</input>  ждать и отдохнуть 1 ход
   <input>$cmd[CMD_REST]</input>  ждать и отдыхать до 100 ходов
 
 <yellow>Трупы<console> <brown>%</brown></console></yellow>

@@ -7,19 +7,22 @@
 
 #include "describe.h"
 
+#include <cstdio>
 #include <iomanip>
 #include <numeric>
+#include <set>
 #include <sstream>
 #include <string>
-#include <stdio.h>
 
 #include "artefact.h"
 #include "branch.h"
+#include "butcher.h"
 #include "clua.h"
 #include "command.h"
 #include "database.h"
 #include "decks.h"
 #include "delay.h"
+#include "describe-spells.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -27,6 +30,7 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "hints.h"
 #include "invent.h"
@@ -270,9 +274,8 @@ static vector<string> _randart_propnames(const item_def& item,
         if (!ego.empty())
         {
             // XXX: Ugly hack for adding a comma if needed.
-            for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
-                if (known_proprt(propanns[i].prop)
-                    && propanns[i].prop != ARTP_BRAND
+            for (const property_annotators &ann : propanns)
+                if (known_proprt(ann.prop) && ann.prop != ARTP_BRAND
                     && !no_comma)
                 {
                     ego += ",";
@@ -286,53 +289,53 @@ static vector<string> _randart_propnames(const item_def& item,
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);
-        if (entry && entry->inscrip != NULL)
+        if (entry && entry->inscrip != nullptr)
             propnames.push_back(entry->inscrip);
      }
 
-    for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
+    for (const property_annotators &ann : propanns)
     {
-        if (known_proprt(propanns[i].prop))
+        if (known_proprt(ann.prop))
         {
-            const int val = proprt[propanns[i].prop];
+            const int val = proprt[ann.prop];
 
             // Don't show rF+/rC- for =Fire, or vice versa for =Ice.
             if (item.base_type == OBJ_JEWELLERY)
             {
                 if (item.sub_type == RING_FIRE
-                    && (propanns[i].prop == ARTP_FIRE && val == 1
-                        || propanns[i].prop == ARTP_COLD && val == -1))
+                    && (ann.prop == ARTP_FIRE && val == 1
+                        || ann.prop == ARTP_COLD && val == -1))
                 {
                     continue;
                 }
                 if (item.sub_type == RING_ICE
-                    && (propanns[i].prop == ARTP_COLD && val == 1
-                        || propanns[i].prop == ARTP_FIRE && val == -1))
+                    && (ann.prop == ARTP_COLD && val == 1
+                        || ann.prop == ARTP_FIRE && val == -1))
                 {
                     continue;
                 }
             }
 
             ostringstream work;
-            switch (propanns[i].spell_out)
+            switch (ann.spell_out)
             {
             case 0: // e.g. AC+4
-                work << showpos << propanns[i].name << val;
+                work << showpos << ann.name << val;
                 break;
             case 1: // e.g. F++
             {
                 // XXX: actually handle absurd values instead of displaying
                 // the wrong number of +s or -s
                 const int sval = min(abs(val), 6);
-                work << propanns[i].name
+                work << ann.name
                      << string(sval, (val > 0 ? '+' : '-'));
                 break;
             }
             case 2: // e.g. rPois or SInv
-                if (propanns[i].prop == ARTP_CURSED && val < 1)
+                if (ann.prop == ARTP_CURSED && val < 1)
                     continue;
 
-                work << propanns[i].name;
+                work << ann.name;
                 break;
             }
             propnames.push_back(work.str());
@@ -481,27 +484,24 @@ static string _randart_descrip(const item_def &item)
         }
     }
 
-    for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
+    for (const property_descriptor &desc : propdescs)
     {
-        if (known_proprt(propdescs[i].property))
+        if (known_proprt(desc.property))
         {
             // Only randarts with ARTP_CURSED > 0 may recurse themselves.
-            if (propdescs[i].property == ARTP_CURSED
-                && proprt[propdescs[i].property] < 1)
-            {
+            if (desc.property == ARTP_CURSED && proprt[desc.property] < 1)
                 continue;
-            }
 
-            string sdesc = propdescs[i].desc;
+            string sdesc = desc.desc;
 
             // FIXME Not the nicest hack.
             char buf[80];
-            snprintf(buf, sizeof buf, "%+d", proprt[propdescs[i].property]);
+            snprintf(buf, sizeof buf, "%+d", proprt[desc.property]);
             sdesc = replace_all(sdesc, "%d", buf);
 
-            if (propdescs[i].is_graded_resist)
+            if (desc.is_graded_resist)
             {
-                int idx = proprt[propdescs[i].property] + 3;
+                int idx = proprt[desc.property] + 3;
                 idx = min(idx, 6);
                 idx = max(idx, 0);
 
@@ -606,56 +606,41 @@ int str_to_trap(const string &s)
 //---------------------------------------------------------------
 static string _describe_demon(const string& name, flight_type fly)
 {
-    const uint32_t seed = hash32(&name[0], name.length());
+    const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_rand(ARRAYSZ(arr), seed, id)]
 
     const char* body_descs[] =
     {
-        "huge, barrel-shaped ",
-        "wispy, insubstantial ",
-        "spindly ",
-        "skeletal ",
-        "horribly deformed ",
-        "spiny ",
-        "waif-like ",
-        "scaly ",
-        "sickeningly deformed ",
-        "bruised and bleeding ",
-        "sickly ",
-        "mass of writhing tentacles for a ",
-        "mass of ropey tendrils for a ",
-        "tree trunk-like ",
-        "hairy ",
-        "furry ",
-        "fuzzy ",
-        "obese ",
-        "fat ",
-        "slimy ",
-        "wrinkled ",
-        "metallic ",
-        "glassy ",
-        "crystalline ",
-        "muscular ",
-        "icky ",
-        "swollen ",
-        "lumpy ",
         "armoured ",
-        "carapaced ",
+        "vast, spindly ",
+        "fat ",
+        "obese ",
+        "muscular ",
+        "spiked ",
+        "splotchy ",
         "slender ",
+        "tentacled ",
+        "emaciated ",
+        "bug-like ",
+        "skeletal ",
+        "mantis ",
     };
 
     const char* wing_names[] =
     {
-        " with small insectoid wings",
-        " with large insectoid wings",
-        " with moth-like wings",
-        " with butterfly wings",
-        " with huge, bat-like wings",
-        " with fleshy wings",
         " with small, bat-like wings",
-        " with hairy wings",
-        " with great feathered wings",
-        " with shiny metal wings",
+        " with bony wings",
+        " with sharp, metallic wings",
+        " with the wings of a moth",
+        " with thin, membranous wings",
+        " with dragonfly wings",
+        " with large, powerful wings",
+        " with fluttering wings",
+        " with great, sinister wings",
+        " with hideous, tattered wings",
+        " with sparrow-like wings",
+        " with hooked wings",
+        " with strange knobs attached",
     };
 
     const char* lev_names[] =
@@ -664,36 +649,35 @@ static string _describe_demon(const string& name, flight_type fly)
         " with sacs of gas hanging from its back",
     };
 
-    const char* nonfly_names[] =
+    const char* head_names[] =
     {
-        " covered in tiny crawling spiders",
-        " covered in tiny crawling insects",
-        " and the head of a crocodile",
-        " and the head of a hippopotamus",
-        " and a cruel curved beak for a mouth",
-        " and a straight sharp beak for a mouth",
-        " and no head at all",
+        " and a cubic structure in place of a head",
+        " and a brain for a head",
         " and a hideous tangle of tentacles for a mouth",
-        " and an elephantine trunk",
-        " and an evil-looking proboscis",
-        " and dozens of eyes",
-        " and two ugly heads",
-        " and a long serpentine tail",
-        " and a pair of huge tusks growing from its jaw",
-        " and a single huge eye in the centre of its forehead",
-        " and spikes of black metal for teeth",
-        " and a disc-shaped sucker for a head",
-        " and huge, flapping ears",
-        " and a huge, toothy maw in the centre of its chest",
-        " and a giant snail shell on its back",
-        " and a dozen heads",
-        " and the head of a jackal",
-        " and the head of a baboon",
-        " and a huge, slobbery tongue",
-        " which is covered in oozing lacerations",
+        " and the head of an elephant",
+        " and an eyeball for a head",
+        " and wears a helmet over its head",
+        " and a horn in place of a head",
+        " and a thick, horned head",
+        " and the head of a horse",
+        " and a vicious glare",
+        " and snakes for hair",
+        " and the face of a baboon",
+        " and the head of a mouse",
+        " and a ram's head",
+        " and the head of a rhino",
+        " and eerily human features",
+        " and a gigantic mouth",
+        " and a mass of tentacles growing from its neck",
+        " and a thin, worm-like head",
+        " and huge, compound eyes",
         " and the head of a frog",
-        " and the head of a yak",
-        " and eyes out on stalks",
+        " and an insectoid head",
+        " and a great mass of hair",
+        " and a skull for a head",
+        " and a cow's skull for a head",
+        " and the head of a bird",
+        " and a large fungus growing from its neck",
     };
 
     const char* misc_descs[] =
@@ -716,37 +700,53 @@ static string _describe_demon(const string& name, flight_type fly)
         " It shimmers before your eyes.",
         " It is surrounded by a brilliant glow.",
         " It radiates an aura of extreme power.",
+        " It seems utterly heartbroken.",
+        " It seems filled with irrepressible glee.",
+        " It constantly shivers and twitches.",
+        " Blue sparks crawl across its body.",
+        " It seems uncertain.",
+        " A cloud of flies swarms around it.",
+        " The air ripples with heat as it passes.",
+        " It appears supremely confident.",
+        " Its skin is covered in a network of cracks.",
+        " Its skin has a disgusting oily sheen.",
+        " It seems completely insane!",
+        " It seems somehow familiar."
     };
 
     ostringstream description;
-    description << "A powerful demon, " << name << " has ";
+    description << "One of the many lords of Pandemonium, " << name << " has ";
 
-    const string a_body = HRANDOM_ELEMENT(body_descs, 1);
+    const string a_body = HRANDOM_ELEMENT(body_descs, 2);
     description << article_a(a_body) << "body";
+
+    string head_desc = HRANDOM_ELEMENT(head_names, 1);
 
     switch (fly)
     {
     case FL_WINGED:
-        description << HRANDOM_ELEMENT(wing_names, 2);
+        description << HRANDOM_ELEMENT(wing_names, 3);
+        if (head_desc.find(" with") == 0)
+            description << " and";
         break;
 
     case FL_LEVITATE:
-        description << HRANDOM_ELEMENT(lev_names, 2);
+        description << HRANDOM_ELEMENT(lev_names, 3);
+        if (head_desc.find(" with") == 0)
+            description << " and";
         break;
 
-    case FL_NONE:  // does not fly
-        if (hash_rand(4, seed, 3))
-            description << HRANDOM_ELEMENT(nonfly_names, 2);
+    default:
         break;
     }
 
-    description << ".";
+    description << head_desc << ".";
 
     if (hash_rand(40, seed, 4) < 3)
     {
         if (you.can_smell())
         {
-            switch (hash_rand(3, seed, 5))
+            switch (hash_rand(4, seed, 5))
             {
             case 0:
                 description << " It stinks of brimstone.";
@@ -755,6 +755,9 @@ static string _describe_demon(const string& name, flight_type fly)
                 description << " It is surrounded by a sickening stench.";
                 break;
             case 2:
+                description << " It smells delicious!";
+                break;
+            case 3:
                 description << " It smells like rotting flesh"
                             << (you.species == SP_GHOUL ? " - yum!"
                                                        : ".");
@@ -763,7 +766,7 @@ static string _describe_demon(const string& name, flight_type fly)
         }
     }
     else if (hash_rand(2, seed, 6))
-        description << RANDOM_ELEMENT(misc_descs);
+        description << HRANDOM_ELEMENT(misc_descs, 5);
 
     return description.str();
 }
@@ -852,8 +855,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
                            " around the wielder.";
             break;
         case SK_SHORT_BLADES:
-            // TODO: should we mention stabbing for "ok" stabbing weapons?
-            // (long blades, piercing polearms, and clubs)
             {
                 string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
                                                            : "particularly";
@@ -866,8 +867,13 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
+    // ident known & no brand but still glowing
+    // TODO: deduplicate this with the code in itemname.cc
+    const bool enchanted = get_equip_desc(item) && spec_ench == SPWPN_NORMAL
+                           && !item_ident(item, ISFLAG_KNOW_PLUSES);
+
     // special weapon descrip
-    if (spec_ench != SPWPN_NORMAL && item_type_known(item))
+    if (item_type_known(item) && (spec_ench != SPWPN_NORMAL || enchanted))
     {
         description += "\n\n";
 
@@ -996,6 +1002,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "It disrupts the flow of magical energy around "
                     "spellcasters and certain magical creatures (including "
                     "the wielder).";
+            break;
+        case SPWPN_NORMAL:
+            ASSERT(enchanted);
+            description += "It has no special brand (it is not flaming, "
+                    "freezing, etc), but is still enchanted in some way - "
+                    "positive or negative.";
             break;
         }
     }
@@ -1564,37 +1576,6 @@ static string _describe_deck(const item_def &item)
     return description;
 }
 
-// Adds a list of all spells contained in a book or rod to its
-// description string.
-void append_spells(string &desc, const item_def &item)
-{
-    if (!item.has_spells())
-        return;
-
-    desc += "\n\nSpells                             Type                      Level\n";
-
-    for (int j = 0; j < SPELLBOOK_SIZE; ++j)
-    {
-        spell_type stype = which_spell_in_book(item, j);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
-        string name = (is_memorised(stype) ? "*" : "");
-                    name += spell_title(stype);
-        desc += chop_string(name, 35);
-
-        string schools;
-        if (item.base_type == OBJ_RODS)
-            schools = "Evocations";
-        else
-            schools = spell_schools_string(stype);
-
-        desc += chop_string(schools, 65 - 36);
-
-        desc += make_stringf("%d\n", spell_difficulty(stype));
-    }
-}
-
 // ========================================================================
 //      Public Functions
 // ========================================================================
@@ -1644,7 +1625,6 @@ string get_item_description(const item_def &item, bool verbose,
                     << " slot: " << item.slot
                     << " ident_type: "
                     << static_cast<int>(get_ident_type(item))
-                    << " book_number: " << item.book_number()
                     << "\nannotate: "
                     << stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
     }
@@ -1758,7 +1738,7 @@ string get_item_description(const item_def &item, bool verbose,
         if (!verbose
             && (Options.dump_book_spells || is_random_artefact(item)))
         {
-            append_spells(desc, item);
+            desc += describe_item_spells(item);
             if (desc.empty())
                 need_extra_line = false;
             else
@@ -1803,6 +1783,22 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
             break;
+
+        if (mons_class_leaves_hide(item.mon_type))
+        {
+            description << "\n\n";
+            if (item.props.exists(MANGLED_CORPSE_KEY))
+            {
+                description << "This corpse is badly mangled; its hide is "
+                               "beyond any hope of recovery.";
+            }
+            else
+            {
+                description << "Butchering may allow you to recover this "
+                               "creature's hide, which can be enchanted into "
+                               "armour.";
+            }
+        }
         // intentional fall-through
     case OBJ_FOOD:
         if (item.base_type == OBJ_FOOD)
@@ -1886,7 +1882,7 @@ string get_item_description(const item_def &item, bool verbose,
         }
         else if (Options.dump_book_spells)
         {
-            append_spells(desc, item);
+            desc += describe_item_spells(item);
             if (desc.empty())
                 need_extra_line = false;
             else
@@ -1942,15 +1938,19 @@ string get_item_description(const item_def &item, bool verbose,
         {
             item_def stack = static_cast<item_def>(item);
             CrawlHashTable &props = stack.props;
-            ASSERT(props.exists("timer"));
-            CrawlVector &timer = props["timer"].get_vector();
-            ASSERT(!timer.empty());
+            if (!props.exists("timer"))
+                description << "\nTimers not yet initialized.";
+            else
+            {
+                CrawlVector &timer = props["timer"].get_vector();
+                ASSERT(!timer.empty());
 
-            description << "\nQuantity: " << stack.quantity
-                        << "        Timer size: " << (int) timer.size();
-            description << "\nTimers:\n";
-            for (int i = 0; i < timer.size(); ++i)
-                 description << (timer[i].get_int()) << "  ";
+                description << "\nQuantity: " << stack.quantity
+                            << "        Timer size: " << (int) timer.size();
+                description << "\nTimers:\n";
+                for (int i = 0; i < timer.size(); ++i)
+                    description << (timer[i].get_int()) << "  ";
+            }
         }
 #endif
 
@@ -2100,34 +2100,41 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     inf.quote = getQuoteString(db_name);
 }
 
-// Returns the pressed key in key
+/// A message explaining how the player can toggle between quote &
+static const string _toggle_message =
+    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    " or <w>Right-click</w>"
+#endif
+    " to toggle between the description and quote.";
+
+/**
+ * If the given description has an associated quote, print a message at the
+ * bottom of the screen explaining how the player can toggle between viewing
+ * that quote & the description, and then check whether the input corresponds
+ * to such a toggle.
+ *
+ * @param inf[in]       The description in question.
+ * @param key[in,out]   The input command. If zero, is set to getchm().
+ * @return              Whether the description & quote should be toggled.
+ */
 static int _print_toggle_message(const describe_info &inf, int& key)
 {
+    mouse_control mc(MOUSE_MODE_MORE);
+    if (!key)
+        key = getchm();
+
     if (inf.quote.empty())
-    {
-        mouse_control mc(MOUSE_MODE_MORE);
-        key = getchm();
         return false;
-    }
-    else
-    {
-        const int bottom_line = min(30, get_number_of_lines());
-        cgotoxy(1, bottom_line);
-        formatted_string::parse_string(
-            "Press '<w>!</w>'"
-#ifdef USE_TILE_LOCAL
-            " or <w>Right-click</w>"
-#endif
-            " to toggle between the description and quote.").display();
 
-        mouse_control mc(MOUSE_MODE_MORE);
-        key = getchm();
+    const int bottom_line = min(30, get_number_of_lines());
+    cgotoxy(1, bottom_line);
+    formatted_string::parse_string(_toggle_message).display();
 
-        if (key == '!' || key == CK_MOUSE_CMD)
-            return true;
+    if (key == '!' || key == CK_MOUSE_CMD)
+        return true;
 
-        return false;
-    }
+    return false;
 }
 
 void describe_feature_wide(const coord_def& pos, bool show_quote)
@@ -2147,7 +2154,7 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
-    int key;
+    int key = 0;
     if (_print_toggle_message(inf, key))
         describe_feature_wide(pos, !show_quote);
 }
@@ -2166,14 +2173,6 @@ static bool _can_show_spells(const item_def &item)
     return item.has_spells()
            && (item.base_type != OBJ_BOOKS || item_type_known(item)
                || player_can_memorise_from_spellbook(item));
-}
-
-static void _show_spells(const item_def &item)
-{
-    formatted_string fs;
-    item_def dup = item;
-    spellbook_contents(dup, &fs);
-    fs.display(2, -2);
 }
 
 static void _show_item_description(const item_def &item)
@@ -2198,26 +2197,11 @@ static void _show_item_description(const item_def &item)
         hints_describe_item(item);
 
     if (_can_show_spells(item))
-      _show_spells(item);
-}
-
-static bool _describe_spells(const item_def &item)
-{
-    const int c = getchm();
-    if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
     {
-        clear_messages();
-        return false;
+        formatted_string fdesc;
+        fdesc.cprintf("%s", desc.c_str());
+        list_spellset(item_spellset(item), &item, fdesc);
     }
-
-    const int spell_index = letter_to_index(c);
-
-    const spell_type nthing = which_spell_in_book(item, spell_index);
-    if (nthing == SPELL_NO_SPELL)
-        return false;
-
-    describe_spell(nthing, &item);
-    return item.is_valid();
 }
 
 static bool _can_memorise(item_def &item)
@@ -2232,35 +2216,6 @@ static void _update_inscription(item_def &item)
         && !_can_memorise(item))
     {
         inscribe_book_highlevel(item);
-    }
-}
-
-static bool _describe_spellbook(item_def &item)
-{
-    while (true)
-    {
-        // Memorised spell while reading a spellbook.
-        if (already_learning_spell(-1))
-            return false;
-
-        _show_item_description(item);
-        _update_inscription(item);
-
-        cgotoxy(1, wherey());
-        textcolour(LIGHTGREY);
-
-        if (_can_memorise(item) && !crawl_state.player_is_dead())
-        {
-            cprintf("Select a spell to read its description, to "
-                    "memorise it or to forget it.");
-        }
-        else
-            cprintf("Select a spell to read its description.");
-
-        if (_describe_spells(item))
-            continue;
-
-        return true;
     }
 }
 
@@ -2289,12 +2244,10 @@ static command_type _get_action(int key, vector<command_type> actions)
         act_key_init = false;
     }
 
-    for (vector<command_type>::const_iterator at = actions.begin();
-         at < actions.end(); ++at)
-    {
-        if (key == act_key[*at])
-            return *at;
-    }
+    for (auto cmd : actions)
+        if (key == act_key[cmd])
+            return cmd;
+
     return CMD_NO_CMD;
 }
 
@@ -2307,7 +2260,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
 {
 #ifdef USE_TILE_LOCAL
     PrecisionMenu menu;
-    TextItem* tmp = NULL;
+    TextItem* tmp = nullptr;
     MenuFreeform* freeform = new MenuFreeform();
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     freeform->init(coord_def(1, 1),
@@ -2406,8 +2359,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
         act_str_init = false;
     }
 
-    for (vector<command_type>::const_iterator at = actions.begin();
-         at < actions.end(); ++at)
+    for (auto at = actions.begin(); at < actions.end(); ++at)
     {
 #ifdef USE_TILE_LOCAL
         tmp = new TextItem();
@@ -2445,6 +2397,13 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
 #endif
 
     keyin = toalower(getch_ck());
+#ifdef USE_TILE_LOCAL
+    while (keyin == CK_REDRAW)
+    {
+        menu.draw_menu();
+        keyin = toalower(getch_ck());
+    }
+#endif
     command_type action = _get_action(keyin, actions);
 
 #ifdef TOUCH_UI
@@ -2492,7 +2451,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
     case CMD_READ:
         if (item.base_type != OBJ_BOOKS || item.sub_type == BOOK_DESTRUCTION)
             redraw_screen();
-        read_scroll(slot);
+        read(slot);
         // In case of a book, stay in the inventory to see the content.
         return item.base_type == OBJ_BOOKS && item.sub_type != BOOK_DESTRUCTION;
     case CMD_WEAR_JEWELLERY:
@@ -2540,10 +2499,20 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
 #endif
 
-    if (_can_show_spells(item))
-        return _describe_spellbook(item);
-
+    // we might destroy the item, so save this first.
+    const bool item_had_spells = _can_show_spells(item);
     _show_item_description(item);
+
+    // spellbooks & rods have their own UIs, so we don't currently support the
+    // inscribe/drop/etc prompt UI for them.
+    // ...it would be nice if we did, though.
+    if (item_had_spells)
+    {
+        // only continue the inventory loop if we didn't start memorizing a
+        // spell & didn't destroy the item for amnesia.
+        return !already_learning_spell() && item.is_valid();
+    }
+
     _update_inscription(item);
 
     if (allow_inscribe && crawl_state.game_is_tutorial())
@@ -2596,13 +2565,16 @@ void inscribe_item(item_def &item, bool msgwin)
     char buf[79];
     int ret;
     if (msgwin)
-        ret = msgwin_get_line(prompt, buf, sizeof buf, NULL, item.inscription);
+    {
+        ret = msgwin_get_line(prompt, buf, sizeof buf, nullptr,
+                              item.inscription);
+    }
     else
     {
         _safe_newline();
         prompt = "<cyan>" + prompt + "</cyan>";
         formatted_string::parse_string(prompt).display();
-        ret = cancellable_get_line(buf, sizeof buf, NULL, NULL,
+        ret = cancellable_get_line(buf, sizeof buf, nullptr, nullptr,
                                   item.inscription);
     }
 
@@ -2645,6 +2617,7 @@ static void _adjust_item(item_def &item)
     string prompt = "<cyan>Adjust to which letter? </cyan>";
     formatted_string::parse_string(prompt).display();
     const int keyin = getch_ck();
+    // TODO: CK_RESIZE?
 
     if (isaalpha(keyin))
     {
@@ -2753,7 +2726,7 @@ string get_skill_description(skill_type skill, bool need_title)
 // forget it and BOOK_NEITHER if you can do neither
 static int _get_spell_description(const spell_type spell,
                                    string &description,
-                                   const item_def* item = NULL)
+                                   const item_def* item = nullptr)
 {
     description.reserve(500);
 
@@ -2782,34 +2755,44 @@ static int _get_spell_description(const spell_type spell,
                        + " creature" + (limit > 1 ? "s" : "") + " summoned by this spell.\n";
     }
 
-    const bool rod = item && item->base_type == OBJ_RODS;
+    if (item)
+    {
+        const bool rod = item && item->base_type == OBJ_RODS;
 
-    if (god_hates_spell(spell, you.religion, rod))
-    {
-        description += uppercase_first(god_name(you.religion))
-                       + " frowns upon the use of this spell.\n";
-        if (god_loathes_spell(spell, you.religion))
-            description += "You'd be excommunicated if you dared to cast it!\n";
-    }
-    else if (god_likes_spell(spell, you.religion))
-    {
-        description += uppercase_first(god_name(you.religion))
-                       + " supports the use of this spell.\n";
-    }
-    if (item && !player_can_memorise_from_spellbook(*item))
-    {
-        description += "The spell is scrawled in ancient runes that are beyond "
-                       "your current level of understanding.\n";
-    }
-    if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
-    {
-        description += "\nThis spell will have no effect right now: "
-        + spell_uselessness_reason(spell, true, false, rod)
-        + "\n";
+        if (god_hates_spell(spell, you.religion, rod))
+        {
+            description += uppercase_first(god_name(you.religion))
+                            + " frowns upon the use of this spell.\n";
+            if (god_loathes_spell(spell, you.religion))
+            {
+                description += "You'd be excommunicated if you dared to cast "
+                               "it!\n";
+            }
+        }
+        else if (god_likes_spell(spell, you.religion))
+        {
+            description += uppercase_first(god_name(you.religion))
+                           + " supports the use of this spell.\n";
+        }
+
+        if (item && !player_can_memorise_from_spellbook(*item))
+        {
+            description += "The spell is scrawled in ancient runes that are "
+                           "beyond your current level of understanding.\n";
+        }
+
+        if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
+        {
+            description += "\nThis spell will have no effect right now: "
+                           + spell_uselessness_reason(spell, true, false, rod)
+                           + "\n";
+        }
+
+        _append_spell_stats(spell, description, rod);
     }
 
-    _append_spell_stats(spell, description, rod);
-
+    // Don't allow memorization or amnesia after death.
+    // (In the post-game inventory screen.)
     if (crawl_state.player_is_dead())
         return BOOK_NEITHER;
 
@@ -3168,42 +3151,36 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
 static string _monster_attacks_description(const monster_info& mi)
 {
     ostringstream result;
-    vector<attack_flavour> attack_flavours;
+    set<attack_flavour> attack_flavours;
     vector<string> attack_descs;
     // Weird attack types that act like attack flavours.
     bool trample = false;
     bool reach_sting = false;
 
-    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    for (const auto &attack : mi.attack)
     {
-        attack_flavour af = mi.attack[i].flavour;
-
-        bool match = false;
-        for (unsigned int k = 0; k < attack_flavours.size(); ++k)
-            if (attack_flavours[k] == af)
-                match = true;
-
-        if (!match)
+        attack_flavour af = attack.flavour;
+        if (!attack_flavours.count(af))
         {
-            attack_flavours.push_back(af);
-            const char* desc = _describe_attack_flavour(af);
-            if (*desc)
+            attack_flavours.insert(af);
+            const char * const desc = _describe_attack_flavour(af);
+            if (desc[0]) // non-empty
                 attack_descs.push_back(desc);
         }
 
-        if (mi.attack[i].type == AT_TRAMPLE)
+        if (attack.type == AT_TRAMPLE)
             trample = true;
 
-        if (mi.attack[i].type == AT_REACH_STING)
+        if (attack.type == AT_REACH_STING)
             reach_sting = true;
     }
 
     if (trample)
-        attack_descs.push_back("knock back the defender");
+        attack_descs.emplace_back("knock back the defender");
 
     // Assumes nothing has both AT_REACH_STING and AF_REACH.
     if (reach_sting)
-        attack_descs.push_back(_describe_attack_flavour(AF_REACH));
+        attack_descs.emplace_back(_describe_attack_flavour(AF_REACH));
 
     if (!attack_descs.empty())
     {
@@ -3215,83 +3192,24 @@ static string _monster_attacks_description(const monster_info& mi)
     return result.str();
 }
 
-static string _monster_spell_type_description(const monster_info& mi,
-                                              mon_spell_slot_flags flags,
-                                              string set_name,
-                                              string desc_singular,
-                                              string desc_plural)
-{
-    unique_books books = get_unique_spells(mi, flags);
-    const size_t num_books = books.size();
-
-    if (num_books == 0)
-        return "";
-
-    ostringstream result;
-
-    result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-
-    if (num_books > 1)
-        result << desc_plural;
-    else
-        result << desc_singular;
-
-    // Loop through books and display spells/abilities for each of them
-    for (size_t i = 0; i < num_books; ++i)
-    {
-        vector<spell_type> &book_spells = books[i];
-
-        // Display spells for this book
-        if (num_books > 1)
-            result << set_name << " " << i+1 << ": ";
-
-        for (size_t j = 0; j < book_spells.size(); ++j)
-        {
-            const spell_type spell = book_spells[j];
-            if (j > 0)
-                result << ", ";
-            result << spell_title(spell);
-        }
-        result << "\n";
-    }
-
-    return result.str();
-}
-
 static string _monster_spells_description(const monster_info& mi)
 {
     // Show a generic message for pan lords, since they're secret.
     if (mi.type == MONS_PANDEMONIUM_LORD)
         return "It may possess any of a vast number of diabolical powers.\n";
 
+    // Ditto for (a)liches.
+    if (mi.type == MONS_LICH || mi.type == MONS_ANCIENT_LICH)
+        return "It has mastered any of a vast number of powerful spells.\n";
+
     // Show monster spells and spell-like abilities.
     if (!mi.has_spells())
         return "";
 
-    ostringstream result;
-
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_NATURAL, "Set",
-        " possesses the following special abilities: ",
-        " possesses one of the following sets of special abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_MAGICAL, "Set",
-        " possesses the following magical abilities: ",
-        " possesses one of the following sets of magical abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_DEMONIC, "Set",
-        " possesses the following demonic abilities: ",
-        " possesses one of the following sets of demonic abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_PRIEST, "Set",
-        " possesses the following divine abilities: ",
-        " possesses one of the following sets of divine abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_WIZARD, "Book",
-        " has mastered the following spells: ",
-        " has mastered one of the following spellbooks:\n");
-
-    return result.str();
+    formatted_string description;
+    describe_spellset(monster_spellset(mi), nullptr, description);
+    description.cprintf("Select a spell to read its description.\n");
+    return description.tostring();
 }
 
 static const char *_speed_description(int speed)
@@ -3453,28 +3371,28 @@ static string _monster_stat_description(const monster_info& mi)
     vector<string> base_resists;
     vector<string> suscept;
 
-    for (unsigned int i = 0; i < ARRAYSZ(resists); ++i)
+    for (mon_resist_flags rflags : resists)
     {
-        int level = get_resist(resist, resists[i]);
+        int level = get_resist(resist, rflags);
 
         if (level != 0)
         {
-            const char* attackname = _get_resist_name(resists[i]);
+            const char* attackname = _get_resist_name(rflags);
             level = max(level, -1);
             level = min(level,  3);
             switch (level)
             {
                 case -1:
-                    suscept.push_back(attackname);
+                    suscept.emplace_back(attackname);
                     break;
                 case 1:
-                    base_resists.push_back(attackname);
+                    base_resists.emplace_back(attackname);
                     break;
                 case 2:
-                    high_resists.push_back(attackname);
+                    high_resists.emplace_back(attackname);
                     break;
                 case 3:
-                    extreme_resists.push_back(attackname);
+                    extreme_resists.emplace_back(attackname);
                     break;
             }
         }
@@ -3653,7 +3571,7 @@ static string _monster_stat_description(const monster_info& mi)
         "tiny",
         "very small",
         "small",
-        NULL,     // don't display anything for 'medium'
+        nullptr,     // don't display anything for 'medium'
         "large",
         "very large",
         "giant",
@@ -3828,8 +3746,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         symbol_suffix += symbol;
         symbol_suffix += "_suffix";
 
-        string suffix = getLongDescription(symbol_suffix);
-              suffix += getLongDescription(symbol_suffix + "_examine");
+        string suffix = getLongDescription(symbol_suffix)
+                      + getLongDescription(symbol_suffix + "_examine");
 
         if (!suffix.empty())
             inf.body << "\n" << suffix;
@@ -3869,6 +3787,32 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << " is vulnerable to silver and hated by Zin.\n";
     }
 
+    if (in_good_standing(GOD_ZIN, 0))
+    {
+        const int check = mons_class_hit_dice(mi.type) - zin_recite_power();
+        if (check >= 0)
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " is too strong to be recited to.";
+        }
+        else if (check >= -5)
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " may be too strong to be recited to.";
+        }
+        else
+        {
+            inf.body << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
+                     << " is weak enough to be recited to.";
+        }
+        if (you.wizard)
+        {
+            inf.body << " (Recite power:" << zin_recite_power()
+                     << ", Hit dice:" << mons_class_hit_dice(mi.type) << ")";
+        }
+        inf.body << "\n";
+    }
+
     if (mi.is(MB_SUMMONED))
     {
         inf.body << "\n" << "This monster has been summoned, and is thus only "
@@ -3878,13 +3822,19 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body << ", and it is incapable of using stairs";
         inf.body << ".\n";
     }
-
-    if (mi.is(MB_PERM_SUMMON))
+    else if (mi.is(MB_PERM_SUMMON))
     {
         inf.body << "\n" << "This monster has been summoned in a durable "
                        "way, and only partially exists. Killing it yields no "
                        "experience, nutrition or items. You cannot easily "
                        "abjure it, though.\n";
+    }
+    else if (mons_class_leaves_hide(mi.type))
+    {
+        inf.body << "\nIf " << mi.pronoun(PRONOUN_SUBJECTIVE) << " is slain "
+        "and butchered, it may be possible to recover "
+        << mi.pronoun(PRONOUN_POSSESSIVE) << " hide, which can be "
+        "enchanted into armour.\n";
     }
 
     if (mi.is(MB_SUMMONED_CAPPED))
@@ -3918,17 +3868,17 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     vector<string> attitude;
     if (mons.friendly())
-        attitude.push_back("friendly");
+        attitude.emplace_back("friendly");
     if (mons.neutral())
-        attitude.push_back("neutral");
+        attitude.emplace_back("neutral");
     if (mons.good_neutral())
-        attitude.push_back("good_neutral");
+        attitude.emplace_back("good_neutral");
     if (mons.strict_neutral())
-        attitude.push_back("strict_neutral");
+        attitude.emplace_back("strict_neutral");
     if (mons.pacified())
-        attitude.push_back("pacified");
+        attitude.emplace_back("pacified");
     if (mons.wont_attack())
-        attitude.push_back("wont_attack");
+        attitude.emplace_back("wont_attack");
     if (!attitude.empty())
     {
         inf.body << "; " << comma_separated_line(attitude.begin(),
@@ -3988,11 +3938,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
         const CrawlVector& blame = mons.props["blame"].get_vector();
 
-        for (CrawlVector::const_iterator it = blame.begin();
-             it != blame.end(); ++it)
-        {
-            inf.body << "    " << it->get_string() << "\n";
-        }
+        for (const auto &entry : blame)
+            inf.body << "    " << entry.get_string() << "\n";
     }
 #endif
 }
@@ -4003,8 +3950,6 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     describe_info inf;
     bool has_stat_desc = false;
     get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
-
-    bool show_quote = false;
 
     if (!footer.empty())
     {
@@ -4018,26 +3963,43 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
 #endif
 
-    int key;
-    do
+    spell_scroller fs(monster_spellset(mi), nullptr);
+    fs.add_text(inf.title);
+    fs.add_text(inf.body.str(), false, get_number_of_cols() - 1);
+    if (crawl_state.game_is_hints())
+        fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
+
+    formatted_scroller qs;
+
+    if (!inf.quote.empty())
+    {
+        fs.add_item_formatted_string(
+                formatted_string::parse_string("\n" + _toggle_message));
+
+        qs.add_text(inf.title);
+        qs.add_text(inf.quote, false, get_number_of_cols() - 1);
+        qs.add_item_formatted_string(
+                formatted_string::parse_string("\n" + _toggle_message));
+    }
+
+    fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
+
+    bool show_quote = false;
+    while (true)
     {
         if (show_quote)
-            _print_quote(inf);
+            qs.show();
         else
-        {
-            print_description(inf);
+            fs.show();
 
-            // TODO enne - this should really move into get_monster_db_desc
-            // and an additional tutorial string added to describe_info.
-            if (crawl_state.game_is_hints())
-                hints_describe_monster(mi, has_stat_desc);
-        }
-
-        show_quote = !show_quote;
+        int keyin = (show_quote ? qs : fs).get_lastch();
+        // this is never actually displayed to the player
+        // we just use it to check whether we should toggle.
+        if (_print_toggle_message(inf, keyin))
+            show_quote = !show_quote;
+        else
+            return keyin;
     }
-    while (_print_toggle_message(inf, key));
-
-    return key;
 }
 
 static const char* xl_rank_names[] =
@@ -4207,13 +4169,7 @@ void alt_desc_proc::print(const string &str)
 
 int alt_desc_proc::count_newlines(const string &str)
 {
-    int count = 0;
-    for (size_t i = 0; i < str.size(); i++)
-    {
-        if (str[i] == '\n')
-            count++;
-    }
-    return count;
+    return count(begin(str), end(str), '\n');
 }
 
 void alt_desc_proc::trim(string &str)

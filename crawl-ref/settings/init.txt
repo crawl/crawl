@@ -63,6 +63,9 @@
 # Override the vi movement keys with a non-command.
 # include = no_vi_command_keys.txt
 
+# Turn the shift-vi keys into safe move, instead of run.
+# include = safe_move_shift.txt
+
 ##### Ancient versions ##############################################
 # If you're used to the interface of ancient versions of Crawl, you may
 # get back parts of it by uncommenting the following options:

@@ -202,8 +202,7 @@ end
 
 mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "catoblepas w:12 / hellephant w:6 / spriggan druid w:1 / " ..
-                "guardian serpent w:1 / deep troll shaman w:1 / " ..
-                "raiju w:1 / hell beast w:1", { weight = 5 }),
+                "caustic shrike w:4", { weight = 5 }),
      with_props("place:Shoals:$ w:125 band / merfolk aquamancer / " ..
                 "water nymph w:5 / merfolk impaler w:5 / " ..
                 "merfolk javelineer / octopode crusher w:12", { weight = 5 }),
@@ -227,9 +226,9 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "frost giant / ettin / titan", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
                 "fire dragon / fire giant / orb of fire", { weight = 2 }),
-     with_props("ice beast / freezing wraith / ice dragon / " ..
-                "frost giant / ice devil / ice fiend / simulacrum / " ..
-                "white draconian knight / blizzard demon", { weight = 2 }),
+     with_props("ice beast / ice dragon / frost giant / " ..
+                "ice devil / blizzard demon / ice fiend / simulacrum / " ..
+                "white draconian knight / shard shrike", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / titan / raiju / " ..
                 "storm dragon / electric golem / spriggan air mage / " ..
                 "shock serpent", { weight = 2 }),
@@ -265,7 +264,7 @@ mset(spec_fn(function ()
                local d = 290 - 10 * you.depth()
                local e = math.max(0, you.depth() - 20)
                return "place:Orc:$ w:" .. d .. " / orc warlord / " ..
-                 "orc high priest band / orc sorcerer w:5 / stone giant / " ..
+                 "orc high priest / orc sorcerer w:5 / stone giant / " ..
                  "iron troll w:5 / moth of wrath w:" .. e
              end))
 
@@ -445,13 +444,16 @@ local function ziggurat_create_loot_at(c)
   end
 
   -- dgn.good_scrolls is a list of items with total weight 1000
-  local good_loot = dgn.item_spec("* no_pickup no_mimic w:7000 / " .. dgn.good_scrolls)
+  local good_loot = dgn.item_spec("* no_pickup no_mimic w:6960 /" ..
+                                  "potion of restore abilities no_pickup no_mimic w:40 /" ..
+                                  dgn.good_scrolls)
   local super_loot = dgn.item_spec("| no_pickup no_mimic w:7000 /" ..
-                                   "potion of experience no_pickup no_mimic w:200 /" ..
-                                   "potion of cure mutation no_pickup no_mimic w:200 /" ..
-                                   "potion of porridge no_pickup no_mimic w:100 /" ..
-                                   "wand of heal wounds no_pickup no_mimic w:10 / " ..
-                                   "wand of hasting no_pickup no_mimic w:10 / " ..
+                                   "potion of experience no_pickup no_mimic w:190 /" ..
+                                   "potion of cure mutation no_pickup no_mimic w:190 /" ..
+                                   "potion of beneficial mutation no_pickup no_mimic w:40 /" ..
+                                   "royal jelly q:3 no_pickup no_mimic w:80 /" ..
+                                   "wand of heal wounds no_pickup no_mimic / " ..
+                                   "wand of hasting no_pickup no_mimic / " ..
                                    dgn.good_scrolls)
 
   local loot_spots = find_free_space(nloot * 4)
@@ -646,13 +648,32 @@ local function ziggurat_furnish(centre, entry, exit)
     dgn.set_random_mon_list(monster_generation.spec)
   end
 
+  local need_lootvault = monster_generation.jelly_protect
+
+  -- zig 1: always start on one side
+  -- zig 2+: A chance of starting in the centre, increasing with zigs completed
+  -- & depth; 50% chance at zig2 + depth 27, 50% @ zig3 + depth21, etc
+  local completed = you.zigs_completed()
+  local place_centre = crawl.x_chance_in_y(completed * 6 + you.depth(),
+                                           completed * 6 + you.depth() + 6+27)
+                       and completed > 0
+
+
+
+  -- If we can (since there won't be a loot vault in the way), place the player
+  -- in the centre.
+  if not need_lootvault and place_centre then
+    entry = centre
+  end
+
+  ziggurat_stairs(entry, exit)
+
   -- Identify where we're going to place loot, but don't actually put
   -- anything down until we've placed pillars.
-  local lootspot = ziggurat_locate_loot(entry, exit,
-    monster_generation.jelly_protect)
+  local lootspot = ziggurat_locate_loot(entry, exit, need_lootvault)
 
-  if not has_loot_chamber then
-    -- Place pillars if we did not create a loot chamber.
+  if not has_loot_chamber and entry ~= centre then
+    -- Place pillars if we didn't put anything else in the middle.
     ziggurat_place_pillars(centre)
   end
 
@@ -710,7 +731,6 @@ local function ziggurat_rectangle_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
@@ -747,7 +767,6 @@ local function ziggurat_ellipse_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
@@ -793,7 +812,6 @@ local function ziggurat_hexagon_builder(e)
     entry, exit = exit, entry
   end
 
-  ziggurat_stairs(entry, exit)
   ziggurat_furnish(c, entry, exit)
 end
 

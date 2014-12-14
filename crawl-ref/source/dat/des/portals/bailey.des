@@ -277,7 +277,7 @@ MONS:   gnoll ; spear / goblin ; spear
 : end
 SUBST:  . = ...;!
 COLOUR: ; = red
-KITEM:  ! = potion of confusion q:2 ident:type
+KITEM:  ! = potion of poison q:2 ident:type
 KFEAT:  ! = floor
 SUBST:  ; = .
 MAP
@@ -840,7 +840,7 @@ ITEM:    scroll of enchant armour q:2 / scroll of enchant weapon q:3 /\
          book of annihilations w:1 / grand grimoire w:1 / necronomicon w:1
 MONS:    deep elf fighter / deep elf mage w:4
 MONS:    deep elf mage / deep elf priest / nothing w:20
-MONS:    deep elf knight
+MONS:    deep elf knight ; short sword . leather armour
 : bailey_setup(_G)
 MAP
          ccccc

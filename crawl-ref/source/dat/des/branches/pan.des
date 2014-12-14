@@ -1546,7 +1546,7 @@ ENDMAP
 NAME:   evilmike_mini_pan_thingy
 KITEM:  | = |
 KFEAT:  | = (
-: pan_demonic_rune(_G, 'P')
+: pan_demonic_rune(_G, 'P', true)
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
      .....
@@ -1571,7 +1571,7 @@ ENDMAP
 NAME:   evilmike_mini_pan_other_thingy
 KITEM:  | = |
 KFEAT:  | = (
-SUBST:  d : +x, X : c., C : ccx
+SUBST:  d : +x, X : c., Y : ccx
 : pan_demonic_rune(_G, 'P', true)
 : pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP

@@ -251,6 +251,18 @@ Chilling Breath spell
 This creatue can breath a blast of frost that bypasses any armour the unfortunate
 victim may have, and might even knock it backwards if in flight.
 %%%%
+Cigotuvi's Embrace spell
+
+This spell violently mutilates all nearby corpses, wrapping them around the
+caster to serve as both armour and shield. As it takes hits, the carrion will
+gradually fall away, faster and faster as more is piled on, though increased
+spellpower will tighten its grasp on the caster's body. It cannot grip ice or
+stone; only that which lives, or once lived.
+%%%%
+Cleansing Flame spell
+
+<Cleansing Flame ability>
+%%%%
 Cloud Cone spell
 
 This spell blasts the area near the caster with various destructive clouds. At
@@ -449,9 +461,10 @@ inflict a great deal of damage on it.
 %%%%
 Dispersal spell
 
-This spell tries to teleport away any monsters directly beside the caster. Any
-monster that it fails to teleport will still be irresistibly blinked a shorter
-distance.
+This spell tries to teleport away any monsters within a short distance of the
+caster. Any monster that it fails to teleport will still be irresistibly
+blinked a shorter distance, and any monster it affects at all has a chance of
+being confused by the crazy warping of space.
 %%%%
 Draconian Breath spell
 
@@ -613,6 +626,14 @@ and unleashes it after a short while as a violent explosion of arcane force. Be
 warned that the prism is extremely fragile and any damage caused to it may
 result in premature detonation!
 %%%%
+Gell's Gravitas spell
+
+For a brief moment, this spell redirects space around the target, making 'down'
+become exactly where the target is standing. All nearby creatures, save the
+caster, fall helplessly toward the victim - typically colliding with it, or
+with each other. The disorienting experience can leave the afflicted creatures
+confused.
+%%%%
 Ghostly Fireball spell
 
 This spell allows the caster to throw an exploding ball of necromantic energy.
@@ -627,6 +648,11 @@ energy. It resembles eerie greenish flames, but it has nothing in common with
 fire besides appearance. Both the direct hit and residual flame does damage to
 living beings and heals the undead. The energy tends to coalesce into spectral
 undead creatures on its own.
+%%%%
+Goblin Toss spell
+
+Throws a nearby friendly goblin in a long, beautiful arc, bopping the target on
+the head and landing the goblin nearby.
 %%%%
 Glaciate spell
 
@@ -1076,7 +1102,7 @@ caster.
 %%%%
 Regeneration spell
 
-This spell reanimates parts of the caster's wounds. This unholy act
+This spell reanimates parts of the caster's wounds. This unnatural act
 dramatically but temporarily increases the caster's recuperative abilities,
 while also increasing the rate of food consumption.
 %%%%
@@ -1106,6 +1132,11 @@ This ability taints the victim's ability to cast spells; casting a spell while
 afflicted with this condition causes them to lose control over their magic,
 progressively hindering their chances of success as more spells are cast.
 %%%%
+Scattershot spell
+
+This spell generates metallic fragments, blasting a cone-shaped area in front
+of the caster.
+%%%%
 Seal Doors spell
 
 Imparts seals on nearby doors and stairs, preventing those not allied with
@@ -1134,11 +1165,10 @@ A penetrating bolt spell mimicked by the shadow of a Dithmenos worshipper.
 %%%%
 Shadow Creatures spell
 
-This spell weaves a creature from shadows and threads of ethereal matter. The
-creature thus brought into existence will recreate some type of creature found
-in the caster's immediate vicinity. The spell even creates appropriate
-equipment for the creature, which are given a lasting substance by their firm
-contact with reality.
+This spell weaves a creature from shadows and threads of Abyssal matter. The
+creature thus brought into existence will recreate some type of creature native
+to the caster's location. The spell even creates appropriate equipment for the
+creature from the same ethereal matter.
 %%%%
 Shadow Shard spell
 
@@ -1185,6 +1215,12 @@ This spell creates a icy replica from the corpse of the original being. This
 magic is unstable, so eventually the replica will sublimate into a freezing
 cloud, if it isn't hacked or melted into a small puddle of water first. Note
 that simulacra are incapable of leaving the level they were created on.
+%%%%
+Singularity spell
+
+This spell compresses space into a gravitational singularity, pulling nearby
+enemies of the caster towards it and warping them violently in the process.
+The caster can only maintain one singularity at a time.
 %%%%
 Siren Song spell
 
@@ -1382,6 +1418,10 @@ significant amounts of damage. It will gain more health at high power.
 Summon Hell Beast spell
 
 Using his horn, Geryon can summon a deadly hell beast against his foes.
+%%%%
+Summon Holies spell
+
+Calls forth a divine warrior to aid the caster.
 %%%%
 Summon Horrible Things spell
 
@@ -1587,10 +1627,10 @@ dealing damage. It can affect targets standing in or flying above water.
 %%%%
 Weave Shadows spell
 
-This spell weaves a creature from shadows and threads of ethereal matter. The
+This spell weaves a creature from shadows and threads of Abyssal matter. The
 creatures thus brought into existence increase in power with spellpower. The
-spell even creates appropriate equipment for the creature, which are given a
-lasting substance by their firm contact with reality.
+spell even creates appropriate equipment for the creature from the same
+ethereal matter.
 %%%%
 Wind Blast spell
 

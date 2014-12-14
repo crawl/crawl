@@ -788,7 +788,6 @@ i-spirit AMU_SPIRIT_SHIELD
 i-faith AMU_FAITH
 i-stasis AMU_STASIS
 i-regeneration AMU_REGENERATION AMU_ID_LAST
-%rim 1
 
 ####################OBJ_POTIONS
 %sdir item/potion
@@ -818,7 +817,6 @@ sky_blue
 
 %sdir item/potion
 %back i-label
-%rim 0
 # These must be in the same order as the enum in enum.h!
 i-curing POT_CURING POT_ID_FIRST
 i-heal-wounds POT_HEAL_WOUNDS
@@ -834,7 +832,7 @@ i-flight POT_FLIGHT
 i-poison POT_POISON
 i-slowing POT_SLOWING
 i-cancel POT_CANCELLATION
-i-confusion POT_CONFUSION
+i-ambrosia POT_AMBROSIA
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION

@@ -95,14 +95,14 @@ void initialise_branch_depths()
     // This way you get one "water" branch and one "poison" branch.
     branch_type disabled_branch[] =
     {
-        random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
-        random_choose(BRANCH_SNAKE, BRANCH_SPIDER, -1),
+        random_choose(BRANCH_SWAMP, BRANCH_SHOALS),
+        random_choose(BRANCH_SNAKE, BRANCH_SPIDER),
     };
 
-    for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
+    for (branch_type disabled : disabled_branch)
     {
-        dprf("Disabling branch: %s", branches[disabled_branch[i]].shortname);
-        brentry[disabled_branch[i]].clear();
+        dprf("Disabling branch: %s", branches[disabled].shortname);
+        brentry[disabled].clear();
     }
 
     for (branch_iterator it; it; ++it)
@@ -139,7 +139,7 @@ void initialise_temples()
     // First determine main temple map to use.
     level_id ecumenical(BRANCH_TEMPLE, 1);
 
-    map_def *main_temple = NULL;
+    map_def *main_temple = nullptr;
     for (int i = 0; i < 10; i++)
     {
         int altar_count = 0;
@@ -147,21 +147,18 @@ void initialise_temples()
         main_temple
             = const_cast<map_def*>(random_map_for_place(ecumenical, false));
 
-        if (main_temple == NULL)
+        if (main_temple == nullptr)
             end(1, false, "No temples?!");
 
         if (main_temple->has_tag("temple_variable"))
         {
             vector<int> sizes;
-            vector<string> tag_list = main_temple->get_tags();
-            for (unsigned int j = 0; j < tag_list.size(); j++)
+            for (string &tag : main_temple->get_tags())
             {
-                if (starts_with(tag_list[j], "temple_altars_"))
+                if (starts_with(tag, "temple_altars_"))
                 {
                     sizes.push_back(
-                        atoi(
-                            strip_tag_prefix(
-                                tag_list[j], "temple_altars_").c_str()));
+                        atoi(strip_tag_prefix(tag, "temple_altars_").c_str()));
                 }
             }
             if (sizes.empty())
@@ -169,7 +166,7 @@ void initialise_temples()
                 mprf(MSGCH_ERROR,
                      "Temple %s set as variable but has no sizes.",
                      main_temple->name.c_str());
-                main_temple = NULL;
+                main_temple = nullptr;
                 continue;
             }
             altar_count =
@@ -181,15 +178,15 @@ void initialise_temples()
 
         // Without all this find_glyph() returns 0.
         string err;
-              main_temple->load();
-              main_temple->reinit();
+        main_temple->load();
+        main_temple->reinit();
         err = main_temple->run_lua(true);
 
         if (!err.empty())
         {
             mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
-            main_temple = NULL;
+            main_temple = nullptr;
             you.props.erase(TEMPLE_SIZE_KEY);
             continue;
         }
@@ -201,14 +198,14 @@ void initialise_temples()
         {
             mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
-            main_temple = NULL;
+            main_temple = nullptr;
             you.props.erase(TEMPLE_SIZE_KEY);
             continue;
         }
         break;
     }
 
-    if (main_temple == NULL)
+    if (main_temple == nullptr)
         end(1, false, "No valid temples.");
 
     you.props[TEMPLE_MAP_KEY] = main_temple->name;
@@ -267,12 +264,11 @@ void initialise_temples()
         if (!maps.empty())
         {
             int chance = 0;
-            for (mapref_vector::iterator map = maps.begin();
-                 map != maps.end(); map++)
+            for (auto map : maps)
             {
                 // XXX: this should handle level depth better
-                chance += (*map)->weight(level_id(BRANCH_DUNGEON,
-                                                  MAX_OVERFLOW_LEVEL));
+                chance += map->weight(level_id(BRANCH_DUNGEON,
+                                               MAX_OVERFLOW_LEVEL));
             }
             overflow_weights[i] = chance;
         }
@@ -318,11 +314,10 @@ multi_overflow:
         if (overflow_weights[num] > 0)
         {
             int chance = 0;
-            for (mapref_vector::iterator map = maps.begin(); map != maps.end();
-                 map++)
+            for (auto map : maps)
             {
-                chance += (*map)->weight(level_id(BRANCH_DUNGEON,
-                                                  MAX_OVERFLOW_LEVEL));
+                chance += map->weight(level_id(BRANCH_DUNGEON,
+                                               MAX_OVERFLOW_LEVEL));
             }
             if (!x_chance_in_y(chance, overflow_weights[num] + chance))
                 continue;
@@ -354,13 +349,9 @@ multi_overflow:
 
             // Randomly choose from the sizes which have maps.
             for (unsigned int j = 2; j <= remaining_size; j++)
-            {
                 if (overflow_weights[j] > 0)
-                {
-                    num_weights.push_back(
-                        pair<unsigned int, int>(j, overflow_weights[j]));
-                }
-            }
+                    num_weights.emplace_back(j, overflow_weights[j]);
+
             if (!num_weights.empty())
                 num_gods = *(random_choose_weighted(num_weights));
 
@@ -373,13 +364,13 @@ multi_overflow:
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 static int _get_random_porridge_desc()
 {
     return PDESCQ(PDQ_GLUGGY, one_chance_in(3) ? PDC_BROWN
                                                : PDC_WHITE);
 }
 
-#if TAG_MAJOR_VERSION == 34
 static int _get_random_coagulated_blood_desc()
 {
     potion_description_qualifier_type qualifier = PDQ_NONE;
@@ -423,13 +414,13 @@ void initialise_item_descriptions()
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
 
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
-        = _get_random_porridge_desc();
     you.item_description[IDESC_POTIONS][POT_BLOOD]
         = _get_random_blood_desc();
 #if TAG_MAJOR_VERSION == 34
     you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
         = _get_random_coagulated_blood_desc();
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
+        = _get_random_porridge_desc();
 #endif
 
     // The order here must match that of IDESC in describe.h
@@ -519,7 +510,9 @@ void initialise_item_descriptions()
 void fix_up_jiyva_name()
 {
     do
+    {
         you.jiyva_second_name = make_name(random_int(), false, 8, 'J');
+    }
     while (strncmp(you.jiyva_second_name.c_str(), "J", 1) != 0);
 
     you.jiyva_second_name = replace_all(you.jiyva_second_name, " ", "");

@@ -384,7 +384,7 @@ public:
     ~precompute_travel_safety_grid()
     {
         if (did_compute)
-            _travel_safe_grid.reset(NULL);
+            _travel_safe_grid.reset(nullptr);
     }
 };
 
@@ -613,11 +613,10 @@ static int _slowest_ally_speed()
 {
     vector<monster* > followers = get_on_level_followers();
     int min_speed = INT_MAX;
-    for (vector<monster* >::iterator fol = followers.begin();
-         fol != followers.end(); ++fol)
+    for (auto fol : followers)
     {
-        int speed = (*fol)->speed * BASELINE_DELAY
-                    / (*fol)->action_energy(EUT_MOVE);
+        int speed = fol->speed * BASELINE_DELAY
+                    / fol->action_energy(EUT_MOVE);
         if (speed < min_speed)
             min_speed = speed;
     }
@@ -831,7 +830,7 @@ static void _explore_find_target_square()
             }
             else
             {
-                vector<string> inacc;
+                vector<const char *> inacc;
                 if (estatus & EST_GREED_UNFULFILLED)
                     inacc.push_back("items");
                 if (estatus & EST_PARTLY_EXPLORED)
@@ -1160,10 +1159,10 @@ FixedVector<coord_def, GXM * GYM> travel_pathfind::circumference[2];
 travel_pathfind::travel_pathfind()
     : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
       floodout(false), double_flood(false), ignore_hostile(false),
-      ignore_danger(false), annotate_map(false), ls(NULL),
+      ignore_danger(false), annotate_map(false), ls(nullptr),
       need_for_greed(false), autopickup(false), sacrifice(false),
       unexplored_place(), greedy_place(), unexplored_dist(0), greedy_dist(0),
-      refdist(NULL), reseed_points(), features(NULL), unreachables(),
+      refdist(nullptr), reseed_points(), features(nullptr), unreachables(),
       point_distance(travel_point_distance), points(0), next_iter_points(0),
       traveled_distance(0), circ_index(0)
 {
@@ -1425,10 +1424,9 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 
     if (features && floodout)
     {
-        exclude_set::const_iterator it;
-        for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+        for (const auto &entry : curr_excludes)
         {
-            const travel_exclude &exc = it->second;
+            const travel_exclude &exc = entry.second;
             // An exclude - wherever it is - is always a feature.
             if (find(features->begin(), features->end(), exc.pos)
                     == features->end())
@@ -1470,10 +1468,9 @@ void travel_pathfind::get_features()
             }
         }
 
-    exclude_set::const_iterator it;
-    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
+    for (const auto &entry : curr_excludes)
     {
-        const travel_exclude &exc = it->second;
+        const travel_exclude &exc = entry.second;
 
         // An exclude - wherever it is - is always a feature.
         if (find(features->begin(), features->end(), exc.pos) == features->end())
@@ -1864,11 +1861,16 @@ static void _find_parent_branch(branch_type br, int depth,
                                 branch_type *pb, int *pd)
 {
     *pb = parent_branch(br);   // Check depth before using *pb.
-    map<branch_type, set<level_id> >::iterator i = stair_level.find(br);
-    if (i == stair_level.end() || i->second.size() == 0)
-        *pd = 0;
-    else
-        *pd = i->second.begin()->depth;
+
+    if (auto levels = map_find(stair_level, br))
+    {
+        if (levels->size() > 0)
+        {
+            *pd = levels->begin()->depth;
+            return;
+        }
+    }
+    *pd = 0;
 }
 
 // Appends the passed in branch/depth to the given vector, then attempts to
@@ -1890,8 +1892,7 @@ static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
         return;
     ASSERT(subdepth <= 27);
 
-    level_id lid(branch, subdepth);
-    vec.push_back(lid);
+    vec.emplace_back(branch, subdepth);
 
     if (branch != root_branch)
     {
@@ -2086,7 +2087,7 @@ static vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 
 static bool _is_valid_branch(const Branch &br)
 {
-    return br.shortname != NULL && brdepth[br.id] != -1;
+    return br.shortname != nullptr && brdepth[br.id] != -1;
 }
 
 static bool _is_disconnected_branch(const Branch &br)
@@ -2131,7 +2132,7 @@ static int _prompt_travel_branch(int prompt_flags)
                 if (linec == 4)
                 {
                     linec = 0;
-                    mpr(line.c_str());
+                    mpr(line);
                     line = "";
                 }
                 line += make_stringf("(%c) %-14s ",
@@ -2139,7 +2140,7 @@ static int _prompt_travel_branch(int prompt_flags)
                                      branches[br[i]].shortname);
             }
             if (!line.empty())
-                mpr(line.c_str());
+                mpr(line);
         }
 
         string shortcuts = "(";
@@ -2148,9 +2149,9 @@ static int _prompt_travel_branch(int prompt_flags)
             if (allow_waypoints)
             {
                 if (waypoint_list)
-                    segs.push_back("* - list branches");
+                    segs.emplace_back("* - list branches");
                 else if (waycount)
-                    segs.push_back("* - list waypoints");
+                    segs.emplace_back("* - list waypoints");
             }
 
             if (!trans_travel_dest.empty() && remember_targ)
@@ -2159,7 +2160,7 @@ static int _prompt_travel_branch(int prompt_flags)
                     make_stringf("Enter - %s", trans_travel_dest.c_str()));
             }
 
-            segs.push_back("? - help");
+            segs.emplace_back("? - help");
 
             shortcuts += comma_separated_line(segs.begin(), segs.end(),
                                               ", ", ", ");
@@ -2333,15 +2334,14 @@ static level_pos _find_entrance(const level_pos &from)
     lid.depth = 1;
     level_id new_lid = find_up_level(lid);
 
-    if (new_lid.is_valid()) {
+    if (new_lid.is_valid())
+    {
         LevelInfo &li = travel_cache.get_level_info(new_lid);
         vector<stair_info> &stairs = li.get_stairs();
-        for (vector<stair_info>::const_iterator sit = stairs.begin();
-                sit != stairs.end();
-                ++sit)
-            if (sit->destination.id.branch == target_branch)
+        for (const auto &stair : stairs)
+            if (stair.destination.id.branch == target_branch)
             {
-                pos = sit->position;
+                pos = stair.position;
                 break;
             }
 
@@ -2351,12 +2351,10 @@ static level_pos _find_entrance(const level_pos &from)
     {
         LevelInfo &li = travel_cache.get_level_info(lid);
         vector<stair_info> &stairs = li.get_stairs();
-        for (vector<stair_info>::const_iterator sit = stairs.begin();
-                sit != stairs.end();
-                ++sit)
-            if (!sit->destination.id.is_valid())
+        for (const auto &stair : stairs)
+            if (!stair.destination.id.is_valid())
             {
-                pos = sit->position;
+                pos = stair.position;
                 break;
             }
 
@@ -2403,7 +2401,7 @@ static void _travel_depth_munge(int munge_method, const string &s,
     case '$':
         lid = find_deepest_explored(lid);
         break;
-    case '^': {
+    case '^':
         if (targ.pos.x != -1)
         {
             LevelInfo &li = travel_cache.get_level_info(lid);
@@ -2418,7 +2416,6 @@ static void _travel_depth_munge(int munge_method, const string &s,
         targ = _find_entrance(targ);
         return;
         break;
-    }
     }
     targ.id = lid;
     if (targ.id.depth < 1)
@@ -2444,7 +2441,8 @@ static level_pos _prompt_travel_depth(const level_id &id)
 
         char buf[100];
         const int response =
-            cancellable_get_line(buf, sizeof buf, NULL, _travel_depth_keyfilter, "", "travel_depth");
+            cancellable_get_line(buf, sizeof buf, nullptr,
+                                 _travel_depth_keyfilter, "", "travel_depth");
 
         if (!response)
             return _parse_travel_target(buf, target);
@@ -2731,7 +2729,7 @@ static int _find_transtravel_stair(const level_id &cur,
 
     vector<stair_info> &stairs = li.get_stairs();
 
-    // this_stair being NULL is perfectly acceptable, since we start with
+    // this_stair being nullptr is perfectly acceptable, since we start with
     // coords as the player coords, and the player need not be standing on
     // stairs.
     stair_info *this_stair = li.get_stair(stair);
@@ -2762,7 +2760,7 @@ static int _find_transtravel_stair(const level_id &cur,
                 deltadist = -1;
         }
 
-        // deltadist == 0 is legal (if this_stair is NULL), since the player
+        // deltadist == 0 is legal (if this_stair is nullptr), since the player
         // may be standing on the stairs. If two stairs are disconnected,
         // deltadist has to be negative.
         if (deltadist < 0)
@@ -2863,7 +2861,7 @@ static bool _loadlev_populate_stair_distances(const level_pos &target)
 static void _populate_stair_distances(const level_pos &target)
 {
     // Populate travel_point_distance.
-    find_travel_pos(target.pos, NULL, NULL, NULL);
+    find_travel_pos(target.pos, nullptr, nullptr, nullptr);
 
     LevelInfo &li = travel_cache.get_level_info(target.id);
     const vector<stair_info> &stairs = li.get_stairs();
@@ -2894,7 +2892,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     int best_level_distance = -1;
     travel_cache.clear_distances();
 
-    find_travel_pos(you.pos(), NULL, NULL, NULL);
+    find_travel_pos(you.pos(), nullptr, nullptr, nullptr);
 
     _find_transtravel_stair(current, target,
                             0, cur_stair, closest_level,
@@ -3337,7 +3335,7 @@ void LevelInfo::update_stair_distances()
 
         // For each stair, we need to ask travel to populate the distance
         // array.
-        find_travel_pos(stairs[s].position, NULL, NULL, NULL);
+        find_travel_pos(stairs[s].position, nullptr, nullptr, nullptr);
 
         // Assume movement distance between stairs is commutative,
         // i.e. going from a->b is the same distance as b->a.
@@ -3481,7 +3479,7 @@ bool LevelInfo::know_stair(const coord_def &c) const
 stair_info *LevelInfo::get_stair(const coord_def &pos)
 {
     int index = get_stair_index(pos);
-    return index != -1? &stairs[index] : NULL;
+    return index != -1? &stairs[index] : nullptr;
 }
 
 int LevelInfo::get_stair_index(const coord_def &pos) const
@@ -3695,7 +3693,7 @@ void LevelInfo::fixup()
 
 bool TravelCache::know_stair(const coord_def &c) const
 {
-    travel_levels_map::const_iterator i = levels.find(level_id::current());
+    auto i = levels.find(level_id::current());
     return i == levels.end() ? false : i->second.know_stair(c);
 }
 
@@ -3717,12 +3715,12 @@ void TravelCache::list_waypoints() const
         line += choice;
         if (!(++count % 5))
         {
-            mpr(line.c_str());
+            mpr(line);
             line = "";
         }
     }
     if (!line.empty())
-        mpr(line.c_str());
+        mpr(line);
 }
 
 uint8_t TravelCache::is_waypoint(const level_pos &lp) const
@@ -3870,19 +3868,15 @@ int TravelCache::get_waypoint_count() const
 
 void TravelCache::clear_distances()
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.clear_distances();
+    for (auto &entry : levels)
+        entry.second.clear_distances();
 }
 
 bool TravelCache::is_known_branch(uint8_t branch) const
 {
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        if (i->second.is_known_branch(branch))
-            return true;
-
-    return false;
+    return any_of(begin(levels), end(levels),
+            [branch] (const pair<level_id, LevelInfo> &entry)
+            { return entry.second.is_known_branch(branch); });
 }
 
 void TravelCache::save(writer& outf) const
@@ -3894,11 +3888,10 @@ void TravelCache::save(writer& outf) const
     // Write level count.
     marshallShort(outf, levels.size());
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
+    for (const auto &entry : levels)
     {
-        i->first.save(outf);
-        i->second.save(outf);
+        entry.first.save(outf);
+        entry.second.save(outf);
     }
 
     for (int wp = 0; wp < TRAVEL_WAYPOINT_COUNT; ++wp)
@@ -3963,34 +3956,30 @@ unsigned int TravelCache::query_daction_counter(daction_type c)
 
     unsigned int sum = 0;
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        sum += i->second.daction_counters[c];
+    for (const auto &entry : levels)
+        sum += entry.second.daction_counters[c];
 
     return sum;
 }
 
 void TravelCache::clear_daction_counter(daction_type c)
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.daction_counters[c] = 0;
+    for (auto &entry : levels)
+        entry.second.daction_counters[c] = 0;
 }
 
 void TravelCache::fixup_levels()
 {
-    map<level_id, LevelInfo>::iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        i->second.fixup();
+    for (auto &entry : levels)
+        entry.second.fixup();
 }
 
 vector<level_id> TravelCache::known_levels() const
 {
     vector<level_id> levs;
 
-    map<level_id, LevelInfo>::const_iterator i = levels.begin();
-    for (; i != levels.end(); ++i)
-        levs.push_back(i->first);
+    for (const auto &entry : levels)
+        levs.push_back(entry.first);
 
     return levs;
 }
@@ -4226,7 +4215,7 @@ void runrest::clear()
 explore_discoveries::explore_discoveries()
     : can_autopickup(::can_autopickup()),
       sacrifice(god_likes_items(you.religion, true)), es_flags(0),
-      current_level(NULL), items(), stairs(), portals(), shops(), altars(),
+      current_level(nullptr), items(), stairs(), portals(), shops(), altars(),
       runed_doors()
 {
 }
@@ -4272,7 +4261,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
 {
     if (feat == DNGN_ENTER_SHOP && ES_shop)
     {
-        shops.push_back(named_thing<int>(shop_name(pos), feat));
+        shops.emplace_back(shop_name(pos), feat);
         es_flags |= ES_SHOP;
     }
     else if (feat_is_stair(feat) && ES_stair)
@@ -4311,8 +4300,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
         string desc = env.markers.property_at(pos, MAT_ANY, "stop_explore");
         if (desc.empty())
             desc = cleaned_feature_description(pos);
-        const named_thing<int> rdoor(desc, 1);
-        runed_doors.push_back(rdoor);
+        runed_doors.emplace_back(desc, 1);
         es_flags |= ES_RUNED_DOOR;
     }
     else if (feat_is_altar(feat) && ES_altar)
@@ -4387,7 +4375,7 @@ void explore_discoveries::add_item(const item_def &i)
     else if (mon && mon->type == MONS_PLANT)
         itemname += " (under plant)";
 
-    items.push_back(named_thing<item_def>(itemname, i));
+    items.emplace_back(itemname, i);
 
     // First item of this type?
     // XXX: Only works when travelling.
@@ -4471,7 +4459,7 @@ template <class C> void explore_discoveries::say_any(
     if (strwidth(message) >= get_number_of_cols())
         mprf("Found %s %s.", number_in_words(size).c_str(), category);
     else
-        mprf("%s", message.c_str());
+        mpr(message);
 }
 
 vector<string> explore_discoveries::apply_quantities(
@@ -4480,7 +4468,7 @@ vector<string> explore_discoveries::apply_quantities(
     static const char *feature_plural_qualifiers[] =
     {
         " leading ", " back to ", " to ", " of ", " in ", " out of",
-        " from ", " back into ", NULL
+        " from ", " back into ", nullptr
     };
 
     vector<string> things;
@@ -4503,11 +4491,11 @@ bool explore_discoveries::prompt_stop() const
 {
     const bool marker_stop = !marker_msgs.empty() || !marked_feats.empty();
 
-    for (unsigned int i = 0; i < marker_msgs.size(); i++)
-        mprf("%s", marker_msgs[i].c_str());
+    for (const string &msg : marker_msgs)
+        mpr(msg);
 
-    for (unsigned int i = 0; i < marked_feats.size(); i++)
-        mprf("Found %s", marked_feats[i].c_str());
+    for (const string &marked : marked_feats)
+        mprf("Found %s", marked.c_str());
 
     if (!es_flags)
         return marker_stop;
@@ -4575,7 +4563,7 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
 
         int cmd = cmd_array[i];
         if (force)
-            cmd += CMD_OPEN_DOOR_LEFT - CMD_MOVE_LEFT;
+            cmd += CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
 
         return cmd;
     }
@@ -4651,8 +4639,8 @@ void clear_level_target()
 void clear_travel_trail()
 {
 #ifdef USE_TILE_WEB
-    for (unsigned int i = 0; i < env.travel_trail.size(); ++i)
-        tiles.update_minimap(env.travel_trail[i]);
+    for (coord_def c : env.travel_trail)
+        tiles.update_minimap(c);
 #endif
     env.travel_trail.clear();
 }

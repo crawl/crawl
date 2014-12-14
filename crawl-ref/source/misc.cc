@@ -12,7 +12,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
-#include <string.h>
+#include <cstring>
 #if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
 #include <unistd.h>
 #endif
@@ -379,7 +379,7 @@ static void monster_threat_values(double *general, double *highest,
 bool player_in_a_dangerous_place(bool *invis)
 {
     bool junk;
-    if (invis == NULL)
+    if (invis == nullptr)
         invis = &junk;
 
     const double logexp = log((double)you.experience);
@@ -570,7 +570,7 @@ void timeout_tombs(int duration)
 
             monster* mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
-                                                      : NULL;
+                                                      : nullptr;
             // A monster's Tomb of Doroklohe spell.
             if (mon_src
                 && mon_src == mon_entombed)
@@ -1086,12 +1086,7 @@ void swap_with_monster(monster* mon_to_swap)
 
     mprf("You swap places with %s.", mon.name(DESC_THE).c_str());
 
-    // Pick the monster up.
-    mgrd(newpos) = NON_MONSTER;
-    mon.moveto(you.pos());
-
-    // Plunk it down.
-    mgrd(mon.pos()) = mon_to_swap->mindex();
+    mon.move_to_pos(you.pos(), true, true);
 
     if (you_caught)
     {
@@ -1175,15 +1170,13 @@ void entered_malign_portal(actor* act)
 {
     if (you.can_see(act))
     {
-        mprf("The portal repels %s, its terrible forces doing untold damage!",
-             act->is_player() ? "you" : act->name(DESC_THE).c_str());
+        mprf("%s %s twisted violently and ejected from the portal!",
+             act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
     }
 
     act->blink(false);
-    if (act->is_player())
-        ouch(roll_dice(2, 4), KILLED_BY_WILD_MAGIC, MID_NOBODY, "a malign gateway");
-    else
-        act->hurt(NULL, roll_dice(2, 4));
+    act->hurt(nullptr, roll_dice(2, 4), BEAM_MISSILE, KILLED_BY_WILD_MAGIC,
+              "", "entering a malign gateway");
 }
 
 void handle_real_time(time_t t)
@@ -1197,8 +1190,8 @@ string part_stack_string(const int num, const int total)
     if (num == total)
         return "Your";
 
-    string ret  = uppercase_first(number_in_words(num));
-           ret += " of your";
+    string ret  = uppercase_first(number_in_words(num))
+                + " of your";
 
     return ret;
 }
@@ -1216,22 +1209,22 @@ unsigned int breakpoint_rank(int val, const int breakpoints[],
 void counted_monster_list::add(const monster* mons)
 {
     const string name = mons->name(DESC_PLAIN);
-    for (counted_list::iterator i = list.begin(); i != list.end(); ++i)
+    for (auto &entry : list)
     {
-        if (i->first->name(DESC_PLAIN) == name)
+        if (entry.first->name(DESC_PLAIN) == name)
         {
-            i->second++;
+            entry.second++;
             return;
         }
     }
-    list.push_back(counted_monster(mons, 1));
+    list.emplace_back(mons, 1);
 }
 
 int counted_monster_list::count()
 {
     int nmons = 0;
-    for (counted_list::const_iterator i = list.begin(); i != list.end(); ++i)
-        nmons += i->second;
+    for (const auto &entry : list)
+        nmons += entry.second;
     return nmons;
 }
 
@@ -1240,7 +1233,7 @@ string counted_monster_list::describe(description_level_type desc,
 {
     string out;
 
-    for (counted_list::const_iterator i = list.begin(); i != list.end();)
+    for (auto i = list.begin(); i != list.end();)
     {
         const counted_monster &cm(*i);
         if (i != list.begin())
@@ -1277,7 +1270,7 @@ string counted_monster_list::describe(description_level_type desc,
  */
 bool today_is_halloween()
 {
-    const time_t curr_time = time(NULL);
+    const time_t curr_time = time(nullptr);
     const struct tm *date = TIME_FN(&curr_time);
     // tm_mon is zero-based in case you are wondering
     return date->tm_mon == 9 && date->tm_mday == 31;

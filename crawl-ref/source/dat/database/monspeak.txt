@@ -5302,6 +5302,48 @@ confused Natasha permanently killed
 
 @Natasha permanently killed@
 %%%%
+############ ROBIN ### A hobgoblin with a plan.
+Robin
+
+@_Robin_common_@
+
+w:5
+@_Robin_rare_@
+
+%%%%
+_Robin_common_
+@The_monster@ says, "Kneel, worm!"
+
+@The_monster@ says, "My army is invincible!"
+
+@The_monster@ says, "Feeling lonely?"
+
+@The_monster@ says, "Duck!"
+
+@The_monster@ laughs in a distinctly smug fashion.
+
+VISUAL:@The_monster@'s bangles clink loudly.
+
+VISUAL:@The_monster@'s horned helmet rattles.
+
+VISUAL:@The_monster@ flexes a bicep menacingly.
+
+# YOU ARE VIOLATING AREA SECURITY!
+@The_monster@ points @at_foe@. "Kill!"
+
+%%%%
+_Robin_rare_
+@The_monster@ says, "A pitiful @player_genus@ like you will never find the ORB!"
+
+# You can be the slave of me, the Spider Queen!
+@The_monster@ says, "Bow before me, strongest of all the hobgoblins!"
+
+# ...or food for my pets!
+@The_monster@ says, "My goblins will feast on your bones."
+
+w:2
+@The_monster@ says, "We wiped out the hill dwarves - you're next!"
+%%%%
 ############ NELLIE ### An escaped circus (h)elephant.
 Nellie
 

@@ -27,6 +27,21 @@
 #include "random.h"
 #include "unicode.h"
 
+#ifdef __ANDROID__
+#include <errno.h>
+
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+#include <jni.h>
+
+extern "C"
+{
+    extern JNIEnv *Android_JNI_GetEnv(); // sigh
+}
+
+AAssetManager *_android_asset_manager = nullptr; // XXX
+#endif
+
 bool lock_file(int fd, bool write, bool wait)
 {
 #ifdef TARGET_OS_WINDOWS
@@ -168,10 +183,10 @@ int mkstemp(char *dummy)
         for (int i = 0; i < 6; i++)
             filename[len + i] = 'a' + random2(26);
         filename[len + 6] = 0;
-        fh = CreateFileW(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+        fh = CreateFileW(filename, GENERIC_READ | GENERIC_WRITE, 0, nullptr,
                          CREATE_NEW,
                          FILE_FLAG_DELETE_ON_CLOSE | FILE_ATTRIBUTE_TEMPORARY,
-                         NULL);
+                         nullptr);
         if (fh != INVALID_HANDLE_VALUE)
             return _open_osfhandle((intptr_t)fh, 0);
     }
@@ -227,9 +242,37 @@ void usleep(unsigned long time)
     timer.tv_sec  = (time / 1000000L);
     timer.tv_usec = (time % 1000000L);
 
-    select(0, NULL, NULL, NULL, &timer);
+    select(0, nullptr, nullptr, nullptr, &timer);
 }
 # endif
+#endif
+
+#ifdef __ANDROID__
+AAssetManager *_android_get_asset_manager()
+{
+    JNIEnv *env = Android_JNI_GetEnv();
+    jclass sdlClass = env->FindClass("org/libsdl/app/SDLActivity");
+
+    if (!sdlClass)
+        return nullptr;
+
+    jmethodID mid =
+        env->GetStaticMethodID(sdlClass, "getContext",
+                               "()Landroid/content/Context;");
+    jobject context = env->CallStaticObjectMethod(sdlClass, mid);
+
+    if (!context)
+        return nullptr;
+
+    mid = env->GetMethodID(env->GetObjectClass(context), "getAssets",
+                           "()Landroid/content/res/AssetManager;");
+    jobject assets = env->CallObjectMethod(context, mid);
+
+    if (!assets)
+        return nullptr;
+
+    return AAssetManager_fromJava(env, assets);
+}
 #endif
 
 bool file_exists(const string &name)
@@ -239,11 +282,47 @@ bool file_exists(const string &name)
     return lAttr != INVALID_FILE_ATTRIBUTES
            && !(lAttr & FILE_ATTRIBUTE_DIRECTORY);
 #else
+#ifdef __ANDROID__
+    if (name.find(ANDROID_ASSETS) == 0)
+    {
+        if (!_android_asset_manager)
+            _android_asset_manager = _android_get_asset_manager();
+
+        ASSERT(_android_asset_manager);
+
+        AAsset* asset = AAssetManager_open(_android_asset_manager,
+                                           name.substr(strlen(ANDROID_ASSETS)
+                                                       + 1)
+                                               .c_str(),
+                                           AASSET_MODE_UNKNOWN);
+        if (asset)
+        {
+            AAsset_close(asset);
+            return true;
+        }
+        return false;
+    }
+#endif
     struct stat st;
     const int err = ::stat(OUTS(name), &st);
     return !err && S_ISREG(st.st_mode);
 #endif
 }
+
+#ifdef __ANDROID__
+/**
+ * Remove an ANDROID_ASSETS prefix and strip any trailing slashes
+ * from a directory name.
+ */
+static string _android_strip_dir_slash(const string &in)
+{
+    string out = in.substr(strlen(ANDROID_ASSETS) + 1);
+    if (out.back() == '/')
+        out = out.substr(0, out.length() - 1);
+
+    return out;
+}
+#endif
 
 // Low-tech existence check.
 bool dir_exists(const string &dir)
@@ -252,7 +331,27 @@ bool dir_exists(const string &dir)
     DWORD lAttr = GetFileAttributesW(OUTW(dir));
     return lAttr != INVALID_FILE_ATTRIBUTES
            && (lAttr & FILE_ATTRIBUTE_DIRECTORY);
-#elif defined(HAVE_STAT)
+#else
+#ifdef __ANDROID__
+    if (dir.find(ANDROID_ASSETS) == 0)
+    {
+        if (!_android_asset_manager)
+            _android_asset_manager = _android_get_asset_manager();
+
+        ASSERT(_android_asset_manager);
+
+        AAssetDir* adir = AAssetManager_openDir(_android_asset_manager,
+                                                _android_strip_dir_slash(dir)
+                                                    .c_str());
+        if (adir)
+        {
+            AAssetDir_close(adir);
+            return true;
+        }
+        return false;
+    }
+#endif
+#ifdef HAVE_STAT
     struct stat st;
     const int err = ::stat(OUTS(dir), &st);
     return !err && S_ISDIR(st.st_mode);
@@ -263,6 +362,7 @@ bool dir_exists(const string &dir)
         closedir(d);
 
     return exists;
+#endif
 #endif
 }
 
@@ -294,7 +394,29 @@ vector<string> get_dir_files(const string &dirname)
         FindClose(hFind);
     }
 #else
+#ifdef __ANDROID__
+    if (dirname.find(ANDROID_ASSETS) == 0)
+    {
+        if (!_android_asset_manager)
+            _android_asset_manager = _android_get_asset_manager();
 
+        ASSERT(_android_asset_manager);
+
+        AAssetDir* adir =
+            AAssetManager_openDir(_android_asset_manager,
+                                  _android_strip_dir_slash(dirname).c_str());
+
+        if (!adir)
+            return files;
+
+        const char *file;
+        while ((file = AAssetDir_getNextFileName(adir)) != nullptr)
+            files.emplace_back(file);
+
+        AAssetDir_close(adir);
+        return files;
+    }
+#endif
     DIR *dir = opendir(OUTS(dirname));
     if (!dir)
         return files;
@@ -330,12 +452,63 @@ int unlink_u(const char *pathname)
 #endif
 }
 
+#ifdef __ANDROID__
+/**
+ * This implementation of handling Android fopens to Android assets
+ * appears to originate from here:
+ * http://www.50ply.com/blog/2013/01/19/
+ *   loading-compressed-android-assets-with-file-pointer/
+ */
+
+static int _android_read(void* cookie, char* buf, int size)
+{
+    return AAsset_read((AAsset*)cookie, buf, size);
+}
+
+static int _android_write(void* cookie, const char* buf, int size)
+{
+    return EACCES; // can't provide write access to the apk
+}
+
+static fpos_t _android_seek(void* cookie, fpos_t offset, int whence)
+{
+    return AAsset_seek((AAsset*)cookie, offset, whence);
+}
+
+static int _android_close(void* cookie)
+{
+    AAsset_close((AAsset*)cookie);
+    return 0;
+}
+#endif
+
 FILE *fopen_u(const char *path, const char *mode)
 {
 #ifdef TARGET_OS_WINDOWS
     // Why it wants the mode string as double-byte is beyond me.
     return _wfopen(OUTW(path), OUTW(mode));
 #else
+#ifdef __ANDROID__
+    if (strstr(path, ANDROID_ASSETS) == path)
+    {
+        if (!mode || mode[0] == 'w')
+            return nullptr;
+
+        if (!_android_asset_manager)
+            _android_asset_manager = _android_get_asset_manager();
+
+        ASSERT(_android_asset_manager);
+
+        AAsset* asset = AAssetManager_open(_android_asset_manager,
+                                           path + strlen(ANDROID_ASSETS) + 1,
+                                           AASSET_MODE_RANDOM);
+        if (!asset)
+            return nullptr;
+
+        return funopen(asset, _android_read, _android_write, _android_seek,
+                       _android_close);
+    }
+#endif
     return fopen(OUTS(path), mode);
 #endif
 }

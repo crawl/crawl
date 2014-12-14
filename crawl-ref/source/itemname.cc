@@ -7,14 +7,16 @@
 
 #include "itemname.h"
 
+#include <cctype>
+#include <cstring>
 #include <iomanip>
 #include <sstream>
-#include <ctype.h>
-#include <string.h>
 
 #include "artefact.h"
 #include "art-enum.h"
+#include "butcher.h"
 #include "colour.h"
+#include "command.h"
 #include "decks.h"
 #include "describe.h"
 #include "english.h"
@@ -339,18 +341,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
         if (!insparts.empty())
         {
-            buff << " {";
-
-            vector<string>::iterator iter = insparts.begin();
-
-            for (;;)
-            {
-                buff << *iter;
-                if (++iter == insparts.end()) break;
-                buff << ", ";
-            }
-
-            buff << "}";
+            buff << " {"
+                 << comma_separated_line(begin(insparts), end(insparts), ", ")
+                 << "}";
         }
     }
     // These didn't have "cursed " prepended; add them here so that
@@ -695,14 +688,14 @@ const char* potion_type_name(int potiontype)
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
     case POT_STRONG_POISON:     return "strong poison";
+    case POT_PORRIDGE:          return "porridge";
 #endif
     case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
     case POT_SLOWING:           return "slowing";
     case POT_CANCELLATION:      return "cancellation";
-    case POT_CONFUSION:         return "confusion";
+    case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
-    case POT_PORRIDGE:          return "porridge";
     case POT_DEGENERATION:      return "degeneration";
     case POT_DECAY:             return "decay";
     case POT_EXPERIENCE:        return "experience";
@@ -1047,13 +1040,12 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONTROL:                return "Control";
     case BOOK_GEOMANCY:               return "Geomancy";
     case BOOK_EARTH:                  return "the Earth";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_WIZARDRY:               return "Wizardry";
+#endif
     case BOOK_POWER:                  return "Power";
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
-#if TAG_MAJOR_VERSION == 34
-    case BOOK_STALKING:               return "Stalking";
-#endif
     case BOOK_DEBILITATION:           return "Debilitation";
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
@@ -1116,7 +1108,7 @@ static const char* rod_type_name(int type)
     case ROD_WARDING:         return "warding";
 #endif
     case ROD_LIGHTNING:       return "lightning";
-    case ROD_STRIKING:        return "striking";
+    case ROD_IRON:            return "iron";
     case ROD_SHADOWS:         return "shadows";
 #if TAG_MAJOR_VERSION == 34
     case ROD_VENOM:           return "venom";
@@ -1131,12 +1123,12 @@ static const char* rod_type_name(int type)
     }
 }
 
-string base_type_string(const item_def &item)
+const char *base_type_string(const item_def &item)
 {
     return base_type_string(item.base_type);
 }
 
-string base_type_string(object_class_type type)
+const char *base_type_string(object_class_type type)
 {
     switch (type)
     {
@@ -1195,6 +1187,8 @@ string sub_type_string(const item_def &item, bool known)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
             return "Fen Folio";
+        else if (sub_type == BOOK_AKASHIC_RECORD)
+            return "Akashic Record";
 
         return string("book of ") + _book_type_name(sub_type);
     }
@@ -1349,7 +1343,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
         && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
 
-    const bool __know_pluses =
+    const bool know_pluses =
         !basename && !qualname && !dbname
         && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES)
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
@@ -1362,15 +1356,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     const bool know_ego = know_brand;
 
     // Display runed/glowing/embroidered etc?
-    // Only display this if brand is unknown or item is unbranded.
-    const bool show_cosmetic = !__know_pluses && !terse && !basename
+    // Only display this if brand is unknown.
+    const bool show_cosmetic = !know_pluses && !terse && !basename
         && !qualname && !dbname
-        && (!know_brand || !special)
+        && !know_brand
         && !(ignore_flags & ISFLAG_COSMETIC_MASK);
-
-    // So that show_cosmetic won't be affected by ignore_flags.
-    const bool know_pluses = __know_pluses
-        && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 
     const bool need_plural = !basename && !dbname;
 
@@ -1431,6 +1421,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 buff << "vampiric ";
             else if (wpn_brand == SPWPN_ANTIMAGIC)
                 buff << "antimagic ";
+            else if (wpn_brand == SPWPN_NORMAL && !know_pluses
+                     && get_equip_desc(*this))
+            {
+                buff << "enchanted ";
+            }
         }
         buff << item_base_name(*this);
 
@@ -1835,6 +1830,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
             if (item_typ == ROD_LIGHTNING)
                 buff << "lightning rod";
+            else if (item_typ == ROD_IRON)
+                buff << "iron rod";
             else
                 buff << "rod of " << rod_type_name(item_typ);
         }
@@ -1885,6 +1882,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         if (dbname && item_typ == CORPSE_SKELETON)
             return "decaying skeleton";
+
+        if (item_typ == CORPSE_BODY && props.exists(MANGLED_CORPSE_KEY)
+            && !dbname)
+        {
+            buff << "mangled ";
+        }
 
         uint64_t name_type, name_flags = 0;
 
@@ -2042,14 +2045,14 @@ bool item_type_tried(const item_def &item)
     return you.type_ids[item.base_type][item.sub_type] != ID_UNKNOWN_TYPE;
 }
 
-void set_ident_type(item_def &item, item_type_id_state_type setting,
+bool set_ident_type(item_def &item, item_type_id_state_type setting,
                     bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
-        return;
+        return false;
 
     if (!set_ident_type(item.base_type, item.sub_type, setting, force))
-        return;
+        return false;
 
     if (in_inventory(item))
     {
@@ -2070,6 +2073,8 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
         // don't note twice in those cases.
         item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     }
+
+    return true;
 }
 
 bool set_ident_type(object_class_type basetype, int subtype,
@@ -2158,7 +2163,7 @@ class KnownMenu : public InvMenu
 public:
     // This loads items in the order they are put into the list (sequentially)
     menu_letter load_items_seq(const vector<const item_def*> &mitems,
-                               MenuEntry *(*procfn)(MenuEntry *me) = NULL,
+                               MenuEntry *(*procfn)(MenuEntry *me) = nullptr,
                                menu_letter ckey = 'a')
     {
         for (int i = 0, count = mitems.size(); i < count; ++i)
@@ -2351,7 +2356,7 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (i == OBJ_BOOKS && j > MAX_RARE_BOOK)
+            if (i == OBJ_BOOKS && j > MAX_FIXED_BOOK)
                 continue;
 
             // Curse scrolls are only created by Ashenzari.
@@ -2368,7 +2373,7 @@ void check_item_knowledge(bool unknown_items)
             }
 
 #if TAG_MAJOR_VERSION == 34
-            // Water is never interesting either. [1KB]
+            // Items removed since the last save compat break.
             if (i == OBJ_POTIONS
                 && (j == POT_WATER
                  || j == POT_GAIN_STRENGTH
@@ -2376,7 +2381,8 @@ void check_item_knowledge(bool unknown_items)
                  || j == POT_GAIN_INTELLIGENCE
                  || j == POT_SLOWING
                  || j == POT_STRONG_POISON
-                 || j == POT_BLOOD_COAGULATED))
+                 || j == POT_BLOOD_COAGULATED
+                 || j == POT_PORRIDGE))
             {
                 continue;
             }
@@ -2392,9 +2398,6 @@ void check_item_knowledge(bool unknown_items)
                 continue;
 
             if (i == OBJ_STAVES && j == STAFF_CHANNELING)
-                continue;
-
-            if (i == OBJ_BOOKS && j == BOOK_STALKING)
                 continue;
 #endif
 
@@ -2415,9 +2418,9 @@ void check_item_knowledge(bool unknown_items)
                     items.push_back(ptmp);
 
                     if (you.force_autopickup[i][j] == 1)
-                        selected_items.push_back(SelItem(0,1,ptmp));
+                        selected_items.emplace_back(0,1,ptmp);
                     if (you.force_autopickup[i][j] == -1)
-                        selected_items.push_back(SelItem(0,2,ptmp));
+                        selected_items.emplace_back(0,2,ptmp);
                 }
             }
             else
@@ -2446,9 +2449,9 @@ void check_item_knowledge(bool unknown_items)
                 items.push_back(ptmp);
 
                 if (you.force_autopickup[i][ptmp->sub_type] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[i][ptmp->sub_type ] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
         // Missiles
@@ -2468,9 +2471,9 @@ void check_item_knowledge(bool unknown_items)
                 items_missile.push_back(ptmp);
 
                 if (you.force_autopickup[OBJ_MISSILES][i] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[OBJ_MISSILES][i] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
         // Misc.
@@ -2478,13 +2481,12 @@ void check_item_knowledge(bool unknown_items)
         {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
-            OBJ_MISCELLANY, OBJ_MISCELLANY, OBJ_MISCELLANY
+            OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] =
         {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_BEEF_JERKY, FOOD_BREAD_RATION, FOOD_FRUIT, FOOD_PIZZA, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
-            MISC_PHANTOM_MIRROR,
             NUM_MISCELLANY
         };
         COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
@@ -2517,9 +2519,9 @@ void check_item_knowledge(bool unknown_items)
                 items_other.push_back(ptmp);
 
                 if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
+                    selected_items.emplace_back(0,1,ptmp);
                 if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
+                    selected_items.emplace_back(0,2,ptmp);
             }
         }
     }
@@ -2960,8 +2962,8 @@ bool is_interesting_item(const item_def& item)
         return true;
 
     const string iname = item_prefix(item, false) + " " + item.name(DESC_PLAIN);
-    for (unsigned i = 0; i < Options.note_items.size(); ++i)
-        if (Options.note_items[i].matches(iname))
+    for (const text_pattern &pat : Options.note_items)
+        if (pat.matches(iname))
             return true;
 
     return false;
@@ -3107,10 +3109,10 @@ bool is_bad_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
+#if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
-            if (you.species == SP_FORMICID)
-                return false;
-        case POT_CONFUSION:
+            return !you.stasis();
+#endif
         case POT_DEGENERATION:
             return true;
         case POT_DECAY:
@@ -3163,6 +3165,10 @@ bool is_dangerous_item(const item_def &item, bool temp)
     if (!item_type_known(item))
         return false;
 
+    // useless items can hardly be dangerous.
+    if (is_useless_item(item, temp))
+        return false;
+
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
@@ -3185,13 +3191,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_MUTATION:
-            // Non-vampire undead can't be mutated.
-            return you.can_safely_mutate(temp);
         case POT_LIGNIFY:
-            // Only living characters can change form.
-            return you.undead_state() == US_ALIVE
-                   || temp && you.species == SP_VAMPIRE
-                      && you.hunger_state >= HS_SATIATED;
+        case POT_AMBROSIA:
+            return true;
         default:
             return false;
         }
@@ -3359,14 +3361,16 @@ bool is_useless_item(const item_def &item, bool temp)
 
         // heal wand is useless for VS if they can't get allies
         if (item.sub_type == WAND_HEAL_WOUNDS
+            && item_type_known(item)
             && you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3
             && player_mutation_level(MUT_NO_LOVE))
         {
             return true;
         }
 
-        // haste wand is useless for VS if they can't get allies
+        // haste wand is useless for Formicid if they can't get allies
         if (item.sub_type == WAND_HASTING
+            && item_type_known(item)
             && you.species == SP_FORMICID
             && player_mutation_level(MUT_NO_LOVE))
         {
@@ -3419,25 +3423,29 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_FLIGHT:
             return you.permanent_flight();
 
+#if TAG_MAJOR_VERSION == 34
         case POT_PORRIDGE:
             return you.species == SP_VAMPIRE
-                   || player_mutation_level(MUT_CARNIVOROUS) == 3;
-        case POT_BLOOD:
-#if TAG_MAJOR_VERSION == 34
+                    || player_mutation_level(MUT_CARNIVOROUS) == 3;
         case POT_BLOOD_COAGULATED:
 #endif
-            return player_mutation_level(MUT_HERBIVOROUS) == 3;
+        case POT_BLOOD:
+            return you.species != SP_VAMPIRE;
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
             return player_res_poison(false, temp) > 0;
+#if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return you.species == SP_FORMICID;
+#endif
         case POT_HEAL_WOUNDS:
             return !you.can_device_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
+        case POT_AMBROSIA:
+            return you.clarity() || you.duration[DUR_DIVINE_STAMINA];
         }
 
         return false;
@@ -3610,9 +3618,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_RUNE_OF_ZOT:
             return false;
 
+        // Purely summoning misc items don't work w/ sac love
         case MISC_SACK_OF_SPIDERS:
         case MISC_BOX_OF_BEASTS:
         case MISC_HORN_OF_GERYON:
+        case MISC_PHANTOM_MIRROR:
             return player_mutation_level(MUT_NO_LOVE)
                 || player_mutation_level(MUT_NO_ARTIFICE);
 
@@ -3637,7 +3647,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
 string item_prefix(const item_def &item, bool temp)
 {
-    vector<string> prefixes;
+    vector<const char *> prefixes;
 
     if (!item.defined())
         return "";
@@ -3746,6 +3756,11 @@ string item_prefix(const item_def &item, bool temp)
         }
         break;
 
+    case OBJ_GOLD:
+        if (item.special)
+            prefixes.push_back("distracting"); // better name for this?
+        break;
+
     default:
         break;
     }
@@ -3847,9 +3862,8 @@ void init_item_name_cache()
 
                 if (!item_names_cache.count(name))
                 {
-                    item_kind kind = {base_type, (uint8_t)sub_type,
-                                      (int8_t)item.plus, 0};
-                    item_names_cache[name] = kind;
+                    item_names_cache[name] = { base_type, (uint8_t)sub_type,
+                                               (int8_t)item.plus, 0 };
                     if (g.ch)
                         item_names_by_glyph_cache[g.ch].push_back(name);
                 }
@@ -3860,30 +3874,15 @@ void init_item_name_cache()
     ASSERT(!item_names_cache.empty());
 }
 
-item_kind item_kind_by_name(string name)
+item_kind item_kind_by_name(const string &name)
 {
-    lowercase(name);
-
-    item_names_map::iterator i = item_names_cache.find(name);
-
-    if (i != item_names_cache.end())
-        return i->second;
-
-    item_kind err = {OBJ_UNASSIGNED, 0, 0, 0};
-
-    return err;
+    return lookup(item_names_cache, lowercase_string(name),
+                  { OBJ_UNASSIGNED, 0, 0, 0 });
 }
 
 vector<string> item_name_list_for_glyph(unsigned glyph)
 {
-    item_names_by_glyph_map::iterator i;
-    i = item_names_by_glyph_cache.find(glyph);
-
-    if (i != item_names_by_glyph_cache.end())
-        return i->second;
-
-    vector<string> empty;
-    return empty;
+    return lookup(item_names_by_glyph_cache, glyph, {});
 }
 
 bool is_named_corpse(const item_def &corpse)
@@ -3900,7 +3899,7 @@ string get_corpse_name(const item_def &corpse, uint64_t *name_type)
     if (!corpse.props.exists(CORPSE_NAME_KEY))
         return "";
 
-    if (name_type != NULL)
+    if (name_type != nullptr)
         *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
 
     return corpse.props[CORPSE_NAME_KEY].get_string();

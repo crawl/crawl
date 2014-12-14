@@ -129,7 +129,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             status->text = pr;
 #else
             if (message)
-                mpr(pr.c_str());
+                mpr(pr);
             else
                 cprintf("\n%s\n", pr.c_str());
 #endif
@@ -268,7 +268,7 @@ int prompt_for_quantity(const char *prompt)
     int ch = getch_ck();
     if (ch == CK_ENTER || ch == ';')
         return -1;
-    else if (ch == CK_ESCAPE)
+    else if (ch == CK_ESCAPE || ch == CK_REDRAW)
         return 0;
 
     macro_buf_add(ch);

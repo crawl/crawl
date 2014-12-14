@@ -9,11 +9,12 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <memory>
 #include <sstream>
-#include <string.h>
 
 #include "act-iter.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"
@@ -176,20 +177,19 @@ static string _desc_mons_type_map(map<monster_type, int> types)
 {
     string message;
     unsigned int count = 1;
-    for (map<monster_type, int>::iterator it = types.begin();
-         it != types.end(); ++it)
+    for (const auto &entry : types)
     {
         string name;
         description_level_type desc;
-        if (it->second == 1)
+        if (entry.second == 1)
             desc = DESC_A;
         else
             desc = DESC_PLAIN;
 
-        name = mons_type_name(it->first, desc);
-        if (it->second > 1)
+        name = mons_type_name(entry.first, desc);
+        if (entry.second > 1)
         {
-            name = make_stringf("%d %s", it->second,
+            name = make_stringf("%d %s", entry.second,
                                 pluralise(name).c_str());
         }
 
@@ -222,13 +222,12 @@ static void _genus_factoring(map<monster_type, int> &types,
 {
     monster_type genus = MONS_NO_MONSTER;
     int num = 0;
-    map<monster_type, int>::iterator it;
     // Find the most represented genus.
-    for (it = genera.begin(); it != genera.end(); ++it)
-        if (it->second > num)
+    for (const auto &entry : genera)
+        if (entry.second > num)
         {
-            genus = it->first;
-            num = it->second;
+            genus = entry.first;
+            num = entry.second;
         }
 
     // The most represented genus has a single member.
@@ -240,7 +239,7 @@ static void _genus_factoring(map<monster_type, int> &types,
     }
 
     genera.erase(genus);
-    it = types.begin();
+    auto it = types.begin();
     do
     {
         if (_mons_genus_keep_uniques(it->first) != genus)
@@ -302,17 +301,17 @@ void update_monsters_in_view()
 
     if (!msgs.empty())
     {
-        unsigned int size = monsters.size();
         map<monster_type, int> types;
         map<monster_type, int> genera; // This is the plural for genus!
-        const monster* target = NULL;
-        for (unsigned int i = 0; i < size; ++i)
+        const monster* target = nullptr;
+        for (const monster *mon : monsters)
         {
-            const monster_type type = monsters[i]->type;
+            const monster_type type = mon->type;
             types[type]++;
             genera[_mons_genus_keep_uniques(type)]++;
         }
 
+        unsigned int size = monsters.size();
         if (size == 1)
             mprf(MSGCH_MONSTER_WARNING, "%s", msgs[0].c_str());
         else
@@ -327,9 +326,8 @@ void update_monsters_in_view()
         string warning_msg = you_worship(GOD_ZIN) ? "Zin warns you:"
                                                   : "Ashenzari warns you:";
         warning_msg += " ";
-        for (unsigned int i = 0; i < size; ++i)
+        for (const monster* mon : monsters)
         {
-            const monster* mon = monsters[i];
             if (!target
                 && player_mutation_level(MUT_SCREAM)
                 && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3,
@@ -368,8 +366,9 @@ void update_monsters_in_view()
             }
             else
             {
-                warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
-                                                          DESC_NONE);
+                warning_msg += " "
+                               + get_monster_equipment_desc(mi, DESC_IDENTIFIED,
+                                                            DESC_NONE);
             }
             warning_msg += ".";
         }
@@ -389,9 +388,8 @@ void update_monsters_in_view()
         {
             counted_monster_list mon_count;
             vector<monster *> mons;
-            for (unsigned int i = 0; i < monsters.size(); i++)
+            for (monster *mon : monsters)
             {
-                monster *mon = monsters[i];
                 if (mon->wont_attack())
                     continue;
 
@@ -410,8 +408,8 @@ void update_monsters_in_view()
                 if (strwidth(msg) >= get_number_of_cols() - 2)
                     msg = "Gozag incites your enemies against you.";
                 mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-                for (unsigned int i = 0; i < mons.size(); i++)
-                    gozag_incite(mons[i]);
+                for (monster *mon : mons)
+                    gozag_incite(mon);
 
                 dec_penance(GOD_GOZAG, mons.size());
             }
@@ -432,6 +430,32 @@ void update_monsters_in_view()
         xom_is_stimulated(12 * num_hostile);
     }
 }
+
+void mark_mon_equipment_seen(const monster *mons)
+{
+    // mark items as seen.
+    for (int slot = MSLOT_WEAPON; slot <= MSLOT_LAST_VISIBLE_SLOT; slot++)
+    {
+        int item_id = mons->inv[slot];
+        if (item_id == NON_ITEM)
+            continue;
+
+        item_def &item = mitm[item_id];
+
+        item.flags |= ISFLAG_SEEN;
+
+        // ID brands of non-randart weapons held by enemies.
+        if (is_artefact(item))
+            continue;
+
+        if (slot == MSLOT_WEAPON
+            || slot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(mons))
+        {
+            item.flags |= ISFLAG_KNOW_TYPE;
+        }
+    }
+}
+
 
 // We logically associate a difficulty parameter with each tile on each level,
 // to make deterministic magic mapping work.  This function returns the
@@ -711,8 +735,8 @@ string screenshot()
         lines[y] = line;
     }
 
-    for (unsigned int y = 0; y < lines.size(); y++)
-        lines[y].erase(0, lsp); // actually trim from the left
+    for (string &line : lines)
+        line.erase(0, lsp);     // actually trim from the left
     while (!lines.empty() && lines.back().empty())
         lines.pop_back();       // then from the bottom
 
@@ -1037,7 +1061,8 @@ static void _draw_los(screen_cell_t *cell,
 #endif
 }
 
-class shake_viewport_animation: public animation {
+class shake_viewport_animation: public animation
+{
 public:
     shake_viewport_animation() { frames = 5; frame_delay = 40; }
 
@@ -1055,7 +1080,8 @@ private:
     coord_def offset;
 };
 
-class checkerboard_animation: public animation {
+class checkerboard_animation: public animation
+{
 public:
     checkerboard_animation() { frame_delay = 100; frames = 5; }
     void init_frame(int frame)
@@ -1074,7 +1100,8 @@ public:
     int current_frame;
 };
 
-class banish_animation: public animation {
+class banish_animation: public animation
+{
 public:
     banish_animation(): remaining(false) { }
 
@@ -1102,13 +1129,15 @@ public:
         if (pos == you.pos())
             return pos;
 
-        map<coord_def, bool>::iterator found = hidden.find(pos);
-        if (found != hidden.end() && found->second)
-            return coord_def(-1, -1);
+        if (bool *found = map_find(hidden, pos))
+        {
+            if (*found)
+                return coord_def(-1, -1);
+        }
 
         if (!random2(10 - current_frame))
         {
-            hidden.insert(std::pair<coord_def, bool>(pos, true));
+            hidden.insert(make_pair(pos, true));
             return coord_def(-1, -1);
         }
 
@@ -1121,7 +1150,8 @@ public:
     int current_frame;
 };
 
-class slideout_animation: public animation {
+class slideout_animation: public animation
+{
 public:
     void init_frame(int frame)
     {
@@ -1147,7 +1177,8 @@ public:
     int current_frame;
 };
 
-class orb_animation: public animation {
+class orb_animation: public animation
+{
 public:
     void init_frame(int frame)
     {
@@ -1391,15 +1422,12 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     }
     else if (crawl_state.flash_monsters)
     {
-        vector<monster *> *monsters = crawl_state.flash_monsters;
         bool found = gc == you.pos();
 
         if (!found)
-            for (vector<monster *>::const_iterator it = monsters->begin();
-                it != monsters->end();
-                ++it)
+            for (auto mon : *crawl_state.flash_monsters)
             {
-                if (gc == (*it)->pos())
+                if (gc == mon->pos())
                 {
                     found = true;
                     break;

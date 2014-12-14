@@ -149,7 +149,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     // Get feature name before sliding stair over.
     string stair_str = feature_description_at(you.pos(), false, DESC_THE, false);
 
-    if (!slide_feature_over(you.pos(), coord_def(-1, -1), false))
+    if (!slide_feature_over(you.pos()))
         return false;
 
     string verb = stair_climb_verb(stair);
@@ -202,10 +202,9 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
 
 static void _clear_golubria_traps()
 {
-    vector<coord_def> traps = find_golubria_on_level();
-    for (vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
+    for (auto c : find_golubria_on_level())
     {
-        trap_def *trap = find_trap(*it);
+        trap_def *trap = find_trap(c);
         if (trap && trap->type == TRAP_GOLUBRIA)
             trap->destroy();
     }
@@ -704,7 +703,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         if (force_stair && shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
-        mprf("You %s a shaft%s!", you.flight_mode() ? "dive into"
+        mprf("You %s a shaft%s!", you.flight_mode() ? "are sucked into"
                                                     : "fall through",
                                   howfar.c_str());
 
@@ -716,22 +715,20 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     if (stair_find == DNGN_ENTER_VAULTS
         && !is_existing_level(level_id(BRANCH_VAULTS, 1)))
     {
-        bool has_rune = false;
-        int i = 0;
-        for (; i < NUM_RUNE_TYPES; i++)
-            if (you.runes[i])
-            {
-                has_rune = true;
-                break;
-            }
-
-        if (!has_rune)
+        if (!runes_in_pack())
         {
             mpr("You need a rune to enter this place.");
             return;
         }
 
-        mprf("You insert the %s rune into the lock.", rune_type_name(i));
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (you.runes[i])
+            {
+                mprf("You insert the %s rune into the lock.",
+                     rune_type_name(i));
+                break;
+            }
+
         if (silenced(you.pos()))
             mpr("The gate opens wide!");
         else
@@ -739,7 +736,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         more();
     }
 
-    if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
+    if (stair_find == DNGN_ENTER_ZOT
+        && !is_existing_level(level_id(BRANCH_ZOT, 1)))
     {
         vector<int> runes;
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
@@ -748,16 +746,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
 
         if (runes.size() < NUMBER_OF_RUNES_NEEDED)
         {
-            switch (NUMBER_OF_RUNES_NEEDED)
-            {
-            case 1:
-                mpr("You need a rune to enter this place.");
-                break;
-
-            default:
-                mprf("You need at least %d runes to enter this place.",
-                     NUMBER_OF_RUNES_NEEDED);
-            }
+            mprf("You need at least %d runes to enter this place.",
+                 NUMBER_OF_RUNES_NEEDED);
             return;
         }
 
@@ -788,7 +778,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
             mpr("With a loud hiss the gate opens wide!");
         more();
 
-        you.opened_zot = true;
     }
 
     if (stair_find == DNGN_ENTER_ZIGGURAT)
@@ -862,11 +851,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     else
         _player_change_level_downstairs(stair_find, dst);
 
-    // Did we enter a new branch.
-    const bool entered_branch(
-        !player_in_branch(old_level.branch)
-        && parent_branch(you.where_are_you) == old_level.branch);
-
     if (stair_find == DNGN_EXIT_ABYSS
         || stair_find == DNGN_EXIT_PANDEMONIUM
         || stair_find == DNGN_EXIT_THROUGH_ABYSS)
@@ -919,14 +903,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
 
     switch (you.where_are_you)
     {
-    case BRANCH_LABYRINTH:
-        // XXX: Ideally, we want to hint at the wall rule (rock > metal),
-        //      and that the walls can shift occasionally.
-        // Are these too long?
-        mpr("As you enter the labyrinth, previously moving walls settle noisily into place.");
-        mpr("You hear the metallic echo of a distant snort before it fades into the rock.");
-        break;
-
     case BRANCH_ABYSS:
         if (old_level.branch == BRANCH_ABYSS)
         {
@@ -951,11 +927,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     case BRANCH_PANDEMONIUM:
         if (old_level.branch == BRANCH_PANDEMONIUM)
             mpr("You pass into a different region of Pandemonium.");
-        else
-        {
-            mpr("You enter the halls of Pandemonium!");
-            mpr("To return, you must find a gate leading back.");
-        }
         break;
 
     default:
@@ -967,24 +938,23 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
     if (!shaft)
         _exit_stair_message(stair_find);
 
-    if (entered_branch)
+    // Did we enter a new branch.
+    if (!player_in_branch(old_level.branch))
     {
         const branch_type branch = you.where_are_you;
-        if (branches[branch].entry_message)
-            mpr(branches[branch].entry_message);
-        else
-            mprf("Welcome to %s!", branches[branch].longname);
-        enter_branch(branch, old_level);
-    }
 
-    if (stair_find == DNGN_ENTER_HELL)
-    {
-        mpr("Welcome to Hell!");
-        mpr("Please enjoy your stay.");
+        // Entered a branch (including portals) through the front door.
+        if (stair_taken == branches[branch].entry_stairs)
+        {
+            if (branches[branch].entry_message)
+                mpr(branches[branch].entry_message);
+            else
+                mprf("Welcome to %s!", branches[branch].longname);
+        }
 
-        // Kill -more- prompt if we're traveling.
-        if (!you.running && !force_stair)
-            more();
+        // Entered a regular (non-portal) branch from above.
+        if (parent_branch(branch) == old_level.branch)
+            enter_branch(branch, old_level);
     }
 
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);

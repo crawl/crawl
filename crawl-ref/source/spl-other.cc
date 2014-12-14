@@ -57,6 +57,11 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
     }
     else if (!enough_hp(2, true))
         mpr("Your attempt to draw power from your own body fails.");
+    else if (you.magic_points ==
+              you.max_magic_points - spell_difficulty(SPELL_SUBLIMATION_OF_BLOOD))
+    {
+        mpr("Your magic capacity is already full.");
+    }
     else
     {
         int food = 0;
@@ -116,15 +121,11 @@ spret_type cast_death_channel(int pow, god_type god, bool fail)
 spret_type cast_recall(bool fail)
 {
     fail_check();
-    start_recall(0);
+    start_recall(RECALL_SPELL);
     return SPRET_SUCCESS;
 }
 
-// Type recalled:
-// 0 = anything
-// 1 = undead only (Yred religion ability)
-// 2 = orcs only (Beogh religion ability)
-void start_recall(int type)
+void start_recall(recall_t type)
 {
     // Assemble the recall list.
     typedef pair<mid_t, int> mid_hd;
@@ -136,12 +137,12 @@ void start_recall(int type)
         if (!mons_is_recallable(&you, *mi))
             continue;
 
-        if (type == 1) // undead
+        if (type == RECALL_YRED)
         {
             if (mi->holiness() != MH_UNDEAD)
                 continue;
         }
-        else if (type == 2) // Beogh
+        else if (type == RECALL_BEOGH)
         {
             if (!is_orcish_follower(*mi))
                 continue;
@@ -151,19 +152,19 @@ void start_recall(int type)
         rlist.push_back(m);
     }
 
-    if (type > 0 && branch_allows_followers(you.where_are_you))
+    if (type != RECALL_SPELL && branch_allows_followers(you.where_are_you))
         populate_offlevel_recall_list(rlist);
 
     if (!rlist.empty())
     {
-        // Sort the recall list roughly by HD, randomizing a little
-        for (unsigned int i = 0; i < rlist.size(); ++i)
-            rlist[i].second += random2(10);
+        // Sort the recall list roughly
+        for (mid_hd &entry : rlist)
+            entry.second += random2(10);
         sort(rlist.begin(), rlist.end(), greater_second<mid_hd>());
 
         you.recall_list.clear();
-        for (unsigned int i = 0; i < rlist.size(); ++i)
-            you.recall_list.push_back(rlist[i].first);
+        for (mid_hd &entry : rlist)
+            you.recall_list.push_back(entry.first);
 
         you.attribute[ATTR_NEXT_RECALL_INDEX] = 1;
         you.attribute[ATTR_NEXT_RECALL_TIME] = 0;
@@ -350,7 +351,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 {
     monster* mons = monster_at(where);
-    if (mons == NULL
+    if (mons == nullptr
         || mons_intel(mons) < I_NORMAL
         || mons->holiness() != MH_NATURAL
         || mons->res_poison() > 0)
@@ -374,7 +375,7 @@ spret_type cast_intoxicate(int pow, bool fail)
     fail_check();
     mpr("You radiate an intoxicating aura.");
     if (x_chance_in_y(60 - pow/3, 100))
-        potion_effect(POT_CONFUSION, 10 + (100 - pow) / 10);
+        confuse_player(3+random2(10 + (100 - pow) / 10));
 
     if (one_chance_in(20)
         && lose_stat(STAT_INT, 1 + random2(3), false,
@@ -456,6 +457,12 @@ spret_type cast_stoneskin(int pow, bool fail)
         mpr("Your stone body feels more resilient.");
     else
         mpr("Your skin hardens.");
+
+    if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+    {
+        you.attribute[ATTR_BONE_ARMOUR] = 0;
+        mpr("Your corpse armour falls away.");
+    }
 
     you.increase_duration(DUR_STONESKIN, 10 + random2(pow) + random2(pow), 50);
     you.props[STONESKIN_KEY] = pow;

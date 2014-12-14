@@ -43,84 +43,92 @@ enum card_flags_type
 enum card_type
 {
 #if TAG_MAJOR_VERSION == 34
-    CARD_PORTAL,                // "the mover"
-    CARD_WARP,                  // "the jumper"
+    CARD_PORTAL,              // teleport, maybe controlled
+    CARD_WARP,                // blink, maybe controlled
 #endif
-    CARD_SWAP,                  // "swap"
-    CARD_VELOCITY,              // "the runner"
+    CARD_SWAP,                // player and monster position
+    CARD_VELOCITY,            // remove slow, alter others' speeds
 
-    CARD_TOMB,                  // "the wall"
-    CARD_BANSHEE,               // "the scream"
-    CARD_DAMNATION,             // banishment
-    CARD_SOLITUDE,              // dispersal
-    CARD_WARPWRIGHT,            // create teleport trap
-    CARD_SHAFT,
+    CARD_TOMB,                // a ring of rock walls
+    CARD_BANSHEE,             // cause fear and drain
+    CARD_DAMNATION,           // banish others, maybe self
+    CARD_SOLITUDE,            // dispersal
+    CARD_WARPWRIGHT,          // create teleport trap
+    CARD_SHAFT,               // under the user, maybe others
 
-    CARD_VITRIOL,               // acid damage
-    CARD_CLOUD,                 // fire/cold clouds
-    CARD_HAMMER,                // plain damage
-    CARD_VENOM,                 // poison damage
-    CARD_FORTITUDE,             // strength and damage shaving
-    CARD_STORM,
-    CARD_PAIN,                  // single target, like spell of agony
-    CARD_TORMENT,               // Symbol of Torment
-    CARD_ORB,
+    CARD_VITRIOL,             // acid damage
+    CARD_CLOUD,               // encage enemies in rings of clouds
+    CARD_HAMMER,              // straightforward earth conjurations
+    CARD_VENOM,               // poison damage, maybe poison vuln
+    CARD_FORTITUDE,           // strength and damage shaving
+    CARD_STORM,               // wind and rain
+    CARD_PAIN,                // necromancy, manipulating life itself
+    CARD_TORMENT,             // symbol of
+    CARD_ORB,                 // pure bursts of energy
 
-    CARD_ELIXIR,                // healing
+    CARD_ELIXIR,              // restoration of hp and mp
 #if TAG_MAJOR_VERSION == 34
-    CARD_BATTLELUST,            // melee boosts
-    CARD_METAMORPHOSIS,         // transformation
+    CARD_BATTLELUST,          // melee boosts
+    CARD_METAMORPHOSIS,       // transmutations
 #endif
-    CARD_HELM,                  // defence
-    CARD_BLADE,                 // weapon boosts
-    CARD_SHADOW,                // assassin skills
-    CARD_MERCENARY,
+    CARD_HELM,                // defence boosts
+    CARD_BLADE,               // cleave status
+    CARD_SHADOW,              // stealth and darkness
+    CARD_MERCENARY,           // costly perma-ally
 
-    CARD_CRUSADE,
-    CARD_SUMMON_ANIMAL,
-    CARD_SUMMON_DEMON,
-    CARD_SUMMON_WEAPON,
-    CARD_SUMMON_FLYING,         // wisps and butterflies
-    CARD_SUMMON_SKELETON,
-    CARD_SUMMON_UGLY,
+    CARD_CRUSADE,             // aura of abjuration and mass enslave
+#if TAG_MAJOR_VERSION == 34
+    CARD_SUMMON_ANIMAL,       // scattered herd
+#endif
+    CARD_SUMMON_DEMON,        // dual demons
+    CARD_SUMMON_WEAPON,       // a dance partner
+    CARD_SUMMON_FLYING,       // swarms from the swamp
+#if TAG_MAJOR_VERSION == 34
+    CARD_SUMMON_SKELETON,     // bones, bones, bones
+#endif
+    CARD_SUMMON_UGLY,         // or very, or both
 
-    CARD_POTION,
-    CARD_FOCUS,
+    CARD_POTION,              // random boost, probably also for allies
+    CARD_FOCUS,               // lowest stat down, highest stat up
 #if TAG_MAJOR_VERSION == 34
-    CARD_SHUFFLE,
-    CARD_EXPERIENCE,
+    CARD_SHUFFLE,             // stats, specifically
+    CARD_EXPERIENCE,          // like the potion
 #endif
-    CARD_WILD_MAGIC,
+    CARD_WILD_MAGIC,          // miscasts for everybody
 #if TAG_MAJOR_VERSION == 34
-    CARD_SAGE,                  // skill training
+    CARD_SAGE,                // skill training
 #endif
-    CARD_HELIX,                 // remove one *bad* mutation
-    CARD_ALCHEMIST,
-
-#if TAG_MAJOR_VERSION == 34
-    CARD_WATER,                 // flood squares
-    CARD_GLASS,                 // make walls transparent
-#endif
-    CARD_DOWSING,               // mapping/detect SD/traps/items/monsters
-#if TAG_MAJOR_VERSION == 34
-    CARD_TROWEL,                // create feature/vault
-    CARD_MINEFIELD,             // plant traps
-#endif
-    CARD_STAIRS,                // moves stairs around
+    CARD_HELIX,               // precision mutation alteration
+    CARD_ALCHEMIST,           // health / mp for gold
 
 #if TAG_MAJOR_VERSION == 34
-    CARD_GENIE,                 // acquirement OR rotting/deterioration
-    CARD_BARGAIN,               // shopping discount
+    CARD_WATER,               // flood squares
+    CARD_GLASS,               // make walls transparent
 #endif
-    CARD_WRATH,                 // Godly wrath
-    CARD_WRAITH,                // drain XP
-    CARD_XOM,
-    CARD_FEAST,
-    CARD_FAMINE,
-    CARD_CURSE,                 // Curse your items
-    CARD_SWINE,                 // *oink*
-    CARD_ILLUSION,
-    CARD_DEGEN,
+    CARD_DOWSING,             // mapping/detect traps/items/monsters
+#if TAG_MAJOR_VERSION == 34
+    CARD_TROWEL,              // create altars, statues, portal
+    CARD_MINEFIELD,           // plant traps
+#endif
+    CARD_STAIRS,              // moves stairs around
+
+#if TAG_MAJOR_VERSION == 34
+    CARD_GENIE,               // acquirement or rotting/deterioration
+    CARD_BARGAIN,             // shopping discount
+#endif
+    CARD_WRATH,               // random godly wrath
+    CARD_WRAITH,              // drain XP
+    CARD_XOM,                 // 's attention turns to you
+    CARD_FEAST,               // engorged
+    CARD_FAMINE,              // starving
+    CARD_CURSE,               // curse your items
+    CARD_SWINE,               // *oink*
+
+    CARD_ILLUSION,            // a copy of the player
+    CARD_DEGEN,               // polymorph hostiles down hd, malmutate
+    CARD_ELEMENTS,            // primal animals of the elements
+    CARD_RANGERS,             // sharpshooting
+    CARD_PLACID_MAGIC,        // cancellation and antimagic
 
     NUM_CARDS
 };

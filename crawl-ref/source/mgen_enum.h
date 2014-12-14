@@ -10,6 +10,7 @@ enum band_type
     BAND_ORC_KNIGHT,
     BAND_KILLER_BEES,
     BAND_CAUSTIC_SHRIKE,
+    BAND_SHARD_SHRIKE,
     BAND_FLYING_SKULLS,
     BAND_SLIME_CREATURES,
     BAND_YAKS,
@@ -40,7 +41,7 @@ enum band_type
     BAND_GUARDIAN_SERPENT,
     BAND_WOLVES,
     BAND_GREEN_RATS,
-    BAND_ORANGE_RATS,
+    BAND_HELL_RATS,
     BAND_SHEEP,
     BAND_GHOULS,
     BAND_DEEP_TROLLS,
@@ -111,6 +112,8 @@ enum band_type
     BAND_MNOLEG,
     BAND_DEATH_SCARABS,
     BAND_ANUBIS_GUARD,
+    BAND_HOLIES,
+    BAND_ROBIN,
     BAND_RANDOM_SINGLE,
     NUM_BANDS                   // always last
 };

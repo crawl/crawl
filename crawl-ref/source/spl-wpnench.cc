@@ -74,7 +74,7 @@ static string _get_brand_msg(brand_type which_brand, bool is_range_weapon)
     case SPWPN_DISTORTION:
         msg = " seems to ";
         msg += random_choose("twist", "bend", "vibrate",
-                             "flex", "wobble", "twang", NULL);
+                             "flex", "wobble", "twang");
         msg += (coinflip() ? " oddly." : " strangely.");
         return msg;
     case SPWPN_PAIN:
@@ -236,11 +236,11 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     }
 
     const brand_type orig_brand = get_weapon_brand(weapon);
+    const bool dangerous_disto = orig_brand == SPWPN_DISTORTION
+                                 && !has_temp_brand
+                                 && !you_worship(GOD_LUGONU);
 
-    // Can't get out of it that easily...
-    if (orig_brand == SPWPN_DISTORTION
-        && !has_temp_brand
-        && !you_worship(GOD_LUGONU))
+    if (dangerous_disto)
     {
         const string prompt =
               "Really brand " + weapon.name(DESC_INVENTORY) + "?";
@@ -249,11 +249,16 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
             canned_msg(MSG_OK);
             return SPRET_ABORT;
         }
-        MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
-                      9, 90, "rebranding a weapon of distortion");
     }
 
     fail_check();
+
+    if (dangerous_disto)
+    {
+        // Can't get out of it that easily...
+        MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_TRANSLOCATION,
+                      9, 90, "rebranding a weapon of distortion");
+    }
 
     string msg = weapon.name(DESC_YOUR);
 
@@ -286,7 +291,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     }
 
     if (emit_special_message)
-        mpr(msg.c_str());
+        mpr(msg);
     else
         mprf("%s flashes.", weapon.name(DESC_YOUR).c_str());
 
@@ -308,7 +313,7 @@ spret_type cast_confusing_touch(int power, bool fail)
     you.set_duration(DUR_CONFUSING_TOUCH,
                      max(10 + random2(power) / 5,
                          you.duration[DUR_CONFUSING_TOUCH]),
-                     20, NULL);
+                     20, nullptr);
 
     return SPRET_SUCCESS;
 }
@@ -328,7 +333,7 @@ spret_type cast_sure_blade(int power, bool fail)
             mpr("Your bond becomes stronger.");
 
         you.increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10),
-                              25, NULL);
+                              25, nullptr);
         return SPRET_SUCCESS;
     }
 

@@ -24,6 +24,8 @@ lernaean_hydra07
 lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
+%sdir mon/holy
+seraph MONS_SERAPH
 %sdir mon/sprint
 unspeakable MONS_UNSPEAKABLE
 
@@ -58,12 +60,11 @@ butterfly9
 butterfly10
 %rim 0
 fire_bat MONS_FIRE_BAT
-%rim 1
 raven MONS_RAVEN
 bennu MONS_BENNU
 caustic_shrike MONS_CAUSTIC_SHRIKE
+shard_shrike MONS_SHARD_SHRIKE
 %sdir mon/vault
-%rim 0
 microbat MONS_MICROBAT
 %rim 1
 megabat MONS_MEGABAT
@@ -110,7 +111,7 @@ gastronok MONS_GASTRONOK
 %sdir mon/animals
 %rim 0
 rat MONS_RAT
-green_rat MONS_GREEN_RAT
+green_rat MONS_RIVER_RAT
 orange_rat MONS_ORANGE_RAT
 porcupine MONS_PORCUPINE
 %rim 1
@@ -264,6 +265,10 @@ fulminant_prism1 MONS_FULMINANT_PRISM
 fulminant_prism2
 fulminant_prism3
 fulminant_prism4
+singularity1 MONS_SINGULARITY /*'*'*/
+singularity2
+singularity3
+singularity4
 %rim 1
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %sdir mon/undead
@@ -279,8 +284,8 @@ tentacled_starspawn MONS_TENTACLED_STARSPAWN
 thrashing_horror MONS_THRASHING_HORROR
 %rim 0
 worldbinder MONS_WORLDBINDER
-%rim 1
 wretched_star MONS_WRETCHED_STAR
+%rim 1
 
 ### Demonic monsters
 ## Arch demons ('&')
@@ -579,7 +584,6 @@ demigod MONS_DEMIGOD
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
-seraph MONS_SERAPH
 %sdir mon/undead
 profane_servitor MONS_PROFANE_SERVITOR
 %sdir mon/unique
@@ -906,6 +910,9 @@ deathcap MONS_DEATHCAP
 ## Goblins ('g')
 %sdir mon/unique
 ijyb MONS_IJYB
+%rim 0
+robin MONS_ROBIN
+%rim 1
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
 %sdir mon

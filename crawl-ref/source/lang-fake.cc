@@ -375,19 +375,19 @@ static void _wide(string &txt)
 {
     string out;
 
-    for (size_t i = 0; i < txt.length(); i++)
+    for (char ch : txt)
     {
-        if (txt[i] == ' ')
+        if (ch == ' ')
             out += "　"; // U+3000 rather than U+FF00
-        else if (txt[i] > 32 && txt[i] < 127)
+        else if (ch > 32 && ch < 127)
         {
             char buf[4];
-            int r = wctoutf8(buf, txt[i] + 0xFF00 - 32);
+            int r = wctoutf8(buf, ch + 0xFF00 - 32);
             for (int j = 0; j < r; j++)
                 out.push_back(buf[j]);
         }
         else
-            out.push_back(txt[i]);
+            out.push_back(ch);
     }
 
     txt = out;
@@ -413,7 +413,7 @@ static void _grunt(string &txt)
          "smash puny caster"},
         {"appreciates your killing of a holy being",
          "smash puny angel"},
-        {"appreciates your kill", "screams: ANNIHILATED"},
+        {"is honoured by your kill", "screams: ANNIHILATED"},
         {"You pass out from exhaustion.", "POWER NAP!!!"},
         {"You die...", "rip"},
         {"LOW HITPOINT WARNING", "don't die"},

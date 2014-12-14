@@ -1,4 +1,4 @@
-static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
+static const vector<spell_type> spellbook_templates[] =
 {
 
 {   // Book of Minor Magic
@@ -9,7 +9,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SLOW,
     SPELL_CONJURE_FLAME,
     SPELL_MEPHITIC_CLOUD,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Conjurations
@@ -19,8 +18,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_FULMINANT_PRISM,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_BATTLESPHERE,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Flames
@@ -30,8 +27,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_INNER_FLAME,
     SPELL_STICKY_FLAME,
     SPELL_FIREBALL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Frost
@@ -41,8 +36,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_THROW_ICICLE,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_CONDENSATION_SHIELD,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Summonings
@@ -52,8 +45,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SUMMON_DEMON,
     SPELL_SUMMON_FOREST,
     SPELL_MONSTROUS_MENAGERIE,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Fire
@@ -62,9 +53,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_BOLT_OF_FIRE,
     SPELL_DELAYED_FIREBALL,
     SPELL_RING_OF_FLAMES,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Ice
@@ -74,8 +62,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_BOLT_OF_COLD,
     SPELL_FREEZING_CLOUD,
     SPELL_SIMULACRUM,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Spatial Translocations
@@ -85,8 +71,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_PORTAL_PROJECTILE,
     SPELL_TELEPORT_OTHER,
     SPELL_GOLUBRIAS_PASSAGE,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Enchantments
@@ -96,8 +80,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
     SPELL_DISCORD,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Young Poisoner's Handbook
@@ -106,9 +88,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_MEPHITIC_CLOUD,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_VENOM_BOLT,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of the Tempests
@@ -117,9 +96,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_FIREBALL,
     SPELL_TORNADO,
     SPELL_SHATTER,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Death
@@ -129,19 +105,15 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_DISPEL_UNDEAD,
     SPELL_EXCRUCIATING_WOUNDS,
     SPELL_BOLT_OF_DRAINING,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Hinderance
     SPELL_CONFUSING_TOUCH,
     SPELL_CONFUSE,
     SPELL_PETRIFY,
-    SPELL_LEDAS_LIQUEFACTION,
     SPELL_ENGLACIATION,
     SPELL_SUMMON_MANA_VIPER,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
+    SPELL_GRAVITAS,
 },
 
 {   // Book of Changes
@@ -150,9 +122,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SPIDER_FORM,
     SPELL_ICE_FORM,
     SPELL_BLADE_HANDS,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Transfigurations
@@ -161,9 +130,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_STATUE_FORM,
     SPELL_HYDRA_FORM,
     SPELL_DRAGON_FORM,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Fen Folio
@@ -173,8 +139,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SUMMON_FOREST,
     SPELL_HYDRA_FORM,
     SPELL_SUMMON_HYDRA,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 #if TAG_MAJOR_VERSION > 34
@@ -184,9 +148,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SONG_OF_SLAYING,
     SPELL_SPECTRAL_WEAPON,
     SPELL_REGENERATION,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 #endif
 {   // Book of Clouds
@@ -195,9 +156,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_POISONOUS_CLOUD,
     SPELL_FREEZING_CLOUD,
     SPELL_RING_OF_FLAMES,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Necromancy
@@ -207,8 +165,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_REGENERATION,
     SPELL_ANIMATE_DEAD,
     SPELL_CONTROL_UNDEAD,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Callings
@@ -218,8 +174,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SUMMON_GUARDIAN_GOLEM,
     SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_SUMMON_ICE_BEAST,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Maledictions
@@ -229,8 +183,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_CONFUSE,
     SPELL_DAZZLING_SPRAY,
     SPELL_ENSLAVEMENT,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Air
@@ -240,8 +192,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_FLY,
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of the Sky
@@ -251,19 +201,16 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_DEFLECT_MISSILES,
     SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_TORNADO,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of the Warp
+    SPELL_RECALL,
     SPELL_CONTROL_TELEPORT,
+    SPELL_FORCE_LANCE,
     SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
-    SPELL_DISPERSAL,
-    SPELL_CONTROLLED_BLINK,
-    SPELL_DISJUNCTION,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
+    SPELL_SUMMON_FOREST,
+    SPELL_GRAVITAS,
 },
 
 {   // Book of Envenomations
@@ -271,21 +218,15 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_INTOXICATE,
     SPELL_OLGREBS_TOXIC_RADIANCE,
     SPELL_POISONOUS_CLOUD,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Unlife
     SPELL_RECALL,
     SPELL_ANIMATE_DEAD,
     SPELL_CONTROL_UNDEAD,
-    SPELL_TWISTED_RESURRECTION,
+    SPELL_CIGOTUVIS_EMBRACE,
     SPELL_DEATH_CHANNEL,
     SPELL_SIMULACRUM,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Control
@@ -294,9 +235,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_ENSLAVEMENT,
     SPELL_ENGLACIATION,
     SPELL_MASS_CONFUSION,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -306,9 +244,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SONG_OF_SLAYING,
     SPELL_SPECTRAL_WEAPON,
     SPELL_REGENERATION,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 #endif
 
@@ -319,8 +254,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_STONE_ARROW,
     SPELL_PETRIFY,
     SPELL_LRD,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Earth
@@ -329,21 +262,17 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_STATUE_FORM,
     SPELL_IRON_SHOT,
     SPELL_SHATTER,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Wizardry
     SPELL_AGONY,
     SPELL_FORCE_LANCE,
-    SPELL_DISPERSAL,
     SPELL_HASTE,
     SPELL_INVISIBILITY,
     SPELL_SPELLFORGED_SERVITOR,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
+#endif
 
 {   // Book of Power
     SPELL_FULMINANT_PRISM,
@@ -352,8 +281,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_BOLT_OF_MAGMA,
     SPELL_IRON_SHOT,
     SPELL_IOOD,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
+    SPELL_SPELLFORGED_SERVITOR,
 },
 
 {   // Book of Cantrips
@@ -361,35 +289,23 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_ANIMATE_SKELETON,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Party Tricks
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_APPORTATION,
-    SPELL_BLINK,
     SPELL_TUKIMAS_DANCE,
     SPELL_INTOXICATE,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
+    SPELL_INVISIBILITY
 },
 
-#if TAG_MAJOR_VERSION == 34
-{   // Book of Stalking
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
+{   // Akashic Record
+    SPELL_DISPERSAL,
+    SPELL_CONTROLLED_BLINK,
+    SPELL_MALIGN_GATEWAY,
+    SPELL_DISJUNCTION,
+    SPELL_SINGULARITY,
 },
-#endif
 
 {   // Book of Debilitation
     SPELL_CORONA,
@@ -398,8 +314,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_ENSLAVEMENT,
     SPELL_CAUSE_FEAR,
     SPELL_LEDAS_LIQUEFACTION,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of the Dragon
@@ -408,9 +322,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_BOLT_OF_FIRE,
     SPELL_DRAGON_FORM,
     SPELL_DRAGON_CALL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Burglary
@@ -420,8 +331,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_LRD,
     SPELL_INVISIBILITY,
     SPELL_DARKNESS,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Dreams
@@ -431,8 +340,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SHADOW_CREATURES,
     SPELL_MASS_CONFUSION,
     SPELL_DARKNESS,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Alchemy
@@ -442,8 +349,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_PETRIFY,
     SPELL_IGNITE_POISON,
     SPELL_IRRADIATE,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Beasts
@@ -453,8 +358,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SUMMON_MANA_VIPER,
     SPELL_MONSTROUS_MENAGERIE,
     SPELL_SUMMON_HYDRA,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Book of Annihilations
@@ -463,9 +366,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_GLACIATE,
     SPELL_FIRE_STORM,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Grand Grimoire
@@ -474,9 +374,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_HORRIBLE_THINGS,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 {   // Necronomicon
@@ -484,10 +381,6 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_DEATHS_DOOR,
     SPELL_NECROMUTATION,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
-    SPELL_NO_SPELL,
 },
 
 };

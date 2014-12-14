@@ -7,13 +7,13 @@
 
 #include "player.h"
 
-#include <sstream>
 #include <algorithm>
-#include <ctype.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cctype>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
 
 #include "ability.h"
 #include "act-iter.h"
@@ -110,7 +110,7 @@ static void _moveto_maybe_repel_stairs()
                                                         DESC_THE, false);
         const string prep = feat_preposition(new_grid, true, &you);
 
-        if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
+        if (slide_feature_over(you.pos()))
         {
             mprf("%s slides away as you move %s it!", stair_str.c_str(),
                  prep.c_str());
@@ -178,7 +178,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
         if (!yes_or_no("%s", prompt.c_str()))
         {
             canned_msg(MSG_OK);
-                return false;
+            return false;
         }
     }
     else if (!trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
@@ -211,7 +211,7 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
     }
 
     if (msg != "")
-        mpr(msg.c_str());
+        mpr(msg);
     else if (species_likes_water(you.species) && feat_is_water(env.grid(p)))
         mpr("You cannot enter water in your current form.");
     else if (species_likes_lava(you.species) && feat_is_lava(env.grid(p)))
@@ -484,10 +484,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         }
     }
 
-    // Traps go off. (But magical traps don't go off again when losing flight
-    // - i.e., moving into the same tile)
+    // Traps go off.
+    // (But not when losing flight - i.e., moving into the same tile)
     trap_def* ptrap = find_trap(you.pos());
-    if (ptrap && (old_pos != you.pos() || ptrap->ground_only()))
+    if (ptrap && old_pos != you.pos())
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
     if (stepped)
@@ -1455,15 +1455,15 @@ int player_spell_levels()
     if (sl > 99)
         sl = 99;
 
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+    for (const spell_type spell : you.spells)
     {
-        if (you.spells[i] == SPELL_FIREBALL)
+        if (spell == SPELL_FIREBALL)
             fireball = true;
-        else if (you.spells[i] == SPELL_DELAYED_FIREBALL)
+        else if (spell == SPELL_DELAYED_FIREBALL)
             delayed_fireball = true;
 
-        if (you.spells[i] != SPELL_NO_SPELL)
-            sl -= spell_difficulty(you.spells[i]);
+        if (spell != SPELL_NO_SPELL)
+            sl -= spell_difficulty(spell);
     }
 
     // Fireball is free for characters with delayed fireball
@@ -2464,6 +2464,49 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     return prescaled_ev;
 }
 
+/**
+ * What is the player's bonus to EV from dodging when not paralyzed, after
+ * accounting for size & body armour penalties?
+ *
+ * First, calculate base dodge bonus (linear with dodging * stepdowned dex),
+ * and armour dodge penalty (base armour evp, increased for small races &
+ * decreased for large, then with a magic "3" subtracted from it to make the
+ * penalties not too harsh).
+ *
+ * If the player's strength is greater than the armour dodge penalty, return
+ *      base dodge * (1 - dodge_pen / (str*2)).
+ * E.g., if str is twice dodge penalty, return 3/4 of base dodge. If
+ * str = dodge_pen * 4, return 7/8...
+ *
+ * If str is less than dodge penalty, return
+ *      base_dodge * str / (dodge_pen * 2).
+ * E.g., if str = dodge_pen / 2, return 1/4 of base dodge. if
+ * str = dodge_pen / 4, return 1/8...
+ *
+ * For either equation, if str = dodge_pen, the result is base_dodge/2.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A bonus to EV, multiplied by the scale.
+ */
+static int _player_armour_adjusted_dodge_bonus(int scale)
+{
+    // stepdowns at 10 and 24 dex; the last two parameters are not important.
+    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
+
+    const int dodge_bonus =
+        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
+        / (20 - _player_evasion_size_factor()) / 10;
+
+    const int armour_dodge_penalty = you.unadjusted_body_armour_penalty() - 3;
+    if (armour_dodge_penalty <= 0)
+        return dodge_bonus;
+
+    const int str = max(1, you.strength());
+    if (armour_dodge_penalty >= str)
+        return dodge_bonus * str / (armour_dodge_penalty * 2);
+    return dodge_bonus - dodge_bonus * armour_dodge_penalty / (str * 2);
+}
+
 // Total EV for player using the revised 0.6 evasion model.
 int player_evasion(ev_ignore_type evit)
 {
@@ -2481,37 +2524,11 @@ int player_evasion(ev_ignore_type evit)
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
-    const int adjusted_evasion_penalty =
-        _player_adjusted_evasion_penalty(scale);
-
-    // The last two parameters are not important.
-    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
-
-    const int dodge_bonus =
-        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
-        / (20 - size_factor) / 10;
-
-    // [ds] Dodging penalty for being in high EVP armour, almost
-    // identical to v0.5/4.1 penalty, but with the EVP discount being
-    // 1 instead of 0.5 so that leather armour is fully discounted.
-    // The 1 EVP of leather armour may still incur an
-    // adjusted_evasion_penalty, however.
-    const int armour_dodge_penalty = max(0,
-        (10 * you.adjusted_body_armour_penalty(scale, true)
-         - 30 * scale)
-        / max(1, (int) you.strength()));
-
-    // Adjust dodge bonus for the effects of being suited up in armour.
-    const int armour_adjusted_dodge_bonus =
-        max(0, dodge_bonus - armour_dodge_penalty);
-
-    const int adjusted_shield_penalty = you.adjusted_shield_penalty(scale);
-
     const int prestepdown_evasion =
         size_base_ev
-        + armour_adjusted_dodge_bonus
-        - adjusted_evasion_penalty
-        - adjusted_shield_penalty;
+        + _player_armour_adjusted_dodge_bonus(scale)
+        - _player_adjusted_evasion_penalty(scale)
+        - you.adjusted_shield_penalty(scale);
 
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
@@ -2618,6 +2635,12 @@ int player_shield_class()
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
+    if (you.attribute[ATTR_BONE_ARMOUR])
+    {
+        // make sure bone armour always gives at least one point of sh.
+        shield += (you.attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 200
+                   / BONE_ARMOUR_DIV;
+    }
 
     return (shield + 50) / 100;
 }
@@ -2809,7 +2832,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     level_change();
 
-    if (actual_gain != NULL)
+    if (actual_gain != nullptr)
         *actual_gain = you.experience - old_exp;
 
     if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
@@ -3095,9 +3118,6 @@ void level_change(bool skip_attribute_increase)
                              "You can now transform into a vampire bat.");
                     }
                 }
-                else if (you.experience_level == 6)
-                    mprf(MSGCH_INTRINSIC_GAIN,
-                         "You can now bottle potions of blood from corpses.");
                 break;
 
             case SP_NAGA:
@@ -3243,13 +3263,12 @@ void level_change(bool skip_attribute_increase)
                 int level = 0;
                 mutation_type first_body_facet = NUM_MUTATIONS;
 
-                for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                for (const player::demon_trait trait : you.demonic_traits)
                 {
-                    if (is_body_facet(you.demonic_traits[i].mutation))
+                    if (is_body_facet(trait.mutation))
                     {
                         if (first_body_facet < NUM_MUTATIONS
-                            && you.demonic_traits[i].mutation
-                                != first_body_facet)
+                            && trait.mutation != first_body_facet)
                         {
                             if (you.experience_level == level)
                             {
@@ -3263,25 +3282,24 @@ void level_change(bool skip_attribute_increase)
 
                         if (first_body_facet == NUM_MUTATIONS)
                         {
-                            first_body_facet = you.demonic_traits[i].mutation;
-                            level = you.demonic_traits[i].level_gained;
+                            first_body_facet = trait.mutation;
+                            level = trait.level_gained;
                         }
                     }
                 }
 
-                for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                for (const player::demon_trait trait : you.demonic_traits)
                 {
-                    if (you.demonic_traits[i].level_gained
-                        == you.experience_level)
+                    if (trait.level_gained == you.experience_level)
                     {
                         if (!gave_message)
                         {
-                            mprf(MSGCH_INTRINSIC_GAIN, "Your demonic ancestry asserts itself...");
+                            mprf(MSGCH_INTRINSIC_GAIN,
+                                 "Your demonic ancestry asserts itself...");
 
                             gave_message = true;
                         }
-                        perma_mutate(you.demonic_traits[i].mutation, 1,
-                                     "demonic ancestry");
+                        perma_mutate(trait.mutation, 1, "demonic ancestry");
                     }
                 }
 
@@ -3670,8 +3688,8 @@ int check_stealth()
     {
         // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
         // Now 2 * EP^2 / 3 after EP rescaling.
-        const int ep = -property(*arm, PARM_EVASION);
-        const int penalty = 2 * ep * ep / 3;
+        const int evp = you.unadjusted_body_armour_penalty();
+        const int penalty = evp * evp * 2 / 3;
 #if 0
         dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
 #endif
@@ -3875,7 +3893,7 @@ static void _display_char_status(int value, const char *fmt, ...)
 static void _display_vampire_status()
 {
     string msg = "At your current hunger state you ";
-    vector<string> attrib;
+    vector<const char *> attrib;
 
     switch (you.hunger_state)
     {
@@ -3924,7 +3942,7 @@ static void _display_vampire_status()
     if (!attrib.empty())
     {
         msg += comma_separated_line(attrib.begin(), attrib.end());
-        mpr(msg.c_str());
+        mpr(msg);
     }
 }
 
@@ -3968,7 +3986,7 @@ static void _display_movement_speed()
 static void _display_tohit()
 {
 #ifdef DEBUG_DIAGNOSTICS
-    melee_attack attk(&you, NULL);
+    melee_attack attk(&you, nullptr);
 
     const int to_hit = attk.calc_to_hit(false);
 
@@ -3999,12 +4017,19 @@ static const char* _attack_delay_desc(int attack_delay)
  */
 static void _display_attack_delay()
 {
-    const item_def* ammo = NULL;
-    you.m_quiver->get_desired_item(&ammo, NULL);
+    const item_def* ammo = nullptr;
+    you.m_quiver->get_desired_item(&ammo, nullptr);
     const bool uses_ammo = ammo && you.weapon()
                            && ammo->launched_by(*you.weapon());
-    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : NULL,
+    const int delay = you.attack_delay(you.weapon(), uses_ammo ? ammo : nullptr,
                                        false, false);
+
+    const int no_shield_delay = you.attack_delay(you.weapon(),
+                                                 uses_ammo ? ammo : nullptr,
+                                                 false, false, false);
+    const bool at_min_delay = you.weapon()
+                              && weapon_min_delay(*you.weapon())
+                                 == no_shield_delay;
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
@@ -4014,8 +4039,10 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = max(20, avg / 2);
 
-    _display_char_status(avg, "Your attack speed is %s",
-                         _attack_delay_desc(avg));
+    _display_char_status(avg, "Your attack speed is %s%s",
+                         _attack_delay_desc(avg),
+                         at_min_delay ?
+                            " (and cannot be increased with skill)" : "");
 }
 
 // forward declaration
@@ -4060,11 +4087,11 @@ void display_char_status()
     for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
         if (fill_status_info(i, &inf) && !inf.long_text.empty())
-            mprf("%s", inf.long_text.c_str());
+            mpr(inf.long_text);
     }
     string cinfo = _constriction_description();
     if (!cinfo.empty())
-        mpr(cinfo.c_str());
+        mpr(cinfo);
 
     _display_movement_speed();
     _display_tohit();
@@ -4207,7 +4234,7 @@ int slaying_bonus(bool ranged)
 
 // Checks each equip slot for a randart, and adds up all of those with
 // a given property. Slow if any randarts are worn, so avoid where
-// possible. If `matches' is non-NULL, items with nonzero property are
+// possible. If `matches' is non-nullptr, items with nonzero property are
 // pushed onto *matches.
 int player::scan_artefacts(artefact_prop_type which_property,
                            bool calc_unid,
@@ -4231,7 +4258,8 @@ int player::scan_artefacts(artefact_prop_type which_property,
 
         bool known;
         int val = artefact_wpn_property(inv[eq], which_property, known);
-        if (calc_unid || known) {
+        if (calc_unid || known)
+        {
             retval += val;
             if (matches && val)
                 matches->push_back(inv[eq]);
@@ -4734,7 +4762,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
 
     if (msg && new_level >= 1 && old_level <= 1 && new_level != old_level)
-        mprf("%s", describe_contamination(new_level).c_str());
+        mpr(describe_contamination(new_level));
     else if (msg && new_level != old_level)
     {
         if (old_level == 1 && new_level == 0)
@@ -4844,7 +4872,7 @@ bool curare_hits_player(int death_source, int levels, string name,
         }
     }
 
-    potion_effect(POT_SLOWING, levels + random2(3*levels));
+    slow_player(10 + random2(levels + random2(3 * levels)));
 
     return hurted > 0;
 }
@@ -4854,7 +4882,7 @@ void paralyse_player(string source, int amount)
     if (!amount)
         amount = 2 + random2(6 + you.duration[DUR_PARALYSIS] / BASELINE_DELAY);
 
-    you.paralyse(NULL, amount, source);
+    you.paralyse(nullptr, amount, source);
 }
 
 bool poison_player(int amount, string source, string source_aux, bool force)
@@ -5142,7 +5170,7 @@ bool miasma_player(actor *who, string source_aux)
 
     if (one_chance_in(3))
     {
-        potion_effect(POT_SLOWING, 5);
+        slow_player(10 + random2(5));
         success = true;
     }
 
@@ -5397,6 +5425,33 @@ void dec_elixir_player(int delay)
         _dec_elixir_mp(delay);
 }
 
+void dec_ambrosia_player(int delay)
+{
+    if (!you.duration[DUR_AMBROSIA])
+        return;
+
+    // ambrosia ends when confusion does.
+    if (!you.confused())
+        you.duration[DUR_AMBROSIA] = 0;
+
+    you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
+
+    // 3-5 per turn, 9-50 over (3-10) turns
+    const int hp_restoration = 3 + random2(3);
+    const int mp_restoration = 3 + random2(3);
+
+    if (!you.duration[DUR_DEATHS_DOOR])
+    {
+        const int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
+        inc_hp(div_rand_round(hp_restoration * mut_factor, 3));
+    }
+
+    inc_mp(mp_restoration);
+
+    if (!you.duration[DUR_AMBROSIA])
+        mpr("You feel less invigorated.");
+}
+
 bool flight_allowed(bool quiet)
 {
     if (get_form()->forbids_flight())
@@ -5603,8 +5658,10 @@ void player::init()
 
 #ifdef WIZARD
     wizard = Options.wiz_mode == WIZ_YES;
+    explore = Options.explore_mode == WIZ_YES;
 #else
     wizard = false;
+    explore = false;
 #endif
     birth_time       = time(0);
 
@@ -5655,7 +5712,6 @@ void player::init()
     spell_no        = 0;
     vehumet_gifts.clear();
     char_direction  = GDT_DESCENDING;
-    opened_zot      = false;
     royal_jelly_dead = false;
     transform_uncancellable = false;
     fishtail = false;
@@ -5664,6 +5720,7 @@ void player::init()
 
     duration.init(0);
     rotting         = 0;
+    apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
     quiver.init(ENDOFPACK);
@@ -5985,10 +6042,6 @@ bool player::can_swim(bool permanently) const
 
 int player::visible_igrd(const coord_def &where) const
 {
-    // shop hack, etc.
-    if (where.x == 0)
-        return NON_ITEM;
-
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
             && !species_likes_water(species)))
@@ -6001,13 +6054,7 @@ int player::visible_igrd(const coord_def &where) const
 
 bool player::has_spell(spell_type spell) const
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-    {
-        if (spells[i] == spell)
-            return true;
-    }
-
-    return false;
+    return find(begin(spells), end(spells), spell) != end(spells);
 }
 
 bool player::cannot_speak() const
@@ -6137,6 +6184,8 @@ bool player::liquefied_ground() const
 
 /**
  * Returns whether the player currently has any kind of shield.
+ *
+ * XXX: why does this function exist?
  */
 bool player::shielded() const
 {
@@ -6145,7 +6194,8 @@ bool player::shielded() const
            || duration[DUR_MAGIC_SHIELD]
            || duration[DUR_DIVINE_SHIELD]
            || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-           || qazlal_sh_boost() > 0;
+           || qazlal_sh_boost() > 0
+           || attribute[ATTR_BONE_ARMOUR] > 0;
 }
 
 int player::shield_block_penalty() const
@@ -6214,32 +6264,34 @@ void player::ablate_deflection()
     }
 }
 
+/**
+ * What's the base value of the penalties the player recieves from their
+ * body armour?
+ *
+ * Used as the base for adjusted armour penalty calculations, as well as for
+ * stealth penalty calculations.
+ *
+ * @return  The player's body armour's PARM_EVASION, if any.
+ */
 int player::unadjusted_body_armour_penalty() const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
     if (!body_armour)
         return 0;
 
-    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
-    return base_ev_penalty;
+    return -property(*body_armour, PARM_EVASION);
 }
 
-// The EV penalty to the player for their worn body armour.
-int player::adjusted_body_armour_penalty(int scale, bool use_size) const
+/**
+ * The encumbrance penalty to the player for their worn body armour.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based quadratically on body armour
+ *                  encumbrance.
+ */
+int player::adjusted_body_armour_penalty(int scale) const
 {
     const int base_ev_penalty = unadjusted_body_armour_penalty();
-    if (!base_ev_penalty)
-        return 0;
-
-    if (use_size)
-    {
-        const int size = body_size(PSIZE_BODY);
-
-        const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
-
-        return max(0, scale * base_ev_penalty
-                      - size_bonus_factor * base_ev_penalty);
-    }
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
     return 2 * base_ev_penalty * base_ev_penalty
@@ -6249,7 +6301,12 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
            / 450;
 }
 
-// The EV penalty to the player for wearing their current shield.
+/**
+ * The encumbrance penalty to the player for their worn shield.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A penalty to EV based on shield weight.
+ */
 int player::adjusted_shield_penalty(int scale) const
 {
     const item_def *shield_l = slot_item(EQ_SHIELD, false);
@@ -6284,9 +6341,8 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     unsigned int effective_points = skill_points[sk];
     if (!real)
     {
-        vector<skill_type> cross_skills = get_crosstrain_skills(sk);
-        for (size_t i = 0; i < cross_skills.size(); ++i)
-            effective_points += skill_points[cross_skills[i]] * 2 / 5;
+        for (skill_type cross : get_crosstrain_skills(sk))
+            effective_points += skill_points[cross] * 2 / 5;
     }
     effective_points = min(effective_points, skill_exp_needed(27, sk));
     while (1)
@@ -6438,8 +6494,15 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_QAZLAL_AC])
         AC += 300;
 
-    if (you.duration[DUR_CORROSION])
+    if (duration[DUR_CORROSION])
         AC -= 500 * you.props["corrosion_amount"].get_int();
+
+    if (attribute[ATTR_BONE_ARMOUR])
+    {
+        // make sure bone armour always gives at least one point of ac.
+        AC += (attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 100
+              / BONE_ARMOUR_DIV;
+    }
 
     AC += get_form()->get_ac_bonus();
 
@@ -6777,13 +6840,8 @@ bool player::res_wind() const
 
 bool player::res_petrify(bool temp) const
 {
-    if (player_mutation_level(MUT_PETRIFICATION_RESISTANCE))
-        return true;
-
-    if (temp && (form == TRAN_STATUE || form == TRAN_WISP))
-        return true;
-
-    return false;
+    return player_mutation_level(MUT_PETRIFICATION_RESISTANCE)
+           || temp && get_form()->res_petrify();
 }
 
 int player::res_constrict() const
@@ -6893,15 +6951,15 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
     vector<string> problems;
 
     if (duration[DUR_DIMENSION_ANCHOR])
-        problems.push_back("locked down by Dimension Anchor");
+        problems.emplace_back("locked down by Dimension Anchor");
 
     if (form == TRAN_TREE)
-        problems.push_back("held in place by your roots");
+        problems.emplace_back("held in place by your roots");
 
     if (crawl_state.game_is_zotdef() && orb_haloed(pos()))
-        problems.push_back("in the halo of the Orb");
+        problems.emplace_back("in the halo of the Orb");
 
-    const bool stasis_block = stasis_blocks_effect(calc_unid, NULL);
+    const bool stasis_block = stasis_blocks_effect(calc_unid, nullptr);
     vector<item_def> notele_items;
     if (has_notele_item(calc_unid, &notele_items) || stasis_block)
     {
@@ -6910,18 +6968,17 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         bool found_nonartefact = false;
         bool found_stasis = false;
 
-        for (vector<item_def>::iterator it=notele_items.begin();
-             it < notele_items.end(); ++it)
+        for (const auto &item : notele_items)
         {
-            if (it->base_type == OBJ_WEAPONS)
+            if (item.base_type == OBJ_WEAPONS)
             {
                 problems.push_back(make_stringf("wielding %s",
-                                                it->name(DESC_A).c_str()));
+                                                item.name(DESC_A).c_str()));
             }
             else
-                worn_notele.push_back(it->name(DESC_A).c_str());
+                worn_notele.push_back(item.name(DESC_A));
 
-            if (it->base_type == OBJ_JEWELLERY && jewellery_is_amulet(*it))
+            if (item.base_type == OBJ_JEWELLERY && jewellery_is_amulet(item))
                 amulet_handled = true;
         }
 
@@ -6932,7 +6989,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
             {
                 item_def *amulet = slot_item(EQ_AMULET);
                 ASSERT(amulet);
-                worn_notele.push_back(amulet->name(DESC_A).c_str());
+                worn_notele.push_back(amulet->name(DESC_A));
                 found_nonartefact = !is_artefact(*amulet);
             }
             //...but we also don't want to report "buggy stasis" from it.
@@ -6958,7 +7015,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         {
             // Formicids and AMU_STASIS are handled above, other sources
             // of stasis will display this message:
-            problems.push_back("affected by a buggy stasis");
+            problems.emplace_back("affected by a buggy stasis");
         }
     }
 
@@ -6985,7 +7042,7 @@ bool player::no_tele_print_reason(bool calc_unid, bool blinking) const
     if (reason.empty())
         return false;
 
-    mpr(reason.c_str());
+    mpr(reason);
     return true;
 }
 
@@ -7132,7 +7189,8 @@ void player::teleport(bool now, bool wizard_tele)
 }
 
 int player::hurt(const actor *agent, int amount, beam_type flavour,
-                 bool cleanup_dead, bool /*attacker_effects*/)
+                 kill_method_type kill_type, string source, string aux,
+                 bool /*cleanup_dead*/, bool /*attacker_effects*/)
 {
     // We ignore cleanup_dead here.
     if (!agent)
@@ -7141,20 +7199,13 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         // to a player from a dead monster.  We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
-        ouch(amount, KILLED_BY_MONSTER, MID_NOBODY, "",
-             false, "posthumous revenge");
-    }
-    else if (agent->is_monster())
-    {
-        const monster* mon = agent->as_monster();
-        ouch(amount,
-             flavour == BEAM_WATER ? KILLED_BY_WATER : KILLED_BY_MONSTER,
-             mon->mid, "", mon->visible_to(this), NULL);
+        ouch(amount, kill_type, MID_NOBODY, aux.c_str(),
+             false, source.empty() ? "posthumous revenge" : source.c_str());
     }
     else
     {
-        // Should never happen!
-        die("player::hurt() called for self-damage");
+        ouch(amount, kill_type, agent->mid, aux.c_str(),
+             agent->visible_to(this), source.c_str());
     }
 
     if ((flavour == BEAM_DEVASTATION || flavour == BEAM_DISINTEGRATION)
@@ -7168,7 +7219,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
 
 void player::drain_stat(stat_type s, int amount, actor *attacker)
 {
-    if (attacker == NULL)
+    if (attacker == nullptr)
         lose_stat(s, amount, false, "");
     else if (attacker->is_monster())
         lose_stat(s, amount, attacker->as_monster(), false);
@@ -7577,7 +7628,7 @@ int player::has_usable_tentacles(bool allow_tran) const
     return has_tentacles(allow_tran);
 }
 
-bool player::sicken(int amount, bool allow_hint, bool quiet)
+bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -7590,15 +7641,13 @@ bool player::sicken(int amount, bool allow_hint, bool quiet)
         return false;
     }
 
-    if (!quiet)
-        mpr("You feel ill.");
+    mpr("You feel ill.");
 
     disease += amount * BASELINE_DELAY;
     if (disease > 210 * BASELINE_DELAY)
         disease = 210 * BASELINE_DELAY;
 
-    if (allow_hint)
-        learned_something_new(HINT_YOU_SICK);
+    learned_something_new(HINT_YOU_SICK);
     return true;
 }
 
@@ -8083,7 +8132,7 @@ void player::set_gold(int amount)
         if (you_worship(GOD_GOZAG))
         {
             vector<ability_type> abilities = get_god_abilities(true, true);
-            for (int i = 0; i < MAX_GOD_ABILITIES; i++)
+            for (size_t i = 0; i < abilities.size(); i++)
             {
                 const int cost = get_gold_cost(abilities[i]);
                 if (gold >= cost && old_gold < cost)
@@ -8278,10 +8327,9 @@ static string _constriction_description()
 
     if (you.constricting && !you.constricting->empty())
     {
-        actor::constricting_t::const_iterator i;
-        for (i = you.constricting->begin(); i != you.constricting->end(); ++i)
+        for (const auto &entry : *you.constricting)
         {
-            monster *whom = monster_by_mid(i->first);
+            monster *whom = monster_by_mid(entry.first);
             ASSERT(whom);
             c_name.push_back(whom->name(DESC_A));
         }
@@ -8327,18 +8375,6 @@ int player_monster_detect_radius()
 bool player_has_orb()
 {
     return you.char_direction == GDT_ASCENDING;
-}
-
-/**
- * Invoke this each time you wish to test MUT_BLURRY_VISION.0
- * @return  True if the player fails to read things.
- */
-bool does_vision_blur()
-{
-    // "Ashenzari keeps your vision clear" corrects for blurry vision.
-    return player_mutation_level(MUT_BLURRY_VISION)
-        && !in_good_standing(GOD_ASHENZARI, 2)
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5);
 }
 
 bool player::form_uses_xl() const
@@ -8609,7 +8645,7 @@ string temperature_text(int temp)
 }
 #endif
 
-void player_open_door(coord_def doorpos, bool check_confused)
+void player_open_door(coord_def doorpos)
 {
     // Finally, open the closed door!
     set<coord_def> all_door;
@@ -8626,7 +8662,7 @@ void player_open_door(coord_def doorpos, bool check_confused)
     if (!door_desc_noun.empty())
         noun = door_desc_noun.c_str();
 
-    if (!(check_confused && you.confused()))
+    if (!you.confused())
     {
         string door_open_prompt =
             env.markers.property_at(doorpos, MAT_ANY, "door_open_prompt");
@@ -8743,9 +8779,8 @@ void player_open_door(coord_def doorpos, bool check_confused)
     }
 
     vector<coord_def> excludes;
-    for (set<coord_def>::iterator i = all_door.begin(); i != all_door.end(); ++i)
+    for (const auto &dc : all_door)
     {
-        const coord_def& dc = *i;
         // Even if some of the door is out of LOS, we want the entire
         // door to be updated.  Hitting this case requires a really big
         // door!
@@ -8765,6 +8800,161 @@ void player_open_door(coord_def doorpos, bool check_confused)
 
     update_exclusion_los(excludes);
     viewwindow();
+    you.turn_is_over = true;
+}
+
+void player_close_door(coord_def doorpos)
+{
+    // Finally, close the opened door!
+    string berserk_close = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_berserk_verb_close");
+    const string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_berserk_adjective");
+    const string door_close_creak = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_noisy_verb_close");
+    const string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_airborne_verb_close");
+    const string door_close_verb = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_verb_close");
+    const string door_desc_adj  = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_description_adjective");
+    const string door_desc_noun = env.markers.property_at(doorpos, MAT_ANY,
+                                                "door_description_noun");
+    set<coord_def> all_door;
+    find_connected_identical(doorpos, all_door);
+    const char *adj, *noun;
+    get_door_description(all_door.size(), &adj, &noun);
+    const string waynoun_str = make_stringf("%sway", noun);
+    const char *waynoun = waynoun_str.c_str();
+
+    if (!door_desc_adj.empty())
+        adj = door_desc_adj.c_str();
+    if (!door_desc_noun.empty())
+    {
+        noun = door_desc_noun.c_str();
+        waynoun = noun;
+    }
+
+    for (const coord_def& dc : all_door)
+    {
+        if (monster* mon = monster_at(dc))
+        {
+            const bool mons_unseen = !you.can_see(mon);
+            if (mons_unseen || mons_is_object(mon->type))
+            {
+                mprf("Something is blocking the %s!", waynoun);
+                // No free detection!
+                if (mons_unseen)
+                    you.turn_is_over = true;
+            }
+            else
+                mprf("There's a creature in the %s!", waynoun);
+            return;
+        }
+
+        if (igrd(dc) != NON_ITEM)
+        {
+            mprf("There's something blocking the %s.", waynoun);
+            return;
+        }
+
+        if (you.pos() == dc)
+        {
+            mprf("There's a thick-headed creature in the %s!", waynoun);
+            return;
+        }
+    }
+
+    const int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
+
+    if (you.berserk())
+    {
+        if (silenced(you.pos()))
+        {
+            if (!berserk_close.empty())
+            {
+                berserk_close += ".";
+                mprf(berserk_close.c_str(), adj, noun);
+            }
+            else
+                mprf("You slam the %s%s shut!", adj, noun);
+        }
+        else
+        {
+            if (!berserk_close.empty())
+            {
+                if (!berserk_adjective.empty())
+                    berserk_close += " " + berserk_adjective;
+                else
+                    berserk_close += ".";
+                mprf(MSGCH_SOUND, berserk_close.c_str(), adj, noun);
+            }
+            else
+            {
+                mprf(MSGCH_SOUND, "You slam the %s%s shut with a bang!",
+                                  adj, noun);
+            }
+
+            noisy(15, you.pos());
+         }
+    }
+    else if (one_chance_in(skill) && !silenced(you.pos()))
+    {
+        if (!door_close_creak.empty())
+            mprf(MSGCH_SOUND, door_close_creak.c_str(), adj, noun);
+        else
+        {
+            mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
+                              adj, noun);
+        }
+
+        noisy(10, you.pos());
+    }
+    else
+    {
+        const char* verb;
+        if (you.airborne())
+        {
+            if (!door_airborne.empty())
+                verb = door_airborne.c_str();
+            else
+                verb = "You reach down and close the %s%s.";
+        }
+        else
+        {
+            if (!door_close_verb.empty())
+                verb = door_close_verb.c_str();
+            else
+                verb = "You close the %s%s.";
+        }
+
+        mprf(verb, adj, noun);
+    }
+
+    vector<coord_def> excludes;
+    for (const coord_def& dc : all_door)
+    {
+        // Once opened, formerly runed doors become normal doors.
+        grd(dc) = DNGN_CLOSED_DOOR;
+        set_terrain_changed(dc);
+        dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
+
+        // Even if some of the door is out of LOS once it's closed
+        // (or even if some of it is out of LOS when it's open), we
+        // want the entire door to be updated.
+        if (env.map_knowledge(dc).seen())
+        {
+            env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
+#ifdef USE_TILE
+            env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
+#endif
+        }
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+     }
+
+     update_exclusion_los(excludes);
+     you.turn_is_over = true;
 }
 
 /**
@@ -8795,4 +8985,37 @@ string player::hands_act(const string &plural_verb,
                          const string &subject) const
 {
     return "Your " + hands_verb(plural_verb) + " " + subject;
+}
+
+/**
+ * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit,
+ * or over time (currently every ~8 turns)
+ *
+ * Chance of losing a point of ac/sh (BONE_ARMOUR_DIV) increases with current
+ * number of corpses (ATTR_BONE_ARMOUR) and decreases with spellpower, both
+ * linearly. 50->100 power halves the chance; 1->5 corpses (roughly) doubles it.
+ * at 50 power and 5 SH+EV, there's a 1/5 chance of losing a point on hit.
+ * chance floored at 1/27.
+ */
+void player::maybe_degrade_bone_armour()
+{
+    if (attribute[ATTR_BONE_ARMOUR] <= 0)
+        return;
+
+    const int numerator = attribute[ATTR_BONE_ARMOUR] + 5 * BONE_ARMOUR_DIV;
+    const int power = max(1, calc_spell_power(SPELL_CIGOTUVIS_EMBRACE, true));
+    const int denom = min(power * 3, numerator * 27);
+    const bool degrade_armour = x_chance_in_y(numerator, denom);
+    if (!degrade_armour)
+        return;
+
+    you.attribute[ATTR_BONE_ARMOUR]
+        = max(0, you.attribute[ATTR_BONE_ARMOUR] - BONE_ARMOUR_DIV);
+
+    if (you.attribute[ATTR_BONE_ARMOUR])
+        mpr("A chunk of your corpse armour falls away.");
+    else
+        mpr("The last of your corpse armour falls away.");
+
+    redraw_armour_class = true;
 }

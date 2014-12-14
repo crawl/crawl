@@ -42,9 +42,9 @@ bool move_item_to_grid(int *const obj, const coord_def& p,
                         bool silent = false);
 void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
+bool move_item_to_inv(item_def& item);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
-bool merge_items_into_inv(const item_def &it, int quant_got, char &inv_slot,
-                          bool quiet = false);
+item_def* auto_assign_item_slot(item_def& item);
 void mark_items_non_pickup_at(const coord_def &pos);
 void mark_items_non_visit_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);
@@ -88,7 +88,7 @@ coord_def item_pos(const item_def &item);
 
 bool move_top_item(const coord_def &src, const coord_def &dest);
 
-// Get the top item in a given cell. If there are no items, return NULL.
+// Get the top item in a given cell. If there are no items, return nullptr.
 const item_def* top_item_at(const coord_def& where);
 
 // Returns whether there is more than one item in a given cell.
@@ -118,9 +118,9 @@ void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
 void origin_set_inventory(void (*oset)(item_def &item));
-bool origin_is_god_gift(const item_def& item, god_type *god = NULL);
+bool origin_is_god_gift(const item_def& item, god_type *god = nullptr);
 bool origin_is_acquirement(const item_def& item,
-                           item_source_type *type = NULL);
+                           item_source_type *type = nullptr);
 
 bool item_needs_autopickup(const item_def &);
 bool can_autopickup();
@@ -167,7 +167,7 @@ public:
     operator bool() const;
     item_def& operator *() const;
     item_def* operator->() const;
-    int link() const;
+    int index() const;
 
     const stack_iterator& operator ++ ();
     stack_iterator operator ++ (int);

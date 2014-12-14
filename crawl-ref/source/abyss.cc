@@ -20,6 +20,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "dbg-scan.h"
+#include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
 #include "itemprop.h"
@@ -240,7 +241,9 @@ static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
     bool result = false;
     int tries = 10;
     do
+    {
         result = _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_rune");
+    }
     while (!result && --tries);
 
     // Make sure the rune is linked.
@@ -388,7 +391,7 @@ void push_features_to_abyss()
 
             dungeon_feature_type feature = map_bounds(p) ? grd(p) : DNGN_UNSEEN;
             feature = sanitize_feature(feature);
-                 abyssal_features.push_back(feature);
+            abyssal_features.push_back(feature);
         }
     }
 }
@@ -454,7 +457,9 @@ static dungeon_feature_type _abyss_pick_altar()
     god_type god;
 
     do
+    {
         god = random_god();
+    }
     while (is_good_god(god));
 
     return altar_for_god(god);
@@ -558,10 +563,8 @@ static void _place_displaced_monsters()
 {
     list<monster*>::iterator mon_itr;
 
-    for (mon_itr = displaced_monsters.begin();
-         mon_itr != displaced_monsters.end(); ++mon_itr)
+    for (monster *mon : displaced_monsters)
     {
-        monster* mon = *mon_itr;
         if (mon->alive() && !mon->find_home_near_place(mon->pos()))
         {
             maybe_bloodify_square(mon->pos());
@@ -702,10 +705,9 @@ static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
             vault_indexes.insert(vi);
     }
 
-    for (set<int>::const_iterator i = vault_indexes.begin();
-         i != vault_indexes.end(); ++i)
+    for (auto i : vault_indexes)
     {
-        vault_placement &vp(*env.level_vaults[*i]);
+        vault_placement &vp(*env.level_vaults[i]);
 #ifdef DEBUG_DIAGNOSTICS
         const coord_def oldp = vp.pos;
 #endif
@@ -807,11 +809,8 @@ static void _abyss_identify_area_to_shift(coord_def source, int radius,
             affected_vault_indexes.insert(map_index);
     }
 
-    for (set<int>::const_iterator i = affected_vault_indexes.begin();
-         i != affected_vault_indexes.end(); ++i)
-    {
-        _abyss_expand_mask_to_cover_vault(mask, *i);
-    }
+    for (auto i : affected_vault_indexes)
+        _abyss_expand_mask_to_cover_vault(mask, i);
 }
 
 static void _abyss_invert_mask(map_bitmask *mask)
@@ -1022,7 +1021,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
         return sample;
     }
 
-    if (abyssLayout == NULL)
+    if (abyssLayout == nullptr)
     {
         const level_id lid = _get_random_level();
         levelLayout = new LevelLayout(lid, 5, rivers);
@@ -1245,13 +1244,13 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         you.char_direction != GDT_GAME_START
         && _abyss_check_place_feat(p, 10000,
                                    &altars_wanted,
-                                   NULL,
+                                   nullptr,
                                    _abyss_pick_altar(),
                                    abyss_genlevel_mask)
         ||
         you.char_direction != GDT_GAME_START
         && level_id::current().depth < brdepth[BRANCH_ABYSS]
-        && _abyss_check_place_feat(p, 1900, NULL, NULL,
+        && _abyss_check_place_feat(p, 1900, nullptr, nullptr,
                                    DNGN_ABYSSAL_STAIR,
                                    abyss_genlevel_mask);
     }
@@ -1268,34 +1267,40 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
 
     int vaults_placed = 0;
 
-    bool mini = false;
+    bool extra = false;
     const int maxvaults = 6;
     int tries = 0;
     while (vaults_placed < maxvaults)
     {
-        const map_def *map = random_map_in_depth(level_id::current(), mini);
-        if (!map)
+        const map_def *map = random_map_in_depth(level_id::current(), extra);
+        if (map)
         {
-            if (!mini)
+            if (_abyss_place_map(map) && !map->has_tag("extra"))
             {
-                mini = true;
+                extra = true;
+
+                if (!one_chance_in(2 + (++vaults_placed)))
+                    break;
+            }
+            else
+            {
+                if (tries++ >= 100)
+                    break;
+
                 continue;
             }
-            break;
-        }
 
-        if (!_abyss_place_map(map) || map->has_tag("extra"))
+        }
+        else
         {
-            if (tries++ >= 100)
+            if (extra)
                 break;
-
-            continue;
+            else
+            {
+                extra = true;
+                continue;
+            }
         }
-
-        mini = true;
-
-        if (!one_chance_in(2 + (++vaults_placed)))
-            break;
     }
 
     return vaults_placed;
@@ -1920,12 +1925,16 @@ static void _corrupt_choose_colours(corrupt_env *cenv)
 {
     colour_t colour = BLACK;
     do
+    {
         colour = random_uncommon_colour();
+    }
     while (colour == env.rock_colour || colour == LIGHTGREY || colour == WHITE);
     cenv->rock_colour = colour;
 
     do
+    {
         colour = random_uncommon_colour();
+    }
     while (colour == env.floor_colour || colour == LIGHTGREY
            || colour == WHITE);
     cenv->floor_colour = colour;
@@ -1939,6 +1948,7 @@ bool lugonu_corrupt_level(int power)
     simple_god_message("'s Hand of Corruption reaches out!");
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
+    mark_corrupted_level(level_id::current());
 
     flash_view(UA_PLAYER, MAGENTA);
 

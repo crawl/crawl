@@ -146,7 +146,6 @@ struct monsterentry
     int8_t ev; // evasion
     int sec;   // actually mon_spellbook_type
     corpse_effect_type corpse_thingy;
-    zombie_size_type   zombie_size;
     shout_type         shouts;
     mon_intel_type     intel;
     habitat_type     habitat;
@@ -219,6 +218,7 @@ shout_type mons_shouts(monster_type mclass, bool demon_shout = false);
 
 bool mons_is_ghost_demon(monster_type mc);
 bool mons_is_unique(monster_type mc);
+bool mons_is_or_was_unique(const monster& mon);
 bool mons_is_pghost(monster_type mc);
 bool mons_is_draconian_job(monster_type mc);
 bool mons_is_demonspawn_job(monster_type mc);
@@ -232,8 +232,6 @@ int hit_points(int hit_dice, int min_hp, int rand_hp);
 int mons_class_hit_dice(monster_type mc);
 
 bool mons_immune_magic(const monster* mon);
-const char* mons_resist_string(const monster* mon, int res_margin);
-const char* resist_margin_phrase(int margin);
 
 mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_flavour = false);
 
@@ -243,7 +241,7 @@ bool mons_class_flag(monster_type mc, uint64_t bf);
 
 mon_holy_type mons_class_holiness(monster_type mc);
 
-void discover_mimic(const coord_def& pos, bool wake = true);
+void discover_mimic(const coord_def& pos);
 void discover_shifter(monster* shifter);
 
 bool mons_is_statue(monster_type mc);
@@ -408,6 +406,8 @@ bool invalid_monster(const monster* mon);
 bool invalid_monster_type(monster_type mt);
 bool invalid_monster_index(int i);
 
+void mons_load_spells(monster* mon);
+
 void mons_remove_from_grid(const monster* mon);
 
 bool monster_shover(const monster* m);
@@ -454,8 +454,8 @@ bool mons_is_immotile(const monster* mons);
 
 int get_dist_to_nearest_monster();
 bool monster_nearby();
-actor *actor_by_mid(mid_t m);
-monster *monster_by_mid(mid_t m);
+actor *actor_by_mid(mid_t m, bool require_valid = false);
+monster *monster_by_mid(mid_t m, bool require_valid = false);
 bool mons_is_recallable(actor* caller, monster* targ);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
@@ -474,6 +474,7 @@ bool mons_is_player_shadow(const monster* mon);
 
 void reset_all_monsters();
 void debug_mondata();
+void debug_monspells();
 
 bool choose_any_monster(const monster* mon);
 monster *choose_random_nearby_monster(
@@ -488,7 +489,8 @@ monster *choose_random_monster_on_level(
         choose_any_monster);
 void update_monster_symbol(monster_type mtype, cglyph_t md);
 
-void fixup_spells(monster_spells &spells, int hd, bool wizard, bool priest);
+void fixup_spells(monster_spells &spells, int hd);
+void normalize_spell_freq(monster_spells &spells, int hd);
 
 enum mon_dam_level_type
 {

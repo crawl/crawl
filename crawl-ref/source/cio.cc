@@ -13,10 +13,14 @@
 #include "macro.h"
 #include "message.h"
 #include "options.h"
+#include "output.h"
 #include "state.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "viewgeom.h"
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+#include "windowmanager.h"
+#endif
 
 static keycode_type _numpad2vi(keycode_type key)
 {
@@ -209,7 +213,7 @@ void input_history::new_input(const string &s)
 const string *input_history::prev()
 {
     if (history.empty())
-        return NULL;
+        return nullptr;
 
     if (pos == history.begin())
         pos = history.end();
@@ -220,7 +224,7 @@ const string *input_history::prev()
 const string *input_history::next()
 {
     if (history.empty())
-        return NULL;
+        return nullptr;
 
     if (pos == history.end() || ++pos == history.end())
         pos = history.begin();
@@ -243,9 +247,9 @@ void input_history::clear()
 // line_reader
 
 line_reader::line_reader(char *buf, size_t sz, int wrap)
-    : buffer(buf), bufsz(sz), history(NULL), region(GOTO_CRT),
-      start(coord_def(0,0)), keyfn(NULL), wrapcol(wrap),
-      cur(NULL), length(0), pos(-1)
+    : buffer(buf), bufsz(sz), history(nullptr), region(GOTO_CRT),
+      start(coord_def(0,0)), keyfn(nullptr), wrapcol(wrap),
+      cur(nullptr), length(0), pos(-1)
 {
 }
 
@@ -318,6 +322,11 @@ int line_reader::read_line(bool clear_previous)
 
     if (clear_previous)
         *buffer = 0;
+
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
+    if (wm)
+        wm->show_keyboard();
+#endif
 
 #ifdef USE_TILE_WEB
     if (!tiles.is_in_crt_menu())
@@ -619,6 +628,9 @@ int line_reader::process_key(int ch)
         break;
     case CK_MOUSE_CLICK:
         // FIXME: ought to move cursor to click location, if it's within the input
+        return -1;
+    case CK_REDRAW:
+        redraw_screen();
         return -1;
     default:
         if (wcwidth(ch) >= 0 && length + wclen(ch) < static_cast<int>(bufsz))

@@ -7,7 +7,7 @@
 
 #include "player.h"
 
-#include <math.h>
+#include <cmath>
 
 #include "act-iter.h"
 #include "areas.h"
@@ -58,9 +58,9 @@ bool player::alive() const
 
 bool player::is_summoned(int* _duration, int* summon_type) const
 {
-    if (_duration != NULL)
+    if (_duration != nullptr)
         *_duration = -1;
-    if (summon_type != NULL)
+    if (summon_type != nullptr)
         *summon_type = 0;
 
     return false;
@@ -78,7 +78,7 @@ void player::moveto(const coord_def &c, bool clear_net)
     end_searing_ray();
 }
 
-bool player::move_to_pos(const coord_def &c, bool clear_net)
+bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
 {
     actor *target = actor_at(c);
     if (!target || target->submerged())
@@ -267,14 +267,15 @@ brand_type player::damage_brand(int)
  * @param weap          The weapon to be used; may be null.
  * @param projectile    The projectile to be fired/thrown; may be null.
  * @param random        Whether to randomize delay, or provide a fixed value
- *                      for display.
+ *                      for display (the worst-case scenario).
  * @param scaled        Whether to apply special delay modifiers (finesse)
+ * @param shield        Whether to apply shield penalties.
  * @return              The time taken by an attack with the given weapon &
  *                      projectile, in aut.
  */
 random_var player::attack_delay(const item_def *weap,
                                 const item_def *projectile, bool random,
-                                bool scaled) const
+                                bool scaled, bool do_shield) const
 {
     random_var attk_delay = constant(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
@@ -352,8 +353,11 @@ random_var player::attack_delay(const item_def *weap,
     if (!weap && player_wearing_slot(EQ_SHIELD))
         shield_penalty += rv::random2(2);
 
+    if (!do_shield)
+        shield_penalty = constant(0);
+
     int final_delay = random ? attk_delay.roll() + shield_penalty.roll()
-                             : attk_delay.expected() + shield_penalty.expected();
+                             : attk_delay.max() + shield_penalty.max();
     // Stop here if we just want the unmodified value.
     if (!scaled)
         return final_delay;
@@ -362,7 +366,7 @@ random_var player::attack_delay(const item_def *weap,
     return max(2, div_rand_round(scaling * final_delay, 10));
 }
 
-// Returns the item in the given equipment slot, NULL if the slot is empty.
+// Returns the item in the given equipment slot, nullptr if the slot is empty.
 // eq must be in [EQ_WEAPON, EQ_RING_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
@@ -370,7 +374,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded) const
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
-        return NULL;
+        return nullptr;
     return const_cast<item_def *>(&inv[item]);
 }
 
@@ -378,7 +382,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded) const
 item_def *player::weapon(int /* which_attack */) const
 {
     if (melded[EQ_WEAPON])
-        return NULL;
+        return nullptr;
 
     return slot_item(EQ_WEAPON, false);
 }
@@ -445,7 +449,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         if (item.base_type == OBJ_ARMOUR || item.base_type == OBJ_JEWELLERY)
         {
             if (!quiet)
-                mprf("You can't wield %s.", base_type_string(item).c_str());
+                mprf("You can't wield %s.", base_type_string(item));
             return false;
         }
 
@@ -483,7 +487,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     return true;
 }
 
-// Returns the shield the player is wearing, or NULL if none.
+// Returns the shield the player is wearing, or nullptr if none.
 item_def *player::shield() const
 {
     return slot_item(EQ_SHIELD, false);
@@ -554,7 +558,7 @@ static string _hand_name_singular()
 string player::hand_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
-    if (can_plural == NULL)
+    if (can_plural == nullptr)
         can_plural = &_can_plural;
     *can_plural = !player_mutation_level(MUT_MISSING_HAND);
 
@@ -616,7 +620,7 @@ static string _foot_name_singular(bool *can_plural)
 string player::foot_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
-    if (can_plural == NULL)
+    if (can_plural == nullptr)
         can_plural = &_can_plural;
     *can_plural = true;
 
@@ -632,7 +636,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     if (form_changed_physiology())
         return hand_name(plural, can_plural);
 
-    if (can_plural != NULL)
+    if (can_plural != nullptr)
         *can_plural = true;
 
     string adj;
@@ -972,10 +976,14 @@ int player::constriction_damage() const
     return roll_dice(2, div_rand_round(strength(), 5));
 }
 
+/**
+ * How many heads does the player have, in their current form?
+ *
+ * Currently only checks for hydra form.
+ */
 int player::heads() const
 {
-    if (form != TRAN_HYDRA)
-        return 1; // not actually always true
-    ASSERT(props.exists(HYDRA_FORM_HEADS_KEY));
-    return props[HYDRA_FORM_HEADS_KEY].get_int();
+    if (props.exists(HYDRA_FORM_HEADS_KEY))
+        return props[HYDRA_FORM_HEADS_KEY].get_int();
+    return 1; // not actually always true
 }

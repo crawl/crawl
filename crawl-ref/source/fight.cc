@@ -8,9 +8,9 @@
 #include "fight.h"
 
 #include <algorithm>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "art-enum.h"
 #include "cloud.h"
@@ -213,6 +213,55 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                 break;
         }
 
+        if (!simu && attacker->is_monster()
+            && mons_attack_spec(attacker->as_monster(), attack_number, true)
+                   .type == AT_KITE
+            && attacker->as_monster()->foe_distance() == 1
+            && attacker->reach_range() == REACH_TWO
+            && x_chance_in_y(3, 5))
+        {
+            monster* mons = attacker->as_monster();
+            coord_def foepos = mons->get_foe()->pos();
+            coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
+
+            bool found = false;
+            if (!monster_habitable_grid(mons, grd(hopspot)) ||
+                actor_at(hopspot))
+            {
+                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+                {
+                    if (ai->distance_from(foepos) != 2)
+                        continue;
+                    else
+                    {
+                        if (monster_habitable_grid(mons, grd(*ai))
+                            && !actor_at(*ai))
+                        {
+                            hopspot = *ai;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+                found = true;
+
+            if (found)
+            {
+                const bool could_see = you.can_see(mons);
+                if (mons->move_to_pos(hopspot))
+                {
+                    if (could_see || you.can_see(mons))
+                    {
+                        mprf("%s hops backward while attacking.",
+                             mons->name(DESC_THE, true).c_str());
+                    }
+                    mons->speed_increment -= 2; // Add a small extra delay
+                }
+            }
+        }
+
         melee_attack melee_attk(attacker, defender, attack_number,
                                 effective_attack_number);
 
@@ -236,7 +285,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
              && attacker->is_monster()
              && attacker->as_monster()->has_ench(ENCH_GRAND_AVATAR))
     {
-        trigger_grand_avatar(attacker->as_monster(), defender, SPELL_MELEE,
+        trigger_grand_avatar(attacker->as_monster(), defender, SPELL_NO_SPELL,
                              orig_hp);
     }
 
@@ -379,8 +428,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
 
     if (res > 0)
     {
-        const bool immune_at_3_res = is_mon || flavour == BEAM_NEG
-                                            || flavour == BEAM_ACID;
+        const bool immune_at_3_res = is_mon || flavour == BEAM_NEG;
         if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
@@ -435,29 +483,6 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     return result;
 }
 
-/**
- * Can the given actor 'cleave' (hit surrounding targets) when attacking
- * using the given skill?
- *
- * @param attacker      The player or monster in question.
- * @param attack_skill  The skill used for the attack. (e.g. axes, etc)
- * @return              Whether the attacker is allowed to cleave with this
- *                      attack.
- */
-bool actor_can_cleave(const actor &attacker, skill_type attack_skill)
-{
-    if (attacker.confused())
-        return false;
-
-    if (attacker.is_player()
-        && you.form == TRAN_HYDRA && you.heads() > 1)
-    {
-        return true;
-    }
-
-    return attack_skill == SK_AXES;
-}
-
 // Used by cleave to determine if multi-hit targets will be attacked.
 static bool _dont_harm(const actor* attacker, const actor* defender)
 {
@@ -467,54 +492,59 @@ static bool _dont_harm(const actor* attacker, const actor* defender)
 }
 
 /**
- * List potential cleave targets (adjacent hostile creatures), aside from the
- * targeted defender itself.
+ * List potential cleave targets (adjacent hostile creatures), including the
+ * defender itself.
  *
  * @param attacker[in]   The attacking creature.
  * @param def[in]        The location of the targeted defender.
  * @param targets[out]   A list to be populated with targets.
+ * @param which_attack   The attack_number (default -1, which uses the default weapon).
  */
 void get_cleave_targets(const actor* attacker, const coord_def& def,
-                        list<actor*> &targets)
+                        list<actor*> &targets, int which_attack)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
     if (!attacker->alive())
         return;
 
-    const coord_def atk = attacker->pos();
-    coord_def atk_vector = def - atk;
-    const int dir = coinflip() ? -1 : 1;
-
-    for (int i = 0; i < 7; ++i)
-    {
-        atk_vector = rotate_adjacent(atk_vector, dir);
-        if (cell_is_solid(atk + atk_vector))
-            continue;
-
-        actor * target = actor_at(atk + atk_vector);
-        if (target && !_dont_harm(attacker, target))
-            targets.push_back(target);
-    }
-}
-
-/**
- * List potential cleave targets (adjacent hostile creatures), including the
- * defender.
- *
- * @param attacker[in]   The attacking creature.
- * @param def[in]        The location of the targeted defender.
- * @param targets[out]   A list to be populated with targets.
- */
-void get_all_cleave_targets(const actor* attacker, const coord_def& def,
-                            list<actor*> &targets)
-{
-    if (cell_is_solid(def))
-        return;
-
     if (actor_at(def))
         targets.push_back(actor_at(def));
-    get_cleave_targets(attacker, def, targets);
+
+    const item_def* weap = attacker->weapon(which_attack);
+    if (attacker->confused() || !weap)
+        return;
+
+    if ((item_attack_skill(*weap) == SK_AXES
+         || attacker->is_player()
+            && (you.form == TRAN_HYDRA && you.heads() > 1
+                || you.duration[DUR_CLEAVE]))
+        && !attacker->confused())
+    {
+        const coord_def atk = attacker->pos();
+        coord_def atk_vector = def - atk;
+        const int dir = coinflip() ? -1 : 1;
+
+        for (int i = 0; i < 7; ++i)
+        {
+            atk_vector = rotate_adjacent(atk_vector, dir);
+
+            actor * target = actor_at(atk + atk_vector);
+            if (target && !_dont_harm(attacker, target))
+                targets.push_back(target);
+        }
+    }
+
+    if (is_unrandom_artefact(*weap, UNRAND_GYRE))
+    {
+        list<actor*> new_targets;
+        for (actor* targ : targets)
+        {
+            new_targets.push_back(targ);
+            new_targets.push_back(targ);
+        }
+        targets = new_targets;
+    }
 }
 
 /**
@@ -602,8 +632,8 @@ int mons_missile_damage(monster* mons, const item_def *launch,
 
 int mons_usable_missile(monster* mons, item_def **launcher)
 {
-    *launcher = NULL;
-    item_def *launch = NULL;
+    *launcher = nullptr;
+    item_def *launch = nullptr;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
@@ -615,7 +645,7 @@ int mons_usable_missile(monster* mons, item_def **launcher)
 
     const item_def *missiles = mons->missiles();
     if (launch && missiles && !missiles->launched_by(*launch))
-        launch = NULL;
+        launch = nullptr;
 
     const int fdam = mons_missile_damage(mons, launch, missiles);
 

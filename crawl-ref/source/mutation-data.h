@@ -1,4 +1,18 @@
-// mutation_def struct is defined & documented in mutation.h.
+struct mutation_def
+{
+    mutation_type mutation;
+    short       weight;     // Commonality of the mutation; bigger = appears
+                            // more often.
+    short       levels;     // The number of levels of the mutation.
+    mut_flags_type uses;    // Bitfield holding types of effects that grant
+                            // this mutation (MUTFLAG_*)
+    bool        form_based; // A mutation that is suppressed when shapechanged.
+    const char* short_desc; // What appears on the '%' screen.
+    const char* have[3];    // What appears on the 'A' screen.
+    const char* gain[3];    // Message when you gain the mutation.
+    const char* lose[3];    // Message when you lose the mutation.
+    const char* desc;       // A descriptive phrase that can be used in a sentence.
+};
 
 static const mutation_def mut_data[] =
 {
@@ -599,9 +613,9 @@ static const mutation_def mut_data[] =
 { MUT_BLURRY_VISION,                 10,  3,  MUTFLAG_BAD | MUTFLAG_XOM | MUTFLAG_CORRUPT, false,
   "blurry vision",
 
-  {"Your vision is a little blurry.",
-   "Your vision is quite blurry.",
-   "Your vision is extremely blurry."},
+  {"Scrolls take you a little longer to read.",
+   "Scrolls take you longer to read.",
+   "Scrolls take you much longer to read."},
 
   {"Your vision blurs.",
    "Your vision blurs.",

@@ -63,12 +63,6 @@ enum extra_monster_index_type
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
-
-    ZOT_TRAP_MISCAST,
-    HELL_EFFECT_MISCAST,
-    WIELD_MISCAST,
-    MELEE_MISCAST,
-    MISC_MISCAST,
 };
 
 // number of monster attack specs
@@ -84,6 +78,11 @@ enum extra_monster_index_type
 #define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
+#define ITEM_IN_INVENTORY (coord_def(-1, -1))
+#define ITEM_IN_SHOP 32767
+// NON_ITEM + mindex + 1 is used as the item link for monster inventory;
+// make sure we're not colliding with that.
+COMPILE_CHECK(ITEM_IN_SHOP > NON_ITEM + MAX_MONSTERS);
 
 #if NON_ITEM <= MAX_ITEMS
 #error NON_ITEM must be > MAX_ITEMS
@@ -335,8 +334,8 @@ const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
 const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
-const char * const GOZAG_BRIBE_KEY           = "gozag_bribed";
-const char * const GOZAG_PERMABRIBE_KEY      = "gozag_permabribed";
+const char * const NEUTRAL_BRIBE_KEY         = "gozag_bribed";
+const char * const FRIENDLY_BRIBE_KEY        = "gozag_permabribed";
 const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
 
 #define GOZAG_POTION_BASE_MULTIPLIER 25
@@ -344,8 +343,7 @@ const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
 #define GOZAG_SHOP_MOD_MULTIPLIER 20
 #define GOZAG_BRIBE_AMOUNT 3000
 #define GOZAG_MAX_BRIBABILITY 8
-#define GOZAG_MAX_POTIONS 4
-#define GOZAG_MAX_SHOPS 3
+#define GOZAG_MAX_POTIONS 3
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10
@@ -380,5 +378,9 @@ enum mouse_mode
 const int DEFAULT_VIEW_DELAY = 600;
 
 #define PI 3.14159265359f
+
+#ifdef __ANDROID__
+#define ANDROID_ASSETS "ANDROID_ASSETS"
+#endif
 
 #endif

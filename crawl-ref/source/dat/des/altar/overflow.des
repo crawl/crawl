@@ -815,8 +815,9 @@ TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_gozag uniq_altar_gozag
 WEIGHT: 5
 KFEAT:  _ = altar_gozag
+# sort of ruined this joke...
 KFEAT:  O = general shop name:Gozag type:Nutrition suffix:Petition greed:100 \
-        use_all ; potion of porridge | potion of blood q:4
+        use_all ; royal jelly q:3
 TILE:   G = dngn_golden_statue
 FTILE:  _-GO = floor_limestone
 RTILE:  x = wall_sandstone
@@ -1081,7 +1082,7 @@ ENDMAP
 
 NAME:   makhleb_blood_cavern_becter
 TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
-DEPTH:  2-9
+DEPTH:  D:2-9
 : if you.absdepth() < 6 then
 : dgn.delayed_decay(_G, '1', 'human corpse')
 KMONS:  2 = hound
@@ -1114,7 +1115,7 @@ TAGS:   uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
 TAGS:   no_monster_gen
 DEPTH:  D:2-9
 KFEAT:  _ = altar_makhleb
-KMONS:  _ = hound perm_ench:bleeding
+KMONS:  _ = patrolling hound perm_ench:bleeding
 TILE:   c = wall_hall
 SUBST:  y = xx.
 : interest_check(_G)
@@ -1648,7 +1649,6 @@ MAP
 @...   ...@
 ENDMAP
 
-
 NAME: nicolae_ru_awakened_eye
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
 TAGS: no_pool_fixup
@@ -1666,7 +1666,6 @@ MAP
    .ccccccc.
     .......
 ENDMAP
-
 
 # Overgrown and disused, since many pilgrims find Ru's sacrifices too onerous.
 NAME: nicolae_ru_the_path_less_chosen
@@ -1688,7 +1687,6 @@ xriiirxACBx
 xrrrrrxxxxx
 xxxxxxx
 ENDMAP
-
 
 NAME: nicolae_ru_sacrificial_ziggurat
 TAGS: temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
@@ -1734,6 +1732,30 @@ l,......,llc
 @lcccccccccc
 ENDMAP
 
+NAME:   hangedman_ru_absence
+TAGS:   temple_overflow_ru temple_overflow_1 uniq_altar_ru transparent decor
+TAGS:   no_pool_fixup
+DEPTH:  D:2-
+WEIGHT: 5
+KFEAT:  _ = altar_ru
+SUBST:  X : x., x : cxx, b: cbxx, + : W+++, m : mmw
+KMASK:  wW = no_monster_gen
+: interest_check(_G)
+MAP
+......xxxxx......
+..x...........x..
+xxxxxx.....xxxxxx
+..x..x.....x..x..
+..x..x.XxX.x..x..
+.....+..b..+.....
+....xxbbbbbxx....
+.....+..b_.+.....
+..x..x.XxX.m..m..
+..x..x.....m..m..
+xxxxxx.....mmmmmm
+..x...........m..
+......xxxxx......
+ENDMAP
 
 ### Sif Muna overflow altars ##################################################
 
@@ -2094,8 +2116,9 @@ DEPTH:  D:2-, Depths
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
 TAGS:   uniq_altar_xom
 KFEAT:  _ = altar_xom
-MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
-MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
+MONS:   orc; club ego:chaos ident:type / orc; dagger ego:chaos ident:type
+MONS:   orc; spear ego:chaos ident:type / gnoll; club ego:chaos ident:type
+MONS:   gnoll; dagger ego:chaos ident:type / gnoll; spear ego:chaos ident:type
 MONS:   place:D:1-8
 NSUBST: ' = 1:_ / *:.
 SUBST:  . = .:200 ~:10 W:60 w:50 x:80 n:80 v b l Z T U M:20
@@ -2137,11 +2160,11 @@ MAP
 ENDMAP
 
 NAME:    xom_butterflies
-TAGS:    temple_overflow_1 temple_overflow_xom transparent
+TAGS:    temple_overflow_1 temple_overflow_xom transparent patrolling
 KFEAT:   _ = altar_xom
 KITEM:   _ = wand of random effects w:40 / any wand
 COLOUR:  . = random
-SUBST:   . = 11.
+NSUBST:  . = 2: 1/ *: .
 MONS:    butterfly
 : interest_check(_G)
 MAP
@@ -2153,14 +2176,16 @@ ENDMAP
 NAME:    xom_shifter_show
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
 DEPTH:   D:7-
+MONS:    shapeshifter hd:1
 KFEAT:   _ = altar_xom
-FTILE:   ._ = floor_pebble
-COLOUR:  . = random
-NSUBST:  . = 2:1 / 1:> / .
-SUBST:   . = _...
+NSUBST:  . = 2:1 / 1:> / * = _...
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:   > = <
+:  end
 SUBST:   x = bmv
-COLOUR:  . = random
-MONS:    shapeshifter
+KMASK:   .1 = no_trap_gen
+COLOUR:  .1 = random
+FTILE:   ._<>1 = floor_pebble
 MAP
  xxxxxxx
  x.....x

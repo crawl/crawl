@@ -20,6 +20,7 @@
 #include "macro.h"
 #include "maps.h"
 #include "message.h"
+#include "misc.h"
 #include "mgen_data.h"
 #include "mon-death.h"
 #include "mon-pick.h"
@@ -127,23 +128,16 @@ namespace arena
     static bool cycle_random     = false;
     static uint32_t cycle_random_pos = 0;
 
-    static FILE *file = NULL;
+    static FILE *file = nullptr;
     static level_id place(BRANCH_DEPTHS, 1);
 
     static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
         monster_spells &spells(mons->spells);
-        for (monster_spells::iterator it = spells.begin();
-             it != spells.end(); it++)
-        {
-            spell_type sp = it->spell;
-            if (no_summons && spell_typematch(sp, SPTYP_SUMMONING)
-                || no_animate && sp == SPELL_ANIMATE_DEAD)
-            {
-                spells.erase(it);
-                it = spells.begin() - 1;
-            }
-        }
+        erase_if(spells, [&](const mon_spell_slot &t) {
+            return (no_summons && spell_typematch(t.spell, SPTYP_SUMMONING))
+                || (no_animate && t.spell == SPELL_ANIMATE_DEAD);
+        });
     }
 
     static void adjust_monsters()
@@ -158,23 +152,22 @@ namespace arena
 
     static void list_eq(const monster *mon)
     {
-        if (!Options.arena_list_eq || file == NULL)
+        if (!Options.arena_list_eq || file == nullptr)
             return;
 
         vector<int> items;
-
-        for (unsigned int i = 0; i < NUM_MONSTER_SLOTS; i++)
-            if (mon->inv[i] != NON_ITEM)
-                items.push_back(mon->inv[i]);
+        for (short it : mon->inv)
+            if (it != NON_ITEM)
+                items.push_back(it);
 
         if (items.empty())
             return;
 
         fprintf(file, "%s:\n", mon->name(DESC_PLAIN, true).c_str());
 
-        for (unsigned int i = 0; i < items.size(); i++)
+        for (int iidx : items)
         {
-            item_def &item = mitm[items[i]];
+            item_def &item = mitm[iidx];
             fprintf(file, "        %s\n",
                     item.name(DESC_PLAIN, false, true).c_str());
         }
@@ -366,10 +359,9 @@ namespace arena
             }
         }
 
-        const string glyphs = strip_tag_prefix(spec, "ban_glyphs:");
-        for (unsigned int i = 0; i < glyphs.size(); i++)
-            if (!(glyphs[i] & !127))
-                banned_glyphs[static_cast<int>(glyphs[i])] = true;
+        for (unsigned char gly : strip_tag_prefix(spec, "ban_glyphs:"))
+            if (gly < ARRAYSZ(banned_glyphs))
+                banned_glyphs[gly] = true;
 
         vector<string> factions = split_string(" v ", spec);
 
@@ -583,7 +575,7 @@ namespace arena
 
     static void dump_messages()
     {
-        if (!Options.arena_dump_msgs || file == NULL)
+        if (!Options.arena_dump_msgs || file == nullptr)
             return;
 
         vector<string> messages;
@@ -649,16 +641,14 @@ namespace arena
             return;
         }
 
-        for (unsigned int i = 0; i < a_spawners.size(); i++)
+        for (int idx : a_spawners)
         {
-            int idx = a_spawners[i];
             menv[idx].speed_increment *= faction_b.active_members;
             menv[idx].speed_increment /= faction_a.active_members;
         }
 
-        for (unsigned int i = 0; i < b_spawners.size(); i++)
+        for (int idx : b_spawners)
         {
-            int idx = b_spawners[i];
             menv[idx].speed_increment *= faction_a.active_members;
             menv[idx].speed_increment /= faction_b.active_members;
         }
@@ -674,7 +664,7 @@ namespace arena
             if (mon->type == MONS_TEST_SPAWNER)
                 continue;
 
-            MiscastEffect(*mon, mon->mindex(), SPTYP_RANDOM,
+            MiscastEffect(*mon, *mon, WIZARD_MISCAST, SPTYP_RANDOM,
                           random_range(1, 3), "arena miscast", NH_NEVER);
         }
     }
@@ -702,7 +692,7 @@ namespace arena
             return;
         }
 
-        if (file != NULL)
+        if (file != nullptr)
             fflush(file);
 
         cursor_control coff(true);
@@ -891,7 +881,7 @@ namespace arena
             msg = "---------- " + msg + " ----------";
 
         if (was_tied)
-            mpr(msg.c_str());
+            mpr(msg);
         else
             mprf(msg.c_str(),
                  faction_a.won ? faction_a.desc.c_str()
@@ -926,11 +916,11 @@ namespace arena
             game_ended_with_error(error);
         }
 
-        if (file != NULL)
+        if (file != nullptr)
             end(0, false, "Results file already open");
         file = fopen("arena.result", "w");
 
-        if (file != NULL)
+        if (file != nullptr)
         {
             string spec = find_monster_spec();
             fprintf(file, "%s\n", spec.c_str());
@@ -953,15 +943,15 @@ namespace arena
 
     static void global_shutdown()
     {
-        if (file != NULL)
+        if (file != nullptr)
             fclose(file);
 
-        file = NULL;
+        file = nullptr;
     }
 
     static void write_results()
     {
-        if (file != NULL)
+        if (file != nullptr)
         {
             if (Options.arena_dump_msgs || Options.arena_list_eq)
                 fprintf(file, "========================================\n");
@@ -975,12 +965,12 @@ namespace arena
 
     static void write_error(const string &error)
     {
-        if (file != NULL)
+        if (file != nullptr)
         {
             fprintf(file, "err: %s\n", error.c_str());
             fclose(file);
         }
-        file = NULL;
+        file = nullptr;
     }
 
     static void simulate()
@@ -1236,7 +1226,7 @@ void arena_monster_died(monster* mons, killer_type killer,
              && killer == KILL_MISC
              && killer_index == NON_MONSTER))
     {
-        arena::faction *fac = NULL;
+        arena::faction *fac = nullptr;
         if (mons->attitude == ATT_FRIENDLY)
             fac = &arena::faction_a;
         else if (mons->attitude == ATT_HOSTILE)
@@ -1331,9 +1321,8 @@ int arena_cull_items()
 
     vector<int> ammo;
 
-    for (unsigned int i = 0, end = items.size(); i < end; i++)
+    for (int idx : items)
     {
-        const int      idx = items[i];
         const item_def &item(mitm[idx]);
 
         // If the drop time is 0 then this is probably thrown ammo.
@@ -1370,9 +1359,9 @@ int arena_cull_items()
 #ifdef DEBUG_DIAGNOSTICS
     const int count1 = cull_count;
 #endif
-    for (unsigned int i = 0; i < ammo.size(); i++)
+    for (int idx : ammo)
     {
-        DESTROY_ITEM(ammo[i]);
+        DESTROY_ITEM(idx);
         if (cull_count >= cull_target)
             break;
     }

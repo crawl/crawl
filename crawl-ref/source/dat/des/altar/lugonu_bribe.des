@@ -38,7 +38,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Elyvilon="lantern of shadows / book of Necromancy w:5 /\
               book of Death w:5 / book of Unlife w:5",
          Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 /\
-              randbook owner:Lugonu spells:simulacrum|twisted_resurrection \
+              randbook owner:Lugonu spells:simulacrum|cigotuvi's_embrace \
                        numspells:2 /\
               randbook owner:Lugonu spells:animate_dead|sublimation_of_blood \
                        numspells:2",

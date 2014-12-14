@@ -2,7 +2,8 @@
 
 #include "target.h"
 
-#include <math.h>
+#include <cmath>
+#include <utility> // swap
 
 #include "coord.h"
 #include "coordit.h"
@@ -83,7 +84,7 @@ targetter_beam::targetter_beam(const actor *act, int range, zap_type zap,
     beam.ex_size = min_ex_rad;
     beam.aimed_at_spot = true;
 
-    penetrates_targets = beam.is_beam;
+    penetrates_targets = beam.pierce;
     range2 = dist_range(range);
 }
 
@@ -103,13 +104,12 @@ bool targetter_beam::set_aim(coord_def a)
     {
         bolt tempbeam2 = beam;
         tempbeam2.target = origin;
-        for (vector<coord_def>::const_iterator i = path_taken.begin();
-             i != path_taken.end(); ++i)
+        for (auto c : path_taken)
         {
-            if (cell_is_solid(*i) && !tempbeam.can_affect_wall(grd(*i)))
+            if (cell_is_solid(c) && !tempbeam.can_affect_wall(grd(c)))
                 break;
-            tempbeam2.target = *i;
-            if (anyone_there(*i) && !tempbeam.ignores_monster(monster_at(*i)))
+            tempbeam2.target = c;
+            if (anyone_there(c) && !tempbeam.ignores_monster(monster_at(c)))
                 break;
         }
         tempbeam2.use_target_as_pos = true;
@@ -147,24 +147,23 @@ aff_type targetter_beam::is_affected(coord_def loc)
     bool on_path = false;
     coord_def c;
     aff_type current = AFF_YES;
-    for (vector<coord_def>::const_iterator i = path_taken.begin();
-         i != path_taken.end(); ++i)
+    for (auto pc : path_taken)
     {
-        if (cell_is_solid(*i)
-            && !beam.can_affect_wall(grd(*i))
+        if (cell_is_solid(pc)
+            && !beam.can_affect_wall(grd(pc))
             && max_expl_rad > 0)
         {
             break;
         }
 
-        c = *i;
+        c = pc;
         if (c == loc)
         {
             if (max_expl_rad > 0)
                 on_path = true;
-            else if (cell_is_solid(*i))
+            else if (cell_is_solid(pc))
             {
-                bool res = beam.can_affect_wall(grd(*i));
+                bool res = beam.can_affect_wall(grd(pc));
                 if (res)
                     return current;
                 else
@@ -174,9 +173,9 @@ aff_type targetter_beam::is_affected(coord_def loc)
             else
                 return current;
         }
-        if (anyone_there(*i)
+        if (anyone_there(pc)
             && !penetrates_targets
-            && !beam.ignores_monster(monster_at(*i)))
+            && !beam.ignores_monster(monster_at(pc)))
         {
             // We assume an exploding spell will always stop here.
             if (max_expl_rad > 0)
@@ -223,13 +222,10 @@ bool targetter_imb::set_aim(coord_def a)
     if (end == origin)
         return true;
 
-    coord_def c;
     bool first = true;
 
-    for (vector<coord_def>::iterator i = path_taken.begin();
-         i != path_taken.end(); i++)
+    for (auto c : path_taken)
     {
-        c = *i;
         cur_path.push_back(c);
         if (!(anyone_there(c)
               && !beam.ignores_monster((monster_at(c))))
@@ -266,18 +262,14 @@ aff_type targetter_imb::is_affected(coord_def loc)
     if (from_path != AFF_NO)
         return from_path;
 
-    for (vector<coord_def>::const_iterator i = splash.begin();
-         i != splash.end(); ++i)
-    {
-        if (*i == loc)
-            return cell_is_solid(*i) ? AFF_NO : AFF_MAYBE;
-    }
-    for (vector<coord_def>::const_iterator i = splash2.begin();
-         i != splash2.end(); ++i)
-    {
-        if (*i == loc)
-            return cell_is_solid(*i) ? AFF_NO : AFF_TRACER;
-    }
+    for (auto c : splash)
+        if (c == loc)
+            return cell_is_solid(c) ? AFF_NO : AFF_MAYBE;
+
+    for (auto c : splash2)
+        if (c == loc)
+            return cell_is_solid(c) ? AFF_NO : AFF_TRACER;
+
     return AFF_NO;
 }
 
@@ -383,7 +375,7 @@ aff_type targetter_smite::is_affected(coord_def loc)
 }
 
 targetter_fragment::targetter_fragment(const actor* act, int power, int ran) :
-    targetter_smite(act, ran, 1, 1, true, NULL),
+    targetter_smite(act, ran, 1, 1, true, nullptr),
     pow(power)
 {
 }
@@ -396,7 +388,7 @@ bool targetter_fragment::valid_aim(coord_def a)
     bolt tempbeam;
     bool temp;
     if (!setup_fragmentation_beam(tempbeam, pow, agent, a, false,
-                                  true, true, NULL, temp, temp))
+                                  true, true, nullptr, temp, temp))
     {
         return notify_fail("You cannot affect that.");
     }
@@ -412,11 +404,11 @@ bool targetter_fragment::set_aim(coord_def a)
     bool temp;
 
     if (setup_fragmentation_beam(tempbeam, pow, agent, a, false,
-                                 false, true, NULL, temp, temp))
+                                 false, true, nullptr, temp, temp))
     {
         exp_range_min = tempbeam.ex_size;
         setup_fragmentation_beam(tempbeam, pow, agent, a, false,
-                                 true, true, NULL, temp, temp);
+                                 true, true, nullptr, temp, temp);
         exp_range_max = tempbeam.ex_size;
     }
     else
@@ -491,7 +483,7 @@ targetter_cleave::targetter_cleave(const actor* act, coord_def target)
     origin = act->pos();
     aim = target;
     list<actor*> act_targets;
-    get_all_cleave_targets(act, target, act_targets);
+    get_cleave_targets(act, target, act_targets);
     while (!act_targets.empty())
     {
         targets.insert(act_targets.front()->pos());
@@ -555,19 +547,17 @@ bool targetter_cloud::set_aim(coord_def a)
 
     seen.clear();
     queue.clear();
-    queue.push_back(vector<coord_def>());
+    queue.emplace_back();
 
     int placed = 0;
     queue[0].push_back(a);
 
     for (unsigned int d1 = 0; d1 < queue.size() && placed < cnt_max; d1++)
     {
-        unsigned int to_place = queue[d1].size();
-        placed += to_place;
+        placed += queue[d1].size();
 
-        for (unsigned int i = 0; i < to_place; i++)
+        for (coord_def c : queue[d1])
         {
-            coord_def c = queue[d1][i];
             for (adjacent_iterator ai(c); ai; ++ai)
                 if (_cloudable(*ai, avoid_clouds) && !seen.count(*ai))
                 {
@@ -595,11 +585,12 @@ aff_type targetter_cloud::is_affected(coord_def loc)
     if (!valid_aim(aim))
         return AFF_NO;
 
-    map<coord_def, aff_type>::const_iterator it = seen.find(loc);
-    if (it == seen.end() || it->second <= 0) // AFF_TRACER is used privately
-        return AFF_NO;
-
-    return it->second;
+    if (aff_type *aff = map_find(seen, loc))
+    {
+        if (*aff > 0) // AFF_TRACER is used privately
+            return *aff;
+    }
+    return AFF_NO;
 }
 
 targetter_splash::targetter_splash(const actor* act)
@@ -769,7 +760,7 @@ bool targetter_thunderbolt::set_aim(coord_def a)
     coord_def a1 = prev - origin;
     coord_def a2 = aim - origin;
     if (left_of(a2, a1))
-        swapv(a1, a2);
+        swap(a1, a2);
 
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; ++x)
         for (int y = -LOS_RADIUS; y <= LOS_RADIUS; ++y)
@@ -836,28 +827,25 @@ bool targetter_spray::set_aim(coord_def a)
     beams = get_spray_rays(agent, aim, _range, 3);
 
     paths_taken.clear();
-    for (unsigned int i = 0; i < beams.size(); ++i)
-        paths_taken.push_back(beams[i].path_taken);
+    for (const bolt &beam : beams)
+        paths_taken.push_back(beam.path_taken);
 
     return true;
 }
 
 aff_type targetter_spray::is_affected(coord_def loc)
 {
-    coord_def c;
     aff_type affected = AFF_NO;
 
     for (unsigned int n = 0; n < paths_taken.size(); ++n)
     {
         aff_type beam_affect = AFF_YES;
         bool beam_reached = false;
-        for (vector<coord_def>::const_iterator i = paths_taken[n].begin();
-         i != paths_taken[n].end(); ++i)
+        for (auto c : paths_taken[n])
         {
-            c = *i;
             if (c == loc)
             {
-                if (cell_is_solid(*i))
+                if (cell_is_solid(c))
                     beam_affect = AFF_NO;
                 else if (beam_affect != AFF_MAYBE)
                     beam_affect = AFF_YES;
@@ -865,8 +853,8 @@ aff_type targetter_spray::is_affected(coord_def loc)
                 beam_reached = true;
                 break;
             }
-            else if (anyone_there(*i)
-                && !beams[n].ignores_monster(monster_at(*i)))
+            else if (anyone_there(c)
+                     && !beams[n].ignores_monster(monster_at(c)))
             {
                 beam_affect = AFF_MAYBE;
             }
@@ -998,8 +986,6 @@ aff_type targetter_shadow_step::is_affected(coord_def loc)
 // least one valid landing position from the player's perspective.
 bool targetter_shadow_step::set_aim(coord_def a)
 {
-    set<coord_def>::const_iterator site;
-
     if (a == origin)
         return false;
     if (!targetter::set_aim(a))
@@ -1012,10 +998,8 @@ bool targetter_shadow_step::set_aim(coord_def a)
     set_additional_sites(aim);
     if (additional_sites.size())
     {
-        int site_ind = random2(additional_sites.size());
-        for (site = additional_sites.begin(); site_ind > 0; site++)
-            site_ind--;
-        landing_site = *site;
+        auto it = random_iterator(additional_sites);
+        landing_site = *it;
         if (!valid_landing(landing_site, false))
             step_is_blocked = true;
         return true;
@@ -1090,14 +1074,13 @@ bool targetter_explosive_bolt::set_aim(coord_def a)
 
     bolt tempbeam = beam;
     tempbeam.target = origin;
-    for (vector<coord_def>::const_iterator i = path_taken.begin();
-         i != path_taken.end(); ++i)
+    for (auto c : path_taken)
     {
-        if (cell_is_solid(*i))
+        if (cell_is_solid(c))
             break;
 
-        tempbeam.target = *i;
-        if (anyone_there(*i))
+        tempbeam.target = c;
+        if (anyone_there(c))
         {
             tempbeam.use_target_as_pos = true;
             exp_map.init(INT_MAX);
@@ -1112,17 +1095,13 @@ bool targetter_explosive_bolt::set_aim(coord_def a)
 aff_type targetter_explosive_bolt::is_affected(coord_def loc)
 {
     bool on_path = false;
-    coord_def c;
-    for (vector<coord_def>::const_iterator i = path_taken.begin();
-         i != path_taken.end(); ++i)
+    for (auto c : path_taken)
     {
-        if (cell_is_solid(*i))
+        if (cell_is_solid(c))
             break;
-
-        c = *i;
         if (c == loc)
             on_path = true;
-        if (anyone_there(*i)
+        if (anyone_there(c)
             && !beam.ignores_monster(monster_at(c))
             && (loc - c).rdist() <= 9)
         {
@@ -1191,7 +1170,7 @@ bool targetter_cone::set_aim(coord_def a)
     coord_def a1 = l - origin;
     coord_def a2 = r - origin;
     if (left_of(a2, a1))
-        swapv(a1, a2);
+        swap(a1, a2);
 
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; ++x)
         for (int y = -LOS_RADIUS; y <= LOS_RADIUS; ++y)
@@ -1230,11 +1209,15 @@ aff_type targetter_cone::is_affected(coord_def loc)
     return zapped[loc];
 }
 
-targetter_shotgun::targetter_shotgun(const actor* act, int range)
+targetter_shotgun::targetter_shotgun(const actor* act, size_t beam_count,
+                                     int range)
 {
     ASSERT(act);
     agent = act;
     origin = act->pos();
+    num_beams = beam_count;
+    for (size_t i = 0; i < num_beams; i++)
+        rays.emplace_back();
     range2 = dist_range(range);
 }
 
@@ -1254,7 +1237,6 @@ bool targetter_shotgun::valid_aim(coord_def a)
 bool targetter_shotgun::set_aim(coord_def a)
 {
     zapped.clear();
-    rays.init(ray_def());
 
     if (!targetter::set_aim(a))
         return false;
@@ -1264,13 +1246,16 @@ bool targetter_shotgun::set_aim(coord_def a)
     coord_def p;
     bool hit = false;
 
-    const double spread_range = PI / 4.0;
-    for (int i = 0; i < SHOTGUN_BEAMS; i++)
+    const double spread_range = (double)(num_beams - 1) * PI / 40.0;
+    for (size_t i = 0; i < num_beams; i++)
     {
         hit = true;
-        double spread = -(spread_range / 2.0)
-                        + (spread_range * (double)i)
-                                        / (double)(SHOTGUN_BEAMS - 1);
+        double spread = (num_beams == 1)
+                        ? 0.0
+                        : -(spread_range / 2.0)
+                          + (spread_range * (double)i)
+                                          / (double)(num_beams - 1);
+        rays[i] = ray_def();
         rays[i].r.start = orig_ray.r.start;
         rays[i].r.dir.x =
              orig_ray.r.dir.x * cos(spread) + orig_ray.r.dir.y * sin(spread);
@@ -1297,9 +1282,9 @@ aff_type targetter_shotgun::is_affected(coord_def loc)
     if ((loc - origin).abs() > range2)
         return AFF_NO;
 
-    return (zapped[loc] >= SHOTGUN_BEAMS) ? AFF_YES :
-           (zapped[loc] > 0)              ? AFF_MAYBE
-                                          : AFF_NO;
+    return (zapped[loc] >= num_beams) ? AFF_YES :
+           (zapped[loc] > 0)          ? AFF_MAYBE
+                                      : AFF_NO;
 }
 
 targetter_list::targetter_list(vector<coord_def> target_list, coord_def center)
@@ -1310,13 +1295,8 @@ targetter_list::targetter_list(vector<coord_def> target_list, coord_def center)
 
 aff_type targetter_list::is_affected(coord_def loc)
 {
-    for (unsigned int i = 0; i < targets.size(); ++i)
-    {
-        if (targets[i] == loc)
-            return AFF_YES;
-    }
-
-    return AFF_NO;
+    return find(begin(targets), end(targets), loc) == end(targets) ? AFF_NO
+                                                                   : AFF_YES;
 }
 
 bool targetter_list::valid_aim(coord_def a)

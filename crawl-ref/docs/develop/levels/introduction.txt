@@ -88,12 +88,13 @@ making, look at the following files:
 
   dat/des/variable
     float.des - floating vaults
-    large.des - all regular vaults which have ORIENT:encompass/northwest etc
+    large_abstract.des - all regular vaults which have
+    large_themed.des   - ORIENT:encompass/northwest etc
     mini.des  - minivaults (no ORIENT line at all)
 
 There are also the following other directories:
 
-  dat/des/branches - contains vaults for special branches
+  dat/des/branches - contains vaults for specific branches
   dat/des/portals  - contains all maps and lua for portal vaults
   dat/des/builder  - uniques.des etc.; look, don't touch
 
@@ -282,7 +283,7 @@ above (and preferably in wizard mode).
 
 In wizmode, you can use the following commands
     &L "map name"   (creates that vault on the current level)
-    &P "map name"   (for playtesting portal vaults)
+    &P "map name"   (creates a level with that vault guaranteed to be in it)
     &~              (for jumping to a branch end).
 For both &L and &P, you don't need to specify the full name of the vault,
 a substring which uniquely determines the vault is enough. If a branch end

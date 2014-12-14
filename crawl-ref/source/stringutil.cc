@@ -54,13 +54,11 @@ string &lowercase(string &s)
 
 string &uppercase(string &s)
 {
-    for (unsigned i = 0, sz = s.size(); i < sz; ++i)
-        s[i] = toupper(s[i]);
+    for (char &ch : s)
+        ch = toupper(ch);
 
     return s;
 }
-
-
 
 // Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
 // MSVC crt) supporting letters that expand or contract, like German ß (-> SS)

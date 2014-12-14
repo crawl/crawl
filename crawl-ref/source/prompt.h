@@ -11,7 +11,7 @@ typedef map<int, int> explicit_keymap;
 bool yesno(const char * str, bool safe, int safeanswer,
            bool clear_after = true, bool interrupt_delays = true,
            bool noprompt = false,
-           const explicit_keymap *map = NULL,
+           const explicit_keymap *map = nullptr,
            GotoRegion = GOTO_MSG);
 
 int yesnoquit(const char* str, bool safe = true, int safeanswer = 0,

@@ -53,14 +53,16 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
                                            && testbits(mon->flags, MF_SEEN));
     lowercase(name);
 
-    for (unsigned i = 0; i < Options.auto_exclude.size(); ++i)
-        if (Options.auto_exclude[i].matches(name)
+    for (const text_pattern &pat : Options.auto_exclude)
+    {
+        if (pat.matches(name)
             && _mon_needs_auto_exclude(mon, sleepy)
             && (mon->attitude == ATT_HOSTILE
                 || mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
         {
             return true;
         }
+    }
 
     return false;
 }
@@ -217,7 +219,7 @@ void exclude_set::clear()
 
 void exclude_set::erase(const coord_def &p)
 {
-    exclude_set::iterator it = exclude_roots.find(p);
+    auto it = exclude_roots.find(p);
 
     if (it == exclude_roots.end())
         return;
@@ -297,12 +299,7 @@ bool exclude_set::is_exclude_root(const coord_def &p) const
 
 travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
 {
-    exclude_set::iterator it = exclude_roots.find(p);
-
-    if (it != exclude_roots.end())
-        return &it->second;
-
-    return NULL;
+    return map_find(exclude_roots, p);
 }
 
 size_t exclude_set::size() const
@@ -339,10 +336,9 @@ exclude_set::iterator exclude_set::end()
 
 static void _mark_excludes_non_updated(const coord_def &p)
 {
-    for (exclude_set::iterator it = curr_excludes.begin();
-         it != curr_excludes.end(); ++it)
+    for (auto &entry : curr_excludes)
     {
-        travel_exclude &ex = it->second;
+        travel_exclude &ex = entry.second;
         ex.uptodate = ex.uptodate && !ex.in_bounds(p);
     }
 }
@@ -363,8 +359,8 @@ void update_exclusion_los(vector<coord_def> changed)
     if (changed.empty())
         return;
 
-    for (unsigned int i = 0; i < changed.size(); ++i)
-        _mark_excludes_non_updated(changed[i]);
+    for (coord_def c : changed)
+        _mark_excludes_non_updated(c);
 
     curr_excludes.update_excluded_points(true);
 }
@@ -435,9 +431,8 @@ void deferred_exclude_update()
 {
     _exclude_update();
 #ifdef USE_TILE
-    exclude_set::iterator it;
-    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
-        _tile_exclude_gmap_update(it->second.pos);
+    for (const auto &entry : curr_excludes)
+        _tile_exclude_gmap_update(entry.second.pos);
 #endif
 }
 
@@ -454,8 +449,8 @@ void clear_excludes()
     clear_level_exclusion_annotation();
 
 #ifdef USE_TILE
-    for (exclude_set::iterator it = excludes.begin(); it != excludes.end(); ++it)
-        _tile_exclude_gmap_update(it->second.pos);
+    for (const auto &entry : excludes)
+        _tile_exclude_gmap_update(entry.second.pos);
 #endif
 
     _exclude_update();
@@ -465,13 +460,12 @@ static void _exclude_gate(const coord_def &p, bool del = false)
 {
     set<coord_def> all_doors;
     find_connected_identical(p, all_doors);
-    for (set<coord_def>::const_iterator dc = all_doors.begin();
-         dc != all_doors.end(); ++dc)
+    for (const auto &dc : all_doors)
     {
         if (del)
-            del_exclude(*dc);
+            del_exclude(dc);
         else
-            set_exclude(*dc, 0);
+            set_exclude(dc, 0);
     }
 }
 
@@ -597,18 +591,17 @@ string exclude_set::get_exclusion_desc()
 {
     vector<string> desc;
     int count_other = 0;
-    for (exclmap::iterator it = exclude_roots.begin();
-         it != exclude_roots.end(); ++it)
+    for (auto &entry : exclude_roots)
     {
-        travel_exclude &ex = it->second;
+        travel_exclude &ex = entry.second;
 
         // Don't count cloud exclusions.
         if (strstr(ex.desc.c_str(), "cloud"))
             continue;
 
         // Don't duplicate if there's already an annotation from unique monsters.
-        set<pair<string, level_id> >::iterator ma
-            = auto_unique_annotations.find(pair<string, level_id>(ex.desc, level_id::current()));
+        auto ma = auto_unique_annotations.find(make_pair(ex.desc,
+                                                         level_id::current()));
         if (ma != auto_unique_annotations.end())
             continue;
 
@@ -684,12 +677,11 @@ string exclude_set::get_exclusion_desc()
 void marshallExcludes(writer& outf, const exclude_set& excludes)
 {
     marshallShort(outf, excludes.size());
-    exclude_set::const_iterator it;
     if (excludes.size())
     {
-        for (it = excludes.begin(); it != excludes.end(); ++it)
+        for (const auto &entry : excludes)
         {
-            const travel_exclude &ex = it->second;
+            const travel_exclude &ex = entry.second;
             marshallCoord(outf, ex.pos);
             marshallShort(outf, ex.radius);
             marshallBoolean(outf, ex.autoex);

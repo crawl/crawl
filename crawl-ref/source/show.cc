@@ -577,8 +577,8 @@ void show_init(bool terrain_only)
     }
 
     // Need to clear these update flags now so they don't persist.
-    for (unsigned int i = 0; i < update_locs.size(); i++)
-        env.map_knowledge(update_locs[i]).flags &= ~MAP_INVISIBLE_UPDATE;
+    for (coord_def loc : update_locs)
+        env.map_knowledge(loc).flags &= ~MAP_INVISIBLE_UPDATE;
 }
 
 // Emphasis may change while off-level (precisely, after
@@ -593,7 +593,7 @@ void show_update_emphasis()
     // stairs are now known. (see is_unknown_stair(), emphasise())
     LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
     vector<stair_info> stairs = level_info.get_stairs();
-    for (unsigned i = 0; i < stairs.size(); ++i)
-        if (stairs[i].destination.is_valid())
-            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
+    for (const stair_info &stair : stairs)
+        if (stair.destination.is_valid())
+            env.map_knowledge(stair.position).flags &= ~MAP_EMPHASIZE;
 }

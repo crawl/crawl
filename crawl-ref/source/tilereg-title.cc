@@ -79,6 +79,10 @@ void TitleRegion::run()
 {
     mouse_control mc(MOUSE_MODE_MORE);
     getchm();
+    // XXX Figure out why, during the title, the first call to
+    // TilesFramework::getch_ck() through getchm() is returning -10000 before
+    // any real keyboard input.
+    getchm();
 }
 
 /**

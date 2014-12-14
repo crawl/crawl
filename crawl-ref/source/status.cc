@@ -10,6 +10,7 @@
 #include "evoke.h"
 #include "food.h"
 #include "godabil.h"
+#include "itemprop.h"
 #include "mutation.h"
 #include "options.h"
 #include "player-stats.h"
@@ -41,7 +42,7 @@ static const duration_def* _lookup_duration(duration_type dur)
 {
     ASSERT_RANGE(dur, 0, NUM_DURATIONS);
     if (duration_index[dur] == -1)
-        return NULL;
+        return nullptr;
     else
         return &duration_data[duration_index[dur]];
 }
@@ -53,7 +54,7 @@ const char *duration_name(duration_type dur)
 
 bool duration_dispellable(duration_type dur)
 {
-    return _lookup_duration(dur)->dispellable;
+    return _lookup_duration(dur)->duration_has_flag(D_DISPELLABLE);
 }
 
 static void _reset_status_info(status_info* inf)
@@ -125,7 +126,7 @@ static bool _fill_inf_from_ddef(duration_type dur, status_info* inf)
     inf->light_text   = ddef->light_text;
     inf->short_text   = ddef->short_text;
     inf->long_text    = ddef->long_text;
-    if (ddef->expire)
+    if (ddef->duration_has_flag(D_EXPIRES))
     {
         inf->light_colour = _dur_colour(inf->light_colour, dur_expiring(dur));
         _mark_expiring(inf, dur_expiring(dur));
@@ -381,6 +382,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_BONE_ARMOUR:
+        if (you.attribute[ATTR_BONE_ARMOUR] > 0)
+        {
+            inf->short_text = "corpse armour";
+            inf->long_text = "You are enveloped in carrion and bones.";
+        }
+        break;
+
     case STATUS_CONSTRICTED:
         if (you.is_constricted())
         {
@@ -538,7 +547,7 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_BRIBE:
     {
         int bribe = 0;
-        vector<string> places;
+        vector<const char *> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
             if (branch_bribe[i] > 0)
@@ -607,6 +616,16 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_colour =
                 is_damaging_cloud(cloud, true, cloud_is_yours_at(you.pos())) ? LIGHTRED : DARKGREY;
         }
+        break;
+    }
+
+    case DUR_CLEAVE:
+    {
+        const item_def* weapon = you.weapon();
+
+        if (weapon && item_attack_skill(*weapon) == SK_AXES)
+            inf->light_colour = DARKGREY;
+
         break;
     }
 

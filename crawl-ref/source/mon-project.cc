@@ -8,10 +8,11 @@
 #include "mon-project.h"
 
 #include <cmath>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "cloud.h"
 #include "directn.h"
@@ -119,22 +120,97 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     return SPRET_SUCCESS;
 }
 
-void cast_iood_burst(int pow, coord_def target)
+/**
+ * Find a target for a bursty (non-player-targeted) IOOD.
+ *
+ * Try to find an enemy that's at a reasonable angle from the angle the IOOD
+ * is fired at, preferring the given foe (if a non-MHITNOT foe is given) if
+ * they're valid, and otherwise preferring the closest valid foe.
+ *
+ * @param angle             The angle that the IOOD will be fired at, relative
+ *                          to the player's position.
+ * @param preferred_foe     The mindex of a target to choose if possible; may
+ *                          be MHITNOT (no preferred target)
+ * @return                  The mindex of a valid target for the IOOD.
+ */
+static int _burst_iood_target(double iood_angle, int preferred_foe)
 {
-    int foe = MHITNOT;
-    if (const monster* mons = monster_at(target))
+    int closest_foe = MHITNOT;
+    int closest_dist = INT_MAX;
+
+    for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
     {
-        if (mons && you.can_see(mons))
-            foe = mons->mindex();
+        const monster* m = *mi;
+        ASSERT(m);
+
+        if (!you.can_see(m) || mons_is_projectile(m))
+            continue;
+
+        // is this position at a valid angle?
+        const coord_def delta = mi->pos() - you.pos();
+        const double angle = atan2(delta.x, delta.y);
+        const double abs_angle_diff = abs(angle - fmod(iood_angle, PI * 2));
+        const double angle_diff = (abs_angle_diff > PI) ?
+                                        2 * PI - abs_angle_diff :
+                                        abs_angle_diff;
+        if (angle_diff >= PI / 3)
+        {
+            dprf("can't target %s; angle diff %f",
+                 m->name(DESC_PLAIN).c_str(), angle_diff);
+            continue;
+        }
+
+        // if preferred foe is valid, choose it.
+        if (m->mindex() == preferred_foe)
+        {
+            dprf("preferred target %s is valid burst target (delta %f)",
+                 m->name(DESC_PLAIN).c_str(), angle_diff);
+            return preferred_foe;
+        }
+
+        if (mons_aligned(m, &you) || mons_is_firewood(m))
+        {
+            dprf("skipping invalid burst target %s (%s)",
+                 m->name(DESC_PLAIN).c_str(),
+                 mons_aligned(m, &you) ? "aligned" : "firewood");
+            continue;
+        }
+
+        const int dist = grid_distance(m->pos(), you.pos());
+        // on distance ties, bias by iterator order (mindex)
+        if (dist >= closest_dist)
+        {
+            dprf("%s not closer to target than closest (%d vs %d)",
+                 m->name(DESC_PLAIN).c_str(), dist, closest_dist);
+            continue;
+        }
+
+        dprf("%s is valid burst target (delta %f, dist %d)",
+             m->name(DESC_PLAIN).c_str(), angle_diff, dist);
+        closest_dist = dist;
+        closest_foe = m->mindex();
     }
 
-    int n_orbs = random_range(3, 7);
+    const int foe = closest_foe != MHITNOT ? closest_foe : preferred_foe;
+    dprf("targeting %d", foe);
+    return foe;
+}
+
+void cast_iood_burst(int pow, coord_def target)
+{
+    const monster* mons = monster_at(target);
+    const int preferred_foe = mons && you.can_see(mons) ?
+                                                            mons->mindex() :
+                                                            MHITNOT;
+
+    const int n_orbs = random_range(3, 7);
     dprf("Bursting %d orbs.", n_orbs);
-    double angle0 = random2(2097152) * PI / 1048576;
+    const double angle0 = random2(2097152) * PI * 2 / 2097152;
 
     for (int i = 0; i < n_orbs; i++)
     {
-        double angle = angle0 + i * PI * 2 / n_orbs;
+        const double angle = angle0 + i * PI * 2 / n_orbs;
+        const int foe = _burst_iood_target(angle, preferred_foe);
         cast_iood(&you, pow, 0, sin(angle), cos(angle), foe);
     }
 }
@@ -222,10 +298,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
                                + victim->name(DESC_THE) + "!").c_str());
 
         int dam = victim->apply_ac(roll_dice(3, 20));
-        if (victim->is_player())
-            ouch(dam, KILLED_BY_ROLLING, mon.mid);
-        else
-            victim->hurt(&mon, dam);
+        victim->hurt(&mon, dam, BEAM_MISSILE, KILLED_BY_ROLLING);
     }
 
     noisy(5, pos);
@@ -487,16 +560,9 @@ move_again:
         if (mons && (mons->submerged() || mons->type == MONS_BATTLESPHERE))
         {
             // Try to swap with the submerged creature.
-            if (mons->is_habitable(mon.pos()))
+            if (mon.swap_with(mons))
             {
                 dprf("iood: Swapping with a submerged monster.");
-                mons->set_position(mon.pos());
-                mon.set_position(pos);
-                ASSERT(!mons->is_constricted());
-                ASSERT(!mons->is_constricting());
-                mgrd(mons->pos()) = mons->mindex();
-                mgrd(pos) = mon.mindex();
-
                 return false;
             }
             else // if swap fails, move ahead

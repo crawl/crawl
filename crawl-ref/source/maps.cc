@@ -502,14 +502,12 @@ static bool _connected_minivault_place(const coord_def &c,
 
 coord_def find_portal_place(const vault_placement *place, bool check_place)
 {
-    vector<map_marker*> markers = env.markers.get_all(MAT_LUA_MARKER);
     vector<coord_def> candidates;
-    for (vector<map_marker*>::iterator it = markers.begin();
-         it != markers.end(); it++)
+    for (auto marker : env.markers.get_all(MAT_LUA_MARKER))
     {
-        if ((*it)->property("portal") != "")
+        if (marker->property("portal") != "")
         {
-            coord_def v1((*it)->pos);
+            coord_def v1(marker->pos);
             if ((!check_place
                   || place && map_place_valid(place->map, v1, place->size))
                 && (!place || _connected_minivault_place(v1, *place))
@@ -670,12 +668,11 @@ static bool _map_matches_layout_type(const map_def &map)
         return true;
     }
 
-    for (string_set::const_iterator i = env.level_layout_types.begin();
-         i != env.level_layout_types.end(); ++i)
+    for (const auto &layout : env.level_layout_types)
     {
-        if (map.has_tag("layout_" + *i))
+        if (map.has_tag("layout_" + layout))
             return true;
-        else if (map.has_tag("nolayout_" + *i))
+        else if (map.has_tag("nolayout_" + layout))
             return false;
     }
 
@@ -692,28 +689,28 @@ static bool _map_matches_species(const map_def &map)
 
 const map_def *find_map_by_name(const string &name)
 {
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (vdefs[i].name == name)
-            return &vdefs[i];
+    for (const map_def &mapdef : vdefs)
+        if (mapdef.name == name)
+            return &mapdef;
 
-    return NULL;
+    return nullptr;
 }
 
 // Discards Lua code loaded by all maps to reduce memory use. If any stripped
 // map is reused, its data will be reloaded from the .dsc
 void strip_all_maps()
 {
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        vdefs[i].strip();
+    for (map_def &mapdef : vdefs)
+        mapdef.strip();
 }
 
 vector<string> find_map_matches(const string &name)
 {
     vector<string> matches;
 
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (vdefs[i].name.find(name) != string::npos)
-            matches.push_back(vdefs[i].name);
+    for (const map_def &mapdef : vdefs)
+        if (mapdef.name.find(name) != string::npos)
+            matches.push_back(mapdef.name);
     return matches;
 }
 
@@ -724,9 +721,8 @@ mapref_vector find_maps_for_tag(const string tag,
     mapref_vector maps;
     level_id place = level_id::current();
 
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+    for (const map_def &mapdef : vdefs)
     {
-        const map_def &mapdef = vdefs[i];
         if (mapdef.has_tag(tag)
             && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
@@ -1047,15 +1043,12 @@ _random_chance_maps_in_list(const map_selector &sel,
     typedef set<string> tag_set;
     tag_set chance_tags;
 
-    for (unsigned f = 0, size = filtered.size(); f < size; ++f)
-    {
-        const int i = filtered[f];
+    for (const int i : filtered)
         if (!sel.ignore_chance
             && _vault_chance_new(vdefs[i], sel.place, chance_tags))
         {
             chance.push_back(&vdefs[i]);
         }
-    }
 
     for (vault_chance_roll_iterator vc(chance); vc; ++vc)
         if (const map_def *chosen = _resolve_chance_vault(sel, *vc))
@@ -1071,7 +1064,7 @@ static const map_def *
 _random_map_in_list(const map_selector &sel,
                     const vault_indices &filtered)
 {
-    const map_def *chosen_map = NULL;
+    const map_def *chosen_map = nullptr;
     int rollsize = 0;
 
     // First build a list of vaults that could be used:
@@ -1083,9 +1076,8 @@ _random_map_in_list(const map_selector &sel,
     typedef set<string> tag_set;
     tag_set chance_tags;
 
-    for (unsigned f = 0, size = filtered.size(); f < size; ++f)
+    for (auto i : filtered)
     {
-        const int i = filtered[f];
         if (!sel.ignore_chance && vdefs[i].chance(sel.place).valid())
         {
             if (_vault_chance_new(vdefs[i], sel.place, chance_tags))
@@ -1105,11 +1097,9 @@ _random_map_in_list(const map_selector &sel,
     if (!chosen_map)
     {
         const level_id &here(level_id::current());
-        for (mapref_vector::const_iterator i = eligible.begin();
-             i != eligible.end(); ++i)
+        for (auto map : eligible)
         {
-            const map_def &map(**i);
-            const int weight = map.weight(here);
+            const int weight = map->weight(here);
 
             if (weight <= 0)
                 continue;
@@ -1117,14 +1107,14 @@ _random_map_in_list(const map_selector &sel,
             rollsize += weight;
 
             if (rollsize && x_chance_in_y(weight, rollsize))
-                chosen_map = &map;
+                chosen_map = map;
         }
     }
 
     if (!sel.preserve_dummy && chosen_map
         && chosen_map->has_tag("dummy"))
     {
-        chosen_map = NULL;
+        chosen_map = nullptr;
     }
 
     sel.announce(chosen_map);
@@ -1526,7 +1516,7 @@ void run_map_global_preludes()
         dlua_chunk &chunk = global_preludes[i];
         if (!chunk.empty())
         {
-            if (chunk.load_call(dlua, NULL))
+            if (chunk.load_call(dlua, nullptr))
                 mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
         }
     }
@@ -1586,12 +1576,7 @@ static weighted_map_names _find_random_vaults(
             map_counts[map->name]++;
     }
 
-    for (map_count_t::const_iterator i = map_counts.begin();
-         i != map_counts.end(); ++i)
-    {
-        wms.push_back(*i);
-    }
-
+    wms.insert(wms.end(), map_counts.begin(), map_counts.end());
     return wms;
 }
 

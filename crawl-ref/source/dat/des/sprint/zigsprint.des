@@ -86,7 +86,7 @@ function setup_room(e, id)
     e.tile("X = wall_stone_white")
 
     -- Create items
-    e.kitem("1 = superb_item ident:all w:590 / potion of porridge ident:all w:2 /\
+e.kitem("1 = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
             wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
             potion of heal wounds ident:all q:2 w:2 / scroll of recharging ident:all w:1 /\
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
@@ -122,7 +122,7 @@ function choose_mset_1(e)
     e.kmons("1 = ball python / adder / water moccasin w:5 / naga w:2")
 -- Lair
   elseif rnd < 29 then
-    e.kmons("1 = green rat / sheep / iguana / porcupine / yak w:5 /\
+    e.kmons("1 = river rat / sheep / iguana / porcupine / yak w:5 /\
                jackal / wolf w:5 / giant frog w:5")
 -- Spider
   elseif rnd < 39 then
@@ -212,7 +212,7 @@ function choose_mset_2(e)
                black mamba w:5 / naga mage w:5")
 -- Lair
   elseif rnd < 29 then
-    e.kmons("1 =  green rat / sheep / iguana / porcupine / yak /\
+    e.kmons("1 =  river rat / sheep / iguana / porcupine / yak /\
                jackal / wolf / giant frog / spiny frog w:5 /\
                komodo dragon w:5 / basilisk w:5 / place:Lair:1 w:30")
 -- Spider
@@ -714,6 +714,7 @@ KFEAT:  r = altar_cheibriados
 KFEAT:  s = altar_dithmenos
 KFEAT:  t = altar_gozag
 KFEAT:  u = altar_qazlal
+KFEAT:  v = altar_ru
 KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
@@ -814,9 +815,9 @@ d..JE.....S...m
 ^...D..M..P...^
 c......L..O...n
 ^...C..K..N...^
-b...B.........o
+b...B.{.......o
 ^.............^
-a^r^t^{^u^s^q^p
+a^r^t^v^u^s^q^p
 ENDMAP
 
 NAME:  room_1

@@ -17,7 +17,7 @@
 
 void add_uncancel(uncancellable_type kind, int arg)
 {
-    you.uncancel.push_back(pair<uncancellable_type, int>(kind, arg));
+    you.uncancel.emplace_back(kind, arg);
 }
 
 static bool running = false;

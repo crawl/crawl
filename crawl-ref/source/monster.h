@@ -51,7 +51,8 @@ public:
 
     unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour
-    union {
+    union
+    {
         unsigned int number;   ///< General purpose number variable
         int blob_size;         ///< # of slimes/masses in this one
         int num_heads;         ///< Hydra-like head number
@@ -66,6 +67,7 @@ public:
         mid_t tentacle_connect;///< mid of monster this tentacle is
                                //   connected to: for segments, this is the
                                //   tentacle; for tentacles, the head.
+        int countdown;         ///< Actions till singularity dies.
     };
     int           colour;
     mid_t         summoner;
@@ -115,7 +117,7 @@ public:
 
     void mark_summoned(int longevity, bool mark_items_summoned,
                        int summon_type = 0, bool abj = true);
-    bool is_summoned(int* duration = NULL, int* summon_type = NULL) const;
+    bool is_summoned(int* duration = nullptr, int* summon_type = nullptr) const;
     bool is_perm_summoned() const;
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
@@ -125,7 +127,9 @@ public:
     bool self_destructs();
 
     void moveto(const coord_def& c, bool clear_net = true);
-    bool move_to_pos(const coord_def &newpos, bool clear_net = true);
+    bool move_to_pos(const coord_def &newpos, bool clear_net = true,
+                     bool force = false);
+    bool swap_with(monster* other);
     bool blink_to(const coord_def& c, bool quiet = false);
     bool blink_to(const coord_def& c, bool quiet, bool jump);
     kill_category kill_alignment() const;
@@ -174,6 +178,7 @@ public:
     bool gain_exp(int exp, int max_levels_to_gain = 2);
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
+    void maybe_degrade_bone_armour();
 
     void forget_random_spell();
 
@@ -184,7 +189,7 @@ public:
 
     bool can_drink_potion(potion_type ptype) const;
     bool should_drink_potion(potion_type ptype) const;
-    item_type_id_state_type drink_potion_effect(potion_type pot_eff);
+    item_type_id_state_type drink_potion_effect(potion_type pot_eff, bool card = false);
 
     bool can_evoke_jewellery(jewellery_type jtype) const;
     bool should_evoke_jewellery(jewellery_type jtype) const;
@@ -243,15 +248,16 @@ public:
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
     random_var  attack_delay(const item_def *weapon,
-                             const item_def *projectile = NULL,
-                             bool random = true, bool scaled = true) const;
+                             const item_def *projectile = nullptr,
+                             bool random = true, bool scaled = true,
+                             bool /*shield*/ = true) const;
     int         has_claws(bool allow_tran = true) const;
 
     int wearing(equipment_type slot, int type, bool calc_unid = true) const;
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
     int scan_artefacts(artefact_prop_type which_property,
                        bool calc_unid = true,
-                       vector<item_def> *_unused_matches = NULL) const;
+                       vector<item_def> *_unused_matches = nullptr) const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
     item_def *mslot_item(mon_inv_type sl) const;
@@ -313,9 +319,9 @@ public:
     string full_name(description_level_type type, bool use_comma = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
     string conj_verb(const string &verb) const;
-    string hand_name(bool plural, bool *can_plural = NULL) const;
-    string foot_name(bool plural, bool *can_plural = NULL) const;
-    string arm_name(bool plural, bool *can_plural = NULL) const;
+    string hand_name(bool plural, bool *can_plural = nullptr) const;
+    string foot_name(bool plural, bool *can_plural = nullptr) const;
+    string arm_name(bool plural, bool *can_plural = nullptr) const;
 
     bool fumbles_attack();
     bool cannot_fight() const;
@@ -363,7 +369,7 @@ public:
     int res_cold() const;
     int res_elec() const;
     int res_poison(bool temp = true) const;
-    int res_rotting(bool temp = true) const;
+    int res_rotting(bool /*temp*/ = true) const;
     bool res_asphyx() const;
     int res_water_drowning() const;
     bool res_sticky_flame() const;
@@ -372,7 +378,7 @@ public:
     bool res_torment() const;
     int res_acid(bool calc_unid = true) const;
     bool res_wind() const;
-    bool res_petrify(bool temp = true) const;
+    bool res_petrify(bool /*temp*/ = true) const;
     int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true,
@@ -454,7 +460,7 @@ public:
     int melee_evasion(const actor* /*attacker*/, ev_ignore_type evit) const;
 
     bool poison(actor *agent, int amount = 1, bool force = false);
-    bool sicken(int strength, bool unused = true, bool quiet = false);
+    bool sicken(int strength);
     bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str, string source = "");
     void petrify(actor *, bool force = false);
@@ -463,11 +469,14 @@ public:
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
-    void splash_with_acid(const actor* evildoer, int acid_strength = -1,
-                          bool allow_corrosion = true,
-                          const char* hurt_msg = NULL);
+    void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
+                          bool /*allow_corrosion*/ = true,
+                          const char* /*hurt_msg*/ = nullptr);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
+             kill_method_type kill_type = KILLED_BY_MONSTER,
+             string source = "",
+             string aux = "",
              bool cleanup_dead = true,
              bool attacker_effects = true);
     bool heal(int amount, bool max_too = false);
@@ -497,16 +506,16 @@ public:
 
     // Combat-related class methods
     int     unadjusted_body_armour_penalty() const { return 0; }
-    int     adjusted_body_armour_penalty(int, bool) const { return 0; }
+    int     adjusted_body_armour_penalty(int) const { return 0; }
     int     adjusted_shield_penalty(int) const { return 0; }
     int     armour_tohit_penalty(bool, int) const { return 0; }
     int     shield_tohit_penalty(bool, int) const { return 0; }
 
     bool is_player() const { return false; }
     monster* as_monster() { return this; }
-    player* as_player() { return NULL; }
+    player* as_player() { return nullptr; }
     const monster* as_monster() const { return this; }
-    const player* as_player() const { return NULL; }
+    const player* as_player() const { return nullptr; }
 
     // Hacks, with a capital H.
     void check_speed();
@@ -578,7 +587,8 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
-    bool search_spells(function<bool (const mon_spell_slot)> func) const;
+    bool search_slots(function<bool (const mon_spell_slot &)> func) const;
+    bool search_spells(function<bool (spell_type)> func) const;
 };
 
 #endif

@@ -18,7 +18,7 @@ bool is_vowel(const ucs_t chr);
 string pluralise(const string &name,
                  const char * const stock_plural_quals[]
                      = standard_plural_qualifiers,
-                 const char *no_of[] = NULL);
+                 const char *no_of[] = nullptr);
 string apostrophise(const string &name);
 string apostrophise_fixup(const string &msg);
 string conjugate_verb(const string &verb, bool plural);

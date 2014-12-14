@@ -967,6 +967,7 @@ SUBST:   F = 3
 ITEM:    disc of storms, fan of gales, staff of air, book of the sky
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
+KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
@@ -975,6 +976,7 @@ SUBST:   w = l
 SUBST:   W = l..
 : else
 MONS:    fire giant, fire dragon
+KMONS:   F = salamander firebrand
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
@@ -1086,7 +1088,7 @@ KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
         randart arbalest ego:chaos | hunting sling | shortbow | arbalest | \
         nothing w:15 . sling bullet | arrow | bolt . \
         lightning rod w:6 | rod of shadows w:4 | rod of the swarm w:4 | \
-        rod of destruction w:2 | rod of striking w:6 | wand of hasting w:16 | \
+        rod of destruction w:2 | iron rod w:6 | wand of hasting w:16 | \
         wand of confusion | wand of random effects w:6 | \
         wand of polymorph w:6 | any wand w:28 | any rod w:2 | \
         scroll of summoning w:45 . randart ring mail | \
@@ -1666,7 +1668,7 @@ KFEAT: _ = altar_xom / altar_lugonu / altar_zin / altar_the_shining_one / \
 SUBST: 1 = 1.
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
-KITEM: Z = randbook spells:summon_demon|fireball|twisted_resurrection|airstrike title:the_Zealot
+KITEM: Z = randbook spells:summon_demon|fireball|animate_dead|airstrike title:the_Zealot
 KITEM: F = randbook spells:bolt_of_fire|fireball|sticky_flame|conjure_flame title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta
@@ -1714,7 +1716,7 @@ KMONS:   H = green draconian
 KMONS:   I = green death / nonbase green draconian w:6
 KMONS:   J = white very ugly thing
 KMONS:   K = white draconian
-KMONS:   L = white draconian knight / nonbase white draconian w:6
+KMONS:   L = shard shrike / nonbase white draconian w:6
 KMONS:   M = brown very ugly thing
 KMONS:   N = yellow draconian
 KMONS:   O = acid blob / nonbase yellow draconian w:6
@@ -2389,6 +2391,40 @@ xyyXXXX'''''''''''''''''''XXXXyyyyyyyyyyyXXXX'''
 xXXX'''''''''''''''''''''''''XXXXXXXXXXXXX'''''
 xx''''''''''''''''''''''''''''''''''''''''''''
    ''''''   ''''@''''   '''''''''   '''''''''
+ENDMAP
+
+NAME:    hangedman_zot_wheel_spokes
+TAGS:    transparent extra decor
+DEPTH:   Zot, !Zot:$
+# Swap positions in unit's potential spots
+# with the spokes and / or the center, maybe.
+SHUFFLE: AGMBHN / AHMBGN / AGNBJM
+SHUFFLE: CIOFLR / CLOFIR / CIRFLO
+SHUFFLE: DJPEKQ / DJQEKP / DJQEKP
+SHUFFLE: AGM / BHN / CIO / DJP / EKQ / FLR
+# Make those slots random walls or floor.
+SUBST:   AGM : xxxxcccbbv, BHN : xxxxcccbbv
+SUBST:   CIO : xxxxcccbbv .:100
+SUBST:   DJP : xxxxcccbbv .:100, EFKLQR = .
+MAP
+      ...CDEF...
+      ..F.AB.C..
+........EB..AD..
+........DA..BE..
+.IJKL...C.BA.F..
+L.GH.I...FEDC...
+KH..GJ.OPQR.......
+JG..HKR.MN.O......
+I.HG.LQN..MP.IJKL.
+.LKJI.PM..NQL.GH.I
+......O.NM.RKH..GJ
+.......RQPO.JG..HK
+  ...CEDF...I.HG.L
+  ..F.AB.C...LKJI.
+  ..EB..AE........
+  ..DA..BD........
+  ..C.BA.F..
+  ...FEDC...
 ENDMAP
 
 ##############################################################################

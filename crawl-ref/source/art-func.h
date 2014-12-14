@@ -46,7 +46,7 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
                        msg_channel_type chan = MSGCH_PLAIN)
 {
     bool do_show = true;
-    if (show_msgs == NULL)
+    if (show_msgs == nullptr)
         show_msgs = &do_show;
 
     if (*show_msgs)
@@ -147,17 +147,15 @@ static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
 }
 
 ////////////////////////////////////////////////////
-static void _curses_miscast(actor* victim, int power, int fail)
-{
-    MiscastEffect(victim, WIELD_MISCAST, SPTYP_NECROMANCY, power, fail,
-                  "the Scythe of Curses", NH_NEVER);
-}
 
 static void _CURSES_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
     if (!unmeld)
-        _curses_miscast(&you, random2(9), random2(70));
+    {
+        MiscastEffect(&you, nullptr, WIELD_MISCAST, SPTYP_NECROMANCY, random2(9),
+                      random2(70), "the Scythe of Curses", NH_NEVER);
+    }
 }
 
 static void _CURSES_world_reacts(item_def *item)
@@ -173,7 +171,11 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
     if (attacker->is_player())
         did_god_conduct(DID_NECROMANCY, 3);
     if (!mondied && defender->has_lifeforce())
-        _curses_miscast(defender, random2(9), random2(70));
+    {
+        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_NECROMANCY,
+                      random2(9), random2(70), "the Scythe of Curses",
+                      NH_NEVER);
+    }
 }
 
 /////////////////////////////////////////////////////
@@ -325,7 +327,7 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     bool def_show = true;
 
-    if (show_msgs == NULL)
+    if (show_msgs == nullptr)
         show_msgs = &def_show;
 
     if (!*show_msgs)
@@ -448,7 +450,7 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
 
 static void _wucad_miscast(actor* victim, int power,int fail)
 {
-    MiscastEffect(victim, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
+    MiscastEffect(victim, nullptr, WIELD_MISCAST, SPTYP_DIVINATION, power, fail,
                   "the Staff of Wucad Mu", NH_NEVER);
 }
 
@@ -626,7 +628,7 @@ static monster* _find_nearest_possible_beholder()
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 static void _DEMON_AXE_world_reacts(item_def *item)
@@ -843,12 +845,6 @@ static void _NIGHT_unequip(item_def *item, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
-static void _plutonium_sword_miscast(actor* victim, int power, int fail)
-{
-    MiscastEffect(victim, MELEE_MISCAST, SPTYP_TRANSMUTATION, power, fail,
-                  "the plutonium sword", NH_NEVER);
-}
-
 static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
                                            actor* defender, bool mondied,
                                            int dam)
@@ -856,7 +852,8 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
     if (!mondied && one_chance_in(5))
     {
         mpr("Mutagenic energy flows through the plutonium sword!");
-        _plutonium_sword_miscast(defender, random2(9), random2(70));
+        MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_TRANSMUTATION,
+                      random2(9), random2(70), "the plutonium sword", NH_NEVER);
 
         if (attacker->is_player())
             did_god_conduct(DID_CHAOS, 3);
@@ -929,7 +926,7 @@ static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
     bolt *expl   = new bolt(*beam);
     expl->flavour = BEAM_HELLFIRE;
     expl->is_explosion = true;
-    expl->damage = dice_def(2, 5);
+    expl->damage = dice_def(3, 8);
     expl->name   = "hellfire";
 
     beam->special_explosion = expl;
@@ -985,7 +982,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
     if (mondied || !(x_chance_in_y(evoc, 27*27) || x_chance_in_y(evoc, 27*27)))
         return;
 
-    const char *verb = NULL;
+    const char *verb = nullptr;
     beam_type flavour = BEAM_NONE;
 
     switch (random2(4))
@@ -1077,8 +1074,8 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
         else
         {
             const monster* mons = defender->as_monster();
-            for (unsigned i = 0; i < mons->spells.size(); i++)
-                school |= get_spell_disciplines(mons->spells[i].spell);
+            for (const mon_spell_slot &slot : mons->spells)
+                school |= get_spell_disciplines(slot.spell);
         }
         if (school != SPTYP_NONE)
         {
@@ -1088,7 +1085,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
                     schools.push_back(static_cast<spschool_flag_type>(1 << i));
 
             ASSERT(schools.size() > 0);
-            MiscastEffect(defender, attacker->mindex(),
+            MiscastEffect(defender, attacker, MELEE_MISCAST,
                           schools[random2(schools.size())],
                           random2(9),
                           random2(70), "the demon whip \"Spellbinder\"",
@@ -1109,7 +1106,7 @@ static void _ORDER_melee_effects(item_def* item, actor* attacker,
         if (silver_dam)
         {
             if (you.can_see(defender))
-                mpr(msg.c_str());
+                mpr(msg);
             defender->hurt(attacker, silver_dam);
         }
     }

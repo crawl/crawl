@@ -239,12 +239,12 @@ public:
 
 crawl_view_buffer::crawl_view_buffer()
     : m_size(0, 0)
-    , m_buffer(NULL)
+    , m_buffer(nullptr)
 {
 }
 crawl_view_buffer::crawl_view_buffer(const coord_def &sz)
     : m_size(0, 0)
-    , m_buffer(NULL)
+    , m_buffer(nullptr)
 {
     resize(sz);
 }
@@ -280,7 +280,7 @@ const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer 
 void crawl_view_buffer::clear()
 {
     delete [] m_buffer;
-    m_buffer = NULL;
+    m_buffer = nullptr;
     m_size = coord_def(0,0);
 }
 

@@ -1488,7 +1488,7 @@ Un démon de couleur ambre avec un queue ressemblant à celle d'un scorpion. Ell
 contient un puissant venin qui peut rendre ses victimes faiblardes et affaiblir
 ses coups.
 %%%%
-orange rat
+hell rat
 
 Un rat inhabituellement gros avec une étrange peau noueuse et orange, brillant
 d'énergies malfaisantes.

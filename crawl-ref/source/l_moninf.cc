@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "env.h"
 #include "l_defs.h"
+#include "libutil.h" // map_find
 #include "mon-book.h"
 #include "spl-util.h"
 #include "stringutil.h"
@@ -100,14 +101,14 @@ LUAFN(moninf_get_is)
         if (mi_flags.empty())
             _init_mi_flags();
         string flag = luaL_checkstring(ls, 2);
-        const map<string, int>::const_iterator f = mi_flags.find(lowercase(flag));
-        if (f == mi_flags.end())
+        if (int *flagnum = map_find(mi_flags, lowercase(flag)))
+            num = *flagnum;
+        else
         {
             luaL_argerror(ls, 2, (string("no such moninf flag: '")
                                   + flag + "'").c_str());
             return 0;
         }
-        num = f->second;
     }
     if (num < 0 || num >= NUM_MB_FLAGS)
     {
@@ -139,7 +140,7 @@ LUAFN(moninf_get_spells)
         for (size_t j = 0; j < unique_spells.size(); ++j)
         {
             const spell_type spell = unique_spells[j];
-            spell_titles.push_back(spell_title(spell));
+            spell_titles.emplace_back(spell_title(spell));
         }
 
         clua_stringtable(ls, spell_titles);
@@ -277,7 +278,7 @@ LUAFN(moninf_get_desc)
 LUAFN(moninf_get_status)
 {
     MONINF(ls, 1, mi);
-    const char* which = NULL;
+    const char* which = nullptr;
     if (lua_gettop(ls) >= 2)
         which = luaL_checkstring(ls, 2);
 
@@ -287,9 +288,10 @@ LUAFN(moninf_get_status)
         PLUARET(string, comma_separated_line(status.begin(),
                                              status.end(), ", ").c_str());
     }
-    for (vector<string>::const_iterator i = status.begin(); i != status.end(); ++i)
-        if (*i == which)
+    for (const auto &st : status)
+        if (st == which)
             PLUARET(boolean, true);
+
     PLUARET(boolean, false);
 }
 
@@ -337,7 +339,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(res_shock),
     MIREG(res_corr),
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 // XXX: unify with directn.cc/h
@@ -367,7 +369,7 @@ static const struct luaL_reg mon_lib[] =
 {
     { "get_monster_at", mi_get_monster_at },
 
-    { NULL, NULL }
+    { nullptr, nullptr }
 };
 
 void cluaopen_moninf(lua_State *ls)

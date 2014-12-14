@@ -2,8 +2,8 @@
 
 #include "colour.h"
 
+#include <cmath>
 #include <utility>
-#include <math.h>
 
 #include "areas.h"
 #include "branch.h"
@@ -11,6 +11,7 @@
 #include "dgn-height.h"
 #include "options.h"
 #include "stringutil.h"
+#include "libutil.h" // map_find
 
 static element_colour_calc* element_colours[NUM_COLOURS] = {};
 static map<string, element_colour_calc*> element_colours_str;
@@ -69,7 +70,9 @@ colour_t random_uncommon_colour()
     colour_t result;
 
     do
+    {
         result = random_colour();
+    }
     while (result == LIGHTCYAN || result == CYAN || result == BROWN);
 
     return result;
@@ -114,13 +117,9 @@ static int _randomized_element_colour(int rand, const coord_def&,
                                       random_colour_map rand_vals)
 {
     int accum = 0;
-    for (random_colour_map::const_iterator it = rand_vals.begin();
-         it != rand_vals.end();
-         ++it)
-    {
-        if ((accum += it->first) > rand)
-            return it->second;
-    }
+    for (const auto &entry : rand_vals)
+        if ((accum += entry.first) > rand)
+            return entry.second;
 
     return BLACK;
 }
@@ -365,7 +364,7 @@ static element_colour_calc *_create_random_element_colour_calc(element_type type
 
         int colour = va_arg(ap, int);
 
-        rand_vals.push_back(make_pair(prob, colour));
+        rand_vals.emplace_back(prob, colour);
     }
 
     va_end(ap);
@@ -648,6 +647,12 @@ void init_element_colours()
                             60,  MAGENTA,
                             60,  RED,
                         0));
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_SHINING, "shining",
+                            // no YELLOW - always make this visually distinct
+                            60,  WHITE,
+                            60,  BROWN,
+                        0));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random
@@ -783,12 +788,10 @@ int str_to_colour(const string &str, int default_colour, bool accept_number)
     if (ret == 16)
     {
         // Maybe we have an element colour attribute.
-        map<string, element_colour_calc*>::const_iterator it
-            = element_colours_str.find(str);
-        if (it != element_colours_str.end())
+        if (element_colour_calc **calc = map_find(element_colours_str, str))
         {
-            ASSERT(it->second);
-            ret = it->second->type;
+            ASSERT(*calc);
+            ret = (*calc)->type;
         }
     }
 
@@ -796,7 +799,7 @@ int str_to_colour(const string &str, int default_colour, bool accept_number)
     {
         // Check if we have a direct colour index.
         const char *s = str.c_str();
-        char *es = NULL;
+        char *es = nullptr;
         const int ci = static_cast<int>(strtol(s, &es, 10));
         if (s != es && es && ci >= 0 && ci < 16)
             ret = ci;

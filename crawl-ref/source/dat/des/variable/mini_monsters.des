@@ -27,10 +27,12 @@
 # Functionality for some Grunt vaults.
 {{
 function grunt_ministairs_setup(e, hatches)
-  if you.branch() == "Crypt" then
+  if you.branch() == "Crypt" or you.branch() == "Zot" then
     e.shuffle("GT")
-    e.subst("T = T:20 V Y:1")
-    e.subst("x = c")
+    if you.branch() == "Crypt" then
+      e.subst("T = T V:20 Y:1")
+      e.subst("x = c")
+    end
   else
     e.shuffle("GTt")
     e.subst("T = T:20 V U:1")
@@ -456,7 +458,7 @@ ENDMAP
 NAME:  rats_and_rats_again
 DEPTH: D:8-14
 MONS:  shadow imp
-MONS:  rat w:40 / green rat w:20 / orange rat w:1 / nothing
+MONS:  rat w:40 / river rat w:20 / hell rat w:1 / nothing
 MAP
 ...........
 .xxx+++xxx.
@@ -639,7 +641,7 @@ NAME:  pond
 TAGS:  no_monster_gen
 DEPTH: D:10-, Lair
 MONS:  plant w:30 / fungus
-MONS:  giant frog w:30 / water moccasin / green rat / swamp drake w:2
+MONS:  giant frog w:30 / water moccasin / river rat / swamp drake w:2
 MONS:  vampire mosquito / insubstantial wisp w:5 / swamp drake w:1
 KMONS: ? = plant
 SUBST: ! : w.
@@ -1004,7 +1006,7 @@ DEPTH:   D:11-
 MONS:    rat, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
 KMONS:   8 = ball python / adder w:8
-KMONS:   A = green rat
+KMONS:   A = river rat
 KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
 KMONS:   D = worm
@@ -1012,7 +1014,7 @@ KMONS:   E = goliath beetle
 KMONS:   F = worker ant
 KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
-KMONS:   I = orange rat
+KMONS:   I = hell rat
 KMONS:   J = unseen horror
 KMONS:   K = alligator
 KMONS:   L = lindwurm
@@ -1296,7 +1298,7 @@ NAME:  eino_house_with_fridge
 DEPTH: D:9-15, Lair:2-
 TAGS:  no_monster_gen no_item_gen
 MONS:  patrolling necromancer, plant
-MONS:  green rat simulacrum / wolf simulacrum / \
+MONS:  river rat simulacrum / wolf simulacrum / \
        yak simulacrum / polar bear simulacrum
 MAP
 ............
@@ -1416,7 +1418,7 @@ ITEM:    randbook numspells:2 title:Combed_Thunderclap disc:air
 ITEM:    randbook numspells:2 title:Plaster_Cramp disc:earth
 ITEM:    randbook numspells:2 title:Axaxaxas_mlö
 ITEM:    randbook numspells:3 title:Forking_Paths owner:Ts'ui_Pên disc:hexes disc2:charms
-ITEM:    randbook numspells:2 title:Of_Sand
+ITEM:    randbook numspells:2 title:Sand
 KFEAT:   ^ : known shaft trap
 SHUFFLE: defg, efghij, bm, bm / ++
 MAP
@@ -2028,7 +2030,7 @@ NAME:  grunt_absolute_annihilation
 DEPTH: Depths
 # These spell sets are Lich III and Lich IV; they have LCS and IOOD
 # respectively.
-MONS:    ancient lich spells:bolt_of_draining.12.wizard;\
+MONS:    ancient lich spells:corrosive_bolt.12.wizard;\
                              slow.12.wizard;\
                              invisibility.24.wizard;\
                              throw_icicle.12.wizard;\
@@ -2039,7 +2041,7 @@ MONS:    ancient lich spells:bolt_of_draining.12.wizard;\
                              animate_dead.12.wizard;\
                              orb_of_destruction.12.wizard
 MONS:    deep elf annihilator / draconian annihilator w:5 / \
-         lich spells:bolt_of_draining.12.wizard;\
+         lich spells:corrosive_bolt.12.wizard;\
                      slow.12.wizard;\
                      invisibility.24.wizard;\
                      throw_icicle.12.wizard;\
@@ -2545,6 +2547,43 @@ x.(xl%vvvvvvvvx
 xxxxxxxxxxxx@@x
 ENDMAP
 
+NAME:    hangedman_batty
+TAGS:    patrolling no_monster_gen no_item_gen
+DEPTH:   D:11-15, Crypt, !Crypt:$
+WEIGHT:  5
+MONS:    bat, phantom, vampire, unseen horror
+MONS:    phantasmal warrior, vampire knight, jiangshi
+# Notably, sometimes fill in parts of the grid.
+SHUFFLE: ABC, DE, FGH, 34 / 34 / 34 / 43
+SUBST:   A = 1, F = 2, B : xx..., D : xx..., G : xx..., CEH = .
+SUBST:   I : c...., 5 = 3333445
+: if you.branch() == "Crypt" then
+SUBST:   4 = 7, 3 = 6, 2 = 5, 1 = 1444
+SUBST:   c = v, x = c
+: end
+KITEM:   % = % no_pickup
+KITEM:   * = * no_pickup
+MAP
+xx@xxxxxxxxxxx
+x.x.xxxxxxxxxx
+@x.x.xAxBxxxxx
+x.x.x.x.x1xxxx
+xx.x4....xCxxxxxxx
+xxx..%....xxxxxxxx
+xxAx..%..xDxxxxxxx
+xxx....%..cExFxxxx
+xxBx....Ic.x.x1xxx
+xxx1x.x.cI..%.xGxx
+xxxxCxDc..*..%.xxx
+xxxxxxxEx..*..xHxx
+xxxxxxxx.%..*..xxx
+     xxFx.%..3x4xx
+     xxx1x.x.x5xxx
+     xxxxGxHx4xxxx
+     xxxxxxxxxxx
+     xxxxxxxxxxx
+ENDMAP
+
 ################################################################################
 #
 # <<5>> Stationary shooters: statues, oklobs, fog generators.
@@ -2688,12 +2727,15 @@ ENDMAP
 
 NAME:   statue_in_the_mist_lemuel
 TAGS:   extra no_exits
-MONS:   orange crystal statue / obsidian statue / ice statue
 DEPTH:  D:9-, Depths, Orc, Elf, Snake, Swamp
+KMONS:  1 = orange crystal statue / obsidian statue / ice statue
+KITEM:  1 = %, % / $
 MARKER: G = lua:fog_machine { cloud_type= "grey smoke", \
             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
             size = 3, walk_dist = 2, spread_rate= 25 }
+: if you.branch() == "Abyss" then
 SUBST:  G : G111
+: end
 MAP
 G
 ENDMAP
@@ -3539,7 +3581,7 @@ KMONS:   e = chaos spawn
 KMONS:   f = demonic crawler
 KMONS:   g = glowing shapeshifter
 KMONS:   h = shadow wraith
-KMONS:   i = orange rat
+KMONS:   i = hell rat
 KMONS:   j = giant cockroach
 KMONS:   k = phantom
 KMONS:   l = large abomination
@@ -5665,7 +5707,8 @@ COLOUR:  F = lightred
 KMONS:   9 = ice devil / blue devil w:5 / ice dragon / simulacrum w:5 / \
              skeletal warrior ; hunting sling ego:freezing ident:type . \
              mundane sling bullet . mace ego:freezing ident:type
-KMONS:   8 = blizzard demon / lich / reaper ; scythe ego:freezing ident:type
+KMONS:   8 = blizzard demon / lich / shard shrike / \
+             reaper ; scythe ego:freezing ident:type
 KMONS:   7 = ice fiend
 MARKER:  F = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 8, pow_max = 10, delay = 100, \

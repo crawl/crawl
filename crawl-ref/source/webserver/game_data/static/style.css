@@ -366,3 +366,14 @@ body {
 .menu_spell #menu_title {
     margin-left: 32px;
 }
+
+/* Use crisp (nearest-neighbor) upscaling on HiDPI screens to avoid blurriness. */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    canvas {
+        image-rendering: optimizeSpeed;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-optimize-contrast;
+        -ms-interpolation-mode: nearest-neighbor;
+        image-rendering: crisp-edges;
+    }
+}

@@ -63,7 +63,7 @@ tutorial2 exit
   Je kunt ook een voorwerp afvuren door hierop te <input>klikken</input> en het doel te bevestigen met <input>Enter</input>.</localtiles>
 
 <yellow>Rusten</yellow>
-  <input>$cmd[CMD_MOVE_NOWHERE]</input>  een beurt wachten en rusten
+  <input>$cmd[CMD_WAIT]</input>  een beurt wachten en rusten
   <input>$cmd[CMD_REST]</input>  tot maximaal 100 beurten wachten en rusten
 
 <yellow>Lijken<console> <brown>%</brown></console></yellow>

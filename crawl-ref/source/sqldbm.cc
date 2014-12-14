@@ -46,8 +46,8 @@ private:
 };
 
 SQL_DBM::SQL_DBM(const string &dbname, bool _readonly, bool do_open)
-    : error(), errc(SQLITE_OK), db(NULL), s_insert(NULL), s_remove(NULL),
-      s_query(NULL), s_iterator(NULL), dbfile(dbname), readonly(_readonly)
+    : error(), errc(SQLITE_OK), db(nullptr), s_insert(nullptr), s_remove(nullptr),
+      s_query(nullptr), s_iterator(nullptr), dbfile(dbname), readonly(_readonly)
 {
     if (do_open && !dbfile.empty())
         open();
@@ -110,7 +110,7 @@ From SQLite's documentation:
                 dbfile.c_str(), &db,
                 readonly ? SQLITE_OPEN_READONLY :
                 (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
-                NULL
+                nullptr
 #endif
               )) != SQLITE_OK)
     {
@@ -132,15 +132,16 @@ int SQL_DBM::init_schema()
                   db,
                   "CREATE TABLE dbm (key STRING UNIQUE PRIMARY KEY,"
                   "                  value STRING);",
-                  NULL,
-                  NULL,
-                  NULL));
+                  nullptr,
+                  nullptr,
+                  nullptr));
 
     // Turn off auto-commit
     if (!readonly)
     {
         for (sqlite_retry_iterator ri; ri;
-             ri.check(ec(sqlite3_exec(db, "BEGIN;", NULL, NULL, NULL))));
+             ri.check(ec(sqlite3_exec(db, "BEGIN;", nullptr, nullptr,
+                                      nullptr))));
     }
     return err;
 }
@@ -150,13 +151,13 @@ void SQL_DBM::close()
     if (db)
     {
         if (!readonly)
-            sqlite3_exec(db, "COMMIT;", NULL, NULL, NULL);
+            sqlite3_exec(db, "COMMIT;", nullptr, nullptr, nullptr);
         finalise_query(&s_insert);
         finalise_query(&s_remove);
         finalise_query(&s_query);
         finalise_query(&s_iterator);
         sqlite3_close(db);
-        db = NULL;
+        db = nullptr;
     }
 }
 
@@ -301,7 +302,7 @@ int SQL_DBM::finalise_query(sqlite3_stmt **q)
 
     sqlite3_reset(*q);
     int ret = ec(sqlite3_finalize(*q));
-    *q = NULL;
+    *q = nullptr;
 
     return ret;
 }
@@ -321,11 +322,11 @@ int SQL_DBM::prepare_query(sqlite3_stmt **q, const char *sql)
 
 ////////////////////////////////////////////////////////////////////////
 
-sql_datum::sql_datum() : dptr(NULL), dsize(0), need_free(false)
+sql_datum::sql_datum() : dptr(nullptr), dsize(0), need_free(false)
 {
 }
 
-sql_datum::sql_datum(const string &s) : dptr(NULL), dsize(s.length()),
+sql_datum::sql_datum(const string &s) : dptr(nullptr), dsize(s.length()),
                                         need_free(false)
 {
     if ((dptr = new char [dsize]))
@@ -336,7 +337,8 @@ sql_datum::sql_datum(const string &s) : dptr(NULL), dsize(s.length()),
     }
 }
 
-sql_datum::sql_datum(const sql_datum &dat) : dptr(NULL), dsize(0), need_free(false)
+sql_datum::sql_datum(const sql_datum &dat) : dptr(nullptr), dsize(0),
+                     need_free(false)
 {
     init_from(dat);
 }
@@ -361,7 +363,7 @@ void sql_datum::reset()
     if (need_free)
         delete [] dptr;
 
-    dptr = NULL;
+    dptr = nullptr;
     dsize = 0;
 }
 
@@ -398,7 +400,7 @@ SQL_DBM *dbm_open(const char *filename, int mode, int)
     if (!n->is_open())
     {
         delete n;
-        return NULL;
+        return nullptr;
     }
 
     return n;

@@ -162,6 +162,7 @@ static void _print_hints_menu(hints_types type)
 // Hints mode selection screen and choice.
 void pick_hints(newgame_def* choice)
 {
+again:
     clrscr();
 
     cgotoxy(1,1);
@@ -184,6 +185,8 @@ void pick_hints(newgame_def* choice)
     while (true)
     {
         int keyn = getch_ck();
+        if (keyn == CK_REDRAW)
+            goto again;
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
@@ -439,9 +442,8 @@ void print_hint(string key, const string arg1, const string arg2)
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
-    vector<string> chunks = split_string("\n", text);
-    for (size_t i = 0; i < chunks.size(); i++)
-        mprf(MSGCH_TUTORIAL, "%s", chunks[i].c_str());
+    for (const string &chunk : split_string("\n", text))
+        mprf(MSGCH_TUTORIAL, "%s", chunk.c_str());
 
     stop_running();
 }
@@ -2679,7 +2681,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
                     "or mouse over the spell tiles "
 #endif
-                    "to check your current success rates.";
+                    "to check your current failure rates.";
             cmd.push_back(CMD_DISPLAY_SPELLS);
             break;
         }
@@ -2691,7 +2693,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             text << "Wearing heavy body armour or using a shield, especially a "
                     "large one, can severely hamper your spellcasting "
                     "abilities. You can check the effect of this by comparing "
-                    "the success rates on the <w>%\?</w> screen with and "
+                    "the failure rates on the <w>%\?</w> screen with and "
                     "without the item being worn.\n\n";
             cmd.push_back(CMD_CAST_SPELL);
         }
@@ -2700,12 +2702,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "checked by entering <w>%\?</w> or <w>%</w>) then a miscast "
                 "merely means the spell is not working, along with a harmless "
                 "side effect. "
-                "However, for spells with a low success rate, there's a chance "
-                "of contaminating yourself with magical energy, plus a chance "
-                "of an additional harmful side effect. Normally this isn't a "
-                "problem, since magical contamination bleeds off over time, "
-                "but if you're repeatedly contaminated in a short amount of "
-                "time you'll mutate or suffer from other ill side effects.\n\n";
+                "However, for spells with a high failure rate, there's a "
+                "chance of contaminating yourself with magical energy, plus a "
+                "chance of an additional harmful side effect. Normally this "
+                "isn't a problem, since magical contamination bleeds off over "
+                "time, but if you're repeatedly contaminated in a short amount "
+                "of time you'll mutate or suffer from other ill side effects."
+                "\n\n";
         cmd.push_back(CMD_CAST_SPELL);
         cmd.push_back(CMD_DISPLAY_SPELLS);
 
@@ -2731,8 +2734,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_GLOWING:
         text << "You've accumulated so much magical contamination that you're "
                 "glowing! You usually acquire magical contamination from using "
-                "some powerful magics, like invisibility, haste or potions of "
-                "resistance. ";
+                "some powerful magics, like invisibility or haste, or from "
+                "miscasting spells. ";
 
         if (get_contamination_level() < 2)
         {
@@ -2816,14 +2819,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_LOAD_SAVED_GAME:
     {
-        text << "Welcome back! If it's been a while since you last played this "
-                "character, you should take some time to refresh your memory "
-                "of your character's progress. It is recommended to at least "
-                "have a look through your <w>%</w>nventory, but you should "
-                "also check ";
+        text << "Welcome back! If it's been a while, you may want to refresh "
+                "your memory.\nYour <w>%</w>nventory, ";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
-        vector<string> listed;
+        vector<const char *> listed;
         if (you.spell_no > 0)
         {
             listed.push_back("your spells (<w>%?</w>)");
@@ -2848,19 +2848,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         listed.push_back("the message history (<w>%</w>)");
         listed.push_back("the character overview screen (<w>%</w>)");
         listed.push_back("the dungeon overview screen (<w>%</w>)");
-        text << comma_separated_line(listed.begin(), listed.end()) << ".";
+        text << comma_separated_line(listed.begin(), listed.end())
+             << " are good things to check.";
         cmd.push_back(CMD_REPLAY_MESSAGES);
         cmd.push_back(CMD_RESISTS_SCREEN);
         cmd.push_back(CMD_DISPLAY_OVERMAP);
-
-        text << "\nAlternatively, you can dump all information pertaining to "
-                "your character into a text file with the <w>%</w> command. "
-                "You can then find said file in the <w>morgue/</w> directory (<w>"
-             << you.your_name << ".txt</w>) and read it at your leisure. Also, "
-                "such a file will automatically be created upon death (the "
-                "filename will then also contain the date) but that won't be "
-                "of much use to you now.";
-        cmd.push_back(CMD_CHARACTER_DUMP);
         break;
     }
     case HINT_AUTOPICKUP_THROWN:
@@ -2891,9 +2883,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
     case HINT_CLOUD_WARNING:
         text << "Rather than step into this cloud and hurt yourself, you should "
-                "try to step around it or wait it out with <w>%</w> or <w>%</w>.";
-        cmd.push_back(CMD_MOVE_NOWHERE);
-        cmd.push_back(CMD_REST);
+                "say <w>N</w>o and either wait for a few turns to see if it "
+                "vanishes (with <w>%</w>), or just step around it.";
+        cmd.push_back(CMD_WAIT);
         break;
     case HINT_ANIMATE_CORPSE_SKELETON:
         text << "As long as a monster has a skeleton, Animate Skeleton also "
@@ -3132,7 +3124,7 @@ void hints_describe_item(const item_def &item)
             }
 
             item_def *weap = you.slot_item(EQ_WEAPON, false);
-            bool wielded = (weap && (*weap).slot == item.slot);
+            bool wielded = (weap && weap->slot == item.slot);
             bool long_text = false;
 
             if (!wielded)
@@ -3791,32 +3783,16 @@ static void _hints_describe_feature(int x, int y)
     case DNGN_TRAP_ZOT:
     case DNGN_TRAP_MECHANICAL:
          ostr << "These nasty constructions can cause a range of "
-                 "unpleasant effects. ";
-
-         if (feat == DNGN_TRAP_MECHANICAL)
-         {
-             ostr << "You can attempt to deactivate a mechanical trap by "
-                     "standing next to it and then pressing <w>Ctrl</w> "
-                     "and the direction of the trap. Note that this usually "
-                     "causes the trap to go off, so it can be quite a "
-                     "dangerous task.\n\n"
-
-                     "You can safely pass over a mechanical trap if "
-                     "you're flying.";
-         }
-         else
-         {
-             ostr << "Magical traps can't be disarmed, and you can't "
-                     "avoid tripping them by flying over them.";
-         }
+                 "unpleasant effects. You won't be able to avoid "
+                 "tripping traps by flying over them; their magic "
+                 "construction will cause them to be triggered anyway.";
          Hints.hints_events[HINT_SEEN_TRAP] = false;
          break;
 
     case DNGN_TRAP_SHAFT:
          ostr << "The dungeon contains a number of natural obstacles such "
-                 "as shafts, which lead one to three levels down. They "
-                 "can't be disarmed, but once you know the shaft is there, "
-                 "you can safely step over it.\n"
+                 "as shafts, which lead one to three levels down. Once you "
+                 "know the shaft is there, you can safely step over it.\n"
                  "If you want to jump down there, use <w>></w> to do so. "
                  "Be warned that getting back here might be difficult.";
          Hints.hints_events[HINT_SEEN_TRAP] = false;
@@ -3826,12 +3802,6 @@ static void _hints_describe_feature(int x, int y)
          ostr << "Some areas of the dungeon, such as the Spider Nest, may "
                  "be strewn with giant webs that may ensnare you for a short "
                  "time and notify nearby spiders of your location. "
-                 "You can attempt to clear away the web by "
-                 "standing next to it and then pressing <w>Ctrl</w> "
-                 "and the direction of the web. Note that this often "
-                 "results in just getting entangled anyway, so it can be "
-                 "quite a dangerous task.\n\n"
-
                  "Players in Spider Form can safely navigate the webs (as "
                  "can incorporeal entities and various oozes). ";
          Hints.hints_events[HINT_SEEN_WEB] = false;
@@ -4121,7 +4091,7 @@ bool hints_monster_interesting(const monster* mons)
     return mons_threat_level(mons) == MTHRT_NASTY;
 }
 
-void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
+string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
     cgotoxy(1, wherey());
     ostringstream ostr;
@@ -4243,7 +4213,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 
     string broken = ostr.str();
     linebreak_string(broken, _get_hints_cols());
-    display_tagged_block(broken);
+    return broken;
 }
 
 void hints_observe_cell(const coord_def& gc)
@@ -4301,9 +4271,8 @@ void tutorial_msg(const char *key, bool end)
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
-    vector<string> chunks = split_string("\n", text, false);
-    for (size_t i = 0; i < chunks.size(); i++)
-        mprf(MSGCH_TUTORIAL, "%s", chunks[i].c_str());
+    for (const string &chunk : split_string("\n", text, false))
+        mprf(MSGCH_TUTORIAL, "%s", chunk.c_str());
 
     stop_running();
 }

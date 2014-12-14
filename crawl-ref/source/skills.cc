@@ -9,9 +9,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
+#include <cstring>
+#include <functional>
 #include <sstream>
-#include <stdlib.h>
-#include <string.h>
 
 #include "ability.h"
 #include "describe-god.h"
@@ -34,7 +35,7 @@
 #include "stringutil.h"
 #include "unwind.h"
 
-typedef string (*string_fn)();
+typedef function<string ()> string_fn;
 typedef map<string, string_fn> skill_op_map;
 
 static skill_op_map Skill_Op_Map;
@@ -67,8 +68,7 @@ public:
 
     static string get(const string &_key)
     {
-        skill_op_map::const_iterator i = Skill_Op_Map.find(_key);
-        return i == Skill_Op_Map.end()? string() : (i->second)();
+        return lookup(Skill_Op_Map, _key, [] () { return string(); })();
     }
 private:
     const char *key;
@@ -385,14 +385,10 @@ static void _init_queue(list<skill_type> &queue, FixedVector<T, SIZE> &array)
     ASSERT(queue.size() == (unsigned)EXERCISE_QUEUE_SIZE);
 }
 
-static void _erase_from_stop_train(skill_set &can_train)
+static void _erase_from_stop_train(const skill_set &can_train)
 {
-    for (skill_set_iter it = can_train.begin(); it != can_train.end(); ++it)
-    {
-        skill_set_iter it2 = you.stop_train.find(*it);
-        if (it2 != you.stop_train.end())
-            you.stop_train.erase(it2);
-    }
+    for (skill_type sk : can_train)
+        you.stop_train.erase(sk);
 }
 
 /*
@@ -418,74 +414,55 @@ static void _check_inventory_skills()
 
 static void _check_spell_skills()
 {
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+    for (spell_type spell : you.spells)
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
-        if (you.spells[i] == SPELL_NO_SPELL)
+        if (spell == SPELL_NO_SPELL)
             continue;
 
         skill_set skills;
-        spell_skills(you.spells[i], skills);
+        spell_skills(spell, skills);
         _erase_from_stop_train(skills);
     }
 }
 
 static void _check_abil_skills()
 {
-    vector<ability_type> abilities = get_god_abilities(true, true);
-    for (unsigned int i = 0; i < abilities.size(); ++i)
+    for (ability_type abil : get_god_abilities(true, true))
     {
         // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
-        skill_set_iter it = you.stop_train.find(abil_skill(abilities[i]));
-        if (it != you.stop_train.end())
-            you.stop_train.erase(it);
+        you.stop_train.erase(abil_skill(abil));
     }
 }
 
-string skill_names(skill_set &skills)
+string skill_names(const skill_set &skills)
 {
-    string s;
-    int i = 0;
-    int size = skills.size();
-    for (skill_set_iter it = skills.begin(); it != skills.end(); ++it)
-    {
-        ++i;
-        s += skill_name(*it);
-        if (i < size)
-        {
-            if (i == size - 1)
-                s += " and ";
-            else
-                s+= ", ";
-        }
-    }
-    return s;
+    return comma_separated_fn(begin(skills), end(skills), skill_name);
 }
 
 static void _check_start_train()
 {
     skill_set skills;
-    for (skill_set_iter it = you.start_train.begin();
-             it != you.start_train.end(); ++it)
+    for (skill_type sk : you.start_train)
     {
-        if (is_invalid_skill(*it) || is_useless_skill(*it))
+        if (is_invalid_skill(sk) || is_useless_skill(sk))
             continue;
 
-        if (!you.can_train[*it] && you.train[*it])
-            skills.insert(*it);
-        you.can_train.set(*it);
+        if (!you.can_train[sk] && you.train[sk])
+            skills.insert(sk);
+        you.can_train.set(sk);
     }
 
     reset_training();
 
     // We're careful of not invalidating the iterator when erasing.
-    for (skill_set_iter it = skills.begin(); it != skills.end();)
+    for (auto it = skills.begin(); it != skills.end();)
         if (!you.training[*it])
             skills.erase(it++);
         else
@@ -507,17 +484,16 @@ static void _check_stop_train()
         return;
 
     skill_set skills;
-    for (skill_set_iter it = you.stop_train.begin();
-         it != you.stop_train.end(); ++it)
+    for (skill_type sk : you.stop_train)
     {
-        if (is_invalid_skill(*it))
+        if (is_invalid_skill(sk))
             continue;
-        if (skill_has_manual(*it))
+        if (skill_has_manual(sk))
             continue;
 
-        if (skill_trained(*it) && you.training[*it])
-            skills.insert(*it);
-        you.can_train.set(*it, false);
+        if (skill_trained(sk) && you.training[sk])
+            skills.insert(sk);
+        you.can_train.set(sk, false);
     }
 
     if (!skills.empty())
@@ -632,7 +608,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
             int64_t result = (int64_t)array[i] * (int64_t)scale;
             const int64_t rest = result % total;
             if (rest)
-                rests.push_back(pair<skill_type, int64_t>(skill_type(i), rest));
+                rests.emplace_back(skill_type(i), rest);
             array[i] = (int)(result / total);
             scaled_total += array[i];
         }
@@ -645,12 +621,13 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     // We ensure that the percentage always add up to 100 by increasing the
     // training for skills which had the higher rest from the above scaling.
     sort(rests.begin(), rests.end(), _cmp_rest);
-    vector<pair<skill_type, int64_t> >::iterator it = rests.begin();
-    while (scaled_total < scale && it != rests.end())
+    for (auto &rest : rests)
     {
-        ++array[it->first];
+        if (scaled_total >= scale)
+            break;
+
+        ++array[rest.first];
         ++scaled_total;
-        ++it;
     }
 
     ASSERT(scaled_total == scale);
@@ -747,30 +724,22 @@ void reset_training()
     // In automatic mode, we fill the array with the content of the queue.
     if (you.auto_training)
     {
-        for (list<skill_type>::iterator it = you.exercises.begin();
-             it != you.exercises.end(); ++it)
-        {
-            skill_type sk = *it;
+        for (auto sk : you.exercises)
             if (skill_trained(sk))
             {
                 you.training[sk] += you.train[sk];
                 empty = false;
             }
-        }
 
         // We count the practise events in the other queue.
         FixedVector<unsigned int, NUM_SKILLS> exer_all;
         exer_all.init(0);
-        for (list<skill_type>::iterator it = you.exercises_all.begin();
-             it != you.exercises_all.end(); ++it)
-        {
-            skill_type sk = *it;
+        for (auto sk : you.exercises_all)
             if (skill_trained(sk))
             {
                 exer_all[sk] += you.train[sk];
                 empty = false;
             }
-        }
 
         // We keep the highest of the 2 numbers.
         for (int sk = 0; sk < NUM_SKILLS; ++sk)
@@ -908,10 +877,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
         // We randomize the order, to avoid a slight bias to first skills.
         // Being trained first can make a difference if skill cost increases.
         shuffle_array(training_order);
-        for (vector<skill_type>::iterator it = training_order.begin();
-             it != training_order.end(); ++it)
+        for (auto sk : training_order)
         {
-            skill_type sk = *it;
             int gain = 0;
 
             while (sk_exp[sk] >= cost && you.training[sk])
@@ -995,7 +962,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
         magic_gain = sprint_modify_exp_inverse(magic_gain);
 
     if (magic_gain && !simu)
-        did_god_conduct(DID_SPELL_PRACTISE, magic_gain);
+        did_god_conduct(DID_SPELL_PRACTISE, div_rand_round(magic_gain, 10));
 }
 
 bool skill_trained(int i)
@@ -1601,9 +1568,8 @@ int species_apt(skill_type skill, species_type species)
         for (int sp = 0; sp < NUM_SPECIES; ++sp)
             for (int sk = 0; sk < NUM_SKILLS; ++sk)
                 _spec_skills[sp][sk] = sentinel;
-        for (unsigned i = 0; i < ARRAYSZ(species_skill_aptitudes); ++i)
+        for (const species_skill_aptitude &ssa : species_skill_aptitudes)
         {
-            const species_skill_aptitude &ssa(species_skill_aptitudes[i]);
             ASSERT(_spec_skills[ssa.species][ssa.skill] == sentinel);
             _spec_skills[ssa.species][ssa.skill] = ssa.aptitude;
         }
@@ -1620,34 +1586,24 @@ float species_apt_factor(skill_type sk, species_type sp)
 
 vector<skill_type> get_crosstrain_skills(skill_type sk)
 {
-    vector<skill_type> ret;
-
     switch (sk)
     {
     case SK_SHORT_BLADES:
-        ret.push_back(SK_LONG_BLADES);
-        return ret;
+        return { SK_LONG_BLADES };
     case SK_LONG_BLADES:
-        ret.push_back(SK_SHORT_BLADES);
-        return ret;
+        return { SK_SHORT_BLADES };
     case SK_AXES:
     case SK_STAVES:
-        ret.push_back(SK_POLEARMS);
-        ret.push_back(SK_MACES_FLAILS);
-        return ret;
+        return { SK_POLEARMS, SK_MACES_FLAILS };
     case SK_MACES_FLAILS:
     case SK_POLEARMS:
-        ret.push_back(SK_AXES);
-        ret.push_back(SK_STAVES);
-        return ret;
+        return { SK_AXES, SK_STAVES };
     case SK_SLINGS:
-        ret.push_back(SK_THROWING);
-        return ret;
+        return { SK_THROWING };
     case SK_THROWING:
-        ret.push_back(SK_SLINGS);
-        return ret;
+        return { SK_SLINGS };
     default:
-        return ret;
+        return {};
     }
 }
 
@@ -1675,9 +1631,9 @@ int elemental_preference(spell_type spell, int scale)
     skill_set skill_list;
     spell_skills(spell, skill_list);
     int preference = 0;
-    for (skill_set_iter it = skill_list.begin(); it != skill_list.end(); ++it)
-        if (_skill_is_elemental(*it))
-            preference += you.skill(*it, scale);
+    for (skill_type sk : skill_list)
+        if (_skill_is_elemental(sk))
+            preference += you.skill(sk, scale);
     return preference;
 }
 

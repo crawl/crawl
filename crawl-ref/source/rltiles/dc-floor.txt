@@ -910,6 +910,46 @@ demonic_red9
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_DARKGRAY
 %resetcol
 
+%variation FLOOR_DEMONIC lightblue
+%hue 0 210
+%lum 0 5
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTBLUE
+%resetcol
+
+%variation FLOOR_DEMONIC lightgreen
+%hue 0 110
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTGREEN
+%resetcol
+
+%variation FLOOR_DEMONIC lightcyan
+%hue 0 180
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTCYAN
+%resetcol
+
+%variation FLOOR_DEMONIC lightred
+%hue 0 0
+%lum 0 10
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTRED
+%resetcol
+
+%variation FLOOR_DEMONIC lightmagenta
+%hue 0 290
+%lum 0 5
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTMAGENTA
+%resetcol
+
+%variation FLOOR_DEMONIC yellow
+%hue 0 50
+%lum 0 5
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_YELLOW
+%resetcol
+
+%variation FLOOR_DEMONIC white
+%desat 0
+%lum 0 30
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_WHITE
+%resetcol
+
 %weight 10
 green_bones01 FLOOR_GREEN_BONES
 green_bones02

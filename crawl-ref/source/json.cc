@@ -40,7 +40,7 @@
 static char *json_strdup(const char *str)
 {
     char *ret = (char*)malloc(strlen(str) + 1);
-    if (ret == NULL)
+    if (ret == nullptr)
         out_of_memory();
     strcpy(ret, str);
     return ret;
@@ -58,7 +58,7 @@ typedef struct
 static void sb_init(SB *sb)
 {
     sb->start = (char*)malloc(17);
-    if (sb->start == NULL)
+    if (sb->start == nullptr)
         out_of_memory();
     sb->cur = sb->start;
     sb->end = sb->start + 16;
@@ -80,7 +80,7 @@ static void sb_grow(SB *sb, int need)
     while (alloc < length + need);
 
     sb->start = (char*)realloc(sb->start, alloc + 1);
-    if (sb->start == NULL)
+    if (sb->start == nullptr)
         out_of_memory();
     sb->cur = sb->start + length;
     sb->end = sb->start + alloc;
@@ -393,13 +393,13 @@ JsonNode *json_decode(const char *json)
 
     skip_space(&s);
     if (!parse_value(&s, &ret))
-        return NULL;
+        return nullptr;
 
     skip_space(&s);
     if (*s != 0)
     {
         json_delete(ret);
-        return NULL;
+        return nullptr;
     }
 
     return ret;
@@ -407,7 +407,7 @@ JsonNode *json_decode(const char *json)
 
 char *json_encode(const JsonNode *node)
 {
-    return json_stringify(node, NULL);
+    return json_stringify(node, nullptr);
 }
 
 char *json_encode_string(const char *str)
@@ -425,7 +425,7 @@ char *json_stringify(const JsonNode *node, const char *space)
     SB sb;
     sb_init(&sb);
 
-    if (space != NULL)
+    if (space != nullptr)
         emit_value_indented(&sb, node, space, 0);
     else
         emit_value(&sb, node);
@@ -435,7 +435,7 @@ char *json_stringify(const JsonNode *node, const char *space)
 
 void json_delete(JsonNode *node)
 {
-    if (node != NULL)
+    if (node != nullptr)
     {
         json_remove_from_parent(node);
 
@@ -448,7 +448,7 @@ void json_delete(JsonNode *node)
             case JSON_OBJECT:
             {
                 JsonNode *child, *next;
-                for (child = node->children.head; child != NULL; child = next)
+                for (child = node->children.head; child != nullptr; child = next)
                 {
                     next = child->next;
                     json_delete(child);
@@ -467,7 +467,7 @@ bool json_validate(const char *json)
     const char *s = json;
 
     skip_space(&s);
-    if (!parse_value(&s, NULL))
+    if (!parse_value(&s, nullptr))
         return false;
 
     skip_space(&s);
@@ -482,8 +482,8 @@ JsonNode *json_find_element(JsonNode *array, int index)
     JsonNode *element;
     int i = 0;
 
-    if (array == NULL || array->tag != JSON_ARRAY)
-        return NULL;
+    if (array == nullptr || array->tag != JSON_ARRAY)
+        return nullptr;
 
     json_foreach(element, array)
     {
@@ -492,34 +492,34 @@ JsonNode *json_find_element(JsonNode *array, int index)
         i++;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 JsonNode *json_find_member(JsonNode *object, const char *name)
 {
     JsonNode *member;
 
-    if (object == NULL || object->tag != JSON_OBJECT)
-        return NULL;
+    if (object == nullptr || object->tag != JSON_OBJECT)
+        return nullptr;
 
     json_foreach(member, object)
         if (strcmp(member->key, name) == 0)
             return member;
 
-    return NULL;
+    return nullptr;
 }
 
 JsonNode *json_first_child(const JsonNode *node)
 {
-    if (node != NULL && (node->tag == JSON_ARRAY || node->tag == JSON_OBJECT))
+    if (node != nullptr && (node->tag == JSON_ARRAY || node->tag == JSON_OBJECT))
         return node->children.head;
-    return NULL;
+    return nullptr;
 }
 
 static JsonNode *mknode(JsonTag tag)
 {
     JsonNode *ret = (JsonNode*) calloc(1, sizeof(JsonNode));
-    if (ret == NULL)
+    if (ret == nullptr)
         out_of_memory();
     ret->tag = tag;
     return ret;
@@ -527,7 +527,7 @@ static JsonNode *mknode(JsonTag tag)
 
 JsonNode *json_mknull()
 {
-    return mknode(JSON_NULL);
+    return mknode(JSON_nullptr);
 }
 
 JsonNode *json_mkbool(bool b)
@@ -570,9 +570,9 @@ static void append_node(JsonNode *parent, JsonNode *child)
 {
     child->parent = parent;
     child->prev = parent->children.tail;
-    child->next = NULL;
+    child->next = nullptr;
 
-    if (parent->children.tail != NULL)
+    if (parent->children.tail != nullptr)
         parent->children.tail->next = child;
     else
         parent->children.head = child;
@@ -582,10 +582,10 @@ static void append_node(JsonNode *parent, JsonNode *child)
 static void prepend_node(JsonNode *parent, JsonNode *child)
 {
     child->parent = parent;
-    child->prev = NULL;
+    child->prev = nullptr;
     child->next = parent->children.head;
 
-    if (parent->children.head != NULL)
+    if (parent->children.head != nullptr)
         parent->children.head->prev = child;
     else
         parent->children.tail = child;
@@ -601,7 +601,7 @@ static void append_member(JsonNode *object, char *key, JsonNode *value)
 void json_append_element(JsonNode *array, JsonNode *element)
 {
     ASSERT(array->tag == JSON_ARRAY);
-    ASSERT(element->parent == NULL);
+    ASSERT(element->parent == nullptr);
 
     append_node(array, element);
 }
@@ -609,7 +609,7 @@ void json_append_element(JsonNode *array, JsonNode *element)
 void json_prepend_element(JsonNode *array, JsonNode *element)
 {
     ASSERT(array->tag == JSON_ARRAY);
-    ASSERT(element->parent == NULL);
+    ASSERT(element->parent == nullptr);
 
     prepend_node(array, element);
 }
@@ -617,7 +617,7 @@ void json_prepend_element(JsonNode *array, JsonNode *element)
 void json_append_member(JsonNode *object, const char *key, JsonNode *value)
 {
     ASSERT(object->tag == JSON_OBJECT);
-    ASSERT(value->parent == NULL);
+    ASSERT(value->parent == nullptr);
 
     append_member(object, json_strdup(key), value);
 }
@@ -625,7 +625,7 @@ void json_append_member(JsonNode *object, const char *key, JsonNode *value)
 void json_prepend_member(JsonNode *object, const char *key, JsonNode *value)
 {
     ASSERT(object->tag == JSON_OBJECT);
-    ASSERT(value->parent == NULL);
+    ASSERT(value->parent == nullptr);
 
     value->key = json_strdup(key);
     prepend_node(object, value);
@@ -635,22 +635,22 @@ void json_remove_from_parent(JsonNode *node)
 {
     JsonNode *parent = node->parent;
 
-    if (parent != NULL)
+    if (parent != nullptr)
     {
-        if (node->prev != NULL)
+        if (node->prev != nullptr)
             node->prev->next = node->next;
         else
             parent->children.head = node->next;
-        if (node->next != NULL)
+        if (node->next != nullptr)
             node->next->prev = node->prev;
         else
             parent->children.tail = node->prev;
 
         free(node->key);
 
-        node->parent = NULL;
-        node->prev = node->next = NULL;
-        node->key = NULL;
+        node->parent = nullptr;
+        node->prev = node->next = nullptr;
+        node->key = nullptr;
     }
 }
 
@@ -693,7 +693,7 @@ static bool parse_value(const char **sp, JsonNode **out)
     case '"':
     {
         char *str;
-        if (parse_string(&s, out ? &str : NULL))
+        if (parse_string(&s, out ? &str : nullptr))
         {
             if (out)
                 *out = mkstring(str);
@@ -722,7 +722,7 @@ static bool parse_value(const char **sp, JsonNode **out)
     default:
     {
         double num;
-        if (parse_number(&s, out ? &num : NULL))
+        if (parse_number(&s, out ? &num : nullptr))
         {
             if (out)
                 *out = json_mknumber(num);
@@ -737,7 +737,7 @@ static bool parse_value(const char **sp, JsonNode **out)
 static bool parse_array(const char **sp, JsonNode **out)
 {
     const char *s = *sp;
-    JsonNode *ret = out ? json_mkarray() : NULL;
+    JsonNode *ret = out ? json_mkarray() : nullptr;
     JsonNode *element;
 
     if (*s++ != '[')
@@ -752,7 +752,7 @@ static bool parse_array(const char **sp, JsonNode **out)
 
     for (;;)
     {
-        if (!parse_value(&s, out ? &element : NULL))
+        if (!parse_value(&s, out ? &element : nullptr))
             goto failure;
         skip_space(&s);
 
@@ -784,7 +784,7 @@ failure:
 static bool parse_object(const char **sp, JsonNode **out)
 {
     const char *s = *sp;
-    JsonNode *ret = out ? json_mkobject() : NULL;
+    JsonNode *ret = out ? json_mkobject() : nullptr;
     char *key;
     JsonNode *value;
 
@@ -800,7 +800,7 @@ static bool parse_object(const char **sp, JsonNode **out)
 
     for (;;)
     {
-        if (!parse_string(&s, out ? &key : NULL))
+        if (!parse_string(&s, out ? &key : nullptr))
             goto failure;
         skip_space(&s);
 
@@ -808,7 +808,7 @@ static bool parse_object(const char **sp, JsonNode **out)
             goto failure_free_key;
         skip_space(&s);
 
-        if (!parse_value(&s, out ? &value : NULL))
+        if (!parse_value(&s, out ? &value : nullptr))
             goto failure_free_key;
         skip_space(&s);
 
@@ -1016,7 +1016,7 @@ bool parse_number(const char **sp, double *out)
     }
 
     if (out)
-        *out = strtod(*sp, NULL);
+        *out = strtod(*sp, nullptr);
 
     *sp = s;
     return true;
@@ -1035,7 +1035,7 @@ static void emit_value(SB *out, const JsonNode *node)
     ASSERT(tag_is_valid(node->tag));
     switch (node->tag)
     {
-        case JSON_NULL:
+        case JSON_nullptr:
             sb_puts(out, "null");
             break;
         case JSON_BOOL:
@@ -1063,7 +1063,7 @@ void emit_value_indented(SB *out, const JsonNode *node, const char *space, int i
     ASSERT(tag_is_valid(node->tag));
     switch (node->tag)
     {
-        case JSON_NULL:
+        case JSON_nullptr:
             sb_puts(out, "null");
             break;
         case JSON_BOOL:
@@ -1094,7 +1094,7 @@ static void emit_array(SB *out, const JsonNode *array)
     json_foreach(element, array)
     {
         emit_value(out, element);
-        if (element->next != NULL)
+        if (element->next != nullptr)
             sb_putc(out, ',');
     }
     sb_putc(out, ']');
@@ -1105,21 +1105,21 @@ static void emit_array_indented(SB *out, const JsonNode *array, const char *spac
     const JsonNode *element = array->children.head;
     int i;
 
-    if (element == NULL)
+    if (element == nullptr)
     {
         sb_puts(out, "[]");
         return;
     }
 
     sb_puts(out, "[\n");
-    while (element != NULL)
+    while (element != nullptr)
     {
         for (i = 0; i < indent_level + 1; i++)
             sb_puts(out, space);
         emit_value_indented(out, element, space, indent_level + 1);
 
         element = element->next;
-        sb_puts(out, element != NULL ? ",\n" : "\n");
+        sb_puts(out, element != nullptr ? ",\n" : "\n");
     }
     for (i = 0; i < indent_level; i++)
         sb_puts(out, space);
@@ -1136,7 +1136,7 @@ static void emit_object(SB *out, const JsonNode *object)
         emit_string(out, member->key);
         sb_putc(out, ':');
         emit_value(out, member);
-        if (member->next != NULL)
+        if (member->next != nullptr)
             sb_putc(out, ',');
     }
     sb_putc(out, '}');
@@ -1147,14 +1147,14 @@ static void emit_object_indented(SB *out, const JsonNode *object, const char *sp
     const JsonNode *member = object->children.head;
     int i;
 
-    if (member == NULL)
+    if (member == nullptr)
     {
         sb_puts(out, "{}");
         return;
     }
 
     sb_puts(out, "{\n");
-    while (member != NULL)
+    while (member != nullptr)
     {
         for (i = 0; i < indent_level + 1; i++)
             sb_puts(out, space);
@@ -1163,7 +1163,7 @@ static void emit_object_indented(SB *out, const JsonNode *object, const char *sp
         emit_value_indented(out, member, space, indent_level + 1);
 
         member = member->next;
-        sb_puts(out, member != NULL ? ",\n" : "\n");
+        sb_puts(out, member != nullptr ? ",\n" : "\n");
     }
     for (i = 0; i < indent_level; i++)
         sb_puts(out, space);
@@ -1322,12 +1322,12 @@ static void emit_number(SB *out, double num)
 
 static bool tag_is_valid(unsigned int tag)
 {
-    return /* tag >= JSON_NULL && */ tag <= JSON_OBJECT;
+    return /* tag >= JSON_nullptr && */ tag <= JSON_OBJECT;
 }
 
 static bool number_is_valid(const char *num)
 {
-    return parse_number(&num, NULL) && *num == '\0';
+    return parse_number(&num, nullptr) && *num == '\0';
 }
 
 static bool expect_literal(const char **sp, const char *str)
@@ -1397,12 +1397,12 @@ static int write_hex16(char *out, uint16_t val)
 bool json_check(const JsonNode *node, char errmsg[256])
 {
     #define problem(...) do { \
-            if (errmsg != NULL) \
+            if (errmsg != nullptr) \
                 snprintf(errmsg, 256, __VA_ARGS__); \
             return false; \
         } while (0)
 
-    if (node->key != NULL && !utf8_validate(node->key))
+    if (node->key != nullptr && !utf8_validate(node->key))
         problem("key contains invalid UTF-8");
 
     if (!tag_is_valid(node->tag))
@@ -1415,8 +1415,8 @@ bool json_check(const JsonNode *node, char errmsg[256])
     }
     else if (node->tag == JSON_STRING)
     {
-        if (node->string_ == NULL)
-            problem("string_ is NULL");
+        if (node->string_ == nullptr)
+            problem("string_ is nullptr");
         if (!utf8_validate(node->string_))
             problem("string_ contains invalid UTF-8");
     }
@@ -1425,22 +1425,22 @@ bool json_check(const JsonNode *node, char errmsg[256])
         JsonNode *head = node->children.head;
         JsonNode *tail = node->children.tail;
 
-        if (head == NULL || tail == NULL)
+        if (head == nullptr || tail == nullptr)
         {
-            if (head != NULL)
-                problem("tail is NULL, but head is not");
-            if (tail != NULL)
-                problem("head is NULL, but tail is not");
+            if (head != nullptr)
+                problem("tail is nullptr, but head is not");
+            if (tail != nullptr)
+                problem("head is nullptr, but tail is not");
         }
         else
         {
             JsonNode *child;
-            JsonNode *last = NULL;
+            JsonNode *last = nullptr;
 
-            if (head->prev != NULL)
-                problem("First child's prev pointer is not NULL");
+            if (head->prev != nullptr)
+                problem("First child's prev pointer is not nullptr");
 
-            for (child = head; child != NULL; last = child, child = child->next)
+            for (child = head; child != nullptr; last = child, child = child->next)
             {
                 if (child == node)
                     problem("node is its own child");
@@ -1451,13 +1451,13 @@ bool json_check(const JsonNode *node, char errmsg[256])
 
                 if (child->parent != node)
                     problem("child does not point back to parent");
-                if (child->next != NULL && child->next->prev != child)
+                if (child->next != nullptr && child->next->prev != child)
                     problem("child->next does not point back to child");
 
-                if (node->tag == JSON_ARRAY && child->key != NULL)
-                    problem("Array element's key is not NULL");
-                if (node->tag == JSON_OBJECT && child->key == NULL)
-                    problem("Object member's key is NULL");
+                if (node->tag == JSON_ARRAY && child->key != nullptr)
+                    problem("Array element's key is not nullptr");
+                if (node->tag == JSON_OBJECT && child->key == nullptr)
+                    problem("Object member's key is nullptr");
 
                 if (!json_check(child, errmsg))
                     return false;

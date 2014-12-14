@@ -287,8 +287,8 @@ static const char *divine_title[NUM_GODS][8] =
         "Holy Warrior",       "Exorcist",              "Demon Slayer",             "Bringer of Light"},
 
     // Kikubaaqudgha -- scholarly death.
-    {"Tormented",          "Purveyor of Pain",      "Death's Scholar",          "Merchant of Misery",
-        "Death's Artisan",    "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
+    {"Tormented",          "Purveyor of Pain",      "Scholar of Death",         "Merchant of Misery",
+        "Artisan of Death",   "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
     // Yredelemnul -- zombie death.
     {"Traitor",            "Tainted",                "Torchbearer",             "Fey @Genus@",
@@ -416,7 +416,7 @@ static string _describe_ash_skill_boost()
         string skills;
         map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(i));
         const int8_t bonus = boosted_skills.begin()->second;
-        map<skill_type, int8_t>::iterator it = boosted_skills.begin();
+        auto it = boosted_skills.begin();
 
         // First, we keep only one magic school skill (conjuration).
         // No need to list all of them since we boost all or none.
@@ -424,7 +424,7 @@ static string _describe_ash_skill_boost()
         {
             if (it->first > SK_CONJURATIONS && it->first <= SK_LAST_MAGIC)
             {
-                boosted_skills.erase(it);
+                boosted_skills.erase(it++);
                 it = boosted_skills.begin();
             }
             else
@@ -447,8 +447,7 @@ static string _describe_ash_skill_boost()
             else if (boosted_skills.size() == 2)
                 skills += " and ";
 
-            boosted_skills.erase(it);
-            ++it;
+            boosted_skills.erase(it++);
         }
 
         desc << setw(30) << skills;
@@ -507,15 +506,15 @@ static string _describe_branch_bribability()
     _list_bribable_branches(targets);
 
     size_t width = 0;
-    for (unsigned int i = 0; i < targets.size(); i++)
-        width = max(width, strlen(branches[targets[i]].longname));
+    for (branch_type br : targets)
+        width = max(width, strlen(branches[br].longname));
 
-    for (unsigned int i = 0; i < targets.size(); i++)
+    for (branch_type br : targets)
     {
-        string line(branches[targets[i]].longname);
+        string line(branches[br].longname);
         line += string(width + 1 - strwidth(line), ' ');
         // XXX: move this elsewhere?
-        switch (targets[i])
+        switch (br)
         {
             case BRANCH_ORC:
                 line += "(orcs)              ";
@@ -547,15 +546,15 @@ static string _describe_branch_bribability()
         }
 
         line += "Susceptibility: ";
-        const int suscept = gozag_branch_bribe_susceptibility(targets[i]);
+        const int suscept = gozag_branch_bribe_susceptibility(br);
         ASSERT(suscept >= 0
                && suscept < (int)ARRAYSZ(bribe_susceptibility_adjectives));
         line += bribe_susceptibility_adjectives[suscept];
 
-        if (!branch_bribe[targets[i]])
+        if (!branch_bribe[br])
             line += "not bribed";
         else
-            line += make_stringf("$%d", branch_bribe[targets[i]]);
+            line += make_stringf("$%d", branch_bribe[br]);
 
         ret += line + "\n";
     }
@@ -577,7 +576,7 @@ static bool _check_description_cycle(god_desc_type gdesc)
     const int bottom_line = min(30, get_number_of_lines());
 
     cgotoxy(1, bottom_line);
-    const char* place = NULL;
+    const char* place = nullptr;
     switch (gdesc)
     {
         case GDESC_OVERVIEW: place = "<w>Overview</w>|Powers|Wrath"; break;
@@ -1002,15 +1001,13 @@ static void _describe_god_powers(god_type which_god, int numcols)
     }
     else if (which_god == GOD_VEHUMET)
     {
-        set<spell_type>::iterator it = you.vehumet_gifts.begin();
-        if (it != you.vehumet_gifts.end())
+        if (const int numoffers = you.vehumet_gifts.size())
         {
             have_any = true;
 
-            string offer = spell_title(*it);
-            // If we have multiple offers, just summarise.
-            if (++it != you.vehumet_gifts.end())
-                offer = "some of Vehumet's most lethal spells";
+            const string offer = numoffers == 1
+                               ? spell_title(*you.vehumet_gifts.begin())
+                               : "some of Vehumet's most lethal spells";
 
             _print_final_god_abil_desc(which_god,
                                        "You can memorise " + offer + ".",
@@ -1076,22 +1073,21 @@ static void _god_overview_description(god_type which_god, bool give_title)
     if (give_title)
     {
         textcolour(WHITE);
-        const int len = numcols - strlen("Religion");
-        cprintf("%sReligion\n", string(len / 2, ' ').c_str());
+        cprintf("Religion");
         textcolour(LIGHTGREY);
     }
-
-    _print_top_line(which_god, numcols);
+    // Center top line even if it already contains "Religion" (len = 8)
+    _print_top_line(which_god, numcols - (give_title ? 2*8 : 0));
 
     // Print god's description.
     string god_desc = getLongDescription(god_name(which_god));
-    cprintf("%s", get_linebreak_string(god_desc.c_str(), numcols).c_str());
+    cprintf("%s\n", get_linebreak_string(god_desc.c_str(), numcols).c_str());
 
     // Title only shown for our own god.
     if (you_worship(which_god))
     {
         // Print title based on piety.
-        cprintf("\nTitle - ");
+        cprintf("\nTitle  - ");
         textcolour(god_colour(which_god));
 
         string title = god_title(which_god, you.species, you.piety);
@@ -1103,7 +1099,7 @@ static void _god_overview_description(god_type which_god, bool give_title)
     // something better, do it.
 
     textcolour(LIGHTGREY);
-    cprintf("\n\nFavour - ");
+    cprintf("\nFavour - ");
     textcolour(god_colour(which_god));
 
     //mv: Player is praying at altar without appropriate religion.

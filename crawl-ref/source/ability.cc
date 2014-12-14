@@ -7,12 +7,12 @@
 
 #include "ability.h"
 
+#include <cctype>
 #include <cmath>
+#include <cstdio>
+#include <cstring>
 #include <iomanip>
 #include <sstream>
-#include <ctype.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "abyss.h"
 #include "acquire.h"
@@ -86,11 +86,11 @@ enum ability_flag_type
     ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
     ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
     ABFLAG_VARIABLE_FRUIT = 0x00000400, // ability requires fruit or piety
-    ABFLAG_HEX_MISCAST    = 0x00000800, // severity 3 enchantment miscast
-    ABFLAG_TLOC_MISCAST   = 0x00001000, // severity 3 translocation miscast
+                          //0x00000800,
+                          //0x00001000,
     ABFLAG_NECRO_MISCAST_MINOR = 0x00002000, // severity 2 necro miscast
-    ABFLAG_NECRO_MISCAST  = 0x00004000, // severity 3 necro miscast
-    ABFLAG_TRMT_MISCAST   = 0x00008000, // severity 3 transmutation miscast
+                          //0x00004000,
+                          //0x00008000,
     ABFLAG_LEVEL_DRAIN    = 0x00010000, // drains 2 levels
     ABFLAG_STAT_DRAIN     = 0x00020000, // stat drain
     ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
@@ -223,7 +223,6 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, 0, ABFLAG_BREATH},
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, 0, ABFLAG_BREATH},
     { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_BOTTLE_BLOOD, "Bottle Blood", 0, 0, 0, 0, 0, ABFLAG_NONE}, // no costs
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, 0, ABFLAG_BREATH},
 
@@ -496,12 +495,9 @@ static const ability_def Ability_List[] =
 
 const ability_def& get_ability_def(ability_type abil)
 {
-    for (unsigned int i = 0;
-         i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
-    {
-        if (Ability_List[i].ability == abil)
-            return Ability_List[i];
-    }
+    for (const ability_def &ab_def : Ability_List)
+        if (ab_def.ability == abil)
+            return ab_def;
 
     return Ability_List[0];
 }
@@ -699,7 +695,7 @@ int get_gold_cost(ability_type ability)
     case ABIL_GOZAG_CALL_MERCHANT:
         return gozag_price_for_shop(true);
     case ABIL_GOZAG_POTION_PETITION:
-        return gozag_porridge_price();
+        return gozag_potion_price();
     case ABIL_GOZAG_BRIBE_BRANCH:
         return GOZAG_BRIBE_AMOUNT;
     default:
@@ -1057,10 +1053,6 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 45 - (2 * you.experience_level);
         break;
 
-    case ABIL_BOTTLE_BLOOD:
-        failure = 0;
-        break;
-
     case ABIL_RECHARGING:       // this is for deep dwarves {1KB}
         failure = 45 - (2 * you.experience_level);
         break;
@@ -1318,10 +1310,9 @@ const char* ability_name(ability_type ability)
 
 vector<const char*> get_ability_names()
 {
-    vector<talent> talents = your_talents(false);
     vector<const char*> result;
-    for (unsigned int i = 0; i < talents.size(); ++i)
-        result.push_back(ability_name(talents[i].which));
+    for (const talent &tal : your_talents(false))
+        result.push_back(ability_name(tal.which));
     return result;
 }
 
@@ -1536,17 +1527,10 @@ static bool _check_ability_possible(const ability_def& abil,
         if (!zin_check_able_to_recite(quiet))
             return false;
 
-        const int result = zin_check_recite_to_monsters(quiet);
-        if (result == -1)
+        if (zin_check_recite_to_monsters(quiet) != 1)
         {
             if (!quiet)
                 mpr("There's no appreciative audience!");
-            return false;
-        }
-        else if (result == 0)
-        {
-            if (!quiet)
-                mpr("There's no-one here to preach to!");
             return false;
         }
         return true;
@@ -1633,7 +1617,8 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_OKAWARU_FINESSE:
         if (stasis_blocks_effect(false,
-                                 quiet ? NULL : "%s makes your neck tingle."))
+                                 quiet ? nullptr
+                                       : "%s makes your neck tingle."))
         {
             return false;
         }
@@ -1685,7 +1670,7 @@ static bool _check_ability_possible(const ability_def& abil,
             return true;
 
         if (!quiet)
-             mpr(no_tele_reason.c_str());
+             mpr(no_tele_reason);
         return false;
     }
 
@@ -1798,7 +1783,6 @@ bool activate_talent(const talent& tal)
         case ABIL_STOP_SINGING:
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
-        case ABIL_BOTTLE_BLOOD:
         case ABIL_ASHENZARI_END_TRANSFER:
         case ABIL_ZIN_VITALISATION:
         case ABIL_GOZAG_POTION_PETITION:
@@ -2148,14 +2132,14 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         targetter_beam tgt(&you, beam.range, ZAP_FIREBALL, power, 1, 1);
 
         if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, beam.range,
-                             true, true, false, NULL,
+                             true, true, false, nullptr,
                              "Aiming: <white>Delayed Fireball</white>",
                              false, &tgt))
         {
             return SPRET_ABORT;
         }
 
-        if (!zapping(ZAP_FIREBALL, power, beam, true, NULL, false))
+        if (!zapping(ZAP_FIREBALL, power, beam, true, nullptr, false))
             return SPRET_ABORT;
 
         // Only one allowed, since this is instantaneous. - bwr
@@ -2194,7 +2178,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         beam.range = 1;
         if (!spell_direction(abild, beam,
                              DIR_NONE, TARG_HOSTILE, 0, true, true, false,
-                             NULL, NULL, false,
+                             nullptr, nullptr, false,
                              &hitfunc))
         {
             return SPRET_ABORT;
@@ -2380,7 +2364,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, cloaks, randarts
         fail_check();
-        potion_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
+        potionlike_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
         contaminate_player(1000 + random2(2000), true);
         break;
 
@@ -2440,7 +2424,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_ZIN_RECITE:
     {
         fail_check();
-        if (zin_check_recite_to_monsters())
+        if (zin_check_recite_to_monsters() == 1)
         {
             you.attribute[ATTR_RECITE_TYPE] = (recite_type) random2(NUM_RECITE_TYPES); // This is just flavor
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
@@ -2475,7 +2459,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         monster* mons = monster_at(beam.target);
 
-        if (mons == NULL || !you.can_see(mons))
+        if (mons == nullptr || !you.can_see(mons))
         {
             mpr("There is no monster there to imprison!");
             return SPRET_ABORT;
@@ -2570,7 +2554,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
         fail_check();
-        start_recall(1);
+        start_recall(RECALL_YRED);
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
@@ -2595,7 +2579,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons == NULL || !you.can_see(mons)
+        if (mons == nullptr || !you.can_see(mons)
             || !ench_flavour_affects_monster(BEAM_ENSLAVE_SOUL, mons))
         {
             mpr("You see nothing there to enslave the soul of!");
@@ -2610,7 +2594,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         fail_check();
 
-        return zapping(ZAP_ENSLAVE_SOUL, power, beam, false, NULL, fail);
+        return zapping(ZAP_ENSLAVE_SOUL, power, beam, false, nullptr, fail);
     }
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
@@ -2687,7 +2671,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
         fail_check();
         summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
-                          MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL, -1),
+                          MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
         break;
 
@@ -2716,8 +2700,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                               ZAP_STICKY_FLAME,
                               ZAP_IRON_SHOT,
                               ZAP_BOLT_OF_DRAINING,
-                              ZAP_ORB_OF_ELECTRICITY,
-                              -1);
+                              ZAP_ORB_OF_ELECTRICITY);
             zapping(ztype, power, beam);
         }
         break;
@@ -2725,7 +2708,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
         fail_check();
         summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
-                          MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
+                          MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
         break;
 
@@ -2852,7 +2835,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
 
         return zapping(ZAP_BANISHMENT, 16 + you.skill(SK_INVOCATIONS, 8), beam,
-                       true, NULL, fail);
+                       true, nullptr, fail);
 
     case ABIL_LUGONU_CORRUPT:
         fail_check();
@@ -2911,7 +2894,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         fail_check();
-        start_recall(2);
+        start_recall(RECALL_BEOGH);
         break;
 
     case ABIL_STOP_RECALL:
@@ -2955,12 +2938,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             crawl_state.zero_turns_taken();
             return SPRET_ABORT;
         }
-        break;
-
-    case ABIL_BOTTLE_BLOOD:
-        fail_check();
-        if (!butchery(-1, true))
-            return SPRET_ABORT;
         break;
 
     case ABIL_JIYVA_CALL_JELLY:
@@ -3258,29 +3235,9 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost)
         you.redraw_experience = true;
     }
 
-    if (abil.flags & ABFLAG_HEX_MISCAST)
-    {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_HEXES, 10, 90,
-                      "power out of control", NH_DEFAULT);
-    }
-    if (abil.flags & ABFLAG_NECRO_MISCAST)
-    {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 10, 90,
-                      "power out of control");
-    }
     if (abil.flags & ABFLAG_NECRO_MISCAST_MINOR)
     {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 5, 90,
-                      "power out of control");
-    }
-    if (abil.flags & ABFLAG_TLOC_MISCAST)
-    {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 10, 90,
-                      "power out of control");
-    }
-    if (abil.flags & ABFLAG_TRMT_MISCAST)
-    {
-        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSMUTATION, 10, 90,
+        MiscastEffect(&you, nullptr, ABIL_MISCAST, SPTYP_NECROMANCY, 5, 90,
                       "power out of control");
     }
     if (abil.flags & ABFLAG_LEVEL_DRAIN)
@@ -3305,7 +3262,7 @@ int choose_ability_menu(const vector<talent>& talents)
                              | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE,
                              text_only);
 
-    abil_menu.set_highlighter(NULL);
+    abil_menu.set_highlighter(nullptr);
 #ifdef USE_TILE_LOCAL
     {
         // Hack like the one in spl-cast.cc:list_spells() to align the title.
@@ -3612,9 +3569,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
 
-    if (you.species == SP_VAMPIRE && you.experience_level >= 6)
-        _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
-
     if ((you.species == SP_TENGU && you.experience_level >= 5
          || player_mutation_level(MUT_BIG_WINGS)) && !you.airborne()
         || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT]
@@ -3646,9 +3600,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
-    vector<ability_type> abilities = get_god_abilities(include_unusable);
-    for (unsigned int i = 0; i < abilities.size(); ++i)
-        _add_talent(talents, abilities[i], check_confused);
+    for (ability_type abil : get_god_abilities(include_unusable))
+        _add_talent(talents, abil, check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (!you_worship(GOD_NO_GOD))
@@ -3736,10 +3689,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     // Find hotkeys for the non-hotkeyed talents.
-    for (unsigned int i = 0; i < talents.size(); ++i)
+    for (talent &tal : talents)
     {
         // Skip preassigned hotkeys.
-        if (talents[i].hotkey != 0)
+        if (tal.hotkey != 0)
             continue;
 
         // Try to find a free hotkey for i, starting from Z.
@@ -3749,19 +3702,17 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             bool good_key = true;
 
             // Check that it doesn't conflict with other hotkeys.
-            for (unsigned int j = 0; j < talents.size(); ++j)
-            {
-                if (talents[j].hotkey == kkey)
+            for (const talent &other : talents)
+                if (other.hotkey == kkey)
                 {
                     good_key = false;
                     break;
                 }
-            }
 
             if (good_key)
             {
-                talents[i].hotkey = k;
-                you.ability_letter_table[k] = talents[i].which;
+                tal.hotkey = k;
+                you.ability_letter_table[k] = tal.which;
                 break;
             }
         }
@@ -3966,9 +3917,9 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
     else if (you_worship(GOD_RU))
     {
 
-        ASSERT(you.props.exists("available_sacrifices"));
+        ASSERT(you.props.exists(AVAILABLE_SAC_KEY));
         CrawlVector &available_sacrifices
-            = you.props["available_sacrifices"].get_vector();
+            = you.props[AVAILABLE_SAC_KEY].get_vector();
 
         int num_sacrifices = available_sacrifices.size();
         for (int i = 0; i < num_sacrifices; ++i)

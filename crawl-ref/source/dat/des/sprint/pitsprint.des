@@ -20,7 +20,7 @@ function base_monster_setup(e)
            giant frog / mummy / orc warrior band / wight band /\
            hungry ghost / big kobold band /\
            brain worm / warg / wolf / porcupine / black bear /\
-           giant mite / green rat / flying skull / iron imp /\
+           giant mite / river rat / flying skull / iron imp /\
            white imp / ufetubus / fire bat")
   e.kmons("B = goliath beetle / steam dragon / crocodile / hippogriff /\
            killer bee band / yellow wasp / eye of draining / manticore /\
@@ -34,7 +34,7 @@ function base_monster_setup(e)
            orc high priest band w:5 / boring beetle /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
            orc sorcerer band w:5 / orc knight band /\
-           redback / phantasmal warrior / spiny frog / orange rat /\
+           redback / phantasmal warrior / spiny frog / hell rat /\
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
            elephant / death yak / wolf band / sheep band /\
            raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
@@ -103,7 +103,7 @@ function base_monster_setup(e)
            hobgoblin / jackal band /  adder / quokka /\
            orc / worker ant / giant eyeball / skeleton /\
            zombie / brain worm / giant mite /\
-           green rat / ufetubus")
+           river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
            Prince Ribbit")
@@ -166,7 +166,7 @@ end
 
 
 function general_item_setup(e)
-  e.kitem("^ = superb_item ident:all w:590 / potion of porridge ident:all w:2 /\
+  e.kitem("^ = superb_item ident:all w:590 / royal jelly q:3 w:2 /\
           wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
           potion of heal wounds ident:all q:2 w:2 /\
           scroll of recharging ident:all w:1 /\
@@ -1003,12 +1003,13 @@ KFEAT:   r = altar_cheibriados
 KFEAT:   s = altar_dithmenos
 KFEAT:   t = altar_gozag
 KFEAT:   u = altar_qazlal
+KFEAT:   v = altar_ru
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
 hopnlfjida
-gqrmks.ebc
+gqrmksvebc
 .
 u
 t
@@ -1900,7 +1901,7 @@ TILE:   v = wall_cobalt_stone
 : general_item_setup(_G)
 : base_monster_setup(_G)
 KITEM:  34CBDEJK = superb_item ident:all w:66 /\
-                   potion of porridge ident:all q:2 /\
+                   royal jelly q:6 /\
                    bread ration ident:all q:2 /\
                    meat ration ident:all q:2
 : lua_marker('_', props_marker {

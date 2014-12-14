@@ -560,7 +560,7 @@ public:
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
         item_special(0), qty(0), acquirement_source(0), place(), props(),
-        _corpse_monster_spec(NULL)
+        _corpse_monster_spec(nullptr)
     {
     }
 
@@ -781,10 +781,15 @@ struct shop_spec
 
     bool use_all;       /**< True if all items in `items` should be used. */
 
+    bool gozag;         /**< True if this shop was created by Gozag's Call
+                         *   Merchant ability (and therefore should have better
+                         *   stock).
+                         *   */
+
     shop_spec(shop_type sh, string n="", string t="",
-              string s="", int g=-1, int ni=-1, bool u=false)
+              string s="", int g=-1, int ni=-1, bool u=false, bool goz=false)
         : sh_type(sh), name(n), type(t), suffix(s),
-          greed(g), num_items(ni), items(), use_all(u) { }
+          greed(g), num_items(ni), items(), use_all(u), gozag(goz) { }
 };
 
 /**
@@ -869,8 +874,7 @@ public:
     string set_feat(const string &s, bool fix);
     string set_mons(const string &s, bool fix);
     string set_item(const string &s, bool fix);
-    string set_mask(const string &s, bool garbage);
-    string set_height(const string &s, bool garbage);
+    string set_mask(const string &s, bool /*garbage*/);
 
     // Copy from the given mapspec.  If that entry is fixed,
     // it should be pre-selected prior to the copy.

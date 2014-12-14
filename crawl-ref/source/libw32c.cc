@@ -72,9 +72,9 @@
 
 wchar_t oldTitle[80];
 
-static HANDLE inbuf = NULL;
-static HANDLE outbuf = NULL;
-static HANDLE old_outbuf = NULL;
+static HANDLE inbuf = nullptr;
+static HANDLE outbuf = nullptr;
+static HANDLE old_outbuf = nullptr;
 static int current_colour = -1;
 static bool cursor_is_enabled = false;
 static CONSOLE_CURSOR_INFO initial_cci;
@@ -85,7 +85,7 @@ static int chsx = 0, chex = 0, chy = -1;
 static int cx = 0, cy = 0;
 
 // and now, for the screen buffer
-static CHAR_INFO *screen = NULL;
+static CHAR_INFO *screen = nullptr;
 static COORD screensize;
 #define SCREENINDEX(x,y) ((x)+screensize.X*(y))
 static unsigned InputCP, OutputCP;
@@ -311,7 +311,7 @@ static void set_w32_screen_size()
     if (screen)
     {
         delete [] screen;
-        screen = NULL;
+        screen = nullptr;
     }
 
     screen = new CHAR_INFO[screensize.X * screensize.Y];
@@ -359,9 +359,9 @@ void console_startup()
     outbuf = CreateConsoleScreenBuffer(
         GENERIC_READ |GENERIC_WRITE,
         FILE_SHARE_READ | FILE_SHARE_WRITE, // shared
-        NULL,                    // default security attributes
+        nullptr,                    // default security attributes
         CONSOLE_TEXTMODE_BUFFER, // must be TEXTMODE
-        NULL);                   // reserved; must be NULL
+        nullptr);                   // reserved; must be nullptr
 
     SetConsoleActiveScreenBuffer(outbuf);
 
@@ -418,7 +418,7 @@ void console_startup()
 void console_shutdown()
 {
     // don't do anything if we were never initted
-    if (inbuf == NULL && outbuf == NULL && old_outbuf == NULL)
+    if (inbuf == nullptr && outbuf == nullptr && old_outbuf == nullptr)
         return;
 
     // JWM, 06/12/2004: Code page stuff.  If it was the preferred code page, it
@@ -436,10 +436,10 @@ void console_shutdown()
     _setcursortype_internal(true);
     textcolour(DARKGREY);
 
-    inbuf = NULL;
+    inbuf = nullptr;
 
     delete [] screen;
-    screen = NULL;
+    screen = nullptr;
 
     // finally, restore title
     if (*oldTitle)
@@ -578,7 +578,7 @@ void textbackground(int c)
 static void cprintf_aux(const char *s)
 {
     // early out -- not initted yet
-    if (outbuf == NULL)
+    if (outbuf == nullptr)
     {
         printf("%S", OUTW(s));
         return;

@@ -49,7 +49,7 @@ void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
 void set_piety(int piety);
-void handle_god_time(int time_delta);
+void handle_god_time(int /*time_delta*/);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 int gozag_service_fee();
@@ -124,7 +124,7 @@ bool is_follower(const monster* mon);
 bool vehumet_is_offering(spell_type spell);
 void vehumet_accept_gift(spell_type spell);
 
-bool god_hates_attacking_friend(god_type god, const actor *fr);
+bool god_hates_attacking_friend(god_type god, const monster *fr);
 bool god_likes_item(god_type god, const item_def& item);
 bool god_likes_items(god_type god, bool greedy_explore = false);
 
@@ -137,9 +137,9 @@ int get_fuzzied_monster_difficulty(const monster *mons);
 
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
 
-void delayed_monster(const mgen_data &mg, delayed_callback callback = NULL);
+void delayed_monster(const mgen_data &mg, delayed_callback callback = nullptr);
 void delayed_monster_done(string success, string failure,
-                          delayed_callback callback = NULL);
+                          delayed_callback callback = nullptr);
 
 bool do_god_gift(bool forced = false);
 

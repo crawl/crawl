@@ -2,7 +2,7 @@
 
 #include "godpassive.h"
 
-#include <math.h>
+#include <cmath>
 
 #include "artefact.h"
 #include "art-enum.h"
@@ -95,7 +95,7 @@ void jiyva_eat_offlevel_items()
                 mpr("You hear a distant slurping noise.");
                 sacrifice_item_stack(*si, &js);
                 item_was_destroyed(*si);
-                destroy_item(si.link());
+                destroy_item(si.index());
                 jiyva_slurp_message(js);
             }
             return;
@@ -275,12 +275,11 @@ void ash_check_bondage(bool msg)
     {
         you.bondage[s] = new_bondage[s];
         map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(s));
-        for (map<skill_type, int8_t>::iterator it = boosted_skills.begin();
-             it != boosted_skills.end(); ++it)
+        for (const auto &entry : boosted_skills)
         {
-            you.skill_boost[it->first] += it->second;
-            if (you.skill_boost[it->first] > 3)
-                you.skill_boost[it->first] = 3;
+            you.skill_boost[entry.first] += entry.second;
+            if (you.skill_boost[entry.first] > 3)
+                you.skill_boost[entry.first] = 3;
         }
 
     }
@@ -455,6 +454,7 @@ bool god_id_item(item_def& item, bool silent)
             mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 
         seen_item(item);
+        auto_assign_item_slot(item);
         return true;
     }
 
@@ -657,9 +657,10 @@ int ash_skill_boost(skill_type sk, int scale)
     // high bonus   -> factor = 7
 
     unsigned int skill_points = you.skill_points[sk];
-    vector<skill_type> cross_skills = get_crosstrain_skills(sk);
-    for (size_t i = 0; i < cross_skills.size(); ++i)
-        skill_points += you.skill_points[cross_skills[i]] * 2 / 5;
+
+    for (skill_type cross : get_crosstrain_skills(sk))
+        skill_points += you.skill_points[cross] * 2 / 5;
+
     skill_points += (you.skill_boost[sk] * 2 + 1) * piety_rank()
                     * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
 
@@ -759,7 +760,7 @@ void qazlal_storm_clouds()
         do
         {
             ctype = random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
-                                       CLOUD_DUST_TRAIL, -1);
+                                       CLOUD_DUST_TRAIL);
         } while (water && ctype == CLOUD_FIRE);
 
         place_cloud(ctype, candidates[i], random_range(3, 5), &you);

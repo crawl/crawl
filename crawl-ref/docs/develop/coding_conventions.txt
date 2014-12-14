@@ -208,7 +208,8 @@ changed, of course. The following assumes that the conditions are followed by
 single statements.
 
 If both the condition itself and the conditional code are single line
-statements, the braces may be omitted.
+statements, the braces may be omitted; do-while loops, however, should
+always have braces (as in the example above).
 
     if (item != NULL)
         _remove_from_inventory(item);

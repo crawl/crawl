@@ -8,23 +8,23 @@
 #include "player-reacts.h"
 
 #include <algorithm>
+#include <cerrno>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <list>
 #include <sstream>
 #include <string>
 
-#include <errno.h>
 #ifndef TARGET_OS_WINDOWS
 # ifndef __ANDROID__
 #  include <langinfo.h>
 # endif
 #endif
 #include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #ifdef USE_UNIX_SIGNALS
-#include <signal.h>
+#include <csignal>
 #endif
 
 #include "act-iter.h"
@@ -206,10 +206,14 @@ static void _decrement_petrification(int delay)
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
         you.redraw_evasion = true;
+        // implicit assumption: all races that can be petrified are made of
+        // flesh when not petrified
+        const string flesh_equiv = get_form()->flesh_equivalent.empty() ?
+                                            "flesh" :
+                                            get_form()->flesh_equivalent;
+
         mprf(MSGCH_DURATION, "You turn to %s and can move again.",
-             you.form == TRAN_LICH ? "bone" :
-             you.form == TRAN_ICE_BEAST ? "ice" :
-             "flesh");
+             flesh_equiv.c_str());
     }
 
     if (you.duration[DUR_PETRIFYING])
@@ -224,7 +228,7 @@ static void _decrement_petrification(int delay)
             // magical, inluding tengu, as there's no flapping of wings.  Should
             // we be nasty to dragon and bat forms?  For now, let's not instakill
             // them even if it's inconsistent.
-            you.fully_petrify(NULL);
+            you.fully_petrify(nullptr);
         }
         else if (dur < 15 && old_dur >= 15)
             mpr("Your limbs are stiffening.");
@@ -297,7 +301,7 @@ static int _current_horror_level()
     {
         const monster* const mon = monster_at(*ri);
 
-        if (mon == NULL
+        if (mon == nullptr
             || mons_aligned(mon, &you)
             || mons_is_firewood(mon)
             || !you.can_see(mon))
@@ -549,7 +553,7 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
 
     if (_decrement_a_duration(DUR_TROGS_HAND, delay,
-                              NULL, coinflip(),
+                              nullptr, coinflip(),
                               "You feel the effects of Trog's Hand fading."))
     {
         trog_remove_trogs_hand();
@@ -611,7 +615,7 @@ static void _decrement_durations()
         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY
         || you.transform_uncancellable)
     {
-        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, NULL, random2(3),
+        if (_decrement_a_duration(DUR_TRANSFORMATION, delay, nullptr, random2(3),
                                   "Your transformation is almost over."))
         {
             untransform();
@@ -620,7 +624,7 @@ static void _decrement_durations()
 
     // Must come after transformation duration.
     _decrement_a_duration(DUR_BREATH_WEAPON, delay,
-                          "You have got your breath back.", 0, NULL,
+                          "You have got your breath back.", 0, nullptr,
                           MSGCH_RECOVERY);
 
     if (you.attribute[ATTR_SWIFTNESS] >= 0)
@@ -703,7 +707,7 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
 
-    if (_decrement_a_duration(DUR_INVIS, delay, NULL,
+    if (_decrement_a_duration(DUR_INVIS, delay, nullptr,
                               coinflip(), "You flicker for a moment."))
     {
         if (you.invisible())
@@ -713,11 +717,16 @@ static void _decrement_durations()
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     }
 
+    // Decrement ambrosia before confusion, otherwise confusion ending
+    // will cancel ambrosia early. Might be a bad coupling, but ambrosia
+    // needs to use DUR_CONF otherwise it won't behave right if a player
+    // gets confused after eating ambrosia.
+    dec_ambrosia_player(delay);
     _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
     _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
-    if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
+    if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, nullptr, 0,
                               "Quad Damage is wearing off."))
     {
         invalidate_agrid(true);
@@ -745,7 +754,7 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_MESMERISED, delay,
                               "You break out of your daze.",
-                              0, NULL, MSGCH_RECOVERY))
+                              0, nullptr, MSGCH_RECOVERY))
     {
         you.clear_beholders();
     }
@@ -754,23 +763,23 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_AFRAID, delay,
                               "Your fear fades away.",
-                              0, NULL, MSGCH_RECOVERY))
+                              0, nullptr, MSGCH_RECOVERY))
     {
         you.clear_fearmongers();
     }
 
     _decrement_a_duration(DUR_FROZEN, delay,
                           "The ice encasing you melts away.",
-                          0, NULL, MSGCH_RECOVERY);
+                          0, nullptr, MSGCH_RECOVERY);
 
     _decrement_a_duration(DUR_NO_POTIONS, delay,
-                          you_foodless(true) ? NULL
+                          you_foodless(true) ? nullptr
                                              : "You can drink potions again.",
-                          0, NULL, MSGCH_RECOVERY);
+                          0, nullptr, MSGCH_RECOVERY);
 
     _decrement_a_duration(DUR_NO_SCROLLS, delay,
                           "You can read scrolls again.",
-                          0, NULL, MSGCH_RECOVERY);
+                          0, nullptr, MSGCH_RECOVERY);
 
     dec_slow_player(delay);
     dec_exhaust_player(delay);
@@ -1063,6 +1072,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SAP_MAGIC, delay,
                           "Your magic seems less tainted.");
 
+    _decrement_a_duration(DUR_CLEAVE, delay,
+                          "Your cleaving frenzy subsides.");
+
     if (_decrement_a_duration(DUR_CORROSION, delay,
                           "You repair your equipment."))
     {
@@ -1188,6 +1200,9 @@ static void _decrement_durations()
     }
 
     dec_elixir_player(delay);
+
+    if (x_chance_in_y(delay, 80))
+        you.maybe_degrade_bone_armour();
 
     if (!env.sunlight.empty())
         process_sunlights();

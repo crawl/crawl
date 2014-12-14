@@ -39,6 +39,7 @@ bool  is_helmet(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
 // ego items:
+brand_type choose_weapon_brand(weapon_type wpn_type);
 bool set_item_ego_type(item_def &item, object_class_type item_type,
                        int ego_type);
 brand_type get_weapon_brand(const item_def &item) PURE;
@@ -47,6 +48,7 @@ special_missile_type get_ammo_brand(const item_def &item) PURE;
 
 // armour functions:
 int armour_max_enchant(const item_def &item) PURE;
+bool armour_type_is_hide(int type, bool inc_made = false) PURE;
 bool armour_is_hide(const item_def &item, bool inc_made = false) PURE;
 bool armour_is_special(const item_def &item) PURE;
 
@@ -56,6 +58,8 @@ equipment_type get_armour_slot(armour_type arm) IMMUTABLE;
 bool jewellery_is_amulet(const item_def &item) PURE;
 bool jewellery_is_amulet(int sub_type) IMMUTABLE;
 
+armour_type hide_for_monster(monster_type mc) PURE;
+armour_type armour_for_hide(armour_type hide_type) PURE;
 bool  hide2armour(item_def &item);
 
 int   fit_armour_size(const item_def &item, size_type size) PURE;
@@ -71,7 +75,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse,
 
 bool is_shield(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
-                            const item_def *shield = NULL) PURE;
+                            const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
 void ident_reflector(item_def *item);
 

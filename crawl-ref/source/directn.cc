@@ -9,10 +9,10 @@
 
 #include <algorithm>
 #include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "areas.h"
 #include "attitude-change.h"
@@ -133,7 +133,7 @@ static void _debug_describe_feature_at(const coord_def &where);
 #ifdef WIZARD
 static void _wizard_make_friendly(monster* m)
 {
-    if (m == NULL)
+    if (m == nullptr)
         return;
 
     mon_attitude_type att = m->attitude;
@@ -317,20 +317,20 @@ monster* direction_chooser::targeted_monster() const
     if (m && you.can_see(m))
         return m;
     else
-        return NULL;
+        return nullptr;
 }
 
 // Return your target, if it still exists and is visible to you.
 static monster* _get_current_target()
 {
     if (invalid_monster_index(you.prev_targ))
-        return NULL;
+        return nullptr;
 
     monster* mon = &menv[you.prev_targ];
     if (mon->alive() && you.can_see(mon))
         return mon;
     else
-        return NULL;
+        return nullptr;
 }
 
 string direction_chooser::build_targeting_hint_string() const
@@ -634,29 +634,28 @@ void full_describe_view()
     if (!list_mons.empty())
     {
         desc_menu.add_entry(new MenuEntry("Monsters", MEL_SUBTITLE));
-        vector<monster_info>::const_iterator mi;
-        for (mi = list_mons.begin(); mi != list_mons.end(); ++mi)
+        for (const monster_info &mi : list_mons)
         {
             // List monsters in the form
             // (A) An angel (neutral), wielding a glowing long sword
 
             string prefix = "";
 #ifndef USE_TILE_LOCAL
-            cglyph_t g = get_mons_glyph(*mi);
+            cglyph_t g = get_mons_glyph(mi);
             const string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
                      + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
                      + "</" + col_string + ">) ";
 #endif
 
-            string str = get_monster_equipment_desc(*mi, DESC_FULL, DESC_A, true);
-            if (mi->is(MB_MESMERIZING))
+            string str = get_monster_equipment_desc(mi, DESC_FULL, DESC_A, true);
+            if (mi.is(MB_MESMERIZING))
                 str += ", keeping you mesmerised";
 
-            if (mi->dam != MDAM_OKAY)
-                str += ", " + mi->damage_desc();
+            if (mi.dam != MDAM_OKAY)
+                str += ", " + mi.damage_desc();
 
-            string consinfo = mi->constriction_description();
+            string consinfo = mi.constriction_description();
             if (!consinfo.empty())
                 str += ", " + consinfo;
 
@@ -666,11 +665,11 @@ void full_describe_view()
 #endif
             vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
-            MenuEntry *me = NULL;
+            MenuEntry *me = nullptr;
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix+str, &(*mi), hotkey++);
+                    me = new MonsterMenuEntry(prefix+str, &mi, hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
@@ -687,16 +686,15 @@ void full_describe_view()
     if (!list_items.empty())
     {
         vector<InvEntry*> all_items;
-        for (unsigned int i = 0; i < list_items.size(); ++i)
-            all_items.push_back(new InvEntry(list_items[i], true));
+        for (const item_def &item : list_items)
+            all_items.push_back(new InvEntry(item, true));
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
 
         desc_menu.add_entry(new MenuEntry("Items", MEL_SUBTITLE));
-        for (unsigned int i = 0; i < all_items.size(); ++i, hotkey++)
+        for (InvEntry *me : all_items)
         {
-            InvEntry *me = all_items[i];
 #ifndef USE_TILE_LOCAL
             // Show glyphs only for ASCII.
             me->set_show_glyph(true);
@@ -706,15 +704,15 @@ void full_describe_view()
             me->quantity = 2; // Hack to make items selectable.
 
             desc_menu.add_entry(me);
+            ++hotkey;
         }
     }
 
     if (!list_features.empty())
     {
         desc_menu.add_entry(new MenuEntry("Features", MEL_SUBTITLE));
-        for (unsigned int i = 0; i < list_features.size(); ++i, hotkey++)
+        for (const coord_def c : list_features)
         {
-            const coord_def c = list_features[i];
             string desc = "";
 #ifndef USE_TILE_LOCAL
             cglyph_t g = get_cell_glyph(c, true);
@@ -734,6 +732,7 @@ void full_describe_view()
             // Hack to make features selectable.
             me->quantity   = c.x*100 + c.y + 3;
             desc_menu.add_entry(me);
+            ++hotkey;
         }
     }
 
@@ -948,7 +947,7 @@ range_view_annotator::~range_view_annotator()
 {
     if (crawl_state.darken_range)
     {
-        crawl_state.darken_range = NULL;
+        crawl_state.darken_range = nullptr;
         viewwindow(false);
     }
 }
@@ -967,7 +966,7 @@ monster_view_annotator::~monster_view_annotator()
     if ((Options.use_animations & UA_MONSTER_IN_SIGHT)
         && crawl_state.flash_monsters)
     {
-        crawl_state.flash_monsters = NULL;
+        crawl_state.flash_monsters = nullptr;
         viewwindow(false);
     }
 }
@@ -1025,11 +1024,11 @@ bool direction_chooser::move_is_ok() const
 // Assuming the target is in view, is line-of-fire
 // blocked, and by what?
 static bool _blocked_ray(const coord_def &where,
-                         dungeon_feature_type* feat = NULL)
+                         dungeon_feature_type* feat = nullptr)
 {
     if (exists_ray(you.pos(), where, opc_solid_see))
         return false;
-    if (feat == NULL)
+    if (feat == nullptr)
         return true;
     *feat = ray_blocker(you.pos(), where);
     return true;
@@ -1056,7 +1055,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
 
     // First try to pick our previous target.
     const monster* mons_target = _get_current_target();
-    if (mons_target != NULL
+    if (mons_target != nullptr
         && (mode != TARG_EVOLVABLE_PLANTS
             && mons_attitude(mons_target) == ATT_HOSTILE
             || mode == TARG_ENEMY && !mons_target->friendly()
@@ -2102,7 +2101,7 @@ bool direction_chooser::choose_direction()
                                                  : MOUSE_MODE_TARGET);
     targetter_smite legacy_range(&you, range, 0, 0, true);
     range_view_annotator rva(hitfunc ? hitfunc :
-                             (range >= 0) ? &legacy_range : NULL);
+                             (range >= 0) ? &legacy_range : nullptr);
 
     // init
     moves.delta.reset();
@@ -2340,7 +2339,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
         return false;
 
     const monster_info* mon = env.map_knowledge(where).monsterinfo();
-    if (mon == NULL)
+    if (mon == nullptr)
         return false;
 
     int real_idx = 0;
@@ -2987,11 +2986,9 @@ string raw_feature_description(const coord_def &where)
     int mapi = env.level_map_ids(where);
     if (mapi != INVALID_MAP_INDEX)
     {
-        const vault_placement *v = env.level_vaults[mapi];
-        map<dungeon_feature_type, string>::const_iterator it =
-            v->map.feat_renames.find(feat);
-        if (it != v->map.feat_renames.end())
-            return it->second;
+        const auto &renames = env.level_vaults[mapi]->map.feat_renames;
+        if (const string *rename = map_find(renames, feat))
+            return *rename;
     }
 
     return _base_feature_desc(feat, get_trap_type(where));
@@ -3210,11 +3207,11 @@ static vector<string> _get_monster_behaviour_vector(const monster_info& mi)
     vector<string> descs;
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
-        descs.push_back(mi.is(MB_CONFUSED) ? "sleepwalking" : "resting");
+        descs.emplace_back(mi.is(MB_CONFUSED) ? "sleepwalking" : "resting");
     else if (mi.is(MB_FLEEING))
-        descs.push_back("fleeing");
+        descs.emplace_back("fleeing");
     else if (mi.attitude == ATT_HOSTILE && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
-        descs.push_back("hasn't noticed you");
+        descs.emplace_back("hasn't noticed you");
 
     return descs;
 }
@@ -3225,48 +3222,48 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     vector<string> descs;
 
     if (mi.is(MB_CLINGING))
-        descs.push_back("clinging");
+        descs.emplace_back("clinging");
 
     if (mi.is(MB_MESMERIZING))
-        descs.push_back("mesmerising");
+        descs.emplace_back("mesmerising");
 
     _append_container(descs, _get_monster_behaviour_vector(mi));
 
     if (mi.attitude == ATT_FRIENDLY)
-        descs.push_back("friendly");
+        descs.emplace_back("friendly");
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
-        descs.push_back("peaceful");
+        descs.emplace_back("peaceful");
     else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
     {
         // don't differentiate between permanent or not
-        descs.push_back("indifferent");
+        descs.emplace_back("indifferent");
     }
 
     if (mi.is(MB_SUMMONED))
-        descs.push_back("summoned");
+        descs.emplace_back("summoned");
 
     if (mi.is(MB_PERM_SUMMON))
-        descs.push_back("durably summoned");
+        descs.emplace_back("durably summoned");
 
     if (mi.is(MB_SUMMONED_CAPPED))
-        descs.push_back("expiring");
+        descs.emplace_back("expiring");
 
     if (mi.is(MB_HALOED))
-        descs.push_back("haloed");
+        descs.emplace_back("haloed");
 
     if (mi.is(MB_UMBRAED))
-        descs.push_back("umbra");
+        descs.emplace_back("umbra");
 
     if (mi.is(MB_POSSESSABLE))
-        descs.push_back("possessable"); // FIXME: better adjective
+        descs.emplace_back("possessable"); // FIXME: better adjective
     else if (mi.is(MB_ENSLAVED))
-        descs.push_back("disembodied soul");
+        descs.emplace_back("disembodied soul");
 
     if (mi.is(MB_MIRROR_DAMAGE))
-        descs.push_back("reflecting injuries");
+        descs.emplace_back("reflecting injuries");
 
     if (mi.is(MB_INNER_FLAME))
-        descs.push_back("inner flame");
+        descs.emplace_back("inner flame");
 
     if (mi.fire_blocker)
     {
@@ -3402,38 +3399,29 @@ string get_monster_equipment_desc(const monster_info& mi,
 
         if (print_attitude)
         {
-            string str = "";
+            vector<string> attributes;
             if (mi.is(MB_CHARMED))
-                str = "charmed";
+                attributes.emplace_back("charmed");
             else if (mi.attitude == ATT_FRIENDLY)
-                str = "friendly";
+                attributes.emplace_back("friendly");
             else if (mi.attitude == ATT_GOOD_NEUTRAL)
-                str = "peaceful";
+                attributes.emplace_back("peaceful");
             else if (mi.is(MB_INSANE))
-                str = "insane";
+                attributes.emplace_back("insane");
             else if (mi.attitude != ATT_HOSTILE)
-                str = "neutral";
+                attributes.emplace_back("neutral");
 
             if (mi.is(MB_SUMMONED))
-            {
-                if (!str.empty())
-                    str += ", ";
-                str += "summoned";
-            }
+                attributes.emplace_back("summoned");
 
             if (mi.is(MB_PERM_SUMMON))
-            {
-                if (!str.empty())
-                    str += ", ";
-                str += "durably summoned";
-            }
+                attributes.emplace_back("durably summoned");
 
             if (mi.is(MB_SUMMONED_CAPPED))
-            {
-                if (!str.empty())
-                    str += ", ";
-                str += "expiring";
-            }
+                attributes.emplace_back("expiring");
+
+            string str = comma_separated_line(attributes.begin(),
+                                              attributes.end());
 
             if (mi.type == MONS_DANCING_WEAPON
                 || mi.type == MONS_PANDEMONIUM_LORD
@@ -3448,8 +3436,6 @@ string get_monster_equipment_desc(const monster_info& mi,
                     str += "pandemonium lord";
                 else if (mi.type == MONS_PLAYER_GHOST)
                     str += "ghost";
-                else if (mi.type == MONS_PLAYER_ILLUSION)
-                    str += "illusion";
             }
             if (!str.empty())
                 desc += " (" + str + ")";
@@ -3458,152 +3444,130 @@ string get_monster_equipment_desc(const monster_info& mi,
 
     string weap = "";
 
-    // We don't report rakshasa equipment in order not to give away the
-    // true rakshasa when it summons. But Mara is fine, because his weapons
-    // and armour are cloned with him.
-
     if (mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
         weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
     else if (level == DESC_IDENTIFIED)
         return " " + mi.full_name(DESC_A);
 
-    if (!weap.empty())
-    {
-        if (level == DESC_FULL)
-            desc += ",";
-        desc += weap;
-    }
-
     // Print the rest of the equipment only for full descriptions.
-    if (level != DESC_WEAPON)
-    {
-        item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
-        item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
-        item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
-        item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
-        item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
-        item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
+    if (level == DESC_WEAPON)
+        return desc + weap;
+
+    item_def* mon_arm = mi.inv[MSLOT_ARMOUR].get();
+    item_def* mon_shd = mi.inv[MSLOT_SHIELD].get();
+    item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
+    item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
+    item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
+    item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
 
 #define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
-        // For Ashenzari warnings, we only care about ided and branded stuff.
-        if (level == DESC_IDENTIFIED)
+    // For Ashenzari warnings, we only care about ided and branded stuff.
+    if (level == DESC_IDENTIFIED)
+    {
+        if (mon_arm && no_warn(mon_arm))
+            mon_arm = 0;
+        if (mon_shd && no_warn(mon_shd))
+            mon_shd = 0;
+        if (mon_qvr && no_warn(mon_qvr))
+            mon_qvr = 0;
+        if (mon_rng && no_warn(mon_rng))
+            mon_rng = 0;
+        if (mon_alt && (!item_type_known(*mon_alt)
+                        || mon_alt->base_type == OBJ_WANDS
+                        && !is_offensive_wand(*mon_alt)))
         {
-            if (mon_arm && no_warn(mon_arm))
-                mon_arm = 0;
-            if (mon_shd && no_warn(mon_shd))
-                mon_shd = 0;
-            if (mon_qvr && no_warn(mon_qvr))
-                mon_qvr = 0;
-            if (mon_rng && no_warn(mon_rng))
-                mon_rng = 0;
-            if (mon_alt && (!item_type_known(*mon_alt)
-                            || mon_alt->base_type == OBJ_WANDS
-                               && !is_offensive_wand(*mon_alt)))
-            {
-                mon_alt = 0;
-            }
-        }
-
-        // _describe_monster_weapon already took care of this
-        if (mi.wields_two_weapons())
             mon_alt = 0;
-
-        const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;
-        const bool mon_carry = mon_alt || mon_has_wand;
-
-        bool found_sth    = !weap.empty();
-
-        if (mon_arm)
-        {
-            if (found_sth)
-            {
-                desc += (!mon_shd && !mon_rng && !mon_qvr && !mon_carry)
-                        ? " and" : ",";
-            }
-            else
-                found_sth = true;
-
-            desc += " wearing ";
-            desc += mon_arm->name(DESC_A);
-        }
-
-        if (mon_shd)
-        {
-            if (found_sth)
-                desc += (!mon_rng && !mon_qvr && !mon_carry) ? " and" : ",";
-            else
-                found_sth = true;
-
-            desc += " wearing ";
-            desc += mon_shd->name(DESC_A);
-        }
-
-        if (mon_rng)
-        {
-            if (found_sth)
-                desc += (!mon_qvr && !mon_carry) ? " and" : ",";
-            else
-                found_sth = true;
-
-            desc += " wearing ";
-            desc += mon_rng->name(DESC_A);
-        }
-
-        if (mon_qvr)
-        {
-            if (found_sth)
-                desc += !mon_carry ? " and" : ",";
-            else
-                found_sth = true;
-
-            desc += " quivering ";
-            desc += mon_qvr->name(DESC_A);
-        }
-
-        if (mon_carry)
-        {
-            if (found_sth)
-                desc += " and";
-
-            desc += " carrying ";
-
-            if (mon_alt)
-            {
-                desc += mon_alt->name(DESC_A);
-                if (mon_has_wand)
-                    desc += " and ";
-            }
-
-            if (mon_has_wand)
-            {
-                if (mi.props["wand_known"])
-                    desc += mon_wnd->name(DESC_A);
-                else
-                    desc += "a wand";
-            }
         }
     }
 
-    return desc;
+    // _describe_monster_weapon already took care of this
+    if (mi.wields_two_weapons())
+        mon_alt = 0;
+
+    const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;
+    const bool mon_carry = mon_alt || mon_has_wand;
+
+    vector<string> item_descriptions;
+
+    if (!weap.empty())
+        item_descriptions.push_back(weap.substr(1)); // strip leading space
+
+    if (mon_arm)
+    {
+        const string armour_desc = make_stringf("wearing %s",
+                                                mon_arm->name(DESC_A).c_str());
+        item_descriptions.push_back(armour_desc);
+    }
+
+    if (mon_shd)
+    {
+        const string shield_desc = make_stringf("wearing %s",
+                                                mon_shd->name(DESC_A).c_str());
+        item_descriptions.push_back(shield_desc);
+    }
+
+    if (mon_rng)
+    {
+        const string rng_desc = make_stringf("wearing %s",
+                                             mon_rng->name(DESC_A).c_str());
+        item_descriptions.push_back(rng_desc);
+    }
+
+    if (mon_qvr)
+    {
+        const string qvr_desc = make_stringf("quivering %s",
+                                             mon_qvr->name(DESC_A).c_str());
+        item_descriptions.push_back(qvr_desc);
+    }
+
+    if (mon_carry)
+    {
+        string carried_desc = "carrying ";
+
+        if (mon_alt)
+        {
+            carried_desc += mon_alt->name(DESC_A);
+            if (mon_has_wand)
+                carried_desc += " and ";
+        }
+
+        if (mon_has_wand)
+        {
+            if (mi.props["wand_known"])
+                carried_desc += mon_wnd->name(DESC_A);
+            else
+                carried_desc += "a wand";
+        }
+
+        item_descriptions.push_back(carried_desc);
+    }
+
+    const string item_description = comma_separated_line(
+                                                item_descriptions.begin(),
+                                                item_descriptions.end());
+
+    if (!item_description.empty() && !desc.empty())
+        desc += ", ";
+    return desc + item_description;
 }
 
 static bool _print_cloud_desc(const coord_def where)
 {
     vector<string> areas;
     if (is_sanctuary(where))
-        areas.push_back("lies inside a sanctuary");
+        areas.emplace_back("lies inside a sanctuary");
     if (silenced(where))
-        areas.push_back("is shrouded in silence");
+        areas.emplace_back("is shrouded in silence");
     if (haloed(where) && !umbraed(where))
-        areas.push_back("is lit by a halo");
+        areas.emplace_back("is lit by a halo");
     if (umbraed(where) && !haloed(where))
-        areas.push_back("is wreathed by an umbra");
+        areas.emplace_back("is wreathed by an umbra");
     if (liquefied(where))
-        areas.push_back("is liquefied");
+        areas.emplace_back("is liquefied");
     if (orb_haloed(where) || quad_haloed(where))
-        areas.push_back("is covered in magical glow");
+        areas.emplace_back("is covered in magical glow");
     if (disjunction_haloed(where))
-        areas.push_back("is bathed in translocation energy");
+        areas.emplace_back("is bathed in translocation energy");
     if (!areas.empty())
     {
         mprf("This square %s.",
@@ -3758,7 +3722,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
 #endif
-        mprf("%s", feature_desc.c_str());
+        mpr(feature_desc);
     }
     else
     {

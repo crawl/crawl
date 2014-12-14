@@ -49,7 +49,9 @@ enum attack_type
 #endif
     AT_POUNCE,
     AT_REACH_STING,
-    AT_LAST_REAL_ATTACK = AT_REACH_STING,
+    AT_KITE,  // Hops backwards if attacking with a polearm.
+    AT_SWOOP, // Swoops in to perform a melee attack if far away.
+    AT_LAST_REAL_ATTACK = AT_SWOOP,
 
     AT_CHERUB,
 #if TAG_MAJOR_VERSION == 34
@@ -244,7 +246,6 @@ enum shout_type
     S_BUZZ,                 // buzz
     S_MOAN,                 // moan
     S_GURGLE,               // gurgle
-    S_WHINE,                // irritating whine (mosquitos)
     S_CROAK,                // frog croak
     S_GROWL,                // for bears
     S_HISS,                 // for snakes and lizards

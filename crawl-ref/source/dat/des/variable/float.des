@@ -67,7 +67,12 @@ function grunt_megastairs_setup(e)
   elseif you.branch() ~= "Lair" then
     e.subst("x = c")
   end
-  e.subst("G : GGGGTTVt")
+  if you.branch() == "Depths" or you.branch() == "Lair" or
+     you.branch() == "Snake" or you.branch() == "Elf" then
+    e.subst("G : GGGGTTVt")
+  else
+    e.subst("G : GGGGTTV")
+  end
   e.kmons("0 = 0 band")
 end
 }}
@@ -83,25 +88,11 @@ default-depth: D:12-, Depths, !Depths:$
 #
 ###############################################################################
 
-##############################################################################
-# Elevator
-NAME:    lemuel_elevator
-TAGS:    allow_dup extra luniq_staircase
-DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$, \
-         Tar:2-, !Tar:$, Dis:2-, !Dis:$, Geh:2-, !Geh:$, Coc:2-, !Coc:$
-ORIENT:  float
-SUBST:   m:mn
-SHUFFLE: ]}), [{(
-MAP
-mmmm
-m{}m
-mmmm
-ENDMAP
-
 NAME:   firewood_loft
 TAGS:   extra
 DEPTH:  D, !D:$, Depths, !Depths:$
 ORIENT: float
+WEIGHT: 5
 : if you.absdepth() > 8 then
 KITEM:  " = club, quarterstaff, quarterstaff good_item
 : else
@@ -1164,7 +1155,7 @@ KITEM:   + = damaged eveningstar, damaged short sword, \
 KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
 MONS:    giant mite, scorpion
-MONS:    rat / porcupine, green rat / orange rat
+MONS:    rat / porcupine, river rat / hell rat
 MONS:    bat
 KFEAT:   w = web
 SHUFFLE: ?!+
@@ -1325,7 +1316,7 @@ ENDMAP
 NAME:    lemuel_vampire_tower
 ORIENT:  float
 DEPTH:   D:12-, Depths, !Depths:$, Crypt
-MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 bat
+MONS:    rat / porcupine / w:6 river rat / w:3 hell rat / w:20 bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item
@@ -2488,7 +2479,8 @@ MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hound
 MONS:    death yak / griffon / catoblepas / dire elephant
 MONS:    hydra / anaconda / red wasp w:2 / redback w:3 / wolf spider w:5 / harpy
-MONS:    spriggan druid, spriggan rider, sphinx / hell beast
+MONS:    spriggan druid, spriggan rider
+MONS:    sphinx / hell beast w:5 / caustic shrike w:5
 ITEM:    fruit q:1
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
 NSUBST:  " : 2:2 / 2:3 / 2:4 / 4 = 233444. / *:.
@@ -2862,28 +2854,25 @@ TAGS:   no_item_gen no_monster_gen patrolling
 DEPTH:  D:14-, Depths, Crypt:1-4
 ORIENT: float
 KITEM:  $ = amulet of regeneration unrand:amulet_of_vitality / acquire any
-KITEM:  1234 = gold / any / nothing
-KITEM:  M4 = superb_item / any
+KITEM:  12345d = gold / any / nothing
+KITEM:  67M = superb_item / any
 KFEAT:  ~ = known zot trap
+KMONS:  1 = mummy
+KMONS:  25 = guardian mummy
+KMONS:  36 = mummy priest
+KMONS:  47 = greater mummy
+KMONS:  H = sphinx
 : if you.absdepth() <= 17 then
-KMONS: 1 = mummy / guardian mummy / nothing
-KMONS: 2 = mummy / guardian mummy / nothing
-KMONS: 3 = mummy / guardian mummy / mummy priest
-KMONS: 4 = mummy priest
-SUBST: H = .
+SUBST: 12 = 12d, 3 = 123, 4 = 6, H = .
 : else
-KMONS: 1 = mummy / guardian mummy
-KMONS: 2 = guardian mummy / mummy priest / nothing
-KMONS: 3 = guardian mummy / mummy priest / greater mummy
-KMONS: 4 = mummy priest / greater mummy
-KMONS: H = sphinx / nothing
+SUBST: 4 = 67, 3 = 345, 2 = 23d, 1 = 12, H = H`
 : end
 : if you.branch() == "Crypt" then
 KMONS: M = Khufu, greater mummy
 : elseif you.absdepth() <= 17 then
 KMONS: M = Menkaure, mummy priest
 : else
-KMONS: M = mummy priest
+SUBST: M = 6
 : end
 SUBST:  C = c
 NSUBST: ~ = 2:~ / 1:~. / *:.
@@ -2893,7 +2882,7 @@ COLOUR: c = yellow
 TILE:   c = wall_tomb
 COLOUR: C = white
 TILE:   C = wall_lab_stone
-FTILE:  .~cCG1234M$ = floor_sandstone
+FTILE:  .~cCG1234567M$ = floor_sandstone
 : set_feature_name("granite_statue", "sealed sarcophagus")
 MAP
 xxxxxxxxxxxxxxxxxxxxx
@@ -2916,20 +2905,19 @@ xc1ccc...ccc...ccc1cx
 xccccGc...c...cGccccx
 xccccccc.....cccccccx
 xccHHHcccC.CcccHHHccx
-xc,,,,,cc,,,cc,,,,,cx
-x,,,,,,,,,@,,,,,,,,,x
+xc`````cc```cc`````cx
+x`````````@`````````x
 ENDMAP
 
 ## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
-## the worship of a life-bringing water diety.
+## the worship of a life-bringing water deity.
 NAME:     gammafunk_depths_water_palace
 DEPTH:    Depths:2-, !Depths:$
 ORIENT:   float
 TAGS:     no_monster_gen patrolling no_pool_fixup
 ## Plants or water monsters
 KMONS:    f = plant / fungus
-KMONS:    R = electric eel / water elemental
-KMONS:    S = electric eel / water elemental
+KMONS:    RS = electric eel / water elemental
 ## Main monster sets
 KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
               / minotaur / satyr / merfolk impaler / deep elf knight
@@ -2937,23 +2925,24 @@ KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
               / octopode crusher
 KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
 KMONS:    4 = ice statue / w:5 orange crystal statue
-KMONS:    5 = catoblepas / dire elephant / emperor scorpion \
+KMONS:    5Z = catoblepas / dire elephant / emperor scorpion \
               / alligator snapping turtle / shambling mangrove / thorn hunter
 KMONS:    6 = merfolk avatar
 KMONS:    7 = water nymph / wind drake / sphinx
 KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
               / spriggan air mage
-KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon
+KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon \
+              / w:5 caustic shrike
 KMONS:    O = the Enchantress band
 ## The loot items need this to be placed in water
 KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
 KITEM:    E| = |
-KFEAT:    f567DER%$*| = W
+KFEAT:    f5Z67DER%$*| = W
 KFEAT:    S = w
 KFEAT:    m = t
-KPROP:    ~`5R = no_rtele_into
+KPROP:    ~`ZR = no_rtele_into
 SHUFFLE:  HI / JK
 NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
 SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
@@ -2972,7 +2961,7 @@ MAP
   ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
   ccc'.GcccBBccccccccccccccc''''wwc
   ccGR.cc~``cccccUGUccccc""'5x'''Sc
- cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
+ cccc'.n~Z`cccc''*E*''cccc"'m'm''wcc
  cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
  ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
  cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
@@ -2986,7 +2975,7 @@ cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
  cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
  ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
  cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
- cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
+ cccc'.n~Z`cccc''*E*''cccc"'m'm''wcc
   ccGR.cc~``cccccUGUccccc""'5x'''Sc
   ccc'.GcccCCccccccccccccccc''''wwc
   ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
@@ -3137,6 +3126,28 @@ ENDMAP
 #       or very generic vault contents like statues and oklobs.
 #
 ###############################################################################
+
+##############################################################################
+# Elevator
+NAME:    lemuel_elevator
+TAGS:    allow_dup extra luniq_staircase
+DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$, \
+         Tar:2-, !Tar:$, Dis:2-, !Dis:$, Geh:2-, !Geh:$, Coc:2-, !Coc:$
+ORIENT:  float
+WEIGHT:  10 (D), 5
+SUBST:   m:mn
+KFEAT:   ] = ]
+KFEAT:   } = }
+KFEAT:   ) = )
+: if you.branch() ~= "D" then
+KMONS:   ]}) = 9
+: end
+SHUFFLE: ]}), [{(
+MAP
+mmmm
+m{}m
+mmmm
+ENDMAP
 
 ##############################################################################
 # Kobold bridge
@@ -6581,4 +6592,62 @@ MAP
   wwwt.""""""""""".twww
    wwwt...G"""G...twww
     www     @     www
+ENDMAP
+
+NAME: pf_snail_temple
+DEPTH: Depths, !Depths:$
+ORIENT: float
+TAGS: no_monster_gen
+TILE: G = dngn_statue_snail
+# foyer: 6/10 0s
+NSUBST: 1 = 5:0 / 1:T / *:.
+# 2nd corridor: 5/7 0s and 1/2 9s
+NSUBST: 2 = 2:D / 2:0 / 1:T / *:.
+NSUBST: 3 = 1:9 / *:.
+# 3rd corridor: 10/17 0s and 1/2 9s
+NSUBST: 4 = 3:D / 6:0 / 1:T / *:.
+NSUBST: 5 = 1:9 / *:.
+# sanctum: 5/7 0s, 2/3 9s, an 8, and a torpor snail on the altar
+NSUBST: 6 = 2:E / 3:F / *:.
+NSUBST: 7 = 2:H / *:.
+KMONS: _ = torpor snail patrolling
+KFEAT: _ = altar_cheibriados
+KITEM: _ = plate armour good_item ego:ponderousness no_pickup /\
+           crystal plate armour good_item ego:ponderousness no_pickup w:5 /\
+           gold dragon armour good_item ego:ponderousness no_pickup w:5
+# general settings
+KMONS: T = torpor snail
+KMONS: D = 0 band
+KMONS: 9 = 9 band
+KMONS: E = 0 band patrolling
+KMONS: F = 0 patrolling
+KMONS: H = 9 band patrolling
+KMONS: 8 = 8 patrolling
+#loot
+KITEM: 8 = acquire any
+KITEM: 7 = *
+MAP
+                    ccc
+                ccccccccccc
+              ccccccc4cccccc
+ ...        ccccc.G4G.4c.cccc
+ .m..      cccc......4.+..cccc
+..cc..     ccc.......4.+...cccc
+.mccc.    ccc.5....G4G4c.2..ccc
+...cc..  ccc...5..cccccc.....ccc
+  ..cc.. ccc....ccc*GG*cc....ccc
+   .ccc. cc4..4cc|7..6.6cc2..2cc
+   ..cc. ccG44GcG8.._.6.*cG..Gcc
+   ..cc..cc4..4cc|7.....Gc....cc
+   ..cc..ccc....cc*GG6..Gc2..2cc
+   ..ccc.0cc....4ccc+.6.7cG..Gcc
+    ..cc0*ccc.4.....+.6.cc....cc
+   ..ccccccccc...4..c6.cc..3.ccc
+  ..cccccccccccccccccccc....cccc
+ ..ccc.G..1G...G1..G1.c2.3..ccc
+  .@++......1....1....+....ccc
+   @++......1....1....+...cccc
+   ccc.G..1G...G1..G1.c2cccc
+   cccccccccccccccccccccccc
+    ccccccccccccccccccccc
 ENDMAP

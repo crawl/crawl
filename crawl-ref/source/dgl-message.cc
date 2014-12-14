@@ -4,7 +4,7 @@
 
 #include "dgl-message.h"
 
-#include <errno.h>
+#include <cerrno>
 #include <sys/stat.h>
 
 #include "files.h"
@@ -24,7 +24,7 @@ static void _show_message_line(string line)
 {
     const string::size_type sender_pos = line.find(":");
     if (sender_pos == string::npos)
-        mpr(line.c_str());
+        mpr(line);
     else
     {
         string sender = line.substr(0, sender_pos);

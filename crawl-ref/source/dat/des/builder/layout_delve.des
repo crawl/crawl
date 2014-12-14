@@ -1,0 +1,587 @@
+###############################################################################
+# layout_geoelf.des: Layouts buit around the delve command
+###############################################################################
+
+: require("dlua/layout/zonify.lua")
+: require("dlua/layout/theme.lua")
+: require("dlua/layout/minimum_map_area.lua")
+
+
+##############################################################
+# layout_twisted_cavern
+#
+# A long winding cavern of roughly constant width, snaking around all the
+# level.  It forks from time to time, but never for long.
+#
+# TODO: Rework and add at weight 5.  Possible ideas on devwiki.
+#
+NAME: layout_twisted_cavern
+DEPTH: D:4-, Depths
+WEIGHT: 0
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
+{{
+    if is_validating() then return; end
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym}
+    fill_area{fill = 'x', border = 'X'}
+
+    delve(3, 3, 0, -1, 1)
+    subst('X = x')
+
+    theme.D.caves_classic(_G)
+}}
+
+##############################################################
+# layout_twisted_cross
+#
+# A cross-like layout with 4 arms of different types.  Most of the
+#  types are made using delve, making this a more complex form of
+#  layout_twisted_cavern.  There are also straighter arm types.
+#
+# One stairs is always placed in the middle, to ensure that
+#  travelling across this map does not get too slow.  This can
+#  otherwise be a problem if the stairs appear at the ends of two
+#  different delved arms.
+#
+# This layout starts by dividing the map into 4 quarters, using
+#  different glyphs for each.  This is because the delve command
+#  might dig tunnels into any wall of the right type and we want
+#  to control it.  The map looks something like this before the
+#  arms are added:
+#
+#   XXXXXXXXXXXXX
+#   XXmmmmmmmmmXX
+#   XcXmmmmmmmXvX
+#   XccXmmmmmXvvX
+#   XccCXmmmXvvvX
+#   XccCCXmXvvvvX
+#   XccCccXvvvvvX
+#   XccCCXnXvvvvX
+#   XccCXnnnXvvvX
+#   XccXnnnnnXvvX
+#   XcXnnnnnnnXvX
+#   XXnnnnnnnnnXX
+#   XXXXXXXXXXXXX
+#
+# There are currently 6 arm types:
+#  1. a clone of layout_twisted_cavern
+#  2. layout_twisted_cavern with wide areas
+#  3. a narrower layout_twisted_cavern
+#  4. a honeycomb of little connected passages
+#  5. a straight and boring cross arm
+#  6. a straight cross arm with a big room on the end
+# More arm types welcome!
+#
+# TODO: improve delve command to take floor type, wall type, and
+#       starting position as parameters
+#
+
+NAME:   layout_twisted_cross
+DEPTH:  Depths
+WEIGHT: 5
+ORIENT: encompass
+TAGS:   overwritable layout unrand layout_type_narrow_caves
+TAGS:   no_rotate no_vmirror no_hmirror uniq_layout_twisted_delve
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym}
+    fill_area{fill = 'x', border = 'X'}
+
+    local center_x = math.floor(gxm / 2)
+    local center_y = math.floor(gym / 2)
+
+    for x = 1, gxm - 2 do
+        for y = 1, gym - 2 do
+            local x_off = x - center_x
+            local y_off = y - center_y
+            local abs_x_off = math.abs(x_off)
+            local abs_y_off = math.abs(y_off)
+
+            if (math.abs(abs_x_off - abs_y_off) < 2) then
+                -- a big X across the map
+                mapgrd[x][y] = "X"
+            else
+                -- divide the map into 4 quarters
+                if (abs_x_off > abs_y_off) then
+                    if (x_off < 0) then
+                        mapgrd[x][y] = "c"
+                    else
+                        mapgrd[x][y] = "v"
+                    end
+                else
+                    if (y_off < 0) then
+                        mapgrd[x][y] = "m"
+                    else
+                        mapgrd[x][y] = "n"
+                    end
+                end
+            end
+        end
+    end
+
+    -- seeds for the 4 corner paths
+    mapgrd[center_x - 6][center_y] = "."
+    mapgrd[center_x + 6][center_y] = "."
+    mapgrd[center_x][center_y - 6] = "."
+    mapgrd[center_x][center_y + 6] = "."
+
+    --
+    -- roughen the borders
+    --  -> this stops delve from making straight paths
+    --  -> these will bever be seen in-game
+    --
+
+    smear_map { onto = "cvmn", smear = "X", iterations = 200 }
+
+    --
+    -- choose random types for the branches
+    --  -> we put all the branch types in a random order
+    --     and use the first 4
+    --  -> this guarentees we only get one of each
+    --
+
+    local branch_type = {}
+    branch_type[0] = 0
+    for i = 1, 5 do
+        local other_index = crawl.random2(i + 1)
+        branch_type[i] = branch_type[other_index]
+        branch_type[other_index] = i
+    end
+
+    local quarter_glyphs = { "c", "v", "m", "n" }
+    for i = 1, 4 do
+        subst(quarter_glyphs[i] .. ' = x')
+
+        -- !send infiniplex LUA switch statements
+        if (branch_type[i] == 0) then
+            -- classic twisted cavern branch
+            delve(3, 3, 0,  crawl.random_range(200, 400), 1)
+
+        elseif (branch_type[i] == 1) then
+            -- "roomier" twisted cavern branch
+            delve(3, 4, 0,  crawl.random_range(250, 500), 1)
+
+        elseif (branch_type[i] == 2) then
+            -- narrower twisted cavern branch
+            delve(2, 4, 10, crawl.random_range(150, 250), 1)
+
+        elseif (branch_type[i] == 3) then
+            -- a mess of interconnected areas
+            delve(2, 3, 25, crawl.random_range(200, 300), 10000)
+
+        elseif (branch_type[i] == 4) then
+            -- draw a straight "cross" arm outward
+
+            -- really half of thickness
+            local arm_thickness = crawl.random_range(1, 2)
+
+            if (i == 1) then
+                fill_area { x1 = center_x - 25, y1 = center_y - arm_thickness,
+                            x2 = center_x,      y2 = center_y + arm_thickness,
+                            fill = "." }
+            elseif (i == 2) then
+                fill_area { x1 = center_x,      y1 = center_y - arm_thickness,
+                            x2 = center_x + 25, y2 = center_y + arm_thickness,
+                            fill = "." }
+            elseif (i == 3) then
+                fill_area { x1 = center_x - arm_thickness, y1 = center_y - 25,
+                            x2 = center_x + arm_thickness, y2 = center_y,
+                            fill = "." }
+            else
+                fill_area { x1 = center_x - arm_thickness, y1 = center_y,
+                            x2 = center_x + arm_thickness, y2 = center_y + 25,
+                            fill = "." }
+            end
+
+        elseif (branch_type[i] == 5) then
+            -- draw a straight arm outward with a room on it
+
+            -- really half of thickness
+            local arm_thickness = crawl.random_range(1, 2)
+
+
+            local room_func = crawl.random_element(
+              { [make_circle]         = 3,
+                [make_diamond]        = 3,
+                [make_square]         = 2,
+                [make_rounded_square] = 1 } )
+            local room_radius = crawl.random_range(4, 7)
+
+            if (i == 1) then
+                fill_area { x1 = center_x - 20, y1 = center_y - arm_thickness,
+                            x2 = center_x,      y2 = center_y + arm_thickness,
+                            fill = "." }
+                room_func({x = center_x - 20, y = center_y,
+                           radius = room_radius, fill = "." })
+            elseif (i == 2) then
+                fill_area { x1 = center_x,      y1 = center_y - arm_thickness,
+                            x2 = center_x + 20, y2 = center_y + arm_thickness,
+                            fill = "." }
+                room_func({x = center_x + 20, y = center_y,
+                           radius = room_radius, fill = "." })
+            elseif (i == 3) then
+                fill_area { x1 = center_x - arm_thickness, y1 = center_y - 20,
+                            x2 = center_x + arm_thickness, y2 = center_y,
+                            fill = "." }
+                room_func({x = center_x, y = center_y - 20,
+                           radius = room_radius, fill = "." })
+            else
+                fill_area { x1 = center_x - arm_thickness, y1 = center_y,
+                            x2 = center_x + arm_thickness, y2 = center_y + 20,
+                            fill = "." }
+                room_func({x = center_x, y = center_y + 20,
+                           radius = room_radius, fill = "." })
+            end
+        end
+
+        subst('x = X')
+    end
+
+    --
+    -- Place a central cross-shaped room that connects the four
+    --  branches.  Add one stairs to prevent (or at least reduce)
+    --  really long automovement between levels.
+    --
+
+    fill_area { x1 = center_x - 1, y1 = center_y - 5,
+                x2 = center_x + 1, y2 = center_y + 5, fill = "." }
+    fill_area { x1 = center_x - 5, y1 = center_y - 1,
+                x2 = center_x + 5, y2 = center_y + 1, fill = "." }
+    mapgrd[center_x][center_y] = "{"
+    subst('{ = {([})]')
+
+    -- general finishing stuff
+    subst('X = x')
+    zonify.map_fill_zones(_G, 1, 'x')
+    theme.D.caves_classic(_G)
+}}
+# Enforce minimum floor size - otherwise could get very tiny floors
+validate {{
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.NARROW_CAVES)
+}}
+
+##############################################################
+# layout_twisted_circle
+#
+# A bunch of rooms with 3-wide passages around and between them.
+#  The passages are made using delve, making this a more complex
+#  form of layout_twisted_cavern.
+#
+# The layout is enclosed in a circular area, although the rooms
+#  can be partially outside this border.
+#
+
+NAME:   layout_twisted_circle
+DEPTH:  Zot
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   overwritable layout unrand allow_dup layout_type_narrow_caves
+TAGS:   no_rotate no_vmirror no_hmirror
+{{
+    local MAP_RADIUS = 28
+
+    local ROOM_RADIUS_MIN = 3
+    local ROOM_RADIUS_MAX = 5
+    local room_count      = crawl.random_range(10, 15)
+
+    local DELVE_SIZE_MIN = 50
+    local DELVE_SIZE_MAX = 100
+    local delve_count    = crawl.random_range(15, 20)
+    local delve_sanity   = 1000
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = "X"}
+
+    -- this is the area we will use for the map
+    local center_x = math.floor(gxm / 2)
+    local center_y = math.floor(gym / 2)
+    make_circle {x = center_x, y = center_y, radius = MAP_RADIUS, fill = "x" }
+
+    -- block off the primary vault (if any)
+    for x = 1, gxm - 2 do
+        for y = 1, gym - 2 do
+            if dgn.in_vault(x, y) then
+                mapgrd[x][y] = "X"
+            end
+        end
+    end
+
+    --
+    -- place the room placeholders
+    --  -> for now, these are just blocked areas so the paths
+    --     don't go through them
+    --  -> we will place the real rooms at these same positions
+    --     after we have passages to connect them to
+    --
+
+    local rooms = {}
+    for i = 1, room_count do
+        -- choose a random room position in the circle
+        local x_off = crawl.random_range(-MAP_RADIUS, MAP_RADIUS)
+        local y_off = crawl.random_range(-MAP_RADIUS, MAP_RADIUS)
+        while (x_off * x_off + x_off * x_off > MAP_RADIUS * MAP_RADIUS) do
+            x_off = crawl.random_range(-MAP_RADIUS, MAP_RADIUS)
+            y_off = crawl.random_range(-MAP_RADIUS, MAP_RADIUS)
+        end
+
+        rooms[i] = {}
+        rooms[i].x_base = center_x + x_off
+        rooms[i].y_base = center_y + y_off
+        rooms[i].radius = crawl.random_range(ROOM_RADIUS_MIN, ROOM_RADIUS_MAX)
+        rooms[i].x1 = rooms[i].x_base - rooms[i].radius
+        rooms[i].x2 = rooms[i].x_base + rooms[i].radius
+        rooms[i].y1 = rooms[i].y_base - rooms[i].radius
+        rooms[i].y2 = rooms[i].y_base + rooms[i].radius
+        rooms[i].floor = "X"
+        rooms[i].wall  = "X"
+        rooms[i].door_count = 0
+
+        make_round_box (rooms[i])
+    end
+
+    -- delve some passages around the rooms
+    local placed = 0
+    local sanity = 0
+    while (placed < delve_count and sanity < delve_sanity) do
+        sanity = sanity + 1
+
+        -- choose random starting point to the path
+        local x_off = crawl.random_range(-MAP_RADIUS, MAP_RADIUS)
+        local y_off = crawl.random_range(-MAP_RADIUS, MAP_RADIUS)
+
+        -- if its a workable location
+        if (x_off * x_off + x_off * x_off < MAP_RADIUS * MAP_RADIUS and
+            count_neighbors{ x = center_x + x_off,
+                             y = center_y + y_off, feat = "x" } > 6) then
+
+            -- add the path starting location
+            mapgrd[center_x + x_off][center_y + y_off] = "."
+
+            -- delve out a path
+            local size = crawl.random_range(DELVE_SIZE_MIN, DELVE_SIZE_MAX)
+            delve(3, 3, 0, size, 1)
+
+            -- wall off this path so others can't join onto it
+            widen_paths{find = "x", replace = "X", passable = ".", boxy = true}
+            placed = placed + 1
+        end
+    end
+
+    -- connect up the passages
+    connect_adjacent_rooms { wall = "X", floor = ".", replace = ".",
+                             max = 2000 }
+
+    -- place the rooms using the placeholders
+    for i = 1, room_count do
+        -- these are just updates from last time
+        rooms[i].floor = "."
+        rooms[i].wall  = "x"
+        rooms[i].door_count       = crawl.random_range(2, 4)
+        rooms[i].veto_gates       = true
+        rooms[i].veto_if_no_doors = true
+
+        local check_size = math.floor(rooms[i].radius / 2)
+        if not find_in_area {x1 = rooms[i].x_base - check_size,
+                             y1 = rooms[i].y_base - check_size,
+                             x2 = rooms[i].x_base + check_size,
+                             y2 = rooms[i].y_base + check_size,
+                             find = "", find_vault = true } then
+            make_round_box (rooms[i])
+        end
+    end
+
+    -- general finishing stuff
+    subst('X = x')
+    zonify.map_fill_zones(_G, 1, 'x')
+    -- theme.D.caves_classic(_G) -- no special walls in Zot
+}}
+# Enforce minimum floor size - otherwise could get very tiny floors
+validate {{
+  return minimum_map_area.is_map_big_enough(_G, minimum_map_area.NARROW_CAVES)
+}}
+
+##############################################################
+# layout_spider_delve
+#
+# Previously named "layout_delve".
+#
+# TODO: Use "layout_type_narrow_caves" tag for passage-y version
+#       and "layout_type_open_caves" tag for more open version.
+#
+NAME:   layout_spider_delve
+DEPTH:  Spider
+WEIGHT: 25
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
+{{
+    if is_validating() then return; end
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym}
+    fill_area{fill = 'x', border = 'X'}
+
+    local ngb_min = 2
+    local ngb_max = crawl.random_range(3, 8)
+    if crawl.one_chance_in(10) then
+      -- sometimes use a more cramped layout
+      ngb_min = 1
+      ngb_max = crawl.random_range(5, 7)
+    end
+    if crawl.one_chance_in(20) then
+      -- or a wider one
+      ngb_min = 3
+      ngb_max = 4
+    end
+    local connchance = crawl.random_element
+        { [0] = 2, [5] = 1, [20] = 1, [50] = 1, [100] = 1 }
+    local top = crawl.random_element
+        { [1] = 1, [20] = 1, [125] = 1, [500] = 1, [999999] =1 }
+    crawl.dpr("<lightmagenta>delve(" .. ngb_min .. ", " .. ngb_max .. ", " ..
+              connchance .. ", -1, " .. top .. ")</lightmagenta>")
+    delve(ngb_min, ngb_max, connchance, -1, top)
+    if crawl.coinflip() then
+      crawl.dpr("delve: adding water");
+      subst('. = @')
+      delve(ngb_min, ngb_max, 100, 100, top)
+      subst('. = w')
+      subst('@ = .')
+    end
+    subst('X = x')
+}}
+
+################################################################
+# layout_cocytus_delve
+#
+# Previously named "layout_cocytus".
+#
+# An ice cave approximation for Cocytus.  There is one main
+# delved path that is guaranteed to contain at least one up and
+# down stairs.  There are also other delved paths and
+# diamond-shaped rooms, but these might be behind pools of
+# water.  To avoid trapping the player, all random teleports go
+# to the main path.
+#
+# TODO: Serious improvements, less glyph switching
+#
+NAME:   layout_cocytus_delve
+DEPTH:  Coc
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
+TAGS:   no_rotate no_vmirror no_hmirror
+{{
+    if is_validating() then return; end
+
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym}
+
+    local map_border = 5
+    local map_x_min = map_border
+    local map_y_min = map_border
+    local map_x_max = gxm - map_border - 1
+    local map_y_max = gym - map_border - 1
+    fill_area { x1 = map_x_min, y1 = map_y_min,
+                x2 = map_x_max, y2 = map_y_max, fill = 'x', border = 'X' }
+
+    -- Due to the behaviour of the spotty_map, delve, and
+    --  fill_disconnected functions, we need to make some
+    --  strange substitutions to have the right glyphs on the
+    --  map when we call these functions.  We will put the
+    --  glyphs right again later.
+    --    -> spotty_map always expands '.' glyphs with '.'s
+    --    -> delve always places '.' glyphs and seems to have
+    --       trouble with 'w's
+    --    -> fill_disconnected will not fill custom-defined
+    --       glyphs, even if they are kfeat-ed to another glyph
+
+    -- Add some water patches.
+    --    1. Add some circles of floor
+    --    2. Expand the floor circles using spotty_map
+    --    3. Convert the floor to unbreakable wall (later water)
+    for i = 1, crawl.random_range(40, 60) do
+        local x = crawl.random_range(map_x_min, map_x_max)
+        local y = crawl.random_range(map_y_min, map_y_max)
+        local radius = crawl.random_range(0, 1)
+        if crawl.one_chance_in(15) then
+            radius = crawl.random_range(2, 4)
+        end
+
+        make_circle ({ x = x, y = y, radius = radius, fill = '.'})
+    end
+    local iterations = crawl.random_range(150, 350)
+    spotty_map { boxy = false, iterations = iterations }
+    subst('. = X')
+
+    -- Delve the paths
+    local ngb_min = 2
+    local ngb_max = 5
+    -- chance of connecting to an adjecent passage
+    local connchance = 0
+    local total_count = crawl.random_range(200, 500)
+    local top = 10
+
+    -- Delve the main path and add two sets of stairs.  This
+    --  guarantees the map is connected without crossing water.
+    --  Keep the '@' glyph for connectivity checking later.
+    delve(ngb_min, ngb_max, connchance, total_count, top)
+    nsubst('. = 1:@ / *:.')
+    local x, y = farthest_from('@')
+    mapgrd[x][y] = '{'
+    x, y = farthest_from('{')
+    mapgrd[x][y] = '}'
+    subst('. = >')
+
+    -- Delve some smaller paths
+    for i = 1, crawl.random_range(1, 3) do
+        ngb_min = crawl.random_element { [1] = 3, [2] = 1 }
+        ngb_max = crawl.random_range(2, 5)
+        connchance = crawl.random_element
+            { [0] = 1, [2] = 2, [5] = 1, [20] = 1 }
+        total_count = crawl.random_range(50, 150)
+        top = crawl.random_element
+            { [1] = 1, [20] = 1, [125] = 1, [500] = 1, [999999] = 1 }
+
+        delve(2, 3, 3, 150, 100)
+    end
+    subst('. = <')
+
+    -- Fix up the map after delving.
+    --    1. The edges become walls
+    --    2. The remaining unbreakable walls become water
+    fill_area { x1 = 0,         y1 = 0,
+                x2 = map_x_min, y2 = gym-1,     fill = 'x' }
+    fill_area { x1 = map_x_max, y1 = 0,
+                x2 = gxm-1,     y2 = gym-1,     fill = 'x' }
+    fill_area { x1 = map_x_min, y1 = 0,
+                x2 = map_x_max, y2 = map_y_min, fill = 'x' }
+    fill_area { x1 = map_x_min, y1 = map_y_max,
+                x2 = map_x_max, y2 = gym-1,     fill = 'x' }
+    subst('X = w')
+
+    -- Add some rooms
+    for i = 1, crawl.random_range(15, 25) do
+        local x = crawl.random_range(8, gxm-9)
+        local y = crawl.random_range(8, gym-9)
+        local radius = crawl.random_element
+            { [1] = 30, [2] = 50, [3] = 15, [4] = 4, [5] = 1 }
+
+        octa_room { x1 = x - radius, y1 = y - radius,
+                    x2 = x + radius, y2 = y + radius,
+                    oblique = radius, replace = 'x', inside = '<'}
+    end
+
+    -- Finishing up stuff.
+    --     1. Fill everything not connected to the '@' set when
+    --        delving the first path.
+    --     2. Set the first delved path to floor.
+    --     3. Set the rooms and the other delved paths to
+    --        no_r_tele_into floor ('_').  These areas might be
+    --        inescapable if water covers the path out.
+    fill_disconnected{wanted = '@'}
+    subst('@> = .')
+    subst('< = _')
+    kfeat('_ = .')
+    kprop('_ = no_rtele_into')
+}}

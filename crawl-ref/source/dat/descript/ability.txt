@@ -594,9 +594,8 @@ your skills will be further drained when taking damage.
 Potion Petition ability
 
 Petition Gozag to sell you the effects of a set of potions. Gozag will offer
-four lists at a time, with varying prices. One of the potion sets will always
-solely consist of a potion of porridge, which will always be affordable if the
-ability is usable. Prices will slowly increase as you purchase potions.
+three lists at a time, with varying prices. Prices will slowly increase as you
+purchase potions.
 %%%%
 Call Merchant ability
 
@@ -604,6 +603,10 @@ Through Gozag, send funds to a merchant to help them set up shop in the
 dungeon. The shop may appear in an unvisited area of the dungeon, or near your
 location if there are no other appropriate locations for a store. The cost of
 funding a shop increases with the number of shops funded.
+
+You will always have the option to fund a food shop, provided you are a race
+that requires food. Ghouls and vampires will find corpses and blood in their
+respective food shops.
 %%%%
 Bribe Branch ability
 
@@ -611,7 +614,7 @@ Give 3000 gold to Gozag to spread throughout the inhabitants of the current
 branch, only possible if the branch has intelligent native monsters. Those
 native to a bribed branch will occasionally become uninterested in fighting you
 (with tougher inhabitants having an increasing chance of being bribed), and
-more rarely will join your ranks. Enemies become less hostile will lower the
+more rarely will join your ranks. Enemies' becoming less hostile will lower the
 remaining bribe fund; upon its exhaustion, bribed enemies will resume
 hostilities.
 %%%%
@@ -789,8 +792,9 @@ Sacrifices cannot be taken back.
 %%%%
 Sacrifice a Hand ability
 
-Adherents who choose to sacrifice a hand lose the ability to use two-handed
-weapons and shields, and also may only wear one ring.
+Adherents of every species who choose to sacrifice a hand lose the ability to
+use shields and can wear one fewer ring. Non-formicids also lose the ability
+to wield two-handed weapons.
 
 If you make this sacrifice, your powers granted by Ru will become stronger in
 proportion to the value of the sacrifice, and you may gain new powers as well.

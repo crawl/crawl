@@ -65,7 +65,9 @@ static int food_can_eat(lua_State *ls)
     if (lua_isboolean(ls, 2))
         hungercheck = lua_toboolean(ls, 2);
 
-    bool edible = item && can_eat(*item, true, hungercheck);
+    const bool edible = item && (item->base_type == OBJ_FOOD
+                                 || item->base_type == OBJ_CORPSES)
+                             &&  can_eat(*item, true, hungercheck);
     lua_pushboolean(ls, edible);
     return 1;
 }
@@ -128,7 +130,8 @@ static int food_isveggie(lua_State *ls)
 static int food_bottleable(lua_State *ls)
 {
     LUA_ITEM(ls, item, 1);
-    lua_pushboolean(ls, item && item->base_type == OBJ_CORPSES
+    lua_pushboolean(ls, item && (item->base_type == OBJ_CORPSES
+                                 && item->sub_type == CORPSE_BODY)
                              && can_bottle_blood_from_corpse(item->mon_type));
     return 1;
 }
@@ -157,7 +160,7 @@ static const struct luaL_reg food_lib[] =
     { "isveggie",          food_isveggie },
     { "bottleable",        food_bottleable },
     { "edible",            food_edible },
-    { NULL, NULL },
+    { nullptr, nullptr },
 };
 
 void cluaopen_food(lua_State *ls)

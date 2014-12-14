@@ -122,7 +122,7 @@ bool item_type_has_ids(object_class_type base_type);
 item_type_id_state_type get_ident_type(const item_def &item);
 item_type_id_state_type get_ident_type(object_class_type basetype,
                                        int subtype);
-void set_ident_type(item_def &item, item_type_id_state_type setting,
+bool set_ident_type(item_def &item, item_type_id_state_type setting,
                      bool force = false);
 bool set_ident_type(object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);
@@ -134,17 +134,17 @@ string get_menu_colour_prefix_tags(const item_def &item,
                                    description_level_type desc);
 
 void            init_item_name_cache();
-item_kind item_kind_by_name(string name);
+item_kind item_kind_by_name(const string &name);
 
 vector<string> item_name_list_for_glyph(unsigned glyph);
 
 const char* rune_type_name(short p);
 
 bool   is_named_corpse(const item_def &corpse);
-string get_corpse_name(const item_def &corpse, uint64_t *name_type = NULL);
+string get_corpse_name(const item_def &corpse, uint64_t *name_type = nullptr);
 const char* deck_rarity_name(deck_rarity_type rarity);
-string base_type_string(object_class_type type);
-string base_type_string(const item_def &item);
+const char *base_type_string(object_class_type type);
+const char *base_type_string(const item_def &item);
 
 string sub_type_string(const item_def &item, bool known = true);
 

@@ -7,10 +7,10 @@
 
 #include "food.h"
 
+#include <cctype>
+#include <cstdio>
+#include <cstring>
 #include <sstream>
-#include <ctype.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "butcher.h"
 #include "database.h"
@@ -160,7 +160,7 @@ bool prompt_eat_inventory_item(int slot)
         which_inventory_slot = prompt_invent_item("Eat which item?",
                                                   MT_INVLIST, OBJ_FOOD,
                                                   true, true, true, 0, -1,
-                                                  NULL, OPER_EAT);
+                                                  nullptr, OPER_EAT);
 
         if (prompt_failed(which_inventory_slot))
             return false;
@@ -396,7 +396,7 @@ static void _describe_food_change(int food_increment)
 
     msg += _how_hungry().c_str();
     msg += ".";
-    mpr(msg.c_str());
+    mpr(msg);
 }
 
 bool eat_item(item_def &food)
@@ -552,9 +552,8 @@ int eat_from_floor(bool skip_chunks)
         }
 #else
         sort(food_items.begin(), food_items.end(), _compare_by_freshness);
-        for (unsigned int i = 0; i < food_items.size(); ++i)
+        for (const item_def *item : food_items)
         {
-            item_def *item = const_cast<item_def *>(food_items[i]);
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
@@ -575,7 +574,7 @@ int eat_from_floor(bool skip_chunks)
                     break;
 
                 if (can_eat(*item, false))
-                    return eat_item(*item);
+                    return eat_item(*const_cast<item_def *>(item));
                 need_more = true;
                 break;
             case 'i':
@@ -622,7 +621,7 @@ bool eat_from_inventory()
         return 0;
 
     int inedible_food = 0;
-    item_def *wonteat = NULL;
+    item_def *wonteat = nullptr;
     bool found_valid = false;
 
     vector<item_def *> food_items;
@@ -665,9 +664,8 @@ bool eat_from_inventory()
     if (found_valid)
     {
         sort(food_items.begin(), food_items.end(), _compare_by_freshness);
-        for (unsigned int i = 0; i < food_items.size(); ++i)
+        for (item_def *item : food_items)
         {
-            item_def *item = food_items[i];
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
@@ -786,10 +784,9 @@ int prompt_eat_chunks(bool only_auto)
     if (found_valid)
     {
         sort(chunks.begin(), chunks.end(), _compare_by_freshness);
-        for (unsigned int i = 0; i < chunks.size(); ++i)
+        for (item_def *item : chunks)
         {
             bool autoeat = false;
-            item_def *item = chunks[i];
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             const bool bad = is_bad_food(*item);
@@ -1071,7 +1068,7 @@ void finished_eating_message(int food_type)
             string taste = getMiscString("eating_fruit");
             if (taste.empty())
                 taste = "Eugh, buggy fruit.";
-            mprf("%s", taste.c_str());
+            mpr(taste);
             break;
         }
         default:
@@ -1089,7 +1086,7 @@ void finished_eating_message(int food_type)
         string taste = getMiscString("eating_pizza");
         if (taste.empty())
             taste = "Bleh, bug pizza.";
-        mprf("%s", taste.c_str());
+        mpr(taste);
         break;
     }
     default:
@@ -1127,8 +1124,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
     // Duration depends on corpse weight.
     const int max_chunks = get_max_corpse_chunks(mons_type);
-    int chunk_amount     = 1 + max_chunks/3;
-        chunk_amount     = stepdown_value(chunk_amount, 6, 6, 12, 12);
+    const int chunk_amount = stepdown_value(1 + max_chunks/3, 6, 6, 12, 12);
 
     // Add 1 for the artificial extra call at the start of draining.
     const int duration   = 1 + chunk_amount;
@@ -1276,15 +1272,15 @@ bool is_preferred_food(const item_def &food)
     if (you.species == SP_VAMPIRE)
         return is_blood_potion(food);
 
+#if TAG_MAJOR_VERSION == 34
     if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE
         && item_type_known(food)
-#if TAG_MAJOR_VERSION == 34
         && you.species != SP_DJINNI
-#endif
         )
     {
         return !player_mutation_level(MUT_CARNIVOROUS);
     }
+#endif
 
     if (food.base_type != OBJ_FOOD)
         return false;

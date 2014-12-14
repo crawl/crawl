@@ -78,9 +78,9 @@ struct bolt
     int         loudness;              // Noise level on hitting or exploding.
     string      noise_msg;             // Message to give player if the hit
                                        // or explosion isn't in view.
-    bool        is_beam;               // beam? (can hit multiple targets?)
+    bool        pierce;                // Can the beam pass through a target and
+                                       // hit another target behind the first?
     bool        is_explosion;
-    bool        is_big_cloud;          // expands into big_cloud at endpoint
     bool        aimed_at_spot;         // aimed at (x, y), should not cross
     string      aux_source;            // source of KILL_MISC beams
 
@@ -103,8 +103,6 @@ struct bolt
 #ifdef DEBUG_DIAGNOSTICS
     bool        quiet_debug;           // Disable any debug spam.
 #endif
-    bool        drac_breath;           // Whether to give special draconian
-                                       // effects.
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
@@ -179,7 +177,7 @@ public:
 
     // Return whether any affected cell was seen.
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
-    bool knockback_actor(actor *actor);
+    bool knockback_actor(actor *actor, int distance, coord_def &newpos);
 
     bool visible() const;
 
@@ -210,6 +208,7 @@ private:
     bool need_regress() const;
     bool can_see_invis() const;
     bool nightvision() const;
+    bool is_big_cloud() const; // expands into big_cloud at endpoint
 
     set<string> message_cache;
     void emit_message(const char* msg);
@@ -283,7 +282,7 @@ public:
     void determine_affected_cells(explosion_map& m, const coord_def& delta,
                                   int count, int r,
                                   bool stop_at_statues, bool stop_at_walls);
-    bool can_knockback(const actor *act = NULL, int dam = -1) const;
+    bool can_knockback(const actor *act = nullptr, int dam = -1) const;
 };
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
@@ -313,9 +312,11 @@ void fire_tracer(const monster* mons, bolt &pbolt,
 bool imb_can_splash(coord_def origin, coord_def center,
                     vector<coord_def> path_taken, coord_def target);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
-                   bool needs_tracer = false, const char* msg = NULL,
+                   bool needs_tracer = false, const char* msg = nullptr,
                    bool fail = false);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
+
+void create_feat_splash(coord_def center, int radius, int nattempts);
 
 void init_zap_index();
 void clear_zap_info_on_exit();

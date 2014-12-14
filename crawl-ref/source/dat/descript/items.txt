@@ -1,4 +1,11 @@
 %%%%
+akashic record
+
+The last and greatest work of the Warper Golubria, detailing the most powerful
+Translocations spells in existence. It is notoriously difficult to track down
+and understand, as copies of the book and their contents have a tendency to
+shift between planes at a moment's notice.
+%%%%
 amulet of clarity
 
 This amulet protects its wearer from some forms of mental confusion, including
@@ -352,13 +359,6 @@ This unholy book describes a variety of magical methods for the creation and
 command of undead servants. The dreadful book radiates a malignant aura, and
 its parchment pages sometimes twitch and shudder on their own.
 %%%%
-book of wizardry
-
-A book of various magic spells, useful for any sufficiently-talented
-spellcaster. Mages of a scholarly nature consider it a point of pride to have
-contributed in some way to this work, though more than a few of them have been
-slain by jealous rivals using their own spells against them.
-%%%%
 box of beasts
 
 A box filled with the bizarre leftovers of a depraved wizard's magical
@@ -647,6 +647,10 @@ The scaly skin of a cold-breathing dragon. It can be fashioned into proper
 armour, but even in its raw form it provides great protection from the effects
 of cold while rendering its wearer susceptible to fire.
 %%%%
+iron rod
+
+This rod allows its wielder to fire powerful blasts of metallic shrapnel.
+%%%%
 javelin
 
 This lightweight spear is designed for throwing and can cause serious injury.
@@ -682,7 +686,6 @@ large rock
 A very large and very heavy stone. {{
     if you.race() == "Ogre"
        or you.race() == "Troll"
-       or you.race() == "Formicid"
    then
        return ""
    else
@@ -800,14 +803,15 @@ resistance to negative energies.
 pearl dragon hide
 
 The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
-form it does not provide much protection, but by magical means it may be used
-to make excellent armour.
+form it does not provide much protection, beyond resistance to negative energy.
+By magical means, however, it may be used to make excellent armour.
 %%%%
 phantom mirror
 
 A hand mirror which can create a reflection of a nearby creature, shattering
 in the process. The reflection's duration increases with Evocations skill and
-decreases with the magic resistance of the target.
+decreases with the magic resistance of the target. It is, invariably, slightly
+weaker than the creature it mirrors.
 %%%%
 phial of floods
 
@@ -829,6 +833,12 @@ potion of agility
 A magic potion which greatly increases the dexterity and evasiveness of one who
 drinks it.
 %%%%
+potion of ambrosia
+
+A strange substance, produced by ghost moths. Consuming it causes regeneration
+of health and magic, along with total befuddlement. The two effects are
+fundamentally linked - the regeneration ends the moment the confusion does.
+%%%%
 potion of beneficial mutation
 
 A potion which gives you a supposedly good mutation.
@@ -839,9 +849,7 @@ A potion which can send one into an incoherent rage.
 %%%%
 potion of blood
 
-A potion containing the essence of life. It is vital for all living creatures,
-as well as some undead ones. It can also provide nutrition for those capable of
-eating meat.
+A potion containing the essence of life. Vampires find it... vital.
 %%%%
 potion of brilliance
 
@@ -852,16 +860,12 @@ potion of cancellation
 
 A potion which ends most magical effects, good or bad, affecting you.
 %%%%
+# if TAG_MAJOR_VERSION == 34
 potion of coagulated blood
 
-A potion containing the essence of life. It is vital for all living creatures,
-as well as some undead ones. It can also provide nutrition for those capable of
-eating meat. The blood within won't be palatable for much longer.
-%%%%
-potion of confusion
-
-A potion which confuses your perceptions and reduces your control over your own
-actions.
+A potion containing the essence of life. Vampires find it... vital. The blood
+within won't be palatable for much longer.
+# endif
 %%%%
 potion of cure mutation
 
@@ -1135,12 +1139,6 @@ rod of shadows
 
 This rod weaves creatures from shadows and ethereal matter.
 %%%%
-rod of striking
-
-This rod is designed for melee combat, releasing its charges to deal additional
-damage dependent on Evocations skill when it strikes a foe. Maces & Flails
-skill will help improve your basic effectiveness with the weapon.
-%%%%
 rod of the swarm
 
 This rod allows its wielder to summon a swarm of insects.
@@ -1196,6 +1194,9 @@ scroll of brand weapon
 This scroll enchants an unbranded weapon so as to make it far more effective
 at inflicting harm on its wielder's enemies. The scroll can also be used on a
 weapon that is already permanently branded to randomly select a new brand.
+
+Unlike temporary branding spells, this scroll causes no ill effects if the
+reader uses it to change the brand of a weapon of distortion.
 %%%%
 scroll of curse armour
 
@@ -1409,12 +1410,13 @@ steam dragon armour
 
 Armour made from the scales of a steam-breathing dragon. Unlike armour made
 from the scales of some larger dragons, it does not provide its wearer with
-much protection, but it is extremely light and supple.
+much protection (beyond a resistance to scalding steam), but it is extremely
+light and supple.
 %%%%
 steam dragon hide
 
-The soft and supple scaly skin of a steam dragon. It may be turned into proper
-armour by magical means.
+The soft and supple scaly skin of a steam dragon. It provides protection
+against scalding steam, and may be turned into proper armour by magical means.
 %%%%
 stone
 
@@ -1438,8 +1440,9 @@ as to provide a substantial benefit to the wearer's stealth.
 shadow dragon hide
 
 The hide of a great umbral dragon, covered in extremely hard blue-black scales.
-In its raw form it does not provide much protection, but with magical means, it
-may be used to make excellent armour.
+In its raw form it does not provide much protection beyond the ability to blend
+with the shadows. With magical means, however, it may be used to make excellent
+armour.
 %%%%
 storm dragon armour
 

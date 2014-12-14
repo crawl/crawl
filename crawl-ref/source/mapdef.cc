@@ -189,7 +189,7 @@ subvault_place::subvault_place(const coord_def &_tl,
 
 subvault_place::subvault_place(const subvault_place &place)
     : tl(place.tl), br(place.br),
-      subvault(place.subvault.get() ? new map_def(*place.subvault) : NULL)
+      subvault(place.subvault.get() ? new map_def(*place.subvault) : nullptr)
 {
 }
 
@@ -197,7 +197,8 @@ subvault_place &subvault_place::operator = (const subvault_place &place)
 {
     tl = place.tl;
     br = place.br;
-    subvault.reset(place.subvault.get() ? new map_def(*place.subvault) : NULL);
+    subvault.reset(place.subvault.get() ? new map_def(*place.subvault)
+                                        : nullptr);
     return *this;
 }
 
@@ -513,7 +514,7 @@ void map_lines::init_from(const map_lines &map)
 {
     // Markers have to be regenerated, they will not be copied.
     clear_markers();
-    overlay.reset(NULL);
+    overlay.reset(nullptr);
     lines            = map.lines;
     map_width        = map.map_width;
     solid_north      = map.solid_north;
@@ -748,12 +749,12 @@ string map_lines::parse_glyph_replacements(string s, glyph_replacements_t &gly)
             if (!parse_int(is.substr(2).c_str(), weight) || weight < 1)
                 return "Invalid weight specifier in \"" + s + "\"";
             else
-                gly.push_back(glyph_weighted_replacement_t(glych, weight));
+                gly.emplace_back(glych, weight);
         }
         else
         {
             for (int c = 0, cs = is.length(); c < cs; ++c)
-                gly.push_back(glyph_weighted_replacement_t(is[c], 10));
+                gly.emplace_back(is[c], 10);
         }
     }
 
@@ -799,7 +800,7 @@ bool map_colour_list::parse(const string &col, int weight)
     if (colour == -1)
         return false;
 
-    push_back(map_weighted_colour(colour, weight));
+    emplace_back(colour, weight);
     return true;
 }
 
@@ -842,7 +843,7 @@ bool map_fprop_list::parse(const string &fp, int weight)
     else
         fprop = str_to_fprop(fp);
 
-    push_back(map_weighted_fprop(fprop, weight));
+    emplace_back(fprop, weight);
     return true;
 }
 
@@ -851,7 +852,7 @@ bool map_featheight_list::parse(const string &fp, int weight)
     const int thisheight = strict_aton(fp.c_str(), INVALID_HEIGHT);
     if (thisheight == INVALID_HEIGHT)
         return false;
-    push_back(map_weighted_fheight(thisheight, weight));
+    emplace_back(thisheight, weight);
     return true;
 }
 
@@ -908,7 +909,7 @@ string map_lines::add_fheight(const string &sub)
 
 bool map_string_list::parse(const string &fp, int weight)
 {
-    push_back(map_weighted_string(fp, weight));
+    emplace_back(fp, weight);
     return !fp.empty();
 }
 
@@ -1145,7 +1146,7 @@ void map_lines::clear()
     clear_markers();
     lines.clear();
     keyspecs.clear();
-    overlay.reset(NULL);
+    overlay.reset(nullptr);
     map_width = 0;
     solid_checked = false;
 
@@ -1211,7 +1212,7 @@ void map_lines::fill_mask_matrix(const string &glyphs,
         {
             int ox = x - tl.x;
             int oy = y - tl.y;
-            flags(ox, oy) = (strchr(glyphs.c_str(), (*this)(x, y)) != NULL);
+            flags(ox, oy) = (strchr(glyphs.c_str(), (*this)(x, y)) != nullptr);
         }
 }
 
@@ -1260,9 +1261,8 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
     }
 
     // Copy markers and update locations.
-    for (size_t i = 0; i < vlines.markers.size(); ++i)
+    for (map_marker *mm : vlines.markers)
     {
-        map_marker *mm = vlines.markers[i];
         coord_def mapc = mm->pos + vtl;
         coord_def maskc = mapc - mtl;
 
@@ -1451,7 +1451,7 @@ void map_lines::nsubst(nsubst_spec &spec)
     {
         string::size_type pos = 0;
         while ((pos = lines[y].find_first_of(spec.key, pos)) != string::npos)
-            positions.push_back(coord_def(pos++, y));
+            positions.emplace_back(pos++, y);
     }
     shuffle_array(positions);
 
@@ -1690,14 +1690,12 @@ void map_lines::hmirror()
 
 keyed_mapspec *map_lines::mapspec_for_key(int key)
 {
-    keyed_specs::iterator i = keyspecs.find(key);
-    return i != keyspecs.end()? &i->second : NULL;
+    return map_find(keyspecs, key);
 }
 
 const keyed_mapspec *map_lines::mapspec_for_key(int key) const
 {
-    keyed_specs::const_iterator i = keyspecs.find(key);
-    return i != keyspecs.end()? &i->second : NULL;
+    return map_find(keyspecs, key);
 }
 
 keyed_mapspec *map_lines::mapspec_at(const coord_def &c)
@@ -1709,12 +1707,12 @@ keyed_mapspec *map_lines::mapspec_at(const coord_def &c)
         // Any subvault should create the overlay.
         ASSERT(overlay.get());
         if (!overlay.get())
-            return NULL;
+            return nullptr;
 
         key = (*overlay)(c.x, c.y).keyspec_idx;
         ASSERT(key);
         if (!key)
-            return NULL;
+            return nullptr;
     }
 
     return mapspec_for_key(key);
@@ -1729,12 +1727,12 @@ const keyed_mapspec *map_lines::mapspec_at(const coord_def &c) const
         // Any subvault should create the overlay and set the keyspec idx.
         ASSERT(overlay.get());
         if (!overlay.get())
-            return NULL;
+            return nullptr;
 
         key = (*overlay)(c.x, c.y).keyspec_idx;
         ASSERT(key);
         if (!key)
-            return NULL;
+            return nullptr;
     }
 
     return mapspec_for_key(key);
@@ -1911,14 +1909,11 @@ bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
 
     for (points[cur].push_back(start); !points[cur].empty();)
     {
-        for (list<coord_def>::const_iterator i = points[cur].begin();
-             i != points[cur].end(); ++i)
+        for (const auto &c : points[cur])
         {
-            const coord_def &c(*i);
-
             tpd[c.x][c.y] = zone;
 
-            ret |= (wanted && strchr(wanted, (*this)(c)) != NULL);
+            ret |= (wanted && strchr(wanted, (*this)(c)) != nullptr);
 
             for (int yi = -1; yi <= 1; ++yi)
                 for (int xi = -1; xi <= 1; ++xi)
@@ -1965,7 +1960,7 @@ bool map_tile_list::parse(const string &s, int weight)
     if (s != "none" && !tile_dngn_index(s.c_str(), &idx))
         return false;
 
-    push_back(map_weighted_tile(s, weight));
+    emplace_back(s, weight);
     return true;
 }
 
@@ -2232,7 +2227,7 @@ void map_def::init()
 
     // Subvault mask set and cleared externally.
     // It should *not* be in reinit.
-    svmask = NULL;
+    svmask = nullptr;
 }
 
 void map_def::reinit()
@@ -2700,21 +2695,14 @@ string map_def::validate_temple_map()
     if (has_tag_prefix("temple_overflow_"))
     {
         vector<string> tag_list = get_tags();
-        string         temple_tag;
 
-        for (unsigned int i = 0; i < tag_list.size(); i++)
-        {
-            if (starts_with(tag_list[i], "temple_overflow_"))
-            {
-                temple_tag = tag_list[i];
-                break;
-            }
-        }
+        auto tag = find_if(begin(tag_list), end(tag_list),
+                bind(starts_with, placeholders::_1, "temple_overflow_"));
 
-        if (temple_tag.empty())
+        if (tag == end(tag_list))
             return make_stringf("Unknown temple tag.");
 
-        temple_tag = strip_tag_prefix(temple_tag, "temple_overflow_");
+        string temple_tag = strip_tag_prefix(*tag, "temple_overflow_");
 
         if (temple_tag.empty())
             return "Malformed temple_overflow_ tag";
@@ -2745,11 +2733,10 @@ string map_def::validate_temple_map()
     // TODO: check for substitutions and shuffles
 
     vector<coord_def> b_glyphs = map.find_glyph('B');
-    for (vector<coord_def>::iterator i = b_glyphs.begin();
-        i != b_glyphs.end(); ++i)
+    for (auto c : b_glyphs)
     {
-        const keyed_mapspec *spec = map.mapspec_at(*i);
-        if (spec != NULL && !spec->feat.feats.empty())
+        const keyed_mapspec *spec = map.mapspec_at(c);
+        if (spec != nullptr && !spec->feat.feats.empty())
             return "Can't change feat 'B' in temple (KFEAT)";
     }
 
@@ -2997,12 +2984,12 @@ coord_def map_def::float_dock()
     map_section_type which_orient = MAP_NONE;
     int norients = 0;
 
-    for (unsigned i = 0; i < ARRAYSZ(orients); ++i)
+    for (map_section_type sec : orients)
     {
-        if (map.solid_borders(orients[i]) && can_dock(orients[i])
+        if (map.solid_borders(sec) && can_dock(sec)
             && one_chance_in(++norients))
         {
-            which_orient = orients[i];
+            which_orient = sec;
         }
     }
 
@@ -3086,7 +3073,7 @@ point_vector map_def::anchor_points() const
     for (int y = 0, cheight = map.height(); y < cheight; ++y)
         for (int x = 0, cwidth = map.width(); x < cwidth; ++x)
             if (map.glyph(x, y) == '@')
-                points.push_back(coord_def(x, y));
+                points.emplace_back(x, y);
     return points;
 }
 
@@ -3297,8 +3284,8 @@ bool map_def::has_tag(const string &tagwanted) const
 
     vector<string> wanted_tags = split_string(" ", tagwanted);
 
-    for (unsigned int i = 0; i < wanted_tags.size(); i++)
-        if (tags.find(" " + wanted_tags[i] + " ") == string::npos)
+    for (const string &tag : wanted_tags)
+        if (tags.find(" " + tag + " ") == string::npos)
             return false;
 
     return true;
@@ -3457,10 +3444,8 @@ string map_def::apply_subvault(string_spec &spec)
         env.new_subvault_names.push_back(vault.name);
         env.new_subvault_tags.push_back(vault.tags);
         _register_subvault(vault.name, vault.tags);
-        subvault_places.push_back(
-            subvault_place(subvault_corners.first,
-                           subvault_corners.second,
-                           vault));
+        subvault_places.emplace_back(subvault_corners.first,
+                                     subvault_corners.second, vault);
 
         return "";
     }
@@ -3474,7 +3459,7 @@ string map_def::apply_subvault(string_spec &spec)
 
 bool map_def::is_subvault() const
 {
-    return svmask != NULL;
+    return svmask != nullptr;
 }
 
 void map_def::apply_subvault_mask()
@@ -3561,12 +3546,11 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
     int totweight = 0;
     mons_spec pick;
 
-    for (mons_spec_list::iterator i = slot.mlist.begin();
-         i != slot.mlist.end(); ++i)
+    for (const auto &spec : slot.mlist)
     {
-        const int weight = i->genweight;
+        const int weight = spec.genweight;
         if (x_chance_in_y(weight, totweight += weight))
-            pick = *i;
+            pick = spec;
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -3626,17 +3610,16 @@ void mons_list::set_from_slot(const mons_list &list, int slot_index)
 void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
 {
     spec.explicit_spells = true;
-    vector<string>::iterator spell_it;
 
-    for (spell_it = spells.begin(); spell_it != spells.end(); ++spell_it)
+    for (const string &slotspec : spells)
     {
         monster_spells cur_spells;
 
-        const vector<string> spell_names(split_string(";", (*spell_it)));
+        const vector<string> spell_names(split_string(";", slotspec));
 
         for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
         {
-            cur_spells.push_back(mon_spell_slot());
+            cur_spells.emplace_back();
             const string spname(
                 lowercase_string(replace_all_of(spell_names[i], "_", " ")));
             if (spname.empty() || spname == "." || spname == "none"
@@ -3651,7 +3634,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 {
                     error = make_stringf(
                         "Invalid spell slot format: '%s' in '%s'",
-                        spname.c_str(), spell_it->c_str());
+                        spname.c_str(), slotspec.c_str());
                     return;
                 }
                 const spell_type sp(spell_by_name(slot_vals[0]));
@@ -3659,7 +3642,7 @@ void mons_list::parse_mons_spells(mons_spec &spec, vector<string> &spells)
                 {
                     error = make_stringf("Unknown spell name: '%s' in '%s'",
                                          slot_vals[0].c_str(),
-                                         spell_it->c_str());
+                                         slotspec.c_str());
                     return;
                 }
                 if (!is_valid_mon_spell(sp))
@@ -4204,7 +4187,7 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
 {
     static const char *zombie_types[] =
     {
-        " zombie", " skeleton", " simulacrum", " spectre", NULL
+        " zombie", " skeleton", " simulacrum", " spectre", nullptr
     };
 
     // This order must match zombie_types, indexed from one.
@@ -4546,9 +4529,9 @@ mons_spec mons_list::mons_by_name(string name) const
             return MONS_PROGRAM_BUG;
 
         spec = MONS_CHIMERA;
-        for (unsigned int i = 0; i < components.size(); i++)
+        for (const string &component : components)
         {
-            monster_type monstype = get_monster_by_name(components[i]);
+            monster_type monstype = get_monster_by_name(component);
             if (monstype == MONS_PROGRAM_BUG)
                 return MONS_PROGRAM_BUG;
             spec.chimera_mons.push_back(monstype);
@@ -4599,7 +4582,7 @@ mons_spec mons_list::mons_by_name(string name) const
 // item_list
 
 item_spec::item_spec(const item_spec &other)
-    : _corpse_monster_spec(NULL)
+    : _corpse_monster_spec(nullptr)
 {
     *this = other;
 }
@@ -4637,7 +4620,7 @@ item_spec::~item_spec()
 void item_spec::release_corpse_monster_spec()
 {
     delete _corpse_monster_spec;
-    _corpse_monster_spec = NULL;
+    _corpse_monster_spec = nullptr;
 }
 
 bool item_spec::corpselike() const
@@ -4688,7 +4671,7 @@ item_spec item_list::random_item_weighted()
     for (int i = 0, sz = size(); i < sz; ++i)
     {
         item_spec item = get_item(i);
-        pairs.push_back(item_pair(item, item.genweight));
+        pairs.emplace_back(item, item.genweight);
     }
 
     item_spec* rn_item = random_choose_weighted(pairs);
@@ -4701,23 +4684,22 @@ item_spec item_list::random_item_weighted()
 item_spec item_list::pick_item(item_spec_slot &slot)
 {
     int cumulative = 0;
-    item_spec spec;
-    for (item_spec_list::const_iterator i = slot.ilist.begin();
-         i != slot.ilist.end(); ++i)
+    item_spec pick;
+    for (const auto &spec : slot.ilist)
     {
-        const int weight = i->genweight;
+        const int weight = spec.genweight;
         if (x_chance_in_y(weight, cumulative += weight))
-            spec = *i;
+            pick = spec;
     }
 
     if (slot.fix_slot)
     {
         slot.ilist.clear();
-        slot.ilist.push_back(spec);
+        slot.ilist.push_back(pick);
         slot.fix_slot = false;
     }
 
-    return spec;
+    return pick;
 }
 
 item_spec item_list::get_item(int index)
@@ -4815,7 +4797,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
 #if TAG_MAJOR_VERSION == 34
         "jumping",
 #endif
-        NULL
+        nullptr
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);
 
@@ -4851,7 +4833,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
 #endif
         "penetration",
         "reaping",
-        NULL
+        nullptr
     };
     COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS);
 
@@ -4876,7 +4858,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "sickness",
 #endif
         "frenzy",
-        NULL
+        nullptr
     };
     COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_REAL_SPECIAL_MISSILES);
 
@@ -4912,7 +4894,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
 
     const char** allowed = name_lists[order[0]];
 
-    for (int i = 0; allowed[i] != NULL; i++)
+    for (int i = 0; allowed[i] != nullptr; i++)
     {
         if (ego_str == allowed[i])
             return i + 1;
@@ -4923,7 +4905,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
     {
         const char** list = name_lists[order[i]];
 
-        for (int j = 0; list[j] != NULL; j++)
+        for (int j = 0; list[j] != nullptr; j++)
             if (ego_str == list[j])
                 // Ego incompatible with base type.
                 return -1;
@@ -5180,6 +5162,13 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         }
     }
 
+    // Damaged + cursed, but allow other specs to override the former.
+    if (strip_tag(s, "cursed"))
+    {
+        result.level = ISPEC_BAD;
+        result.props["cursed"] = bool(true);
+    }
+
     const string acquirement_source = strip_tag_prefix(s, "acquire:");
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
     {
@@ -5207,16 +5196,15 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     {
         vector<string> ids = split_string("|", id_str);
         int id = 0;
-        for (vector<string>::const_iterator is = ids.begin();
-             is != ids.end(); ++is)
+        for (const auto &is : ids)
         {
-            if (*is == "curse")
+            if (is == "curse")
                 id |= ISFLAG_KNOW_CURSE;
-            else if (*is == "type")
+            else if (is == "type")
                 id |= ISFLAG_KNOW_TYPE;
-            else if (*is == "pluses")
+            else if (is == "pluses")
                 id |= ISFLAG_KNOW_PLUSES;
-            else if (*is == "properties")
+            else if (is == "properties")
                 id |= ISFLAG_KNOW_PROPERTIES;
             else
             {
@@ -5251,16 +5239,9 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     {
         result.level = ISPEC_MUNDANE;
         result.ego   = -1;
-        if (strip_tag(s, "cursed"))
-            result.props["cursed"] = bool(true);
     }
     if (strip_tag(s, "damaged"))
         result.level = ISPEC_DAMAGED;
-    if (strip_tag(s, "cursed"))
-    {
-        result.level = ISPEC_BAD; // damaged + cursed, actually
-        result.props["cursed"] = bool(true);
-    }
     if (strip_tag(s, "randart"))
         result.level = ISPEC_RANDART;
     if (strip_tag(s, "not_cursed"))
@@ -5320,8 +5301,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         // spell: <include this spell>, owner:<name of owner>
         // None of these are required, but if you don't intend on using any
         // of them, use "any fixed theme book" instead.
-        short disc1 = 0;
-        short disc2 = 0;
+        spschool_flag_type disc1 = SPTYP_NONE;
+        spschool_flag_type disc2 = SPTYP_NONE;
 
         string st_disc1 = strip_tag_prefix(s, "disc:");
         if (!st_disc1.empty())
@@ -5355,18 +5336,17 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             }
         }
 
-        if (disc1 == 0 && disc2 != 0)
+        if (disc1 == SPTYP_NONE && disc2 != 0)
         {
             // Don't fail, just quietly swap. Any errors in disc1's syntax will
             // have been caught above, anyway.
-            disc1 = disc2;
-            disc2 = 0;
+            swap(disc1, disc2);
         }
 
         short num_spells = strip_number_tag(s, "numspells:");
         if (num_spells == TAG_UNFOUND)
             num_spells = -1;
-        else if (num_spells <= 0 || num_spells > SPELLBOOK_SIZE)
+        else if (num_spells <= 0 || num_spells > RANDBOOK_SIZE)
         {
             error = make_stringf("Bad spellbook size: %d", num_spells);
             return false;
@@ -5390,13 +5370,13 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         CrawlVector &incl_spells
             = result.props["randbook_spells"].new_vector(SV_INT);
 
-        for (unsigned int i = 0; i < spell_list.size(); ++i)
+        for (const string &spnam : spell_list)
         {
-            string spell_name = replace_all_of(spell_list[i], "_", " ");
+            string spell_name = replace_all_of(spnam, "_", " ");
             spell_type spell = spell_by_name(spell_name);
             if (spell == SPELL_NO_SPELL)
             {
-                error = make_stringf("Bad spell: %s", spell_list[i].c_str());
+                error = make_stringf("Bad spell: %s", spnam.c_str());
                 return false;
             }
             incl_spells.push_back(spell);
@@ -5404,8 +5384,10 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
         const string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
                                             "_", " ");
-        result.props["randbook_disc1"] = disc1;
-        result.props["randbook_disc2"] = disc2;
+
+        COMPILE_CHECK(SPTYP_LAST_SCHOOL < SHRT_MAX);
+        result.props["randbook_disc1"].get_short() = disc1;
+        result.props["randbook_disc2"].get_short() = disc2;
         result.props["randbook_num_spells"] = num_spells;
         result.props["randbook_slevels"] = slevels;
         result.props["randbook_title"] = title;
@@ -5657,15 +5639,14 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
     item_spec_slot list;
 
     list.fix_slot = strip_tag(spec, "fix_slot");
-    vector<string> specifiers = split_string("/", spec);
 
-    for (unsigned i = 0; i < specifiers.size() && error.empty(); ++i)
+    for (const string &specifier : split_string("/", spec))
     {
         item_spec result;
-        if (parse_single_spec(result, specifiers[i]))
+        if (parse_single_spec(result, specifier))
             list.ilist.push_back(result);
         else
-          dprf(DIAG_DNGN, "Failed to parse: %s", specifiers[i].c_str());
+            dprf(DIAG_DNGN, "Failed to parse: %s", specifier.c_str());
     }
 
     return list;
@@ -5868,14 +5849,15 @@ map_flags map_flags::parse(const string flag_list[],
             negate = true;
         }
 
-        flag_map::const_iterator val = flag_vals.find(flag);
-        if (val == flag_vals.end())
-            throw make_stringf("Unknown flag: '%s'", flag.c_str());
-
-        if (negate)
-            mf.flags_unset |= val->second;
+        if (unsigned long *val = map_find(flag_vals, flag))
+        {
+            if (negate)
+                mf.flags_unset |= *val;
+            else
+                mf.flags_set |= *val;
+        }
         else
-            mf.flags_set |= val->second;
+            throw make_stringf("Unknown flag: '%s'", flag.c_str());
     }
 
     return mf;
@@ -5975,6 +5957,8 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
 
     bool use_all = strip_tag(s, "use_all");
 
+    const bool gozag = strip_tag(s, "gozag");
+
     string shop_name = replace_all_of(strip_tag_prefix(s, "name:"), "_", " ");
     string shop_type_name = replace_all_of(strip_tag_prefix(s, "type:"),
                                            "_", " ");
@@ -5992,8 +5976,8 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
     vector<string> parts = split_string(";", s);
     string main_part = parts[0];
 
-    const int shop = str_to_shoptype(main_part);
-    if (shop == -1)
+    const shop_type shop = str_to_shoptype(main_part);
+    if (shop == SHOP_UNASSIGNED)
         err = make_stringf("bad shop type: '%s'", s.c_str());
 
     if (parts.size() > 2)
@@ -6013,9 +5997,9 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
     }
 
     feature_spec fspec(-1, weight, mimic, no_mimic);
-    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name,
-                                   shop_type_name, shop_suffix_name, greed,
-                                   num_items, use_all));
+    fspec.shop.reset(new shop_spec(shop, shop_name, shop_type_name,
+                                   shop_suffix_name, greed,
+                                   num_items, use_all, gozag));
     fspec.shop->items = items;
     return fspec;
 }
@@ -6040,28 +6024,15 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
         feature_spec fsp(-1, weight, mimic, no_mimic);
         fsp.glyph = s[0];
         list.push_back(fsp);
-        return list;
     }
-
-    if (s.find("trap") != string::npos || s == "web")
-    {
+    else if (strip_tag(s, "trap") || s == "web")
         list.push_back(parse_trap(s, weight));
-        return list;
-    }
-
-    if (s.find("shop") != string::npos && s != "abandoned_shop"
-        || s.find("store") != string::npos)
-    {
+    else if (strip_tag(s, "shop"))
         list.push_back(parse_shop(s, weight, mimic, no_mimic));
-        return list;
-    }
-
-    const dungeon_feature_type ftype = dungeon_feature_by_name(s);
-
-    if (ftype == DNGN_UNSEEN)
-        err = make_stringf("no features matching \"%s\"", str.c_str());
+    else if (auto ftype = dungeon_feature_by_name(s)) // DNGN_UNSEEN == 0
+        list.emplace_back(ftype, weight, mimic, no_mimic);
     else
-        list.push_back(feature_spec(ftype, weight, mimic, no_mimic));
+        err = make_stringf("no features matching \"%s\"", str.c_str());
 
     return list;
 }
@@ -6099,10 +6070,8 @@ string keyed_mapspec::set_item(const string &s, bool fix)
     return err;
 }
 
-string keyed_mapspec::set_mask(const string &s, bool garbage)
+string keyed_mapspec::set_mask(const string &s, bool /*garbage*/)
 {
-    UNUSED(garbage);
-
     err.clear();
 
     try
@@ -6170,8 +6139,8 @@ feature_spec::feature_spec()
     genweight = 0;
     feat = 0;
     glyph = -1;
-    shop.reset(NULL);
-    trap.reset(NULL);
+    shop.reset(nullptr);
+    trap.reset(nullptr);
     mimic = 0;
     no_mimic = false;
 }
@@ -6181,8 +6150,8 @@ feature_spec::feature_spec(int f, int wt, int _mimic, bool _no_mimic)
     genweight = wt;
     feat = f;
     glyph = -1;
-    shop.reset(NULL);
-    trap.reset(NULL);
+    shop.reset(nullptr);
+    trap.reset(nullptr);
     mimic = _mimic;
     no_mimic = _no_mimic;
 }
@@ -6210,12 +6179,12 @@ void feature_spec::init_with(const feature_spec& other)
     if (other.trap.get())
         trap.reset(new trap_spec(*other.trap));
     else
-        trap.reset(NULL);
+        trap.reset(nullptr);
 
     if (other.shop.get())
         shop.reset(new shop_spec(*other.shop));
     else
-        shop.reset(NULL);
+        shop.reset(nullptr);
 }
 
 feature_slot::feature_slot() : feats(), fix_slot(false)

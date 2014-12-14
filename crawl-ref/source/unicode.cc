@@ -8,11 +8,11 @@
 
 #include "unicode.h"
 
+#include <climits>
+#include <clocale>
+#include <cstdio>
+#include <cstring>
 #include <string>
-#include <limits.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "syscalls.h"
 
@@ -525,8 +525,10 @@ char *next_glyph(char *s)
     if (!c)
         return 0;
     do
+    {
         s += utf8towc(&c, s_cur = s);
         // And any combining ones after it.
+    }
     while (c && !wcwidth(c));
     return s_cur;
 }

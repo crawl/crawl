@@ -7,10 +7,10 @@
 #ifndef STORE_H
 #define STORE_H
 
+#include <climits>
 #include <map>
 #include <string>
 #include <vector>
-#include <limits.h>
 
 class  reader;
 class  writer;

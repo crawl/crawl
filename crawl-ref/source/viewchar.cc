@@ -46,7 +46,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
 
 dungeon_char_type dchar_by_name(const string &name)
 {
-    const char *dchar_names[] =
+    static const char *dchar_names[] =
     {
         "wall", "permawall", "wall_magic", "floor", "floor_magic", "door_open",
         "door_closed", "trap", "stairs_down", "stairs_up",
