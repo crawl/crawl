@@ -512,10 +512,10 @@ void get_cleave_targets(const actor* attacker, const coord_def& def,
         targets.push_back(actor_at(def));
 
     const item_def* weap = attacker->weapon(which_attack);
-    if (attacker->confused() || !weap)
+    if (attacker->confused())
         return;
 
-    if ((item_attack_skill(*weap) == SK_AXES
+    if ((weap && item_attack_skill(*weap) == SK_AXES
          || attacker->is_player()
             && (you.form == TRAN_HYDRA && you.heads() > 1
                 || you.duration[DUR_CLEAVE]))
@@ -535,7 +535,7 @@ void get_cleave_targets(const actor* attacker, const coord_def& def,
         }
     }
 
-    if (is_unrandom_artefact(*weap, UNRAND_GYRE))
+    if (weap && is_unrandom_artefact(*weap, UNRAND_GYRE))
     {
         list<actor*> new_targets;
         for (actor* targ : targets)
