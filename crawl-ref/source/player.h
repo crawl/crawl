@@ -1009,6 +1009,7 @@ void rot_hp(int hp_loss);
 void unrot_hp(int hp_recovered);
 int player_rotted();
 void rot_mp(int mp_loss);
+int player_rotted_mp();
 
 void inc_max_hp(int hp_gain);
 void dec_max_hp(int hp_loss);
@@ -1017,7 +1018,7 @@ void deflate_hp(int new_level, bool floor);
 void set_hp(int new_amount);
 
 int get_real_hp(bool trans, bool rotted = false);
-int get_real_mp(bool include_items);
+int get_real_mp(bool include_items, bool exclude_temp = false);
 
 int get_contamination_level();
 string describe_contamination(int level);

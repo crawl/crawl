@@ -4495,6 +4495,11 @@ int player_rotted()
     return -you.hp_max_adj_temp;
 }
 
+int player_rotted_mp()
+{
+    return -you.mp_max_adj_temp;
+}
+
 void rot_mp(int mp_loss)
 {
     you.mp_max_adj_perm -= mp_loss;
@@ -4606,7 +4611,7 @@ int get_real_hp(bool trans, bool rotted)
     return hitp;
 }
 
-int get_real_mp(bool include_items)
+int get_real_mp(bool include_items, bool exclude_temp)
 {
     int enp = you.experience_level;
     enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
@@ -4649,6 +4654,9 @@ int get_real_mp(bool include_items)
 
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
+
+    if (!exclude_temp)
+        enp += you.mp_max_adj_temp;
 
     enp = max(enp, 0);
 

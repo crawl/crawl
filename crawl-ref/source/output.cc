@@ -595,6 +595,8 @@ static void _print_stats_mp(int x, int y)
         return;
 
 #endif
+    int max_max_mp = get_real_mp(true, true);
+
     // Calculate colour
     short mp_colour = HUD_VALUE_COLOUR;
 
@@ -615,12 +617,14 @@ static void _print_stats_mp(int x, int y)
 
     CGOTOXY(x, y, GOTO_STAT);
     textcolour(HUD_CAPTION_COLOUR);
-    CPRINTF(player_rotted() ? "MP: " : "Magic:  ");
+    CPRINTF((player_rotted() || player_rotted_mp()) ? "MP: " : "Magic:  ");
     textcolour(mp_colour);
     CPRINTF("%d", you.magic_points);
     if (!boosted)
         textcolour(HUD_VALUE_COLOUR);
     CPRINTF("/%d", you.max_magic_points);
+    if (max_max_mp != you.max_magic_points)
+        CPRINTF(" (%d)", max_max_mp);
     if (boosted)
         textcolour(HUD_VALUE_COLOUR);
 
@@ -716,10 +720,10 @@ static void _print_stats_hp(int x, int y)
     textcolour(HUD_CAPTION_COLOUR);
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
-        CPRINTF(player_rotted() ? "EP: " : "Essence: ");
+        CPRINTF((player_rotted() || player_rotted_mp()) ? "EP: " : "Essence: ");
     else
 #endif
-    CPRINTF(player_rotted() ? "HP: " : "Health: ");
+    CPRINTF((player_rotted() || player_rotted_mp()) ? "HP: " : "Health: ");
     textcolour(hp_colour);
     CPRINTF("%d", you.hp);
     if (!boosted)
@@ -2176,7 +2180,7 @@ static vector<formatted_string> _get_overview_stats()
     column_composer cols(4, col1, col1 + col2, col1 + col2 + col3);
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
+    if (player_rotted() || player_rotted_mp())
         entry.cprintf("HP:   ");
     else
         entry.cprintf("Health: ");
@@ -2194,7 +2198,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.clear();
 
     entry.textcolour(HUD_CAPTION_COLOUR);
-    if (player_rotted())
+    if (player_rotted() || player_rotted_mp())
         entry.cprintf("MP:   ");
     else
         entry.cprintf("Magic:  ");
@@ -2205,6 +2209,8 @@ static vector<formatted_string> _get_overview_stats()
         entry.textcolour(HUD_VALUE_COLOUR);
 
     entry.cprintf("%d/%d", you.magic_points, you.max_magic_points);
+    if (player_rotted_mp())
+        entry.cprintf(" (%d)", get_real_mp(true, true));
 
     cols.add_formatted(0, entry.to_colour_string(), false);
     entry.clear();
