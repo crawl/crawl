@@ -3726,15 +3726,19 @@ void dithmenos_shadow_throw(coord_def target, const item_def &item)
 
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 {
-    if (!orig_beam
-        || orig_beam->target.origin()
+    if (!orig_beam)
+        return;
+
+    const coord_def target = orig_beam->target;
+
+    if (orig_beam->target.origin()
         || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
+        || orig_beam->flavour == BEAM_ENSLAVE
+           && monster_at(target) && monster_at(target)->friendly()
         || !_dithmenos_shadow_acts())
     {
         return;
     }
-
-    const coord_def target = orig_beam->target;
 
     monster* mon = shadow_monster();
     if (!mon)
