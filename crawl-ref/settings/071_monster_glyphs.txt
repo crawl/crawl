@@ -5,15 +5,15 @@
 ###########################
 
 # small zombies, etc.
-mon_glyph = wight : lightgrey W
+mon_glyph += wight : lightgrey W
 
 # no spiders in 0.7, but the spider form uses this
-mon_glyph = spider : brown s
+mon_glyph += spider : brown s
 
 # nagas
-mon_glyph = greater naga : lightred N
-mon_glyph = guardian serpent : lightgreen N
-mon_glyph = salamander : lightred S
+mon_glyph += greater naga : lightred N
+mon_glyph += guardian serpent : lightgreen N
+mon_glyph += salamander : lightred S
 
 # unique monsters
-mon_glyph = Aizul : lightmagenta N
+mon_glyph += Aizul : lightmagenta N

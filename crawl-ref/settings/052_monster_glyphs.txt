@@ -8,49 +8,49 @@
 ###########################
 
 # bees
-mon_glyph = killer bee : yellow
-mon_glyph = queen bee : yellow Q
-mon_glyph = killer bee larva : yellow w
+mon_glyph += killer bee : yellow
+mon_glyph += queen bee : yellow Q
+mon_glyph += killer bee larva : yellow w
 
 # ants/cockroaches
-mon_glyph = queen ant : lightgrey Q
-mon_glyph = giant cockroach : brown a
-mon_glyph = ant larva : lightgrey w
-mon_glyph = soldier ant : lightgrey a
+mon_glyph += queen ant : lightgrey Q
+mon_glyph += giant cockroach : brown a
+mon_glyph += ant larva : lightgrey w
+mon_glyph += soldier ant : lightgrey a
 
 # hybrids
-mon_glyph = minotaur : red t
+mon_glyph += minotaur : red t
 
 # spiders
-mon_glyph = trapdoor spider : brown
-mon_glyph = wolf spider : brown
-mon_glyph = scorpion : lightgrey
+mon_glyph += trapdoor spider : brown
+mon_glyph += wolf spider : brown
+mon_glyph += scorpion : lightgrey
 
 # tier 4 demons
-mon_glyph = smoke demon : lightgrey 4
+mon_glyph += smoke demon : lightgrey 4
 
 # tier 3 demons
-mon_glyph = hellion : fire 3
-mon_glyph = ynoxinul : cyan 3
+mon_glyph += hellion : fire 3
+mon_glyph += ynoxinul : cyan 3
 
 # efreets
-mon_glyph = efreet : red E
-mon_glyph = Azrael : lightred E
+mon_glyph += efreet : red E
+mon_glyph += Azrael : lightred E
 
 # jellies
-mon_glyph = acid blob : lightgreen
+mon_glyph += acid blob : lightgreen
 # not in 0.5, but it would conflict with acid blobs
-mon_glyph = merged slime creature : green
-mon_glyph = giant spore : G
+mon_glyph += merged slime creature : green
+mon_glyph += giant spore : G
 
 # insubstantials
-mon_glyph = insubstantial wisp : lightgrey p
-mon_glyph = shadow : darkgrey x20
-mon_glyph = vapour : lightgrey #
-mon_glyph = shadow wraith : blue W
+mon_glyph += insubstantial wisp : lightgrey p
+mon_glyph += shadow : darkgrey x20
+mon_glyph += vapour : lightgrey #
+mon_glyph += shadow wraith : blue W
 
 # elementals
-mon_glyph = earth elemental : brown #
-mon_glyph = fire elemental : yellow #
-mon_glyph = water elemental : lightblue {
-mon_glyph = air elemental : lightgrey v
+mon_glyph += earth elemental : brown #
+mon_glyph += fire elemental : yellow #
+mon_glyph += water elemental : lightblue {
+mon_glyph += air elemental : lightgrey v
