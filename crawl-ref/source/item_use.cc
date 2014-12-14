@@ -1960,6 +1960,11 @@ void zap_wand(int slot)
         xom_is_stimulated(200);
     }
 
+    // Need to do this down here since auto_assign_item_slot may
+    // move the item in memory.
+    if (!alreadyknown)
+        auto_assign_item_slot(wand);
+
     you.turn_is_over = true;
 }
 
@@ -2133,6 +2138,7 @@ void drink(int slot)
 
     dec_inv_item_quantity(slot, 1);
     count_action(CACT_USE, OBJ_POTIONS);
+    auto_assign_item_slot(potion);
     you.turn_is_over = true;
 
     // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
@@ -2470,6 +2476,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
             learned_something_new(HINT_INACCURACY);
         }
 
+        auto_assign_item_slot(item);
         return true;
     }
 }
@@ -3173,6 +3180,10 @@ void read_scroll(int item_slot)
         // since there are no *really* bad scrolls, merely useless ones).
         xom_is_stimulated(bad_effect ? 100 : 50);
     }
+
+    if (!alreadyknown)
+        auto_assign_item_slot(scroll);
+
 }
 
 bool stasis_blocks_effect(bool calc_unid,

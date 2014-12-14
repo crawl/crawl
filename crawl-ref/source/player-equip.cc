@@ -1225,6 +1225,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mprf("You feel %s static.", you.species == SP_FORMICID ? "familiarly" : "strangely");
     }
 
+    bool new_ident = false;
     // Artefacts have completely different appearance than base types
     // so we don't allow them to make the base types known.
     if (artefact)
@@ -1236,7 +1237,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     }
     else
     {
-        set_ident_type(item, ID_KNOWN_TYPE);
+        new_ident = set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
@@ -1263,6 +1264,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     if (!unmeld)
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+    if (new_ident)
+        auto_assign_item_slot(item);
 }
 
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,

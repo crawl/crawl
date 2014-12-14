@@ -44,7 +44,7 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
 bool move_item_to_inv(item_def& item);
 bool move_item_to_inv(int obj, int quant_got, bool quiet = false);
-bool auto_assign_item_slot(item_def& item);
+item_def* auto_assign_item_slot(item_def& item);
 void mark_items_non_pickup_at(const coord_def &pos);
 void mark_items_non_visit_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);

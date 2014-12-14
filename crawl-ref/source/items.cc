@@ -1860,11 +1860,15 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 /**
  * Maybe move an item to the slot given by the item_slot option.
  *
- * @param item the item to be checked.
- * @returns whether the item was moved anywhere.
+ * @param[in] item the item to be checked. Note that any references to this
+ *                 item will be invalidated by the swap_inv_slots call!
+ * @returns the new location of the item if it was moved, NULL otherwise.
  */
-bool auto_assign_item_slot(item_def& item)
+item_def *auto_assign_item_slot(item_def& item)
 {
+    if (!item.defined())
+        return nullptr;
+
     int newslot = -1;
     // check to see whether we've chosen an automatic label:
     for (auto& mapping : Options.auto_item_letters)
@@ -1880,10 +1884,10 @@ bool auto_assign_item_slot(item_def& item)
         if (newslot != -1 && newslot != item.link)
         {
             swap_inv_slots(item.link, newslot, true);
-            return true;
+            return &you.inv[newslot];
         }
     }
-    return false;
+    return nullptr;
 }
 
 /**
@@ -1913,10 +1917,6 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
 
-    bool message_given = false;
-    if (auto_assign_item_slot(item))
-        message_given = true;
-
     god_id_item(item);
     if (item.base_type == OBJ_WANDS)
         set_ident_type(item, ID_KNOWN_TYPE);
@@ -1930,11 +1930,6 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     if (is_perishable_stack(it) && quant_got != it.quantity)
         remove_newest_perishable_item(item);
 
-    if (!quiet && !message_given)
-    {
-        mprf_nocap("%s", get_menu_colour_prefix_tags(you.inv[freeslot],
-                                                     DESC_INVENTORY).c_str());
-    }
     if (crawl_state.game_is_hints())
     {
         taken_new_item(item.base_type);
@@ -1946,7 +1941,15 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     you.last_pickup[item.link] = quant_got;
     item_skills(item, you.start_train);
 
-    return freeslot;
+    if (const item_def* newitem = auto_assign_item_slot(item))
+        return newitem->link;
+    else if (!quiet)
+    {
+        mprf_nocap("%s", get_menu_colour_prefix_tags(item,
+                                                     DESC_INVENTORY).c_str());
+    }
+
+    return item.link;
 }
 
 /**
@@ -4971,7 +4974,10 @@ static void _identify_last_item(item_def &item)
     mprf("You have identified the last %s.", class_name.c_str());
 
     if (in_inventory(item))
+    {
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+        auto_assign_item_slot(item);
+    }
 }
 
 
