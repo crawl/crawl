@@ -1164,13 +1164,20 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case AMU_FAITH:
-        if (!(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5)))
+        if (you.species == SP_DEMIGOD)
+            mpr("You feel a surge of self-confidence.");
+        else if (you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
+        {
+            simple_god_message(" says: An ascetic of your devotion"
+                               " has no use for such trinkets.");
+        }
+        else
         {
             mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
-                (you_worship(GOD_NO_GOD))
-                ? "strange " : "");
+                            you_worship(GOD_NO_GOD) ? "strange " : "");
         }
-        else if (you_worship(GOD_GOZAG))
+
+        if (you_worship(GOD_GOZAG))
             simple_god_message(" discounts your offered prices.");
         break;
 
