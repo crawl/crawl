@@ -2198,3 +2198,15 @@ bool evoker_is_charging(const item_def &item)
     list_charging_evokers(evokers);
     return evokers[item.sub_type] == &item;
 }
+
+void identify_inventory()
+{
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (you.inv[i].defined())
+        {
+            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+        }
+    }
+}
