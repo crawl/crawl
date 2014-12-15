@@ -4562,56 +4562,53 @@ void bolt::knockback_actor(actor *act, int dam)
 {
     if (!can_knockback(act, dam))
         return;
-    const coord_def oldpos(act->pos());
-    coord_def newpos(act->pos());
 
     const int distance =
         (origin_spell == SPELL_FORCE_LANCE)
             ? 1 + div_rand_round(ench_power, 40) :
         (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
 
+    const int roll = origin_spell == SPELL_FORCE_LANCE
+                     ? 1000 + 40 * ench_power
+                     : 2500;
+
+    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
+
+    const coord_def oldpos = act->pos();
+    ASSERT(ray.pos() == oldpos);
+
+    if (act->is_stationary())
+        return;
     // We can't do knockback if the beam starts and ends on the same space
     if (source == oldpos)
         return;
 
-    if (act->is_stationary())
-        return;
-
-    const int roll = origin_spell == SPELL_FORCE_LANCE
-                     ? 1000 + 40 * ench_power
-                     : 2500;
-    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
-
-    ASSERT(ray.pos() == oldpos);
-
+    coord_def newpos = oldpos;
     for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
     {
         // Save is based on target's body weight.
         if (random2(roll) < weight)
             continue;
 
-        const ray_def ray_copy(ray);
+        const ray_def oldray(ray);
 
         ray.advance();
 
         newpos = ray.pos();
-        if (newpos == ray_copy.pos()
+        if (newpos == oldray.pos()
             || cell_is_solid(newpos)
             || actor_at(newpos)
             || !act->can_pass_through(newpos)
             || !act->is_habitable(newpos))
         {
-            ray = ray_copy;
-            if (newpos == oldpos)
-                return;
+            ray = oldray;
+            break;
         }
 
         act->move_to_pos(newpos);
     }
 
-    // Knockback cannot ever kill the actor directly - caller must do
-    // apply_location_effects after messaging.
-    if (ray.pos() == oldpos)
+    if (newpos == oldpos)
         return;
 
     if (you.can_see(act))
