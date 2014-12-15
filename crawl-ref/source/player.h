@@ -37,8 +37,6 @@ static const int MR_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
-/// The number of ATTR_BONE_ARMOUR points required for a point of AC/SH
-static const int BONE_ARMOUR_DIV = 3;
 /// The rough number of aut getting hit takes off your bone armour
 static const int BONE_ARMOUR_HIT_RATIO = 50;
 
