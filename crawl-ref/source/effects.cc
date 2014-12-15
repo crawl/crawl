@@ -1247,6 +1247,12 @@ struct hell_effect_spec
 static map<branch_type, hell_effect_spec> hell_effects_by_branch =
 {
     { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, SPTYP_EARTH, {
+        { RANDOM_MONSTER, 100 }, // TODO
+    }}},
+    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, SPTYP_FIRE, {
+        { RANDOM_MONSTER, 100 }, // TODO
+    }}},
+    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, SPTYP_ICE, {
         { MONS_SKELETON, 15 },
         { MONS_ZOMBIE, 15 },
         { MONS_SIMULACRUM, 10 },
@@ -1257,12 +1263,6 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { MONS_ICE_DRAGON, 10 },
         { MONS_BLUE_DEVIL, 5 },
         { MONS_ICE_DEVIL, 5 },
-    }}},
-    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, SPTYP_FIRE, {
-        { RANDOM_MONSTER, 100 }, // TODO
-    }}},
-    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, SPTYP_ICE, {
-        { RANDOM_MONSTER, 100 }, // TODO
     }}},
     { BRANCH_TARTARUS, { {MONS_SHADOW_FIEND}, SPTYP_NECROMANCY, {
         { RANDOM_MONSTER, 100 }, // TODO
