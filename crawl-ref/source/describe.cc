@@ -2800,7 +2800,7 @@ static int _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (!you_can_memorise(spell))
+    if (item && !you_can_memorise(spell))
         description += "\n" + desc_cannot_memorise_reason(spell) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
