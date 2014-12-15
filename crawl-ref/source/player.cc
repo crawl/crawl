@@ -947,11 +947,16 @@ bool player_weapon_wielded()
 bool berserk_check_wielded_weapon()
 {
     const item_def * const wpn = you.weapon();
+    bool penance = false;
     if (wpn && wpn->defined() && (!is_melee_weapon(*wpn)
-                                   || needs_handle_warning(*wpn, OPER_ATTACK)))
+                                   || needs_handle_warning(*wpn,
+                                                           OPER_ATTACK,
+                                                           penance)))
     {
         string prompt = "Do you really want to go berserk while wielding "
                         + wpn->name(DESC_YOUR) + "?";
+        if (penance)
+            prompt += " This could place you under penance!";
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {

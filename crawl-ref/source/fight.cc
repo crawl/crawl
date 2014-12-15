@@ -459,8 +459,9 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
 
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
+    bool penance = false;
     if (!weapon
-        || (!needs_handle_warning(*weapon, OPER_ATTACK)
+        || (!needs_handle_warning(*weapon, OPER_ATTACK, penance)
              && is_melee_weapon(*weapon))
         || you.received_weapon_warning)
     {
@@ -471,6 +472,8 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         return false;
 
     string prompt  = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+    if (penance)
+        prompt += " This could place you under penance!";
 
     const bool result = yesno(prompt.c_str(), true, 'n');
 
