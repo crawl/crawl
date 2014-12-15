@@ -85,6 +85,8 @@
 const int DJ_MP_RATE = 2;
 #endif
 
+static int _bone_armour_bonus();
+
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
@@ -2614,12 +2616,7 @@ int player_shield_class()
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
-    if (you.attribute[ATTR_BONE_ARMOUR])
-    {
-        // make sure bone armour always gives at least one point of sh.
-        shield += (you.attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 200
-                   / BONE_ARMOUR_DIV;
-    }
+    shield += _bone_armour_bonus() * 2;
 
     return (shield + 50) / 100;
 }
@@ -6399,6 +6396,23 @@ static int _stoneskin_bonus()
     return boost;
 }
 
+/**
+ * How many points of AC/SH does the player get from their current bone armour?
+ *
+ * ((power / 100) + 0.5) * (# of corpses). (That is, between 0.5 and 1.5 AC+SH
+ * per corpse.)
+ * @return          The AC/SH bonus * 100. (For scale reasons.)
+ */
+static int _bone_armour_bonus()
+{
+    if (!you.attribute[ATTR_BONE_ARMOUR])
+        return 0;
+
+    const int power = calc_spell_power(SPELL_CIGOTUVIS_EMBRACE, true);
+    // rounding errors here, but not sure of a good way to avoid that.
+    return you.attribute[ATTR_BONE_ARMOUR] * (50 + power);
+}
+
 int player::armour_class(bool /*calc_unid*/) const
 {
     int AC = 0;
@@ -6457,12 +6471,7 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_CORROSION])
         AC -= 500 * you.props["corrosion_amount"].get_int();
 
-    if (attribute[ATTR_BONE_ARMOUR])
-    {
-        // make sure bone armour always gives at least one point of ac.
-        AC += (attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 100
-              / BONE_ARMOUR_DIV;
-    }
+    AC += _bone_armour_bonus();
 
     AC += get_form()->get_ac_bonus();
 
@@ -8950,9 +8959,9 @@ string player::hands_act(const string &plural_verb,
  * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit,
  * or over time.
  *
- * Chance of losing a point of ac/sh (BONE_ARMOUR_DIV) increases with current
- * number of corpses (ATTR_BONE_ARMOUR). Each added corpse increases the chance
- * of losing a bit by 5/4x. (So ten corpses are a 9x chance, twenty are 87x...)
+ * Chance of losing a point of ac/sh increases with current number of corpses
+ * (ATTR_BONE_ARMOUR). Each added corpse increases the chance of losing a bit
+ * by 5/4x. (So ten corpses are a 9x chance, twenty are 87x...)
  *
  * Base chance is 1/500 (per aut) - 2% per turn, 63% within 50 turns.
  * At 10 corpses, that becomes a 17% per-turn chance, 61% within 5 turns.
@@ -8971,7 +8980,7 @@ void player::maybe_degrade_bone_armour(int mult)
 
     const int base_denom = 50 * BASELINE_DELAY;
     int denom = base_denom;
-    for (int i = 1; i < attribute[ATTR_BONE_ARMOUR]; i += BONE_ARMOUR_DIV)
+    for (int i = 1; i < attribute[ATTR_BONE_ARMOUR]; ++i)
         denom = div_rand_round(denom * 4, 5);
     denom = div_rand_round(denom, mult);
 
@@ -8982,7 +8991,7 @@ void player::maybe_degrade_bone_armour(int mult)
         return;
 
     you.attribute[ATTR_BONE_ARMOUR]
-        = max(0, you.attribute[ATTR_BONE_ARMOUR] - BONE_ARMOUR_DIV);
+        = max(0, you.attribute[ATTR_BONE_ARMOUR] - 1);
 
     if (you.attribute[ATTR_BONE_ARMOUR])
         mpr("A chunk of your corpse armour falls away.");
