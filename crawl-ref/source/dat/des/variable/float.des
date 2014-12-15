@@ -6387,7 +6387,7 @@ NAME: cheibrodos_lost_city_excavation
 DEPTH: D:11-15, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-: if you.branch() == "Dungeon" then
+: if you.branch() == "D" then
 MONS: deep elf mage w:8 / fire elemental w:5 / nothing, wizard
 : else
 MONS: wizard w:5 / fire elemental w:5 / nothing, lich
