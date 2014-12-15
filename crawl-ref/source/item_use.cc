@@ -277,11 +277,15 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     {
         if (const item_def* wpn = you.weapon())
         {
+            bool penance = false;
             // Can we safely unwield this item?
-            if (needs_handle_warning(*wpn, OPER_WIELD))
+            if (needs_handle_warning(*wpn, OPER_WIELD, penance))
             {
-                const string prompt =
+                string prompt =
                     "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
+                if (penance)
+                    prompt += " This could place you under penance!";
+
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);
