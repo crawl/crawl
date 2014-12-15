@@ -1236,7 +1236,7 @@ static void _random_hell_miscast()
 struct hell_effect_spec
 {
     /// The type of greater demon to spawn from hell effects.
-    monster_type fiend_type;
+    vector<monster_type> fiend_types;
     /// The appropriate theme of miscast effects to toss at the player.
     spschool_flag_type miscast_type;
     /// A weighted list of lesser creatures to spawn.
@@ -1246,7 +1246,7 @@ struct hell_effect_spec
 /// Hell effects for each branch of hell
 static map<branch_type, hell_effect_spec> hell_effects_by_branch =
 {
-    { BRANCH_DIS, { RANDOM_DEMON_GREATER, SPTYP_EARTH, {
+    { BRANCH_DIS, { {RANDOM_DEMON_GREATER}, SPTYP_EARTH, {
         { MONS_SKELETON, 15 },
         { MONS_ZOMBIE, 15 },
         { MONS_SIMULACRUM, 10 },
@@ -1258,13 +1258,13 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { MONS_BLUE_DEVIL, 5 },
         { MONS_ICE_DEVIL, 5 },
     }}},
-    { BRANCH_GEHENNA, { MONS_BRIMSTONE_FIEND, SPTYP_FIRE, {
+    { BRANCH_GEHENNA, { {MONS_BRIMSTONE_FIEND}, SPTYP_FIRE, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
-    { BRANCH_COCYTUS, { MONS_ICE_FIEND, SPTYP_ICE, {
+    { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, SPTYP_ICE, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
-    { BRANCH_TARTARUS, { MONS_SHADOW_FIEND, SPTYP_NECROMANCY, {
+    { BRANCH_TARTARUS, { {MONS_SHADOW_FIEND}, SPTYP_NECROMANCY, {
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
 };
@@ -1283,9 +1283,10 @@ static void _themed_hell_summon_or_miscast()
 
     if (x_chance_in_y(2, 5))
     {
+        const monster_type fiend
+            = spec->fiend_types[random2(spec->fiend_types.size())];
         create_monster(
-                       mgen_data::hostile_at(spec->fiend_type,
-                                             "the effects of Hell",
+                       mgen_data::hostile_at(fiend, "the effects of Hell",
                                              true, 0, 0, you.pos()));
     }
     else
