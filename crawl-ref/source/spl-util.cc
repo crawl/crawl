@@ -111,6 +111,16 @@ void init_spell_descs()
         ASSERTM(!(data.flags & SPFLAG_MONSTER && is_player_spell(data.id)),
                 "spell '%s' is declared as a monster spell but is a player spell", data.title);
 
+        for (int j = 0; j < data.resists.size(); ++j)
+        {
+            const spres_type type = data.resists[j].type;
+            ASSERTM(type >= 0 && type < SPRES_NUM_RESISTS,
+                    "spell '%s' has invalid resist type %d", data.title, type);
+            ASSERTM(j == 0 || type != SPRES_HARMLESS,
+                    "spell '%s' marked harmless but has multiple resists",
+                    data.title, type);
+        }
+
         spell_list[data.id] = i;
     }
 }

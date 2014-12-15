@@ -58,13 +58,14 @@ enum spres_type
 struct spell_resistance
 {
     spres_type type;
-    uint percent;
-    spell_resistance(spres_type _type = SPRES_HARMLESS, int _percent = 100) :
+    unsigned int percent;
+    spell_resistance(spres_type _type = SPRES_HARMLESS,
+                     unsigned int _percent = 100) :
         type(_type), percent(_percent)
     { }
 };
 
-inline int beam_ac_res(spres_type type)
+inline unsigned int beam_ac_res(spres_type type)
 {
     return type == SPRES_RELEC ? 50 : 100;
 }
