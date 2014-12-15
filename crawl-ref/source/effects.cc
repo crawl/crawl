@@ -1253,14 +1253,15 @@ static map<branch_type, hell_effect_spec> hell_effects_by_branch =
         { RANDOM_MONSTER, 100 }, // TODO
     }}},
     { BRANCH_COCYTUS, { {MONS_ICE_FIEND, MONS_SHARD_SHRIKE}, SPTYP_ICE, {
-        { MONS_SKELETON, 15 },
         { MONS_ZOMBIE, 15 },
+        { MONS_SKELETON, 10 },
         { MONS_SIMULACRUM, 10 },
         { MONS_FREEZING_WRAITH, 10 },
         { MONS_FLYING_SKULL, 10 },
         { MONS_TORMENTOR, 10 },
         { MONS_REAPER, 10 },
         { MONS_ICE_DRAGON, 10 },
+        { MONS_BLIZZARD_DEMON, 5 },
         { MONS_BLUE_DEVIL, 5 },
         { MONS_ICE_DEVIL, 5 },
     }}},
