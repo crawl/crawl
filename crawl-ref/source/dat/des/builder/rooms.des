@@ -45,7 +45,7 @@ function sroom_kobold_lair(e)
 
     local mon = "kobold w:" .. small_freq .. " / big kobold w:" .. big_freq
 
-    if level > 11 or you.branch() == "Orc" then
+    if level > 11 or you.in_branch("Orc") then
        lord_mon = "kobold demonologist / big kobold"
     else
        lord_mon = "big kobold"
@@ -62,13 +62,13 @@ function sroom_orc_lair(e)
 
     local mon
     -- Buff Orc:Foo rooms despite depth to be harder than regular floors in Orc.
-    if you.branch() == "Orc" then
+    if you.in_branch("Orc") then
         mon = "orc w:12 / orc warrior w:5 / orc priest w:2 / "
               .. "orc knight w:1"
         lord_mon = "orc sorcerer w:1 / orc high priest w:9 / "
                    .. "orc warlord w:5 / orc knight"
     else
-        if level > 20 or you.branch() == "Elf" then
+        if level > 20 or you.in_branch("Elf") then
             mon = "orc w:5 / orc priest w:4 / orc warrior / orc knight w:8 / "
                   .. " orc high priest w:1 / ogre w:1 / troll w:1"
             lord_mon = "orc warlord w:9 / orc high priest w:1"
@@ -109,13 +109,13 @@ function sroom_morgue(e)
     local bodies
     local bodies_chance
     local weap = ""
-    if you.branch() == "Geh" then
+    if you.in_branch("Geh") then
         weap = " ego:flaming ident:type"
-    elseif you.branch() == "Coc" then
+    elseif you.in_branch("Coc") then
         weap = " ego:freezing ident:type"
-    elseif you.branch() == "Dis" then
+    elseif you.in_branch("Dis") then
         weap = " good_item"
-    elseif you.branch() == "Tar" then
+    elseif you.in_branch("Tar") then
         weap = " ego:draining ident:type"
     end
 
@@ -128,14 +128,14 @@ function sroom_morgue(e)
               .. " | glaive" .. weap .. " | battleaxe" .. weap
     mons[4] = "vampire knight w:5 ; great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
-    if you.branch() == "Geh" then
+    if you.in_branch("Geh") then
         mons[5] = "fire giant zombie w:3 / fire giant skeleton w:3 / "
                  .. "fire dragon zombie w:2 / fire dragon skeleton w:2"
         mons[6] = "flayed ghost"
         bodies = "fire giant corpse / fire giant skeleton / "
                  .. "fire dragon corpse / fire dragon skeleton"
         bodies_chance = 40
-    elseif you.branch() == "Coc" then
+    elseif you.in_branch("Coc") then
         mons[5] = "hydra zombie w:3 / hydra simulacrum w:3 / "
                  .. "alligator snapping turtle zombie w:2 / "
                  .. "alligator snapping turtle skeleton w:2"
@@ -146,14 +146,14 @@ function sroom_morgue(e)
                  .. "alligator snapping turtle skeleton / "
                  .. "hydra corpse / hydra skeleton"
         bodies_chance = 40
-    elseif you.branch() == "Dis" then
+    elseif you.in_branch("Dis") then
         mons[5] = "iron troll zombie w:2 / iron troll skeleton w:2 / "
                  .. "iron dragon zombie w:3 / iron dragon skeleton w:3"
         mons[6] = "ancient champion w:7 / phantasmal warrior w:3"
         bodies = "iron dragon corpse / iron dragon skeleton / "
                  .. "iron troll corpse / iron troll skeleton"
         bodies_chance = 40
-    elseif you.branch() == "Tar" or you.branch() == "Crypt" then
+    elseif you.in_branch("Tar") or you.in_branch("Crypt") then
         mons[5] = "eidolon w:6 / jiangshi w:6"
         mons[6] = "mummy priest w:2 / death knight w:2 / revenant w:2"
         bodies = "shadow dragon corpse / base draconian corpse / "
@@ -177,7 +177,7 @@ function sroom_morgue(e)
     end
 
     fill_special_room(e, mons, lord_mon, true)
-    if you.branch() == "Depths" or you.branch() == "Crypt" then
+    if you.in_branch("Depths") or you.in_branch("Crypt") then
          e.kitem('2 = randbook disc:necromancy')
     else
          -- XXX: Any better ways to place the stair?
@@ -201,7 +201,7 @@ function sroom_jelly_pit(e)
 
     local level = you.absdepth() - 1
 
-    if you.branch() == "Slime" then
+    if you.in_branch("Slime") then
         level = you.absdepth() + 10
     end
 
@@ -224,7 +224,7 @@ function sroom_jelly_pit(e)
 
     e.nsubst('1. = 2 = x1')
 
-    if crawl.coinflip() and you.branch() ~= "Slime" then
+    if crawl.coinflip() and not you.in_branch("Slime") then
         e.nsubst('1. = 1:A')
         e.kfeat('A = altar_jiyva')
     end
@@ -237,9 +237,9 @@ function sroom_mythical_zoo(e)
 
     local Z = you.absdepth()
 
-    if you.branch() == "Elf" then
+    if you.in_branch("Elf") then
         Z = Z + 5
-    elseif you.branch() == "Lair" then
+    elseif you.in_branch("Lair") then
         Z = Z - 2
     end
 

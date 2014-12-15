@@ -63,7 +63,7 @@ lua_marker('c', props_marker {feat_remove = 1})
 lua_marker('+', props_marker {feat_remove = 1})
 lua_marker('+', restrict_door())
 
-if you.branch() == "D" then
+if you.in_branch("D") then
   if you.absdepth() > 9 then
     tags('extra')
   end

@@ -84,7 +84,7 @@ function init_aquarium(e)
   e.kprop('! = no_tele_into')
   e.kprop('! = no_jiyva')
 
-  if you.branch() == "Elf" then
+  if you.in_branch("Elf") then
     -- if we get a diamond obelisk, the winds will kill
     --  everything else except the air elementals
     e.subst('w = w:' .. (nothing_weight + 64) .. ' _:1')

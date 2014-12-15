@@ -991,7 +991,7 @@ KITEM:   *| = % no_pickup w:2 / * no_pickup / | no_pickup
 KFEAT:   aA = stone_arch
 KFEAT:   B = shallow_water
 KFEAT:   Z = known zot trap
-: if you.branch() == "Swamp" then
+: if you.in_branch("Swamp") then
 MONS:    swamp drake, hydra, swamp dragon
 KMONS:   A = swamp dragon
 KMONS:   B = green draconian

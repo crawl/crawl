@@ -467,7 +467,7 @@ TAGS:   no_monster_gen no_pool_fixup patrolling allow_dup
 DEPTH:  Spider:1-3, Zot, !Zot:$
 KMONS:  0 = patrolling spider
 KMONS:  1 = tarantella
-: if you.branch() == "Zot" then
+: if you.in_branch("Zot") then
 KMONS:  2* = jumping spider / orb spider w:5
 KMONS:  3| = ghost moth / moth of wrath
 KITEM:  | = acquire any w:5 / any good_item

@@ -33,7 +33,7 @@
 function init_forest(e, base_weight, lair_weight)
   e.tags('allow_dup')
   e.tags('serial_forest')
-  if you.branch() == "Lair" then
+  if you.in_branch("Lair") then
     e.weight(lair_weight)
   elseif you.absdepth() == 1 then
     e.weight(base_weight * 3)
@@ -54,7 +54,7 @@ function init_forest(e, base_weight, lair_weight)
   e.kmask('E = no_monster_gen')
   e.kmask('D = no_monster_gen')
   e.kmask('" = no_monster_gen')
-  if you.branch() == "Lair" then
+  if you.in_branch("Lair") then
     e.subst('E = tt12222_')
     e.subst('D = t1222222____')
     e.subst('" = 2:25 _:50')
