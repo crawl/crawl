@@ -1032,6 +1032,10 @@ static bool _append_books(string &desc, item_def &item, string key)
     if (type == SPELL_NO_SPELL)
         return false;
 
+    const string resist_info = describe_spell_resists(type);
+    if (!resist_info.empty())
+        desc += "Resisted by: " + resist_info + ".\n";
+
     desc += "\nType:       ";
     bool already = false;
 
