@@ -5371,9 +5371,11 @@ bool monster::can_mutate() const
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
+    // too weird
     if (type == MONS_CHAOS_SPAWN)
         return false;
 
+    // cosmetic tile mutations
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
         return true;
 
@@ -5389,9 +5391,11 @@ bool monster::can_safely_mutate(bool temp) const
 
 bool monster::can_polymorph() const
 {
+    // can't mutate but can be poly'd
     if (type == MONS_CHAOS_SPAWN)
         return true;
 
+    // like all undead, can't be polymorphed (but can 'mutate')
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
         return false;
 

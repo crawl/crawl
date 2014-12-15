@@ -2447,7 +2447,7 @@ static const struct spell_desc spelldata[] =
 #if TAG_MAJOR_VERSION == 34
 {
     SPELL_MELEE, "Melee",
-     0,
+     SPTYP_NONE,
      SPFLAG_BATTLE,
      1,
      0,
@@ -3593,7 +3593,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_NO_SPELL, "nonexistent spell",
-    0,
+    SPTYP_NONE,
     SPFLAG_TESTING,
     1,
     0,

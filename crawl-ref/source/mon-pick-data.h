@@ -260,10 +260,7 @@ static const pop_entry pop_lair[] =
   {  4,  8,   14, SEMI, MONS_BRAIN_WORM },
   {  4, 10,   52, SEMI, MONS_POLAR_BEAR },
   {  4, 10,   25, PEAK, MONS_LINDWURM },
-  {  4,  8,    8, PEAK, MONS_TRAPDOOR_SPIDER },
   {  5,  9,   17, SEMI, MONS_WANDERING_MUSHROOM },
-  {  5,  9,   17, SEMI, MONS_REDBACK },
-  {  5,  9,   11, PEAK, MONS_WOLF_SPIDER },
   {  5, 12,   66, UP,   MONS_FIRE_CRAB },
   {  1,  6, 3000, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
   { 0,0,0,FLAT,MONS_0 }

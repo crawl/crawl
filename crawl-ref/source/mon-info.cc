@@ -1795,8 +1795,9 @@ bool monster_info::ground_level() const
 // Use monster.h's has_spells for knowing a monster has spells
 bool monster_info::has_spells() const
 {
+    // Some monsters have a special book but may not have any spells anyways.
     if (props.exists("custom_spells"))
-        return true;
+        return spells.size() > 0 && spells[0].spell != SPELL_NO_SPELL;
 
     // Almost all draconians have breath spells.
     if (mons_genus(draco_or_demonspawn_subspecies()) == MONS_DRACONIAN
@@ -1808,10 +1809,8 @@ bool monster_info::has_spells() const
 
     const vector<mon_spellbook_type> books = get_spellbooks(*this);
 
-    const size_t num_books = books.size();
-
     // Random pan lords don't display their spells.
-    if (num_books == 0 || books[0] == MST_NO_SPELLS
+    if (books.size() == 0 || books[0] == MST_NO_SPELLS
         || type == MONS_PANDEMONIUM_LORD)
     {
         return false;

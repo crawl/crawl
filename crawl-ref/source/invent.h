@@ -217,6 +217,7 @@ vector<SelItem> prompt_invent_items(
 unsigned char get_invent(int invent_type, bool redraw = true);
 
 bool in_inventory(const item_def &i);
+void identify_inventory();
 
 const char *item_class_name(int type, bool terse = false);
 const char *item_slot_name(equipment_type type);

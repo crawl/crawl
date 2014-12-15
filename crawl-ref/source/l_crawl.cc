@@ -35,6 +35,7 @@ module "crawl"
 #include "state.h"
 #include "stringutil.h"
 #include "tutorial.h"
+#include "version.h"
 #include "view.h"
 #include "worley.h"
 
@@ -835,6 +836,16 @@ LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_c
 LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 LUAWRAP(crawl_print_hint, print_hint(luaL_checkstring(ls, 1)))
 
+/**
+ * A random choice function crawl.random_element for clua.
+ *
+ * @param[in] list A lua array or table of elements to choose from. If list is
+ * an array, a random element is chosen from list. If list is a table, the
+ * values should be numeric or convertible to numeric and give the weights for
+ * their corresponding keys. A value with no key will default to a weight of
+ * 1. A random key is then returned based on these weights.
+ * @returns A random element from list.
+*/
 static int crawl_random_element(lua_State *ls)
 {
     const int table_idx = 1;
@@ -983,6 +994,38 @@ static int crawl_call_dlua(lua_State *ls)
 }
 #endif
 
+/**
+ Implements the clua function crawl.version()
+
+ The optional lua argument is a string from "long", "major", or "short" to
+ determine which version type to return. The default is "long", and argument
+ check is case-insensitive.
+ */
+static int crawl_version(lua_State *ls)
+{
+    string type = "long";
+    if (lua_gettop(ls) > 0)
+    {
+        const char *ltype = luaL_checkstring(ls, 1);
+        if (ltype)
+            type = lowercase_string(ltype);
+    }
+
+    if (type == "long")
+        lua_pushstring(ls, Version::Long);
+    else if (type == "short")
+        lua_pushstring(ls, Version::Short);
+    else if (type == "major")
+        lua_pushstring(ls, Version::Major);
+    else
+    {
+        luaL_argerror(ls, 1,
+                      "must be a string \"long\", \"short\", or \"major\"");
+        return 0;
+    }
+    return 1;
+}
+
 static const struct luaL_reg crawl_clib[] =
 {
     { "mpr",                crawl_mpr },
@@ -1031,7 +1074,6 @@ static const struct luaL_reg crawl_clib[] =
     { "msgch_name",         crawl_msgch_name },
     { "take_note",          crawl_take_note },
     { "messages",           crawl_messages },
-
     { "regex",              crawl_regex },
     { "message_filter",     crawl_message_filter },
     { "trim",               crawl_trim },
@@ -1051,7 +1093,7 @@ static const struct luaL_reg crawl_clib[] =
 #ifdef WIZARD
     { "call_dlua",          crawl_call_dlua },
 #endif
-
+    { "version",            crawl_version },
     { nullptr, nullptr },
 };
 

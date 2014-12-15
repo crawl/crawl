@@ -11,6 +11,7 @@
 #include "mon-util.h"
 #include "religion.h"
 #include "state.h"
+#include "stringutil.h" // uppercase_first
 
 // Forward declarations.
 static bool _god_likes_killing(const monster* victim);
@@ -590,7 +591,11 @@ static const like_response OKAWARU_KILL = {
         denom = 600;
 
         if (piety > 3200)
-            simple_god_message(" appreciates your kill.");
+        {
+            mprf(MSGCH_GOD, you.religion,
+                 "<white>%s is honoured by your kill.</white>",
+                 uppercase_first(god_name(you.religion)).c_str());
+        }
         else if (piety > 9) // might still be miniscule
             simple_god_message(" accepts your kill.");
     }

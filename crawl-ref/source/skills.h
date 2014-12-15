@@ -33,9 +33,8 @@ struct skill_state
 };
 
 typedef set<skill_type> skill_set;
-typedef set<skill_type>::iterator skill_set_iter;
 
-string skill_names(skill_set &skills);
+string skill_names(const skill_set &skills);
 
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);

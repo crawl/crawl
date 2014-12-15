@@ -78,6 +78,7 @@ enum extra_monster_index_type
 #define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
+#define ITEM_IN_INVENTORY (coord_def(-1, -1))
 #define ITEM_IN_SHOP 32767
 // NON_ITEM + mindex + 1 is used as the item link for monster inventory;
 // make sure we're not colliding with that.

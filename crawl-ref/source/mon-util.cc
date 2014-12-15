@@ -4558,12 +4558,161 @@ void debug_mondata()
 
     if (!fails.empty())
     {
+        fprintf(stderr, "%s", fails.c_str());
+
         FILE *f = fopen("mon-data.out", "w");
         if (!f)
             sysfail("can't write test output");
         fprintf(f, "%s", fails.c_str());
         fclose(f);
         fail("mon-data errors (dumped to mon-data.out)");
+    }
+}
+
+/**
+ * Iterate over mspell_list (mon-spell.h) and look for anything that seems
+ * incorrect. Dump the output to a text file & print its location to the
+ * console.
+ */
+void debug_monspells()
+{
+    string fails;
+
+    // first, build a map from spellbooks to the first monster that uses them
+    // (zero-initialised, where 0 == MONS_PROGRAM_BUG).
+    monster_type mon_book_map[NUM_MSTYPES] = { };
+    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
+        if (!invalid_monster_type(mc))
+            for (mon_spellbook_type mon_book : _mons_spellbook_list(mc))
+                if (mon_book < ARRAYSZ(mon_book_map) && !mon_book_map[mon_book])
+                    mon_book_map[mon_book] = mc;
+
+    // then, check every spellbook for errors.
+
+    for (const mon_spellbook &spbook : mspell_list)
+    {
+        string book_name;
+        const monster_type sample_mons = mon_book_map[spbook.type];
+        if (!sample_mons)
+        {
+            string spells;
+            if (spbook.spells.empty())
+                spells = "no spells";
+            else
+                for (const mon_spell_slot &spslot : spbook.spells)
+                    if (is_valid_spell(spslot.spell))
+                        spells += make_stringf(",%s", spell_title(spslot.spell));
+
+            fails += make_stringf("Book #%d is unused (%s)\n", spbook.type,
+                                  spells.c_str());
+            book_name = make_stringf("#%d", spbook.type);
+        }
+        else
+        {
+            const vector<mon_spellbook_type> mons_books
+                = _mons_spellbook_list(sample_mons);
+            const char * const mons_name = get_monster_data(sample_mons)->name;
+            if (mons_books.size() > 1)
+            {
+                auto it = find(begin(mons_books), end(mons_books), spbook.type);
+                ASSERT(it != end(mons_books));
+                book_name = make_stringf("%s-%d", mons_name,
+                                         (int) (it - begin(mons_books)));
+            }
+            else
+                book_name = make_stringf("%s", mons_name);
+        }
+
+        const char * const bknm = book_name.c_str();
+
+        if (!spbook.spells.size())
+            fails += make_stringf("Empty book %s\n", bknm);
+
+        for (const mon_spell_slot &spslot : spbook.spells)
+        {
+            string spell_name;
+            if (!is_valid_spell(spslot.spell))
+            {
+                fails += make_stringf("Book %s contains invalid spell %d\n",
+                                      bknm, spslot.spell);
+                spell_name = make_stringf("%d", spslot.spell);
+            }
+            else
+                spell_name = spell_title(spslot.spell);
+
+            // TODO: export this value somewhere
+            const int max_freq = 200;
+            if (spslot.freq > max_freq)
+            {
+                fails += make_stringf("Spellbook %s has spell %s at freq %d "
+                                      "(greater than max freq %d)\n",
+                                      bknm, spell_name.c_str(),
+                                      spslot.freq, max_freq);
+            }
+
+            mon_spell_slot_flags category = MON_SPELL_NO_FLAGS;
+            for (int flag_exp = 0; flag_exp <= MON_SPELL_LAST_EXPONENT;
+                 ++flag_exp)
+            {
+                const mon_spell_slot_flags flag
+                    = (mon_spell_slot_flags)(1 << flag_exp);
+
+                if (!(spslot.flags & flag))
+                    continue;
+
+                if (flag >= MON_SPELL_FIRST_CATEGORY
+                    && flag <= MON_SPELL_LAST_CATEGORY)
+                {
+                    if (category == MON_SPELL_NO_FLAGS)
+                        category = flag;
+                    else
+                    {
+                        fails += make_stringf("Spellbook %s has spell %s in "
+                                              "multiple categories (%d and %d)\n",
+                                              bknm, spell_name.c_str(),
+                                              category, flag);
+                    }
+                }
+
+                COMPILE_CHECK(MON_SPELL_NO_SILENT > MON_SPELL_LAST_CATEGORY);
+                static const int NO_SILENT_CATEGORIES =
+                    MON_SPELL_SILENCE_MASK & ~MON_SPELL_NO_SILENT;
+                if (flag == MON_SPELL_NO_SILENT
+                    && (category & NO_SILENT_CATEGORIES))
+                {
+                    fails += make_stringf("Spellbook %s has spell %s marked "
+                                          "MON_SPELL_NO_SILENT redundantly\n",
+                                          bknm, spell_name.c_str());
+                }
+
+                COMPILE_CHECK(MON_SPELL_NOISY > MON_SPELL_LAST_CATEGORY);
+                if (flag == MON_SPELL_NOISY
+                    && category && !(category & MON_SPELL_INNATE_MASK))
+                {
+                    fails += make_stringf("Spellbook %s has spell %s marked "
+                                          "MON_SPELL_NOISY redundantly\n",
+                                          bknm, spell_name.c_str());
+                }
+            }
+
+            if (category == MON_SPELL_NO_FLAGS)
+            {
+                fails += make_stringf("Spellbook %s has spell %s with no "
+                                      "category\n", bknm, spell_name.c_str());
+            }
+        }
+    }
+
+    if (!fails.empty())
+    {
+        fprintf(stderr, "%s", fails.c_str());
+
+        FILE *f = fopen("mon-spell.out", "w");
+        if (!f)
+            sysfail("can't write test output");
+        fprintf(f, "%s", fails.c_str());
+        fclose(f);
+        fail("mon-spell errors (dumped to mon-spell.out)");
     }
 }
 

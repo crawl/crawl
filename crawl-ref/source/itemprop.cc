@@ -1086,12 +1086,12 @@ bool is_hard_helmet(const item_def &item)
  */
 brand_type choose_weapon_brand(weapon_type wpn_type)
 {
-    vector<brand_weight_tuple> weights
+    const vector<brand_weight_tuple> weights
         = Weapon_prop[ Weapon_index[wpn_type] ].brand_weights;
     if (!weights.size())
         return SPWPN_NORMAL;
 
-    brand_type *brand = random_choose_weighted(weights);
+    const brand_type *brand = random_choose_weighted(weights);
     ASSERT(brand);
     return *brand;
 }
@@ -1598,6 +1598,8 @@ hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
     // Non-weapons.
     if (wpn_type == WPN_UNKNOWN)
         return HANDS_ONE;
+    if (is_unrandom_artefact(item, UNRAND_GYRE))
+        return HANDS_TWO;
     return size >= Weapon_prop[Weapon_index[wpn_type]].min_1h_size ? HANDS_ONE
                                                                    : HANDS_TWO;
 }

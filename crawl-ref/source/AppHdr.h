@@ -449,6 +449,12 @@ static inline void UNUSED(const volatile T &)
 # define PRINTF(x, dfmt) const char *format dfmt, ...
 #endif
 
+// Most libcs support %zu, but msvcrt does not.
+#if defined(TARGET_COMPILER_VC) || defined(TARGET_COMPILER_MINGW)
+#define PRIuSIZET "Iu"
+#else
+#define PRIuSIZET "zu"
+#endif
 
 // And now headers we want precompiled
 #ifdef TARGET_COMPILER_VC

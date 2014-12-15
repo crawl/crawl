@@ -48,7 +48,6 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
-    bool         can_cleave;
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     coord_def attack_position;

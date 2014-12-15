@@ -6,6 +6,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "attack.h"
 #include "directn.h"
 #include "env.h"

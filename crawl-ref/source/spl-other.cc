@@ -57,6 +57,11 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
     }
     else if (!enough_hp(2, true))
         mpr("Your attempt to draw power from your own body fails.");
+    else if (you.magic_points ==
+              you.max_magic_points - spell_difficulty(SPELL_SUBLIMATION_OF_BLOOD))
+    {
+        mpr("Your magic capacity is already full.");
+    }
     else
     {
         int food = 0;

@@ -16,6 +16,7 @@
 #include "art-enum.h"
 #include "butcher.h"
 #include "colour.h"
+#include "command.h"
 #include "decks.h"
 #include "describe.h"
 #include "english.h"
@@ -2044,14 +2045,14 @@ bool item_type_tried(const item_def &item)
     return you.type_ids[item.base_type][item.sub_type] != ID_UNKNOWN_TYPE;
 }
 
-void set_ident_type(item_def &item, item_type_id_state_type setting,
+bool set_ident_type(item_def &item, item_type_id_state_type setting,
                     bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
-        return;
+        return false;
 
     if (!set_ident_type(item.base_type, item.sub_type, setting, force))
-        return;
+        return false;
 
     if (in_inventory(item))
     {
@@ -2072,6 +2073,8 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
         // don't note twice in those cases.
         item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     }
+
+    return true;
 }
 
 bool set_ident_type(object_class_type basetype, int subtype,

@@ -5,15 +5,15 @@
 ###########################
 
 # demons
-mon_glyph = hairy devil : lightred 4
-mon_glyph = smoke demon : lightgray 3
-mon_glyph = tormentor : yellow 3
-mon_glyph = blue devil : blue 3
-mon_glyph = iron devil : cyan 3
-mon_glyph = orange demon : lightred 3
-mon_glyph = shadow demon : magenta 3
-mon_glyph = soul eater : magenta 2
-mon_glyph = ice devil : magenta 2
-mon_glyph = Green Death : green 1
-mon_glyph = balrug : red 1
-mon_glyph = cacodemon : yellow 1
+mon_glyph += hairy devil : lightred 4
+mon_glyph += smoke demon : lightgray 3
+mon_glyph += tormentor : yellow 3
+mon_glyph += blue devil : blue 3
+mon_glyph += iron devil : cyan 3
+mon_glyph += orange demon : lightred 3
+mon_glyph += shadow demon : magenta 3
+mon_glyph += soul eater : magenta 2
+mon_glyph += ice devil : magenta 2
+mon_glyph += Green Death : green 1
+mon_glyph += balrug : red 1
+mon_glyph += cacodemon : yellow 1

@@ -49,7 +49,7 @@ visible in the flames.
 %%%%
 A closed door
 
-A wooden door. To open it, try simply walking into it, or press ‘O’.
+A wooden door.
 %%%%
 # These should get custom names instead. Currently used by: IceCv, Ossuary,
 # Sewer, Trove, Volcano.
@@ -263,8 +263,8 @@ An altar to Beogh, unmistakably roughly hewn by orcish artisans.
 A runed door
 
 A door, covered in runic writing. It looks like there is something special
-behind it — perhaps danger, perhaps treasure. You may break the runes and open
-it like any other door (i.e., by walking into it or pressing ‘O’).
+behind it — perhaps danger, perhaps treasure. You may break the runes by
+opening it like any other door.
 %%%%
 A sacrificial altar of Ru
 
@@ -560,13 +560,7 @@ wand quite easily. It is too strong to be breakable by hand, however.
 %%%%
 An open door
 
-A wooden door. You can close it by standing next to it and {{
-    if crawl.is_tiles() then
-        return "either doing Ctrl-L-Click on the door or pressing 'C'."
-    else
-        return "pressing 'C'."
-    end
-}}
+A wooden door.
 %%%%
 An opulent altar of Gozag
 

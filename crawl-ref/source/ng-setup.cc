@@ -10,6 +10,7 @@
 #include "food.h"
 #include "godcompanions.h"
 #include "hints.h"
+#include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -877,6 +878,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_HUNTER:
         // Equipment.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _update_weapon(ng);
 
         newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
@@ -1092,15 +1094,7 @@ static void _give_basic_spells(job_type which_job)
 
 static void _give_basic_knowledge(job_type which_job)
 {
-    // Identify all items in pack.
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (you.inv[i].defined())
-        {
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
-        }
-    }
+    identify_inventory();
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = ID_KNOWN_TYPE;
@@ -1251,13 +1245,17 @@ static void _setup_generic(const newgame_def& ng)
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (you.inv[i].defined())
+        if (!you.inv[i].defined())
+            continue;
+        // link properly
+        you.inv[i].pos = ITEM_IN_INVENTORY;
+        you.inv[i].link = i;
+        you.inv[i].slot = index_to_letter(you.inv[i].link);
+        item_colour(you.inv[i]);  // set correct special and colour
+        if (!you.inv[i].props.exists("adjusted"))
         {
-            // link properly
-            you.inv[i].pos.set(-1, -1);
-            you.inv[i].link = i;
-            you.inv[i].slot = index_to_letter(you.inv[i].link);
-            item_colour(you.inv[i]);  // set correct special and colour
+            you.inv[i].props["adjusted"] = true;
+            auto_assign_item_slot(you.inv[i]);
         }
     }
 

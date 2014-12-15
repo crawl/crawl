@@ -385,10 +385,10 @@ static void _init_queue(list<skill_type> &queue, FixedVector<T, SIZE> &array)
     ASSERT(queue.size() == (unsigned)EXERCISE_QUEUE_SIZE);
 }
 
-static void _erase_from_stop_train(skill_set &can_train)
+static void _erase_from_stop_train(const skill_set &can_train)
 {
-    for (skill_set_iter it = can_train.begin(); it != can_train.end(); ++it)
-        you.stop_train.erase(*it);
+    for (skill_type sk : can_train)
+        you.stop_train.erase(sk);
 }
 
 /*
@@ -441,44 +441,28 @@ static void _check_abil_skills()
     }
 }
 
-string skill_names(skill_set &skills)
+string skill_names(const skill_set &skills)
 {
-    string s;
-    int i = 0;
-    int size = skills.size();
-    for (skill_set_iter it = skills.begin(); it != skills.end(); ++it)
-    {
-        ++i;
-        s += skill_name(*it);
-        if (i < size)
-        {
-            if (i == size - 1)
-                s += " and ";
-            else
-                s+= ", ";
-        }
-    }
-    return s;
+    return comma_separated_fn(begin(skills), end(skills), skill_name);
 }
 
 static void _check_start_train()
 {
     skill_set skills;
-    for (skill_set_iter it = you.start_train.begin();
-             it != you.start_train.end(); ++it)
+    for (skill_type sk : you.start_train)
     {
-        if (is_invalid_skill(*it) || is_useless_skill(*it))
+        if (is_invalid_skill(sk) || is_useless_skill(sk))
             continue;
 
-        if (!you.can_train[*it] && you.train[*it])
-            skills.insert(*it);
-        you.can_train.set(*it);
+        if (!you.can_train[sk] && you.train[sk])
+            skills.insert(sk);
+        you.can_train.set(sk);
     }
 
     reset_training();
 
     // We're careful of not invalidating the iterator when erasing.
-    for (skill_set_iter it = skills.begin(); it != skills.end();)
+    for (auto it = skills.begin(); it != skills.end();)
         if (!you.training[*it])
             skills.erase(it++);
         else
@@ -500,17 +484,16 @@ static void _check_stop_train()
         return;
 
     skill_set skills;
-    for (skill_set_iter it = you.stop_train.begin();
-         it != you.stop_train.end(); ++it)
+    for (skill_type sk : you.stop_train)
     {
-        if (is_invalid_skill(*it))
+        if (is_invalid_skill(sk))
             continue;
-        if (skill_has_manual(*it))
+        if (skill_has_manual(sk))
             continue;
 
-        if (skill_trained(*it) && you.training[*it])
-            skills.insert(*it);
-        you.can_train.set(*it, false);
+        if (skill_trained(sk) && you.training[sk])
+            skills.insert(sk);
+        you.can_train.set(sk, false);
     }
 
     if (!skills.empty())
@@ -1648,9 +1631,9 @@ int elemental_preference(spell_type spell, int scale)
     skill_set skill_list;
     spell_skills(spell, skill_list);
     int preference = 0;
-    for (skill_set_iter it = skill_list.begin(); it != skill_list.end(); ++it)
-        if (_skill_is_elemental(*it))
-            preference += you.skill(*it, scale);
+    for (skill_type sk : skill_list)
+        if (_skill_is_elemental(sk))
+            preference += you.skill(sk, scale);
     return preference;
 }
 

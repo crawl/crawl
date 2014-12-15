@@ -2325,7 +2325,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         beam.colour = env.grid_colours(target);
     else
     {
-        beam.colour = element_colour(get_feature_def(grid).colour,
+        beam.colour = element_colour(get_feature_def(grid).colour(),
                                      false, target);
     }
 

@@ -35,12 +35,8 @@ bool wielded_weapon_check(item_def *weapon, bool no_message = false);
 stab_type find_stab_type(const actor *attacker,
                          const actor *defender);
 
-bool actor_can_cleave(const actor &attacker, skill_type attack_skill);
-
 void get_cleave_targets(const actor* attacker, const coord_def& def,
-                        list<actor*> &targets);
-void get_all_cleave_targets(const actor* attacker, const coord_def& def,
-                            list<actor*> &targets);
+                        list<actor*> &targets, int which_attack = -1);
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0);

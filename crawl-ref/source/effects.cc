@@ -1198,18 +1198,15 @@ bool vitrify_area(int radius)
 
 /**
  * Choose a random, spooky hell effect message, print it, and make a loud noise
- * if it's marked as noisy.
+ * if appropriate. (1/6 chance of loud noise.)
  */
 static void _hell_effect_noise()
 {
-    string msg = getMiscString("hell_effect");
+    const bool loud = one_chance_in(6) && !silenced(you.pos());
+    string msg = getMiscString(loud ? "hell_effect_noisy"
+                                    : "hell_effect_quiet");
     if (msg.empty())
         msg = "Something hellishly buggy happens.";
-
-    // ugh
-    const bool loud = starts_with(msg, "SOUND:");
-    if (loud)
-        msg.erase(0, 6);
 
     mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
     if (loud)

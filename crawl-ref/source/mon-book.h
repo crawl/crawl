@@ -22,6 +22,9 @@ enum mon_spell_slot_flags
     MON_SPELL_WIZARD    = 1 << 4, // a real spell, affected by AM and silence
     MON_SPELL_PRIEST    = 1 << 5,
 
+    MON_SPELL_FIRST_CATEGORY = MON_SPELL_NATURAL,
+    MON_SPELL_LAST_CATEGORY  = MON_SPELL_PRIEST,
+
     MON_SPELL_TYPE_MASK = MON_SPELL_NATURAL | MON_SPELL_MAGICAL
                              | MON_SPELL_DEMONIC | MON_SPELL_WIZARD
                              | MON_SPELL_PRIEST,
@@ -38,6 +41,8 @@ enum mon_spell_slot_flags
 
     MON_SPELL_INSTANT   = 1 << 8, // allows another action on the same turn
     MON_SPELL_NOISY     = 1 << 9, // makes noise despite being innate
+
+    MON_SPELL_LAST_EXPONENT = 9,
 };
 
 struct mon_spellbook
@@ -45,8 +50,6 @@ struct mon_spellbook
     mon_spellbook_type type;
     vector<mon_spell_slot> spells;
 };
-
-#define END_OF_MONS_BOOK { SPELL_NO_SPELL, 0, MON_SPELL_NO_FLAGS }
 
 typedef vector<vector<spell_type> > unique_books;
 
