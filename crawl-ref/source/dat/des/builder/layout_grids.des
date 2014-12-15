@@ -426,11 +426,11 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
   local thin = crawl.one_chance_in(3)       -- Use thin or thick walls?
   local detree = crawl.x_chance_in_y(9,10)  -- Cut out more walls to make a less tree-like layout
   local doors = crawl.x_chance_in_y(2,3)    -- Create doors sometimes instead of just holes in walls
-  local fortify = you.branch() == "Tar"     -- Add wall crennelations?
+  local fortify = you.in_branch("Tar")      -- Add wall crennelations?
 
-  if you.branch() == "Lair" or you.branch() == "Snake" then
+  if you.in_branch("Lair") or you.in_branch("Snake") then
     thin = false
-  elseif you.branch() == "D" then
+  elseif you.in_branch("D") then
     thin = true
   end
 
@@ -441,7 +441,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     minimum_size = crawl.random_range(thin and 3 or 4,thin and 5 or 6)
   }
 
-  if you.branch() == "Dis" then
+  if you.in_branch("Dis") then
     grid_opts.minimum_size = math.max(grid_opts.minimum_size, thin and 4 or 5)
   end
 

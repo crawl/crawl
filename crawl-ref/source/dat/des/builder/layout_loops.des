@@ -636,7 +636,7 @@ function loopsInsertRoom (e, center_x, center_y, radius, wall_glyph)
   else
     local shape  = crawl.random_element { [0] = 3, [1] = 2, [2] = 1 }
     local center = crawl.random2(6)
-    if you.branch() == "Elf" then
+    if you.in_branch("Elf") then
       shape  = crawl.random2(4)
       center = crawl.random_range(1, 3)  -- 2/3 are open
     end
@@ -1039,7 +1039,7 @@ function loopsInsertRoomsAtPositions (e, positions, percent,
       local x = value % 1000
       local y = math.floor(value / 1000)
       local radius = math.floor(radius_min + randomLow(radius_diff + 1))
-      if you.branch() == "Elf" then
+      if you.in_branch("Elf") then
         radius = crawl.random_range(radius_min, radius_max)
       end
 
@@ -1208,7 +1208,7 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-  local IS_ELF = (you.branch() == "Elf")
+  local IS_ELF = you.in_branch("Elf")
   local ROOM_RADIUS_MIN = IS_ELF and 2 or 1
   local ROOM_RADIUS_MAX = IS_ELF and 5 or 4
 
@@ -1330,7 +1330,7 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-  local IS_ELF = (you.branch() == "Elf")
+  local IS_ELF = you.in_branch("Elf")
   local ROOM_RADIUS_MIN = IS_ELF and 2 or 1
   local ROOM_RADIUS_MAX = IS_ELF and 5 or 4
   local ROOM_BORDER = 1
@@ -1605,7 +1605,7 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-  local IS_ELF = (you.branch() == "Elf")
+  local IS_ELF = you.in_branch("Elf")
   local ROOM_RADIUS_MIN = IS_ELF and 2 or 1
   local ROOM_RADIUS_MAX = IS_ELF and 5 or 4
   local ROOM_CORNER_PERCENT = IS_ELF and 40 or 25
@@ -1642,7 +1642,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
                            ROOM_CORNER_PERCENT,
                            ROOM_RADIUS_MIN, ROOM_RADIUS_MAX)
 
-  if you.branch() == "Elf" then
+  if you.in_branch("Elf") then
     add_windows {wall = wall_glyph .. "m", open = ".", window = "m" }
   end
 }}

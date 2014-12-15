@@ -531,7 +531,7 @@ TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   D, Depths, Abyss
 MONS:    butterfly, plant, unseen horror, shadow wraith, wind drake
 SHUFFLE: 34GT, GTt
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 TAGS:    no_exits
 SHUFFLE: 345", ABCD / ACBD / ADCB
 SUBST:   + = M, ' = x:5 c:2 v:1 b:1, " = ., % = %%***|
@@ -724,7 +724,7 @@ ENDMAP
 NAME:   hangedman_abyss_or_decor_stabs
 TAGS:   transparent no_pool_fixup decor
 DEPTH:  D, Depths, Abyss
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:  xc = xxxxcccb, ' = %0, " = wl...
 : else
 TAGS:   extra
@@ -748,7 +748,7 @@ NAME:   hangedman_abyss_or_decor_jellyfish_corner
 TAGS:   transparent decor
 DEPTH:  D:4-, Depths, Abyss
 WEIGHT: 5 (D), 10
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:  x : XXCB, c : CB, X = xxxxcb, C = xccccb, B = xcbbbb
 SUBST:  HIJ = cbw,  ' = 000., " = %%%.
 : else
@@ -776,7 +776,7 @@ ENDMAP
 NAME:    hangedman_abyss_or_decor_lesser_grid
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D, Depths, Abyss
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SHUFFLE: ABCDEF, "'
 SUBST:   A : cbx.., B : cbx., C : cbx.., D : cbx., E : cbx.., F : cbx.
 SUBST:   " = 0., ' = %*..., X = wl.
@@ -806,7 +806,7 @@ TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:8-, Depths, Abyss
 KFEAT:   @ = +
 SHUFFLE: ABCDEFGH, '"
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:   b = wlb., AB = wl., CD = xcb., EFGH = .
 SUBST:   x = xxxxcccb, ' = 00., " = %%*.
 : else
@@ -836,7 +836,7 @@ ENDMAP
 NAME:    hangedman_abyss_or_decor_passed
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:   ' = 00., " = %%*..
 SUBST:   x = xxxxcb, XY = ww...
 : else
@@ -861,7 +861,7 @@ ENDMAP
 NAME:    hangedman_abyss_or_decor_stagger
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:   ' = 00., " = %%., X = xxcccb, x = xxxxxcccb
 SUBST:   yY = ...xxxcbw, zZ = ...xxxcbl
 : else
@@ -891,7 +891,7 @@ NAME:    hangedman_abyss_or_decor_slice
 TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:4-, Depths, Abyss
 WEIGHT:  5 (D), 10
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:   ' = 00., " = %%., x = xxxxxcccb, cX = xxccb
 : else
 TAGS:    extra

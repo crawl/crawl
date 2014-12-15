@@ -98,7 +98,7 @@ DEPTH:  D, Depths
 CHANCE: 3%
 {{
   local p = 0
-  if you.branch() == "Depths" and crawl.one_chance_in(2) then
+  if you.in_branch("Depths") and crawl.one_chance_in(2) then
     p = 1
   end
   local f = crawl.random2(3)
@@ -584,7 +584,7 @@ NAME:    column_ruins_courtyard_long_water
 TAGS:    serial_column_ruins_fancy
 TAGS:    allow_dup
 WEIGHT:  1
-:  if you.branch() == "Depths" then
+:  if you.in_branch("Depths") then
 SUBST:   w : wl
 :  end
 : init_column_ruins(_G)
@@ -645,7 +645,7 @@ TAGS:    allow_dup transparent
 WEIGHT:  5
 SUBST:   z = ww_
 SUBST:   y = W__
-:  if you.branch() == "Depths" then
+:  if you.in_branch("Depths") then
 SUBST:   w : l
 :  end
 : init_column_ruins_hut(_G)
@@ -758,7 +758,7 @@ NAME:    column_ruins_open_tiny_water
 TAGS:    serial_column_ruins_simple
 TAGS:    allow_dup transparent
 WEIGHT:  2
-:  if you.branch() == "Depths" then
+:  if you.in_branch("Depths") then
 SUBST:   w : l
 :  end
 : init_column_ruins(_G)
@@ -775,7 +775,7 @@ NAME:    column_ruins_open_small_water
 TAGS:    serial_column_ruins_simple
 TAGS:    allow_dup transparent
 WEIGHT:  3
-:  if you.branch() == "Depths" then
+:  if you.in_branch("Depths") then
 SUBST:   w : l
 :  end
 SUBST:   T : TG____
@@ -794,7 +794,7 @@ NAME:    column_ruins_open_medium_water
 TAGS:    serial_column_ruins_simple
 TAGS:    allow_dup transparent
 WEIGHT:  1
-:  if you.branch() == "Depths" then
+:  if you.in_branch("Depths") then
 SUBST:   w : l
 :  end
 SUBST:   T : TG__
@@ -890,7 +890,7 @@ NAME:    column_ruins_columns_water
 TAGS:    serial_column_ruins_simple
 TAGS:    allow_dup
 WEIGHT:  2
-:  if you.branch() == "Depths" then
+:  if you.in_branch("Depths") then
 SUBST:   w : l
 :  end
 : init_column_ruins(_G)
@@ -979,7 +979,7 @@ NAME:    column_ruins_corridor_water
 TAGS:    serial_column_ruins_simple
 TAGS:    allow_dup transparent
 WEIGHT:  1
-:  if you.branch() == "Depths" then
+:  if you.in_branch("Depths") then
 SUBST:   w : l
 :  end
 : init_column_ruins(_G)

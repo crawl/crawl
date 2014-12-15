@@ -56,7 +56,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if not is_validating() then
-      layout_chaotic_city((you.branch() == "Dis") and "metal_wall" or nil)
+      layout_chaotic_city(you.in_branch("Dis") and "metal_wall" or nil)
     end
 }}
 MAP

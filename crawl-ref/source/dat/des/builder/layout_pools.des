@@ -118,7 +118,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     local pool_contents = {}
     pool_contents["."] = 40
     pool_contents["x"] = 40 - you.absdepth()
-    if you.branch() == "Depths" then
+    if you.in_branch("Depths") then
         if you.depth() >= crawl.random2(8) then
             pool_contents["l"] = you.absdepth() * crawl.random2(100) / 100
         else

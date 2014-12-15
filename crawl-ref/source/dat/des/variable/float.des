@@ -60,15 +60,15 @@ function grunt_megastairs_setup(e)
     e.subst("( = (<")
     e.subst(") = )>")
   end
-  if you.branch() == "Dis" then
+  if you.in_branch("Dis") then
     e.subst("x = v")
-  elseif you.branch() == "Depths" then
+  elseif you.in_branch("Depths") then
     e.subst("x : cccccvvvb")
-  elseif you.branch() ~= "Lair" then
+  elseif not you.in_branch("Lair") then
     e.subst("x = c")
   end
-  if you.branch() == "Depths" or you.branch() == "Lair" or
-     you.branch() == "Snake" or you.branch() == "Elf" then
+  if you.in_branch("Depths") or you.in_branch("Lair") or
+     you.in_branch("Snake") or you.in_branch("Elf") then
     e.subst("G : GGGGTTVt")
   else
     e.subst("G : GGGGTTV")
@@ -1374,7 +1374,7 @@ KMONS:   F = w:2 slime creature / swamp worm /\
              w:2 vampire mosquito / w:2 swamp drake / w:1000 nothing
 KMONS:   H = swamp drake / swamp dragon / hydra
 KITEM:   H = any good_item / any potion / gold
-: if you.branch() ~= "Snake" and you.absdepth() < 18 then
+: if not you.in_branch("Snake") and you.absdepth() < 18 then
 NSUBST:  H = 3:H / 2 = HH.W / *: .W
 : end
 MAP
@@ -1552,7 +1552,7 @@ FTILE:  .t0@*123 = floor_moss
 : if you.absdepth() < 5 then
 SUBST:  12 = ., 3 = 0
 : elseif you.absdepth() > 15 then
-:   if you.branch() == "Lair" then
+:   if you.in_branch("Lair") then
 MONS:   spriggan, spriggan druid n_adj n_noc name:young hd:8, spriggan rider
 :   else
 MONS:   spriggan, spriggan druid, spriggan rider
@@ -2047,7 +2047,7 @@ TAGS:   no_monster_gen no_rotate no_vmirror
 DEPTH:  Depths, Lair:1-7
   # next: we generate more dire elephants at greater depths
   # we also turn the shallow water into deep water at the lowest depths
-: if you.branch() == "Lair" then
+: if you.in_branch("Lair") then
 MONS:   elephant, fungus, plant
 : else
 MONS:   w:1 elephant / dire elephant, fungus, plant
@@ -2148,7 +2148,7 @@ KMONS:   5 = skeletal warrior / necromancer
 : end
 SHUFFLE: Aa / Bb / Cc / Dd / Ee
 SUBST:   4 = 4 3:2, 2 = 2 3:2, ABCD = ., abcd = @, Ee = x
-: if you.branch() == "Crypt" then
+: if you.in_branch("Crypt") then
 SUBST:   x = c
 : end
 MAP
@@ -2175,7 +2175,7 @@ TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen
 ORIENT: float
 MONS:   centaur, centaur warrior
 DEPTH:  D:6-, Depths
-: if you.branch() == "D" then
+: if you.in_branch("D") then
 SUBST:  1 = ..1
 SUBST:  2 = 1
 : end
@@ -2594,7 +2594,7 @@ NAME:    hangedman_staggered_hall
 TAGS:    transparent allow_dup no_monster_gen
 ORIENT:  float
 DEPTH:   Elf, !Elf:$, Crypt, !Crypt:$
-: if you.branch() == "Crypt" then
+: if you.in_branch("Crypt") then
 TAGS:    patrolling
 MONS:    skeletal warrior / eidolon, necromancer
 MONS:    necromancer band / vampire mage band w:6
@@ -2645,7 +2645,7 @@ ORIENT: centre
 DEPTH:  Depths, Zot, !Zot:$
 PLACE:  Depths:$
 {{
-  if you.branch() == "Zot" then
+  if you.in_branch("Zot") then
      kmons("1 = draconian annihilator band")
      kmons("2 = moth of wrath")
      kmons("3 = base draconian")
@@ -2728,7 +2728,7 @@ ORIENT: float
 # Random interlopers look badly out of place here.
 TAGS: no_monster_gen no_item_gen
 DEPTH: Dis, !D:$, Depths, !Depths:$
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 # A more worthy adversary badly wanted.
 # What about an obvious up-HD rename of hell knight? *duck*
 MONS: fire giant
@@ -2782,7 +2782,7 @@ MONS:    hell knight spells:pain.17.wizard;bolt_of_fire.17.wizard;\
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 MONS:    grey draconian, black draconian, ettin
 NSUBST:  2 = 2:2 / 2:3 / 2:4 / * = 222334
-: elseif you.branch() == "Depths" then
+: elseif you.in_branch("Depths") then
 MONS:    deep troll
 : else
 # hell beast perm_ench:invis is too gimmicky.
@@ -2867,7 +2867,7 @@ SUBST: 12 = 12d, 3 = 123, 4 = 6, H = .
 : else
 SUBST: 4 = 67, 3 = 345, 2 = 23d, 1 = 12, H = H`
 : end
-: if you.branch() == "Crypt" then
+: if you.in_branch("Crypt") then
 KMONS: M = Khufu, greater mummy
 : elseif you.absdepth() <= 17 then
 KMONS: M = Menkaure, mummy priest
@@ -3139,7 +3139,7 @@ SUBST:   m:mn
 KFEAT:   ] = ]
 KFEAT:   } = }
 KFEAT:   ) = )
-: if you.branch() ~= "D" then
+: if not you.in_branch("D") then
 KMONS:   ]}) = 9
 : end
 SHUFFLE: ]}), [{(
@@ -4182,7 +4182,7 @@ KMONS:   5 = 9 / 8
 KITEM:   1 = $ / % w:5
 KITEM:   23 = % / $ w:5
 KITEM:   45 = * / % w:5
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:   x = xxmmccbv, X = xxccvb, . = .:990 W, ' = .:55 WWwl G:5, 23 = 1, 45 = 2
 : elseif you.absdepth() > 20 then
 SUBST:   x : x m:5, X : ccccbv, ' : .:70 w:20 l
@@ -4402,28 +4402,28 @@ SUBST:  ] = ]>
 # Like the door vault, pick interesting monsters for the 8s in branches,
 # but use normal OOD for D.
 # Also remove the bits of loot for Hell branches and Zot.
-: if you.branch() == "Crypt" then
+: if you.in_branch("Crypt") then
 KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / \
             w:5 curse toe / w:5 zombie / w:5 skeleton / eidolon / \
             w:20 reaper / soul eater / w:30 place:Crypt
-: elseif you.branch() == "Dis" then
+: elseif you.in_branch("Dis") then
 KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / \
             w:5 hell sentinel / iron dragon / tormentor / iron golem / \
             place:Dis
 SUBST:  *% = .
-: elseif you.branch() == "Geh" then
+: elseif you.in_branch("Geh") then
 KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
             fire giant / place:Geh
 SUBST:  *% = .
-: elseif you.branch() == "Tar" then
+: elseif you.in_branch("Tar") then
 KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / \
             lich / ancient lich / w:15 place:Tar
 SUBST:  *% = .
-: elseif you.branch() == "Coc" then
+: elseif you.in_branch("Coc") then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
             w:5 simulacrum / place:Coc
 SUBST:  *% = .
-: elseif you.branch() == "Zot" then
+: elseif you.in_branch("Zot") then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
             killer klown / death cob / w:5 curse toe / w:5 ancient lich
 SUBST:  *% = .
@@ -6387,7 +6387,7 @@ NAME: cheibrodos_lost_city_excavation
 DEPTH: D:11-15, Depths
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
-: if you.branch() == "D" then
+: if you.in_branch("D") then
 MONS: deep elf mage w:8 / fire elemental w:5 / nothing, wizard
 : else
 MONS: wizard w:5 / fire elemental w:5 / nothing, lich

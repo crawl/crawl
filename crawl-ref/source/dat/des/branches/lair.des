@@ -19,7 +19,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     e.mons("bush")
     e.mons("fungus")
 
-    if you.branch() == "Lair" then
+    if you.in_branch("Lair") then
        e.mons("spriggan")
        e.mons("wolf / black bear w:4 / yak w:2")
     else
@@ -509,7 +509,7 @@ SHUFFLE: 23, 34
 MONS:    rat, rat / river rat w:5, river rat, hell rat
 ITEM:    slice of pizza w:80 / fruit
 SUBST:   d = d$..., e = d$
-: if you.branch() == "Lair" then
+: if you.in_branch("Lair") then
 TAGS:    extra
 SUBST:   4 = 40, 3 = 34., 2 = 24., 1 = 13., 0 = 1
 CLEAR:   "

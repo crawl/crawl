@@ -116,7 +116,7 @@ KFEAT:   L = l
 KPROP:   l = no_cloud_gen
 SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, ()~- / ()~- / -~(), () / {( / }) / '' / ''
 SUBST:   4 = 3, ' = .:99 >:1, ( = ( <:2, ) = ) >:2, ~- = .
-: if you.branch() == "Geh" then
+: if you.in_branch("Geh") then
 SUBST:   d$ = .
 : end
 MAP
@@ -142,7 +142,7 @@ ENDMAP
 NAME:    hangedman_elemental_grid_stream
 TAGS:    transparent no_monster_gen no_pool_fixup patrolling allow_dup
 DEPTH:   Geh, Coc, Zot:1-4
-:  if you.branch() == "Geh" then
+:  if you.in_branch("Geh") then
 KMONS:   1 = brimstone fiend w:9 / hell sentinel w:1
 KMONS:   2 = hellion / balrug
 KMONS:   34 = smoke demon / red devil
@@ -151,7 +151,7 @@ KMONS:   56 = skeletal warrior ; broad axe ego:flaming ident:type | \
 KMONS:   7 = hell knight
 SUBST:   w = l, W = .
 KPROP:   l = no_cloud_gen
-:  elseif you.branch() == "Coc" then
+:  elseif you.in_branch("Coc") then
 KMONS:   1 = ice fiend
 KMONS:   2 = blizzard demon
 KMONS:   34 = ice devil / blue devil
@@ -195,18 +195,18 @@ NAME:    hangedman_elemental_corridor
 TAGS:    no_monster_gen no_pool_fixup allow_dup
 DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
 SHUFFLE: 123456, }] / }] / {[ / **
-:  if you.branch() == "Geh" then
+:  if you.in_branch("Geh") then
 MONS:    brimstone fiend / balrug / hellion
 MONS:    sun demon / smoke demon / hell knight
 SUBST:   w = l, f = F, %* = ., 2 = 1, 3456 = 2
-:  elseif you.branch() == "Coc" then
+:  elseif you.in_branch("Coc") then
 MONS:    ice fiend / blizzard demon / shard shrike / \
          reaper ; scythe ego:freezing ident:type
 MONS:    eight-headed hydra simulacrum w:2 / \
          seven-headed hydra simulacrum w:2 / \
          ice dragon simulacrum w:3 / freezing wraith w:3 / ice devil
 SUBST:   l = w, F = f, %* = ., 2 = 1, 3456 = 2
-:  elseif you.branch() == "Abyss" then
+:  elseif you.in_branch("Abyss") then
 MONS:    blizzard demon / frost giant / dancing weapon ; battleaxe ego:freezing ident:type w:5
 MONS:    simulacrum w:12 / white draconian / water elemental w:5 / \
          white very ugly thing w:15 / ice devil w:8
