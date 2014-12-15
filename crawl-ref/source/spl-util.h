@@ -189,4 +189,6 @@ int spell_highlight_by_utility(spell_type spell,
                                 bool rod_spell = false);
 bool spell_no_hostile_in_range(spell_type spell, bool rod = false);
 
+string describe_spell_resists(spell_type spell);
+
 #endif

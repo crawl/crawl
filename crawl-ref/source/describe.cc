@@ -2755,6 +2755,10 @@ static int _get_spell_description(const spell_type spell,
                        + " creature" + (limit > 1 ? "s" : "") + " summoned by this spell.\n";
     }
 
+    const string resist_info = describe_spell_resists(spell);
+    if (!resist_info.empty())
+        description += "Resisted by: " + resist_info + ".\n";
+
     if (item)
     {
         const bool rod = item && item->base_type == OBJ_RODS;

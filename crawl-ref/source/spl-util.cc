@@ -1607,3 +1607,56 @@ skill_type arcane_mutation_to_skill(mutation_type mutation)
             return spell_type2skill(1 << sptyp_exp);
     return SK_NONE;
 }
+
+/// A mapping between spres_types and their descriptions.
+static const char * const spres_names[]
+{
+    "", "AC", "EV", "SH",
+    "rF", "rSteam", "rC",
+    "rN", "rElec", "rPois",
+    "rCorr", "rMut", "rRot",
+    "SustAb", "Clarity", "Stasis",
+    "MR", "XL",
+};
+COMPILE_CHECK(ARRAYSZ(spres_names) == SPRES_NUM_RESISTS);
+
+/**
+ * Produce a string describing the ways in which the given spell can be
+ * be resisted.
+ *
+ * E.g.: "AC (strongly), EV, SH"
+ * or:   "Nothing"
+ *
+ * @param spell     The spell in question.
+ * @return          A comma-separated list of resists for the given spell, or
+ *                  the empty string.
+ */
+string describe_spell_resists(spell_type spell)
+{
+    if (!is_valid_spell(spell))
+        return "";
+
+    const spell_desc * const spell_info = _seekspell(spell);
+    ASSERT(spell_info);
+
+    if (!spell_info->resists.size())
+        return "Nothing"; // SPRVEC_IRRESISTIBLE
+
+    vector<string> resists;
+    for (auto resist : spell_info->resists)
+    {
+        if (resist.type == SPRES_HARMLESS)
+            return ""; // SPRVEC_HARMLESS
+
+        const char * const severity_desc =
+            resist.percent < 100 ? " (partially)" :
+            resist.percent > 100 ? " (strongly)" :
+            "";
+
+        resists.emplace_back(make_stringf("%s%s",
+                                          spres_names[resist.type],
+                                          severity_desc));
+    }
+
+    return comma_separated_line(resists.begin(), resists.end());
+}
