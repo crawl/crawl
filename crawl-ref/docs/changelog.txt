@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-2936-gdb8a0b4)
+Stone Soup 0.16 (up to 0.16-a0-3177-ge5ac76f)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -102,7 +102,8 @@ Spells
   - Singularity (L9 Translocation), which summons a singularity & sucks in all
     nearby enemies, severely damaging them in the process.
   - Gell's Gravitas (L6 Hexes/Translocation), which pulls nearby creatures
-    toward the target, causing damage if they collide.
+    toward the target, causing damage if they collide & occasionally confusing
+    them.
   - Hydra Form (L6 Transmutation), a short-duration form that attacks all
     adjacent foes & devours slain foes for nutrition and healing.
   - Irradiate (L5 Transmutation/Conjuration), which deals heavy damage &
@@ -285,6 +286,8 @@ Interface
 ---------
 * Some effects (Shatter, banishment, etc.) now display animations.
 * Monster AC, EV, and MR are now displayed as bars in their descriptions.
+* Monster spell descriptions can now be examined through their descriptions, in
+  the same way as books & rods.
 * The screen now flashes on attempting to autoexplore with monsters in view,
   indicating where the relevant monsters are.
 * Stealth is now displayed as a bar in the % screen. (The old 'stealth words')
