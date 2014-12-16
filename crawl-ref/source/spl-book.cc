@@ -859,7 +859,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
         ASSERT(is_valid_spell(spell));
 
         if (spell_menu.menu_action == Menu::ACT_EXAMINE)
-            describe_spell(spell);
+            describe_spell(spell, nullptr);
         else
             return spell;
     }
