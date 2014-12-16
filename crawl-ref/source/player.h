@@ -870,7 +870,7 @@ bool player_in_hell();
 static inline bool player_in_branch(int branch)
 {
     return you.where_are_you == branch;
-};
+}
 
 bool berserk_check_wielded_weapon();
 bool player_equip_unrand(int unrand_index);

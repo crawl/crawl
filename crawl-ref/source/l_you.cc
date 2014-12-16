@@ -795,12 +795,12 @@ LUAFN(you_init)
     PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
-LUARET1(you_exp_needed, number, exp_needed(luaL_checkint(ls, 1)));
-LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1));
-LUARET1(you_skill_cost_level, number, you.skill_cost_level);
+LUARET1(you_exp_needed, number, exp_needed(luaL_checkint(ls, 1)))
+LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1))
+LUARET1(you_skill_cost_level, number, you.skill_cost_level)
 LUARET1(you_skill_points, number,
-        you.skill_points[str_to_skill(luaL_checkstring(ls, 1))]);
-LUARET1(you_zigs_completed, number, you.zigs_completed);
+        you.skill_points[str_to_skill(luaL_checkstring(ls, 1))])
+LUARET1(you_zigs_completed, number, you.zigs_completed)
 
 static const struct luaL_reg you_dlib[] =
 {

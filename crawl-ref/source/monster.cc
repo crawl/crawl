@@ -89,7 +89,7 @@ monster::monster()
     clear_constricted();
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
-};
+}
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
 monster::~monster()
