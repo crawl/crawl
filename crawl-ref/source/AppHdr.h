@@ -21,7 +21,7 @@
 
 #include "platform.h"
 #include <stdint.h>
-namespace std {};
+namespace std {}
 using namespace std;
 
 // Define COMPILE_CHECK before including any of our headers, so even things
