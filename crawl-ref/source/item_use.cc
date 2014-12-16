@@ -2889,8 +2889,7 @@ void read(int slot)
 
     // if we have blurry vision, we need to start a delay before the actual
     // scroll effect kicks in.
-    if (player_mutation_level(MUT_BLURRY_VISION)
-        && !in_good_standing(GOD_ASHENZARI, 2))
+    if (player_mutation_level(MUT_BLURRY_VISION))
     {
         // takes 1, 2, 3 extra turns
         const int turns = player_mutation_level(MUT_BLURRY_VISION);

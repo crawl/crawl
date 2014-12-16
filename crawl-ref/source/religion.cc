@@ -332,7 +332,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "The more cursed you are, the more Ashenzari supports your skills.",
-      "Ashenzari keeps your vision and mind clear.",
+      "Ashenzari reveals the unseen and keeps your mind clear.",
       "scry through walls",
       "Ashenzari helps you to reconsider your skills."
     },
@@ -477,7 +477,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "Ashenzari no longer supports your skills.",
-      "Ashenzari no longer keeps your vision and mind clear.",
+      "Ashenzari no longer reveals the unseen or keeps your mind clear.",
       "scry through walls",
       "Ashenzari no longer helps you to reconsider your skills."
     },
