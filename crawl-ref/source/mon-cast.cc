@@ -322,6 +322,32 @@ static bool _set_nearby_target(monster* caster, bolt& pbolt)
     return false;
 }
 
+/**
+ * How much range does a monster of the given spell HD have with the given
+ * spell?
+ *
+ * @param spell     The spell in question.
+ * @param hd        The monster's effective HD for spellcasting purposes.
+ * @return          -1 if the spell has an undefined range; else its range.
+ */
+int mons_spell_range(spell_type spell, int hd)
+{
+    const int power = 12 * hd;
+
+    switch (spell)
+    {
+        case SPELL_SANDBLAST:
+            return 2; // spell_range changes with player wielded items
+        case SPELL_FLAME_TONGUE:
+            // HD:1 monsters would get range 2, HD:2 -- 3, other 4, let's
+            // use the mighty Throw Flame for big ranges.
+            // Here, we have HD:1 -- 1, HD:2+ -- 2.
+            return (power >= 20) ? 2 : 1;
+        default:
+            return spell_range(spell, power, false);
+    }
+}
+
 bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                      bool check_validity)
 {
@@ -341,19 +367,8 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.pierce       = false;
     beam.is_explosion = false;
 
-    switch (spell_cast)
-    { // add touch or range-setting spells here
-        case SPELL_SANDBLAST:
-            break;
-        case SPELL_FLAME_TONGUE:
-            // HD:1 monsters would get range 2, HD:2 -- 3, other 4, let's
-            // use the mighty Throw Flame for big ranges.
-            // Here, we have HD:1 -- 1, HD:2+ -- 2.
-            beam.range = (power >= 20) ? 2 : 1;
-            break;
-        default:
-        beam.range = spell_range(spell_cast, power, false);
-    }
+
+    beam.range = mons_spell_range(spell_cast, mons->spell_hd());
 
     spell_type real_spell = spell_cast;
 
@@ -432,7 +447,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.damage   = dice_def(3, 5 + (power / 40));
         beam.hit      = 20 + power / 40;
         beam.flavour  = BEAM_FRAG;
-        beam.range    = 2;      // spell_range() is wrong here
         break;
 
     case SPELL_DISPEL_UNDEAD:
