@@ -2200,7 +2200,7 @@ static void _show_item_description(const item_def &item)
     {
         formatted_string fdesc;
         fdesc.cprintf("%s", desc.c_str());
-        list_spellset(item_spellset(item), &item, fdesc);
+        list_spellset(item_spellset(item), nullptr, &item, fdesc);
     }
 }
 
@@ -2722,11 +2722,24 @@ string get_skill_description(skill_type skill, bool need_title)
 }
 
 
-// Returns BOOK_MEM if you can memorise the spell BOOK_FORGET if you can
-// forget it and BOOK_NEITHER if you can do neither
+/**
+ * Examine a given spell. Set the given string to its description, stats, &c.
+ * If it's a book in a spell that the player is holding, provide the option to
+ * memorize or forget it.
+ *
+ * @param spell         The spell in question.
+ * @param mon_owner     If this spell is being examined from a monster's
+ *                      description, 'spell' is that monster. Else, null.
+ * @param description   Set to the description & details of the spell.
+ * @param item          The item (book or rod) holding the spell, if any.
+ * @return              BOOK_MEM if you can memorise the spell
+ *                      BOOK_FORGET if you can forget it
+ *                      BOOK_NEITHER if you can do neither.
+ */
 static int _get_spell_description(const spell_type spell,
-                                   string &description,
-                                   const item_def* item = nullptr)
+                                  const monster_info *mon_owner,
+                                  string &description,
+                                  const item_def* item = nullptr)
 {
     description.reserve(500);
 
@@ -2755,7 +2768,7 @@ static int _get_spell_description(const spell_type spell,
                        + " creature" + (limit > 1 ? "s" : "") + " summoned by this spell.\n";
     }
 
-    if (item)
+    if (!mon_owner)
     {
         const bool rod = item && item->base_type == OBJ_RODS;
 
@@ -2800,7 +2813,7 @@ static int _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (item && !you_can_memorise(spell))
+    if (!mon_owner && !you_can_memorise(spell))
         description += "\n" + desc_cannot_memorise_reason(spell) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
@@ -2823,28 +2836,41 @@ static int _get_spell_description(const spell_type spell,
     return BOOK_NEITHER;
 }
 
+/**
+ * Provide the text description of a given spell.
+ *
+ * @param spell     The spell in question.
+ * @param inf[out]  The spell's description is concatenated onto the end of
+ *                  inf.body.
+ */
 void get_spell_desc(const spell_type spell, describe_info &inf)
 {
     string desc;
-    _get_spell_description(spell, desc);
+    _get_spell_description(spell, nullptr, desc);
     inf.body << desc;
 }
 
-//---------------------------------------------------------------
-//
-// describe_spell
-//
-// Describes (most) every spell in the game.
-//
-//---------------------------------------------------------------
-void describe_spell(spell_type spelled, const item_def* item)
+
+/**
+ * Examine a given spell. List its description and details, and handle
+ * memorizing or forgetting the spell in question, if the player is able to
+ * do so & chooses to.
+ *
+ * @param spelled   The spell in question.
+ * @param owner     If this spell is being examined from a monster's
+ *                  description, 'mon_owner' is that monster. Else, null.
+ * @param item      The item (book or rod) holding the spell, if any.
+ */
+void describe_spell(spell_type spelled, const monster_info *mon_owner,
+                    const item_def* item)
 {
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "describe_spell");
 #endif
 
     string desc;
-    const int mem_or_forget = _get_spell_description(spelled, desc, item);
+    const int mem_or_forget = _get_spell_description(spelled, mon_owner, desc,
+                                                     item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -3963,7 +3989,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
 #endif
 
-    spell_scroller fs(monster_spellset(mi), nullptr);
+    spell_scroller fs(monster_spellset(mi), &mi, nullptr);
     fs.add_text(inf.title);
     fs.add_text(inf.body.str(), false, get_number_of_cols() - 1);
     if (crawl_state.game_is_hints())

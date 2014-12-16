@@ -275,7 +275,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ASSERT(sel[0]->hotkeys.size() == 1);
         if (spell_menu.menu_action == Menu::ACT_EXAMINE)
         {
-            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]));
+            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]), nullptr);
             redraw_screen();
         }
         else
