@@ -84,6 +84,7 @@ int power_to_barcount(int power);
 
 string spell_power_string(spell_type spell, bool rod = false);
 string spell_range_string(spell_type spell, bool rod = false);
+string range_string(int range, int maxrange);
 string spell_schools_string(spell_type spell);
 string spell_hunger_string(spell_type spell, bool rod = false);
 string spell_noise_string(spell_type spell);
