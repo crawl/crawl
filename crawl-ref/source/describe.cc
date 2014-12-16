@@ -42,6 +42,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-book.h"
+#include "mon-cast.h" // mons_spell_range
 #include "mon-chimera.h"
 #include "mon-tentacle.h"
 #include "options.h"
@@ -2768,7 +2769,15 @@ static int _get_spell_description(const spell_type spell,
                        + " creature" + (limit > 1 ? "s" : "") + " summoned by this spell.\n";
     }
 
-    if (!mon_owner)
+    if (mon_owner)
+    {
+        // FIXME: this HD is wrong in some cases
+        // (draining, malmutation, levelling up)
+        const int hd = mons_class_hit_dice(mon_owner->type);
+        const int range = mons_spell_range(spell, hd);
+        description += "\nRange : " + range_string(range, range) + "\n";
+    }
+    else
     {
         const bool rod = item && item->base_type == OBJ_RODS;
 
