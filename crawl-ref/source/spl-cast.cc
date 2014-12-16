@@ -1022,8 +1022,14 @@ static bool _spellcasting_aborted(spell_type spell,
     bool uncastable = false;
 
     {
-        // MP was already deducted, so don't check MP in spell_is_uncastable.
-        unwind_var<int> fake_mp(you.magic_points, 50);
+        // FIXME: we might be called in a situation ([a]bilities, Xom) that
+        // isn't evoked but still doesn't use the spell's MP.  your_spells,
+        // this function, and spell_is_uncastable should take a flag indicating
+        // whether MP should be checked.
+        const int rest_mp = evoked ? 0 : spell_mana(spell);
+
+        // Temporarily restore MP so that we're no uncastable for lack of MP.
+        unwind_var<int> fake_mp(you.magic_points, you.magic_points + rest_mp);
         uncastable = !wiz_cast && spell_is_uncastable(spell, msg, true, evoked);
     }
 
