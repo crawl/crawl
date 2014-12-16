@@ -40,7 +40,7 @@ struct spell_desc
 {
     spell_type id;
     const char  *title;
-    unsigned int disciplines; // bitfield
+    spschools_type disciplines;
     unsigned int flags;       // bitfield
     unsigned int level;
 
@@ -441,7 +441,7 @@ bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 }
 
 //jmf: next two for simple bit handling
-unsigned int get_spell_disciplines(spell_type spell)
+spschools_type get_spell_disciplines(spell_type spell)
 {
     return _seekspell(spell)->disciplines;
 }
@@ -460,9 +460,9 @@ int count_bits(unsigned int bits)
 
 // NOTE: Assumes that any single spell won't belong to conflicting
 // disciplines.
-bool disciplines_conflict(unsigned int disc1, unsigned int disc2)
+bool disciplines_conflict(spschools_type disc1, spschools_type disc2)
 {
-    const unsigned int combined = disc1 | disc2;
+    const spschools_type combined = disc1 | disc2;
 
     return (combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
            || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE);
@@ -834,7 +834,7 @@ skill_type spell_type2skill(unsigned int spelltype)
     }
 }
 
-unsigned int skill2spell_type(skill_type spell_skill)
+spschool_flag_type skill2spell_type(skill_type spell_skill)
 {
     switch (spell_skill)
     {
@@ -1329,11 +1329,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         {
             return "You have no blood to sublime.";
         }
+        if (you.magic_points == you.max_magic_points && temp)
+            return "Your magic capacity is already full.";
         break;
 
     case SPELL_ENSLAVEMENT:
         if (player_mutation_level(MUT_NO_LOVE))
             return "You cannot make allies.";
+        break;
 
     case SPELL_MALIGN_GATEWAY:
         if (temp && !can_cast_malign_gateway())

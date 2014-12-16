@@ -157,8 +157,8 @@ bool monster::add_ench(const mon_enchant &ench)
         add_enchantment_effect(ench);
 
     if (ench.ench == ENCH_CHARM
-        || ench.ench == ENCH_BRIBED
-        || ench.ench == ENCH_PERMA_BRIBED
+        || ench.ench == ENCH_NEUTRAL_BRIBED
+        || ench.ench == ENCH_FRIENDLY_BRIBED
         || ench.ench == ENCH_HEXED)
     {
         align_avatars(true);
@@ -246,8 +246,8 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_CHARM:
-    case ENCH_BRIBED:
-    case ENCH_PERMA_BRIBED:
+    case ENCH_NEUTRAL_BRIBED:
+    case ENCH_FRIENDLY_BRIBED:
     case ENCH_HEXED:
     {
         behaviour = BEH_SEEK;
@@ -600,8 +600,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_CHARM:
-    case ENCH_BRIBED:
-    case ENCH_PERMA_BRIBED:
+    case ENCH_NEUTRAL_BRIBED:
+    case ENCH_FRIENDLY_BRIBED:
     case ENCH_HEXED:
         if (invisible() && mons_near(this) && !you.can_see_invisible()
             && !backlit() && !has_ench(ENCH_SUBMERGED))
@@ -1168,8 +1168,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
         case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
-        case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_BRIBED:
-        case ENCH_PERMA_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
+        case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_NEUTRAL_BRIBED:
+        case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
         case ENCH_RESISTANCE: case ENCH_HEXED:
             lose_ench_levels(entry.second, levels);
             break;

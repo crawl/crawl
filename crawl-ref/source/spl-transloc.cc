@@ -39,6 +39,7 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
+#include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "traps.h"
@@ -1180,6 +1181,13 @@ spret_type cast_singularity(actor* agent, int pow, const coord_def& where,
 
     fail_check();
 
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->type == MONS_SINGULARITY && mi->summoner == agent->mid)
+        {
+            simple_monster_message(*mi, " implodes!");
+            monster_die(*mi, KILL_RESET, NON_MONSTER);
+        }
+
     monster* singularity = create_monster(
                                 mgen_data(MONS_SINGULARITY,
                                           agent->is_player()
@@ -1261,7 +1269,7 @@ void singularity_pull(const monster *singularity)
 {
     actor *agent = actor_by_mid(singularity->summoner);
 
-    for (actor_near_iterator ai(singularity, LOS_NO_TRANS); ai; ++ai)
+    for (actor_near_iterator ai(singularity->pos(), LOS_NO_TRANS); ai; ++ai)
     {
         if (*ai == singularity
             || agent && mons_aligned(*ai, agent))
@@ -1310,7 +1318,7 @@ void singularity_pull(const monster *singularity)
 bool fatal_attraction(actor *victim, actor *agent, int pow)
 {
     bool affected = false;
-    for (actor_near_iterator ai(victim, LOS_NO_TRANS); ai; ++ai)
+    for (actor_near_iterator ai(victim->pos(), LOS_NO_TRANS); ai; ++ai)
     {
         if (*ai == victim || *ai == agent || ai->is_stationary())
             continue;
@@ -1323,6 +1331,9 @@ bool fatal_attraction(actor *victim, actor *agent, int pow)
 
         affected = true;
         attract_actor(agent, *ai, victim->pos(), pow, strength);
+
+        if (ai->alive() && ai->check_res_magic(pow / 2) <= 0)
+            ai->confuse(agent, random2avg(pow / 20, 2));
     }
 
     return affected;

@@ -176,7 +176,7 @@ ENDMAP
 NAME:    hangedman_player_shredder
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
 DEPTH:   Dis:1-6, Zot:1-4
-: if you.branch() == "Dis" then
+: if you.in_branch("Dis") then
 KMONS:   01 = tormentor
 KMONS:   23 = reaper
 KMONS:   45 = hellion
@@ -214,7 +214,7 @@ SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
 NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
 NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
 SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
-: if you.branch() == "Dis" then
+: if you.in_branch("Dis") then
 : dis_statues(_G)
 : end
 MAP

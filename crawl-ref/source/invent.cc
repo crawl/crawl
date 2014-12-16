@@ -20,6 +20,7 @@
 #include "describe.h"
 #include "env.h"
 #include "food.h"
+#include "goditem.h"
 #include "initfile.h"
 #include "itemprop.h"
 #include "items.h"
@@ -983,7 +984,7 @@ unsigned char InvMenu::getkey() const
 
 bool in_inventory(const item_def &i)
 {
-    return i.pos.x == -1 && i.pos.y == -1;
+    return i.pos == ITEM_IN_INVENTORY;
 }
 
 const char *item_class_name(int type, bool terse)
@@ -1521,6 +1522,7 @@ bool check_old_item_warning(const item_def& item,
 {
     item_def old_item;
     string prompt;
+    bool penance = false;
     if (oper == OPER_WIELD) // can we safely unwield old item?
     {
         if (!you.weapon())
@@ -1531,7 +1533,7 @@ bool check_old_item_warning(const item_def& item,
             return true;
 
         old_item = *you.weapon();
-        if (!needs_handle_warning(old_item, OPER_WIELD))
+        if (!needs_handle_warning(old_item, OPER_WIELD, penance))
             return true;
 
         prompt += "Really unwield ";
@@ -1548,7 +1550,7 @@ bool check_old_item_warning(const item_def& item,
 
         old_item = you.inv[you.equip[eq_slot]];
 
-        if (!needs_handle_warning(old_item, OPER_TAKEOFF))
+        if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
             return true;
 
         prompt += "Really take off ";
@@ -1565,7 +1567,7 @@ bool check_old_item_warning(const item_def& item,
                 return true;
 
             old_item = you.inv[equip];
-            if (!needs_handle_warning(old_item, OPER_TAKEOFF))
+            if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
                 return true;
 
             prompt += "Really remove ";
@@ -1579,6 +1581,8 @@ bool check_old_item_warning(const item_def& item,
     // now ask
     prompt += old_item.name(DESC_INVENTORY);
     prompt += "?";
+    if (penance)
+        prompt += " This could place you under penance!";
     return yesno(prompt.c_str(), false, 'n');
 }
 
@@ -1641,7 +1645,8 @@ bool nasty_stasis(const item_def &item, operation_types oper)
                 && (_is_known_no_tele_item(item) && you.duration[DUR_TELEPORT]);
 }
 
-bool needs_handle_warning(const item_def &item, operation_types oper)
+bool needs_handle_warning(const item_def &item, operation_types oper,
+                          bool &penance)
 {
     if (_has_warning_inscription(item, oper))
         return true;
@@ -1675,6 +1680,12 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 
     if (nasty_stasis(item, oper))
         return true;
+
+    if (oper == OPER_ATTACK && god_hates_item(item))
+    {
+        penance = true;
+        return true;
+    }
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
         && is_weapon(item))
@@ -1713,8 +1724,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 bool check_warning_inscriptions(const item_def& item,
                                  operation_types oper)
 {
+    bool penance = false;
     if (item.defined()
-        && needs_handle_warning(item, oper))
+        && needs_handle_warning(item, oper, penance))
     {
         // When it's about destroying an item, don't even ask.
         // If the player really wants to do that, they'll have
@@ -1786,6 +1798,8 @@ bool check_warning_inscriptions(const item_def& item,
                          you.duration[DUR_SLOW] ? "slowed" : "hasted");
         }
         prompt += "?";
+        if (penance)
+            prompt += " This could place you under penance!";
         return yesno(prompt.c_str(), false, 'n')
                && check_old_item_warning(item, oper);
     }
@@ -2197,4 +2211,16 @@ bool evoker_is_charging(const item_def &item)
     FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
     list_charging_evokers(evokers);
     return evokers[item.sub_type] == &item;
+}
+
+void identify_inventory()
+{
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (you.inv[i].defined())
+        {
+            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+        }
+    }
 }

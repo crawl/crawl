@@ -459,8 +459,9 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
 
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
+    bool penance = false;
     if (!weapon
-        || (!needs_handle_warning(*weapon, OPER_ATTACK)
+        || (!needs_handle_warning(*weapon, OPER_ATTACK, penance)
              && is_melee_weapon(*weapon))
         || you.received_weapon_warning)
     {
@@ -471,6 +472,8 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         return false;
 
     string prompt  = "Really attack while wielding " + weapon->name(DESC_YOUR) + "?";
+    if (penance)
+        prompt += " This could place you under penance!";
 
     const bool result = yesno(prompt.c_str(), true, 'n');
 
@@ -483,30 +486,6 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     return result;
 }
 
-/**
- * Can the given actor 'cleave' (hit surrounding targets) when attacking
- * using the given skill?
- *
- * @param attacker      The player or monster in question.
- * @param attack_skill  The skill used for the attack. (e.g. axes, etc)
- * @return              Whether the attacker is allowed to cleave with this
- *                      attack.
- */
-bool actor_can_cleave(const actor &attacker, skill_type attack_skill)
-{
-    if (attacker.confused())
-        return false;
-
-    if (attacker.is_player()
-        && (you.form == TRAN_HYDRA && you.heads() > 1
-            || you.duration[DUR_CLEAVE]))
-    {
-        return true;
-    }
-
-    return attack_skill == SK_AXES;
-}
-
 // Used by cleave to determine if multi-hit targets will be attacked.
 static bool _dont_harm(const actor* attacker, const actor* defender)
 {
@@ -516,54 +495,59 @@ static bool _dont_harm(const actor* attacker, const actor* defender)
 }
 
 /**
- * List potential cleave targets (adjacent hostile creatures), aside from the
- * targeted defender itself.
+ * List potential cleave targets (adjacent hostile creatures), including the
+ * defender itself.
  *
  * @param attacker[in]   The attacking creature.
  * @param def[in]        The location of the targeted defender.
  * @param targets[out]   A list to be populated with targets.
+ * @param which_attack   The attack_number (default -1, which uses the default weapon).
  */
 void get_cleave_targets(const actor* attacker, const coord_def& def,
-                        list<actor*> &targets)
+                        list<actor*> &targets, int which_attack)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
     if (!attacker->alive())
         return;
 
-    const coord_def atk = attacker->pos();
-    coord_def atk_vector = def - atk;
-    const int dir = coinflip() ? -1 : 1;
-
-    for (int i = 0; i < 7; ++i)
-    {
-        atk_vector = rotate_adjacent(atk_vector, dir);
-        if (cell_is_solid(atk + atk_vector))
-            continue;
-
-        actor * target = actor_at(atk + atk_vector);
-        if (target && !_dont_harm(attacker, target))
-            targets.push_back(target);
-    }
-}
-
-/**
- * List potential cleave targets (adjacent hostile creatures), including the
- * defender.
- *
- * @param attacker[in]   The attacking creature.
- * @param def[in]        The location of the targeted defender.
- * @param targets[out]   A list to be populated with targets.
- */
-void get_all_cleave_targets(const actor* attacker, const coord_def& def,
-                            list<actor*> &targets)
-{
-    if (cell_is_solid(def))
-        return;
-
     if (actor_at(def))
         targets.push_back(actor_at(def));
-    get_cleave_targets(attacker, def, targets);
+
+    const item_def* weap = attacker->weapon(which_attack);
+    if (attacker->confused())
+        return;
+
+    if ((weap && item_attack_skill(*weap) == SK_AXES
+         || attacker->is_player()
+            && (you.form == TRAN_HYDRA && you.heads() > 1
+                || you.duration[DUR_CLEAVE]))
+        && !attacker->confused())
+    {
+        const coord_def atk = attacker->pos();
+        coord_def atk_vector = def - atk;
+        const int dir = coinflip() ? -1 : 1;
+
+        for (int i = 0; i < 7; ++i)
+        {
+            atk_vector = rotate_adjacent(atk_vector, dir);
+
+            actor * target = actor_at(atk + atk_vector);
+            if (target && !_dont_harm(attacker, target))
+                targets.push_back(target);
+        }
+    }
+
+    if (weap && is_unrandom_artefact(*weap, UNRAND_GYRE))
+    {
+        list<actor*> new_targets;
+        for (actor* targ : targets)
+        {
+            new_targets.push_back(targ);
+            new_targets.push_back(targ);
+        }
+        targets = new_targets;
+    }
 }
 
 /**

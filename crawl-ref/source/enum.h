@@ -6,7 +6,91 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+#include <type_traits> // underlying_type<>
+
 #include "tag-version.h"
+
+template<class E>
+class enum_bitfield
+{
+public:
+    typedef typename underlying_type<E>::type underlying_type;
+    underlying_type flags;
+
+    enum_bitfield() : flags(0) {}
+    enum_bitfield(E flag) : flags(flag) {}
+    template<class ... Es>
+    enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
+
+    operator underlying_type () const { return flags; }
+
+    enum_bitfield<E> &operator|=(enum_bitfield<E> other)
+    {
+        flags |= other.flags;
+        return *this;
+    }
+
+    enum_bitfield<E> &operator&=(enum_bitfield<E> other)
+    {
+        flags &= other.flags;
+        return *this;
+    }
+
+    enum_bitfield<E> operator|(enum_bitfield<E> other) const
+    {
+        return enum_bitfield<E>(*this) |= other;
+    }
+
+    enum_bitfield<E> operator|(E other) const
+    {
+        return enum_bitfield<E>(*this) |= other;
+    }
+
+    enum_bitfield<E> operator&(enum_bitfield<E> other) const
+    {
+        return enum_bitfield<E>(*this) &= other;
+    }
+
+    enum_bitfield<E> operator&(E other) const
+    {
+        return enum_bitfield<E>(*this) &= other;
+    }
+
+    enum_bitfield<E> operator~() const
+    {
+        enum_bitfield<E> me(*this);
+        me.flags = ~me.flags;
+        return me;
+    }
+};
+
+template <class E, class ... Es>
+enum_bitfield<E> bitfield(E e1, Es... args)
+{
+    return bitfield<E>(e1, args...);
+}
+
+/**
+ * Define fieldT as a bitfield of the enum flagT, and make bitwise
+ * operators on flagT yield a fieldT.
+ *
+ * This macro produces a typedef and several inline function definitions;
+ * use it only at file/namespace scope. It requires a trailing semicolon.
+ *
+ * @param fieldT An identifier naming the bitfield type to define.
+ * @param flagT  An identifier naming the enum type to use as a flag.
+ *               Could theoretically be a more complex type expression, but
+ *               I wouldn't try anything trickier than scope resolution.
+ */
+#define DEF_BITFIELD(fieldT, flagT) typedef enum_bitfield<flagT> fieldT;  \
+    inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
+    inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
+    inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
+    inline fieldT operator&(flagT a, fieldT b) { return fieldT(a) &= b; } \
+    inline fieldT operator~(flagT a) { return ~fieldT(a); } \
+    COMPILE_CHECK(is_enum<flagT>::value)
+// The last line above is really just to eat a semicolon; template
+// substitution of enum_bitfield would have already failed.
 
 enum lang_t
 {
@@ -1339,7 +1423,7 @@ enum dungeon_char_type
 //      update docs/develop/levels/syntax.txt with the new symbol.
 enum dungeon_feature_type
 {
-    DNGN_UNSEEN,
+    DNGN_UNSEEN = 0,                   // must be zero
     DNGN_CLOSED_DOOR,
     DNGN_RUNED_DOOR,
     DNGN_SEALED_DOOR,
@@ -1853,8 +1937,8 @@ enum enchant_type
     ENCH_SAP_MAGIC,
     ENCH_SHROUD,
     ENCH_PHANTOM_MIRROR,
-    ENCH_BRIBED,
-    ENCH_PERMA_BRIBED,
+    ENCH_NEUTRAL_BRIBED,
+    ENCH_FRIENDLY_BRIBED,
     ENCH_CORROSION,
     ENCH_GOLD_LUST,
     ENCH_DRAINED,
@@ -2311,7 +2395,7 @@ enum monster_type                      // menv[].type
     MONS_GREY_RAT,
 #endif
     MONS_RIVER_RAT,
-    MONS_ORANGE_RAT,
+    MONS_HELL_RAT,
 #if TAG_MAJOR_VERSION == 34
     MONS_LABORATORY_RAT,
 #endif
@@ -4295,7 +4379,7 @@ enum spell_type
     SPELL_SCATTERSHOT,
     SPELL_CLEANSING_FLAME,
     SPELL_GOBLIN_TOSS,
-    SPELL_BONE_ARMOUR,
+    SPELL_CIGOTUVIS_EMBRACE,
     SPELL_SINGULARITY,
     SPELL_GRAVITAS,
     NUM_SPELLS

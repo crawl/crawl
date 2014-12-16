@@ -368,7 +368,7 @@ string zin_recite_text(const int seed, const int prayertype, int step)
     const int virtue_seed = sin_seed;
 
     COMPILE_CHECK(ARRAYSZ(smite_text) == 9);
-    const int smite_seed = (verse/27) % 9;
+    const int smite_seed = (verse/3) % 9;
 
     string recite = book_of_zin[chapter][step-1];
 
@@ -2044,7 +2044,7 @@ int fedhas_fungal_bloom()
                 corpse_on_pos = true;
 
                 const int trial_prob = mushroom_prob(*j);
-                const int target_count = 1 + binomial_generator(20, trial_prob);
+                const int target_count = 1 + binomial(20, trial_prob);
                 int seen_per;
                 spawn_corpse_mushrooms(*j, target_count, seen_per,
                                        BEH_GOOD_NEUTRAL, true);
@@ -3726,15 +3726,19 @@ void dithmenos_shadow_throw(coord_def target, const item_def &item)
 
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 {
-    if (!orig_beam
-        || orig_beam->target.origin()
+    if (!orig_beam)
+        return;
+
+    const coord_def target = orig_beam->target;
+
+    if (orig_beam->target.origin()
         || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
+        || orig_beam->flavour == BEAM_ENSLAVE
+           && monster_at(target) && monster_at(target)->friendly()
         || !_dithmenos_shadow_acts())
     {
         return;
     }
-
-    const coord_def target = orig_beam->target;
 
     monster* mon = shadow_monster();
     if (!mon)

@@ -10,6 +10,7 @@
 #include "food.h"
 #include "godcompanions.h"
 #include "hints.h"
+#include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -748,9 +749,6 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, +1);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
 
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
-            you.inv[0].sub_type = WPN_CLUB;
-
         weap_skill = 1;
         you.skills[SK_HEXES]        = 3;
         you.skills[SK_SPELLCASTING] = 2;
@@ -870,9 +868,6 @@ static void _give_items_skills(const newgame_def& ng)
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
         autopickup_starting_ammo(MI_NEEDLE);
 
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
-            you.inv[0].sub_type = WPN_CLUB;
-
         weap_skill = 2;
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_DODGING]      = 1;
@@ -883,23 +878,10 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_HUNTER:
         // Equipment.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        if (you.has_claws())
-            _newgame_clear_item(0);
         _update_weapon(ng);
 
         newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
-
-        // This is meant to match the En/As start change-up, but Trolls have
-        // claws, so they don't get a starting melee weapon (see above).
-        // The +1 is meant to make this less sucky; it could be a better
-        // base type, but whips don't seem very hunter-ish.
-        if (you.species == SP_OGRE)
-        {
-            you.inv[0].sub_type = WPN_CLUB;
-            you.inv[0].plus = 1;
-        }
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
@@ -917,9 +899,6 @@ static void _give_items_skills(const newgame_def& ng)
         // Equipment. Short sword, wands, and armour or robe.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
 
-        if (you.has_claws())
-            _newgame_clear_item(0);
-
         newgame_make_item(1, EQ_NONE, OBJ_WANDS, WAND_FLAME,
                            -1, 1, 15, 0);
         newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_ENSLAVEMENT,
@@ -929,13 +908,6 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                            ARM_LEATHER_ARMOUR, ARM_ROBE);
-
-        // See Hunter notes above.
-        if (you.species == SP_OGRE)
-        {
-            you.inv[0].sub_type = WPN_CLUB;
-            you.inv[0].plus = 1;
-        }
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
@@ -1122,15 +1094,7 @@ static void _give_basic_spells(job_type which_job)
 
 static void _give_basic_knowledge(job_type which_job)
 {
-    // Identify all items in pack.
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (you.inv[i].defined())
-        {
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
-        }
-    }
+    identify_inventory();
 
     // Recognisable by appearance.
     you.type_ids[OBJ_POTIONS][POT_BLOOD] = ID_KNOWN_TYPE;
@@ -1281,13 +1245,17 @@ static void _setup_generic(const newgame_def& ng)
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (you.inv[i].defined())
+        if (!you.inv[i].defined())
+            continue;
+        // link properly
+        you.inv[i].pos = ITEM_IN_INVENTORY;
+        you.inv[i].link = i;
+        you.inv[i].slot = index_to_letter(you.inv[i].link);
+        item_colour(you.inv[i]);  // set correct special and colour
+        if (!you.inv[i].props.exists("adjusted"))
         {
-            // link properly
-            you.inv[i].pos.set(-1, -1);
-            you.inv[i].link = i;
-            you.inv[i].slot = index_to_letter(you.inv[i].link);
-            item_colour(you.inv[i]);  // set correct special and colour
+            you.inv[i].props["adjusted"] = true;
+            auto_assign_item_slot(you.inv[i]);
         }
     }
 

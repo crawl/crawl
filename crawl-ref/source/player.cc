@@ -85,6 +85,8 @@
 const int DJ_MP_RATE = 2;
 #endif
 
+static int _bone_armour_bonus();
+
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
@@ -945,11 +947,16 @@ bool player_weapon_wielded()
 bool berserk_check_wielded_weapon()
 {
     const item_def * const wpn = you.weapon();
+    bool penance = false;
     if (wpn && wpn->defined() && (!is_melee_weapon(*wpn)
-                                   || needs_handle_warning(*wpn, OPER_ATTACK)))
+                                   || needs_handle_warning(*wpn,
+                                                           OPER_ATTACK,
+                                                           penance)))
     {
         string prompt = "Do you really want to go berserk while wielding "
                         + wpn->name(DESC_YOUR) + "?";
+        if (penance)
+            prompt += " This could place you under penance!";
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
@@ -2446,6 +2453,49 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
     return prescaled_ev;
 }
 
+/**
+ * What is the player's bonus to EV from dodging when not paralyzed, after
+ * accounting for size & body armour penalties?
+ *
+ * First, calculate base dodge bonus (linear with dodging * stepdowned dex),
+ * and armour dodge penalty (base armour evp, increased for small races &
+ * decreased for large, then with a magic "3" subtracted from it to make the
+ * penalties not too harsh).
+ *
+ * If the player's strength is greater than the armour dodge penalty, return
+ *      base dodge * (1 - dodge_pen / (str*2)).
+ * E.g., if str is twice dodge penalty, return 3/4 of base dodge. If
+ * str = dodge_pen * 4, return 7/8...
+ *
+ * If str is less than dodge penalty, return
+ *      base_dodge * str / (dodge_pen * 2).
+ * E.g., if str = dodge_pen / 2, return 1/4 of base dodge. if
+ * str = dodge_pen / 4, return 1/8...
+ *
+ * For either equation, if str = dodge_pen, the result is base_dodge/2.
+ *
+ * @param scale     A scale to multiply the result by, to avoid precision loss.
+ * @return          A bonus to EV, multiplied by the scale.
+ */
+static int _player_armour_adjusted_dodge_bonus(int scale)
+{
+    // stepdowns at 10 and 24 dex; the last two parameters are not important.
+    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
+
+    const int dodge_bonus =
+        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
+        / (20 - _player_evasion_size_factor()) / 10;
+
+    const int armour_dodge_penalty = you.unadjusted_body_armour_penalty() - 3;
+    if (armour_dodge_penalty <= 0)
+        return dodge_bonus;
+
+    const int str = max(1, you.strength());
+    if (armour_dodge_penalty >= str)
+        return dodge_bonus * str / (armour_dodge_penalty * 2);
+    return dodge_bonus - dodge_bonus * armour_dodge_penalty / (str * 2);
+}
+
 // Total EV for player using the revised 0.6 evasion model.
 int player_evasion(ev_ignore_type evit)
 {
@@ -2463,32 +2513,11 @@ int player_evasion(ev_ignore_type evit)
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
-    const int adjusted_evasion_penalty =
-        _player_adjusted_evasion_penalty(scale);
-
-    // The last two parameters are not important.
-    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
-
-    const int dodge_bonus =
-        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
-        / (20 - size_factor) / 10;
-
-    const int armour_dodge_penalty = max(0,
-        (10 * you.armour_dodge_penalty(scale)
-         - 30 * scale)
-        / max(1, (int) you.strength()));
-
-    // Adjust dodge bonus for the effects of being suited up in armour.
-    const int armour_adjusted_dodge_bonus =
-        max(0, dodge_bonus - armour_dodge_penalty);
-
-    const int adjusted_shield_penalty = you.adjusted_shield_penalty(scale);
-
     const int prestepdown_evasion =
         size_base_ev
-        + armour_adjusted_dodge_bonus
-        - adjusted_evasion_penalty
-        - adjusted_shield_penalty;
+        + _player_armour_adjusted_dodge_bonus(scale)
+        - _player_adjusted_evasion_penalty(scale)
+        - you.adjusted_shield_penalty(scale);
 
     const int poststepdown_evasion =
         stepdown_value(prestepdown_evasion, 20*scale, 30*scale, 60*scale, -1);
@@ -2595,12 +2624,7 @@ int player_shield_class()
 
     shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
-    if (you.attribute[ATTR_BONE_ARMOUR])
-    {
-        // make sure bone armour always gives at least one point of sh.
-        shield += (you.attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 200
-                   / BONE_ARMOUR_DIV;
-    }
+    shield += _bone_armour_bonus() * 2;
 
     return (shield + 50) / 100;
 }
@@ -5384,13 +5408,16 @@ void dec_ambrosia_player(int delay)
     you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
 
     // 3-5 per turn, 9-50 over (3-10) turns
-    const int restoration = 3 + random2(3);
+    const int hp_restoration = 3 + random2(3);
+    const int mp_restoration = 3 + random2(3);
+
     if (!you.duration[DUR_DEATHS_DOOR])
     {
         const int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
-        inc_hp(div_rand_round(restoration * mut_factor, 3));
+        inc_hp(div_rand_round(hp_restoration * mut_factor, 3));
     }
-    inc_mp(restoration);
+
+    inc_mp(mp_restoration);
 
     if (!you.duration[DUR_AMBROSIA])
         mpr("You feel less invigorated.");
@@ -6227,29 +6254,6 @@ int player::unadjusted_body_armour_penalty() const
 }
 
 /**
- * [ds] Dodging penalty for being in high EVP armour, almost
- * identical to v0.5/4.1 penalty, but with the EVP discount being
- * 1 instead of 0.5 so that leather armour is fully discounted.
- *
- * A penalty to EV that scales linearly with encumbrance, not quadratically.
- * Will later be capped to not exceed the player's EV bonus from Dodging.
- *
- * @param scale     A scale to multiply the result by, to avoid precision loss.
- * @return          A penalty to EV based linearly on body armour encumbrance.
- */
-int player::armour_dodge_penalty(int scale) const
-{
-    const int base_ev_penalty = unadjusted_body_armour_penalty();
-
-    const int size = body_size(PSIZE_BODY);
-
-    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
-
-    return max(0, scale * base_ev_penalty
-               - size_bonus_factor * base_ev_penalty);
-}
-
-/**
  * The encumbrance penalty to the player for their worn body armour.
  *
  * @param scale     A scale to multiply the result by, to avoid precision loss.
@@ -6406,6 +6410,23 @@ static int _stoneskin_bonus()
     return boost;
 }
 
+/**
+ * How many points of AC/SH does the player get from their current bone armour?
+ *
+ * ((power / 100) + 0.5) * (# of corpses). (That is, between 0.5 and 1.5 AC+SH
+ * per corpse.)
+ * @return          The AC/SH bonus * 100. (For scale reasons.)
+ */
+static int _bone_armour_bonus()
+{
+    if (!you.attribute[ATTR_BONE_ARMOUR])
+        return 0;
+
+    const int power = calc_spell_power(SPELL_CIGOTUVIS_EMBRACE, true);
+    // rounding errors here, but not sure of a good way to avoid that.
+    return you.attribute[ATTR_BONE_ARMOUR] * (50 + power);
+}
+
 int player::armour_class(bool /*calc_unid*/) const
 {
     int AC = 0;
@@ -6464,12 +6485,7 @@ int player::armour_class(bool /*calc_unid*/) const
     if (duration[DUR_CORROSION])
         AC -= 500 * you.props["corrosion_amount"].get_int();
 
-    if (attribute[ATTR_BONE_ARMOUR])
-    {
-        // make sure bone armour always gives at least one point of ac.
-        AC += (attribute[ATTR_BONE_ARMOUR] + BONE_ARMOUR_DIV-1) * 100
-              / BONE_ARMOUR_DIV;
-    }
+    AC += _bone_armour_bonus();
 
     AC += get_form()->get_ac_bonus();
 
@@ -8955,28 +8971,41 @@ string player::hands_act(const string &plural_verb,
 
 /**
  * Possibly drop a point of bone armour (from Cigotuvi's Embrace) when hit,
- * or over time (currently every ~8 turns)
+ * or over time.
  *
- * Chance of losing a point of ac/sh (BONE_ARMOUR_DIV) increases with current
- * number of corpses (ATTR_BONE_ARMOUR) and decreases with spellpower, both
- * linearly. 50->100 power halves the chance; 1->5 corpses (roughly) doubles it.
- * at 50 power and 5 SH+EV, there's a 1/5 chance of losing a point on hit.
- * chance floored at 1/27.
+ * Chance of losing a point of ac/sh increases with current number of corpses
+ * (ATTR_BONE_ARMOUR). Each added corpse increases the chance of losing a bit
+ * by 5/4x. (So ten corpses are a 9x chance, twenty are 87x...)
+ *
+ * Base chance is 1/500 (per aut) - 2% per turn, 63% within 50 turns.
+ * At 10 corpses, that becomes a 17% per-turn chance, 61% within 5 turns.
+ * At 20 corpses, that's 20% per-aut, 90% per-turn...
+ *
+ * Getting hit/blocking has a higher (BONE_ARMOUR_HIT_RATIO *) chance;
+ * at BONE_ARMOUR_HIT_RATIO = 50, that's 10% at one corpse, 30% at five,
+ * 90% at ten...
+ *
+ * @param       A multiplier to base chance. Used for BONE_ARMOUR_HIT_RATIO.
  */
-void player::maybe_degrade_bone_armour()
+void player::maybe_degrade_bone_armour(int mult)
 {
     if (attribute[ATTR_BONE_ARMOUR] <= 0)
         return;
 
-    const int numerator = attribute[ATTR_BONE_ARMOUR] + 5 * BONE_ARMOUR_DIV;
-    const int power = max(1, calc_spell_power(SPELL_BONE_ARMOUR, true));
-    const int denom = min(power * 3, numerator * 27);
-    const bool degrade_armour = x_chance_in_y(numerator, denom);
+    const int base_denom = 50 * BASELINE_DELAY;
+    int denom = base_denom;
+    for (int i = 1; i < attribute[ATTR_BONE_ARMOUR]; ++i)
+        denom = div_rand_round(denom * 4, 5);
+    denom = div_rand_round(denom, mult);
+
+    const bool degrade_armour = one_chance_in(denom);
+    dprf("degraded armour? (%d armour, 1/%d): %d", attribute[ATTR_BONE_ARMOUR],
+         denom, degrade_armour);
     if (!degrade_armour)
         return;
 
     you.attribute[ATTR_BONE_ARMOUR]
-        = max(0, you.attribute[ATTR_BONE_ARMOUR] - BONE_ARMOUR_DIV);
+        = max(0, you.attribute[ATTR_BONE_ARMOUR] - 1);
 
     if (you.attribute[ATTR_BONE_ARMOUR])
         mpr("A chunk of your corpse armour falls away.");

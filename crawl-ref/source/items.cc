@@ -22,6 +22,7 @@
 #include "cio.h"
 #include "clua.h"
 #include "colour.h"
+#include "command.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dactions.h"
@@ -83,6 +84,8 @@ static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
 static void _multidrop(vector<SelItem> tmp_items);
+static bool _merge_items_into_inv(const item_def &it, int quant_got,
+                                  char &inv_slot, bool quiet);
 
 static bool will_autopickup   = false;
 static bool will_autoinscribe = false;
@@ -1669,7 +1672,7 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
 
     // attempt to put the item into your inventory.
     char inv_slot;
-    if (merge_items_into_inv(it, quant_got, inv_slot, quiet))
+    if (_merge_items_into_inv(it, quant_got, inv_slot, quiet))
     {
         put_in_inv = true;
         // if you succeeded, actually reduce the number in the original stack
@@ -1861,7 +1864,42 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
 }
 
 /**
+ * Maybe move an item to the slot given by the item_slot option.
+ *
+ * @param[in] item the item to be checked. Note that any references to this
+ *                 item will be invalidated by the swap_inv_slots call!
+ * @returns the new location of the item if it was moved, NULL otherwise.
+ */
+item_def *auto_assign_item_slot(item_def& item)
+{
+    if (!item.defined())
+        return nullptr;
+
+    int newslot = -1;
+    // check to see whether we've chosen an automatic label:
+    for (auto& mapping : Options.auto_item_letters)
+    {
+        if (!mapping.first.matches(item.name(DESC_QUALNAME)))
+            continue;
+        for (char i : mapping.second)
+            if (isaalpha(i) && !you.inv[letter_to_index(i)].defined())
+            {
+                newslot = letter_to_index(i);
+                break;
+            }
+        if (newslot != -1 && newslot != item.link)
+        {
+            swap_inv_slots(item.link, newslot, true);
+            return &you.inv[newslot];
+        }
+    }
+    return nullptr;
+}
+
+/**
  * Move the given item and quantity to a free slot in the player's inventory.
+ * If the item_slot option tells us to put it in a specific slot, it will move
+ * there and push out the item that was in it before instead.
  *
  * @param it[in]          The item to be placed into the player's inventory.
  * @param quant_got       The quantity of this item to place.
@@ -1881,7 +1919,7 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     item.link     = freeslot;
     item.quantity = quant_got;
     item.slot     = index_to_letter(item.link);
-    item.pos.set(-1, -1);
+    item.pos = ITEM_IN_INVENTORY;
     // Remove "unobtainable" as it was just proven false.
     item.flags &= ~ISFLAG_UNOBTAINABLE;
 
@@ -1898,11 +1936,6 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     if (is_perishable_stack(it) && quant_got != it.quantity)
         remove_newest_perishable_item(item);
 
-    if (!quiet)
-    {
-        mprf_nocap("%s", get_menu_colour_prefix_tags(you.inv[freeslot],
-                                                     DESC_INVENTORY).c_str());
-    }
     if (crawl_state.game_is_hints())
     {
         taken_new_item(item.base_type);
@@ -1914,7 +1947,15 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
     you.last_pickup[item.link] = quant_got;
     item_skills(item, you.start_train);
 
-    return freeslot;
+    if (const item_def* newitem = auto_assign_item_slot(item))
+        return newitem->link;
+    else if (!quiet)
+    {
+        mprf_nocap("%s", get_menu_colour_prefix_tags(item,
+                                                     DESC_INVENTORY).c_str());
+    }
+
+    return item.link;
 }
 
 /**
@@ -1929,8 +1970,8 @@ static int _place_item_in_free_slot(const item_def &it, int quant_got,
  *              item pickup failure) aren't printed.
  * @return Whether something was successfully picked up.
  */
-bool merge_items_into_inv(const item_def &it, int quant_got, char &inv_slot,
-                          bool quiet)
+static bool _merge_items_into_inv(const item_def &it, int quant_got,
+                                  char &inv_slot, bool quiet)
 {
     inv_slot = -1;
 
@@ -4427,7 +4468,10 @@ bool get_item_by_name(item_def *item, char* specs,
                 mpr("Sorry, no books on that skill today.");
         }
         else if (type_wanted == BOOK_RANDART_THEME)
-            make_book_theme_randart(*item, 0, 0, 5 + coinflip(), 20);
+        {
+            make_book_theme_randart(*item, SPTYP_NONE, SPTYP_NONE,
+                                    5 + coinflip(), 20);
+        }
         else if (type_wanted == BOOK_RANDART_LEVEL)
         {
             int level = random_range(1, 9);
@@ -4936,7 +4980,10 @@ static void _identify_last_item(item_def &item)
     mprf("You have identified the last %s.", class_name.c_str());
 
     if (in_inventory(item))
+    {
         mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+        auto_assign_item_slot(item);
+    }
 }
 
 

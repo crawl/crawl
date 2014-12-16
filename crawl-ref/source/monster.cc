@@ -234,9 +234,9 @@ mon_attitude_type monster::temp_attitude() const
         }
         return ATT_HOSTILE; // ???
     }
-    if (has_ench(ENCH_CHARM) || has_ench(ENCH_PERMA_BRIBED))
+    if (has_ench(ENCH_CHARM) || has_ench(ENCH_FRIENDLY_BRIBED))
         return ATT_FRIENDLY;
-    else if (has_ench(ENCH_BRIBED))
+    else if (has_ench(ENCH_NEUTRAL_BRIBED))
         return ATT_GOOD_NEUTRAL; // ???
     else
         return attitude;
@@ -3251,6 +3251,21 @@ int monster::shield_bonus() const
     return sh;
 }
 
+/**
+ * After being hit or blocking an attack, possibly remove the monster's bone
+ * armour (if it has any).
+ *
+ * Currently a 1/4 chance each time.
+ */
+void monster::maybe_degrade_bone_armour()
+{
+    if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
+    {
+        del_ench(ENCH_BONE_ARMOUR);
+        simple_monster_message(this, "'s corpse armour sloughs away.");
+    }
+}
+
 int monster::shield_block_penalty() const
 {
     return 4 * shield_blocks * shield_blocks;
@@ -3261,11 +3276,7 @@ void monster::shield_block_succeeded(actor *attacker)
     actor::shield_block_succeeded(attacker);
 
     ++shield_blocks;
-    if (has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
-    {
-        del_ench(ENCH_BONE_ARMOUR);
-        simple_monster_message(this, "'s corpse armour sloughs away.");
-    }
+    maybe_degrade_bone_armour();
 }
 
 int monster::shield_bypass_ability(int) const
@@ -5360,9 +5371,11 @@ bool monster::can_mutate() const
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
+    // too weird
     if (type == MONS_CHAOS_SPAWN)
         return false;
 
+    // cosmetic tile mutations
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
         return true;
 
@@ -5378,9 +5391,11 @@ bool monster::can_safely_mutate(bool temp) const
 
 bool monster::can_polymorph() const
 {
+    // can't mutate but can be poly'd
     if (type == MONS_CHAOS_SPAWN)
         return true;
 
+    // like all undead, can't be polymorphed (but can 'mutate')
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
         return false;
 
@@ -6359,12 +6374,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
 
-    if (alive() && has_ench(ENCH_BONE_ARMOUR) && one_chance_in(4))
-    {
-        del_ench(ENCH_BONE_ARMOUR);
-        mprf("%s corpse armour sloughs away.",
-             apostrophise(name(DESC_THE)).c_str());
-    }
+    if (alive())
+        maybe_degrade_bone_armour();
 }
 
 reach_type monster::reach_range() const
@@ -6541,14 +6552,14 @@ void monster::steal_item_from_player()
 
     const int orig_qty = you.inv[steal_what].quantity;
 
+    mprf("%s steals %s!",
+         name(DESC_THE).c_str(),
+         you.inv[steal_what].name(DESC_YOUR).c_str());
+
     item_def* tmp = take_item(steal_what, mslot);
     if (!tmp)
         return;
     item_def& new_item = *tmp;
-
-    mprf("%s steals %s!",
-         name(DESC_THE).c_str(),
-         new_item.name(DESC_YOUR).c_str());
 
     // You'll want to autopickup it after killing Maurice.
     new_item.flags |= ISFLAG_THROWN;

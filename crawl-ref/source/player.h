@@ -37,8 +37,8 @@ static const int MR_PIP = 40;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
-/// The number of ATTR_BONE_ARMOUR points required for a point of AC/SH
-static const int BONE_ARMOUR_DIV = 3;
+/// The rough number of aut getting hit takes off your bone armour
+static const int BONE_ARMOUR_HIT_RATIO = 50;
 
 /// The minimum aut cost for a player move (before haste)
 static const int FASTEST_PLAYER_MOVE_SPEED = 6;
@@ -505,7 +505,7 @@ public:
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
 
-    void maybe_degrade_bone_armour();
+    void maybe_degrade_bone_armour(int mult);
 
     // actor
     int mindex() const;
@@ -748,7 +748,6 @@ public:
     // Combat-related adjusted penalty calculation methods
     int unadjusted_body_armour_penalty() const;
     int adjusted_body_armour_penalty(int scale = 1) const;
-    int armour_dodge_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
     int armour_tohit_penalty(bool random_factor, int scale = 1) const;
     int shield_tohit_penalty(bool random_factor, int scale = 1) const;

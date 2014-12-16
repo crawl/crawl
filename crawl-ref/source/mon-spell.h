@@ -91,9 +91,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VAMPIRE,
       {
-       { SPELL_VAMPIRIC_DRAINING, 0, MON_SPELL_WIZARD },
-       { SPELL_CONFUSE, 0, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 0, MON_SPELL_WIZARD },
+       { SPELL_VAMPIRIC_DRAINING, 28, MON_SPELL_WIZARD },
+       { SPELL_CONFUSE, 14, MON_SPELL_WIZARD },
+       { SPELL_INVISIBILITY, 14, MON_SPELL_WIZARD },
       }
     },
 
@@ -376,7 +376,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELLWING,
       {
-       { SPELL_BONE_ARMOUR, 28, MON_SPELL_DEMONIC },
+       { SPELL_CIGOTUVIS_EMBRACE, 28, MON_SPELL_DEMONIC },
        { SPELL_TELEPORT_OTHER, 28, MON_SPELL_DEMONIC },
        { SPELL_TELEPORT_SELF, 28, MON_SPELL_DEMONIC | MON_SPELL_EMERGENCY },
       }
@@ -1056,7 +1056,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 12, MON_SPELL_WIZARD },
        { SPELL_BOLT_OF_COLD, 12, MON_SPELL_WIZARD },
-       { SPELL_INVISIBILITY, 24, MON_SPELL_WIZARD },
+       { SPELL_SPELLFORGED_SERVITOR, 24, MON_SPELL_WIZARD },
        { SPELL_IRON_SHOT, 12, MON_SPELL_WIZARD },
       }
     },
@@ -1214,15 +1214,6 @@ static const mon_spellbook mspell_list[] =
        { SPELL_SUMMON_DEMON, 30, MON_SPELL_DEMONIC },
       }
     },
-
-#if TAG_MAJOR_VERSION == 34
-    {  MST_SILVER_STAR,
-      {
-       { SPELL_HOLY_LIGHT, 40, MON_SPELL_DEMONIC },
-       { SPELL_SILVER_BLAST, 40, MON_SPELL_DEMONIC },
-      }
-    },
-#endif
 
     {  MST_GNOLL_SHAMAN,
       {
@@ -1887,12 +1878,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_COLD_BREATH,
-      {
-       { SPELL_COLD_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH },
-      }
-    },
-
     {  MST_ICE_DRAGON_BREATH,
       {
        { SPELL_COLD_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH
@@ -1963,8 +1948,7 @@ static const mon_spellbook mspell_list[] =
       {
         { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
                                 | MON_SPELL_NO_SILENT },
-        { SPELL_GOBLIN_TOSS, 80, MON_SPELL_NATURAL },
-        END_OF_MONS_BOOK
+        { SPELL_GOBLIN_TOSS, 80, MON_SPELL_NATURAL }
       }
     },
 

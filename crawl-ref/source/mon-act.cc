@@ -1656,7 +1656,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 
                 if (new_target == nullptr
                     || mons_is_projectile(new_target->type)
-                    || mons_is_firewood(new_target))
+                    || mons_is_firewood(new_target)
+                    || new_target->friendly())
                 {
                     continue;
                 }
@@ -2475,7 +2476,8 @@ void handle_monster_move(monster* mons)
                                 monster* candidate = monster_at(*ai);
                                 if (candidate == nullptr
                                     || mons_is_projectile(candidate->type)
-                                    || mons_is_firewood(candidate))
+                                    || mons_is_firewood(candidate)
+                                    || candidate->friendly())
                                 {
                                     continue;
                                 }

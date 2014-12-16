@@ -23,8 +23,6 @@
 #include "stepdown.h"
 #include "stringutil.h"
 
-static armour_type _get_random_armour_type(int item_level);
-
 int create_item_named(string name, coord_def p, string *error)
 {
     trim_string(name);
@@ -846,10 +844,11 @@ static special_armour_type _generate_armour_type_ego(armour_type type,
 
     case ARM_ROBE:
         // Archmagi depends on depth, unlike everything else, because ???
-        if (x_chance_in_y(4, 15) && x_chance_in_y(11 + item_level, 50))
+        if (x_chance_in_y(12, 100) && x_chance_in_y(11 + item_level, 50))
             return SPARM_ARCHMAGI;
 
         return random_choose_weighted(1, SPARM_RESISTANCE,
+                                      2, SPARM_NORMAL,
                                       2, SPARM_COLD_RESISTANCE,
                                       2, SPARM_FIRE_RESISTANCE,
                                       2, SPARM_POSITIVE_ENERGY,
@@ -1022,6 +1021,102 @@ static int _armour_plus_threshold(equipment_type armour_type)
         default:
             return 1;
     }
+}
+
+/**
+ * Pick an armour type (ex. plate armour), based on item_level
+ *
+ * @param item_level The rough power level of the item.
+ *
+ * @return The selected armour type.
+ */
+static armour_type _get_random_armour_type(int item_level)
+{
+
+    // Dummy value for initilization, always changed by the conditional
+    // (and not changing it would trigger an ASSERT)
+    armour_type armtype = NUM_ARMOURS;
+
+    // Secondary armours.
+    if (one_chance_in(5))
+    {
+                       // Total weight is 30, each slot has a weight of 6
+        armtype = random_choose_weighted(6, ARM_BOOTS,
+                                         6, ARM_CLOAK,
+                                         6, ARM_GLOVES,
+                                         // Head slot
+                                         5, ARM_HELMET,
+                                         1, ARM_HAT,
+                                         // Shield slot
+                                         2, ARM_SHIELD,
+                                         3, ARM_BUCKLER,
+                                         1, ARM_LARGE_SHIELD,
+                                         0);
+    }
+    else if (x_chance_in_y(11 + item_level, 10000))
+    {
+        // High level dragon armours/hides (14 entries)
+        armtype = random_choose(ARM_STEAM_DRAGON_HIDE,
+                                ARM_STEAM_DRAGON_ARMOUR,
+                                ARM_MOTTLED_DRAGON_HIDE,
+                                ARM_MOTTLED_DRAGON_ARMOUR,
+                                ARM_STORM_DRAGON_HIDE,
+                                ARM_STORM_DRAGON_ARMOUR,
+                                ARM_GOLD_DRAGON_HIDE,
+                                ARM_GOLD_DRAGON_ARMOUR,
+                                ARM_SWAMP_DRAGON_HIDE,
+                                ARM_SWAMP_DRAGON_ARMOUR,
+                                ARM_PEARL_DRAGON_HIDE,
+                                ARM_PEARL_DRAGON_ARMOUR,
+                                ARM_SHADOW_DRAGON_HIDE,
+                                ARM_SHADOW_DRAGON_ARMOUR,
+                                ARM_QUICKSILVER_DRAGON_HIDE,
+                                ARM_QUICKSILVER_DRAGON_ARMOUR);
+    }
+    else if (x_chance_in_y(11 + item_level, 8000))
+    {
+        // Crystal plate, some armours which are normally gained by butchering
+        // monsters for hides.
+        armtype = random_choose(ARM_CRYSTAL_PLATE_ARMOUR,
+                                ARM_TROLL_HIDE,
+                                ARM_TROLL_LEATHER_ARMOUR,
+                                ARM_FIRE_DRAGON_HIDE,
+                                ARM_FIRE_DRAGON_ARMOUR,
+                                ARM_ICE_DRAGON_HIDE,
+                                ARM_ICE_DRAGON_ARMOUR);
+
+    }
+    else if (x_chance_in_y(11 + item_level, 60))
+    {
+        // All the "mundane" armours. Generally the player will find at least
+        // one copy of these by the Lair.
+        armtype = random_choose(ARM_ROBE,
+                                ARM_LEATHER_ARMOUR,
+                                ARM_RING_MAIL,
+                                ARM_SCALE_MAIL,
+                                ARM_CHAIN_MAIL,
+                                ARM_PLATE_ARMOUR);
+    }
+    else if (x_chance_in_y(11 + item_level, 35))
+    {
+        // All the "mundane" amours except plate.
+        armtype = random_choose(ARM_ROBE,
+                                ARM_LEATHER_ARMOUR,
+                                ARM_RING_MAIL,
+                                ARM_SCALE_MAIL,
+                                ARM_CHAIN_MAIL);
+    }
+    else
+    {
+        // Default (lowest-level) armours.
+        armtype = random_choose(ARM_ROBE,
+                                ARM_LEATHER_ARMOUR,
+                                ARM_RING_MAIL);
+    }
+
+    ASSERT(armtype != NUM_ARMOURS);
+
+    return armtype;
 }
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
@@ -1489,7 +1584,10 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
 
     if (item.sub_type == BOOK_RANDART_THEME)
-        make_book_theme_randart(item, 0, 0, 5 + coinflip(), 20);
+    {
+        make_book_theme_randart(item, SPTYP_NONE, SPTYP_NONE,
+                                5 + coinflip(), 20);
+    }
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
         int max_level  = min(9, max(1, item_level / 3));
@@ -1737,7 +1835,16 @@ void squash_plusses(int item_slot)
 }
 
 /**
- * Create an item. This function does too much.
+ * Create an item.
+ *
+ * Various parameters determine whether the item can be an artifact, set the
+ * item class (ex. weapon, wand), set the item subtype (ex.
+ * hand axe, wand of fire), set the item ego (ex. of flaming, of running), set
+ * the rough power level of the item, and set the agent of the item (which
+ * affects what artefacts can be generated, and also non-artefact items if the
+ * agent is Xom). Item class, Item type, and Item ego can also be randomly
+ * selected (by setting those parameters to OBJ_RANDOM, OBJ_RANDOM, and 0
+ * respectively).
  *
  * @param allow_uniques Can the item generated be an artefact?
  * @param force_class The desired OBJECTS class (Example: OBJ_ARMOUR)
@@ -2089,101 +2196,6 @@ jewellery_type get_random_ring_type()
     }
 
     return j;
-}
-
-// FIXME: Need to clean up this mess.
-static armour_type _get_random_armour_type(int item_level)
-{
-    // Default (lowest-level) armours.
-    const armour_type defarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                       ARM_RING_MAIL };
-
-    int armtype = RANDOM_ELEMENT(defarmours);
-
-    if (x_chance_in_y(11 + item_level, 35))
-    {
-        // Low-level armours.
-        const armour_type lowarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL };
-
-        armtype = RANDOM_ELEMENT(lowarmours);
-    }
-
-    if (x_chance_in_y(11 + item_level, 60))
-    {
-        // Medium-level armours.
-        const armour_type medarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                           ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                           ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR };
-
-        armtype = RANDOM_ELEMENT(medarmours);
-    }
-
-    if (one_chance_in(20) && x_chance_in_y(11 + item_level, 400))
-    {
-        // High-level armours, including troll and some dragon armours.
-        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_ARMOUR,
-                                          ARM_TROLL_HIDE,
-                                          ARM_TROLL_LEATHER_ARMOUR,
-                                          ARM_FIRE_DRAGON_HIDE, ARM_FIRE_DRAGON_ARMOUR,
-                                          ARM_ICE_DRAGON_HIDE,
-                                          ARM_ICE_DRAGON_ARMOUR };
-
-        armtype = RANDOM_ELEMENT(hiarmours);
-    }
-
-    if (one_chance_in(20) && x_chance_in_y(11 + item_level, 500))
-    {
-        // Animal skins and high-level armours, including the rest of
-        // the dragon armours.
-        const armour_type morehiarmours[] = { ARM_STEAM_DRAGON_HIDE,
-                                              ARM_STEAM_DRAGON_ARMOUR,
-                                              ARM_MOTTLED_DRAGON_HIDE,
-                                              ARM_MOTTLED_DRAGON_ARMOUR,
-                                              ARM_STORM_DRAGON_HIDE,
-                                              ARM_STORM_DRAGON_ARMOUR,
-                                              ARM_GOLD_DRAGON_HIDE,
-                                              ARM_GOLD_DRAGON_ARMOUR,
-                                              ARM_SWAMP_DRAGON_HIDE,
-                                              ARM_SWAMP_DRAGON_ARMOUR,
-                                              ARM_PEARL_DRAGON_HIDE,
-                                              ARM_PEARL_DRAGON_ARMOUR,
-                                              ARM_SHADOW_DRAGON_HIDE,
-                                              ARM_SHADOW_DRAGON_ARMOUR,
-                                              ARM_QUICKSILVER_DRAGON_HIDE,
-                                              ARM_QUICKSILVER_DRAGON_ARMOUR, };
-
-        armtype = RANDOM_ELEMENT(morehiarmours);
-
-        if (one_chance_in(200))
-            armtype = ARM_CRYSTAL_PLATE_ARMOUR;
-    }
-
-    // Secondary armours.
-    if (one_chance_in(5))
-    {
-        const armour_type secarmours[] = { ARM_SHIELD, ARM_CLOAK, ARM_HELMET,
-                                           ARM_GLOVES, ARM_BOOTS };
-
-        armtype = RANDOM_ELEMENT(secarmours);
-
-        if (armtype == ARM_HELMET && one_chance_in(3))
-        {
-            const armour_type hats[] = { ARM_HAT, ARM_HELMET };
-
-            armtype = RANDOM_ELEMENT(hats);
-        }
-        else if (armtype == ARM_SHIELD)
-        {
-            armtype = random_choose_weighted(333, ARM_SHIELD,
-                                             500, ARM_BUCKLER,
-                                             167, ARM_LARGE_SHIELD,
-                                               0);
-        }
-    }
-
-    return static_cast<armour_type>(armtype);
 }
 
 // Sets item appearance to match brands, if any.

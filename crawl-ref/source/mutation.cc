@@ -68,29 +68,18 @@ struct demon_mutation_info
         : mut(m), when(w), facet(f) { }
 };
 
-enum mut_use_type // Which gods/effects use these mutations?
+enum mut_flag_type
 {
-    MU_USE_NONE,     // unused
-    MU_USE_GOOD,     // used by benemut etc
-    MU_USE_MIN     = MU_USE_GOOD,
-    MU_USE_BAD,      // used by malmut etc
-    MU_USE_JIYVA,    // jiyva-only muts
-    MU_USE_QAZLAL,   // qazlal wrath
-    MU_USE_XOM,      // xom being xom
-    MU_USE_CORRUPT,  // wretched stars
-    MU_USE_RU,       // Ru sacrifice muts
-    NUM_MU_USE
+    MUTFLAG_GOOD    = 1 << 0, // used by benemut etc
+    MUTFLAG_BAD     = 1 << 1, // used by malmut etc
+    MUTFLAG_JIYVA   = 1 << 2, // jiyva-only muts
+    MUTFLAG_QAZLAL  = 1 << 3, // qazlal wrath
+    MUTFLAG_XOM     = 1 << 4, // xom being xom
+    MUTFLAG_CORRUPT = 1 << 5, // wretched stars
+    MUTFLAG_RU      = 1 << 6, // Ru sacrifice muts
 };
-
-#define MFLAG(mt) (1 << (mt))
-#define MUTFLAG_NONE    MFLAG(MU_USE_NONE)
-#define MUTFLAG_GOOD    MFLAG(MU_USE_GOOD)
-#define MUTFLAG_BAD     MFLAG(MU_USE_BAD)
-#define MUTFLAG_JIYVA   MFLAG(MU_USE_JIYVA)
-#define MUTFLAG_QAZLAL  MFLAG(MU_USE_QAZLAL)
-#define MUTFLAG_XOM     MFLAG(MU_USE_XOM)
-#define MUTFLAG_CORRUPT MFLAG(MU_USE_CORRUPT)
-#define MUTFLAG_RU      MFLAG(MU_USE_RU)
+const int MUTFLAG_LAST_EXPONENT = 6;
+DEF_BITFIELD(mut_flags_type, mut_flag_type);
 
 #include "mutation-data.h"
 
@@ -159,38 +148,38 @@ equipment_type beastly_slot(int mut)
     }
 }
 
-static bool _mut_has_use(const mutation_def &mut, mut_use_type use)
+static bool _mut_has_use(const mutation_def &mut, mut_flag_type use)
 {
-    return mut.uses & MFLAG(use);
+    return mut.uses & use;
 }
 
-#define MUT_BAD(mut) _mut_has_use((mut), MU_USE_BAD)
-#define MUT_GOOD(mut) _mut_has_use((mut), MU_USE_GOOD)
+#define MUT_BAD(mut) _mut_has_use((mut), MUTFLAG_BAD)
+#define MUT_GOOD(mut) _mut_has_use((mut), MUTFLAG_GOOD)
 
-static int _mut_weight(const mutation_def &mut, mut_use_type use)
+static int _mut_weight(const mutation_def &mut, mut_flag_type use)
 {
     switch (use)
     {
-        case MU_USE_JIYVA:
-        case MU_USE_QAZLAL:
-        case MU_USE_XOM:
-        case MU_USE_CORRUPT:
+        case MUTFLAG_JIYVA:
+        case MUTFLAG_QAZLAL:
+        case MUTFLAG_XOM:
+        case MUTFLAG_CORRUPT:
             return 1;
-        case MU_USE_GOOD:
-        case MU_USE_BAD:
+        case MUTFLAG_GOOD:
+        case MUTFLAG_BAD:
         default:
             return mut.weight;
     }
 }
 
 static int mut_index[NUM_MUTATIONS];
-static int total_weight[NUM_MU_USE];
+static map<mut_flag_type, int> total_weight;
 
 void init_mut_index()
 {
+    total_weight.clear();
     for (int i = 0; i < NUM_MUTATIONS; ++i)
         mut_index[i] = -1;
-    memset(total_weight, 0, sizeof(total_weight));
 
     for (unsigned int i = 0; i < ARRAYSZ(mut_data); ++i)
     {
@@ -198,9 +187,12 @@ void init_mut_index()
         ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
-        for (int mt = MU_USE_MIN; mt < NUM_MU_USE; mt++)
-            if (_mut_has_use(mut_data[i], (mut_use_type)mt))
-                total_weight[mt] += _mut_weight(mut_data[i], (mut_use_type)mt);
+        for (int mt = 0; mt <= MUTFLAG_LAST_EXPONENT; mt++)
+        {
+            const auto flag = static_cast<mut_flag_type>(1 << mt);
+            if (_mut_has_use(mut_data[i], flag))
+                total_weight[flag] += _mut_weight(mut_data[i], flag);
+        }
     }
 }
 
@@ -1001,9 +993,12 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
     return x_chance_in_y(weight, 10);
 }
 
-static mutation_type _get_mut_with_use(mut_use_type mt)
+static mutation_type _get_mut_with_use(mut_flag_type mt)
 {
-    int cweight = random2(total_weight[mt]);
+    const int tweight = lookup(total_weight, mt, 0);
+    ASSERT(tweight);
+
+    int cweight = random2(tweight);
     for (const mutation_def &mutdef : mut_data)
     {
         if (!_mut_has_use(mutdef, mt))
@@ -1021,7 +1016,7 @@ static mutation_type _get_mut_with_use(mut_use_type mt)
 
 static mutation_type _get_random_slime_mutation()
 {
-    return _get_mut_with_use(MU_USE_JIYVA);
+    return _get_mut_with_use(MUTFLAG_JIYVA);
 }
 
 static mutation_type _delete_random_slime_mutation()
@@ -1047,7 +1042,7 @@ static mutation_type _delete_random_slime_mutation()
 
 static bool _is_slime_mutation(mutation_type m)
 {
-    return _mut_has_use(mut_data[mut_index[m]], MU_USE_JIYVA);
+    return _mut_has_use(mut_data[mut_index[m]], MUTFLAG_JIYVA);
 }
 
 static mutation_type _get_random_xom_mutation()
@@ -1061,7 +1056,7 @@ static mutation_type _get_random_xom_mutation()
         if (one_chance_in(1000))
             return NUM_MUTATIONS;
         else if (one_chance_in(5))
-            mutat = _get_mut_with_use(MU_USE_XOM);
+            mutat = _get_mut_with_use(MUTFLAG_XOM);
     }
     while (!_accept_mutation(mutat, false));
 
@@ -1070,30 +1065,30 @@ static mutation_type _get_random_xom_mutation()
 
 static mutation_type _get_random_corrupt_mutation()
 {
-    return _get_mut_with_use(MU_USE_CORRUPT);
+    return _get_mut_with_use(MUTFLAG_CORRUPT);
 }
 
 static mutation_type _get_random_qazlal_mutation()
 {
-    return _get_mut_with_use(MU_USE_QAZLAL);
+    return _get_mut_with_use(MUTFLAG_QAZLAL);
 }
 
 static mutation_type _get_random_mutation(mutation_type mutclass)
 {
-    mut_use_type mt;
+    mut_flag_type mt;
     switch (mutclass)
     {
         case RANDOM_MUTATION:
             // maintain an arbitrary ratio of good to bad muts to allow easier
             // weight changes within categories - 60% good seems to be about
             // where things are right now
-            mt = x_chance_in_y(3, 5) ? MU_USE_GOOD : MU_USE_BAD;
+            mt = x_chance_in_y(3, 5) ? MUTFLAG_GOOD : MUTFLAG_BAD;
             break;
         case RANDOM_BAD_MUTATION:
-            mt = MU_USE_BAD;
+            mt = MUTFLAG_BAD;
             break;
         case RANDOM_GOOD_MUTATION:
-            mt = MU_USE_GOOD;
+            mt = MUTFLAG_GOOD;
             break;
         default:
             die("invalid mutation class: %d", mutclass);

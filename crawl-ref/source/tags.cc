@@ -329,9 +329,8 @@ static void unmarshallMapCell (reader &, map_cell& cell);
 template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshal marshal);
-template<typename T>
-static void unmarshall_vector(reader& th, vector<T>& vec,
-                              T (*T_unmarshall)(reader&));
+template<typename T, typename U>
+static void unmarshall_vector(reader& th, vector<T>& vec, U T_unmarshall);
 
 template<int SIZE>
 void marshallFixedBitVector(writer& th, const FixedBitVector<SIZE>& arr);
@@ -539,9 +538,8 @@ static void marshall_iterator(writer &th, T_iter beg, T_iter end,
     }
 }
 
-template<typename T>
-static void unmarshall_vector(reader& th, vector<T>& vec,
-                              T (*T_unmarshall)(reader&))
+template<typename T, typename U>
+static void unmarshall_vector(reader& th, vector<T>& vec, U T_unmarshall)
 {
     vec.clear();
     const int num_to_read = unmarshallInt(th);
@@ -3530,12 +3528,6 @@ static int _last_used_index(const Z &thinglist, int max_things)
 
 // ------------------------------- level tags ---------------------------- //
 
-// If only you could treat optional arguments like they didn't exist in templates...
-static void _marshall_item(writer &th, const item_def& it)
-{
-    marshallItem(th, it);
-}
-
 static void tag_construct_level(writer &th)
 {
     marshallByte(th, env.floor_colour);
@@ -3617,7 +3609,8 @@ static void tag_construct_level(writer &th)
         marshallString(th, env.shop[i].shop_type_name);
         marshallString(th, env.shop[i].shop_suffix_name);
         marshall_iterator(th, env.shop[i].stock.begin(),
-                              env.shop[i].stock.end(), _marshall_item);
+                              env.shop[i].stock.end(),
+                              bind(marshallItem, placeholders::_1, placeholders::_2, false));
     }
 
     CANARY;
@@ -4832,13 +4825,6 @@ void tag_construct_level_tiles(writer &th)
     marshallInt(th, TILE_WALL_MAX);
 }
 
-static item_def _unmarshall_item(reader &th)
-{
-    item_def ret;
-    unmarshallItem(th, ret);
-    return ret;
-}
-
 static void tag_read_level(reader &th)
 {
     env.floor_colour = unmarshallUByte(th);
@@ -4989,7 +4975,10 @@ static void tag_read_level(reader &th)
             env.shop[i].stock.clear();
         else
 #endif
-            unmarshall_vector(th, env.shop[i].stock, _unmarshall_item);
+        unmarshall_vector(th, env.shop[i].stock, [](reader& r) -> item_def
+                                                 { item_def ret;
+                                                   unmarshallItem(r, ret);
+                                                   return ret; });
         env.tgrid(env.shop[i].pos) = i;
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)

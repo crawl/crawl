@@ -334,13 +334,13 @@ Banishment spell
 %%%%
 bow of Krishna "Sharnga"
 
-"What will you do if Karna is able to kill me?" Arjun asked Krishna. Krishna
-smiled and replied, "The sun will fall, the earth shatter into a thousand
+“What will you do if Karna is able to kill me?” Arjun asked Krishna. Krishna
+smiled and replied, “The sun will fall, the earth shatter into a thousand
 fragments, and fire lose its heat before he kills you. But if he does, it is a
 sign that the end of the world has come. As for me, I shall kill him with my
-bare hands."
+bare hands.
     -Vyasa, _Mahabharata_, Book Eight: Karna.
-    trans. P. Lal, 1986.
+     trans. P. Lal, 1986.
 
 %%%%
 Cause Fear spell
@@ -598,7 +598,7 @@ Orcish Mines
  Another day older and deeper in debt
  Saint Peter don't you call me 'cause I can't go
  I owe my soul to the company store.”
-    -Merle Travis, "Sixteen Tons". 1946.
+    -Merle Travis, “Sixteen Tons”. 1946.
 %%%%
 Polyphemus
 
@@ -1668,6 +1668,12 @@ insubstantial wisp
  There swallow'd up and lost, from succour farr.”
     -John Milton, _Paradise Lost_
 %%%%
+iron rod
+
+“At this particular moment in time, I don't believe I have a healthier or more
+deeply-felt respect for any object in the universe than this here shotgun...”
+    -Steven ‘Body Bag’ Behling and Michael ‘Splatter’ Steward, _Doom_. 1996.
+%%%%
 Iskenderun's Battlesphere spell
 
 “Rule 4: Close air support covereth a multitude of sins.”
@@ -1676,10 +1682,10 @@ Iskenderun's Battlesphere spell
 %%%%
 jackal
 
-Always ready to take advantage of every favourable opportunity, the Jackal is a
-sad parasite, and hangs on the skirts of the larger carnivora as they roam the
-country for prey, in the hope of securing some share of the creatures which
-they destroy or wound."
+“Always ready to take advantage of every favourable opportunity, the Jackal is
+a sad parasite, and hangs on the skirts of the larger carnivora as they roam
+the country for prey, in the hope of securing some share of the creatures
+which they destroy or wound.”
     -John George Wood, _The Illustrated Natural History: Mammalia_. 1865.
 %%%%
 javelin
@@ -2125,7 +2131,7 @@ potion
 %%%%
 potion of poison
 
-“If when you say "whiskey" you mean the devil's brew, the poison
+“If when you say ‘whiskey’ you mean the devil's brew, the poison
  scourge, the bloody monster, that defiles innocence, dethrones
  reason, destroys the home, creates misery and poverty, yea,
  literally takes the bread from the mouths of little children...
@@ -2134,7 +2140,7 @@ potion of poison
 %%%%
 potion of curing
 
-“But if when you say "whiskey" you mean the oil of conversation,
+“But if when you say ‘whiskey’ you mean the oil of conversation,
  the philosophic wine, the ale that is consumed when good fellows
  get together, that puts a song in their hearts and laughter on
  their lips, and the warm glow of contentment in their eyes...
@@ -2353,12 +2359,6 @@ robe
 “CLEOPATRA: Give me my robe, put on my crown; I have
  Immortal longings in me”
     -William Shakespeare, _Anthony & Cleopatra_, V, ii. ca. 1605.
-%%%%
-rod of striking
-
-“He that spares his rod hates his son: but he that loves him chastens him
- early.”
-    -King James 2000 Bible, Proverbs 13:24
 %%%%
 rotten bat
 

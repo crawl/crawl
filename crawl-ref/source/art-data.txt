@@ -1170,6 +1170,16 @@ INT:     6
 BRAND:   SPWPN_VAMPIRISM
 BOOL:    unholy
 
+ENUM:    GYRE
+NAME:    quick blades "Gyre" and "Gimble"
+OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+COLOUR:  ETC_ENCHANT
+TILE:    urand_gyre
+TILE_EQ: gyre
+PLUS:    5
+BRAND:   SPWPN_VORPAL
+DEX:     -3
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

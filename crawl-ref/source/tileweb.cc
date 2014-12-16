@@ -681,14 +681,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.god, god, "god");
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     uint8_t prank = 0;
-    if (you_worship(GOD_XOM))
-    {
-        if (!you.gift_timeout)
-            prank = 2;
-        else if (you.gift_timeout == 1)
-            prank = 1;
-    }
-    else if (!you_worship(GOD_NO_GOD))
+    if (!you_worship(GOD_NO_GOD))
         prank = max(0, piety_rank() - 1);
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
              && !had_gods())

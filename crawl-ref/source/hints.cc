@@ -2819,11 +2819,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_LOAD_SAVED_GAME:
     {
-        text << "Welcome back! If it's been a while since you last played this "
-                "character, you should take some time to refresh your memory "
-                "of your character's progress. It is recommended to at least "
-                "have a look through your <w>%</w>nventory, but you should "
-                "also check ";
+        text << "Welcome back! If it's been a while, you may want to refresh "
+                "your memory.\nYour <w>%</w>nventory, ";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
         vector<const char *> listed;
@@ -2851,19 +2848,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         listed.push_back("the message history (<w>%</w>)");
         listed.push_back("the character overview screen (<w>%</w>)");
         listed.push_back("the dungeon overview screen (<w>%</w>)");
-        text << comma_separated_line(listed.begin(), listed.end()) << ".";
+        text << comma_separated_line(listed.begin(), listed.end())
+             << " are good things to check.";
         cmd.push_back(CMD_REPLAY_MESSAGES);
         cmd.push_back(CMD_RESISTS_SCREEN);
         cmd.push_back(CMD_DISPLAY_OVERMAP);
-
-        text << "\nAlternatively, you can dump all information pertaining to "
-                "your character into a text file with the <w>%</w> command. "
-                "You can then find said file in the <w>morgue/</w> directory (<w>"
-             << you.your_name << ".txt</w>) and read it at your leisure. Also, "
-                "such a file will automatically be created upon death (the "
-                "filename will then also contain the date) but that won't be "
-                "of much use to you now.";
-        cmd.push_back(CMD_CHARACTER_DUMP);
         break;
     }
     case HINT_AUTOPICKUP_THROWN:
@@ -3135,7 +3124,7 @@ void hints_describe_item(const item_def &item)
             }
 
             item_def *weap = you.slot_item(EQ_WEAPON, false);
-            bool wielded = (weap && (*weap).slot == item.slot);
+            bool wielded = (weap && weap->slot == item.slot);
             bool long_text = false;
 
             if (!wielded)
@@ -4102,7 +4091,7 @@ bool hints_monster_interesting(const monster* mons)
     return mons_threat_level(mons) == MTHRT_NASTY;
 }
 
-void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
+string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
     cgotoxy(1, wherey());
     ostringstream ostr;
@@ -4224,7 +4213,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 
     string broken = ostr.str();
     linebreak_string(broken, _get_hints_cols());
-    display_tagged_block(broken);
+    return broken;
 }
 
 void hints_observe_cell(const coord_def& gc)

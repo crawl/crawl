@@ -5301,8 +5301,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         // spell: <include this spell>, owner:<name of owner>
         // None of these are required, but if you don't intend on using any
         // of them, use "any fixed theme book" instead.
-        short disc1 = 0;
-        short disc2 = 0;
+        spschool_flag_type disc1 = SPTYP_NONE;
+        spschool_flag_type disc2 = SPTYP_NONE;
 
         string st_disc1 = strip_tag_prefix(s, "disc:");
         if (!st_disc1.empty())
@@ -5336,12 +5336,11 @@ bool item_list::parse_single_spec(item_spec& result, string s)
             }
         }
 
-        if (disc1 == 0 && disc2 != 0)
+        if (disc1 == SPTYP_NONE && disc2 != 0)
         {
             // Don't fail, just quietly swap. Any errors in disc1's syntax will
             // have been caught above, anyway.
-            disc1 = disc2;
-            disc2 = 0;
+            swap(disc1, disc2);
         }
 
         short num_spells = strip_number_tag(s, "numspells:");
@@ -5385,8 +5384,10 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
         const string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
                                             "_", " ");
-        result.props["randbook_disc1"] = disc1;
-        result.props["randbook_disc2"] = disc2;
+
+        COMPILE_CHECK(SPTYP_LAST_SCHOOL < SHRT_MAX);
+        result.props["randbook_disc1"].get_short() = disc1;
+        result.props["randbook_disc2"].get_short() = disc2;
         result.props["randbook_num_spells"] = num_spells;
         result.props["randbook_slevels"] = slevels;
         result.props["randbook_title"] = title;
@@ -6023,28 +6024,15 @@ feature_spec_list keyed_mapspec::parse_feature(const string &str)
         feature_spec fsp(-1, weight, mimic, no_mimic);
         fsp.glyph = s[0];
         list.push_back(fsp);
-        return list;
     }
-
-    if (s.find("trap") != string::npos || s == "web")
-    {
+    else if (strip_tag(s, "trap") || s == "web")
         list.push_back(parse_trap(s, weight));
-        return list;
-    }
-
-    if (s.find("shop") != string::npos && s != "abandoned_shop"
-        || s.find("store") != string::npos)
-    {
+    else if (strip_tag(s, "shop"))
         list.push_back(parse_shop(s, weight, mimic, no_mimic));
-        return list;
-    }
-
-    const dungeon_feature_type ftype = dungeon_feature_by_name(s);
-
-    if (ftype == DNGN_UNSEEN)
-        err = make_stringf("no features matching \"%s\"", str.c_str());
-    else
+    else if (auto ftype = dungeon_feature_by_name(s)) // DNGN_UNSEEN == 0
         list.emplace_back(ftype, weight, mimic, no_mimic);
+    else
+        err = make_stringf("no features matching \"%s\"", str.c_str());
 
     return list;
 }

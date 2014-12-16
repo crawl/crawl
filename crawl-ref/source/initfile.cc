@@ -1122,6 +1122,7 @@ void game_options::reset_options()
     note_skill_levels.set(15);
     note_skill_levels.set(27);
     auto_spell_letters.clear();
+    auto_item_letters.clear();
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
@@ -1278,7 +1279,28 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     return md;
 }
 
-void game_options::add_mon_glyph_override(const string &text)
+void game_options::remove_mon_glyph_override(const string &text, bool prepend)
+{
+    vector<string> override = split_string(":", text);
+
+    set<monster_type> matches;
+    if (override[0].length() == 1)
+        matches = _mons_classes_by_glyph(override[0][0]);
+    else
+    {
+        const monster_type m = _mons_class_by_string(override[0]);
+        if (m == MONS_0)
+        {
+            report_error("Unknown monster: \"%s\"", text.c_str());
+            return;
+        }
+        matches.insert(m);
+    }
+    for (monster_type m : matches)
+        mon_glyph_overrides.erase(m);;
+}
+
+void game_options::add_mon_glyph_override(const string &text, bool prepend)
 {
     vector<string> override = split_string(":", text);
     if (override.size() != 2u)
@@ -1316,7 +1338,20 @@ void game_options::add_mon_glyph_override(const string &text)
             mon_glyph_overrides[m] = mdisp;
 }
 
-void game_options::add_item_glyph_override(const string &text)
+void game_options::remove_item_glyph_override(const string &text, bool prepend)
+{
+    string key = text;
+    trim_string(key);
+
+    item_glyph_overrides.erase(
+        remove_if(item_glyph_overrides.begin(),
+                  item_glyph_overrides.end(),
+                  [&key](const item_glyph_override_type& arg)
+                  { return key == arg.first; }),
+        item_glyph_overrides.end());
+}
+
+void game_options::add_item_glyph_override(const string &text, bool prepend)
 {
     vector<string> override = split_string(":", text);
     if (override.size() != 2u)
@@ -1324,10 +1359,37 @@ void game_options::add_item_glyph_override(const string &text)
 
     cglyph_t mdisp = parse_mon_glyph(override[1]);
     if (mdisp.ch || mdisp.col)
-        item_glyph_overrides.emplace_back(override[0], mdisp);
+    {
+        if (prepend)
+        {
+            item_glyph_overrides.emplace(item_glyph_overrides.begin(),
+                                               override[0],mdisp);
+        }
+        else
+            item_glyph_overrides.emplace_back(override[0], mdisp);
+    }
 }
 
-void game_options::add_feature_override(const string &text)
+void game_options::remove_feature_override(const string &text, bool prepend)
+{
+    string fname;
+    string::size_type epos = text.rfind("}");
+    if (epos != string::npos)
+        fname = text.substr(0, text.rfind("{",epos));
+    else
+        fname = text;
+
+    trim_string(fname);
+
+    vector<dungeon_feature_type> feats = features_by_desc(text_pattern(fname));
+    for (dungeon_feature_type f : feats)
+    {
+        feature_colour_overrides.erase(f);
+        feature_symbol_overrides.erase(f);
+    }
+}
+
+void game_options::add_feature_override(const string &text, bool prepend)
 {
     string::size_type epos = text.rfind("}");
     if (epos == string::npos)
@@ -1368,11 +1430,11 @@ void game_options::add_feature_override(const string &text)
         feature_def &fov(feature_colour_overrides[feat]);
 #define COL(n, field) if (colour_t c = str_to_colour(iprops[n], BLACK)) \
                           fov.field = c;
-        COL(2, colour);
-        COL(3, map_colour);
-        COL(4, seen_colour);
-        COL(5, em_colour);
-        COL(6, seen_em_colour);
+        COL(2, dcolour);
+        COL(3, map_dcolour);
+        COL(4, seen_dcolour);
+        COL(5, em_dcolour);
+        COL(6, seen_em_dcolour);
 #undef COL
     }
 }
@@ -2212,15 +2274,26 @@ void game_options::set_menu_sort(string field)
     sort_menus.push_back(cond);
 }
 
+// Lots of things use split parse, for some ^= and += should do different things,
+// for others they should not. Split parse just pases them along.
 void game_options::split_parse(const string &s, const string &separator,
-                               void (game_options::*add)(const string &))
+                               void (game_options::*add)(const string &, bool),
+                               bool prepend)
 {
     const vector<string> defs = split_string(separator, s);
-    for (int i = 0, size = defs.size(); i < size; ++i)
-        (this->*add)(defs[i]);
+    if (prepend)
+    {
+        for ( auto it = defs.rbegin() ; it != defs.rend(); ++it)
+            (this->*add)(*it, prepend);
+    }
+    else
+    {
+        for ( auto it = defs.begin() ; it != defs.end(); ++it)
+            (this->*add)(*it, prepend);
+    }
 }
 
-void game_options::set_option_fragment(const string &s)
+void game_options::set_option_fragment(const string &s, bool prepend)
 {
     if (s.empty())
         return;
@@ -2501,6 +2574,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "levels" && key != "level" && key != "entries"
         && key != "include" && key != "bindkey"
         && key != "spell_slot"
+        && key != "item_slot"
         && key.find("font") == string::npos)
     {
         lowercase(field);
@@ -2681,11 +2755,38 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
     }
     else if (key == "feature" || key == "dungeon")
-        split_parse(field, ";", &game_options::add_feature_override);
+    {
+        if (plain)
+           clear_feature_overrides();
+
+        if (minus_equal)
+            split_parse(field, ";", &game_options::remove_feature_override);
+        else
+            split_parse(field, ";", &game_options::add_feature_override);
+    }
     else if (key == "mon_glyph")
-        split_parse(field, ",", &game_options::add_mon_glyph_override);
+    {
+        if (plain)
+           mon_glyph_overrides.clear();
+
+        if (minus_equal)
+            split_parse(field, ",", &game_options::remove_mon_glyph_override);
+        else
+            split_parse(field, ",", &game_options::add_mon_glyph_override);
+    }
     else if (key == "item_glyph")
-        split_parse(field, ",", &game_options::add_item_glyph_override);
+    {
+        if (plain)
+        {
+           item_glyph_overrides.clear();
+           item_glyph_cache.clear();
+        }
+
+        if (minus_equal)
+            split_parse(field, ",", &game_options::remove_item_glyph_override);
+        else
+            split_parse(field, ",", &game_options::add_item_glyph_override, caret_equal);
+    }
     else CURSES_OPTION(friend_brand);
     else CURSES_OPTION(neutral_brand);
     else CURSES_OPTION(stab_brand);
@@ -3212,26 +3313,30 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
         }
     }
-    else if (key == "spell_slot")
+    else if (key == "spell_slot"
+             || key == "item_slot")
+
     {
+        const bool item = key == "item_slot";
+        auto& auto_letters = item ? auto_item_letters : auto_spell_letters;
         if (plain)
-            auto_spell_letters.clear();
+            auto_letters.clear();
 
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
         {
-            return report_error("Error parsing spell lettering string: %s\n",
-                                field.c_str());
+            return report_error("Error parsing %s lettering string: %s\n",
+                                item ? "item" : "spell", field.c_str());
         }
         pair<text_pattern,string> entry(lowercase_string(thesplit[0]),
                                         thesplit[1]);
 
         if (minus_equal)
-            remove_matching(auto_spell_letters, entry);
+            remove_matching(auto_letters, entry);
         else if (caret_equal)
-            auto_spell_letters.insert(auto_spell_letters.begin(), entry);
+            auto_letters.insert(auto_letters.begin(), entry);
         else
-            auto_spell_letters.push_back(entry);
+            auto_letters.push_back(entry);
     }
     else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD

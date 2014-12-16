@@ -459,7 +459,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
 static int _spell_enhancement(spell_type spell)
 {
-    unsigned int typeflags = get_spell_disciplines(spell);
+    const spschools_type typeflags = get_spell_disciplines(spell);
     int enhanced = 0;
 
     if (typeflags & SPTYP_CONJURATION)
@@ -1809,7 +1809,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_OZOCUBUS_ARMOUR:
         return ice_armour(powc, fail);
 
-    case SPELL_BONE_ARMOUR:
+    case SPELL_CIGOTUVIS_EMBRACE:
         return corpse_armour(powc, fail);
 
     case SPELL_PHASE_SHIFT:

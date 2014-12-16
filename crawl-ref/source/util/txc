@@ -96,7 +96,7 @@ def merge_ini():
 
 def setup_transifex():
     """Initialize the transifex config file"""
-    
+
     os.chdir(tx_abs_path)
     call_tx(['init'])
     tx_set = ['set', '--auto-local', '-s', 'en_AU', '-t', 'INI', '--execute']
@@ -109,7 +109,7 @@ def setup_transifex():
 
 def call_tx(args, silent = False):
     """wrapper to call the transifex client"""
-    
+
     if silent:
         stderr = open(os.devnull, 'wb')
     else:
@@ -336,7 +336,7 @@ class ResourceIndex():
     Note that not selecting "removed" only affects diffs and temporary files
     created for editing. When writing the resource file, removed keys are never
     written no matter what is in the changes array."""
-    
+
     def __init__(self):
         self.default_languages = [ 'en' ]
         self.default_resources = []
@@ -532,7 +532,7 @@ class ResourceFile():
         When diff_only is true, only return changed or new values (for diff and
         edit). When it is false, return the original value for unchanged ones
         (for writing file)."""
-        
+
         items = []
         for key in self.source_keys():
             found_diff = False
@@ -649,7 +649,7 @@ class ResourceFile():
         entries.clear()
         for (key, value) in self.entries.items():
             entries[key] = self.raw_entry(value)
-            
+
     def update(self, update_removed_keys = True):
         """Update the resource file with the content of raw_entries. New values
         will be converted in the resource format and stored in the appropriate
@@ -1022,7 +1022,7 @@ class TxtCollection(ResourceCollection):
 
     def git_status(self):
         call(["git", "status"] + self.paths())
-        
+
     def git_add_hunks(self):
         self.git_add(True)
 
@@ -1113,7 +1113,7 @@ class Menu(OrderedDict):
     cmd is the command string, it can be used to queue several commands.
     res_files points to the current resource file collection which is being
     worked on."""
-    
+
     def __init__(self, cmd = ''):
         OrderedDict.__init__(self)
         self.cmds = dict()

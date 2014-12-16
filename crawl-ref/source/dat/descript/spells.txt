@@ -631,7 +631,8 @@ Gell's Gravitas spell
 For a brief moment, this spell redirects space around the target, making 'down'
 become exactly where the target is standing. All nearby creatures, save the
 caster, fall helplessly toward the victim - typically colliding with it, or
-with each other!
+with each other. The disorienting experience can leave the afflicted creatures
+confused.
 %%%%
 Ghostly Fireball spell
 
@@ -1164,11 +1165,10 @@ A penetrating bolt spell mimicked by the shadow of a Dithmenos worshipper.
 %%%%
 Shadow Creatures spell
 
-This spell weaves a creature from shadows and threads of ethereal matter. The
-creature thus brought into existence will recreate some type of creature found
-in the caster's immediate vicinity. The spell even creates appropriate
-equipment for the creature, which are given a lasting substance by their firm
-contact with reality.
+This spell weaves a creature from shadows and threads of Abyssal matter. The
+creature thus brought into existence will recreate some type of creature native
+to the caster's location. The spell even creates appropriate equipment for the
+creature from the same ethereal matter.
 %%%%
 Shadow Shard spell
 
@@ -1220,6 +1220,7 @@ Singularity spell
 
 This spell compresses space into a gravitational singularity, pulling nearby
 enemies of the caster towards it and warping them violently in the process.
+The caster can only maintain one singularity at a time.
 %%%%
 Siren Song spell
 
@@ -1626,10 +1627,10 @@ dealing damage. It can affect targets standing in or flying above water.
 %%%%
 Weave Shadows spell
 
-This spell weaves a creature from shadows and threads of ethereal matter. The
+This spell weaves a creature from shadows and threads of Abyssal matter. The
 creatures thus brought into existence increase in power with spellpower. The
-spell even creates appropriate equipment for the creature, which are given a
-lasting substance by their firm contact with reality.
+spell even creates appropriate equipment for the creature from the same
+ethereal matter.
 %%%%
 Wind Blast spell
 

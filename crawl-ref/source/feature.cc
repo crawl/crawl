@@ -45,44 +45,90 @@ ucs_t feature_def::magic_symbol() const
         return symbol();
 }
 
+/** What colour should be used for this feature?
+ *
+ *  @returns The colour from the feature option if given, otherwise
+ *           the normal colour.
+ */
+colour_t feature_def::colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->dcolour)
+        return ofeat->dcolour;
+
+    return dcolour;
+}
+
+/** What colour should be used for this feature when out of LOS?
+ *
+ *  @returns The map_colour from the feature option if given, otherwise
+ *           the normal map_colour.
+ */
+colour_t feature_def::map_colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->map_dcolour)
+        return ofeat->map_dcolour;
+
+    return map_dcolour;
+}
+
+/** What colour should be used for this feature when we have knowledge of it?
+ *
+ *  @returns The seen_colour from the feature option if given, otherwise
+ *           the normal seen_colour.
+ */
+colour_t feature_def::seen_colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->seen_dcolour)
+        return ofeat->seen_dcolour;
+
+    return seen_dcolour;
+}
+
+/** Emphasised colour when out of LoS?
+ *
+ *  @returns The seen_em_colour from the feature option if given, otherwise
+ *           the normal seen_em_colour.
+ */
+colour_t feature_def::seen_em_colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->seen_em_dcolour)
+        return ofeat->seen_em_dcolour;
+
+    return seen_em_dcolour;
+}
+
+/** Emphasised colour in LOS?
+ *
+ *  @returns The em_colour from the feature option if given, otherwise
+*            the normal em_colour.
+ */
+colour_t feature_def::em_colour() const
+{
+    auto ofeat = map_find(Options.feature_colour_overrides, feat);
+    if (ofeat && ofeat->em_dcolour)
+        return ofeat->em_dcolour;
+
+    return em_dcolour;
+}
+
 /** Do the default colour relations on a feature_def.
  *
  *  @param[out] f The feature_def to be filled out.
  */
 static void _create_colours(feature_def &f)
 {
-    if (f.seen_colour == BLACK)
-        f.seen_colour = f.map_colour;
+    if (f.seen_dcolour == BLACK)
+        f.seen_dcolour = f.map_dcolour;
 
-    if (f.seen_em_colour == BLACK)
-        f.seen_em_colour = f.seen_colour;
+    if (f.seen_em_dcolour == BLACK)
+        f.seen_em_dcolour = f.seen_dcolour;
 
-    if (f.em_colour == BLACK)
-        f.em_colour = f.colour;
-}
-
-/** Put the feature overrides from the 'feature' option, stored in
- *  Options.feature_overrides, into feat_defs.
- */
-static void _apply_feature_overrides()
-{
-    for (const auto &entry : Options.feature_colour_overrides)
-    {
-        const feature_def &ofeat  = entry.second;
-        // Replicating get_feature_def since we need not-const.
-        feature_def       &feat   = feat_defs[feat_index[entry.first]];
-
-        if (ofeat.colour)
-            feat.colour = ofeat.colour;
-        if (ofeat.map_colour)
-            feat.map_colour = ofeat.map_colour;
-        if (ofeat.seen_colour)
-            feat.seen_colour = ofeat.seen_colour;
-        if (ofeat.seen_em_colour)
-            feat.seen_em_colour = ofeat.seen_em_colour;
-        if (ofeat.em_colour)
-            feat.em_colour = ofeat.em_colour;
-    }
+    if (f.em_dcolour == BLACK)
+        f.em_dcolour = f.dcolour;
 }
 
 static void _init_feature_index()
@@ -105,7 +151,6 @@ static void _init_feature_index()
 void init_show_table()
 {
     _init_feature_index();
-    _apply_feature_overrides();
 
     for (int i = 0; i < NUM_SHOW_ITEMS; i++)
     {

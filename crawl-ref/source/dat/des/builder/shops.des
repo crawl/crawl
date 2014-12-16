@@ -342,7 +342,7 @@ KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
          w:70 potion of blood | w:10 any weapon ego:vampirism | \
          w:9 randbook disc:necromancy | w:1 book of annihilations
 SUBST:   ? = 2.Y
-: if you.branch() == "D" then
+: if you.in_branch("D") then
 SUBST:   2 = 1
 : end
 MAP
@@ -435,7 +435,7 @@ NAME: nicolae_barding_shop
 DEPTH: D:8-, Depths, Snake, !Snake:$
 WEIGHT: 1
 TAGS: transparent
-: if you.branch() == "Snake" then
+: if you.in_branch("Snake") then
 KMONS: s = naga w:50 / naga warrior
 : else
 KMONS: s = centaur w:50 / centaur warrior

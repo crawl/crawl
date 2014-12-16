@@ -48,7 +48,6 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
-    bool         can_cleave;
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     coord_def attack_position;
@@ -151,7 +150,7 @@ private:
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
     void player_stab_check();
-    int  player_stab_tier();
+    bool player_good_stab();
     void player_announce_aux_hit();
     string player_why_missed();
     void player_warn_miss();

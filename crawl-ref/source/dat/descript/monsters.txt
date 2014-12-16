@@ -1399,6 +1399,11 @@ hell knight
 A heavily armoured warrior, in league with the powers of Hell, and usually
 accompanied by other unsavoury beings of its ilk.
 %%%%
+hell rat
+
+A unusually large rat. Its weird, knobbly orange skin glows with the infernal
+energies that spawned it.
+%%%%
 Hell Sentinel
 
 A towering monolith constructed and possessed by demonic forces. A thousand
@@ -1832,11 +1837,6 @@ orange demon
 
 An amber-coloured demon with a tail not unlike that of a scorpion. It contains
 a potent venom that can render its victims weak and their blows feeble.
-%%%%
-orange rat
-
-A unusually large rat with weird knobbly orange skin, glowing with unholy
-energies.
 %%%%
 Orb Guardian
 

@@ -1614,14 +1614,46 @@ NAME:   kennysheep_goblin_castle
 TAGS:   no_monster_gen no_pool_fixup
 ORIENT: northwest
 DEPTH:  D:2-4
-KMONS:  O = Ijyb / hobgoblin w:1, hobgoblin
+## this gives a chance for Ijyb and Robin to appear as the boss if they
+## haven't been placed, selecting from who is available.
+{{
+  -- Default for when we're only map validating.
+  if not crawl.game_started() then
+    kmons("O = Ijyb / Robin / hobgoblin w:1")
+    subst("B = 1")
+    return
+  end
+
+  -- possible hobgoblin bosses and their weights
+  bossw = {hobgoblin = 1, Ijyb = 10, Robin = 10}
+  bosses = {"hobgoblin"}
+
+  -- Find out which hobgoblin uniques we can use
+  if not you.uniques("Ijyb") then
+    bosses["Ijyb"] = bossw["Ijyb"]
+  end
+  if not you.uniques("Robin") then
+    bosses["Robin"] = bossw["Robin"]
+  end
+
+  -- Choose a boss, and remove the supporting goblins if we select Robin, since
+  -- she has her own band.
+  boss = crawl.random_element(bosses)
+  if boss == "Robin" then
+    subst("B = .")
+    boss = "Robin band"
+  else
+    subst("B = 1")
+  end
+  kmons("O = " .. boss)
+}}
 MONS:   goblin, goblin ; hunting sling . stone, jackal
 NSUBST: . = 1:0 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx
-x...+....1..x%%*xww
+x...+....B..x%%*xww
 x...+......O+%%%xww
-x...x....1..xxxxxww
+x...x....B..xxxxxww
 x...xxxxxxxxxx...ww
 x............x...ww
 x.....1.1....x.2.ww

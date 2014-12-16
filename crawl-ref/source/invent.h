@@ -217,6 +217,7 @@ vector<SelItem> prompt_invent_items(
 unsigned char get_invent(int invent_type, bool redraw = true);
 
 bool in_inventory(const item_def &i);
+void identify_inventory();
 
 const char *item_class_name(int type, bool terse = false);
 const char *item_slot_name(equipment_type type);
@@ -237,5 +238,6 @@ bool item_is_evokable(const item_def &item, bool reach = true,
                       bool known = false, bool all_wands = false,
                       bool msg = false, bool equip = true);
 bool nasty_stasis(const item_def &item, operation_types oper);
-bool needs_handle_warning(const item_def &item, operation_types oper);
+bool needs_handle_warning(const item_def &item, operation_types oper,
+                          bool &penance);
 #endif

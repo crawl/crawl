@@ -1311,7 +1311,7 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_QUOKKA;
     case MONS_RIVER_RAT:
         return TILEP_MONS_RIVER_RAT;
-    case MONS_ORANGE_RAT:
+    case MONS_HELL_RAT:
         return TILEP_MONS_ORANGE_RAT;
     case MONS_PORCUPINE:
         return TILEP_MONS_PORCUPINE;
@@ -3665,7 +3665,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_QUOKKA;
     case MONS_RIVER_RAT:
         return TILE_CORPSE_GREEN_RAT;
-    case MONS_ORANGE_RAT:
+    case MONS_HELL_RAT:
         return TILE_CORPSE_ORANGE_RAT;
     case MONS_PORCUPINE:
         return TILE_CORPSE_PORCUPINE;
@@ -4816,7 +4816,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_DISPEL_UNDEAD:            return TILEG_DISPEL_UNDEAD;
     case SPELL_HAUNT:                    return TILEG_HAUNT;
     case SPELL_BORGNJORS_REVIVIFICATION: return TILEG_BORGNJORS_REVIVIFICATION;
-    case SPELL_BONE_ARMOUR:              return TILEG_CIGOTUVIS_EMBRACE;
+    case SPELL_CIGOTUVIS_EMBRACE:        return TILEG_CIGOTUVIS_EMBRACE;
     case SPELL_AGONY:                    return TILEG_AGONY;
     case SPELL_TWISTED_RESURRECTION:     return TILEG_TWISTED_RESURRECTION;
     case SPELL_EXCRUCIATING_WOUNDS:      return TILEG_EXCRUCIATING_WOUNDS;

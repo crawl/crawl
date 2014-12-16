@@ -149,6 +149,10 @@ struct bolt
     int         tile_beam;
 #endif
 
+private:
+    bool can_see_invis;
+    bool nightvision;
+
 public:
     bolt();
 
@@ -171,28 +175,39 @@ public:
     string get_short_name() const;
     string get_source_name() const;
 
-    // Assume that all saving throws are failed, actually apply
-    // the enchantment.
-    mon_resist_type apply_enchantment_to_monster(monster* mon);
-
-    // Return whether any affected cell was seen.
-    bool explode(bool show_more = true, bool hole_in_the_middle = false);
-    bool knockback_actor(actor *actor, int distance, coord_def &newpos);
-
     bool visible() const;
 
     bool can_affect_actor(const actor *act) const;
     bool can_affect_wall(dungeon_feature_type feat) const;
     bool ignores_monster(const monster* mon) const;
+    bool can_knockback(const actor *act = nullptr, int dam = -1) const;
+    bool god_cares() const; // Will the god be unforgiving about this beam?
 
-    int range_used_on_hit() const;
+    void draw(const coord_def& p);
+    void drop_object();
 
+    // Various explosion-related stuff.
+    bool explode(bool show_more = true, bool hole_in_the_middle = false);
+    void refine_for_explosion();
+    bool explosion_draw_cell(const coord_def& p);
+    void explosion_affect_cell(const coord_def& p);
+    void determine_affected_cells(explosion_map& m, const coord_def& delta,
+                                  int count, int r,
+                                  bool stop_at_statues, bool stop_at_walls);
+
+    // Setup.
+    void fake_flavour();
 private:
     void do_fire();
-    coord_def pos() const;
-    coord_def leg_source() const;
+    void initialise_fire();
+    void apply_beam_conducts();
 
     // Lots of properties of the beam.
+    coord_def pos() const;
+    coord_def leg_source() const;
+    cloud_type get_cloud_type() const;
+    int get_cloud_pow() const;
+    int get_cloud_size(bool min = false, bool max = false) const;
     bool is_blockable() const;
     bool is_fiery() const;
     bool is_superhot() const;
@@ -206,83 +221,77 @@ private:
     bool nice_to(const monster* mon) const;
     bool found_player() const;
     bool need_regress() const;
-    bool can_see_invis() const;
-    bool nightvision() const;
     bool is_big_cloud() const; // expands into big_cloud at endpoint
+    int range_used_on_hit() const;
+    bool pierces_shields() const;
 
     set<string> message_cache;
     void emit_message(const char* msg);
-    void step();
-    bool hit_wall();
-    void hit_shield(actor* victim) const;
 
     int apply_AC(const actor* victim, int hurted);
-
-    cloud_type get_cloud_type();
-    int get_cloud_pow();
-    int get_cloud_size(bool min = false, bool max = false);
+    bool determine_damage(monster* mon, int& preac, int& postac, int& final,
+                          vector<string> &messages);
 
     // Functions which handle actually affecting things. They all
     // operate on the beam's current position (i.e., whatever pos()
     // returns.)
+    void step();
 public:
     void affect_cell();
+    void affect_endpoint();
+private:
     void affect_wall();
-    void affect_actor(actor *act);
-    void affect_monster(monster* m);
-    void affect_player();
+    void digging_wall_effect();
+    void burn_wall_effect();
+    void destroy_wall_effect();
     void affect_ground();
     void affect_place_clouds();
     void affect_place_explosion_clouds();
-    void affect_endpoint();
-
-    void beam_hits_actor(actor *act);
-    bool god_cares() const; // Will the god be unforgiving about this beam?
-
-    // Stuff when a monster or player is hit.
-    void affect_player_enchantment(bool resistible = true);
-    void tracer_affect_player();
-    void tracer_affect_monster(monster* mon);
-    void apply_bolt_paralysis(monster* mons);
-    void apply_bolt_petrify(monster* mons);
-    void enchantment_affect_monster(monster* mon);
-    mon_resist_type try_enchant_monster(monster* mon, int &res_margin);
-    void tracer_enchantment_affect_monster(monster* mon);
-    void tracer_nonenchantment_affect_monster(monster* mon);
-    void update_hurt_or_helped(monster* mon);
-    bool attempt_block(monster* mon);
-    void handle_stop_attack_prompt(monster* mon);
-    bool determine_damage(monster* mon, int& preac, int& postac, int& final,
-                          vector<string> &messages);
-    void monster_post_hit(monster* mon, int dmg);
-    bool misses_player();
-
-    void initialise_fire();
-    void apply_beam_conducts();
-    void choose_ray();
-    void draw(const coord_def& p);
-    void bounce();
-    void reflect();
-    void fake_flavour();
-    void digging_wall_effect();
-    void fire_wall_effect();
-    void elec_wall_effect();
-    void destroy_wall_effect();
-    void drop_object();
+    bool hit_wall();
     int range_used(bool leg_only = false) const;
     void finish_beam();
-    bool fuzz_invis_tracer();
 
+    // These methods make the beam affect a specific actor, not
+    // necessarily what's at pos().
+public:
+    void affect_actor(actor *act);
+private:
+    // for monsters
+    void affect_monster(monster* m);
+    void handle_stop_attack_prompt(monster* mon);
+    bool attempt_block(monster* mon);
+    void update_hurt_or_helped(monster* mon);
+    mon_resist_type try_enchant_monster(monster* mon, int &res_margin);
+    void enchantment_affect_monster(monster* mon);
+public:
+    mon_resist_type apply_enchantment_to_monster(monster* mon);
+private:
+    void apply_bolt_paralysis(monster* mons);
+    void apply_bolt_petrify(monster* mons);
+    void monster_post_hit(monster* mon, int dmg);
+    // for players
+    void affect_player();
+    bool misses_player();
+public:
+    void affect_player_enchantment(bool resistible = true);
+private:
     void internal_ouch(int dam);
+    // for both
+    void hit_shield(actor* victim) const;
+    void knockback_actor(actor *act, int dam);
 
-    // Various explosion-related stuff.
-    void refine_for_explosion();
-    bool explosion_draw_cell(const coord_def& p);
-    void explosion_affect_cell(const coord_def& p);
-    void determine_affected_cells(explosion_map& m, const coord_def& delta,
-                                  int count, int r,
-                                  bool stop_at_statues, bool stop_at_walls);
-    bool can_knockback(const actor *act = nullptr, int dam = -1) const;
+    // tracers
+    void tracer_affect_player();
+    void tracer_affect_monster(monster* mon);
+    void tracer_enchantment_affect_monster(monster* mon);
+    void tracer_nonenchantment_affect_monster(monster* mon);
+
+    // methods to change the path
+    void bounce();
+    void reflect();
+    bool fuzz_invis_tracer();
+public:
+    void choose_ray();
 };
 
 int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,

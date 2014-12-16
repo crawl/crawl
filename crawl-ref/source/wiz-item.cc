@@ -766,15 +766,7 @@ void wizard_uncurse_item()
 void wizard_identify_pack()
 {
     mpr("You feel a rush of knowledge.");
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def& item = you.inv[i];
-        if (item.defined())
-        {
-            set_ident_type(item, ID_KNOWN_TYPE);
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
-        }
-    }
+    identify_inventory();
     you.wield_change  = true;
     you.redraw_quiver = true;
 }

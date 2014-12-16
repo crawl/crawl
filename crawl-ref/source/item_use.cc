@@ -277,11 +277,15 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     {
         if (const item_def* wpn = you.weapon())
         {
+            bool penance = false;
             // Can we safely unwield this item?
-            if (needs_handle_warning(*wpn, OPER_WIELD))
+            if (needs_handle_warning(*wpn, OPER_WIELD, penance))
             {
-                const string prompt =
+                string prompt =
                     "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
+                if (penance)
+                    prompt += " This could place you under penance!";
+
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);
@@ -1960,6 +1964,11 @@ void zap_wand(int slot)
         xom_is_stimulated(200);
     }
 
+    // Need to do this down here since auto_assign_item_slot may
+    // move the item in memory.
+    if (!alreadyknown)
+        auto_assign_item_slot(wand);
+
     you.turn_is_over = true;
 }
 
@@ -2133,6 +2142,7 @@ void drink(int slot)
 
     dec_inv_item_quantity(slot, 1);
     count_action(CACT_USE, OBJ_POTIONS);
+    auto_assign_item_slot(potion);
     you.turn_is_over = true;
 
     // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
@@ -2470,6 +2480,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
             learned_something_new(HINT_INACCURACY);
         }
 
+        auto_assign_item_slot(item);
         return true;
     }
 }
@@ -2931,9 +2942,13 @@ void read_scroll(int item_slot)
         break;
 
     case SCR_BLINKING:
+    {
+        const bool safely_cancellable
+            = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
         cancel_scroll = (blink(1000, false, false,
-                               pre_succ_msg, alreadyknown) == -1
+                               pre_succ_msg, safely_cancellable) == -1
                         && alreadyknown);
+    }
         break;
 
     case SCR_TELEPORTATION:
@@ -3169,6 +3184,10 @@ void read_scroll(int item_slot)
         // since there are no *really* bad scrolls, merely useless ones).
         xom_is_stimulated(bad_effect ? 100 : 50);
     }
+
+    if (!alreadyknown)
+        auto_assign_item_slot(scroll);
+
 }
 
 bool stasis_blocks_effect(bool calc_unid,

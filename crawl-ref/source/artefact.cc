@@ -1510,12 +1510,12 @@ string get_artefact_name(const item_def &item, bool force_known)
 
     if (item_type_known(item) || force_known)
     {
-        // unrands don't use cached names
-        if (is_unrandom_artefact(item))
-            return _seekunrandart(item)->name;
         // print artefact's real name
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
+        // unrands don't use cached names
+        if (is_unrandom_artefact(item))
+            return _seekunrandart(item)->name;
         return make_artefact_name(item, false);
     }
     // print artefact appearance
@@ -1947,6 +1947,7 @@ static void _make_faerie_armour(item_def &item)
 
     doodad.props[ARTEFACT_APPEAR_KEY].get_string()
         = item.props[ARTEFACT_APPEAR_KEY].get_string();
+    doodad.props.erase(ARTEFACT_NAME_KEY);
     item.props = doodad.props;
     item.plus = random2(6) + random2(6) - 2;
 }

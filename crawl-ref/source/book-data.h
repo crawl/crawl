@@ -111,7 +111,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CONFUSING_TOUCH,
     SPELL_CONFUSE,
     SPELL_PETRIFY,
-    SPELL_LEDAS_LIQUEFACTION,
     SPELL_ENGLACIATION,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_GRAVITAS,
@@ -225,7 +224,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_RECALL,
     SPELL_ANIMATE_DEAD,
     SPELL_CONTROL_UNDEAD,
-    SPELL_BONE_ARMOUR,
+    SPELL_CIGOTUVIS_EMBRACE,
     SPELL_DEATH_CHANNEL,
     SPELL_SIMULACRUM,
 },
@@ -295,9 +294,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Party Tricks
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_APPORTATION,
-    SPELL_BLINK,
     SPELL_TUKIMAS_DANCE,
     SPELL_INTOXICATE,
+    SPELL_INVISIBILITY
 },
 
 {   // Akashic Record

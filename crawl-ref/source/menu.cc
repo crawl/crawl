@@ -1820,10 +1820,11 @@ formatted_scroller::formatted_scroller(int _flags, const string& s) :
     add_text(s);
 }
 
-void formatted_scroller::add_text(const string& s, bool new_line)
+void formatted_scroller::add_text(const string& s, bool new_line, int wrap_col)
 {
     vector<formatted_string> parts;
-    formatted_string::parse_string_to_multiple(s, parts);
+
+    formatted_string::parse_string_to_multiple(s, parts, wrap_col);
     for (const formatted_string &part : parts)
         add_item_formatted_string(part);
 
@@ -1842,6 +1843,12 @@ void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
         me->quantity = 1;
     }
     add_entry(me);
+}
+
+void formatted_scroller::wrap_formatted_string(const formatted_string& fs,
+                                               int width)
+{
+    add_text(fs.to_colour_string(), false, width);
 }
 
 void formatted_scroller::add_item_string(const string& s, int hotkey)

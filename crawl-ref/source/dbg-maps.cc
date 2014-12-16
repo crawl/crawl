@@ -217,6 +217,19 @@ static bool _build_dungeon()
     return true;
 }
 
+/**
+ * Build dungeon levels for mapstat or objstat.
+ *
+ * The exact branches/levels built and number of build iterations is set by the
+ * command-line options for mapstat/objstat.
+
+ * @returns True if all iterations built successfully. For mapstat, this can
+ * return false if an iteration produced a disconnected level, since for
+ * diagnostic purposes we record the map in detail to a file and exit. For
+ * objstat, this only returns false if the primary dungeon generation function
+ * builder() fails, as the level may be in an invalid state and any object
+ * statistics erroneous.
+*/
 bool mapstat_build_levels()
 {
     if (!generated_levels.size())

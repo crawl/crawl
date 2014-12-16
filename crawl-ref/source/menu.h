@@ -553,10 +553,14 @@ public:
     formatted_scroller(int flags, const string& s);
     virtual void add_item_formatted_string(const formatted_string& s,
                                            int hotkey = 0);
+    virtual void wrap_formatted_string(const formatted_string& s,
+                                       int width = get_number_of_cols()-1);
     virtual void add_item_string(const string& s, int hotkey = 0);
-    virtual void add_text(const string& s, bool new_line = false);
+    virtual void add_text(const string& s, bool new_line = false,
+                          int wrap_col = 0);
     virtual bool jump_to_hotkey(int keyin);
     virtual vector<MenuEntry *> show(bool reuse_selections = false);
+    int get_lastch() { return lastch; }
     virtual ~formatted_scroller();
 protected:
     virtual bool page_down();

@@ -122,7 +122,7 @@ bool item_type_has_ids(object_class_type base_type);
 item_type_id_state_type get_ident_type(const item_def &item);
 item_type_id_state_type get_ident_type(object_class_type basetype,
                                        int subtype);
-void set_ident_type(item_def &item, item_type_id_state_type setting,
+bool set_ident_type(item_def &item, item_type_id_state_type setting,
                      bool force = false);
 bool set_ident_type(object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);

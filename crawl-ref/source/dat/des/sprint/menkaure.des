@@ -40,7 +40,7 @@ MARKER: d = lua:fog_machine { \
              cloud_type= "grey smoke" }
 KFEAT:  dV = shallow_water
 KMONS:  V = crocodile
-KMONS:  b = orange rat / scorpion / vampire mosquito / blink frog
+KMONS:  b = hell rat / scorpion / vampire mosquito / blink frog
 KITEM:  b = star_item
 SUBVAULT: A : sprint2_stairs_cluster
 SUBVAULT: B : sprint2_shoproom

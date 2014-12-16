@@ -39,12 +39,15 @@ static bool _confirm_pray_sacrifice(god_type god)
 {
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
+        bool penance = false;
         if (god_likes_item(god, *si)
-            && needs_handle_warning(*si, OPER_PRAY))
+            && needs_handle_warning(*si, OPER_PRAY, penance))
         {
             string prompt = "Really sacrifice stack with ";
             prompt += si->name(DESC_A);
             prompt += " in it?";
+            if (penance)
+                prompt += " This could place you under penance!";
 
             if (!yesno(prompt.c_str(), false, 'n'))
             {
@@ -568,7 +571,7 @@ static void _ashenzari_sac_scroll(const item_def& item)
                                          jwl, SCR_CURSE_JEWELLERY,
                                          0);
         }
-        int it = items(false, OBJ_SCROLLS, scr, 0, 0, GOD_ASHENZARI);
+        int it = items(false, OBJ_SCROLLS, scr, 0);
         if (it == NON_ITEM)
         {
             mpr("You feel the world is against you.");
