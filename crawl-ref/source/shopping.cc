@@ -325,14 +325,16 @@ static void _shop_print_stock(const vector<bool>& selected,
         stock_order.push_back(i);
     stable_sort(stock_order.begin(), stock_order.end(),
                 ShopSorter(shop));
-    for (size_t index = 0; index < stock_order.size(); ++index)
+    ASSERT(shop.stock.size() == stock_order.size());
+    for (size_t i = 0; i < stock_order.size(); ++i)
     {
-        const item_def& item = shop.stock[stock_order[index]];
+        const int stock_pos = stock_order[i];
+        const item_def& item = shop.stock[stock_pos];
         const int gp_value = _shop_get_item_value(item, shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
 
-        cgotoxy(1, index + 1, GOTO_CRT);
-        const char c = index + 'a';
+        cgotoxy(1, i + 1, GOTO_CRT);
+        const char c = i + 'a';
 
         // Colour stock as follows:
         //  * lightcyan, if on the shopping list.
@@ -344,12 +346,12 @@ static void _shop_print_stock(const vector<bool>& selected,
 
         // Is this too complicated? (jpeg)
 
-        if (in_list[index])
+        if (in_list[stock_pos])
             textcolour(LIGHTCYAN);
-        else if (total_cost > you.gold && selected[index])
+        else if (total_cost > you.gold && selected[stock_pos])
             textcolour(LIGHTRED);
         else if (gp_value <= you.gold - total_cost
-                 || selected[index] && can_afford)
+                 || selected[stock_pos] && can_afford)
         {
             textcolour(LIGHTGREEN);
         }
@@ -358,9 +360,9 @@ static void _shop_print_stock(const vector<bool>& selected,
         else
             textcolour(YELLOW);
 
-        if (in_list[index])
+        if (in_list[stock_pos])
             cprintf("%c $ ", c);
-        else if (selected[index])
+        else if (selected[stock_pos])
             cprintf("%c + ", c);
         else
             cprintf("%c - ", c);
