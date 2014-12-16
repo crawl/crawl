@@ -73,6 +73,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
+#include "viewchar.h" // stringize_glyph
 
 static int _spell_enhancement(spell_type spell);
 static int _apply_enhancement(spell_type spell, const int initial_power);
@@ -2136,7 +2137,7 @@ string spell_range_string(spell_type spell, bool rod)
     const int range    = calc_spell_range(spell, 0, rod);
     const int maxrange = spell_range(spell, cap);
 
-    return range_string(range, maxrange);
+    return range_string(range, maxrange, '@');
 }
 
 /**
@@ -2147,14 +2148,16 @@ string spell_range_string(spell_type spell, bool rod)
  *
  * @param range         The current range of the spell.
  * @param maxrange      The range the spell would have at max power.
+ * @param caster_char   The character used to represent the caster.
+ *                      Usually @ for the player.
  * @return              See above.
  */
-string range_string(int range, int maxrange)
+string range_string(int range, int maxrange, ucs_t caster_char)
 {
     if (range <= 0)
         return "N/A";
 
-    return string("@") + string(range - 1, '-')
+    return stringize_glyph(caster_char) + string(range - 1, '-')
            + string(">") + string(maxrange - range, '.');
 }
 
