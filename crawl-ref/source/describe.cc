@@ -2775,7 +2775,9 @@ static int _get_spell_description(const spell_type spell,
         // (draining, malmutation, levelling up)
         const int hd = mons_class_hit_dice(mon_owner->type);
         const int range = mons_spell_range(spell, hd);
-        description += "\nRange : " + range_string(range, range) + "\n";
+        description += "\nRange : "
+                       + range_string(range, range, mons_char(mon_owner->type))
+                       + "\n";
     }
     else
     {
