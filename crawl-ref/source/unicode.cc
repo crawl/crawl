@@ -46,10 +46,7 @@ int wctoutf8(char *d, ucs_t s)
         return 4;
     }
     // Invalid char marker (U+FFFD).
-    d[0] = 0xef;
-    d[1] = 0xbf;
-    d[2] = 0xbd;
-    return 3;
+    return wctoutf8(d, 0xFFFD);
 }
 
 int utf8towc(ucs_t *d, const char *s)
