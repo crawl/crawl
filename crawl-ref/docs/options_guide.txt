@@ -1132,6 +1132,11 @@ item_slot ^= <regex>:<inventory letter>
         Additionally, the item_slot option is applied on an item when it is
         identified, so it can be moved to the right place even if it was
         picked up unidentified.
+        Also, item_slot will cause items to be moved to their designated spot
+        even if there already is an item there, unlike spell_slot. However, if
+        that item matches the regex as well, it will try the next inventory
+        letter the player specified, and see if that slot is empty or has an
+        item that doesn't match the regex.
 
 autofight_stop = 30
         Autofight will not act if your HP is at or lower than this
