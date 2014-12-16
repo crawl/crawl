@@ -16,9 +16,10 @@ usually called git-core.
 Mac: Install git using Mac ports or Fink. The MacPorts port is
 called git-core (sudo port install git-core).
 
-Windows: Install msysgit (https://github.com/msysgit/msysgit/releases).
-Be sure to download the 'msysGit-netinstall', as this also includes the
-necessary tools to build Crawl - other installers include only Git itself.
+Windows: Install msysgit (http://msysgit.github.io/#contribute).
+Be sure to download 'msysGit', as this also includes most of the
+necessary tools to build Crawl - other installers include only Git
+itself.
 TortoiseGit is apparently pretty usable now for those who want Windows
 explorer integration, but I have not used it myself.
 
