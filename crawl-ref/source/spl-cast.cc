@@ -2122,19 +2122,40 @@ int calc_spell_range(spell_type spell, int power, bool rod)
     return range;
 }
 
+/**
+ * Give a string visually describing a given spell's range, as cast by the
+ * player.
+ *
+ * @param spell     The spell in question.
+ * @param rod       Whether the spell is being 'cast' from a rod.
+ * @return          Something like "@-->.."
+ */
 string spell_range_string(spell_type spell, bool rod)
 {
     const int cap      = spell_power_cap(spell);
     const int range    = calc_spell_range(spell, 0, rod);
     const int maxrange = spell_range(spell, cap);
 
-    if (range < 0)
+    return range_string(range, maxrange);
+}
+
+/**
+ * Give a string visually describing a given spell's range.
+ *
+ * E.g., for a spell of fixed range 1 (melee), "@>"
+ *       for a spell of range 3, max range 5, "@-->.."
+ *
+ * @param range         The current range of the spell.
+ * @param maxrange      The range the spell would have at max power.
+ * @return              See above.
+ */
+string range_string(int range, int maxrange)
+{
+    if (range <= 0)
         return "N/A";
-    else
-    {
-        return string("@") + string(range - 1, '-')
-               + string(">") + string(maxrange - range, '.');
-    }
+
+    return string("@") + string(range - 1, '-')
+           + string(">") + string(maxrange - range, '.');
 }
 
 string spell_schools_string(spell_type spell)
