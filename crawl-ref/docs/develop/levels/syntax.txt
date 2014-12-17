@@ -1372,7 +1372,10 @@ KMASK:    Z = no_monster_gen
             KMASK: W = !no_monster_gen
 
           would make it so that monsters are only randomly generated on shallow
-          water squares.
+          water squares. Or, to make only part of a vault transparent for
+          level-connectivity purposes:
+
+            KMASK: .12 = !opaque
 
           Unlike KFEAT, KITEM, and KMONS, KMASK does not override the normal
           meaning of the glyph.
