@@ -439,7 +439,7 @@ string describe_item_spells(const item_def &item)
  * information/interaction.
  *
  * @param spells            The set of spells to be listed.
- * @param owner             If this spell is being examined from a monster's
+ * @param mon_owner         If this spell is being examined from a monster's
  *                          description, 'mon_owner' is that monster. Else,
  *                          it's null.
  * @param source_item       The physical item holding the spells. May be null.
