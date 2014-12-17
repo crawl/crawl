@@ -6205,24 +6205,35 @@ int player::missile_deflection() const
 
 void player::ablate_deflection()
 {
-    int power;
+    const int orig_defl = missile_deflection();
+
+    bool did_something = false;
     if (attribute[ATTR_DEFLECT_MISSILES])
     {
-        power = calc_spell_power(SPELL_DEFLECT_MISSILES, true);
+        const int power = calc_spell_power(SPELL_DEFLECT_MISSILES, true);
         if (one_chance_in(2 + power / 8))
         {
             attribute[ATTR_DEFLECT_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "You feel less protected from missiles.");
+            did_something = true;
         }
     }
     else if (attribute[ATTR_REPEL_MISSILES])
     {
-        power = calc_spell_power(SPELL_REPEL_MISSILES, true);
+        const int power = calc_spell_power(SPELL_REPEL_MISSILES, true);
         if (one_chance_in(2 + power / 8))
         {
             attribute[ATTR_REPEL_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "You feel less protected from missiles.");
+            did_something = true;
         }
+    }
+
+    if (did_something)
+    {
+        // We might also have the effect from a non-expiring source.
+        mprf(MSGCH_DURATION, "You feel %s from missiles.",
+                             missile_deflection() < orig_defl
+                                 ? "less protected"
+                                 : "your spell is no longer protecting you");
     }
 }
 
