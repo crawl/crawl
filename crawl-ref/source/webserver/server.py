@@ -5,6 +5,7 @@ import errno
 import sys
 import re
 import random
+import collections
 
 import tornado.httpserver
 import tornado.ioloop
@@ -18,6 +19,7 @@ from conf import config
 import util
 from ws_handler import *
 from game_data_handler import GameDataHandler
+from janitor_handler import JanitorHandler
 import process_handler
 import userdb
 
@@ -187,13 +189,17 @@ def bind_server():
     if config.get("no_cache"):
         settings["static_handler_class"] = NoCacheHandler
 
-    application = tornado.web.Application([
+    routes = [
         (r"/", MainHandler, {"action": "lobby"}),
         (r"/play/(.*)", MainHandler, {"action": "play"}),
         (r"/watch/(.*)", MainHandler, {"action": "watch"}),
         (r"/scores/(.*)", MainHandler, {"action": "scores"}),
         (r"/socket", CrawlWebSocket),
-        (r"/gamedata/(.*)/(.*)", GameDataHandler)], gzip=True, **settings)
+        (r"/gamedata/(.*)/(.*)", GameDataHandler),
+        (r"/janitor/(.*)", JanitorHandler),
+        ]
+
+    application = tornado.web.Application(routes, gzip=True, **settings)
 
     kwargs = {}
     if config.get("http_connection_timeout") is not None:
@@ -280,6 +286,16 @@ def check_config():
         logging.error("init_player_program ({0}) is not "
                       "executable".format(init_prog))
         success = False
+
+    janitor_commands = config.get('janitor_commands')
+    if janitor_commands:
+        # This is pretty gnarly
+        janitor_id_counts = collections.Counter(
+            cmd['id'] for cmd in janitor_commands
+            )
+        for dup_id in [i for i in janitor_id_counts.iteritems() if i[1] > 1]:
+            logging.error("Duplicate janitor command id '%s'" % dup_id)
+            success = False
 
     return success
 
