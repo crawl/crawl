@@ -2868,7 +2868,7 @@ void get_spell_desc(const spell_type spell, describe_info &inf)
  * do so & chooses to.
  *
  * @param spelled   The spell in question.
- * @param owner     If this spell is being examined from a monster's
+ * @param mon_owner If this spell is being examined from a monster's
  *                  description, 'mon_owner' is that monster. Else, null.
  * @param item      The item (book or rod) holding the spell, if any.
  */
