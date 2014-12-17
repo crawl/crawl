@@ -609,12 +609,10 @@ void bolt::initialise_fire()
     if (you.see_cell(source) && target == source && visible())
         seen = true;
 
-    // The agent may die during the beam's firing, need to save this
-    // now.
-    if (agent() && agent()->nightvision())
-        nightvision = true;
-    if (agent() && agent()->can_see_invisible())
-        can_see_invis = true;
+    // XXX: Should non-agents count as seeing invisible?
+    // The agent may die during the beam's firing, need to save these now.
+    nightvision = agent() && agent()->nightvision();
+    can_see_invis = agent() && agent()->can_see_invisible();
 
 #ifdef DEBUG_DIAGNOSTICS
     // Not a "real" tracer, merely a range/reachability check.
@@ -6329,7 +6327,8 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false), beam_cancelled(false),
                dont_stop_player(false), bounces(false), bounce_pos(),
-               reflections(0), reflector(MID_NOBODY), auto_hit(false)
+               reflections(0), reflector(MID_NOBODY), auto_hit(false),
+               can_see_invis(false), nightvision(false)
 {
 }
 
