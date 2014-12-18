@@ -6076,7 +6076,7 @@ void player::god_conduct(conduct_type thing_done, int level)
     ::did_god_conduct(thing_done, level);
 }
 
-void player::banish(actor *agent, const string &who)
+void player::banish(actor* /*agent*/, const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (brdepth[BRANCH_ABYSS] == -1)
@@ -6090,8 +6090,6 @@ void player::banish(actor *agent, const string &who)
 
     banished    = true;
     banished_by = who;
-
-    run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
 }
 
 // For semi-undead species (Vampire!) reduce food cost for spells and abilities

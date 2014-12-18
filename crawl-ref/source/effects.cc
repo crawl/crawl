@@ -67,6 +67,7 @@
 #include "throw.h"
 #include "travel.h"
 #include "unwind.h"
+#include "view.h"
 #include "viewchar.h"
 #include "xom.h"
 
@@ -389,6 +390,7 @@ void banished(const string &who)
     take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
 
     stop_delay(true);
+    run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
     down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 
     // Xom just might decide to interfere.
