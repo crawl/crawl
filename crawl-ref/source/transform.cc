@@ -166,8 +166,6 @@ int FormDuration::power_bonus(int pow) const
     {
         case PS_NONE:
             return 0;
-        case PS_STABLE_TENTH:
-            return (random2(pow) + pow)/20;
         case PS_SINGLE:
             return random2(pow);
         case PS_ONE_AND_A_HALF:
@@ -1695,6 +1693,32 @@ static int _beastly_appendage_level(int appendage)
     }
 }
 
+/**
+ * Print an appropriate message when the number of heads the player has
+ * changes during a refresh of hydra form.
+ */
+static void _print_head_change_message(int old_heads, int new_heads)
+{
+    if (old_heads == new_heads)
+        return;
+
+    const int delta = abs(old_heads - new_heads);
+    const bool plural = delta != 1;
+    if (old_heads > new_heads)
+    {
+        if (plural)
+            mprf("%d of your heads shrink away.", delta);
+        else
+            mpr("One of your heads shrinks away.");
+        return;
+    }
+
+    if (plural)
+        mprf("%d new heads grow.", delta);
+    else
+        mpr("A new head grows.");
+}
+
 // Transforms you into the specified form. If involuntary, checks for
 // inscription warnings are skipped, and the transformation fails silently
 // (if it fails). If just_check is true the transformation doesn't actually
@@ -1739,6 +1763,13 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             you.redraw_armour_class = true;
             // ^ could check more carefully for the exact cases, but I'm
             // worried about making the code too fragile
+
+            if (which_trans == TRAN_HYDRA)
+            {
+                const int heads = you.heads();
+                set_hydra_form_heads(div_rand_round(pow, 10));
+                _print_head_change_message(heads, you.heads());
+            }
         }
 
         int dur = _transform_duration(which_trans, pow);
