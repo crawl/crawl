@@ -371,7 +371,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SMITING, "Smiting",
      SPTYP_NONE,
-     SPFLAG_TARGET | SPFLAG_NOT_SELF, // divine ability, monsters
+     SPFLAG_TARGET | SPFLAG_NOT_SELF,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -3407,7 +3407,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FLAY, "Flay",
      SPTYP_NECROMANCY,
-     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER | SPFLAG_UNHOLY,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONSTER,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
