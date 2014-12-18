@@ -498,9 +498,6 @@ static int _spell_enhancement(spell_type spell)
     if (you.form == TRAN_SHADOW)
         enhanced -= 2;
 
-    if (you.form == TRAN_DRAGON && spell == SPELL_DRAGON_CALL)
-        enhanced++;
-
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
 

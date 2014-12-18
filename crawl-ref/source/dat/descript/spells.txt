@@ -483,8 +483,6 @@ This spell issues a powerful call to a draconic realm, beckoning forth dragon
 after dragon to engage the summoner's enemies. The spell is taxing to maintain,
 and each new dragon which answers the call will further drain the summoner's
 magical reserves.
-
-If the caster is a mighty dragon, the spell echoes more powerfully still.
 %%%%
 Drain Life spell
 
