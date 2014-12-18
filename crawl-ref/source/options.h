@@ -282,6 +282,7 @@ public:
     FixedBitVector<MAX_SKILL_LEVEL + 1> note_skill_levels;
     vector<pair<text_pattern, string>> auto_spell_letters;
     vector<pair<text_pattern, string>> auto_item_letters;
+    vector<pair<text_pattern, string>> auto_ability_letters;
 
     bool        pickup_thrown;  // Pickup thrown missiles
     int         travel_delay;   // How long to pause between travel moves
