@@ -179,30 +179,7 @@ static void _adjust_ability()
         return;
     }
 
-    const int index2 = letter_to_index(keyin);
-    if (index1 == index2)
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    mprf_nocap("%c - %s", static_cast<char>(keyin),
-         ability_name(talents[selected].which));
-
-    for (unsigned int i = 0; i < talents.size(); ++i)
-    {
-        if (talents[i].hotkey == keyin)
-        {
-            mprf_nocap("%c - %s", old_key, ability_name(talents[i].which));
-            break;
-        }
-    }
-
-
-    // Swap references in the letter table.
-    ability_type tmp = you.ability_letter_table[index2];
-    you.ability_letter_table[index2] = you.ability_letter_table[index1];
-    you.ability_letter_table[index1] = tmp;
+    swap_ability_slots(index1, letter_to_index(keyin));
 }
 
 void swap_inv_slots(int from_slot, int to_slot, bool verbose)

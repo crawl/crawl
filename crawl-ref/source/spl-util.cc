@@ -248,17 +248,38 @@ bool add_spell_to_memory(spell_type spell)
 
     // now we find an available label:
     // first check to see whether we've chosen an automatic label:
+    bool overwrite = false;
     for (const auto &entry : Options.auto_spell_letters)
     {
         if (!entry.first.matches(sname))
             continue;
         for (char ch : entry.second)
         {
-            if (isaalpha(ch)
-                && you.spell_letter_table[letter_to_index(ch)] == -1)
+            if (ch == '+')
+                overwrite = true;
+            else if (ch == '-')
+                overwrite = false;
+            else if (isaalpha(ch))
             {
-                j = letter_to_index(ch);
-                break;
+                const int slot = letter_to_index(ch);
+                const int existing = you.spell_letter_table[slot];
+                if (existing == -1)
+                {
+                    j = slot;
+                    break;
+                }
+                else if (overwrite)
+                {
+                    const string ename = lowercase_string(
+                            spell_title(static_cast<spell_type>(existing)));
+                    // Don't overwrite a spell matched by the same rule.
+                    if (!entry.first.matches(ename))
+                    {
+                        j = slot;
+                        break;
+                    }
+                }
+                // Otherwise continue on to the next letter in this rule.
             }
         }
         if (j != -1)
@@ -274,6 +295,18 @@ bool add_spell_to_memory(spell_type spell)
 
     if (you.num_turns)
         mprf("Spell assigned to '%c'.", index_to_letter(j));
+
+    // Swapping with an existing spell.
+    if (you.spell_letter_table[j] != -1)
+    {
+        // Find a spot for the spell being moved. Assumes there will be one.
+        for (int free = 0; free < 52; free++)
+            if (you.spell_letter_table[free] == -1)
+            {
+                you.spell_letter_table[free] = you.spell_letter_table[j];
+                break;
+            }
+    }
 
     you.spell_letter_table[j] = i;
 
