@@ -878,8 +878,8 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
  */
 static bool _handle_swoop(monster* mons)
 {
-    // TODO: check for AT_SWOOP in other slots and/or make it work there?
-    if (mons_attack_spec(mons, 0, true).type != AT_SWOOP)
+    // TODO: check for AF_SWOOP in other slots and/or make it work there?
+    if (mons_attack_spec(mons, 0, true).flavour != AF_SWOOP)
         return false;
 
     actor *defender = mons->get_foe();
