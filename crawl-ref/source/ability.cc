@@ -45,6 +45,7 @@
 #include "mon-place.h"
 #include "mutation.h"
 #include "notes.h"
+#include "options.h"
 #include "output.h"
 #include "player-stats.h"
 #include "potion.h"
@@ -3277,10 +3278,62 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     return talents;
 }
 
+/**
+ * Maybe move an ability to the slot given by the ability_slot option.
+ *
+ * @param[in] abil_type the ability to be checked
+ * @param[in] slot current slot of the ability
+ * @returns the new slot of the ability if it was moved, slot otherwise.
+ */
+static int _auto_assign_ability_slot(ability_type abil_type, int slot)
+{
+    const string abilname = lowercase_string(ability_name(abil_type));
+    bool overwrite = false;
+    // check to see whether we've chosen an automatic label:
+    for (auto& mapping : Options.auto_ability_letters)
+    {
+        if (!mapping.first.matches(abilname))
+            continue;
+        for (char i : mapping.second)
+        {
+            if (i == '+')
+                overwrite = true;
+            else if (i == '-')
+                overwrite = false;
+            else if (isaalpha(i))
+            {
+                const int index = letter_to_index(i);
+                ability_type existing_ability = you.ability_letter_table[index];
+
+                if (existing_ability == ABIL_NON_ABILITY
+                    || existing_ability == abil_type)
+                {
+                    // Unassigned or already assigned to this ability.
+                    you.ability_letter_table[index] = abil_type;
+                    return index;
+                }
+                else if (overwrite)
+                {
+                    const string str = lowercase_string(ability_name(existing_ability));
+                    // Don't overwrite an ability matched by the same rule.
+                    if (mapping.first.matches(str))
+                        continue;
+                    you.ability_letter_table[slot] = abil_type;
+                    swap_ability_slots(slot, index, true);
+                    return index;
+                }
+                // else occupied, continue to the next mapping.
+            }
+        }
+    }
+    return slot;
+}
+
 // Returns an index (0-51) if successful, -1 if you should
 // just use the next one.
 static int _find_ability_slot(const ability_def &abil)
 {
+    ability_type abil_type = abil.ability;
     for (int slot = 0; slot < 52; slot++)
         // Placeholder handling, part 2: The ability we have might
         // correspond to a placeholder, in which case the ability letter
@@ -3288,7 +3341,7 @@ static int _find_ability_slot(const ability_def &abil)
         // its corresponding ability before comparing the two, so that
         // we'll find the placeholder's index properly.
         if (fixup_ability(you.ability_letter_table[slot]) == abil.ability)
-            return slot;
+            return _auto_assign_ability_slot(abil_type, slot);
 
     // No requested slot, find new one and make it preferred.
 
@@ -3301,7 +3354,7 @@ static int _find_ability_slot(const ability_def &abil)
 
     ASSERT(first_slot < 52);
 
-    switch (abil.ability)
+    switch (abil_type)
     {
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_TSO_BLESS_WEAPON:
@@ -3341,8 +3394,8 @@ static int _find_ability_slot(const ability_def &abil)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
-            you.ability_letter_table[slot] = abil.ability;
-            return slot;
+            you.ability_letter_table[slot] = abil_type;
+            return _auto_assign_ability_slot(abil_type, slot);
         }
     }
 
@@ -3351,8 +3404,8 @@ static int _find_ability_slot(const ability_def &abil)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
-            you.ability_letter_table[slot] = abil.ability;
-            return slot;
+            you.ability_letter_table[slot] = abil_type;
+            return _auto_assign_ability_slot(abil_type, slot);
         }
     }
 
@@ -3403,6 +3456,18 @@ vector<ability_type> get_god_abilities(bool ignore_silence, bool ignore_piety,
 
     return abilities;
 }
+
+void swap_ability_slots(int index1, int index2, bool silent)
+{
+    if (!silent)
+        mprf_nocap("%c - %s", index_to_letter(index2), ability_name(you.ability_letter_table[index2]));
+
+    // Swap references in the letter table.
+    ability_type tmp = you.ability_letter_table[index2];
+    you.ability_letter_table[index2] = you.ability_letter_table[index1];
+    you.ability_letter_table[index1] = tmp;
+}
+
 
 ////////////////////////////////////////////////////////////////////////
 // generic_cost
