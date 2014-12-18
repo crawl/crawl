@@ -37,7 +37,7 @@ static const int SHOALS_ISLAND_COLLIDE_DIST2 = 5 * 5;
 // The raw tide height / TIDE_MULTIPLIER is the actual tide height. The higher
 // the tide multiplier, the slower the tide advances and recedes. A multiplier
 // of X implies that the tide will advance visibly about once in X turns.
-static int TIDE_MULTIPLIER = 30;
+static int TIDE_MULTIPLIER = 2;
 
 static int LOW_TIDE = -18 * TIDE_MULTIPLIER;
 static int HIGH_TIDE = 25 * TIDE_MULTIPLIER;
@@ -109,24 +109,10 @@ static int _shoals_feature_height(dungeon_feature_type feat)
     }
 }
 
-static int _shoals_feature_sequence_number(dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-    case DNGN_SHALLOW_WATER:
-        return 1;
-    case DNGN_DEEP_WATER:
-        return 2;
-    default:
-    case DNGN_FLOOR:
-        return 0;
-    }
-}
-
 // Returns true if the given feature can be affected by Shoals tides.
 static inline bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
 {
-    return feat_is_water(feat) || feat == DNGN_FLOOR;
+    return feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR;
 }
 
 // Return true if tide effects can propagate through this square.
@@ -850,173 +836,24 @@ static void _shoals_run_tide(int &tide, int &acc)
         acc = in_decel_margin? acc / 2 : acc * 2;
 }
 
-static coord_def _shoals_escape_place_from(coord_def bad_place,
-                                           actor *act, item_def *it)
-{
-    int best_height = -1000;
-    coord_def chosen;
-    for (adjacent_iterator ai(bad_place); ai; ++ai)
-    {
-        coord_def p(*ai);
-        const dungeon_feature_type feat(grd(p));
-        if (!feat_has_solid_floor(feat))
-            continue;
-
-        if (!act || !actor_at(p))
-        {
-            if (best_height == -1000 || dgn_height_at(p) > best_height)
-            {
-                best_height = dgn_height_at(p);
-                chosen = p;
-            }
-        }
-    }
-    return chosen;
-}
-
-static void _clear_net_trapping_status(coord_def c)
-{
-    actor *victim = actor_at(c);
-    if (!victim)
-        return;
-
-    if (victim->is_monster())
-    {
-        monster* mvictim = victim->as_monster();
-        if (you.can_see(mvictim))
-            mprf("The net is swept off %s.", mvictim->name(DESC_THE).c_str());
-        mons_clear_trapping_net(mvictim);
-    }
-    else
-    {
-        mpr("The tide washes the net away!");
-        clear_trapping_net();
-    }
-}
-
-/**
- * Have the shoals tides sometimes move items at a location to a higher spot
- * with a solid floor.
- *
- * @param c The location.
-*/
-static void _shoals_tide_sweep_items_clear(coord_def c)
-{
-    if (igrd(c) == NON_ITEM)
-        return;
-
-    for (stack_iterator si(c); si; ++si)
-    {
-        // Don't abort tide entry because of items. If we can't sweep the
-        // item clear here, let dungeon_terrain_changed teleport the item
-        // to the nearest safe square.
-        item_def &item(*si);
-
-        // Let the tide break up stacks
-        if (!item_is_rune(item) && coinflip())
-            continue;
-
-        if (item_is_stationary(item) && !one_chance_in(5))
-            continue;
-
-        const coord_def target(_shoals_escape_place_from(c, nullptr, &item));
-        if (!target.origin())
-        {
-            if (item_is_stationary_net(item))
-                _clear_net_trapping_status(c);
-
-            int id = si.index();
-            move_item_to_grid(&id, target);
-        }
-    }
-}
-
-/**
- * Have the shoals tides sometimes move non-water-capable actors a location to
- * an adjacent spot.
- *
- * @param c The location.
- * @return  False if there was a drownable actor at the location that couldn't
- *          be moved, true otherwise.
-*/
-static bool _shoals_tide_sweep_actors_clear(coord_def c)
-{
-    actor *victim = actor_at(c);
-    if (!victim
-        || (victim->swimming() || !victim->ground_level())
-            && (!victim->is_player()
-                || !need_expiration_warning(DNGN_DEEP_WATER)))
-    {
-        return true;
-    }
-
-    if (victim->is_monster())
-    {
-        const monster* mvictim = victim->as_monster();
-        // Plants and statues cannot be moved away; the tide cannot
-        // drown them.
-        if (mons_class_is_stationary(mvictim->type))
-            return false;
-
-        // If the monster doesn't need help, move along.
-        if (monster_habitable_grid(mvictim, DNGN_DEEP_WATER))
-            return true;
-    }
-    coord_def evacuation_point(_shoals_escape_place_from(c, victim, nullptr));
-    // The tide no longer drowns monster/player if it cannot push them
-    // out of the way.
-    if (evacuation_point.origin())
-        return false;
-
-    bool clear_net = false;
-    if (victim->caught())
-    {
-        int net = get_trapping_net(c);
-        if (net != NON_ITEM)
-            clear_net = !move_item_to_grid(&net, evacuation_point);
-    }
-    victim->move_to_pos(evacuation_point, clear_net);
-    return true;
-}
-
-/**
- * Have the shoals tides sometimes move items and non-water-capable actors a
- * location to an adjacent spot.
- *
- * @param c The location.
- * @return  False if there was a drownable actor at the location that couldn't
- *          be moved, true otherwise.
-*/
-static bool _shoals_tide_sweep_clear(coord_def c)
-{
-    _shoals_tide_sweep_items_clear(c);
-    return _shoals_tide_sweep_actors_clear(c);
-}
-
 static void _shoals_tide_wash_blood_away_at(coord_def c)
 {
     env.pgrid(c) &= ~FPROP_BLOODY;
 }
 
-static dungeon_feature_type _shoals_apply_tide_feature_at(
+static void _shoals_apply_tide_feature_at(
     coord_def c,
     dungeon_feature_type feat)
 {
-    if (feat == DNGN_DEEP_WATER && !_shoals_tide_sweep_clear(c))
-        feat = DNGN_SHALLOW_WATER;
-
     const dungeon_feature_type current_feat = grd(c);
 
-    // Return DNGN_UNSEEN if the feature isn't changed.
     if (feat == current_feat)
-        return DNGN_UNSEEN;
+        return;
 
     if (crawl_state.generating_level)
         grd(c) = feat;
     else
         dungeon_terrain_changed(c, feat, true, false, true);
-
-    return feat;
 }
 
 // Determines if the tide is rising or falling based on before and
@@ -1040,21 +877,13 @@ static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
     const int effective_height = dgn_height_at(c) - tide;
     dungeon_feature_type newfeat =
         _shoals_feature_by_height(effective_height);
-    // Make sure we're not sprouting new walls.
+    // Make sure we're not sprouting new walls, or deep water.
     if (feat_is_wall(newfeat))
         newfeat = DNGN_FLOOR;
+    if (feat_is_water(newfeat))
+        newfeat = DNGN_SHALLOW_WATER;
     const dungeon_feature_type oldfeat = grd(c);
 
-    // If the tide is affecting squares incrementally, never go
-    // straight from floor -> deep water or vice versa, always force
-    // an intermediate shallow water step.
-    if (incremental_tide)
-    {
-        const int oldfeat_seq = _shoals_feature_sequence_number(oldfeat);
-        const int newfeat_seq = _shoals_feature_sequence_number(newfeat);
-        if (abs(oldfeat_seq - newfeat_seq) >= 2)
-            newfeat = DNGN_SHALLOW_WATER;
-    }
 
     if (oldfeat == newfeat
         || (_shoals_feature_tide_height_change(oldfeat, newfeat) !=
@@ -1063,17 +892,7 @@ static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
         return;
     }
 
-    const dungeon_feature_type final_feature =
-        _shoals_apply_tide_feature_at(c, newfeat);
-
-    if (incremental_tide
-        && final_feature == DNGN_DEEP_WATER
-        && c == you.pos()
-        && !you.ground_level()
-        && !you.permanent_flight())
-    {
-        mprf(MSGCH_WARN, "The tide rushes in under you.");
-    }
+    _shoals_apply_tide_feature_at(c, newfeat);
 }
 
 static int _shoals_tide_at(coord_def pos, int base_tide)
