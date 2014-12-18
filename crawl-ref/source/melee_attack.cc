@@ -2708,7 +2708,7 @@ bool melee_attack::mons_attack_effects()
         return defender->alive();
     }
 
-    if (attacker != defender && attk_type == AT_TRAMPLE)
+    if (attacker != defender && attk_flavour == AF_TRAMPLE)
         do_knockback();
 
     special_damage = 0;

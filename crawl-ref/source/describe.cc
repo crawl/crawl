@@ -3181,6 +3181,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_FIREBRAND:       return "deal extra fire damage and surround the defender with flames";
     case AF_CORRODE:         return "corrode armour";
     case AF_SCARAB:          return "reduce negative energy resistance and drain health, speed, or skills";
+    case AF_TRAMPLE:         return "knock back the defender";
     default:                 return "";
     }
 }
@@ -3191,7 +3192,6 @@ static string _monster_attacks_description(const monster_info& mi)
     set<attack_flavour> attack_flavours;
     vector<string> attack_descs;
     // Weird attack types that act like attack flavours.
-    bool trample = false;
     bool reach_sting = false;
 
     for (const auto &attack : mi.attack)
@@ -3205,15 +3205,9 @@ static string _monster_attacks_description(const monster_info& mi)
                 attack_descs.push_back(desc);
         }
 
-        if (attack.type == AT_TRAMPLE)
-            trample = true;
-
         if (attack.type == AT_REACH_STING)
             reach_sting = true;
     }
-
-    if (trample)
-        attack_descs.emplace_back("knock back the defender");
 
     // Assumes nothing has both AT_REACH_STING and AF_REACH.
     if (reach_sting)
