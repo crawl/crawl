@@ -848,7 +848,7 @@ KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / nee
 KITEM:  g = any potion q:2-3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
-KMONS:  7 = spider
+KMONS:  7 = wasp
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal
 KMONS:  & = bush
@@ -903,7 +903,7 @@ KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / nee
 KITEM:  g = any potion q:2 / any potion q:3
 MONS:   plant, oklob sapling, ball python
 MONS:   adder, oklob plant, water moccasin
-KMONS:  7 = spider
+KMONS:  7 = wasp
 KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal band
 KMONS:  & = bush

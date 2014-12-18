@@ -1041,7 +1041,7 @@ SUBST:  g = xm
 KFEAT:  m = iron_grate
 KFEAT:  q = web / floor
 MONS:   patrolling orc w:20 / patrolling orc warrior / patrolling orc knight w:2
-MONS:   tarantella / wolf spider / spider / redback
+MONS:   tarantella / wolf spider / redback
 MAP
 x@@@@@@@eeee
 x.......eeexxxx

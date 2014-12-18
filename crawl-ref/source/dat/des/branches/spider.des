@@ -11,7 +11,7 @@ function callback.spider_nest_trap(data, triggerable, triggerer, marker, ev)
   local spiders = 0
   for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
     if (dgn.mons_at(p.x, p.y) == nil and p ~= youpos and dgn.is_passable(p.x, p.y)) then
-      if (dgn.create_monster(p.x, p.y, "generate_awake spider")) then
+      if (dgn.create_monster(p.x, p.y, "generate_awake redback")) then
         spiders = spiders + 1
       end
     end
@@ -41,7 +41,7 @@ ENDMAP
 NAME:   spider_nest_entry_a
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
-MONS:   spider
+MONS:   trapdoor spider / w:5 redback / w:5 jumping spider / nothing w:20
 MAP
 .WWW.WWW.
 W.WW.WW.W
@@ -78,7 +78,7 @@ NAME:   spider_nest_entry_funnel_web
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
 KFEAT:  ^ = web / floor
-MONS:   spider / w:5 wolf spider / jumping spider / redback / nothing
+MONS:   w:5 wolf spider / jumping spider / redback / nothing
 MAP
       xxxxxx
      xx11.1x
@@ -138,7 +138,7 @@ KFEAT: O = enter_spider_nest
 NSUBST: A = 2:x / '
 SUBST: X = xxx', ' = .....^^1
 KFEAT: ^ = web
-KMONS: 1 = spider
+KMONS: 1 = redback / jumping spider
 MAP
  xxxxxxxxx
 xxXxXxXxXxx
@@ -252,7 +252,7 @@ NAME:   spiders_nest_scorpion_pit
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: southeast
 DEPTH:  Spider, !Spider:$
-KMONS:  1 = spider
+KMONS:  1 = wasp
 KMONS:  2 = scorpion / wolf spider w:3
 KMONS:  3 = trapdoor spider generate_awake / nothing
 KMONS:  74 = redback / wolf spider / nothing w:15
@@ -307,8 +307,7 @@ KMONS:  M = fungus
  lua_marker('Z', wm)
 }}
 SUBST:  W = Ww , z : * , * = %%$*..M , . = WW.
-MONS:   spider w:20 / wolf spider / trapdoor spider generate_awake / \
-        redback / tarantella w:2
+MONS:   wolf spider / trapdoor spider generate_awake / redback / tarantella w:2
 MAP
   xxxxx    xxxx
  xxxxxxx xxxxxxx
@@ -397,9 +396,9 @@ SUBST:   2 = 2 *:4
 KMONS:   2 = tarantella / redback w:12 / jumping spider w:8 / wolf spider w:5
 KMONS:   3 = redback
 SUBST:   4 = 4 *:3
-KMONS:   4 = jumping spider / wolf spider w:5 / spider w:20 / redback w:2
+KMONS:   4 = jumping spider / wolf spider w:5 / trapdoor spider w:20 / redback w:2
 SUBST:   6 = 6 *:2
-KMONS:   6 = spider / wolf spider w:4 / jumping spider w:1
+KMONS:   6 = redback / wolf spider w:4 / jumping spider w:1
 SUBST:   7 = 7 .:50
 KMONS:   7 = trapdoor spider
 KITEM:   t = potion of ambrosia ident:type
@@ -435,7 +434,7 @@ ENDMAP
 NAME:   hangedman_spider_trapstep
 TAGS:   no_monster_gen no_pool_fixup patrolling allow_dup
 DEPTH:  Spider:1-2, Zot, !Zot:$
-KMONS:  0 = patrolling spider
+KMONS:  0 = patrolling wasp
 KMONS:  1 = tarantella
 : if you.in_branch("Zot") then
 KMONS:  2* = jumping spider / orb spider w:5
@@ -489,7 +488,7 @@ TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   Spider, !Spider:$
 WEIGHT:  5
-KMONS:   1 = scorpion w:20 / spider w:13 / worker ant w:35 / \
+KMONS:   1 = scorpion w:20 / wasp w:13 / worker ant w:35 / \
              giant cockroach w:1 / worm w:1
 KMONS:   2 = soldier ant / redback / vampire mosquito w:5
 KMONS:   3aAdD = brain worm / boulder beetle w:5
@@ -612,8 +611,8 @@ COLOUR: z = brown
 COLOUR: X = lightgrey
 SUBST:  O = x
 SUBST:  z = v:1 z:14
-KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
-            tarantella w:1 /  nothing w:100
+KMONS:  z = jumping spider w:5 / wolf spider w:3 / redback w:1 / \
+            tarantella w:1 /  nothing w:96
 : dgn.delayed_decay(_G, 'v', 'orc skeleton')
 KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
 KFEAT: z = web / floor w:60
@@ -652,8 +651,8 @@ COLOUR: z = brown
 COLOUR: X = lightgrey
 SUBST:  O = x
 SUBST:  z = v:1 z:14
-KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
-            tarantella w:1 / nothing w:100
+KMONS:  z = jumping spider w:5 / wolf spider w:3 / redback w:1 / \
+            tarantella w:1 / nothing w:96
 : dgn.delayed_decay(_G, 'v', 'orc skeleton')
 KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
 KFEAT: z = web / floor w:60
@@ -692,8 +691,8 @@ COLOUR: z = brown
 COLOUR: X = lightgrey
 SUBST:  O = x
 SUBST:  z = v:1 z:14
-KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
-            tarantella w:1 / nothing w:100
+KMONS:  z = jumping spider w:5 / wolf spider w:3 / redback w:1 / \
+            tarantella w:1 / nothing w:96
 : dgn.delayed_decay(_G, 'v', 'orc skeleton')
 KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
 KFEAT: z = web / floor w:60
@@ -722,7 +721,7 @@ ENDMAP
 # Misc minivaults
 NAME:   guppyfry_spider_mini_1
 DEPTH:  Spider
-MONS:   spider / jumping spider, trapdoor spider / redback
+MONS:   jumping spider / trapdoor spider / redback
 MAP
 x@.xxxxxxxx.
 xx..xxxxx..@
@@ -740,7 +739,7 @@ ENDMAP
 
 NAME:   guppyfry_spider_mini_2
 DEPTH:  Spider
-MONS:   spider / jumping spider / trapdoor spider / redback
+MONS:   jumping spider / trapdoor spider / redback
 MAP
 xx..xxxx..xx
 x....xx....x
@@ -757,7 +756,7 @@ ENDMAP
 
 NAME:   guppyfry_spider_mini_3
 DEPTH:  Spider
-MONS:   spider / jumping spider / trapdoor spider / redback
+MONS:   jumping spider / trapdoor spider / redback
 MAP
 W....WW....W
 xW...WW...Wx
@@ -848,7 +847,7 @@ ENDMAP
 NAME:   nicolae_spider_nook
 DEPTH:  Spider
 TAGS:   no_monster_gen
-MONS:   wolf spider / redback / trapdoor spider / jumping spider / spider
+MONS:   wolf spider / redback / trapdoor spider / jumping spider
 KITEM:  d = | w:5 / * w:20 / $
 KMONS:  d = orb spider
 MAP
@@ -908,7 +907,7 @@ ENDMAP
 NAME:   nicolae_arachne_temple
 DEPTH:  Spider:2-
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-MONS:   spider, tarantella, wolf spider, redback, jumping spider
+MONS:   tarantella, wolf spider, redback, jumping spider
 FTILE:  -2 = FLOOR_SANDSTONE
 FTILE:  'A435 = FLOOR_LIMESTONE
 COLOUR: -2 = brown
@@ -941,7 +940,7 @@ NAME:    lemuel_spider_zombies
 DEPTH:   Spider, !Spider:$
 ORIENT:  float
 TAGS:    no_monster_gen
-MONS:    spider zombie / wolf spider zombie / tarantella zombie
+MONS:    redback zombie / wolf spider zombie / tarantella zombie
 MONS:    necromancer
 MONS:    plant
 SHUFFLE: {}
@@ -984,7 +983,7 @@ TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  Spider:2-3
 ORIENT: float
 WEIGHT: 3
-MONS:   orb spider / spider
+MONS:   orb spider / redback
 SUBST:  s = x.
 SUBST:  . = ...^
 KFEAT:  ^ = web
@@ -1707,24 +1706,21 @@ PLACE:  Spider:$
     FTILE:  Y = FLOOR_HALL
     COLOUR: Y = blue
     KMONS:  Z = Arachne, torpor snail
-    KMONS:  1 = spider / tarantella / wolf spider \
-              / redback / jumping spider w:50
+    KMONS:  1 = tarantella / wolf spider / redback / jumping spider w:50
 : elseif crawl.one_chance_in(2) then
     SUBST:  '-! = .
     SUBST:  "_?^ = Y
     FTILE:  Y = FLOOR_ROUGH_RED
     COLOUR: Y = red
     KMONS:  Z = Arachne, ghost moth
-    KMONS:  1 = spider / redback / wolf spider \
-              / tarantella w:50 / jumping spider
+    KMONS:  1 = redback / wolf spider / tarantella w:50 / jumping spider
 : else
     SUBST:  '"_ = .
     SUBST:  -!?^ = Y
     FTILE:  Y = FLOOR_SANDSTONE
     COLOUR: Y = brown
     KMONS:  Z = Arachne, emperor scorpion
-    KMONS:  1 = spider / tarantella / wolf spider w:50 \
-            / redback / jumping spider
+    KMONS:  1 = tarantella / wolf spider w:50 / redback / jumping spider
 : end
 
 NSUBST: 3 = 4:e / 1:s / *:t.2
