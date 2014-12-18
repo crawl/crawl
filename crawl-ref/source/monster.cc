@@ -480,8 +480,7 @@ static int _mons_offhand_weapon_index(const monster* m)
 item_def *monster::weapon(int which_attack) const
 {
     const mon_attack_def attk = mons_attack_spec(this, which_attack);
-    if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY
-        && attk.type != AT_KITE && attk.type != AT_SWOOP)
+    if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
     {
         return nullptr;
     }

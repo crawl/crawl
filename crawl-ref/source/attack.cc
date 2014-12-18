@@ -440,8 +440,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
             // Elephant trunks have no bones inside.
             attk_type = AT_NONE;
         }
-        else if (attk_type == AT_KITE || attk_type == AT_SWOOP)
-            attk_type = AT_HIT; // special handling of these two elsewhere
     }
     else
     {

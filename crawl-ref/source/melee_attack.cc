@@ -2494,8 +2494,6 @@ string melee_attack::mons_attack_verb()
 #endif
         "pounce on",
         "sting",
-        "kite",  // should never display
-        "swoop", // ditto
     };
     COMPILE_CHECK(ARRAYSZ(attack_types) == AT_LAST_REAL_ATTACK);
 
