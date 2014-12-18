@@ -40,8 +40,6 @@ void random_uselessness(int scroll_slot = -1);
 
 int recharge_wand(bool known = true, const string &pre_msg = "");
 
-void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
-
 void yell(const actor* mon = nullptr);
 
 void holy_word(int pow, holy_word_source_type source, const coord_def& where,
