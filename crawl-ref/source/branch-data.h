@@ -69,7 +69,7 @@ const Branch branches[NUM_BRANCHES] =
       'S', 0 },
 
     { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 5, 15,
-      BFLAG_ISLANDED | BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END, 0,
       DNGN_ENTER_SHOALS, DNGN_EXIT_SHOALS,
       "Shoals", "the Shoals", "Shoals",
       nullptr,
