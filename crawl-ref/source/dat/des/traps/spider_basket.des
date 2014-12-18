@@ -18,7 +18,7 @@ function callback.spider_trap_stepped(data, triggerable, triggerer, marker, ev)
   local spiders = 0
   for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
     if (dgn.mons_at(p.x, p.y) == nil and p ~= dgn.point(you.pos) and dgn.is_passable(p.x, p.y)) then
-      if (dgn.create_monster(p.x, p.y, "generate_awake spider")) then
+      if (dgn.create_monster(p.x, p.y, "generate_awake redback")) then
         spiders = spiders + 1
       end
     end
@@ -33,7 +33,7 @@ end
 # a basket of spiders
 #
 NAME:   spider_trap
-DEPTH:  D:9-, Depths, Vaults, Elf, Spider, Snake
+DEPTH:  D:12-, Depths, Vaults, Elf, Spider, Snake
 TAGS:   allow_dup extra luniq_spider_trap transparent
 WEIGHT: 100
 KFEAT:  ^ = pressure plate trap
