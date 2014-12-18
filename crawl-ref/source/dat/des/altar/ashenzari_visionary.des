@@ -177,9 +177,8 @@ ENDMAP
 
 NAME: grunt_ashenzari_visionary_spider
 TAGS: grunt_ashenzari_visionary_spider no_trap_gen no_monster_gen unrand
-MONS: giant cockroach w:15 / scorpion w:35 / spider w:40 / \
-      worm w:20 / wasp w:15 / redback w:55 / trapdoor spider w:75 / \
-      wolf spider w:20
+MONS: giant cockroach w:15 / scorpion w:35 / worm w:20 / wasp w:15 / \
+      redback w:55 / trapdoor spider w:75 / wolf spider w:20
 KPROP:  . = no_tele_into
 SUBST:  . = ....x1
 COLOUR: 1. = brown

@@ -2963,7 +2963,7 @@ NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
 MONS:    worker ant w:16 / adder w:24 / river rat w:2
-MONS:    water moccasin / spider w:6, wasp / wyvern w:6
+MONS:    water moccasin / wasp w:6, wasp / wyvern w:6
 MONS:    spiny frog, black mamba, hornet / redback w:5, wolf spider
 KMONS:   8 = guardian serpent
 KMONS:   f = fungus

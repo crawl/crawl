@@ -1716,7 +1716,7 @@ KFEAT:  m = iron_grate
 KFEAT:  > = enter_tomb
 MONS:   w:3 patrolling lich / w:1 patrolling revenant
 MONS:   patrolling zombie / nothing
-MONS:   spider / jumping spider / wolf spider / redback / w:25 nothing
+MONS:   jumping spider / wolf spider / redback / w:19 nothing
 MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 nothing
 MONS:   wyvern skeleton / w:30 nothing
 MONS:   w:2 ushabti / w:3 guardian mummy / w:2 mummy

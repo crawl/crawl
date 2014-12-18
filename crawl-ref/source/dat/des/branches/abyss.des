@@ -309,7 +309,7 @@ MONS:   fire bat w:12 / bat simulacrum / spectral bat / vampire bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
 MONS:   kobold demonologist, deep elf summoner / orc sorcerer w:7
-MONS:   worker ant w:40 / spider w:20 / vampire mosquito
+MONS:   worker ant w:40 / wasp w:20 / vampire mosquito
 KMONS:  8 = demonic crawler
 KMONS:  9 = emperor scorpion
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
