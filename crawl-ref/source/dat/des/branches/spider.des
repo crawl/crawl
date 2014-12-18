@@ -1397,7 +1397,8 @@ PLACE:  Spider:$
 WEIGHT: 20
 ORIENT: northwest
 KITEM:  O = potion of ambrosia ident:type, gossamer rune of Zot
-MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
+MONS:   ghost moth, w:5 spark wasp / red wasp / w:5 yellow wasp
+MONS:   emperor scorpion / storm strider
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   trapdoor spider / nothing
 MONS:   ghost moth
@@ -1455,7 +1456,8 @@ PLACE:  Spider:$
 ORIENT: float
 KITEM:  O = gossamer rune of Zot
 ITEM:   potion of ambrosia ident:type
-MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
+MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth
+MONS:   emperor scorpion / storm strider / w:5 spark wasp
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   orb spider / nothing, trapdoor spider / nothing
 NSUBST: 4 = 3:3
@@ -1495,8 +1497,8 @@ KMONS:  O = ghost moth
 KITEM:  *d = potion of ambrosia ident:type
 KMONS:  * = emperor scorpion
 MONS:   ghost moth, ghost moth / moth of wrath
-MONS:   yellow wasp / red wasp / w:5 nothing
-MONS:   w:2 demonic crawler / w:4 emperor scorpion
+MONS:   yellow wasp / red wasp / w:5 spark wasp / w:6 nothing
+MONS:   w:2 demonic crawler / w:4 emperor scorpion / w:1 storm strider
 MONS:   tarantella / w:22 wolf spider / jumping spider / w:8 demonic crawler / \
         w:7 nothing
 MONS:   trapdoor spider / nothing
@@ -1542,7 +1544,8 @@ ORIENT: east
 NSUBST: O = 1:O / *:P
 KITEM:  O = gossamer rune of Zot
 KITEM:  P = potion of ambrosia ident:type
-MONS:   ghost moth, moth of wrath, emperor scorpion
+MONS:   ghost moth, moth of wrath
+MONS:   emperor scorpion / storm strider / w:5 spark wasp
 MONS:   wolf spider w:11 / redback / tarantella / jumping spider
 MONS:   orb spider / red wasp, trapdoor spider
 NSUBST: 1 = 2:1 / 1:1.. / *:4, 4 = 20:4 / 16:. / * = 44...
@@ -1591,8 +1594,8 @@ ORIENT:  west
 NSUBST:  d = 1:O / 3:d / *:.
 KITEM:   O = gossamer rune of Zot
 ITEM:    potion of ambrosia ident:type
-MONS:    ghost moth, moth of wrath, emperor scorpion
-MONS:    red wasp / yellow wasp w:2, orb spider
+MONS:    ghost moth, moth of wrath, emperor scorpion / storm strider
+MONS:    spark wasp w:2 / red wasp / yellow wasp w:2, orb spider
 MONS:    wolf spider, redback / tarantella
 KMONS:   8 = jumping spider / demonic crawler
 SHUFFLE: efgh, ijk
