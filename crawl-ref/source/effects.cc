@@ -2803,8 +2803,8 @@ void slime_wall_damage(actor* act, int delay)
         if (mons_is_slime(mon))
             return;
 
-        const int dam = resist_adjust_damage(mon, BEAM_ACID, mon->res_acid(),
-                                              roll_dice(2, strength));
+        const int dam = resist_adjust_damage(mon, BEAM_ACID,
+                                             roll_dice(2, strength));
         if (dam > 0 && you.can_see(mon))
         {
             mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",

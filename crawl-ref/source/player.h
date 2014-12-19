@@ -670,6 +670,7 @@ public:
     bool is_unbreathing() const;
     bool is_insubstantial() const;
     int res_acid(bool calc_unid = true) const;
+    bool res_hellfire() const { return false; };
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;

@@ -2159,17 +2159,16 @@ void melee_attack::decapitate(int dam_type)
 void melee_attack::attacker_sustain_passive_damage()
 {
     // If the defender has been cleaned up, it's too late for anything.
-    if (defender->type == MONS_PROGRAM_BUG)
+    if (!defender->alive())
         return;
 
     if (!mons_class_flag(defender->type, M_ACID_SPLASH))
         return;
 
-    const int rA = attacker->res_acid();
-    if (rA >= 3)
+    if (attacker->res_acid() >= 3)
         return;
 
-    const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, rA, 5);
+    const int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, 5);
 
     const item_def *weap = weapon ? weapon : attacker->slot_item(EQ_GLOVES);
 
@@ -2224,7 +2223,6 @@ void melee_attack::apply_staff_damage()
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_ELECTRICITY,
-                                 defender->res_elec(),
                                  staff_damage(SK_AIR_MAGIC));
 
         if (special_damage)
@@ -2242,7 +2240,6 @@ void melee_attack::apply_staff_damage()
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_COLD,
-                                 defender->res_cold(),
                                  staff_damage(SK_ICE_MAGIC));
 
         if (special_damage)
@@ -2276,7 +2273,6 @@ void melee_attack::apply_staff_damage()
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
-                                 defender->res_fire(),
                                  staff_damage(SK_FIRE_MAGIC));
 
         if (special_damage)
@@ -2806,7 +2802,6 @@ void melee_attack::mons_apply_attack_flavour()
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
-                                 defender->res_fire(),
                                  base_damage);
         special_damage_flavour = BEAM_FIRE;
 
@@ -2829,7 +2824,6 @@ void melee_attack::mons_apply_attack_flavour()
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_COLD,
-                                 defender->res_cold(),
                                  base_damage);
         special_damage_flavour = BEAM_COLD;
 
@@ -2854,7 +2848,6 @@ void melee_attack::mons_apply_attack_flavour()
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_ELECTRICITY,
-                                 defender->res_elec(),
                                  base_damage);
         special_damage_flavour = BEAM_ELECTRICITY;
 
@@ -3185,7 +3178,6 @@ void melee_attack::mons_apply_attack_flavour()
         special_damage = defender->apply_ac(special_damage, 0, AC_HALF);
         special_damage = resist_adjust_damage(defender,
                                               BEAM_FIRE,
-                                              defender->res_fire(),
                                               special_damage);
 
         if (needs_message && special_damage)
@@ -3270,7 +3262,6 @@ void melee_attack::mons_apply_attack_flavour()
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
-                                 defender->res_fire(),
                                  base_damage);
         special_damage_flavour = BEAM_FIRE;
 

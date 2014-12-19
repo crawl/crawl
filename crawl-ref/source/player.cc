@@ -5177,7 +5177,7 @@ void dec_napalm_player(int delay)
     expose_player_to_element(BEAM_STICKY_FLAME,
                              div_rand_round(delay * 4, BASELINE_DELAY));
 
-    const int hurted = resist_adjust_damage(&you, BEAM_FIRE, player_res_fire(),
+    const int hurted = resist_adjust_damage(&you, BEAM_FIRE,
                                             random2avg(9, 2) + 1);
 
     ouch(hurted * delay / BASELINE_DELAY, KILLED_BY_BURNING);
@@ -7299,8 +7299,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
     dam += 2;
     dam = roll_dice(dam, acid_strength);
 
-    const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID,
-                                                  you.res_acid(), dam);
+    const int post_res_dam = resist_adjust_damage(&you, BEAM_ACID, dam);
 
     if (post_res_dam > 0)
     {

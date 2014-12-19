@@ -1398,12 +1398,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     {
     case BEAM_FIRE:
     case BEAM_STEAM:
-        hurted = resist_adjust_damage(
-                    mons,
-                    pbolt.flavour,
-                    (pbolt.flavour == BEAM_FIRE) ? mons->res_fire()
-                                                 : mons->res_steam(),
-                    hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
 
         if (!hurted)
         {
@@ -1436,9 +1431,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_WATER:
-        hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                      mons->res_water_drowning(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
         if (doFlavouredEffects)
         {
             if (!hurted)
@@ -1449,9 +1442,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_COLD:
-        hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                      mons->res_cold(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1474,9 +1465,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ELECTRICITY:
-        hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                      mons->res_elec(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1500,9 +1489,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_ACID:
     {
-        const int res = mons->res_acid();
-        hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                      res, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1512,16 +1499,16 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                                                       : " appears unharmed.");
             }
         }
-        else if (res <= 0 && doFlavouredEffects)
+        else if (mons->res_acid() <= 0 && doFlavouredEffects)
             mons->splash_with_acid(pbolt.agent());
         break;
     }
 
     case BEAM_POISON:
     {
-        int res = mons->res_poison();
-        hurted  = resist_adjust_damage(mons, pbolt.flavour, res,
-                                       hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+
+        const int res = mons->res_poison();
         if (!hurted && res > 0)
         {
             if (doFlavouredEffects)
@@ -1538,9 +1525,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     }
 
     case BEAM_POISON_ARROW:
-        hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                      mons->res_poison(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1568,9 +1553,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         else
         {
-            hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                          mons->res_negative_energy(),
-                                          hurted, true);
+            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
 
             // Early out if no side effects.
             if (!doFlavouredEffects)
@@ -1633,11 +1616,9 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     }
 
     case BEAM_ICE:
-        // ice - about 50% of damage is cold, other 50% is impact and
+        // ice - 40% of damage is cold, other 60% is impact and
         // can't be resisted (except by AC, of course)
-        hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                      mons->res_cold(), hurted,
-                                      true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1651,8 +1632,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_LAVA:
-        hurted = resist_adjust_damage(mons, pbolt.flavour,
-                                      mons->res_fire(), hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
 
         if (hurted < original)
         {
@@ -1720,8 +1700,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             hurted = 0;
         else
         {
-            const int res = mons->res_negative_energy();
-            hurted = resist_adjust_damage(mons, pbolt.flavour, res, hurted, true);
+            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
 
             if (!doFlavouredEffects)
                 break;
@@ -3652,8 +3631,7 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_MALIGN_OFFERING:
     {
-        int dam = resist_adjust_damage(&you, BEAM_NEG, you.res_negative_energy(),
-                                       damage.roll());
+        const int dam = resist_adjust_damage(&you, flavour, damage.roll());
         if (dam)
         {
             _malign_offering_effect(&you, agent(), dam);
@@ -5627,8 +5605,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_MALIGN_OFFERING:
     {
-        int dam = resist_adjust_damage(mon, BEAM_NEG, mon->res_negative_energy(),
-                                       damage.roll());
+        const int dam = resist_adjust_damage(mon, flavour, damage.roll());
         if (dam)
         {
             _malign_offering_effect(mon, agent(), dam);
