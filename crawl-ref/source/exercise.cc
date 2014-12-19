@@ -78,6 +78,8 @@ skill_type abil_skill(ability_type abil)
     case ABIL_QAZLAL_UPHEAVAL:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
     case ABIL_QAZLAL_DISASTER_AREA:
+    case ABIL_WULNDRASTE_BLEND_IN:
+    case ABIL_WULNDRASTE_CHANGE_OF_SCENERY:
         return SK_INVOCATIONS;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
