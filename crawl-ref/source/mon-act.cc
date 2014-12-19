@@ -3113,8 +3113,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         {
             quant = min(quant, max_eat - eaten);
 
-            hps_changed += (quant * item_mass(*si))
-                           / (crawl_state.game_is_zotdef() ? 30 : 20) + quant;
+            hps_changed += quant * 3;
             eaten += quant;
 
             if (mons->caught() && item_is_stationary_net(*si))

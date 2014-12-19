@@ -721,30 +721,19 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     const int               wepType  = thrown.sub_type;
 
     // Determine range.
-    int max_range = 0;
-    int range = 0;
+    int max_range = INT_MAX;
+    int range = INT_MAX;
 
-    if (projected)
+    // are we properly throwing/shooting this thing?
+    if (projected != LRET_FUMBLED)
     {
         if (wepType == MI_LARGE_ROCK)
         {
-            range     = 1 + random2(you.strength() / 5);
-            max_range = you.strength() / 5;
-            if (you.can_throw_large_rocks())
-            {
-                range     += random_range(4, 7);
-                max_range += 7;
-            }
+            range     = random_range(5, 8) + random2(you.strength() / 5);
+            max_range = 7 + you.strength() / 5;
         }
         else if (wepType == MI_THROWING_NET)
             max_range = range = 2 + you.body_size(PSIZE_BODY);
-        else
-            max_range = range = you.current_vision;
-    }
-    else
-    {
-        // Range based on mass & strength, between 1 and 9.
-        max_range = range = max(you.strength()-item_mass(thrown)/10 + 3, 1);
     }
 
     range = min(range, (int)you.current_vision);
@@ -896,7 +885,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     pbolt.pierce    = false;
     pbolt.is_tracer = false;
 
-    pbolt.loudness = int(sqrt(item_mass(item))/3 + 0.5);
+    pbolt.loudness = ammo_type_damage(item.sub_type) / 3;
 
     // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
