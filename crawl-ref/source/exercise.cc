@@ -246,27 +246,32 @@ static void _exercise_spell(spell_type spell, bool success)
     exercise(SK_SPELLCASTING, 1 + random2(1 + diff) / skillcount);
 }
 
+/**
+ * A best-fit linear approximation of the old item mass equation for armour.
+ *
+ * @return 42 * EVP - 13, if the player is wearing body armour; else 0.
+ */
+static int _armour_mass()
+{
+    const int evp = you.unadjusted_body_armour_penalty();
+    return max(0, 42 * evp - 13);
+}
+
 static bool _check_train_armour(int amount)
 {
-    if (const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false))
+    const int mass_base = 100; // old animal skin mass
+    if (x_chance_in_y(_armour_mass() - mass_base,
+                      you.skill(SK_ARMOUR, 50)))
     {
-        // XXX: animal skin; should be a better way to get at that.
-        const int mass_base = 100;
-        const int mass = max(item_mass(*armour) - mass_base, 0);
-        if (x_chance_in_y(mass, you.skill(SK_ARMOUR, 50)))
-        {
-            exercise(SK_ARMOUR, amount);
-            return true;
-        }
+        exercise(SK_ARMOUR, amount);
+        return true;
     }
     return false;
 }
 
 static bool _check_train_dodging(int amount)
 {
-    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    const int mass = armour? item_mass(*armour) : 0;
-    if (!x_chance_in_y(mass, 800))
+    if (!x_chance_in_y(_armour_mass(), 800))
     {
         exercise(SK_DODGING, amount);
         return true;
@@ -276,9 +281,7 @@ static bool _check_train_dodging(int amount)
 
 static void _check_train_sneak(bool invis)
 {
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    const int armour_mass = body_armour? item_mass(*body_armour) : 0;
-    if (!x_chance_in_y(armour_mass, 1000)
+    if (!x_chance_in_y(_armour_mass(), 1000)
         && !you.attribute[ATTR_SHADOWS]
             // If invisible, training happens much more rarely.
         && (!invis && one_chance_in(25) || one_chance_in(100)))
@@ -290,21 +293,18 @@ static void _check_train_sneak(bool invis)
 static void _exercise_passive()
 {
     if (one_chance_in(6) && _check_train_armour(1))
-    {
-        // Armour trained in check_train_armour
-    }
+        return; // Armour trained in check_train_armour
+
+    if (you.berserk() || you.attribute[ATTR_SHADOWS])
+        return;
+
     // Exercise stealth skill:
-    else if (!you.berserk() && !you.attribute[ATTR_SHADOWS])
+    if (!x_chance_in_y(_armour_mass(), 1000)
+        // Diminishing returns for stealth training by waiting.
+        && you.skills[SK_STEALTH] <= 2 + random2(3)
+        && one_chance_in(15))
     {
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        const int armour_mass = body_armour? item_mass(*body_armour) : 0;
-        if (!x_chance_in_y(armour_mass, 1000)
-            // Diminishing returns for stealth training by waiting.
-            && you.skills[SK_STEALTH] <= 2 + random2(3)
-            && one_chance_in(15))
-        {
-            exercise(SK_STEALTH, 1);
-        }
+        exercise(SK_STEALTH, 1);
     }
 }
 

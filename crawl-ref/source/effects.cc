@@ -2628,7 +2628,7 @@ int mushroom_prob(item_def & corpse)
     // The chance of producing mushrooms depends on the weight of the
     // corpse involved.  Humans weigh 550 so we will take that as the
     // base factor here.
-    float weight_factor = item_mass(corpse) / 550.0f;
+    float weight_factor = mons_weight(corpse.mon_type) / 550.0f;
 
     trial_prob_f *= weight_factor;
 
