@@ -2997,7 +2997,7 @@ void melee_attack::mons_apply_attack_flavour()
     {
         // Only wasps at the moment, so Zin vitalisation
         // protects from the paralysis and slow.
-        if (you.duration[DUR_DIVINE_STAMINA] > 0)
+        if (defender->is_player() && you.duration[DUR_DIVINE_STAMINA] > 0)
         {
             mpr("Your divine stamina protects you from poison!");
             break;
