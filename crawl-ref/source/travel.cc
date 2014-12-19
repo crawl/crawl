@@ -4766,7 +4766,7 @@ bool valid_downward_path_exists(dungeon_feature_type up_stair)
         return sinfo->backtracking;
     else
     {
-        // Stair data isn't saved until we use them, so when havve no cache
+        // Stair data isn't saved until we use them, so when have no cache
         // we just have to wing it.
         return has_connected_path_forward(stair_coord);
     }

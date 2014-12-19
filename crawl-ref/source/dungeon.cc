@@ -6289,7 +6289,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             return pos;
     }
 
-    if (player_in_branch(BRANCH_LABYRINTH))
+    if (player_in_branch(BRANCH_LABYRINTH) && !exact_match)
     {
         const coord_def pos(_dgn_find_labyrinth_entry_point());
         if (in_bounds(pos))
