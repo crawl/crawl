@@ -1831,31 +1831,22 @@ unsigned int item_value(item_def item, bool ident)
             double rarity = 0;
             if (is_random_artefact(item))
             {
-                // Consider spellbook as rare as the average of its
-                // three rarest spells.
-                int rarities[3] = {0};
-                int count = 0;
-                for (spell_type spell : spells_in_book(item))
+                const vector<spell_type>& spells = spells_in_book(item);
+
+                int rarest = 0;
+                for (spell_type spell : spells)
                 {
-                    int min_index = 0;
-                    for (int i = 0; i < 3; i++)
-                        if (rarities[i] < spell_rarity(spell))
-                            min_index = i;
-                    rarities[min_index] = spell_rarity(spell);
-                    count++;
+                    rarity += spell_rarity(spell);
+                    if (spell_rarity(spell) > rarest)
+                        rarest = spell_rarity(spell);
                 }
-                ASSERT(count > 0);
+                rarity += rarest * 2;
+                rarity /= spells.size();
 
-                if (count > 3)
-                    count = 3;
+                // Surcharge for large books.
+                if (spells.size() > 6)
+                    rarity *= spells.size() / 6;
 
-                rarity = rarities[0] + rarities[1] + rarities[2];
-                rarity /= count;
-
-                // Fixed level randarts get a bonus for the really low and
-                // really high level spells.
-                if (book == BOOK_RANDART_LEVEL)
-                    valued += 50 * abs(5 - item.plus);
             }
             else
                 rarity = book_rarity(book);
