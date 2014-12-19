@@ -394,6 +394,39 @@ static inline int get_resistible_fraction(beam_type flavour)
     }
 }
 
+static int _beam_to_resist(const actor* defender, beam_type flavour)
+{
+    switch (flavour)
+    {
+        case BEAM_FIRE:
+        case BEAM_LAVA:
+            return defender->res_fire();
+        case BEAM_HELLFIRE:
+            return defender->res_hellfire();
+        case BEAM_STEAM:
+            return defender->res_steam();
+        case BEAM_COLD:
+        case BEAM_ICE:
+            return defender->res_cold();
+        case BEAM_WATER:
+            return defender->res_water_drowning();
+        case BEAM_ELECTRICITY:
+            return defender->res_elec();
+        case BEAM_NEG:
+        case BEAM_GHOSTLY_FLAME:
+        case BEAM_MALIGN_OFFERING:
+            return defender->res_negative_energy();
+        case BEAM_ACID:
+            return defender->res_acid();
+        case BEAM_POISON:
+        case BEAM_POISON_ARROW:
+            return defender->res_poison();
+        default:
+            return 0;
+    }
+}
+
+
 /**
  * Adjusts damage for elemental resists, electricity and poison.
  *
@@ -406,16 +439,16 @@ static inline int get_resistible_fraction(beam_type flavour)
  * @param defender      The victim of the attack.
  * @param flavour       The type of attack having its damage adjusted.
  *                      (Does not necessarily imply the attack is a beam.)
- * @param res           The level of resistance that the defender possesses.
  * @param rawdamage     The base damage, to be adjusted by resistance.
  * @param ranged        Whether the attack is ranged, and therefore has a
  *                      smaller damage multiplier against victims with negative
  *                      resistances. (????)
  * @return              The amount of damage done, after resists are applied.
  */
-int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
+int resist_adjust_damage(const actor* defender, beam_type flavour,
                          int rawdamage, bool ranged)
 {
+    const int res = _beam_to_resist(defender, flavour);
     if (!res)
         return rawdamage;
 

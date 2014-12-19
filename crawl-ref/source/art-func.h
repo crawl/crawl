@@ -953,25 +953,7 @@ static int _calc_elemental_staff_damage(beam_type flavour,
     if (flavour == BEAM_NONE) // earth
         return defender->apply_ac(base_bonus_dam);
 
-    // XXX: refactor this into some more general function (why isn't there one
-    // already???)
-    int resist = 0;
-    switch (flavour)
-    {
-        case BEAM_FIRE:
-            resist = defender->res_fire();
-            break;
-        case BEAM_COLD:
-            resist = defender->res_cold();
-            break;
-        case BEAM_ELECTRICITY:
-            resist = defender->res_elec();
-            break;
-        default:
-            break;
-    }
-
-    return resist_adjust_damage(defender, flavour, resist, base_bonus_dam);
+    return resist_adjust_damage(defender, flavour, base_bonus_dam);
 }
 
 static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,

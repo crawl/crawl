@@ -661,7 +661,7 @@ bool ranged_attack::apply_missile_brand()
         {
             break;
         }
-        calc_elemental_brand_damage(BEAM_FIRE, defender->res_fire(),
+        calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_FIRE);
@@ -673,7 +673,7 @@ bool ranged_attack::apply_missile_brand()
         {
             break;
         }
-        calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze",
+        calc_elemental_brand_damage(BEAM_COLD, "freeze",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_COLD, 2);
         break;

@@ -1588,7 +1588,7 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
     actor* act = actor_at(where);
     if (act)
     {
-        int dam = resist_adjust_damage(act, BEAM_FIRE, act->res_fire(), 40, true);
+        const int dam = resist_adjust_damage(act, BEAM_FIRE, 40, true);
         return mons_aligned(act, agent) ? -dam : dam;
     }
     // We've done something, but its value is indeterminate
@@ -1758,13 +1758,13 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
     int damage = roll_dice(str, 5 + pow/7);
     if (damage)
     {
-        const int resist = player_res_fire();
-        damage = resist_adjust_damage(&you, BEAM_FIRE, resist, damage, true);
+        damage = resist_adjust_damage(&you, BEAM_FIRE, damage, true);
 
         if (tracer)
             return mons_aligned(&you, agent) ? -1 * damage : damage;
         else
         {
+            const int resist = player_res_fire();
             if (resist > 0)
                 mpr("You feel like your blood is boiling!");
             else if (resist < 0)
@@ -2886,8 +2886,7 @@ void toxic_radiance_effect(actor* agent, int mult)
         else
             dam = dam * 9 / (8 + ai->pos().distance_from(agent->pos()));
 
-        dam = resist_adjust_damage(*ai, BEAM_POISON, ai->res_poison(),
-                                   dam, true);
+        dam = resist_adjust_damage(*ai, BEAM_POISON, dam, true);
 
         if (ai->is_player())
         {

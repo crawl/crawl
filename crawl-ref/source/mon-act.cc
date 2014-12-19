@@ -4492,10 +4492,8 @@ static void _heated_area(monster* mons)
     const int timescaled = max(0, base_damage) * 10 / speed;
 
     // rF protects:
-    const int resist = mons->res_fire();
     const int adjusted_damage = resist_adjust_damage(mons,
-                                BEAM_FIRE, resist,
-                                timescaled, true);
+                                BEAM_FIRE, timescaled, true);
     // So does AC:
     const int final_damage = max(0, adjusted_damage
                                  - random2(mons->armour_class()));
