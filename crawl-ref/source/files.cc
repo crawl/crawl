@@ -1545,7 +1545,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.penance[GOD_WULNDRASTE])
         {
             dec_penance(GOD_WULNDRASTE, 6 + random2(5));
-            mprf("Penance: %d", you.penance[GOD_WULNDRASTE]);
         }
     }
 
