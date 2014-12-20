@@ -430,12 +430,13 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
 /**
  * Adjusts damage for elemental resists, electricity and poison.
  *
- * FIXME: Does not (yet) handle draining (?), miasma, and other exotic attacks.
- * XXX: which other attacks?
- * Damage is reduced to 1/2, 1/3, or 1/5 if res has values 1, 2, and 3,
- * respectively.  For "boolean" attacks like electricity and sticky flame, the
- * damage is instead reduced to 1/3, 1/4, and 1/6 at resist levels 1, 2, and 3
- * respectively.
+ * For players, damage is reduced to 1/2, 1/3, or 1/5 if res has values 1, 2,
+ * or 3, respectively. "Boolean" resists (rElec, rPois) reduce damage by 1/3.
+ * rN is a special case that reduces damage to 1/2, 1/4, 0 instead.
+ *
+ * For monsters, damage is reduced to 1/2, 1/5, and 0 for 1/2/3 resistance.
+ * "Boolean" resists give 1/3, 1/6, 0 instead.
+ *
  * @param defender      The victim of the attack.
  * @param flavour       The type of attack having its damage adjusted.
  *                      (Does not necessarily imply the attack is a beam.)
@@ -466,14 +467,10 @@ int resist_adjust_damage(const actor* defender, beam_type flavour,
             resistible = 0;
         else
         {
-            // Check if this is a resist that pretends to be boolean for
-            // damage purposes.  Only electricity, miasma and sticky
-            // flame (napalm) do this at the moment; raw poison damage
-            // uses the normal formula.
+            // Is this a resist that claims to be boolean for damage purposes?
             const int bonus_res = (is_boolean_resist(flavour) ? 1 : 0);
 
-            // Use a new formula for players, but keep the old, more
-            // effective one for monsters.
+            // Monster resistances are stronger than player versions.
             if (is_mon)
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG)
