@@ -4476,7 +4476,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (m_brand == SPMSL_SLEEP && was_asleep && !mon->asleep())
             mon->put_to_sleep(agent(), 0);
     }
-    mpr("test");
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
         || origin_spell == SPELL_STICKY_FLAME_RANGE
