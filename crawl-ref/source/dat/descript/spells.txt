@@ -76,7 +76,7 @@ Banishment spell
 Battlecry spell
 
 Inspires nearby allies of the caster to fight more aggressively, increasing
-the strength of their blows and the power of their shots.
+the strength of their blows.
 %%%%
 Beastly Appendage spell
 
