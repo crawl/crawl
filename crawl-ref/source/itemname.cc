@@ -77,20 +77,14 @@ static const char* _interesting_origin(const item_def &item)
 {
     if (origin_is_god_gift(item))
         return "god gift";
-    switch (item.orig_monnum)
+
+    if (item.orig_monnum == MONS_DONALD
+        && item.base_type == OBJ_ARMOUR && item.sub_type == ARM_SHIELD)
     {
-    case MONS_SONJA:
-        if (item_attack_skill(item) == SK_SHORT_BLADES)
-            return "Sonja";
-    case MONS_PSYCHE:
-        if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_DAGGER)
-            return "Psyche";
-    case MONS_DONALD:
-        if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_SHIELD)
-            return "Donald";
-    default:
-        return 0;
+        return "Donald";
     }
+
+    return nullptr;
 }
 
 string item_def::name(description_level_type descrip, bool terse, bool ident,
