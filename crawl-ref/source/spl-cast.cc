@@ -1263,9 +1263,14 @@ spret_type your_spells(spell_type spell, int powc,
                               && testbits(flags, SPFLAG_DIR_OR_TARGET)
                               && !testbits(flags, SPFLAG_HELPFUL);
         desc_filter additional_desc = nullptr;
-        const int eff_pow = zap_ench_power(spell_to_zap(spell), powc);
         if (mr_check)
-            additional_desc = bind(desc_success_chance, placeholders::_1, eff_pow);
+        {
+            const zap_type zap = spell_to_zap(spell);
+            const int eff_pow = zap == NUM_ZAPS ? powc
+                                                : zap_ench_power(zap, powc);
+            additional_desc = bind(desc_success_chance, placeholders::_1,
+                                   eff_pow);
+        }
 
         string title = "Aiming: <white>";
         title += spell_title(spell);
