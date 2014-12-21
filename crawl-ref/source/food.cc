@@ -412,7 +412,7 @@ bool eat_item(item_def &food)
             return false;
     }
 
-    if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
+    if (food.is_type(OBJ_CORPSES, CORPSE_BODY))
     {
         if (you.species != SP_VAMPIRE)
             return false;
@@ -1273,7 +1273,7 @@ bool is_preferred_food(const item_def &food)
         return is_blood_potion(food);
 
 #if TAG_MAJOR_VERSION == 34
-    if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE
+    if (food.is_type(OBJ_POTIONS, POT_PORRIDGE)
         && item_type_known(food)
         && you.species != SP_DJINNI
         )
@@ -1332,7 +1332,6 @@ bool is_forbidden_food(const item_def &food)
 bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
 {
 #define FAIL(msg) { if (!suppress_msg) mpr(msg); return false; }
-    int sub_type = food.sub_type;
     ASSERT(food.base_type == OBJ_FOOD || food.base_type == OBJ_CORPSES);
 
     // special case mutagenic chunks to skip hunger checks, as they don't give
@@ -1354,7 +1353,7 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
 
     if (you.species == SP_VAMPIRE)
     {
-        if (food.base_type == OBJ_CORPSES && sub_type == CORPSE_BODY)
+        if (food.is_type(OBJ_CORPSES, CORPSE_BODY))
             return true;
 
         FAIL("Blech - you need blood!")
@@ -1373,7 +1372,7 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
     {
         if (player_mutation_level(MUT_HERBIVOROUS) == 3)
             FAIL("Sorry, you're a herbivore.")
-        else if (sub_type == FOOD_CHUNK)
+        else if (food.sub_type == FOOD_CHUNK)
         {
             if (!check_hunger
                 || you.hunger_state < HS_SATIATED

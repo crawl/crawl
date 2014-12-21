@@ -343,13 +343,13 @@ bool maybe_id_book(item_def &book, bool silent)
     if (book.base_type != OBJ_BOOKS && book.base_type != OBJ_RODS)
         return false;
 
-    if (book.base_type == OBJ_BOOKS && book.sub_type == BOOK_DESTRUCTION)
+    if (book.is_type(OBJ_BOOKS, BOOK_DESTRUCTION))
     {
         ASSERT(fully_identified(book));
         return false;
     }
 
-    if (book.base_type == OBJ_BOOKS && book.sub_type == BOOK_MANUAL)
+    if (book.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
         set_ident_flags(book, ISFLAG_IDENT_MASK);
         return false;

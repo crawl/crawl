@@ -980,19 +980,14 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     {
     case EQ_WEAPON:
         // Hands can have more than just weapons.
-        if (weapon()
-            && weapon()->base_type == OBJ_WEAPONS
-            && weapon()->sub_type == sub_type)
-        {
+        if (weapon() && weapon()->is_type(OBJ_WEAPONS, sub_type))
             ret++;
-        }
         break;
 
     case EQ_STAFF:
         // Like above, but must be magical staff.
         if (weapon()
-            && weapon()->base_type == OBJ_STAVES
-            && weapon()->sub_type == sub_type
+            && weapon()->is_type(OBJ_STAVES, sub_type)
             && (calc_unid || item_type_known(*weapon())))
         {
             ret++;

@@ -1842,9 +1842,7 @@ void melee_attack::player_weapon_upsets_god()
             did_god_conduct(DID_HASTY, 1);
         }
     }
-    else if (weapon
-             && weapon->base_type == OBJ_STAVES
-             && weapon->sub_type == STAFF_FIRE)
+    else if (weapon && weapon->is_type(OBJ_STAVES, STAFF_FIRE))
     {
         did_god_conduct(DID_FIRE, 1);
     }

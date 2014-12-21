@@ -1287,9 +1287,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
 static bool _top_item_is_corpse(const map_cell& mc)
 {
     const item_info* item = mc.item();
-    return item
-           && item->base_type == OBJ_CORPSES
-           && item->sub_type == CORPSE_BODY;
+    return item && item->is_type(OBJ_CORPSES, CORPSE_BODY);
 }
 
 static uint8_t _get_direction_index(const coord_def& delta)

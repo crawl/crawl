@@ -2822,8 +2822,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             // weapon swap trick.
             const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
             if (!mon.inv[MSLOT_SHIELD].get() && weapon
-                && (weapon->base_type == OBJ_STAVES
-                      && weapon->sub_type == STAFF_POISON
+                && (weapon->is_type(OBJ_STAVES, STAFF_POISON)
                     || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
                 return TILEP_MONS_ARACHNE;

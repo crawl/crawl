@@ -1548,23 +1548,17 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv, bool tracer =
             break;
         }
     }
-    else if (item.base_type == OBJ_CORPSES &&
-             item.sub_type == CORPSE_BODY &&
-             carrion_is_poisonous(item))
+    else if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
+             && carrion_is_poisonous(item))
     {
         strength = mons_weight(item.mon_type) / 25;
     }
-    else if (item.base_type == OBJ_FOOD &&
-             item.sub_type == FOOD_CHUNK &&
-             carrion_is_poisonous(item))
-    {
+    else if (item.is_type(OBJ_FOOD, FOOD_CHUNK) && carrion_is_poisonous(item))
         strength += 30 * item.quantity;
-    }
 
     if (strength)
     {
-        if (item.base_type == OBJ_CORPSES
-            && item.sub_type == CORPSE_BODY
+        if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
             && mons_skeleton(item.mon_type)
             && !tracer)
         {
@@ -1841,8 +1835,7 @@ static bool maybe_abort_ignite()
                 break;
             }
         }
-        else if (item.base_type == OBJ_CORPSES
-                 && item.sub_type == CORPSE_BODY
+        else if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
                  && carrion_is_poisonous(item))
         {
             prompt += "over ";
@@ -1850,9 +1843,8 @@ static bool maybe_abort_ignite()
             prompt += "! Ignite poison anyway?";
             return !yesno(prompt.c_str(), false, 'n');
         }
-        else if (item.base_type == OBJ_FOOD &&
-                 item.sub_type == FOOD_CHUNK &&
-                 carrion_is_poisonous(item))
+        else if (item.is_type(OBJ_FOOD, FOOD_CHUNK)
+                 && carrion_is_poisonous(item))
         {
             prompt += "over ";
             prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));

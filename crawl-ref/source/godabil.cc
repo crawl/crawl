@@ -2039,7 +2039,7 @@ int fedhas_fungal_bloom()
         {
             bool corpse_on_pos = false;
 
-            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
+            if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 corpse_on_pos = true;
 
@@ -2713,8 +2713,7 @@ int count_corpses_in_los(vector<stack_iterator> *positions)
 
         for (stack_iterator stack_it(*rad); stack_it; ++stack_it)
         {
-            if (stack_it->base_type == OBJ_CORPSES
-                && stack_it->sub_type == CORPSE_BODY)
+            if (stack_it->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 if (positions)
                     positions->push_back(stack_it);

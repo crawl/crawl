@@ -2313,7 +2313,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         return 0;
 
     // Manuals are consumable, and interesting enough to keep on list.
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+    if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
         return 0;
 
     // Item is already on shopping-list.
@@ -2363,7 +2363,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
         // Don't prompt to remove known manuals when the new one is unknown
         // or for a different skill.
-        if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL
+        if (item.is_type(OBJ_BOOKS, BOOK_MANUAL)
             && item_type_known(list_item)
             && (!item_type_known(item) || item.plus != list_item.plus))
         {

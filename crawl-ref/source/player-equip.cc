@@ -639,8 +639,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
     if (is_artefact(item))
         _unequip_artefact_effect(item, &showMsgs, meld, EQ_WEAPON);
 
-    if (item.base_type == OBJ_MISCELLANY
-        && item.sub_type == MISC_LANTERN_OF_SHADOWS)
+    if (item.is_type(OBJ_MISCELLANY, MISC_LANTERN_OF_SHADOWS))
     {
         you.attribute[ATTR_SHADOWS] = 0;
         update_vision_range();
@@ -746,7 +745,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
             }
         }
     }
-    else if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
+    else if (item.is_type(OBJ_STAVES, STAFF_POWER))
     {
         int mp = you.magic_points;
 #if TAG_MAJOR_VERSION == 34
