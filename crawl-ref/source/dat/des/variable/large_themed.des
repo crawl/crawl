@@ -1626,7 +1626,7 @@ DEPTH:  D:2-4
 
   -- possible hobgoblin bosses and their weights
   bossw = {hobgoblin = 1, Ijyb = 10, Robin = 10}
-  bosses = {"hobgoblin"}
+  bosses = {hobgoblin = 1}
 
   -- Find out which hobgoblin uniques we can use
   if not you.uniques("Ijyb") then
