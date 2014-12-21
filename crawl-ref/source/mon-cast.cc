@@ -7857,7 +7857,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
         int power = 12 * mon->spell_hd(monspell)
                        * (monspell == SPELL_PAIN ? 2 : 1);
-        power = stepdown_value(power, 30, 40, 100, 120);
+        power = ench_power_stepdown(power);
 
         // Determine the amount of chance allowed by the benefit from
         // the spell.  The estimated difficulty is the probability

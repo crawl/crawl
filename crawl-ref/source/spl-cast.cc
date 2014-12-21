@@ -1154,8 +1154,9 @@ static int _triangular_number(int n)
 }
 
 // Computes success chance for MR-checking spells and abilities.
-static double _success_chance(const int mr, const int powc)
+static double _success_chance(const int mr, int powc)
 {
+    powc = ench_power_stepdown(powc);
     const int target = mr + 100 - powc;
 
     if (target <= 0)
@@ -1261,9 +1262,10 @@ spret_type your_spells(spell_type spell, int powc,
         const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
                               && testbits(flags, SPFLAG_DIR_OR_TARGET)
                               && !testbits(flags, SPFLAG_HELPFUL);
-        desc_filter additional_desc = NULL;
+        desc_filter additional_desc = nullptr;
+        const int eff_pow = zap_ench_power(spell_to_zap(spell), powc);
         if (mr_check)
-            additional_desc = bind(desc_success_chance, placeholders::_1, powc);
+            additional_desc = bind(desc_success_chance, placeholders::_1, eff_pow);
 
         string title = "Aiming: <white>";
         title += spell_title(spell);
