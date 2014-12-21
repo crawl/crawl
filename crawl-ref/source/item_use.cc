@@ -56,6 +56,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-wpnench.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
@@ -1783,6 +1784,8 @@ void zap_wand(int slot)
         hitfunc = _wand_targetter(&wand);
     }
 
+    const int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
+        * (player_mutation_level(MUT_MP_WANDS) + 6) / 6;
     const int tracer_range =
         (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
         _wand_range(type_zapped) : _max_wand_range();
@@ -1795,6 +1798,11 @@ void zap_wand(int slot)
     args.range = tracer_range;
     args.top_prompt = zap_title;
     args.hitfunc = hitfunc;
+    if (testbits(get_spell_flags(zap_to_spell(type_zapped)), SPFLAG_MR_CHECK))
+    {
+        args.get_desc_func = bind(desc_success_chance, placeholders::_1,
+                                  zap_ench_power(type_zapped, power));
+    }
     direction(zap_wand, args);
 
     if (hitfunc)
@@ -1847,9 +1855,6 @@ void zap_wand(int slot)
     beam.set_target(zap_wand);
 
     const bool aimed_at_self = (beam.target == you.pos());
-
-    const int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
-        * (player_mutation_level(MUT_MP_WANDS) + 6) / 6;
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
