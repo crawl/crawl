@@ -60,9 +60,14 @@ int random_element_colour_calc::get(const coord_def& loc, bool non_random)
     return (*real_calc)(rand(non_random), loc, rand_vals);
 }
 
-colour_t random_colour()
+colour_t random_colour(bool ui_rand)
 {
-    return 1 + random2(15);
+    return 1 + (ui_rand ? ui_random : random2)(15);
+}
+
+static bool _ui_coinflip()
+{
+    return static_cast<bool>(ui_random(2));
 }
 
 colour_t random_uncommon_colour()
@@ -172,13 +177,13 @@ static int _etc_elemental(int, const coord_def& loc)
         case 0:
             return element_colour(ETC_EARTH, false, loc);
         case 1:
-            return element_colour(coinflip() ? ETC_AIR : ETC_ELECTRICITY,
+            return element_colour(_ui_coinflip() ? ETC_AIR : ETC_ELECTRICITY,
                                   false, loc);
         case 2:
             // Not ETC_FIRE, which is Makhleb; instead do magma-y colours.
-            if (coinflip())
+            if (_ui_coinflip())
                 return RED;
-            return coinflip() ? BROWN : LIGHTRED;
+            return _ui_coinflip() ? BROWN : LIGHTRED;
         case 3:
             return element_colour(ETC_ICE, false, loc);
     }
@@ -262,7 +267,7 @@ bool get_tornado_phase(const coord_def& loc)
 {
     coord_def center = get_cloud_originator(loc);
     if (center.origin())
-        return coinflip(); // source died/went away
+        return _ui_coinflip(); // source died/went away
     else
     {
         int x = loc.x - center.x;
@@ -345,7 +350,7 @@ colour_t rune_colour(int type)
 
 static int _etc_random(int, const coord_def&)
 {
-    return random_colour();
+    return random_colour(true);
 }
 
 static element_colour_calc *_create_random_element_colour_calc(element_type type,
