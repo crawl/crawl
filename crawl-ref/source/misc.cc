@@ -348,15 +348,15 @@ bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
 
 // General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.
 // Highest threat = highest_logexpervalue_of_nearby_unfriendly_monsters.
-static void monster_threat_values(double *general, double *highest,
-                                  bool *invis)
+static void _monster_threat_values(double *general, double *highest,
+                                   bool *invis, coord_def pos = you.pos())
 {
     *invis = false;
 
     double sum = 0;
     int highest_xp = -1;
 
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(pos); mi; ++mi)
     {
         if (mi->friendly())
             continue;
@@ -384,7 +384,7 @@ bool player_in_a_dangerous_place(bool *invis)
 
     const double logexp = log((double)you.experience);
     double gen_threat = 0.0, hi_threat = 0.0;
-    monster_threat_values(&gen_threat, &hi_threat, invis);
+    _monster_threat_values(&gen_threat, &hi_threat, invis);
 
     return gen_threat > logexp * 1.3 || hi_threat > logexp / 2;
 }
@@ -671,7 +671,7 @@ void bring_to_safety()
 
         bool junk;
         double gen_threat = 0.0, hi_threat = 0.0;
-        monster_threat_values(&gen_threat, &hi_threat, &junk);
+        _monster_threat_values(&gen_threat, &hi_threat, &junk, pos);
         const double threat = gen_threat * hi_threat;
 
         if (threat < min_threat)
