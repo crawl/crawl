@@ -6218,7 +6218,8 @@ bool w_change_of_scenery()
     if (you.no_tele_print_reason(true, false))
         return false;
 
-    you_teleport_now(false);
+    simple_god_message(" changes the scenery!");
+    bring_to_safety();
 
     // apply dimensional anchor
     int invo = you.skill(SK_INVOCATIONS);
