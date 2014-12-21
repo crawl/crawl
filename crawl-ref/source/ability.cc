@@ -2829,7 +2829,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         const int pow = 16 + you.skill(SK_INVOCATIONS, 8);
 
         if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, 0,
-                             true, true, false, NULL, NULL, false, NULL,
+                             true, true, false, nullptr, nullptr, false, nullptr,
                              bind(desc_success_chance, placeholders::_1, pow)))
         {
             return SPRET_ABORT;

@@ -400,6 +400,21 @@ int zap_power_cap(zap_type z_type)
     return zinfo ? zinfo->power_cap : 0;
 }
 
+int zap_ench_power(zap_type z_type, int pow)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return pow;
+
+    if (zinfo->power_cap > 0)
+        pow = min(zinfo->power_cap, pow);
+
+    if (zinfo->is_enchantment && zinfo->tohit)
+        return (*zinfo->tohit)(pow);
+    else
+        return pow;
+}
+
 void zappy(zap_type z_type, int power, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -407,9 +422,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     // None found?
     if (zinfo == nullptr)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_ERROR, "Couldn't find zap type %d", z_type);
-#endif
+        dprf("Couldn't find zap type %d", z_type);
         return;
     }
 
@@ -428,10 +441,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
-    if (zinfo->is_enchantment && zinfo->tohit)
-        pbolt.ench_power = (*zinfo->tohit)(power);
-    else
-        pbolt.ench_power = power;
+    pbolt.ench_power = zap_ench_power(z_type, power);
 
     if (zinfo->is_enchantment)
         pbolt.hit = AUTOMATIC_HIT;
@@ -5250,7 +5260,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
             if (mon->check_res_magic(ench_power) > 0)
             {
                 // Note only actually used by messages in this case.
-                res_margin = mon->res_magic() - stepdown_value(ench_power, 30, 40, 100, 120);
+                res_margin = mon->res_magic() - ench_power_stepdown(ench_power);
                 return MON_RESIST;
             }
         }
@@ -6561,4 +6571,9 @@ void clear_zap_info_on_exit()
         delete zap.damage;
         delete zap.tohit;
     }
+}
+
+int ench_power_stepdown(int pow)
+{
+    return stepdown_value(pow, 30, 40, 100, 120);
 }

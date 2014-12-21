@@ -307,6 +307,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
                                                   bool intrinsic_only = false);
 spret_type mass_enchantment(enchant_type wh_enchant, int pow,
                             bool fail = false);
+int ench_power_stepdown(int pow);
 
 bool poison_monster(monster* mons, const actor* who, int levels = 1,
                     bool force = false, bool verbose = true);
@@ -331,6 +332,7 @@ void init_zap_index();
 void clear_zap_info_on_exit();
 
 int zap_power_cap(zap_type ztype);
+int zap_ench_power(zap_type z_type, int pow);
 void zappy(zap_type z_type, int power, bolt &pbolt);
 void bolt_parent_init(bolt *parent, bolt *child);
 
