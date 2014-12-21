@@ -11,7 +11,7 @@ PlaceInfo::PlaceInfo()
       turns_travel(0), turns_interlevel(0), turns_resting(0),
       turns_other(0), elapsed_total(0), elapsed_explore(0),
       elapsed_travel(0), elapsed_interlevel(0), elapsed_resting(0),
-      elapsed_other(0)
+      elapsed_other(0), deepest_level_seen(0)
 {
     for (int i = 0; i < KC_NCATEGORIES; i++)
         mon_kill_num[i] = 0;
@@ -70,6 +70,8 @@ const PlaceInfo &PlaceInfo::operator += (const PlaceInfo &other)
     elapsed_resting    += other.elapsed_resting;
     elapsed_other      += other.elapsed_other;
 
+    deepest_level_seen = max(deepest_level_seen, other.deepest_level_seen);
+
     return *this;
 }
 
@@ -96,6 +98,8 @@ const PlaceInfo &PlaceInfo::operator -= (const PlaceInfo &other)
     elapsed_interlevel -= other.elapsed_interlevel;
     elapsed_resting    -= other.elapsed_resting;
     elapsed_other      -= other.elapsed_other;
+
+    deepest_level_seen = min(deepest_level_seen, other.deepest_level_seen);
 
     return *this;
 }

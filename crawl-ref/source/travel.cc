@@ -4700,6 +4700,87 @@ static const vector<dungeon_feature_type> _up_stairs_list =
 };
 
 /**
+ * Checks whether Wundraste considers a branch "cleared", overriding other
+ * backtracking checks.
+ *
+ * @returns bool True if the player has reached the bottom of the branch and
+ *               gotten any runes that exist.
+ */
+static bool _has_finished_branch()
+{
+    // some branches we can skip
+    switch (you.where_are_you)
+    {
+        case BRANCH_ZIGGURAT:
+        case BRANCH_LABYRINTH:
+        case BRANCH_VESTIBULE:
+        case BRANCH_TEMPLE:
+        case BRANCH_ABYSS:
+        case BRANCH_BAZAAR:
+        case BRANCH_TROVE:
+        case BRANCH_SEWER:
+        case BRANCH_OSSUARY:
+        case BRANCH_BAILEY:
+        case BRANCH_ICE_CAVE:
+        case BRANCH_VOLCANO:
+        case BRANCH_WIZLAB:
+        case BRANCH_PANDEMONIUM:
+            return false;
+
+        default:
+            break;
+    }
+
+    // check if you've been to the bottom
+    if (you.get_place_info(you.where_are_you).deepest_level_seen
+            != brdepth[you.where_are_you]) {
+        return false;
+    }
+
+    // check if rune has been obtained
+    switch (you.where_are_you)
+    {
+        case BRANCH_SWAMP:
+            return you.runes[RUNE_SWAMP];
+            break;
+        case BRANCH_SHOALS:
+            return you.runes[RUNE_SHOALS];
+            break;
+        case BRANCH_SNAKE:
+            return you.runes[RUNE_SNAKE];
+            break;
+        case BRANCH_SPIDER:
+            return you.runes[RUNE_SPIDER];
+            break;
+        case BRANCH_SLIME:
+            return you.runes[RUNE_SLIME];
+            break;
+        case BRANCH_VAULTS:
+            return you.runes[RUNE_VAULTS];
+            break;
+        case BRANCH_TOMB:
+            return you.runes[RUNE_TOMB];
+            break;
+        case BRANCH_DIS:
+            return you.runes[RUNE_DIS];
+            break;
+        case BRANCH_GEHENNA:
+            return you.runes[RUNE_GEHENNA];
+            break;
+        case BRANCH_COCYTUS:
+            return you.runes[RUNE_COCYTUS];
+            break;
+        case BRANCH_TARTARUS:
+            return you.runes[RUNE_TARTARUS];
+            break;
+        default:
+            break;
+    }
+
+    return true;
+}
+
+/**
  * Determines whether there's an unexplored stone down stair or rune pathable
  * on this level. Ignores player water/lava traversability.
  *
@@ -4760,7 +4841,7 @@ void set_stair_backtracking_status(bool skip_check)
 
         if (sinfo != nullptr)
         {
-            if (skip_check)
+            if (skip_check || _has_finished_branch())
                 sinfo->backtracking = false;
             else
                 sinfo->backtracking = has_connected_path_forward(stair_coord);
@@ -4789,6 +4870,9 @@ bool valid_downward_path_exists(dungeon_feature_type up_stair)
     {
         // Stair data isn't saved until we use them, so when have no cache
         // we just have to wing it.
+        if (_has_finished_branch())
+            return false;
+
         return has_connected_path_forward(stair_coord);
     }
 

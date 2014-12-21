@@ -26,6 +26,8 @@ public:
     int elapsed_resting;
     int elapsed_other;
 
+    int deepest_level_seen;
+
 public:
     PlaceInfo();
 

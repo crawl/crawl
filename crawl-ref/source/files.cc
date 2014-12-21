@@ -1469,9 +1469,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         {
             delta.num_visits++;
         }
-
-        if (just_created_level)
+        if (just_created_level) {
             delta.levels_seen++;
+            delta.deepest_level_seen = max(delta.deepest_level_seen, you.depth);
+        }
 
         you.global_info += delta;
 #ifdef DEBUG_LEVEL_LOAD

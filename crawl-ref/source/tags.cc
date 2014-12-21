@@ -1701,6 +1701,8 @@ static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
     marshallInt(th, place_info.elapsed_interlevel);
     marshallInt(th, place_info.elapsed_resting);
     marshallInt(th, place_info.elapsed_other);
+
+    marshallInt(th, place_info.deepest_level_seen);
 }
 
 static void tag_construct_you_dungeon(writer &th)
@@ -3345,6 +3347,11 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     place_info.elapsed_interlevel = unmarshallInt(th);
     place_info.elapsed_resting    = unmarshallInt(th);
     place_info.elapsed_other      = unmarshallInt(th);
+
+    if (th.getMinorVersion() >= TAG_MINOR_DEEPEST_LEVEL)
+        place_info.deepest_level_seen = unmarshallInt(th);
+    else
+        place_info.deepest_level_seen = 0;
 
     return place_info;
 }

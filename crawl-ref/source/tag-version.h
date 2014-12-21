@@ -143,6 +143,7 @@ enum tag_minor_version
     TAG_MINOR_ISFLAG_HANDLED,      // Game tracks which items player has handled
     TAG_MINOR_SHOP_HACK,           // The shop hack is dead!
     TAG_MINOR_STAIR_BACKTRACKING,  // Store whether a given stair is "backtracking"
+    TAG_MINOR_DEEPEST_LEVEL,       // Store deepest level seen for each branch
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
