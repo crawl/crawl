@@ -255,8 +255,7 @@ int attack::calc_to_hit(bool random)
 
         const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
         if (jewellery != NON_ITEM
-            && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && mitm[jewellery].sub_type == RING_SLAYING)
+            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
         {
             mhit += mitm[jewellery].plus;
         }
@@ -1428,8 +1427,7 @@ int attack::calc_damage()
 
             const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
             if (jewellery != NON_ITEM
-                && mitm[jewellery].base_type == OBJ_JEWELLERY
-                && mitm[jewellery].sub_type == RING_SLAYING)
+                && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
             {
                 wpn_damage_plus += mitm[jewellery].plus;
             }

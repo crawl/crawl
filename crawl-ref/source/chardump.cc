@@ -639,11 +639,8 @@ static bool _dump_item_origin(const item_def &item)
     if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
         return true;
 
-    if (fs(IODS_RUNES) && item.base_type == OBJ_MISCELLANY
-        && item.sub_type == MISC_RUNE_OF_ZOT)
-    {
+    if (fs(IODS_RUNES) && item_is_rune(item))
         return true;
-    }
 
     if (fs(IODS_RODS) && item.base_type == OBJ_RODS)
         return true;

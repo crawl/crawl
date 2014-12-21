@@ -1112,7 +1112,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
     item_info inf = get_item_info(item);
 
     const bool grants_flight =
-         inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_FLIGHT
+         inf.is_type(OBJ_JEWELLERY, RING_FLIGHT)
          || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING
          || is_artefact(inf)
             && artefact_known_wpn_property(inf, ARTP_FLY);
@@ -1998,7 +1998,7 @@ static bool _check_blood_corpses_on_ground()
 {
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
             && mons_has_blood(si->mon_type))
         {
             return true;
@@ -2477,8 +2477,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        if (item.base_type == OBJ_JEWELLERY
-            && item.sub_type == AMU_INACCURACY
+        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
             && item_slot == you.equip[EQ_AMULET]
             && !item_known_cursed(item))
         {

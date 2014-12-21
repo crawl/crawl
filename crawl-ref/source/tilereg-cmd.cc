@@ -196,7 +196,7 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
     case CMD_BUTCHER:
         // this logic is enormously simplistic compared to food.cc
         for (stack_iterator si(you.pos(), true); si; ++si)
-            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 return false;
         if (you.species == SP_VAMPIRE)
             return false;

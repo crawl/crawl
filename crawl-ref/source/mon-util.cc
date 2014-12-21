@@ -412,7 +412,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_BOOTS:
     case EQ_SHIELD:
         item = mslot_item(MSLOT_SHIELD);
-        if (item && item->base_type == OBJ_ARMOUR && item->sub_type == sub_type)
+        if (item && item->is_type(OBJ_ARMOUR, sub_type))
             ret++;
         // Don't check MSLOT_ARMOUR for EQ_SHIELD
         if (slot == EQ_SHIELD)
@@ -420,7 +420,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         // intentional fall-through
     case EQ_BODY_ARMOUR:
         item = mslot_item(MSLOT_ARMOUR);
-        if (item && item->base_type == OBJ_ARMOUR && item->sub_type == sub_type)
+        if (item && item->is_type(OBJ_ARMOUR, sub_type))
             ret++;
         break;
 
@@ -428,8 +428,7 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
         item = mslot_item(MSLOT_JEWELLERY);
-        if (item && item->base_type == OBJ_JEWELLERY
-            && item->sub_type == sub_type
+        if (item && item->is_type(OBJ_JEWELLERY, sub_type)
             && (calc_unid || item_type_known(*item)))
         {
             if (slot == EQ_RINGS_PLUS)
@@ -1829,8 +1828,7 @@ flight_type mons_flies(const monster* mon, bool temp)
 
         const int jewellery = mon->inv[MSLOT_JEWELLERY];
         if (jewellery != NON_ITEM
-            && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && mitm[jewellery].sub_type == RING_FLIGHT)
+            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_FLIGHT))
         {
             return FL_LEVITATE;
         }

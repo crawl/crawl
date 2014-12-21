@@ -395,8 +395,7 @@ static void _give_wanderer_item(object_class_type base, int sub, int & slot)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].defined() && you.inv[i].base_type == base
-            && you.inv[i].sub_type == sub)
+        if (you.inv[i].defined() && you.inv[i].is_type(base, sub))
         {
             you.inv[i].quantity++;
             return;
@@ -778,8 +777,7 @@ static void _wanderer_cover_equip_holes(int & slot)
 
         for (int i = 0; i < slot; ++i)
         {
-            if (you.inv[i].base_type == OBJ_WEAPONS
-                && you.inv[i].sub_type == WPN_DAGGER)
+            if (you.inv[i].is_type(OBJ_WEAPONS, WPN_DAGGER))
             {
                 has_dagger = true;
                 break;

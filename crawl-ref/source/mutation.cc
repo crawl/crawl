@@ -2643,7 +2643,7 @@ int handle_pbd_corpses()
     {
         for (stack_iterator j(*ri); j; ++j)
         {
-            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
+            if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 ++corpse_count;
                 if (corpse_count == 7)

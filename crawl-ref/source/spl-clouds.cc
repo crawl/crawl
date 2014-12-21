@@ -289,7 +289,7 @@ spret_type cast_corpse_rot(bool fail)
     {
         for (stack_iterator si(you.pos()); si; ++si)
         {
-            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
                 {
@@ -315,7 +315,7 @@ void corpse_rot(actor* caster)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
             for (stack_iterator si(*ri); si; ++si)
-                if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+                if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
                     // Found a corpse.  Skeletonise it if possible.
                     if (!mons_skeleton(si->mon_type))

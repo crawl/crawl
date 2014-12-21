@@ -603,6 +603,11 @@ public:
     colour_t get_colour() const;
     zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
+    bool is_type(int base, int sub) const
+    {
+        return base_type == base && sub_type == sub;
+    }
+
     /**
      * Find the index of an item in the mitm array. Results are undefined
      * if this item is not in the array!

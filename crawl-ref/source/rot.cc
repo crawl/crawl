@@ -45,7 +45,7 @@ static void _potion_stack_changed_message(string item_name, int num_changed,
  */
 static bool _is_chunk(const item_def &item)
 {
-    return item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK;
+    return item.is_type(OBJ_FOOD, FOOD_CHUNK);
 }
 
 
