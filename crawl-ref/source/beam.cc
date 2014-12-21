@@ -1398,7 +1398,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     {
     case BEAM_FIRE:
     case BEAM_STEAM:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
         if (!hurted)
         {
@@ -1431,7 +1431,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_WATER:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (doFlavouredEffects)
         {
             if (!hurted)
@@ -1442,7 +1442,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_COLD:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1465,7 +1465,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ELECTRICITY:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1489,7 +1489,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_ACID:
     {
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1506,7 +1506,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_POISON:
     {
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
         const int res = mons->res_poison();
         if (!hurted && res > 0)
@@ -1525,7 +1525,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     }
 
     case BEAM_POISON_ARROW:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1553,7 +1553,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         else
         {
-            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
             // Early out if no side effects.
             if (!doFlavouredEffects)
@@ -1618,7 +1618,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_ICE:
         // ice - 40% of damage is cold, other 60% is impact and
         // can't be resisted (except by AC, of course)
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1632,7 +1632,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_LAVA:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
         if (hurted < original)
         {
@@ -1700,7 +1700,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             hurted = 0;
         else
         {
-            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
             if (!doFlavouredEffects)
                 break;

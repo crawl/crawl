@@ -1231,7 +1231,7 @@ static int _cloud_damage_output(const actor *actor,
                                 bool maximum_damage = false)
 {
     const int resist_adjusted_damage =
-        resist_adjust_damage(actor, flavour, base_damage, true);
+        resist_adjust_damage(actor, flavour, base_damage);
     if (maximum_damage)
         return resist_adjusted_damage;
 

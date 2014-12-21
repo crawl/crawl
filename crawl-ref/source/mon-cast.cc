@@ -4085,7 +4085,7 @@ static bool _mons_cast_freeze(monster* mons)
     int damage = 0;
 
     if (target->is_player())
-        damage = resist_adjust_damage(&you, BEAM_COLD, base_damage, true);
+        damage = resist_adjust_damage(&you, BEAM_COLD, base_damage);
     else
     {
         bolt beam;
