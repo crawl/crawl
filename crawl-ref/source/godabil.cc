@@ -5860,7 +5860,7 @@ void ru_draw_out_power()
            + roll_dice(div_rand_round(you.piety, 20), 6));
     inc_mp(div_rand_round(you.piety, 48)
            + roll_dice(div_rand_round(you.piety, 40), 4));
-    drain_player(25, false, true);
+    drain_player(30, false, true);
 }
 
 bool ru_power_leap()
