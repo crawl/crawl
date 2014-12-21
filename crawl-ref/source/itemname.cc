@@ -77,20 +77,14 @@ static const char* _interesting_origin(const item_def &item)
 {
     if (origin_is_god_gift(item))
         return "god gift";
-    switch (item.orig_monnum)
+
+    if (item.orig_monnum == MONS_DONALD
+        && item.is_type(OBJ_ARMOUR, ARM_SHIELD))
     {
-    case MONS_SONJA:
-        if (item_attack_skill(item) == SK_SHORT_BLADES)
-            return "Sonja";
-    case MONS_PSYCHE:
-        if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_DAGGER)
-            return "Psyche";
-    case MONS_DONALD:
-        if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_SHIELD)
-            return "Donald";
-    default:
-        return 0;
+        return "Donald";
     }
+
+    return nullptr;
 }
 
 string item_def::name(description_level_type descrip, bool terse, bool ident,
@@ -1996,10 +1990,10 @@ bool item_type_known(const item_def& item)
         return true;
     }
 
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_DESTRUCTION)
+    if (item.is_type(OBJ_BOOKS, BOOK_DESTRUCTION))
         return true;
 
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+    if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
         return false;
 
     if (!item_type_has_ids(item.base_type))
@@ -2117,11 +2111,8 @@ void pack_item_identify_message(int base_type, int sub_type)
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item = you.inv[i];
-        if (item.defined() && item.base_type == base_type
-            && item.sub_type == sub_type)
-        {
+        if (item.defined() && item.is_type(base_type, sub_type))
             mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-        }
     }
 }
 
@@ -2240,7 +2231,7 @@ public:
             else
                 name = "miscellaneous";
         }
-        else if (item->base_type == OBJ_BOOKS && item->sub_type == BOOK_MANUAL)
+        else if (item->is_type(OBJ_BOOKS, BOOK_MANUAL))
             name = "manuals";
         else if (item->base_type == OBJ_RODS || item->base_type == OBJ_GOLD)
         {
@@ -2502,16 +2493,15 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->quantity  = ptmp->base_type == OBJ_GOLD ? 18 : 1;
 
                 // Make chunks fresh, non-poisonous, etc.
-                if (ptmp->base_type == OBJ_FOOD
-                    && ptmp->sub_type == FOOD_CHUNK)
+                if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
                 {
                     ptmp->special = 100;
                     ptmp->mon_type = MONS_RAT;
                 }
 
                 // stupid fake decks
-                if (is_deck(*ptmp) || ptmp->base_type == OBJ_MISCELLANY
-                                      && ptmp->sub_type == NUM_MISCELLANY)
+                if (is_deck(*ptmp)
+                    || ptmp->is_type(OBJ_MISCELLANY, NUM_MISCELLANY))
                 {
                     ptmp->deck_rarity = DECK_RARITY_COMMON;
                 }

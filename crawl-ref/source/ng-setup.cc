@@ -366,8 +366,7 @@ void newgame_make_item(int slot, equipment_type eqslot,
         for (int i = 0; i < ENDOFPACK; ++i)
         {
             item_def& item = you.inv[i];
-            if (item.base_type == base && item.sub_type == sub_type
-                && is_stackable_item(item))
+            if (item.is_type(base, sub_type) && is_stackable_item(item))
             {
                 item.quantity += qty;
                 return;

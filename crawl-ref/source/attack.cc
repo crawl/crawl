@@ -255,8 +255,7 @@ int attack::calc_to_hit(bool random)
 
         const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
         if (jewellery != NON_ITEM
-            && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && mitm[jewellery].sub_type == RING_SLAYING)
+            && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
         {
             mhit += mitm[jewellery].plus;
         }
@@ -440,8 +439,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
             // Elephant trunks have no bones inside.
             attk_type = AT_NONE;
         }
-        else if (attk_type == AT_KITE || attk_type == AT_SWOOP)
-            attk_type = AT_HIT; // special handling of these two elsewhere
     }
     else
     {
@@ -1055,7 +1052,6 @@ void attack::drain_defender()
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
-                                          defender->res_negative_energy(),
                                           (1 + random2(damage_done)) / 2);
 
     if (defender->drain_exp(attacker, true, 20 + min(35, damage_done)))
@@ -1431,8 +1427,7 @@ int attack::calc_damage()
 
             const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
             if (jewellery != NON_ITEM
-                && mitm[jewellery].base_type == OBJ_JEWELLERY
-                && mitm[jewellery].sub_type == RING_SLAYING)
+                && mitm[jewellery].is_type(OBJ_JEWELLERY, RING_SLAYING))
             {
                 wpn_damage_plus += mitm[jewellery].plus;
             }
@@ -1635,15 +1630,14 @@ bool attack::apply_damage_brand(const char *what)
     switch (brand)
     {
     case SPWPN_FLAMING:
-        calc_elemental_brand_damage(BEAM_FIRE, defender->res_fire(),
+        calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     what);
         attacker->god_conduct(DID_FIRE, 1);
         break;
 
     case SPWPN_FREEZING:
-        calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze",
-                                    what);
+        calc_elemental_brand_damage(BEAM_COLD, "freeze", what);
         break;
 
     case SPWPN_HOLY_WRATH:
@@ -1825,9 +1819,6 @@ bool attack::apply_damage_brand(const char *what)
         if (using_weapon() && is_unrandom_artefact(*weapon, UNRAND_HELLFIRE))
         {
             calc_elemental_brand_damage(BEAM_HELLFIRE,
-                                        defender->is_monster()
-                                        ? defender->as_monster()->res_hellfire()
-                                        : 0,
                                         defender->is_icy() ? "melt" : "burn",
                                         what);
             defender->expose_to_element(BEAM_HELLFIRE);
@@ -1902,11 +1893,10 @@ bool attack::apply_damage_brand(const char *what)
  * of attack, but the calculation of elemental damage should be consistent.
  */
 void attack::calc_elemental_brand_damage(beam_type flavour,
-                                                int res,
-                                                const char *verb,
-                                                const char *what)
+                                         const char *verb,
+                                         const char *what)
 {
-    special_damage = resist_adjust_damage(defender, flavour, res,
+    special_damage = resist_adjust_damage(defender, flavour,
                                           random2(damage_done) / 2 + 1);
 
     if (needs_message && special_damage > 0 && verb)

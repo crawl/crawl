@@ -44,7 +44,6 @@ public:
 enum duration_power_scaling
 {
     PS_NONE,                ///< no bonus
-    PS_STABLE_TENTH,        ///< bonus based on (random2(pow) + pow)/20
     PS_SINGLE,              ///< bonus based on rand2(power)
     PS_ONE_AND_A_HALF,      ///< bonus based on r(power) + r(power/2)
     PS_DOUBLE               ///< bonus based on r(power) + r(power)

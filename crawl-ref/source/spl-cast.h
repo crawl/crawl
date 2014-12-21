@@ -42,6 +42,7 @@ enum spflag_type
     SPFLAG_UTILITY             = 0x1000000,      // usable no matter what foe is
     SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
     SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
+    SPFLAG_MR_CHECK            = 0x8000000,      // spell that checks monster MR
 };
 
 enum spret_type
@@ -71,6 +72,7 @@ bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
+vector<string> desc_success_chance(const monster_info& mi, int pow);
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
     bool evoked = false);
 
@@ -84,6 +86,7 @@ int power_to_barcount(int power);
 
 string spell_power_string(spell_type spell, bool rod = false);
 string spell_range_string(spell_type spell, bool rod = false);
+string range_string(int range, int maxrange, ucs_t caster_char);
 string spell_schools_string(spell_type spell);
 string spell_hunger_string(spell_type spell, bool rod = false);
 string spell_noise_string(spell_type spell);

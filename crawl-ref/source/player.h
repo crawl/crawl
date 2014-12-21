@@ -48,6 +48,12 @@ class targetter;
 
 int check_stealth();
 
+// needed for assert in is_player()
+#ifdef DEBUG_GLOBALS
+#define you (*real_you)
+#endif
+extern player you;
+
 typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
@@ -614,7 +620,7 @@ public:
     bool malmutate(const string &reason);
     bool polymorph(int pow);
     void backlight();
-    void banish(actor *agent, const string &who = "");
+    void banish(actor* /*agent*/, const string &who = "");
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
@@ -664,6 +670,7 @@ public:
     bool is_unbreathing() const;
     bool is_insubstantial() const;
     int res_acid(bool calc_unid = true) const;
+    bool res_hellfire() const { return false; };
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
@@ -809,11 +816,6 @@ protected:
     bool _possible_fearmonger(const monster* mon) const;
 };
 
-#ifdef DEBUG_GLOBALS
-#define you (*real_you)
-#endif
-extern player you;
-
 struct player_save_info
 {
     string name;
@@ -870,7 +872,7 @@ bool player_in_hell();
 static inline bool player_in_branch(int branch)
 {
     return you.where_are_you == branch;
-};
+}
 
 bool berserk_check_wielded_weapon();
 bool player_equip_unrand(int unrand_index);

@@ -1548,23 +1548,17 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv, bool tracer =
             break;
         }
     }
-    else if (item.base_type == OBJ_CORPSES &&
-             item.sub_type == CORPSE_BODY &&
-             carrion_is_poisonous(item))
+    else if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
+             && carrion_is_poisonous(item))
     {
         strength = mons_weight(item.mon_type) / 25;
     }
-    else if (item.base_type == OBJ_FOOD &&
-             item.sub_type == FOOD_CHUNK &&
-             carrion_is_poisonous(item))
-    {
+    else if (item.is_type(OBJ_FOOD, FOOD_CHUNK) && carrion_is_poisonous(item))
         strength += 30 * item.quantity;
-    }
 
     if (strength)
     {
-        if (item.base_type == OBJ_CORPSES
-            && item.sub_type == CORPSE_BODY
+        if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
             && mons_skeleton(item.mon_type)
             && !tracer)
         {
@@ -1588,7 +1582,7 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
     actor* act = actor_at(where);
     if (act)
     {
-        int dam = resist_adjust_damage(act, BEAM_FIRE, act->res_fire(), 40, true);
+        const int dam = resist_adjust_damage(act, BEAM_FIRE, 40);
         return mons_aligned(act, agent) ? -dam : dam;
     }
     // We've done something, but its value is indeterminate
@@ -1758,13 +1752,13 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
     int damage = roll_dice(str, 5 + pow/7);
     if (damage)
     {
-        const int resist = player_res_fire();
-        damage = resist_adjust_damage(&you, BEAM_FIRE, resist, damage, true);
+        damage = resist_adjust_damage(&you, BEAM_FIRE, damage);
 
         if (tracer)
             return mons_aligned(&you, agent) ? -1 * damage : damage;
         else
         {
+            const int resist = player_res_fire();
             if (resist > 0)
                 mpr("You feel like your blood is boiling!");
             else if (resist < 0)
@@ -1841,8 +1835,7 @@ static bool maybe_abort_ignite()
                 break;
             }
         }
-        else if (item.base_type == OBJ_CORPSES
-                 && item.sub_type == CORPSE_BODY
+        else if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
                  && carrion_is_poisonous(item))
         {
             prompt += "over ";
@@ -1850,9 +1843,8 @@ static bool maybe_abort_ignite()
             prompt += "! Ignite poison anyway?";
             return !yesno(prompt.c_str(), false, 'n');
         }
-        else if (item.base_type == OBJ_FOOD &&
-                 item.sub_type == FOOD_CHUNK &&
-                 carrion_is_poisonous(item))
+        else if (item.is_type(OBJ_FOOD, FOOD_CHUNK)
+                 && carrion_is_poisonous(item))
         {
             prompt += "over ";
             prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
@@ -2886,8 +2878,7 @@ void toxic_radiance_effect(actor* agent, int mult)
         else
             dam = dam * 9 / (8 + ai->pos().distance_from(agent->pos()));
 
-        dam = resist_adjust_damage(*ai, BEAM_POISON, ai->res_poison(),
-                                   dam, true);
+        dam = resist_adjust_damage(*ai, BEAM_POISON, dam);
 
         if (ai->is_player())
         {

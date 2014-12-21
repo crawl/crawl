@@ -93,7 +93,7 @@ NAME:   minmay_shoals_entry_hut
 TAGS:   shoals_entry
 MONS:   snapping turtle
 SUBST:  W = WWWw, w = wwwW
-TILE:   x = wall_vines
+TILE:   x = wall_pebble_cyan
 KFEAT:  O = enter_shoals
 MAP
   WWWWWWW
@@ -1080,7 +1080,7 @@ KITEM:     O = barnacled rune of Zot mimic
 KITEM:     O = barnacled rune of Zot
 : end
 KPROP:     O = no_tide
-LROCKTILE: wall_vines
+LROCKTILE: wall_pebble_cyan
 MAP
  xxAxx
 xx.0.xx
@@ -1146,7 +1146,7 @@ KPROP:   d = no_tide
 SHUFFLE: AB / AB / BA, CD / CD / DC
 NSUBST:  2 = 2 = 22w / * = 22www, 0 = 2:0 / 1:. / * = 00...
 SUBST:   AC = x, B = w, D = .
-LROCKTILE: wall_vines
+LROCKTILE: wall_pebble_cyan
 FHEIGHT: .d0@ = 15
 MAP
   xxxxxxx
@@ -1196,7 +1196,7 @@ KFEAT:   123456 = w
 SHUFFLE: 123 / 123 / 123 / 456 / 456
 SHUFFLE: AB / AB / BA, CD / CD / DC
 SUBST:   AC = x, B = w, D = .
-LROCKTILE: wall_vines
+LROCKTILE: wall_pebble_cyan
 MAP
   .@xxxx
  .x....xx

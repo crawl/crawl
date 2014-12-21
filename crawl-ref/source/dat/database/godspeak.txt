@@ -448,7 +448,7 @@ Xom yawns loudly!
 
 "This toy is broken."
 
-"It's only fun and games until someone loses an eye."
+"It's all fun and games until someone loses an eye."
 
 w:1
 "It's not fun and games unless someone loses an eye."

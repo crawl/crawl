@@ -49,9 +49,7 @@ enum attack_type
 #endif
     AT_POUNCE,
     AT_REACH_STING,
-    AT_KITE,  // Hops backwards if attacking with a polearm.
-    AT_SWOOP, // Swoops in to perform a melee attack if far away.
-    AT_LAST_REAL_ATTACK = AT_SWOOP,
+    AT_LAST_REAL_ATTACK = AT_REACH_STING,
 
     AT_CHERUB,
 #if TAG_MAJOR_VERSION == 34
@@ -125,6 +123,9 @@ enum attack_flavour
     AF_FIREBRAND,
     AF_CORRODE,
     AF_SCARAB,
+    AF_KITE,  // Hops backwards if attacking with a polearm.
+    AF_SWOOP, // Swoops in to perform a melee attack if far away.
+    AF_TRAMPLE, // Trampling effect.
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

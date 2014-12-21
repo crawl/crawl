@@ -528,7 +528,7 @@ int manual_slot_for_skill(skill_type skill)
 bool skill_has_manual(skill_type skill)
 {
     return manual_slot_for_skill(skill) != -1;
-};
+}
 
 void finish_manual(int slot)
 {

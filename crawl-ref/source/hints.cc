@@ -2480,8 +2480,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
 
         if (Hints.hints_type == HINT_RANGER_CHAR && wpn != -1
-            && you.inv[wpn].base_type == OBJ_WEAPONS
-            && you.inv[wpn].sub_type == WPN_SHORTBOW)
+            && you.inv[wpn].is_type(OBJ_WEAPONS, WPN_SHORTBOW))
         {
             text << "You can easily switch between weapons in slots a and "
                     "b by pressing <w>%</w>.";

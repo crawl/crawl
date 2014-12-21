@@ -197,7 +197,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         switch (speci)
         {
         case SP_DEEP_ELF:
-        case SP_HALFLING:
+        case SP_FELID:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -725,7 +725,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_ARCANE_MARKSMAN:
                 return CC_BANNED;
             case JOB_BERSERKER:
-            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ENCHANTER:
             case JOB_TRANSMUTER:
             case JOB_ICE_ELEMENTALIST:
             case JOB_CONJURER:

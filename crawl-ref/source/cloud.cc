@@ -1227,13 +1227,11 @@ static int _actor_cloud_base_damage(const actor *act,
 
 static int _cloud_damage_output(const actor *actor,
                                 beam_type flavour,
-                                int resist,
                                 int base_damage,
                                 bool maximum_damage = false)
 {
     const int resist_adjusted_damage =
-        resist_adjust_damage(actor, flavour, resist,
-                             base_damage, true);
+        resist_adjust_damage(actor, flavour, base_damage);
     if (maximum_damage)
         return resist_adjusted_damage;
 
@@ -1268,7 +1266,7 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
         final_damage =
-            _cloud_damage_output(act, _cloud2beam(cloud.type), resist,
+            _cloud_damage_output(act, _cloud2beam(cloud.type),
                                  cloud_base_damage,
                                  maximum_damage);
         break;
@@ -1302,7 +1300,6 @@ static int _actor_cloud_damage(const actor *act,
 
         const int lightning_dam = _cloud_damage_output(act,
                                                        _cloud2beam(cloud.type),
-                                                       resist,
                                                        cloud_base_damage,
                                                        maximum_damage);
 

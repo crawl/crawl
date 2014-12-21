@@ -51,19 +51,19 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_WEAPONS)
             type_bad = true;
 
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
+        if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
             type_bad = true;
         break;
 
     case GOD_SHINING_ONE:
         // Crusader god: holiness, honourable combat.
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_STEALTH)
+        if (item.is_type(OBJ_JEWELLERY, RING_STEALTH))
             type_bad = true;
         break;
 
     case GOD_OKAWARU:
         // Precision fighter god: no inaccuracy.
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_INACCURACY)
+        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY))
             type_bad = true;
         break;
 
@@ -91,16 +91,16 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_CHEIBRIADOS:
         // Slow god: no quick blades, no berserking.
-        if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_QUICK_BLADE)
+        if (item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
             type_bad = true;
 
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
+        if (item.is_type(OBJ_JEWELLERY, AMU_RAGE))
             type_bad = true;
         break;
 
     case GOD_DITHMENOS:
         // Shadow god: no reducing stealth.
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_LOUDNESS)
+        if (item.is_type(OBJ_JEWELLERY, RING_LOUDNESS))
             type_bad = true;
         break;
 

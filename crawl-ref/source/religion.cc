@@ -338,7 +338,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "The more cursed you are, the more Ashenzari supports your skills.",
-      "Ashenzari keeps your vision and mind clear.",
+      "Ashenzari reveals the unseen and keeps your mind clear.",
       "scry through walls",
       "Ashenzari helps you to reconsider your skills."
     },
@@ -490,7 +490,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { "",
       "Ashenzari no longer supports your skills.",
-      "Ashenzari no longer keeps your vision and mind clear.",
+      "Ashenzari no longer reveals the unseen or keeps your mind clear.",
       "scry through walls",
       "Ashenzari no longer helps you to reconsider your skills."
     },
@@ -3233,10 +3233,7 @@ bool god_likes_item(god_type god, const item_def& item)
         return false;
 
     if (god_likes_fresh_corpses(god))
-    {
-        return item.base_type == OBJ_CORPSES
-               && item.sub_type == CORPSE_BODY;
-    }
+        return item.is_type(OBJ_CORPSES, CORPSE_BODY);
 
     switch (god)
     {
@@ -3257,8 +3254,7 @@ bool god_likes_item(god_type god, const item_def& item)
                && mons_genus(item.mon_type) == MONS_ORC;
 
     case GOD_ASHENZARI:
-        return item.base_type == OBJ_SCROLLS
-               && item.sub_type == SCR_REMOVE_CURSE;
+        return item.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE);
 
     default:
         return false;

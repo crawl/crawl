@@ -434,8 +434,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
 
     // Only ogres and trolls can wield large rocks (for sandblast).
-    if (bsize < SIZE_LARGE
-        && item.base_type == OBJ_MISSILES && item.sub_type == MI_LARGE_ROCK)
+    if (bsize < SIZE_LARGE && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
     {
         if (!quiet)
             mpr("That's too large and heavy for you to wield.");

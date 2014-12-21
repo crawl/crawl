@@ -289,7 +289,7 @@ spret_type cast_corpse_rot(bool fail)
     {
         for (stack_iterator si(you.pos()); si; ++si)
         {
-            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
                 {
@@ -315,7 +315,7 @@ void corpse_rot(actor* caster)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
             for (stack_iterator si(*ri); si; ++si)
-                if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+                if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
                     // Found a corpse.  Skeletonise it if possible.
                     if (!mons_skeleton(si->mon_type))
@@ -342,7 +342,7 @@ void corpse_rot(actor* caster)
     // Should make zombies decay into skeletons?
 }
 
-int holy_flames(monster* caster, actor* defender)
+void holy_flames(monster* caster, actor* defender)
 {
     const coord_def pos = defender->pos();
     int cloud_count = 0;
@@ -364,7 +364,14 @@ int holy_flames(monster* caster, actor* defender)
         cloud_count++;
     }
 
-    return cloud_count;
+    if (cloud_count)
+    {
+        if (defender->is_player())
+            mpr("Blessed fire suddenly surrounds you!");
+        else
+            simple_monster_message(defender->as_monster(),
+                                   " is surrounded by blessed fire!");
+    }
 }
 
 struct dist2_sorter

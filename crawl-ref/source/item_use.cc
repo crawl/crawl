@@ -56,6 +56,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-wpnench.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
@@ -1111,7 +1112,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
     item_info inf = get_item_info(item);
 
     const bool grants_flight =
-         inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_FLIGHT
+         inf.is_type(OBJ_JEWELLERY, RING_FLIGHT)
          || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING
          || is_artefact(inf)
             && artefact_known_wpn_property(inf, ARTP_FLY);
@@ -1783,6 +1784,8 @@ void zap_wand(int slot)
         hitfunc = _wand_targetter(&wand);
     }
 
+    const int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
+        * (player_mutation_level(MUT_MP_WANDS) + 6) / 6;
     const int tracer_range =
         (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
         _wand_range(type_zapped) : _max_wand_range();
@@ -1795,6 +1798,11 @@ void zap_wand(int slot)
     args.range = tracer_range;
     args.top_prompt = zap_title;
     args.hitfunc = hitfunc;
+    if (testbits(get_spell_flags(zap_to_spell(type_zapped)), SPFLAG_MR_CHECK))
+    {
+        args.get_desc_func = bind(desc_success_chance, placeholders::_1,
+                                  zap_ench_power(type_zapped, power));
+    }
     direction(zap_wand, args);
 
     if (hitfunc)
@@ -1847,9 +1855,6 @@ void zap_wand(int slot)
     beam.set_target(zap_wand);
 
     const bool aimed_at_self = (beam.target == you.pos());
-
-    const int power = (15 + you.skill(SK_EVOCATIONS, 5) / 2)
-        * (player_mutation_level(MUT_MP_WANDS) + 6) / 6;
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
@@ -1993,7 +1998,7 @@ static bool _check_blood_corpses_on_ground()
 {
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
             && mons_has_blood(si->mon_type))
         {
             return true;
@@ -2472,8 +2477,7 @@ static bool _identify(bool alreadyknown, const string &pre_msg)
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        if (item.base_type == OBJ_JEWELLERY
-            && item.sub_type == AMU_INACCURACY
+        if (item.is_type(OBJ_JEWELLERY, AMU_INACCURACY)
             && item_slot == you.equip[EQ_AMULET]
             && !item_known_cursed(item))
         {
@@ -2889,8 +2893,7 @@ void read(int slot)
 
     // if we have blurry vision, we need to start a delay before the actual
     // scroll effect kicks in.
-    if (player_mutation_level(MUT_BLURRY_VISION)
-        && !in_good_standing(GOD_ASHENZARI, 2))
+    if (player_mutation_level(MUT_BLURRY_VISION))
     {
         // takes 1, 2, 3 extra turns
         const int turns = player_mutation_level(MUT_BLURRY_VISION);

@@ -2039,7 +2039,7 @@ int fedhas_fungal_bloom()
         {
             bool corpse_on_pos = false;
 
-            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
+            if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 corpse_on_pos = true;
 
@@ -2713,8 +2713,7 @@ int count_corpses_in_los(vector<stack_iterator> *positions)
 
         for (stack_iterator stack_it(*rad); stack_it; ++stack_it)
         {
-            if (stack_it->base_type == OBJ_CORPSES
-                && stack_it->sub_type == CORPSE_BODY)
+            if (stack_it->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 if (positions)
                     positions->push_back(stack_it);
@@ -5861,7 +5860,7 @@ void ru_draw_out_power()
            + roll_dice(div_rand_round(you.piety, 20), 6));
     inc_mp(div_rand_round(you.piety, 48)
            + roll_dice(div_rand_round(you.piety, 40), 4));
-    drain_player(25, false, true);
+    drain_player(30, false, true);
 }
 
 bool ru_power_leap()
@@ -6024,7 +6023,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     int dmg = 10;
     //damage scales with XL amd piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
-    int effect = random2(5);
+    int effect = random2(4);
     int duration = 0;
     string message = "";
     enchant_type enchantment = ENCH_NONE;

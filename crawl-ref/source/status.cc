@@ -63,7 +63,7 @@ static void _reset_status_info(status_info* inf)
     inf->light_text = "";
     inf->short_text = "";
     inf->long_text = "";
-};
+}
 
 static int _bad_ench_colour(int lvl, int orange, int red)
 {

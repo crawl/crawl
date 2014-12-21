@@ -73,6 +73,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
+#include "viewchar.h" // stringize_glyph
 
 static int _spell_enhancement(spell_type spell);
 static int _apply_enhancement(spell_type spell, const int initial_power);
@@ -275,7 +276,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ASSERT(sel[0]->hotkeys.size() == 1);
         if (spell_menu.menu_action == Menu::ACT_EXAMINE)
         {
-            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]));
+            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]), nullptr);
             redraw_screen();
         }
         else
@@ -496,9 +497,6 @@ static int _spell_enhancement(spell_type spell)
         enhanced -= 2;
     if (you.form == TRAN_SHADOW)
         enhanced -= 2;
-
-    if (you.form == TRAN_DRAGON && spell == SPELL_DRAGON_CALL)
-        enhanced++;
 
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
@@ -1021,8 +1019,14 @@ static bool _spellcasting_aborted(spell_type spell,
     bool uncastable = false;
 
     {
-        // MP was already deducted, so don't check MP in spell_is_uncastable.
-        unwind_var<int> fake_mp(you.magic_points, 50);
+        // FIXME: we might be called in a situation ([a]bilities, Xom) that
+        // isn't evoked but still doesn't use the spell's MP.  your_spells,
+        // this function, and spell_is_uncastable should take a flag
+        // indicating whether MP should be checked (or should never check).
+        const int rest_mp = evoked ? 0 : spell_mana(spell);
+
+        // Temporarily restore MP so that we're not uncastable for lack of MP.
+        unwind_var<int> fake_mp(you.magic_points, you.magic_points + rest_mp);
         uncastable = !wiz_cast && spell_is_uncastable(spell, msg, true, evoked);
     }
 
@@ -1143,6 +1147,50 @@ static void _spellcasting_corruption(spell_type spell)
     ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, source);
 }
 
+// Returns the nth triangular number.
+static int _triangular_number(int n)
+{
+    return n * (n+1) / 2;
+}
+
+/**
+ * Compute success chance for MR-checking spells and abilities.
+ *
+ * @param mr The magic resistance of the target.
+ * @param powc The enchantment power.
+ * @param scale The denominator of the result.
+ *
+ * @return The chance, out of scale, that the enchantment affects the target.
+ */
+static int _success_chance(const int mr, int powc, int scale)
+{
+    powc = ench_power_stepdown(powc);
+    const int target = mr + 100 - powc;
+
+    if (target <= 0)
+        return scale;
+    if (target > 200)
+        return 0;
+    if (target <= 100)
+        return scale - scale * _triangular_number(target) / (101 * 100);
+    return scale * _triangular_number(201 - target) / (101 * 100);
+}
+
+// Include success chance in targeter for spells checking monster MR.
+vector<string> desc_success_chance(const monster_info& mi, int pow)
+{
+    vector<string> descs;
+    const int mr = mi.res_magic();
+    if (mr == MAG_IMMUNE)
+        descs.push_back("magic immune");
+    else
+    {
+        descs.push_back(make_stringf("chance %d%%",
+                                     _success_chance(mr, pow, 100)).c_str());
+    }
+    return descs;
+}
+
 /**
  * Targets and fires player-cast spells & spell-like effects.
  *
@@ -1218,6 +1266,20 @@ spret_type your_spells(spell_type spell, int powc,
 
         targetter *hitfunc = _spell_targetter(spell, powc, range);
 
+        // Add success chance to targetted spells checking monster MR
+        const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
+                              && testbits(flags, SPFLAG_DIR_OR_TARGET)
+                              && !testbits(flags, SPFLAG_HELPFUL);
+        desc_filter additional_desc = nullptr;
+        if (mr_check)
+        {
+            const zap_type zap = spell_to_zap(spell);
+            const int eff_pow = zap == NUM_ZAPS ? powc
+                                                : zap_ench_power(zap, powc);
+            additional_desc = bind(desc_success_chance, placeholders::_1,
+                                   eff_pow);
+        }
+
         string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
@@ -1226,7 +1288,8 @@ spret_type your_spells(spell_type spell, int powc,
                              needs_path, true, dont_cancel_me, prompt,
                              title.c_str(),
                              testbits(flags, SPFLAG_NOT_SELF),
-                             hitfunc))
+                             hitfunc,
+                             additional_desc))
         {
             if (hitfunc)
                 delete hitfunc;
@@ -2122,19 +2185,42 @@ int calc_spell_range(spell_type spell, int power, bool rod)
     return range;
 }
 
+/**
+ * Give a string visually describing a given spell's range, as cast by the
+ * player.
+ *
+ * @param spell     The spell in question.
+ * @param rod       Whether the spell is being 'cast' from a rod.
+ * @return          Something like "@-->.."
+ */
 string spell_range_string(spell_type spell, bool rod)
 {
     const int cap      = spell_power_cap(spell);
     const int range    = calc_spell_range(spell, 0, rod);
     const int maxrange = spell_range(spell, cap);
 
-    if (range < 0)
+    return range_string(range, maxrange, '@');
+}
+
+/**
+ * Give a string visually describing a given spell's range.
+ *
+ * E.g., for a spell of fixed range 1 (melee), "@>"
+ *       for a spell of range 3, max range 5, "@-->.."
+ *
+ * @param range         The current range of the spell.
+ * @param maxrange      The range the spell would have at max power.
+ * @param caster_char   The character used to represent the caster.
+ *                      Usually @ for the player.
+ * @return              See above.
+ */
+string range_string(int range, int maxrange, ucs_t caster_char)
+{
+    if (range <= 0)
         return "N/A";
-    else
-    {
-        return string("@") + string(range - 1, '-')
-               + string(">") + string(maxrange - range, '.');
-    }
+
+    return stringize_glyph(caster_char) + string(range - 1, '-')
+           + string(">") + string(maxrange - range, '.');
 }
 
 string spell_schools_string(spell_type spell)

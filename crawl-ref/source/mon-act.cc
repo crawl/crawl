@@ -440,8 +440,7 @@ static bool _mons_can_zap_dig(const monster* mons)
            && !mons->submerged()
            && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
-           && mitm[mons->inv[MSLOT_WAND]].base_type == OBJ_WANDS
-           && mitm[mons->inv[MSLOT_WAND]].sub_type == WAND_DIGGING
+           && mitm[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
            && mitm[mons->inv[MSLOT_WAND]].plus > 0;
 }
 
@@ -878,8 +877,8 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
  */
 static bool _handle_swoop(monster* mons)
 {
-    // TODO: check for AT_SWOOP in other slots and/or make it work there?
-    if (mons_attack_spec(mons, 0, true).type != AT_SWOOP)
+    // TODO: check for AF_SWOOP in other slots and/or make it work there?
+    if (mons_attack_spec(mons, 0, true).flavour != AF_SWOOP)
         return false;
 
     actor *defender = mons->get_foe();
@@ -3104,17 +3103,14 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                                && (get_weapon_brand(*si) == SPWPN_HOLY_WRATH
                                    || get_ammo_brand(*si) == SPMSL_SILVER));
         death_ooze_ate_corpse = (mons->type == MONS_DEATH_OOZE
-                                 && ((si->base_type == OBJ_CORPSES
-                                     && si->sub_type == CORPSE_BODY)
-                                 || si->base_type == OBJ_FOOD
-                                     && si->sub_type == FOOD_CHUNK));
+                                 && (si->is_type(OBJ_CORPSES, CORPSE_BODY)
+                                     || si->is_type(OBJ_FOOD, FOOD_CHUNK)));
 
         if (si->base_type != OBJ_GOLD)
         {
             quant = min(quant, max_eat - eaten);
 
-            hps_changed += (quant * item_mass(*si))
-                           / (crawl_state.game_is_zotdef() ? 30 : 20) + quant;
+            hps_changed += quant * 3;
             eaten += quant;
 
             if (mons->caught() && item_is_stationary_net(*si))
@@ -4493,10 +4489,8 @@ static void _heated_area(monster* mons)
     const int timescaled = max(0, base_damage) * 10 / speed;
 
     // rF protects:
-    const int resist = mons->res_fire();
     const int adjusted_damage = resist_adjust_damage(mons,
-                                BEAM_FIRE, resist,
-                                timescaled, true);
+                                BEAM_FIRE, timescaled);
     // So does AC:
     const int final_damage = max(0, adjusted_damage
                                  - random2(mons->armour_class()));

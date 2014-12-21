@@ -28,7 +28,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit = nullptr,
                  bool simu = false);
 
 int resist_adjust_damage(const actor *defender, beam_type flavour,
-                         int res, int rawdamage, bool ranged = false);
+                         int rawdamage);
 
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
 

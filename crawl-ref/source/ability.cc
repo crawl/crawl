@@ -52,6 +52,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
+#include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
@@ -2833,10 +2834,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_LUGONU_BANISH:
+    {
         beam.range = LOS_RADIUS;
+        const int pow = 16 + you.skill(SK_INVOCATIONS, 8);
 
-        if (!spell_direction(spd, beam))
+        if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, 0,
+                             true, true, false, nullptr, nullptr, false, nullptr,
+                             bind(desc_success_chance, placeholders::_1, pow)))
+        {
             return SPRET_ABORT;
+        }
 
         if (beam.target == you.pos())
         {
@@ -2844,8 +2851,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        return zapping(ZAP_BANISHMENT, 16 + you.skill(SK_INVOCATIONS, 8), beam,
-                       true, nullptr, fail);
+        return zapping(ZAP_BANISHMENT, pow, beam, true, nullptr, fail);
+    }
 
     case ABIL_LUGONU_CORRUPT:
         fail_check();

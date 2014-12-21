@@ -325,7 +325,7 @@ static int l_item_do_subtype(lua_State *ls)
     return 1;
 }
 
-IDEFN(subtype, do_subtype);
+IDEFN(subtype, do_subtype)
 
 IDEF(cursed)
 {

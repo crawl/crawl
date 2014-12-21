@@ -89,7 +89,7 @@ monster::monster()
     clear_constricted();
     went_unseen_this_turn = false;
     unseen_pos = coord_def(0, 0);
-};
+}
 
 // Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
 monster::~monster()
@@ -480,11 +480,8 @@ static int _mons_offhand_weapon_index(const monster* m)
 item_def *monster::weapon(int which_attack) const
 {
     const mon_attack_def attk = mons_attack_spec(this, which_attack);
-    if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY
-        && attk.type != AT_KITE && attk.type != AT_SWOOP)
-    {
+    if (attk.type != AT_HIT && attk.type != AT_WEAP_ONLY)
         return nullptr;
-    }
 
     // Even/odd attacks use main/offhand weapon.
     if (which_attack > 1)
@@ -1464,16 +1461,12 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 
         if (mons->type == MONS_ARACHNE)
         {
-            return weapon.base_type == OBJ_STAVES
-                       && weapon.sub_type == STAFF_POISON
+            return weapon.is_type(OBJ_STAVES, STAFF_POISON)
                    || is_unrandom_artefact(weapon, UNRAND_OLGREB);
         }
 
         if (mons->type == MONS_FANNAR)
-        {
-            return weapon.base_type == OBJ_STAVES
-                   && weapon.sub_type == STAFF_COLD;
-        }
+            return weapon.is_type(OBJ_STAVES, STAFF_COLD);
 
         // Asterion's demon weapon was a gift from Makhleb.
         if (mons->type == MONS_ASTERION)
@@ -3932,7 +3925,7 @@ int monster::res_fire() const
             u += get_jewellery_res_fire(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_FIRE)
+        if (w && w->is_type(OBJ_STAVES, STAFF_FIRE))
             u++;
     }
 
@@ -3986,7 +3979,7 @@ int monster::res_cold() const
             u += get_jewellery_res_cold(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_COLD)
+        if (w && w->is_type(OBJ_STAVES, STAFF_COLD))
             u++;
     }
 
@@ -4026,7 +4019,7 @@ int monster::res_elec() const
             u += get_jewellery_res_elec(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_AIR)
+        if (w && w->is_type(OBJ_STAVES, STAFF_AIR))
             u++;
     }
 
@@ -4088,7 +4081,7 @@ int monster::res_poison(bool temp) const
             u += get_jewellery_res_poison(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_POISON)
+        if (w && w->is_type(OBJ_STAVES, STAFF_POISON))
             u++;
     }
 
@@ -4189,7 +4182,7 @@ int monster::res_negative_energy(bool intrinsic_only) const
             u += get_jewellery_life_protection(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
-        if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_DEATH)
+        if (w && w->is_type(OBJ_STAVES, STAFF_DEATH))
             u++;
     }
 
@@ -6757,7 +6750,7 @@ void monster::id_if_worn(mon_inv_type mslot, object_class_type base_type,
 {
     item_def *item = mslot_item(mslot);
 
-    if (item && item->base_type == base_type && item->sub_type == sub_type)
+    if (item && item->is_type(base_type, sub_type))
         set_ident_type(*item, ID_KNOWN_TYPE);
 }
 

@@ -51,6 +51,10 @@ struct JsonNode
     char *key; /* Must be valid UTF-8. */
 
     JsonTag tag;
+    struct JsonChildren
+    {
+        JsonNode *head, *tail;
+    };
     union
     {
         /* JSON_BOOL */
@@ -64,10 +68,7 @@ struct JsonNode
 
         /* JSON_ARRAY */
         /* JSON_OBJECT */
-        struct
-        {
-            JsonNode *head, *tail;
-        } children;
+        JsonChildren children;
     };
 };
 

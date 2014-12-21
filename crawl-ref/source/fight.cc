@@ -215,7 +215,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 
         if (!simu && attacker->is_monster()
             && mons_attack_spec(attacker->as_monster(), attack_number, true)
-                   .type == AT_KITE
+                   .flavour == AF_KITE
             && attacker->as_monster()->foe_distance() == 1
             && attacker->reach_range() == REACH_TWO
             && x_chance_in_y(3, 5))
@@ -394,28 +394,58 @@ static inline int get_resistible_fraction(beam_type flavour)
     }
 }
 
+static int _beam_to_resist(const actor* defender, beam_type flavour)
+{
+    switch (flavour)
+    {
+        case BEAM_FIRE:
+        case BEAM_LAVA:
+            return defender->res_fire();
+        case BEAM_HELLFIRE:
+            return defender->res_hellfire();
+        case BEAM_STEAM:
+            return defender->res_steam();
+        case BEAM_COLD:
+        case BEAM_ICE:
+            return defender->res_cold();
+        case BEAM_WATER:
+            return defender->res_water_drowning();
+        case BEAM_ELECTRICITY:
+            return defender->res_elec();
+        case BEAM_NEG:
+        case BEAM_GHOSTLY_FLAME:
+        case BEAM_MALIGN_OFFERING:
+            return defender->res_negative_energy();
+        case BEAM_ACID:
+            return defender->res_acid();
+        case BEAM_POISON:
+        case BEAM_POISON_ARROW:
+            return defender->res_poison();
+        default:
+            return 0;
+    }
+}
+
+
 /**
  * Adjusts damage for elemental resists, electricity and poison.
  *
- * FIXME: Does not (yet) handle draining (?), miasma, and other exotic attacks.
- * XXX: which other attacks?
- * Damage is reduced to 1/2, 1/3, or 1/5 if res has values 1, 2, and 3,
- * respectively.  For "boolean" attacks like electricity and sticky flame, the
- * damage is instead reduced to 1/3, 1/4, and 1/6 at resist levels 1, 2, and 3
- * respectively.
+ * For players, damage is reduced to 1/2, 1/3, or 1/5 if res has values 1, 2,
+ * or 3, respectively. "Boolean" resists (rElec, rPois) reduce damage to 1/3.
+ * rN is a special case that reduces damage to 1/2, 1/4, 0 instead.
+ *
+ * For monsters, damage is reduced to 1/2, 1/5, and 0 for 1/2/3 resistance.
+ * "Boolean" resists give 1/3, 1/6, 0 instead.
+ *
  * @param defender      The victim of the attack.
  * @param flavour       The type of attack having its damage adjusted.
  *                      (Does not necessarily imply the attack is a beam.)
- * @param res           The level of resistance that the defender possesses.
  * @param rawdamage     The base damage, to be adjusted by resistance.
- * @param ranged        Whether the attack is ranged, and therefore has a
- *                      smaller damage multiplier against victims with negative
- *                      resistances. (????)
  * @return              The amount of damage done, after resists are applied.
  */
-int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
-                         int rawdamage, bool ranged)
+int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage)
 {
+    const int res = _beam_to_resist(defender, flavour);
     if (!res)
         return rawdamage;
 
@@ -433,14 +463,10 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
             resistible = 0;
         else
         {
-            // Check if this is a resist that pretends to be boolean for
-            // damage purposes.  Only electricity, miasma and sticky
-            // flame (napalm) do this at the moment; raw poison damage
-            // uses the normal formula.
+            // Is this a resist that claims to be boolean for damage purposes?
             const int bonus_res = (is_boolean_resist(flavour) ? 1 : 0);
 
-            // Use a new formula for players, but keep the old, more
-            // effective one for monsters.
+            // Monster resistances are stronger than player versions.
             if (is_mon)
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG)
@@ -450,7 +476,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int res,
         }
     }
     else if (res < 0)
-        resistible = resistible * (ranged? 15 : 20) / 10;
+        resistible = resistible * 15 / 10;
 
     return max(resistible + irresistible, 0);
 }

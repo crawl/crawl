@@ -16,6 +16,15 @@ on crawl.
 
     Treat the DEF_BITFIELD macro as a typedef.
 
+-I decltype+
+
+    More correctly interpret "auto func() -> decltype(foo)" as a declaration
+    of "func", not of "decltype".
+
+--extra=+q
+
+    Allow searching for "player::rot", not just "rot".
+
 --exclude=contrib
 --exclude=android-project
 --exclude=saves
@@ -33,7 +42,7 @@ file than an incomplete one; so I have ctags write the tag file to a temporary
 location (containing the job's PID to avoid conflicts) then move it into
 place once it is ready.
 
-Create an executbale script .git/hooks/ctags with the contents:
+Create an executable script .git/hooks/ctags with the contents:
 
    #! /bin/sh -e
    cd crawl-ref/source

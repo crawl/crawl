@@ -439,11 +439,14 @@ string describe_item_spells(const item_def &item)
  * information/interaction.
  *
  * @param spells            The set of spells to be listed.
+ * @param mon_owner         If this spell is being examined from a monster's
+ *                          description, 'mon_owner' is that monster. Else,
+ *                          it's null.
  * @param source_item       The physical item holding the spells. May be null.
  * @param initial_desc      A description to prefix the spellset with.
  */
-void list_spellset(const spellset &spells, const item_def *source_item,
-                   formatted_string &initial_desc)
+void list_spellset(const spellset &spells, const monster_info *mon_owner,
+                   const item_def *source_item, formatted_string &initial_desc)
 {
     const bool can_memorize =
         source_item && source_item->base_type == OBJ_BOOKS
@@ -460,7 +463,7 @@ void list_spellset(const spellset &spells, const item_def *source_item,
         description.cprintf(", to memorize it or to forget it");
     description.cprintf(".\n");
 
-    spell_scroller ssc(spells, source_item);
+    spell_scroller ssc(spells, mon_owner, source_item);
     ssc.wrap_formatted_string(description);
     ssc.show();
 }
@@ -493,7 +496,7 @@ bool spell_scroller::process_key(int keyin)
         return formatted_scroller::process_key(keyin);
 
     const spell_type chosen_spell = flat_spells[spell_index];
-    describe_spell(chosen_spell, source_item);
+    describe_spell(chosen_spell, mon_owner, source_item);
 
     const bool used_amnesia = source_item && !source_item->is_valid();
     const bool memorized = already_learning_spell();

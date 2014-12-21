@@ -35,7 +35,7 @@ protected:
     const map_mask *vaults;
 
     const fgrd &fgrid;
-    const bound_check &bcheck;
+    bound_check bcheck;
 };
 
 template <typename fgrd, typename bound_check>

@@ -10,7 +10,8 @@
 --  any scroll
 --  any potion
 --  any wand
---  runes and the horn of Geryon
+--  runes
+--  the horn of Geryon
 --  your piety!
 ------------------------------------------------------------------------------
 
@@ -82,7 +83,7 @@ function TroveMarker:fdesc_long (marker)
   local toll = get_toll(self.props)
 
   if toll.item then
-    if toll.item.base_type == "miscellaneous" then
+    if self:showing_item() then
       state = "This portal requires the presence of " ..
               self:item_name() .. " to function."
     else
@@ -101,10 +102,20 @@ function TroveMarker:fdesc_long (marker)
   return state
 end
 
+function TroveMarker:showing_item (marker)
+  local toll = get_toll(self.props)
+  if toll.item then
+    if toll.item.sub_type == "rune of Zot" then
+      return true
+    end
+  end
+  return false
+end
+
 function TroveMarker:overview_note (marker)
   local toll = get_toll(self.props)
   if toll.item then
-    if toll.item.base_type == "miscellaneous" then
+    if self:showing_item() then
       return "show " .. self:item_name(false)
     else
       return "give " .. self:item_name(false)
@@ -519,8 +530,8 @@ function TroveMarker:check_item_veto(marker, pname)
 
   local item = get_toll(self.props).item
   -- The message is slightly different for items that aren't actually taken by
-  -- the trove (currently the horn of Geryon and the runes).
-  if item.base_type == "miscellaneous" then
+  -- the trove (runes, currently).
+  if self:showing_item() then
     if not crawl.yesno("This trove requires the presence of "
                        .. self:item_name() .. " to function. Show it the item"
                        .. self:plural() .. "?", true, "n") then
@@ -553,8 +564,8 @@ function TroveMarker:check_item_veto(marker, pname)
   local acceptable_items = self:search_for_item(marker, pname, items.inventory())
 
   if #acceptable_items == 0 then
-    -- Give a different message for the horn of Geryon here, too.
-    if item.base_type == "miscellaneous" then
+    -- Give a different message for items that are not taken away.
+    if self:showing_item() then
       crawl.mpr("You don't have " .. self:item_name() .. " with you.")
     else
       crawl.mpr("You don't have the item" .. self:plural() ..
@@ -576,7 +587,7 @@ function TroveMarker:check_item_veto(marker, pname)
   end
 
   -- Open the portal and maybe consume the item.
-  if item.base_type == "miscellaneous" then
+  if self:showing_item() then
     crawl.mpr("The portal draws power from the presence of the item" ..
               self:plural() .. " and buzzes to life!")
     self:note_payed(titem, false)

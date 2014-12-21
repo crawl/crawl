@@ -1697,8 +1697,8 @@ int monster_info::res_magic() const
 
     item_def *jewellery = inv[MSLOT_JEWELLERY].get();
 
-    if (jewellery && jewellery->base_type == OBJ_JEWELLERY
-        && jewellery->sub_type == RING_PROTECTION_FROM_MAGIC)
+    if (jewellery
+        && jewellery->is_type(OBJ_JEWELLERY, RING_PROTECTION_FROM_MAGIC))
     {
         mr += 40;
     }

@@ -25,9 +25,10 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim);
 
 bool handle_mon_spell(monster* mons, bolt &beem);
 
+int mons_spell_range(spell_type spell, int hd);
 bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
                      bool check_validity = false);
-void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
+void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
                unsigned short slot_flags, bool do_noise = true);
 void mons_cast_noise(monster* mons, const bolt &pbolt,
                      spell_type spell_cast, unsigned short slot_flags);
