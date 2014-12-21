@@ -629,7 +629,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
      SPTYP_NECROMANCY,
-     SPFLAG_MR_CHECK,
+     SPFLAG_NONE,
      4,
      200,
      -1, -1,
@@ -2596,7 +2596,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_DAZZLING_SPRAY, "Dazzling Spray",
      SPTYP_CONJURATION | SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_MR_CHECK,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      3,
      100,
      6, 6,
