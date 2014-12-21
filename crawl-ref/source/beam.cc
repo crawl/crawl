@@ -4561,13 +4561,13 @@ void bolt::knockback_actor(actor *act, int dam)
     const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
 
     const coord_def oldpos = act->pos();
-    ASSERT(ray.pos() == oldpos);
 
     if (act->is_stationary())
         return;
     // We can't do knockback if the beam starts and ends on the same space
     if (source == oldpos)
         return;
+    ASSERT(ray.pos() == oldpos);
 
     coord_def newpos = oldpos;
     for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
