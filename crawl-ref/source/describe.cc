@@ -889,8 +889,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             else
             {
                 description += "It emits flame when wielded, causing extra "
-                    "injury to most foes and up to double damage against "
-                    "particularly susceptible opponents.";
+                    "injury to most foes and up to half as much damage over "
+                    "again against particularly susceptible opponents.";
                 if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
                 {
                     description += " Big, fiery blades are also staple "
@@ -908,8 +908,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             {
                 description += "It has been specially enchanted to freeze "
                     "those struck by it, causing extra injury to most foes "
-                    "and up to double damage against particularly "
-                    "susceptible opponents. It can also slow down "
+                    "and up to half as much damage over again against "
+                    "particularly susceptible opponents. It can also slow down "
                     "cold-blooded creatures.";
             }
             break;

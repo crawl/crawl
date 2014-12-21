@@ -441,13 +441,9 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
  * @param flavour       The type of attack having its damage adjusted.
  *                      (Does not necessarily imply the attack is a beam.)
  * @param rawdamage     The base damage, to be adjusted by resistance.
- * @param ranged        Whether the attack is ranged, and therefore has a
- *                      smaller damage multiplier against victims with negative
- *                      resistances. (????)
  * @return              The amount of damage done, after resists are applied.
  */
-int resist_adjust_damage(const actor* defender, beam_type flavour,
-                         int rawdamage, bool ranged)
+int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage)
 {
     const int res = _beam_to_resist(defender, flavour);
     if (!res)
@@ -480,7 +476,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour,
         }
     }
     else if (res < 0)
-        resistible = resistible * (ranged? 15 : 20) / 10;
+        resistible = resistible * 15 / 10;
 
     return max(resistible + irresistible, 0);
 }

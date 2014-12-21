@@ -119,7 +119,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     switch (flavour)
     {
     case BEAM_WATER:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (!hurted && doEffects)
             mpr("You shrug off the wave.");
         else if (hurted > original && doEffects)
@@ -130,7 +130,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_STEAM:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
@@ -141,7 +141,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_FIRE:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
@@ -163,7 +163,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_COLD:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
@@ -174,7 +174,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ELECTRICITY:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
@@ -186,7 +186,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_POISON:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (doEffects)
         {
@@ -224,7 +224,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_NEG:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (doEffects)
         {
@@ -240,7 +240,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ICE:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
@@ -252,7 +252,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_LAVA:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
@@ -264,7 +264,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ACID:
-        hurted = resist_adjust_damage(&you, flavour, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         break;
@@ -317,7 +317,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         else
         {
-            hurted = resist_adjust_damage(&you, flavour, hurted, true);
+            hurted = resist_adjust_damage(&you, flavour, hurted);
             if (hurted < original && doEffects)
                 canned_msg(MSG_YOU_PARTIALLY_RESIST);
             else if (hurted > original && doEffects)
