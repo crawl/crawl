@@ -431,7 +431,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
  * Adjusts damage for elemental resists, electricity and poison.
  *
  * For players, damage is reduced to 1/2, 1/3, or 1/5 if res has values 1, 2,
- * or 3, respectively. "Boolean" resists (rElec, rPois) reduce damage by 1/3.
+ * or 3, respectively. "Boolean" resists (rElec, rPois) reduce damage to 1/3.
  * rN is a special case that reduces damage to 1/2, 1/4, 0 instead.
  *
  * For monsters, damage is reduced to 1/2, 1/5, and 0 for 1/2/3 resistance.
