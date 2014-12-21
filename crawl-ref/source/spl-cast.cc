@@ -1153,19 +1153,27 @@ static int _triangular_number(int n)
     return n * (n+1) / 2;
 }
 
-// Computes success chance for MR-checking spells and abilities.
-static double _success_chance(const int mr, int powc)
+/**
+ * Compute success chance for MR-checking spells and abilities.
+ *
+ * @param mr The magic resistance of the target.
+ * @param powc The enchantment power.
+ * @param scale The denominator of the result.
+ *
+ * @return The chance, out of scale, that the enchantment affects the target.
+ */
+static int _success_chance(const int mr, int powc, int scale)
 {
     powc = ench_power_stepdown(powc);
     const int target = mr + 100 - powc;
 
     if (target <= 0)
-        return 1.0;
+        return scale;
     if (target > 200)
-        return 0.0;
+        return 0;
     if (target <= 100)
-        return 1.0 - (double) _triangular_number(target) / (101 * 100);
-    return (double) _triangular_number(201 - target) / (101 * 100);
+        return scale - scale * _triangular_number(target) / (101 * 100);
+    return scale * _triangular_number(201 - target) / (101 * 100);
 }
 
 // Include success chance in targeter for spells checking monster MR.
@@ -1176,10 +1184,10 @@ vector<string> desc_success_chance(const monster_info& mi, int pow)
     if (mr == MAG_IMMUNE)
         descs.push_back("magic immune");
     else
-        descs.push_back(
-            make_stringf("chance %d%%",
-                (int) (100 * _success_chance(mr, pow))
-            ).c_str());
+    {
+        descs.push_back(make_stringf("chance %d%%",
+                                     _success_chance(mr, pow, 100)).c_str());
+    }
     return descs;
 }
 
