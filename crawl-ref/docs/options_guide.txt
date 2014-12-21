@@ -2224,17 +2224,17 @@ feature -= <regex> , <regex>
 
         Examples:
          * Colour rock walls red:
-             feature = rock wall { , , red }
+             feature += rock wall { , , red }
          * Use # for metal walls in all character sets:
-             feature = metal wall {#}
+             feature += metal wall {#}
          * Colour upstairs green and downstairs red:
-             feature = stone staircase leading up {,,,,green}
-             feature = stone staircase leading down {,,,,red}
+             feature += stone staircase leading up {,,,,green}
+             feature += stone staircase leading down {,,,,red}
 
         Symbols can be specified as with display_char:
-             feature = metal wall {#}
-             feature = metal wall {35}
-             feature = metal wall {x23}
+             feature += metal wall {#}
+             feature += metal wall {35}
+             feature += metal wall {x23}
         all do the same thing.
 
 mon_glyph += <monster name or symbol> : (<colour> <glyph> | <monster name>) ,
