@@ -600,8 +600,11 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_CHEIBRIADOS:
-        if (item_type_known(item)
-            && (_is_potentially_hasty_item(item) || is_hasty_item(item)))
+        if (item_type_known(item) && (_is_potentially_hasty_item(item)
+                                      || is_hasty_item(item))
+            // Don't need item_type_known for quick blades.
+            || item.base_type == OBJ_WEAPONS
+               && item.sub_type == WPN_QUICK_BLADE)
         {
             return DID_HASTY;
         }
