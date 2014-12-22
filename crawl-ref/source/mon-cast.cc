@@ -325,6 +325,49 @@ static bool _set_nearby_target(monster* caster, bolt& pbolt)
 }
 
 /**
+ * What value do monsters multiply their hd with to get spellpower, for the
+ * given spell?
+ *
+ * @param spell     The spell in question.
+ * @param random    Whether to randomize powers for weird spells.
+ *                  If false, the average value is used.
+ * @return          A multiplier to HD for spellpower.
+ *                  Value may exceed 200.
+ */
+int mons_power_hd_factor(spell_type spell, bool random)
+{
+    switch (spell)
+    {
+        // spells that vary with range historically used 12 * HD for range
+        case SPELL_LIGHTNING_BOLT:
+        case SPELL_BLINKBOLT:
+        case SPELL_CLOUD_CONE:
+            return 12;
+
+        default:
+            return 4;
+    }
+}
+
+/**
+ * What power does the given monster cast the given spell with?
+ *
+ * @param spell     The spell in question.
+ * @param mons      The monster in question.
+ * @return          A spellpower value for the spell.
+ *                  May vary from call to call for certain weird spells.
+ */
+static int _mons_spellpower(spell_type spell, const monster &mons)
+{
+    return mons.spell_hd(spell) * mons_power_hd_factor(spell);
+}
+
+static int _mons_spell_range(spell_type spell, const monster &mons)
+{
+    return mons_spell_range(spell, _mons_spellpower(spell, mons));
+}
+
+/**
  * How much range does a monster of the given spell HD have with the given
  * spell?
  *
@@ -334,8 +377,6 @@ static bool _set_nearby_target(monster* caster, bolt& pbolt)
  */
 int mons_spell_range(spell_type spell, int hd)
 {
-    const int power = 12 * hd;
-
     switch (spell)
     {
         case SPELL_SANDBLAST:
@@ -343,11 +384,13 @@ int mons_spell_range(spell_type spell, int hd)
         case SPELL_FLAME_TONGUE:
             // HD:1 monsters would get range 2, HD:2 -- 3, other 4, let's
             // use the mighty Throw Flame for big ranges.
-            // Here, we have HD:1 -- 1, HD:2+ -- 2.
-            return (power >= 20) ? 2 : 1;
+            return min(2, hd);
         default:
-            return spell_range(spell, power, false);
+            break;
     }
+
+    const int power = mons_power_hd_factor(spell) * hd;
+    return spell_range(spell, power, false);
 }
 
 bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
@@ -370,7 +413,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.is_explosion = false;
 
 
-    beam.range = mons_spell_range(spell_cast, mons->spell_hd());
+    beam.range = _mons_spell_range(spell_cast, *mons);
 
     spell_type real_spell = spell_cast;
 
@@ -1463,21 +1506,17 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         break;
     }
 
-    int power = 12 * mons->spell_hd(spell_cast);
+    const int power = _mons_spellpower(spell_cast, *mons);
 
     bolt theBeam = mons_spell_beam(mons, spell_cast, power);
 
     if (spell_cast == SPELL_LEGENDARY_DESTRUCTION)
     {
-        int range = spell_range(theBeam.origin_spell,
-                                12 * mons->spell_hd(theBeam.origin_spell),
-                                false);
+        int range = _mons_spell_range(theBeam.origin_spell, *mons);
         while (distance2(mons->pos(), mons->target) > dist_range(range))
         {
             theBeam = mons_spell_beam(mons, spell_cast, power);
-            range = spell_range(theBeam.origin_spell,
-                                12 * mons->spell_hd(theBeam.origin_spell),
-                                false);
+            range = _mons_spell_range(theBeam.origin_spell, *mons);
         }
     }
     bolt_parent_init(&theBeam, &pbolt);
@@ -3054,12 +3093,11 @@ static coord_def _mons_conjure_flame_pos(monster* mon, actor* foe)
     if (!foe || foe->res_fire() >= 3)
         return coord_def();
 
-    const int pow = 6 * mon->spell_hd(SPELL_CONJURE_FLAME);
     const coord_def foe_pos = foe->pos();
     const coord_def a = foe_pos - mon->pos();
     vector<coord_def> targets;
 
-    const int range = spell_range(SPELL_CONJURE_FLAME, pow, false);
+    const int range = _mons_spell_range(SPELL_CONJURE_FLAME, *mon);
     for (distance_iterator di(mon->pos(), true, true, range); di; ++di)
     {
         // Our target needs to be in LOS, and we can't have a creature or
@@ -3123,8 +3161,6 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
     if (!foe)
         return coord_def();
 
-    const int pow = 8 * mon->spell_hd(SPELL_FULMINANT_PRISM);
-
     const int foe_speed =
         foe->is_player() ? player_movement_speed()
                          : foe->as_monster()->action_energy(EUT_MOVE)
@@ -3150,7 +3186,7 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
     int max_coverage = 0;
     int hits = 1;
 
-    const int range = spell_range(SPELL_CONJURE_FLAME, pow, false);
+    const int range = _mons_spell_range(SPELL_FULMINANT_PRISM, *mon);
     for (distance_iterator di(mon->pos(), true, true, range); di; ++di)
     {
         // Our target needs to be in LOS, and we can't have a creature there.
@@ -3219,7 +3255,7 @@ bool scattershot_tracer(monster *caster, int pow, coord_def aim)
  */
 static coord_def _mons_singularity_pos(const monster* mon)
 {
-    const int pow = 6 * mon->spell_hd(SPELL_SINGULARITY);
+    const int pow = _mons_spellpower(SPELL_SINGULARITY, *mon);
     const int rad = singularity_range(pow);
     int max_strength = 0, max_count = 0;
     coord_def retval;
@@ -5031,7 +5067,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     if (do_noise)
         mons_cast_noise(mons, pbolt, spell_cast, slot_flags);
 
-    // If this is a wizard spell, summons won't  necessarily have the
+    // If this is a wizard spell, summons won't necessarily have the
     // same god. But intrinsic/priestly summons should.
     god_type god = slot_flags & MON_SPELL_WIZARD ? GOD_NO_GOD : mons->god;
 
