@@ -4092,7 +4092,6 @@ string get_ghost_description(const monster_info &mi, bool concise)
 
     switch (gspecies)
     {
-    case SP_MOUNTAIN_DWARF:
     case SP_DEEP_DWARF:
     case SP_TROLL:
     case SP_OGRE:
