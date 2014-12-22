@@ -5421,14 +5421,8 @@ bool monster::malmutate(const string &/*reason*/)
     // tile change, already mutated wrecks
     if (type == MONS_ABOMINATION_SMALL || type == MONS_ABOMINATION_LARGE)
     {
-        // Don't desync RNG state between ASCII and tiles.  We could use
-        // ui_random and avoid the #else altogether, if we were sure the
-        // choice of tile number would not affect the sequence of future
-        // RNG calls.
 #ifdef USE_TILE
-        props[TILE_NUM_KEY].get_short() = random2(256);
-#else
-        (void) random2(256);
+        props[TILE_NUM_KEY].get_short() = ui_random(256);
 #endif
         return true;
     }
