@@ -1162,7 +1162,7 @@ static int _triangular_number(int n)
  *
  * @return The chance, out of scale, that the enchantment affects the target.
  */
-static int _success_chance(const int mr, int powc, int scale)
+int hex_success_chance(const int mr, int powc, int scale)
 {
     powc = ench_power_stepdown(powc);
     const int target = mr + 100 - powc;
@@ -1186,7 +1186,7 @@ vector<string> desc_success_chance(const monster_info& mi, int pow)
     else
     {
         descs.push_back(make_stringf("chance %d%%",
-                                     _success_chance(mr, pow, 100)).c_str());
+                                     hex_success_chance(mr, pow, 100)).c_str());
     }
     return descs;
 }
