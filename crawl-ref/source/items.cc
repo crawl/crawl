@@ -866,11 +866,14 @@ void pickup_menu(int item_link)
     item_list_on_square(items, item_link);
     ASSERT(items.size());
 
+    string prompt = "Pick up what? " + slot_description()
 #ifdef TOUCH_UI
-    string prompt = "Pick up what? (<Enter> or tap header to pick up)";
+                  + " (<Enter> or tap header to pick up)"
 #else
-    string prompt = "Pick up what? (_ for help)";
+                  + " (_ for help)"
 #endif
+                  ;
+
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
     vector<SelItem> selected = select_items(items, prompt.c_str(), false,
@@ -2556,12 +2559,15 @@ void drop()
     }
 
     vector<SelItem> tmp_items;
+    string prompt = "Drop what? " + slot_description()
 #ifdef TOUCH_UI
-    tmp_items = prompt_invent_items("Drop what? (<Enter> or tap header to drop)",
-                                    MT_DROP,
+                  + " (<Enter> or tap header to pick up)"
 #else
-    tmp_items = prompt_invent_items("Drop what? (_ for help)", MT_DROP,
+                  + " (_ for help)"
 #endif
+                  ;
+
+    tmp_items = prompt_invent_items(prompt.c_str(), MT_DROP,
                                      -1, nullptr, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop);
