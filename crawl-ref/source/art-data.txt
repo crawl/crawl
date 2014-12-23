@@ -218,6 +218,7 @@ VALUE:   1000
 BOOL:    poison, no_upgrade
 
 NAME:    Staff of Wucad Mu
+INSCRIP: channel
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +9
 COLOUR:  ETC_MAGIC
@@ -478,6 +479,7 @@ BOOL:    elec, seeinv, notelep
 # called botono.
 NAME:     spear of the Botono
 OBJ:      OBJ_WEAPONS/WPN_SPEAR
+INSCRIP:  Hex
 PLUS:     +6
 COLOUR:   ETC_UNHOLY
 TILE:     urand_botono
@@ -539,6 +541,7 @@ EV:      -2
 
 ENUM:    BLOWGUN_ASSASSIN
 NAME:    blowgun of the Assassin
+INSCRIP: stab,
 OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
 PLUS:    +6
 COLOUR:  ETC_DEATH
@@ -1013,6 +1016,7 @@ BOOL:     clarity
 BRAND:    SPWPN_VORPAL
 
 NAME:     shillelagh "Devastator"
+INSCRIP:  shatter
 OBJ:      OBJ_WEAPONS/WPN_CLUB
 TYPE:     shillelagh
 TILE:     urand_shillelagh
@@ -1138,6 +1142,7 @@ BOOL:    rMut
 
 ENUM:     FIRESTARTER
 NAME:     great mace "Firestarter"
+INSCRIP:  inner flame,
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
 COLOUR:   RED
 TILE:     urand_firestarter
@@ -1158,7 +1163,7 @@ BOOL:     clarity, sustab
 
 ENUM:    MAJIN
 NAME:    Majin-Bo
-INSCRIP: Archmagi,
+INSCRIP: Archmagi
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    +6
 COLOUR:  ETC_UNHOLY
