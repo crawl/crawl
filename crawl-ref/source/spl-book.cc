@@ -1025,10 +1025,12 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
 {
     string prompt;
 
-    prompt += make_stringf("Forgetting %s from %s will destroy the book! "
+    prompt += make_stringf("Forgetting %s from %s will destroy the book%s! "
                            "Are you sure?",
                            spell_title(spell),
-                           book->name(DESC_THE).c_str());
+                           book->name(DESC_THE).c_str(),
+                           you_worship(GOD_SIF_MUNA)
+                               ? " and put you under penance" : "");
 
     // Deactivate choice from tile inventory.
     mouse_control mc(MOUSE_MODE_MORE);
