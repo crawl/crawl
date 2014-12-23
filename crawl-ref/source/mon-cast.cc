@@ -338,14 +338,8 @@ int mons_power_hd_factor(spell_type spell, bool random)
 {
     switch (spell)
     {
-        // spells that vary with range historically used 12 * HD for range
-        case SPELL_LIGHTNING_BOLT:
-        case SPELL_BLINKBOLT:
-        case SPELL_CLOUD_CONE:
-            return 12;
-
         default:
-            return 4;
+            return 12;
     }
 }
 
@@ -405,7 +399,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.colour       = 255;
     beam.hit          = -1;
     beam.damage       = dice_def(1, 0);
-    beam.ench_power   = power;
+    beam.ench_power   = max(1, power / 3); // U G H
     beam.glyph        = 0;
     beam.flavour      = BEAM_NONE;
     beam.thrower      = KILL_MISC;
