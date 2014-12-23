@@ -228,9 +228,8 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
         if (doEffects)
         {
-            if (hurted < original)
-                canned_msg(MSG_YOU_RESIST);
-            else if (hurted > original)
+            // drain_player handles the messaging here
+            if (hurted > original)
             {
                 mpr("The negative energy saps you greatly!");
                 xom_is_stimulated(200);
