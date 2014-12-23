@@ -1404,7 +1404,7 @@ ENDMAP
 NAME:    lemuel_reptile_caves
 DEPTH:   D:10-13, Lair:1-5
 ORIENT:  float
-TAGS:    transparent
+TAGS:    transparent no_pool_fixup
 MONS:    giant gecko / giant newt, crocodile, iguana
 MONS:    fire drake / swamp drake
 MONS:    adder, water moccasin
@@ -1417,16 +1417,17 @@ SUBST:   a = W, b = x, c = x, d = .
 SHUFFLE: 123/566
 SUBST:   X=x.
 SUBST:   Y=xw
+SUBST:   Z=xWw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxXW**wXxxxxxxxxxxxxxxX**XXx
-xXwWwwwXxxxxxxX33xxxxxX423Xx
-xXWww232XxxxxX121xxxxX.13Xxx
-xXXWww2XxxxxxX.1xxxxxw222Xxx
-xxXXWwwWaaxxxxXWxxaaaw1121Xx
-xxxXWww1XaaaaaWwaaaxXWw211Xx
-xxxxXW23xxxxxaWwwxxxXww11XXx
-xxxxXX1XxxxxxxxWwwxxxxX.Xxxx
+xxXW**wZxxxxxxxxxxxxxxX**XXx
+xZwWwwwZxxxxxxX33xxxxxX423Xx
+xZWww232ZxxxxX121xxxxX.13Xxx
+xZZWww2ZxxxxxX.1xxxxxw222Xxx
+xxZZWwwWaaxxxxXWxxaaaw1121Xx
+xxxZWww1XaaaaaWwaaaxZWw211Xx
+xxxxZW23xxxxxaWwwxxxZww11XXx
+xxxxZZ1XxxxxxxxWwwxxxxZ.Xxxx
 xxxxxxX.XxxxXwWwwwxxx...Xxxx
 xxxxxxx..Xxxx2xWwxxX..XXxxxx
 xxxxxxxX.12111xw3X211bxxxxxx
