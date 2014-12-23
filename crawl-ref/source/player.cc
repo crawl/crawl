@@ -7174,8 +7174,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         // to a player from a dead monster.  We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
-        ouch(amount, kill_type, MID_NOBODY, aux.c_str(),
-             false, source.empty() ? "posthumous revenge" : source.c_str());
+        ouch(amount, kill_type, MID_NOBODY, aux.c_str(), false, source.c_str());
     }
     else
     {
