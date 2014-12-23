@@ -20,7 +20,6 @@
 #include "decks.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "exercise.h"

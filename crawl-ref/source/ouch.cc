@@ -28,7 +28,6 @@
 #include "delay.h"
 #include "describe.h"
 #include "dgnevent.h"
-#include "effects.h"
 #include "end.h"
 #include "env.h"
 #include "fight.h"

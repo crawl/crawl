@@ -27,7 +27,6 @@
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "evoke.h"
 #include "exercise.h"
 #include "food.h"

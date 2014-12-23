@@ -54,7 +54,6 @@ dgnevent.o \
 directn.o \
 dlua.o \
 dungeon.o \
-effects.o \
 end.o \
 english.o \
 errors.o \
@@ -230,6 +229,7 @@ target.o \
 teleport.o \
 terrain.o \
 throw.o \
+timed_effects.o \
 transform.o \
 traps.o \
 travel.o \

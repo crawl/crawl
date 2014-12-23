@@ -27,7 +27,6 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "english.h"
 #include "exercise.h"
 #include "fight.h"
