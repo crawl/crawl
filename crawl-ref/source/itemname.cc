@@ -1374,7 +1374,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (is_artefact(*this) && !dbname)
         {
-            buff << get_artefact_name(*this);
+            buff << get_artefact_name(*this, false, terse);
             break;
         }
 

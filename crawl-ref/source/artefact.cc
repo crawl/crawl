@@ -1305,18 +1305,65 @@ static const unrandart_entry *_seekunrandart(const item_def &item)
     return get_unrand_entry(item.special);
 }
 
-string get_artefact_name(const item_def &item, bool force_known)
+string get_artefact_base_name(const item_def &item, bool terse)
+{
+    string base_name = item_base_name(item);
+    const char* custom_type = _seekunrandart(item)->type_name;
+    if (custom_type)
+        base_name = custom_type;
+    if (terse)
+    {
+        base_name = replace_all(base_name, "executioner's axe", "exec axe");
+        base_name = replace_all(base_name, "giant spiked club", "g.spiked club");
+        base_name = replace_all(base_name, "triple crossbow", "triple xbow");
+    }
+    return base_name;
+}
+
+string get_artefact_name(const item_def &item, bool force_known, bool terse)
 {
     ASSERT(is_artefact(item));
 
     if (item_type_known(item) || force_known)
     {
-        // print artefact's real name
-        if (item.props.exists(ARTEFACT_NAME_KEY))
-            return item.props[ARTEFACT_NAME_KEY].get_string();
+        if (terse
+            && (!is_unrandom_artefact(item)
+                || is_unrandom_artefact(item, UNRAND_ARGA)
+                || is_unrandom_artefact(item, UNRAND_BLOODBANE)
+                || is_unrandom_artefact(item, UNRAND_BLOWGUN_ASSASSIN)
+                || is_unrandom_artefact(item, UNRAND_BOTONO)
+                || is_unrandom_artefact(item, UNRAND_BRILLIANCE) // would go over limit w/ {halo} INSCRIP
+                || is_unrandom_artefact(item, UNRAND_CHILLY_DEATH)
+                || is_unrandom_artefact(item, UNRAND_DEVASTATOR)
+                || is_unrandom_artefact(item, UNRAND_DOOM_KNIGHT)
+                // could get away with no INSCRIP due to unique properties?
+                // would fit width then - {el,} is one char too long
+                || is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
+                || is_unrandom_artefact(item, UNRAND_EOS) // almost fits, one char over: SInv|}
+                || is_unrandom_artefact(item, UNRAND_FIRESTARTER)
+                || is_unrandom_artefact(item, UNRAND_FLAMING_DEATH)
+                || is_unrandom_artefact(item, UNRAND_GUARD)
+                || is_unrandom_artefact(item, UNRAND_GYRE) // base TYPE: pluralized to 'quick blades'
+                || is_unrandom_artefact(item, UNRAND_HELLFIRE)
+                || is_unrandom_artefact(item, UNRAND_KRISHNA)
+                || is_unrandom_artefact(item, UNRAND_LEECH) // still too long, of course
+                || is_unrandom_artefact(item, UNRAND_OCTOPUS_KING)
+                || is_unrandom_artefact(item, UNRAND_SKULLCRUSHER)
+                || is_unrandom_artefact(item, UNRAND_SNIPER)
+                || is_unrandom_artefact(item, UNRAND_SPELLBINDER) // kinda sorta fits as-is w/Wp: gone (one char over) //TODO INSCRIP
+                || is_unrandom_artefact(item, UNRAND_SPRIGGANS_KNIFE)
+                || is_unrandom_artefact(item, UNRAND_UNDEADHUNTER)
+                || is_unrandom_artefact(item, UNRAND_WYRMBANE) // almost fits, three chars over: AC|+5}
+            ))
+        {
+            return get_artefact_base_name(item);
+        }
         // unrands don't use cached names
         if (is_unrandom_artefact(item))
             return _seekunrandart(item)->name;
+        // print artefact's real name
+        if (item.props.exists(ARTEFACT_NAME_KEY))
+            return item.props[ARTEFACT_NAME_KEY].get_string();
         return make_artefact_name(item, false);
     }
     // print artefact appearance
