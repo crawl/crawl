@@ -22,7 +22,6 @@
 
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
-#include "effects.h"       // For Sceptre of Torment tormenting
 #include "english.h"       // For apostrophise
 #include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
@@ -34,6 +33,7 @@
 #include "player.h"
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
+#include "spl-goditem.h"   // For Sceptre of Torment tormenting
 #include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow

@@ -20,9 +20,11 @@
 #include "colour.h"
 #include "coordit.h"
 #include "dbg-scan.h"
+#include "delay.h"
 #include "dgn-overview.h"
 #include "dgn-proclayouts.h"
 #include "files.h"
+#include "hiscores.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -40,6 +42,7 @@
 #include "religion.h"
 #include "stash.h"
 #include "state.h"
+#include "stairs.h"
 #include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -373,6 +376,52 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
     }
 
     return items_placed;
+}
+
+static string _who_banished(const string &who)
+{
+    return who.empty() ? who : " (" + who + ")";
+}
+
+void banished(const string &who)
+{
+    ASSERT(!crawl_state.game_is_arena());
+    push_features_to_abyss();
+    if (brdepth[BRANCH_ABYSS] == -1)
+        return;
+
+    if (!player_in_branch(BRANCH_ABYSS))
+    {
+        mark_milestone("abyss.enter",
+                       "is cast into the Abyss!" + _who_banished(who));
+    }
+
+    if (player_in_branch(BRANCH_ABYSS))
+    {
+        if (level_id::current().depth < brdepth[BRANCH_ABYSS])
+            down_stairs(DNGN_ABYSSAL_STAIR);
+        else
+        {
+            // On Abyss:5 we can't go deeper; cause a shift to a new area
+            mprf(MSGCH_BANISHMENT, "You are banished to a different region of the Abyss.");
+            abyss_teleport();
+        }
+        return;
+    }
+
+    const string what = "Cast into the Abyss" + _who_banished(who);
+    take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
+
+    stop_delay(true);
+    run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
+    down_stairs(DNGN_ENTER_ABYSS);  // heh heh
+
+    // Xom just might decide to interfere.
+    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
+        && who != "a distortion unwield")
+    {
+        xom_maybe_reverts_banishment(false, false);
+    }
 }
 
 void push_features_to_abyss()

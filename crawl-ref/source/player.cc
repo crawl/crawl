@@ -2727,6 +2727,30 @@ int get_exp_progress()
     return (you.experience - current) * 100 / (next - current);
 }
 
+static void _recharge_xp_evokers(int exp)
+{
+    FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
+    list_charging_evokers(evokers);
+
+    int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
+                             you.experience_level * 425),
+                        you.experience_level*4 + 30)
+                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
+
+    for (int i = 0; i < NUM_MISCELLANY; ++i)
+    {
+        item_def* evoker = evokers[i];
+        if (!evoker)
+            continue;
+        evoker->evoker_debt -= div_rand_round(exp, xp_factor);
+        if (evoker->evoker_debt <= 0)
+        {
+            evoker->evoker_debt = 0;
+            mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
+        }
+    }
+}
+
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
@@ -2816,7 +2840,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
             _remove_temp_mutation();
     }
 
-    recharge_xp_evokers(exp_gained);
+    _recharge_xp_evokers(exp_gained);
 
     if (you.attribute[ATTR_XP_DRAIN])
     {
@@ -7243,6 +7267,30 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     return true;
 }
 
+void player::corrode_equipment(const char* corrosion_source)
+{
+    // rCorr protects against 50% of corrosion.
+    if (res_corr() && coinflip())
+    {
+        dprf("rCorr protects.");
+        return;
+    }
+    // always increase duration, but...
+    increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
+                      make_stringf("%s corrodes your equipment!",
+                                   corrosion_source).c_str());
+
+    // the more corrosion you already have, the lower the odds of more
+    const int prev_corr = props["corrosion_amount"].get_int();
+    if (x_chance_in_y(prev_corr, prev_corr + 9))
+        return;
+
+    props["corrosion_amount"].get_int()++;
+    redraw_armour_class = true;
+    wield_change = true;
+    return;
+}
+
 /**
  * Attempts to apply corrosion to the player and deals acid damage.
  *
@@ -7278,7 +7326,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
     }
 
     if (do_corrosion)
-        corrode_actor(&you);
+        corrode_equipment();
 
     // Covers head, hands and feet.
     if (player_equip_unrand(UNRAND_LEAR))

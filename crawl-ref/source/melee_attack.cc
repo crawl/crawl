@@ -2175,7 +2175,7 @@ void melee_attack::attacker_sustain_passive_damage()
     if (weap && !avatar)
     {
         if (x_chance_in_y(acid_strength + 1, 30))
-            corrode_actor(attacker);
+            attacker->corrode_equipment();
     }
     else
     {
@@ -3027,7 +3027,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_CORRODE:
         if (defender->slot_item(EQ_BODY_ARMOUR))
-            corrode_actor(defender, atk_name(DESC_THE).c_str());
+            defender->corrode_equipment(atk_name(DESC_THE).c_str());
         break;
 
     case AF_DISTORT:
