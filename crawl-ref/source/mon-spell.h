@@ -1728,6 +1728,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VASHNIA,
       {
+       { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        { SPELL_PORTAL_PROJECTILE, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_ALLIES_AWAY, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 11, MON_SPELL_WIZARD },
