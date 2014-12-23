@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -20,7 +21,6 @@
 #include "database.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "english.h"
 #include "evoke.h"
 #include "food.h"

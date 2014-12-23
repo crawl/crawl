@@ -4640,7 +4640,7 @@ bool bolt::god_cares() const
 void bolt::hit_shield(actor* blocker) const
 {
     if (flavour == BEAM_ACID)
-        corrode_actor(blocker);
+        blocker->corrode_equipment();
     if (is_fiery() || flavour == BEAM_STEAM)
     {
         monster* mon = blocker->as_monster();

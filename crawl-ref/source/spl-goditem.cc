@@ -34,6 +34,7 @@
 #include "tiledef-dngn.h"
 #include "traps.h"
 #include "view.h"
+#include "viewchar.h"
 
 static void _print_holy_pacification_speech(const string key,
                                             monster* mon,
@@ -1000,4 +1001,288 @@ bool cast_smiting(int pow, monster* mons)
     }
 
     return success;
+}
+
+static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
+{
+    if (!you.undead_or_demonic())
+        return;
+
+    int hploss;
+
+    // Holy word won't kill its user.
+    if (attacker && attacker->is_player())
+        hploss = max(0, you.hp / 2 - 1);
+    else
+        hploss = roll_dice(3, 15) + (random2(pow) / 3);
+
+    if (!hploss)
+        return;
+
+    mpr("You are blasted by holy energy!");
+
+    const char *aux = "holy word";
+
+    kill_method_type type = KILLED_BY_SOMETHING;
+    if (crawl_state.is_god_acting())
+        type = KILLED_BY_DIVINE_WRATH;
+
+    switch (source)
+    {
+    case HOLY_WORD_SCROLL:
+        aux = "scroll of holy word";
+        break;
+
+    case HOLY_WORD_ZIN:
+        aux = "Zin's holy word";
+        break;
+
+    case HOLY_WORD_TSO:
+        aux = "the Shining One's holy word";
+        break;
+    }
+
+    ouch(hploss, type, MID_NOBODY, aux);
+
+    return;
+}
+
+void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
+                        actor *attacker)
+{
+    pow = min(300, pow);
+
+    // Is the player in this cell?
+    if (where == you.pos())
+        _holy_word_player(pow, source, attacker);
+
+    // Is a monster in this cell?
+    monster* mons = monster_at(where);
+    if (!mons || !mons->alive() || !mons->undead_or_demonic())
+        return;
+
+    int hploss;
+
+    // Holy word won't kill its user.
+    if (attacker == mons)
+        hploss = max(0, mons->hit_points / 2 - 1);
+    else
+        hploss = roll_dice(3, 15) + (random2(pow) / 10);
+
+    if (hploss)
+        if (source == HOLY_WORD_ZIN)
+            simple_monster_message(mons, " is blasted by Zin's holy word!");
+        else
+            simple_monster_message(mons, " convulses!");
+    mons->hurt(attacker, hploss, BEAM_MISSILE);
+
+    if (!hploss || !mons->alive())
+        return;
+    // Holy word won't annoy or stun its user.
+    if (attacker != mons)
+    {
+        // Currently, holy word annoys the monsters it affects
+        // because it can kill them, and because hostile
+        // monsters don't use it.
+        // Tolerate unknown scroll, to not annoy Yred worshippers too much.
+        if (attacker != nullptr
+            && (attacker != &you
+                || source != HOLY_WORD_SCROLL
+                || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
+        {
+            behaviour_event(mons, ME_ANNOY, attacker);
+        }
+
+        if (mons->speed_increment >= 25)
+            mons->speed_increment -= 20;
+    }
+}
+
+void holy_word(int pow, holy_word_source_type source, const coord_def& where,
+               bool silent, actor *attacker)
+{
+    if (!silent && attacker)
+    {
+        mprf("%s %s a Word of immense power!",
+             attacker->name(DESC_THE).c_str(),
+             attacker->conj_verb("speak").c_str());
+    }
+
+    for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
+        holy_word_monsters(*ri, pow, source, attacker);
+}
+
+void torment_player(actor *attacker, torment_source_type taux)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    int hploss = 0;
+
+    if (!player_res_torment())
+    {
+        // Negative energy resistance can alleviate torment.
+        hploss = max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
+        // Statue form is only partial petrification.
+        if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+            hploss /= 2;
+
+        if (hploss == 0 && player_prot_life() < 0)
+            hploss = 1;
+    }
+
+    // Kiku protects you from torment to a degree.
+    const bool kiku_shielding_player = player_kiku_res_torment();
+
+    if (kiku_shielding_player)
+    {
+        if (hploss > 0)
+        {
+            if (random2(600) < you.piety) // 13.33% to 33.33% chance
+            {
+                hploss = 0;
+                simple_god_message(" shields you from torment!");
+            }
+            else if (random2(250) < you.piety) // 24% to 80% chance
+            {
+                hploss -= random2(hploss - 1);
+                simple_god_message(" partially shields you from torment!");
+            }
+        }
+    }
+
+    if (!hploss)
+    {
+        mpr("You feel a surge of unholy energy.");
+        return;
+    }
+
+    mpr("Your body is wracked with pain!");
+
+
+    kill_method_type type = KILLED_BY_BEAM;
+    if (crawl_state.is_god_acting())
+        type = KILLED_BY_DIVINE_WRATH;
+    else if (taux == TORMENT_MISCAST)
+        type = KILLED_BY_WILD_MAGIC;
+
+    const char *aux = "";
+
+    switch (taux)
+    {
+    case TORMENT_CARDS:
+    case TORMENT_SPELL:
+        aux = "Symbol of Torment";
+        break;
+
+    case TORMENT_SCEPTRE:
+        aux = "Sceptre of Torment";
+        break;
+
+    case TORMENT_SCROLL:
+        aux = "a scroll of torment";
+        break;
+
+    case TORMENT_XOM:
+        type = KILLED_BY_XOM;
+        aux = "Xom's torment";
+        break;
+
+    case TORMENT_KIKUBAAQUDGHA:
+        aux = "Kikubaaqudgha's torment";
+        break;
+
+    case TORMENT_LURKING_HORROR:
+        type = KILLED_BY_SPORE;
+        aux = "an exploding lurking horror";
+
+    case TORMENT_MISCAST:
+        aux = "by torment";
+        break;
+    }
+
+    ouch(hploss, type, attacker? attacker->mid : MID_NOBODY, aux);
+
+    return;
+}
+
+static void _torment_stuff_at(coord_def where, actor *attacker,
+                       torment_source_type taux)
+{
+    // Is the player in this cell?
+    if (where == you.pos())
+        torment_player(attacker, taux);
+    // Don't return, since you could be standing on a monster.
+
+    // Is a monster in this cell?
+    monster* mons = monster_at(where);
+    if (!mons || !mons->alive() || mons->res_torment())
+        return;
+
+    int hploss = max(0, mons->hit_points * (50 - mons->res_negative_energy() * 5) / 100 - 1);
+
+    if (!hploss && mons->res_negative_energy() < 0)
+        hploss = 1;
+
+    if (hploss)
+    {
+        simple_monster_message(mons, " convulses!");
+
+        // Currently, torment doesn't annoy the monsters it affects
+        // because it can't kill them, and because hostile monsters use
+        // it.  It does alert them, though.
+        // XXX: attacker isn't passed through "int torment()".
+        behaviour_event(mons, ME_ALERT, attacker);
+    }
+
+    mons->hurt(attacker, hploss, BEAM_TORMENT_DAMAGE);
+}
+
+void torment(actor *attacker, torment_source_type taux, const coord_def& where)
+{
+    for (radius_iterator ri(where, LOS_NO_TRANS); ri; ++ri)
+        _torment_stuff_at(*ri, attacker, taux);
+}
+
+void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
+                                coord_def where, actor *attacker)
+{
+    beam.flavour      = BEAM_HOLY;
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.damage       = dice_def(2, pow);
+    beam.target       = where;
+    beam.name         = "golden flame";
+    beam.colour       = YELLOW;
+    beam.aux_source   = (caster == CLEANSING_FLAME_TSO)
+                        ? "the Shining One's cleansing flame"
+                        : "cleansing flame";
+    beam.ex_size      = 2;
+    beam.is_explosion = true;
+
+    if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
+    {
+        beam.thrower   = KILL_MISC;
+        beam.source_id = MID_NOBODY;
+    }
+    else if (attacker && attacker->is_player())
+    {
+        beam.thrower   = KILL_YOU;
+        beam.source_id = MID_PLAYER;
+    }
+    else
+    {
+        // If there was no attacker, caster should have been
+        // CLEANSING_FLAME_{GENERIC,TSO} which we handled above.
+        ASSERT(attacker);
+
+        beam.thrower   = KILL_MON;
+        beam.source_id = attacker->mid;
+    }
+}
+
+void cleansing_flame(int pow, int caster, coord_def where,
+                     actor *attacker)
+{
+    bolt beam;
+    setup_cleansing_flame_beam(beam, pow, caster, where, attacker);
+    beam.explode();
 }

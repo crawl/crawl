@@ -20,6 +20,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "english.h"
+#include "evoke.h"
 #include "food.h"
 #include "goditem.h"
 #include "invent.h"

@@ -20,6 +20,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "fight.h"
 #include "feature.h"
 #include "fprop.h"
 #include "godabil.h"
@@ -748,6 +749,51 @@ bool slime_wall_neighbour(const coord_def& c)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
             return true;
     return false;
+}
+
+void slime_wall_damage(actor* act, int delay)
+{
+    ASSERT(act);
+
+    int walls = 0;
+    for (adjacent_iterator ai(act->pos()); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            walls++;
+
+    if (!walls)
+        return;
+
+    const int depth = player_in_branch(BRANCH_SLIME) ? you.depth : 1;
+
+    // Up to 1d6 damage per wall per slot.
+    const int strength = div_rand_round(depth * walls * delay, BASELINE_DELAY);
+
+    if (act->is_player())
+    {
+        if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
+        {
+            you.splash_with_acid(nullptr, strength, false,
+                                (walls > 1) ? "The walls burn you!"
+                                            : "The wall burns you!");
+        }
+    }
+    else
+    {
+        monster* mon = act->as_monster();
+
+        // Slime native monsters are immune to slime walls.
+        if (mons_is_slime(mon))
+            return;
+
+        const int dam = resist_adjust_damage(mon, BEAM_ACID,
+                                             roll_dice(2, strength));
+        if (dam > 0 && you.can_see(mon))
+        {
+            mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
+                  mon->name(DESC_THE).c_str());
+        }
+        mon->hurt(nullptr, dam, BEAM_ACID);
+    }
 }
 
 bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,

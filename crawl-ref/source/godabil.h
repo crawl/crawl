@@ -65,6 +65,17 @@ bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
 bool fedhas_shoot_through(const bolt& beam, const monster* victim);
+struct mgen_data;
+int place_ring(vector<coord_def>& ring_points,
+               const coord_def& origin,
+               mgen_data prototype,
+               int n_arcs,
+               int arc_occupancy,
+               int& seen_count);
+// Collect lists of points that are within LOS, unoccupied, and not solid
+// (walls/statues).
+void collect_radius_points(vector<vector<coord_def> > &radius_points,
+                           const coord_def &origin, los_type los);
 int fedhas_fungal_bloom();
 spret_type fedhas_sunlight(bool fail = false);
 void process_sunlights(bool future = false);

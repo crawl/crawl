@@ -4506,6 +4506,38 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
     return true;
 }
 
+void monster::corrode_equipment(const char* corrosion_source)
+{
+    // Don't corrode spectral weapons or temporary items.
+    if (mons_is_avatar(type) || type == MONS_PLAYER_SHADOW)
+        return;
+
+    // rCorr protects against 50% of corrosion.
+    if (res_corr() && coinflip())
+    {
+        dprf("rCorr protects.");
+        return;
+    }
+
+    if (you.see_cell(pos()))
+    {
+        if (type == MONS_DANCING_WEAPON)
+        {
+            mprf("%s corrodes %s!",
+                 corrosion_source,
+                 name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("%s corrodes %s equipment!",
+                 corrosion_source,
+                 apostrophise(name(DESC_THE)).c_str());
+        }
+    }
+
+    add_ench(mon_enchant(ENCH_CORROSION, 0));
+}
+
 /**
  * Attempts to either apply corrosion to a monster or make it bleed from acid
  * damage.
@@ -4517,7 +4549,7 @@ void monster::splash_with_acid(const actor* evildoer, int /*acid_strength*/,
     item_def *has_armour = mslot_item(MSLOT_ARMOUR);
 
     if (!one_chance_in(3) && (has_shield || has_armour))
-        corrode_actor(this);
+        corrode_equipment();
     else if (!one_chance_in(3) && !(has_shield || has_armour)
              && can_bleed() && !res_acid())
     {

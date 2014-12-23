@@ -538,7 +538,7 @@ public:
 
     bool can_quaff() const
     {
-        // TODO: merge with item_use.cc:_dont_use_invis()
+        // TODO: merge with item_use.cc:dont_use_invis()
         return get_contamination_level() <= 1;
     }
 
