@@ -1027,10 +1027,10 @@ static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
     {
         const int pow = 75 + random2avg(75, 2);
         const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
-        int dam = 0;
+        int dam_dealt = 0;
         for (int i = 0; defender->alive() && i < num_targs; i++)
-            dam += discharge_monsters(defender->pos(), pow, 0, attacker);
-        if (dam > 0)
+            dam_dealt += discharge_monsters(defender->pos(), pow, 0, attacker);
+        if (dam_dealt > 0)
             scaled_delay(100);
         else
         {
