@@ -338,6 +338,10 @@ int mons_power_hd_factor(spell_type spell, bool random)
 {
     switch (spell)
     {
+        case SPELL_SLEEP:
+        case SPELL_AGONY:
+            return 6 * ENCH_POW_FACTOR;
+
         default:
             return 12;
     }
@@ -353,7 +357,10 @@ int mons_power_hd_factor(spell_type spell, bool random)
  */
 static int _mons_spellpower(spell_type spell, const monster &mons)
 {
-    return mons.spell_hd(spell) * mons_power_hd_factor(spell);
+    const int power = mons.spell_hd(spell) * mons_power_hd_factor(spell);
+    if (spell == SPELL_PAIN)
+        return max(50 * ENCH_POW_FACTOR, power);
+    return power;
 }
 
 static int _mons_spell_range(spell_type spell, const monster &mons)
@@ -399,7 +406,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.colour       = 255;
     beam.hit          = -1;
     beam.damage       = dice_def(1, 0);
-    beam.ench_power   = max(1, power / 3); // U G H
+    beam.ench_power   = max(1, power / ENCH_POW_FACTOR); // U G H
     beam.glyph        = 0;
     beam.flavour      = BEAM_NONE;
     beam.thrower      = KILL_MISC;
@@ -537,7 +544,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_SLEEP:
         beam.flavour    = BEAM_SLEEP;
         beam.pierce     = true;
-        beam.ench_power = 6 * mons->spell_hd(real_spell);
         break;
 
     case SPELL_POLYMORPH:
@@ -778,13 +784,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PAIN:
         beam.flavour    = BEAM_PAIN;
         beam.damage     = dice_def(1, 7 + (power / 20));
-        beam.ench_power = max(50, 8 * mons->spell_hd(real_spell));
         beam.pierce     = true;
         break;
 
     case SPELL_AGONY:
         beam.flavour    = BEAM_PAIN;
-        beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.pierce     = true;
         break;
 
