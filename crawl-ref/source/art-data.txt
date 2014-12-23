@@ -522,6 +522,7 @@ BOOL:     elec
 
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
+TYPE:     heavy crossbow
 PLUS:     +15
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
@@ -1177,6 +1178,7 @@ BOOL:    unholy
 ENUM:    GYRE
 NAME:    quick blades "Gyre" and "Gimble"
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
+TYPE:    quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
