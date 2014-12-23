@@ -1843,9 +1843,7 @@ void melee_attack::player_weapon_upsets_god()
         }
     }
     else if (weapon && weapon->is_type(OBJ_STAVES, STAFF_FIRE))
-    {
         did_god_conduct(DID_FIRE, 1);
-    }
 }
 
 /* Apply player-specific effects as well as brand damage.
