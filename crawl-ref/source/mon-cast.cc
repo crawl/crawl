@@ -1321,10 +1321,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 {
     // always set these -- used by things other than fire_beam()
 
-    // [ds] Used to be 12 * MHD and later buggily forced to -1 downstairs.
-    // Setting this to a more realistic number now that that bug is
-    // squashed.
-    pbolt.ench_power = 4 * mons->spell_hd(spell_cast);
     pbolt.source_id = mons->mid;
 
     // Convenience for the hapless innocent who assumes that this
