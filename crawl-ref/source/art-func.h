@@ -37,6 +37,7 @@
 #include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow
+#include "view.h"          // For arc blade's discharge effect
 
 /*******************
  * Helper functions.
@@ -1027,7 +1028,11 @@ static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
         if (discharge_monsters(defender->pos(),
                                75 + random2avg(75, 2),
                                0,
-                               attacker) == 0)
+                               attacker) > 0)
+        {
+            scaled_delay(100);
+        }
+        else
         {
             if (you.can_see(attacker))
                 mpr("The arc blade crackles.");

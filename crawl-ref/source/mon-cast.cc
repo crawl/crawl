@@ -6346,7 +6346,9 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
         const int dam = apply_random_around_square(discharge_monsters,
                                                    mons->pos(), true, power,
                                                    num_targs, mons);
-        if (dam == 0)
+        if (dam > 0)
+            scaled_delay(100);
+        else
         {
             if (!you.can_see(mons))
                 mpr("You hear crackling.");

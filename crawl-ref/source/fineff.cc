@@ -29,6 +29,7 @@
 #include "state.h"
 #include "transform.h"
 #include "view.h"
+#include "viewchar.h"
 
 /*static*/ void final_effect::schedule(final_effect *eff)
 {
@@ -436,6 +437,25 @@ void shock_serpent_discharge_fineff::fire()
 {
     monster* serpent = defender() ? defender()->as_monster() : nullptr;
     int range = min(3, power);
+    bool pause = false;
+
+    bolt beam;
+    beam.flavour    = BEAM_VISUAL;
+    beam.colour     = LIGHTCYAN;
+    beam.glyph      = dchar_glyph(DCHAR_EXPLOSION);
+    beam.draw_delay = 0;
+    coord_def tl(position.x - range, position.y - range);
+    coord_def br(position.x + range, position.y + range);
+    for (rectangle_iterator ri(tl, br); ri; ++ri)
+        if (in_bounds(*ri))
+        {
+            if (!pause && you.see_cell(*ri))
+                pause = true;
+            beam.draw(*ri);
+        }
+
+    if (pause)
+        scaled_delay(100);
 
     vector <actor*> targets;
     for (actor_near_iterator ai(position); ai; ++ai)
@@ -454,7 +474,7 @@ void shock_serpent_discharge_fineff::fire()
         mprf("%s electric aura discharges%s!", serpent->name(DESC_ITS).c_str(),
              power < 4 ? "" : " violently");
     }
-    else if (you.see_cell(position))
+    else if (pause)
         mpr("The air sparks with electricity!");
 
     // FIXME: should merge the messages.
