@@ -33,7 +33,6 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "env.h"
 #include "food.h"
 #include "godpassive.h"

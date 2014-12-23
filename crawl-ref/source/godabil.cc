@@ -24,7 +24,6 @@
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "english.h"
 #include "fight.h"
 #include "files.h"

@@ -19,7 +19,6 @@
 #include "dbg-scan.h"
 #include "delay.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "evoke.h"
 #include "fight.h"
 #include "fineff.h"

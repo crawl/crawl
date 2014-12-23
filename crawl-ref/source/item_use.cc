@@ -20,7 +20,6 @@
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "evoke.h"
