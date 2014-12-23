@@ -499,7 +499,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\target.cc" />
     <ClCompile Include="..\teleport.cc" />
     <ClCompile Include="..\terrain.cc" />
-    <ClCompile Include="..\time.cc" />
+    <ClCompile Include="..\timed_effects.cc" />
     <ClCompile Include="..\throw.cc" />
     <ClCompile Include="..\tilebuf.cc" />
     <ClCompile Include="..\rltiles\tiledef-dngn.cc">
@@ -869,7 +869,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\target.h" />
     <ClInclude Include="..\teleport.h" />
     <ClInclude Include="..\terrain.h" />
-    <ClInclude Include="..\time.h" />
+    <ClInclude Include="..\timed_effects.h" />
     <ClInclude Include="..\threads.h" />
     <ClInclude Include="..\throw.h" />
     <ClInclude Include="..\tilebuf.h" />

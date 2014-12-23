@@ -235,7 +235,7 @@
     <ClCompile Include="..\teleport.cc" />
     <ClCompile Include="..\terrain.cc" />
     <ClCompile Include="..\throw.cc" />
-    <ClCompile Include="..\time.cc" />
+    <ClCompile Include="..\timed_effects.cc" />
     <ClCompile Include="..\tilebuf.cc" />
     <ClCompile Include="..\rltiles\tiledef-dngn.cc" />
     <ClCompile Include="..\rltiles\tiledef-gui.cc" />
@@ -558,7 +558,7 @@
     <ClInclude Include="..\threads.h" />
     <ClInclude Include="..\throw.h" />
     <ClInclude Include="..\tilebuf.h" />
-    <ClInclude Include="..\time.h" />
+    <ClInclude Include="..\timed_effects.h" />
     <ClInclude Include="..\rltiles\tiledef-dngn.h" />
     <ClInclude Include="..\rltiles\tiledef-gui.h" />
     <ClInclude Include="..\rltiles\tiledef-main.h" />
