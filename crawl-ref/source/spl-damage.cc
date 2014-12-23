@@ -3135,7 +3135,7 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
 
 size_t shotgun_beam_count(int pow)
 {
-    return 1 + (pow - 5) / 3;
+    return 1 + stepdown((pow - 5) / 3, 5, ROUND_CLOSE);
 }
 
 spret_type cast_scattershot(const actor *caster, int pow, const coord_def &pos,
