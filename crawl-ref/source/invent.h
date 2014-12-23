@@ -183,6 +183,8 @@ bool is_item_selected(const item_def &item, int selector);
 bool any_items_of_type(int type_expect, int excluded_slot = -1);
 string no_selectables_message(int item_selector);
 
+string slot_description();
+
 int prompt_invent_item(const char *prompt,
                        menu_type type,
                        int type_expect,

@@ -351,6 +351,11 @@ void InvMenu::set_preselect(const vector<SelItem> *pre)
     pre_select = pre;
 }
 
+string slot_description()
+{
+    return make_stringf("%d/%d slots", inv_count(), ENDOFPACK);
+}
+
 void InvMenu::set_title(const string &s)
 {
     string stitle = s;
@@ -365,10 +370,7 @@ void InvMenu::set_title(const string &s)
         // so that get_number_of_cols returns the appropriate value.
         cgotoxy(1, 1);
 
-        stitle = make_stringf(
-            "Inventory: %d/%d slots",
-            inv_count(),
-            ENDOFPACK);
+        stitle = "Inventory: " + slot_description();
 
         string prompt = "(_ for help)";
         stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
