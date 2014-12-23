@@ -338,9 +338,54 @@ int mons_power_hd_factor(spell_type spell, bool random)
 {
     switch (spell)
     {
+        case SPELL_IGNITE_POISON_SINGLE:
+            return 12 * ENCH_POW_FACTOR;
+
+        case SPELL_SAP_MAGIC:
+            return 10 * ENCH_POW_FACTOR;
+
         case SPELL_SLEEP:
         case SPELL_AGONY:
+        case SPELL_STRIP_RESISTANCE:
+        case SPELL_VIRULENCE:
+        case SPELL_DRAIN_MAGIC:
             return 6 * ENCH_POW_FACTOR;
+
+        case SPELL_ABJURATION:
+            return 20;
+
+        case SPELL_CAUSE_FEAR:
+            return 18;
+
+        case SPELL_MESMERISE:
+            return 10;
+
+        case SPELL_MASS_CONFUSION:
+        case SPELL_OLGREBS_TOXIC_RADIANCE:
+        case SPELL_FULMINANT_PRISM:
+            return 8;
+
+        case SPELL_LRD:
+        case SPELL_MONSTROUS_MENAGERIE:
+        case SPELL_BATTLESPHERE:
+        case SPELL_SPECTRAL_WEAPON:
+        case SPELL_IGNITE_POISON:
+        case SPELL_IOOD:
+        case SPELL_CONJURE_FLAME:
+        case SPELL_SINGULARITY:
+            return 6;
+
+        case SPELL_OZOCUBUS_REFRIGERATION:
+        case SPELL_SUMMON_DRAGON:
+        case SPELL_SUMMON_HYDRA:
+            return 5;
+
+        case SPELL_CHAIN_LIGHTNING:
+        case SPELL_CHAIN_OF_CHAOS:
+            return 4;
+
+        case SPELL_DRAIN_LIFE:
+            return 1;
 
         default:
             return 12;
@@ -1113,7 +1158,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_STRIP_RESISTANCE:
-        beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.flavour    = BEAM_VULNERABILITY;
         beam.pierce     = true;
         break;
@@ -1132,13 +1176,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_VIRULENCE:
         beam.flavour    = BEAM_VIRULENCE;
-        beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.pierce     = true;
         break;
 
     case SPELL_IGNITE_POISON_SINGLE:
         beam.flavour    = BEAM_IGNITE_POISON;
-        beam.ench_power = mons->spell_hd(real_spell) * 12;
         beam.pierce     = true;
         break;
 
@@ -1171,7 +1213,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_SAP_MAGIC:
-        beam.ench_power = mons->spell_hd(real_spell) * 10;
         beam.flavour    = BEAM_SAP_MAGIC;
         beam.pierce     = true;
         break;
@@ -1204,7 +1245,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_DRAIN_MAGIC:
-        beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.flavour    = BEAM_DRAIN_MAGIC;
         break;
 
@@ -3613,7 +3653,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
             if (spell_cast == SPELL_DAZZLING_SPRAY
                 && (!foe
-                    || !_spray_tracer(mons, 12 * mons->spell_hd(spell_cast),
+                    || !_spray_tracer(mons, _mons_spellpower(spell_cast, *mons),
                                       beem, spell_cast)))
             {
                 spell_cast = SPELL_NO_SPELL;
@@ -3838,7 +3878,7 @@ static int _monster_abjuration(const monster* caster, bool actual)
     if (actual)
         mpr("Send 'em back where they came from!");
 
-    int pow = caster->spell_hd(SPELL_ABJURATION) * 20;
+    const int pow = _mons_spellpower(SPELL_ABJURATION, *caster);
 
     for (monster_near_iterator mi(caster->pos(), LOS_NO_TRANS); mi; ++mi)
     {
@@ -4051,7 +4091,7 @@ static bool _mons_vampiric_drain(monster *mons)
     if (grid_distance(mons->pos(), target->pos()) > 1)
         return false;
 
-    int pow = mons->spell_hd(SPELL_VAMPIRIC_DRAINING) * 12;
+    const int pow = _mons_spellpower(SPELL_VAMPIRIC_DRAINING, *mons);
     int hp_cost = 3 + random2avg(9, 2) + 1 + random2(pow) / 7;
 
     hp_cost = min(hp_cost, target->stat_hp());
@@ -4113,9 +4153,9 @@ static bool _mons_cast_freeze(monster* mons)
     if (grid_distance(mons->pos(), target->pos()) > 1)
         return false;
 
-    const int pow = mons->spell_hd(SPELL_FREEZE) * 6;
+    const int pow = _mons_spellpower(SPELL_FREEZE, *mons);
 
-    const int base_damage = roll_dice(1, 3 + pow / 3);
+    const int base_damage = roll_dice(1, 3 + pow / 6);
     int damage = 0;
 
     if (target->is_player())
@@ -4141,7 +4181,8 @@ static bool _mons_cast_freeze(monster* mons)
 
         if (target->is_monster() && target->res_cold() <= 0)
         {
-            const int stun = (1 - target->res_cold()) * random2(min(7, 2 + pow/12));
+            const int stun = (1 - target->res_cold())
+                             * random2(min(7, 2 + pow/24));
             target->as_monster()->speed_increment -= stun;
         }
     }
@@ -4209,7 +4250,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
         }
     }
 
-    const int pow = min(mons->spell_hd(SPELL_MESMERISE) * 10, 200);
+    const int pow = min(_mons_spellpower(SPELL_MESMERISE, *mons), 200);
     const int res_magic = you.check_res_magic(pow);
 
     // Don't mesmerise if you pass an MR check or have clarity.
@@ -4251,7 +4292,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     int retval = -1;
 
-    const int pow = min(mons->spell_hd(SPELL_CAUSE_FEAR) * 18, 200);
+    const int pow = min(_mons_spellpower(SPELL_CAUSE_FEAR, *mons), 200);
 
     if (mons->can_see(&you) && !mons->wont_attack() && !you.afraid_of(mons))
     {
@@ -4336,7 +4377,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = min(mons->spell_hd(SPELL_MASS_CONFUSION) * 8, 200);
+    const int pow = min(_mons_spellpower(SPELL_MASS_CONFUSION, *mons), 200);
 
     if (mons->can_see(&you) && !mons->wont_attack())
     {
@@ -4394,7 +4435,7 @@ static int _mons_control_undead(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = min(mons->spell_hd(SPELL_CONTROL_UNDEAD) * 12, 200);
+    const int pow = min(_mons_spellpower(SPELL_CONTROL_UNDEAD, *mons), 200);
 
     if (mons->can_see(&you) && !mons->wont_attack()
         && you.holiness() == MH_UNDEAD)
@@ -4467,7 +4508,7 @@ static int _mons_control_undead(monster* mons, bool actual)
 static coord_def _mons_fragment_target(monster *mons)
 {
     coord_def target(GXM+1, GYM+1);
-    int pow = 6 * mons->spell_hd(SPELL_LRD);
+    const int pow = _mons_spellpower(SPELL_LRD, *mons);
 
     // Shadow casting should try to affect the same tile as the player.
     if (mons_is_player_shadow(mons))
@@ -4482,7 +4523,7 @@ static coord_def _mons_fragment_target(monster *mons)
         return mons->target;
     }
 
-    int range = spell_range(SPELL_LRD, pow, false);
+    const int range = _mons_spell_range(SPELL_LRD, *mons);
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
     {
@@ -5072,6 +5113,8 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     if (mons->god == GOD_YREDELEMNUL)
         god = mons->god;
 
+    const int splpow = _mons_spellpower(spell_cast, *mons);
+
     switch (spell_cast)
     {
     default:
@@ -5471,7 +5514,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        cast_monstrous_menagerie(mons, mons->spell_hd(spell_cast) * 6, mons->god);
+        cast_monstrous_menagerie(mons, splpow, mons->god);
         return;
 
     case SPELL_ANIMATE_DEAD:
@@ -5670,25 +5713,21 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
         return;
 
     case SPELL_DRAIN_LIFE:
-        cast_los_attack_spell(spell_cast, mons->spell_hd(spell_cast), mons, true);
+        cast_los_attack_spell(spell_cast, splpow, mons, true);
         return;
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        cast_los_attack_spell(spell_cast, mons->spell_hd(spell_cast) * 5,
-                              mons, true);
+        cast_los_attack_spell(spell_cast, splpow, mons, true);
         return;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        cast_toxic_radiance(mons, mons->spell_hd(spell_cast) * 8);
+        cast_toxic_radiance(mons, splpow);
         return;
 
     case SPELL_LRD:
     {
         if (in_bounds(pbolt.target))
-        {
-           cast_fragmentation(6 * mons->spell_hd(spell_cast), mons,
-                              pbolt.target, false);
-        }
+            cast_fragmentation(splpow, mons, pbolt.target, false);
         else if (you.can_see(mons))
             canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -5772,11 +5811,11 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
         return;
 
     case SPELL_BATTLESPHERE:
-        cast_battlesphere(mons, min(6 * mons->spell_hd(spell_cast), 200), mons->god, false);
+        cast_battlesphere(mons, min(splpow, 200), mons->god, false);
         return;
 
     case SPELL_SPECTRAL_WEAPON:
-        cast_spectral_weapon(mons, min(6 * mons->spell_hd(spell_cast), 200), mons->god, false);
+        cast_spectral_weapon(mons, min(splpow, 200), mons->god, false);
         return;
 
     case SPELL_TORNADO:
@@ -6047,7 +6086,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     }
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_CHAIN_OF_CHAOS:
-        cast_chain_spell(spell_cast, 4 * mons->spell_hd(spell_cast), mons);
+        cast_chain_spell(spell_cast, splpow, mons);
         return;
     case SPELL_SUMMON_EYEBALLS:
         if (mons->type != MONS_DISSOLUTION
@@ -6122,13 +6161,13 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        cast_summon_dragon(mons, mons->spell_hd(spell_cast) * 5, god);
+        cast_summon_dragon(mons, splpow, god);
         return;
     case SPELL_SUMMON_HYDRA:
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        cast_summon_hydra(mons, mons->spell_hd(spell_cast) * 5, god);
+        cast_summon_hydra(mons, splpow, god);
         return;
     case SPELL_FIRE_SUMMON:
         if (_mons_abjured(mons, monsterNearby))
@@ -6240,7 +6279,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
             simple_monster_message(mons, " radiates an aura of cold.");
         else if (mons->see_cell_no_trans(you.pos()))
             mpr("A wave of cold passes over you.");
-        apply_area_visible(englaciate, min(12 * mons->spell_hd(spell_cast), 200), mons);
+        apply_area_visible(englaciate, min(splpow, 200), mons);
         return;
 
     case SPELL_AWAKEN_VINES:
@@ -6286,7 +6325,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
         if (foe && mons->can_see(foe))
         {
             simple_monster_message(mons, " summons a great blast of wind!");
-            wind_blast(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
+            wind_blast(mons, splpow, foe->pos());
         }
         return;
     }
@@ -6302,7 +6341,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
 
     case SPELL_DISCHARGE:
     {
-        const int power = min(200, mons->spell_hd(spell_cast) * 12);
+        const int power = min(200, splpow);
         const int num_targs = 1 + random2(random_range(1, 3) + power / 20);
         const int dam = apply_random_around_square(discharge_monsters,
                                                    mons->pos(), true, power,
@@ -6345,7 +6384,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     }
 
     case SPELL_IGNITE_POISON:
-        cast_ignite_poison(mons, mons->spell_hd(spell_cast) * 6, false);
+        cast_ignite_poison(mons, splpow, false);
         return;
 
     case SPELL_LEGENDARY_DESTRUCTION:
@@ -6353,7 +6392,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
         mons->hurt(mons, 10);
         if (pbolt.origin_spell == SPELL_IOOD)
         {
-            cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
+            cast_iood(mons, _mons_spellpower(SPELL_IOOD, *mons), &pbolt);
             return;
         }
         // Don't return yet, we want to actually fire the random beam later
@@ -6465,15 +6504,14 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     case SPELL_GLACIATE:
     {
         ASSERT(foe);
-        cast_glaciate(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
+        cast_glaciate(mons, splpow, foe->pos());
         return;
     }
 
     case SPELL_CLOUD_CONE:
     {
         ASSERT(mons->get_foe());
-        cast_cloud_cone(mons, 12 * mons->spell_hd(spell_cast),
-                        mons->get_foe()->pos());
+        cast_cloud_cone(mons, splpow, mons->get_foe()->pos());
         return;
     }
 
@@ -6603,7 +6641,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     case SPELL_SCATTERSHOT:
     {
         ASSERT(foe);
-        cast_scattershot(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
+        cast_scattershot(mons, splpow, foe->pos());
         return;
     }
     }
@@ -6630,8 +6668,8 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     {
         if (in_bounds(pbolt.target))
         {
-            if (conjure_flame(mons, 6 * mons->spell_hd(spell_cast),
-                              pbolt.target, false) != SPRET_SUCCESS)
+            if (conjure_flame(mons, splpow, pbolt.target, false)
+                != SPRET_SUCCESS)
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
             }
@@ -6649,10 +6687,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     case SPELL_FULMINANT_PRISM:
     {
         if (in_bounds(pbolt.target))
-        {
-           cast_fulminating_prism(mons, 8 * mons->spell_hd(spell_cast),
-                                  pbolt.target, false);
-        }
+           cast_fulminating_prism(mons, splpow, pbolt.target, false);
         else if (you.can_see(mons))
             canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -6668,10 +6703,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
     case SPELL_SINGULARITY:
     {
         if (in_bounds(pbolt.target))
-        {
-           cast_singularity(mons, 6 * mons->spell_hd(spell_cast), pbolt.target,
-                            false);
-        }
+           cast_singularity(mons, splpow, pbolt.target, false);
         else if (you.can_see(mons))
             canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -7885,9 +7917,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                 est_magic_resist += random2(30) - 15;
         }
 
-        int power = 12 * mon->spell_hd(monspell)
-                       * (monspell == SPELL_PAIN ? 2 : 1);
-        power = ench_power_stepdown(power);
+        const int power = ench_power_stepdown(_mons_spellpower(monspell, *mon));
 
         // Determine the amount of chance allowed by the benefit from
         // the spell.  The estimated difficulty is the probability
@@ -8201,7 +8231,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DRAIN_LIFE:
     case SPELL_OZOCUBUS_REFRIGERATION:
-        return cast_los_attack_spell(monspell, mon->spell_hd(monspell),
+        return cast_los_attack_spell(monspell, _mons_spellpower(monspell, *mon),
                                      mon, false) != SPRET_SUCCESS
                || you.visible_to(mon)
                   && friendly
@@ -8212,12 +8242,12 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_GLACIATE:
         return !foe
-               || !_glaciate_tracer(mon, 12 * mon->spell_hd(monspell),
+               || !_glaciate_tracer(mon, _mons_spellpower(monspell, *mon),
                                     foe->pos());
 
     case SPELL_CLOUD_CONE:
         return !foe
-               || !mons_should_cloud_cone(mon, 12 * mon->spell_hd(monspell),
+               || !mons_should_cloud_cone(mon, _mons_spellpower(monspell, *mon),
                                           foe->pos());
 
     // Friendly monsters don't use polymorph, as it's likely to cause
@@ -8261,7 +8291,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_SCATTERSHOT:
         return !foe
-               || !scattershot_tracer(mon, 12 * mon->spell_hd(monspell),
+               || !scattershot_tracer(mon, _mons_spellpower(monspell, *mon),
                                       foe->pos());
 
     case SPELL_CLEANSING_FLAME:
