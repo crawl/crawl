@@ -328,39 +328,48 @@ static bool _set_nearby_target(monster* caster, bolt& pbolt)
  * What value do monsters multiply their hd with to get spellpower, for the
  * given spell?
  *
+ * XXX: everything except SPELL_CONFUSION_GAZE could be trivially exported to
+ * data.
+ *
  * @param spell     The spell in question.
  * @param random    Whether to randomize powers for weird spells.
  *                  If false, the average value is used.
  * @return          A multiplier to HD for spellpower.
  *                  Value may exceed 200.
  */
-int mons_power_hd_factor(spell_type spell, bool random)
+static int _mons_power_hd_factor(spell_type spell, bool random)
 {
     switch (spell)
     {
+        case SPELL_CONFUSION_GAZE:
+            if (random)
+                return 5 * (2 + random2(3)) * ENCH_POW_FACTOR;
+            return 5 * (2 + 1) * ENCH_POW_FACTOR;
+
+        case SPELL_CAUSE_FEAR:
+            return 18 * ENCH_POW_FACTOR;
+
         case SPELL_IGNITE_POISON_SINGLE:
             return 12 * ENCH_POW_FACTOR;
 
         case SPELL_SAP_MAGIC:
+        case SPELL_MESMERISE:
             return 10 * ENCH_POW_FACTOR;
+
+        case SPELL_MASS_CONFUSION:
+            return 8 * ENCH_POW_FACTOR;
 
         case SPELL_SLEEP:
         case SPELL_AGONY:
         case SPELL_STRIP_RESISTANCE:
         case SPELL_VIRULENCE:
         case SPELL_DRAIN_MAGIC:
+        case SPELL_DIMENSION_ANCHOR:
             return 6 * ENCH_POW_FACTOR;
 
         case SPELL_ABJURATION:
             return 20;
 
-        case SPELL_CAUSE_FEAR:
-            return 18;
-
-        case SPELL_MESMERISE:
-            return 10;
-
-        case SPELL_MASS_CONFUSION:
         case SPELL_OLGREBS_TOXIC_RADIANCE:
         case SPELL_FULMINANT_PRISM:
             return 8;
@@ -392,6 +401,25 @@ int mons_power_hd_factor(spell_type spell, bool random)
     }
 }
 
+
+/**
+ * What spellpower does a monster with the given spell_hd cast the given spell
+ * at?
+ *
+ * @param spell     The spell in question.
+ * @param hd        The spell_hd of the given monster.
+ * @param random    Whether to randomize powers for weird spells.
+ *                  If false, the average value is used.
+ * @return          A spellpower value for the spell.
+ */
+int mons_power_for_hd(spell_type spell, int hd, bool random)
+{
+    const int power = hd * _mons_power_hd_factor(spell, random);
+    if (spell == SPELL_PAIN)
+        return max(50 * ENCH_POW_FACTOR, power);
+    return power;
+}
+
 /**
  * What power does the given monster cast the given spell with?
  *
@@ -402,10 +430,21 @@ int mons_power_hd_factor(spell_type spell, bool random)
  */
 static int _mons_spellpower(spell_type spell, const monster &mons)
 {
-    const int power = mons.spell_hd(spell) * mons_power_hd_factor(spell);
-    if (spell == SPELL_PAIN)
-        return max(50 * ENCH_POW_FACTOR, power);
-    return power;
+    return mons_power_for_hd(spell, mons.spell_hd(spell));
+}
+
+/**
+ * What power does the given monster cast the given enchantment with?
+ *
+ * @param spell     The spell in question.
+ * @param mons      The monster in question.
+ * @param cap       The maximum power of the spell.
+ * @return          A spellpower value for the spell, with ENCH_POW_FACTOR
+ *                  removed & capped at some maximum spellpower.
+ */
+static int _ench_power(spell_type spell, const monster &mons, int cap = 200)
+{
+    return min(cap, _mons_spellpower(spell, mons) / ENCH_POW_FACTOR);
 }
 
 static int _mons_spell_range(spell_type spell, const monster &mons)
@@ -435,7 +474,7 @@ int mons_spell_range(spell_type spell, int hd)
             break;
     }
 
-    const int power = mons_power_hd_factor(spell) * hd;
+    const int power = mons_power_for_hd(spell, hd);
     return spell_range(spell, power, false);
 }
 
@@ -1144,7 +1183,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_DIMENSION_ANCHOR:
-        beam.ench_power = power / 2;
         beam.flavour    = BEAM_DIMENSION_ANCHOR;
         beam.pierce     = true;
         break;
@@ -4250,7 +4288,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
         }
     }
 
-    const int pow = min(_mons_spellpower(SPELL_MESMERISE, *mons), 200);
+    const int pow = _ench_power(SPELL_MESMERISE, *mons);
     const int res_magic = you.check_res_magic(pow);
 
     // Don't mesmerise if you pass an MR check or have clarity.
@@ -4292,7 +4330,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     int retval = -1;
 
-    const int pow = min(_mons_spellpower(SPELL_CAUSE_FEAR, *mons), 200);
+    const int pow = _ench_power(SPELL_CAUSE_FEAR, *mons);
 
     if (mons->can_see(&you) && !mons->wont_attack() && !you.afraid_of(mons))
     {
@@ -4377,7 +4415,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = min(_mons_spellpower(SPELL_MASS_CONFUSION, *mons), 200);
+    const int pow = _ench_power(SPELL_MASS_CONFUSION, *mons);
 
     if (mons->can_see(&you) && !mons->wont_attack())
     {
@@ -4435,7 +4473,7 @@ static int _mons_control_undead(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = min(_mons_spellpower(SPELL_CONTROL_UNDEAD, *mons), 200);
+    const int pow = _ench_power(SPELL_CONTROL_UNDEAD, *mons);
 
     if (mons->can_see(&you) && !mons->wont_attack()
         && you.holiness() == MH_UNDEAD)
@@ -5241,10 +5279,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
 
     case SPELL_CONFUSION_GAZE:
     {
-        const int confuse_power = 2 + random2(3);
-        const int res_margin =
-            foe->check_res_magic(5 * mons->get_experience_level()
-                                   * confuse_power);
+        const int res_margin = foe->check_res_magic(splpow / ENCH_POW_FACTOR);
         if (res_margin > 0)
         {
             if (you.can_see(foe))
