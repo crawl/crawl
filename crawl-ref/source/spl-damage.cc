@@ -1930,9 +1930,21 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
                                                  + (random2(pow) / 10));
 
     bolt beam;
-    beam.flavour = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
+    beam.flavour    = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
+    beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour     = LIGHTBLUE;
+#ifdef USE_TILE
+    beam.tile_beam  = -1;
+#endif
+    beam.draw_delay = 0;
 
     dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
+    if (victim->is_player()
+        || victim->res_elec() <= 0
+        || victim->type == MONS_SHOCK_SERPENT)
+    {
+        beam.draw(where);
+    }
     if (victim->is_player())
     {
         mpr("You are struck by lightning.");
@@ -2028,7 +2040,9 @@ spret_type cast_discharge(int pow, bool fail)
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);
 
-    if (dam == 0)
+    if (dam > 0)
+        scaled_delay(100);
+    else
     {
         if (coinflip())
             mpr("The air around you crackles with electrical energy.");
