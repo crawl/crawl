@@ -164,12 +164,14 @@ static bool _item_needs_rot_check(const item_def &item)
     if (!item.defined())
         return false;
 
+    if (item.props.exists(CORPSE_NEVER_DECAYS))
+        return false;
+
     if (is_perishable_stack(item))
         return true;
 
     return item.base_type == OBJ_CORPSES
-           && item.sub_type <= CORPSE_SKELETON // XXX: is this needed?
-           && !item.props.exists(CORPSE_NEVER_DECAYS);
+           && item.sub_type <= CORPSE_SKELETON; // XXX: is this needed?
 }
 
 /**
