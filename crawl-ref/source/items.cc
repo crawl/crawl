@@ -2560,7 +2560,7 @@ void drop()
     vector<SelItem> tmp_items;
     string prompt = "Drop what? " + slot_description()
 #ifdef TOUCH_UI
-                  + " (<Enter> or tap header to pick up)"
+                  + " (<Enter> or tap header to drop)"
 #else
                   + " (_ for help)"
 #endif
