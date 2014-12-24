@@ -1255,6 +1255,12 @@ static void _place_player(dungeon_feature_type stair_taken,
 }
 
 
+// Merry Christmas, Grunt.
+static string _level_chunk_name(const level_id &level)
+{
+    return replace_all(level.describe(), "Nor", "Coc");
+}
+
 /**
  * Load the current level.
  *
@@ -1266,7 +1272,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
 
-    string level_name = level_id::current().describe();
+    string level_name = _level_chunk_name(level_id::current());
     const bool make_changes =
     (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
 
@@ -1554,7 +1560,7 @@ static void _save_level(const level_id& lid)
     // Nail all items to the ground.
     fix_item_coordinates();
 
-    _write_tagged_chunk(lid.describe(), TAG_LEVEL);
+    _write_tagged_chunk(_level_chunk_name(lid), TAG_LEVEL);
 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -1693,7 +1699,7 @@ void save_game_state()
 static string _make_ghost_filename()
 {
     return "bones."
-           + replace_all(level_id::current().describe(), ":", "-");
+           + replace_all(_level_chunk_name(level_id::current()), ":", "-");
 }
 
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
@@ -2022,7 +2028,7 @@ static void _load_level(const level_id &level)
 // in this game.
 bool is_existing_level(const level_id &level)
 {
-    return you.save && you.save->has_chunk(level.describe());
+    return you.save && you.save->has_chunk(_level_chunk_name(level));
 }
 
 void delete_level(const level_id &level)
@@ -2035,7 +2041,7 @@ void delete_level(const level_id &level)
     clear_level_annotations(level);
 
     if (you.save)
-        you.save->delete_chunk(level.describe());
+        you.save->delete_chunk(_level_chunk_name(level));
     if (level.branch == BRANCH_ABYSS)
     {
         save_abyss_uniques();
