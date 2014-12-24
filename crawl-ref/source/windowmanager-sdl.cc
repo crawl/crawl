@@ -162,6 +162,7 @@ static int _translate_keysym(SDL_Keysym &keysym)
     case SDLK_ESCAPE:
         return CK_ESCAPE + offset;
     case SDLK_DELETE:
+    case SDLK_KP_PERIOD:
         return CK_DELETE + offset;
 
     case SDLK_LSHIFT:
