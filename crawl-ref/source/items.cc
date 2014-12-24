@@ -1873,13 +1873,17 @@ item_def *auto_assign_item_slot(item_def& item)
             continue;
         for (char i : mapping.second)
         {
-            const int index = letter_to_index(i);
-            if (isaalpha(i)
-                && !(you.inv[index].defined()
-                     && mapping.first.matches(you.inv[index].name(DESC_QUALNAME))))
+            if (isaalpha(i))
             {
-                newslot = index;
-                break;
+                const int index = letter_to_index(i);
+
+                // Don't swap with an item matched by the same rule.
+                if (!you.inv[index].defined()
+                    || !mapping.first.matches(you.inv[index].name(DESC_QUALNAME)))
+                {
+                    newslot = index;
+                    break;
+                }
             }
         }
         if (newslot != -1 && newslot != item.link)
