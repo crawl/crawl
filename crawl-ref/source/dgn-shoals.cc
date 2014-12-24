@@ -672,7 +672,8 @@ void dgn_build_shoals_level()
     env.level_build_method += make_stringf(" [depth %d]", you.depth);
 
     const int shoals_depth = you.depth - 1;
-    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA,
+                     MMT_VAULT);
     _shoals_init_heights();
     _shoals_init_islands(shoals_depth);
     _shoals_cliffs();

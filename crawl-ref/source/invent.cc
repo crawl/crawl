@@ -351,6 +351,11 @@ void InvMenu::set_preselect(const vector<SelItem> *pre)
     pre_select = pre;
 }
 
+string slot_description()
+{
+    return make_stringf("%d/%d slots", inv_count(), ENDOFPACK);
+}
+
 void InvMenu::set_title(const string &s)
 {
     string stitle = s;
@@ -365,10 +370,7 @@ void InvMenu::set_title(const string &s)
         // so that get_number_of_cols returns the appropriate value.
         cgotoxy(1, 1);
 
-        stitle = make_stringf(
-            "Inventory: %d/%d slots",
-            inv_count(),
-            ENDOFPACK);
+        stitle = "Inventory: " + slot_description();
 
         string prompt = "(_ for help)";
         stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
@@ -1636,8 +1638,7 @@ static bool _is_known_no_tele_item(const item_def &item)
 bool nasty_stasis(const item_def &item, operation_types oper)
 {
     return (oper == OPER_PUTON
-           && (item.base_type == OBJ_JEWELLERY
-               && item.sub_type == AMU_STASIS
+           && (item.is_type(OBJ_JEWELLERY, AMU_STASIS)
                && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
                    || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE])))
             || (oper == OPER_PUTON || oper == OPER_WEAR
@@ -1669,8 +1670,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         return false;
 
     if (oper == OPER_REMOVE
-        && item.base_type == OBJ_JEWELLERY
-        && item.sub_type == AMU_FAITH
+        && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         && !you_worship(GOD_NO_GOD)
         && !you_worship(GOD_XOM))
@@ -2036,11 +2036,8 @@ bool item_is_wieldable(const item_def &item)
         return you.species != SP_FELID;
 
     // The lantern needs to be wielded to be used.
-    if (item.base_type == OBJ_MISCELLANY
-        && item.sub_type == MISC_LANTERN_OF_SHADOWS)
-    {
+    if (item.is_type(OBJ_MISCELLANY, MISC_LANTERN_OF_SHADOWS))
         return true;
-    }
 
     if (item.base_type == OBJ_MISSILES
         && (item.sub_type == MI_STONE

@@ -855,7 +855,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
 */
 void set_net_stationary(item_def &item)
 {
-    if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
+    if (item.is_type(OBJ_MISSILES, MI_THROWING_NET))
         item.net_placed = true;
 }
 
@@ -879,8 +879,7 @@ bool item_is_stationary(const item_def &item)
 */
 bool item_is_stationary_net(const item_def &item)
 {
-    return item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET
-        && item.net_placed;
+    return item.is_type(OBJ_MISSILES, MI_THROWING_NET) && item.net_placed;
 }
 
 /**
@@ -1065,7 +1064,7 @@ bool is_helmet(const item_def& item)
 
 bool is_hard_helmet(const item_def &item)
 {
-    return item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET;
+    return item.is_type(OBJ_ARMOUR, ARM_HELMET);
 }
 
 //
@@ -1839,7 +1838,7 @@ static bool _staff_uses_evocations(const item_def &item)
 
 bool item_skills(const item_def &item, set<skill_type> &skills)
 {
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+    if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
         const skill_type skill = static_cast<skill_type>(item.plus);
         if (training_restricted(skill))
@@ -2047,28 +2046,25 @@ reach_type weapon_reach(const item_def &item)
 //
 bool item_is_rune(const item_def &item, rune_type which_rune)
 {
-    return item.base_type == OBJ_MISCELLANY
-           && item.sub_type == MISC_RUNE_OF_ZOT
+    return item.is_type(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT)
            && (which_rune == NUM_RUNE_TYPES || item.plus == which_rune);
 }
 
 bool item_is_unique_rune(const item_def &item)
 {
-    return item.base_type == OBJ_MISCELLANY
-           && item.sub_type == MISC_RUNE_OF_ZOT
+    return item_is_rune(item)
            && item.plus != RUNE_DEMONIC
            && item.plus != RUNE_ABYSSAL;
 }
 
 bool item_is_orb(const item_def &item)
 {
-    return item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT;
+    return item.is_type(OBJ_ORBS, ORB_ZOT);
 }
 
 bool item_is_horn_of_geryon(const item_def &item)
 {
-    return item.base_type == OBJ_MISCELLANY
-           && item.sub_type == MISC_HORN_OF_GERYON;
+    return item.is_type(OBJ_MISCELLANY, MISC_HORN_OF_GERYON);
 }
 
 bool item_is_spellbook(const item_def &item)
@@ -2217,7 +2213,7 @@ bool can_cut_meat(const item_def &item)
 
 bool is_fruit(const item_def & item)
 {
-    return item.base_type == OBJ_FOOD && item.sub_type == FOOD_FRUIT;
+    return item.is_type(OBJ_FOOD, FOOD_FRUIT);
 }
 
 //

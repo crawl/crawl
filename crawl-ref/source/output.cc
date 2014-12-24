@@ -1131,6 +1131,14 @@ static bool _need_stats_printed()
 }
 #endif
 
+static void _draw_wizmode_flag(const char *word)
+{
+    textcolour(LIGHTMAGENTA);
+    // 3+ for the " **"
+    CGOTOXY(1 + crawl_view.hudsz.x - (3 + strlen(word)), 1, GOTO_STAT);
+    CPRINTF(" *%s*", word);
+}
+
 static void _redraw_title(const string &your_name, const string &job_name)
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
@@ -1164,7 +1172,7 @@ static void _redraw_title(const string &your_name, const string &job_name)
     CGOTOXY(1, 1, GOTO_STAT);
     textcolour(YELLOW);
 #ifdef USE_TILE_LOCAL
-    if (tiles.is_using_small_layout() && you.wizard) textcolour(LIGHTBLUE);
+    if (tiles.is_using_small_layout() && you.wizard) textcolour(LIGHTMAGENTA);
 #endif
     CPRINTF("%s", chop_string(title, WIDTH).c_str());
 #ifdef USE_TILE_LOCAL
@@ -1172,21 +1180,13 @@ static void _redraw_title(const string &your_name, const string &job_name)
 #else
     if (you.wizard)
 #endif
-    {
-        textcolour(LIGHTBLUE);
-        CGOTOXY(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
-        CPRINTF(" *WIZARD*");
-    }
+        _draw_wizmode_flag("WIZARD");
 #ifdef USE_TILE_LOCAL
     else if (you.explore && !tiles.is_using_small_layout())
 #else
     else if (you.explore)
 #endif
-    {
-        textcolour(LIGHTBLUE);
-        CGOTOXY(1 + crawl_view.hudsz.x-10, 1, GOTO_STAT);
-        CPRINTF(" *EXPLORE*");
-    }
+        _draw_wizmode_flag("EXPLORE");
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
 #endif
@@ -1757,8 +1757,10 @@ int update_monster_pane()
     if (i_mons < (int)mons.size())
     {
         // Didn't get to all of them.
-        CGOTOXY(crawl_view.mlistsz.x - 4, crawl_view.mlistsz.y, GOTO_MLIST);
-        CPRINTF(" ... ");
+        CGOTOXY(crawl_view.mlistsz.x - 3, crawl_view.mlistsz.y, GOTO_MLIST);
+        textbackground(COLFLAG_REVERSE);
+        CPRINTF("(…)");
+        textbackground(BLACK);
     }
 
     if (mons.empty())

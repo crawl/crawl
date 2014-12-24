@@ -33,7 +33,6 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "env.h"
 #include "food.h"
 #include "godpassive.h"
@@ -172,11 +171,8 @@ static bool _item_ok_to_clean(int item)
         return false;
 
     // Never clean runes.
-    if (mitm[item].base_type == OBJ_MISCELLANY
-        && mitm[item].sub_type == MISC_RUNE_OF_ZOT)
-    {
+    if (item_is_rune(mitm[item]))
         return false;
-    }
 
     return true;
 }
@@ -751,7 +747,7 @@ static void _maybe_give_corpse_hint(const item_def item)
     if (!crawl_state.game_is_hints_tutorial())
         return;
 
-    if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY
+    if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
         && you.has_spell(SPELL_ANIMATE_SKELETON))
     {
         learned_something_new(HINT_ANIMATE_CORPSE_SKELETON);
@@ -869,11 +865,14 @@ void pickup_menu(int item_link)
     item_list_on_square(items, item_link);
     ASSERT(items.size());
 
+    string prompt = "Pick up what? " + slot_description()
 #ifdef TOUCH_UI
-    string prompt = "Pick up what? (<Enter> or tap header to pick up)";
+                  + " (<Enter> or tap header to pick up)"
 #else
-    string prompt = "Pick up what? (_ for help)";
+                  + " (_ for help)"
 #endif
+                  ;
+
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
     vector<SelItem> selected = select_items(items, prompt.c_str(), false,
@@ -1395,11 +1394,8 @@ bool is_stackable_item(const item_def &item)
         return true;
     }
 
-    if (item.base_type == OBJ_MISCELLANY
-        && item.sub_type == MISC_PHANTOM_MIRROR)
-    {
+    if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR))
         return true;
-    }
 
     return false;
 }
@@ -1426,13 +1422,13 @@ bool items_similar(const item_def &item1, const item_def &item2)
         return false;
 
     // Don't merge trapping nets with other nets.
-    if (item1.base_type == OBJ_MISSILES && item1.sub_type == MI_THROWING_NET
+    if (item1.is_type(OBJ_MISSILES, MI_THROWING_NET)
         && item1.net_placed != item2.net_placed)
     {
         return false;
     }
 
-    if (item1.base_type == OBJ_FOOD && item2.sub_type == FOOD_CHUNK
+    if (item1.is_type(OBJ_FOOD, FOOD_CHUNK)
         && determine_chunk_effect(item1, true) !=
            determine_chunk_effect(item2, true))
     {
@@ -2562,12 +2558,15 @@ void drop()
     }
 
     vector<SelItem> tmp_items;
+    string prompt = "Drop what? " + slot_description()
 #ifdef TOUCH_UI
-    tmp_items = prompt_invent_items("Drop what? (<Enter> or tap header to drop)",
-                                    MT_DROP,
+                  + " (<Enter> or tap header to pick up)"
 #else
-    tmp_items = prompt_invent_items("Drop what? (_ for help)", MT_DROP,
+                  + " (_ for help)"
 #endif
+                  ;
+
+    tmp_items = prompt_invent_items(prompt.c_str(), MT_DROP,
                                      -1, nullptr, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop);
@@ -2828,8 +2827,7 @@ typedef bool (*item_comparer)(const item_def& pickup_item,
 static bool _identical_types(const item_def& pickup_item,
                              const item_def& inv_item)
 {
-    return pickup_item.base_type == inv_item.base_type
-           && pickup_item.sub_type == inv_item.sub_type;
+    return pickup_item.is_type(inv_item.base_type, inv_item.sub_type);
 }
 
 static bool _edible_food(const item_def& pickup_item,
@@ -3064,11 +3062,8 @@ static void _do_autopickup()
             clear_item_pickup_flags(mitm[o]);
 
             const bool pickup_result = move_item_to_inv(o, mitm[o].quantity);
-            if (mitm[o].base_type == OBJ_FOOD
-                && mitm[o].sub_type == FOOD_CHUNK)
-            {
+            if (mitm[o].is_type(OBJ_FOOD, FOOD_CHUNK))
                 mitm[o].flags |= ISFLAG_DROPPED;
-            }
 
             if (pickup_result)
             {
@@ -3124,7 +3119,7 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
         for (int x = 0; x < GXM; ++x)
             for (stack_iterator si(coord_def(x,y)); si; ++si)
                 if (si->defined()
-                    && si->base_type == cls && si->sub_type == sub_type
+                    && si->is_type(cls, sub_type)
                     && !(si->flags & ISFLAG_MIMIC))
                 {
                     return &*si;
@@ -4011,10 +4006,7 @@ bool item_def::is_critical() const
     if (base_type == OBJ_ORBS)
         return true;
 
-    return base_type == OBJ_MISCELLANY
-           && sub_type == MISC_RUNE_OF_ZOT
-           && plus != RUNE_DEMONIC
-           && plus != RUNE_ABYSSAL;
+    return item_is_unique_rune(*this);
 }
 
 // Is item something that no one would usually bother enchanting?

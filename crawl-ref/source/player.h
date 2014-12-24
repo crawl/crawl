@@ -20,6 +20,7 @@
 #ifdef USE_TILE
 #include "tiledoll.h"
 #endif
+#include "timed_effects.h"
 
 #define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
@@ -645,6 +646,7 @@ public:
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
                           const char* hurt_msg = nullptr);
+    void corrode_equipment(const char* corrosion_source = "the acid");
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,

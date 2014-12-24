@@ -231,13 +231,13 @@ static int _get_mons_colour(const monster_info& mi)
         }
     }
 
-    // Backlit monsters are fuzzy and override brands.
+    // Backlit monsters are fuzzy and override colours, but not brands.
     if (!crawl_state.game_is_arena()
         && !you.can_see_invisible()
         && mi.is(MB_INVISIBLE)
         && mi.attitude != ATT_FRIENDLY)
     {
-        col = DARKGREY;
+        col = (col & COLFLAG_MASK) | DARKGREY;
     }
 
     return col;

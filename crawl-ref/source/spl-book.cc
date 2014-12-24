@@ -343,13 +343,13 @@ bool maybe_id_book(item_def &book, bool silent)
     if (book.base_type != OBJ_BOOKS && book.base_type != OBJ_RODS)
         return false;
 
-    if (book.base_type == OBJ_BOOKS && book.sub_type == BOOK_DESTRUCTION)
+    if (book.is_type(OBJ_BOOKS, BOOK_DESTRUCTION))
     {
         ASSERT(fully_identified(book));
         return false;
     }
 
-    if (book.base_type == OBJ_BOOKS && book.sub_type == BOOK_MANUAL)
+    if (book.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
         set_ident_flags(book, ISFLAG_IDENT_MASK);
         return false;
@@ -1025,10 +1025,12 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
 {
     string prompt;
 
-    prompt += make_stringf("Forgetting %s from %s will destroy the book! "
+    prompt += make_stringf("Forgetting %s from %s will destroy the book%s! "
                            "Are you sure?",
                            spell_title(spell),
-                           book->name(DESC_THE).c_str());
+                           book->name(DESC_THE).c_str(),
+                           you_worship(GOD_SIF_MUNA)
+                               ? " and put you under penance" : "");
 
     // Deactivate choice from tile inventory.
     mouse_control mc(MOUSE_MODE_MORE);

@@ -29,7 +29,6 @@
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "errors.h"
@@ -980,19 +979,14 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     {
     case EQ_WEAPON:
         // Hands can have more than just weapons.
-        if (weapon()
-            && weapon()->base_type == OBJ_WEAPONS
-            && weapon()->sub_type == sub_type)
-        {
+        if (weapon() && weapon()->is_type(OBJ_WEAPONS, sub_type))
             ret++;
-        }
         break;
 
     case EQ_STAFF:
         // Like above, but must be magical staff.
         if (weapon()
-            && weapon()->base_type == OBJ_STAVES
-            && weapon()->sub_type == sub_type
+            && weapon()->is_type(OBJ_STAVES, sub_type)
             && (calc_unid || item_type_known(*weapon())))
         {
             ret++;
@@ -2732,6 +2726,30 @@ int get_exp_progress()
     return (you.experience - current) * 100 / (next - current);
 }
 
+static void _recharge_xp_evokers(int exp)
+{
+    FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
+    list_charging_evokers(evokers);
+
+    int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
+                             you.experience_level * 425),
+                        you.experience_level*4 + 30)
+                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
+
+    for (int i = 0; i < NUM_MISCELLANY; ++i)
+    {
+        item_def* evoker = evokers[i];
+        if (!evoker)
+            continue;
+        evoker->evoker_debt -= div_rand_round(exp, xp_factor);
+        if (evoker->evoker_debt <= 0)
+        {
+            evoker->evoker_debt = 0;
+            mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
+        }
+    }
+}
+
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
@@ -2821,7 +2839,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
             _remove_temp_mutation();
     }
 
-    recharge_xp_evokers(exp_gained);
+    _recharge_xp_evokers(exp_gained);
 
     if (you.attribute[ATTR_XP_DRAIN])
     {
@@ -7179,8 +7197,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         // to a player from a dead monster.  We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
-        ouch(amount, kill_type, MID_NOBODY, aux.c_str(),
-             false, source.empty() ? "posthumous revenge" : source.c_str());
+        ouch(amount, kill_type, MID_NOBODY, aux.c_str(), false, source.c_str());
     }
     else
     {
@@ -7249,6 +7266,30 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     return true;
 }
 
+void player::corrode_equipment(const char* corrosion_source)
+{
+    // rCorr protects against 50% of corrosion.
+    if (res_corr() && coinflip())
+    {
+        dprf("rCorr protects.");
+        return;
+    }
+    // always increase duration, but...
+    increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
+                      make_stringf("%s corrodes your equipment!",
+                                   corrosion_source).c_str());
+
+    // the more corrosion you already have, the lower the odds of more
+    const int prev_corr = props["corrosion_amount"].get_int();
+    if (x_chance_in_y(prev_corr, prev_corr + 9))
+        return;
+
+    props["corrosion_amount"].get_int()++;
+    redraw_armour_class = true;
+    wield_change = true;
+    return;
+}
+
 /**
  * Attempts to apply corrosion to the player and deals acid damage.
  *
@@ -7284,7 +7325,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
     }
 
     if (do_corrosion)
-        corrode_actor(&you);
+        corrode_equipment();
 
     // Covers head, hands and feet.
     if (player_equip_unrand(UNRAND_LEAR))
@@ -7843,7 +7884,7 @@ bool player::polymorph(int pow)
               1, TRAN_DRAGON,
               0);
         // need to do a dry run first, as Zin's protection has a random factor
-        if (transform(pow, f, false, true))
+        if (transform(pow, f, true, true))
             break;
         f = TRAN_NONE;
     }

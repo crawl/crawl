@@ -45,23 +45,10 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
                                bool require_visible = true,
                                bool consider_user_options = false);
 
-void timeout_tombs(int duration);
-
-int count_malign_gateways();
-void timeout_malign_gateways(int duration);
-
-void timeout_terrain_changes(int duration, bool force = false);
-
-void setup_environment_effects();
-
-// Lava smokes, swamp water mists.
-void run_environment_effects();
 
 bool player_in_a_dangerous_place(bool *invis = nullptr);
 void bring_to_safety();
 void revive();
-
-int speed_to_duration(int speed);
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance,

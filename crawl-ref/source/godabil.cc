@@ -24,7 +24,6 @@
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "english.h"
 #include "fight.h"
 #include "files.h"
@@ -61,9 +60,11 @@
 #include "potion.h"
 #include "prompt.h"
 #include "religion.h"
+#include "rot.h"
 #include "shout.h"
 #include "skill_menu.h"
 #include "spl-book.h"
+#include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
@@ -1945,6 +1946,378 @@ bool fedhas_shoot_through(const bolt& beam, const monster* victim)
                || victim->neutral());
 }
 
+// Basically we want to break a circle into n_arcs equal sized arcs and find
+// out which arc the input point pos falls on.
+static int _arc_decomposition(const coord_def & pos, int n_arcs)
+{
+    float theta = atan2((float)pos.y, (float)pos.x);
+
+    if (pos.x == 0 && pos.y != 0)
+        theta = pos.y > 0 ? PI / 2 : -PI / 2;
+
+    if (theta < 0)
+        theta += 2 * PI;
+
+    float arc_angle = 2 * PI / n_arcs;
+
+    theta += arc_angle / 2.0f;
+
+    if (theta >= 2 * PI)
+        theta -= 2 * PI;
+
+    return static_cast<int> (theta / arc_angle);
+}
+
+int place_ring(vector<coord_def> &ring_points,
+               const coord_def &origin,
+               mgen_data prototype,
+               int n_arcs,
+               int arc_occupancy,
+               int &seen_count)
+{
+    shuffle_array(ring_points);
+
+    int target_amount = ring_points.size();
+    int spawned_count = 0;
+    seen_count = 0;
+
+    vector<int> arc_counts(n_arcs, arc_occupancy);
+
+    for (unsigned i = 0;
+         spawned_count < target_amount && i < ring_points.size();
+         i++)
+    {
+        int direction = _arc_decomposition(ring_points.at(i)
+                                           - origin, n_arcs);
+
+        if (arc_counts[direction]-- <= 0)
+            continue;
+
+        prototype.pos = ring_points.at(i);
+
+        if (create_monster(prototype, false))
+        {
+            spawned_count++;
+            if (you.see_cell(ring_points.at(i)))
+                seen_count++;
+        }
+    }
+
+    return spawned_count;
+}
+
+// Collect lists of points that are within LOS (under the given env map),
+// unoccupied, and not solid (walls/statues).
+void collect_radius_points(vector<vector<coord_def> > &radius_points,
+                           const coord_def &origin, los_type los)
+{
+    radius_points.clear();
+    radius_points.resize(LOS_RADIUS);
+
+    // Just want to associate a point with a distance here for convenience.
+    typedef pair<coord_def, int> coord_dist;
+
+    // Using a priority queue because squares don't make very good circles at
+    // larger radii.  We will visit points in order of increasing euclidean
+    // distance from the origin (not path distance).  We want a min queue
+    // based on the distance, so we use greater_second as the comparator.
+    priority_queue<coord_dist, vector<coord_dist>,
+                   greater_second<coord_dist> > fringe;
+
+    fringe.push(coord_dist(origin, 0));
+
+    set<int> visited_indices;
+
+    int current_r = 1;
+    int current_thresh = current_r * (current_r + 1);
+
+    int max_distance = LOS_RADIUS * LOS_RADIUS + 1;
+
+    while (!fringe.empty())
+    {
+        coord_dist current = fringe.top();
+        // We're done here once we hit a point that is farther away from the
+        // origin than our maximum permissible radius.
+        if (current.second > max_distance)
+            break;
+
+        fringe.pop();
+
+        int idx = current.first.x + current.first.y * X_WIDTH;
+        if (!visited_indices.insert(idx).second)
+            continue;
+
+        while (current.second > current_thresh)
+        {
+            current_r++;
+            current_thresh = current_r * (current_r + 1);
+        }
+
+        // We don't include radius 0.  This is also a good place to check if
+        // the squares are already occupied since we want to search past
+        // occupied squares but don't want to consider them valid targets.
+        if (current.second && !actor_at(current.first))
+            radius_points[current_r - 1].push_back(current.first);
+
+        for (adjacent_iterator i(current.first); i; ++i)
+        {
+            coord_dist temp(*i, current.second);
+
+            // If the grid is out of LOS, skip it.
+            if (!cell_see_cell(origin, temp.first, los))
+                continue;
+
+            coord_def local = temp.first - origin;
+
+            temp.second = local.abs();
+
+            idx = temp.first.x + temp.first.y * X_WIDTH;
+
+            if (!visited_indices.count(idx)
+                && in_bounds(temp.first)
+                && !cell_is_solid(temp.first))
+            {
+                fringe.push(temp);
+            }
+        }
+
+    }
+}
+
+static int _mushroom_prob(item_def & corpse)
+{
+    int low_threshold = 5;
+    int high_threshold = FRESHEST_CORPSE - 5;
+
+    // Expect this many trials over a corpse's lifetime since this function
+    // is called once for every 10 units of rot_time.
+    int step_size = 10;
+    float total_trials = (high_threshold - low_threshold) / step_size;
+
+    // Chance of producing no mushrooms (not really because of weight_factor
+    // below).
+    float p_failure = 0.5f;
+
+    float trial_prob_f = 1 - powf(p_failure, 1.0f / total_trials);
+
+    // The chance of producing mushrooms depends on the weight of the
+    // corpse involved.  Humans weigh 550 so we will take that as the
+    // base factor here.
+    float weight_factor = mons_weight(corpse.mon_type) / 550.0f;
+
+    trial_prob_f *= weight_factor;
+
+    int trial_prob = static_cast<int>(100 * trial_prob_f);
+
+    return trial_prob;
+}
+
+static bool _mushroom_spawn_message(int seen_targets, int seen_corpses)
+{
+    if (seen_targets <= 0)
+        return false;
+
+    string what  = seen_targets  > 1 ? "Some toadstools"
+                                     : "A toadstool";
+    string where = seen_corpses  > 1 ? "nearby corpses" :
+                   seen_corpses == 1 ? "a nearby corpse"
+                                     : "the ground";
+    mprf("%s grow%s from %s.",
+         what.c_str(), seen_targets > 1 ? "" : "s", where.c_str());
+
+    return true;
+}
+
+// Place a partial ring of toadstools around the given corpse.  Returns
+// the number of mushrooms spawned.  A return of 0 indicates no
+// mushrooms were placed -> some sort of failure mode was reached.
+static int _mushroom_ring(item_def &corpse, int & seen_count)
+{
+    // minimum number of mushrooms spawned on a given ring
+    unsigned min_spawn = 2;
+
+    seen_count = 0;
+
+    vector<vector<coord_def> > radius_points;
+
+    collect_radius_points(radius_points, corpse.pos, LOS_SOLID);
+
+    // So what we have done so far is collect the set of points at each radius
+    // reachable from the origin with (somewhat constrained) 8 connectivity,
+    // now we will choose one of those radii and spawn mushrooms at some
+    // of the points along it.
+    int chosen_idx = random2(LOS_RADIUS);
+
+    unsigned max_size = 0;
+    for (unsigned i = 0; i < LOS_RADIUS; ++i)
+    {
+        if (radius_points[i].size() >= max_size)
+        {
+            max_size = radius_points[i].size();
+            chosen_idx = i;
+        }
+    }
+
+    chosen_idx = random2(chosen_idx + 1);
+
+    // Not enough valid points?
+    if (radius_points[chosen_idx].size() < min_spawn)
+        return 0;
+
+    mgen_data temp(MONS_TOADSTOOL,
+                   BEH_GOOD_NEUTRAL, 0, 0, 0,
+                   coord_def(),
+                   MHITNOT,
+                   MG_FORCE_PLACE,
+                   GOD_NO_GOD,
+                   MONS_NO_MONSTER,
+                   0,
+                   corpse.get_colour());
+
+    float target_arc_len = 2 * sqrtf(2.0f);
+
+    int n_arcs = static_cast<int> (ceilf(2 * PI * (chosen_idx + 1)
+                                   / target_arc_len));
+
+    int spawned_count = place_ring(radius_points[chosen_idx], corpse.pos, temp,
+                                   n_arcs, 1, seen_count);
+
+    return spawned_count;
+}
+
+// Try to spawn 'target_count' mushrooms around the position of
+// 'corpse'.  Returns the number of mushrooms actually spawned.
+// Mushrooms radiate outwards from the corpse following bfs with
+// 8-connectivity.  Could change the expansion pattern by using a
+// priority queue for sequencing (priority = distance from origin under
+// some metric).
+static int _spawn_corpse_mushrooms(item_def& corpse,
+                                  int target_count,
+                                  int& seen_targets)
+
+{
+    seen_targets = 0;
+    if (target_count == 0)
+        return 0;
+
+    int placed_targets = 0;
+
+    queue<coord_def> fringe;
+    set<int> visited_indices;
+
+    // Slight chance of spawning a ring of mushrooms around the corpse (and
+    // skeletonising it) if the corpse square is unoccupied.
+    if (!actor_at(corpse.pos) && one_chance_in(100))
+    {
+        int ring_seen;
+        // It's possible no reasonable ring can be found, in that case we'll
+        // give up and just place a toadstool on top of the corpse (probably).
+        int res = _mushroom_ring(corpse, ring_seen);
+
+        if (res)
+        {
+            corpse.special = 0;
+
+            if (you.see_cell(corpse.pos))
+                mpr("A ring of toadstools grows before your very eyes.");
+            else if (ring_seen > 1)
+                mpr("Some toadstools grow in a peculiar arc.");
+            else if (ring_seen > 0)
+                mpr("A toadstool grows.");
+
+            seen_targets = -1;
+
+            return res;
+        }
+    }
+
+    visited_indices.insert(X_WIDTH * corpse.pos.y + corpse.pos.x);
+    fringe.push(corpse.pos);
+
+    while (!fringe.empty())
+    {
+        coord_def current = fringe.front();
+
+        fringe.pop();
+
+        monster* mons = monster_at(current);
+
+        bool player_occupant = you.pos() == current;
+
+        // Is this square occupied by a non mushroom?
+        if (mons && mons->mons_species() != MONS_TOADSTOOL
+            || player_occupant && !you_worship(GOD_FEDHAS)
+            || !can_spawn_mushrooms(current))
+        {
+            continue;
+        }
+
+        if (!mons)
+        {
+            monster *mushroom = create_monster(
+                        mgen_data(MONS_TOADSTOOL,
+                                  BEH_GOOD_NEUTRAL,
+                                  0,
+                                  0,
+                                  0,
+                                  current,
+                                  MHITNOT,
+                                  MG_FORCE_PLACE,
+                                  GOD_NO_GOD,
+                                  MONS_NO_MONSTER,
+                                  0,
+                                  corpse.get_colour()),
+                                  false);
+
+            if (mushroom)
+            {
+                // Going to explicitly override the die-off timer in
+                // this case since, we're creating a lot of toadstools
+                // at once that should die off quickly.
+                coord_def offset = corpse.pos - current;
+
+                int dist = static_cast<int>(sqrtf(offset.abs()) + 0.5);
+
+                // Trying a longer base duration...
+                int time_left = random2(8) + dist * 8 + 8;
+
+                time_left *= 10;
+
+                mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
+                mushroom->update_ench(temp_en);
+
+                placed_targets++;
+                if (current == you.pos())
+                {
+                    mprf("A toadstool grows %s.",
+                         player_has_feet() ? "at your feet" : "before you");
+                    current = mushroom->pos();
+                }
+                else if (you.see_cell(current))
+                    seen_targets++;
+            }
+            else
+                continue;
+        }
+
+        // We're done here if we placed the desired number of mushrooms.
+        if (placed_targets == target_count)
+            break;
+
+        for (fair_adjacent_iterator ai(current); ai; ++ai)
+        {
+            if (in_bounds(*ai) && mons_class_can_pass(MONS_TOADSTOOL, grd(*ai)))
+            {
+                const int index = ai->x + ai->y * X_WIDTH;
+                if (visited_indices.insert(index).second)
+                    fringe.push(*ai); // Not previously visited.
+            }
+        }
+    }
+
+    return placed_targets;
+}
+
 // Turns corpses in LOS into skeletons and grows toadstools on them.
 // Can also turn zombies into skeletons and destroy ghoul-type monsters.
 // Returns the number of corpses consumed.
@@ -2039,15 +2412,14 @@ int fedhas_fungal_bloom()
         {
             bool corpse_on_pos = false;
 
-            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
+            if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 corpse_on_pos = true;
 
-                const int trial_prob = mushroom_prob(*j);
+                const int trial_prob = _mushroom_prob(*j);
                 const int target_count = 1 + binomial(20, trial_prob);
                 int seen_per;
-                spawn_corpse_mushrooms(*j, target_count, seen_per,
-                                       BEH_GOOD_NEUTRAL, true);
+                _spawn_corpse_mushrooms(*j, target_count, seen_per);
 
                 // Either turn this corpse into a skeleton or destroy it.
                 if (mons_skeleton(j->mon_type))
@@ -2069,7 +2441,7 @@ int fedhas_fungal_bloom()
     }
 
     if (seen_mushrooms > 0)
-        mushroom_spawn_message(seen_mushrooms, seen_corpses);
+        _mushroom_spawn_message(seen_mushrooms, seen_corpses);
 
     if (kills)
         mpr("That felt like a moral victory.");
@@ -2713,8 +3085,7 @@ int count_corpses_in_los(vector<stack_iterator> *positions)
 
         for (stack_iterator stack_it(*rad); stack_it; ++stack_it)
         {
-            if (stack_it->base_type == OBJ_CORPSES
-                && stack_it->sub_type == CORPSE_BODY)
+            if (stack_it->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 if (positions)
                     positions->push_back(stack_it);
@@ -5861,7 +6232,7 @@ void ru_draw_out_power()
            + roll_dice(div_rand_round(you.piety, 20), 6));
     inc_mp(div_rand_round(you.piety, 48)
            + roll_dice(div_rand_round(you.piety, 40), 4));
-    drain_player(25, false, true);
+    drain_player(30, false, true);
 }
 
 bool ru_power_leap()
@@ -6024,7 +6395,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     int dmg = 10;
     //damage scales with XL amd piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
-    int effect = random2(5);
+    int effect = random2(4);
     int duration = 0;
     string message = "";
     enchant_type enchantment = ENCH_NONE;

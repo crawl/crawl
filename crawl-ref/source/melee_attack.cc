@@ -20,7 +20,6 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
@@ -1842,12 +1841,8 @@ void melee_attack::player_weapon_upsets_god()
             did_god_conduct(DID_HASTY, 1);
         }
     }
-    else if (weapon
-             && weapon->base_type == OBJ_STAVES
-             && weapon->sub_type == STAFF_FIRE)
-    {
+    else if (weapon && weapon->is_type(OBJ_STAVES, STAFF_FIRE))
         did_god_conduct(DID_FIRE, 1);
-    }
 }
 
 /* Apply player-specific effects as well as brand damage.
@@ -2179,7 +2174,7 @@ void melee_attack::attacker_sustain_passive_damage()
     if (weap && !avatar)
     {
         if (x_chance_in_y(acid_strength + 1, 30))
-            corrode_actor(attacker);
+            attacker->corrode_equipment();
     }
     else
     {
@@ -3031,7 +3026,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_CORRODE:
         if (defender->slot_item(EQ_BODY_ARMOUR))
-            corrode_actor(defender, atk_name(DESC_THE).c_str());
+            defender->corrode_equipment(atk_name(DESC_THE).c_str());
         break;
 
     case AF_DISTORT:

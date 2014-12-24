@@ -49,7 +49,6 @@
 #include "dgn-shoals.h"
 #include "dlua.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "env.h"
 #include "evoke.h"
 #include "exercise.h"

@@ -3801,9 +3801,9 @@ void unmarshallItem(reader &th, item_def &item)
             item.flags |= ISFLAG_KNOW_TYPE;
     }
 
-    if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
+    if (item.is_type(OBJ_POTIONS, POT_WATER))
         item.sub_type = POT_POISON;
-    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_CHANNELING)
+    if (item.is_type(OBJ_STAVES, STAFF_CHANNELING))
         item.sub_type = STAFF_ENERGY;
 
     if (th.getMinorVersion() < TAG_MINOR_GOD_GIFT)
@@ -3820,21 +3820,21 @@ void unmarshallItem(reader &th, item_def &item)
     }
 
     if (th.getMinorVersion() < TAG_MINOR_BOX_OF_BEASTS_CHARGES
-        && item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BOX_OF_BEASTS)
+        && item.is_type(OBJ_MISCELLANY, MISC_BOX_OF_BEASTS))
     {
         // Give charges to box of beasts. If the player used it
         // already then, well, they got some freebies.
         item.plus = random_range(5, 15, 2);
     }
 
-    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BUGGY_EBONY_CASKET)
+    if (item.is_type(OBJ_MISCELLANY, MISC_BUGGY_EBONY_CASKET))
     {
         item.sub_type = MISC_BOX_OF_BEASTS;
         item.plus = 1;
     }
 
     // was spiked flail; rods can't spawn
-    if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_ROD
+    if (item.is_type(OBJ_WEAPONS, WPN_ROD)
         && th.getMinorVersion() <= TAG_MINOR_FORGOTTEN_MAP)
     {
         item.sub_type = WPN_FLAIL;
@@ -3866,7 +3866,7 @@ void unmarshallItem(reader &th, item_def &item)
             item.special = SPWPN_FLAMING;
     }
 
-    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_HORN_OF_GERYON
+    if (item.is_type(OBJ_MISCELLANY, MISC_HORN_OF_GERYON)
         && th.getMinorVersion() < TAG_MINOR_HORN_GERYON_CHANGE)
     {
         item.evoker_debt = 0;
@@ -3929,7 +3929,7 @@ void unmarshallItem(reader &th, item_def &item)
 
         // Moved under TAG_MINOR_NO_POT_FOOD because it was formerly
         // not restricted to a particular range of minor tags.
-        if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_WAR_CHANTS)
+        if (item.is_type(OBJ_BOOKS, BOOK_WAR_CHANTS))
             item.sub_type = BOOK_BATTLE;
 
         if (item.base_type == OBJ_FOOD && (item.sub_type == FOOD_UNUSED
@@ -3981,7 +3981,7 @@ void unmarshallItem(reader &th, item_def &item)
             artefact_set_property(item, ARTP_SLAYING, slay);
         }
 
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_SLAYING)
+        if (item.is_type(OBJ_JEWELLERY, RING_SLAYING))
         {
              acc = item.plus;
              dam = item.plus2;
@@ -4020,7 +4020,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (th.getMinorVersion() < TAG_MINOR_CUT_CUTLASSES)
     {
-        if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_CUTLASS)
+        if (item.is_type(OBJ_WEAPONS, WPN_CUTLASS))
             item.sub_type = WPN_RAPIER;
     }
 

@@ -270,8 +270,7 @@ int get_trapping_net(const coord_def& where, bool trapped)
 {
     for (stack_iterator si(where); si; ++si)
     {
-        if (si->base_type == OBJ_MISSILES
-            && si->sub_type == MI_THROWING_NET
+        if (si->is_type(OBJ_MISSILES, MI_THROWING_NET)
             && (!trapped || item_is_stationary_net(*si)))
         {
             return si->index();
@@ -1415,7 +1414,7 @@ void mons_clear_trapping_net(monster* mon)
 void free_stationary_net(int item_index)
 {
     item_def &item = mitm[item_index];
-    if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
+    if (item.is_type(OBJ_MISSILES, MI_THROWING_NET))
     {
         const coord_def pos = item.pos;
         // Probabilistically mulch net based on damage done, otherwise

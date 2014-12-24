@@ -22,7 +22,6 @@
 
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
-#include "effects.h"       // For Sceptre of Torment tormenting
 #include "english.h"       // For apostrophise
 #include "env.h"           // For storm bow env.cgrid
 #include "fight.h"
@@ -34,9 +33,11 @@
 #include "player.h"
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
+#include "spl-goditem.h"   // For Sceptre of Torment tormenting
 #include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow
+#include "view.h"          // For arc blade's discharge effect
 
 /*******************
  * Helper functions.
@@ -1024,10 +1025,14 @@ static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
 {
     if (!mondied && one_chance_in(3))
     {
-        if (discharge_monsters(defender->pos(),
-                               75 + random2avg(75, 2),
-                               0,
-                               attacker) == 0)
+        const int pow = 75 + random2avg(75, 2);
+        const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
+        int dam_dealt = 0;
+        for (int i = 0; defender->alive() && i < num_targs; i++)
+            dam_dealt += discharge_monsters(defender->pos(), pow, 0, attacker);
+        if (dam_dealt > 0)
+            scaled_delay(100);
+        else
         {
             if (you.can_see(attacker))
                 mpr("The arc blade crackles.");

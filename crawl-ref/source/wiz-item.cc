@@ -17,7 +17,6 @@
 #include "coordit.h"
 #include "dbg-util.h"
 #include "decks.h"
-#include "effects.h"
 #include "env.h"
 #include "godpassive.h"
 #include "invent.h"

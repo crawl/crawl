@@ -4490,11 +4490,8 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (spec.item_special)
         item.special = spec.item_special;
 
-    if (spec.plus >= 0
-        && (item.base_type == OBJ_BOOKS
-            && item.sub_type == BOOK_MANUAL)
-        || (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT))
+    if (spec.plus >= 0 && item.is_type(OBJ_BOOKS, BOOK_MANUAL)
+        || item_is_rune(item))
     {
         item.plus = spec.plus;
         item_colour(item);

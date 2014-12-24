@@ -351,5 +351,5 @@ void clear_monster_list_colours();
 
 void get_monster_info(vector<monster_info>& mons);
 
-typedef vector<string> (*desc_filter) (const monster_info& mi);
+typedef function<vector<string> (const monster_info& mi)> (desc_filter);
 #endif

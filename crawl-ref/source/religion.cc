@@ -3181,10 +3181,7 @@ bool god_likes_item(god_type god, const item_def& item)
         return false;
 
     if (god_likes_fresh_corpses(god))
-    {
-        return item.base_type == OBJ_CORPSES
-               && item.sub_type == CORPSE_BODY;
-    }
+        return item.is_type(OBJ_CORPSES, CORPSE_BODY);
 
     switch (god)
     {
@@ -3205,8 +3202,7 @@ bool god_likes_item(god_type god, const item_def& item)
                && mons_genus(item.mon_type) == MONS_ORC;
 
     case GOD_ASHENZARI:
-        return item.base_type == OBJ_SCROLLS
-               && item.sub_type == SCR_REMOVE_CURSE;
+        return item.is_type(OBJ_SCROLLS, SCR_REMOVE_CURSE);
 
     default:
         return false;

@@ -27,7 +27,6 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "english.h"
 #include "exercise.h"
 #include "fight.h"
@@ -400,6 +399,21 @@ int zap_power_cap(zap_type z_type)
     return zinfo ? zinfo->power_cap : 0;
 }
 
+int zap_ench_power(zap_type z_type, int pow)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+    if (!zinfo)
+        return pow;
+
+    if (zinfo->power_cap > 0)
+        pow = min(zinfo->power_cap, pow);
+
+    if (zinfo->is_enchantment && zinfo->tohit)
+        return (*zinfo->tohit)(pow);
+    else
+        return pow;
+}
+
 void zappy(zap_type z_type, int power, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -407,9 +421,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     // None found?
     if (zinfo == nullptr)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_ERROR, "Couldn't find zap type %d", z_type);
-#endif
+        dprf("Couldn't find zap type %d", z_type);
         return;
     }
 
@@ -428,10 +440,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
 
     ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
 
-    if (zinfo->is_enchantment && zinfo->tohit)
-        pbolt.ench_power = (*zinfo->tohit)(power);
-    else
-        pbolt.ench_power = power;
+    pbolt.ench_power = zap_ench_power(z_type, power);
 
     if (zinfo->is_enchantment)
         pbolt.hit = AUTOMATIC_HIT;
@@ -708,7 +717,7 @@ void bolt::draw(const coord_def& p)
 #endif
 #ifndef USE_TILE_LOCAL
     cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
-    put_colour_ch(colour == BLACK ? random_colour()
+    put_colour_ch(colour == BLACK ? random_colour(true)
                                   : element_colour(colour),
                   glyph);
 
@@ -1398,7 +1407,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     {
     case BEAM_FIRE:
     case BEAM_STEAM:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
         if (!hurted)
         {
@@ -1431,7 +1440,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_WATER:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (doFlavouredEffects)
         {
             if (!hurted)
@@ -1442,7 +1451,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_COLD:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1465,7 +1474,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ELECTRICITY:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1489,7 +1498,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_ACID:
     {
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1506,7 +1515,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
     case BEAM_POISON:
     {
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
         const int res = mons->res_poison();
         if (!hurted && res > 0)
@@ -1525,7 +1534,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     }
 
     case BEAM_POISON_ARROW:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1553,7 +1562,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         else
         {
-            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
             // Early out if no side effects.
             if (!doFlavouredEffects)
@@ -1618,7 +1627,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_ICE:
         // ice - 40% of damage is cold, other 60% is impact and
         // can't be resisted (except by AC, of course)
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
         if (hurted < original)
         {
             if (doFlavouredEffects)
@@ -1632,7 +1641,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_LAVA:
-        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+        hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
         if (hurted < original)
         {
@@ -1700,7 +1709,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             hurted = 0;
         else
         {
-            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted, true);
+            hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
             if (!doFlavouredEffects)
                 break;
@@ -4551,13 +4560,13 @@ void bolt::knockback_actor(actor *act, int dam)
     const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
 
     const coord_def oldpos = act->pos();
-    ASSERT(ray.pos() == oldpos);
 
     if (act->is_stationary())
         return;
     // We can't do knockback if the beam starts and ends on the same space
     if (source == oldpos)
         return;
+    ASSERT(ray.pos() == oldpos);
 
     coord_def newpos = oldpos;
     for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
@@ -4630,7 +4639,7 @@ bool bolt::god_cares() const
 void bolt::hit_shield(actor* blocker) const
 {
     if (flavour == BEAM_ACID)
-        corrode_actor(blocker);
+        blocker->corrode_equipment();
     if (is_fiery() || flavour == BEAM_STEAM)
     {
         monster* mon = blocker->as_monster();
@@ -5250,7 +5259,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
             if (mon->check_res_magic(ench_power) > 0)
             {
                 // Note only actually used by messages in this case.
-                res_margin = mon->res_magic() - stepdown_value(ench_power, 30, 40, 100, 120);
+                res_margin = mon->res_magic() - ench_power_stepdown(ench_power);
                 return MON_RESIST;
             }
         }
@@ -6074,7 +6083,7 @@ bool bolt::explosion_draw_cell(const coord_def& p)
 #endif
 #ifndef USE_TILE_LOCAL
             cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
-            put_colour_ch(colour == BLACK ? random_colour()
+            put_colour_ch(colour == BLACK ? random_colour(true)
                                           : element_colour(colour, false, p),
                           dchar_glyph(DCHAR_EXPLOSION));
 #endif
@@ -6561,4 +6570,9 @@ void clear_zap_info_on_exit()
         delete zap.damage;
         delete zap.tohit;
     }
+}
+
+int ench_power_stepdown(int pow)
+{
+    return stepdown_value(pow, 30, 40, 100, 120);
 }

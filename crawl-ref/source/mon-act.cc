@@ -19,7 +19,6 @@
 #include "dbg-scan.h"
 #include "delay.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "evoke.h"
 #include "fight.h"
 #include "fineff.h"
@@ -440,8 +439,7 @@ static bool _mons_can_zap_dig(const monster* mons)
            && !mons->submerged()
            && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
            && mons->inv[MSLOT_WAND] != NON_ITEM
-           && mitm[mons->inv[MSLOT_WAND]].base_type == OBJ_WANDS
-           && mitm[mons->inv[MSLOT_WAND]].sub_type == WAND_DIGGING
+           && mitm[mons->inv[MSLOT_WAND]].is_type(OBJ_WANDS, WAND_DIGGING)
            && mitm[mons->inv[MSLOT_WAND]].plus > 0;
 }
 
@@ -3104,10 +3102,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                                && (get_weapon_brand(*si) == SPWPN_HOLY_WRATH
                                    || get_ammo_brand(*si) == SPMSL_SILVER));
         death_ooze_ate_corpse = (mons->type == MONS_DEATH_OOZE
-                                 && ((si->base_type == OBJ_CORPSES
-                                     && si->sub_type == CORPSE_BODY)
-                                 || si->base_type == OBJ_FOOD
-                                     && si->sub_type == FOOD_CHUNK));
+                                 && (si->is_type(OBJ_CORPSES, CORPSE_BODY)
+                                     || si->is_type(OBJ_FOOD, FOOD_CHUNK)));
 
         if (si->base_type != OBJ_GOLD)
         {
@@ -4493,7 +4489,7 @@ static void _heated_area(monster* mons)
 
     // rF protects:
     const int adjusted_damage = resist_adjust_damage(mons,
-                                BEAM_FIRE, timescaled, true);
+                                BEAM_FIRE, timescaled);
     // So does AC:
     const int final_damage = max(0, adjusted_damage
                                  - random2(mons->armour_class()));

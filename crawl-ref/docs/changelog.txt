@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-3177-ge5ac76f)
+Stone Soup 0.16 (up to 0.16-a0-3280-g3a29b53)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -288,6 +288,8 @@ Interface
 * Monster AC, EV, and MR are now displayed as bars in their descriptions.
 * Monster spell descriptions can now be examined through their descriptions, in
   the same way as books & rods.
+* Odds of hex success is now displayed when targeting monsters, or when
+  examining their spells.
 * The screen now flashes on attempting to autoexplore with monsters in view,
   indicating where the relevant monsters are.
 * Stealth is now displayed as a bar in the % screen. (The old 'stealth words')

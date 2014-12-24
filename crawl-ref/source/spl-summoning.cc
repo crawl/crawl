@@ -2012,7 +2012,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     // If not, look for a corpse and butcher it.
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
             && mons_skeleton(si->mon_type)
             && mons_class_can_be_zombified(si->mon_type))
         {
@@ -2071,8 +2071,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     int co = -1;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES
-            && si->sub_type == CORPSE_BODY
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
             && mons_class_can_be_zombified(si->mon_type))
         {
             found = true;
@@ -2265,7 +2264,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         // Count up number/size of corpses at this location.
         for (stack_iterator si(*ri); si; ++si)
         {
-            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 if (!actual)
                 {

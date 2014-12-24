@@ -18,7 +18,6 @@
 #include "colour.h"
 #include "describe.h"
 #include "directn.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
@@ -1147,6 +1146,50 @@ static void _spellcasting_corruption(spell_type spell)
     ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, source);
 }
 
+// Returns the nth triangular number.
+static int _triangular_number(int n)
+{
+    return n * (n+1) / 2;
+}
+
+/**
+ * Compute success chance for MR-checking spells and abilities.
+ *
+ * @param mr The magic resistance of the target.
+ * @param powc The enchantment power.
+ * @param scale The denominator of the result.
+ *
+ * @return The chance, out of scale, that the enchantment affects the target.
+ */
+int hex_success_chance(const int mr, int powc, int scale)
+{
+    powc = ench_power_stepdown(powc);
+    const int target = mr + 100 - powc;
+
+    if (target <= 0)
+        return scale;
+    if (target > 200)
+        return 0;
+    if (target <= 100)
+        return scale - scale * _triangular_number(target) / (101 * 100);
+    return scale * _triangular_number(201 - target) / (101 * 100);
+}
+
+// Include success chance in targeter for spells checking monster MR.
+vector<string> desc_success_chance(const monster_info& mi, int pow)
+{
+    vector<string> descs;
+    const int mr = mi.res_magic();
+    if (mr == MAG_IMMUNE)
+        descs.push_back("magic immune");
+    else
+    {
+        descs.push_back(make_stringf("chance %d%%",
+                                     hex_success_chance(mr, pow, 100)).c_str());
+    }
+    return descs;
+}
+
 /**
  * Targets and fires player-cast spells & spell-like effects.
  *
@@ -1222,6 +1265,20 @@ spret_type your_spells(spell_type spell, int powc,
 
         targetter *hitfunc = _spell_targetter(spell, powc, range);
 
+        // Add success chance to targetted spells checking monster MR
+        const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
+                              && testbits(flags, SPFLAG_DIR_OR_TARGET)
+                              && !testbits(flags, SPFLAG_HELPFUL);
+        desc_filter additional_desc = nullptr;
+        if (mr_check)
+        {
+            const zap_type zap = spell_to_zap(spell);
+            const int eff_pow = zap == NUM_ZAPS ? powc
+                                                : zap_ench_power(zap, powc);
+            additional_desc = bind(desc_success_chance, placeholders::_1,
+                                   eff_pow);
+        }
+
         string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
@@ -1230,7 +1287,8 @@ spret_type your_spells(spell_type spell, int powc,
                              needs_path, true, dont_cancel_me, prompt,
                              title.c_str(),
                              testbits(flags, SPFLAG_NOT_SELF),
-                             hitfunc))
+                             hitfunc,
+                             additional_desc))
         {
             if (hitfunc)
                 delete hitfunc;
