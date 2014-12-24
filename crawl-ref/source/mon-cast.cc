@@ -1591,7 +1591,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             range = _mons_spell_range(theBeam.origin_spell, *mons);
         }
     }
-    bolt_parent_init(&theBeam, &pbolt);
+    bolt_parent_init(theBeam, pbolt);
     pbolt.source = mons->pos();
     pbolt.is_tracer = false;
     if (!pbolt.is_enchantment())
@@ -3142,7 +3142,7 @@ static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type
 
     for (bolt &child : beams)
     {
-        bolt_parent_init(&parent_beam, &child);
+        bolt_parent_init(parent_beam, child);
         fire_tracer(caster, child);
         beam.friend_info += child.friend_info;
         beam.foe_info    += child.foe_info;
@@ -6532,7 +6532,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
                                             ZAP_DAZZLING_SPRAY);
         for (bolt &child : beams)
         {
-            bolt_parent_init(&pbolt, &child);
+            bolt_parent_init(pbolt, child);
             child.fire();
         }
         return;
