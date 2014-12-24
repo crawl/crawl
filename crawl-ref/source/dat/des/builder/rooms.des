@@ -111,7 +111,7 @@ function sroom_morgue(e)
     local weap = ""
     if you.in_branch("Geh") then
         weap = " ego:flaming ident:type"
-    elseif you.in_branch("Coc") then
+    elseif you.in_branch("Nor") then
         weap = " ego:freezing ident:type"
     elseif you.in_branch("Dis") then
         weap = " good_item"
@@ -135,7 +135,7 @@ function sroom_morgue(e)
         bodies = "fire giant corpse / fire giant skeleton / "
                  .. "fire dragon corpse / fire dragon skeleton"
         bodies_chance = 40
-    elseif you.in_branch("Coc") then
+    elseif you.in_branch("Nor") then
         mons[5] = "hydra zombie w:3 / hydra simulacrum w:3 / "
                  .. "alligator snapping turtle zombie w:2 / "
                  .. "alligator snapping turtle skeleton w:2"
@@ -303,7 +303,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_morgue
-DEPTH:  Depths, Crypt, Dis, Tar, Coc, Geh
+DEPTH:  Depths, Crypt, Dis, Tar, Nor, Geh
 TAGS:   special_room allow_dup unrand
 WEIGHT: 29 (Depths:1-3), 34
 : sroom_morgue(_G)
