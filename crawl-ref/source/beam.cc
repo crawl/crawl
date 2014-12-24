@@ -2240,45 +2240,45 @@ bool imb_can_splash(coord_def origin, coord_def center,
     return true;
 }
 
-void bolt_parent_init(bolt *parent, bolt *child)
+void bolt_parent_init(const bolt &parent, bolt &child)
 {
-    child->name           = parent->name;
-    child->short_name     = parent->short_name;
-    child->aux_source     = parent->aux_source;
-    child->source_id      = parent->source_id;
-    child->origin_spell   = parent->origin_spell;
-    child->glyph          = parent->glyph;
-    child->colour         = parent->colour;
+    child.name           = parent.name;
+    child.short_name     = parent.short_name;
+    child.aux_source     = parent.aux_source;
+    child.source_id      = parent.source_id;
+    child.origin_spell   = parent.origin_spell;
+    child.glyph          = parent.glyph;
+    child.colour         = parent.colour;
 
-    child->flavour        = parent->flavour;
-    child->origin_spell   = parent->origin_spell;
+    child.flavour        = parent.flavour;
+    child.origin_spell   = parent.origin_spell;
 
     // We don't copy target since that is often overriden.
-    child->thrower        = parent->thrower;
-    child->source         = parent->source;
-    child->source_name    = parent->source_name;
-    child->attitude       = parent->attitude;
+    child.thrower        = parent.thrower;
+    child.source         = parent.source;
+    child.source_name    = parent.source_name;
+    child.attitude       = parent.attitude;
 
-    child->pierce         = parent->pierce ;
-    child->is_explosion   = parent->is_explosion;
-    child->ex_size        = parent->ex_size;
-    child->foe_ratio      = parent->foe_ratio;
+    child.pierce         = parent.pierce ;
+    child.is_explosion   = parent.is_explosion;
+    child.ex_size        = parent.ex_size;
+    child.foe_ratio      = parent.foe_ratio;
 
-    child->is_tracer      = parent->is_tracer;
-    child->is_targeting   = parent->is_targeting;
+    child.is_tracer      = parent.is_tracer;
+    child.is_targeting   = parent.is_targeting;
 
-    child->range          = parent->range;
-    child->hit            = parent->hit;
-    child->damage         = parent->damage;
-    if (parent->ench_power != -1)
-        child->ench_power = parent->ench_power;
+    child.range          = parent.range;
+    child.hit            = parent.hit;
+    child.damage         = parent.damage;
+    if (parent.ench_power != -1)
+        child.ench_power = parent.ench_power;
 
-    child->friend_info.dont_stop = parent->friend_info.dont_stop;
-    child->foe_info.dont_stop    = parent->foe_info.dont_stop;
-    child->dont_stop_player      = parent->dont_stop_player;
+    child.friend_info.dont_stop = parent.friend_info.dont_stop;
+    child.foe_info.dont_stop    = parent.foe_info.dont_stop;
+    child.dont_stop_player      = parent.dont_stop_player;
 
 #ifdef DEBUG_DIAGNOSTICS
-    child->quiet_debug    = parent->quiet_debug;
+    child.quiet_debug    = parent.quiet_debug;
 #endif
 }
 
@@ -2294,7 +2294,7 @@ static void _maybe_imb_explosion(bolt *parent, coord_def center)
         return;
     bolt beam;
 
-    bolt_parent_init(parent, &beam);
+    bolt_parent_init(*parent, beam);
     beam.name           = "mystic blast";
     beam.aux_source     = "orb of energy";
     beam.range          = 3;
@@ -2378,7 +2378,7 @@ static void _explosive_bolt_explode(bolt *parent, coord_def pos)
 {
     bolt beam;
 
-    bolt_parent_init(parent, &beam);
+    bolt_parent_init(*parent, beam);
     beam.name         = "fiery explosion";
     beam.aux_source   = "explosive bolt";
     beam.damage       = dice_def(3, 9 + parent->ench_power / 6);
