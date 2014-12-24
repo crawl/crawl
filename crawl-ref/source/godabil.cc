@@ -7,9 +7,10 @@
 
 #include "godabil.h"
 
+#include <cmath>
+#include <numeric>
 #include <queue>
 #include <sstream>
-#include <numeric>
 
 #include "act-iter.h"
 #include "areas.h"
