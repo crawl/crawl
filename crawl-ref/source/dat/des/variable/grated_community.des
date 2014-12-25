@@ -307,9 +307,9 @@ NAME: grated_community_mu_troll_home
 TAGS: grated_community_mu_home grated_community_mu_home5 unrand
 MONS: patrolling iron troll / patrolling deep troll
 FTILE:   1.c~+#$%& = floor_dirt
-: dgn.delayed_decay_extra(_G, '%', 'w:20 any skeleton / w:5 any chunk', 'any / nothing')
 KITEM:   $ = animal skin
 NSUBST:  . = 7:% / 2:$ / *:.
+: dgn.delayed_decay_extra(_G, '%', 'w:20 any skeleton / w:5 any chunk', 'any / nothing')
 KFEAT:   ~ = floor
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \

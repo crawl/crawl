@@ -1575,7 +1575,6 @@ ORIENT: north
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-9
 MONS:   big kobold, kobold
-: dgn.delayed_decay(_G, 'C', 'human corpse')
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \
                                walk_dist = 0, excl_rad = 0 }
@@ -1583,6 +1582,7 @@ KMONS:  p = plant
 NSUBST: . = 15:2 / *:.
 SUBST:  t = tp`
 NSUBST: ' = 5:C / 5:2
+: dgn.delayed_decay(_G, 'C', 'human corpse')
 KPROP:  ` = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1803,13 +1803,13 @@ TAGS:    no_monster_gen
 ORIENT:  northwest
 MONS:    big kobold, patrolling kobold demonologist, kobold, plant
 MONS:    lesser demon, obsidian statue
-: dgn.delayed_decay(_G, 'C', 'halfling corpse / halfling skeleton')
 KMONS:   g = bush
 SHUFFLE: !'
 NSUBST:  ! = 3:C / 4:- / 2:5 / *:.
 NSUBST:  ' = 2:C / *:.
 NSUBST:  . = 10:3 / 4:5
 SUBST:  .z = .:200 W:35 4:20
+: dgn.delayed_decay(_G, 'C', 'halfling corpse / halfling skeleton')
 KPROP:  -C = bloody
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx

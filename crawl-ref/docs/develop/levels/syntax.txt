@@ -625,6 +625,12 @@ ITEM:     (list of items, separated by comma)
           the same location, use delayed_decay_extra:
              : dgn.delayed_decay_extra(_G, 'e', 'human corpse', 'mace, shield')
 
+          IMPORTANT: the delayed_decay line should always come after any
+          shuffles or substitutions of the relevant glyphs. This is because
+          it is equivalent to a KITEM plus a MARKER; the former applies to
+          the glyph after all substitutions, while the latter considers only
+          those substitutions that precede the delayed_decay call.
+
           Randart spell books
           -------------------
           You can specify random artefact spell books using:

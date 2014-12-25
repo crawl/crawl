@@ -789,8 +789,8 @@ ENDMAP
 NAME:   st_small_mortuary
 DEPTH:  Crypt
 KMONS:  1 : vampire mage w:20 / necromancer
-: dgn.delayed_decay(_G, 'd', 'human corpse')
 NSUBST: ' = 5:d / *:.
+: dgn.delayed_decay(_G, 'd', 'human corpse')
 MAP
    ccccccccc
  ccc...1...ccc
