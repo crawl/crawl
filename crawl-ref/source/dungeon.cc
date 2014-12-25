@@ -3204,20 +3204,6 @@ static bool _builder_normal()
     return true;
 }
 
-// Used to nuke shafts placed in corridors on low levels - it's just
-// too nasty otherwise.
-// Well, actually this just checks if it's next to a non-passable
-// square. (jpeg)
-static bool _shaft_is_in_corridor(const coord_def& c)
-{
-    for (orth_adjacent_iterator ai(c); ai; ++ai)
-    {
-        if (!(in_bounds(*ai) && feat_has_solid_floor(grd(*ai))))
-            return true;
-    }
-    return false;
-}
-
 static void _place_gozag_shop(dungeon_feature_type stair)
 {
     string key = make_stringf(GOZAG_SHOP_KEY,
@@ -3313,12 +3299,16 @@ static void _place_traps()
     int level_number = env.absdepth0;
 
     ASSERT_RANGE(num_traps, 0, MAX_TRAPS + 1);
+    dprf("attempting to place %d traps", num_traps);
 
     for (int i = 0; i < num_traps; i++)
     {
         trap_def& ts(env.trap[i]);
         if (ts.type != TRAP_UNASSIGNED)
+        {
+            dprf("trap %d already placed (by a vault?)", i);
             continue;
+        }
 
         int tries;
         for (tries = 0; tries < 200; ++tries)
@@ -3334,36 +3324,25 @@ static void _place_traps()
         }
 
         if (tries == 200)
-            break;
-
-        while (ts.type >= NUM_TRAPS)
-            ts.type = random_trap_for_place();
-
-        if (ts.type == TRAP_SHAFT && level_number <= 7)
         {
-            // Disallow shaft construction in corridors!
-            if (_shaft_is_in_corridor(ts.pos))
-            {
-                // Reroll until we get a different type of trap
-                while (ts.type == TRAP_SHAFT || ts.type >= NUM_TRAPS)
-                    ts.type = random_trap_for_place();
-            }
+            dprf("tried %d times to place a trap & gave up", tries);
+            break;
         }
 
-        // Only teleport, shaft, alarm and Zot traps are interesting enough to
-        // be placed randomly.  Until the formula is overhauled, let's just
-        // skip creation if the old code would pick a boring one.
-        if (trap_category(ts.type) == DNGN_TRAP_MECHANICAL)
+        const trap_type type = random_trap_for_place();
+        if (ts.type == NUM_TRAPS)
         {
-            ts.type = TRAP_UNASSIGNED;
+            dprf("failed to find a trap type to place");
             continue;
         }
 
+        ts.type = type;
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
         env.tgrid(ts.pos) = i;
         if (ts.type == TRAP_SHAFT && _shaft_known(level_number))
             ts.reveal();
         ts.prepare_ammo();
+        dprf("placed a trap");
     }
 
     if (player_in_branch(BRANCH_SPIDER))
