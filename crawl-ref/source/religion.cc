@@ -3190,13 +3190,15 @@ void set_god_ability_slots()
             // Animate Dead doesn't have its own hotkey; it steals
             // Animate Remains'
             && power.abil != ABIL_YRED_ANIMATE_DEAD
-            && find(begin(you.ability_letter_table), end(you.ability_letter_table),
-                    power.abil) == end(you.ability_letter_table)
+            && find(begin(you.ability_letter_table),
+                    end(you.ability_letter_table), power.abil)
+               == end(you.ability_letter_table)
             && you.ability_letter_table[num] == ABIL_NON_ABILITY)
-         {
+        {
             you.ability_letter_table[num] = power.abil;
+            auto_assign_ability_slot(power.abil, num);
             ++num;
-         }
+        }
     }
 }
 
