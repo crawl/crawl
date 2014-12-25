@@ -113,7 +113,7 @@ struct ability_def
     ability_flags       flags;          // used for additional cost notices
 };
 
-static int  _find_ability_slot(const ability_def& abil);
+static int _find_ability_slot(ability_type abil);
 static spret_type _do_ability(const ability_def& abil, bool fail);
 static void _pay_ability_costs(const ability_def& abil);
 static int _scale_piety_cost(ability_type abil, int original_cost);
@@ -735,7 +735,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     // Look through the table to see if there's a preference, else find
     // a new empty slot for this ability. - bwr
-    const int index = _find_ability_slot(abil);
+    const int index = _find_ability_slot(abil.ability);
     if (index != -1)
         result.hotkey = index_to_letter(index);
     else
@@ -3285,7 +3285,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
  * @param[in] slot current slot of the ability
  * @returns the new slot of the ability if it was moved, slot otherwise.
  */
-static int _auto_assign_ability_slot(ability_type abil_type, int slot)
+int auto_assign_ability_slot(ability_type abil_type, int slot)
 {
     const string abilname = lowercase_string(ability_name(abil_type));
     bool overwrite = false;
@@ -3310,6 +3310,8 @@ static int _auto_assign_ability_slot(ability_type abil_type, int slot)
                 {
                     // Unassigned or already assigned to this ability.
                     you.ability_letter_table[index] = abil_type;
+                    if (slot != index)
+                        you.ability_letter_table[slot] = ABIL_NON_ABILITY;
                     return index;
                 }
                 else if (overwrite)
@@ -3331,17 +3333,16 @@ static int _auto_assign_ability_slot(ability_type abil_type, int slot)
 
 // Returns an index (0-51) if successful, -1 if you should
 // just use the next one.
-static int _find_ability_slot(const ability_def &abil)
+static int _find_ability_slot(const ability_type abil)
 {
-    ability_type abil_type = abil.ability;
     for (int slot = 0; slot < 52; slot++)
         // Placeholder handling, part 2: The ability we have might
         // correspond to a placeholder, in which case the ability letter
         // table will contain that placeholder. Convert the latter to
         // its corresponding ability before comparing the two, so that
         // we'll find the placeholder's index properly.
-        if (fixup_ability(you.ability_letter_table[slot]) == abil.ability)
-            return _auto_assign_ability_slot(abil_type, slot);
+        if (fixup_ability(you.ability_letter_table[slot]) == abil)
+            return slot;
 
     // No requested slot, find new one and make it preferred.
 
@@ -3354,7 +3355,7 @@ static int _find_ability_slot(const ability_def &abil)
 
     ASSERT(first_slot < 52);
 
-    switch (abil_type)
+    switch (abil)
     {
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_TSO_BLESS_WEAPON:
@@ -3394,8 +3395,8 @@ static int _find_ability_slot(const ability_def &abil)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
-            you.ability_letter_table[slot] = abil_type;
-            return _auto_assign_ability_slot(abil_type, slot);
+            you.ability_letter_table[slot] = abil;
+            return auto_assign_ability_slot(abil, slot);
         }
     }
 
@@ -3404,8 +3405,8 @@ static int _find_ability_slot(const ability_def &abil)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
-            you.ability_letter_table[slot] = abil_type;
-            return _auto_assign_ability_slot(abil_type, slot);
+            you.ability_letter_table[slot] = abil;
+            return auto_assign_ability_slot(abil, slot);
         }
     }
 
