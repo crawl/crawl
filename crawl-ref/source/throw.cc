@@ -885,7 +885,9 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     pbolt.pierce    = false;
     pbolt.is_tracer = false;
 
-    pbolt.loudness = ammo_type_damage(item.sub_type) / 3;
+    pbolt.loudness = item.base_type == OBJ_MISSILES
+                   ? ammo_type_damage(item.sub_type) / 3
+                   : 0; // Maybe not accurate, but reflects the damage.
 
     // Mark this item as thrown if it's a missile, so that we'll pick it up
     // when we walk over it.
