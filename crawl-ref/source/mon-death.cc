@@ -2096,12 +2096,14 @@ item_def* monster_die(monster* mons, killer_type killer,
             // killing born-friendly monsters.
             if (gives_player_xp
                 && (you_worship(GOD_MAKHLEB)
+                    || you_worship(GOD_PAKELLAS)
                     || you_worship(GOD_VEHUMET)
                     || you_worship(GOD_SHINING_ONE)
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
                 && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0))
+                && (you_worship(GOD_PAKELLAS)
+                    || random2(you.piety) >= piety_breakpoint(0)))
             {
                 int hp_heal = 0, mp_heal = 0;
 
@@ -2115,6 +2117,7 @@ item_def* monster_die(monster* mons, killer_type killer,
                     hp_heal = random2(1 + 2 * mons->get_experience_level());
                     mp_heal = random2(2 + mons->get_experience_level() / 3);
                     break;
+                case GOD_PAKELLAS:
                 case GOD_VEHUMET:
                     mp_heal = 1 + random2(mons->get_experience_level() / 2);
                     break;

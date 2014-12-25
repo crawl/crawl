@@ -1217,6 +1217,8 @@ static bool _ball_of_energy()
         }
     }
 
+    did_god_conduct(DID_CHANNEL, 5, true);
+
     return ret;
 }
 
@@ -2254,6 +2256,8 @@ bool evoke_item(int slot, bool check_range)
             pract = 1;
             did_work = true;
             count_action(CACT_EVOKE, OBJ_STAVES << 16 | STAFF_ENERGY);
+
+            did_god_conduct(DID_CHANNEL, 1, true);
         }
         break;
 

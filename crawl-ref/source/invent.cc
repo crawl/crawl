@@ -1556,6 +1556,15 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (item.base_type == OBJ_RODS && oper == OPER_ATTACK)
         return true;
 
+    // The consequences of evokables are generally known unless it's a deck
+    // and you don't know what kind of a deck it is.
+    if (item.base_type == OBJ_MISCELLANY && !is_deck(item)
+        && oper == OPER_EVOKE && god_hates_item(item))
+    {
+        penance = true;
+        return true;
+    }
+
     // Everything else depends on knowing the item subtype/brand.
     if (!item_ident(item, ISFLAG_KNOW_TYPE))
         return false;
@@ -1573,7 +1582,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (nasty_stasis(item, oper))
         return true;
 
-    if (oper == OPER_ATTACK && god_hates_item(item))
+    if (oper == OPER_ATTACK && god_hates_item(item)
+        && !you_worship(GOD_PAKELLAS))
     {
         penance = true;
         return true;
@@ -1624,6 +1634,12 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
 
         if (is_artefact(item) && artefact_property(item, ARTP_DRAIN))
             return true;
+    }
+
+    if (oper == OPER_EVOKE && god_hates_item(item))
+    {
+        penance = true;
+        return true;
     }
 
     return false;

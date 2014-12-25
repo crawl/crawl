@@ -1253,6 +1253,10 @@ static void _regenerate_hp_and_mp(int delay)
 
     ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
+    // Pakellas blocks MP regeneration.
+    if (you_worship(GOD_PAKELLAS))
+        return;
+
     // Don't let DD use guardian spirit for free HP, since their
     // damage shaving is enough. (due, dpeg)
     if (you.spirit_shield() && you.species == SP_DEEP_DWARF)

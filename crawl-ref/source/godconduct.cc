@@ -70,7 +70,7 @@ static const char *conducts[] =
     "Souled Friend Died", "Attack In Sanctuary",
     "Kill Artificial", "Destroy Spellbook",
     "Exploration", "Desecrate Holy Remains", "Seen Monster",
-    "Fire", "Kill Fiery", "Sacrificed Love"
+    "Fire", "Kill Fiery", "Sacrificed Love", "Channel",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -458,7 +458,20 @@ static peeve_map divine_peeves[] =
     // GOD_RU,
     peeve_map(),
     // GOD_PAKELLAS
-    peeve_map(),
+    {
+        { DID_SPELL_MEMORISE, {
+            10, 10
+        } },
+        { DID_SPELL_CASTING, {
+            1, 5,
+        } },
+        { DID_SPELL_PRACTISE, {
+            1, 0, nullptr, " doesn't appreciate your training magic!"
+        } },
+        { DID_CHANNEL, {
+            1, 1,
+        } },
+    },
 };
 
 
@@ -846,7 +859,14 @@ static like_map divine_likes[] =
         } },
     },
     // GOD_PAKELLAS,
-    like_map(),
+    {
+        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
+        { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
+        { DID_KILL_WIZARD, {
+            -6, 10, 0, " appreciates your killing of a magic user."
+        } },
+    },
 };
 
 /**
