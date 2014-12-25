@@ -274,6 +274,8 @@ KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 ITEM:  fruit q:1 no_mimic
 ITEM:  fruit no_mimic q:1
 ITEM:  royal jelly q:2 no_mimic, bread ration q:3 no_mimic
+SUBST:  D : DDDDE
+NSUBST: D = 1:A / 2:d / 2:f / 1:h, E = 1:d / 1:e / 2:f / 2:h
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'h', 'spriggan skeleton')
 : else
@@ -284,8 +286,6 @@ ITEM:  royal jelly q:2 no_mimic, bread ration q:3 no_mimic
 : else
 :     dgn.delayed_decay(_G, 'A', 'ogre skeleton')
 : end
-SUBST:  D : DDDDE
-NSUBST: D = 1:A / 2:d / 2:f / 1:h, E = 1:d / 1:e / 2:f / 2:h
 MAP
  cccccccccc
 ccxx1xh=DDc

@@ -176,6 +176,13 @@ ENDMAP
 NAME:    hangedman_player_shredder
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
 DEPTH:   Dis:1-6, Zot:1-4
+SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
+SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
+NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
+SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
+NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
+NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
+SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
 : if you.in_branch("Dis") then
 KMONS:   01 = tormentor
 KMONS:   23 = reaper
@@ -207,13 +214,6 @@ KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
 KITEM:   % = % / * w:2
 : end
 KMONS:   H = iron dragon
-SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
-SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
-NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
-SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
-NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
-NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
-SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
 : if you.in_branch("Dis") then
 : dis_statues(_G)
 : end
@@ -590,7 +590,6 @@ KFEAT:   Z = known zot trap
 KITEM:   d = battleaxe no_pickup / great mace no_pickup      / \
              great sword no_pickup / glaive no_pickup        / \
              scythe good_item no_pickup w:5
-: dgn.delayed_decay(_G, 'e', 'human skeleton')
 NSUBST:  > = 1 = ((<d / 1 = ))>e / 2 = >:1 .:49 / * = ...de
 # Always place at least one door per room, possibly wider or multiplied.
 # Variation provided across either half of the vault and per-room.
@@ -610,6 +609,7 @@ NSUBST:  S = 2 = 1:3 2:1 .:1 / * = 1:4 .:1, T = 2 = 1:3 2:1 .:1 / * = 1:4 .:1
 NSUBST:  U = 1:. / 1:1 / * = 1:4 .:1, W = 2:. / 1:1 / 1 = 1:4 .:1
 NSUBST:  X = 1:2 / 1 = 1:3 2:1 .:1 / * = 1:4 .:1, Y = 2:2 / * = 1:4 .:1
 KMASK:   wl = no_monster_gen
+: dgn.delayed_decay(_G, 'e', 'human skeleton')
 # : dis_statues(_G)
 MAP
  ...............................................
