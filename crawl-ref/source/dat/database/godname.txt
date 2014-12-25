@@ -67,6 +67,10 @@ Ru lastname
 
 Ru the Awakened
 %%%%
+Pakellas lastname
+
+Pakellas the Inventive
+%%%%
 Xom lastname
 
 w:280

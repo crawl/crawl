@@ -533,6 +533,12 @@ An iron grate
 A rusted iron grate, brittle enough to be disrupted with a spell or a wand
 quite easily. It is too strong to be breakable by hand, however.
 %%%%
+An oddly glowing altar of Pakellas
+
+Strange half-completed devices, tools beyond your comprehension, and a
+persistent light glowing in odd colours all adorn this altar to Pakellas the
+Inventive.
+%%%%
 An open door
 
 A wooden door.

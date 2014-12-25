@@ -807,6 +807,14 @@ Okawaru welcome
 
 Okawaru says: Bring me glory in combat!
 %%%%
+Pakellas penance
+
+Pakellas says: Approach this problem some other way!
+%%%%
+Pakellas welcome
+
+Pakellas says: Let your inventiveness lead the way!
+%%%%
 Qazlal penance
 
 Qazlal thunders: Do not interfere with the natural order!

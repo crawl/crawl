@@ -385,6 +385,11 @@ enum ability_type
     ABIL_RU_DRAW_OUT_POWER = 1200,
     ABIL_RU_POWER_LEAP,
     ABIL_RU_APOCALYPSE,
+    // Pakellas
+    ABIL_PAKELLAS_MINOR_DEVICE_SURGE = 1220,
+    ABIL_PAKELLAS_QUICK_CHARGE,
+    ABIL_PAKELLAS_DEVICE_SURGE,
+    ABIL_PAKELLAS_MAJOR_DEVICE_SURGE,
 
     ABIL_RU_SACRIFICE_PURITY,
         ABIL_FIRST_SACRIFICE = ABIL_RU_SACRIFICE_PURITY,
@@ -1653,6 +1658,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
+    DNGN_ALTAR_PAKELLAS,
     DNGN_ALTAR_ECUMENICAL,
 #endif
 
@@ -1718,6 +1724,7 @@ enum dungeon_feature_type
     DNGN_TRAP_SHADOW,
     DNGN_TRAP_SHADOW_DORMANT,
     DNGN_ALTAR_ECUMENICAL,
+    DNGN_ALTAR_PAKELLAS,
 #endif
 
     NUM_FEATURES
@@ -2173,6 +2180,7 @@ enum god_type
     GOD_GOZAG,
     GOD_QAZLAL,
     GOD_RU,
+    GOD_PAKELLAS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
