@@ -221,7 +221,17 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     else // just to make sure
         you.redraw_quiver = true;
 
-    // Remove the moved items from last_drop if they're there.
-    you.last_pickup.erase(to_slot);
-    you.last_pickup.erase(from_slot);
+    // Swap the moved items in last_pickup if they're there.
+    if (!you.last_pickup.empty())
+    {
+        auto &last_pickup = you.last_pickup;
+        int to_count = lookup(last_pickup, to_slot, 0);
+        int from_count = lookup(last_pickup, from_slot, 0);
+        last_pickup.erase(to_slot);
+        last_pickup.erase(from_slot);
+        if (from_count > 0)
+            last_pickup[to_slot] = from_count;
+        if (to_count > 0)
+            last_pickup[from_slot] = to_count;
+    }
 }
