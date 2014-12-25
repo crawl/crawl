@@ -482,6 +482,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
     if (one_chance_in(4))
     {
         _wucad_miscast(&you, random2(9), random2(70));
+        did_god_conduct(DID_CHANNEL, 10, true);
         return false;
     }
 
@@ -492,6 +493,8 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
     *pract    = 1;
     *did_work = true;
+
+    did_god_conduct(DID_CHANNEL, 10, true);
 
     return false;
 }

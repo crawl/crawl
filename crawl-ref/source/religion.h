@@ -95,6 +95,7 @@ bool god_hates_killing(god_type god, const monster* mon);
 bool god_hates_eating(god_type god, monster_type mc);
 
 bool god_likes_spell(spell_type spell, god_type god);
+bool god_hates_spellcasting(god_type god);
 bool god_hates_spell(spell_type spell, god_type god,
                      bool rod_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);

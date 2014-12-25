@@ -470,6 +470,16 @@ bool is_fiery_item(const item_def& item)
     return false;
 }
 
+bool is_channeling_item(const item_def& item)
+{
+    if (is_unrandom_artefact(item, UNRAND_WUCAD_MU))
+        return true;
+
+    return item.base_type == OBJ_STAVES && item.sub_type == STAFF_ENERGY
+           || item.base_type == OBJ_MISCELLANY
+              && item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY;
+}
+
 bool is_unholy_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
@@ -522,6 +532,11 @@ bool is_fiery_spell(spell_type spell)
 static bool _your_god_hates_spell(spell_type spell)
 {
     return god_hates_spell(spell, you.religion);
+}
+
+static bool _your_god_hates_rod_spell(spell_type spell)
+{
+    return god_hates_spell(spell, you.religion, true);
 }
 
 static conduct_type good_god_hates_item_handling(const item_def &item)
@@ -618,6 +633,11 @@ conduct_type god_hates_item_handling(const item_def &item)
         }
         break;
 
+    case GOD_PAKELLAS:
+        if (item_type_known(item) && is_channeling_item(item))
+            return DID_CHANNEL;
+        break;
+
     default:
         break;
     }
@@ -628,7 +648,10 @@ conduct_type god_hates_item_handling(const item_def &item)
         return DID_NECROMANCY;
     }
 
-    if (item_type_known(item) && _is_bookrod_type(item, _your_god_hates_spell))
+    if (item_type_known(item) && _is_bookrod_type(item,
+                                                  item.base_type == OBJ_RODS
+                                                  ? _your_god_hates_rod_spell
+                                                  : _your_god_hates_spell))
     {
         return NUM_CONDUCTS; // FIXME: Get the specific reason, if it
     }                          // will ever be needed for spellbooks.

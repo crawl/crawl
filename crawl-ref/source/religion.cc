@@ -648,6 +648,7 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_MAKHLEB:
     case GOD_LUGONU:
     case GOD_QAZLAL:
+    case GOD_PAKELLAS:
         likes.emplace_back("you or your allies kill living beings");
         break;
 
@@ -717,6 +718,7 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_MAKHLEB:
     case GOD_LUGONU:
     case GOD_QAZLAL:
+    case GOD_PAKELLAS:
         likes.emplace_back("you or your allies kill demons");
         break;
 
@@ -757,6 +759,7 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_MAKHLEB:
     case GOD_LUGONU:
     case GOD_QAZLAL:
+    case GOD_PAKELLAS:
         likes.emplace_back("you or your allies kill holy beings");
         break;
 
@@ -797,6 +800,7 @@ string get_god_likes(god_type which_god, bool verbose)
         really_likes.emplace_back("you kill the priests of other religions");
         break;
 
+    case GOD_PAKELLAS:
     case GOD_TROG:
         really_likes.emplace_back("you kill wizards and other users of magic");
         break;
@@ -935,6 +939,9 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
         really_dislikes.emplace_back("you use holy magic or items");
         break;
 
+    case GOD_PAKELLAS:
+        really_dislikes.emplace_back("you channel magical energy");
+        // deliberate fall-through
     case GOD_TROG:
         really_dislikes.emplace_back("you memorise spells");
         really_dislikes.emplace_back("you attempt to cast spells");
@@ -2806,6 +2813,11 @@ void excommunication(bool voluntary, god_type new_god, bool immediate)
         _set_penance(old_god, 25);
         break;
 
+    case GOD_PAKELLAS:
+        _set_penance(old_god, 25);
+        mprf(MSGCH_GOD, old_god, "You begin regenerating magic.");
+        break;
+
     case GOD_CHEIBRIADOS:
         simple_god_message(" continues to slow your movements.", old_god);
         _set_penance(old_god, 25);
@@ -3313,8 +3325,9 @@ void join_religion(god_type which_god, bool immediate)
         notify_stat_change();
     }
 
-    // We disable all magical skills to avoid accidentally angering Trog.
-    if (you_worship(GOD_TROG))
+    // We disable all magical skills to avoid accidentally angering
+    // spell-casting gods.
+    if (god_hates_spellcasting(which_god))
     {
         for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
             if (you.skills[sk])
@@ -3349,7 +3362,7 @@ void join_religion(god_type which_god, bool immediate)
         add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
         mprf(MSGCH_MONSTER_ENCHANT, "Your unclean and chaotic allies forsake you.");
     }
-    else if (you_worship(GOD_TROG)
+    else if (god_hates_spellcasting(you.religion)
              && query_daction_counter(DACT_ALLY_SPELLCASTER))
     {
         add_daction(DACT_ALLY_SPELLCASTER);
@@ -3362,6 +3375,11 @@ void join_religion(god_type which_god, bool immediate)
         if (env.forest_awoken_until)
             for (monster_iterator mi; mi; ++mi)
                 mi->del_ench(ENCH_AWAKEN_FOREST);
+    }
+    else if (you_worship(GOD_PAKELLAS))
+    {
+        mprf(MSGCH_GOD, "You stop regenerating magic.");
+        mprf(MSGCH_GOD, "You can now gain magical power from killing.");
     }
 
     if (you.worshipped[you.religion] < 100)
@@ -3788,9 +3806,14 @@ bool god_likes_spell(spell_type spell, god_type god)
     }
 }
 
+bool god_hates_spellcasting(god_type god)
+{
+    return god == GOD_TROG || god == GOD_PAKELLAS;
+}
+
 bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
 {
-    if (god == GOD_TROG)
+    if (god_hates_spellcasting(god))
         return !rod_spell;
 
     if (god_punishes_spell(spell, god))
