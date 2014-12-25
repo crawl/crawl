@@ -78,6 +78,7 @@ static const char *_god_wrath_adjectives[] =
     "greed",            // Gozag (unused)
     "adversity",        // Qazlal
     "disappointment",   // Ru
+    "progress",         // Pakellas
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -1739,6 +1740,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
+    case GOD_PAKELLAS:      do_more = true; break; // TODO
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:

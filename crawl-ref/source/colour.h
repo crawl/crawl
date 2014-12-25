@@ -63,6 +63,7 @@ enum element_type
 #if TAG_MAJOR_VERSION == 34
     ETC_SHINING,        // shining gold (Gozag)
 #endif
+    ETC_PAKELLAS,       // Pakellas altar colours
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 

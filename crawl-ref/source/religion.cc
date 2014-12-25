@@ -221,6 +221,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " disappears in a burst of power",
         " disappears in an immense burst of power",
     },
+    // Pakellas
+    {
+        " slowly breaks apart.",
+        " falls apart.",
+        " is torn apart in a burst of bright light.",
+    },
 };
 
 const vector<god_power> god_powers[NUM_GODS] =
@@ -426,6 +432,17 @@ const vector<god_power> god_powers[NUM_GODS] =
       { 4, ABIL_RU_POWER_LEAP, "gather your power into a mighty leap" },
       { 5, ABIL_RU_APOCALYPSE, "wreak a terrible wrath on your foes" },
     },
+    // Pakellas
+    {
+      { 1, ABIL_PAKELLAS_MINOR_DEVICE_SURGE,
+           "spend a small amount of magic to empower your devices" },
+      { 2, ABIL_PAKELLAS_QUICK_CHARGE,
+           "spend your magic to charge your devices" },
+      { 3, ABIL_PAKELLAS_DEVICE_SURGE,
+           "spend a moderate amount of magic to empower your devices" },
+      { 5, ABIL_PAKELLAS_MAJOR_DEVICE_SURGE,
+           "spend a large amount of magic to empower your devices" },
+    }
 };
 
 vector<god_power> get_god_powers(god_type god)
@@ -1989,6 +2006,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_GOZAG:         return "Gozag";
     case GOD_QAZLAL:        return "Qazlal";
     case GOD_RU:            return "Ru";
+    case GOD_PAKELLAS:      return "Pakellas";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case GOD_ECUMENICAL:    return "an unknown god";
     case NUM_GODS:          return "Buggy";
@@ -3926,6 +3944,7 @@ void handle_god_time(int /*time_delta*/)
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
         case GOD_ZIN:
+        case GOD_PAKELLAS:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -4040,6 +4059,9 @@ int god_colour(god_type god) // mv - added
     case GOD_RU:
         return BROWN;
 
+    case GOD_PAKELLAS:
+        return LIGHTGREEN;
+
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
@@ -4123,6 +4145,9 @@ colour_t god_message_altar_colour(god_type god)
     case GOD_QAZLAL:
     case GOD_RU:
         return BROWN;
+
+    case GOD_PAKELLAS:
+        return random_choose(LIGHTMAGENTA, LIGHTGREEN, LIGHTCYAN);
 
     default:
         return YELLOW;

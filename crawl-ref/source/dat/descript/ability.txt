@@ -597,6 +597,27 @@ though they will not leave their home branch. Enemies accepting a bribe will
 lower the remaining bribe fund; upon its exhaustion, bribed enemies will become
 indifferent if they have not become your allies.
 %%%%
+# Pakellas
+Minor Device Surge ability
+
+Spend a small amount of magic to slightly empower your next use of an evokable
+device.
+%%%%
+Quick Charge ability
+
+Spend all of your current pool of magic to charge a wand or rod. The
+effectiveness of this depends on your current pool of magic and your
+Evocations skill.
+%%%%
+Device Surge ability
+
+Spend some magic to empower your next use of an evokable device.
+%%%%
+Major Device Surge ability
+
+Spend a large amount of magic to greatly empower your next use of an evokable
+device.
+%%%%
 # Qazlal
 Upheaval ability
 
