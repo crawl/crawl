@@ -1660,11 +1660,6 @@ bool is_valid_shaft_level(bool known)
     if (!is_connected_branch(place))
         return false;
 
-    // Shafts are now allowed on the first two levels, as they have a
-    // good chance of being detected. You'll also fall less deep.
-    /* if (place == BRANCH_DUNGEON && you.depth < 3)
-        return false; */
-
     // Don't generate shafts in branches where teleport control
     // is prevented.  Prevents player from going down levels without
     // reaching stairs, and also keeps player from getting stuck
@@ -1809,8 +1804,10 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
  * Get a number of traps to place on the current level.
  *
  * No traps are placed in either Temple or disconnected branches other than
- * Pandemonium. For other branches, we place 0-8 traps a level, averaged over
- * two dice.
+ * Pandemonium. For other branches, we place 0-4 traps per level, averaged over
+ * two dice. This value is increased for deeper levels; roughly one additional
+ * trap for every 14 levels of absdepth, capping out at max 9 traps in a level.
+ *
  * @return  A number of traps to be placed.
 */
 int num_traps_for_place()
@@ -1821,67 +1818,45 @@ int num_traps_for_place()
     {
         return 0;
     }
-    return random2avg(9, 2);
+
+    const int depth_bonus = div_rand_round(env.absdepth0, 7);
+    return random2avg(5 + depth_bonus, 2);
 }
 
-static trap_type _random_trap_slime(int level_number)
-{
-    trap_type type = NUM_TRAPS;
-
-    if (random2(1 + level_number) > 14 && one_chance_in(3))
-        type = TRAP_ZOT;
-
-    if (one_chance_in(5) && is_valid_shaft_level())
-        type = TRAP_SHAFT;
-    if (one_chance_in(5) && !crawl_state.game_is_sprint())
-        type = TRAP_TELEPORT;
-    if (one_chance_in(10))
-        type = TRAP_ALARM;
-
-    return type;
-}
-
-static trap_type _random_trap_default(int level_number)
-{
-    trap_type type = TRAP_ARROW;
-
-    if ((random2(1 + level_number) > 1) && one_chance_in(4))
-        type = TRAP_NEEDLE;
-    if (random2(1 + level_number) > 3)
-        type = TRAP_SPEAR;
-
-    if (type == TRAP_ARROW && one_chance_in(15))
-        type = TRAP_NET;
-
-    if (random2(1 + level_number) > 7)
-        type = TRAP_BOLT;
-    if (random2(1 + level_number) > 14)
-        type = TRAP_BLADE;
-
-    if (random2(1 + level_number) > 14 && one_chance_in(3)
-        || (player_in_branch(BRANCH_ZOT) && coinflip()))
-    {
-        type = TRAP_ZOT;
-    }
-
-    if (one_chance_in(20) && is_valid_shaft_level())
-        type = TRAP_SHAFT;
-    if (one_chance_in(20) && !crawl_state.game_is_sprint())
-        type = TRAP_TELEPORT;
-    if (one_chance_in(40) && level_number > 3)
-        type = TRAP_ALARM;
-
-    return type;
-}
+/**
+ * Choose a weighted random trap type for the currently-generated level.
+ *
+ * Odds of generating zot traps vary by depth (and are depth-limited). Alarm
+ * traps also can't be placed before D:4. All other traps are depth-agnostic.
+ *
+ * @return                    A random trap type.
+ *                            May be NUM_TRAPS, if no traps were valid.
+ */
 
 trap_type random_trap_for_place()
 {
-    int level_number = env.absdepth0;
+    // zot traps are Very Special.
+    // very common in zot...
+    if (player_in_branch(BRANCH_ZOT) && coinflip())
+        return TRAP_ZOT;
 
-    if (player_in_branch(BRANCH_SLIME))
-        return _random_trap_slime(level_number);
+    // and elsewhere, increasingly common with depth
+    // possible starting at depth 15 (end of D, late lair, lair branches)
+    // XXX: is there a better way to express this?
+    if (random2(1 + env.absdepth0) > 14 && one_chance_in(3))
+        return TRAP_ZOT;
 
-    return _random_trap_default(level_number);
+    const bool shaft_ok = is_valid_shaft_level();
+    const bool tele_ok = !crawl_state.game_is_sprint();
+    const bool alarm_ok = env.absdepth0 > 3;
+
+    if (!shaft_ok && !tele_ok && !alarm_ok)
+        return NUM_TRAPS;
+
+    return random_choose_weighted(tele_ok  ? 2 : 0, TRAP_TELEPORT,
+                                  shaft_ok ? 1 : 0, TRAP_SHAFT,
+                                  alarm_ok ? 1 : 0, TRAP_ALARM,
+                                  0);
 }
 
 int count_traps(trap_type ttyp)
