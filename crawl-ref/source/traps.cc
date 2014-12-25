@@ -32,6 +32,7 @@
 #include "mon-transit.h"
 #include "output.h"
 #include "prompt.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"
@@ -1853,10 +1854,14 @@ trap_type random_trap_for_place()
     if (!shaft_ok && !tele_ok && !alarm_ok)
         return NUM_TRAPS;
 
-    return random_choose_weighted(tele_ok  ? 2 : 0, TRAP_TELEPORT,
-                                  shaft_ok ? 1 : 0, TRAP_SHAFT,
-                                  alarm_ok ? 1 : 0, TRAP_ALARM,
-                                  0);
+    const vector<pair<trap_type, int>> trap_weights =
+    {
+        { TRAP_TELEPORT, tele_ok  ? 2 : 0},
+        { TRAP_SHAFT,   shaft_ok  ? 2 : 0},
+        { TRAP_ALARM,   alarm_ok  ? 2 : 0},
+    };
+
+    return *random_choose_weighted(trap_weights);
 }
 
 int count_traps(trap_type ttyp)
