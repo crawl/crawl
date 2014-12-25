@@ -112,7 +112,11 @@ void init_perishable_stack(item_def &stack, int age)
     ASSERT(is_blood_potion(stack) || _is_chunk(stack));
 
     CrawlHashTable &props = stack.props;
+    const bool never_decay = props.exists(CORPSE_NEVER_DECAYS)
+                             && props[CORPSE_NEVER_DECAYS].get_bool();
     props.clear(); // sanity measure
+    if (never_decay)
+        props[CORPSE_NEVER_DECAYS] = true;
     props[TIMER_KEY].new_vector(SV_INT, SFLAG_CONST_TYPE);
     CrawlVector &timer = props[TIMER_KEY].get_vector();
 
