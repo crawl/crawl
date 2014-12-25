@@ -11,6 +11,7 @@ enum feature_flag_type
     FFT_OPAQUE        = 1<< 2,           // Does this feature block LOS?
     FFT_WALL          = 1<< 3,           // Is this a "wall"?
     FFT_SOLID         = 1<< 4,           // Does this feature block beams / normal movement?
+    FFT_TRAP          = 1<< 5,           // Is this a "trap"?
 };
 
 struct feature_def

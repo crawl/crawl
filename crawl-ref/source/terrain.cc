@@ -410,11 +410,11 @@ bool feat_is_permarock(dungeon_feature_type feat)
  */
 bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too)
 {
-    return feat == DNGN_TRAP_MECHANICAL || feat == DNGN_TRAP_TELEPORT
-           || feat == DNGN_TRAP_ALARM   || feat == DNGN_TRAP_ZOT
-           || feat == DNGN_PASSAGE_OF_GOLUBRIA // FIXME
-           || feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_WEB
-           || undiscovered_too && feat == DNGN_UNDISCOVERED_TRAP;
+    if (!is_valid_feature_type(feat))
+        return false; // ???
+    if (feat == DNGN_UNDISCOVERED_TRAP)
+        return undiscovered_too;
+    return get_feature_def(feat).flags & FFT_TRAP;
 }
 
 /** Is this feature a type of water, with the concomitant dangers/bonuss?

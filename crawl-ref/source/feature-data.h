@@ -218,7 +218,7 @@ static feature_def feat_defs[] =
     enum, name, vaultname,\
     DCHAR_TRAP, NUM_DCHAR_TYPES,\
     COLOUR_AND_MAP(colour),\
-    FFT_NONE, MF_TRAP,\
+    FFT_TRAP, MF_TRAP,\
 }
 
 TRAP(DNGN_TRAP_MECHANICAL, "mechanical trap", "trap_mechanical", LIGHTCYAN),
