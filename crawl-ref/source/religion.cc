@@ -1472,6 +1472,38 @@ static bool _give_nemelex_gift(bool forced = false)
     return false;
 }
 
+static bool _give_pakellas_gift()
+{
+    // Break early if giving a gift now means it would be lost.
+    if (!(feat_has_solid_floor(grd(you.pos()))
+        || feat_is_watery(grd(you.pos())) && species_likes_water(you.species)))
+    {
+        return false;
+    }
+
+    object_class_type gift_type =
+        random_choose_weighted(
+            10,                              OBJ_WANDS,
+            5,                               OBJ_MISCELLANY, // evokers
+            you.species == SP_FELID ? 3 : 0, OBJ_RODS,
+                                             0);
+
+    if (acquirement(gift_type, you.religion))
+    {
+        simple_god_message(" grants you a gift!");
+        more();
+
+        _inc_gift_timeout(40 + random2avg(19, 2));
+        you.num_current_gifts[you.religion]++;
+        you.num_total_gifts[you.religion]++;
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+        return true;
+    }
+
+    return false;
+}
+
 void mons_make_god_gift(monster* mon, god_type god)
 {
     const god_type acting_god =
@@ -1731,6 +1763,15 @@ bool do_god_gift(bool forced)
 
         case GOD_NEMELEX_XOBEH:
             success = _give_nemelex_gift(forced);
+            break;
+
+        case GOD_PAKELLAS:
+            if (forced && coinflip()
+                || !forced && random2(you.piety) > piety_breakpoint(3)
+                   && one_chance_in(4))
+            {
+                success = _give_pakellas_gift();
+            }
             break;
 
         case GOD_OKAWARU:
