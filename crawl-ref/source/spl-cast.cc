@@ -321,22 +321,24 @@ int spell_fail(spell_type spell)
     dprf("Armour+Shield spell failure penalty: %d", armour_shield_penalty);
     chance += armour_shield_penalty;
 
-    switch (spell_difficulty(spell))
+    static const int difficulty_by_level[] =
     {
-    case  1: chance +=   3; break;
-    case  2: chance +=  15; break;
-    case  3: chance +=  35; break;
-    case  4: chance +=  70; break;
-    case  5: chance += 100; break;
-    case  6: chance += 150; break;
-    case  7: chance += 200; break;
-    case  8: chance += 260; break;
-    case  9: chance += 330; break;
-    case 10: chance += 420; break;
-    case 11: chance += 500; break;
-    case 12: chance += 600; break;
-    default: chance += 750; break;
-    }
+        0,
+        3,
+        15,
+        35,
+
+        70,
+        100,
+        150,
+
+        200,
+        260,
+        330,
+    };
+    const int spell_level = spell_difficulty(spell);
+    ASSERT_RANGE(spell_level, 0, ARRAYSZ(difficulty_by_level));
+    chance += difficulty_by_level[spell_level];
 
 #if TAG_MAJOR_VERSION == 34
     // Only apply this penalty to Dj because other species lose nutrition
