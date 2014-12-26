@@ -19,6 +19,7 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card = false);
 
 bool can_flood_feature(dungeon_feature_type feat);
 
+bool evoke_check(int slot, bool quiet = false);
 bool evoke_item(int slot = -1, bool check_range = false);
 int wand_mp_cost();
 void zap_wand(int slot = -1);

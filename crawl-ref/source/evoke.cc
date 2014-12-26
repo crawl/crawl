@@ -513,7 +513,8 @@ void zap_wand(int slot)
         return;
     }
 
-    const int mp_cost = wand_mp_cost();
+    const int mp_cost = wand_mp_cost()
+                        + 3 * you.attribute[ATTR_PAKELLAS_DEVICE_SURGE];
     if (!enough_mp(mp_cost, false))
         return;
 
@@ -2111,11 +2112,12 @@ static bool _rod_spell(item_def& irod, bool check_range)
     return true;
 }
 
-bool evoke_item(int slot, bool check_range)
+bool evoke_check(int slot, bool quiet)
 {
     if (you.form == TRAN_WISP)
     {
-        mpr("You cannot evoke items in this form.");
+        if (!quiet)
+            mpr("You cannot evoke items in this form.");
         return false;
     }
 
@@ -2125,14 +2127,23 @@ bool evoke_item(int slot, bool check_range)
 
     if (you.berserk() && !reaching)
     {
-        canned_msg(MSG_TOO_BERSERK);
+        if (!quiet)
+            canned_msg(MSG_TOO_BERSERK);
         return false;
     }
     else if (player_mutation_level(MUT_NO_ARTIFICE) && !reaching)
     {
-        mpr("You cannot evoke magical items.");
+        if (!quiet)
+            mpr("You cannot evoke magical items.");
         return false;
     }
+    return true;
+}
+
+bool evoke_item(int slot, bool check_range)
+{
+    if (!evoke_check(slot))
+        return false;
 
     if (slot == -1)
     {

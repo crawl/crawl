@@ -3621,6 +3621,12 @@ bool player::gourmand(bool calc_unid, bool items) const
     return actor::gourmand(calc_unid, items);
 }
 
+int player::spec_evoke(bool calc_unid, bool items) const
+{
+    return actor::spec_evoke(calc_unid, items)
+           + attribute[ATTR_PAKELLAS_DEVICE_SURGE];
+}
+
 bool player::stasis(bool calc_unid, bool items) const
 {
     if (species == SP_FORMICID)
