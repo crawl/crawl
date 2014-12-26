@@ -458,7 +458,9 @@ qazlal0 DNGN_ALTAR_QAZLAL
 qazlal1
 qazlal2
 ru DNGN_ALTAR_RU
-generic DNGN_ALTAR_PAKELLAS
+pakellas0 DNGN_ALTAR_PAKELLAS
+pakellas1
+pakellas2
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
