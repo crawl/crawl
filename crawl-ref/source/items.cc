@@ -4807,6 +4807,14 @@ item_info get_item_info(const item_def& item)
             ii.props["cards"] = info_cards;
             ii.props["card_flags"] = info_card_flags;
         }
+
+        // Copying the exact number here would leak info about how charged
+        // the evokers are; instead, let's give the evoker debt as the
+        // number of inert evokers.
+        // If the scale mismatch turns out to be an issue, we can scale by
+        // XP_EVOKE_DEBT.
+        if (is_xp_evoker(item))
+            ii.evoker_debt = num_xp_evokers_inert(item);
         break;
     case OBJ_GOLD:
         ii.special = item.special;
