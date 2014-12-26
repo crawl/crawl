@@ -35,6 +35,7 @@
 #include "godprayer.h"
 #include "hints.h"
 #include "invent.h"
+#include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
@@ -72,6 +73,7 @@
 #include "traps.h"
 #include "uncancel.h"
 #include "unicode.h"
+#include "view.h"
 
 enum class abflag
 {
@@ -394,6 +396,7 @@ static const ability_def Ability_List[] =
         6, 0, 100, 3, abflag::NONE },
     { ABIL_PAKELLAS_MAJOR_DEVICE_SURGE, "Major Device Surge",
         9, 0, 150, 4, abflag::NONE },
+    { ABIL_PAKELLAS_SUPERCHARGE, "Supercharge", 0, 0, 0, 0, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, abflag::NONE },
@@ -877,6 +880,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_RU_SACRIFICE_EYE:
     case ABIL_RU_SACRIFICE_RESISTANCE:
     case ABIL_RU_REJECT_SACRIFICES:
+    case ABIL_PAKELLAS_SUPERCHARGE:
     case ABIL_STOP_RECALL:
     case ABIL_RENOUNCE_RELIGION:
     case ABIL_CONVERT_TO_BEOGH:
@@ -2919,6 +2923,62 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
+    case ABIL_PAKELLAS_SUPERCHARGE:
+    {
+        fail_check();
+        simple_god_message(" will supercharge a wand or rod.");
+        more();
+
+        int item_slot = prompt_invent_item("Supercharge what?", MT_INVLIST,
+                                           OSEL_SUPERCHARGE, true, true, false);
+
+        if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+            return SPRET_ABORT;
+
+        item_def& wand(you.inv[item_slot]);
+
+        string prompt = "Do you wish to have " + wand.name(DESC_YOUR)
+                           + " supercharged?";
+
+        if (!yesno(prompt.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+
+        if (wand.base_type == OBJ_RODS)
+        {
+            wand.charge_cap = wand.charges =
+                (MAX_ROD_CHARGE + 1) * ROD_CHARGE_MULT;
+            wand.rod_plus = MAX_WPN_ENCHANT + 1;
+        }
+        else
+        {
+            set_ident_flags(wand, ISFLAG_KNOW_PLUSES);
+            wand.charges    = 4 * wand_charge_value(wand.sub_type);
+            wand.used_count = ZAPCOUNT_RECHARGED;
+        }
+
+        you.wield_change = true;
+        you.one_time_ability_used.set(GOD_PAKELLAS);
+
+        take_note(Note(NOTE_ID_ITEM, 0, 0, wand.name(DESC_A).c_str(),
+                  "supercharged by Pakellas"));
+
+        mprf(MSGCH_GOD, "Your %s glows brightly!",
+             wand.name(DESC_QUALNAME).c_str());
+
+        flash_view(UA_PLAYER, LIGHTGREEN);
+
+        simple_god_message(" booms: Use this gift wisely!");
+
+#ifndef USE_TILE_LOCAL
+        // Allow extra time for the flash to linger.
+        delay(1000);
+#endif
+        break;
+    }
+
     case ABIL_RENOUNCE_RELIGION:
         fail_check();
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
@@ -3468,6 +3528,7 @@ int find_ability_slot(const ability_type abil, char firstletter)
     case ABIL_TSO_BLESS_WEAPON:
     case ABIL_KIKU_BLESS_WEAPON:
     case ABIL_LUGONU_BLESS_WEAPON:
+    case ABIL_PAKELLAS_SUPERCHARGE:
         first_slot = letter_to_index('W');
         break;
     case ABIL_CONVERT_TO_BEOGH:

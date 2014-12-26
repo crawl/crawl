@@ -442,6 +442,9 @@ const vector<god_power> god_powers[NUM_GODS] =
            "spend a moderate amount of magic to empower your devices" },
       { 5, ABIL_PAKELLAS_MAJOR_DEVICE_SURGE,
            "spend a large amount of magic to empower your devices" },
+      { 7, ABIL_PAKELLAS_SUPERCHARGE,
+           "Pakellas will now supercharge a wand or rod... once.",
+           "Pakellas is no longer ready to supercharge a wand or rod." },
     }
 };
 
