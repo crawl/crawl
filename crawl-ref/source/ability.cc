@@ -388,6 +388,8 @@ static const ability_def Ability_List[] =
     // Pakellas
     { ABIL_PAKELLAS_MINOR_DEVICE_SURGE, "Minor Device Surge",
         3, 0, 50, 2, abflag::NONE },
+    { ABIL_PAKELLAS_QUICK_CHARGE, "Quick Charge",
+        0, 0, 100, 3, abflag::NONE },
     { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
         6, 0, 100, 3, abflag::NONE },
     { ABIL_PAKELLAS_MAJOR_DEVICE_SURGE, "Major Device Surge",
@@ -934,6 +936,11 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 4);
         break;
 
+    case ABIL_PAKELLAS_QUICK_CHARGE:
+        invoc = true;
+        failure = 40 - (you.piety / 20) - you.skill(SK_EVOCATIONS, 5);
+        break;
+
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_BEOGH_SMITING:
@@ -1477,6 +1484,9 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_PAKELLAS_DEVICE_SURGE:
     case ABIL_PAKELLAS_MAJOR_DEVICE_SURGE:
         return evoke_check(-1, quiet);
+
+    case ABIL_PAKELLAS_QUICK_CHARGE:
+        return pakellas_check_quick_charge(quiet);
 
     default:
         return true;
@@ -2889,6 +2899,22 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         if (!ret)
             return SPRET_ABORT;
+
+        break;
+    }
+
+    case ABIL_PAKELLAS_QUICK_CHARGE:
+    {
+        fail_check();
+
+        const int num = random2avg(you.skill(SK_EVOCATIONS, 10), 2)
+                        * you.magic_points;
+        const int den = 100 * you.max_magic_points;
+
+        if (recharge_wand(true, "", num, den) <= 0)
+            return SPRET_ABORT;
+
+        dec_mp(you.magic_points);
 
         break;
     }
