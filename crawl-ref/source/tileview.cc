@@ -239,7 +239,7 @@ void tile_default_flv(branch_type br, int depth, tile_flavour &flv)
         return;
 
     case BRANCH_SEWER:
-        flv.wall  = TILE_WALL_SLIME;
+        flv.wall  = TILE_WALL_PEBBLE_GREEN;
         flv.floor = TILE_FLOOR_SLIME;
         return;
 
