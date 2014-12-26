@@ -1857,8 +1857,8 @@ trap_type random_trap_for_place()
     const vector<pair<trap_type, int>> trap_weights =
     {
         { TRAP_TELEPORT, tele_ok  ? 2 : 0},
-        { TRAP_SHAFT,   shaft_ok  ? 2 : 0},
-        { TRAP_ALARM,   alarm_ok  ? 2 : 0},
+        { TRAP_SHAFT,   shaft_ok  ? 1 : 0},
+        { TRAP_ALARM,   alarm_ok  ? 1 : 0},
     };
 
     return *random_choose_weighted(trap_weights);
