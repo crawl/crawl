@@ -1163,10 +1163,8 @@ A penetrating bolt spell mimicked by the shadow of a Dithmenos worshipper.
 %%%%
 Shadow Creatures spell
 
-This spell weaves a creature from shadows and threads of Abyssal matter. The
-creature thus brought into existence will recreate some type of creature native
-to the caster's location. The spell even creates appropriate equipment for the
-creature from the same ethereal matter.
+This spell creates replicas of creatures native to the caster's current
+location, weaving them from shadows and threads of Abyssal matter.
 %%%%
 Shadow Shard spell
 

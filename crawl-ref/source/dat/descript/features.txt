@@ -290,6 +290,13 @@ A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
 %%%%
+A shadow trap
+
+This magical trap creates replicas of creatures native to its location, weaving
+them from shadows and threads of Abyssal matter. Its magics are sensitive
+enough that any non-summoned creature entering it will set it off, as long as
+you are in sight.
+%%%%
 A shadowy altar of Dithmenos
 
 This altar to Dithmenos the Shadowed seems to absorb light from its
