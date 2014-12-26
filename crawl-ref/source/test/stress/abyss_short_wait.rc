@@ -30,9 +30,10 @@ function ready()
     crawl.sendkeys("&Y" .. esc)
     crawl.sendkeys("&l27" .. eol .. "N")
     crawl.sendkeys("&" .. string.char(2))
+    crawl.sendkeys("&G" .. eol)
   end
   if you.turns() < 1000 then
-    crawl.sendkeys('5')
+    crawl.sendkeys('.')
   else
     crawl.sendkeys("*qyes" .. eol .. esc .. esc)
   end
