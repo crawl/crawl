@@ -1681,11 +1681,10 @@ static bool _put_item_in_inv(item_def& it, int quant_got, bool quiet, bool& put_
             if (is_perishable_stack(it))
                 for (int i = 0; i < quant_got; i++)
                     remove_oldest_perishable_item(it);
+
+            // updating the stack in inventory is handled in the merge call
             if (is_xp_evoker(it))
-            {
-                you.inv[inv_slot].evoker_debt =
-                    remove_newest_xp_evoker(it, quant_got);
-            }
+                (void)remove_newest_xp_evoker(it, quant_got);
         }
 
         // cleanup items that ended up in an inventory slot (not gold, etc)
