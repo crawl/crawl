@@ -27,6 +27,7 @@
 #include "food.h"
 #include "ghost.h"
 #include "godconduct.h"
+#include "godwrath.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -264,6 +265,8 @@ static bool _evoke_horn_of_geryon(item_def &item)
         return false;
     }
 
+    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(SPELL_SUMMON_HELL_BEAST);
     surge_power(you.spec_evoke());
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
     did_god_conduct(DID_UNHOLY, 3);
@@ -373,6 +376,9 @@ bool disc_of_storms()
 {
     const int fail_rate =
         30 - player_adjust_evoc_power(you.skill(SK_EVOCATIONS));
+
+    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(SPELL_CHAIN_LIGHTNING); // approx
 
     if (x_chance_in_y(fail_rate, 100))
     {
@@ -707,6 +713,8 @@ void zap_wand(int slot)
 #endif
 
     dec_mp(mp_cost, false);
+    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(zap_to_spell(type_zapped));
     surge_power(you.spec_evoke());
 
     // zapping() updates beam.
@@ -1047,6 +1055,8 @@ static const pop_entry pop_spiders[] =
 
 static bool _box_of_beasts(item_def &box)
 {
+    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(SPELL_MONSTROUS_MENAGERIE); // approx
     surge_power(you.spec_evoke());
     mpr("You open the lid...");
 
@@ -1106,6 +1116,8 @@ static bool _sack_of_spiders_veto_mon(monster_type mon)
 
 static bool _sack_of_spiders(item_def &sack)
 {
+    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(SPELL_SUMMON_SWARM); // approx
     surge_power(you.spec_evoke());
     mpr("You reach into the bag...");
 
@@ -1433,6 +1445,9 @@ static bool _lamp_of_fire()
     {
         if (you.confused())
             target.confusion_fuzz();
+
+        if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+            pakellas_evoke_backfire(SPELL_FIRE_ELEMENTALS); // approx
 
         surge_power(you.spec_evoke());
         did_god_conduct(DID_FIRE, 6 + random2(3));
@@ -1806,6 +1821,8 @@ static bool _stone_of_tremors()
             rubble_pos.push_back(*di);
     }
 
+    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(SPELL_EARTH_ELEMENTALS); // approx
     surge_power(you.spec_evoke());
     mpr("The dungeon trembles and rubble falls from the walls!");
     noisy(15, you.pos());
@@ -1922,6 +1939,8 @@ static bool _phial_of_floods()
             target.confusion_fuzz();
             beam.set_target(target);
         }
+        if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+            pakellas_evoke_backfire(SPELL_WATER_ELEMENTALS); // approx
         surge_power(you.spec_evoke());
         beam.fire();
 
@@ -1974,7 +1993,7 @@ static bool _phial_of_floods()
     return false;
 }
 
-static void _expend_xp_evoker(item_def &item)
+void expend_xp_evoker(item_def &item)
 {
     evoker_debt(item.sub_type) = XP_EVOKE_DEBT;
 }
@@ -2025,6 +2044,8 @@ static spret_type _phantom_mirror()
         return SPRET_FAIL;
     }
 
+    if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(SPELL_PHANTOM_MIRROR); // approx
     surge_power(you.spec_evoke());
     const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
     int dur = min(6, max(1,
@@ -2314,12 +2335,14 @@ bool evoke_item(int slot, bool check_range)
                 mpr("That is presently inert.");
                 return false;
             }
+            if (!you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+                pakellas_evoke_backfire(SPELL_AIR_ELEMENTALS); // approx
             surge_power(you.spec_evoke());
             wind_blast(&you,
                        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10)),
                        coord_def());
             _fan_of_gales_elementals();
-            _expend_xp_evoker(item);
+            expend_xp_evoker(item);
             pract = 1;
             break;
 
@@ -2331,7 +2354,7 @@ bool evoke_item(int slot, bool check_range)
             }
             if (_lamp_of_fire())
             {
-                _expend_xp_evoker(item);
+                expend_xp_evoker(item);
                 pract = 1;
             }
             else
@@ -2347,7 +2370,7 @@ bool evoke_item(int slot, bool check_range)
             }
             if (_stone_of_tremors())
             {
-                _expend_xp_evoker(item);
+                expend_xp_evoker(item);
                 pract = 1;
             }
             else
@@ -2362,7 +2385,7 @@ bool evoke_item(int slot, bool check_range)
             }
             if (_phial_of_floods())
             {
-                _expend_xp_evoker(item);
+                expend_xp_evoker(item);
                 pract = 1;
             }
             else
@@ -2377,7 +2400,7 @@ bool evoke_item(int slot, bool check_range)
             }
             if (_evoke_horn_of_geryon(item))
             {
-                _expend_xp_evoker(item);
+                expend_xp_evoker(item);
                 pract = 1;
             }
             else
