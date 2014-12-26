@@ -337,7 +337,7 @@ int spell_fail(spell_type spell)
         330,
     };
     const int spell_level = spell_difficulty(spell);
-    ASSERT_RANGE(spell_level, 0, ARRAYSZ(difficulty_by_level));
+    ASSERT_RANGE(spell_level, 0, (int) ARRAYSZ(difficulty_by_level));
     chance += difficulty_by_level[spell_level];
 
 #if TAG_MAJOR_VERSION == 34
