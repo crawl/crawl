@@ -5452,6 +5452,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_PAKELLAS_DEVICE_SURGE;
     case ABIL_PAKELLAS_MAJOR_DEVICE_SURGE:
         return TILEG_ABILITY_PAKELLAS_MAJOR_DEVICE_SURGE;
+    case ABIL_PAKELLAS_SUPERCHARGE:
+        return TILEG_ABILITY_PAKELLAS_SUPERCHARGE;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
