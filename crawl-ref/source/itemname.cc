@@ -1766,12 +1766,28 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             buff << " {used: " << used_count << "}";
         }
-        else if (is_xp_evoker(*this) && !evoker_is_charged(*this) && !dbname)
+        else if (is_xp_evoker(*this) && !dbname)
         {
-            if (evoker_is_charging(*this))
-                buff << " (inert, charging)";
-            else
-                buff << " (inert)";
+            const int inert = num_xp_evokers_inert(*this);
+            if (inert > 0)
+            {
+                if (quantity == 1)
+                {
+                    buff << " (inert";
+                    if (evoker_is_charging(*this))
+                        buff << ", charging";
+                    buff << ")";
+                }
+                else
+                {
+                    string inert_desc = make_stringf(" (%d inert%s)",
+                                                     inert,
+                                                     evoker_is_charging(*this)
+                                                     ? ", 1 charging"
+                                                     : "");
+                    buff << inert_desc;
+                }
+            }
         }
         break;
 

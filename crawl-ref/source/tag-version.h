@@ -142,6 +142,7 @@ enum tag_minor_version
     TAG_MINOR_RANDLICHES,          // Liches are now GHOST_DEMONs
     TAG_MINOR_ISFLAG_HANDLED,      // Game tracks which items player has handled
     TAG_MINOR_SHOP_HACK,           // The shop hack is dead!
+    TAG_MINOR_STACKABLE_EVOKERS,   // XP evokers stack
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

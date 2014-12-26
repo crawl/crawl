@@ -6599,6 +6599,9 @@ void monster::steal_item_from_player()
         if (you.inv[steal_what].defined())
             remove_newest_perishable_item(you.inv[steal_what]);
     }
+
+    if (is_xp_evoker(new_item))
+        new_item.evoker_debt = remove_oldest_xp_evoker(you.inv[steal_what]);
 }
 
 /**
