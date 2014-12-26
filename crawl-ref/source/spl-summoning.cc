@@ -1028,10 +1028,17 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
  */
 static monster_type _get_imp_type(int pow)
 {
-    // this seems to think that iron & shadow imps are better than white...?
-    if (random2(pow) >= 46 || one_chance_in(6))
+    // Proportion of white imps is independent of spellpower.
+    if (x_chance_in_y(5, 18))
+        return MONS_WHITE_IMP;
+
+    // 3/13 * 13/18 = 1/6 chance of one of these two at 0-46 spellpower,
+    // increasing up to about 4/9 at max spellpower.
+    if (random2(pow) >= 46 || x_chance_in_y(3, 13))
         return one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
-    return one_chance_in(3) ? MONS_WHITE_IMP : MONS_CRIMSON_IMP;
+
+    // 5/9 crimson at 0-46 spellpower, about half that at max power.
+    return MONS_CRIMSON_IMP;
 }
 
 static map<monster_type, const char*> _imp_summon_messages = {
