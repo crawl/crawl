@@ -34,6 +34,7 @@
 #include "godconduct.h"
 #include "godprayer.h"
 #include "hints.h"
+#include "invent.h"
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
@@ -383,6 +384,14 @@ static const ability_def Ability_List[] =
       6, 0, 0, 6, abflag::NONE },
     { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area", 7, 0, 0,
       generic_cost::range(10, 14), abflag::NONE },
+
+    // Pakellas
+    { ABIL_PAKELLAS_MINOR_DEVICE_SURGE, "Minor Device Surge",
+        3, 0, 50, 2, abflag::NONE },
+    { ABIL_PAKELLAS_DEVICE_SURGE, "Device Surge",
+        6, 0, 100, 3, abflag::NONE },
+    { ABIL_PAKELLAS_MAJOR_DEVICE_SURGE, "Major Device Surge",
+        9, 0, 150, 4, abflag::NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, abflag::NONE },
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, abflag::NONE },
@@ -912,6 +921,11 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 30 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 6);
         break;
 
+    case ABIL_PAKELLAS_MINOR_DEVICE_SURGE:
+        invoc = true;
+        failure = 30 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 6);
+        break;
+
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_INJURY_MIRROR:
@@ -950,6 +964,11 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 4);
         break;
 
+    case ABIL_PAKELLAS_DEVICE_SURGE:
+        invoc = true;
+        failure = 50 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 5);
+        break;
+
     case ABIL_ZIN_IMPRISON:
     case ABIL_LUGONU_BANISH:
     case ABIL_CHEIBRIADOS_DISTORTION:
@@ -978,6 +997,11 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_QAZLAL_DISASTER_AREA:
         invoc = true;
         failure = 70 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
+        break;
+
+    case ABIL_PAKELLAS_MAJOR_DEVICE_SURGE:
+        invoc = true;
+        failure = 70 - (you.piety / 25) - you.skill(SK_EVOCATIONS, 4);
         break;
 
     case ABIL_ZIN_SANCTUARY:
@@ -1448,6 +1472,11 @@ static bool _check_ability_possible(const ability_def& abil,
             return false;
         }
         return true;
+
+    case ABIL_PAKELLAS_MINOR_DEVICE_SURGE:
+    case ABIL_PAKELLAS_DEVICE_SURGE:
+    case ABIL_PAKELLAS_MAJOR_DEVICE_SURGE:
+        return evoke_check(-1, quiet);
 
     default:
         return true;
@@ -2836,6 +2865,33 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
+
+    case ABIL_PAKELLAS_MINOR_DEVICE_SURGE:
+    case ABIL_PAKELLAS_DEVICE_SURGE:
+    case ABIL_PAKELLAS_MAJOR_DEVICE_SURGE:
+    {
+        int slot = prompt_invent_item("Surge which item? (* to show all)",
+                                      MT_INVLIST,
+                                      OSEL_EVOKABLE, true, true, true, 0, -1,
+                                      nullptr, OPER_EVOKE);
+
+        if (prompt_failed(slot))
+            return SPRET_ABORT;
+
+        fail_check();
+
+        you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] =
+            abil.ability == ABIL_PAKELLAS_MAJOR_DEVICE_SURGE ? 3 :
+            abil.ability == ABIL_PAKELLAS_DEVICE_SURGE       ? 2
+                                                             : 1;
+        const bool ret = evoke_item(slot);
+        you.attribute[ATTR_PAKELLAS_DEVICE_SURGE] = 0;
+
+        if (!ret)
+            return SPRET_ABORT;
+
+        break;
+    }
 
     case ABIL_RENOUNCE_RELIGION:
         fail_check();

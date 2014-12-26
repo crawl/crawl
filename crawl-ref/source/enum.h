@@ -385,11 +385,6 @@ enum ability_type
     ABIL_RU_DRAW_OUT_POWER = 1200,
     ABIL_RU_POWER_LEAP,
     ABIL_RU_APOCALYPSE,
-    // Pakellas
-    ABIL_PAKELLAS_MINOR_DEVICE_SURGE = 1220,
-    ABIL_PAKELLAS_QUICK_CHARGE,
-    ABIL_PAKELLAS_DEVICE_SURGE,
-    ABIL_PAKELLAS_MAJOR_DEVICE_SURGE,
 
     ABIL_RU_SACRIFICE_PURITY,
         ABIL_FIRST_SACRIFICE = ABIL_RU_SACRIFICE_PURITY,
@@ -411,6 +406,12 @@ enum ability_type
     ABIL_RU_SACRIFICE_RESISTANCE,
         ABIL_FINAL_SACRIFICE = ABIL_RU_SACRIFICE_RESISTANCE,
     ABIL_RU_REJECT_SACRIFICES,
+
+    // Pakellas
+    ABIL_PAKELLAS_MINOR_DEVICE_SURGE = 1230,
+    ABIL_PAKELLAS_QUICK_CHARGE,
+    ABIL_PAKELLAS_DEVICE_SURGE,
+    ABIL_PAKELLAS_MAJOR_DEVICE_SURGE,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -528,6 +529,7 @@ enum attribute_type
     ATTR_LAST_FLIGHT_STATUS,   // Whether spawm_flight should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
+    ATTR_PAKELLAS_DEVICE_SURGE,// Surge power applied to next evocation.
     NUM_ATTRIBUTES
 };
 

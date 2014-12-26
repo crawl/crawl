@@ -700,6 +700,7 @@ public:
     bool gourmand(bool calc_unid = true, bool items = true) const override;
     bool res_corr(bool calc_unid = true, bool items = true) const override;
     bool clarity(bool calc_unid = true, bool items = true) const override;
+    int spec_evoke(bool calc_unid = true, bool items = true) const override;
     bool stasis(bool calc_unid = true, bool items = true) const override;
 
     bool airborne() const override;
