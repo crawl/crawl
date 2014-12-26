@@ -143,6 +143,9 @@ bool item_is_spellbook(const item_def &item) PURE;
 
 bool is_xp_evoker(const item_def &item);
 bool evoker_is_charged(const item_def &item);
+size_t num_xp_evokers_inert(const item_def &item);
+int remove_newest_xp_evoker(item_def &stack, int quant = 1);
+int remove_oldest_xp_evoker(item_def &stack, int quant = 1);
 
 // ring functions:
 bool ring_has_pluses(const item_def &item) PURE;

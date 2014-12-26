@@ -2741,11 +2741,20 @@ static void _recharge_xp_evokers(int exp)
         item_def* evoker = evokers[i];
         if (!evoker)
             continue;
+        const int old_inert = num_xp_evokers_inert(*evoker);
         evoker->evoker_debt -= div_rand_round(exp, xp_factor);
-        if (evoker->evoker_debt <= 0)
+        const int new_inert = num_xp_evokers_inert(*evoker);
+        if (new_inert < old_inert)
         {
-            evoker->evoker_debt = 0;
-            mprf("Your %s has recharged.", evoker->name(DESC_QUALNAME).c_str());
+            const int charged = old_inert - new_inert;
+            string evokername = evoker->name(DESC_QUALNAME);
+            if (evoker->quantity > 1)
+                evokername = pluralise(evokername);
+            if (new_inert == 0)
+                evoker->evoker_debt = 0;
+            mprf("%s %s %s recharged.",
+                 get_desc_quantity(charged, evoker->quantity, "your").c_str(),
+                 evokername.c_str(), charged > 1 ? "have" : "has");
         }
     }
 }

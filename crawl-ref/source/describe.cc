@@ -1918,15 +1918,21 @@ string get_item_description(const item_def &item, bool verbose,
                            "may be attracted as its bearer battles through the "
                            "dungeon and grows in power and wisdom.";
 
-            if (!evoker_is_charged(item))
+            const int inert = num_xp_evokers_inert(item);
+            if (inert > 0)
             {
-                description << "\n\nThe device is presently inert.";
+                string what = item.quantity > 1 ? "the devices are"
+                                                : "the device is";
+                description << "\n\n";
+                description << get_desc_quantity(inert, item.quantity, what);
+                description << " presently inert.";
                 if (evoker_is_charging(item))
-                    description << " Gaining experience will recharge it.";
-                else if (in_inventory(item))
                 {
-                    description << " Another item of the same type is"
-                                   " currently charging.";
+                    description << " Gaining experience will recharge";
+                    if (item.quantity > 1)
+                        description << " them.";
+                    else
+                        description << " it.";
                 }
             }
         }

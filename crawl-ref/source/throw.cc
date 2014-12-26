@@ -815,13 +815,19 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Now start real firing!
     origin_set_unknown(item);
 
-    // bloodpots & chunks need special handling.
-    if (is_perishable_stack(item) && thrown.quantity > 1)
+    if (thrown.quantity > 1)
     {
-        // Initialise thrown item with oldest item in stack.
-        const int rot_timer = remove_oldest_perishable_item(thrown);
-        item.props.clear();
-        init_perishable_stack(item, rot_timer);
+        // bloodpots & chunks need special handling.
+        if (is_perishable_stack(item) && thrown.quantity > 1)
+        {
+            // Initialise thrown item with oldest item in stack.
+            const int rot_timer = remove_oldest_perishable_item(thrown);
+            item.props.clear();
+            init_perishable_stack(item, rot_timer);
+        }
+
+        if (is_xp_evoker(item))
+            item.evoker_debt = remove_newest_xp_evoker(thrown);
     }
 
     // Even though direction is allowed, we're throwing so we
