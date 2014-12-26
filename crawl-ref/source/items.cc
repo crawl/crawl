@@ -2250,6 +2250,11 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
             if (items_stack(item, *si))
             {
                 item_def copy = item;
+                if (is_xp_evoker(item))
+                {
+                    copy.evoker_debt = remove_newest_xp_evoker(item,
+                                                               quant_drop);
+                }
                 merge_item_stacks(copy, *si, quant_drop);
                 inc_mitm_item_quantity(si->index(), quant_drop);
 
