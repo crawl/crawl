@@ -27,6 +27,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godwrath.h"
 #include "hints.h"
 #include "item_use.h"
 #include "libutil.h"
@@ -1370,6 +1371,8 @@ spret_type your_spells(spell_type spell, int powc,
         mpr("You fail to access your magic.");
         fail = antimagic = true;
     }
+    else if (evoked && !you_worship(GOD_PAKELLAS) && you.penance[GOD_PAKELLAS])
+        pakellas_evoke_backfire(spell);
     else if (allow_fail)
     {
         int spfl = random2avg(100, 3);

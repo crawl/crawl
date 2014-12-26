@@ -519,7 +519,12 @@ surrounded by titans and elvish blademasters.
 %%%%
 Pakellas wrath
 
-The wrath of Pakellas is terrible.
+Those that offend Pakellas will find their magical devices drained of their
+power, their magic reserves emptied, and even their very life force fed
+into the ever-hungry engine that is progress on Pakellas' behalf. Those who
+abandon Pakellas altogether will further find that their devices fail to
+work as intended - though they still have their intended effects, they will
+also harm the user in their use.
 %%%%
 Qazlal wrath
 
