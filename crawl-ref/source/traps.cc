@@ -27,8 +27,11 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "mon-enum.h"
+#include "mgen_enum.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-place.h"
 #include "mon-transit.h"
 #include "output.h"
 #include "prompt.h"
@@ -496,6 +499,70 @@ static bool _find_other_passage_side(coord_def& to)
     return true;
 }
 
+/**
+ * Spawn a single shadow creature or band from the current level. The creatures
+ * are always hostile to the player.
+ *
+ * @param triggerer     The creature that set off the trap.
+ * @return              Whether any monsters were successfully created.
+ */
+bool trap_def::weave_shadow(const actor& triggerer)
+{
+    // forbid early packs
+    const bool bands_ok = env.absdepth0 > 3;
+    mgen_data mg = mgen_data::hostile_at(RANDOM_MOBILE_MONSTER,
+                                         "a shadow trap", // blame
+                                         you.see_cell(pos), // alerted?
+                                         5, // abj duration
+                                         MON_SUMM_SHADOW,
+                                         pos,
+                                         bands_ok ? 0 : MG_FORBID_BANDS);
+
+    monster *mons = create_monster(mg);
+    if (!mons)
+        return false;
+
+    const string triggerer_name = triggerer.is_player() ?
+                                        "the player character" :
+                                        triggerer.name(DESC_A, true);
+    mons_add_blame(mons, "triggered by " + triggerer_name);
+
+    return true;
+}
+
+/**
+ * Trigger a shadow creature trap.
+ *
+ * Temporarily summons some number of shadow creatures/bands from the current
+ * level. On d:1, summons 2; otherwise summons 3-5, increasing with depth.
+ *
+ * @param triggerer     The creature that set off the trap.
+ */
+void trap_def::trigger_shadow_trap(const actor& triggerer)
+{
+    if (triggerer.is_summoned())
+        return; // no summonsplosions
+
+    if (!you.see_cell(pos))
+        return;
+
+    const int to_summon =
+        (env.absdepth0 == 0) ? 2
+                             : 3 + div_rand_round(env.absdepth0, 16);
+    dprf ("summoning %d dudes from %d", to_summon, env.absdepth0);
+
+    bool summoned_any = false;
+    for (int i = 0; i < to_summon; ++i)
+    {
+        const bool successfully_summoned = weave_shadow(triggerer);
+        summoned_any = summoned_any || successfully_summoned;
+    }
+
+    mprf("Shadows whirl around %s...", triggerer.name(DESC_THE).c_str());
+    if (!summoned_any)
+        mpr("...but the shadows disperse without effect.");
+}
+
 // Returns a direction string from you.pos to the
 // specified position. If fuzz is true, may be wrong.
 // Returns an empty string if no direction could be
@@ -523,7 +590,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool you_know = is_known();
     const bool trig_knows = !flat_footed && is_known(&triggerer);
 
-    const bool you_trigger = (triggerer.is_player());
+    const bool you_trigger = triggerer.is_player();
     const bool in_sight = you.see_cell(pos);
 
     // Zot def - player never sets off known traps
@@ -648,8 +715,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                       + "blaring wail " + (!dir.empty()? ("to the " + dir + ".")
                                                        : "behind you!");
             }
-            // Monsters of normal or greater intelligence will realize that
-            // they were the one to set off the trap.
+
+            // XXX: this is very goofy and probably should be replaced with
+            // const mid_t source = triggerer.mid;
             mid_t source = !m ? MID_PLAYER :
                             mons_intel(m) >= I_NORMAL ? m->mid : MID_NOBODY;
 
@@ -1010,6 +1078,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     case TRAP_PLATE:
         dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
+        break;
+
+    case TRAP_SHADOW:
+        trigger_shadow_trap(triggerer);
         break;
 
     default:
@@ -1629,6 +1701,8 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_TRAP_ZOT;
     case TRAP_GOLUBRIA:
         return DNGN_PASSAGE_OF_GOLUBRIA;
+    case TRAP_SHADOW:
+        return DNGN_TRAP_SHADOW;
 
     case TRAP_ARROW:
     case TRAP_SPEAR:
@@ -1851,12 +1925,10 @@ trap_type random_trap_for_place()
     const bool tele_ok = !crawl_state.game_is_sprint();
     const bool alarm_ok = env.absdepth0 > 3;
 
-    if (!shaft_ok && !tele_ok && !alarm_ok)
-        return NUM_TRAPS;
-
     const pair<trap_type, int> trap_weights[] =
     {
         { TRAP_TELEPORT, tele_ok  ? 2 : 0},
+        { TRAP_SHADOW,              1    },
         { TRAP_SHAFT,   shaft_ok  ? 1 : 0},
         { TRAP_ALARM,   alarm_ok  ? 1 : 0},
     };

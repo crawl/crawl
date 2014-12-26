@@ -3778,6 +3778,7 @@ static void _hints_describe_feature(int x, int y)
          break;
 
     case DNGN_TRAP_TELEPORT:
+    case DNGN_TRAP_SHADOW:
     case DNGN_TRAP_ALARM:
     case DNGN_TRAP_ZOT:
     case DNGN_TRAP_MECHANICAL:

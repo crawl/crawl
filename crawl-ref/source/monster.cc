@@ -4833,8 +4833,9 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 
     const bool player_knows_trap = (trap.is_known(&you));
 
-    // No friendly monsters will ever enter a Zot trap you know.
-    if (player_knows_trap && friendly() && trap.type == TRAP_ZOT)
+    // No friendly monsters will ever enter a shadow or Zot trap you know.
+    if (player_knows_trap && friendly() && (trap.type == TRAP_ZOT
+                                            || trap.type == TRAP_SHADOW))
         return false;
 
     // Dumb monsters don't care at all.
@@ -5781,6 +5782,7 @@ bool monster::do_shaft()
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_TELEPORT:
         case DNGN_TRAP_ALARM:
+        case DNGN_TRAP_SHADOW:
         case DNGN_TRAP_ZOT:
         case DNGN_TRAP_SHAFT:
         case DNGN_TRAP_WEB:
