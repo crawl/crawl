@@ -173,6 +173,9 @@ const int MONSTER_LOS_RANGE = LOS_RADIUS;
 const int MAX_ROD_CHARGE  = 17;
 const int ROD_CHARGE_MULT = 100;
 
+// evoker_debt for evoking one XP evoker
+const int XP_EVOKE_DEBT   = 10;
+
 const int BASELINE_DELAY  = 10;
 const int GOURMAND_MAX            = 200 * BASELINE_DELAY;
 const int GOURMAND_NUTRITION_BASE = 10  * BASELINE_DELAY;

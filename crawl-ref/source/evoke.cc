@@ -2054,7 +2054,7 @@ static bool _phial_of_floods()
 
 static void _expend_xp_evoker(item_def &item)
 {
-    item.evoker_debt = 10;
+    item.evoker_debt += XP_EVOKE_DEBT;
 }
 
 static spret_type _phantom_mirror()

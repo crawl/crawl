@@ -3119,6 +3119,27 @@ static void tag_read_you_items(reader &th)
 #endif
     }
 
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_STACKABLE_EVOKERS)
+    {
+        for (i = 0; i < count; i++)
+        {
+            if (!you.inv[i].defined() || !is_xp_evoker(you.inv[i]))
+                continue;
+
+            for (j = i + 1; j < count; j++)
+            {
+                if (you.inv[j].defined() && items_stack(you.inv[i], you.inv[j]))
+                {
+                    merge_item_stacks(you.inv[j], you.inv[i]);
+                    inc_inv_item_quantity(i, you.inv[j].quantity);
+                    dec_inv_item_quantity(j, you.inv[j].quantity);
+                }
+            }
+        }
+    }
+#endif
+
     // Initialize cache of equipped unrand functions
     for (i = 0; i < NUM_EQUIP; ++i)
     {
