@@ -2923,6 +2923,9 @@ size_t num_xp_evokers_inert(const item_def &item)
 // XXX: this doesn't seem like the best place to put these two functions.
 /**
  * Remove the most recently used XP evoker from a stack of items.
+ * (That is, first remove all of the inert evokers, and only then remove
+ * charged ones as necessary.)
+ *
  * @param   stack The stack of items.
  * @param   quant The number of evokers we are pulling.
  * @returns The evoker debt of the items we are pulling out of the pile.
@@ -2937,24 +2940,32 @@ int remove_newest_xp_evoker(item_def &stack, int quant)
 
 /**
  * Remove the least recently used XP evoker from a stack of items.
+ * (That is, first remove all of the charged evokers, and only then remove
+ * inert ones as necessary.)
+ *
  * @param   stack The stack of items.
  * @param   quant The number of evokers we are pulling.
  * @returns The evoker debt of the items we are pulling out of the pile.
  */
 int remove_oldest_xp_evoker(item_def &stack, int quant)
 {
-    int num_inert = num_xp_evokers_inert(stack) - (stack.quantity - quant);
+    // how many items will be left in the old stack?
+    const int old_stack_remaining = stack.quantity - quant;
+    // how many inert evokers do we need to take?
+    int num_inert = num_xp_evokers_inert(stack) - old_stack_remaining;
     if (num_inert <= 0)
         return 0;
 
-    int ret = 0;
+    int new_stack_debt = 0;
+    // first, take a partially-recharged inert evoker, if there is one
     if (stack.evoker_debt % XP_EVOKE_DEBT > 0)
     {
-        ret = stack.evoker_debt % XP_EVOKE_DEBT;
-        stack.evoker_debt -= ret;
+        new_stack_debt = stack.evoker_debt % XP_EVOKE_DEBT;
+        stack.evoker_debt -= new_stack_debt;
         num_inert -= 1;
     }
+    // then take as many fully inert evokers as is necessary.
     stack.evoker_debt -= XP_EVOKE_DEBT * num_inert;
-    ret += XP_EVOKE_DEBT * num_inert;
-    return ret;
+    new_stack_debt += XP_EVOKE_DEBT * num_inert;
+    return new_stack_debt;
 }
