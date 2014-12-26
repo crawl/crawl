@@ -161,4 +161,6 @@ void ru_do_retribution(monster* mons, int damage);
 void ru_draw_out_power();
 bool ru_power_leap();
 bool ru_apocalypse();
+
+bool pakellas_check_quick_charge(bool quiet);
 #endif
