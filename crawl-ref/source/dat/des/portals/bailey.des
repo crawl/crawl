@@ -578,6 +578,11 @@ KFEAT:   ^ = known alarm trap
 SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc
+SUBST:   H = W.
+# the following KMONS duplicates monster 1 from kobold_axe_returning
+KFEAT:   ( = exit_bailey
+KMONS:   ( = generate_awake kobold ; tomahawk ego:returning ident:type q:4 | \
+                                     tomahawk ego:returning ident:type q:3
 #
 : kobold_axe_returning(_G)
 : easy_axe_fighter(_G)
@@ -597,9 +602,9 @@ cccccccc....2T2...c..c.2.d.2.c.1CdC...ccccccccccccc
 ccccccccc....2..cEc..c.2...2.c..cDc...1cwwwwcccwwwc
 ccccccccccc.....EdB..cccc+cccc..+dc..Wwwwwwwwwwwwwx
 cccwwwwwwc1.1...cEc...^.....^...ccc1Wwwwwwwwwwwwxxx
-cwwwwwwwwwwwW1.1..c1.cccc+cccc.1c1Wwwwwwwwxxxxxxxxx
+cwwwwwwwwwwwW1.1..c1.cccc+cccc.1c1Hwwwwwwwxxxxxxxxx
 xwwwxxxwwwwwwwwwW1cncc..2.2..ccncwwwwwwxxxxxxxxxxxx
-xxxxxxxxx....Wwwwwww1c.2.2.2.c1wwwwwxxxxxxxxxxxxxxx
+xxxxxxxxx....Wwwwwww(c.2.2.2.c(wwwwwxxxxxxxxxxxxxxx
 xxxxxxxxxx......Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.......Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx........WwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
