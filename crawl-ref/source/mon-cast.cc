@@ -7305,17 +7305,17 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
 
     const coord_def old_pos = goblin.pos();
     const bool thrower_seen = you.can_see(&tosser);
-    const bool victim_was_seen = you.can_see(&foe);
-    const bool victim_will_be_seen = foe.visible_to(&you)
+    const bool goblin_was_seen = you.can_see(&goblin);
+    const bool goblin_will_be_seen = goblin.visible_to(&you)
                                      && you.see_cell(chosen_dest);
-    const bool victim_seen = victim_was_seen || victim_will_be_seen;
+    const bool goblin_seen = goblin_was_seen || goblin_will_be_seen;
 
     if (!(goblin.flags & MF_WAS_IN_VIEW))
         goblin.seen_context = SC_THROWN_IN;
 
-    if (thrower_seen || victim_was_seen)
+    if (thrower_seen || goblin_seen)
     {
-        const string victim_name = goblin.name(DESC_THE, true);
+        const string goblin_name = goblin.name(DESC_THE, true);
         const string thrower_name = tosser.name(DESC_THE);
         const string destination = you.can_see(&foe) ?
                                    make_stringf("at %s",
@@ -7324,7 +7324,7 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
 
         mprf("%s throws %s %s!",
              (thrower_seen ? thrower_name.c_str() : "Something"),
-             (victim_seen ? victim_name.c_str() : "something"),
+             (goblin_seen ? goblin_name.c_str() : "something"),
              destination.c_str());
 
         bolt beam;
@@ -7348,8 +7348,8 @@ static void _goblin_toss_to(const monster &tosser, monster &goblin,
     goblin.check_redraw(old_pos);
 
     const string killed_by = make_stringf("Hit by %s thrown by %s",
-                                          goblin.name(DESC_A).c_str(),
-                                          tosser.name(DESC_PLAIN).c_str());
+                                          goblin.name(DESC_A, true).c_str(),
+                                          tosser.name(DESC_PLAIN, true).c_str());
     foe.hurt(&tosser, dam, BEAM_NONE, KILLED_BY_BEAM, "", killed_by, true);
 
     // wake sleepy goblins
