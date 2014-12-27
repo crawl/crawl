@@ -2150,7 +2150,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
     case MONS_VAULT_SENTINEL:
     case MONS_IRONBRAND_CONVOKER:
-    case MONS_IRONHEART_PRESERVER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_RING_MAIL,   ARM_SCALE_MAIL);
         break;
@@ -2270,6 +2269,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
     case MONS_TENGU_WARRIOR:
     case MONS_DEMONSPAWN:
+    case MONS_IRONHEART_PRESERVER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_RING_MAIL;
         break;
