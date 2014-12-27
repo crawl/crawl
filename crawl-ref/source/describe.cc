@@ -1059,7 +1059,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     if (verbose)
     {
-        description += "\n\nThis weapon falls into the";
+        description += "\n\nThis ";
+        if (is_unrandom_artefact(item))
+            description += get_artefact_base_name(item, true);
+        else
+            description += "weapon";
+        description += " falls into the";
 
         const skill_type skill = item_attack_skill(item);
 
