@@ -11,6 +11,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define ZOMBIE_BASE_AC_KEY "zombie_base_ac"
 #define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
 
+#define FAKE_BLINK_KEY "fake_blink"
+
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
