@@ -503,7 +503,8 @@ targetter_cloud::targetter_cloud(const actor* act, int range,
     ASSERT(cnt_min > 0);
     ASSERT(cnt_max > 0);
     ASSERT(cnt_min <= cnt_max);
-    if (agent = act)
+    agent = act;
+    if (agent)
         origin = aim = act->pos();
     range2 = dist_range(range);
 }

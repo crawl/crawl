@@ -2842,10 +2842,12 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_GHOSTLY_FLAME, p, random2(6) + 5, agent());
 
     if (origin_spell == SPELL_DEATH_RATTLE)
+    {
         if (coinflip())
             place_cloud(CLOUD_NEGATIVE_ENERGY, p, random2(4) + 4, agent());
         else
             place_cloud(CLOUD_MIASMA, p, random2(4) + 4, agent());
+    }
 }
 
 void bolt::affect_place_explosion_clouds()

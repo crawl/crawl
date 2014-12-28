@@ -1569,10 +1569,12 @@ int find_free_slot(const item_def &i)
     // Return first free slot
     for (slot = 0; slot < ENDOFPACK; ++slot)
         if (!you.inv[slot].defined())
+        {
             if (disliked[slot])
                 badslot = slot;
             else
                 return slot;
+        }
 
     // If the least preferred slot is the only choice, so be it.
     return badslot;

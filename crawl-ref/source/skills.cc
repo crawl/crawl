@@ -361,10 +361,12 @@ void check_skill_level_change(skill_type sk, bool do_level_up)
     }
 
     if (new_level != you.skills[sk])
+    {
         if (do_level_up)
             _change_skill_level(sk, new_level - you.skills[sk]);
         else
             you.skills[sk] = new_level;
+    }
 }
 
 // Fill a queue in random order with the values of the array.

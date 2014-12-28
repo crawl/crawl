@@ -138,8 +138,8 @@ bool monster::add_ench(const mon_enchant &ench)
     }
 
     bool new_enchantment = false;
-    mon_enchant *added = nullptr;
-    if (added = map_find(enchantments, ench.ench))
+    mon_enchant *added = map_find(enchantments, ench.ench);
+    if (added)
         *added += ench;
     else
     {
@@ -492,19 +492,23 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_SWIFT:
         if (!quiet)
+        {
             if (type == MONS_ALLIGATOR)
                 simple_monster_message(this, " slows down.");
             else
                 simple_monster_message(this, " is no longer moving somewhat quickly.");
+        }
         break;
 
     case ENCH_SILENCE:
         invalidate_agrid();
         if (!quiet && !silenced(pos()))
+        {
             if (alive())
                 simple_monster_message(this, " becomes audible again.");
             else
                 mprf("As %s dies, the sound returns.", name(DESC_THE).c_str());
+        }
         break;
 
     case ENCH_MIGHT:

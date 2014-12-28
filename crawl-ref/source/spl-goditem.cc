@@ -1070,10 +1070,12 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
         hploss = roll_dice(3, 15) + (random2(pow) / 10);
 
     if (hploss)
+    {
         if (source == HOLY_WORD_ZIN)
             simple_monster_message(mons, " is blasted by Zin's holy word!");
         else
             simple_monster_message(mons, " convulses!");
+    }
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
     if (!hploss || !mons->alive())

@@ -290,16 +290,20 @@ static void _dump_player(FILE *file)
             fprintf(file, "    unknown #%d: %d", i, normal);
 
         if (innate)
+        {
             if (innate == normal)
                 fprintf(file, " (innate)");
             else
                 fprintf(file, " (%d innate)", innate);
+        }
 
         if (temp)
+        {
             if (temp == normal)
                 fprintf(file, " (temporary)");
             else
                 fprintf(file, " (%d temporary)", temp);
+        }
 
         fprintf(file, "\n");
     }

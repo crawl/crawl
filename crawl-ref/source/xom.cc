@@ -2515,6 +2515,7 @@ static void _xom_zero_miscast()
         string str = "A monocle briefly appears over your ";
         str += coinflip() ? "right" : "left";
         if (you.form == TRAN_SPIDER)
+        {
             if (coinflip())
                 str += " primary";
             else
@@ -2522,6 +2523,7 @@ static void _xom_zero_miscast()
                 str += random_choose(" front", " middle", " rear");
                 str += " secondary";
             }
+        }
         str += " eye.";
         messages.push_back(str);
     }

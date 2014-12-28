@@ -855,10 +855,12 @@ static void _describe_rotting(status_info* inf)
         else if (rot > 4)
             inf->long_text += " badly";
         else if (you.species == SP_GHOUL)
+        {
             if (rot > 2)
                 inf->long_text += " faster than usual";
             else
                 inf->long_text += " at the usual pace";
+        }
         inf->long_text += ".";
     }
 }
