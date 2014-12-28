@@ -993,13 +993,6 @@ static const char* book_secondary_string(uint32_t s)
     if (!_book_visually_special(s))
         return "";
 
-    /*item.special = random2(5);
-
-    if (one_chance_in(10))
-        item.special += random2(NDSC_BOOK_SEC) * NDSC_BOOK_PRI;
-    NDSC_BOOK_PRI  = 10,
-    NDSC_BOOK_SEC  = 8,*/
-
     static const char* const secondary_strings[] = {
         "", "chunky ", "thick ", "thin ", "wide ", "glowing ",
         "dog-eared ", "oblong ", "runed ", "", "", ""
