@@ -3848,7 +3848,8 @@ static void _ballisto_on_move(monster* mons, const coord_def& position)
     mons->spore_cooldown = 40;
 }
 
-bool monster_swaps_places(monster* mon, const coord_def& delta, bool takes_time)
+bool monster_swaps_places(monster* mon, const coord_def& delta,
+                          bool takes_time, bool apply_effects)
 {
     if (delta.origin())
         return false;
@@ -3889,13 +3890,13 @@ bool monster_swaps_places(monster* mon, const coord_def& delta, bool takes_time)
     mon->check_redraw(m2->pos(), false);
     if (mon->is_wall_clinging())
         mon->check_clinging(true);
-    else
+    else if (apply_effects)
         mon->apply_location_effects(m2->pos());
 
     m2->check_redraw(mon->pos(), false);
     if (m2->is_wall_clinging())
         m2->check_clinging(true);
-    else
+    else if (apply_effects)
         m2->apply_location_effects(mon->pos());
 
     // The seen context no longer applies if the monster is moving normally.
