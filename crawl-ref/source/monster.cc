@@ -4836,7 +4836,9 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     // No friendly monsters will ever enter a shadow or Zot trap you know.
     if (player_knows_trap && friendly() && (trap.type == TRAP_ZOT
                                             || trap.type == TRAP_SHADOW))
+    {
         return false;
+    }
 
     // Dumb monsters don't care at all.
     if (intel == I_PLANT)
