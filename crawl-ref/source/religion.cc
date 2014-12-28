@@ -1484,19 +1484,26 @@ static bool _give_pakellas_gift()
         return false;
     }
 
-    object_class_type gift_type =
-        random_choose_weighted(
-            10,                              OBJ_WANDS,
-            5,                               OBJ_MISCELLANY, // evokers
-            you.species == SP_FELID ? 3 : 0, OBJ_RODS,
-                                             0);
+    object_class_type gift_type = OBJ_UNASSIGNED;
+
+    if (you.species == SP_FELID)
+        gift_type = coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
+    else if (you.num_total_gifts[GOD_PAKELLAS] == 0)
+        gift_type = OBJ_RODS;
+    else
+    {
+        gift_type = random_choose_weighted(5, OBJ_WANDS,
+                                           5, OBJ_MISCELLANY,
+                                           3, OBJ_RODS,
+                                           0);
+    }
 
     if (acquirement(gift_type, you.religion))
     {
         simple_god_message(" grants you a gift!");
         more();
 
-        _inc_gift_timeout(40 + random2avg(19, 2));
+        _inc_gift_timeout(100 + random2avg(19, 2));
         you.num_current_gifts[you.religion]++;
         you.num_total_gifts[you.religion]++;
         take_note(Note(NOTE_GOD_GIFT, you.religion));
