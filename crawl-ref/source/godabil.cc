@@ -3640,12 +3640,11 @@ void cheibriados_temporal_distortion()
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
 
-    monster* mon;
-    if (mon = monster_at(old_pos))
+    if (monster *mon = monster_at(old_pos))
     {
         mon->blink();
-        if (mon = monster_at(old_pos))
-            mon->teleport(true);
+        if (monster *stubborn = monster_at(old_pos))
+            stubborn->teleport(true);
     }
 
     you.moveto(old_pos);
@@ -3679,12 +3678,11 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     scaled_delay(1000);
 #endif
 
-    monster* mon;
-    if (mon = monster_at(old_pos))
+    if (monster *mon = monster_at(old_pos))
     {
         mon->blink();
-        if (mon = monster_at(old_pos))
-            mon->teleport(true);
+        if (monster *stubborn = monster_at(old_pos))
+            stubborn->teleport(true);
     }
 
     you.moveto(old_pos);

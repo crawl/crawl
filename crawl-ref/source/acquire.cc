@@ -113,21 +113,25 @@ static armour_type _pick_wearable_armour(const armour_type arm)
 
     case SP_OCTOPODE:
         if (arm != ARM_HELMET && arm != ARM_SHIELD)
+        {
             if (coinflip())
                 result = ARM_HELMET;
             else
                 result = ARM_SHIELD;
+        }
         // and fall through for shield size adjustments
 
     default:
         if (arm == ARM_CENTAUR_BARDING || arm == ARM_NAGA_BARDING)
             result = ARM_BOOTS;
         if (arm == ARM_SHIELD)
+        {
             if (x_chance_in_y(15 - you.skills[SK_SHIELDS], 20))
                 result = ARM_BUCKLER;
             else if (x_chance_in_y(you.skills[SK_SHIELDS] - 10, 15)
                      && you.species != SP_KOBOLD && you.species != SP_HALFLING)
                 result = ARM_LARGE_SHIELD;
+        }
         break;
     }
 

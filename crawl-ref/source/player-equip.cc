@@ -424,12 +424,14 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             int mp = item.special - you.elapsed_time / POWER_DECAY;
 
             if (mp > 0)
+            {
 #if TAG_MAJOR_VERSION == 34
                 if (you.species == SP_DJINNI)
                     you.hp += mp;
                 else
 #endif
                 you.magic_points += mp;
+            }
 
             if (get_real_mp(true) >= 50)
                 mpr("You feel your magic capacity is already quite full.");

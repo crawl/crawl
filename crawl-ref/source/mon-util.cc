@@ -297,7 +297,7 @@ void set_resist(resists_t &all, mon_resist_flags res, int lev)
     }
 
     ASSERT_RANGE(lev, -3, 5);
-    all = all & ~(res * 7) | res * (lev & 7);
+    all = (all & ~(res * 7)) | (res * (lev & 7));
 }
 
 int get_mons_class_ac(monster_type mc)
@@ -341,13 +341,13 @@ resists_t get_mons_resists(const monster* mon)
     // Undead get full poison resistance. This is set from here in case
     // they're undead due to the MF_FAKE_UNDEAD flag.
     if (mon->holiness() == MH_UNDEAD)
-        resists = resists & ~(MR_RES_POISON * 7) | MR_RES_POISON * 3;
+        resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
     // Everything but natural creatures have full rNeg. Set here for the
     // benefit of the monster_info constructor.  If you change this, also
     // change monster::res_negative_energy.
     if (mon->holiness() != MH_NATURAL)
-        resists = resists & ~(MR_RES_NEG * 7) | MR_RES_NEG * 3;
+        resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
 
     return resists;
 }

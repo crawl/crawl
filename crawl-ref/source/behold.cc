@@ -61,7 +61,7 @@ void player::add_beholder(const monster* mon, bool axe)
 // Whether player is mesmerised.
 bool player::beheld() const
 {
-    ASSERT(duration[DUR_MESMERISED] > 0 == !beholders.empty());
+    ASSERT((duration[DUR_MESMERISED] > 0) == !beholders.empty());
     return duration[DUR_MESMERISED] > 0;
 }
 
