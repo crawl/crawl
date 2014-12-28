@@ -30,6 +30,7 @@
 #include "abyss.h"
 #include "acquire.h"
 #include "act-iter.h"
+#include "adjust.h"
 #include "areas.h"
 #include "arena.h"
 #include "artefact.h"

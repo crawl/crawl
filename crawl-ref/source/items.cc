@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "adjust.h"
 #include "areas.h"
 #include "arena.h"
 #include "artefact.h"
@@ -22,7 +23,6 @@
 #include "cio.h"
 #include "clua.h"
 #include "colour.h"
-#include "command.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dactions.h"

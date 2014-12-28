@@ -7,6 +7,7 @@
     <ClCompile Include="..\act-iter.cc" />
     <ClCompile Include="..\actor-los.cc" />
     <ClCompile Include="..\actor.cc" />
+    <ClCompile Include="..\adjust.cc" />
     <ClCompile Include="..\AppHdr.cc" />
     <ClCompile Include="..\areas.cc" />
     <ClCompile Include="..\arena.cc" />
@@ -307,6 +308,7 @@
     <ClInclude Include="..\acquire.h" />
     <ClInclude Include="..\act-iter.h" />
     <ClInclude Include="..\actor.h" />
+    <ClInclude Include="..\adjust.h" />
     <ClInclude Include="..\AppHdr.h" />
     <ClInclude Include="..\aptitudes.h" />
     <ClInclude Include="..\areas.h" />
