@@ -82,8 +82,7 @@ enum
     NDSC_WAND_SEC  = 16,
     NDSC_POT_PRI   = PDC_NCOLOURS,
     NDSC_POT_SEC   = PDQ_NQUALS,
-    NDSC_BOOK_PRI  = 10,
-    NDSC_BOOK_SEC  = 8,
+    NDSC_BOOK_PRI  = 5,
 };
 
 enum mbn_type
