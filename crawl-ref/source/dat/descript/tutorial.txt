@@ -181,7 +181,6 @@ chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
 %%%%
 tutorial2 rest_and_chop_reminder
 
-# FIXME: Awkward. No mouse commands.
 Don't forget about chopping corpses for food (with
 <input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
 mouseclick</input></localtiles>), or resting (with
