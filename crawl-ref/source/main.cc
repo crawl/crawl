@@ -2985,10 +2985,13 @@ static void _swap_places(monster* mons, const coord_def &loc)
         if (mons->type == MONS_WANDERING_MUSHROOM
             && monster_at(loc)->type == MONS_TOADSTOOL)
         {
-            // FIXME: need to not fire apply_location_effects just yet.
-            // That's a little tricky because there are two monsters
-            // involved.
-            monster_swaps_places(mons, loc - mons->pos());
+            // We'll fire location effects for 'mons' back in _move_player,
+            // so don't do so here. The toadstool won't get location effects,
+            // but the player will trigger those soon enough. This wouldn't
+            // work so well if toadstools were aquatic, had clinging, or were
+            // otherwise handled specially in monster_swap_places or in
+            // apply_location_effects.
+            monster_swaps_places(mons, loc - mons->pos(), true, false);
             return;
         }
         else
