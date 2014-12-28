@@ -447,7 +447,7 @@ void shock_serpent_discharge_fineff::fire()
     coord_def tl(position.x - range, position.y - range);
     coord_def br(position.x + range, position.y + range);
     for (rectangle_iterator ri(tl, br); ri; ++ri)
-        if (in_bounds(*ri))
+        if (in_bounds(*ri) && !cell_is_solid(*ri))
         {
             if (!pause && you.see_cell(*ri))
                 pause = true;
