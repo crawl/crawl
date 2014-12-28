@@ -74,6 +74,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
+#include "teleport.h" // monster_teleport
 #include "terrain.h"
 #include "throw.h"
 #ifdef USE_TILE
@@ -3642,9 +3643,11 @@ void cheibriados_temporal_distortion()
 
     if (monster *mon = monster_at(old_pos))
     {
+        mon->props[FAKE_BLINK_KEY].get_bool() = true;
         mon->blink();
+        mon->props.erase(FAKE_BLINK_KEY);
         if (monster *stubborn = monster_at(old_pos))
-            stubborn->teleport(true);
+            monster_teleport(stubborn, true, true);
     }
 
     you.moveto(old_pos);
@@ -3680,9 +3683,11 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
     if (monster *mon = monster_at(old_pos))
     {
+        mon->props[FAKE_BLINK_KEY].get_bool() = true;
         mon->blink();
+        mon->props.erase(FAKE_BLINK_KEY);
         if (monster *stubborn = monster_at(old_pos))
-            stubborn->teleport(true);
+            monster_teleport(stubborn, true, true);
     }
 
     you.moveto(old_pos);
