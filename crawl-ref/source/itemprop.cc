@@ -2915,7 +2915,7 @@ bool evoker_is_charged(const item_def &item)
     return num_xp_evokers_inert(item) < item.quantity;
 }
 
-size_t num_xp_evokers_inert(const item_def &item)
+int num_xp_evokers_inert(const item_def &item)
 {
     return (item.evoker_debt + XP_EVOKE_DEBT - 1) / XP_EVOKE_DEBT;
 }
