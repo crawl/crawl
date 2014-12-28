@@ -27,6 +27,7 @@
 #include "ouch.h"
 #include "religion.h"
 #include "state.h"
+#include "terrain.h"
 #include "transform.h"
 #include "view.h"
 #include "viewchar.h"
