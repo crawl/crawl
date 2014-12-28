@@ -444,6 +444,9 @@ void shock_serpent_discharge_fineff::fire()
     beam.flavour    = BEAM_VISUAL;
     beam.colour     = LIGHTCYAN;
     beam.glyph      = dchar_glyph(DCHAR_EXPLOSION);
+#ifdef USE_TILE
+    beam.tile_beam = -1;
+#endif
     beam.draw_delay = 0;
     coord_def tl(position.x - range, position.y - range);
     coord_def br(position.x + range, position.y + range);
