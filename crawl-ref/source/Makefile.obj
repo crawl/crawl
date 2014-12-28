@@ -121,6 +121,7 @@ l_you.o \
 lang-fake.o \
 lev-pand.o \
 libutil.o \
+lookup_help.o \
 los.o \
 los_def.o \
 losglobal.o \

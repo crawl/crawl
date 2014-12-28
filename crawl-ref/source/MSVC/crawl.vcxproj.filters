@@ -122,6 +122,7 @@
     <ClCompile Include="..\l_view.cc" />
     <ClCompile Include="..\l_you.cc" />
     <ClCompile Include="..\lev-pand.cc" />
+    <ClCompile Include="..\lookup_help.cc" />
     <ClCompile Include="..\melee_attack.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
@@ -424,6 +425,7 @@
     <ClInclude Include="..\l_libs.h" />
     <ClInclude Include="..\l_los.h" />
     <ClInclude Include="..\lev-pand.h" />
+    <ClInclude Include="..\lookup_help.h" />
     <ClInclude Include="..\matrix.h" />
     <ClInclude Include="..\melee_attack.h" />
     <ClInclude Include="..\mi-enum.h" />
