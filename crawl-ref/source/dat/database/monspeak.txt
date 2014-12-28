@@ -1047,7 +1047,7 @@ VISUAL:@The_monster@ takes a fighting stance.
 
 @The_monster@ sneers, "Do you call that fighting?"
 
-@The_monster@ laughs, "And you think you're capable of finding the ORB. I had it, you know. Then I gave it away so I could steal it AGAIN."
+@The_monster@ laughs, "And you think you're capable of finding the ORB? I had it, you know. Then I gave it away so I could steal it AGAIN."
 %%%%
 Short Blades player ghost
 
@@ -1062,8 +1062,6 @@ Long Blades player ghost
 VISUAL:@The_monster@ holds @possessive@ blade at the ready.
 
 @The_monster@ says, "Live by the sword, die by the sword."
-
-@The_monster@ says, "My hard blade and your soft body. They will meet - soon."
 %%%%
 Axes player ghost
 
@@ -1281,8 +1279,6 @@ Earth Magic player ghost
 
 @The_monster@ says, "All of the earth is under my command."
 
-@The_monster@ says, "I can make a mountain out of a molehill and squeeze you to death."
-
 VISUAL:@The_monster@ gestures.
 VISUAL SPELL:For a moment, the earth shakes beneath you.
 %%%%
@@ -1297,8 +1293,6 @@ Poison Magic player ghost
 @The_monster@ says @to_foe@, "Don't move, or the poison will kill you faster."
 
 @The_monster@ says @to_foe@, "I don't need to breathe anymore, but you do!"
-
-@The_monster@ says, "I've got poisons running in my veins."
 %%%%
 Invocations player ghost
 
@@ -1318,7 +1312,7 @@ Evocations player ghost
 
 @The_monster@ says @to_foe@, "How about a game of cards?"
 
-@The_monster@ says @to_foe@, "Sure you are pointing that wand in the right direction?"
+@The_monster@ says @to_foe@, "Are you sure you're pointing that wand in the right direction?"
 
 @The_monster@ says, "I could kill you with a [stone|fan|lamp]."
 %%%%
@@ -1375,8 +1369,6 @@ Fedhas player ghost
 @The_monster@ says, "You will make such fine fertiliser."
 
 @The_monster@ says, "Life goes in cycles. In a little while, you'll be reborn as a tapeworm."
-
-@The_monster@ mutters, "Two more apples and I would have lived."
 %%%%
 Gozag player ghost
 
