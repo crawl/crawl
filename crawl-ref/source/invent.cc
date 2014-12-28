@@ -2197,19 +2197,6 @@ void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
     }
 }
 
-/**
- * Is the given elemental evoker currently charging?
- *
- * @param item      The evoker in question.
- * @return          Whether the player gaining xp will help recharge this item.
- */
-bool evoker_is_charging(const item_def &item)
-{
-    FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
-    list_charging_evokers(evokers);
-    return evokers[item.sub_type] == &item;
-}
-
 void identify_inventory()
 {
     for (int i = 0; i < ENDOFPACK; ++i)
