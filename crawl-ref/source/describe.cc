@@ -14,11 +14,11 @@
 #include <sstream>
 #include <string>
 
+#include "adjust.h"
 #include "artefact.h"
 #include "branch.h"
 #include "butcher.h"
 #include "clua.h"
-#include "command.h"
 #include "database.h"
 #include "decks.h"
 #include "delay.h"

@@ -5,6 +5,7 @@ acquire.o \
 act-iter.o \
 actor-los.o \
 actor.o \
+adjust.o \
 areas.o \
 arena.o \
 artefact.o \

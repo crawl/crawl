@@ -8,11 +8,9 @@
 
 #include "enum.h"
 
-void adjust();
 void list_armour();
 void list_jewellery();
 
-void swap_inv_slots(int slot1, int slot2, bool verbose);
 void toggle_viewport_monster_hp();
 void toggle_viewport_weapons();
 void show_levelmap_help();
