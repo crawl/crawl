@@ -77,12 +77,13 @@ void item_colour(item_def &item)
     item.rnd = 1 + random2(255); // reserve 0 for uninitialized
 
     // reserve the high bit for marking 1 in 10 books "visually special"
-    if (item.base_type = OBJ_BOOKS)
+    if (item.base_type == OBJ_BOOKS)
     {
         if (one_chance_in(10))
             item.rnd |= 128;
         else
-            item.rnd &= 127;
+            item.rnd = 1 + random2(127); // can't just trim the high bit,
+                                         // since it might be the only set bit
     }
 
     if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
