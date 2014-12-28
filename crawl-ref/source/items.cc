@@ -4813,12 +4813,9 @@ item_info get_item_info(const item_def& item)
         }
 
         // Copying the exact number here would leak info about how charged
-        // the evokers are; instead, let's give the evoker debt as the
-        // number of inert evokers.
-        // If the scale mismatch turns out to be an issue, we can scale by
-        // XP_EVOKE_DEBT.
+        // the evokers are.
         if (is_xp_evoker(item))
-            ii.evoker_debt = num_xp_evokers_inert(item);
+            ii.evoker_debt = num_xp_evokers_inert(item) * XP_EVOKE_DEBT;
         break;
     case OBJ_GOLD:
         ii.special = item.special;
