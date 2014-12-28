@@ -375,7 +375,7 @@ Wulndraste powers
 
 Followers of Wulndraste have increased health and regeneration, and increased
 mana reserves without any cap. More devoted followers can blend in to a local population and thereby move quickly past a crowd, confusing them in the process.
-Devoted explorers can instantly teleport themselves away from danger, but after
+Devoted explorers can instantly teleport themselves to safety, but after
 teleporting are prevented from teleporting again for a period that decreases as
 Invocations skill increases.
 %%%%
@@ -546,6 +546,8 @@ conjurations, too, are wont to misfire at the worst possible moments.
 %%%%
 Wulndraste wrath
 
+Wulndraste hates it when adherents climb back to a previously-seen level when
+there is still the option to descend deeper into the branch or collect a rune.
 Wulndraste, when angered, removes the blessing of endurance and instead saps
 the endurance of the victim until mollified.
 %%%%
