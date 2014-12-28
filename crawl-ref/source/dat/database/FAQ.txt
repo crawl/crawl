@@ -162,9 +162,7 @@ Is there a cheating mode to Crawl where I can play without dying?
 %%%%
 A:cheating
 
-A: Not a cheating mode, exactly, but if your build supports it you can play in wizard mode (access with '&') where you are prompted whenever you're about to die and have access to a number of nifty commands to create equipment, travel to distant branches, or fiddle with your stats or skills. Note that wizard mode games will never appear on the highscore list.
-
-Many players reckon long-time use of wizard mode to be detrimental to your playing skills. On the other hand, wizard mode has its uses: we are really grateful whenever we get bug reports using wizard mode for reproducing and exploring bugs.
+A: Press '+'!
 %%%%
 Q:weapons
 
@@ -174,7 +172,7 @@ A:weapons
 
 A: "Better" depends on a number of factors, such as your weapon skills, whether it's one- or two-handed, the randart properties, the weapon brand, and the monsters you're about to face. In general, switching from a weapon type at which you are already highly skilled to another one that you have no skill in is a waste of time. The brands may greatly differ in damage output, but you can get a good idea by bashing a few comparatively harmless monsters with each and comparing the results.
 
-Of the enchantments, the second value (damage) is usually much more important than the first (accuracy), unless you hardly ever manage to hit with a weapon. The delay in swinging a weapon can be reduced by the corresponding weapon skill.
+The delay in swinging a weapon can be reduced by the corresponding weapon skill.
 %%%%
 Q:religion
 
@@ -198,7 +196,7 @@ A: There isn't any such option, and we're not planning to add one, either.
 
 For a more constructive answer, once a ghost has been loaded onto a level, it won't be loaded again - unless you happen to die on that level, thus creating a bones file featuring more than one ghost. Keep in mind that you don't absolutely have to fight every monster you meet, and with ghosts it's even easier: they cannot leave the level they were created on.
 
-Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers or spellcasters with Conjure Flame.
+Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Troll Berserkers. Or play online, where you'll mostly be killed by others' ghosts instead!
 %%%%
 Q:abyss
 
@@ -214,9 +212,7 @@ A: If you are in the Abyss for the first time, chances of getting out are slim. 
 
 * If you have it, use defensive equipment (weapons of protection, etc.).
 
-* Use teleportation to end up in a completely new part of the Abyss.
-
-* Teleportation might take much longer to kick in than in the Dungeon.
+* Use teleportation to end up in a completely new part of the Abyss. (But keep in mind that teleportation will take much longer to kick in than in the Dungeon...)
 
 * Consider switching your allegiance to Lugonu, the god of the Abyss. Upon conversion, you will be able to escape the Abyss immediately (but you may anger your previous god!).
 
@@ -269,7 +265,7 @@ A:beta
 
 A: There certainly is! You can play "trunk" (what will eventually become the next version) online on any of the online servers; https://crawl.develz.org also hosts Windows and Mac binaries you can download. Note that trunk may be buggy, and that very rarely a bug may invalidate your saved games. If that doesn't bother you, go ahead and play!
 
-Be sure to reports bugs on our bug tracker (https://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the development wiki (https://crawl.develz.org/wiki).
+Be sure to reports bugs on our bug tracker (https://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the forums (https://crawl.develz.org/tavern/).
 
 When doing so, please mention the version (see '?v') you're currently playing, in case the bug's already been fixed or the feature already implemented.
 %%%%
@@ -302,11 +298,9 @@ I've got a cool idea! What can I do with it?
 %%%%
 A:idea
 
-A: If you'd like your idea to get in, your surest bet is to put it in a place where a developer can see it. One good place is an appropriate section of the Mantis wiki: https://crawl.develz.org/wiki. Another possibility is the official forum at https://crawl.develz.org/tavern/.
+A: If you'd like your idea to get in, your surest bet is to put it in a place where a developer can see it. One good place is the official forum, at https://crawl.develz.org/tavern/. If it catches the interest of at least one coder, chances are it'll' make it into the game.
 
-If they catch the interest of at least one coder, chances are they'll make it into the game.
-
-Note that your idea has a better chance of being accepted if you present the ramifications on gameplay. Since we put a lot of emphasis on the interface, a good proposal on how to make the game play smoother may go in without much ado.
+Note that your idea has a better chance of being accepted if you present the ramifications on gameplay. ("How does [adding/removing X] make the game better?") A suggestion for how to improve the interface may go in without much ado, but other suggestions will probably require to defend & justify them.
 %%%%
 Q:help
 
