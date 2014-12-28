@@ -112,7 +112,7 @@ dictatorship (because other people do have good ideas sometimes, even if it's
 hard to believe).
 
 All developers are free and expected to commit changes on their own -- no
-need to ask in advance. This goes especially for features they are already
+need to ask in advance. This goes especially for features they have already
 introduced. For example, vault designers can and should apply changes to
 their vaults. However, there are cases which are less clear cut. If you
 are not sure about that, at least mention it in the commit message,
