@@ -3889,13 +3889,13 @@ bool monster_swaps_places(monster* mon, const coord_def& delta,
 
     mon->check_redraw(m2->pos(), false);
     if (mon->is_wall_clinging())
-        mon->check_clinging(true);
+        mon->check_clinging(true); // XXX: avoids location effects!
     else if (apply_effects)
         mon->apply_location_effects(m2->pos());
 
     m2->check_redraw(mon->pos(), false);
     if (m2->is_wall_clinging())
-        m2->check_clinging(true);
+        m2->check_clinging(true); // XXX: avoids location effects!
     else if (apply_effects)
         m2->apply_location_effects(mon->pos());
 
