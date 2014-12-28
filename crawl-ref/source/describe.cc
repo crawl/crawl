@@ -1927,14 +1927,9 @@ string get_item_description(const item_def &item, bool verbose,
                 description << "\n\n";
                 description << get_desc_quantity(inert, item.quantity, what);
                 description << " presently inert.";
-                if (evoker_is_charging(item))
-                {
-                    description << " Gaining experience will recharge";
-                    if (item.quantity > 1)
-                        description << " them.";
-                    else
-                        description << " it.";
-                }
+
+                description << " Gaining experience will recharge";
+                description << (item.quantity > 1 ? " them." : " it.");
             }
         }
         break;
