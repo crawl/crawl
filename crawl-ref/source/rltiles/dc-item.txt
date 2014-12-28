@@ -889,7 +889,6 @@ bronze BOOK_METAL_OFFSET
 copper
 silver
 gold
-glittering
 metal_blue
 metal_cyan
 metal_green
