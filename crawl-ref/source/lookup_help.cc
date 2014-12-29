@@ -549,7 +549,7 @@ static bool _append_books(string &desc, item_def &item, string key)
  * @param key       The raw database key for the entry. (E.g. "blade card".)
  * @return          A new menu entry.
  */
-MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
+static MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
     me->data = &key;
@@ -564,7 +564,7 @@ MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
  * @param mslot[out]  A space in memory to store a fake monster.
  * @return            A new menu entry.
  */
-MenuEntry* _monster_menu_gen(char letter, const string &str,
+static MenuEntry* _monster_menu_gen(char letter, const string &str,
                              monster_info &mslot)
 {
     // Create and store fake monsters, so the menu code will
@@ -608,7 +608,7 @@ MenuEntry* _monster_menu_gen(char letter, const string &str,
 /**
  * Generate a ?/F menu entry. (ref. _simple_menu_gen()).
  */
-MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
+static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = new FeatureMenuEntry(str, feat_by_desc(str), letter);
     me->data = &key;
@@ -618,7 +618,7 @@ MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/G menu entry. (ref. _simple_menu_gen()).
  */
-MenuEntry* _god_menu_gen(char letter, const string &str, string &key)
+static MenuEntry* _god_menu_gen(char letter, const string &str, string &key)
 {
     return new GodMenuEntry(str_to_god(key));
 }
@@ -626,7 +626,7 @@ MenuEntry* _god_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/A menu entry. (ref. _simple_menu_gen()).
  */
-MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
+static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
@@ -642,7 +642,7 @@ MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/S menu entry. (ref. _simple_menu_gen()).
  */
-MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
+static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
