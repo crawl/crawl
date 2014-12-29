@@ -200,6 +200,8 @@ static vector<string> _get_monster_keys(ucs_t showchar)
     return mon_keys;
 }
 
+typedef vector<string> (*keys_by_glyph)(ucs_t showchar);
+
 static vector<string> _get_god_keys()
 {
     vector<string> names;
@@ -227,6 +229,8 @@ static vector<string> _get_branch_keys()
     }
     return names;
 }
+
+typedef vector<string> (*simple_key_list)();
 
 static bool _monster_filter(string key, string body)
 {
@@ -557,13 +561,8 @@ enum lookup_type_flag
     LTYPF_NONE          = 0,
     /// append the 'type' to the db lookup (e.g. "<input> spell")
     LTYPF_DB_SUFFIX     = 1<<0,
-    /// single letter input searches for corresponding glyphs (o is for orc)
-    LTYPF_SINGLE_LETTER = 1<<1,
-    /// whether the search functionality should be turned off
-    /// (just display a constant list)
-    LTYPF_DISABLE_REGEX = 1<<2,
     /// whether the sorting functionality should be turned off
-    LTYPF_DISABLE_SORT  = 1<<3,
+    LTYPF_DISABLE_SORT  = 1<<1,
 };
 DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
 
@@ -572,9 +571,12 @@ class LookupType
 {
 public:
     LookupType(char _symbol, string _type, db_keys_recap _recap,
-               db_find_filter _filter_forbid, lookup_type_flags _flags)
-    : symbol(_symbol), type(_type), recap(_recap),
-      filter_forbid(_filter_forbid), flags(_flags)
+               db_find_filter _filter_forbid, keys_by_glyph _glyph_fetch,
+               simple_key_list _simple_key_fetch, lookup_type_flags _flags)
+    : symbol(_symbol), type(_type), filter_forbid(_filter_forbid),
+      flags(_flags),
+      simple_key_fetch(_simple_key_fetch), glyph_fetch(_glyph_fetch),
+      recap(_recap)
     { }
 
     /**
@@ -609,39 +611,86 @@ public:
         return "";
     }
 
+    /**
+     * Get a list of string corresponding to the given regex.
+     */
+    vector<string> matching_keys(string regex) const
+    {
+        vector<string> key_list;
+
+        if (no_search())
+            key_list = simple_key_fetch();
+        else if (regex.size() == 1 && supports_glyph_lookup())
+            key_list = glyph_fetch(regex[0]);
+        else
+            key_list = _get_desc_keys(regex, filter_forbid);
+
+        if (recap != nullptr)
+            (*recap)(key_list);
+
+        return key_list;
+    }
+
+    /**
+     * Does this lookup type have special support for single-character input
+     * (looking up corresponding glyphs - e.g. 'o' for orc, '(' for ammo...)
+     */
+    bool supports_glyph_lookup() const { return glyph_fetch != nullptr; }
+
+    /**
+     * Does this lookup type return a list of keys without taking a search
+     * request (e.g. branches or gods)?
+     */
+    bool no_search() const { return simple_key_fetch != nullptr; }
+
 public:
     /// The letter pressed to choose this (e.g. 'M'). case insensitive
     char symbol;
     /// A description of the lookup type (e.g. "monster"). case insensitive
     string type;
-    /// no idea, sorry :(
-    db_keys_recap recap;
     /// a function returning 'true' if the search result corresponding to
     /// the corresponding search should be filtered out of the results
     db_find_filter filter_forbid;
     /// A set of optional functionality; see lookup_type_flag for details
     lookup_type_flags flags;
+private:
+    /// Function that fetches a list of keys, without taking arguments.
+    simple_key_list simple_key_fetch;
+    /// a function taking a single character & returning a list of keys
+    /// corresponding to that glyph
+    keys_by_glyph glyph_fetch;
+    /// no idea, sorry :(
+    db_keys_recap recap;
 };
 
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
-               LTYPF_SINGLE_LETTER),
+               _get_monster_keys, nullptr,
+               LTYPF_NONE),
     LookupType('S', "spell", nullptr, _spell_filter,
+               nullptr, nullptr,
                LTYPF_DB_SUFFIX),
     LookupType('K', "skill", nullptr, _skill_filter,
+               nullptr, nullptr,
                LTYPF_NONE),
     LookupType('A', "ability", nullptr, _ability_filter,
+               nullptr, nullptr,
                LTYPF_DB_SUFFIX),
     LookupType('C', "card", _recap_card_keys, _card_filter,
+               nullptr, nullptr,
                LTYPF_DB_SUFFIX),
     LookupType('I', "item", nullptr, _item_filter,
-               LTYPF_SINGLE_LETTER),
+               item_name_list_for_glyph, nullptr,
+               LTYPF_NONE),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
+               nullptr, nullptr,
                LTYPF_NONE),
     LookupType('G', "god", nullptr, nullptr,
-               LTYPF_DISABLE_REGEX),
+               nullptr, _get_god_keys,
+               LTYPF_NONE),
     LookupType('B', "branch", nullptr, nullptr,
-               LTYPF_DISABLE_REGEX | LTYPF_DISABLE_SORT)
+               nullptr, _get_branch_keys,
+               LTYPF_DISABLE_SORT)
 };
 
 /**
@@ -668,7 +717,7 @@ static const map<char, const LookupType*> _lookup_types_by_symbol
 static string _prompt_for_regex(const LookupType &lookup_type, string &err)
 {
     const string type = lowercase_string(lookup_type.type);
-    const string extra = lookup_type.flags & LTYPF_SINGLE_LETTER ?
+    const string extra = lookup_type.supports_glyph_lookup() ?
         make_stringf(" Enter a single letter to list %s displayed by that"
                      " symbol.", pluralise(type).c_str()) :
         "";
@@ -691,16 +740,57 @@ static string _prompt_for_regex(const LookupType &lookup_type, string &err)
 static bool _exact_lookup_match(const LookupType &lookup_type,
                                 const string &regex)
 {
-    if (lookup_type.flags & LTYPF_DISABLE_REGEX)
+    if (lookup_type.no_search())
         return false; // no search, no exact match
 
-    if (lookup_type.flags & LTYPF_SINGLE_LETTER && regex.size() == 1)
+    if (lookup_type.supports_glyph_lookup() && regex.size() == 1)
         return false; // glyph search doesn't have the concept
 
     if ((*lookup_type.filter_forbid)(regex, ""))
         return false; // match found, but incredibly illegal to display
 
     return !getLongDescription(regex + lookup_type.suffix()).empty();
+}
+
+/**
+ * Check if the provided keylist is invalid; if so, return the reason why.
+ *
+ * @param key_list      The list of keys to be checked before display.
+ * @param type          The singular name of the things being listed.
+ * @param regex         The search term that was used to fetch this list.
+ * @param by_symbol     Whether the search is by regex or by glyph.
+ * @return              A reason why the list is invalid, if it is
+ *                      (e.g. "No monsters with symbol '👻'."),
+ *                      or the empty string if the list is valid.
+ */
+static string _keylist_invalid_reason(const vector<string> &key_list,
+                                      const string &type,
+                                      const string &regex,
+                                      bool by_symbol)
+{
+    const string plur_type = pluralise(type);
+
+    if (key_list.empty())
+    {
+        if (by_symbol)
+            return "No " + plur_type + " with symbol '" + regex + "'.";
+        return "No matching " + plur_type + ".";
+    }
+
+    if (key_list.size() > 52)
+    {
+        if (by_symbol)
+        {
+            return "Too many " + plur_type + " with symbol '" + regex +
+                    "' to display.";
+        }
+
+        return make_stringf("Too many matching %s (%" PRIuSIZET ") to display.",
+                            plur_type.c_str(), key_list.size());
+    }
+
+    // we're good!
+    return "";
 }
 
 /**
@@ -735,16 +825,12 @@ static bool _find_description(string &response)
     // All this will soon pass.
     const string type = lowercase_string(lookup_type.type);
     const string suffix = lookup_type.suffix();
-    const db_find_filter filter = lookup_type.filter_forbid;
-    const db_keys_recap recap = lookup_type.recap;
-    const bool want_regex = !(lookup_type.flags & LTYPF_DISABLE_REGEX);
+    const bool want_regex = !(lookup_type.no_search());
     const bool want_sort = !(lookup_type.flags & LTYPF_DISABLE_SORT);
 
     // ...but especially this.
     const bool doing_mons = ch == 'M';
-    const bool doing_items = ch == 'I';
     const bool doing_gods = ch == 'G';
-    const bool doing_branches = ch == 'B';
     const bool doing_features = ch == 'F';
     const bool doing_spells = ch == 'S';
 
@@ -762,56 +848,19 @@ static bool _find_description(string &response)
         return true;
     }
 
-    const bool by_symbol = (lookup_type.flags & LTYPF_SINGLE_LETTER)
-                            && regex.size() == 1;
-    const bool by_mon_symbol = by_symbol && doing_mons;
-    const bool by_item_symbol = by_symbol && doing_items;
 
     // Try to get an exact match first.
     const bool exact_match = _exact_lookup_match(lookup_type, regex);
 
-    vector<string> key_list;
+    vector<string> key_list = lookup_type.matching_keys(regex);
 
-    if (by_mon_symbol)
-        key_list = _get_monster_keys(regex[0]);
-    else if (by_item_symbol)
-        key_list = item_name_list_for_glyph(regex[0]);
-    else if (doing_gods)
-        key_list = _get_god_keys();
-    else if (doing_branches)
-        key_list = _get_branch_keys();
-    else
-        key_list = _get_desc_keys(regex, filter);
-
-    if (recap != nullptr)
-        (*recap)(key_list);
-
-    const string plur_type = pluralise(type);
-
-    if (key_list.empty())
-    {
-        if (by_symbol)
-            response = "No " + plur_type + " with symbol '" + regex + "'.";
-        else
-            response = "No matching " + plur_type + ".";
+    const bool by_symbol = lookup_type.supports_glyph_lookup()
+                           && regex.size() == 1;
+    response = _keylist_invalid_reason(key_list, type, regex, by_symbol);
+    if (!response.empty())
         return true;
-    }
-    else if (key_list.size() > 52)
-    {
-        if (by_symbol)
-        {
-            response = "Too many " + plur_type + " with symbol '" + regex +
-                        "' to display.";
-        }
-        else
-        {
-            response = make_stringf("Too many matching %s (%" PRIuSIZET ") to"
-                                    " display.",
-                                    plur_type.c_str(), key_list.size());
-        }
-        return true;
-    }
-    else if (key_list.size() == 1)
+
+    if (key_list.size() == 1)
     {
         _do_description(key_list[0], type, suffix);
         return true;
