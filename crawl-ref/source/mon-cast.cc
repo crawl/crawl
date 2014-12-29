@@ -3259,6 +3259,8 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
     int hits = 1;
 
     const int range = _mons_spell_range(SPELL_FULMINANT_PRISM, *mon);
+
+    // TODO: try to avoid hurting allies and oneself here.
     for (distance_iterator di(mon->pos(), true, true, range); di; ++di)
     {
         // Our target needs to be in LOS, and we can't have a creature there.

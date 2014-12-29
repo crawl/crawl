@@ -1641,7 +1641,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FULMINANT_PRISM, "Fulminant Prism",
      SPTYP_CONJURATION | SPTYP_HEXES,
-     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
      4,
      200,
      5, 5,
