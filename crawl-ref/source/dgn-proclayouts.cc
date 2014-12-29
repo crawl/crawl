@@ -345,7 +345,7 @@ CityLayout::operator()(const coord_def &p, const uint32_t offset) const
     double y = p.y / scale;
     double z = 12.0;
     worley::noise_datum n = worley::noise(x, y, z + 0xF00);
-    int size = 3 + (n.id[0] % 5) & (n.id[0] / 5) % 5;
+    int size = 3 + ((n.id[0] % 5) & ((n.id[0] / 5) % 5));
     int x_off = ceil(n.pos[0][0] * scale);
     int y_off = ceil(n.pos[0][1] * scale);
     int dist = coord_def(x_off, y_off).rdist();
