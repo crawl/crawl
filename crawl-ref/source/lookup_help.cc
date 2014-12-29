@@ -648,8 +648,8 @@ static const vector<LookupType> lookup_types = {
 static map<char, const LookupType*> _build_lookup_type_map()
 {
     map<char, const LookupType*> lookup_map;
-    for (int i = 0; i < lookup_types.size(); i++)
-        lookup_map[lookup_types[i].symbol] = &lookup_types[i];
+    for (const auto &lookup : lookup_types)
+        lookup_map[lookup.symbol] = &lookup;
     return lookup_map;
 }
 static const map<char, const LookupType*> _lookup_types_by_symbol
