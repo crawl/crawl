@@ -555,7 +555,8 @@ enum lookup_type_flag
     LTYPF_DB_SUFFIX     = 1<<0,
     /// single letter input searches for corresponding glyphs (o is for orc)
     LTYPF_SINGLE_LETTER = 1<<1,
-    /// whether the regex functionality should be turned off
+    /// whether the search functionality should be turned off
+    /// (just display a constant list)
     LTYPF_DISABLE_REGEX = 1<<2,
     /// whether the sorting functionality should be turned off
     LTYPF_DISABLE_SORT  = 1<<3,
@@ -588,6 +589,20 @@ public:
         prompt_str.replace(symbol_pos, 1, make_stringf("(%c)",
                                                        toupper(symbol)));
         return prompt_str;
+    }
+
+    /**
+     * A suffix to be appended to the provided search string when looking for
+     * db info.
+     *
+     * @return      An appropriate suffix for types that need them (e.g.
+     *              " cards"); otherwise "".
+     */
+    string suffix() const
+    {
+        if (flags & LTYPF_DB_SUFFIX)
+            return " " + type;
+        return "";
     }
 
 public:
@@ -639,7 +654,12 @@ static const map<char, const LookupType*> _lookup_types_by_symbol
     = _build_lookup_type_map();
 
 /**
+ * Prompt the player for a search string for the given lookup type.
  *
+ * @param lookup_type  The LookupType in question (e.g. monsters, items...)
+ * @param err[out]     Will be set to a non-empty string if the user failed to
+ *                     provide a string.
+ * @return             A search string, if one was provided; else "".
  */
 static string _prompt_for_regex(const LookupType &lookup_type, string &err)
 {
@@ -662,6 +682,21 @@ static string _prompt_for_regex(const LookupType &lookup_type, string &err)
 
     const string regex = strlen(buf) == 1 ? buf : trimmed_string(buf);
     return regex;
+}
+
+static bool _exact_lookup_match(const LookupType &lookup_type,
+                                const string &regex)
+{
+    if (lookup_type.flags & LTYPF_DISABLE_REGEX)
+        return false; // no search, no exact match
+
+    if (lookup_type.flags & LTYPF_SINGLE_LETTER && regex.size() == 1)
+        return false; // glyph search doesn't have the concept
+
+    if ((*lookup_type.filter_forbid)(regex, ""))
+        return false; // match found, but incredibly illegal to display
+
+    return !getLongDescription(regex + lookup_type.suffix()).empty();
 }
 
 /**
@@ -707,12 +742,10 @@ static bool _find_description(string &error_inout)
 
     // All this will soon pass.
     const string type = lowercase_string(lookup_type.type);
-    const string suffix = lookup_type.flags & LTYPF_DB_SUFFIX ?
-                          " " + type :
-                          "";
+    const string suffix = lookup_type.suffix();
     const db_find_filter filter = lookup_type.filter_forbid;
     const db_keys_recap recap = lookup_type.recap;
-    bool want_regex = !(lookup_type.flags & LTYPF_DISABLE_REGEX);
+    const bool want_regex = !(lookup_type.flags & LTYPF_DISABLE_REGEX);
     const bool want_sort = !(lookup_type.flags & LTYPF_DISABLE_SORT);
 
     // ...but especially this.
@@ -741,21 +774,13 @@ static bool _find_description(string &error_inout)
         return true;
     }
 
-    bool by_mon_symbol  = (doing_mons  && regex.size() == 1);
-    bool by_item_symbol = (doing_items && regex.size() == 1);
+    const bool by_symbol = (lookup_type.flags & LTYPF_SINGLE_LETTER)
+                            && regex.size() == 1;
+    const bool by_mon_symbol = by_symbol && doing_mons;
+    const bool by_item_symbol = by_symbol && doing_items;
 
-    if (by_mon_symbol)
-        want_regex = false;
-
-    bool exact_match = false;
-    if (want_regex && !(*filter)(regex, ""))
-    {
-        // Try to get an exact match first.
-        string desc = getLongDescription(regex + suffix);
-
-        if (!desc.empty())
-            exact_match = true;
-    }
+    // Try to get an exact match first.
+    const bool exact_match = _exact_lookup_match(lookup_type, regex);
 
     vector<string> key_list;
 
