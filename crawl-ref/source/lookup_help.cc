@@ -330,11 +330,13 @@ static vector<string> _get_skill_keys()
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
-        // There are a couple of nullptr entries in the skill set.
-        if (!skill_name(sk))
-            continue;
+        const string name = lowercase_string(skill_name(sk));
+#if TAG_MAJOR_VERSION == 34
+        if (getLongDescription(name).empty())
+            continue; // obsolete skills
+#endif
 
-        names.emplace_back(lowercase_string(skill_name(sk)));
+        names.emplace_back(name);
     }
     return names;
 }

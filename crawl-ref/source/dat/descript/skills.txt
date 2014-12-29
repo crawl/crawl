@@ -114,25 +114,11 @@ Stealth skill, along with the weapon skill for your equipped weapon, also
 governs the likelihood of doing a great amount of damage when attacking a
 distracted or helpless creature, as well as the amount of extra damage dealt.
 %%%%
-# TAG_MAJOR_VERSION == 34
-Stabbing
-
-Stabbing is the skill that governs the likeliness of doing a great amount of
-damage when attacking a distracted or helpless creature (usually with a short
-blade), as well as the amount of extra damage dealt. Some gods may disapprove
-of this.
-%%%%
 Shields
 
 A high Shields skill helps you block melee attacks or projectiles (both magical
 and non-magical) with your equipped shield. Some attacks, such as penetrating
 bolts, cannot be blocked at all.
-%%%%
-# TAG_MAJOR_VERSION == 34
-Traps
-
-A character trained in Traps will be more observant to his or her surroundings
-and be quicker in noticing traps, as well as more able to disarm them.
 %%%%
 Unarmed Combat
 
