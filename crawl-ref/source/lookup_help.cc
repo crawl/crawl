@@ -961,16 +961,16 @@ static bool _find_description(string &response)
  */
 void keyhelp_query_descriptions()
 {
-    string error;
+    string response;
     while (true)
     {
         redraw_screen();
 
-        if (!error.empty())
-            mprf(MSGCH_PROMPT, "%s", error.c_str());
-        error = "";
+        if (!response.empty())
+            mprf(MSGCH_PROMPT, "%s", response.c_str());
+        response = "";
 
-        if (!_find_description(error))
+        if (!_find_description(response))
             break;
 
         clear_messages();
