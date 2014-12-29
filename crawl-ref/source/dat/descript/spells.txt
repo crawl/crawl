@@ -1236,9 +1236,9 @@ Smiting spell
 
 <Smiting ability>
 %%%%
-Song of Sleighing spell
+Song of Slaying spell
 
-This spell conjures ancient Christmas carols within the caster's mind, which
+This spell conjures ancient verses of battle within the caster's mind, which
 the caster then recites — quite loudly! Each non-summoned enemy the caster
 slays in combat during this recitation temporarily enhances their melee &
 ranged skills. The bonus only lasts for the duration of the song; casting this
