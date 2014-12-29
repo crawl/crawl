@@ -623,6 +623,22 @@ MenuEntry* _god_menu_gen(char letter, const string &str, string &key)
 }
 
 /**
+ * Generate a ?/A menu entry. (ref. _simple_menu_gen()).
+ */
+MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+    const ability_type ability = ability_by_name(str);
+#ifdef USE_TILE
+    if (ability != ABIL_NON_ABILITY)
+        me->add_tile(tile_def(tileidx_ability(ability), TEX_GUI));
+#endif
+
+    return me;
+}
+
+/**
  * Generate a ?/S menu entry. (ref. _simple_menu_gen()).
  */
 MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
@@ -801,8 +817,8 @@ static const vector<LookupType> lookup_types = {
                nullptr, nullptr, _simple_menu_gen,
                LTYPF_NONE),
     LookupType('A', "ability", nullptr, _ability_filter,
-               nullptr, nullptr, _simple_menu_gen,
-               LTYPF_DB_SUFFIX),
+               nullptr, nullptr, _ability_menu_gen,
+               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _simple_menu_gen,
                LTYPF_DB_SUFFIX),
