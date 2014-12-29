@@ -360,10 +360,8 @@ skill_type skill_from_name(const char *name)
 {
     skill_type skill = SK_NONE;
 
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        skill_type sk = static_cast<skill_type>(i);
-
         string sk_name = lowercase_string(skill_name(sk));
 
         size_t pos = sk_name.find(name);

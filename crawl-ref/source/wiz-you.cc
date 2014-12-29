@@ -110,11 +110,10 @@ void wizard_change_species_to(species_type sp)
     }
 
     // Re-scale skill-points.
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        skill_type sk = static_cast<skill_type>(i);
-        you.skill_points[i] *= species_apt_factor(sk, sp)
-                               / species_apt_factor(sk);
+        you.skill_points[sk] *= species_apt_factor(sk, sp)
+                                / species_apt_factor(sk);
     }
 
     species_type old_sp = you.species;
@@ -564,9 +563,8 @@ void wizard_set_all_skills()
         if (amount > 27)
             amount = 27;
 
-        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
         {
-            skill_type sk = static_cast<skill_type>(i);
             if (is_invalid_skill(sk) || is_useless_skill(sk))
                 continue;
 
