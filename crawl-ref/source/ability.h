@@ -92,6 +92,7 @@ bool check_ability_possible(const ability_type ability, bool hungerCheck = true,
 bool activate_talent(const talent& tal);
 vector<talent> your_talents(bool check_confused, bool include_unusable = false);
 bool string_matches_ability_name(const string& key);
+ability_type ability_by_name(const string &name);
 string print_abilities();
 
 void set_god_ability_slots();
