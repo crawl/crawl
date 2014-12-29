@@ -2447,11 +2447,13 @@ static bool _want_target_monster(const monster *mon, int mode)
     return !mons_class_flag(mon->type, M_NO_EXP_GAIN);
 }
 
+#ifdef CLUA_BINDINGS
 static bool _tobool(maybe_bool mb)
 {
     ASSERT(mb != MB_MAYBE);
     return mb == MB_TRUE;
 }
+#endif
 
 static bool _find_monster(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc)
