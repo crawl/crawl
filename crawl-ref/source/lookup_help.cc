@@ -1013,7 +1013,7 @@ static bool _exact_lookup_match(const LookupType &lookup_type,
     if (lookup_type.supports_glyph_lookup() && regex.size() == 1)
         return false; // glyph search doesn't have the concept
 
-    if ((*lookup_type.filter_forbid)(regex, ""))
+    if (lookup_type.filter_forbid && (*lookup_type.filter_forbid)(regex, ""))
         return false; // match found, but incredibly illegal to display
 
     return !getLongDescription(regex + lookup_type.suffix()).empty();
