@@ -7,6 +7,8 @@
 
 #include "lookup_help.h"
 
+#include <functional> // mem_fn
+
 #include "ability.h"
 #include "branch.h"
 #include "cio.h"
@@ -720,9 +722,7 @@ static bool _find_description(string &error_inout)
 
     const string lookup_type_prompts =
         comma_separated_fn(lookup_types.begin(), lookup_types.end(),
-                           [] (const LookupType type) {
-                               return type.prompt_string();
-                           }, " or ");
+                           mem_fn(&LookupType::prompt_string), " or ");
     mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
 
     int ch;
