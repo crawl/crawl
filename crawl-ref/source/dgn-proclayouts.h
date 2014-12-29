@@ -201,15 +201,6 @@ class ClampLayout : public ProceduralLayout
         const bool bursty;
 };
 
-class CityLayout : public ProceduralLayout
-{
-    public:
-        CityLayout() {}
-        ProceduralSample operator()(const coord_def &p,
-            const uint32_t offset = 0) const;
-    private:
-};
-
 // Base class is only needed for a couple of support functions
 // TODO: Refactor those functions into ProceduralFunctions
 
