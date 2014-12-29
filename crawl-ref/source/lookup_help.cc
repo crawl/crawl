@@ -706,19 +706,12 @@ static bool _exact_lookup_match(const LookupType &lookup_type,
 /**
  * Run an iteration of ?/.
  *
- * @param error_inout[in,out]      The error from the previous loop iteration
- *                                 (if any); will? be set to the error from
- *                                 this loop iteration, if any.
- * @return                         true if the ?/ loop should continue
- *                                 false if it should abort & return control
- *                                 to the original caller
+ * @param response[out]   A response to input, to print before the next iter.
+ * @return                true if the ?/ loop should continue
+ *                        false if it should return control to the caller
  */
-static bool _find_description(string &error_inout)
+static bool _find_description(string &response)
 {
-    redraw_screen();
-
-    if (!error_inout.empty())
-        mprf(MSGCH_PROMPT, "%s", error_inout.c_str());
 
     const string lookup_type_prompts =
         comma_separated_fn(lookup_types.begin(), lookup_types.end(),
@@ -734,10 +727,7 @@ static bool _find_description(string &error_inout)
     const LookupType * const *lookup_type_ptr
         = map_find(_lookup_types_by_symbol, ch);
     if (!lookup_type_ptr)
-    {
-        error_inout = "Okay, then.";
         return false;
-    }
 
     ASSERT(*lookup_type_ptr);
     const LookupType lookup_type = **lookup_type_ptr;
@@ -758,21 +748,17 @@ static bool _find_description(string &error_inout)
     const bool doing_features = ch == 'F';
     const bool doing_spells = ch == 'S';
 
-    string regex_error;
     const string regex = want_regex ?
-                         _prompt_for_regex(lookup_type, regex_error) :
+                         _prompt_for_regex(lookup_type, response) :
                          "";
 
-    if (!regex_error.empty())
-    {
-        error_inout = regex_error;
+    if (!response.empty())
         return true;
-    }
 
     // not actually sure how to trigger this branch...
     if (want_regex && regex.empty())
     {
-        error_inout = "Description must contain at least one non-space.";
+        response = "Description must contain at least one non-space.";
         return true;
     }
 
@@ -800,42 +786,28 @@ static bool _find_description(string &error_inout)
     if (recap != nullptr)
         (*recap)(key_list);
 
+    const string plur_type = pluralise(type);
+
     if (key_list.empty())
     {
-        if (by_mon_symbol)
-        {
-            error_inout  = "No monsters with symbol '";
-            error_inout += regex;
-            error_inout += "'.";
-        }
-        else if (by_item_symbol)
-        {
-            error_inout  = "No items with symbol '";
-            error_inout += regex;
-            error_inout += "'.";
-        }
+        if (by_symbol)
+            response = "No " + plur_type + " with symbol '" + regex + "'.";
         else
-        {
-            error_inout  = "No matching ";
-            error_inout += pluralise(type);
-            error_inout += ".";
-        }
+            response = "No matching " + plur_type + ".";
         return true;
     }
     else if (key_list.size() > 52)
     {
-        if (by_mon_symbol)
+        if (by_symbol)
         {
-            error_inout  = "Too many monsters with symbol '";
-            error_inout += regex;
-            error_inout += "' to display";
+            response = "Too many " + plur_type + " with symbol '" + regex +
+                        "' to display.";
         }
         else
         {
-            ostringstream os;
-            os << "Too many matching " << pluralise(type)
-            << " (" << key_list.size() << ") to display.";
-            error_inout = os.str();
+            response = make_stringf("Too many matching %s (%" PRIuSIZET ") to"
+                                    " display.",
+                                    plur_type.c_str(), key_list.size());
         }
         return true;
     }
@@ -847,9 +819,8 @@ static bool _find_description(string &error_inout)
 
     if (exact_match)
     {
-        string footer = "This entry is an exact match for '";
-        footer += regex;
-        footer += "'. To see non-exact matches, press space.";
+        string footer = "This entry is an exact match for '" + regex
+                        + "'. To see non-exact matches, press space.";
 
         if (_do_description(regex, type, suffix, footer) != ' ')
             return true;
@@ -993,6 +964,12 @@ void keyhelp_query_descriptions()
     string error;
     while (true)
     {
+        redraw_screen();
+
+        if (!error.empty())
+            mprf(MSGCH_PROMPT, "%s", error.c_str());
+        error = "";
+
         if (!_find_description(error))
             break;
 
@@ -1000,6 +977,5 @@ void keyhelp_query_descriptions()
     }
 
     viewwindow();
-    if (!error.empty())
-        mpr(error);
+    mpr("Okay, then.");
 }
