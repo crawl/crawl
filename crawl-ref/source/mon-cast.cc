@@ -3241,7 +3241,7 @@ static coord_def _mons_prism_pos(monster* mon, actor* foe)
     // The % bit is effectively a ceil(); it captures the partial move the
     // target gets with their leftover energy.
     const int rad = 3 * BASELINE_DELAY / foe_speed
-                    + (((3 * BASELINE_DELAY) % foe_speed) > 0) ? 1 : 0;
+                    + (((3 * BASELINE_DELAY) % foe_speed) > 0 ? 1 : 0);
 
     // XXX: make this use coord_def when we have a hash<> for it
     unordered_set<int> possible_places;
