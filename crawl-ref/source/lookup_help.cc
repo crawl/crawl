@@ -563,6 +563,8 @@ enum lookup_type_flag
     LTYPF_DB_SUFFIX     = 1<<0,
     /// whether the sorting functionality should be turned off
     LTYPF_DISABLE_SORT  = 1<<1,
+    /// whether the display menu for this supports tiles
+    LTYPF_SUPPORT_TILES = 1<<2,
 };
 DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
 
@@ -666,10 +668,10 @@ private:
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
                _get_monster_keys, nullptr,
-               LTYPF_NONE),
+               LTYPF_SUPPORT_TILES),
     LookupType('S', "spell", nullptr, _spell_filter,
                nullptr, nullptr,
-               LTYPF_DB_SUFFIX),
+               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
     LookupType('K', "skill", nullptr, _skill_filter,
                nullptr, nullptr,
                LTYPF_NONE),
@@ -684,7 +686,7 @@ static const vector<LookupType> lookup_types = {
                LTYPF_NONE),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr,
-               LTYPF_NONE),
+               LTYPF_SUPPORT_TILES),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys,
                LTYPF_NONE),
@@ -825,8 +827,6 @@ static bool _find_description(string &response)
     // All this will soon pass.
     const string type = lowercase_string(lookup_type.type);
     const string suffix = lookup_type.suffix();
-    const bool want_regex = !(lookup_type.no_search());
-    const bool want_sort = !(lookup_type.flags & LTYPF_DISABLE_SORT);
 
     // ...but especially this.
     const bool doing_mons = ch == 'M';
@@ -834,6 +834,7 @@ static bool _find_description(string &response)
     const bool doing_features = ch == 'F';
     const bool doing_spells = ch == 'S';
 
+    const bool want_regex = !(lookup_type.no_search());
     const string regex = want_regex ?
                          _prompt_for_regex(lookup_type, response) :
                          "";
@@ -875,13 +876,13 @@ static bool _find_description(string &response)
             return true;
     }
 
-    if (want_sort)
+    if (!(lookup_type.flags & LTYPF_DISABLE_SORT))
         sort(key_list.begin(), key_list.end());
 
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only =
 #ifdef USE_TILE_LOCAL
-    !(doing_mons || doing_features || doing_spells);
+    !(lookup_type.flags & LTYPF_SUPPORT_TILES);
 #else
     true;
 #endif
