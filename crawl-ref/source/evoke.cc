@@ -545,7 +545,7 @@ static targetter *_wand_targetter(const item_def *wand)
 int wand_mp_cost()
 {
     // Update mutation-data.h when updating this value.
-    return player_mutation_level(MUT_MP_WANDS) * 6;
+    return player_mutation_level(MUT_MP_WANDS) * 3;
 }
 
 void zap_wand(int slot)
