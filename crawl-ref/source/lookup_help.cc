@@ -10,6 +10,7 @@
 #include "ability.h"
 #include "branch.h"
 #include "cio.h"
+#include "colour.h"
 #include "database.h"
 #include "decks.h"
 #include "describe.h"
@@ -41,6 +42,7 @@
 #include "tilepick.h"
 #endif
 #include "view.h"
+#include "viewchar.h"
 
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
@@ -619,7 +621,7 @@ public:
     lookup_type_flags flags;
 };
 
-static const vector<const LookupType> _lookup_types = {
+static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
                LTYPF_SINGLE_LETTER),
     LookupType('S', "spell", nullptr, _spell_filter,
@@ -646,8 +648,8 @@ static const vector<const LookupType> _lookup_types = {
 static map<char, const LookupType*> _build_lookup_type_map()
 {
     map<char, const LookupType*> lookup_map;
-    for (int i = 0; i < _lookup_types.size(); i++)
-        lookup_map[_lookup_types[i].symbol] = &_lookup_types[i];
+    for (int i = 0; i < lookup_types.size(); i++)
+        lookup_map[lookup_types[i].symbol] = &lookup_types[i];
     return lookup_map;
 }
 static const map<char, const LookupType*> _lookup_types_by_symbol
@@ -717,7 +719,7 @@ static bool _find_description(string &error_inout)
         mprf(MSGCH_PROMPT, "%s", error_inout.c_str());
 
     const string lookup_type_prompts =
-        comma_separated_fn(_lookup_types.begin(), _lookup_types.end(),
+        comma_separated_fn(lookup_types.begin(), lookup_types.end(),
                            [] (const LookupType type) {
                                return type.prompt_string();
                            }, " or ");
