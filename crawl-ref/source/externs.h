@@ -298,6 +298,7 @@ typedef uint32_t mid_t;
 
 DEF_ENUM_INC(monster_type);
 DEF_ENUM_INC(spell_type);
+DEF_ENUM_INC(skill_type);
 
 struct cloud_struct
 {

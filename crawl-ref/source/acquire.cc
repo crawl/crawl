@@ -937,9 +937,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int magic_weights = 0;
         int other_weights = 0;
 
-        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
         {
-            skill_type sk = static_cast<skill_type>(i);
             int weight = you.skills[sk];
 
             if (_is_magic_skill(sk))
@@ -1040,10 +1039,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int weights[NUM_SKILLS];
         int total_weights = 0;
 
-        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
         {
-            skill_type sk = static_cast<skill_type>(i);
-
             int skl = you.skills[sk];
 
             if (skl == 27 || is_useless_skill(sk))

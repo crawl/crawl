@@ -213,10 +213,8 @@ void jiyva_stat_action()
     {
         int magic_weights = 0;
         int other_weights = 0;
-        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
         {
-            skill_type sk = static_cast<skill_type>(i);
-
             int weight = you.skills[sk];
 
             if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)

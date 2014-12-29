@@ -3171,11 +3171,10 @@ void level_change(bool skip_attribute_increase)
                     // time passing do_update = true.
 
                     uint8_t saved_skills[NUM_SKILLS];
-                    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+                    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
                     {
-                        saved_skills[i] = you.skills[i];
-                        check_skill_level_change(static_cast<skill_type>(i),
-                                                 false);
+                        saved_skills[sk] = you.skills[sk];
+                        check_skill_level_change(sk, false);
                     }
                     // The player symbol depends on species.
                     update_player_symbol();
@@ -3187,10 +3186,10 @@ void level_change(bool skip_attribute_increase)
                     // Produce messages about skill increases/decreases. We
                     // restore one skill level at a time so that at most the
                     // skill being checked is at the wrong level.
-                    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+                    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
                     {
-                        you.skills[i] = saved_skills[i];
-                        check_skill_level_change(static_cast<skill_type>(i));
+                        you.skills[sk] = saved_skills[sk];
+                        check_skill_level_change(sk);
                     }
 
                     redraw_screen();

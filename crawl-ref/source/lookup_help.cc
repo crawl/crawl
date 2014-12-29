@@ -327,9 +327,8 @@ static vector<string> _get_branch_keys()
 static vector<string> _get_skill_keys()
 {
     vector<string> names;
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        skill_type sk = static_cast<skill_type>(i);
         const string name = lowercase_string(skill_name(sk));
 #if TAG_MAJOR_VERSION == 34
         if (getLongDescription(name).empty())

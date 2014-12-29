@@ -197,9 +197,10 @@ int calc_skill_cost(int skill_cost_level)
 void reassess_starting_skills()
 {
     // go backwards, need to do Dodging before Armour
-    for (int i = NUM_SKILLS - 1; i >= SK_FIRST_SKILL; --i)
+    // "sk >= SK_FIRST_SKILL" might be optimised away, so do this differently.
+    for (skill_type next = NUM_SKILLS; next > SK_FIRST_SKILL; )
     {
-        skill_type sk = static_cast<skill_type>(i);
+        skill_type sk = --next;
         ASSERT(you.skills[sk] == 0 || !is_useless_skill(sk));
 
         // Grant the amount of skill points required for a human.
@@ -321,9 +322,8 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
     // at its new level.   See skills.cc::init_skill_order()
     // for more details.  -- bwr
     you.skill_order[exsk] = 0;
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        skill_type sk = static_cast<skill_type>(i);
         if (sk != exsk && you.skill(sk, 10, true) >= you.skill(exsk, 10, true))
             you.skill_order[exsk]++;
     }
@@ -1153,9 +1153,9 @@ const char *skill_name(skill_type which_skill)
 
 skill_type str_to_skill(const string &skill)
 {
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-        if (skill_titles[i][0] && skill == skill_titles[i][0])
-            return static_cast<skill_type>(i);
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        if (skill_titles[sk][0] && skill == skill_titles[sk][0])
+            return sk;
 
     return SK_FIGHTING;
 }
@@ -1444,18 +1444,15 @@ skill_type best_skill(skill_type min_skill, skill_type max_skill,
 // becomes the characters final nickname). -- bwr
 void init_skill_order()
 {
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+    for (skill_type si = SK_FIRST_SKILL; si < NUM_SKILLS; ++si)
     {
-        skill_type si = static_cast<skill_type>(i);
-
         const unsigned int i_points = you.skill_points[si]
                                       / species_apt_factor(si);
 
         you.skill_order[si] = 0;
 
-        for (int j = SK_FIRST_SKILL; j < NUM_SKILLS; j++)
+        for (skill_type sj = SK_FIRST_SKILL; sj < NUM_SKILLS; ++sj)
         {
-            skill_type sj = static_cast<skill_type>(j);
             if (si == sj)
                 continue;
 
@@ -1843,9 +1840,9 @@ void skill_state::restore_levels()
 
 void skill_state::restore_training()
 {
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-        if (you.skills[i] < 27)
-            you.train[i] = train[i];
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        if (you.skills[sk] < 27)
+            you.train[sk] = train[sk];
 
     you.can_train                   = can_train;
     you.auto_training               = auto_training;
@@ -1855,12 +1852,12 @@ void skill_state::restore_training()
 // Sanitize skills after an upgrade, racechange, etc.
 void fixup_skills()
 {
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
     {
-        skill_type sk = static_cast<skill_type>(i);
         if (is_useless_skill(sk))
-            you.skill_points[i] = 0;
-        you.skill_points[i] = min(you.skill_points[i], skill_exp_needed(27, sk));
+            you.skill_points[sk] = 0;
+        you.skill_points[sk] = min(you.skill_points[sk],
+                                   skill_exp_needed(27, sk));
         check_skill_level_change(sk);
     }
     init_can_train();
