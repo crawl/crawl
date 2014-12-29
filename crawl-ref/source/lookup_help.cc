@@ -544,14 +544,22 @@ static int _do_description(string key, string type, const string &suffix,
     return getchm();
 }
 
-static void _find_description(bool *again, string *error_inout)
+/**
+ * Run an iteration of ?/.
+ *
+ * @param error_inout[in,out]      The error from the previous loop iteration
+ *                                 (if any); will? be set to the error from
+ *                                 this loop iteration, if any.
+ * @return                         true if the ?/ loop should continue
+ *                                 false if it should abort & return control
+ *                                 to the original caller
+ */
+static bool _find_description(string &error_inout)
 {
-    *again = true;
-
     redraw_screen();
 
-    if (!error_inout->empty())
-        mprf(MSGCH_PROMPT, "%s", error_inout->c_str());
+    if (!error_inout.empty())
+        mprf(MSGCH_PROMPT, "%s", error_inout.c_str());
     mprf(MSGCH_PROMPT, "Describe a (M)onster, (S)pell, s(K)ill, (I)tem, "
          "(F)eature, (G)od, (A)bility, (B)ranch, or (C)ard? ");
     int ch;
@@ -634,9 +642,8 @@ static void _find_description(bool *again, string *error_inout)
             break;
 
         default:
-            *error_inout = "Okay, then.";
-            *again = false;
-            return;
+            error_inout = "Okay, then.";
+            return false;
     }
 
     string regex = "";
@@ -651,8 +658,8 @@ static void _find_description(bool *again, string *error_inout)
         char buf[80];
         if (cancellable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
         {
-            *error_inout = "Okay, then.";
-            return;
+            error_inout = "Okay, then.";
+            return true;
         }
 
         if (strlen(buf) == 1)
@@ -662,9 +669,9 @@ static void _find_description(bool *again, string *error_inout)
 
         if (regex.empty())
         {
-            *error_inout = "Description must contain at least "
+            error_inout = "Description must contain at least "
             "one non-space.";
-            return;
+            return true;
         }
     }
 
@@ -704,45 +711,45 @@ static void _find_description(bool *again, string *error_inout)
     {
         if (by_mon_symbol)
         {
-            *error_inout  = "No monsters with symbol '";
-            *error_inout += regex;
-            *error_inout += "'.";
+            error_inout  = "No monsters with symbol '";
+            error_inout += regex;
+            error_inout += "'.";
         }
         else if (by_item_symbol)
         {
-            *error_inout  = "No items with symbol '";
-            *error_inout += regex;
-            *error_inout += "'.";
+            error_inout  = "No items with symbol '";
+            error_inout += regex;
+            error_inout += "'.";
         }
         else
         {
-            *error_inout  = "No matching ";
-            *error_inout += pluralise(type);
-            *error_inout += ".";
+            error_inout  = "No matching ";
+            error_inout += pluralise(type);
+            error_inout += ".";
         }
-        return;
+        return true;
     }
     else if (key_list.size() > 52)
     {
         if (by_mon_symbol)
         {
-            *error_inout  = "Too many monsters with symbol '";
-            *error_inout += regex;
-            *error_inout += "' to display";
+            error_inout  = "Too many monsters with symbol '";
+            error_inout += regex;
+            error_inout += "' to display";
         }
         else
         {
             ostringstream os;
             os << "Too many matching " << pluralise(type)
             << " (" << key_list.size() << ") to display.";
-            *error_inout = os.str();
+            error_inout = os.str();
         }
-        return;
+        return true;
     }
     else if (key_list.size() == 1)
     {
         _do_description(key_list[0], type, suffix);
-        return;
+        return true;
     }
 
     if (exact_match)
@@ -752,7 +759,7 @@ static void _find_description(bool *again, string *error_inout)
         footer += "'. To see non-exact matches, press space.";
 
         if (_do_description(regex, type, suffix, footer) != ' ')
-            return;
+            return true;
     }
 
     if (want_sort)
@@ -860,7 +867,7 @@ static void _find_description(bool *again, string *error_inout)
             if (doing_mons && desc_menu.getkey() == CONTROL('S'))
                 desc_menu.toggle_sorting();
             else
-                return;
+                return true;
         }
         else
         {
@@ -884,19 +891,20 @@ static void _find_description(bool *again, string *error_inout)
     }
 }
 
+/**
+ * Run the ?/ loop, repeatedly prompting the player to query for monsters,
+ * etc, until they indicate they're done.
+ */
 void keyhelp_query_descriptions()
 {
-    bool again = false;
     string error;
-    do
+    while (true)
     {
-        // resets 'again'
-        _find_description(&again, &error);
+        if (!_find_description(error))
+            break;
 
-        if (again)
-            clear_messages();
+        clear_messages();
     }
-    while (again);
 
     viewwindow();
     if (!error.empty())
