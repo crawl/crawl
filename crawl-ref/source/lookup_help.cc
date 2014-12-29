@@ -321,6 +321,24 @@ static vector<string> _get_branch_keys()
     return names;
 }
 
+/**
+ * Return a list of all skill names.
+ */
+static vector<string> _get_skill_keys()
+{
+    vector<string> names;
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+    {
+        skill_type sk = static_cast<skill_type>(i);
+        // There are a couple of nullptr entries in the skill set.
+        if (!skill_name(sk))
+            continue;
+
+        names.emplace_back(lowercase_string(skill_name(sk)));
+    }
+    return names;
+}
+
 static bool _monster_filter(string key, string body)
 {
     monster_type mon_num = get_monster_by_name(key.c_str());
@@ -348,25 +366,6 @@ static bool _spell_filter(string key, string body)
 static bool _item_filter(string key, string body)
 {
     return item_kind_by_name(key).base_type == OBJ_UNASSIGNED;
-}
-
-static bool _skill_filter(string key, string body)
-{
-    lowercase(key);
-    string name;
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
-    {
-        skill_type sk = static_cast<skill_type>(i);
-        // There are a couple of nullptr entries in the skill set.
-        if (!skill_name(sk))
-            continue;
-
-        name = lowercase_string(skill_name(sk));
-
-        if (name.find(key) != string::npos)
-            return false;
-    }
-    return true;
 }
 
 static bool _feature_filter(string key, string body)
@@ -813,8 +812,8 @@ static const vector<LookupType> lookup_types = {
     LookupType('S', "spell", nullptr, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
-    LookupType('K', "skill", nullptr, _skill_filter,
-               nullptr, nullptr, _simple_menu_gen,
+    LookupType('K', "skill", nullptr, nullptr,
+               nullptr, _get_skill_keys, _simple_menu_gen,
                LTYPF_NONE),
     LookupType('A', "ability", nullptr, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
