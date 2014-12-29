@@ -639,6 +639,32 @@ static const map<char, const LookupType*> _lookup_types_by_symbol
     = _build_lookup_type_map();
 
 /**
+ *
+ */
+static string _prompt_for_regex(const LookupType &lookup_type, string &err)
+{
+    const string type = lowercase_string(lookup_type.type);
+    const string extra = lookup_type.flags & LTYPF_SINGLE_LETTER ?
+        make_stringf(" Enter a single letter to list %s displayed by that"
+                     " symbol.", pluralise(type).c_str()) :
+        "";
+    mprf(MSGCH_PROMPT,
+         "Describe a %s; partial names and regexps are fine.%s",
+         type.c_str(), extra.c_str());
+
+    mprf(MSGCH_PROMPT, "Describe what? ");
+    char buf[80];
+    if (cancellable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+    {
+        err = "Okay, then.";
+        return "";
+    }
+
+    const string regex = strlen(buf) == 1 ? buf : trimmed_string(buf);
+    return regex;
+}
+
+/**
  * Run an iteration of ?/.
  *
  * @param error_inout[in,out]      The error from the previous loop iteration
@@ -681,10 +707,6 @@ static bool _find_description(string &error_inout)
 
     // All this will soon pass.
     const string type = lowercase_string(lookup_type.type);
-    const string extra = lookup_type.flags & LTYPF_SINGLE_LETTER ?
-        make_stringf(" Enter a single letter to list %s displayed by that"
-                     " symbol.", pluralise(type).c_str()) :
-        "";
     const string suffix = lookup_type.flags & LTYPF_DB_SUFFIX ?
                           " " + type :
                           "";
@@ -701,32 +723,22 @@ static bool _find_description(string &error_inout)
     const bool doing_features = ch == 'F';
     const bool doing_spells = ch == 'S';
 
-    string regex = "";
+    string regex_error;
+    const string regex = want_regex ?
+                         _prompt_for_regex(lookup_type, regex_error) :
+                         "";
 
-    if (want_regex)
+    if (!regex_error.empty())
     {
-        mprf(MSGCH_PROMPT,
-             "Describe a %s; partial names and regexps are fine.%s",
-             type.c_str(), extra.c_str());
+        error_inout = regex_error;
+        return true;
+    }
 
-        mprf(MSGCH_PROMPT, "Describe what? ");
-        char buf[80];
-        if (cancellable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
-        {
-            error_inout = "Okay, then.";
-            return true;
-        }
-
-        if (strlen(buf) == 1)
-            regex = buf;
-        else
-            regex = trimmed_string(buf);
-
-        if (regex.empty())
-        {
-            error_inout = "Description must contain at least one non-space.";
-            return true;
-        }
+    // not actually sure how to trigger this branch...
+    if (want_regex && regex.empty())
+    {
+        error_inout = "Description must contain at least one non-space.";
+        return true;
     }
 
     bool by_mon_symbol  = (doing_mons  && regex.size() == 1);
