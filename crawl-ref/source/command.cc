@@ -13,7 +13,6 @@
 #include <sstream>
 
 #include "chardump.h"
-#include "colour.h"
 #include "database.h"
 #include "describe.h"
 #include "env.h"
