@@ -47,6 +47,91 @@
 #include "viewchar.h"
 
 
+typedef vector<string> (*keys_by_glyph)(ucs_t showchar);
+typedef vector<string> (*simple_key_list)();
+typedef void (*db_keys_recap)(vector<string>&);
+typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
+                                           string &key);
+
+/// A set of optional functionality for lookup types.
+enum lookup_type_flag
+{
+    LTYPF_NONE          = 0,
+    /// append the 'type' to the db lookup (e.g. "<input> spell")
+    LTYPF_DB_SUFFIX     = 1<<0,
+    /// whether the sorting functionality should be turned off
+    LTYPF_DISABLE_SORT  = 1<<1,
+    /// whether the display menu for this supports tiles
+    LTYPF_SUPPORT_TILES = 1<<2,
+};
+DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
+
+/// A description of a lookup that the player can do. (e.g. (M)onster data)
+class LookupType
+{
+public:
+    LookupType(char _symbol, string _type, db_keys_recap _recap,
+               db_find_filter _filter_forbid, keys_by_glyph _glyph_fetch,
+               simple_key_list _simple_key_fetch,
+               menu_entry_generator _menu_gen,
+               lookup_type_flags _flags)
+    : symbol(_symbol), type(_type), filter_forbid(_filter_forbid),
+    flags(_flags),
+    simple_key_fetch(_simple_key_fetch), glyph_fetch(_glyph_fetch),
+    recap(_recap), menu_gen(_menu_gen)
+    { }
+
+    string prompt_string() const;
+    string suffix() const;
+    vector<string> matching_keys(string regex) const;
+    void display_keys(vector<string> &key_list) const;
+
+    /**
+     * Does this lookup type have special support for single-character input
+     * (looking up corresponding glyphs - e.g. 'o' for orc, '(' for ammo...)
+     */
+    bool supports_glyph_lookup() const { return glyph_fetch != nullptr; }
+
+    /**
+     * Does this lookup type return a list of keys without taking a search
+     * request (e.g. branches or gods)?
+     */
+    bool no_search() const { return simple_key_fetch != nullptr; }
+
+public:
+    /// The letter pressed to choose this (e.g. 'M'). case insensitive
+    char symbol;
+    /// A description of the lookup type (e.g. "monster"). case insensitive
+    string type;
+    /// a function returning 'true' if the search result corresponding to
+    /// the corresponding search should be filtered out of the results
+    db_find_filter filter_forbid;
+    /// A set of optional functionality; see lookup_type_flag for details
+    lookup_type_flags flags;
+private:
+    MenuEntry* make_menu_entry(char letter, string &key) const;
+    string key_to_menu_str(const string &key) const;
+
+private:
+    /// Function that fetches a list of keys, without taking arguments.
+    simple_key_list simple_key_fetch;
+    /// a function taking a single character & returning a list of keys
+    /// corresponding to that glyph
+    keys_by_glyph glyph_fetch;
+    /// no idea, sorry :(
+    db_keys_recap recap;
+    /// take a letter & a key, return a corresponding new menu entry
+    menu_entry_generator menu_gen;
+};
+
+
+static int _do_description(const string &key, const LookupType &lookup_type,
+                           bool exact_match = false);
+
+
+
+
+
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
     monster_info* a = static_cast<monster_info* >(entry_a->data);
@@ -200,7 +285,6 @@ static vector<string> _get_monster_keys(ucs_t showchar)
     return mon_keys;
 }
 
-typedef vector<string> (*keys_by_glyph)(ucs_t showchar);
 
 static vector<string> _get_god_keys()
 {
@@ -229,8 +313,6 @@ static vector<string> _get_branch_keys()
     }
     return names;
 }
-
-typedef vector<string> (*simple_key_list)();
 
 static bool _monster_filter(string key, string body)
 {
@@ -315,7 +397,7 @@ static bool _ability_filter(string key, string body)
     return true;
 }
 
-typedef void (*db_keys_recap)(vector<string>&);
+
 
 static void _recap_mon_keys(vector<string> &keys)
 {
@@ -451,109 +533,6 @@ static bool _append_books(string &desc, item_def &item, string key)
     return true;
 }
 
-// Returns the result of the keypress.
-static int _do_description(string key, string type, const string &suffix,
-                           string footer = "")
-{
-    god_type which_god = str_to_god(key);
-    if (which_god != GOD_NO_GOD)
-    {
-#ifdef USE_TILE_WEB
-        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
-#endif
-        describe_god(which_god, true);
-        return true;
-    }
-
-    describe_info inf;
-    inf.quote = getQuoteString(key);
-
-    string desc = getLongDescription(key);
-    int width = min(80, get_number_of_cols());
-
-    monster_type mon_num = get_monster_by_name(key);
-    // Don't attempt to get more information on ghost demon
-    // monsters, as the ghost struct has not been initialised, which
-    // will cause a crash.  Similarly for zombified monsters, since
-    // they require a base monster.
-    if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
-        && !mons_class_is_zombified(mon_num))
-    {
-        monster_info mi(mon_num);
-        // Avoid slime creature being described as "buggy"
-        if (mi.type == MONS_SLIME_CREATURE)
-            mi.slime_size = 1;
-        return describe_monsters(mi, true, footer);
-    }
-
-    int thing_created = get_mitm_slot();
-    if (thing_created != NON_ITEM
-        && (type == "item" || type == "spell"))
-    {
-        char name[80];
-        strncpy(name, key.c_str(), sizeof(name));
-        if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
-        {
-            append_weapon_stats(desc, mitm[thing_created]);
-            desc += "\n";
-        }
-        else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
-        {
-            append_armour_stats(desc, mitm[thing_created]);
-            desc += "\n";
-        }
-        else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
-        {
-            append_missile_info(desc, mitm[thing_created]);
-            desc += "\n";
-        }
-        else if (type == "spell"
-                 || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
-                 || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
-        {
-            if (!_append_books(desc, mitm[thing_created], key))
-            {
-                // FIXME: Duplicates messages from describe.cc.
-                if (!player_can_memorise_from_spellbook(mitm[thing_created]))
-                {
-                    desc += "This book is beyond your current level "
-                    "of understanding.";
-                }
-                desc += describe_item_spells(mitm[thing_created]);
-            }
-        }
-    }
-    else if (type == "card")
-    {
-        // 5 - " card"
-        card_type which_card =
-        name_to_card(key.substr(0, key.length() - 5));
-        if (which_card != NUM_CARDS)
-            desc += which_decks(which_card) + "\n";
-    }
-
-    // Now we don't need the item anymore.
-    if (thing_created != NON_ITEM)
-        destroy_item(thing_created);
-
-    inf.body << desc;
-
-    if (ends_with(key, suffix))
-        key.erase(key.length() - suffix.length());
-    key = uppercase_first(key);
-    linebreak_string(footer, width - 1);
-
-    inf.footer = footer;
-    inf.title  = key;
-
-#ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU, "description");
-#endif
-
-    print_description(inf);
-    return getchm();
-}
-
 /**
  * Make a basic, no-frills ?/<foo> menu entry.
  *
@@ -655,219 +634,153 @@ MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
     return me;
 }
 
-typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
-                                           string &key);
 
-
-/// A set of optional functionality for lookup types.
-enum lookup_type_flag
+/**
+ * How should this type be expressed in the prompt string?
+ *
+ * @return The 'type', with the first instance of the 'symbol' found &
+ *          replaced with an uppercase version surrounded by parens
+ *          e.g. "monster", 'm' -> "(M)onster"
+ */
+string LookupType::prompt_string() const
 {
-    LTYPF_NONE          = 0,
-    /// append the 'type' to the db lookup (e.g. "<input> spell")
-    LTYPF_DB_SUFFIX     = 1<<0,
-    /// whether the sorting functionality should be turned off
-    LTYPF_DISABLE_SORT  = 1<<1,
-    /// whether the display menu for this supports tiles
-    LTYPF_SUPPORT_TILES = 1<<2,
-};
-DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
+    string prompt_str = lowercase_string(type);
+    const size_t symbol_pos = prompt_str.find(tolower(symbol));
+    ASSERT(symbol_pos != string::npos);
 
-/// A description of a lookup that the player can do. (e.g. (M)onster data)
-class LookupType
+    prompt_str.replace(symbol_pos, 1, make_stringf("(%c)", toupper(symbol)));
+    return prompt_str;
+}
+
+/**
+ * A suffix to be appended to the provided search string when looking for
+ * db info.
+ *
+ * @return      An appropriate suffix for types that need them (e.g.
+ *              " cards"); otherwise "".
+ */
+string LookupType::suffix() const
 {
-public:
-    LookupType(char _symbol, string _type, db_keys_recap _recap,
-               db_find_filter _filter_forbid, keys_by_glyph _glyph_fetch,
-               simple_key_list _simple_key_fetch,
-               menu_entry_generator _menu_gen,
-               lookup_type_flags _flags)
-    : symbol(_symbol), type(_type), filter_forbid(_filter_forbid),
-      flags(_flags),
-      simple_key_fetch(_simple_key_fetch), glyph_fetch(_glyph_fetch),
-      recap(_recap), menu_gen(_menu_gen)
-    { }
+    if (flags & LTYPF_DB_SUFFIX)
+        return " " + type;
+    return "";
+}
 
-    /**
-     * How should this type be expressed in the prompt string?
-     *
-     * @return The 'type', with the first instance of the 'symbol' found &
-     *          replaced with an uppercase version surrounded by parens
-     *          e.g. "monster", 'm' -> "(M)onster"
-     */
-    string prompt_string() const
-    {
-        string prompt_str = lowercase_string(type);
-        const size_t symbol_pos = prompt_str.find(tolower(symbol));
-        ASSERT(symbol_pos != string::npos);
+/**
+ * Get a list of string corresponding to the given regex.
+ */
+vector<string> LookupType::matching_keys(string regex) const
+{
+    vector<string> key_list;
 
-        prompt_str.replace(symbol_pos, 1, make_stringf("(%c)",
-                                                       toupper(symbol)));
-        return prompt_str;
-    }
+    if (no_search())
+        key_list = simple_key_fetch();
+    else if (regex.size() == 1 && supports_glyph_lookup())
+        key_list = glyph_fetch(regex[0]);
+    else
+        key_list = _get_desc_keys(regex, filter_forbid);
 
-    /**
-     * A suffix to be appended to the provided search string when looking for
-     * db info.
-     *
-     * @return      An appropriate suffix for types that need them (e.g.
-     *              " cards"); otherwise "".
-     */
-    string suffix() const
-    {
-        if (flags & LTYPF_DB_SUFFIX)
-            return " " + type;
-        return "";
-    }
+    if (recap != nullptr)
+        (*recap)(key_list);
 
-    /**
-     * Get a list of string corresponding to the given regex.
-     */
-    vector<string> matching_keys(string regex) const
-    {
-        vector<string> key_list;
+    return key_list;
+}
 
-        if (no_search())
-            key_list = simple_key_fetch();
-        else if (regex.size() == 1 && supports_glyph_lookup())
-            key_list = glyph_fetch(regex[0]);
-        else
-            key_list = _get_desc_keys(regex, filter_forbid);
-
-        if (recap != nullptr)
-            (*recap)(key_list);
-
-        return key_list;
-    }
-
-    /**
-     * Build a menu listing the given keys, and allow the player to interact
-     * with them.
-     */
-    void display_keys(vector<string> &key_list) const
-    {
-        // For tiles builds use a tiles menu to display monsters.
-        const bool text_only =
+/**
+ * Build a menu listing the given keys, and allow the player to interact
+ * with them.
+ */
+void LookupType::display_keys(vector<string> &key_list) const
+{
+    // For tiles builds use a tiles menu to display monsters.
+    const bool text_only =
 #ifdef USE_TILE_LOCAL
-        !(flags & LTYPF_SUPPORT_TILES);
+    !(flags & LTYPF_SUPPORT_TILES);
 #else
-        true;
+    true;
 #endif
-        /// XXX: ugh
-        const bool doing_mons = symbol == 'M';
+    /// XXX: ugh
+    const bool doing_mons = symbol == 'M';
 
-        DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING,
-                           doing_mons, text_only);
-        desc_menu.set_tag("description");
-        monster_info monster_list[52];
-        for (unsigned int i = 0, size = key_list.size(); i < size; i++)
+    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING,
+                       doing_mons, text_only);
+    desc_menu.set_tag("description");
+    monster_info monster_list[52];
+    for (unsigned int i = 0, size = key_list.size(); i < size; i++)
+    {
+        const char letter = index_to_letter(i);
+        string &key = key_list[i];
+        // XXX: double ugh
+        if (doing_mons)
         {
-            const char letter = index_to_letter(i);
-            string &key = key_list[i];
-            // XXX: double ugh
+            desc_menu.add_entry(_monster_menu_gen(letter,
+                                                  key_to_menu_str(key),
+                                                  monster_list[i]));
+        } else
+            desc_menu.add_entry(make_menu_entry(letter, key));
+    }
+
+    desc_menu.sort();
+
+    while (true)
+    {
+        vector<MenuEntry*> sel = desc_menu.show();
+        redraw_screen();
+        if (sel.empty())
+        {
+            if (doing_mons && desc_menu.getkey() == CONTROL('S'))
+                desc_menu.toggle_sorting();
+            else
+                return; // only exit from this function
+        }
+        else
+        {
+            ASSERT(sel.size() == 1);
+            ASSERT(sel[0]->hotkeys.size() >= 1);
+
+            string key;
+
             if (doing_mons)
             {
-                desc_menu.add_entry(_monster_menu_gen(letter,
-                                                      key_to_menu_str(key),
-                                                      monster_list[i]));
-            } else
-                desc_menu.add_entry(make_menu_entry(letter, key));
-        }
-
-        desc_menu.sort();
-
-        while (true)
-        {
-            vector<MenuEntry*> sel = desc_menu.show();
-            redraw_screen();
-            if (sel.empty())
-            {
-                if (doing_mons && desc_menu.getkey() == CONTROL('S'))
-                    desc_menu.toggle_sorting();
-                else
-                    return; // only exit from this function
+                monster_info* mon = (monster_info*) sel[0]->data;
+                key = mons_type_name(mon->type, DESC_PLAIN);
             }
             else
-            {
-                ASSERT(sel.size() == 1);
-                ASSERT(sel[0]->hotkeys.size() >= 1);
+                key = *((string*) sel[0]->data);
 
-                string key;
-
-                if (doing_mons)
-                {
-                    monster_info* mon = (monster_info*) sel[0]->data;
-                    key = mons_type_name(mon->type, DESC_PLAIN);
-                }
-                else
-                    key = *((string*) sel[0]->data);
-
-                _do_description(key, type, suffix());
-            }
+            _do_description(key, *this);
         }
     }
+}
 
-    /**
-     * Does this lookup type have special support for single-character input
-     * (looking up corresponding glyphs - e.g. 'o' for orc, '(' for ammo...)
-     */
-    bool supports_glyph_lookup() const { return glyph_fetch != nullptr; }
+/**
+ * Generate a description menu entry for the given key.
+ *
+ * @param letter    The letter with which the entry should be labeled.
+ * @param key       The key for the entry.
+ * @return          A pointer to a new MenuEntry object.
+ */
+MenuEntry* LookupType::make_menu_entry(char letter, string &key) const
+{
+    ASSERT(menu_gen);
+    return menu_gen(letter, key_to_menu_str(key), key);
+}
 
-    /**
-     * Does this lookup type return a list of keys without taking a search
-     * request (e.g. branches or gods)?
-     */
-    bool no_search() const { return simple_key_fetch != nullptr; }
+/**
+ * Turn a DB string into a nice menu title.
+ *
+ * @param key       The key in question. (E.g. "blade card").
+ * @return          A nicer string. (E.g. "Blade").
+ */
+string LookupType::key_to_menu_str(const string &key) const
+{
+    string str = uppercase_first(key);
 
-public:
-    /// The letter pressed to choose this (e.g. 'M'). case insensitive
-    char symbol;
-    /// A description of the lookup type (e.g. "monster"). case insensitive
-    string type;
-    /// a function returning 'true' if the search result corresponding to
-    /// the corresponding search should be filtered out of the results
-    db_find_filter filter_forbid;
-    /// A set of optional functionality; see lookup_type_flag for details
-    lookup_type_flags flags;
-private:
-    /**
-     * Generate a description menu entry for the given key.
-     *
-     * @param letter    The letter with which the entry should be labeled.
-     * @param key       The key for the entry.
-     * @return          A pointer to a new MenuEntry object.
-     */
-    MenuEntry* make_menu_entry(char letter, string &key) const
-    {
-        ASSERT(menu_gen);
-        return menu_gen(letter, key_to_menu_str(key), key);
-    }
+    if (ends_with(str, suffix())) // perhaps we should assert this?
+        str.erase(str.length() - suffix().length());
 
-    /**
-     * Turn a DB string into a nice menu title.
-     *
-     * @param key       The key in question. (E.g. "blade card").
-     * @return          A nicer string. (E.g. "Blade").
-     */
-    string key_to_menu_str(const string &key) const
-    {
-        string str = uppercase_first(key);
-
-        if (ends_with(str, suffix())) // perhaps we should assert this?
-            str.erase(str.length() - suffix().length());
-
-        return str;
-    }
-private:
-    /// Function that fetches a list of keys, without taking arguments.
-    simple_key_list simple_key_fetch;
-    /// a function taking a single character & returning a list of keys
-    /// corresponding to that glyph
-    keys_by_glyph glyph_fetch;
-    /// no idea, sorry :(
-    db_keys_recap recap;
-    /// take a letter & a key, return a corresponding new menu entry
-    menu_entry_generator menu_gen;
-};
+    return str;
+}
 
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
@@ -912,6 +825,129 @@ static map<char, const LookupType*> _build_lookup_type_map()
 static const map<char, const LookupType*> _lookup_types_by_symbol
     = _build_lookup_type_map();
 
+
+/**
+ * Let the player examine the the item indicated by the given key & lookup
+ * type (a monster, spell, etc), and processes the corresponding input.
+ *
+ * @param key           The key for the item in question.
+ *                      (E.g. "orc", "fireball")
+ * @param lookup_type   The type items being examined. (e.g. monsters)
+ * @param exact_match   Whether the item's name is an exact match for the
+ *                      user's search term, and there are other, non-exact
+ *                      matches that can be displayed.
+ * @return              The player's final, terminating keypress.
+ */
+static int _do_description(const string &key, const LookupType &lookup_type,
+                           bool exact_match)
+{
+    string footer
+        = exact_match ? "This entry is an exact match for '" + key
+                        + "'. To see non-exact matches, press space."
+                        : "";
+    // All this will soon pass.
+    const string type = lowercase_string(lookup_type.type);
+    const string suffix = lookup_type.suffix();
+
+    god_type which_god = str_to_god(key);
+    if (which_god != GOD_NO_GOD)
+    {
+#ifdef USE_TILE_WEB
+        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
+#endif
+        describe_god(which_god, true);
+        return 0; // no exact matches for gods, so output doesn't matter
+    }
+
+    describe_info inf;
+    inf.quote = getQuoteString(key);
+
+    string desc = getLongDescription(key);
+    int width = min(80, get_number_of_cols());
+
+    monster_type mon_num = get_monster_by_name(key);
+    // Don't attempt to get more information on ghost demon
+    // monsters, as the ghost struct has not been initialised, which
+    // will cause a crash.  Similarly for zombified monsters, since
+    // they require a base monster.
+    if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
+        && !mons_class_is_zombified(mon_num))
+    {
+        monster_info mi(mon_num);
+        // Avoid slime creature being described as "buggy"
+        if (mi.type == MONS_SLIME_CREATURE)
+            mi.slime_size = 1;
+        return describe_monsters(mi, true, footer);
+    }
+
+    int thing_created = get_mitm_slot();
+    if (thing_created != NON_ITEM
+        && (type == "item" || type == "spell"))
+    {
+        char name[80];
+        strncpy(name, key.c_str(), sizeof(name));
+        if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
+        {
+            append_weapon_stats(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
+        {
+            append_armour_stats(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
+        {
+            append_missile_info(desc, mitm[thing_created]);
+            desc += "\n";
+        }
+        else if (type == "spell"
+                 || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
+                 || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
+        {
+            if (!_append_books(desc, mitm[thing_created], key))
+            {
+                // FIXME: Duplicates messages from describe.cc.
+                if (!player_can_memorise_from_spellbook(mitm[thing_created]))
+                {
+                    desc += "This book is beyond your current level "
+                    "of understanding.";
+                }
+                desc += describe_item_spells(mitm[thing_created]);
+            }
+        }
+    }
+    else if (type == "card")
+    {
+        // 5 - " card"
+        card_type which_card =
+        name_to_card(key.substr(0, key.length() - 5));
+        if (which_card != NUM_CARDS)
+            desc += which_decks(which_card) + "\n";
+    }
+
+    // Now we don't need the item anymore.
+    if (thing_created != NON_ITEM)
+        destroy_item(thing_created);
+
+    inf.body << desc;
+
+    string title = key;
+    if (ends_with(title, suffix))
+        title.erase(title.length() - suffix.length());
+    title = uppercase_first(title);
+    linebreak_string(footer, width - 1);
+
+    inf.footer = footer;
+    inf.title  = title;
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "description");
+#endif
+
+    print_description(inf);
+    return getchm();
+}
 /**
  * Prompt the player for a search string for the given lookup type.
  *
@@ -1028,10 +1064,6 @@ static bool _find_description(string &response)
     ASSERT(*lookup_type_ptr);
     const LookupType lookup_type = **lookup_type_ptr;
 
-    // All this will soon pass.
-    const string type = lowercase_string(lookup_type.type);
-    const string suffix = lookup_type.suffix();
-
     const bool want_regex = !(lookup_type.no_search());
     const string regex = want_regex ?
                          _prompt_for_regex(lookup_type, response) :
@@ -1055,24 +1087,19 @@ static bool _find_description(string &response)
 
     const bool by_symbol = lookup_type.supports_glyph_lookup()
                            && regex.size() == 1;
+    const string type = lowercase_string(lookup_type.type);
     response = _keylist_invalid_reason(key_list, type, regex, by_symbol);
     if (!response.empty())
         return true;
 
     if (key_list.size() == 1)
     {
-        _do_description(key_list[0], type, suffix);
+        _do_description(key_list[0], lookup_type);
         return true;
     }
 
-    if (exact_match)
-    {
-        string footer = "This entry is an exact match for '" + regex
-                        + "'. To see non-exact matches, press space.";
-
-        if (_do_description(regex, type, suffix, footer) != ' ')
-            return true;
-    }
+    if (exact_match && _do_description(regex, lookup_type, true) != ' ')
+        return true;
 
     if (!(lookup_type.flags & LTYPF_DISABLE_SORT))
         sort(key_list.begin(), key_list.end());
