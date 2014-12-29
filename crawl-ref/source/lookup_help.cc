@@ -56,13 +56,15 @@ typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
 /// A set of optional functionality for lookup types.
 enum lookup_type_flag
 {
-    LTYPF_NONE          = 0,
+    LTYPF_NONE            = 0,
     /// append the 'type' to the db lookup (e.g. "<input> spell")
-    LTYPF_DB_SUFFIX     = 1<<0,
+    LTYPF_DB_SUFFIX       = 1<<0,
     /// whether the sorting functionality should be turned off
-    LTYPF_DISABLE_SORT  = 1<<1,
+    LTYPF_DISABLE_SORT    = 1<<1,
     /// whether the display menu for this supports tiles
-    LTYPF_SUPPORT_TILES = 1<<2,
+    LTYPF_SUPPORT_TILES   = 1<<2,
+    /// whether the display menu for this has toggleable sorting
+    LTYPF_TOGGLEABLE_SORT = 1<<3,
 };
 DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
 
@@ -111,6 +113,11 @@ public:
 private:
     MenuEntry* make_menu_entry(char letter, string &key) const;
     string key_to_menu_str(const string &key) const;
+
+    /**
+     * Does this lookup type support toggling the sort order of results?
+     */
+    bool toggleable_sort() const { return flags & LTYPF_TOGGLEABLE_SORT; }
 
 private:
     /// Function that fetches a list of keys, without taking arguments.
@@ -170,26 +177,26 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 class DescMenu : public Menu
 {
 public:
-    DescMenu(int _flags, bool _show_mon, bool _text_only)
+    DescMenu(int _flags, bool _toggleable_sort, bool _text_only)
     : Menu(_flags, "", _text_only), sort_alpha(true),
-    showing_monsters(_show_mon)
+    toggleable_sort(_toggleable_sort)
     {
         set_highlighter(nullptr);
 
-        if (_show_mon)
+        if (_toggleable_sort)
             toggle_sorting();
 
         set_prompt();
     }
 
     bool sort_alpha;
-    bool showing_monsters;
+    bool toggleable_sort;
 
     void set_prompt()
     {
         string prompt = "Describe which? ";
 
-        if (showing_monsters)
+        if (toggleable_sort)
         {
             if (sort_alpha)
                 prompt += "(CTRL-S to sort by monster toughness)";
@@ -201,7 +208,7 @@ public:
 
     void sort()
     {
-        if (!showing_monsters)
+        if (!toggleable_sort)
             return;
 
         if (sort_alpha)
@@ -220,7 +227,7 @@ public:
 
     void toggle_sorting()
     {
-        if (!showing_monsters)
+        if (!toggleable_sort)
             return;
 
         sort_alpha = !sort_alpha;
@@ -699,12 +706,13 @@ void LookupType::display_keys(vector<string> &key_list) const
 #else
     true;
 #endif
-    /// XXX: ugh
-    const bool doing_mons = symbol == 'M';
 
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING,
-                       doing_mons, text_only);
+                       toggleable_sort(), text_only);
     desc_menu.set_tag("description");
+
+    // XXX: ugh
+    const bool doing_mons = type == "monster";
     monster_info monster_list[52];
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
@@ -728,7 +736,7 @@ void LookupType::display_keys(vector<string> &key_list) const
         redraw_screen();
         if (sel.empty())
         {
-            if (doing_mons && desc_menu.getkey() == CONTROL('S'))
+            if (toggleable_sort() && desc_menu.getkey() == CONTROL('S'))
                 desc_menu.toggle_sorting();
             else
                 return; // only exit from this function
@@ -785,7 +793,7 @@ string LookupType::key_to_menu_str(const string &key) const
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
                _get_monster_keys, nullptr, nullptr,
-               LTYPF_SUPPORT_TILES),
+               LTYPF_SUPPORT_TILES | LTYPF_TOGGLEABLE_SORT),
     LookupType('S', "spell", nullptr, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
@@ -948,6 +956,7 @@ static int _do_description(const string &key, const LookupType &lookup_type,
     print_description(inf);
     return getchm();
 }
+
 /**
  * Prompt the player for a search string for the given lookup type.
  *
