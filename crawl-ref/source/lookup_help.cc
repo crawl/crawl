@@ -235,7 +235,8 @@ typedef vector<string> (*simple_key_list)();
 static bool _monster_filter(string key, string body)
 {
     monster_type mon_num = get_monster_by_name(key.c_str());
-    return mons_class_flag(mon_num, M_CANT_SPAWN);
+    return mons_class_flag(mon_num, M_CANT_SPAWN)
+           || mons_is_tentacle_segment(mon_num);
 }
 
 static bool _spell_filter(string key, string body)
@@ -553,6 +554,109 @@ static int _do_description(string key, string type, const string &suffix,
     return getchm();
 }
 
+/**
+ * Make a basic, no-frills ?/<foo> menu entry.
+ *
+ * @param letter    The letter for the entry. (E.g. 'e' for the fifth entry.)
+ * @param str       A processed string for the entry. (E.g. "Blade".)
+ * @param key       The raw database key for the entry. (E.g. "blade card".)
+ * @return          A new menu entry.
+ */
+MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
+    me->data = &key;
+    return me;
+}
+
+/**
+ * Generate a ?/M entry.
+ *
+ * @param letter      The letter for the entry. (E.g. 'e' for the fifth entry.)
+ * @param str         A processed string for the entry. (E.g. "Blade".)
+ * @param mslot[out]  A space in memory to store a fake monster.
+ * @return            A new menu entry.
+ */
+MenuEntry* _monster_menu_gen(char letter, const string &str,
+                             monster_info &mslot)
+{
+    // Create and store fake monsters, so the menu code will
+    // have something valid to refer to.
+    monster_type m_type = get_monster_by_name(str);
+
+    monster_type base_type = MONS_NO_MONSTER;
+    // HACK: Set an arbitrary humanoid monster as base type.
+    if (mons_class_is_zombified(m_type))
+        base_type = MONS_GOBLIN;
+    // FIXME: This doesn't generate proper draconian monsters.
+    monster_info fake_mon(m_type, base_type);
+    fake_mon.props["fake"] = true;
+
+    mslot = fake_mon;
+
+#ifndef USE_TILE_LOCAL
+    int colour = mons_class_colour(m_type);
+    if (colour == BLACK)
+        colour = LIGHTGREY;
+
+    string prefix = "(<";
+    prefix += colour_to_str(colour);
+    prefix += ">";
+    prefix += stringize_glyph(mons_char(m_type));
+    prefix += "</";
+    prefix += colour_to_str(colour);
+    prefix += ">) ";
+
+    const string title = prefix + str;
+#else
+    const string &title = str;
+#endif
+
+    // NOTE: MonsterMenuEntry::get_tiles() takes care of setting
+    // up a fake weapon when displaying a fake dancing weapon's
+    // tile.
+    return new MonsterMenuEntry(title, &mslot, letter);
+}
+
+/**
+ * Generate a ?/F menu entry. (ref. _simple_menu_gen()).
+ */
+MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = new FeatureMenuEntry(str, feat_by_desc(str), letter);
+    me->data = &key;
+    return me;
+}
+
+/**
+ * Generate a ?/G menu entry. (ref. _simple_menu_gen()).
+ */
+MenuEntry* _god_menu_gen(char letter, const string &str, string &key)
+{
+    return new GodMenuEntry(str_to_god(key));
+}
+
+/**
+ * Generate a ?/S menu entry. (ref. _simple_menu_gen()).
+ */
+MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+    const spell_type spell = spell_by_name(str);
+#ifdef USE_TILE
+    if (spell != SPELL_NO_SPELL)
+        me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+#endif
+    me->colour = is_player_spell(spell) ? WHITE
+               : _is_rod_spell(spell)   ? LIGHTGREY
+                                        : DARKGREY; // monster-only
+
+    return me;
+}
+
+typedef MenuEntry* (*menu_entry_generator)(char letter, const string &str,
+                                           string &key);
 
 
 /// A set of optional functionality for lookup types.
@@ -574,11 +678,13 @@ class LookupType
 public:
     LookupType(char _symbol, string _type, db_keys_recap _recap,
                db_find_filter _filter_forbid, keys_by_glyph _glyph_fetch,
-               simple_key_list _simple_key_fetch, lookup_type_flags _flags)
+               simple_key_list _simple_key_fetch,
+               menu_entry_generator _menu_gen,
+               lookup_type_flags _flags)
     : symbol(_symbol), type(_type), filter_forbid(_filter_forbid),
       flags(_flags),
       simple_key_fetch(_simple_key_fetch), glyph_fetch(_glyph_fetch),
-      recap(_recap)
+      recap(_recap), menu_gen(_menu_gen)
     { }
 
     /**
@@ -634,6 +740,73 @@ public:
     }
 
     /**
+     * Build a menu listing the given keys, and allow the player to interact
+     * with them.
+     */
+    void display_keys(vector<string> &key_list) const
+    {
+        // For tiles builds use a tiles menu to display monsters.
+        const bool text_only =
+#ifdef USE_TILE_LOCAL
+        !(flags & LTYPF_SUPPORT_TILES);
+#else
+        true;
+#endif
+        /// XXX: ugh
+        const bool doing_mons = symbol == 'M';
+
+        DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING,
+                           doing_mons, text_only);
+        desc_menu.set_tag("description");
+        monster_info monster_list[52];
+        for (unsigned int i = 0, size = key_list.size(); i < size; i++)
+        {
+            const char letter = index_to_letter(i);
+            string &key = key_list[i];
+            // XXX: double ugh
+            if (doing_mons)
+            {
+                desc_menu.add_entry(_monster_menu_gen(letter,
+                                                      key_to_menu_str(key),
+                                                      monster_list[i]));
+            } else
+                desc_menu.add_entry(make_menu_entry(letter, key));
+        }
+
+        desc_menu.sort();
+
+        while (true)
+        {
+            vector<MenuEntry*> sel = desc_menu.show();
+            redraw_screen();
+            if (sel.empty())
+            {
+                if (doing_mons && desc_menu.getkey() == CONTROL('S'))
+                    desc_menu.toggle_sorting();
+                else
+                    return; // only exit from this function
+            }
+            else
+            {
+                ASSERT(sel.size() == 1);
+                ASSERT(sel[0]->hotkeys.size() >= 1);
+
+                string key;
+
+                if (doing_mons)
+                {
+                    monster_info* mon = (monster_info*) sel[0]->data;
+                    key = mons_type_name(mon->type, DESC_PLAIN);
+                }
+                else
+                    key = *((string*) sel[0]->data);
+
+                _do_description(key, type, suffix());
+            }
+        }
+    }
+
+    /**
      * Does this lookup type have special support for single-character input
      * (looking up corresponding glyphs - e.g. 'o' for orc, '(' for ammo...)
      */
@@ -656,6 +829,35 @@ public:
     /// A set of optional functionality; see lookup_type_flag for details
     lookup_type_flags flags;
 private:
+    /**
+     * Generate a description menu entry for the given key.
+     *
+     * @param letter    The letter with which the entry should be labeled.
+     * @param key       The key for the entry.
+     * @return          A pointer to a new MenuEntry object.
+     */
+    MenuEntry* make_menu_entry(char letter, string &key) const
+    {
+        ASSERT(menu_gen);
+        return menu_gen(letter, key_to_menu_str(key), key);
+    }
+
+    /**
+     * Turn a DB string into a nice menu title.
+     *
+     * @param key       The key in question. (E.g. "blade card").
+     * @return          A nicer string. (E.g. "Blade").
+     */
+    string key_to_menu_str(const string &key) const
+    {
+        string str = uppercase_first(key);
+
+        if (ends_with(str, suffix())) // perhaps we should assert this?
+            str.erase(str.length() - suffix().length());
+
+        return str;
+    }
+private:
     /// Function that fetches a list of keys, without taking arguments.
     simple_key_list simple_key_fetch;
     /// a function taking a single character & returning a list of keys
@@ -663,35 +865,37 @@ private:
     keys_by_glyph glyph_fetch;
     /// no idea, sorry :(
     db_keys_recap recap;
+    /// take a letter & a key, return a corresponding new menu entry
+    menu_entry_generator menu_gen;
 };
 
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
-               _get_monster_keys, nullptr,
+               _get_monster_keys, nullptr, nullptr,
                LTYPF_SUPPORT_TILES),
     LookupType('S', "spell", nullptr, _spell_filter,
-               nullptr, nullptr,
+               nullptr, nullptr, _spell_menu_gen,
                LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
     LookupType('K', "skill", nullptr, _skill_filter,
-               nullptr, nullptr,
+               nullptr, nullptr, _simple_menu_gen,
                LTYPF_NONE),
     LookupType('A', "ability", nullptr, _ability_filter,
-               nullptr, nullptr,
+               nullptr, nullptr, _simple_menu_gen,
                LTYPF_DB_SUFFIX),
     LookupType('C', "card", _recap_card_keys, _card_filter,
-               nullptr, nullptr,
+               nullptr, nullptr, _simple_menu_gen,
                LTYPF_DB_SUFFIX),
     LookupType('I', "item", nullptr, _item_filter,
-               item_name_list_for_glyph, nullptr,
+               item_name_list_for_glyph, nullptr, _simple_menu_gen,
                LTYPF_NONE),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
-               nullptr, nullptr,
+               nullptr, nullptr, _feature_menu_gen,
                LTYPF_SUPPORT_TILES),
     LookupType('G', "god", nullptr, nullptr,
-               nullptr, _get_god_keys,
+               nullptr, _get_god_keys, _god_menu_gen,
                LTYPF_NONE),
     LookupType('B', "branch", nullptr, nullptr,
-               nullptr, _get_branch_keys,
+               nullptr, _get_branch_keys, _simple_menu_gen,
                LTYPF_DISABLE_SORT)
 };
 
@@ -828,12 +1032,6 @@ static bool _find_description(string &response)
     const string type = lowercase_string(lookup_type.type);
     const string suffix = lookup_type.suffix();
 
-    // ...but especially this.
-    const bool doing_mons = ch == 'M';
-    const bool doing_gods = ch == 'G';
-    const bool doing_features = ch == 'F';
-    const bool doing_spells = ch == 'S';
-
     const bool want_regex = !(lookup_type.no_search());
     const string regex = want_regex ?
                          _prompt_for_regex(lookup_type, response) :
@@ -879,130 +1077,8 @@ static bool _find_description(string &response)
     if (!(lookup_type.flags & LTYPF_DISABLE_SORT))
         sort(key_list.begin(), key_list.end());
 
-    // For tiles builds use a tiles menu to display monsters.
-    const bool text_only =
-#ifdef USE_TILE_LOCAL
-    !(lookup_type.flags & LTYPF_SUPPORT_TILES);
-#else
-    true;
-#endif
-
-    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING,
-                       doing_mons, text_only);
-    desc_menu.set_tag("description");
-    list<monster_info> monster_list;
-    list<item_def> item_list;
-    for (unsigned int i = 0, size = key_list.size(); i < size; i++)
-    {
-        const char letter = index_to_letter(i);
-        string     str    = uppercase_first(key_list[i]);
-
-        if (ends_with(str, suffix)) // perhaps we should assert this?
-            str.erase(str.length() - suffix.length());
-
-        MenuEntry *me = nullptr;
-
-        if (doing_mons)
-        {
-            // Create and store fake monsters, so the menu code will
-            // have something valid to refer to.
-            monster_type m_type = get_monster_by_name(str);
-
-            // No proper monster, and causes crashes in Tiles.
-            if (mons_is_tentacle_segment(m_type))
-                continue;
-
-            monster_type base_type = MONS_NO_MONSTER;
-            // HACK: Set an arbitrary humanoid monster as base type.
-            if (mons_class_is_zombified(m_type))
-                base_type = MONS_GOBLIN;
-            monster_info fake_mon(m_type, base_type);
-            fake_mon.props["fake"] = true;
-
-            // FIXME: This doesn't generate proper draconian monsters.
-            monster_list.push_back(fake_mon);
-
-#ifndef USE_TILE_LOCAL
-            int colour = mons_class_colour(m_type);
-            if (colour == BLACK)
-                colour = LIGHTGREY;
-
-            string prefix = "(<";
-            prefix += colour_to_str(colour);
-            prefix += ">";
-            prefix += stringize_glyph(mons_char(m_type));
-            prefix += "</";
-            prefix += colour_to_str(colour);
-            prefix += ">) ";
-
-            str = prefix + str;
-#endif
-
-            // NOTE: MonsterMenuEntry::get_tiles() takes care of setting
-            // up a fake weapon when displaying a fake dancing weapon's
-            // tile.
-            me = new MonsterMenuEntry(str, &(monster_list.back()),
-                                      letter);
-        }
-        else if (doing_features)
-            me = new FeatureMenuEntry(str, feat_by_desc(str), letter);
-        else if (doing_gods)
-            me = new GodMenuEntry(str_to_god(key_list[i]));
-        else
-        {
-            me = new MenuEntry(str, MEL_ITEM, 1, letter);
-
-            if (doing_spells)
-            {
-                spell_type spell = spell_by_name(str);
-#ifdef USE_TILE
-                if (spell != SPELL_NO_SPELL)
-                    me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
-#endif
-                me->colour = is_player_spell(spell) ? WHITE
-                : _is_rod_spell(spell)   ? LIGHTGREY
-                : DARKGREY; // monster-only
-            }
-
-            me->data = &key_list[i];
-        }
-
-        desc_menu.add_entry(me);
-    }
-
-    desc_menu.sort();
-
-    while (true)
-    {
-        vector<MenuEntry*> sel = desc_menu.show();
-        redraw_screen();
-        if (sel.empty())
-        {
-            if (doing_mons && desc_menu.getkey() == CONTROL('S'))
-                desc_menu.toggle_sorting();
-            else
-                return true;
-        }
-        else
-        {
-            ASSERT(sel.size() == 1);
-            ASSERT(sel[0]->hotkeys.size() >= 1);
-
-            string key;
-
-            if (doing_mons)
-            {
-                monster_info* mon = (monster_info*) sel[0]->data;
-                key = mons_type_name(mon->type, DESC_PLAIN);
-            }
-            else if (doing_features)
-                key = sel[0]->text;
-            else
-                key = *((string*) sel[0]->data);
-
-            _do_description(key, type, suffix);
-        }
-    }
+    lookup_type.display_keys(key_list);
+    return true;
 }
 
 /**
