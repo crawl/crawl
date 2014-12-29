@@ -23,6 +23,7 @@
 #include "itemprop.h"
 #include "itemname.h"
 #include "items.h"
+#include "libutil.h" // map_find
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
@@ -544,6 +545,99 @@ static int _do_description(string key, string type, const string &suffix,
     return getchm();
 }
 
+
+
+/// A set of optional functionality for lookup types.
+enum lookup_type_flag
+{
+    LTYPF_NONE          = 0,
+    /// append the 'type' to the db lookup (e.g. "<input> spell")
+    LTYPF_DB_SUFFIX     = 1<<0,
+    /// single letter input searches for corresponding glyphs (o is for orc)
+    LTYPF_SINGLE_LETTER = 1<<1,
+    /// whether the regex functionality should be turned off
+    LTYPF_DISABLE_REGEX = 1<<2,
+    /// whether the sorting functionality should be turned off
+    LTYPF_DISABLE_SORT  = 1<<3,
+};
+DEF_BITFIELD(lookup_type_flags, lookup_type_flag);
+
+/// A description of a lookup that the player can do. (e.g. (M)onster data)
+class LookupType
+{
+public:
+    LookupType(char _symbol, string _type, db_keys_recap _recap,
+               db_find_filter _filter_forbid, lookup_type_flags _flags)
+    : symbol(_symbol), type(_type), recap(_recap),
+      filter_forbid(_filter_forbid), flags(_flags)
+    { }
+
+    /**
+     * How should this type be expressed in the prompt string?
+     *
+     * @return The 'type', with the first instance of the 'symbol' found &
+     *          replaced with an uppercase version surrounded by parens
+     *          e.g. "monster", 'm' -> "(M)onster"
+     */
+    string prompt_string() const
+    {
+        string prompt_str = lowercase_string(type);
+        const size_t symbol_pos = prompt_str.find(tolower(symbol));
+        ASSERT(symbol_pos != string::npos);
+
+        prompt_str.replace(symbol_pos, 1, make_stringf("(%c)",
+                                                       toupper(symbol)));
+        return prompt_str;
+    }
+
+public:
+    /// The letter pressed to choose this (e.g. 'M'). case insensitive
+    char symbol;
+    /// A description of the lookup type (e.g. "monster"). case insensitive
+    string type;
+    /// no idea, sorry :(
+    db_keys_recap recap;
+    /// a function returning 'true' if the search result corresponding to
+    /// the corresponding search should be filtered out of the results
+    db_find_filter filter_forbid;
+    /// A set of optional functionality; see lookup_type_flag for details
+    lookup_type_flags flags;
+};
+
+static const vector<const LookupType> _lookup_types = {
+    LookupType('M', "monster", _recap_mon_keys, _monster_filter,
+               LTYPF_SINGLE_LETTER),
+    LookupType('S', "spell", nullptr, _spell_filter,
+               LTYPF_DB_SUFFIX),
+    LookupType('K', "skill", nullptr, _skill_filter,
+               LTYPF_NONE),
+    LookupType('A', "ability", nullptr, _ability_filter,
+               LTYPF_DB_SUFFIX),
+    LookupType('C', "card", _recap_card_keys, _card_filter,
+               LTYPF_DB_SUFFIX),
+    LookupType('I', "item", nullptr, _item_filter,
+               LTYPF_SINGLE_LETTER),
+    LookupType('F', "feature", _recap_feat_keys, _feature_filter,
+               LTYPF_NONE),
+    LookupType('G', "god", nullptr, nullptr,
+               LTYPF_DISABLE_REGEX),
+    LookupType('B', "branch", nullptr, nullptr,
+               LTYPF_DISABLE_REGEX | LTYPF_DISABLE_SORT)
+};
+
+/**
+ * Build a mapping from LookupTypes' symbols to the objects themselves.
+ */
+static map<char, const LookupType*> _build_lookup_type_map()
+{
+    map<char, const LookupType*> lookup_map;
+    for (int i = 0; i < _lookup_types.size(); i++)
+        lookup_map[_lookup_types[i].symbol] = &_lookup_types[i];
+    return lookup_map;
+}
+static const map<char, const LookupType*> _lookup_types_by_symbol
+    = _build_lookup_type_map();
+
 /**
  * Run an iteration of ?/.
  *
@@ -560,91 +654,52 @@ static bool _find_description(string &error_inout)
 
     if (!error_inout.empty())
         mprf(MSGCH_PROMPT, "%s", error_inout.c_str());
-    mprf(MSGCH_PROMPT, "Describe a (M)onster, (S)pell, s(K)ill, (I)tem, "
-         "(F)eature, (G)od, (A)bility, (B)ranch, or (C)ard? ");
+
+    const string lookup_type_prompts =
+        comma_separated_fn(_lookup_types.begin(), _lookup_types.end(),
+                           [] (const LookupType type) {
+                               return type.prompt_string();
+                           }, " or ");
+    mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
+
     int ch;
     {
         cursor_control con(true);
         ch = toupper(getchm());
     }
-    string    type;
-    string    extra;
-    string    suffix;
-    db_find_filter filter     = nullptr;
-    db_keys_recap  recap      = nullptr;
-    bool           want_regex = true;
-    bool           want_sort  = true;
 
-    bool doing_mons     = false;
-    bool doing_items    = false;
-    bool doing_gods     = false;
-    bool doing_branches = false;
-    bool doing_features = false;
-    bool doing_spells   = false;
-
-    switch (ch)
+    const LookupType * const *lookup_type_ptr
+        = map_find(_lookup_types_by_symbol, ch);
+    if (!lookup_type_ptr)
     {
-        case 'M':
-            type       = "monster";
-            extra      = " Enter a single letter to list monsters displayed by "
-            "that symbol.";
-            filter     = _monster_filter;
-            recap      = _recap_mon_keys;
-            doing_mons = true;
-            break;
-        case 'S':
-            type         = "spell";
-            filter       = _spell_filter;
-            suffix       = " spell";
-            doing_spells = true;
-            break;
-        case 'K':
-            type   = "skill";
-            filter = _skill_filter;
-            break;
-        case 'A':
-            type   = "ability";
-            filter = _ability_filter;
-            suffix = " ability";
-            break;
-        case 'C':
-            type   = "card";
-            filter = _card_filter;
-            suffix = " card";
-            recap  = _recap_card_keys;
-            break;
-        case 'I':
-            type        = "item";
-            extra       = " Enter a single letter to list items displayed by "
-            "that symbol.";
-            filter      = _item_filter;
-            doing_items = true;
-            break;
-        case 'F':
-            type   = "feature";
-            filter = _feature_filter;
-            recap  = _recap_feat_keys;
-
-            doing_features = true;
-            break;
-        case 'G':
-            type       = "god";
-            filter     = nullptr;
-            want_regex = false;
-            doing_gods = true;
-            break;
-        case 'B':
-            type           = "branch";
-            filter         = nullptr;
-            want_regex     = false;
-            want_sort      = false;
-            doing_branches = true;
-            break;
-
-        default:
-            error_inout = "Okay, then.";
-            return false;
+        error_inout = "Okay, then.";
+        return false;
     }
+
+    ASSERT(*lookup_type_ptr);
+    const LookupType lookup_type = **lookup_type_ptr;
+
+    // All this will soon pass.
+    const string type = lowercase_string(lookup_type.type);
+    const string extra = lookup_type.flags & LTYPF_SINGLE_LETTER ?
+        make_stringf(" Enter a single letter to list %s displayed by that"
+                     " symbol.", pluralise(type).c_str()) :
+        "";
+    const string suffix = lookup_type.flags & LTYPF_DB_SUFFIX ?
+                          " " + type :
+                          "";
+    const db_find_filter filter = lookup_type.filter_forbid;
+    const db_keys_recap recap = lookup_type.recap;
+    bool want_regex = !(lookup_type.flags & LTYPF_DISABLE_REGEX);
+    const bool want_sort = !(lookup_type.flags & LTYPF_DISABLE_SORT);
+
+    // ...but especially this.
+    const bool doing_mons = ch == 'M';
+    const bool doing_items = ch == 'I';
+    const bool doing_gods = ch == 'G';
+    const bool doing_branches = ch == 'B';
+    const bool doing_features = ch == 'F';
+    const bool doing_spells = ch == 'S';
 
     string regex = "";
 
@@ -669,8 +724,7 @@ static bool _find_description(string &error_inout)
 
         if (regex.empty())
         {
-            error_inout = "Description must contain at least "
-            "one non-space.";
+            error_inout = "Description must contain at least one non-space.";
             return true;
         }
     }
