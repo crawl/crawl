@@ -3115,7 +3115,7 @@ static void _move_player(coord_def move)
                 mpr("You're too confused to move!");
         }
 
-        const coord_def& new_targ = you.pos() + move;
+        const coord_def new_targ = you.pos() + move;
         if (!in_bounds(new_targ) || !you.can_pass_through(new_targ))
         {
             you.walking = move.abs();
@@ -3154,7 +3154,7 @@ static void _move_player(coord_def move)
         }
     }
 
-    const coord_def& targ = you.pos() + move;
+    const coord_def targ = you.pos() + move;
 
     // You can't walk out of bounds!
     if (!in_bounds(targ))
