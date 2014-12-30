@@ -1530,6 +1530,9 @@ bool mons_can_use_stairs(const monster* mon)
         // and perhaps needs a whilelist (or long-duration vs. short-duration).
         return !summons_are_capped(static_cast<spell_type>(stype));
     }
+    if (stype == MON_SUMM_SHADOW)
+        return false; // shadow traps summons can't follow up/down stairs
+
     // Everything else is fine
     return true;
 }
