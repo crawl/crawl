@@ -1829,9 +1829,9 @@ static const mutation_def mut_data[] =
 { MUT_NO_DODGING,                0,  1, MUTFLAG_RU, false,
   "inability to train dodging",
 
-  {"You cannot train Dodging.", "", ""},
-  {"You can no longer train Dodging.", "", ""},
-  {"You can once more train Dodging.", "", ""},
+  {"You cannot train Dodging skill.", "", ""},
+  {"You can no longer train Dodging skill.", "", ""},
+  {"You can once more train Dodging skill.", "", ""},
 
   "inability to train Dodging",
 },
@@ -1839,9 +1839,9 @@ static const mutation_def mut_data[] =
 { MUT_NO_ARMOUR,                0,  1, MUTFLAG_RU, false,
   "inability to train armour",
 
-  {"You cannot train your Armour skill.", "", ""},
-  {"You can no longer train your Armour skill.", "", ""},
-  {"You can once more train your Armour skill.", "", ""},
+  {"You cannot train Armour skill.", "", ""},
+  {"You can no longer train Armour skill.", "", ""},
+  {"You can once more train Armour skill.", "", ""},
 
   "inability to train Armour",
 },
