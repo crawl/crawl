@@ -4322,7 +4322,7 @@ static bool _book_from_spell(const char* specs, item_def &item)
     return false;
 }
 
-bool get_item_by_name(item_def *item, char* specs,
+bool get_item_by_name(item_def *item, const char* specs,
                       object_class_type class_wanted, bool create_for_real)
 {
     int            type_wanted    = -1;
