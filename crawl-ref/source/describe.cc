@@ -2738,6 +2738,59 @@ static int _hex_chance(const spell_type spell, const int hd)
 }
 
 /**
+ * Describe mostly non-numeric player-specific information about a spell.
+ *
+ * (E.g., your god's opinion of it, whether it's in a high-level book that
+ * you can't memorize from, whether it's currently useless for whatever
+ * reason...)
+ *
+ * @param spell     The spell in question.
+ * @param item      The object the spell is in; may be null.
+ */
+static string _player_spell_desc(spell_type spell, const item_def* item)
+{
+    string description;
+
+    // Report summon cap
+    const int limit = summons_limit(spell);
+    if (limit)
+    {
+        description += "You can sustain at most " + number_in_words(limit)
+                        + " creature" + (limit > 1 ? "s" : "")
+                        + " summoned by this spell.\n";
+    }
+
+    const bool rod = item && item->base_type == OBJ_RODS;
+    if (god_hates_spell(spell, you.religion, rod))
+    {
+        description += uppercase_first(god_name(you.religion))
+                       + " frowns upon the use of this spell.\n";
+        if (god_loathes_spell(spell, you.religion))
+            description += "You'd be excommunicated if you dared to cast it!\n";
+    }
+    else if (god_likes_spell(spell, you.religion))
+    {
+        description += uppercase_first(god_name(you.religion))
+                       + " supports the use of this spell.\n";
+    }
+
+    if (item && !player_can_memorise_from_spellbook(*item))
+    {
+        description += "The spell is scrawled in ancient runes that are "
+                       "beyond your current level of understanding.\n";
+    }
+
+    if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
+    {
+        description += "\nThis spell will have no effect right now: "
+                       + spell_uselessness_reason(spell, true, false, rod)
+                       + "\n";
+    }
+
+    return description;
+}
+
+/**
  * Examine a given spell. Set the given string to its description, stats, &c.
  * If it's a book in a spell that the player is holding, mention the option to
  * memorize or forget it.
@@ -2776,13 +2829,6 @@ static int _get_spell_description(const spell_type spell,
 #endif
     }
 
-    // Report summon cap
-    if (const int limit = summons_limit(spell))
-    {
-        description += "You can sustain at most " + number_in_words(limit)
-                       + " creature" + (limit > 1 ? "s" : "") + " summoned by this spell.\n";
-    }
-
     if (mon_owner)
     {
         // FIXME: this HD is wrong in some cases
@@ -2801,39 +2847,10 @@ static int _get_spell_description(const spell_type spell,
         }
 
     }
-    else
+    else if (crawl_state.need_save)
     {
+        description += _player_spell_desc(spell, item);
         const bool rod = item && item->base_type == OBJ_RODS;
-
-        if (god_hates_spell(spell, you.religion, rod))
-        {
-            description += uppercase_first(god_name(you.religion))
-                            + " frowns upon the use of this spell.\n";
-            if (god_loathes_spell(spell, you.religion))
-            {
-                description += "You'd be excommunicated if you dared to cast "
-                               "it!\n";
-            }
-        }
-        else if (god_likes_spell(spell, you.religion))
-        {
-            description += uppercase_first(god_name(you.religion))
-                           + " supports the use of this spell.\n";
-        }
-
-        if (item && !player_can_memorise_from_spellbook(*item))
-        {
-            description += "The spell is scrawled in ancient runes that are "
-                           "beyond your current level of understanding.\n";
-        }
-
-        if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
-        {
-            description += "\nThis spell will have no effect right now: "
-                           + spell_uselessness_reason(spell, true, false, rod)
-                           + "\n";
-        }
-
         _append_spell_stats(spell, description, rod);
     }
 
