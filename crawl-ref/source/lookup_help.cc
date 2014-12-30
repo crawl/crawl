@@ -952,39 +952,38 @@ static int _describe_card(const string &key, const string &suffix,
  * Describe the stats of the item named by the given key.
  *
  * @param key       The name of the item to describe.
- * @param it_slot   An allocated index in mitm to store temporary items in.
- * XXX: replace this with an unwind_var
  * @return          Information about the item's stats, or "" if there's
  *                  nothing to mechanically add to its db description.
  */
-static string _item_stats(const string &key, int it_slot)
+static string _item_stats(const string &key)
 {
     string desc;
-    if (get_item_by_name(&mitm[it_slot], key.c_str(), OBJ_WEAPONS))
+    item_def item;
+    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS))
     {
-        append_weapon_stats(desc, mitm[it_slot]);
+        append_weapon_stats(desc, item);
         return desc + "\n";
     }
 
-    if (get_item_by_name(&mitm[it_slot], key.c_str(), OBJ_ARMOUR))
+    if (get_item_by_name(&item, key.c_str(), OBJ_ARMOUR))
     {
-        append_armour_stats(desc, mitm[it_slot]);
+        append_armour_stats(desc, item);
         return desc + "\n";
     }
 
-    if (get_item_by_name(&mitm[it_slot], key.c_str(), OBJ_MISSILES))
+    if (get_item_by_name(&item, key.c_str(), OBJ_MISSILES))
     {
-        append_missile_info(desc, mitm[it_slot]);
+        append_missile_info(desc, item);
         return desc + "\n";
     }
 
-    if (get_item_by_name(&mitm[it_slot], key.c_str(), OBJ_BOOKS)
-        || get_item_by_name(&mitm[it_slot], key.c_str(), OBJ_RODS))
+    if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
+        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
     {
         // FIXME: Duplicates messages from describe.cc.
-        if (!player_can_memorise_from_spellbook(mitm[it_slot]))
+        if (!player_can_memorise_from_spellbook(item))
             desc = "This book is beyond your current level of understanding.";
-        return desc + describe_item_spells(mitm[it_slot]);
+        return desc + describe_item_spells(item);
     }
 
     return "";
@@ -1002,9 +1001,7 @@ static string _item_stats(const string &key, int it_slot)
 static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
-    const int it_slot = get_mitm_slot();
-    const string iinfo = _item_stats(key, it_slot);
-    destroy_item(it_slot);
+    const string iinfo = _item_stats(key);
     return _describe_key(key, suffix, footer, iinfo);
 }
 
