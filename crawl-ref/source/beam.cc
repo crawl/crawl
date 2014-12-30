@@ -2621,7 +2621,8 @@ void bolt::drop_object()
         {
             mprf("%s %s!",
                  item->name(DESC_THE).c_str(),
-                 summoned_poof_msg(agent()->as_monster(), *item).c_str());
+                 summoned_poof_msg(agent() ? agent()->as_monster() : nullptr,
+                                   *item).c_str());
         }
         item_was_destroyed(*item);
         return;
