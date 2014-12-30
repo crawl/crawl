@@ -628,8 +628,8 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
-    const ability_type ability = ability_by_name(str);
 #ifdef USE_TILE
+    const ability_type ability = ability_by_name(str);
     if (ability != ABIL_NON_ABILITY)
         me->add_tile(tile_def(tileidx_ability(ability), TEX_GUI));
 #endif
@@ -652,6 +652,21 @@ static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
     me->colour = is_player_spell(spell) ? WHITE
                : _is_rod_spell(spell)   ? LIGHTGREY
                                         : DARKGREY; // monster-only
+
+    return me;
+}
+
+/**
+ * Generate a ?/K menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+#ifdef USE_TILE
+    const skill_type skill = str_to_skill(str);
+    me->add_tile(tile_def(tileidx_skill(skill, 1), TEX_GUI));
+#endif
 
     return me;
 }
@@ -1024,9 +1039,9 @@ static const vector<LookupType> lookup_types = {
                _describe_spell,
                LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
     LookupType('K', "skill", nullptr, nullptr,
-               nullptr, _get_skill_keys, _simple_menu_gen,
+               nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_generic,
-               LTYPF_NONE),
+               LTYPF_SUPPORT_TILES),
     LookupType('A', "ability", nullptr, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_generic,
