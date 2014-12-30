@@ -1758,7 +1758,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_STEAM_BALL, "Steam Ball",
-     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
      4,
      0,

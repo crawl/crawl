@@ -3959,7 +3959,6 @@ bool god_hates_ability(ability_type ability, god_type god)
             return god == GOD_SHINING_ONE;
         case ABIL_BREATHE_FIRE:
         case ABIL_BREATHE_STICKY_FLAME:
-        case ABIL_BREATHE_STEAM:
         case ABIL_DELAYED_FIREBALL:
         case ABIL_HELLFIRE:
             return god == GOD_DITHMENOS;
