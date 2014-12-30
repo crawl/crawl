@@ -1924,11 +1924,16 @@ trap_type random_trap_for_place()
     const bool shaft_ok = is_valid_shaft_level();
     const bool tele_ok = !crawl_state.game_is_sprint();
     const bool alarm_ok = env.absdepth0 > 3;
+    const bool shadow_ok = env.absdepth0 > 1;
+
+    // XXX: express this in a better way
+    if (!shaft_ok && !tele_ok && !alarm_ok && !shadow_ok)
+        return NUM_TRAPS;
 
     const pair<trap_type, int> trap_weights[] =
     {
         { TRAP_TELEPORT, tele_ok  ? 2 : 0},
-        { TRAP_SHADOW,              1    },
+        { TRAP_SHADOW,  shadow_ok ? 1 : 0 },
         { TRAP_SHAFT,   shaft_ok  ? 1 : 0},
         { TRAP_ALARM,   alarm_ok  ? 1 : 0},
     };
