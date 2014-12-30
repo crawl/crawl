@@ -825,9 +825,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         colour = failure_rate_colour(spell);
         desc << "<" << colour_to_str(colour) << ">";
-        char* failure = failure_rate_to_string(spell_fail(spell));
-        desc << chop_string(failure, 12);
-        free(failure);
+        desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12);
         desc << "</" << colour_to_str(colour) << ">";
         desc << spell_difficulty(spell);
 

@@ -864,9 +864,7 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line = chop_string(spell_line, 54);
 
-                char* failure = failure_rate_to_string(spell_fail(spell));
-                spell_line += failure;
-                free(failure);
+                spell_line += failure_rate_to_string(spell_fail(spell));
 
                 spell_line = chop_string(spell_line, 66);
 

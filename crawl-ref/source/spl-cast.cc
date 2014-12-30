@@ -118,9 +118,8 @@ static string _spell_base_description(spell_type spell, bool viewing)
     // spell fail rate, level
     highlight = failure_rate_colour(spell);
     desc << "<" << colour_to_str(highlight) << ">";
-    char* failure = failure_rate_to_string(spell_fail(spell));
+    const string failure = failure_rate_to_string(spell_fail(spell));
     desc << chop_string(failure, 12);
-    free(failure);
     desc << "</" << colour_to_str(highlight) << ">";
     desc << spell_difficulty(spell);
 
@@ -2080,13 +2079,15 @@ int failure_rate_to_int(int fail)
         return max(1, (int) (100 * _get_true_fail_rate(fail)));
 }
 
-//Note that this char[] is allocated on the heap, so anything calling
-//this function will also need to call free()!
-char* failure_rate_to_string(int fail)
+/**
+ * Convert the given failure rate into a percent, and return it as a string.
+ *
+ * @param fail      A raw failure rate (not a percent!)
+ * @return          E.g. "79%".
+ */
+string failure_rate_to_string(int fail)
 {
-    char *buffer = (char *)malloc(9);
-    sprintf(buffer, "%d%%", failure_rate_to_int(fail));
-    return buffer;
+    return make_stringf("%d%%", failure_rate_to_int(fail));
 }
 
 string spell_hunger_string(spell_type spell, bool rod)
