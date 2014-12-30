@@ -1003,9 +1003,9 @@ static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
     const int it_slot = get_mitm_slot();
-    const string item_info = _item_stats(key, it_slot);
+    const string iinfo = _item_stats(key, it_slot);
     destroy_item(it_slot);
-    return _describe_key(key, suffix, footer, item_info);
+    return _describe_key(key, suffix, footer, iinfo);
 }
 
 /**
