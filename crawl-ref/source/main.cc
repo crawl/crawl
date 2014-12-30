@@ -3403,7 +3403,7 @@ static void _move_player(coord_def move)
         // so earlier would allow e.g. shadow traps to put a monster
         // at the player's location.
         if (swap)
-            targ_monst->apply_location_effects(targ_monst->pos());
+            targ_monst->apply_location_effects(targ);
 
         if (you.duration[DUR_BARBS])
         {
