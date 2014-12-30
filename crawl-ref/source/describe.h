@@ -69,6 +69,7 @@ int describe_monsters(const monster_info &mi, bool force_seen = false,
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);
 
+string player_spell_desc(spell_type spell, const item_def* item = nullptr);
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled,
                     const monster_info *mon_owner = nullptr,
