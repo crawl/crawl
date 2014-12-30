@@ -416,8 +416,15 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         u.ghost.damage = 5;
     }
 
-    if (base_type == MONS_NO_MONSTER)
+    // Don't put a bad base type on ?/mdraconian annihilator etc.
+    // The mons_species check is to catch jobs (draconian annihilator)
+    // but not races (mottled draconian).
+    if (base_type == MONS_NO_MONSTER
+        && mons_species(type) != MONS_DRACONIAN
+        && mons_species(type) != MONS_DEMONSPAWN)
+    {
         base_type = type;
+    }
 
     if (mons_is_unique(type))
     {
