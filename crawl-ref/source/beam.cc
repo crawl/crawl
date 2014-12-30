@@ -865,9 +865,8 @@ void bolt::burn_wall_effect()
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
     ASSERT(agent());
 
-    // Trees do not burn so readily in a wet environment, and you shouldn't get
-    // tons of penance from an unid'd wand of fire.
-    if (player_in_branch(BRANCH_SWAMP) || in_good_standing(GOD_DITHMENOS))
+    // Trees do not burn so readily in a wet environment.
+    if (player_in_branch(BRANCH_SWAMP))
         place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
     else
         place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
