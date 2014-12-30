@@ -1926,10 +1926,6 @@ trap_type random_trap_for_place()
     const bool alarm_ok = env.absdepth0 > 3;
     const bool shadow_ok = env.absdepth0 > 1;
 
-    // XXX: express this in a better way
-    if (!shaft_ok && !tele_ok && !alarm_ok && !shadow_ok)
-        return NUM_TRAPS;
-
     const pair<trap_type, int> trap_weights[] =
     {
         { TRAP_TELEPORT, tele_ok  ? 2 : 0},
@@ -1938,7 +1934,8 @@ trap_type random_trap_for_place()
         { TRAP_ALARM,   alarm_ok  ? 1 : 0},
     };
 
-    return *random_choose_weighted(trap_weights);
+    const trap_type *trap = random_choose_weighted(trap_weights);
+    return trap ? *trap : NUM_TRAPS;
 }
 
 int count_traps(trap_type ttyp)
