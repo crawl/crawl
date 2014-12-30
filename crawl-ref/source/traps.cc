@@ -1879,9 +1879,9 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
  * Get a number of traps to place on the current level.
  *
  * No traps are placed in either Temple or disconnected branches other than
- * Pandemonium. For other branches, we place 0-4 traps per level, averaged over
+ * Pandemonium. For other branches, we place 0-2 traps per level, averaged over
  * two dice. This value is increased for deeper levels; roughly one additional
- * trap for every 14 levels of absdepth, capping out at max 9 traps in a level.
+ * trap for every 10 levels of absdepth, capping out at max 9 traps in a level.
  *
  * @return  A number of traps to be placed.
 */
@@ -1894,8 +1894,8 @@ int num_traps_for_place()
         return 0;
     }
 
-    const int depth_bonus = div_rand_round(env.absdepth0, 7);
-    return random2avg(5 + depth_bonus, 2);
+    const int depth_bonus = div_rand_round(env.absdepth0, 5);
+    return random2avg(3 + depth_bonus, 2);
 }
 
 /**
