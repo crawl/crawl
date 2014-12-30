@@ -468,7 +468,7 @@ static bool _is_rod_spell(spell_type spell)
 
 // Adds a list of all books/rods that contain a given spell (by name)
 // to a description string.
-static bool _append_books(string &desc, item_def &item, string key)
+static bool _append_books(string &desc, string key)
 {
     if (ends_with(key, " spell"))
         key.erase(key.length() - 6);
@@ -500,6 +500,7 @@ static bool _append_books(string &desc, item_def &item, string key)
     if (!you_can_memorise(type))
         desc += "\n" + desc_cannot_memorise_reason(type);
 
+    item_def item;
     set_ident_flags(item, ISFLAG_IDENT_MASK);
     vector<string> books;
     vector<string> rods;
@@ -917,16 +918,8 @@ static int _describe_spell(const string &key, const string &suffix,
 {
     // TODO: deduplicate this with describe_spell()
 
-    const int it_slot = get_mitm_slot();
     string spell_info;
-    if (it_slot)
-    {
-        _append_books(spell_info, mitm[it_slot], key);
-        destroy_item(it_slot);
-    }
-    else
-        spell_info = "Unable to allocate space to describe this spell!";
-
+    _append_books(spell_info, key);
     return _describe_key(key, suffix, footer, spell_info);
 }
 
