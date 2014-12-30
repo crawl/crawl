@@ -1021,6 +1021,7 @@ int mons_demon_tier(monster_type mc)
     case 'C':
         if (mc != MONS_ANTAEUS)
             return 0;
+        // intentional fall-through for Antaeus
     case '&':
         return -1;
     case '1':
