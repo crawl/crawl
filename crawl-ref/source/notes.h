@@ -53,6 +53,8 @@ enum NOTE_TYPES
     NOTE_FEAT_MIMIC,            /* needs: mimiced feature (string) */
     NOTE_OFFERED_SPELL,         /* needs: spell idx */
     NOTE_PERM_MUTATION,         /* needs: mutation idx, reason (string) */
+    NOTE_FOCUS_CARD,            /* needs: increased stat value, decreased stat value,
+                                   increased stat name (string), decreased stat name (string) */
     NOTE_NUM_TYPES
 };
 
