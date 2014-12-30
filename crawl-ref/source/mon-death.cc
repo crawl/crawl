@@ -3006,7 +3006,7 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
     case SPELL_GHOSTLY_FLAMES:
     case SPELL_CALL_LOST_SOUL:
-        msg = "fades away";
+        msg = "fade%s away";
         break;
     }
 
@@ -3032,10 +3032,10 @@ string summoned_poof_msg(const monster* mons, bool plural)
         }
 
         if (mons->type == MONS_DROWNED_SOUL)
-            msg = "returns to the deep";
+            msg = "return%s to the deep";
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
-            msg = "shimmers and vanishes";
+            msg = "shimmer%s and vanish" + string(plural ? "" : "es"); // Ugh
     }
 
     // Conjugate.
