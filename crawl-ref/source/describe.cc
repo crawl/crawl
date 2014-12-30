@@ -2630,28 +2630,35 @@ static void _adjust_item(item_def &item)
     }
 }
 
-static void _append_spell_stats(const spell_type spell,
-                                string &description,
-                                bool rod)
+/**
+ * List the simple calculated stats of a given spell, when cast by the player
+ * in their current condition.
+ *
+ * @param spell     The spell in question.
+ * @param rod       Whether the spell is being cast from a rod (not a book).
+ */
+static string _player_spell_stats(const spell_type spell, bool rod)
 {
-    if (rod)
-    {
-        snprintf(info, INFO_SIZE,
-                 "\nLevel: %d",
-                 spell_difficulty(spell));
-    }
-    else
+    string description;
+    description += make_stringf("\nLevel: %d", spell_difficulty(spell));
+    if (!rod)
     {
         const string schools = spell_schools_string(spell);
+        description +=
+            make_stringf("        School%s: %s",
+                         schools.find("/") != string::npos ? "s" : "",
+                         schools.c_str());
+
+        if (!crawl_state.need_save
+            || (get_spell_flags(spell) & SPFLAG_MONSTER))
+        {
+            return description; // all other info is player-dependent
+        }
+
         const string failure = failure_rate_to_string(spell_fail(spell));
-        snprintf(info, INFO_SIZE,
-                 "\nLevel: %d        School%s: %s        Fail: %s",
-                 spell_difficulty(spell),
-                 schools.find("/") != string::npos ? "s" : "",
-                 schools.c_str(),
-                 failure.c_str());
+        description += make_stringf("        Fail: %s", failure.c_str());
     }
-    description += info;
+
     description += "\n\nPower : ";
     description += spell_power_string(spell, rod);
     description += "\nRange : ";
@@ -2661,6 +2668,7 @@ static void _append_spell_stats(const spell_type spell,
     description += "\nNoise : ";
     description += spell_noise_string(spell);
     description += "\n";
+    return description;
 }
 
 string get_skill_description(skill_type skill, bool need_title)
@@ -2748,6 +2756,9 @@ static int _hex_chance(const spell_type spell, const int hd)
  */
 static string _player_spell_desc(spell_type spell, const item_def* item)
 {
+    if (!crawl_state.need_save || (get_spell_flags(spell) & SPFLAG_MONSTER))
+        return ""; // all info is player-dependent
+
     string description;
 
     // Report summon cap
@@ -2787,6 +2798,22 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
     }
 
     return description;
+}
+
+
+/**
+ * Describe a spell, as cast by the player.
+ *
+ * @param spell     The spell in question.
+ * @param item      The object the spell is in; may be null.
+ * @return          Information about the spell; does not include the title or
+ *                  db description, but does include level, range, etc.
+ */
+string player_spell_desc(spell_type spell, const item_def* item)
+{
+    const bool rod = item && item->base_type == OBJ_RODS;
+    return _player_spell_stats(spell, rod)
+           + _player_spell_desc(spell, item);
 }
 
 /**
@@ -2846,12 +2873,8 @@ static int _get_spell_description(const spell_type spell,
         }
 
     }
-    else if (crawl_state.need_save)
-    {
-        description += _player_spell_desc(spell, item);
-        const bool rod = item && item->base_type == OBJ_RODS;
-        _append_spell_stats(spell, description, rod);
-    }
+    else
+        description += player_spell_desc(spell, item);
 
     // Don't allow memorization or amnesia after death.
     // (In the post-game inventory screen.)

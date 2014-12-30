@@ -466,40 +466,21 @@ static bool _is_rod_spell(spell_type spell)
     return false;
 }
 
-// Adds a list of all books/rods that contain a given spell (by name)
-// to a description string.
-static bool _append_books(string &desc, string key)
+/**
+ * Make a list of all books/rods that contain a given spell.
+ *
+ * @param spell_type spell      The spell in question.
+ * @return                      A formatted list of books & rods containing
+ *                              the spell, e.g.:
+ *    \n\nThis spell can be found in the following rod: iron rod.
+ *    or
+ *    \n\nThis spell can be found in the following books: dreams, burglary.
+ *    \n\nThis spell can be found in the following rods: warding, clouds.
+ *    or
+ *    \n\nThis spell is not found in any books or rods.
+ */
+static string _spell_sources(const spell_type spell)
 {
-    if (ends_with(key, " spell"))
-        key.erase(key.length() - 6);
-
-    spell_type type = spell_by_name(key, true);
-
-    if (type == SPELL_NO_SPELL)
-        return false;
-
-    desc += "\nType:       ";
-    bool already = false;
-
-    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-    {
-        if (spell_typematch(type, 1 << i))
-        {
-            if (already)
-                desc += "/" ;
-
-            desc += spelltype_long_name(1 << i);
-            already = true;
-        }
-    }
-    if (!already)
-        desc += "None";
-
-    desc += make_stringf("\nLevel:      %d", spell_difficulty(type));
-
-    if (!you_can_memorise(type))
-        desc += "\n" + desc_cannot_memorise_reason(type);
-
     item_def item;
     set_ident_flags(item, ISFLAG_IDENT_MASK);
     vector<string> books;
@@ -508,7 +489,7 @@ static bool _append_books(string &desc, string key)
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
         for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
-            if (sp == type)
+            if (sp == spell)
             {
                 item.sub_type = i;
                 books.push_back(item.name(DESC_PLAIN));
@@ -518,9 +499,14 @@ static bool _append_books(string &desc, string key)
     for (int i = 0; i < NUM_RODS; i++)
     {
         item.sub_type = i;
-        if (spell_in_rod(static_cast<rod_type>(i)) == type)
+        if (spell_in_rod(static_cast<rod_type>(i)) == spell)
             rods.push_back(item.name(DESC_BASENAME));
     }
+
+    if (books.empty() && rods.empty())
+        return "\n\nThis spell is not found in any books or rods.";
+
+    string desc;
 
     if (!books.empty())
     {
@@ -529,7 +515,6 @@ static bool _append_books(string &desc, string key)
             desc += "s";
         desc += ":\n ";
         desc += comma_separated_line(books.begin(), books.end(), "\n ", "\n ");
-
     }
 
     if (!rods.empty())
@@ -541,10 +526,7 @@ static bool _append_books(string &desc, string key)
         desc += comma_separated_line(rods.begin(), rods.end(), "\n ", "\n ");
     }
 
-    if (books.empty() && rods.empty())
-        desc += "\n\nThis spell is not found in any books or rods.";
-
-    return true;
+    return desc;
 }
 
 /**
@@ -916,11 +898,13 @@ static int _describe_monster(const string &key, const string &suffix,
 static int _describe_spell(const string &key, const string &suffix,
                              string footer)
 {
-    // TODO: deduplicate this with describe_spell()
+    const string spell_name = key.substr(0, key.size() - suffix.size());
+    const spell_type spell = spell_by_name(spell_name, true);
+    ASSERT(spell != SPELL_NO_SPELL);
 
-    string spell_info;
-    _append_books(spell_info, key);
-    return _describe_key(key, suffix, footer, spell_info);
+    const string spell_info = player_spell_desc(spell);
+    const string source_info = _spell_sources(spell);
+    return _describe_key(key, suffix, footer, spell_info + source_info);
 }
 
 
