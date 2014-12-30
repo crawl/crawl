@@ -45,10 +45,9 @@ void SpellRegion::draw_tag()
         return;
 
     const spell_type spell = (spell_type) idx;
-    char* failure = failure_rate_to_string(spell_fail(spell));
+    const string failure = failure_rate_to_string(spell_fail(spell));
     string desc = make_stringf("%d MP    %s    (%s)", spell_mana(spell),
-                               spell_title(spell), failure);
-    free(failure);
+                               spell_title(spell), failure.c_str());
     draw_desc(desc.c_str());
 }
 
