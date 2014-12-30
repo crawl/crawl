@@ -417,11 +417,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     }
 
     // Don't put a bad base type on ?/mdraconian annihilator etc.
-    // The mons_species check is to catch jobs (draconian annihilator)
-    // but not races (mottled draconian).
-    if (base_type == MONS_NO_MONSTER
-        && mons_species(type) != MONS_DRACONIAN
-        && mons_species(type) != MONS_DEMONSPAWN)
+    if (base_type == MONS_NO_MONSTER && !mons_is_job(type))
     {
         base_type = type;
     }
