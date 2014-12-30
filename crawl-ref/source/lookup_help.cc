@@ -603,9 +603,11 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
     me->data = &key;
 
 #ifdef USE_TILE
-    const tileidx_t idx = tileidx_feature_base(feat);
     if (feat)
+    {
+        const tileidx_t idx = tileidx_feature_base(feat);
         me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+    }
 #endif
 
     return me;
@@ -1044,7 +1046,7 @@ static const vector<LookupType> lookup_types = {
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god,
-               LTYPF_NONE),
+               LTYPF_SUPPORT_TILES),
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _simple_menu_gen,
                _describe_generic,
