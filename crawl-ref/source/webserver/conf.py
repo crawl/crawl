@@ -1,4 +1,5 @@
 import csv
+import glob
 import os
 import toml
 import logging
@@ -40,24 +41,34 @@ class Conf(object):
         self.init_games()
 
     def load(self):
+        ## XXX the toml module uses the base Exception class, so we
+        ## have to catch it in a different block.
         try:
-            self.data = toml.load(open(self.path, "r"))
-        except OSError as e:
-            errmsg = ("Couldn't open config file %s (%s)" % (self.path, e))
-            if os.path.exists(path + ".sample"):
-                errmsg += (". Maybe copy config.toml.sample to config.toml.")
-            logging.error(errmsg)
+            fh = open(self.path, "r")
+        except EnvironmentError as e:
+            logging.error("Couldn't open config file {0} "
+                                  "({1})".format(self.path, e.strerror))
             sys.exit(1)
+        else:
+            try:
+                self.data = toml.load(self.path)
+            except Exception as e:
+                logging.error("Couldn't parse config file {0} "
+                              "({1})".format(self.path, e.args))
+                sys.exit(1)
+            finally:
+                fh.close()
 
         devteam_file = self.get("devteam_file")
         if devteam_file:
-            if not os.path.exists(devteam_file):
-                errmsg = "Could not find devteam file {0}".format(devteam_file)
-                logging.error(errmsg)
-                sys.exit(errmsg)
+            try:
+                devteam_fh = open(devteam_file, "r")
+            except EnvironmentError as e:
+                logging.error("Could not open devteam file {0} "
+                              "({1})".format(devteam_file, e.strerror))
+                sys.exit(1)
 
-            devteam_fh = open(devteam_file, "r")
-            devteam_r = csv.reader(devteam_fh, delimiter=' ',
+            devteam_r = csv.reader(devteam_fh, delimiter=" ",
                                    quoting=csv.QUOTE_NONE)
             self.devteam = {}
             for row in devteam_r:
@@ -70,49 +81,65 @@ class Conf(object):
 
     def init_games(self):
         self.games = {}
-        # If there are no games in config.toml, this won't be defined
-        if not self.data.get('games'):
-            self.data['games'] = []
-        # Load games specified in main config file first
-        for game in self.data["games"]:
-            if game["id"] in self.games:
-                logging.warning("Skipping duplicate game definition '%s' in '%s'" % (game["id"], self.path))
-                continue
+        # Load any games specified in main config file first
+        if self.data.get('games'):
+            for game in  self.data["games"]:
+                try:
+                    self.load_game_data(game)
+                except ValueError:
+                    logging.warning("Skipping duplicate game definition '{0}' "
+                                    "in {1}".format(game["id"], self.path))
+        self.load_game_conf_dir()
+
+
+    def load_game_data(self, game):
+        if game["id"] in self.games:
+            raise ValueError
+        else:
             self.games[game["id"]] = game
-            logging.info("Loaded game '%s'" % game["id"])
+            logging.info("Loaded game '{0}'".format(game["id"]))
 
-        # Load from games_conf_d
-        games_conf_d = self.get("games_conf_d")
-        if games_conf_d and os.path.isdir(games_conf_d):
-            for f in sorted(os.listdir(games_conf_d)):
-                f_path = os.path.join(games_conf_d, f)
-                if not os.path.isfile(f_path):
-                    logging.warning("Skipping non-file in games_conf_d: %s" % f_path)
-                    continue
-                if not f.endswith('.toml'):
-                    logging.info("Skipping non-toml file in games_conf_d: %s" % f_path)
-                    continue
 
-                logging.debug("Loading %s" % f_path)
-                data = toml.load(open(f_path, "r"))
-                if "games" not in data:
-                    logging.warning("No games specifications found in %s, skipping." % f_path)
-                    continue
-
-                games = {data["id"]: data for data in data["games"]}
-                for game in games.values():
-                    if game["id"] in self.games:
-                        logging.warning("Skipping duplicate game definition '%s' in '%s'" % (game["id"], f_path))
-                        continue
-
-                    self.games[game["id"]] = game
-                    # Note: We also have to append these the raw TOML
-                    # representation of config.toml, which is used for
-                    # determining lobby display order.
-                    self.data['games'].append(game)
-                    logging.info("Loaded game '%s'" % game["id"])
-        elif games_conf_d and not os.path.isdir(games_conf_d):
+    # Load from games_conf_d
+    def load_game_conf_dir(self):
+        conf_dir = self.get("games_conf_d")
+        if not conf_dir:
+            return
+        if not os.path.isdir(conf_dir):
             logging.warning("games_conf_d is not a directory, ignoring")
+            return
+
+        for f in sorted(glob.glob(conf_dir + "/*.toml")):
+            if not os.path.isfile(f):
+                logging.warning("Skipping non-file {0}".format(f))
+                continue
+            logging.debug("Loading {0}".format(f))
+            try:
+                fh = open(f, "r")
+            except EnvironmentError as e:
+                logging.warning("Unable to open game config file {0} "
+                                "({1})".format(f, e.strerror))
+                sys.exit(1)
+            else:
+                try:
+                    data = toml.load(fh)
+                except Exception as e:
+                    logging.error("Could parse game config file {0} "
+                                "({1})".format(f, e.args))
+                finally:
+                    fh.close()
+
+            if "games" not in data:
+                logging.warning("No games specifications found in game config "
+                                "file {0}, skipping.".format(f))
+                continue
+            for game in data["games"]:
+                try:
+                    self.load_game_data(game)
+                except ValueError:
+                    logging.warning("Skipping duplicate definition '{0}' in "
+                                    "game config file {1}".format(game["id"], f))
+
 
     def init_logging(self):
         logging_config = self.logging_config
@@ -148,17 +175,13 @@ class Conf(object):
         title_file = self.get("player_title_file")
         if not title_file:
             return
-        if not os.path.exists(title_file):
-            errmsg = "Could not find player title file {0}".format(title_file)
-            logging.error(errmsg)
-            sys.exit(errmsg)
 
         try:
             title_fh = open(title_file, "r")
-        except:
-            errmsg = "Could not open player title file {0}".format(title_file)
-            logging.error(errmsg)
-            return
+        except EnvironmentError as e:
+            logging.error("Could not open player title file {0} "
+                          "({1})".format(title_file, e.strerror))
+            sys.exit(1)
 
         title_r = csv.reader(title_fh, delimiter=' ', quoting=csv.QUOTE_NONE)
         self.player_titles = {}

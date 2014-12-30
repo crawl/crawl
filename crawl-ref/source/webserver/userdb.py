@@ -17,8 +17,8 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
     try:
         conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
-        c.execute("select username,password from dglusers where username=? collate nocase",
-                  (username,))
+        c.execute("select username,password from dglusers where username=? "
+                  "collate nocase", (username,))
         result = c.fetchone()
 
         if result is None:

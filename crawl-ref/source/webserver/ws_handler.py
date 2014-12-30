@@ -98,8 +98,7 @@ def handle_new_milestone(line):
 def find_player_savegames(username):
     used_morgues = set()
     for game in config.get("games"):
-        morgue_path = util.dgl_format_str(game["morgue_path"],
-                                     username, game)
+        morgue_path = util.dgl_format_str(game["morgue_path"], username, game)
         if morgue_path in used_morgues:
             continue
         else:
