@@ -389,16 +389,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not config.get('init_player_program'):
             return True
         try:
-            output = subprocess.check_output([config.init_player_program, self.username],
-                                     stderr = subprocess.STDOUT)
+            output = subprocess.check_output([config.init_player_program,
+                                              self.username],
+                                             stderr = subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            logging.error("init_player_program failed for user '%s', output: %s" %
-                          (self.username, e.output.replace('\n', ' ')))
+            logging.error("init_player_program failed for user '{0}', "
+                          "output: {1}".format(self.username,
+                                               e.output.replace("\n", " ")))
             return False
         else:
             if output.strip():
-                logging.debug("init_player_program succeeded for user '%s', output: %s" %
-                              (self.username, output.replace('\n', ' ')))
+                logging.debug("init_player_program succeeded for user '{0}', "
+                              "output: {1}".format(self.username,
+                                                   output.replace('\n', ' ')))
             return True
 
     def stop_watching(self):
@@ -422,12 +425,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.username = username
         self.logger.extra["username"] = username
         if not self.init_user():
-            msg = ("Could not initialize your account!<br>" +
-                   "This probably means there is something wrong " +
-                   "with the server configuration.")
-            self.send_message("close", reason = msg)
-            self.logger.warning("User initialization returned an error for user %s!",
-                                self.username)
+            self.send_message("close", reason = "Could not initialize your "
+                              "account! This probably means there is something "
+                              "wrong with the server configuration.")
+            self.logger.warning("User initialization returned an error for "
+                                "user {0}!".format(self.username))
             self.username = None
             self.close()
             return
