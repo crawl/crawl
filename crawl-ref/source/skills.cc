@@ -1154,7 +1154,7 @@ const char *skill_name(skill_type which_skill)
 skill_type str_to_skill(const string &skill)
 {
     for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
-        if (skill_titles[sk][0] && skill == skill_titles[sk][0])
+        if (lowercase_string(skill) == lowercase_string(skill_titles[sk][0]))
             return sk;
 
     return SK_FIGHTING;
