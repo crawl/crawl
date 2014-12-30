@@ -598,8 +598,16 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
  */
 static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = new FeatureMenuEntry(str, feat_by_desc(str), letter);
+    const dungeon_feature_type feat = feat_by_desc(str);
+    MenuEntry* me = new FeatureMenuEntry(str, feat, letter);
     me->data = &key;
+
+#ifdef USE_TILE
+    const tileidx_t idx = tileidx_feature_base(feat);
+    if (feat)
+        me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+#endif
+
     return me;
 }
 
