@@ -98,7 +98,7 @@ static const cloud_data clouds[] = {
       MAGENTA,                                  // colour
     },
     // CLOUD_FOREST_FIRE,
-    { "fire", "roaring flames",                 // terse, verbose name
+    { "spreading flames", "a forest fire",      // terse, verbose name
       COLOUR_UNDEF,                             // colour
       BEAM_FIRE,                                // beam_effect
       15, 46                                    // base, expected random damage
