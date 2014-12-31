@@ -698,6 +698,15 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     fake_cloud.decay = 1000;
     me->colour = element_colour(get_cloud_colour(fake_cloud));
 
+#ifdef USE_TILE
+    cloud_info fake_cloud_info;
+    fake_cloud_info.type = cloud;
+    fake_cloud_info.colour = me->colour;
+    const tileidx_t idx = tileidx_cloud(fake_cloud_info) & ~TILE_FLAG_FLYING;
+    if (idx < 1292)
+        me->add_tile(tile_def(idx, TEX_DEFAULT));
+#endif
+
     return me;
 }
 
@@ -1121,7 +1130,7 @@ static const vector<LookupType> lookup_types = {
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
-               LTYPF_DB_SUFFIX),
+               LTYPF_DB_SUFFIX | LTYPF_SUPPORT_TILES),
 };
 
 /**
