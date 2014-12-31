@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-3280-g3a29b53)
+Stone Soup 0.16 (up to 0.16-a0-3445-g167ea73)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -11,6 +11,8 @@ Branches, environment
 * Clouds of draining now require rN+++ for immunity, up from rN+.
 * Clouds of miasma now apply the 'Rot' status, rather than causing rotting
   directly.
+* New trap: "Shadow Trap", which summons a small group of hostile creatures
+  from the local area when any non-summoned creature steps on it.
 * Traps no longer care about whether the player is flying.
 * The 'disarm trap' command has been removed.
 
@@ -155,6 +157,7 @@ Items
   - The Ring of Vitality is now the Amulet of Vitality.
   - The captain's cutlass is now +5 (was +10) and can disarm enemies.
   - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
+  - Maxwell's Patent Armour now gives rCorr rElec instead of rF+ rC+.
   - The arbalest Hellfire has had its explosion damage roughly doubled.
 * All food other than rations, chunks, and royal jellies now takes one turn
   to eat.
@@ -162,6 +165,7 @@ Items
 * All short blades now do piercing damage.
 * Weapons other than short blades & felid claws are all now equally good at
   stabbing.
+* Elemental evocables now stack.
 * The Box of Beasts and Rod of Shadows are now considerably stronger.
 * Renamed items:
   - Cutlasses are now rapiers.
@@ -310,6 +314,7 @@ Interface
   displayed (like in wizard mode), and no extra commands are available. As
   with wizard mode, explore mode games are not scored. Enter explore mode
   using '+'.
+* ?/ has been generally improved, and a new ?/c(L)oud lookup has been added.
 
 Stone Soup 0.15.2 (20141018)
 ----------------------------
