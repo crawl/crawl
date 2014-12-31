@@ -13,6 +13,7 @@
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
+#include "cloud.h"
 #include "database.h"
 #include "decks.h"
 #include "describe.h"
@@ -324,6 +325,16 @@ static vector<string> _get_branch_keys()
 
         names.push_back(it->shortname);
     }
+    return names;
+}
+
+static vector<string> _get_cloud_keys()
+{
+    vector<string> names;
+
+    for (int i = CLOUD_NONE + 1; i < NUM_CLOUD_TYPES; i++)
+        names.push_back(cloud_type_name((cloud_type) i));
+
     return names;
 }
 
@@ -1065,7 +1076,11 @@ static const vector<LookupType> lookup_types = {
     LookupType('B', "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _simple_menu_gen,
                _describe_generic,
-               LTYPF_DISABLE_SORT)
+               LTYPF_DISABLE_SORT),
+    LookupType('L', "cloud", nullptr, nullptr,
+               nullptr, _get_cloud_keys, _simple_menu_gen,
+               _describe_generic,
+               LTYPF_DISABLE_SORT),
 };
 
 /**
