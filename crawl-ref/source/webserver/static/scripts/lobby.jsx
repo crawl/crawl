@@ -281,7 +281,6 @@ function (React, comm, pubsub, user, misc, login, $) {
     }
     function collect_version_games(games, v)
     {
-        var modes = [];
         return games.filter(function (g) {
             return (g.version || g.name) === v;
         });
