@@ -682,6 +682,25 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
     return me;
 }
 
+/**
+ * Generate a ?/L menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+    const string cloud_name = lowercase_string(str);
+    const cloud_type cloud = cloud_name_to_type(cloud_name);
+    ASSERT(cloud != NUM_CLOUD_TYPES);
+
+    cloud_struct fake_cloud;
+    fake_cloud.type = cloud;
+    fake_cloud.decay = 1000;
+    me->colour = element_colour(get_cloud_colour(fake_cloud));
+
+    return me;
+}
+
 
 /**
  * How should this type be expressed in the prompt string?
@@ -1100,7 +1119,7 @@ static const vector<LookupType> lookup_types = {
                _describe_generic,
                LTYPF_DISABLE_SORT),
     LookupType('L', "cloud", nullptr, nullptr,
-               nullptr, _get_cloud_keys, _simple_menu_gen,
+               nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud,
                LTYPF_DB_SUFFIX),
 };
