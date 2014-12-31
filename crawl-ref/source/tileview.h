@@ -17,6 +17,8 @@ class monster;
 struct tile_flavour;
 struct packed_cell;
 
+tileidx_t pick_dngn_tile(tileidx_t idx, int value);
+
 // Initialize the flavour and the tile env when changing or creating levels.
 void tile_new_level(bool first_time, bool init_unseen);
 

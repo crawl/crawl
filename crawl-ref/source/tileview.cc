@@ -336,7 +336,7 @@ static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
 }
 
-static tileidx_t _pick_dngn_tile(tileidx_t idx, int value)
+tileidx_t pick_dngn_tile(tileidx_t idx, int value)
 {
     ASSERT_RANGE(idx, 0, TILE_DNGN_MAX);
     const int count = tile_dngn_count(idx);
@@ -411,14 +411,14 @@ void tile_init_flavour(const coord_def &gc)
         int colour = env.grid_colours(gc);
         if (colour)
             floor_base = tile_dngn_coloured(floor_base, colour);
-        env.tile_flv(gc).floor = _pick_dngn_tile(floor_base, rand1);
+        env.tile_flv(gc).floor = pick_dngn_tile(floor_base, rand1);
     }
     else if (env.tile_flv(gc).floor != TILE_HALO_GRASS
              && env.tile_flv(gc).floor != TILE_HALO_GRASS2
              && env.tile_flv(gc).floor != TILE_HALO_VAULT
              && env.tile_flv(gc).floor != TILE_HALO_DIRT)
     {
-        env.tile_flv(gc).floor = _pick_dngn_tile(env.tile_flv(gc).floor, rand1);
+        env.tile_flv(gc).floor = pick_dngn_tile(env.tile_flv(gc).floor, rand1);
     }
 
     if (!env.tile_flv(gc).wall)
@@ -439,11 +439,11 @@ void tile_init_flavour(const coord_def &gc)
             int colour = env.grid_colours(gc);
             if (colour)
                 wall_base = tile_dngn_coloured(wall_base, colour);
-            env.tile_flv(gc).wall = _pick_dngn_tile(wall_base, rand2);
+            env.tile_flv(gc).wall = pick_dngn_tile(wall_base, rand2);
         }
     }
     else
-        env.tile_flv(gc).wall = _pick_dngn_tile(env.tile_flv(gc).wall, rand2);
+        env.tile_flv(gc).wall = pick_dngn_tile(env.tile_flv(gc).wall, rand2);
 
     if (feat_is_stone_stair(grd(gc)) && player_in_branch(BRANCH_SHOALS))
     {
@@ -1249,8 +1249,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = flv.wall;
     else if (orig == TILE_DNGN_STONE_WALL)
     {
-        *bg = _pick_dngn_tile(tile_dngn_coloured(orig,
-                                                 env.grid_colours(gc)),
+        *bg = pick_dngn_tile(tile_dngn_coloured(orig,
+                                                env.grid_colours(gc)),
                               flv.special);
     }
     else if (is_door_tile(orig))
@@ -1278,7 +1278,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = orig + 6 + flv.special % 6;
     }
     else if (orig < TILE_DNGN_MAX)
-        *bg = _pick_dngn_tile(orig, flv.special);
+        *bg = pick_dngn_tile(orig, flv.special);
 
     *bg |= flag;
 }

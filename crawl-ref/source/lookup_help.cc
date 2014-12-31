@@ -43,6 +43,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tilepick.h"
+#include "tileview.h"
 #endif
 #include "view.h"
 #include "viewchar.h"
@@ -617,7 +618,8 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
-        me->add_tile(tile_def(idx, get_dngn_tex(idx)));
+        me->add_tile(tile_def(pick_dngn_tile(idx, ui_random(INT_MAX)),
+                                             get_dngn_tex(idx)));
     }
 #endif
 
