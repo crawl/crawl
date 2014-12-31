@@ -6412,7 +6412,8 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
         case 0:
             if (mons->antimagic_susceptible())
             {
-                message = " loses its magic into the devouring truth!";
+                message = " loses " + mons->pronoun(PRONOUN_POSSESSIVE)
+                          + " magic into the devouring truth!";
                 enchantment = ENCH_ANTIMAGIC;
                 duration = 500 + random2(200);
                 dmg += roll_dice(die_size, 4);
