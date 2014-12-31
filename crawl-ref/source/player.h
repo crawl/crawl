@@ -596,7 +596,7 @@ public:
     string conj_verb(const string &verb) const;
     string hand_name(bool plural, bool *can_plural = nullptr) const;
     string hands_verb(const string &plural_verb) const;
-    string hands_act(const string &plural_verb, const string &subject) const;
+    string hands_act(const string &plural_verb, const string &object) const;
     string foot_name(bool plural, bool *can_plural = nullptr) const;
     string arm_name(bool plural, bool *can_plural = nullptr) const;
     string unarmed_attack_name() const;
