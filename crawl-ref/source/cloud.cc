@@ -27,6 +27,7 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "unwind.h"
@@ -248,11 +249,9 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
 }
 #endif
 
-static bool _is_opaque_cloud(cloud_type ctype);
-
 static void _los_cloud_changed(const coord_def& p, cloud_type t)
 {
-    if (_is_opaque_cloud(t))
+    if (is_opaque_cloud_type(t))
         los_terrain_changed(p);
 }
 
@@ -813,7 +812,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     }
 }
 
-static bool _is_opaque_cloud(cloud_type ctype)
+bool is_opaque_cloud_type(cloud_type ctype)
 {
     return ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST;
 }
@@ -823,7 +822,7 @@ bool is_opaque_cloud(int cloud_idx)
     if (cloud_idx == EMPTY_CLOUD)
         return false;
 
-    return _is_opaque_cloud(env.cloud[cloud_idx].type);
+    return is_opaque_cloud_type(env.cloud[cloud_idx].type);
 }
 
 cloud_type cloud_type_at(const coord_def &c)
@@ -1608,6 +1607,22 @@ string cloud_type_name(cloud_type type, bool terse)
     if (terse || clouds[type].verbose_name == nullptr)
         return clouds[type].terse_name;
     return clouds[type].verbose_name;
+}
+
+cloud_type cloud_name_to_type(const string &name)
+{
+    const string lower_name = lowercase_string(name);
+
+    if (lower_name == "random")
+        return CLOUD_RANDOM;
+    else if (lower_name == "debugging")
+        return CLOUD_DEBUGGING;
+
+    for (int i = CLOUD_NONE; i < CLOUD_RANDOM; i++)
+        if (cloud_type_name(static_cast<cloud_type>(i)) == lower_name)
+            return static_cast<cloud_type>(i);
+
+    return CLOUD_NONE;
 }
 
 ////////////////////////////////////////////////////////////////////////

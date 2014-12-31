@@ -962,6 +962,28 @@ static int _describe_card(const string &key, const string &suffix,
 }
 
 /**
+ * Describe the cloud with the given name.
+ *
+ * @param key       The name of the cloud in question.
+ * @param suffix    A suffix to trim from the key when making the title.
+ * @param footer    A footer to append to the end of descriptions.
+ * @return          The keypress the user made to exit.
+ */
+static int _describe_cloud(const string &key, const string &suffix,
+                          string footer)
+{
+    const string cloud_name = key.substr(0, key.size() - suffix.size());
+    const cloud_type cloud = cloud_name_to_type(cloud_name);
+    ASSERT(cloud != NUM_CLOUD_TYPES);
+
+    const string extra_info = is_opaque_cloud_type(cloud) ?
+        "\nThis cloud is opaque; one tile will not block vision, but "
+        "multiple will."
+        : "";
+    return _describe_key(key, suffix, footer, extra_info);
+}
+
+/**
  * Describe the stats of the item named by the given key.
  *
  * @param key       The name of the item to describe.
@@ -1079,7 +1101,7 @@ static const vector<LookupType> lookup_types = {
                LTYPF_DISABLE_SORT),
     LookupType('L', "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _simple_menu_gen,
-               _describe_generic,
+               _describe_cloud,
                LTYPF_DB_SUFFIX),
 };
 

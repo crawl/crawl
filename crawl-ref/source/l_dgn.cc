@@ -1195,22 +1195,6 @@ static int dgn_random_walk(lua_State *ls)
     return 2;
 }
 
-static cloud_type dgn_cloud_name_to_type(string name)
-{
-    lowercase(name);
-
-    if (name == "random")
-        return CLOUD_RANDOM;
-    else if (name == "debugging")
-        return CLOUD_DEBUGGING;
-
-    for (int i = CLOUD_NONE; i < CLOUD_RANDOM; i++)
-        if (cloud_type_name(static_cast<cloud_type>(i)) == name)
-            return static_cast<cloud_type>(i);
-
-    return CLOUD_NONE;
-}
-
 static kill_category dgn_kill_name_to_category(string name)
 {
     if (name.empty())
@@ -1252,7 +1236,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
     lua_cloud_pow_rolls = luaL_checkint(ls, 5);
     const int size      = luaL_checkint(ls, 6);
 
-    const cloud_type ctype = dgn_cloud_name_to_type(luaL_checkstring(ls, 7));
+    const cloud_type ctype = cloud_name_to_type(luaL_checkstring(ls, 7));
     const char*      kname = lua_isstring(ls, 8) ? luaL_checkstring(ls, 8)
     : "";
     const kill_category kc = dgn_kill_name_to_category(kname);
@@ -1348,7 +1332,7 @@ static int dgn_place_cloud(lua_State *ls)
 {
     const int x         = luaL_checkint(ls, 1);
     const int y         = luaL_checkint(ls, 2);
-    const cloud_type ctype = dgn_cloud_name_to_type(luaL_checkstring(ls, 3));
+    const cloud_type ctype = cloud_name_to_type(luaL_checkstring(ls, 3));
     const int cl_range      = luaL_checkint(ls, 4);
     const char*      kname = lua_isstring(ls, 5) ? luaL_checkstring(ls, 5)
     : "";
