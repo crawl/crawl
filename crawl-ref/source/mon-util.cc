@@ -980,7 +980,8 @@ bool herd_monster(const monster* mon)
     return mons_class_flag(mon->type, M_HERD);
 }
 
-// Plant or fungus really
+// Plant or fungus or really anything with
+// permanent plant holiness
 bool mons_class_is_plant(monster_type mc)
 {
     return bool(mons_class_holiness(mc) & MH_PLANT);
@@ -5067,7 +5068,6 @@ bool mons_stores_tracking_data(const monster* mons)
 bool mons_is_beast(monster_type mc)
 {
     if (!(mons_class_holiness(mc) & MH_NATURAL)
-          && mc != MONS_APIS
         || mons_class_intel(mc) != I_ANIMAL)
     {
         return false;

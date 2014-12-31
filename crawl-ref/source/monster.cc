@@ -3668,7 +3668,7 @@ bool monster::undead_or_demonic() const
 {
     const mon_holy_type holi = holiness();
 
-    return bool(holi & (MH_UNDEAD | MH_DEMONIC)) || mons_is_demonspawn(type);
+    return bool(holi & (MH_UNDEAD | MH_DEMONIC));
 }
 
 bool monster::holy_wrath_susceptible() const
@@ -3683,9 +3683,6 @@ bool monster::is_holy(bool check_spells) const
 
 bool monster::is_unholy(bool check_spells) const
 {
-    if (mons_is_demonspawn(type))
-        return true;
-
     return bool(holiness() & (MH_DEMONIC | MH_UNHOLY));
 }
 
