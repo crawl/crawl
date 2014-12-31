@@ -78,10 +78,7 @@ int is_pacifiable(const monster* mon)
 
     const mon_holy_type holiness = mon->holiness();
 
-    if (!mon->is_holy()
-        && holiness != MH_UNDEAD
-        && holiness != MH_DEMONIC
-        && holiness != MH_NATURAL)
+    if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
     {
         return -1;
     }
@@ -120,9 +117,9 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     const mon_holy_type holiness = mon->holiness();
     if (mon->is_holy())
         divisor--;
-    else if (holiness == MH_UNDEAD)
+    else if (holiness & MH_UNDEAD)
         divisor++;
-    else if (holiness == MH_DEMONIC)
+    else if (holiness & MH_DEMONIC)
         divisor += 2;
 
     if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)

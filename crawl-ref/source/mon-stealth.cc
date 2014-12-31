@@ -39,7 +39,7 @@ int monster::stealth() const
     int actual_stealth = base_stealth;
 
     // Undead are inherently more stealthy.
-    if (holiness() == MH_UNDEAD)
+    if (holiness() & MH_UNDEAD)
     {
         // Zombies are less stealthy.
         if (type == MONS_ZOMBIE)

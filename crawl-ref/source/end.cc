@@ -251,7 +251,7 @@ NORETURN void end_game(scorefile_entry &se)
             {
                 const mon_holy_type holi = you.holiness();
 
-                if (holi == MH_NONLIVING || holi == MH_UNDEAD)
+                if (holi & (MH_NONLIVING | MH_UNDEAD))
                 {
                     simple_god_message(" rasps: \"You have failed me! "
                                        "Welcome... oblivion!\"");

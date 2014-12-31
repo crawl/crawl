@@ -126,7 +126,7 @@ bool monster::add_ench(const mon_enchant &ench)
         return false;
 
     if (ench.ench == ENCH_FEAR
-        && (holiness() == MH_NONLIVING || berserk_or_insane()))
+        && (holiness() & MH_NONLIVING || berserk_or_insane()))
     {
         return false;
     }
@@ -570,7 +570,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_FEAR:
     {
         string msg;
-        if (holiness() == MH_NONLIVING || berserk_or_insane())
+        if (holiness() & MH_NONLIVING || berserk_or_insane())
         {
             // This should only happen because of fleeing sanctuary
             msg = " stops retreating.";

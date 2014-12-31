@@ -268,7 +268,9 @@ static const dislike_response ELY_FRIEND_DEATH_RESPONSE = {
         // For everyone but Fedhas, plants are items not creatures,
         // and animated items are, well, items as well.
         return victim && !mons_is_object(victim->type)
-                      && victim->holiness() != MH_PLANT;
+                      && !(victim->holiness() & MH_PLANT)
+        // Converted allies (marked as TSOites) can be martyrs.
+                      && victim->god == GOD_SHINING_ONE;
     }
 };
 
@@ -542,21 +544,16 @@ struct like_response
  */
 static int _piety_bonus_for_holiness(mon_holy_type holiness)
 {
-    switch (holiness)
-    {
-        case MH_NATURAL:
-        case MH_PLANT:
-            return -6;
-        case MH_UNDEAD:
-            return -5;
-        case MH_DEMONIC:
-            return -4;
-        case MH_HOLY:
-        case MH_NONLIVING: // hi, yred
-            return -3;
-        default:
-            die("unknown holiness type; can't give a bonus");
-    }
+    if (holiness & (MH_NATURAL | MH_PLANT))
+        return -6;
+    else if (holiness & MH_UNDEAD)
+        return -5;
+    else if (holiness & MH_DEMONIC)
+        return -4;
+    else if (holiness & (MH_HOLY | MH_NONLIVING)) // hi, yred
+        return -3;
+    else
+        die("unknown holiness type; can't give a bonus");
 }
 
 /**

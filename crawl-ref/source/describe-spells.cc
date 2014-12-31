@@ -55,7 +55,7 @@ static string _ability_type_descriptor(mon_spell_slot_flag type,
                                        mon_holy_type caster_holiness)
 {
     // special case (:
-    if (type == MON_SPELL_DEMONIC && caster_holiness == MH_HOLY)
+    if (type == MON_SPELL_DEMONIC && caster_holiness & MH_HOLY)
         return "angelic";
 
     static const map<mon_spell_slot_flag, string> descriptors =

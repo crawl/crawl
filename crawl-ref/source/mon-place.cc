@@ -1401,7 +1401,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     // Holy monsters need their halo!
-    if (mon->holiness() == MH_HOLY)
+    if (mon->holiness() & MH_HOLY)
         invalidate_agrid(true);
     if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR)
         invalidate_agrid(true);
@@ -1856,7 +1856,7 @@ bool zombie_picker::veto(monster_type mt)
         return true;
     if (!mons_zombie_size(corpse_type) || mons_is_unique(mt))
         return true;
-    if (mons_class_holiness(corpse_type) != MH_NATURAL)
+    if (!(mons_class_holiness(corpse_type) & MH_NATURAL))
         return true;
     if (!_good_zombie(corpse_type, zombie_kind, pos))
         return true;
@@ -3843,7 +3843,7 @@ conduct_type player_will_anger_monster(monster* mon)
     if (is_good_god(you.religion) && mon->is_evil())
         return DID_NECROMANCY;
     if (you_worship(GOD_FEDHAS)
-        && ((mon->holiness() == MH_UNDEAD && !mon->is_insubstantial())
+        && ((mon->holiness() & MH_UNDEAD && !mon->is_insubstantial())
             || mon->has_corpse_violating_spell()))
     {
         return DID_CORPSE_VIOLATION;
