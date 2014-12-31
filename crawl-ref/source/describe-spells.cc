@@ -241,6 +241,9 @@ static vector<spell_type> _spellset_contents(const spellset &spells)
  */
 static int _spell_colour(spell_type spell, const item_def* const source_item)
 {
+    if (!crawl_state.need_save)
+        return COL_UNKNOWN;
+
     if (!source_item || source_item->base_type != OBJ_BOOKS)
         return spell_highlight_by_utility(spell);
 
