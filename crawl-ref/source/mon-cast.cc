@@ -349,6 +349,9 @@ static int _mons_power_hd_factor(spell_type spell, bool random)
         case SPELL_CAUSE_FEAR:
             return 18 * ENCH_POW_FACTOR;
 
+        case SPELL_SENTINEL_MARK:
+            return 16 * ENCH_POW_FACTOR;
+
         case SPELL_IGNITE_POISON_SINGLE:
             return 12 * ENCH_POW_FACTOR;
 
@@ -1159,7 +1162,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_SENTINEL_MARK:
-        beam.ench_power = 125; //Difficult to resist
         beam.flavour    = BEAM_SENTINEL_MARK;
         beam.pierce     = true;
         break;

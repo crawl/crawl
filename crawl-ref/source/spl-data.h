@@ -2618,7 +2618,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SENTINEL_MARK, "Sentinel's Mark",
      SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
