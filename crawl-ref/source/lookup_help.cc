@@ -1022,10 +1022,8 @@ static int _describe_cloud(const string &key, const string &suffix,
  *                  TODO: change to the last keypress (to allow exact match
  *                  support)
  */
-static int _describe_spell_item(item_def &item)
+static int _describe_spell_item(const item_def &item)
 {
-    item_colour(item);
-
     const string desc = get_item_description(item, true, false, true);
     formatted_string fdesc;
     fdesc.cprintf("%s", desc.c_str());
@@ -1051,6 +1049,7 @@ static int _describe_item(const string &key, const string &suffix,
     if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
         || get_item_by_name(&item, key.c_str(), OBJ_RODS))
     {
+        item_colour(item);
         return _describe_spell_item(item);
     }
 
