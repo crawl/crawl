@@ -236,7 +236,7 @@ static const form_entry formdata[] =
     TRAN_HYDRA, MONS_HYDRA, "Hydra", "hydra-form", "hydra",
     "",
     EQF_PHYSICAL, MR_RES_POISON,
-    FormDuration(10, PS_SINGLE, 100), 8, 0, SIZE_BIG, 15, 6,
+    FormDuration(10, PS_SINGLE, 100), 8, 0, SIZE_BIG, 13, 6,
     6, 5, 0, true, 0, 10, -1,
     SPWPN_NORMAL, GREEN, "", { "nip at", "bite", "gouge", "chomp" },
     FC_DEFAULT, FC_ENABLE, FC_ENABLE, true, false,
