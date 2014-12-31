@@ -3864,6 +3864,25 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     else if (mons.has_ench(ENCH_INSANE))
         inf.body << "; frenzied and insane";
 
+    inf.body << "\n\nHas holiness:";
+    if(mi.holi & MH_HOLY)
+        inf.body << " holy";
+    if(mi.holi & MH_NATURAL)
+        inf.body << " natural";
+    if(mi.holi & MH_UNDEAD)
+        inf.body << " undead";
+    if(mi.holi & MH_DEMONIC)
+        inf.body << " demonic";
+    if(mi.holi & MH_NONLIVING)
+        inf.body << " nonliving";
+    if(mi.holi & MH_PLANT)
+        inf.body << " plant";
+    if(mi.holi & MH_EVIL)
+        inf.body << " evil";
+    if(mi.holi & MH_UNHOLY)
+        inf.body << " unholy";
+    inf.body << ".";
+
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
 
