@@ -28,6 +28,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "mon-enum.h"
+#include "mon-tentacle.h"
 #include "mgen_enum.h"
 #include "message.h"
 #include "misc.h"
@@ -542,6 +543,9 @@ void trap_def::trigger_shadow_trap(const actor& triggerer)
 {
     if (triggerer.is_summoned())
         return; // no summonsplosions
+
+    if (mons_is_tentacle_or_tentacle_segment(triggerer.type))
+        return; // no krakensplosions
 
     if (!you.see_cell(pos))
         return;
