@@ -1630,6 +1630,13 @@ void CrawlVector::read(reader &th)
     else
 #endif
     max_size      = static_cast<vec_size>(unmarshallUnsigned(th));
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FIX_8_BIT_VEC_MAX
+        && max_size == 0xFF)
+    {
+        max_size = VEC_MAX_SIZE;
+    }
+#endif
     type          = static_cast<store_val_type>(unmarshallByte(th));
     default_flags = static_cast<store_flags>(unmarshallByte(th));
 
