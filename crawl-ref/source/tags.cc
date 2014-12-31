@@ -4763,7 +4763,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallUnsigned(th, mi.fire_blocker);
     marshallString(th, mi.description);
     marshallString(th, mi.quote);
-    marshallUnsigned(th, mi.holi);
+    marshallUnsigned(th, mi.holi.flags);
     marshallUnsigned(th, mi.mintel);
     marshallUnsigned(th, mi.hd);
     marshallUnsigned(th, mi.ac);
@@ -4882,7 +4882,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     }
 #endif
 
-    unmarshallUnsigned(th, mi.holi);
+    uint64_t holi_flags = unmarshallUnsigned(th); mi.holi.flags = holi_flags;
     unmarshallUnsigned(th, mi.mintel);
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34

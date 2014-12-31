@@ -1558,7 +1558,7 @@ bool mons_is_god_gift(const monster* mon, god_type god)
 
 bool is_yred_undead_slave(const monster* mon)
 {
-    return mon->alive() && mon->holiness() == MH_UNDEAD
+    return mon->alive() && mon->holiness() & MH_UNDEAD
            && mon->attitude == ATT_FRIENDLY
            && mons_is_god_gift(mon, GOD_YREDELEMNUL);
 }
@@ -2555,7 +2555,7 @@ void lose_piety(int pgn)
 static bool _fedhas_protects_species(monster_type mc)
 {
     return mons_class_is_plant(mc)
-           && mons_class_holiness(mc) == MH_PLANT
+           && mons_class_holiness(mc) & MH_PLANT
            && mc != MONS_GIANT_SPORE
            && mc != MONS_SNAPLASHER_VINE
            && mc != MONS_SNAPLASHER_VINE_SEGMENT;
@@ -2567,6 +2567,9 @@ bool fedhas_protects(const monster* target)
 }
 
 // Fedhas neutralises most plants and fungi
+// Currently only neutralises pure plants, change to & MH_PLANT
+// if death caps/cobs are given the plant bit and Fedhas should
+// neutralise them.
 bool fedhas_neutralises(const monster* target)
 {
     return target && mons_is_plant(target)
@@ -3155,7 +3158,7 @@ bool player_can_join_god(god_type which_god)
         return false;
 
     // Fedhas hates undead, but will accept demonspawn.
-    if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
+    if (which_god == GOD_FEDHAS && you.holiness() & MH_UNDEAD)
         return false;
 
 #if TAG_MAJOR_VERSION == 34
@@ -3827,17 +3830,10 @@ bool god_hates_killing(god_type god, const monster* mon)
     bool retval = false;
     const mon_holy_type holiness = mon->holiness();
 
-    switch (holiness)
-    {
-        case MH_HOLY:
+    if(holiness & MH_HOLY)
             retval = (is_good_god(god));
-            break;
-        case MH_NATURAL:
+    else if(holiness & MH_NATURAL)
             retval = (god == GOD_ELYVILON);
-            break;
-        default:
-            break;
-    }
 
     if (god == GOD_FEDHAS)
         retval = (fedhas_protects(mon));
@@ -3856,7 +3852,7 @@ bool god_hates_eating(god_type god, monster_type mc)
 {
     if (god_hates_cannibalism(god) && is_player_same_genus(mc))
         return true;
-    if (is_good_god(you.religion) && mons_class_holiness(mc) == MH_HOLY)
+    if (is_good_god(you.religion) && mons_class_holiness(mc) & MH_HOLY)
         return true;
     if (you_worship(GOD_ZIN) && mons_class_intel(mc) >= I_HUMAN)
         return true;
@@ -4287,7 +4283,7 @@ bool tso_unchivalric_attack_safe_monster(const monster* mon)
            || mons_is_object(mon->mons_species())
            || mon->undead_or_demonic()
            || mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)
-           || !mon->is_holy() && holiness != MH_NATURAL;
+           || !mon->is_holy() && !(holiness & MH_NATURAL);
 }
 
 int get_monster_tension(const monster* mons, god_type god)

@@ -226,7 +226,7 @@ static void _establish_connection(monster* tentacle,
             connect->props["inwards"].get_int() = MID_NOBODY;
             connect->props["outwards"].get_int() = MID_NOBODY;
 
-            if (head->holiness() == MH_UNDEAD)
+            if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
 
             connect->max_hit_points = tentacle->max_hit_points;
@@ -276,7 +276,7 @@ static void _establish_connection(monster* tentacle,
             if (last_mon->type == connector_type)
                 last_mon->props["outwards"].get_int() = connect->mid;
 
-            if (head->holiness() == MH_UNDEAD)
+            if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
 
             if (monster_can_submerge(connect, env.grid(connect->pos())))
@@ -1269,7 +1269,7 @@ void mons_create_tentacles(monster* head)
 
             tentacle->props["inwards"].get_int() = head->mid;
 
-            if (head->holiness() == MH_UNDEAD)
+            if (head->holiness() & MH_UNDEAD)
                 tentacle->flags |= MF_FAKE_UNDEAD;
         }
     }

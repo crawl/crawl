@@ -687,8 +687,8 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     eligibility[RECITE_IMPURE] = mon->how_unclean(false);
 
     // Anti-unholy prayer: Hits demons and incorporeal undead.
-    if (holiness == MH_UNDEAD && mon->is_insubstantial()
-        || holiness == MH_DEMONIC)
+    if (holiness & MH_UNDEAD && mon->is_insubstantial()
+        || holiness & MH_DEMONIC)
     {
         eligibility[RECITE_UNHOLY]++;
     }

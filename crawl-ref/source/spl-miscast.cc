@@ -1915,7 +1915,7 @@ void MiscastEffect::_necromancy(int severity)
         switch (random2(target->is_player() ? 6 : 5))
         {
         case 0:
-            if (target->holiness() == MH_UNDEAD)
+            if (target->holiness() & MH_UNDEAD)
             {
                 you_msg      = "Something just walked over your grave. No, "
                                "really!";

@@ -306,7 +306,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
     case BEAM_GHOSTLY_FLAME:
     {
-        if (you.holiness() == MH_UNDEAD)
+        if (you.holiness() & MH_UNDEAD)
         {
             if (doEffects && hurted > 0)
             {

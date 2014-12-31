@@ -123,7 +123,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     }
 
     // Various inappropriate polymorph targets.
-    if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
+    if ( !(mons_class_holiness(new_mclass) & mons_class_holiness(old_mclass))
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
@@ -584,8 +584,7 @@ bool mon_can_be_slimified(monster* mons)
 
     return !mons->is_insubstantial()
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
-           && (holi == MH_UNDEAD
-                || holi == MH_NATURAL && !mons_is_slime(mons));
+           && (holi & (MH_UNDEAD | MH_NATURAL) && !mons_is_slime(mons));
 }
 
 void slimify_monster(monster* mon, bool hostile)
@@ -611,7 +610,7 @@ void slimify_monster(monster* mon, bool hostile)
     if (feat_is_water(grd(mon->pos()))) // Pick something amphibious.
         target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
 
-    if (mon->holiness() == MH_UNDEAD)
+    if (mon->holiness() & MH_UNDEAD)
         target = MONS_DEATH_OOZE;
 
     // Bail out if jellies can't live here.

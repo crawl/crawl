@@ -2455,15 +2455,18 @@ enum menu_type
     MT_SELONE,                         // Select one
 };
 
-enum mon_holy_type
+enum mon_holy_type_flags
 {
-    MH_HOLY,
-    MH_NATURAL,
-    MH_UNDEAD,
-    MH_DEMONIC,
-    MH_NONLIVING, // golems and other constructs
-    MH_PLANT,
+    MH_HOLY              = 1<<0,
+    MH_NATURAL           = 1<<1,
+    MH_UNDEAD            = 1<<2,
+    MH_DEMONIC           = 1<<3,
+    MH_NONLIVING         = 1<<4, // golems and other constructs
+    MH_PLANT             = 1<<5,
+    MH_EVIL              = 1<<6, // priests/wizards with evil spells
+    MH_UNHOLY            = 1<<7, // ditto, unholy spells
 };
+DEF_BITFIELD(mon_holy_type,mon_holy_type_flags);
 
 enum targ_mode_type
 {
