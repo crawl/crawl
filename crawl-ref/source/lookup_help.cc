@@ -703,8 +703,7 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     fake_cloud_info.type = cloud;
     fake_cloud_info.colour = me->colour;
     const tileidx_t idx = tileidx_cloud(fake_cloud_info) & ~TILE_FLAG_FLYING;
-    if (idx < 1292)
-        me->add_tile(tile_def(idx, TEX_DEFAULT));
+    me->add_tile(tile_def(idx, TEX_DEFAULT));
 #endif
 
     return me;
