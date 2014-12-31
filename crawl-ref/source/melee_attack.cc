@@ -3633,10 +3633,10 @@ void melee_attack::cleave_setup()
     cleave_targets.pop_front();
 }
 
-// cleave damage modifier for additional attacks: 75% of base damage
+// cleave damage modifier for additional attacks: 70% of base damage
 int melee_attack::cleave_damage_mod(int dam)
 {
-    return div_rand_round(dam * 3, 4);
+    return div_rand_round(dam * 7, 10);
 }
 
 void melee_attack::chaos_affect_actor(actor *victim)
