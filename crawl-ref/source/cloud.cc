@@ -1742,8 +1742,19 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
  */
 colour_t get_cloud_colour(int cloudno)
 {
-    const cloud_struct &cloud = env.cloud[cloudno];
+    return get_cloud_colour(env.cloud[cloudno]);
+}
 
+/**
+ * What colour is the given cloud?
+ *
+ * @param cloudno       The cloud in question.
+ * @return              An appropriate colour for the cloud.
+ *                      May vary from call to call (randomized for some cloud
+ *                      types).
+ */
+colour_t get_cloud_colour(const cloud_struct &cloud)
+{
     // if the cloud has a set (custom?) colour, use that.
     if (cloud.colour != -1)
         return cloud.colour;
