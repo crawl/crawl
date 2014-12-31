@@ -332,6 +332,12 @@ Banishment spell
 “An immense river of oblivion is sweeping us away into a nameless abyss.”
     -Ernest Renan, Souvenirs
 %%%%
+Bat Form ability
+
+“The bats have left the bell tower
+ The victims have been bled”
+    -Bauhaus, “Bela Lugosi's Dead”. 1979.
+%%%%
 bow of Krishna "Sharnga"
 
 “What will you do if Karna is able to kill me?” Arjun asked Krishna. Krishna
@@ -341,7 +347,17 @@ sign that the end of the world has come. As for me, I shall kill him with my
 bare hands.
     -Vyasa, _Mahabharata_, Book Eight: Karna.
      trans. P. Lal, 1986.
+%%%%
+Call Canine Familiar spell
 
+“There seemed a strange stillness over everything. But as I listened, I heard
+as if from down below in the valley the howling of many wolves. The Count's
+eyes gleamed, and he said.
+
+‘Listen to them, the children of the night. What music they make!’ Seeing, I
+suppose, some expression in my face strange to him, he added, ‘Ah, sir, you
+dwellers in the city cannot enter into the feelings of the hunter.’”
+    -Bram Stoker, _Dracula_. 1897.
 %%%%
 Cause Fear spell
 
@@ -433,11 +449,11 @@ them to divide the realm as their fathers had done.”
 Enslavement spell
 
 “He held up his hand, and they all stopped, and I thought he seemed to be
-saying, `All these lives will I give you, ay, and many more and greater,
-through countless ages, if you will fall down and worship me!' And then a red
+saying, ‘All these lives will I give you, ay, and many more and greater,
+through countless ages, if you will fall down and worship me!’ And then a red
 cloud, like the colour of blood, seemed to close over my eyes, and before I
 knew what I was doing, I found myself opening the sash and saying to Him,
-`Come in, Lord and Master!'”
+‘Come in, Lord and Master!’”
     -Bram Stoker, _Dracula_. 1897.
 %%%%
 Ensorcelled Hibernation spell
@@ -2128,6 +2144,12 @@ potion
  To help to take her from her borrow’d grave,
  Being the time the potion’s force should cease.”
     -William Shakespeare, _Romeo and Juliet_
+%%%%
+potion of blood
+
+“Only be sure that thou eat not the blood: for the blood _is_ the life;
+and thou mayest not eat the life with the flesh.”
+    -KJV Bible, Deuteronomy 12:23
 %%%%
 potion of poison
 
