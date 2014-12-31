@@ -854,8 +854,7 @@ bool actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_PETRIFY:
         return act->res_petrify();
     case CLOUD_SPECTRAL:
-        return bool(act->holiness() & MH_UNDEAD)
-               || act->type == MONS_GHOST_CRAB;
+        return bool(act->holiness() & MH_UNDEAD);
     case CLOUD_ACID:
         return act->res_acid() > 0;
     case CLOUD_STORM:

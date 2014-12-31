@@ -2567,13 +2567,10 @@ bool fedhas_protects(const monster* target)
 }
 
 // Fedhas neutralises most plants and fungi
-// Currently only neutralises pure plants, change to & MH_PLANT
-// if death caps/cobs are given the plant bit and Fedhas should
-// neutralise them.
 bool fedhas_neutralises(const monster* target)
 {
     return target && mons_is_plant(target)
-           && target->holiness() == MH_PLANT
+           && target->holiness() & MH_PLANT
            && target->type != MONS_SNAPLASHER_VINE
            && target->type != MONS_SNAPLASHER_VINE_SEGMENT;
 }
