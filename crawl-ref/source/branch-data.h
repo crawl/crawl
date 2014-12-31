@@ -160,7 +160,7 @@ const Branch branches[NUM_BRANCHES] =
     { BRANCH_COCYTUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END, 0,
       DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL,
-      "North Pole", "the North Pole", "Nor",
+      "Cocytus", "Cocytus", "Coc",
       nullptr,
       LIGHTBLUE, LIGHTCYAN,
       'X', 0 },

@@ -141,7 +141,7 @@ Crypt:3.
 Hell
 
 The hallway to the four hells is guarded by Geryon. The Vestibule of Hell
-contains portals to Dis, Gehenna, the North Pole and Tartarus.
+contains portals to Dis, Gehenna, Cocytus and Tartarus.
 
 Portals to the Vestibule of Hell are found abundantly in the Depths.
 %%%%
@@ -159,12 +159,12 @@ Gehenna is a realm of flames, lava and hellfire.
 Gehenna is seven levels deep and contains the obsidian rune. It can be accessed
 via the Vestibule of Hell.
 %%%%
-North Pole
+Cocytus
 
-The North Pole is a festive place, home to all the world's good cheer.
+Cocytus is a grim and frost-bitten wasteland.
 
-The North Pole  is seven levels deep and contains the icy rune. It can be
-accessed via the Vestibule of Hell.
+Cocytus is seven levels deep and contains the icy rune. It can be accessed via
+the Vestibule of Hell.
 %%%%
 Tartarus
 

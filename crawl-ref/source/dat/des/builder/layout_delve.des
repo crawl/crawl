@@ -466,7 +466,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 # TODO: Serious improvements, less glyph switching
 #
 NAME:   layout_cocytus_delve
-DEPTH:  Nor
+DEPTH:  Coc
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves

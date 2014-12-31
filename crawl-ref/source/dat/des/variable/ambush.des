@@ -11,7 +11,7 @@
 
 NAME:     evilmike_ambush
 DEPTH:    Depths, !Depths:$, Elf, !Elf:$, Snake, !Snake:$, \
-          Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Nor, !Nor:$, \
+          Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Coc, !Coc:$, \
           Zot, !Zot:$, Crypt, !Crypt:$
 TAGS:     allow_dup
 SUBVAULT: = : evilmike_ambush_outer
