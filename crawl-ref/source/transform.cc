@@ -1973,7 +1973,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
 
     // If we are no longer living, end an effect that afflicts only the living
-    if (you.duration[DUR_FLAYED] && you.holiness() != MH_NATURAL)
+    if (you.duration[DUR_FLAYED] && !(you.holiness() & MH_NATURAL))
     {
         // Heal a little extra if we gained max hp from this transformation
         if (form_hp_mod() != 10)

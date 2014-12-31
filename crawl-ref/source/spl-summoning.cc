@@ -2275,7 +2275,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
                 if (mons_genus(si->mon_type) == MONS_ORC)
                     num_orcs++;
-                if (mons_class_holiness(si->mon_type) == MH_HOLY)
+                if (mons_class_holiness(si->mon_type) & MH_HOLY)
                     num_holy++;
 
                 total_max_chunks += max_corpse_chunks(si->mon_type);

@@ -1680,17 +1680,14 @@ void melee_attack::set_attack_verb(int damage)
             attack_verb = "thrash";
         else
         {
-            switch (defender->holiness())
+            if (defender->holiness() & (MH_HOLY | MH_NATURAL | MH_DEMONIC))
             {
-            case MH_HOLY:
-            case MH_NATURAL:
-            case MH_DEMONIC:
                 attack_verb = "punish";
                 verb_degree = ", causing immense pain";
                 break;
-            default:
-                attack_verb = "devastate";
             }
+            else
+                attack_verb = "devastate";
         }
         break;
 
@@ -1938,7 +1935,7 @@ bool melee_attack::consider_decapitation(int dam, int damage_type)
         return true;
 
     // Only living hydras get to regenerate heads.
-    if (defender->holiness() != MH_NATURAL)
+    if (!(defender->holiness() & MH_NATURAL))
         return false;
 
     // What's the largest number of heads the defender can have?
@@ -2798,7 +2795,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_HUNGER:
-        if (defender->holiness() == MH_UNDEAD)
+        if (defender->holiness() & MH_UNDEAD)
             break;
 
         defender->make_hungry(you.hunger / 4, false);

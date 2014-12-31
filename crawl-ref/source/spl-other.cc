@@ -126,7 +126,7 @@ void start_recall(recall_t type)
 
         if (type == RECALL_YRED)
         {
-            if (mi->holiness() != MH_UNDEAD)
+            if (!(mi->holiness() & MH_UNDEAD))
                 continue;
         }
         else if (type == RECALL_BEOGH)
@@ -340,7 +340,7 @@ static int _intoxicate_monsters(coord_def where, int pow)
     monster* mons = monster_at(where);
     if (mons == nullptr
         || mons_intel(mons) < I_HUMAN
-        || mons->holiness() != MH_NATURAL
+        || !(mons->holiness() & MH_NATURAL)
         || mons->res_poison() > 0)
     {
         return 0;

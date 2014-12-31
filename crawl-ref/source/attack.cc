@@ -589,7 +589,7 @@ void attack::chaos_affects_defender()
     monster * const mon    = defender->as_monster();
     const bool firewood    = mon && mons_is_firewood(mon);
     const bool immune      = mon && mons_immune_magic(mon);
-    const bool is_natural  = mon && defender->holiness() == MH_NATURAL;
+    const bool is_natural  = mon && defender->holiness() & MH_NATURAL;
     const bool is_shifter  = mon && mon->is_shapeshifter();
     const bool can_clone   = mon && mons_clonable(mon, true);
     const bool can_poly    = is_shifter || (defender->can_safely_mutate()
@@ -863,7 +863,7 @@ brand_type attack::random_chaos_brand()
                 susceptible = false;
             break;
         case SPWPN_VENOM:
-            if (defender->holiness() == MH_UNDEAD)
+            if (defender->holiness() & MH_UNDEAD)
                 susceptible = false;
             break;
         case SPWPN_VAMPIRISM:
@@ -874,7 +874,7 @@ brand_type attack::random_chaos_brand()
             }
             // intentional fall-through
         case SPWPN_DRAINING:
-            if (defender->holiness() != MH_NATURAL)
+            if (!(defender->holiness() & MH_NATURAL))
                 susceptible = false;
             break;
         case SPWPN_HOLY_WRATH:
@@ -882,8 +882,7 @@ brand_type attack::random_chaos_brand()
                 susceptible = false;
             break;
         case SPWPN_CONFUSE:
-            if (defender->holiness() == MH_NONLIVING
-                || defender->holiness() == MH_PLANT)
+            if (defender->holiness() & (MH_NONLIVING | MH_PLANT))
             {
                 susceptible = false;
             }
@@ -992,7 +991,7 @@ void attack::drain_defender()
     if (defender->is_monster() && coinflip())
         return;
 
-    if (defender->holiness() != MH_NATURAL)
+    if (!(defender->holiness() & MH_NATURAL))
         return;
 
     special_damage = resist_adjust_damage(defender, BEAM_NEG,
@@ -1695,7 +1694,7 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_VAMPIRISM:
     {
         if (!weapon
-            || defender->holiness() != MH_NATURAL
+            || !(defender->holiness() & MH_NATURAL)
             || defender->res_negative_energy()
             || damage_done < 1
             || attacker->stat_hp() == attacker->stat_maxhp()
@@ -1773,7 +1772,7 @@ bool attack::apply_damage_brand(const char *what)
         }
 
         const int hdcheck =
-            (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
+            (defender->holiness() & MH_NATURAL ? random2(30) : random2(22));
 
         if (hdcheck < defender->get_hit_dice()
             || one_chance_in(5)

@@ -1725,7 +1725,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_GHOSTLY_FLAME:
-        if (mons->holiness() == MH_UNDEAD)
+        if (mons->holiness() & MH_UNDEAD)
             hurted = 0;
         else
         {
@@ -1776,7 +1776,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         if (mons->friendly())
             return true;
 
-        if (mons->holiness() != MH_UNDEAD)
+        if (!(mons->holiness() & MH_UNDEAD))
             return true;
 
         int res_margin = mons->check_res_magic(pow);
@@ -1798,7 +1798,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     }
     else if (wh_enchant == ENCH_CONFUSION
              || wh_enchant == ENCH_INSANE
-             || mons->holiness() == MH_NATURAL)
+             || mons->holiness() & MH_NATURAL)
     {
         if (wh_enchant == ENCH_FEAR
             && mons->friendly())
@@ -2403,7 +2403,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     // or invisibility.
     for (actor_near_iterator ai(c, LOS_NO_TRANS); ai; ++ai)
     {
-        if (mons_aligned(agent, *ai) && ai->holiness() != MH_NONLIVING)
+        if (mons_aligned(agent, *ai) && !(ai->holiness() & MH_NONLIVING))
         {
             if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(**ai))
             {
@@ -3103,7 +3103,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_poison() > 0 || mon->is_unbreathing();
 
     case BEAM_GHOSTLY_FLAME:
-        return mon->holiness() == MH_UNDEAD;
+        return bool(mon->holiness() & MH_UNDEAD);
 
     default:
         return false;
@@ -3949,7 +3949,7 @@ void bolt::affect_player()
 
     // Confusion effect for spore explosions
     if (flavour == BEAM_SPORE && hurted
-        && you.holiness() != MH_UNDEAD
+        && !(you.holiness() & MH_UNDEAD)
         && !you.is_unbreathing())
     {
         confuse_player(3);
@@ -4077,9 +4077,7 @@ void bolt::affect_player()
         }
     }
     else if (origin_spell == SPELL_DAZZLING_SPRAY
-             && !(you.holiness() == MH_UNDEAD
-                  || you.holiness() == MH_NONLIVING
-                  || you.holiness() == MH_PLANT))
+             && !(you.holiness() & (MH_UNDEAD | MH_NONLIVING | MH_PLANT)))
     {
         if (x_chance_in_y(85 - you.experience_level * 3 , 100))
             you.confuse(agent(), 4 + random2(4));
@@ -4577,7 +4575,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         }
     }
 
-    if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() == MH_UNDEAD)
+    if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() & MH_UNDEAD)
     {
         if (mon->heal(roll_dice(3, 10)))
             simple_monster_message(mon, " is bolstered by the flame.");
@@ -4894,7 +4892,7 @@ void bolt::affect_monster(monster* mon)
     }
 
     if (engulfs && flavour == BEAM_SPORE // XXX: engulfs is redundant?
-        && mon->holiness() == MH_NATURAL
+        && mon->holiness() & MH_NATURAL
         && !mon->is_unbreathing())
     {
         apply_enchantment_to_monster(mon);
@@ -5193,14 +5191,14 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_ENSLAVE_SOUL:
-        rc = mon->holiness() == MH_NATURAL
+        rc = mon->holiness() & MH_NATURAL
              && mon->attitude != ATT_FRIENDLY
              && mons_can_be_zombified(mon)
              && mons_intel(mon) >= I_HUMAN;
         break;
 
     case BEAM_DISPEL_UNDEAD:
-        rc = (mon->holiness() == MH_UNDEAD);
+        rc = bool(mon->holiness() & MH_UNDEAD);
         break;
 
     case BEAM_PAIN:
@@ -5212,9 +5210,9 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_PORKALATOR:
-        rc = (mon->holiness() == MH_DEMONIC && mon->type != MONS_HELL_HOG)
-              || (mon->holiness() == MH_NATURAL && mon->type != MONS_HOG)
-              || (mon->holiness() == MH_HOLY && mon->type != MONS_HOLY_SWINE);
+        rc = (mon->holiness() & MH_DEMONIC && mon->type != MONS_HELL_HOG)
+              || (mon->holiness() & MH_NATURAL && mon->type != MONS_HOG)
+              || (mon->holiness() & MH_HOLY && mon->type != MONS_HOLY_SWINE);
         break;
 
     case BEAM_SENTINEL_MARK:
@@ -5611,8 +5609,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_UNAFFECTED;
 
         monster orig_mon(*mon);
-        if (monster_polymorph(mon, mon->holiness() == MH_DEMONIC ?
-                      MONS_HELL_HOG : mon->holiness() == MH_HOLY ?
+        if (monster_polymorph(mon, mon->holiness() & MH_DEMONIC ?
+                      MONS_HELL_HOG : mon->holiness() & MH_HOLY ?
                       MONS_HOLY_SWINE : MONS_HOG))
         {
             obvious_effect = true;
@@ -6277,14 +6275,14 @@ bool bolt::nasty_to(const monster* mon) const
 
     // dispel undead
     if (flavour == BEAM_DISPEL_UNDEAD)
-        return mon->holiness() == MH_UNDEAD;
+        return bool(mon->holiness() & MH_UNDEAD);
 
     // pain / agony
     if (flavour == BEAM_PAIN)
         return !mon->res_negative_energy();
 
     if (flavour == BEAM_GHOSTLY_FLAME)
-        return mon->holiness() != MH_UNDEAD;
+        return !(mon->holiness() & MH_UNDEAD);
 
     if (flavour == BEAM_TUKIMAS_DANCE)
         return tukima_affects(*mon);
@@ -6319,7 +6317,7 @@ bool bolt::nice_to(const monster* mon) const
         return true;
     }
 
-    if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() == MH_UNDEAD)
+    if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() & MH_UNDEAD)
         return true;
 
     return false;

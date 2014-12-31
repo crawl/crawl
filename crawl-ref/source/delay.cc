@@ -274,7 +274,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
                                       : mitm[delay.parm2]);
 
         const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
-        const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
+        const bool was_holy = bool(mons_class_holiness(item.mon_type) & MH_HOLY);
 
         // Don't skeletonize a corpse if it's no longer there!
         if (item.defined() && item.is_type(OBJ_CORPSES, CORPSE_BODY)
@@ -845,7 +845,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                       : mitm[delay.parm2]);
 
         const bool was_orc = (mons_genus(item.mon_type) == MONS_ORC);
-        const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
+        const bool was_holy = bool(mons_class_holiness(item.mon_type) & MH_HOLY);
 
         vampire_nutrition_per_turn(item, 1);
 

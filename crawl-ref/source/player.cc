@@ -6123,6 +6123,7 @@ bool player::heal(int amount, bool max_too)
 
 /**
  * What is the player's (current) mon_holy_type category?
+ * Stays up to date with god for evil/unholy
  * Nonliving (statues, etc), undead, or alive.
  *
  * @param temp      Whether to consider temporary effects: forms,
@@ -6131,16 +6132,28 @@ bool player::heal(int amount, bool max_too)
  */
 mon_holy_type player::holiness(bool temp) const
 {
+    mon_holy_type holi = MH_NATURAL;
     if (species == SP_GARGOYLE ||
         temp && (form == TRAN_STATUE || form == TRAN_WISP || petrified()))
     {
-        return MH_NONLIVING;
+        holi = MH_NONLIVING;
     }
 
     if (undead_state(temp))
-        return MH_UNDEAD;
+        holi = MH_UNDEAD;
 
-    return MH_NATURAL;
+    if (species == SP_DEMONSPAWN)
+        holi |= MH_UNHOLY;
+
+    if (is_good_god(religion))
+        holi |= MH_HOLY;
+
+    if (is_evil_god(religion))
+        holi |= MH_EVIL;
+
+    // possible XXX: Monsters get evil/unholy bits set on spell selection
+    //  should players?
+    return holi;
 }
 
 bool player::undead_or_demonic() const
@@ -6156,26 +6169,17 @@ bool player::holy_wrath_susceptible() const
 
 bool player::is_holy(bool check_spells) const
 {
-    if (is_good_god(religion) && check_spells)
-        return true;
-
-    return false;
+    return bool(holiness() & MH_HOLY);
 }
 
 bool player::is_unholy(bool check_spells) const
 {
-    return species == SP_DEMONSPAWN;
+    return bool(holiness() & MH_UNHOLY);
 }
 
 bool player::is_evil(bool check_spells) const
 {
-    if (holiness() == MH_UNDEAD)
-        return true;
-
-    if (is_evil_god(religion) && check_spells)
-        return true;
-
-    return false;
+    return bool(holiness() & (MH_UNDEAD | MH_EVIL));
 }
 
 // This is a stub. Check is used only for silver damage. Worship of chaotic
@@ -7235,7 +7239,7 @@ bool player::can_bleed(bool allow_tran) const
 #if TAG_MAJOR_VERSION == 34
         || species == SP_DJINNI
 #endif
-        || holiness() == MH_NONLIVING)
+        || holiness() & MH_NONLIVING)
     {   // demonspawn and demigods have a mere drop of taint
         return false;
     }

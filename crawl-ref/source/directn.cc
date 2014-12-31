@@ -2385,7 +2385,7 @@ static bool _want_target_monster(const monster *mon, targ_mode_type mode)
     case TARG_EVOLVABLE_PLANTS:
         return mons_is_evolvable(mon);
     case TARG_HOSTILE_UNDEAD:
-         return !mon->friendly() && mon->holiness() == MH_UNDEAD;
+        return !mon->friendly() && mon->holiness() & MH_UNDEAD;
     case TARG_BEOGH_GIFTABLE:
         return beogh_can_gift_items_to(mon);
     case TARG_DISPELLABLE:

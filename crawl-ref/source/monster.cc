@@ -1725,7 +1725,7 @@ static int _get_monster_armour_value(const monster *mon,
         value += get_armour_res_poison(item, true);
 
     // Same for life protection.
-    if (mon->holiness() == MH_NATURAL)
+    if (mon->holiness() & MH_NATURAL)
         value += get_armour_life_protection(item, true);
 
     // See invisible also is only useful if not already intrinsic.
@@ -1892,7 +1892,7 @@ static int _get_monster_jewellery_value(const monster *mon,
         value += get_jewellery_res_poison(item, true);
 
     // Same for life protection.
-    if (mon->holiness() == MH_NATURAL)
+    if (mon->holiness() & MH_NATURAL)
         value += get_jewellery_life_protection(item, true);
 
     // See invisible also is only useful if not already intrinsic.
@@ -2824,7 +2824,7 @@ bool monster::go_frenzy(actor *source)
 
     attitude = ATT_NEUTRAL;
     add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
-    if (holiness() == MH_NATURAL)
+    if (holiness() & MH_NATURAL)
     {
         add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
         add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
@@ -3634,14 +3634,41 @@ mon_holy_type monster::holiness(bool /*temp*/) const
     if (testbits(flags, MF_FAKE_UNDEAD))
         return MH_UNDEAD;
 
-    return mons_class_holiness(type);
+    mon_holy_type holi = mons_class_holiness(type);
+
+    // Assume that all unknown gods are not holy.
+    if (is_priest() && is_good_god(god))
+        holi |= MH_HOLY;
+
+    if (has_unholy_spell())
+        holi |= MH_UNHOLY;
+
+    // Assume that all unknown gods are evil.
+    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
+    {
+        holi |= MH_EVIL;
+    }
+
+    if (has_evil_spell())
+        holi |= MH_EVIL;
+
+    if (has_attack_flavour(AF_DRAIN_XP)
+        || has_attack_flavour(AF_VAMPIRIC))
+    {
+        holi |= MH_EVIL;
+    }
+
+    if (testbits(flags, MF_SPECTRALISED))
+        holi |= MH_EVIL;
+
+    return holi;
 }
 
 bool monster::undead_or_demonic() const
 {
     const mon_holy_type holi = holiness();
 
-    return holi == MH_UNDEAD || holi == MH_DEMONIC || mons_is_demonspawn(type);
+    return bool(holi & (MH_UNDEAD | MH_DEMONIC)) || mons_is_demonspawn(type);
 }
 
 bool monster::holy_wrath_susceptible() const
@@ -3651,14 +3678,7 @@ bool monster::holy_wrath_susceptible() const
 
 bool monster::is_holy(bool check_spells) const
 {
-    if (holiness() == MH_HOLY)
-        return true;
-
-    // Assume that all unknown gods are not holy.
-    if (is_priest() && is_good_god(god) && check_spells)
-        return true;
-
-    return false;
+    return bool(holiness() & MH_HOLY);
 }
 
 bool monster::is_unholy(bool check_spells) const
@@ -3666,40 +3686,12 @@ bool monster::is_unholy(bool check_spells) const
     if (mons_is_demonspawn(type))
         return true;
 
-    if (holiness() == MH_DEMONIC)
-        return true;
-
-    if (has_unholy_spell() && check_spells)
-        return true;
-
-    return false;
+    return bool(holiness() & (MH_DEMONIC | MH_UNHOLY));
 }
 
 bool monster::is_evil(bool check_spells) const
 {
-    if (holiness() == MH_UNDEAD)
-        return true;
-
-    // Assume that all unknown gods are evil.
-    if (is_priest() && (is_evil_god(god) || is_unknown_god(god))
-        && check_spells)
-    {
-        return true;
-    }
-
-    if (has_evil_spell() && check_spells)
-        return true;
-
-    if (has_attack_flavour(AF_DRAIN_XP)
-        || has_attack_flavour(AF_VAMPIRIC))
-    {
-        return true;
-    }
-
-    if (testbits(flags, MF_SPECTRALISED))
-        return true;
-
-    return false;
+    return bool(holiness() & MH_UNDEAD);
 }
 
 /** Is the monster considered unclean by Zin?
@@ -3754,7 +3746,7 @@ int monster::how_unclean(bool check_god) const
         uncleanliness++;
 
     // Corporeal undead are a perversion of natural form.
-    if (holiness() == MH_UNDEAD && !is_insubstantial())
+    if (holiness() & MH_UNDEAD && !is_insubstantial())
         uncleanliness++;
 
     return uncleanliness;
@@ -3835,12 +3827,8 @@ bool monster::is_unbreathing() const
 {
     const mon_holy_type holi = holiness();
 
-    if (holi == MH_UNDEAD
-        || holi == MH_NONLIVING
-        || holi == MH_PLANT)
-    {
+    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
         return true;
-    }
 
     if (mons_is_slime(this))
         return true;
@@ -4055,26 +4043,23 @@ bool monster::res_sticky_flame() const
 int monster::res_rotting(bool /*temp*/) const
 {
     int res = 0;
-    switch (holiness())
+    const mon_holy_type holi = holiness();
+
+    // handle undead first so that multi-holiness undead get their due
+    if (holi & MH_UNDEAD)
     {
-    case MH_NATURAL:
-    case MH_PLANT: // was 1 before. Gardening shows it should be -1 instead...
-        res = 0;
-        break;
-    case MH_UNDEAD:
         if (mons_genus(type) == MONS_GHOUL || type == MONS_ZOMBIE)
             res = 1;
         else
             res = 3;
-        break;
-    case MH_DEMONIC:
-    case MH_HOLY:
-        res = 1;
-        break;
-    case MH_NONLIVING:
-        res = 3;
-        break;
     }
+    else if (holi & (MH_NATURAL | MH_PLANT))
+        res = 0; // was 1 for plants before. Gardening shows it should be -1
+    else if (holi & (MH_HOLY | MH_DEMONIC))
+        res = 1;
+    else if (holi & MH_NONLIVING)
+        res = 3;
+
     if (is_insubstantial())
         res = 3;
     if (get_mons_resist(this, MR_RES_ROTTING))
@@ -4109,7 +4094,7 @@ int monster::res_holy_energy(const actor *attacker) const
 int monster::res_negative_energy(bool intrinsic_only) const
 {
     // If you change this, also change get_mons_resists.
-    if (holiness() != MH_NATURAL)
+    if (!(holiness() & MH_NATURAL))
         return 3;
 
     int u = get_mons_resist(this, MR_RES_NEG);
@@ -4145,10 +4130,7 @@ int monster::res_negative_energy(bool intrinsic_only) const
 bool monster::res_torment() const
 {
     const mon_holy_type holy = holiness();
-    return holy == MH_UNDEAD
-            || holy == MH_DEMONIC
-            || holy == MH_PLANT
-            || holy == MH_NONLIVING
+    return holy & (MH_UNDEAD | MH_DEMONIC |  MH_PLANT | MH_NONLIVING)
             || get_mons_resist(this, MR_RES_TORMENT) > 0;
 }
 
@@ -5246,7 +5228,7 @@ bool monster::can_go_frenzy() const
 
 bool monster::can_go_berserk() const
 {
-    return (holiness() == MH_NATURAL) && can_go_frenzy();
+    return bool(holiness() & MH_NATURAL) && can_go_frenzy();
 }
 
 bool monster::berserk() const
@@ -5360,7 +5342,7 @@ bool monster::can_mutate() const
 
     const mon_holy_type holi = holiness();
 
-    return holi != MH_UNDEAD && holi != MH_NONLIVING;
+    return !(holi & (MH_UNDEAD | MH_NONLIVING));
 }
 
 bool monster::can_safely_mutate(bool temp) const
@@ -5937,8 +5919,7 @@ bool monster::can_drink_potion(potion_type ptype) const
     {
         case POT_CURING:
         case POT_HEAL_WOUNDS:
-            return holiness() != MH_NONLIVING
-                   && holiness() != MH_PLANT;
+            return !(holiness() & (MH_NONLIVING | MH_PLANT));
         case POT_BLOOD:
 #if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:

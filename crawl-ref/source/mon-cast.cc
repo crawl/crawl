@@ -1627,7 +1627,7 @@ static bool _foe_should_res_negative_energy(const actor* foe)
         }
     }
 
-    return foe->holiness() != MH_NATURAL;
+    return !(foe->holiness() & MH_NATURAL);
 }
 
 static bool _valid_blink_ally(const monster* caster, const monster* target)
@@ -1696,9 +1696,9 @@ static bool _is_battlecry_compatible(const monster& mons, battlecry_type type)
         case BATTLECRY_ORC:
             return mons_genus(mons.type) == MONS_ORC;
         case BATTLECRY_HOLY:
-            return mons.holiness() == MH_HOLY;
+            return bool(mons.holiness() & MH_HOLY);
         case BATTLECRY_NATURAL:
-            return mons.holiness() == MH_NATURAL;
+            return bool(mons.holiness() & MH_NATURAL);
         default:
             return false;
     }
@@ -1718,7 +1718,7 @@ static battlecry_type _get_cry_type(const monster& crier)
         return BATTLECRY_GOBLIN;
     if (mons_genus(crier.type) == MONS_ORC)
         return BATTLECRY_ORC;
-    if (crier.holiness() == MH_HOLY)
+    if (crier.holiness() & MH_HOLY)
         return BATTLECRY_HOLY;
     return BATTLECRY_NATURAL;
 }
@@ -4153,7 +4153,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     if (mons->can_see(you) && !mons->wont_attack() && !you.afraid_of(mons))
     {
-        if (you.holiness() != MH_NATURAL)
+        if (!(you.holiness() & MH_NATURAL))
         {
             if (actual)
                 canned_msg(MSG_YOU_UNAFFECTED);
@@ -4187,7 +4187,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         // never affected, even though they aren't immune.
         // Will not further scare a monster that is already afraid.
         if (mons_immune_magic(*mi)
-            || mi->holiness() != MH_NATURAL
+            || !(mi->holiness() & MH_NATURAL)
             || mons_is_firewood(*mi)
             || mons_atts_aligned(mi->attitude, mons->attitude)
             || mi->has_ench(ENCH_FEAR))
@@ -4295,7 +4295,7 @@ static int _mons_control_undead(monster* mons, bool actual)
     const int pow = _ench_power(SPELL_CONTROL_UNDEAD, *mons);
 
     if (mons->can_see(you) && !mons->wont_attack()
-        && you.holiness() == MH_UNDEAD)
+        && you.holiness() & MH_UNDEAD)
     {
         retval = 0;
 
@@ -4326,7 +4326,7 @@ static int _mons_control_undead(monster* mons, bool actual)
             || mons_is_firewood(*mi)
             || (mons_atts_aligned(mi->attitude, mons->attitude)
                 && !mi->has_ench(bad))
-            || mi->holiness() != MH_UNDEAD)
+            || !(mi->holiness() & MH_UNDEAD))
         {
             continue;
         }
@@ -7546,7 +7546,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DISPEL_UNDEAD:
         // [ds] How is dispel undead intended to interact with vampires?
-        return !foe || foe->holiness() != MH_UNDEAD;
+        // Currently if the vampire's undead state returns MH_UNDEAD it
+        // affects the player.
+        return !foe || foe->holiness() & MH_UNDEAD;
 
     case SPELL_CORONA:
         return !foe || foe->backlit() || foe->glows_naturally();
@@ -7686,7 +7688,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_DEATHS_DOOR:
         // The caster may be an (undead) enslaved soul.
-        return mon->holiness() == MH_UNDEAD
+        return mon->holiness() & MH_UNDEAD
                || mon->has_ench(ENCH_DEATHS_DOOR)
                || mon->has_ench(ENCH_FATIGUE)
                || !foe || !mon->can_see(*foe);
@@ -7721,7 +7723,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
 
     case SPELL_GHOSTLY_FIREBALL:
-        return !foe || foe->holiness() == MH_UNDEAD;
+        return !foe || foe->holiness() & MH_UNDEAD;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
         if (!foe || !mon->can_see(*foe))
@@ -7873,7 +7875,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return friendly || !_seal_doors_and_stairs(mon, true);
 
     case SPELL_FLAY:
-        return !foe || foe->holiness() != MH_NATURAL;
+        return !foe || !(foe->holiness() & MH_NATURAL);
 
     case SPELL_TWISTED_RESURRECTION:
         if (friendly && !_animate_dead_okay(monspell))

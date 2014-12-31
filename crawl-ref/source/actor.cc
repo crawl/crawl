@@ -187,7 +187,7 @@ bool actor::can_hibernate(bool holi_only, bool intrinsic_only) const
 bool actor::can_sleep(bool holi_only) const
 {
     const mon_holy_type holi = holiness();
-    if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
+    if (holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
         return false;
 
     if (!holi_only)

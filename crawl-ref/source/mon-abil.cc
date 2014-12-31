@@ -799,7 +799,7 @@ static bool _lost_soul_affectable(const monster &mons)
         return false;
 
     // undead can be reknit, naturals ghosted, everyone else is out of luck
-    if (mons.holiness() != MH_UNDEAD && mons.holiness() != MH_NATURAL)
+    if (!(mons.holiness() & (MH_UNDEAD | MH_NATURAL)))
         return false;
 
     // already been revived once
@@ -927,7 +927,7 @@ bool lost_soul_revive(monster* mons, killer_type killer)
 
         // save this before we revive it
         const string revivee_name = mons->name(DESC_THE);
-        const bool was_alive = mons->holiness() == MH_NATURAL;
+        const bool was_alive = bool(mons->holiness() & MH_NATURAL);
 
         // In this case the old monster will be replaced by
         // a ghostly version, so we should record defeat now.

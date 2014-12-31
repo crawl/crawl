@@ -216,7 +216,7 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
         return false;
 
     // Only natural monsters can level-up.
-    if (holiness() != MH_NATURAL)
+    if (!(holiness() & MH_NATURAL))
         return false;
 
     // Only monsters that you can gain XP from can level-up.

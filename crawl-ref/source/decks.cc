@@ -1771,7 +1771,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                     monster *mons = monster_at(*di);
 
                     if (!mons || mons->wont_attack()
-                        || mons->holiness() != MH_NATURAL)
+                        || !(mons->holiness() & MH_NATURAL))
                     {
                         continue;
                     }
@@ -2245,7 +2245,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (mi->friendly()
-               || mi->holiness() != MH_NATURAL
+               || !(mi->holiness() & MH_NATURAL)
                || mons_is_unique(mi->type)
                || mons_immune_magic(*mi)
                || player_will_anger_monster(*mi))
@@ -2844,7 +2844,7 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
                 monster_polymorph(mons, RANDOM_MONSTER, PPT_LESS);
                 mons->malmutate("");
             }
-            else if (mons->holiness() == MH_UNDEAD)
+            else if (mons->holiness() & MH_UNDEAD)
             {
                 const int daze_time = (5 + 5 * power_level) * BASELINE_DELAY;
                 mons->add_ench(mon_enchant(ENCH_DAZED, 0, &you, daze_time));

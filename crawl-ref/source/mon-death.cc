@@ -578,7 +578,7 @@ int exp_rate(int killer)
 }
 
 // Elyvilon will occasionally (5% chance) protect the life of one of
-// your allies.
+// your holy or natural allies.
 static bool _ely_protect_ally(monster* mons, killer_type killer)
 {
     ASSERT(mons); // XXX: change to monster &mons
@@ -588,8 +588,7 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
     if (!MON_KILL(killer) && !YOU_KILL(killer))
         return false;
 
-    if (!mons->is_holy()
-            && mons->holiness() != MH_NATURAL
+    if ( mons->holiness() & ~(MH_HOLY | MH_NATURAL)
         || !mons->friendly()
         || !you.can_see(*mons) // for simplicity
         || !one_chance_in(20))
@@ -1427,7 +1426,7 @@ static string _killer_type_name(killer_type killer)
 
 static void _make_spectral_thing(monster* mons, bool quiet)
 {
-    if (mons->holiness() == MH_NATURAL && mons_can_be_zombified(mons))
+    if (mons->holiness() & MH_NATURAL && mons_can_be_zombified(mons))
     {
         const monster_type spectre_type = mons_species(mons->type);
         enchant_type shapeshift = ENCH_NONE;
@@ -1620,7 +1619,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
 
     if (holiness == MH_DEMONIC)
         did_kill_conduct(DID_KILL_DEMON, mons);
-    else if (holiness == MH_NATURAL)
+    else if (holiness & MH_NATURAL)
     {
         did_kill_conduct(DID_KILL_LIVING, mons);
 
@@ -1630,7 +1629,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
         else if (mons.is_evil())
             did_kill_conduct(DID_KILL_NATURAL_EVIL, mons);
     }
-    else if (holiness == MH_UNDEAD)
+    else if (holiness & MH_UNDEAD)
         did_kill_conduct(DID_KILL_UNDEAD, mons);
 
     // Zin hates unclean and chaotic beings.
@@ -2191,7 +2190,7 @@ item_def* monster_die(monster* mons, killer_type killer,
             {
                 const bool sentient = mons_class_intel(mons->type) >= I_HUMAN;
                 // plant HD aren't very meaningful. (fedhas hack)
-                const int severity = mons->holiness() == MH_PLANT ?
+                const int severity = mons->holiness() & MH_PLANT ?
                                      1 :
                                      1 + (mons->get_experience_level() / 4);
 

@@ -316,13 +316,13 @@ int get_mons_class_ev(monster_type mc)
 static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
 {
     // Undead and non-living beings get full poison resistance.
-    if (mh == MH_UNDEAD || mh == MH_NONLIVING)
+    if (mh & (MH_UNDEAD | MH_NONLIVING))
         resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
     // Everything but natural creatures have full rNeg. Set here for the
     // benefit of the monster_info constructor. If you change this, also
     // change monster::res_negative_energy.
-    if (mh != MH_NATURAL)
+    if (!(mh & MH_NATURAL))
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
 
     return resists;
@@ -743,8 +743,7 @@ bool mons_has_flesh(const monster* mon)
     //    mainly muscle tissue and fat)
     // 3. pulp, flesh -- (a soft moist part of a fruit)
     // yet I exclude sense 3 anyway but include arthropods and molluscs.
-    return mon->holiness() != MH_PLANT
-           && mon->holiness() != MH_NONLIVING
+    return !(mon->holiness() & (MH_PLANT | MH_NONLIVING))
            && mons_genus(mon->type) != MONS_GIANT_EYEBALL
            && mons_genus(mon->type) != MONS_GIANT_ORANGE_BRAIN
            && mons_genus(mon->type) != MONS_JELLY
@@ -984,10 +983,7 @@ bool herd_monster(const monster* mon)
 // Plant or fungus really
 bool mons_class_is_plant(monster_type mc)
 {
-    return mons_genus(mc) == MONS_PLANT
-           || mons_genus(mc) == MONS_FUNGUS
-           || mons_species(mc) == MONS_BUSH
-           || mc == MONS_SHAMBLING_MANGROVE;
+    return bool(mons_class_holiness(mc) & MH_PLANT);
 }
 
 bool mons_is_plant(const monster* mon)
@@ -1122,8 +1118,7 @@ void discover_shifter(monster* shifter)
 
 bool mons_is_demon(monster_type mc)
 {
-    // Not every demonic monster is a demon (hell hog, hell hound, etc.)
-    return mons_class_holiness(mc) == MH_DEMONIC
+    return mons_class_holiness(mc) & MH_DEMONIC
              && (mons_demon_tier(mc) != 0 && mc != MONS_ANTAEUS
                  || mons_species(mc) == MONS_RAKSHASA);
 }
@@ -1477,8 +1472,8 @@ bool mons_can_be_dazzled(monster_type mc)
     // that's useful
 
     const mon_holy_type holiness = mons_class_holiness(mc);
-    return holiness != MH_UNDEAD && holiness != MH_NONLIVING
-           && holiness != MH_PLANT && mons_can_be_blinded(mc);
+    return !(holiness & (MH_UNDEAD | MH_NONLIVING | MH_PLANT))
+        && mons_can_be_blinded(mc);
 }
 
 ucs_t mons_char(monster_type mc)
@@ -3946,14 +3941,13 @@ bool monster_shover(const monster* m)
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
     // or spectral zombified undead can push past non-spectral zombified
     // undead).
-    if (m1->holiness() == m2->holiness() && mons_class_can_use_stairs(m1->type)
+    if (m1->holiness() & m2->holiness() && mons_class_can_use_stairs(m1->type)
         && !mons_class_can_use_stairs(m2->type))
     {
         return true;
     }
     const bool related = mons_genus(m1->type) == mons_genus(m2->type)
-                         || m1->holiness() == MH_DEMONIC
-                            && m2->holiness() == MH_DEMONIC;
+                         || (m1->holiness() & m2->holiness() & MH_DEMONIC);
 
     // Let all related monsters (all demons are 'related') push past ones that
     // are weaker at all. Unrelated ones have to be quite a bit stronger, to
@@ -5072,7 +5066,7 @@ bool mons_stores_tracking_data(const monster* mons)
 
 bool mons_is_beast(monster_type mc)
 {
-    if (mons_class_holiness(mc) != MH_NATURAL
+    if (!(mons_class_holiness(mc) & MH_NATURAL)
           && mc != MONS_APIS
         || mons_class_intel(mc) != I_ANIMAL)
     {
@@ -5275,7 +5269,7 @@ void print_wounds(const monster* mons)
 bool wounded_damaged(mon_holy_type holi)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    return holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT;
+    return bool(holi & (MH_UNDEAD | MH_NONLIVING | MH_PLANT));
 }
 
 bool mons_class_can_display_wounds(monster_type mc)
