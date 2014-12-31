@@ -629,8 +629,8 @@ static void _hydra_devour(monster &victim)
     // healing
     if (!you.duration[DUR_DEATHS_DOOR])
     {
-        const int healing = 1 + victim.get_experience_level() * 3 / 2
-                              + random2(victim.get_experience_level() * 3 / 2);
+        const int healing = 1 + victim.get_experience_level() * 3 / 4
+                              + random2(victim.get_experience_level() * 3 / 4);
         you.heal(healing);
         calc_hp();
         mpr("You feel better.");
