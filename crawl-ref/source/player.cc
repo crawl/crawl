@@ -9000,20 +9000,36 @@ string player::hands_verb(const string &plural_verb) const
     return hand + " " + conjugate_verb(plural_verb, plural);
 }
 
+// Is this a character that would not normally have a preceding space when
+// it follows a word?
+static bool _is_end_punct(char c)
+{
+    switch (c)
+    {
+    case ' ': case '.': case '!': case '?':
+    case ',': case ':': case ';': case ')':
+        return true;
+    }
+    return false;
+}
+
 /**
  * Return a string describing the player's hand(s) (or equivalent) taking the
  * given action (verb).
  *
  * @param plural_verb   The plural-agreeing verb corresponding to the action to
- *                      take. (E.g., "smoulder", "glow", "gain", etc.)
- * @param subject       The subject of the action. E.g. ".", "new energy.", &c.
- * @return              A string describing the player taking the given action.
- *                      E.g. "Your tentacle gains new energy."
+ *                      take. E.g., "smoulder", "glow", "gain", etc.
+ * @param object        The object or predicate complement of the action,
+ *                      including any sentence-final punctuation. E.g. ".",
+ *                      "new energy.", etc.
+ * @return              A string describing the player's hands taking the
+ *                      given action. E.g. "Your tentacle gains new energy."
  */
 string player::hands_act(const string &plural_verb,
-                         const string &subject) const
+                         const string &object) const
 {
-    return "Your " + hands_verb(plural_verb) + " " + subject;
+    const bool space = !object.empty() && !_is_end_punct(object[0]);
+    return "Your " + hands_verb(plural_verb) + (space ? " " : "") + object;
 }
 
 /**
