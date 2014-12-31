@@ -1018,13 +1018,6 @@ be at risk of becoming dazed & confused by the gasses, unless equipped with
 some source of poison resistance. Tougher, more experienced creatures are less
 likely to be affected.
 %%%%
-noxious fumes cloud
-
-A cloud of vile, choking fumes. Any breathing creature spending time in it will
-be at risk of becoming dazed & confused by the gases, unless equipped with some
-source of poison resistance. Tougher and more experienced creatures are
-less likely to be affected.
-%%%%
 freezing vapour cloud
 
 A cloud of freezing air. Any creature not entirely immune to cold will be hurt
@@ -1097,14 +1090,6 @@ calcifying dust cloud
 A petrifying cloud. Creatures caught in the cloud for any length of time will
 find themselves turning to stone, though an experienced adventurer can often
 resist the effects.
-%%%%
-blessed fire cloud
-
-A cloud of divine fire, imbued with the power & wrath of the good gods. Those
-in their service recieve some protection; otherwise, the only defense is stout
-armour and the wisdom to not enter the clouds in the first place. Those
-following evil gods are especially well advised to avoid these clouds, and the
-undead and demonic are even moreso.
 %%%%
 blessed fire cloud
 
