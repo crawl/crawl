@@ -200,6 +200,15 @@ CMD_MEMORISE_SPELL verbose
 
 Commit a spell to memory, read from a book you are holding or standing on.
 %%%%
+%%%%
+CMD_LOOKUP_HELP
+
+Lookup help
+%%%%
+CMD_LOOKUP_HELP verbose
+
+Look up information about monsters, spells, and more.
+%%%%
 CMD_DROP
 
 Drop items

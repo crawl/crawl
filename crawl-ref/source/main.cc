@@ -89,6 +89,7 @@
 #include "item_use.h"
 #include "libutil.h"
 #include "luaterp.h"
+#include "lookup_help.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "map_knowledge.h"
@@ -1111,6 +1112,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_RESISTS_SCREEN:
     case CMD_READ_MESSAGES:
     case CMD_SEARCH_STASHES:
+    case CMD_LOOKUP_HELP:
         mpr("You can't repeat informational commands.");
         return false;
 
@@ -2117,6 +2119,7 @@ void process_command(command_type cmd)
     case CMD_MAKE_NOTE:                make_user_note();               break;
     case CMD_REPLAY_MESSAGES: replay_messages(); redraw_screen();      break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
+    case CMD_LOOKUP_HELP:           keyhelp_query_descriptions();      break;
 
     case CMD_DISPLAY_RELIGION:
     {

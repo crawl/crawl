@@ -5104,6 +5104,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_EDIT_PLAYER_TILE;
     case CMD_DISPLAY_COMMANDS:
         return TILEG_CMD_DISPLAY_COMMANDS;
+    case CMD_LOOKUP_HELP:
+        return TILEG_CMD_LOOKUP_HELP;
     case CMD_CHARACTER_DUMP:
         return TILEG_CMD_CHARACTER_DUMP;
     case CMD_DISPLAY_INVENTORY:
