@@ -2134,15 +2134,19 @@ static const string _toggle_message =
 static int _print_toggle_message(const describe_info &inf, int& key)
 {
     mouse_control mc(MOUSE_MODE_MORE);
-    if (!key)
-        key = getchm();
 
     if (inf.quote.empty())
+    {
+        if (!key)
+            key = getchm();
         return false;
+    }
 
     const int bottom_line = min(30, get_number_of_lines());
     cgotoxy(1, bottom_line);
     formatted_string::parse_string(_toggle_message).display();
+    if (!key)
+        key = getchm();
 
     if (key == '!' || key == CK_MOUSE_CMD)
         return true;
