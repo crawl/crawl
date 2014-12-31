@@ -9,6 +9,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "delay.h"
+#include "english.h" // conjugate_verb
 #include "food.h"
 #include "goditem.h"
 #include "godpassive.h"
@@ -527,8 +528,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_SPEED:
-                    mprf("Your %s tingle!",
-                         you.hand_name(true).c_str());
+                    mpr(you.hands_act("tingle", "!"));
                     break;
 
                 case SPWPN_VAMPIRISM:
@@ -557,10 +557,17 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_PENETRATION:
-                    mprf("Your %s briefly pass through it before you manage "
+                {
+                    // FIXME: make hands_act take a pre-verb adverb so we can
+                    // use it here.
+                    bool plural = true;
+                    string hand = you.hand_name(true, &plural);
+
+                    mprf("Your %s briefly %s through it before you manage "
                          "to get a firm grip on it.",
-                         you.hand_name(true).c_str());
+                         hand.c_str(), conjugate_verb("pass", plural).c_str());
                     break;
+                }
 
                 case SPWPN_REAPING:
                     mpr("It is briefly surrounded by shifting shadows.");

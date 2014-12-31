@@ -293,8 +293,7 @@ bool fill_status_info(int status, status_info* inf)
 
     case DUR_CONFUSING_TOUCH:
     {
-        inf->long_text = string("Your ") + you.hand_name(true)
-                         + " are glowing red.";
+        inf->long_text = you.hands_act("are", "glowing red.");
         break;
     }
 

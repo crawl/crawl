@@ -2179,7 +2179,7 @@ void melee_attack::attacker_sustain_passive_damage()
     else
     {
         if (attacker->is_player())
-            mprf("Your %s burn!", you.hand_name(true).c_str());
+            mpr(you.hands_act("burn", "!"));
         else
         {
             simple_monster_message(attacker->as_monster(),

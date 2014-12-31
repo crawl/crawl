@@ -299,13 +299,10 @@ string ash_describe_bondage(int flags, bool level)
         && you.bondage[ET_WEAPON] != -1)
     {
         if (you.bondage[ET_WEAPON] == you.bondage[ET_SHIELD])
-        {
-            desc = make_stringf("Your %s are %sbound.\n",
-                                you.hand_name(true).c_str(),
-                                you.bondage[ET_WEAPON] ? "" : "not ");
-        }
+            desc = you.hands_act("are", "bound.\n");
         else
         {
+            // FIXME: what if you sacrificed a hand?
             desc = make_stringf("Your %s %s is bound but not your %s %s.\n",
                                 you.bondage[ET_WEAPON] ? "weapon" : "shield",
                                 you.hand_name(false).c_str(),
