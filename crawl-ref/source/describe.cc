@@ -18,6 +18,7 @@
 #include "artefact.h"
 #include "branch.h"
 #include "butcher.h"
+#include "cloud.h" // cloud_type_name
 #include "clua.h"
 #include "database.h"
 #include "decks.h"
@@ -2096,9 +2097,18 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
     // mention the ability to pray at altars
     if (feat_is_altar(feat))
-        long_desc += "(Pray here to learn more.)";
+        long_desc += "(Pray here to learn more.)\n";
 
     inf.body << long_desc;
+
+    if (const cloud_type cloud = env.map_knowledge(pos).cloud())
+    {
+        const string cl_name = cloud_type_name(cloud);
+        const string cl_desc = getLongDescription(cl_name + " cloud");
+        inf.body << "\nThere is a cloud of " << cl_name << " here"
+                 << (cl_desc.empty() ? "." : ":\n")
+                 << cl_desc;
+    }
 
     inf.quote = getQuoteString(db_name);
 }
