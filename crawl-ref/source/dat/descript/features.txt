@@ -1005,7 +1005,8 @@ flame cloud
 A cloud of raging fire. Any creature not entirely immune to fire will be hurt
 by time spent in the flames, though armour can mitigate the damage.
 
-Bolts of cold are blocked by the cloud, but will destroy it in the process.
+Ranged cold attacks are blocked by the cloud, but will destroy it in the
+process.
 
 If placed over water, the heat will generate steam nearby. If the water is deep
 enough, the cold of the waves will lead to the cloud dissipating much more
@@ -1023,8 +1024,8 @@ freezing vapour cloud
 A cloud of freezing air. Any creature not entirely immune to cold will be hurt
 by time spent inside, though armour can mitigate the damage.
 
-Bolts of fire and lava are blocked by the cloud, but will destroy it in the
-process.
+Ranged fire and lava attacks are blocked by the cloud, but will destroy it in
+the process.
 
 If placed over lava, the heat will dissipate the cloud much more quickly.
 %%%%
@@ -1069,7 +1070,8 @@ These flames are especially fierce, and will intermittently flare up and fill
 its surroundings with lesser fires. Any trees unfortunate enough to be nearby
 will often find themselves transformed into more kindling for the fire.
 
-Bolts of cold are blocked by the cloud, but will destroy it in the process.
+Ranged cold attacks are blocked by the cloud, but will destroy it in the
+process.
 
 If placed over water, the heat will generate steam nearby. If the water is deep
 enough, the cold of the waves will lead to the cloud dissipating much more
