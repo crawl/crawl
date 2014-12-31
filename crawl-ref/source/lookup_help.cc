@@ -29,6 +29,7 @@
 #include "items.h"
 #include "libutil.h" // map_find
 #include "macro.h"
+#include "makeitem.h" // item_colour
 #include "menu.h"
 #include "message.h"
 #include "mon-info.h"
@@ -1012,45 +1013,25 @@ static int _describe_cloud(const string &key, const string &suffix,
     return _describe_key(key, suffix, footer, extra_info);
 }
 
+
 /**
- * Describe the stats of the item named by the given key.
+ * Describe the given spell-holding item. (Book or rod)
  *
- * @param key       The name of the item to describe.
- * @return          Information about the item's stats, or "" if there's
- *                  nothing to mechanically add to its db description.
+ * @param item      The item in question.
+ * @return          0.
+ *                  TODO: change to the last keypress (to allow exact match
+ *                  support)
  */
-static string _item_stats(const string &key)
+static int _describe_spell_item(item_def &item)
 {
-    string desc;
-    item_def item;
-    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS))
-    {
-        append_weapon_stats(desc, item);
-        return desc + "\n";
-    }
+    item_colour(item);
 
-    if (get_item_by_name(&item, key.c_str(), OBJ_ARMOUR))
-    {
-        append_armour_stats(desc, item);
-        return desc + "\n";
-    }
+    const string desc = get_item_description(item, true, false, true);
+    formatted_string fdesc;
+    fdesc.cprintf("%s", desc.c_str());
 
-    if (get_item_by_name(&item, key.c_str(), OBJ_MISSILES))
-    {
-        append_missile_info(desc, item);
-        return desc + "\n";
-    }
-
-    if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
-        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
-    {
-        // FIXME: Duplicates messages from describe.cc.
-        if (!player_can_memorise_from_spellbook(item))
-            desc = "This book is beyond your current level of understanding.";
-        return desc + describe_item_spells(item);
-    }
-
-    return "";
+    list_spellset(item_spellset(item), nullptr, &item, fdesc);
+    return 0; // XXX: this breaks exact match stuff
 }
 
 
@@ -1065,8 +1046,26 @@ static string _item_stats(const string &key)
 static int _describe_item(const string &key, const string &suffix,
                            string footer)
 {
-    const string iinfo = _item_stats(key);
-    return _describe_key(key, suffix, footer, iinfo);
+    item_def item;
+    // spellbooks/rods are interactive & so require special handling
+    if (get_item_by_name(&item, key.c_str(), OBJ_BOOKS)
+        || get_item_by_name(&item, key.c_str(), OBJ_RODS))
+    {
+        return _describe_spell_item(item);
+    }
+
+    string stats;
+    if (get_item_by_name(&item, key.c_str(), OBJ_WEAPONS))
+        append_weapon_stats(stats, item);
+    else if (get_item_by_name(&item, key.c_str(), OBJ_ARMOUR))
+        append_armour_stats(stats, item);
+    else if (get_item_by_name(&item, key.c_str(), OBJ_MISSILES))
+        append_missile_info(stats, item);
+
+    if (!stats.empty())
+        stats += "\n";
+
+    return _describe_key(key, suffix, footer, stats);
 }
 
 /**
