@@ -611,7 +611,11 @@ SUBST:  L = ..l
 SUBST:  ' = .
 NSUBST: | = 1:> / *:|
 KITEM:  > = |
+: if you.at_branch_bottom() then
+KFEAT:  > = escape_hatch_up
+: else
 KFEAT:  > = escape_hatch_down
+: end
 MAP
      .....LL.....
    ....LLLllLLL....
