@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <sstream>
 
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "butcher.h"
@@ -3326,6 +3327,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
 #endif
 
+        if (temp && silenced(you.pos()))
+            return true; // can't use scrolls while silenced
+
         if (!item_type_known(item))
             return false;
 
@@ -3648,7 +3652,11 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
-        if (item.sub_type != BOOK_MANUAL || !item_type_known(item))
+        if (!item_type_known(item))
+            return false;
+        if (temp && item.sub_type == BOOK_DESTRUCTION && silenced(you.pos()))
+            return true; // can't read from the Tome while silenced
+        if (item.sub_type != BOOK_MANUAL)
             return false;
         if (you.skills[item.plus] >= 27)
             return true;
