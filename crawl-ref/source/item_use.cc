@@ -754,7 +754,7 @@ bool do_wear_armour(int item, bool quiet)
             if (you.species == SP_OCTOPODE)
                 mpr("You need the rest of your tentacles for walking.");
             else
-                mprf("You'd need another %s to do that!", you.hand_name(true).c_str());
+                mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
         }
         return false;
     }
@@ -771,6 +771,7 @@ bool do_wear_armour(int item, bool quiet)
                 mpr("You need the rest of your tentacles for walking.");
             else
             {
+                // Singular hand should have already been handled above.
                 mprf("You'd need three %s to do that!",
                      you.hand_name(true).c_str());
             }
@@ -2306,8 +2307,8 @@ void random_uselessness(int scroll_slot)
         }
         else
         {
-            mprf("Your %s glow %s for a moment.",
-                 you.hand_name(true).c_str(), weird_glowing_colour().c_str());
+            mpr(you.hands_act("glow", weird_glowing_colour()
+                                      + " for a moment."));
         }
         break;
 

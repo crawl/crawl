@@ -133,7 +133,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 {
     if (!you.weapon())
     {
-        mprf("Your %s feel slithery!", you.hand_name(true).c_str());
+        mpr(you.hands_act("feel", "slithery!"));
         return SPRET_ABORT;
     }
 
@@ -768,12 +768,16 @@ static bool _check_tukima_validity(const actor *target)
             return _fail_tukimas();
 
         if (target_is_player)
-            mprf("Your %s twitch.", you.hand_name(true).c_str());
+            mpr(you.hands_act("twitch", "."));
         else
         {
-            mprf("%s %s twitch.",
+            // FIXME: maybe move hands_act to class actor?
+            bool plural = true;
+            const string hand = target->hand_name(true, &plural);
+
+            mprf("%s %s %s.",
                  apostrophise(target->name(DESC_THE)).c_str(),
-                 target->hand_name(true).c_str());
+                 hand.c_str(), conjugate_verb("twitch", plural).c_str());
         }
         return false;
     }
@@ -3244,7 +3248,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
                      wpn->quantity > 1 ? "" : "s");
             }
             else
-                mprf("Your %s twitch.", you.hand_name(true).c_str());
+                mpr(you.hands_act("twitch", "."));
         }
 
         return SPRET_ABORT;
