@@ -15,6 +15,7 @@
 #include "fprop.h"
 #include "goditem.h"
 #include "godprayer.h"
+#include "invent.h" // in_inventory
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -451,7 +452,8 @@ bool god_id_item(item_def& item, bool silent)
             mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 
         seen_item(item);
-        auto_assign_item_slot(item);
+        if (in_inventory(item))
+            auto_assign_item_slot(item);
         return true;
     }
 
