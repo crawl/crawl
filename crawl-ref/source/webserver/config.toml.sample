@@ -154,7 +154,7 @@ send_json_options = true
 
 [[games]]
 id = "zd-web-trunk"
-name = "Zot Defense trunk"
+name = "Zot Defence trunk"
 version = "trunk"
 mode = "Zot Defence"
 comment = "Start one of several \"tower defence\"-style games of Crawl."
