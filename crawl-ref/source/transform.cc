@@ -554,16 +554,6 @@ public:
     static const FormStatue &instance() { static FormStatue inst; return inst; }
 
     /**
-     * The AC bonus of the form, multiplied by 100 to match
-     * player::armour_class().
-     */
-    int get_ac_bonus() const
-    {
-        return Form::get_ac_bonus()
-               - (you.species == SP_GARGOYLE ? 400 : 0);
-    }
-
-    /**
      * Find the player's base unarmed damage in this form.
      */
     int get_base_unarmed_damage() const
