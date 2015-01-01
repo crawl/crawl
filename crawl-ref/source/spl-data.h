@@ -2843,7 +2843,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SPECTRAL_WEAPON, "Spectral Weapon",
      SPTYP_HEXES | SPTYP_CHARMS,
-     SPFLAG_BATTLE | SPFLAG_SELFENCH | SPFLAG_UTILITY,
+     SPFLAG_BATTLE | SPFLAG_SELFENCH | SPFLAG_UTILITY | SPFLAG_NO_GHOST,
      3,
      100,
      -1, -1,
