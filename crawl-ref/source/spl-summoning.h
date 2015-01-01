@@ -113,6 +113,7 @@ spret_type cast_fulminating_prism(actor* caster, int pow,
                                   const coord_def& where, bool fail);
 
 monster* find_spectral_weapon(const actor* agent);
+bool weapon_can_be_spectral(const item_def *weapon);
 spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail);
 void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
 bool trigger_spectral_weapon(actor* agent, const actor* target);

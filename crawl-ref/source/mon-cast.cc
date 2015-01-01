@@ -7994,7 +7994,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
 
     case SPELL_SPECTRAL_WEAPON:
         return find_spectral_weapon(mon)
-            || !mon->weapon()
+            || !weapon_can_be_spectral(mon->weapon())
             || !foe
             // Don't cast unless the caster is at or close to melee range for
             // its target. Casting spectral weapon at distance is bad since it
