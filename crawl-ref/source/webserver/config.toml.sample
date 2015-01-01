@@ -94,6 +94,8 @@ game_data_no_cache = true
 use_minified = true
 use_cdn = true
 
+games_conf_d = "webserver/games.conf.d/"
+
 # Non-SSL bindings
 [[binds]]
 port = 8080
@@ -112,8 +114,8 @@ address = ""
 # Game Configuration
 # ==================
 
-# You can specify [[games]] sections here or in *.toml files in the games_conf_d directory
-games_conf_d = "webserver/games.conf.d/"
+# You can specify [[games]] sections here or in *.toml files in the
+# games_conf_d directory
 
 [[games]]
 id = "dcss-web-trunk"
