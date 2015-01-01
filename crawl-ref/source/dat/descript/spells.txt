@@ -965,9 +965,9 @@ onto their targets, yet because of their huge inertia, especially agile
 opponents may be able to outmanoeuvre them. The orbs need some time to
 stabilize, and a nascent orb won't do the full damage it is capable of.
 
-It is said that most copies of this spell suffer from a scribal error that
-makes the orbs unstable beyond a short range. Certain individuals may have
-access to spellbooks without this flaw, so beware!
+Those who have trained for years, or who have an innate ability, can maintain
+the orb out of their own line of sight. Adventurers, sadly, do not have the
+time to master this aspect of the spell.
 %%%%
 Orb of Electricity spell
 
