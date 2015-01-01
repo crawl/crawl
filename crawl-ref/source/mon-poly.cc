@@ -123,6 +123,9 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 
     // Various inappropriate polymorph targets.
     if ( !(mons_class_holiness(new_mclass) & mons_class_holiness(old_mclass))
+        // normally holiness just needs to overlap, but we don't want
+        // shapeshifters to become demons
+        || mons->is_shapeshifter() && !(mons_class_holiness(new_mclass) & MH_NATURAL)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
