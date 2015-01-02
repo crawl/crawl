@@ -813,6 +813,8 @@ void game_options::reset_options()
     note_dgl_messages      = true;
     note_hp_percent        = 5;
 
+    fail_severity_to_confirm = 3;
+
     clear_messages         = false;
 #ifdef TOUCH_UI
     show_more              = false;
@@ -3847,6 +3849,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(arena_dump_msgs);
     else BOOL_OPTION(arena_dump_msgs_all);
     else BOOL_OPTION(arena_list_eq);
+    else INT_OPTION(fail_severity_to_confirm, -1, 3);
 
     // Catch-all else, copies option into map
     else if (runscript)

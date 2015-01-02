@@ -1521,6 +1521,16 @@ static spret_type _do_cast(spell_type spell, int powc,
 
         return ret;
     }
+    if (Options.fail_severity_to_confirm > 0
+        && Options.fail_severity_to_confirm <= fail_severity(spell))
+    {
+        string prompt = "The spell is dangerous to cast. Continue anyway?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+    }
 
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
 
