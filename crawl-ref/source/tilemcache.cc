@@ -460,6 +460,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -2;
         break;
     case TILEP_MONS_CENTAUR_MELEE:
+    case TILEP_MONS_EUSTACHIO:
         *ofs_x = -3;
         *ofs_y = -3;
         break;
