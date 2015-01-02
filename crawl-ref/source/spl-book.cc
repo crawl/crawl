@@ -986,16 +986,16 @@ bool learn_spell(spell_type specspell)
     if (!_learn_spell_checks(specspell))
         return false;
 
-    double chance = get_miscast_chance(specspell);
+    int severity = fail_severity(specspell);
 
     if (spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
         mprf(MSGCH_WARN, "This spell is impossible to cast!");
-    else if (chance >= 0.025)
-        mprf(MSGCH_WARN, "This spell is very dangerous to cast!");
-    else if (chance >= 0.005)
-        mprf(MSGCH_WARN, "This spell is quite dangerous to cast!");
-    else if (chance >= 0.001)
-        mprf(MSGCH_WARN, "This spell is slightly dangerous to cast.");
+    else if (severity > 0)
+    {
+        mprf(MSGCH_WARN, "This spell is %s to cast%s",
+                         fail_severity_adjs[severity],
+                         severity > 1 ? "!" : ".");
+    }
 
     snprintf(info, INFO_SIZE,
              "Memorise %s, consuming %d spell level%s and leaving %d?",

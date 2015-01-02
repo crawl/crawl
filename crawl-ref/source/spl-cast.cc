@@ -2060,6 +2060,14 @@ static double _get_miscast_chance_with_miscast_prot(spell_type spell)
     return chance;
 }
 
+const char *fail_severity_adjs[] =
+{
+    "safe",
+    "slightly dangerous",
+    "quite dangerous",
+    "very dangerous",
+};
+
 int fail_severity(spell_type spell)
 {
     const double chance = _get_miscast_chance_with_miscast_prot(spell);
@@ -2068,6 +2076,7 @@ int fail_severity(spell_type spell)
            (chance < 0.005) ? 1 :
            (chance < 0.025) ? 2
                             : 3;
+    COMPILE_CHECK(ARRAYSZ(fail_severity_adjs) >= 3);
 }
 
 // Chooses a colour for the failure rate display for a spell. The colour is
