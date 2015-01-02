@@ -229,7 +229,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
                                          1, MONS_GOLIATH_BEETLE,
                                          3, MONS_KILLER_BEE,
                                          1, MONS_VAMPIRE_MOSQUITO,
-                                         1, MONS_YELLOW_WASP,
+                                         1, MONS_WASP,
                                          0);
         }
         while (player_will_anger_monster(mon) && ++tries < MAX_TRIES);

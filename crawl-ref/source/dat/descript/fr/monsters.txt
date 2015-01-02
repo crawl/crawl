@@ -1685,7 +1685,7 @@ deux petites ailes aux épaules. Ils préfèrent les tridents acérés, et se
 moquent souvent de leurs victimes alors qu'ils les piquent de loin avant de se
 replier prestement.
 %%%%
-red wasp
+hornet
 
 Une énorme guêpe rouge avec un dard acéré. Du poison paralytique puissant
 s'égoutte du bout de son dard.
@@ -2160,7 +2160,7 @@ yaktaur captain
 Un yaktaure exceptionnellement fort et brutal, il est capable de donner des
 ordres à ses congénères plus faibles pour appliquer sa domination.
 %%%%
-yellow wasp
+wasp
 
 Une guêpe géante couverte d'épaisses plaques d'armures chitineuses jaunes. Son
 venin mortel peut paralyser la plupart des êtres.

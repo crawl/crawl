@@ -1049,15 +1049,15 @@ void treant_release_fauna(monster* mons)
     int count = mons->mangrove_pests;
     bool created = false;
 
-    monster_type base_t = (one_chance_in(3) ? MONS_YELLOW_WASP
+    monster_type base_t = (one_chance_in(3) ? MONS_WASP
                                             : MONS_RAVEN);
 
     mon_enchant abj = mons->get_ench(ENCH_ABJ);
 
     for (int i = 0; i < count; ++i)
     {
-        monster_type fauna_t = (base_t == MONS_YELLOW_WASP && one_chance_in(3)
-                                                ? MONS_RED_WASP
+        monster_type fauna_t = (base_t == MONS_WASP && one_chance_in(3)
+                                                ? MONS_HORNET
                                                 : base_t);
 
         mgen_data fauna_data(fauna_t, SAME_ATTITUDE(mons),
@@ -1081,7 +1081,7 @@ void treant_release_fauna(monster* mons)
 
     if (created && you.can_see(mons))
     {
-        if (base_t == MONS_YELLOW_WASP)
+        if (base_t == MONS_WASP)
         {
                 mprf("Angry insects surge out from beneath %s foliage!",
                         mons->name(DESC_ITS).c_str());

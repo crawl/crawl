@@ -2666,8 +2666,6 @@ w:50
 
 @The_monster@ says, "I hate venom. I hate getting bitten."
 
-@The_monster@ says, "Red wasps, yellow wasps, why not green ones?"
-
 @The_monster@ says, "Arachnophobia is no disease, it's common sense."
 
 @The_monster@ says, "There, on the ceiling! And on that wall!"

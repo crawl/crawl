@@ -206,7 +206,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
      with_props("place:Shoals:$ w:125 band / merfolk aquamancer / " ..
                 "water nymph w:5 / merfolk impaler w:5 / " ..
                 "merfolk javelineer / octopode crusher w:12", { weight = 5 }),
-     "place:Spider:$ w:115 / ghost moth w:15 / red wasp / " ..
+     "place:Spider:$ w:115 / ghost moth w:15 / hornet / " ..
                 "orb spider",
      "place:Crypt:$ 9 w:260 / curse skull w:5 / profane servitor w:5 / " ..
                 "bone dragon / ancient lich / revenant",
