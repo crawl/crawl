@@ -126,7 +126,7 @@ ENDMAP
 NAME:   hive_lemuel
 TAGS:   uniq_beehive
 DEPTH:  D:9-, Spider
-MONS:   killer bee, yellow wasp, red wasp
+MONS:   killer bee, wasp, hornet
 KMONS:  *R = worm
 SUBST:  ? : .w
 SUBST:  1 = 1 a:2, 1 : 1:15 2 3:2
@@ -1820,7 +1820,7 @@ MONS:  hill giant ; rod of the swarm ident:type
 MONS:  ettin ; rod of the swarm ident:type . great mace
 : end
 MONS:  killer bee w:3 / wolf spider w:1 / scorpion w:1 / worm w:1
-MONS:  worker ant w:3 / vampire mosquito w:1 / goliath beetle w:1 / yellow wasp w:1
+MONS:  worker ant w:3 / vampire mosquito w:1 / goliath beetle w:1 / wasp w:1
 ITEM: royal jelly
 MAP
 xxxxxx
@@ -3592,8 +3592,8 @@ KMONS:   l = large abomination
 KMONS:   m = scorpion
 KMONS:   n = small abomination
 KMONS:   o = unseen horror
-KMONS:   p = red wasp
-KMONS:   q = yellow wasp
+KMONS:   p = hornet
+KMONS:   q = wasp
 KMONS:   r = wolf spider
 KITEM:   e = acquire armour / acquire weapon
 SHUFFLE: bcdfghjklnopqr

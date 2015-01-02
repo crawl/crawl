@@ -3950,7 +3950,7 @@ static monster_type _pick_swarmer()
         MONS_KILLER_BEE,     MONS_KILLER_BEE,    MONS_KILLER_BEE,
         MONS_SCORPION,       MONS_WORM,          MONS_VAMPIRE_MOSQUITO,
         MONS_GOLIATH_BEETLE, MONS_SPIDER,        MONS_BUTTERFLY,
-        MONS_YELLOW_WASP,    MONS_WORKER_ANT,    MONS_WORKER_ANT,
+        MONS_WASP,    MONS_WORKER_ANT,    MONS_WORKER_ANT,
         MONS_WORKER_ANT
     };
 
@@ -4788,7 +4788,7 @@ static const pop_entry _planerend_spider[] =
 { // Spider enemies
   {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
   {  1,   1,  100, FLAT, MONS_EMPEROR_SCORPION },
-  {  1,   1,   20, FLAT, MONS_RED_WASP },
+  {  1,   1,   20, FLAT, MONS_HORNET },
   {  1,   1,   60, FLAT, MONS_ORB_SPIDER },
   {  1,   1,   20, FLAT, MONS_TARANTELLA },
   { 0,0,0,FLAT,MONS_0 }

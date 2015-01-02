@@ -167,8 +167,8 @@ torpor_snail MONS_TORPOR_SNAIL
 
 ## Flying insects ('y')
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
-yellow_wasp MONS_YELLOW_WASP
-red_wasp MONS_RED_WASP
+yellow_wasp MONS_WASP
+red_wasp MONS_HORNET
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
 %rim 0

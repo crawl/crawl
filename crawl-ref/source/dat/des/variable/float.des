@@ -2481,7 +2481,7 @@ DEPTH:   Depths
 MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hound
 MONS:    death yak / griffon / catoblepas / dire elephant
-MONS:    hydra / anaconda / red wasp w:2 / redback w:3 / wolf spider w:5 / harpy
+MONS:    hydra / anaconda / hornet w:2 / redback w:3 / wolf spider w:5 / harpy
 MONS:    spriggan druid, spriggan rider
 MONS:    sphinx / hell beast w:5 / caustic shrike w:5
 ITEM:    fruit q:1

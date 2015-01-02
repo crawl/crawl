@@ -756,7 +756,7 @@ TAGS:   ruin_lair
 DEPTH:  Lair
 ORIENT: north
 MONS:   black mamba / spiny frog / wolf spider
-MONS:   basilisk / komodo dragon / yellow wasp
+MONS:   basilisk / komodo dragon / wasp
 MONS:   giant mite / adder
 MONS:   plant / fungus w:2 / bush w:1, bush
 SUBST:  4 = 444. 5:2, . = ...4 5:2
@@ -2575,7 +2575,7 @@ ORIENT:  southeast
 MONS:    plant
 MONS:    torpor snail, worm, brain worm
 MONS:    giant leech, lindwurm, fire dragon / ice dragon
-KMONS:   8 = yellow wasp
+KMONS:   8 = wasp
 SHUFFLE: ABC
 SUBST:   P = 11.
 NSUBST:  A = 3:8 / 1:65 / * = 33338, B = 3:4 / 1:24 / * = 33334
@@ -2714,7 +2714,7 @@ ENDMAP
 NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
-MONS:   black bear / polar bear w:12, wolf, redback w:9 / yellow wasp w:1
+MONS:   black bear / polar bear w:12, wolf, redback w:9 / wasp w:1
 MONS:   spriggan, spriggan rider, spriggan druid n_adj n_noc name:young hd:8
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = tt..., E = t_
@@ -2988,8 +2988,8 @@ NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
 MONS:    worker ant w:16 / adder w:24 / river rat w:2
-MONS:    water moccasin / spider w:6, yellow wasp / wyvern w:6
-MONS:    spiny frog, black mamba, red wasp / redback w:5, wolf spider
+MONS:    water moccasin / spider w:6, wasp / wyvern w:6
+MONS:    spiny frog, black mamba, hornet / redback w:5, wolf spider
 KMONS:   8 = guardian serpent
 KMONS:   f = fungus
 KMONS:   P = plant

@@ -2998,7 +2998,7 @@ void melee_attack::mons_apply_attack_flavour()
             break;
         }
 
-        if (attacker->type == MONS_RED_WASP || one_chance_in(3))
+        if (attacker->type == MONS_HORNET || one_chance_in(3))
         {
             int dmg = random_range(attacker->get_hit_dice() * 3 / 2,
                                    attacker->get_hit_dice() * 5 / 2);
@@ -3006,10 +3006,10 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         int paralyse_roll = (damage_done > 4 ? 3 : 20);
-        if (attacker->type == MONS_YELLOW_WASP)
+        if (attacker->type == MONS_WASP)
             paralyse_roll += 3;
 
-        const int flat_bonus  = attacker->type == MONS_RED_WASP ? 1 : 0;
+        const int flat_bonus  = attacker->type == MONS_HORNET ? 1 : 0;
         const bool strong_result = one_chance_in(paralyse_roll);
 
         if (strong_result && defender->res_poison() <= 0)

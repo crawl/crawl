@@ -2038,9 +2038,9 @@ red draconian
 
 A muscular red-scaled humanoid with a reptilian tail and small wings.
 %%%%
-red wasp
+hornet
 
-A huge red wasp with a viciously barbed stinger. Potent paralytic poison drips
+A huge hornet with a viciously barbed stinger. Potent paralytic poison drips
 from its tip.
 %%%%
 redback
@@ -2716,7 +2716,7 @@ yellow draconian
 
 A muscular yellow-scaled humanoid with a reptilian tail and small wings.
 %%%%
-yellow wasp
+wasp
 
 A giant wasp covered with thick plates of yellow chitinous armour. Its deadly
 venom can render most beings unable to move.
