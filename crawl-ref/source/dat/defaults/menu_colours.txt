@@ -55,7 +55,7 @@ menu += cyan:.*misc.*[lL]antern
 menu += $dangerous:.*dangerous_item.*
 
 # Defaults for normal items
-menu += lightblue:unidentified.*(potion|scroll|wand|jewellery)
+menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
 # : if you.god() == "Nemelex Xobeh" then
 #     menu += lightblue:deck of cards
 # : end
