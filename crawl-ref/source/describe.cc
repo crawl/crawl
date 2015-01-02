@@ -2105,8 +2105,8 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     {
         const string cl_name = cloud_type_name(cloud);
         const string cl_desc = getLongDescription(cl_name + " cloud");
-        inf.body << "\nThere is a cloud of " << cl_name << " here"
-                 << (cl_desc.empty() ? "." : ":\n")
+        inf.body << "\n\nA cloud of " << cl_name
+                 << (cl_desc.empty() ? "." : ".\n\n")
                  << cl_desc;
     }
 
