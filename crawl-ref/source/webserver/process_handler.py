@@ -75,10 +75,7 @@ class CrawlProcessHandlerBase(object):
     def __init__(self, game_params, username, logger, io_loop=None):
         self.game_params = game_params
         self.username = username
-        self.devname = None
-        nt = self.get_nerdtype(username)
-        self.nerdtype = nt[0]
-        self.devname = nt[1]
+        self.nerdtype = config.get_nerdtype(username)
         self.logger = logging.LoggerAdapter(logger, {})
         self.logger.process = self._process_log_msg
         self.io_loop = io_loop or IOLoop.instance()
@@ -111,18 +108,6 @@ class CrawlProcessHandlerBase(object):
 
     def _process_log_msg(self, msg, kwargs):
         return "P%-5s %s" % (self.id, msg), kwargs
-
-    def get_nerdtype(self, username):
-        if config.is_server_admin(username):
-            return ["admins", None]
-        devname = config.get_devname(username)
-        if devname:
-            return ["devteam", devname]
-        title = config.get_player_title(username)
-        if title:
-            return [title, None]
-        return ["normal", None]
-
 
     def format_path(self, path):
         return dgl_format_str(path, self.username, self.game_params)
@@ -180,7 +165,7 @@ class CrawlProcessHandlerBase(object):
                      "player": w.process is not None}
             if player_url:
                 wdata["url"] = player_url % (w.username.lower());
-            nt = self.get_nerdtype(w.username.lower())
+            nt = config.get_nerdtype(w.username.lower())
             wdata["nerdtype"] = nt[0]
             if nt[1]:
                 wdata["devname"] = nt[1]
@@ -310,8 +295,8 @@ class CrawlProcessHandlerBase(object):
         entry = {
             "id": self.id,
             "username": self.username,
-            "nerdtype": self.nerdtype,
-            "devname": self.devname,
+            "nerdtype": self.nerdtype[0],
+            "devname": self.nerdtype[1],
             "spectator_count": self.watcher_count(),
             "idle_time": (self.idle_time() if self.is_idle() else 0),
             "game_id": self.game_params["id"],

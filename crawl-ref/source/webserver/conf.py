@@ -221,6 +221,56 @@ class Conf(object):
             return True
         return False
 
+    def get_nerdtype(self, username):
+        if self.is_server_admin(username):
+            return ["admins", None]
+        devname = self.get_devname(username)
+        if devname:
+            return ["devteam", devname]
+        title = self.get_player_title(username)
+        if title:
+            return [title, None]
+        return ["normal", None]
+
+
+    def get_score_file(self, mode, version, map_name):
+        score_file = None
+        for game in self.games.keys():
+            if "mode" not in game or "version" not in game:
+                continue
+            if game["mode"] == mode and game["version"] == version:
+                try:
+                    score_file = self.games[game]["score_path"]
+                except:
+                    logging.error("No score file configured for game entry "
+                                  "for {0}".format(game))
+                if map_id is not None:
+                    score_file = score_file.sub("%m", map_id)
+                break
+        if score_file is None:
+            logging.error("Could not find game entry for mode {0} and "
+                          "version {1}".format(mode, version))
+        return score_file
+
+    def load_game_map(self, game):
+        if not "map_path" in game:
+            return
+        if "score_path" not in game:
+            logging.warning("Not parsing game map for game definition '{0}' "
+                            "because it has no score_path".format(game["id"]))
+            return
+        try:
+            data = toml.load(game["map_path"])
+        except Exception as e:
+            logging.error("Could not load game map file "
+                          "{0} ({1})".format(game["map_path"], e.args))
+            sys.exit(1)
+        if "maps" not in data:
+            logging.error("maps section missing from game map file "
+                          "{0}".format(game["map_path"]))
+            sys.exit(1)
+        game["game_maps"] = data["maps"]
+
     def __getattr__(self, name):
         try:
             return self.data[name]
