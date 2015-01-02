@@ -800,13 +800,16 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
+    int severity = fail_severity(spell);
     if (Options.fail_severity_to_confirm > 0
-        && Options.fail_severity_to_confirm <= fail_severity(spell))
+        && Options.fail_severity_to_confirm <= severity)
     {
-        const char * const prompt =
-            "The spell is dangerous to cast. Continue anyway?";
+        string prompt = make_stringf("The spell is %s to cast%s "
+                                     "Continue anyway?",
+                                     fail_severity_adjs[severity],
+                                     severity > 1 ? "!" : ".");
 
-        if (!yesno(prompt, false, 'n'))
+        if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
