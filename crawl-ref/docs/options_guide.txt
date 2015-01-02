@@ -1187,7 +1187,7 @@ fail_severity_to_confirm = 3
         Ask for confirmation when attempting to cast a spell where a miscast
         would cause severe penalties. Prompt if the miscast severity of the
         spell (the colour shown in the spellcasting menu) is greater than
-        or equal to the numer specified:
+        or equal to the number specified:
 
           3: dark red
           2: light red or higher
