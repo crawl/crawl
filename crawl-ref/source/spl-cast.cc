@@ -800,6 +800,19 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
+    if (Options.fail_severity_to_confirm > 0
+        && Options.fail_severity_to_confirm <= fail_severity(spell))
+    {
+        const char * const prompt =
+            "The spell is dangerous to cast. Continue anyway?";
+
+        if (!yesno(prompt, false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
@@ -1520,16 +1533,6 @@ static spret_type _do_cast(spell_type spell, int powc,
             _spell_zap_effect(spell);
 
         return ret;
-    }
-    if (Options.fail_severity_to_confirm > 0
-        && Options.fail_severity_to_confirm <= fail_severity(spell))
-    {
-        string prompt = "The spell is dangerous to cast. Continue anyway?";
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return SPRET_ABORT;
-        }
     }
 
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
