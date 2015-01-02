@@ -2685,9 +2685,6 @@ void bolt::affect_ground()
         {
             beh_type beh = attitude_creation_behavior(attitude);
 
-            if (crawl_state.game_is_arena())
-                beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
-
             const god_type god = agent() ? agent()->deity() : GOD_NO_GOD;
 
             if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
