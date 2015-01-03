@@ -4313,12 +4313,8 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
 
     if (!make_no_exits)
     {
-        const bool spotty = player_in_branch(BRANCH_ORC)
-#if TAG_MAJOR_VERSION == 34
-                            || player_in_branch(BRANCH_FOREST)
-#endif
-                            || player_in_branch(BRANCH_SWAMP)
-                            || player_in_branch(BRANCH_SLIME);
+        const bool spotty =
+            branches[you.where_are_you].branch_flags & BFLAG_SPOTTY;
         if (place.connect(spotty) == 0 && place.exits.size() > 0
             && !player_in_branch(BRANCH_ABYSS))
         {
