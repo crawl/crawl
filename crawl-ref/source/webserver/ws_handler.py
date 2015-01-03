@@ -642,7 +642,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # if the game ended properly, we can give a morgue file.
             if "end" in score:
                 # fix 0-origin month to 1-origin
-                timestamp = str(int(score['end'].rstrip("DS")) + 100000000)
+                timestamp = str(int(score["end"].rstrip("DS")) + 100000000)
                 ptn = re.compile(r'(\d{2})(\d{2})(\d{2})(\d{2})(\d{6})')
                 score["date"] = ptn.sub(r'\2/\3/\4', timestamp)
                 if morgue_url is not None and 'name' in score:

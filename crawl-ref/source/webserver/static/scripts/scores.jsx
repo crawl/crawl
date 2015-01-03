@@ -26,9 +26,10 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
                      <td>{s.god}</td>
                      <td>{s.title}</td>
                      <td>{s.place}</td>
+                     <td>{s.end}</td>
                      <td>{s.xl}</td>
                      <td>{s.turns}</td>
-                     <td>{s.runes}</td>
+                     <td>{s.urune}</td>
                      <td>{s.date}</td>
                    </tr>;
         }
@@ -127,9 +128,10 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
                           {h("god", "God")}
                           {h("title", "Title")}
                           {h("place", "Place")}
+                          {h("end", "End")}
                           {h("xl", "XL")}
                           {h("turns", "Turns")}
-                          {h("runes", "Runes")}
+                          {h("urunes", "Runes")}
                           {h("date", "Date")}
                         </tr>
                       </thead>
@@ -180,7 +182,18 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
         },
 
         load_scores: function (data) {
-            this.setState({scores : data.scores, state : "received",
+            var scores = data.scores.map(function(s) {
+                if (s.hasOwnProperty("vmsg"))
+                    s.end = s.vmsg;
+                else if (s.hasOwnProperty("tmsg"))
+                    s.end = s.tmsg;
+                else if (s.hasOwnProperty("ktype"))
+                    s.end = s.ktype;
+                else
+                    s.end = "";
+                return s;
+            });
+            this.setState({scores : scores, state : "received",
                            game_desc : data.game_desc});
         },
 
