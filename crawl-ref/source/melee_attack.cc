@@ -1657,6 +1657,11 @@ void melee_attack::set_attack_verb()
             attack_verb = "carve";
             verb_degree = "like the proverbial ham";
         }
+        else if (defender_genus == MONS_TENGU && one_chance_in(3))
+        {
+            attack_verb = "carve";
+            verb_degree = "like a turkey";
+        }
         else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
                  && Options.lang == LANG_GRUNT)
             attack_verb = "shave";
