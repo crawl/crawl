@@ -551,7 +551,8 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
             var links = null;
             var score_nav = null;
             if (this.state.games)
-                score_nav = <ScoreNavigation games={this.state.games} />;
+                score_nav = <ScoreNavigation games={this.state.games}
+                             edit_num_scores={false}/>;
             if (this.state.games && this.state.username)
             {
                 var nerd = this.state.nerd;

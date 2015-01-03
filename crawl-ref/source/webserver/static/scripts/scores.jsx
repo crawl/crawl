@@ -137,24 +137,33 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
                         {data.map(make_entry)}
                       </tbody>
                     </table>;
-            return <div><span>Scores for {this.props.game_desc}:</span>{t}</div>;
+            return <div><span>Top {this.props.scores.length} Scores for&nbsp;
+                              {this.props.game_desc}:</span>{t}
+                   </div>;
         }
     });
 
 
     // Root component for the scores
     var Scores = React.createClass({
+        getDefaultProps: function () {
+            return {
+                initial_num_scores: 500
+            };
+        },
+
         getInitialState: function () {
             return {
                 username: user.username,
                 nerd: user.nerd,
-                num_scores: 0,
+                num_scores: this.props.initial_num_scores,
                 scores: null,
                 games: null,
                 game_id: null,
                 state: "loading"
             };
         },
+
         componentDidMount: function () {
             comm.register_handler("game_info", this.game_info);
             comm.register_handler("scores", this.load_scores);

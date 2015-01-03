@@ -26,7 +26,8 @@ function (exports, $, React, comm, user, LobbyRoot, Loader, Scores, pubsub) {
             case "watch":
                 return Loader();
             case "scores":
-                return Scores();
+                var comps = score_path_components(location.pathname);
+                return Scores({initial_num_scores : comps.num_scores});
             case "closed":
                 return React.DOM.div({}, "The connection was closed:",
                                      React.DOM.br(),
@@ -88,6 +89,25 @@ function (exports, $, React, comm, user, LobbyRoot, Loader, Scores, pubsub) {
         }
     }
 
+    function score_path_components(url)
+    {
+        var pat = new RegExp("^/scores/top([\\d]+)/([^/]+)/" +
+                             "([^/]+)(/([^/]+))?");
+        var comps = {};
+        var match = pat.exec(url);
+        if (match)
+        {
+            comps.num_scores = match[1];
+            comps.game_version = match[2];
+            comps.game_mode = match[3];
+            if (match[5] !== undefined)
+                comps.game_map = match[5];
+        }
+        else
+            comps = null;
+        return comps;
+    }
+
     function do_url_action()
     {
         var play = location.pathname.match(/^\/play\/(.+)/);
@@ -109,18 +129,16 @@ function (exports, $, React, comm, user, LobbyRoot, Loader, Scores, pubsub) {
             update({state: "watch"});
         }
 
-        var scores_re = new RegExp("^/scores/top([\\d]+)/([^/]+)/" +
-                                   "([^/]+)(/([^/]+))?");
-        var scores = scores_re.exec(location.pathname);
-        if (scores)
+        var comps = score_path_components(location.pathname);
+        if (comps)
         {
-            var game_mode = user.full_mode_name(scores[3]);
+            var game_mode = user.full_mode_name(comps.game_mode);
             var game_map = null;
-            if (scores[5] !== undefined)
-                game_map = scores[5];
+            if (comps.game_map !== undefined)
+                game_map = comps.game_map;
             comm.send_message("get_scores", {
-                num_scores: scores[1],
-                game_version: scores[2],
+                num_scores: comps.num_scores,
+                game_version: comps.game_version,
                 game_mode: game_mode,
                 game_map: game_map
             });

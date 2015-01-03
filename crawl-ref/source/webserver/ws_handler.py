@@ -667,8 +667,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         scores = None
         num_scores = int(num_scores)
         if config.get("max_score_list_length"):
-            num_scores = max(min(config.max_score_list_length, num_scores), 50)
-            game = config.get_game(game_version, game_mode)
+            num_scores = min(config.max_score_list_length, num_scores)
+            if num_scores > 0:
+                game = config.get_game(game_version, game_mode)
         else:
             logging.warning("max_score_list_length must be set to return "
                             "scores")
