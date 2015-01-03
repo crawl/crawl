@@ -316,7 +316,7 @@ static monsterentry mondata[] =
 {
     MONS_FORMICID, 'a', GREEN, "formicid",
     M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS | M_NO_SKELETON | M_BURROWS
-        | M_NO_POLY_TO,
+        | M_NO_POLY_TO | M_NO_GEN_DERIVED,
     MR_NO_FLAGS,
     600, 10, MONS_FORMICID, MONS_FORMICID, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
