@@ -727,9 +727,9 @@ static const mutation_def mut_data[] =
    "You are quite resistant to negative energy.",
    "You are immune to negative energy."},
 
-  {"You feel negative.",
-   "You feel negative.",
-   "You feel negative."},
+  {"You feel resistant to negative energy.",
+   "You feel more resistant to negative energy.",
+   "You feel more resistant to negative energy."},
 
   {"", "", ""},
 
