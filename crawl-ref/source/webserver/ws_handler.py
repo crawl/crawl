@@ -129,6 +129,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
+        self.nerd = None
         self.sid = None
         self.timeout = None
         self.watched_game = None
@@ -273,8 +274,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.send_message("lobby", entries=data)
 
     def send_lobby_html(self):
-        banner_html = self.render_string("banner.html", username=self.username)
-        footer_html = self.render_string("footer.html", username=self.username)
+        banner_html = self.render_string("banner.html", username=self.username,
+                                         nerd=self.nerd)
+        footer_html = self.render_string("footer.html", username=self.username,
+                                         nerd=self.nerd)
         self.queue_message("lobby_html", banner=banner_html, footer=footer_html)
 
     def get_game_info(self):
@@ -442,7 +445,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.username = None
             self.close()
             return
-        self.queue_message("login_success", username=username, sid=sid)
+        self.nerd = config.get_nerd(self.username)
+        self.queue_message("login_success", username=username, sid=sid,
+                           nerd=self.nerd)
         if self.watched_game:
             self.watched_game.update_watcher_description()
         else:
@@ -646,7 +651,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                                          score["name"], fstamp)
                     score["morgue_url"] = url.replace("%n", score["name"])
             if "name" in score:
-                score["nerdtype"] = config.get_nerdtype(score["name"])
+                score["nerd"] = config.get_nerd(score["name"])
             scores.append(score)
             if len(scores) == num_scores:
                 break

@@ -318,9 +318,9 @@ function (React, misc, comm, pubsub, user) {
             pubsub.unsubscribe("login_fail", this.login_fail);
         },
 
-        logged_in: function (username) {
+        logged_in: function (username, nerd) {
             if (this.props.on_login)
-                this.props.on_login(username);
+                this.props.on_login(username, nerd);
         },
         login_fail: function () {
             this.setState({failed: true});

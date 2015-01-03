@@ -136,10 +136,8 @@ function (React, comm, pubsub, user, login, misc, linkify) {
             {
                 if (i > 0) speclist.push(", ");
                 var cls = specs[i].player ? "player" : "watcher";
-                cls += " " + specs[i].nerdtype;
-                var title = user.nerd_description(specs[i].name,
-                                                  specs[i].nerdtype,
-                                                  specs[i].devname);
+                cls += " " + specs[i].nerd.type;
+                var title = user.nerd_description(specs[i].name, specs[i].nerd);
                 if (specs[i].url)
                 {
                     speclist.push(

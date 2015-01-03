@@ -314,8 +314,9 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
                 idle_time = format_time((new Date() - g.idle_start)/1000);
             else
                 idle_time = null;
-            var title = user.nerd_description(g.username, g.nerdtype, g.devname);
-            var watch = <a href={"/watch/" + g.username} className={g.nerdtype}
+            var title = user.nerd_description(g.username, g.nerd);
+            var watch = <a href={"/watch/" + g.username}
+                           className={g.nerd.type}
                            onClick={this.handle_click}
                            title={title}>{g.username}</a>;
             return <tr>
@@ -516,19 +517,26 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
                            saved_games: data.saved_games});
         },
 
-        logged_in: function (username) {
-            this.setState({username: username});
+        logged_in: function (username, nerd) {
+            this.setState({username: username, nerd: nerd});
         },
 
         render: function () {
             var login_line;
+            var title = null;
             if (this.state.username)
             {
+                title = user.nerd_description(this.state.username,
+                                              this.state.nerd);
                 login_line = <div style={{float: "right",
                                           textAlign: "right"}}
                                   className="login">
-                               Logged in as {this.state.username}{" | "}
-                               <PasswordChangeLink />{" | "}
+                               Logged in as&nbsp;
+                              <span className={this.state.nerd.type}
+                                    title={title}>
+                               {this.state.username}
+                              </span>
+                               {" | "}<PasswordChangeLink />{" | "}
                                <LogoutLink />
                              </div>;
             }
@@ -546,9 +554,15 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
                 score_nav = <ScoreNavigation games={this.state.games} />;
             if (this.state.games && this.state.username)
             {
-                links = <GameSelector games={this.state.games}
+                var nerd = this.state.nerd;
+                links =  <div>
+                         <br />Hello, <span className={nerd.type} title={title}>
+                          {this.state.username}
+                         </span>!
+                         <GameSelector games={this.state.games}
                                       settings={this.state.game_link_settings}
-                                      saved_games={this.state.saved_games} />;
+                                      saved_games={this.state.saved_games} />
+                          </div>;
             }
 
             var running_games = null;

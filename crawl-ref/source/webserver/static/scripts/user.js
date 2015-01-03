@@ -1,9 +1,10 @@
 define(["comm", "pubsub"], function (comm, pubsub) {
     var username = null;
+    var nerd = null;
 
-    function nerd_description(name, nerdtype, devname)
+    function nerd_description(name, nerd)
     {
-        if (nerdtype == "normal")
+        if (nerd.type == "normal")
             return "";
 
         var desc = {"admins" : "a Server Administrator",
@@ -15,14 +16,15 @@ define(["comm", "pubsub"], function (comm, pubsub) {
                     "centuryplayers" : "a centuryplayer (100+ wins)"};
 
         var fullname = name;
-        if (nerdtype == "devteam" && name !== devname)
-            fullname = fullname + " (" + devname + ")";
-        return fullname + " is " + desc[nerdtype];
+        if (nerd.type == "devteam" && name !== nerd.devname)
+            fullname = fullname + " (" + nerd.devname + ")";
+        return fullname + " is " + desc[nerd.type];
     }
 
     function logged_in(data)
     {
         username = data.username;
+        nerd = data.nerd
 
         var cookie = "sid=" + data.sid + "; path=/";
         if (location.protocol === "https:")
@@ -30,7 +32,7 @@ define(["comm", "pubsub"], function (comm, pubsub) {
 
         document.cookie = cookie;
 
-        pubsub.publish("logged_in", username);
+        pubsub.publish("logged_in", username, nerd);
     }
 
     function utc_format(ts)
@@ -171,6 +173,9 @@ define(["comm", "pubsub"], function (comm, pubsub) {
     return {
         get username() {
             return username;
+        },
+        get nerd() {
+            return nerd;
         },
         login: login,
         logout: logout,

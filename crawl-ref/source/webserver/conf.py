@@ -230,16 +230,16 @@ class Conf(object):
             return True
         return False
 
-    def get_nerdtype(self, username):
+    def get_nerd(self, username):
         if self.is_server_admin(username):
-            return ["admins", None]
+            return {"type" : "admins", "devname" : None}
         devname = self.get_devname(username)
         if devname:
-            return ["devteam", devname]
+            return {"type" : "devteam", "devname" : devname}
         title = self.get_player_title(username)
         if title:
-            return [title, None]
-        return ["normal", None]
+            return {"type" : title, "devname" : None}
+        return {"type" : "normal", "devname" : None}
 
     def get_game(self, game_version, game_mode):
         if not self.games:

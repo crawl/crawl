@@ -370,29 +370,29 @@ ol.select li:hover {
     font-weight: normal;
 }
 
-.spectator_list .admins, .player_list .admins {
+.spectator_list .admins, .player_list .admins, .login .admins, body .admins {
     color: #A138FF;
     font-weight: bold;
 }
 
-.spectator_list .devteam, .player_list .devteam {
+.spectator_list .devteam, .player_list .devteam, .login .devteam, body .devteam {
     color: orange;
     font-weight: bold;
 }
 
-.spectator_list .goodplayers, .player_list .goodplayers {
+.spectator_list .goodplayers, .player_list .goodplayers, .login .goodplayers, body .goodplayers {
     color: #37C11C;
 }
 
-.spectator_list .greatplayers, .player_list .greatplayers {
+.spectator_list .greatplayers, .player_list .greatplayers, .login .greatplayers, body .greatplayers {
     color: #0066CC
 }
 
-.spectator_list .greaterplayers, .player_list .greaterplayers {
+.spectator_list .greaterplayers, .player_list .greaterplayers, .login .greaterplayers, body .greaterplayers {
     color: yellow;
 }
 
-.spectator_list .centuryplayers, .player_list .centuryplayers {
+.spectator_list .centuryplayers, .player_list .centuryplayers, .login .centuryplayers, body .centuryplayers {
     color: #D92C2B;
 }
 

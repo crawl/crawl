@@ -15,9 +15,8 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
     var ScoreEntry = React.createClass({
         render: function () {
             var s = this.props.score;
-            var title = user.nerd_description(s.name, s.nerdtype[0],
-                                              s.nerdtype[1]);
-            var morgue = <a href={s.morgue_url} className={s.nerdtype[0]}
+            var title = user.nerd_description(s.name, s.nerd);
+            var morgue = <a href={s.morgue_url} className={s.nerd.type}
                             title={title}>{s.name}</a>;
             return <tr>
                      <td>{s.rank}</td>
@@ -147,7 +146,8 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
     var Scores = React.createClass({
         getInitialState: function () {
             return {
-                username: null,
+                username: user.username,
+                nerd: user.nerd,
                 num_scores: 0,
                 scores: null,
                 games: null,
@@ -175,19 +175,25 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
                            game_desc : data.game_desc});
         },
 
-        logged_in: function (username) {
-            this.setState({username: username});
+        logged_in: function (username, nerd) {
+            this.setState({username: username, nerd: nerd});
         },
 
         render: function () {
             var login_line;
             if (this.state.username)
             {
+                var title = user.nerd_description(this.state.username,
+                                                  this.state.nerd);
                 login_line = <div style={{float: "right",
                                           textAlign: "right"}}
                                   className="login">
-                               Logged in as {this.state.username}{" | "}
-                               <PasswordChangeLink />{" | "}
+                               Logged in as&nbsp;
+                               <span className={this.state.nerd.type}
+                                     title={title}>
+                               {this.state.username}
+                               </span>
+                               {" | "}<PasswordChangeLink />{" | "}
                                <LogoutLink />
                              </div>;
             }
@@ -215,6 +221,8 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
                 score_entries = "Invalid score request";
             return <div className="scores">
                      {login_line}
+                     <a href="/#lobby">Return to Lobby</a>
+                     <br/>
                      {score_nav}
                      {score_entries}
                    </div>;
