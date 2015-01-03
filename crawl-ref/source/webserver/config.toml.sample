@@ -82,6 +82,10 @@ max_score_list_length = 1000
 # override the earlier ones.
 # title_names = ["goodplayers", "greatplayers", "greaterplayers", "centuryplayers"]
 
+# Locale for e.g. number formatting, may not need this if we move formatting to
+# client.
+# locale = "en_US.UTF-8"
+
 # Detach from session after startup?
 daemon = false
 
@@ -133,13 +137,16 @@ inprogress_path = "./rcs/running"
 rcfile_path = "./rcs/"
 socket_path = "./rcs"
 morgue_path = "./rcs/%n"
+# full or relative url to morgues, where %n is replaced with the username
+# morgue_url = "/morgues/%n/"
+# path to score file
+score_path = "./saves/scores"
 client_path = "./webserver/game_data/"
 macro_path = "./rcs/"
 ttyrec_path = "./rcs/ttyrecs/%n"
 # dir_path = "./"
 # env_lang = "en_US.UTF8"
 send_json_options = true
-# morgue_url = ""
 
 [[games]]
 id = "sprint-web-trunk"
@@ -153,6 +160,13 @@ inprogress_path = "./rcs/running"
 rcfile_path = "./rcs/"
 socket_path = "./rcs"
 morgue_path = "./rcs/%n"
+# morgue_url = "/morgues/%n/"
+# path to score file, with %m being replaced by a map name if map_path is
+# defined.
+# score_path = "./saves/scores-sprint-%m"
+# Path to toml file giving all sprint map names/descriptions in order generated
+# by e.g. game_map.py ./dat/des/sprint
+# map_path = "./dat/des/sprint/sprint.toml"
 client_path = "./webserver/game_data/"
 macro_path = "./rcs/"
 ttyrec_path = "./rcs/ttyrecs/%n"
@@ -170,6 +184,8 @@ inprogress_path = "./rcs/running"
 rcfile_path = "./rcs/"
 socket_path = "./rcs"
 morgue_path = "./rcs/%n"
+# morgue_url = "/morgues/%n/"
+score_path = "./saves/scores-zotdef"
 client_path = "./webserver/game_data/"
 macro_path = "./rcs/"
 ttyrec_path = "./rcs/ttyrecs/%n"
