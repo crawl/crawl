@@ -15,7 +15,7 @@ if os.environ.get("WEBTILES_DEBUG"):
 class Conf(object):
     def __init__(self, path=""):
         self.data = None
-        self.dev_team = None
+        self.devteam = None
         self.player_titles = None
 
         if path:
@@ -64,7 +64,9 @@ class Conf(object):
             locale.setlocale(locale.LC_ALL, self.locale)
         else:
             locale.setlocale(locale.LC_ALL, '')
-
+        ## crawl usernames are case-insensitive
+        if self.get("server_admins"):
+            self.data["server_admins"] = [a.lower() for a in self.server_admins]
         devteam_file = self.get("devteam_file")
         if devteam_file:
             try:
@@ -78,7 +80,9 @@ class Conf(object):
                                    quoting=csv.QUOTE_NONE)
             self.devteam = {}
             for row in devteam_r:
-                self.devteam[row[0]] = row[1:]
+                ## We leave case intact on the primary account here since it's
+                ## used for display purposes.
+                self.devteam[row[0]] = [u.lower() for u in row[1:]]
             devteam_fh.close()
         else:
             self.devteam = None
@@ -195,14 +199,15 @@ class Conf(object):
         title_r = csv.reader(title_fh, delimiter=" ", quoting=csv.QUOTE_NONE)
         self.player_titles = {}
         for row in title_r:
-            self.player_titles[row[0]] = row[1:]
+            self.player_titles[row[0].lower()] = [u.lower() for u in row[1:]]
         title_fh.close()
 
     def get_devname(self, username):
+        lname = username.lower()
         if not self.devteam:
             return None
         for d in self.devteam.keys():
-            if d == username or username in self.devteam[d]:
+            if d.lower() == lname or lname in self.devteam[d]:
                 return d
         return None
 
@@ -226,7 +231,7 @@ class Conf(object):
 
     def is_server_admin(self, username):
         server_admins = self.get("server_admins")
-        if server_admins and username in server_admins:
+        if server_admins and username.lower() in server_admins:
             return True
         return False
 
