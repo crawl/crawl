@@ -1884,7 +1884,7 @@ ENDMAP
 NAME:   pubby_orc_utopia
 ORIENT: encompass
 TAGS:   patrolling no_item_gen no_monster_gen
-PLACE:  Orc:$
+DEPTH:  Orc:$
 MONS:   orc warlord, orc knight, orc high priest, orc sorcerer
 MONS:   orc warrior, orc priest, orc wizard,      orc
 KFEAT:  A = any shop
