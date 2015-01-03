@@ -22,6 +22,10 @@ __d_suffix
  And the Trogdor comes in the night!”
     -The Brothers Chaps, “Trogdor”. 2003.
 %%%%
+__q_suffix
+
+<__d_suffix>
+%%%%
 __r_suffix
 
 HAMLET [Drawing his sword.]: How now! a rat? Dead, for a ducat, dead [Stabs
