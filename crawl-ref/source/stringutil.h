@@ -54,6 +54,8 @@ string trimmed_string(string s);
  * whose name, as given by namefunc(e), has the earliest occurrence of the
  * substring spec.
  *
+ * @tparam Enum     An enumeration or integer type no larger than size_t.
+ *
  * @param spec      The substring to search for.
  * @param begin     The beginning of the enumerator range to search in.
  * @param end       One past the end of the enum range to search in.
