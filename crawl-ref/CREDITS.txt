@@ -143,7 +143,6 @@
     Mitsuhiro Itakura
     Jeekaroose
     Mikko Juola
-    Alex "chequers" Jurkiewicz
     Dominic 'dk' Kexel
     Jarmo Kielosto
     Brandon Kime
