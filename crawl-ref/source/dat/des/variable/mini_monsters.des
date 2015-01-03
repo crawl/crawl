@@ -27,16 +27,16 @@
 # Functionality for some Grunt vaults.
 {{
 function grunt_ministairs_setup(e, hatches)
-  if you.branch() == "Crypt" or you.branch() == "Zot" then
+  if you.in_branch("Crypt") or you.in_branch("Zot") then
     e.shuffle("GT")
-    if you.branch() == "Crypt" then
+    if you.in_branch("Crypt") then
       e.subst("T = T V:20 Y:1")
       e.subst("x = c")
     end
   else
     e.shuffle("GTt")
     e.subst("T = T:20 V U:1")
-    if you.branch() == "D" or you.branch() == "Depths" then
+    if you.in_branch("D") or you.in_branch("Depths") then
       init_hm_decor_walldepth(e, 'x')
     end
   end
@@ -126,7 +126,7 @@ ENDMAP
 NAME:   hive_lemuel
 TAGS:   uniq_beehive
 DEPTH:  D:9-, Spider
-MONS:   killer bee, yellow wasp, red wasp
+MONS:   killer bee, wasp, hornet
 KMONS:  *R = worm
 SUBST:  ? : .w
 SUBST:  1 = 1 a:2, 1 : 1:15 2 3:2
@@ -202,7 +202,7 @@ TAGS:  patrolling uniq_anthill
 DEPTH: D:8-13, Lair, Spider
 MONS:  queen ant, soldier ant, worker ant
 SUBST: 0 = 3.
-: if you.branch() == "Spider" then
+: if you.in_branch("Spider") then
 SUBST: 3 = 3332, ' = %
 : end
 MAP
@@ -225,7 +225,7 @@ TAGS:   no_rotate uniq_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
 MONS:   queen ant, soldier ant, worker ant
 SUBST:  0 = 233, ? = . x
-: if you.branch() == "Spider" then
+: if you.in_branch("Spider") then
 SUBST:  3 = 3332, ' = %
 : end
 MAP
@@ -251,7 +251,7 @@ TAGS:  no_rotate uniq_anthill
 DEPTH: D:8-13, Lair, Spider
 MONS:  queen ant, soldier ant, worker ant
 KFEAT: ^ = known alarm trap / .
-: if you.branch() == "Spider" then
+: if you.in_branch("Spider") then
 SUBST: 3 = 3332., ' = %
 : else
 SUBST: 2 = 223, 3 = 33.
@@ -305,7 +305,7 @@ TAGS:   uniq_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
 MONS:   patrolling worker ant / nothing, worker ant, soldier ant, patrolling queen ant
 SUBST:  a = 1223........x
-: if you.branch() == "Spider" then
+: if you.in_branch("Spider") then
 SUBST:  3 = 3332
 NSUBST: . = 4:% / *:.
 : end
@@ -358,7 +358,7 @@ KITEM:   0.@ = stone no_pickup q:1 w:90 / nothing
 KITEM:   12345 = % w:90 no_pickup / * no_pickup
 SHUFFLE: ABCDEF / ABCDEF / ABCCBA, ABC, 13 / 13 / 31, {`
 SHUFFLE: '.12 / ..12 / .'12 / .'12 / ''12
-:  if you.branch() == "Abyss" then
+:  if you.in_branch("Abyss") then
 SUBST:   G = BEG, C : x:5 cvb, B : x:5 cvbw, A : xcvb w:4
 SUBST:   D: x:5 cvb, E : x:5 cvbw, F : xcvb w:4, { = '
 SUBST:   0 = 4:50 0
@@ -367,7 +367,7 @@ SUBST:   { : {[( `:15, ` = '
 NSUBST:  { = 1:{ / 1:}, [ = 1:[ / 1:(, ( = 1:] / 1:)
 SUBST:   G = BEG, C: xc, B : x., A : xxc .:2
 SUBST:   D : xc, E : x .:5, F : xxc .:2
-:    if you.branch() == "Spider" then
+:    if you.in_branch("Spider") then
 SUBST:   0 = 3:50 0
 :    else
 SUBST: c : cb
@@ -398,7 +398,7 @@ KMONS:  B = patrolling queen bee
 KMONS:  b = patrolling killer bee
 KMONS:  p = plant
 NSUBST: b = 1:B / 1:b / * = bb.
-: if you.branch() == "Spider" then
+: if you.in_branch("Spider") then
 SUBST:  + = .
 : end
 MAP
@@ -611,7 +611,11 @@ SUBST:  L = ..l
 SUBST:  ' = .
 NSUBST: | = 1:> / *:|
 KITEM:  > = |
+: if you.at_branch_bottom() then
+KFEAT:  > = escape_hatch_up
+: else
 KFEAT:  > = escape_hatch_down
+: end
 MAP
      .....LL.....
    ....LLLllLLL....
@@ -691,7 +695,7 @@ ENDMAP
 NAME:  nrook_guardian_serpent_ordinary
 DEPTH: D:9-, Snake, Crypt
 TAGS:  no_monster_gen no_item_gen
-: if you.branch() == "Crypt" then
+: if you.in_branch("Crypt") then
 TAGS:  extra
 MONS:  patrolling spectral guardian serpent
 SUBST: x = c
@@ -813,10 +817,10 @@ DEPTH:    D:8-12, Lair:3-, Swamp
 KMONS:    1 = raven
 KITEM:    % = any jewellery
 KITEM:    1 = any jewellery / nothing
-: if you.branch() == "D" then
+: if you.in_branch("D") then
 SHUFFLE:  t / x
 : end
-: if you.branch() == "Swamp" then
+: if you.in_branch("Swamp") then
 TAGS:   extra
 : end
 : kmons("% = nothing w:10 / raven w:" .. you.absdepth())
@@ -1194,7 +1198,7 @@ ENDMAP
 
 NAME:  minmay_orc_keep
 DEPTH: D:8-, Depths, Orc
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 MONS:  orc knight, orc warlord, orc sorcerer / orc high priest
 SUBST: % = *||
 : elseif you.absdepth() > 12 then
@@ -1440,7 +1444,7 @@ TAGS:   no_monster_gen no_item_gen allow_dup extra
 DEPTH:  D:4-, Elf
 WEIGHT: 7
 NSUBST: 1 = 2:1 / *:.
-: if you.branch() == "Elf" then
+: if you.in_branch("Elf") then
 MONS:   deep elf fighter
 : else
 MONS:   goblin / hobgoblin / kobold / orc
@@ -1461,7 +1465,7 @@ WEIGHT:  3
 SHUFFLE: mA
 SUBST:   A = x
 NSUBST:  1 = 2:1 / *:.
-: if you.branch() == "Elf" then
+: if you.in_branch("Elf") then
 MONS:    deep elf fighter
 : else
 MONS:    goblin / hobgoblin / kobold / orc
@@ -1523,7 +1527,7 @@ ENDMAP
 
 NAME:   kilobyte_rumbling_trees
 DEPTH:  Depths, Elf, Lair:4-
-: if you.branch() == "Lair" then
+: if you.in_branch("Lair") then
 MONS:   patrolling spriggan druid n_adj n_noc name:young hd:8
 : else
 MONS:   patrolling spriggan druid
@@ -1705,9 +1709,9 @@ KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34
 NSUBST:  ' = 1:@ / * = .@
 SUBST:   c : ccb
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:   bc = xcccccvb
-: elseif you.branch() == "Crypt" then
+: elseif you.in_branch("Crypt") then
 SUBST:   5 = 7, 6 = 8
 : else
 SHUFFLE: 56 / 78
@@ -1816,7 +1820,7 @@ MONS:  hill giant ; rod of the swarm ident:type
 MONS:  ettin ; rod of the swarm ident:type . great mace
 : end
 MONS:  killer bee w:3 / wolf spider w:1 / scorpion w:1 / worm w:1
-MONS:  worker ant w:3 / vampire mosquito w:1 / goliath beetle w:1 / yellow wasp w:1
+MONS:  worker ant w:3 / vampire mosquito w:1 / goliath beetle w:1 / wasp w:1
 ITEM: royal jelly
 MAP
 xxxxxx
@@ -1881,11 +1885,11 @@ TAGS:    patrolling no_monster_gen transparent
 DEPTH:   Snake, Elf, Orc, Zot
 ITEM:    gold / any scroll / any book w:4
 SUBST:   ? = 123d
-: if you.branch() == "Snake" then
+: if you.in_branch("Snake") then
 MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
-: elseif you.branch() == "Elf" then
+: elseif you.in_branch("Elf") then
 MONS:    deep elf fighter, deep elf mage, deep elf conjurer / deep elf summoner
-: elseif you.branch() == "Orc" then
+: elseif you.in_branch("Orc") then
 MONS:    orc, orc warrior, orc wizard w:9 / orc sorcerer w:1
 : else
 MONS:    any draconian, draconian scorcher
@@ -1974,7 +1978,7 @@ ENDMAP
 NAME:     grunt_tower_of_power
 TAGS:     vaults_hard vaults_orient_s no_monster_gen patrolling
 DEPTH:    Depths, Vaults, !Vaults:$
-: if you.branch() == "Vaults" then
+: if you.in_branch("Vaults") then
 SUBST:   c : vvb, @ = .
 : end
 # This spell set is Lich IV, picked for having IMB and IOOD.
@@ -2118,7 +2122,7 @@ ENDMAP
 NAME: lightli_minifort
 DEPTH: D:4-, Depths
 TAGS: no_pool_fixup
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 MONS: fire giant / frost giant / titan
 : elseif you.absdepth () > 11 then
 MONS: orc knight band
@@ -2138,7 +2142,7 @@ wwc.1.cww
 wwc...cww
 wccc+cccw
 wccw.wccw
-wwww.wwww
+wwww@wwww
 ENDMAP
 
 NAME: lightli_wizard_tower
@@ -2344,7 +2348,7 @@ MONS:   necrophage
 SUBST:  ' = 111.
 SUBST:  ? = %%.
 : dgn.delayed_decay(_G, '%', 'any corpse')
-: if you.branch() == "Swamp" or you.depth() > 4 then
+: if you.in_branch("Swamp") or you.depth() > 4 then
 TAGS:   extra
 : end
 MAP
@@ -2423,7 +2427,7 @@ SUBST:  4 = .
 SUBST:  5 = .
 SUBST:  6 = .
 : end
-: if you.branch() == "Coc" or you.branch() == "Geh" then
+: if you.in_branch("Coc") or you.in_branch("Geh") then
 SUBST:  | = .
 : else
 SUBST:  > = .
@@ -2530,7 +2534,7 @@ MONS:   efreet / large abomination / rakshasa
 MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         hell beast / hellion / reaper / lorocyproca / tormentor
 KITEM:  | = superb_item / any good_item / any w:5
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 SUBST:  2 = 23, 4 = 5
 : end
 MAP
@@ -2557,7 +2561,7 @@ MONS:    phantasmal warrior, vampire knight, jiangshi
 SHUFFLE: ABC, DE, FGH, 34 / 34 / 34 / 43
 SUBST:   A = 1, F = 2, B : xx..., D : xx..., G : xx..., CEH = .
 SUBST:   I : c...., 5 = 3333445
-: if you.branch() == "Crypt" then
+: if you.in_branch("Crypt") then
 SUBST:   4 = 7, 3 = 6, 2 = 5, 1 = 1444
 SUBST:   c = v, x = c
 : end
@@ -2675,7 +2679,7 @@ KFEAT: 1 = >
 SUBST:  3 = 4, 2 = 223
 NSUBST: | = 1:1 / *:|
 : end
-: if you.branch == "Cocytus" then
+: if you.in_branch("Cocytus") then
 SUBST: | = .
 : else
 SUBST: | = ||****%%%%
@@ -2733,7 +2737,7 @@ KITEM:  1 = %, % / $
 MARKER: G = lua:fog_machine { cloud_type= "grey smoke", \
             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
             size = 3, walk_dist = 2, spread_rate= 25 }
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:  G : G111
 : end
 MAP
@@ -2868,15 +2872,15 @@ DEPTH:    D:10-, Lair, Snake, Shoals, Depths
 # Weights for levels not of subdepth 1 intentionally lower.
 WEIGHT:   1 (D:10-, Lair:2-, Snake:2-, Shoals:2-, Depths:2-)
 WEIGHT:   10 (Lair:1, Shoals:1, Snake:1, Depths:1)
-: if you.branch() == "Snake" or you.branch() == "Shoals" then
+: if you.in_branch("Snake") or you.in_branch("Shoals") then
 MONS:     oklob plant / obsidian statue / orange crystal statue / ice statue /\
           w:1 Roxanne
-: elseif you.branch() == "Dungeon" or you.branch() == "Lair" then
+: elseif you.in_branch("D") or you.in_branch("Lair") then
 MONS:     oklob plant, electric eel
 SHUFFLE:  1" / 22
-: elseif you.branch() == "Vaults" then
+: elseif you.in_branch("Vaults") then
 MONS:     obsidian statue / orange crystal statue / ice statue / w:1 Roxanne
-: elseif you.branch() == "Depths" then
+: elseif you.in_branch("Depths") then
 MONS:     obsidian statue / orange crystal statue / ice statue / w:3 Roxanne
 SUBST:    " = 1
 : end
@@ -3106,7 +3110,7 @@ MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
 KPROP:  13' = no_rtele_into
 KFEAT:  m = iron_grate
-: if you.branch() == "Abyss" then
+: if you.in_branch("Abyss") then
 SUBST:  c = c:4 v:1 b:1, = = +
 : end
 MAP
@@ -3133,7 +3137,7 @@ NAME:    hangedman_cracks_in_the_wall
 TAGS:    no_monster_gen patrolling
 DEPTH:   D:12-, Depths, !Depths:$
 MONS:    earth elemental
-: if you.branch() == "D" then
+: if you.in_branch("D") then
 MONS:    cyclops, basilisk, catoblepas
 SUBST:   * = %%***, | = *|, c = x
 : else
@@ -3588,8 +3592,8 @@ KMONS:   l = large abomination
 KMONS:   m = scorpion
 KMONS:   n = small abomination
 KMONS:   o = unseen horror
-KMONS:   p = red wasp
-KMONS:   q = yellow wasp
+KMONS:   p = hornet
+KMONS:   q = wasp
 KMONS:   r = wolf spider
 KITEM:   e = acquire armour / acquire weapon
 SHUFFLE: bcdfghjklnopqr
@@ -3845,7 +3849,7 @@ KFEAT:   Z = known zot trap
 SUBST:   A : C:20 D:20 ATVY^{[(<>, b : c:30 G:20 bvwtdGG123, 0 : 0:3 9:2 ':1
 SUBST:   .' : .:99 W:1, [ : [], ( : ()
 NSUBST:  { = 1:{ / 1:}, [ = 1:[ / 1:(, ] = 1:[ / 1:], ( = 1:] / 1:), ) = 1:( / 1:)
-: if you.branch() == "D" or you.branch() == "Depths" then
+: if you.in_branch("D") or you.in_branch("Depths") then
 :    if you.absdepth() < 2 then
 SUBST:   CDY[{^ = T, 9 : 0'
 :    elseif you.absdepth() < 5 then
@@ -3853,14 +3857,14 @@ SUBST:   CDY = T, 9 : 0'
 :    elseif you.absdepth() > 20 then
 MARKER:  A = lua:props_marker { portal=1 }
 :    end
-: elseif you.branch() == "Orc" then
+: elseif you.in_branch("Orc") then
 SUBST:   G = I, t23 = 1:9 I:1
-: elseif you.branch() == "Geh" or you.branch() == "Coc"
-: or you.branch() == "Dis" or you.branch() == "Tar" then
+: elseif you.in_branch("Geh") or you.in_branch("Coc")
+: or you.in_branch("Dis") or you.in_branch("Tar") then
 SUBST:   DTV : Y:9 ^:1, t123 : G:9 ^:1, b : c
-: elseif you.branch() == "Crypt" then
+: elseif you.in_branch("Crypt") then
 SUBST:   TV : VY, t123 : c
-: elseif you.branch() == "Zot" then
+: elseif you.in_branch("Zot") then
 SUBST:   D : V:9 Z:1, ^ : ^Z, t123 : G:9 Z:1
 : else
 SUBST:   A = T
@@ -5102,7 +5106,7 @@ ENDMAP
 NAME:   kennysheep_orc_chapel
 DEPTH:  D:3-4, Orc:2-
 SUBST:  $ = $.
-: if you.branch() == "Orc" then
+: if you.in_branch("Orc") then
 KMONS:  1 = orc high priest band
 :else
 KMONS:  1 = orc priest band
@@ -5149,7 +5153,7 @@ ENDMAP
 NAME:   kennysheep_underground_church
 TAGS:   no_pool_fixup misc_elf_vault
 DEPTH:  Depths, Elf, Zot
-: if you.branch() ~= "Zot" then
+: if not you.in_branch("Zot") then
 MONS:   deep elf high priest, deep elf priest
 :else
 MONS:   draconian zealot, base draconian
@@ -5692,7 +5696,7 @@ KITEM:   * = battleaxe no_pickup / great mace no_pickup / \
              demon blade no_pickup w:5 / demon trident no_pickup w:5
 : dgn.delayed_decay(_G, 'd', 'human skeleton')
 KFEAT:   ^ = known zot trap
-: if you.branch() == "Geh" then
+: if you.in_branch("Geh") then
 KMONS:   9 = sun demon / smoke demon / hell knight / \
              red devil w:5 / efreet w:5
 KMONS:   8 = hellion / balrug / salamander firebrand
@@ -5703,7 +5707,7 @@ MARKER:  F = lua:fog_machine {cloud_type = "flame", \
 SUBST:   ~ = l
 FTILE:   F = floor_volcanic
 COLOUR:  F = lightred
-: elseif you.branch() == "Coc" then
+: elseif you.in_branch("Coc") then
 KMONS:   9 = ice devil / blue devil w:5 / ice dragon / simulacrum w:5 / \
              skeletal warrior ; hunting sling ego:freezing ident:type . \
              mundane sling bullet . mace ego:freezing ident:type
@@ -5716,7 +5720,7 @@ MARKER:  F = lua:fog_machine {cloud_type = "freezing vapour", \
 SUBST:   ~ = w
 FTILE:   F = floor_nerves_blue
 COLOUR:  F = lightblue
-: elseif you.branch() == "Tar" then
+: elseif you.in_branch("Tar") then
 KMONS:   9 = soul eater / shadow demon / vampire mage / flayed ghost
 KMONS:   8 = tormentor / revenant / mummy priest
 KMONS:   7 = shadow fiend
@@ -5726,7 +5730,7 @@ MARKER:  F = lua:fog_machine {cloud_type = "foul pestilence", \
 SUBST:   ~ = G
 FTILE:   F = floor_crystal_squares
 COLOUR:  F = lightmagenta
-: elseif you.branch() == "Dis" then
+: elseif you.in_branch("Dis") then
 KMONS:   9 = ynoxinul / rust devil w:5 / vampire knight w:5 / \
              phantasmal warrior / skeletal warrior ; mundane arbalest . \
              mundane bolt . mace good_item
@@ -5800,7 +5804,7 @@ NAME:   minmay_guarded_unrand_zonguldrok
 DEPTH:  D:12-, Depths, Crypt
 TAGS:   no_monster_gen no_item_gen
 WEIGHT: 3
-: if you.branch() == "Depths" then
+: if you.in_branch("Depths") then
 MONS:   place:Depths:$ zombie / place:Depths:$ skeleton, bone dragon
 : else
 MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
@@ -6008,10 +6012,10 @@ KFEAT:   S = known permanent teleport trap
 NSUBST:  k = 4=k / * = .:19 k:1
 SHUFFLE: bm
 SUBST:   b = cccvvb
-: if you.branch() == "Orc" then
+: if you.in_branch("Orc") then
 NSUBST:  k = 1:A / 1:C / *:k
 KMONS:   k = orc warrior / orc knight w:5 / orc w:1
-: elseif you.branch() == "Elf" then
+: elseif you.in_branch("Elf") then
 NSUBST:  k = 2 = EFIJ / *:k
 KMONS:   k = deep elf knight
 : elseif you.absdepth() < 10 then
@@ -6199,31 +6203,31 @@ MARKER: Y = lua: props_marker { stop_explore="strange structure made of doors" }
 KFEAT:  X = +
 KFEAT:  Y = runed_door
 # Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
-: if you.branch() == "Elf" then
+: if you.in_branch("Elf") then
 KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
             deep elf sorcerer / deep elf death mage / deep elf demonologist / \
             deep elf high priest / w:20 place:Elf:$
-: elseif you.branch() == "Crypt" then
+: elseif you.in_branch("Crypt") then
 KMONS:  8 = bone dragon / lich / ancient lich / vampire knight / w:5 revenant / \
             ancient champion / w:5 eidolon / w:20 reaper / soul eater / w:30 place:Crypt:$
-: elseif you.branch() == "Dis" then
+: elseif you.in_branch("Dis") then
 KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / hell sentinel / \
             iron dragon / tormentor / iron golem / place:Dis
-: elseif you.branch() == "Geh" then
+: elseif you.in_branch("Geh") then
 KMONS:  8 = brimstone fiend / w:5 hell sentinel / hellion / balrug / \
             fire giant / salamander firebrand / place:Geh
-: elseif you.branch() == "Tar" then
+: elseif you.in_branch("Tar") then
 KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / lich / \
             ancient lich / w:5 revenant / w:15 place:Tar
-: elseif you.branch() == "Coc" then
+: elseif you.in_branch("Coc") then
 KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
             w:5 simulacrum / place:Coc
-: elseif you.branch() == "Zot" then
+: elseif you.in_branch("Zot") then
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / killer klown / \
             death cob / w:5 curse toe / w:5 ancient lich
 : end
-: if you.branch() == "Geh" or you.branch() == "Tar"
-:  or you.branch() == "Coc" or you.branch() == "Dis" then
+: if you.in_branch("Geh") or you.in_branch("Tar")
+:  or you.in_branch("Coc") or you.in_branch("Dis") then
 KFEAT:  9 = >
 : else
 KITEM:  9 = *

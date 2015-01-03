@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "abyss.h"
 #include "acquire.h"
 #include "act-iter.h"
 #include "areas.h"
@@ -21,7 +22,6 @@
 #endif
 #include "delay.h"
 #include "directn.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "goditem.h"
@@ -2171,6 +2171,43 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
     return helpful ? XOM_GOOD_ENCHANT_MONSTER : XOM_BAD_ENCHANT_MONSTER;
 }
 
+static inline dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_ROCK_WALL:
+        return DNGN_CLEAR_ROCK_WALL;
+    case DNGN_STONE_WALL:
+        return DNGN_CLEAR_STONE_WALL;
+    case DNGN_PERMAROCK_WALL:
+        return DNGN_CLEAR_PERMAROCK_WALL;
+    default:
+        return feat;
+    }
+}
+
+// Returns true if there was a visible change.
+static bool _vitrify_area(int radius)
+{
+    if (radius < 2)
+        return false;
+
+    bool something_happened = false;
+    for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
+    {
+        const dungeon_feature_type grid = grd(*ri);
+        const dungeon_feature_type newgrid = _vitrified_feature(grid);
+        if (newgrid != grid)
+        {
+            grd(*ri) = newgrid;
+            set_terrain_changed(*ri);
+            something_happened = true;
+        }
+    }
+    return something_happened;
+}
+
+
 // The nicer stuff.  Note: these things are not necessarily nice.
 static int _xom_is_good(int sever, int tension, bool debug = false)
 {
@@ -2284,7 +2321,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
             return XOM_GOOD_VITRIFY;
 
         // This can fail with radius 1, or in open areas.
-        if (vitrify_area(random2avg(sever / 4, 2) + 1))
+        if (_vitrify_area(random2avg(sever / 4, 2) + 1))
         {
             god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
             take_note(Note(NOTE_XOM_EFFECT, you.piety, tension,
@@ -2478,6 +2515,7 @@ static void _xom_zero_miscast()
         string str = "A monocle briefly appears over your ";
         str += coinflip() ? "right" : "left";
         if (you.form == TRAN_SPIDER)
+        {
             if (coinflip())
                 str += " primary";
             else
@@ -2485,6 +2523,7 @@ static void _xom_zero_miscast()
                 str += random_choose(" front", " middle", " rear");
                 str += " secondary";
             }
+        }
         str += " eye.";
         messages.push_back(str);
     }
@@ -2994,7 +3033,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     beam.range   = INFINITE_DISTANCE;
     beam.flavour = BEAM_VISUAL;
     beam.glyph   = feat_def.symbol();
-    beam.colour  = feat_def.colour;
+    beam.colour  = feat_def.colour();
     beam.source  = stair_pos;
     beam.target  = ray.pos();
     beam.name    = "STAIR BEAM";

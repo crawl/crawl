@@ -181,7 +181,7 @@ ENDMAP
 NAME:    hangedman_snap_crack_crunch
 TAGS:    transparent no_monster_gen
 DEPTH:   Tar, !Tar:$, Zot:1-4
-: if you.branch() == "Tar" then
+: if you.in_branch("Tar") then
 KMONS:   12 = patrolling reaper
 KMONS:   34 = patrolling tormentor
 KMONS:   56 = patrolling shadow demon

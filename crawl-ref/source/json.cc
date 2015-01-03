@@ -24,6 +24,7 @@
 #include "AppHdr.h"
 
 #include "json.h"
+#include "unicode.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -1246,9 +1247,8 @@ void emit_string(SB *out, const char *str)
                 }
                 else
                 {
-                    *b++ = 0xEF;
-                    *b++ = 0xBF;
-                    *b++ = 0xBD;
+                    // Invalid char marker (U+FFFD).
+                    b += wctoutf8(b, 0xFFFD);
                 }
                 s++;
             }

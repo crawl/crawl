@@ -143,7 +143,6 @@ protected:
     virtual bool attack_ignores_shield(bool verbose) = 0;
     virtual bool apply_damage_brand(const char *what = nullptr);
     void calc_elemental_brand_damage(beam_type flavour,
-                                     int res,
                                      const char *verb,
                                      const char *what = nullptr);
 

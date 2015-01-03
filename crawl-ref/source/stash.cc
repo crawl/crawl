@@ -176,8 +176,7 @@ Stash::Stash(int xp, int yp) : enabled(true), items()
 
 bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 {
-    const bool same = a.base_type == b.base_type
-        && a.sub_type == b.sub_type
+    const bool same = a.is_type(b.base_type, b.sub_type)
         // Ignore Gozag's gold flag, and rod charges.
         && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact
                              || a.base_type == OBJ_RODS && !exact)
@@ -190,7 +189,7 @@ bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
     return same
            || (!exact && a.base_type == b.base_type
                && (a.base_type == OBJ_CORPSES
-                   || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
+                   || (a.is_type(OBJ_FOOD, FOOD_CHUNK)
                        && b.sub_type == FOOD_CHUNK))
                && a.plus == b.plus);
 }
@@ -373,8 +372,7 @@ static bool _is_rottable(const item_def &item)
 {
     if (is_shop_item(item))
         return false;
-    return item.base_type == OBJ_CORPSES
-           || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK;
+    return item.base_type == OBJ_CORPSES || item.is_type(OBJ_FOOD, FOOD_CHUNK);
 }
 
 static short _min_rot(const item_def &item)
@@ -382,7 +380,7 @@ static short _min_rot(const item_def &item)
     if (item.base_type == OBJ_FOOD)
         return 0;
 
-    if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_SKELETON)
+    if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
         return 0;
 
     if (!mons_skeleton(item.mon_type))
@@ -407,7 +405,7 @@ string Stash::stash_item_name(const item_def &item)
     }
 
     // Skeletons show no signs of rotting before they're gone
-    if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_SKELETON)
+    if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
         return name;
 
     if (item.stash_freshness <= 0)

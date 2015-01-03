@@ -84,7 +84,7 @@ function init_aquarium(e)
   e.kprop('! = no_tele_into')
   e.kprop('! = no_jiyva')
 
-  if you.branch() == "Elf" then
+  if you.in_branch("Elf") then
     -- if we get a diamond obelisk, the winds will kill
     --  everything else except the air elementals
     e.subst('w = w:' .. (nothing_weight + 64) .. ' _:1')
@@ -143,7 +143,7 @@ function init_aquarium(e)
     e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
                  w:4  generate_awake ice beast /
                  w:1  generate_awake bat simulacrum /
-                 w:1  generate_awake red wasp simulacrum /
+                 w:1  generate_awake hornet simulacrum /
                  w:1  generate_awake orc simulacrum /
                  w:1  generate_awake yaktaur simulacrum /
                  w:1  generate_awake deep troll simulacrum /

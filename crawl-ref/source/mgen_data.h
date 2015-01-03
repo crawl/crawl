@@ -157,7 +157,12 @@ struct mgen_data
                || summon_type == SPELL_SINGULARITY);
     }
 
-    bool permit_bands() const       { return flags & MG_PERMIT_BANDS; }
+    bool permit_bands() const
+    {
+        // The permit flag is set but the forbid flag is not.
+        return (flags & (MG_PERMIT_BANDS|MG_FORBID_BANDS)) == MG_PERMIT_BANDS;
+    }
+
     bool force_place() const        { return flags & MG_FORCE_PLACE; }
     bool needs_patrol_point() const { return flags & MG_PATROLLING; }
 

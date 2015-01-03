@@ -37,10 +37,12 @@
 static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
     if (player_in_branch(BRANCH_PANDEMONIUM))
+    {
         if (down)
             return DNGN_TRANSIT_PANDEMONIUM;
         else
             return DNGN_EXIT_PANDEMONIUM;
+    }
 
     int depth = you.depth;
     if (down)

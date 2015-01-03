@@ -9,11 +9,11 @@
 
 #include <sstream>
 
+#include "adjust.h"
 #include "artefact.h"
 #include "cluautil.h"
 #include "cluautil.h"
 #include "colour.h"
-#include "command.h"
 #include "coord.h"
 #include "enum.h"
 #include "env.h"
@@ -325,7 +325,7 @@ static int l_item_do_subtype(lua_State *ls)
     return 1;
 }
 
-IDEFN(subtype, do_subtype);
+IDEFN(subtype, do_subtype)
 
 IDEF(cursed)
 {

@@ -63,8 +63,8 @@ end
 -- Returns true for hard difficulty.
 function ice_cave_difficulty()
 
-  if you.branch() == "D" or you.branch() == "Lair" or
-     you.branch() == "Orc" then
+  if you.in_branch("D") or you.in_branch("Lair") or
+     you.in_branch("Orc") then
        return false
   end
 

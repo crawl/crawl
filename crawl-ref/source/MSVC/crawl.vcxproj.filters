@@ -7,6 +7,7 @@
     <ClCompile Include="..\act-iter.cc" />
     <ClCompile Include="..\actor-los.cc" />
     <ClCompile Include="..\actor.cc" />
+    <ClCompile Include="..\adjust.cc" />
     <ClCompile Include="..\AppHdr.cc" />
     <ClCompile Include="..\areas.cc" />
     <ClCompile Include="..\arena.cc" />
@@ -54,7 +55,6 @@
     <ClCompile Include="..\directn.cc" />
     <ClCompile Include="..\dlua.cc" />
     <ClCompile Include="..\dungeon.cc" />
-    <ClCompile Include="..\effects.cc" />
     <ClCompile Include="..\end.cc" />
     <ClCompile Include="..\english.cc" />
     <ClCompile Include="..\errors.cc" />
@@ -122,6 +122,7 @@
     <ClCompile Include="..\l_view.cc" />
     <ClCompile Include="..\l_you.cc" />
     <ClCompile Include="..\lev-pand.cc" />
+    <ClCompile Include="..\lookup_help.cc" />
     <ClCompile Include="..\melee_attack.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
@@ -236,6 +237,7 @@
     <ClCompile Include="..\teleport.cc" />
     <ClCompile Include="..\terrain.cc" />
     <ClCompile Include="..\throw.cc" />
+    <ClCompile Include="..\timed_effects.cc" />
     <ClCompile Include="..\tilebuf.cc" />
     <ClCompile Include="..\rltiles\tiledef-dngn.cc" />
     <ClCompile Include="..\rltiles\tiledef-gui.cc" />
@@ -307,6 +309,7 @@
     <ClInclude Include="..\acquire.h" />
     <ClInclude Include="..\act-iter.h" />
     <ClInclude Include="..\actor.h" />
+    <ClInclude Include="..\adjust.h" />
     <ClInclude Include="..\AppHdr.h" />
     <ClInclude Include="..\aptitudes.h" />
     <ClInclude Include="..\areas.h" />
@@ -365,7 +368,6 @@
     <ClInclude Include="..\directn.h" />
     <ClInclude Include="..\dlua.h" />
     <ClInclude Include="..\dungeon.h" />
-    <ClInclude Include="..\effects.h" />
     <ClInclude Include="..\end.h" />
     <ClInclude Include="..\endianness.h" />
     <ClInclude Include="..\english.h" />
@@ -423,6 +425,7 @@
     <ClInclude Include="..\l_libs.h" />
     <ClInclude Include="..\l_los.h" />
     <ClInclude Include="..\lev-pand.h" />
+    <ClInclude Include="..\lookup_help.h" />
     <ClInclude Include="..\matrix.h" />
     <ClInclude Include="..\melee_attack.h" />
     <ClInclude Include="..\mi-enum.h" />
@@ -559,6 +562,7 @@
     <ClInclude Include="..\threads.h" />
     <ClInclude Include="..\throw.h" />
     <ClInclude Include="..\tilebuf.h" />
+    <ClInclude Include="..\timed_effects.h" />
     <ClInclude Include="..\rltiles\tiledef-dngn.h" />
     <ClInclude Include="..\rltiles\tiledef-gui.h" />
     <ClInclude Include="..\rltiles\tiledef-main.h" />

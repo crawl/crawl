@@ -5,6 +5,6 @@
 ###########################
 
 # merfolk
-mon_glyph = merfolk : blue
-mon_glyph = merfolk impaler : lightblue
-mon_glyph = merfolk javelineer : lightgrey
+mon_glyph += merfolk : blue
+mon_glyph += merfolk impaler : lightblue
+mon_glyph += merfolk javelineer : lightgrey

@@ -325,14 +325,16 @@ static void _shop_print_stock(const vector<bool>& selected,
         stock_order.push_back(i);
     stable_sort(stock_order.begin(), stock_order.end(),
                 ShopSorter(shop));
-    for (size_t index = 0; index < stock_order.size(); ++index)
+    ASSERT(shop.stock.size() == stock_order.size());
+    for (size_t i = 0; i < stock_order.size(); ++i)
     {
-        const item_def& item = shop.stock[stock_order[index]];
+        const int stock_pos = stock_order[i];
+        const item_def& item = shop.stock[stock_pos];
         const int gp_value = _shop_get_item_value(item, shop.greed, id);
         const bool can_afford = (you.gold >= gp_value);
 
-        cgotoxy(1, index + 1, GOTO_CRT);
-        const char c = index + 'a';
+        cgotoxy(1, i + 1, GOTO_CRT);
+        const char c = i + 'a';
 
         // Colour stock as follows:
         //  * lightcyan, if on the shopping list.
@@ -344,12 +346,12 @@ static void _shop_print_stock(const vector<bool>& selected,
 
         // Is this too complicated? (jpeg)
 
-        if (in_list[index])
+        if (in_list[stock_pos])
             textcolour(LIGHTCYAN);
-        else if (total_cost > you.gold && selected[index])
+        else if (total_cost > you.gold && selected[stock_pos])
             textcolour(LIGHTRED);
         else if (gp_value <= you.gold - total_cost
-                 || selected[index] && can_afford)
+                 || selected[stock_pos] && can_afford)
         {
             textcolour(LIGHTGREEN);
         }
@@ -358,9 +360,9 @@ static void _shop_print_stock(const vector<bool>& selected,
         else
             textcolour(YELLOW);
 
-        if (in_list[index])
+        if (in_list[stock_pos])
             cprintf("%c $ ", c);
-        else if (selected[index])
+        else if (selected[stock_pos])
             cprintf("%c + ", c);
         else
             cprintf("%c - ", c);
@@ -1829,31 +1831,22 @@ unsigned int item_value(item_def item, bool ident)
             double rarity = 0;
             if (is_random_artefact(item))
             {
-                // Consider spellbook as rare as the average of its
-                // three rarest spells.
-                int rarities[3] = {0};
-                int count = 0;
-                for (spell_type spell : spells_in_book(item))
+                const vector<spell_type>& spells = spells_in_book(item);
+
+                int rarest = 0;
+                for (spell_type spell : spells)
                 {
-                    int min_index = 0;
-                    for (int i = 0; i < 3; i++)
-                        if (rarities[i] < spell_rarity(spell))
-                            min_index = i;
-                    rarities[min_index] = spell_rarity(spell);
-                    count++;
+                    rarity += spell_rarity(spell);
+                    if (spell_rarity(spell) > rarest)
+                        rarest = spell_rarity(spell);
                 }
-                ASSERT(count > 0);
+                rarity += rarest * 2;
+                rarity /= spells.size();
 
-                if (count > 3)
-                    count = 3;
+                // Surcharge for large books.
+                if (spells.size() > 6)
+                    rarity *= spells.size() / 6;
 
-                rarity = rarities[0] + rarities[1] + rarities[2];
-                rarity /= count;
-
-                // Fixed level randarts get a bonus for the really low and
-                // really high level spells.
-                if (book == BOOK_RANDART_LEVEL)
-                    valued += 50 * abs(5 - item.plus);
             }
             else
                 rarity = book_rarity(book);
@@ -2320,7 +2313,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         return 0;
 
     // Manuals are consumable, and interesting enough to keep on list.
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+    if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
         return 0;
 
     // Item is already on shopping-list.
@@ -2370,7 +2363,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
         // Don't prompt to remove known manuals when the new one is unknown
         // or for a different skill.
-        if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL
+        if (item.is_type(OBJ_BOOKS, BOOK_MANUAL)
             && item_type_known(list_item)
             && (!item_type_known(item) || item.plus != list_item.plus))
         {

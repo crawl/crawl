@@ -392,7 +392,7 @@ mangled
 
 mewling
 
-obno
+obnoxious
 
 odious
 
@@ -1319,13 +1319,15 @@ insult minotaur noun
 
 bovine
 
-briscut
+brisket
 
 bull-brain
 
 cud-chewer
 
 calf-wit
+
+cloven-toed
 
 cretin
 
@@ -1342,6 +1344,8 @@ meatball
 mooer
 
 rump-roast
+
+ruminant
 
 veal
 

@@ -11,6 +11,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 #define ZOMBIE_BASE_AC_KEY "zombie_base_ac"
 #define ZOMBIE_BASE_EV_KEY "zombie_base_ev"
 
+#define FAKE_BLINK_KEY "fake_blink"
+
 typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
@@ -472,6 +474,7 @@ public:
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
                           const char* /*hurt_msg*/ = nullptr);
+    void corrode_equipment(const char* corrosion_source = "the acid");
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              kill_method_type kill_type = KILLED_BY_MONSTER,

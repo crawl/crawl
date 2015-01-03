@@ -1586,8 +1586,8 @@ ENDMAP
 ##############################################################################
 # Sounds of Crawl: the Slurp.
 NAME:    dpeg_arrival_sounds_slurp
-TAGS:    arrival no_monster_gen
-MONS:    generate_awake jelly / kobold
+TAGS:    arrival no_monster_gen no_trap_gen
+MONS:    generate_awake jelly
 ITEM:    club
 ORIENT:  float
 KPROP:   1d> = no_rtele_into
@@ -1616,7 +1616,7 @@ ENDMAP
 ##############################################################################
 # Sounds of Crawl: the Drone.
 NAME:    dpeg_arrival_sounds_drone
-TAGS:    arrival no_monster_gen
+TAGS:    arrival no_monster_gen no_trap_gen
 MONS:    generate_awake boring beetle / boring beetle
 ORIENT:  float
 NSUBST:  . = 1={ / *:.

@@ -76,7 +76,7 @@ Banishment spell
 Battlecry spell
 
 Inspires nearby allies of the caster to fight more aggressively, increasing
-the strength of their blows and the power of their shots.
+the strength of their blows.
 %%%%
 Beastly Appendage spell
 
@@ -483,8 +483,6 @@ This spell issues a powerful call to a draconic realm, beckoning forth dragon
 after dragon to engage the summoner's enemies. The spell is taxing to maintain,
 and each new dragon which answers the call will further drain the summoner's
 magical reserves.
-
-If the caster is a mighty dragon, the spell echoes more powerfully still.
 %%%%
 Drain Life spell
 
@@ -631,7 +629,8 @@ Gell's Gravitas spell
 For a brief moment, this spell redirects space around the target, making 'down'
 become exactly where the target is standing. All nearby creatures, save the
 caster, fall helplessly toward the victim - typically colliding with it, or
-with each other!
+with each other. The disorienting experience can leave the afflicted creatures
+confused.
 %%%%
 Ghostly Fireball spell
 
@@ -726,9 +725,8 @@ many heads strike in all directions. Edible foes slain by the gnashing teeth
 are instantly devoured, reinvigorating the caster in their reptilian rampage.
 
 Like real hydras, the caster will sprout new heads when decapitated, unless the
-wound is cauterized by flame. However, because of a flaw in the spell, growing
-new heads does not provide healing as it does for real hydras. If all of the
-caster's heads are lopped off, the form will end.
+wound is cauterized by flame. If all of the caster's heads are lopped off, the
+form will end.
 %%%%
 Ice Form spell
 
@@ -967,9 +965,9 @@ onto their targets, yet because of their huge inertia, especially agile
 opponents may be able to outmanoeuvre them. The orbs need some time to
 stabilize, and a nascent orb won't do the full damage it is capable of.
 
-It is said that most copies of this spell suffer from a scribal error that
-makes the orbs unstable beyond a short range. Certain individuals may have
-access to spellbooks without this flaw, so beware!
+Those who have trained for years, or who have an innate ability, can maintain
+the orb out of their own line of sight. Adventurers, sadly, do not have the
+time to master this aspect of the spell.
 %%%%
 Orb of Electricity spell
 
@@ -1021,8 +1019,7 @@ Petrify spell
 
 This spell attempts to petrify a monster. If successful, the monster is slowed
 down for a while until it is temporarily turned into stone. In this state, a
-monster will take less damage upon being hit. It also precludes the use of
-wings, which can be quite unhealthy above lava.
+monster will take less damage upon being hit.
 %%%%
 Petrifying Cloud spell
 
@@ -1164,11 +1161,8 @@ A penetrating bolt spell mimicked by the shadow of a Dithmenos worshipper.
 %%%%
 Shadow Creatures spell
 
-This spell weaves a creature from shadows and threads of ethereal matter. The
-creature thus brought into existence will recreate some type of creature found
-in the caster's immediate vicinity. The spell even creates appropriate
-equipment for the creature, which are given a lasting substance by their firm
-contact with reality.
+This spell creates replicas of creatures native to the caster's current
+location, weaving them from shadows and threads of Abyssal matter.
 %%%%
 Shadow Shard spell
 
@@ -1627,10 +1621,10 @@ dealing damage. It can affect targets standing in or flying above water.
 %%%%
 Weave Shadows spell
 
-This spell weaves a creature from shadows and threads of ethereal matter. The
+This spell weaves a creature from shadows and threads of Abyssal matter. The
 creatures thus brought into existence increase in power with spellpower. The
-spell even creates appropriate equipment for the creature, which are given a
-lasting substance by their firm contact with reality.
+spell even creates appropriate equipment for the creature from the same
+ethereal matter.
 %%%%
 Wind Blast spell
 

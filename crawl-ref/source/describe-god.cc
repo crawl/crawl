@@ -344,7 +344,7 @@ static const char *divine_title[NUM_GODS][8] =
 
     // Cheibriados -- slow theme
     {"Hasty",              "Sluggish @Genus@",      "Deliberate",               "Unhurried",
-     "Contemplative",         "Epochal",               "Timeless",                 "@Adj@ Eon"},
+     "Contemplative",         "Epochal",               "Timeless",                 "@Adj@ Aeon"},
 
     // Ashenzari -- divination theme
     {"Star-crossed",       "Cursed",                "Initiated",                "Soothsayer",

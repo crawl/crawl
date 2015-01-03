@@ -49,7 +49,7 @@ visible in the flames.
 %%%%
 A closed door
 
-A wooden door. To open it, try simply walking into it, or press ‘O’.
+A wooden door.
 %%%%
 # These should get custom names instead. Currently used by: IceCv, Ossuary,
 # Sewer, Trove, Volcano.
@@ -263,8 +263,8 @@ An altar to Beogh, unmistakably roughly hewn by orcish artisans.
 A runed door
 
 A door, covered in runic writing. It looks like there is something special
-behind it — perhaps danger, perhaps treasure. You may break the runes and open
-it like any other door (i.e., by walking into it or pressing ‘O’).
+behind it — perhaps danger, perhaps treasure. You may break the runes by
+opening it like any other door.
 %%%%
 A sacrificial altar of Ru
 
@@ -289,6 +289,13 @@ through it looks impossible, so long as the magic holds.
 A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
+%%%%
+A shadow trap
+
+This magical trap creates replicas of creatures native to its location, weaving
+them from shadows and threads of Abyssal matter. Its magics are sensitive
+enough that any non-summoned creature entering it will set it off, as long as
+you are in sight.
 %%%%
 A shadowy altar of Dithmenos
 
@@ -560,13 +567,7 @@ wand quite easily. It is too strong to be breakable by hand, however.
 %%%%
 An open door
 
-A wooden door. You can close it by standing next to it and {{
-    if crawl.is_tiles() then
-        return "either doing Ctrl-L-Click on the door or pressing 'C'."
-    else
-        return "pressing 'C'."
-    end
-}}
+A wooden door.
 %%%%
 An opulent altar of Gozag
 
@@ -994,4 +995,183 @@ One of the entrances that the opposition may come in through.
 An exit from the tutorial
 
 This is a way out of the dungeon, letting you finish this lesson.
+%%%%
+############
+### Clouds
+### TODO: move this to its own file!
+############
+flame cloud
+
+A cloud of raging fire. Any creature not entirely immune to fire will be hurt
+by time spent in the flames, though armour can mitigate the damage.
+
+Ranged cold attacks are blocked by the cloud, but will destroy it in the
+process.
+
+If placed over water, the heat will generate steam nearby. If the water is deep
+enough, the cold of the waves will lead to the cloud dissipating much more
+quickly.
+%%%%
+noxious fumes cloud
+
+A cloud of vile, choking fumes. Any breathing creature spending time in it will
+be at risk of becoming dazed & confused by the gasses, unless equipped with
+some source of poison resistance. Tougher, more experienced creatures are less
+likely to be affected.
+%%%%
+freezing vapour cloud
+
+A cloud of freezing air. Any creature not entirely immune to cold will be hurt
+by time spent inside, though armour can mitigate the damage.
+
+Ranged fire and lava attacks are blocked by the cloud, but will destroy it in
+the process.
+
+If placed over lava, the heat will dissipate the cloud much more quickly.
+%%%%
+poison gas cloud
+
+A cloud of deadly poison. Any creature without resistance to poison will be
+both poisoned & directly harmed by time spent in it.
+%%%%
+smoke cloud
+
+A cloud of coloured smoke. Harmless, except to the asthmatic.
+%%%%
+black smoke cloud
+
+<smoke cloud>
+%%%%
+grey smoke cloud
+
+<smoke cloud>
+%%%%
+blue smoke cloud
+
+<smoke cloud>
+%%%%
+purple smoke cloud
+
+<smoke cloud>
+%%%%
+translocational energy cloud
+
+The remnant of some creature that was recently here but is no longer, banished
+nearby, across the level, or out of reality itself, all the way into the Abyss.
+Some wizards say these are a kind of "allergic reaction" the universe
+produces, in response to magic that warps space in impossible ways; a cosmic
+sneeze. Perhaps metaphysically gross, but otherwise harmless.
+%%%%
+spreading flames cloud
+
+A raging forest fire. Any creature not entirely immune to fire will be hurt by
+time spent in the flames, though armour can mitigate the damage.
+
+These flames are especially fierce, and will intermittently flare up and fill
+its surroundings with lesser fires. Any trees unfortunate enough to be nearby
+will often find themselves transformed into more kindling for the fire.
+
+Ranged cold attacks are blocked by the cloud, but will destroy it in the
+process.
+
+If placed over water, the heat will generate steam nearby. If the water is deep
+enough, the cold of the waves will lead to the cloud dissipating much more
+quickly.
+%%%%
+steam cloud
+
+A cloud of scalding steam. Creatures caught within will be somewhat injured,
+though a modicum of armour or fire resistance is generally enough to reduce the
+damage to tolerable levels.
+%%%%
+ink cloud
+
+A cloud of ink, completely filling the water.
+%%%%
+calcifying dust cloud
+
+A petrifying cloud. Creatures caught in the cloud for any length of time will
+find themselves turning to stone, though an experienced adventurer can often
+resist the effects.
+%%%%
+blessed fire cloud
+
+A cloud of divine fire, imbued with the power & wrath of the good gods. Those
+in their service recieve some protection; otherwise, the only defense is stout
+armour and the wisdom to not enter the clouds in the first place. Those
+following evil gods are especially well advised to avoid these clouds, and the
+undead and demonic are even moreso.
+%%%%
+foul pestilence cloud
+
+# XXX: clarify vine stalkers, gargoyles
+A cloud of dark miasma. Any living being not subject to Zin's divine protection
+will find themselves terribly poisoned, ignoring any resistance they may have
+to lesser toxins. The unfortunate may find their movements slowing & their
+flesh rotting away, if they dally. Even the dumbest denizens of the Dungeon
+will avoid miasma if they can, and adventurers are well advised to do the same.
+%%%%
+thin mist cloud
+
+Atmospheric, but harmless.
+%%%%
+seething chaos cloud
+
+Reality itself become unhinged. A variety of exciting effects apply to those
+dallying within the clouds, ranging from invisibility to berserk rage to
+complete paralysis. The wise adventurer will stay to experience as few of these
+as possible.
+%%%%
+rain cloud
+
+An extremely localized rainstorm. Sometime produces pools of shallow water, or
+temporarily deepens existing pools. Beings made entirely out of fire are
+inexplicably averse to spending much time in these.
+
+If placed over lava, the heat will dissipate the cloud much more quickly.
+%%%%
+mutagenic fog cloud
+
+Pure, unstructured magic, condensed into a scintilliating mist; essentially,
+toxic magical waste. Creatures venturing within will find soon themselves
+glowing in the dark, and generally acquire a variety of exciting mutations
+shortly afterward. Not the fun kind, either!
+%%%%
+magical condensation cloud
+
+The wake of some highly concentrated magical energy. Harmless. (But whatever
+spawned it probably isn't!)
+%%%%
+raging winds cloud
+
+The winds of a raging tornado. Tarrying in here is a good way to meet a quick
+death.
+%%%%
+sparse dust cloud
+
+Atmospheric, but harmless.
+%%%%
+ghostly flame cloud
+
+The memory of flames past. Neither resistance to fire nor negative energy
+protect against these clouds; only armour will suffice. Luckily, standing in
+them causes very little harm. The spectres that emerge from the flames, on the
+other hand, are considerably more dangerous...
+%%%%
+acidic fog cloud
+
+A cloud of flesh-searing, metal-dissolving acid. Resistance to corrosion will
+mitigate the damage, as will armour, but the latter will quickly be eaten away
+by the acid. Very few creatures can survive in this for long.
+%%%%
+thunder cloud
+
+A lightning-spitting storm. The lightning only comes intermittently, but when
+it does, it hurts!
+%%%%
+negative energy cloud
+
+A cloud of necromantic magics. Living creatures trapped within will find
+themselves drained of their life energies, though armour and protection from
+negative energies mitigate the effects.
 %%%%

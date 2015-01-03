@@ -106,6 +106,8 @@ static tileidx_t _tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_TELEPORT;
     case TRAP_TELEPORT_PERMANENT:
         return TILE_DNGN_TRAP_TELEPORT_PERMANENT;
+    case TRAP_SHADOW:
+        return TILE_DNGN_TRAP_SHADOW;
     case TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case TRAP_BLADE:
@@ -166,7 +168,7 @@ static tileidx_t _tileidx_shop(coord_def where)
     }
 }
 
-static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
+tileidx_t tileidx_feature_base(dungeon_feature_type feat)
 {
     switch (feat)
     {
@@ -232,6 +234,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_SHAFT;
     case DNGN_TRAP_WEB:
         return TILE_DNGN_TRAP_WEB;
+    case DNGN_TRAP_SHADOW:
+        return TILE_DNGN_TRAP_SHADOW;
     case DNGN_TELEPORTER:
         return TILE_DNGN_TRAP_GOLUBRIA;
     case DNGN_ENTER_SHOP:
@@ -528,7 +532,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
             unsigned rc = real_colour(colour, gc);
             return tile_dngn_coloured(base, rc) + spec; // XXX
         }
-        return _tileidx_feature_base(feat);
+        return tileidx_feature_base(feat);
     }
 
     case DNGN_TRAP_MECHANICAL:
@@ -593,7 +597,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
             return t;
         }
     default:
-        return _tileidx_feature_base(feat);
+        return tileidx_feature_base(feat);
     }
 }
 
@@ -620,7 +624,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
 
     // Override terrain for magic mapping.
     if (!cell.seen() && env.map_knowledge(gc).mapped())
-        *bg = _tileidx_feature_base(cell.feat());
+        *bg = tileidx_feature_base(cell.feat());
     else
         *bg = mem_bg;
     *bg |= tileidx_unseen_flag(gc);
@@ -1429,12 +1433,12 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_WRETCHED_STAR;
 
     // flying insects ('y')
-    case MONS_YELLOW_WASP:
-        return TILEP_MONS_YELLOW_WASP;
+    case MONS_WASP:
+        return TILEP_MONS_WASP;
     case MONS_VAMPIRE_MOSQUITO:
         return TILEP_MONS_VAMPIRE_MOSQUITO;
-    case MONS_RED_WASP:
-        return TILEP_MONS_RED_WASP;
+    case MONS_HORNET:
+        return TILEP_MONS_HORNET;
     case MONS_GHOST_MOTH:
         return TILEP_MONS_GHOST_MOTH;
     case MONS_MOTH_OF_WRATH:
@@ -2822,8 +2826,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             // weapon swap trick.
             const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
             if (!mon.inv[MSLOT_SHIELD].get() && weapon
-                && (weapon->base_type == OBJ_STAVES
-                      && weapon->sub_type == STAFF_POISON
+                && (weapon->is_type(OBJ_STAVES, STAFF_POISON)
                     || is_unrandom_artefact(*weapon, UNRAND_OLGREB)))
             {
                 return TILEP_MONS_ARACHNE;
@@ -3739,9 +3742,9 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // flying insects ('y')
     case MONS_VAMPIRE_MOSQUITO:
         return TILE_CORPSE_VAMPIRE_MOSQUITO;
-    case MONS_YELLOW_WASP:
+    case MONS_WASP:
         return TILE_CORPSE_YELLOW_WASP;
-    case MONS_RED_WASP:
+    case MONS_HORNET:
         return TILE_CORPSE_RED_WASP;
     case MONS_GHOST_MOTH:
         return TILE_CORPSE_GHOST_MOTH;
@@ -4195,17 +4198,17 @@ tileidx_t tileidx_item(const item_def &item)
         switch (rnd % NDSC_BOOK_PRI)
         {
         case 0:
-            return TILE_BOOK_LEATHER_OFFSET
-                   + rnd % tile_main_count(TILE_BOOK_LEATHER_OFFSET);
         case 1:
-            return TILE_BOOK_METAL_OFFSET
-                   + rnd % tile_main_count(TILE_BOOK_METAL_OFFSET);
-        case 2:
-            return TILE_BOOK_PAPYRUS;
-        case 3:
-        case 4:
         default:
             return TILE_BOOK_PAPER_OFFSET + colour;
+        case 2:
+            return TILE_BOOK_LEATHER_OFFSET
+                   + rnd % tile_main_count(TILE_BOOK_LEATHER_OFFSET);
+        case 3:
+            return TILE_BOOK_METAL_OFFSET
+                   + rnd % tile_main_count(TILE_BOOK_METAL_OFFSET);
+        case 4:
+            return TILE_BOOK_PAPYRUS;
         }
 
     case OBJ_STAVES:
@@ -5101,6 +5104,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_EDIT_PLAYER_TILE;
     case CMD_DISPLAY_COMMANDS:
         return TILEG_CMD_DISPLAY_COMMANDS;
+    case CMD_LOOKUP_HELP:
+        return TILEG_CMD_LOOKUP_HELP;
     case CMD_CHARACTER_DUMP:
         return TILEG_CMD_CHARACTER_DUMP;
     case CMD_DISPLAY_INVENTORY:

@@ -28,7 +28,6 @@
 #include "delay.h"
 #include "describe.h"
 #include "dgnevent.h"
-#include "effects.h"
 #include "end.h"
 #include "env.h"
 #include "fight.h"
@@ -102,7 +101,6 @@ void maybe_melt_player_enchantments(beam_type flavour, int damage)
 int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam, bool doEffects)
 {
-    int resist;
     int original = hurted;
 
     dprf("checking resistance: flavour=%d", flavour);
@@ -120,8 +118,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     switch (flavour)
     {
     case BEAM_WATER:
-        hurted = resist_adjust_damage(&you, flavour,
-                                      you.res_water_drowning(), hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (!hurted && doEffects)
             mpr("You shrug off the wave.");
         else if (hurted > original && doEffects)
@@ -132,8 +129,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_STEAM:
-        hurted = resist_adjust_damage(&you, flavour,
-                                      player_res_steam(), hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
@@ -144,8 +140,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_FIRE:
-        hurted = resist_adjust_damage(&you, flavour,
-                                      player_res_fire(), hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
@@ -164,13 +159,10 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                 mpr("You resist completely.");
         }
 #endif
-        // Inconsistency: no penalty for rF-, unlike monsters.  That's
-        // probably good, and monsters should be changed.
         break;
 
     case BEAM_COLD:
-        hurted = resist_adjust_damage(&you, flavour,
-                                      player_res_cold(), hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         else if (hurted > original && doEffects)
@@ -181,9 +173,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ELECTRICITY:
-        hurted = resist_adjust_damage(&you, flavour,
-                                      player_res_electricity(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
@@ -195,8 +185,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_POISON:
-        resist = player_res_poison();
-        hurted = resist_adjust_damage(&you, flavour, resist, hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (doEffects)
         {
@@ -208,15 +197,13 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
             poison_player(pois, source, kaux);
 
-            if (resist > 0)
+            if (player_res_poison() > 0)
                 canned_msg(MSG_YOU_RESIST);
         }
 
         break;
 
     case BEAM_POISON_ARROW:
-        resist = player_res_poison();
-
         if (doEffects)
         {
             // Ensure that we received a valid beam object before proceeding.
@@ -226,23 +213,22 @@ int check_your_resists(int hurted, beam_type flavour, string source,
             int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
             pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
 
+            const int resist = player_res_poison();
             poison_player((resist ? pois / 2 : pois), source, kaux, true);
         }
 
-        hurted = resist_adjust_damage(&you, flavour, resist, hurted);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         break;
 
     case BEAM_NEG:
-        hurted = resist_adjust_damage(&you, flavour, player_prot_life(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (doEffects)
         {
-            if (hurted < original)
-                canned_msg(MSG_YOU_RESIST);
-            else if (hurted > original)
+            // drain_player handles the messaging here
+            if (hurted > original)
             {
                 mpr("The negative energy saps you greatly!");
                 xom_is_stimulated(200);
@@ -252,8 +238,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ICE:
-        hurted = resist_adjust_damage(&you, flavour, player_res_cold(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
@@ -265,8 +250,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_LAVA:
-        hurted = resist_adjust_damage(&you, flavour, player_res_fire(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
@@ -278,8 +262,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_ACID:
-        hurted = resist_adjust_damage(&you, flavour, player_res_acid(),
-                                      hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, hurted);
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         break;
@@ -332,9 +315,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         }
         else
         {
-            hurted = resist_adjust_damage(&you, flavour,
-                                          you.res_negative_energy(),
-                                          hurted, true);
+            hurted = resist_adjust_damage(&you, flavour, hurted);
             if (hurted < original && doEffects)
                 canned_msg(MSG_YOU_PARTIALLY_RESIST);
             else if (hurted > original && doEffects)
@@ -899,7 +880,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
     if (dam != INSTANT_DEATH)
     {
-        you.maybe_degrade_bone_armour();
+        you.maybe_degrade_bone_armour(BONE_ARMOUR_HIT_RATIO);
 
         if (you.spirit_shield() && death_type != KILLED_BY_POISON
             && !(aux && strstr(aux, "flay_damage")))

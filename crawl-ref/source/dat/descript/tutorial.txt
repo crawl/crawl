@@ -59,22 +59,27 @@ to return to the normal game mode.</nomouse>
 tutorial1 autoexplore
 
 Exploring manually can get tedious after a while, so you might want to let that
-happen automatically. Try it by pressing <input>$cmd[CMD_EXPLORE]</input>.
+happen automatically. Try it by pressing <input>$cmd[CMD_EXPLORE]</input>
+<localtiles>, or by clicking on 'autoexplore', the first button in the comamnd
+bar below the minimap.</localtiles>.
 %%%%
 tutorial1 exclusion
 
-Some dangerous ground is marked with <w>exclusions</w>. Autoexplore
-<localtiles>(including by <input>mouseclick</input>!) </localtiles>will not
-lead you into exclusions. Instead you will automatically stop.
+Some dangerous ground is marked with <w>exclusions</w>. Autotravel
+<localtiles>(including <input>mouseclick</input>!) </localtiles>will not lead
+you into exclusions. Instead you will automatically stop.
 
-However, autoexplore will move you safely around exclusions so you may continue
-by pressing <input>$cmd[CMD_EXPLORE]</input>.
+However, autoexplore will move you safely around exclusions: so, you can safely
+continue by pressing <input>$cmd[CMD_EXPLORE]</input>.
 %%%%
 tutorial1 autoexplore_announce
 
-Autoexplore will stop to announce features and items. To travel directly to the
-stairs, you can <localtiles><input>click</input> on them or you can
-</localtiles>press <input>$cmd[CMD_DISPLAY_MAP] << Enter</input>.
+Autoexplore will stop when you first see items or dungeon features, like these
+stairs. To travel directly to the stairs, you can
+<localtiles><input>click</input> on them; or you can </localtiles>press
+<input>$cmd[CMD_DISPLAY_MAP]</input> to enter the map overview, then
+<input><<</input> to move the cursor to the nearest up-stairs, and
+<input>Enter</input> to go there.
 %%%%
 tutorial1 tutorial_end
 
@@ -149,10 +154,10 @@ weapon! Go and grab the one lying over there.
 %%%%
 tutorial2 pickup_weapon
 
-Pick up this weapon with <input>$cmd[CMD_PICKUP]</input> or <input>g</input>
-and then wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>.<localtiles>
-Alternatively, you can perform either action by <input>clicking</input> on it
-in the inventory panel.</localtiles>
+Pick up this weapon<localtiles> by clicking on it in the inventory panel, and
+then wield it by clicking on it again. Alternatively, pick it up</localtiles>
+with <input>$cmd[CMD_PICKUP]</input> or <input>g</input> and then wield it with
+<input>$cmd[CMD_WIELD_WEAPON]</input>.
 %%%%
 tutorial2 melee
 
@@ -161,24 +166,26 @@ it.
 %%%%
 tutorial2 resting
 
-Very good! You can regain any lost health by resting with
-<input>$cmd[CMD_REST]</input>. This will make you rest for up to 100 turns, but
-will get interrupted by a number of important events.
+Very good! You can heal by resting with <input>$cmd[CMD_REST]</input>
+<localtiles>, or by clicking the 'rest' button in the command bar below the
+minimap</localtiles>. This will make you rest for up to 100 turns, but will be
+interrupted by important events, or when your health is fully restored.
 %%%%
 tutorial2 chop_corpses
 
-You can chop up corpses into edible meat chunks with
-<input>$cmd[CMD_BUTCHER]</input> <localtiles>or <input>Shift +
-mouseclick</input>, </localtiles>and then eat the resulting chunks with
-<input>$cmd[CMD_EAT]</input><localtiles> or by <input>mouseclick</input>
-</localtiles>.
+While standing on corpses, you can chop them into edible meat chunks with
+<input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
+mouseclick</input></localtiles>. When you're hungry, you can eat the resulting
+chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
+<input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 rest_and_chop_reminder
 
-# FIXME: Awkward. No mouse commands.
 Don't forget about chopping corpses for food (with
-<input>$cmd[CMD_BUTCHER]</input>), or resting (with
-<input>$cmd[CMD_REST]</input>)!
+<input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
+mouseclick</input></localtiles>), or resting (with
+<input>$cmd[CMD_REST]</input><localtiles> or the third button in the command
+bar</localtiles>)!
 %%%%
 tutorial2 wait
 
@@ -200,9 +207,14 @@ the resulting chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
 tutorial2 compare_monster_desc
 
 # The keyboard commands are skipped in localtiles for clarity.
-# :nowrap is used because of line length.
-:nowrap
-Examine these monsters (<localtiles>via <input>mouseover</input></localtiles><nomouse>with <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></nomouse>) and compare their descriptions (<localtiles><input>rightmouseclick</input></localtiles><nomouse><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></nomouse>) to find out which of these cages is safer to fight through.
+Examine these monsters (<localtiles>via <input>mouseover</input></localtiles>
+<nomouse>by pressing <input>$cmd[CMD_LOOK_AROUND]</input> to enter examine mode,
+and then <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> to cycle through nearby
+monsters</nomouse>)
+and compare their descriptions (<localtiles>with <input>rightmouseclick</input></localtiles>
+<nomouse>by pressing <input>$cmd[CMD_TARGET_DESCRIBE]</input> while selecting
+them in examine mode</nomouse>)
+to find out which of these cages is safer to fight through.
 %%%%
 tutorial2 downstairs
 
@@ -218,7 +230,7 @@ Remember: You can reread old messages with
 tutorial2 tomahawks
 
 Now, for ranged combat! Pick up these tomahawks with
-<input>$cmd[CMD_PICKUP]</input><localtiles> or by
+<input>$cmd[CMD_PICKUP]</input> or <input>g</input><localtiles>, or by
 <input>mouseclick</input>,</localtiles> and continue.
 %%%%
 tutorial2 throwing

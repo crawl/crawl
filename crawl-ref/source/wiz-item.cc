@@ -17,7 +17,6 @@
 #include "coordit.h"
 #include "dbg-util.h"
 #include "decks.h"
-#include "effects.h"
 #include "env.h"
 #include "godpassive.h"
 #include "invent.h"
@@ -766,15 +765,7 @@ void wizard_uncurse_item()
 void wizard_identify_pack()
 {
     mpr("You feel a rush of knowledge.");
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        item_def& item = you.inv[i];
-        if (item.defined())
-        {
-            set_ident_type(item, ID_KNOWN_TYPE);
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
-        }
-    }
+    identify_inventory();
     you.wield_change  = true;
     you.redraw_quiver = true;
 }
@@ -1259,12 +1250,12 @@ static void _debug_acquirement_stats(FILE *ostat)
         {
             const int mannum = subtype_quants[BOOK_MANUAL];
             fprintf(ostat, "\nManuals:\n");
-            for (int i = SK_FIRST_SKILL; i <= SK_LAST_SKILL; ++i)
+            for (skill_type sk = SK_FIRST_SKILL; sk <= SK_LAST_SKILL; ++sk)
             {
-                const int k = 200 + i;
+                const int k = 200 + sk;
                 if (subtype_quants[k] > 0)
                 {
-                    fprintf(ostat, "%17s: %5.2f\n", skill_name((skill_type)i),
+                    fprintf(ostat, "%17s: %5.2f\n", skill_name(sk),
                             100.0 * (float) subtype_quants[k] / (float) mannum);
                 }
             }

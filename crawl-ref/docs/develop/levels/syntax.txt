@@ -625,6 +625,12 @@ ITEM:     (list of items, separated by comma)
           the same location, use delayed_decay_extra:
              : dgn.delayed_decay_extra(_G, 'e', 'human corpse', 'mace, shield')
 
+          IMPORTANT: the delayed_decay line should always come after any
+          shuffles or substitutions of the relevant glyphs. This is because
+          it is equivalent to a KITEM plus a MARKER; the former applies to
+          the glyph after all substitutions, while the latter considers only
+          those substitutions that precede the delayed_decay call.
+
           Randart spell books
           -------------------
           You can specify random artefact spell books using:
@@ -1372,7 +1378,10 @@ KMASK:    Z = no_monster_gen
             KMASK: W = !no_monster_gen
 
           would make it so that monsters are only randomly generated on shallow
-          water squares.
+          water squares. Or, to make only part of a vault transparent for
+          level-connectivity purposes:
+
+            KMASK: .12 = !opaque
 
           Unlike KFEAT, KITEM, and KMONS, KMASK does not override the normal
           meaning of the glyph.

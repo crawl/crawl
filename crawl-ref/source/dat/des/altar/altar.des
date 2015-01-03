@@ -29,7 +29,7 @@
 
 {{
 function interest_check(e)
-  if you.branch() == "D" then
+  if you.in_branch("D") then
     if you.absdepth() > 9 then
       e.tags('extra')
     end

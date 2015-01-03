@@ -55,8 +55,8 @@ The contents of this text are:
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
                 autofight_throw, autofight_throw_nomove, autofight_fire_stop,
                 autofight_caught, automagic_enable, automagic_slot,
-                automagic_fight, automagic_stop
-3-i     Message and Display Improvements.
+                automagic_fight, automagic_stop, fail_severity_to_confirm
+3-h     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark,
@@ -1132,6 +1132,11 @@ item_slot ^= <regex>:<inventory letter>
         Additionally, the item_slot option is applied on an item when it is
         identified, so it can be moved to the right place even if it was
         picked up unidentified.
+        Also, item_slot will cause items to be moved to their designated spot
+        even if there already is an item there, unlike spell_slot. However, if
+        that item matches the regex as well, it will try the next inventory
+        letter the player specified, and see if that slot is empty or has an
+        item that doesn't match the regex.
 
 autofight_stop = 30
         Autofight will not act if your HP is at or lower than this
@@ -1177,6 +1182,18 @@ automagic_stop = 0
         Similar to autofight_stop, if magic points are below this number
         (percentage of total), casting is prevented. What happens depends
         on automagic_fight setting.
+
+fail_severity_to_confirm = 3
+        Ask for confirmation when attempting to cast a spell where a miscast
+        would cause severe penalties. Prompt if the miscast severity of the
+        spell (the colour shown in the spellcasting menu) is greater than
+        or equal to the number specified:
+
+          3: dark red
+          2: light red or higher
+          1: yellow or higher
+
+        If the value 0 or -1 is given, never prompt about miscasts.
 
 3-h     Messages and Display Enhancements.
 ------------------------------------------
@@ -2181,9 +2198,12 @@ display_char = <dungeon_character_name : symbol>
         Symbols can be specified using a letter, or by its ASCII/Unicode
         code: a decimal number or a hexadecimal one (prefixed with x).
 
-feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
+feature += <regex> { <symbol>, <magicmap symbol>, <view colour>,
                     <levelmap_magic_colour>, <levelmap_seen_colour>,
-                    <emphasised_colour>, <levelmap_emphasised_colour> }
+                    <emphasised_colour>, <levelmap_emphasised_colour> } ;
+           <regex> { ... }
+feature -= <regex> , <regex>
+        (List-like option)
         where <regex> is a regular expression describing a dungeon
         feature. This regex should match the description when using the
         'x' command. In case the regex matches several descriptions, all
@@ -2210,23 +2230,29 @@ feature = <regex> { <symbol>, <magicmap symbol>, <view colour>,
         feature descriptions strung together on the same line separated
         by semicolons.
 
+        Feature overrides can be cleared using -=, providing a regex only
+        (and not an appearance). This will restore all features whose
+        descriptions match the regex to their default appearances.
+
         Examples:
          * Colour rock walls red:
-             feature = rock wall { , , red }
+             feature += rock wall { , , red }
          * Use # for metal walls in all character sets:
-             feature = metal wall {#}
+             feature += metal wall {#}
          * Colour upstairs green and downstairs red:
-             feature = stone staircase leading up {,,,,green}
-             feature = stone staircase leading down {,,,,red}
+             feature += stone staircase leading up {,,,,green}
+             feature += stone staircase leading down {,,,,red}
 
         Symbols can be specified as with display_char:
-             feature = metal wall {#}
-             feature = metal wall {35}
-             feature = metal wall {x23}
+             feature += metal wall {#}
+             feature += metal wall {35}
+             feature += metal wall {x23}
         all do the same thing.
 
-mon_glyph = <monster name or symbol> : <colour> <glyph>
-            <monster name or symbol> : <monster name>
+mon_glyph += <monster name or symbol> : (<colour> <glyph> | <monster name>) ,
+             <monster name or symbol> : <replacement>
+mon_glyph -= <monster name or symbol>
+        (List option)
         The mon_glyph option allows you to customise the symbol and
         colour used to display a monster.
 
@@ -2234,16 +2260,16 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
         existing symbols. For instance, if you want to put elves on E
         and elementals on e, you can do this:
 
-             mon_glyph = e : E
-             mon_glyph = E : e
+             mon_glyph += e : E
+             mon_glyph += E : e
 
         You can specify a different symbol, or a colour, or both, in any
         order. Here are more examples:
 
-             mon_glyph = deep elf annihilator : E lightmagenta
-             mon_glyph = Xtahua : lightmagenta D
-             mon_glyph = large zombie : darkgrey
-             mon_glyph = small simulacrum : x
+             mon_glyph += deep elf annihilator : E lightmagenta
+             mon_glyph += Xtahua : lightmagenta D
+             mon_glyph += large zombie : darkgrey
+             mon_glyph += small simulacrum : x
 
         (The left hand side of the : is case-sensitive.)
 
@@ -2251,19 +2277,19 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
         symbol and colour of that monster (this is not transitive). For
         example, if you think that slime creature colours are backwards:
 
-            mon_glyph = slime creature : merged slime creature
-            mon_glyph = merged slime creature : slime creature
+            mon_glyph += slime creature : merged slime creature
+            mon_glyph += merged slime creature : slime creature
 
         You can specify symbols using their code points using the syntax
         as shown in the "feature" option. You can also use Unicode code
         points:
 
-             mon_glyph = draconian scorcher : x6e9
+             mon_glyph += draconian scorcher : x6e9
 
         A single _ is treated as a space; if you want a real underscore,
         put a \ in front of it like this:
 
-             mon_glyph = player ghost : \_
+             mon_glyph += player ghost : \_
 
         You can also redefine several "pseudo" monsters, them being:
 
@@ -2275,7 +2301,14 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
         Playable species that normally have no monster of the same name can
         also be redefined, for use with show_player_species = true.
 
-item_glyph = <regexp> : <colour> <glyph>
+        Monster glyph overrides can be cleared using -=, which restores
+        the named monster (or all monsters of the given glyph) to its default
+        appearance. Specify only the monster name or glyph for -=, not the
+        replacement being removed.
+
+item_glyph ^= <regexp> : <colour> <glyph>
+item_glyph -= <regexp>
+        (Ordered list option)
         Customizes the symbol and/or colour of all items matching the regexp.
         Unlike mon_glyph, this is a partial name match.
 
@@ -2286,6 +2319,11 @@ item_glyph = <regexp> : <colour> <glyph>
         to change the colour and glyph separately:
             item_glyph += corpse : x625
             item_glyph += poisonous.* corpse : lightgreen
+
+        Rules are applied in order, so later rules are higher priority.
+
+        Removing a rule with -= removes all rules using the exact regexp
+        provided; do not specify a colour or glyph in that case.
 
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the

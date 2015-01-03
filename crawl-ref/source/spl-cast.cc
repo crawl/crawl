@@ -18,7 +18,6 @@
 #include "colour.h"
 #include "describe.h"
 #include "directn.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
@@ -73,6 +72,7 @@
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
+#include "viewchar.h" // stringize_glyph
 
 static int _spell_enhancement(spell_type spell);
 static int _apply_enhancement(spell_type spell, const int initial_power);
@@ -118,9 +118,8 @@ static string _spell_base_description(spell_type spell, bool viewing)
     // spell fail rate, level
     highlight = failure_rate_colour(spell);
     desc << "<" << colour_to_str(highlight) << ">";
-    char* failure = failure_rate_to_string(spell_fail(spell));
+    const string failure = failure_rate_to_string(spell_fail(spell));
     desc << chop_string(failure, 12);
-    free(failure);
     desc << "</" << colour_to_str(highlight) << ">";
     desc << spell_difficulty(spell);
 
@@ -275,7 +274,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         ASSERT(sel[0]->hotkeys.size() == 1);
         if (spell_menu.menu_action == Menu::ACT_EXAMINE)
         {
-            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]));
+            describe_spell(get_spell_by_letter(sel[0]->hotkeys[0]), nullptr);
             redraw_screen();
         }
         else
@@ -321,22 +320,24 @@ int spell_fail(spell_type spell)
     dprf("Armour+Shield spell failure penalty: %d", armour_shield_penalty);
     chance += armour_shield_penalty;
 
-    switch (spell_difficulty(spell))
+    static const int difficulty_by_level[] =
     {
-    case  1: chance +=   3; break;
-    case  2: chance +=  15; break;
-    case  3: chance +=  35; break;
-    case  4: chance +=  70; break;
-    case  5: chance += 100; break;
-    case  6: chance += 150; break;
-    case  7: chance += 200; break;
-    case  8: chance += 260; break;
-    case  9: chance += 330; break;
-    case 10: chance += 420; break;
-    case 11: chance += 500; break;
-    case 12: chance += 600; break;
-    default: chance += 750; break;
-    }
+        0,
+        3,
+        15,
+        35,
+
+        70,
+        100,
+        150,
+
+        200,
+        260,
+        330,
+    };
+    const int spell_level = spell_difficulty(spell);
+    ASSERT_RANGE(spell_level, 0, (int) ARRAYSZ(difficulty_by_level));
+    chance += difficulty_by_level[spell_level];
 
 #if TAG_MAJOR_VERSION == 34
     // Only apply this penalty to Dj because other species lose nutrition
@@ -459,7 +460,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
 static int _spell_enhancement(spell_type spell)
 {
-    unsigned int typeflags = get_spell_disciplines(spell);
+    const spschools_type typeflags = get_spell_disciplines(spell);
     int enhanced = 0;
 
     if (typeflags & SPTYP_CONJURATION)
@@ -496,9 +497,6 @@ static int _spell_enhancement(spell_type spell)
         enhanced -= 2;
     if (you.form == TRAN_SHADOW)
         enhanced -= 2;
-
-    if (you.form == TRAN_DRAGON && spell == SPELL_DRAGON_CALL)
-        enhanced++;
 
     enhanced += you.archmagi();
     enhanced += player_equip_unrand(UNRAND_MAJIN);
@@ -802,6 +800,22 @@ bool cast_a_spell(bool check_range, spell_type spell)
         }
     }
 
+    int severity = fail_severity(spell);
+    if (Options.fail_severity_to_confirm > 0
+        && Options.fail_severity_to_confirm <= severity)
+    {
+        string prompt = make_stringf("The spell is %s to cast%s "
+                                     "Continue anyway?",
+                                     fail_severity_adjs[severity],
+                                     severity > 1 ? "!" : ".");
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
@@ -1021,8 +1035,14 @@ static bool _spellcasting_aborted(spell_type spell,
     bool uncastable = false;
 
     {
-        // MP was already deducted, so don't check MP in spell_is_uncastable.
-        unwind_var<int> fake_mp(you.magic_points, 50);
+        // FIXME: we might be called in a situation ([a]bilities, Xom) that
+        // isn't evoked but still doesn't use the spell's MP.  your_spells,
+        // this function, and spell_is_uncastable should take a flag
+        // indicating whether MP should be checked (or should never check).
+        const int rest_mp = evoked ? 0 : spell_mana(spell);
+
+        // Temporarily restore MP so that we're not uncastable for lack of MP.
+        unwind_var<int> fake_mp(you.magic_points, you.magic_points + rest_mp);
         uncastable = !wiz_cast && spell_is_uncastable(spell, msg, true, evoked);
     }
 
@@ -1143,6 +1163,50 @@ static void _spellcasting_corruption(spell_type spell)
     ouch(hp_cost, KILLED_BY_SOMETHING, MID_NOBODY, source);
 }
 
+// Returns the nth triangular number.
+static int _triangular_number(int n)
+{
+    return n * (n+1) / 2;
+}
+
+/**
+ * Compute success chance for MR-checking spells and abilities.
+ *
+ * @param mr The magic resistance of the target.
+ * @param powc The enchantment power.
+ * @param scale The denominator of the result.
+ *
+ * @return The chance, out of scale, that the enchantment affects the target.
+ */
+int hex_success_chance(const int mr, int powc, int scale)
+{
+    powc = ench_power_stepdown(powc);
+    const int target = mr + 100 - powc;
+
+    if (target <= 0)
+        return scale;
+    if (target > 200)
+        return 0;
+    if (target <= 100)
+        return scale - scale * _triangular_number(target) / (101 * 100);
+    return scale * _triangular_number(201 - target) / (101 * 100);
+}
+
+// Include success chance in targeter for spells checking monster MR.
+vector<string> desc_success_chance(const monster_info& mi, int pow)
+{
+    vector<string> descs;
+    const int mr = mi.res_magic();
+    if (mr == MAG_IMMUNE)
+        descs.push_back("magic immune");
+    else
+    {
+        descs.push_back(make_stringf("chance %d%%",
+                                     hex_success_chance(mr, pow, 100)).c_str());
+    }
+    return descs;
+}
+
 /**
  * Targets and fires player-cast spells & spell-like effects.
  *
@@ -1218,6 +1282,20 @@ spret_type your_spells(spell_type spell, int powc,
 
         targetter *hitfunc = _spell_targetter(spell, powc, range);
 
+        // Add success chance to targetted spells checking monster MR
+        const bool mr_check = testbits(flags, SPFLAG_MR_CHECK)
+                              && testbits(flags, SPFLAG_DIR_OR_TARGET)
+                              && !testbits(flags, SPFLAG_HELPFUL);
+        desc_filter additional_desc = nullptr;
+        if (mr_check)
+        {
+            const zap_type zap = spell_to_zap(spell);
+            const int eff_pow = zap == NUM_ZAPS ? powc
+                                                : zap_ench_power(zap, powc);
+            additional_desc = bind(desc_success_chance, placeholders::_1,
+                                   eff_pow);
+        }
+
         string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
@@ -1226,7 +1304,8 @@ spret_type your_spells(spell_type spell, int powc,
                              needs_path, true, dont_cancel_me, prompt,
                              title.c_str(),
                              testbits(flags, SPFLAG_NOT_SELF),
-                             hitfunc))
+                             hitfunc,
+                             additional_desc))
         {
             if (hitfunc)
                 delete hitfunc;
@@ -1984,6 +2063,14 @@ static double _get_miscast_chance_with_miscast_prot(spell_type spell)
     return chance;
 }
 
+const char *fail_severity_adjs[] =
+{
+    "safe",
+    "slightly dangerous",
+    "quite dangerous",
+    "very dangerous",
+};
+
 int fail_severity(spell_type spell)
 {
     const double chance = _get_miscast_chance_with_miscast_prot(spell);
@@ -1992,6 +2079,7 @@ int fail_severity(spell_type spell)
            (chance < 0.005) ? 1 :
            (chance < 0.025) ? 2
                             : 3;
+    COMPILE_CHECK(ARRAYSZ(fail_severity_adjs) >= 3);
 }
 
 // Chooses a colour for the failure rate display for a spell. The colour is
@@ -2016,13 +2104,15 @@ int failure_rate_to_int(int fail)
         return max(1, (int) (100 * _get_true_fail_rate(fail)));
 }
 
-//Note that this char[] is allocated on the heap, so anything calling
-//this function will also need to call free()!
-char* failure_rate_to_string(int fail)
+/**
+ * Convert the given failure rate into a percent, and return it as a string.
+ *
+ * @param fail      A raw failure rate (not a percent!)
+ * @return          E.g. "79%".
+ */
+string failure_rate_to_string(int fail)
 {
-    char *buffer = (char *)malloc(9);
-    sprintf(buffer, "%d%%", failure_rate_to_int(fail));
-    return buffer;
+    return make_stringf("%d%%", failure_rate_to_int(fail));
 }
 
 string spell_hunger_string(spell_type spell, bool rod)
@@ -2122,19 +2212,42 @@ int calc_spell_range(spell_type spell, int power, bool rod)
     return range;
 }
 
+/**
+ * Give a string visually describing a given spell's range, as cast by the
+ * player.
+ *
+ * @param spell     The spell in question.
+ * @param rod       Whether the spell is being 'cast' from a rod.
+ * @return          Something like "@-->.."
+ */
 string spell_range_string(spell_type spell, bool rod)
 {
     const int cap      = spell_power_cap(spell);
     const int range    = calc_spell_range(spell, 0, rod);
     const int maxrange = spell_range(spell, cap);
 
-    if (range < 0)
+    return range_string(range, maxrange, '@');
+}
+
+/**
+ * Give a string visually describing a given spell's range.
+ *
+ * E.g., for a spell of fixed range 1 (melee), "@>"
+ *       for a spell of range 3, max range 5, "@-->.."
+ *
+ * @param range         The current range of the spell.
+ * @param maxrange      The range the spell would have at max power.
+ * @param caster_char   The character used to represent the caster.
+ *                      Usually @ for the player.
+ * @return              See above.
+ */
+string range_string(int range, int maxrange, ucs_t caster_char)
+{
+    if (range <= 0)
         return "N/A";
-    else
-    {
-        return string("@") + string(range - 1, '-')
-               + string(">") + string(maxrange - range, '.');
-    }
+
+    return stringize_glyph(caster_char) + string(range - 1, '-')
+           + string(">") + string(maxrange - range, '.');
 }
 
 string spell_schools_string(spell_type spell)

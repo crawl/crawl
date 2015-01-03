@@ -20,6 +20,7 @@
 #include "describe.h"
 #include "env.h"
 #include "food.h"
+#include "goditem.h"
 #include "initfile.h"
 #include "itemprop.h"
 #include "items.h"
@@ -350,6 +351,11 @@ void InvMenu::set_preselect(const vector<SelItem> *pre)
     pre_select = pre;
 }
 
+string slot_description()
+{
+    return make_stringf("%d/%d slots", inv_count(), ENDOFPACK);
+}
+
 void InvMenu::set_title(const string &s)
 {
     string stitle = s;
@@ -364,10 +370,7 @@ void InvMenu::set_title(const string &s)
         // so that get_number_of_cols returns the appropriate value.
         cgotoxy(1, 1);
 
-        stitle = make_stringf(
-            "Inventory: %d/%d slots",
-            inv_count(),
-            ENDOFPACK);
+        stitle = "Inventory: " + slot_description();
 
         string prompt = "(_ for help)";
         stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
@@ -1521,6 +1524,7 @@ bool check_old_item_warning(const item_def& item,
 {
     item_def old_item;
     string prompt;
+    bool penance = false;
     if (oper == OPER_WIELD) // can we safely unwield old item?
     {
         if (!you.weapon())
@@ -1531,7 +1535,7 @@ bool check_old_item_warning(const item_def& item,
             return true;
 
         old_item = *you.weapon();
-        if (!needs_handle_warning(old_item, OPER_WIELD))
+        if (!needs_handle_warning(old_item, OPER_WIELD, penance))
             return true;
 
         prompt += "Really unwield ";
@@ -1548,7 +1552,7 @@ bool check_old_item_warning(const item_def& item,
 
         old_item = you.inv[you.equip[eq_slot]];
 
-        if (!needs_handle_warning(old_item, OPER_TAKEOFF))
+        if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
             return true;
 
         prompt += "Really take off ";
@@ -1565,7 +1569,7 @@ bool check_old_item_warning(const item_def& item,
                 return true;
 
             old_item = you.inv[equip];
-            if (!needs_handle_warning(old_item, OPER_TAKEOFF))
+            if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
                 return true;
 
             prompt += "Really remove ";
@@ -1579,6 +1583,8 @@ bool check_old_item_warning(const item_def& item,
     // now ask
     prompt += old_item.name(DESC_INVENTORY);
     prompt += "?";
+    if (penance)
+        prompt += " This could place you under penance!";
     return yesno(prompt.c_str(), false, 'n');
 }
 
@@ -1632,8 +1638,7 @@ static bool _is_known_no_tele_item(const item_def &item)
 bool nasty_stasis(const item_def &item, operation_types oper)
 {
     return (oper == OPER_PUTON
-           && (item.base_type == OBJ_JEWELLERY
-               && item.sub_type == AMU_STASIS
+           && (item.is_type(OBJ_JEWELLERY, AMU_STASIS)
                && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
                    || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE])))
             || (oper == OPER_PUTON || oper == OPER_WEAR
@@ -1641,7 +1646,8 @@ bool nasty_stasis(const item_def &item, operation_types oper)
                 && (_is_known_no_tele_item(item) && you.duration[DUR_TELEPORT]);
 }
 
-bool needs_handle_warning(const item_def &item, operation_types oper)
+bool needs_handle_warning(const item_def &item, operation_types oper,
+                          bool &penance)
 {
     if (_has_warning_inscription(item, oper))
         return true;
@@ -1664,8 +1670,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         return false;
 
     if (oper == OPER_REMOVE
-        && item.base_type == OBJ_JEWELLERY
-        && item.sub_type == AMU_FAITH
+        && item.is_type(OBJ_JEWELLERY, AMU_FAITH)
         && !(you_worship(GOD_RU) && you.piety >= piety_breakpoint(5))
         && !you_worship(GOD_NO_GOD)
         && !you_worship(GOD_XOM))
@@ -1675,6 +1680,12 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 
     if (nasty_stasis(item, oper))
         return true;
+
+    if (oper == OPER_ATTACK && god_hates_item(item))
+    {
+        penance = true;
+        return true;
+    }
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
         && is_weapon(item))
@@ -1713,8 +1724,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 bool check_warning_inscriptions(const item_def& item,
                                  operation_types oper)
 {
+    bool penance = false;
     if (item.defined()
-        && needs_handle_warning(item, oper))
+        && needs_handle_warning(item, oper, penance))
     {
         // When it's about destroying an item, don't even ask.
         // If the player really wants to do that, they'll have
@@ -1786,6 +1798,8 @@ bool check_warning_inscriptions(const item_def& item,
                          you.duration[DUR_SLOW] ? "slowed" : "hasted");
         }
         prompt += "?";
+        if (penance)
+            prompt += " This could place you under penance!";
         return yesno(prompt.c_str(), false, 'n')
                && check_old_item_warning(item, oper);
     }
@@ -2022,11 +2036,8 @@ bool item_is_wieldable(const item_def &item)
         return you.species != SP_FELID;
 
     // The lantern needs to be wielded to be used.
-    if (item.base_type == OBJ_MISCELLANY
-        && item.sub_type == MISC_LANTERN_OF_SHADOWS)
-    {
+    if (item.is_type(OBJ_MISCELLANY, MISC_LANTERN_OF_SHADOWS))
         return true;
-    }
 
     if (item.base_type == OBJ_MISSILES
         && (item.sub_type == MI_STONE
@@ -2186,15 +2197,14 @@ void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
     }
 }
 
-/**
- * Is the given elemental evoker currently charging?
- *
- * @param item      The evoker in question.
- * @return          Whether the player gaining xp will help recharge this item.
- */
-bool evoker_is_charging(const item_def &item)
+void identify_inventory()
 {
-    FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
-    list_charging_evokers(evokers);
-    return evokers[item.sub_type] == &item;
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (you.inv[i].defined())
+        {
+            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+            set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+        }
+    }
 }

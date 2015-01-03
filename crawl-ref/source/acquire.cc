@@ -113,21 +113,25 @@ static armour_type _pick_wearable_armour(const armour_type arm)
 
     case SP_OCTOPODE:
         if (arm != ARM_HELMET && arm != ARM_SHIELD)
+        {
             if (coinflip())
                 result = ARM_HELMET;
             else
                 result = ARM_SHIELD;
+        }
         // and fall through for shield size adjustments
 
     default:
         if (arm == ARM_CENTAUR_BARDING || arm == ARM_NAGA_BARDING)
             result = ARM_BOOTS;
         if (arm == ARM_SHIELD)
+        {
             if (x_chance_in_y(15 - you.skills[SK_SHIELDS], 20))
                 result = ARM_BUCKLER;
             else if (x_chance_in_y(you.skills[SK_SHIELDS] - 10, 15)
                      && you.species != SP_KOBOLD && you.species != SP_HALFLING)
                 result = ARM_LARGE_SHIELD;
+        }
         break;
     }
 
@@ -933,9 +937,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int magic_weights = 0;
         int other_weights = 0;
 
-        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
         {
-            skill_type sk = static_cast<skill_type>(i);
             int weight = you.skills[sk];
 
             if (_is_magic_skill(sk))
@@ -1012,8 +1015,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
     }
     case BOOK_RANDART_THEME:
         book.sub_type = BOOK_RANDART_THEME;
-        if (!make_book_theme_randart(book, 0, 0, 5 + coinflip(), 20,
-                                     SPELL_NO_SPELL, owner))
+        if (!make_book_theme_randart(book, SPTYP_NONE, SPTYP_NONE,
+                                     5 + coinflip(), 20, SPELL_NO_SPELL, owner))
         {
             return false;
         }
@@ -1036,10 +1039,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
         int weights[NUM_SKILLS];
         int total_weights = 0;
 
-        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
         {
-            skill_type sk = static_cast<skill_type>(i);
-
             int skl = you.skills[sk];
 
             if (skl == 27 || is_useless_skill(sk))

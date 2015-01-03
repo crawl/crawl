@@ -168,7 +168,7 @@ DEPTH:  D:8-14
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   spider / brain worm w:5 / goliath beetle / worker ant
-MONS:   yellow wasp w:7 / boring beetle / soldier ant w:13
+MONS:   wasp w:7 / boring beetle / soldier ant w:13
 ITEM:   beef jerky q:3 no_mimic / fruit q:3 no_mimic
 ITEM:   royal jelly q:3 no_mimic, royal jelly q:6 no_mimic
 MAP
@@ -274,6 +274,8 @@ KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 ITEM:  fruit q:1 no_mimic
 ITEM:  fruit no_mimic q:1
 ITEM:  royal jelly q:2 no_mimic, bread ration q:3 no_mimic
+SUBST:  D : DDDDE
+NSUBST: D = 1:A / 2:d / 2:f / 1:h, E = 1:d / 1:e / 2:f / 2:h
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'h', 'spriggan skeleton')
 : else
@@ -284,8 +286,6 @@ ITEM:  royal jelly q:2 no_mimic, bread ration q:3 no_mimic
 : else
 :     dgn.delayed_decay(_G, 'A', 'ogre skeleton')
 : end
-SUBST:  D : DDDDE
-NSUBST: D = 1:A / 2:d / 2:f / 1:h, E = 1:d / 1:e / 2:f / 2:h
 MAP
  cccccccccc
 ccxx1xh=DDc

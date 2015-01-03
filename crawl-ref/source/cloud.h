@@ -29,6 +29,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget,
 
 void manage_clouds();
 
+bool is_opaque_cloud_type(cloud_type ctype);
 bool is_opaque_cloud(int cloud_idx);
 
 int max_cloud_damage(cloud_type cl_type, int power = -1);
@@ -36,7 +37,9 @@ int actor_apply_cloud(actor *act);
 
 string cloud_name_at_index(int cloudno);
 string cloud_type_name(cloud_type type, bool terse = true);
+cloud_type cloud_name_to_type(const string &name);
 colour_t get_cloud_colour(int cloudno);
+colour_t get_cloud_colour(const cloud_struct &cloud);
 coord_def get_cloud_originator(const coord_def& pos);
 
 bool actor_cloud_immune(const actor *act, const cloud_struct &cloud);

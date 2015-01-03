@@ -14,11 +14,12 @@
 #include <sstream>
 #include <string>
 
+#include "adjust.h"
 #include "artefact.h"
 #include "branch.h"
 #include "butcher.h"
+#include "cloud.h" // cloud_type_name
 #include "clua.h"
-#include "command.h"
 #include "database.h"
 #include "decks.h"
 #include "delay.h"
@@ -42,6 +43,7 @@
 #include "macro.h"
 #include "message.h"
 #include "mon-book.h"
+#include "mon-cast.h" // mons_spell_range
 #include "mon-chimera.h"
 #include "mon-tentacle.h"
 #include "options.h"
@@ -61,8 +63,6 @@
  #include "tilereg-crt.h"
 #endif
 #include "unicode.h"
-
-extern const spell_type serpent_of_hell_breaths[4][3];
 
 // ========================================================================
 //      Internal Functions
@@ -555,6 +555,7 @@ static const char *trap_names[] =
 #if TAG_MAJOR_VERSION == 34
     "gas", "teleport",
 #endif
+     "shadow",
 };
 
 string trap_name(trap_type trap)
@@ -890,8 +891,8 @@ static string _describe_weapon(const item_def &item, bool verbose)
             else
             {
                 description += "It emits flame when wielded, causing extra "
-                    "injury to most foes and up to double damage against "
-                    "particularly susceptible opponents.";
+                    "injury to most foes and up to half again as much damage "
+                    "against particularly susceptible opponents.";
                 if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
                 {
                     description += " Big, fiery blades are also staple "
@@ -909,7 +910,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
             {
                 description += "It has been specially enchanted to freeze "
                     "those struck by it, causing extra injury to most foes "
-                    "and up to double damage against particularly "
+                    "and up to half again as much damage against particularly "
                     "susceptible opponents. It can also slow down "
                     "cold-blooded creatures.";
             }
@@ -1919,16 +1920,17 @@ string get_item_description(const item_def &item, bool verbose,
                            "may be attracted as its bearer battles through the "
                            "dungeon and grows in power and wisdom.";
 
-            if (!evoker_is_charged(item))
+            const int inert = num_xp_evokers_inert(item);
+            if (inert > 0)
             {
-                description << "\n\nThe device is presently inert.";
-                if (evoker_is_charging(item))
-                    description << " Gaining experience will recharge it.";
-                else if (in_inventory(item))
-                {
-                    description << " Another item of the same type is"
-                                   " currently charging.";
-                }
+                string what = item.quantity > 1 ? "the devices are"
+                                                : "the device is";
+                description << "\n\n";
+                description << get_desc_quantity(inert, item.quantity, what);
+                description << " presently inert.";
+
+                description << " Gaining experience will recharge";
+                description << (item.quantity > 1 ? " them." : " it.");
             }
         }
         break;
@@ -2095,41 +2097,61 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
 
     // mention the ability to pray at altars
     if (feat_is_altar(feat))
-        long_desc += "(Pray here to learn more.)";
+        long_desc += "(Pray here to learn more.)\n";
 
     inf.body << long_desc;
+
+    if (const cloud_type cloud = env.map_knowledge(pos).cloud())
+    {
+        const string cl_name = cloud_type_name(cloud);
+        const string cl_desc = getLongDescription(cl_name + " cloud");
+        inf.body << "\n\nA cloud of " << cl_name
+                 << (cl_desc.empty() ? "." : ".\n\n")
+                 << cl_desc;
+    }
 
     inf.quote = getQuoteString(db_name);
 }
 
-// Returns the pressed key in key
+/// A message explaining how the player can toggle between quote &
+static const string _toggle_message =
+    "Press '<w>!</w>'"
+#ifdef USE_TILE_LOCAL
+    " or <w>Right-click</w>"
+#endif
+    " to toggle between the description and quote.";
+
+/**
+ * If the given description has an associated quote, print a message at the
+ * bottom of the screen explaining how the player can toggle between viewing
+ * that quote & the description, and then check whether the input corresponds
+ * to such a toggle.
+ *
+ * @param inf[in]       The description in question.
+ * @param key[in,out]   The input command. If zero, is set to getchm().
+ * @return              Whether the description & quote should be toggled.
+ */
 static int _print_toggle_message(const describe_info &inf, int& key)
 {
+    mouse_control mc(MOUSE_MODE_MORE);
+
     if (inf.quote.empty())
     {
-        mouse_control mc(MOUSE_MODE_MORE);
-        key = getchm();
+        if (!key)
+            key = getchm();
         return false;
     }
-    else
-    {
-        const int bottom_line = min(30, get_number_of_lines());
-        cgotoxy(1, bottom_line);
-        formatted_string::parse_string(
-            "Press '<w>!</w>'"
-#ifdef USE_TILE_LOCAL
-            " or <w>Right-click</w>"
-#endif
-            " to toggle between the description and quote.").display();
 
-        mouse_control mc(MOUSE_MODE_MORE);
+    const int bottom_line = min(30, get_number_of_lines());
+    cgotoxy(1, bottom_line);
+    formatted_string::parse_string(_toggle_message).display();
+    if (!key)
         key = getchm();
 
-        if (key == '!' || key == CK_MOUSE_CMD)
-            return true;
+    if (key == '!' || key == CK_MOUSE_CMD)
+        return true;
 
-        return false;
-    }
+    return false;
 }
 
 void describe_feature_wide(const coord_def& pos, bool show_quote)
@@ -2149,7 +2171,7 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
-    int key;
+    int key = 0;
     if (_print_toggle_message(inf, key))
         describe_feature_wide(pos, !show_quote);
 }
@@ -2195,7 +2217,7 @@ static void _show_item_description(const item_def &item)
     {
         formatted_string fdesc;
         fdesc.cprintf("%s", desc.c_str());
-        list_spellset(item_spellset(item), &item, fdesc);
+        list_spellset(item_spellset(item), nullptr, &item, fdesc);
     }
 }
 
@@ -2622,29 +2644,35 @@ static void _adjust_item(item_def &item)
     }
 }
 
-static void _append_spell_stats(const spell_type spell,
-                                string &description,
-                                bool rod)
+/**
+ * List the simple calculated stats of a given spell, when cast by the player
+ * in their current condition.
+ *
+ * @param spell     The spell in question.
+ * @param rod       Whether the spell is being cast from a rod (not a book).
+ */
+static string _player_spell_stats(const spell_type spell, bool rod)
 {
-    if (rod)
-    {
-        snprintf(info, INFO_SIZE,
-                 "\nLevel: %d",
-                 spell_difficulty(spell));
-    }
-    else
+    string description;
+    description += make_stringf("\nLevel: %d", spell_difficulty(spell));
+    if (!rod)
     {
         const string schools = spell_schools_string(spell);
-        char* failure = failure_rate_to_string(spell_fail(spell));
-        snprintf(info, INFO_SIZE,
-                 "\nLevel: %d        School%s: %s        Fail: %s",
-                 spell_difficulty(spell),
-                 schools.find("/") != string::npos ? "s" : "",
-                 schools.c_str(),
-                 failure);
-        free(failure);
+        description +=
+            make_stringf("        School%s: %s",
+                         schools.find("/") != string::npos ? "s" : "",
+                         schools.c_str());
+
+        if (!crawl_state.need_save
+            || (get_spell_flags(spell) & SPFLAG_MONSTER))
+        {
+            return description; // all other info is player-dependent
+        }
+
+        const string failure = failure_rate_to_string(spell_fail(spell));
+        description += make_stringf("        Fail: %s", failure.c_str());
     }
-    description += info;
+
     description += "\n\nPower : ";
     description += spell_power_string(spell, rod);
     description += "\nRange : ";
@@ -2654,6 +2682,7 @@ static void _append_spell_stats(const spell_type spell,
     description += "\nNoise : ";
     description += spell_noise_string(spell);
     description += "\n";
+    return description;
 }
 
 string get_skill_description(skill_type skill, bool need_title)
@@ -2716,12 +2745,109 @@ string get_skill_description(skill_type skill, bool need_title)
     return result;
 }
 
+/**
+ * What are the odds of the given spell, cast by a monster with the given
+ * spell_hd, affecting the player?
+ */
+static int _hex_chance(const spell_type spell, const int hd)
+{
+    const int pow = mons_power_for_hd(spell, hd, false) / ENCH_POW_FACTOR;
+    const int chance = hex_success_chance(you.res_magic(), pow, 100);
+    if (spell == SPELL_STRIP_RESISTANCE)
+        return chance + (100 - chance) / 3; // ignores mr 1/3rd of the time
+    return chance;
+}
 
-// Returns BOOK_MEM if you can memorise the spell BOOK_FORGET if you can
-// forget it and BOOK_NEITHER if you can do neither
+/**
+ * Describe mostly non-numeric player-specific information about a spell.
+ *
+ * (E.g., your god's opinion of it, whether it's in a high-level book that
+ * you can't memorize from, whether it's currently useless for whatever
+ * reason...)
+ *
+ * @param spell     The spell in question.
+ * @param item      The object the spell is in; may be null.
+ */
+static string _player_spell_desc(spell_type spell, const item_def* item)
+{
+    if (!crawl_state.need_save || (get_spell_flags(spell) & SPFLAG_MONSTER))
+        return ""; // all info is player-dependent
+
+    string description;
+
+    // Report summon cap
+    const int limit = summons_limit(spell);
+    if (limit)
+    {
+        description += "You can sustain at most " + number_in_words(limit)
+                        + " creature" + (limit > 1 ? "s" : "")
+                        + " summoned by this spell.\n";
+    }
+
+    const bool rod = item && item->base_type == OBJ_RODS;
+    if (god_hates_spell(spell, you.religion, rod))
+    {
+        description += uppercase_first(god_name(you.religion))
+                       + " frowns upon the use of this spell.\n";
+        if (god_loathes_spell(spell, you.religion))
+            description += "You'd be excommunicated if you dared to cast it!\n";
+    }
+    else if (god_likes_spell(spell, you.religion))
+    {
+        description += uppercase_first(god_name(you.religion))
+                       + " supports the use of this spell.\n";
+    }
+
+    if (item && !player_can_memorise_from_spellbook(*item))
+    {
+        description += "The spell is scrawled in ancient runes that are "
+                       "beyond your current level of understanding.\n";
+    }
+
+    if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
+    {
+        description += "\nThis spell will have no effect right now: "
+                       + spell_uselessness_reason(spell, true, false, rod)
+                       + "\n";
+    }
+
+    return description;
+}
+
+
+/**
+ * Describe a spell, as cast by the player.
+ *
+ * @param spell     The spell in question.
+ * @param item      The object the spell is in; may be null.
+ * @return          Information about the spell; does not include the title or
+ *                  db description, but does include level, range, etc.
+ */
+string player_spell_desc(spell_type spell, const item_def* item)
+{
+    const bool rod = item && item->base_type == OBJ_RODS;
+    return _player_spell_stats(spell, rod)
+           + _player_spell_desc(spell, item);
+}
+
+/**
+ * Examine a given spell. Set the given string to its description, stats, &c.
+ * If it's a book in a spell that the player is holding, mention the option to
+ * memorize or forget it.
+ *
+ * @param spell         The spell in question.
+ * @param mon_owner     If this spell is being examined from a monster's
+ *                      description, 'spell' is that monster. Else, null.
+ * @param description   Set to the description & details of the spell.
+ * @param item          The item (book or rod) holding the spell, if any.
+ * @return              BOOK_MEM if you can memorise the spell
+ *                      BOOK_FORGET if you can forget it
+ *                      BOOK_NEITHER if you can do neither.
+ */
 static int _get_spell_description(const spell_type spell,
-                                   string &description,
-                                   const item_def* item = nullptr)
+                                  const monster_info *mon_owner,
+                                  string &description,
+                                  const item_def* item = nullptr)
 {
     description.reserve(500);
 
@@ -2743,41 +2869,29 @@ static int _get_spell_description(const spell_type spell,
 #endif
     }
 
-    // Report summon cap
-    if (const int limit = summons_limit(spell))
+    if (mon_owner)
     {
-        description += "You can sustain at most " + number_in_words(limit)
-                       + " creature" + (limit > 1 ? "s" : "") + " summoned by this spell.\n";
-    }
+        // FIXME: this HD is wrong in some cases
+        // (draining, malmutation, levelling up)
+        const int hd = mons_class_hit_dice(mon_owner->type);
+        const int range = mons_spell_range(spell, hd);
+        description += "\nRange : "
+                       + range_string(range, range, mons_char(mon_owner->type))
+                       + "\n";
 
-    const bool rod = item && item->base_type == OBJ_RODS;
+        // only display this if the player exists (not in the main menu)
+        if (crawl_state.need_save && (get_spell_flags(spell) & SPFLAG_MR_CHECK))
+        {
+            description += make_stringf("Chance to beat your MR: %d%%\n",
+                                        _hex_chance(spell, hd));
+        }
 
-    if (god_hates_spell(spell, you.religion, rod))
-    {
-        description += uppercase_first(god_name(you.religion))
-                       + " frowns upon the use of this spell.\n";
-        if (god_loathes_spell(spell, you.religion))
-            description += "You'd be excommunicated if you dared to cast it!\n";
     }
-    else if (god_likes_spell(spell, you.religion))
-    {
-        description += uppercase_first(god_name(you.religion))
-                       + " supports the use of this spell.\n";
-    }
-    if (item && !player_can_memorise_from_spellbook(*item))
-    {
-        description += "The spell is scrawled in ancient runes that are beyond "
-                       "your current level of understanding.\n";
-    }
-    if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
-    {
-        description += "\nThis spell will have no effect right now: "
-        + spell_uselessness_reason(spell, true, false, rod)
-        + "\n";
-    }
+    else
+        description += player_spell_desc(spell, item);
 
-    _append_spell_stats(spell, description, rod);
-
+    // Don't allow memorization or amnesia after death.
+    // (In the post-game inventory screen.)
     if (crawl_state.player_is_dead())
         return BOOK_NEITHER;
 
@@ -2785,7 +2899,7 @@ static int _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    if (!you_can_memorise(spell))
+    if (!mon_owner && !you_can_memorise(spell))
         description += "\n" + desc_cannot_memorise_reason(spell) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
@@ -2808,28 +2922,41 @@ static int _get_spell_description(const spell_type spell,
     return BOOK_NEITHER;
 }
 
+/**
+ * Provide the text description of a given spell.
+ *
+ * @param spell     The spell in question.
+ * @param inf[out]  The spell's description is concatenated onto the end of
+ *                  inf.body.
+ */
 void get_spell_desc(const spell_type spell, describe_info &inf)
 {
     string desc;
-    _get_spell_description(spell, desc);
+    _get_spell_description(spell, nullptr, desc);
     inf.body << desc;
 }
 
-//---------------------------------------------------------------
-//
-// describe_spell
-//
-// Describes (most) every spell in the game.
-//
-//---------------------------------------------------------------
-void describe_spell(spell_type spelled, const item_def* item)
+
+/**
+ * Examine a given spell. List its description and details, and handle
+ * memorizing or forgetting the spell in question, if the player is able to
+ * do so & chooses to.
+ *
+ * @param spelled   The spell in question.
+ * @param mon_owner If this spell is being examined from a monster's
+ *                  description, 'mon_owner' is that monster. Else, null.
+ * @param item      The item (book or rod) holding the spell, if any.
+ */
+void describe_spell(spell_type spelled, const monster_info *mon_owner,
+                    const item_def* item)
 {
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "describe_spell");
 #endif
 
     string desc;
-    const int mem_or_forget = _get_spell_description(spelled, desc, item);
+    const int mem_or_forget = _get_spell_description(spelled, mon_owner, desc,
+                                                     item);
     print_description(desc);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -3129,6 +3256,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_FIREBRAND:       return "deal extra fire damage and surround the defender with flames";
     case AF_CORRODE:         return "corrode armour";
     case AF_SCARAB:          return "reduce negative energy resistance and drain health, speed, or skills";
+    case AF_TRAMPLE:         return "knock back the defender";
     default:                 return "";
     }
 }
@@ -3139,7 +3267,6 @@ static string _monster_attacks_description(const monster_info& mi)
     set<attack_flavour> attack_flavours;
     vector<string> attack_descs;
     // Weird attack types that act like attack flavours.
-    bool trample = false;
     bool reach_sting = false;
 
     for (const auto &attack : mi.attack)
@@ -3153,15 +3280,9 @@ static string _monster_attacks_description(const monster_info& mi)
                 attack_descs.push_back(desc);
         }
 
-        if (attack.type == AT_TRAMPLE)
-            trample = true;
-
         if (attack.type == AT_REACH_STING)
             reach_sting = true;
     }
-
-    if (trample)
-        attack_descs.emplace_back("knock back the defender");
 
     // Assumes nothing has both AT_REACH_STING and AF_REACH.
     if (reach_sting)
@@ -3172,70 +3293,6 @@ static string _monster_attacks_description(const monster_info& mi)
         result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
         result << " may attack to " << comma_separated_line(attack_descs.begin(), attack_descs.end());
         result << ".\n";
-    }
-
-    return result.str();
-}
-
-static string _monster_spell_type_description(const monster_info& mi,
-                                              mon_spell_slot_flags flags,
-                                              string set_name,
-                                              string desc_singular,
-                                              string desc_plural)
-{
-    unique_books books = get_unique_spells(mi, flags);
-    const size_t num_books = books.size();
-
-    if (num_books == 0)
-        return "";
-
-    ostringstream result;
-
-    result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-
-    if (num_books > 1)
-        result << desc_plural;
-    else
-        result << desc_singular;
-
-    // Loop through books and display spells/abilities for each of them
-    for (size_t i = 0; i < num_books; ++i)
-    {
-        vector<spell_type> &book_spells = books[i];
-
-        // Display spells for this book
-        if (num_books > 1)
-            result << set_name << " " << i+1 << ": ";
-
-        for (size_t j = 0; j < book_spells.size(); ++j)
-        {
-            const spell_type spell = book_spells[j];
-            if (spell == SPELL_SERPENT_OF_HELL_BREATH)
-            {
-                const int idx =
-                        mi.type == MONS_SERPENT_OF_HELL          ? 0
-                      : mi.type == MONS_SERPENT_OF_HELL_COCYTUS  ? 1
-                      : mi.type == MONS_SERPENT_OF_HELL_DIS      ? 2
-                      : mi.type == MONS_SERPENT_OF_HELL_TARTARUS ? 3
-                      :                                           -1;
-                ASSERT(idx >= 0 && idx <= 3);
-                for (size_t k = 0;
-                     k < ARRAYSZ(serpent_of_hell_breaths[idx]);
-                     ++k)
-                {
-                    if (j > 0 || k > 0)
-                        result << ", ";
-                    result << spell_title(serpent_of_hell_breaths[idx][k]);
-                }
-            }
-            else
-            {
-                if (j > 0)
-                    result << ", ";
-                result << spell_title(spell);
-            }
-        }
-        result << "\n";
     }
 
     return result.str();
@@ -3255,40 +3312,10 @@ static string _monster_spells_description(const monster_info& mi)
     if (!mi.has_spells())
         return "";
 
-    ostringstream result;
-
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_NATURAL, "Set",
-        " possesses the following special abilities: ",
-        " possesses one of the following sets of special abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_MAGICAL, "Set",
-        " possesses the following magical abilities: ",
-        " possesses one of the following sets of magical abilities:\n");
-    if (mi.holi == MH_HOLY)
-    {
-        result << _monster_spell_type_description(
-            mi, MON_SPELL_DEMONIC, "Set",
-            " possesses the following angelic abilities: ",
-            " possesses one of the following sets of angelic abilities:\n");
-    }
-    else
-    {
-        result << _monster_spell_type_description(
-            mi, MON_SPELL_DEMONIC, "Set",
-            " possesses the following demonic abilities: ",
-            " possesses one of the following sets of demonic abilities:\n");
-    }
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_PRIEST, "Set",
-        " possesses the following divine abilities: ",
-        " possesses one of the following sets of divine abilities:\n");
-    result << _monster_spell_type_description(
-        mi, MON_SPELL_WIZARD, "Book",
-        " has mastered the following spells: ",
-        " has mastered one of the following spellbooks:\n");
-
-    return result.str();
+    formatted_string description;
+    describe_spellset(monster_spellset(mi), nullptr, description);
+    description.cprintf("Select a spell to read its description.\n");
+    return description.tostring();
 }
 
 static const char *_speed_description(int speed)
@@ -4030,8 +4057,6 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     bool has_stat_desc = false;
     get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
 
-    bool show_quote = false;
-
     if (!footer.empty())
     {
         if (inf.footer.empty())
@@ -4044,26 +4069,43 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
 #endif
 
-    int key;
-    do
+    spell_scroller fs(monster_spellset(mi), &mi, nullptr);
+    fs.add_text(inf.title);
+    fs.add_text(inf.body.str(), false, get_number_of_cols() - 1);
+    if (crawl_state.game_is_hints())
+        fs.add_text(hints_describe_monster(mi, has_stat_desc).c_str());
+
+    formatted_scroller qs;
+
+    if (!inf.quote.empty())
+    {
+        fs.add_item_formatted_string(
+                formatted_string::parse_string("\n" + _toggle_message));
+
+        qs.add_text(inf.title);
+        qs.add_text(inf.quote, false, get_number_of_cols() - 1);
+        qs.add_item_formatted_string(
+                formatted_string::parse_string("\n" + _toggle_message));
+    }
+
+    fs.add_item_formatted_string(formatted_string::parse_string(inf.footer));
+
+    bool show_quote = false;
+    while (true)
     {
         if (show_quote)
-            _print_quote(inf);
+            qs.show();
         else
-        {
-            print_description(inf);
+            fs.show();
 
-            // TODO enne - this should really move into get_monster_db_desc
-            // and an additional tutorial string added to describe_info.
-            if (crawl_state.game_is_hints())
-                hints_describe_monster(mi, has_stat_desc);
-        }
-
-        show_quote = !show_quote;
+        int keyin = (show_quote ? qs : fs).get_lastch();
+        // this is never actually displayed to the player
+        // we just use it to check whether we should toggle.
+        if (_print_toggle_message(inf, keyin))
+            show_quote = !show_quote;
+        else
+            return keyin;
     }
-    while (_print_toggle_message(inf, key));
-
-    return key;
 }
 
 static const char* xl_rank_names[] =
@@ -4125,7 +4167,6 @@ string get_ghost_description(const monster_info &mi, bool concise)
 
     switch (gspecies)
     {
-    case SP_MOUNTAIN_DWARF:
     case SP_DEEP_DWARF:
     case SP_TROLL:
     case SP_OGRE:

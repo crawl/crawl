@@ -19,7 +19,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     e.mons("bush")
     e.mons("fungus")
 
-    if you.branch() == "Lair" then
+    if you.in_branch("Lair") then
        e.mons("spriggan")
        e.mons("wolf / black bear w:4 / yak w:2")
     else
@@ -509,7 +509,7 @@ SHUFFLE: 23, 34
 MONS:    rat, rat / river rat w:5, river rat, hell rat
 ITEM:    slice of pizza w:80 / fruit
 SUBST:   d = d$..., e = d$
-: if you.branch() == "Lair" then
+: if you.in_branch("Lair") then
 TAGS:    extra
 SUBST:   4 = 40, 3 = 34., 2 = 24., 1 = 13., 0 = 1
 CLEAR:   "
@@ -756,7 +756,7 @@ TAGS:   ruin_lair
 DEPTH:  Lair
 ORIENT: north
 MONS:   black mamba / spiny frog / wolf spider
-MONS:   basilisk / komodo dragon / yellow wasp
+MONS:   basilisk / komodo dragon / wasp
 MONS:   giant mite / adder
 MONS:   plant / fungus w:2 / bush w:1, bush
 SUBST:  4 = 444. 5:2, . = ...4 5:2
@@ -2524,7 +2524,7 @@ MONS:    hydra / fire drake / dire elephant
 MONS:    red devil / blue devil w:15 / orange demon w:15 / hell hound w:5
 MONS:    hellwing, sun demon, sixfirhy, smoke demon, hell beast
 KMONS:   8 = wizard
-# add no_pickup whenever that works; loot is too easily missed
+# add no_pickup to acquire_any whenever that works; loot is too easily missed
 KITEM:   / = acquire any, any good_item / no_pickup gold good_item w:15
 KFEAT:   / = enter_hell
 KFEAT:   Q = granite_statue
@@ -2575,7 +2575,7 @@ ORIENT:  southeast
 MONS:    plant
 MONS:    torpor snail, worm, brain worm
 MONS:    giant leech, lindwurm, fire dragon / ice dragon
-KMONS:   8 = yellow wasp
+KMONS:   8 = wasp
 SHUFFLE: ABC
 SUBST:   P = 11.
 NSUBST:  A = 3:8 / 1:65 / * = 33338, B = 3:4 / 1:24 / * = 33334
@@ -2617,46 +2617,47 @@ NAME:    hangedman_lair_caniforms_friends
 PLACE:   Lair:$
 TAGS:    no_monster_gen no_rotate patrolling
 ORIENT:  southwest
-MONS:    plant
-MONS:    jackal, hound, warg, wolf, hell hound
+MONS:    jackal, hound, warg, wolf, hell hound, raiju
 KMONS:   7 = black bear
 KMONS:   8 = polar bear
-KMONS:   9 = raiju
-KITEM:   $ = any, beef jerky q:3
-KITEM:   % = any, royal jelly q:2
+KMONS:   P = plant
+# The one big reward and the several smaller stacks of items
+# are randomly split between the mostly-dog and mostly-bear sections.
+KITEM:   $ = any, any w:1 / nothing w:5, beef jerky q:3
+KITEM:   % = any, any w:1 / nothing w:5, royal jelly q:2
 KITEM:   *| = gold, gold, gold, acquire any
-NSUBST:  4 = 1:6 / 1:04 / *:4
+NSUBST:  4 = 1:6 / 1 : 4:4 5:3 6:1 / *:4
 SHUFFLE: %'*" / '$"|
-SUBST:   X = xx., z = xx`, ' = ., " = x, 0 = 6:3 0:1
+SUBST:   X = xx., z = xx`, ' = ., " = x, 0 = 5:3 6:1, p = PP.
 CLEAR:   `
 : lair_small_ending(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxzzz  @  @  @
-xxxxxxxxxxxxxxxxxxxxxxxxxP..P..
-xxxxxxxxxxxxxxxxxxxxxxxxxxP..P.
+xxxxxxxxxxxxxxxxxxxxxxxxxp..p..
+xxxxxxxxxxxxxxxxxxxxxxxxxxp..p.
 xxxxxxXxxxxxxxxxxxxxxxxxxxx....
-xx%.78xxxxXXxxxxxxxxxxxxxxx1..P@
-xx8..78xXx77xxxxxxxxxxxx...x1..
-xxx...xxx%...x1xx3x.x3x.22..x1.
-xxXx2..xxx...1x7x.......222..xP@
-xxxxxx.......1x........x...xxxx
-xxxxX6.xx...7x17..x3..x3xxxxxxx
-xxxxxx4.xx.%XXxx..xxxxxxxxxxxxxz
-xxxxx"x.8..xxxxx..xx4x3xx.xxxxxz
-xxxxXx....7Xxxxx....x.x....x3xxz
+xx%'78xxxxXXxxxxxxxxxxxxxxxP..p@
+xx8..78xXx77xxxxxxxxxxxx...xP..
+xxx...xxx%...xPxx2x.x2x.11..xP.
+xxXx4..xxx...Px7x.......111..xp@
+xxxxxx.......Px........x...xxxx
+xxxxX0.xx...7xP7..x2..x2xxxxxxx
+xxxxxx3.xx.%XXxx..xxxxxxxxxxxxxz
+xxxxx"x.8..xxxxx..xx3x2xx.xxxxxz
+xxxxXx....7Xxxxx....x.x....x2xxz
 xxxxx%....xxxxxxx.............xz
 xxxxx7....7xXxxxxx............xz
-xxxxXx7....8xxxxxxxx5x...x5x..xx
+xxxxXx7....8xxxxxxxx4x...x4x..xx
 xxxxxxx8.%8xXxxxxxxxxxx.xxxxx..x
-xxxxxxx1x1xxxxxxxxxxxxxxxxxxx.3x
-xxxxxx8x5xxxxx4'xxxxxx..x.x...xx
-xxxxx...xxxxxx..x.x4x...55....xz
-xx*x4.....'xx333...x....5....xxz
-xxx5.......3x..3..........5..xxx
-xx0.6...xx....xx.....xx....xxxxx
-xxx5..'xxxx..xxx....x.xx4x4xxxxx
-xxx.5.xxxxxx5xxxx'.xxxxxxxxxxxxx
-xxx'..xxxxxxxxxxxx5xxxxxxxxxxxxx
+xxxxxxxPxPxxxxxxxxxxxxxxxxxxx.2x
+xxxxxx8x7xxxxx3'xxxxxx..x.x...xx
+xxxxx...xxxxxx..x.x3x...44....xz
+xx*x3.....'xx222...x....4....xxz
+xxx4.......2x..2..........4..xxx
+xx0.5...xx....xx.....xx....xxxxx
+xxx0..'xxxx..xxx....x.xx3x3xxxxx
+xxx.4.xxxxxx4xxxx'.xxxxxxxxxxxxx
+xxx'.%xxxxxxxxxxxx4xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2713,19 +2714,22 @@ ENDMAP
 NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
-MONS:   black bear / polar bear w:12, wolf, redback w:9 / yellow wasp w:1
+MONS:   black bear / polar bear w:12, wolf, redback w:9 / wasp w:1
 MONS:   spriggan, spriggan rider, spriggan druid n_adj n_noc name:young hd:8
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = tt..., E = t_
 CLEAR:  _
 SUBST:  2 = 2., 4 = 4., . = .:185 1 3:5
 NSUBST: 5 = 1:5 / *:4, 6 = 1 = 6:9 5:1 / 1 = 6:4 5:6 / *:5
+KITEM:  * = gold no_pickup, star_item no_pickup, star_item no_pickup
+KITEM:  | = gold no_pickup, superb_item no_pickup, star_item no_pickup
 KITEM:  $ = gold no_pickup, star_item no_pickup
+NSUBST: * = 1:| / *:*
 MAP
 ttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttT$G$Ttttttt....ttttttttt.....ttTTtttttTT
-ttttttttt4.$..TTT....ttT5..TTT....ttT.2222TTtt..@
+tttttttttT*G*Ttttttt....ttttttttt.....ttTTtttttTT
+ttttttttt4.*..TTT....ttT5..TTT....ttT.2222TTtt..@
 tttttttTT.4.4....TTttttttT..4...TttttttTT222..ttT
 tttttT.....6..4TtttttttttT4...4ttttttttt22ttttttt
 ttttt..ttT4.4.TtttttttttT....4.tttttttt..tttttttE
@@ -2877,8 +2881,8 @@ KMONS:   G = sheep
 KMONS:   H = yak
 KMONS:   I = elephant
 KMONS:   J = death yak
-# some non-set monsters right outside the vault to make sure you don't miss
-# that there's a vault here maybe
+# some non-set monsters right outside the vault
+# to make sure you don't miss that there's a vault here maybe
 KMONS:   K = crocodile
 KMONS:   L = river rat
 KMONS:   M = wolf
@@ -2984,15 +2988,15 @@ NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
 MONS:    worker ant w:16 / adder w:24 / river rat w:2
-MONS:    water moccasin / spider w:6, yellow wasp / wyvern w:6
-MONS:    spiny frog, black mamba, red wasp / redback w:5, wolf spider
+MONS:    water moccasin / spider w:6, wasp / wyvern w:6
+MONS:    spiny frog, black mamba, hornet / redback w:5, wolf spider
 KMONS:   8 = guardian serpent
 KMONS:   f = fungus
 KMONS:   P = plant
 SHUFFLE: AB / CD / EF / GH, DFH
 SUBST:   P = P:35 @:25, f = f:4 ":1, z = x:49 f:1, BCDEG = x, AH = ., F : xxP
 NSUBST:  1 = 8:1 / 4 = 2. / 4:. / * = 11., 0 = 8:2 / 2:3 / 3:. / * = 221..
-NSUBST:  9 = 1:367 / 2:4 / 2:5 / * = 33445, 8 = 1:8 / 2:7 / 2 = 45 / * = 45 6:15 "
+NSUBST:  9 = 1:367 / 2:4 / 2:5 / * = 33445, 8 = 1:8 / 1:7 / 2 = 45 / * = 45 6:15 "
 NSUBST:  % = 10:% / 2 = %" / *:", x = 6:c / * = x
 KMASK:   %*" = no_monster_gen
 : lair_small_ending(_G)

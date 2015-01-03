@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <sstream>
 
+#include "areas.h"
 #include "artefact.h"
 #include "art-enum.h"
 #include "butcher.h"
@@ -20,6 +21,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "english.h"
+#include "evoke.h"
 #include "food.h"
 #include "goditem.h"
 #include "invent.h"
@@ -77,20 +79,14 @@ static const char* _interesting_origin(const item_def &item)
 {
     if (origin_is_god_gift(item))
         return "god gift";
-    switch (item.orig_monnum)
+
+    if (item.orig_monnum == MONS_DONALD
+        && item.is_type(OBJ_ARMOUR, ARM_SHIELD))
     {
-    case MONS_SONJA:
-        if (item_attack_skill(item) == SK_SHORT_BLADES)
-            return "Sonja";
-    case MONS_PSYCHE:
-        if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_DAGGER)
-            return "Psyche";
-    case MONS_DONALD:
-        if (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_SHIELD)
-            return "Donald";
-    default:
-        return 0;
+        return "Donald";
     }
+
+    return nullptr;
 }
 
 string item_def::name(description_level_type descrip, bool terse, bool ident,
@@ -988,23 +984,30 @@ static const char* misc_type_name(int type, bool known)
     }
 }
 
+static bool _book_visually_special(uint32_t s)
+{
+    return s & 128; // one in ten books; c.f. item_colour()
+}
+
 static const char* book_secondary_string(uint32_t s)
 {
-    // larger than NDSC_BOOK_SEC?
+    if (!_book_visually_special(s))
+        return "";
+
     static const char* const secondary_strings[] = {
         "", "chunky ", "thick ", "thin ", "wide ", "glowing ",
         "dog-eared ", "oblong ", "runed ", "", "", ""
     };
-    return secondary_strings[s % ARRAYSZ(secondary_strings)];
+    return secondary_strings[(s / NDSC_BOOK_PRI) % ARRAYSZ(secondary_strings)];
 }
 
 static const char* book_primary_string(uint32_t p)
 {
-    // smaller than NDSC_BOOK_PRI??
     static const char* const primary_strings[] = {
-        "paperback ", "hardcover ", "leatherbound ", "metal-bound ",
-        "papyrus ", "", ""
+        "paperback", "hardcover", "leatherbound", "metal-bound", "papyrus",
     };
+    COMPILE_CHECK(NDSC_BOOK_PRI == ARRAYSZ(primary_strings));
+
     return primary_strings[p % ARRAYSZ(primary_strings)];
 }
 
@@ -1322,6 +1325,28 @@ static void _name_deck(const item_def &deck, description_level_type desc,
     }
 
     buff << "}";
+}
+
+/**
+ * Qualify the displayed name of a given XP evoker stack.
+ *
+ * E.g, for a stack with three discharged evokers, "  (2 inert)"
+ * Or, for a single-item stack,
+ * Or for a stack with all evokers charged, ""
+ *
+ * @param evoker   The stack in question.
+ * @return         The appropriate qualifiers to display after the item's name.
+ */
+static string _xp_evoker_qualifiers(const item_def &evoker)
+{
+    const int inert = num_xp_evokers_inert(evoker);
+    if (!inert)
+        return "";
+
+    if (evoker.quantity == inert)
+        return " (inert)";
+
+    return make_stringf(" (%d inert)", inert);
 }
 
 // Note that "terse" is only currently used for the "in hand" listing on
@@ -1771,13 +1796,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             buff << " {used: " << used_count << "}";
         }
-        else if (is_xp_evoker(*this) && !evoker_is_charged(*this) && !dbname)
-        {
-            if (evoker_is_charging(*this))
-                buff << " (inert, charging)";
-            else
-                buff << " (inert)";
-        }
+        else if (is_xp_evoker(*this) && !dbname)
+            buff << _xp_evoker_qualifiers(*this);
+
         break;
 
     case OBJ_BOOKS:
@@ -1792,8 +1813,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             buff << (item_typ == BOOK_MANUAL ? "manual" : "book");
         else if (!know_type)
         {
-            buff << book_secondary_string(rnd / NDSC_BOOK_PRI)
-                 << book_primary_string(rnd % NDSC_BOOK_PRI)
+            buff << book_secondary_string(rnd)
+                 << book_primary_string(rnd) << " "
                  << (item_typ == BOOK_MANUAL ? "manual" : "book");
         }
         else
@@ -1996,10 +2017,10 @@ bool item_type_known(const item_def& item)
         return true;
     }
 
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_DESTRUCTION)
+    if (item.is_type(OBJ_BOOKS, BOOK_DESTRUCTION))
         return true;
 
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+    if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
         return false;
 
     if (!item_type_has_ids(item.base_type))
@@ -2045,21 +2066,20 @@ bool item_type_tried(const item_def &item)
     return you.type_ids[item.base_type][item.sub_type] != ID_UNKNOWN_TYPE;
 }
 
-void set_ident_type(item_def &item, item_type_id_state_type setting,
+bool set_ident_type(item_def &item, item_type_id_state_type setting,
                     bool force)
 {
     if (is_artefact(item) || crawl_state.game_is_arena())
-        return;
+        return false;
 
     if (!set_ident_type(item.base_type, item.sub_type, setting, force))
-        return;
+        return false;
 
     if (in_inventory(item))
     {
         shopping_list.cull_identical_items(item);
         if (setting == ID_KNOWN_TYPE)
             item_skills(item, you.start_train);
-        auto_assign_item_slot(item);
     }
 
     if (setting == ID_KNOWN_TYPE && notes_are_active()
@@ -2074,6 +2094,8 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
         // don't note twice in those cases.
         item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
     }
+
+    return true;
 }
 
 bool set_ident_type(object_class_type basetype, int subtype,
@@ -2116,11 +2138,8 @@ void pack_item_identify_message(int base_type, int sub_type)
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item = you.inv[i];
-        if (item.defined() && item.base_type == base_type
-            && item.sub_type == sub_type)
-        {
+        if (item.defined() && item.is_type(base_type, sub_type))
             mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
-        }
     }
 }
 
@@ -2239,7 +2258,7 @@ public:
             else
                 name = "miscellaneous";
         }
-        else if (item->base_type == OBJ_BOOKS && item->sub_type == BOOK_MANUAL)
+        else if (item->is_type(OBJ_BOOKS, BOOK_MANUAL))
             name = "manuals";
         else if (item->base_type == OBJ_RODS || item->base_type == OBJ_GOLD)
         {
@@ -2501,16 +2520,15 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->quantity  = ptmp->base_type == OBJ_GOLD ? 18 : 1;
 
                 // Make chunks fresh, non-poisonous, etc.
-                if (ptmp->base_type == OBJ_FOOD
-                    && ptmp->sub_type == FOOD_CHUNK)
+                if (ptmp->is_type(OBJ_FOOD, FOOD_CHUNK))
                 {
                     ptmp->special = 100;
                     ptmp->mon_type = MONS_RAT;
                 }
 
                 // stupid fake decks
-                if (is_deck(*ptmp) || ptmp->base_type == OBJ_MISCELLANY
-                                      && ptmp->sub_type == NUM_MISCELLANY)
+                if (is_deck(*ptmp)
+                    || ptmp->is_type(OBJ_MISCELLANY, NUM_MISCELLANY))
                 {
                     ptmp->deck_rarity = DECK_RARITY_COMMON;
                 }
@@ -3191,8 +3209,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
         {
         case POT_MUTATION:
         case POT_LIGNIFY:
-        case POT_AMBROSIA:
             return true;
+        case POT_AMBROSIA:
+            return you.species != SP_DEEP_DWARF; // VERY good for dd
         default:
             return false;
         }
@@ -3307,6 +3326,9 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
             return true;
 #endif
+
+        if (temp && silenced(you.pos()))
+            return true; // can't use scrolls while silenced
 
         if (!item_type_known(item))
             return false;
@@ -3630,7 +3652,11 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
-        if (item.sub_type != BOOK_MANUAL || !item_type_known(item))
+        if (!item_type_known(item))
+            return false;
+        if (temp && item.sub_type == BOOK_DESTRUCTION && silenced(you.pos()))
+            return true; // can't read from the Tome while silenced
+        if (item.sub_type != BOOK_MANUAL)
             return false;
         if (you.skills[item.plus] >= 27)
             return true;

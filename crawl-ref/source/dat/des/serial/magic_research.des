@@ -24,7 +24,7 @@ function init_research(e, disc)
   e.tags('no_monster_gen')
   e.tags('patrolling')
   e.weight('1')
-  if you.branch() == "Elf" then
+  if you.in_branch("Elf") then
      e.kmons('0 = deep elf mage / deep elf knight / deep elf conjurer')
   else
      e.kmons('0 = wizard / ogre mage / naga mage w:8 / \
@@ -135,7 +135,7 @@ ENDMAP
 
 NAME:    hangedman_research_toxicology
 MONS:    spiny frog / black mamba, trapdoor spider
-MONS:    sea snake / redback, red wasp / yellow wasp
+MONS:    sea snake / redback, hornet / wasp
 MONS:    mana viper / tarantella
 KMONS:   D = death drake
 KITEM:   E = potion of poison ident:type / \

@@ -57,7 +57,7 @@ sub read_file($)
     local $_;
 
     print "Checking $file\n" if $verbose;
-    
+
     sub add_key()
     {
         err "Duplicate entry: '$key' at $source{$key} and $file:$line\n"
@@ -69,7 +69,7 @@ sub read_file($)
         undef $key;
         undef $value;
     }
-    
+
     while (<F>)
     {
         next if /^#/;

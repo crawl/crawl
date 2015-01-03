@@ -349,7 +349,7 @@ static peeve_map divine_peeves[] =
     peeve_map(),
     // GOD_SIF_MUNA,
     {
-        { DID_DESTROY_SPELLBOOK, { 1 } },
+        { DID_DESTROY_SPELLBOOK, { 1, 2 } },
     },
     // GOD_TROG,
     {

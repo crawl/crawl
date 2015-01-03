@@ -382,21 +382,20 @@ static void _give_wanderer_minor_book(skill_type skill, int & slot)
         skill = skill_type(SK_FIRST_MAGIC_SCHOOL + random2(value));
     }
 
-    int school = skill2spell_type(skill);
+    spschool_flag_type school = skill2spell_type(skill);
 
     newgame_make_item(slot, EQ_NONE, OBJ_BOOKS, BOOK_RANDART_THEME);
     item_def &item(you.inv[slot]);
 
-    make_book_theme_randart(item, school, 0, 2, 4, SPELL_NO_SPELL, "", "",
-        true);
+    make_book_theme_randart(item, school, SPTYP_NONE, 2, 4, SPELL_NO_SPELL,
+                            "", "", true);
 }
 
 static void _give_wanderer_item(object_class_type base, int sub, int & slot)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].defined() && you.inv[i].base_type == base
-            && you.inv[i].sub_type == sub)
+        if (you.inv[i].defined() && you.inv[i].is_type(base, sub))
         {
             you.inv[i].quantity++;
             return;
@@ -778,8 +777,7 @@ static void _wanderer_cover_equip_holes(int & slot)
 
         for (int i = 0; i < slot; ++i)
         {
-            if (you.inv[i].base_type == OBJ_WEAPONS
-                && you.inv[i].sub_type == WPN_DAGGER)
+            if (you.inv[i].is_type(OBJ_WEAPONS, WPN_DAGGER))
             {
                 has_dagger = true;
                 break;

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -20,7 +21,6 @@
 #include "database.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "english.h"
 #include "evoke.h"
 #include "food.h"
@@ -1996,21 +1996,29 @@ static void _blade_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     const bool cleaving = you.duration[DUR_CLEAVE] > 0;
-    const item_def* const weapon = you.weapon();
-    const bool axe = weapon && item_attack_skill(*weapon) == SK_AXES;
-    const bool bladed = weapon && can_cut_meat(*weapon);
-    const bool plural = (weapon && weapon->quantity > 1) || !weapon;
-    string hand_part = "Your " + you.hand_name(true);
 
     you.increase_duration(DUR_CLEAVE, 10 + random2((power_level + 1) * 10));
 
     if (!cleaving)
     {
-        mprf(MSGCH_DURATION,
-             "%s look%s %ssharp%s",
-             (weapon) ? weapon->name(DESC_YOUR).c_str() : hand_part.c_str(),
-             (plural) ?  "" : "s", (bladed) ? "" : "oddly ",
-             (axe) ? " (like it always does)." : ".");
+        if (const item_def* const weapon = you.weapon())
+        {
+            // FIXME: it's not that odd for a dagger to look sharp...
+            const bool bladed = can_cut_meat(*weapon);
+            const bool axe = item_attack_skill(*weapon) == SK_AXES;
+            mprf(MSGCH_DURATION,
+                 "%s %s %ssharp%s", weapon->name(DESC_YOUR).c_str(),
+                 conjugate_verb("look", weapon->quantity > 1).c_str(),
+                 (bladed) ? "" : "oddly ",
+                 (axe) ? " (like it always does)." : ".");
+        }
+        else
+        {
+            // FIXME: no "oddly" for claws?
+            mprf(MSGCH_DURATION, "%s",
+                 you.hands_act("look", "oddly sharp.").c_str());
+        }
+
     }
     else
         mprf(MSGCH_DURATION, "Your cleaving ability is renewed.");
@@ -2094,6 +2102,10 @@ static void _focus_card(int power, deck_rarity_type rarity)
 
     modify_stat(best_stat, 1, true, true);
     modify_stat(worst_stat, -1, true, true);
+
+    const char* stats[3] = { "Str", "Int", "Dex" };
+    take_note(Note(NOTE_FOCUS_CARD, you.base_stats[best_stat], you.base_stats[worst_stat],
+              stats[best_stat], stats[worst_stat]));
 }
 
 static void _remove_bad_mutation()
@@ -2474,7 +2486,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     const monster_type flytypes[] =
     {
         MONS_INSUBSTANTIAL_WISP, MONS_KILLER_BEE, MONS_RAVEN,
-        MONS_VAMPIRE_MOSQUITO, MONS_YELLOW_WASP, MONS_RED_WASP
+        MONS_VAMPIRE_MOSQUITO, MONS_WASP, MONS_HORNET
     };
     const int num_flytypes = ARRAYSZ(flytypes);
 

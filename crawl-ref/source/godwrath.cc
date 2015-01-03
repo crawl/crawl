@@ -14,7 +14,6 @@
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "food.h"

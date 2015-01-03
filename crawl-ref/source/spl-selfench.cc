@@ -122,7 +122,6 @@ spret_type ice_armour(int pow, bool fail)
  * @param dry_run     Whether this is a test run & no corpses should be
  *                    actually destroyed.
  * @return            The total number of corpses (available to be) destroyed.
- *                    Non-skeleton corpses count double.
  */
 int harvest_corpses(const actor &harvester, bool dry_run)
 {
@@ -136,7 +135,7 @@ int harvest_corpses(const actor &harvester, bool dry_run)
             if (item.base_type != OBJ_CORPSES)
                 continue;
 
-            harvested += item.sub_type == CORPSE_SKELETON ? 1 : 2;
+            ++harvested;
 
             if (dry_run)
                 continue;
@@ -153,12 +152,10 @@ int harvest_corpses(const actor &harvester, bool dry_run)
             beam.draw_delay = 3;
             beam.fire();
             destroy_item(item.index());
+
+            viewwindow();
         }
     }
-
-    // don't cover the screen with corpses if we get a more()
-    if (harvested)
-        viewwindow();
 
     return harvested;
 }
@@ -167,8 +164,6 @@ int harvest_corpses(const actor &harvester, bool dry_run)
 /**
  * Casts the player spell "Cigotuvi's Embrace", pulling all corpses into LOS
  * around the caster to serve as armour.
- *
- * One point of (ac+sh) per for every 1.5 corpses or 3 skeletons.
  *
  * @param pow   The spellpower at which the spell is being cast.
  * @param fail  Whether the casting failed.
@@ -209,10 +204,6 @@ spret_type corpse_armour(int pow, bool fail)
     else
         mpr("Your shell of carrion and bone grows thicker.");
 
-    // 1 point of ac&sh per two skeletons, plus whatever you had already
-    // don't give more than spellpower/10 ac&sh. (5 at 50 power, etc)
-    // but if you got any corpses at all, always give at least 2 ac&sh
-    // and never reduce it below what you had before casting!
     you.attribute[ATTR_BONE_ARMOUR] += harvested;
     you.redraw_armour_class = true;
 

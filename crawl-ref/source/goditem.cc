@@ -496,7 +496,7 @@ bool is_corpse_violating_spell(spell_type spell)
 
 bool is_evil_spell(spell_type spell)
 {
-    unsigned int disciplines = get_spell_disciplines(spell);
+    const spschools_type disciplines = get_spell_disciplines(spell);
 
     return disciplines & SPTYP_NECROMANCY;
 }
@@ -524,7 +524,7 @@ bool is_hasty_spell(spell_type spell)
 
 bool is_fiery_spell(spell_type spell)
 {
-    unsigned int disciplines = get_spell_disciplines(spell);
+    const spschools_type disciplines = get_spell_disciplines(spell);
 
     return disciplines & SPTYP_FIRE;
 }
@@ -600,8 +600,10 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_CHEIBRIADOS:
-        if (item_type_known(item)
-            && (_is_potentially_hasty_item(item) || is_hasty_item(item)))
+        if (item_type_known(item) && (_is_potentially_hasty_item(item)
+                                      || is_hasty_item(item))
+            // Don't need item_type_known for quick blades.
+            || item.is_type(OBJ_WEAPONS, WPN_QUICK_BLADE))
         {
             return DID_HASTY;
         }
@@ -651,7 +653,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         return true;
 
     unsigned int flags       = get_spell_flags(spell);
-    unsigned int disciplines = get_spell_disciplines(spell);
+    spschools_type disciplines = get_spell_disciplines(spell);
 
     switch (god)
     {

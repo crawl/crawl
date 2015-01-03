@@ -14,10 +14,9 @@ Autoexplore the current level
 %%%%
 CMD_EXPLORE verbose
 
-Lets your character travel on autopilot towards unexplored areas of the current
-level and collect items subject to autopickup on the way. Travel stops as soon
-as a hostile monster comes into view, and also to announce items or features
-found.
+Sends your character on autopilot towards unexplored areas of the current level,
+and collects items on the way. Travel stops as soon as a hostile monster comes
+into view, or when you encounter new items or features.
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
@@ -200,6 +199,15 @@ Memorise spell
 CMD_MEMORISE_SPELL verbose
 
 Commit a spell to memory, read from a book you are holding or standing on.
+%%%%
+%%%%
+CMD_LOOKUP_HELP
+
+Lookup help
+%%%%
+CMD_LOOKUP_HELP verbose
+
+Look up information about monsters, spells, and more.
 %%%%
 CMD_DROP
 

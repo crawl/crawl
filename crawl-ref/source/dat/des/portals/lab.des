@@ -669,14 +669,17 @@ ENDMAP
 # The other minotaur's lava lair
 NAME: labyrinth_lava_lair
 TAGS: allow_dup
-MONS: minotaur zombie
+NSUBST: l = 2:L / *:l
+KITEM: S = minotaur skeleton
+KMONS: L = lava snake
+KFEAT: L = l
 MAP
 .......
 .lllll.
 .l***l.
-.l*1*l.
+.L*S*l.
 .l***l.
-.lllll.
+.llLll.
 .......
 ENDMAP
 

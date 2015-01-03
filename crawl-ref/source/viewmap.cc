@@ -337,7 +337,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 {
                     const feature_def& fd = get_feature_def(DNGN_EXPLORE_HORIZON);
                     cell->glyph = fd.symbol();
-                    cell->colour = fd.colour;
+                    cell->colour = fd.colour();
                 }
 
                 if (travel_mode && _travel_colour_override(c))
@@ -1295,9 +1295,9 @@ static cglyph_t _get_feat_glyph(const coord_def& gc)
     if (_travel_colour_override(gc))
         col = _get_travel_colour(gc);
     else if (emphasise(gc))
-        col = fdef.seen_em_colour;
+        col = fdef.seen_em_colour();
     else
-        col = fdef.seen_colour;
+        col = fdef.seen_colour();
     g.col = real_colour(col);
     return g;
 }

@@ -76,6 +76,16 @@ void item_colour(item_def &item)
     // Compute random tile/colour choice.
     item.rnd = 1 + random2(255); // reserve 0 for uninitialized
 
+    // reserve the high bit for marking 1 in 10 books "visually special"
+    if (item.base_type == OBJ_BOOKS)
+    {
+        if (one_chance_in(10))
+            item.rnd |= 128;
+        else
+            item.rnd = 1 + random2(127); // can't just trim the high bit,
+                                         // since it might be the only set bit
+    }
+
     if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
         return; // don't stomp on item.special!
 
@@ -1507,12 +1517,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
 static void _generate_book_item(item_def& item, bool allow_uniques,
                                 int force_type, int item_level)
 {
-    // determine special (description)
-    item.special = random2(5);
-
-    if (one_chance_in(10))
-        item.special += random2(NDSC_BOOK_SEC) * NDSC_BOOK_PRI;
-
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
@@ -1584,7 +1588,10 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
     }
 
     if (item.sub_type == BOOK_RANDART_THEME)
-        make_book_theme_randart(item, 0, 0, 5 + coinflip(), 20);
+    {
+        make_book_theme_randart(item, SPTYP_NONE, SPTYP_NONE,
+                                5 + coinflip(), 20);
+    }
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
         int max_level  = min(9, max(1, item_level / 3));

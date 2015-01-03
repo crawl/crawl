@@ -183,6 +183,8 @@ bool is_item_selected(const item_def &item, int selector);
 bool any_items_of_type(int type_expect, int excluded_slot = -1);
 string no_selectables_message(int item_selector);
 
+string slot_description();
+
 int prompt_invent_item(const char *prompt,
                        menu_type type,
                        int type_expect,
@@ -217,6 +219,7 @@ vector<SelItem> prompt_invent_items(
 unsigned char get_invent(int invent_type, bool redraw = true);
 
 bool in_inventory(const item_def &i);
+void identify_inventory();
 
 const char *item_class_name(int type, bool terse = false);
 const char *item_slot_name(equipment_type type);
@@ -230,12 +233,12 @@ void init_item_sort_comparators(item_sort_comparators &list,
 bool prompt_failed(int retval);
 
 void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers);
-bool evoker_is_charging(const item_def &item);
 
 bool item_is_wieldable(const item_def &item);
 bool item_is_evokable(const item_def &item, bool reach = true,
                       bool known = false, bool all_wands = false,
                       bool msg = false, bool equip = true);
 bool nasty_stasis(const item_def &item, operation_types oper);
-bool needs_handle_warning(const item_def &item, operation_types oper);
+bool needs_handle_warning(const item_def &item, operation_types oper,
+                          bool &penance);
 #endif

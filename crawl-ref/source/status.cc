@@ -63,7 +63,7 @@ static void _reset_status_info(status_info* inf)
     inf->light_text = "";
     inf->short_text = "";
     inf->long_text = "";
-};
+}
 
 static int _bad_ench_colour(int lvl, int orange, int red)
 {
@@ -293,8 +293,7 @@ bool fill_status_info(int status, status_info* inf)
 
     case DUR_CONFUSING_TOUCH:
     {
-        inf->long_text = string("Your ") + you.hand_name(true)
-                         + " are glowing red.";
+        inf->long_text = you.hands_act("are", "glowing red.");
         break;
     }
 
@@ -855,10 +854,12 @@ static void _describe_rotting(status_info* inf)
         else if (rot > 4)
             inf->long_text += " badly";
         else if (you.species == SP_GHOUL)
+        {
             if (rot > 2)
                 inf->long_text += " faster than usual";
             else
                 inf->long_text += " at the usual pace";
+        }
         inf->long_text += ".";
     }
 }

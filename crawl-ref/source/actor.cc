@@ -142,7 +142,7 @@ int actor::check_res_magic(int power)
     if (is_monster() && mrs < 6 && coinflip())
         return -1;
 
-    power = stepdown_value(power, 30, 40, 100, 120);
+    power = ench_power_stepdown(power);
 
     const int mrchance = (100 + mrs) - power;
     const int mrch2 = random2(100) + random2(101);
@@ -898,26 +898,4 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
          KILLED_BY_COLLISION, "",
          feature_description_at(newpos, false, DESC_A, false));
-}
-
-bool actor::can_cleave(int which_attack) const
-{
-    if (confused())
-        return false;
-
-    if (is_player()
-        && (you.form == TRAN_HYDRA && you.heads() > 1
-            || you.duration[DUR_CLEAVE]))
-    {
-        return true;
-    }
-
-    const item_def* weap = weapon(which_attack);
-    if (!weap)
-        return false;
-
-    if (is_unrandom_artefact(*weap, UNRAND_GYRE))
-        return true;
-
-    return item_attack_skill(*weap) == SK_AXES;
 }

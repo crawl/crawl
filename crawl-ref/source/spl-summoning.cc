@@ -133,7 +133,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 {
     if (!you.weapon())
     {
-        mprf("Your %s feel slithery!", you.hand_name(true).c_str());
+        mpr(you.hands_act("feel", "slithery!"));
         return SPRET_ABORT;
     }
 
@@ -229,7 +229,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
                                          1, MONS_GOLIATH_BEETLE,
                                          3, MONS_KILLER_BEE,
                                          1, MONS_VAMPIRE_MOSQUITO,
-                                         1, MONS_YELLOW_WASP,
+                                         1, MONS_WASP,
                                          0);
         }
         while (player_will_anger_monster(mon) && ++tries < MAX_TRIES);
@@ -768,12 +768,16 @@ static bool _check_tukima_validity(const actor *target)
             return _fail_tukimas();
 
         if (target_is_player)
-            mprf("Your %s twitch.", you.hand_name(true).c_str());
+            mpr(you.hands_act("twitch", "."));
         else
         {
-            mprf("%s %s twitch.",
+            // FIXME: maybe move hands_act to class actor?
+            bool plural = true;
+            const string hand = target->hand_name(true, &plural);
+
+            mprf("%s %s %s.",
                  apostrophise(target->name(DESC_THE)).c_str(),
-                 target->hand_name(true).c_str());
+                 hand.c_str(), conjugate_verb("twitch", plural).c_str());
         }
         return false;
     }
@@ -1028,10 +1032,17 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
  */
 static monster_type _get_imp_type(int pow)
 {
-    // this seems to think that iron & shadow imps are better than white...?
-    if (random2(pow) >= 46 || one_chance_in(6))
+    // Proportion of white imps is independent of spellpower.
+    if (x_chance_in_y(5, 18))
+        return MONS_WHITE_IMP;
+
+    // 3/13 * 13/18 = 1/6 chance of one of these two at 0-46 spellpower,
+    // increasing up to about 4/9 at max spellpower.
+    if (random2(pow) >= 46 || x_chance_in_y(3, 13))
         return one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
-    return one_chance_in(3) ? MONS_WHITE_IMP : MONS_CRIMSON_IMP;
+
+    // 5/9 crimson at 0-46 spellpower, about half that at max power.
+    return MONS_CRIMSON_IMP;
 }
 
 static map<monster_type, const char*> _imp_summon_messages = {
@@ -2012,7 +2023,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
     // If not, look for a corpse and butcher it.
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
             && mons_skeleton(si->mon_type)
             && mons_class_can_be_zombified(si->mon_type))
         {
@@ -2071,8 +2082,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     int co = -1;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES
-            && si->sub_type == CORPSE_BODY
+        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
             && mons_class_can_be_zombified(si->mon_type))
         {
             found = true;
@@ -2265,7 +2275,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         // Count up number/size of corpses at this location.
         for (stack_iterator si(*ri); si; ++si)
         {
-            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
             {
                 if (!actual)
                 {
@@ -3218,6 +3228,12 @@ monster* find_spectral_weapon(const actor* agent)
         return nullptr;
 }
 
+bool weapon_can_be_spectral(const item_def *wpn)
+{
+    return wpn && is_weapon(*wpn) && !is_range_weapon(*wpn)
+        && !is_special_unrandom_artefact(*wpn);
+}
+
 spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 {
     ASSERT(agent);
@@ -3226,8 +3242,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
     item_def* wpn = agent->weapon();
 
     // If the wielded weapon should not be cloned, abort
-    if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn)
-        || is_special_unrandom_artefact(*wpn))
+    if (!weapon_can_be_spectral(wpn))
     {
         if (agent->is_player())
         {
@@ -3238,7 +3253,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
                      wpn->quantity > 1 ? "" : "s");
             }
             else
-                mprf("Your %s twitch.", you.hand_name(true).c_str());
+                mpr(you.hands_act("twitch", "."));
         }
 
         return SPRET_ABORT;

@@ -1,0 +1,59 @@
+1. CTAGS-EXUBERANT SETTINGS FOR CRAWL
+
+For users of ctags-exuberant, there are some settings that can improve
+your quality of living when working on crawl. Note that some of these
+settings aren't appropriate for your ~/.ctags unless you work exclusively
+on crawl.
+
+--langdef=crawlmap
+--langmap=crawlmap:+.des
+--regex-crawlmap=/^ *NAME: *([^ ]*)/\1/q,map,map definition/
+
+    Create tags for maps in .des files, pointing to the NAME: line.
+    Single-quote the regex in the shell, but not in .ctags.
+
+--regex-c++=/^ *DEF_BITFIELD *\( *([a-zA-Z0-9_:]*)/\1/t/
+
+    Treat the DEF_BITFIELD macro as a typedef.
+
+-I decltype+
+
+    More correctly interpret "auto func() -> decltype(foo)" as a declaration
+    of "func", not of "decltype".
+
+--extra=+q
+
+    Allow searching for "player::rot", not just "rot".
+
+--exclude=contrib
+--exclude=android-project
+--exclude=saves
+
+    Don't tag third-party code, and don't try to tag save files,
+    which would otherwise be mistaken for C# source.
+
+
+2. RUNNING CTAGS AUTOMATICALLY
+
+I like to run ctags automatically every time I take a git action, but don't
+want to wait for it to complete each time. Instead, I run ctags in the
+background. But, until ctags does finish, I'd rather have an outdated tag
+file than an incomplete one; so I have ctags write the tag file to a temporary
+location (containing the job's PID to avoid conflicts) then move it into
+place once it is ready.
+
+Create an executable script .git/hooks/ctags with the contents:
+
+   #! /bin/sh -e
+   cd crawl-ref/source
+   tagfile=../../.git/tags.tmp.$$
+   ctags -R -f "$tagfile"  # Perhaps add some command-line options here
+   mv "$tagfile" tags
+
+Add to your post-checkout, post-commit, and post-merge hooks the line:
+
+   .git/hooks/ctags >/dev/null 2>&1 &
+
+Add to your post-rewrite hook:
+
+   [ "$1" = rebase ] && .git/hooks/ctags >/dev/null 2>&1 &

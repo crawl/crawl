@@ -33,7 +33,7 @@
 
 {{
 function interest_check(e)
-  if you.branch() ~= "D" or you.absdepth() > 9 then
+  if not you.in_branch("D") or you.absdepth() > 9 then
     e.tags('extra')
   end
 end
@@ -915,7 +915,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_kikubaaqudgha
 KMONS:  _ = human zombie
-: if you.branch() ~= "D" or you.absdepth() > 14 then
+: if not you.in_branch("D") or you.absdepth() > 14 then
 TAGS:   extra
 : end
 MAP
@@ -2305,7 +2305,7 @@ NSUBST: ? = 1:_ / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
 KFEAT:  _ = altar_yredelemnul
 KMONS:  _ = human zombie
-: if you.branch() ~= "D" or you.absdepth() > 14 then
+: if not you.in_branch("D") or you.absdepth() > 14 then
 TAGS:   extra
 : end
 MAP

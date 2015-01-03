@@ -31,8 +31,8 @@
   Wiki, development blog and Windows trunk builds, as well as providing public
   telnet access to development builds, all on crawl.develz.org.
 
-* Rachel Elizabeth Dillon, for all the work done in running the public telnet
-  server crawl.akrasiac.org, its associated August tourney, and other great
+* Rax E. Dillon, for all the work done in running the public telnet server
+  crawl.akrasiac.org, its associated August tourney, and other great
   contributions.
 
 * Other administrators of public crawl servers, both present:
@@ -73,6 +73,7 @@
     Aj Adamson
     Nikhil Addleman
     Warwick Allison
+    Austin Appleby
     araganzar
     argonaut
     Juha Arpiainen

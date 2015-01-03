@@ -223,13 +223,7 @@ NORETURN void end_game(scorefile_entry &se)
         if (you.inv[i].defined() && item_type_unknown(you.inv[i]))
             add_inscription(you.inv[i], "unknown");
 
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (!you.inv[i].defined())
-            continue;
-        set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
-        set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-    }
+    identify_inventory();
 
     _delete_files();
 

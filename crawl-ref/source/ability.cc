@@ -27,7 +27,6 @@
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "evoke.h"
 #include "exercise.h"
 #include "food.h"
@@ -52,6 +51,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
+#include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
@@ -502,19 +502,41 @@ const ability_def& get_ability_def(ability_type abil)
     return Ability_List[0];
 }
 
+/**
+ * Is there a valid ability with a name matching that given?
+ *
+ * @param key   The name in question. (Not case sensitive.)
+ * @return      true if such an ability exists; false if not.
+ */
 bool string_matches_ability_name(const string& key)
 {
-    for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
+    return ability_by_name(key) != ABIL_NON_ABILITY;
+}
+
+/**
+ * Find an ability whose name matches the given key.
+ *
+ * @param name      The name in question. (Not case sensitive.)
+ * @return          The enum of the relevant ability, if there was one; else
+ *                  ABIL_NON_ABILITY.
+ */
+ability_type ability_by_name(const string &key)
+{
+    for (const auto &abil : Ability_List)
     {
-        const ability_def abil = get_ability_def(static_cast<ability_type>(i));
         if (abil.ability == ABIL_NON_ABILITY)
             continue;
 
+        // don't display zot abilties outside zotdef
+        if ((abil.flags & ABFLAG_ZOTDEF) && !crawl_state.game_is_zotdef())
+            continue;
+
         const string name = lowercase_string(ability_name(abil.ability));
-        if (name.find(key) != string::npos)
-            return true;
+        if (name == lowercase_string(key))
+            return abil.ability;
     }
-    return false;
+
+    return ABIL_NON_ABILITY;
 }
 
 string print_abilities()
@@ -2823,10 +2845,16 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_LUGONU_BANISH:
+    {
         beam.range = LOS_RADIUS;
+        const int pow = 16 + you.skill(SK_INVOCATIONS, 8);
 
-        if (!spell_direction(spd, beam))
+        if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, 0,
+                             true, true, false, nullptr, nullptr, false, nullptr,
+                             bind(desc_success_chance, placeholders::_1, pow)))
+        {
             return SPRET_ABORT;
+        }
 
         if (beam.target == you.pos())
         {
@@ -2834,8 +2862,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        return zapping(ZAP_BANISHMENT, 16 + you.skill(SK_INVOCATIONS, 8), beam,
-                       true, nullptr, fail);
+        return zapping(ZAP_BANISHMENT, pow, beam, true, nullptr, fail);
+    }
 
     case ABIL_LUGONU_CORRUPT:
         fail_check();
@@ -3417,14 +3445,13 @@ string describe_talent(const talent& tal)
 {
     ASSERT(tal.which != ABIL_NON_ABILITY);
 
-    char* failure = failure_rate_to_string(tal.fail);
+    const string failure = failure_rate_to_string(tal.fail);
 
     ostringstream desc;
     desc << left
          << chop_string(ability_name(tal.which), 32)
          << chop_string(make_cost_description(tal.which), 30)
          << chop_string(failure, 7);
-    free(failure);
     return desc.str();
 }
 

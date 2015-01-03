@@ -45,7 +45,7 @@ static void _potion_stack_changed_message(string item_name, int num_changed,
  */
 static bool _is_chunk(const item_def &item)
 {
-    return item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK;
+    return item.is_type(OBJ_FOOD, FOOD_CHUNK);
 }
 
 
@@ -112,7 +112,11 @@ void init_perishable_stack(item_def &stack, int age)
     ASSERT(is_blood_potion(stack) || _is_chunk(stack));
 
     CrawlHashTable &props = stack.props;
+    const bool never_decay = props.exists(CORPSE_NEVER_DECAYS)
+                             && props[CORPSE_NEVER_DECAYS].get_bool();
     props.clear(); // sanity measure
+    if (never_decay)
+        props[CORPSE_NEVER_DECAYS] = true;
     props[TIMER_KEY].new_vector(SV_INT, SFLAG_CONST_TYPE);
     CrawlVector &timer = props[TIMER_KEY].get_vector();
 
@@ -164,12 +168,14 @@ static bool _item_needs_rot_check(const item_def &item)
     if (!item.defined())
         return false;
 
+    if (item.props.exists(CORPSE_NEVER_DECAYS))
+        return false;
+
     if (is_perishable_stack(item))
         return true;
 
     return item.base_type == OBJ_CORPSES
-           && item.sub_type <= CORPSE_SKELETON // XXX: is this needed?
-           && !item.props.exists(CORPSE_NEVER_DECAYS);
+           && item.sub_type <= CORPSE_SKELETON; // XXX: is this needed?
 }
 
 /**

@@ -3009,7 +3009,7 @@ void start_explore(bool grab_items)
         {
             for (stack_iterator j(*i); j; ++j)
             {
-                if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
+                if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
                     corpse_on_pos = true;
                     break;

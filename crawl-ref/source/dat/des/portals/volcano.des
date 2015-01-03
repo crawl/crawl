@@ -216,7 +216,7 @@ end
 
 function fiery_guardians (e, intelligent, village)
     local humanweight = 5
-    if you.branch() == "Lair" then
+    if you.in_branch("Lair") then
         humanweight = 4
     end
     local flame = "ego:flaming ident:type"

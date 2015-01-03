@@ -2480,8 +2480,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
 
         if (Hints.hints_type == HINT_RANGER_CHAR && wpn != -1
-            && you.inv[wpn].base_type == OBJ_WEAPONS
-            && you.inv[wpn].sub_type == WPN_SHORTBOW)
+            && you.inv[wpn].is_type(OBJ_WEAPONS, WPN_SHORTBOW))
         {
             text << "You can easily switch between weapons in slots a and "
                     "b by pressing <w>%</w>.";
@@ -3124,7 +3123,7 @@ void hints_describe_item(const item_def &item)
             }
 
             item_def *weap = you.slot_item(EQ_WEAPON, false);
-            bool wielded = (weap && (*weap).slot == item.slot);
+            bool wielded = (weap && weap->slot == item.slot);
             bool long_text = false;
 
             if (!wielded)
@@ -3779,6 +3778,7 @@ static void _hints_describe_feature(int x, int y)
          break;
 
     case DNGN_TRAP_TELEPORT:
+    case DNGN_TRAP_SHADOW:
     case DNGN_TRAP_ALARM:
     case DNGN_TRAP_ZOT:
     case DNGN_TRAP_MECHANICAL:
@@ -4091,7 +4091,7 @@ bool hints_monster_interesting(const monster* mons)
     return mons_threat_level(mons) == MTHRT_NASTY;
 }
 
-void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
+string hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
     cgotoxy(1, wherey());
     ostringstream ostr;
@@ -4213,7 +4213,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 
     string broken = ostr.str();
     linebreak_string(broken, _get_hints_cols());
-    display_tagged_block(broken);
+    return broken;
 }
 
 void hints_observe_cell(const coord_def& gc)

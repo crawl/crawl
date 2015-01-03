@@ -107,7 +107,7 @@ ORIENT:  float
 SHUFFLE: ]def
 SUBST:   c : cx
 TILE:    c = wall_stone_brick
-TILE:    x = wall_vines
+TILE:    x = wall_pebble_lightgray
 KFEAT:   ' = floor
 FTILE:   '+]def{T = floor_cobble_blood
 SUBST:   X = T
@@ -145,7 +145,7 @@ MONS:    fungus
 SHUFFLE: {[(, UVW, XYZ
 SUBST:   [( = T
 SUBST:   '=.x, U=+, V=x, W=x, X=+, Y=x, Z=x, b:xxxbcv
-RTILE:   x = wall_vines
+RTILE:   x = wall_pebble_lightgray
 SUBST:   = : + x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -543,7 +543,7 @@ ORIENT:  float
 SHUFFLE: {[(
 SUBST:   ([ = .
 SUBST:   y = w:39 W:1, Y = A:5 w:1, W = W:19 .:1, A = W
-TILE:    x = wall_vines
+TILE:    x = wall_pebble_lightgray
 MAP
              ..........@.......
          .....WWWWW........WWW...

@@ -9,7 +9,7 @@ function init_ice(e)
   e.tags('mini_float')
   e.tags('transparent')
   e.weight('2')
-  if you.branch() == "Coc" then
+  if you.in_branch("Coc") then
     e.kmons('.- = simulacrum w:30 / \
                   ice fiend w:1 / blizzard demon w:5 / ice devil / \
                   blue devil / white imp / ice beast w:20 / \
@@ -30,7 +30,7 @@ function init_ice(e)
   e.kfeat(".-! = floor")
 
   local cloud_type = "thin mist"
-  if you.branch() == "Coc" then
+  if you.in_branch("Coc") then
     cloud_type = "freezing vapour"
   end
   e.lua_marker("!", fog_machine { cloud_type = cloud_type, pow_max = 15,
@@ -46,7 +46,7 @@ CHANCE: 1% (D), 3% (Coc)
 {{
   local c = 4 + crawl.random2(3) * crawl.random2(4)
   local ice_cave = 0
-  if you.branch() == "D" and you.absdepth() >= 11 and
+  if you.in_branch("D") and you.absdepth() >= 11 and
      dgn.map_by_tag("uniq_icecv") and crawl.coinflip() then
     ice_cave = 1
   end

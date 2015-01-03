@@ -4,8 +4,8 @@ struct mutation_def
     short       weight;     // Commonality of the mutation; bigger = appears
                             // more often.
     short       levels;     // The number of levels of the mutation.
-    unsigned int  uses;     // Bitfield holding types of effects that grant
-                            // this mutation. (MFLAG)
+    mut_flags_type uses;    // Bitfield holding types of effects that grant
+                            // this mutation (MUTFLAG_*)
     bool        form_based; // A mutation that is suppressed when shapechanged.
     const char* short_desc; // What appears on the '%' screen.
     const char* have[3];    // What appears on the 'A' screen.
@@ -727,9 +727,9 @@ static const mutation_def mut_data[] =
    "You are quite resistant to negative energy.",
    "You are immune to negative energy."},
 
-  {"You feel negative.",
-   "You feel negative.",
-   "You feel negative."},
+  {"You feel resistant to negative energy.",
+   "You feel more resistant to negative energy.",
+   "You feel more resistant to negative energy."},
 
   {"", "", ""},
 
@@ -1829,9 +1829,9 @@ static const mutation_def mut_data[] =
 { MUT_NO_DODGING,                0,  1, MUTFLAG_RU, false,
   "inability to train dodging",
 
-  {"You cannot train Dodging.", "", ""},
-  {"You can no longer train Dodging.", "", ""},
-  {"You can once more train Dodging.", "", ""},
+  {"You cannot train Dodging skill.", "", ""},
+  {"You can no longer train Dodging skill.", "", ""},
+  {"You can once more train Dodging skill.", "", ""},
 
   "inability to train Dodging",
 },
@@ -1839,9 +1839,9 @@ static const mutation_def mut_data[] =
 { MUT_NO_ARMOUR,                0,  1, MUTFLAG_RU, false,
   "inability to train armour",
 
-  {"You cannot train your Armour skill.", "", ""},
-  {"You can no longer train your Armour skill.", "", ""},
-  {"You can once more train your Armour skill.", "", ""},
+  {"You cannot train Armour skill.", "", ""},
+  {"You can no longer train Armour skill.", "", ""},
+  {"You can once more train Armour skill.", "", ""},
 
   "inability to train Armour",
 },
@@ -2033,9 +2033,9 @@ static const mutation_def mut_data[] =
 { MUT_MP_WANDS,                        7,  3, MUTFLAG_BAD, false,
   "MP-powered wands",
 
-  {"You expend magic power (6 MP) to slightly strengthen your wands.",
-    "You expend magic power (12 MP) to strengthen your wands.",
-    "You expend magic power (18 MP) to make your wands much stronger."},
+  {"You expend magic power (3 MP) to slightly strengthen your wands.",
+    "You expend magic power (6 MP) to strengthen your wands.",
+    "You expend magic power (9 MP) to make your wands much stronger."},
   {"You feel less able to contain your magic power.",
     "You feel less able to contain your magic power.",
     "You feel less able to contain your magic power."},

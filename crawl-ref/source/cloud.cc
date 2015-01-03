@@ -27,6 +27,7 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stringutil.h"
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "unwind.h"
@@ -98,7 +99,7 @@ static const cloud_data clouds[] = {
       MAGENTA,                                  // colour
     },
     // CLOUD_FOREST_FIRE,
-    { "fire", "roaring flames",                 // terse, verbose name
+    { "spreading flames", "a forest fire",      // terse, verbose name
       COLOUR_UNDEF,                             // colour
       BEAM_FIRE,                                // beam_effect
       15, 46                                    // base, expected random damage
@@ -248,11 +249,9 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
 }
 #endif
 
-static bool _is_opaque_cloud(cloud_type ctype);
-
 static void _los_cloud_changed(const coord_def& p, cloud_type t)
 {
-    if (_is_opaque_cloud(t))
+    if (is_opaque_cloud_type(t))
         los_terrain_changed(p);
 }
 
@@ -813,7 +812,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     }
 }
 
-static bool _is_opaque_cloud(cloud_type ctype)
+bool is_opaque_cloud_type(cloud_type ctype)
 {
     return ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST;
 }
@@ -823,7 +822,7 @@ bool is_opaque_cloud(int cloud_idx)
     if (cloud_idx == EMPTY_CLOUD)
         return false;
 
-    return _is_opaque_cloud(env.cloud[cloud_idx].type);
+    return is_opaque_cloud_type(env.cloud[cloud_idx].type);
 }
 
 cloud_type cloud_type_at(const coord_def &c)
@@ -1227,13 +1226,11 @@ static int _actor_cloud_base_damage(const actor *act,
 
 static int _cloud_damage_output(const actor *actor,
                                 beam_type flavour,
-                                int resist,
                                 int base_damage,
                                 bool maximum_damage = false)
 {
     const int resist_adjusted_damage =
-        resist_adjust_damage(actor, flavour, resist,
-                             base_damage, true);
+        resist_adjust_damage(actor, flavour, base_damage);
     if (maximum_damage)
         return resist_adjusted_damage;
 
@@ -1268,7 +1265,7 @@ static int _actor_cloud_damage(const actor *act,
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
         final_damage =
-            _cloud_damage_output(act, _cloud2beam(cloud.type), resist,
+            _cloud_damage_output(act, _cloud2beam(cloud.type),
                                  cloud_base_damage,
                                  maximum_damage);
         break;
@@ -1302,7 +1299,6 @@ static int _actor_cloud_damage(const actor *act,
 
         const int lightning_dam = _cloud_damage_output(act,
                                                        _cloud2beam(cloud.type),
-                                                       resist,
                                                        cloud_base_damage,
                                                        maximum_damage);
 
@@ -1613,6 +1609,22 @@ string cloud_type_name(cloud_type type, bool terse)
     return clouds[type].verbose_name;
 }
 
+cloud_type cloud_name_to_type(const string &name)
+{
+    const string lower_name = lowercase_string(name);
+
+    if (lower_name == "random")
+        return CLOUD_RANDOM;
+    else if (lower_name == "debugging")
+        return CLOUD_DEBUGGING;
+
+    for (int i = CLOUD_NONE; i < CLOUD_RANDOM; i++)
+        if (cloud_type_name(static_cast<cloud_type>(i)) == lower_name)
+            return static_cast<cloud_type>(i);
+
+    return CLOUD_NONE;
+}
+
 ////////////////////////////////////////////////////////////////////////
 // cloud_struct
 
@@ -1730,8 +1742,19 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
  */
 colour_t get_cloud_colour(int cloudno)
 {
-    const cloud_struct &cloud = env.cloud[cloudno];
+    return get_cloud_colour(env.cloud[cloudno]);
+}
 
+/**
+ * What colour is the given cloud?
+ *
+ * @param cloudno       The cloud in question.
+ * @return              An appropriate colour for the cloud.
+ *                      May vary from call to call (randomized for some cloud
+ *                      types).
+ */
+colour_t get_cloud_colour(const cloud_struct &cloud)
+{
     // if the cloud has a set (custom?) colour, use that.
     if (cloud.colour != -1)
         return cloud.colour;

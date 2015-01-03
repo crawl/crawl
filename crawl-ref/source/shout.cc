@@ -15,18 +15,22 @@
 #include "art-enum.h"
 #include "branch.h"
 #include "database.h"
+#include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "hints.h"
 #include "jobs.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-chimera.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "prompt.h"
 #include "religion.h"
 #include "state.h"
 #include "stringutil.h"
@@ -451,6 +455,298 @@ void noisy_equipment()
         msg = getSpeakString("noisy weapon");
 
     item_noise(*weapon, msg, 20);
+}
+
+// Berserking monsters cannot be ordered around.
+static bool _follows_orders(monster* mon)
+{
+    return mon->friendly()
+           && mon->type != MONS_GIANT_SPORE
+           && !mon->berserk_or_insane()
+           && !mons_is_conjured(mon->type)
+           && !mon->has_ench(ENCH_HAUNTING);
+}
+
+// Sets foe target of friendly monsters.
+// If allow_patrol is true, patrolling monsters get MHITNOT instead.
+static void _set_friendly_foes(bool allow_patrol = false)
+{
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi))
+            continue;
+        if (you.pet_target != MHITNOT && mi->behaviour == BEH_WITHDRAW)
+        {
+            mi->behaviour = BEH_SEEK;
+            mi->patrol_point = coord_def(0, 0);
+        }
+        mi->foe = (allow_patrol && mi->is_patrolling() ? MHITNOT
+                                                         : you.pet_target);
+    }
+}
+
+static void _set_allies_patrol_point(bool clear = false)
+{
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi))
+            continue;
+        mi->patrol_point = (clear ? coord_def(0, 0) : mi->pos());
+        if (!clear)
+            mi->behaviour = BEH_WANDER;
+        else
+            mi->behaviour = BEH_SEEK;
+    }
+}
+
+static void _set_allies_withdraw(const coord_def &target)
+{
+    coord_def delta = target - you.pos();
+    float mult = float(LOS_RADIUS * 2) / (float)max(abs(delta.x), abs(delta.y));
+    coord_def rally_point = clamp_in_bounds(coord_def(delta.x * mult, delta.y * mult) + you.pos());
+
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi))
+            continue;
+        if (mons_class_flag(mi->type, M_STATIONARY))
+            continue;
+        mi->behaviour = BEH_WITHDRAW;
+        mi->target = clamp_in_bounds(target);
+        mi->patrol_point = rally_point;
+        mi->foe = MHITNOT;
+
+        mi->props.erase("last_pos");
+        mi->props.erase("idle_point");
+        mi->props.erase("idle_deadline");
+        mi->props.erase("blocked_deadline");
+    }
+}
+
+void yell(const actor* mon)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    bool targ_prev = false;
+    int mons_targd = MHITNOT;
+    dist targ;
+
+    const string shout_verb = you.shout_verb(mon != nullptr);
+    string cap_shout = shout_verb;
+    cap_shout[0] = toupper(cap_shout[0]);
+    const int noise_level = you.shout_volume();
+
+    if (you.cannot_speak())
+    {
+        if (mon)
+        {
+            if (you.paralysed() || you.duration[DUR_WATER_HOLD])
+            {
+                mprf("You feel a strong urge to %s, but "
+                     "you are unable to make a sound!",
+                     shout_verb.c_str());
+            }
+            else
+            {
+                mprf("You feel a %s rip itself from your throat, "
+                     "but you make no sound!",
+                     shout_verb.c_str());
+            }
+        }
+        else
+            mpr("You are unable to make a sound!");
+
+        return;
+    }
+
+    if (mon)
+    {
+        mprf("You %s%s at %s!",
+             shout_verb.c_str(),
+             you.duration[DUR_RECITE] ? " your recitation" : "",
+             mon->name(DESC_THE).c_str());
+        noisy(noise_level, you.pos());
+        return;
+    }
+
+    mprf(MSGCH_PROMPT, "What do you say?");
+    mprf(" t - %s!", cap_shout.c_str());
+
+    if (!you.berserk())
+    {
+        string previous;
+        if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
+        {
+            const monster* target = &menv[you.prev_targ];
+            if (target->alive() && you.can_see(target))
+            {
+                previous = "   p - Attack previous target.";
+                targ_prev = true;
+            }
+        }
+
+        mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
+        mpr("                   r - Retreat!             s - Stop attacking.");
+        mpr("                   w - Wait here.           f - Follow me.");
+    }
+    mpr(" Anything else - Stay silent.");
+
+    int keyn = get_ch();
+    clear_messages();
+
+    switch (keyn)
+    {
+    case '!':    // for players using the old keyset
+    case 't':
+        mprf(MSGCH_SOUND, "You %s%s!",
+             shout_verb.c_str(),
+             you.berserk() ? " wildly" : " for attention");
+        noisy(noise_level, you.pos());
+        zin_recite_interrupt();
+        you.turn_is_over = true;
+        return;
+
+    case 'f':
+    case 's':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
+        mons_targd = MHITYOU;
+        if (keyn == 'f')
+        {
+            // Don't reset patrol points for 'Stop fighting!'
+            _set_allies_patrol_point(true);
+            mpr("Follow me!");
+        }
+        else
+            mpr("Stop fighting!");
+        break;
+
+    case 'w':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
+        mpr("Wait here!");
+        mons_targd = MHITNOT;
+        _set_allies_patrol_point();
+        break;
+
+    case 'p':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
+        if (targ_prev)
+        {
+            mons_targd = you.prev_targ;
+            break;
+        }
+
+    // fall through
+    case 'a':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
+        if (env.sanctuary_time > 0)
+        {
+            if (!yesno("An ally attacking under your orders might violate "
+                       "sanctuary; order anyway?", false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
+        }
+
+        {
+            direction_chooser_args args;
+            args.restricts = DIR_TARGET;
+            args.mode = TARG_HOSTILE;
+            args.needs_path = false;
+            args.top_prompt = "Gang up on whom?";
+            direction(targ, args);
+        }
+
+        if (targ.isCancel)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        {
+            bool cancel = !targ.isValid;
+            if (!cancel)
+            {
+                const monster* m = monster_at(targ.target);
+                cancel = (m == nullptr || !you.can_see(m));
+                if (!cancel)
+                    mons_targd = m->mindex();
+            }
+
+            if (cancel)
+            {
+                canned_msg(MSG_NOTHING_THERE);
+                return;
+            }
+        }
+        break;
+
+    case 'r':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
+        {
+            direction_chooser_args args;
+            args.restricts = DIR_TARGET;
+            args.mode = TARG_ANY;
+            args.needs_path = false;
+            args.top_prompt = "Retreat in which direction?";
+            direction(targ, args);
+        }
+
+        if (targ.isCancel)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
+        if (targ.isValid)
+        {
+            mpr("Fall back!");
+            mons_targd = MHITNOT;
+        }
+
+        _set_allies_withdraw(targ.target);
+        break;
+
+    default:
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    zin_recite_interrupt();
+    you.turn_is_over = true;
+    you.pet_target = mons_targd;
+    // Allow patrolling for "Stop fighting!" and "Wait here!"
+    _set_friendly_foes(keyn == 's' || keyn == 'w');
+
+    if (mons_targd != MHITNOT && mons_targd != MHITYOU)
+        mpr("Attack!");
+
+    noisy(noise_level, you.pos());
 }
 
 void apply_noises()

@@ -26,7 +26,6 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "exclude.h"
@@ -483,8 +482,8 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     }
 
     // must not produce the magic value (-1)
-    int seed = (static_cast<int>(you.where_are_you) << 8) + you.depth
-             ^ you.game_seeds[SEED_PASSIVE_MAP] & 0x7fffffff;
+    int seed = ((static_cast<int>(you.where_are_you) << 8) + you.depth)
+             ^ (you.game_seeds[SEED_PASSIVE_MAP] & 0x7fffffff);
 
     if (seed == cache_seed)
         return cache;

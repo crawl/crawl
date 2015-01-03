@@ -81,11 +81,23 @@ formatted_string formatted_string::parse_string(const string &s,
 // Parses a formatted string in much the same way as parse_string, but
 // handles \n by creating a new formatted_string.
 void formatted_string::parse_string_to_multiple(const string &s,
-                                                vector<formatted_string> &out)
+                                                vector<formatted_string> &out,
+                                                int wrap_col)
 {
     vector<int> colour_stack(1, LIGHTGREY);
 
     vector<string> lines = split_string("\n", s, false, true);
+    if (wrap_col > 0)
+    {
+        vector<string> pre_split = move(lines);
+        for (string &line : pre_split)
+        {
+            if (line.empty())
+                lines.emplace_back(" ");
+            while (!line.empty())
+                lines.push_back(wordwrap_line(line, wrap_col, true, true));
+        }
+    }
 
     for (int i = 0, size = lines.size(); i < size; ++i)
     {

@@ -483,7 +483,7 @@ targetter_cleave::targetter_cleave(const actor* act, coord_def target)
     origin = act->pos();
     aim = target;
     list<actor*> act_targets;
-    get_all_cleave_targets(act, target, act_targets);
+    get_cleave_targets(act, target, act_targets);
     while (!act_targets.empty())
     {
         targets.insert(act_targets.front()->pos());
@@ -503,7 +503,8 @@ targetter_cloud::targetter_cloud(const actor* act, int range,
     ASSERT(cnt_min > 0);
     ASSERT(cnt_max > 0);
     ASSERT(cnt_min <= cnt_max);
-    if (agent = act)
+    agent = act;
+    if (agent)
         origin = aim = act->pos();
     range2 = dist_range(range);
 }

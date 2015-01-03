@@ -1215,15 +1215,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-#if TAG_MAJOR_VERSION == 34
-    {  MST_SILVER_STAR,
-      {
-       { SPELL_HOLY_LIGHT, 40, MON_SPELL_DEMONIC },
-       { SPELL_SILVER_BLAST, 40, MON_SPELL_DEMONIC },
-      }
-    },
-#endif
-
     {  MST_GNOLL_SHAMAN,
       {
        { SPELL_CORONA, 11, MON_SPELL_PRIEST },
@@ -1658,12 +1649,14 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_NAGA_SNIPER,
       {
+       { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        { SPELL_PORTAL_PROJECTILE, 59, MON_SPELL_WIZARD },
       }
     },
 
     {  MST_NAGA_RITUALIST,
       {
+       { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },
        { SPELL_OLGREBS_TOXIC_RADIANCE, 23, MON_SPELL_WIZARD },
        { SPELL_VIRULENCE, 23, MON_SPELL_WIZARD },
@@ -1735,6 +1728,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_VASHNIA,
       {
+       { SPELL_SPIT_POISON, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH },
        { SPELL_PORTAL_PROJECTILE, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_ALLIES_AWAY, 22, MON_SPELL_WIZARD },
        { SPELL_BLINK_AWAY, 11, MON_SPELL_WIZARD },
@@ -1887,12 +1881,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_COLD_BREATH,
-      {
-       { SPELL_COLD_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH },
-      }
-    },
-
     {  MST_ICE_DRAGON_BREATH,
       {
        { SPELL_COLD_BREATH, 62, MON_SPELL_NATURAL | MON_SPELL_BREATH
@@ -1963,8 +1951,7 @@ static const mon_spellbook mspell_list[] =
       {
         { SPELL_BATTLECRY, 50, MON_SPELL_NATURAL | MON_SPELL_INSTANT
                                 | MON_SPELL_NO_SILENT },
-        { SPELL_GOBLIN_TOSS, 80, MON_SPELL_NATURAL },
-        END_OF_MONS_BOOK
+        { SPELL_GOBLIN_TOSS, 80, MON_SPELL_NATURAL }
       }
     },
 

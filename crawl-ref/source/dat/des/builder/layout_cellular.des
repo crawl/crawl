@@ -118,7 +118,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
-  local doors = you.branch() == "Dis"
+  local doors = you.in_branch("Dis")
 
   local grid_opts = {
     -- Maximum size means we don't have to worry about chance so rigidly
@@ -351,33 +351,33 @@ TAGS:   no_rotate no_vmirror no_hmirror
   local fills = false
   local mid_doors = mid_doors
 
-  if you.branch() == "D" then
+  if you.in_branch("D") then
     fills = crawl.coinflip()
-  elseif you.branch() == "Crypt" then
+  elseif you.in_branch("Crypt") then
     corners = true
     regular_grid = true
     collapse_rooms = false
     big_corridors = true
     maxcorridor = crawl.random_range(2,3)
-  elseif you.branch() == "Elf" then
+  elseif you.in_branch("Elf") then
     corners = true
     doors = false
     regular_grid = true
     maxcorridor = crawl.random_range(1,2)
     fills = true
     mid_doors = true
-  elseif you.branch() == "Snake" then
+  elseif you.in_branch("Snake") then
     corners = true
     corridor_doors = crawl.coinflip()
     random_rooms = crawl.coinflip()
     maxcorridor = crawl.random_range(1,4)
-  elseif you.branch() == "Lair" then
+  elseif you.in_branch("Lair") then
     doors = false
     corridor_doors = false
     corners = crawl.coinflip()
     maxcorridor = 4
     random_rooms = true
-  elseif you.branch() == "Pan" then
+  elseif you.in_branch("Pan") then
     regular_grid = crawl.coinflip()
     doors = false
     corridor_doors = false

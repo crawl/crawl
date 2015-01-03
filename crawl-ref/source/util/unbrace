@@ -2,17 +2,23 @@
 use Getopt::Std;
 use strict;
 
-our ($opt_A, $opt_n);
-getopts('nA');
+our ($opt_m, $opt_A, $opt_n);
+getopts('nAm');
 my $dry_run = $opt_n;
 my $add_braces = !$opt_A;
+my $modified_only = $opt_m;
 my $any_bad = 0;
 
 my @files = @ARGV;
 undef $/;
 unless (@files)
 {
-    @files = (grep /\.(cc|h)$/ && !/(^|\/)prebuilt\//, split /\n/, `git ls-files`);
+    my $git_cmd = "git ls-files";
+    if ($modified_only)
+    {
+        $git_cmd = "git diff-index -M --name-only --cached HEAD";
+    }
+    @files = (grep /\.(cc|h)$/ && !/(^|\/)prebuilt\//, split /\n/, `$git_cmd`);
 }
 
 sub rebrace($$$)

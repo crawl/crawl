@@ -25,6 +25,8 @@ struct abyss_state
 extern abyss_state abyssal_state;
 
 void abyss_morph();
+
+void banished(const string &who = "");
 void push_features_to_abyss();
 
 void generate_abyss();

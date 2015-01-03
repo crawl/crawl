@@ -109,6 +109,16 @@ static void _translate_window_event(const SDL_WindowEvent &sdl_event,
     }
 }
 
+// Suppress the SDL_TEXTINPUT event from this keypress.  XXX: hacks
+static void _suppress_textinput()
+{
+    if (SDL_IsTextInputActive())
+    {
+        SDL_StopTextInput();
+        SDL_StartTextInput();
+    }
+}
+
 static int _translate_keysym(SDL_Keysym &keysym)
 {
     // This function returns the key that was hit.  Returning zero implies that
@@ -152,6 +162,7 @@ static int _translate_keysym(SDL_Keysym &keysym)
     case SDLK_ESCAPE:
         return CK_ESCAPE + offset;
     case SDLK_DELETE:
+    case SDLK_KP_PERIOD:
         return CK_DELETE + offset;
 
     case SDLK_LSHIFT:
@@ -651,6 +662,11 @@ int SDLWrapper::wait_event(wm_event *event)
 
         if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
             return 0;
+
+        // If we're going to accept this keydown, don't generate subsequent
+        // textinput events for the same key.
+        if (event->key.keysym.sym)
+            _suppress_textinput();
 
 /*
  * LShift = scancode 0x30; key_mod 0x1; unicode 0x130; sym 0x130 SDLK_LSHIFT

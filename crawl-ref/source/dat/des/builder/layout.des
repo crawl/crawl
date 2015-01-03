@@ -443,7 +443,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
     function draw_room(room)
         local room_type = 0
-        if you.branch() == "Elf" then
+        if you.in_branch("Elf") then
            if crawl.coinflip() then
              room_type = 1
            else
@@ -597,7 +597,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     local percent_room_gone = 14 -- was 1/7 chance
     local max_wall_in = 5
 
-    if you.branch() == "Lair" then
+    if you.in_branch("Lair") then
         wall_type = 'x'
         percent_thickness_2 = 50 + you.depth_fraction() * 150 -- 100% at Lair:4
         percent_thickness_3 = 20 + you.depth_fraction() * 80  -- 100% at Lair:8
@@ -607,7 +607,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
         percent_inner_split = 0
         percent_room_gone = 0
         max_wall_in = you.at_branch_bottom() and 3 or 4
-    elseif you.branch() == "Dis" then
+    elseif you.in_branch("Dis") then
         wall_type = 'x'
         percent_thickness_2 = 0
         percent_thickness_3 = 0
@@ -746,7 +746,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     end
 
     -- remove doors in Lair, increasingly with depth
-    if you.branch() == "Lair" then
+    if you.in_branch("Lair") then
         local keep_weight   = dgn.br_depth(you.branch())
         local remove_weight = you.depth() * 2
         subst("+ = .:" .. remove_weight .. " +:" .. keep_weight)

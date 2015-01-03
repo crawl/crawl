@@ -166,7 +166,7 @@ static void _apply_randart_properties(item_def &item,
             end_brand = props.length();
         string brand_name = props.substr(begin_brand, end_brand - begin_brand);
 
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == NUM_JEWELLERY)
+        if (item.is_type(OBJ_JEWELLERY, NUM_JEWELLERY))
         {
             item.sub_type = _jewellery_type_from_artefact_prop(
                 brand_name

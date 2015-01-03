@@ -27,11 +27,16 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "mon-enum.h"
+#include "mon-tentacle.h"
+#include "mgen_enum.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-place.h"
 #include "mon-transit.h"
 #include "output.h"
 #include "prompt.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"
@@ -270,8 +275,7 @@ int get_trapping_net(const coord_def& where, bool trapped)
 {
     for (stack_iterator si(where); si; ++si)
     {
-        if (si->base_type == OBJ_MISSILES
-            && si->sub_type == MI_THROWING_NET
+        if (si->is_type(OBJ_MISSILES, MI_THROWING_NET)
             && (!trapped || item_is_stationary_net(*si)))
         {
             return si->index();
@@ -496,6 +500,73 @@ static bool _find_other_passage_side(coord_def& to)
     return true;
 }
 
+/**
+ * Spawn a single shadow creature or band from the current level. The creatures
+ * are always hostile to the player.
+ *
+ * @param triggerer     The creature that set off the trap.
+ * @return              Whether any monsters were successfully created.
+ */
+bool trap_def::weave_shadow(const actor& triggerer)
+{
+    // forbid early packs
+    const bool bands_ok = env.absdepth0 > 3;
+    mgen_data mg = mgen_data::hostile_at(RANDOM_MOBILE_MONSTER,
+                                         "a shadow trap", // blame
+                                         you.see_cell(pos), // alerted?
+                                         5, // abj duration
+                                         MON_SUMM_SHADOW,
+                                         pos,
+                                         bands_ok ? 0 : MG_FORBID_BANDS);
+
+    monster *mons = create_monster(mg);
+    if (!mons)
+        return false;
+
+    const string triggerer_name = triggerer.is_player() ?
+                                        "the player character" :
+                                        triggerer.name(DESC_A, true);
+    mons_add_blame(mons, "triggered by " + triggerer_name);
+
+    return true;
+}
+
+/**
+ * Trigger a shadow creature trap.
+ *
+ * Temporarily summons some number of shadow creatures/bands from the current
+ * level. On d:1, summons 2; otherwise summons 3-5, increasing with depth.
+ *
+ * @param triggerer     The creature that set off the trap.
+ */
+void trap_def::trigger_shadow_trap(const actor& triggerer)
+{
+    if (triggerer.is_summoned())
+        return; // no summonsplosions
+
+    if (mons_is_tentacle_or_tentacle_segment(triggerer.type))
+        return; // no krakensplosions
+
+    if (!you.see_cell(pos))
+        return;
+
+    const int to_summon =
+        (env.absdepth0 == 0) ? 2
+                             : 3 + div_rand_round(env.absdepth0, 16);
+    dprf ("summoning %d dudes from %d", to_summon, env.absdepth0);
+
+    bool summoned_any = false;
+    for (int i = 0; i < to_summon; ++i)
+    {
+        const bool successfully_summoned = weave_shadow(triggerer);
+        summoned_any = summoned_any || successfully_summoned;
+    }
+
+    mprf("Shadows whirl around %s...", triggerer.name(DESC_THE).c_str());
+    if (!summoned_any)
+        mpr("...but the shadows disperse without effect.");
+}
+
 // Returns a direction string from you.pos to the
 // specified position. If fuzz is true, may be wrong.
 // Returns an empty string if no direction could be
@@ -523,7 +594,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool you_know = is_known();
     const bool trig_knows = !flat_footed && is_known(&triggerer);
 
-    const bool you_trigger = (triggerer.is_player());
+    const bool you_trigger = triggerer.is_player();
     const bool in_sight = you.see_cell(pos);
 
     // Zot def - player never sets off known traps
@@ -648,8 +719,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                       + "blaring wail " + (!dir.empty()? ("to the " + dir + ".")
                                                        : "behind you!");
             }
-            // Monsters of normal or greater intelligence will realize that
-            // they were the one to set off the trap.
+
+            // XXX: this is very goofy and probably should be replaced with
+            // const mid_t source = triggerer.mid;
             mid_t source = !m ? MID_PLAYER :
                             mons_intel(m) >= I_NORMAL ? m->mid : MID_NOBODY;
 
@@ -1010,6 +1082,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     case TRAP_PLATE:
         dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
+        break;
+
+    case TRAP_SHADOW:
+        trigger_shadow_trap(triggerer);
         break;
 
     default:
@@ -1415,7 +1491,7 @@ void mons_clear_trapping_net(monster* mon)
 void free_stationary_net(int item_index)
 {
     item_def &item = mitm[item_index];
-    if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
+    if (item.is_type(OBJ_MISSILES, MI_THROWING_NET))
     {
         const coord_def pos = item.pos;
         // Probabilistically mulch net based on damage done, otherwise
@@ -1629,6 +1705,8 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_TRAP_ZOT;
     case TRAP_GOLUBRIA:
         return DNGN_PASSAGE_OF_GOLUBRIA;
+    case TRAP_SHADOW:
+        return DNGN_TRAP_SHADOW;
 
     case TRAP_ARROW:
     case TRAP_SPEAR:
@@ -1660,11 +1738,6 @@ bool is_valid_shaft_level(bool known)
 
     if (!is_connected_branch(place))
         return false;
-
-    // Shafts are now allowed on the first two levels, as they have a
-    // good chance of being detected. You'll also fall less deep.
-    /* if (place == BRANCH_DUNGEON && you.depth < 3)
-        return false; */
 
     // Don't generate shafts in branches where teleport control
     // is prevented.  Prevents player from going down levels without
@@ -1810,8 +1883,10 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
  * Get a number of traps to place on the current level.
  *
  * No traps are placed in either Temple or disconnected branches other than
- * Pandemonium. For other branches, we place 0-8 traps a level, averaged over
- * two dice.
+ * Pandemonium. For other branches, we place 0-2 traps per level, averaged over
+ * two dice. This value is increased for deeper levels; roughly one additional
+ * trap for every 10 levels of absdepth, capping out at max 9 traps in a level.
+ *
  * @return  A number of traps to be placed.
 */
 int num_traps_for_place()
@@ -1822,67 +1897,49 @@ int num_traps_for_place()
     {
         return 0;
     }
-    return random2avg(9, 2);
+
+    const int depth_bonus = div_rand_round(env.absdepth0, 5);
+    return random2avg(3 + depth_bonus, 2);
 }
 
-static trap_type _random_trap_slime(int level_number)
-{
-    trap_type type = NUM_TRAPS;
-
-    if (random2(1 + level_number) > 14 && one_chance_in(3))
-        type = TRAP_ZOT;
-
-    if (one_chance_in(5) && is_valid_shaft_level())
-        type = TRAP_SHAFT;
-    if (one_chance_in(5) && !crawl_state.game_is_sprint())
-        type = TRAP_TELEPORT;
-    if (one_chance_in(10))
-        type = TRAP_ALARM;
-
-    return type;
-}
-
-static trap_type _random_trap_default(int level_number)
-{
-    trap_type type = TRAP_ARROW;
-
-    if ((random2(1 + level_number) > 1) && one_chance_in(4))
-        type = TRAP_NEEDLE;
-    if (random2(1 + level_number) > 3)
-        type = TRAP_SPEAR;
-
-    if (type == TRAP_ARROW && one_chance_in(15))
-        type = TRAP_NET;
-
-    if (random2(1 + level_number) > 7)
-        type = TRAP_BOLT;
-    if (random2(1 + level_number) > 14)
-        type = TRAP_BLADE;
-
-    if (random2(1 + level_number) > 14 && one_chance_in(3)
-        || (player_in_branch(BRANCH_ZOT) && coinflip()))
-    {
-        type = TRAP_ZOT;
-    }
-
-    if (one_chance_in(20) && is_valid_shaft_level())
-        type = TRAP_SHAFT;
-    if (one_chance_in(20) && !crawl_state.game_is_sprint())
-        type = TRAP_TELEPORT;
-    if (one_chance_in(40) && level_number > 3)
-        type = TRAP_ALARM;
-
-    return type;
-}
+/**
+ * Choose a weighted random trap type for the currently-generated level.
+ *
+ * Odds of generating zot traps vary by depth (and are depth-limited). Alarm
+ * traps also can't be placed before D:4. All other traps are depth-agnostic.
+ *
+ * @return                    A random trap type.
+ *                            May be NUM_TRAPS, if no traps were valid.
+ */
 
 trap_type random_trap_for_place()
 {
-    int level_number = env.absdepth0;
+    // zot traps are Very Special.
+    // very common in zot...
+    if (player_in_branch(BRANCH_ZOT) && coinflip())
+        return TRAP_ZOT;
 
-    if (player_in_branch(BRANCH_SLIME))
-        return _random_trap_slime(level_number);
+    // and elsewhere, increasingly common with depth
+    // possible starting at depth 15 (end of D, late lair, lair branches)
+    // XXX: is there a better way to express this?
+    if (random2(1 + env.absdepth0) > 14 && one_chance_in(3))
+        return TRAP_ZOT;
 
-    return _random_trap_default(level_number);
+    const bool shaft_ok = is_valid_shaft_level();
+    const bool tele_ok = !crawl_state.game_is_sprint();
+    const bool alarm_ok = env.absdepth0 > 3;
+    const bool shadow_ok = env.absdepth0 > 1;
+
+    const pair<trap_type, int> trap_weights[] =
+    {
+        { TRAP_TELEPORT, tele_ok  ? 2 : 0},
+        { TRAP_SHADOW,  shadow_ok ? 1 : 0 },
+        { TRAP_SHAFT,   shaft_ok  ? 1 : 0},
+        { TRAP_ALARM,   alarm_ok  ? 1 : 0},
+    };
+
+    const trap_type *trap = random_choose_weighted(trap_weights);
+    return trap ? *trap : NUM_TRAPS;
 }
 
 int count_traps(trap_type ttyp)

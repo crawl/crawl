@@ -24,7 +24,6 @@
 #include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "fineff.h"
@@ -55,6 +54,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
+#include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "state.h"
@@ -2564,7 +2564,7 @@ int monster_die(monster* mons, killer_type killer,
 
         if (mons->type == MONS_SPRIGGAN_RIDER)
         {
-            corpse2 = mounted_kill(mons, MONS_YELLOW_WASP, killer, killer_index);
+            corpse2 = mounted_kill(mons, MONS_WASP, killer, killer_index);
             mons->type = MONS_SPRIGGAN;
         }
         corpse = place_monster_corpse(mons, silent);
@@ -3006,7 +3006,7 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
     case SPELL_GHOSTLY_FLAMES:
     case SPELL_CALL_LOST_SOUL:
-        msg = "fades away";
+        msg = "fade%s away";
         break;
     }
 
@@ -3032,10 +3032,10 @@ string summoned_poof_msg(const monster* mons, bool plural)
         }
 
         if (mons->type == MONS_DROWNED_SOUL)
-            msg = "returns to the deep";
+            msg = "return%s to the deep";
 
         if (mons->has_ench(ENCH_PHANTOM_MIRROR))
-            msg = "shimmers and vanishes";
+            msg = "shimmer%s and vanish" + string(plural ? "" : "es"); // Ugh
     }
 
     // Conjugate.

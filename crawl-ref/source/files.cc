@@ -36,7 +36,6 @@
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "effects.h"
 #include "end.h"
 #include "errors.h"
 #include "fineff.h"

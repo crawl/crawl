@@ -14,10 +14,10 @@
 #include "cloud.h"
 #include "colour.h"
 #include "directn.h"
-#include "effects.h"
 #include "english.h"
 #include "env.h"
 #include "food.h"
+#include "item_use.h"
 #include "itemprop.h"
 #include "mapmark.h"
 #include "message.h"
@@ -1093,10 +1093,12 @@ void MiscastEffect::_charms(int severity)
                 return;
             }
             else if (target->is_player())
+            {
                 if (you.species == SP_OCTOPODE)
                     you_msg = "Your beak vibrates slightly."; // the only hard part
                 else
                     you_msg = "Your skull vibrates slightly.";
+            }
             break;
         }
         do_msg();

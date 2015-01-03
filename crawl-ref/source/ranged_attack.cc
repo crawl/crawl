@@ -261,8 +261,7 @@ bool ranged_attack::handle_phase_hit()
     if (!attack_ignores_shield(false))
         range_used = BEAM_STOP;
 
-    if (projectile->base_type == OBJ_MISSILES
-        && projectile->sub_type == MI_NEEDLE)
+    if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE))
     {
         int dur = blowgun_duration_roll(get_ammo_brand(*projectile));
         set_attack_verb();
@@ -270,8 +269,7 @@ bool ranged_attack::handle_phase_hit()
         damage_done = dur + (stab - dur) / 10;
         announce_hit();
     }
-    else if (projectile->base_type == OBJ_MISSILES
-             && projectile->sub_type == MI_THROWING_NET)
+    else if (projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
     {
         set_attack_verb();
         announce_hit();
@@ -283,9 +281,7 @@ bool ranged_attack::handle_phase_hit()
     else
     {
         damage_done = calc_damage();
-        if (damage_done > 0
-            || projectile->base_type == OBJ_MISSILES
-               && projectile->sub_type == MI_NEEDLE)
+        if (damage_done > 0 || projectile->is_type(OBJ_MISSILES, MI_NEEDLE))
         {
             if (!handle_phase_damaged())
                 return false;
@@ -661,7 +657,7 @@ bool ranged_attack::apply_missile_brand()
         {
             break;
         }
-        calc_elemental_brand_damage(BEAM_FIRE, defender->res_fire(),
+        calc_elemental_brand_damage(BEAM_FIRE,
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_FIRE);
@@ -673,14 +669,13 @@ bool ranged_attack::apply_missile_brand()
         {
             break;
         }
-        calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze",
+        calc_elemental_brand_damage(BEAM_COLD, "freeze",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_COLD, 2);
         break;
     case SPMSL_POISONED:
         if (stab_attempt
-            || (projectile->base_type == OBJ_MISSILES
-                && projectile->sub_type == MI_NEEDLE
+            || (projectile->is_type(OBJ_MISSILES, MI_NEEDLE)
                 && using_weapon()
                 && damage_done > 0)
             || !one_chance_in(4))
@@ -696,8 +691,7 @@ bool ranged_attack::apply_missile_brand()
             }
 
             defender->poison(attacker,
-                             projectile->base_type == OBJ_MISSILES
-                             && projectile->sub_type == MI_NEEDLE
+                             projectile->is_type(OBJ_MISSILES, MI_NEEDLE)
                              ? damage_done
                              : 6 + random2(8) + random2(damage_done * 3 / 2));
 
@@ -841,8 +835,7 @@ void ranged_attack::player_stab_check()
 bool ranged_attack::player_good_stab()
 {
     return using_weapon()
-           && projectile->base_type == OBJ_MISSILES
-           && projectile->sub_type == MI_NEEDLE;
+           && projectile->is_type(OBJ_MISSILES, MI_NEEDLE);
 }
 
 void ranged_attack::set_attack_verb()

@@ -769,12 +769,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             2, WPN_FLAIL,       2, WPN_MORNINGSTAR,
             1, WPN_MACE,
             0);
-
-        if (mon->type == MONS_IRONHEART_PRESERVER && one_chance_in(3))
-        {
-            force_item = true;
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PROTECTION);
-        }
         break;
 
     case MONS_CYCLOPS:
@@ -1872,7 +1866,6 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_DRACONIAN_KNIGHT:
-    case MONS_IRONHEART_PRESERVER:
         if (coinflip())
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
@@ -2150,7 +2143,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
     case MONS_FREDERICK:
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
-    case MONS_IRONHEART_PRESERVER:
     case MONS_ANCIENT_CHAMPION:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR);
@@ -2277,6 +2269,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
     case MONS_TENGU_WARRIOR:
     case MONS_DEMONSPAWN:
+    case MONS_IRONHEART_PRESERVER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_RING_MAIL;
         break;

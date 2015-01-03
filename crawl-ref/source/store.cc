@@ -1578,8 +1578,8 @@ void CrawlVector::write(writer &th) const
         return;
     }
 
-    marshallUnsigned(th, (char) size());
-    marshallUnsigned(th, (char) max_size);
+    marshallUnsigned(th, size());
+    marshallUnsigned(th, max_size);
     marshallByte(th, static_cast<char>(type));
     marshallByte(th, (char) default_flags);
 
@@ -1605,6 +1605,11 @@ void CrawlVector::read(reader &th)
     vec_size _size;
     if (th.getMinorVersion() < TAG_MINOR_16_BIT_TABLE)
         _size = (vec_size) unmarshallByte(th);
+    else if (th.getMinorVersion() < TAG_MINOR_REALLY_16_BIT_VEC)
+    {
+        // Fix bad sign extensions.
+        _size = (vec_size) (unsigned char) unmarshallUnsigned(th);
+    }
     else
         _size = (vec_size) unmarshallUnsigned(th);
 #else
@@ -1617,9 +1622,21 @@ void CrawlVector::read(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_16_BIT_TABLE)
         max_size = static_cast<vec_size>(unmarshallByte(th));
+    else if (th.getMinorVersion() < TAG_MINOR_REALLY_16_BIT_VEC)
+    {
+        // Fix bad sign extensions.
+        max_size = (vec_size) (unsigned char) unmarshallUnsigned(th);
+    }
     else
 #endif
     max_size      = static_cast<vec_size>(unmarshallUnsigned(th));
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FIX_8_BIT_VEC_MAX
+        && max_size == 0xFF)
+    {
+        max_size = VEC_MAX_SIZE;
+    }
+#endif
     type          = static_cast<store_val_type>(unmarshallByte(th));
     default_flags = static_cast<store_flags>(unmarshallByte(th));
 

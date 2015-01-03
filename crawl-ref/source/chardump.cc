@@ -639,11 +639,8 @@ static bool _dump_item_origin(const item_def &item)
     if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
         return true;
 
-    if (fs(IODS_RUNES) && item.base_type == OBJ_MISCELLANY
-        && item.sub_type == MISC_RUNE_OF_ZOT)
-    {
+    if (fs(IODS_RUNES) && item_is_rune(item))
         return true;
-    }
 
     if (fs(IODS_RODS) && item.base_type == OBJ_RODS)
         return true;
@@ -867,9 +864,7 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line = chop_string(spell_line, 54);
 
-                char* failure = failure_rate_to_string(spell_fail(spell));
-                spell_line += failure;
-                free(failure);
+                spell_line += failure_rate_to_string(spell_fail(spell));
 
                 spell_line = chop_string(spell_line, 66);
 

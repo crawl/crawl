@@ -6,7 +6,91 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+#include <type_traits> // underlying_type<>
+
 #include "tag-version.h"
+
+template<class E>
+class enum_bitfield
+{
+public:
+    typedef typename underlying_type<E>::type underlying_type;
+    underlying_type flags;
+
+    enum_bitfield() : flags(0) {}
+    enum_bitfield(E flag) : flags(flag) {}
+    template<class ... Es>
+    enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
+
+    operator underlying_type () const { return flags; }
+
+    enum_bitfield<E> &operator|=(enum_bitfield<E> other)
+    {
+        flags |= other.flags;
+        return *this;
+    }
+
+    enum_bitfield<E> &operator&=(enum_bitfield<E> other)
+    {
+        flags &= other.flags;
+        return *this;
+    }
+
+    enum_bitfield<E> operator|(enum_bitfield<E> other) const
+    {
+        return enum_bitfield<E>(*this) |= other;
+    }
+
+    enum_bitfield<E> operator|(E other) const
+    {
+        return enum_bitfield<E>(*this) |= other;
+    }
+
+    enum_bitfield<E> operator&(enum_bitfield<E> other) const
+    {
+        return enum_bitfield<E>(*this) &= other;
+    }
+
+    enum_bitfield<E> operator&(E other) const
+    {
+        return enum_bitfield<E>(*this) &= other;
+    }
+
+    enum_bitfield<E> operator~() const
+    {
+        enum_bitfield<E> me(*this);
+        me.flags = ~me.flags;
+        return me;
+    }
+};
+
+template <class E, class ... Es>
+enum_bitfield<E> bitfield(E e1, Es... args)
+{
+    return bitfield<E>(e1, args...);
+}
+
+/**
+ * Define fieldT as a bitfield of the enum flagT, and make bitwise
+ * operators on flagT yield a fieldT.
+ *
+ * This macro produces a typedef and several inline function definitions;
+ * use it only at file/namespace scope. It requires a trailing semicolon.
+ *
+ * @param fieldT An identifier naming the bitfield type to define.
+ * @param flagT  An identifier naming the enum type to use as a flag.
+ *               Could theoretically be a more complex type expression, but
+ *               I wouldn't try anything trickier than scope resolution.
+ */
+#define DEF_BITFIELD(fieldT, flagT) typedef enum_bitfield<flagT> fieldT;  \
+    inline fieldT operator|(flagT a, flagT b)  { return fieldT(a) |= b; } \
+    inline fieldT operator|(flagT a, fieldT b) { return fieldT(a) |= b; } \
+    inline fieldT operator&(flagT a, flagT b)  { return fieldT(a) &= b; } \
+    inline fieldT operator&(flagT a, fieldT b) { return fieldT(a) &= b; } \
+    inline fieldT operator~(flagT a) { return ~fieldT(a); } \
+    COMPILE_CHECK(is_enum<flagT>::value)
+// The last line above is really just to eat a semicolon; template
+// substitution of enum_bitfield would have already failed.
 
 enum lang_t
 {
@@ -832,6 +916,7 @@ enum command_type
     CMD_DISPLAY_RUNES,
     CMD_DISPLAY_CHARACTER_STATUS,
     CMD_DISPLAY_SPELLS,
+    CMD_LOOKUP_HELP,
     CMD_EXPERIENCE_CHECK,
     CMD_ADJUST_INVENTORY,
     CMD_REPLAY_MESSAGES,
@@ -1376,6 +1461,12 @@ enum dungeon_feature_type
     DNGN_TRAP_TELEPORT,
     DNGN_TRAP_SHAFT,
     DNGN_TRAP_WEB,
+#if TAG_MAJOR_VERSION > 34
+    DNGN_TRAP_ALARM,
+    DNGN_TRAP_ZOT,
+    DNGN_PASSAGE_OF_GOLUBRIA,
+    DNGN_TRAP_SHADOW,
+#endif
     DNGN_UNDISCOVERED_TRAP,
 
     DNGN_ENTER_SHOP,
@@ -1514,9 +1605,11 @@ enum dungeon_feature_type
 
     DNGN_SEALED_STAIRS_UP,
     DNGN_SEALED_STAIRS_DOWN,
+#if TAG_MAJOR_VERSION == 34
     DNGN_TRAP_ALARM,
     DNGN_TRAP_ZOT,
     DNGN_PASSAGE_OF_GOLUBRIA,
+#endif
 
     DNGN_ENTER_ZIGGURAT,
     DNGN_ENTER_BAZAAR,
@@ -1547,6 +1640,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_RU,
+
+    DNGN_TRAP_SHADOW,
 #endif
 
     NUM_FEATURES
@@ -2447,8 +2542,8 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_BUMBLEBEE,
 #endif
-    MONS_YELLOW_WASP,
-    MONS_RED_WASP,
+    MONS_WASP,
+    MONS_HORNET,
     MONS_GOLIATH_BEETLE,
     MONS_BORING_BEETLE,
     MONS_BOULDER_BEETLE,
@@ -4357,6 +4452,7 @@ enum trap_type
     TRAP_GAS,
     TRAP_TELEPORT,
 #endif
+    TRAP_SHADOW,
     NUM_TRAPS,
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,
@@ -4815,29 +4911,6 @@ enum wizard_option_type
 
 #endif
 
-enum timed_effect_type
-{
-    TIMER_CORPSES,
-    TIMER_HELL_EFFECTS,
-    TIMER_STAT_RECOVERY,
-    TIMER_CONTAM,
-    TIMER_DETERIORATION,
-    TIMER_GOD_EFFECTS,
-#if TAG_MAJOR_VERSION == 34
-    TIMER_SCREAM,
-#endif
-    TIMER_FOOD_ROT,
-    TIMER_PRACTICE,
-    TIMER_LABYRINTH,
-    TIMER_ABYSS_SPEED,
-    TIMER_JIYVA,
-    TIMER_EVOLUTION,
-#if TAG_MAJOR_VERSION == 34
-    TIMER_BRIBE_TIMEOUT,
-#endif
-    NUM_TIMERS,
-};
-
 enum deck_rarity_type
 {
     DECK_RARITY_RANDOM,
@@ -4845,5 +4918,6 @@ enum deck_rarity_type
     DECK_RARITY_RARE,
     DECK_RARITY_LEGENDARY,
 };
+
 
 #endif // ENUM_H

@@ -106,7 +106,8 @@ public:
     map<dungeon_feature_type, FixedVector<ucs_t, 2> > feature_symbol_overrides;
     map<monster_type, cglyph_t> mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
-    vector<pair<string, cglyph_t> > item_glyph_overrides;
+    typedef pair<string, cglyph_t> item_glyph_override_type;
+    vector<item_glyph_override_type > item_glyph_overrides;
     map<string, cglyph_t> item_glyph_cache;
 
     string      save_dir;       // Directory where saves and bones go.
@@ -368,6 +369,8 @@ public:
     lang_t      lang;                // Translation to use.
     const char* lang_name;           // Database name of the language.
 
+    // -1 and 0 mean no confirmation, other possible values are 1,2,3 (see fail_severity())
+    int         fail_severity_to_confirm;
 #ifdef WIZARD
     // Parameters for fight simulations.
     string      fsim_mode;
@@ -496,7 +499,8 @@ private:
     void clear_feature_overrides();
     void clear_cset_overrides();
     void add_cset_override(dungeon_char_type dc, int symbol);
-    void add_feature_override(const string &);
+    void add_feature_override(const string &, bool prepend);
+    void remove_feature_override(const string &, bool prepend);
 
     void add_message_colour_mappings(const string &, bool, bool);
     void add_message_colour_mapping(const string &, bool, bool);
@@ -520,11 +524,14 @@ private:
     int  read_use_animations(const string &) const;
 
     void split_parse(const string &s, const string &separator,
-                     void (game_options::*add)(const string &));
-    void add_mon_glyph_override(const string &);
+                     void (game_options::*add)(const string &, bool),
+                     bool prepend = false);
+    void add_mon_glyph_override(const string &, bool prepend);
+    void remove_mon_glyph_override(const string &, bool prepend);
     cglyph_t parse_mon_glyph(const string &s) const;
-    void add_item_glyph_override(const string &);
-    void set_option_fragment(const string &s);
+    void add_item_glyph_override(const string &, bool prepend);
+    void remove_item_glyph_override(const string &, bool prepend);
+    void set_option_fragment(const string &s, bool prepend);
     bool set_lang(const char *s);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
