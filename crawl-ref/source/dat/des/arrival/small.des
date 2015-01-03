@@ -1587,7 +1587,7 @@ ENDMAP
 # Sounds of Crawl: the Slurp.
 NAME:    dpeg_arrival_sounds_slurp
 TAGS:    arrival no_monster_gen no_trap_gen
-MONS:    generate_awake jelly / kobold
+MONS:    generate_awake jelly
 ITEM:    club
 ORIENT:  float
 KPROP:   1d> = no_rtele_into
