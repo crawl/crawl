@@ -16,6 +16,7 @@ enum branch_flag_type
     BFLAG_NO_XLEV_TRAVEL  = (1 << 2), // Can't cross-level travel to or from it.
     BFLAG_NO_ITEMS        = (1 << 3), // Branch gets no random items.
     BFLAG_DANGEROUS_END   = (1 << 4), // bottom level is more dangerous than normal
+    BFLAG_SPOTTY          = (1 << 5), // Connect vaults with more open paths, not hallways.
 };
 
 struct Branch
