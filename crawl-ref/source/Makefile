@@ -678,6 +678,7 @@ INCLUDES_L += -I$(RLTILES)
 ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_WEB
+DEFINES_L += -DDGL_WHEREIS
 
 ifneq ($(shell which nodejs 2> /dev/null),)
   NODE = $(shell which nodejs)
