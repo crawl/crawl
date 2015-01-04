@@ -785,7 +785,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     //
     // I'm disabling this code for now except for excommunication, please
     // re-enable if you can fix it.
-    if (/*god_hates_spell*/god_loathes_spell(spell, you.religion))
+    if (/*god_hates_spell*/god_loathes_spell(spell, you.religion)
+        && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         // None currently dock just piety, right?
         if (!yesno(god_loathes_spell(spell, you.religion) ?
@@ -802,7 +803,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     int severity = fail_severity(spell);
     if (Options.fail_severity_to_confirm > 0
-        && Options.fail_severity_to_confirm <= severity)
+        && Options.fail_severity_to_confirm <= severity
+        && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         string prompt = make_stringf("The spell is %s to cast%s "
                                      "Continue anyway?",
