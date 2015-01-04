@@ -18,9 +18,6 @@ from conf import config
 import util
 from ws_handler import *
 from game_data_handler import GameDataHandler
-
-from score_handler import ScoreTopNHandler
-
 import process_handler
 import userdb
 
