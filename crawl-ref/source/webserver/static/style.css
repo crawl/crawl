@@ -389,7 +389,7 @@ ol.select li:hover {
 }
 
 .spectator_list .greaterplayers, .player_list .greaterplayers, .login .greaterplayers, body .greaterplayers {
-    color: yellow;
+    color: #00CED1;
 }
 
 .spectator_list .centuryplayers, .player_list .centuryplayers, .login .centuryplayers, body .centuryplayers {
