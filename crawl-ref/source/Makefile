@@ -1247,11 +1247,17 @@ else
 minify:
 endif
 
+# toml game maps
+GAME_MAP_FILES = dat/des/sprint/sprint.toml
+
+$(GAME_MAP_FILES): 
+	$(QUIET_GEN)webserver/game_map.py -q $(dir $@)
+
 clean-webserver:
-	$(RM) $(STATICFILES) webserver/*.pyc
+	$(RM) $(STATICFILES) webserver/*.pyc $(GAME_MAP_FILES)
 
 ifdef WEBTILES
-webserver: $(STATICFILES) minify
+webserver: $(STATICFILES) minify $(GAME_MAP_FILES)
 else
 webserver:
 endif
