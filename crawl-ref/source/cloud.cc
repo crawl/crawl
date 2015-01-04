@@ -181,7 +181,7 @@ static const cloud_data clouds[] = {
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
       ETC_DARK,                                 // colour
-      BEAM_NONE,                                // beam_effect
+      BEAM_ELECTRICITY,                         // beam_effect
       60, 46,                                   // base, random expected damage
     },
     // CLOUD_NEGATIVE_ENERGY,
