@@ -382,7 +382,6 @@ string attack::anon_pronoun(pronoun_type pron)
 void attack::init_attack(skill_type unarmed_skill, int attack_number)
 {
     weapon          = attacker->weapon(attack_number);
-    damage_brand    = attacker->damage_brand(attack_number);
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
     if (attacker->is_player() && you.form_uses_xl())
