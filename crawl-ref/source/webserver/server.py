@@ -297,6 +297,13 @@ def check_config():
             logging.error("Duplicate janitor command id '%s'" % dup_id)
             success = False
 
+        if config.get('devs_are_server_janitors') and \
+                config.get('dev_nicks_can_be_registered'):
+            logging.error("devs_are_server_janitors is true but "
+                          "dev_nicks_can_be_registered is not false. "
+                          "I can't let you do that Dave.")
+            success = False
+
     return success
 
 

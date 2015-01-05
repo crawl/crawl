@@ -71,8 +71,14 @@ max_score_list_length = 1000
 
 # Set to true to allow devs to use web ui admin commands. Note: this is a
 # pretty big security hole! Anyone could register a dev nick, and they're
-# publicly known.
-# devs_are_server_janitors = false
+# publicly known. If this is enabled, dev_nicks_can_be_registered must be false.
+# Default: false
+# devs_are_server_janitors = true
+
+# Set to true to allow registration of developer nicks. These are the nicks
+# specified in devteam_crawl_accounts.txt.
+# Default: false
+# dev_nicks_can_be_registered = false
 
 # A text file containing user accounts of the DCSS Development Team. The
 # devteam title is indicated by color/description on the WebTiles lobby and
