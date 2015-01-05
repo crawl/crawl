@@ -1,18 +1,25 @@
 import csv
 import glob
 import locale
-import os
-import toml
 import logging
+import os
 import sys
 
-from util import TornadoFilter
+import toml
 
+from util import TornadoFilter
 
 if os.environ.get("WEBTILES_DEBUG"):
     logging.getLogger().setLevel(logging.DEBUG)
 
+
 class Conf(object):
+
+    """Object representing webtiles server configuration.
+
+    One instance of this class should exist in the application, as conf.config.
+    """
+
     def __init__(self, path=""):
         self.data = None
         self.devteam = None
@@ -42,13 +49,13 @@ class Conf(object):
         self.init_games()
 
     def load(self):
-        ## XXX the toml module uses the base Exception class, so we
-        ## have to catch it in a different block.
+        # XXX the toml module uses the base Exception class, so we
+        # have to catch it in a different block.
         try:
             fh = open(self.path, "r")
         except EnvironmentError as e:
             logging.error("Couldn't open config file {0} "
-                                  "({1})".format(self.path, e.strerror))
+                          "({1})".format(self.path, e.strerror))
             sys.exit(1)
         else:
             try:
@@ -64,7 +71,7 @@ class Conf(object):
             locale.setlocale(locale.LC_ALL, self.locale)
         else:
             locale.setlocale(locale.LC_ALL, '')
-        ## crawl usernames are case-insensitive
+        # crawl usernames are case-insensitive
         if self.get("server_admins"):
             self.data["server_admins"] = [a.lower() for a in self.server_admins]
         devteam_file = self.get("devteam_file")
@@ -80,8 +87,8 @@ class Conf(object):
                                    quoting=csv.QUOTE_NONE)
             self.devteam = {}
             for row in devteam_r:
-                ## We leave case intact on the primary account here since it's
-                ## used for display purposes.
+                # We leave case intact on the primary account here since it's
+                # used for display purposes.
                 self.devteam[row[0]] = [u.lower() for u in row[1:]]
             devteam_fh.close()
         else:
@@ -113,7 +120,6 @@ class Conf(object):
             self.games[game["id"]] = game
             logging.info("Loaded game '{0}'".format(game["id"]))
 
-
     # Load from games_conf_d
     def load_game_conf_dir(self):
         conf_dir = self.get("games_conf_d")
@@ -140,7 +146,7 @@ class Conf(object):
                     data = toml.load(fh)
                 except Exception as e:
                     logging.error("Could parse game config file {0} "
-                                "({1})".format(f, e.args))
+                                  "({1})".format(f, e.args))
                 finally:
                     fh.close()
 
@@ -151,8 +157,8 @@ class Conf(object):
             for game in data["games"]:
                 try:
                     self.load_game_data(game)
-                    ## Add game entry the TOML of the main config so it can be
-                    ## sent to the client.
+                    # Add game entry the TOML of the main config so it can be
+                    # sent to the client.
                     self.data["games"].append(game)
                 except ValueError:
                     logging.warning("Skipping duplicate definition '{0}' in "
@@ -207,6 +213,11 @@ class Conf(object):
         title_fh.close()
 
     def get_devname(self, username):
+        """Return the canonical username for an account.
+
+        Devs have hardcoded aliases, we return their primary name when an alt
+        is checked.
+        """
         lname = username.lower()
         if not self.devteam:
             return None
@@ -216,6 +227,7 @@ class Conf(object):
         return None
 
     def get_player_title(self, username):
+        """Return username's most important title, or None if it lacks one."""
         if not self.player_titles:
             return None
 
@@ -240,15 +252,16 @@ class Conf(object):
         return False
 
     def get_nerd(self, username):
+        """Return {title, canonical_name} for a username."""
         if self.is_server_admin(username):
-            return {"type" : "admins", "devname" : None}
+            return {"type": "admins", "devname": None}
         devname = self.get_devname(username)
         if devname:
-            return {"type" : "devteam", "devname" : devname}
+            return {"type": "devteam", "devname": devname}
         title = self.get_player_title(username)
         if title:
-            return {"type" : title, "devname" : None}
-        return {"type" : "normal", "devname" : None}
+            return {"type": title, "devname": None}
+        return {"type": "normal", "devname": None}
 
     def get_game(self, game_version, game_mode):
         if not self.games:
@@ -262,7 +275,7 @@ class Conf(object):
         return None
 
     def load_game_map(self, game):
-        if not "map_path" in game:
+        if "map_path" not in game:
             return
         if "score_path" not in game:
             logging.warning("Not parsing game map for game definition '{0}' "
@@ -281,11 +294,10 @@ class Conf(object):
         game["game_maps"] = data["maps"]
 
     def game_map(self, game_id, map_name):
-        if not "game_maps" in self.games[game_id]:
+        if "game_maps" not in self.games[game_id]:
             return None
         for m in self.games[game_id]["game_maps"]:
             if m["name"] == map_name:
-                valid_map = True
                 return m
         return None
 
