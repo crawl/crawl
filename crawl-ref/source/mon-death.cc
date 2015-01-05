@@ -1874,18 +1874,22 @@ int monster_die(monster* mons, killer_type killer,
         }
     }
 
-    // Kills by the spectral weapon are considered as kills by the player instead
-    // Ditto Dithmenos shadow kills.
-    if ((killer == KILL_MON || killer == KILL_MON_MISSILE)
+    // Kills by the spectral weapon are considered as kills by the player
+    // instead. Ditto Dithmenos shadow melee and shadow throw.
+    if (MON_KILL(killer)
         && !invalid_monster_index(killer_index)
         && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
              && menv[killer_index].summoner == MID_PLAYER)
             || mons_is_player_shadow(&menv[killer_index])))
     {
-        killer = (killer == KILL_MON_MISSILE) ? KILL_YOU_MISSILE
-                                              : KILL_YOU;
         killer_index = you.mindex();
     }
+
+    // Set an appropriate killer; besides the cases in the preceding if,
+    // this handles Dithmenos shadow spells, which look like they come from
+    // you because the shadow's mid is MID_PLAYER.
+    if (MON_KILL(killer) && killer_index == you.mindex())
+        killer = (killer == KILL_MON_MISSILE) ? KILL_YOU_MISSILE : KILL_YOU;
 
     // Take notes and mark milestones.
     record_monster_defeat(mons, killer);

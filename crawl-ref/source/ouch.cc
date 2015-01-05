@@ -1112,7 +1112,7 @@ int actor_to_death_source(const actor* agent)
         return NON_MONSTER;
 
     if (agent->is_player())
-        return NON_MONSTER;
+        return MHITYOU;
     else if (agent->is_monster())
         return agent->as_monster()->mindex();
     else
