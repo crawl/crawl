@@ -4087,7 +4087,7 @@ void dithmenos_shadow_throw(coord_def target, const item_def &item)
         new_item.flags    |= ISFLAG_SUMMONED;
         mon->inv[MSLOT_MISSILE] = ammo_index;
 
-        mon->target = target;
+        mon->target = clamp_in_bounds(target);
 
         bolt beem;
         beem.target = target;
@@ -4124,7 +4124,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
                           min(3 * spell_difficulty(spell),
                               you.experience_level) / 2));
 
-    mon->target = target;
+    mon->target = clamp_in_bounds(target);
     if (actor_at(target))
         mon->foe = actor_at(target)->mindex();
 
