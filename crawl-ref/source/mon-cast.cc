@@ -3429,10 +3429,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     monster_spells hspell_pass(mons->spells);
 
-    erase_if(hspell_pass, [&](mon_spell_slot &t) {
-        return (t.flags & MON_SPELL_SILENCE_MASK)
-            && (mons->is_silenced() || mons->is_shapeshifter());
-    });
+    if (mons->is_silenced() || mons->is_shapeshifter())
+    {
+        erase_if(hspell_pass, [&](const mon_spell_slot &t) {
+            return t.flags & MON_SPELL_SILENCE_MASK;
+        });
+    }
 
     if (!hspell_pass.size())
         return false;
