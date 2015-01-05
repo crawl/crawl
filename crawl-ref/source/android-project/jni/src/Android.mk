@@ -24,6 +24,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/act-iter.cc \
     $(CRAWL_PATH)/actor-los.cc \
     $(CRAWL_PATH)/actor.cc \
+    $(CRAWL_PATH)/adjust.cc \
     $(CRAWL_PATH)/areas.cc \
     $(CRAWL_PATH)/arena.cc \
     $(CRAWL_PATH)/artefact.cc \
@@ -58,6 +59,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/delay.cc \
     $(CRAWL_PATH)/describe.cc \
     $(CRAWL_PATH)/describe-god.cc \
+    $(CRAWL_PATH)/describe-spells.cc \
     $(CRAWL_PATH)/dgl-message.cc \
     $(CRAWL_PATH)/dgn-delve.cc \
     $(CRAWL_PATH)/dgn-height.cc \
@@ -72,7 +74,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/directn.cc \
     $(CRAWL_PATH)/dlua.cc \
     $(CRAWL_PATH)/dungeon.cc \
-    $(CRAWL_PATH)/effects.cc \
     $(CRAWL_PATH)/end.cc \
     $(CRAWL_PATH)/english.cc \
     $(CRAWL_PATH)/errors.cc \
@@ -139,6 +140,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/lang-fake.cc \
     $(CRAWL_PATH)/lev-pand.cc \
     $(CRAWL_PATH)/libutil.cc \
+    $(CRAWL_PATH)/lookup_help.cc \
     $(CRAWL_PATH)/los.cc \
     $(CRAWL_PATH)/los_def.cc \
     $(CRAWL_PATH)/losglobal.cc \
@@ -248,6 +250,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/teleport.cc \
     $(CRAWL_PATH)/terrain.cc \
     $(CRAWL_PATH)/throw.cc \
+    $(CRAWL_PATH)/timed_effects.cc \
     $(CRAWL_PATH)/transform.cc \
     $(CRAWL_PATH)/traps.cc \
     $(CRAWL_PATH)/travel.cc \
