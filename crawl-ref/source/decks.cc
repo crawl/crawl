@@ -379,11 +379,13 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
     vector<const deck_archetype *> *subdecks
         = map_find(all_decks, (misc_item_type)deck_type);
 
+    if (subdecks)
+        return *subdecks;
+
 #ifdef ASSERTS
-    if (!subdecks)
-        die("No subdecks found for %u", unsigned(deck_type));
+    die("No subdecks found for %u", unsigned(deck_type));
 #endif
-    return *subdecks;
+    return {};
 }
 
 const string deck_contents(uint8_t deck_type)
@@ -902,7 +904,7 @@ string which_decks(card_type card)
     for (auto &deck_data : all_decks)
     {
         uint8_t deck = deck_data.first;
-        for (auto subdeck : deck_data.second)
+        for (auto &subdeck : deck_data.second)
         {
             if (!_card_in_deck(card, subdeck))
                 continue;
