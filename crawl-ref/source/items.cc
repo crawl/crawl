@@ -4150,7 +4150,8 @@ static void _rune_from_specs(const char* _specs, item_def &item)
     }
 }
 
-static void _deck_from_specs(const char* _specs, item_def &item)
+static void _deck_from_specs(const char* _specs, item_def &item,
+                             bool create_for_real)
 {
     string specs    = _specs;
     string type_str = "";
@@ -4204,6 +4205,13 @@ static void _deck_from_specs(const char* _specs, item_def &item)
 
     if (item.sub_type == MISC_DECK_UNKNOWN)
     {
+        if (!create_for_real)
+        {
+            // bail
+            item.base_type = OBJ_UNASSIGNED;
+            return;
+        }
+
         while (true)
         {
             mprf(MSGCH_PROMPT,
@@ -4247,6 +4255,9 @@ static void _deck_from_specs(const char* _specs, item_def &item)
             break;
         }
 
+    if (rarity_val == -1 && !create_for_real)
+        rarity_val = 0;
+
     if (rarity_val == -1)
     {
         while (true)
@@ -4282,26 +4293,29 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         static_cast<deck_rarity_type>(DECK_RARITY_COMMON + rarity_val);
     item.special = rarity;
 
-    int num = prompt_for_int("How many cards? ", false);
+    const int num_cards =
+        create_for_real ? prompt_for_int("How many cards? ", false)
+                        : 1;
 
-    if (num <= 0)
+    if (num_cards <= 0)
     {
         canned_msg(MSG_OK);
         item.base_type = OBJ_UNASSIGNED;
         return;
     }
 
-    item.plus = num;
+    item.initial_cards = num_cards;
 
     init_deck(item);
 }
 
-static void _rune_or_deck_from_specs(const char* specs, item_def &item)
+static void _rune_or_deck_from_specs(const char* specs, item_def &item,
+                                     bool create_for_real)
 {
     if (strstr(specs, "rune"))
         _rune_from_specs(specs, item);
     else if (strstr(specs, "deck") || strstr(specs, "card"))
-        _deck_from_specs(specs, item);
+        _deck_from_specs(specs, item, create_for_real);
 }
 
 static bool _book_from_spell(const char* specs, item_def &item)
@@ -4344,7 +4358,7 @@ bool get_item_by_name(item_def *item, const char* specs,
     if (class_wanted == OBJ_MISCELLANY)
     {
         // Leaves object unmodified if it wasn't a rune or deck.
-        _rune_or_deck_from_specs(specs, *item);
+        _rune_or_deck_from_specs(specs, *item, create_for_real);
 
         if (item->base_type == OBJ_UNASSIGNED)
         {
