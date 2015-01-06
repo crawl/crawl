@@ -1096,7 +1096,7 @@ static void _lugonu_transloc_retribution()
         if (!one_chance_in(3))
             you_teleport_now(false);
         else
-            random_blink(false);
+            uncontrolled_blink();
     }
 }
 

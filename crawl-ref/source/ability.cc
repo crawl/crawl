@@ -2351,8 +2351,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_EVOKE_BLINK:      // randarts
     case ABIL_BLINK:            // mutation
-        fail_check();
-        random_blink(true);
+        cast_blink(true, fail);
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
