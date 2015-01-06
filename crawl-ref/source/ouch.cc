@@ -844,8 +844,10 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
+                if (!you.duration[DUR_NO_SCROLLS])
+                    mpr("You feel threatened and lose the ability to read scrolls!");
+
                 you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
-                mpr("You feel threatened and lose the ability to read scrolls!");
             }
         }
 
@@ -853,8 +855,10 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         {
             if (_is_damage_threatening(damage_fraction_of_hp))
             {
+                if (!you.duration[DUR_NO_POTIONS])
+                    mpr("You feel threatened and lose the ability to drink potions!");
+
                 you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
-                mpr("You feel threatened and lose the ability to drink potions!");
             }
         }
     }
