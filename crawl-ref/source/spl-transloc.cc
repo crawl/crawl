@@ -406,7 +406,8 @@ spret_type cast_blink(bool allow_control, bool fail)
     if (you.no_tele(false, false, true))
         return fail ? SPRET_FAIL : SPRET_SUCCESS; // probably always SUCCESS
 
-    if (player_control_teleport() && allow_control_teleport(true))
+    if (allow_control && player_control_teleport()
+        && allow_control_teleport(true))
     {
         if (!you.confused())
             return semicontrolled_blink(100, fail);
