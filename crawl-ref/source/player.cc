@@ -7181,7 +7181,7 @@ void player::expose_to_element(beam_type element, int _strength,
 
 void player::blink(bool allow_partial_control)
 {
-    random_blink(allow_partial_control);
+    cast_blink(allow_partial_control);
 }
 
 void player::teleport(bool now, bool wizard_tele)

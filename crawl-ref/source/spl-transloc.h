@@ -3,13 +3,18 @@
 
 #include "spl-cast.h"
 
-spret_type cast_controlled_blink(int pow, bool fail);
 spret_type cast_disjunction(int pow, bool fail);
 void disjunction();
-int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false,
-          const string &pre_msg = "", bool safely_cancellable = false);
-spret_type cast_blink(bool allow_partial_control, bool fail);
-void random_blink(bool, bool override_abyss = false, bool override_stasis = false);
+
+spret_type cast_blink(bool allow_control = true, bool fail = false);
+spret_type cast_controlled_blink(int pow = 100, bool fail = false,
+                                 bool safe = true);
+void uncontrolled_blink(bool override_stasis = false);
+spret_type semicontrolled_blink(int pow = 100, bool fail = false,
+                                bool safe_cancel = true,
+                                bool end_ctele = true);
+spret_type controlled_blink(bool fail, bool safe_cancel = true);
+void wizard_blink();
 
 bool allow_control_teleport(bool quiet = false);
 spret_type cast_teleport_self(bool fail);
@@ -24,9 +29,6 @@ spret_type cast_portal_projectile(int pow, bool fail);
 
 struct bolt;
 spret_type cast_apportation(int pow, bolt& beam, bool fail);
-spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel,
-                                      bool end_ctele,
-                                      bool fail = false);
 spret_type cast_golubrias_passage(const coord_def& where, bool fail);
 
 spret_type cast_dispersal(int pow, bool fail = false);

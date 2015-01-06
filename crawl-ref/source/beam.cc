@@ -3505,7 +3505,7 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
 
     case BEAM_BLINK:
-        random_blink(false);
+        uncontrolled_blink();
         obvious_effect = true;
         break;
 

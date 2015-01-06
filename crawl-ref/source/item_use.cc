@@ -2652,9 +2652,16 @@ void read_scroll(int item_slot)
     {
         const bool safely_cancellable
             = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
-        cancel_scroll = (blink(1000, false, false,
-                               pre_succ_msg, safely_cancellable) == -1
-                        && alreadyknown);
+        if (allow_control_teleport())
+        {
+            cancel_scroll = (cast_controlled_blink(100, false,
+                                                   safely_cancellable)
+                             == SPRET_ABORT) && alreadyknown;
+        }
+        else
+            uncontrolled_blink();
+        if (!cancel_scroll)
+            mpr(pre_succ_msg); // ordering is iffy but w/e
     }
         break;
 

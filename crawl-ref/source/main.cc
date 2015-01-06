@@ -732,7 +732,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mpr("You can only abyss_teleport() inside the Abyss.");
         break;
 
-    case 'b': blink(1000, true, true); break;
+    case 'b': wizard_blink(); break;
     case 'B': you.teleport(true, true); break;
     case CONTROL('B'):
         if (!player_in_branch(BRANCH_ABYSS))
