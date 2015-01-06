@@ -8,13 +8,16 @@
 
 #include "enum.h"
 
-// DECK STRUCTURE: deck.plus is the number of cards the deck *started*
-// with, deck.plus2 is the number of cards drawn, deck.special is the
+// DECK STRUCTURE: deck.initial_cards is the number of cards the deck *started*
+// with, deck.used_count is* the number of cards drawn, deck.rarity is the
 // deck rarity, deck.props["cards"] holds the list of cards (with the
 // highest index card being the top card, and index 0 being the bottom
-// card), deck.props.["card_flags"] holds the flags for each card,
-// deck.props["num_marked"] is the number of marked cards left in the
-// deck.
+// card), deck.props["drawn_cards"] holds the list of drawn cards
+// (with index 0 being the first drawn), deck.props["card_flags"]
+// holds the flags for each card, deck.props["num_marked"] is the
+// number of marked cards left in the deck.
+//
+// if deck.used_count is negative, it's actually -(cards_left). wtf.
 //
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
