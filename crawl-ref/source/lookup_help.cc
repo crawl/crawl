@@ -1060,6 +1060,11 @@ static int _describe_item(const string &key, const string &suffix,
         append_armour_stats(stats, item);
     else if (get_item_by_name(&item, key.c_str(), OBJ_MISSILES))
         append_missile_info(stats, item);
+    else if (get_item_by_name(&item, key.c_str(), OBJ_MISCELLANY))
+        if (is_deck(item))
+            stats += "\n" + deck_contents(item.sub_type);
+
+
 
     if (!stats.empty())
         stats += "\n";
