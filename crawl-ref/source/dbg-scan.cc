@@ -912,10 +912,7 @@ static item_base_type _item_base_type(item_def &item)
     switch (item.base_type)
     {
     case OBJ_MISCELLANY:
-        if (item.sub_type >= MISC_FIRST_DECK && item.sub_type <= MISC_LAST_DECK)
-            type = ITEM_DECKS;
-        else
-            type = ITEM_MISCELLANY;
+        type = is_deck(item) ? ITEM_DECKS : ITEM_MISCELLANY;
         break;
     case OBJ_BOOKS:
         if (item.sub_type == BOOK_MANUAL)
@@ -1059,13 +1056,10 @@ static int _item_orig_sub_type(item_type &item)
     switch (item.base_type)
     {
     case ITEM_DECKS:
-        type = item.sub_type + MISC_FIRST_DECK;
+        type = deck_types[item.sub_type];
         break;
     case ITEM_MISCELLANY:
-        if (item.sub_type >= MISC_FIRST_DECK)
-            type = item.sub_type + MISC_LAST_DECK - MISC_FIRST_DECK + 1;
-        else
-            type = item.sub_type;
+        type = misc_types[item.sub_type];
         break;
     case ITEM_FOOD:
         type = _orig_food_subtype(item.sub_type);
@@ -1092,11 +1086,10 @@ static int _item_max_sub_type(item_base_type base_type)
         num = valid_foods.size();
         break;
     case ITEM_MISCELLANY:
-        // Decks not counted here.
-        num = NUM_MISCELLANY - (MISC_LAST_DECK - MISC_FIRST_DECK + 1);
+        num = misc_types.size();
         break;
     case ITEM_DECKS:
-        num = MISC_LAST_DECK - MISC_FIRST_DECK + 1;
+        num = deck_types.size();
         break;
     case ITEM_BOOKS:
         num = MAX_FIXED_BOOK + 1;
@@ -1146,9 +1139,17 @@ item_type::item_type(item_def &item)
 {
     base_type = _item_base_type(item);
     if (base_type == ITEM_DECKS)
-        sub_type = item.sub_type - MISC_FIRST_DECK;
-    else if (base_type == ITEM_MISCELLANY && item.sub_type > MISC_LAST_DECK)
-        sub_type = item.sub_type - (MISC_LAST_DECK - MISC_FIRST_DECK + 1);
+    {
+        sub_type = find(deck_types.begin(), deck_types.end(), item.sub_type)
+                   - deck_types.begin();
+        ASSERT(sub_type < deck_types.size());
+    }
+    else if (base_type == ITEM_MISCELLANY)
+    {
+        sub_type = find(misc_types.begin(), misc_types.end(), item.sub_type)
+                        - misc_types.begin();
+        ASSERT(sub_type < misc_types.size());
+    }
     else if (base_type == ITEM_FOOD)
         sub_type = valid_foods[item.sub_type];
     else if (base_type == ITEM_ARTEBOOKS)

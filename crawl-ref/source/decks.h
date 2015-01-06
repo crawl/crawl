@@ -163,6 +163,7 @@ void draw_from_deck_of_punishment(bool deal = false);
 bool      top_card_is_known(const item_def &item);
 card_type top_card(const item_def &item);
 
+bool is_deck_type(uint8_t type);
 bool is_deck(const item_def &item);
 bool bad_deck(const item_def &item);
 colour_t deck_rarity_to_colour(deck_rarity_type rarity);
