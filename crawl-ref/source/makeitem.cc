@@ -1804,7 +1804,9 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 
     if (is_deck(item))
     {
-        item.initial_cards = 4 + random2(10);
+        item.initial_cards = MIN_STARTING_CARDS
+                             + random2(MAX_STARTING_CARDS - MIN_STARTING_CARDS
+                                       + 1);
 
         if (force_ego >= DECK_RARITY_COMMON
             && force_ego <= DECK_RARITY_LEGENDARY)

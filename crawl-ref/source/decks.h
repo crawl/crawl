@@ -22,6 +22,11 @@
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
 
+/// The minimum number of cards a deck starts with, when generated normally.
+const int MIN_STARTING_CARDS = 4;
+/// The maximum number of cards a deck starts with, when generated normally.
+const int MAX_STARTING_CARDS = 13;
+
 enum deck_type
 {
     // pure decks

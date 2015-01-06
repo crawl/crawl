@@ -1491,6 +1491,10 @@ static string _describe_deck(const item_def &item)
     if (item_type_known(item))
         description += deck_contents(item.sub_type) + "\n";
 
+    description += make_stringf("\nMost decks begin with %d to %d cards.\n",
+                                MIN_STARTING_CARDS,
+                                MAX_STARTING_CARDS);
+
     const vector<card_type> drawn_cards = get_drawn_cards(item);
     if (!drawn_cards.empty())
     {
