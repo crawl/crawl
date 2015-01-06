@@ -5699,13 +5699,10 @@ static int _get_sacrifice_piety(ability_type sac)
         case ABIL_RU_SACRIFICE_PURITY:
             if (mut == MUT_WEAK || mut == MUT_DOPEY || mut == MUT_CLUMSY)
             {
-                stat_type stat = NUM_STATS;
-                if (mut == MUT_WEAK)
-                    stat = STAT_STR;
-                else if (mut == MUT_CLUMSY)
-                    stat = STAT_DEX;
-                else if (mut == MUT_DOPEY)
-                    stat = STAT_INT;
+                const stat_type stat = mut == MUT_WEAK   ? STAT_STR
+                                     : mut == MUT_CLUMSY ? STAT_DEX
+                                     : mut == MUT_DOPEY  ? STAT_INT
+                                                         : NUM_STATS;
                 piety_gain += 4 + _get_stat_piety(stat, 4);
             }
             // the other sacrifices get sharply worse if you already
