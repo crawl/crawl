@@ -5692,9 +5692,7 @@ static int _get_sacrifice_piety(ability_type sac)
             else if (mut == MUT_MAGICAL_VULNERABILITY)
                 piety_gain += 28;
             else
-            {
                 piety_gain += 2 + _get_stat_piety(STAT_INT, 6);
-            }
             break;
         case ABIL_RU_SACRIFICE_PURITY:
             if (mut == MUT_WEAK || mut == MUT_DOPEY || mut == MUT_CLUMSY)
