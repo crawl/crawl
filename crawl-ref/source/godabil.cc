@@ -6109,9 +6109,10 @@ bool ru_do_sacrifice(ability_type sac)
     return true;
 }
 
-bool ru_reject_sacrifices()
+bool ru_reject_sacrifices(bool skip_prompt)
 {
-    if (!yesno("Do you really want to reject the sacrifices Ru is offering?",
+    if (!skip_prompt &&
+        !yesno("Do you really want to reject the sacrifices Ru is offering?",
                false, 'n'))
     {
         canned_msg(MSG_OK);

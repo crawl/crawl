@@ -11,6 +11,7 @@
 #include "delay.h"
 #include "english.h" // conjugate_verb
 #include "food.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
 #include "hints.h"
@@ -1070,12 +1071,12 @@ static void _remove_amulet_of_faith(item_def &item)
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.
-        if (you.piety >= piety_breakpoint(6))
+        if (you.piety < piety_breakpoint(5))
         {
+            int current_delay = you.props["ru_sacrifice_delay"].get_int();
+            ru_reject_sacrifices(true);
             you.props["ru_sacrifice_delay"] =
-                you.props["ru_sacrifice_delay"].get_int() * 3;
-            simple_god_message(" reconsiders your readiness for further "
-                "sacrifices.");
+                max(you.props["ru_sacrifice_delay"].get_int(), current_delay)*2;
         }
     }
     else if (!you_worship(GOD_NO_GOD)
