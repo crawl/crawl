@@ -1804,9 +1804,8 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 
     if (is_deck(item))
     {
-        item.initial_cards = MIN_STARTING_CARDS
-                             + random2(MAX_STARTING_CARDS - MIN_STARTING_CARDS
-                                       + 1);
+        item.initial_cards = random_range(MIN_STARTING_CARDS,
+                                          MAX_STARTING_CARDS);
 
         if (force_ego >= DECK_RARITY_COMMON
             && force_ego <= DECK_RARITY_LEGENDARY)
@@ -2165,15 +2164,15 @@ jewellery_type get_random_amulet_type()
     int res;
     do
     {
-        res = (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+        res = random_range(AMU_FIRST_AMULET, NUM_JEWELLERY - 1);
     }
     // Do not generate cFly or Cons
     while (res == AMU_CONTROLLED_FLIGHT || res == AMU_CONSERVATION);
 
     return jewellery_type(res);
 #else
-    return static_cast<jewellery_type>(AMU_FIRST_AMULET
-           + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+    return static_cast<jewellery_type>(random_range(AMU_FIRST_AMULET,
+                                                    NUM_JEWELLERY - 1));
 #endif
 }
 

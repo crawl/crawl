@@ -1455,7 +1455,7 @@ LUAFN(dgn_connect_adjacent_rooms)
                           max, min);
     }
 
-    int count = min + random2(max - min + 1);
+    int count = random_range(min, max);
     for (random_rectangle_iterator ri(coord_def(x1, y1),
                                       coord_def(x2, y2)); ri; ++ri)
     {
@@ -2244,7 +2244,7 @@ LUAFN(dgn_farthest_from)
 
     ASSERT(dc_next > dc_prev);
     // There may be multiple farthest cells, pick one at random.
-    coord_def loc = queue[dc_prev + random2(dc_next - dc_prev)];
+    coord_def loc = queue[random_range(dc_prev, dc_next - 1)];
     lua_pushnumber(ls, loc.x);
     lua_pushnumber(ls, loc.y);
     return 2;
