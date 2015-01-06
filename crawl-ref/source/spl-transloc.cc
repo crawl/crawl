@@ -267,17 +267,10 @@ static bool _find_cblink_target(coord_def &target, bool safe_cancel)
         return _find_cblink_target(target, safe_cancel);
     }
 
-    if (grd(beam.target) == DNGN_OPEN_SEA)
+    if (cell_is_solid(beam.target))
     {
         clear_messages();
-        mpr("You can't blink into the sea!");
-        return _find_cblink_target(target, safe_cancel);
-    }
-
-    if (grd(beam.target) == DNGN_LAVA_SEA)
-    {
-        clear_messages();
-        mpr("You can't blink into the sea of lava!");
+        mpr("You can't blink into that!");
         return _find_cblink_target(target, safe_cancel);
     }
 
