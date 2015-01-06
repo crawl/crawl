@@ -5699,7 +5699,7 @@ static int _get_sacrifice_piety(ability_type sac)
         case ABIL_RU_SACRIFICE_PURITY:
             if (mut == MUT_WEAK || mut == MUT_DOPEY || mut == MUT_CLUMSY)
             {
-                stat_type stat;
+                stat_type stat = NUM_STATS;
                 if (mut == MUT_WEAK)
                     stat = STAT_STR;
                 else if (mut == MUT_CLUMSY)
