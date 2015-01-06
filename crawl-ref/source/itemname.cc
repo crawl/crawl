@@ -939,11 +939,8 @@ const char* deck_rarity_name(deck_rarity_type rarity)
 
 static const char* misc_type_name(int type, bool known)
 {
-    if (!known)
-    {
-        if (type >= MISC_FIRST_DECK && type <= MISC_LAST_DECK)
-            return "deck of cards";
-    }
+    if (!known && is_deck_type(type))
+        return "deck of cards";
 
     switch (static_cast<misc_item_type>(type))
     {
@@ -954,6 +951,7 @@ static const char* misc_type_name(int type, bool known)
 #endif
     case MISC_DECK_OF_SUMMONING:   return "deck of summonings";
     case MISC_DECK_OF_WONDERS:     return "deck of wonders";
+    case MISC_DECK_OF_ODDITIES:    return "deck of oddities";
     case MISC_DECK_OF_PUNISHMENT:  return "deck of punishment";
     case MISC_DECK_OF_WAR:         return "deck of war";
     case MISC_DECK_OF_CHANGES:     return "deck of changes";
@@ -2011,11 +2009,8 @@ bool item_type_known(const item_def& item)
     if (item.base_type == OBJ_MISSILES)
         return true;
 
-    if (item.base_type == OBJ_MISCELLANY
-        && (item.sub_type < MISC_FIRST_DECK || item.sub_type > MISC_LAST_DECK))
-    {
+    if (item.base_type == OBJ_MISCELLANY && !is_deck(item))
         return true;
-    }
 
     if (item.is_type(OBJ_BOOKS, BOOK_DESTRUCTION))
         return true;

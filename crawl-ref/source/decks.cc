@@ -188,6 +188,22 @@ const deck_archetype deck_of_punishment[] =
     END_OF_DECK
 };
 
+static map<misc_item_type, vector<const deck_archetype *>> all_decks =
+{
+    { MISC_DECK_OF_ESCAPE,      { deck_of_transport, deck_of_emergency } },
+    { MISC_DECK_OF_DESTRUCTION, { deck_of_destruction } },
+#if TAG_MAJOR_VERSION == 34
+    { MISC_DECK_OF_DUNGEONS,    { deck_of_dungeons } },
+#endif
+    { MISC_DECK_OF_SUMMONING,   { deck_of_summoning } },
+    { MISC_DECK_OF_WONDERS,     { deck_of_wonders } },
+    { MISC_DECK_OF_ODDITIES,    { deck_of_oddities } },
+    { MISC_DECK_OF_PUNISHMENT,  { deck_of_punishment } },
+    { MISC_DECK_OF_WAR,         { deck_of_battle, deck_of_summoning } },
+    { MISC_DECK_OF_CHANGES,     { deck_of_battle, deck_of_wonders } },
+    { MISC_DECK_OF_DEFENCE,     { deck_of_battle, deck_of_emergency } },
+};
+
 static void _check_odd_card(uint8_t flags)
 {
     if ((flags & CFLAG_ODDITY) && !(flags & CFLAG_SEEN))
@@ -360,36 +376,14 @@ card_type name_to_card(string name)
 
 static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
 {
-    vector<const deck_archetype *> subdecks;
-
-    switch (deck_type)
-    {
-    case MISC_DECK_OF_ESCAPE:
-        return { deck_of_transport, deck_of_emergency };
-    case MISC_DECK_OF_DESTRUCTION:
-        return { deck_of_destruction };
-#if TAG_MAJOR_VERSION == 34
-    case MISC_DECK_OF_DUNGEONS:
-        return { deck_of_dungeons };
-#endif
-    case MISC_DECK_OF_SUMMONING:
-        return { deck_of_summoning };
-    case MISC_DECK_OF_WONDERS:
-        return { deck_of_wonders };
-    case MISC_DECK_OF_PUNISHMENT:
-        return { deck_of_punishment };
-    case MISC_DECK_OF_WAR:
-        return { deck_of_battle, deck_of_summoning };
-    case MISC_DECK_OF_CHANGES:
-        return { deck_of_battle, deck_of_wonders };
-    case MISC_DECK_OF_DEFENCE:
-        return { deck_of_emergency, deck_of_battle };
-    }
+    vector<const deck_archetype *> *subdecks
+        = map_find(all_decks, (misc_item_type)deck_type);
 
 #ifdef ASSERTS
-    die("No subdecks found for %u", unsigned(deck_type));
+    if (!subdecks)
+        die("No subdecks found for %u", unsigned(deck_type));
 #endif
-    return {};
+    return *subdecks;
 }
 
 const string deck_contents(uint8_t deck_type)
@@ -422,6 +416,13 @@ const string deck_contents(uint8_t deck_type)
     if (first)
         output += "BUGGY cards";
     output += ".";
+
+    if (deck_type != MISC_DECK_OF_PUNISHMENT
+        && deck_type != MISC_DECK_OF_ODDITIES)
+    {
+        output += " (One in a hundred cards may be drawn from the deck of "
+                  "oddities, instead.)";
+    }
 
     return output;
 }
@@ -898,24 +899,25 @@ string which_decks(card_type card)
     vector<string> decks;
     string output = "";
     bool punishment = false;
-    for (uint8_t deck = MISC_FIRST_DECK; deck <= MISC_LAST_DECK; deck++)
+    for (auto &deck_data : all_decks)
     {
-        for (const deck_archetype *subdeck : _subdecks(deck))
+        uint8_t deck = deck_data.first;
+        for (auto subdeck : deck_data.second)
         {
-            if (_card_in_deck(card, subdeck))
+            if (!_card_in_deck(card, subdeck))
+                continue;
+
+            if (deck == MISC_DECK_OF_PUNISHMENT)
+                punishment = true;
+            else
             {
-                if (deck == MISC_DECK_OF_PUNISHMENT)
-                    punishment = true;
-                else
-                {
-                    item_def tmp;
-                    tmp.base_type = OBJ_MISCELLANY;
-                    tmp.sub_type = deck;
-                    // 8 - "deck of "
-                    decks.push_back(sub_type_string(tmp, true).substr(8));
-                }
-                break;
+                item_def tmp;
+                tmp.base_type = OBJ_MISCELLANY;
+                tmp.sub_type = deck;
+                // 8 - "deck of "
+                decks.push_back(sub_type_string(tmp, true).substr(8));
             }
+            break;
         }
     }
 
@@ -3221,11 +3223,14 @@ card_type top_card(const item_def &deck)
     return card;
 }
 
+bool is_deck_type(uint8_t sub_type)
+{
+    return map_find(all_decks, (misc_item_type)sub_type) != nullptr;
+}
+
 bool is_deck(const item_def &item)
 {
-    return item.base_type == OBJ_MISCELLANY
-           && item.sub_type >= MISC_FIRST_DECK
-           && item.sub_type <= MISC_LAST_DECK;
+    return item.base_type == OBJ_MISCELLANY && is_deck_type(item.sub_type);
 }
 
 bool bad_deck(const item_def &item)

@@ -4171,28 +4171,15 @@ static void _deck_from_specs(const char* _specs, item_def &item,
         trim_string(type_str);
     }
 
-    misc_item_type types[] =
-    {
-        MISC_DECK_OF_ESCAPE,
-        MISC_DECK_OF_DESTRUCTION,
-        MISC_DECK_OF_SUMMONING,
-        MISC_DECK_OF_WONDERS,
-        MISC_DECK_OF_PUNISHMENT,
-        MISC_DECK_OF_WAR,
-        MISC_DECK_OF_CHANGES,
-        MISC_DECK_OF_DEFENCE,
-        MISC_DECK_UNKNOWN,
-    };
-
-    item.special  = DECK_RARITY_COMMON;
-    item.sub_type = MISC_DECK_UNKNOWN;
+    item.deck_rarity = DECK_RARITY_COMMON;
+    item.sub_type    = MISC_DECK_UNKNOWN;
 
     if (!type_str.empty())
     {
-        for (int i = 0; types[i] != MISC_DECK_UNKNOWN; ++i)
+        for (auto type : deck_types)
         {
-            item.sub_type = types[i];
-            item.plus     = 1;
+            item.sub_type = type;
+            item.initial_cards = 1;
             init_deck(item);
             // Remove "plain " from front.
             string name = item.name(DESC_PLAIN).substr(6);
@@ -4203,39 +4190,45 @@ static void _deck_from_specs(const char* _specs, item_def &item,
         }
     }
 
-    if (item.sub_type == MISC_DECK_UNKNOWN)
+    if (item.sub_type == MISC_DECK_UNKNOWN && !create_for_real)
     {
-        if (!create_for_real)
+        // bail
+        item.base_type = OBJ_UNASSIGNED;
+        return;
+    }
+
+    while (item.sub_type == MISC_DECK_UNKNOWN)
+    {
+        mprf(MSGCH_PROMPT,
+             "[a] escape     [b] destruction [c] summoning [d] wonders");
+        mprf(MSGCH_PROMPT,
+             "[e] war         [f] changes  [g] defence");
+        mpr("Which deck (ESC to exit)? ");
+
+        const int keyin = toalower(get_ch());
+
+        if (key_is_escape(keyin) || keyin == ' '
+            || keyin == '\r' || keyin == '\n')
         {
-            // bail
+            canned_msg(MSG_OK);
             item.base_type = OBJ_UNASSIGNED;
             return;
         }
 
-        while (true)
+        static const map<char, misc_item_type> deckmap =
         {
-            mprf(MSGCH_PROMPT,
-"[a] escape     [b] destruction [c] summoning [d] wonders");
-            mprf(MSGCH_PROMPT,
-"[e] punishment [f] war         [g] changes  [h] defence");
-            mpr("Which deck (ESC to exit)? ");
+            { 'a', MISC_DECK_OF_ESCAPE },
+            { 'b', MISC_DECK_OF_DESTRUCTION },
+            { 'c', MISC_DECK_OF_SUMMONING },
+            { 'd', MISC_DECK_OF_WONDERS },
+            { 'e', MISC_DECK_OF_WAR },
+            { 'f', MISC_DECK_OF_CHANGES },
+            { 'g', MISC_DECK_OF_DEFENCE }
+        };
 
-            const int keyin = toalower(get_ch());
-
-            if (key_is_escape(keyin) || keyin == ' '
-                || keyin == '\r' || keyin == '\n')
-            {
-                canned_msg(MSG_OK);
-                item.base_type = OBJ_UNASSIGNED;
-                return;
-            }
-
-            if (keyin < 'a' || keyin > 'h')
-                continue;
-
-            item.sub_type = types[keyin - 'a'];
-            break;
-        }
+        const misc_item_type *deck_type = map_find(deckmap, keyin);
+        if (deck_type)
+            item.sub_type = *deck_type;
     }
 
     const char* rarities[] =

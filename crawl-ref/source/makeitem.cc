@@ -1871,9 +1871,7 @@ int items(bool allow_uniques,
            || force_class == OBJ_WEAPONS
            || force_class == OBJ_ARMOUR
            || force_class == OBJ_MISSILES
-           || force_class == OBJ_MISCELLANY
-              && force_type >= MISC_FIRST_DECK
-              && force_type <= MISC_LAST_DECK);
+           || force_class == OBJ_MISCELLANY && is_deck_type(force_type));
 
     // Find an empty slot for the item (with culling if required).
     int p = get_mitm_slot(10);
