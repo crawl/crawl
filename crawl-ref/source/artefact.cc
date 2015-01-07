@@ -530,6 +530,7 @@ static inline void _randart_propset(artefact_properties_t &p,
     p[pt] = (neg? -value : value);
 }
 
+/*
 static int _randart_add_one_property(const item_def &item,
                                       artefact_properties_t &proprt)
 {
@@ -582,8 +583,8 @@ static int _randart_add_one_property(const item_def &item,
     while (false);
 
     return negench ? -1 : 1;
-}
-
+} */
+/*
 // An artefact will pass this check if it has any non-stat properties, and
 // also if it has enough stat properties (AC, EV, Str, Dex, Int).
 // Returns how many (more) stat properties we need to add.
@@ -617,8 +618,312 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
     // some more.
     return 1 + random2(2);
 }
+*/
+static void _add_randart_weapon_brand(const item_def &item,
+                                    artefact_properties_t &item_props)
+{
+    const int item_type = item.sub_type;
+
+    if (is_range_weapon(item))
+    {
+        item_props[ARTP_BRAND] = random_choose_weighted(
+            2, SPWPN_SPEED,
+            4, SPWPN_VENOM,
+            4, SPWPN_VORPAL,
+            4, SPWPN_FLAMING,
+            4, SPWPN_FREEZING,
+            0);
+
+        if (item_type == WPN_BLOWGUN)
+            item_props[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
+        else if (item_attack_skill(item) == SK_CROSSBOWS)
+        {
+            // Penetration and electrocution are only allowed on
+            // crossbows.  This may change in future.
+            if (one_chance_in(5))
+                item_props[ARTP_BRAND] = SPWPN_ELECTROCUTION;
+            else if (one_chance_in(5))
+                item_props[ARTP_BRAND] = SPWPN_PENETRATION;
+        }
+    }
+    else if (is_demonic(item) && x_chance_in_y(7, 9))
+    {
+        item_props[ARTP_BRAND] = random_choose(
+            SPWPN_DRAINING,
+            SPWPN_FLAMING,
+            SPWPN_FREEZING,
+            SPWPN_ELECTROCUTION,
+            SPWPN_VAMPIRISM,
+            SPWPN_PAIN,
+            SPWPN_VENOM);
+        // fall back to regular melee brands 2/9 of the time
+    }
+    else
+    {
+        item_props[ARTP_BRAND] = random_choose_weighted(
+            73, SPWPN_VORPAL,
+            34, SPWPN_FLAMING,
+            34, SPWPN_FREEZING,
+            26, SPWPN_VENOM,
+            26, SPWPN_DRAINING,
+            13, SPWPN_HOLY_WRATH,
+            13, SPWPN_ELECTROCUTION,
+            13, SPWPN_SPEED,
+            13, SPWPN_VAMPIRISM,
+            13, SPWPN_PAIN,
+            13, SPWPN_ANTIMAGIC,
+             3, SPWPN_DISTORTION,
+             0);
+    }
+
+    // no brand = magic flag to reject and retry
+    if (!is_weapon_brand_ok(item_type, item_props[ARTP_BRAND], true))
+        item_props[ARTP_BRAND] = SPWPN_NORMAL;
+}
+
+static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
+{
+    const object_class_type item_class = item.base_type;
+    const int item_type = item.sub_type;
+    switch (prop)
+    {
+        case ARTP_STRENGTH:
+            return item_class != OBJ_JEWELLERY || item_type != RING_STRENGTH;
+        case ARTP_INTELLIGENCE:
+            return item_class != OBJ_JEWELLERY || item_type != RING_INTELLIGENCE;
+        case ARTP_DEXTERITY:
+            return item_class != OBJ_JEWELLERY || item_type != RING_DEXTERITY;
+        case ARTP_SLAYING:
+            return item_class != OBJ_WEAPONS
+                    && (item_class != OBJ_JEWELLERY || item_type != RING_SLAYING);
+        case ARTP_FIRE:
+        case ARTP_COLD:
+            return (item_class != OBJ_JEWELLERY
+                            || (item_type != RING_PROTECTION_FROM_FIRE
+                                && item_type != RING_FIRE
+                                && item_type != RING_ICE))
+                    && (item_class != OBJ_ARMOUR
+                            || (item_type != ARM_FIRE_DRAGON_ARMOUR
+                                && item_type != ARM_ICE_DRAGON_ARMOUR
+                                && item_type != ARM_GOLD_DRAGON_ARMOUR));
+        case ARTP_POISON:
+            return (item_class != OBJ_JEWELLERY
+                                || item_type != RING_POISON_RESISTANCE)
+                    && (item_class != OBJ_ARMOUR
+                                || item_type != ARM_GOLD_DRAGON_ARMOUR
+                                   && item_type != ARM_SWAMP_DRAGON_ARMOUR
+                                   && item_type != ARM_NAGA_BARDING);
+        case ARTP_ELECTRICITY:
+            return item_class != OBJ_ARMOUR
+                    || item_type != ARM_STORM_DRAGON_ARMOUR;
+        case ARTP_NEGATIVE_ENERGY:
+        case ARTP_MAGIC:
+        case ARTP_BLINK:
+        case ARTP_NOISES:
+        case ARTP_PREVENT_SPELLCASTING:
+        case ARTP_MUTAGENIC:
+            return true;
+        case ARTP_EYESIGHT:
+            return (item_class != OBJ_JEWELLERY
+                        || item_type != RING_SEE_INVISIBLE)
+                     && (item_class != OBJ_ARMOUR
+                        || item_type != ARM_NAGA_BARDING);
+        case ARTP_RCORR:
+            return item_class == OBJ_ARMOUR;
+        case ARTP_INVISIBLE:
+            return item_class != OBJ_JEWELLERY
+                    || item_type != RING_INVISIBILITY;
+        case ARTP_FLY:
+            return item_class != OBJ_JEWELLERY || item_type != RING_FLIGHT;
+        case ARTP_BERSERK:
+            return (item_class != OBJ_WEAPONS || !is_range_weapon(item))
+                    && (item_class != OBJ_JEWELLERY || item_type != AMU_RAGE);
+        //spirit shield
+            return item_type == ARM_HAT || item_type == ARM_SHIELD;
+        case ARTP_CAUSE_TELEPORTATION:
+            return item_type != OBJ_WEAPONS || crawl_state.game_is_sprint();
+        case ARTP_PREVENT_TELEPORTATION:
+            return (item_type != OBJ_JEWELLERY
+                        || item_type != RING_TELEPORTATION)
+                    && (item_type == OBJ_JEWELLERY
+                        || item_type == RING_TELEPORT_CONTROL);
+        case ARTP_ANGRY:
+            return item_type != OBJ_WEAPONS || is_range_weapon(item);
+        case ARTP_STEALTH:
+            return (item_type != OBJ_JEWELLERY || item_type != RING_LOUDNESS)
+                && (item_type != OBJ_ARMOUR
+                    || item_type != ARM_SHADOW_DRAGON_ARMOUR);
+        default:
+            return false;
+    }
+}
 
 static void _get_randart_properties(const item_def &item,
+                                    artefact_properties_t &item_props)
+{
+    const object_class_type item_class = item.base_type;
+
+    // initialize an array of artefact properties to randomly pick from
+    vector<artefact_prop_type> art_props;
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+        art_props.push_back(static_cast<artefact_prop_type>(i));
+
+    int good = 0; // number of good properties to assign
+    int bad = 0; // number of bad properties to assign
+    int max_extra_props = 5; // at most 6 total props
+    // try to assign additional properties, with a large chance of not assigning.
+    for (int i = 0; i <= max_extra_props; ++i)
+    {
+        int j = random2(24);
+        if (j <= 6)
+            ++good;
+        else if (j <= 9)
+            ++bad;
+        // else no property
+    }
+
+    // Make sure to have at least one bonus good property.
+    if (good == 0)
+        ++good;
+
+    item_props.init(0);
+
+    // make sure all weapons have a brand
+    if (item_class == OBJ_WEAPONS)
+        _add_randart_weapon_brand(item, item_props);
+
+    // randomly pick properties from the list, assign values and all that,
+    // then subtract them from the good/bad count as needed
+    shuffle_array(art_props);
+    for (artefact_prop_type prop : art_props)
+    {
+        if (good <= 0 && bad <= 0)
+            break;
+
+        bool valid = false;
+        int value = 0;
+        bool prop_is_good = true;
+
+        if (_artp_can_go_on_item(prop, item))
+        {
+            // Pick appropriate values for this property.
+            switch (prop)
+            {
+                case ARTP_STRENGTH:
+                case ARTP_INTELLIGENCE:
+                case ARTP_DEXTERITY:
+                    value = 1 + random2avg(6, 2);
+                    if (good > 0 && (coinflip() || bad == 0))
+                        valid = true;
+                    else if (bad > 0)
+                    {
+                        prop_is_good = false;
+                        value *= -1;
+                        valid = true;
+                    }
+                    break;
+
+                case ARTP_SLAYING:
+                    value = 2 + random2(3) + random2(3);
+                    if (good > 0 && (coinflip() || bad == 0))
+                        valid = true;
+                    else if (bad > 0)
+                    {
+                        prop_is_good = false;
+                        value *= -1;
+                        valid = true;
+                    }
+                    break;
+
+                case ARTP_FIRE:
+                case ARTP_COLD:
+                case ARTP_POISON:
+                case ARTP_ELECTRICITY:
+                case ARTP_NEGATIVE_ENERGY:
+                case ARTP_MAGIC:
+                case ARTP_STEALTH:
+                    value = 1 + one_chance_in(5);
+                    if (good > 0 && (coinflip() || bad == 0))
+                        valid = true;
+                    else if (bad > 0)
+                    {
+                        prop_is_good = false;
+                        value = -1 + ((prop == ARTP_STEALTH) ? coinflip() : 0);
+                        valid = true;
+                    }
+                    break;
+
+                case ARTP_EYESIGHT:
+                case ARTP_RCORR:
+                case ARTP_INVISIBLE:
+                case ARTP_FLY:
+                case ARTP_BLINK:
+                case ARTP_BERSERK:
+                //case //spirit shield
+                    if (good > 0)
+                    {
+                        value = 1;
+                        valid = true;
+                    }
+                    break;
+
+                case ARTP_NOISES:
+                    if (bad > 0)
+                    {
+                        prop_is_good = false;
+                        value = 2;
+                        valid = true;
+                    }
+                    break;
+                case ARTP_PREVENT_SPELLCASTING:
+                case ARTP_MUTAGENIC:
+                case ARTP_PREVENT_TELEPORTATION:
+                    if (bad > 0)
+                    {
+                        prop_is_good = false;
+                        value = 1;
+                        valid = true;
+                    }
+                    break;
+                case ARTP_CAUSE_TELEPORTATION:
+                    if (bad > 0)
+                    {
+                        prop_is_good = false;
+                        value = 12;
+                        valid = true;
+                    }
+                    break;
+                case ARTP_ANGRY:
+                    if (bad > 0)
+                    {
+                        prop_is_good = false;
+                        value = 5;
+                        valid = true;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        // Actually apply the property if it's valid.
+        if (valid)
+        {
+            if (prop_is_good)
+                --good;
+            else
+                --bad;
+            item_props[prop] = value;
+
+            // special case: remove the blink property if we're adding stasis
+            if (prop == ARTP_PREVENT_TELEPORTATION)
+                item_props[ARTP_BLINK] = 0;
+        }
+    }
+}
+
+/*
+static void _get_randart_properties_old(const item_def &item,
                                     artefact_properties_t &proprt)
 {
     const object_class_type aclass = item.base_type;
@@ -1028,7 +1333,7 @@ static void _get_randart_properties(const item_def &item,
             proprt[ARTP_CURSED] = -1;
     }
 }
-
+*/
 static bool _redo_book(item_def &book)
 {
     int num_spells  = 0;
