@@ -191,6 +191,8 @@ const deck_archetype deck_of_punishment[] =
 
 struct deck_type_data
 {
+    /// The name of the deck. (Doesn't include "deck of ".)
+    string name;
     /// The weight of this deck in non-Nemelex item generation
     int weight;
     /// The list of decks this deck contains
@@ -200,35 +202,45 @@ struct deck_type_data
 static map<misc_item_type, deck_type_data> all_decks =
 {
     { MISC_DECK_OF_ESCAPE, {
+        "escape",
         1, { deck_of_transport, deck_of_emergency }
     } },
     { MISC_DECK_OF_DESTRUCTION, {
+        "destruction",
         1, { deck_of_destruction }
     } },
 #if TAG_MAJOR_VERSION == 34
     { MISC_DECK_OF_DUNGEONS, {
+        "dungeons",
         0, { deck_of_dungeons }
     } },
 #endif
     { MISC_DECK_OF_SUMMONING, {
+        "summonings",
         5, { deck_of_summoning }
     } },
     { MISC_DECK_OF_WONDERS, {
+        "wonders",
         5, { deck_of_wonders }
     } },
     { MISC_DECK_OF_ODDITIES, {
+        "oddities",
         0, { deck_of_oddities }
     } },
     { MISC_DECK_OF_PUNISHMENT, {
+        "punishment",
         0, { deck_of_punishment }
     } },
     { MISC_DECK_OF_WAR, {
+        "war",
         1, { deck_of_battle, deck_of_summoning }
     } },
     { MISC_DECK_OF_CHANGES, {
+        "changes",
         5, { deck_of_battle, deck_of_wonders }
     } },
     { MISC_DECK_OF_DEFENCE, {
+        "defence",
         5, { deck_of_battle, deck_of_emergency }
     } },
 };
@@ -3264,6 +3276,39 @@ static vector<pair<misc_item_type, int>> _deck_weights()
 }
 
 static const vector<pair<misc_item_type, int>> deck_weights = _deck_weights();
+
+
+/**
+ * Return the appropriate name for a known deck of the given type.
+ *
+ * @param sub_type  The type of deck in question.
+ * @return          A name, e.g. "deck of war".
+ *                  Does not include rarity.
+ *                  If the given type isn't a deck, return "deck of bugginess".
+ */
+string deck_name(uint8_t sub_type)
+{
+    const deck_type_data *deck_data = map_find(all_decks,
+                                               (misc_item_type)sub_type);
+    const string name = deck_data ? deck_data->name : "bugginess";
+    return "deck of " + name;
+}
+
+/**
+ * Returns the appropriate type for a deck name.
+ *
+ * @param name      The name in question; e.g. "war", "summonings", etc.
+ * @return          The type of the deck, if one is found;
+ *                  else, MISC_DECK_UNKNOWN.
+ */
+uint8_t deck_type_by_name(string name)
+{
+    for (auto &deck_data : all_decks)
+        if (deck_data.second.name == name)
+            return deck_data.first;
+
+    return MISC_DECK_UNKNOWN;
+}
 
 /**
  * Choose a random deck type for normal generation. (Not Nemelex.)
