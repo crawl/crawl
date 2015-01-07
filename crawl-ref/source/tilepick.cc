@@ -3975,7 +3975,7 @@ static tileidx_t _tileidx_rune(const item_def &item)
     case RUNE_GLOORX_VLOQ: return TILE_MISC_RUNE_GLOORX_VLOQ;
 
     case RUNE_DEMONIC:     return TILE_MISC_RUNE_DEMONIC
-        + ((uint32_t)item.special) % tile_main_count(TILE_MISC_RUNE_DEMONIC);
+        + ((uint32_t)item.rnd) % tile_main_count(TILE_MISC_RUNE_DEMONIC);
     case RUNE_ABYSSAL:     return TILE_MISC_RUNE_ABYSS;
 
     case RUNE_SNAKE:       return TILE_MISC_RUNE_SNAKE;
