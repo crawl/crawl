@@ -5047,41 +5047,6 @@ static misc_item_type _deck_type_string_to_subtype(const string& s)
     return MISC_DECK_UNKNOWN;
 }
 
-static misc_item_type _random_deck_subtype()
-{
-    item_def dummy;
-    dummy.base_type = OBJ_MISCELLANY;
-    while (true)
-    {
-        dummy.sub_type = random2(NUM_MISCELLANY);
-
-        if (!is_deck(dummy))
-            continue;
-
-        if (dummy.sub_type == MISC_DECK_OF_PUNISHMENT
-            || dummy.sub_type == MISC_DECK_OF_ODDITIES)
-        {
-            continue;
-        }
-
-#if TAG_MAJOR_VERSION == 34
-        if (dummy.sub_type == MISC_DECK_OF_DUNGEONS)
-            continue;
-#endif
-
-        if ((dummy.sub_type == MISC_DECK_OF_ESCAPE
-             || dummy.sub_type == MISC_DECK_OF_DESTRUCTION
-             || dummy.sub_type == MISC_DECK_OF_SUMMONING
-             || dummy.sub_type == MISC_DECK_OF_WONDERS)
-            && !one_chance_in(5))
-        {
-            continue;
-        }
-
-        return static_cast<misc_item_type>(dummy.sub_type);
-    }
-}
-
 void item_list::build_deck_spec(string s, item_spec* spec)
 {
     spec->base_type = OBJ_MISCELLANY;
@@ -5120,7 +5085,7 @@ void item_list::build_deck_spec(string s, item_spec* spec)
         spec->sub_type = sub_type;
     }
     else
-        spec->sub_type = _random_deck_subtype();
+        spec->sub_type = random_deck_type();
 }
 
 bool item_list::parse_single_spec(item_spec& result, string s)

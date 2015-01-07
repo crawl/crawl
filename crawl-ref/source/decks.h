@@ -163,6 +163,7 @@ void draw_from_deck_of_punishment(bool deal = false);
 bool      top_card_is_known(const item_def &item);
 card_type top_card(const item_def &item);
 
+uint8_t random_deck_type();
 bool is_deck_type(uint8_t type);
 bool is_deck(const item_def &item);
 bool bad_deck(const item_def &item);
