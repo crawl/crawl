@@ -47,6 +47,7 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
@@ -188,20 +189,48 @@ const deck_archetype deck_of_punishment[] =
     END_OF_DECK
 };
 
-static map<misc_item_type, vector<const deck_archetype *>> all_decks =
+struct deck_type_data
 {
-    { MISC_DECK_OF_ESCAPE,      { deck_of_transport, deck_of_emergency } },
-    { MISC_DECK_OF_DESTRUCTION, { deck_of_destruction } },
+    /// The weight of this deck in non-Nemelex item generation
+    int weight;
+    /// The list of decks this deck contains
+    vector<const deck_archetype *> subdecks;
+};
+
+static map<misc_item_type, deck_type_data> all_decks =
+{
+    { MISC_DECK_OF_ESCAPE, {
+        1, { deck_of_transport, deck_of_emergency }
+    } },
+    { MISC_DECK_OF_DESTRUCTION, {
+        1, { deck_of_destruction }
+    } },
 #if TAG_MAJOR_VERSION == 34
-    { MISC_DECK_OF_DUNGEONS,    { deck_of_dungeons } },
+    { MISC_DECK_OF_DUNGEONS, {
+        0, { deck_of_dungeons }
+    } },
 #endif
-    { MISC_DECK_OF_SUMMONING,   { deck_of_summoning } },
-    { MISC_DECK_OF_WONDERS,     { deck_of_wonders } },
-    { MISC_DECK_OF_ODDITIES,    { deck_of_oddities } },
-    { MISC_DECK_OF_PUNISHMENT,  { deck_of_punishment } },
-    { MISC_DECK_OF_WAR,         { deck_of_battle, deck_of_summoning } },
-    { MISC_DECK_OF_CHANGES,     { deck_of_battle, deck_of_wonders } },
-    { MISC_DECK_OF_DEFENCE,     { deck_of_battle, deck_of_emergency } },
+    { MISC_DECK_OF_SUMMONING, {
+        5, { deck_of_summoning }
+    } },
+    { MISC_DECK_OF_WONDERS, {
+        5, { deck_of_wonders }
+    } },
+    { MISC_DECK_OF_ODDITIES, {
+        0, { deck_of_oddities }
+    } },
+    { MISC_DECK_OF_PUNISHMENT, {
+        0, { deck_of_punishment }
+    } },
+    { MISC_DECK_OF_WAR, {
+        1, { deck_of_battle, deck_of_summoning }
+    } },
+    { MISC_DECK_OF_CHANGES, {
+        5, { deck_of_battle, deck_of_wonders }
+    } },
+    { MISC_DECK_OF_DEFENCE, {
+        5, { deck_of_battle, deck_of_emergency }
+    } },
 };
 
 static void _check_odd_card(uint8_t flags)
@@ -376,11 +405,10 @@ card_type name_to_card(string name)
 
 static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
 {
-    vector<const deck_archetype *> *subdecks
-        = map_find(all_decks, (misc_item_type)deck_type);
+    deck_type_data *deck_data = map_find(all_decks, (misc_item_type)deck_type);
 
-    if (subdecks)
-        return *subdecks;
+    if (deck_data)
+        return deck_data->subdecks;
 
 #ifdef ASSERTS
     die("No subdecks found for %u", unsigned(deck_type));
@@ -904,7 +932,7 @@ string which_decks(card_type card)
     for (auto &deck_data : all_decks)
     {
         uint8_t deck = deck_data.first;
-        for (auto &subdeck : deck_data.second)
+        for (auto &subdeck : deck_data.second.subdecks)
         {
             if (!_card_in_deck(card, subdeck))
                 continue;
@@ -3223,6 +3251,28 @@ card_type top_card(const item_def &deck)
     UNUSED(flags);
 
     return card;
+}
+
+/// Cache deck weights.
+static vector<pair<misc_item_type, int>> _deck_weights()
+{
+    vector<pair<misc_item_type, int>> deck_weights;
+    for (auto &deck_data : all_decks)
+        if (deck_data.second.weight)
+            deck_weights.push_back({deck_data.first, deck_data.second.weight});
+    return deck_weights;
+}
+
+static const vector<pair<misc_item_type, int>> deck_weights = _deck_weights();
+
+/**
+ * Choose a random deck type for normal generation. (Not Nemelex.)
+ */
+uint8_t random_deck_type()
+{
+    const misc_item_type *deck_type = random_choose_weighted(deck_weights);
+    ASSERT(deck_type);
+    return *deck_type;
 }
 
 bool is_deck_type(uint8_t sub_type)
