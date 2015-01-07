@@ -5031,22 +5031,6 @@ static deck_rarity_type _rarity_string_to_rarity(const string& s)
     return DECK_RARITY_RANDOM;
 }
 
-static misc_item_type _deck_type_string_to_subtype(const string& s)
-{
-    if (s == "escape")      return MISC_DECK_OF_ESCAPE;
-    if (s == "destruction") return MISC_DECK_OF_DESTRUCTION;
-    if (s == "summoning")   return MISC_DECK_OF_SUMMONING;
-    if (s == "summonings")  return MISC_DECK_OF_SUMMONING;
-    if (s == "wonders")     return MISC_DECK_OF_WONDERS;
-    if (s == "punishment")  return MISC_DECK_OF_PUNISHMENT;
-    if (s == "war")         return MISC_DECK_OF_WAR;
-    if (s == "changes")     return MISC_DECK_OF_CHANGES;
-    if (s == "defence")     return MISC_DECK_OF_DEFENCE;
-
-    mprf("Unknown deck type '%s'", s.c_str());
-    return MISC_DECK_UNKNOWN;
-}
-
 void item_list::build_deck_spec(string s, item_spec* spec)
 {
     spec->base_type = OBJ_MISCELLANY;
@@ -5073,8 +5057,7 @@ void item_list::build_deck_spec(string s, item_spec* spec)
     if (word == "of")
     {
         string sub_type_str = _get_and_discard_word(&s);
-        int sub_type =
-            _deck_type_string_to_subtype(sub_type_str);
+        const int sub_type = deck_type_by_name(sub_type_str);
 
         if (sub_type == NUM_MISCELLANY)
         {

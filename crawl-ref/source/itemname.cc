@@ -937,10 +937,14 @@ const char* deck_rarity_name(deck_rarity_type rarity)
     }
 }
 
-static const char* misc_type_name(int type, bool known)
+static string misc_type_name(int type, bool known)
 {
-    if (!known && is_deck_type(type))
-        return "deck of cards";
+    if (is_deck_type(type))
+    {
+        if (!known)
+            return "deck of cards";
+        return deck_name(type);
+    }
 
     switch (static_cast<misc_item_type>(type))
     {
