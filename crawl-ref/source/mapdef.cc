@@ -5058,8 +5058,11 @@ static misc_item_type _random_deck_subtype()
         if (!is_deck(dummy))
             continue;
 
-        if (dummy.sub_type == MISC_DECK_OF_PUNISHMENT)
+        if (dummy.sub_type == MISC_DECK_OF_PUNISHMENT
+            || dummy.sub_type == MISC_DECK_OF_ODDITIES)
+        {
             continue;
+        }
 
 #if TAG_MAJOR_VERSION == 34
         if (dummy.sub_type == MISC_DECK_OF_DUNGEONS)
