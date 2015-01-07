@@ -99,6 +99,10 @@ class Conf(object):
                 except ValueError:
                     logging.warning("Skipping duplicate game definition '{0}' "
                                     "in {1}".format(game["id"], self.path))
+        else:
+            ## Need this to exist since we're sending the final games config
+            ## array to the client.
+            self.data["games"] = []
         self.load_game_conf_dir()
 
     def load_game_data(self, game):
