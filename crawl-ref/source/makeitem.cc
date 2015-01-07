@@ -1782,6 +1782,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
             (item.sub_type == MISC_RUNE_OF_ZOT
              || item.sub_type == MISC_HORN_OF_GERYON
              || item.sub_type == MISC_DECK_OF_PUNISHMENT
+             || item.sub_type == MISC_DECK_OF_ODDITIES
              || item.sub_type == MISC_QUAD_DAMAGE
 #if TAG_MAJOR_VERSION == 34
              || item.sub_type == MISC_BUGGY_EBONY_CASKET
