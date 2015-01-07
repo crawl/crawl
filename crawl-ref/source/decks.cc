@@ -216,7 +216,7 @@ static map<misc_item_type, deck_type_data> all_decks =
     } },
 #endif
     { MISC_DECK_OF_SUMMONING, {
-        "summonings",
+        "summoning",
         5, { deck_of_summoning }
     } },
     { MISC_DECK_OF_WONDERS, {
