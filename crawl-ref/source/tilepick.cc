@@ -3994,6 +3994,36 @@ static tileidx_t _tileidx_rune(const item_def &item)
 
 static tileidx_t _tileidx_misc(const item_def &item)
 {
+    if (is_deck(item))
+    {
+        tileidx_t ch = TILE_ERROR;
+        switch (item.special)
+        {
+            case DECK_RARITY_LEGENDARY:
+                ch = TILE_MISC_DECK_LEGENDARY;
+                break;
+            case DECK_RARITY_RARE:
+                ch = TILE_MISC_DECK_RARE;
+                break;
+            case DECK_RARITY_COMMON:
+            default:
+                ch = TILE_MISC_DECK;
+                break;
+        }
+
+        if (item.flags & ISFLAG_KNOW_TYPE
+#if TAG_MAJOR_VERSION == 34
+            && item.sub_type != MISC_DECK_OF_ODDITIES // non-contiguous
+#endif
+            )
+        {
+            // NOTE: order of tiles must be identical to order of decks.
+            int offset = item.sub_type - MISC_DECK_OF_ESCAPE + 1;
+            ch += offset;
+        }
+        return ch;
+    }
+
     switch (item.sub_type)
     {
 #if TAG_MAJOR_VERSION == 34
@@ -4038,41 +4068,6 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_PHANTOM_MIRROR:
         return TILE_MISC_PHANTOM_MIRROR;
 
-    case MISC_DECK_OF_ESCAPE:
-    case MISC_DECK_OF_DESTRUCTION:
-#if TAG_MAJOR_VERSION == 34
-    case MISC_DECK_OF_DUNGEONS:
-#endif
-    case MISC_DECK_OF_SUMMONING:
-    case MISC_DECK_OF_WONDERS:
-    case MISC_DECK_OF_PUNISHMENT:
-    case MISC_DECK_OF_WAR:
-    case MISC_DECK_OF_CHANGES:
-    case MISC_DECK_OF_DEFENCE:
-    case MISC_DECK_UNKNOWN:
-    {
-        tileidx_t ch = TILE_ERROR;
-        switch (item.special)
-        {
-        case DECK_RARITY_LEGENDARY:
-            ch = TILE_MISC_DECK_LEGENDARY;
-            break;
-        case DECK_RARITY_RARE:
-            ch = TILE_MISC_DECK_RARE;
-            break;
-        case DECK_RARITY_COMMON:
-        default:
-            ch = TILE_MISC_DECK;
-            break;
-        }
-        if (item.flags & ISFLAG_KNOW_TYPE)
-        {
-            // NOTE: order of tiles must be identical to order of decks.
-            int offset = item.sub_type - MISC_DECK_OF_ESCAPE + 1;
-            ch += offset;
-        }
-        return ch;
-    }
     case MISC_RUNE_OF_ZOT:
         return _tileidx_rune(item);
 
