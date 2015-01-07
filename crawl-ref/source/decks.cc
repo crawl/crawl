@@ -943,7 +943,7 @@ string which_decks(card_type card)
     bool punishment = false;
     for (auto &deck_data : all_decks)
     {
-        uint8_t deck = deck_data.first;
+        misc_item_type deck = (misc_item_type)deck_data.first;
         for (auto &subdeck : deck_data.second.subdecks)
         {
             if (!_card_in_deck(card, subdeck))
@@ -952,13 +952,8 @@ string which_decks(card_type card)
             if (deck == MISC_DECK_OF_PUNISHMENT)
                 punishment = true;
             else
-            {
-                item_def tmp;
-                tmp.base_type = OBJ_MISCELLANY;
-                tmp.sub_type = deck;
-                // 8 - "deck of "
-                decks.push_back(sub_type_string(tmp, true).substr(8));
-            }
+                decks.push_back(deck_data.second.name);
+
             break;
         }
     }
