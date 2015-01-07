@@ -948,19 +948,6 @@ static string misc_type_name(int type, bool known)
 
     switch (static_cast<misc_item_type>(type))
     {
-    case MISC_DECK_OF_ESCAPE:      return "deck of escape";
-    case MISC_DECK_OF_DESTRUCTION: return "deck of destruction";
-#if TAG_MAJOR_VERSION == 34
-    case MISC_DECK_OF_DUNGEONS:    return "deck of dungeons";
-#endif
-    case MISC_DECK_OF_SUMMONING:   return "deck of summonings";
-    case MISC_DECK_OF_WONDERS:     return "deck of wonders";
-    case MISC_DECK_OF_ODDITIES:    return "deck of oddities";
-    case MISC_DECK_OF_PUNISHMENT:  return "deck of punishment";
-    case MISC_DECK_OF_WAR:         return "deck of war";
-    case MISC_DECK_OF_CHANGES:     return "deck of changes";
-    case MISC_DECK_OF_DEFENCE:     return "deck of defence";
-
     case MISC_CRYSTAL_BALL_OF_ENERGY:    return "crystal ball of energy";
     case MISC_BOX_OF_BEASTS:             return "box of beasts";
 #if TAG_MAJOR_VERSION == 34
