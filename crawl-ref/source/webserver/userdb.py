@@ -165,13 +165,15 @@ def purge_login_tokens():
     try:
         conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
-        c.execute("DELETE FROM login_tokens WHERE expires<?", (int(time.time()),))
+        c.execute("DELETE FROM login_tokens WHERE expires<?",
+                  (int(time.time()),))
         conn.commit()
     finally:
         if c: c.close()
         if conn: conn.close()
 
-    for sid, session in list(sessions.items()):
+    for sid in sessions:
+        session = sessions[sid]
         if (session["expires"] < time.time() or
             session["forceexpires"] < time.time()):
             del sessions[sid]
@@ -188,6 +190,8 @@ def delete_logins(username):
         if c: c.close()
         if conn: conn.close()
 
+    # This is a python3-compatible way to list copy the items so we can delete
+    # keys.
     for sid, session in list(sessions.items()):
         if session.get("username") == username:
             del sessions[sid]
@@ -202,8 +206,8 @@ def token_login(cookie, logger=logging):
     try:
         conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
-        c.execute("SELECT token, expires FROM login_tokens WHERE username=? AND seqid=?",
-                  (username, seqid))
+        c.execute("SELECT token, expires FROM login_tokens WHERE username=? "
+                  "AND seqid=?", (username, seqid))
         result = c.fetchone()
         c.execute("DELETE FROM login_tokens WHERE username=? AND seqid=?",
                   (username, seqid))
