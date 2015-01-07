@@ -2841,6 +2841,11 @@ int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
     mon.moveto(daddy->pos());
     define_monster(&mon);
     mon.flags = daddy->flags;
+
+    // Need to copy ENCH_ABJ etc. or we could get real XP/meat from a summon.
+    mon.enchantments = daddy->enchantments;
+    mon.ench_cache = daddy->ench_cache;
+
     mon.attitude = daddy->attitude;
     mon.damage_friendly = daddy->damage_friendly;
     mon.damage_total = daddy->damage_total;
