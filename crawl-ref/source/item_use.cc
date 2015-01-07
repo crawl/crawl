@@ -2599,9 +2599,11 @@ void read(int slot)
     // scroll effect kicks in.
     if (player_mutation_level(MUT_BLURRY_VISION))
     {
-        // takes 1, 2, 3 extra turns
-        const int turns = player_mutation_level(MUT_BLURRY_VISION);
+        // takes 0.5, 1, 2 extra turns
+        const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
         start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
+        if (player_mutation_level(MUT_BLURRY_VISION) == 1)
+            you.time_taken /= 2;
     }
     else
         read_scroll(item_slot);
