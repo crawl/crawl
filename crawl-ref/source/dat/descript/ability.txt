@@ -432,7 +432,7 @@ would usually prevent translocations.
 %%%%
 Banish ability
 
-Attempt to banish a monster into the Abyss.
+Attempt to banish a creature into the Abyss.
 %%%%
 Corrupt ability
 
