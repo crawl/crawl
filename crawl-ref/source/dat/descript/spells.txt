@@ -1153,7 +1153,7 @@ Breathes a blast of flame that leaves a cloud of fire where it ends up.
 Sentinel's Mark spell
 
 This spell bestows a strong beacon upon an enemy. It announces the presence and
-location of the marked person to everyone on the same same dungeon level.
+location of the marked person to everyone on the same dungeon level.
 %%%%
 Shadow Bolt spell
 
