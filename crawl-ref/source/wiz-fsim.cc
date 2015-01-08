@@ -52,14 +52,14 @@ static const char* _title_line =
 static const char* _csv_title_line =
     "AvHitDam\tMaxDam\tAccuracy\tAvDam\tAvTime\tAvSpeed\tAvEffDam";
 
-static const char* _fight_string(fight_data fdata, bool csv)
+static string _fight_string(fight_data fdata, bool csv)
 {
     return make_stringf(csv ? "%.1f\t%d\t%d%%\t%.1f\t%d\t%.2f\t%.1f"
                             : "   %5.1f |    %3d |     %3d%% |"
                               " %5.1f |   %3d  | %5.2f |    %5.1f",
                         fdata.av_hit_dam, fdata.max_dam, fdata.accuracy,
                         fdata.av_dam, fdata.av_time, fdata.av_speed,
-                        fdata.av_eff_dam).c_str();
+                        fdata.av_eff_dam);
 }
 
 static skill_type _equipped_skill()
@@ -449,10 +449,10 @@ void wizard_quick_fsim()
     const int iter_limit = Options.fsim_rounds;
     fight_data fdata = _get_fight_data(*mon, iter_limit, false);
     mprf("           %s\nAttacking: %s", _title_line,
-         _fight_string(fdata, false));
+         _fight_string(fdata, false).c_str());
 
     fdata = _get_fight_data(*mon, iter_limit, true);
-    mprf("Defending: %s", _fight_string(fdata, false));
+    mprf("Defending: %s", _fight_string(fdata, false).c_str());
 
     _uninit_fsim(mon);
     return;
@@ -546,10 +546,10 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
 
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
         const string line = make_stringf("        %2d | %s", i,
-                                         _fight_string(fdata, false));
+                                         _fight_string(fdata, false).c_str());
         mpr(line);
         if (Options.fsim_csv)
-            fprintf(o, "%d\t%s\n", i, _fight_string(fdata, true));
+            fprintf(o, "%d\t%s\n", i, _fight_string(fdata, true).c_str());
         else
             fprintf(o, "%s\n", line.c_str());
         fflush(o);
