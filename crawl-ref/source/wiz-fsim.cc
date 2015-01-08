@@ -351,6 +351,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     const int hunger = you.hunger;
 
     const coord_def start_pos = mon.pos();
+    const coord_def you_start_pos = you.pos();
 
     if (!defend) // you're the attacker
     {
@@ -360,8 +361,10 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             you.stop_constricting(mon.mid, false, true);
             // This sets mgrid(mons.pos()) to NON_MONSTER
             mon = orig;
-            // Re-place the monster if it e.g. blinked away.
+            // Re-place the combatants if they e.g. blinked away or were
+            // trampled.
             mon.move_to_pos(start_pos);
+            you.move_to_pos(you_start_pos);
             mon.hit_points = mon.max_hit_points;
             mon.shield_blocks = 0;
             you.time_taken = player_speed();
@@ -414,8 +417,10 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             if (damage > fdata.max_dam)
                 fdata.max_dam = damage;
 
-            // Re-place the monster if it e.g. blinked away.
+            // Re-place the combatants if they e.g. blinked away or were
+            // trampled.
             mon.move_to_pos(start_pos);
+            you.move_to_pos(you_start_pos);
         }
         you.hp = yhp;
         you.hp_max = ymhp;
