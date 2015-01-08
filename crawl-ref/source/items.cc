@@ -3839,7 +3839,7 @@ colour_t item_def::miscellany_colour() const
 {
     ASSERT(base_type == OBJ_MISCELLANY);
 
-    if (is_deck(*this) || sub_type == MISC_DECK_UNKNOWN)
+    if (is_deck(*this, true))
         return deck_rarity_to_colour(deck_rarity);
 
     if (item_is_rune(*this))

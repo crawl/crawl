@@ -939,7 +939,7 @@ const char* deck_rarity_name(deck_rarity_type rarity)
 
 static string misc_type_name(int type, bool known)
 {
-    if (is_deck_type(type))
+    if (is_deck_type(type, true))
     {
         if (!known)
             return "deck of cards";
@@ -2513,11 +2513,8 @@ void check_item_knowledge(bool unknown_items)
                 }
 
                 // stupid fake decks
-                if (is_deck(*ptmp)
-                    || ptmp->is_type(OBJ_MISCELLANY, NUM_MISCELLANY))
-                {
+                if (is_deck(*ptmp, true))
                     ptmp->deck_rarity = DECK_RARITY_COMMON;
-                }
 
                 items_other.push_back(ptmp);
 
