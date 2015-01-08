@@ -3315,14 +3315,16 @@ uint8_t random_deck_type()
     return *deck_type;
 }
 
-bool is_deck_type(uint8_t sub_type)
+bool is_deck_type(uint8_t sub_type, bool allow_unided)
 {
-    return map_find(all_decks, (misc_item_type)sub_type) != nullptr;
+    return allow_unided && sub_type == MISC_DECK_UNKNOWN
+           || map_find(all_decks, (misc_item_type)sub_type) != nullptr;
 }
 
-bool is_deck(const item_def &item)
+bool is_deck(const item_def &item, bool iinfo)
 {
-    return item.base_type == OBJ_MISCELLANY && is_deck_type(item.sub_type);
+    return item.base_type == OBJ_MISCELLANY
+           && is_deck_type(item.sub_type, iinfo);
 }
 
 bool bad_deck(const item_def &item)

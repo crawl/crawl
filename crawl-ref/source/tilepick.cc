@@ -3994,7 +3994,7 @@ static tileidx_t _tileidx_rune(const item_def &item)
 
 static tileidx_t _tileidx_misc(const item_def &item)
 {
-    if (is_deck(item))
+    if (is_deck(item, true))
     {
         tileidx_t ch = TILE_ERROR;
         switch (item.special)
