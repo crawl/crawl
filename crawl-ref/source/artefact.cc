@@ -414,6 +414,71 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
     proprt[ARTP_STEALTH] += armour_type_bonus_stealth(arm) / STEALTH_PIP;
 }
 
+/// The artefact properties corresponding to a given piece of jewellery.
+struct jewellery_fake_artp
+{
+    /// The artp matching the jewellery (e.g. ARTP_AC for RING_PROTECTION)
+    artefact_prop_type  artp;
+    /// The value of the artp. (E.g. '9' for RING_MAGICAL_POWER.) If set to 0, uses item.plus instead.
+    int                 plus;
+};
+
+static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
+    { AMU_RAGE, { { ARTP_BERSERK, 1 } } },
+    { AMU_WARDING, { { ARTP_NEGATIVE_ENERGY, 1 } } },
+    { AMU_REGENERATION, { { ARTP_REGENERATION, 1 } } },
+
+    { RING_INVISIBILITY, { { ARTP_INVISIBLE, 1 } } },
+    { RING_MAGICAL_POWER, { { ARTP_MAGICAL_POWER, 9 } } },
+    { RING_FLIGHT, { { ARTP_FLY, 1 } } },
+    { RING_SEE_INVISIBLE, { { ARTP_EYESIGHT, 1 } } },
+    { RING_STEALTH, { { ARTP_STEALTH, 1 } } },
+    { RING_LOUDNESS, { { ARTP_STEALTH, -1 } } },
+
+    { RING_PROTECTION_FROM_FIRE, { { ARTP_FIRE, 1 } } },
+    { RING_PROTECTION_FROM_COLD, { { ARTP_COLD, 1 } } },
+    { RING_POISON_RESISTANCE, { { ARTP_POISON, 1 } } },
+    { RING_LIFE_PROTECTION, { { ARTP_NEGATIVE_ENERGY, 1 } } },
+    { RING_PROTECTION_FROM_MAGIC, { { ARTP_MAGIC, 1 } } },
+
+    { RING_FIRE, { { ARTP_FIRE, 1 }, { ARTP_COLD, -1 } } },
+    { RING_ICE, { { ARTP_COLD, 1 }, { ARTP_FIRE, -1 } } },
+
+    { RING_STRENGTH, { { ARTP_STRENGTH, 0 } } },
+    { RING_INTELLIGENCE, { { ARTP_INTELLIGENCE, 0 } } },
+    { RING_DEXTERITY, { { ARTP_DEXTERITY, 0 } } },
+    { RING_PROTECTION, { { ARTP_AC, 0 } } },
+    { RING_EVASION, { { ARTP_EVASION, 0 } } },
+    { RING_SLAYING, { { ARTP_SLAYING, 0 } } },
+};
+
+/**
+ * Fill out the inherent ARTPs corresponding to a given type of jewellery.
+ *
+ * @param arm           The jewellery in question.
+ * @param proprt[out]   The properties list to be populated.
+ * @param known[out]    The props which are known.
+ */
+static void _populate_jewel_intrininsic_artps(const item_def &item,
+                                              artefact_properties_t &proprt,
+                                              artefact_known_props_t &known)
+{
+    const jewellery_type jewel = (jewellery_type)item.sub_type;
+    vector<jewellery_fake_artp> *props = map_find(jewellery_artps, jewel);
+    if (!props)
+        return;
+
+    const bool id_props = item_ident(item, ISFLAG_KNOW_PROPERTIES)
+                            || item_ident(item, ISFLAG_KNOW_TYPE);
+
+    for (const auto &fake_artp : *props)
+    {
+        proprt[fake_artp.artp] += fake_artp.plus ? fake_artp.plus : item.plus;
+        if (id_props)
+            known[fake_artp.artp] = true;
+    }
+}
+
 void artefact_desc_properties(const item_def &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known)
@@ -422,159 +487,21 @@ void artefact_desc_properties(const item_def &item,
     if (item.base_type == OBJ_BOOKS)
         return;
 
+    // actual artefact properties
     artefact_wpn_properties(item, proprt, known);
 
-    if (item.base_type == OBJ_ARMOUR)
-        _populate_armour_intrinsic_artps((armour_type)item.sub_type, proprt);
-
-    // Only jewellery need fake randart properties.
-    if (item.base_type != OBJ_JEWELLERY)
-        return;
-
-    artefact_prop_type fake_rap  = ARTP_NUM_PROPERTIES;
-    int               fake_plus = 1;
-
-    // XXX has to match player-equip.cc:_equip_jewelry_effect(), sort-of (SamB)
-    switch (item.sub_type)
+    // fake artefact properties (intrinsics)
+    switch (item.base_type)
     {
-    case RING_INVISIBILITY:
-        fake_rap = ARTP_INVISIBLE;
-        break;
-
-    case RING_MAGICAL_POWER:
-        fake_rap  = ARTP_MAGICAL_POWER;
-        fake_plus = 9;
-        break;
-
-    case RING_FLIGHT:
-        fake_rap = ARTP_FLY;
-        break;
-
-    case AMU_RAGE:
-        fake_rap = ARTP_BERSERK;
-        break;
-    }
-
-    if (fake_rap != ARTP_NUM_PROPERTIES)
-    {
-        proprt[fake_rap] += fake_plus;
-
-        if (item_ident(item, ISFLAG_KNOW_PROPERTIES)
-            || item_ident(item, ISFLAG_KNOW_TYPE))
-        {
-            known[fake_rap] = true;
-        }
-
-        return;
-    }
-
-    // For auto-inscribing randart jewellery, fold as
-    // much info about the base type as possible into the randarts
-    // property struct.
-
-    artefact_prop_type fake_rap2  = ARTP_NUM_PROPERTIES;
-    int               fake_plus2 = 1;
-
-    switch (item.sub_type)
-    {
-    case AMU_WARDING:
-        fake_rap = ARTP_NEGATIVE_ENERGY;
-        break;
-
-    case AMU_REGENERATION:
-        fake_rap = ARTP_REGENERATION;
-        break;
-
-    case RING_PROTECTION:
-        fake_rap  = ARTP_AC;
-        fake_plus = item.plus;
-        break;
-
-    case RING_PROTECTION_FROM_FIRE:
-        fake_rap = ARTP_FIRE;
-        break;
-
-    case RING_POISON_RESISTANCE:
-        fake_rap = ARTP_POISON;
-        break;
-
-    case RING_PROTECTION_FROM_COLD:
-        fake_rap = ARTP_COLD;
-        break;
-
-    case RING_SLAYING:
-        fake_rap  = ARTP_SLAYING;
-        fake_plus = item.plus;
-        break;
-
-    case RING_SEE_INVISIBLE:
-        fake_rap = ARTP_EYESIGHT;
-        break;
-
-    case RING_LOUDNESS:
-        fake_rap = ARTP_STEALTH;
-        fake_plus = -1;
-        break;
-
-    case RING_STEALTH:
-        fake_rap = ARTP_STEALTH;
-        break;
-
-    case RING_EVASION:
-        fake_rap  = ARTP_EVASION;
-        fake_plus = item.plus;
-        break;
-
-    case RING_STRENGTH:
-        fake_rap  = ARTP_STRENGTH;
-        fake_plus = item.plus;
-        break;
-
-    case RING_INTELLIGENCE:
-        fake_rap  = ARTP_INTELLIGENCE;
-        fake_plus = item.plus;
-        break;
-
-    case RING_DEXTERITY:
-        fake_rap  = ARTP_DEXTERITY;
-        fake_plus = item.plus;
-        break;
-
-    case RING_LIFE_PROTECTION:
-        fake_rap = ARTP_NEGATIVE_ENERGY;
-        break;
-
-    case RING_PROTECTION_FROM_MAGIC:
-        fake_rap = ARTP_MAGIC;
-        break;
-
-    case RING_FIRE:
-        fake_rap   = ARTP_FIRE;
-        fake_rap2  = ARTP_COLD;
-        fake_plus2 = -1;
-        break;
-
-    case RING_ICE:
-        fake_rap   = ARTP_COLD;
-        fake_rap2  = ARTP_FIRE;
-        fake_plus2 = -1;
-        break;
-    }
-
-    if (fake_rap != ARTP_NUM_PROPERTIES && fake_plus != 0)
-        proprt[fake_rap] += fake_plus;
-
-    if (fake_rap2 != ARTP_NUM_PROPERTIES && fake_plus2 != 0)
-        proprt[fake_rap2] += fake_plus2;
-
-    if (item_ident(item, ISFLAG_KNOW_PROPERTIES)
-        || item_ident(item, ISFLAG_KNOW_TYPE))
-    {
-        if (fake_rap != ARTP_NUM_PROPERTIES && proprt[fake_rap] != 0)
-            known[fake_rap] = true;
-
-        if (fake_rap2 != ARTP_NUM_PROPERTIES && proprt[fake_rap2] != 0)
-            known[fake_rap2] = true;
+        case OBJ_ARMOUR:
+            _populate_armour_intrinsic_artps((armour_type)item.sub_type,
+                                             proprt);
+            break;
+        case OBJ_JEWELLERY:
+            _populate_jewel_intrininsic_artps(item, proprt, known);
+            break;
+        default:
+            break;
     }
 }
 
