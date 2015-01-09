@@ -730,6 +730,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
                         || item_type != ARM_NAGA_BARDING);
         case ARTP_RCORR:
             return item_class == OBJ_ARMOUR;
+        case ARTP_REGENERATION:
+            return item_class == OBJ_ARMOUR
+                || item_type != ARM_TROLL_LEATHER_ARMOUR;
         case ARTP_INVISIBLE:
             return item_class != OBJ_JEWELLERY
                     || item_type != RING_INVISIBILITY;
@@ -900,6 +903,14 @@ static void _get_randart_properties(const item_def &item,
                     {
                         prop_is_good = false;
                         value = 5;
+                        valid = true;
+                    }
+                    break;
+
+                case ARTP_REGENERATION:
+                    if (good > 0)
+                    {
+                        value = 40;
                         valid = true;
                     }
                     break;
