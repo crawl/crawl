@@ -409,37 +409,13 @@ void artefact_desc_properties(const item_def &item,
 
     if (item.base_type == OBJ_ARMOUR)
     {
-        switch (item.sub_type)
-        {
-        case ARM_QUICKSILVER_DRAGON_ARMOUR:
-            ++proprt[ARTP_MAGIC];
-            break;
-        case ARM_SWAMP_DRAGON_ARMOUR:
-            ++proprt[ARTP_POISON];
-            break;
-        case ARM_FIRE_DRAGON_ARMOUR:
-            proprt[ARTP_FIRE] += 2;
-            --proprt[ARTP_COLD];
-            break;
-        case ARM_ICE_DRAGON_ARMOUR:
-            --proprt[ARTP_FIRE];
-            proprt[ARTP_COLD] += 2;
-            break;
-        case ARM_PEARL_DRAGON_ARMOUR:
-            ++proprt[ARTP_NEGATIVE_ENERGY];
-            break;
-        case ARM_STORM_DRAGON_ARMOUR:
-            ++proprt[ARTP_ELECTRICITY];
-            break;
-        case ARM_SHADOW_DRAGON_ARMOUR:
-            proprt[ARTP_STEALTH] += 4;
-            break;
-        case ARM_GOLD_DRAGON_ARMOUR:
-            ++proprt[ARTP_POISON];
-            ++proprt[ARTP_FIRE];
-            ++proprt[ARTP_COLD];
-            break;
-        }
+        proprt[ARTP_FIRE] += armour_type_res_fire(item.sub_type);
+        proprt[ARTP_COLD] += armour_type_res_cold(item.sub_type);
+        proprt[ARTP_NEGATIVE_ENERGY] += armour_type_res_neg(item.sub_type);
+        proprt[ARTP_POISON] += armour_type_res_poison(item.sub_type) ? 1 : 0;
+        proprt[ARTP_ELECTRICITY] += armour_type_res_elec(item.sub_type) ? 1 : 0;
+        proprt[ARTP_MAGIC] += armour_type_res_magic(item.sub_type) / MR_PIP;
+        proprt[ARTP_STEALTH] += armour_type_bonus_stealth(item.sub_type) / STEALTH_PIP;
     }
 
     if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
