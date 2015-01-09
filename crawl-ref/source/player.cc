@@ -6898,10 +6898,14 @@ int player_res_magic(bool calc_unid, bool temp)
     // randarts
     rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC, calc_unid);
 
-    // armour
+    // body armour
     const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
     if (body_armour)
         rm += armour_type_res_magic(body_armour->sub_type);
+
+    // ego armours
+    rm += MR_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
+                                   calc_unid);
 
     // rings of magic resistance
     rm += MR_PIP * you.wearing(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
