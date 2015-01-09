@@ -723,6 +723,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
         case ARTP_PREVENT_SPELLCASTING:
         case ARTP_MUTAGENIC:
         case ARTP_HP:
+        case ARTP_TWISTER:
             return true;
         case ARTP_EYESIGHT:
             return (item_class != OBJ_JEWELLERY
@@ -873,6 +874,15 @@ static void _get_randart_properties(const item_def &item,
                     {
                         value = 1;
                         valid = true;
+                    }
+                    break;
+
+                case ARTP_TWISTER:
+                    if (good > 1)
+                    {
+                        value = 1;
+                        valid = true;
+                        good--; // costs a little extra goodness.
                     }
                     break;
 

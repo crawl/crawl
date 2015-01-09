@@ -294,6 +294,7 @@ static const char* _prop_name[] =
     "noupgr",
     "rCorr",
     "rMut",
+    "+Twstr",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -352,6 +353,7 @@ static int8_t _prop_type[] =
     ARTP_VAL_BOOL, //NO_UPGRADE
     ARTP_VAL_BOOL, //RCORR
     ARTP_VAL_BOOL, //RMUT
+    ARTP_VAL_BOOL, //TWISTER
 };
 
 static void _tweak_randart(item_def &item)
@@ -1387,6 +1389,7 @@ static void _debug_rap_stats(FILE *ostat)
          0, //ARTP_NO_UPGRADE
          1, //ARTP_RCORR
          1, //ARTP_RMUT
+         1, //ARTP_TWISTER
     };
     COMPILE_CHECK(ARRAYSZ(good_or_bad) == ARTP_NUM_PROPERTIES);
 
@@ -1549,6 +1552,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_NO_UPGRADE",
         "ARTP_RCORR",
         "ARTP_RMUT",
+        "ARTP_TWISTER",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

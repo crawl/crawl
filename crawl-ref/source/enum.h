@@ -179,7 +179,8 @@ enum ability_type
 #endif
     ABIL_EVOKE_FOG,
     ABIL_EVOKE_TELEPORT_CONTROL,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_TELEPORT_CONTROL,
+    ABIL_EVOKE_TWISTER,
+    ABIL_MAX_EVOKE = ABIL_EVOKE_TWISTER,
 
     // Divine abilities
     // Zin
@@ -3742,8 +3743,9 @@ enum gender_type
     NUM_GENDERS
 };
 
-// Be sure to update _prop_name[] in wiz-item.cc to match.  Also
-// _randart_propnames(), but order doesn't matter there.
+// Be sure to update _prop_name[] and good_or_bad[] and _prop_type[] in
+// wiz-item.cc to match.  Also _randart_propnames(), but order doesn't matter
+// there.
 enum artefact_prop_type
 {
     ARTP_BRAND,
@@ -3796,6 +3798,7 @@ enum artefact_prop_type
     ARTP_NO_UPGRADE,
     ARTP_RCORR,
     ARTP_RMUT,
+    ARTP_TWISTER,
     ARTP_NUM_PROPERTIES
 };
 
