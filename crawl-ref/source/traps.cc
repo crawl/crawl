@@ -535,7 +535,7 @@ bool trap_def::weave_shadow(const actor& triggerer)
  * Trigger a shadow creature trap.
  *
  * Temporarily summons some number of shadow creatures/bands from the current
- * level. On d:1, summons 2; otherwise summons 3-5, increasing with depth.
+ * level. 3-5 creatures/bands, increasing with depth.
  *
  * @param triggerer     The creature that set off the trap.
  */
@@ -550,9 +550,7 @@ void trap_def::trigger_shadow_trap(const actor& triggerer)
     if (!you.see_cell(pos))
         return;
 
-    const int to_summon =
-        (env.absdepth0 == 0) ? 2
-                             : 3 + div_rand_round(env.absdepth0, 16);
+    const int to_summon = 3 + div_rand_round(env.absdepth0, 16);
     dprf ("summoning %d dudes from %d", to_summon, env.absdepth0);
 
     bool summoned_any = false;
