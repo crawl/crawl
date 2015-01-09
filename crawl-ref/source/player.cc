@@ -1487,12 +1487,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += you.wearing(EQ_STAFF, STAFF_FIRE, calc_unid);
 
         // body armour:
-        rf += 2 * you.wearing(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
-        rf += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rf -= you.wearing(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
-        rf += 2 * you.wearing(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
-        rf += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rf -= you.wearing(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            rf += armour_type_res_fire(body_armour->sub_type);
 
         // ego armours
         rf += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE);
@@ -1563,10 +1560,8 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
     if (you.species == SP_PALE_DRACONIAN)
         res += 2;
 
-    if (items && you.wearing(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
-        res += 2;
-
-    if (items && you.wearing(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_HIDE))
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (body_armour && armour_type_res_steam(body_armour->sub_type))
         res += 2;
 
     res += (rf < 0) ? rf
@@ -1622,12 +1617,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += you.wearing(EQ_STAFF, STAFF_COLD, calc_unid);
 
         // body armour:
-        rc += 2 * you.wearing(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
-        rc += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rc -= you.wearing(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
-        rc += 2 * you.wearing(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
-        rc += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rc -= you.wearing(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            rc += armour_type_res_cold(body_armour->sub_type);
 
         // ego armours
         rc += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE);
@@ -1711,8 +1703,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re += you.wearing(EQ_STAFF, STAFF_AIR, calc_unid);
 
         // body armour:
-        re += you.wearing(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR);
-        re += you.wearing(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            re += armour_type_res_elec(body_armour->sub_type);
 
         // randart weapons:
         re += you.scan_artefacts(ARTP_ELECTRICITY, calc_unid);
@@ -1828,10 +1821,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         rp += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
 
         // body armour:
-        rp += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rp += you.wearing(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR);
-        rp += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rp += you.wearing(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            rp += armour_type_res_poison(body_armour->sub_type);
 
         // randart weapons:
         rp += you.scan_artefacts(ARTP_POISON, calc_unid);
@@ -1883,9 +1875,8 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
     if (you.species == SP_MOTTLED_DRACONIAN)
         rsf++;
 
-    if (items && you.wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
-        rsf++;
-    if (items && you.wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_HIDE))
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (body_armour && armour_type_res_sticky_flame(body_armour->sub_type))
         rsf++;
 
     // dragonskin cloak: 0.5 to draconic resistances
@@ -2115,8 +2106,9 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         pl += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
         // pearl dragon counts
-        pl += you.wearing(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_ARMOUR);
-        pl += you.wearing(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            pl += armour_type_res_neg(body_armour->sub_type);
 
         // randart wpns
         pl += you.scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
@@ -3687,10 +3679,9 @@ int check_stealth()
     stealth += STEALTH_PIP * you.wearing(EQ_RINGS, RING_STEALTH);
     stealth -= STEALTH_PIP * you.wearing(EQ_RINGS, RING_LOUDNESS);
 
-    stealth += STEALTH_PIP * 4
-               * you.wearing(EQ_BODY_ARMOUR, ARM_SHADOW_DRAGON_ARMOUR);
-    stealth += STEALTH_PIP * 4
-               * you.wearing(EQ_BODY_ARMOUR, ARM_SHADOW_DRAGON_HIDE);
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (body_armour)
+        stealth += armour_type_bonus_stealth(body_armour->sub_type);
 
     if (you.duration[DUR_STEALTH])
         stealth += STEALTH_PIP * 2;
@@ -6908,9 +6899,9 @@ int player_res_magic(bool calc_unid, bool temp)
     rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC, calc_unid);
 
     // armour
-    rm += MR_PIP * you.wearing(EQ_BODY_ARMOUR, ARM_QUICKSILVER_DRAGON_ARMOUR);
-    rm += MR_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
-                                   calc_unid);
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (body_armour)
+        rm += armour_type_res_magic(body_armour->sub_type);
 
     // rings of magic resistance
     rm += MR_PIP * you.wearing(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);

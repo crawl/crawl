@@ -163,6 +163,16 @@ bool can_cut_meat(const item_def &item) PURE;
 bool is_fruit(const item_def &item) PURE;
 
 // generic item property functions:
+int armour_type_res_fire(const uint8_t armour_type) PURE;
+int armour_type_res_cold(const uint8_t armour_type) PURE;
+int armour_type_res_neg(const uint8_t armour_type) PURE;
+int armour_type_bonus_stealth(const uint8_t armour_type) PURE;
+int armour_type_res_magic(const uint8_t armour_type) PURE;
+bool armour_type_res_elec(const uint8_t armour_type) PURE;
+bool armour_type_res_poison(const uint8_t armour_type) PURE;
+bool armour_type_res_sticky_flame(const uint8_t armour_type) PURE;
+bool armour_type_res_steam(const uint8_t armour_type) PURE;
+
 int get_armour_res_fire(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_cold(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_poison(const item_def &arm, bool check_artp) PURE;
