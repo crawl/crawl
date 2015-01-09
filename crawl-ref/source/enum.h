@@ -22,7 +22,16 @@ public:
     template<class ... Es>
     enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
 
-    operator underlying_type () const { return flags; }
+    explicit operator underlying_type () const { return flags; }
+    explicit operator bool () const { return flags; }
+    bool operator==(enum_bitfield<E> other) const
+    {
+        return flags == other.flags;
+    }
+    bool operator!=(enum_bitfield<E> other) const
+    {
+        return !(*this == other);
+    }
 
     enum_bitfield<E> &operator|=(enum_bitfield<E> other)
     {
