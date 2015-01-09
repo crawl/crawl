@@ -812,7 +812,9 @@ static void _get_randart_properties(const item_def &item,
                 case ARTP_STRENGTH:
                 case ARTP_INTELLIGENCE:
                 case ARTP_DEXTERITY:
-                    value = 1 + random2avg(6, 2);
+                    value = 2 + random2(5);
+                    if (one_chance_in(4))
+                        value += 1 + random2(4); // max value +10
                     if (good > 0 && (coinflip() || bad == 0))
                         valid = true;
                     else if (bad > 0)
