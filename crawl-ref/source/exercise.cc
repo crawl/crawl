@@ -189,7 +189,7 @@ static void _exercise_spell(spell_type spell, bool success)
     // (!success) reduces skill increase for miscast spells
     int workout = 0;
 
-    unsigned int disciplines = get_spell_disciplines(spell);
+    spschools_type disciplines = get_spell_disciplines(spell);
 
     int skillcount = count_bits(disciplines);
 
@@ -205,10 +205,11 @@ static void _exercise_spell(spell_type spell, bool success)
     vector<skill_type> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
-        if (!spell_typematch(spell, 1 << ndx))
+        auto bit = static_cast<spschool_flag_type>(1 << ndx);
+        if (!spell_typematch(spell, bit))
             continue;
 
-        skill_type skill = spell_type2skill(1 << ndx);
+        skill_type skill = spell_type2skill(bit);
         if (skill == SK_CONJURATIONS)
             conj = true;
 
