@@ -47,17 +47,20 @@ enum armour_flags
     ARMF_RES_FIRE           = 1 << 0,
     ARMF_RES_COLD           = 1 << 3,
     ARMF_RES_NEG            = 1 << 6,
-    ARMF_RES_MAGIC          = 1 << 9,
-    // boolean resists
-    ARMF_RES_ELEC           = 1 << 10,
-    ARMF_RES_POISON         = 1 << 11,
-    ARMF_RES_STICKY_FLAME   = 1 << 12,
-    ARMF_RES_STEAM          = 1 << 13,
-    // vulnerabilities
-    ARMF_VUL_FIRE           = ard(MR_RES_FIRE, -1),
-    ARMF_VUL_COLD           = ard(MR_RES_COLD, -1),
     // misc (multilevel)
-    ARMF_STEALTH            = 1 << 16,
+    ARMF_STEALTH            = 1 << 9,
+
+    ARMF_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
+
+    // boolean resists
+    ARMF_RES_MAGIC          = 1 << 17,
+    ARMF_RES_ELEC           = 1 << 18,
+    ARMF_RES_POISON         = 1 << 19,
+    ARMF_RES_STICKY_FLAME   = 1 << 20,
+    ARMF_RES_STEAM          = 1 << 21,
+    // vulnerabilities
+    ARMF_VUL_FIRE           = ard(ARMF_RES_FIRE, -1),
+    ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
 };
 
 // XXX: Name strings in most of the following are currently unused!
@@ -76,6 +79,17 @@ struct armour_def
     /// The resists, vulns, &c that this armour type gives when worn.
     armflags_t          flags;
 };
+
+/// witchcraft. copied from mon-util.h's get_resist
+static inline int _get_armour_flag(armflags_t all, armour_flags res)
+{
+    if (res > ARMF_LAST_MULTI)
+        return all & res ? 1 : 0;
+    int v = (all / res) & 7;
+    if (v > 4)
+        return v - 8;
+    return v;
+}
 
 // Note: the Little-Giant range is used to make armours which are very
 // flexible and adjustable and can be worn by any player character...
@@ -2272,23 +2286,7 @@ int get_armour_res_fire(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_FIRE_DRAGON_ARMOUR:
-    case ARM_FIRE_DRAGON_HIDE:
-        res += 2;
-        break;
-    case ARM_GOLD_DRAGON_ARMOUR:
-    case ARM_GOLD_DRAGON_HIDE:
-        res += 1;
-        break;
-    case ARM_ICE_DRAGON_ARMOUR:
-    case ARM_ICE_DRAGON_HIDE:
-        res -= 1;
-        break;
-    default:
-        break;
-    }
+    res += armour_type_res_fire(arm.sub_type);
 
     // check ego resistance
     const int ego = get_armour_ego_type(arm);
@@ -2308,23 +2306,7 @@ int get_armour_res_cold(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_ICE_DRAGON_ARMOUR:
-    case ARM_ICE_DRAGON_HIDE:
-        res += 2;
-        break;
-    case ARM_GOLD_DRAGON_ARMOUR:
-    case ARM_GOLD_DRAGON_HIDE:
-        res += 1;
-        break;
-    case ARM_FIRE_DRAGON_ARMOUR:
-    case ARM_FIRE_DRAGON_HIDE:
-        res -= 1;
-        break;
-    default:
-        break;
-    }
+    res += armour_type_res_cold(arm.sub_type);
 
     // check ego resistance
     const int ego = get_armour_ego_type(arm);
@@ -2344,19 +2326,7 @@ int get_armour_res_poison(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_SWAMP_DRAGON_ARMOUR:
-    case ARM_SWAMP_DRAGON_HIDE:
-        res += 1;
-        break;
-    case ARM_GOLD_DRAGON_ARMOUR:
-    case ARM_GOLD_DRAGON_HIDE:
-        res += 1;
-        break;
-    default:
-        break;
-    }
+    res += armour_type_res_poison(arm.sub_type);
 
     // check ego resistance
     if (get_armour_ego_type(arm) == SPARM_POISON_RESISTANCE)
@@ -2375,15 +2345,7 @@ int get_armour_res_elec(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_STORM_DRAGON_ARMOUR:
-    case ARM_STORM_DRAGON_HIDE:
-        res += 1;
-        break;
-    default:
-        break;
-    }
+    res += armour_type_res_elec(arm.sub_type);
 
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_ELECTRICITY);
@@ -2397,9 +2359,8 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
 
     int res = 0;
 
-    // Pearl dragon armour grants rN+.
-    if (arm.sub_type == ARM_PEARL_DRAGON_ARMOUR)
-        res += 1;
+    // intrinsci armour abilities
+    res += armour_type_res_neg(arm.sub_type);
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)
@@ -2417,12 +2378,15 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
 
     int res = 0;
 
+    // intrinsci armour abilities
+    res += armour_type_res_magic(arm.sub_type);
+
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_MAGIC_RESISTANCE)
-        res += 40;
+        res += MR_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += 40 * artefact_wpn_property(arm, ARTP_MAGIC);
+        res += MR_PIP * artefact_wpn_property(arm, ARTP_MAGIC);
 
     return res;
 }
@@ -2445,15 +2409,8 @@ int get_armour_res_sticky_flame(const item_def &arm)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
-    // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-    case ARM_MOTTLED_DRAGON_HIDE:
-        return 1;
-    default:
-        return 0;
-    }
+    // intrinsci armour abilities
+    return armour_type_res_sticky_flame(arm.sub_type);
 }
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp)
@@ -3014,4 +2971,58 @@ int remove_oldest_xp_evoker(item_def &stack, int quant)
     stack.evoker_debt -= XP_EVOKE_DEBT * num_inert;
     new_stack_debt += XP_EVOKE_DEBT * num_inert;
     return new_stack_debt;
+}
+
+
+static armflags_t _armour_type_flags(const uint8_t armour_type)
+{
+    return Armour_prop[ Armour_index[armour_type] ].flags;
+}
+
+int armour_type_res_fire(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_FIRE);
+}
+
+int armour_type_res_cold(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_COLD);
+}
+
+bool armour_type_res_poison(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_POISON);
+}
+
+bool armour_type_res_elec(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_ELEC);
+}
+
+int armour_type_res_neg(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_NEG);
+}
+
+int armour_type_res_magic(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_MAGIC)
+            * MR_PIP;
+}
+
+int armour_type_bonus_stealth(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_STEALTH)
+            * STEALTH_PIP;
+}
+
+bool armour_type_res_sticky_flame(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type),
+                            ARMF_RES_STICKY_FLAME);
+}
+
+bool armour_type_res_steam(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_STEAM);
 }
