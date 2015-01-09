@@ -416,8 +416,7 @@ static void _populate_armour_intrinsic_artps(const armour_type arm,
 
 void artefact_desc_properties(const item_def &item,
                               artefact_properties_t &proprt,
-                              artefact_known_props_t &known,
-                              bool force_fake_props)
+                              artefact_known_props_t &known)
 {
     // Randart books have no randart properties.
     if (item.base_type == OBJ_BOOKS)
@@ -427,9 +426,6 @@ void artefact_desc_properties(const item_def &item,
 
     if (item.base_type == OBJ_ARMOUR)
         _populate_armour_intrinsic_artps((armour_type)item.sub_type, proprt);
-
-    if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
-        return;
 
     // Only jewellery need fake randart properties.
     if (item.base_type != OBJ_JEWELLERY)
@@ -472,10 +468,7 @@ void artefact_desc_properties(const item_def &item,
         return;
     }
 
-    if (!force_fake_props)
-        return;
-
-    // For auto-inscribing randart jewellery, force_fake_props folds as
+    // For auto-inscribing randart jewellery, fold as
     // much info about the base type as possible into the randarts
     // property struct.
 

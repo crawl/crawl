@@ -202,7 +202,7 @@ static vector<string> _randart_propnames(const item_def& item,
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
-    artefact_desc_properties(item, proprt, known, true);
+    artefact_desc_properties(item, proprt, known);
 
     vector<string> propnames;
 
@@ -432,7 +432,7 @@ static string _randart_descrip(const item_def &item)
 
     artefact_properties_t  proprt;
     artefact_known_props_t known;
-    artefact_desc_properties(item, proprt, known, true);
+    artefact_desc_properties(item, proprt, known);
 
     const property_descriptor propdescs[] =
     {
