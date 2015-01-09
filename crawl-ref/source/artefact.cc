@@ -722,6 +722,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
         case ARTP_NOISES:
         case ARTP_PREVENT_SPELLCASTING:
         case ARTP_MUTAGENIC:
+        case ARTP_HP:
             return true;
         case ARTP_EYESIGHT:
             return (item_class != OBJ_JEWELLERY
@@ -756,6 +757,9 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
             return (item_type != OBJ_JEWELLERY || item_type != RING_LOUDNESS)
                 && (item_type != OBJ_ARMOUR
                     || item_type != ARM_SHADOW_DRAGON_ARMOUR);
+        case ARTP_MAGICAL_POWER:
+            return item_class != OBJ_JEWELLERY
+                || item_type != RING_MAGICAL_POWER;
         default:
             return false;
     }
@@ -911,6 +915,19 @@ static void _get_randart_properties(const item_def &item,
                     if (good > 0)
                     {
                         value = 40;
+                        valid = true;
+                    }
+                    break;
+
+                case ARTP_MAGICAL_POWER:
+                case ARTP_HP:
+                    value = 5 * (1 + (one_chance_in(3) ? random2(3) : 0));
+                    if (good > 0 && (coinflip() || bad == 0))
+                        valid = true;
+                    else if (bad > 0)
+                    {
+                        prop_is_good = false;
+                        value *= -1;
                         valid = true;
                     }
                     break;
