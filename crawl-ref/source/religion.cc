@@ -3905,7 +3905,7 @@ bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
     if (god == GOD_TROG && !rod_spell)
         return true;
 
-    unsigned int disciplines = get_spell_disciplines(spell);
+    spschools_type disciplines = get_spell_disciplines(spell);
 
     switch (god)
     {

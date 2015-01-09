@@ -1071,10 +1071,11 @@ static bool _compare_spells(spell_type a, spell_type b)
     if (level_a != level_b)
         return level_a < level_b;
 
-    unsigned int schools_a = get_spell_disciplines(a);
-    unsigned int schools_b = get_spell_disciplines(b);
+    spschools_type schools_a = get_spell_disciplines(a);
+    spschools_type schools_b = get_spell_disciplines(b);
 
-    if (schools_a != schools_b && schools_a != 0 && schools_b != 0)
+    if (schools_a != schools_b && schools_a != SPTYP_NONE
+                               && schools_b != SPTYP_NONE)
     {
         const char* a_type = nullptr;
         const char* b_type = nullptr;
@@ -1082,7 +1083,7 @@ static bool _compare_spells(spell_type a, spell_type b)
         // Find lowest/earliest school for each spell.
         for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
         {
-            int mask = 1 << i;
+            auto mask = static_cast<spschool_flag_type>(1 << i);
             if (a_type == nullptr && (schools_a & mask))
                 a_type = spelltype_long_name(mask);
             if (b_type == nullptr && (schools_b & mask))
@@ -1523,7 +1524,8 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
 }
 
 static bool _get_weighted_spells(bool completely_random, god_type god,
-                                 int disc1, int disc2,
+                                 spschool_flag_type disc1,
+                                 spschool_flag_type disc2,
                                  int num_spells, int max_levels,
                                  const vector<spell_type> &spells,
                                  spell_type chosen_spells[], bool exact_level)
@@ -1551,7 +1553,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
         const int Spc = you.skills[SK_SPELLCASTING];
         for (spell_type spell : spells)
         {
-            unsigned int disciplines = get_spell_disciplines(spell);
+            const spschools_type disciplines = get_spell_disciplines(spell);
 
             int d = 1;
             if ((disciplines & disc1) && (disciplines & disc2))
@@ -1567,7 +1569,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
             int num_skills  = 0;
             for (int j = 0; j <= SPTYP_LAST_EXPONENT; j++)
             {
-                int disc = 1 << j;
+                auto disc = static_cast<spschool_flag_type>(1 << j);
 
                 if (disciplines & disc)
                 {
@@ -1630,7 +1632,8 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
 }
 
 static void _remove_nondiscipline_spells(spell_type chosen_spells[],
-                                         int d1, int d2,
+                                         spschool_flag_type d1,
+                                         spschool_flag_type d2,
                                          spell_type exclude = SPELL_NO_SPELL)
 {
     int replace = -1;
@@ -1724,7 +1727,7 @@ bool make_book_theme_randart(item_def &book,
     if (max_levels == -1)
         max_levels = 255;
 
-    if (disc1 == 0 && disc2 == 0)
+    if (disc1 == SPTYP_NONE && disc2 == SPTYP_NONE)
     {
         if (!_get_weighted_discs(completely_random, god, disc1, disc2))
         {
@@ -1800,8 +1803,11 @@ bool make_book_theme_randart(item_def &book,
             continue;
 
         for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
-            if (spell_typematch(chosen_spells[i], 1 << k))
+            if (spell_typematch(chosen_spells[i],
+                                static_cast<spschool_flag_type>(1 << k)))
+            {
                 count[k]++;
+            }
     }
 
     // Remember the two dominant spell schools ...
@@ -1842,20 +1848,16 @@ bool make_book_theme_randart(item_def &book,
         max2 = max1;
 
     // Remove spells that don't fit either discipline.
-    _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2);
+    // ... and change disc1 and disc2 accordingly.
+    disc1 = static_cast<spschool_flag_type>(1 << max1);
+    disc2 = static_cast<spschool_flag_type>(1 << max2);
+    _remove_nondiscipline_spells(chosen_spells, disc1, disc2);
     _add_included_spells(chosen_spells, incl_spells);
 
     // Resort spells.
     if (!incl_spells.empty())
         sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
-
-    // ... and change disc1 and disc2 accordingly.
-    disc1 = static_cast<spschool_flag_type>(1 << max1);
-    if (max1 == max2)
-        disc2 = disc1;
-    else
-        disc2 = static_cast<spschool_flag_type>(1 << max2);
 
     int highest_level = 0;
     int lowest_level  = 10;

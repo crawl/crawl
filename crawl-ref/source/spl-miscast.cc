@@ -63,11 +63,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
     can_plural_hand(_can_plural)
 {
     ASSERT(is_valid_spell(_spell));
-    unsigned int schools = get_spell_disciplines(_spell);
-    ASSERT(schools != SPTYP_NONE);
-#ifndef ASSERTS
-    UNUSED(schools);
-#endif
+    ASSERT(get_spell_disciplines(_spell) != SPTYP_NONE);
 
     init();
     do_miscast();
@@ -250,7 +246,7 @@ void MiscastEffect::do_miscast()
     {
         vector<int> school_list;
         for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-            if (spell_typematch(spell, 1 << i))
+            if (spell_typematch(spell, static_cast<spschool_flag_type>(1 << i)))
                 school_list.push_back(i);
 
         unsigned int _school = school_list[random2(school_list.size())];

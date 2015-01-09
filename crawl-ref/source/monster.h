@@ -3,6 +3,7 @@
 
 #include "actor.h"
 #include "mon-ench.h"
+#include "spl-util.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
@@ -529,7 +530,7 @@ public:
     int action_energy(energy_use_type et) const;
 
     bool do_shaft();
-    bool has_spell_of_type(unsigned) const;
+    bool has_spell_of_type(spschool_flag_type discipline) const;
 
     void bind_melee_flags();
     void bind_spell_flags();

@@ -5607,7 +5607,8 @@ static const char* _arcane_mutation_to_school_name(mutation_type mutation)
 {
     // XXX: this does a really silly dance back and forth between school &
     // spelltype.
-    const int school = skill2spell_type(arcane_mutation_to_skill(mutation));
+    const skill_type sk = arcane_mutation_to_skill(mutation);
+    const spschool_flag_type school = skill2spell_type(sk);
     return spelltype_long_name(school);
 }
 
@@ -5622,7 +5623,7 @@ static const char* _arcane_mutation_to_school_abbr(mutation_type mutation)
 {
     // XXX: this does a really silly dance back and forth between school &
     // spelltype.
-    const int school = skill2spell_type(arcane_mutation_to_skill(mutation));
+    const auto school = skill2spell_type(arcane_mutation_to_skill(mutation));
     return spelltype_short_name(school);
 }
 
