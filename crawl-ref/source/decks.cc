@@ -2903,27 +2903,7 @@ static void _storm_card(int power, deck_rarity_type rarity)
     {
         if (coinflip())
         {
-            coord_def pos;
-            int tries = 0;
-
-            do
-            {
-                random_near_space(&you, you.pos(), pos, true);
-                tries++;
-            }
-            while (distance2(pos, you.pos()) < 3 && tries < 50);
-
-            if (tries > 50)
-                pos = you.pos();
-
-
-            if (create_monster(
-                        mgen_data(MONS_TWISTER,
-                                  BEH_HOSTILE, &you, 1 + random2(power_level + 1),
-                                  0, pos, MHITYOU, MG_FORCE_PLACE)))
-            {
-                mpr("A tornado forms.");
-            }
+            summon_twister(power_level);
         }
         else
         {

@@ -165,6 +165,10 @@ wary that controlled translocations will cause the subject to become
 contaminated with magical energy, and that controlled teleports will take
 longer to trigger than uncontrolled ones.
 %%%%
+Evoke Twister ability
+
+Summons a tornado nearby. The furious winds can harm friend and foe alike.
+%%%%
 End Transformation ability
 
 Revert to your normal form, with a short delay.
