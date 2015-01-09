@@ -1,14 +1,15 @@
 import crypt
-import sqlite3
-import re
-import os.path
 import logging
+import os.path
 import random
+import re
+import sqlite3
 import time
 
 from conf import config
 
-def user_passwd_match(username, passwd): # Returns the correctly cased username.
+def user_passwd_match(username, passwd):
+    """Return the correctly cased username."""
     try:
         passwd = passwd[0:config.max_passwd_length]
     except:
@@ -37,10 +38,9 @@ def ensure_user_db_exists():
         try:
             conn = sqlite3.connect(config.password_db)
             c = conn.cursor()
-            schema = ("CREATE TABLE dglusers (id integer primary key," +
-                      " username text, email text, env text," +
-                      " password text, flags integer);")
-            c.execute(schema)
+            c.execute("CREATE TABLE dglusers (id integer primary key, username "
+                      "text, email text, env text, password text, flags "
+                      "integer);")
             conn.commit()
         finally:
             if c: c.close()
@@ -51,11 +51,9 @@ def ensure_user_db_exists():
     try:
         conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
-        schema = ("CREATE TABLE IF NOT EXISTS login_tokens (" +
-                  "username text, seqid text," +
-                  "token text, expires integer," +
-                  "PRIMARY KEY (username, seqid));")
-        c.execute(schema)
+        c.execute("CREATE TABLE IF NOT EXISTS login_tokens (username text, "
+                  "seqid text, token text, expires integer, PRIMARY KEY "
+                  "(username, seqid));")
         conn.commit()
     finally:
         if c: c.close()
@@ -65,41 +63,43 @@ def ensure_user_db_exists():
 saltchars = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 def make_salt(saltlen):
-    return ''.join(random.choice(saltchars) for x in xrange(0,saltlen))
+    return "".join(random.choice(saltchars) for x in xrange(0,saltlen))
 
 def get_salt(passwd):
     algo = config.get("crypt_algorithm", "6")
     if algo:
-        salt = "$%s$%s$" % (algo, make_salt(config.crypt_salt_length))
+        salt = "${0}${1}$".format(algo, make_salt(config.crypt_salt_length))
     else:
         salt = make_salt(2)
     return salt
 
 def register_user(username, passwd, email): # Returns an error message or None
-    if passwd == "": return "The password can't be empty!"
+    if not passwd:
+        return "The password can't be empty!"
     passwd = passwd[0:config.max_passwd_length]
     username = username.strip()
-    if not re.match(config.nick_regex, username): return "Invalid username!"
+    if not re.match(config.nick_regex, username):
+        return "Invalid username!"
 
     salt = get_salt(passwd)
     crypted_pw = crypt.crypt(passwd, salt)
     # crypt.crypt can fail if you pass in a salt it doesn't like
     if not crypted_pw:
-        logging.warning("User registration failed -- incorrect crypt_algorithm setting?"
-            "Tested salt was '%s...'" % salt)
+        logging.warning("User registration failed; crypt_algorithm setting? "
+                        "Tested salt was '{0}'".format(salt))
         return "Internal registration error." # deliberately generic
 
     try:
         conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
-        c.execute("select username from dglusers where username=? collate nocase",
-                  (username,))
+        c.execute("select username from dglusers where username=? collate "
+                  "nocase", (username,))
         result = c.fetchone()
 
         if result: return "User already exists!"
 
-        c.execute("insert into dglusers(username, email, password, flags, env) values (?,?,?,0,'')",
-                  (username, email, crypted_pw))
+        c.execute("insert into dglusers(username, email, password, flags, env) "
+                  "values (?,?,?,0,'')", (username, email, crypted_pw))
 
         conn.commit()
 
@@ -133,7 +133,7 @@ sessions = {}
 rand = random.SystemRandom()
 
 def pack_sid(sid):
-    return "%x" % sid
+    return "{0:x}".format(sid)
 
 def session_info(sid):
     s = sessions.get(sid)
@@ -150,8 +150,8 @@ def renew_session(sid):
 
 def new_session():
     sid = pack_sid(rand.getrandbits(128))
-    sessions[sid] = {"forceexpires": time.time() +
-                     config.get("session_lifetime", 24*60*60)}
+    sessions[sid] = {"forceexpires": time.time()
+                     + config.get("session_lifetime", 24*60*60)}
     renew_session(sid)
     return sid, sessions[sid]
 
@@ -222,10 +222,10 @@ def token_login(cookie, logger=logging):
             return None, None
 
         if true_token == token:
-            logger.info("User %s logged in (via token).", username)
+            logger.info("User {0} logged in (via token).".format(username))
             return username, get_login_cookie(username, seqid=seqid)
         else:
-            logger.warning("Bad login token for user %s!", username)
+            logger.warning("Bad login token for user {0}!".format(username))
             delete_logins(username)
             return None, None
     else:
@@ -240,14 +240,13 @@ def get_login_cookie(username, seqid=None):
     try:
         conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
-        c.execute("INSERT INTO login_tokens(username, seqid, token, expires)"
-                  + " VALUES (?,?,?,?)",
-                  (username, seqid, token, expires))
+        c.execute("INSERT INTO login_tokens(username, seqid, token, expires) "
+                  "VALUES (?,?,?,?)", (username, seqid, token, expires))
         conn.commit()
     finally:
         if c: c.close()
         if conn: conn.close()
-    cookie = username + ":" + str(token) + ":" + str(seqid)
+    cookie = "{0}:{1}:{2}".format(username, token, seqid)
     return cookie, expires
 
 def forget_login_cookie(cookie):
