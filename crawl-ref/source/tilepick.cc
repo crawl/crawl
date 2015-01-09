@@ -492,7 +492,10 @@ tileidx_t tileidx_feature(const coord_def &gc)
     switch (feat)
     {
     case DNGN_FLOOR:
-        if (player_in_branch(BRANCH_SLIME))
+        // branches that can have slime walls (premature optimization?)
+        if (player_in_branch(BRANCH_SLIME)
+            || player_in_branch(BRANCH_TEMPLE)
+            || player_in_branch(BRANCH_LAIR))
         {
             bool slimy = false;
             for (adjacent_iterator ai(gc); ai; ++ai)
