@@ -98,8 +98,7 @@ typedef FixedVector< bool, ART_PROPERTIES > artefact_known_props_t;
 
 void artefact_desc_properties(const item_def        &item,
                               artefact_properties_t &proprt,
-                              artefact_known_props_t &known,
-                              bool force_fake_props = false);
+                              artefact_known_props_t &known);
 
 void artefact_wpn_properties(const item_def       &item,
                              artefact_properties_t &proprt,
