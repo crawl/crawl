@@ -847,11 +847,11 @@ static int _spell_weight(spell_type spell)
     ASSERT(spell != SPELL_NO_SPELL);
 
     int weight = 0;
-    unsigned int disciplines = get_spell_disciplines(spell);
+    spschools_type disciplines = get_spell_disciplines(spell);
     int count = 0;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
-        int disc = 1 << i;
+        auto disc = static_cast<spschool_flag_type>(1 << i);
         if (disciplines & disc)
         {
             int skill = you.skills[spell_type2skill(disc)];

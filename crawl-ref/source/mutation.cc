@@ -150,7 +150,7 @@ equipment_type beastly_slot(int mut)
 
 static bool _mut_has_use(const mutation_def &mut, mut_flag_type use)
 {
-    return mut.uses & use;
+    return bool(mut.uses & use);
 }
 
 #define MUT_BAD(mut) _mut_has_use((mut), MUTFLAG_BAD)

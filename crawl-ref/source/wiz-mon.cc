@@ -1275,12 +1275,12 @@ void debug_miscast(int target_index)
         return;
     }
 
-    int disciplines = 0;
+    spschools_type disciplines = SPTYP_NONE;
     if (spell != SPELL_NO_SPELL)
     {
         disciplines = get_spell_disciplines(spell);
 
-        if (disciplines == 0)
+        if (!disciplines)
         {
             mprf("Spell '%s' has no disciplines.", spell_title(spell));
             return;

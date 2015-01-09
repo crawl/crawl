@@ -1057,10 +1057,10 @@ static void _debug_acquirement_stats(FILE *ostat)
 
             const bool seen = you.seen_spell[spell];
 
-            const unsigned int disciplines = get_spell_disciplines(spell);
+            const spschools_type disciplines = get_spell_disciplines(spell);
             for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
             {
-                const int disc = 1 << d;
+                auto disc = static_cast<spschool_flag_type>(1 << d);
                 if (disc & SPTYP_DIVINATION)
                     continue;
 
@@ -1074,7 +1074,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         }
         for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
         {
-            const int disc = 1 << d;
+            auto disc = static_cast<spschool_flag_type>(1 << d);
             if (disc & SPTYP_DIVINATION)
                 continue;
 

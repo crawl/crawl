@@ -757,9 +757,9 @@ bool monster::search_spells(function<bool (spell_type)> func) const
                         { return func(s.spell); });
 }
 
-bool monster::has_spell_of_type(unsigned disciplines) const
+bool monster::has_spell_of_type(spschool_flag_type discipline) const
 {
-    return search_spells(bind(spell_typematch, placeholders::_1, disciplines));
+    return search_spells(bind(spell_typematch, placeholders::_1, discipline));
 }
 
 void monster::bind_melee_flags()

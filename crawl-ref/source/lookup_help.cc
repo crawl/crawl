@@ -128,7 +128,7 @@ private:
     /**
      * Does this lookup type support toggling the sort order of results?
      */
-    bool toggleable_sort() const { return flags & LTYPF_TOGGLEABLE_SORT; }
+    bool toggleable_sort() const { return bool(flags & LTYPF_TOGGLEABLE_SORT); }
 
 private:
     /// Function that fetches a list of keys, without taking arguments.
