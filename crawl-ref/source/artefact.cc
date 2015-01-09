@@ -479,18 +479,18 @@ static void _populate_jewel_intrininsic_artps(const item_def &item,
     }
 }
 
-void artefact_desc_properties(const item_def &item,
-                              artefact_properties_t &proprt,
-                              artefact_known_props_t &known)
+
+/**
+ * Fill out the inherent ARTPs corresponding to a given item.
+ *
+ * @param arm           The item in question.
+ * @param proprt[out]   The properties list to be populated.
+ * @param known[out]    The props which are known.
+ */
+static void _populate_item_intrininsic_artps(const item_def &item,
+                                             artefact_properties_t &proprt,
+                                             artefact_known_props_t &known)
 {
-    // Randart books have no randart properties.
-    if (item.base_type == OBJ_BOOKS)
-        return;
-
-    // actual artefact properties
-    artefact_wpn_properties(item, proprt, known);
-
-    // fake artefact properties (intrinsics)
     switch (item.base_type)
     {
         case OBJ_ARMOUR:
@@ -503,6 +503,21 @@ void artefact_desc_properties(const item_def &item,
         default:
             break;
     }
+}
+
+void artefact_desc_properties(const item_def &item,
+                              artefact_properties_t &proprt,
+                              artefact_known_props_t &known)
+{
+    // Randart books have no randart properties.
+    if (item.base_type == OBJ_BOOKS)
+        return;
+
+    // actual artefact properties
+    artefact_wpn_properties(item, proprt, known);
+
+    // fake artefact properties (intrinsics)
+    _populate_item_intrininsic_artps(item, proprt, known);
 }
 
 static inline void _randart_propset(artefact_properties_t &p,
