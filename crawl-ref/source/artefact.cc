@@ -683,86 +683,51 @@ static void _add_randart_weapon_brand(const item_def &item,
 
 static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
 {
+    artefact_properties_t proprt;
+    artefact_known_props_t _;
+    _populate_item_intrininsic_artps(item, proprt, _);
+    if (proprt[prop])
+        return false; // don't duplicate intrinsic props
+
     const object_class_type item_class = item.base_type;
     const int item_type = item.sub_type;
+
     switch (prop)
     {
-        case ARTP_STRENGTH:
-            return item_class != OBJ_JEWELLERY || item_type != RING_STRENGTH;
-        case ARTP_INTELLIGENCE:
-            return item_class != OBJ_JEWELLERY || item_type != RING_INTELLIGENCE;
-        case ARTP_DEXTERITY:
-            return item_class != OBJ_JEWELLERY || item_type != RING_DEXTERITY;
         case ARTP_SLAYING:
-            return item_class != OBJ_WEAPONS
-                    && (item_class != OBJ_JEWELLERY || item_type != RING_SLAYING);
-        case ARTP_FIRE:
-        case ARTP_COLD:
-            return (item_class != OBJ_JEWELLERY
-                            || (item_type != RING_PROTECTION_FROM_FIRE
-                                && item_type != RING_FIRE
-                                && item_type != RING_ICE))
-                    && (item_class != OBJ_ARMOUR
-                            || (item_type != ARM_FIRE_DRAGON_ARMOUR
-                                && item_type != ARM_ICE_DRAGON_ARMOUR
-                                && item_type != ARM_GOLD_DRAGON_ARMOUR));
+            return item_class != OBJ_WEAPONS; // they already have slaying!
         case ARTP_POISON:
-            return (item_class != OBJ_JEWELLERY
-                                || item_type != RING_POISON_RESISTANCE)
-                    && (item_class != OBJ_ARMOUR
-                                || item_type != ARM_GOLD_DRAGON_ARMOUR
-                                   && item_type != ARM_SWAMP_DRAGON_ARMOUR
-                                   && item_type != ARM_NAGA_BARDING);
-        case ARTP_ELECTRICITY:
-            return item_class != OBJ_ARMOUR
-                    || item_type != ARM_STORM_DRAGON_ARMOUR;
-        case ARTP_NEGATIVE_ENERGY:
-        case ARTP_MAGIC:
-        case ARTP_BLINK:
-        case ARTP_NOISES:
-        case ARTP_PREVENT_SPELLCASTING:
-        case ARTP_MUTAGENIC:
-        case ARTP_HP:
-        case ARTP_TWISTER:
-            return true;
-        case ARTP_EYESIGHT:
-            return (item_class != OBJ_JEWELLERY
-                        || item_type != RING_SEE_INVISIBLE)
-                     && (item_class != OBJ_ARMOUR
-                        || item_type != ARM_NAGA_BARDING);
+            return !item.is_type(OBJ_ARMOUR, ARM_NAGA_BARDING);
+            // naga already have rPois & sInv!
         case ARTP_RCORR:
-            return item_class == OBJ_ARMOUR;
-        case ARTP_REGENERATION:
-            return item_class == OBJ_ARMOUR
-                || item_type != ARM_TROLL_LEATHER_ARMOUR;
-        case ARTP_INVISIBLE:
-            return item_class != OBJ_JEWELLERY
-                    || item_type != RING_INVISIBILITY;
-        case ARTP_FLY:
-            return item_class != OBJ_JEWELLERY || item_type != RING_FLIGHT;
+            return item_class == OBJ_ARMOUR; // limit availability to armour
         case ARTP_BERSERK:
-            return (item_class != OBJ_WEAPONS || !is_range_weapon(item))
-                    && (item_class != OBJ_JEWELLERY || item_type != AMU_RAGE);
-        //spirit shield
-            return item_type == ARM_HAT || item_type == ARM_SHIELD;
+        case ARTP_ANGRY:
+        case ARTP_NOISES:
+            return item_class != OBJ_WEAPONS || !is_range_weapon(item);
+            // works poorly with ranged weapons
         case ARTP_CAUSE_TELEPORTATION:
             return item_type != OBJ_WEAPONS || crawl_state.game_is_sprint();
+            // no tele in sprint, and too annoying on weapons (swappable)
         case ARTP_PREVENT_TELEPORTATION:
             return (item_type != OBJ_JEWELLERY
                         || item_type != RING_TELEPORTATION)
                     && (item_type == OBJ_JEWELLERY
                         || item_type == RING_TELEPORT_CONTROL);
-        case ARTP_ANGRY:
-            return item_type != OBJ_WEAPONS || is_range_weapon(item);
-        case ARTP_STEALTH:
-            return (item_type != OBJ_JEWELLERY || item_type != RING_LOUDNESS)
-                && (item_type != OBJ_ARMOUR
-                    || item_type != ARM_SHADOW_DRAGON_ARMOUR);
+            // absurd
+        case ARTP_HP:
         case ARTP_MAGICAL_POWER:
-            return item_class != OBJ_JEWELLERY
-                || item_type != RING_MAGICAL_POWER;
+        case ARTP_AC:
+        case ARTP_EVASION:
+        case ARTP_FOG:
+        case ARTP_RMUT:
+        case ARTP_EYESIGHT: // if enabled, remember to ban on naga barding
+        case ARTP_CLARITY:
+        case ARTP_REGENERATION: // if enabled, remember to ban on troll armour
+        case ARTP_SUSTAB:
+            return false; // banned on randarts
         default:
-            return false;
+            return true;
     }
 }
 
