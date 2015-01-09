@@ -280,7 +280,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     {
         if (has_temp_brand)
             end_weapon_brand(weapon);
-        you.props[ORIGINAL_BRAND_KEY] = orig_brand;
+        you.props[ORIGINAL_BRAND_KEY] = get_weapon_brand(weapon);
 
         set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
         you.wield_change = true;
