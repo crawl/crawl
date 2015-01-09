@@ -396,6 +396,24 @@ void set_unique_item_status(const item_def& item,
         _set_unique_item_status(item.special, status);
 }
 
+/**
+ * Fill out the inherent ARTPs corresponding to a given type of armour.
+ *
+ * @param arm           The armour_type of the armour in question.
+ * @param proprt[out]   The properties list to be populated.
+ */
+static void _populate_armour_intrinsic_artps(const armour_type arm,
+                                             artefact_properties_t &proprt)
+{
+    proprt[ARTP_FIRE] += armour_type_res_fire(arm);
+    proprt[ARTP_COLD] += armour_type_res_cold(arm);
+    proprt[ARTP_NEGATIVE_ENERGY] += armour_type_res_neg(arm);
+    proprt[ARTP_POISON] += armour_type_res_poison(arm) ? 1 : 0;
+    proprt[ARTP_ELECTRICITY] += armour_type_res_elec(arm) ? 1 : 0;
+    proprt[ARTP_MAGIC] += armour_type_res_magic(arm) / MR_PIP;
+    proprt[ARTP_STEALTH] += armour_type_bonus_stealth(arm) / STEALTH_PIP;
+}
+
 void artefact_desc_properties(const item_def &item,
                               artefact_properties_t &proprt,
                               artefact_known_props_t &known,
@@ -408,15 +426,7 @@ void artefact_desc_properties(const item_def &item,
     artefact_wpn_properties(item, proprt, known);
 
     if (item.base_type == OBJ_ARMOUR)
-    {
-        proprt[ARTP_FIRE] += armour_type_res_fire(item.sub_type);
-        proprt[ARTP_COLD] += armour_type_res_cold(item.sub_type);
-        proprt[ARTP_NEGATIVE_ENERGY] += armour_type_res_neg(item.sub_type);
-        proprt[ARTP_POISON] += armour_type_res_poison(item.sub_type) ? 1 : 0;
-        proprt[ARTP_ELECTRICITY] += armour_type_res_elec(item.sub_type) ? 1 : 0;
-        proprt[ARTP_MAGIC] += armour_type_res_magic(item.sub_type) / MR_PIP;
-        proprt[ARTP_STEALTH] += armour_type_bonus_stealth(item.sub_type) / STEALTH_PIP;
-    }
+        _populate_armour_intrinsic_artps((armour_type)item.sub_type, proprt);
 
     if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
         return;
