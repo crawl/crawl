@@ -2974,52 +2974,51 @@ int remove_oldest_xp_evoker(item_def &stack, int quant)
 }
 
 
-static armflags_t _armour_type_flags(const uint8_t armour_type)
+static armflags_t _armour_type_flags(const uint8_t arm)
 {
-    return Armour_prop[ Armour_index[armour_type] ].flags;
+    return Armour_prop[ Armour_index[arm] ].flags;
 }
 
-int armour_type_res_fire(const uint8_t armour_type)
+int armour_type_res_fire(const uint8_t arm)
 {
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_FIRE);
+    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_FIRE);
 }
 
-int armour_type_res_cold(const uint8_t armour_type)
+int armour_type_res_cold(const uint8_t arm)
 {
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_COLD);
+    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_COLD);
 }
 
-bool armour_type_res_poison(const uint8_t armour_type)
+bool armour_type_res_poison(const uint8_t arm)
 {
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_POISON);
+    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_POISON);
 }
 
-bool armour_type_res_elec(const uint8_t armour_type)
+bool armour_type_res_elec(const uint8_t arm)
 {
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_ELEC);
+    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_ELEC);
 }
 
-int armour_type_res_neg(const uint8_t armour_type)
+int armour_type_res_neg(const uint8_t arm)
 {
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_NEG);
+    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_NEG);
 }
 
-int armour_type_res_magic(const uint8_t armour_type)
+int armour_type_res_magic(const uint8_t arm)
 {
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_MAGIC)
+    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_MAGIC)
             * MR_PIP;
 }
 
-int armour_type_bonus_stealth(const uint8_t armour_type)
+int armour_type_bonus_stealth(const uint8_t arm)
 {
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_STEALTH)
+    return _get_armour_flag(_armour_type_flags(arm), ARMF_STEALTH)
             * STEALTH_PIP;
 }
 
-bool armour_type_res_sticky_flame(const uint8_t armour_type)
+bool armour_type_res_sticky_flame(const uint8_t arm)
 {
-    return _get_armour_flag(_armour_type_flags(armour_type),
-                            ARMF_RES_STICKY_FLAME);
+    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_STICKY_FLAME);
 }
 
 bool armour_type_res_steam(const uint8_t armour_type)
