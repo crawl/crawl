@@ -36,6 +36,30 @@
 
 static iflags_t _full_ident_mask(const item_def& item);
 
+
+typedef uint32_t armflags_t;
+#define ard(flg, lev) (armflags_t)((flg) * ((lev) & 7))
+
+enum armour_flags
+{
+    ARMF_NO_FLAGS           = 0,
+    // multilevel resistances
+    ARMF_RES_FIRE           = 1 << 0,
+    ARMF_RES_COLD           = 1 << 3,
+    ARMF_RES_NEG            = 1 << 6,
+    ARMF_RES_MAGIC          = 1 << 9,
+    // boolean resists
+    ARMF_RES_ELEC           = 1 << 10,
+    ARMF_RES_POISON         = 1 << 11,
+    ARMF_RES_STICKY_FLAME   = 1 << 12,
+    ARMF_RES_STEAM          = 1 << 13,
+    // vulnerabilities
+    ARMF_VUL_FIRE           = ard(MR_RES_FIRE, -1),
+    ARMF_VUL_COLD           = ard(MR_RES_COLD, -1),
+    // misc (multilevel)
+    ARMF_STEALTH            = 1 << 16,
+};
+
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
@@ -49,6 +73,8 @@ struct armour_def
     size_type           fit_max;
     /// Whether this armour is mundane or inherently 'special', for acq.
     bool                mundane;
+    /// The resists, vulns, &c that this armour type gives when worn.
+    armflags_t          flags;
 };
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -80,47 +106,67 @@ static const armour_def Armour_prop[] =
     { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -4,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
     { ARM_STEAM_DRAGON_HIDE,    "steam dragon hide",      2,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_STEAM },
     { ARM_STEAM_DRAGON_ARMOUR,  "steam dragon armour",    5,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_STEAM },
     { ARM_MOTTLED_DRAGON_HIDE,  "mottled dragon hide",    3,  -5,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_STICKY_FLAME },
     { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  6,  -5,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_STICKY_FLAME },
     { ARM_QUICKSILVER_DRAGON_HIDE,   "quicksilver dragon hide",
                                                           3,  -6,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_MAGIC },
     { ARM_QUICKSILVER_DRAGON_ARMOUR, "quicksilver dragon armour",
                                                          10,  -6,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_MAGIC },
     { ARM_SWAMP_DRAGON_HIDE,    "swamp dragon hide",      3,  -7,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_POISON },
     { ARM_SWAMP_DRAGON_ARMOUR,  "swamp dragon armour",    7,  -7,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_POISON },
     { ARM_FIRE_DRAGON_HIDE,     "fire dragon hide",       3, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ard(ARMF_RES_FIRE, 2) | ARMF_VUL_COLD },
     { ARM_FIRE_DRAGON_ARMOUR,   "fire dragon armour",     8, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ard(ARMF_RES_FIRE, 2) | ARMF_VUL_COLD },
     { ARM_ICE_DRAGON_HIDE,      "ice dragon hide",        4, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ard(ARMF_RES_COLD, 2) | ARMF_VUL_FIRE },
     { ARM_ICE_DRAGON_ARMOUR,    "ice dragon armour",      9, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ard(ARMF_RES_COLD, 2) | ARMF_VUL_FIRE },
     { ARM_PEARL_DRAGON_HIDE,    "pearl dragon hide",      3, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_NEG },
     { ARM_PEARL_DRAGON_ARMOUR,  "pearl dragon armour",   10, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_NEG },
     { ARM_STORM_DRAGON_HIDE,    "storm dragon hide",      4, -15,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_ELEC },
     { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",   10, -15,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_ELEC },
     { ARM_SHADOW_DRAGON_HIDE,    "shadow dragon hide",    4, -15,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ard(ARMF_STEALTH, 4) },
     { ARM_SHADOW_DRAGON_ARMOUR,  "shadow dragon armour", 10, -15,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ard(ARMF_STEALTH, 4) },
     { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -23,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON },
     { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -23,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON },
 
     { ARM_CLOAK,                "cloak",                  1,   0,
         EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
