@@ -1336,63 +1336,6 @@ static void _debug_rap_stats(FILE *ostat)
         return;
     }
 
-    // -1 = always bad, 1 = always good, 0 = depends on value
-    const int good_or_bad[] =
-    {
-         1, //ARTP_BRAND
-         0, //ARTP_AC
-         0, //ARTP_EVASION
-         0, //ARTP_STRENGTH
-         0, //ARTP_INTELLIGENCE
-         0, //ARTP_DEXTERITY
-         0, //ARTP_FIRE
-         0, //ARTP_COLD
-         1, //ARTP_ELECTRICITY
-         1, //ARTP_POISON
-         1, //ARTP_NEGATIVE_ENERGY
-         0, //ARTP_MAGIC
-         1, //ARTP_EYESIGHT
-         1, //ARTP_INVISIBLE
-         1, //ARTP_FLY
-#if TAG_MAJOR_VERSION > 34
-         1, //ARTP_FOG,
-#endif
-         1, //ARTP_BLINK
-         1, //ARTP_BERSERK
-        -1, //ARTP_NOISES
-        -1, //ARTP_PREVENT_SPELLCASTING
-        -1, //ARTP_CAUSE_TELEPORTATION
-        -1, //ARTP_PREVENT_TELEPORTATION
-        -1, //ARTP_ANGRY
-#if TAG_MAJOR_VERSION == 34
-         0, //ARTP_METABOLISM
-#endif
-        -1, //ARTP_MUTAGENIC
-#if TAG_MAJOR_VERSION == 34
-         0, //ARTP_ACCURACY
-#endif
-         0, //ARTP_SLAYING
-        -1, //ARTP_CURSED
-         0, //ARTP_STEALTH
-         0, //ARTP_MAGICAL_POWER
-         0, //ARTP_BASE_DELAY
-         0, //ARTP_HP
-         1, //ARTP_CLARITY
-         0, //ARTP_BASE_ACC
-         0, //ARTP_BASE_DAM
-         1, //ARTP_RMSL
-#if TAG_MAJOR_VERSION == 34
-         1, //ARTP_FOG
-#endif
-         1, //ARTP_REGENERATION
-         1, //ARTP_SUSTAB,
-         0, //ARTP_NO_UPGRADE
-         1, //ARTP_RCORR
-         1, //ARTP_RMUT
-         1, //ARTP_TWISTER
-    };
-    COMPILE_CHECK(ARRAYSZ(good_or_bad) == ARTP_NUM_PROPERTIES);
-
     // No bounds checking to speed things up a bit.
     int all_props[ARTP_NUM_PROPERTIES];
     int good_props[ARTP_NUM_PROPERTIES];
@@ -1437,31 +1380,26 @@ static void _debug_rap_stats(FILE *ostat)
         int num_props = 0, num_good_props = 0, num_bad_props = 0;
         for (int j = 0; j < ARTP_NUM_PROPERTIES; ++j)
         {
-            const int val = proprt[j];
-            if (val)
+            const artefact_prop_type prop = (artefact_prop_type)j;
+            const int val = proprt[prop];
+            if (!val)
+                continue;
+
+            num_props++;
+            all_props[prop]++;
+            if (!artp_potentially_good(prop))
+                num_bad_props++;
+            else if (!artp_potentially_bad(prop))
+                num_good_props++;
+            else if (val > 0) // assumption: all mixed good/bad props are good iff positive
             {
-                num_props++;
-                all_props[j]++;
-                switch (good_or_bad[j])
-                {
-                case -1:
-                    num_bad_props++;
-                    break;
-                case 1:
-                    num_good_props++;
-                    break;
-                case 0:
-                    if (val > 0)
-                    {
-                        good_props[j]++;
-                        num_good_props++;
-                    }
-                    else
-                    {
-                        bad_props[j]++;
-                        num_bad_props++;
-                    }
-                }
+                good_props[prop]++;
+                num_good_props++;
+            }
+            else
+            {
+                bad_props[prop]++;
+                num_bad_props++;
             }
         }
 
