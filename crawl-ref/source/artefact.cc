@@ -521,16 +521,6 @@ void artefact_desc_properties(const item_def &item,
     _populate_item_intrininsic_artps(item, proprt, known);
 }
 
-static inline void _randart_propset(artefact_properties_t &p,
-                                     artefact_prop_type pt,
-                                     int value,
-                                     bool neg)
-{
-    // This shouldn't be called with 0, else no property gets added after all.
-    ASSERT(value != 0);
-    p[pt] = (neg? -value : value);
-}
-
 static void _add_randart_weapon_brand(const item_def &item,
                                     artefact_properties_t &item_props)
 {
