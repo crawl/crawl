@@ -644,21 +644,21 @@ static void _get_randart_properties(const item_def &item,
 
     int good = 0; // number of good properties to assign
     int bad = 0; // number of bad properties to assign
-    int max_extra_props = 5; // at most 6 total props
-    // try to assign additional properties, with a large chance of not assigning.
-    for (int i = 0; i <= max_extra_props; ++i)
+    // select how many good & bad properties to assign
+    for (int i = 0; i <= 5; ++i)
     {
-        int j = random2(24);
-        if (j <= 6)
-            ++good;
-        else if (j <= 9)
-            ++bad;
-        // else no property
+        if (x_chance_in_y(7, 12))
+            continue; // no property for this iter
+
+        if (x_chance_in_y(7, 10))
+            ++good;              // 7/24 chance overall
+        else
+            ++bad;               // 1/8 chance overall
     }
+    // avg 0.75 bad props & >1.75 good props per randart
 
     // Make sure to have at least one bonus good property.
-    if (good == 0)
-        ++good;
+    good = max(1, good);
 
     item_props.init(0);
 
@@ -678,153 +678,154 @@ static void _get_randart_properties(const item_def &item,
         int value = 0;
         bool prop_is_good = true;
 
-        if (_artp_can_go_on_item(prop, item))
+        if (!_artp_can_go_on_item(prop, item))
+            continue;
+
+        // Pick appropriate values for this property.
+        switch (prop)
         {
-            // Pick appropriate values for this property.
-            switch (prop)
-            {
-                case ARTP_STRENGTH:
-                case ARTP_INTELLIGENCE:
-                case ARTP_DEXTERITY:
-                    value = 2 + random2(5);
-                    if (one_chance_in(4))
-                        value += 1 + random2(4); // max value +10
-                    if (good > 0 && (coinflip() || bad == 0))
-                        valid = true;
-                    else if (bad > 0)
-                    {
-                        prop_is_good = false;
-                        value *= -1;
-                        valid = true;
-                    }
-                    break;
+            case ARTP_STRENGTH:
+            case ARTP_INTELLIGENCE:
+            case ARTP_DEXTERITY:
+                value = 2 + random2(5);
+                if (one_chance_in(4))
+                    value += 1 + random2(4); // max value +10
+                if (good > 0 && (coinflip() || bad == 0))
+                    valid = true;
+                else if (bad > 0)
+                {
+                    prop_is_good = false;
+                    value *= -1;
+                    valid = true;
+                }
+                break;
 
-                case ARTP_SLAYING:
-                    value = 2 + random2(3) + random2(3);
-                    if (good > 0 && (coinflip() || bad == 0))
-                        valid = true;
-                    else if (bad > 0)
-                    {
-                        prop_is_good = false;
-                        value *= -1;
-                        valid = true;
-                    }
-                    break;
+            case ARTP_SLAYING:
+                value = 2 + random2(3) + random2(3);
+                if (good > 0 && (coinflip() || bad == 0))
+                    valid = true;
+                else if (bad > 0)
+                {
+                    prop_is_good = false;
+                    value *= -1;
+                    valid = true;
+                }
+                break;
 
-                case ARTP_FIRE:
-                case ARTP_COLD:
-                case ARTP_POISON:
-                case ARTP_ELECTRICITY:
-                case ARTP_NEGATIVE_ENERGY:
-                case ARTP_MAGIC:
-                case ARTP_STEALTH:
-                    value = 1 + one_chance_in(5);
-                    if (good > 0 && (coinflip() || bad == 0))
-                        valid = true;
-                    else if (bad > 0)
-                    {
-                        prop_is_good = false;
-                        value = -1 + ((prop == ARTP_STEALTH) ? coinflip() : 0);
-                        valid = true;
-                    }
-                    break;
+            case ARTP_FIRE:
+            case ARTP_COLD:
+            case ARTP_POISON:
+            case ARTP_ELECTRICITY:
+            case ARTP_NEGATIVE_ENERGY:
+            case ARTP_MAGIC:
+            case ARTP_STEALTH:
+                value = 1 + one_chance_in(5);
+                if (good > 0 && (coinflip() || bad == 0))
+                    valid = true;
+                else if (bad > 0)
+                {
+                    prop_is_good = false;
+                    value = -1 + ((prop == ARTP_STEALTH) ? coinflip() : 0);
+                    valid = true;
+                }
+                break;
 
-                case ARTP_EYESIGHT:
-                case ARTP_RCORR:
-                case ARTP_INVISIBLE:
-                case ARTP_FLY:
-                case ARTP_BLINK:
-                case ARTP_BERSERK:
+            case ARTP_EYESIGHT:
+            case ARTP_RCORR:
+            case ARTP_INVISIBLE:
+            case ARTP_FLY:
+            case ARTP_BLINK:
+            case ARTP_BERSERK:
                 //case //spirit shield
-                    if (good > 0)
-                    {
-                        value = 1;
-                        valid = true;
-                    }
-                    break;
+                if (good > 0)
+                {
+                    value = 1;
+                    valid = true;
+                }
+                break;
 
-                case ARTP_TWISTER:
-                    if (good > 1)
-                    {
-                        value = 1;
-                        valid = true;
-                        good--; // costs a little extra goodness.
-                    }
-                    break;
+            case ARTP_TWISTER:
+                if (good > 1)
+                {
+                    value = 1;
+                    valid = true;
+                    good--; // costs a little extra goodness.
+                }
+                break;
 
-                case ARTP_NOISES:
-                    if (bad > 0)
-                    {
-                        prop_is_good = false;
-                        value = 2;
-                        valid = true;
-                    }
-                    break;
-                case ARTP_PREVENT_SPELLCASTING:
-                case ARTP_MUTAGENIC:
-                case ARTP_PREVENT_TELEPORTATION:
-                    if (bad > 0)
-                    {
-                        prop_is_good = false;
-                        value = 1;
-                        valid = true;
-                    }
-                    break;
-                case ARTP_CAUSE_TELEPORTATION:
-                    if (bad > 0)
-                    {
-                        prop_is_good = false;
-                        value = 12;
-                        valid = true;
-                    }
-                    break;
-                case ARTP_ANGRY:
-                    if (bad > 0)
-                    {
-                        prop_is_good = false;
-                        value = 5;
-                        valid = true;
-                    }
-                    break;
+            case ARTP_NOISES:
+                if (bad > 0)
+                {
+                    prop_is_good = false;
+                    value = 2;
+                    valid = true;
+                }
+                break;
+            case ARTP_PREVENT_SPELLCASTING:
+            case ARTP_MUTAGENIC:
+            case ARTP_PREVENT_TELEPORTATION:
+                if (bad > 0)
+                {
+                    prop_is_good = false;
+                    value = 1;
+                    valid = true;
+                }
+                break;
+            case ARTP_CAUSE_TELEPORTATION:
+                if (bad > 0)
+                {
+                    prop_is_good = false;
+                    value = 12;
+                    valid = true;
+                }
+                break;
+            case ARTP_ANGRY:
+                if (bad > 0)
+                {
+                    prop_is_good = false;
+                    value = 5;
+                    valid = true;
+                }
+                break;
 
-                case ARTP_REGENERATION:
-                    if (good > 0)
-                    {
-                        value = 1;
-                        valid = true;
-                    }
-                    break;
+            case ARTP_REGENERATION:
+                if (good > 0)
+                {
+                    value = 1;
+                    valid = true;
+                }
+                break;
 
-                case ARTP_MAGICAL_POWER:
-                case ARTP_HP:
-                    value = 5 * (1 + (one_chance_in(3) ? random2(3) : 0));
-                    if (good > 0 && (coinflip() || bad == 0))
-                        valid = true;
-                    else if (bad > 0)
-                    {
-                        prop_is_good = false;
-                        value *= -1;
-                        valid = true;
-                    }
-                    break;
+            case ARTP_MAGICAL_POWER:
+            case ARTP_HP:
+                value = 5 * (1 + (one_chance_in(3) ? random2(3) : 0));
+                if (good > 0 && (coinflip() || bad == 0))
+                    valid = true;
+                else if (bad > 0)
+                {
+                    prop_is_good = false;
+                    value *= -1;
+                    valid = true;
+                }
+                break;
 
-                default:
-                    break;
-            }
+            default:
+                break;
         }
+
         // Actually apply the property if it's valid.
-        if (valid)
-        {
-            if (prop_is_good)
-                --good;
-            else
-                --bad;
-            item_props[prop] = value;
+        if (!valid)
+            continue;
 
-            // special case: remove the blink property if we're adding stasis
-            if (prop == ARTP_PREVENT_TELEPORTATION)
-                item_props[ARTP_BLINK] = 0;
-        }
+        if (prop_is_good)
+            --good;
+        else
+            --bad;
+        item_props[prop] = value;
+
+        // special case: remove the blink property if we're adding stasis
+        if (prop == ARTP_PREVENT_TELEPORTATION)
+            item_props[ARTP_BLINK] = 0;
     }
 }
 
