@@ -203,7 +203,6 @@ enum prop_note_type
 
 struct property_annotators
 {
-    const char* name;
     artefact_prop_type prop;
     prop_note_type spell_out;
 };
@@ -222,49 +221,49 @@ static vector<string> _randart_propnames(const item_def& item,
     {
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
-        { "-Cast",  ARTP_PREVENT_SPELLCASTING,  PROPN_PLAIN },
-        { "-Tele",  ARTP_PREVENT_TELEPORTATION, PROPN_PLAIN },
-        { "Contam", ARTP_MUTAGENIC,             PROPN_PLAIN },
-        { "*Rage",  ARTP_ANGRY,                 PROPN_PLAIN },
-        { "*Tele",  ARTP_CAUSE_TELEPORTATION,   PROPN_PLAIN },
-        { "Noisy",  ARTP_NOISES,                PROPN_PLAIN },
+        { ARTP_PREVENT_SPELLCASTING,  PROPN_PLAIN },
+        { ARTP_PREVENT_TELEPORTATION, PROPN_PLAIN },
+        { ARTP_MUTAGENIC,             PROPN_PLAIN },
+        { ARTP_ANGRY,                 PROPN_PLAIN },
+        { ARTP_CAUSE_TELEPORTATION,   PROPN_PLAIN },
+        { ARTP_NOISES,                PROPN_PLAIN },
 
         // Evokable abilities come second
-        { "+Twstr", ARTP_TWISTER,               PROPN_PLAIN },
-        { "+Blink", ARTP_BLINK,                 PROPN_PLAIN },
-        { "+Rage",  ARTP_BERSERK,               PROPN_PLAIN },
-        { "+Inv",   ARTP_INVISIBLE,             PROPN_PLAIN },
-        { "+Fly",   ARTP_FLY,                   PROPN_PLAIN },
-        { "+Fog",   ARTP_FOG,                   PROPN_PLAIN },
+        { ARTP_TWISTER,               PROPN_PLAIN },
+        { ARTP_BLINK,                 PROPN_PLAIN },
+        { ARTP_BERSERK,               PROPN_PLAIN },
+        { ARTP_INVISIBLE,             PROPN_PLAIN },
+        { ARTP_FLY,                   PROPN_PLAIN },
+        { ARTP_FOG,                   PROPN_PLAIN },
 
         // Resists, also really important
-        { "rElec",  ARTP_ELECTRICITY,           PROPN_PLAIN },
-        { "rPois",  ARTP_POISON,                PROPN_PLAIN },
-        { "rF",     ARTP_FIRE,                  PROPN_SYMBOLIC },
-        { "rC",     ARTP_COLD,                  PROPN_SYMBOLIC },
-        { "rN",     ARTP_NEGATIVE_ENERGY,       PROPN_SYMBOLIC },
-        { "MR",     ARTP_MAGIC,                 PROPN_SYMBOLIC },
-        { "Regen",  ARTP_REGENERATION,          PROPN_SYMBOLIC },
-        { "rMut",   ARTP_RMUT,                  PROPN_PLAIN },
-        { "rCorr",  ARTP_RCORR,                 PROPN_PLAIN },
+        { ARTP_ELECTRICITY,           PROPN_PLAIN },
+        { ARTP_POISON,                PROPN_PLAIN },
+        { ARTP_FIRE,                  PROPN_SYMBOLIC },
+        { ARTP_COLD,                  PROPN_SYMBOLIC },
+        { ARTP_NEGATIVE_ENERGY,       PROPN_SYMBOLIC },
+        { ARTP_MAGIC,                 PROPN_SYMBOLIC },
+        { ARTP_REGENERATION,          PROPN_SYMBOLIC },
+        { ARTP_RMUT,                  PROPN_PLAIN },
+        { ARTP_RCORR,                 PROPN_PLAIN },
 
         // Quantitative attributes
-        { "HP",     ARTP_HP,                    PROPN_NUMERAL },
-        { "MP",     ARTP_MAGICAL_POWER,         PROPN_NUMERAL },
-        { "AC",     ARTP_AC,                    PROPN_NUMERAL },
-        { "EV",     ARTP_EVASION,               PROPN_NUMERAL },
-        { "Str",    ARTP_STRENGTH,              PROPN_NUMERAL },
-        { "Int",    ARTP_INTELLIGENCE,          PROPN_NUMERAL },
-        { "Dex",    ARTP_DEXTERITY,             PROPN_NUMERAL },
-        { "Slay",   ARTP_SLAYING,               PROPN_NUMERAL },
+        { ARTP_HP,                    PROPN_NUMERAL },
+        { ARTP_MAGICAL_POWER,         PROPN_NUMERAL },
+        { ARTP_AC,                    PROPN_NUMERAL },
+        { ARTP_EVASION,               PROPN_NUMERAL },
+        { ARTP_STRENGTH,              PROPN_NUMERAL },
+        { ARTP_INTELLIGENCE,          PROPN_NUMERAL },
+        { ARTP_DEXTERITY,             PROPN_NUMERAL },
+        { ARTP_SLAYING,               PROPN_NUMERAL },
 
         // Qualitative attributes (and Stealth)
-        { "SInv",   ARTP_EYESIGHT,              PROPN_PLAIN },
-        { "Stlth",  ARTP_STEALTH,               PROPN_SYMBOLIC },
-        { "Curse",  ARTP_CURSED,                PROPN_PLAIN },
-        { "Clar",   ARTP_CLARITY,               PROPN_PLAIN },
-        { "RMsl",   ARTP_RMSL,                  PROPN_PLAIN },
-        { "SustAb", ARTP_SUSTAB,                PROPN_PLAIN },
+        { ARTP_EYESIGHT,              PROPN_PLAIN },
+        { ARTP_STEALTH,               PROPN_SYMBOLIC },
+        { ARTP_CURSED,                PROPN_PLAIN },
+        { ARTP_CLARITY,               PROPN_PLAIN },
+        { ARTP_RMSL,                  PROPN_PLAIN },
+        { ARTP_SUSTAB,                PROPN_PLAIN },
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -334,14 +333,14 @@ static vector<string> _randart_propnames(const item_def& item,
             switch (ann.spell_out)
             {
             case PROPN_NUMERAL: // e.g. AC+4
-                work << showpos << ann.name << val;
+                work << showpos << artp_name(ann.prop) << val;
                 break;
             case PROPN_SYMBOLIC: // e.g. F++
             {
                 // XXX: actually handle absurd values instead of displaying
                 // the wrong number of +s or -s
                 const int sval = min(abs(val), 6);
-                work << ann.name
+                work << artp_name(ann.prop)
                      << string(sval, (val > 0 ? '+' : '-'));
                 break;
             }
@@ -349,7 +348,7 @@ static vector<string> _randart_propnames(const item_def& item,
                 if (ann.prop == ARTP_CURSED && val < 1)
                     continue;
 
-                work << ann.name;
+                work << artp_name(ann.prop);
                 break;
             }
             propnames.push_back(work.str());

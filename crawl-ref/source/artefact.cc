@@ -636,6 +636,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
 /// Generation info for a type of artefact property.
 struct artefact_prop_data
 {
+    /// The name of the prop, as displayed on item annotations, etc.
+    const char *name;
     /// The types of values this prop can have (e.g. bool, positive int, int)
     artp_value_type value_types;
     /// Randomly generate a 'good' value; null if this prop is never good
@@ -671,59 +673,101 @@ static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
 /// Generation info for artefact properties.
 static const artefact_prop_data artp_data[] =
 {
-    { ARTP_VAL_POS, nullptr, nullptr }, // ARTP_BRAND,
-    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_AC,
-    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_EVASION,
-    { ARTP_VAL_ANY, _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_STRENGTH,
-    { ARTP_VAL_ANY, _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_INTELLIGENCE,
-    { ARTP_VAL_ANY, _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_DEXTERITY,
-    { ARTP_VAL_ANY, _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_FIRE,
-    { ARTP_VAL_ANY, _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_COLD,
-    { ARTP_VAL_BOOL, _gen_good_res_artp, nullptr }, // ARTP_ELECTRICITY,
-    { ARTP_VAL_BOOL, _gen_good_res_artp, nullptr }, // ARTP_POISON,
-    { ARTP_VAL_ANY, _gen_good_res_artp,  nullptr }, // ARTP_NEGATIVE_ENERGY,
-    { ARTP_VAL_ANY, _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_MAGIC,
-    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_EYESIGHT,
-    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_INVISIBLE,
-    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_FLY,
+    { "Brand", ARTP_VAL_POS,
+        nullptr, nullptr }, // ARTP_BRAND,
+    { "AC", ARTP_VAL_ANY,
+        nullptr, nullptr }, // ARTP_AC,
+    { "EV", ARTP_VAL_ANY,
+        nullptr, nullptr }, // ARTP_EVASION,
+    { "Str", ARTP_VAL_ANY,
+        _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_STRENGTH,
+    { "Int", ARTP_VAL_ANY,
+        _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_INTELLIGENCE,
+    { "Dex", ARTP_VAL_ANY,
+        _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_DEXTERITY,
+    { "rF", ARTP_VAL_ANY,
+        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_FIRE,
+    { "rC", ARTP_VAL_ANY,
+        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_COLD,
+    { "rElec", ARTP_VAL_BOOL,
+        _gen_good_res_artp, nullptr }, // ARTP_ELECTRICITY,
+    { "rPois", ARTP_VAL_BOOL,
+        _gen_good_res_artp, nullptr }, // ARTP_POISON,
+    { "rN", ARTP_VAL_ANY,
+        _gen_good_res_artp,  nullptr }, // ARTP_NEGATIVE_ENERGY,
+    { "MR", ARTP_VAL_ANY,
+        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_MAGIC,
+    { "SInv", ARTP_VAL_BOOL,
+        []() { return 1; }, nullptr }, // ARTP_EYESIGHT,
+    { "+Inv", ARTP_VAL_BOOL,
+        []() { return 1; }, nullptr }, // ARTP_INVISIBLE,
+    { "+Fly", ARTP_VAL_BOOL,
+        []() { return 1; }, nullptr }, // ARTP_FLY,
 #if TAG_MAJOR_VERSION > 34
-    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_FOG,
+    { "+Fog", ARTP_VAL_BOOL,
+        nullptr, nullptr }, // ARTP_FOG,
 #endif
-    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_BLINK,
-    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_BERSERK,
-    { ARTP_VAL_POS, nullptr, []() { return 2; } }, // ARTP_NOISES,
-    { ARTP_VAL_BOOL, nullptr, []() { return 1; } }, // ARTP_PREVENT_SPELLCASTING,
-    { ARTP_VAL_POS, nullptr, []() { return 12; } }, // ARTP_CAUSE_TELEPORTATION,
-    { ARTP_VAL_BOOL, nullptr, []() { return 1; } }, // ARTP_PREVENT_TELEPORTATION,
-    { ARTP_VAL_POS, nullptr, []() { return 5; } }, // ARTP_ANGRY,
+    { "+Blink", ARTP_VAL_BOOL,
+        []() { return 1; }, nullptr }, // ARTP_BLINK,
+    { "+Rage", ARTP_VAL_BOOL,
+        []() { return 1; }, nullptr }, // ARTP_BERSERK,
+    { "Noisy", ARTP_VAL_POS,
+        nullptr, []() { return 2; } }, // ARTP_NOISES,
+    { "-Cast", ARTP_VAL_BOOL,
+        nullptr, []() { return 1; } }, // ARTP_PREVENT_SPELLCASTING,
+    { "*Tele", ARTP_VAL_POS,
+        nullptr, []() { return 12; } }, // ARTP_CAUSE_TELEPORTATION,
+    { "-Tele", ARTP_VAL_BOOL,
+        nullptr, []() { return 1; } }, // ARTP_PREVENT_TELEPORTATION,
+    { "*Rage", ARTP_VAL_POS,
+        nullptr, []() { return 5; } }, // ARTP_ANGRY,
 #if TAG_MAJOR_VERSION == 34
-    { ARTP_VAL_POS, nullptr, nullptr }, // ARTP_METABOLISM,
+    { "Hungry", ARTP_VAL_POS,
+        nullptr, nullptr }, // ARTP_METABOLISM,
 #endif
-    { ARTP_VAL_POS, nullptr, []() { return 1; } }, // ARTP_MUTAGENIC,
+    { "Contam", ARTP_VAL_POS,
+        nullptr, []() { return 1; } }, // ARTP_MUTAGENIC,
 #if TAG_MAJOR_VERSION == 34
-    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_ACCURACY,
+    { "Acc", ARTP_VAL_ANY,
+        nullptr, nullptr }, // ARTP_ACCURACY,
 #endif
-    { ARTP_VAL_ANY,
+    { "Slay", ARTP_VAL_ANY,
       []() { return 2 + random2(3) + random2(3); },
       []() { return -(2 + random2(3) + random2(3)); } }, // ARTP_SLAYING,
-    { ARTP_VAL_POS, nullptr, nullptr }, // ARTP_CURSED,
-    { ARTP_VAL_ANY, _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_STEALTH,
-    { ARTP_VAL_ANY, _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_MAGICAL_POWER,
-    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_BASE_DELAY,
-    { ARTP_VAL_ANY, _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_HP,
-    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_CLARITY,
-    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_BASE_ACC,
-    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_BASE_DAM,
-    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_RMSL,
+    { "Curse", ARTP_VAL_POS,
+        nullptr, nullptr }, // ARTP_CURSED,
+    { "Stlth", ARTP_VAL_ANY,
+        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_STEALTH,
+    { "MP", ARTP_VAL_ANY,
+        _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_MAGICAL_POWER,
+    { "Delay", ARTP_VAL_ANY,
+        nullptr, nullptr }, // ARTP_BASE_DELAY,
+    { "HP", ARTP_VAL_ANY,
+        _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_HP,
+    { "Clar", ARTP_VAL_BOOL,
+        nullptr, nullptr }, // ARTP_CLARITY,
+    { "BAcc", ARTP_VAL_ANY,
+        nullptr, nullptr }, // ARTP_BASE_ACC,
+    { "BDam", ARTP_VAL_ANY,
+        nullptr, nullptr }, // ARTP_BASE_DAM,
+    { "RMsl", ARTP_VAL_BOOL,
+        nullptr, nullptr }, // ARTP_RMSL,
 #if TAG_MAJOR_VERSION == 34
-    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_FOG,
+    { "+Fog", ARTP_VAL_BOOL,
+        nullptr, nullptr }, // ARTP_FOG,
 #endif
-    { ARTP_VAL_POS, []() { return 1; }, nullptr }, // ARTP_REGENERATION,
-    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_SUSTAB,
-    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_NO_UPGRADE,
-    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_RCORR,
-    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_RMUT,
-    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_TWISTER,
+    { "Regen", ARTP_VAL_POS,
+        []() { return 1; }, nullptr }, // ARTP_REGENERATION,
+    { "SustAb", ARTP_VAL_BOOL,
+        nullptr, nullptr }, // ARTP_SUSTAB,
+    { "nupgr", ARTP_VAL_BOOL,
+        nullptr, nullptr }, // ARTP_NO_UPGRADE,
+    { "rCorr", ARTP_VAL_BOOL,
+        []() { return 1; }, nullptr }, // ARTP_RCORR,
+    { "rMut", ARTP_VAL_BOOL,
+        nullptr, nullptr }, // ARTP_RMUT,
+    { "+Twstr", ARTP_VAL_BOOL,
+        []() { return 1; }, nullptr }, // ARTP_TWISTER,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 
@@ -769,6 +813,18 @@ artp_value_type artp_potential_value_types(artefact_prop_type prop)
 {
     ASSERT_RANGE(prop, 0, ARRAYSZ(artp_data));
     return artp_data[prop].value_types;
+}
+
+/**
+ * Return the name for a given artefact property.
+ *
+ * @param prop      The artp in question.
+ * @return          A name; e.g. rCorr, Slay, HP, etc.
+ */
+const char *artp_name(artefact_prop_type prop)
+{
+    ASSERT_RANGE(prop, 0, ARRAYSZ(artp_data));
+    return artp_data[prop].name;
 }
 
 static void _get_randart_properties(const item_def &item,

@@ -244,63 +244,8 @@ void wizard_create_spec_object()
     }
 }
 
-static const char* _prop_name[] =
-{
-    "Brand",
-    "AC",
-    "EV",
-    "Str",
-    "Int",
-    "Dex",
-    "rFire",
-    "rCold",
-    "rElec",
-    "rPois",
-    "rNeg",
-    "MR",
-    "SInv",
-    "+Inv",
-    "+Fly",
-#if TAG_MAJOR_VERSION > 34
-    "+Fog",
-#endif
-    "+Blink",
-    "+Rage",
-    "Noisy",
-    "-Cast",
-    "*Tele",
-    "-Tele",
-    "*Rage",
-#if TAG_MAJOR_VERSION == 34
-    "Hunger",
-#endif
-    "Contam",
-    "Acc",
-    "Dam",
-    "Curse",
-    "Stlth",
-    "MP",
-    "Delay",
-    "HP",
-    "Clar",
-    "BAcc",
-    "BDam",
-    "RMsl",
-#if TAG_MAJOR_VERSION == 34
-    "+Fog",
-#endif
-    "Regen",
-    "SustAb",
-    "noupgr",
-    "rCorr",
-    "rMut",
-    "+Twstr",
-};
-
 static void _tweak_randart(item_def &item)
 {
-    COMPILE_CHECK(ARRAYSZ(_prop_name) == ARTP_NUM_PROPERTIES);
-
     if (item_is_equipped(item))
     {
         mprf(MSGCH_PROMPT, "You can't tweak the randart properties of an equipped item.");
@@ -317,8 +262,6 @@ static void _tweak_randart(item_def &item)
     vector<unsigned int> choice_to_prop;
     for (unsigned int i = 0, choice_num = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
-        if (_prop_name[i] == string("UNUSED"))
-            continue;
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
             *(prompt.rend()) = '\n'; // Replace the space
@@ -339,7 +282,7 @@ static void _tweak_randart(item_def &item)
         snprintf(buf, sizeof(buf), "%s) %s%-6s%s ",
                 choice == '<' ? "<<" : string(1, choice).c_str(),
                  props[i] ? "<w>" : "",
-                 _prop_name[i],
+                 artp_name((artefact_prop_type)choice_to_prop[choice_num]),
                  props[i] ? "</w>" : "");
 
         prompt += buf;
@@ -373,7 +316,7 @@ static void _tweak_randart(item_def &item)
     switch (artp_potential_value_types(prop))
     {
     case ARTP_VAL_BOOL:
-        mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[prop],
+        mprf(MSGCH_PROMPT, "Toggling %s to %s.", artp_name(prop),
              props[prop] ? "off" : "on");
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              !props[prop]);
@@ -381,13 +324,13 @@ static void _tweak_randart(item_def &item)
 
     case ARTP_VAL_POS:
      {
-        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
+        mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", true);
 
         if (val < 0)
         {
             mprf(MSGCH_PROMPT, "Value for %s must be non-negative",
-                 _prop_name[prop]);
+                 artp_name(prop));
             return;
         }
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
@@ -396,7 +339,7 @@ static void _tweak_randart(item_def &item)
       }
     case ARTP_VAL_ANY:
       {
-        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
+        mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
         const int val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
