@@ -3743,9 +3743,8 @@ enum gender_type
     NUM_GENDERS
 };
 
-// Be sure to update _prop_name[] and good_or_bad[] and _prop_type[] in
-// wiz-item.cc to match.  Also _randart_propnames(), but order doesn't matter
-// there.
+// Be sure to update artefact_prop_data[] in artefact.cc. Also,
+// _randart_propnames() in describe.cc, but order doesn't matter there.
 enum artefact_prop_type
 {
     ARTP_BRAND,
