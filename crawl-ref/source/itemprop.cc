@@ -49,6 +49,7 @@ enum armour_flags
     ARMF_RES_NEG            = 1 << 6,
     // misc (multilevel)
     ARMF_STEALTH            = 1 << 9,
+    ARMF_REGENERATION       = 1 << 13,
 
     ARMF_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
 
@@ -116,9 +117,11 @@ static const armour_def Armour_prop[] =
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false },
 
     { ARM_TROLL_HIDE,           "troll hide",             2,  -4,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_REGENERATION },
     { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -4,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
+        ARMF_REGENERATION },
     { ARM_STEAM_DRAGON_HIDE,    "steam dragon hide",      2,   0,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false,
         ARMF_RES_STEAM },
@@ -3018,7 +3021,14 @@ int remove_oldest_xp_evoker(item_def &stack, int quant)
 
 static armflags_t _armour_type_flags(const uint8_t arm)
 {
-    return Armour_prop[ Armour_index[arm] ].flags;
+    // Ugly hack
+    if (you.species == SP_TROLL && (arm == ARM_TROLL_HIDE
+                                    || arm ==  ARM_TROLL_LEATHER_ARMOUR))
+    {
+        return ARMF_NO_FLAGS;
+    }
+    else
+        return Armour_prop[ Armour_index[arm] ].flags;
 }
 
 int armour_type_res_fire(const uint8_t arm)
@@ -3066,4 +3076,9 @@ bool armour_type_res_sticky_flame(const uint8_t arm)
 bool armour_type_res_steam(const uint8_t armour_type)
 {
     return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_STEAM);
+}
+
+bool armour_type_bonus_regen(const uint8_t armour_type)
+{
+    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_REGENERATION);
 }

@@ -173,6 +173,7 @@ bool armour_type_res_elec(const uint8_t arm) PURE;
 bool armour_type_res_poison(const uint8_t arm) PURE;
 bool armour_type_res_sticky_flame(const uint8_t arm) PURE;
 bool armour_type_res_steam(const uint8_t arm) PURE;
+bool armour_type_bonus_regen(const uint8_t arm) PURE;
 
 int get_armour_res_fire(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_cold(const item_def &arm, bool check_artp) PURE;

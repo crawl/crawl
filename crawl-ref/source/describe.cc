@@ -219,7 +219,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Noisy",  ARTP_NOISES,                2 },
 
         // Evokable abilities come second
-        { "+Twstr", ARTP_TWISTER,              2 },
+        { "+Twstr", ARTP_TWISTER,               2 },
         { "+Blink", ARTP_BLINK,                 2 },
         { "+Rage",  ARTP_BERSERK,               2 },
         { "+Inv",   ARTP_INVISIBLE,             2 },
@@ -233,6 +233,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "rC",     ARTP_COLD,                  1 },
         { "rN",     ARTP_NEGATIVE_ENERGY,       1 },
         { "MR",     ARTP_MAGIC,                 1 },
+        { "Regen",  ARTP_REGENERATION,          1 },
         { "rMut",   ARTP_RMUT,                  2 },
         { "rCorr",  ARTP_RCORR,                 2 },
 
@@ -252,7 +253,6 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Curse",  ARTP_CURSED,                2 },
         { "Clar",   ARTP_CLARITY,               2 },
         { "RMsl",   ARTP_RMSL,                  2 },
-        { "Regen",  ARTP_REGENERATION,          2 },
         { "SustAb", ARTP_SUSTAB,                2 },
     };
 
