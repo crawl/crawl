@@ -36,7 +36,7 @@ function bailey_portal(e, ptype)
   e.lua_marker('O',
       timed_marker {
         disappear = "The portal closes with a thud.",
-        entity = 'oriflamme',
+        entity = 'portcullis',
         bailey_type = ptype,
         turns = timeout_turns,
         single_timed = true,
