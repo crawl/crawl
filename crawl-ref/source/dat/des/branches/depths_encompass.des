@@ -54,10 +54,9 @@
         e.shuffle("JH")
         e.shuffle("34")
         e.shuffle("m6")
-        e.kitem("p = w:50 potion of mutation / " ..
-                "w:15 amulet of resist mutation ident:all / " ..
+        e.kitem("p = w:60 potion of mutation / " ..
+                "w:5 amulet of resist mutation ident:all / " ..
                 "w:1 potion of cure mutation")
-        e.kitem("O = | mimic")
         e.kitem("P = amulet of resist mutation ident:all")
         e.kitem("Q = potion of cure mutation")
         e.kitem("R = potion of cure mutation / nothing")
@@ -67,8 +66,8 @@
         e.nsubst("J = 2:3 / 2:4")
         e.nsubst("w = 4:W / *:w")
         e.nsubst("1 = 3:1 / *:.")
-        e.subst("s = .$*p|O")
-        e.subst("u = .$||O")
+        e.subst("s = ..$*p|")
+        e.subst("u = ..$||")
         e.subst("3 = 3.")
         e.subst("5 = 5 .:4")
         e.subst("6 = 6.")
