@@ -6005,44 +6005,40 @@ static void _extra_sacrifice_code(ability_type sac)
     }
 }
 
+/**
+ * Describe variable costs for a given Ru sacrifice being offered.
+ *
+ * @param sac       The sacrifice in question.
+ * @return          Extra costs.
+ *                  For ABIL_RU_SACRIFICE_ARCANA: e.g. " (Tloc/Air/Fire)"
+ *                  For other variable muts: e.g. " (frail)"
+ *                  Otherwise, "".
+ */
 string ru_sac_text(ability_type sac)
 {
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
-    mutation_type mut = MUT_NON_MUTATION;
-    int num_sacrifices;
-    string extra_text;
-    const bool is_sac_arcana = sac == ABIL_RU_SACRIFICE_ARCANA;
-    if (sac_def.sacrifice_vector)
+    if (!sac_def.sacrifice_vector)
+        return "";
+
+    ASSERT(you.props.exists(sac_def.sacrifice_vector));
+    const CrawlVector &sacrifice_muts =
+        you.props[sac_def.sacrifice_vector].get_vector();
+
+    if (sac != ABIL_RU_SACRIFICE_ARCANA)
     {
-        ASSERT(you.props.exists(sac_def.sacrifice_vector));
-        CrawlVector &sacrifice_muts =
-            you.props[sac_def.sacrifice_vector].get_vector();
-        num_sacrifices = sacrifice_muts.size();
-
-        for (int i = 0; i < num_sacrifices; i++)
-        {
-            mut = AS_MUT(sacrifice_muts[i]);
-
-            // format the text that will be displayed
-            if (is_sac_arcana)
-            {
-                if (i == num_sacrifices - 1)
-                {
-                    extra_text = make_stringf("%s%s", extra_text.c_str(),
-                        _arcane_mutation_to_school_abbr(mut));
-                }
-                else
-                {
-                    extra_text = make_stringf("%s%s/", extra_text.c_str(),
-                        _arcane_mutation_to_school_abbr(mut));
-                }
-            }
-            else
-                extra_text = static_cast<string>(mutation_name(mut));
-        }
-        return make_stringf(" (%s)", extra_text.c_str());
+        ASSERT(sacrifice_muts.size() == 1);
+        const mutation_type mut = AS_MUT(sacrifice_muts[0]);
+        return make_stringf(" (%s)", mutation_name(mut));
     }
-    return "";
+
+    // "Tloc/Fire/Ice"
+    const string school_names
+        = comma_separated_fn(sacrifice_muts.begin(), sacrifice_muts.end(),
+                [](CrawlStoreValue mut) {
+                    return _arcane_mutation_to_school_abbr(AS_MUT(mut));
+                }, "/", "/");
+
+    return make_stringf(" (%s)", school_names.c_str());
 }
 
 bool ru_do_sacrifice(ability_type sac)
