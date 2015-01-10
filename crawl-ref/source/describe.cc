@@ -190,11 +190,22 @@ static const char* _jewellery_base_ability_string(int subtype)
 
 #define known_proprt(prop) (proprt[(prop)] && known[(prop)])
 
+/// How to display props of a given type?
+enum prop_note_type
+{
+    /// The raw numeral; e.g "Slay+3", "Int-1"
+    PROPN_NUMERAL,
+    /// Plusses and minuses; "rF-", "rC++"
+    PROPN_SYMBOLIC,
+    /// Don't note the number; e.g. "rMut"
+    PROPN_PLAIN,
+};
+
 struct property_annotators
 {
     const char* name;
     artefact_prop_type prop;
-    int spell_out;              // 0: "+3", 1: "+++", 2: value doesn't matter
+    prop_note_type spell_out;
 };
 
 static vector<string> _randart_propnames(const item_def& item,
@@ -211,49 +222,49 @@ static vector<string> _randart_propnames(const item_def& item,
     {
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
-        { "-Cast",  ARTP_PREVENT_SPELLCASTING,  2 },
-        { "-Tele",  ARTP_PREVENT_TELEPORTATION, 2 },
-        { "Contam", ARTP_MUTAGENIC,             2 },
-        { "*Rage",  ARTP_ANGRY,                 2 },
-        { "*Tele",  ARTP_CAUSE_TELEPORTATION,   2 },
-        { "Noisy",  ARTP_NOISES,                2 },
+        { "-Cast",  ARTP_PREVENT_SPELLCASTING,  PROPN_PLAIN },
+        { "-Tele",  ARTP_PREVENT_TELEPORTATION, PROPN_PLAIN },
+        { "Contam", ARTP_MUTAGENIC,             PROPN_PLAIN },
+        { "*Rage",  ARTP_ANGRY,                 PROPN_PLAIN },
+        { "*Tele",  ARTP_CAUSE_TELEPORTATION,   PROPN_PLAIN },
+        { "Noisy",  ARTP_NOISES,                PROPN_PLAIN },
 
         // Evokable abilities come second
-        { "+Twstr", ARTP_TWISTER,               2 },
-        { "+Blink", ARTP_BLINK,                 2 },
-        { "+Rage",  ARTP_BERSERK,               2 },
-        { "+Inv",   ARTP_INVISIBLE,             2 },
-        { "+Fly",   ARTP_FLY,                   2 },
-        { "+Fog",   ARTP_FOG,                   2 },
+        { "+Twstr", ARTP_TWISTER,               PROPN_PLAIN },
+        { "+Blink", ARTP_BLINK,                 PROPN_PLAIN },
+        { "+Rage",  ARTP_BERSERK,               PROPN_PLAIN },
+        { "+Inv",   ARTP_INVISIBLE,             PROPN_PLAIN },
+        { "+Fly",   ARTP_FLY,                   PROPN_PLAIN },
+        { "+Fog",   ARTP_FOG,                   PROPN_PLAIN },
 
         // Resists, also really important
-        { "rElec",  ARTP_ELECTRICITY,           2 },
-        { "rPois",  ARTP_POISON,                2 },
-        { "rF",     ARTP_FIRE,                  1 },
-        { "rC",     ARTP_COLD,                  1 },
-        { "rN",     ARTP_NEGATIVE_ENERGY,       1 },
-        { "MR",     ARTP_MAGIC,                 1 },
-        { "Regen",  ARTP_REGENERATION,          1 },
-        { "rMut",   ARTP_RMUT,                  2 },
-        { "rCorr",  ARTP_RCORR,                 2 },
+        { "rElec",  ARTP_ELECTRICITY,           PROPN_PLAIN },
+        { "rPois",  ARTP_POISON,                PROPN_PLAIN },
+        { "rF",     ARTP_FIRE,                  PROPN_SYMBOLIC },
+        { "rC",     ARTP_COLD,                  PROPN_SYMBOLIC },
+        { "rN",     ARTP_NEGATIVE_ENERGY,       PROPN_SYMBOLIC },
+        { "MR",     ARTP_MAGIC,                 PROPN_SYMBOLIC },
+        { "Regen",  ARTP_REGENERATION,          PROPN_SYMBOLIC },
+        { "rMut",   ARTP_RMUT,                  PROPN_PLAIN },
+        { "rCorr",  ARTP_RCORR,                 PROPN_PLAIN },
 
         // Quantitative attributes
-        { "HP",     ARTP_HP,                    0 },
-        { "MP",     ARTP_MAGICAL_POWER,         0 },
-        { "AC",     ARTP_AC,                    0 },
-        { "EV",     ARTP_EVASION,               0 },
-        { "Str",    ARTP_STRENGTH,              0 },
-        { "Int",    ARTP_INTELLIGENCE,          0 },
-        { "Dex",    ARTP_DEXTERITY,             0 },
-        { "Slay",   ARTP_SLAYING,               0 },
+        { "HP",     ARTP_HP,                    PROPN_NUMERAL },
+        { "MP",     ARTP_MAGICAL_POWER,         PROPN_NUMERAL },
+        { "AC",     ARTP_AC,                    PROPN_NUMERAL },
+        { "EV",     ARTP_EVASION,               PROPN_NUMERAL },
+        { "Str",    ARTP_STRENGTH,              PROPN_NUMERAL },
+        { "Int",    ARTP_INTELLIGENCE,          PROPN_NUMERAL },
+        { "Dex",    ARTP_DEXTERITY,             PROPN_NUMERAL },
+        { "Slay",   ARTP_SLAYING,               PROPN_NUMERAL },
 
         // Qualitative attributes (and Stealth)
-        { "SInv",   ARTP_EYESIGHT,              2 },
-        { "Stlth",  ARTP_STEALTH,               1 },
-        { "Curse",  ARTP_CURSED,                2 },
-        { "Clar",   ARTP_CLARITY,               2 },
-        { "RMsl",   ARTP_RMSL,                  2 },
-        { "SustAb", ARTP_SUSTAB,                2 },
+        { "SInv",   ARTP_EYESIGHT,              PROPN_PLAIN },
+        { "Stlth",  ARTP_STEALTH,               PROPN_SYMBOLIC },
+        { "Curse",  ARTP_CURSED,                PROPN_PLAIN },
+        { "Clar",   ARTP_CLARITY,               PROPN_PLAIN },
+        { "RMsl",   ARTP_RMSL,                  PROPN_PLAIN },
+        { "SustAb", ARTP_SUSTAB,                PROPN_PLAIN },
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -322,10 +333,10 @@ static vector<string> _randart_propnames(const item_def& item,
             ostringstream work;
             switch (ann.spell_out)
             {
-            case 0: // e.g. AC+4
+            case PROPN_NUMERAL: // e.g. AC+4
                 work << showpos << ann.name << val;
                 break;
-            case 1: // e.g. F++
+            case PROPN_SYMBOLIC: // e.g. F++
             {
                 // XXX: actually handle absurd values instead of displaying
                 // the wrong number of +s or -s
@@ -334,7 +345,7 @@ static vector<string> _randart_propnames(const item_def& item,
                      << string(sval, (val > 0 ? '+' : '-'));
                 break;
             }
-            case 2: // e.g. rPois or SInv
+            case PROPN_PLAIN: // e.g. rPois or SInv
                 if (ann.prop == ARTP_CURSED && val < 1)
                     continue;
 
