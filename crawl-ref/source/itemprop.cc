@@ -36,34 +36,6 @@
 
 static iflags_t _full_ident_mask(const item_def& item);
 
-
-typedef uint32_t armflags_t;
-#define ard(flg, lev) (armflags_t)((flg) * ((lev) & 7))
-
-enum armour_flag
-{
-    ARMF_NO_FLAGS           = 0,
-    // multilevel resistances
-    ARMF_RES_FIRE           = 1 << 0,
-    ARMF_RES_COLD           = 1 << 3,
-    ARMF_RES_NEG            = 1 << 6,
-    // misc (multilevel)
-    ARMF_STEALTH            = 1 << 9,
-    ARMF_REGENERATION       = 1 << 13,
-
-    ARMF_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
-
-    // boolean resists
-    ARMF_RES_MAGIC          = 1 << 17,
-    ARMF_RES_ELEC           = 1 << 18,
-    ARMF_RES_POISON         = 1 << 19,
-    ARMF_RES_STICKY_FLAME   = 1 << 20,
-    ARMF_RES_STEAM          = 1 << 21,
-    // vulnerabilities
-    ARMF_VUL_FIRE           = ard(ARMF_RES_FIRE, -1),
-    ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
-};
-
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
@@ -80,17 +52,6 @@ struct armour_def
     /// The resists, vulns, &c that this armour type gives when worn.
     armflags_t          flags;
 };
-
-/// witchcraft. copied from mon-util.h's get_resist
-static inline int _get_armour_flag(armflags_t all, armour_flag res)
-{
-    if (res > ARMF_LAST_MULTI)
-        return all & res ? 1 : 0;
-    int v = (all / res) & 7;
-    if (v > 4)
-        return v - 8;
-    return v;
-}
 
 // Note: the Little-Giant range is used to make armours which are very
 // flexible and adjustable and can be worn by any player character...
@@ -2331,7 +2292,7 @@ int get_armour_res_fire(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    res += armour_type_res_fire(arm.sub_type);
+    res += armour_type_prop(arm.sub_type, ARMF_RES_FIRE);
 
     // check ego resistance
     const int ego = get_armour_ego_type(arm);
@@ -2351,7 +2312,7 @@ int get_armour_res_cold(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    res += armour_type_res_cold(arm.sub_type);
+    res += armour_type_prop(arm.sub_type, ARMF_RES_COLD);
 
     // check ego resistance
     const int ego = get_armour_ego_type(arm);
@@ -2371,7 +2332,7 @@ int get_armour_res_poison(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    res += armour_type_res_poison(arm.sub_type);
+    res += armour_type_prop(arm.sub_type, ARMF_RES_POISON);
 
     // check ego resistance
     if (get_armour_ego_type(arm) == SPARM_POISON_RESISTANCE)
@@ -2390,7 +2351,7 @@ int get_armour_res_elec(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    res += armour_type_res_elec(arm.sub_type);
+    res += armour_type_prop(arm.sub_type, ARMF_RES_ELEC);
 
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_ELECTRICITY);
@@ -2404,8 +2365,8 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
 
     int res = 0;
 
-    // intrinsci armour abilities
-    res += armour_type_res_neg(arm.sub_type);
+    // intrinsic armour abilities
+    res += armour_type_prop(arm.sub_type, ARMF_RES_NEG);
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)
@@ -2423,8 +2384,8 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
 
     int res = 0;
 
-    // intrinsci armour abilities
-    res += armour_type_res_magic(arm.sub_type);
+    // intrinsic armour abilities
+    res += armour_type_prop(arm.sub_type, ARMF_RES_MAGIC) * MR_PIP;
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_MAGIC_RESISTANCE)
@@ -2454,8 +2415,8 @@ int get_armour_res_sticky_flame(const item_def &arm)
 {
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
-    // intrinsci armour abilities
-    return armour_type_res_sticky_flame(arm.sub_type);
+    // intrinsic armour abilities
+    return armour_type_prop(arm.sub_type, ARMF_RES_STICKY_FLAME);
 }
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp)
@@ -3019,6 +2980,23 @@ int remove_oldest_xp_evoker(item_def &stack, int quant)
 }
 
 
+/// witchcraft. copied from mon-util.h's get_resist
+static inline int _get_armour_flag(armflags_t all, armour_flag res)
+{
+    if (res > ARMF_LAST_MULTI)
+        return all & res ? 1 : 0;
+    int v = (all / res) & 7;
+    if (v > 4)
+        return v - 8;
+    return v;
+}
+
+/**
+ * What inherent special properties does the given armour type have?
+ *
+ * @param arm   The given armour type.
+ * @return      A bitfield of special properties.
+ */
 static armflags_t _armour_type_flags(const uint8_t arm)
 {
     // Ugly hack
@@ -3031,54 +3009,14 @@ static armflags_t _armour_type_flags(const uint8_t arm)
         return Armour_prop[ Armour_index[arm] ].flags;
 }
 
-int armour_type_res_fire(const uint8_t arm)
+/**
+ * What value does the given armour type have for the innate special property?
+ *
+ * @param arm   The given armour type.
+ * @param prop  The property in question.
+ * @return      A value for that property; ranges -3 to 4.
+ */
+int armour_type_prop(const uint8_t arm, const armour_flag prop)
 {
-    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_FIRE);
-}
-
-int armour_type_res_cold(const uint8_t arm)
-{
-    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_COLD);
-}
-
-bool armour_type_res_poison(const uint8_t arm)
-{
-    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_POISON);
-}
-
-bool armour_type_res_elec(const uint8_t arm)
-{
-    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_ELEC);
-}
-
-int armour_type_res_neg(const uint8_t arm)
-{
-    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_NEG);
-}
-
-int armour_type_res_magic(const uint8_t arm)
-{
-    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_MAGIC)
-            * MR_PIP;
-}
-
-int armour_type_bonus_stealth(const uint8_t arm)
-{
-    return _get_armour_flag(_armour_type_flags(arm), ARMF_STEALTH)
-            * STEALTH_PIP;
-}
-
-bool armour_type_res_sticky_flame(const uint8_t arm)
-{
-    return _get_armour_flag(_armour_type_flags(arm), ARMF_RES_STICKY_FLAME);
-}
-
-bool armour_type_res_steam(const uint8_t armour_type)
-{
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_RES_STEAM);
-}
-
-bool armour_type_bonus_regen(const uint8_t armour_type)
-{
-    return _get_armour_flag(_armour_type_flags(armour_type), ARMF_REGENERATION);
+    return _get_armour_flag(_armour_type_flags(arm), prop);
 }
