@@ -96,6 +96,7 @@ enum ability_flag_type
     ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
     ABFLAG_SKILL_DRAIN    = 0x00080000, // drains skill levels
     ABFLAG_GOLD           = 0x00100000, // costs gold
+    ABFLAG_SACRIFICE      = 0x00200000, // sacrifice (Ru)
 };
 
 static int  _find_ability_slot(const ability_def& abil);
@@ -411,31 +412,31 @@ static const ability_def Ability_List[] =
       8, 0, 0, 0, 0, ABFLAG_EXHAUSTION|ABFLAG_SKILL_DRAIN },
 
     { ABIL_RU_SACRIFICE_PURITY, "Sacrifice Purity",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_WORDS, "Sacrifice Words",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_DRINK, "Sacrifice Drink",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_ESSENCE, "Sacrifice Essence",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_HEALTH, "Sacrifice Health",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_STEALTH, "Sacrifice Stealth",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_ARTIFICE, "Sacrifice Artifice",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_LOVE, "Sacrifice Love",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_COURAGE, "Sacrifice Courage",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_ARCANA, "Sacrifice Arcana",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_NIMBLENESS, "Sacrifice Nimbleness",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_DURABILITY, "Sacrifice Durability",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_HAND, "Sacrifice a Hand",
-      0, 0, 0, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_REJECT_SACRIFICES, "Reject Sacrifices",
       0, 0, 0, 0, 0, ABFLAG_NONE },
 
@@ -791,6 +792,14 @@ const string make_cost_description(ability_type ability)
             ret += make_stringf(", %d Gold", amount);
         else
             ret += ", Gold";
+    }
+
+    if (abil.flags & ABFLAG_SACRIFICE)
+    {
+        ret += ", ";
+        const string prefix = "Sacrifice ";
+        ret += string(ability_name(ability)).substr(prefix.size());
+        ret += ru_sac_text(ability);
     }
 
     // If we haven't output anything so far, then the effect has no cost
