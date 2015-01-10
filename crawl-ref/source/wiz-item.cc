@@ -41,6 +41,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "unicode.h"
+#include "view.h"
 
 #ifdef WIZARD
 static void _make_all_books()
@@ -1196,7 +1197,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
-#define MAX_TRIES 16777216 /* not special anymore */
+#define MAX_TRIES 272727
 static void _debug_rap_stats(FILE *ostat)
 {
     int i = prompt_invent_item("Generate randart stats on which item?",
@@ -1259,9 +1260,8 @@ static void _debug_rap_stats(FILE *ostat)
         }
 
         num_randarts++;
-        proprt[ARTP_CURSED] = 0;
 
-        int num_props = 0, num_good_props = 0, num_bad_props = 0;
+        int num_good_props = 0, num_bad_props = 0;
         for (int j = 0; j < ARTP_NUM_PROPERTIES; ++j)
         {
             const artefact_prop_type prop = (artefact_prop_type)j;
@@ -1269,7 +1269,6 @@ static void _debug_rap_stats(FILE *ostat)
             if (!val)
                 continue;
 
-            num_props++;
             all_props[prop]++;
             if (!artp_potentially_good(prop))
                 num_bad_props++;
@@ -1287,7 +1286,8 @@ static void _debug_rap_stats(FILE *ostat)
             }
         }
 
-        int balance = num_good_props - num_bad_props;
+        const int num_props = num_good_props + num_bad_props;
+        const int balance   = num_good_props - num_bad_props;
 
         max_props         = max(max_props, num_props);
         max_good_props    = max(max_good_props, num_good_props);
@@ -1299,12 +1299,13 @@ static void _debug_rap_stats(FILE *ostat)
         total_bad_props     += num_bad_props;
         total_balance_props += balance;
 
-        if (i % 16767 == 0)
+        if (i % (MAX_TRIES / 100) == 0)
         {
             clear_messages();
             float curr_percent = (float) i * 1000.0
                 / (float) MAX_TRIES;
             mprf("%4.1f%% done.", curr_percent / 10.0);
+            viewwindow();
         }
 
     }
