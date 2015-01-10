@@ -3448,42 +3448,13 @@ colour_t item_def::armour_colour() const
     if (is_artefact(*this))
         return randart_colour();
 
+    if (armour_type_is_hide(sub_type, true))
+        return mons_class_colour(monster_for_hide((armour_type)sub_type));
+
+
     // TODO: move (some of?) this into itemprop.cc
     switch (sub_type)
     {
-        case ARM_FIRE_DRAGON_HIDE:
-        case ARM_FIRE_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_FIRE_DRAGON);
-        case ARM_TROLL_HIDE:
-        case ARM_TROLL_LEATHER_ARMOUR:
-            return mons_class_colour(MONS_TROLL);
-        case ARM_ICE_DRAGON_HIDE:
-        case ARM_ICE_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_ICE_DRAGON);
-        case ARM_STEAM_DRAGON_HIDE:
-        case ARM_STEAM_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_STEAM_DRAGON);
-        case ARM_MOTTLED_DRAGON_HIDE:
-        case ARM_MOTTLED_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_MOTTLED_DRAGON);
-        case ARM_STORM_DRAGON_HIDE:
-        case ARM_STORM_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_STORM_DRAGON);
-        case ARM_GOLD_DRAGON_HIDE:
-        case ARM_GOLD_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_GOLDEN_DRAGON);
-        case ARM_SWAMP_DRAGON_HIDE:
-        case ARM_SWAMP_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_SWAMP_DRAGON);
-        case ARM_PEARL_DRAGON_HIDE:
-        case ARM_PEARL_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_PEARL_DRAGON);
-        case ARM_SHADOW_DRAGON_HIDE:
-        case ARM_SHADOW_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_SHADOW_DRAGON);
-        case ARM_QUICKSILVER_DRAGON_HIDE:
-        case ARM_QUICKSILVER_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_QUICKSILVER_DRAGON);
         case ARM_CLOAK:
             return WHITE;
         case ARM_NAGA_BARDING:
