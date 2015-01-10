@@ -460,7 +460,7 @@ static map<jewellery_type, vector<jewellery_fake_artp>> jewellery_artps = {
  * @param proprt[out]   The properties list to be populated.
  * @param known[out]    The props which are known.
  */
-static void _populate_jewel_intrininsic_artps(const item_def &item,
+static void _populate_jewel_intrinsic_artps(const item_def &item,
                                               artefact_properties_t &proprt,
                                               artefact_known_props_t &known)
 {
@@ -488,7 +488,7 @@ static void _populate_jewel_intrininsic_artps(const item_def &item,
  * @param proprt[out]   The properties list to be populated.
  * @param known[out]    The props which are known.
  */
-static void _populate_item_intrininsic_artps(const item_def &item,
+static void _populate_item_intrinsic_artps(const item_def &item,
                                              artefact_properties_t &proprt,
                                              artefact_known_props_t &known)
 {
@@ -499,7 +499,7 @@ static void _populate_item_intrininsic_artps(const item_def &item,
                                              proprt);
             break;
         case OBJ_JEWELLERY:
-            _populate_jewel_intrininsic_artps(item, proprt, known);
+            _populate_jewel_intrinsic_artps(item, proprt, known);
             break;
         default:
             break;
@@ -518,7 +518,7 @@ void artefact_desc_properties(const item_def &item,
     artefact_wpn_properties(item, proprt, known);
 
     // fake artefact properties (intrinsics)
-    _populate_item_intrininsic_artps(item, proprt, known);
+    _populate_item_intrinsic_artps(item, proprt, known);
 }
 
 static void _add_randart_weapon_brand(const item_def &item,
@@ -588,7 +588,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
     artefact_properties_t proprt;
     proprt.init(0);
     artefact_known_props_t _;
-    _populate_item_intrininsic_artps(item, proprt, _);
+    _populate_item_intrinsic_artps(item, proprt, _);
     if (proprt[prop])
         return false; // don't duplicate intrinsic props
 
