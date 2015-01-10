@@ -5169,13 +5169,13 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     string unrand_str = strip_tag_prefix(s, "unrand:");
 
     if (strip_tag(s, "good_item"))
-        result.level = MAKE_GOOD_ITEM;
+        result.level = ISPEC_GOOD_ITEM;
     else
     {
         int number = strip_number_tag(s, "level:");
         if (number != TAG_UNFOUND)
         {
-            if (number <= 0 && number != ISPEC_GOOD && number != ISPEC_SUPERB
+            if (number <= 0 && number != ISPEC_STAR && number != ISPEC_SUPERB
                 && number != ISPEC_DAMAGED && number != ISPEC_BAD)
             {
                 error = make_stringf("Bad item level: %d", number);
@@ -5394,7 +5394,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
     if (s == "*" || s == "star_item")
     {
-        result.level = ISPEC_GOOD;
+        result.level = ISPEC_STAR;
         return true;
     }
     else if (s == "|" || s == "superb_item")

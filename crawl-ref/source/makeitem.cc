@@ -207,7 +207,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         // Make a randart or unrandart.
 
         // 1 in 20 randarts are unrandarts.
-        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 20)
+        if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type))
@@ -246,7 +246,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
  */
 static int _num_brand_tries(const item_def& item, int item_level)
 {
-    if (item_level >= MAKE_GIFT_ITEM)
+    if (item_level >= ISPEC_GIFT)
         return 5;
     if (is_demonic(item) || x_chance_in_y(101 + item_level, 300))
         return 1;
@@ -400,7 +400,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                 return;
             }
         // fall back to an ordinary item
-        item_level = MAKE_GOOD_ITEM;
+        item_level = ISPEC_GOOD_ITEM;
     }
 
     // If we make the unique roll, no further generation necessary.
@@ -413,7 +413,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     ASSERT(!is_artefact(item));
 
     // Artefacts handled, let's make a normal item.
-    const bool force_good = item_level >= MAKE_GIFT_ITEM;
+    const bool force_good = item_level >= ISPEC_GIFT;
     const bool forced_ego = item.special > 0;
     const bool no_brand   = item.special == SPWPN_FORBID_BRAND;
 
@@ -493,7 +493,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (item.special != 0)
         return static_cast<special_missile_type>(item.special);
 
-    const bool force_good = item_level >= MAKE_GIFT_ITEM;
+    const bool force_good = item_level >= ISPEC_GIFT;
     special_missile_type rc = SPMSL_NORMAL;
 
     // "Normal weight" of SPMSL_NORMAL.
@@ -745,7 +745,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // Make a randart or unrandart.
 
         // 1 in 20 randarts are unrandarts.
-        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 20)
+        if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type))
@@ -1158,7 +1158,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             }
         }
         // fall back to an ordinary item
-        item_level = MAKE_GOOD_ITEM;
+        item_level = ISPEC_GOOD_ITEM;
     }
 
     if (allow_uniques
@@ -1175,7 +1175,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             item.sub_type = ARM_CENTAUR_BARDING;
     }
 
-    const bool force_good = item_level >= MAKE_GIFT_ITEM;
+    const bool force_good = item_level >= ISPEC_GIFT;
     const bool forced_ego = (item.special > 0);
     const bool no_ego     = (item.special == SPARM_FORBID_EGO);
 
@@ -1606,7 +1606,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
     // Copied unrand code from _try_make_weapon_artefact since randart enhancer staves
     // can't happen.
     if (allow_uniques
-        && one_chance_in(item_level == MAKE_GOOD_ITEM ? 27 : 100))
+        && one_chance_in(item_level == ISPEC_GOOD_ITEM ? 27 : 100))
     {
         // Temporarily fix the base_type to get enhancer staves
         item.base_type = OBJ_WEAPONS;
@@ -1873,7 +1873,7 @@ int items(bool allow_uniques,
 
     item_def& item(mitm[p]);
 
-    const bool force_good = item_level >= MAKE_GIFT_ITEM;
+    const bool force_good = item_level >= ISPEC_GIFT;
 
     if (force_ego != 0)
         allow_uniques = false;
@@ -2077,7 +2077,7 @@ static int _roll_rod_enchant(int item_level)
     if (one_chance_in(4))
         value -= random_range(1, 3);
 
-    if (item_level >= MAKE_GIFT_ITEM)
+    if (item_level >= ISPEC_GIFT)
         value += 2;
 
     int pr = 20 + item_level * 2;
@@ -2236,7 +2236,7 @@ static int _test_item_level()
     switch (random2(10))
     {
     case 0:
-        return MAKE_GOOD_ITEM;
+        return ISPEC_GOOD_ITEM;
     case 1:
         return ISPEC_DAMAGED;
     case 2:
