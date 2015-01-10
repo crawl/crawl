@@ -684,6 +684,7 @@ static void _add_randart_weapon_brand(const item_def &item,
 static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
 {
     artefact_properties_t proprt;
+    proprt.init(0);
     artefact_known_props_t _;
     _populate_item_intrininsic_artps(item, proprt, _);
     if (proprt[prop])
@@ -1430,6 +1431,7 @@ static bool _init_artefact_properties(item_def &item)
         return _init_artefact_book(item);
 
     artefact_properties_t prop;
+    prop.init(0);
     _get_randart_properties(item, prop);
 
     for (int i = 0; i < ART_PROPERTIES; i++)
@@ -1528,6 +1530,8 @@ int artefact_known_wpn_property(const item_def &item,
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
+    proprt.init(0);
+    known.init(0);
 
     artefact_wpn_properties(item, proprt, known);
 
@@ -2043,6 +2047,7 @@ bool randart_is_bad(const item_def &item, artefact_properties_t &proprt)
 bool randart_is_bad(const item_def &item)
 {
     artefact_properties_t proprt;
+    proprt.init(0);
     artefact_wpn_properties(item, proprt);
 
     return randart_is_bad(item, proprt);
