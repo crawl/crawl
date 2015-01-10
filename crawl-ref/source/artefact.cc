@@ -600,6 +600,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS; // they already have slaying!
         case ARTP_POISON:
+        case ARTP_EYESIGHT:
             return !item.is_type(OBJ_ARMOUR, ARM_NAGA_BARDING);
             // naga already have rPois & sInv!
         case ARTP_RCORR:
@@ -623,7 +624,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
         case ARTP_EVASION:
         case ARTP_FOG:
         case ARTP_RMUT:
-        case ARTP_EYESIGHT: // if enabled, remember to ban on naga barding
         case ARTP_CLARITY:
         case ARTP_SUSTAB:
             return false; // banned on randarts
