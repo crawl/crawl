@@ -297,69 +297,9 @@ static const char* _prop_name[] =
     "+Twstr",
 };
 
-#define ARTP_VAL_BOOL 0
-#define ARTP_VAL_POS  1
-#define ARTP_VAL_ANY  2
-
-static int8_t _prop_type[] =
-{
-    ARTP_VAL_POS,  //BRAND
-    ARTP_VAL_ANY,  //AC
-    ARTP_VAL_ANY,  //EVASION
-    ARTP_VAL_ANY,  //STRENGTH
-    ARTP_VAL_ANY,  //INTELLIGENCE
-    ARTP_VAL_ANY,  //DEXTERITY
-    ARTP_VAL_ANY,  //FIRE
-    ARTP_VAL_ANY,  //COLD
-    ARTP_VAL_BOOL, //ELECTRICITY
-    ARTP_VAL_BOOL, //POISON
-    ARTP_VAL_BOOL, //NEGATIVE_ENERGY
-    ARTP_VAL_POS,  //MAGIC
-    ARTP_VAL_BOOL, //EYESIGHT
-    ARTP_VAL_BOOL, //INVISIBLE
-    ARTP_VAL_BOOL, //FLIGHT
-#if TAG_MAJOR_VERSION > 34
-    ARTP_VAL_BOOL, //FOG
-#endif
-    ARTP_VAL_BOOL, //BLINK
-    ARTP_VAL_BOOL, //BERSERK
-    ARTP_VAL_POS,  //NOISES
-    ARTP_VAL_BOOL, //PREVENT_SPELLCASTING
-    ARTP_VAL_BOOL, //CAUSE_TELEPORTATION
-    ARTP_VAL_BOOL, //PREVENT_TELEPORTATION
-    ARTP_VAL_POS,  //ANGRY
-#if TAG_MAJOR_VERSION == 34
-    ARTP_VAL_POS,  //METABOLISM
-#endif
-    ARTP_VAL_POS,  //MUTAGENIC
-#if TAG_MAJOR_VERSION == 34
-    ARTP_VAL_ANY,  //ACCURACY
-#endif
-    ARTP_VAL_ANY,  //SLAYING
-    ARTP_VAL_POS,  //CURSED
-    ARTP_VAL_ANY,  //STEALTH
-    ARTP_VAL_ANY,  //MAGICAL_POWER
-    ARTP_VAL_ANY,  //BASE_DELAY
-    ARTP_VAL_ANY,  //HP
-    ARTP_VAL_BOOL, //CLARITY
-    ARTP_VAL_ANY,  //BASE_ACC
-    ARTP_VAL_ANY,  //BASE_DAM
-    ARTP_VAL_BOOL, //RMSL
-#if TAG_MAJOR_VERSION == 34
-    ARTP_VAL_BOOL, //FOG
-#endif
-    ARTP_VAL_ANY,  //REGENERATION
-    ARTP_VAL_BOOL, //SUSTAB
-    ARTP_VAL_BOOL, //NO_UPGRADE
-    ARTP_VAL_BOOL, //RCORR
-    ARTP_VAL_BOOL, //RMUT
-    ARTP_VAL_BOOL, //TWISTER
-};
-
 static void _tweak_randart(item_def &item)
 {
     COMPILE_CHECK(ARRAYSZ(_prop_name) == ARTP_NUM_PROPERTIES);
-    COMPILE_CHECK(ARRAYSZ(_prop_type) == ARTP_NUM_PROPERTIES);
 
     if (item_is_equipped(item))
     {
@@ -429,11 +369,8 @@ static void _tweak_randart(item_def &item)
         return;
     }
 
-    unsigned int prop = choice_to_prop[choice];
-    ASSERT(prop < ARRAYSZ(_prop_type));
-
-    int val;
-    switch (_prop_type[prop])
+    const artefact_prop_type prop = (artefact_prop_type)choice_to_prop[choice];
+    switch (artp_potential_value_types(prop))
     {
     case ARTP_VAL_BOOL:
         mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[prop],
@@ -443,8 +380,9 @@ static void _tweak_randart(item_def &item)
         break;
 
     case ARTP_VAL_POS:
+     {
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
-        val = prompt_for_int("New value? ", true);
+        const int val = prompt_for_int("New value? ", true);
 
         if (val < 0)
         {
@@ -455,12 +393,15 @@ static void _tweak_randart(item_def &item)
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
+      }
     case ARTP_VAL_ANY:
+      {
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
-        val = prompt_for_int("New value? ", false);
+        const int val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
+      }
     }
 }
 

@@ -636,7 +636,11 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
 /// Generation info for a type of artefact property.
 struct artefact_prop_data
 {
+    /// The types of values this prop can have (e.g. bool, positive int, int)
+    artp_value_type value_types;
+    /// Randomly generate a 'good' value; null if this prop is never good
     function<int ()> gen_good_value;
+    /// Randomly generate a 'bad' value; null if this prop is never good
     function<int ()> gen_bad_value;
 };
 
@@ -667,58 +671,59 @@ static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
 /// Generation info for artefact properties.
 static const artefact_prop_data artp_data[] =
 {
-    { nullptr, nullptr }, // ARTP_BRAND,
-    { nullptr, nullptr }, // ARTP_AC,
-    { nullptr, nullptr }, // ARTP_EVASION,
-    { _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_STRENGTH,
-    { _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_INTELLIGENCE,
-    { _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_DEXTERITY,
-    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_FIRE,
-    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_COLD,
-    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_ELECTRICITY,
-    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_POISON,
-    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_NEGATIVE_ENERGY,
-    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_MAGIC,
-    { []() { return 1; }, nullptr }, // ARTP_EYESIGHT,
-    { []() { return 1; }, nullptr }, // ARTP_INVISIBLE,
-    { []() { return 1; }, nullptr }, // ARTP_FLY,
+    { ARTP_VAL_POS, nullptr, nullptr }, // ARTP_BRAND,
+    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_AC,
+    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_EVASION,
+    { ARTP_VAL_ANY, _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_STRENGTH,
+    { ARTP_VAL_ANY, _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_INTELLIGENCE,
+    { ARTP_VAL_ANY, _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_DEXTERITY,
+    { ARTP_VAL_ANY, _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_FIRE,
+    { ARTP_VAL_ANY, _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_COLD,
+    { ARTP_VAL_BOOL, _gen_good_res_artp, nullptr }, // ARTP_ELECTRICITY,
+    { ARTP_VAL_BOOL, _gen_good_res_artp, nullptr }, // ARTP_POISON,
+    { ARTP_VAL_ANY, _gen_good_res_artp,  nullptr }, // ARTP_NEGATIVE_ENERGY,
+    { ARTP_VAL_ANY, _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_MAGIC,
+    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_EYESIGHT,
+    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_INVISIBLE,
+    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_FLY,
 #if TAG_MAJOR_VERSION > 34
-    { nullptr, nullptr }, // ARTP_FOG,
+    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_FOG,
 #endif
-    { []() { return 1; }, nullptr }, // ARTP_BLINK,
-    { []() { return 1; }, nullptr }, // ARTP_BERSERK,
-    { nullptr, []() { return 2; } }, // ARTP_NOISES,
-    { nullptr, []() { return 1; } }, // ARTP_PREVENT_SPELLCASTING,
-    { nullptr, []() { return 12; } }, // ARTP_CAUSE_TELEPORTATION,
-    { nullptr, []() { return 1; } }, // ARTP_PREVENT_TELEPORTATION,
-    { nullptr, []() { return 5; } }, // ARTP_ANGRY,
+    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_BLINK,
+    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_BERSERK,
+    { ARTP_VAL_POS, nullptr, []() { return 2; } }, // ARTP_NOISES,
+    { ARTP_VAL_BOOL, nullptr, []() { return 1; } }, // ARTP_PREVENT_SPELLCASTING,
+    { ARTP_VAL_POS, nullptr, []() { return 12; } }, // ARTP_CAUSE_TELEPORTATION,
+    { ARTP_VAL_BOOL, nullptr, []() { return 1; } }, // ARTP_PREVENT_TELEPORTATION,
+    { ARTP_VAL_POS, nullptr, []() { return 5; } }, // ARTP_ANGRY,
 #if TAG_MAJOR_VERSION == 34
-    { nullptr, nullptr }, // ARTP_METABOLISM,
+    { ARTP_VAL_POS, nullptr, nullptr }, // ARTP_METABOLISM,
 #endif
-    { nullptr, []() { return 1; } }, // ARTP_MUTAGENIC,
+    { ARTP_VAL_POS, nullptr, []() { return 1; } }, // ARTP_MUTAGENIC,
 #if TAG_MAJOR_VERSION == 34
-    { nullptr, nullptr }, // ARTP_ACCURACY,
+    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_ACCURACY,
 #endif
-    { []() { return 2 + random2(3) + random2(3); },
+    { ARTP_VAL_ANY,
+      []() { return 2 + random2(3) + random2(3); },
       []() { return -(2 + random2(3) + random2(3)); } }, // ARTP_SLAYING,
-    { nullptr, nullptr }, // ARTP_CURSED,
-    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_STEALTH,
-    { _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_MAGICAL_POWER,
-    { nullptr, nullptr }, // ARTP_BASE_DELAY,
-    { _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_HP,
-    { nullptr, nullptr }, // ARTP_CLARITY,
-    { nullptr, nullptr }, // ARTP_BASE_ACC,
-    { nullptr, nullptr }, // ARTP_BASE_DAM,
-    { nullptr, nullptr }, // ARTP_RMSL,
+    { ARTP_VAL_POS, nullptr, nullptr }, // ARTP_CURSED,
+    { ARTP_VAL_ANY, _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_STEALTH,
+    { ARTP_VAL_ANY, _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_MAGICAL_POWER,
+    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_BASE_DELAY,
+    { ARTP_VAL_ANY, _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_HP,
+    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_CLARITY,
+    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_BASE_ACC,
+    { ARTP_VAL_ANY, nullptr, nullptr }, // ARTP_BASE_DAM,
+    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_RMSL,
 #if TAG_MAJOR_VERSION == 34
-    { nullptr, nullptr }, // ARTP_FOG,
+    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_FOG,
 #endif
-    { []() { return 1; }, nullptr }, // ARTP_REGENERATION,
-    { nullptr, nullptr }, // ARTP_SUSTAB,
-    { nullptr, nullptr }, // ARTP_NO_UPGRADE,
-    { []() { return 1; }, nullptr }, // ARTP_RCORR,
-    { nullptr, nullptr }, // ARTP_RMUT,
-    { []() { return 1; }, nullptr }, // ARTP_TWISTER,
+    { ARTP_VAL_POS, []() { return 1; }, nullptr }, // ARTP_REGENERATION,
+    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_SUSTAB,
+    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_NO_UPGRADE,
+    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_RCORR,
+    { ARTP_VAL_BOOL, nullptr, nullptr }, // ARTP_RMUT,
+    { ARTP_VAL_BOOL, []() { return 1; }, nullptr }, // ARTP_TWISTER,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 
@@ -748,6 +753,22 @@ bool artp_potentially_good(artefact_prop_type prop)
 bool artp_potentially_bad(artefact_prop_type prop)
 {
     return artp_data[prop].gen_bad_value != nullptr;
+}
+
+/**
+ * What type of values can this prop have?
+ *
+ * Positive, boolean (0 or 1), or any (integer).
+ *
+ * There should be a better way of expressing this...
+ *
+ * @param prop      The prop type in question.
+ * @return          Possible value types for the prop.
+ */
+artp_value_type artp_potential_value_types(artefact_prop_type prop)
+{
+    ASSERT_RANGE(prop, 0, ARRAYSZ(artp_data));
+    return artp_data[prop].value_types;
 }
 
 static void _get_randart_properties(const item_def &item,

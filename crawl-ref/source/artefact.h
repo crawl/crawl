@@ -135,6 +135,14 @@ void artefact_set_property(item_def           &item,
 bool artp_potentially_good(artefact_prop_type prop);
 bool artp_potentially_bad(artefact_prop_type prop);
 
+enum artp_value_type
+{
+    ARTP_VAL_BOOL,
+    ARTP_VAL_POS,
+    ARTP_VAL_ANY,
+};
+artp_value_type artp_potential_value_types(artefact_prop_type prop);
+
 int get_unrandart_num(const char *name);
 
 void unrand_reacts();
