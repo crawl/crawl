@@ -845,12 +845,17 @@ static void _get_randart_properties(const item_def &item,
         if (x_chance_in_y(7, 12))
             continue; // no property for this iter
 
-        if (x_chance_in_y(7, 10))
-            ++good;              // 7/24 chance overall
+        if (x_chance_in_y(10, 13))
+            ++good;              // 32% chance overall
         else
-            ++bad;               // 1/8 chance overall
+            ++bad;               // <10% chance overall
     }
-    // avg 0.75 bad props & >1.75 good props per randart
+    // avg ~0.5 bad props & ~1.6 good props per randart
+
+    // Add some extra good props if the artifact has a bad base enchantment
+    // 0 through -2: +1 good; -3 to -5: +2 good; -6 to -8: +3 good, etc.
+    if (item_class != OBJ_JEWELLERY && item.plus <= 0)
+        good += 1 + (-1 * item.plus / 3);
 
     // Make sure to have at least one bonus good property.
     good = max(1, good);
