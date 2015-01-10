@@ -1200,15 +1200,16 @@ static void _debug_acquirement_stats(FILE *ostat)
 #define MAX_TRIES 272727
 static void _debug_rap_stats(FILE *ostat)
 {
-    int i = prompt_invent_item("Generate randart stats on which item?",
-                                MT_INVLIST, -1);
+    const int inv_index
+        = prompt_invent_item("Generate randart stats on which item?",
+                             MT_INVLIST, -1);
 
-    if (prompt_failed(i))
+    if (prompt_failed(inv_index))
         return;
 
     // A copy of the item, rather than a reference to the inventory item,
     // so we can fiddle with the item at will.
-    item_def item(you.inv[i]);
+    item_def item(you.inv[inv_index]);
 
     // Start off with a non-artefact item.
     item.flags  &= ~ISFLAG_ARTEFACT_MASK;
@@ -1221,27 +1222,19 @@ static void _debug_rap_stats(FILE *ostat)
         return;
     }
 
-    // No bounds checking to speed things up a bit.
-    int all_props[ARTP_NUM_PROPERTIES];
-    int good_props[ARTP_NUM_PROPERTIES];
-    int bad_props[ARTP_NUM_PROPERTIES];
-    for (i = 0; i < ARTP_NUM_PROPERTIES; ++i)
-    {
-        all_props[i] = 0;
-        good_props[i] = 0;
-        bad_props[i] = 0;
-    }
+    FixedVector<int, ARTP_NUM_PROPERTIES> good_props(0);
+    FixedVector<int, ARTP_NUM_PROPERTIES> bad_props(0);
 
-    int max_props         = 0, total_props         = 0;
-    int max_good_props    = 0, total_good_props    = 0;
-    int max_bad_props     = 0, total_bad_props     = 0;
+    int max_props         = 0;
+    int max_good_props    = 0;
+    int max_bad_props     = 0;
     int max_balance_props = 0, total_balance_props = 0;
 
     int num_randarts = 0, bad_randarts = 0;
 
     artefact_properties_t proprt;
 
-    for (i = 0; i < MAX_TRIES; ++i)
+    for (int i = 0; i < MAX_TRIES; ++i)
     {
         if (kbhit())
         {
@@ -1252,7 +1245,12 @@ static void _debug_rap_stats(FILE *ostat)
 
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
+        item.flags  &= ~ISFLAG_ARTEFACT_MASK;
+        item.special = 0;
+        item.props.clear();
+        make_item_randart(item);
         artefact_wpn_properties(item, proprt);
+
         if (randart_is_bad(item, proprt))
         {
             bad_randarts++;
@@ -1269,12 +1267,10 @@ static void _debug_rap_stats(FILE *ostat)
             if (!val)
                 continue;
 
-            all_props[prop]++;
-            if (!artp_potentially_good(prop))
-                num_bad_props++;
-            else if (!artp_potentially_bad(prop))
-                num_good_props++;
-            else if (val > 0) // assumption: all mixed good/bad props are good iff positive
+            // assumption: all mixed good/bad props are good iff positive
+            const bool good = !artp_potentially_bad(prop)
+                              || (artp_potentially_good(prop) && val > 0);
+            if (good)
             {
                 good_props[prop]++;
                 num_good_props++;
@@ -1294,9 +1290,6 @@ static void _debug_rap_stats(FILE *ostat)
         max_bad_props     = max(max_bad_props, num_bad_props);
         max_balance_props = max(max_balance_props, balance);
 
-        total_props         += num_props;
-        total_good_props    += num_good_props;
-        total_bad_props     += num_bad_props;
         total_balance_props += balance;
 
         if (i % (MAX_TRIES / 100) == 0)
@@ -1312,6 +1305,16 @@ static void _debug_rap_stats(FILE *ostat)
 
     fprintf(ostat, "Randarts generated: %d valid, %d invalid\n\n",
             num_randarts, bad_randarts);
+
+    int total_good_props = 0, total_bad_props = 0;
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    {
+        total_good_props += good_props[i];
+        total_bad_props += bad_props[i];
+    }
+
+    // assumption: all props are good or bad
+    const int total_props = total_good_props + total_bad_props;
 
     fprintf(ostat, "max # of props = %d, avg # = %5.2f\n",
             max_props, (float) total_props / (float) num_randarts);
@@ -1381,14 +1384,18 @@ static void _debug_rap_stats(FILE *ostat)
 
     fprintf(ostat, "                            All    Good   Bad\n");
     fprintf(ostat, "                           --------------------\n");
+    fprintf(ostat, "%-25s: %5.2f%% %5.2f%% %5.2f%%\n", "Overall", 100.0,
+            (float) total_good_props * 100.0 / (float) total_props,
+            (float) total_bad_props * 100.0 / (float) total_props);
 
-    for (i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
-        if (all_props[i] == 0)
+        const int total_props_of_type = good_props[i] + bad_props[i];
+        if (!total_props_of_type)
             continue;
 
         fprintf(ostat, "%-25s: %5.2f%% %5.2f%% %5.2f%%\n", rap_names[i],
-                (float) all_props[i] * 100.0 / (float) num_randarts,
+                (float) total_props_of_type * 100.0 / (float) num_randarts,
                 (float) good_props[i] * 100.0 / (float) num_randarts,
                 (float) bad_props[i] * 100.0 / (float) num_randarts);
     }
