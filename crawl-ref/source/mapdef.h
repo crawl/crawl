@@ -535,6 +535,8 @@ enum item_spec_type
     ISPEC_RANDART = -6,
     ISPEC_MUNDANE = -7,
     ISPEC_ACQUIREMENT = -9,
+    MAKE_GIFT_ITEM = 350, // worse than the next one
+    MAKE_GOOD_ITEM = 351,
 };
 
 class mons_spec;
