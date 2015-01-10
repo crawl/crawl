@@ -5784,8 +5784,7 @@ int bolt::range_used_on_hit() const
 }
 
 // Takes a bolt and refines it for use in the explosion function.
-// Explosions which do not follow from beams (e.g., scrolls of
-// immolation) bypass this function.
+// Explosions which do not follow from beams bypass this function.
 void bolt::refine_for_explosion()
 {
     ASSERT(!special_explosion);
