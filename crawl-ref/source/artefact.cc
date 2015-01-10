@@ -632,6 +632,124 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
     }
 }
 
+
+/// Generation info for a type of artefact property.
+struct artefact_prop_data
+{
+    function<int ()> gen_good_value;
+    function<int ()> gen_bad_value;
+};
+
+
+/// Generate 'good' values for stat artps (e.g. ARTP_STRENGTH)
+static int _gen_good_stat_artp() {
+    // normally 2-6, max 10
+    return 2 + random2(5) + (one_chance_in(4) ? 1 + random2(4) : 0);
+}
+
+/// Generate 'bad' values for stat artps (e.g. ARTP_STRENGTH)
+static int _gen_bad_stat_artp() { return -_gen_good_stat_artp(); }
+
+/// Generate 'good' values for resist-ish artps (e.g. ARTP_FIRE)
+static int _gen_good_res_artp() { return 1 + one_chance_in(5); }
+
+/// Generate 'bad' values for resist-ish artps (e.g. ARTP_FIRE)
+static int _gen_bad_res_artp() { return -1; }
+
+/// Generate 'good' values for ARTP_HP/ARTP_MAGICAL_POWER
+static int _gen_good_hpmp_artp() {
+    return 5 * (1 + (one_chance_in(3) ? random2(3) : 0));
+}
+
+/// Generate 'bad' values for ARTP_HP/ARTP_MAGICAL_POWER
+static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
+
+/// Generation info for artefact properties.
+static const artefact_prop_data artp_data[] =
+{
+    { nullptr, nullptr }, // ARTP_BRAND,
+    { nullptr, nullptr }, // ARTP_AC,
+    { nullptr, nullptr }, // ARTP_EVASION,
+    { _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_STRENGTH,
+    { _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_INTELLIGENCE,
+    { _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_DEXTERITY,
+    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_FIRE,
+    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_COLD,
+    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_ELECTRICITY,
+    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_POISON,
+    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_NEGATIVE_ENERGY,
+    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_MAGIC,
+    { []() { return 1; }, nullptr }, // ARTP_EYESIGHT,
+    { []() { return 1; }, nullptr }, // ARTP_INVISIBLE,
+    { []() { return 1; }, nullptr }, // ARTP_FLY,
+#if TAG_MAJOR_VERSION > 34
+    { nullptr, nullptr }, // ARTP_FOG,
+#endif
+    { []() { return 1; }, nullptr }, // ARTP_BLINK,
+    { []() { return 1; }, nullptr }, // ARTP_BERSERK,
+    { nullptr, []() { return 2; } }, // ARTP_NOISES,
+    { nullptr, []() { return 1; } }, // ARTP_PREVENT_SPELLCASTING,
+    { nullptr, []() { return 12; } }, // ARTP_CAUSE_TELEPORTATION,
+    { nullptr, []() { return 1; } }, // ARTP_PREVENT_TELEPORTATION,
+    { nullptr, []() { return 5; } }, // ARTP_ANGRY,
+#if TAG_MAJOR_VERSION == 34
+    { nullptr, nullptr }, // ARTP_METABOLISM,
+#endif
+    { nullptr, []() { return 1; } }, // ARTP_MUTAGENIC,
+#if TAG_MAJOR_VERSION == 34
+    { nullptr, nullptr }, // ARTP_ACCURACY,
+#endif
+    { []() { return 2 + random2(3) + random2(3); },
+      []() { return -(2 + random2(3) + random2(3)); } }, // ARTP_SLAYING,
+    { nullptr, nullptr }, // ARTP_CURSED,
+    { _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_STEALTH,
+    { _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_MAGICAL_POWER,
+    { nullptr, nullptr }, // ARTP_BASE_DELAY,
+    { _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_HP,
+    { nullptr, nullptr }, // ARTP_CLARITY,
+    { nullptr, nullptr }, // ARTP_BASE_ACC,
+    { nullptr, nullptr }, // ARTP_BASE_DAM,
+    { nullptr, nullptr }, // ARTP_RMSL,
+#if TAG_MAJOR_VERSION == 34
+    { nullptr, nullptr }, // ARTP_FOG,
+#endif
+    { []() { return 1; }, nullptr }, // ARTP_REGENERATION,
+    { nullptr, nullptr }, // ARTP_SUSTAB,
+    { nullptr, nullptr }, // ARTP_NO_UPGRADE,
+    { []() { return 1; }, nullptr }, // ARTP_RCORR,
+    { nullptr, nullptr }, // ARTP_RMUT,
+    { []() { return 1; }, nullptr }, // ARTP_TWISTER,
+};
+COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
+
+/**
+ * Is it possible for the given artp to be generated with 'good' values
+ * (generally helpful to the player?
+ * E.g. ARTP_SLAYING, ARTP_FIRE, ARTP_REGENERATION, etc.
+ *
+ * @param prop      The artefact property in question.
+ * @return      true if the ARTP is ever generated as a 'good' prop; false
+ *              otherwise.
+ */
+bool artp_potentially_good(artefact_prop_type prop)
+{
+    return artp_data[prop].gen_good_value != nullptr;
+}
+
+/**
+ * Is it possible for the given artp to be generated with 'bad' values
+ * (generally harmful to the player?
+ * E.g. ARTP_SLAYING, ARTP_AC, ARTP_CONTAM, etc.
+ *
+ * @param prop      The artefact property in question.
+ * @return      true if the ARTP is ever generated as a 'bad' prop; false
+ *              otherwise.
+ */
+bool artp_potentially_bad(artefact_prop_type prop)
+{
+    return artp_data[prop].gen_bad_value != nullptr;
+}
+
 static void _get_randart_properties(const item_def &item,
                                     artefact_properties_t &item_props)
 {
@@ -674,158 +792,43 @@ static void _get_randart_properties(const item_def &item,
         if (good <= 0 && bad <= 0)
             break;
 
-        bool valid = false;
-        int value = 0;
-        bool prop_is_good = true;
-
         if (!_artp_can_go_on_item(prop, item))
             continue;
 
-        // Pick appropriate values for this property.
-        switch (prop)
+        if (prop == ARTP_TWISTER && good <= 1)
+            continue; // costs a little extra goodness.
+
+        // should we try to generate a good or bad version of the prop?
+        const bool can_gen_good = good > 0 && artp_potentially_good(prop);
+        const bool can_gen_bad = bad > 0 && artp_potentially_bad(prop);
+        const bool gen_good = can_gen_good && (!can_gen_bad || coinflip());
+
+        if (gen_good)
         {
-            case ARTP_STRENGTH:
-            case ARTP_INTELLIGENCE:
-            case ARTP_DEXTERITY:
-                value = 2 + random2(5);
-                if (one_chance_in(4))
-                    value += 1 + random2(4); // max value +10
-                if (good > 0 && (coinflip() || bad == 0))
-                    valid = true;
-                else if (bad > 0)
-                {
-                    prop_is_good = false;
-                    value *= -1;
-                    valid = true;
-                }
-                break;
-
-            case ARTP_SLAYING:
-                value = 2 + random2(3) + random2(3);
-                if (good > 0 && (coinflip() || bad == 0))
-                    valid = true;
-                else if (bad > 0)
-                {
-                    prop_is_good = false;
-                    value *= -1;
-                    valid = true;
-                }
-                break;
-
-            case ARTP_FIRE:
-            case ARTP_COLD:
-            case ARTP_POISON:
-            case ARTP_ELECTRICITY:
-            case ARTP_NEGATIVE_ENERGY:
-            case ARTP_MAGIC:
-            case ARTP_STEALTH:
-                value = 1 + one_chance_in(5);
-                if (good > 0 && (coinflip() || bad == 0))
-                    valid = true;
-                else if (bad > 0)
-                {
-                    prop_is_good = false;
-                    value = -1 + ((prop == ARTP_STEALTH) ? coinflip() : 0);
-                    valid = true;
-                }
-                break;
-
-            case ARTP_EYESIGHT:
-            case ARTP_RCORR:
-            case ARTP_INVISIBLE:
-            case ARTP_FLY:
-            case ARTP_BLINK:
-            case ARTP_BERSERK:
-                //case //spirit shield
-                if (good > 0)
-                {
-                    value = 1;
-                    valid = true;
-                }
-                break;
-
-            case ARTP_TWISTER:
-                if (good > 1)
-                {
-                    value = 1;
-                    valid = true;
-                    good--; // costs a little extra goodness.
-                }
-                break;
-
-            case ARTP_NOISES:
-                if (bad > 0)
-                {
-                    prop_is_good = false;
-                    value = 2;
-                    valid = true;
-                }
-                break;
-            case ARTP_PREVENT_SPELLCASTING:
-            case ARTP_MUTAGENIC:
-            case ARTP_PREVENT_TELEPORTATION:
-                if (bad > 0)
-                {
-                    prop_is_good = false;
-                    value = 1;
-                    valid = true;
-                }
-                break;
-            case ARTP_CAUSE_TELEPORTATION:
-                if (bad > 0)
-                {
-                    prop_is_good = false;
-                    value = 12;
-                    valid = true;
-                }
-                break;
-            case ARTP_ANGRY:
-                if (bad > 0)
-                {
-                    prop_is_good = false;
-                    value = 5;
-                    valid = true;
-                }
-                break;
-
-            case ARTP_REGENERATION:
-                if (good > 0)
-                {
-                    value = 1;
-                    valid = true;
-                }
-                break;
-
-            case ARTP_MAGICAL_POWER:
-            case ARTP_HP:
-                value = 5 * (1 + (one_chance_in(3) ? random2(3) : 0));
-                if (good > 0 && (coinflip() || bad == 0))
-                    valid = true;
-                else if (bad > 0)
-                {
-                    prop_is_good = false;
-                    value *= -1;
-                    valid = true;
-                }
-                break;
-
-            default:
-                break;
+            item_props[prop] = artp_data[prop].gen_good_value();
+            --good;
+            if (prop == ARTP_TWISTER)
+                --good; // costs a little extra goodness.
         }
-
-        // Actually apply the property if it's valid.
-        if (!valid)
+        else if (can_gen_bad)
+        {
+            item_props[prop] = artp_data[prop].gen_bad_value();
+            --bad;
+        }
+        else
             continue;
 
-        if (prop_is_good)
-            --good;
-        else
-            --bad;
-        item_props[prop] = value;
-
-        // special case: remove the blink property if we're adding stasis
+        // special case: remove tloc properties if we're adding -tele
         if (prop == ARTP_PREVENT_TELEPORTATION)
+        {
+            if (item_props[ARTP_BLINK])
+                ++good; // replace with another good prop
             item_props[ARTP_BLINK] = 0;
+
+            if (item_props[ARTP_CAUSE_TELEPORTATION])
+                ++good; // replace with another bad prop... bad luck!
+            item_props[ARTP_CAUSE_TELEPORTATION] = 0;
+        }
     }
 }
 
