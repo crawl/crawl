@@ -40,7 +40,7 @@ static iflags_t _full_ident_mask(const item_def& item);
 typedef uint32_t armflags_t;
 #define ard(flg, lev) (armflags_t)((flg) * ((lev) & 7))
 
-enum armour_flags
+enum armour_flag
 {
     ARMF_NO_FLAGS           = 0,
     // multilevel resistances
@@ -82,7 +82,7 @@ struct armour_def
 };
 
 /// witchcraft. copied from mon-util.h's get_resist
-static inline int _get_armour_flag(armflags_t all, armour_flags res)
+static inline int _get_armour_flag(armflags_t all, armour_flag res)
 {
     if (res > ARMF_LAST_MULTI)
         return all & res ? 1 : 0;
