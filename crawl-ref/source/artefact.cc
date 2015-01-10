@@ -649,8 +649,8 @@ struct artefact_prop_data
 
 /// Generate 'good' values for stat artps (e.g. ARTP_STRENGTH)
 static int _gen_good_stat_artp() {
-    // normally 2-6, max 10
-    return 2 + random2(5) + (one_chance_in(4) ? 1 + random2(4) : 0);
+    // normally 3-5, max 7
+    return 3 + random2(3) + (one_chance_in(4) ? random2(3) : 0);
 }
 
 /// Generate 'bad' values for stat artps (e.g. ARTP_STRENGTH)
