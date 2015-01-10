@@ -129,6 +129,7 @@ bool qazlal_disaster_area();
 
 void init_sac_index();
 void ru_offer_new_sacrifices();
+string ru_sac_text(ability_type sac);
 bool ru_do_sacrifice(ability_type sac);
 bool ru_reject_sacrifices(bool skip_prompt = false);
 void ru_reset_sacrifice_timer(bool clear_timer = false);
