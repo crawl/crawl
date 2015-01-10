@@ -1236,17 +1236,17 @@ static int _player_bonus_regen()
     }
 
     // Jewellery.
-    rr += 40 * you.wearing(EQ_AMULET, AMU_REGENERATION);
+    rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
     // Artefacts
-    rr += you.scan_artefacts(ARTP_REGENERATION);
+    rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
 
     // Troll leather (except for trolls).
     if ((you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
          || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
         && you.species != SP_TROLL)
     {
-        rr += 40;
+        rr += REGEN_PIP;
     }
 
     // Fast heal mutation.
