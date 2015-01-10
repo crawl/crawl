@@ -405,14 +405,14 @@ void set_unique_item_status(const item_def& item,
 static void _populate_armour_intrinsic_artps(const armour_type arm,
                                              artefact_properties_t &proprt)
 {
-    proprt[ARTP_FIRE] += armour_type_res_fire(arm);
-    proprt[ARTP_COLD] += armour_type_res_cold(arm);
-    proprt[ARTP_NEGATIVE_ENERGY] += armour_type_res_neg(arm);
-    proprt[ARTP_POISON] += armour_type_res_poison(arm) ? 1 : 0;
-    proprt[ARTP_ELECTRICITY] += armour_type_res_elec(arm) ? 1 : 0;
-    proprt[ARTP_MAGIC] += armour_type_res_magic(arm) / MR_PIP;
-    proprt[ARTP_STEALTH] += armour_type_bonus_stealth(arm) / STEALTH_PIP;
-    proprt[ARTP_REGENERATION] += armour_type_bonus_regen(arm);
+    proprt[ARTP_FIRE] += armour_type_prop(arm, ARMF_RES_FIRE);
+    proprt[ARTP_COLD] += armour_type_prop(arm, ARMF_RES_COLD);
+    proprt[ARTP_NEGATIVE_ENERGY] += armour_type_prop(arm, ARMF_RES_NEG);
+    proprt[ARTP_POISON] += armour_type_prop(arm, ARMF_RES_POISON);
+    proprt[ARTP_ELECTRICITY] += armour_type_prop(arm, ARMF_RES_ELEC);
+    proprt[ARTP_MAGIC] += armour_type_prop(arm, ARMF_RES_MAGIC);
+    proprt[ARTP_STEALTH] += armour_type_prop(arm, ARMF_STEALTH);
+    proprt[ARTP_REGENERATION] += armour_type_prop(arm, ARMF_REGENERATION);
 }
 
 /// The artefact properties corresponding to a given piece of jewellery.

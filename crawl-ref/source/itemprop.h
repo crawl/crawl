@@ -12,6 +12,34 @@ struct bolt;
 
 void init_properties();
 
+
+typedef uint32_t armflags_t;
+#define ard(flg, lev) (armflags_t)((flg) * ((lev) & 7))
+
+enum armour_flag
+{
+    ARMF_NO_FLAGS           = 0,
+    // multilevel resistances
+    ARMF_RES_FIRE           = 1 << 0,
+    ARMF_RES_COLD           = 1 << 3,
+    ARMF_RES_NEG            = 1 << 6,
+    // misc (multilevel)
+    ARMF_STEALTH            = 1 << 9,
+    ARMF_REGENERATION       = 1 << 13,
+
+    ARMF_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
+
+    // boolean resists
+    ARMF_RES_MAGIC          = 1 << 17,
+    ARMF_RES_ELEC           = 1 << 18,
+    ARMF_RES_POISON         = 1 << 19,
+    ARMF_RES_STICKY_FLAME   = 1 << 20,
+    ARMF_RES_STEAM          = 1 << 21,
+    // vulnerabilities
+    ARMF_VUL_FIRE           = ard(ARMF_RES_FIRE, -1),
+    ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
+};
+
 // cursed:
 bool item_known_cursed(const item_def &item) PURE;
 bool curse_an_item(bool ignore_holy_wrath = false);
@@ -164,16 +192,7 @@ bool can_cut_meat(const item_def &item) PURE;
 bool is_fruit(const item_def &item) PURE;
 
 // generic item property functions:
-int armour_type_res_fire(const uint8_t arm) PURE;
-int armour_type_res_cold(const uint8_t arm) PURE;
-int armour_type_res_neg(const uint8_t arm) PURE;
-int armour_type_bonus_stealth(const uint8_t arm) PURE;
-int armour_type_res_magic(const uint8_t arm) PURE;
-bool armour_type_res_elec(const uint8_t arm) PURE;
-bool armour_type_res_poison(const uint8_t arm) PURE;
-bool armour_type_res_sticky_flame(const uint8_t arm) PURE;
-bool armour_type_res_steam(const uint8_t arm) PURE;
-bool armour_type_bonus_regen(const uint8_t arm) PURE;
+int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;
 
 int get_armour_res_fire(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_cold(const item_def &arm, bool check_artp) PURE;
