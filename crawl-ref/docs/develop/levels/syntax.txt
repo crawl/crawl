@@ -538,11 +538,13 @@ ITEM:     (list of items, separated by comma)
           * "not_cursed" forces an item to have any curse placed on it to be
             removed.
           * "any" by itself gives a random choice; you can combine "any" with
-            "good_item."
+            "good_item". A lone "%" may be used as an alias for "any".
           * "useful" tries to select an item usable by the player, but may
             give an useless one if it has trouble finding one
           * "star_item" by itself makes an item equivalent to the "*" glyph.
+            A lone "*" may be used as an alias for "star_item".
           * "superb_item" by itself makes an item equivalent to the "|" glyph.
+            A lone "|" may be used as an alias for "superb_item".
           * "any book", "any misc" etc. gives a random item of that class.
             Valid item class names are: gold, weapon, missile, armour, wand,
             food, scroll, jewellery, potion, book, magical staff, orb, misc,
