@@ -86,8 +86,11 @@ Items
 -----
  $ - gold
  % - normal item
- * - higher level item (good)
- | - superb item (almost guaranteed excellent)
+
+ * - higher quality item, with the quality level increasing with absolute
+     depth. The level is 2 * absdepth + 5, capped at 50.
+ | - superb quality item, the highest quality level. It's a special class above
+     the "*" glyph and the same as the "good_item" modifier described below.
  d-k - item array item. See section below on ITEM: arrays for more info.
 
 Monsters
@@ -510,9 +513,10 @@ ITEM:     (list of items, separated by comma)
           * "no_uniq" prevents the item from being turned into an artefact,
             unless cancelled by an "allow_uniq" modifier.
           * "good_item" makes the builder try to make the item a good one
-            (acquirement quality). This is independent of the level's depth,
-            in contrast to placing items with * or | which just add a bonus
-            to depth for the item generation.
+            (acquirement quality). This is independent of the level's depth, in
+            contrast to placing items with the "*" glyph, which just adds a
+            bonus to depth for the item generation. The "|" item glyph uses
+            this quality level.
           * "acquire" requests the use of the acquirement code itself,
             ensuring that the player gets wearable armour, etc. You can
             also use acquire:<god> to request that the acquired item be
