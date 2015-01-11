@@ -1026,12 +1026,16 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
         spellslot.freq = 200 / count;
 }
 
-const mon_spell_slot lich_primary_spells[] =
+const mon_spell_slot lich_primary_summoner_spells[] =
+{
+    { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
+};
+
+const mon_spell_slot lich_primary_conjurer_spells[] =
 {
     { SPELL_IOOD, 18, MON_SPELL_WIZARD },
     { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 18, MON_SPELL_WIZARD },
     { SPELL_CORROSIVE_BOLT, 18, MON_SPELL_WIZARD },
-    { SPELL_SUMMON_GREATER_DEMON, 18, MON_SPELL_WIZARD },
 };
 
 const mon_spell_slot lich_secondary_spells[] =
@@ -1184,12 +1188,17 @@ void ghost_demon::init_lich(monster_type type)
 
     size_t count = 5 + random2(3);
 
-    _add_lich_spell(spells, lich_primary_spells,
-                    ARRAYSZ(lich_primary_spells));
+    if (coinflip())
+        _add_lich_spell(spells, lich_primary_summoner_spells,
+                        ARRAYSZ(lich_primary_summoner_spells));
+    else
+        _add_lich_spell(spells, lich_primary_conjurer_spells,
+                        ARRAYSZ(lich_primary_conjurer_spells));
+
     if (type == MONS_ANCIENT_LICH && coinflip())
     {
-        _add_lich_spell(spells, lich_primary_spells,
-                        ARRAYSZ(lich_primary_spells));
+        _add_lich_spell(spells, lich_primary_conjurer_spells,
+                        ARRAYSZ(lich_primary_conjurer_spells));
     }
 
     while (spells.size() < count - 1)
