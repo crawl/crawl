@@ -1499,11 +1499,6 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         }
         break;
 
-    case CLOUD_MEPHITIC:
-        if (x_chance_in_y(mons->get_hit_dice() - 1, 5))
-            return false;
-
-        // fallthrough to damaging cloud cases
     default:
     {
         if (extra_careful)
@@ -1513,7 +1508,13 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int trials = max(1, rand_dam/9);
         const int hp_threshold = clouds[cloud.type].expected_base_damage +
                                  random2avg(rand_dam, trials);
-        if (mons->hit_points >= hp_threshold)
+
+        // dare we risk the damage?
+        const bool hp_ok = mons->hit_points >= hp_threshold;
+        // dare we risk the status effects?
+        const bool sfx_ok = cloud.type != CLOUD_MEPHITIC
+                            || x_chance_in_y(mons->get_hit_dice() - 1, 5);
+        if (hp_ok && sfx_ok)
             return false;
         break;
     }
