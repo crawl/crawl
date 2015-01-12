@@ -880,3 +880,27 @@ ru_interference get_ru_attack_interference_level()
     else
         return DO_NOTHING;
 }
+
+/**
+ * ID the charges of wands and rods in the player's possession.
+ */
+void pakellas_id_device_charges()
+{
+    for (int which_item = 0; which_item < ENDOFPACK; which_item++)
+    {
+        if (!you.inv[which_item].defined()
+            || !(you.inv[which_item].base_type == OBJ_WANDS
+                 || you.inv[which_item].base_type == OBJ_RODS)
+            || item_ident(you.inv[which_item], ISFLAG_KNOW_PLUSES)
+               && item_ident(you.inv[which_item], ISFLAG_KNOW_TYPE))
+        {
+            continue;
+        }
+        if (you.inv[which_item].base_type == OBJ_RODS)
+            set_ident_flags(you.inv[which_item], ISFLAG_KNOW_TYPE);
+        set_ident_flags(you.inv[which_item], ISFLAG_KNOW_PLUSES);
+        mprf_nocap("%s",
+                   get_menu_colour_prefix_tags(you.inv[which_item],
+                                               DESC_INVENTORY).c_str());
+    }
+}

@@ -794,6 +794,13 @@ static void _describe_god_powers(god_type which_god, int numcols)
         break;
     }
 
+    case GOD_PAKELLAS:
+    {
+        have_any = true;
+        cprintf("%s identifies device charges for you.\n",
+                uppercase_first(god_name(which_god)).c_str());
+    }
+
     default:
         break;
     }
