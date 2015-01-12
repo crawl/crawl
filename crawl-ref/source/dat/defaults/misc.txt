@@ -1,7 +1,6 @@
 drop_filter += useless_item
 
 auto_exclude += oklob,statue,roxanne,hyperactive,lightning spire
-auto_exclude += mimic
 
 # Interrupting run and rest compound commands:
 runrest_safe_poison  = 80:100
