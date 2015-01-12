@@ -2051,7 +2051,7 @@ int player_movement_speed()
 
 const int player_adjust_evoc_power(const int power)
 {
-    return apply_enhancement(power, you.spec_evoke());
+    return stepdown_spellpower(apply_enhancement(power, you.spec_evoke()));
 }
 
 const int player_adjust_invoc_power(const int power)
