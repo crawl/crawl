@@ -880,12 +880,14 @@ static void _print_stats_wp(int y)
             else
                 wpn.plus -= 3 * you.props["corrosion_amount"].get_int();
         }
-        text = wpn.name(DESC_INVENTORY, true, false, true);
+        text = wpn.name(DESC_PLAIN, true, false, true);
     }
     else
-        text = "-) " + you.unarmed_attack_name();
+        text = you.unarmed_attack_name();
 
     CGOTOXY(1, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF("%c) ", you.weapon() ? index_to_letter(you.weapon()->link) : '-');
     textcolour(_wpn_name_colour());
     CPRINTF("%s", chop_string(text, crawl_view.hudsz.x).c_str());
     textcolour(LIGHTGREY);
@@ -898,22 +900,22 @@ static void _print_stats_qv(int y)
 
     int q = you.m_quiver->get_fire_item();
     ASSERT_RANGE(q, -1, ENDOFPACK);
+    char hud_letter = '-';
     if (q != -1 && !fire_warn_if_impossible(true))
     {
         const item_def& quiver = you.inv[q];
+        hud_letter = index_to_letter(quiver.link);
         const string prefix = item_prefix(quiver);
         const int prefcol =
-            menu_colour(quiver.name(DESC_INVENTORY), prefix, "stats");
+            menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
         if (prefcol != -1)
             col = prefcol;
         else
             col = LIGHTGREY;
-        text = quiver.name(DESC_INVENTORY, true);
+        text = quiver.name(DESC_PLAIN, true);
     }
     else
     {
-        const string prefix = "-) ";
-
         if (fire_warn_if_impossible(true))
         {
             col  = DARKGREY;
@@ -924,10 +926,10 @@ static void _print_stats_qv(int y)
             col  = LIGHTGREY;
             text = "Nothing quivered";
         }
-
-        text = prefix + text;
     }
     CGOTOXY(1, y, GOTO_STAT);
+    textcolour(HUD_CAPTION_COLOUR);
+    CPRINTF("%c) ", hud_letter);
     textcolour(col);
 #ifdef USE_TILE_LOCAL
     int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
