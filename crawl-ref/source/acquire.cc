@@ -731,16 +731,18 @@ static int _tele_wand_weight()
     return 15;
 }
 
-
 /**
  * Choose a random type of wand to be generated via acquirement or god gifts.
  *
  * Heavily weighted toward more useful wands and wands the player hasn't yet
  * seen.
  *
- * @return  A random wand type.
+ * @param divine    Whether the item is a god gift, rather than from
+ *                  acquirement proper.
+ *
+ * @return          A random wand type.
  */
-static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
+static int _acquirement_wand_subtype(bool divine, int & /*quantity*/)
 {
     vector<pair<wand_type, int>> weights = {
         // normally 25
@@ -768,9 +770,10 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
     };
 
     // Unknown wands get a huge weight bonus.
+    // Pakellas will try to give you wands you haven't seen before.
     for (auto &weight : weights)
         if (!get_ident_type(OBJ_WANDS, weight.first))
-            weight.second *= 2;
+            weight.second *= divine ? 50 : 2;
 
     const wand_type* wand = random_choose_weighted(weights);
     ASSERT(wand);
