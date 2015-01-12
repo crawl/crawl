@@ -663,9 +663,7 @@ static int _gen_good_res_artp() { return 1 + one_chance_in(5); }
 static int _gen_bad_res_artp() { return -1; }
 
 /// Generate 'good' values for ARTP_HP/ARTP_MAGICAL_POWER
-static int _gen_good_hpmp_artp() {
-    return 5 * (1 + (one_chance_in(3) ? random2(3) : 0));
-}
+static int _gen_good_hpmp_artp() { return 9; }
 
 /// Generate 'bad' values for ARTP_HP/ARTP_MAGICAL_POWER
 static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
