@@ -1884,6 +1884,17 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     god_id_item(item);
     if (item.base_type == OBJ_WANDS)
         set_ident_type(item, true);
+
+    if ((item.base_type == OBJ_WANDS || item.base_type == OBJ_RODS)
+        && you_worship(GOD_PAKELLAS)
+        && in_good_standing(GOD_PAKELLAS))
+    {
+        if (item.base_type == OBJ_RODS)
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        if (!item_ident(item, ISFLAG_KNOW_PLUSES))
+            set_ident_flags(item, ISFLAG_KNOW_PLUSES);
+    }
+
     maybe_identify_base_type(item);
     if (item.base_type == OBJ_BOOKS)
     {

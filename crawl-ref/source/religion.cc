@@ -1096,6 +1096,8 @@ void dec_penance(god_type god, int val)
             // another chance to make hostile slimes strict neutral.
             else if (god == GOD_JIYVA)
                 add_daction(DACT_SLIME_NEW_ATTEMPT);
+            else if (god == GOD_PAKELLAS)
+                pakellas_id_device_charges();
         }
     }
     else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
@@ -3431,6 +3433,7 @@ void join_religion(god_type which_god, bool immediate)
     {
         mprf(MSGCH_GOD, "You stop regenerating magic.");
         mprf(MSGCH_GOD, "You can now gain magical power from killing.");
+        pakellas_id_device_charges();
     }
 
     if (you.worshipped[you.religion] < 100)
