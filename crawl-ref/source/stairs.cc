@@ -824,6 +824,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft,
         mark_milestone("abyss.exit", "escaped from the Abyss!");
         you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
                                                   + random2(100);
+        you.banished_by = "";
     }
 
     // Interlevel travel data.
