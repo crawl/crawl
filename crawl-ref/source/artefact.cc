@@ -620,13 +620,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
                     && (item_type == OBJ_JEWELLERY
                         || item_type == RING_TELEPORT_CONTROL);
             // ^ absurd
-        case ARTP_AC:
-        case ARTP_EVASION:
-        case ARTP_FOG:
-        case ARTP_RMUT:
-        case ARTP_CLARITY:
-        case ARTP_SUSTAB:
-            return false; // banned on randarts
         default:
             return true;
     }
