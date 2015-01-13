@@ -3431,7 +3431,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     if (mons->is_silenced() || mons->is_shapeshifter())
     {
-        erase_if(hspell_pass, [&](const mon_spell_slot &t) {
+        erase_if(hspell_pass, [](const mon_spell_slot &t) {
             return t.flags & MON_SPELL_SILENCE_MASK;
         });
     }
