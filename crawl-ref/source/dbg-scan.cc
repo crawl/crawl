@@ -1142,13 +1142,13 @@ item_type::item_type(item_def &item)
     {
         sub_type = find(deck_types.begin(), deck_types.end(), item.sub_type)
                    - deck_types.begin();
-        ASSERT(sub_type < deck_types.size());
+        ASSERT(sub_type < (int) deck_types.size());
     }
     else if (base_type == ITEM_MISCELLANY)
     {
         sub_type = find(misc_types.begin(), misc_types.end(), item.sub_type)
                         - misc_types.begin();
-        ASSERT(sub_type < misc_types.size());
+        ASSERT(sub_type < (int) misc_types.size());
     }
     else if (base_type == ITEM_FOOD)
         sub_type = valid_foods[item.sub_type];
