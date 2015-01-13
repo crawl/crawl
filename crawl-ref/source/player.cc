@@ -5810,6 +5810,8 @@ void player::init()
     type_ids.init(ID_UNKNOWN_TYPE);
     type_id_props.clear();
 
+    banished_by.clear();
+
     zotdef_wave_name.clear();
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
@@ -5842,7 +5844,6 @@ void player::init()
     // Volatile (same-turn) state:
     turn_is_over     = false;
     banished         = false;
-    banished_by.clear();
 
     wield_change     = false;
     redraw_quiver    = false;

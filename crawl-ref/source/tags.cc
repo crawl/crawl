@@ -1371,6 +1371,8 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.zigs_completed);
     marshallByte(th, you.zig_max);
 
+    marshallString(th, you.banished_by);
+
     marshallShort(th, you.hp_max_adj_temp);
     marshallShort(th, you.hp_max_adj_perm);
     marshallShort(th, you.mp_max_adj);
@@ -2224,6 +2226,12 @@ static void tag_read_you(reader &th)
     you.zot_points                = unmarshallInt(th);
     you.zigs_completed            = unmarshallInt(th);
     you.zig_max                   = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_TRACK_BANISHER)
+        you.banished_by = "";
+    else
+#endif
+        you.banished_by           = unmarshallString(th);
 
     you.hp_max_adj_temp           = unmarshallShort(th);
     you.hp_max_adj_perm           = unmarshallShort(th);

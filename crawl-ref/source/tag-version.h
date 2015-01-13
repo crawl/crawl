@@ -145,6 +145,7 @@ enum tag_minor_version
     TAG_MINOR_STACKABLE_EVOKERS,   // XP evokers stack
     TAG_MINOR_REALLY_16_BIT_VEC,   // CrawlVector size really saved as 16-bit
     TAG_MINOR_FIX_8_BIT_VEC_MAX,   // Fix up bad CrawlVector max size
+    TAG_MINOR_TRACK_BANISHER,      // Persist the name of the last thing that banished the player
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

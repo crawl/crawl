@@ -2307,7 +2307,6 @@ static void _check_banished()
     if (you.banished)
     {
         ASSERT(brdepth[BRANCH_ABYSS] != -1);
-        you.banished = false;
         if (!player_in_branch(BRANCH_ABYSS))
             mprf(MSGCH_BANISHMENT, "You are cast into the Abyss!");
         else if (you.depth < brdepth[BRANCH_ABYSS])
@@ -2316,7 +2315,7 @@ static void _check_banished()
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
         more();
         banished(you.banished_by);
-        you.banished_by.clear();
+        you.banished = false;
     }
 }
 

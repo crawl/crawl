@@ -75,6 +75,8 @@ private:
     string      auxkilldata;        // weapon wielded, spell cast, etc
     string      indirectkiller;     // the effect or real monster that summoned
     string      killerpath;         // colon-separated intermediate killers
+    string      last_banisher;      // the name of the last thing that banished
+                                    // the player
     uint8_t     dlvl;               // dungeon level (relative)
     short       absdepth;           // 1-based absolute depth
     branch_type branch;             // dungeon branch
