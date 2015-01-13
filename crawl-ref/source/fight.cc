@@ -517,7 +517,8 @@ static bool _dont_harm(const actor* attacker, const actor* defender)
 {
     return mons_aligned(attacker, defender)
            || attacker == &you && defender->wont_attack()
-           || defender == &you && attacker->wont_attack();
+           || defender == &you && attacker->wont_attack()
+           || mons_attitude(defender->as_monster()) == ATT_NEUTRAL;
 }
 
 /**
