@@ -34,6 +34,7 @@
 #include "errors.h"
 #include "exercise.h"
 #include "food.h"
+#include "fprop.h"
 #include "godabil.h"
 #include "godconduct.h"
 #include "godpassive.h"
@@ -393,6 +394,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
+    env.pgrid(you.pos()) |= FPROP_PAINTED;
     // Terrain effects.
     if (is_feat_dangerous(new_grid))
         fall_into_a_pool(new_grid);

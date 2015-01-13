@@ -31,6 +31,7 @@ enum feature_property_type
     FPROP_BLOOD_NORTH   = (1 << 17),
     FPROP_BLOOD_EAST    = FPROP_BLOOD_WEST | FPROP_BLOOD_NORTH,
     FPROP_OLD_BLOOD     = (1 << 18),
+    FPROP_PAINTED       = (1 << 19),
 };
 
 bool is_sanctuary(const coord_def& p);

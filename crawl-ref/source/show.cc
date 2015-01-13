@@ -174,6 +174,12 @@ static void _update_feat_at(const coord_def &gp)
     if (is_bloodcovered(gp))
         env.map_knowledge(gp).flags |= MAP_BLOODY;
 
+    if (is_bloodcovered(gp))
+        env.map_knowledge(gp).flags |= MAP_BLOODY;
+
+    if (env.pgrid(gp) & FPROP_PAINTED)
+        env.map_knowledge(gp).flags |= MAP_PAINTED;
+
     if (is_moldy(gp))
     {
         env.map_knowledge(gp).flags |= MAP_MOLDY;

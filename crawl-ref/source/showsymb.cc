@@ -38,7 +38,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     // These aren't shown mossy/bloody/slimy in console.
     const bool norecolour = feat_is_door(feat) || no_vault_recolour;
 
-    if (is_stair_exclusion(loc))
+    if (feat == DNGN_FLOOR && cell.flags & MAP_PAINTED)
+        colour = LIGHTMAGENTA;
+    else if (is_stair_exclusion(loc))
         colour = Options.tc_excluded;
     else if (!coloured)
     {
