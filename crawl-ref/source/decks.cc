@@ -2902,9 +2902,7 @@ static void _storm_card(int power, deck_rarity_type rarity)
     if (power_level > 1 || (power_level == 1 && coinflip()))
     {
         if (coinflip())
-        {
             summon_twister(power_level);
-        }
         else
         {
             // create some water so the wellspring can place
