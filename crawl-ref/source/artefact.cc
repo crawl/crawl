@@ -683,7 +683,7 @@ static const artefact_prop_data artp_data[] =
     { "rElec", ARTP_VAL_BOOL,
         _gen_good_res_artp, nullptr }, // ARTP_ELECTRICITY,
     { "rPois", ARTP_VAL_ANY,
-        _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_POISON,
+        []() { return 1; }, _gen_bad_res_artp }, // ARTP_POISON,
     { "rN", ARTP_VAL_ANY,
         _gen_good_res_artp,  _gen_bad_res_artp }, // ARTP_NEGATIVE_ENERGY,
     { "MR", ARTP_VAL_ANY,
