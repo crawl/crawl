@@ -86,6 +86,13 @@ enum_bitfield<E> bitfield(E e1, Es... args)
  * This macro produces a typedef and several inline function definitions;
  * use it only at file/namespace scope. It requires a trailing semicolon.
  *
+ * The operations ~, |, and (binary) & on flags or fields yields a field.
+ * Fields also support &= and |=. Fields can be explicitly converted to
+ * an integer of the enum's underlying type, or to bool. Note that in C++
+ * using a bitfield expression as the condition of a control structure,
+ * or as an operand of a logical operator, counts as explicit conversion
+ * to bool.
+ *
  * @param fieldT An identifier naming the bitfield type to define.
  * @param flagT  An identifier naming the enum type to use as a flag.
  *               Could theoretically be a more complex type expression, but
