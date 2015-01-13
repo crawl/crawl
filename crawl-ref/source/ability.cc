@@ -2289,7 +2289,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         case ABIL_BREATHE_LIGHTNING:
             mpr("You breathe a wild blast of lightning!");
-            disc_of_storms(true);
+            black_drac_breath();
             break;
 
         case ABIL_SPIT_ACID:
