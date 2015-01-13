@@ -1189,8 +1189,10 @@ void ghost_demon::init_lich(monster_type type)
     size_t count = 5 + random2(3);
 
     if (coinflip())
+    {
         _add_lich_spell(spells, lich_primary_summoner_spells,
                         ARRAYSZ(lich_primary_summoner_spells), false);
+    }
     else
         _add_lich_spell(spells, lich_primary_conjurer_spells,
                         ARRAYSZ(lich_primary_conjurer_spells), false);
