@@ -26,6 +26,7 @@ int wand_mp_cost();
 void zap_wand(int slot = -1);
 
 void shadow_lantern_effect();
-bool disc_of_storms(bool drac_breath = false);
+bool disc_of_storms();
+void black_drac_breath();
 
 #endif
