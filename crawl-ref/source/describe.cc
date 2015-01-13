@@ -238,7 +238,7 @@ static vector<string> _randart_propnames(const item_def& item,
 
         // Resists, also really important
         { ARTP_ELECTRICITY,           PROPN_PLAIN },
-        { ARTP_POISON,                PROPN_PLAIN },
+        { ARTP_POISON,                PROPN_SYMBOLIC },
         { ARTP_FIRE,                  PROPN_SYMBOLIC },
         { ARTP_COLD,                  PROPN_SYMBOLIC },
         { ARTP_NEGATIVE_ENERGY,       PROPN_SYMBOLIC },
