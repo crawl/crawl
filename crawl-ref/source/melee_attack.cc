@@ -892,7 +892,7 @@ bool melee_attack::attack()
     if (attacker->is_player()
         && weapon
         && is_artefact(*weapon)
-        && artefact_wpn_property(*weapon, ARTP_NOISES))
+        && artefact_property(*weapon, ARTP_NOISES))
     {
         noisy_equipment();
     }
@@ -924,7 +924,7 @@ void melee_attack::check_autoberserk()
             if (!is_artefact(*item))
                 continue;
 
-            if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
+            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
             {
                 attacker->go_berserk(false);
                 return;
@@ -943,7 +943,7 @@ void melee_attack::check_autoberserk()
             if (!is_artefact(*item))
                 continue;
 
-            if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
+            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
             {
                 attacker->go_berserk(false);
                 return;

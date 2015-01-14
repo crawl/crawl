@@ -537,31 +537,31 @@ int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid,
         if (weap != NON_ITEM && mitm[weap].base_type == OBJ_WEAPONS
             && is_artefact(mitm[weap]))
         {
-            ret += artefact_wpn_property(mitm[weap], ra_prop);
+            ret += artefact_property(mitm[weap], ra_prop);
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
             && is_artefact(mitm[second]) && mons_wields_two_weapons(this))
         {
-            ret += artefact_wpn_property(mitm[second], ra_prop);
+            ret += artefact_property(mitm[second], ra_prop);
         }
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
             && is_artefact(mitm[armour]))
         {
-            ret += artefact_wpn_property(mitm[armour], ra_prop);
+            ret += artefact_property(mitm[armour], ra_prop);
         }
 
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
             && is_artefact(mitm[shld]))
         {
-            ret += artefact_wpn_property(mitm[shld], ra_prop);
+            ret += artefact_property(mitm[shld], ra_prop);
         }
 
         if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
             && is_artefact(mitm[jewellery]))
         {
-            ret += artefact_wpn_property(mitm[jewellery], ra_prop);
+            ret += artefact_property(mitm[jewellery], ra_prop);
         }
     }
 

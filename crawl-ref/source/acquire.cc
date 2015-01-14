@@ -1311,7 +1311,7 @@ int acquirement_create_item(object_class_type class_wanted,
             && is_artefact(acq_item))
         {
             artefact_properties_t  proprt;
-            artefact_wpn_properties(acq_item, proprt);
+            artefact_properties(acq_item, proprt);
 
             // Check vs. stats. positive stats will automatically fall
             // through.  As will negative stats that won't kill you.

@@ -911,7 +911,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
         if (message_given)
         {
             if (is_artefact(item) && !is_unrandom_artefact(item))
-                artefact_wpn_learn_prop(item, ARTP_BRAND);
+                artefact_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
         }
@@ -1058,7 +1058,7 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
         if (message_given)
         {
             if (is_artefact(item) && !is_unrandom_artefact(item))
-                artefact_wpn_learn_prop(item, ARTP_BRAND);
+                artefact_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
         }
@@ -1663,7 +1663,7 @@ bool monster::wants_weapon(const item_def &weap) const
     // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(weap)
-        && artefact_wpn_property(weap, ARTP_PREVENT_SPELLCASTING))
+        && artefact_property(weap, ARTP_PREVENT_SPELLCASTING))
     {
         return false;
     }
@@ -1693,7 +1693,7 @@ bool monster::wants_armour(const item_def &item) const
     if (!pos().origin() && is_actual_spellcaster()
         && (property(item, PARM_EVASION) < -5
             || is_artefact(item)
-               && artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING)))
+               && artefact_property(item, ARTP_PREVENT_SPELLCASTING)))
     {
         return false;
     }
@@ -1707,7 +1707,7 @@ bool monster::wants_jewellery(const item_def &item) const
     // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(item)
-        && artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING))
+        && artefact_property(item, ARTP_PREVENT_SPELLCASTING))
     {
         return false;
     }

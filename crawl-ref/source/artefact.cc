@@ -129,7 +129,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
-                 || artefact_wpn_property(item, ARTP_CURSED) != 0))
+                 || artefact_property(item, ARTP_CURSED) != 0))
     {
         return false;
     }
@@ -138,8 +138,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     {
     case GOD_ELYVILON:
         // Peaceful healer god: no berserking.
-        if (artefact_wpn_property(item, ARTP_ANGRY)
-            || artefact_wpn_property(item, ARTP_BERSERK))
+        if (artefact_property(item, ARTP_ANGRY)
+            || artefact_property(item, ARTP_BERSERK))
         {
             return false;
         }
@@ -147,7 +147,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_ZIN:
         // Lawful god: no mutagenics.
-        if (artefact_wpn_property(item, ARTP_MUTAGENIC))
+        if (artefact_property(item, ARTP_MUTAGENIC))
             return false;
         break;
 
@@ -156,8 +156,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_HOLY_WRATH)
             return false;
 
-        if (artefact_wpn_property(item, ARTP_INVISIBLE)
-            || artefact_wpn_property(item, ARTP_STEALTH) > 0)
+        if (artefact_property(item, ARTP_INVISIBLE)
+            || artefact_property(item, ARTP_STEALTH) > 0)
         {
             return false;
         }
@@ -176,7 +176,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     case GOD_SIF_MUNA:
     case GOD_VEHUMET:
         // The magic gods: no preventing spellcasting.
-        if (artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING))
+        if (artefact_property(item, ARTP_PREVENT_SPELLCASTING))
             return false;
         break;
 
@@ -185,7 +185,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (brand == SPWPN_PAIN) // Pain involves necromantic spell use.
             return false;
 
-        if (artefact_wpn_property(item, ARTP_MAGICAL_POWER))
+        if (artefact_property(item, ARTP_MAGICAL_POWER))
             return false;
         break;
 
@@ -204,8 +204,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (ego == SPARM_RUNNING)
             return false;
 
-        if (artefact_wpn_property(item, ARTP_ANGRY)
-            || artefact_wpn_property(item, ARTP_BERSERK))
+        if (artefact_property(item, ARTP_ANGRY)
+            || artefact_property(item, ARTP_BERSERK))
         {
             return false;
         }
@@ -225,7 +225,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
         }
         // No reducing stealth.
-        if (artefact_wpn_property(item, ARTP_STEALTH) < 0)
+        if (artefact_property(item, ARTP_STEALTH) < 0)
             return false;
         break;
 
@@ -515,7 +515,7 @@ void artefact_desc_properties(const item_def &item,
         return;
 
     // actual artefact properties
-    artefact_wpn_properties(item, proprt, known);
+    artefact_properties(item, proprt, known);
 
     // fake artefact properties (intrinsics)
     _populate_item_intrinsic_artps(item, proprt, known);
@@ -1003,9 +1003,9 @@ static bool _init_artefact_properties(item_def &item)
     return true;
 }
 
-void artefact_wpn_properties(const item_def &item,
-                             artefact_properties_t  &proprt,
-                             artefact_known_props_t &known)
+void artefact_properties(const item_def &item,
+                         artefact_properties_t  &proprt,
+                         artefact_known_props_t &known)
 {
     ASSERT(is_artefact(item));
     if (!item.props.exists(KNOWN_PROPS_KEY))
@@ -1051,45 +1051,44 @@ void artefact_wpn_properties(const item_def &item,
         _get_randart_properties(item, proprt);
 }
 
-void artefact_wpn_properties(const item_def &item,
-                              artefact_properties_t &proprt)
+void artefact_properties(const item_def &item,
+                         artefact_properties_t &proprt)
 {
     artefact_known_props_t known;
 
-    artefact_wpn_properties(item, proprt, known);
+    artefact_properties(item, proprt, known);
 }
 
-int artefact_wpn_property(const item_def &item, artefact_prop_type prop,
-                           bool &_known)
+int artefact_property(const item_def &item, artefact_prop_type prop,
+                      bool &_known)
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
     proprt.init(0);
     known.init(0);
 
-    artefact_wpn_properties(item, proprt, known);
+    artefact_properties(item, proprt, known);
 
     _known = known[prop];
 
     return proprt[prop];
 }
 
-int artefact_wpn_property(const item_def &item, artefact_prop_type prop)
+int artefact_property(const item_def &item, artefact_prop_type prop)
 {
     bool known;
 
-    return artefact_wpn_property(item, prop, known);
+    return artefact_property(item, prop, known);
 }
 
-int artefact_known_wpn_property(const item_def &item,
-                                 artefact_prop_type prop)
+int artefact_known_property(const item_def &item, artefact_prop_type prop)
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
     proprt.init(0);
     known.init(0);
 
-    artefact_wpn_properties(item, proprt, known);
+    artefact_properties(item, proprt, known);
 
     if (known[prop])
         return proprt[prop];
@@ -1109,7 +1108,7 @@ static int _artefact_num_props(const artefact_properties_t &proprt)
     return num;
 }
 
-void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop)
+void artefact_learn_prop(item_def &item, artefact_prop_type prop)
 {
     ASSERT(is_artefact(item));
     ASSERT(item.props.exists(KNOWN_PROPS_KEY));
@@ -1604,7 +1603,7 @@ bool randart_is_bad(const item_def &item)
 {
     artefact_properties_t proprt;
     proprt.init(0);
-    artefact_wpn_properties(item, proprt);
+    artefact_properties(item, proprt);
 
     return randart_is_bad(item, proprt);
 }
@@ -1719,8 +1718,8 @@ static void _make_faerie_armour(item_def &item)
 
         // -CAST makes no sense on someone called "the Enchantress",
         // +TELE is not implemented for monsters yet.
-        if (artefact_wpn_property(doodad, ARTP_PREVENT_SPELLCASTING)
-            || artefact_wpn_property(doodad, ARTP_CAUSE_TELEPORTATION))
+        if (artefact_property(doodad, ARTP_PREVENT_SPELLCASTING)
+            || artefact_property(doodad, ARTP_CAUSE_TELEPORTATION))
         {
             continue;
         }

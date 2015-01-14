@@ -256,7 +256,7 @@ static void _tweak_randart(item_def &item)
         clear_messages();
 
     artefact_properties_t props;
-    artefact_wpn_properties(item, props);
+    artefact_properties(item, props);
 
     string prompt = "";
 
@@ -1249,7 +1249,7 @@ static void _debug_rap_stats(FILE *ostat)
         item.special = 0;
         item.props.clear();
         make_item_randart(item);
-        artefact_wpn_properties(item, proprt);
+        artefact_properties(item, proprt);
 
         if (randart_is_bad(item, proprt))
         {
