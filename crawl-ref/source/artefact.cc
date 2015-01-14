@@ -828,28 +828,17 @@ static void _get_randart_properties(const item_def &item,
     for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
         art_props.push_back(static_cast<artefact_prop_type>(i));
 
-    int good = 0; // number of good properties to assign
-    int bad = 0; // number of bad properties to assign
-    // select how many good & bad properties to assign
-    for (int i = 0; i <= 5; ++i)
-    {
-        if (x_chance_in_y(7, 12))
-            continue; // no property for this iter
+    // number of good properties to assign -- avg 2.4, min 1.
+    int good = max(1, binomial(6, 45));
 
-        if (x_chance_in_y(10, 13))
-            ++good;              // 32% chance overall
-        else
-            ++bad;               // <10% chance overall
-    }
-    // avg ~0.5 bad props & ~1.6 good props per randart
+    // number of bad properties to assign. Chance increases w/ number of good
+    // properties. Average is .24 bad per good, up to 1.44 for 6 good.
+    int bad = binomial(3, 8 * good);
 
-    // Add some extra good props if the artifact has a bad base enchantment
-    // 0 through -2: +1 good; -3 to -5: +2 good; -6 to -8: +3 good, etc.
-    if (item_class != OBJ_JEWELLERY && item.plus <= 0)
+    // Add some extra good props if the artifact is a weapon and has a bad base
+    // enchantment 0 through -2: +1 good; -3 to -5: +2 good; -6 to -8: +3 good
+    if (item_class == OBJ_WEAPONS && item.plus <= 0)
         good += 1 + (-1 * item.plus / 3);
-
-    // Make sure to have at least one bonus good property.
-    good = max(1, good);
 
     item_props.init(0);
 
