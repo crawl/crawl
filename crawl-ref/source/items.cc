@@ -2793,26 +2793,18 @@ static bool _is_option_autopickup(const item_def &item)
         return false;
 
 #ifdef CLUA_BINDINGS
-    bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
-                                        &item, iname.c_str());
+    maybe_bool res = clua.callmaybefn("ch_force_autopickup", "is",
+                                      &item, iname.c_str());
     if (!clua.error.empty())
     {
         mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s",
              clua.error.c_str());
     }
 
-    if (res)
+    if (res == MB_TRUE)
         return true;
 
-    res = clua.callbooleanfn(false, "ch_deny_autopickup", "is",
-                             &item, iname.c_str());
-    if (!clua.error.empty())
-    {
-        mprf(MSGCH_ERROR, "ch_deny_autopickup failed: %s",
-             clua.error.c_str());
-    }
-
-    if (res)
+    if (res == MB_FALSE)
         return false;
 #endif
 

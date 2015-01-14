@@ -11,7 +11,6 @@ chk_lua_option          = { }
 -- Push into this table, rather than indexing into it.
 chk_lua_save            = { }
 chk_force_autopickup    = { }
-chk_deny_autopickup     = { }
 
 function c_save()
     if not chk_lua_save then
@@ -83,34 +82,22 @@ end
 
 function ch_force_autopickup(it, name)
     if not chk_force_autopickup then
-        return false
+        return
     end
     for i = 1, #chk_force_autopickup do
-        if chk_force_autopickup[i](it, name) then
-            return true
+        res = chk_force_autopickup[i](it, name)
+        if type(res) == "boolean" then
+            return res
         end
     end
-
-    return false
 end
 
 function add_autopickup_func(func)
     table.insert(chk_force_autopickup, func)
 end
 
-function ch_deny_autopickup(it, name)
-    if not chk_deny_autopickup then
-        return false
+function clear_autopickup_funcs()
+    for i in pairs(chk_force_autopickup) do
+        chk_force_autopickup[i] = nil
     end
-    for i = 1, #chk_deny_autopickup do
-        if chk_deny_autopickup[i](it, name) then
-            return true
-        end
-    end
-
-    return false
-end
-
-function add_no_autopickup_func(func)
-    table.insert(chk_deny_autopickup, func)
 end
