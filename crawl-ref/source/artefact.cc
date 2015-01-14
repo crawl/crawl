@@ -857,8 +857,10 @@ static void _get_randart_properties(const item_def &item,
         if (!_artp_can_go_on_item(prop, item))
             continue;
 
-        if (prop == ARTP_TWISTER && good <= 1)
-            continue; // costs a little extra goodness.
+        // awkwardly cut the spawn rate of this property to one third.
+        // once proper weighting comes in, do that instead.
+        if (prop == ARTP_TWISTER && !one_chance_in(5))
+            continue;
 
         // should we try to generate a good or bad version of the prop?
         const bool can_gen_good = good > 0 && artp_potentially_good(prop);
