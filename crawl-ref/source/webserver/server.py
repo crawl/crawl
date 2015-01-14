@@ -157,7 +157,7 @@ def usr1_handler(signum, frame):
     logging.info("Received USR1, reloading config.")
     try:
         config.load()
-        config.init_games()
+        config.load_games()
     except ValueError:
         logging.error("Error in config file", exc_info=True)
     global title_imgs
@@ -190,14 +190,13 @@ def bind_server():
         settings["static_handler_class"] = NoCacheHandler
 
     routes = [
-        (r"/", MainHandler, {"action": "lobby"}),
-        (r"/play/(.*)", MainHandler, {"action": "play"}),
-        (r"/watch/(.*)", MainHandler, {"action": "watch"}),
-        (r"/scores/(.*)", MainHandler, {"action": "scores"}),
-        (r"/socket", CrawlWebSocket),
-        (r"/gamedata/(.*)/(.*)", GameDataHandler),
-        (r"/janitor/(.*)", JanitorHandler),
-        ]
+        ("/", MainHandler, {"action": "lobby"}),
+        ("/play/(.*)", MainHandler, {"action": "play"}),
+        ("/watch/(.*)", MainHandler, {"action": "watch"}),
+        ("/scores/(.*)", MainHandler, {"action": "scores"}),
+        ("/socket", CrawlWebSocket),
+        ("/gamedata/(.*)/(.*)", GameDataHandler),
+        ("/janitor/(.*)", JanitorHandler)]
 
     application = tornado.web.Application(routes, gzip=True, **settings)
 
