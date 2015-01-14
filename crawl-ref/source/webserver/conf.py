@@ -154,6 +154,7 @@ class Conf(object):
                 except Exception as e:
                     logging.error("Could parse game config file {0} "
                                   "({1})".format(f, e.args))
+                    sys.exit(1)
                 finally:
                     fh.close()
 
