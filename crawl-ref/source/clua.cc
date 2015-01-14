@@ -536,6 +536,38 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params, ...)
     return callmbooleanfn(fn, params, args);
 }
 
+maybe_bool CLua::callmaybefn(const char *fn, const char *params, va_list args)
+{
+    error.clear();
+    lua_State *ls = state();
+    if (!ls)
+        return MB_MAYBE;
+
+    int stacktop = lua_gettop(ls);
+
+    pushglobal(fn);
+    if (!lua_isfunction(ls, -1))
+    {
+        lua_pop(ls, 1);
+        CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
+    }
+
+    bool ret = calltopfn(ls, params, args, 1);
+    if (!ret)
+        CL_RESETSTACK_RETURN(ls, stacktop, MB_MAYBE);
+
+    maybe_bool r = lua_isboolean(ls, -1) ? _frombool(lua_toboolean(ls, -1))
+                                         : MB_MAYBE;
+    CL_RESETSTACK_RETURN(ls, stacktop, r);
+}
+
+maybe_bool CLua::callmaybefn(const char *fn, const char *params, ...)
+{
+    va_list args;
+    va_start(args, params);
+    return callmaybefn(fn, params, args);
+}
+
 static bool _tobool(maybe_bool mb, bool def)
 {
     switch (mb)
