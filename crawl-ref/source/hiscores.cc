@@ -1595,11 +1595,7 @@ void scorefile_entry::init(time_t dt)
 
     absdepth   = env.absdepth0 + 1;  // 1-based absolute depth.
 
-    if ((player_in_branch(BRANCH_ABYSS) || you.banished)
-        && !you.banished_by.empty())
-    {
-        last_banisher = you.banished_by;
-    }
+    last_banisher = you.banished_by;
 
     if (const vault_placement *vp = dgn_vault_at(you.pos()))
     {
