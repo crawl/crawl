@@ -218,17 +218,22 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (item.sub_type == WPN_CLUB)
             return false;
 
-        // The rest are normal randarts.
-        make_item_randart(item);
         // Mean enchantment +6.
         item.plus = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
 
+        bool cursed = false;
         if (one_chance_in(5))
         {
-            do_curse_item(item);
+            cursed = true;
             item.plus = 3 - random2(6);
         }
         else if (item.plus < 0 && !one_chance_in(3))
+            cursed = true;
+
+        // The rest are normal randarts.
+        make_item_randart(item);
+
+        if (cursed)
             do_curse_item(item);
 
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
@@ -763,10 +768,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         else
             hide2armour(item); // No randart hides.
 
-        // Needs to be done after the barding chance else we get randart
-        // bardings named Boots of xy.
-        make_item_randart(item);
-
         // Determine enchantment and cursedness.
         if (one_chance_in(5))
         {
@@ -787,6 +788,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             if (item.plus < 0 && !one_chance_in(3))
                 do_curse_item(item);
         }
+
+        // Needs to be done after the barding chance else we get randart
+        // bardings named Boots of xy.
+        make_item_randart(item);
 
         // Don't let quicksilver dragon armour get minuses.
         if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
