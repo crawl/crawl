@@ -93,18 +93,37 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         _describe_food_change(-hunger_amount);
 }
 
-void lessen_hunger(int satiated_amount, bool suppress_msg)
+// Must match the order of hunger_state_t enums
+static constexpr int hunger_threshold[HS_ENGORGED + 1] =
+{ HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY, HUNGER_HUNGRY,
+    HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL, HUNGER_ENGORGED };
+
+/**
+ * Attempt to reduce the player's hunger.
+ *
+ * @param satiated_amount       The amount by which to reduce hunger by.
+ * @param suppress_msg          Whether to squelch messages about hunger
+ *                              decreasing.
+ * @param max                   The maximum hunger state which the player may
+ *                              reach. If -1, defaults to HUNGER_MAXIMUM.
+ */
+void lessen_hunger(int satiated_amount, bool suppress_msg, int max)
 {
     if (you_foodless())
         return;
 
     you.hunger += satiated_amount;
 
-    if (you.hunger > HUNGER_MAXIMUM)
-        you.hunger = HUNGER_MAXIMUM;
+    const hunger_state_t max_hunger_state = max == -1 ? HS_ENGORGED
+                                                      : (hunger_state_t) max;
+    ASSERT_RANGE(max_hunger_state, 0, HS_ENGORGED + 1);
+    const int max_hunger = min(HUNGER_MAXIMUM,
+                               hunger_threshold[max_hunger_state]);
+    if (you.hunger > max_hunger)
+        you.hunger = max_hunger;
 
     // So we don't get two messages, ever.
-    bool state_message = food_change();
+    const bool state_message = food_change();
 
     if (!suppress_msg && !state_message)
         _describe_food_change(satiated_amount);
@@ -250,11 +269,6 @@ static string _how_hungry()
         return "thirsty";
     return "hungry";
 }
-
-// Must match the order of hunger_state_t enums
-static constexpr int hunger_threshold[HS_ENGORGED + 1] =
-    { HUNGER_STARVING, HUNGER_NEAR_STARVING, HUNGER_VERY_HUNGRY, HUNGER_HUNGRY,
-      HUNGER_SATIATED, HUNGER_FULL, HUNGER_VERY_FULL, HUNGER_ENGORGED };
 
 // "initial" is true when setting the player's initial hunger state on game
 // start or load: in that case it's not really a change, so we suppress the
