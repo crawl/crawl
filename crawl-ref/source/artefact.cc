@@ -588,7 +588,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
     artefact_properties_t proprt;
     proprt.init(0);
     artefact_known_props_t _;
-    _populate_item_intrinsic_artps(item, proprt, _);
+    artefact_desc_properties(item, proprt, _);
     if (proprt[prop])
         return false; // don't duplicate intrinsic props
 
@@ -612,14 +612,19 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
             return item_class != OBJ_WEAPONS || !is_range_weapon(item);
             // works poorly with ranged weapons
         case ARTP_CAUSE_TELEPORTATION:
-            return item_type != OBJ_WEAPONS || crawl_state.game_is_sprint();
+            return item_type != OBJ_WEAPONS
+                    && !crawl_state.game_is_sprint()
+                    && !proprt[ARTP_PREVENT_TELEPORTATION];
             // no tele in sprint, and too annoying on weapons (swappable)
+            // and obv we shouldn't generate contradictory props
         case ARTP_PREVENT_TELEPORTATION:
-            return (item_type != OBJ_JEWELLERY
-                        || item_type != RING_TELEPORTATION)
-                    && (item_type == OBJ_JEWELLERY
-                        || item_type == RING_TELEPORT_CONTROL);
-            // ^ absurd
+            return !item.is_type(OBJ_JEWELLERY, RING_TELEPORT_CONTROL)
+                    && !proprt[ARTP_BLINK]
+                    && !proprt[ARTP_CAUSE_TELEPORTATION];
+            // no contradictory props/item types
+        case ARTP_BLINK:
+            return !proprt[ARTP_PREVENT_TELEPORTATION];
+            // no contradictory props
         default:
             return true;
     }
@@ -878,20 +883,6 @@ static void _get_randart_properties(const item_def &item,
         {
             item_props[prop] = artp_data[prop].gen_bad_value();
             --bad;
-        }
-        else
-            continue;
-
-        // special case: remove tloc properties if we're adding -tele
-        if (prop == ARTP_PREVENT_TELEPORTATION)
-        {
-            if (item_props[ARTP_BLINK])
-                ++good; // replace with another good prop
-            item_props[ARTP_BLINK] = 0;
-
-            if (item_props[ARTP_CAUSE_TELEPORTATION])
-                ++good; // replace with another bad prop... bad luck!
-            item_props[ARTP_CAUSE_TELEPORTATION] = 0;
         }
     }
 }
