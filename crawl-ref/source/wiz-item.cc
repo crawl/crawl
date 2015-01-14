@@ -1197,7 +1197,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
-#define MAX_TRIES 272727
+#define MAX_TRIES 27272
 static void _debug_rap_stats(FILE *ostat)
 {
     const int inv_index
