@@ -621,10 +621,8 @@ static void _hydra_devour(monster &victim)
     if (filling)
     {
         const int equiv_chunks =
-            1+random2(get_max_corpse_chunks(victim.type));
-        // XXX: consider capping nutrition at random2(CHUNK_BASE_NUTRITION)
-        // short of the next hunger level?
-        lessen_hunger(CHUNK_BASE_NUTRITION * equiv_chunks, false);
+            1 + random2(get_max_corpse_chunks(victim.type));
+        lessen_hunger(CHUNK_BASE_NUTRITION * equiv_chunks, false, max_hunger);
     }
 
     // healing
