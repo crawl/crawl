@@ -223,7 +223,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     artefact_properties_t  proprt;
     artefact_known_props_t known;
-    artefact_wpn_properties(item, proprt, known);
+    artefact_properties(item, proprt, known);
 
     if (proprt[ARTP_AC])
         you.redraw_armour_class = true;
@@ -287,7 +287,7 @@ static void _unequip_artefact_effect(item_def &item,
 
     artefact_properties_t proprt;
     artefact_known_props_t known;
-    artefact_wpn_properties(item, proprt, known);
+    artefact_properties(item, proprt, known);
     const bool msg = !show_msgs || *show_msgs;
 
     if (proprt[ARTP_AC])
@@ -470,7 +470,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
         if (artefact)
         {
-            special = artefact_wpn_property(item, ARTP_BRAND);
+            special = artefact_property(item, ARTP_BRAND);
 
             if (!was_known && !(item.flags & ISFLAG_NOTED_ID))
             {
@@ -481,7 +481,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                                origin_desc(item).c_str()));
             }
             else
-                known_recurser = artefact_known_wpn_property(item,
+                known_recurser = artefact_known_property(item,
                                                              ARTP_CURSED);
         }
 

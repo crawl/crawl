@@ -1014,7 +1014,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
         artefact_set_property(item, ARTP_BRAND, brand);
 
         if (seen)
-            artefact_wpn_learn_prop(item, ARTP_BRAND);
+            artefact_learn_prop(item, ARTP_BRAND);
     }
     else
     {
@@ -1342,9 +1342,9 @@ bool swap_monsters(monster* m1, monster* m2)
 
 static bool _art_is_safe(item_def item)
 {
-    int prop_str = artefact_wpn_property(item, ARTP_STRENGTH);
-    int prop_int = artefact_wpn_property(item, ARTP_INTELLIGENCE);
-    int prop_dex = artefact_wpn_property(item, ARTP_DEXTERITY);
+    int prop_str = artefact_property(item, ARTP_STRENGTH);
+    int prop_int = artefact_property(item, ARTP_INTELLIGENCE);
+    int prop_dex = artefact_property(item, ARTP_DEXTERITY);
 
     return prop_str >= 0 && prop_int >= 0 && prop_dex >= 0;
 }

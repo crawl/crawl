@@ -3905,9 +3905,9 @@ void unmarshallItem(reader &th, item_def &item)
     // Negative MR was only supposed to exist for Folly, but paranoia.
     if (th.getMinorVersion() < TAG_MINOR_MR_ITEM_RESCALE
         && is_artefact(item)
-        && artefact_wpn_property(item, ARTP_MAGIC))
+        && artefact_property(item, ARTP_MAGIC))
     {
-        int prop_mr = artefact_wpn_property(item, ARTP_MAGIC);
+        int prop_mr = artefact_property(item, ARTP_MAGIC);
         if (prop_mr > 99)
             artefact_set_property(item, ARTP_MAGIC, 3);
         else if (prop_mr > 79)
@@ -3923,9 +3923,9 @@ void unmarshallItem(reader &th, item_def &item)
     // Rescale stealth (range 10..79 and -10..-98) to discrete steps (+-50/100)
     if (th.getMinorVersion() < TAG_MINOR_STEALTH_RESCALE && is_artefact(item))
     {
-        if (artefact_wpn_property(item, ARTP_STEALTH))
+        if (artefact_property(item, ARTP_STEALTH))
         {
-            int prop_st = artefact_wpn_property(item, ARTP_STEALTH);
+            int prop_st = artefact_property(item, ARTP_STEALTH);
             if (prop_st > 60)
                 artefact_set_property(item, ARTP_STEALTH, 2);
             else if (prop_st < -70)
@@ -3937,7 +3937,7 @@ void unmarshallItem(reader &th, item_def &item)
         }
 
         // Remove fast metabolism property
-        if (artefact_wpn_property(item, ARTP_METABOLISM))
+        if (artefact_property(item, ARTP_METABOLISM))
         {
             artefact_set_property(item, ARTP_METABOLISM, 0);
             artefact_set_property(item, ARTP_STEALTH, -1);
@@ -4003,8 +4003,8 @@ void unmarshallItem(reader &th, item_def &item)
 
         if (item.props.exists(ARTEFACT_PROPS_KEY))
         {
-            acc = artefact_wpn_property(item, ARTP_ACCURACY);
-            dam = artefact_wpn_property(item, ARTP_SLAYING);
+            acc = artefact_property(item, ARTP_ACCURACY);
+            dam = artefact_property(item, ARTP_SLAYING);
             slay = dam < 0 ? dam : max(acc, dam);
 
             artefact_set_property(item, ARTP_SLAYING, slay);

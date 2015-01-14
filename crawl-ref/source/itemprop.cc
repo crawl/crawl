@@ -754,12 +754,12 @@ void do_curse_item(item_def &item, bool quiet)
         if (!quiet)
         {
             const bool was_known = is_artefact(item)
-                                 ? artefact_known_wpn_property(item, ARTP_BRAND)
+                                 ? artefact_known_property(item, ARTP_BRAND)
                                  : item_ident(item, ISFLAG_KNOW_TYPE);
             mprf("Your %s glows black briefly, but repels the curse.",
                  item.name(DESC_PLAIN).c_str());
             if (is_artefact(item))
-                artefact_wpn_learn_prop(item, ARTP_BRAND);
+                artefact_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
@@ -1106,7 +1106,7 @@ brand_type get_weapon_brand(const item_def &item)
         return SPWPN_NORMAL;
 
     if (is_artefact(item))
-        return static_cast<brand_type>(artefact_wpn_property(item, ARTP_BRAND));
+        return static_cast<brand_type>(artefact_property(item, ARTP_BRAND));
 
     return static_cast<brand_type>(item.brand);
 }
@@ -1129,7 +1129,7 @@ special_armour_type get_armour_ego_type(const item_def &item)
     if (is_artefact(item))
     {
         return static_cast<special_armour_type>(
-                   artefact_wpn_property(item, ARTP_BRAND));
+                   artefact_property(item, ARTP_BRAND));
     }
 
     return static_cast<special_armour_type>(item.brand);
@@ -2271,7 +2271,7 @@ int get_armour_res_fire(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_FIRE);
+        res += artefact_property(arm, ARTP_FIRE);
 
     return res;
 }
@@ -2291,7 +2291,7 @@ int get_armour_res_cold(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_COLD);
+        res += artefact_property(arm, ARTP_COLD);
 
     return res;
 }
@@ -2310,7 +2310,7 @@ int get_armour_res_poison(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_POISON);
+        res += artefact_property(arm, ARTP_POISON);
 
     return res;
 }
@@ -2325,7 +2325,7 @@ int get_armour_res_elec(const item_def &arm, bool check_artp)
     res += armour_type_prop(arm.sub_type, ARMF_RES_ELEC);
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_ELECTRICITY);
+        res += artefact_property(arm, ARTP_ELECTRICITY);
 
     return res;
 }
@@ -2344,7 +2344,7 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_NEGATIVE_ENERGY);
+        res += artefact_property(arm, ARTP_NEGATIVE_ENERGY);
 
     return res;
 }
@@ -2363,7 +2363,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
         res += MR_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += MR_PIP * artefact_wpn_property(arm, ARTP_MAGIC);
+        res += MR_PIP * artefact_property(arm, ARTP_MAGIC);
 
     return res;
 }
@@ -2377,7 +2377,7 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(arm))
-        return artefact_wpn_property(arm, ARTP_EYESIGHT);
+        return artefact_property(arm, ARTP_EYESIGHT);
 
     return false;
 }
@@ -2411,7 +2411,7 @@ int get_jewellery_res_fire(const item_def &ring, bool check_artp)
     }
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_FIRE);
+        res += artefact_property(ring, ARTP_FIRE);
 
     return res;
 }
@@ -2437,7 +2437,7 @@ int get_jewellery_res_cold(const item_def &ring, bool check_artp)
     }
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_COLD);
+        res += artefact_property(ring, ARTP_COLD);
 
     return res;
 }
@@ -2452,7 +2452,7 @@ int get_jewellery_res_poison(const item_def &ring, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_POISON);
+        res += artefact_property(ring, ARTP_POISON);
 
     return res;
 }
@@ -2464,7 +2464,7 @@ int get_jewellery_res_elec(const item_def &ring, bool check_artp)
     int res = 0;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_ELECTRICITY);
+        res += artefact_property(ring, ARTP_ELECTRICITY);
 
     return res;
 }
@@ -2480,7 +2480,7 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_NEGATIVE_ENERGY);
+        res += artefact_property(ring, ARTP_NEGATIVE_ENERGY);
 
     return res;
 }
@@ -2495,7 +2495,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp)
         res += 40;
 
     if (check_artp && is_artefact(ring))
-        res += 40 * artefact_wpn_property(ring, ARTP_MAGIC);
+        res += 40 * artefact_property(ring, ARTP_MAGIC);
 
     return res;
 }
@@ -2508,7 +2508,7 @@ bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(ring))
-        return artefact_wpn_property(ring, ARTP_EYESIGHT);
+        return artefact_property(ring, ARTP_EYESIGHT);
 
     return false;
 }
@@ -2533,13 +2533,13 @@ int property(const item_def &item, int prop_type)
             {
             case PWPN_DAMAGE:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].dam
-                       + artefact_wpn_property(item, ARTP_BASE_DAM);
+                       + artefact_property(item, ARTP_BASE_DAM);
             case PWPN_HIT:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].hit
-                       + artefact_wpn_property(item, ARTP_BASE_ACC);
+                       + artefact_property(item, ARTP_BASE_ACC);
             case PWPN_SPEED:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].speed
-                       + artefact_wpn_property(item, ARTP_BASE_DELAY);
+                       + artefact_property(item, ARTP_BASE_DELAY);
             }
         }
         if (prop_type == PWPN_DAMAGE)
@@ -2616,11 +2616,11 @@ bool gives_ability(const item_def &item)
 
     // Check for evokable randart properties.
     for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
-        if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
+        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
             return true;
 
 #if TAG_MAJOR_VERSION == 34
-    if (artefact_wpn_property(item, ARTP_FOG))
+    if (artefact_property(item, ARTP_FOG))
         return true;
 #endif
 
@@ -2691,7 +2691,7 @@ bool gives_resistance(const item_def &item)
         if (rap == ARTP_MAGIC || rap >= ARTP_INVISIBLE)
             continue;
 
-        if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
+        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
             return true;
     }
 
