@@ -585,12 +585,16 @@ static void _add_randart_weapon_brand(const item_def &item,
 
 static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
 {
+    artefact_properties_t intrinsic_proprt;
+    intrinsic_proprt.init(0);
+    artefact_known_props_t _;
+    _populate_item_intrinsic_artps(item, intrinsic_proprt, _);
+    if (intrinsic_proprt[prop])
+        return false; // don't duplicate intrinsic props
+
     artefact_properties_t proprt;
     proprt.init(0);
-    artefact_known_props_t _;
     artefact_desc_properties(item, proprt, _);
-    if (proprt[prop])
-        return false; // don't duplicate intrinsic props
 
     const object_class_type item_class = item.base_type;
     const int item_type = item.sub_type;
