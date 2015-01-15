@@ -1207,13 +1207,8 @@ int player_teleport(bool calc_unid)
     // rings (keep in sync with _equip_jewellery_effect)
     tp += 8 * you.wearing(EQ_RINGS, RING_TELEPORTATION, calc_unid);
 
-    // randart weapons only
-    if (you.weapon()
-        && you.weapon()->base_type == OBJ_WEAPONS
-        && is_artefact(*you.weapon()))
-    {
-        tp += you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
-    }
+    // artefacts
+    tp += you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
 
     // mutations
     tp += player_mutation_level(MUT_TELEPORT) * 3;
