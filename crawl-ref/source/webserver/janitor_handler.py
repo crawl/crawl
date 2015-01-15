@@ -6,7 +6,7 @@ import re
 import shlex
 
 import tornado.web
-import tornado.escape
+from tornado.escape import url_unescape
 import tornado.gen
 from tornado.process import Subprocess
 
@@ -16,109 +16,74 @@ import logging
 
 
 class JanitorHandler(tornado.web.RequestHandler):
-
     """Handle Janitor requests."""
 
-    def __init__(self, application, request):
-        """See tornado.web.RequestHandler.__init__."""
-        # NOTE: this regex MUST be anchored on ^both sides$
-        self.PARAM_REGEX = r'^[a-zA-Z0-9_-]+$'
-        super(JanitorHandler, self).__init__(application, request)
-
-    def _resolve_params(self, raw_string, provided_args):
-        """Return a validated dict of provided params.
+    def _format_command_argument(self, command_id):
+        """Return a formatted janitor command argument using the request
+        arguments as parameters.
 
         Handles the following security concerns:
-        * Only required params are in the returned dict
-        * All params were specified with exactly one value
+        * Only required params are in the returned dict.
+        * All params are given with exactly one value.
+        * Parameter values contain only safe characters.
         """
-        required_params = set(token[1] for token in
-                              string.Formatter().parse(raw_string)
-                              if token[1]
-                              )
-        validated_params = {}
-        for param in required_params:
-            if param not in self.request.arguments:
+
+        valid_params = {}
+        command = config.janitor_commands[command_id]
+        for param in command["params"]:
+            if param not in self.request.arguments \
+               or not self.request.arguments[param]:
                 raise ValueError("Missing param {0}".format(param))
-            if len(self.request.arguments[param]) == 0:
-                # this is a sanity check for &arg=
-                raise ValueError("No values for param {0}".format(param))
             if len(self.request.arguments[param]) > 1:
-                raise ValueError(">1 values for param {0}".format(param))
-
+                raise ValueError("Multiple values for param {0}".format(param))
             param_value = self.request.arguments[param][0]
-            if not re.match(self.PARAM_REGEX, param_value):
+            # Check that the value contains only safe characters.
+            if not re.match("^[a-zA-Z0-9_-]+$", param_value):
                 raise ValueError("Bad characters in param {0}".format(param))
-            validated_params[param] = param_value
-        return validated_params
+            valid_params[param] = param_value
+        return command["argument"].format(**valid_params)
 
-    def _handle_command_output(self, data):
+    def _handle_command_data(self, data):
         self.write(data)
         self.flush()
 
-    def _dispatch_request(self, action, args):
-        """
-        Dispatch the actual janitor command.
-
-        Responsible for validating "action" is valid.
-        """
-        if action == "source":
-            logging.debug("Returning the static file {0}".format(args))
-            self._action_source(args)
-            self.finish()
-        elif action == "command":
-            logging.debug("Running command {0}".format(args))
-            self._action_command(args)
-        else:
-            assert False  # check_config should ensure this is unreachable
-
-    def _get_command(self, arg, janitor_commands):
-        """Return the configuration for a given janitor ID.
-
-        May return None.
-        """
-        cmd = [cmd for cmd in janitor_commands if cmd["id"] == arg]
-        assert len(cmd) in (0, 1)  # sanity check: check_config ensures this
-        if cmd:
-            return cmd[0]
-        else:
-            return None
-
     def _action_source(self, path):
-        if not os.path.isfile(path):
-            logging.debug("Requested file does not exist: {0}".format(path))
-            self.send_error(404)
-            return
-        if os.path.abspath(path) != path:
-            # probably someone trying to be clever with a /../ component
-            logging.debug("Requested path is invalid")
-            self.send_error(400)
-            return
         filename = os.path.basename(path)
         self.set_header("Content-Type", "application/octet-stream")
         self.set_header("Content-Disposition",
                         "attachment; filename=" + filename)
-        with open(path, "rb") as f:
-            self.write(f.read())
-            self.flush()
+        try:
+            fh = open(path, "rb")
+        except EnvironmentError as e:
+            self.fail(500, "Could not open file {0}: {1}".format(path,
+                                                                 e.strerror))
+            return
+        self.write(fh.read())
+        fh.close()
+        self.flush()
 
     def _action_command(self, command):
         args = shlex.split(command)
         try:
-            p = Subprocess(args, stdout=Subprocess.STREAM)
+            p = Subprocess(args, stdout=Subprocess.STREAM,
+                           stderr=Subprocess.STREAM)
         except OSError as e:
-            self.set_header("Content-Type", "text/plain")
-            self.write("Command {0} could not execute.\n"
-                       "Error: {1}".format(command, e.strerror))
-            self.flush()
+            self.fail(400, "Command {0} could not execute: "
+                      "{1}".format(command, e.strerror))
             return
         self.set_header("Content-Type", "text/plain")
         self.write("Kicked off command {0}\n".format(command))
         self.flush()
+
+        def no_handler(data):
+            return
+        p.stderr.read_until_close(callback=no_handler,
+                                  streaming_callback=self._handle_command_data)
         p.stdout.read_until_close(callback=self._handle_command_exit,
-                                  streaming_callback=self._handle_command_output)
+                                  streaming_callback=self._handle_command_data)
 
     def _handle_command_exit(self, data):
+        self.write("Janitor command complete!")
         self.finish()
 
     def fail(self, code, message):
@@ -128,47 +93,40 @@ class JanitorHandler(tornado.web.RequestHandler):
         self.send_error(code, message=message)
 
     @tornado.web.asynchronous
-    def get(self, arg=None):
-        """Handler override for GET requests."""
-        janitor_commands = config.get("janitor_commands")
+    def get(self, command_id=None):
+        """Handler for Janitor HTTP GET requests."""
 
-        # XXX: should clean up this session management
-        # factor it all out to util?
         sid = self.get_cookie("sid")
-        if not sid:
-            self.fail(403, "You must be logged in to access this.")
-            return
-        session = userdb.session_info(sid)
+        session = None
+        if sid:
+            session = userdb.session_info(url_unescape(sid))
         if not session:
             self.fail(403, "You must be logged in to access this.")
             return
-        janitors = config.janitors
-        if session["username"].lower() not in janitors:
+
+        if not config.is_server_janitor(session["username"]):
             self.fail(403, "You do not have permission to access this.")
             return
 
-        if not janitor_commands:
-            # This is also checked by check_config
-            self.fail(404, "No janitor_commands defined")
+        if not config.janitor_commands or not command_id \
+           or command_id not in config.janitor_commands:
+            self.fail(400, "Invalid janitor command.")
             return
-        if not arg:
-            self.fail(400, "No specific janitor command requested")
-            return
-
-        cmd = self._get_command(arg, janitor_commands)
-        if not cmd:
-            self.fail(404, "No janitor_command matches {0}".format(arg))
-            return
-
         try:
-            safe_params = self._resolve_params(cmd["args"],
-                                               self.request.arguments)
+            janitor_arg = self._format_command_argument(command_id)
         except ValueError as e:
             self.fail(400, e)
             return
-
-        args_formatted = cmd["args"].format(**safe_params)
-        self._dispatch_request(cmd["action"], args_formatted)
+        # The source command is not async, so we finish the session after the
+        # call.
+        cmd = config.janitor_commands[command_id]
+        if cmd["action"] == "source":
+            logging.debug("Returning the static file {0}".format(janitor_arg))
+            self._action_source(janitor_arg)
+            self.finish()
+        elif cmd["action"] == "command":
+            logging.debug("Running command {0}".format(command_id))
+            self._action_command(janitor_arg)
 
     def write_error(self, status_code, **kwargs):
         """Handler override for error page rendering."""
