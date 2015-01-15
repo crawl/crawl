@@ -716,7 +716,7 @@ static const artefact_prop_data artp_data[] =
     { "-Cast", ARTP_VAL_BOOL,
         nullptr, []() { return 1; } }, // ARTP_PREVENT_SPELLCASTING,
     { "*Tele", ARTP_VAL_POS,
-        nullptr, []() { return 12; } }, // ARTP_CAUSE_TELEPORTATION,
+        nullptr, []() { return 8; } }, // ARTP_CAUSE_TELEPORTATION,
     { "-Tele", ARTP_VAL_BOOL,
         nullptr, []() { return 1; } }, // ARTP_PREVENT_TELEPORTATION,
     { "*Rage", ARTP_VAL_POS,
