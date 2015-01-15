@@ -125,7 +125,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_NIMBLENESS, MUT_NO_DODGING,
-  "sacrifice your ability to dodge",
+  "sacrifice your Dodging skill",
   "sacrificed dodging",
 
   28,
@@ -135,7 +135,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR,
-  "sacrifice your ability to wear armour well",
+  "sacrifice your Armour skill",
   "sacrificed armour",
 
   28,
