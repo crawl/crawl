@@ -249,17 +249,18 @@ enable_access_log = true
 #
 # Each command has the following parameters:
 # * id: Unique URL
-# * name: human understandable description, should be short
+# * name: human-readable description, should be short
 # * action: should be either command or source:
-#   * command: run the specified command and return stdout, stderr and exit
-#       code as a JSON object. Note: the command path must be absolute, $PATH
-#       is not used.
-#   * source: return (as application/octet-stream) the specified local file.
-# * args: the command string to execute or local file to serve, depending on
-#   the value of action. You can insert Python format variables into this
-#   string. These are substituted with values from GET request query args,
-#   so shouldn't be sensitive info like passwords, etc.
-#   NOTE: User-supplied values must match the following regex: ^[a-zA-Z0-9_-]+$
+#   * command: run the specified command, and return stdout, stderr to the
+#              client. Note: the command path must be absolute, $PATH is not
+#              used.
+#   * source:  return (as application/octet-stream) the specified local file.
+# * argument: the command string to execute or local file to serve, depending
+#             on the value of action. You can insert Python format variables
+#             into this string. These are substituted with values from GET
+#             request query args, so shouldn't be sensitive info like
+#             passwords, etc.  NOTE: User-supplied values must match the
+#             following regex: ^[a-zA-Z0-9_-]+$
 #
 # Enabling janitor commands requires a server restart, but adding additional
 # commands can be done with a reload.
@@ -267,11 +268,11 @@ enable_access_log = true
 #[[janitor_commands]]
 #id = "rebuild"
 #name = "Rebuild a DCSS version"
-#action = command
-#args = "/bin/echo 'I am the command that rebuilds dcss {version}!'"
+#action = "command"
+#argument = "/bin/echo 'I am the command that rebuilds dcss {version}!'"
 
 #[[janitor_commands]]
 #id = "save"
 #name = "Download a save"
-#action = source
-#args = "/path/to/dcss/{version}/{nick}.cs"
+#action = "source"
+#argument = "/path/to/dcss/{version}/{nick}.cs"
