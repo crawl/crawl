@@ -999,10 +999,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // and mark the trap on an external paper map.  Not good.
 
             actor* targ = nullptr;
-            if (m->wont_attack() || crawl_state.game_is_arena())
-                targ = m;
-            else if (you.see_cell_no_trans(pos) && one_chance_in(5))
-                targ = &you;
+            if (you.see_cell_no_trans(pos))
+            {
+                if (m->wont_attack() || crawl_state.game_is_arena())
+                    targ = m;
+                else if (one_chance_in(5))
+                    targ = &you;
+            }
 
             // Give the player a chance to figure out what happened
             // to their friend.
