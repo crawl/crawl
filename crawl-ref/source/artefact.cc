@@ -584,7 +584,19 @@ static void _add_randart_weapon_brand(const item_def &item,
         item_props[ARTP_BRAND] = SPWPN_NORMAL;
 }
 
-static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
+/**
+ * Can the given artefact property be placed on the given item?
+ *
+ * @param prop          The artefact property in question (e.g. ARTP_BLINK).
+ * @param item          The item in question.
+ * @param extant_props  The properties already chosen for the artefact.
+ * @return              True if the property doesn't conflict with any chosen
+ *                      or intrinsic properties, and doesn't violate any other
+ *                      special constraints (e.g. no slaying on weapons);
+ *                      false otherwise.
+ */
+static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
+                                 const artefact_properties_t &extant_props)
 {
     artefact_properties_t intrinsic_proprt;
     intrinsic_proprt.init(0);
@@ -592,10 +604,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
     _populate_item_intrinsic_artps(item, intrinsic_proprt, _);
     if (intrinsic_proprt[prop])
         return false; // don't duplicate intrinsic props
-
-    artefact_properties_t proprt;
-    proprt.init(0);
-    artefact_desc_properties(item, proprt, _);
 
     const object_class_type item_class = item.base_type;
     const int item_type = item.sub_type;
@@ -619,22 +627,21 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item)
         case ARTP_CAUSE_TELEPORTATION:
             return item_type != OBJ_WEAPONS
                     && !crawl_state.game_is_sprint()
-                    && !proprt[ARTP_PREVENT_TELEPORTATION];
+                    && !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no tele in sprint, and too annoying on weapons (swappable)
             // and obv we shouldn't generate contradictory props
         case ARTP_PREVENT_TELEPORTATION:
             return !item.is_type(OBJ_JEWELLERY, RING_TELEPORT_CONTROL)
-                    && !proprt[ARTP_BLINK]
-                    && !proprt[ARTP_CAUSE_TELEPORTATION];
+                    && !extant_props[ARTP_BLINK]
+                    && !extant_props[ARTP_CAUSE_TELEPORTATION];
             // no contradictory props/item types
         case ARTP_BLINK:
-            return !proprt[ARTP_PREVENT_TELEPORTATION];
+            return !extant_props[ARTP_PREVENT_TELEPORTATION];
             // no contradictory props
         default:
             return true;
     }
 }
-
 
 /// Generation info for a type of artefact property.
 struct artefact_prop_data
@@ -866,7 +873,7 @@ static void _get_randart_properties(const item_def &item,
         ASSERT(prop_ptr);
         const artefact_prop_type prop = *prop_ptr;
 
-        if (!_artp_can_go_on_item(prop, item))
+        if (!_artp_can_go_on_item(prop, item, item_props))
             continue;
 
         // should we try to generate a good or bad version of the prop?
@@ -888,12 +895,14 @@ static void _get_randart_properties(const item_def &item,
             continue;
 
         // don't choose the same prop twice
+        const int old_len = art_prop_weights.size();
         const pair<artefact_prop_type, int> weight_tuple
             = { prop, artp_data[prop].weight };
         art_prop_weights.erase(std::remove(art_prop_weights.begin(),
                                            art_prop_weights.end(),
                                            weight_tuple),
                                art_prop_weights.end());
+        ASSERT(old_len == art_prop_weights.size() + 1);
     }
 }
 
