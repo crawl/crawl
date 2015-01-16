@@ -1,6 +1,8 @@
 #ifndef RANDOM_WEIGHT_H
 #define RANDOM_WEIGHT_H
 
+#include "random.h"
+
 /**
  * Get a random weighted choice.
  *
