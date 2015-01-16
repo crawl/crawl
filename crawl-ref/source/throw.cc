@@ -732,8 +732,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
             range     = random_range(5, 8) + random2(you.strength() / 5);
             max_range = 7 + you.strength() / 5;
         }
-        else if (wepType == MI_THROWING_NET)
-            max_range = range = 2 + you.body_size(PSIZE_BODY);
     }
 
     range = min(range, (int)you.current_vision);
