@@ -1244,6 +1244,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
+    case SPELL_STATUE_FORM:
+        if (SP_GARGOYLE == you.species)
+            return "You're already functionally a statue.";
+        // fallthrough to other forms
+
     case SPELL_STONESKIN:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
@@ -1251,7 +1256,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_HYDRA_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
-    case SPELL_STATUE_FORM:
         if (you.undead_state(temp) == US_UNDEAD
             || you.undead_state(temp) == US_HUNGRY_DEAD)
         {
