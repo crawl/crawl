@@ -24,6 +24,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-book.h"
@@ -642,6 +643,8 @@ struct artefact_prop_data
     const char *name;
     /// The types of values this prop can have (e.g. bool, positive int, int)
     artp_value_type value_types;
+    /// Weight in randart selection (higher = more common)
+    int weight;
     /// Randomly generate a 'good' value; null if this prop is never good
     function<int ()> gen_good_value;
     /// Randomly generate a 'bad' value; null if this prop is never good
@@ -673,103 +676,105 @@ static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
 /// Generation info for artefact properties.
 static const artefact_prop_data artp_data[] =
 {
-    { "Brand", ARTP_VAL_POS,
+    { "Brand", ARTP_VAL_POS, 0,
         nullptr, nullptr }, // ARTP_BRAND,
-    { "AC", ARTP_VAL_ANY,
+    { "AC", ARTP_VAL_ANY, 0,
         nullptr, nullptr }, // ARTP_AC,
-    { "EV", ARTP_VAL_ANY,
+    { "EV", ARTP_VAL_ANY, 0,
         nullptr, nullptr }, // ARTP_EVASION,
-    { "Str", ARTP_VAL_ANY,
+    { "Str", ARTP_VAL_ANY, 95,
         _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_STRENGTH,
-    { "Int", ARTP_VAL_ANY,
+    { "Int", ARTP_VAL_ANY, 95,
         _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_INTELLIGENCE,
-    { "Dex", ARTP_VAL_ANY,
+    { "Dex", ARTP_VAL_ANY, 95,
         _gen_good_stat_artp, _gen_bad_stat_artp }, // ARTP_DEXTERITY,
-    { "rF", ARTP_VAL_ANY,
+    { "rF", ARTP_VAL_ANY, 60,
         _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_FIRE,
-    { "rC", ARTP_VAL_ANY,
+    { "rC", ARTP_VAL_ANY, 60,
         _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_COLD,
-    { "rElec", ARTP_VAL_BOOL,
+    { "rElec", ARTP_VAL_BOOL, 50,
         []() { return 1; }, nullptr }, // ARTP_ELECTRICITY,
-    { "rPois", ARTP_VAL_ANY,
+    { "rPois", ARTP_VAL_ANY, 50,
         []() { return 1; }, _gen_bad_res_artp }, // ARTP_POISON,
-    { "rN", ARTP_VAL_ANY,
+    { "rN", ARTP_VAL_ANY, 50,
         _gen_good_res_artp,  _gen_bad_res_artp }, // ARTP_NEGATIVE_ENERGY,
-    { "MR", ARTP_VAL_ANY,
+    { "MR", ARTP_VAL_ANY, 50,
         _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_MAGIC,
-    { "SInv", ARTP_VAL_BOOL,
+    { "SInv", ARTP_VAL_BOOL, 30,
         []() { return 1; }, nullptr }, // ARTP_EYESIGHT,
-    { "+Inv", ARTP_VAL_BOOL,
+    { "+Inv", ARTP_VAL_BOOL, 15,
         []() { return 1; }, nullptr }, // ARTP_INVISIBLE,
-    { "+Fly", ARTP_VAL_BOOL,
+    { "+Fly", ARTP_VAL_BOOL, 15,
         []() { return 1; }, nullptr }, // ARTP_FLY,
 #if TAG_MAJOR_VERSION > 34
-    { "+Fog", ARTP_VAL_BOOL,
+    { "+Fog", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_FOG,
 #endif
-    { "+Blink", ARTP_VAL_BOOL,
+    { "+Blink", ARTP_VAL_BOOL, 15,
         []() { return 1; }, nullptr }, // ARTP_BLINK,
-    { "+Rage", ARTP_VAL_BOOL,
+    { "+Rage", ARTP_VAL_BOOL, 15,
         []() { return 1; }, nullptr }, // ARTP_BERSERK,
-    { "Noisy", ARTP_VAL_POS,
+    { "Noisy", ARTP_VAL_POS, 20,
         nullptr, []() { return 2; } }, // ARTP_NOISES,
-    { "-Cast", ARTP_VAL_BOOL,
+    { "-Cast", ARTP_VAL_BOOL, 20,
         nullptr, []() { return 1; } }, // ARTP_PREVENT_SPELLCASTING,
-    { "*Tele", ARTP_VAL_POS,
+    { "*Tele", ARTP_VAL_POS, 20,
         nullptr, []() { return 8; } }, // ARTP_CAUSE_TELEPORTATION,
-    { "-Tele", ARTP_VAL_BOOL,
+    { "-Tele", ARTP_VAL_BOOL, 20,
         nullptr, []() { return 1; } }, // ARTP_PREVENT_TELEPORTATION,
-    { "*Rage", ARTP_VAL_POS,
+    { "*Rage", ARTP_VAL_POS, 20,
         nullptr, []() { return 5; } }, // ARTP_ANGRY,
 #if TAG_MAJOR_VERSION == 34
-    { "Hungry", ARTP_VAL_POS,
+    { "Hungry", ARTP_VAL_POS, 0,
         nullptr, nullptr }, // ARTP_METABOLISM,
 #endif
-    { "Contam", ARTP_VAL_POS,
+    { "Contam", ARTP_VAL_POS, 20,
         nullptr, []() { return 1; } }, // ARTP_MUTAGENIC,
 #if TAG_MAJOR_VERSION == 34
-    { "Acc", ARTP_VAL_ANY,
+    { "Acc", ARTP_VAL_ANY, 0,
         nullptr, nullptr }, // ARTP_ACCURACY,
 #endif
-    { "Slay", ARTP_VAL_ANY,
+    { "Slay", ARTP_VAL_ANY, 30,
       []() { return 2 + random2(3) + random2(3); },
       []() { return -(2 + random2(3) + random2(3)); } }, // ARTP_SLAYING,
-    { "Curse", ARTP_VAL_POS,
+    { "Curse", ARTP_VAL_POS, 0,
         nullptr, nullptr }, // ARTP_CURSED,
-    { "Stlth", ARTP_VAL_ANY,
+    { "Stlth", ARTP_VAL_ANY, 40,
         _gen_good_res_artp, _gen_bad_res_artp }, // ARTP_STEALTH,
-    { "MP", ARTP_VAL_ANY,
+    { "MP", ARTP_VAL_ANY, 30,
         _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_MAGICAL_POWER,
-    { "Delay", ARTP_VAL_ANY,
+    { "Delay", ARTP_VAL_ANY, 0,
         nullptr, nullptr }, // ARTP_BASE_DELAY,
-    { "HP", ARTP_VAL_ANY,
+    { "HP", ARTP_VAL_ANY, 30,
         _gen_good_hpmp_artp, _gen_bad_hpmp_artp }, // ARTP_HP,
-    { "Clar", ARTP_VAL_BOOL,
+    { "Clar", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_CLARITY,
-    { "BAcc", ARTP_VAL_ANY,
+    { "BAcc", ARTP_VAL_ANY, 0,
         nullptr, nullptr }, // ARTP_BASE_ACC,
-    { "BDam", ARTP_VAL_ANY,
+    { "BDam", ARTP_VAL_ANY, 0,
         nullptr, nullptr }, // ARTP_BASE_DAM,
-    { "RMsl", ARTP_VAL_BOOL,
+    { "RMsl", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_RMSL,
 #if TAG_MAJOR_VERSION == 34
-    { "+Fog", ARTP_VAL_BOOL,
+    { "+Fog", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_FOG,
 #endif
-    { "Regen", ARTP_VAL_POS,
+    { "Regen", ARTP_VAL_POS, 30,
         []() { return 1; }, nullptr }, // ARTP_REGENERATION,
-    { "SustAb", ARTP_VAL_BOOL,
+    { "SustAb", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_SUSTAB,
-    { "nupgr", ARTP_VAL_BOOL,
+    { "nupgr", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_NO_UPGRADE,
-    { "rCorr", ARTP_VAL_BOOL,
+    { "rCorr", ARTP_VAL_BOOL, 40,
         []() { return 1; }, nullptr }, // ARTP_RCORR,
-    { "rMut", ARTP_VAL_BOOL,
+    { "rMut", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_RMUT,
-    { "+Twstr", ARTP_VAL_BOOL,
+    { "+Twstr", ARTP_VAL_BOOL, 5,
         []() { return 1; }, nullptr }, // ARTP_TWISTER,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
+// weights sum to 1000.
+
 
 /**
  * Is it possible for the given artp to be generated with 'good' values
@@ -832,11 +837,6 @@ static void _get_randart_properties(const item_def &item,
 {
     const object_class_type item_class = item.base_type;
 
-    // initialize an array of artefact properties to randomly pick from
-    vector<artefact_prop_type> art_props;
-    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
-        art_props.push_back(static_cast<artefact_prop_type>(i));
-
     // number of good properties to assign -- avg 2.1, min 1.
     int good = max(1, binomial(6, 35));
 
@@ -844,6 +844,13 @@ static void _get_randart_properties(const item_def &item,
     // properties. Average is .18 bad per good, up to 1.08 for 6 good.
     int bad = binomial(3, 8 * good);
 
+    // initialize a vector of weighted artefact properties to pick from
+    vector<pair<artefact_prop_type, int>> art_prop_weights;
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    {
+        art_prop_weights.push_back({(artefact_prop_type)i,
+                                     artp_data[i].weight});
+    }
     item_props.init(0);
 
     // make sure all weapons have a brand
@@ -852,18 +859,14 @@ static void _get_randart_properties(const item_def &item,
 
     // randomly pick properties from the list, assign values and all that,
     // then subtract them from the good/bad count as needed
-    shuffle_array(art_props);
-    for (artefact_prop_type prop : art_props)
+    while (good > 0 || bad > 0)
     {
-        if (good <= 0 && bad <= 0)
-            break;
+        const artefact_prop_type *prop_ptr
+            = random_choose_weighted(art_prop_weights);
+        ASSERT(prop_ptr);
+        const artefact_prop_type prop = *prop_ptr;
 
         if (!_artp_can_go_on_item(prop, item))
-            continue;
-
-        // awkwardly cut the spawn rate of this property to one third.
-        // once proper weighting comes in, do that instead.
-        if (prop == ARTP_TWISTER && !one_chance_in(5))
             continue;
 
         // should we try to generate a good or bad version of the prop?
@@ -875,14 +878,22 @@ static void _get_randart_properties(const item_def &item,
         {
             item_props[prop] = artp_data[prop].gen_good_value();
             --good;
-            if (prop == ARTP_TWISTER)
-                --good; // costs a little extra goodness.
         }
         else if (can_gen_bad)
         {
             item_props[prop] = artp_data[prop].gen_bad_value();
             --bad;
         }
+        else
+            continue;
+
+        // don't choose the same prop twice
+        const pair<artefact_prop_type, int> weight_tuple
+            = { prop, artp_data[prop].weight };
+        art_prop_weights.erase(std::remove(art_prop_weights.begin(),
+                                           art_prop_weights.end(),
+                                           weight_tuple),
+                               art_prop_weights.end());
     }
 }
 
