@@ -417,6 +417,31 @@ static void _give_experience(int player_exp, int monster_exp,
     _give_monster_experience(monster_exp, killer_index);
 }
 
+/**
+ * Turn a given corpse into gold. Praise Gozag!
+ *
+ * Gold is random, but correlates weakly with monster mass.
+ *
+ * Also sets the gozag distraction sparkle timer on the newly created gold.
+ *
+ * @param corpse        The corpse item to be Midasified.
+ */
+void goldify_corpse(item_def &corpse)
+{
+    const monsterentry* me = get_monster_data(corpse.mon_type);
+    const int min_base_gold = 7;
+    // monsters weighing more than this give more than base gold
+    const int baseline_weight = 550; // MONS_HUMAN
+    const int base_gold = max(min_base_gold,
+                              (me->weight - baseline_weight) / 80
+                              + min_base_gold);
+    corpse.clear();
+    corpse.base_type = OBJ_GOLD;
+    corpse.quantity = base_gold / 2 + random2avg(base_gold, 2);
+    corpse.special = corpse.quantity;
+    item_colour(corpse);
+}
+
 // Returns the item slot of a generated corpse, or -1 if no corpse.
 int place_monster_corpse(const monster* mons, bool silent, bool force)
 {
@@ -460,20 +485,7 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
         return -1;
 
     if (!force && in_good_standing(GOD_GOZAG))
-    {
-        const monsterentry* me = get_monster_data(corpse_class);
-        const int min_base_gold = 7;
-        // monsters weighing more than this give more than base gold
-        const int baseline_weight = 550; // MONS_HUMAN
-        const int base_gold = max(min_base_gold,
-                                  (me->weight - baseline_weight) / 80
-                                    + min_base_gold);
-        corpse.clear();
-        corpse.base_type = OBJ_GOLD;
-        corpse.quantity = base_gold / 2 + random2avg(base_gold, 2);
-        corpse.special = corpse.quantity;
-        item_colour(corpse);
-    }
+        goldify_corpse(corpse);
 
     int o = get_mitm_slot();
 
