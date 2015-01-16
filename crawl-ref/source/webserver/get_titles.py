@@ -12,12 +12,6 @@ parser.add_argument("-q", dest="quiet", action="store_true", default=False,
                     help="suppress all messages but warnings/errors.")
 args = parser.parse_args()
 
-config.logging = False
-try:
-    config.load()
-except ConfigError as e:
-    sys.exit(e.msg)
-
 if config.get("pidfile"):
     try:
         pid_fh = open(config.pidfile, "r")

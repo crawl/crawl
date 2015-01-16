@@ -135,15 +135,11 @@ def signal_handler(signum, frame):
 
 def usr1_handler(signum, frame):
     logging.info("Received USR1, reloading config.")
-    try:
-        config.read()
-        config.load()
-    except ConfigError as e:
-        err_exit(e.msg)
+    config.reload()
 
 def usr2_handler(signum, frame):
-    logging.info("Received USR2, reloading player title data.")
-    config.load_player_titles()
+    logging.info("Received USR2, reloading player titles.")
+    config.reload_player_titles()
 
 def purge_login_tokens_timeout():
     userdb.purge_login_tokens()
@@ -215,7 +211,6 @@ def make_dgl_status_file():
     else:
         logging.info("Created dgl_status_file "
                      "({0})".format(dgl_file))
-
 
 def init_logging():
     try:

@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+from copy import copy, deepcopy
 import csv
 import glob
 import locale
@@ -158,7 +159,7 @@ class Conf(object):
                                  self.get("server_janitors")])
         self.janitors.update(self.admins)
         self._load_devteam_file()
-        self.load_player_titles()
+        self._load_player_titles()
         self._load_janitor_commands()
         self._load_games()
 
@@ -274,10 +275,9 @@ class Conf(object):
                 # Needed to send the full games config array to the client.
                 self.data["games"].append(game)
 
-    def load_player_titles(self):
-        """Load player titles from the player_title_file
+    def _load_player_titles(self):
+        """Load player titles from the player_title_file.
 
-        This is called on config reload an on SIGUSR2.
         """
 
         # Don't bother loading titles if we don't have the title sets defined.
@@ -323,6 +323,58 @@ class Conf(object):
         for f in os.listdir(self.static_path):
             if title_regex.match(f):
                 self.title_images.append(f)
+
+    def reload(self):
+        """Try to reload the WebTiles configuration from self.path
+
+        If the new configuration fails to load or parse, we rollback to the
+        current configuration. Not that any changes to configuration data that
+        is used before chroot or privilege dropping are ignored. This would be
+        the [[binds]], [[ssl_binds]], [logging_config] tables, and any of the
+        permissions and chroot options.
+
+        """
+
+        # XXX Find a nice way to avoid an explicit list of what to copy
+        data = copy(self.data)
+        admins = copy(self.admins)
+        devteam = deepcopy(self.devteam)
+        janitors = copy(self.janitors)
+        player_titles = deepcopy(self.player_titles)
+        janitor_commands = deepcopy(self.janitor_commands)
+        games = deepcopy(self.games)
+        title_images = copy(self.title_images)
+
+        try:
+            self.read()
+            self.load()
+        except ConfigError as e:
+            self.data = data
+            self.admins = admins
+            self.devteam = devteam
+            self.janitors = janitors
+            self.player_titles = player_titles
+            self.janitor_commands = janitor_commands
+            self.games = games
+            self.title_images = title_images
+            self._warn("Unable to reload configuration: {0}; rolling back "
+                       "configuration to previous state".format(e.msg))
+
+    def reload_player_titles(self):
+        """Reload player titles.
+
+        This is called on config reload an on SIGUSR2. The titles are rolled
+        back to the current ones if there's an error.
+
+        """
+        player_titles = deepcopy(self.player_titles)
+
+        try:
+            self._load_player_titles()
+        except ConfigError as e:
+            self.player_titles = player_titles
+            self._warn("Unable to reload player titles: {0}; rolling back "
+                       "to previous title data".format(e.msg))
 
     def get_devname(self, username):
         """Return the canonical username for an account.
