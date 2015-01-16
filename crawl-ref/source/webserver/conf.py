@@ -152,8 +152,10 @@ class Conf(object):
             raise ConfigError("init_player_program ({0}) is not "
                               "executable".format(init_prog))
         # crawl usernames are case-insensitive
+        self.admins = set()
         if self.get("server_admins"):
             self.admins = set([a.lower() for a in self.get("server_admins")])
+        self.janitors = set()
         if self.get("server_janitors"):
             self.janitors = set([j.lower() for j in \
                                  self.get("server_janitors")])
@@ -279,7 +281,7 @@ class Conf(object):
         """Load player titles from the player_title_file.
 
         """
-
+        self.player_titles = {}
         # Don't bother loading titles if we don't have the title sets defined.
         title_names = self.get("title_names")
         title_file = self.get("player_title_file")
@@ -293,7 +295,6 @@ class Conf(object):
                               "({1})".format(title_file, e.strerror))
 
         title_r = csv.reader(title_fh, delimiter=" ", quoting=csv.QUOTE_NONE)
-        self.player_titles = {}
         for row in title_r:
             self.player_titles[row[0].lower()] = [u.lower() for u in row[1:]]
         title_fh.close()
