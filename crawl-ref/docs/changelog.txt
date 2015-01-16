@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-3534-g5c12db1)
+Stone Soup 0.16 (up to 0.16-a0-3649-ge23cfc4)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -154,6 +154,7 @@ Items
     regeneration.
 * Regeneration has been moved from rings to amulets.
 * Corrosion resistance can now occur on artefact armour.
+* Artefact generation has been generally reworked.
 * Scale mail now only has 10 ER, down from 11.
 * Unrand changes:
   - The Ring of Vitality is now the Amulet of Vitality.
