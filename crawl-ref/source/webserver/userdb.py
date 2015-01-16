@@ -81,8 +81,8 @@ def register_user(username, passwd, email): # Returns an error message or None
     if not re.match(config.nick_regex, username):
         return "Invalid username!"
 
-    if config.get('dev_nicks_can_be_registered') is not True and \
-            config.get_devname(username):
+    if not config.get('dev_nicks_can_be_registered') \
+       and config.get_devname(username):
         return "Reserved username!"
 
     salt = get_salt(passwd)
