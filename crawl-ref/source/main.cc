@@ -1473,7 +1473,7 @@ static void _input()
 #ifdef USE_TILE_LOCAL
         cursor_control con(false);
 #endif
-        const command_type cmd = _get_next_cmd();
+        const command_type cmd = you.turn_is_over ? CMD_NO_CMD : _get_next_cmd();
 
         if (crawl_state.seen_hups)
             save_game(true, "Game saved, see you later!");
