@@ -568,7 +568,7 @@ bool is_processing_macro()
 
 bool has_pending_input()
 {
-    return !Buffer.empty() && !SendKeysBuffer.empty();
+    return !Buffer.empty() || !SendKeysBuffer.empty();
 }
 
 /*
