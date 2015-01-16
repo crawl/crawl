@@ -41,6 +41,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "unicode.h"
+#include "view.h"
 
 #ifdef WIZARD
 static void _make_all_books()
@@ -244,121 +245,8 @@ void wizard_create_spec_object()
     }
 }
 
-static const char* _prop_name[] =
-{
-    "Brand",
-    "AC",
-    "EV",
-    "Str",
-    "Int",
-    "Dex",
-    "rFire",
-    "rCold",
-    "rElec",
-    "rPois",
-    "rNeg",
-    "MR",
-    "SInv",
-    "+Inv",
-    "+Fly",
-#if TAG_MAJOR_VERSION > 34
-    "+Fog",
-#endif
-    "+Blink",
-    "+Rage",
-    "Noisy",
-    "-Cast",
-    "*Tele",
-    "-Tele",
-    "*Rage",
-#if TAG_MAJOR_VERSION == 34
-    "Hunger",
-#endif
-    "Contam",
-    "Acc",
-    "Dam",
-    "Curse",
-    "Stlth",
-    "MP",
-    "Delay",
-    "HP",
-    "Clar",
-    "BAcc",
-    "BDam",
-    "RMsl",
-#if TAG_MAJOR_VERSION == 34
-    "+Fog",
-#endif
-    "Regen",
-    "SustAb",
-    "noupgr",
-    "rCorr",
-    "rMut",
-};
-
-#define ARTP_VAL_BOOL 0
-#define ARTP_VAL_POS  1
-#define ARTP_VAL_ANY  2
-
-static int8_t _prop_type[] =
-{
-    ARTP_VAL_POS,  //BRAND
-    ARTP_VAL_ANY,  //AC
-    ARTP_VAL_ANY,  //EVASION
-    ARTP_VAL_ANY,  //STRENGTH
-    ARTP_VAL_ANY,  //INTELLIGENCE
-    ARTP_VAL_ANY,  //DEXTERITY
-    ARTP_VAL_ANY,  //FIRE
-    ARTP_VAL_ANY,  //COLD
-    ARTP_VAL_BOOL, //ELECTRICITY
-    ARTP_VAL_BOOL, //POISON
-    ARTP_VAL_BOOL, //NEGATIVE_ENERGY
-    ARTP_VAL_POS,  //MAGIC
-    ARTP_VAL_BOOL, //EYESIGHT
-    ARTP_VAL_BOOL, //INVISIBLE
-    ARTP_VAL_BOOL, //FLIGHT
-#if TAG_MAJOR_VERSION > 34
-    ARTP_VAL_BOOL, //FOG
-#endif
-    ARTP_VAL_BOOL, //BLINK
-    ARTP_VAL_BOOL, //BERSERK
-    ARTP_VAL_POS,  //NOISES
-    ARTP_VAL_BOOL, //PREVENT_SPELLCASTING
-    ARTP_VAL_BOOL, //CAUSE_TELEPORTATION
-    ARTP_VAL_BOOL, //PREVENT_TELEPORTATION
-    ARTP_VAL_POS,  //ANGRY
-#if TAG_MAJOR_VERSION == 34
-    ARTP_VAL_POS,  //METABOLISM
-#endif
-    ARTP_VAL_POS,  //MUTAGENIC
-#if TAG_MAJOR_VERSION == 34
-    ARTP_VAL_ANY,  //ACCURACY
-#endif
-    ARTP_VAL_ANY,  //SLAYING
-    ARTP_VAL_POS,  //CURSED
-    ARTP_VAL_ANY,  //STEALTH
-    ARTP_VAL_ANY,  //MAGICAL_POWER
-    ARTP_VAL_ANY,  //BASE_DELAY
-    ARTP_VAL_ANY,  //HP
-    ARTP_VAL_BOOL, //CLARITY
-    ARTP_VAL_ANY,  //BASE_ACC
-    ARTP_VAL_ANY,  //BASE_DAM
-    ARTP_VAL_BOOL, //RMSL
-#if TAG_MAJOR_VERSION == 34
-    ARTP_VAL_BOOL, //FOG
-#endif
-    ARTP_VAL_ANY,  //REGENERATION
-    ARTP_VAL_BOOL, //SUSTAB
-    ARTP_VAL_BOOL, //NO_UPGRADE
-    ARTP_VAL_BOOL, //RCORR
-    ARTP_VAL_BOOL, //RMUT
-};
-
 static void _tweak_randart(item_def &item)
 {
-    COMPILE_CHECK(ARRAYSZ(_prop_name) == ARTP_NUM_PROPERTIES);
-    COMPILE_CHECK(ARRAYSZ(_prop_type) == ARTP_NUM_PROPERTIES);
-
     if (item_is_equipped(item))
     {
         mprf(MSGCH_PROMPT, "You can't tweak the randart properties of an equipped item.");
@@ -368,15 +256,13 @@ static void _tweak_randart(item_def &item)
         clear_messages();
 
     artefact_properties_t props;
-    artefact_wpn_properties(item, props);
+    artefact_properties(item, props);
 
     string prompt = "";
 
     vector<unsigned int> choice_to_prop;
     for (unsigned int i = 0, choice_num = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
-        if (_prop_name[i] == string("UNUSED"))
-            continue;
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
             *(prompt.rend()) = '\n'; // Replace the space
@@ -397,7 +283,7 @@ static void _tweak_randart(item_def &item)
         snprintf(buf, sizeof(buf), "%s) %s%-6s%s ",
                 choice == '<' ? "<<" : string(1, choice).c_str(),
                  props[i] ? "<w>" : "",
-                 _prop_name[i],
+                 artp_name((artefact_prop_type)choice_to_prop[choice_num]),
                  props[i] ? "</w>" : "");
 
         prompt += buf;
@@ -427,38 +313,39 @@ static void _tweak_randart(item_def &item)
         return;
     }
 
-    unsigned int prop = choice_to_prop[choice];
-    ASSERT(prop < ARRAYSZ(_prop_type));
-
-    int val;
-    switch (_prop_type[prop])
+    const artefact_prop_type prop = (artefact_prop_type)choice_to_prop[choice];
+    switch (artp_potential_value_types(prop))
     {
     case ARTP_VAL_BOOL:
-        mprf(MSGCH_PROMPT, "Toggling %s to %s.", _prop_name[prop],
+        mprf(MSGCH_PROMPT, "Toggling %s to %s.", artp_name(prop),
              props[prop] ? "off" : "on");
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              !props[prop]);
         break;
 
     case ARTP_VAL_POS:
-        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
-        val = prompt_for_int("New value? ", true);
+     {
+        mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
+        const int val = prompt_for_int("New value? ", true);
 
         if (val < 0)
         {
             mprf(MSGCH_PROMPT, "Value for %s must be non-negative",
-                 _prop_name[prop]);
+                 artp_name(prop));
             return;
         }
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
+      }
     case ARTP_VAL_ANY:
-        mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
-        val = prompt_for_int("New value? ", false);
+      {
+        mprf(MSGCH_PROMPT, "%s was %d.", artp_name(prop), props[prop]);
+        const int val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
+      }
     }
 }
 
@@ -1057,10 +944,10 @@ static void _debug_acquirement_stats(FILE *ostat)
 
             const bool seen = you.seen_spell[spell];
 
-            const unsigned int disciplines = get_spell_disciplines(spell);
+            const spschools_type disciplines = get_spell_disciplines(spell);
             for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
             {
-                const int disc = 1 << d;
+                auto disc = static_cast<spschool_flag_type>(1 << d);
                 if (disc & SPTYP_DIVINATION)
                     continue;
 
@@ -1074,7 +961,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         }
         for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
         {
-            const int disc = 1 << d;
+            auto disc = static_cast<spschool_flag_type>(1 << d);
             if (disc & SPTYP_DIVINATION)
                 continue;
 
@@ -1310,18 +1197,19 @@ static void _debug_acquirement_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
-#define MAX_TRIES 16777216 /* not special anymore */
+#define MAX_TRIES 27272
 static void _debug_rap_stats(FILE *ostat)
 {
-    int i = prompt_invent_item("Generate randart stats on which item?",
-                                MT_INVLIST, -1);
+    const int inv_index
+        = prompt_invent_item("Generate randart stats on which item?",
+                             MT_INVLIST, -1);
 
-    if (prompt_failed(i))
+    if (prompt_failed(inv_index))
         return;
 
     // A copy of the item, rather than a reference to the inventory item,
     // so we can fiddle with the item at will.
-    item_def item(you.inv[i]);
+    item_def item(you.inv[inv_index]);
 
     // Start off with a non-artefact item.
     item.flags  &= ~ISFLAG_ARTEFACT_MASK;
@@ -1334,83 +1222,19 @@ static void _debug_rap_stats(FILE *ostat)
         return;
     }
 
-    // -1 = always bad, 1 = always good, 0 = depends on value
-    const int good_or_bad[] =
-    {
-         1, //ARTP_BRAND
-         0, //ARTP_AC
-         0, //ARTP_EVASION
-         0, //ARTP_STRENGTH
-         0, //ARTP_INTELLIGENCE
-         0, //ARTP_DEXTERITY
-         0, //ARTP_FIRE
-         0, //ARTP_COLD
-         1, //ARTP_ELECTRICITY
-         1, //ARTP_POISON
-         1, //ARTP_NEGATIVE_ENERGY
-         0, //ARTP_MAGIC
-         1, //ARTP_EYESIGHT
-         1, //ARTP_INVISIBLE
-         1, //ARTP_FLY
-#if TAG_MAJOR_VERSION > 34
-         1, //ARTP_FOG,
-#endif
-         1, //ARTP_BLINK
-         1, //ARTP_BERSERK
-        -1, //ARTP_NOISES
-        -1, //ARTP_PREVENT_SPELLCASTING
-        -1, //ARTP_CAUSE_TELEPORTATION
-        -1, //ARTP_PREVENT_TELEPORTATION
-        -1, //ARTP_ANGRY
-#if TAG_MAJOR_VERSION == 34
-         0, //ARTP_METABOLISM
-#endif
-        -1, //ARTP_MUTAGENIC
-#if TAG_MAJOR_VERSION == 34
-         0, //ARTP_ACCURACY
-#endif
-         0, //ARTP_SLAYING
-        -1, //ARTP_CURSED
-         0, //ARTP_STEALTH
-         0, //ARTP_MAGICAL_POWER
-         0, //ARTP_BASE_DELAY
-         0, //ARTP_HP
-         1, //ARTP_CLARITY
-         0, //ARTP_BASE_ACC
-         0, //ARTP_BASE_DAM
-         1, //ARTP_RMSL
-#if TAG_MAJOR_VERSION == 34
-         1, //ARTP_FOG
-#endif
-         1, //ARTP_REGENERATION
-         1, //ARTP_SUSTAB,
-         0, //ARTP_NO_UPGRADE
-         1, //ARTP_RCORR
-         1, //ARTP_RMUT
-    };
-    COMPILE_CHECK(ARRAYSZ(good_or_bad) == ARTP_NUM_PROPERTIES);
+    FixedVector<int, ARTP_NUM_PROPERTIES> good_props(0);
+    FixedVector<int, ARTP_NUM_PROPERTIES> bad_props(0);
 
-    // No bounds checking to speed things up a bit.
-    int all_props[ARTP_NUM_PROPERTIES];
-    int good_props[ARTP_NUM_PROPERTIES];
-    int bad_props[ARTP_NUM_PROPERTIES];
-    for (i = 0; i < ARTP_NUM_PROPERTIES; ++i)
-    {
-        all_props[i] = 0;
-        good_props[i] = 0;
-        bad_props[i] = 0;
-    }
-
-    int max_props         = 0, total_props         = 0;
-    int max_good_props    = 0, total_good_props    = 0;
-    int max_bad_props     = 0, total_bad_props     = 0;
+    int max_props         = 0;
+    int max_good_props    = 0;
+    int max_bad_props     = 0;
     int max_balance_props = 0, total_balance_props = 0;
 
     int num_randarts = 0, bad_randarts = 0;
 
     artefact_properties_t proprt;
 
-    for (i = 0; i < MAX_TRIES; ++i)
+    for (int i = 0; i < MAX_TRIES; ++i)
     {
         if (kbhit())
         {
@@ -1421,7 +1245,12 @@ static void _debug_rap_stats(FILE *ostat)
 
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
-        artefact_wpn_properties(item, proprt);
+        item.flags  &= ~ISFLAG_ARTEFACT_MASK;
+        item.special = 0;
+        item.props.clear();
+        make_item_randart(item);
+        artefact_properties(item, proprt);
+
         if (randart_is_bad(item, proprt))
         {
             bad_randarts++;
@@ -1429,63 +1258,63 @@ static void _debug_rap_stats(FILE *ostat)
         }
 
         num_randarts++;
-        proprt[ARTP_CURSED] = 0;
 
-        int num_props = 0, num_good_props = 0, num_bad_props = 0;
+        int num_good_props = 0, num_bad_props = 0;
         for (int j = 0; j < ARTP_NUM_PROPERTIES; ++j)
         {
-            const int val = proprt[j];
-            if (val)
+            const artefact_prop_type prop = (artefact_prop_type)j;
+            const int val = proprt[prop];
+            if (!val)
+                continue;
+
+            // assumption: all mixed good/bad props are good iff positive
+            const bool good = !artp_potentially_bad(prop)
+                              || (artp_potentially_good(prop) && val > 0);
+            if (good)
             {
-                num_props++;
-                all_props[j]++;
-                switch (good_or_bad[j])
-                {
-                case -1:
-                    num_bad_props++;
-                    break;
-                case 1:
-                    num_good_props++;
-                    break;
-                case 0:
-                    if (val > 0)
-                    {
-                        good_props[j]++;
-                        num_good_props++;
-                    }
-                    else
-                    {
-                        bad_props[j]++;
-                        num_bad_props++;
-                    }
-                }
+                good_props[prop]++;
+                num_good_props++;
+            }
+            else
+            {
+                bad_props[prop]++;
+                num_bad_props++;
             }
         }
 
-        int balance = num_good_props - num_bad_props;
+        const int num_props = num_good_props + num_bad_props;
+        const int balance   = num_good_props - num_bad_props;
 
         max_props         = max(max_props, num_props);
         max_good_props    = max(max_good_props, num_good_props);
         max_bad_props     = max(max_bad_props, num_bad_props);
         max_balance_props = max(max_balance_props, balance);
 
-        total_props         += num_props;
-        total_good_props    += num_good_props;
-        total_bad_props     += num_bad_props;
         total_balance_props += balance;
 
-        if (i % 16767 == 0)
+        if (i % (MAX_TRIES / 100) == 0)
         {
             clear_messages();
             float curr_percent = (float) i * 1000.0
                 / (float) MAX_TRIES;
             mprf("%4.1f%% done.", curr_percent / 10.0);
+            viewwindow();
         }
 
     }
 
     fprintf(ostat, "Randarts generated: %d valid, %d invalid\n\n",
             num_randarts, bad_randarts);
+
+    int total_good_props = 0, total_bad_props = 0;
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    {
+        total_good_props += good_props[i];
+        total_bad_props += bad_props[i];
+    }
+
+    // assumption: all props are good or bad
+    const int total_props = total_good_props + total_bad_props;
 
     fprintf(ostat, "max # of props = %d, avg # = %5.2f\n",
             max_props, (float) total_props / (float) num_randarts);
@@ -1549,19 +1378,24 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_NO_UPGRADE",
         "ARTP_RCORR",
         "ARTP_RMUT",
+        "ARTP_TWISTER",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
     fprintf(ostat, "                            All    Good   Bad\n");
     fprintf(ostat, "                           --------------------\n");
+    fprintf(ostat, "%-25s: %5.2f%% %5.2f%% %5.2f%%\n", "Overall", 100.0,
+            (float) total_good_props * 100.0 / (float) total_props,
+            (float) total_bad_props * 100.0 / (float) total_props);
 
-    for (i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
-        if (all_props[i] == 0)
+        const int total_props_of_type = good_props[i] + bad_props[i];
+        if (!total_props_of_type)
             continue;
 
         fprintf(ostat, "%-25s: %5.2f%% %5.2f%% %5.2f%%\n", rap_names[i],
-                (float) all_props[i] * 100.0 / (float) num_randarts,
+                (float) total_props_of_type * 100.0 / (float) num_randarts,
                 (float) good_props[i] * 100.0 / (float) num_randarts,
                 (float) bad_props[i] * 100.0 / (float) num_randarts);
     }

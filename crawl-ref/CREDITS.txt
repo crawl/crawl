@@ -40,6 +40,8 @@
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
     John Boyle (crawl.berotato.org)
     sd1989 (kr.dobrazupa.org)
+    Alex 'chequers' Jurkiewicz (crawl.project357.org)
+    dplusplus (http://lazy-life.ddo.jp/)
   and past:
     joosa (rl.heh.fi)
     phunktion (crawl.somatika.net)

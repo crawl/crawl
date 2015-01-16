@@ -1627,7 +1627,7 @@ static bool _is_known_no_tele_item(const item_def &item)
         return false;
 
     bool known;
-    int val = artefact_wpn_property(item, ARTP_PREVENT_TELEPORTATION, known);
+    int val = artefact_property(item, ARTP_PREVENT_TELEPORTATION, known);
 
     if (known && val)
         return true;
@@ -1706,14 +1706,14 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
             return true;
         }
 
-        if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
+        if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
             return true;
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
-        if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
+        if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
             return true;
     }
 

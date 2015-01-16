@@ -11,6 +11,7 @@
 #include "delay.h"
 #include "english.h" // conjugate_verb
 #include "food.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
 #include "hints.h"
@@ -222,7 +223,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
 
     artefact_properties_t  proprt;
     artefact_known_props_t known;
-    artefact_wpn_properties(item, proprt, known);
+    artefact_properties(item, proprt, known);
 
     if (proprt[ARTP_AC])
         you.redraw_armour_class = true;
@@ -286,7 +287,7 @@ static void _unequip_artefact_effect(item_def &item,
 
     artefact_properties_t proprt;
     artefact_known_props_t known;
-    artefact_wpn_properties(item, proprt, known);
+    artefact_properties(item, proprt, known);
     const bool msg = !show_msgs || *show_msgs;
 
     if (proprt[ARTP_AC])
@@ -469,7 +470,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
         if (artefact)
         {
-            special = artefact_wpn_property(item, ARTP_BRAND);
+            special = artefact_property(item, ARTP_BRAND);
 
             if (!was_known && !(item.flags & ISFLAG_NOTED_ID))
             {
@@ -480,7 +481,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                                origin_desc(item).c_str()));
             }
             else
-                known_recurser = artefact_known_wpn_property(item,
+                known_recurser = artefact_known_property(item,
                                                              ARTP_CURSED);
         }
 
@@ -1070,12 +1071,12 @@ static void _remove_amulet_of_faith(item_def &item)
     if (you_worship(GOD_RU))
     {
         // next sacrifice is going to be delaaaayed.
-        if (you.piety >= piety_breakpoint(6))
+        if (you.piety < piety_breakpoint(5))
         {
+            int current_delay = you.props["ru_sacrifice_delay"].get_int();
+            ru_reject_sacrifices(true);
             you.props["ru_sacrifice_delay"] =
-                you.props["ru_sacrifice_delay"].get_int() * 3;
-            simple_god_message(" reconsiders your readiness for further "
-                "sacrifices.");
+                max(you.props["ru_sacrifice_delay"].get_int(), current_delay)*2;
         }
     }
     else if (!you_worship(GOD_NO_GOD)

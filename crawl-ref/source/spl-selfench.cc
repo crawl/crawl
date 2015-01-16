@@ -140,20 +140,24 @@ int harvest_corpses(const actor &harvester, bool dry_run)
             if (dry_run)
                 continue;
 
-            bolt beam;
-            beam.source = *ri;
-            beam.target = harvester.pos();
-            beam.glyph = dchar_glyph(DCHAR_FIRED_CHUNK);
-            beam.colour = item.get_colour();
-            beam.range = LOS_RADIUS;
-            beam.aimed_at_spot = true;
-            beam.item = &item;
-            beam.flavour = BEAM_VISUAL;
-            beam.draw_delay = 3;
-            beam.fire();
-            destroy_item(item.index());
+            // don't spam animations
+            if (harvested <= 5)
+            {
+                bolt beam;
+                beam.source = *ri;
+                beam.target = harvester.pos();
+                beam.glyph = dchar_glyph(DCHAR_FIRED_CHUNK);
+                beam.colour = item.get_colour();
+                beam.range = LOS_RADIUS;
+                beam.aimed_at_spot = true;
+                beam.item = &item;
+                beam.flavour = BEAM_VISUAL;
+                beam.draw_delay = 3;
+                beam.fire();
+                viewwindow();
+            }
 
-            viewwindow();
+            destroy_item(item.index());
         }
     }
 

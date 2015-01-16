@@ -3532,7 +3532,7 @@ void lugonu_bend_space()
     if (area_warp)
         _lugonu_warp_area(pow);
 
-    random_blink(false, true, true);
+    uncontrolled_blink(true);
 
     const int damage = roll_dice(1, 4);
     ouch(damage, KILLED_BY_WILD_MAGIC, MID_NOBODY, "a spatial distortion");
@@ -4087,7 +4087,7 @@ void dithmenos_shadow_throw(coord_def target, const item_def &item)
         new_item.flags    |= ISFLAG_SUMMONED;
         mon->inv[MSLOT_MISSILE] = ammo_index;
 
-        mon->target = target;
+        mon->target = clamp_in_bounds(target);
 
         bolt beem;
         beem.target = target;
@@ -4124,7 +4124,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
                           min(3 * spell_difficulty(spell),
                               you.experience_level) / 2));
 
-    mon->target = target;
+    mon->target = clamp_in_bounds(target);
     if (actor_at(target))
         mon->foe = actor_at(target)->mindex();
 
@@ -4353,7 +4353,8 @@ static int _gozag_max_shops()
 int gozag_price_for_shop(bool max)
 {
     // This value probably needs tweaking.
-    const int base = max ? 1000 : random_range(500, 1000);
+    const int max_base = 666;
+    const int base = max ? max_base : random_range(max_base/2, max_base);
     const int price = base
                       * (GOZAG_SHOP_BASE_MULTIPLIER
                          + GOZAG_SHOP_MOD_MULTIPLIER
@@ -4404,7 +4405,8 @@ static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
 
 bool gozag_setup_call_merchant(bool quiet)
 {
-    const int gold_min = gozag_price_for_shop(true);
+    const int gold_min = gozag_price_for_shop(true) *
+                         (you.species == SP_MUMMY ? 3 : 2) / 2;
     if (you.gold < gold_min)
     {
         if (!quiet)
@@ -4515,8 +4517,10 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
                                                       "Emporium", "Shop")
                                       : "";
 
-    you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int()
-                                    = gozag_price_for_shop();
+    // food shops are 2/3rds as expensive as all other shop types.
+    const int base_price = gozag_price_for_shop();
+    const int price = type == SHOP_FOOD ? base_price : base_price * 3 / 2;
+    you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int() = price;
 }
 
 /**
@@ -5607,8 +5611,24 @@ static const char* _arcane_mutation_to_school_name(mutation_type mutation)
 {
     // XXX: this does a really silly dance back and forth between school &
     // spelltype.
-    const int school = skill2spell_type(arcane_mutation_to_skill(mutation));
+    const skill_type sk = arcane_mutation_to_skill(mutation);
+    const spschool_flag_type school = skill2spell_type(sk);
     return spelltype_long_name(school);
+}
+
+/**
+ * What's the abbreviation of the spell school corresponding to the given Ru
+ * mutation?
+ *
+ * @param mutation  The variety of MUT_NO_*_MAGIC in question.
+ * @return          A school abbreviation ("Summ", "Tloc", etc.)
+ */
+static const char* _arcane_mutation_to_school_abbr(mutation_type mutation)
+{
+    // XXX: this does a really silly dance back and forth between school &
+    // spelltype.
+    const auto school = skill2spell_type(arcane_mutation_to_skill(mutation));
+    return spelltype_short_name(school);
 }
 
 static int _piety_for_skill(skill_type skill)
@@ -5617,6 +5637,26 @@ static int _piety_for_skill(skill_type skill)
 }
 
 #define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
+
+/**
+ * Adjust piety based on stat ranking. You get less piety if you're looking at
+ * your lower stats.
+ *
+ * @param stat_type input_stat The stat we're checking.
+ * @param int       multiplier How much piety for each rank position off.
+ * @return          The piety to add.
+ */
+static int _get_stat_piety(stat_type input_stat, int multiplier)
+{
+    int stat_val = 3; // If this is your highest stat.
+    if (you.base_stats[STAT_INT] > you.base_stats[input_stat])
+            stat_val -= 1;
+    if (you.base_stats[STAT_STR] > you.base_stats[input_stat])
+            stat_val -= 1;
+    if (you.base_stats[STAT_DEX] > you.base_stats[input_stat])
+            stat_val -= 1;
+    return stat_val * multiplier;
+}
 
 static int _get_sacrifice_piety(ability_type sac)
 {
@@ -5628,12 +5668,8 @@ static int _get_sacrifice_piety(ability_type sac)
     ability_type sacrifice = sac_def.sacrifice;
     mutation_type mut = MUT_NON_MUTATION;
     int num_sacrifices = 0;
-    const int piety_for_lost_muts = 15;
-    const int piety_for_lost_stat_muts = 6;
-
 
     // Initialize data
-
     if (sac_def.sacrifice_vector)
     {
         ASSERT(you.props.exists(sac_def.sacrifice_vector));
@@ -5668,29 +5704,33 @@ static int _get_sacrifice_piety(ability_type sac)
     {
         case ABIL_RU_SACRIFICE_ESSENCE:
             if (mut == MUT_LOW_MAGIC)
-                piety_gain += 12;
+            {
+                piety_gain += 10 + max(you.skill_rdiv(SK_INVOCATIONS, 1, 2),
+                                       max( you.skill_rdiv(SK_SPELLCASTING, 1, 2),
+                                            you.skill_rdiv(SK_EVOCATIONS, 1, 2)));
+            }
             else if (mut == MUT_MAGICAL_VULNERABILITY)
                 piety_gain += 28;
             else
-                piety_gain += 16;
+                piety_gain += 2 + _get_stat_piety(STAT_INT, 6);
             break;
         case ABIL_RU_SACRIFICE_PURITY:
-            if (mut == MUT_WEAK
-                || mut == MUT_CLUMSY
-                || mut == MUT_DOPEY)
+            if (mut == MUT_WEAK || mut == MUT_DOPEY || mut == MUT_CLUMSY)
             {
-                if (player_mutation_level(MUT_STRONG) && mut == MUT_WEAK)
-                piety_gain += 8;
+                const stat_type stat = mut == MUT_WEAK   ? STAT_STR
+                                     : mut == MUT_CLUMSY ? STAT_DEX
+                                     : mut == MUT_DOPEY  ? STAT_INT
+                                                         : NUM_STATS;
+                piety_gain += 4 + _get_stat_piety(stat, 4);
             }
             // the other sacrifices get sharply worse if you already
             // have levels of them.
             else if (player_mutation_level(mut) == 2)
                 piety_gain += 28;
             else if (player_mutation_level(mut) == 1)
-                piety_gain += 20;
+                piety_gain += 21;
             else
-                piety_gain += 12;
-
+                piety_gain += 14;
             break;
         case ABIL_RU_SACRIFICE_ARTIFICE:
             if (player_mutation_level(MUT_NO_LOVE))
@@ -5733,12 +5773,7 @@ static int _get_sacrifice_piety(ability_type sac)
         || sacrifice == ABIL_RU_SACRIFICE_HEALTH
         || sacrifice == ABIL_RU_SACRIFICE_ESSENCE)
     {
-        int existing_mut_val = 0;
-        if (mut == MUT_STRONG || mut == MUT_CLEVER || mut == MUT_AGILE)
-            existing_mut_val = piety_for_lost_stat_muts;
-        else
-            existing_mut_val = piety_for_lost_muts;
-        piety_gain += existing_mut_val * mut_check_conflict(mut);
+        piety_gain *= 1 + mut_check_conflict(mut);
     }
 
     return piety_gain;
@@ -5975,6 +6010,42 @@ static void _extra_sacrifice_code(ability_type sac)
     }
 }
 
+/**
+ * Describe variable costs for a given Ru sacrifice being offered.
+ *
+ * @param sac       The sacrifice in question.
+ * @return          Extra costs.
+ *                  For ABIL_RU_SACRIFICE_ARCANA: e.g. " (Tloc/Air/Fire)"
+ *                  For other variable muts: e.g. " (frail)"
+ *                  Otherwise, "".
+ */
+string ru_sac_text(ability_type sac)
+{
+    const sacrifice_def &sac_def = _get_sacrifice_def(sac);
+    if (!sac_def.sacrifice_vector)
+        return "";
+
+    ASSERT(you.props.exists(sac_def.sacrifice_vector));
+    const CrawlVector &sacrifice_muts =
+        you.props[sac_def.sacrifice_vector].get_vector();
+
+    if (sac != ABIL_RU_SACRIFICE_ARCANA)
+    {
+        ASSERT(sacrifice_muts.size() == 1);
+        const mutation_type mut = AS_MUT(sacrifice_muts[0]);
+        return make_stringf(" (%s)", mutation_name(mut));
+    }
+
+    // "Tloc/Fire/Ice"
+    const string school_names
+        = comma_separated_fn(sacrifice_muts.begin(), sacrifice_muts.end(),
+                [](CrawlStoreValue mut) {
+                    return _arcane_mutation_to_school_abbr(AS_MUT(mut));
+                }, "/", "/");
+
+    return make_stringf(" (%s)", school_names.c_str());
+}
+
 bool ru_do_sacrifice(ability_type sac)
 {
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
@@ -6109,9 +6180,10 @@ bool ru_do_sacrifice(ability_type sac)
     return true;
 }
 
-bool ru_reject_sacrifices()
+bool ru_reject_sacrifices(bool skip_prompt)
 {
-    if (!yesno("Do you really want to reject the sacrifices Ru is offering?",
+    if (!skip_prompt &&
+        !yesno("Do you really want to reject the sacrifices Ru is offering?",
                false, 'n'))
     {
         canned_msg(MSG_OK);

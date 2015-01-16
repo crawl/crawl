@@ -49,6 +49,8 @@ struct armour_def
     size_type           fit_max;
     /// Whether this armour is mundane or inherently 'special', for acq.
     bool                mundane;
+    /// The resists, vulns, &c that this armour type gives when worn.
+    armflags_t          flags;
 };
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -75,52 +77,45 @@ static const armour_def Armour_prop[] =
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -23,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false },
 
-    { ARM_TROLL_HIDE,           "troll hide",             2,  -4,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -4,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_STEAM_DRAGON_HIDE,    "steam dragon hide",      2,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_STEAM_DRAGON_ARMOUR,  "steam dragon armour",    5,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_MOTTLED_DRAGON_HIDE,  "mottled dragon hide",    3,  -5,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  6,  -5,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_QUICKSILVER_DRAGON_HIDE,   "quicksilver dragon hide",
-                                                          3,  -6,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_QUICKSILVER_DRAGON_ARMOUR, "quicksilver dragon armour",
-                                                         10,  -6,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_SWAMP_DRAGON_HIDE,    "swamp dragon hide",      3,  -7,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_SWAMP_DRAGON_ARMOUR,  "swamp dragon armour",    7,  -7,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_FIRE_DRAGON_HIDE,     "fire dragon hide",       3, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_FIRE_DRAGON_ARMOUR,   "fire dragon armour",     8, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_ICE_DRAGON_HIDE,      "ice dragon hide",        4, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_ICE_DRAGON_ARMOUR,    "ice dragon armour",      9, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_PEARL_DRAGON_HIDE,    "pearl dragon hide",      3, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_PEARL_DRAGON_ARMOUR,  "pearl dragon armour",   10, -11,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_STORM_DRAGON_HIDE,    "storm dragon hide",      4, -15,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",   10, -15,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_SHADOW_DRAGON_HIDE,    "shadow dragon hide",    4, -15,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_SHADOW_DRAGON_ARMOUR,  "shadow dragon armour", 10, -15,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -23,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
-    { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -23,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false },
+#define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res) \
+    { henum, hname, (aac)/2, aevp,                              \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res },    \
+    { aenum, aname, aac, aevp,                                  \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res }
+
+#define DRAGON_ARMOUR(id, name, ac, evp, res) \
+    HIDE_ARMOUR(ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour", ac, evp, \
+                ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res)
+
+    HIDE_ARMOUR(
+      ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -4,
+      ARM_TROLL_HIDE,           "troll hide",
+        ARMF_REGENERATION
+    ),
+
+    DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,
+        ARMF_RES_STEAM),
+    DRAGON_ARMOUR(MOTTLED,     "mottled",                 6,  -5,
+        ARMF_RES_STICKY_FLAME),
+    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",            10,  -7,
+        ARMF_RES_MAGIC),
+    DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -7,
+        ARMF_RES_POISON),
+    DRAGON_ARMOUR(FIRE,        "fire",                    8, -11,
+        ard(ARMF_RES_FIRE, 2) | ARMF_VUL_COLD),
+    DRAGON_ARMOUR(ICE,         "ice",                     9, -11,
+        ard(ARMF_RES_COLD, 2) | ARMF_VUL_FIRE),
+    DRAGON_ARMOUR(PEARL,       "pearl",                  10, -11,
+        ARMF_RES_NEG),
+    DRAGON_ARMOUR(STORM,       "storm",                  10, -15,
+        ARMF_RES_ELEC),
+    DRAGON_ARMOUR(SHADOW,      "shadow",                 10, -15,
+        ard(ARMF_STEALTH, 4)),
+    DRAGON_ARMOUR(GOLD,        "gold",                   12, -23,
+        ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),
+
+#undef DRAGON_HIDE
+#undef HIDE_ARMOUR
 
     { ARM_CLOAK,                "cloak",                  1,   0,
         EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG, true },
@@ -759,12 +754,12 @@ void do_curse_item(item_def &item, bool quiet)
         if (!quiet)
         {
             const bool was_known = is_artefact(item)
-                                 ? artefact_known_wpn_property(item, ARTP_BRAND)
+                                 ? artefact_known_property(item, ARTP_BRAND)
                                  : item_ident(item, ISFLAG_KNOW_TYPE);
             mprf("Your %s glows black briefly, but repels the curse.",
                  item.name(DESC_PLAIN).c_str());
             if (is_artefact(item))
-                artefact_wpn_learn_prop(item, ARTP_BRAND);
+                artefact_learn_prop(item, ARTP_BRAND);
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
@@ -1111,7 +1106,7 @@ brand_type get_weapon_brand(const item_def &item)
         return SPWPN_NORMAL;
 
     if (is_artefact(item))
-        return static_cast<brand_type>(artefact_wpn_property(item, ARTP_BRAND));
+        return static_cast<brand_type>(artefact_property(item, ARTP_BRAND));
 
     return static_cast<brand_type>(item.brand);
 }
@@ -1134,7 +1129,7 @@ special_armour_type get_armour_ego_type(const item_def &item)
     if (is_artefact(item))
     {
         return static_cast<special_armour_type>(
-                   artefact_wpn_property(item, ARTP_BRAND));
+                   artefact_property(item, ARTP_BRAND));
     }
 
     return static_cast<special_armour_type>(item.brand);
@@ -1306,6 +1301,48 @@ bool armour_type_is_hide(int _type, bool inc_made)
         return true;
     // armour made from hides?
     return inc_made && _hide_armour_set.count(type);
+}
+
+/**
+ * Generate a map from hides to the monsters that source them.
+ */
+static map<armour_type, monster_type> _make_hide_monster_map()
+{
+    map<armour_type, monster_type> hide_to_mons;
+    for (auto monster_data : _monster_hides)
+    {
+        const armour_type hide = monster_data.second;
+        const monster_type mon = monster_data.first;
+        hide_to_mons[hide] = mon;
+
+        const armour_type *arm = map_find(_hide_armours, hide);
+        ASSERT(arm);
+        hide_to_mons[*arm] = mon;
+    }
+
+    // troll hides are generated by multiple monsters, so set a canonical troll
+    // by hand
+    hide_to_mons[ARM_TROLL_HIDE] = MONS_TROLL;
+    hide_to_mons[ARM_TROLL_LEATHER_ARMOUR] = MONS_TROLL;
+
+    return hide_to_mons;
+}
+
+static map<armour_type, monster_type> hide_to_mons = _make_hide_monster_map();
+
+/**
+ * Find the monster that the given type of hide/dragon/troll armour came from.
+ *
+ * @param arm   The type of armour in question.
+ * @return      The corresponding monster type; e.g. MONS_FIRE_DRAGON for
+ *              ARM_FIRE_DRAGON_HIDE or ARM_FIRE_DRAGON_ARMOUR, MONS_TROLL
+ *              for ARM_TROLL_HIDE or ARM_TROLL_LEATHER_ARMOUR...
+ */
+monster_type monster_for_hide(armour_type arm)
+{
+    monster_type *mon = map_find(hide_to_mons, arm);
+    ASSERT(mon);
+    return *mon;
 }
 
 /**
@@ -2226,23 +2263,7 @@ int get_armour_res_fire(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_FIRE_DRAGON_ARMOUR:
-    case ARM_FIRE_DRAGON_HIDE:
-        res += 2;
-        break;
-    case ARM_GOLD_DRAGON_ARMOUR:
-    case ARM_GOLD_DRAGON_HIDE:
-        res += 1;
-        break;
-    case ARM_ICE_DRAGON_ARMOUR:
-    case ARM_ICE_DRAGON_HIDE:
-        res -= 1;
-        break;
-    default:
-        break;
-    }
+    res += armour_type_prop(arm.sub_type, ARMF_RES_FIRE);
 
     // check ego resistance
     const int ego = get_armour_ego_type(arm);
@@ -2250,7 +2271,7 @@ int get_armour_res_fire(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_FIRE);
+        res += artefact_property(arm, ARTP_FIRE);
 
     return res;
 }
@@ -2262,23 +2283,7 @@ int get_armour_res_cold(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_ICE_DRAGON_ARMOUR:
-    case ARM_ICE_DRAGON_HIDE:
-        res += 2;
-        break;
-    case ARM_GOLD_DRAGON_ARMOUR:
-    case ARM_GOLD_DRAGON_HIDE:
-        res += 1;
-        break;
-    case ARM_FIRE_DRAGON_ARMOUR:
-    case ARM_FIRE_DRAGON_HIDE:
-        res -= 1;
-        break;
-    default:
-        break;
-    }
+    res += armour_type_prop(arm.sub_type, ARMF_RES_COLD);
 
     // check ego resistance
     const int ego = get_armour_ego_type(arm);
@@ -2286,7 +2291,7 @@ int get_armour_res_cold(const item_def &arm, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_COLD);
+        res += artefact_property(arm, ARTP_COLD);
 
     return res;
 }
@@ -2298,26 +2303,14 @@ int get_armour_res_poison(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_SWAMP_DRAGON_ARMOUR:
-    case ARM_SWAMP_DRAGON_HIDE:
-        res += 1;
-        break;
-    case ARM_GOLD_DRAGON_ARMOUR:
-    case ARM_GOLD_DRAGON_HIDE:
-        res += 1;
-        break;
-    default:
-        break;
-    }
+    res += armour_type_prop(arm.sub_type, ARMF_RES_POISON);
 
     // check ego resistance
     if (get_armour_ego_type(arm) == SPARM_POISON_RESISTANCE)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_POISON);
+        res += artefact_property(arm, ARTP_POISON);
 
     return res;
 }
@@ -2329,18 +2322,10 @@ int get_armour_res_elec(const item_def &arm, bool check_artp)
     int res = 0;
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_STORM_DRAGON_ARMOUR:
-    case ARM_STORM_DRAGON_HIDE:
-        res += 1;
-        break;
-    default:
-        break;
-    }
+    res += armour_type_prop(arm.sub_type, ARMF_RES_ELEC);
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_ELECTRICITY);
+        res += artefact_property(arm, ARTP_ELECTRICITY);
 
     return res;
 }
@@ -2351,16 +2336,15 @@ int get_armour_life_protection(const item_def &arm, bool check_artp)
 
     int res = 0;
 
-    // Pearl dragon armour grants rN+.
-    if (arm.sub_type == ARM_PEARL_DRAGON_ARMOUR)
-        res += 1;
+    // intrinsic armour abilities
+    res += armour_type_prop(arm.sub_type, ARMF_RES_NEG);
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_POSITIVE_ENERGY)
         res += 1;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_NEGATIVE_ENERGY);
+        res += artefact_property(arm, ARTP_NEGATIVE_ENERGY);
 
     return res;
 }
@@ -2371,12 +2355,15 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
 
     int res = 0;
 
+    // intrinsic armour abilities
+    res += armour_type_prop(arm.sub_type, ARMF_RES_MAGIC) * MR_PIP;
+
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_MAGIC_RESISTANCE)
-        res += 40;
+        res += MR_PIP;
 
     if (check_artp && is_artefact(arm))
-        res += 40 * artefact_wpn_property(arm, ARTP_MAGIC);
+        res += MR_PIP * artefact_property(arm, ARTP_MAGIC);
 
     return res;
 }
@@ -2390,7 +2377,7 @@ bool get_armour_see_invisible(const item_def &arm, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(arm))
-        return artefact_wpn_property(arm, ARTP_EYESIGHT);
+        return artefact_property(arm, ARTP_EYESIGHT);
 
     return false;
 }
@@ -2400,14 +2387,7 @@ int get_armour_res_sticky_flame(const item_def &arm)
     ASSERT(arm.base_type == OBJ_ARMOUR);
 
     // intrinsic armour abilities
-    switch (arm.sub_type)
-    {
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-    case ARM_MOTTLED_DRAGON_HIDE:
-        return 1;
-    default:
-        return 0;
-    }
+    return armour_type_prop(arm.sub_type, ARMF_RES_STICKY_FLAME);
 }
 
 int get_jewellery_res_fire(const item_def &ring, bool check_artp)
@@ -2431,7 +2411,7 @@ int get_jewellery_res_fire(const item_def &ring, bool check_artp)
     }
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_FIRE);
+        res += artefact_property(ring, ARTP_FIRE);
 
     return res;
 }
@@ -2457,7 +2437,7 @@ int get_jewellery_res_cold(const item_def &ring, bool check_artp)
     }
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_COLD);
+        res += artefact_property(ring, ARTP_COLD);
 
     return res;
 }
@@ -2472,7 +2452,7 @@ int get_jewellery_res_poison(const item_def &ring, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_POISON);
+        res += artefact_property(ring, ARTP_POISON);
 
     return res;
 }
@@ -2484,7 +2464,7 @@ int get_jewellery_res_elec(const item_def &ring, bool check_artp)
     int res = 0;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_ELECTRICITY);
+        res += artefact_property(ring, ARTP_ELECTRICITY);
 
     return res;
 }
@@ -2500,7 +2480,7 @@ int get_jewellery_life_protection(const item_def &ring, bool check_artp)
         res += 1;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_NEGATIVE_ENERGY);
+        res += artefact_property(ring, ARTP_NEGATIVE_ENERGY);
 
     return res;
 }
@@ -2515,7 +2495,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp)
         res += 40;
 
     if (check_artp && is_artefact(ring))
-        res += 40 * artefact_wpn_property(ring, ARTP_MAGIC);
+        res += 40 * artefact_property(ring, ARTP_MAGIC);
 
     return res;
 }
@@ -2528,7 +2508,7 @@ bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
         return true;
 
     if (check_artp && is_artefact(ring))
-        return artefact_wpn_property(ring, ARTP_EYESIGHT);
+        return artefact_property(ring, ARTP_EYESIGHT);
 
     return false;
 }
@@ -2553,13 +2533,13 @@ int property(const item_def &item, int prop_type)
             {
             case PWPN_DAMAGE:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].dam
-                       + artefact_wpn_property(item, ARTP_BASE_DAM);
+                       + artefact_property(item, ARTP_BASE_DAM);
             case PWPN_HIT:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].hit
-                       + artefact_wpn_property(item, ARTP_BASE_ACC);
+                       + artefact_property(item, ARTP_BASE_ACC);
             case PWPN_SPEED:
                 return Weapon_prop[ Weapon_index[item.sub_type] ].speed
-                       + artefact_wpn_property(item, ARTP_BASE_DELAY);
+                       + artefact_property(item, ARTP_BASE_DELAY);
             }
         }
         if (prop_type == PWPN_DAMAGE)
@@ -2636,11 +2616,11 @@ bool gives_ability(const item_def &item)
 
     // Check for evokable randart properties.
     for (int rap = ARTP_INVISIBLE; rap <= ARTP_BERSERK; rap++)
-        if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
+        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
             return true;
 
 #if TAG_MAJOR_VERSION == 34
-    if (artefact_wpn_property(item, ARTP_FOG))
+    if (artefact_property(item, ARTP_FOG))
         return true;
 #endif
 
@@ -2711,7 +2691,7 @@ bool gives_resistance(const item_def &item)
         if (rap == ARTP_MAGIC || rap >= ARTP_INVISIBLE)
             continue;
 
-        if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
+        if (artefact_property(item, static_cast<artefact_prop_type>(rap)))
             return true;
     }
 
@@ -2968,4 +2948,46 @@ int remove_oldest_xp_evoker(item_def &stack, int quant)
     stack.evoker_debt -= XP_EVOKE_DEBT * num_inert;
     new_stack_debt += XP_EVOKE_DEBT * num_inert;
     return new_stack_debt;
+}
+
+
+/// witchcraft. copied from mon-util.h's get_resist
+static inline int _get_armour_flag(armflags_t all, armour_flag res)
+{
+    if (res > ARMF_LAST_MULTI)
+        return all & res ? 1 : 0;
+    int v = (all / res) & 7;
+    if (v > 4)
+        return v - 8;
+    return v;
+}
+
+/**
+ * What inherent special properties does the given armour type have?
+ *
+ * @param arm   The given armour type.
+ * @return      A bitfield of special properties.
+ */
+static armflags_t _armour_type_flags(const uint8_t arm)
+{
+    // Ugly hack
+    if (you.species == SP_TROLL && (arm == ARM_TROLL_HIDE
+                                    || arm ==  ARM_TROLL_LEATHER_ARMOUR))
+    {
+        return ARMF_NO_FLAGS;
+    }
+    else
+        return Armour_prop[ Armour_index[arm] ].flags;
+}
+
+/**
+ * What value does the given armour type have for the innate special property?
+ *
+ * @param arm   The given armour type.
+ * @param prop  The property in question.
+ * @return      A value for that property; ranges -3 to 4.
+ */
+int armour_type_prop(const uint8_t arm, const armour_flag prop)
+{
+    return _get_armour_flag(_armour_type_flags(arm), prop);
 }

@@ -1514,6 +1514,25 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
                                " erupts in a fountain of uncontrolled magic!");
     }
 
+#ifndef USE_TILE
+    // this looks terrible in tiles. TODO: make a decent sprite
+    bolt beam;
+    beam.name = "irradiate";
+    beam.flavour = BEAM_VISUAL;
+    beam.set_agent(&you);
+    beam.colour = ETC_MUTAGENIC;
+    beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    beam.range = 1;
+    beam.ex_size = 1;
+    beam.is_explosion = true;
+    beam.explode_delay = beam.explode_delay * 3 / 2;
+    beam.source = you.pos();
+    beam.target = you.pos();
+    beam.hit = AUTOMATIC_HIT;
+    beam.loudness = 0;
+    beam.explode(true, true);
+#endif
+
     apply_random_around_square(_irradiate_cell, who->pos(), true, powc, 8, who);
 
     if (who->is_player())

@@ -1207,13 +1207,8 @@ int player_teleport(bool calc_unid)
     // rings (keep in sync with _equip_jewellery_effect)
     tp += 8 * you.wearing(EQ_RINGS, RING_TELEPORTATION, calc_unid);
 
-    // randart weapons only
-    if (you.weapon()
-        && you.weapon()->base_type == OBJ_WEAPONS
-        && is_artefact(*you.weapon()))
-    {
-        tp += you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
-    }
+    // artefacts
+    tp += you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
 
     // mutations
     tp += player_mutation_level(MUT_TELEPORT) * 3;
@@ -1236,17 +1231,17 @@ static int _player_bonus_regen()
     }
 
     // Jewellery.
-    rr += 40 * you.wearing(EQ_AMULET, AMU_REGENERATION);
+    rr += REGEN_PIP * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
     // Artefacts
-    rr += you.scan_artefacts(ARTP_REGENERATION);
+    rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
 
     // Troll leather (except for trolls).
     if ((you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
          || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
         && you.species != SP_TROLL)
     {
-        rr += 40;
+        rr += REGEN_PIP;
     }
 
     // Fast heal mutation.
@@ -1487,12 +1482,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += you.wearing(EQ_STAFF, STAFF_FIRE, calc_unid);
 
         // body armour:
-        rf += 2 * you.wearing(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
-        rf += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rf -= you.wearing(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
-        rf += 2 * you.wearing(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
-        rf += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rf -= you.wearing(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            rf += armour_type_prop(body_armour->sub_type, ARMF_RES_FIRE);
 
         // ego armours
         rf += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE);
@@ -1563,11 +1555,9 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
     if (you.species == SP_PALE_DRACONIAN)
         res += 2;
 
-    if (items && you.wearing(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
-        res += 2;
-
-    if (items && you.wearing(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_HIDE))
-        res += 2;
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (body_armour)
+        res += armour_type_prop(body_armour->sub_type, ARMF_RES_STEAM) * 2;
 
     res += (rf < 0) ? rf
                     : (rf + 1) / 2;
@@ -1622,12 +1612,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += you.wearing(EQ_STAFF, STAFF_COLD, calc_unid);
 
         // body armour:
-        rc += 2 * you.wearing(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
-        rc += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rc -= you.wearing(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
-        rc += 2 * you.wearing(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
-        rc += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rc -= you.wearing(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            rc += armour_type_prop(body_armour->sub_type, ARMF_RES_COLD);
 
         // ego armours
         rc += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE);
@@ -1711,8 +1698,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re += you.wearing(EQ_STAFF, STAFF_AIR, calc_unid);
 
         // body armour:
-        re += you.wearing(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR);
-        re += you.wearing(EQ_BODY_ARMOUR, ARM_STORM_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            re += armour_type_prop(body_armour->sub_type, ARMF_RES_ELEC);
 
         // randart weapons:
         re += you.scan_artefacts(ARTP_ELECTRICITY, calc_unid);
@@ -1828,10 +1816,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         rp += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POISON_RESISTANCE);
 
         // body armour:
-        rp += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rp += you.wearing(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR);
-        rp += you.wearing(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rp += you.wearing(EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
 
         // randart weapons:
         rp += you.scan_artefacts(ARTP_POISON, calc_unid);
@@ -1883,10 +1870,9 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
     if (you.species == SP_MOTTLED_DRACONIAN)
         rsf++;
 
-    if (items && you.wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
-        rsf++;
-    if (items && you.wearing(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_HIDE))
-        rsf++;
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (body_armour)
+        rsf += armour_type_prop(body_armour->sub_type, ARMF_RES_STICKY_FLAME);
 
     // dragonskin cloak: 0.5 to draconic resistances
     if (items && calc_unid
@@ -2115,8 +2101,9 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         pl += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
         // pearl dragon counts
-        pl += you.wearing(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_ARMOUR);
-        pl += you.wearing(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_HIDE);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        if (body_armour)
+            pl += armour_type_prop(body_armour->sub_type, ARMF_RES_NEG);
 
         // randart wpns
         pl += you.scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
@@ -3687,10 +3674,12 @@ int check_stealth()
     stealth += STEALTH_PIP * you.wearing(EQ_RINGS, RING_STEALTH);
     stealth -= STEALTH_PIP * you.wearing(EQ_RINGS, RING_LOUDNESS);
 
-    stealth += STEALTH_PIP * 4
-               * you.wearing(EQ_BODY_ARMOUR, ARM_SHADOW_DRAGON_ARMOUR);
-    stealth += STEALTH_PIP * 4
-               * you.wearing(EQ_BODY_ARMOUR, ARM_SHADOW_DRAGON_HIDE);
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (body_armour)
+    {
+        const int pips = armour_type_prop(body_armour->sub_type, ARMF_STEALTH);
+        stealth += pips * STEALTH_PIP;
+    }
 
     if (you.duration[DUR_STEALTH])
         stealth += STEALTH_PIP * 2;
@@ -4243,7 +4232,7 @@ int player::scan_artefacts(artefact_prop_type which_property,
             continue;
 
         bool known;
-        int val = artefact_wpn_property(inv[eq], which_property, known);
+        int val = artefact_property(inv[eq], which_property, known);
         if (calc_unid || known)
         {
             retval += val;
@@ -5816,6 +5805,8 @@ void player::init()
     type_ids.init(ID_UNKNOWN_TYPE);
     type_id_props.clear();
 
+    banished_by.clear();
+
     zotdef_wave_name.clear();
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
@@ -5848,7 +5839,6 @@ void player::init()
     // Volatile (same-turn) state:
     turn_is_over     = false;
     banished         = false;
-    banished_by.clear();
 
     wield_change     = false;
     redraw_quiver    = false;
@@ -6907,8 +6897,12 @@ int player_res_magic(bool calc_unid, bool temp)
     // randarts
     rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC, calc_unid);
 
-    // armour
-    rm += MR_PIP * you.wearing(EQ_BODY_ARMOUR, ARM_QUICKSILVER_DRAGON_ARMOUR);
+    // body armour
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    if (body_armour)
+        rm += armour_type_prop(body_armour->sub_type, ARMF_RES_MAGIC) * MR_PIP;
+
+    // ego armours
     rm += MR_PIP * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
                                    calc_unid);
 
@@ -7181,7 +7175,7 @@ void player::expose_to_element(beam_type element, int _strength,
 
 void player::blink(bool allow_partial_control)
 {
-    random_blink(allow_partial_control);
+    cast_blink(allow_partial_control);
 }
 
 void player::teleport(bool now, bool wizard_tele)

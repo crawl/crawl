@@ -9,6 +9,7 @@
 #include "butcher.h"
 #include "coordit.h"
 #include "database.h"
+#include "english.h"
 #include "env.h"
 #include "fprop.h"
 #include "godabil.h"
@@ -549,40 +550,70 @@ static bool _zin_donate_gold()
     return true;
 }
 
+/**
+ * Sacrifice a scroll to Ashenzari, transforming it into three new curse
+ * scrolls.
+ *
+ * The types of scrolls generated are random, weighted by the number of slots
+ * of the appropriate type available to the player.
+ *
+ * @param item         The scroll to be sacrificed.
+ *                     Is not destroyed by this function (obviously!)
+ */
 static void _ashenzari_sac_scroll(const item_def& item)
 {
-    int scr = SCR_CURSE_JEWELLERY;
-    int num = 3;
+    mprf("%s flickers black.",
+         get_desc_quantity(1, item.quantity,
+                           item.name(DESC_THE)).c_str());
 
-    int wpn = 3;
-    int arm = 0;
-    int jwl = (you.species != SP_OCTOPODE) ? 3 : 9;
-
+    const int wpn_weight = 3;
+    const int jwl_weight = (you.species != SP_OCTOPODE) ? 3 : 9;
+    int arm_weight = 0;
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         if (you_can_wear(i, true))
-            arm++;
+            arm_weight++;
 
-    do
+    map<int, int> generated_scrolls = {
+        { SCR_CURSE_WEAPON, 0 },
+        { SCR_CURSE_ARMOUR, 0 },
+        { SCR_CURSE_JEWELLERY, 0 },
+    };
+    for (int i = 0; i < 3; i++)
     {
-        if (you.species != SP_FELID)
-        {
-            scr = random_choose_weighted(wpn, SCR_CURSE_WEAPON,
-                                         arm, SCR_CURSE_ARMOUR,
-                                         jwl, SCR_CURSE_JEWELLERY,
-                                         0);
-        }
-        int it = items(false, OBJ_SCROLLS, scr, 0);
+        const int scroll_type = you.species == SP_FELID ?
+                        SCR_CURSE_JEWELLERY :
+                        random_choose_weighted(wpn_weight, SCR_CURSE_WEAPON,
+                                               arm_weight, SCR_CURSE_ARMOUR,
+                                               jwl_weight, SCR_CURSE_JEWELLERY,
+                                               0);
+        generated_scrolls[scroll_type]++;
+        dprf("%d: %d", scroll_type, generated_scrolls[scroll_type]);
+    }
+
+    vector<string> scroll_names;
+    for (auto gen_scroll : generated_scrolls)
+    {
+        const int scroll_type = gen_scroll.first;
+        const int num_generated = gen_scroll.second;
+        if (!num_generated)
+            continue;
+
+        int it = items(false, OBJ_SCROLLS, scroll_type, 0);
         if (it == NON_ITEM)
         {
             mpr("You feel the world is against you.");
             return;
         }
 
-        mitm[it].quantity = 1;
+        mitm[it].quantity = num_generated;
+        scroll_names.push_back(mitm[it].name(DESC_A));
+
         if (!move_item_to_grid(&it, you.pos(), true))
             destroy_item(it, true); // can't happen
     }
-    while (--num > 0);
+
+    mprf("%s appear.", comma_separated_line(scroll_names.begin(),
+                                            scroll_names.end()).c_str());
 }
 
 // Is the destroyed weapon valuable enough to gain piety by doing so?
@@ -701,10 +732,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         break;
     }
 
-    case GOD_ASHENZARI:
-        _ashenzari_sac_scroll(item);
-        break;
-
     default:
         break;
     }
@@ -777,7 +804,8 @@ static bool _offer_items()
 
         if (god_likes_item(you.religion, item)
             && ((item.inscription.find("=p") != string::npos)
-                || item_needs_autopickup(item)))
+                || item_needs_autopickup(item)
+                    && GOD_ASHENZARI != you.religion))
         {
             const string msg = "Really sacrifice " + item.name(DESC_A) + "?";
 
@@ -788,10 +816,22 @@ static bool _offer_items()
             }
         }
 
-        piety_gain_t relative_gain = sacrifice_item_stack(item);
-        print_sacrifice_message(you.religion, mitm[i], relative_gain);
-        item_was_destroyed(mitm[i]);
-        destroy_item(i);
+        if (GOD_ASHENZARI == you.religion)
+            _ashenzari_sac_scroll(item);
+        else
+        {
+            const piety_gain_t relative_gain = sacrifice_item_stack(item);
+            print_sacrifice_message(you.religion, mitm[i], relative_gain);
+        }
+
+        if (GOD_ASHENZARI == you.religion && item.quantity > 1)
+            item.quantity -= 1;
+        else
+        {
+            item_was_destroyed(mitm[i]);
+            destroy_item(i);
+        }
+
         i = next;
         num_sacced++;
     }

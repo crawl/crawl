@@ -292,7 +292,7 @@ bool is_chaotic_item(const item_def& item)
     }
 
     if (is_artefact(item) && item.base_type != OBJ_BOOKS
-        && artefact_wpn_property(item, ARTP_MUTAGENIC))
+        && artefact_property(item, ARTP_MUTAGENIC))
     {
         retval = true;
     }
@@ -498,35 +498,35 @@ bool is_evil_spell(spell_type spell)
 {
     const spschools_type disciplines = get_spell_disciplines(spell);
 
-    return disciplines & SPTYP_NECROMANCY;
+    return bool(disciplines & SPTYP_NECROMANCY);
 }
 
 bool is_unclean_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
 
-    return flags & SPFLAG_UNCLEAN;
+    return bool(flags & SPFLAG_UNCLEAN);
 }
 
 bool is_chaotic_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
 
-    return flags & SPFLAG_CHAOTIC;
+    return bool(flags & SPFLAG_CHAOTIC);
 }
 
 bool is_hasty_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
 
-    return flags & SPFLAG_HASTY;
+    return bool(flags & SPFLAG_HASTY);
 }
 
 bool is_fiery_spell(spell_type spell)
 {
     const spschools_type disciplines = get_spell_disciplines(spell);
 
-    return disciplines & SPTYP_FIRE;
+    return bool(disciplines & SPTYP_FIRE);
 }
 
 static bool _your_god_hates_spell(spell_type spell)
@@ -707,23 +707,21 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
     return false;
 }
 
-bool god_dislikes_spell_discipline(int discipline, god_type god)
+bool god_dislikes_spell_discipline(spschools_type discipline, god_type god)
 {
-    ASSERT(discipline < (1 << (SPTYP_LAST_EXPONENT + 1)));
-
     if (is_good_god(god) && (discipline & SPTYP_NECROMANCY))
         return true;
 
     switch (god)
     {
     case GOD_SHINING_ONE:
-        return discipline & SPTYP_POISON;
+        return bool(discipline & SPTYP_POISON);
 
     case GOD_ELYVILON:
-        return discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING);
+        return bool(discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
 
     case GOD_DITHMENOS:
-        return discipline & SPTYP_FIRE;
+        return bool(discipline & SPTYP_FIRE);
 
     default:
         break;

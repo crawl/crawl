@@ -332,62 +332,93 @@ static bool _check_crystal_ball()
     return true;
 }
 
-bool disc_of_storms(bool drac_breath)
+/**
+ * Spray lightning in all directions. (Randomly: shock, lightning bolt, OoE.)
+ *
+ * @param range         The range of the beams. (As with all beams, eventually
+ *                      capped at LOS.)
+ * @param power         The power of the beams. (Affects damage.)
+ */
+static void _spray_lightning(int range, int power)
+{
+    const zap_type which_zap = random_choose(ZAP_SHOCK,
+                                             ZAP_LIGHTNING_BOLT,
+                                             ZAP_ORB_OF_ELECTRICITY);
+
+    bolt beam;
+    // range has no tracer, so randomness is ok
+    beam.range = range;
+    beam.source = you.pos();
+    beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+    // Non-controlleable, so no player tracer.
+    zapping(which_zap, power, beam);
+}
+
+/**
+ * Evoke the Disc of Storms, potentially hurling Shock, Lightning Bolt, or
+ * Orb of Electricity in all directions around the player. Odds of doing so,
+ * the number of zaps created, & their power all increase with Evocations.
+ *
+ * @return  Whether anything happened.
+ */
+bool disc_of_storms()
 {
     const int fail_rate = 30 - you.skill(SK_EVOCATIONS);
-    bool rc = false;
 
-    if (x_chance_in_y(fail_rate, 100) && !drac_breath)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
-        mpr("The disc glows for a moment, then fades.");
-    else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
-        mpr("Little bolts of electricity crackle over the disc.");
-    else
+    if (x_chance_in_y(fail_rate, 100))
     {
-        if (!drac_breath)
-            mpr("The disc erupts in an explosion of electricity!");
-        rc = true;
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return false;
+    }
+    if (x_chance_in_y(fail_rate, 100))
+    {
+        mpr("The disc glows for a moment, then fades.");
+        return false;
+    }
+    if (x_chance_in_y(fail_rate, 100))
+    {
+        mpr("Little bolts of electricity crackle over the disc.");
+        return false;
+    }
 
-        const int disc_count = (drac_breath) ? roll_dice(2, 1 + you.experience_level / 7) :
-            roll_dice(2, 1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7));
+    const int disc_count
+        = roll_dice(2, 1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7));
+    ASSERT(disc_count);
 
-        for (int i = 0; i < disc_count; ++i)
+    mpr("The disc erupts in an explosion of electricity!");
+    const int range = you.skill_rdiv(SK_EVOCATIONS, 1, 3) + 5; // 5--14
+    const int power = 30 + you.skill(SK_EVOCATIONS, 2); // 30-84
+    for (int i = 0; i < disc_count; ++i)
+        _spray_lightning(range, power);
+
+    // Let it rain.
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (!in_bounds(*ri) || cell_is_solid(*ri))
+            continue;
+
+        if (one_chance_in(60 - you.skill(SK_EVOCATIONS)))
         {
-            bolt beam;
-            const zap_type types[] = { ZAP_LIGHTNING_BOLT, ZAP_SHOCK,
-                                       ZAP_ORB_OF_ELECTRICITY };
-
-            const zap_type which_zap = RANDOM_ELEMENT(types);
-
-            // range has no tracer, so randomness is ok
-            beam.range = (drac_breath) ? you.experience_level / 3 + 5 :
-                you.skill_rdiv(SK_EVOCATIONS, 1, 3) + 5; // 5--14
-            beam.source = you.pos();
-            beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
-            int power = (drac_breath) ? 25 + you.experience_level : 30
-                                           + you.skill(SK_EVOCATIONS, 2);
-            // Non-controlleable, so no player tracer.
-            zapping(which_zap, power, beam);
-
-        }
-
-        if (!drac_breath)
-        {
-            for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-            {
-                if (!in_bounds(*ri) || cell_is_solid(*ri))
-                    continue;
-
-                if (one_chance_in(60 - you.skill(SK_EVOCATIONS)))
-                {
-                    place_cloud(CLOUD_RAIN, *ri,
-                                random2(you.skill(SK_EVOCATIONS)), &you);
-                }
-            }
+            place_cloud(CLOUD_RAIN, *ri,
+                        random2(you.skill(SK_EVOCATIONS)), &you);
         }
     }
-    return rc;
+
+    return true;
+}
+
+/**
+ * Spray lightning in all directions around the player.
+ *
+ * Quantity, range & power increase with level.
+ */
+void black_drac_breath()
+{
+    const int num_shots = roll_dice(2, 1 + you.experience_level / 7);
+    const int range = you.experience_level / 3 + 5; // 5--14
+    const int power = 25 + you.experience_level; // 25-52
+    for (int i = 0; i < num_shots; ++i)
+        _spray_lightning(range, power);
 }
 
 static void _fiery_explosion()

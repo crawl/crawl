@@ -79,14 +79,20 @@ int spell_levels_required(spell_type which_spell);
 
 unsigned int get_spell_flags(spell_type which_spell);
 
-bool spell_typematch(spell_type which_spell, unsigned int which_discipline);
+bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc);
 spschools_type get_spell_disciplines(spell_type which_spell);
 bool disciplines_conflict(spschools_type disc1, spschools_type disc2);
-int count_bits(unsigned int bits);
+int count_bits(uint64_t bits);
+
+template <class E>
+int count_bits(enum_bitfield<E> bits)
+{
+    return count_bits(bits.flags);
+}
 
 const char *spell_title(spell_type which_spell);
-const char* spelltype_short_name(int which_spelltype);
-const char* spelltype_long_name(int which_spelltype);
+const char* spelltype_short_name(spschool_flag_type which_spelltype);
+const char* spelltype_long_name(spschool_flag_type which_spelltype);
 
 typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
 typedef int monster_func(monster* mon, int pow);
@@ -123,11 +129,11 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       targetter *hitfunc = nullptr,
                       desc_filter get_desc_func = nullptr);
 
-skill_type spell_type2skill(unsigned int which_spelltype);
+skill_type spell_type2skill(spschool_flag_type spelltype);
 spschool_flag_type skill2spell_type(skill_type spell_skill);
 
 skill_type arcane_mutation_to_skill(mutation_type mutation);
-bool cannot_use_schools(unsigned int schools);
+bool cannot_use_schools(spschools_type schools);
 
 spell_type zap_type_to_spell(zap_type zap);
 

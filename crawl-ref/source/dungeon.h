@@ -23,8 +23,6 @@
 #define TEMPLE_MAP_KEY       "temple_map_key"
 #define TEMPLE_SIZE_KEY      "temple_size_key"
 
-const int MAKE_GIFT_ITEM = 350; // worse than the next one
-const int MAKE_GOOD_ITEM = 351;
 const unsigned short INVALID_MAP_INDEX = 10000;
 
 // Should be the larger of GXM/GYM

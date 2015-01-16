@@ -186,7 +186,7 @@ bool can_wield(item_def *weapon, bool say_reason,
                 mprf_nocap("%s", weapon->name(DESC_INVENTORY_EQUIP).c_str());
         }
         else if (is_artefact(*weapon) && !item_type_known(*weapon))
-            artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
+            artefact_learn_prop(*weapon, ARTP_BRAND);
         return false;
     }
 
@@ -1053,9 +1053,9 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
 
     if (is_artefact(item))
     {
-        prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
-        prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
-        prop_dex += artefact_known_wpn_property(item, ARTP_DEXTERITY);
+        prop_str += artefact_known_property(item, ARTP_STRENGTH);
+        prop_int += artefact_known_property(item, ARTP_INTELLIGENCE);
+        prop_dex += artefact_known_property(item, ARTP_DEXTERITY);
     }
 
     if (!remove)
@@ -1115,7 +1115,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
          inf.is_type(OBJ_JEWELLERY, RING_FLIGHT)
          || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING
          || is_artefact(inf)
-            && artefact_known_wpn_property(inf, ARTP_FLY);
+            && artefact_known_property(inf, ARTP_FLY);
 
     // assumes item can't grant flight twice
     const bool removing_ends_flight = you.flight_mode()
@@ -2599,9 +2599,11 @@ void read(int slot)
     // scroll effect kicks in.
     if (player_mutation_level(MUT_BLURRY_VISION))
     {
-        // takes 1, 2, 3 extra turns
-        const int turns = player_mutation_level(MUT_BLURRY_VISION);
+        // takes 0.5, 1, 2 extra turns
+        const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
         start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
+        if (player_mutation_level(MUT_BLURRY_VISION) == 1)
+            you.time_taken /= 2;
     }
     else
         read_scroll(item_slot);
@@ -2652,9 +2654,16 @@ void read_scroll(int item_slot)
     {
         const bool safely_cancellable
             = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
-        cancel_scroll = (blink(1000, false, false,
-                               pre_succ_msg, safely_cancellable) == -1
-                        && alreadyknown);
+        if (allow_control_teleport())
+        {
+            cancel_scroll = (cast_controlled_blink(100, false,
+                                                   safely_cancellable)
+                             == SPRET_ABORT) && alreadyknown;
+        }
+        else
+            uncontrolled_blink();
+        if (!cancel_scroll)
+            mpr(pre_succ_msg); // ordering is iffy but w/e
     }
         break;
 

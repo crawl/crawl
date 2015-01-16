@@ -86,8 +86,14 @@ Items
 -----
  $ - gold
  % - normal item
- * - higher level item (good)
- | - superb item (almost guaranteed excellent)
+
+ * - higher quality item, with the quality level increasing with absolute
+     depth. The level is 2 * absdepth + 5, capped at 50.
+ | - superb quality item, the highest quality level. It's a special class
+     above the "*" glyph, similar to the "good_item" modifier described
+     below, but with a different distribution of item classes: this glyph
+     generates only weapons, armour, jewellery, books, staves, rods, and
+     miscellaneous items.
  d-k - item array item. See section below on ITEM: arrays for more info.
 
 Monsters
@@ -481,7 +487,7 @@ ITEM:     (list of items, separated by comma)
           in the first position in the array will be used when the dungeon
           builder sees a "d" in the vault definition, the second will be used
           for "e"s, etc. Positions are comma-separated; several ITEM: lines
-          are possible as well. The following defines letters 'd' - 'g':
+          are possible as well. The following defines letters "d" - "g":
             ITEM: stone, ring mail, meat ration, ring of hunger
 
           Positions can contain multiple possibilities, one of which the
@@ -494,7 +500,7 @@ ITEM:     (list of items, separated by comma)
           possibility is
           [possibility's weight: / sum of all weight:s in that array position]
 
-          For example, the following line makes letter 'd' into a bread ration
+          For example, the following line makes letter "d" into a bread ration
           with 50% chance, or apple or orange with 25% chance each:
 
             ITEM: bread ration / w:5 apple / w:5 orange
@@ -510,9 +516,11 @@ ITEM:     (list of items, separated by comma)
           * "no_uniq" prevents the item from being turned into an artefact,
             unless cancelled by an "allow_uniq" modifier.
           * "good_item" makes the builder try to make the item a good one
-            (acquirement quality). This is independent of the level's depth,
-            in contrast to placing items with * or | which just add a bonus
-            to depth for the item generation.
+            (acquirement quality). This is independent of the level's depth, in
+            contrast to placing items with the "*" glyph, which just adds a
+            bonus to depth for the item generation. The "|" item glyph uses
+            this quality level (but with a different distribution of item
+            classes, see above).
           * "acquire" requests the use of the acquirement code itself,
             ensuring that the player gets wearable armour, etc. You can
             also use acquire:<god> to request that the acquired item be
@@ -530,11 +538,13 @@ ITEM:     (list of items, separated by comma)
           * "not_cursed" forces an item to have any curse placed on it to be
             removed.
           * "any" by itself gives a random choice; you can combine "any" with
-            "good_item."
+            "good_item". A lone "%" may be used as an alias for "any".
           * "useful" tries to select an item usable by the player, but may
             give an useless one if it has trouble finding one
           * "star_item" by itself makes an item equivalent to the "*" glyph.
+            A lone "*" may be used as an alias for "star_item".
           * "superb_item" by itself makes an item equivalent to the "|" glyph.
+            A lone "|" may be used as an alias for "superb_item".
           * "any book", "any misc" etc. gives a random item of that class.
             Valid item class names are: gold, weapon, missile, armour, wand,
             food, scroll, jewellery, potion, book, magical staff, orb, misc,
@@ -609,7 +619,7 @@ ITEM:     (list of items, separated by comma)
              KITEM: e = griffon corpse / griffon skeleton
 
           you'd use:
-             : dgn.delayed_decay(_G, 'e', 'griffon corpse / griffon skeleton')
+             : dgn.delayed_decay(_G, "e","griffon corpse / griffon skeleton")
 
           (Note the leading ":" - this is a Lua call).
 
@@ -623,7 +633,7 @@ ITEM:     (list of items, separated by comma)
 
           If you need to put additional non-corpse, non-chunk items at
           the same location, use delayed_decay_extra:
-             : dgn.delayed_decay_extra(_G, 'e', 'human corpse', 'mace, shield')
+             : dgn.delayed_decay_extra(_G, "e", "human corpse", "mace, shield")
 
           IMPORTANT: the delayed_decay line should always come after any
           shuffles or substitutions of the relevant glyphs. This is because
@@ -723,7 +733,7 @@ MONS:     (list of monsters)
               MONS: rat tile:mons_giant_bat
 
           In tiles version, this would create a monster that uses the
-          'mons_giant_bat' tile, but is otherwise identical to a rat.
+          "mons_giant_bat" tile, but is otherwise identical to a rat.
           Obviously, this substitution of one monster onto another should
           never be used, but it can be useful for customised vault monsters
           if an alternate tile exists. In ASCII mode, this will do nothing.
@@ -822,7 +832,7 @@ MONS:     (list of monsters)
 
           The name tag is also useable in KMONS. It should be used carefully
           to avoid having multiple monsters named the same (ie, as above,
-          and then using the glyph '1' multiple times will result in multiple
+          and then using the glyph "1" multiple times will result in multiple
           "Durwent the Kobold"s).
 
           There are three different modifiers that by used on a name:
@@ -946,7 +956,7 @@ MONS:     (list of monsters)
           (a list of spell slots, consisting of a spell name with
           spaces replaced with underscores, a frequency of casting and
           set of spell slot flags specified afterwards with .,
-          with slots separated by ';' with no spaces around the ';' or
+          with slots separated by ";" with no spaces around the ";" or
           after the spells: prefix)
 
           Spell names must exactly match the names in spl-data.h, with
@@ -1070,9 +1080,9 @@ COLOUR:   . = green / blue:5 / red / none
           }}
 
           and then in your map definition, you can use "checkerboard" as a
-          valid colour name. In the colour definition function, 'rand' is a
+          valid colour name. In the colour definition function, "rand" is a
           random number between 0 and 119 (chosen randomly each time this
-          function is called), and 'x' and 'y' are the coordinates of the tile
+          function is called), and "x" and "y" are the coordinates of the tile
           that this is supposed to be colouring.
 
           Even more so than base colours, elemental colours should be used
@@ -1204,7 +1214,7 @@ NSUBST:   ? = 3:w / *:l
           also for / and numbers), it is safer to spell out the N:
           preceding the replacement symbols.
 
-CLEAR:    Clear is a special kind of SUBST that only swaps glyphs to ' ',
+CLEAR:    Clear is a special kind of SUBST that only swaps glyphs to " ",
           i.e. a blank space. This makes the resulting areas not part of
           the map, so they won't overwrite the underlying level. The
           syntax is simply:
@@ -1224,7 +1234,7 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
 
           KFEAT: G : C / needle trap / antique armour shop
 
-          You'll notice that 'G' is the symbol of a granite statue. Kxxx
+          You'll notice that "G" is the symbol of a granite statue. Kxxx
           directives allow you to assign arbitrary definitions to any symbol.
 
           KFEAT features are specified as a feature name (see feature-data.h
@@ -1233,9 +1243,9 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
 
           KFEAT: A = enter_abyss
 
-          If you want no feature as an option in a KFEAT line, use '.' or
-          'floor'. If you do not want to specify the type of shop, use 'any
-          shop' or 'random shop'. If you wish to specify more complex options
+          If you want no feature as an option in a KFEAT line, use "." or
+          "floor". If you do not want to specify the type of shop, use "any
+          shop" or "random shop". If you wish to specify more complex options
           for shops, see the section on shop definitions at the end of this
           document.
 
@@ -1526,7 +1536,7 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
 
           The use of an equal sign to pick a different subvault per-glyph,
           e.g. "X = some_vault_tag" is not supported at this time. Use
-          a ':' instead to fix the choice of vault tag among all glyphs.
+          a ":" instead to fix the choice of vault tag among all glyphs.
 
           When a subvault is applied, the first step is finding the smallest
           bounding box around the glyphs. For example, in the following vault
@@ -1561,7 +1571,7 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
           untouched so that the parent vault can replace them with whatever
           feature it desires. These untouched glyphs can occur either because
           the subvault was smaller than the bounding box or because the
-          subvault left the glyph blank (' '). Because of this, a SUBVAULT
+          subvault left the glyph blank (" "). Because of this, a SUBVAULT
           command should usually be followed by a SUBST command to clean up
           these remaining glyphs.
 
@@ -1603,12 +1613,12 @@ SUBVAULT: X : some_vault_tag / some_other_vault_tag:20
               This is a convenience function that replaces the current
               subvault map with one that is the exact size of the bounding
               box. For any valid square that the parent map will replace with
-              the subvault, it will place a '.' in the map. For any invalid
+              the subvault, it will place a "." in the map. For any invalid
               square that will not be replaced by the subvault, it will place
-              a ' ' in the map. If not a subvault, it does nothing.
+              a " " in the map. If not a subvault, it does nothing.
 
               The advantage of this is that a vault author can then use nsubst
-              on the '.' feature to ensure that a fixed number of objects will
+              on the "." feature to ensure that a fixed number of objects will
               be created in the parent vault.
 
               NOTE: This function will also entirely clear the current map, so

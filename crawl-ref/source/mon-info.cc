@@ -1657,19 +1657,19 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
         item_def* ring   = inv[MSLOT_JEWELLERY].get();
 
         if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
-            ret += artefact_wpn_property(*weapon, ra_prop);
+            ret += artefact_property(*weapon, ra_prop);
 
         if (second && second->base_type == OBJ_WEAPONS && is_artefact(*second))
-            ret += artefact_wpn_property(*second, ra_prop);
+            ret += artefact_property(*second, ra_prop);
 
         if (armour && armour->base_type == OBJ_ARMOUR && is_artefact(*armour))
-            ret += artefact_wpn_property(*armour, ra_prop);
+            ret += artefact_property(*armour, ra_prop);
 
         if (shield && shield->base_type == OBJ_ARMOUR && is_artefact(*shield))
-            ret += artefact_wpn_property(*shield, ra_prop);
+            ret += artefact_property(*shield, ra_prop);
 
         if (ring && ring->base_type == OBJ_JEWELLERY && is_artefact(*ring))
-            ret += artefact_wpn_property(*ring, ra_prop);
+            ret += artefact_property(*ring, ra_prop);
     }
 
     return ret;

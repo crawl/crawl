@@ -773,7 +773,7 @@ static void _sdump_skills(dump_params &par)
 // Return string of the i-th spell type, with slash if required
 //
 //---------------------------------------------------------------
-static string spell_type_shortname(int spell_class, bool slash)
+static string spell_type_shortname(spschool_flag_type spell_class, bool slash)
 {
     string ret;
 
@@ -851,9 +851,10 @@ static void _sdump_spells(dump_params &par)
 
                 for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
                 {
-                    if (spell_typematch(spell, 1 << i))
+                    auto bit = static_cast<spschool_flag_type>(1 << i);
+                    if (spell_typematch(spell, bit))
                     {
-                        spell_line += spell_type_shortname(1 << i, already);
+                        spell_line += spell_type_shortname(bit, already);
                         already = true;
                     }
                 }

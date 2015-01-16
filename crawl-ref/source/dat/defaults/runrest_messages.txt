@@ -40,13 +40,6 @@ stop += flesh start
 ignore += Your skin is crawling a little less now.
 ignore += of your corpse armour falls away.
 
-# Ghouls
-#
-: if you.race() == "Ghoul" then
-stop += smell.*(rott(ing|en)|decay)
-stop += something tasty in your inventory
-: end
-
 ignore += pray:
 ignore += talk:
 ignore += talk_visual:

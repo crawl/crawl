@@ -937,28 +937,17 @@ const char* deck_rarity_name(deck_rarity_type rarity)
     }
 }
 
-static const char* misc_type_name(int type, bool known)
+static string misc_type_name(int type, bool known)
 {
-    if (!known)
+    if (is_deck_type(type, true))
     {
-        if (type >= MISC_FIRST_DECK && type <= MISC_LAST_DECK)
+        if (!known)
             return "deck of cards";
+        return deck_name(type);
     }
 
     switch (static_cast<misc_item_type>(type))
     {
-    case MISC_DECK_OF_ESCAPE:      return "deck of escape";
-    case MISC_DECK_OF_DESTRUCTION: return "deck of destruction";
-#if TAG_MAJOR_VERSION == 34
-    case MISC_DECK_OF_DUNGEONS:    return "deck of dungeons";
-#endif
-    case MISC_DECK_OF_SUMMONING:   return "deck of summonings";
-    case MISC_DECK_OF_WONDERS:     return "deck of wonders";
-    case MISC_DECK_OF_PUNISHMENT:  return "deck of punishment";
-    case MISC_DECK_OF_WAR:         return "deck of war";
-    case MISC_DECK_OF_CHANGES:     return "deck of changes";
-    case MISC_DECK_OF_DEFENCE:     return "deck of defence";
-
     case MISC_CRYSTAL_BALL_OF_ENERGY:    return "crystal ball of energy";
     case MISC_BOX_OF_BEASTS:             return "box of beasts";
 #if TAG_MAJOR_VERSION == 34
@@ -2011,11 +2000,8 @@ bool item_type_known(const item_def& item)
     if (item.base_type == OBJ_MISSILES)
         return true;
 
-    if (item.base_type == OBJ_MISCELLANY
-        && (item.sub_type < MISC_FIRST_DECK || item.sub_type > MISC_LAST_DECK))
-    {
+    if (item.base_type == OBJ_MISCELLANY && !is_deck(item))
         return true;
-    }
 
     if (item.is_type(OBJ_BOOKS, BOOK_DESTRUCTION))
         return true;
@@ -2527,11 +2513,8 @@ void check_item_knowledge(bool unknown_items)
                 }
 
                 // stupid fake decks
-                if (is_deck(*ptmp)
-                    || ptmp->is_type(OBJ_MISCELLANY, NUM_MISCELLANY))
-                {
+                if (is_deck(*ptmp, true))
                     ptmp->deck_rarity = DECK_RARITY_COMMON;
-                }
 
                 items_other.push_back(ptmp);
 

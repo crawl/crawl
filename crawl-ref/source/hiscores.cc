@@ -697,6 +697,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     auxkilldata       = se.auxkilldata;
     indirectkiller    = se.indirectkiller;
     killerpath        = se.killerpath;
+    last_banisher     = se.last_banisher;
     dlvl              = se.dlvl;
     absdepth          = se.absdepth;
     branch            = se.branch;
@@ -914,6 +915,7 @@ void scorefile_entry::init_with_fields()
     if (indirectkiller.empty())
         indirectkiller = death_source_name;
     killerpath        = fields->str_field("kpath");
+    last_banisher     = fields->str_field("banisher");
 
     branch     = str_to_branch(fields->str_field("br"), BRANCH_DUNGEON);
     dlvl       = fields->int_field("lvl");
@@ -1007,6 +1009,9 @@ void scorefile_entry::set_base_xlog_fields() const
 
     fields->add_field("place", "%s",
                       level_id(branch, dlvl).describe().c_str());
+
+    if (!last_banisher.empty())
+        fields->add_field("banisher", "%s", last_banisher.c_str());
 
     // Note: "br", "lvl" (and former "ltyp") are redundant with "place"
     // but may still be used by DGL logs.
@@ -1355,6 +1360,7 @@ void scorefile_entry::reset()
     auxkilldata.clear();
     indirectkiller.clear();
     killerpath.clear();
+    last_banisher.clear();
     dlvl                 = 0;
     absdepth             = 1;
     branch               = BRANCH_DUNGEON;
@@ -1588,6 +1594,8 @@ void scorefile_entry::init(time_t dt)
     dlvl       = you.depth;
 
     absdepth   = env.absdepth0 + 1;  // 1-based absolute depth.
+
+    last_banisher = you.banished_by;
 
     if (const vault_placement *vp = dgn_vault_at(you.pos()))
     {

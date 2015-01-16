@@ -3,6 +3,7 @@
 
 #include "enum.h"
 #include "player.h"
+#include "spl-util.h"
 
 bool is_holy_item(const item_def& item);
 bool is_potentially_unholy_item(const item_def& item);
@@ -29,5 +30,6 @@ bool god_hates_item(const item_def &item);
 // NOTE: As of now, these two functions only say if a god won't give a
 // spell/school when giving a gift.
 bool god_dislikes_spell_type(spell_type spell, god_type god = you.religion);
-bool god_dislikes_spell_discipline(int discipline, god_type god = you.religion);
+bool god_dislikes_spell_discipline(spschools_type discipline,
+                                   god_type god = you.religion);
 #endif

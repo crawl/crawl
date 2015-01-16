@@ -2793,26 +2793,18 @@ static bool _is_option_autopickup(const item_def &item)
         return false;
 
 #ifdef CLUA_BINDINGS
-    bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
-                                        &item, iname.c_str());
+    maybe_bool res = clua.callmaybefn("ch_force_autopickup", "is",
+                                      &item, iname.c_str());
     if (!clua.error.empty())
     {
         mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s",
              clua.error.c_str());
     }
 
-    if (res)
+    if (res == MB_TRUE)
         return true;
 
-    res = clua.callbooleanfn(false, "ch_deny_autopickup", "is",
-                             &item, iname.c_str());
-    if (!clua.error.empty())
-    {
-        mprf(MSGCH_ERROR, "ch_deny_autopickup failed: %s",
-             clua.error.c_str());
-    }
-
-    if (res)
+    if (res == MB_FALSE)
         return false;
 #endif
 
@@ -3448,42 +3440,13 @@ colour_t item_def::armour_colour() const
     if (is_artefact(*this))
         return randart_colour();
 
+    if (armour_type_is_hide(sub_type, true))
+        return mons_class_colour(monster_for_hide((armour_type)sub_type));
+
+
     // TODO: move (some of?) this into itemprop.cc
     switch (sub_type)
     {
-        case ARM_FIRE_DRAGON_HIDE:
-        case ARM_FIRE_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_FIRE_DRAGON);
-        case ARM_TROLL_HIDE:
-        case ARM_TROLL_LEATHER_ARMOUR:
-            return mons_class_colour(MONS_TROLL);
-        case ARM_ICE_DRAGON_HIDE:
-        case ARM_ICE_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_ICE_DRAGON);
-        case ARM_STEAM_DRAGON_HIDE:
-        case ARM_STEAM_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_STEAM_DRAGON);
-        case ARM_MOTTLED_DRAGON_HIDE:
-        case ARM_MOTTLED_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_MOTTLED_DRAGON);
-        case ARM_STORM_DRAGON_HIDE:
-        case ARM_STORM_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_STORM_DRAGON);
-        case ARM_GOLD_DRAGON_HIDE:
-        case ARM_GOLD_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_GOLDEN_DRAGON);
-        case ARM_SWAMP_DRAGON_HIDE:
-        case ARM_SWAMP_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_SWAMP_DRAGON);
-        case ARM_PEARL_DRAGON_HIDE:
-        case ARM_PEARL_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_PEARL_DRAGON);
-        case ARM_SHADOW_DRAGON_HIDE:
-        case ARM_SHADOW_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_SHADOW_DRAGON);
-        case ARM_QUICKSILVER_DRAGON_HIDE:
-        case ARM_QUICKSILVER_DRAGON_ARMOUR:
-            return mons_class_colour(MONS_QUICKSILVER_DRAGON);
         case ARM_CLOAK:
             return WHITE;
         case ARM_NAGA_BARDING:
@@ -3839,7 +3802,7 @@ colour_t item_def::miscellany_colour() const
 {
     ASSERT(base_type == OBJ_MISCELLANY);
 
-    if (is_deck(*this) || sub_type == MISC_DECK_UNKNOWN)
+    if (is_deck(*this, true))
         return deck_rarity_to_colour(deck_rarity);
 
     if (item_is_rune(*this))
@@ -4150,7 +4113,8 @@ static void _rune_from_specs(const char* _specs, item_def &item)
     }
 }
 
-static void _deck_from_specs(const char* _specs, item_def &item)
+static void _deck_from_specs(const char* _specs, item_def &item,
+                             bool create_for_real)
 {
     string specs    = _specs;
     string type_str = "";
@@ -4170,28 +4134,15 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         trim_string(type_str);
     }
 
-    misc_item_type types[] =
-    {
-        MISC_DECK_OF_ESCAPE,
-        MISC_DECK_OF_DESTRUCTION,
-        MISC_DECK_OF_SUMMONING,
-        MISC_DECK_OF_WONDERS,
-        MISC_DECK_OF_PUNISHMENT,
-        MISC_DECK_OF_WAR,
-        MISC_DECK_OF_CHANGES,
-        MISC_DECK_OF_DEFENCE,
-        MISC_DECK_UNKNOWN,
-    };
-
-    item.special  = DECK_RARITY_COMMON;
-    item.sub_type = MISC_DECK_UNKNOWN;
+    item.deck_rarity = DECK_RARITY_COMMON;
+    item.sub_type    = MISC_DECK_UNKNOWN;
 
     if (!type_str.empty())
     {
-        for (int i = 0; types[i] != MISC_DECK_UNKNOWN; ++i)
+        for (auto type : deck_types)
         {
-            item.sub_type = types[i];
-            item.plus     = 1;
+            item.sub_type = type;
+            item.initial_cards = 1;
             init_deck(item);
             // Remove "plain " from front.
             string name = item.name(DESC_PLAIN).substr(6);
@@ -4202,32 +4153,45 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         }
     }
 
-    if (item.sub_type == MISC_DECK_UNKNOWN)
+    if (item.sub_type == MISC_DECK_UNKNOWN && !create_for_real)
     {
-        while (true)
+        // bail
+        item.base_type = OBJ_UNASSIGNED;
+        return;
+    }
+
+    while (item.sub_type == MISC_DECK_UNKNOWN)
+    {
+        mprf(MSGCH_PROMPT,
+             "[a] escape     [b] destruction [c] summoning [d] wonders");
+        mprf(MSGCH_PROMPT,
+             "[e] war         [f] changes  [g] defence");
+        mpr("Which deck (ESC to exit)? ");
+
+        const int keyin = toalower(get_ch());
+
+        if (key_is_escape(keyin) || keyin == ' '
+            || keyin == '\r' || keyin == '\n')
         {
-            mprf(MSGCH_PROMPT,
-"[a] escape     [b] destruction [c] summoning [d] wonders");
-            mprf(MSGCH_PROMPT,
-"[e] punishment [f] war         [g] changes  [h] defence");
-            mpr("Which deck (ESC to exit)? ");
-
-            const int keyin = toalower(get_ch());
-
-            if (key_is_escape(keyin) || keyin == ' '
-                || keyin == '\r' || keyin == '\n')
-            {
-                canned_msg(MSG_OK);
-                item.base_type = OBJ_UNASSIGNED;
-                return;
-            }
-
-            if (keyin < 'a' || keyin > 'h')
-                continue;
-
-            item.sub_type = types[keyin - 'a'];
-            break;
+            canned_msg(MSG_OK);
+            item.base_type = OBJ_UNASSIGNED;
+            return;
         }
+
+        static const map<char, misc_item_type> deckmap =
+        {
+            { 'a', MISC_DECK_OF_ESCAPE },
+            { 'b', MISC_DECK_OF_DESTRUCTION },
+            { 'c', MISC_DECK_OF_SUMMONING },
+            { 'd', MISC_DECK_OF_WONDERS },
+            { 'e', MISC_DECK_OF_WAR },
+            { 'f', MISC_DECK_OF_CHANGES },
+            { 'g', MISC_DECK_OF_DEFENCE }
+        };
+
+        const misc_item_type *deck_type = map_find(deckmap, keyin);
+        if (deck_type)
+            item.sub_type = *deck_type;
     }
 
     const char* rarities[] =
@@ -4246,6 +4210,9 @@ static void _deck_from_specs(const char* _specs, item_def &item)
             rarity_val = i;
             break;
         }
+
+    if (rarity_val == -1 && !create_for_real)
+        rarity_val = 0;
 
     if (rarity_val == -1)
     {
@@ -4282,26 +4249,29 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         static_cast<deck_rarity_type>(DECK_RARITY_COMMON + rarity_val);
     item.special = rarity;
 
-    int num = prompt_for_int("How many cards? ", false);
+    const int num_cards =
+        create_for_real ? prompt_for_int("How many cards? ", false)
+                        : 1;
 
-    if (num <= 0)
+    if (num_cards <= 0)
     {
         canned_msg(MSG_OK);
         item.base_type = OBJ_UNASSIGNED;
         return;
     }
 
-    item.plus = num;
+    item.initial_cards = num_cards;
 
     init_deck(item);
 }
 
-static void _rune_or_deck_from_specs(const char* specs, item_def &item)
+static void _rune_or_deck_from_specs(const char* specs, item_def &item,
+                                     bool create_for_real)
 {
     if (strstr(specs, "rune"))
         _rune_from_specs(specs, item);
     else if (strstr(specs, "deck") || strstr(specs, "card"))
-        _deck_from_specs(specs, item);
+        _deck_from_specs(specs, item, create_for_real);
 }
 
 static bool _book_from_spell(const char* specs, item_def &item)
@@ -4344,7 +4314,7 @@ bool get_item_by_name(item_def *item, const char* specs,
     if (class_wanted == OBJ_MISCELLANY)
     {
         // Leaves object unmodified if it wasn't a rune or deck.
-        _rune_or_deck_from_specs(specs, *item);
+        _rune_or_deck_from_specs(specs, *item, create_for_real);
 
         if (item->base_type == OBJ_UNASSIGNED)
         {

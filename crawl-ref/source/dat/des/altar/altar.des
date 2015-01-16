@@ -156,7 +156,6 @@ ENDMAP
 NAME:  lemuel_tele_altar
 TAGS:  transparent decor
 DEPTH: D:2-, Vaults
-WEIGHT: 5
 SUBST: Y = X x
 KFEAT: X = known teleport trap
 KMASK: _C = opaque

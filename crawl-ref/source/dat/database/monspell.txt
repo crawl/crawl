@@ -648,7 +648,7 @@ giant eyeball cast
 %%%%
 unseen giant eyeball cast targeted
 
-You feel you are being watched by something. @player_only@
+You feel something staring at you. @player_only@
 %%%%
 guardian serpent cast targeted
 

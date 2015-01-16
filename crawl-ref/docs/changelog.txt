@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-3445-g167ea73)
+Stone Soup 0.16 (up to 0.16-a0-3649-ge23cfc4)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -78,6 +78,8 @@ Monsters
   - Silver statues -> obsidian statues.
   - Green rats -> river rats.
   - Orange rats -> hell rats.
+  - Yellow wasps -> wasps.
+  - Red wasps -> hornets.
   - Mermaids -> sirens.
   - Sirens -> merfolk avatars.
 * Ghost crabs have been moved from Crypt to Swamp.
@@ -152,6 +154,7 @@ Items
     regeneration.
 * Regeneration has been moved from rings to amulets.
 * Corrosion resistance can now occur on artefact armour.
+* Artefact generation has been generally reworked.
 * Scale mail now only has 10 ER, down from 11.
 * Unrand changes:
   - The Ring of Vitality is now the Amulet of Vitality.
@@ -270,8 +273,6 @@ Gods
 * All gods now treat followers' kills the same as the player's, for purposes of
   piety gain.
 * Makhleb and Okawaru no longer support corpse sacrifice.
-* Ashenzari's clear vision perk now also grants immunity to the negative
-  effects of blurry vision mutations.
 * Dithmenos now specifically hates fire; Corona and related effects are now
   permitted to Dithmenos's worshippers.
 * Nemelex Xobeh:

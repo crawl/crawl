@@ -382,7 +382,6 @@ string attack::anon_pronoun(pronoun_type pron)
 void attack::init_attack(skill_type unarmed_skill, int attack_number)
 {
     weapon          = attacker->weapon(attack_number);
-    damage_brand    = attacker->damage_brand(attack_number);
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
     if (attacker->is_player() && you.form_uses_xl())
@@ -399,7 +398,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
     if (weapon && weapon->base_type == OBJ_WEAPONS && is_artefact(*weapon))
     {
-        artefact_wpn_properties(*weapon, art_props);
+        artefact_properties(*weapon, art_props);
         if (is_unrandom_artefact(*weapon))
             unrand_entry = get_unrand_entry(weapon->special);
     }
@@ -557,7 +556,7 @@ bool attack::distortion_affects_defender()
             // the player goes to Abyss, while the weapon object is
             // still in memory.
             if (is_artefact(*weapon))
-                artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
+                artefact_learn_prop(*weapon, ARTP_BRAND);
             else
                 set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
         }
@@ -1600,7 +1599,7 @@ bool attack::apply_damage_brand(const char *what)
     if (using_weapon())
     {
         if (is_artefact(*weapon))
-            brand_was_known = artefact_known_wpn_property(*weapon, ARTP_BRAND);
+            brand_was_known = artefact_known_property(*weapon, ARTP_BRAND);
         else
             brand_was_known = item_type_known(*weapon);
     }
@@ -1878,7 +1877,7 @@ bool attack::apply_damage_brand(const char *what)
     if (obvious_effect && attacker_visible && using_weapon())
     {
         if (is_artefact(*weapon))
-            artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
+            artefact_learn_prop(*weapon, ARTP_BRAND);
         else
             set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
     }

@@ -207,7 +207,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         // Make a randart or unrandart.
 
         // 1 in 20 randarts are unrandarts.
-        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 20)
+        if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type))
@@ -218,17 +218,22 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (item.sub_type == WPN_CLUB)
             return false;
 
-        // The rest are normal randarts.
-        make_item_randart(item);
         // Mean enchantment +6.
         item.plus = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
 
+        bool cursed = false;
         if (one_chance_in(5))
         {
-            do_curse_item(item);
+            cursed = true;
             item.plus = 3 - random2(6);
         }
         else if (item.plus < 0 && !one_chance_in(3))
+            cursed = true;
+
+        // The rest are normal randarts.
+        make_item_randart(item);
+
+        if (cursed)
             do_curse_item(item);
 
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
@@ -246,7 +251,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
  */
 static int _num_brand_tries(const item_def& item, int item_level)
 {
-    if (item_level >= MAKE_GIFT_ITEM)
+    if (item_level >= ISPEC_GIFT)
         return 5;
     if (is_demonic(item) || x_chance_in_y(101 + item_level, 300))
         return 1;
@@ -400,7 +405,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
                 return;
             }
         // fall back to an ordinary item
-        item_level = MAKE_GOOD_ITEM;
+        item_level = ISPEC_GOOD_ITEM;
     }
 
     // If we make the unique roll, no further generation necessary.
@@ -413,7 +418,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     ASSERT(!is_artefact(item));
 
     // Artefacts handled, let's make a normal item.
-    const bool force_good = item_level >= MAKE_GIFT_ITEM;
+    const bool force_good = item_level >= ISPEC_GIFT;
     const bool forced_ego = item.special > 0;
     const bool no_brand   = item.special == SPWPN_FORBID_BRAND;
 
@@ -493,7 +498,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (item.special != 0)
         return static_cast<special_missile_type>(item.special);
 
-    const bool force_good = item_level >= MAKE_GIFT_ITEM;
+    const bool force_good = item_level >= ISPEC_GIFT;
     special_missile_type rc = SPMSL_NORMAL;
 
     // "Normal weight" of SPMSL_NORMAL.
@@ -745,7 +750,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         // Make a randart or unrandart.
 
         // 1 in 20 randarts are unrandarts.
-        if (one_chance_in(item_level == MAKE_GOOD_ITEM ? 7 : 20)
+        if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
             && !force_randart)
         {
             if (_try_make_item_unrand(item, force_type))
@@ -762,10 +767,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         }
         else
             hide2armour(item); // No randart hides.
-
-        // Needs to be done after the barding chance else we get randart
-        // bardings named Boots of xy.
-        make_item_randart(item);
 
         // Determine enchantment and cursedness.
         if (one_chance_in(5))
@@ -787,6 +788,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             if (item.plus < 0 && !one_chance_in(3))
                 do_curse_item(item);
         }
+
+        // Needs to be done after the barding chance else we get randart
+        // bardings named Boots of xy.
+        make_item_randart(item);
 
         // Don't let quicksilver dragon armour get minuses.
         if (item.sub_type == ARM_QUICKSILVER_DRAGON_ARMOUR)
@@ -1158,7 +1163,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             }
         }
         // fall back to an ordinary item
-        item_level = MAKE_GOOD_ITEM;
+        item_level = ISPEC_GOOD_ITEM;
     }
 
     if (allow_uniques
@@ -1175,7 +1180,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             item.sub_type = ARM_CENTAUR_BARDING;
     }
 
-    const bool force_good = item_level >= MAKE_GIFT_ITEM;
+    const bool force_good = item_level >= ISPEC_GIFT;
     const bool forced_ego = (item.special > 0);
     const bool no_ego     = (item.special == SPARM_FORBID_EGO);
 
@@ -1606,7 +1611,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
     // Copied unrand code from _try_make_weapon_artefact since randart enhancer staves
     // can't happen.
     if (allow_uniques
-        && one_chance_in(item_level == MAKE_GOOD_ITEM ? 27 : 100))
+        && one_chance_in(item_level == ISPEC_GOOD_ITEM ? 27 : 100))
     {
         // Temporarily fix the base_type to get enhancer staves
         item.base_type = OBJ_WEAPONS;
@@ -1771,27 +1776,20 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
+    else if (one_chance_in(3))
+        item.sub_type = random_deck_type();
     else
     {
-        do
-        {
-            item.sub_type = random2(NUM_MISCELLANY);
-        }
-        while
-            // never randomly generated
-            (item.sub_type == MISC_RUNE_OF_ZOT
-             || item.sub_type == MISC_HORN_OF_GERYON
-             || item.sub_type == MISC_DECK_OF_PUNISHMENT
-             || item.sub_type == MISC_QUAD_DAMAGE
-#if TAG_MAJOR_VERSION == 34
-             || item.sub_type == MISC_BUGGY_EBONY_CASKET
-             || item.sub_type == MISC_BOTTLED_EFREET
-             || item.sub_type == MISC_DECK_OF_DUNGEONS
-#endif
-             // Nemelex' decks are rare in the dungeon.
-             || ((item.sub_type == MISC_DECK_OF_WAR
-                    || item.sub_type == MISC_DECK_OF_ESCAPE)
-                && !one_chance_in(5)));
+        item.sub_type = random_choose(MISC_FAN_OF_GALES,
+                                      MISC_LAMP_OF_FIRE,
+                                      MISC_STONE_OF_TREMORS,
+                                      MISC_PHIAL_OF_FLOODS,
+                                      MISC_DISC_OF_STORMS,
+                                      MISC_BOX_OF_BEASTS,
+                                      MISC_SACK_OF_SPIDERS,
+                                      MISC_CRYSTAL_BALL_OF_ENERGY,
+                                      MISC_LANTERN_OF_SHADOWS,
+                                      MISC_PHANTOM_MIRROR);
     }
 
     // set initial charges
@@ -1804,7 +1802,8 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 
     if (is_deck(item))
     {
-        item.initial_cards = 4 + random2(10);
+        item.initial_cards = random_range(MIN_STARTING_CARDS,
+                                          MAX_STARTING_CARDS);
 
         if (force_ego >= DECK_RARITY_COMMON
             && force_ego <= DECK_RARITY_LEGENDARY)
@@ -1870,9 +1869,7 @@ int items(bool allow_uniques,
            || force_class == OBJ_WEAPONS
            || force_class == OBJ_ARMOUR
            || force_class == OBJ_MISSILES
-           || force_class == OBJ_MISCELLANY
-              && force_type >= MISC_FIRST_DECK
-              && force_type <= MISC_LAST_DECK);
+           || force_class == OBJ_MISCELLANY && is_deck_type(force_type));
 
     // Find an empty slot for the item (with culling if required).
     int p = get_mitm_slot(10);
@@ -1881,7 +1878,7 @@ int items(bool allow_uniques,
 
     item_def& item(mitm[p]);
 
-    const bool force_good = item_level >= MAKE_GIFT_ITEM;
+    const bool force_good = item_level >= ISPEC_GIFT;
 
     if (force_ego != 0)
         allow_uniques = false;
@@ -2085,7 +2082,7 @@ static int _roll_rod_enchant(int item_level)
     if (one_chance_in(4))
         value -= random_range(1, 3);
 
-    if (item_level >= MAKE_GIFT_ITEM)
+    if (item_level >= ISPEC_GIFT)
         value += 2;
 
     int pr = 20 + item_level * 2;
@@ -2163,15 +2160,15 @@ jewellery_type get_random_amulet_type()
     int res;
     do
     {
-        res = (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+        res = random_range(AMU_FIRST_AMULET, NUM_JEWELLERY - 1);
     }
     // Do not generate cFly or Cons
     while (res == AMU_CONTROLLED_FLIGHT || res == AMU_CONSERVATION);
 
     return jewellery_type(res);
 #else
-    return static_cast<jewellery_type>(AMU_FIRST_AMULET
-           + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+    return static_cast<jewellery_type>(random_range(AMU_FIRST_AMULET,
+                                                    NUM_JEWELLERY - 1));
 #endif
 }
 
@@ -2244,7 +2241,7 @@ static int _test_item_level()
     switch (random2(10))
     {
     case 0:
-        return MAKE_GOOD_ITEM;
+        return ISPEC_GOOD_ITEM;
     case 1:
         return ISPEC_DAMAGED;
     case 2:

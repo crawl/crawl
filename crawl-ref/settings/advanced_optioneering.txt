@@ -23,6 +23,9 @@ end
 # already have an item equipped there.
 {
 add_autopickup_func(function(it, name)
+  if it.is_useless then
+    return
+  end
   if it.class(true) == "armour" then
     local good_slots = {cloak="Cloak", helmet="Helmet", gloves="Gloves",
                         boots="Boots"}
@@ -31,7 +34,6 @@ add_autopickup_func(function(it, name)
       return true
     end
   end
-  return false
 end)
 }
 

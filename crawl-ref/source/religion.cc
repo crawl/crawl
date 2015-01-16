@@ -3278,6 +3278,19 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_GOZAG && you.gold < gozag_service_fee())
         return false;
 
+    if (player_mutation_level(MUT_NO_LOVE) && (which_god == GOD_BEOGH
+                                           ||  which_god == GOD_JIYVA
+                                           ||  which_god == GOD_ELYVILON))
+    {
+        return false;
+    }
+
+    if (player_mutation_level(MUT_NO_ARTIFICE)
+            && which_god == GOD_NEMELEX_XOBEH)
+    {
+      return false;
+    }
+
     return _transformed_player_can_join_god(which_god);
 }
 
@@ -3693,6 +3706,18 @@ void god_pitch(god_type which_god)
                      " have %d.", fee, you.gold);
             }
         }
+        else if (which_god == GOD_BEOGH || which_god == GOD_ELYVILON
+                                   || which_god == GOD_JIYVA)
+        {
+            simple_god_message(" does not accept worship from the loveless!",
+                               which_god);
+        }
+        else if (player_mutation_level(MUT_NO_ARTIFICE)
+                          && which_god == GOD_NEMELEX_XOBEH)
+        {
+            simple_god_message(" does not accept worship for those who cannot "
+                              "deal a hand of cards!", which_god);
+        }
         else if (!_transformed_player_can_join_god(which_god))
         {
             simple_god_message(" says: How dare you come in such a loathsome"
@@ -3905,7 +3930,7 @@ bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
     if (god == GOD_TROG && !rod_spell)
         return true;
 
-    unsigned int disciplines = get_spell_disciplines(spell);
+    spschools_type disciplines = get_spell_disciplines(spell);
 
     switch (god)
     {

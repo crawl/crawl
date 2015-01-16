@@ -160,7 +160,7 @@ spschool_flag_type school_by_name(string name)
 
     for (int i = 0; i <= SPTYP_RANDOM; i++)
     {
-        spschool_flag_type type = (spschool_flag_type) (1 << i);
+        auto type = static_cast<spschool_flag_type>(1 << i);
 
         string short_name = spelltype_short_name(type);
         string long_name  = spelltype_long_name(type);
@@ -435,9 +435,9 @@ const char *get_spell_target_prompt(spell_type which_spell)
     return _seekspell(which_spell)->target_prompt;
 }
 
-bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
+bool spell_typematch(spell_type which_spell, spschool_flag_type which_disc)
 {
-    return get_spell_disciplines(which_spell) & which_discipline;
+    return bool(get_spell_disciplines(which_spell) & which_disc);
 }
 
 //jmf: next two for simple bit handling
@@ -446,12 +446,12 @@ spschools_type get_spell_disciplines(spell_type spell)
     return _seekspell(spell)->disciplines;
 }
 
-int count_bits(unsigned int bits)
+int count_bits(uint64_t bits)
 {
-    unsigned int n;
+    uint64_t n;
     int c = 0;
 
-    for (n = 1; n < INT_MAX; n <<= 1)
+    for (n = 1; n; n <<= 1)
         if (n & bits)
             c++;
 
@@ -736,7 +736,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
     return true;
 }
 
-const char* spelltype_short_name(int which_spelltype)
+const char* spelltype_short_name(spschool_flag_type which_spelltype)
 {
     switch (which_spelltype)
     {
@@ -773,7 +773,7 @@ const char* spelltype_short_name(int which_spelltype)
     }
 }
 
-const char* spelltype_long_name(int which_spelltype)
+const char* spelltype_long_name(spschool_flag_type which_spelltype)
 {
     switch (which_spelltype)
     {
@@ -810,7 +810,7 @@ const char* spelltype_long_name(int which_spelltype)
     }
 }
 
-skill_type spell_type2skill(unsigned int spelltype)
+skill_type spell_type2skill(spschool_flag_type spelltype)
 {
     switch (spelltype)
     {
@@ -1244,6 +1244,11 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
+    case SPELL_STATUE_FORM:
+        if (SP_GARGOYLE == you.species)
+            return "You're already functionally a statue.";
+        // fallthrough to other forms
+
     case SPELL_STONESKIN:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
@@ -1251,7 +1256,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_HYDRA_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
-    case SPELL_STATUE_FORM:
         if (you.undead_state(temp) == US_UNDEAD
             || you.undead_state(temp) == US_HUNGRY_DEAD)
         {
@@ -1558,7 +1562,7 @@ static const mutation_type arcana_sacrifice_map[] = {
  * @param schools   A bitfield containing a union of spschool_flag_types.
  * @return          Whether the player is unable use any of the given schools.
  */
-bool cannot_use_schools(unsigned int schools)
+bool cannot_use_schools(spschools_type schools)
 {
     COMPILE_CHECK(ARRAYSZ(arcana_sacrifice_map) == SPTYP_LAST_EXPONENT + 1);
 
@@ -1566,7 +1570,7 @@ bool cannot_use_schools(unsigned int schools)
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
         // skip schools not in the provided set
-        const int school = 1<<i;
+        const auto school = static_cast<spschool_flag_type>(1 << i);
         if (!(schools & school))
             continue;
 
@@ -1589,8 +1593,8 @@ bool cannot_use_schools(unsigned int schools)
  */
 skill_type arcane_mutation_to_skill(mutation_type mutation)
 {
-    for (int sptyp_exp = 0; sptyp_exp <= SPTYP_LAST_EXPONENT; sptyp_exp++)
-        if (arcana_sacrifice_map[sptyp_exp] == mutation)
-            return spell_type2skill(1 << sptyp_exp);
+    for (int exp = 0; exp <= SPTYP_LAST_EXPONENT; exp++)
+        if (arcana_sacrifice_map[exp] == mutation)
+            return spell_type2skill(static_cast<spschool_flag_type>(1 << exp));
     return SK_NONE;
 }

@@ -1362,7 +1362,7 @@ void player_reacts()
                 save_game(false);
         }
         else if (you.form == TRAN_WISP && !you.stasis())
-            random_blink(false);
+            uncontrolled_blink();
     }
 
     actor_apply_cloud(&you);

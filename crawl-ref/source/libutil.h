@@ -181,6 +181,18 @@ static inline bool testbits(uint64_t flags, uint64_t test)
     return (flags & test) == test;
 }
 
+template<class E>
+static inline bool testbits(enum_bitfield<E> flags, enum_bitfield<E> test)
+{
+    return (flags & test) == test;
+}
+
+template<class E>
+static inline bool testbits(enum_bitfield<E> flags, E test)
+{
+    return (flags & test) == test;
+}
+
 coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 

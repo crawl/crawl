@@ -847,11 +847,11 @@ static int _spell_weight(spell_type spell)
     ASSERT(spell != SPELL_NO_SPELL);
 
     int weight = 0;
-    unsigned int disciplines = get_spell_disciplines(spell);
+    spschools_type disciplines = get_spell_disciplines(spell);
     int count = 0;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
-        int disc = 1 << i;
+        auto disc = static_cast<spschool_flag_type>(1 << i);
         if (disciplines & disc)
         {
             int skill = you.skills[spell_type2skill(disc)];
@@ -1169,7 +1169,7 @@ int acquirement_create_item(object_class_type class_wanted,
                          || agent == GOD_TROG);
     int thing_created = NON_ITEM;
     int quant = 1;
-#define ITEM_LEVEL (divine ? MAKE_GIFT_ITEM : MAKE_GOOD_ITEM)
+#define ITEM_LEVEL (divine ? ISPEC_GIFT : ISPEC_GOOD_ITEM)
 #define MAX_ACQ_TRIES 40
     for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
     {
@@ -1311,7 +1311,7 @@ int acquirement_create_item(object_class_type class_wanted,
             && is_artefact(acq_item))
         {
             artefact_properties_t  proprt;
-            artefact_wpn_properties(acq_item, proprt);
+            artefact_properties(acq_item, proprt);
 
             // Check vs. stats. positive stats will automatically fall
             // through.  As will negative stats that won't kill you.

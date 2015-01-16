@@ -111,7 +111,7 @@ static void _labyrinth_place_items(const coord_def &end)
 
         const int treasure_item =
             items(true, glopop, OBJ_RANDOM,
-                  one_chance_in(3) ? env.absdepth0 * 3 : MAKE_GOOD_ITEM);
+                  one_chance_in(3) ? env.absdepth0 * 3 : ISPEC_GOOD_ITEM);
 
         if (treasure_item != NON_ITEM)
             mitm[treasure_item].pos = end;

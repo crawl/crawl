@@ -717,7 +717,7 @@ bool dgn_square_travel_ok(const coord_def &c)
     if (feat_is_trap(feat))
     {
         const trap_def * const trap = find_trap(c);
-        return !(trap && trap->type == TRAP_TELEPORT);
+        return !(trap && trap->type == TRAP_TELEPORT_PERMANENT);
     }
     else
         return feat_is_traversable(feat);
@@ -4569,12 +4569,12 @@ int dgn_place_item(const item_spec &spec,
         case ISPEC_RANDART:
             level = spec.level;
             break;
-        case ISPEC_GOOD:
+        case ISPEC_STAR:
             level = 5 + level * 2;
             break;
         case ISPEC_SUPERB:
             adjust_type = true;
-            level = MAKE_GOOD_ITEM;
+            level = ISPEC_GOOD_ITEM;
             break;
         case ISPEC_ACQUIREMENT:
             adjust_type = true;
@@ -4715,11 +4715,11 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             // and maybe even handle ISPEC_ACQUIREMENT.
             switch (spec.level)
             {
-            case ISPEC_GOOD:
+            case ISPEC_STAR:
                 item_level = 5 + item_level * 2;
                 break;
             case ISPEC_SUPERB:
-                item_level = MAKE_GOOD_ITEM;
+                item_level = ISPEC_GOOD_ITEM;
                 break;
             case ISPEC_DAMAGED:
             case ISPEC_BAD:
@@ -5158,7 +5158,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         else if (vgrid == '|')
         {
             which_class = _superb_object_class();
-            which_depth = MAKE_GOOD_ITEM;
+            which_depth = ISPEC_GOOD_ITEM;
         }
         else if (vgrid == '*')
             which_depth = 5 + which_depth * 2;
@@ -5779,7 +5779,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
             // make an item randomly
             // gozag shop items are better
             const bool good_item = spec.gozag || one_chance_in(4);
-            const int level = good_item ? MAKE_GOOD_ITEM : item_level;
+            const int level = good_item ? ISPEC_GOOD_ITEM : item_level;
             item_index = items(true, basetype, subtype, level);
         }
 

@@ -732,7 +732,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mpr("You can only abyss_teleport() inside the Abyss.");
         break;
 
-    case 'b': blink(1000, true, true); break;
+    case 'b': wizard_blink(); break;
     case 'B': you.teleport(true, true); break;
     case CONTROL('B'):
         if (!player_in_branch(BRANCH_ABYSS))
@@ -1473,7 +1473,7 @@ static void _input()
 #ifdef USE_TILE_LOCAL
         cursor_control con(false);
 #endif
-        const command_type cmd = _get_next_cmd();
+        const command_type cmd = you.turn_is_over ? CMD_NO_CMD : _get_next_cmd();
 
         if (crawl_state.seen_hups)
             save_game(true, "Game saved, see you later!");
@@ -2306,8 +2306,8 @@ static void _check_banished()
 {
     if (you.banished)
     {
-        ASSERT(brdepth[BRANCH_ABYSS] != -1);
         you.banished = false;
+        ASSERT(brdepth[BRANCH_ABYSS] != -1);
         if (!player_in_branch(BRANCH_ABYSS))
             mprf(MSGCH_BANISHMENT, "You are cast into the Abyss!");
         else if (you.depth < brdepth[BRANCH_ABYSS])
@@ -2316,7 +2316,6 @@ static void _check_banished()
             mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
         more();
         banished(you.banished_by);
-        you.banished_by.clear();
     }
 }
 
@@ -3290,7 +3289,7 @@ static void _move_player(coord_def move)
             attacking = true;
         }
     }
-    else if (you.form == TRAN_FUNGUS && moving)
+    else if (you.form == TRAN_FUNGUS && moving && !you.confused())
     {
         if (you.made_nervous_by(targ))
         {

@@ -54,6 +54,12 @@ string trimmed_string(string s);
  * whose name, as given by namefunc(e), has the earliest occurrence of the
  * substring spec.
  *
+ * @tparam Enum     An integer-like or C-style enum type no larger than
+ *                  size_t. More specifically, Enum must be implicitly
+ *                  convertible to size_t, and must be explicitly convertible
+ *                  from size_t with static_cast. There should be no gaps
+ *                  in enumerator values between begin and end.
+ *
  * @param spec      The substring to search for.
  * @param begin     The beginning of the enumerator range to search in.
  * @param end       One past the end of the enum range to search in.

@@ -79,6 +79,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     cleaving(is_cleaving)
 {
     attack_occurred = false;
+    damage_brand = attacker->damage_brand(attack_number);
     init_attack(SK_UNARMED_COMBAT, attack_number);
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
@@ -620,10 +621,8 @@ static void _hydra_devour(monster &victim)
     if (filling)
     {
         const int equiv_chunks =
-            1+random2(get_max_corpse_chunks(victim.type));
-        // XXX: consider capping nutrition at random2(CHUNK_BASE_NUTRITION)
-        // short of the next hunger level?
-        lessen_hunger(CHUNK_BASE_NUTRITION * equiv_chunks, false);
+            1 + random2(get_max_corpse_chunks(victim.type));
+        lessen_hunger(CHUNK_BASE_NUTRITION * equiv_chunks, false, max_hunger);
     }
 
     // healing
@@ -893,7 +892,7 @@ bool melee_attack::attack()
     if (attacker->is_player()
         && weapon
         && is_artefact(*weapon)
-        && artefact_wpn_property(*weapon, ARTP_NOISES))
+        && artefact_property(*weapon, ARTP_NOISES))
     {
         noisy_equipment();
     }
@@ -925,7 +924,7 @@ void melee_attack::check_autoberserk()
             if (!is_artefact(*item))
                 continue;
 
-            if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
+            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
             {
                 attacker->go_berserk(false);
                 return;
@@ -944,7 +943,7 @@ void melee_attack::check_autoberserk()
             if (!is_artefact(*item))
                 continue;
 
-            if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
+            if (x_chance_in_y(artefact_property(*item, ARTP_ANGRY), 100))
             {
                 attacker->go_berserk(false);
                 return;
@@ -1626,10 +1625,13 @@ void melee_attack::set_attack_verb()
             }
             else
             {
-                const char* pierce_desc[][2] = {{"spit", "like a pig"},
-                                                {"skewer", "like a kebab"},
-                                                {"stick", "like a pincushion"},
-                                                {"perforate", "like a sieve"}};
+                static const char * const pierce_desc[][2] =
+                {
+                    {"spit", "like a pig"},
+                    {"skewer", "like a kebab"},
+                    {"stick", "like a pincushion"},
+                    {"perforate", "like a sieve"}
+                };
                 const int choice = random2(ARRAYSZ(pierce_desc));
                 attack_verb = pierce_desc[choice][0];
                 verb_degree = pierce_desc[choice][1];
@@ -1657,19 +1659,27 @@ void melee_attack::set_attack_verb()
             attack_verb = "carve";
             verb_degree = "like the proverbial ham";
         }
+        else if (defender_genus == MONS_TENGU && one_chance_in(3))
+        {
+            attack_verb = "carve";
+            verb_degree = "like a turkey";
+        }
         else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
                  && Options.lang == LANG_GRUNT)
             attack_verb = "shave";
         else
         {
-            const char* pierce_desc[][2] = {{"open",    "like a pillowcase"},
-                                            {"slice",   "like a ripe choko"},
-                                            {"cut",     "into ribbons"},
-                                            {"carve",   "like a ham"},
-                                            {"chop",    "into pieces"}};
-            const int choice = random2(ARRAYSZ(pierce_desc));
-            attack_verb = pierce_desc[choice][0];
-            verb_degree = pierce_desc[choice][1];
+            static const char * const slice_desc[][2] =
+            {
+                {"open",    "like a pillowcase"},
+                {"slice",   "like a ripe choko"},
+                {"cut",     "into ribbons"},
+                {"carve",   "like a ham"},
+                {"chop",    "into pieces"}
+            };
+            const int choice = random2(ARRAYSZ(slice_desc));
+            attack_verb = slice_desc[choice][0];
+            verb_degree = slice_desc[choice][1];
         }
         break;
 
@@ -1690,14 +1700,17 @@ void melee_attack::set_attack_verb()
         }
         else
         {
-            const char* pierce_desc[][2] = {{"crush",   "like a grape"},
-                                            {"beat",    "like a drum"},
-                                            {"hammer",  "like a gong"},
-                                            {"pound",   "like an anvil"},
-                                            {"flatten", "like a pancake"}};
-            const int choice = random2(ARRAYSZ(pierce_desc));
-            attack_verb = pierce_desc[choice][0];
-            verb_degree = pierce_desc[choice][1];
+            static const char * const bludgeon_desc[][2] =
+            {
+                {"crush",   "like a grape"},
+                {"beat",    "like a drum"},
+                {"hammer",  "like a gong"},
+                {"pound",   "like an anvil"},
+                {"flatten", "like a pancake"}
+            };
+            const int choice = random2(ARRAYSZ(bludgeon_desc));
+            attack_verb = bludgeon_desc[choice][0];
+            verb_degree = bludgeon_desc[choice][1];
         }
         break;
 
@@ -1777,11 +1790,13 @@ void melee_attack::set_attack_verb()
             }
             else
             {
-                const char* punch_desc[][2] =
-                {{"pound",     "into fine dust"},
+                static const char * const punch_desc[][2] =
+                {
+                    {"pound",     "into fine dust"},
                     {"pummel",    "like a punching bag"},
                     {"pulverise", ""},
-                    {"squash",    "like an ant"}};
+                    {"squash",    "like an ant"}
+                };
                 const int choice = random2(ARRAYSZ(punch_desc));
                 // XXX: could this distinction work better?
                 if (choice == 0

@@ -528,13 +528,15 @@ private:
 
 enum item_spec_type
 {
-    ISPEC_GOOD    = -2,
+    ISPEC_STAR    = -2,
     ISPEC_SUPERB  = -3,
     ISPEC_DAMAGED = -4,
     ISPEC_BAD     = -5,
     ISPEC_RANDART = -6,
     ISPEC_MUNDANE = -7,
     ISPEC_ACQUIREMENT = -9,
+    ISPEC_GIFT    = 350, // worse than the next one
+    ISPEC_GOOD_ITEM = 351,
 };
 
 class mons_spec;

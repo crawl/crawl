@@ -240,6 +240,9 @@ enum misc_item_type
 #endif
     MISC_DECK_OF_SUMMONING,
     MISC_DECK_OF_WONDERS,
+#if TAG_MAJOR_VERSION > 34
+    MISC_DECK_OF_ODDITIES,
+#endif
     MISC_DECK_OF_PUNISHMENT,
 
     // mixed decks
@@ -255,11 +258,36 @@ enum misc_item_type
     MISC_SACK_OF_SPIDERS,
 
     MISC_PHANTOM_MIRROR,
+#if TAG_MAJOR_VERSION == 34
+    MISC_DECK_OF_ODDITIES,
+#endif
 
     NUM_MISCELLANY,
     MISC_DECK_UNKNOWN = NUM_MISCELLANY,
-    MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
-    MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,
+};
+
+// in no particular order (but we need *a* fixed order for dbg-scan)
+const vector<misc_item_type> deck_types =
+{
+    MISC_DECK_OF_ESCAPE, MISC_DECK_OF_DESTRUCTION, MISC_DECK_OF_SUMMONING,
+    MISC_DECK_OF_WONDERS, MISC_DECK_OF_ODDITIES, MISC_DECK_OF_PUNISHMENT,
+    MISC_DECK_OF_WAR, MISC_DECK_OF_CHANGES, MISC_DECK_OF_DEFENCE,
+#if TAG_MAJOR_VERSION == 34
+    MISC_DECK_OF_DUNGEONS,
+#endif
+};
+
+// in no particular order (but we need *a* fixed order for dbg-scan)
+const vector<misc_item_type> misc_types =
+{
+    MISC_FAN_OF_GALES, MISC_LAMP_OF_FIRE, MISC_STONE_OF_TREMORS,
+    MISC_LANTERN_OF_SHADOWS, MISC_HORN_OF_GERYON, MISC_BOX_OF_BEASTS,
+    MISC_CRYSTAL_BALL_OF_ENERGY, MISC_DISC_OF_STORMS, MISC_PHIAL_OF_FLOODS,
+    MISC_RUNE_OF_ZOT, MISC_QUAD_DAMAGE, MISC_SACK_OF_SPIDERS,
+    MISC_PHANTOM_MIRROR,
+#if TAG_MAJOR_VERSION == 34
+    MISC_BOTTLED_EFREET, MISC_BUGGY_EBONY_CASKET,
+#endif
 };
 
 enum missile_type
