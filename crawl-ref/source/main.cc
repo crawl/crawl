@@ -3289,7 +3289,7 @@ static void _move_player(coord_def move)
             attacking = true;
         }
     }
-    else if (you.form == TRAN_FUNGUS && moving)
+    else if (you.form == TRAN_FUNGUS && moving && !you.confused())
     {
         if (you.made_nervous_by(targ))
         {
