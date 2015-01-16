@@ -3,9 +3,7 @@
 import os
 import errno
 import sys
-import re
 import random
-import collections
 
 import tornado.httpserver
 import tornado.ioloop
@@ -13,25 +11,15 @@ import tornado.web
 import tornado.template
 
 import logging
-import logging.handlers
+from logging.handlers import RotatingFileHandler
 
-from conf import config
+from conf import config, ConfigError
 import util
 from ws_handler import *
 from game_data_handler import GameDataHandler
 from janitor_handler import JanitorHandler
 import process_handler
 import userdb
-
-
-title_imgs = []
-title_regex = re.compile(r"^title_.*\.png$")
-def scan_titles():
-    title_imgs = []
-    for f in os.listdir(config.static_path):
-        if title_regex.match(f):
-            title_imgs.append(f)
-    return title_imgs
 
 
 def maybe_minified(module):
@@ -43,9 +31,8 @@ def maybe_minified(module):
     else:
         logging.warning("use_minified is True, but couldn't find {0}. Falling "
                         "back to non-minified javascript".format(path))
-        config['use_minified'] = False
+        config.use_minified = False
         return "/static/" + module
-
 
 class MainHandler(tornado.web.RequestHandler):
     def __init__(self, application, request, action):
@@ -53,11 +40,11 @@ class MainHandler(tornado.web.RequestHandler):
         self.action = action
 
     def get(self, arg=None):
-        self.render("client.html", title_img=random.choice(title_imgs),
-                    username=None, config=config, action=self.action,
+        self.render("client.html",
+                    title_img=random.choice(config.title_images),
+                    username=None, action=self.action,
                     maybe_minified=maybe_minified,
                     use_cdn=config.get("use_cdn", True))
-
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
@@ -65,11 +52,9 @@ class NoCacheHandler(tornado.web.StaticFileHandler):
         self.set_header("Pragma", "no-cache")
         self.set_header("Expires", "0")
 
-
 def err_exit(errmsg):
     logging.error(errmsg)
-    sys.exit(errmsg)
-
+    sys.exit()
 
 def daemonize():
     try:
@@ -92,7 +77,6 @@ def daemonize():
         os.dup2(f.fileno(), sys.stdin.fileno())
         os.dup2(f.fileno(), sys.stdout.fileno())
         os.dup2(f.fileno(), sys.stderr.fileno())
-
 
 def write_pidfile():
     pidfile = config.get("pidfile")
@@ -123,7 +107,6 @@ def write_pidfile():
         f.write(str(os.getpid()))
     os.chown(pidfile, uid, gid)
 
-
 def remove_pidfile():
     pidfile = config.get("pidfile")
     if not pidfile:
@@ -138,13 +121,11 @@ def remove_pidfile():
     except:
         logging.error("Failed to delete pidfile!")
 
-
 def shed_privileges():
     if config.get("gid") is not None:
         os.setgid(config.get("gid"))
     if config.get("uid") is not None:
         os.setuid(config.get("uid"))
-
 
 def signal_handler(signum, frame):
     logging.info("Received signal {0}, shutting down.".format(signum))
@@ -152,29 +133,23 @@ def signal_handler(signum, frame):
     if len(sockets) == 0:
         ioloop.stop()
 
-
 def usr1_handler(signum, frame):
     logging.info("Received USR1, reloading config.")
     try:
+        config.read()
         config.load()
-        config.load_games()
-    except ValueError:
-        logging.error("Error in config file", exc_info=True)
-    global title_imgs
-    title_imgs = scan_titles()
-
+    except ConfigError as e:
+        err_exit(e.msg)
 
 def usr2_handler(signum, frame):
     logging.info("Received USR2, reloading player title data.")
     config.load_player_titles()
-
 
 def purge_login_tokens_timeout():
     userdb.purge_login_tokens()
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.add_timeout(time.time() + 60 * 60 * 24,
                        purge_login_tokens_timeout)
-
 
 def bind_server():
     class ForbiddenHandler(tornado.web.RequestHandler):
@@ -226,111 +201,82 @@ def bind_server():
 
     return servers
 
+def make_dgl_status_file():
+    dgl_file = config.get('dgl_status_file')
+    if not dgl_file or os.path.isfile(dgl_file):
+        return
 
-def check_config():
-    success = True
-    for game in config.get("games"):
-        logging.debug("Checking crawl binary {0}".format(game["crawl_binary"]))
-        if not os.path.exists(game["crawl_binary"]):
-            logging.error("Crawl executable {0} doesn't "
-                          "exist!".format(game["crawl_binary"]))
-            success = False
+    try:
+        f = open(dgl_file, 'w')
+        f.close()
+    except EnvironmentError as e:
+        err_exit("dgl_status_file ({0}) doesn't exist and couldn't create "
+                 "({1})".format(dgl_file, e.strerror))
+    else:
+        logging.info("Created dgl_status_file "
+                     "({0})".format(dgl_file))
 
-        if ("client_path" in game and not os.path.exists(game["client_path"])):
-            logging.error("Client data path %s doesn't "
-                          "exist!", game["client_path"])
-            success = False
 
-        if type(game.get("options", [])) is not list:
-            logging.error("The options field should be a list!")
-            success = False
-        if type(game.get("pre_options", [])) is not list:
-            logging.error("The pre_options field should be a list!")
-            success = False
+def init_logging():
+    try:
+        config.check_logging()
+    except ConfigError as e:
+        err_exit(e.msg)
 
-    if not os.path.isdir(config.static_path):
-        logging.error("static_path doesn't exist on the filesystem "
-                      "({0}).".format(config.static_path))
-        success = False
-    if os.path.isdir(config.static_path) and not scan_titles():
-        logging.error("No title images (title_*.png) found in static_path "
-                      "({0}).".format(config.static_path))
-        success = False
+    log_conf = config.logging_config
+    if log_conf.get("filename"):
+        log_handler = RotatingFileHandler(log_conf["filename"],
+                                          maxBytes=log_conf["max_bytes"],
+                                          backupCount=log_conf["backup_count"])
+    else:
+        log_handler = logging.StreamHandler(None)
+    log_handler.setFormatter(logging.Formatter(log_conf["format"],
+                                               log_conf.get("datefmt")))
+    logging.getLogger().addHandler(log_handler)
+    if log_conf.get("level") is not None:
+        logging.getLogger().setLevel(log_conf["level"])
+    logging.getLogger().addFilter(util.TornadoFilter())
+    logging.addLevelName(logging.DEBUG, "DEBG")
+    logging.addLevelName(logging.WARNING, "WARN")
 
-    if config.get('dgl_status_file') \
-       and not os.path.isfile(config.dgl_status_file):
-        try:
-            f = open(config.dgl_status_file, 'w')
-            f.close()
-        except EnvironmentError as e:
-            logging.error("dgl_status_file ({0}) doesn't exist and couldn't "
-                          "create ({1})".format(config.dgl_status_file,
-                                                e.strerror))
-            success = False
-        else:
-            logging.warning("Created dgl_status_file "
-                            "({0})".format(config.dgl_status_file))
-
-    if not os.path.isfile(config.get('password_db')):
-        if os.path.isdir(os.path.dirname(config.password_db)):
-            logging.warning("password_db doesn't exist ({0}), "
-                            "will create it".format(config.password_db))
-        else:
-            logging.error("Can't create password_db, parent directory doesn't "
-                          "exist ({0})".format(config.password_db))
-            success = False
-
-    init_prog = config.get('init_player_program')
-    if init_prog and not os.access(config.init_player_program, os.X_OK):
-        logging.error("init_player_program ({0}) is not "
-                      "executable".format(init_prog))
-        success = False
-
-    janitor_commands = config.get('janitor_commands')
-    if janitor_commands:
-        # This is pretty gnarly
-        janitor_id_counts = collections.Counter(
-            cmd['id'] for cmd in janitor_commands
-            )
-        for dup_id in [i for i in janitor_id_counts.iteritems() if i[1] > 1]:
-            logging.error("Duplicate janitor command id '%s'" % dup_id)
-            success = False
-
-        if config.get('devs_are_server_janitors') and \
-                config.get('dev_nicks_can_be_registered'):
-            logging.error("devs_are_server_janitors is true but "
-                          "dev_nicks_can_be_registered is not false. "
-                          "I can't let you do that Dave.")
-            success = False
-
-    return success
+    if not log_conf.get("enable_access_log"):
+        logging.getLogger("tornado.access").setLevel(logging.FATAL)
+    if os.environ.get("WEBTILES_DEBUG"):
+        logging.getLogger().setLevel(logging.DEBUG)
 
 
 if __name__ == "__main__":
+    init_logging()
+
     if config.get("chroot"):
         os.chroot(config.chroot)
 
-    if not check_config():
-        err_exit("Errors in config. Exiting.")
+    make_dgl_status_file()
 
     if config.get("daemon"):
         daemonize()
-
-    signal.signal(signal.SIGTERM, signal_handler)
-    signal.signal(signal.SIGHUP, signal_handler)
-    signal.signal(signal.SIGUSR1, usr1_handler)
-    signal.signal(signal.SIGUSR2, usr2_handler)
 
     if config.get("umask") is not None:
         os.umask(config.umask)
 
     write_pidfile()
-
     servers = bind_server()
-
     shed_privileges()
 
-    title_imgs = scan_titles()
+    try:
+        config.load()
+    except ConfigError as e:
+        err_exit(e.msg)
+
+    if config.get("locale"):
+        locale.setlocale(locale.LC_ALL, config.locale)
+    else:
+        locale.setlocale(locale.LC_ALL, '')
+
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGHUP, signal_handler)
+    signal.signal(signal.SIGUSR1, usr1_handler)
+    signal.signal(signal.SIGUSR2, usr2_handler)
 
     userdb.ensure_user_db_exists()
 

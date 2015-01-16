@@ -1,9 +1,10 @@
-import re
 import logging
+import os.path
+import re
+import time
+
 import tornado.template
 import tornado.ioloop
-import os.path
-import time
 
 class TornadoFilter(logging.Filter):
     def filter(self, record):
