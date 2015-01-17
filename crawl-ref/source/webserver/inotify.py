@@ -1,5 +1,6 @@
 import struct
 import ctypes
+import ctypes.util
 import os, os.path
 import errno
 import sys
