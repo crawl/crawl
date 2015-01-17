@@ -269,7 +269,6 @@ static int l_item_do_class(lua_State *ls)
 
 IDEFN(class, do_class)
 
-// XXX: I really doubt most of this function needs to exist
 static int l_item_do_subtype(lua_State *ls)
 {
     UDATA_ITEM(item);
@@ -281,41 +280,13 @@ static int l_item_do_subtype(lua_State *ls)
     }
 
     const char *s = nullptr;
+
+    // Special-case OBJ_ARMOUR behavior to maintain compatibility with
+    // existing scripts.
     if (item->base_type == OBJ_ARMOUR)
         s = item_slot_name(get_armour_slot(*item));
-    if (item->base_type == OBJ_BOOKS)
-    {
-        if (item->sub_type == BOOK_MANUAL)
-            s = "manual";
-        else
-            s = "spellbook";
-    }
     else if (item_type_known(*item))
-    {
-        if (item->base_type == OBJ_JEWELLERY)
-            s = jewellery_effect_name(item->sub_type);
-        else if (item->base_type == OBJ_POTIONS)
-        {
-            if (item->sub_type == POT_BLOOD)
-                s = "blood";
-#if TAG_MAJOR_VERSION == 34
-            else if (item->sub_type == POT_BLOOD_COAGULATED)
-                s = "coagulated blood";
-            else if (item->sub_type == POT_PORRIDGE)
-                s = "porridge";
-            else if (item->sub_type == POT_GAIN_STRENGTH
-                        || item->sub_type == POT_GAIN_DEXTERITY
-                        || item->sub_type == POT_GAIN_INTELLIGENCE)
-            {
-                s = "gain ability";
-            }
-#endif
-            else if (item->sub_type == POT_BERSERK_RAGE)
-                s = "berserk";
-            else if (item->sub_type == POT_CURE_MUTATION)
-                s = "cure mutation";
-        }
-    }
+        s = sub_type_string(*item).c_str();
 
     if (s)
         lua_pushstring(ls, s);
