@@ -895,14 +895,14 @@ static void _get_randart_properties(const item_def &item,
             continue;
 
         // don't choose the same prop twice
-        const int old_len = art_prop_weights.size();
         const pair<artefact_prop_type, int> weight_tuple
             = { prop, artp_data[prop].weight };
-        art_prop_weights.erase(std::remove(art_prop_weights.begin(),
-                                           art_prop_weights.end(),
-                                           weight_tuple),
-                               art_prop_weights.end());
-        ASSERT(old_len == art_prop_weights.size() + 1);
+        const auto old_end = art_prop_weights.end();
+        const auto new_end = std::remove(art_prop_weights.begin(), old_end,
+                                         weight_tuple);
+        // That should have removed exactly one entry.
+        ASSERT(new_end == old_end - 1);
+        art_prop_weights.erase(new_end, old_end);
     }
 }
 
