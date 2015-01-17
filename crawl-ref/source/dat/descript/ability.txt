@@ -1,4 +1,4 @@
-
+﻿
 %%%%
 No ability ability
 
@@ -117,6 +117,10 @@ Shaft Self ability
 
 Sends you to a random position one to three floors down, as if you jumped into
 a shaft trap. It takes some time to dig the shaft.
+%%%%
+Cornered Berserk ability
+
+Your inner beast allows you to enter a berserk rage when you're greatly wounded.
 %%%%
 Evoke Teleportation ability
 

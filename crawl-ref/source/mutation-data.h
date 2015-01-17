@@ -903,6 +903,16 @@ static const mutation_def mut_data[] =
    "hind claws",
 },
 
+{ MUT_HIND_CLAWS,					0, 1, MUTFLAG_GOOD, true,
+	"cornered berserk",
+
+	{"You can berserk when greatly wounded.", "", ""},
+	{"You can now berserk when greatly wounded.", "", ""},
+	{"You can no longer berserk when greatly wounded.","",""},
+
+	"cornered berserk",
+},
+
 // Naga only
 { MUT_BREATHE_POISON,                 4,  1, MUTFLAG_GOOD, false,
   "breathe poison",

@@ -3414,6 +3414,7 @@ void level_change(bool skip_attribute_increase)
 					perma_mutate(MUT_HIND_CLAWS, 1, "bearkin transformation");
 				else perma_mutate(MUT_FANGS, 1, "bearkin transformation");
 				}
+
 				// TODO: turn large at XL14, remember to allow GSCs.
 				// Give low hp berserk ability at XL1.
 				break;
