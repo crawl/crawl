@@ -947,6 +947,10 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         target = &you;
     }
 
+    // Stepped from time?
+    if (!in_bounds(target->pos()))
+        return;
+
     if ((mons->type == MONS_MUMMY || mons->type == MONS_MENKAURE)
         && target->is_player())
     {
