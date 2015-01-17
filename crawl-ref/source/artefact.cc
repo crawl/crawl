@@ -870,7 +870,8 @@ static void _get_randart_properties(const item_def &item,
     {
         const artefact_prop_type *prop_ptr
             = random_choose_weighted(art_prop_weights);
-        ASSERT(prop_ptr);
+        ASSERTM(prop_ptr, "all %d randart properties have weight 0?",
+                (int) art_prop_weights.size());
         const artefact_prop_type prop = *prop_ptr;
 
         if (!_artp_can_go_on_item(prop, item, item_props))
