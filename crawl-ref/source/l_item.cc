@@ -641,6 +641,30 @@ IDEF(spells)
     return 1;
 }
 
+IDEF(artprops)
+{
+    if (!item || !item->defined() || !is_artefact(*item)
+        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES))
+    {
+        return 0;
+    }
+
+    lua_newtable(ls);
+
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    {
+        int value = artefact_property(*item, (artefact_prop_type)i);
+        if (value)
+        {
+            lua_pushstring(ls, artp_name((artefact_prop_type)i));
+            lua_pushnumber(ls, value);
+            lua_settable(ls, -3);
+        }
+    }
+
+    return 1;
+}
+
 IDEF(damage)
 {
     if (!item || !item->defined())
@@ -1173,6 +1197,7 @@ static ItemAccessor item_attrs[] =
     { "is_bad_food",       l_item_is_bad_food },
     { "is_useless",        l_item_is_useless },
     { "spells",            l_item_spells },
+    { "artprops",          l_item_artprops },
     { "damage",            l_item_damage },
     { "accuracy",          l_item_accuracy },
     { "delay",             l_item_delay },
