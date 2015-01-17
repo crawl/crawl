@@ -27,7 +27,7 @@ ae += [^n]identified.*spellbook
 
 : add_autopickup_func(function (it, name)
 :         if you.god() == "Trog" then
-:             if it.subtype() == "spellbook" then
+:             if it.class(true) == "book" and not it.name():find("manual") then
 :                 return true
 :             end
 :         end
