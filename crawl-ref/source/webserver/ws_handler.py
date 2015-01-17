@@ -295,7 +295,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = False
         self.send_message("ping")
         self.timeout = self.ioloop.add_timeout(time.time() \
-                                               + config.connection_timeout,
+                                               + config.http_connection_timeout,
                                                self.check_connection)
 
     def check_connection(self):
