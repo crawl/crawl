@@ -844,8 +844,8 @@ static void _get_randart_properties(const item_def &item,
 {
     const object_class_type item_class = item.base_type;
 
-    // number of good properties to assign -- avg 2.1, min 1.
-    int good = max(1, binomial(6, 35));
+    // number of good properties to assign -- avg 2.4, min 1.
+    int good = max(1, binomial(6, 40));
 
     // number of bad properties to assign. Chance increases w/ number of good
     // properties. Average is .18 bad per good, up to 1.08 for 6 good.
