@@ -884,6 +884,25 @@ static const mutation_def mut_data[] =
    "a tentacle spike",
 },
 
+// Bearkin only
+{ MUT_HIND_CLAWS,                   0,  3, MUTFLAG_GOOD, true,
+    "hind claws",
+
+  {"Your hind legs have claws.",
+   "Your hind legs have sharp claws.",
+   "Your hind legs have very sharp claws."},
+
+  {"Your hind legs grow claws.",
+   "Your hind claws sharpen and grow.",
+   "Your hind claws sharpen even further."},
+
+  {"Your hind claws disappear.",
+   "Your hind claws dull and recede somewhat.",
+   "Your hind claws dull slightly."},
+
+   "hind claws",
+},
+
 // Naga only
 { MUT_BREATHE_POISON,                 4,  1, MUTFLAG_GOOD, false,
   "breathe poison",

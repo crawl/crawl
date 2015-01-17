@@ -3388,6 +3388,29 @@ void level_change(bool skip_attribute_increase)
                     perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
                 break;
 
+			case SP_BEARKIN:
+				if (!(you.experience_level % 5) && !skip_attribute_increase)
+				{
+				   modify_stat((coinflip() ? STAT_STR
+										   : STAT_INT), 1, false,
+								"level gain");
+				}
+				if (!(you.experience_level % 4) && !skip_attribute_increase)
+					modify_stat(STAT_STR, 1, false, "bearkin transformation");
+
+				if (you.experience_level == 6)
+					perma_mutate(MUT_SHAGGY_FUR, 1, "bearkin transformation");
+
+				if (you.experience_level == 12)
+					perma_mutate(MUT_SHAGGY_FUR, 1, "bearkin transformation");
+
+				if (you.experience_level % 9)
+					perma_mutate(MUT_ROBUST, 1, "bearkin transformation");
+
+				// todo: how do i random fangs/claws/hind claws? turning large? using gscs?
+				break;
+
+
             default:
                 break;
             }

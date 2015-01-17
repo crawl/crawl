@@ -995,6 +995,9 @@ public:
         // Max spike damage: 8.
         // ... yes, apparently tentacle spikes are "kicks".
         return player_mutation_level(MUT_TENTACLE_SPIKE);
+
+		// Max hind claws damage: 10
+		return player_mutation_level(MUT_HIND_CLAWS) * 2 - 1;
     }
 
     string get_verb() const
@@ -1003,6 +1006,8 @@ public:
             return "claw";
         if (player_mutation_level(MUT_TENTACLE_SPIKE))
             return "pierce";
+		if (player_mutation_level(MUT_HIND_CLAWS))
+			return "claw";
         return name;
     }
 
@@ -1010,6 +1015,8 @@ public:
     {
         if (player_mutation_level(MUT_TENTACLE_SPIKE))
             return "tentacle spike";
+        else if (player_mutation_level(MUT_HIND_CLAWS))
+            return "hind claws";
         return name;
     }
 };
@@ -3693,7 +3700,8 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_KICK:
         return you.has_usable_hooves()
                || you.has_usable_talons()
-               || player_mutation_level(MUT_TENTACLE_SPIKE);
+               || player_mutation_level(MUT_TENTACLE_SPIKE)
+			   || player_mutation_level(MUT_HIND_CLAWS);
 
     case UNAT_PECK:
         return player_mutation_level(MUT_BEAK) && !one_chance_in(3);

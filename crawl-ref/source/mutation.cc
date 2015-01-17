@@ -120,6 +120,8 @@ static const int conflict[][3] =
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
+	{ MUT_HIND_CLAWS,		   MUT_TALONS,				  -1},
+	{ MUT_HIND_CLAWS,		   MUT_HOOVES,				  -1},
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,            -1},
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,             -1},
     { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,           -1},

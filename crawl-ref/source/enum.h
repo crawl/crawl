@@ -3567,6 +3567,7 @@ enum mutation_type
 #endif
     MUT_ANTIMAGIC_BITE,
     MUT_NO_DEVICE_HEAL,
+    MUT_HIND_CLAWS,
 #if TAG_MAJOR_VERSION == 34
     MUT_COLD_VULNERABILITY,
     MUT_HEAT_VULNERABILITY,
@@ -3990,7 +3991,8 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
-    LAST_VALID_SPECIES = SP_VINE_STALKER,
+    SP_BEARKIN,
+    LAST_VALID_SPECIES = SP_BEARKIN,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
