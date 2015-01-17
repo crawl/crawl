@@ -7,6 +7,8 @@
 
 #include "lang-fake.h"
 
+#include <unordered_set>
+
 #include "libutil.h"
 #include "options.h"
 #include "random.h"
@@ -461,14 +463,12 @@ static int _token_starting(const string &str, int start)
  */
 static bool _too_boring_to_butt(const string &token)
 {
-    const static string boring_words[] = {
-        "a", "the", "and", "or", "of", "on", "in", "if", "with",
+    static const unordered_set<string> boring_words = {
+        "a", "an", "the", // articles
+        "and", "or", "of", "on", "in", "if", "into", "with", // etc
         // , "but" <- this is actually very funny to replace.
     };
-    for (auto boring_word : boring_words)
-        if (token == boring_word)
-            return true;
-    return false;
+    return boring_words.count(token);
 }
 
 /**
@@ -501,7 +501,7 @@ static void _butt(string &str)
 
         const string token = str.substr(start, end - start);
         // butt sparingly.
-        if (_too_boring_to_butt(lowercase_string(token)) || !one_chance_in(20))
+        if (!one_chance_in(20) || _too_boring_to_butt(lowercase_string(token)))
         {
             start = end; // will increment again, past the token-ending char
             continue;
