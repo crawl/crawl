@@ -1804,6 +1804,8 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
     int rp = 0;
 
+    const int artefact_rp = you.scan_artefacts(ARTP_POISON, calc_unid);
+
     if (items)
     {
         // rings of poison resistance
@@ -1820,8 +1822,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         if (body_armour)
             rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
 
-        // randart weapons:
-        rp += you.scan_artefacts(ARTP_POISON, calc_unid);
+        // rPois+ artefacts
+        if (artefact_rp > 0)
+            rp += artefact_rp;
 
         // dragonskin cloak: 0.5 to draconic resistances
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
@@ -1847,9 +1850,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp++;
     }
 
-    // Give vulnerability for Spider Form, and only let one level of rP to make
-    // up for it (never be poison resistant in Spider Form).
-    rp = (rp > 0 ? 1 : rp);
+    // Cap rPois at + before vulnerability effects are applied
+    // (so carrying multiple rPois effects is never useful)
+    rp = min(1, rp);
 
     if (temp)
     {
@@ -1859,6 +1862,13 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_POISON_VULN])
             rp--;
     }
+
+    // rPois- artefacts
+    if (items && artefact_rp < 0)
+        rp += artefact_rp; // actually subtracts...
+
+    // don't allow rPois--, etc.
+    rp = max(-1, rp);
 
     return rp;
 }
