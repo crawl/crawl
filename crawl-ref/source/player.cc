@@ -3045,10 +3045,7 @@ void level_change(bool skip_attribute_increase)
 
             case SP_DEEP_DWARF:
                 if (you.experience_level == 14)
-                {
-                    mprf(MSGCH_INTRINSIC_GAIN, "You feel somewhat more resistant.");
                     perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "level up");
-                }
 
                 if (you.experience_level == 9
                     || you.experience_level == 18)
