@@ -241,11 +241,10 @@ def init_logging():
 
 
 if __name__ == "__main__":
-    init_logging()
-
     if config.get("chroot"):
         os.chroot(config.chroot)
 
+    init_logging()
     make_dgl_status_file()
 
     if config.get("daemon"):
