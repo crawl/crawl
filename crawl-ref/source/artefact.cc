@@ -855,8 +855,8 @@ static void _get_randart_properties(const item_def &item,
     vector<pair<artefact_prop_type, int>> art_prop_weights;
     for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
-        art_prop_weights.push_back({(artefact_prop_type)i,
-                                     artp_data[i].weight});
+        art_prop_weights.emplace_back(static_cast<artefact_prop_type>(i),
+                                      artp_data[i].weight);
     }
     item_props.init(0);
 
@@ -895,8 +895,7 @@ static void _get_randart_properties(const item_def &item,
             continue;
 
         // don't choose the same prop twice
-        const pair<artefact_prop_type, int> weight_tuple
-            = { prop, artp_data[prop].weight };
+        const auto weight_tuple = make_pair(prop, artp_data[prop].weight);
         const auto old_end = art_prop_weights.end();
         const auto new_end = std::remove(art_prop_weights.begin(), old_end,
                                          weight_tuple);
