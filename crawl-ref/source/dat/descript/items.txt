@@ -458,7 +458,7 @@ deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
 %%%%
-deck of summonings
+deck of summoning
 
 A deck of magical cards, depicting a range of weird and wondrous creatures.
 %%%%
