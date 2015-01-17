@@ -321,7 +321,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_ZOMBIE_OCTOPODE:
-    case TILEP_MONS_NIKOLA:
     case TILEP_MONS_NAGA_RITUALIST:
     case TILEP_MONS_ANUBIS_GUARD:
         *ofs_x = 0;
@@ -492,6 +491,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_FANNAR:
         *ofs_x = -2;
         *ofs_y = -4;
+        break;
+    case TILEP_MONS_NIKOLA:
+        *ofs_x = -4;
+        *ofs_y = -3;
         break;
     case TILEP_MONS_ARACHNE_STAVELESS:
         *ofs_x = -1;
@@ -675,6 +678,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -13;
         break;
     case TILEP_MONS_STARCURSED_MASS:
+    case TILEP_MONS_EXECUTIONER:
         *ofs_x = -4;
         *ofs_y = 4;
         break;
@@ -685,10 +689,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_9:
         *ofs_x = -2;
         *ofs_y = -3;
-        break;
-    case TILEP_MONS_EXECUTIONER:
-        *ofs_x = -4;
-        *ofs_y = 4;
         break;
     case TILEP_MONS_ICE_FIEND:
         *ofs_x = 1;
