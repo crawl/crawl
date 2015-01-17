@@ -1223,10 +1223,10 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             psiweapon_roxanne baconkid_gastronok baconkid_mnoleg \
             peileppe_bloax_eye baconkid_duvessa_dowan
 
-STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
-              webserver/static/stone_soup_icon-32x32.png \
-              $(TITLEIMGS:%=webserver/static/title_%.png) \
-              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
+CLIENT_STATICFILES = webserver/static/stone_soup_icon-32x32.png \
+	           $(TITLEIMGS:%=webserver/static/title_%.png)
+GAME_STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
+	           $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
 
@@ -1234,6 +1234,7 @@ webserver/game_data/static/tileinfo-%.js: $(RLTILES)/tileinfo-%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 CLIENT_JS_FILES = $(filter-out webserver/static/scripts/app.min.js, $(wildcard webserver/static/scripts/*.js webserver/static/scripts/*.jsx))
+
 GAME_JS_FILES = $(filter-out webserver/game_data/static/game.min.js, $(wildcard webserver/game_data/static/*.js webserver/game_data/static/*.jsx))
 
 webserver/static/scripts/app.min.js: $(CLIENT_JS_FILES)
@@ -1241,10 +1242,13 @@ webserver/static/scripts/app.min.js: $(CLIENT_JS_FILES)
 webserver/game_data/static/game.min.js: $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) $(GAME_JS_FILES)
 	$(NODE) util/r.js -o webserver/game_data/static/build.js
 
+
 ifdef NODE
-minify: webserver/static/scripts/app.min.js webserver/game_data/static/game.min.js
+minify-client: webserver/static/scripts/app.min.js
+minify-game: webserver/game_data/static/game.min.js
 else
-minify:
+minify-client: 
+minify-game: 
 endif
 
 # toml game maps
@@ -1254,10 +1258,16 @@ $(GAME_MAP_FILES):
 	$(QUIET_GEN)webserver/game_map.py -q $(dir $@)
 
 clean-webserver:
-	$(RM) $(STATICFILES) webserver/*.pyc $(GAME_MAP_FILES)
+	$(RM) $(CLIENT_STATICFILES) $(GAME_STATICFILES) \
+	webserver/static/scripts/app.min.js \
+	webserver/game_data/static/game.min.js webserver/*.pyc \
+	$(GAME_MAP_FILES)
+
+webserver-client: $(CLIENT_STATICFILES) minify-client $(GAME_MAP_FILES)
+webserver-game: $(GAME_STATICFILES) minify-game
 
 ifdef WEBTILES
-webserver: $(STATICFILES) minify $(GAME_MAP_FILES)
+webserver:  webserver-client webserver-game
 else
 webserver:
 endif
