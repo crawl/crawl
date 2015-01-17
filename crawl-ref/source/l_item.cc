@@ -298,6 +298,37 @@ static int l_item_do_subtype(lua_State *ls)
 
 IDEFN(subtype, do_subtype)
 
+static int l_item_do_ego(lua_State *ls)
+{
+    UDATA_ITEM(item);
+    if (!item)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    bool terse = false;
+    if (lua_isboolean(ls, 1))
+        terse = lua_toboolean(ls, 1);
+
+    const char *s = nullptr;
+
+    if ((item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR
+         || item->base_type == OBJ_MISSILES) && item_ident(*item, ISFLAG_KNOW_TYPE))
+    {
+        s = ego_type_string(*item, terse).c_str();
+    }
+
+    if (s && *s)
+        lua_pushstring(ls, s);
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEFN(ego, do_ego)
+
 IDEF(cursed)
 {
     bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
@@ -1171,6 +1202,7 @@ static ItemAccessor item_attrs[] =
     { "plus2",             l_item_plus2 },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
+    { "ego",               l_item_ego },
     { "cursed",            l_item_cursed },
     { "tried",             l_item_tried },
     { "worn",              l_item_worn },
