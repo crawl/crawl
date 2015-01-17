@@ -2081,7 +2081,7 @@ int fail_severity(spell_type spell)
            (chance < 0.005) ? 1 :
            (chance < 0.025) ? 2
                             : 3;
-    COMPILE_CHECK(ARRAYSZ(fail_severity_adjs) >= 3);
+    COMPILE_CHECK(ARRAYSZ(fail_severity_adjs) > 3);
 }
 
 // Chooses a colour for the failure rate display for a spell. The colour is
