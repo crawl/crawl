@@ -479,9 +479,15 @@ static bool _too_boring_to_butt(const string &token)
  */
 static string _replacement_butt(const string &token)
 {
-    return make_stringf("%sutt%s",
-                        isupper(token[0]) ? "B" : "b",
-                        token[token.size() - 1] == 's' ? "s" : "");
+    string butt = "butt";
+    if (isupper(token[0]))
+        butt = uppercase_first(butt); // foo -> butt
+    if (token[token.size() - 1] == 's')
+        butt += 's'; // Foos -> Butts
+    else if (token.substr(token.size() - 2, 2) == "ly") // adv?
+        butt += "-ly"; // carefully -> butt-ly
+
+    return butt;
 }
 
 /**
