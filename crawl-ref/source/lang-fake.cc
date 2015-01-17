@@ -447,9 +447,9 @@ static void _grunt(string &txt)
  *              For example, if passed ("bird bee", 5), return 8.
  *              If passed ("bird bee, 4"), return 4 (empty token)
  */
-static int _token_starting(const string &str, int start)
+static size_t _token_starting(const string &str, size_t start)
 {
-    int end;
+    size_t end;
     for (end = start; end < str.size() && isaalpha(str[end]); ++end)
         ;
     return end;
@@ -498,9 +498,9 @@ static string _replacement_butt(const string &token)
 static void _butt(string &str)
 {
     // iter along the string, tokenizing & potentially replacing as we go.
-    for (int start = 0; start < str.size(); ++start)
+    for (size_t start = 0; start < str.size(); ++start)
     {
-        const int end = _token_starting(str, start);
+        const size_t end = _token_starting(str, start);
 
         if (end == start) // empty token (non-alpha index)
             continue;
