@@ -810,6 +810,20 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             default:
                 return CC_RESTRICTED;
         }
+	case SP_BEARKIN:
+		switch (job)
+		{
+			case JOB_TRANSMUTER:
+			case JOB_WIZARD:
+			case JOB_SUMMONER:
+			case JOB_ICE_ELEMENTALIST:
+			case JOB_GLADIATOR:
+			case JOB_BERSERKER:
+			case JOB_EARTH_ELEMENTALIST:
+				return CC_UNRESTRICTED;
+			default:
+				return CC_RESTRICTED;
+		}
     default:
         return CC_BANNED;
     }
@@ -899,6 +913,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_FORMICID:
         case SP_VINE_STALKER:
+		case SP_BEARKIN:
             return CC_UNRESTRICTED;
 
         default:
@@ -926,6 +941,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_FORMICID:
         case SP_VINE_STALKER:
+		case SP_BEARKIN:
             return CC_UNRESTRICTED;
 
         case SP_SPRIGGAN:
@@ -961,6 +977,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_FORMICID:
         case SP_VINE_STALKER:
         case SP_HALFLING:
+		case SP_BEARKIN:
             return CC_UNRESTRICTED;
 
         default:
@@ -987,6 +1004,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_FORMICID:
         case SP_GARGOYLE:
         case SP_VINE_STALKER:
+		case SP_BEARKIN:
             return CC_UNRESTRICTED;
 
         default:

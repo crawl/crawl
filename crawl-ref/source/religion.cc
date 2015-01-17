@@ -3252,6 +3252,9 @@ bool player_can_join_god(god_type which_god)
     if (is_good_god(which_god) && you.undead_or_demonic())
         return false;
 
+	if (which_god == GOD_ZIN && you.species == SP_BEARKIN)
+		return false;
+
     if (which_god == GOD_YREDELEMNUL && you.is_artificial())
         return false;
 

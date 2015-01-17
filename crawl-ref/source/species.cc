@@ -271,6 +271,9 @@ int species_has_claws(species_type species, bool mut_level)
     if (species == SP_FELID && !mut_level)
         return 1;
 
+	if (species == SP_BEARKIN)
+		return 1;
+
     return 0;
 }
 

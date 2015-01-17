@@ -324,7 +324,6 @@ void give_basic_mutations(species_type speci)
         break;
 	case SP_BEARKIN:
 		you.mutation[MUT_HIND_CLAWS]	= 1;
-		you.mutation[MUT_CLAWS]			= 1;
 		you.mutation[MUT_SHAGGY_FUR]	= 1;
 		break;
     default:

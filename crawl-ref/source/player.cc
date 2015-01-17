@@ -3404,10 +3404,18 @@ void level_change(bool skip_attribute_increase)
 				if (you.experience_level == 12)
 					perma_mutate(MUT_SHAGGY_FUR, 1, "bearkin transformation");
 
-				if (you.experience_level % 9)
+				if (!(you.experience_level % 9))
 					perma_mutate(MUT_ROBUST, 1, "bearkin transformation");
 
-				// todo: how do i random fangs/claws/hind claws? turning large? using gscs?
+				if (!(you.experience_level % 4))
+				{ if (one_chance_in(3) && player_mutation_level(MUT_CLAWS) == 1)
+					perma_mutate(MUT_CLAWS, 1, "bearkin transformation");
+				else if (one_chance_in(2) && player_mutation_level(MUT_HIND_CLAWS) < 3)
+					perma_mutate(MUT_HIND_CLAWS, 1, "bearkin transformation");
+				else perma_mutate(MUT_FANGS, 1, "bearkin transformation");
+				}
+				// TODO: turn large at XL14, remember to allow GSCs.
+				// Give low hp berserk ability at XL1.
 				break;
 
 
