@@ -3949,6 +3949,8 @@ bool game_options::set_lang(const char *lc)
         lang = LANG_WIDE;
     else if (l == "grunt" || l == "sgrunt" || l == "!!!")
         lang = LANG_GRUNT;
+    else if (l == "butt" || l == "buttbot" || l == "tef")
+        lang = LANG_BUTT;
     else
         return false;
     return true;

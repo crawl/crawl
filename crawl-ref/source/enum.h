@@ -136,7 +136,8 @@ enum lang_t
     LANG_KRAUT,
     LANG_FUTHARK,
     LANG_WIDE,
-    LANG_GRUNT
+    LANG_GRUNT,
+    LANG_BUTT
 };
 
 enum ability_type

@@ -9,6 +9,7 @@
 
 #include "libutil.h"
 #include "options.h"
+#include "random.h"
 #include "stringutil.h"
 #include "unicode.h"
 
@@ -436,6 +437,85 @@ static void _grunt(string &txt)
     }
 }
 
+/**
+ * Greedily look for a token consisting of only letters, starting at the
+ * given index into the given string.
+ *
+ * @return      The index into the string at which the token ends.
+ *              For example, if passed ("bird bee", 5), return 8.
+ *              If passed ("bird bee, 4"), return 4 (empty token)
+ */
+static int _token_starting(const string &str, int start)
+{
+    int end;
+    for (end = start; end < str.size() && isaalpha(str[end]); ++end)
+        ;
+    return end;
+}
+
+/**
+ * Is the given string token too boring to be replaced with 'butt'?
+ *
+ * @param token     The string in question. Should be lowercased.
+ * @return          Whether the token should be skipped in buttification.
+ */
+static bool _too_boring_to_butt(const string &token)
+{
+    const static string boring_words[] = {
+        "a", "the", "and", "or", "of", "on", "in", "if", "with",
+        // , "but" <- this is actually very funny to replace.
+    };
+    for (auto boring_word : boring_words)
+        if (token == boring_word)
+            return true;
+    return false;
+}
+
+/**
+ * Return an appropriate string to replace the given token with.
+ *
+ * @param token     The token to be replaced.
+ * @return          Presumably, some variant on 'butt'.
+ */
+static string _replacement_butt(const string &token)
+{
+    return make_stringf("%sutt%s",
+                        isupper(token[0]) ? "B" : "b",
+                        token[token.size() - 1] == 's' ? "s" : "");
+}
+
+/**
+ * Reference https://code.google.com/p/buttbot/ for vision statement & details.
+ *
+ * @param str[in,out]   The string to be improved.
+ */
+static void _butt(string &str)
+{
+    // iter along the string, tokenizing & potentially replacing as we go.
+    for (int start = 0; start < str.size(); ++start)
+    {
+        const int end = _token_starting(str, start);
+
+        if (end == start) // empty token (non-alpha index)
+            continue;
+
+        const string token = str.substr(start, end - start);
+        // butt sparingly.
+        if (_too_boring_to_butt(lowercase_string(token)) || !one_chance_in(20))
+        {
+            start = end; // will increment again, past the token-ending char
+            continue;
+        }
+
+        // here's where the magic happens!!!
+        const string butt = _replacement_butt(token);
+        str.erase(start, end - start);
+        str.insert(start, butt);
+        start += butt.size(); // will incr again, past the token-ending char
+    }
+}
+
+
 void filter_lang(string &str)
 {
     const char* (*repl)[4];
@@ -459,6 +539,9 @@ void filter_lang(string &str)
     case LANG_GRUNT:
         _grunt(str); repl = grunt;
         break;
+    case LANG_BUTT:
+        _butt(str);
+        return;
     default:
         return;
     }
