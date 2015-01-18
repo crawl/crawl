@@ -102,7 +102,8 @@ struct coord_def
     int         x;
     int         y;
 
-    explicit coord_def(int x_in = 0, int y_in = 0) : x(x_in), y(y_in) { }
+    coord_def(int x_in, int y_in) : x(x_in), y(y_in) { }
+    coord_def() : coord_def(0,0) { }
 
     void set(int xi, int yi)
     {
