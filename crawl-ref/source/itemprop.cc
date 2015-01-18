@@ -63,18 +63,18 @@ static const armour_def Armour_prop[] =
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true },
     { ARM_ROBE,                 "robe",                   2,   0,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true },
-    { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -4,
+    { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
 
-    { ARM_RING_MAIL,            "ring mail",              5,  -7,
+    { ARM_RING_MAIL,            "ring mail",              5,  -70,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
-    { ARM_SCALE_MAIL,           "scale mail",             6, -10,
+    { ARM_SCALE_MAIL,           "scale mail",             6, -100,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
-    { ARM_CHAIN_MAIL,           "chain mail",             8, -15,
+    { ARM_CHAIN_MAIL,           "chain mail",             8, -150,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
-    { ARM_PLATE_ARMOUR,         "plate armour",          10, -18,
+    { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true },
-    { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -23,
+    { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false },
 
 #define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res) \
@@ -88,30 +88,30 @@ static const armour_def Armour_prop[] =
                 ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res)
 
     HIDE_ARMOUR(
-      ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -4,
+      ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -40,
       ARM_TROLL_HIDE,           "troll hide",
         ARMF_REGENERATION
     ),
 
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,
         ARMF_RES_STEAM),
-    DRAGON_ARMOUR(MOTTLED,     "mottled",                 6,  -5,
+    DRAGON_ARMOUR(MOTTLED,     "mottled",                 6,  -50,
         ARMF_RES_STICKY_FLAME),
-    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",            10,  -7,
+    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",            10,  -70,
         ARMF_RES_MAGIC),
-    DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -7,
+    DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,
         ARMF_RES_POISON),
-    DRAGON_ARMOUR(FIRE,        "fire",                    8, -11,
+    DRAGON_ARMOUR(FIRE,        "fire",                    8, -110,
         ard(ARMF_RES_FIRE, 2) | ARMF_VUL_COLD),
-    DRAGON_ARMOUR(ICE,         "ice",                     9, -11,
+    DRAGON_ARMOUR(ICE,         "ice",                     9, -110,
         ard(ARMF_RES_COLD, 2) | ARMF_VUL_FIRE),
-    DRAGON_ARMOUR(PEARL,       "pearl",                  10, -11,
+    DRAGON_ARMOUR(PEARL,       "pearl",                  10, -110,
         ARMF_RES_NEG),
-    DRAGON_ARMOUR(STORM,       "storm",                  10, -15,
+    DRAGON_ARMOUR(STORM,       "storm",                  10, -150,
         ARMF_RES_ELEC),
-    DRAGON_ARMOUR(SHADOW,      "shadow",                 10, -15,
+    DRAGON_ARMOUR(SHADOW,      "shadow",                 10, -150,
         ard(ARMF_STEALTH, 4)),
-    DRAGON_ARMOUR(GOLD,        "gold",                   12, -23,
+    DRAGON_ARMOUR(GOLD,        "gold",                   12, -230,
         ARMF_RES_FIRE | ARMF_RES_COLD | ARMF_RES_POISON),
 
 #undef DRAGON_HIDE
@@ -140,18 +140,18 @@ static const armour_def Armour_prop[] =
         EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true },
     // Changed max. barding size to large to allow for the appropriate
     // monster types (monsters don't differentiate between torso and general).
-    { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -6,
+    { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -60,
         EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
-    { ARM_NAGA_BARDING,         "naga barding",           4,  -6,
+    { ARM_NAGA_BARDING,         "naga barding",           4,  -60,
         EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
-    { ARM_BUCKLER,              "buckler",                3,  -1,
+    { ARM_BUCKLER,              "buckler",                3,  -8,
         EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
-    { ARM_SHIELD,               "shield",                 8,  -3,
+    { ARM_SHIELD,               "shield",                 8,  -30,
         EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG, true    },
-    { ARM_LARGE_SHIELD,         "large shield",          13,  -5,
+    { ARM_LARGE_SHIELD,         "large shield",          13,  -50,
         EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true  },
 };
 
