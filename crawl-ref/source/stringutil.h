@@ -17,6 +17,7 @@ size_t strlcpy(char *dst, const char *src, size_t n);
 string lowercase_string(const string s);
 string &lowercase(string &s);
 string &uppercase(string &s);
+string uppercase_string(string s);
 string lowercase_first(string);
 string uppercase_first(string);
 

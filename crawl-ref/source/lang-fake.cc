@@ -481,12 +481,26 @@ static string _replacement_butt(const string &token)
 {
     string butt = "butt";
     size_t size = token.size();
+    char plural = 's';
+    const char *ly = "-ly";
     if (isupper(token[0]))
-        butt = uppercase_first(butt); // foo -> butt
-    if (token[size - 1] == 's')
-        butt += 's'; // Foos -> Butts
-    else if (size > 2 && token.substr(size - 2, 2) == "ly") // adv?
-        butt += "-ly"; // carefully -> butt-ly
+    {
+        // All caps and not a single-letter word?
+        if (token.size() > 1 && uppercase_string(token) == token)
+        {
+            uppercase(butt); // FOO -> BUTT
+            plural = 'S';
+            ly = "-LY";
+        }
+        else
+            butt = uppercase_first(butt); // Foo -> Butt
+    }
+
+    // Plurals and adverbs (and a few adjectives like "holy", "ugly").
+    if (toalower(token[size - 1]) == 's')
+        butt += plural; // Foos -> Butts, FOOS -> BUTTS
+    else if (size > 2 && lowercase_string(token.substr(size - 2, 2)) == "ly")
+        butt += ly; // carefully -> butt-ly, THUNDEROUSLY -> BUTT-LY
 
     return butt;
 }
