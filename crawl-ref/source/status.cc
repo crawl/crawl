@@ -785,8 +785,9 @@ static void _describe_poison(status_info* inf)
          (pois_perc > 65)   ? "seriously" :
          (pois_perc > 35)   ? "quite"
                             : "mildly";
-    inf->short_text   = adj + " poisoned";
-    inf->long_text    = "You are " + inf->short_text + make_stringf(" (%d -> %d).", you.hp, poison_survival());
+    inf->short_text   = adj + " poisoned"
+        + make_stringf(" (%d -> %d)", you.hp, poison_survival());
+    inf->long_text    = "You are " + inf->short_text + ".";
 }
 
 static void _describe_speed(status_info* inf)
