@@ -3389,14 +3389,14 @@ void level_change(bool skip_attribute_increase)
                 break;
 
 			case SP_BEARKIN:
-				if (!(you.experience_level % 5) && !skip_attribute_increase)
+				if (!(you.experience_level % 3) && !skip_attribute_increase)
 				{
 				   modify_stat((coinflip() ? STAT_STR
 										   : STAT_INT), 1, false,
 								"level gain");
 				}
-				if (!(you.experience_level % 4) && !skip_attribute_increase)
-					modify_stat(STAT_STR, 1, false, "bearkin transformation");
+				if (!(you.experience_level == 14) && !skip_attribute_increase)
+					modify_stat(STAT_STR, 2, false, "bearkin transformation");
 
 				if (you.experience_level == 6)
 					perma_mutate(MUT_SHAGGY_FUR, 1, "bearkin transformation");
@@ -3415,8 +3415,6 @@ void level_change(bool skip_attribute_increase)
 				else perma_mutate(MUT_FANGS, 1, "bearkin transformation");
 				}
 
-				// TODO: turn large at XL14, remember to allow GSCs.
-				// Give low hp berserk ability at XL1.
 				break;
 
 
