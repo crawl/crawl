@@ -7970,6 +7970,8 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
+    if (species == SP_BEARKIN && experience_level >= 14)
+        return true;
     return species_can_throw_large_rocks(species);
 }
 
