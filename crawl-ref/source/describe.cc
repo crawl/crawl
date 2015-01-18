@@ -1216,6 +1216,17 @@ void append_armour_stats(string &description, const item_def &item)
     _append_value(description, -property(item, PARM_EVASION), false);
 }
 
+void append_shield_stats(string &description, const item_def &item)
+{
+    description += "\nBase shield rating: ";
+    _append_value(description, property(item, PARM_AC), false);
+    description += "       ";
+
+    description += "Skill to remove penalty: ";
+    _append_value(description, you.get_shield_skill_to_offset_penalty(item),
+            false);
+}
+
 void append_missile_info(string &description, const item_def &item)
 {
     const int dam = property(item, PWPN_DAMAGE);
@@ -1246,6 +1257,11 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         description += "\n";
         append_armour_stats(description, item);
+    }
+    else if (verbose)
+    {
+        description += "\n";
+        append_shield_stats(description, item);
     }
 
     const int ego = get_armour_ego_type(item);

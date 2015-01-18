@@ -6309,6 +6309,12 @@ int player::adjusted_shield_penalty(int scale) const
                   / _player_shield_racial_factor()));
 }
 
+float player::get_shield_skill_to_offset_penalty(const item_def &item)
+{
+    int evp = property(item, PARM_EVASION);
+    return -1 * evp * _player_shield_racial_factor();
+}
+
 int player::armour_tohit_penalty(bool random_factor, int scale) const
 {
     return maybe_roll_dice(1, adjusted_body_armour_penalty(scale), random_factor);
