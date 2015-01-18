@@ -760,6 +760,7 @@ public:
     int unadjusted_body_armour_penalty() const;
     int adjusted_body_armour_penalty(int scale = 1) const;
     int adjusted_shield_penalty(int scale = 1) const;
+    float get_shield_skill_to_offset_penalty(const item_def &item);
     int armour_tohit_penalty(bool random_factor, int scale = 1) const;
     int shield_tohit_penalty(bool random_factor, int scale = 1) const;
 
