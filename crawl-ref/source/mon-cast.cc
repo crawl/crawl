@@ -499,7 +499,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.thrower      = KILL_MISC;
     beam.pierce       = false;
     beam.is_explosion = false;
-
+    beam.attitude     = mons_attitude(mons);
 
     beam.range = _mons_spell_range(spell_cast, *mons);
 
