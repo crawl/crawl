@@ -241,7 +241,7 @@ static const ability_def Ability_List[] =
     { ABIL_DIG, "Dig", 0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, ABFLAG_DELAY},
 
-	{ ABIL_BEARSERK, "Cornered Berserk", 0, 0, 0, 0, 0, ABFLAG_NONE},
+	  { ABIL_BEARSERK, "Cornered Berserk", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -1096,9 +1096,9 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 0;
         break;
 
-	case ABIL_BEARSERK:
-		failure = 0;
-		break;
+  	case ABIL_BEARSERK:
+  		failure = 0;
+  		break;
 
         // end species abilities (some mutagenic)
 
@@ -2164,13 +2164,10 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         break;
 
-	case ABIL_BEARSERK:
-		if (you.hp_max / you.hp >= 4)
-			you.go_berserk(true);
-		else mpr("Your inner beast is too calm.");
-		return SPRET_ABORT;
-		break;
-
+  	case ABIL_BEARSERK:
+      fail_check();
+      you.go_berserk(true);
+  		break;
 
     case ABIL_DELAYED_FIREBALL:
     {
@@ -3587,8 +3584,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
     }
 
-	if (you.species == SP_BEARKIN)
-		_add_talent(talents, ABIL_BEARSERK, check_confused);
+  	if (player_mutation_level(MUT_BEARSERK) && you.hp * 100 / you.hp_max <= 30)
+  		_add_talent(talents, ABIL_BEARSERK, check_confused);
 
     // Spit Poison. Nagas can upgrade to Breathe Poison.
     if (you.species == SP_NAGA)

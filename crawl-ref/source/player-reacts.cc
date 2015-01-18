@@ -389,6 +389,17 @@ static void _update_cowardice()
 }
 
 /**
+ * Update whether a player with the MUT_BEARSERK is cornered or not
+ */
+static void _update_cornered()
+{
+    if (player_mutation_level(MUT_BEARSERK) && you.hp * 100 / you.hp_max <= 30)
+        you.set_duration(DUR_CORNERED, 1);
+    else
+        you.set_duration(DUR_CORNERED, 0);
+}
+
+/**
  * Player reactions after monster and cloud activities in the turn are finished.
  */
 void player_reacts_to_monsters()
@@ -418,6 +429,7 @@ void player_reacts_to_monsters()
         you.awake();
     _maybe_melt_armour();
     _update_cowardice();
+    _update_cornered();
 }
 
 static bool _check_recite()

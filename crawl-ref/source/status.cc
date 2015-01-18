@@ -628,6 +628,14 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
+    case DUR_CORNERED:
+        if (you.hp * 100 / you.hp_max <= 30 )
+        {
+            inf->light_colour = YELLOW;
+            inf->light_text   = "Cornrd";
+        }
+        break;
+
     default:
         if (!found)
         {

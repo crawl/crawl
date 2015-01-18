@@ -180,9 +180,9 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
-	// Bearkin
-	ABIL_BEARSERK,
+    // Bearkin
+    ABIL_BEARSERK,
+    ABIL_MAX_INTRINSIC = ABIL_BEARSERK,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -1827,6 +1827,7 @@ enum duration_type
     DUR_NO_SCROLLS,
     DUR_NEGATIVE_VULN,
     DUR_CLEAVE,
+    DUR_CORNERED,
     NUM_DURATIONS
 };
 
