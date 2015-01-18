@@ -3879,6 +3879,42 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
 }
 
+static const map<string, flang_t> fake_lang_names = {
+    { "dwarven", FLANG_DWARVEN },
+    { "dwarf", FLANG_DWARVEN },
+
+    { "jäger", FLANG_JAGERKIN },
+    { "jägerkin", FLANG_JAGERKIN },
+    { "jager", FLANG_JAGERKIN },
+    { "jagerkin", FLANG_JAGERKIN },
+    { "jaeger", FLANG_JAGERKIN },
+    { "jaegerkin", FLANG_JAGERKIN },
+
+    // Due to a historical conflict with actual german, slang names are
+    // supported. Not the really rude ones, though.
+    { "de", FLANG_KRAUT },
+    { "german", FLANG_KRAUT },
+    { "kraut", FLANG_KRAUT },
+    { "jerry", FLANG_KRAUT },
+    { "fritz", FLANG_KRAUT },
+
+    { "futhark", FLANG_FUTHARK },
+    { "runes", FLANG_FUTHARK },
+    { "runic", FLANG_FUTHARK },
+
+    { "wide", FLANG_WIDE },
+    { "doublewidth", FLANG_WIDE },
+    { "fullwidth", FLANG_WIDE },
+
+    { "grunt", FLANG_GRUNT },
+    { "sgrunt", FLANG_GRUNT },
+    { "!!!", FLANG_GRUNT },
+
+    { "butt", FLANG_BUTT },
+    { "buttbot", FLANG_BUTT },
+    { "tef", FLANG_BUTT },
+};
+
 bool game_options::set_lang(const char *lc)
 {
     if (!lc)
@@ -3932,6 +3968,12 @@ bool game_options::set_lang(const char *lc)
         language = LANG_SV, lang_name = "sv";
     else if (l == "zh" || l == "chinese" || l == "中国的" || l == "中國的")
         language = LANG_ZH, lang_name = "zh";
+    else if (const flang_t * const flang = map_find(fake_lang_names, l))
+    {
+        // Handle fake languages for backwards-compatibility with old rcs.
+        // Override rather than stack, because that's how it used to work.
+        fake_langs = { *flang };
+    }
     else
         return false;
     return true;
@@ -3944,42 +3986,6 @@ bool game_options::set_lang(const char *lc)
  */
 void game_options::set_fake_langs(const string &input)
 {
-    static const map<string, flang_t> fake_lang_names = {
-        { "dwarven", FLANG_DWARVEN },
-        { "dwarf", FLANG_DWARVEN },
-
-        { "jäger", FLANG_JAGERKIN },
-        { "jägerkin", FLANG_JAGERKIN },
-        { "jager", FLANG_JAGERKIN },
-        { "jagerkin", FLANG_JAGERKIN },
-        { "jaeger", FLANG_JAGERKIN },
-        { "jaegerkin", FLANG_JAGERKIN },
-
-        // Due to a historical conflict with actual german, slang names are
-        // supported. Not the really rude ones, though.
-        { "de", FLANG_KRAUT },
-        { "german", FLANG_KRAUT },
-        { "kraut", FLANG_KRAUT },
-        { "jerry", FLANG_KRAUT },
-        { "fritz", FLANG_KRAUT },
-
-        { "futhark", FLANG_FUTHARK },
-        { "runes", FLANG_FUTHARK },
-        { "runic", FLANG_FUTHARK },
-
-        { "wide", FLANG_WIDE },
-        { "doublewidth", FLANG_WIDE },
-        { "fullwidth", FLANG_WIDE },
-
-        { "grunt", FLANG_GRUNT },
-        { "sgrunt", FLANG_GRUNT },
-        { "!!!", FLANG_GRUNT },
-
-        { "butt", FLANG_BUTT },
-        { "buttbot", FLANG_BUTT },
-        { "tef", FLANG_BUTT },
-    };
-
     fake_langs.clear();
     for (const string &flang_name : split_string(",", input))
     {
