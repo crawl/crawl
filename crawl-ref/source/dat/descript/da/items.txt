@@ -1014,12 +1014,6 @@ Et net af reb, som er bundet sammen og har vægte i kanten, som bruges til at
 besnære og indfange bytte. Sprællende ofre vil til sidst ødelægge nettet og
 bryde fri hvis de lever længe nok.
 %%%%
-tome of destruction
-
-En ekstremt kraftfuld, men uforudsigelig bog med vild magi. Den er mere
-effektiv hvis man er dygtig til vækkelser, men den kan stadig have
-uhensigtsmæssige konsekvenser.
-%%%%
 trident
 
 Et fiskespyd, som er forbedret med et længere skaft og et tregrenet metalhoved.

@@ -801,8 +801,7 @@ KITEM:    T = longbow unrand:piercer ident:all, \
               triple sword unrand:plutonium_sword ident:all, \
               club unrand:devastator ident:all, \
               great mace unrand:firestarter ident:all
-KITEM:    S = disc of storms ident:all, \
-              tome of destruction ident:all, tome of destruction ident:all
+KITEM:    S = disc of storms ident:all
 KFEAT:    ^ = granite_statue
 KFEAT:    & = granite_statue
 COLOUR:   & = magenta

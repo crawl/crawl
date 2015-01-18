@@ -468,7 +468,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    wand of frost | wand of cold | wand of lightning | wand of magic darts | \
    staff of conjuration | lightning rod | rod of inaccuracy | \
    rod of destruction | iron rod | large rock ego:exploding | \
-   arrow ego:exploding | bolt ego:exploding | tome of destruction | \
+   arrow ego:exploding | bolt ego:exploding | \
    sling bullet ego:exploding | scroll of immolation | book of flames | \
    book of fire | book of air | manual of conjurations
 FTILE: ' = floor_rough_red
