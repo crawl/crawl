@@ -480,11 +480,12 @@ static bool _too_boring_to_butt(const string &token)
 static string _replacement_butt(const string &token)
 {
     string butt = "butt";
+    size_t size = token.size();
     if (isupper(token[0]))
         butt = uppercase_first(butt); // foo -> butt
-    if (token[token.size() - 1] == 's')
+    if (token[size - 1] == 's')
         butt += 's'; // Foos -> Butts
-    else if (token.substr(token.size() - 2, 2) == "ly") // adv?
+    else if (size > 2 && token.substr(size - 2, 2) == "ly") // adv?
         butt += "-ly"; // carefully -> butt-ly
 
     return butt;
