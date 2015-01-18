@@ -130,14 +130,17 @@ enum lang_t
     LANG_RU,
     LANG_SV,
     LANG_ZH,
-    // fake languages
-    LANG_DWARVEN,
-    LANG_JAGERKIN,
-    LANG_KRAUT,
-    LANG_FUTHARK,
-    LANG_WIDE,
-    LANG_GRUNT,
-    LANG_BUTT
+};
+
+enum flang_t
+{
+    FLANG_DWARVEN,
+    FLANG_JAGERKIN,
+    FLANG_KRAUT,
+    FLANG_FUTHARK,
+    FLANG_WIDE,
+    FLANG_GRUNT,
+    FLANG_BUTT,
 };
 
 enum ability_type

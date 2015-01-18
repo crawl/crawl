@@ -2336,9 +2336,13 @@ show_player_species = false
         you're a Hill Orc, you will be shown as an 'o' rather than '@'. Has
         no effect in Tiles.
 
-language = (dwarven|jagerkin|kraut|runes|wide|grunt|butt)
-        Set a joke language. Experiment to find out what they do!
+fake_lang = <lang1>[,<lang2>[,...]]
+        Set one or more fake languages, applied in the order provided (order
+        does matter!) The same language can be set more than once, though it
+        may not end up making much sense...
 
+        Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt)
+        Experiment to find out what they do!
 
 5-b     DOS and Windows.
 ------------------------

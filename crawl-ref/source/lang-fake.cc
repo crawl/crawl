@@ -524,36 +524,39 @@ static void _butt(string &str)
 
 void filter_lang(string &str)
 {
-    const char* (*repl)[4];
-
-    switch (Options.lang)
+    for (auto fake_lang : Options.fake_langs)
     {
-    case LANG_DWARVEN:
-        repl = dwarven;
-        break;
-    case LANG_JAGERKIN:
-        repl = jager;
-        break;
-    case LANG_KRAUT:
-        _german(str), repl = german;
-        break;
-    case LANG_WIDE:
-        return _wide(str);
-    case LANG_FUTHARK:
-        repl = runes;
-        break;
-    case LANG_GRUNT:
-        _grunt(str); repl = grunt;
-        break;
-    case LANG_BUTT:
-        _butt(str);
-        return;
-    default:
-        return;
-    }
+        const char* (*repl)[4];
 
-    for (; **repl; repl++)
-        _replace_cap_variants(str, (*repl)[0], (*repl)[1], (*repl)[2], (*repl)[3]);
+        switch (fake_lang)
+        {
+            case FLANG_DWARVEN:
+                repl = dwarven;
+                break;
+            case FLANG_JAGERKIN:
+                repl = jager;
+                break;
+            case FLANG_KRAUT:
+                _german(str), repl = german;
+                break;
+            case FLANG_WIDE:
+                return _wide(str);
+            case FLANG_FUTHARK:
+                repl = runes;
+                break;
+            case FLANG_GRUNT:
+                _grunt(str); repl = grunt;
+                break;
+            case FLANG_BUTT:
+                _butt(str);
+                continue;
+            default:
+                continue;
+        }
+
+        for (; **repl; repl++)
+            _replace_cap_variants(str, (*repl)[0], (*repl)[1], (*repl)[2], (*repl)[3]);
+    }
 }
 
 string filtered_lang(string str)
