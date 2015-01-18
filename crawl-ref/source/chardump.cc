@@ -1124,9 +1124,9 @@ static string _describe_action_subtype(caction_type type, int subtype)
 #if TAG_MAJOR_VERSION == 34
         case EVOC_MISC:
             return "Miscellaneous";
-#endif
-        case EVOC_TOME:
+        case EVOC_BUGGY_TOME:
             return "tome";
+#endif
         default:
             return "Error";
         }

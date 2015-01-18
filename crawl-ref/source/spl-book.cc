@@ -183,11 +183,9 @@ int book_rarity(book_type which_book)
     case BOOK_MANUAL:
         return 20;
 
-    case BOOK_DESTRUCTION:
-        return 30;
-
 #if TAG_MAJOR_VERSION == 34
     case BOOK_WIZARDRY:
+    case BOOK_BUGGY_DESTRUCTION:
         return 100;
 #endif
 
@@ -343,11 +341,13 @@ bool maybe_id_book(item_def &book, bool silent)
     if (book.base_type != OBJ_BOOKS && book.base_type != OBJ_RODS)
         return false;
 
-    if (book.is_type(OBJ_BOOKS, BOOK_DESTRUCTION))
+#if TAG_MAJOR_VERSION == 34
+    if (book.is_type(OBJ_BOOKS, BOOK_BUGGY_DESTRUCTION))
     {
         ASSERT(fully_identified(book));
         return false;
     }
+#endif
 
     if (book.is_type(OBJ_BOOKS, BOOK_MANUAL))
     {
