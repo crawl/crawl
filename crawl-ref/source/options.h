@@ -1,6 +1,8 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+#include <algorithm>
+
 #include "feature.h"
 #include "newgame_def.h"
 #include "pattern.h"
