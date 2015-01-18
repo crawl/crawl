@@ -6305,8 +6305,8 @@ int player::adjusted_shield_penalty(int scale) const
         return 0;
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
-    return max(0, (base_shield_penalty * scale - skill(SK_SHIELDS, scale)
-                  / _player_shield_racial_factor()) / 10);
+    return max(0, ((base_shield_penalty * scale) - skill(SK_SHIELDS, scale)
+                  / _player_shield_racial_factor() * 10) / 10);
 }
 
 float player::get_shield_skill_to_offset_penalty(const item_def &item)
