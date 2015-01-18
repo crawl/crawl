@@ -480,7 +480,6 @@ static bool _too_boring_to_butt(const string &token)
 static string _replacement_butt(const string &token)
 {
     string butt = "butt";
-    size_t size = token.size();
     char plural = 's';
     const char *ly = "-ly";
     if (isupper(token[0]))
@@ -496,10 +495,20 @@ static string _replacement_butt(const string &token)
             butt = uppercase_first(butt); // Foo -> Butt
     }
 
-    // Plurals and adverbs (and a few adjectives like "holy", "ugly").
-    if (toalower(token[size - 1]) == 's')
+    const string lctok = lowercase_string(token);
+    size_t size = lctok.size();
+
+    // Possessives, plurals, and adverbs (and a few adjectives like "holy",
+    // "ugly").
+    if (ends_with(lctok, "'s") || ends_with(lctok, "s'")
+        || lctok == "your" || lctok == "my" || lctok == "its" || lctok == "his"
+        || lctok == "our" || lctok == "their") // "her" is ambiguous :(
+    {
+        butt += '\''; butt += plural; // your -> butt's, Sigmund's -> Butt's
+    }
+    else if (lctok[size - 1] == 's')
         butt += plural; // Foos -> Butts, FOOS -> BUTTS
-    else if (size > 2 && lowercase_string(token.substr(size - 2, 2)) == "ly")
+    else if (size > 2 && lctok.substr(size - 2, 2) == "ly")
         butt += ly; // carefully -> butt-ly, THUNDEROUSLY -> BUTT-LY
 
     return butt;
