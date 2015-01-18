@@ -903,7 +903,7 @@ static const mutation_def mut_data[] =
    "hind claws",
 },
 
-{ MUT_HIND_CLAWS,					0, 1, MUTFLAG_GOOD, true,
+{ MUT_BEARSERK,					0, 1, MUTFLAG_GOOD, true,
 	"cornered berserk",
 
 	{"You can berserk when greatly wounded.", "", ""},
