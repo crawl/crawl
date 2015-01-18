@@ -622,7 +622,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_BERSERK:
         case ARTP_ANGRY:
         case ARTP_NOISES:
-            return item_class != OBJ_WEAPONS || !is_range_weapon(item);
+            return item_class == OBJ_WEAPONS && !is_range_weapon(item);
             // works poorly with ranged weapons
         case ARTP_CAUSE_TELEPORTATION:
             return item_type != OBJ_WEAPONS
