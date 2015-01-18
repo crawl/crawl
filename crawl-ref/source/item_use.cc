@@ -2362,14 +2362,13 @@ static void _handle_read_book(int item_slot)
     item_def& book(you.inv[item_slot]);
     ASSERT(book.sub_type != BOOK_MANUAL);
 
-    if (book.sub_type == BOOK_DESTRUCTION)
+#if TAG_MAJOR_VERSION == 34
+    if (book.sub_type == BOOK_BUGGY_DESTRUCTION)
     {
-        if (silenced(you.pos()))
-            mpr("This book does not work if you cannot read it aloud!");
-        else
-            tome_of_power(item_slot);
+        mpr("This item has been removed, sorry!");
         return;
     }
+#endif
 
     read_book(book);
 }

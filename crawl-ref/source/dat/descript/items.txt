@@ -1487,11 +1487,9 @@ tomahawk
 
 An small, axe-like item designed for throwing.
 %%%%
-tome of destruction
+tome of obsoleteness
 
-An extremely powerful but unpredictable book of wild magic. It is more
-effective for those skilled at evocation, but reading it may have undesirable
-effects regardless.
+Sadly, this item has been removed.
 %%%%
 trident
 

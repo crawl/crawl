@@ -667,7 +667,9 @@ enum book_type
     BOOK_RANDART_THEME,
 
     BOOK_MANUAL,
-    BOOK_DESTRUCTION,
+#if TAG_MAJOR_VERSION == 34
+    BOOK_BUGGY_DESTRUCTION,
+#endif
     NUM_BOOKS
 };
 
@@ -1310,8 +1312,8 @@ enum evoc_type
     EVOC_DECK,
 #if TAG_MAJOR_VERSION == 34
     EVOC_MISC,
+    EVOC_BUGGY_TOME,
 #endif
-    EVOC_TOME,
 };
 
 enum game_direction_type
