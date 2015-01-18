@@ -1213,7 +1213,7 @@ void append_armour_stats(string &description, const item_def &item)
     description += "       ";
 
     description += "Encumbrance rating: ";
-    _append_value(description, -property(item, PARM_EVASION), false);
+    _append_value(description, -property(item, PARM_EVASION) / 10, false);
 }
 
 void append_shield_stats(string &description, const item_def &item)

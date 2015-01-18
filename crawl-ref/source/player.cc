@@ -2292,7 +2292,7 @@ static int _player_armour_beogh_bonus(const item_def& item)
 bool is_effectively_light_armour(const item_def *item)
 {
     return !item
-           || (abs(property(*item, PARM_EVASION)) < 5);
+           || (abs(property(*item, PARM_EVASION)) / 10 < 5);
 }
 
 bool player_effectively_in_light_armour()
@@ -2357,8 +2357,8 @@ static int _player_adjusted_evasion_penalty(const int scale)
             piece_armour_evasion_penalty += penalty;
     }
 
-    return piece_armour_evasion_penalty * scale +
-           you.adjusted_body_armour_penalty(scale);
+    return piece_armour_evasion_penalty * scale / 10 +
+           you.adjusted_body_armour_penalty(scale) ;
 }
 
 // EV bonuses that work even when helpless.
@@ -6270,7 +6270,7 @@ int player::unadjusted_body_armour_penalty() const
     if (!body_armour)
         return 0;
 
-    return -property(*body_armour, PARM_EVASION);
+    return -property(*body_armour, PARM_EVASION) / 10;
 }
 
 /**
@@ -6306,13 +6306,13 @@ int player::adjusted_shield_penalty(int scale) const
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
     return max(0, (base_shield_penalty * scale - skill(SK_SHIELDS, scale)
-                  / _player_shield_racial_factor()));
+                  / _player_shield_racial_factor()) / 10);
 }
 
 float player::get_shield_skill_to_offset_penalty(const item_def &item)
 {
     int evp = property(item, PARM_EVASION);
-    return -1 * evp * _player_shield_racial_factor();
+    return -1 * evp * _player_shield_racial_factor() / 10;
 }
 
 int player::armour_tohit_penalty(bool random_factor, int scale) const

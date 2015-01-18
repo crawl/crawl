@@ -1691,7 +1691,7 @@ bool monster::wants_armour(const item_def &item) const
     // Spellcasters won't pick up restricting armour, although they can
     // start with one.  Applies to arcane spells only, of course.
     if (!pos().origin() && is_actual_spellcaster()
-        && (property(item, PARM_EVASION) < -5
+        && (property(item, PARM_EVASION) / 10 < -5
             || is_artefact(item)
                && artefact_property(item, ARTP_PREVENT_SPELLCASTING)))
     {
@@ -3567,7 +3567,7 @@ int monster::melee_evasion(const actor* /*act*/, ev_ignore_type evit) const
         const item_def* armour = mslot_item(static_cast<mon_inv_type>(slot));
         if (armour)
         {
-            ev += property(*armour, PARM_EVASION)
+            ev += property(*armour, PARM_EVASION) / 10
                   / (is_shield(*armour) ? 2 : 6);
         }
     }
