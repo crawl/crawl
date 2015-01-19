@@ -1,4 +1,4 @@
-define(["jquery", "contrib/inflate"], function ($) {
+define(["jquery", "contrib/jquery.browser", "contrib/inflate"], function ($) {
     "use strict";
 
     window.log_messages = false;
@@ -184,8 +184,6 @@ define(["jquery", "contrib/inflate"], function ($) {
             return false; // doesn't support binary frames
         if (b.chrome && b.version.match("^19\."))
             return false; // buggy Blob builder
-        if (b.safari)
-            return false;
         if (b.opera)
             return false; // errors in inflate.js (?)
         return true;

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-// Source: https://github.com/philix/jsx-requirejs-plugin
 define(['JSXTransformer', 'text'], function (JSXTransformer, text) {
 
   'use strict';
@@ -29,29 +28,36 @@ define(['JSXTransformer', 'text'], function (JSXTransformer, text) {
   var buildMap = {};
 
   var jsx = {
-    version: '0.2.1',
+    version: '0.5.2',
 
     load: function (name, req, onLoadNative, config) {
-      var fileExtension = config.jsx && config.jsx.fileExtension || '.js';
+      var jsxOptions = config.jsx || {};
+      var fileExtension = jsxOptions.fileExtension || '.js';
+
+      var transformOptions = {
+        harmony: !!jsxOptions.harmony,
+        stripTypes: !!jsxOptions.stripTypes
+      };
 
       var onLoad = function(content) {
         try {
-          if (-1 === content.indexOf('@jsx React.DOM')) {
-            content = "/** @jsx React.DOM */\n" + content;
-          }
-          content = JSXTransformer.transform(content).code;
+          content = JSXTransformer.transform(content, transformOptions).code;
         } catch (err) {
           onLoadNative.error(err);
         }
 
         if (config.isBuild) {
           buildMap[name] = content;
-        } else {
-          content += "\n//# sourceURL=" + location.protocol + "//" + location.hostname +
+        } else if (typeof location !== 'undefined') { // Do not create sourcemap when loaded in Node
+          content += '\n//# sourceURL=' + location.protocol + '//' + location.hostname +
             config.baseUrl + name + fileExtension;
         }
 
         onLoadNative.fromText(content);
+      };
+
+      onLoad.error = function(err) {
+        onLoadNative.error(err);
       };
 
       text.load(name + fileExtension, req, onLoad, config);
@@ -60,7 +66,7 @@ define(['JSXTransformer', 'text'], function (JSXTransformer, text) {
     write: function (pluginName, moduleName, write) {
       if (buildMap.hasOwnProperty(moduleName)) {
         var content = buildMap[moduleName];
-        write.asModule(moduleName, content);
+        write.asModule(pluginName + '!' + moduleName, content);
       }
     }
   };

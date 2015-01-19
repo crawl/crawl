@@ -1,4 +1,4 @@
-define(["jquery"], function($) {
+define(["jquery", "contrib/jquery.browser"], function($) {
     var val;
     // Key codes - from cio.h
     val = -255

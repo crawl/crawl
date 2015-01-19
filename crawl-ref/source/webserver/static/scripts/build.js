@@ -2,10 +2,10 @@
     baseUrl: '.',
     paths: {
         'jquery': 'empty:',
-        'react': './contrib/react-0.10.0',
+        'react': 'empty:',
         'text': './contrib/text',
         'jsx': './contrib/jsx',
-        'JSXTransformer': './contrib/JSXTransformer-0.10.0',
+        'JSXTransformer': './contrib/JSXTransformer',
         "image": "./contrib/image"
     },
     jsx: {
@@ -14,7 +14,7 @@
 
     optimize: "uglify2",
 
-    exclude: ["react", "jsx"],
+    exclude: ["jsx"],
 
     name: 'app',
     out: 'app.min.js',
