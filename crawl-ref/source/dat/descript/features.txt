@@ -1144,8 +1144,8 @@ spawned it probably isn't!)
 %%%%
 raging winds cloud
 
-The winds of a raging tornado. Tarrying in here is a good way to meet a quick
-death.
+The winds of a raging tornado. Stout armour will mitigate the worst of the
+damage, but tarrying in here is still a good way to meet a quick death.
 %%%%
 sparse dust cloud
 
