@@ -1754,6 +1754,12 @@ void drink(int slot)
         return;
     }
 
+    if (alreadyknown && is_bad_item(potion, true))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return;
+    }
+
     zin_recite_interrupt();
 
     // The "> 1" part is to reduce the amount of times that Xom is
