@@ -660,14 +660,17 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         }
     }
 
-    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, dur, 0,
-                 caster ? caster->pos() : you.pos(),
+    mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE, caster, caster ? dur : 0,
+                 0, caster ? caster->pos() : you.pos(),
                  (caster && caster->is_monster())
                      ? ((monster*)caster)->foe : MHITYOU,
                  MG_AUTOFOE, GOD_TROG);
 
     if (!caster)
+    {
         mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+    }
 
     monster *mons = create_monster(mg);
 
