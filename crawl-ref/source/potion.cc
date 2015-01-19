@@ -499,10 +499,10 @@ public:
 
     bool effect(bool=true, int pow = 40) const
     {
-        if (you.backlit() || you.haloed())
+        if (you.backlit())
         {
             vector<const char *> afflictions;
-            if (you.haloed())
+            if (you.haloed() && !you.umbraed())
                 afflictions.push_back("halo");
             if (get_contamination_level() > 1)
                 afflictions.push_back("magical contamination");
