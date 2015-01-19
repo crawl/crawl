@@ -4486,11 +4486,15 @@ void rot_hp(int hp_loss)
     if (!player_rotted() && hp_loss > 0)
         you.redraw_magic_points = true;
 
+    const int initial_rot = you.hp_max_adj_temp;
     you.hp_max_adj_temp -= hp_loss;
-    calc_hp();
+    // don't allow more rot than you have normal mhp
+    you.hp_max_adj_temp = max(-(get_real_hp(false, true) - 1),
+                              you.hp_max_adj_temp);
+    if (initial_rot == you.hp_max_adj_temp)
+        return;
 
-    // Kill the player if they reached 0 maxhp.
-    ouch(0, KILLED_BY_ROTTING);
+    calc_hp();
 
     if (you.species != SP_GHOUL)
         xom_is_stimulated(hp_loss * 25);
@@ -4500,9 +4504,7 @@ void rot_hp(int hp_loss)
 
 void unrot_hp(int hp_recovered)
 {
-    you.hp_max_adj_temp += hp_recovered;
-    if (you.hp_max_adj_temp > 0)
-        you.hp_max_adj_temp = 0;
+    you.hp_max_adj_temp = min(0, you.hp_max_adj_temp + hp_recovered);
 
     calc_hp();
 
@@ -4624,7 +4626,7 @@ int get_real_hp(bool trans, bool rotted)
     if (trans) // Some transformations give you extra hp.
         hitp = hitp * form_hp_mod() / 10;
 
-    return hitp;
+    return max(1, hitp);
 }
 
 int get_real_mp(bool include_items)
