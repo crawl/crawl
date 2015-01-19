@@ -1530,20 +1530,9 @@ bool mons_can_use_stairs(const monster* mon)
     if (!mons_class_can_use_stairs(mon->type))
         return false;
 
-    // Check summon status
-    int stype = 0;
-    // Other permanent summons can always use stairs
-    if (mon->is_summoned(0, &stype) && !mon->is_perm_summoned()
-        && stype > 0 && stype < NUM_SPELLS)
-    {
-        // Allow uncapped summons to use stairs. This means creatures
-        // from misc evokables, temporary god summons, etc. These tend
-        // to be balanced by other means; however this could use a review
-        // and perhaps needs a whilelist (or long-duration vs. short-duration).
-        return !summons_are_capped(static_cast<spell_type>(stype));
-    }
-    if (stype == MON_SUMM_SHADOW)
-        return false; // shadow traps summons can't follow up/down stairs
+    // Summons can't use stairs.
+    if (mon->has_ench(ENCH_ABJ) || mon->has_ench(ENCH_FAKE_ABJURATION))
+        return false;
 
     // Everything else is fine
     return true;
