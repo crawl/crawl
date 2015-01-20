@@ -102,6 +102,8 @@ public:
     }
 
     void save(writer &outf);
+    void save_persist();
+    void load_persist();
     void gc();
 
     void setglobal(const char *name);

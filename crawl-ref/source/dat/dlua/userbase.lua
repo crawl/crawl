@@ -12,6 +12,12 @@ chk_lua_option          = { }
 chk_lua_save            = { }
 chk_force_autopickup    = { }
 
+-- Data placed in this table will automatically persist through
+-- saves and deaths. See persist.lua for the details of how this is done.
+if not c_persist then
+    c_persist = { }
+end
+
 function c_save()
     if not chk_lua_save then
         return

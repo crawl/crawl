@@ -323,6 +323,8 @@ NORETURN void end_game(scorefile_entry &se)
         get_invent(OSEL_ANY);
     textcolour(LIGHTGREY);
 
+    clua.save_persist();
+
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
         macro_save();
