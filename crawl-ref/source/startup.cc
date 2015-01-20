@@ -244,6 +244,8 @@ static void _post_init(bool newc)
 {
     ASSERT(strwidth(you.your_name) <= kNameLen);
 
+    clua.load_persist();
+
     // Load macros
     macro_init();
 

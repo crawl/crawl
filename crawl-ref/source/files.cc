@@ -1612,6 +1612,8 @@ static void _save_game_base()
 // complain.
 static void _save_game_exit()
 {
+    clua.save_persist();
+
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros
         && !crawl_state.seen_hups
