@@ -320,7 +320,7 @@ static void _german(string &txt)
     ben a deterent to akurate speling.
     */
     for (int i = txt.length() - 2; i > 0; i--)
-        if (txt[i] == txt[i + 1])
+        if (isalpha(txt[i]) && txt[i] == txt[i + 1])
             txt.erase(i, 1);
     /*
     Also, al wil agre that the horibl mes of the silent "e" in the languag is
