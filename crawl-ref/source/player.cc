@@ -1804,6 +1804,8 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
     int rp = 0;
 
+    const int artefact_rp = you.scan_artefacts(ARTP_POISON, calc_unid);
+
     if (items)
     {
         // rings of poison resistance
@@ -1820,8 +1822,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         if (body_armour)
             rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
 
-        // randart weapons:
-        rp += you.scan_artefacts(ARTP_POISON, calc_unid);
+        // rPois+ artefacts
+        if (artefact_rp > 0)
+            rp += artefact_rp;
 
         // dragonskin cloak: 0.5 to draconic resistances
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
@@ -1847,9 +1850,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp++;
     }
 
-    // Give vulnerability for Spider Form, and only let one level of rP to make
-    // up for it (never be poison resistant in Spider Form).
-    rp = (rp > 0 ? 1 : rp);
+    // Cap rPois at + before vulnerability effects are applied
+    // (so carrying multiple rPois effects is never useful)
+    rp = min(1, rp);
 
     if (temp)
     {
@@ -1859,6 +1862,13 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_POISON_VULN])
             rp--;
     }
+
+    // rPois- artefacts
+    if (items && artefact_rp < 0)
+        rp += artefact_rp; // actually subtracts...
+
+    // don't allow rPois--, etc.
+    rp = max(-1, rp);
 
     return rp;
 }
@@ -2282,7 +2292,7 @@ static int _player_armour_beogh_bonus(const item_def& item)
 bool is_effectively_light_armour(const item_def *item)
 {
     return !item
-           || (abs(property(*item, PARM_EVASION)) < 5);
+           || (abs(property(*item, PARM_EVASION)) / 10 < 5);
 }
 
 bool player_effectively_in_light_armour()
@@ -2347,8 +2357,8 @@ static int _player_adjusted_evasion_penalty(const int scale)
             piece_armour_evasion_penalty += penalty;
     }
 
-    return piece_armour_evasion_penalty * scale +
-           you.adjusted_body_armour_penalty(scale);
+    return piece_armour_evasion_penalty * scale / 10 +
+           you.adjusted_body_armour_penalty(scale) ;
 }
 
 // EV bonuses that work even when helpless.
@@ -2518,11 +2528,10 @@ int player_armour_shield_spell_penalty()
     const int scale = 100;
 
     const int body_armour_penalty =
-        max(25 * you.adjusted_body_armour_penalty(scale), 0);
+        max(19 * you.adjusted_body_armour_penalty(scale), 0);
 
     const int total_penalty = body_armour_penalty
-                 + 25 * you.adjusted_shield_penalty(scale)
-                 - 20 * scale;
+                 + 19 * you.adjusted_shield_penalty(scale);
 
     return max(total_penalty, 0) / scale;
 }
@@ -3045,10 +3054,7 @@ void level_change(bool skip_attribute_increase)
 
             case SP_DEEP_DWARF:
                 if (you.experience_level == 14)
-                {
-                    mprf(MSGCH_INTRINSIC_GAIN, "You feel somewhat more resistant.");
                     perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "level up");
-                }
 
                 if (you.experience_level == 9
                     || you.experience_level == 18)
@@ -4480,11 +4486,15 @@ void rot_hp(int hp_loss)
     if (!player_rotted() && hp_loss > 0)
         you.redraw_magic_points = true;
 
+    const int initial_rot = you.hp_max_adj_temp;
     you.hp_max_adj_temp -= hp_loss;
-    calc_hp();
+    // don't allow more rot than you have normal mhp
+    you.hp_max_adj_temp = max(-(get_real_hp(false, true) - 1),
+                              you.hp_max_adj_temp);
+    if (initial_rot == you.hp_max_adj_temp)
+        return;
 
-    // Kill the player if they reached 0 maxhp.
-    ouch(0, KILLED_BY_ROTTING);
+    calc_hp();
 
     if (you.species != SP_GHOUL)
         xom_is_stimulated(hp_loss * 25);
@@ -4494,9 +4504,7 @@ void rot_hp(int hp_loss)
 
 void unrot_hp(int hp_recovered)
 {
-    you.hp_max_adj_temp += hp_recovered;
-    if (you.hp_max_adj_temp > 0)
-        you.hp_max_adj_temp = 0;
+    you.hp_max_adj_temp = min(0, you.hp_max_adj_temp + hp_recovered);
 
     calc_hp();
 
@@ -4618,7 +4626,7 @@ int get_real_hp(bool trans, bool rotted)
     if (trans) // Some transformations give you extra hp.
         hitp = hitp * form_hp_mod() / 10;
 
-    return hitp;
+    return max(1, hitp);
 }
 
 int get_real_mp(bool include_items)
@@ -6264,7 +6272,7 @@ int player::unadjusted_body_armour_penalty() const
     if (!body_armour)
         return 0;
 
-    return -property(*body_armour, PARM_EVASION);
+    return -property(*body_armour, PARM_EVASION) / 10;
 }
 
 /**
@@ -6299,8 +6307,14 @@ int player::adjusted_shield_penalty(int scale) const
         return 0;
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
-    return max(0, (base_shield_penalty * scale - skill(SK_SHIELDS, scale)
-                  / _player_shield_racial_factor()));
+    return max(0, ((base_shield_penalty * scale) - skill(SK_SHIELDS, scale)
+                  / _player_shield_racial_factor() * 10) / 10);
+}
+
+float player::get_shield_skill_to_offset_penalty(const item_def &item)
+{
+    int evp = property(item, PARM_EVASION);
+    return -1 * evp * _player_shield_racial_factor() / 10;
 }
 
 int player::armour_tohit_penalty(bool random_factor, int scale) const

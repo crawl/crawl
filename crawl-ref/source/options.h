@@ -1,6 +1,8 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+#include <algorithm>
+
 #include "feature.h"
 #include "newgame_def.h"
 #include "pattern.h"
@@ -366,8 +368,14 @@ public:
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
 
-    lang_t      lang;                // Translation to use.
-    const char* lang_name;           // Database name of the language.
+    lang_t              language;         // Translation to use.
+    const char*         lang_name;        // Database name of the language.
+    vector<flang_t>     fake_langs;       // The fake language(s) in use.
+    bool has_fake_lang(flang_t flang)
+    {
+        return find(fake_langs.begin(), fake_langs.end(), flang)
+                != fake_langs.end();
+    }
 
     // -1 and 0 mean no confirmation, other possible values are 1,2,3 (see fail_severity())
     int         fail_severity_to_confirm;
@@ -533,6 +541,7 @@ private:
     void remove_item_glyph_override(const string &, bool prepend);
     void set_option_fragment(const string &s, bool prepend);
     bool set_lang(const char *s);
+    void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
 

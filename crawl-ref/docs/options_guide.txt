@@ -123,7 +123,7 @@ The contents of this text are:
 5-a     All OS.
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
                 display_char, feature, mon_glyph, item_glyph,
-                use_fake_player_cursor, show_player_species
+                use_fake_player_cursor, show_player_species, fake_lang
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -2335,6 +2335,14 @@ show_player_species = false
         Displays your character as a member of its species. For example, if
         you're a Hill Orc, you will be shown as an 'o' rather than '@'. Has
         no effect in Tiles.
+
+fake_lang = <lang1>[,<lang2>[,...]]
+        Set one or more fake languages, applied in the order provided (order
+        does matter!) The same language can be set more than once, though it
+        may not end up making much sense...
+
+        Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt)
+        Experiment to find out what they do!
 
 5-b     DOS and Windows.
 ------------------------

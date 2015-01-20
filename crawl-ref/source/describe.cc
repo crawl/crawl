@@ -1213,7 +1213,18 @@ void append_armour_stats(string &description, const item_def &item)
     description += "       ";
 
     description += "Encumbrance rating: ";
-    _append_value(description, -property(item, PARM_EVASION), false);
+    _append_value(description, -property(item, PARM_EVASION) / 10, false);
+}
+
+void append_shield_stats(string &description, const item_def &item)
+{
+    description += "\nBase shield rating: ";
+    _append_value(description, property(item, PARM_AC), false);
+    description += "       ";
+
+    description += "Skill to remove penalty: ";
+    _append_value(description, you.get_shield_skill_to_offset_penalty(item),
+            false);
 }
 
 void append_missile_info(string &description, const item_def &item)
@@ -1246,6 +1257,11 @@ static string _describe_armour(const item_def &item, bool verbose)
     {
         description += "\n";
         append_armour_stats(description, item);
+    }
+    else if (verbose)
+    {
+        description += "\n";
+        append_shield_stats(description, item);
     }
 
     const int ego = get_armour_ego_type(item);
@@ -1335,7 +1351,7 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "It improves your effectiveness with ranged weaponry.";
+            description += "It improves your effectiveness with ranged weaponry (Slay+4).";
             break;
         }
     }
@@ -2482,11 +2498,19 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
         eat_food(slot);
         return false;
     case CMD_READ:
-        if (item.base_type != OBJ_BOOKS || item.sub_type == BOOK_DESTRUCTION)
+    {
+        const bool spellbook =
+#if TAG_MAJOR_VERSION == 34
+            item.sub_type != BOOK_BUGGY_DESTRUCTION &&
+#endif
+            item.base_type == OBJ_BOOKS;
+
+        if (!spellbook)
             redraw_screen();
         read(slot);
         // In case of a book, stay in the inventory to see the content.
-        return item.base_type == OBJ_BOOKS && item.sub_type != BOOK_DESTRUCTION;
+        return spellbook;
+    }
     case CMD_WEAR_JEWELLERY:
         redraw_screen();
         puton_ring(slot);

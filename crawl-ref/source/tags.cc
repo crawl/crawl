@@ -4236,6 +4236,11 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     {
         feature = DNGN_EXIT_LABYRINTH;
     }
+    if (feature == DNGN_DEEP_WATER && player_in_branch(BRANCH_SHOALS)
+        && th.getMinorVersion() < TAG_MINOR_SHOALS_LITE)
+    {
+        feature = DNGN_SHALLOW_WATER;
+    }
 #else
         feature = unmarshallFeatureType(th);
 #endif
@@ -4893,6 +4898,11 @@ static void tag_read_level(reader &th)
                 && player_in_branch(BRANCH_LABYRINTH))
             {
                 grd[i][j] = DNGN_EXIT_LABYRINTH;
+            }
+            if (feat == DNGN_DEEP_WATER && player_in_branch(BRANCH_SHOALS)
+                && th.getMinorVersion() < TAG_MINOR_SHOALS_LITE)
+            {
+                grd[i][j] = DNGN_SHALLOW_WATER;
             }
 #endif
 

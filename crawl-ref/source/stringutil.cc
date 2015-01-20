@@ -60,6 +60,11 @@ string &uppercase(string &s)
     return s;
 }
 
+string uppercase_string(string s)
+{
+    return uppercase(s);
+}
+
 // Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
 // MSVC crt) supporting letters that expand or contract, like German ß (-> SS)
 // upon capitalization / lowercasing.  This is mostly a fault of the API --

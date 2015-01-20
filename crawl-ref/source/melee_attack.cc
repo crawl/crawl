@@ -1572,7 +1572,7 @@ void melee_attack::set_attack_verb()
     int weap_type = WPN_UNKNOWN;
 
     int damage_to_display = damage_done;
-    if (Options.lang == LANG_GRUNT)
+    if (Options.has_fake_lang(FLANG_GRUNT))
         damage_to_display = HIT_STRONG + 1;
 
     if (!weapon)
@@ -1618,7 +1618,8 @@ void melee_attack::set_attack_verb()
                 attack_verb = "spit";
                 verb_degree = "like the proverbial pig";
             }
-            else if (defender_genus == MONS_CRAB && Options.lang == LANG_GRUNT)
+            else if (defender_genus == MONS_CRAB
+                     && Options.has_fake_lang(FLANG_GRUNT))
             {
                 attack_verb = "attack";
                 verb_degree = "'s weak point";
@@ -1665,7 +1666,7 @@ void melee_attack::set_attack_verb()
             verb_degree = "like a turkey";
         }
         else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
-                 && Options.lang == LANG_GRUNT)
+                 && Options.has_fake_lang(FLANG_GRUNT))
             attack_verb = "shave";
         else
         {

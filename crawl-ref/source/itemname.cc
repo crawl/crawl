@@ -1173,8 +1173,10 @@ string sub_type_string(const item_def &item, bool known)
             return "Necronomicon";
         else if (sub_type == BOOK_GRAND_GRIMOIRE)
             return "Grand Grimoire";
-        else if (sub_type == BOOK_DESTRUCTION)
-            return "tome of Destruction";
+#if TAG_MAJOR_VERSION == 34
+        else if (sub_type == BOOK_BUGGY_DESTRUCTION)
+            return "tome of obsoleteness";
+#endif
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
         else if (sub_type == BOOK_FEN)
@@ -2003,8 +2005,10 @@ bool item_type_known(const item_def& item)
     if (item.base_type == OBJ_MISCELLANY && !is_deck(item))
         return true;
 
-    if (item.is_type(OBJ_BOOKS, BOOK_DESTRUCTION))
+#if TAG_MAJOR_VERSION == 34
+    if (item.is_type(OBJ_BOOKS, BOOK_BUGGY_DESTRUCTION))
         return true;
+#endif
 
     if (item.is_type(OBJ_BOOKS, BOOK_MANUAL))
         return false;
@@ -3199,10 +3203,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
             return false;
         }
 
-    case OBJ_BOOKS:
-        // The Tome of Destruction is certainly risky.
-        return item.sub_type == BOOK_DESTRUCTION;
-
     default:
         return false;
     }
@@ -3635,11 +3635,7 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_BOOKS:
-        if (!item_type_known(item))
-            return false;
-        if (temp && item.sub_type == BOOK_DESTRUCTION && silenced(you.pos()))
-            return true; // can't read from the Tome while silenced
-        if (item.sub_type != BOOK_MANUAL)
+        if (!item_type_known(item) || item.sub_type != BOOK_MANUAL)
             return false;
         if (you.skills[item.plus] >= 27)
             return true;
@@ -3756,12 +3752,8 @@ string item_prefix(const item_def &item, bool temp)
         break;
 
     case OBJ_BOOKS:
-        if (item.sub_type != BOOK_MANUAL
-            && item.sub_type != BOOK_DESTRUCTION
-            && item.sub_type != NUM_BOOKS)
-        {
+        if (item.sub_type != BOOK_MANUAL && item.sub_type != NUM_BOOKS)
             prefixes.push_back("spellbook");
-        }
         break;
 
     case OBJ_GOLD:

@@ -7,8 +7,11 @@
 
 #include "lang-fake.h"
 
+#include <unordered_set>
+
 #include "libutil.h"
 #include "options.h"
+#include "random.h"
 #include "stringutil.h"
 #include "unicode.h"
 
@@ -436,35 +439,148 @@ static void _grunt(string &txt)
     }
 }
 
-void filter_lang(string &str)
+/**
+ * Greedily look for a token consisting of only letters, starting at the
+ * given index into the given string.
+ *
+ * @return      The index into the string at which the token ends.
+ *              For example, if passed ("bird bee", 5), return 8.
+ *              If passed ("bird bee, 4"), return 4 (empty token)
+ */
+static size_t _token_starting(const string &str, size_t start)
 {
-    const char* (*repl)[4];
+    size_t end;
+    for (end = start; end < str.size() && isaalpha(str[end]); ++end)
+        ;
+    return end;
+}
 
-    switch (Options.lang)
+/**
+ * Is the given string token too boring to be replaced with 'butt'?
+ *
+ * @param token     The string in question. Should be lowercased.
+ * @return          Whether the token should be skipped in buttification.
+ */
+static bool _too_boring_to_butt(const string &token)
+{
+    static const unordered_set<string> boring_words = {
+        "a", "an", "the", // articles
+        "and", "or", "of", "on", "in", "if", "into", "with", // etc
+        // , "but" <- this is actually very funny to replace.
+    };
+    return boring_words.count(token);
+}
+
+/**
+ * Return an appropriate string to replace the given token with.
+ *
+ * @param token     The token to be replaced.
+ * @return          Presumably, some variant on 'butt'.
+ */
+static string _replacement_butt(const string &token)
+{
+    string butt = "butt";
+    char plural = 's';
+    const char *ly = "-ly";
+    if (isupper(token[0]))
     {
-    case LANG_DWARVEN:
-        repl = dwarven;
-        break;
-    case LANG_JAGERKIN:
-        repl = jager;
-        break;
-    case LANG_KRAUT:
-        _german(str), repl = german;
-        break;
-    case LANG_WIDE:
-        return _wide(str);
-    case LANG_FUTHARK:
-        repl = runes;
-        break;
-    case LANG_GRUNT:
-        _grunt(str); repl = grunt;
-        break;
-    default:
-        return;
+        // All caps and not a single-letter word?
+        if (token.size() > 1 && uppercase_string(token) == token)
+        {
+            uppercase(butt); // FOO -> BUTT
+            plural = 'S';
+            ly = "-LY";
+        }
+        else
+            butt = uppercase_first(butt); // Foo -> Butt
     }
 
-    for (; **repl; repl++)
-        _replace_cap_variants(str, (*repl)[0], (*repl)[1], (*repl)[2], (*repl)[3]);
+    const string lctok = lowercase_string(token);
+    size_t size = lctok.size();
+
+    // Possessives, plurals, and adverbs (and a few adjectives like "holy",
+    // "ugly").
+    if (ends_with(lctok, "'s") || ends_with(lctok, "s'")
+        || lctok == "your" || lctok == "my" || lctok == "its" || lctok == "his"
+        || lctok == "our" || lctok == "their") // "her" is ambiguous :(
+    {
+        butt += '\''; butt += plural; // your -> butt's, Sigmund's -> Butt's
+    }
+    else if (lctok[size - 1] == 's')
+        butt += plural; // Foos -> Butts, FOOS -> BUTTS
+    else if (size > 2 && lctok.substr(size - 2, 2) == "ly")
+        butt += ly; // carefully -> butt-ly, THUNDEROUSLY -> BUTT-LY
+
+    return butt;
+}
+
+/**
+ * Reference https://code.google.com/p/buttbot/ for vision statement & details.
+ *
+ * @param str[in,out]   The string to be improved.
+ */
+static void _butt(string &str)
+{
+    // iter along the string, tokenizing & potentially replacing as we go.
+    for (size_t start = 0; start < str.size(); ++start)
+    {
+        const size_t end = _token_starting(str, start);
+
+        if (end == start) // empty token (non-alpha index)
+            continue;
+
+        const string token = str.substr(start, end - start);
+        // butt sparingly.
+        if (!one_chance_in(20) || _too_boring_to_butt(lowercase_string(token)))
+        {
+            start = end; // will increment again, past the token-ending char
+            continue;
+        }
+
+        // here's where the magic happens!!!
+        const string butt = _replacement_butt(token);
+        str.erase(start, end - start);
+        str.insert(start, butt);
+        start += butt.size(); // will incr again, past the token-ending char
+    }
+}
+
+
+void filter_lang(string &str)
+{
+    for (auto fake_lang : Options.fake_langs)
+    {
+        const char* (*repl)[4];
+
+        switch (fake_lang)
+        {
+            case FLANG_DWARVEN:
+                repl = dwarven;
+                break;
+            case FLANG_JAGERKIN:
+                repl = jager;
+                break;
+            case FLANG_KRAUT:
+                _german(str), repl = german;
+                break;
+            case FLANG_WIDE:
+                return _wide(str);
+            case FLANG_FUTHARK:
+                repl = runes;
+                break;
+            case FLANG_GRUNT:
+                _grunt(str); repl = grunt;
+                break;
+            case FLANG_BUTT:
+                _butt(str);
+                continue;
+            default:
+                continue;
+        }
+
+        for (; **repl; repl++)
+            _replace_cap_variants(str, (*repl)[0], (*repl)[1], (*repl)[2], (*repl)[3]);
+    }
 }
 
 string filtered_lang(string str)

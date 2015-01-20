@@ -42,6 +42,8 @@ sub was_last
     $lastadd = 0;
 }
 
+# Was the previous line a deletion?
+my $prev_del = 0;
 while (<DIFF>)
 {
     if (m|^diff --git a/(.*) b/\1$|)
@@ -69,6 +71,7 @@ while (<DIFF>)
         $lineno++;
         next;
     }
+    my $is_del = /^-/;
     if (s/^\+//)
     {
         $lineno++;
@@ -82,7 +85,8 @@ while (<DIFF>)
         bad_line("TAB") if /\t/ && !$tab;
     }
     $lastadd = $lineno if $_ eq "";
-    bad_line("no newline at eof",1) if $_ eq "\\ No newline at end of file\n";
+    bad_line("no newline at eof",1) if $_ eq "\\ No newline at end of file\n" and not $prev_del;
+    $prev_del = $is_del;
 }
 was_last;
 

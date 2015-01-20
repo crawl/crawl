@@ -1287,7 +1287,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_MAGIC_DART, 13, MON_SPELL_WIZARD },
        { SPELL_SLOW, 13, MON_SPELL_WIZARD },
        { SPELL_CALL_IMP, 13, MON_SPELL_WIZARD },
-       { SPELL_MEPHITIC_CLOUD, 13, MON_SPELL_WIZARD },
+       { SPELL_CONJURE_FLAME, 13, MON_SPELL_WIZARD },
       }
     },
 

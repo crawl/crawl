@@ -1032,10 +1032,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
     case BOOK_MANUAL:
     {
-        // The Tome of Destruction is rare enough we won't change this.
-        if (book.sub_type == BOOK_DESTRUCTION)
-            return true;
-
         int weights[NUM_SKILLS];
         int total_weights = 0;
 

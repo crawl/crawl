@@ -3058,10 +3058,6 @@ tomahawk
 bitterest enemy is in their hands.”
     -James Fenimore Cooper, “The Last of the Mohicans”, 1826.
 %%%%
-tome of destruction
-
-<book>
-%%%%
 tormentor
 
 “Thou art to me a delicious torment.”

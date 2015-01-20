@@ -580,7 +580,7 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
     // Include melded.
     const item_def* wpn = you.slot_item(EQ_WEAPON, true);
     const item_def* armour = you.slot_item(EQ_BODY_ARMOUR, true);
-    const int evp = armour ? -property(*armour, PARM_EVASION) : 0;
+    const int evp = armour ? -property(*armour, PARM_EVASION) / 10 : 0;
     switch (type)
     {
     case (ET_WEAPON):

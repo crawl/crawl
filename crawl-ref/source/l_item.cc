@@ -269,7 +269,6 @@ static int l_item_do_class(lua_State *ls)
 
 IDEFN(class, do_class)
 
-// XXX: I really doubt most of this function needs to exist
 static int l_item_do_subtype(lua_State *ls)
 {
     UDATA_ITEM(item);
@@ -281,41 +280,13 @@ static int l_item_do_subtype(lua_State *ls)
     }
 
     const char *s = nullptr;
+
+    // Special-case OBJ_ARMOUR behavior to maintain compatibility with
+    // existing scripts.
     if (item->base_type == OBJ_ARMOUR)
         s = item_slot_name(get_armour_slot(*item));
-    if (item->base_type == OBJ_BOOKS)
-    {
-        if (item->sub_type == BOOK_MANUAL)
-            s = "manual";
-        else
-            s = "spellbook";
-    }
     else if (item_type_known(*item))
-    {
-        if (item->base_type == OBJ_JEWELLERY)
-            s = jewellery_effect_name(item->sub_type);
-        else if (item->base_type == OBJ_POTIONS)
-        {
-            if (item->sub_type == POT_BLOOD)
-                s = "blood";
-#if TAG_MAJOR_VERSION == 34
-            else if (item->sub_type == POT_BLOOD_COAGULATED)
-                s = "coagulated blood";
-            else if (item->sub_type == POT_PORRIDGE)
-                s = "porridge";
-            else if (item->sub_type == POT_GAIN_STRENGTH
-                        || item->sub_type == POT_GAIN_DEXTERITY
-                        || item->sub_type == POT_GAIN_INTELLIGENCE)
-            {
-                s = "gain ability";
-            }
-#endif
-            else if (item->sub_type == POT_BERSERK_RAGE)
-                s = "berserk";
-            else if (item->sub_type == POT_CURE_MUTATION)
-                s = "cure mutation";
-        }
-    }
+        s = sub_type_string(*item).c_str();
 
     if (s)
         lua_pushstring(ls, s);
@@ -326,6 +297,37 @@ static int l_item_do_subtype(lua_State *ls)
 }
 
 IDEFN(subtype, do_subtype)
+
+static int l_item_do_ego(lua_State *ls)
+{
+    UDATA_ITEM(item);
+    if (!item)
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    bool terse = false;
+    if (lua_isboolean(ls, 1))
+        terse = lua_toboolean(ls, 1);
+
+    const char *s = nullptr;
+
+    if ((item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR
+         || item->base_type == OBJ_MISSILES) && item_ident(*item, ISFLAG_KNOW_TYPE))
+    {
+        s = ego_type_string(*item, terse).c_str();
+    }
+
+    if (s && *s)
+        lua_pushstring(ls, s);
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEFN(ego, do_ego)
 
 IDEF(cursed)
 {
@@ -670,6 +672,30 @@ IDEF(spells)
     return 1;
 }
 
+IDEF(artprops)
+{
+    if (!item || !item->defined() || !is_artefact(*item)
+        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES))
+    {
+        return 0;
+    }
+
+    lua_newtable(ls);
+
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+    {
+        int value = artefact_property(*item, (artefact_prop_type)i);
+        if (value)
+        {
+            lua_pushstring(ls, artp_name((artefact_prop_type)i));
+            lua_pushnumber(ls, value);
+            lua_settable(ls, -3);
+        }
+    }
+
+    return 1;
+}
+
 IDEF(damage)
 {
     if (!item || !item->defined())
@@ -737,7 +763,7 @@ IDEF(encumbrance)
         return 0;
 
     if (item->base_type == OBJ_ARMOUR)
-        lua_pushnumber(ls, -property(*item, PARM_EVASION));
+        lua_pushnumber(ls, -property(*item, PARM_EVASION) / 10);
     else
         lua_pushnil(ls);
 
@@ -1176,6 +1202,7 @@ static ItemAccessor item_attrs[] =
     { "plus2",             l_item_plus2 },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
+    { "ego",               l_item_ego },
     { "cursed",            l_item_cursed },
     { "tried",             l_item_tried },
     { "worn",              l_item_worn },
@@ -1202,6 +1229,7 @@ static ItemAccessor item_attrs[] =
     { "is_bad_food",       l_item_is_bad_food },
     { "is_useless",        l_item_is_useless },
     { "spells",            l_item_spells },
+    { "artprops",          l_item_artprops },
     { "damage",            l_item_damage },
     { "accuracy",          l_item_accuracy },
     { "delay",             l_item_delay },

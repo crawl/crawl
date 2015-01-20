@@ -27,7 +27,7 @@ const Branch branches[NUM_BRANCHES] =
       'T', 0 },
 
     { BRANCH_ORC, BRANCH_DUNGEON, 9, 12, 4, 8,
-      0, 0,
+      BFLAG_SPOTTY, 0,
       DNGN_ENTER_ORC, DNGN_EXIT_ORC,
       "Orcish Mines", "the Orcish Mines", "Orc",
       nullptr,
@@ -61,7 +61,7 @@ const Branch branches[NUM_BRANCHES] =
       'L', 4 },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 3, 6, 5, 15,
-      BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END | BFLAG_SPOTTY, 0,
       DNGN_ENTER_SWAMP, DNGN_EXIT_SWAMP,
       "Swamp", "the Swamp", "Swamp",
       nullptr,
@@ -69,7 +69,7 @@ const Branch branches[NUM_BRANCHES] =
       'S', 0 },
 
     { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 5, 15,
-      BFLAG_ISLANDED | BFLAG_DANGEROUS_END, 0,
+      BFLAG_DANGEROUS_END, 0,
       DNGN_ENTER_SHOALS, DNGN_EXIT_SHOALS,
       "Shoals", "the Shoals", "Shoals",
       nullptr,
@@ -93,7 +93,7 @@ const Branch branches[NUM_BRANCHES] =
       'N', 0 },
 
     { BRANCH_SLIME, BRANCH_LAIR, 6, 8, 6, 17,
-      BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END, 0,
+      BFLAG_NO_ITEMS | BFLAG_DANGEROUS_END | BFLAG_SPOTTY, 0,
       DNGN_ENTER_SLIME, DNGN_EXIT_SLIME,
       "Slime Pits", "the Pits of Slime", "Slime",
       nullptr,
@@ -182,7 +182,7 @@ const Branch branches[NUM_BRANCHES] =
       'Z', 0 },
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_FOREST, BRANCH_VAULTS, 2, 3, 5, 19,
-      0, 0,
+      BFLAG_SPOTTY, 0,
       DNGN_ENTER_FOREST, DNGN_EXIT_FOREST,
       "Forest", "the Enchanted Forest", "Forest",
       nullptr,

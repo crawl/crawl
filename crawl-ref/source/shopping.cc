@@ -1823,8 +1823,10 @@ unsigned int item_value(item_def item, bool ident)
     {
         valued = 150;
         const book_type book = static_cast<book_type>(item.sub_type);
-        if (book == BOOK_DESTRUCTION)
+#if TAG_MAJOR_VERSION == 34
+        if (book == BOOK_BUGGY_DESTRUCTION)
             break;
+#endif
 
         if (item_type_known(item))
         {
