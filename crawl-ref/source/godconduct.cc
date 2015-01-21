@@ -588,7 +588,7 @@ static const like_response OKAWARU_KILL = {
     {
         piety = get_fuzzied_monster_difficulty(victim);
         dprf("fuzzied monster difficulty: %4.2f", piety * 0.01);
-        denom = 600;
+        denom = 550;
 
         if (piety > 3200)
         {
