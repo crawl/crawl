@@ -541,8 +541,12 @@ bool trap_def::weave_shadow(const actor& triggerer)
  */
 void trap_def::trigger_shadow_trap(const actor& triggerer)
 {
-    if (triggerer.is_summoned())
+    if (triggerer.is_monster()
+        && (triggerer.as_monster()->has_ench(ENCH_ABJ)
+            || triggerer.as_monster()->has_ench(ENCH_FAKE_ABJURATION)))
+    {
         return; // no summonsplosions
+    }
 
     if (mons_is_tentacle_or_tentacle_segment(triggerer.type))
         return; // no krakensplosions
