@@ -707,13 +707,14 @@ void zap_wand(int slot)
     // Take off a charge.
     wand.charges--;
     // And a few more, if you didn't know the wand's charges.
+    int wasted_charges = 0;
     if (wasteful)
     {
 #ifdef DEBUG_DIAGNOSTICS
         const int initial_charge = wand.plus;
 #endif
 
-        const int wasted_charges = 1 + random2(2); //1-2
+        wasted_charges = 1 + random2(2); //1-2
         wand.charges = max(0, wand.charges - wasted_charges);
 
         dprf("Wasted %d charges (wand %d -> %d)", wasted_charges,
@@ -728,9 +729,8 @@ void zap_wand(int slot)
     if (wand.used_count >= 0)
     {
         wand.used_count++;
-        // And at least once more for wasteage
         if (wasteful)
-            wand.used_count++;
+            wand.used_count += wasted_charges;
     }
 
     // Identify if unknown.
