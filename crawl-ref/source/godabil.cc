@@ -4353,7 +4353,7 @@ static int _gozag_max_shops()
 int gozag_price_for_shop(bool max)
 {
     // This value probably needs tweaking.
-    const int max_base = 666;
+    const int max_base = 1000;
     const int base = max ? max_base : random_range(max_base/2, max_base);
     const int price = base
                       * (GOZAG_SHOP_BASE_MULTIPLIER
@@ -4405,8 +4405,7 @@ static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
 
 bool gozag_setup_call_merchant(bool quiet)
 {
-    const int gold_min = gozag_price_for_shop(true) *
-                         (you.species == SP_MUMMY ? 3 : 2) / 2;
+    const int gold_min = gozag_price_for_shop(true);
     if (you.gold < gold_min)
     {
         if (!quiet)
@@ -4517,10 +4516,8 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
                                                       "Emporium", "Shop")
                                       : "";
 
-    // food shops are 2/3rds as expensive as all other shop types.
-    const int base_price = gozag_price_for_shop();
-    const int price = type == SHOP_FOOD ? base_price : base_price * 3 / 2;
-    you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int() = price;
+    you.props[make_stringf(GOZAG_SHOP_COST_KEY, index)].get_int()
+        = gozag_price_for_shop();
 }
 
 /**
