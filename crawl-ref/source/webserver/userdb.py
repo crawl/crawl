@@ -73,11 +73,14 @@ def get_salt(passwd):
         salt = make_salt(2)
     return salt
 
-def register_user(username, passwd, email): # Returns an error message or None
+def register_user(username, passwd, email):
+    '''Returns an error message or None (success).'''
     if not passwd:
         return "The password can't be empty!"
     passwd = passwd[0:config.max_passwd_length]
     username = username.strip()
+    if len(username) == 1:
+        return "Username too short."
     if not re.match(config.nick_regex, username):
         return "Invalid username!"
 
