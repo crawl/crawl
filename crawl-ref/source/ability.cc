@@ -717,7 +717,8 @@ int get_gold_cost(ability_type ability)
     switch (ability)
     {
     case ABIL_GOZAG_CALL_MERCHANT:
-        return gozag_price_for_shop(true);
+        return gozag_price_for_shop(true) *
+            (you.species == SP_MUMMY ? 3 : 2) / 2;
     case ABIL_GOZAG_POTION_PETITION:
         return gozag_potion_price();
     case ABIL_GOZAG_BRIBE_BRANCH:
