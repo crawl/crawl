@@ -4842,10 +4842,20 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     const bool player_knows_trap = (trap.is_known(&you));
 
     // No friendly monsters will ever enter a shadow or Zot trap you know.
-    if (player_knows_trap && friendly() && (trap.type == TRAP_ZOT
-                                            || trap.type == TRAP_SHADOW))
+    if (player_knows_trap && friendly())
     {
-        return false;
+        if (trap.type == TRAP_ZOT)
+            return false;
+
+        // except for summoned allies, whch can enter shadow traps without
+        // triggering them.
+        if (trap.type == TRAP_SHADOW
+            && !has_ench(ENCH_ABJ)
+            && !has_ench(ENCH_FAKE_ABJURATION))
+        {
+            return false;
+        }
+
     }
 
     // Dumb monsters don't care at all.
