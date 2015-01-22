@@ -1178,7 +1178,8 @@ static int _triangular_number(int n)
  * @param powc The enchantment power.
  * @param scale The denominator of the result.
  *
- * @return The chance, out of scale, that the enchantment affects the target.
+ * @return The chance, out of scale (rounded down), that the enchantment
+ * affects the target.
  */
 int hex_success_chance(const int mr, int powc, int scale)
 {
@@ -1190,7 +1191,7 @@ int hex_success_chance(const int mr, int powc, int scale)
     if (target > 200)
         return 0;
     if (target <= 100)
-        return scale - scale * _triangular_number(target) / (101 * 100);
+        return scale * (101 * 100 - _triangular_number(target)) / (101 * 100);
     return scale * _triangular_number(201 - target) / (101 * 100);
 }
 
