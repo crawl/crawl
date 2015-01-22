@@ -1587,7 +1587,7 @@ vector<string> monster_info::attributes() const
         v.emplace_back("heavily drained");
     if (is(MB_NEGATIVE_VULN))
         v.emplace_back("more vulnerable to negative energy");
-    if (is(MB_OZOCUBUS_ARMOUR))
+    if (is(MB_CONDENSATION_SHIELD))
         v.emplace_back("protected by a disc of dense vapour");
     if (is(MB_RESISTANCE))
         v.emplace_back("unusually resistant");
