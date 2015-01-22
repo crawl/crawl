@@ -19,6 +19,21 @@
 #define PURITY_SAC_KEY "current_purity_sacrifice"
 #define ARCANA_SAC_KEY "current_arcane_sacrifices"
 
+const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
+const char * const GOZAG_PRICE_KEY = "gozag_price%d";
+
+const char * const GOZAG_SHOPKEEPER_NAME_KEY = "gozag_shopkeeper_%d";
+const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
+const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
+const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
+
+#define GOZAG_POTION_BASE_MULTIPLIER 25
+#define GOZAG_SHOP_BASE_MULTIPLIER 100
+#define GOZAG_SHOP_MOD_MULTIPLIER 20
+#define GOZAG_BRIBE_AMOUNT 3000
+#define GOZAG_MAX_BRIBABILITY 8
+#define GOZAG_MAX_POTIONS 3
+
 struct bolt;
 class stack_iterator;
 
