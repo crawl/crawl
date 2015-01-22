@@ -364,6 +364,9 @@ void wizard_heal(bool super_heal)
     you.redraw_hit_points = true;
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
+
+    for (int stat = 0; stat < NUM_STATS; stat++)
+        you.stat_zero[stat] = false;
 }
 
 void wizard_set_hunger_state()
