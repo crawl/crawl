@@ -2755,7 +2755,7 @@ static void _open_door(coord_def move)
         }
 
         // If there's only one door to open, don't ask.
-        if (num == 1)
+        if (num == 1 && Options.easy_door)
             door_move.delta = move;
         else
         {
@@ -2852,7 +2852,7 @@ static void _close_door()
         return;
     }
     // move got set in _check_adjacent
-    else if (num == 1)
+    else if (num == 1 && Options.easy_door)
         door_move.delta = move;
     else
     {
