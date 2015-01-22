@@ -147,6 +147,7 @@ enum tag_minor_version
     TAG_MINOR_FIX_8_BIT_VEC_MAX,   // Fix up bad CrawlVector max size
     TAG_MINOR_TRACK_BANISHER,      // Persist the name of the last thing that banished the player
     TAG_MINOR_SHOALS_LITE,         // Remove deep water from old Shoals
+    TAG_MINOR_FIX_EXPLORE_MODE,    // Fix char selection screen on old versions
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
