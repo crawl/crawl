@@ -329,24 +329,9 @@ const char * const MONSTER_MID = "monster-mid";
 const char * const GOZAG_SHOP_KEY = "gozag_shop_%s";
 const char * const GOZAG_ANNOUNCE_SHOP_KEY = "gozag_announce_shop";
 
-const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
-const char * const GOZAG_PRICE_KEY = "gozag_price%d";
-
-const char * const GOZAG_SHOPKEEPER_NAME_KEY = "gozag_shopkeeper_%d";
-const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
-const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
-const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
-
 const char * const NEUTRAL_BRIBE_KEY         = "gozag_bribed";
 const char * const FRIENDLY_BRIBE_KEY        = "gozag_permabribed";
 const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
-
-#define GOZAG_POTION_BASE_MULTIPLIER 25
-#define GOZAG_SHOP_BASE_MULTIPLIER 100
-#define GOZAG_SHOP_MOD_MULTIPLIER 20
-#define GOZAG_BRIBE_AMOUNT 3000
-#define GOZAG_MAX_BRIBABILITY 8
-#define GOZAG_MAX_POTIONS 3
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10
