@@ -211,7 +211,7 @@ static void _input();
 static void _safe_move_player(int move_x, int move_y);
 static void _move_player(int move_x, int move_y);
 static void _move_player(coord_def move);
-static int  _check_adjacent(dungeon_feature_type feat);
+static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
 static void _open_door(coord_def move = coord_def(0,0));
 
 static void _swing_at_target(coord_def move);
@@ -2633,8 +2633,8 @@ static keycode_type _get_next_keycode()
 }
 
 // Check squares adjacent to player for given feature and return how
-// many there are.
-static int _check_adjacent(dungeon_feature_type feat)
+// many there are.  If there's only one, return the dx and dy.
+static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
 
@@ -2657,6 +2657,7 @@ static int _check_adjacent(dungeon_feature_type feat)
             }
 
             num++;
+            delta = *ai - you.pos();
         }
     }
 
@@ -2744,14 +2745,18 @@ static void _open_door(coord_def move)
     // The player hasn't picked a direction yet.
     if (move.origin())
     {
-        const int num = _check_adjacent(DNGN_CLOSED_DOOR)
-                        + _check_adjacent(DNGN_RUNED_DOOR);
+        const int num = _check_adjacent(DNGN_CLOSED_DOOR, move)
+                        + _check_adjacent(DNGN_RUNED_DOOR, move);
 
         if (num == 0)
         {
             mpr("There's nothing to open nearby.");
             return;
         }
+
+        // If there's only one door to open, don't ask.
+        if (num == 1)
+            door_move.delta = move;
         else
         {
             mprf(MSGCH_PROMPT, "Which direction?");
@@ -2837,14 +2842,18 @@ static void _close_door()
     }
 
     dist door_move;
+    coord_def move = coord_def(0, 0);
 
     // If there's only one door to close, don't ask.
-    int num = _check_adjacent(DNGN_OPEN_DOOR);
+    int num = _check_adjacent(DNGN_OPEN_DOOR, move);
     if (num == 0)
     {
         mpr("There's nothing to close nearby.");
         return;
     }
+    // move got set in _check_adjacent
+    else if (num == 1)
+        door_move.delta = move;
     else
     {
         mprf(MSGCH_PROMPT, "Which direction?");
