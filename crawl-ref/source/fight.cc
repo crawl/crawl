@@ -512,13 +512,30 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     return result;
 }
 
-// Used by cleave to determine if multi-hit targets will be attacked.
-static bool _dont_harm(const actor* attacker, const actor* defender)
+/**
+ * Should the given attacker cleave into the given victim with an axe or axe-
+ * like weapon?
+ *
+ * @param attacker  The creature doing the cleaving.
+ * @param defender  The potential cleave-ee.
+ * @return          True if the defender is an enemy of the defender; false
+ *                  otherwise.
+ */
+static bool _dont_harm(const actor &attacker, const actor &defender)
 {
-    return mons_aligned(attacker, defender)
-           || attacker == &you && defender->wont_attack()
-           || defender == &you && attacker->wont_attack()
-           || mons_attitude(defender->as_monster()) == ATT_NEUTRAL;
+    if (mons_aligned(&attacker, &defender))
+        return true;
+
+    if (defender.is_player())
+        return attacker.wont_attack();
+
+    if (attacker.is_player())
+    {
+        return defender.wont_attack()
+               || mons_attitude(defender.as_monster()) == ATT_NEUTRAL;
+    }
+
+    return false;
 }
 
 /**
@@ -530,28 +547,27 @@ static bool _dont_harm(const actor* attacker, const actor* defender)
  * @param targets[out]   A list to be populated with targets.
  * @param which_attack   The attack_number (default -1, which uses the default weapon).
  */
-void get_cleave_targets(const actor* attacker, const coord_def& def,
+void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
-    if (!attacker->alive())
+    if (!attacker.alive())
         return;
 
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
-    const item_def* weap = attacker->weapon(which_attack);
-    if (attacker->confused())
+    const item_def* weap = attacker.weapon(which_attack);
+    if (attacker.confused())
         return;
 
     if ((weap && item_attack_skill(*weap) == SK_AXES
-         || attacker->is_player()
+         || attacker.is_player()
             && (you.form == TRAN_HYDRA && you.heads() > 1
-                || you.duration[DUR_CLEAVE]))
-        && !attacker->confused())
+                || you.duration[DUR_CLEAVE])))
     {
-        const coord_def atk = attacker->pos();
+        const coord_def atk = attacker.pos();
         coord_def atk_vector = def - atk;
         const int dir = coinflip() ? -1 : 1;
 
@@ -559,8 +575,8 @@ void get_cleave_targets(const actor* attacker, const coord_def& def,
         {
             atk_vector = rotate_adjacent(atk_vector, dir);
 
-            actor * target = actor_at(atk + atk_vector);
-            if (target && !_dont_harm(attacker, target))
+            actor *target = actor_at(atk + atk_vector);
+            if (target && !_dont_harm(attacker, *target))
                 targets.push_back(target);
         }
     }
@@ -585,16 +601,15 @@ void get_cleave_targets(const actor* attacker, const coord_def& def,
  * @param attack_number             ?
  * @param effective_attack_number   ?
  */
-void attack_cleave_targets(actor* attacker, list<actor*> &targets,
+void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            int attack_number, int effective_attack_number)
 {
-    ASSERT(attacker);
-    while (attacker->alive() && !targets.empty())
+    while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
-        if (def && def->alive() && !_dont_harm(attacker, def))
+        if (def && def->alive() && !_dont_harm(attacker, *def))
         {
-            melee_attack attck(attacker, def, attack_number,
+            melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
             attck.attack();
         }

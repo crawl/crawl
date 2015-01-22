@@ -716,7 +716,7 @@ bool melee_attack::handle_phase_end()
 {
     if (!cleave_targets.empty())
     {
-        attack_cleave_targets(attacker, cleave_targets, attack_number,
+        attack_cleave_targets(*attacker, cleave_targets, attack_number,
                               effective_attack_number);
     }
 
@@ -3644,7 +3644,8 @@ void melee_attack::cleave_setup()
 
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
-    get_cleave_targets(attacker, defender->pos(), cleave_targets, attack_number);
+    get_cleave_targets(*attacker, defender->pos(), cleave_targets,
+                       attack_number);
     // We're already attacking this guy.
     cleave_targets.pop_front();
 }
