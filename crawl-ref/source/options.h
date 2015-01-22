@@ -173,6 +173,7 @@ public:
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
+    bool        easy_door;       // 'O', 'C' don't prompt with just one door.
     int         confirm_butcher; // When to prompt for butchery
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
