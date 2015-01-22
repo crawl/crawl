@@ -4353,7 +4353,7 @@ static int _gozag_max_shops()
 int gozag_price_for_shop(bool max)
 {
     // This value probably needs tweaking.
-    const int max_base = 1000;
+    const int max_base = 800;
     const int base = max ? max_base : random_range(max_base/2, max_base);
     const int price = base
                       * (GOZAG_SHOP_BASE_MULTIPLIER
