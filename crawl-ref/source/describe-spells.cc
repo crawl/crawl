@@ -244,8 +244,9 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (!crawl_state.need_save)
         return COL_UNKNOWN;
 
+    const bool rod = source_item && OBJ_RODS == source_item->base_type;
     if (!source_item || source_item->base_type != OBJ_BOOKS)
-        return spell_highlight_by_utility(spell);
+        return spell_highlight_by_utility(spell, COL_UNKNOWN, false, rod);
 
     if (you.has_spell(spell))
         return COL_MEMORIZED;
@@ -262,7 +263,7 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     if (!you.has_spell(spell))
         return COL_UNMEMORIZED;
 
-    return spell_highlight_by_utility(spell);
+    return spell_highlight_by_utility(spell, COL_UNKNOWN, false, rod);
 }
 
 /**
