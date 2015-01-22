@@ -293,6 +293,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 }
             }
 
+            // check if you'd get stat-zeroed
+            if (!_safe_to_remove_or_wear(*wpn, true))
+                return false;
+
             if (!unwield_item(show_weff_messages))
                 return false;
 
