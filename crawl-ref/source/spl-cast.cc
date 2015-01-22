@@ -2011,25 +2011,37 @@ static int _tetrahedral_number(int n)
 // Called only by failure_rate_to_int and get_miscast_chance.
 static double _get_true_fail_rate(int raw_fail)
 {
-    //Need random2(101) + random2(101) + random2(100) to be less than 3*raw_fail.
-    //Fun with tetrahedral numbers!
-
-    int target = raw_fail * 3;
+    // Need 3*random2avg(100,3) = random2(101) + random2(101) + random2(100)
+    // to be (strictly) less than 3*raw_fail. Fun with tetrahedral numbers!
+    
+    // How many possible outcomes, considering all three dice?
+    const int outcomes = 101 * 101 * 100;
+    const int target = raw_fail * 3;
 
     if (target <= 100)
-        return (double) _tetrahedral_number(target)/1020100;
+    {
+        // The failures are exactly the triples of nonnegative integers
+        // that sum to < target.
+        return double(_tetrahedral_number(target)) / outcomes;
+    }
     if (target <= 200)
     {
-        //PIE: the negative term takes the maximum of 100 (or 99) into
-        //consideration.  Note that only one term can exceed it in this case,
-        //which is why this works.
-        return (double) (_tetrahedral_number(target)
-                         - 2*_tetrahedral_number(target - 101)
-                         - _tetrahedral_number(target - 100)) / 1020100;
+        // Some of the triples that sum to < target would have numbers
+        // greater than 100, or a last number greater than 99, so aren't
+        // possible outcomes. Apply the principle of inclusion-exclusion
+        // by subtracting out these cases. The set of triples with first
+        // number > 100 is isomorphic to the set of triples that sum to
+        // 101 less; likewise for the second and third numbers (100 less
+        // in the last case). Two or more out-of-range numbers would have
+        // resulted in a sum of at least 201, so there is no overlap
+        // among the three cases we are subtracting.
+        return double(_tetrahedral_number(target)
+                      - 2 * _tetrahedral_number(target - 101)
+                      - _tetrahedral_number(target - 100)) / outcomes;
     }
-    //The random2avg distribution is symmetric, so the last interval is
-    //essentially the same as the first interval.
-    return (double) (1020100 - _tetrahedral_number(300 - target)) / 1020100;
+    // The random2avg distribution is symmetric, so the last interval is
+    // essentially the same as the first interval.
+    return double(outcomes - _tetrahedral_number(300 - target)) / outcomes;
 }
 
 /**
