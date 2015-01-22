@@ -2885,14 +2885,27 @@ void seen_item(const item_def &item)
     }
 }
 
+/// Map of xp evokers to you.props[] xp debt keys.
+static const map<int, const char*> debt_map = {
+    { MISC_FAN_OF_GALES,        "fan_debt" },
+    { MISC_LAMP_OF_FIRE,        "lamp_debt" },
+    { MISC_STONE_OF_TREMORS,    "stone_debt" },
+    { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
+    { MISC_HORN_OF_GERYON,      "horn_debt" },
+};
+
+/**
+ * Is the given item an xp-charged evocable? (That is, one that recharges as
+ * the player gains xp.)
+ *
+ * @param item      The item in question.
+ * @return          Whether the given item is an xp evocable. (One of the
+ *                  elemental evocables or the Horn of Geryon.)
+ */
 bool is_xp_evoker(const item_def &item)
 {
     return item.base_type == OBJ_MISCELLANY
-           && (item.sub_type == MISC_LAMP_OF_FIRE
-               || item.sub_type == MISC_STONE_OF_TREMORS
-               || item.sub_type == MISC_FAN_OF_GALES
-               || item.sub_type == MISC_PHIAL_OF_FLOODS
-               || item.sub_type == MISC_HORN_OF_GERYON);
+           && map_find(debt_map, item.sub_type);
 }
 
 /**
@@ -2905,15 +2918,6 @@ bool is_xp_evoker(const item_def &item)
  */
 int &evoker_debt(int evoker_type)
 {
-    static const map<int, const char*> debt_map = {
-        { MISC_FAN_OF_GALES,        "fan_debt" },
-        { MISC_LAMP_OF_FIRE,        "lamp_debt" },
-        { MISC_STONE_OF_TREMORS,    "stone_debt" },
-        { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
-        { MISC_HORN_OF_GERYON,      "horn_debt" },
-    };
-    // fr: statically check that all xp evokers are in here
-
     const char* const *prop_name = map_find(debt_map, evoker_type);
     ASSERT(prop_name);
     return you.props[*prop_name].get_int();
