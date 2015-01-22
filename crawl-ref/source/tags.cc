@@ -1283,7 +1283,8 @@ static void tag_construct_char(writer &th)
     // older version.
     // Please keep this compatible even over major version breaks!
 
-    // Appending fields is fine.
+    // Appending fields is fine, but inserting new fields anywhere other than
+    // the end of this function is not!
 
     marshallString2(th, you.your_name);
     marshallString2(th, Version::Long);
@@ -1296,7 +1297,6 @@ static void tag_construct_char(writer &th)
     marshallString2(th, you.jiyva_second_name);
 
     marshallByte(th, you.wizard);
-    marshallByte(th, you.explore);
 
     marshallByte(th, crawl_state.type);
     if (crawl_state.game_is_tutorial())
@@ -1307,6 +1307,8 @@ static void tag_construct_char(writer &th)
 
     // separate from the tutorial so we don't have to bump TAG_CHR_FORMAT
     marshallString2(th, crawl_state.map);
+
+    marshallByte(th, you.explore);
 }
 
 static void tag_construct_you(writer &th)
@@ -2062,10 +2064,17 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     you.jiyva_second_name = unmarshallString2(th);
 
     you.wizard            = unmarshallBoolean(th);
-#if TAG_MAJOR_VERSION == 34
-    if (minor >= TAG_MINOR_EXPLORE_MODE)
+    // this was mistakenly inserted in the middle for a few tag versions - this
+    // just makes sure that games generated in that time period are still
+    // readable, but should not be used for new games
+#if TAG_CHR_FORMAT == 0
+    if (major == 34
+        && (minor >= TAG_MINOR_EXPLORE_MODE
+            && minor < TAG_MINOR_FIX_EXPLORE_MODE))
+    {
+        you.explore = unmarshallBoolean(th);
+    }
 #endif
-        you.explore       = unmarshallBoolean(th);
 
     crawl_state.type = (game_type) unmarshallUByte(th);
     if (crawl_state.game_is_tutorial())
@@ -2092,6 +2101,11 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 
     if (major > 34 || major == 34 && minor >= 29)
         crawl_state.map = unmarshallString2(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (minor >= TAG_MINOR_FIX_EXPLORE_MODE)
+#endif
+        you.explore = unmarshallBoolean(th);
 }
 
 static void tag_read_you(reader &th)
