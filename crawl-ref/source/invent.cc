@@ -2182,16 +2182,8 @@ void list_charging_evokers(FixedVector<item_def*, NUM_MISCELLANY> &evokers)
     {
         item_def& item(you.inv[i]);
         // can't charge non-evokers, or evokers that are full
-        if (!is_xp_evoker(item) || item.evoker_debt == 0)
+        if (!is_xp_evoker(item) || evoker_debt(item.sub_type) == 0)
             continue;
-
-        // Only recharge one of each type of evoker at a time.
-        // Prioritizes by which one is most nearly charged.
-        if (evokers[item.sub_type]
-            && evokers[item.sub_type]->evoker_debt <= item.evoker_debt)
-        {
-            continue;
-        }
 
         evokers[item.sub_type] = &item;
     }

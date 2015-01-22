@@ -2895,64 +2895,33 @@ bool is_xp_evoker(const item_def &item)
                || item.sub_type == MISC_HORN_OF_GERYON);
 }
 
+/**
+ * Return the xp debt corresponding to the given type of evoker.
+ * Asserts that the given evoker type actually corresponds to an xp evoker.
+ *
+ * @param evoker_type       The misc_item_type of the evoker in question.
+ * @return                  The level of xp debt the given evoker type has
+ *                          before it can be used again.
+ */
+int &evoker_debt(int evoker_type)
+{
+    static const map<int, const char*> debt_map = {
+        { MISC_FAN_OF_GALES,        "fan_debt" },
+        { MISC_LAMP_OF_FIRE,        "lamp_debt" },
+        { MISC_STONE_OF_TREMORS,    "stone_debt" },
+        { MISC_PHIAL_OF_FLOODS,     "phial_debt" },
+        { MISC_HORN_OF_GERYON,      "horn_debt" },
+    };
+    // fr: statically check that all xp evokers are in here
+
+    const char* const *prop_name = map_find(debt_map, evoker_type);
+    ASSERT(prop_name);
+    return you.props[*prop_name].get_int();
+}
+
 bool evoker_is_charged(const item_def &item)
 {
-    return num_xp_evokers_inert(item) < item.quantity;
-}
-
-int num_xp_evokers_inert(const item_def &item)
-{
-    return (item.evoker_debt + XP_EVOKE_DEBT - 1) / XP_EVOKE_DEBT;
-}
-
-// XXX: this doesn't seem like the best place to put these two functions.
-/**
- * Remove the most recently used XP evoker from a stack of items.
- * (That is, first remove all of the inert evokers, and only then remove
- * charged ones as necessary.)
- *
- * @param   stack The stack of items.
- * @param   quant The number of evokers we are pulling.
- * @returns The evoker debt of the items we are pulling out of the pile.
- */
-int remove_newest_xp_evoker(item_def &stack, int quant)
-{
-    const int new_stack_debt = min<int>(stack.evoker_debt,
-                                        quant * XP_EVOKE_DEBT);
-    stack.evoker_debt -= new_stack_debt;
-    return new_stack_debt;
-}
-
-/**
- * Remove the least recently used XP evoker from a stack of items.
- * (That is, first remove all of the charged evokers, and only then remove
- * inert ones as necessary.)
- *
- * @param   stack The stack of items.
- * @param   quant The number of evokers we are pulling.
- * @returns The evoker debt of the items we are pulling out of the pile.
- */
-int remove_oldest_xp_evoker(item_def &stack, int quant)
-{
-    // how many items will be left in the old stack?
-    const int old_stack_remaining = stack.quantity - quant;
-    // how many inert evokers do we need to take?
-    int num_inert = num_xp_evokers_inert(stack) - old_stack_remaining;
-    if (num_inert <= 0)
-        return 0;
-
-    int new_stack_debt = 0;
-    // first, take a partially-recharged inert evoker, if there is one
-    if (stack.evoker_debt % XP_EVOKE_DEBT > 0)
-    {
-        new_stack_debt = stack.evoker_debt % XP_EVOKE_DEBT;
-        stack.evoker_debt -= new_stack_debt;
-        num_inert -= 1;
-    }
-    // then take as many fully inert evokers as is necessary.
-    stack.evoker_debt -= XP_EVOKE_DEBT * num_inert;
-    new_stack_debt += XP_EVOKE_DEBT * num_inert;
-    return new_stack_debt;
+    return evoker_debt(item.sub_type) == 0;
 }
 
 

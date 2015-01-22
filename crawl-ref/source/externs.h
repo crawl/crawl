@@ -537,7 +537,6 @@ struct item_def
     union
     {
         short plus2;        ///< legacy/generic name for this union
-        short evoker_debt;  ///< xp~ required for evoker to finish recharging
         short used_count;   ///< the # of known times it was used (decks, wands)
                             // for wands, may hold negative ZAPCOUNT knowledge
                             // info (e.g. "recharged", "empty", "unknown")

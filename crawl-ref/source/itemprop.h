@@ -171,10 +171,8 @@ bool item_is_horn_of_geryon(const item_def &item) PURE;
 bool item_is_spellbook(const item_def &item) PURE;
 
 bool is_xp_evoker(const item_def &item);
+int &evoker_debt(int evoker_type);
 bool evoker_is_charged(const item_def &item);
-int num_xp_evokers_inert(const item_def &item);
-int remove_newest_xp_evoker(item_def &stack, int quant = 1);
-int remove_oldest_xp_evoker(item_def &stack, int quant = 1);
 
 // ring functions:
 bool ring_has_pluses(const item_def &item) PURE;
