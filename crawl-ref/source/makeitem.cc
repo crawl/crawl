@@ -1680,10 +1680,49 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
     return false;
 }
 
+/**
+ * Generate a random 'bad' plus for a ring type that cares about plusses.
+ *
+ * @return a bad 'plus', between -2 and -6 (inclusive).
+ */
+static int _bad_ring_plus()
+{
+    int plus = -2;
+    if (coinflip())
+        --plus;
+    if (one_chance_in(3))
+        plus -= random2(4);
+    return plus;
+}
+
+/**
+ * Generate a random 'good' plus for a ring type that cares about plusses.
+ *
+ * @param subtype       The type of ring in question.
+ * @return              Between 1 and 6 (inclusive); 2-6 for statrings.
+ *                      (+1 stat rings are extremely boring.)
+ */
+static int _good_ring_plus(int subtype)
+{
+    switch (subtype)
+    {
+        case RING_STRENGTH:
+        case RING_DEXTERITY:
+        case RING_INTELLIGENCE:
+            return 2 + (one_chance_in(3) ? random2(2) : random2avg(5, 2));
+        default:
+            return 1 + (one_chance_in(3) ? random2(3) : random2avg(6, 2));
+    }
+}
+
+/**
+ * Generate a random 'plus' for a given type of ring.
+ *
+ * @param subtype       The type of ring in question.
+ * @return              A 'plus' for that ring. 0 for most types.
+ */
 static int _determine_ring_plus(int subtype)
 {
-    int rc = 0;
-
     switch (subtype)
     {
     case RING_PROTECTION:
@@ -1693,20 +1732,12 @@ static int _determine_ring_plus(int subtype)
     case RING_DEXTERITY:
     case RING_INTELLIGENCE:
         if (one_chance_in(5)) // 20% of such rings are cursed {dlb}
-        {
-            rc = (coinflip() ? -2 : -3);
-
-            if (one_chance_in(3))
-                rc -= random2(4);
-        }
-        else
-            rc = 1 + (one_chance_in(3) ? random2(3) : random2avg(6, 2));
-        break;
+            return _bad_ring_plus();
+        return _good_ring_plus(subtype);
 
     default:
-        break;
+        return 0;
     }
-    return rc;
 }
 
 static void _generate_jewellery_item(item_def& item, bool allow_uniques,
