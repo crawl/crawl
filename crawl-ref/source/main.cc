@@ -2695,7 +2695,7 @@ static void _swing_at_target(coord_def move)
     else
     {
         list<actor*> cleave_targets;
-        get_cleave_targets(&you, target, cleave_targets);
+        get_cleave_targets(you, target, cleave_targets);
 
         if (!cleave_targets.empty())
         {
@@ -2704,7 +2704,7 @@ static void _swing_at_target(coord_def move)
                 return;
 
             if (!you.fumbles_attack())
-                attack_cleave_targets(&you, cleave_targets);
+                attack_cleave_targets(you, cleave_targets);
         }
         else if (!you.fumbles_attack())
             mpr("You swing at nothing.");
