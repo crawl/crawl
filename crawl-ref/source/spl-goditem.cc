@@ -1127,9 +1127,6 @@ void torment_player(actor *attacker, torment_source_type taux)
         // Statue form is only partial petrification.
         if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
             hploss /= 2;
-
-        if (hploss == 0 && player_prot_life() < 0)
-            hploss = 1;
     }
 
     // Kiku protects you from torment to a degree.
@@ -1221,9 +1218,6 @@ static void _torment_stuff_at(coord_def where, actor *attacker,
         return;
 
     int hploss = max(0, mons->hit_points * (50 - mons->res_negative_energy() * 5) / 100 - 1);
-
-    if (!hploss && mons->res_negative_energy() < 0)
-        hploss = 1;
 
     if (hploss)
     {
