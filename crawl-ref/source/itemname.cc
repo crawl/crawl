@@ -1318,28 +1318,6 @@ static void _name_deck(const item_def &deck, description_level_type desc,
     buff << "}";
 }
 
-/**
- * Qualify the displayed name of a given XP evoker stack.
- *
- * E.g, for a stack with three discharged evokers, "  (2 inert)"
- * Or, for a single-item stack,
- * Or for a stack with all evokers charged, ""
- *
- * @param evoker   The stack in question.
- * @return         The appropriate qualifiers to display after the item's name.
- */
-static string _xp_evoker_qualifiers(const item_def &evoker)
-{
-    const int inert = num_xp_evokers_inert(evoker);
-    if (!inert)
-        return "";
-
-    if (evoker.quantity == inert)
-        return " (inert)";
-
-    return make_stringf(" (%d inert)", inert);
-}
-
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 string item_def::name_aux(description_level_type desc, bool terse, bool ident,
@@ -1787,8 +1765,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             buff << " {used: " << used_count << "}";
         }
-        else if (is_xp_evoker(*this) && !dbname)
-            buff << _xp_evoker_qualifiers(*this);
+        else if (is_xp_evoker(*this) && !dbname && !evoker_is_charged(*this))
+            buff << " (inert)";
 
         break;
 

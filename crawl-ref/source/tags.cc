@@ -3909,12 +3909,6 @@ void unmarshallItem(reader &th, item_def &item)
             item.special = SPWPN_FLAMING;
     }
 
-    if (item.is_type(OBJ_MISCELLANY, MISC_HORN_OF_GERYON)
-        && th.getMinorVersion() < TAG_MINOR_HORN_GERYON_CHANGE)
-    {
-        item.evoker_debt = 0;
-    }
-
     // Rescale old MR (range 35-99) to new discrete steps (40/80/120)
     // Negative MR was only supposed to exist for Folly, but paranoia.
     if (th.getMinorVersion() < TAG_MINOR_MR_ITEM_RESCALE

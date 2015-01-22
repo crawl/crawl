@@ -2737,20 +2737,16 @@ static void _recharge_xp_evokers(int exp)
         item_def* evoker = evokers[i];
         if (!evoker)
             continue;
-        const int old_inert = num_xp_evokers_inert(*evoker);
-        evoker->evoker_debt -= div_rand_round(exp, xp_factor);
-        const int new_inert = num_xp_evokers_inert(*evoker);
-        if (new_inert < old_inert)
+
+        int &debt = evoker_debt(evoker->sub_type);
+        if (debt == 0)
+            continue;
+
+        debt = max(0, debt - div_rand_round(exp, xp_factor));
+        if (debt == 0)
         {
-            const int charged = old_inert - new_inert;
-            string evokername = evoker->name(DESC_QUALNAME);
-            if (evoker->quantity > 1)
-                evokername = pluralise(evokername);
-            if (new_inert == 0)
-                evoker->evoker_debt = 0;
-            mprf("%s %s %s recharged.",
-                 get_desc_quantity(charged, evoker->quantity, "your").c_str(),
-                 evokername.c_str(), charged > 1 ? "have" : "has");
+            mprf("%s %s recharged.", evoker->name(DESC_YOUR).c_str(),
+                 evoker->quantity > 1 ? "have" : "has");
         }
     }
 }

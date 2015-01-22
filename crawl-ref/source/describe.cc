@@ -1947,22 +1947,16 @@ string get_item_description(const item_def &item, bool verbose,
             description << _describe_deck(item);
         if (is_xp_evoker(item))
         {
-            description << "\nOnce released, the spirits within this device "
-                           "will dissipate, leaving it inert, though new ones "
-                           "may be attracted as its bearer battles through the "
-                           "dungeon and grows in power and wisdom.";
+            description << "\nOnce released, the spirits of this device will "
+                           "depart, leaving it and all other devices of its "
+                           "kind inert. However, more spirits will be "
+                           "attracted as its bearer grows in power and "
+                           "wisdom.";
 
-            const int inert = num_xp_evokers_inert(item);
-            if (inert > 0)
+            if (!evoker_is_charged(item))
             {
-                string what = item.quantity > 1 ? "the devices are"
-                                                : "the device is";
-                description << "\n\n";
-                description << get_desc_quantity(inert, item.quantity, what);
-                description << " presently inert.";
-
-                description << " Gaining experience will recharge";
-                description << (item.quantity > 1 ? " them." : " it.");
+                mpr("The device is presently inert. Gaining experience will "
+                    "recharge it.");
             }
         }
         break;
