@@ -2013,7 +2013,7 @@ static double _get_true_fail_rate(int raw_fail)
 {
     // Need 3*random2avg(100,3) = random2(101) + random2(101) + random2(100)
     // to be (strictly) less than 3*raw_fail. Fun with tetrahedral numbers!
-    
+
     // How many possible outcomes, considering all three dice?
     const int outcomes = 101 * 101 * 100;
     const int target = raw_fail * 3;
