@@ -766,7 +766,7 @@ static const artefact_prop_data artp_data[] =
     { "+Fog", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_FOG,
 #endif
-    { "Regen", ARTP_VAL_POS, 30,
+    { "Regen", ARTP_VAL_POS, 35,
         []() { return 1; }, nullptr }, // ARTP_REGENERATION,
     { "SustAb", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_SUSTAB,
@@ -776,7 +776,7 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr }, // ARTP_RCORR,
     { "rMut", ARTP_VAL_BOOL, 0,
         nullptr, nullptr }, // ARTP_RMUT,
-    { "+Twstr", ARTP_VAL_BOOL, 5,
+    { "+Twstr", ARTP_VAL_BOOL, 0,
         []() { return 1; }, nullptr }, // ARTP_TWISTER,
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
