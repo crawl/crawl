@@ -1197,6 +1197,15 @@ static void _debug_acquirement_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
+/**
+ * Take the median of the provided dataset. Mutates it for efficiency.
+ */
+static int _median(vector<int> &counts)
+{
+    nth_element(counts.begin(), counts.begin() + counts.size()/2, counts.end());
+    return counts[counts.size()/2];
+}
+
 #define MAX_TRIES 27272
 static void _debug_rap_stats(FILE *ostat)
 {
@@ -1230,6 +1239,9 @@ static void _debug_rap_stats(FILE *ostat)
     FixedVector<int, ARTP_NUM_PROPERTIES> total_good_prop_vals(0);
     FixedVector<int, ARTP_NUM_PROPERTIES> total_bad_prop_vals(0);
 
+    vector<int> good_prop_counts;
+    vector<int> bad_prop_counts;
+    vector<int> total_prop_counts;
 
     int max_props         = 0;
     int max_good_props    = 0;
@@ -1295,6 +1307,10 @@ static void _debug_rap_stats(FILE *ostat)
         const int num_props = num_good_props + num_bad_props;
         const int balance   = num_good_props - num_bad_props;
 
+        good_prop_counts.push_back(num_good_props);
+        bad_prop_counts.push_back(num_bad_props);
+        total_prop_counts.push_back(num_props);
+
         max_props         = max(max_props, num_props);
         max_good_props    = max(max_good_props, num_good_props);
         max_bad_props     = max(max_bad_props, num_bad_props);
@@ -1326,12 +1342,15 @@ static void _debug_rap_stats(FILE *ostat)
     // assumption: all props are good or bad
     const int total_props = total_good_props + total_bad_props;
 
-    fprintf(ostat, "max # of props = %d, avg # = %5.2f\n",
-            max_props, (float) total_props / (float) num_randarts);
-    fprintf(ostat, "max # of good props = %d, avg # = %5.2f\n",
-            max_good_props, (float) total_good_props / (float) num_randarts);
-    fprintf(ostat, "max # of bad props = %d, avg # = %5.2f\n",
-            max_bad_props, (float) total_bad_props / (float) num_randarts);
+    fprintf(ostat, "max # of props = %d, mean = %5.2f, median = %d\n",
+            max_props, (float) total_props / (float) num_randarts,
+            _median(total_prop_counts));
+    fprintf(ostat, "max # of good props = %d, mean = %5.2f, median = %d\n",
+            max_good_props, (float) total_good_props / (float) num_randarts,
+            _median(good_prop_counts));
+    fprintf(ostat, "max # of bad props = %d, mean = %5.2f, median = %d\n",
+            max_bad_props, (float) total_bad_props / (float) num_randarts,
+            _median(bad_prop_counts));
     fprintf(ostat, "max (good - bad) props = %d, avg # = %5.2f\n\n",
             max_balance_props,
             (float) total_balance_props / (float) num_randarts);
