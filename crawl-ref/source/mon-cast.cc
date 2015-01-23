@@ -6671,7 +6671,7 @@ void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 3 + random2(mons->spell_hd(spell_cast) / 5 + 1);
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
