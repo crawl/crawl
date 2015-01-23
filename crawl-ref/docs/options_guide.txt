@@ -1164,6 +1164,10 @@ autofight_caught = false
         If true, autofight will attempt to escape webs or nets that are
         holding you, even if no enemies are in view.
 
+autofight_wait = false
+        If true, ===hit_closest_nomove while not in range of an enemy will
+        wait for a turn instead of aborting autofight.
+
 automagic_enable = false
         If true, the autofight function will resort to casting an assigned
         spell at a target. Initial spell slot is a.
