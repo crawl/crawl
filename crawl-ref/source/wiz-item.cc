@@ -1225,6 +1225,12 @@ static void _debug_rap_stats(FILE *ostat)
     FixedVector<int, ARTP_NUM_PROPERTIES> good_props(0);
     FixedVector<int, ARTP_NUM_PROPERTIES> bad_props(0);
 
+    FixedVector<int, ARTP_NUM_PROPERTIES> max_prop_vals(0);
+    FixedVector<int, ARTP_NUM_PROPERTIES> min_prop_vals(0);
+    FixedVector<int, ARTP_NUM_PROPERTIES> total_good_prop_vals(0);
+    FixedVector<int, ARTP_NUM_PROPERTIES> total_bad_prop_vals(0);
+
+
     int max_props         = 0;
     int max_good_props    = 0;
     int max_bad_props     = 0;
@@ -1274,11 +1280,15 @@ static void _debug_rap_stats(FILE *ostat)
             {
                 good_props[prop]++;
                 num_good_props++;
+                total_good_prop_vals[prop] += val;
+                max_prop_vals[prop] = max(max_prop_vals[prop], val);
             }
             else
             {
                 bad_props[prop]++;
                 num_bad_props++;
+                total_bad_prop_vals[prop] += val;
+                min_prop_vals[prop] = min(min_prop_vals[prop], val);
             }
         }
 
@@ -1382,9 +1392,9 @@ static void _debug_rap_stats(FILE *ostat)
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
-    fprintf(ostat, "                            All    Good   Bad\n");
-    fprintf(ostat, "                           --------------------\n");
-    fprintf(ostat, "%-25s: %5.2f%% %5.2f%% %5.2f%%\n", "Overall", 100.0,
+    fprintf(ostat, "                                 All    Good   Bad   Max AvgGood Min AvgBad\n");
+    fprintf(ostat, "                           ------------------------------------------------\n");
+    fprintf(ostat, "%-27s: %6.2f%% %6.2f%% %6.2f%%\n", "Overall", 100.0,
             (float) total_good_props * 100.0 / (float) total_props,
             (float) total_bad_props * 100.0 / (float) total_props);
 
@@ -1394,10 +1404,19 @@ static void _debug_rap_stats(FILE *ostat)
         if (!total_props_of_type)
             continue;
 
-        fprintf(ostat, "%-25s: %5.2f%% %5.2f%% %5.2f%%\n", rap_names[i],
+        const float avg_good = good_props[i] ?
+            (float) total_good_prop_vals[i] / (float) good_props[i] :
+            0.0;
+        const float avg_bad = bad_props[i] ?
+            (float) total_bad_prop_vals[i] / (float) bad_props[i] :
+            0.0;
+        fprintf(ostat, "%-27s: %6.2f%% %6.2f%% %6.2f%% %3d %5.2f %5d %5.2f\n",
+                rap_names[i],
                 (float) total_props_of_type * 100.0 / (float) num_randarts,
                 (float) good_props[i] * 100.0 / (float) num_randarts,
-                (float) bad_props[i] * 100.0 / (float) num_randarts);
+                (float) bad_props[i] * 100.0 / (float) num_randarts,
+                max_prop_vals[i], avg_good,
+                min_prop_vals[i], avg_bad);
     }
 
     fprintf(ostat, "\n-----------------------------------------\n\n");
