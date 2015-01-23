@@ -661,7 +661,7 @@ struct artefact_prop_data
 };
 
 /// Generate 'good' values for stat artps (e.g. ARTP_STRENGTH)
-static int _gen_good_stat_artp() { return 2 + coinflip(); }
+static int _gen_good_stat_artp() { return 2 + random2(3); }
 
 /// Generate 'bad' values for stat artps (e.g. ARTP_STRENGTH)
 static int _gen_bad_stat_artp() { return -2 - random2(4); }
@@ -734,7 +734,7 @@ static const artefact_prop_data artp_data[] =
     { "Acc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0 }, // ARTP_ACCURACY,
 #endif
     { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
-      _gen_good_stat_artp,
+      []() { return 2 + random2(2); },
       []() { return -(2 + random2(3) + random2(3)); }, 6 },
     { "Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSED,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
@@ -871,7 +871,7 @@ static void _get_randart_properties(const item_def &item,
             const int max = artp_data[prop].max_dup;
             for (int i = 1;
                  good > 0 && item_props[prop] <= max && one_chance_in(i);
-                 ++i)
+                 i += 2)
             {
                 item_props[prop] += artp_data[prop].gen_good_value();
                 --good;
