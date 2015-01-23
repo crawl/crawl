@@ -84,8 +84,8 @@
     "hell beast hp:1000 hd:40 name:meat_beast n_rpl n_des n_spe " ..
     "col:red generate_awake perm_ench:haste"
 
-  local lost_soul =
-    "phantom hp:500 hd:50 name:lost_soul dbname:meat_lost_soul n_rpl n_des n_spe " ..
+  local wretched_soul =
+    "phantom hp:500 hd:50 name:wretched_soul n_rpl n_des n_spe " ..
     "never_corpse col:red generate_awake " ..
     "spells:bolt_of_draining.50.natural;dispel_undead.50.natural " ..
     "perm_ench:invis"
@@ -416,7 +416,7 @@ KITEM:     * = ring of protection from fire not_cursed ident:all no_pickup
 SUBST:     1 = 1.
 KFEAT:     _ = altar_makhleb
 KFEAT:     ^ = permanent teleport trap
-KFEAT:     x = rock_wall
+KFEAT:     x = stone_wall
 COLOUR:    xX = red
 TILE:      xX = wall_hell
 FTILE:     1234+'*&J = floor_demonic_red
