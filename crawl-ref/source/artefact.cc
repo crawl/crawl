@@ -681,6 +681,9 @@ static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
 /// Decide whether to remove a numeric property
 static int _should_remove_num(int val) { return (val >= 12); }
 
+/// Decide whether to remove slaying property
+static int _should_remove_slay(int val) { return (val >= 6); }
+
 /// Decide whether to remove a resistance-type property
 static int _should_remove_res(int val) { return (val >= 3); }
 
@@ -741,7 +744,7 @@ static const artefact_prop_data artp_data[] =
 #endif
     { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
       _gen_good_stat_artp,
-      []() { return -(2 + random2(3) + random2(3)); }, _should_remove_num },
+      []() { return -(2 + random2(3) + random2(3)); }, _should_remove_slay },
     { "Curse", ARTP_VAL_POS, 0, nullptr, nullptr, nullptr }, // ARTP_CURSED,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
         _gen_good_res_artp, _gen_bad_res_artp, _should_remove_res },
