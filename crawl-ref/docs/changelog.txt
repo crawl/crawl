@@ -1,9 +1,11 @@
-Stone Soup 0.16 (up to 0.16-a0-3649-ge23cfc4)
+Stone Soup 0.16 (up to 0.16-a0-3760-g3ef0081)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
 Branches, environment
 ---------------------
+* The tides in Shoals now only shift between shallow water & land; deep water
+  is neither created nor destroyed. The tides move 15 times faster than before.
 * Ziggurats now only require two runes to enter, down from three.
 * Every time a player clears a ziggurat (exits from the top floor, Zig:27), all
   subsequent ziggurats become significantly harder.
@@ -36,6 +38,7 @@ Character
 * Worshippers of Kikubaaqudgha and Nemelex Xobeh will now have titles unique
   to those gods displayed when their highest skill is Necromancy or Evocations
   (respectively).
+* Gargoyles can no longer cast Statue Form.
 * Removed Death Knight background.
 
 Monsters
@@ -99,6 +102,7 @@ Monsters
 * Polymorphed monsters now return to their original shapes in death.
 * Liches (and ancient liches) now choose their spells randomly from a large
   set of possible spells, instead of having fixed spellbooks.
+* All non-permanent summoned monsters are now unable to use stairs.
 
 Spells
 ------
@@ -168,7 +172,9 @@ Items
 * All short blades now do piercing damage.
 * Weapons other than short blades & felid claws are all now equally good at
   stabbing.
-* Elemental evocables now stack.
+* Light armour now has a small spellcast success penalty.
+* Elemental evocables now charge & discharge on a type-by-type basis, rather
+  than individually for each item.
 * The Box of Beasts and Rod of Shadows are now considerably stronger.
 * Renamed items:
   - Cutlasses are now rapiers.
@@ -180,6 +186,7 @@ Items
   - Potions of confusion, porridge and coagulated blood.
   - Blessed Blades.
   - Rods of Striking.
+  - Tomes of Destruction.
   - The book of Wizardry.
 
 
