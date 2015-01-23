@@ -658,6 +658,8 @@ struct artefact_prop_data
     function<int ()> gen_bad_value;
     /// The value beyond which the artp should not be repeatedly applied.
     int max_dup;
+    /// The amount to increment the odds of a property being reapplied
+    int odds_inc;
 };
 
 /// Generate 'good' values for stat artps (e.g. ARTP_STRENGTH)
@@ -681,85 +683,85 @@ static int _gen_bad_hpmp_artp() { return -_gen_good_hpmp_artp(); }
 /// Generation info for artefact properties.
 static const artefact_prop_data artp_data[] =
 {
-    { "Brand", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_BRAND,
-    { "AC", ARTP_VAL_ANY, 0, nullptr, nullptr, 0}, // ARTP_AC,
-    { "EV", ARTP_VAL_ANY, 0, nullptr, nullptr, 0 }, // ARTP_EVASION,
+    { "Brand", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 }, // ARTP_BRAND,
+    { "AC", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0}, // ARTP_AC,
+    { "EV", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_EVASION,
     { "Str", ARTP_VAL_ANY, 95,      // ARTP_STRENGTH,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 12 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 12, 1 },
     { "Int", ARTP_VAL_ANY, 95,      // ARTP_INTELLIGENCE,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 12 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 12, 1 },
     { "Dex", ARTP_VAL_ANY, 95,      // ARTP_DEXTERITY,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 12 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 12, 1 },
     { "rF", ARTP_VAL_ANY, 60,       // ARTP_FIRE,
-        _gen_good_res_artp, _gen_bad_res_artp, 3},
+        _gen_good_res_artp, _gen_bad_res_artp, 3, 4},
     { "rC", ARTP_VAL_ANY, 60,       // ARTP_COLD,
-        _gen_good_res_artp, _gen_bad_res_artp, 3 },
+        _gen_good_res_artp, _gen_bad_res_artp, 3, 4 },
     { "rElec", ARTP_VAL_BOOL, 50,   // ARTP_ELECTRICITY,
         []() { return 1; }, nullptr, 1  },
     { "rPois", ARTP_VAL_ANY, 50,    // ARTP_POISON,
-        []() { return 1; }, _gen_bad_res_artp, 1 },
+        []() { return 1; }, _gen_bad_res_artp, 1, 0 },
     { "rN", ARTP_VAL_ANY, 50,       // ARTP_NEGATIVE_ENERGY,
-        _gen_good_res_artp,  _gen_bad_res_artp, 3 },
+        _gen_good_res_artp,  _gen_bad_res_artp, 3, 4 },
     { "MR", ARTP_VAL_ANY, 50,       // ARTP_MAGIC,
-        _gen_good_res_artp, _gen_bad_res_artp, 3 },
+        _gen_good_res_artp, _gen_bad_res_artp, 3, 4 },
     { "SInv", ARTP_VAL_BOOL, 30,    // ARTP_EYESIGHT,
-        []() { return 1; }, nullptr, 1 },
+        []() { return 1; }, nullptr, 1, 0 },
     { "+Inv", ARTP_VAL_BOOL, 15,    // ARTP_INVISIBLE,
-        []() { return 1; }, nullptr, 1 },
+        []() { return 1; }, nullptr, 1, 0 },
     { "+Fly", ARTP_VAL_BOOL, 15,    // ARTP_FLY,
-        []() { return 1; }, nullptr, 1 },
+        []() { return 1; }, nullptr, 1, 0 },
 #if TAG_MAJOR_VERSION > 34
-    { "+Fog", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0 }, // ARTP_FOG,
+    { "+Fog", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_FOG,
 #endif
     { "+Blink", ARTP_VAL_BOOL, 15,  // ARTP_BLINK,
-        []() { return 1; }, nullptr, 1 },
+        []() { return 1; }, nullptr, 1, 0 },
     { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
-        []() { return 1; }, nullptr, 1 },
+        []() { return 1; }, nullptr, 1, 0 },
     { "Noisy", ARTP_VAL_POS, 20,    // ARTP_NOISES,
-        nullptr, []() { return 2; }, 1 },
+        nullptr, []() { return 2; }, 1, 0 },
     { "-Cast", ARTP_VAL_BOOL, 20,   // ARTP_PREVENT_SPELLCASTING,
-        nullptr, []() { return 1; }, 1 },
+        nullptr, []() { return 1; }, 1, 0 },
     { "*Tele", ARTP_VAL_POS, 20,    // ARTP_CAUSE_TELEPORTATION,
-        nullptr, []() { return 8; }, 1 },
+        nullptr, []() { return 8; }, 1, 0 },
     { "-Tele", ARTP_VAL_BOOL, 20,   // ARTP_PREVENT_TELEPORTATION,
-        nullptr, []() { return 1; }, 1 },
+        nullptr, []() { return 1; }, 1, 0 },
     { "*Rage", ARTP_VAL_POS, 20,    // ARTP_ANGRY,
-        nullptr, []() { return 5; }, 1 },
+        nullptr, []() { return 5; }, 1, 0 },
 #if TAG_MAJOR_VERSION == 34
-    { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0 },// ARTP_METABOLISM,
+    { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif
     { "Contam", ARTP_VAL_POS, 20,   // ARTP_MUTAGENIC
-        nullptr, []() { return 1; }, 1 },
+        nullptr, []() { return 1; }, 1, 0 },
 #if TAG_MAJOR_VERSION == 34
-    { "Acc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0 }, // ARTP_ACCURACY,
+    { "Acc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_ACCURACY,
 #endif
     { "Slay", ARTP_VAL_ANY, 30,     // ARTP_SLAYING,
       []() { return 2 + random2(2); },
-      []() { return -(2 + random2(3) + random2(3)); }, 6 },
+      []() { return -(2 + random2(3) + random2(3)); }, 6, 2 },
     { "Curse", ARTP_VAL_POS, 0, nullptr, nullptr, 0 }, // ARTP_CURSED,
     { "Stlth", ARTP_VAL_ANY, 40,    // ARTP_STEALTH,
-        _gen_good_res_artp, _gen_bad_res_artp, 1 },
+        _gen_good_res_artp, _gen_bad_res_artp, 1, 0 },
     { "MP", ARTP_VAL_ANY, 30,       // ARTP_MAGICAL_POWER,
-        _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 1 },
-    { "Delay", ARTP_VAL_ANY, 0, nullptr, nullptr, 0 }, // ARTP_BASE_DELAY,
+        _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 1, 0 },
+    { "Delay", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_BASE_DELAY,
     { "HP", ARTP_VAL_ANY, 30,       // ARTP_HP,
-        _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 1 },
-    { "Clar", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0 }, // ARTP_CLARITY,
-    { "BAcc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0 },  // ARTP_BASE_ACC,
-    { "BDam", ARTP_VAL_ANY, 0, nullptr, nullptr, 0 },  // ARTP_BASE_DAM,
-    { "RMsl", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0 }, // ARTP_RMSL,
+        _gen_good_hpmp_artp, _gen_bad_hpmp_artp, 1, 0 },
+    { "Clar", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_CLARITY,
+    { "BAcc", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 },  // ARTP_BASE_ACC,
+    { "BDam", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 },  // ARTP_BASE_DAM,
+    { "RMsl", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RMSL,
 #if TAG_MAJOR_VERSION == 34
-    { "+Fog", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0 }, // ARTP_FOG,
+    { "+Fog", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_FOG,
 #endif
     { "Regen", ARTP_VAL_POS, 35,    // ARTP_REGENERATION,
-        []() { return 1; }, nullptr, 1 },
-    { "SustAb", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0 }, // ARTP_SUSTAB,
-    { "nupgr", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0 },// ARTP_NO_UPGRADE,
+        []() { return 1; }, nullptr, 1, 0 },
+    { "SustAb", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_SUSTAB,
+    { "nupgr", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 },// ARTP_NO_UPGRADE,
     { "rCorr", ARTP_VAL_BOOL, 40,   // ARTP_RCORR,
-        []() { return 1; }, nullptr, 1 },
-    { "rMut", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0 }, // ARTP_RMUT,
+        []() { return 1; }, nullptr, 1, 0 },
+    { "rMut", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_RMUT,
     { "+Twstr", ARTP_VAL_BOOL, 0,   // ARTP_TWISTER,
-        []() { return 1; }, nullptr, 1 },
+        []() { return 1; }, nullptr, 1, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
 // weights sum to 1000.
@@ -871,7 +873,7 @@ static void _get_randart_properties(const item_def &item,
             const int max = artp_data[prop].max_dup;
             for (int i = 1;
                  good > 0 && item_props[prop] <= max && one_chance_in(i);
-                 i += 2)
+                 i += artp_data[prop].odds_inc)
             {
                 item_props[prop] += artp_data[prop].gen_good_value();
                 --good;
