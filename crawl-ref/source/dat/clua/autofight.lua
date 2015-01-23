@@ -19,6 +19,7 @@ AUTOFIGHT_CAUGHT = false
 AUTOFIGHT_THROW = false
 AUTOFIGHT_THROW_NOMOVE = true
 AUTOFIGHT_FIRE_STOP = false
+AUTOFIGHT_WAIT = false
 AUTOMAGIC_ACTIVE = false
 
 local function delta_to_vi(dx, dy)
@@ -255,6 +256,10 @@ local function set_af_fire_stop(key, value, mode)
   AUTOFIGHT_FIRE_STOP = string.lower(value) ~= "false"
 end
 
+local function set_af_wait(key, value, mode)
+    AUTOFIGHT_WAIT = string.lower(value) ~= "false"
+end
+
 function set_automagic(key, value, mode)
   AUTOMAGIC_ACTIVE = string.lower(value) ~= "false"
 end
@@ -278,7 +283,11 @@ function attack(allow_movement)
       crawl.mpr("You are " .. caught .. "!")
     end
   elseif info == nil then
-    crawl.mpr("No target in view!")
+    if AUTOFIGHT_WAIT and not allow_movement then
+      crawl.process_keys('s')
+    else
+      crawl.mpr("No target in view!")
+    end
   elseif info.attack_type == 3 then
     if AUTOFIGHT_FIRE_STOP then
       attack_fire_stop(x,y)
@@ -291,6 +300,8 @@ function attack(allow_movement)
     attack_reach(x,y)
   elseif allow_movement then
     move_towards(x,y)
+  elseif AUTOFIGHT_WAIT then
+    crawl.process_keys('s')
   else
     crawl.mpr("No target in range!")
   end
@@ -346,4 +357,5 @@ chk_lua_option.autofight_caught = set_af_caught
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
 chk_lua_option.autofight_fire_stop = set_af_fire_stop
+chk_lua_option.autofight_wait = set_af_wait
 chk_lua_option.automagic_enable = set_automagic
