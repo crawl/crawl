@@ -616,24 +616,6 @@ static void _ashenzari_sac_scroll(const item_def& item)
                                             scroll_names.end()).c_str());
 }
 
-// Is the destroyed weapon valuable enough to gain piety by doing so?
-// Unholy and evil weapons are handled specially.
-static bool _destroyed_valuable_weapon(int value, int type)
-{
-    // value/500 chance of piety normally
-    if (value > random2(500))
-        return true;
-
-    // But all non-missiles are acceptable if you've never reached *.
-    if (you.piety_max[GOD_ELYVILON] < piety_breakpoint(0)
-        && type != OBJ_MISSILES)
-    {
-        return true;
-    }
-
-    return false;
-}
-
 static piety_gain_t _sac_corpse(const item_def& item)
 {
     gain_piety(13, 19);
@@ -669,37 +651,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     piety_gain_t relative_piety_gain = PIETY_NONE;
     switch (you.religion)
     {
-    case GOD_ELYVILON:
-    {
-        const bool valuable_weapon =
-            _destroyed_valuable_weapon(value, item.base_type);
-        const bool unholy_weapon = is_unholy_item(item);
-        const bool evil_weapon = is_evil_item(item);
-
-        if (valuable_weapon || unholy_weapon || evil_weapon)
-        {
-            if (unholy_weapon || evil_weapon)
-            {
-                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
-
-                // Print this in addition to the above!
-                if (first)
-                {
-                    simple_god_message(make_stringf(
-                             " welcomes the destruction of %s %s weapon%s.",
-                             item.quantity == 1 ? "this" : "these",
-                             desc_weapon,
-                             item.quantity == 1 ? ""     : "s").c_str(),
-                             GOD_ELYVILON);
-                }
-            }
-
-            gain_piety(1);
-            relative_piety_gain = PIETY_SOME;
-        }
-        break;
-    }
-
     case GOD_BEOGH:
     {
         const int item_orig = item.orig_monnum;
@@ -845,11 +796,6 @@ static bool _offer_items()
             simple_god_message(" only cares about orcish remains!");
         else if (you_worship(GOD_ASHENZARI))
             simple_god_message(" can corrupt only scrolls of remove curse.");
-    }
-    if (num_sacced == 0 && you_worship(GOD_ELYVILON))
-    {
-        mprf("There are no %sweapons here to destroy!",
-             you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "unholy or evil ");
     }
 
     return num_sacced > 0;

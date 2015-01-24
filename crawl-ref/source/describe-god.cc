@@ -210,12 +210,6 @@ static string _religion_help(god_type god)
             break;
         }
 
-        case GOD_ELYVILON:
-            result += "You can pray to destroy weapons on the ground in "
-            + apostrophise(god_name(god)) + " name. Inscribe them "
-            "with !p, !* or =p to avoid sacrificing them accidentally.";
-            break;
-
         case GOD_LUGONU:
             if (can_do_capstone_ability(god))
             {
@@ -773,9 +767,8 @@ static string _get_god_misc_info(god_type which_god)
                    "worse on monsters of your species, worse on other "
                    "species, worst of all on demons and undead, and not at "
                    "all on sleeping or mindless monsters. If it succeeds, "
-                   "you gain half of the monster's experience value and "
-                   "possibly some piety. Pacified monsters try to leave the "
-                   "level.";
+                   "you gain half of the monster's experience value. Pacified "
+                   "monsters try to leave the level.";
 
         case GOD_NEMELEX_XOBEH:
             return "The power of Nemelex Xobeh's abilities and of the "

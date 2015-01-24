@@ -714,7 +714,16 @@ static like_map divine_likes[] =
         } },
     },
     // GOD_ELYVILON,
-    like_map(),
+    {
+        { DID_EXPLORATION, {
+            0, 0, 0, nullptr,
+            [] (int &piety, int &denom, const monster* /*victim*/)
+            {
+                // piety = denom = level at the start of the function
+                piety = 14;
+            }
+        } },
+    },
     // GOD_LUGONU,
     {
         { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
