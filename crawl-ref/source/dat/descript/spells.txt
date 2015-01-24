@@ -71,7 +71,7 @@ interlopers, dragging them towards nearby trees.
 %%%%
 Banishment spell
 
-<Banish ability>
+Attempt to banish a creature into the Abyss.
 %%%%
 Battlecry spell
 

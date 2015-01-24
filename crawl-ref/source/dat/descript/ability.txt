@@ -74,7 +74,6 @@ Spit Acid ability
 
 Spit acid at a targeted monster.
 %%%%
-# Both for Fly I and II.
 Fly ability
 
 Start flying. During flight you can safely cross water and similar obstacles.
