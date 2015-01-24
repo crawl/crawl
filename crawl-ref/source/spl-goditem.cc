@@ -204,97 +204,99 @@ static spret_type _healing_spell(int healed, int max_healed,
         return SPRET_FAIL;
     }
 
-    const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
-    const bool is_hostile = _mons_hostile(mons);
-
-    // Don't divinely heal a monster you can't pacify.
-    if (divine_ability && is_hostile
-        && you_worship(GOD_ELYVILON)
-        && can_pacify <= 0)
-    {
-        if (can_pacify == 0)
-        {
-            mprf("The light of Elyvilon fails to reach %s.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
-        }
-        else if (can_pacify == -3)
-        {
-            mprf("The light of Elyvilon almost touches upon %s.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
-        }
-        else if (can_pacify == -4)
-        {
-            mprf("%s is completely unfazed by your meager offer of peace.",
-                 mons->name(DESC_THE).c_str());
-            return SPRET_FAIL;
-        }
-        else
-        {
-            if (can_pacify == -2)
-            {
-                mprf("You cannot pacify this monster while %s is sleeping!",
-                     mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-            }
-            else
-                mpr("You cannot pacify this monster!");
-            return SPRET_ABORT;
-        }
-    }
-
     bool did_something = false;
 
-    if (you_worship(GOD_ELYVILON)
-        && can_pacify == 1
-        && is_hostile)
+    if (divine_ability
+        && you_worship(GOD_ELYVILON)
+        && _mons_hostile(mons))
     {
-        did_something = true;
+        const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
 
-        const bool is_holy     = mons->is_holy();
-        const bool is_summoned = mons->is_summoned();
-
-        int pgain = 0;
-        if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
+        // Don't divinely heal a monster you can't pacify.
+        if (can_pacify <= 0)
         {
-            pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
-            if (!pgain) // Always give a 50% chance of gaining a little piety.
-                pgain = coinflip();
-        }
-
-        // The feedback no longer tells you if you gained any piety this time,
-        // it tells you merely the general rate.
-        if (random2(1 + pgain))
-            simple_god_message(" approves of your offer of peace.");
-        else
-            mpr("Elyvilon supports your offer of peace.");
-
-        if (is_holy)
-        {
-            string key = "pacification";
-
-            // Quadrupeds can't salute, etc.
-            mon_body_shape shape = get_mon_shape(mons);
-            if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
-                key += "_humanoid";
-
-            _print_holy_pacification_speech(key, mons, MSGCH_FRIEND_ENCHANT);
-
-            if (!one_chance_in(3)
-                && mons->can_speak()
-                && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
+            if (can_pacify == 0)
             {
-                _print_holy_pacification_speech("speech", mons, MSGCH_TALK);
+                mprf("The light of Elyvilon fails to reach %s.",
+                     mons->name(DESC_THE).c_str());
+                return SPRET_FAIL;
+            }
+            else if (can_pacify == -3)
+            {
+                mprf("The light of Elyvilon almost touches upon %s.",
+                     mons->name(DESC_THE).c_str());
+                return SPRET_FAIL;
+            }
+            else if (can_pacify == -4)
+            {
+                mprf("%s is completely unfazed by your meager offer of peace.",
+                     mons->name(DESC_THE).c_str());
+                return SPRET_FAIL;
+            }
+            else
+            {
+                if (can_pacify == -2)
+                {
+                    mprf("You cannot pacify this monster while %s is sleeping!",
+                         mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
+                }
+                else
+                    mpr("You cannot pacify this monster!");
+                return SPRET_ABORT;
             }
         }
-        else
-            simple_monster_message(mons, " turns neutral.");
 
-        record_monster_defeat(mons, KILL_PACIFIED);
-        mons_pacify(mons, ATT_NEUTRAL);
+        if (can_pacify == 1)
+        {
+            did_something = true;
 
-        // Give a small piety return.
-        gain_piety(pgain);
+            const bool is_holy     = mons->is_holy();
+            const bool is_summoned = mons->is_summoned();
+
+            int pgain = 0;
+            if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
+            {
+                pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
+                // Always give a 50% chance of gaining a little piety.
+                if (!pgain)
+                    pgain = coinflip();
+            }
+
+            // The feedback no longer tells you if you gained any piety this
+            // time, it tells you merely the general rate.
+            if (random2(1 + pgain))
+                simple_god_message(" approves of your offer of peace.");
+            else
+                mpr("Elyvilon supports your offer of peace.");
+
+            if (is_holy)
+            {
+                string key = "pacification";
+
+                // Quadrupeds can't salute, etc.
+                mon_body_shape shape = get_mon_shape(mons);
+                if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+                    key += "_humanoid";
+
+                _print_holy_pacification_speech(key, mons,
+                                                MSGCH_FRIEND_ENCHANT);
+
+                if (!one_chance_in(3)
+                    && mons->can_speak()
+                    && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
+                {
+                    _print_holy_pacification_speech("speech", mons, MSGCH_TALK);
+                }
+            }
+            else
+                simple_monster_message(mons, " turns neutral.");
+
+            record_monster_defeat(mons, KILL_PACIFIED);
+            mons_pacify(mons, ATT_NEUTRAL);
+
+            // Give a small piety return.
+            gain_piety(pgain);
+        }
     }
 
     if (mons->heal(healed))
