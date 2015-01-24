@@ -89,6 +89,59 @@ static const char* _interesting_origin(const item_def &item)
     return nullptr;
 }
 
+/**
+ * What inscription should be used to describe the way in which this item has
+ * been seen to be tried?
+ */
+static string _tried_inscription(const item_def &item)
+{
+    const item_type_id_state_type id_type = get_ident_type(item);
+
+    if (id_type == ID_MON_TRIED_TYPE)
+        return "tried by monster";
+    if (id_type != ID_TRIED_ITEM_TYPE)
+        return "tried";     // can this happen anymore?
+    return "tried on item"; // or this
+}
+
+/**
+ * What inscription should be appended to the given item's name?
+ */
+static string _item_inscription(const item_def &item, bool ident, bool equipped)
+{
+    vector<string> insparts;
+
+    if (!ident && !equipped && item_type_tried(item))
+        insparts.push_back(_tried_inscription(item));
+
+    if (const char *orig = _interesting_origin(item))
+    {
+        if (Options.show_god_gift == MB_TRUE
+            || Options.show_god_gift == MB_MAYBE && !fully_identified(item))
+        {
+            insparts.push_back(orig);
+        }
+    }
+
+    if (is_artefact(item))
+    {
+        const string part = artefact_inscription(item);
+        if (!part.empty())
+            insparts.push_back(part);
+    }
+
+    if (!item.inscription.empty())
+        insparts.push_back(item.inscription);
+
+    if (insparts.empty())
+        return "";
+
+    return make_stringf(" {%s}",
+                        comma_separated_line(begin(insparts),
+                                             end(insparts),
+                                             ", ").c_str());
+}
+
 string item_def::name(description_level_type descrip, bool terse, bool ident,
                       bool with_inscription, bool quantity_in_words,
                       iflags_t ignore_flags) const
@@ -272,76 +325,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
     }
 
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
-    {
-        const bool  tried  =  !ident && !equipped && item_type_tried(*this);
-        string tried_str;
+        buff << _item_inscription(*this, ident, equipped);
 
-        if (tried)
-        {
-            item_type_id_state_type id_type = get_ident_type(*this);
-
-            if (id_type == ID_MON_TRIED_TYPE)
-                tried_str = "tried by monster";
-            else if (id_type == ID_TRIED_ITEM_TYPE)
-            {
-                tried_str = "tried on item";
-                if (base_type == OBJ_SCROLLS)
-                {
-                    if (sub_type == SCR_IDENTIFY
-                        && you.type_id_props.exists("SCR_ID"))
-                    {
-                        tried_str = "tried on " +
-                                    you.type_id_props["SCR_ID"].get_string();
-                    }
-                    else if (sub_type == SCR_RECHARGING
-                             && you.type_id_props.exists("SCR_RC"))
-                    {
-                        tried_str = "tried on " +
-                                    you.type_id_props["SCR_RC"].get_string();
-                    }
-                    else if (sub_type == SCR_ENCHANT_ARMOUR
-                             && you.type_id_props.exists("SCR_EA"))
-                    {
-                        tried_str = "tried on " +
-                                    you.type_id_props["SCR_EA"].get_string();
-                    }
-                }
-            }
-            else
-                tried_str = "tried";
-        }
-
-        vector<string> insparts;
-
-        if (tried)
-            insparts.push_back(tried_str);
-
-        if (const char *orig = _interesting_origin(*this))
-        {
-            if (Options.show_god_gift == MB_TRUE
-                || Options.show_god_gift == MB_MAYBE && !fully_identified(*this))
-            {
-                insparts.push_back(orig);
-            }
-        }
-
-        if (is_artefact(*this))
-        {
-            string part = artefact_inscription(*this);
-            if (!part.empty())
-                insparts.push_back(part);
-        }
-
-        if (with_inscription && !(inscription.empty()))
-            insparts.push_back(inscription);
-
-        if (!insparts.empty())
-        {
-            buff << " {"
-                 << comma_separated_line(begin(insparts), end(insparts), ", ")
-                 << "}";
-        }
-    }
     // These didn't have "cursed " prepended; add them here so that
     // it comes after the inscription.
     if (terse && descrip != DESC_DBNAME && descrip != DESC_BASENAME
