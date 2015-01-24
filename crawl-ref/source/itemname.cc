@@ -80,7 +80,7 @@ static const char* _interesting_origin(const item_def &item)
     if (origin_is_god_gift(item))
         return "god gift";
 
-    if (item.orig_monnum == MONS_DONALD
+    if (item.orig_monnum == MONS_DONALD && get_equip_desc(item)
         && item.is_type(OBJ_ARMOUR, ARM_SHIELD))
     {
         return "Donald";
