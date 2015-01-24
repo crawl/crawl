@@ -623,18 +623,8 @@ string get_god_likes(god_type which_god, bool verbose)
     }
 
     case GOD_ELYVILON:
-    {
-        string like = "you destroy weapons (especially unholy and "
-                      "evil ones)";
-        if (verbose)
-        {
-            like += " via the <w>p</w> command (inscribe items with "
-                    "<w>!p</w> to prevent their accidental destruction)";
-        }
-        likes.push_back(like);
-        likes.emplace_back("you calm hostilities by healing your foes");
+        likes.emplace_back("you explore the world");
         break;
-    }
 
     case GOD_JIYVA:
     {
@@ -3174,7 +3164,6 @@ bool god_likes_items(god_type god, bool greedy_explore)
     {
     case GOD_BEOGH:
     case GOD_ASHENZARI:
-    case GOD_ELYVILON:
         return true;
 
     case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
@@ -3202,18 +3191,6 @@ bool god_likes_item(god_type god, const item_def& item)
 
     switch (god)
     {
-    case GOD_ELYVILON:
-        if (item_is_stationary_net(item)) // Held in a net?
-            return false;
-        return (item.base_type == OBJ_WEAPONS
-                || item.base_type == OBJ_STAVES
-                || item.base_type == OBJ_RODS
-                || item.base_type == OBJ_MISSILES)
-               // Once you've reached *** once, don't accept mundane weapon
-               // sacrifices ever again just because of value.
-               && (is_unholy_item(item) || is_evil_item(item)
-                   || you.piety_max[GOD_ELYVILON] < piety_breakpoint(2));
-
     case GOD_BEOGH:
         return item.base_type == OBJ_CORPSES
                && mons_genus(item.mon_type) == MONS_ORC;
@@ -3334,10 +3311,6 @@ static void _god_welcome_handle_gear()
         auto_id_inventory();
         ash_detect_portals(true);
     }
-
-    // detect evil weapons
-    if (you_worship(GOD_ELYVILON))
-        auto_id_inventory();
 
     // Give a reminder to remove any disallowed equipment.
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
@@ -3508,11 +3481,7 @@ void join_religion(god_type which_god, bool immediate)
     }
 
     if (you_worship(GOD_ELYVILON))
-    {
-        mprf(MSGCH_GOD, "You can now call upon Elyvilon to destroy weapons "
-                        "lying on the ground.");
         mprf(MSGCH_GOD, "You can now provide lesser healing for others.");
-    }
     else if (you_worship(GOD_TROG))
     {
         mprf(MSGCH_GOD, "You can now call upon Trog to burn spellbooks in your "

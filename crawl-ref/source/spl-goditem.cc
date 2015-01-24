@@ -250,26 +250,7 @@ static spret_type _healing_spell(int healed, int max_healed,
         {
             did_something = true;
 
-            const bool is_holy     = mons->is_holy();
-            const bool is_summoned = mons->is_summoned();
-
-            int pgain = 0;
-            if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
-            {
-                pgain = random2(mons->max_hit_points / (2 + you.piety / 20));
-                // Always give a 50% chance of gaining a little piety.
-                if (!pgain)
-                    pgain = coinflip();
-            }
-
-            // The feedback no longer tells you if you gained any piety this
-            // time, it tells you merely the general rate.
-            if (random2(1 + pgain))
-                simple_god_message(" approves of your offer of peace.");
-            else
-                mpr("Elyvilon supports your offer of peace.");
-
-            if (is_holy)
+            if (mons->is_holy())
             {
                 string key = "pacification";
 
@@ -293,9 +274,6 @@ static spret_type _healing_spell(int healed, int max_healed,
 
             record_monster_defeat(mons, KILL_PACIFIED);
             mons_pacify(mons, ATT_NEUTRAL);
-
-            // Give a small piety return.
-            gain_piety(pgain);
         }
     }
 
