@@ -46,6 +46,7 @@
 #include "transform.h"
 #include "unicode.h"
 #include "unwind.h"
+#include "viewgeom.h"
 
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
@@ -1365,6 +1366,201 @@ static void _name_deck(const item_def &deck, description_level_type desc,
     buff << "}";
 }
 
+/**
+ * The curse-describing prefix to a weapon's name, including trailing space if
+ * appropriate. (Empty if the weapon isn't cursed, or if the curse shouldn't be
+ * prefixed.)
+ */
+static string _curse_prefix(const item_def &weap, description_level_type desc,
+                            bool terse, bool ident, iflags_t ignore_flags)
+{
+    if (!_know_curse(weap, desc, ident, ignore_flags) || terse)
+        return "";
+
+    if (weap.cursed())
+        return "cursed ";
+
+    if (!Options.show_uncursed)
+        return "";
+    // We don't bother printing "uncursed" if the item is identified
+    // for pluses (its state should be obvious), this is so that
+    // the weapon name is kept short (there isn't a lot of room
+    // for the name on the main screen).  If you're going to change
+    // this behaviour, *please* make it so that there is an option
+    // that maintains this behaviour. -- bwr
+    if (_know_pluses(weap, desc, ident, ignore_flags))
+        return "";
+    // Nor for artefacts. Again, the state should be obvious. --jpeg
+    if (!ident && !item_type_known(weap)
+        || !is_artefact(weap))
+    {
+        return "uncursed ";
+    }
+    return "";
+}
+
+/**
+ * The plus-describing prefix to a weapon's name, including trailing space.
+ */
+static string _plus_prefix(const item_def &weap)
+{
+    if (is_unrandom_artefact(weap, UNRAND_WOE))
+        return "+∞ ";
+    return make_stringf("%+d ", weap.plus);
+}
+
+/**
+ * Cosmetic text for weapons (e.g. glowing, runed). Includes trailing space,
+ * if appropriate. (Empty if there is no cosmetic property, or if it's
+ * marked to be ignored.)
+ */
+static string _cosmetic_text(const item_def &weap, iflags_t ignore_flags)
+{
+    const iflags_t desc = get_equip_desc(weap);
+    if (testbits(ignore_flags, desc))
+        return "";
+
+    switch (desc)
+    {
+        case ISFLAG_RUNED:
+            return "runed ";
+        case ISFLAG_GLOWING:
+            return "glowing ";
+        default:
+            return "";
+    }
+}
+
+/**
+ * The ego-describing prefix to a weapon's name, including trailing space if
+ * appropriate. (Empty if the weapon's brand shouldn't be prefixed.)
+ */
+static string _ego_prefix(const item_def &weap, description_level_type desc,
+                          bool terse, bool ident, iflags_t ignore_flags)
+{
+    if (!_know_ego(weap, desc, ident, ignore_flags) || terse)
+        return "";
+
+    switch (get_weapon_brand(weap))
+    {
+        case SPWPN_VAMPIRISM:
+            return "vampiric ";
+        case SPWPN_ANTIMAGIC:
+            return "antimagic ";
+        case SPWPN_NORMAL:
+            if (!_know_pluses(weap, desc, ident, ignore_flags)
+                && get_equip_desc(weap))
+            {
+                return "enchanted ";
+            }
+            // fallthrough to default
+        default:
+            return "";
+    }
+}
+
+/**
+ * The ego-describing suffix to a weapon's name, May be empty. Does not include
+ * trailing space.
+ */
+static string _ego_suffix(const item_def &weap, bool terse)
+{
+    const string brand_name = weapon_brand_name(weap, terse);
+    if (brand_name.empty())
+        return "";
+
+    if (terse)
+        return make_stringf("(%s)", brand_name.c_str());
+    return " of " + brand_name;
+}
+
+/**
+ * Build the appropriate name for a given weapon.
+ *
+ * @param weap          The weapon in question.
+ * @param desc          The type of name to provide. (E.g. the name to be used
+ *                      in database lookups for description, or...)
+ * @param terse         Whether to provide a terse version of the name for
+ *                      display in the HUD.
+ * @param ident         Whether the weapon should be named as if it were
+ *                      identified.
+ * @param inscr         Whether an inscription will be added later.
+ * @param ignore_flags  Identification flags on the weapon to ignore.
+ *
+ * @return              A name for the weapon.
+ *                      TODO: example
+ */
+static string _name_weapon(const item_def &weap, description_level_type desc,
+                           bool terse, bool ident, bool inscr,
+                           iflags_t ignore_flags)
+{
+    const bool dbname   = (desc == DESC_DBNAME);
+    const bool basename = _use_basename(weap, desc, ident);
+    const bool qualname = (desc == DESC_QUALNAME);
+
+    const bool know_curse =  _know_curse(weap, desc, ident, ignore_flags);
+    const bool know_pluses = _know_pluses(weap, desc, ident, ignore_flags);
+    const bool know_ego =    _know_ego(weap, desc, ident, ignore_flags);
+
+    const string curse_prefix
+        = _curse_prefix(weap, desc, terse, ident, ignore_flags);
+    const string plus_text = know_pluses ? _plus_prefix(weap) : "";
+
+    if (is_artefact(weap) && !dbname)
+    {
+        const string long_name = curse_prefix + plus_text
+                                 + get_artefact_name(weap, ident);
+
+        const bool has_inscript = desc != DESC_BASENAME && desc != DESC_DBNAME
+                                  && inscr;
+        const string inscription = _item_inscription(weap, ident, true);
+
+        const int total_length = long_name.size()
+                                 + (has_inscript ? inscription.size() : 0);
+        const string inv_slot_text = "x) ";
+        const int max_length = crawl_view.hudsz.x - inv_slot_text.size();
+        if (terse)
+        {
+            dprf("full %s (inscr %s (%d)) (%d), ok = %d",
+                 long_name.c_str(), inscription.c_str(), has_inscript,
+                 total_length, max_length);
+        }
+        if (!terse || total_length <= max_length)
+            return long_name;
+
+        // special case: these two shouldn't ever have their base name revealed
+        // (since showing 'eudaemon blade' is unhelpful in the former case, and
+        // showing 'broad axe' is misleading in the latter)
+        // could be a flag, but doesn't seem worthwhile for only two items
+        if (is_unrandom_artefact(weap, UNRAND_JIHAD)
+            || is_unrandom_artefact(weap, UNRAND_DEMON_AXE))
+        {
+            return long_name;
+        }
+
+        const string short_name
+            = curse_prefix + plus_text + get_artefact_base_name(weap, true);
+        dprf("short: %s", short_name.c_str());
+        return short_name;
+    }
+
+    const bool show_cosmetic = !basename && !qualname && !dbname
+                               && !know_pluses && !know_ego
+                               && !terse
+                               && !(ignore_flags & ISFLAG_COSMETIC_MASK);
+
+    const string cosmetic_text
+        = show_cosmetic ? _cosmetic_text(weap, ignore_flags) : "";
+    const string ego_prefix
+        = _ego_prefix(weap, desc, terse, ident, ignore_flags);
+    const string ego_suffix = know_ego ? _ego_suffix(weap, terse) : "";
+    const string curse_suffix
+        = know_curse && weap.cursed() && terse ? " (curse)" :  "";
+    return curse_prefix + plus_text + cosmetic_text + ego_prefix
+           + item_base_name(weap)
+           + ego_suffix + curse_suffix;
+}
+
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 string item_def::name_aux(description_level_type desc, bool terse, bool ident,
@@ -1379,9 +1575,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     const bool basename = _use_basename(*this, desc, ident);
     const bool qualname = (desc == DESC_QUALNAME);
 
-    const bool know_curse = _know_curse(*this, desc, ident, ignore_flags);
+    const bool know_curse =  _know_curse(*this, desc, ident, ignore_flags);
     const bool know_pluses = _know_pluses(*this, desc, ident, ignore_flags);
-    const bool know_brand = _know_ego(*this, desc, ident, ignore_flags);
+    const bool know_brand =  _know_ego(*this, desc, ident, ignore_flags);
 
     const bool know_ego = know_brand;
 
@@ -1399,83 +1595,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     switch (base_type)
     {
     case OBJ_WEAPONS:
-        if (know_curse && !terse)
-        {
-            // We don't bother printing "uncursed" if the item is identified
-            // for pluses (its state should be obvious), this is so that
-            // the weapon name is kept short (there isn't a lot of room
-            // for the name on the main screen).  If you're going to change
-            // this behaviour, *please* make it so that there is an option
-            // that maintains this behaviour. -- bwr
-            // Nor for artefacts. Again, the state should be obvious. --jpeg
-            if (cursed())
-                buff << "cursed ";
-            else if (Options.show_uncursed && !know_pluses
-                     && (!know_type || !is_artefact(*this)))
-                buff << "uncursed ";
-        }
-
-        if (know_pluses)
-        {
-            if (is_unrandom_artefact(*this, UNRAND_WOE))
-                buff << "+∞ ";
-            else
-                buff << make_stringf("%+d ", plus);
-        }
-
-        if (is_artefact(*this) && !dbname)
-        {
-            buff << get_artefact_name(*this, false, terse);
-            break;
-        }
-
-        if (show_cosmetic)
-        {
-            switch (get_equip_desc(*this))
-            {
-            case ISFLAG_RUNED:
-                if (!testbits(ignore_flags, ISFLAG_RUNED))
-                    buff << "runed ";
-                break;
-            case ISFLAG_GLOWING:
-                if (!testbits(ignore_flags, ISFLAG_GLOWING))
-                    buff << "glowing ";
-                break;
-            }
-        }
-
-        if (know_brand && !terse)
-        {
-            const int wpn_brand = get_weapon_brand(*this);
-            if (wpn_brand == SPWPN_VAMPIRISM)
-                buff << "vampiric ";
-            else if (wpn_brand == SPWPN_ANTIMAGIC)
-                buff << "antimagic ";
-            else if (wpn_brand == SPWPN_NORMAL && !know_pluses
-                     && get_equip_desc(*this))
-            {
-                buff << "enchanted ";
-            }
-        }
-        buff << item_base_name(*this);
-
-        if (know_brand)
-        {
-            const string brand_name = weapon_brand_name(*this, terse);
-            if (!brand_name.empty())
-            {
-                if (!terse)
-                    buff << " of ";
-                else
-                    buff << " (";
-                buff << brand_name;
-                if (terse)
-                    buff << ")";
-            }
-        }
-
-        if (know_curse && cursed() && terse)
-            buff << " (curse)";
+        buff << _name_weapon(*this, desc, terse, ident, with_inscription,
+                             ignore_flags);
         break;
 
     case OBJ_MISSILES:
