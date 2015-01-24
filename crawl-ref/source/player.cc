@@ -2744,10 +2744,7 @@ static void _recharge_xp_evokers(int exp)
 
         debt = max(0, debt - div_rand_round(exp, xp_factor));
         if (debt == 0)
-        {
-            mprf("%s %s recharged.", evoker->name(DESC_YOUR).c_str(),
-                 evoker->quantity > 1 ? "have" : "has");
-        }
+            mprf("%s has recharged.", evoker->name(DESC_YOUR).c_str());
     }
 }
 

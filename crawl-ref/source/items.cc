@@ -1397,9 +1397,6 @@ bool is_stackable_item(const item_def &item)
     if (item.is_type(OBJ_MISCELLANY, MISC_PHANTOM_MIRROR))
         return true;
 
-    if (is_xp_evoker(item))
-        return true;
-
     return false;
 }
 
