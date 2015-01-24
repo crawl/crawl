@@ -436,7 +436,8 @@ would usually prevent translocations.
 %%%%
 Banish ability
 
-Attempt to banish a creature into the Abyss.
+Attempt to banish a creature into the Abyss. If the attempt succeeds, you gain
+some piety and half the creature's experience value.
 %%%%
 Corrupt ability
 
