@@ -663,7 +663,7 @@ struct artefact_prop_data
 };
 
 /// Generate 'good' values for stat artps (e.g. ARTP_STRENGTH)
-static int _gen_good_stat_artp() { return 2 + random2(3); }
+static int _gen_good_stat_artp() { return 1 + random2(3); }
 
 /// Generate 'bad' values for stat artps (e.g. ARTP_STRENGTH)
 static int _gen_bad_stat_artp() { return -2 - random2(4); }
@@ -687,11 +687,11 @@ static const artefact_prop_data artp_data[] =
     { "AC", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0}, // ARTP_AC,
     { "EV", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_EVASION,
     { "Str", ARTP_VAL_ANY, 100,      // ARTP_STRENGTH,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 8, 1 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 9, 1 },
     { "Int", ARTP_VAL_ANY, 100,      // ARTP_INTELLIGENCE,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 8, 1 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 9, 1 },
     { "Dex", ARTP_VAL_ANY, 100,      // ARTP_DEXTERITY,
-        _gen_good_stat_artp, _gen_bad_stat_artp, 8, 1 },
+        _gen_good_stat_artp, _gen_bad_stat_artp, 9, 1 },
     { "rF", ARTP_VAL_ANY, 60,       // ARTP_FIRE,
         _gen_good_res_artp, _gen_bad_res_artp, 2, 4},
     { "rC", ARTP_VAL_ANY, 60,       // ARTP_COLD,
@@ -875,6 +875,15 @@ static void _get_randart_properties(const item_def &item,
                  good > 0 && item_props[prop] <= max && one_chance_in(i);
                  i += artp_data[prop].odds_inc)
             {
+                // Add one to the starting value for stat bonuses.
+                if ((prop == ARTP_STRENGTH
+                     || prop == ARTP_INTELLIGENCE
+                     || prop == ARTP_DEXTERITY)
+                    && item_props[prop] == 0)
+                {
+                   item_props[prop]++;
+                }
+
                 item_props[prop] += artp_data[prop].gen_good_value();
                 --good;
             }
