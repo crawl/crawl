@@ -1240,6 +1240,69 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
 }
 
 /**
+ * When naming the given item, should the base name be used?
+ */
+static bool _use_basename(const item_def &item, description_level_type desc,
+                          bool ident)
+{
+    const bool know_type = ident || item_type_known(item);
+    return desc == DESC_BASENAME
+           || desc == DESC_DBNAME && !know_type;
+}
+
+/**
+ * When naming the given item, should identifiable properties be mentioned?
+ */
+static bool _know_any_ident(const item_def &item, description_level_type desc,
+                            bool ident)
+{
+    return desc != DESC_QUALNAME && desc != DESC_DBNAME
+           && !_use_basename(item, desc, ident);
+}
+
+/**
+ * When naming the given item, should the specified identifiable property be
+ * mentioned?
+ */
+static bool _know_ident(const item_def &item, description_level_type desc,
+                        bool ident, iflags_t ignore_flags,
+                        item_status_flag_type vprop)
+{
+    return _know_any_ident(item, desc, ident)
+            && !testbits(ignore_flags, vprop)
+            && (ident || item_ident(item, vprop));
+}
+
+/**
+ * When naming the given item, should the curse be mentioned?
+ */
+static bool _know_curse(const item_def &item, description_level_type desc,
+                        bool ident, iflags_t ignore_flags)
+{
+    return _know_ident(item, desc, ident, ignore_flags, ISFLAG_KNOW_CURSE);
+}
+
+/**
+ * When naming the given item, should the pluses be mentioned?
+ */
+static bool _know_pluses(const item_def &item, description_level_type desc,
+                          bool ident, iflags_t ignore_flags)
+{
+    return _know_ident(item, desc, ident, ignore_flags, ISFLAG_KNOW_PLUSES);
+}
+
+/**
+ * When naming the given item, should the brand be mentioned?
+ */
+static bool _know_ego(const item_def &item, description_level_type desc,
+                         bool ident, iflags_t ignore_flags)
+{
+    return _know_any_ident(item, desc, ident)
+           && !testbits(ignore_flags, ISFLAG_KNOW_TYPE)
+           && (ident || item_type_known(item));
+}
+
+/**
  * Construct the name of a given deck item.
  *
  * @param[in] deck      The deck item in question.
@@ -1254,8 +1317,7 @@ static void _name_deck(const item_def &deck, description_level_type desc,
     const bool know_type = ident || item_type_known(deck);
 
     const bool dbname   = desc == DESC_DBNAME;
-    const bool basename = desc == DESC_BASENAME
-                          || dbname && !know_type;
+    const bool basename = _use_basename(deck, desc, ident);
 
     if (basename)
     {
@@ -1314,32 +1376,21 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     const bool know_type = ident || item_type_known(*this);
 
     const bool dbname   = (desc == DESC_DBNAME);
-    const bool basename = (desc == DESC_BASENAME || (dbname && !know_type));
+    const bool basename = _use_basename(*this, desc, ident);
     const bool qualname = (desc == DESC_QUALNAME);
 
-    const bool know_curse =
-        !basename && !qualname && !dbname
-        && !testbits(ignore_flags, ISFLAG_KNOW_CURSE)
-        && (ident || item_ident(*this, ISFLAG_KNOW_CURSE));
-
-    const bool know_pluses =
-        !basename && !qualname && !dbname
-        && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES)
-        && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
-
-    const bool know_brand =
-        !basename && !qualname && !dbname
-        && !testbits(ignore_flags, ISFLAG_KNOW_TYPE)
-        && (ident || item_type_known(*this));
+    const bool know_curse = _know_curse(*this, desc, ident, ignore_flags);
+    const bool know_pluses = _know_pluses(*this, desc, ident, ignore_flags);
+    const bool know_brand = _know_ego(*this, desc, ident, ignore_flags);
 
     const bool know_ego = know_brand;
 
     // Display runed/glowing/embroidered etc?
     // Only display this if brand is unknown.
-    const bool show_cosmetic = !know_pluses && !terse && !basename
-        && !qualname && !dbname
-        && !know_brand
-        && !(ignore_flags & ISFLAG_COSMETIC_MASK);
+    const bool show_cosmetic = !know_pluses && !know_brand
+                               && !basename && !qualname && !dbname
+                               && !terse
+                               && !(ignore_flags & ISFLAG_COSMETIC_MASK);
 
     const bool need_plural = !basename && !dbname;
 
