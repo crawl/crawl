@@ -160,9 +160,9 @@ static monsterentry mondata[] =
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     // hit points
     { 0, 0, 0, 0 },
-    // AC, EV, spells, corpse type, zombie size, shout type, intelligence
+    // AC, EV, spells, corpse type, zombie size, shout type
     0, 0, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    // intelligence, habitat, speed, energy usage, use type
+    // intelligence, habitat, flight type, speed, energy usage
     I_PLANT, HT_LAND, FL_NONE, 0, DEFAULT_ENERGY,
     // use type, eat type, body size, body shape
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_GIANT, MON_SHAPE_MISC,
