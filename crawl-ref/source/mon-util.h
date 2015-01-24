@@ -129,9 +129,9 @@ struct monsterentry
 
     mon_holy_type holiness;
 
-    short resist_magic;  // (positive is ??)
-    // max damage in a turn is total of these four?
+    short resist_magic;  // (positive sets value, negative is relative to hd)
 
+    // max damage in a turn is total of these four?
     mon_attack_def attack[MAX_NUM_ATTACKS];
 
     // hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp

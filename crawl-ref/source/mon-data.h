@@ -16,7 +16,7 @@
     - row 4: mass, experience modifier, genus, species, holiness, resist magic
     - row 5: damage for each of four attacks
     - row 6: hit dice, described by four parameters
-    - row 7: AC, evasion, sec(spell), corpse_thingy, zombie size, shouts
+    - row 7: AC, evasion, spells, corpse effect, shouts
     - row 8: intel, habitat, flight class, speed, energy_usage
     - row 9: gmon_use class, gmon_eat class, body size, body shape
 
@@ -27,7 +27,7 @@
               and if a default colour isn't meaningful, they should also use
               COLOUR_UNDEF.
     - name: if an empty string, name generated automagically (see moname)
-    - mass: if zero, the monster never leaves a corpse (also corpse_thingy)
+    - mass: if zero, the monster never leaves a corpse (ref also corpse effect)
     - genus: base monster "type" for a classed monsters (i.e. jackal as hound)
     - species: corpse type of monster (i.e. orc for orc wizard)
     - holiness:
@@ -37,21 +37,16 @@
        MH_UNDEAD     - immunity from draining, pain, torment; resistance
                         to poison; extra damage from holy wrath;
                         affected by holy word
-       MH_DEMONIC    - similar to undead, but no poison resistance and
+       MH_DEMONIC    - similar to undead, but no poison resistance
                         *no* automatic hellfire resistance
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
 
-   exp_mod: see give_adjusted_experience() in mon-death.cc
-   - the experience given for killing this monster is calculated something
-   like this:
-
-    experience = (16 + maxhp) * HD * HD * exp_mod * (100 + diff. score) * speed
-                 / 100000
-    with a minimum of 1, and maximum 15000 (jpeg)
+   exp_mod: multiplies xp value after most other calculations.
+            see exper_value() in mon-util.cc
 
    resist_magic: see mons_resist_magic() in mon-util.cc
-   - If -x calculate (-x * hit dice * 4/3), else simply x
+   - If -x calculate (-x * hit dice * 4/3), else simply x.
 
    damage [4]
    - up to 4 different attacks
@@ -72,9 +67,10 @@
    sec: if the monster has only one possible spellbook, sec is set to that book.
      If a monster has multiple possible books, sec is set to MST_NO_SPELLS. Then
      the function _mons_spellbook_list in mon-util.cc handles the books.
+   TODO: replace this system ^
 
-   corpse_thingy
-   - err, bad name. Describes effects of eating corpses.
+   corpse effect
+   - Describes effects of eating corpses.
      CE_NOCORPSE,        leaves no corpse
      CE_CLEAN,           can be healthily eaten by non-Ghouls
      CE_POISONOUS,       inedible to characters without poison resistance
@@ -160,7 +156,7 @@ static monsterentry mondata[] =
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     // hit points
     { 0, 0, 0, 0 },
-    // AC, EV, spells, corpse type, zombie size, shout type
+    // AC, EV, spells, corpse type, shout type
     0, 0, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     // intelligence, habitat, flight type, speed, energy usage
     I_PLANT, HT_LAND, FL_NONE, 0, DEFAULT_ENERGY,
@@ -6969,18 +6965,5 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
 },
-
-/*
-  For simplicity, here again the explanation:
-    - row 1: monster id, display character, display colour, name
-    - row 2: monster flags
-    - row 3: monster resistance flags
-    - row 4: mass, experience modifier, genus, species, holiness, resist magic
-    - row 5: damage for each of four attacks
-    - row 6: hit dice, described by four parameters
-    - row 7: AC, evasion, sec(spell), corpse_thingy, zombie size, shouts
-    - row 8: intel, habitat, flight class, speed, energy_usage
-    - row 9: gmon_use class, gmon_eat class, body size, body shape
-*/
 
 };
