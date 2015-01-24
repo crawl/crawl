@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "bloodspatter.h"
 #include "branch.h"
@@ -519,14 +520,28 @@ bool trap_def::weave_shadow(const actor& triggerer)
                                          pos,
                                          bands_ok ? 0 : MG_FORBID_BANDS);
 
-    monster *mons = create_monster(mg);
-    if (!mons)
+    monster *leader = create_monster(mg);
+    if (!leader)
         return false;
 
     const string triggerer_name = triggerer.is_player() ?
                                         "the player character" :
                                         triggerer.name(DESC_A, true);
-    mons_add_blame(mons, "triggered by " + triggerer_name);
+    const string blame = "triggered by " + triggerer_name;
+    mons_add_blame(leader, blame);
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        monster *follower = *mi;
+        if (!follower || !follower->alive())
+            continue;
+
+        if (follower->props["band_leader"].get_int() == leader->mid)
+        {
+            ASSERT(follower->mid != leader->mid);
+            mons_add_blame(follower, blame);
+        }
+    }
 
     return true;
 }
