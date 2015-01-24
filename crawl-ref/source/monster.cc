@@ -4849,13 +4849,8 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 
         // except for summoned allies, whch can enter shadow traps without
         // triggering them.
-        if (trap.type == TRAP_SHADOW
-            && !has_ench(ENCH_ABJ)
-            && !has_ench(ENCH_FAKE_ABJURATION))
-        {
+        if (trap.type == TRAP_SHADOW && can_trigger_shadow_trap(*this))
             return false;
-        }
-
     }
 
     // Dumb monsters don't care at all.

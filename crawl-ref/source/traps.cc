@@ -532,6 +532,18 @@ bool trap_def::weave_shadow(const actor& triggerer)
 }
 
 /**
+ * Is the given monster non-summoned, & therefore capable of triggering a
+ * shadow trap that it stepped on?
+ */
+bool can_trigger_shadow_trap(const monster &mons)
+{
+    // this is very silly and there is probably a better way
+    return !mons.has_ench(ENCH_ABJ)
+        && !mons.has_ench(ENCH_FAKE_ABJURATION)
+        && !mons.is_perm_summoned();
+}
+
+/**
  * Trigger a shadow creature trap.
  *
  * Temporarily summons some number of shadow creatures/bands from the current
@@ -542,8 +554,7 @@ bool trap_def::weave_shadow(const actor& triggerer)
 void trap_def::trigger_shadow_trap(const actor& triggerer)
 {
     if (triggerer.is_monster()
-        && (triggerer.as_monster()->has_ench(ENCH_ABJ)
-            || triggerer.as_monster()->has_ench(ENCH_FAKE_ABJURATION)))
+        && !can_trigger_shadow_trap(*triggerer.as_monster()))
     {
         return; // no summonsplosions
     }
