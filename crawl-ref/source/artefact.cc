@@ -1320,44 +1320,12 @@ string get_artefact_base_name(const item_def &item, bool terse)
     return base_name;
 }
 
-string get_artefact_name(const item_def &item, bool force_known, bool terse)
+string get_artefact_name(const item_def &item, bool force_known)
 {
     ASSERT(is_artefact(item));
 
     if (item_type_known(item) || force_known)
     {
-        if (terse
-            && (!is_unrandom_artefact(item)
-                || is_unrandom_artefact(item, UNRAND_ARGA)
-                || is_unrandom_artefact(item, UNRAND_BLOODBANE)
-                || is_unrandom_artefact(item, UNRAND_BLOWGUN_ASSASSIN)
-                || is_unrandom_artefact(item, UNRAND_BOTONO)
-                || is_unrandom_artefact(item, UNRAND_BRILLIANCE) // would go over limit w/ {halo} INSCRIP
-                || is_unrandom_artefact(item, UNRAND_CHILLY_DEATH)
-                || is_unrandom_artefact(item, UNRAND_DEVASTATOR)
-                || is_unrandom_artefact(item, UNRAND_DOOM_KNIGHT)
-                // could get away with no INSCRIP due to unique properties?
-                // would fit width then - {el,} is one char too long
-                || is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
-                || is_unrandom_artefact(item, UNRAND_EOS) // almost fits, one char over: SInv|}
-                || is_unrandom_artefact(item, UNRAND_FIRESTARTER)
-                || is_unrandom_artefact(item, UNRAND_FLAMING_DEATH)
-                || is_unrandom_artefact(item, UNRAND_GUARD)
-                || is_unrandom_artefact(item, UNRAND_GYRE) // base TYPE: pluralized to 'quick blades'
-                || is_unrandom_artefact(item, UNRAND_HELLFIRE)
-                || is_unrandom_artefact(item, UNRAND_KRISHNA)
-                || is_unrandom_artefact(item, UNRAND_LEECH) // still too long, of course
-                || is_unrandom_artefact(item, UNRAND_OCTOPUS_KING)
-                || is_unrandom_artefact(item, UNRAND_SKULLCRUSHER)
-                || is_unrandom_artefact(item, UNRAND_SNIPER)
-                || is_unrandom_artefact(item, UNRAND_SPELLBINDER) // kinda sorta fits as-is w/Wp: gone (one char over) //TODO INSCRIP
-                || is_unrandom_artefact(item, UNRAND_SPRIGGANS_KNIFE)
-                || is_unrandom_artefact(item, UNRAND_UNDEADHUNTER)
-                || is_unrandom_artefact(item, UNRAND_WYRMBANE) // almost fits, three chars over: AC|+5}
-            ))
-        {
-            return get_artefact_base_name(item);
-        }
         // unrands don't use cached names
         if (is_unrandom_artefact(item))
             return _seekunrandart(item)->name;
