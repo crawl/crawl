@@ -2894,7 +2894,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (defender->is_summoned())
             break;
 
-        if (x_chance_in_y(defender->res_negative_energy(), 3))
+        if (defender->res_negative_energy())
             break;
 
         if (defender->stat_hp() < defender->stat_maxhp())
@@ -2913,8 +2913,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_DRAIN_STR:
     case AF_DRAIN_INT:
     case AF_DRAIN_DEX:
-        if ((one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
-            && defender->res_negative_energy() < random2(4))
+        if (one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
         {
             stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR :
                                       flavour == AF_DRAIN_INT ? STAT_INT

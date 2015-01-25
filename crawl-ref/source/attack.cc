@@ -1707,10 +1707,10 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_VAMPIRISM:
     {
-        if (x_chance_in_y(defender->res_negative_energy(), 3))
-            break;
-
-        if (!weapon || defender->holiness() != MH_NATURAL || damage_done < 1
+        if (!weapon
+            || defender->holiness() != MH_NATURAL
+            || defender->res_negative_energy()
+            || damage_done < 1
             || attacker->stat_hp() == attacker->stat_maxhp()
             || !defender->is_player()
                && defender->as_monster()->is_summoned()

@@ -4140,8 +4140,8 @@ static bool _mons_vampiric_drain(monster *mons)
 
     hp_cost = min(hp_cost, target->stat_hp());
     hp_cost = min(hp_cost, mons->max_hit_points - mons->hit_points);
-    if (target->res_negative_energy() > 0)
-        hp_cost -= hp_cost * target->res_negative_energy() / 3;
+    if (target->res_negative_energy())
+        hp_cost = 0;
 
     if (!hp_cost)
     {
