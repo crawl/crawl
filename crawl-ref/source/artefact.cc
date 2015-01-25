@@ -721,7 +721,7 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 2; }, 0, 0 },
     { "-Cast", ARTP_VAL_BOOL, 20,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Tele", ARTP_VAL_POS, 20,    // ARTP_CAUSE_TELEPORTATION,
+    { "*Tele", ARTP_VAL_POS,   0,    // ARTP_CAUSE_TELEPORTATION,
         nullptr, []() { return 8; }, 0, 0 },
     { "-Tele", ARTP_VAL_BOOL, 20,   // ARTP_PREVENT_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
@@ -764,7 +764,7 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
-// weights sum to 1000.
+// weights summed to 1000; who knows what now
 
 
 /**
