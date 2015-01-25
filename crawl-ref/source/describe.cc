@@ -3289,12 +3289,12 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_PURE_FIRE:       return "deal pure fire damage";
     case AF_DRAIN_SPEED:     return "drain speed";
     case AF_VULN:            return "reduce resistance to hostile enchantments";
-    case AF_WEAKNESS_POISON: return "cause poison and weakness";
+    case AF_WEAKNESS_POISON: return "cause poisoning and weakness";
     case AF_SHADOWSTAB:      return "deal extra damage from the shadows";
     case AF_DROWN:           return "deal drowning damage";
     case AF_FIREBRAND:       return "deal extra fire damage and surround the defender with flames";
-    case AF_CORRODE:         return "corrode armour";
-    case AF_SCARAB:          return "drain health, and drain speed or skills";
+    case AF_CORRODE:         return "cause corrosion";
+    case AF_SCARAB:          return "drain speed or skills and drain health";
     case AF_TRAMPLE:         return "knock back the defender";
     default:                 return "";
     }
