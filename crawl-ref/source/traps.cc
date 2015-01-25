@@ -536,7 +536,7 @@ bool trap_def::weave_shadow(const actor& triggerer)
         if (!follower || !follower->alive())
             continue;
 
-        if (follower->props["band_leader"].get_int() == leader->mid)
+        if (mid_t(follower->props["band_leader"].get_int()) == leader->mid)
         {
             ASSERT(follower->mid != leader->mid);
             mons_add_blame(follower, blame);
