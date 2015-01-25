@@ -292,54 +292,6 @@ MAP
   ...
 ENDMAP
 
-NAME:   shoals_atoll
-DEPTH:  Shoals
-KMONS:  1 = patrolling kraken
-KFEAT:  1 = deep_water
-KPROP:  1Wgw. = no_tide
-FHEIGHT: gw1 = 40
-MARKER: 1 = lua:MonPropsMarker:new {ancient_kraken="ancient_kraken"}
-MARKER: 1 = lua:portal_desc { water_marker = 1, tide_seed = 1 }
-MARKER: W = lua:portal_desc { water_marker = 1 }
-MARKER: w = lua:portal_desc { water_marker = 1 }
-MARKER: . = lua:portal_desc { water_marker = 1 }
-SUBST:  g = WWw, X = ccc., x = c
-{{
-local kraken_death_marker = TriggerableFunction:new {
-  func="shoals_atoll_kraken_death",
-  repeated=false,
-  props= {water_marker="1"} }
-
-kraken_death_marker:add_triggerer(DgnTriggerer:new {
-  type="monster_dies",
-  target="ancient_kraken" })
-
-lua_marker("*", kraken_death_marker)
-
-local place_items_marker = TriggerableFunction:new {
-  func="shoals_atoll_place_items",
-  repeated=false,
-  props= {water_marker="1"} }
-
-place_items_marker:add_triggerer(DgnTriggerer:new { type="entered_level" })
-lua_marker("1", place_items_marker)
-}}
-MAP
-     XXXXXXXX
-    XxxxxxxxxX
-   Xx...WWWGxxX
-  Xx.gggggW*GxX
- Xx.ggwwwggWWxX
-Xx.ggwwwwwggWxX
-Xx.ggww1wwgg.xX
-Xx.ggwwwwwgg.xX
-XW..ggwwwgg.xX
- WW..ggggg.xX
-  WW......xX
-   WWWWxxxX
-      XXXX
-ENDMAP
-
 NAME:   yaktaur_hedge
 DEPTH:  Shoals
 MONS:   bush
