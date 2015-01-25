@@ -4455,7 +4455,7 @@ god_type monster::deity() const
 
 bool monster::drain_exp(actor *agent, bool quiet, int pow)
 {
-    if (x_chance_in_y(res_negative_energy(), 3))
+    if (res_negative_energy() >= 3)
         return false;
 
     if (!quiet && you.can_see(this))
@@ -4466,9 +4466,12 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
 
     if (alive())
     {
-        const int dur = min(200 + random2(100),
-                            300 - get_ench(ENCH_DRAINED).duration
-                                - random2(50));
+        int dur = min(200 + random2(100),
+                      300 - get_ench(ENCH_DRAINED).duration - random2(50));
+
+        if (res_negative_energy())
+            dur /= (res_negative_energy() * 2);
+
         const mon_enchant drain_ench = mon_enchant(ENCH_DRAINED, 1, agent,
                                                    dur);
         add_ench(drain_ench);
