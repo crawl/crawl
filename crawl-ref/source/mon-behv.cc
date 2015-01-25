@@ -212,12 +212,6 @@ static void _decide_monster_firing_position(monster* mon, actor* owner)
 //
 // 1. Evaluates current AI state
 // 2. Sets monster target x,y based on current foe
-//
-// XXX: Monsters of I_NORMAL or above should select a new target
-// if their current target is another monster which is sitting in
-// a wall and is immune to most attacks while in a wall, unless
-// the monster has a spell or special/nearby ability which isn't
-// affected by the wall.
 //---------------------------------------------------------------
 void handle_behaviour(monster* mon)
 {
