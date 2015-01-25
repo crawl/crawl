@@ -2600,7 +2600,7 @@ void ShoppingListMenu::draw_title()
 
         cgotoxy(1, 1);
         formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s, total cost %d gp",
+        fs.cprintf("%d %s%s, total cost %d gold",
                    title->quantity, title->text.c_str(),
                    title->quantity > 1? "s" : "",
                    total_cost);
@@ -2643,9 +2643,11 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             unknown = shop_item_unknown(get_thing_item(thing));
 
         string etitle =
-            make_stringf("[%s] %s%s (%d gp)", pos.id.describe().c_str(),
+            make_stringf("%4d gold [%s] %s%s",
+                         cost,
+                         pos.id.describe().c_str(),
                          name_thing(thing, DESC_A).c_str(),
-                         unknown ? " (unknown)" : "", cost);
+                         unknown ? " (unknown)" : "");
 
         MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
         me->data = &thing;
