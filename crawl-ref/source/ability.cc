@@ -161,8 +161,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NEMELEX_TRIPLE_DRAW,
       ABIL_NEMELEX_DEAL_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
-    { ABIL_ELYVILON_LESSER_HEALING_SELF, ABIL_ELYVILON_PURIFICATION,
-      ABIL_ELYVILON_GREATER_HEALING_OTHERS, ABIL_NON_ABILITY,
+    { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_HEAL_OTHER,
+      ABIL_ELYVILON_PURIFICATION, ABIL_ELYVILON_GREATER_HEALING,
       ABIL_ELYVILON_DIVINE_VIGOUR },
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE, ABIL_LUGONU_BANISH,
@@ -331,16 +331,14 @@ static const ability_def Ability_List[] =
     // Elyvilon
     { ABIL_ELYVILON_LIFESAVING, "Divine Protection",
       0, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_ELYVILON_LESSER_HEALING_SELF, "Lesser Self-Healing",
+    { ABIL_ELYVILON_LESSER_HEALING, "Lesser Healing",
       1, 0, 100, generic_cost::range(0, 1), 0, ABFLAG_CONF_OK},
-    { ABIL_ELYVILON_LESSER_HEALING_OTHERS, "Lesser Healing",
-      1, 0, 100, 0, 0, ABFLAG_NONE},
+    { ABIL_ELYVILON_HEAL_OTHER, "Heal Other",
+      2, 0, 250, 2, 0, ABFLAG_NONE},
     { ABIL_ELYVILON_PURIFICATION, "Purification", 3, 0, 300, 3, 0,
       ABFLAG_CONF_OK},
-    { ABIL_ELYVILON_GREATER_HEALING_SELF, "Greater Self-Healing",
+    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
       2, 0, 250, 3, 0, ABFLAG_CONF_OK},
-    { ABIL_ELYVILON_GREATER_HEALING_OTHERS, "Greater Healing",
-      2, 0, 250, 2, 0, ABFLAG_NONE},
     { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour", 0, 0, 600, 6, 0,
       ABFLAG_CONF_OK},
 
@@ -1214,8 +1212,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_RECITE:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_OKAWARU_HEROISM:
-    case ABIL_ELYVILON_LESSER_HEALING_SELF:
-    case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
+    case ABIL_ELYVILON_LESSER_HEALING:
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_FEDHAS_SUNLIGHT:
     case ABIL_FEDHAS_EVOLUTION:
@@ -1238,8 +1235,8 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_SIF_MUNA_FORGET_SPELL:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_ELYVILON_GREATER_HEALING_SELF:
-    case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
+    case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_ELYVILON_HEAL_OTHER:
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_PLANT_RING:
     case ABIL_QAZLAL_UPHEAVAL:
@@ -2814,20 +2811,17 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
                      + random2avg(you.piety * BASELINE_DELAY, 2) / 10;
         break;
 
-    case ABIL_ELYVILON_LESSER_HEALING_SELF:
-    case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
+    case ABIL_ELYVILON_LESSER_HEALING:
     {
         fail_check();
-        const bool self = (abil.ability == ABIL_ELYVILON_LESSER_HEALING_SELF);
         int pow = 3 + (you.skill_rdiv(SK_INVOCATIONS, 1, 6));
 #if TAG_MAJOR_VERSION == 34
-        if (self && you.species == SP_DJINNI)
+        if (you.species == SP_DJINNI)
             pow /= 2;
 #endif
         if (cast_healing(pow,
                          3 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 6.0),
-                         true, self ? you.pos() : coord_def(0, 0), !self,
-                         self ? TARG_NUM_MODES : TARG_INJURED_FRIEND)
+                         true, you.pos(), false, TARG_NUM_MODES)
                          == SPRET_ABORT)
         {
             return SPRET_ABORT;
@@ -2840,11 +2834,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         elyvilon_purification();
         break;
 
-    case ABIL_ELYVILON_GREATER_HEALING_SELF:
-    case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
+    case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_ELYVILON_HEAL_OTHER:
     {
         fail_check();
-        const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING_SELF);
+        const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING);
 
         int pow = 10 + (you.skill_rdiv(SK_INVOCATIONS, 1, 3));
 #if TAG_MAJOR_VERSION == 34
@@ -3826,8 +3820,6 @@ static int _is_god_ability(ability_type abil)
     // TODO: Fix that and remove the following.
     if (abil == ABIL_CHEIBRIADOS_TIME_BEND)
         return GOD_CHEIBRIADOS;
-    if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
-        return GOD_ELYVILON;
     if (abil == ABIL_TROG_BURN_SPELLBOOKS)
         return GOD_TROG;
 
@@ -3857,11 +3849,6 @@ void set_god_ability_slots()
 
     // Finally, add in current god's invocations in traditional slots.
     int num = 0;
-    if (you_worship(GOD_ELYVILON))
-    {
-        _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_OTHERS,
-                                'a' + num++);
-    }
     if (you_worship(GOD_CHEIBRIADOS))
     {
         _set_god_ability_helper(ABIL_CHEIBRIADOS_TIME_BEND,
@@ -3878,15 +3865,9 @@ void set_god_ability_slots()
             if (you_worship(GOD_ELYVILON))
             {
                 if (god_abilities[you.religion][i]
-                        == ABIL_ELYVILON_LESSER_HEALING_SELF)
+                        == ABIL_ELYVILON_LESSER_HEALING)
                 {
                     _set_god_ability_helper(ABIL_ELYVILON_LIFESAVING, 'p');
-                }
-                else if (god_abilities[you.religion][i]
-                            == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
-                {
-                    _set_god_ability_helper(ABIL_ELYVILON_GREATER_HEALING_SELF,
-                                            'a' + num++);
                 }
             }
             else if (you_worship(GOD_YREDELEMNUL))
@@ -3977,8 +3958,6 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
     vector<ability_type> abilities;
     if (you_worship(GOD_TROG) && (include_unusable || !silenced(you.pos())))
         abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
-    else if (you_worship(GOD_ELYVILON) && (include_unusable || !silenced(you.pos())))
-        abilities.push_back(ABIL_ELYVILON_LESSER_HEALING_OTHERS);
     else if (you_worship(GOD_CHEIBRIADOS) && (include_unusable
                                               || !(silenced(you.pos())
                                                    || player_under_penance())))
@@ -4033,10 +4012,8 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
         }
 
         abilities.push_back(abil);
-        if (abil == ABIL_ELYVILON_LESSER_HEALING_SELF)
+        if (abil == ABIL_ELYVILON_LESSER_HEALING)
             abilities.push_back(ABIL_ELYVILON_LIFESAVING);
-        else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
-            abilities.push_back(ABIL_ELYVILON_GREATER_HEALING_SELF);
         else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES
                  || abil == ABIL_STOP_RECALL && you_worship(GOD_YREDELEMNUL))
         {
