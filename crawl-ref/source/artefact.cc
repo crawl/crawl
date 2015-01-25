@@ -717,15 +717,15 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
         []() { return 1; }, nullptr, 0, 0 },
-    { "Noisy", ARTP_VAL_POS, 20,    // ARTP_NOISES,
+    { "Noisy", ARTP_VAL_POS, 25,    // ARTP_NOISES,
         nullptr, []() { return 2; }, 0, 0 },
-    { "-Cast", ARTP_VAL_BOOL, 20,   // ARTP_PREVENT_SPELLCASTING,
+    { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
     { "*Tele", ARTP_VAL_POS,   0,    // ARTP_CAUSE_TELEPORTATION,
         nullptr, []() { return 8; }, 0, 0 },
-    { "-Tele", ARTP_VAL_BOOL, 20,   // ARTP_PREVENT_TELEPORTATION,
+    { "-Tele", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Rage", ARTP_VAL_POS, 20,    // ARTP_ANGRY,
+    { "*Rage", ARTP_VAL_POS, 25,    // ARTP_ANGRY,
         nullptr, []() { return 5; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
@@ -764,7 +764,7 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
-// weights summed to 1000; who knows what now
+// weights sum to 1000
 
 
 /**
