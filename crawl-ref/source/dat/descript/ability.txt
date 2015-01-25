@@ -368,21 +368,6 @@ Beware: killing others while asking to be spared yourself is a major sin!
 %%%%
 Lesser Healing ability
 
-Depending on your Invocations skill, heal a creature other than you by a small
-amount. Using this ability on hostile monsters will try to make them neutral.
-This works best on animals, worse on humanoids of your species, still worse on
-other humanoids, and worst of all on demons and undead. Mindless creatures
-cannot be pacified, and no monster can be pacified while it is asleep. The
-chance for successful pacification depends on the healing power.
-
-Whether the pacification succeeds or not, the invested food and magic are lost.
-If it does succeed, the monster is healed and you gain half the monster's
-experience value. Otherwise, the monster is unaffected and you gain nothing.
-
-You can also heal allies and neutral monsters.
-%%%%
-Lesser Self-Healing ability
-
 Depending on your Invocations skill, heal a small amount of health.
 %%%%
 Purification ability
@@ -391,15 +376,14 @@ Purge your body of all bad effects such as sickness, poisoning, slowness,
 petrification, confusion and rot, and fully restore your Strength, Dexterity
 and Intelligence.
 %%%%
-Greater Healing ability
+Heal Other ability
 
 Depending on your Invocations skill, heal a creature other than you by a
 moderate amount. Using this ability on hostile monsters will try to make them
 neutral. This works best on animals, worse on humanoids of your species, still
 worse on other humanoids, and worst of all on demons and undead. Mindless
 creatures cannot be pacified, and no monster can be pacified while it is
-asleep. The chance for successful pacification depends on the healing power, so
-it is significantly better than using Lesser Healing.
+asleep.
 
 Whether the pacification succeeds or not, the invested food, piety and magic
 points are lost. If it does succeed, the monster is healed and you gain half
@@ -408,7 +392,7 @@ gain nothing.
 
 You can also heal allies and neutral monsters.
 %%%%
-Greater Self-Healing ability
+Greater Healing ability
 
 Depending on your Invocations skill, heal a moderate amount of health.
 Roughly, Greater Healing will allow you to heal three times the amount of

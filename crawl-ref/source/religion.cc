@@ -292,9 +292,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "order the top five cards of a deck, losing the rest" },
     // Elyvilon
     { "provide lesser healing for yourself",
+      "heal and attempt to pacify others",
       "purify yourself",
-      "provide greater healing for yourself and others",
-      "",
+      "provide greater healing for yourself",
       "call upon Elyvilon for divine vigour" },
     // Lugonu
     { "depart the Abyss",
@@ -437,9 +437,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "stack decks" },
     // Elyvilon
     { "provide lesser healing for yourself",
+      "heal and attempt to pacify others",
       "purify yourself",
-      "provide greater healing",
-      "",
+      "provide greater healing for yourself",
       "call upon Elyvilon for divine vigour" },
     // Lugonu
     { "depart the Abyss at will",
@@ -3480,9 +3480,7 @@ void join_religion(god_type which_god, bool immediate)
         mprf(MSGCH_MONSTER_ENCHANT, "Your magic-using allies forsake you.");
     }
 
-    if (you_worship(GOD_ELYVILON))
-        mprf(MSGCH_GOD, "You can now provide lesser healing for others.");
-    else if (you_worship(GOD_TROG))
+    if (you_worship(GOD_TROG))
     {
         mprf(MSGCH_GOD, "You can now call upon Trog to burn spellbooks in your "
             "surroundings.");
