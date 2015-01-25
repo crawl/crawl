@@ -1312,6 +1312,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         return false;
     else
     {
+        ash_id_monster_equipment(const_cast<monster* >(mon));
+        mark_mon_equipment_seen(mon);
+
         string text = getMiscString(mon->name(DESC_DBNAME) + " title");
         if (text.empty())
             text = mon->full_name(DESC_A);
@@ -1368,12 +1371,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         else
             text += " comes into view.";
 
-        ash_id_monster_equipment(const_cast<monster* >(mon));
         bool ash_id = mon->props.exists("ash_id") && mon->props["ash_id"];
         bool zin_id = false;
         string god_warning;
-
-        mark_mon_equipment_seen(mon);
 
         if (you_worship(GOD_ZIN)
             && mon->is_shapeshifter()
