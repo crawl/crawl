@@ -1401,7 +1401,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         if (!mweap.empty())
         {
             if (ash_id)
-                god_warning = "Ashenzari warns you:";
+                god_warning = "Ashenzari warns you: ";
 
             (ash_id ? god_warning : text) +=
                 " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"
