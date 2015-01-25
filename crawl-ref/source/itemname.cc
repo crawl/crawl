@@ -1470,7 +1470,7 @@ static string _ego_suffix(const item_def &weap, bool terse)
         return "";
 
     if (terse)
-        return make_stringf("(%s)", brand_name.c_str());
+        return make_stringf(" (%s)", brand_name.c_str());
     return " of " + brand_name;
 }
 
