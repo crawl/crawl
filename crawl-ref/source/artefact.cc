@@ -1326,12 +1326,12 @@ string get_artefact_name(const item_def &item, bool force_known)
 
     if (item_type_known(item) || force_known)
     {
-        // unrands don't use cached names
-        if (is_unrandom_artefact(item))
-            return _seekunrandart(item)->name;
-        // print artefact's real name
+        // print artefact's real name, if that's set
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
+        // other unrands don't use cached names
+        if (is_unrandom_artefact(item))
+            return _seekunrandart(item)->name;
         return make_artefact_name(item, false);
     }
     // print artefact appearance
