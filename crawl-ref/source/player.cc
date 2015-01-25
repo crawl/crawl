@@ -2094,9 +2094,6 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         // completely stoned, unlike statue which has some life force
         if (you.petrified())
             pl += 3;
-
-        if (you.duration[DUR_NEGATIVE_VULN])
-            pl--;
     }
 
     if (items)

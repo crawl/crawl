@@ -4103,6 +4103,15 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.quantity = 1;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_NO_NEGATIVE_VULN
+        && is_artefact(item)
+        && artefact_property(item, ARTP_NEGATIVE_ENERGY))
+    {
+        if (artefact_property(item, ARTP_NEGATIVE_ENERGY) < 0)
+            artefact_set_property(item, ARTP_NEGATIVE_ENERGY, 0);
+    }
+
 #endif
 
     if (is_unrandom_artefact(item))

@@ -362,10 +362,6 @@ static const duration_def duration_data[] =
       0, "",
       "divine shield", "",
       "You are shielded by the power of the Shining One.", D_NO_FLAGS},
-    { DUR_NEGATIVE_VULN,
-      RED, "-rN",
-      "negative energy vulnerable", "negative energy vulnerability",
-      "You are more vulnerable to negative energy.", D_DISPELLABLE},
     { DUR_CLEAVE,
       LIGHTBLUE, "Cleave",
       "cleaving", "cleave",
@@ -426,5 +422,6 @@ static const duration_def duration_data[] =
     { DUR_SONG_OF_SHIELDING, 0, "", "", "old song of shielding", "", D_NO_FLAGS},
     { DUR_ANTENNAE_EXTEND, 0, "", "", "old antennae extend", "", D_NO_FLAGS},
     { DUR_BUILDING_RAGE, 0, "", "", "old building rage", "", D_NO_FLAGS},
+    { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
 #endif
 };

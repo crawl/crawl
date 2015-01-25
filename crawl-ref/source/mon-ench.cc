@@ -1043,14 +1043,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer deflecting missiles.");
         break;
 
-    case ENCH_NEGATIVE_VULN:
-        if (!quiet)
-        {
-            simple_monster_message(this, " is no longer more vulnerable to "
-                                         "negative energy.");
-        }
-        break;
-
     case ENCH_CONDENSATION_SHIELD:
         if (!quiet && you.can_see(this))
         {
@@ -1530,7 +1522,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SAP_MAGIC:
     case ENCH_CORROSION:
     case ENCH_GOLD_LUST:
-    case ENCH_NEGATIVE_VULN:
     case ENCH_RESISTANCE:
     case ENCH_HEXED:
         decay_enchantment(en);
@@ -2276,7 +2267,11 @@ static const char *enchant_names[] =
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
     "corrosion", "gold_lust", "drained", "repel missiles",
-    "deflect missiles", "negative_vuln", "condensation_shield", "resistant",
+    "deflect missiles",
+#if TAG_MAJOR_VERSION == 34
+    "negative_vuln",
+#endif
+    "condensation_shield", "resistant",
     "hexed", "corpse_armour", "buggy",
 };
 
