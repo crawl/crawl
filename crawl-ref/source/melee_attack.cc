@@ -2879,34 +2879,6 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_SCARAB:
         if (coinflip())
-        {
-            if (defender->is_player())
-            {
-                if (you.holiness() == MH_NATURAL
-                    && !you.duration[DUR_NEGATIVE_VULN])
-                {
-                    mpr("You feel yourself grow more vulnerable to negative"
-                        " energy.");
-                    you.increase_duration(DUR_NEGATIVE_VULN,
-                                          random_range(20, 30));
-                }
-            }
-            else
-            {
-                monster* mon = defender->as_monster();
-                if (mon->holiness() == MH_NATURAL
-                    && !mon->has_ench(ENCH_NEGATIVE_VULN)
-                    && mon->add_ench(
-                           mon_enchant(ENCH_NEGATIVE_VULN, 0, attacker,
-                                       random_range(20, 30) * BASELINE_DELAY)))
-                {
-                    simple_monster_message(mon, " grows more vulnerable to"
-                                                " negative energy.");
-                }
-            }
-        }
-
-        if (coinflip())
             drain_defender();
         else
             drain_defender_speed();
