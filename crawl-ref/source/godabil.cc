@@ -5471,6 +5471,26 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
         if (mut_check_conflict(mut, true))
             continue;
 
+        // special case a few weird interactions
+        // vampires can't get slow healing for some reason related to their
+        // existing regen silliness
+        if (you.species == SP_VAMPIRE && mut == MUT_SLOW_HEALING)
+            continue;
+
+        // demonspawn can't get frail if they have a robust facet
+        if (you.species == SP_DEMONSPAWN)
+        {
+            bool cont = false;
+            for (player::demon_trait trait : you.demonic_traits)
+                if (trait.mutation == MUT_ROBUST)
+                {
+                    cont = true;
+                    break;
+                }
+            if (cont)
+                continue;
+        }
+
         // The Grunt Algorithm
         // (choose a random element from a set of unknown size without building
         // an explicit list, by giving each one a chance to be chosen equal to
