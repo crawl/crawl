@@ -5478,7 +5478,7 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
             continue;
 
         // demonspawn can't get frail if they have a robust facet
-        if (you.species == SP_DEMONSPAWN)
+        if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL)
         {
             bool cont = false;
             for (player::demon_trait trait : you.demonic_traits)
