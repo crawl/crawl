@@ -397,8 +397,8 @@ into a state of unliving slavery as spectral things.
 %%%%
 Death Rattle spell
 
-This spell is an exhaling of the essence of the dying, a foul scattered mix
-of miasma and negative energy clouds.
+This spell exhales the essence of the dying, creating clouds of negative
+energy.
 %%%%
 Death's Door spell
 
