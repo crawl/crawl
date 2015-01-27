@@ -3294,7 +3294,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_DROWN:           return "deal drowning damage";
     case AF_FIREBRAND:       return "deal extra fire damage and surround the defender with flames";
     case AF_CORRODE:         return "cause corrosion";
-    case AF_SCARAB:          return "drain speed or skills and drain health";
+    case AF_SCARAB:          return "drain speed and drain health";
     case AF_TRAMPLE:         return "knock back the defender";
     default:                 return "";
     }

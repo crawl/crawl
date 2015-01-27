@@ -2877,10 +2877,9 @@ void melee_attack::mons_apply_attack_flavour()
         defender->expose_to_element(BEAM_ELECTRICITY, 2);
         break;
 
+        // Combines drain speed and vampiric.
     case AF_SCARAB:
-        if (coinflip())
-            drain_defender();
-        else
+        if (x_chance_in_y(3, 5))
             drain_defender_speed();
 
         // deliberate fall-through
