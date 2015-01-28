@@ -512,17 +512,8 @@ monster_info::monster_info(const monster* m, int milev)
 
     _colour = m->colour;
 
-    int stype = 0;
-    if (m->is_summoned(0, &stype)
-        && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
-    {
+    if (m->is_summoned())
         mb.set(MB_SUMMONED);
-        if (stype > 0 && stype < NUM_SPELLS
-            && summons_are_capped(static_cast<spell_type>(stype)))
-        {
-            mb.set(MB_SUMMONED_NO_STAIRS);
-        }
-    }
     else if (m->is_perm_summoned())
         mb.set(MB_PERM_SUMMON);
 
