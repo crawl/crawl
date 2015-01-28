@@ -2020,7 +2020,7 @@ static spret_type _phantom_mirror()
 
     if (!actor_is_illusion_cloneable(victim))
     {
-        mpr("The mirror can't reflect that right now.");
+        mpr("The mirror can't reflect that.");
         return SPRET_ABORT;
     }
 

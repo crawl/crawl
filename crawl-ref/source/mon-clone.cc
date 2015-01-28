@@ -18,6 +18,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-tentacle.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -60,6 +61,7 @@ static bool _mons_is_illusion(monster* mons)
 static bool _mons_is_illusion_cloneable(monster* mons)
 {
     return !mons_is_conjured(mons->type)
+           && !mons_is_tentacle(mons->type)
            && !_mons_is_illusion(mons)
            && !_monster_clone_exists(mons);
 }
