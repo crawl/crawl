@@ -752,8 +752,6 @@ int viewmap_flash_colour()
 {
     if (_show_terrain)
         return BLACK;
-    else if (you.attribute[ATTR_SHADOWS])
-        return LIGHTGREY;
     else if (you.berserk())
         return RED;
 
