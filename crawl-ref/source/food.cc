@@ -1097,9 +1097,10 @@ void finished_eating_message(int food_type)
         break;
     case FOOD_PIZZA:
     {
-        if (!Options.pizza.empty())
+        if (!Options.pizzas.empty())
         {
-            mprf("Mmm... %s.", Options.pizza.c_str());
+            const string za = Options.pizzas[random2(Options.pizzas.size())];
+            mprf("Mmm... %s.", trimmed_string(za).c_str());
             break;
         }
 

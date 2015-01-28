@@ -2336,7 +2336,7 @@ item_glyph -= <regexp>
         provided; do not specify a colour or glyph in that case.
 
 pizza = <topping name>
-        The player's preferred pizza topping.
+        A comma-separated list of the player's preferred pizza toppings.
 
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the
