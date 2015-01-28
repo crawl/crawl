@@ -116,26 +116,6 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
             return CC_RESTRICTED;
         }
 
-    case JOB_HEALER:
-        switch (speci)
-        {
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return CC_BANNED;
-        case SP_NAGA:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_MINOTAUR:
-        case SP_BASE_DRACONIAN:
-        case SP_GARGOYLE:
-            return CC_UNRESTRICTED;
-        default:
-            return CC_RESTRICTED;
-        }
-
     case JOB_SKALD:
         switch (speci)
         {
@@ -477,7 +457,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_GLADIATOR:
             case JOB_BERSERKER:
             case JOB_ABYSSAL_KNIGHT:
-            case JOB_HEALER:
             case JOB_NECROMANCER:
             case JOB_FIRE_ELEMENTALIST:
                 return CC_UNRESTRICTED;
@@ -501,7 +480,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case SP_MUMMY:
         switch (job)
         {
-            case JOB_HEALER:
             case JOB_TRANSMUTER:
                 return CC_BANNED;
             case JOB_WIZARD:
@@ -588,7 +566,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_BERSERKER:
             case JOB_ABYSSAL_KNIGHT:
             case JOB_CHAOS_KNIGHT:
-            case JOB_HEALER:
                 return CC_BANNED;
             case JOB_TRANSMUTER:
             case JOB_CONJURER:
@@ -630,8 +607,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case SP_DEMONSPAWN:
         switch (job)
         {
-            case JOB_HEALER:
-                return CC_BANNED;
             case JOB_GLADIATOR:
             case JOB_BERSERKER:
             case JOB_ABYSSAL_KNIGHT:
@@ -647,7 +622,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case SP_GHOUL:
         switch (job)
         {
-            case JOB_HEALER:
             case JOB_TRANSMUTER:
                 return CC_BANNED;
             case JOB_WARPER:
@@ -691,8 +665,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case SP_VAMPIRE:
         switch (job)
         {
-            case JOB_HEALER:
-                return CC_BANNED;
             case JOB_MONK:
             case JOB_ASSASSIN:
             case JOB_ENCHANTER:
@@ -709,7 +681,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_FIGHTER:
             case JOB_HUNTER:
             case JOB_BERSERKER:
-            case JOB_HEALER:
             case JOB_NECROMANCER:
             case JOB_EARTH_ELEMENTALIST:
                 return CC_UNRESTRICTED;
@@ -759,7 +730,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_GLADIATOR:
             case JOB_BERSERKER:
             case JOB_ABYSSAL_KNIGHT:
-            case JOB_HEALER:
             case JOB_NECROMANCER:
             case JOB_FIRE_ELEMENTALIST:
                 return CC_UNRESTRICTED;
@@ -788,7 +758,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_FIGHTER:
             case JOB_HUNTER:
             case JOB_ABYSSAL_KNIGHT:
-            case JOB_HEALER:
             case JOB_ARCANE_MARKSMAN:
             case JOB_EARTH_ELEMENTALIST:
             case JOB_VENOM_MAGE:

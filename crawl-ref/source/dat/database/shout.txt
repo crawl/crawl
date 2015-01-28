@@ -263,10 +263,6 @@ Transmuter player ghost
 
 @player ghost@
 %%%%
-Healer player ghost
-
-@player ghost@
-%%%%
 Monk player ghost
 
 @player ghost@

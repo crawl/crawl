@@ -137,8 +137,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; break;
 
-    case JOB_HEALER:            s =  4; i =  4; d =  4; break;
-
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; break;
@@ -650,21 +648,6 @@ static void _give_items_skills(const newgame_def& ng)
         weap_skill = 2;
         break;
 
-    case JOB_HEALER:
-        you.religion = GOD_ELYVILON;
-        you.piety = 55;
-
-        you.equip[EQ_WEAPON] = -1;
-
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, +1);
-        newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_CURING);
-        newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
-
-        you.skills[SK_FIGHTING]       = 1;
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_INVOCATIONS]    = 3;
-        break;
-
     case JOB_SKALD:
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, +0);
         _update_weapon(ng);
@@ -985,12 +968,8 @@ static void _give_starting_food()
     }
 
     // Give another one for hungry species.
-    // And healers, to give pacifists a better chance. [rob]
-    if (player_mutation_level(MUT_FAST_METABOLISM)
-        || you.char_class == JOB_HEALER)
-    {
+    if (player_mutation_level(MUT_FAST_METABOLISM))
         item.quantity = 2;
-    }
 
     const int slot = find_free_slot(item);
     you.inv[slot]  = item;       // will ASSERT if couldn't find free slot
