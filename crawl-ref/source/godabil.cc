@@ -5945,6 +5945,8 @@ static void _ru_kill_skill(skill_type skill)
 {
     change_skill_points(skill, -you.skill_points[skill], true);
     you.stop_train.insert(skill);
+    update_can_train();
+    check_selected_skills();
 }
 
 static void _extra_sacrifice_code(ability_type sac)
