@@ -465,7 +465,7 @@ static bool _too_boring_to_butt(const string &token)
 {
     static const unordered_set<string> boring_words = {
         "a", "an", "the", // articles
-        "and", "or", "of", "at", "on", "in", "if", "into", "with", // etc
+        "and", "or", "of", "at", "on", "in", "if", "into", "to", "with", // etc
         // , "but" <- this is actually very funny to replace.
     };
     return boring_words.count(token);
