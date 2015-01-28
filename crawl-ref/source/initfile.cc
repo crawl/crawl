@@ -924,6 +924,8 @@ void game_options::reset_options()
 
     item_stack_summary_minimum = 4;
 
+    pizza.clear();
+
 #ifdef WIZARD
     fsim_rounds = 4000L;
     fsim_csv    = false;
@@ -2879,6 +2881,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
+    else if (key == "pizza")
+        pizza = field; // field is already cleaned up from trim_string()
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif
