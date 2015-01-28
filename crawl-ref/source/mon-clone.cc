@@ -59,7 +59,9 @@ static bool _mons_is_illusion(monster* mons)
 
 static bool _mons_is_illusion_cloneable(monster* mons)
 {
-    return !_mons_is_illusion(mons) && !_monster_clone_exists(mons);
+    return !mons_is_conjured(mons->type)
+           && !_mons_is_illusion(mons)
+           && !_monster_clone_exists(mons);
 }
 
 static bool _player_is_illusion_cloneable()
