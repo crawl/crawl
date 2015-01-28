@@ -74,13 +74,30 @@ void shadow_lantern_effect()
     int n = div_rand_round(you.time_taken, 10);
     for (int i = 0; i < n; ++i)
     {
-        if (x_chance_in_y(you.skill_rdiv(SK_EVOCATIONS, 1, 5) + 1, 14))
+        if (you.magic_points > 0)
         {
-            create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2, 0,
-                                    you.pos(), MHITNOT));
+            dec_mp(1);
 
-            did_god_conduct(DID_NECROMANCY, 1);
+            if (x_chance_in_y(you.skill_rdiv(SK_EVOCATIONS, 1, 5) + 1, 14))
+            {
+                create_monster(mgen_data(MONS_SHADOW, BEH_FRIENDLY, &you, 2,
+                               MON_SUMM_LANTERN, you.pos(), MHITNOT));
+
+                did_god_conduct(DID_NECROMANCY, 1);
+            }
         }
+        else
+            expire_lantern_shadows();
+    }
+}
+
+void expire_lantern_shadows()
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        int stype = 0;
+        if (mi->is_summoned(0, &stype) && stype == MON_SUMM_LANTERN)
+            mi->del_ench(ENCH_ABJ);
     }
 }
 
