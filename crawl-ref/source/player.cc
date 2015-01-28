@@ -1998,13 +1998,7 @@ int player_spec_conj()
 
 int player_spec_hex()
 {
-    int sh = 0;
-
-    // Unrands
-    if (player_equip_unrand(UNRAND_BOTONO))
-        sh++;
-
-    return sh;
+    return 0;
 }
 
 int player_spec_charm()
