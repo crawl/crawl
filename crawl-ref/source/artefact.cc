@@ -828,12 +828,25 @@ static void _get_randart_properties(const item_def &item,
 {
     const object_class_type item_class = item.base_type;
 
-    // number of good properties to assign -- avg 2.4, min 1.
-    int good = max(1, binomial(7, 40));
-
-    // number of bad properties to assign. Chance increases w/ number of good
-    // properties. Average is .18 bad per good, up to 1.08 for 6 good.
-    int bad = binomial(3, 8 * good);
+    // first figure out how good we want the artefact to be, range 1 to 6.
+    int quality = max(1, binomial(7, 30));
+    // then consider adding bad properties. the better the artefact, the more
+    // likely we add a bad property, up to a max of 2.
+    int bad = binomial(1 + div_rand_round(quality, 3), 35);
+    // we start by assuming we'll allow one good property per quality level
+    // and an additional one for each bad property.
+    int good = quality + bad;
+    // but we want avoid generating more then 4-ish properties properties or
+    // things get spammy. Extra "good" properties will be used to enhance
+    // properties only, not to add more distinct properties. There is still a
+    // small chance of >4 properties.
+    int max_properties = 5 + one_chance_in(20) + one_chance_in(40);
+    int enhance = 0;
+    if (good + bad > max_properties)
+    {
+        enhance = good + bad - max_properties;
+        good = 5 - bad;
+    }
 
     // initialize a vector of weighted artefact properties to pick from
     vector<pair<artefact_prop_type, int>> art_prop_weights;
@@ -872,7 +885,8 @@ static void _get_randart_properties(const item_def &item,
             // using up a good property each time.
             const int max = artp_data[prop].max_dup;
             for (int i = 1;
-                 good > 0 && item_props[prop] <= max && one_chance_in(i);
+                 good > 0 && item_props[prop] <= max &&
+                    (one_chance_in(i) || (enhance > 0 && i == 2));
                  i += artp_data[prop].odds_inc)
             {
                 // Add one to the starting value for stat bonuses.
@@ -885,7 +899,10 @@ static void _get_randart_properties(const item_def &item,
                 }
 
                 item_props[prop] += artp_data[prop].gen_good_value();
-                --good;
+                if (enhance > 0 && i > 1)
+                    --enhance;
+                else
+                    --good;
             }
         }
         else if (can_gen_bad)
