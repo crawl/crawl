@@ -3,9 +3,13 @@
 
 struct trap_def
 {
+    /// The position of the trap on the map
     coord_def pos;
+    /// The type of trap
     trap_type type;
+    /// The amount of ammo remaining (also used for a horrible shadow trap hack)
     short     ammo_qty;
+    /// How difficult the trap is to detect
     uint8_t   skill_rnd;
 
     dungeon_feature_type category() const;

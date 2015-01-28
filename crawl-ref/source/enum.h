@@ -1489,6 +1489,7 @@ enum dungeon_feature_type
     DNGN_TRAP_ZOT,
     DNGN_PASSAGE_OF_GOLUBRIA,
     DNGN_TRAP_SHADOW,
+    DNGN_TRAP_SHADOW_DORMANT,
 #endif
     DNGN_UNDISCOVERED_TRAP,
 
@@ -1665,6 +1666,7 @@ enum dungeon_feature_type
     DNGN_ALTAR_RU,
 
     DNGN_TRAP_SHADOW,
+    DNGN_TRAP_SHADOW_DORMANT,
 #endif
 
     NUM_FEATURES
@@ -4483,6 +4485,7 @@ enum trap_type
     TRAP_TELEPORT,
 #endif
     TRAP_SHADOW,
+    TRAP_SHADOW_DORMANT,
     NUM_TRAPS,
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,

@@ -567,7 +567,7 @@ static const char *trap_names[] =
 #if TAG_MAJOR_VERSION == 34
     "gas", "teleport",
 #endif
-     "shadow",
+     "shadow", "dormant shadow",
 };
 
 string trap_name(trap_type trap)
