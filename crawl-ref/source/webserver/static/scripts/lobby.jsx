@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 define(["react", "comm", "pubsub", "user", "jsx!misc", "jsx!login",
-        "jsx!scorenav", "jquery"],
-function (React, comm, pubsub, user, misc, login, scorenav, $) {
+        "jsx!scorenav", "react-bootstrap", "jquery"],
+function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
     "use strict";
 
     var extend = $.extend;
@@ -12,7 +12,8 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
     var PasswordChangeLink = login.PasswordChangeLink;
     var LogoutLink = login.LogoutLink;
     var ScoreNavigation = scorenav.ScoreNavigation;
-
+    var ButtonToolbar = ReactBootstrap.ButtonToolbar;
+    var Button = ReactBootstrap.Button;
     // RC file editor form
     var RcEditor = React.createClass({
         getInitialState: function () {

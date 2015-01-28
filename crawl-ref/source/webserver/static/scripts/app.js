@@ -6,6 +6,7 @@ require.config({
         "text": "/static/scripts/contrib/text",
         "jsx": "/static/scripts/contrib/jsx",
         "JSXTransformer": "/static/scripts/contrib/JSXTransformer",
+        "react-bootstrap": "/static/scripts/contrib/react-bootstrap/react-bootstrap",
         "image": "/static/scripts/contrib/image"
     },
     jsx: {

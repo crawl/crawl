@@ -6,6 +6,7 @@
         'text': './contrib/text',
         'jsx': './contrib/jsx',
         'JSXTransformer': './contrib/JSXTransformer',
+        'react-bootstrap': './contrib/react-bootstrap/react-bootstrap',
         "image": "./contrib/image"
     },
     jsx: {
