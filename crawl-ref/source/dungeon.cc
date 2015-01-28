@@ -6037,6 +6037,7 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
 #if TAG_MAJOR_VERSION == 34
            || spec_type == TRAP_DART || spec_type == TRAP_GAS
 #endif
+           || spec_type == TRAP_SHADOW_DORMANT
            || !is_valid_shaft_level(known) && spec_type == TRAP_SHAFT)
     {
         spec_type = static_cast<trap_type>(random2(TRAP_MAX_REGULAR + 1));

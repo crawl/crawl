@@ -227,6 +227,9 @@ bool trap_def::is_safe(actor* act) const
     if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
         return true;
 
+    if (type == TRAP_SHADOW_DORMANT)
+        return true;
+
     if (!act->is_player())
         return false;
 
@@ -593,6 +596,16 @@ void trap_def::trigger_shadow_trap(const actor& triggerer)
     mprf("Shadows whirl around %s...", triggerer.name(DESC_THE).c_str());
     if (!summoned_any)
         mpr("...but the shadows disperse without effect.");
+
+    // now we go dormant for a bit
+    type = TRAP_SHADOW_DORMANT;
+    grd(pos) = category();
+    env.map_knowledge(pos).set_feature(grd(pos), 0, type);
+    // store the time until the trap will become active again
+    // I apologize sincerely for this flagrant field misuse
+    // TODO: don't do this
+    ammo_qty = 2 + random2(3); // 2-4 turns
+    dprf("trap deactivating until %d turns pass", ammo_qty);
 }
 
 // Returns a direction string from you.pos to the
@@ -1119,6 +1132,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         trigger_shadow_trap(triggerer);
         break;
 
+    case TRAP_SHADOW_DORMANT:
     default:
         break;
     }
@@ -1738,6 +1752,8 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_PASSAGE_OF_GOLUBRIA;
     case TRAP_SHADOW:
         return DNGN_TRAP_SHADOW;
+    case TRAP_SHADOW_DORMANT:
+        return DNGN_TRAP_SHADOW_DORMANT;
 
     case TRAP_ARROW:
     case TRAP_SPEAR:
