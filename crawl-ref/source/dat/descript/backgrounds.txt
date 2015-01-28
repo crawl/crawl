@@ -68,11 +68,6 @@ Gladiator
 Gladiators are ready for the arena with light armour, nets, and a weapon of
 their choice.
 %%%%
-Healer
-
-Healers are followers of Elyvilon, ready to heal themselves and others. Such
-healing will possibly pacify beasts and brutes, yielding experience.
-%%%%
 Hunter
 
 Hunters are able to attack with a ranged weapon of their choice, without
