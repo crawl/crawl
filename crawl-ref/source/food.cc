@@ -1097,10 +1097,20 @@ void finished_eating_message(int food_type)
         break;
     case FOOD_PIZZA:
     {
-        string taste = getMiscString("eating_pizza");
+        if (!Options.pizza.empty())
+        {
+            mprf("Mmm... %s.", Options.pizza.c_str());
+            break;
+        }
+
+        const string taste = getMiscString("eating_pizza");
         if (taste.empty())
-            taste = "Bleh, bug pizza.";
-        mpr(taste);
+        {
+            mpr("Bleh, bug pizza.");
+            break;
+        }
+
+        mprf("%s", taste.c_str());
         break;
     }
     default:

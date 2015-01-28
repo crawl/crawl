@@ -217,6 +217,8 @@ public:
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
+    string pizza;
+
 #ifdef WIZARD
     int            wiz_mode;      // no, never, start in wiz mode
     int            explore_mode;  // no, never, start in explore mode
