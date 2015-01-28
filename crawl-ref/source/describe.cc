@@ -1192,8 +1192,7 @@ static string _describe_ammo(const item_def &item)
             break;
         case SPMSL_STEEL:
             description += "Compared to normal ammo, it does 30% more "
-                "damage, is destroyed upon impact only 1/10th of the "
-                "time.";
+                "damage.";
             break;
         case SPMSL_SILVER:
             description += "Silver sears all those touched by chaos. "

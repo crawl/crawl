@@ -1155,9 +1155,6 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
 
     switch (brand)
     {
-        case SPMSL_STEEL:
-            chance *= 10;
-            break;
         case SPMSL_FLAME:
         case SPMSL_FROST:
         case SPMSL_CURARE:
