@@ -247,10 +247,6 @@ Skald player ghost
 
 @player ghost@
 %%%%
-Death Knight player ghost
-
-@player ghost@
-%%%%
 Venom Mage player ghost
 
 @player ghost@
