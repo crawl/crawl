@@ -370,7 +370,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Grand Grimoire
     SPELL_AURA_OF_ABJURATION,
-    SPELL_FORCEFUL_DISMISSAL,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_MALIGN_GATEWAY,
     SPELL_SUMMON_HORRIBLE_THINGS,

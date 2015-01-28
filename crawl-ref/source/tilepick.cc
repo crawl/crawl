@@ -4801,7 +4801,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SUMMON_FOREST:            return TILEG_SUMMON_FOREST;
     case SPELL_MONSTROUS_MENAGERIE:      return TILEG_MONSTROUS_MENAGERIE;
     case SPELL_SUMMON_MANA_VIPER:        return TILEG_SUMMON_MANA_VIPER;
-    case SPELL_FORCEFUL_DISMISSAL:       return TILEG_FORCEFUL_DISMISSAL;
     case SPELL_SPELLFORGED_SERVITOR:     return TILEG_SPELLFORGED_SERVITOR;
 
     // Necromancy

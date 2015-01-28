@@ -3238,6 +3238,7 @@ static const struct spell_desc spelldata[] =
      nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FORCEFUL_DISMISSAL, "Forceful Dismissal",
      SPTYP_SUMMONING,
@@ -3248,6 +3249,7 @@ static const struct spell_desc spelldata[] =
      5, 0,
      nullptr,
 },
+#endif
 
 {
     SPELL_SUMMON_MANA_VIPER, "Summon Mana Viper",

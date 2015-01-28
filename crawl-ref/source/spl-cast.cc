@@ -1747,8 +1747,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SPELLFORGED_SERVITOR:
         return cast_spellforged_servitor(powc, god, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_FORCEFUL_DISMISSAL:
-        return cast_forceful_dismissal(powc, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_SPECTRAL_WEAPON:
         return cast_spectral_weapon(&you, powc, god, fail);

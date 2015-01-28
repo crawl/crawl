@@ -139,7 +139,6 @@ summon_guardian_golem SUMMON_GUARDIAN_GOLEM
 summon_forest SUMMON_FOREST
 monstrous_menagerie MONSTROUS_MENAGERIE
 summon_mana_viper SUMMON_MANA_VIPER
-forceful_dismissal FORCEFUL_DISMISSAL
 spellforged_servitor SPELLFORGED_SERVITOR
 
 %sdir gui/spells/translocation
