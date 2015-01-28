@@ -108,8 +108,8 @@ enum monster_info_flags
     MB_CONTROL_WINDS,
 #if TAG_MAJOR_VERSION == 34
     MB_WIND_AIDED,
-#endif
     MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
+#endif
     MB_SUMMONED_CAPPED,    // Expiring due to summons cap
     MB_TOXIC_RADIANCE,
     MB_GRASPING_ROOTS,
