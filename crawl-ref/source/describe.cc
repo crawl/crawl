@@ -897,39 +897,55 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_FLAMING:
             if (is_range_weapon(item))
             {
-                description += "It turns projectiles fired from it into "
-                    "bolts of flame.";
+                description += "It causes projectiles fired from it to burn "
+                    "those they strike,";
             }
             else
             {
-                description += "It emits flame when wielded, causing extra "
-                    "injury to most foes and up to half again as much damage "
-                    "against particularly susceptible opponents.";
-                if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
-                {
-                    description += " Big, fiery blades are also staple "
-                        "armaments of hydra-hunters.";
-                }
+                description += "It has been specially enchanted to burn "
+                    "those struck by it,";
+            }
+            description += " causing extra injury to most foes and up to half "
+                           "again as much damage against particularly "
+                           "susceptible opponents.";
+            if (!is_range_weapon(item) &&
+                (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING))
+            {
+                description += " Big, fiery blades are also staple "
+                    "armaments of hydra-hunters.";
             }
             break;
         case SPWPN_FREEZING:
             if (is_range_weapon(item))
             {
-                description += "It turns projectiles fired from it into "
-                    "bolts of frost.";
+                description += "It causes projectiles fired from it to freeze "
+                    "those they strike,";
             }
             else
             {
                 description += "It has been specially enchanted to freeze "
-                    "those struck by it, causing extra injury to most foes "
-                    "and up to half again as much damage against particularly "
-                    "susceptible opponents. It can also slow down "
-                    "cold-blooded creatures.";
+                    "those struck by it,";
             }
+            description += " causing extra injury to most foes "
+                    "and up to half again as much damage against particularly "
+                    "susceptible opponents.";
+            if (is_range_weapon(item))
+                description += " They";
+            else
+                description += " It";
+            description += " can also slow down cold-blooded creatures.";
             break;
         case SPWPN_HOLY_WRATH:
-            description += "It has been blessed by the Shining One to "
-                "cause great damage to the undead and demons.";
+            description += "It has been blessed by the Shining One";
+            if (is_range_weapon(item))
+            {
+                description += ", and any ";
+                description += ammo_name(item);
+                description += " fired from it will";
+            }
+            else
+                description += " to";
+            description += " cause great damage to the undead and demons.";
             break;
         case SPWPN_ELECTROCUTION:
             if (is_range_weapon(item))
@@ -1124,10 +1140,17 @@ static string _describe_ammo(const item_def &item)
         switch (item.special)
         {
         case SPMSL_FLAME:
-            description += "It turns into a bolt of flame.";
+            description += "It burns those it strikes, causing extra injury "
+                    "to most foes and up to half again as much damage against "
+                    "particularly susceptible opponents. Compared to normal "
+                    "ammo, it is twice as likely to be destroyed on impact.";
             break;
         case SPMSL_FROST:
-            description += "It turns into a bolt of frost.";
+            description += "It freezes those it strikes, causing extra injury "
+                    "to most foes and up to half again as much damage against "
+                    "particularly susceptible opponents. It can also slow down "
+                    "cold-blooded creatures. Compared to normal ammo, it is "
+                    "twice as likely to be destroyed on impact.";
             break;
         case SPMSL_CHAOS:
             description += "When ";
@@ -1148,7 +1171,9 @@ static string _describe_ammo(const item_def &item)
             description += "It is coated with poison.";
             break;
         case SPMSL_CURARE:
-            description += "It is tipped with asphyxiating poison.";
+            description += "It is tipped with asphyxiating poison. Compared "
+                           "to other needles, it is twice as likely to be "
+                           "destroyed on impact";
             break;
         case SPMSL_PARALYSIS:
             description += "It is tipped with a paralysing substance.";

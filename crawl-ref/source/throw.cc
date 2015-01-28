@@ -1162,5 +1162,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
             break;
     }
 
+    dprf("mulch chance: %d in %d", mult, chance);
+
     return x_chance_in_y(mult, chance);
 }
