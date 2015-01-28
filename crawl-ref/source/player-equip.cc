@@ -10,6 +10,7 @@
 #include "art-enum.h"
 #include "delay.h"
 #include "english.h" // conjugate_verb
+#include "evoke.h"
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
@@ -653,6 +654,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
     {
         you.attribute[ATTR_SHADOWS] = 0;
         update_vision_range();
+        expire_lantern_shadows();
     }
     else if (item.base_type == OBJ_WEAPONS)
     {
