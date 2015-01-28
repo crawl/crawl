@@ -529,7 +529,8 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.thrower       = KILL_MON_MISSILE;
     }
 
-    beam.source_id = agent->mid;
+    beam.range        = you.current_vision;
+    beam.source_id    = agent->mid;
     beam.item         = &item;
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
@@ -720,26 +721,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     const object_class_type wepClass = thrown.base_type;
     const int               wepType  = thrown.sub_type;
 
-    // Determine range.
-    int max_range = INT_MAX;
-    int range = INT_MAX;
-
-    // are we properly throwing/shooting this thing?
-    if (projected != LRET_FUMBLED)
-    {
-        if (wepType == MI_LARGE_ROCK)
-        {
-            range     = random_range(5, 8) + random2(you.strength() / 5);
-            max_range = 7 + you.strength() / 5;
-        }
-    }
-
-    range = min(range, (int)you.current_vision);
-    max_range = min(max_range, (int)you.current_vision);
-
-    // For the tracer, use max_range. For the actual shot, use range.
-    pbolt.range = max_range;
-
     // Save the special explosion (exploding missiles) for later.
     // Need to clear this if unknown to avoid giving away the explosion.
     bolt* expl = pbolt.special_explosion;
@@ -798,7 +779,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     pbolt.is_tracer = false;
 
     // Reset values.
-    pbolt.range = range;
     pbolt.special_explosion = expl;
 
     bool unwielded = false;
@@ -987,7 +967,6 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
 
 void setup_monster_throw_beam(monster* mons, bolt &beam)
 {
-    // FIXME we should use a sensible range here
     beam.range = you.current_vision;
     beam.source_id = mons->mid;
 
@@ -1032,9 +1011,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     // Dropping item copy, since the launched item might be different.
     item_def item = mitm[msl];
     item.quantity = 1;
-
-    // FIXME we should actually determine a sensible range here
-    beam.range         = you.current_vision;
 
     if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
         return false;
