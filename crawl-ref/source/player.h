@@ -28,7 +28,6 @@
 #define TRANSFORM_POW_KEY "transform_pow"
 #define BARBS_MOVE_KEY "moved_with_barbs_status"
 #define HORROR_PENALTY_KEY "horror_penalty"
-#define MAX_XP_KEY "max_exp_level"
 
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
@@ -522,6 +521,7 @@ public:
     int mindex() const;
     int get_hit_dice() const;
     int get_experience_level() const;
+    int get_max_xl() const;
     bool is_player() const
     {
 #ifndef DEBUG_GLOBALS

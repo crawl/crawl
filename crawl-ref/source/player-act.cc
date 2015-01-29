@@ -158,6 +158,11 @@ int player::get_experience_level() const
     return experience_level;
 }
 
+int player::get_max_xl() const
+{
+    return 27 - player_mutation_level(MUT_INEXPERIENCED) * 2;
+}
+
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
     return !feat_is_solid(grid) && grid != DNGN_MALIGN_GATEWAY;

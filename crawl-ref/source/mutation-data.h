@@ -2061,4 +2061,20 @@ static const mutation_def mut_data[] =
 
   "a lack of skill",
 },
+
+{ MUT_INEXPERIENCED,                    0,  3, MUTFLAG_RU, false,
+    "inexperienced",
+
+    {"You are somewhat inexperienced (-2 XL).",
+     "You are inexperienced (-4 XL)",
+     "You are extremely inexperienced (-6 XL)."},
+    {"You feel less experienced.",
+     "You feel less experienced.",
+     "You feel less experienced."},
+    {"You regain all your potential.",
+     "You regain some potential.",
+     "You regain some potential."},
+
+     "a lack of experience",
+},
 };
