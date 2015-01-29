@@ -3091,6 +3091,9 @@ static void tag_read_you(reader &th)
     }
 #endif
 
+    if (th.getMinorVersion() < TAG_MINOR_MAX_XL)
+        you.props["max_exp_level"] = 27;
+
     EAT_CANARY;
 
     if (!dlua.callfn("dgn_load_data", "u", &th))

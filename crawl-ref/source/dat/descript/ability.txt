@@ -805,6 +805,28 @@ proportion to the value of the sacrifice, and you may gain new powers as well.
 
 Sacrifices cannot be taken back.
 %%%%
+Sacrifice Experience ability
+
+Adherents who choose to sacrifice their experiences will lose two levels
+immediately and also have the maximum level they can attain lowered by two
+levels.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
+Sacrifice Skill ability
+
+Adherents who choose to sacrifice their skills will get -1 to all of their
+skill aptitudes. This will likely cause the adherent to lose ranks in skills
+they have trained.
+
+If you make this sacrifice, your powers granted by Ru will become stronger in
+proportion to the value of the sacrifice, and you may gain new powers as well.
+
+Sacrifices cannot be taken back.
+%%%%
 Reject Sacrifices ability
 
 Adherents who cannot bring themselves to make any offered sacrifice may reject

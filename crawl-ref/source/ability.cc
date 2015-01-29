@@ -438,6 +438,10 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_SACRIFICE_HAND, "Sacrifice a Hand",
       0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
+    { ABIL_RU_SACRIFICE_EXPERIENCE, "Sacrifice Experience",
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
+    { ABIL_RU_SACRIFICE_SKILL, "Sacrifice Skill",
+      0, 0, 0, 0, 0, ABFLAG_SACRIFICE },
     { ABIL_RU_REJECT_SACRIFICES, "Reject Sacrifices",
       0, 0, 0, 0, 0, ABFLAG_NONE },
 
@@ -1168,6 +1172,8 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_RU_SACRIFICE_NIMBLENESS:
     case ABIL_RU_SACRIFICE_DURABILITY:
     case ABIL_RU_SACRIFICE_HAND:
+    case ABIL_RU_SACRIFICE_EXPERIENCE:
+    case ABIL_RU_SACRIFICE_SKILL:
     case ABIL_RU_REJECT_SACRIFICES:
     case ABIL_STOP_RECALL:
         invoc = true;
@@ -3129,6 +3135,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_RU_SACRIFICE_NIMBLENESS:
     case ABIL_RU_SACRIFICE_DURABILITY:
     case ABIL_RU_SACRIFICE_HAND:
+    case ABIL_RU_SACRIFICE_EXPERIENCE:
+    case ABIL_RU_SACRIFICE_SKILL:
         fail_check();
         if (!ru_do_sacrifice(abil.ability))
             return SPRET_ABORT;
@@ -3922,6 +3930,8 @@ static int _find_ability_slot(const ability_def &abil)
       || abil.ability == ABIL_RU_SACRIFICE_NIMBLENESS
       || abil.ability == ABIL_RU_SACRIFICE_DURABILITY
       || abil.ability == ABIL_RU_SACRIFICE_HAND
+      || abil.ability == ABIL_RU_SACRIFICE_EXPERIENCE
+      || abil.ability == ABIL_RU_SACRIFICE_SKILL
       || abil.ability == ABIL_RU_REJECT_SACRIFICES)
     {
         first_slot = letter_to_index('P');

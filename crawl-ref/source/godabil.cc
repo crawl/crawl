@@ -5924,8 +5924,10 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
 
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
-    perma_mutate(sacrifice, 1, "Ru sacrifice");
-    you.sacrifices[sacrifice] += 1;
+    if (sacrifice != MUT_NON_MUTATION) {
+        perma_mutate(sacrifice, 1, "Ru sacrifice");
+        you.sacrifices[sacrifice] += 1;
+    }
 }
 
 static bool _execute_sacrifice(int piety_gain, const char* message)
@@ -6021,6 +6023,32 @@ static void _extra_sacrifice_code(ability_type sac)
                 puton_ring(ring_inv_slot, false);
             }
         }
+    }
+    else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_EXPERIENCE)
+    {
+        lose_level();
+        lose_level();
+        you.props[MAX_XP_KEY] = you.props[MAX_XP_KEY].get_int() - 2;
+    }
+    else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_SKILL)
+    {
+        uint8_t saved_skills[NUM_SKILLS];
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        {
+            saved_skills[sk] = you.skills[sk];
+            check_skill_level_change(sk, false);
+        }
+
+        // Produce messages about skill increases/decreases. We
+        // restore one skill level at a time so that at most the
+        // skill being checked is at the wrong level.
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        {
+            you.skills[sk] = saved_skills[sk];
+            check_skill_level_change(sk);
+        }
+
+        redraw_screen();
     }
 }
 
