@@ -2045,4 +2045,20 @@ static const mutation_def mut_data[] =
 
   "MP-powered wands",
 },
+
+{ MUT_UNSKILLED,                        0,  3, MUTFLAG_RU, false,
+  "unskilled",
+
+  {"You are somewhat unskilled (-1 Apt).",
+    "You are unskilled (-2 Apt)",
+    "You are extremely unskilled (-3 Apt)."},
+  {"You feel less skilled.",
+    "You feel less skilled.",
+    "You feel less skilled."},
+  {"You regain all your skill.",
+    "You regain some skill.",
+    "You regain some skill."},
+
+  "a lack of skill",
+},
 };

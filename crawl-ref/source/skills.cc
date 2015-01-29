@@ -1575,7 +1575,7 @@ int species_apt(skill_type skill, species_type species)
         spec_skills_initialised = true;
     }
 
-    return _spec_skills[species][skill];
+    return _spec_skills[species][skill] - player_mutation_level(MUT_UNSKILLED);
 }
 
 float species_apt_factor(skill_type sk, species_type sp)

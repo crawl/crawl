@@ -38,7 +38,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to read while threatened",
   "sacrificed words",
 
-  28,
+  30,
   SK_NONE,
   nullptr,
   nullptr,
@@ -48,7 +48,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to drink while threatened",
   "sacrificed drink",
 
-  28,
+  30,
   SK_NONE,
   nullptr,
   []() { return you.species != SP_MUMMY; },
@@ -128,7 +128,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your Dodging skill",
   "sacrificed dodging",
 
-  28,
+  30,
   SK_DODGING,
   nullptr,
   nullptr,
@@ -138,7 +138,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your Armour skill",
   "sacrificed armour",
 
-  28,
+  30,
   SK_ARMOUR,
   nullptr,
   []() { return you_can_wear(EQ_BODY_ARMOUR); },
@@ -150,6 +150,26 @@ static const sacrifice_def sac_data[] =
 
   70,
   SK_SHIELDS,
+  nullptr,
+  nullptr,
+},
+
+{ ABIL_RU_SACRIFICE_EXPERIENCE, MUT_NON_MUTATION,
+  "sacrifice your experiences",
+  "sacrificed experience",
+
+  28,
+  SK_NONE,
+  nullptr,
+  nullptr,
+},
+
+{ ABIL_RU_SACRIFICE_SKILL, MUT_UNSKILLED,
+  "sacrifice your skill",
+  "sacrificed skill",
+
+  35,
+  SK_NONE,
   nullptr,
   nullptr,
 },

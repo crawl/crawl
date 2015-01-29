@@ -2703,7 +2703,7 @@ static void _remove_temp_mutation()
 
 int get_exp_progress()
 {
-    if (you.experience_level >= 27)
+    if (you.experience_level >= you.props[MAX_XP_KEY].get_int())
         return 0;
 
     const int current = exp_needed(you.experience_level);
@@ -2944,7 +2944,7 @@ void level_change(bool skip_attribute_increase)
     while (you.experience < exp_needed(you.experience_level))
         lose_level();
 
-    while (you.experience_level < 27
+    while (you.experience_level < you.props[MAX_XP_KEY].get_int()
            && you.experience >= exp_needed(you.experience_level + 1))
     {
         if (!skip_attribute_increase)
@@ -2982,6 +2982,9 @@ void level_change(bool skip_attribute_increase)
 
             if (new_exp == 27)
                 mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
+            else if (new_exp == you.props[MAX_XP_KEY].get_int())
+                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d, the highest you will ever reach!",
+                        you.props[MAX_XP_KEY].get_int());
             else
             {
                 mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
@@ -3478,7 +3481,7 @@ void level_change(bool skip_attribute_increase)
 
     while (you.experience >= exp_needed(you.max_level + 1))
     {
-        ASSERT(you.experience_level == 27);
+        ASSERT(you.experience_level == you.props[MAX_XP_KEY].get_int());
         ASSERT(you.max_level < 127); // marshalled as an 1-byte value
         you.max_level++;
         if (you.species == SP_FELID)
@@ -3499,19 +3502,22 @@ void level_change(bool skip_attribute_increase)
 void adjust_level(int diff, bool just_xp)
 {
     ASSERT((uint64_t)you.experience <= (uint64_t)MAX_EXP_TOTAL);
-
+    int max_exp_level = you.props[MAX_XP_KEY].get_int();
     if (you.experience_level + diff < 1)
         you.experience = 0;
-    else if (you.experience_level + diff >= 27)
-        you.experience = max(you.experience, exp_needed(27));
+    else if (you.experience_level + diff >= max_exp_level)
+        you.experience = max(you.experience,
+                exp_needed(max_exp_level));
     else
     {
-        while (diff < 0 && you.experience >= exp_needed(27))
+        while (diff < 0 && you.experience >=
+                exp_needed(max_exp_level))
         {
             // Having XP for level 53 and going back to 26 due to a single
             // card would mean your felid is not going to get any extra lives
             // in foreseable future.
-            you.experience -= exp_needed(27) - exp_needed(26);
+            you.experience -= exp_needed(max_exp_level)
+                    - exp_needed(max_exp_level - 1);
             diff++;
         }
         int old_min = exp_needed(you.experience_level);
@@ -5879,6 +5885,8 @@ void player::init()
         branch_info[it->id].branch = it->id;
         branch_info[it->id].assert_validity();
     }
+
+    you.props[MAX_XP_KEY] = 27;
 }
 
 void player::init_skills()
