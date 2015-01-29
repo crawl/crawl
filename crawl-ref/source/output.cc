@@ -2802,7 +2802,7 @@ static string _status_mut_abilities(int sw)
         mutations.emplace_back("almost no armour");
         mutations.emplace_back("amphibious");
         mutations.push_back(_annotate_form_based(
-            "8 rings",
+            make_stringf("%d rings", you.has_tentacles(false)),
             !get_form()->slot_available(EQ_RING_EIGHT)));
         mutations.push_back(_annotate_form_based(
             make_stringf("constrict %d", you.has_tentacles(false)),
