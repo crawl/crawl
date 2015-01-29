@@ -2631,28 +2631,36 @@ void ShoppingListMenu::draw_title()
     }
 }
 
+/**
+ * Describe the location of a given shopping list entry.
+ *
+ * @param thing     A shopping list entry.
+ * @return          Something like [Orc:4], probably.
+ */
+string ShoppingList::describe_thing_pos(const CrawlHashTable &thing)
+{
+    return make_stringf("[%s]", thing_pos(thing).id.describe().c_str());
+}
+
 void ShoppingList::fill_out_menu(Menu& shopmenu)
 {
     menu_letter hotkey;
     int longest = 0;
     // How much space does the longest entry need for proper alignment?
-    for (CrawlHashTable &thing : *list)
-        longest = max(longest, strwidth(thing_pos(thing).id.describe()));
+    for (const CrawlHashTable &thing : *list)
+        longest = max(longest, strwidth(describe_thing_pos(thing)));
 
     for (CrawlHashTable &thing : *list)
     {
-        level_pos      pos     = thing_pos(thing);
-        int            cost    = thing_cost(thing);
-        bool           unknown = false;
+        const int cost = thing_cost(thing);
+        const bool unknown = thing_is_item(thing)
+                             && shop_item_unknown(get_thing_item(thing));
 
-        if (thing_is_item(thing))
-            unknown = shop_item_unknown(get_thing_item(thing));
-
-        string etitle =
+        const string etitle =
             make_stringf(
                 "%*s%5d gold  %s%s",
-                longest+2,
-                make_stringf("[%s]", pos.id.describe().c_str()).c_str(),
+                longest,
+                describe_thing_pos(thing).c_str(),
                 cost,
                 name_thing(thing, DESC_A).c_str(),
                 unknown ? " (unknown)" : "");

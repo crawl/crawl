@@ -96,6 +96,7 @@ private:
 
     static int       thing_cost(const CrawlHashTable& thing);
     static level_pos thing_pos(const CrawlHashTable& thing);
+    static string    describe_thing_pos(const CrawlHashTable& thing);
 
     static string name_thing(const CrawlHashTable& thing,
                              description_level_type descrip = DESC_PLAIN);
