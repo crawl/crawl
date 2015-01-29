@@ -21,6 +21,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "delay.h"
+#include "english.h"
 #include "env.h"
 #include "godabil.h"
 #include "godpassive.h"
@@ -508,7 +509,8 @@ string describe_mutations(bool center_title)
         result += "You cannot wear most types of armour.\n";
         result += "You are amphibious.\n";
         result += _annotate_form_based(
-            "You can wear up to eight rings at the same time.",
+            make_stringf("You can wear up to %s rings at the same time.",
+                number_in_words(you.has_usable_tentacles(false)).c_str()),
             !get_form()->slot_available(EQ_RING_EIGHT));
         result += _annotate_form_based(
             "You can use your tentacles to constrict many enemies at once.",
