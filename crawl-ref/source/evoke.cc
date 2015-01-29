@@ -2024,6 +2024,15 @@ static spret_type _phantom_mirror()
         return SPRET_ABORT;
     }
 
+    if (player_will_anger_monster(victim))
+    {
+        if (player_mutation_level(MUT_NO_LOVE))
+            mpr("The reflection would only feel hate for you!");
+        else
+            simple_god_message(" forbids your reflecting this monster.");
+        return SPRET_ABORT;
+    }
+
     monster* mon = clone_mons(victim, true);
     if (!mon)
     {
@@ -2035,8 +2044,7 @@ static spret_type _phantom_mirror()
     int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
                              * (100 - victim->check_res_magic(power)) / 100));
 
-    mon->attitude =
-            player_mutation_level(MUT_NO_LOVE) ? ATT_HOSTILE : ATT_FRIENDLY;
+    mon->attitude = ATT_FRIENDLY;
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
 
     mon->summoner = MID_PLAYER;
