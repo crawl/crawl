@@ -555,7 +555,8 @@ static string _milestone_kill_verb(killer_type killer)
 {
     return killer == KILL_BANISHED ? "banished" :
            killer == KILL_PACIFIED ? "pacified" :
-           killer == KILL_ENSLAVED ? "enslaved" : "killed";
+           killer == KILL_ENSLAVED ? "enslaved" :
+           killer == KILL_SLIMIFIED ? "slimified" : "killed";
 }
 
 void record_monster_defeat(monster* mons, killer_type killer)
@@ -1493,6 +1494,8 @@ static string _killer_type_name(killer_type killer)
         return "pacified";
     case KILL_ENSLAVED:
         return "enslaved";
+    case KILL_SLIMIFIED:
+        return "slimified";
     }
     die("invalid killer type");
 }
