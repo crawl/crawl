@@ -5924,10 +5924,8 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
 
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
-    if (sacrifice != MUT_NON_MUTATION) {
-        perma_mutate(sacrifice, 1, "Ru sacrifice");
-        you.sacrifices[sacrifice] += 1;
-    }
+    perma_mutate(sacrifice, 1, "Ru sacrifice");
+    you.sacrifices[sacrifice] += 1;
 }
 
 static bool _execute_sacrifice(int piety_gain, const char* message)
@@ -6028,7 +6026,6 @@ static void _extra_sacrifice_code(ability_type sac)
     {
         lose_level();
         lose_level();
-        you.props[MAX_XP_KEY] = you.props[MAX_XP_KEY].get_int() - 2;
     }
     else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_SKILL)
     {

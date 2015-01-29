@@ -969,8 +969,7 @@ void wizard_set_xl()
     }
 
     const int newxl = atoi(buf);
-    if (newxl < 1 || newxl > you.props[MAX_XP_KEY].get_int()
-            || newxl == you.experience_level)
+    if (newxl < 1 || newxl > you.get_max_xl() || newxl == you.experience_level)
     {
         canned_msg(MSG_OK);
         return;

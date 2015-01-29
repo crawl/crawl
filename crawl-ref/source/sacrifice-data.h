@@ -154,7 +154,7 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_EXPERIENCE, MUT_NON_MUTATION,
+{ ABIL_RU_SACRIFICE_EXPERIENCE, MUT_INEXPERIENCED,
   "sacrifice your experiences",
   "sacrificed experience",
 

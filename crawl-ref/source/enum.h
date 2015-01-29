@@ -3630,6 +3630,7 @@ enum mutation_type
 #endif
     MUT_MP_WANDS,
     MUT_UNSKILLED,
+    MUT_INEXPERIENCED,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
