@@ -45,6 +45,7 @@
 #include "tilereg-crt.h"
 #endif
 #include "travel.h"
+#include "unicode.h"
 #include "unwind.h"
 
 #define SHOPPING_LIST_COST_KEY "shopping_list_cost_key"
@@ -2600,7 +2601,7 @@ void ShoppingListMenu::draw_title()
 
         cgotoxy(1, 1);
         formatted_string fs = formatted_string(title->colour);
-        fs.cprintf("%d %s%s, total cost %d gold",
+        fs.cprintf("%d %s%s, total %d gold",
                    title->quantity, title->text.c_str(),
                    title->quantity > 1? "s" : "",
                    total_cost);
@@ -2633,6 +2634,11 @@ void ShoppingListMenu::draw_title()
 void ShoppingList::fill_out_menu(Menu& shopmenu)
 {
     menu_letter hotkey;
+    int longest = 0;
+    // How much space does the longest entry need for proper alignment?
+    for (CrawlHashTable &thing : *list)
+        longest = max(longest, strwidth(thing_pos(thing).id.describe()));
+
     for (CrawlHashTable &thing : *list)
     {
         level_pos      pos     = thing_pos(thing);
@@ -2643,11 +2649,13 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             unknown = shop_item_unknown(get_thing_item(thing));
 
         string etitle =
-            make_stringf("%4d gold [%s] %s%s",
-                         cost,
-                         pos.id.describe().c_str(),
-                         name_thing(thing, DESC_A).c_str(),
-                         unknown ? " (unknown)" : "");
+            make_stringf(
+                "%*s%5d gold  %s%s",
+                longest+2,
+                make_stringf("[%s]", pos.id.describe().c_str()).c_str(),
+                cost,
+                name_thing(thing, DESC_A).c_str(),
+                unknown ? " (unknown)" : "");
 
         MenuEntry *me = new MenuEntry(etitle, MEL_ITEM, 1, hotkey);
         me->data = &thing;
