@@ -581,7 +581,9 @@ void record_monster_defeat(monster* mons, killer_type killer)
         mark_milestone("ghost", milestone);
     }
     // Or summoned uniques, which a summoned ghost is treated as {due}
-    else if (mons_is_or_was_unique(*mons) && !mons->is_summoned())
+    else if (mons_is_or_was_unique(*mons)
+             && !mons->is_summoned()
+             && !testbits(mons->flags, MF_SPECTRALISED))
     {
         mark_milestone("uniq",
                        _milestone_kill_verb(killer)
@@ -806,13 +808,8 @@ static bool _monster_avoided_death(monster* mons, killer_type killer,
 
     // Before the hp check since this should not care about the power of the
     // finishing blow
-    if (killer != KILL_RESET
-        && killer != KILL_DISMISSED
-        && killer != KILL_BANISHED)
-    {
-        if (lost_soul_revive(mons))
-            return true;
-    }
+    if (lost_soul_revive(mons, killer))
+        return true;
 
     // Yredelemnul special.
     if (_yred_enslave_soul(mons, killer))
