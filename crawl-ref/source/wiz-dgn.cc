@@ -65,7 +65,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         else if (player_in_branch(BRANCH_ABYSS))
             return DNGN_EXIT_ABYSS;
         else if (player_in_branch(BRANCH_DUNGEON))
-            return DNGN_STONE_STAIRS_UP_I;
+            return DNGN_EXIT_DUNGEON;
 
         dungeon_feature_type stairs = your_branch().exit_stairs;
 
