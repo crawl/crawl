@@ -606,6 +606,7 @@ void slimify_monster(monster* mon, bool hostile)
         return;
     }
 
+    record_monster_defeat(mon, KILL_SLIMIFIED);
     remove_unique_annotation(mon);
 
     monster_polymorph(mon, target);
