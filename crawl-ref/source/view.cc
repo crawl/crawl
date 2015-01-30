@@ -1453,6 +1453,18 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
     tile_apply_properties(gc, cell->tile);
 #endif
+#ifndef USE_TILE_LOCAL
+    if (_show_terrain
+        && you.on_current_level
+        && map_bounds(gc)
+        && travel_colour_override(gc))
+    {
+        if (is_exclude_root(gc))
+            cell->colour = Options.tc_excluded;
+        else if (is_excluded(gc))
+            cell->colour = Options.tc_exclude_circle;
+    }
+#endif
 }
 
 void toggle_show_terrain()

@@ -60,7 +60,7 @@ static unsigned _get_travel_colour(const coord_def& p)
 #endif
 
 #ifndef USE_TILE_LOCAL
-static bool _travel_colour_override(const coord_def& p)
+bool travel_colour_override(const coord_def& p)
 {
     if (is_waypoint(p) || is_stair_exclusion(p)
        || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
@@ -340,7 +340,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                     cell->colour = fd.colour();
                 }
 
-                if (travel_mode && _travel_colour_override(c))
+                if (travel_mode && travel_colour_override(c))
                     cell->colour = _get_travel_colour(c);
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
@@ -1292,7 +1292,7 @@ static cglyph_t _get_feat_glyph(const coord_def& gc)
     cglyph_t g;
     g.ch  = terrain_seen ? fdef.symbol() : fdef.magic_symbol();
     unsigned col;
-    if (_travel_colour_override(gc))
+    if (travel_colour_override(gc))
         col = _get_travel_colour(gc);
     else if (emphasise(gc))
         col = fdef.seen_em_colour();
