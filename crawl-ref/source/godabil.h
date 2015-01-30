@@ -34,6 +34,8 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define GOZAG_MAX_BRIBABILITY 8
 #define GOZAG_MAX_POTIONS 3
 
+#define RU_SAC_XP_LEVELS 2
+
 struct bolt;
 class stack_iterator;
 

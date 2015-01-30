@@ -161,7 +161,7 @@ static const sacrifice_def sac_data[] =
   28,
   SK_NONE,
   nullptr,
-  nullptr,
+  []() { return you.experience_level > RU_SAC_XP_LEVELS; }
 },
 
 { ABIL_RU_SACRIFICE_SKILL, MUT_UNSKILLED,

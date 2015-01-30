@@ -6024,8 +6024,8 @@ static void _extra_sacrifice_code(ability_type sac)
     }
     else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_EXPERIENCE)
     {
-        lose_level();
-        lose_level();
+        for (int i = 0; i < RU_SAC_XP_LEVELS; ++i)
+            lose_level();
     }
     else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_SKILL)
     {
