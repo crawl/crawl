@@ -1933,14 +1933,14 @@ void process_command(command_type cmd)
 #endif
 
         // Movement and running commands.
+    case CMD_ATTACK_DOWN_LEFT:  _swing_at_target({-1,  1}); break;
+    case CMD_ATTACK_DOWN:       _swing_at_target({ 0,  1}); break;
     case CMD_ATTACK_UP_RIGHT:   _swing_at_target({ 1, -1}); break;
     case CMD_ATTACK_UP:         _swing_at_target({ 0, -1}); break;
     case CMD_ATTACK_UP_LEFT:    _swing_at_target({-1, -1}); break;
-    case CMD_ATTACK_RIGHT:      _swing_at_target({ 1,  0}); break;
-    case CMD_ATTACK_DOWN_RIGHT: _swing_at_target({ 1,  1}); break;
-    case CMD_ATTACK_DOWN:       _swing_at_target({ 0,  1}); break;
-    case CMD_ATTACK_DOWN_LEFT:  _swing_at_target({-1,  1}); break;
     case CMD_ATTACK_LEFT:       _swing_at_target({-1,  0}); break;
+    case CMD_ATTACK_DOWN_RIGHT: _swing_at_target({ 1,  1}); break;
+    case CMD_ATTACK_RIGHT:      _swing_at_target({ 1,  0}); break;
 
     case CMD_MOVE_DOWN_LEFT:  _move_player({-1,  1}); break;
     case CMD_MOVE_DOWN:       _move_player({ 0,  1}); break;
