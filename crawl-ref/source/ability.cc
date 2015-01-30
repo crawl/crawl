@@ -1737,6 +1737,15 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_GOZAG_BRIBE_BRANCH:
         return gozag_check_bribe_branch(quiet);
+    
+    case ABIL_RU_SACRIFICE_EXPERIENCE:
+        if (you.experience_level <= RU_SAC_XP_LEVELS)
+        {
+            if (!quiet)
+                mpr("You don't have enough experience to sacrifice.");
+            return false;
+        }
+        return true;
 
     default:
         return true;
