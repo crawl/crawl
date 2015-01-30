@@ -1064,6 +1064,7 @@ public:
     }
 };
 
+#if TAG_MAJOR_VERSION == 34
 class PotionPorridge : public PotionEffect
 {
 private:
@@ -1089,6 +1090,7 @@ public:
         return true;
     }
 };
+#endif
 
 class PotionWater : public PotionEffect
 {
