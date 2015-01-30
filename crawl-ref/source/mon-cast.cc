@@ -5069,7 +5069,7 @@ extern const spell_type serpent_of_hell_breaths[][3] =
  *  Make this monster cast a spell
  *
  *  @param mons       The monster casting
- *  @param pbolt[in]  The beam, possibly containing pre-done setup, to use
+ *  @param pbolt      The beam, possibly containing pre-done setup, to use
  *                    for the spell. Not a reference because this function
                       shouldn't affect the original copy.
  *  @param spell_cast The spell to be cast.
