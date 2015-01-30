@@ -38,6 +38,7 @@
 #include "godwrath.h"
 #include "hints.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1472,7 +1473,10 @@ void toggle_show_terrain()
 {
     _show_terrain = !_show_terrain;
     if (_show_terrain)
-        mpr("Showing terrain only.");
+    {
+        mprf("Showing terrain only. Press <w>%s</w> to return to normal view.",
+             command_to_string(CMD_SHOW_TERRAIN).c_str());
+    }
     else
         mpr("Returning to normal view.");
 }
