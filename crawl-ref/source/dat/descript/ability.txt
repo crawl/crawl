@@ -807,7 +807,7 @@ Sacrifices cannot be taken back.
 %%%%
 Sacrifice Experience ability
 
-Adherents who choose to sacrifice their experiences will lose two levels
+Adherents who choose to sacrifice their experience will lose two levels
 immediately and also have the maximum level they can attain lowered by two
 levels.
 
