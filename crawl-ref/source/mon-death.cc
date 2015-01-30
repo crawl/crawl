@@ -660,10 +660,8 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
 
     mons->hit_points = 1;
 
-    snprintf(info, INFO_SIZE, " protects %s from harm!",
-             mons->name(DESC_THE).c_str());
-
-    simple_god_message(info);
+    const string msg = " protects " + mons->name(DESC_THE) + " from harm!";
+    simple_god_message(msg.c_str());
 
     return true;
 }
@@ -700,12 +698,12 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     dprf("new hp: %d, ely penance: %d", mons->hit_points, ely_penance);
 
-    snprintf(info, INFO_SIZE, "%s heals %s%s",
+    const string msg = make_stringf("%s heals %s%s",
              god_name(god, false).c_str(),
              mons->name(DESC_THE).c_str(),
              mons->hit_points * 2 <= mons->max_hit_points ? "." : "!");
 
-    god_speaks(god, info);
+    god_speaks(god, msg.c_str());
     dec_penance(god, 1);
 
     return true;

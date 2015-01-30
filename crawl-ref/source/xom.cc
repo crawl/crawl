@@ -336,9 +336,9 @@ void xom_tick()
             you.piety = HALF_MAX_PIETY + (good ? size : -size);
         }
 #ifdef DEBUG_XOM
-        snprintf(info, INFO_SIZE, "xom_tick(), delta: %d, piety: %d",
-                 delta, you.piety);
-        take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
+        const string note = make_stringf("xom_tick(), delta: %d, piety: %d",
+                                         delta, you.piety);
+        take_note(Note(NOTE_MESSAGE, 0, 0, note), true);
 #endif
 
         // ...but he gets bored...
@@ -593,10 +593,8 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
          spell, spellenum);
 #endif
 
-    static char spell_buf[100];
-    snprintf(spell_buf, sizeof(spell_buf), "cast spell '%s'",
-             spell_title(spell));
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, spell_buf), true);
+    const string note = make_stringf("cast spell '%s'", spell_title(spell));
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, note), true);
 
     your_spells(spell, sever, false);
     return result;
@@ -1990,13 +1988,12 @@ static int _xom_change_scenery(bool debug = false)
     vector<string> effects, terse;
     if (fountains_blood > 0)
     {
-        snprintf(info, INFO_SIZE,
+        string fountains = make_stringf(
                  "%s fountain%s start%s gushing blood",
                  fountains_blood == 1 ? "a" : "some",
                  fountains_blood == 1 ? ""  : "s",
                  fountains_blood == 1 ? "s" : "");
 
-        string fountains = info;
         if (effects.empty())
             fountains = uppercase_first(fountains);
         effects.push_back(fountains);
@@ -2012,18 +2009,17 @@ static int _xom_change_scenery(bool debug = false)
 
     if (doors_open > 0)
     {
-        snprintf(info, INFO_SIZE, "%s door%s burst%s open",
-                 doors_open == 1 ? "A"    :
-                 doors_open == 2 ? "Two"
-                                 : "Several",
-                 doors_open == 1 ? ""  : "s",
-                 doors_open == 1 ? "s" : "");
-        effects.emplace_back(info);
+        effects.push_back(make_stringf("%s door%s burst%s open",
+                                       doors_open == 1 ? "A"    :
+                                       doors_open == 2 ? "Two"
+                                                       : "Several",
+                                       doors_open == 1 ? ""  : "s",
+                                       doors_open == 1 ? "s" : ""));
         terse.push_back(make_stringf("%d doors open", doors_open));
     }
     if (doors_close > 0)
     {
-        snprintf(info, INFO_SIZE, "%s%s door%s slam%s shut",
+        string closed = make_stringf("%s%s door%s slam%s shut",
                  doors_close == 1 ? "a"    :
                  doors_close == 2 ? "two"
                                   : "several",
@@ -2031,7 +2027,6 @@ static int _xom_change_scenery(bool debug = false)
                                   : "",
                  doors_close == 1 ? ""  : "s",
                  doors_close == 1 ? "s" : "");
-        string closed = info;
         if (effects.empty())
             closed = uppercase_first(closed);
         effects.push_back(closed);
@@ -3826,9 +3821,9 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
             && x_chance_in_y(you.piety, MAX_PIETY))
         {
 #ifdef NOTE_DEBUG_XOM
-            snprintf(info, INFO_SIZE, "suppress bad act because of %d tension",
-                     tension);
-            take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
+            const string note = string("suppress bad act because of ") +
+                                tension + " tension";
+            take_note(Note(NOTE_MESSAGE, 0, 0, note), true);
 #endif
             return debug ? XOM_BAD_NOTHING : XOM_DID_NOTHING;
         }
@@ -3855,8 +3850,8 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
             god_speaks(you.religion, msg.c_str());
         }
 #ifdef NOTE_DEBUG_XOM
-        snprintf(info, INFO_SIZE, "reroll piety: %d", you.piety);
-        take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
+        const string note = string("reroll piety: ") + you.piety;
+        take_note(Note(NOTE_MESSAGE, 0, 0, note), true);
 #endif
     }
     else if (was_bored)
@@ -4156,7 +4151,7 @@ static const string _xom_effect_to_name(int effect)
     return result;
 }
 
-static char* _list_exploration_estimate()
+static string _list_exploration_estimate()
 {
     int explored = 0;
     int mapped   = 0;
@@ -4168,11 +4163,8 @@ static char* _list_exploration_estimate()
     mapped /= 10;
     explored /= 10;
 
-    snprintf(info, INFO_SIZE, "mapping estimate: %d%%\n"
-                              "exploration estimate: %d%%\n",
-             mapped, explored);
-
-    return info;
+    return make_stringf("mapping estimate: %d%%\nexploration estimate: %d%%\n",
+                        mapped, explored);
 }
 
 // Loops over the entire piety spectrum and calls xom_acts() multiple
@@ -4205,7 +4197,7 @@ void debug_xom_effects()
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
     fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
     fprintf(ostat, "%s\n", screenshot().c_str());
-    fprintf(ostat, "%s\n", _list_exploration_estimate());
+    fprintf(ostat, "%s\n", _list_exploration_estimate().c_str());
     fprintf(ostat, "%s\n", mpr_monster_list().c_str());
     fprintf(ostat, " --> Tension: %d\n", tension);
 

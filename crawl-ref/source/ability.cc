@@ -2270,18 +2270,20 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
+        {
             power = you.experience_level
                     + player_mutation_level(MUT_BREATHE_FLAMES) * 4;
 
             if (you.form == TRAN_DRAGON)
                 power += 12;
 
-            snprintf(info, INFO_SIZE, "You breathe a blast of fire%c",
-                     (power < 15) ? '.':'!');
+            string msg = "You breathe a blast of fire";
+            msg += (power < 15) ? '.' : '!';
 
-            if (!zapping(ZAP_BREATHE_FIRE, power, beam, true, info))
+            if (!zapping(ZAP_BREATHE_FIRE, power, beam, true, msg.c_str()))
                 return SPRET_ABORT;
             break;
+        }
 
         case ABIL_BREATHE_FROST:
             if (!zapping(ZAP_BREATHE_FROST,

@@ -847,10 +847,10 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
 
     if (msg)
     {
-        snprintf(info, INFO_SIZE, " wields %s.",
-                 item.name(DESC_A, false, false, true, false,
-                           ISFLAG_CURSED).c_str());
-        msg = simple_monster_message(this, info);
+        const string str = " wields " +
+                           item.name(DESC_A, false, false, true, false,
+                                     ISFLAG_CURSED) + ".";
+        msg = simple_monster_message(this, str.c_str());
     }
 
     const int brand = get_weapon_brand(item);
@@ -945,9 +945,9 @@ void monster::equip_armour(item_def &item, int slot, int near)
 {
     if (need_message(near))
     {
-        snprintf(info, INFO_SIZE, " wears %s.",
-                 item.name(DESC_A).c_str());
-        simple_monster_message(this, info);
+        const string str = " wears " +
+                           item.name(DESC_A) + ".";
+        simple_monster_message(this, str.c_str());
     }
 
     if (slot == EQ_SHIELD && has_ench(ENCH_CONDENSATION_SHIELD))
@@ -960,9 +960,9 @@ void monster::equip_jewellery(item_def &item, int near)
 
     if (need_message(near))
     {
-        snprintf(info, INFO_SIZE, " puts on %s.",
-                 item.name(DESC_A).c_str());
-        simple_monster_message(this, info);
+        const string str = " puts on " +
+                           item.name(DESC_A) + ".";
+        simple_monster_message(this, str.c_str());
     }
 
     if (item.sub_type == AMU_STASIS)
@@ -1020,10 +1020,10 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
 
     if (msg)
     {
-        snprintf(info, INFO_SIZE, " unwields %s.",
-                             item.name(DESC_A, false, false, true, false,
-                             ISFLAG_CURSED).c_str());
-        msg = simple_monster_message(this, info);
+        const string str = " unwields " +
+                           item.name(DESC_A, false, false, true, false,
+                                     ISFLAG_CURSED) + ".";
+        msg = simple_monster_message(this, str.c_str());
     }
 
     const int brand = get_weapon_brand(item);
@@ -1073,9 +1073,9 @@ void monster::unequip_armour(item_def &item, int near)
 {
     if (need_message(near))
     {
-        snprintf(info, INFO_SIZE, " takes off %s.",
-                 item.name(DESC_A).c_str());
-        simple_monster_message(this, info);
+        const string str = " takes off " +
+                           item.name(DESC_A) + ".";
+        simple_monster_message(this, str.c_str());
     }
 }
 
@@ -1085,9 +1085,9 @@ void monster::unequip_jewellery(item_def &item, int near)
 
     if (need_message(near))
     {
-        snprintf(info, INFO_SIZE, " takes off %s.",
-                 item.name(DESC_A).c_str());
-        simple_monster_message(this, info);
+        const string str = " takes off " +
+                           item.name(DESC_A) + ".";
+        simple_monster_message(this, str.c_str());
     }
 }
 

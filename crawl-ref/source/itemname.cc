@@ -2767,6 +2767,7 @@ void display_runes()
     deleteAll(items);
 }
 
+#define ITEMNAME_SIZE 200
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
 string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 {
@@ -3066,6 +3067,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 
     return name;
 }
+#undef ITEMNAME_SIZE
 
 static bool _is_random_name_space(char let)
 {

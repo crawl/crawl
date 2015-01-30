@@ -97,9 +97,6 @@ static void _initialize()
     for (int i = 0; i < MAX_ITEMS; ++i)
         init_item(i);
 
-    // Empty messaging string.
-    info[0] = 0;
-
     reset_all_monsters();
     init_anon();
 

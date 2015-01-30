@@ -2846,8 +2846,10 @@ static string _status_mut_abilities(int sw)
     // get changes to EV and SH.
     if (AC_change && you.form != TRAN_STATUE)
     {
-        snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
-        mutations.emplace_back(info);
+        const string ac_mut = make_stringf("AC %s%d",
+                                           (AC_change > 0 ? "+" : ""),
+                                           AC_change);
+        mutations.push_back(ac_mut);
     }
 
     if (mutations.empty())

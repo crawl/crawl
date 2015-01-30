@@ -57,12 +57,6 @@ protected:
     tileidx_t m_tile;
 };
 
-#define INFO_SIZE       200          // size of message buffers
-#define ITEMNAME_SIZE   200          // size of item names/shop names/etc
-#define HIGHSCORE_SIZE  800          // <= 10 Lines for long format scores
-
-extern char info[INFO_SIZE];         // defined in main.cc {dlb}
-
 #define kNameLen        30
 const int kFileNameLen = 250;
 

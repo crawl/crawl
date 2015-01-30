@@ -641,14 +641,14 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     else
         verb = "attack ";
 
-    snprintf(info, INFO_SIZE, "Really %s%s%s?%s",
+    const string prompt = make_stringf("Really %s%s%s?%s",
              verb.c_str(), mon_name.c_str(), suffix.c_str(),
              penance ? " This attack would place you under penance!" : "");
 
     if (prompted)
         *prompted = true;
 
-    if (yesno(info, false, 'n'))
+    if (yesno(prompt.c_str(), false, 'n'))
         return false;
     else
     {
@@ -704,14 +704,14 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
         adj = "the " + adj;
     mon_name = adj + mon_name;
 
-    snprintf(info, INFO_SIZE, "Really %s %s%s?%s",
+    const string prompt = make_stringf("Really %s %s%s?%s",
              verb, mon_name.c_str(), suffix.c_str(),
              penance ? " This attack would place you under penance!" : "");
 
     if (prompted)
         *prompted = true;
 
-    if (yesno(info, false, 'n'))
+    if (yesno(prompt.c_str(), false, 'n'))
         return false;
     else
     {

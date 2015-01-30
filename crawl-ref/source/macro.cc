@@ -1366,28 +1366,28 @@ string command_to_string(command_type cmd, bool tutorial)
     if (!desc.empty())
         return desc;
 
+    string result;
     if (key >= 32 && key < 256)
     {
         if (tutorial && key >= 'A' && key <= 'Z')
-            snprintf(info, INFO_SIZE, "uppercase %c", (char) key);
+            result = make_stringf("uppercase %c", (char) key);
         else
-            snprintf(info, INFO_SIZE, "%c", (char) key);
+            result = make_stringf("%c", (char) key);
     }
     else if (key > 1000 && key <= 1009)
     {
         const int numpad = (key - 1000);
-        snprintf(info, INFO_SIZE, "Numpad %d", numpad);
+        result = make_stringf("Numpad %d", numpad);
     }
     else
     {
         const int ch = key + 'A' - 1;
         if (ch >= 'A' && ch <= 'Z')
-            snprintf(info, INFO_SIZE, "Ctrl-%c", (char) ch);
+            result = make_stringf("Ctrl-%c", (char) ch);
         else
-            snprintf(info, INFO_SIZE, "%d", key);
+            result = make_stringf("%d", key);
     }
 
-    string result = info;
     return result;
 }
 
@@ -1449,9 +1449,7 @@ static void _list_all_commands(string &commands)
         if (_context_for_command(cmd) != KMC_DEFAULT)
             continue;
 
-        snprintf(info, INFO_SIZE, "%s: %s\n",
-                 command_name.c_str(), command_to_string(cmd).c_str());
-        commands += info;
+        commands += command_name + ": " + command_to_string(cmd) + "\n";
     }
     commands += "\n";
 }

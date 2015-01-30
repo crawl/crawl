@@ -410,24 +410,6 @@ string Note::describe(bool when, bool where, bool what) const
     return result.str();
 }
 
-Note::Note()
-{
-    turn  = you.num_turns;
-    place = level_id::current();
-}
-
-Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
-    type(t), first(f), second(s)
-{
-    if (n)
-        name = string(n);
-    if (d)
-        desc = string(d);
-
-    turn  = you.num_turns;
-    place = level_id::current();
-}
-
 void Note::check_milestone() const
 {
     if (crawl_state.game_is_arena())

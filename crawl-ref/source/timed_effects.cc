@@ -456,10 +456,7 @@ void change_labyrinth(bool msg)
         string path_str = "";
         mprf(MSGCH_DIAGNOSTICS, "Here's the list of targets: ");
         for (coord_def target : targets)
-        {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", target.x, target.y);
-            path_str += info;
-        }
+            path_str += make_stringf("(%d, %d)  ", target.x, target.y);
         mprf(MSGCH_DIAGNOSTICS, "%s", path_str.c_str());
         mprf(MSGCH_DIAGNOSTICS, "-> #targets = %u", (unsigned int)targets.size());
     }
