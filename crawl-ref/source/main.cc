@@ -208,18 +208,15 @@ NORETURN static void _launch_game();
 static void _do_berserk_no_combat_penalty();
 static void _do_searing_ray();
 static void _input();
-static void _safe_move_player(int move_x, int move_y);
-static void _move_player(int move_x, int move_y);
-static void _move_player(coord_def move);
-static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
-static void _open_door(coord_def move = coord_def(0,0));
 
+static void _safe_move_player(coord_def move);
+static void _move_player(coord_def move);
 static void _swing_at_target(coord_def move);
-static void _swing_at_target(int x, int y)
-{
-    _swing_at_target(coord_def(x,y));
-}
+
+static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
+static void _open_door(coord_def move = {0,0});
 static void _close_door();
+
 static void _start_running(int dir, int mode);
 
 static void _prep_input();
@@ -1936,32 +1933,32 @@ void process_command(command_type cmd)
 #endif
 
         // Movement and running commands.
-    case CMD_ATTACK_UP_RIGHT:   _swing_at_target(1, -1); break;
-    case CMD_ATTACK_UP:         _swing_at_target(0, -1); break;
-    case CMD_ATTACK_UP_LEFT:    _swing_at_target(-1, -1); break;
-    case CMD_ATTACK_RIGHT:      _swing_at_target(1,  0); break;
-    case CMD_ATTACK_DOWN_RIGHT: _swing_at_target(1,  1); break;
-    case CMD_ATTACK_DOWN:       _swing_at_target(0,  1); break;
-    case CMD_ATTACK_DOWN_LEFT:  _swing_at_target(-1,  1); break;
-    case CMD_ATTACK_LEFT:       _swing_at_target(-1,  0); break;
+    case CMD_ATTACK_UP_RIGHT:   _swing_at_target({ 1, -1}); break;
+    case CMD_ATTACK_UP:         _swing_at_target({ 0, -1}); break;
+    case CMD_ATTACK_UP_LEFT:    _swing_at_target({-1, -1}); break;
+    case CMD_ATTACK_RIGHT:      _swing_at_target({ 1,  0}); break;
+    case CMD_ATTACK_DOWN_RIGHT: _swing_at_target({ 1,  1}); break;
+    case CMD_ATTACK_DOWN:       _swing_at_target({ 0,  1}); break;
+    case CMD_ATTACK_DOWN_LEFT:  _swing_at_target({-1,  1}); break;
+    case CMD_ATTACK_LEFT:       _swing_at_target({-1,  0}); break;
 
-    case CMD_MOVE_DOWN_LEFT:  _move_player(-1,  1); break;
-    case CMD_MOVE_DOWN:       _move_player(0,  1); break;
-    case CMD_MOVE_UP_RIGHT:   _move_player(1, -1); break;
-    case CMD_MOVE_UP:         _move_player(0, -1); break;
-    case CMD_MOVE_UP_LEFT:    _move_player(-1, -1); break;
-    case CMD_MOVE_LEFT:       _move_player(-1,  0); break;
-    case CMD_MOVE_DOWN_RIGHT: _move_player(1,  1); break;
-    case CMD_MOVE_RIGHT:      _move_player(1,  0); break;
+    case CMD_MOVE_DOWN_LEFT:  _move_player({-1,  1}); break;
+    case CMD_MOVE_DOWN:       _move_player({ 0,  1}); break;
+    case CMD_MOVE_UP_RIGHT:   _move_player({ 1, -1}); break;
+    case CMD_MOVE_UP:         _move_player({ 0, -1}); break;
+    case CMD_MOVE_UP_LEFT:    _move_player({-1, -1}); break;
+    case CMD_MOVE_LEFT:       _move_player({-1,  0}); break;
+    case CMD_MOVE_DOWN_RIGHT: _move_player({ 1,  1}); break;
+    case CMD_MOVE_RIGHT:      _move_player({ 1,  0}); break;
 
-    case CMD_SAFE_MOVE_DOWN_LEFT:  _safe_move_player(-1,  1); break;
-    case CMD_SAFE_MOVE_DOWN:       _safe_move_player(0,  1); break;
-    case CMD_SAFE_MOVE_UP_RIGHT:   _safe_move_player(1, -1); break;
-    case CMD_SAFE_MOVE_UP:         _safe_move_player(0, -1); break;
-    case CMD_SAFE_MOVE_UP_LEFT:    _safe_move_player(-1, -1); break;
-    case CMD_SAFE_MOVE_LEFT:       _safe_move_player(-1,  0); break;
-    case CMD_SAFE_MOVE_DOWN_RIGHT: _safe_move_player(1,  1); break;
-    case CMD_SAFE_MOVE_RIGHT:      _safe_move_player(1,  0); break;
+    case CMD_SAFE_MOVE_DOWN_LEFT:  _safe_move_player({-1,  1}); break;
+    case CMD_SAFE_MOVE_DOWN:       _safe_move_player({ 0,  1}); break;
+    case CMD_SAFE_MOVE_UP_RIGHT:   _safe_move_player({ 1, -1}); break;
+    case CMD_SAFE_MOVE_UP:         _safe_move_player({ 0, -1}); break;
+    case CMD_SAFE_MOVE_UP_LEFT:    _safe_move_player({-1, -1}); break;
+    case CMD_SAFE_MOVE_LEFT:       _safe_move_player({-1,  0}); break;
+    case CMD_SAFE_MOVE_DOWN_RIGHT: _safe_move_player({ 1,  1}); break;
+    case CMD_SAFE_MOVE_RIGHT:      _safe_move_player({ 1,  0}); break;
 
     case CMD_RUN_DOWN_LEFT: _start_running(RDIR_DOWN_LEFT, RMODE_START); break;
     case CMD_RUN_DOWN:      _start_running(RDIR_DOWN, RMODE_START);      break;
@@ -2963,18 +2960,11 @@ static void _do_searing_ray()
         end_searing_ray();
 }
 
-static void _safe_move_player(int move_x, int move_y)
+static void _safe_move_player(coord_def move)
 {
     if (!i_feel_safe(true))
         return;
-    _move_player(move_x, move_y);
-}
-
-// Called when the player moves by walking/running. Also calls attack
-// function etc when necessary.
-static void _move_player(int move_x, int move_y)
-{
-    _move_player(coord_def(move_x, move_y));
+    _move_player(move);
 }
 
 // Swap monster to this location.  Player is swapped elsewhere.
@@ -3013,6 +3003,8 @@ static void _swap_places(monster* mons, const coord_def &loc)
     return;
 }
 
+// Called when the player moves by walking/running. Also calls attack
+// function etc when necessary.
 static void _move_player(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
