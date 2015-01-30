@@ -18,6 +18,7 @@
 #include "env.h"
 #include "fight.h"
 #include "food.h"
+#include "godabil.h" // RU_SAC_XP_LEVELS
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
@@ -160,7 +161,7 @@ int player::get_experience_level() const
 
 int player::get_max_xl() const
 {
-    return 27 - player_mutation_level(MUT_INEXPERIENCED) * 2;
+    return 27 - player_mutation_level(MUT_INEXPERIENCED) * RU_SAC_XP_LEVELS;
 }
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
