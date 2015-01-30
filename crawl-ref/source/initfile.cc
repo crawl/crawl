@@ -763,6 +763,7 @@ void game_options::reset_options()
     symmetric_scroll = true;
     scroll_margin_x  = 2;
     scroll_margin_y  = 2;
+    always_show_exclusions = true;
 
     autopickup_on    = 1;
     autopickup_starting_ammo = true;
@@ -2965,6 +2966,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             scrollmarg = 0;
         scroll_margin_x = scroll_margin_y = scrollmarg;
     }
+    else BOOL_OPTION(always_show_exclusions);
     else if (key == "user_note_prefix")
     {
         // field is already cleaned up from trim_string()
