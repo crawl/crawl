@@ -159,6 +159,9 @@ public:
     int         scroll_margin_x;
     int         scroll_margin_y;
 
+    // Whether exclusions and exclusion radius are visible in the viewport.
+    bool        always_show_exclusions;
+
     int         autopickup_on;
     bool        autopickup_starting_ammo;
     bool        default_manual_training;

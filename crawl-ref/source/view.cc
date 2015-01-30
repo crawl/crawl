@@ -1454,9 +1454,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     tile_apply_properties(gc, cell->tile);
 #endif
 #ifndef USE_TILE_LOCAL
-    if (_show_terrain
+    if ((_show_terrain || Options.always_show_exclusions)
         && you.on_current_level
         && map_bounds(gc)
+        && (_show_terrain || gc != you.pos())
         && travel_colour_override(gc))
     {
         if (is_exclude_root(gc))

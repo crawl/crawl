@@ -681,6 +681,12 @@ scroll_margin = 2
         An aliased option that sets both scroll_margin_x and
         scroll_margin_y.
 
+always_show_exclusions = true
+        If true, display travel exclusions and their exclusion radius in
+        the viewport. Exclusions are always visible on the level map
+        (access with X) regardless of the value of this option.
+        Exclusions are also visible in terrain-only mode (access with |).
+
 3-f     Travel and Exploration.
 -------------------------------
 
