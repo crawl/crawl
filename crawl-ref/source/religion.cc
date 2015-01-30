@@ -605,40 +605,54 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_FEDHAS:
-        snprintf(info, INFO_SIZE, "you promote the decay of nearby "
-                                  "corpses%s",
-                 verbose ? " by <w>p</w>raying" : "");
-        likes.emplace_back(info);
+    {
+        string like = "you promote the decay of nearby corpses";
+        if (verbose)
+           like += " by <w>p</w>raying";
+        likes.push_back(like);
         break;
+    }
 
     case GOD_TROG:
-        snprintf(info, INFO_SIZE, "you destroy spellbooks%s",
-                 verbose ? " via the <w>a</w> command" : "");
-        likes.emplace_back(info);
+    {
+        string like = "you destroy spellbooks";
+        if (verbose)
+           like += " via the <w>a</w> command";
+        likes.push_back(like);
         break;
+    }
 
     case GOD_ELYVILON:
-        snprintf(info, INFO_SIZE, "you destroy weapons (especially unholy and "
-                                  "evil ones)%s",
-                 verbose ? " via the <w>p</w> command (inscribe items with "
-                           "<w>!p</w> to prevent their accidental destruction)"
-                         : "");
-        likes.emplace_back(info);
+    {
+        string like = "you destroy weapons (especially unholy and "
+                      "evil ones)";
+        if (verbose)
+        {
+            like += " via the <w>p</w> command (inscribe items with "
+                    "<w>!p</w> to prevent their accidental destruction)";
+        }
+        likes.push_back(like);
         likes.emplace_back("you calm hostilities by healing your foes");
         break;
+    }
 
     case GOD_JIYVA:
-        snprintf(info, INFO_SIZE, "you sacrifice items%s",
-                 verbose ? " by allowing slimes to consume them" : "");
-        likes.emplace_back(info);
+    {
+        string like = "you sacrifice items";
+        if (verbose)
+            like += " by allowing slimes to consume them";
+        likes.push_back(like);
         break;
+    }
 
     case GOD_CHEIBRIADOS:
-        snprintf(info, INFO_SIZE, "you kill fast things%s",
-                 verbose ? ", relative to your speed"
-                         : "");
-        likes.emplace_back(info);
+    {
+        string like = "you kill fast things";
+        if (verbose)
+            like += ", relative to your speed";
+        likes.push_back(like);
         break;
+    }
 
     case GOD_ASHENZARI:
         likes.emplace_back("you explore the world (preferably while bound by "
@@ -669,21 +683,25 @@ string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_ZIN:
-        snprintf(info, INFO_SIZE, "you donate money%s",
-                 verbose ? " (by <w>p</w>raying at an altar)" : "");
-        likes.emplace_back(info);
+    {
+        string like = "you donate money";
+        if (verbose)
+            like += " (by <w>p</w>raying at an altar)";
+        likes.push_back(like);
         break;
+    }
 
     case GOD_BEOGH:
-        snprintf(info, INFO_SIZE, "you bless dead orcs%s",
-                 verbose ? " (by standing over their remains and <w>p</w>raying)" : "");
-
-        likes.emplace_back(info);
+    {
+        string like = "you bless dead orcs";
+        if (verbose)
+            like += " (by standing over their remains and <w>p</w>raying";
+        likes.push_back(like);
         break;
+    }
 
     case GOD_NEMELEX_XOBEH:
-        snprintf(info, INFO_SIZE, "you explore the world");
-        likes.emplace_back(info);
+        likes.emplace_back("you explore the world");
         break;
 
     default:
@@ -692,10 +710,10 @@ string get_god_likes(god_type which_god, bool verbose)
 
     if (god_likes_fresh_corpses(which_god))
     {
-        snprintf(info, INFO_SIZE, "you sacrifice fresh corpses%s",
-                 verbose ? " (by standing over them and <w>p</w>raying)" : "");
-
-        likes.emplace_back(info);
+        string like = "you sacrifice fresh corpses";
+        if (verbose)
+            like += " (by standing over them and <w>p</w>raying";
+        likes.push_back(like);
     }
 
     switch (which_god)
@@ -3761,13 +3779,13 @@ void god_pitch(god_type which_god)
                     fee, you.gold);
         }
     }
-    snprintf(info, INFO_SIZE, "%sDo you wish to %sjoin this religion?",
-             service_fee.c_str(),
-             (you.worshipped[which_god]) ? "re" : "");
+    const string prompt = make_stringf("%sDo you wish to %sjoin this religion?",
+                                       service_fee.c_str(),
+                                       (you.worshipped[which_god]) ? "re" : "");
 
     cgotoxy(1, 18, GOTO_CRT);
     textcolour(channel_to_colour(MSGCH_PROMPT));
-    if (!yesno(info, false, 'n', true, true, false, nullptr, GOTO_CRT))
+    if (!yesno(prompt.c_str(), false, 'n', true, true, false, nullptr, GOTO_CRT))
     {
         you.turn_is_over = false; // Okay, opt out.
         redraw_screen();

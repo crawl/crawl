@@ -561,23 +561,26 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_FEAR:
+    {
+        string msg;
         if (holiness() == MH_NONLIVING || berserk_or_insane())
         {
             // This should only happen because of fleeing sanctuary
-            snprintf(info, INFO_SIZE, " stops retreating.");
+            msg = " stops retreating.";
         }
         else if (!mons_is_tentacle_or_tentacle_segment(type))
         {
-            snprintf(info, INFO_SIZE, " seems to regain %s courage.",
-                     pronoun(PRONOUN_POSSESSIVE, true).c_str());
+            msg = " seems to regain " + pronoun(PRONOUN_POSSESSIVE, true)
+                                      + " courage.";
         }
 
         if (!quiet)
-            simple_monster_message(this, info);
+            simple_monster_message(this, msg.c_str());
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
         break;
+    }
 
     case ENCH_CONFUSION:
         if (!quiet)
@@ -907,9 +910,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_WRETCHED:
         if (!quiet)
         {
-            snprintf(info, INFO_SIZE, " seems to return to %s normal shape.",
-                     pronoun(PRONOUN_POSSESSIVE, true).c_str());
-            simple_monster_message(this, info);
+            const string msg = "seems to return to " +
+                               pronoun(PRONOUN_POSSESSIVE, true) +
+                               " normal shape.";
+            simple_monster_message(this, msg.c_str());
         }
         break;
 

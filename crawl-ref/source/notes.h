@@ -10,6 +10,8 @@
 #include <vector>
 #include <cstdio>
 
+#include "player.h"
+
 #define MAX_NOTE_PLACE_LEN 8
 
 class reader;
@@ -60,9 +62,10 @@ enum NOTE_TYPES
 
 struct Note
 {
-    Note();
-    Note(NOTE_TYPES t, int f = 0, int s = 0, const char* n = 0,
-          const char* d = 0);
+    Note() {}
+    Note(NOTE_TYPES t, int f = 0, int s = 0, const string& n = "",
+                                             const string& d = "") :
+        type(t), first(f), second(s), name(n), desc(d) {}
     void save(writer& outf) const;
     void load(reader& inf);
     string describe(bool when = true, bool where = true, bool what = true) const;
@@ -70,8 +73,8 @@ struct Note
 
     NOTE_TYPES type;
     int first, second;
-    int turn;
-    level_id place;
+    int turn = you.num_turns;
+    level_id place = level_id::current();
 
     string name;
     string desc;

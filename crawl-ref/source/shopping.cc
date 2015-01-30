@@ -546,27 +546,27 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             }
         }
 
+        string info;
         if (!total_cost)
         {
-            snprintf(info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
-                     you.gold != 1 ? "s" : "");
-
+            info = make_stringf("You have %d gold piece%s.", you.gold,
+                                you.gold != 1 ? "s" : "");
             textcolour(YELLOW);
         }
         else if (total_cost > you.gold)
         {
-            snprintf(info, INFO_SIZE, "You have %d gold piece%s. "
+            info = make_stringf("You have %d gold piece%s. "
                            "You are short %d gold piece%s for the purchase.",
-                     you.gold,
-                     you.gold != 1 ? "s" : "",
-                     total_cost - you.gold,
-                     (total_cost - you.gold != 1) ? "s" : "");
+                           you.gold,
+                           you.gold != 1 ? "s" : "",
+                           total_cost - you.gold,
+                           (total_cost - you.gold != 1) ? "s" : "");
 
             textcolour(LIGHTRED);
         }
         else
         {
-            snprintf(info, INFO_SIZE, "You have %d gold piece%s. "
+            info = make_stringf("You have %d gold piece%s. "
                      "After the purchase, you will have %d gold piece%s.",
                      you.gold,
                      you.gold != 1 ? "s" : "",
@@ -576,19 +576,18 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             textcolour(YELLOW);
         }
 
-        _shop_print(info, 0);
+        _shop_print(info.c_str(), 0);
 
+        info = "";
         if (first)
         {
             first = false;
-            snprintf(info, INFO_SIZE, "%s What would you like to do? ",
-                      hello.c_str());
+            info = hello + " ";
         }
-        else
-            snprintf(info, INFO_SIZE, "What would you like to do? ");
+        info += "What would you like to do? ";
 
         textcolour(CYAN);
-        _shop_print(info, 1);
+        _shop_print(info.c_str(), 1);
 
         textcolour(LIGHTGREY);
 
@@ -659,10 +658,11 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                 continue;
             else
             {
-                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n)",
-                         total_purchase);
+                const string prompt = make_stringf(
+                                          "Purchase for %d gold? (y/n)",
+                                          total_purchase);
 
-                if (_shop_yesno(info, 'n'))
+                if (_shop_yesno(prompt.c_str(), 'n'))
                 {
                     int num_items = 0, outside_items = 0, quant;
                     for (int i = to_buy.size() - 1; i >= 0; --i)
@@ -2764,12 +2764,12 @@ void ShoppingList::display()
             else // not an item, so we only stored a description.
             {
                 // HACK: Assume it's some kind of portal vault.
-                snprintf(info, INFO_SIZE,
-                         "%s with an entry fee of %d gold pieces.",
-                         describe_thing(*thing, DESC_A).c_str(),
-                         (int) thing_cost(*thing));
+                const string info = make_stringf(
+                             "%s with an entry fee of %d gold pieces.",
+                             describe_thing(*thing, DESC_A).c_str(),
+                             (int) thing_cost(*thing));
 
-                print_description(info);
+                print_description(info.c_str());
                 getchm();
             }
         }

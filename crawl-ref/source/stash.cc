@@ -708,7 +708,6 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
     fprintf(f, "(%d, %d%s%s)\n", x - refx, y - refy,
             place.empty() ? "" : ", ", OUTS(place));
 
-    char buf[ITEMNAME_SIZE];
     for (int i = 0; i < (int) items.size(); ++i)
     {
         item_def item = items[i];
@@ -717,7 +716,6 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
             _fully_identify_item(&item);
 
         string s = stash_item_name(item);
-        strncpy(buf, s.c_str(), sizeof buf);
 
         string ann = userdef_annotate_item(STASH_LUA_DUMP_ANNOTATE, &item);
 
@@ -727,7 +725,7 @@ void Stash::write(FILE *f, int refx, int refy, string place, bool identify)
             ann = " " + ann;
         }
 
-        fprintf(f, "  %s%s%s\n", OUTS(buf), OUTS(ann),
+        fprintf(f, "  %s%s%s\n", OUTS(s), OUTS(ann),
             (!verified && (items.size() > 1 || i) ? " (still there?)" : ""));
 
         if (is_dumpable_artefact(item))

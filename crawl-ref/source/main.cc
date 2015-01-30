@@ -182,8 +182,6 @@ game_state crawl_state;
 
 string init_file_error;    // externed in newgame.cc
 
-char info[ INFO_SIZE ];    // messaging queue extern'd everywhere {dlb}
-
 void world_reacts();
 
 static key_recorder repeat_again_rec;
@@ -411,10 +409,10 @@ NORETURN static void _launch_game()
 
     if (!game_start && you.prev_save_version != Version::Long)
     {
-        snprintf(info, INFO_SIZE, "Upgraded the game from %s to %s",
-                                  you.prev_save_version.c_str(),
-                                  Version::Long);
-        take_note(Note(NOTE_MESSAGE, 0, 0, info));
+        const string note = make_stringf("Upgraded the game from %s to %s",
+                                         you.prev_save_version.c_str(),
+                                         Version::Long);
+        take_note(Note(NOTE_MESSAGE, 0, 0, note));
     }
 
     if (!crawl_state.game_is_tutorial())

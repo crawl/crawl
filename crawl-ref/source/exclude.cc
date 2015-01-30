@@ -634,9 +634,8 @@ string exclude_set::get_exclusion_desc()
                         desc.push_back(old_desc);
                     else
                     {
-                        snprintf(info, INFO_SIZE, "%d %s",
-                                 count, pluralise(old_desc).c_str());
-                        desc.push_back(info);
+                        desc.push_back(make_stringf("%d %s",
+                                       count, pluralise(old_desc).c_str()));
                         count = 1;
                     }
                     old_desc = tmp;
@@ -647,18 +646,16 @@ string exclude_set::get_exclusion_desc()
             desc.push_back(old_desc);
         else
         {
-            snprintf(info, INFO_SIZE, "%d %s",
-                     count, pluralise(old_desc).c_str());
-            desc.push_back(info);
+            desc.push_back(make_stringf("%d %s",
+                           count, pluralise(old_desc).c_str()));
         }
     }
 
     if (count_other > 0)
     {
-        snprintf(info, INFO_SIZE, "%d %sexclusion%s",
-                 count_other, desc.empty() ? "" : "more ",
-                 count_other > 1 ? "s" : "");
-        desc.push_back(info);
+        desc.push_back(make_stringf("%d %sexclusion%s",
+                                    count_other, desc.empty() ? "" : "more ",
+                                    count_other > 1 ? "s" : ""));
     }
     else if (desc.empty())
         return "";
@@ -666,9 +663,10 @@ string exclude_set::get_exclusion_desc()
     string desc_str = "";
     if (desc.size() > 1 || count_other == 0)
     {
-        snprintf(info, INFO_SIZE, "exclusion%s: ",
-                 desc.size() > 1 ? "s" : "");
-        desc_str += info;
+        desc_str += "exclusion";
+        if (desc.size() > 1)
+            desc_str += "s";
+        desc_str += ": ";
     }
     return desc_str + comma_separated_line(desc.begin(), desc.end(),
                                            " and ", ", ");

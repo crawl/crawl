@@ -202,7 +202,7 @@ template <class t_printf>
 static void _hiscores_print_entry(const scorefile_entry &se,
                                   int index, int format, t_printf pf)
 {
-    char buf[INFO_SIZE];
+    char buf[200];
     // print position (tracked implicitly by order score file)
     snprintf(buf, sizeof buf, "%3d.", index + 1);
 
@@ -524,15 +524,15 @@ static bool _hiscore_same_day(time_t t1, time_t t2)
     return d2->tm_mday == day && d2->tm_mon == mon && d2->tm_year == year;
 }
 
-static void _hiscore_date_string(time_t time, char buff[INFO_SIZE])
+static string _hiscore_date_string(time_t time)
 {
     struct tm *date = TIME_FN(&time);
 
     const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
                              "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
 
-    snprintf(buff, INFO_SIZE, "%s %d, %d", mons[date->tm_mon],
-              date->tm_mday, date->tm_year + 1900);
+    return make_stringf("%s %d, %d", mons[date->tm_mon], date->tm_mday,
+                                     date->tm_year + 1900);
 }
 
 static string _hiscore_newline_string()
@@ -1653,12 +1653,9 @@ string scorefile_entry::game_time(death_desc_verbosity verbosity) const
 
     if (verbosity == DDV_VERBOSE)
     {
-        char scratch[INFO_SIZE];
+        line += make_stringf("The game lasted %s (%d turns).",
+                             make_time_string(real_time).c_str(), num_turns);
 
-        snprintf(scratch, INFO_SIZE, "The game lasted %s (%d turns).",
-                 make_time_string(real_time).c_str(), num_turns);
-
-        line += scratch;
         line += _hiscore_newline_string();
     }
 
@@ -1682,10 +1679,8 @@ string scorefile_entry::death_source_desc() const
 
 string scorefile_entry::damage_string(bool terse) const
 {
-    char scratch[50];
-    snprintf(scratch, sizeof scratch, "(%d%s)", damage,
-                       terse? "" : " damage");
-    return scratch;
+    return make_stringf("(%d%s)", damage,
+                        terse? "" : " damage");
 }
 
 string scorefile_entry::strip_article_a(const string &s) const
@@ -1807,36 +1802,28 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         return single_cdesc();
 
     bool verbose = verbosity == DDV_VERBOSE;
-    char scratch[INFO_SIZE];
-    char buf[HIGHSCORE_SIZE];
 
     string desc;
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
     {
-        snprintf(buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
+        desc = make_stringf("%8d %s the %s (level %d",
                   points, name.c_str(), title.c_str(), lvl);
-        desc = buf;
     }
     else
     {
-        snprintf(buf, HIGHSCORE_SIZE, "%8d %s the %s %s (level %d",
+        desc = make_stringf("%8d %s the %s %s (level %d",
                   points, name.c_str(),
                   species_name(static_cast<species_type>(race)).c_str(),
                   _job_name(job), lvl);
-        desc = buf;
     }
 
     if (final_max_max_hp > 0)  // as the other two may be negative
     {
-        snprintf(scratch, INFO_SIZE, ", %d/%d", final_hp, final_max_hp);
-        desc += scratch;
+        desc += make_stringf(", %d/%d", final_hp, final_max_hp);
 
         if (final_max_hp < final_max_max_hp)
-        {
-            snprintf(scratch, INFO_SIZE, " (%d)", final_max_max_hp);
-            desc += scratch;
-        }
+            desc += make_stringf(" (%d)", final_max_max_hp);
 
         desc += " HPs";
     }
@@ -1847,16 +1834,14 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     if (verbose)
     {
         string srace = species_name(static_cast<species_type>(race));
-        snprintf(scratch, INFO_SIZE, "Began as a%s %s %s",
+        desc += make_stringf("Began as a%s %s %s",
                  is_vowel(srace[0]) ? "n" : "",
                  srace.c_str(),
                  _job_name(job));
-        desc += scratch;
 
         ASSERT(birth_time);
         desc += " on ";
-        _hiscore_date_string(birth_time, scratch);
-        desc += scratch;
+        desc += _hiscore_date_string(birth_time);
 
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
@@ -1865,17 +1850,16 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         {
             if (god == GOD_XOM)
             {
-                snprintf(scratch, INFO_SIZE, "Was a %sPlaything of Xom.",
-                                   (lvl >= 20) ? "Favourite " : "");
+                desc + make_stringf("Was a %sPlaything of Xom.",
+                                    (lvl >= 20) ? "Favourite " : "");
 
-                desc += scratch;
                 desc += _hiscore_newline_string();
             }
             else
             {
                 // Not exactly the same as the religion screen, but
                 // good enough to fill this slot for now.
-                snprintf(scratch, INFO_SIZE, "Was %s of %s%s",
+                desc += make_stringf("Was %s of %s%s",
                              (piety >= piety_breakpoint(5)) ? "the Champion" :
                              (piety >= piety_breakpoint(4)) ? "a High Priest" :
                              (piety >= piety_breakpoint(3)) ? "an Elder" :
@@ -1886,7 +1870,6 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                           god_name(god).c_str(),
                              (penance > 0) ? " (penitent)." : ".");
 
-                desc += scratch;
                 desc += _hiscore_newline_string();
             }
         }
@@ -1902,8 +1885,6 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 
     if (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING)
         return "";
-
-    char scratch[ INFO_SIZE ];
 
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
         return " (" + level_id(branch, dlvl).describe() + ")";
@@ -1921,8 +1902,7 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
         && !_hiscore_same_day(birth_time, death_time))
     {
         place += " on ";
-        _hiscore_date_string(death_time, scratch);
-        place += scratch;
+        place += _hiscore_date_string(death_time);
     }
 
     place = _append_sentence_delimiter(place, ".");
@@ -1947,8 +1927,6 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     const bool semiverbose = (verbosity == DDV_LOGVERBOSE);
     const bool verbose = (verbosity == DDV_VERBOSE || semiverbose);
     const bool oneline = (verbosity == DDV_ONELINE);
-
-    char scratch[INFO_SIZE];
 
     string desc;
 
@@ -2034,13 +2012,12 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                         + "]";
         else
         {
-            snprintf(scratch, sizeof(scratch), "Engulfed by %s%s %s",
+            desc += make_stringf("Engulfed by %s%s %s",
                 death_source_name.empty() ? "a" :
                   death_source_name == "you" ? "their own" :
                   apostrophise(death_source_name).c_str(),
                 death_source_name.empty() ? " cloud of" : "",
                 auxkilldata.c_str());
-            desc += scratch;
         }
         needs_damage = true;
         break;
@@ -2049,9 +2026,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (oneline || semiverbose)
         {
             // keeping this short to leave room for the deep elf spellcasters:
-            snprintf(scratch, sizeof(scratch), "%s by ",
+            desc += make_stringf("%s by ",
                       _range_type_verb(auxkilldata.c_str()));
-            desc += scratch;
             desc += (death_source_name == "you") ? "themself"
                                                  : death_source_desc();
 
@@ -2079,16 +2055,15 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             if (death_source_name == "you")
             {
                 needs_damage = true;
-                snprintf(scratch, sizeof(scratch), "Killed by their own %s",
+                desc += make_stringf("Killed by their own %s",
                          auxkilldata.substr(3).c_str());
             }
             else
             {
                 needs_called_by_monster_line = true;
-                snprintf(scratch, sizeof(scratch), "Killed %s",
+                desc += make_stringf("Killed %s",
                           auxkilldata.c_str());
             }
-            desc += scratch;
         }
         else
         {
@@ -2168,9 +2143,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += auxkilldata.c_str();
         else
         {
-            snprintf(scratch, sizeof(scratch), "Killed by triggering %s",
-                     auxkilldata.c_str());
-            desc += scratch;
+            desc += make_stringf("Killed by triggering %s",
+                                 auxkilldata.c_str());
         }
         needs_damage = true;
         break;
@@ -2252,10 +2226,9 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else
             {
                 // A lot of sources for this case... some have "by" already.
-                snprintf(scratch, sizeof(scratch), "Killed %s%s",
+                desc += make_stringf("Killed %s%s",
                           (auxkilldata.find("by ") != 0) ? "by " : "",
                           auxkilldata.c_str());
-                desc += scratch;
             }
         }
 
@@ -2553,18 +2526,16 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 desc += _hiscore_newline_string();
 
-                snprintf(scratch, INFO_SIZE, "... %s %d rune%s",
+                desc += make_stringf("... %s %d rune%s",
                          (death_type == KILLED_BY_WINNING) ? "and" : "with",
                           num_runes, (num_runes > 1) ? "s" : "");
-                desc += scratch;
 
                 if (!semiverbose
                     && death_time > 0
                     && !_hiscore_same_day(birth_time, death_time))
                 {
                     desc += " on ";
-                    _hiscore_date_string(death_time, scratch);
-                    desc += scratch;
+                    desc += _hiscore_date_string(death_time);
                 }
 
                 desc = _append_sentence_delimiter(desc, "!");
@@ -2581,9 +2552,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 if (!semiverbose)
                 {
-                    snprintf(scratch, INFO_SIZE, "... wielding %s",
+                    desc += make_stringf("... wielding %s",
                              auxkilldata.c_str());
-                    desc += scratch;
                     needs_damage = true;
                     desc += _hiscore_newline_string();
                 }
@@ -2608,12 +2578,11 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             }
             else if (needs_called_by_monster_line)
             {
-                snprintf(scratch, sizeof(scratch), "... %s by %s",
+                desc += make_stringf("... %s by %s",
                          death_type == KILLED_BY_COLLISION ? "caused" :
                          auxkilldata == "by angry trees"   ? "awakened"
                                                            : "invoked",
                          death_source_name.c_str());
-                desc += scratch;
                 desc += _hiscore_newline_string();
                 needs_damage = true;
             }

@@ -856,9 +856,8 @@ int recharge_wand(bool known, const string &pre_msg)
 
             if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
             {
-                snprintf(info, INFO_SIZE, " and now has %d charge%s",
-                         new_charges, new_charges == 1 ? "" : "s");
-                desc = info;
+                desc = make_stringf(" and now has %d charge%s",
+                                    new_charges, new_charges == 1 ? "" : "s");
             }
 
             if (known && !pre_msg.empty())

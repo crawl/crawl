@@ -1193,10 +1193,7 @@ void debug_pathfind(int idx)
         string path_str;
         mpr("Here's the shortest path: ");
         for (coord_def pos : path)
-        {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", pos.x, pos.y);
-            path_str += info;
-        }
+            path_str += make_stringf("(%d, %d)  ", pos.x, pos.y);
         mpr(path_str);
         mprf("-> path length: %u", (unsigned int)path.size());
 
@@ -1206,10 +1203,7 @@ void debug_pathfind(int idx)
         mpr("");
         mpr("And here are the needed waypoints: ");
         for (coord_def pos : path)
-        {
-            snprintf(info, INFO_SIZE, "(%d, %d)  ", pos.x, pos.y);
-            path_str += info;
-        }
+            path_str += make_stringf("(%d, %d)  ", pos.x, pos.y);
         mpr(path_str);
         mprf("-> #waypoints: %u", (unsigned int)path.size());
     }

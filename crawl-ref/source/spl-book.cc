@@ -997,7 +997,7 @@ bool learn_spell(spell_type specspell)
                          severity > 1 ? "!" : ".");
     }
 
-    snprintf(info, INFO_SIZE,
+    const string prompt = make_stringf(
              "Memorise %s, consuming %d spell level%s and leaving %d?",
              spell_title(specspell), spell_levels_required(specspell),
              spell_levels_required(specspell) != 1 ? "s" : "",
@@ -1005,7 +1005,7 @@ bool learn_spell(spell_type specspell)
 
     // Deactivate choice from tile inventory.
     mouse_control mc(MOUSE_MODE_MORE);
-    if (!yesno(info, true, 'n', false))
+    if (!yesno(prompt.c_str(), true, 'n', false))
     {
         canned_msg(MSG_OK);
         return false;
