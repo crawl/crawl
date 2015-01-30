@@ -37,8 +37,6 @@
 #include "terrain.h"
 #include "view.h"
 
-extern int stealth;             // defined in main.cc
-
 static noise_grid _noise_grid;
 static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
@@ -279,7 +277,7 @@ void handle_monster_shouts(monster* mons, bool force)
         learned_something_new(HINT_MONSTER_SHOUT, mons->pos());
 }
 
-bool check_awaken(monster* mons)
+bool check_awaken(monster* mons, int stealth)
 {
     // Usually redundant because we iterate over player LOS,
     // but e.g. for you.xray_vision.

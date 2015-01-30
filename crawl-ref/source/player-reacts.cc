@@ -1295,11 +1295,10 @@ static void _regenerate_hp_and_mp(int delay)
 
 void player_reacts()
 {
-    extern int stealth;             // defined in main.cc
-
     search_around();
 
-    stealth = check_stealth();
+    //XXX: does this _need_ to be calculated up here?
+    const int stealth = check_stealth();
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
@@ -1403,7 +1402,7 @@ void player_reacts()
         discover_mimic(*ai);
 
     // Player stealth check.
-    seen_monsters_react();
+    seen_monsters_react(stealth);
 
     update_stat_zero();
 

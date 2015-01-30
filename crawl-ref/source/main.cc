@@ -184,8 +184,6 @@ string init_file_error;    // externed in newgame.cc
 
 char info[ INFO_SIZE ];    // messaging queue extern'd everywhere {dlb}
 
-int stealth;               // externed in shout.cc and player_reacts.cc
-
 void world_reacts();
 
 static key_recorder repeat_again_rec;

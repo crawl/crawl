@@ -120,7 +120,7 @@ void flush_comes_into_view()
     handle_seen_interrupt(mon);
 }
 
-void seen_monsters_react()
+void seen_monsters_react(int stealth)
 {
     if (you.duration[DUR_TIME_STEP] || crawl_state.game_is_arena())
         return;
@@ -128,10 +128,10 @@ void seen_monsters_react()
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
-            && check_awaken(*mi)
+            && check_awaken(*mi, stealth)
 #ifdef EUCLIDEAN
                || you.prev_move.abs() == 2 && x_chance_in_y(2, 5)
-                  && check_awaken(*mi)
+                  && check_awaken(*mi, stealth)
 #endif
            )
         {
