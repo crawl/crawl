@@ -5069,17 +5069,17 @@ extern const spell_type serpent_of_hell_breaths[][3] =
  *  Make this monster cast a spell
  *
  *  @param mons       The monster casting
- *  @param beam[in]   The beam, possibly containing pre-done setup, to use
- *                    for the spell.
+ *  @param pbolt[in]  The beam, possibly containing pre-done setup, to use
+ *                    for the spell. Not a reference because this function
+                      shouldn't affect the original copy.
  *  @param spell_cast The spell to be cast.
  *  @param slot_flags The spell slot flags in mons->spells (is it an
  *                    invocation, natural, shouty, etc.?)
  *  @param do_noise   Whether to make noise (including casting messages).
  */
-void mons_cast(monster* mons, const bolt &beam, spell_type spell_cast,
+void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
                unsigned short slot_flags, bool do_noise)
 {
-    bolt pbolt = beam;
     if (spell_cast == SPELL_SERPENT_OF_HELL_BREATH)
     {
         ASSERT(mons->type >= MONS_SERPENT_OF_HELL);
