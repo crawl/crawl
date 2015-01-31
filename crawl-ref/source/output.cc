@@ -2661,8 +2661,6 @@ static string _status_mut_abilities(int sw)
         // breathe poison replaces spit poison:
         if (!player_mutation_level(MUT_BREATHE_POISON))
             mutations.emplace_back("spit poison");
-        else
-            mutations.emplace_back("breathe poison");
 
         if (you.experience_level > 12)
         {
