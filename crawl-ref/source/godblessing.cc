@@ -705,30 +705,30 @@ static void _display_god_blessing(monster* follower, god_type god,
  */
 static bool _beogh_bless_follower(monster* follower, bool force)
 {
+    // most blessings fail, tragically...
+    if (!force && coinflip())
+        return false;
+
     // If a follower was specified, and it's suitable, pick it.
     // Otherwise, pick a random follower.
     // XXX: factor out into another function?
     if (!follower || (!force && !is_follower(follower)))
     {
-        if (!one_chance_in(10))
-            return false;
-
         // Choose a random follower in LOS, preferably a named or
         // priestly one.
         follower = choose_random_nearby_monster(0, is_follower, true);
     }
 
+    // Try *again*, on the entire level
+    if (!follower)
+        follower = choose_random_monster_on_level(0, is_follower);
+
     if (!follower)
     {
-        if (coinflip())
+        // 1/20 chance of spawning a palband
+        if (!one_chance_in(10))
             return false;
 
-        // Try *again*, on the entire level (2.5% chance).
-        follower = choose_random_monster_on_level(0, is_follower);
-    }
-
-    if (!follower)
-    {
         // If no follower was found, attempt to send
         // reinforcements.
         _beogh_blessing_reinforcements();

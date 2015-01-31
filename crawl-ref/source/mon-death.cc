@@ -2329,7 +2329,6 @@ int monster_die(monster* mons, killer_type killer,
 
             if (in_good_standing(GOD_BEOGH)
                 && random2(you.piety) >= piety_breakpoint(2)
-                && !one_chance_in(3)
                 && !invalid_monster_index(killer_index))
             {
                 // Randomly bless the follower who killed.
