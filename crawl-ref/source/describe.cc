@@ -4032,10 +4032,15 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         attitude.emplace_back("wont_attack");
     if (!attitude.empty())
     {
-        inf.body << "; " << comma_separated_line(attitude.begin(),
-                                                 attitude.end(),
-                                                 "; ", "; ");
+        string att = comma_separated_line(attitude.begin(), attitude.end(),
+                                          "; ", "; ")
+        if (mons.has_ench(ENCH_INSANE))
+            inf.body << "; frenzied and insane (otherwise " << att << ")";
+        else
+            inf.body << "; " << att;
     }
+    else if (mons.has_ench(ENCH_INSANE))
+        inf.body << "; frenzied and insane";
 
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
