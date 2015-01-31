@@ -552,19 +552,25 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
     if (mon->friendly())
     {
-        if (you_worship(GOD_OKAWARU))
+        if (god_hates_attacking_friend(you.religion, mon))
         {
             adj = "your ally ";
 
             monster_info mi(mon, MILEV_NAME);
             if (!mi.is(MB_NAME_UNQUALIFIED))
                 adj += "the ";
+
+            would_cause_penance = true;
+
         }
         else
+        {
             adj = "your ";
 
-        if (god_hates_attacking_friend(you.religion, mon))
-            would_cause_penance = true;
+            monster_info mi(mon, MILEV_NAME);
+            if (mi.is(MB_NAME_UNQUALIFIED))
+                adj += "ally ";
+        }
 
         return true;
     }
