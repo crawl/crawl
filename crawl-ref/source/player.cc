@@ -3869,7 +3869,7 @@ static void _display_vampire_status()
     switch (you.hunger_state)
     {
         case HS_STARVING:
-            attrib.push_back("resist poison");
+            attrib.push_back("are immune to poison");
             attrib.push_back("significantly resist cold");
             attrib.push_back("strongly resist negative energy");
             attrib.push_back("resist torment");

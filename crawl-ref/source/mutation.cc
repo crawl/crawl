@@ -752,7 +752,7 @@ static void _display_vampire_attributes()
         {"Spell hunger         ", "full       ", "full    ", "full      ", "halved   ", "none     ", "none  "},
 
         {"\n<w>Resistances</w>\n"
-         "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
+         "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", "immune"},
 
         {"Cold resistance      ", "           ", "        ", "          ", " +       ", " ++      ", " ++   "},
 
