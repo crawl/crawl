@@ -3211,6 +3211,30 @@ bool mons_is_elven_twin(const monster* mons)
 }
 
 /**
+ * Find Duvessa or Dowan, given the other.
+ *
+ * @param mons    The monster whose twin we seek.
+ * @return        A pointer to the other elven twin, or nullptr if the twin
+ *                no longer exists, or if given a mons that is not an elven twin.
+**/
+monster* mons_find_elven_twin_of(const monster* mons)
+{
+    if (!mons_is_elven_twin(mons))
+        return nullptr;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (*mi == mons)
+            continue;
+
+        if (mons_is_elven_twin(*mi))
+            return *mi;
+    }
+
+    return nullptr;
+}
+
+/**
  * Perform functional changes Dowan or Duvessa upon the other's death.
  *
  * This functional is called when either Dowan or Duvessa are killed or
@@ -3226,31 +3250,19 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 {
     // Sometimes, if you pacify one twin near a staircase, they leave
     // in the same turn. Convert, in those instances.
-    if (twin->neutral())
+    if (twin->neutral() && !twin->has_ench(ENCH_INSANE))
     {
         elven_twins_pacify(twin);
         return;
     }
 
-    monster* mons = nullptr;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (*mi == twin)
-            continue;
-
-        // Don't consider already neutralised monsters.
-        if ((*mi)->good_neutral())
-            continue;
-
-        if (mons_is_elven_twin(*mi))
-        {
-            mons = *mi;
-            break;
-        }
-    }
+    monster* mons = mons_find_elven_twin_of(twin);
 
     if (!mons)
+        return;
+
+    // Don't consider already neutralised monsters.
+    if (mons->good_neutral())
         return;
 
     // Okay, let them climb stairs now.
@@ -3310,7 +3322,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     }
 
     // Finally give them new energy
-    if (mons_near(mons))
+    if (mons_near(mons) && !mons->has_ench(ENCH_INSANE))
         elven_twin_energize(mons);
     else
         mons->props[ELVEN_ENERGIZE_KEY] = true;
@@ -3341,28 +3353,14 @@ void elven_twin_energize(monster* mons)
 **/
 void elven_twins_pacify(monster* twin)
 {
-    monster* mons = nullptr;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (*mi == twin)
-            continue;
-
-        // Don't consider already neutralised monsters.
-        if ((*mi)->neutral())
-            continue;
-
-        if (mons_is_elven_twin(*mi))
-        {
-            mons = *mi;
-            break;
-        }
-    }
+    monster* mons = mons_find_elven_twin_of(twin);
 
     if (!mons)
         return;
 
-    ASSERT(!mons->neutral());
+    // Don't consider already neutralised monsters.
+    if (mons->neutral())
+        return;
 
     if (you_worship(GOD_ELYVILON))
         gain_piety(random2(mons->max_hit_points / (2 + you.piety / 20)), 2);
@@ -3385,25 +3383,13 @@ void elven_twins_pacify(monster* twin)
 **/
 void elven_twins_unpacify(monster* twin)
 {
-    monster* mons = nullptr;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (*mi == twin)
-            continue;
-
-        // Don't consider already neutralised monsters.
-        if (!(*mi)->neutral())
-            continue;
-
-        if (mons_is_elven_twin(*mi))
-        {
-            mons = *mi;
-            break;
-        }
-    }
+    monster* mons = mons_find_elven_twin_of(twin);
 
     if (!mons)
+        return;
+
+    // Don't consider already neutralised monsters.
+    if (!mons->neutral() || mons->has_ench(ENCH_INSANE))
         return;
 
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);

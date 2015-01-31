@@ -70,6 +70,7 @@ bool mons_is_mons_class(const monster* mons, monster_type type);
 void pikel_band_neutralise();
 
 bool mons_is_elven_twin(const monster* mons);
+monster* mons_find_elven_twin_of(const monster* mons);
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index);
 void elven_twin_energize(monster* mons);
 void elven_twins_pacify(monster* twin);

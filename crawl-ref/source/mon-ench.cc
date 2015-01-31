@@ -489,7 +489,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_INSANE:
-        attitude = static_cast<mon_attitude_type>(props["old_attitude"].get_short());
+        if (mons_is_elven_twin(this))
+        {
+            monster* twin = mons_find_elven_twin_of(this);
+            if (twin && !twin->has_ench(ENCH_INSANE))
+                attitude = twin->attitude;
+            else
+                attitude = ATT_HOSTILE;
+        }
+        else
+            attitude = static_cast<mon_attitude_type>(props["old_attitude"].get_short());
         mons_att_changed(this);
         break;
 

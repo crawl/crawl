@@ -153,24 +153,27 @@ void seen_monsters_react(int stealth)
         gozag_check_bribe(*mi);
         slime_convert(*mi);
 
-        // Trigger Duvessa & Dowan upgrades
-        if (mi->props.exists(ELVEN_ENERGIZE_KEY))
+        if (!mi->has_ench(ENCH_INSANE))
         {
-            mi->props.erase(ELVEN_ENERGIZE_KEY);
-            elven_twin_energize(*mi);
-        }
+            // Trigger Duvessa & Dowan upgrades
+            if (mi->props.exists(ELVEN_ENERGIZE_KEY))
+            {
+                mi->props.erase(ELVEN_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
 #if TAG_MAJOR_VERSION == 34
-        else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
-        {
-            mi->props.erase(OLD_DUVESSA_ENERGIZE_KEY);
-            elven_twin_energize(*mi);
-        }
-        else if (mi->props.exists(OLD_DOWAN_ENERGIZE_KEY))
-        {
-            mi->props.erase(OLD_DOWAN_ENERGIZE_KEY);
-            elven_twin_energize(*mi);
-        }
+            else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
+            {
+                mi->props.erase(OLD_DUVESSA_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
+            else if (mi->props.exists(OLD_DOWAN_ENERGIZE_KEY))
+            {
+                mi->props.erase(OLD_DOWAN_ENERGIZE_KEY);
+                elven_twin_energize(*mi);
+            }
 #endif
+        }
     }
 }
 
