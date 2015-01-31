@@ -2931,6 +2931,10 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     if (!mirror)
         return nullptr;
 
+    // Don't keep constricting the real monster.
+    if (mons->is_constricted())
+        mons->stop_being_constricted();
+
     // Don't leak the real one with the targeting interface.
     if (you.prev_targ == mons->mindex())
     {
