@@ -2931,9 +2931,11 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     if (!mirror)
         return nullptr;
 
-    // Don't keep constricting the real monster.
+    // Unentangle the real monster.
     if (mons->is_constricted())
         mons->stop_being_constricted();
+
+    mons_clear_trapping_net(mons);
 
     // Don't leak the real one with the targeting interface.
     if (you.prev_targ == mons->mindex())
@@ -2951,9 +2953,6 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
 
     // Sometimes swap the two monsters, so as to disguise the original and the
     // copy.
-    // Possibly constriction should be preserved so as to not sometimes leak
-    // info on whether the clone or the original is adjacent to you, but
-    // there's a fair amount of complication in this for very narrow benefit.
     if (coinflip())
         targ->swap_with(mirror);
 
