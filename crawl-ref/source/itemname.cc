@@ -1511,6 +1511,9 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
         const string long_name = curse_prefix + plus_text
                                  + get_artefact_name(weap, ident);
 
+        // crop long artefact names on non-webtiles builds - webtiles displays
+        // weapon names across multiple lines
+#ifndef USE_TILE_WEB
         const bool has_inscript = desc != DESC_BASENAME && desc != DESC_DBNAME
                                   && inscr;
         const string inscription = _item_inscription(weap, ident, true);
@@ -1526,6 +1529,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
                  total_length, max_length);
         }
         if (!terse || total_length <= max_length)
+#endif
             return long_name;
 
         // special case: these two shouldn't ever have their base name revealed
