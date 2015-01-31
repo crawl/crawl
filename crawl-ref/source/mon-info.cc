@@ -512,8 +512,11 @@ monster_info::monster_info(const monster* m, int milev)
 
     _colour = m->colour;
 
-    if (m->is_summoned())
+    if (m->is_summoned()
+        && (!m->has_ench(ENCH_PHANTOM_MIRROR) || m->friendly()))
+    {
         mb.set(MB_SUMMONED);
+    }
     else if (m->is_perm_summoned())
         mb.set(MB_PERM_SUMMON);
 
