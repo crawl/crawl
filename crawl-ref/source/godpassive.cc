@@ -183,23 +183,31 @@ void ash_check_bondage(bool msg)
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
         // Missing hands mean fewer rings
-        else if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING &&
-                    player_mutation_level(MUT_MISSING_HAND))
+        else if (you.species != SP_OCTOPODE && i == EQ_LEFT_RING
+                 && player_mutation_level(MUT_MISSING_HAND))
+        {
             continue;
+        }
         // Octopodes don't count these slots:
-        else if (you.species == SP_OCTOPODE &&
-                 ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
-                    || (i == EQ_RING_EIGHT
-                        && player_mutation_level(MUT_MISSING_HAND))))
+        else if (you.species == SP_OCTOPODE
+                 && ((i == EQ_LEFT_RING || i == EQ_RIGHT_RING)
+                     || (i == EQ_RING_EIGHT
+                         && player_mutation_level(MUT_MISSING_HAND))))
         {
             continue;
         }
         // *Only* octopodes count these slots:
-        else if (you.species != SP_OCTOPODE && i > EQ_AMULET)
+        else if (you.species != SP_OCTOPODE
+                 && i >= EQ_RING_ONE && i <= EQ_RING_EIGHT)
+        {
             continue;
-        // Never count the macabre finger necklace's extra ring slot.
-        else if (i == EQ_RING_AMULET)
+        }
+        // The macabre finger necklace's extra slot does count if equipped.
+        else if (!player_equip_unrand(UNRAND_FINGER_AMULET)
+                 && i == EQ_RING_AMULET)
+        {
             continue;
+        }
         else
             s = ET_JEWELS;
 
@@ -212,8 +220,9 @@ void ash_check_bondage(bool msg)
                 const item_def& item = you.inv[you.equip[i]];
                 if (item.cursed() && (i != EQ_WEAPON || is_weapon(item)))
                 {
-                    if (s == ET_WEAPON && (_two_handed() ||
-                        player_mutation_level(MUT_MISSING_HAND)))
+                    if (s == ET_WEAPON
+                        && (_two_handed()
+                            || player_mutation_level(MUT_MISSING_HAND)))
                     {
                         cursed[ET_WEAPON] = 3;
                         cursed[ET_SHIELD] = 3;
