@@ -27,7 +27,7 @@ Character
   weapon choice.
 * Ghouls now gain as much healing from normal chunks as they previously got
   from rotting flesh, and always cure a point of rot when eating a chunk.
-* Vampires now bottle blood with 'c', which they can now do from first level.
+* Vampires now bottle blood with 'c', and can do so from the first level.
 * Butchering/bottling now only takes a single turn.
 * Wanderers now receive a randart spellbook instead of starting with a Level 1
   spell memorized.
@@ -123,8 +123,6 @@ Spells
 * Force Lance is now L4 Translocation/Conjuration, and is more accurate and
   better at knocking enemies back.
 * Ice, Dragon, Tree and Fungus forms no longer meld octopode rings.
-* Dragon Form now provides a spell power & success chance enhancer for Dragon's
-  Call.
 * Spell miscast effects have been hugely revamped.
 * Twisted Resurrection and Forceful Dismissal have been removed.
 
@@ -242,7 +240,7 @@ Cards
     instead of randomly scattering clouds in all valid places in sight.
   - Shaft now randomly places shafts under other monsters as well.
   - Tomb can now raise rock walls on stone stairs and deep water.
-  - Velocity will always apply a overall-positive effect (with allies present).
+  - Velocity will always apply an overall-positive effect (with allies present).
   - Banshee now drains victims, in addition to causing fear.
   - Solitude can now cause Disjunction at high power.
 * Wild Magic now affects enemies instead of the player, and restores magic for
