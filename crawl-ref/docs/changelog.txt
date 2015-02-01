@@ -76,7 +76,7 @@ Monsters
     be immune to torment, and breathe draining, dispel undead, and howl to
     alert other guards.
   - Death scarabs, swarming insects appearing in Tomb. They trail miasma and
-    bite to drain life, speed, and skill.
+    have a vampiric bite that also drains speed.
 * Renamed monsters:
   - Silver statues -> obsidian statues.
   - Green rats -> river rats.
