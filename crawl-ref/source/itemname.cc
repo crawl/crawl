@@ -1511,26 +1511,34 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
         const string long_name = curse_prefix + plus_text
                                  + get_artefact_name(weap, ident);
 
-        // crop long artefact names on non-webtiles builds - webtiles displays
-        // weapon names across multiple lines
-#ifndef USE_TILE_WEB
-        const bool has_inscript = desc != DESC_BASENAME && desc != DESC_DBNAME
-                                  && inscr;
-        const string inscription = _item_inscription(weap, ident, true);
-
-        const int total_length = long_name.size()
-                                 + (has_inscript ? inscription.size() : 0);
-        const string inv_slot_text = "x) ";
-        const int max_length = crawl_view.hudsz.x - inv_slot_text.size();
-        if (terse)
-        {
-            dprf("full %s (inscr %s (%d)) (%d), ok = %d",
-                 long_name.c_str(), inscription.c_str(), has_inscript,
-                 total_length, max_length);
-        }
-        if (!terse || total_length <= max_length)
+        // crop long artefact names when not controlled by webtiles -
+        // webtiles displays weapon names across multiple lines
+#ifdef USE_TILE_WEB
+        if (!tiles.is_controlled_from_web())
 #endif
+        {
+            const bool has_inscript = desc != DESC_BASENAME
+                                   && desc != DESC_DBNAME
+                                   && inscr;
+            const string inscription = _item_inscription(weap, ident, true);
+
+            const int total_length = long_name.size()
+                                     + (has_inscript ? inscription.size() : 0);
+            const string inv_slot_text = "x) ";
+            const int max_length = crawl_view.hudsz.x - inv_slot_text.size();
+            if (terse)
+            {
+                dprf("full %s (inscr %s (%d)) (%d), ok = %d",
+                     long_name.c_str(), inscription.c_str(), has_inscript,
+                     total_length, max_length);
+            }
+            if (!terse || total_length <= max_length)
+                return long_name;
+        }
+#ifdef USE_TILE_WEB
+        else
             return long_name;
+#endif
 
         // special case: these two shouldn't ever have their base name revealed
         // (since showing 'eudaemon blade' is unhelpful in the former case, and
