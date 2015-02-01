@@ -667,6 +667,10 @@ and when directed at the player will expand to:
 
     @The_monster@ asks, "Who are you?"
 
+The @at_foe@ and @to_foe@ tags (only) also allow specifying an alternative
+to be substituted when directed at the player:
+
+    @The_monster@ looks @at_foe/around@ nervously.
 
 Channels
 --------

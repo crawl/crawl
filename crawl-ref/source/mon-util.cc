@@ -3919,6 +3919,50 @@ static string _get_species_insult(const string &species, const string &type)
     return insult;
 }
 
+// From should be of the form "prefix @tag@". Replaces all substrings
+// of the form "prefix @tag@" with to, and all strings of the form
+// "prefix @tag/alt@" with either to (if nonempty) or "prefix alt".
+static string _replace_speech_tag(string msg, string from, const string &to)
+{
+    if (from.empty())
+        return msg;
+    msg = replace_all(msg, from, to);
+
+    // Change the @ to a / for the next search
+    from[from.size() - 1] = '/';
+
+    // @tag/alternative@
+    size_t pos = 0;
+    while ((pos = msg.find(from, pos)) != string::npos)
+    {
+        // beginning of tag
+        const size_t at_pos = msg.find('@', pos);
+        // begining of alternative
+        const size_t alt_pos = pos + from.size();
+        // end of tag (one-past-the-end of alternative)
+        const size_t alt_end = msg.find('@', alt_pos);
+
+        // unclosed @tag/alt, or "from" has no @: leave it alone.
+        if (alt_end == string::npos || at_pos == string::npos)
+            break;
+
+        if (to.empty())
+        {
+            // Replace only the @...@ part.
+            msg.replace(at_pos, alt_end - at_pos + 1,
+                        msg.substr(alt_pos, alt_end - alt_pos));
+            pos = at_pos + (alt_end - alt_pos);
+        }
+        else
+        {
+            // Replace the whole from string, up to the second @
+            msg.replace(pos, alt_end - pos + 1, to);
+            pos += to.size();
+        }
+    }
+    return msg;
+}
+
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
 string do_mon_str_replacements(const string &in_msg, const monster* mons,
@@ -3949,8 +3993,11 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     {
         foe_species = species_name(you.species, true);
 
-        msg = replace_all(msg, " @to_foe@", "");
-        msg = replace_all(msg, " @at_foe@", "");
+        msg = _replace_speech_tag(msg, " @to_foe@", "");
+        msg = _replace_speech_tag(msg, " @at_foe@", "");
+
+        msg = _replace_speech_tag(msg, " @to_foe@", "");
+        msg = _replace_speech_tag(msg, " @at_foe@", "");
 
         msg = replace_all(msg, "@player_only@", "");
         msg = replace_all(msg, " @foe,@", ",");
@@ -3990,10 +4037,10 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
             prep = "to";
         msg = replace_all(msg, "@says@ @to_foe@", "@says@ " + prep + " @foe@");
 
-        msg = replace_all(msg, " @to_foe@", " to @foe@");
-        msg = replace_all(msg, " @at_foe@", " at @foe@");
-        msg = replace_all(msg, "@foe,@",    "@foe@,");
+        msg = _replace_speech_tag(msg, " @to_foe@", " to @foe@");
+        msg = _replace_speech_tag(msg, " @at_foe@", " at @foe@");
 
+        msg = replace_all(msg, "@foe,@", "@foe@,");
         msg = replace_all(msg, "@foe_possessive@", "@foe@'s");
         msg = replace_all(msg, "@foe@", foe_name);
         msg = replace_all(msg, "@Foe@", uppercase_first(foe_name));
