@@ -886,7 +886,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_STEALTH:
-            mpr("You feel stealthy.");
+            if (!player_mutation_level(MUT_NO_STEALTH))
+                mpr("You feel stealthy.");
             break;
 
         case SPARM_RESISTANCE:
@@ -1032,7 +1033,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         break;
 
     case SPARM_STEALTH:
-        mpr("You feel less stealthy.");
+        if (!player_mutation_level(MUT_NO_STEALTH))
+            mpr("You feel less stealthy.");
         break;
 
     case SPARM_RESISTANCE:
