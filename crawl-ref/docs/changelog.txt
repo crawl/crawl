@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-3760-g3ef0081)
+Stone Soup 0.16 (up to 0.16-a0-3880-g9314259)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -39,7 +39,7 @@ Character
   to those gods displayed when their highest skill is Necromancy or Evocations
   (respectively).
 * Gargoyles can no longer cast Statue Form.
-* Removed Death Knight background.
+* Removed Death Knight and Healer backgrounds.
 
 Monsters
 --------
@@ -67,16 +67,16 @@ Monsters
   - Elemental wellsprings, appearing in Cocytus. They fire powerful waves of
     water which produce hostile water elementals - but deplete their own
     'health' in the process.
-  - Bennu, the divine phoenix, appearing in Tomb. Attacks with fire, draining,
-    and holy; when killed, explodes into ghostly flame and instantly returns
-    to life (once).
-  - Ushabti, funerary statues, appearing in Tomb. They breathe a mix of miasma
-    and draining clouds, and rumble deeply to alert far-away foes.
+  - Bennu, the divine phoenix, appearing in Tomb. Attacks with draining and
+    holy; when killed, explodes into ghostly flame and instantly returns to
+    life (once).
+  - Ushabti, funerary statues, appearing in Tomb. They exhale long lines of
+    draining clouds, and rumble deeply to alert far-away foes.
   - Anubis guards, living fanatics appearing in Tomb. They're conditioned to
-    be immune to torment, and breathe draining, control undead, dispel undead,
-    and howl to alert other guards.
+    be immune to torment, and breathe draining, dispel undead, and howl to
+    alert other guards.
   - Death scarabs, swarming insects appearing in Tomb. They trail miasma and
-    bite to drain life, speed, and skill. Their bite can also apply rN-.
+    bite to drain life, speed, and skill.
 * Renamed monsters:
   - Silver statues -> obsidian statues.
   - Green rats -> river rats.
@@ -85,6 +85,7 @@ Monsters
   - Red wasps -> hornets.
   - Mermaids -> sirens.
   - Sirens -> merfolk avatars.
+  - Meatsprint lost souls -> wretched souls.
 * Ghost crabs have been moved from Crypt to Swamp.
 * The "misshapen and mutated" status (from Malmutate and the new Irradiate
   spell) is now temporary, but more significant.
@@ -125,7 +126,7 @@ Spells
 * Dragon Form now provides a spell power & success chance enhancer for Dragon's
   Call.
 * Spell miscast effects have been hugely revamped.
-* Twisted Resurrection has been removed.
+* Twisted Resurrection and Forceful Dismissal have been removed.
 
 Items
 -----
@@ -176,6 +177,10 @@ Items
 * Elemental evocables now charge & discharge on a type-by-type basis, rather
   than individually for each item.
 * The Box of Beasts and Rod of Shadows are now considerably stronger.
+* The lantern of shadows now drains MP while in use, and ceases to function
+  once its wielder runs dry.
+* Steel ammo no longer has a decreased mulch rate.
+* Large rocks no longer have randomized range.
 * Renamed items:
   - Cutlasses are now rapiers.
   - Bastard swords are now double swords.
@@ -188,6 +193,7 @@ Items
   - Rods of Striking.
   - Tomes of Destruction.
   - The book of Wizardry.
+  - The Spear of the Botono.
 
 
 Cards
@@ -288,8 +294,17 @@ Gods
   - Nemelex now grants destruction decks again.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
-   - Hell effect protection halved; now capping out at 50%, down from 100%.
-   - Recite now more effective at very low Invocations.
+ - Hell effect protection halved; now capping out at 50%, down from 100%.
+ - Recite now more effective at very low Invocations.
+* Elyvilon:
+  - Followers can no longer pacify monsters by zapping wands of Heal Wounds.
+  - Piety gain is now solely from exploration.
+  - Abilities have been reworked:
+    - 1*: Lesser Self-Healing (now called 'Lesser Healing')
+    - 2*: Greater Heal Other (now called 'Heal Other')
+    - 3*: Purification
+    - 4*: Greater Self-Healing (now called 'Greater Healing')
+    - 5*: Divine Vigour
 * Gods that hated eating various types of creature (Beogh and the good gods)
   now hate butchering those types of creatures. Penalties for violating these
   conducts have been raised significantly.
