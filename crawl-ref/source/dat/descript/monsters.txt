@@ -1553,8 +1553,8 @@ might.
 %%%%
 ironheart preserver
 
-Towering figures sheathed in heavy armour, preservers safeguard their allies by
-selflessly accepting a portion of the injuries inflicted upon them.
+Towering, muscular figures, preservers safeguard their allies by selflessly
+accepting a portion of the injuries inflicted upon them.
 %%%%
 jackal
 
