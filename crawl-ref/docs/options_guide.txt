@@ -686,6 +686,8 @@ always_show_exclusions = true
         the viewport. Exclusions are always visible on the level map
         (access with X) regardless of the value of this option.
         Exclusions are also visible in terrain-only mode (access with |).
+        This option has no effect in tiles builds, where exclusions are
+        always shown both in the viewport and on the level map.
 
 3-f     Travel and Exploration.
 -------------------------------
