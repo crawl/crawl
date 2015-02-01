@@ -7058,7 +7058,7 @@ _friendly_beogh_speech_rare_
 
 @The_monster@ @_says_or_shouts_@, "Our fallen brethren won't be forgotten."
 
-@The_monster@ nervously looks @at_foe@.
+VISUAL:@The_monster@ looks @at_foe/around@ nervously.
 
 # messages submitted by Lemuel
 @The_monster@ looks @at_foe@ and says, "I'd rather not die in your service, @player_name@."
