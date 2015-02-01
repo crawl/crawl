@@ -5696,6 +5696,8 @@ void player::init()
     apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
+    // Default to flying the first time you wear boots of flying.
+    attribute[ATTR_LAST_FLIGHT_STATUS] = 1;
     quiver.init(ENDOFPACK);
 
     last_timer_effect.init(0);
