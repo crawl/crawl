@@ -2057,7 +2057,7 @@ static void _shadow_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     const int duration = random2(power/4) + 1;
 
-    if (power_level != 1)
+    if (power_level != 1 && !player_mutation_level(MUT_NO_STEALTH))
     {
         mpr(you.duration[DUR_STEALTH] ? "You feel more catlike."
                                       : "You feel stealthy.");
