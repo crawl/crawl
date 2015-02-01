@@ -1020,7 +1020,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         if (you.cancellable_flight() && !you.evokable_flight())
             you.duration[DUR_FLIGHT] = 0;
 
-        land_player(); // land_player() has a check for airborne()
+        if (you.attribute[ATTR_LAST_FLIGHT_STATUS] == 1)
+            land_player(); // land_player() has a check for airborne()
 
         break;
 
