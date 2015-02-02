@@ -3206,10 +3206,10 @@ struct monster_conversion
 // fedhas_evolve_flora() can upgrade it, and set up a monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
-static bool _possible_evolution(const monster* input,
+static bool _possible_evolution(const monster_info& input,
                                 monster_conversion& possible_monster)
 {
-    switch (input->type)
+    switch (input.type)
     {
     case MONS_PLANT:
     case MONS_BUSH:
@@ -3241,10 +3241,18 @@ static bool _possible_evolution(const monster* input,
     return true;
 }
 
+static vector<string> _evolution_name(const monster_info& mon)
+{
+    monster_conversion conversion;
+    if (!_possible_evolution(mon, conversion))
+        return { "cannot be evolved" };
+    return { "can evolve into " + mons_type_name(conversion.new_type, DESC_A) };
+}
+
 bool mons_is_evolvable(const monster* mon)
 {
     monster_conversion temp;
-    return _possible_evolution(mon, temp);
+    return _possible_evolution(monster_info(mon), temp);
 }
 
 static bool _place_ballisto(const coord_def& pos)
@@ -3320,6 +3328,7 @@ bool fedhas_check_evolve_flora(bool quiet)
     args.cancel_at_self = true;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
+    args.get_desc_func = _evolution_name;
 
     direction(spelld, args);
 
@@ -3348,7 +3357,7 @@ bool fedhas_check_evolve_flora(bool quiet)
         return true;
     }
 
-    if (!_possible_evolution(plant, upgrade))
+    if (!_possible_evolution(monster_info(plant), upgrade))
     {
         if (plant->type == MONS_GIANT_SPORE)
             mpr("You can evolve only complete plants, not seeds.");
@@ -3400,7 +3409,7 @@ void fedhas_evolve_flora()
         return;
     }
 
-    ASSERT(_possible_evolution(plant, upgrade));
+    ASSERT(_possible_evolution(monster_info(plant), upgrade));
 
     switch (plant->type)
     {
