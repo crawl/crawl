@@ -27,6 +27,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
+#include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "english.h"
@@ -8797,6 +8798,8 @@ void player_open_door(coord_def doorpos)
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
         }
+        if (grd(dc) == DNGN_RUNED_DOOR)
+            opened_runed_door();
         grd(dc) = DNGN_OPEN_DOOR;
         set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
