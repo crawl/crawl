@@ -280,7 +280,8 @@ int cards_in_deck(const item_def &deck)
 
 static void _shuffle_deck(item_def &deck)
 {
-    ASSERT(is_deck(deck));
+    if (!is_deck(deck))
+        return;
 
     CrawlHashTable &props = deck.props;
     ASSERT(props.exists("cards"));
@@ -542,10 +543,7 @@ static card_type _draw_top_card(item_def& deck, bool message,
     {
         const char *verb = (_flags & CFLAG_DEALT) ? "deal" : "draw";
 
-        if (_flags & CFLAG_MARKED)
-            mprf("You %s %s.", verb, card_name(card));
-        else
-            mprf("You %s a card... It is %s.", verb, card_name(card));
+        mprf("You %s a card... It is %s.", verb, card_name(card));
 
         _check_odd_card(_flags);
     }
@@ -658,7 +656,6 @@ static bool _check_buggy_deck(item_def& deck)
     vec_size num_flags = flags.size();
 
     unsigned int num_buggy     = 0;
-    unsigned int num_marked    = 0;
 
     for (vec_size i = 0; i < num_cards; ++i)
     {
@@ -675,8 +672,6 @@ static bool _check_buggy_deck(item_def& deck)
             num_cards--;
             num_buggy++;
         }
-        else if (_flags & CFLAG_MARKED)
-            num_marked++;
     }
 
     if (num_buggy > 0)
@@ -738,23 +733,6 @@ static bool _check_buggy_deck(item_def& deck)
         for (unsigned int i = num_flags; i > num_cards; --i)
             flags.erase(i);
 
-        problems = true;
-    }
-
-    if (props["num_marked"].get_byte() > static_cast<char>(num_cards))
-    {
-        strm << "More cards marked than in the deck?" << endl;
-        props["num_marked"] = static_cast<char>(num_marked);
-        problems = true;
-    }
-    else if (props["num_marked"].get_byte() != static_cast<char>(num_marked))
-    {
-        strm << "Oops, counted " << static_cast<int>(num_marked)
-             << " marked cards, but num_marked is "
-             << (static_cast<int>(props["num_marked"].get_byte()));
-        strm << endl;
-
-        props["num_marked"] = static_cast<char>(num_marked);
         problems = true;
     }
 
@@ -834,15 +812,14 @@ bool deck_identify_first(int slot)
     uint8_t flags;
     card_type card = get_card_and_flags(deck, -1, flags);
 
-    _set_card_and_flags(deck, -1, card, flags | CFLAG_SEEN | CFLAG_MARKED);
-    deck.props["num_marked"]++;
+    _set_card_and_flags(deck, -1, card, flags | CFLAG_SEEN);
 
     mprf("You get a glimpse of the first card. It is %s.", card_name(card));
     return true;
 }
 
-// Draw the top four cards of an unmarked deck and play them all.
-// Discards the rest of the deck.  Return false if the operation was
+// Draw the top four cards of an unstacked deck and play them all.
+// Discards the rest of the deck. Return false if the operation was
 // failed/aborted along the way.
 bool deck_deal()
 {
@@ -857,12 +834,6 @@ bool deck_deal()
         return false;
 
     CrawlHashTable &props = deck.props;
-    if (props["num_marked"].get_byte() > 0)
-    {
-        mpr("You cannot deal from marked decks.");
-        crawl_state.zero_turns_taken();
-        return false;
-    }
     if (props["stacked"].get_bool())
     {
         mpr("This deck seems insufficiently random for dealing.");
@@ -1023,14 +994,6 @@ bool deck_stack()
     if (_check_buggy_deck(deck))
         return false;
 
-    CrawlHashTable &props = deck.props;
-    if (props["num_marked"].get_byte() > 0)
-    {
-        mpr("You can't stack a marked deck.");
-        crawl_state.zero_turns_taken();
-        return false;
-    }
-
     _deck_ident(deck);
     const int num_cards    = cards_in_deck(deck);
 
@@ -1074,16 +1037,13 @@ bool stack_five(int slot)
         if (i < num_to_stack)
         {
             draws.push_back(card);
-            flags.push_back(_flags | CFLAG_SEEN | CFLAG_MARKED);
+            flags.push_back(_flags | CFLAG_SEEN);
         }
         // Rest of deck is discarded.
     }
 
     CrawlHashTable &props = deck.props;
     deck.used_count = -num_to_stack;
-    props["num_marked"] = static_cast<char>(num_to_stack);
-    // Remember that the deck was stacked even if it is later unmarked
-    // (e.g. by Nemelex abandonment).
     props["stacked"] = true;
     you.wield_change = true;
     bool done = true;
@@ -1259,20 +1219,6 @@ bool draw_three(int slot)
     // Note how many cards were removed from the deck.
     deck.used_count += num_to_draw;
 
-    // Don't forget to update the number of marked ones, too.
-    // But don't reduce the number of non-brownie draws.
-    uint8_t num_marked_left = deck.props["num_marked"].get_byte();
-    for (int i = 0; i < num_to_draw; ++i)
-    {
-        _remember_drawn_card(deck, draws[i], false);
-        if (flags[i] & CFLAG_MARKED)
-        {
-            ASSERT(num_marked_left > 0);
-            --num_marked_left;
-        }
-    }
-    deck.props["num_marked"] = num_marked_left;
-
     you.wield_change = true;
 
     // Make deck disappear *before* the card effect, since we
@@ -1289,7 +1235,7 @@ bool draw_three(int slot)
 
     // Note that card_effect() might cause you to unwield the deck.
     card_effect(draws[selected], rarity,
-                flags[selected] | CFLAG_SEEN | CFLAG_MARKED, false);
+                flags[selected] | CFLAG_SEEN, false);
 
     return true;
 }
@@ -1325,6 +1271,9 @@ static int _xom_check_card(item_def &deck, card_type card,
     if (player_in_a_dangerous_place())
         amusement *= 2;
 
+    if (flags & CFLAG_SEEN)
+        amusement /= 2;
+
     switch (card)
     {
     case CARD_XOM:
@@ -1359,21 +1308,17 @@ void evoke_deck(item_def& deck)
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
 
     const deck_rarity_type rarity = deck.deck_rarity;
-    CrawlHashTable &props = deck.props;
 
     uint8_t flags = 0;
     card_type card = _draw_top_card(deck, true, flags);
 
     // Passive Nemelex retribution: sometimes a card gets swapped out.
-    // More likely to happen with marked decks.
+    // More likely to happen with identified cards.
     if (player_under_penance(GOD_NEMELEX_XOBEH))
     {
         int c = 1;
-        if ((flags & (CFLAG_MARKED | CFLAG_SEEN))
-            || props["num_marked"].get_byte() > 0)
-        {
+        if (flags & CFLAG_SEEN)
             c = 3;
-        }
 
         if (x_chance_in_y(c * you.penance[GOD_NEMELEX_XOBEH], 3000))
         {
@@ -1399,10 +1344,6 @@ void evoke_deck(item_def& deck)
     if (flags & (CFLAG_ODDITY | CFLAG_PUNISHMENT))
         allow_id = false;
 
-    // Do these before the deck item_def object is gone.
-    if (flags & CFLAG_MARKED)
-        props["num_marked"]--;
-
     deck.used_count++;
     _remember_drawn_card(deck, card, allow_id);
 
@@ -1419,12 +1360,7 @@ void evoke_deck(item_def& deck)
 
     card_effect(card, rarity, flags, false);
 
-    if (!(flags & CFLAG_MARKED))
-    {
-        // Could a Xom worshipper ever get a stacked deck in the first
-        // place?
-        xom_is_stimulated(amusement);
-    }
+    xom_is_stimulated(amusement);
 
     // Always wield change, since the number of cards used/left has
     // changed, and it might be wielded.
@@ -3222,7 +3158,7 @@ bool top_card_is_known(const item_def &deck)
     uint8_t flags;
     get_card_and_flags(deck, -1, flags);
 
-    return flags & CFLAG_MARKED;
+    return flags & CFLAG_SEEN;
 }
 
 card_type top_card(const item_def &deck)
@@ -3368,40 +3304,9 @@ void init_deck(item_def &item)
 
     ASSERT(cards_in_deck(item) == item.initial_cards);
 
-    props["num_marked"]        = (char) 0;
-
     props.assert_validity();
 
     item.used_count  = 0;
-}
-
-static void _unmark_deck(item_def& deck)
-{
-    if (!is_deck(deck))
-        return;
-
-    CrawlHashTable &props = deck.props;
-    if (!props.exists("card_flags"))
-        return;
-
-    CrawlVector &flags = props["card_flags"].get_vector();
-
-    for (unsigned int i = 0; i < flags.size(); ++i)
-    {
-        flags[i] =
-            static_cast<char>((static_cast<char>(flags[i]) & ~CFLAG_MARKED));
-    }
-
-    props["num_marked"] = static_cast<char>(0);
-}
-
-static void _unmark_and_shuffle_deck(item_def& deck)
-{
-    if (is_deck(deck))
-    {
-        _unmark_deck(deck);
-        _shuffle_deck(deck);
-    }
 }
 
 void shuffle_all_decks_on_level()
@@ -3416,7 +3321,7 @@ void shuffle_all_decks_on_level()
                  item.name(DESC_PLAIN).c_str(),
                  level_id::current().describe().c_str());
 #endif
-            _unmark_and_shuffle_deck(item);
+            _shuffle_deck(item);
         }
     }
 }
@@ -3434,7 +3339,7 @@ static bool _shuffle_inventory_decks()
             mprf(MSGCH_DIAGNOSTICS, "Shuffling in inventory: %s",
                  item.name(DESC_PLAIN).c_str());
 #endif
-            _unmark_and_shuffle_deck(item);
+            _shuffle_deck(item);
 
             success = true;
         }

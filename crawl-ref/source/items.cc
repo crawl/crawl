@@ -4717,34 +4717,19 @@ item_info get_item_info(const item_def& item)
             const int num_cards = cards_in_deck(item);
             CrawlVector info_cards (SV_BYTE);
             CrawlVector info_card_flags (SV_BYTE);
-            bool found_unmarked = false;
-            for (int i = 0; i < num_cards; ++i)
-            {
-                uint8_t flags;
-                const card_type card = get_card_and_flags(item, -i-1, flags);
-                if (flags & CFLAG_MARKED)
-                {
-                    info_cards.push_back((char)card);
-                    info_card_flags.push_back((char)flags);
-                }
-                else if (!found_unmarked)
-                {
-                    // special card to tell at which point cards are no longer
-                    // continuous
-                    info_cards.push_back((char)0);
-                    info_card_flags.push_back((char)0);
-                    found_unmarked = true;
-                }
-            }
+
             // TODO: this leaks both whether the seen cards are still there
             // and their order: the representation needs to be fixed
 
             // The above comment seems obsolete now that Mark Four is gone.
+
+            // I don't think so... Stack Five has a quite similar effect
+            // if you abanadon Nemelex and get the card shuffled.
             for (int i = 0; i < num_cards; ++i)
             {
                 uint8_t flags;
                 const card_type card = get_card_and_flags(item, -i-1, flags);
-                if (flags & CFLAG_SEEN && !(flags & CFLAG_MARKED))
+                if (flags & CFLAG_SEEN)
                 {
                     info_cards.push_back((char)card);
                     info_card_flags.push_back((char)flags);
