@@ -2453,44 +2453,25 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 static void _summon_rangers(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    monster_type dctr, dctr2, dctr3, dctr4;
-    monster_type base_choice, big_choice, mid_choice, placed_choice;
-    dctr = random_choose(MONS_CENTAUR, MONS_YAKTAUR);
-    dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN);
-    dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN, MONS_NAGA_SHARPSHOOTER);
-    dctr4 = random_choose(MONS_SATYR, MONS_MERFOLK_JAVELINEER,
-                          MONS_DEEP_ELF_MASTER_ARCHER);
-    const int launch_count = 1 + random2(2);
+    const monster_type dctr  = random_choose(MONS_CENTAUR, MONS_YAKTAUR),
+                       dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN),
+                       dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN,
+                                             MONS_NAGA_SHARPSHOOTER),
+                       dctr4 = random_choose(MONS_SATYR,
+                                             MONS_MERFOLK_JAVELINEER,
+                                             MONS_DEEP_ELF_MASTER_ARCHER);
 
-    if (power_level >= 2)
-    {
-        base_choice = dctr2;
-        big_choice  = dctr4;
-        mid_choice  = dctr3;
-    }
-    else
-    {
-        base_choice = dctr;
-        {
-            if (power_level == 1)
-            {
-                big_choice  = dctr3;
-                mid_choice  = dctr2;
-            }
-            else
-            {
-                big_choice  = dctr;
-                mid_choice  = dctr;
-            }
-        }
-    }
+    const monster_type base_choice = power_level == 2 ? dctr2 :
+                                                        dctr;
+    monster_type placed_choice  = power_level == 2 ? dctr3 :
+                                  power_level == 1 ? dctr2 :
+                                                     dctr;
+    const bool extra_monster = coinflip();
 
-    if (launch_count < 2)
-        placed_choice = big_choice;
-    else
-        placed_choice = mid_choice;
+    if (!extra_monster && power_level > 0)
+        placed_choice = power_level == 2 ? dctr4 : dctr3;
 
-    for (int i = 0; i < launch_count; ++i)
+    for (int i = 0; i < 1 + extra_monster; ++i)
     {
         create_monster(
             mgen_data(base_choice,
