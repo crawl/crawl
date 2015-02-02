@@ -4283,25 +4283,29 @@ void explore_discoveries::found_feature(const coord_def &pos,
         add_stair(portal);
         es_flags |= ES_PORTAL;
     }
-    else if (feat == DNGN_RUNED_DOOR && ES_rdoor)
+    else if (feat == DNGN_RUNED_DOOR)
     {
-        for (orth_adjacent_iterator ai(pos); ai; ++ai)
+        seen_runed_door();
+        if (ES_rdoor)
         {
-            // If any neighbours have been seen (and thus announced) before,
-            // skip.  For parts seen for the first time this turn, announce
-            // only the upper leftmost cell.
-            if (env.map_knowledge(*ai).feat() == DNGN_RUNED_DOOR
-                && (env.map_seen(*ai) || *ai < pos))
+            for (orth_adjacent_iterator ai(pos); ai; ++ai)
             {
-                return;
+                // If any neighbours have been seen (and thus announced) before,
+                // skip.  For parts seen for the first time this turn, announce
+                // only the upper leftmost cell.
+                if (env.map_knowledge(*ai).feat() == DNGN_RUNED_DOOR
+                    && (env.map_seen(*ai) || *ai < pos))
+                {
+                    return;
+                }
             }
-        }
 
-        string desc = env.markers.property_at(pos, MAT_ANY, "stop_explore");
-        if (desc.empty())
-            desc = cleaned_feature_description(pos);
-        runed_doors.emplace_back(desc, 1);
-        es_flags |= ES_RUNED_DOOR;
+            string desc = env.markers.property_at(pos, MAT_ANY, "stop_explore");
+            if (desc.empty())
+                desc = cleaned_feature_description(pos);
+            runed_doors.emplace_back(desc, 1);
+            es_flags |= ES_RUNED_DOOR;
+       }
     }
     else if (feat_is_altar(feat) && ES_altar)
     {
