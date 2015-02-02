@@ -6691,7 +6691,8 @@ item_def* monster::disarm()
         || mons_class_is_animated_weapon(type)
         || !adjacent(you.pos(), pos())
         || !you.can_see(this)
-        || !mon_tile_ok)
+        || !mon_tile_ok
+        || mons_wpn->flags & ISFLAG_SUMMONED)
     {
         return nullptr;
     }
