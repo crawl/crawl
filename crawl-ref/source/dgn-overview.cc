@@ -673,8 +673,10 @@ static void _update_runed_door_count(int old_num)
 {
     const level_id li = level_id::current();
     const int new_num = env.properties[SEEN_RUNED_DOOR_KEY];
-    const string new_string = make_stringf("%d runed door", new_num);
-    const string old_string = make_stringf("%d runed door", old_num);
+    const string new_string = make_stringf("%d runed door%s", new_num,
+                                           new_num == 1 ? "" : "s");
+    const string old_string = make_stringf("%d runed door%s", old_num,
+                                           old_num == 1 ? "" : "s");
 
     //TODO: regexes
     if (old_num > 0 && new_num > 0)
