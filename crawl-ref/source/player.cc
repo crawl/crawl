@@ -554,6 +554,17 @@ bool player_in_hell()
     return is_hell_subbranch(you.where_are_you);
 }
 
+/**
+ * Is the player in the slightly-special version of the abyss that AKs start
+ * in?
+ */
+bool player_in_starting_abyss()
+{
+    dprf("depth: %d", you.depth);
+    return you.char_direction == GDT_GAME_START
+           && player_in_branch(BRANCH_ABYSS) && you.depth <= 1;
+}
+
 bool player_in_connected_branch()
 {
     return is_connected_branch(you.where_are_you);
