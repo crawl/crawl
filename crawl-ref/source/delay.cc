@@ -1228,9 +1228,8 @@ static bool _should_stop_activity(const delay_queue_item &item,
     }
 
     // Don't interrupt feeding for monsters already in view.
-    const monster* mon = static_cast<const monster* >(at.data);
     if (_is_butcher_delay(curr) && ai == AI_SEE_MONSTER
-        && testbits(mon->flags, MF_WAS_IN_VIEW))
+        && testbits(at.mons_data->flags, MF_WAS_IN_VIEW))
     {
         return false;
     }
@@ -1289,7 +1288,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
     if (at.context != SC_NEWLY_SEEN && atype == DELAY_NOT_DELAYED)
         return false;
 
-    const monster* mon = static_cast<const monster* >(at.data);
+    ASSERT(at.apt == AIP_MONSTER);
+    monster* mon = at.mons_data;
     if (!you.can_see(mon))
         return false;
 
@@ -1312,7 +1312,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         return false;
     else
     {
-        ash_id_monster_equipment(const_cast<monster* >(mon));
+        ash_id_monster_equipment(mon);
         mark_mon_equipment_seen(mon);
 
         string text = getMiscString(mon->name(DESC_DBNAME) + " title");
@@ -1381,8 +1381,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         {
             ASSERT(!ash_id);
             zin_id = true;
-            (const_cast<monster *>(mon))->props["zin_id"] = true;
-            discover_shifter(const_cast<monster *>(mon));
+            mon->props["zin_id"] = true;
+            discover_shifter(mon);
             god_warning = "Zin warns you: "
                           + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
                           + " is a foul ";
@@ -1427,7 +1427,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                 {
                     mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
                          mon->name(DESC_THE).c_str());
-                    gozag_incite(const_cast<monster *>(mon));
+                    gozag_incite(mon);
                     dec_penance(GOD_GOZAG, 1);
                 }
             }
@@ -1437,7 +1437,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         {
             yell(mon);
         }
-        const_cast<monster* >(mon)->seen_context = SC_JUST_SEEN;
+        mon->seen_context = SC_JUST_SEEN;
     }
 
     if (crawl_state.game_is_hints())
@@ -1485,7 +1485,7 @@ bool interrupt_activity(activity_interrupt_type ai,
     const interrupt_block block_recursive_interrupts;
     if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
     {
-        const monster* mon = static_cast<const monster* >(at.data);
+        const monster* mon = at.mons_data;
         if (mon && !mon->visible_to(&you) && !mon->submerged())
             autotoggle_autopickup(true);
     }

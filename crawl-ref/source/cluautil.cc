@@ -7,32 +7,24 @@
 
 int push_activity_interrupt(lua_State *ls, activity_interrupt_data *t)
 {
-    if (!t->data)
-    {
-        lua_pushnil(ls);
-        return 0;
-    }
-
     switch (t->apt)
     {
     case AIP_HP_LOSS:
         {
-            const ait_hp_loss *ahl = (const ait_hp_loss *) t->data;
-            lua_pushnumber(ls, ahl->hp);
-            lua_pushnumber(ls, ahl->hurt_type);
+            lua_pushnumber(ls, t->ait_hp_loss_data->hp);
+            lua_pushnumber(ls, t->ait_hp_loss_data->hurt_type);
             return 1;
         }
     case AIP_INT:
-        lua_pushnumber(ls, *(const int *) t->data);
+        lua_pushnumber(ls, *t->int_data);
         break;
     case AIP_STRING:
-        lua_pushstring(ls, (const char *) t->data);
+        lua_pushstring(ls, t->string_data);
         break;
     case AIP_MONSTER:
-        // FIXME: We're casting away the const...
-        push_monster(ls, (monster*) t->data);
+        push_monster(ls, t->mons_data);
         break;
-    default:
+    case AIP_NONE:
         lua_pushnil(ls);
         break;
     }

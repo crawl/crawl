@@ -6396,7 +6396,7 @@ void bolt::setup_retrace()
     extra_range_used = 0;
 }
 
-void bolt::set_agent(actor *actor)
+void bolt::set_agent(const actor *actor)
 {
     // nullptr actor is fine by us.
     if (!actor)

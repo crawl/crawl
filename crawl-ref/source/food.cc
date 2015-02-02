@@ -510,7 +510,7 @@ int eat_from_floor(bool skip_chunks)
     item_def wonteat;
     bool found_valid = false;
 
-    vector<const item_def*> food_items;
+    vector<item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type != OBJ_FOOD)
@@ -566,7 +566,7 @@ int eat_from_floor(bool skip_chunks)
         }
 #else
         sort(food_items.begin(), food_items.end(), _compare_by_freshness);
-        for (const item_def *item : food_items)
+        for (item_def *item : food_items)
         {
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
@@ -588,7 +588,7 @@ int eat_from_floor(bool skip_chunks)
                     break;
 
                 if (can_eat(*item, false))
-                    return eat_item(*const_cast<item_def *>(item));
+                    return eat_item(*item);
                 need_more = true;
                 break;
             case 'i':

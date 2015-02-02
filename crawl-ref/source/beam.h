@@ -158,7 +158,7 @@ public:
 
     bool is_enchantment() const; // no block/dodge, use magic resist
     void set_target(const dist &targ);
-    void set_agent(actor *agent);
+    void set_agent(const actor *agent);
     void setup_retrace();
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
