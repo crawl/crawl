@@ -79,7 +79,8 @@ private:
     int level;
 
 private:
-    killer_type   kt;
+    // init() sets this to a proper value
+    killer_type kt = KILL_NONE;
 
     nothing_happens_when_type nothing_happens_when;
 
