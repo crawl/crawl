@@ -2085,13 +2085,47 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
     return new_flame.degree > old_flame.degree;
 }
 
+static bool _curare_hits_player(actor* agent, int levels, string name,
+                                string source_name)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (player_res_poison() >= 3
+        || player_res_poison() > 0 && !one_chance_in(3))
+    {
+        return false;
+    }
+
+    poison_player(roll_dice(levels, 12) + 1, source_name, name);
+
+    int hurted = 0;
+
+    if (!you.res_asphyx())
+    {
+        hurted = roll_dice(levels, 6);
+
+        if (hurted)
+        {
+            you.increase_duration(DUR_BREATH_WEAPON, hurted,
+                                  10*levels + random2(10*levels));
+            mpr("You have difficulty breathing.");
+            ouch(hurted, KILLED_BY_CURARE, agent->mid,
+                 "curare-induced apnoea");
+        }
+    }
+
+    slow_player(10 + random2(levels + random2(3 * levels)));
+
+    return hurted > 0;
+}
+
+
 bool curare_actor(actor* source, actor* target, int levels, string name,
                   string source_name)
 {
     if (target->is_player())
     {
-        return curare_hits_player(actor_to_death_source(source), levels, name,
-                                  source_name);
+        return _curare_hits_player(source, levels, name, source_name);
     }
     else
         return _curare_hits_monster(source, target->as_monster(), levels);

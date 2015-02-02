@@ -4826,40 +4826,6 @@ bool confuse_player(int amount, bool quiet)
     return true;
 }
 
-bool curare_hits_player(int death_source, int levels, string name,
-                        string source_name)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (player_res_poison() >= 3
-        || player_res_poison() > 0 && !one_chance_in(3))
-    {
-        return false;
-    }
-
-    poison_player(roll_dice(levels, 12) + 1, source_name, name);
-
-    int hurted = 0;
-
-    if (!you.res_asphyx())
-    {
-        hurted = roll_dice(levels, 6);
-
-        if (hurted)
-        {
-            you.increase_duration(DUR_BREATH_WEAPON, hurted,
-                                  10*levels + random2(10*levels));
-            mpr("You have difficulty breathing.");
-            ouch(hurted, KILLED_BY_CURARE, menv[death_source].mid,
-                 "curare-induced apnoea");
-        }
-    }
-
-    slow_player(10 + random2(levels + random2(3 * levels)));
-
-    return hurted > 0;
-}
-
 void paralyse_player(string source, int amount)
 {
     if (!amount)
