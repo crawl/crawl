@@ -131,6 +131,7 @@ deck_archetype deck_of_summoning =
     { CARD_RANGERS,         {5, 5, 5} },
     { CARD_SUMMON_UGLY,     {5, 5, 5} },
     { CARD_ILLUSION,        {5, 5, 5} },
+    { CARD_WATER,           {5, 5, 5} },
 };
 
 deck_archetype deck_of_wonders =
@@ -338,12 +339,12 @@ const char* card_name(card_type card)
     case CARD_TROWEL:          return "the Trowel";
     case CARD_MINEFIELD:       return "the Minefield";
     case CARD_GENIE:           return "the Genie";
-    case CARD_WATER:           return "Water";
     case CARD_GLASS:           return "Vitrification";
     case CARD_BARGAIN:         return "the Bargain";
     case CARD_SUMMON_ANIMAL:   return "the Herd";
     case CARD_SUMMON_SKELETON: return "the Bones";
 #endif
+    case CARD_WATER:           return "Water";
     case CARD_SWAP:            return "Swap";
     case CARD_VELOCITY:        return "Velocity";
     case CARD_DAMNATION:       return "Damnation";
@@ -1673,6 +1674,13 @@ static void _stairs_card(int /*power*/, deck_rarity_type /*rarity*/)
     stair_draw_count++;
 }
 
+static monster* _friendly(monster_type mt, int dur)
+{
+    return create_monster(mgen_data(mt,
+                             BEH_FRIENDLY, &you, dur, 0, you.pos(), MHITYOU,
+                             MG_AUTOFOE));
+}
+
 static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                            bool dealt = false)
 {
@@ -1719,9 +1727,7 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                 return;
             }
 
-            if (monster *ghost = create_monster(
-                                    mgen_data(MONS_FLAYED_GHOST, BEH_FRIENDLY,
-                                    &you, 3, 0, you.pos(), MHITYOU)))
+            if (monster *ghost = _friendly(MONS_FLAYED_GHOST, 3))
             {
                 bool msg = true;
                 bolt beem;
@@ -2283,19 +2289,12 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // will never manage to give a position which isn't (-1,-1)
     // and thus not print the message.
     // This hack appears later in this file as well.
-    if (!create_monster(
-            mgen_data(dct, BEH_FRIENDLY, &you,
-                      5 - power_level, 0, you.pos(), MHITYOU, MG_AUTOFOE),
-            false))
+    if (!_friendly(dct, 5 - power_level))
     {
         mpr("You see a puff of smoke.");
     }
 
-    create_monster(
-            mgen_data(dct2,
-                      BEH_FRIENDLY, &you, 5 - power_level, 0, you.pos(), MHITYOU,
-                      MG_AUTOFOE));
-
+    _friendly(dct2, 5 - power_level);
 }
 
 static void _elements_card(int power, deck_rarity_type rarity)
@@ -2327,9 +2326,7 @@ static void _elements_card(int power, deck_rarity_type rarity)
             continue;
         }
 
-        create_monster(
-            mgen_data(mons_type, BEH_FRIENDLY, &you, power_level + 2, 0,
-                      you.pos(), MHITYOU, MG_AUTOFOE));
+        _friendly(mons_type, power_level + 2);
         start++;
     }
 
@@ -2472,18 +2469,9 @@ static void _summon_rangers(int power, deck_rarity_type rarity)
         placed_choice = power_level == 2 ? dctr4 : dctr3;
 
     for (int i = 0; i < 1 + extra_monster; ++i)
-    {
-        create_monster(
-            mgen_data(base_choice,
-                      BEH_FRIENDLY, &you, 5 - power_level, 0, you.pos(), MHITYOU,
-                      MG_AUTOFOE));
-    }
+        _friendly(base_choice, 5 - power_level);
 
-    create_monster(
-        mgen_data(placed_choice,
-                  BEH_FRIENDLY, &you, 5 - power_level, 0, you.pos(), MHITYOU,
-                  MG_AUTOFOE));
-
+    _friendly(placed_choice, 5 - power_level);
 }
 
 static void _summon_ugly(int power, deck_rarity_type rarity)
@@ -2748,16 +2736,13 @@ static void _storm_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
 
+    _friendly(MONS_AIR_ELEMENTAL, 3);
     if (coinflip())
     {
-        const int num_to_summ = 1 + random2(1 + power_level);
+        const int num_to_summ = random2(1 + power_level);
         for (int i = 0; i < num_to_summ; ++i)
-        {
-            create_monster(
-                    mgen_data(MONS_AIR_ELEMENTAL,
-                              BEH_FRIENDLY, &you, 3, 0, you.pos(), MHITYOU,
-                              MG_AUTOFOE));
-        }
+            _friendly(MONS_AIR_ELEMENTAL, 3);
+        summon_twister(power_level);
     }
     else
     {
@@ -2783,22 +2768,33 @@ static void _storm_card(int power, deck_rarity_type rarity)
             }
         }
     }
+}
 
-    if (power_level > 1 || (power_level == 1 && coinflip()))
+static void _water_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    create_feat_splash(you.pos(), 2 + random2(power_level), 10);
+    create_feat_splash(you.pos(), 2, 10);
+    for (radius_iterator ri(you.pos(), power_level + 3, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
     {
-        if (coinflip())
-            summon_twister(power_level);
-        else
-        {
-            // create some water so the wellspring can place
-            create_feat_splash(you.pos(), 2, 3);
-            create_monster(
-                    mgen_data(MONS_ELEMENTAL_WELLSPRING,
-                              BEH_FRIENDLY, &you, 3, 0, you.pos(), MHITYOU,
-                              MG_AUTOFOE));
-        }
+        temp_change_terrain(*ri, DNGN_SHALLOW_WATER,
+                            150 + random2(100 * power_level),
+                            TERRAIN_CHANGE_FLOOD);
     }
- }
+    _friendly(MONS_WATER_ELEMENTAL, 1 + power_level);
+    if (power_level > 0)
+    {
+        if (one_chance_in(4) || power_level == 2 && coinflip())
+            _friendly(MONS_ELEMENTAL_WELLSPRING, 3);
+        else if (one_chance_in(4))
+        {
+            _friendly(MONS_ELECTRIC_EEL, 2);
+            _friendly(MONS_ELECTRIC_EEL, 2);
+        }
+        else
+            _friendly(MONS_WATER_ELEMENTAL, 2);
+    }
+}
 
 static void _illusion_card(int power, deck_rarity_type rarity)
 {
@@ -3041,6 +3037,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_DEGEN:            _degeneration_card(power, rarity); break;
     case CARD_PLACID_MAGIC:     _placid_magic_card(power, rarity); break;
     case CARD_WILD_MAGIC:       _wild_magic_card(power, rarity); break;
+    case CARD_WATER:            _water_card(power, rarity); break;
 
     case CARD_VENOM:
     case CARD_VITRIOL:
@@ -3076,7 +3073,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SHUFFLE:
     case CARD_EXPERIENCE:
     case CARD_SAGE:
-    case CARD_WATER:
     case CARD_GLASS:
     case CARD_TROWEL:
     case CARD_MINEFIELD:
