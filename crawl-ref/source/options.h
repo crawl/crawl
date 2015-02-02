@@ -73,6 +73,12 @@ struct message_colour_mapping
     }
 };
 
+struct flang
+{
+    flang_t lang_id;
+    int value;
+};
+
 class LineInput;
 struct game_options
 {
@@ -376,11 +382,13 @@ public:
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.
-    vector<flang_t>     fake_langs;       // The fake language(s) in use.
+    vector<flang>       fake_langs;       // The fake language(s) in use.
     bool has_fake_lang(flang_t flang)
     {
-        return find(fake_langs.begin(), fake_langs.end(), flang)
-                != fake_langs.end();
+        for (auto f : fake_langs)
+            if (f.lang_id == flang)
+                return true;
+        return false;
     }
 
     // -1 and 0 mean no confirmation, other possible values are 1,2,3 (see fail_severity())

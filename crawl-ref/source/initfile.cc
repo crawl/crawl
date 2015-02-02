@@ -3987,7 +3987,7 @@ bool game_options::set_lang(const char *lc)
     {
         // Handle fake languages for backwards-compatibility with old rcs.
         // Override rather than stack, because that's how it used to work.
-        fake_langs = { *flang };
+        fake_langs = { { *flang, -1 } };
     }
     else
         return false;
@@ -4002,7 +4002,7 @@ bool game_options::set_lang(const char *lc)
 void game_options::set_fake_langs(const string &input)
 {
     fake_langs.clear();
-    for (const string &flang_name : split_string(",", input))
+    for (const string &flang_text : split_string(",", input))
     {
         static const int MAX_LANGS = 3;
         if (fake_langs.size() >= MAX_LANGS)
@@ -4011,9 +4011,40 @@ void game_options::set_fake_langs(const string &input)
             break;
         }
 
+        const vector<string> split_flang = split_string(":", flang_text);
+        const string flang_name = split_flang[0];
+        if (split_flang.size() > 2)
+        {
+            report_error("Invalid fake-lang format: %s", flang_text.c_str());
+            continue;
+        }
+
+        int tval = -1;
+        const int value = split_flang.size() >= 2
+                          && parse_int(split_flang[1].c_str(), tval) ? tval : -1;
+
         const flang_t *flang = map_find(fake_lang_names, flang_name);
         if (flang)
-            fake_langs.push_back(*flang);
+        {
+            if (split_flang.size() >= 2)
+            {
+                if (*flang != FLANG_BUTT)
+                {
+                    report_error("Lang %s doesn't take a value",
+                                 flang_name.c_str());
+                    continue;
+                }
+
+                if (value == -1)
+                {
+                    report_error("Invalid value '%s' provided for lang",
+                                 split_flang[1].c_str());
+                    continue;
+                }
+            }
+
+            fake_langs.push_back({*flang, value});
+        }
         else
             report_error("Unknown language %s!", flang_name.c_str());
 

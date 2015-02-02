@@ -518,8 +518,11 @@ static string _replacement_butt(const string &token)
  * Reference https://code.google.com/p/buttbot/ for vision statement & details.
  *
  * @param str[in,out]   The string to be improved.
+ * @param odds          The raw % chance for a given word to be buttified. Will
+ *                      Will be bounded between 0-100 (inclusive) if specified;
+ *                      -1 indicates that the default odds (5%) should be used.
  */
-static void _butt(string &str)
+static void _butt(string &str, int odds)
 {
     // iter along the string, tokenizing & potentially replacing as we go.
     for (size_t start = 0; start < str.size(); ++start)
@@ -529,9 +532,12 @@ static void _butt(string &str)
         if (end == start) // empty token (non-alpha index)
             continue;
 
+        const int real_odds = odds == -1 ? 5 : max(0, min(100, odds));
+
         const string token = str.substr(start, end - start);
         // butt sparingly.
-        if (!one_chance_in(20) || _too_boring_to_butt(lowercase_string(token)))
+        if (!x_chance_in_y(real_odds, 100)
+            || _too_boring_to_butt(lowercase_string(token)))
         {
             start = end; // will increment again, past the token-ending char
             continue;
@@ -552,7 +558,7 @@ void filter_lang(string &str)
     {
         const char* (*repl)[4];
 
-        switch (fake_lang)
+        switch (fake_lang.lang_id)
         {
             case FLANG_DWARVEN:
                 repl = dwarven;
@@ -572,7 +578,7 @@ void filter_lang(string &str)
                 _grunt(str); repl = grunt;
                 break;
             case FLANG_BUTT:
-                _butt(str);
+                _butt(str, fake_lang.value);
                 continue;
             default:
                 continue;
