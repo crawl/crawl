@@ -79,20 +79,17 @@ struct card_with_weights
     int weight[3];
 };
 
-typedef card_with_weights deck_archetype;
+typedef vector<card_with_weights> deck_archetype;
 
-#define END_OF_DECK {NUM_CARDS, {0,0,0}}
-
-const deck_archetype deck_of_transport[] =
+deck_archetype deck_of_transport =
 {
     { CARD_WARPWRIGHT, {5, 5, 5} },
     { CARD_SWAP,       {5, 5, 5} },
     { CARD_VELOCITY,   {5, 5, 5} },
     { CARD_SOLITUDE,   {5, 5, 5} },
-    END_OF_DECK
 };
 
-const deck_archetype deck_of_emergency[] =
+deck_archetype deck_of_emergency =
 {
     { CARD_TOMB,       {5, 5, 5} },
     { CARD_BANSHEE,    {5, 5, 5} },
@@ -101,10 +98,9 @@ const deck_archetype deck_of_emergency[] =
     { CARD_ALCHEMIST,  {5, 5, 5} },
     { CARD_ELIXIR,     {5, 5, 5} },
     { CARD_CLOUD,      {5, 5, 5} },
-    END_OF_DECK
 };
 
-const deck_archetype deck_of_destruction[] =
+deck_archetype deck_of_destruction =
 {
     { CARD_VITRIOL,  {5, 5, 5} },
     { CARD_HAMMER,   {5, 5, 5} },
@@ -113,10 +109,9 @@ const deck_archetype deck_of_destruction[] =
     { CARD_PAIN,     {5, 5, 3} },
     { CARD_ORB,      {5, 5, 5} },
     { CARD_DEGEN,    {5, 5, 5} },
-    END_OF_DECK
 };
 
-const deck_archetype deck_of_battle[] =
+deck_archetype deck_of_battle =
 {
     { CARD_ELIXIR,        {5, 5, 5} },
     { CARD_POTION,        {5, 5, 5} },
@@ -124,10 +119,9 @@ const deck_archetype deck_of_battle[] =
     { CARD_BLADE,         {5, 5, 5} },
     { CARD_SHADOW,        {5, 5, 5} },
     { CARD_FORTITUDE,     {5, 5, 5} },
-    END_OF_DECK
 };
 
-const deck_archetype deck_of_summoning[] =
+deck_archetype deck_of_summoning =
 {
     { CARD_CRUSADE,         {5, 5, 5} },
     { CARD_ELEMENTS,        {5, 5, 5} },
@@ -137,10 +131,9 @@ const deck_archetype deck_of_summoning[] =
     { CARD_RANGERS,         {5, 5, 5} },
     { CARD_SUMMON_UGLY,     {5, 5, 5} },
     { CARD_ILLUSION,        {5, 5, 5} },
-    END_OF_DECK
 };
 
-const deck_archetype deck_of_wonders[] =
+deck_archetype deck_of_wonders =
 {
     { CARD_FOCUS,             {3, 3, 3} },
     { CARD_HELIX,             {3, 4, 5} },
@@ -149,22 +142,20 @@ const deck_archetype deck_of_wonders[] =
     { CARD_MERCENARY,         {5, 5, 5} },
     { CARD_ALCHEMIST,         {5, 5, 5} },
     { CARD_PLACID_MAGIC,      {5, 5, 5} },
-    END_OF_DECK
 };
 
 #if TAG_MAJOR_VERSION == 34
-const deck_archetype deck_of_dungeons[] =
+deck_archetype deck_of_dungeons =
 {
     { CARD_WATER,     {5, 5, 5} },
     { CARD_GLASS,     {5, 5, 5} },
     { CARD_DOWSING,   {5, 5, 5} },
     { CARD_TROWEL,    {0, 0, 3} },
     { CARD_MINEFIELD, {5, 5, 5} },
-    END_OF_DECK
 };
 #endif
 
-const deck_archetype deck_of_oddities[] =
+deck_archetype deck_of_oddities =
 {
     { CARD_WRATH,   {5, 5, 5} },
     { CARD_XOM,     {5, 5, 5} },
@@ -173,10 +164,9 @@ const deck_archetype deck_of_oddities[] =
     { CARD_CURSE,   {5, 5, 5} },
     { CARD_HELIX,   {5, 5, 5} },
     { CARD_FOCUS,   {5, 5, 5} },
-    END_OF_DECK
 };
 
-const deck_archetype deck_of_punishment[] =
+deck_archetype deck_of_punishment =
 {
     { CARD_WRAITH,     {5, 5, 5} },
     { CARD_WRATH,      {5, 5, 5} },
@@ -186,7 +176,6 @@ const deck_archetype deck_of_punishment[] =
     { CARD_DAMNATION,  {3, 3, 3} },
     { CARD_SWINE,      {5, 5, 5} },
     { CARD_TORMENT,    {5, 5, 5} },
-    END_OF_DECK
 };
 
 struct deck_type_data
@@ -203,45 +192,45 @@ static map<misc_item_type, deck_type_data> all_decks =
 {
     { MISC_DECK_OF_ESCAPE, {
         "escape",
-        1, { deck_of_transport, deck_of_emergency }
+        1, { &deck_of_transport, &deck_of_emergency }
     } },
     { MISC_DECK_OF_DESTRUCTION, {
         "destruction",
-        1, { deck_of_destruction }
+        1, { &deck_of_destruction }
     } },
 #if TAG_MAJOR_VERSION == 34
     { MISC_DECK_OF_DUNGEONS, {
         "dungeons",
-        0, { deck_of_dungeons }
+        0, { &deck_of_dungeons }
     } },
 #endif
     { MISC_DECK_OF_SUMMONING, {
         "summoning",
-        5, { deck_of_summoning }
+        5, { &deck_of_summoning }
     } },
     { MISC_DECK_OF_WONDERS, {
         "wonders",
-        5, { deck_of_wonders }
+        5, { &deck_of_wonders }
     } },
     { MISC_DECK_OF_ODDITIES, {
         "oddities",
-        0, { deck_of_oddities }
+        0, { &deck_of_oddities }
     } },
     { MISC_DECK_OF_PUNISHMENT, {
         "punishment",
-        0, { deck_of_punishment }
+        0, { &deck_of_punishment }
     } },
     { MISC_DECK_OF_WAR, {
         "war",
-        1, { deck_of_battle, deck_of_summoning }
+        1, { &deck_of_battle, &deck_of_summoning }
     } },
     { MISC_DECK_OF_CHANGES, {
         "changes",
-        5, { deck_of_battle, deck_of_wonders }
+        5, { &deck_of_battle, &deck_of_wonders }
     } },
     { MISC_DECK_OF_DEFENCE, {
         "defence",
-        5, { deck_of_battle, deck_of_emergency }
+        5, { &deck_of_battle, &deck_of_emergency }
     } },
 };
 
@@ -434,30 +423,15 @@ const string deck_contents(uint8_t deck_type)
     string output = "It may contain the following cards: ";
     bool first = true;
 
-    // XXX: This awkward way of doing things is intended to prevent a card
+    // This way of doing things is intended to prevent a card
     // that appears in multiple subdecks from showing up twice in the
     // output.
-    FixedVector<bool, NUM_CARDS> cards;
-    cards.init(false);
-    for (const deck_archetype *pdeck : _subdecks(deck_type))
-        for (int j = 0; pdeck[j].card != NUM_CARDS; ++j)
-            cards[pdeck[j].card] = true;
+    set<card_type> cards;
+    for (const deck_archetype* pdeck : _subdecks(deck_type))
+        for (const card_with_weights& cww : *pdeck)
+            cards.insert(cww.card);
 
-    for (int i = 0; i < NUM_CARDS; i++)
-    {
-        if (!cards[i])
-            continue;
-
-        if (!first)
-            output += ", ";
-        else
-            first = false;
-
-        output += card_name(static_cast<card_type>(i));
-    }
-
-    if (first)
-        output += "BUGGY cards";
+    output += comma_separated_fn(cards.begin(), cards.end(), card_name);
     output += ".";
 
     if (deck_type != MISC_DECK_OF_PUNISHMENT
@@ -492,9 +466,8 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
 
     int totalweight = 0;
     card_type result = NUM_CARDS;
-    for (int i = 0; pdeck[i].card != NUM_CARDS; ++i)
+    for (const card_with_weights cww : *pdeck)
     {
-        const card_with_weights& cww = pdeck[i];
         if (_card_forbidden(cww.card))
             continue;
         totalweight += cww.weight[rarity - DECK_RARITY_COMMON];
@@ -511,7 +484,7 @@ static card_type _random_card(uint8_t deck_type, deck_rarity_type rarity,
 
     if (one_chance_in(100))
     {
-        pdeck      = deck_of_oddities;
+        pdeck      = &deck_of_oddities;
         was_oddity = true;
     }
 
@@ -898,13 +871,9 @@ static void _redraw_stacked_cards(const vector<card_type>& draws,
 
 static bool _card_in_deck(card_type card, const deck_archetype *pdeck)
 {
-    for (int i = 0; pdeck[i].card != NUM_CARDS; ++i)
-    {
-        if (pdeck[i].card == card)
-            return true;
-    }
+    return any_of(pdeck->begin(), pdeck->end(),
+                  [card](const card_with_weights& cww){return cww.card == card;});
 
-    return false;
 }
 
 string which_decks(card_type card)
@@ -929,7 +898,7 @@ string which_decks(card_type card)
         }
     }
 
-    if (decks.size())
+    if (!decks.empty())
     {
         output += "It is usually found in decks of "
                +  comma_separated_line(decks.begin(), decks.end());
@@ -1323,7 +1292,7 @@ void evoke_deck(item_def& deck)
         if (x_chance_in_y(c * you.penance[GOD_NEMELEX_XOBEH], 3000))
         {
             card_type old_card = card;
-            card = _choose_from_archetype(deck_of_punishment, rarity);
+            card = _choose_from_archetype(&deck_of_punishment, rarity);
             if (card != old_card)
             {
                 flags |= CFLAG_PUNISHMENT;
