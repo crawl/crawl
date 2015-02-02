@@ -10,6 +10,7 @@
 #include "act-iter.h"
 #include "arena.h"
 #include "artefact.h"
+#include "coordit.h"
 #include "directn.h"
 #include "env.h"
 #include "items.h"
@@ -242,13 +243,11 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
     {
         // Is there space for the clone?
         bool square_found = false;
-        for (int i = 0; i < 8; i++)
+        for (adjacent_iterator ai(mon->pos()); ai; ++ai)
         {
-            const coord_def p = mon->pos() + Compass[i];
-
-            if (in_bounds(p)
-                && !actor_at(p)
-                && monster_habitable_grid(mon, grd(p)))
+            if (in_bounds(*ai)
+                && !actor_at(*ai)
+                && monster_habitable_grid(mon, grd(*ai)))
             {
                 square_found = true;
                 break;
@@ -280,30 +279,26 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     monster* mons = get_free_monster();
 
     if (!mons)
-        return 0;
+        return nullptr;
 
     if (!in_bounds(pos))
     {
-        // Find an adjacent square.
-        int squares = 0;
-        for (int i = 0; i < 8; i++)
+        for (fair_adjacent_iterator ai(orig->pos()); ai; ++ai)
         {
-            const coord_def p = orig->pos() + Compass[i];
-
-            if (in_bounds(p)
-                && !actor_at(p)
-                && monster_habitable_grid(orig, grd(p)))
+            if (in_bounds(*ai)
+                && !actor_at(*ai)
+                && monster_habitable_grid(orig, grd(*ai)))
             {
-                if (one_chance_in(++squares))
-                    pos = p;
+                pos = *ai;
             }
         }
 
-        if (squares == 0)
-            return 0;
+        if (!in_bounds(pos))
+            return nullptr;
     }
 
     ASSERT(!actor_at(pos));
+    ASSERT_IN_BOUNDS(pos);
 
     *mons          = *orig;
     mons->set_new_monster_id();
