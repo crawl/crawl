@@ -2363,7 +2363,7 @@ fake_lang = <lang1>[,<lang2>[,...]]
         may not end up making much sense... At most 3 fake langs can be set at
         a time.
 
-        Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt)
+        Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt:<n>)
         Experiment to find out what they do!
 
 5-b     DOS and Windows.
