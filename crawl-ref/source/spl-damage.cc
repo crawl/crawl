@@ -2694,7 +2694,7 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
 
     bolt base_beam;
 
-    base_beam.set_agent(const_cast<actor *>(caster));
+    base_beam.set_agent(caster);
     base_beam.attitude = caster->is_player() ? ATT_FRIENDLY
                                              : caster->as_monster()->attitude;
     base_beam.is_tracer = true;

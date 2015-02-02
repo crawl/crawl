@@ -69,7 +69,7 @@ targetter_beam::targetter_beam(const actor *act, int range, zap_type zap,
     ASSERT(max_ex_rad >= 0);
     ASSERT(max_ex_rad >= min_ex_rad);
     agent = act;
-    beam.set_agent(const_cast<actor *>(act));
+    beam.set_agent(act);
     origin = aim = act->pos();
     beam.attitude = ATT_FRIENDLY;
     zappy(zap, pow, beam);

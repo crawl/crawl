@@ -214,7 +214,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
     if (ai == AI_SEE_MONSTER)
     {
-        const monster* mon = static_cast<const monster* >(at.data);
+        const monster* mon = at.mons_data;
         if (!you.can_see(mon))
             return false;
 
@@ -274,7 +274,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         // This check is for when command repetition is used to
         // whack away at a 0xp monster, since the player feels safe
         // when the only monsters around are 0xp.
-        const monster* mon = static_cast<const monster* >(at.data);
+        const monster* mon = at.mons_data;
 
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && mon->visible_to(&you))

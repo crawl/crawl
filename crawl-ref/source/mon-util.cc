@@ -3428,10 +3428,9 @@ bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
     // Ugh.
-    monster* mnc = const_cast<monster* >(mon);
-    const item_def *weapon  = mnc->launcher();
-    const item_def *primary = mnc->mslot_item(MSLOT_WEAPON);
-    const item_def *missile = mnc->missiles();
+    const item_def *weapon  = mon->launcher();
+    const item_def *primary = mon->mslot_item(MSLOT_WEAPON);
+    const item_def *missile = mon->missiles();
 
     // We don't have a usable ranged weapon if a different cursed weapon
     // is presently equipped.
@@ -3441,7 +3440,7 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
     if (!missile)
         return false;
 
-    return is_launched(mnc, weapon, *missile);
+    return is_launched(mon, weapon, *missile);
 }
 
 bool mons_has_ranged_attack(const monster* mon)
@@ -3455,8 +3454,7 @@ bool mons_has_incapacitating_ranged_attack(const monster* mon, const actor* foe)
     if (!_mons_has_usable_ranged_weapon(mon))
         return false;
 
-    monster* mnc = const_cast<monster* >(mon);
-    const item_def *missile = mnc->missiles();
+    const item_def *missile = mon->missiles();
 
     if (missile && missile->sub_type == MI_THROWING_NET)
         return true;

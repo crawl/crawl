@@ -510,7 +510,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.glyph = dchar_glyph(zapsym);
     beam.was_missile = true;
 
-    item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
+    item_def *launcher  = agent->weapon(0);
     if (launcher && !item.launched_by(*launcher))
         launcher = nullptr;
 

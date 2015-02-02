@@ -446,7 +446,7 @@ int monster::has_claws(bool allow_tran) const
     return 0;
 }
 
-item_def *monster::missiles()
+item_def *monster::missiles() const
 {
     return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : nullptr;
 }
@@ -459,7 +459,7 @@ int monster::missile_count()
     return 0;
 }
 
-item_def *monster::launcher()
+item_def *monster::launcher() const
 {
     item_def *weap = mslot_item(MSLOT_WEAPON);
     if (weap && is_range_weapon(*weap))
@@ -3226,7 +3226,7 @@ int monster::shield_bonus() const
         return -100;
 
     int sh = -100;
-    const item_def *shld = const_cast<monster* >(this)->shield();
+    const item_def *shld = shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
 
