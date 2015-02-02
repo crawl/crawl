@@ -1556,84 +1556,52 @@ static string _describe_deck(const item_def &item)
     if (!drawn_cards.empty())
     {
         description += "Drawn card(s): ";
-        for (unsigned int i = 0; i < drawn_cards.size(); ++i)
-        {
-            if (i != 0)
-                description += ", ";
-            description += card_name(drawn_cards[i]);
-        }
+        description += comma_separated_fn(drawn_cards.begin(),
+                                          drawn_cards.end(),
+                                          card_name);
         description += "\n";
     }
 
     const int num_cards = cards_in_deck(item);
-    int last_known_card = -1;
-    if (top_card_is_known(item))
-    {
-        description += "Next card(s): ";
-        for (int i = 0; i < num_cards; ++i)
-        {
-            uint8_t flags;
-            const card_type card = get_card_and_flags(item, -i-1, flags);
-            if (flags & CFLAG_MARKED)
-            {
-                if (i != 0)
-                    description += ", ";
-                description += card_name(card);
-                last_known_card = i;
-            }
-            else
-                break;
-        }
-        description += "\n";
-    }
-
-    // Marked cards which we don't know straight off.
-    vector<card_type> marked_cards;
-    for (int i = last_known_card + 1; i < num_cards; ++i)
-    {
-        uint8_t flags;
-        const card_type card = get_card_and_flags(item, -i-1, flags);
-        if (flags & CFLAG_MARKED)
-            marked_cards.push_back(card);
-    }
-    if (!marked_cards.empty())
-    {
-        sort(marked_cards.begin(), marked_cards.end(),
-                  _compare_card_names);
-
-        description += "Marked card(s): ";
-        for (unsigned int i = 0; i < marked_cards.size(); ++i)
-        {
-            if (i != 0)
-                description += ", ";
-            description += card_name(marked_cards[i]);
-        }
-        description += "\n";
-    }
-
-    // Seen cards in the deck.
-    vector<card_type> seen_cards;
+    // The list of known cards, ending at the first one not known to be at the
+    // top.
+    vector<card_type> seen_top_cards;
+    // Seen cards in the deck not necessarily contiguous with the start. (If
+    // Nemelex wrath shuffled a deck that you stacked, for example.)
+    vector<card_type> other_seen_cards;
+    bool still_contiguous = true;
     for (int i = 0; i < num_cards; ++i)
     {
         uint8_t flags;
         const card_type card = get_card_and_flags(item, -i-1, flags);
-
-        // This *might* leak a bit of information...oh well.
-        if ((flags & CFLAG_SEEN) && !(flags & CFLAG_MARKED))
-            seen_cards.push_back(card);
+        if (flags & CFLAG_SEEN)
+        {
+            if (still_contiguous)
+                seen_top_cards.push_back(card);
+            else
+                other_seen_cards.push_back(card);
+        }
+        else
+            still_contiguous = false;
     }
-    if (!seen_cards.empty())
+
+    if (!seen_top_cards.empty())
     {
-        sort(seen_cards.begin(), seen_cards.end(),
-                  _compare_card_names);
+        description += "Next card(s): ";
+        description += comma_separated_fn(seen_top_cards.begin(),
+                                          seen_top_cards.end(),
+                                          card_name);
+        description += "\n";
+    }
+    if (!other_seen_cards.empty())
+    {
+        sort(other_seen_cards.begin(), other_seen_cards.end(),
+             _compare_card_names);
 
         description += "Seen card(s): ";
-        for (unsigned int i = 0; i < seen_cards.size(); ++i)
-        {
-            if (i != 0)
-                description += ", ";
-            description += card_name(seen_cards[i]);
-        }
+        description += comma_separated_fn(other_seen_cards.begin(),
+                                          other_seen_cards.end(),
+                                          card_name);
         description += "\n";
     }
 
