@@ -550,8 +550,19 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         if (env.map_knowledge(*ri).changed())
         {
-            env.map_knowledge(*ri).clear();
-            env.map_seen.set(*ri, false);
+            // If the player has already seen the square, update map
+            // knowledge with the new terrain. Otherwise clear what we had
+            // before.
+            if (env.map_knowledge(*ri).seen())
+            {
+                dungeon_feature_type newfeat = grd(*ri);
+                if (newfeat == DNGN_UNDISCOVERED_TRAP)
+                    newfeat = DNGN_FLOOR;
+                trap_type tr = feat_is_trap(newfeat) ? get_trap_type(*ri) : TRAP_UNASSIGNED;
+                env.map_knowledge(*ri).set_feature(newfeat, env.grid_colours(*ri), tr);
+            }
+            else
+                env.map_knowledge(*ri).clear();
         }
 
         if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
