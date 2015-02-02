@@ -58,7 +58,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source,
     target(_target), act_source(_act_source),
     special_source(_source), cause(_cause), spell(_spell),
     school(SPTYP_NONE), pow(_pow), fail(_fail), level(-1),
-    kt(KILL_NONE), nothing_happens_when(_nothing_happens),
+    nothing_happens_when(_nothing_happens),
     lethality_margin(_lethality_margin), hand_str(_hand_str),
     can_plural_hand(_can_plural)
 {
@@ -78,7 +78,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
     target(_target), act_source(_act_source),
     special_source(_source), cause(_cause),
     spell(SPELL_NO_SPELL), school(_school), pow(-1), fail(-1), level(_level),
-    kt(KILL_NONE), nothing_happens_when(_nothing_happens),
+    nothing_happens_when(_nothing_happens),
     lethality_margin(_lethality_margin), hand_str(_hand_str),
     can_plural_hand(_can_plural)
 {
@@ -100,7 +100,7 @@ MiscastEffect::MiscastEffect(actor* _target, actor* _act_source, int _source,
     target(_target), act_source(_act_source),
     special_source(_source), cause(_cause),
     spell(SPELL_NO_SPELL), school(_school), pow(_pow), fail(_fail), level(-1),
-    kt(KILL_NONE), nothing_happens_when(_nothing_happens),
+    nothing_happens_when(_nothing_happens),
     lethality_margin(_lethality_margin), hand_str(_hand_str),
     can_plural_hand(_can_plural)
 {
