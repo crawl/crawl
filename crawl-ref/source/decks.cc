@@ -420,8 +420,7 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
 
 const string deck_contents(uint8_t deck_type)
 {
-    string output = "It may contain the following cards: ";
-    bool first = true;
+    string output = "\nIt may contain the following cards: ";
 
     // This way of doing things is intended to prevent a card
     // that appears in multiple subdecks from showing up twice in the
@@ -437,7 +436,7 @@ const string deck_contents(uint8_t deck_type)
     if (deck_type != MISC_DECK_OF_PUNISHMENT
         && deck_type != MISC_DECK_OF_ODDITIES)
     {
-        output += " (One in a hundred cards may be drawn from the deck of "
+        output += "\n(One in a hundred cards may be drawn from the deck of "
                   "oddities, instead.)";
     }
 
