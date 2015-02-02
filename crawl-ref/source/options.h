@@ -73,7 +73,7 @@ struct message_colour_mapping
     }
 };
 
-struct flang
+struct flang_entry
 {
     flang_t lang_id;
     int value;
@@ -382,13 +382,12 @@ public:
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.
-    vector<flang>       fake_langs;       // The fake language(s) in use.
+    vector<flang_entry> fake_langs;       // The fake language(s) in use.
     bool has_fake_lang(flang_t flang)
     {
-        for (auto f : fake_langs)
-            if (f.lang_id == flang)
-                return true;
-        return false;
+        return any_of(begin(fake_langs), end(fake_langs),
+                      [flang] (const flang_entry &f)
+                      { return f.lang_id == flang; });
     }
 
     // -1 and 0 mean no confirmation, other possible values are 1,2,3 (see fail_severity())
