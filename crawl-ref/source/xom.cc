@@ -3489,7 +3489,9 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
                 return XOM_DID_NOTHING;
             if (debug)
                 return XOM_BAD_CHAOS_CLOUD;
-            big_cloud(CLOUD_CHAOS, &you, you.pos(), 50, 4 + random2(20));
+            // Place a one-tile cloud with minor spreading.
+            check_place_cloud(CLOUD_CHAOS, you.pos(), 3 + random2(12)*3,
+                              nullptr, random_range(5,15));
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "chaos cloud"),
                       true);
             god_speaks(GOD_XOM, _get_xom_speech("cloud").c_str());
