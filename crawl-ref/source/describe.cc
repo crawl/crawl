@@ -1548,18 +1548,18 @@ static string _describe_deck(const item_def &item)
     if (item_type_known(item))
         description += deck_contents(item.sub_type) + "\n";
 
-    description += make_stringf("\nMost decks begin with %d to %d cards.\n",
+    description += make_stringf("\nMost decks begin with %d to %d cards.",
                                 MIN_STARTING_CARDS,
                                 MAX_STARTING_CARDS);
 
     const vector<card_type> drawn_cards = get_drawn_cards(item);
     if (!drawn_cards.empty())
     {
+        description += "\n";
         description += "Drawn card(s): ";
         description += comma_separated_fn(drawn_cards.begin(),
                                           drawn_cards.end(),
                                           card_name);
-        description += "\n";
     }
 
     const int num_cards = cards_in_deck(item);
@@ -1587,14 +1587,15 @@ static string _describe_deck(const item_def &item)
 
     if (!seen_top_cards.empty())
     {
+        description += "\n";
         description += "Next card(s): ";
         description += comma_separated_fn(seen_top_cards.begin(),
                                           seen_top_cards.end(),
                                           card_name);
-        description += "\n";
     }
     if (!other_seen_cards.empty())
     {
+        description += "\n";
         sort(other_seen_cards.begin(), other_seen_cards.end(),
              _compare_card_names);
 
@@ -1602,7 +1603,6 @@ static string _describe_deck(const item_def &item)
         description += comma_separated_fn(other_seen_cards.begin(),
                                           other_seen_cards.end(),
                                           card_name);
-        description += "\n";
     }
 
     return description;
