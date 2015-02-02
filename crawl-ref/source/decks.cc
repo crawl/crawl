@@ -2502,15 +2502,14 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
         mpr("You see a puff of smoke.");
     }
 
-    if (power_level == 2)
+    if (power_level == 2 || !friendly)
     {
         create_monster(mgen_data(MONS_UGLY_THING,
-                        friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                        BEH_FRIENDLY,
                         &you,
                         min(power/50 + 1, 5), 0,
                         you.pos(), MHITYOU, MG_AUTOFOE));
     }
-
 }
 
 static void _mercenary_card(int power, deck_rarity_type rarity)
