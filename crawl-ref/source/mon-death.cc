@@ -62,6 +62,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "timed_effects.h"
 #include "traps.h"
 #include "unwind.h"
 #include "viewchar.h"

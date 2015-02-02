@@ -80,6 +80,7 @@
 #ifdef USE_TILE
  #include "tiledef-main.h"
 #endif
+#include "timed_effects.h"
 #include "traps.h"
 #include "viewchar.h"
 #include "view.h"

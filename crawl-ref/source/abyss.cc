@@ -47,6 +47,7 @@
 #include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
+#include "timed_effects.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"

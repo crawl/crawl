@@ -69,6 +69,7 @@
 #ifdef USE_TILE
 #include "tiledef-dngn.h"
 #endif
+#include "timed_effects.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"

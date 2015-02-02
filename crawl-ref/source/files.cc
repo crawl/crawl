@@ -72,6 +72,7 @@
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"
+#include "timed_effects.h"
 #include "unwind.h"
 #include "version.h"
 #include "view.h"
