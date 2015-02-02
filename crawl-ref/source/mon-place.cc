@@ -369,7 +369,7 @@ void spawn_random_monsters()
 
     if (player_has_orb())
         rate = you_worship(GOD_CHEIBRIADOS) ? 16 : 8;
-    else if (you.char_direction != GDT_GAME_START)
+    else if (!player_in_starting_abyss())
         rate = _scale_spawn_parameter(rate, 6 * rate, 0);
 
     if (rate == 0)
@@ -381,7 +381,7 @@ void spawn_random_monsters()
 
     if (player_in_branch(BRANCH_ABYSS))
     {
-        if (you.char_direction != GDT_GAME_START)
+        if (!player_in_starting_abyss())
             rate = 5;
         if (you_worship(GOD_CHEIBRIADOS))
             rate *= 2;
