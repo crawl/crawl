@@ -121,6 +121,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #endif
+#include "timed_effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"

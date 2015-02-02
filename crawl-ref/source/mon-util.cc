@@ -61,6 +61,7 @@
 #include "terrain.h"
 #include "tilepick.h"
 #include "tileview.h"
+#include "timed_effects.h"
 #include "traps.h"
 #include "unicode.h"
 #include "unwind.h"

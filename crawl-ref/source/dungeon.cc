@@ -68,6 +68,7 @@
 #include "tiledef-dngn.h"
 #include "tilepick.h"
 #include "tileview.h"
+#include "timed_effects.h"
 #include "traps.h"
 
 #ifdef DEBUG_DIAGNOSTICS

@@ -20,7 +20,6 @@
 #ifdef USE_TILE
 #include "tiledoll.h"
 #endif
-#include "timed_effects.h"
 
 #define CONDENSATION_SHIELD_KEY "condensation_shield_pow"
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"

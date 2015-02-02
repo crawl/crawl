@@ -61,6 +61,7 @@
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "timed_effects.h"
 #include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
