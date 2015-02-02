@@ -707,7 +707,9 @@ void seen_runed_door()
 
 void opened_runed_door()
 {
+#if TAG_MAJOR_VERSION > 34
     ASSERT(env.properties.exists(SEEN_RUNED_DOOR_KEY));
+#endif
 
     // Opening a runed door we haven't seen (because of door_vault, probably).
     if (env.properties[SEEN_RUNED_DOOR_KEY].get_int() == 0)
