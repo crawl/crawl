@@ -3192,13 +3192,11 @@ int fedhas_corpse_spores(beh_type attitude)
 struct monster_conversion
 {
     monster_conversion() :
-        base_monster(nullptr),
         piety_cost(0),
         fruit_cost(0)
     {
     }
 
-    monster* base_monster;
     int piety_cost;
     int fruit_cost;
     monster_type new_type;
