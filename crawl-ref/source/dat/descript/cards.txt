@@ -111,7 +111,13 @@ the Storm card
 
 The card depicts a ship at sea sinking in a thunderstorm.
 
-Drawing it unleashes a storm -- rain, wind and the occasional tornado.
+Drawing it unleashes a storm -- lightning, wind, and the occasional tornado.
+%%%%
+Water card
+
+The card depicts a tsunami destroying a peaceful coastal village.
+
+Drawing it floods the location and summons creatures of the deep.
 %%%%
 Pain card
 

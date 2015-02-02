@@ -108,8 +108,8 @@ enum card_type
     CARD_HELIX,               // precision mutation alteration
     CARD_ALCHEMIST,           // health / mp for gold
 
+    CARD_WATER,               // flood squares, summon water monsters
 #if TAG_MAJOR_VERSION == 34
-    CARD_WATER,               // flood squares
     CARD_GLASS,               // make walls transparent
 #endif
     CARD_DOWSING,             // mapping/detect traps/items/monsters
