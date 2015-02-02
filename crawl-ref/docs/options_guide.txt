@@ -2360,7 +2360,8 @@ show_player_species = false
 fake_lang = <lang1>[,<lang2>[,...]]
         Set one or more fake languages, applied in the order provided (order
         does matter!) The same language can be set more than once, though it
-        may not end up making much sense...
+        may not end up making much sense... At most 3 fake langs can be set at
+        a time.
 
         Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt)
         Experiment to find out what they do!

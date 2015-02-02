@@ -4004,6 +4004,13 @@ void game_options::set_fake_langs(const string &input)
     fake_langs.clear();
     for (const string &flang_name : split_string(",", input))
     {
+        static const int MAX_LANGS = 3;
+        if (fake_langs.size() >= MAX_LANGS)
+        {
+            report_error("Too many fake langs; maximum is %d", MAX_LANGS);
+            break;
+        }
+
         const flang_t *flang = map_find(fake_lang_names, flang_name);
         if (flang)
             fake_langs.push_back(*flang);
