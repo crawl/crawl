@@ -6410,6 +6410,16 @@ void bolt::set_agent(const actor *actor)
         thrower = KILL_MON_MISSILE;
 }
 
+/**
+ * Who caused this beam?
+ *
+ * @param ignore_reflection If true, look all the way back to the original
+ *                          source; if false (the default), treat the latest
+ *                          actor to reflect this as the source.
+ * @returns The actor that can be treated as the source. May be null if
+ *          it's a now-dead monster, or if neither the player nor a monster
+ *          caused it (for example, divine retribution).
+ */
 actor* bolt::agent(bool ignore_reflection) const
 {
     killer_type nominal_ktype = thrower;
