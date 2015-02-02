@@ -560,7 +560,6 @@ bool player_in_hell()
  */
 bool player_in_starting_abyss()
 {
-    dprf("depth: %d", you.depth);
     return you.char_direction == GDT_GAME_START
            && player_in_branch(BRANCH_ABYSS) && you.depth <= 1;
 }
