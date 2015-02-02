@@ -523,7 +523,6 @@ void show_update_at(const coord_def &gp, bool terrain_only)
         return;
     else
         env.map_knowledge(gp).clear_monster();
-
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp);
 
