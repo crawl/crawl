@@ -569,7 +569,7 @@ public:
 
     bool effect(bool=true, int=40) const
     {
-        if (you.experience_level < 27)
+        if (you.experience_level < you.get_max_xl())
         {
             mpr("You feel more experienced!");
             adjust_level(1, true);

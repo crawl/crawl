@@ -1308,7 +1308,7 @@ void print_stats()
         CPRINTF("XL: ");
         textcolour(HUD_VALUE_COLOUR);
         CPRINTF("%2d ", you.experience_level);
-        if (you.experience_level >= 27)
+        if (you.experience_level >= you.get_max_xl())
             CPRINTF("%10s", "");
         else
         {
@@ -2302,7 +2302,7 @@ static vector<formatted_string> _get_overview_stats()
     entry.textcolour(HUD_VALUE_COLOUR);
     entry.cprintf("%d", you.experience_level);
 
-    if (you.experience_level < 27)
+    if (you.experience_level < you.get_max_xl())
     {
         entry.textcolour(HUD_CAPTION_COLOUR);
         entry.cprintf("   Next: ");
