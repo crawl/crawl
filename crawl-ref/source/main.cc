@@ -1742,14 +1742,14 @@ static void _experience_check()
          you.class_name.c_str());
     int perc = get_exp_progress();
 
-    if (you.experience_level < 27)
+    if (you.experience_level < you.get_max_xl())
     {
         mprf("You are %d%% of the way to level %d.", perc,
               you.experience_level + 1);
     }
     else
     {
-        mpr("I'm sorry, level 27 is as high as you can go.");
+        mprf("I'm sorry, level %d is as high as you can go.", you.get_max_xl());
         mpr("With the way you've been playing, I'm surprised you got this far.");
     }
 
