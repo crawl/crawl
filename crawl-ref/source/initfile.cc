@@ -2672,6 +2672,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (field == "prompt")
             allow_self_target = CONFIRM_PROMPT;
     }
+    else BOOL_OPTION(show_uncursed);
     else BOOL_OPTION(easy_quit_item_prompts);
     else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
     else BOOL_OPTION(travel_open_doors);
