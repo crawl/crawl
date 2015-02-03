@@ -280,7 +280,6 @@ Gods
         destination. Inflicts medium exhaustion.
   - 5*: Apocalypse: Deals very high damage to all monsters in LOS and inflicts
         statuses. Inflicts heavy drain and exhaustion.
-  - Ru's abilities can be used while silenced.
 * All gods now treat followers' kills the same as the player's, for purposes of
   piety gain.
 * Makhleb and Okawaru no longer support corpse sacrifice.
