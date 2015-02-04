@@ -767,8 +767,8 @@ WEIGHT:  5
 ORIENT:  encompass
 KFEAT:   A = gadget shop
 KFEAT:   B = distillery shop
-ITEM:    any wand, ring of flight
-SHUFFLE: leAB/wdBA
+ITEM:    ring of flight
+SHUFFLE: lAB/wBA
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
 : lfloorcol(colour)
@@ -801,7 +801,7 @@ x..............lll..............x
 xxxxx.......................xxxxx
 x...x.......................x...x
 x.B.+.......................+.B.x
-x...x..........<e>..........x...x
+x...x..........<d>..........x...x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
