@@ -2209,12 +2209,14 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 4 + random2(4);
         break;
     case MONS_JOSEPHINE:
-        band_size = 1 + random2(2);
-        // intentional fall-through
+        natural_leader = true;
+        band = BAND_JOSEPHINE;
+        band_size = 3 + random2(3);
+        break;
     case MONS_NECROMANCER:
         natural_leader = true;
         band = BAND_NECROMANCER;
-        band_size += 3 + random2(3);
+        band_size = 3 + random2(3);
         break;
     case MONS_VAMPIRE_MAGE:
         if (one_chance_in(3))
@@ -3068,6 +3070,9 @@ static monster_type _band_member(band_type band, int which)
             return MONS_CATOBLEPAS;
     case BAND_DEATH_YAKS:
         return MONS_DEATH_YAK;
+
+    case BAND_JOSEPHINE:
+        return MONS_WRAITH;
 
     case BAND_NECROMANCER:
         return random_choose_weighted(6, MONS_ZOMBIE,
