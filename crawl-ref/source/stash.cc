@@ -28,6 +28,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "menu.h"
 #include "message.h"
 #include "notes.h"
 #include "output.h"
@@ -1703,6 +1704,37 @@ static bool _compare_by_name(const stash_search_result& lhs,
         return false;
 }
 
+static void _inventory_search(const base_pattern &search,
+                              vector<stash_search_result> &results)
+{
+    for (item_def &item : you.inv)
+    {
+        if (!item.defined())
+            continue;
+
+        const string s   = Stash::stash_item_name(item);
+        const string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+        stash_search_result res;
+        bool found_something = false;
+        if (search.matches(ann + s))
+            found_something = true;
+        if (is_dumpable_artefact(item))
+        {
+            const string desc =
+                munge_description(get_item_description(item, false, true));
+            if (search.matches(desc))
+                found_something = true;
+        }
+        if (found_something)
+        {
+            res.match = s;
+            res.in_inventory = true;
+            res.matching_items.push_back(item);
+            results.push_back(res);
+        }
+    }
+}
+
 void StashTracker::search_stashes()
 {
     char buf[400];
@@ -1770,6 +1802,7 @@ void StashTracker::search_stashes()
         return ;
     }
 
+    _inventory_search(*search, results);
     get_matching_stashes(*search, results, curr_lev);
 
     if (results.empty())
@@ -1831,7 +1864,7 @@ void StashTracker::get_matching_stashes(
     for (stash_search_result &result : results)
     {
         int ldist = level_distance(curr, result.pos.id);
-        if (ldist == -1)
+        if (ldist == -1 && !result.in_inventory)
             ldist = 1000;
 
         result.player_distance = ldist;
@@ -2092,10 +2125,17 @@ bool StashTracker::display_search_results(
     {
         ostringstream matchtitle;
         if (const uint8_t waypoint = travel_cache.is_waypoint(res.pos))
-            matchtitle << "(" << waypoint << ") ";
+        {
+            if (!res.in_inventory)
+                matchtitle << "(" << waypoint << ") ";
+        }
 
-        matchtitle << "[" << res.pos.id.describe() << "] "
-                   << res.match;
+        if (res.in_inventory)
+            matchtitle << "(carried)";
+        else
+            matchtitle << "[" << res.pos.id.describe() << "]";
+
+        matchtitle << " " << res.match;
 
         if (res.matches > 1 && res.count > 1)
             matchtitle << " (+" << (res.matches - 1) << ")";
@@ -2353,7 +2393,12 @@ ST_ItemIterator ST_ItemIterator::operator ++ (int)
 
 bool stash_search_result::show_menu() const
 {
-    if (shop)
+    if (in_inventory)
+    {
+        item_def first =  matching_items.front();
+        return describe_item(first, true);
+    }
+    else if (shop)
         return shop->show_menu(pos, can_travel_to(pos.id));
     else if (stash)
         return stash->show_menu(pos, can_travel_to(pos.id), &matching_items);
