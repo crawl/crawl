@@ -610,8 +610,8 @@ void full_describe_view()
     }
 
     title = "Visible " + title;
-    string title1 = title + " (select to view/travel, '!' to examine):";
-    title += " (select for more detail, '!' to view/travel):";
+    string title1 = title + " (select to target/travel, '!' to examine):";
+    title += " (select to examine, '!' to target/travel):";
 
     desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
     desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
