@@ -3613,6 +3613,9 @@ bool monster::heal(int amount, bool max_too)
     if (mons_is_statue(type))
         return false;
 
+    if (!mons_can_display_wounds(this))
+        return false;
+
     if (has_ench(ENCH_DEATHS_DOOR))
         return false;
 
