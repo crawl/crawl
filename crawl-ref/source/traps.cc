@@ -1989,6 +1989,43 @@ trap_type random_trap_for_place()
     return trap ? *trap : NUM_TRAPS;
 }
 
+/**
+ * Oldstyle trap algorithm, used for vaults. Very bad. Please remove ASAP.
+ */
+trap_type random_vault_trap()
+{
+    const int level_number = env.absdepth0;
+    trap_type type = TRAP_ARROW;
+
+    if ((random2(1 + level_number) > 1) && one_chance_in(4))
+        type = TRAP_NEEDLE;
+    if (random2(1 + level_number) > 3)
+        type = TRAP_SPEAR;
+
+    if (type == TRAP_ARROW && one_chance_in(15))
+        type = TRAP_NET;
+
+    if (random2(1 + level_number) > 7)
+        type = TRAP_BOLT;
+    if (random2(1 + level_number) > 14)
+        type = TRAP_BLADE;
+
+    if (random2(1 + level_number) > 14 && one_chance_in(3)
+        || (player_in_branch(BRANCH_ZOT) && coinflip()))
+    {
+        type = TRAP_ZOT;
+    }
+
+    if (one_chance_in(20) && is_valid_shaft_level())
+        type = TRAP_SHAFT;
+    if (one_chance_in(20) && !crawl_state.game_is_sprint())
+        type = TRAP_TELEPORT;
+    if (one_chance_in(40) && level_number > 3)
+        type = TRAP_ALARM;
+
+    return type;
+}
+
 int count_traps(trap_type ttyp)
 {
     int num = 0;
