@@ -261,18 +261,24 @@ static void _change_skill_level(skill_type exsk, int n)
     else
         take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
+    // are you drained/crosstrained/ash'd in the relevant skill?
+    const bool specify_base = you.skill(exsk, 1) != you.skill(exsk, 1, true);
     if (you.skills[exsk] == 27)
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
     else if (abs(n) == 1 && you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s to level %d!",
+             specify_base ? "base " : "",
              skill_name(exsk), (n > 0) ? "increases" : "decreases",
              you.skills[exsk]);
     }
     else if (you.num_turns)
     {
-        mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s %d levels and is now at "
-             "level %d!", skill_name(exsk), (n > 0) ? "gained" : "lost",
+        mprf(MSGCH_INTRINSIC_GAIN, "Your %s%s skill %s %d levels and is now "
+             "at level %d!",
+             specify_base ? "base " : "",
+             skill_name(exsk),
+             (n > 0) ? "gained" : "lost",
              abs(n), you.skills[exsk]);
     }
 
