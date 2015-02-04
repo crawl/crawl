@@ -1113,7 +1113,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
     bool setTarget        = false;
     bool breakCharm       = false;
-    bool was_unaware      = mon->asleep() || mons_is_wandering(mon);
+    bool was_unaware      = mon->asleep() || mon->foe == MHITNOT;
     string msg;
     int src_idx           = src ? src->mindex() : MHITNOT; // AXE ME
 
