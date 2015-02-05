@@ -216,6 +216,7 @@
   end
 
   function blood_spawns(data, triggerable, triggerer, marker, ev)
+    local phase
     if triggerer.type == "turn" then
 
     data.spawn_count = data.spawn_count + 1
