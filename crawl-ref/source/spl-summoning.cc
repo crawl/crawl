@@ -3465,7 +3465,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_DEMON,               3, 2 },
     { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
     // General monsters
-    { SPELL_MONSTROUS_MENAGERIE,        4, 2 },
+    { SPELL_MONSTROUS_MENAGERIE,        3, 2 },
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 8 },
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
