@@ -2776,9 +2776,12 @@ static void _water_card(int power, deck_rarity_type rarity)
     create_feat_splash(you.pos(), 2, 10);
     for (radius_iterator ri(you.pos(), power_level + 3, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
     {
-        temp_change_terrain(*ri, DNGN_SHALLOW_WATER,
-                            150 + random2(100 * power_level),
-                            TERRAIN_CHANGE_FLOOD);
+        if (grd(*ri) == DNGN_FLOOR)
+        {
+            temp_change_terrain(*ri, DNGN_SHALLOW_WATER,
+                                150 + random2(100 * power_level),
+                                TERRAIN_CHANGE_FLOOD);
+        }
     }
     _friendly(MONS_WATER_ELEMENTAL, 1 + power_level);
     if (power_level > 0)
