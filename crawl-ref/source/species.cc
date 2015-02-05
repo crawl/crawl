@@ -504,20 +504,10 @@ string species_prayer_action(species_type species)
     }
 }
 
-bool is_species_valid_choice(species_type species)
+bool is_starting_species(species_type species)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (species == SP_SLUDGE_ELF
-        || species == SP_DJINNI
-        || species == SP_LAVA_ORC)
-    {
-        return false;
-    }
-#endif
-
-    // Non-base draconians cannot be selected either.
-    return species >=0 && species < NUM_SPECIES
-        && !(species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN);
+    return find(species_order, species_order + ARRAYSZ(species_order),
+                species) != species_order + ARRAYSZ(species_order);
 }
 
 int species_exp_modifier(species_type species)

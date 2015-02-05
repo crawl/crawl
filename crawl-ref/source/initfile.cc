@@ -375,7 +375,7 @@ static species_type _str_to_species(const string &str)
     if (ret == SP_UNKNOWN)
         ret = str_to_species(str);
 
-    if (!is_species_valid_choice(ret))
+    if (!is_starting_species(ret))
         ret = SP_UNKNOWN;
 
     if (ret == SP_UNKNOWN)
@@ -410,7 +410,7 @@ job_type str_to_job(const string &str)
     if (job == JOB_UNKNOWN)
         job = get_job_by_name(str.c_str());
 
-    if (!is_job_valid_choice(job))
+    if (!is_starting_job(job))
         job = JOB_UNKNOWN;
 
     if (job == JOB_UNKNOWN)
