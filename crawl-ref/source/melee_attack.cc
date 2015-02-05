@@ -2779,6 +2779,8 @@ void melee_attack::mons_apply_attack_flavour()
     if (flavour == AF_CHAOS)
         flavour = random_chaos_attack_flavour();
 
+    // Note that if damage_done == 0 then this code won't be reached
+    // unless the flavour is in _flavour_triggers_damageless.
     switch (flavour)
     {
     default:
@@ -2912,7 +2914,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_DRAIN_STR:
     case AF_DRAIN_INT:
     case AF_DRAIN_DEX:
-        if (one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
+        if (one_chance_in(20) || one_chance_in(3))
         {
             stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR :
                                       flavour == AF_DRAIN_INT ? STAT_INT
@@ -2925,8 +2927,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (defender->holiness() == MH_UNDEAD)
             break;
 
-        if (one_chance_in(20) || damage_done > 0)
-            defender->make_hungry(you.hunger / 4, false);
+        defender->make_hungry(you.hunger / 4, false);
         break;
 
     case AF_BLINK:
