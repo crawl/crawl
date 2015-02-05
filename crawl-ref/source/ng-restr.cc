@@ -16,7 +16,7 @@
 
 char_choice_restriction species_allowed(job_type job, species_type speci)
 {
-    if (!is_species_valid_choice(speci) || !is_job_valid_choice(job))
+    if (!is_starting_species(speci) || !is_starting_job(job))
         return CC_BANNED;
 
     switch (job)
@@ -390,7 +390,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
 
 char_choice_restriction job_allowed(species_type speci, job_type job)
 {
-    if (!is_species_valid_choice(speci) || !is_job_valid_choice(job))
+    if (!is_starting_species(speci) || !is_starting_job(job))
         return CC_BANNED;
 
     switch (speci)

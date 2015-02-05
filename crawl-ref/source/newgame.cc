@@ -206,15 +206,9 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
     }
         // intentional fall-through
     case SP_RANDOM:
+        // any valid species will do
         if (ng->job == JOB_UNKNOWN)
-        {
-            // any valid species will do
-            do
-            {
-                ng->species = get_species(random2(ng_num_species()));
-            }
-            while (!is_species_valid_choice(ng->species));
-        }
+            ng->species = get_species(random2(ng_num_species()));
         else
         {
             // Pick a random legal character.
@@ -274,7 +268,7 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
             {
                 ng->job = job_type(random2(NUM_JOBS));
             }
-            while (!is_job_valid_choice(ng->job));
+            while (!is_starting_job(ng->job));
         }
         else
         {
@@ -286,7 +280,7 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
                 if (is_good_combination(ng->species, job, true, false)
                     && one_chance_in(++good_choices))
                 {
-                    ASSERT(is_job_valid_choice(job));
+                    ASSERT(is_starting_job(job));
                     ng->job = job;
                 }
             }
@@ -329,8 +323,6 @@ static string _highlight_pattern(const newgame_def* ng)
     for (int i = 0; i < ng_num_species(); ++i)
     {
         const species_type species = get_species(i);
-        if (!is_species_valid_choice(species))
-            continue;
 
         if (is_good_combination(species, ng->job, false, true))
             ret += species_name(species) + "  |";
@@ -641,10 +633,7 @@ static void _construct_species_menu(const newgame_def* ng,
                                     MenuFreeform* menu)
 {
     ASSERT(menu != nullptr);
-    int items_in_column = 0;
-    for (int i = 0; i < NUM_SPECIES; ++i)
-        if (is_species_valid_choice((species_type)i))
-            items_in_column++;
+    int items_in_column = ng_num_species();
     items_in_column = (items_in_column + 2) / 3;
     // Construct the menu, 3 columns
     TextItem* tmp = nullptr;
@@ -655,9 +644,8 @@ static void _construct_species_menu(const newgame_def* ng,
     for (int i = 0, pos = 0; i < ng_num_species(); ++i, ++pos)
     {
         const species_type species = get_species(i);
-        if (!is_species_valid_choice(species)
-            || (ng->job != JOB_UNKNOWN
-                && species_allowed(ng->job, species) == CC_BANNED))
+        if (ng->job != JOB_UNKNOWN
+            && species_allowed(ng->job, species) == CC_BANNED)
         {
             --pos;
             continue;

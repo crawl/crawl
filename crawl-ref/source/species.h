@@ -39,7 +39,7 @@ monster_type player_species_to_mons_species(species_type species);
 string species_prayer_action(species_type species);
 
 // Is the species valid for a new game?
-bool is_species_valid_choice(species_type);
+bool is_starting_species(species_type);
 
 int species_exp_modifier(species_type species);
 int species_hp_modifier(species_type species);
