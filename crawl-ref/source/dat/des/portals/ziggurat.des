@@ -17,7 +17,7 @@ default-depth: Depths
 # In case there is an encompass vault on the level.
 NAME:   ziggurat_fallback
 TAGS:   zig_entry
-KFEAT:  O = enter_ziggurat
+KFEAT:  O = enter_ziggurat no_mimic
 TAGS:   overwrite_floor_cell no_exits transparent
 WEIGHT: 1
 MAP
@@ -26,7 +26,7 @@ ENDMAP
 
 NAME:   enter_ziggurat_a
 TAGS:   zig_entry transparent
-KFEAT:  O = enter_ziggurat
+KFEAT:  O = enter_ziggurat no_mimic
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -45,7 +45,7 @@ ENDMAP
 NAME:    enter_ziggurat_b
 TAGS:    zig_entry transparent
 KMASK:   O = opaque
-KFEAT:   O = enter_ziggurat
+KFEAT:   O = enter_ziggurat no_mimic
 TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
@@ -67,7 +67,7 @@ ENDMAP
 
 NAME:    enter_ziggurat_c
 TAGS:    zig_entry no_trap_gen transparent
-KFEAT:   O = enter_ziggurat
+KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -92,7 +92,7 @@ ENDMAP
 
 NAME:    enter_ziggurat_d
 TAGS:    zig_entry no_trap_gen transparent
-KFEAT:   O = enter_ziggurat
+KFEAT:   O = enter_ziggurat no_mimic
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -118,7 +118,7 @@ ENDMAP
 
 NAME:   enter_ziggurat_e
 TAGS:   zig_entry transparent
-KFEAT:  O = enter_ziggurat
+KFEAT:  O = enter_ziggurat no_mimic
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 FTILE:  ; = floor_hall
@@ -136,7 +136,7 @@ ENDMAP
 
 NAME:   enter_ziggurat_f
 TAGS:   zig_entry no_trap_gen transparent
-KFEAT:  O = enter_ziggurat
+KFEAT:  O = enter_ziggurat no_mimic
 MONS:   angel / nothing w:20
 KPROP:  1Om; = no_rtele_into
 KFEAT:  ; = floor
@@ -155,7 +155,7 @@ ENDMAP
 
 ### Pan entry vaults to ziggurats #############################################
 #
-# These can occur more than once, so no luniq_zig here.
+# These can occur more than once.
 
 default-depth: Pan
 
