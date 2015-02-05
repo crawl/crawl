@@ -893,6 +893,76 @@ static int _job_by_name(const string& name)
     return JOB_UNKNOWN;
 }
 
+enum old_species_type
+{
+    OLD_SP_ELF = -1,
+    OLD_SP_HILL_DWARF = -2,
+    OLD_SP_OGRE_MAGE = -3,
+    OLD_SP_GREY_ELF = -4,
+    OLD_SP_GNOME = -5,
+    OLD_SP_MOUNTAIN_DWARF = -6,
+    OLD_SP_SLUDGE_ELF = -7,
+    OLD_SP_DJINNI = -8,
+    OLD_SP_LAVA_ORC = -9,
+    NUM_OLD_SPECIES = OLD_SP_LAVA_ORC
+};
+
+static string _species_name(int race)
+{
+    if (is_valid_species(static_cast<species_type>(race)))
+        return species_name(static_cast<species_type>(race));
+
+    switch (race)
+    {
+    case OLD_SP_ELF: return "Elf";
+    case OLD_SP_HILL_DWARF: return "Hill Dwarf";
+    case OLD_SP_OGRE_MAGE: return "Ogre-Mage";
+    case OLD_SP_GREY_ELF: return "Grey Elf";
+    case OLD_SP_GNOME: return "Gnome";
+    case OLD_SP_MOUNTAIN_DWARF: return "Mountain Dwarf";
+    case OLD_SP_SLUDGE_ELF: return "Sludge Elf";
+    case OLD_SP_DJINNI: return "Djinni";
+    case OLD_SP_LAVA_ORC: return "Lava Orc";
+    }
+
+    return "Yak";
+}
+
+static const char* _species_abbrev(int race)
+{
+    if (is_valid_species(static_cast<species_type>(race)))
+        return get_species_abbrev(static_cast<species_type>(race));
+
+    switch (race)
+    {
+    case OLD_SP_ELF: return "El";
+    case OLD_SP_HILL_DWARF: return "HD";
+    case OLD_SP_OGRE_MAGE: return "OM";
+    case OLD_SP_GREY_ELF: return "GE";
+    case OLD_SP_GNOME: return "Gn";
+    case OLD_SP_MOUNTAIN_DWARF: return "MD";
+    case OLD_SP_SLUDGE_ELF: return "SE";
+    case OLD_SP_DJINNI: return "Dj";
+    case OLD_SP_LAVA_ORC: return "LO";
+    }
+
+    return "Ya";
+}
+
+static int _species_by_name(const string& name)
+{
+    int race = str_to_species(name);
+
+    if (race != SP_UNKNOWN)
+        return race;
+
+    for (race = -1; race >= -NUM_OLD_JOBS; race--)
+        if (name == _species_name(race))
+            return race;
+
+    return SP_UNKNOWN;
+}
+
 void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");
@@ -900,7 +970,7 @@ void scorefile_entry::init_with_fields()
     points  = fields->int_field("sc");
 
     name    = fields->str_field("name");
-    race    = str_to_species(fields->str_field("race"));
+    race    = _species_by_name(fields->str_field("race"));
     job     = _job_by_name(fields->str_field("cls"));
     lvl     = fields->int_field("xl");
     race_class_name = fields->str_field("char");
@@ -1004,7 +1074,7 @@ void scorefile_entry::set_base_xlog_fields() const
     if (tiles)
         fields->add_field("tiles", "%d", tiles);
     fields->add_field("name", "%s", name.c_str());
-    fields->add_field("race", "%s", species_name(race).c_str());
+    fields->add_field("race", "%s", _species_name(race).c_str());
     fields->add_field("cls",  "%s", _job_name(job));
     fields->add_field("char", "%s", race_class_name.c_str());
     fields->add_field("xl",    "%d", lvl);
@@ -1770,8 +1840,7 @@ void scorefile_entry::fixup_char_name()
     if (race_class_name.empty())
     {
         race_class_name = make_stringf("%s%s",
-                                       race < NUM_SPECIES ?
-                                           get_species_abbrev(race) : "??",
+                                       _species_abbrev(race),
                                        _job_abbrev(job));
     }
 }
@@ -1819,7 +1888,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     {
         desc = make_stringf("%8d %s the %s %s (level %d",
                   points, name.c_str(),
-                  species_name(static_cast<species_type>(race)).c_str(),
+                  _species_name(race).c_str(),
                   _job_name(job), lvl);
     }
 
@@ -1838,10 +1907,10 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
 
     if (verbose)
     {
-        string srace = species_name(static_cast<species_type>(race));
+        const char* srace = _species_name(race).c_str();
         desc += make_stringf("Began as a%s %s %s",
                  is_vowel(srace[0]) ? "n" : "",
-                 srace.c_str(),
+                 srace,
                  _job_name(job));
 
         ASSERT(birth_time);
@@ -2129,7 +2198,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (species_is_unbreathing(race))
+        else if (species_is_unbreathing(static_cast<species_type>(race)))
             desc += "Forgot to exist";
         else
             desc += "Forgot to breathe";
@@ -2161,7 +2230,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (num_runes > 0)
                 desc += "Got out of the dungeon";
-            else if (species_is_undead(race))
+            else if (species_is_undead(static_cast<species_type>(race)))
                 desc += "Safely got out of the dungeon";
             else
                 desc += "Got out of the dungeon alive";

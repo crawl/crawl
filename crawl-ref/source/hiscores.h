@@ -61,7 +61,7 @@ private:
     uint8_t     tiles;
     int         points;
     string      name;
-    species_type race;
+    int         race;               // species_type + legacy values
     int         job;                // job_type + legacy values
     string      race_class_name;    // overrides race & cls if non-empty.
     uint8_t     lvl;                // player level.
