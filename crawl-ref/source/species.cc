@@ -504,11 +504,6 @@ string species_prayer_action(species_type species)
     }
 }
 
-bool is_valid_species(species_type species)
-{
-    return species >= 0 && species <= LAST_VALID_SPECIES;
-}
-
 bool is_species_valid_choice(species_type species)
 {
 #if TAG_MAJOR_VERSION == 34
@@ -521,7 +516,7 @@ bool is_species_valid_choice(species_type species)
 #endif
 
     // Non-base draconians cannot be selected either.
-    return is_valid_species(species)
+    return species >=0 && species < NUM_SPECIES
         && !(species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN);
 }
 

@@ -102,8 +102,8 @@ species_type find_species_from_string(const string &species)
 
 void wizard_change_species_to(species_type sp)
 {
-    // Can't use magic cookies or placeholder species.
-    if (!is_valid_species(sp))
+    // Means find_species_from_string couldn't interpret right.
+    if (sp == SP_UNKNOWN)
     {
         mpr("That species isn't available.");
         return;

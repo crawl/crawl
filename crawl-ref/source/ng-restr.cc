@@ -801,8 +801,8 @@ bool is_good_combination(species_type spc, job_type job, bool species_first,
 char_choice_restriction weapon_restriction(weapon_type wpn,
                                            const newgame_def &ng)
 {
-    ASSERT(is_valid_species(ng.species));
-    ASSERT(is_valid_job(ng.job));
+    ASSERT_RANGE(ng.species, 0, NUM_SPECIES);
+    ASSERT_RANGE(ng.job, 0, NUM_JOBS);
     ASSERT(ng.species == SP_BASE_DRACONIAN
            || species_genus(ng.species) != GENPC_DRACONIAN);
     switch (wpn)

@@ -8,7 +8,7 @@ open IN, "util/cpp_version enum.h|" or die "Can't read enum.h\n";
 $_ = <IN>;
 close IN;
 
-s/.*enum species_type\n\{(.*?)LAST_VALID_SPECIES.*/$1/s
+s/.*enum species_type\n\{(.*?)NUM_SPECIES.*/$1/s
     or die "Can't find species_type in enum.h\n";
 
 for (/SP_([A-Z_]+)/g)
