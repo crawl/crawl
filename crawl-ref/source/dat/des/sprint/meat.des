@@ -240,7 +240,7 @@
       "" .. dread .. " / " .. meat_beast .. " / " .. meat_berserker .. " w:5"
     elseif data.spawn_count < 90 then  -- turns 74 - 89
       phase =
-      "" .. lost_soul .. " / " .. meat_hydra .. " w:5 / " .. meat_beast .. " w:5"
+      "" .. wretched_soul .. " / " .. meat_hydra .. " w:5 / " .. meat_beast .. " w:5"
     elseif data.spawn_count < 105 then  -- turns 90 - 104
       phase =
       "" .. observer .. " / " .. tyrant .. " w:5 / " .. accursed .. " w:5"
@@ -255,17 +255,17 @@
       "" .. meat_berserker .. " / " .. destroyer .. " / " .. meat_beast .. " / "
       .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / " .. sculptor .. " / "
-      .. lost_soul .. ""
+      .. wretched_soul .. ""
     elseif data.spawn_count < 210 then  -- turns 170 - 209
       phase =
       "" .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / "
-      .. lost_soul .. ""
+      .. wretched_soul .. ""
     elseif data.spawn_count < 265 then  -- turns 210 - 264
       phase =
       "" .. fleshlord .. " / " .. dread .. " / " .. meat_hydra .. " / "
       .. observer .. " / " .. plague .. " / "
-      .. lost_soul .. " / " .. vile .. " w:25"
+      .. wretched_soul .. " / " .. vile .. " w:25"
     elseif data.spawn_count >= 265 then  -- turns 265 on
       phase =
       "" .. vile .. ""
