@@ -9,7 +9,6 @@
 #include "player.h"
 
 const int MAX_SKILL_ORDER = 100;
-
 struct skill_state
 {
     FixedBitVector<NUM_SKILLS>            can_train;
