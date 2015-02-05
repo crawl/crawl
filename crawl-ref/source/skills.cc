@@ -1511,7 +1511,7 @@ bool is_useless_skill(skill_type skill)
         return true;
     }
 
-    return species_apt(skill) == -99;
+    return species_apt(skill) == UNUSABLE_SKILL;
 }
 
 bool is_harmful_skill(skill_type skill)
