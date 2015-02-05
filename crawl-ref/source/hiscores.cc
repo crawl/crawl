@@ -825,9 +825,6 @@ enum old_job_type
 
 static const char* _job_name(int job)
 {
-    if (is_valid_job(static_cast<job_type>(job)))
-        return get_job_name(job);
-
     switch (job)
     {
     case OLD_JOB_THIEF:
@@ -846,16 +843,13 @@ static const char* _job_name(int job)
         return "Priest";
     case OLD_JOB_HEALER:
         return "Healer";
-    default:
-        return "unknown";
     }
+
+    return get_job_name(job);
 }
 
 static const char* _job_abbrev(int job)
 {
-    if (is_valid_job(static_cast<job_type>(job)))
-        return get_job_abbrev(job);
-
     switch (job)
     {
     case OLD_JOB_THIEF:
@@ -874,9 +868,9 @@ static const char* _job_abbrev(int job)
         return "Pr";
     case OLD_JOB_HEALER:
         return "He";
-    default:
-        return "??";
     }
+
+    return get_job_abbrev(job);
 }
 
 static int _job_by_name(const string& name)
@@ -909,9 +903,6 @@ enum old_species_type
 
 static string _species_name(int race)
 {
-    if (is_valid_species(static_cast<species_type>(race)))
-        return species_name(static_cast<species_type>(race));
-
     switch (race)
     {
     case OLD_SP_ELF: return "Elf";
@@ -925,14 +916,11 @@ static string _species_name(int race)
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
 
-    return "Yak";
+    return species_name(static_cast<species_type>(race)).c_str();
 }
 
 static const char* _species_abbrev(int race)
 {
-    if (is_valid_species(static_cast<species_type>(race)))
-        return get_species_abbrev(static_cast<species_type>(race));
-
     switch (race)
     {
     case OLD_SP_ELF: return "El";
@@ -946,7 +934,7 @@ static const char* _species_abbrev(int race)
     case OLD_SP_LAVA_ORC: return "LO";
     }
 
-    return "Ya";
+    return get_species_abbrev(static_cast<species_type>(race));
 }
 
 static int _species_by_name(const string& name)

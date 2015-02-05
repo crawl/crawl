@@ -4009,8 +4009,7 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
-    LAST_VALID_SPECIES = SP_VINE_STALKER,
-    NUM_SPECIES,                       // always after the last species
+    NUM_SPECIES,
 
     SP_UNKNOWN  = 100,
     SP_RANDOM   = 101,
