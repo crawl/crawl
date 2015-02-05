@@ -7015,7 +7015,7 @@ w:5
 
 @The_monster@ says, "Your appearance changed my life!"
 
-@The_monster@ @_says_or_shouts_@, "Dying for Beogh is much better than random rampage."
+@The_monster@ @_says_or_shouts_@, "Dying for Beogh is much better than a random rampage."
 
 @The_monster@ @_shouts_@, "Blood in Beogh's name!"
 
