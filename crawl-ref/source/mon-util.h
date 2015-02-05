@@ -485,7 +485,9 @@ monster *choose_random_nearby_monster(
 monster *choose_random_monster_on_level(
     int weight,
     bool (*suitable)(const monster* mon) =
-        choose_any_monster);
+        choose_any_monster,
+    bool prefer_named_or_priest = false);
+
 void update_monster_symbol(monster_type mtype, cglyph_t md);
 
 void fixup_spells(monster_spells &spells, int hd);

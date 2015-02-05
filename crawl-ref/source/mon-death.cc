@@ -287,21 +287,12 @@ static void _give_monster_experience(int experience, int killer_index)
 
     if (mon->gain_exp(experience))
     {
-        if (!you_worship(GOD_SHINING_ONE) && !you_worship(GOD_BEOGH)
-            || player_under_penance()
-            || !one_chance_in(3))
-        {
+        if (!in_good_standing(GOD_BEOGH) || !one_chance_in(3))
             return;
-        }
 
         // Randomly bless the follower who gained experience.
-        if (you_worship(GOD_SHINING_ONE)
-                && random2(you.piety) >= piety_breakpoint(0)
-            || you_worship(GOD_BEOGH)
-                && random2(you.piety) >= piety_breakpoint(2))
-        {
+        if (random2(you.piety) >= piety_breakpoint(2))
             bless_follower(mon);
-        }
     }
 }
 
@@ -1638,6 +1629,15 @@ static bool _reaping(monster *mons)
     return false;
 }
 
+static bool _god_will_bless_follower(monster* victim)
+{
+    return in_good_standing(GOD_BEOGH)
+           && random2(you.piety) >= piety_breakpoint(2)
+           || in_good_standing(GOD_SHINING_ONE)
+              && (victim->is_evil() || victim->is_unholy())
+              && random2(you.piety) >= piety_breakpoint(0);
+}
+
 /**
  * Trigger the appropriate god conducts for a monster's death.
  *
@@ -1729,8 +1729,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     if (mons_is_fiery(&mons))
         did_kill_conduct(DID_KILL_FIERY, mons);
 }
-
-
 
 int monster_die(monster* mons, const actor *killer, bool silent,
                 bool wizard, bool fake)
@@ -2222,9 +2220,8 @@ int monster_die(monster* mons, killer_type killer,
             // Randomly bless a follower.
             if (!created_friendly
                 && gives_xp
-                && in_good_standing(GOD_BEOGH)
-                && random2(you.piety) >= piety_breakpoint(2)
-                && !mons_is_object(mons->type))
+                && !mons_is_object(mons->type)
+                && _god_will_bless_follower(mons))
             {
                 bless_follower();
             }
@@ -2287,30 +2284,8 @@ int monster_die(monster* mons, killer_type killer,
                     anon = true;
             }
 
-            if (in_good_standing(GOD_SHINING_ONE)
-                && (mons->is_evil() || mons->is_unholy())
-                && random2(you.piety) >= piety_breakpoint(0)
-                && !invalid_monster_index(killer_index))
-            {
-                // Randomly bless the follower who killed.
-                if (!one_chance_in(3) && killer_mon->alive()
-                    && bless_follower(killer_mon))
-                {
-                    break;
-                }
-
-                if (killer_mon->alive()
-                    && killer_mon->hit_points < killer_mon->max_hit_points)
-                {
-                    simple_monster_message(killer_mon,
-                                           " looks invigorated.");
-                    killer_mon->heal(1 + random2(mons->get_experience_level() / 4));
-                }
-            }
-
-            if (in_good_standing(GOD_BEOGH)
-                && random2(you.piety) >= piety_breakpoint(2)
-                && !invalid_monster_index(killer_index))
+            if (!invalid_monster_index(killer_index)
+                && _god_will_bless_follower(mons))
             {
                 // Randomly bless the follower who killed.
                 bless_follower(killer_mon);

@@ -4911,7 +4911,8 @@ monster* choose_random_nearby_monster(int weight,
 }
 
 monster* choose_random_monster_on_level(int weight,
-                                        bool (*suitable)(const monster* mon))
+                                        bool (*suitable)(const monster* mon),
+                                        bool prefer_named_or_priest)
 {
     monster* chosen = nullptr;
 
@@ -4921,9 +4922,10 @@ monster* choose_random_monster_on_level(int weight,
         if (!mon || !suitable(mon))
             continue;
 
-        // Named or priestly monsters have doubled chances.
-        int mon_weight = 1
-                       + mon->is_named() + mon->is_priest();
+        int mon_weight = 1;
+
+        if (prefer_named_or_priest)
+            mon_weight += mon->is_named() + mon->is_priest();
 
         if (x_chance_in_y(mon_weight, weight += mon_weight))
             chosen = mon;
