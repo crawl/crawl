@@ -64,11 +64,6 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       "Dj", "LO",
 #endif
       "Gr", "Fo", "VS",
-      // placeholders
-      "El", "HD", "OM", "GE", "Gn", "MD",
-#if TAG_MAJOR_VERSION > 34
-      "SE", "Dj", "LO",
-#endif
 };
 
 const char *get_species_abbrev(species_type which_species)
@@ -475,16 +470,6 @@ monster_type player_species_to_mons_species(species_type species)
         return MONS_FORMICID;
     case SP_VINE_STALKER:
         return MONS_VINE_STALKER;
-    case SP_ELF:
-    case SP_HILL_DWARF:
-    case SP_MOUNTAIN_DWARF:
-    case SP_OGRE_MAGE:
-    case SP_GREY_ELF:
-    case SP_GNOME:
-#if TAG_MAJOR_VERSION > 34
-    case SP_SLUDGE_ELF:
-    case SP_DJINNI:
-#endif
     case NUM_SPECIES:
     case SP_UNKNOWN:
     case SP_RANDOM:
