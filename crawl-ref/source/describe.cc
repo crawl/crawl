@@ -3631,7 +3631,8 @@ static string _monster_stat_description(const monster_info& mi)
         if (me.swim != me.move)
             _add_energy_to_string(speed, me.swim, "swims", fast, slow);
         _add_energy_to_string(speed, me.attack, "attacks", fast, slow);
-        _add_energy_to_string(speed, me.missile, "shoots", fast, slow);
+        if (mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT)
+            _add_energy_to_string(speed, me.missile, "shoots", fast, slow);
         _add_energy_to_string(
             speed, me.spell,
             mi.is_actual_spellcaster() ? "casts spells" :
@@ -3639,7 +3640,8 @@ static string _monster_stat_description(const monster_info& mi)
                                        : "uses natural abilities", fast, slow);
         _add_energy_to_string(speed, me.special, "uses special abilities",
                               fast, slow);
-        _add_energy_to_string(speed, me.item, "uses items", fast, slow);
+        if (mons_class_itemuse(mi.type) >= MONUSE_STARTING_EQUIPMENT)
+            _add_energy_to_string(speed, me.item, "uses items", fast, slow);
 
         if (speed >= 10)
         {
