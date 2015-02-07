@@ -5890,7 +5890,7 @@ void ru_offer_new_sacrifices()
                          });
 
         const int piety_cap
-            = max(170, you.piety + _get_sacrifice_piety(min_piety_sacrifice));
+            = max(179, you.piety + _get_sacrifice_piety(min_piety_sacrifice));
 
         dprf("cheapest sac %d (%d piety); cap %d",
              min_piety_sacrifice, _get_sacrifice_piety(min_piety_sacrifice),
