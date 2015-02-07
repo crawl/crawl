@@ -336,26 +336,47 @@ static string _get_speak_string(const vector<string> &prefixes,
 // Maybe monsters will speak!
 void maybe_mons_speaks(monster* mons)
 {
-#define MON_SPEAK_CHANCE 21
+    // Very fast wandering/patrolling monsters might, in one monster turn,
+    // move into the player's LOS and then back out (or the player
+    // might move into their LOS and the monster move back out before
+    // the player's view has a chance to update) so prevent them
+    // from speaking.
+    if (mons->is_patrolling() || mons_is_wandering(mons))
+        return;
 
-    if (mons->is_patrolling() || mons_is_wandering(mons)
-        || mons->attitude == ATT_NEUTRAL)
+    // per ef44f8a14, this seems to be handled elsewhere?
+    if (mons->attitude == ATT_NEUTRAL)
+        return;
+
+    int chance = 21; // this is a very old number; no idea why it was chosen
+    if (!mons_is_unique(mons->type))
     {
-        // Very fast wandering/patrolling monsters might, in one monster turn,
-        // move into the player's LOS and then back out (or the player
-        // might move into their LOS and the monster move back out before
-        // the player's view has a chance to update) so prevent them
-        // from speaking.
-        ;
+        // allies stick around longer, so should probably have longer to say
+        // their piece; no need for them to chatter as much.
+        if (mons->wont_attack())
+            chance *= 15;
+        else if (testbits(mons->flags, MF_BAND_MEMBER))
+        {
+            // Band members are a lot less likely to speak, since there's
+            // a lot of them.  Except for uniques.
+            chance *= 10;
+        }
     }
-    else if ((mons_class_flag(mons->type, M_SPEAKS)
+
+    // Confused and fleeing monsters are more interesting.
+    if (mons_is_fleeing(mons))
+        chance /= 2;
+    if (mons->has_ench(ENCH_CONFUSION))
+        chance /= 2;
+
+    if ((mons_class_flag(mons->type, M_SPEAKS)
                     || !mons->mname.empty())
-                && one_chance_in(MON_SPEAK_CHANCE))
+                && one_chance_in(chance))
     {
         mons_speaks(mons);
     }
     else if ((mons->type == MONS_CRAZY_YIUF || mons->type == MONS_DONALD)
-        && one_chance_in(MON_SPEAK_CHANCE / 3))
+        && one_chance_in(7))
     {
         // Yiuf gets an extra chance to speak!
         // So does Donald.
@@ -366,23 +387,7 @@ void maybe_mons_speaks(monster* mons)
         // Non-humanoid-ish monsters have a low chance of speaking
         // without the M_SPEAKS flag, to give the dungeon some
         // atmosphere/flavour.
-        int chance = MON_SPEAK_CHANCE * 4;
-
-        // Band members are a lot less likely to speak, since there's
-        // a lot of them.  Except for uniques.
-        if (testbits(mons->flags, MF_BAND_MEMBER)
-            && !mons_is_unique(mons->type))
-        {
-            chance *= 10;
-        }
-
-        // However, confused and fleeing monsters are more interesting.
-        if (mons_is_fleeing(mons))
-            chance /= 2;
-        if (mons->has_ench(ENCH_CONFUSION))
-            chance /= 2;
-
-        if (one_chance_in(chance))
+        if (one_chance_in(chance * 4))
             mons_speaks(mons);
     }
     // Okay then, don't speak.
