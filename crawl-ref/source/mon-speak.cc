@@ -349,18 +349,17 @@ void maybe_mons_speaks(monster* mons)
         return;
 
     int chance = 21; // this is a very old number; no idea why it was chosen
-    if (!mons_is_unique(mons->type))
+
+    // allies stick around longer, so should probably have longer to say
+    // their piece; no need for them to chatter as much.
+    if (mons->wont_attack())
+        chance *= 15;
+    else if (!mons_is_unique(mons->type)
+             && testbits(mons->flags, MF_BAND_MEMBER))
     {
-        // allies stick around longer, so should probably have longer to say
-        // their piece; no need for them to chatter as much.
-        if (mons->wont_attack())
-            chance *= 15;
-        else if (testbits(mons->flags, MF_BAND_MEMBER))
-        {
-            // Band members are a lot less likely to speak, since there's
-            // a lot of them.  Except for uniques.
-            chance *= 10;
-        }
+        // Band members are a lot less likely to speak, since there's
+        // a lot of them. Except for uniques.
+        chance *= 10;
     }
 
     // Confused and fleeing monsters are more interesting.
