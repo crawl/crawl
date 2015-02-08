@@ -12,6 +12,7 @@ function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
     var PasswordChangeLink = login.PasswordChangeLink;
     var LogoutLink = login.LogoutLink;
     var ScoreNavigation = scorenav.ScoreNavigation;
+    var Input = ReactBootstrap.Input;
     var ButtonToolbar = ReactBootstrap.ButtonToolbar;
     var Button = ReactBootstrap.Button;
     // RC file editor form
@@ -130,7 +131,8 @@ function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
     var GameSelector = React.createClass({
         getInitialState: function () {
             return {
-                selected_game: this.props.games[0],
+                selected_version: this.props.games[0].version,
+                selected_mode: this.props.games[0].mode,
                 editing_rc: null
             };
         },
@@ -155,8 +157,10 @@ function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
         },
 
         edit_rc: function (ev) {
-            var game_id = this.state.selected_game.id;
-            this.setState({editing_rc: game_id});
+            var game = user.get_game(this.props.games,
+                                     this.state.selected_version,
+                                     this.state.selected_mode);
+            this.setState({editing_rc: game.id});
             ev.preventDefault();
         },
 
@@ -164,21 +168,21 @@ function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
             this.setState({editing_rc: null});
         },
 
-        select_version: function (v) {
-            var game;
-            if (v !== this.more_versions_text())
-                game = user.collect_version_games(this.props.games, v)[0];
+        select_version: function (event) {
+            var ver = event.target.value;
+            if (ver !== this.more_versions_text())
+                game = user.collect_version_games(this.props.games, ver)[0];
             else
             {
                 game = this.props.games.filter(function (g) {
                     return this.is_hidden_version(g.version || g.name);
                 }.bind(this))[0];
             }
-            this.setState({selected_game: game});
+            this.setState({selected_version: ver});
         },
 
-        select_game: function (g) {
-            this.setState({selected_game: g});
+        select_mode: function (event) {
+            this.setState({selected_mode: event.target.value});
         },
 
         is_hidden_version: function (v) {
@@ -188,6 +192,7 @@ function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
             else
                 return false;
         },
+
         more_versions_text: function () {
             return this.props.settings.more_versions || "More...";
         },
@@ -210,8 +215,11 @@ function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
             );
 
             // Version selector
-            var sel = this.state.selected_game;
-            var sel_ver = sel.version || sel.name;
+            var sel_game = user.get_game(this.props.games,
+                                         this.state.selected_version,
+                                         this.state.selected_mode);
+
+            var sel_ver = sel_game.version;
             // show all hidden versions as long as one is selected
             var show_hidden = this.is_hidden_version(sel_ver);
             var versions = user.collect_versions(this.props.games);
@@ -225,35 +233,37 @@ function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
                 if (versions.length < total_length)
                     versions.push(this.more_versions_text());
             }
-            var version_select = (
-              <div className="version_select">Version:
-                <ol className="select">
-                  {versions.map(function (v) { return (
-                    <li onClick={this.select_version.bind(this, v)} key={v}
-                        className={sel_ver === v ? "selected" : ""}>{v}</li>
-                  ); }.bind(this))}
-                </ol>
-              </div>
-            );
             var games = user.collect_version_games(this.props.games, sel_ver);
-            var mode_select = games.length <= 1 ? null : (
-              <div>Mode:
-                <ol className="select">
-                  {games.map(function (g) { return (
-                    <li onClick={this.select_game.bind(this, g)}
-                        key={g.mode || g.name}
-                        className={sel === g ? "selected" : ""}>
-                      {g.mode || g.name}
-                    </li>
-                  ); }.bind(this))}
-                </ol>
-              </div>
+
+            function make_version_option(v) {
+                return (<option>{v}</option>);
+            }
+            function make_mode_option(g) {
+                return (<option>{g.mode}</option>);
+            }
+            var game_select = (
+                <form className="form-horizontal form-group-sm">
+                    <Input type="select" label="Version"
+                           labelClassName="col-xs-1"
+                           wrapperClassName="col-xs-2"
+                           onChange={this.select_version}>
+                        {versions.map(make_version_option)}
+                    </Input>
+                    <Input type="select" label="Game Mode"
+                           labelClassName="col-xs-1"
+                           wrapperClassName="col-xs-2"
+                           onChange={this.select_mode}>
+                        {games.map(make_mode_option)}
+                    </Input>
+                </form>
             );
-            var comment = sel.comment ? (<div>{sel.comment}</div>) : null;
+
+            var comment = sel_game.comment ?
+                (<div>{sel_game.comment}</div>) : null;
             var golink = (
-              <a className="start_game" href={"/play/" + sel.id}
+              <a className="start_game" href={"/play/" + sel_game.id}
                  onClick={this.start_game}>
-                {"Start " + sel.name}
+                {"Start " + sel_game.name}
               </a>
             );
             var editlink = (
@@ -264,8 +274,7 @@ function (React, comm, pubsub, user, misc, login, scorenav, ReactBootstrap, $) {
             var select = (
               <div>
                 {golink}, {editlink} or select a different version:
-                {version_select}
-                {mode_select}
+                {game_select}
                 {comment}
               </div>
             );

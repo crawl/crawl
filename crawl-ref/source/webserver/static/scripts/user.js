@@ -143,6 +143,12 @@ define(["comm", "pubsub"], function (comm, pubsub) {
         return map_list;
     }
 
+    function get_game(games, ver, mode) {
+        return games.filter(function (g) {
+            return g.version === ver && g.mode === mode;
+        })[0];
+    }
+
     function full_mode_name(mode)
     {
         var mode_names = {dcss : "Dungeon Crawl",
@@ -183,6 +189,7 @@ define(["comm", "pubsub"], function (comm, pubsub) {
         collect_versions: collect_versions,
         collect_version_games: collect_version_games,
         collect_maps: collect_maps,
+        get_game: get_game,
         full_mode_name: full_mode_name,
         abbrev_mode_name: abbrev_mode_name,
     };

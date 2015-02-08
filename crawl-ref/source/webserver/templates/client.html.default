@@ -4,6 +4,7 @@
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
     <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css">
   </head>
   <body>
     <noscript>Please enable javascript!</noscript>

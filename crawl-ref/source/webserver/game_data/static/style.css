@@ -1,5 +1,8 @@
 body {
     margin: 0px;
+    background: black;
+    color: white;
+    font: 16px monospace;
 }
 
 #lobby {
