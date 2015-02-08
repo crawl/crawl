@@ -3751,7 +3751,7 @@ void god_pitch(god_type which_god)
                                        service_fee.c_str(),
                                        (you.worshipped[which_god]) ? "re" : "");
 
-    cgotoxy(1, 18, GOTO_CRT);
+    cgotoxy(1, 21, GOTO_CRT);
     textcolour(channel_to_colour(MSGCH_PROMPT));
     if (!yesno(prompt.c_str(), false, 'n', true, true, false, nullptr, GOTO_CRT))
     {
