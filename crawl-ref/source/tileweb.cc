@@ -811,7 +811,7 @@ void TilesFramework::_send_player(bool force_full)
     json_open_object("inv");
     for (unsigned int i = 0; i < ENDOFPACK; ++i)
     {
-        json_open_object(make_stringf("%d", i));
+        json_open_object(to_string(i));
         _send_item(c.inv[i], get_item_info(you.inv[i]), force_full);
         json_close_object(true);
     }
@@ -821,7 +821,7 @@ void TilesFramework::_send_player(bool force_full)
     for (unsigned int i = 0; i < NUM_EQUIP; ++i)
     {
         const int8_t equip = !you.melded[i] ? you.equip[i] : -1;
-        _update_int(force_full, c.equip[i], equip, make_stringf("%d", i));
+        _update_int(force_full, c.equip[i], equip, to_string(i));
     }
     json_close_object(true);
 

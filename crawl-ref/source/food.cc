@@ -1598,7 +1598,7 @@ string hunger_cost_string(const int hunger)
 
 #ifdef WIZARD
     if (you.wizard)
-        return make_stringf("%d", hunger);
+        return to_string(hunger);
 #endif
 
     const int numbars = hunger_bars(hunger);

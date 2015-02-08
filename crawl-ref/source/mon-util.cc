@@ -4683,7 +4683,7 @@ void debug_monspells()
             {
                 fails += make_stringf("Book %s contains invalid spell %d\n",
                                       bknm, spslot.spell);
-                spell_name = make_stringf("%d", spslot.spell);
+                spell_name = to_string(spslot.spell);
             }
             else
                 spell_name = spell_title(spslot.spell);

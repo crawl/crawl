@@ -997,7 +997,7 @@ string monster_info::common_name(description_level_type desc) const
         if (num_heads < 11)
             ss << number_in_words(num_heads);
         else
-            ss << make_stringf("%d", num_heads);
+            ss << std::to_string(num_heads);
 
         ss << "-headed ";
     }
