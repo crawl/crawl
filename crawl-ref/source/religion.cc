@@ -3690,14 +3690,15 @@ void god_pitch(god_type which_god)
                      " have %d.", fee, you.gold);
             }
         }
-        else if (which_god == GOD_BEOGH || which_god == GOD_ELYVILON
-                                   || which_god == GOD_JIYVA)
+        else if (which_god == GOD_BEOGH
+                 || which_god == GOD_ELYVILON
+                 || which_god == GOD_JIYVA)
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
         }
         else if (player_mutation_level(MUT_NO_ARTIFICE)
-                          && which_god == GOD_NEMELEX_XOBEH)
+                 && which_god == GOD_NEMELEX_XOBEH)
         {
             simple_god_message(" does not accept worship for those who cannot "
                               "deal a hand of cards!", which_god);
@@ -3742,7 +3743,7 @@ void god_pitch(god_type which_god)
         {
             service_fee = make_stringf(
                     "The service fee for joining is currently %d gold; you"
-                    " currently have %d.\n",
+                    " have %d.\n",
                     fee, you.gold);
         }
     }
