@@ -5853,6 +5853,42 @@ static ability_type _random_cheap_sacrifice(
 }
 
 /**
+ * Choose the cheapest remaining sacrifice. This is used when the cheapest
+ * remaining sacrifice is over the piety cap and we still need to fill out 3
+ * options.
+ *
+ * @param possible_sacrifices   The list of sacrifices to choose from.
+ * @return                      The ability_type of the cheapest remaining
+ *                              sacrifice.
+ */
+static ability_type _get_cheapest_sacrifice(
+        const vector<ability_type> &possible_sacrifices)
+{
+    // XXX: replace this with random_if when that's merged
+    ability_type chosen_sacrifice = ABIL_RU_REJECT_SACRIFICES;
+    int last_piety = 999;
+    int cheapest_sacrifices = 0;
+    for (auto sacrifice : possible_sacrifices)
+    {
+        int sac_piety = _get_sacrifice_piety(sacrifice);
+        if (sac_piety >= last_piety)
+            continue;
+
+        ++cheapest_sacrifices;
+        if (one_chance_in(cheapest_sacrifices))
+        {
+            chosen_sacrifice = sacrifice;
+            last_piety = sac_piety;
+        }
+    }
+
+    dprf("found %d cheapest sacrifices; chose %d",
+         cheapest_sacrifices, chosen_sacrifice);
+
+    return chosen_sacrifice;
+}
+
+/**
  * Chooses three distinct sacrifices to offer the player, store them in
  * available_sacrifices, and print a message to the player letting them
  * know that their new sacrifices are ready.
@@ -5897,11 +5933,25 @@ void ru_offer_new_sacrifices()
              piety_cap);
 
         // XXX: replace this with random_if when that's merged
-        const ability_type chosen_sacrifice
+        ability_type chosen_sacrifice
             = _random_cheap_sacrifice(possible_sacrifices, piety_cap);
 
-        ASSERT_RANGE(chosen_sacrifice,
-                     ABIL_FIRST_SACRIFICE, ABIL_FINAL_SACRIFICE+1);
+        if (chosen_sacrifice < ABIL_FIRST_SACRIFICE ||
+                chosen_sacrifice > ABIL_FINAL_SACRIFICE)
+        {
+           chosen_sacrifice = _get_cheapest_sacrifice(possible_sacrifices);
+        }
+
+        if (chosen_sacrifice == ABIL_FINAL_SACRIFICE)
+        {
+            // We don't have three sacrifices to offer for some reason.
+            // Either the player is messing around in wizmode or has rejoined
+            // Ru repeatedly. In either case, we'll just stop offering
+            // sacrifices rather than crashing.
+            _ru_expire_sacrifices();
+            ru_reset_sacrifice_timer(false);
+            return;
+        }
 
         // add it to the list of chosen sacrifices to offer, and remove it from
         // the list of possiblities for the later sacrifices
