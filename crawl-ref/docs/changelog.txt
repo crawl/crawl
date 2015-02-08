@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-3880-g9314259)
+Stone Soup 0.16 (up to 0.16-a0-3944-g1fbc3e7)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -10,6 +10,7 @@ Branches, environment
 * Every time a player clears a ziggurat (exits from the top floor, Zig:27), all
   subsequent ziggurats become significantly harder.
 * A Hall of Blades area (not branch) is now guaranteed on Elf:2.
+* Abyssal stairs can now appear in the Abyssal Knight starting abyss.
 * Clouds of draining now require rN+++ for immunity, up from rN+.
 * Clouds of miasma now apply the 'Rot' status, rather than causing rotting
   directly.
@@ -124,6 +125,7 @@ Spells
   better at knocking enemies back.
 * Ice, Dragon, Tree and Fungus forms no longer meld octopode rings.
 * Spell miscast effects have been hugely revamped.
+* Monstrous Menagerie has had its summon cap reduced by one.
 * Twisted Resurrection and Forceful Dismissal have been removed.
 
 Items
@@ -165,6 +167,7 @@ Items
   - The Hat of the Alchemist is now -2 (rElec rPois rF rC rN MR rMut rCorr).
   - Maxwell's Patent Armour now gives rCorr rElec instead of rF+ rC+.
   - The arbalest Hellfire has had its explosion damage roughly doubled.
+  - The dark maul has had both its base damage & enchantment increased.
 * All food other than rations, chunks, and royal jellies now takes one turn
   to eat.
 * Potions of blood no longer give nutrition for non-vampires.
@@ -204,9 +207,11 @@ Cards
   - Rangers, which summons two or three ranged-missile users.
   - Placid Magic, which removes all status effects and applies heavy antimagic
     to all creatures in sight, including the user.
+  - Water, which creates temporary pools of shallow water & summoned elemental
+    allies.
 * Revamped destruction cards:
-  - Storm has replaced rain and swiftness with summoning air elementals,
-    an elemental wellspring, or thunder clouds alongside a wind blast.
+  - Storm has replaced rain and swiftness with summoning air elementals, or
+    thunder clouds alongside a wind blast.
   - Pain has lost Torment and can now summon a flayed ghost to instantly apply
     its flaying effect to living targets.
   - Venom has lost Sting for earlier Venom Bolts and Poison Arrows, but at low
@@ -234,7 +239,8 @@ Cards
   - Dance has replaced its short swords with quarterstaves and its dire flails
     with executioner's axes. It also has a chance of summoning a randart.
   - Foxfire has lost butterflies and gained ravens.
-  - Repulsiveness can now summon both an ugly thing and a very ugly thing.
+  - Repulsiveness can now summon both an ugly thing and a very ugly thing, and
+    always summons at least one friendly ugly thing if any hostiles are made.
 * Revamped emergency cards:
   - Cloud surrounds all hostile monsters with varying types of clouds,
     instead of randomly scattering clouds in all valid places in sight.
