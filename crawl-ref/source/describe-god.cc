@@ -484,18 +484,19 @@ static void _list_bribable_branches(vector<branch_type> &targets)
  */
 static string _describe_branch_bribability()
 {
-    string ret = "You can bribe the following branches:\n";
+    string ret = "You can bribe the following branches of the dungeon:\n";
     vector<branch_type> targets;
     _list_bribable_branches(targets);
 
     size_t width = 0;
     for (branch_type br : targets)
-        width = max(width, strlen(branches[br].longname));
+        width = max(width, strlen(branches[br].shortname));
 
     for (branch_type br : targets)
     {
-        string line(branches[br].longname);
-        line += string(width + 1 - strwidth(line), ' ');
+        string line = " ";
+        line += branches[br].shortname;
+        line += string(width + 2 - strwidth(line), ' ');
         // XXX: move this elsewhere?
         switch (br)
         {
