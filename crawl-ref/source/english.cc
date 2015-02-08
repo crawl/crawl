@@ -324,7 +324,7 @@ string number_in_words(unsigned num)
 
 static string _number_to_string(unsigned number, bool in_words)
 {
-    return in_words? number_in_words(number) : make_stringf("%u", number);
+    return in_words ? number_in_words(number) : to_string(number);
 }
 
 // Naively prefix A/an to a noun.

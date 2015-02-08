@@ -1385,7 +1385,7 @@ string command_to_string(command_type cmd, bool tutorial)
         if (ch >= 'A' && ch <= 'Z')
             result = make_stringf("Ctrl-%c", (char) ch);
         else
-            result = make_stringf("%d", key);
+            result = to_string(key);
     }
 
     return result;

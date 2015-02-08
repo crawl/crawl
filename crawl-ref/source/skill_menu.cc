@@ -347,7 +347,7 @@ void SkillMenuEntry::set_aptitude()
         if (manual_bonus < 10)
             text += make_stringf("+%d", manual_bonus);
         else
-            text += make_stringf("%d", manual_bonus);
+            text += to_string(manual_bonus);
 
         text += "</lightgreen>";
     }
@@ -366,7 +366,7 @@ void SkillMenuEntry::set_level()
         level = you.skill(m_sk, 10, real);
 
     if (mastered() && !you.attribute[ATTR_XP_DRAIN])
-        m_level->set_text(make_stringf("%d", level / 10));
+        m_level->set_text(to_string(level / 10));
     else
         m_level->set_text(make_stringf("%4.1f", level / 10.0));
     m_level->set_fg_colour(get_colour());
