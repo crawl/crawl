@@ -2437,7 +2437,8 @@ static vector<formatted_string> _get_overview_resistances(
     // TODO: what about different levels of anger/berserkitis?
     const bool show_angry = (you.angry(calc_unid)
                              || player_mutation_level(MUT_BERSERK))
-                            && !rclar && !stasis;
+                            && !rclar && !stasis
+                            && !you.is_lifeless_undead();
     out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false) + "\n"
                       : _resist_composer("Clarity", cwidth, rclar) + "\n";
 
