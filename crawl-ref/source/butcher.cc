@@ -229,12 +229,8 @@ void butchery(item_def* specific_corpse)
                      false, MT_ANY, _butcher_menu_title);
     redraw_screen();
     for (SelItem sel : selected)
-    {
         if (_start_butchering(*sel.item, first_corpse))
-        {
             first_corpse = false;
-        }
-    }
 
 #else
     item_def* to_eat = nullptr;

@@ -2124,9 +2124,7 @@ bool curare_actor(actor* source, actor* target, int levels, string name,
                   string source_name)
 {
     if (target->is_player())
-    {
         return _curare_hits_player(source, levels, name, source_name);
-    }
     else
         return _curare_hits_monster(source, target->as_monster(), levels);
 }

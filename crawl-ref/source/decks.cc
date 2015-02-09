@@ -2290,9 +2290,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // and thus not print the message.
     // This hack appears later in this file as well.
     if (!_friendly(dct, 5 - power_level))
-    {
         mpr("You see a puff of smoke.");
-    }
 
     _friendly(dct2, 5 - power_level);
 }
