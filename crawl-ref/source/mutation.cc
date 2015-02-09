@@ -283,6 +283,10 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         }
     }
 
+    //XXX: Should this make claws inactive too?
+    if (you.form == TRAN_BLADE_HANDS && mut == MUT_PAWS)
+        return MUTACT_INACTIVE;
+
     return MUTACT_FULL;
 }
 
@@ -500,8 +504,6 @@ string describe_mutations(bool center_title)
     case SP_FELID:
         result += "You cannot wear armour.\n";
         result += "You are incapable of wielding weapons or throwing items.\n";
-        result += _annotate_form_based("Your paws have sharp claws.",
-            !form_keeps_mutations() || you.form == TRAN_BLADE_HANDS);
         have_any = true;
         break;
 
