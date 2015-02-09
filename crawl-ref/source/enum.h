@@ -3634,6 +3634,7 @@ enum mutation_type
     MUT_MP_WANDS,
     MUT_UNSKILLED,
     MUT_INEXPERIENCED,
+    MUT_PAWS,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
