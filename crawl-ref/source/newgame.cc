@@ -147,29 +147,6 @@ static void _print_character_info(const newgame_def* ng)
     cprintf("%s\n", _welcome(ng).c_str());
 }
 
-#ifdef ASSERTS
-static bool _species_is_undead(const species_type speci)
-{
-    return speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE;
-}
-#endif
-
-undead_state_type get_undead_state(const species_type sp)
-{
-    switch (sp)
-    {
-    case SP_MUMMY:
-        return US_UNDEAD;
-    case SP_GHOUL:
-        return US_HUNGRY_DEAD;
-    case SP_VAMPIRE:
-        return US_SEMI_UNDEAD;
-    default:
-        ASSERT(!_species_is_undead(sp));
-        return US_ALIVE;
-    }
-}
-
 void choose_tutorial_character(newgame_def* ng_choice)
 {
     ng_choice->species = SP_HIGH_ELF;
