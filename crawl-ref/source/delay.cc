@@ -87,8 +87,8 @@ int interrupt_block::interrupts_blocked = 0;
 static void _xom_check_corpse_waste();
 static void _handle_run_delays(const delay_queue_item &delay);
 static void _handle_macro_delay();
-static void _finish_delay(const delay_queue_item &delay);
 static const char *_activity_interrupt_name(activity_interrupt_type ai);
+static void _finish_delay(const delay_queue_item &delay);
 
 // Returns true if this delay can act as a parent to other delays, i.e. if
 // other delays can be spawned while this delay is running. If is_parent_delay
@@ -168,15 +168,6 @@ void start_delay(delay_type type, int turns, int parm1, int parm2, int parm3)
     if (delay_is_run(type))
         clear_travel_trail();
 
-    // Handle zero-turn delays (possible with butchering).
-    if (turns == 0)
-    {
-        delay.started = true;
-        // Don't issue startup message.
-        if (_push_delay(delay) == 0)
-            _finish_delay(delay);
-        return;
-    }
     _push_delay(delay);
 }
 
@@ -190,14 +181,6 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     ASSERT(!crawl_state.game_is_arena());
 
     delay_queue_item delay = you.delay_queue.front();
-
-    // At the very least we can remove any queued delays, right
-    // now there is no problem with doing this... note that
-    // any queuing here can only happen from a single command,
-    // as the effect of a delay doesn't normally allow interaction
-    // until it is done... it merely chains up individual actions
-    // into a single action.  -- bwr
-    _clear_pending_delays();
 
     switch (delay.type)
     {
@@ -379,6 +362,15 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         break;
     }
 
+    // At the very least we can remove any queued delays, right
+    // now there is no problem with doing this... note that
+    // any queuing here can only happen from a single command,
+    // as the effect of a delay doesn't normally allow interaction
+    // until it is done... it merely chains up individual actions
+    // into a single action.  -- bwr
+    _clear_pending_delays();
+
+
     if (delay_is_run(delay.type))
         update_turn_count();
 }
@@ -559,25 +551,6 @@ void handle_delay()
             mprf(MSGCH_MULTITURN_ACTION, "You start removing your armour.");
             break;
 
-        case DELAY_BUTCHER:
-        case DELAY_BOTTLE_BLOOD:
-            if (!mitm[delay.parm1].defined())
-                break;
-
-            if (delay.type == DELAY_BOTTLE_BLOOD)
-            {
-                mprf(MSGCH_MULTITURN_ACTION,
-                     "You start bottling blood from %s.",
-                     mitm[delay.parm1].name(DESC_THE).c_str());
-            }
-            else
-            {
-                mprf(MSGCH_MULTITURN_ACTION,
-                     "You start butchering %s.",
-                     mitm[delay.parm1].name(DESC_THE).c_str());
-            }
-            break;
-
         case DELAY_MEMORISE:
         {
             spell_type spell = static_cast<spell_type>(delay.parm1);
@@ -649,43 +622,30 @@ void handle_delay()
     }
     else if (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD)
     {
+        const item_def &item = mitm[delay.parm1];
         // A monster may have raised the corpse you're chopping up! -- bwr
         // Note that a monster could have raised the corpse and another
         // monster could die and create a corpse with the same ID number...
         // However, it would not be at the player's square like the
         // original and that's why we do it this way.
-        if (mitm[delay.parm1].defined()
-            && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
-            && mitm[ delay.parm1 ].pos == you.pos())
+        if (!item.defined()
+            || item.base_type != OBJ_CORPSES
+            || item.pos != you.pos())
         {
-            if (mitm[ delay.parm1 ].sub_type == CORPSE_SKELETON)
-            {
-                mpr("The corpse rots away into a skeleton!");
-                if (delay.type == DELAY_BUTCHER
-                    || delay.type == DELAY_BOTTLE_BLOOD) // Shouldn't happen.
-                {
-                    _xom_check_corpse_waste();
-                    delay.duration = 0;
-                }
-                else
-                {
-                    // Don't attempt to offer a skeleton.
-                    _pop_delay();
-                    return;
-                }
-            }
-            else
-            {
-                // Mark work done on the corpse in case we stop. -- bwr
-                mitm[ delay.parm1 ].butcher_amount++;
-            }
+            // There being no item at all could have happened for several
+            // reasons, so don't bother to give a message.
+            _pop_delay();
+            return;
         }
-        else
+        else if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
         {
-            // Corpse is no longer valid!  End the butchering normally
-            // instead of using stop_delay(), so that the player
-            // switches back to their main weapon if necessary.
-            delay.duration = 0;
+            mprf("The corpse has already rotted away into a skeleton before"
+                 "you could %s!",
+                 (delay.type == DELAY_BOTTLE_BLOOD ? "bottle its blood"
+                                                   : "butcher it"));
+            _xom_check_corpse_waste();
+            _pop_delay();
+            return;
         }
     }
     else if (delay.type == DELAY_MULTIDROP)
@@ -739,15 +699,6 @@ void handle_delay()
         case DELAY_ARMOUR_OFF:
             mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
                  you.inv[delay.parm1].name(DESC_YOUR).c_str());
-            break;
-
-        case DELAY_BUTCHER:
-            mprf(MSGCH_MULTITURN_ACTION, "You continue butchering the corpse.");
-            break;
-
-        case DELAY_BOTTLE_BLOOD:
-            mprf(MSGCH_MULTITURN_ACTION, "You continue bottling blood from "
-                                         "the corpse.");
             break;
 
         case DELAY_JEWELLERY_ON:
@@ -988,72 +939,10 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_BUTCHER:
     case DELAY_BOTTLE_BLOOD:
-    {
-        item_def &item = mitm[delay.parm1];
-        if (item.defined() && item.base_type == OBJ_CORPSES)
-        {
-            if (item.sub_type == CORPSE_SKELETON)
-            {
-                mprf("The corpse rots away into a skeleton just before you "
-                     "finish %s!",
-                     (delay.type == DELAY_BOTTLE_BLOOD ? "bottling its blood"
-                                                       : "butchering"));
-
-                _xom_check_corpse_waste();
-
-                break;
-            }
-
-            const bool was_holy = mons_class_holiness(item.mon_type) == MH_HOLY;
-            const bool was_intelligent = corpse_intelligence(item) >= I_NORMAL;
-            const bool was_same_genus = is_player_same_genus(item.mon_type);
-
-            if (delay.type == DELAY_BOTTLE_BLOOD)
-            {
-                mpr("You finish bottling this corpse's blood.");
-
-                if (mons_skeleton(item.mon_type) && one_chance_in(3))
-                    turn_corpse_into_skeleton_and_blood_potions(item);
-                else
-                    turn_corpse_into_blood_potions(item);
-            }
-            else
-            {
-                mprf("You finish butchering %s.",
-                     mitm[delay.parm1].name(DESC_THE).c_str());
-
-                butcher_corpse(item);
-
-                if (you.berserk()
-                    && you.berserk_penalty != NO_BERSERK_PENALTY)
-                {
-                    mpr("You enjoyed that.");
-                    you.berserk_penalty = 0;
-                }
-            }
-
-            if (was_same_genus)
-                did_god_conduct(DID_CANNIBALISM, 2);
-            else if (was_holy)
-                did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
-            else if (was_intelligent)
-                did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
-
-            // Also, don't waste time picking up chunks if you're already
-            // starving. (jpeg)
-            if (you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
-                autopickup();
-        }
-        else
-        {
-            mprf("You stop %s.",
-                 delay.type == DELAY_BUTCHER ? "butchering the corpse"
-                                             : "bottling this corpse's blood");
-            _pop_delay();
-        }
-        StashTrack.update_stash(you.pos()); // Stash-track the generated items.
+        // We know the item is valid and a real corpse, because handle_delay()
+        // checked for that.
+        finish_butchering(mitm[delay.parm1], delay.type == DELAY_BOTTLE_BLOOD);
         break;
-    }
 
     case DELAY_DROP_ITEM:
         // We're here if dropping the item required some action to be done

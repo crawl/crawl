@@ -12,6 +12,7 @@
 #include "delay.h"
 #include "env.h"
 #include "food.h"
+#include "godconduct.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -23,6 +24,7 @@
 #include "output.h"
 #include "prompt.h"
 #include "rot.h"
+#include "stash.h"
 #include "stepdown.h"
 #include "stringutil.h"
 
@@ -51,8 +53,8 @@ static bool _should_butcher(const item_def& corpse)
  *
  * @param corpse       Which corpse to butcher.
  * @param first_corpse Whether this was the first corpse that's being butchered
- *                     this turn, and which should therefore be worked on right
- *                     away.
+ *                     this turn, and which should be butchered right away
+ *                     instead of making a delay.
  * @returns whether the player decided to actually butcher the corpse after all.
  */
 static bool _start_butchering(item_def& corpse,
@@ -61,21 +63,70 @@ static bool _start_butchering(item_def& corpse,
     if (!_should_butcher(corpse))
         return false;
 
-    // Start work on the first corpse we butcher in a turn.
-    if (first_corpse)
-        corpse.butcher_amount++;
-
-    int work_req = max(0, 4 - corpse.butcher_amount);
-
     const bool bottle_blood =
         you.species == SP_VAMPIRE
         && can_bottle_blood_from_corpse(corpse.mon_type);
+
+    // Actually butcher the first corpse we butcher in a turn.
+    if (first_corpse)
+    {
+        finish_butchering(corpse, bottle_blood);
+        return true;
+    }
+
     const delay_type dtype = bottle_blood ? DELAY_BOTTLE_BLOOD : DELAY_BUTCHER;
 
-    start_delay(dtype, work_req, corpse.index(), corpse.special);
+    // Yes, 0 is correct (no "continue butchering" stage).
+    start_delay(dtype, 0, corpse.index());
 
     you.turn_is_over = true;
     return true;
+}
+
+void finish_butchering(item_def& corpse, bool bottling)
+{
+    ASSERT(corpse.base_type == OBJ_CORPSES);
+    ASSERT(corpse.sub_type == CORPSE_BODY);
+    const bool was_holy = mons_class_holiness(corpse.mon_type) == MH_HOLY;
+    const bool was_intelligent = corpse_intelligence(corpse) >= I_NORMAL;
+    const bool was_same_genus = is_player_same_genus(corpse.mon_type);
+
+    if (bottling)
+    {
+        mpr("You bottle the corpse's blood.");
+
+        if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
+            turn_corpse_into_skeleton_and_blood_potions(corpse);
+        else
+            turn_corpse_into_blood_potions(corpse);
+    }
+    else
+    {
+        mprf("You butcher %s.",
+             corpse.name(DESC_THE).c_str());
+
+        butcher_corpse(corpse);
+
+        if (you.berserk()
+            && you.berserk_penalty != NO_BERSERK_PENALTY)
+        {
+            mpr("You enjoyed that.");
+            you.berserk_penalty = 0;
+        }
+    }
+
+    if (was_same_genus)
+        did_god_conduct(DID_CANNIBALISM, 2);
+    else if (was_holy)
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
+    else if (was_intelligent)
+        did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
+
+    // Also, don't waste time picking up chunks if you're already
+    // starving. (jpeg)
+    if (you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
+        autopickup();
+    StashTrack.update_stash(you.pos()); // Stash-track the generated items.
 }
 
 #ifdef TOUCH_UI
