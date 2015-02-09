@@ -6308,42 +6308,8 @@ bool bolt::nice_to(const monster* mon) const
 
 ////////////////////////////////////////////////////////////////////////////
 // bolt
-
-// A constructor for bolt to help guarantee that we start clean (this has
-// caused way too many bugs).  Putting it here since there's no good place to
-// put it, and it doesn't do anything other than initialise its members.
-//
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
-bolt::bolt() : origin_spell(SPELL_NO_SPELL),
-               range(-2), glyph('*'), colour(BLACK), flavour(BEAM_MAGIC),
-               real_flavour(BEAM_MAGIC), drop_item(false), item(nullptr),
-               source(), target(), damage(0, 0), ench_power(0), hit(0),
-               thrower(KILL_MISC), ex_size(0), source_id(MID_NOBODY),
-               source_name(), name(), short_name(), hit_verb(),
-               loudness(0), noise_msg(), pierce(false), is_explosion(false),
-               aimed_at_spot(false), aux_source(),
-               affects_nothing(false), affects_items(true), effect_known(true),
-               effect_wanton(false),
-               draw_delay(15), explode_delay(50),
-               special_explosion(nullptr), was_missile(false),
-               animate(Options.use_animations & UA_BEAM),
-               ac_rule(AC_NORMAL),
-#ifdef DEBUG_DIAGNOSTICS
-               quiet_debug(false),
-#endif
-               obvious_effect(false), seen(false), heard(false),
-               path_taken(), extra_range_used(0), is_tracer(false),
-               is_targeting(false), aimed_at_feet(false), msg_generated(false),
-               noise_generated(false), passed_target(false),
-               in_explosion_phase(false), smart_monster(false),
-               attitude(ATT_HOSTILE), foe_ratio(0),
-               chose_ray(false), beam_cancelled(false),
-               dont_stop_player(false), bounces(false), bounce_pos(),
-               reflections(0), reflector(MID_NOBODY), auto_hit(false),
-               can_see_invis(false), nightvision(false)
-{
-}
 
 killer_type bolt::killer() const
 {
