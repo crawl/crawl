@@ -57,6 +57,12 @@ static inline ucs_t toalower(ucs_t c)
     return isaupper(c) ? c + 'a' - 'A' : c;
 }
 
+// Same thing with signed int, so we can pass though -1 undisturbed.
+static inline int toalower(int c)
+{
+    return isaupper(c) ? c + 'a' - 'A' : c;
+}
+
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(string a, string b);
 
