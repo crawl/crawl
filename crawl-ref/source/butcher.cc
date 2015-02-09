@@ -31,10 +31,8 @@
 #include "menu.h"
 #endif
 
-static bool _should_butcher(int corpse_id, bool bottle_blood = false)
+static bool _should_butcher(const item_def& corpse)
 {
-    const item_def &corpse = mitm[corpse_id];
-
     if (is_forbidden_food(corpse)
         && (Options.confirm_butcher == CONFIRM_NEVER
             || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
@@ -48,26 +46,33 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
     return true;
 }
 
-static bool _corpse_butchery(int corpse_id,
-                             bool first_corpse = true)
+/**
+ * Start butchering a corpse.
+ *
+ * @param corpse       Which corpse to butcher.
+ * @param first_corpse Whether this was the first corpse that's being butchered
+ *                     this turn, and which should therefore be worked on right
+ *                     away.
+ * @returns whether the player decided to actually butcher the corpse after all.
+ */
+static bool _start_butchering(item_def& corpse,
+                              bool first_corpse = true)
 {
-    ASSERT(corpse_id != -1);
-
-    if (!_should_butcher(corpse_id))
+    if (!_should_butcher(corpse))
         return false;
 
-    // Start work on the first corpse we butcher.
+    // Start work on the first corpse we butcher in a turn.
     if (first_corpse)
-        mitm[corpse_id].butcher_amount++;
+        corpse.butcher_amount++;
 
-    int work_req = max(0, 4 - mitm[corpse_id].butcher_amount);
+    int work_req = max(0, 4 - corpse.butcher_amount);
 
     const bool bottle_blood =
         you.species == SP_VAMPIRE
-        && can_bottle_blood_from_corpse(mitm[corpse_id].mon_type);
+        && can_bottle_blood_from_corpse(corpse.mon_type);
     const delay_type dtype = bottle_blood ? DELAY_BOTTLE_BLOOD : DELAY_BUTCHER;
 
-    start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special);
+    start_delay(dtype, work_req, corpse.index(), corpse.special);
 
     you.turn_is_over = true;
     return true;
@@ -104,108 +109,94 @@ static int _corpse_quality(const item_def &item, bool bottle_blood)
 /**
  * Attempt to butcher a corpse.
  *
- * @param which_corpse      The index of the corpse. (index into what...?)
- *                          -1 indicates that the first valid corpse should
- *                          be chosen.
+ * @param specific_corpse A pointer to the corpse. null means that the player
+ *                        chooses what to butcher (unless confirm_butcher =
+ *                        never).
  */
-bool butchery(int which_corpse)
+void butchery(item_def* specific_corpse)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
     {
         mpr("There isn't anything here!");
-        return false;
+        return;
     }
 
-    // First determine which things there are to butcher.
-    int corpse_id   = -1;
-    const bool prechosen  = (which_corpse != -1);
     const bool bottle_blood = you.species == SP_VAMPIRE;
     typedef pair<item_def *, int> corpse_quality;
     vector<corpse_quality> corpses;
 
+    // First determine which things there are to butcher.
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+        if (!si->is_type(OBJ_CORPSES, CORPSE_BODY))
             continue;
-
-        // If the pre-chosen corpse exists, pretend it was the only one.
-        if (prechosen && si->index() == which_corpse)
-        {
-            corpses = { { &*si, 0 } };
-            corpse_id = si->index();
-            break;
-        }
 
         corpses.emplace_back(&*si, _corpse_quality(*si, bottle_blood));
     }
 
-    if (corpses.size() == 0)
+    // If the pre-chosen corpse exists, pretend it was the only one.
+    if (specific_corpse)
+        corpses = { { specific_corpse, 0 } };
+
+    if (corpses.empty())
     {
-        mprf("There isn't anything to %s here.",
-             bottle_blood ? "bottle or butcher" : "butcher");
-        return false;
+        mprf("There isn't anything to %sbutcher here.",
+             bottle_blood ? "bottle or " : "");
+        return;
     }
 
     stable_sort(begin(corpses), end(corpses), greater_second<corpse_quality>());
-    // If we didn't select a pre-chosen corpse, pick the best one.
-    if (corpse_id < 0)
-        corpse_id = corpses[0].first->index();
 
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
-    bool success = false;
-    if (prechosen && corpse_id == which_corpse
+    if (specific_corpse
         || corpses.size() == 1 && Options.confirm_butcher != CONFIRM_ALWAYS
         || Options.confirm_butcher == CONFIRM_NEVER)
     {
         if (Options.confirm_butcher == CONFIRM_NEVER
-            && !_should_butcher(corpse_id, bottle_blood))
+            && !_should_butcher(*corpses[0].first))
         {
-            mprf("There isn't anything suitable to %s here.",
-                 bottle_blood ? "bottle or butcher" : "butcher");
-            return false;
+            mprf("There isn't anything suitable to %sbutcher here.",
+                 bottle_blood ? "bottle or " : "");
+            return;
         }
 
-        return _corpse_butchery(corpse_id, true);
+        _start_butchering(*corpses[0].first, true);
+        return;
     }
 
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
-    bool butcher_all   = false;
     bool first_corpse  = true;
 #ifdef TOUCH_UI
     vector<const item_def*> meat;
-    for (const auto &entry : corpses)
+    for (const corpse_quality &entry : corpses)
         meat.push_back(entry.first);
 
-    corpse_id = -1;
     vector<SelItem> selected =
         select_items(meat, bottle_blood ? "Choose a corpse to bottle or butcher"
                                         : "Choose a corpse to butcher",
                      false, MT_ANY, _butcher_menu_title);
     redraw_screen();
-    for (int i = 0, count = selected.size(); i < count; ++i)
+    for (SelItem sel : selected)
     {
-        corpse_id = selected[i].item->index();
-        if (_corpse_butchery(corpse_id, first_corpse))
+        if (_start_butchering(*sel.item, first_corpse))
         {
-            success = true;
             first_corpse = false;
         }
     }
 
 #else
-    int keyin;
-    bool repeat_prompt = false;
+    item_def* to_eat = nullptr;
+    bool butcher_all   = false;
     for (auto &entry : corpses)
     {
         item_def * const it = entry.first;
+        to_eat = nullptr;
 
         if (butcher_all)
-            corpse_id = it->index();
+            to_eat = it;
         else
         {
-            corpse_id = -1;
-
             string corpse_name = it->name(DESC_A);
 
             // We don't need to check for undead because
@@ -215,6 +206,7 @@ bool butchery(int which_corpse)
             if (you.undead_state() == US_ALIVE)
                 corpse_name = get_menu_colour_prefix_tags(*it, DESC_A);
 
+            bool repeat_prompt = false;
             // Shall we butcher this corpse?
             do
             {
@@ -225,23 +217,21 @@ bool butchery(int which_corpse)
                      corpse_name.c_str());
                 repeat_prompt = false;
 
-                keyin = toalower(getchm(KMC_CONFIRM));
-                switch (keyin)
+                switch (toalower(getchm(KMC_CONFIRM)))
                 {
+                case 'a':
+                    butcher_all = true;
+                // fallthrough
                 case 'y':
                 case 'c':
                 case 'd':
-                case 'a':
-                    corpse_id = it->index();
-
-                    if (keyin == 'a')
-                        butcher_all = true;
+                    to_eat = it;
                     break;
 
                 case 'q':
                 CASE_ESCAPE
                     canned_msg(MSG_OK);
-                    return success;
+                    return;
 
                 case '?':
                     show_butchering_help();
@@ -257,24 +247,18 @@ bool butchery(int which_corpse)
             while (repeat_prompt);
         }
 
-        if (corpse_id != -1)
-        {
-            if (_corpse_butchery(corpse_id, first_corpse))
-            {
-                success = true;
-                first_corpse = false;
-            }
-        }
+        if (to_eat && _start_butchering(*to_eat, first_corpse))
+            first_corpse = false;
     }
 #endif
-    if (!butcher_all && corpse_id == -1)
+    // No point in displaying this if the player pressed 'a' above.
+    if (!to_eat && !butcher_all)
     {
-        mprf("There isn't anything %s to %s here.",
-             Options.confirm_butcher == CONFIRM_NEVER ? "suitable" : "else",
-             bottle_blood ? "bottle" : "butcher");
+        mprf("There isn't anything else to %sbutcher here.",
+             bottle_blood ? "bottle or " : "");
     }
 
-    return success;
+    return;
 }
 
 

@@ -204,17 +204,13 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     case DELAY_BUTCHER:
     case DELAY_BOTTLE_BLOOD:
     {
-        // Corpse keeps track of work in butcher_amount field
-        // see handle_delay(). - bwr
-        bool multiple_corpses    = false;
-
-        for (unsigned int i = 1; i < you.delay_queue.size(); ++i)
-            if (you.delay_queue[i].type == DELAY_BUTCHER
-                || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD)
-            {
-                multiple_corpses = true;
-                break;
-            }
+        const bool multiple_corpses =
+        // + 1 because this delay is still in the queue.
+                   any_of(you.delay_queue.begin() + 1,
+                          you.delay_queue.end(),
+                          [](delay_queue_item dqi)
+                          { return dqi.type == DELAY_BUTCHER ||
+                            dqi.type == DELAY_BOTTLE_BLOOD; });
 
         mprf("You stop %s the corpse%s.",
              delay.type == DELAY_BUTCHER ? "butchering" : "bottling blood from",
@@ -710,7 +706,8 @@ void handle_delay()
             you.time_taken = 0;
             return;
         }
-    } else if (delay.type == DELAY_BLURRY_SCROLL)
+    }
+    else if (delay.type == DELAY_BLURRY_SCROLL)
     {
         if (!_can_read_scroll(delay.parm1))
         {
@@ -1095,12 +1092,6 @@ static void _finish_delay(const delay_queue_item &delay)
 #ifdef USE_TILE
     tiles.update_tabs();
 #endif
-}
-
-void finish_last_delay()
-{
-    delay_queue_item &delay = you.delay_queue.front();
-    _finish_delay(delay);
 }
 
 static void _armour_wear_effects(const int item_slot)
