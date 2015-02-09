@@ -11,9 +11,7 @@
 #include "command.h"
 #include "delay.h"
 #include "env.h"
-#include "english.h"
 #include "food.h"
-#include "godconduct.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -25,7 +23,6 @@
 #include "output.h"
 #include "prompt.h"
 #include "rot.h"
-#include "stash.h"
 #include "stepdown.h"
 #include "stringutil.h"
 
@@ -34,8 +31,10 @@
 #include "menu.h"
 #endif
 
-static bool _should_butcher(item_def& corpse, bool bottle_blood = false)
+static bool _should_butcher(int corpse_id, bool bottle_blood = false)
 {
+    const item_def &corpse = mitm[corpse_id];
+
     if (is_forbidden_food(corpse)
         && (Options.confirm_butcher == CONFIRM_NEVER
             || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
@@ -49,56 +48,26 @@ static bool _should_butcher(item_def& corpse, bool bottle_blood = false)
     return true;
 }
 
-static bool _corpse_butchery(item_def& corpse,
+static bool _corpse_butchery(int corpse_id,
                              bool first_corpse = true)
 {
-    ASSERT(corpse.defined());
-    ASSERT(corpse.base_type == OBJ_CORPSES);
+    ASSERT(corpse_id != -1);
 
-    if (!_should_butcher(corpse))
+    if (!_should_butcher(corpse_id))
         return false;
 
-    const bool was_holy = mons_class_holiness(corpse.mon_type) == MH_HOLY;
-    const bool was_intelligent = corpse_intelligence(corpse) >= I_NORMAL;
-    const bool was_same_genus = is_player_same_genus(corpse.mon_type);
+    // Start work on the first corpse we butcher.
+    if (first_corpse)
+        mitm[corpse_id].butcher_amount++;
 
-    if (you.species == SP_VAMPIRE
-        && can_bottle_blood_from_corpse(corpse.mon_type))
-    {
-        mprf("You bottle %s blood.", apostrophise(corpse.name(DESC_THE)).c_str());
+    int work_req = max(0, 4 - mitm[corpse_id].butcher_amount);
 
-        if (mons_skeleton(corpse.mon_type) && one_chance_in(3))
-            turn_corpse_into_skeleton_and_blood_potions(corpse);
-        else
-            turn_corpse_into_blood_potions(corpse);
-        autopickup();
-    }
-    else
-    {
-        mprf("You butcher %s.",
-             corpse.name(DESC_THE).c_str());
+    const bool bottle_blood =
+        you.species == SP_VAMPIRE
+        && can_bottle_blood_from_corpse(mitm[corpse_id].mon_type);
+    const delay_type dtype = bottle_blood ? DELAY_BOTTLE_BLOOD : DELAY_BUTCHER;
 
-        butcher_corpse(corpse);
-
-        if (you.berserk() && you.berserk_penalty != NO_BERSERK_PENALTY)
-        {
-            mpr("You enjoyed that.");
-            you.berserk_penalty = 0;
-        }
-
-        // Also, don't waste time picking up chunks if you're already
-        // starving. (jpeg)
-        if (you.hunger_state > HS_STARVING)
-            autopickup();
-    }
-
-    if (was_same_genus)
-        did_god_conduct(DID_CANNIBALISM, 2);
-    else if (was_holy)
-        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 4);
-    else if (was_intelligent)
-        did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
-    StashTrack.update_stash(you.pos()); // Stash-track the generated items.
+    start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special);
 
     you.turn_is_over = true;
     return true;
@@ -189,14 +158,14 @@ bool butchery(int which_corpse)
         || Options.confirm_butcher == CONFIRM_NEVER)
     {
         if (Options.confirm_butcher == CONFIRM_NEVER
-            && !_should_butcher(mitm[corpse_id], bottle_blood))
+            && !_should_butcher(corpse_id, bottle_blood))
         {
             mprf("There isn't anything suitable to %s here.",
                  bottle_blood ? "bottle or butcher" : "butcher");
             return false;
         }
 
-        return _corpse_butchery(mitm[corpse_id], true);
+        return _corpse_butchery(corpse_id, true);
     }
 
     // Now pick what you want to butcher. This is only a problem
@@ -217,7 +186,7 @@ bool butchery(int which_corpse)
     for (int i = 0, count = selected.size(); i < count; ++i)
     {
         corpse_id = selected[i].item->index();
-        if (_corpse_butchery(mitm[corpse_id], first_corpse))
+        if (_corpse_butchery(corpse_id, first_corpse))
         {
             success = true;
             first_corpse = false;
@@ -290,7 +259,7 @@ bool butchery(int which_corpse)
 
         if (corpse_id != -1)
         {
-            if (_corpse_butchery(mitm[corpse_id], first_corpse))
+            if (_corpse_butchery(corpse_id, first_corpse))
             {
                 success = true;
                 first_corpse = false;
