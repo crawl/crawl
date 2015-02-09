@@ -11,6 +11,7 @@
 #include "ng-restr.h"
 
 #include "jobs.h"
+#include "newgame.h"
 #include "newgame_def.h"
 #include "species.h"
 

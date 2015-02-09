@@ -40,6 +40,7 @@
 #include "mapdef.h"
 #include "message.h"
 #include "mon-util.h"
+#include "newgame.h"
 #include "options.h"
 #include "player.h"
 #include "prompt.h"
