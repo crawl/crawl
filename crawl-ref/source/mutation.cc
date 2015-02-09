@@ -1465,12 +1465,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         // than divine protection.
         if (!god_gift && _resist_mutation(mutclass, beneficial))
         {
-            if (_resist_mutation(mutclass, beneficial))
-            {
-                if (failMsg)
-                    mprf(MSGCH_MUTATION, "You feel odd for a moment.");
-                return false;
-            }
+            if (failMsg)
+                mprf(MSGCH_MUTATION, "You feel odd for a moment.");
+            return false;
         }
 
         // Zin's protection.
