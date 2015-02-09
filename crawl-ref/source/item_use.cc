@@ -2963,7 +2963,7 @@ bool stasis_blocks_effect(bool calc_unid,
 
 void tile_item_use_floor(int idx)
 {
-    if (mitm[idx].is_type(OBJ_CORPSES, CORPSE_BODY)
+    if (mitm[idx].is_type(OBJ_CORPSES, CORPSE_BODY))
         butchery(&mitm[idx]);
 }
 
