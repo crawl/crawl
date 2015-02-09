@@ -10,7 +10,6 @@ class MenuFreeform;
 struct menu_letter;
 struct newgame_def;
 
-undead_state_type get_undead_state(const species_type sp);
 // Is the species valid for a new game?
 bool is_starting_species(species_type);
 
