@@ -8,7 +8,7 @@
 
 #define MANGLED_CORPSE_KEY "mangled_corpse"
 
-bool butchery(int which_corpse = -1);
+void butchery(item_def* specific_corpse = nullptr);
 
 void maybe_drop_monster_hide(const item_def corpse);
 int get_max_corpse_chunks(monster_type mons_class);
