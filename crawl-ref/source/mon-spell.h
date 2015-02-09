@@ -304,8 +304,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MOTTLED_DRAGON,
       {
-       { SPELL_STICKY_FLAME_SPLASH, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
-                                         | MON_SPELL_NOISY },
+       { SPELL_STICKY_FLAME_RANGE, 55, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                        | MON_SPELL_NOISY },
       }
     },
 
@@ -623,7 +623,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELL_HOG,
       {
-       { SPELL_STICKY_FLAME_SPLASH, 61, MON_SPELL_NATURAL },
+       { SPELL_STICKY_FLAME, 61, MON_SPELL_NATURAL },
       }
     },
 
