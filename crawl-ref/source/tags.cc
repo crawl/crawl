@@ -2728,6 +2728,10 @@ static void tag_read_you(reader &th)
         you.mutation[MUT_JUMP] = 0;
     }
 
+    // No minor version needed: all old felids should get MUT_PAWS.
+    if (you.species == SP_FELID && you.innate_mutation[MUT_PAWS] < 1)
+        you.mutation[MUT_PAWS] = you.innate_mutation[MUT_PAWS] = 1;
+
 #endif
 
     count = unmarshallUByte(th);
