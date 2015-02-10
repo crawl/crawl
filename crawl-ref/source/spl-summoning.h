@@ -2,7 +2,6 @@
 #define SPL_SUMMONING_H
 
 #include "beam.h"
-#include "data-index.h"
 #include "enum.h"
 #include "itemprop-enum.h"
 #include "spl-cast.h"
@@ -130,26 +129,5 @@ bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell);
 int count_summons(const actor *summoner, spell_type spell);
 void summon_twister(int power_level);
-
-struct summons_desc // : public data_index_entry<spell_type>
-{
-    // XXX: Assumes that all summons types from each spell are equal,
-    // this is probably fine for now, but will need thought if a spell
-    // needs to have two separate caps
-    spell_type which;
-    int type_cap;               // Maximum number for this type
-    int timeout;                // Timeout length for replaced summons
-};
-
-class summons_index : public data_index<spell_type, summons_desc, NUM_SPELLS>
-{
-public:
-    summons_index(const summons_desc* _pop)
-        : data_index<spell_type, summons_desc, NUM_SPELLS>(_pop)
-    {};
-
-protected:
-    spell_type map(const summons_desc* val);
-};
 
 #endif
