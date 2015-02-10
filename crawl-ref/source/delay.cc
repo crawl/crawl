@@ -181,20 +181,30 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     ASSERT(!crawl_state.game_is_arena());
 
     delay_queue_item delay = you.delay_queue.front();
+    
+    const bool multiple_corpses =
+        (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD)
+        // + 1 because this delay is still in the queue.
+        && any_of(you.delay_queue.begin() + 1, you.delay_queue.end(),
+                  [] (const delay_queue_item &dqi)
+                  {
+                      return dqi.type == DELAY_BUTCHER
+                          || dqi.type == DELAY_BOTTLE_BLOOD;
+                  });
+
+    // At the very least we can remove any queued delays, right
+    // now there is no problem with doing this... note that
+    // any queuing here can only happen from a single command,
+    // as the effect of a delay doesn't normally allow interaction
+    // until it is done... it merely chains up individual actions
+    // into a single action.  -- bwr
+    _clear_pending_delays();
 
     switch (delay.type)
     {
     case DELAY_BUTCHER:
     case DELAY_BOTTLE_BLOOD:
     {
-        const bool multiple_corpses =
-        // + 1 because this delay is still in the queue.
-                   any_of(you.delay_queue.begin() + 1,
-                          you.delay_queue.end(),
-                          [](delay_queue_item dqi)
-                          { return dqi.type == DELAY_BUTCHER ||
-                            dqi.type == DELAY_BOTTLE_BLOOD; });
-
         mprf("You stop %s the corpse%s.",
              delay.type == DELAY_BUTCHER ? "butchering" : "bottling blood from",
              multiple_corpses ? "s" : "");
@@ -361,15 +371,6 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     default:
         break;
     }
-
-    // At the very least we can remove any queued delays, right
-    // now there is no problem with doing this... note that
-    // any queuing here can only happen from a single command,
-    // as the effect of a delay doesn't normally allow interaction
-    // until it is done... it merely chains up individual actions
-    // into a single action.  -- bwr
-    _clear_pending_delays();
-
 
     if (delay_is_run(delay.type))
         update_turn_count();
