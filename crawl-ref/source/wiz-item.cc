@@ -124,7 +124,8 @@ void wizard_create_spec_object()
         }
     } while (class_wanted == NUM_OBJECT_CLASSES);
 
-    msgwin_reply(make_stringf("%c", keyin));
+    // XXX: hope item_class_by_sym never returns a real class for non-ascii.
+    msgwin_reply(string(1, (char) keyin));
 
     // Allocate an item to play with.
     thing_created = get_mitm_slot();

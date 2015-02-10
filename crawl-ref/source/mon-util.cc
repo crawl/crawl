@@ -4668,7 +4668,7 @@ void debug_monspells()
                                          (int) (it - begin(mons_books)));
             }
             else
-                book_name = make_stringf("%s", mons_name);
+                book_name = mons_name;
         }
 
         const char * const bknm = book_name.c_str();

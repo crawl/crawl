@@ -1372,7 +1372,7 @@ string command_to_string(command_type cmd, bool tutorial)
         if (tutorial && key >= 'A' && key <= 'Z')
             result = make_stringf("uppercase %c", (char) key);
         else
-            result = make_stringf("%c", (char) key);
+            result = string(1, (char) key);
     }
     else if (key > 1000 && key <= 1009)
     {
