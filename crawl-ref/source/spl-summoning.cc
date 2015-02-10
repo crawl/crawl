@@ -3452,77 +3452,73 @@ void end_grand_avatar(monster* mons, bool killed)
     }
 }
 
-spell_type summons_index::map(const summons_desc* val)
+struct summon_cap
 {
-    return val->which;
-}
-
-// spell type, cap, timeout
-static const summons_desc summonsdata[] =
-{
-    // Beasts
-    { SPELL_SUMMON_BUTTERFLIES,         8, 5 },
-    { SPELL_SUMMON_SMALL_MAMMAL,        4, 2 },
-    { SPELL_CALL_CANINE_FAMILIAR,       1, 2 },
-    { SPELL_SUMMON_ICE_BEAST,           3, 3 },
-    { SPELL_SUMMON_HYDRA,               3, 2 },
-    { SPELL_SUMMON_MANA_VIPER,          2, 2 },
-    // Demons
-    { SPELL_CALL_IMP,                   3, 3 },
-    { SPELL_SUMMON_DEMON,               3, 2 },
-    { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
-    // General monsters
-    { SPELL_MONSTROUS_MENAGERIE,        3, 2 },
-    { SPELL_SUMMON_HORRIBLE_THINGS,     8, 8 },
-    { SPELL_SHADOW_CREATURES,           4, 2 },
-    { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
-    { SPELL_SUMMON_GUARDIAN_GOLEM,      1, 2 },
-    { SPELL_SPELLFORGED_SERVITOR,       1, 2 },
-    // Monster spells
-    { SPELL_SUMMON_UFETUBUS,            8, 2 },
-    { SPELL_SUMMON_HELL_BEAST,          8, 2 },
-    { SPELL_SUMMON_UNDEAD,              8, 2 },
-    { SPELL_SUMMON_DRAKES,              4, 2 },
-    { SPELL_SUMMON_MUSHROOMS,           8, 2 },
-    { SPELL_SUMMON_EYEBALLS,            4, 2 },
-    { SPELL_WATER_ELEMENTALS,           3, 2 },
-    { SPELL_FIRE_ELEMENTALS,            3, 2 },
-    { SPELL_EARTH_ELEMENTALS,           3, 2 },
-    { SPELL_AIR_ELEMENTALS,             3, 2 },
-    { SPELL_IRON_ELEMENTALS,            3, 2 },
-    { SPELL_SUMMON_SPECTRAL_ORCS,       3, 2 },
-    { SPELL_FIRE_SUMMON,                4, 2 },
-    { SPELL_SUMMON_MINOR_DEMON,         3, 3 },
-    { SPELL_CALL_LOST_SOUL,             3, 2 },
-    { SPELL_SUMMON_VERMIN,              5, 2 },
-    { SPELL_FORCEFUL_INVITATION,        3, 1 },
-    { SPELL_PLANEREND,                  6, 1 },
-    { SPELL_SUMMON_DRAGON,              4, 8 },
-    { SPELL_PHANTOM_MIRROR,             4, 1 },
-    { SPELL_FAKE_MARA_SUMMON,           2, 1 },
-    { SPELL_SUMMON_EMPEROR_SCORPIONS,   6, 2 },
-    { SPELL_SUMMON_SCARABS,             8, 1 },
-    { SPELL_SUMMON_HOLIES,              4, 2 },
-    // Rod specials
-    { SPELL_SUMMON_SWARM,              12, 2 },
-    { SPELL_WEAVE_SHADOWS,              4, 2 },
-    { SPELL_NO_SPELL,                   0, 0 }
+    int type_cap;
+    int timeout;
 };
 
-static summons_index summonsindex(summonsdata);
+// spell type, cap, timeout
+static const map<spell_type, summon_cap> summonsdata =
+{
+    // Beasts
+    { SPELL_SUMMON_BUTTERFLIES,         { 8, 5 } },
+    { SPELL_SUMMON_SMALL_MAMMAL,        { 4, 2 } },
+    { SPELL_CALL_CANINE_FAMILIAR,       { 1, 2 } },
+    { SPELL_SUMMON_ICE_BEAST,           { 3, 3 } },
+    { SPELL_SUMMON_HYDRA,               { 3, 2 } },
+    { SPELL_SUMMON_MANA_VIPER,          { 2, 2 } },
+    // Demons
+    { SPELL_CALL_IMP,                   { 3, 3 } },
+    { SPELL_SUMMON_DEMON,               { 3, 2 } },
+    { SPELL_SUMMON_GREATER_DEMON,       { 3, 2 } },
+    // General monsters
+    { SPELL_MONSTROUS_MENAGERIE,        { 3, 2 } },
+    { SPELL_SUMMON_HORRIBLE_THINGS,     { 8, 8 } },
+    { SPELL_SHADOW_CREATURES,           { 4, 2 } },
+    { SPELL_SUMMON_LIGHTNING_SPIRE,     { 1, 2 } },
+    { SPELL_SUMMON_GUARDIAN_GOLEM,      { 1, 2 } },
+    { SPELL_SPELLFORGED_SERVITOR,       { 1, 2 } },
+    // Monster spells
+    { SPELL_SUMMON_UFETUBUS,            { 8, 2 } },
+    { SPELL_SUMMON_HELL_BEAST,          { 8, 2 } },
+    { SPELL_SUMMON_UNDEAD,              { 8, 2 } },
+    { SPELL_SUMMON_DRAKES,              { 4, 2 } },
+    { SPELL_SUMMON_MUSHROOMS,           { 8, 2 } },
+    { SPELL_SUMMON_EYEBALLS,            { 4, 2 } },
+    { SPELL_WATER_ELEMENTALS,           { 3, 2 } },
+    { SPELL_FIRE_ELEMENTALS,            { 3, 2 } },
+    { SPELL_EARTH_ELEMENTALS,           { 3, 2 } },
+    { SPELL_AIR_ELEMENTALS,             { 3, 2 } },
+    { SPELL_IRON_ELEMENTALS,            { 3, 2 } },
+    { SPELL_SUMMON_SPECTRAL_ORCS,       { 3, 2 } },
+    { SPELL_FIRE_SUMMON,                { 4, 2 } },
+    { SPELL_SUMMON_MINOR_DEMON,         { 3, 3 } },
+    { SPELL_CALL_LOST_SOUL,             { 3, 2 } },
+    { SPELL_SUMMON_VERMIN,              { 5, 2 } },
+    { SPELL_FORCEFUL_INVITATION,        { 3, 1 } },
+    { SPELL_PLANEREND,                  { 6, 1 } },
+    { SPELL_SUMMON_DRAGON,              { 4, 8 } },
+    { SPELL_PHANTOM_MIRROR,             { 4, 1 } },
+    { SPELL_FAKE_MARA_SUMMON,           { 2, 1 } },
+    { SPELL_SUMMON_EMPEROR_SCORPIONS,   { 6, 2 } },
+    { SPELL_SUMMON_SCARABS,             { 8, 1 } },
+    { SPELL_SUMMON_HOLIES,              { 4, 2 } },
+    // Rod specials
+    { SPELL_SUMMON_SWARM,              { 12, 2 } },
+    { SPELL_WEAVE_SHADOWS,              { 4, 2 } },
+};
 
 bool summons_are_capped(spell_type spell)
 {
     ASSERT_RANGE(spell, 0, NUM_SPELLS);
-    return summonsindex.contains(spell);
+    return summonsdata.count(spell);
 }
 
 int summons_limit(spell_type spell)
 {
-    if (!summons_are_capped(spell))
-        return 0;
-    const summons_desc *desc = summonsindex[spell];
-    return desc->type_cap;
+    const summon_cap *cap = map_find(summonsdata, spell);
+    return cap ? cap->type_cap : 0;
 }
 
 static bool _spell_has_variable_cap(spell_type spell)
@@ -3564,12 +3560,11 @@ static void _expire_capped_summon(monster* mon, int delay, bool recurse)
 void summoned_monster(const monster *mons, const actor *caster,
                       spell_type spell)
 {
-    if (!summons_are_capped(spell))
+    const summon_cap *cap = map_find(summonsdata, spell);
+    if (!cap) // summons aren't capped
         return;
 
-    const summons_desc *desc = summonsindex[spell];
-
-    int max_this_time = desc->type_cap;
+    int max_this_time = cap->type_cap;
 
     // Cap large abominations and tentacled monstrosities separately
     if (spell == SPELL_SUMMON_HORRIBLE_THINGS)
@@ -3626,7 +3621,7 @@ void summoned_monster(const monster *mons, const actor *caster,
     }
 
     if (oldest_summon && count > max_this_time)
-        _expire_capped_summon(oldest_summon, desc->timeout * 5, true);
+        _expire_capped_summon(oldest_summon, cap->timeout * 5, true);
 }
 
 int count_summons(const actor *summoner, spell_type spell)
