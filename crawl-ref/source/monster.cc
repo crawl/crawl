@@ -2861,11 +2861,11 @@ bool monster::go_frenzy(actor *source)
     props["old_attitude"] = short(attitude);
 
     attitude = ATT_NEUTRAL;
-    add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * 10));
+    add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * BASELINE_DELAY));
     if (holiness() == MH_NATURAL)
     {
-        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * 10));
-        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * 10));
+        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * BASELINE_DELAY));
+        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * BASELINE_DELAY));
     }
     mons_att_changed(this);
 
@@ -5202,7 +5202,7 @@ bool monster::sicken(int amount)
         mprf("%s looks sick.", name(DESC_THE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_SICK, 0, 0, amount * 10));
+    add_ench(mon_enchant(ENCH_SICK, 0, 0, amount * BASELINE_DELAY));
 
     return true;
 }
@@ -5215,7 +5215,7 @@ bool monster::bleed(const actor* agent, int amount, int degree)
              pronoun(PRONOUN_POSSESSIVE).c_str());
     }
 
-    add_ench(mon_enchant(ENCH_BLEED, degree, agent, amount * 10));
+    add_ench(mon_enchant(ENCH_BLEED, degree, agent, amount * BASELINE_DELAY));
 
     return true;
 }
@@ -5873,7 +5873,7 @@ void monster::weaken(actor *attacker, int pow)
         simple_monster_message(this, " looks weaker.");
 
     add_ench(mon_enchant(ENCH_WEAK, 1, attacker,
-                         (pow * 10 + random2(pow * 10 + 30))));
+                         (pow + random2(pow + 3)) * BASELINE_DELAY));
 }
 
 void monster::check_awaken(int)

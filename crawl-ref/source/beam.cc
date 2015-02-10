@@ -4565,7 +4565,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_THROW_BARBS && dmg > 0
         && !(mon->is_insubstantial() || mons_genus(mon->type) == MONS_JELLY))
     {
-        mon->add_ench(mon_enchant(ENCH_BARBS, 1, agent(), random_range(5, 7) * 10));
+        mon->add_ench(mon_enchant(ENCH_BARBS, 1, agent(),
+                                  random_range(5, 7) * BASELINE_DELAY));
     }
 }
 
@@ -5366,7 +5367,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         obvious_effect = true;
         const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
-        mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, agent(), duration * 10));
+        mon->add_ench(mon_enchant(ENCH_SOUL_RIPE, 0, agent(),
+                                  duration * BASELINE_DELAY));
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
         return MON_AFFECTED;
     }
