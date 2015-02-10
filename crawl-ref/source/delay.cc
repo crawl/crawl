@@ -943,6 +943,7 @@ static void _finish_delay(const delay_queue_item &delay)
         // We know the item is valid and a real corpse, because handle_delay()
         // checked for that.
         finish_butchering(mitm[delay.parm1], delay.type == DELAY_BOTTLE_BLOOD);
+        you.turn_is_over = true;
         break;
 
     case DELAY_DROP_ITEM:
