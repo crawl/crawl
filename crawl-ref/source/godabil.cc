@@ -5942,7 +5942,7 @@ void ru_offer_new_sacrifices()
            chosen_sacrifice = _get_cheapest_sacrifice(possible_sacrifices);
         }
 
-        if (chosen_sacrifice == ABIL_FINAL_SACRIFICE)
+        if (chosen_sacrifice > ABIL_FINAL_SACRIFICE)
         {
             // We don't have three sacrifices to offer for some reason.
             // Either the player is messing around in wizmode or has rejoined
