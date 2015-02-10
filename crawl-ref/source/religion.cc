@@ -552,12 +552,12 @@ bool is_unavailable_god(god_type god)
     // oklobs, etc...
     // Basically, ZotDef is Fedhas.
 
-    // No Ashenzari/Nemelex, too -- nothing to explore, can't use
-    // their abilities.
+    // Don't allow exploration-piety gods, either -- nothing to explore.
     // We could give some piety for every wave, but there's little point.
     if (crawl_state.game_is_zotdef() && (god == GOD_FEDHAS
                                          || god == GOD_ASHENZARI
-                                         || god == GOD_NEMELEX_XOBEH))
+                                         || god == GOD_NEMELEX_XOBEH
+                                         || god == GOD_ASHENZARI))
     {
         return true;
     }
