@@ -2197,15 +2197,27 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    const int gold = gozag_gold_in_los(mons);
-    if (!mons->asleep()
+    if (you.duration[DUR_GOZAG_GOLD_AURA]
+        && in_good_standing(GOD_GOZAG)
+        && !mons->asleep()
         && !mons_is_avatar(mons->type)
-        && !mons->wont_attack() && gold > 0)
+        && !mons->wont_attack())
     {
+        const int gold = you.props["gozag_gold_aura_amount"].get_int();
         if (bernoulli(gold, 3.0/100.0))
         {
-            simple_monster_message(mons,
+            if (gozag_gold_in_los(mons))
+            {
+                simple_monster_message(mons,
                     " is distracted by the nearby gold.");
+            }
+            else if (you.gold > 0)
+                simple_monster_message(mons, " is distracted by your gold.");
+            // Just in case!
+            else
+                simple_monster_message(mons,
+                                       " is distracted by imaginary riches.");
+
             mons->add_ench(
                 mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
                             random_range(1, 5) * BASELINE_DELAY));

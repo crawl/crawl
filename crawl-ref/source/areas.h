@@ -15,7 +15,6 @@ enum area_centre_type
 #if TAG_MAJOR_VERSION == 34
     AREA_HOT,
 #endif
-    AREA_GOLD,
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -53,8 +52,5 @@ bool umbraed(const coord_def& p);
 // ...or is the area hot?
 bool heated(const coord_def& p);
 #endif
-
-// ...or glowing with fresh gold (Gozag)?
-bool golden(const coord_def& p);
 
 #endif

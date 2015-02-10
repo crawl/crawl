@@ -1196,6 +1196,11 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
+    if (_decrement_a_duration(DUR_GOZAG_GOLD_AURA, delay))
+    {
+        you.props["gozag_gold_aura_amount"] = 0;
+        redraw_screen();
+    }
     dec_elixir_player(delay);
 
     for (int i = 0; i < delay; ++i)

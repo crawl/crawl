@@ -2195,7 +2195,10 @@ static vector<formatted_string> _get_overview_stats()
     else
         entry.cprintf("Gold:   ");
 
-    entry.textcolour(HUD_VALUE_COLOUR);
+    if (you.duration[DUR_GOZAG_GOLD_AURA])
+        entry.textcolour(LIGHTBLUE);
+    else
+        entry.textcolour(HUD_VALUE_COLOUR);
 
     entry.cprintf("%d", you.gold);
 

@@ -372,13 +372,6 @@ bool dec_mitm_item_quantity(int obj, int amount)
     if (amount > item.quantity)
         amount = item.quantity; // can't use min due to type mismatch
 
-    // when removing gold from a stack, make it lose its gozag-aura
-    if (item.base_type == OBJ_GOLD && item.special > 0 && amount)
-    {
-        item.special = 0;
-        invalidate_agrid(true);
-    }
-
     if (item.quantity == amount)
     {
         destroy_item(obj);

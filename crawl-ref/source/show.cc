@@ -144,9 +144,6 @@ static void _update_feat_at(const coord_def &gp)
         env.map_knowledge(gp).flags |= MAP_HOT;
 #endif
 
-    if (golden(gp))
-        env.map_knowledge(gp).flags |= MAP_GOLDEN;
-
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))

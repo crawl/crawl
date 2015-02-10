@@ -56,7 +56,6 @@ struct cloud_info
 #if TAG_MAJOR_VERSION == 34
 #define MAP_HOT           0x10000000
 #endif
-#define MAP_GOLDEN        0x20000000
 
 /*
  * A map_cell stores what the player knows about a cell.
