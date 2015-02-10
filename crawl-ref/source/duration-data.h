@@ -401,6 +401,7 @@ static const duration_def duration_data[] =
     { DUR_ELIXIR_MAGIC, 0, "", "", "elixir magic", "", D_DISPELLABLE},
     { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS},
     { DUR_MAGIC_SAPPED, 0, "", "", "magic sapped", "", D_DISPELLABLE},
+    { DUR_GOZAG_GOLD_AURA, 0, "", "", "gold aura", "", D_NO_FLAGS },
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

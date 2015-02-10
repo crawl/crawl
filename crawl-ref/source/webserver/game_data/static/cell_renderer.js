@@ -648,8 +648,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     // TAG_MAJOR_VERSION == 34
                     if (cell.heat_aura)
                         this.draw_dngn(dngn.HEAT_AURA + cell.heat_aura - 1, x, y);
-                    if (cell.gold_aura)
-                        this.draw_dngn(dngn.GOLD_AURA + cell.gold_aura - 1, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
@@ -739,10 +737,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             {
                 this.render_glyph(x, y, map_cell, true);
             }
-
-            // gozag gold sparkles, only if there's no creature in tile
-            if (cell.gold_aura && fg_idx < main.MAIN_MAX)
-                this.draw_icon(icons.GOLD_SPARKLES + cell.gold_aura - 1, x, y);
 
             if (fg.NET)
                 this.draw_icon(icons.TRAP_NET, x, y);

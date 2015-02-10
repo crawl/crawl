@@ -1845,6 +1845,7 @@ enum duration_type
     DUR_NEGATIVE_VULN,
 #endif
     DUR_CLEAVE,
+    DUR_GOZAG_GOLD_AURA,
     NUM_DURATIONS
 };
 

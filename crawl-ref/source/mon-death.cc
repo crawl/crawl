@@ -51,6 +51,7 @@
 #include "mon-speak.h"
 #include "mon-tentacle.h"
 #include "notes.h"
+#include "output.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
@@ -199,8 +200,6 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     {
         nchunks = corpse.quantity;
         corpse.quantity = 1;
-        // Don't give a bonus from *all* the gold chunks...
-        corpse.special = 0;
     }
     else
     {
@@ -436,8 +435,16 @@ void goldify_corpse(item_def &corpse)
     corpse.clear();
     corpse.base_type = OBJ_GOLD;
     corpse.quantity = base_gold / 2 + random2avg(base_gold, 2);
-    corpse.special = corpse.quantity;
     item_colour(corpse);
+
+    // Apply the gold aura effect to the player.
+    const int dur = corpse.quantity * 2;
+    if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
+    {
+        you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
+        redraw_screen();
+    }
+    you.props["gozag_gold_aura_amount"].get_int()++;
 }
 
 // Returns the item slot of a generated corpse, or -1 if no corpse.
@@ -513,9 +520,6 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     }
 
     move_item_to_grid(&o, mons->pos(), !mons->swimming());
-
-    if (o != NON_ITEM && mitm[o].base_type == OBJ_GOLD)
-        invalidate_agrid(true);
 
     if (you.see_cell(mons->pos()))
     {
