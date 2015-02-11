@@ -30,6 +30,8 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
 
 const char *get_species_abbrev(species_type which_species)
 {
+    if (which_species == SP_UNKNOWN)
+        return "Ya";
     ASSERT_RANGE(which_species, 0, NUM_SPECIES);
 
     return Species_Abbrev_List[which_species];
