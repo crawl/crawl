@@ -6424,6 +6424,38 @@ static int _bone_armour_bonus()
     return you.attribute[ATTR_BONE_ARMOUR] * (50 + power);
 }
 
+/**
+ * How much AC does the player get from an unenchanted version of the given
+ * armour?
+ *
+ * @param armour    The armour in question.
+ * @param scale     A value to multiply the result by. (Used to avoid integer
+ *                  rounding.)
+ * @return          The AC from that armour, including armour skill, mutations
+ *                  & divine blessings, but not enchantments or egos.
+ */
+int player::base_ac_from(const item_def &armour, int scale) const
+{
+    const int base_ac     = property(armour, PARM_AC) * scale;
+    const int beogh_bonus  = _player_armour_beogh_bonus(armour);
+
+    // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
+    // Armour Skill + beogh_bonus / 2.
+    const int AC
+        = base_ac * (440 + skill(SK_ARMOUR, 20) + beogh_bonus * 10) / 440;
+
+    // The deformed don't fit into body armour very well.
+    // (This includes nagas and centaurs.)
+    if (get_armour_slot(armour) == EQ_BODY_ARMOUR
+            && (player_mutation_level(MUT_DEFORMED)
+                || player_mutation_level(MUT_PSEUDOPODS)))
+    {
+        return AC - base_ac / 2;
+    }
+
+    return AC;
+}
+
 int player::armour_class(bool /*calc_unid*/) const
 {
     int AC = 0;
@@ -6436,22 +6468,9 @@ int player::armour_class(bool /*calc_unid*/) const
         if (!player_wearing_slot(eq))
             continue;
 
-        const item_def& item   = inv[equip[eq]];
-        const int ac_value     = property(item, PARM_AC) * 100;
-        const int beogh_bonus  = _player_armour_beogh_bonus(item);
-
-        // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
-        // Armour Skill + beogh_bonus / 2.
-        AC += ac_value * (440 + skill(SK_ARMOUR, 20) + beogh_bonus * 10) / 440;
+        const item_def& item = inv[equip[eq]];
+        AC += base_ac_from(item, 100);
         AC += item.plus * 100;
-
-        // The deformed don't fit into body armour very well.
-        // (This includes nagas and centaurs.)
-        if (eq == EQ_BODY_ARMOUR && (player_mutation_level(MUT_DEFORMED)
-                                     || player_mutation_level(MUT_PSEUDOPODS)))
-        {
-            AC -= ac_value / 2;
-        }
     }
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
