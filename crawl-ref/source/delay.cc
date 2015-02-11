@@ -181,7 +181,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     ASSERT(!crawl_state.game_is_arena());
 
     delay_queue_item delay = you.delay_queue.front();
-    
+
     const bool multiple_corpses =
         (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD)
         // + 1 because this delay is still in the queue.
