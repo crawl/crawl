@@ -138,6 +138,19 @@ bool monster::add_ench(const mon_enchant &ench)
         invalidate_agrid();
     }
 
+    // If we have never changed shape, mark us as shapeshifter, so that
+    // "goblin perm_ench:shapeshifter" reverts on death.
+    if (ench.ench == ENCH_SHAPESHIFTER)
+    {
+        if (!props.exists(ORIGINAL_TYPE_KEY))
+            props[ORIGINAL_TYPE_KEY].get_int() = MONS_SHAPESHIFTER;
+    }
+    else if (ench.ench == ENCH_GLOWING_SHAPESHIFTER)
+    {
+        if (!props.exists(ORIGINAL_TYPE_KEY))
+            props[ORIGINAL_TYPE_KEY].get_int() = MONS_GLOWING_SHAPESHIFTER;
+    }
+
     bool new_enchantment = false;
     mon_enchant *added = map_find(enchantments, ench.ench);
     if (added)
