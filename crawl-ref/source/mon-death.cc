@@ -113,12 +113,9 @@ monster_type fill_out_corpse(const monster* mons,
                 corpse_class = draco_or_demonspawn_subspecies(mons);
         }
 
-        if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-            mtype = corpse_class = MONS_GLOWING_SHAPESHIFTER;
-        else if (mons->has_ench(ENCH_SHAPESHIFTER))
-            mtype = corpse_class = MONS_SHAPESHIFTER;
-        else if (mons->props.exists(ORIGINAL_TYPE_KEY))
+        if (mons->props.exists(ORIGINAL_TYPE_KEY))
         {
+            // Shapeshifters too.
             mtype = (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int();
             corpse_class = mons_species(mtype);
         }
@@ -2681,20 +2678,27 @@ int monster_die(monster* mons, killer_type killer,
         && !fake_abjuration
         && !timeout
         && !unsummoned
-        && !(mons->flags & MF_KNOWN_SHIFTER))
-
+        && mons->props.exists(ORIGINAL_TYPE_KEY))
     {
-        if (mons->is_shapeshifter())
+        const monster_type orig =
+            (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int();
+
+        if (orig == MONS_SHAPESHIFTER || orig == MONS_GLOWING_SHAPESHIFTER)
         {
-            const string message = "'s shape twists and changes as " +
-                                   mons->pronoun(PRONOUN_SUBJECTIVE) + " dies.";
-            simple_monster_message(mons, message.c_str());
+            // No message for known shifters, unless they were originally
+            // something else.
+            if (!(mons->flags & MF_KNOWN_SHIFTER))
+            {
+                const string message = "'s shape twists and changes as "
+                                     + mons->pronoun(PRONOUN_SUBJECTIVE)
+                                     + " dies.";
+                simple_monster_message(mons, message.c_str());
+            }
         }
-        else if (mons->props.exists(ORIGINAL_TYPE_KEY))
+        else
         {
             // Avoid "Sigmund returns to its original shape as it dies.".
-            unwind_var<monster_type> mt(mons->type,
-                                        (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int());
+            unwind_var<monster_type> mt(mons->type, orig);
             int num = mons->mons_species() == MONS_HYDRA
                                         ? mons->props["old_heads"].get_int()
                                         : mons->number;
