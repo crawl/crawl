@@ -2300,7 +2300,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             case MISC_DISC_OF_STORMS:
                 break;
             default:
-                return 0;
+                if (!is_xp_evoker(item))
+                    return 0;
         }
         break;
     default:
