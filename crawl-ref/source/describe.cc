@@ -1241,8 +1241,17 @@ void append_armour_stats(string &description, const item_def &item)
     _append_value(description, property(item, PARM_AC), false);
     description += "       ";
 
+    const int evp = property(item, PARM_EVASION);
     description += "Encumbrance rating: ";
-    _append_value(description, -property(item, PARM_EVASION) / 10, false);
+    _append_value(description, -evp / 10, false);
+
+    // only display player-relevant info if the player exists
+    if (crawl_state.need_save && get_armour_slot(item) == EQ_BODY_ARMOUR)
+    {
+        description += make_stringf("\nWearing mundane armour of this type "
+                                    "will give the following: %d AC",
+                                    you.base_ac_from(item));
+    }
 }
 
 void append_shield_stats(string &description, const item_def &item)
