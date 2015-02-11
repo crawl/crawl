@@ -189,11 +189,7 @@ static void _rot_floor_gold(item_def &it, int rot_time)
     const bool old_aura = it.freshness > 0;
     it.freshness = max(0, it.freshness - rot_time);
     if (old_aura && !it.freshness)
-    {
         invalidate_agrid(true);
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-    }
 }
 
 /**
