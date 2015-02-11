@@ -484,6 +484,9 @@ void shock_serpent_discharge_fineff::fire()
     // FIXME: should merge the messages.
     for (actor *act : targets)
     {
+        // May have died because of hurting an earlier monster (tentacles).
+        if (!act->alive())
+            continue;
         int amount = roll_dice(3, 4 + power * 3 / 2);
         amount = act->apply_ac(amount, 0, AC_HALF);
 
