@@ -376,8 +376,6 @@ bool dec_mitm_item_quantity(int obj, int amount)
     {
         item.special = 0;
         invalidate_agrid(true);
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
     }
 
     if (item.quantity == amount)
