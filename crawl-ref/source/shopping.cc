@@ -912,6 +912,7 @@ static bool _purchase(shop_struct& shop, int index, int cost, bool id)
         || !move_item_to_inv(item))
     {
         copy_item_to_grid(item, shop.pos);
+        return false;
     }
     return true;
 }
