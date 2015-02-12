@@ -75,10 +75,10 @@ The contents of this text are:
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, talk, talk_visual, timed_portal, sound,
                 intrinsic_gain, mutation, monster_spell, monster_enchant,
-                friend_spell, friend_enchant, friend_action, monster_damage,
-                monster_target, banishment, rotten_meat, equipment, floor,
-                multiturn, examine, examine_filter, diagnostics, error,
-                tutorial, orb, hell_effect
+                monster_warning, friend_spell, friend_enchant, friend_action,
+                monster_damage, monster_target, banishment, rotten_meat,
+                equipment, floor, multiturn, examine, examine_filter,
+                diagnostic, error, tutorial, orb, hell_effect, dgl_message
 3-l     Inscriptions.
                 autoinscribe, show_god_gift
 3-m     Macro related Options.
@@ -1592,6 +1592,7 @@ CHANNEL_NAME can currently be one of these:
    mutation        = gain/lose mutations
    monster_spell   = messages about monsters gesturing or casting spells
    monster_enchant = messages pertaining to monster enchantments
+   monster_warning = monsters coming into view
    friend_spell    = as monster_spell, but only for friendly monsters
    friend_enchant  = as monster_enchant, but only for friendly monsters
    friend_action   = other actions by friendly monsters
@@ -1604,11 +1605,12 @@ CHANNEL_NAME can currently be one of these:
    multiturn       = indicates long actions (wearing armour, dissecting etc.)
    examine         = messages from examining your surroundings
    examine_filter  = boring messages from examining your surroundings
-   diagnostics     = debugging messages
+   diagnostic      = debugging messages
    error           = error messages
    tutorial        = messages from the tutorial
    orb             = messages about the Orb of Zot
    hell_effect     = messages about environmental effects of the Hells
+   dgl_message     = messages from watchers (online console games only)
 
 The channel options are
    mute      = show no messages from channel (dangerous, be careful!)
