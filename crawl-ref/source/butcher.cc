@@ -67,17 +67,14 @@ static bool _start_butchering(item_def& corpse,
         you.species == SP_VAMPIRE
         && can_bottle_blood_from_corpse(corpse.mon_type);
 
-    // Actually butcher the first corpse we butcher in a turn.
-    if (first_corpse)
-    {
-        finish_butchering(corpse, bottle_blood);
-        return true;
-    }
-
     const delay_type dtype = bottle_blood ? DELAY_BOTTLE_BLOOD : DELAY_BUTCHER;
 
+    // Actually butcher the first corpse we butcher in a turn.
+    if (first_corpse)
+        finish_butchering(corpse, bottle_blood);
     // Yes, 0 is correct (no "continue butchering" stage).
-    start_delay(dtype, 0, corpse.index());
+    else
+        start_delay(dtype, 0, corpse.index());
 
     you.turn_is_over = true;
     return true;
