@@ -74,7 +74,6 @@ void stop_delay(bool stop_stair_travel = false, bool force_unsafe = false);
 bool you_are_delayed();
 delay_type current_delay_action();
 void handle_delay();
-void finish_last_delay();
 
 bool delay_is_run(delay_type delay);
 bool is_being_drained(const item_def &item);
