@@ -111,8 +111,8 @@ int monster::get_experience_level() const
 
 static const coord_def mon_compass[8] =
 {
-    coord_def(-1,-1), coord_def(0,-1), coord_def(1,-1), coord_def(1,0),
-    coord_def(1, 1), coord_def(0, 1), coord_def(-1,1), coord_def(-1,0)
+    { -1,-1 }, { 0,-1 }, {  1,-1 }, {  1,0 }, // bjnl
+    {  1, 1 }, { 0, 1 }, { -1, 1 }, { -1,0 }  // ukyh
 };
 
 static int _compass_idx(const coord_def& mov)
