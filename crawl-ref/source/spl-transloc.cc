@@ -429,6 +429,13 @@ spret_type cast_blink(bool allow_control, bool fail)
  */
 spret_type cast_controlled_blink(int pow, bool fail, bool safe)
 {
+    // don't prompt if it's useless
+    if (you.no_tele(true, true))
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return SPRET_ABORT;
+    }
+
     if (crawl_state.is_repeating_cmd())
     {
         crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
