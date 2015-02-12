@@ -2661,6 +2661,13 @@ void read_scroll(int item_slot)
 
     case SCR_BLINKING:
     {
+        const string reason = you.no_tele_reason(true, true);
+        if (!reason.empty()) {
+            mpr(pre_succ_msg);
+            mpr(reason);
+            break;
+        }
+
         const bool safely_cancellable
             = alreadyknown && !player_mutation_level(MUT_BLURRY_VISION);
         if (allow_control_teleport())
