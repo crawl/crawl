@@ -943,6 +943,16 @@ static void _finish_delay(const delay_queue_item &delay)
         // We know the item is valid and a real corpse, because handle_delay()
         // checked for that.
         finish_butchering(mitm[delay.parm1], delay.type == DELAY_BOTTLE_BLOOD);
+        // Don't waste time picking up chunks if you're already
+        // starving. (jpeg)
+        if ((you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
+            // Only pick up chunks if this is the last delay...
+            && (you.delay_queue.size() == 1
+            // ...Or, equivalently, if it's the last butcher one.
+                || !_is_butcher_delay(you.delay_queue[1].type)))
+        {
+            request_autopickup();
+        }
         you.turn_is_over = true;
         break;
 

@@ -52,13 +52,9 @@ static bool _should_butcher(const item_def& corpse)
  * Start butchering a corpse.
  *
  * @param corpse       Which corpse to butcher.
- * @param first_corpse Whether this was the first corpse that's being butchered
- *                     this turn, and which should be butchered right away
- *                     instead of making a delay.
  * @returns whether the player decided to actually butcher the corpse after all.
  */
-static bool _start_butchering(item_def& corpse,
-                              bool first_corpse = true)
+static bool _start_butchering(item_def& corpse)
 {
     if (!_should_butcher(corpse))
         return false;
@@ -69,12 +65,8 @@ static bool _start_butchering(item_def& corpse,
 
     const delay_type dtype = bottle_blood ? DELAY_BOTTLE_BLOOD : DELAY_BUTCHER;
 
-    // Actually butcher the first corpse we butcher in a turn.
-    if (first_corpse)
-        finish_butchering(corpse, bottle_blood);
     // Yes, 0 is correct (no "continue butchering" stage).
-    else
-        start_delay(dtype, 0, corpse.index());
+    start_delay(dtype, 0, corpse.index());
 
     you.turn_is_over = true;
     return true;
@@ -119,10 +111,6 @@ void finish_butchering(item_def& corpse, bool bottling)
     else if (was_intelligent)
         did_god_conduct(DID_DESECRATE_SOULED_BEING, 1);
 
-    // Also, don't waste time picking up chunks if you're already
-    // starving. (jpeg)
-    if (you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
-        autopickup();
     StashTrack.update_stash(you.pos()); // Stash-track the generated items.
 }
 
@@ -208,13 +196,15 @@ void butchery(item_def* specific_corpse)
             return;
         }
 
-        _start_butchering(*corpses[0].first, true);
+        //XXX: this assumes that we're not being called from a delay ourselves.
+        if (_start_butchering(*corpses[0].first))
+            handle_delay();
         return;
     }
 
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
-    bool first_corpse  = true;
+    bool butchered_any = false;
 #ifdef TOUCH_UI
     vector<const item_def*> meat;
     for (const corpse_quality &entry : corpses)
@@ -226,9 +216,8 @@ void butchery(item_def* specific_corpse)
                      false, MT_ANY, _butcher_menu_title);
     redraw_screen();
     for (SelItem sel : selected)
-        if (_start_butchering(*sel.item, first_corpse))
-            first_corpse = false;
-
+        if (_start_butchering(*sel.item))
+            butchered_any = true;
 #else
     item_def* to_eat = nullptr;
     bool butcher_all   = false;
@@ -291,16 +280,23 @@ void butchery(item_def* specific_corpse)
             while (repeat_prompt);
         }
 
-        if (to_eat && _start_butchering(*to_eat, first_corpse))
-            first_corpse = false;
+        if (to_eat && _start_butchering(*to_eat))
+            butchered_any = true;
     }
 #endif
+
     // No point in displaying this if the player pressed 'a' above.
     if (!to_eat && !butcher_all)
     {
         mprf("There isn't anything else to %sbutcher here.",
              bottle_blood ? "bottle or " : "");
     }
+
+    //XXX: this assumes that we're not being called from a delay ourselves.
+    // It's not a problem in the case of macros, though, because
+    // delay.cc:_push_delay should handle them OK.
+    if (butchered_any)
+        handle_delay();
 
     return;
 }
