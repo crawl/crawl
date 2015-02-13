@@ -1064,7 +1064,6 @@ void SkillMenu::init_switches()
 
     sw = new SkillMenuSwitch("Show", '*');
     m_switches[SKM_SHOW] = sw;
-    //sw->add(SKM_SHOW_KNOWN);
     sw->add(SKM_SHOW_DEFAULT);
     if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
         sw->add(SKM_SHOW_ALL);
