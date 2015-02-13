@@ -283,7 +283,6 @@ void butchery(item_def* specific_corpse)
         if (to_eat && _start_butchering(*to_eat))
             butchered_any = true;
     }
-#endif
 
     // No point in displaying this if the player pressed 'a' above.
     if (!to_eat && !butcher_all)
@@ -291,6 +290,7 @@ void butchery(item_def* specific_corpse)
         mprf("There isn't anything else to %sbutcher here.",
              bottle_blood ? "bottle or " : "");
     }
+#endif
 
     //XXX: this assumes that we're not being called from a delay ourselves.
     // It's not a problem in the case of macros, though, because
