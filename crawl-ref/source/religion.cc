@@ -3629,12 +3629,6 @@ void join_religion(god_type which_god, bool immediate)
             }
         }
 
-        if (!you.one_time_ability_used[you.religion])
-        {
-            simple_god_message(" will now duplicate a non-artefact item for"
-                               " you... once.");
-        }
-
         if (needs_redraw)
         {
 #ifdef USE_TILE_LOCAL
