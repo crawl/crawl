@@ -246,7 +246,6 @@ corpses are turned into gold piles. These piles of gold may briefly distract
 nearby monsters. Stalwarts can order immediate help in the form of potions,
 with prices being dictated by the Greedy. Particularly well-off adherents may
 attract shopkeepers into the dungeon, and even bribe entire branches.
-Gozag will also duplicate any one non-artefact item for a servant.
 %%%%
 Jiyva powers
 
@@ -442,11 +441,10 @@ Gozag wrath
 
 The first of Gozag's punishments is commercial: all shops opened through
 Gozag's intervention shut their doors forever. The disloyal are advised to
-finish their shopping before they launch their betrayal. Other punishments are
-more pertinent to the penurious: potions fail when they are needed most, or are
-used to aid heretics' enemies. Newly-found gold is stolen out of their hands,
-and other, useful items are transformed *into* gold - little use that it is
-without Gozag's sponsorship!
+finish their shopping before they launch their betrayal. For as long as Gozag
+remains angered, potions will have a chance to fail when quaffed, and any
+foes that are encountered may be granted potions of their own to assist them
+against the ex-worshipper.
 %%%%
 Jiyva wrath
 
