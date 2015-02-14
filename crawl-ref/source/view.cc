@@ -410,8 +410,6 @@ void update_monsters_in_view()
                 mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
                 for (monster *mon : mons)
                     gozag_incite(mon);
-
-                dec_penance(GOD_GOZAG, mons.size());
             }
         }
     }

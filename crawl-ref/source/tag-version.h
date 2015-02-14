@@ -151,6 +151,7 @@ enum tag_minor_version
     TAG_MINOR_UNSTACKABLE_EVOKERS, // XP evokers no longer stack
     TAG_MINOR_NO_NEGATIVE_VULN,    // Remove negative energy vulnerability
     TAG_MINOR_MAX_XL,              // Store max XL instead of hardcoding it
+    TAG_MINOR_XP_PENANCE,          // Let gods other than Ash use xp penance
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
