@@ -4878,7 +4878,7 @@ bribability mons_bribability[] =
     { MONS_SHADOW_FIEND,    BRANCH_TARTARUS, 5 },
 };
 
-// An x-in-16 chance of a monster of the given type being bribed.
+// An x-in-8 chance of a monster of the given type being bribed.
 // Tougher monsters have a stronger chance of being bribed.
 int gozag_type_bribable(monster_type type, bool force)
 {
