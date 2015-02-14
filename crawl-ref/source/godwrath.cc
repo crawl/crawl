@@ -1974,41 +1974,36 @@ void gozag_incite(monster *mon)
     behaviour_event(mon, ME_ALERT, &you);
 
     bool success = false;
+    const mon_attack_def attk = mons_attack_spec(mon, 0);
 
-    if (coinflip() && mon->needs_berserk(false))
+    int tries = 3;
+    do
     {
-        mon->go_berserk(false);
-        success = true;
-    }
-    else
-    {
-        int tries = 3;
-        do
+        switch (random2(3))
         {
-            switch (random2(3))
-            {
-                case 0:
-                    if (mon->has_ench(ENCH_MIGHT))
-                        break;
-                    enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
-                    success = true;
+            case 0:
+                if (attk.type == AT_NONE || attk.damage == 0)
                     break;
-                case 1:
-                    if (mon->has_ench(ENCH_HASTE))
-                        break;
-                    enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
-                    success = true;
+                if (mon->has_ench(ENCH_MIGHT))
                     break;
-                case 2:
-                    if (mon->invisible() || you.can_see_invisible())
-                        break;
-                    enchant_actor_with_flavour(mon, mon, BEAM_INVISIBILITY);
-                    success = true;
+                enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
+                success = true;
+                break;
+            case 1:
+                if (mon->has_ench(ENCH_HASTE))
                     break;
-            }
+                enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
+                success = true;
+                break;
+            case 2:
+                if (!mon->can_go_berserk())
+                    break;
+                mon->go_berserk(true);
+                success = true;
+                break;
         }
-        while (!success && --tries > 0);
     }
+    while (!success && --tries > 0);
 
     if (success)
         view_update_at(mon->pos());
