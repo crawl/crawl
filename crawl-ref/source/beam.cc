@@ -30,7 +30,6 @@
 #include "english.h"
 #include "exercise.h"
 #include "fight.h"
-#include "fineff.h"
 #include "godabil.h"
 #include "godconduct.h"
 #include "itemprop.h"
@@ -5288,16 +5287,6 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
             {
                 // Note only actually used by messages in this case.
                 res_margin = mon->res_magic() - ench_power_stepdown(ench_power);
-
-                // trj spawns jellies when hit by a failed poly
-                if (mon->type == MONS_ROYAL_JELLY && flavour == BEAM_POLYMORPH)
-                {
-                    simple_monster_message(mon, "'s form briefly twists, and "
-                                           "jellies spill out!");
-                    trj_spawn_fineff::schedule(agent(), mon, mon->pos(),
-                                               27 + random2(27));
-                }
-
                 return MON_RESIST;
             }
         }
