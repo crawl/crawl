@@ -1065,6 +1065,15 @@ bool active_penance(god_type god)
                || god_hates_your_god(god, you.religion));
 }
 
+// True for gods whose wrath is passive and expires with XP gain.
+bool xp_penance(god_type god)
+{
+    return player_under_penance(god)
+           && !is_unavailable_god(god)
+           && (god == GOD_ASHENZARI
+               || god == GOD_GOZAG);
+}
+
 void dec_penance(god_type god, int val)
 {
     if (val <= 0 || you.penance[god] <= 0)
@@ -2938,9 +2947,9 @@ void excommunication(god_type new_god, bool immediate)
         if (you.transfer_skill_points > 0)
             ashenzari_end_transfer(false, true);
         you.duration[DUR_SCRYING] = 0;
-        you.exp_docked = exp_needed(min<int>(you.max_level, 27)  + 1)
-                       - exp_needed(min<int>(you.max_level, 27));
-        you.exp_docked_total = you.exp_docked;
+        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[old_god] = you.exp_docked[old_god];
         _set_penance(old_god, 50);
         break;
 
@@ -2965,7 +2974,10 @@ void excommunication(god_type new_god, bool immediate)
             branch_bribe[it->id] = 0;
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
-        _set_penance(old_god, 25);
+        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[old_god] = you.exp_docked[old_god];
+        _set_penance(old_god, 50);
         break;
 
     case GOD_QAZLAL:

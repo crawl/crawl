@@ -39,6 +39,7 @@ string get_god_likes(god_type which_god, bool verbose = false);
 string get_god_dislikes(god_type which_god, bool verbose = false);
 
 bool active_penance(god_type god);
+bool xp_penance(god_type god);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 

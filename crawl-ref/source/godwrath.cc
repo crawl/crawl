@@ -1952,18 +1952,19 @@ static void _god_smites_you(god_type god, const char *message,
     }
 }
 
-void ash_reduce_penance(int amount)
+void reduce_xp_penance(god_type god, int amount)
 {
-    if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
+    if (!you.penance[god] || !you.exp_docked_total[god])
         return;
 
-    int lost = min(amount / 2, you.exp_docked);
-    you.exp_docked -= lost;
+    int lost = min(amount / 2, you.exp_docked[god]);
+    you.exp_docked[god] -= lost;
 
-    int new_pen = (((int64_t)you.exp_docked * 50) + you.exp_docked_total - 1)
-                / you.exp_docked_total;
-    if (new_pen < you.penance[GOD_ASHENZARI])
-        dec_penance(GOD_ASHENZARI, you.penance[GOD_ASHENZARI] - new_pen);
+    int new_pen = (((int64_t)you.exp_docked[god] * 50)
+                   + you.exp_docked_total[god] - 1)
+                / you.exp_docked_total[god];
+    if (new_pen < you.penance[god])
+        dec_penance(god, you.penance[god] - new_pen);
 }
 
 void gozag_incite(monster *mon)

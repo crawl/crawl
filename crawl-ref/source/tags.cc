@@ -1497,8 +1497,10 @@ static void tag_construct_you(writer &th)
 
     marshallByte(th, you.gift_timeout);
 
-    marshallInt(th, you.exp_docked);
-    marshallInt(th, you.exp_docked_total);
+    for (i = 0; i < NUM_GODS; i++)
+        marshallInt(th, you.exp_docked[i]);
+    for (i = 0; i < NUM_GODS; i++)
+        marshallInt(th, you.exp_docked_total[i]);
 
     // elapsed time
     marshallInt(th, you.elapsed_time);
@@ -2759,6 +2761,14 @@ static void tag_read_you(reader &th)
     ASSERT(count <= NUM_GODS);
     for (i = 0; i < count; i++)
     {
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_XP_PENANCE && i == GOD_GOZAG)
+        {
+            unmarshallUByte(th);
+            you.penance[i] = 0;
+            continue;
+        }
+#endif
         you.penance[i] = unmarshallUByte(th);
         ASSERT(you.penance[i] <= MAX_PENANCE);
     }
@@ -2824,8 +2834,34 @@ static void tag_read_you(reader &th)
     }
 #endif
 
-    you.exp_docked       = unmarshallInt(th);
-    you.exp_docked_total = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_XP_PENANCE)
+    {
+        for (i = 0; i < NUM_GODS; i++)
+        {
+            if (i == GOD_ASHENZARI)
+                you.exp_docked[i] = unmarshallInt(th);
+            else
+                you.exp_docked[i] = 0;
+        }
+        for (i = 0; i < NUM_GODS; i++)
+        {
+            if (i == GOD_ASHENZARI)
+                you.exp_docked_total[i] = unmarshallInt(th);
+            else
+                you.exp_docked_total[i] = 0;
+        }
+    }
+    else
+    {
+#endif
+    for (i = 0; i < count; i++)
+        you.exp_docked[i] = unmarshallInt(th);
+    for (i = 0; i < count; i++)
+        you.exp_docked_total[i] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);

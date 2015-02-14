@@ -1514,7 +1514,6 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                     mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
                          mon->name(DESC_THE).c_str());
                     gozag_incite(mon);
-                    dec_penance(GOD_GOZAG, 1);
                 }
             }
         }
