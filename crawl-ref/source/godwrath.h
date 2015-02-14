@@ -12,5 +12,4 @@ void ash_reduce_penance(int amount);
 void beogh_idol_revenge();
 
 void gozag_incite(monster *mon);
-int gozag_goldify(const item_def &it, int quant_got, bool quiet = false);
 #endif
