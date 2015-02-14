@@ -14,6 +14,7 @@
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "exclude.h"
+#include "fineff.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "itemprop.h"
@@ -215,6 +216,15 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     if (mons_is_tentacle_head(mons_base_type(mons)))
         destroy_tentacles(mons);
+
+    // trj spills out jellies when polied, as if he'd been hit for mhp.
+    if (mons->type == MONS_ROYAL_JELLY)
+    {
+        simple_monster_message(mons, "'s form twists and warps, and jellies "
+                               "spill out!");
+        trj_spawn_fineff::schedule(nullptr, mons, mons->pos(),
+                                   mons->hit_points);
+    }
 
     // Inform listeners that the original monster is gone.
     fire_monster_death_event(mons, KILL_MISC, NON_MONSTER, true);
