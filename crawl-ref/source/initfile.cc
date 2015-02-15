@@ -42,6 +42,7 @@
 #include "mon-util.h"
 #include "newgame.h"
 #include "options.h"
+#include "playable.h"
 #include "player.h"
 #include "prompt.h"
 #include "species.h"
@@ -4267,6 +4268,7 @@ enum commandline_option_type
     CLO_NO_GDB, CLO_NOGDB,
     CLO_THROTTLE,
     CLO_NO_THROTTLE,
+    CLO_LIST_COMBOS, // List species, jobs, and legal combos, in that order.
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -4284,7 +4286,7 @@ static const char *cmd_ops[] =
     "builddb", "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "zotdef", "tutorial", "wizard", "explore", "no-save",
-    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
+    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle", "list-combos",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4895,6 +4897,18 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_DUMP_MAPS:
             crawl_state.dump_maps = true;
             break;
+
+        case CLO_LIST_COMBOS:
+        {
+            auto join = [](const vector<string> &vs) {
+                return comma_separated_line(vs.begin(), vs.end(), ",", ",");
+            };
+            fprintf(stdout, "%s\n%s\n%s\n",
+                    join(playable_species_names()).c_str(),
+                    join(playable_job_names()).c_str(),
+                    join(playable_combo_names()).c_str());
+            end(0);
+        }
 
         case CLO_TEST:
             crawl_state.test = true;
