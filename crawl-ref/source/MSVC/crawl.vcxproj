@@ -451,6 +451,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\output.cc" />
     <ClCompile Include="..\pattern.cc" />
     <ClCompile Include="..\place.cc" />
+    <ClCompile Include="..\playable.cc" />
     <ClCompile Include="..\player.cc" />
     <ClCompile Include="..\quiver.cc" />
     <ClCompile Include="..\random-var.cc" />
@@ -813,6 +814,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\output.h" />
     <ClInclude Include="..\pattern.h" />
     <ClInclude Include="..\place.h" />
+    <ClInclude Include="..\playable.h" />
     <ClInclude Include="..\player.h" />
     <ClInclude Include="..\process_desc.h" />
     <ClInclude Include="..\props.h" />

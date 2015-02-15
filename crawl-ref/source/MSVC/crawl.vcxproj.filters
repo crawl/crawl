@@ -188,6 +188,7 @@
     <ClCompile Include="..\output.cc" />
     <ClCompile Include="..\pattern.cc" />
     <ClCompile Include="..\place.cc" />
+    <ClCompile Include="..\playable.cc" />
     <ClCompile Include="..\player.cc" />
     <ClCompile Include="..\quiver.cc" />
     <ClCompile Include="..\random-var.cc" />
@@ -504,6 +505,7 @@
     <ClInclude Include="..\pattern.h" />
     <ClInclude Include="..\place.h" />
     <ClInclude Include="..\player.h" />
+    <ClInclude Include="..\playable.h" />
     <ClInclude Include="..\process_desc.h" />
     <ClInclude Include="..\props.h" />
     <ClInclude Include="..\quiver.h" />
