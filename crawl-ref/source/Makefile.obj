@@ -178,6 +178,7 @@ pattern.o \
 perlin.o \
 place-info.o \
 place.o \
+playable.o \
 player-act.o \
 player-equip.o \
 player-reacts.o \
