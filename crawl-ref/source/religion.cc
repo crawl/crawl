@@ -2069,7 +2069,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_DITHMENOS:     return "Dithmenos";
     case GOD_GOZAG:         return "Gozag";
     case GOD_QAZLAL:        return "Qazlal";
-    case GOD_RU:        return "Ru";
+    case GOD_RU:            return "Ru";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -3621,6 +3621,13 @@ void join_religion(god_type which_god, bool immediate)
 
         for (size_t i = 0; i < abilities.size(); ++i)
         {
+            if (abilities[i] == ABIL_GOZAG_POTION_PETITION
+                && !you.attribute[ATTR_GOZAG_FIRST_POTION])
+            {
+                simple_god_message(" offers you a free set of potion effects!");
+                needs_redraw = true;
+                continue;
+            }
             if (you.gold >= get_gold_cost(abilities[i])
                 && _abil_chg_message(god_gain_power_messages[you.religion][i],
                                      "You have enough gold to %s.", i))
