@@ -51,6 +51,45 @@ ae += [^n]identified.*spellbook
 :  return
 :end)
 
+# If you've sacrificed a hand, don't pick up pointless duplicate rings
+:add_autopickup_func(function (it, name)
+:  local itsubtype = it.subtype()
+:  if you.mutation("missing a hand") == 1 and you.race() ~= "octopode"
+:  and it.class(true) == "jewellery"
+:  and (itsubtype == "ring of positive energy"
+:   or itsubtype == "ring of flight"
+:   or itsubtype == "ring of poison resistance"
+:   or itsubtype == "ring of sustain abilities"
+:   or itsubtype == "ring of wizardry"
+:   or itsubtype == "ring of stealth"
+:   or itsubtype == "ring of regeneration"
+:   or itsubtype == "ring of teleportation"
+:   or itsubtype == "ring of teleport control"
+:   or itsubtype == "ring of protection from fire"
+:   or itsubtype == "ring of protection from cold"
+:   or itsubtype == "ring of invisibility"
+:   or itsubtype == "ring of see invisible"
+:   or itsubtype == "ring of ice"
+:   or itsubtype == "ring of fire") then
+:    for inv in iter.invent_iterator:new(items.inventory()) do
+:      if it.class(true) == inv.class(true)
+:      and itsubtype == inv.subtype() then
+:        return false
+:      end
+:    end
+:  end
+:  return
+:end)
+
+if it.class == "potion" or it.class == "scroll" then
+    for inv in iter.invent_iterator:new(items.inventory()) do
+      if it.class(true) == inv.class(true)
+      and it.subtype() == inv.subtype() then
+        return true
+      end
+    end
+  end
+
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.
 # Some items may already be excluded as bad_item, e.g. inaccuracy.
