@@ -47,7 +47,7 @@ The contents of this text are:
                 tc_excluded, tc_exclude_circle,
                 runrest_ignore_message, runrest_stop_message,
                 runrest_safe_poison, runrest_ignore_monster,
-                trapwalk_safe_hp, rest_wait_both, auto_exclude
+                rest_wait_both, auto_exclude
 3-g     Command Enhancements.
                 auto_switch, travel_open_doors, easy_unequip, equip_unequip,
                 jewellery_prompt, easy_confirm, allow_self_target,
@@ -897,11 +897,6 @@ runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
         big fish and giant goldfish will be considered safe for travel, explore
         and resting as long as the distance is at least 3. If a monster matches
         multiple expressions, its distance is compared with the first match.
-
-trapwalk_safe_hp = true
-        If set to false, mechanical traps will be considered safe for travel
-        at any HP. Otherwise, you will get a prompt when walking onto one and
-        autotravel will avoid them.
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
