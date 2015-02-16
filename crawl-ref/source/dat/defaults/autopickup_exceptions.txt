@@ -33,6 +33,22 @@ ae += [^n]identified.*spellbook
 :         end
 : end)
 
+# Don't pick up misc items when duplication doesn't help.
+:add_autopickup_func(function (it, name)
+:  if it.name() == "lamp of fire"
+:  or it.name() == "phial of floods"
+:  or it.name() == "fan of gales"
+:  or it.name() == "stone of tremors"
+:  or it.name() == "disc of storms"
+:  or it.name() == "lantern of shadows" then
+:    for inv in iter.invent_iterator:new(items.inventory()) do
+:      if it.name() == inv.name() then
+:        return false
+:      end
+:    end
+:  end
+:  return
+:end)
 
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.
