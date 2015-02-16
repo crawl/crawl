@@ -38,7 +38,7 @@ static bool _should_butcher(const item_def& corpse)
     if (is_forbidden_food(corpse)
         && (Options.confirm_butcher == CONFIRM_NEVER
             || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
-                      false, 'n')))
+                      false, 'n', true, false)))
     {
         if (Options.confirm_butcher != CONFIRM_NEVER)
             canned_msg(MSG_OK);
