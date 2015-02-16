@@ -391,7 +391,7 @@ void banished(const string &who)
     if (!player_in_branch(BRANCH_ABYSS))
     {
         mark_milestone("abyss.enter",
-                       "is cast into the Abyss!" + _who_banished(who));
+                       "was cast into the Abyss!" + _who_banished(who));
     }
 
     if (player_in_branch(BRANCH_ABYSS))
