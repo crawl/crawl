@@ -1815,8 +1815,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
     int rp = 0;
 
-    const int artefact_rp = you.scan_artefacts(ARTP_POISON, calc_unid);
-
     if (items)
     {
         // rings of poison resistance
@@ -1834,8 +1832,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp += armour_type_prop(body_armour->sub_type, ARMF_RES_POISON);
 
         // rPois+ artefacts
-        if (artefact_rp > 0)
-            rp += artefact_rp;
+        rp += you.scan_artefacts(ARTP_POISON, calc_unid);
 
         // dragonskin cloak: 0.5 to draconic resistances
         if (calc_unid && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
@@ -1873,10 +1870,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_POISON_VULN])
             rp--;
     }
-
-    // rPois- artefacts
-    if (items && artefact_rp < 0)
-        rp += artefact_rp; // actually subtracts...
 
     // don't allow rPois--, etc.
     rp = max(-1, rp);

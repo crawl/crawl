@@ -4116,6 +4116,14 @@ void unmarshallItem(reader &th, item_def &item)
             artefact_set_property(item, ARTP_NEGATIVE_ENERGY, 0);
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_NO_RPOIS_MINUS
+        && is_artefact(item)
+        && artefact_property(item, ARTP_POISON))
+    {
+        if (artefact_property(item, ARTP_POISON) < 0)
+            artefact_set_property(item, ARTP_POISON, 0);
+    }
+
 #endif
 
     if (is_unrandom_artefact(item))
