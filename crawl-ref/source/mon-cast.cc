@@ -5576,8 +5576,11 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_CIGOTUVIS_EMBRACE:
         harvest_corpses(*mons);
-        mprf("The bodies of the dead form a shell around %s.",
-             mons->name(DESC_THE).c_str());
+        if (crawl_state.game_is_arena() || you.can_see(mons))
+        {
+            mprf("The bodies of the dead form a shell around %s.",
+                 mons->name(DESC_THE).c_str());
+        }
         mons->add_ench(ENCH_BONE_ARMOUR);
         return;
 
