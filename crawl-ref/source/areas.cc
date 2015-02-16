@@ -418,10 +418,6 @@ void create_sanctuary(const coord_def& center, int time)
     int       cloud_count = 0;
     monster* seen_mon    = nullptr;
 
-    // Since revealing mimics can move monsters, we do it first.
-    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
-        discover_mimic(*ri);
-
     int shape = random2(4);
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
     {
