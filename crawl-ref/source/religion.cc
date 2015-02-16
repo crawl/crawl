@@ -3690,9 +3690,10 @@ void god_pitch(god_type which_god)
                      " have %d.", fee, you.gold);
             }
         }
-        else if (which_god == GOD_BEOGH
+        else if (player_mutation_level(MUT_NO_LOVE)
+                 && (which_god == GOD_BEOGH
                  || which_god == GOD_ELYVILON
-                 || which_god == GOD_JIYVA)
+                 || which_god == GOD_JIYVA))
         {
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
