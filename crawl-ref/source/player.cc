@@ -3268,10 +3268,10 @@ void level_change(bool skip_attribute_increase)
                         {
                             if (you.experience_level == level)
                             {
-                                mprf(MSGCH_MUTATION, "You feel monstrous as your "
-                                     "demonic heritage exerts itself.");
-                                mark_milestone("monstrous", "is a "
-                                               "monstrous demonspawn!");
+                                mprf(MSGCH_MUTATION, "You feel monstrous as "
+                                     "your demonic heritage exerts itself.");
+                                mark_milestone("monstrous", "discovered their "
+                                               "monstrous ancestry!");
                             }
                             break;
                         }
