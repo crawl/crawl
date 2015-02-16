@@ -250,19 +250,22 @@ bool trap_def::is_safe(actor* act) const
         return true;
     }
 
-    if (Options.trapwalk_safe_hp)
-    {
-        if (type == TRAP_NEEDLE)
-            return you.hp > 15;
-        else if (type == TRAP_ARROW)
-            return you.hp > 35;
-        else if (type == TRAP_BOLT)
-            return you.hp > 45;
-        else if (type == TRAP_SPEAR)
-            return you.hp > 40;
-        else if (type == TRAP_BLADE)
-            return you.hp > 95;
-    }
+#ifdef CLUA_BINDINGS
+    // Let players specify traps as safe via lua.
+    if (clua.callbooleanfn(false, "c_trap_is_safe", "s", trap_name(type).c_str()))
+        return true;
+#endif
+
+    if (type == TRAP_NEEDLE)
+        return you.hp > 15;
+    else if (type == TRAP_ARROW)
+        return you.hp > 35;
+    else if (type == TRAP_BOLT)
+        return you.hp > 45;
+    else if (type == TRAP_SPEAR)
+        return you.hp > 40;
+    else if (type == TRAP_BLADE)
+        return you.hp > 95;
 
     return false;
 }

@@ -170,7 +170,7 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
     if (!trap || env.grid(p) == DNGN_UNDISCOVERED_TRAP)
         return true;
 
-    if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
+    if (trap->type == TRAP_ZOT && !trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         string msg = "Do you really want to %s into the Zot trap?";
         string prompt = make_stringf(msg.c_str(), move_verb.c_str());
