@@ -3871,39 +3871,14 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 
 void xom_check_lost_item(const item_def& item)
 {
-    if (item.base_type == OBJ_ORBS)
-        xom_is_stimulated(200, "Xom laughs nastily.", true);
-    else if (is_unrandom_artefact(item))
+    if (is_unrandom_artefact(item))
         xom_is_stimulated(100, "Xom snickers.", true);
-    // you can't be made lose unique runes anymore, it was voluntary -- not so funny
-    else if (item_is_rune(item) && item_is_unique_rune(item))
-        xom_is_stimulated(50, "Xom snickers loudly.", true);
 }
 
 void xom_check_destroyed_item(const item_def& item)
 {
-    int amusement = 0;
-
-    if (item.base_type == OBJ_ORBS)
-    {
-        xom_is_stimulated(200, "Xom laughs nastily.", true);
-        return;
-    }
-    else if (is_unrandom_artefact(item))
+    if (is_unrandom_artefact(item))
         xom_is_stimulated(100, "Xom snickers.", true);
-    else if (item_is_rune(item))
-    {
-        if (item_is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
-            amusement = 200;
-        else
-            amusement = 50;
-    }
-
-    xom_is_stimulated(amusement,
-                      (amusement > 100) ? "Xom snickers loudly." :
-                      (amusement > 50)  ? "Xom snickers."
-                                        : "Xom snickers softly.",
-                      true);
 }
 
 static bool _death_is_funny(const kill_method_type killed_by)
