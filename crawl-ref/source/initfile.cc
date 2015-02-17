@@ -2435,17 +2435,18 @@ void game_options::read_option_line(const string &str, bool runscript)
     } while (false)
 #define BOOL_OPTION(_opt) BOOL_OPTION_NAMED(#_opt, _opt)
 
-#define COLOUR_OPTION_NAMED(_opt_str, _opt_var)                         \
+#define COLOUR_OPTION_NAMED(_opt_str, _opt_var, elemental)              \
     if (key == _opt_str) do {                                           \
-        const int col = str_to_colour(field);                           \
+        const int col = str_to_colour(field, -1, true, elemental);      \
         if (col != -1) {                                                \
-            _opt_var = col;                                       \
+            _opt_var = col;                                             \
         } else {                                                        \
             /*fprintf(stderr, "Bad %s -- %s\n", key, field.c_str());*/  \
             report_error("Bad %s -- %s\n", key.c_str(), field.c_str()); \
         }                                                               \
     } while (false)
-#define COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt)
+#define COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt, true)
+#define UI_COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt, false)
 
 #define CURSES_OPTION_NAMED(_opt_str, _opt_var)     \
     if (key == _opt_str) do {                       \
@@ -2729,7 +2730,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (col == MSGCOL_NONE)
             fprintf(stderr, "Bad colour -- %s\n", field.c_str());
     }
-    else COLOUR_OPTION(background_colour);
+    else UI_COLOUR_OPTION(background_colour);
     else COLOUR_OPTION(detected_item_colour);
     else COLOUR_OPTION(detected_monster_colour);
     else COLOUR_OPTION(remembered_monster_colour);
@@ -2813,7 +2814,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(no_dark_brand);
     // no_dark_brand applies here as well.
     else CURSES_OPTION(heap_brand);
-    else COLOUR_OPTION(status_caption_colour);
+    else UI_COLOUR_OPTION(status_caption_colour);
     else if (key == "arena_teams")
         game.arena_teams = field;
     // [ds] Allow changing map only if the map hasn't been set on the
