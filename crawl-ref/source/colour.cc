@@ -771,7 +771,8 @@ const string colour_to_str(colour_t colour)
 }
 
 // Returns default_colour (default -1) if unmatched else returns 0-15.
-int str_to_colour(const string &str, int default_colour, bool accept_number)
+int str_to_colour(const string &str, int default_colour, bool accept_number,
+                  bool accept_elemental)
 {
     int ret;
 
@@ -790,7 +791,7 @@ int str_to_colour(const string &str, int default_colour, bool accept_number)
             ret = 8;
     }
 
-    if (ret == 16)
+    if (ret == 16 && accept_elemental)
     {
         // Maybe we have an element colour attribute.
         if (element_colour_calc **calc = map_find(element_colours_str, str))
