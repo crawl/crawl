@@ -196,12 +196,15 @@ KMONS: M = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
 KMONS: N = human zombie / elf zombie / orc zombie / naga zombie / ogre zombie / \
            centaur zombie / draconian zombie / minotaur zombie / troll zombie / \
            kobold zombie / mummy / spriggan zombie / merfolk zombie / \
-           dwarf zombie / felid zombie / octopode zombie / formicid zombie
-# Player monsters, skeleton versions:
+           dwarf zombie / felid zombie / octopode zombie / formicid zombie / \
+           vine stalker zombie
+# Player monsters, skeleton versions (octopodes and formicids drop out because
+# they have no skeletons):
 KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
            centaur skeleton / draconian skeleton / ogre skeleton / \
            minotaur skeleton / troll skeleton / kobold skeleton / mummy / \
-           spriggan skeleton / dwarf skeleton / merfolk skeleton / felid skeleton
+           spriggan skeleton / dwarf skeleton / merfolk skeleton / \
+           felid skeleton / vine stalker skeleton
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
