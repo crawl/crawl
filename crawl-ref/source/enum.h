@@ -17,12 +17,11 @@ public:
     typedef typename underlying_type<E>::type underlying_type;
     underlying_type flags;
 
-    enum_bitfield() : flags(0) {}
-    enum_bitfield(E flag) : flags(flag) {}
-
     /// Get the flag corresponding to the given bit position (0 = LSB).
     static E exponent(int pos) { return static_cast<E>(1 << pos); }
 
+    enum_bitfield() : flags(0) {}
+    enum_bitfield(E flag) : flags(flag) {}
     template<class ... Es>
     enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
 
