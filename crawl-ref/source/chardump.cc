@@ -851,7 +851,7 @@ static void _sdump_spells(dump_params &par)
 
                 for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
                 {
-                    auto bit = static_cast<spschool_flag_type>(1 << i);
+                    const auto bit = spschools_type::exponent(i);
                     if (spell_typematch(spell, bit))
                     {
                         spell_line += spell_type_shortname(bit, already);

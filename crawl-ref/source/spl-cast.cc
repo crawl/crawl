@@ -405,7 +405,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         {
             for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
             {
-                auto bit = static_cast<spschool_flag_type>(1 << ndx);
+                const auto bit = spschools_type::exponent(ndx);
                 if (disciplines & bit)
                     power += you.skill(spell_type2skill(bit), 200);
             }
@@ -2275,7 +2275,7 @@ string spell_schools_string(spell_type spell)
     bool already = false;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
     {
-        auto bit = static_cast<spschool_flag_type>(1 << i);
+        const auto bit = spschools_type::exponent(i);
         if (spell_typematch(spell, bit))
         {
             if (already)
@@ -2293,7 +2293,7 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
     spschools_type disciplines = get_spell_disciplines(spell);
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
     {
-        auto bit = static_cast<spschool_flag_type>(1 << i);
+        const auto bit = spschools_type::exponent(i);
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
     }

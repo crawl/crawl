@@ -2760,7 +2760,7 @@ static int _xom_miscast(const int max_level, const bool nasty,
 
     // Take a note.
     const char* levels[4] = { "harmless", "mild", "medium", "severe" };
-    auto school = static_cast<spschool_flag_type>(1 << random2(SPTYP_LAST_EXPONENT + 1));
+    const auto school = spschools_type::exponent(random2(SPTYP_LAST_EXPONENT + 1));
     string desc = make_stringf("%s %s miscast", levels[level],
                                spelltype_short_name(school));
 #ifdef NOTE_DEBUG_XOM

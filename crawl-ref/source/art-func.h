@@ -1072,7 +1072,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
             vector<spschool_flag_type> schools;
             for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
             {
-                auto bit = static_cast<spschool_flag_type>(1 << i);
+                const auto bit = spschools_type::exponent(i);
                 if (testbits(school, bit))
                     schools.push_back(bit);
             }

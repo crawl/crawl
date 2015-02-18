@@ -203,7 +203,7 @@ static void _exercise_spell(spell_type spell, bool success)
     vector<skill_type> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
-        auto bit = static_cast<spschool_flag_type>(1 << ndx);
+        const auto bit = spschools_type::exponent(ndx);
         if (!spell_typematch(spell, bit))
             continue;
 
