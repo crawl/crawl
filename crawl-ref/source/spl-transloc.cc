@@ -444,13 +444,6 @@ spret_type cast_controlled_blink(int pow, bool fail, bool safe)
         return SPRET_ABORT;
     }
 
-    if (!allow_control_teleport(true)
-        && !yesno("Your blink will be uncontrolled - continue anyway?",
-                  false, 'n'))
-    {
-        return SPRET_ABORT;
-    }
-
     // the ORB turns cblink into scblink or just blink.
     const bool orbed = orb_haloed(you.pos());
 

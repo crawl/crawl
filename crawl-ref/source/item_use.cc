@@ -2676,8 +2676,16 @@ void read_scroll(int item_slot)
                                                    safely_cancellable)
                              == SPRET_ABORT) && alreadyknown;
         }
+        else if (alreadyknown
+                 && !yesno("Your blink will be uncontrolled - continue anyway?",
+                            false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            cancel_scroll = true;
+        }
         else
             uncontrolled_blink();
+
         if (!cancel_scroll)
             mpr(pre_succ_msg); // ordering is iffy but w/e
     }
