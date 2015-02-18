@@ -81,7 +81,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows rest docs greet api android
+        build-windows package-windows rest docs greet api android FORCE
 
 include Makefile.obj
 
@@ -1285,13 +1285,20 @@ DEPS := $(ALL_OBJECTS:.o=.d)
 # vs console vs webtiles) or if the compiler itself changes (gcc vs
 # gcc-snapshot vs clang, or x86_64-linux-gnu-gcc vs x86_64-w64-mingw32-g++).
 #
-# In such cases, the dependency forces a rebuild of that file.
+# In such cases, the dependency forces a rebuild of that file. If the
+# dependency file referred to a non-existant header, as determined by
+# util/good-depfile, then replace it with a rule that forces a rebuild.
+# That rebuild will overwrite the stopgap .d file with a good one for
+# the next build.
 ifndef NEED_REBUILD
   VALID_DEPS := $(shell for x_d in $(DEPS); do \
-                          x="$${x_d%%.d}"; x_cc="$${x}.cc"; \
+                          x="$${x_d%%.d}"; x_cc="$${x}.cc"; x_o="$${x}.o"; \
                           if [ "$$x_cc" -ot "$$x_d" \
                                -a "$$x_d" -nt .cflags ]; \
-                          then echo "$$x_d"; \
+                          then \
+                            util/good-depfile "$$x_d" \
+                              || echo "$$x_o: FORCE" > "$$x_d"; \
+                            echo "$$x_d"; \
                           fi; \
                         done)
 endif
