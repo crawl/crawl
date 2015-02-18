@@ -229,25 +229,23 @@ void jiyva_stat_action()
             else
                 other_weights += weight;
         }
+        // We give pure Int weighting if the player is sufficiently
+        // focused on magic skills.
+        other_weights = max(other_weights - magic_weights / 2, 0);
 
-        // Heavy armour weights towards strength, Dodging skill towards
-        // dexterity.  EVP 15 (chain) is enough to weight towards pure Str in
-        // the absence of dodging skill, but 15 dodging will will push that
-        // back to pure Dex.
-        int str_weight = (10 * evp - you.skill(SK_DODGING, 10)) / 15;
-        // Clip weight between 0 (pure dex) and 10 (pure strength).
-        str_weight = min(10, max(0, str_weight));
-
-        // If you are in really heavy armour, then you already are getting a
-        // lot of Str and more won't help much, so weight magic more.
-        other_weights = max(other_weights - (evp >= 15 ? 4 : 1)
-                            * magic_weights / 2, 0);
+        // Now scale appropriately and apply the Int weighting
         magic_weights = div_rand_round(remaining * magic_weights,
                                        magic_weights + other_weights);
         other_weights = remaining - magic_weights;
         target_stat[1] += magic_weights;
 
-        const int str_adj = div_rand_round(other_weights * str_weight, 10);
+        // Heavy armour weights towards Str, Dodging skill towards Dex.
+        int str_weight = 10 * evp;
+        int dex_weight = 10 + you.skill(SK_DODGING, 10);
+
+        // Now apply the Str and Dex weighting.
+        const int str_adj = div_rand_round(other_weights * str_weight,
+                                           str_weight + dex_weight);
         target_stat[0] += str_adj;
         target_stat[2] += (other_weights - str_adj);
     }
