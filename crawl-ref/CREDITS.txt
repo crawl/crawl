@@ -179,7 +179,6 @@
     Eva Myers
     nagdon
     Naruni
-    nooodl
     Erkki Nurmi
     Mattias Nyberg
     nyra
@@ -234,6 +233,7 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Tommy
+    Mauris Van Hauwe
     Mikko Vepsäläinen
     Steven Wheeler
     Thomas Willem
