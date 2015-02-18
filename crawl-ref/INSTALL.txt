@@ -247,27 +247,65 @@ run on 9x).
   NOTE: msysgit should be installed to a path that does not contain spaces,
         such as the default location 'c:\msysgit'.
 
-* The default msysgit has an old version of g++ that can't handle C++11. To
-  update yours, win-builds is recommended. Follow the instructions at:
+* The default msysgit has an old version of GCC can't handle C++11. To
+  update yours, Win-builds is recommended.
 
-    http://win-builds.org/1.5-rc3/msys-cygwin.html#_win_builds_installation
+Upgrading GCC with Win-builds:
 
-* Start msys by running 'c:\msysgit\msys.bat'. Now you're in a MinGW build
-  environment.
+Follow steps 2-4 of the 'Installation For Use With MSYS or Cygwin' instructions
+from the win-builds.org website, currently at:
 
-* cd to the the Crawl source directory. For instance, if you have the crawl
-  sources in c:\crawl\source, you would type 'cd /c/crawl/source'.
+http://win-builds.org/1.5.0/msys-cygwin.html
 
-* Build Crawl by running 'make'. If you want a graphical build, you will
-  need to add 'TILES=y' on the 'make' command line.
+Skip step 1 of the instructions, since you already have MSYS installed through
+msysgit, and skip step 5 since you'll be compiling Crawl next.
+
+For step 2 of the instructions, run the installer exe after downloading
+it. You'll need to select the 'System to install for' and the architecture.
+
+For the system, choose the 'Cygwin or MSYS' option and enter the path to the
+folder where you installed msysgit, which is usually 'c:\msysgit'.
+
+For the architecture, the installer should automatically detect this, in which
+case note it now so you know which command you need to run in step 3 of the
+Win-build instructions. If you're unsure which architecture you have, exit the
+installer, start Msys by running 'c:\msysgit\msys.bat', and execute the command
+'gcc -v'. Note the output line that reads e.g. Target: i686-w64-mingw32' or
+'Target: x86_64-w64-mingw32' to indicate whether you have i686 or x86_64.
+
+After choosing the system and architecture, click Ok and then Process on the
+next screen to install the Win-builds packages. This will take some time to
+download and install. You can close the installer after the installation is
+finished.
+
+For step 3 of the instructions, start msys by running 'c:\msysgit\msys.bat',
+and run the appropriate command out of the two given, based on the architecture
+you used/determined in step 2.
+
+It's a good idea to follow step 4 of the instructions so that the Win-builds
+version of GCC is selected every time you start MSYS.
+
+After completing the instructions, check that you have an updated GCC in MSYS
+by running the command 'gcc --version'. The version should be 4.8 or higher. If
+the version is not at least 4.8, run the command 'which gcc', and check that
+the path used for GCC is either '/opt/windows_32/bin/gcc' or
+'/opt/windows_64/bin/gcc', depending on your system. If not, you're still using
+the older GCC shipped with msysgit. In that case make sure you followed step 3
+correctly to activate the Win-builds GCC.
+
+Running MSYS and building Crawl:
+
+* Start MSYS by running 'c:\msysgit\msys.bat'. This gives you the MinGW/MSYS
+  build environment.
+
+* cd to the Crawl source directory. For instance, if you have the crawl sources
+  in c:\crawl\source, you would type 'cd /c/crawl/source'.
+
+* Build Crawl by running 'make NO_PKGCONFIG=y'. If you want a graphical build,
+  you will need to add ' TILES=y' on the 'make' command line.
 
 * When the process finishes, you should be able to run crawl right from the
   source directory by typing './crawl'
-
-* If the linker complains about missing Lua, you may need to compile once
-  with 'BUILD_LUA=y' in the 'make' invocation. Some people have reported also
-  needing to build with 'NO_PKGCONFIG=y', though building without it has
-  worked fine for me.
 
 * If you get a message about missing SDL.h even though you do have contribs
   installed, your version of msys may suffer from a bug that has been fixed
@@ -277,6 +315,19 @@ run on 9x).
 * For you stubborn types who insist on using separate msys and git installs,
   make sure git.exe is in your PATH when trying to build from git! Otherwise,
   util/gen_ver.pl will most likely fail to generate build.h.
+
+NOTE: You may be able to omit 'NO_PKGCONFIG=y' in the make command to use
+libraries that are shipped with Win-builds instead of compiling the contrib
+libraries in the Crawl source. Using 'NO_PKGCONFIG=y' will increase compilation
+time the first time Crawl is compiled, but it means fewer potential build
+problems. The contrib libraries are changed infrequently, so subsequent
+compilations will be faster as contribs won't require recompilation. If you do
+want to use the Win-builds libraries and omit NO_PKGCONFIG=y, you will likely
+still need to use some of the Crawl contribs, which you can enable by adding
+any of the following make arguments (alone or in combination):
+
+  BUILD_LUA=y BUILD_ZLIB=y BUILD_SQLITE=y BUILD_SDL2=y BUILD_SDL2IMAGE=y
+
 
 Building on Windows (cygwin)
 ----------------------------
