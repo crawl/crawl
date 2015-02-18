@@ -1114,7 +1114,7 @@ static bool _lich_spell_is_good(const monster_spells &spells, spell_type spell,
 
     for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
     {
-        auto bit = static_cast<spschool_flag_type>(1 << exponent);
+        const auto bit = spschools_type::exponent(exponent);
         if (disciplines & bit)
             if (x_chance_in_y(weights[exponent], total_weight * num_disciplines))
                 return true;
@@ -1136,7 +1136,7 @@ static void _calculate_lich_spell_weights(const monster_spells &spells,
     for (auto slot : spells)
         for (int exponent = 0; exponent <= SPTYP_LAST_EXPONENT; ++exponent)
         {
-            auto discipline = static_cast<spschool_flag_type>(1 << exponent);
+            const auto discipline = spschools_type::exponent(exponent);
             if (spell_typematch(slot.spell, discipline))
             {
                 // or else we just get entirely bolts

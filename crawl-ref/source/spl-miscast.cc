@@ -246,11 +246,11 @@ void MiscastEffect::do_miscast()
     {
         vector<int> school_list;
         for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-            if (spell_typematch(spell, static_cast<spschool_flag_type>(1 << i)))
+            if (spell_typematch(spell, spschools_type::exponent(i)))
                 school_list.push_back(i);
 
         unsigned int _school = school_list[random2(school_list.size())];
-        sp_type = static_cast<spschool_flag_type>(1 << _school);
+        sp_type = spschools_type::exponent(_school);
     }
     else
     {

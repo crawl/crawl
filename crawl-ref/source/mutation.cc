@@ -190,7 +190,7 @@ void init_mut_index()
         mut_index[mut] = i;
         for (int mt = 0; mt <= MUTFLAG_LAST_EXPONENT; mt++)
         {
-            const auto flag = static_cast<mut_flag_type>(1 << mt);
+            const auto flag = mut_flags_type::exponent(mt);
             if (_mut_has_use(mut_data[i], flag))
                 total_weight[flag] += _mut_weight(mut_data[i], flag);
         }

@@ -160,7 +160,7 @@ spschool_flag_type school_by_name(string name)
 
     for (int i = 0; i <= SPTYP_RANDOM; i++)
     {
-        auto type = static_cast<spschool_flag_type>(1 << i);
+        const auto type = spschools_type::exponent(i);
 
         string short_name = spelltype_short_name(type);
         string long_name  = spelltype_long_name(type);
@@ -1570,7 +1570,7 @@ bool cannot_use_schools(spschools_type schools)
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
         // skip schools not in the provided set
-        const auto school = static_cast<spschool_flag_type>(1 << i);
+        const auto school = spschools_type::exponent(i);
         if (!(schools & school))
             continue;
 
@@ -1595,6 +1595,6 @@ skill_type arcane_mutation_to_skill(mutation_type mutation)
 {
     for (int exp = 0; exp <= SPTYP_LAST_EXPONENT; exp++)
         if (arcana_sacrifice_map[exp] == mutation)
-            return spell_type2skill(static_cast<spschool_flag_type>(1 << exp));
+            return spell_type2skill(spschools_type::exponent(exp));
     return SK_NONE;
 }

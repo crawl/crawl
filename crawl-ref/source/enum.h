@@ -19,6 +19,10 @@ public:
 
     enum_bitfield() : flags(0) {}
     enum_bitfield(E flag) : flags(flag) {}
+
+    /// Get the flag corresponding to the given bit position (0 = LSB).
+    static E exponent(int pos) { return static_cast<E>(1 << pos); }
+
     template<class ... Es>
     enum_bitfield(E flag, Es... rest) : enum_bitfield(rest...) { flags |= flag; }
 

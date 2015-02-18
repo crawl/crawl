@@ -948,7 +948,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             const spschools_type disciplines = get_spell_disciplines(spell);
             for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
             {
-                auto disc = static_cast<spschool_flag_type>(1 << d);
+                const auto disc = spschools_type::exponent(d);
                 if (disc & SPTYP_DIVINATION)
                     continue;
 
@@ -962,7 +962,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         }
         for (int d = 0; d <= SPTYP_LAST_EXPONENT; ++d)
         {
-            auto disc = static_cast<spschool_flag_type>(1 << d);
+            const auto disc = spschools_type::exponent(d);
             if (disc & SPTYP_DIVINATION)
                 continue;
 

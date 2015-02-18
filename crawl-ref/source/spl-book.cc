@@ -1083,7 +1083,7 @@ static bool _compare_spells(spell_type a, spell_type b)
         // Find lowest/earliest school for each spell.
         for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
         {
-            auto mask = static_cast<spschool_flag_type>(1 << i);
+            const auto mask = spschools_type::exponent(i);
             if (a_type == nullptr && (schools_a & mask))
                 a_type = spelltype_long_name(mask);
             if (b_type == nullptr && (schools_b & mask))
@@ -1447,7 +1447,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     vector<int> spellcount;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
-        spschool_flag_type disc = static_cast<spschool_flag_type>(1 << i);
+        const spschool_flag_type disc = spschools_type::exponent(i);
         if (disc & SPTYP_DIVINATION)
             continue;
 
@@ -1569,7 +1569,7 @@ static bool _get_weighted_spells(bool completely_random, god_type god,
             int num_skills  = 0;
             for (int j = 0; j <= SPTYP_LAST_EXPONENT; j++)
             {
-                auto disc = static_cast<spschool_flag_type>(1 << j);
+                const auto disc = spschools_type::exponent(j);
 
                 if (disciplines & disc)
                 {
@@ -1803,11 +1803,8 @@ bool make_book_theme_randart(item_def &book,
             continue;
 
         for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
-            if (spell_typematch(chosen_spells[i],
-                                static_cast<spschool_flag_type>(1 << k)))
-            {
+            if (spell_typematch(chosen_spells[i], spschools_type::exponent(k)))
                 count[k]++;
-            }
     }
 
     // Remember the two dominant spell schools ...
@@ -1849,8 +1846,8 @@ bool make_book_theme_randart(item_def &book,
 
     // Remove spells that don't fit either discipline.
     // ... and change disc1 and disc2 accordingly.
-    disc1 = static_cast<spschool_flag_type>(1 << max1);
-    disc2 = static_cast<spschool_flag_type>(1 << max2);
+    disc1 = spschools_type::exponent(max1);
+    disc2 = spschools_type::exponent(max2);
     _remove_nondiscipline_spells(chosen_spells, disc1, disc2);
     _add_included_spells(chosen_spells, incl_spells);
 
