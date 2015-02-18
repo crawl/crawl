@@ -2217,13 +2217,8 @@ static void _ruin_level(Iterator iter,
 
 static bool _mimics_allowed()
 {
-    return (!player_in_branch(BRANCH_DUNGEON) || you.depth > 1)
+    return level_id::current() != level_id(BRANCH_DUNGEON, 1)
            && !player_in_branch(BRANCH_TEMPLE)
-           && !player_in_branch(BRANCH_VESTIBULE)
-           && !player_in_branch(BRANCH_SLIME)
-           && !player_in_branch(BRANCH_TOMB)
-           && !player_in_branch(BRANCH_PANDEMONIUM)
-           && !player_in_hell()
            && !crawl_state.game_is_tutorial();
 }
 
