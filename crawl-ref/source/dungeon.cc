@@ -2215,7 +2215,7 @@ static void _ruin_level(Iterator iter,
     }
 }
 
-static bool _mimic_at_level()
+static bool _mimics_allowed()
 {
     return (!player_in_branch(BRANCH_DUNGEON) || you.depth > 1)
            && !player_in_branch(BRANCH_TEMPLE)
@@ -2254,7 +2254,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
         if (feat == dest_stairs_type)
             continue;
 
-        // Don't mimic vetoed doors.
+        // Don't mimic special doors.
         if (door_vetoed(pos))
             continue;
 
@@ -2266,31 +2266,11 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             continue;
         }
 
-        // If this is the real branch entry, don't mimic it.
+        // If the branch entry is on the wrong level, it's been put there for
+        // mimicing.
         if (feat_is_branch_entrance(feat)
-            && level_id::current() == brentry[get_branch_at(pos)])
-        {
-            continue;
-        }
-
-        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
-        {
-            // Don't mimic stairs that are about to get removed.
-            if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
-                && at_branch_bottom())
-            {
-                continue;
-            }
-
-            if (feat_stair_direction(feat) == CMD_GO_UPSTAIRS
-                && you.depth <= 1)
-            {
-                continue;
-            }
-        }
-
-        // If it is a branch entry, it's been put there for mimicing.
-        if (feat_is_branch_entrance(feat) || one_chance_in(FEATURE_MIMIC_CHANCE))
+             && level_id::current() != brentry[get_branch_at(pos)]
+            || one_chance_in(FEATURE_MIMIC_CHANCE))
         {
             // For normal stairs, there is a chance to create another mimics
             // elsewhere instead of turning this one. That way, when the 3
@@ -2321,8 +2301,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 
 static void _place_item_mimics()
 {
-    // No mimics on D:1
-    if (!env.absdepth0)
+    if (level_id::current() == level_id(BRANCH_DUNGEON, 1));
         return;
 
     for (int i = 0; i < MAX_ITEMS; i++)
@@ -2418,9 +2397,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         //      connectivity can be ensured
         _place_uniques();
 
-        if (_mimic_at_level())
-            _place_feature_mimics(dest_stairs_type);
-
         _place_traps();
 
         // Any vault-placement activity must happen before this check.
@@ -2453,8 +2429,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _place_gozag_shop(dest_stairs_type);
 
     link_items();
-    if (_mimic_at_level())
-        _place_item_mimics();
 
     if (!player_in_branch(BRANCH_COCYTUS)
         && !player_in_branch(BRANCH_SWAMP)
@@ -2465,6 +2439,12 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
     if (player_in_hell())
         _fixup_hell_stairs();
+
+    if (_mimics_allowed())
+    {
+        _place_feature_mimics(dest_stairs_type);
+        _place_item_mimics();
+    }
 }
 
 static void _dgn_set_floor_colours()
@@ -3264,6 +3244,7 @@ static void _place_gozag_shop(dungeon_feature_type stair)
     env.map_knowledge(*shop_place).set_feature(grd(*shop_place));
     env.map_knowledge(*shop_place).flags |= MAP_MAGIC_MAPPED_FLAG;
     env.pgrid(*shop_place) |= FPROP_SEEN_OR_NOEXP;
+    env.level_map_mask(*shop_place) |= MMT_NO_MIMIC;
     seen_notable_thing(grd(*shop_place), *shop_place);
 
     const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
