@@ -163,8 +163,6 @@ _time_name_
 
 Day
 
-Night
-
 Midnight
 
 Twilight
@@ -238,8 +236,6 @@ the Shining Light
 Sunlight
 
 Starshine
-
-the Clouds
 
 the Sky
 
