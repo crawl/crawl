@@ -1954,10 +1954,13 @@ string get_item_description(const item_def &item, bool verbose,
         if (is_xp_evoker(item))
         {
             description << "\nOnce released, the spirits of this device will "
-                           "depart, leaving it and all other devices of its "
-                           "kind inert. However, more spirits will be "
-                           "attracted as its bearer grows in power and "
-                           "wisdom.";
+                           "depart, leaving it ";
+
+            if (!item_is_horn_of_geryon(item))
+                description << "and all other devices of its kind ";
+
+            description << "inert. However, more spirits will be attracted as "
+                           "its bearer grows in power and wisdom.";
 
             if (!evoker_is_charged(item))
             {
