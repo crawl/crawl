@@ -444,19 +444,8 @@ spret_type cast_controlled_blink(int pow, bool fail, bool safe)
         return SPRET_ABORT;
     }
 
-    // the ORB turns cblink into scblink or just blink.
-    const bool orbed = orb_haloed(you.pos());
-
-    if (orbed && coinflip())
-    {
-        fail_check();
-        mprf(MSGCH_ORB, "The orb prevents control of your teleportation!");
-        uncontrolled_blink();
-        return SPRET_SUCCESS; // of a sort...
-    }
-
     if (!allow_control_teleport())
-        return semicontrolled_blink(pow, fail, safe && !orbed, false);
+        return semicontrolled_blink(pow, fail, safe, false);
 
     return controlled_blink(fail, safe);
 }
