@@ -1345,7 +1345,14 @@ static int _num_mons_wanted()
 
 static void _fixup_walls()
 {
+    // If level part of Dis -> all walls metal.
+    // If Vaults:$ -> all walls metal or crystal.
+    // If part of crypt -> all walls stone.
+
     dungeon_feature_type wall_type = DNGN_ROCK_WALL;
+
+    if (!player_in_connected_branch())
+        return;
 
     switch (you.where_are_you)
     {
@@ -1379,15 +1386,6 @@ static void _fixup_walls()
 
     dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, wall_type,
                      MMT_NO_WALL);
-}
-
-static void _apply_branch_substitutions()
-{
-    if (player_in_hell())
-        _fixup_hell_stairs();
-    if (player_in_branch(BRANCH_PANDEMONIUM))
-        _fixup_pandemonium_stairs();
-    _fixup_walls();
 }
 
 // Remove any items that are on squares that items should not be on.
@@ -2405,6 +2403,8 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
         // Place items.
         _builder_items();
+
+        _fixup_walls();
     }
     else
     {
@@ -2412,6 +2412,10 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         // they happen to have the relevant branch.
         _post_vault_build();
     }
+
+    // Translate stairs for pandemonium levels.
+    if (player_in_branch(BRANCH_PANDEMONIUM))
+        _fixup_pandemonium_stairs();
 
     _fixup_branch_stairs();
     fixup_misplaced_items();
@@ -2428,7 +2432,8 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _prepare_water();
     }
 
-    _apply_branch_substitutions();
+    if (player_in_hell())
+        _fixup_hell_stairs();
 
     if (_mimics_allowed())
     {
