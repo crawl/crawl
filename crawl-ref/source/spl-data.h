@@ -902,7 +902,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TUKIMAS_DANCE, "Tukima's Dance",
      SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
      3,
      100,
      LOS_RADIUS, LOS_RADIUS,
