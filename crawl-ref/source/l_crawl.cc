@@ -282,8 +282,12 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
         if (!keys)
             return;
 
-        for (; *keys; ++keys)
-            macro_sendkeys_end_add_expanded(*keys);
+        ucs_t wc;
+        while (int len = utf8towc(&wc, keys))
+        {
+            macro_sendkeys_end_add_expanded(wc);
+            keys += len;
+        }
     }
     else if (lua_istable(ls, argi))
     {
