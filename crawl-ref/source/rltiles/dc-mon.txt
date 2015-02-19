@@ -614,6 +614,7 @@ wind_drake MONS_WIND_DRAKE
 ## For tile_player_tile
 %sdir mon/unique
 jormungandr MONS_JORMUNGANDR
+giaggostuono MONS_GIAGGOSTUONO
 
 
 ## Dragons ('D')
