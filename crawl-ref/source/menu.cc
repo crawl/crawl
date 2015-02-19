@@ -1249,12 +1249,12 @@ void Menu::select_index(int index, int qty)
 int Menu::get_entry_index(const MenuEntry *e) const
 {
     int index = 0;
-    for (unsigned int i = 0; i < items.size(); i++)
+    for (const auto &item : items)
     {
-        if (items[i] == e)
+        if (item == e)
             return index;
 
-        if (items[i]->quantity != 0)
+        if (item->quantity != 0)
             index++;
     }
 
