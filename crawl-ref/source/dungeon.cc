@@ -2296,7 +2296,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 
 static void _place_item_mimics()
 {
-    if (level_id::current() == level_id(BRANCH_DUNGEON, 1));
+    if (level_id::current() == level_id(BRANCH_DUNGEON, 1))
         return;
 
     for (int i = 0; i < MAX_ITEMS; i++)
