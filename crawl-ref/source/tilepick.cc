@@ -3960,6 +3960,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_ELECTRIC_EEL:
         return TILE_CORPSE_ELECTRIC_EEL;
 
+    // lava monsters
+    case MONS_LAVA_SNAKE:
+        return TILE_CORPSE_LAVA_SNAKE;
+
     default:
         return TILE_ERROR;
     }
