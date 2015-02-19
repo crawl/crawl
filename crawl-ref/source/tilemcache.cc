@@ -771,6 +771,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 9;
         *ofs_y = -4;
         break;
+    case TILEP_MONS_GIAGGOSTUONO:
+        *ofs_x = -5;
+        *ofs_y = 5;
+        break;
     default:
         // This monster cannot be displayed with a weapon.
         return false;
@@ -1163,9 +1167,12 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = 2;
         break;
-
     case TILEP_MONS_SERAPH:
         *ofs_x = -2;
+        *ofs_y = -7;
+        break;
+    case TILEP_MONS_GIAGGOSTUONO:
+        *ofs_x = 2;
         *ofs_y = -7;
         break;
 
