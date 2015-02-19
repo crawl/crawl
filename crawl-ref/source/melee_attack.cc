@@ -3560,8 +3560,7 @@ bool melee_attack::do_knockback(bool trample)
 
     if (!x_chance_in_y(size_diff + 3, 6)
         // need a valid tile
-        || !feat_has_solid_floor(grd(new_pos))
-           && !defender->is_habitable_feat(grd(new_pos))
+        || !defender->is_habitable_feat(grd(new_pos))
         // don't trample into a monster - or do we want to cause a chain
         // reaction here?
         || actor_at(new_pos)
