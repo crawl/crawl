@@ -575,15 +575,15 @@ int line_reader::process_key(int ch)
     case CK_DELETE:
         if (*cur)
         {
-            char *np = next_glyph(cur);
+            const char *np = next_glyph(cur);
             ASSERT(np);
-            char *c = cur;
-            while (*np)
-                *c++ = *np++;
-            length = np - buffer;
+            const size_t del_bytes = np - cur;
+            const size_t follow_bytes = (buffer + length) - np;
+            // Copy the NUL too.
+            memmove(cur, np, follow_bytes + 1);
+            length -= del_bytes;
 
             cursorto(pos);
-            buffer[length-1] = 0;
             wrapcprintf(wrapcol, "%s ", cur);
             cursorto(pos);
         }
