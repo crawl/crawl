@@ -118,7 +118,7 @@ static string _spell_base_description(spell_type spell, bool viewing)
     // spell fail rate, level
     highlight = failure_rate_colour(spell);
     desc << "<" << colour_to_str(highlight) << ">";
-    const string failure = failure_rate_to_string(spell_fail(spell));
+    const string failure = failure_rate_to_string(raw_spell_fail(spell));
     desc << chop_string(failure, 12);
     desc << "</" << colour_to_str(highlight) << ">";
     desc << spell_difficulty(spell);
@@ -308,7 +308,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     return chance * fail_reduce / 100;
 }
 
-int spell_fail(spell_type spell)
+int raw_spell_fail(spell_type spell)
 {
     int chance = 60;
 
@@ -1337,7 +1337,7 @@ spret_type your_spells(spell_type spell, int powc,
         }
     }
 
-    // Enhancers only matter for calc_spell_power() and spell_fail().
+    // Enhancers only matter for calc_spell_power() and raw_spell_fail().
     // Not sure about this: is it flavour or misleading? (jpeg)
     if (allow_fail)
         _surge_power(spell);
@@ -1398,7 +1398,7 @@ spret_type your_spells(spell_type spell, int powc,
                           random2avg(88, 3), "the malice of Vehumet");
         }
 
-        const int spfail_chance = spell_fail(spell);
+        const int spfail_chance = raw_spell_fail(spell);
 
         if (spfl < spfail_chance)
             fail = spfail_chance - spfl;
@@ -2056,7 +2056,7 @@ static double _get_true_fail_rate(int raw_fail)
  */
 double get_miscast_chance(spell_type spell, int severity)
 {
-    int raw_fail = spell_fail(spell);
+    int raw_fail = raw_spell_fail(spell);
     int level = spell_difficulty(spell);
     if (severity <= 0)
         return _get_true_fail_rate(raw_fail);

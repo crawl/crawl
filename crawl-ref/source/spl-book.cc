@@ -669,8 +669,8 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
 
     // Don't sort by failure rate beyond what the player can see in the
     // success descriptions.
-    const int fail_rate_a = failure_rate_to_int(spell_fail(a));
-    const int fail_rate_b = failure_rate_to_int(spell_fail(b));
+    const int fail_rate_a = failure_rate_to_int(raw_spell_fail(a));
+    const int fail_rate_b = failure_rate_to_int(raw_spell_fail(b));
     if (fail_rate_a != fail_rate_b)
         return fail_rate_a < fail_rate_b;
 
@@ -825,7 +825,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         colour = failure_rate_colour(spell);
         desc << "<" << colour_to_str(colour) << ">";
-        desc << chop_string(failure_rate_to_string(spell_fail(spell)), 12);
+        desc << chop_string(failure_rate_to_string(raw_spell_fail(spell)), 12);
         desc << "</" << colour_to_str(colour) << ">";
         desc << spell_difficulty(spell);
 
@@ -988,7 +988,7 @@ bool learn_spell(spell_type specspell)
 
     int severity = fail_severity(specspell);
 
-    if (spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
+    if (raw_spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
         mprf(MSGCH_WARN, "This spell is impossible to cast!");
     else if (severity > 0)
     {
