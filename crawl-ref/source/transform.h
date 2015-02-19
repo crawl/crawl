@@ -180,7 +180,7 @@ public:
 
     /// can the player cast while in this form?
     const bool can_cast;
-    /// increase to spell fail rate (value is weird - see spell_fail())
+    /// increase to spell fail rate (value is weird - see raw_spell_fail())
     const int spellcasting_penalty;
 
     /// acc bonus when using UC in form

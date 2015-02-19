@@ -1288,9 +1288,9 @@ void debug_miscast(int target_index)
         mprf("Miscasting school %s.", spelltype_long_name(school));
 
     if (spell != SPELL_NO_SPELL)
-        mprf(MSGCH_PROMPT, "Enter spell_power,spell_failure: ");
+        mprf(MSGCH_PROMPT, "Enter spell_power,raw_spell_failure: ");
     else
-        mprf(MSGCH_PROMPT, "Enter miscast_level or spell_power,spell_failure: ");
+        mprf(MSGCH_PROMPT, "Enter miscast_level or spell_power,raw_spell_failure: ");
 
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {

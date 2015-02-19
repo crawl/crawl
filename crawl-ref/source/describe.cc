@@ -2712,7 +2712,7 @@ static string _player_spell_stats(const spell_type spell, bool rod)
             return description; // all other info is player-dependent
         }
 
-        const string failure = failure_rate_to_string(spell_fail(spell));
+        const string failure = failure_rate_to_string(raw_spell_fail(spell));
         description += make_stringf("        Fail: %s", failure.c_str());
     }
 
