@@ -2822,7 +2822,7 @@ void ShoppingList::refresh()
         you.props[SHOPPING_LIST_KEY].new_vector(SV_HASH, SFLAG_CONST_TYPE);
     list = &you.props[SHOPPING_LIST_KEY].get_vector();
 
-    sort(list->begin(), list->end(), _compare_shopping_things);
+    stable_sort(list->begin(), list->end(), _compare_shopping_things);
 
     min_unbuyable_cost = INT_MAX;
     min_unbuyable_idx  = -1;
