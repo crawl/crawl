@@ -151,13 +151,21 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
 
     const GotoRegion region = get_cursor_region();
     const int max_y = cgetsize(region).y;
-    while (!buf.empty())
+
+    size_t linestart = 0;
+    size_t len = buf.length();
+
+    while (linestart < len)
     {
         const coord_def pos = cgetpos(region);
 
         const int avail = wrapcol - pos.x + 1;
         if (avail > 0)
-            cprintf("%s", wordwrap_line(buf, avail).c_str());
+        {
+            const string line = chop_string(buf.c_str() + linestart, avail, false);
+            cprintf("%s", line.c_str());
+            linestart += line.length();
+        }
 
         // No room for more lines, quit now.
         if (pos.y >= max_y)
