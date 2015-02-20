@@ -2599,7 +2599,7 @@ void bolt::affect_endpoint()
 
     if (origin_spell == SPELL_BLINKBOLT)
     {
-        if (agent()->alive())
+        if (agent() && agent()->alive())
         {
             for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
                  citr != path_taken.rend(); ++citr)
