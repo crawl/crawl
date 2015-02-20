@@ -1469,10 +1469,10 @@ hydra
 A great and nightmarish lacertilian beast. It has many heads, and the potential
 to grow many more!
 
-Hitting it with any cutting weapon bigger than a dagger or a quick blade risks
-lopping a head off, which, considering hydra's unique biology, is not what you
-want unless the blade is hot enough to cauterize the wound. Even a troll's
-claws may be enough to rip hydra heads.
+Hitting it with any bladed weapon bigger than a short blade risks lopping a
+head off, which, considering hydra's unique biology, is not what you want
+unless the weapon is branded with flame and able to cauterize the wound. Even a
+troll's claws may be enough to rip hydra heads.
 %%%%
 hyperactive ballistomycete
 
