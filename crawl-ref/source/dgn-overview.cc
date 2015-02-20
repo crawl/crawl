@@ -415,7 +415,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
             colour = "white";
         // Good gods don't inflict penance unless they hate your god.
         if (player_under_penance(god)
-            && (god == GOD_ASHENZARI || active_penance(god)))
+            && (xp_penance(god) || active_penance(god)))
         {
             // Active Nemelex penance starts at 101, not 1.
             colour = (you.penance[god] > (god == GOD_NEMELEX_XOBEH ? 110 : 10))
