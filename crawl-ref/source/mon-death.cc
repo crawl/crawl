@@ -1647,7 +1647,7 @@ static bool _reaping(monster *mons)
  * @param maybe_good_kill   Whether the kill can be rewarding in piety.
  *                          (Not summoned, etc)
  */
-static void _fire_kill_conducts(const monster &mons, killer_type killer,
+static void _fire_kill_conducts(monster &mons, killer_type killer,
                                 int killer_index, bool maybe_good_kill)
 {
     const bool your_kill = killer == KILL_YOU ||
@@ -1656,6 +1656,10 @@ static void _fire_kill_conducts(const monster &mons, killer_type killer,
     const bool pet_kill = _is_pet_kill(killer, killer_index);
     const bool your_fault = your_kill && killer_index != YOU_FAULTLESS
                             || pet_kill;
+
+    // Pretend the monster is already dead, so that make_god_gifts_disappear
+    // (and similar) don't kill it twice.
+    unwind_var<int> fake_hp(mons.hit_points, 0);
 
     // if you or your pets didn't do it, no one cares
     if (!your_fault)
