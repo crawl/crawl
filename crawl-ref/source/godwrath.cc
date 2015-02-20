@@ -1952,18 +1952,19 @@ static void _god_smites_you(god_type god, const char *message,
     }
 }
 
-void ash_reduce_penance(int amount)
+void reduce_xp_penance(god_type god, int amount)
 {
-    if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
+    if (!you.penance[god] || !you.exp_docked_total[god])
         return;
 
-    int lost = min(amount / 2, you.exp_docked);
-    you.exp_docked -= lost;
+    int lost = min(amount / 2, you.exp_docked[god]);
+    you.exp_docked[god] -= lost;
 
-    int new_pen = (((int64_t)you.exp_docked * 50) + you.exp_docked_total - 1)
-                / you.exp_docked_total;
-    if (new_pen < you.penance[GOD_ASHENZARI])
-        dec_penance(GOD_ASHENZARI, you.penance[GOD_ASHENZARI] - new_pen);
+    int new_pen = (((int64_t)you.exp_docked[god] * 50)
+                   + you.exp_docked_total[god] - 1)
+                / you.exp_docked_total[god];
+    if (new_pen < you.penance[god])
+        dec_penance(god, you.penance[god] - new_pen);
 }
 
 void gozag_incite(monster *mon)
@@ -1973,85 +1974,38 @@ void gozag_incite(monster *mon)
     behaviour_event(mon, ME_ALERT, &you);
 
     bool success = false;
+    const mon_attack_def attk = mons_attack_spec(mon, 0);
 
-    if (coinflip() && mon->needs_berserk(false))
+    int tries = 3;
+    do
     {
-        mon->go_berserk(false);
-        success = true;
-    }
-    else
-    {
-        int tries = 3;
-        do
+        switch (random2(3))
         {
-            switch (random2(3))
-            {
-                case 0:
-                    if (mon->has_ench(ENCH_MIGHT))
-                        break;
-                    enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
-                    success = true;
+            case 0:
+                if (attk.type == AT_NONE || attk.damage == 0)
                     break;
-                case 1:
-                    if (mon->has_ench(ENCH_HASTE))
-                        break;
-                    enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
-                    success = true;
+                if (mon->has_ench(ENCH_MIGHT))
                     break;
-                case 2:
-                    if (mon->invisible() || you.can_see_invisible())
-                        break;
-                    enchant_actor_with_flavour(mon, mon, BEAM_INVISIBILITY);
-                    success = true;
+                enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
+                success = true;
+                break;
+            case 1:
+                if (mon->has_ench(ENCH_HASTE))
                     break;
-            }
+                enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
+                success = true;
+                break;
+            case 2:
+                if (!mon->can_go_berserk())
+                    break;
+                mon->go_berserk(true);
+                success = true;
+                break;
         }
-        while (!success && --tries > 0);
     }
+    while (!success && --tries > 0);
 
     if (success)
         view_update_at(mon->pos());
 }
 
-/**
- * Invoke the CURSE OF GOZAG by goldifying some part of a stack that the player
- * is trying to pick up.
- * @param it            The item being picked up.
- * @param quant_got     The number of items being picked up. (May be only part
- * of the stack.)
- * @param quiet         Whether to suppress messages.
- * @return              How much of the stack was goldified.
- */
-int gozag_goldify(const item_def &it, int quant_got, bool quiet)
-{
-    if ((it.base_type != OBJ_POTIONS
-         && it.base_type != OBJ_SCROLLS
-         && it.base_type != OBJ_FOOD)
-        || it.flags & ISFLAG_HANDLED)
-    {
-        return 0;
-    }
-
-    const unsigned val = item_value(it, true) / it.quantity;
-    // (val - 20)% chance for each item to be goldified.
-    const int goldified_count = binomial(quant_got, val - 20, 100);
-
-    if (!goldified_count)
-        return goldified_count;
-
-    if (!quiet)
-    {
-        string msg = get_desc_quantity(goldified_count, quant_got, "the")
-                     + " " + it.name(DESC_PLAIN);
-        msg += goldified_count > 1 ? " turn" : " turns";
-        msg += " to gold as you touch ";
-        msg += goldified_count > 1 ? "them." : "it.";
-
-        mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-    }
-
-    get_gold(it, goldified_count, quiet);
-    dec_penance(GOD_GOZAG, goldified_count);
-
-    return goldified_count;
-}

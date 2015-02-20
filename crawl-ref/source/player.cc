@@ -2756,8 +2756,18 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         exp_gained *= 2;
     }
 
-    if (player_under_penance(GOD_ASHENZARI))
-        ash_reduce_penance(exp_gained);
+    vector<god_type> xp_gods;
+    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    {
+        if (xp_penance((god_type) i))
+            xp_gods.push_back((god_type) i);
+    }
+
+    if (!xp_gods.empty())
+    {
+        god_type god = xp_gods[random2(xp_gods.size())];
+        reduce_xp_penance(god, exp_gained);
+    }
 
     const unsigned int old_exp = you.experience;
 
@@ -5724,8 +5734,8 @@ void player::init()
     num_total_gifts.init(0);
     one_time_ability_used.reset();
     piety_max.init(0);
-    exp_docked       = 0;
-    exp_docked_total = 0;
+    exp_docked.init(0);
+    exp_docked_total.init(0);
 
     mutation.init(0);
     innate_mutation.init(0);

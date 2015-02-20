@@ -4204,6 +4204,9 @@ static int _gozag_faith_adjusted_price(int price)
 
 int gozag_potion_price()
 {
+    if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
+        return 0;
+
     int multiplier = GOZAG_POTION_BASE_MULTIPLIER
                      + you.attribute[ATTR_GOZAG_POTIONS];
     int price = multiplier * 15; // arbitrary
@@ -4245,6 +4248,10 @@ bool gozag_potion_petition()
                 prices[i] = 0;
                 int multiplier = GOZAG_POTION_BASE_MULTIPLIER
                                  + you.attribute[ATTR_GOZAG_POTIONS];
+
+                if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
+                    multiplier = 0;
+
                 string key = make_stringf(GOZAG_POTIONS_KEY, i);
                 you.props.erase(key);
                 you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
@@ -4327,7 +4334,10 @@ bool gozag_potion_petition()
     for (auto pot : *pots[keyin])
         potionlike_effect(static_cast<potion_type>(pot.get_int()), 40);
 
-    you.attribute[ATTR_GOZAG_POTIONS]++;
+    if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
+        you.attribute[ATTR_GOZAG_FIRST_POTION] = 1;
+    else
+        you.attribute[ATTR_GOZAG_POTIONS]++;
 
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
@@ -4878,7 +4888,7 @@ bribability mons_bribability[] =
     { MONS_SHADOW_FIEND,    BRANCH_TARTARUS, 5 },
 };
 
-// An x-in-16 chance of a monster of the given type being bribed.
+// An x-in-8 chance of a monster of the given type being bribed.
 // Tougher monsters have a stronger chance of being bribed.
 int gozag_type_bribable(monster_type type, bool force)
 {

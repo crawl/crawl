@@ -249,20 +249,7 @@ static void _count_gold()
 
     you.attribute[ATTR_GOLD_GENERATED] += gold;
 
-    if (player_under_penance(GOD_GOZAG) && x_chance_in_y(gold - 500, 500))
-    {
-        for (item_def *pile : gold_piles)
-        {
-            pile->clear();
-            pile->base_type = OBJ_MISSILES;
-            pile->sub_type  = MI_STONE;
-            pile->quantity  = 1;
-            item_colour(*pile);
-        }
-        mprf(MSGCH_GOD, GOD_GOZAG, "You feel a great sense of loss.");
-        dec_penance(GOD_GOZAG, gold / 200);
-    }
-    else if (you_worship(GOD_GOZAG))
+    if (you_worship(GOD_GOZAG))
     {
         for (unsigned int i = 0; i < gold_places.size(); i++)
         {

@@ -793,6 +793,8 @@ const string make_cost_description(ability_type ability)
         const int amount = get_gold_cost(ability);
         if (amount)
             ret += make_stringf(", %d Gold", amount);
+        else if (ability == ABIL_GOZAG_POTION_PETITION)
+            ret += ", Free";
         else
             ret += ", Gold";
     }
@@ -885,6 +887,8 @@ static const string _detailed_cost_description(ability_type ability)
         int gold_amount = get_gold_cost(ability);
         if (gold_amount)
             ret << gold_amount;
+        else if (ability == ABIL_GOZAG_POTION_PETITION)
+            ret << "free";
         else
             ret << "variable";
     }
