@@ -228,14 +228,6 @@ static string _religion_help(god_type god)
             }
             break;
 
-        case GOD_GOZAG:
-            if (can_do_capstone_ability(god))
-            {
-                result += "You can place a non-artefact item on an altar and "
-                          "pray to duplicate that item.";
-            }
-            break;
-
         default:
             break;
     }

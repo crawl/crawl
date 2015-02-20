@@ -44,6 +44,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-poly.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "options.h"
@@ -390,12 +391,17 @@ void update_monsters_in_view()
             vector<monster *> mons;
             for (monster *mon : monsters)
             {
-                if (mon->wont_attack())
+                if (mon->wont_attack()
+                    || mon->is_stationary()
+                    || mons_is_object(mon->type)
+                    || mons_is_tentacle_or_tentacle_segment(mon->type))
+                {
                     continue;
+                }
 
-                int bribability = gozag_type_bribable(mon->type, true);
-                if (bribability
-                    && x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+                if (coinflip()
+                    && mon->get_experience_level() >=
+                       random2(you.experience_level))
                 {
                     mon_count.add(mon);
                     mons.push_back(mon);
@@ -410,8 +416,6 @@ void update_monsters_in_view()
                 mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
                 for (monster *mon : mons)
                     gozag_incite(mon);
-
-                dec_penance(GOD_GOZAG, mons.size());
             }
         }
     }

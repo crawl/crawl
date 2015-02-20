@@ -1588,35 +1588,6 @@ void get_gold(const item_def& item, int quant, bool quiet)
 {
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
-    if (player_under_penance(GOD_GOZAG)
-        && item.base_type == OBJ_GOLD) // no taxing Curse of Gozag gold
-    {
-        int tax = div_rand_round(quant, 10);
-        if (tax)
-        {
-            if (!quiet)
-            {
-                if (tax >= quant)
-                {
-                    simple_god_message(" claims this gold.",
-                                       GOD_GOZAG);
-                }
-                else
-                {
-                    simple_god_message(" claims a portion of the gold.",
-                                       GOD_GOZAG);
-                }
-            }
-            int penance = div_rand_round(tax, 10);
-            if (penance)
-                dec_penance(GOD_GOZAG, penance);
-
-            quant -= tax;
-            if (quant <= 0)
-                return;
-        }
-    }
-
     if (you_worship(GOD_ZIN) && !(item.flags & ISFLAG_THROWN))
         quant -= zin_tithe(item, quant, quiet);
     if (quant <= 0)
@@ -1996,15 +1967,6 @@ static bool _merge_items_into_inv(item_def &it, int quant_got,
     {
         _get_orb(it, quiet);
         return true;
-    }
-
-    // BEWARE... THE CURSE OF GOZAG!
-    if (player_under_penance(GOD_GOZAG))
-    {
-        const int goldified_count = gozag_goldify(it, quant_got, quiet);
-        quant_got -= goldified_count;
-        if (quant_got <= 0)
-            return true;
     }
 
     // attempt to merge into an existing stack, if possible

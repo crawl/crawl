@@ -43,6 +43,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "options.h"
@@ -1505,16 +1506,19 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             if (zin_id)
                 update_monster_pane();
 #endif
-            if (player_under_penance(GOD_GOZAG) && !mon->wont_attack())
+            if (player_under_penance(GOD_GOZAG)
+                && !mon->wont_attack()
+                && !mon->is_stationary()
+                && !mons_is_object(mon->type)
+                && !mons_is_tentacle_or_tentacle_segment(mon->type))
             {
-                int bribability = gozag_type_bribable(mon->type, true);
-                if (bribability
-                    && x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+                if (coinflip()
+                    && mon->get_experience_level() >=
+                       random2(you.experience_level))
                 {
                     mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
                          mon->name(DESC_THE).c_str());
                     gozag_incite(mon);
-                    dec_penance(GOD_GOZAG, 1);
                 }
             }
         }

@@ -182,7 +182,8 @@ public:
   int  exp_available;
   int  zot_points; // ZotDef currency
 
-  int exp_docked, exp_docked_total; // Ashenzari's wrath
+  FixedVector<int, NUM_GODS> exp_docked;
+  FixedVector<int, NUM_GODS> exp_docked_total; // XP-based wrath
 
   FixedArray<uint32_t, 6, MAX_SUBTYPES> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;

@@ -1773,8 +1773,7 @@ void drink(int slot)
                             && you.experience_level > 1);
     potion_type pot_type = (potion_type)potion.sub_type;
 
-    if (!you_worship(GOD_GOZAG)
-        && you.penance[GOD_GOZAG] && one_chance_in(5))
+    if (player_under_penance(GOD_GOZAG) && one_chance_in(3))
     {
         simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
 

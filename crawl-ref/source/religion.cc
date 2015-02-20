@@ -1065,6 +1065,15 @@ bool active_penance(god_type god)
                || god_hates_your_god(god, you.religion));
 }
 
+// True for gods whose wrath is passive and expires with XP gain.
+bool xp_penance(god_type god)
+{
+    return player_under_penance(god)
+           && !is_unavailable_god(god)
+           && (god == GOD_ASHENZARI
+               || god == GOD_GOZAG);
+}
+
 void dec_penance(god_type god, int val)
 {
     if (val <= 0 || you.penance[god] <= 0)
@@ -2060,7 +2069,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_DITHMENOS:     return "Dithmenos";
     case GOD_GOZAG:         return "Gozag";
     case GOD_QAZLAL:        return "Qazlal";
-    case GOD_RU:        return "Ru";
+    case GOD_RU:            return "Ru";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -2938,9 +2947,9 @@ void excommunication(god_type new_god, bool immediate)
         if (you.transfer_skill_points > 0)
             ashenzari_end_transfer(false, true);
         you.duration[DUR_SCRYING] = 0;
-        you.exp_docked = exp_needed(min<int>(you.max_level, 27)  + 1)
-                       - exp_needed(min<int>(you.max_level, 27));
-        you.exp_docked_total = you.exp_docked;
+        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[old_god] = you.exp_docked[old_god];
         _set_penance(old_god, 50);
         break;
 
@@ -2965,7 +2974,10 @@ void excommunication(god_type new_god, bool immediate)
             branch_bribe[it->id] = 0;
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
-        _set_penance(old_god, 25);
+        you.exp_docked[old_god] = exp_needed(min<int>(you.max_level, 27) + 1)
+                                  - exp_needed(min<int>(you.max_level, 27));
+        you.exp_docked_total[old_god] = you.exp_docked[old_god];
+        _set_penance(old_god, 50);
         break;
 
     case GOD_QAZLAL:
@@ -3609,18 +3621,19 @@ void join_religion(god_type which_god, bool immediate)
 
         for (size_t i = 0; i < abilities.size(); ++i)
         {
+            if (abilities[i] == ABIL_GOZAG_POTION_PETITION
+                && !you.attribute[ATTR_GOZAG_FIRST_POTION])
+            {
+                simple_god_message(" offers you a free set of potion effects!");
+                needs_redraw = true;
+                continue;
+            }
             if (you.gold >= get_gold_cost(abilities[i])
                 && _abil_chg_message(god_gain_power_messages[you.religion][i],
                                      "You have enough gold to %s.", i))
             {
                 needs_redraw = true;
             }
-        }
-
-        if (!you.one_time_ability_used[you.religion])
-        {
-            simple_god_message(" will now duplicate a non-artefact item for"
-                               " you... once.");
         }
 
         if (needs_redraw)
