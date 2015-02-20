@@ -1410,14 +1410,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_FAUN_II,
       {
        { SPELL_CORONA, 15, MON_SPELL_WIZARD },
-       { SPELL_SLOW, 15, MON_SPELL_WIZARD },
-      }
-    },
-
-    {  MST_FAUN_III,
-      {
-       { SPELL_CORONA, 15, MON_SPELL_WIZARD },
-       { SPELL_CONFUSE, 15, MON_SPELL_WIZARD },
+       { SPELL_CONFUSE, 10, MON_SPELL_WIZARD },
       }
     },
 
