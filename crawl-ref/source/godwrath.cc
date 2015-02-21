@@ -2008,4 +2008,3 @@ void gozag_incite(monster *mon)
     if (success)
         view_update_at(mon->pos());
 }
-
