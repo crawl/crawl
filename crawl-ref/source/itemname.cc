@@ -2868,6 +2868,11 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             // Start the name with a predefined letter.
             name[i] = start;
         }
+        else if (i == 0 || name[i - 1] == ' ')
+        {
+            // Start the word with any letter.
+            name[i] = 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
+        }
         else if (!has_space && i > 5 && i < len - 4
                  && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance of a space
         {
@@ -3018,16 +3023,8 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             }
             else // Place a single letter instead.
             {
-                if (i == 0)
-                {
-                    // Start with any letter.
-                    name[i] = 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
-                }
-                else
-                {
-                    // Pick a random consonant.
-                    name[i] = _random_cons(numb[(k + 3 * j) % NUM_SEEDS]);
-                }
+                // Pick a random consonant.
+                name[i] = _random_cons(numb[(k + 3 * j) % NUM_SEEDS]);
             }
         }
 
