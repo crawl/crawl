@@ -3159,9 +3159,10 @@ static void _test_jiyva_names(const string fname)
     FILE* f = _make_appendable_file(fname);
 
     string longest;
+    seed_rng(27);
     for (int i = 0; i < 1000000; i++)
     {
-        const string name = make_name(i, false, 8, 'J');
+        const string name = make_name(random_int(), false, 8, 'J');
         if (name.length() > longest.length())
             longest = name;
         fprintf(f, "%s\n", name.c_str());
@@ -3181,6 +3182,10 @@ void make_name_tests()
 {
     _test_jiyva_names("jiyva_names.out");
     _test_scroll_names("scroll_names.out");
+
+    seed_rng(27);
+    for (int i = 0; i < 1000000; ++i)
+        make_name(random_int(), false);
 }
 
 bool is_interesting_item(const item_def& item)
