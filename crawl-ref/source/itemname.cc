@@ -2806,13 +2806,9 @@ void display_runes()
  */
 string make_name(uint32_t seed, makename_type name_type)
 {
-    char name[ITEMNAME_SIZE];
+    string name;
 
-    int i = 0;
     bool has_space  = false; // Keep track of whether the name contains a space.
-
-    for (i = 0; i < ITEMNAME_SIZE; ++i)
-        name[i] = '\0';
 
     const int var1 = (seed & 0xFF);
     const int var2 = ((seed >>  8) & 0xFF);
@@ -2851,56 +2847,54 @@ string make_name(uint32_t seed, makename_type name_type)
 
     ASSERT_RANGE(len, 1, ITEMNAME_SIZE + 1);
 
-    int j = numb[3] % NUM_SEEDS;
     const int k = numb[4] % NUM_SEEDS;
 
-    int count = 0;
-    for (i = 0; i < len; ++i)
+    static const int MAX_ITERS = 150;
+    for (int iters = 0; iters < MAX_ITERS && name.length() < len; ++iters)
     {
-        j = (j + 1) % NUM_SEEDS;
-        if (j == 0)
-        {
-            count++;
-            if (count > 9)
-                break;
-        }
+        const int j = (numb[3] + iters + 1) % NUM_SEEDS;
 
-        if (i == 0 && name_type == MNAME_JIYVA)
+        const char prev_char = name.length() ? name[name.length() - 1]
+                                              : '\0';
+        const char penult_char = name.length() > 1 ? name[name.length() - 2]
+                                                    : '\0';
+
+        if (name.empty() && name_type == MNAME_JIYVA)
         {
             // Start the name with a predefined letter.
-            name[i] = 'J';
+            name += 'J';
         }
-        else if (i == 0 || name[i - 1] == ' ')
+        else if (name.empty() || prev_char == ' ')
         {
             // Start the word with any letter.
-            name[i] = 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
+            name += 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
         }
-        else if (!has_space && name_type != MNAME_JIYVA && i > 5 && i < len - 4
-                 && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance of a space
+        else if (!has_space && name_type != MNAME_JIYVA
+                 && name.length() > 5 && name.length() < len - 4
+                 && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance
         {
              // Hand out a space.
-            name[i] = ' ';
+            name += ' ';
         }
-        else if (i > 0
-                 && (_is_consonant(name[i - 1])
-                     || (i > 1
-                         && !_is_consonant(name[i - 1])
-                         && _is_consonant(name[i - 2])
-                         && (numb[(k + 4 * j) % NUM_SEEDS] % 5) <= 1))) // 2/5 chance
+        else if (name.length()
+                 && (_is_consonant(prev_char)
+                     || (name.length() > 1
+                         && !_is_consonant(prev_char)
+                         && _is_consonant(penult_char)
+                         && (numb[(k + 4 * j) % NUM_SEEDS] % 5) <= 1))) // 2/5
         {
             // Place a vowel.
-            name[i] = _random_vowel(numb[(k + 7 * j) % NUM_SEEDS]);
+            const char vowel = _random_vowel(numb[(k + 7 * j) % NUM_SEEDS]);
 
-            if (name[i] == ' ')
+            if (vowel == ' ')
             {
                 if (len < 7
-                         || i <= 2 || i >= len - 3
-                         || name[i - 1] == ' '
-                         || (i > 1 && name[i - 2] == ' ')
+                         || name.length() <= 2 || name.length() >= len - 3
+                         || prev_char == ' ' || penult_char == ' '
                          || name_type == MNAME_JIYVA
-                         || i > 2
-                            && _is_consonant(name[i - 1])
-                            && _is_consonant(name[i - 2]))
+                         || name.length() > 2
+                            && _is_consonant(prev_char)
+                            && _is_consonant(penult_char))
                 {
                     // Replace the space with something else if ...
                     // * the name is really short
@@ -2908,35 +2902,32 @@ string make_name(uint32_t seed, makename_type name_type)
                     // * we just got a space
                     // * we're generating a jiyva name, or
                     // * the last two letters were consonants
-                    name[i] = '\0';
-                    i--;
                     continue;
                 }
             }
-            else if (i > 1
-                     && name[i] == name[i - 1]
-                     && (name[i] == 'y' || name[i] == 'i'
+            else if (name.length() > 1
+                     && vowel == prev_char
+                     && (vowel == 'y' || vowel == 'i'
                          || (numb[(k + 12 * j) % NUM_SEEDS] % 5) <= 1))
             {
                 // Replace the vowel with something else if the previous
                 // letter was the same, and it's a 'y', 'i' or with 2/5 chance.
-                name[i] = '\0';
-                i--;
                 continue;
             }
+
+            name += vowel;
         }
         else // We want a consonant.
         {
-            // Use one of number of predefined letter combinations.
-            if ((len > 3 || i != 0)
-                && (numb[(k + 13 * j) % NUM_SEEDS] % 7) <= 1 // 2/7 chance
-                && (i < len - 2
-                    || i > 0 && name[i - 1] != ' '))
-            {
-                // Are we at start or end of the (sub) name?
-                const bool beg = (i < 1 || name[i - 1] == ' ');
-                const bool end = (i >= len - 2);
+            // Are we at start or end of the (sub) name?
+            const bool beg = (name.empty() || prev_char == ' ');
+            const bool end = (name.length() >= len - 2);
 
+            // Use one of number of predefined letter combinations.
+            if ((len > 3 || !name.empty())
+                && (numb[(k + 13 * j) % NUM_SEEDS] % 7) <= 1 // 2/7 chance
+                && (!beg || !end))
+            {
                 const int first = (beg ?  0 : (end ? 14 :  0));
                 const int last  = (beg ? 27 : (end ? 56 : 67));
 
@@ -2950,56 +2941,45 @@ string make_name(uint32_t seed, makename_type name_type)
                 if (!consonant_set.empty())
                 {
                     ASSERT(consonant_set.size() > 1);
-                    i += consonant_set.size() - 1; // added > 1 letter
                     len += consonant_set.size() - 2; // triples increase len
-                    strcat(name, consonant_set.c_str());
+                    name += consonant_set.c_str();
                 }
             }
             else // Place a single letter instead.
             {
                 // Pick a random consonant.
-                name[i] = _random_cons(numb[(k + 3 * j) % NUM_SEEDS]);
+                name += _random_cons(numb[(k + 3 * j) % NUM_SEEDS]);
             }
         }
 
-        ASSERT(name[i] != '\0');
-
-        if (name[i] == ' ')
+        if (name[name.length() - 1] == ' ')
         {
             ASSERT(name_type != MNAME_JIYVA);
             has_space = true;
         }
     }
 
-    // Catch break and try to give a final letter.
-    if (i > 0
-        && name[i - 1] != ' '
-        && name[i - 1] != 'y'
-        && !_is_consonant(name[i - 1])
-        && (count > 9 || (i < 8 && numb[16] % 3)))
+    // Catch early exit and try to give a final letter.
+    const char last_char = name[name.length() - 1];
+    if (!name.empty()
+        && last_char != ' '
+        && last_char != 'y'
+        && !_is_consonant(name[name.length() - 1])
+        && (name.length() < len    // early exit
+            || (len < 8 && numb[16] % 3))) // 2/3 chance for other short names
     {
-        // 2/3 chance of ending in a consonant
-        name[i] = _random_cons(numb[j]);
+        // Specifically, add a consonant.
+        const int cons_seed = (numb[3] + MAX_ITERS + 1) % NUM_SEEDS;
+        // ^ j if we broke out early, arbitrary otherwise
+        name += _random_cons(numb[cons_seed]);
     }
 
-    len = strlen(name);
-
-    if (len)
-    {
-        for (i = len - 1; i > 0; i--)
-        {
-            if ((maxlen == -1 || len <= maxlen) && !isspace(name[i]))
-                break;
-            else
-            {
-                name[i] = '\0';
-                len--;
-            }
-        }
-    }
+    if (maxlen != -1)
+        name = chop_string(name, maxlen);
+    trim_string_right(name);
 
     // Fallback if the name was too short.
-    if (len < 4)
+    if (name.length() < 4)
     {
         if (name_type == MNAME_JIYVA)
         {
@@ -3008,19 +2988,22 @@ string make_name(uint32_t seed, makename_type name_type)
             return make_name(random_int(), MNAME_JIYVA);
         }
 
-        strcpy(name, "plog");
-        len = 4;
+        name = "plog";
     }
 
-    for (i = 0; i < len; i++)
+    string uppercased_name;
+    for (int i = 0; i < name.length(); i++)
     {
-        if (name_type == MNAME_SCROLL || i == 0 || name[i - 1] == ' ')
-            name[i] = toupper(name[i]);
         if (name_type == MNAME_JIYVA)
             ASSERT(name[i] != ' ');
+
+        if (name_type == MNAME_SCROLL || i == 0 || name[i - 1] == ' ')
+            uppercased_name += toupper(name[i]);
+        else
+            uppercased_name += name[i];
     }
 
-    return name;
+    return uppercased_name;
 }
 #undef ITEMNAME_SIZE
 
