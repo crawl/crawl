@@ -3036,20 +3036,8 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             }
         }
 
-        // No letter chosen?
-        if (name[i] == '\0')
-        {
-            i--;
-            continue;
-        }
-
-        // Picked wrong type?
-        if (want_vowel && !_is_random_name_vowel(name[i])
-            || !want_vowel && _is_random_name_vowel(name[i]))
-        {
-            i--;
-            continue;
-        }
+        ASSERT(name[i] != '\0');
+        ASSERT(want_vowel == _is_random_name_vowel(name[i]));
 
         if (name[i] == ' ')
             has_space = true;
