@@ -111,6 +111,7 @@ bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false);
 
 string make_name(uint32_t seed, bool all_caps, int maxlen = -1, char start = 0);
+void make_name_tests();
 
 const char* brand_type_name(int brand, bool terse) PURE;
 const char* weapon_brand_name(const item_def& item, bool terse, int override_brand = 0) PURE;
