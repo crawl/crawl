@@ -310,8 +310,14 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
 static void _resolve_species_job(newgame_def* ng, const newgame_def* ng_choice)
 {
     // Since recommendations are no longer bidirectional, pick one of
-    // species or job to start.
-    if (coinflip())
+    // species or job to start.  If one but not the other was specified
+    // as "viable", always choose that one last; otherwise use a random
+    // order.
+    const bool spfirst  = ng_choice->species != SP_VIABLE
+                          && ng_choice->job == JOB_VIABLE;
+    const bool jobfirst = ng_choice->species == SP_VIABLE
+                          && ng_choice->job != JOB_VIABLE;
+    if (spfirst || !jobfirst && coinflip())
     {
         _resolve_species(ng, ng_choice);
         _resolve_job(ng, ng_choice);
