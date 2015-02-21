@@ -2807,8 +2807,6 @@ void display_runes()
 string make_name(uint32_t seed, makename_type name_type)
 {
     char name[ITEMNAME_SIZE];
-    static const int NUM_SEEDS = 17;
-    int  numb[NUM_SEEDS]; // contains the random seeds used for the name
 
     int i = 0;
     bool has_space  = false; // Keep track of whether the name contains a space.
@@ -2821,23 +2819,26 @@ string make_name(uint32_t seed, makename_type name_type)
     const int var3 = ((seed >> 16) & 0xFF);
     const int var4 = ((seed >> 24) & 0xFF);
 
-    numb[0]  = 373 * var1 + 409 * var2 + 281 * var3;
-    numb[1]  = 163 * var4 + 277 * var2 + 317 * var3;
-    numb[2]  = 257 * var1 + 179 * var4 +  83 * var3;
-    numb[3]  =  61 * var1 + 229 * var2 + 241 * var4;
-    numb[4]  =  79 * var1 + 263 * var2 + 149 * var3;
-    numb[5]  = 233 * var4 + 383 * var2 + 311 * var3;
-    numb[6]  = 199 * var1 + 211 * var4 + 103 * var3;
-    numb[7]  = 139 * var1 + 109 * var2 + 349 * var4;
-    numb[8]  =  43 * var1 + 389 * var2 + 359 * var3;
-    numb[9]  = 367 * var4 + 101 * var2 + 251 * var3;
-    numb[10] = 293 * var1 +  59 * var4 + 151 * var3;
-    numb[11] = 331 * var1 + 107 * var2 + 307 * var4;
-    numb[12] =  73 * var1 + 157 * var2 + 347 * var3;
-    numb[13] = 379 * var4 + 353 * var2 + 227 * var3;
-    numb[14] = 181 * var1 + 173 * var4 + 193 * var3;
-    numb[15] = 131 * var1 + 167 * var2 +  53 * var4;
-    numb[16] = 313 * var1 + 127 * var2 + 401 * var3 + 337 * var4;
+    const int numb[] = { // contains the random seeds used for the name
+        373 * var1 + 409 * var2 + 281 * var3,
+                     277 * var2 + 317 * var3 + 163 * var4,
+        257 * var1              +  83 * var3 + 179 * var4,
+        61  * var1 + 229 * var2              + 241 * var4,
+        79  * var1 + 263 * var2 + 149 * var3,
+                     383 * var2 + 311 * var3 + 233 * var4,
+        199 * var1              + 103 * var3 + 211 * var4,
+        139 * var1 + 109 * var2              + 349 * var4,
+        43  * var1 + 389 * var2 + 359 * var3,
+                     101 * var2 + 251 * var3 + 367 * var4,
+        293 * var1              + 151 * var3 +  59 * var4,
+        331 * var1 + 107 * var2              + 307 * var4,
+        73  * var1 + 157 * var2 + 347 * var3,
+                     353 * var2 + 227 * var3 + 379 * var4,
+        181 * var1              + 193 * var3 + 173 * var4,
+        131 * var1 + 167 * var2              +  53 * var4,
+        313 * var1 + 127 * var2 + 401 * var3 + 337 * var4,
+    };
+    static const int NUM_SEEDS = ARRAYSZ(numb);
 
     int len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
 
