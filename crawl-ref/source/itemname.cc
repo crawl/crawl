@@ -2891,12 +2891,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 
             if (name[i] == ' ')
             {
-                if (i == 0) // Shouldn't happen.
-                {
-                    want_vowel = false;
-                    name[i]    = _random_cons(numb[(k + 14 * j) % NUM_SEEDS]);
-                }
-                else if (len < 7
+                if (len < 7
                          || i <= 2 || i >= len - 3
                          || name[i - 1] == ' '
                          || (i > 1 && name[i - 2] == ' ')
