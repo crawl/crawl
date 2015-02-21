@@ -2803,7 +2803,8 @@ void display_runes()
 string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 {
     char name[ITEMNAME_SIZE];
-    int  numb[17]; // contains the random seeds used for the name
+    static const int NUM_SEEDS = 17;
+    int  numb[NUM_SEEDS]; // contains the random seeds used for the name
 
     int i = 0;
     bool want_vowel = false; // Keep track of whether we want a vowel next.
@@ -2845,13 +2846,13 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 
     ASSERT_RANGE(len, 1, ITEMNAME_SIZE + 1);
 
-    int j = numb[3] % 17;
-    const int k = numb[4] % 17;
+    int j = numb[3] % NUM_SEEDS;
+    const int k = numb[4] % NUM_SEEDS;
 
     int count = 0;
     for (i = 0; i < len; ++i)
     {
-        j = (j + 1) % 17;
+        j = (j + 1) % NUM_SEEDS;
         if (j == 0)
         {
             count++;
@@ -2866,7 +2867,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             want_vowel = _is_random_name_vowel(start);
         }
         else if (!has_space && i > 5 && i < len - 4
-                 && (numb[(k + 10 * j) % 17] % 5) != 3) // 4/5 chance of a space
+                 && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance of a space
         {
             // Hand out a space.
             want_vowel = true;
@@ -2877,18 +2878,18 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                      || (i > 1
                          && _is_random_name_vowel(name[i - 1])
                          && !_is_random_name_vowel(name[i - 2])
-                         && (numb[(k + 4 * j) % 17] % 5) <= 1))) // 2/5 chance
+                         && (numb[(k + 4 * j) % NUM_SEEDS] % 5) <= 1))) // 2/5 chance
         {
             // Place a vowel.
             want_vowel = true;
-            name[i] = _random_vowel(numb[(k + 7 * j) % 17]);
+            name[i] = _random_vowel(numb[(k + 7 * j) % NUM_SEEDS]);
 
             if (_is_random_name_space(name[i]))
             {
                 if (i == 0) // Shouldn't happen.
                 {
                     want_vowel = false;
-                    name[i]    = _random_cons(numb[(k + 14 * j) % 17]);
+                    name[i]    = _random_cons(numb[(k + 14 * j) % NUM_SEEDS]);
                 }
                 else if (len < 7
                          || i <= 2 || i >= len - 3
@@ -2910,7 +2911,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             else if (i > 1
                      && name[i] == name[i - 1]
                      && (name[i] == 'y' || name[i] == 'i'
-                         || (numb[(k + 12 * j) % 17] % 5) <= 1))
+                         || (numb[(k + 12 * j) % NUM_SEEDS] % 5) <= 1))
             {
                 // Replace the vowel with something else if the previous
                 // letter was the same, and it's a 'y', 'i' or with 2/5 chance.
@@ -2922,7 +2923,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
         {
             // Use one of number of predefined letter combinations.
             if ((len > 3 || i != 0)
-                && (numb[(k + 13 * j) % 17] % 7) <= 1 // 2/7 chance
+                && (numb[(k + 13 * j) % NUM_SEEDS] % 7) <= 1 // 2/7 chance
                 && (i < len - 2
                     || i > 0 && !_is_random_name_space(name[i - 1])))
             {
@@ -2942,7 +2943,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                 //   middle -> [0,67]
                 //   end    -> [14,56]
 
-                switch (numb[(k + 11 * j) % 17] % num + first)
+                switch (numb[(k + 11 * j) % NUM_SEEDS] % num + first)
                 {
                 // start, middle
                 case  0: strcat(name, "kl"); break;
@@ -3025,13 +3026,13 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                 if (i == 0)
                 {
                     // Start with any letter.
-                    name[i] = 'a' + (numb[(k + 8 * j) % 17] % 26);
+                    name[i] = 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
                     want_vowel = _is_random_name_vowel(name[i]);
                 }
                 else
                 {
                     // Pick a random consonant.
-                    name[i] = _random_cons(numb[(k + 3 * j) % 17]);
+                    name[i] = _random_cons(numb[(k + 3 * j) % NUM_SEEDS]);
                 }
             }
         }
