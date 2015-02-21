@@ -27,6 +27,7 @@
 #include "end.h"
 #include "errors.h"
 #include "files.h"
+#include "itemname.h"
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
@@ -182,6 +183,7 @@ void run_tests()
     _run_test("mon-data", debug_mondata);
     _run_test("mon-spell", debug_monspells);
     _run_test("coordit", coordit_tests);
+    _run_test("makename", make_name_tests);
 
     // Get a list of Lua files in test. Order of execution of
     // tests should be irrelevant.

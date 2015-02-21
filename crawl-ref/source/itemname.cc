@@ -21,6 +21,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "english.h"
+#include "errors.h" // sysfail
 #include "evoke.h"
 #include "food.h"
 #include "goditem.h"
@@ -3126,6 +3127,41 @@ static char _random_cons(int seed)
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
     return consonants[ seed % (sizeof(consonants) - 1) ];
+}
+
+
+/**
+ * Test make_name().
+ *
+ * Currently just a stress test iterating over all possible scroll names.
+ */
+void make_name_tests()
+{
+    // crudely erase the file (TODO: is there a better way to do this?)
+    FILE *t = fopen("mame.out", "w");
+    fclose(t);
+
+    FILE *f = fopen("mame.out", "a");
+    if (!f)
+        sysfail("can't write test output");
+
+    string longest;
+    for (int i = 0; i < 151; i++)
+    {
+        for (int j = 0; j < 151; j++)
+        {
+            const int seed = i | (j << 8) | (OBJ_SCROLLS << 16);
+            const string name = make_name(seed, true);
+            if (name.length() > longest.length())
+                longest = name;
+            fprintf(f, "%s\n", name.c_str());
+        }
+    }
+
+    fprintf(stderr, "Longest: %s (%d)", longest.c_str(), (int)longest.length());
+    fprintf(f, "\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
+
+    fclose(f);
 }
 
 bool is_interesting_item(const item_def& item)
