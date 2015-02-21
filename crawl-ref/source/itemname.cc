@@ -49,8 +49,7 @@
 #include "unwind.h"
 #include "viewgeom.h"
 
-static bool _is_random_name_vowel(char let);
-
+static bool _is_consonant(char let);
 static char _random_vowel(int seed);
 static char _random_cons(int seed);
 static string _random_consonant_set(int seed);
@@ -2883,10 +2882,10 @@ string make_name(uint32_t seed, makename_type name_type)
             name[i] = ' ';
         }
         else if (i > 0
-                 && (!_is_random_name_vowel(name[i - 1])
+                 && (_is_consonant(name[i - 1])
                      || (i > 1
-                         && _is_random_name_vowel(name[i - 1])
-                         && !_is_random_name_vowel(name[i - 2])
+                         && !_is_consonant(name[i - 1])
+                         && _is_consonant(name[i - 2])
                          && (numb[(k + 4 * j) % NUM_SEEDS] % 5) <= 1))) // 2/5 chance
         {
             // Place a vowel.
@@ -2900,8 +2899,8 @@ string make_name(uint32_t seed, makename_type name_type)
                          || (i > 1 && name[i - 2] == ' ')
                          || name_type == MNAME_JIYVA
                          || i > 2
-                            && !_is_random_name_vowel(name[i - 1])
-                            && !_is_random_name_vowel(name[i - 2]))
+                            && _is_consonant(name[i - 1])
+                            && _is_consonant(name[i - 2]))
                 {
                     // Replace the space with something else if ...
                     // * the name is really short
@@ -2976,7 +2975,7 @@ string make_name(uint32_t seed, makename_type name_type)
     if (i > 0
         && name[i - 1] != ' '
         && name[i - 1] != 'y'
-        && _is_random_name_vowel(name[i - 1])
+        && !_is_consonant(name[i - 1])
         && (count > 9 || (i < 8 && numb[16] % 3)))
     {
         // 2/3 chance of ending in a consonant
@@ -3025,11 +3024,18 @@ string make_name(uint32_t seed, makename_type name_type)
 }
 #undef ITEMNAME_SIZE
 
-// Returns true for vowels, 'y' or space.
-static bool _is_random_name_vowel(char let)
+/**
+ * Is the given character a lower-case ascii consonant?
+ *
+ * For our purposes, y is not a consonant.
+ */
+static bool _is_consonant(char let)
 {
-    return let == 'a' || let == 'e' || let == 'i' || let == 'o' || let == 'u'
-           || let == 'y' || let == ' ';
+    static const set<char> all_consonants = { 'b', 'c', 'd', 'f', 'g',
+                                              'h', 'j', 'k', 'l', 'm',
+                                              'n', 'p', 'q', 'r', 's',
+                                              't', 'v', 'w', 'x', 'z' };
+    return all_consonants.count(let);
 }
 
 // Returns a random vowel (a, e, i, o, u with equal probability) or space
