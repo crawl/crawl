@@ -863,7 +863,6 @@ void bolt::burn_wall_effect()
     }
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
-    ASSERT(agent());
 
     // Trees do not burn so readily in a wet environment.
     if (player_in_branch(BRANCH_SWAMP))
@@ -871,7 +870,6 @@ void bolt::burn_wall_effect()
     else
         place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
-
 
     finish_beam();
 }
