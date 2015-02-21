@@ -541,6 +541,8 @@ string SkillMenuSwitch::get_help()
                "enabled (+) and <white>focused</white> (<white>*</white>). "
                "Focused skills train twice as fast relative to others.";
     case SKM_LEVEL_ENHANCED:
+    {
+        string result;
         if (skm.is_set(SKMF_ENHANCED))
         {
             vector<const char *> causes;
@@ -550,21 +552,29 @@ string SkillMenuSwitch::get_help()
                 causes.push_back("Ashenzari's power");
             if (_any_crosstrained())
                 causes.push_back("cross-training");
-            return "Skills enhanced by "
-                   + comma_separated_line(causes.begin(), causes.end())
-                   + " are in <blue>blue</blue>.";
+            result = "Skills enhanced by "
+                     + comma_separated_line(causes.begin(), causes.end())
+                     + " are in <blue>blue</blue>.";
         }
-        else
+
+        if (skm.is_set(SKMF_REDUCED))
         {
             vector<const char *> causes;
             if (you.attribute[ATTR_XP_DRAIN])
                 causes.push_back("draining");
             if (player_under_penance(GOD_ASHENZARI))
                 causes.push_back("Ashenzari's anger");
-            return "Skills reduced by "
-                   + comma_separated_line(causes.begin(), causes.end())
-                   + " are in <magenta>magenta</magenta>. ";
+
+            if (!result.empty())
+                result += "\n";
+            result += "Skills reduced by "
+                      + comma_separated_line(causes.begin(), causes.end())
+                      + " are in <magenta>magenta</magenta>.";
         }
+
+        if (!result.empty())
+            return result;
+    }
     case SKM_VIEW_TRAINING:
         if (skm.is_set(SKMF_SIMPLE))
             return hints_skill_training_info();
