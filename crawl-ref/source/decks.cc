@@ -1,3 +1,4 @@
+
 /**
  * @file
  * @brief Functions with decks of cards.
@@ -2549,7 +2550,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
         if (give_monster_proper_name(&tempmon, false))
             mg.mname = tempmon.mname;
         else
-            mg.mname = make_name(random_int(), false);
+            mg.mname = make_name(random_int());
         // This is used for giving the merc better stuff in mon-gear.
         mg.props["mercenary items"] = true;
 

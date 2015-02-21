@@ -1299,7 +1299,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     else
     {
         // construct a unique name
-        const string st_p = make_name(random_int(), false);
+        const string st_p = make_name(random_int());
         result += item_base_name(item);
 
         if (one_chance_in(3))

@@ -1174,22 +1174,7 @@ LUAFN(_crawl_millis)
 static string _crawl_make_name(lua_State *ls)
 {
     // A quick wrapper around itemname:make_name. Seed is random_int().
-    // Possible parameters: all caps, max length, char start. By default
-    // these are false, -1, and 0 as per make_name.
-    bool all_caps = false;
-    int maxlen = -1;
-    char start = 0;
-    if (lua_gettop(ls) >= 1 && lua_isboolean(ls, 1))
-        all_caps = lua_toboolean(ls, 1);
-    if (lua_gettop(ls) >= 2 && lua_isnumber(ls, 2))
-        maxlen = luaL_checkint(ls, 2);
-    if (lua_gettop(ls) >= 3 && lua_isstring(ls, 3))
-    {
-        const char* s = luaL_checkstring(ls, 3);
-        if (s && *s)
-            start = *s;
-    }
-    return make_name(random_int(), all_caps, maxlen, start);
+    return make_name(random_int());
 }
 
 LUARET1(crawl_make_name, string, _crawl_make_name(ls).c_str())

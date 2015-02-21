@@ -1848,7 +1848,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_type)
             buff << "of " << scroll_type_name(item_typ);
         else
-            buff << "labeled " << make_name(subtype_rnd, true);
+            buff << "labeled " << make_name(subtype_rnd, MNAME_SCROLL);
         break;
 
     case OBJ_JEWELLERY:
@@ -2795,16 +2795,16 @@ void display_runes()
  *
  * @param seed      The seed to generate the name from.
  *                  The same seed will always generate the same name.
- *
- * @param all_cap   Whether the name should be in allcaps (i.e. whether it's
- *                  a scroll name). Also increases expected length by 6.
- * @param maxlen    The maximum allowable length for the name.
- *                  If -1, max is ITEMNAME_SIZE.
- * @param start     A leading character for the name. If 0, is ignored.
- *                  Does not increase the length of the name (and, in fact,
- *                  slightly decreases it on average).
+ * @param name_type The type of name to be generated.
+ *                  If MNAME_SCROLL, increase length by 6 and force to allcaps.
+ *                  If MNAME_JIYVA, start with J, do not generate spaces,
+ *                  recuse instead of ploggifying, and cap length at 8.
+ *                  Otherwise, no special behaviour.
+ * @return          A randomly generated name.
+ *                  E.g. "Joiduir", "Jays Fya", ZEFOKY WECZYXE,
+ *                  THE GIAGGOSTUONO, etc.
  */
-string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
+string make_name(uint32_t seed, makename_type name_type)
 {
     char name[ITEMNAME_SIZE];
     static const int NUM_SEEDS = 17;
@@ -2841,9 +2841,10 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 
     int len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
 
-    if (all_cap)   // scrolls have longer names
+    if (name_type == MNAME_SCROLL)   // scrolls have longer names
         len += 6;
 
+    const int maxlen = name_type == MNAME_JIYVA ? 8 : -1;
     if (maxlen != -1 && len > maxlen)
         len = maxlen;
 
@@ -2863,17 +2864,17 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                 break;
         }
 
-        if (i == 0 && start != 0)
+        if (i == 0 && name_type == MNAME_JIYVA)
         {
             // Start the name with a predefined letter.
-            name[i] = start;
+            name[i] = 'J';
         }
         else if (i == 0 || name[i - 1] == ' ')
         {
             // Start the word with any letter.
             name[i] = 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
         }
-        else if (!has_space && i > 5 && i < len - 4
+        else if (!has_space && name_type != MNAME_JIYVA && i > 5 && i < len - 4
                  && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance of a space
         {
              // Hand out a space.
@@ -2895,6 +2896,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                          || i <= 2 || i >= len - 3
                          || name[i - 1] == ' '
                          || (i > 1 && name[i - 2] == ' ')
+                         || name_type == MNAME_JIYVA
                          || i > 2
                             && !_is_random_name_vowel(name[i - 1])
                             && !_is_random_name_vowel(name[i - 2]))
@@ -2902,8 +2904,10 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                     // Replace the space with something else if ...
                     // * the name is really short
                     // * we're close to the start/end of the name
-                    // * we just got a space, or
+                    // * we just got a space
+                    // * we're generating a jiyva name, or
                     // * the last two letters were consonants
+                    name[i] = '\0';
                     i--;
                     continue;
                 }
@@ -2915,6 +2919,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             {
                 // Replace the vowel with something else if the previous
                 // letter was the same, and it's a 'y', 'i' or with 2/5 chance.
+                name[i] = '\0';
                 i--;
                 continue;
             }
@@ -3031,7 +3036,10 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
         ASSERT(name[i] != '\0');
 
         if (name[i] == ' ')
+        {
+            ASSERT(name_type != MNAME_JIYVA);
             has_space = true;
+        }
     }
 
     // Catch break and try to give a final letter.
@@ -3064,13 +3072,24 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
     // Fallback if the name was too short.
     if (len < 4)
     {
+        if (name_type == MNAME_JIYVA)
+        {
+            // convolute & recurse
+            seed_rng(seed);
+            return make_name(random_int(), MNAME_JIYVA);
+        }
+
         strcpy(name, "plog");
         len = 4;
     }
 
     for (i = 0; i < len; i++)
-        if (all_cap || i == 0 || name[i - 1] == ' ')
+    {
+        if (name_type == MNAME_SCROLL || i == 0 || name[i - 1] == ' ')
             name[i] = toupper(name[i]);
+        if (name_type == MNAME_JIYVA)
+            ASSERT(name[i] != ' ');
+    }
 
     return name;
 }
@@ -3127,7 +3146,7 @@ static void _test_scroll_names(const string fname)
         for (int j = 0; j < 151; j++)
         {
             const int seed = i | (j << 8) | (OBJ_SCROLLS << 16);
-            const string name = make_name(seed, true);
+            const string name = make_name(seed, MNAME_SCROLL);
             if (name.length() > longest.length())
                 longest = name;
             fprintf(f, "%s\n", name.c_str());
@@ -3150,7 +3169,8 @@ static void _test_jiyva_names(const string fname)
     seed_rng(27);
     for (int i = 0; i < 1000000; i++)
     {
-        const string name = make_name(random_int(), false, 8, 'J');
+        const string name = make_name(random_int(), MNAME_JIYVA);
+        ASSERT(name[0] == 'J');
         if (name.length() > longest.length())
             longest = name;
         fprintf(f, "%s\n", name.c_str());
@@ -3173,7 +3193,7 @@ void make_name_tests()
 
     seed_rng(27);
     for (int i = 0; i < 1000000; ++i)
-        make_name(random_int(), false);
+        make_name(random_int());
 }
 
 bool is_interesting_item(const item_def& item)

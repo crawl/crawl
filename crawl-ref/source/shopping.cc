@@ -2056,7 +2056,7 @@ string shop_name(const coord_def& where, bool add_stop)
             | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
             | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
 
-        sh_name += apostrophise(make_name(seed, false)) + " ";
+        sh_name += apostrophise(make_name(seed)) + " ";
     }
 
     if (!cshop->shop_type_name.empty())
