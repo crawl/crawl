@@ -2811,7 +2811,6 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
     int  numb[NUM_SEEDS]; // contains the random seeds used for the name
 
     int i = 0;
-    bool want_vowel = false; // Keep track of whether we want a vowel next.
     bool has_space  = false; // Keep track of whether the name contains a space.
 
     for (i = 0; i < ITEMNAME_SIZE; ++i)
@@ -2868,24 +2867,21 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
         {
             // Start the name with a predefined letter.
             name[i] = start;
-            want_vowel = _is_random_name_vowel(start);
         }
         else if (!has_space && i > 5 && i < len - 4
                  && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance of a space
         {
-            // Hand out a space.
-            want_vowel = true;
+             // Hand out a space.
             name[i] = ' ';
         }
         else if (i > 0
-                 && (want_vowel
+                 && (!_is_random_name_vowel(name[i - 1])
                      || (i > 1
                          && _is_random_name_vowel(name[i - 1])
                          && !_is_random_name_vowel(name[i - 2])
                          && (numb[(k + 4 * j) % NUM_SEEDS] % 5) <= 1))) // 2/5 chance
         {
             // Place a vowel.
-            want_vowel = true;
             name[i] = _random_vowel(numb[(k + 7 * j) % NUM_SEEDS]);
 
             if (name[i] == ' ')
@@ -2900,7 +2896,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                 {
                     // Replace the space with something else if ...
                     // * the name is really short
-                    // * we're close to the begin/end of the name
+                    // * we're close to the start/end of the name
                     // * we just got a space, or
                     // * the last two letters were consonants
                     i--;
@@ -3026,7 +3022,6 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                 {
                     // Start with any letter.
                     name[i] = 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
-                    want_vowel = _is_random_name_vowel(name[i]);
                 }
                 else
                 {
@@ -3037,13 +3032,9 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
         }
 
         ASSERT(name[i] != '\0');
-        ASSERT(want_vowel == _is_random_name_vowel(name[i]));
 
         if (name[i] == ' ')
             has_space = true;
-
-        // If we just got a vowel, we want a consonant next, and vice versa.
-        want_vowel = !_is_random_name_vowel(name[i]);
     }
 
     // Catch break and try to give a final letter.
