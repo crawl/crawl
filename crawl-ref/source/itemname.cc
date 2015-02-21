@@ -2798,8 +2798,7 @@ void display_runes()
  *
  * @param all_cap   Whether the name should be in allcaps (i.e. whether it's
  *                  a scroll name). Also increases expected length by 6.
- * @param maxlen    The maximum expected length for the name. Actual name may
- *                  exceed this length by up to 50%.
+ * @param maxlen    The maximum allowable length for the name.
  *                  If -1, max is ITEMNAME_SIZE.
  * @param start     A leading character for the name. If 0, is ignored.
  *                  Does not increase the length of the name (and, in fact,
@@ -3076,7 +3075,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
     {
         for (i = len - 1; i > 0; i--)
         {
-            if (!isspace(name[i]))
+            if ((maxlen == -1 || len <= maxlen) && !isspace(name[i]))
                 break;
             else
             {
