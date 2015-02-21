@@ -92,6 +92,14 @@ enum mbn_type
     MBN_BRAND, // plain brand name
 };
 
+/// What kind of special behaviour should make_name use?
+enum makename_type
+{
+    MNAME_DEFAULT, /// No special behaviour.
+    MNAME_SCROLL, /// Allcaps, longer.
+    MNAME_JIYVA, /// No spaces, starts with J, Plog -> Jiyva
+};
+
 void check_item_knowledge(bool unknown_items = false);
 void display_runes();
 
@@ -110,7 +118,7 @@ bool is_bad_item(const item_def &item, bool temp = false);
 bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false);
 
-string make_name(uint32_t seed, bool all_caps, int maxlen = -1, char start = 0);
+string make_name(uint32_t seed, makename_type name_type = MNAME_DEFAULT);
 void make_name_tests();
 
 const char* brand_type_name(int brand, bool terse) PURE;

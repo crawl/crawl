@@ -1,3 +1,4 @@
+
 /**
  * @file
  * @brief Player ghost and random Pandemonium demon handling.
@@ -191,7 +192,7 @@ void ghost_demon::init_pandemonium_lord()
 
     do
     {
-        name = make_name(random_int(), false);
+        name = make_name(random_int());
     }
     while (!getLongDescription(name).empty());
 
