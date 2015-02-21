@@ -2779,7 +2779,6 @@ void display_runes()
 }
 
 #define ITEMNAME_SIZE 200
-// Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
 /**
  * Make a random name from the given seed.
  *
