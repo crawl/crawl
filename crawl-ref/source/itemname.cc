@@ -2781,6 +2781,25 @@ void display_runes()
 
 #define ITEMNAME_SIZE 200
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
+/**
+ * Make a random name from the given seed.
+ *
+ * Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts.
+ *
+ * This function is insane, but that might be useful.
+ *
+ * @param seed      The seed to generate the name from.
+ *                  The same seed will always generate the same name.
+ *
+ * @param all_cap   Whether the name should be in allcaps (i.e. whether it's
+ *                  a scroll name). Also increases expected length by 6.
+ * @param maxlen    The maximum expected length for the name. Actual name may
+ *                  exceed this length by up to 50%.
+ *                  If -1, max is ITEMNAME_SIZE.
+ * @param start     A leading character for the name. If 0, is ignored.
+ *                  Does not increase the length of the name (and, in fact,
+ *                  slightly decreases it on average).
+ */
 string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 {
     char name[ITEMNAME_SIZE];
