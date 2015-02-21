@@ -53,6 +53,7 @@ static bool _is_random_name_vowel(char let);
 
 static char _random_vowel(int seed);
 static char _random_cons(int seed);
+static string _random_consonant_set(int seed);
 
 static void _maybe_identify_pack_item()
 {
@@ -2940,91 +2941,19 @@ string make_name(uint32_t seed, makename_type name_type)
                 const int first = (beg ?  0 : (end ? 14 :  0));
                 const int last  = (beg ? 27 : (end ? 56 : 67));
 
-                const int num = last - first;
+                const int range = last - first;
 
-                i++;
+                const int cons_seed = numb[(k + 11 * j) % NUM_SEEDS] % range
+                                      + first;
 
-                // Pick a random combination of consonants from the set below.
-                //   begin  -> [0,27]
-                //   middle -> [0,67]
-                //   end    -> [14,56]
+                const string consonant_set = _random_consonant_set(cons_seed);
 
-                switch (numb[(k + 11 * j) % NUM_SEEDS] % num + first)
+                if (!consonant_set.empty())
                 {
-                // start, middle
-                case  0: strcat(name, "kl"); break;
-                case  1: strcat(name, "gr"); break;
-                case  2: strcat(name, "cl"); break;
-                case  3: strcat(name, "cr"); break;
-                case  4: strcat(name, "fr"); break;
-                case  5: strcat(name, "pr"); break;
-                case  6: strcat(name, "tr"); break;
-                case  7: strcat(name, "tw"); break;
-                case  8: strcat(name, "br"); break;
-                case  9: strcat(name, "pl"); break;
-                case 10: strcat(name, "bl"); break;
-                case 11: strcat(name, "str"); i++; len++; break;
-                case 12: strcat(name, "shr"); i++; len++; break;
-                case 13: strcat(name, "thr"); i++; len++; break;
-                // start, middle, end
-                case 14: strcat(name, "sm"); break;
-                case 15: strcat(name, "sh"); break;
-                case 16: strcat(name, "ch"); break;
-                case 17: strcat(name, "th"); break;
-                case 18: strcat(name, "ph"); break;
-                case 19: strcat(name, "pn"); break;
-                case 20: strcat(name, "kh"); break;
-                case 21: strcat(name, "gh"); break;
-                case 22: strcat(name, "mn"); break;
-                case 23: strcat(name, "ps"); break;
-                case 24: strcat(name, "st"); break;
-                case 25: strcat(name, "sk"); break;
-                case 26: strcat(name, "sch"); i++; len++; break;
-                // middle, end
-                case 27: strcat(name, "ts"); break;
-                case 28: strcat(name, "cs"); break;
-                case 29: strcat(name, "xt"); break;
-                case 30: strcat(name, "nt"); break;
-                case 31: strcat(name, "ll"); break;
-                case 32: strcat(name, "rr"); break;
-                case 33: strcat(name, "ss"); break;
-                case 34: strcat(name, "wk"); break;
-                case 35: strcat(name, "wn"); break;
-                case 36: strcat(name, "ng"); break;
-                case 37: strcat(name, "cw"); break;
-                case 38: strcat(name, "mp"); break;
-                case 39: strcat(name, "ck"); break;
-                case 40: strcat(name, "nk"); break;
-                case 41: strcat(name, "dd"); break;
-                case 42: strcat(name, "tt"); break;
-                case 43: strcat(name, "bb"); break;
-                case 44: strcat(name, "pp"); break;
-                case 45: strcat(name, "nn"); break;
-                case 46: strcat(name, "mm"); break;
-                case 47: strcat(name, "kk"); break;
-                case 48: strcat(name, "gg"); break;
-                case 49: strcat(name, "ff"); break;
-                case 50: strcat(name, "pt"); break;
-                case 51: strcat(name, "tz"); break;
-                case 52: strcat(name, "dgh"); i++; len++; break;
-                case 53: strcat(name, "rgh"); i++; len++; break;
-                case 54: strcat(name, "rph"); i++; len++; break;
-                case 55: strcat(name, "rch"); i++; len++; break;
-                // middle only
-                case 56: strcat(name, "cz"); break;
-                case 57: strcat(name, "xk"); break;
-                case 58: strcat(name, "zx"); break;
-                case 59: strcat(name, "xz"); break;
-                case 60: strcat(name, "cv"); break;
-                case 61: strcat(name, "vv"); break;
-                case 62: strcat(name, "nl"); break;
-                case 63: strcat(name, "rh"); break;
-                case 64: strcat(name, "dw"); break;
-                case 65: strcat(name, "nw"); break;
-                case 66: strcat(name, "khl"); i++; len++; break;
-                default:
-                    i--;
-                    break;
+                    ASSERT(consonant_set.size() > 1);
+                    i += consonant_set.size() - 1; // added > 1 letter
+                    len += consonant_set.size() - 2; // triples increase len
+                    strcat(name, consonant_set.c_str());
                 }
             }
             else // Place a single letter instead.
@@ -3117,6 +3046,50 @@ static char _random_cons(int seed)
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
     return consonants[ seed % (sizeof(consonants) - 1) ];
+}
+
+/**
+ * Choose a random consonant tuple/triple, based on the given seed.
+ *
+ * @param seed  The index into the consonant array; different seed ranges are
+ *              expected to correspond with the place in the name being
+ *              generated where the consonants should be inserted.
+ * @return      A random length 2 or 3 consonant set; e.g. "kl", "str", etc.
+ *              If the seed is out of bounds, return "";
+ */
+static string _random_consonant_set(int seed)
+{
+    // Pick a random combination of consonants from the set below.
+    //   begin  -> [0,27]
+    //   middle -> [0,67]
+    //   end    -> [14,56]
+
+    static const string consonant_sets[] = {
+        // 0-13: start, middle
+        "kl", "gr", "cl", "cr", "fr",
+        "pr", "tr", "tw", "br", "pl",
+        "bl", "str", "shr", "thr",
+        // 14-26: start, middle, end
+        "sm", "sh", "ch", "th", "ph",
+        "pn", "kh", "gh", "mn", "ps",
+        "st", "sk", "sch",
+        // 27-55: middle, end
+        "ts", "cs", "xt", "nt", "ll",
+        "rr", "ss", "wk", "wn", "ng",
+        "cw", "mp", "ck", "nk", "dd",
+        "tt", "bb", "pp", "nn", "mm",
+        "kk", "gg", "ff", "pt", "tz",
+        "dgh", "rgh", "rph", "rch",
+        // 56-66: middle only
+        "cz", "xk", "zx", "xz", "cv",
+        "vv", "nl", "rh", "dw", "nw",
+        "khl",
+    };
+
+    if (seed < 0 || seed > ARRAYSZ(consonant_sets))
+        return "";
+
+    return consonant_sets[seed];
 }
 
 /**
