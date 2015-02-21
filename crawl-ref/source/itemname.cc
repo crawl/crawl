@@ -3124,21 +3124,27 @@ static char _random_cons(int seed)
     return consonants[ seed % (sizeof(consonants) - 1) ];
 }
 
-
 /**
- * Test make_name().
- *
- * Currently just a stress test iterating over all possible scroll names.
+ * Open an empty file in append mode with the given name.
  */
-void make_name_tests()
+static FILE* _make_appendable_file(const string name)
 {
     // crudely erase the file (TODO: is there a better way to do this?)
-    FILE *t = fopen("mame.out", "w");
+    FILE *t = fopen(name.c_str(), "w");
     fclose(t);
 
-    FILE *f = fopen("mame.out", "a");
+    FILE *f = fopen(name.c_str(), "a");
     if (!f)
         sysfail("can't write test output");
+    return f;
+}
+
+/**
+ * Write all possible scroll names to the given file.
+ */
+static void _test_scroll_names(const string fname)
+{
+    FILE* f = _make_appendable_file(fname);
 
     string longest;
     for (int i = 0; i < 151; i++)
@@ -3153,10 +3159,41 @@ void make_name_tests()
         }
     }
 
-    fprintf(stderr, "Longest: %s (%d)", longest.c_str(), (int)longest.length());
     fprintf(f, "\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
 
     fclose(f);
+}
+
+/**
+ * Write one million random Jiyva names to the given file.
+ */
+static void _test_jiyva_names(const string fname)
+{
+    FILE* f = _make_appendable_file(fname);
+
+    string longest;
+    for (int i = 0; i < 1000000; i++)
+    {
+        const string name = make_name(i, false, 8, 'J');
+        if (name.length() > longest.length())
+            longest = name;
+        fprintf(f, "%s\n", name.c_str());
+    }
+
+    fprintf(f, "\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
+
+    fclose(f);
+}
+
+/**
+ * Test make_name().
+ *
+ * Currently just a stress test iterating over all possible scroll names.
+ */
+void make_name_tests()
+{
+    _test_jiyva_names("jiyva_names.out");
+    _test_scroll_names("scroll_names.out");
 }
 
 bool is_interesting_item(const item_def& item)
