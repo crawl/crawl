@@ -48,7 +48,6 @@
 #include "unwind.h"
 #include "viewgeom.h"
 
-static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
 
 static char _random_vowel(int seed);
@@ -2884,7 +2883,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             want_vowel = true;
             name[i] = _random_vowel(numb[(k + 7 * j) % NUM_SEEDS]);
 
-            if (_is_random_name_space(name[i]))
+            if (name[i] == ' ')
             {
                 if (i == 0) // Shouldn't happen.
                 {
@@ -2893,8 +2892,8 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
                 }
                 else if (len < 7
                          || i <= 2 || i >= len - 3
-                         || _is_random_name_space(name[i - 1])
-                         || (i > 1 && _is_random_name_space(name[i - 2]))
+                         || name[i - 1] == ' '
+                         || (i > 1 && name[i - 2] == ' ')
                          || i > 2
                             && !_is_random_name_vowel(name[i - 1])
                             && !_is_random_name_vowel(name[i - 2]))
@@ -2925,10 +2924,10 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             if ((len > 3 || i != 0)
                 && (numb[(k + 13 * j) % NUM_SEEDS] % 7) <= 1 // 2/7 chance
                 && (i < len - 2
-                    || i > 0 && !_is_random_name_space(name[i - 1])))
+                    || i > 0 && name[i - 1] != ' '))
             {
                 // Are we at start or end of the (sub) name?
-                const bool beg = (i < 1 || _is_random_name_space(name[i - 1]));
+                const bool beg = (i < 1 || name[i - 1] == ' ');
                 const bool end = (i >= len - 2);
 
                 const int first = (beg ?  0 : (end ? 14 :  0));
@@ -3052,7 +3051,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
             continue;
         }
 
-        if (_is_random_name_space(name[i]))
+        if (name[i] == ' ')
             has_space = true;
 
         // If we just got a vowel, we want a consonant next, and vice versa.
@@ -3061,7 +3060,7 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 
     // Catch break and try to give a final letter.
     if (i > 0
-        && !_is_random_name_space(name[i - 1])
+        && name[i - 1] != ' '
         && name[i - 1] != 'y'
         && _is_random_name_vowel(name[i - 1])
         && (count > 9 || (i < 8 && numb[16] % 3)))
@@ -3100,11 +3099,6 @@ string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
     return name;
 }
 #undef ITEMNAME_SIZE
-
-static bool _is_random_name_space(char let)
-{
-    return let == ' ';
-}
 
 // Returns true for vowels, 'y' or space.
 static bool _is_random_name_vowel(char let)
