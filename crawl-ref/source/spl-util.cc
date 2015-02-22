@@ -1001,6 +1001,7 @@ int spell_effect_noise(spell_type spell)
     {
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
+    case SPELL_VIOLENT_UNRAVELLING:
         expl_size = 1;
         break;
 

@@ -42,16 +42,17 @@ confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
 darkness DARKNESS
+discord DISCORD
 enslavement ENSLAVEMENT
 haste HASTE
+infusion INFUSION
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
 slow SLOW
-tukimas_dance TUKIMAS_DANCE
-infusion INFUSION
 song_of_slaying SONG_OF_SLAYING
 spectral_weapon SPECTRAL_WEAPON
-discord DISCORD
+tukimas_dance TUKIMAS_DANCE
+violent_unravelling VIOLENT_UNRAVELLING
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
