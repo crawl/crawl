@@ -3082,26 +3082,13 @@ static string _random_consonant_set(int seed)
 }
 
 /**
- * Open an empty file in append mode with the given name.
- */
-static FILE* _make_appendable_file(const string name)
-{
-    // crudely erase the file (TODO: is there a better way to do this?)
-    FILE *t = fopen(name.c_str(), "w");
-    fclose(t);
-
-    FILE *f = fopen(name.c_str(), "a");
-    if (!f)
-        sysfail("can't write test output");
-    return f;
-}
-
-/**
  * Write all possible scroll names to the given file.
  */
 static void _test_scroll_names(const string fname)
 {
-    FILE* f = _make_appendable_file(fname);
+    FILE *f = fopen(fname.c_str(), "w");
+    if (!f)
+        sysfail("can't write test output");
 
     string longest;
     for (int i = 0; i < 151; i++)
@@ -3126,7 +3113,9 @@ static void _test_scroll_names(const string fname)
  */
 static void _test_jiyva_names(const string fname)
 {
-    FILE* f = _make_appendable_file(fname);
+    FILE *f = fopen(fname.c_str(), "w");
+    if (!f)
+        sysfail("can't write test output");
 
     string longest;
     seed_rng(27);
