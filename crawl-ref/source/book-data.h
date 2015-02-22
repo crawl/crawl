@@ -6,7 +6,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BLINK,
     SPELL_CALL_IMP,
     SPELL_REPEL_MISSILES,
-    SPELL_TUKIMAS_DANCE,
     SPELL_CONJURE_FLAME,
     SPELL_MEPHITIC_CLOUD,
 },
