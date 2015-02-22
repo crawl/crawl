@@ -65,7 +65,7 @@ mangrove2
 mangrove3
 
 ## doors
-%sdir dngn
+%sdir dngn/doors
 closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
 gate_closed_middle DNGN_GATE_CLOSED_MIDDLE
@@ -114,7 +114,6 @@ vgate_open_down_crypt DNGN_VGATE_OPEN_DOWN_CRYPT
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, or
 ## closed, open.
-%sdir dngn/gateways
 fleshy_orifice_closed DNGN_FLESHY_ORIFICE
 fleshy_orifice_open
 
