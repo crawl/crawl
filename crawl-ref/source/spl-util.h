@@ -135,8 +135,6 @@ spschool_flag_type skill2spell_type(skill_type spell_skill);
 skill_type arcane_mutation_to_skill(mutation_type mutation);
 bool cannot_use_schools(spschools_type schools);
 
-spell_type zap_type_to_spell(zap_type zap);
-
 bool spell_is_form(spell_type spell) PURE;
 
 bool spell_is_useless(spell_type spell, bool temp = true,

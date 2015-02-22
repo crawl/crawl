@@ -998,56 +998,6 @@ int spell_effect_noise(spell_type spell)
     return _seekspell(spell)->effect_noise;
 }
 
-spell_type zap_type_to_spell(zap_type zap)
-{
-    switch (zap)
-    {
-    case ZAP_THROW_FLAME:
-        return SPELL_THROW_FLAME;
-    case ZAP_THROW_FROST:
-        return SPELL_THROW_FROST;
-    case ZAP_SLOW:
-        return SPELL_SLOW;
-    case ZAP_HASTE:
-        return SPELL_HASTE;
-    case ZAP_MAGIC_DART:
-        return SPELL_MAGIC_DART;
-    case ZAP_MAJOR_HEALING:
-        return SPELL_MAJOR_HEALING;
-    case ZAP_PARALYSE:
-        return SPELL_PARALYSE;
-    case ZAP_BOLT_OF_FIRE:
-        return SPELL_BOLT_OF_FIRE;
-    case ZAP_BOLT_OF_COLD:
-        return SPELL_BOLT_OF_COLD;
-    case ZAP_PRIMAL_WAVE:
-        return SPELL_PRIMAL_WAVE;
-    case ZAP_CONFUSE:
-        return SPELL_CONFUSE;
-    case ZAP_INVISIBILITY:
-        return SPELL_INVISIBILITY;
-    case ZAP_DIG:
-        return SPELL_DIG;
-    case ZAP_FIREBALL:
-        return SPELL_FIREBALL;
-    case ZAP_TELEPORT_OTHER:
-        return SPELL_TELEPORT_OTHER;
-    case ZAP_LIGHTNING_BOLT:
-        return SPELL_LIGHTNING_BOLT;
-    case ZAP_POLYMORPH:
-        return SPELL_POLYMORPH;
-    case ZAP_BOLT_OF_DRAINING:
-        return SPELL_BOLT_OF_DRAINING;
-    case ZAP_ENSLAVEMENT:
-        return SPELL_ENSLAVEMENT;
-    case ZAP_DISINTEGRATE:
-        return SPELL_DISINTEGRATE;
-    default:
-        die("zap_type_to_spell() only handles wand zaps for now");
-    }
-    return SPELL_NO_SPELL;
-}
-
 static bool _spell_is_empowered(spell_type spell)
 {
     switch (spell)
