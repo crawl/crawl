@@ -3625,6 +3625,17 @@ static const struct spell_desc spelldata[] =
 #endif
 
 {
+    SPELL_VIOLENT_UNRAVELLING, "Yara's Violent Unravelling",
+    SPTYP_HEXES | SPTYP_TRANSMUTATION,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_ALLOW_SELF | SPFLAG_NEEDS_TRACER | SPFLAG_NO_GHOST | SPFLAG_CHAOTIC,
+    5,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    5, 0,
+    nullptr,
+},
+
+{
     SPELL_ENTROPIC_WEAVE, "Entropic Weave",
     SPTYP_HEXES,
     SPFLAG_UTILITY | SPFLAG_MR_CHECK,

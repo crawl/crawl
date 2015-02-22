@@ -1106,6 +1106,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_GRAVITAS:
         return new targetter_smite(&you, range, gravitas_range(pow, 2),
                                                 gravitas_range(pow));
+    case SPELL_VIOLENT_UNRAVELLING:
+        return new targetter_beam(&you, range, spell_to_zap(spell), pow, 0, 1);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
