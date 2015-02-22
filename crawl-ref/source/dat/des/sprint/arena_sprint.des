@@ -989,10 +989,11 @@ LROCKTILE:  wall_hall
               "If it is a boss round, you only need to kill the boss in order to win.\n" ..
               "If it is a lightning round, you only need to survive!</cyan>")
 }}
-# No ash or beogh, although both gods are still allowed (just harder to get).
-# Both would be rather useless if you picked them, though. Positions are random,
-# and you don't have enough time to reach an altar before the game starts.
-NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / i / j / k / l / n / \
+# No exploration gods or beogh, although both gods are still allowed (just
+# harder to get). Both would be rather useless if you picked them, though.
+# Positions are random, and you don't have enough time to reach an altar before
+# the game starts.
+NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / k / l / n / \
             o / p / q / r / *:.
 KFEAT:  0 = altar_zin
 KFEAT:  1 = altar_the_shining_one
@@ -1005,8 +1006,6 @@ KFEAT:  7 = altar_okawaru
 KFEAT:  8 = altar_makhleb
 KFEAT:  9 = altar_sif_muna
 KFEAT:  h = altar_trog
-KFEAT:  i = altar_nemelex_xobeh
-KFEAT:  j = altar_elyvilon
 KFEAT:  k = altar_cheibriados
 KFEAT:  l = altar_jiyva
 KFEAT:  n = altar_fedhas
