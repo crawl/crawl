@@ -1714,13 +1714,13 @@ xxxxxxxx'''...'''xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   bazaar_minmay_oklob
+NAME:   bazaar_minmay_noklob
 TAGS:   no_rotate
 WEIGHT: 1
 ORIENT: encompass
 KFEAT:  ! = any shop
-SUBST:  . = 2 .:200, ' = ., 3 = 2.
-MONS:   oklob plant, plant
+SUBST:  . = 1 .:200, ' = ., 2 = 1.
+MONS:   plant
 :       bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1732,14 +1732,14 @@ xxx'<''+.....'.....+''>'xxx
 xxx'''xxx....'....xxx'''xxx
 xxxxxxxxx....'....xxxxxxxxx
 xxxxxxxxx....'....xxxxxxxxx
-xxxxxxxxt....'....txxxxxxxx
-xxxxx222t....'....t222xxxxx
-xxxx1222t....'....t2221xxxx
-xxxxx222t....'....t222xxxxx
-xxxxxxxxt....'....txxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
 xxxxxxxxx....'....xxxxxxxxx
 xxx'''xxx....'....xxx'''xxx
-xxx'!''+3....'....3+''!'xxx
+xxx'!''+2....'....2+''!'xxx
 xxx'''xxx....'....xxx'''xxx
 xxxxxxxxx....'....xxxxxxxxx
 xxxxxxxxx.!..>..!.xxxxxxxxx
