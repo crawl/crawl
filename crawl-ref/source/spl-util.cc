@@ -1426,9 +1426,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     beam.origin_spell = spell;
 
     zap_type zap = spell_to_zap(spell);
-    if (spell == SPELL_FIREBALL)
-        zap = ZAP_FIREBALL;
-    else if (spell == SPELL_RANDOM_BOLT) // don't let it think that there are no susceptible monsters in range
+    if (spell == SPELL_RANDOM_BOLT) // don't let it think that there are no susceptible monsters in range
         zap = ZAP_DEBUGGING_RAY;
 
     if (zap != NUM_ZAPS)
