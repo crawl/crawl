@@ -141,12 +141,12 @@ static void _jobs_stat_init(job_type which_job)
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; break;
     case JOB_WARPER:            s =  3; i =  5; d =  4; break;
+    case JOB_REAVER:            s =  2; i =  7; d =  3; break;
     case JOB_ARCANE_MARKSMAN:   s =  3; i =  5; d =  4; break;
 
     case JOB_MONK:              s =  3; i =  2; d =  7; break;
     case JOB_TRANSMUTER:        s =  2; i =  5; d =  5; break;
 
-    case JOB_WIZARD:            s = -1; i = 10; d =  3; break;
     case JOB_CONJURER:          s =  0; i =  7; d =  5; break;
     case JOB_ENCHANTER:         s =  0; i =  7; d =  5; break;
     case JOB_FIRE_ELEMENTALIST: s =  0; i =  7; d =  5; break;
@@ -702,7 +702,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_HEXES]                      = 3;
         break;
 
-    case JOB_WIZARD:
+    case JOB_REAVER:
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(1, EQ_HELMET, OBJ_ARMOUR, ARM_HAT);
 
@@ -1018,7 +1018,7 @@ static void _give_basic_spells(job_type which_job)
 
     switch (which_job)
     {
-    case JOB_WIZARD:
+    case JOB_REAVER:
     case JOB_CONJURER:
         which_spell = SPELL_MAGIC_DART;
         break;

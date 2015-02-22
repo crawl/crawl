@@ -6,7 +6,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_BLINK,
     SPELL_CALL_IMP,
     SPELL_REPEL_MISSILES,
-    SPELL_SLOW,
+    SPELL_TUKIMAS_DANCE,
     SPELL_CONJURE_FLAME,
     SPELL_MEPHITIC_CLOUD,
 },
@@ -109,8 +109,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Hinderance
     SPELL_CONFUSING_TOUCH,
+    SPELL_SLOW,
     SPELL_CONFUSE,
-    SPELL_PETRIFY,
     SPELL_ENGLACIATION,
     SPELL_GRAVITAS,
     SPELL_SUMMON_MANA_VIPER,

@@ -2207,8 +2207,8 @@ enum item_type_id_state_type
 enum job_type
 {
     JOB_FIGHTER,
-    JOB_WIZARD,
 #if TAG_MAJOR_VERSION == 34
+    JOB_WIZARD,
     JOB_PRIEST,
 #endif
     JOB_GLADIATOR,
@@ -2243,6 +2243,7 @@ enum job_type
 #if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif
+    JOB_REAVER,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

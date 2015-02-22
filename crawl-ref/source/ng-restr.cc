@@ -145,7 +145,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
             return CC_RESTRICTED;
         }
 
-    case JOB_WIZARD:
+    case JOB_REAVER:
         switch (speci)
         {
         case SP_HIGH_ELF:
@@ -413,7 +413,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
             case JOB_HUNTER:
             case JOB_SKALD:
-            case JOB_WIZARD:
+            case JOB_REAVER:
             case JOB_CONJURER:
             case JOB_FIRE_ELEMENTALIST:
             case JOB_ICE_ELEMENTALIST:
@@ -425,7 +425,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case SP_DEEP_ELF:
         switch (job)
         {
-            case JOB_WIZARD:
+            case JOB_REAVER:
             case JOB_CONJURER:
             case JOB_SUMMONER:
             case JOB_NECROMANCER:
@@ -483,7 +483,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
             case JOB_TRANSMUTER:
                 return CC_BANNED;
-            case JOB_WIZARD:
+            case JOB_REAVER:
             case JOB_CONJURER:
             case JOB_NECROMANCER:
             case JOB_ICE_ELEMENTALIST:
@@ -502,7 +502,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_FIRE_ELEMENTALIST:
             case JOB_ICE_ELEMENTALIST:
             case JOB_WARPER:
-            case JOB_WIZARD:
+            case JOB_REAVER:
             case JOB_VENOM_MAGE:
                 return CC_UNRESTRICTED;
             default:
@@ -514,7 +514,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_HUNTER:
             case JOB_BERSERKER:
             case JOB_ARCANE_MARKSMAN:
-            case JOB_WIZARD:
+            case JOB_REAVER:
             case JOB_FIRE_ELEMENTALIST:
                 return CC_UNRESTRICTED;
             default:

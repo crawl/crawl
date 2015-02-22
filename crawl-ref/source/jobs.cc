@@ -6,9 +6,9 @@
 #include "stringutil.h"
 
 static const char * Job_Abbrev_List[] =
-    { "Fi", "Wz",
+    { "Fi",
 #if TAG_MAJOR_VERSION == 34
-      "Pr",
+      "Wz", "Pr",
 #endif
       "Gl", "Ne",
       "As", "Be", "Hu",
@@ -23,12 +23,13 @@ static const char * Job_Abbrev_List[] =
 #if TAG_MAJOR_VERSION == 34
       "Jr",
 #endif
+      "Re",
 };
 
 static const char * Job_Name_List[] =
-    { "Fighter", "Wizard",
+    { "Fighter",
 #if TAG_MAJOR_VERSION == 34
-      "Priest",
+      "Wizard", "Priest",
 #endif
       "Gladiator", "Necromancer",
       "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
@@ -44,6 +45,7 @@ static const char * Job_Name_List[] =
 #if TAG_MAJOR_VERSION == 34
       "Jester",
 #endif
+      "Reaver",
 };
 
 const char *get_job_abbrev(int which_job)
@@ -113,6 +115,7 @@ bool is_starting_job(job_type job)
 #if TAG_MAJOR_VERSION == 34
         && job != JOB_STALKER && job != JOB_JESTER && job != JOB_PRIEST
         && job != JOB_DEATH_KNIGHT && job != JOB_HEALER
+        && job != JOB_WIZARD
 #endif
         ;
 }

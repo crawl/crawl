@@ -112,8 +112,9 @@ Warper
 Warpers start with a weapon of their choice and a scroll of blinking. They can
 learn spells from the book of Spatial Translocations.
 %%%%
-Wizard
+Reaver
 
-Wizards start with a book of Minor Magic, containing a wide range of spells.
-They have higher magical reserves than any other background.
+Reavers start with a book of Minor Magic, containing a wide range of spells.
+Their spells are well-suited to complement melee combat, but can serve as an
+independent offense for some time.
 %%%%

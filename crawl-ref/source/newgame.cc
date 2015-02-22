@@ -1086,15 +1086,17 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         {
             "Warrior-mage",
             coord_def(35, 0), 21,
-            {JOB_SKALD, JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
-             JOB_ENCHANTER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
+            {JOB_SKALD, JOB_REAVER, JOB_TRANSMUTER, JOB_WARPER,
+             JOB_ARCANE_MARKSMAN, JOB_ENCHANTER, JOB_UNKNOWN, JOB_UNKNOWN,
+             JOB_UNKNOWN}
         },
         {
             "Mage",
             coord_def(56, 0), 22,
-            {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+            {JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
              JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
-             JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE}
+             JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE,
+             JOB_UNKNOWN}
         }
     };
 
