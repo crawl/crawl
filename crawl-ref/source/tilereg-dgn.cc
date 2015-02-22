@@ -26,7 +26,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "spl-cast.h"
-#include "spl-util.h"
+#include "spl-zap.h"
 #include "stash.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -456,7 +456,7 @@ static bool _is_appropriate_evokable(const item_def& item,
     if (item.sub_type == WAND_RANDOM_EFFECTS)
         return true;
 
-    spell_type spell = zap_type_to_spell(item.zap());
+    spell_type spell = zap_to_spell(item.zap());
     if (spell == SPELL_TELEPORT_OTHER && target->is_player())
         spell = SPELL_TELEPORT_SELF;
 
