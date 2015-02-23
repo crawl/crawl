@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-3944-g1fbc3e7)
+Stone Soup 0.16 (up to 0.16-a0-4088-g7c8221e)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 
@@ -87,6 +87,7 @@ Monsters
   - Mermaids -> sirens.
   - Sirens -> merfolk avatars.
   - Meatsprint lost souls -> wretched souls.
+* The Royal Jelly now leaks a large number of jellies when polymorphed.
 * Ghost crabs have been moved from Crypt to Swamp.
 * The "misshapen and mutated" status (from Malmutate and the new Irradiate
   spell) is now temporary, but more significant.
@@ -101,6 +102,8 @@ Monsters
 * Sense invisibility has been simplified; monsters that had it now have see
   invisible + blindness immunity instead.
 * Magic immunity no longer confers confusion immunity to monsters.
+* Many monsters are no longer magic immune: notably, most plant enemies, eyes,
+  mummies, and angels.
 * Polymorphed monsters now return to their original shapes in death.
 * Liches (and ancient liches) now choose their spells randomly from a large
   set of possible spells, instead of having fixed spellbooks.
@@ -111,7 +114,7 @@ Spells
 * New spells:
   - Singularity (L9 Translocation), which summons a singularity & sucks in all
     nearby enemies, severely damaging them in the process.
-  - Gell's Gravitas (L6 Hexes/Translocation), which pulls nearby creatures
+  - Gell's Gravitas (L5 Hexes/Translocation), which pulls nearby creatures
     toward the target, causing damage if they collide & occasionally confusing
     them.
   - Hydra Form (L6 Transmutation), a short-duration form that attacks all
@@ -266,12 +269,11 @@ Gods
   - Does not have piety.
   - Defeated enemies turn to gold; these gold piles distract nearby
     creatures, causing them to sometimes not act.
-  - Potion Petition: purchase one set of potion effects.
+  - Potion Petition: purchase one set of potion effects. The first use is free.
   - Call Merchant: fund a merchant to set up shop somewhere near to areas
     of the dungeon you have explored.
   - Bribe Branch: send money to the inhabitants of a branch to turn them
     temporarily neutral or incite them to join you.
-  - Duplication: one non-artefact item can be duplicated at an altar.
 * New god: Ru the Awakened. Ru is a temple god, with an altar either in
   Temple or on D:2-9.
   - Periodically offers the player a choice of three permanent sacrifices in
@@ -295,6 +297,7 @@ Gods
   - Draw One and Peek at Two are no more.
   - Cards have been changed thoroughly over once more.
   - Nemelex now grants destruction decks again.
+* While following TSO, enemies will no longer be distracted by your allies.
 * TSO's Divine Shield no longer benefits from Shields skill.
 * Zin:
  - Hell effect protection halved; now capping out at 50%, down from 100%.
