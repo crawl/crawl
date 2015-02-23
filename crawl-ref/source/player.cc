@@ -2701,7 +2701,7 @@ static void _remove_temp_mutation()
     if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
     {
         you.attribute[ATTR_TEMP_MUT_XP] +=
-            min(you.experience_level, 17) * (350 + roll_dice(5, 350)) / 17;
+            min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
     }
 }
 
