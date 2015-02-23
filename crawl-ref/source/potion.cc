@@ -871,8 +871,7 @@ public:
 
     bool effect(bool=true, int=40) const
     {
-        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2), false,
-                           "drinking a potion of degeneration");
+        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
     }
 
     bool quaff(bool was_known) const

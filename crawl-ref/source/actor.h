@@ -222,7 +222,7 @@ public:
     virtual void weaken(actor *attacker, int pow) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
-    virtual void drain_stat(stat_type stat, int amount, actor* attacker) { }
+    virtual void drain_stat(stat_type stat, int amount) { }
     virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
                                   bool allow_corrosion = true,
                                   const char* hurt_msg = nullptr) = 0;
