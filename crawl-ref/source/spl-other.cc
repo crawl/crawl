@@ -373,8 +373,7 @@ spret_type cast_intoxicate(int pow, bool fail)
         confuse_player(3+random2(10 + (100 - pow) / 10));
 
     if (one_chance_in(20)
-        && lose_stat(STAT_INT, 1 + random2(3), false,
-                      "casting intoxication"))
+        && lose_stat(STAT_INT, 1 + random2(3)));
     {
         mpr("Your head spins!");
     }

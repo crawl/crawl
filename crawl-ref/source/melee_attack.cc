@@ -2862,7 +2862,7 @@ void melee_attack::mons_apply_attack_flavour()
             stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR :
                                       flavour == AF_DRAIN_INT ? STAT_INT
                                                               : STAT_DEX);
-            defender->drain_stat(drained_stat, 1, attacker);
+            defender->drain_stat(drained_stat, 1);
         }
         break;
 

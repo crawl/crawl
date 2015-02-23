@@ -528,11 +528,6 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
     return true;
 }
 
-bool MiscastEffect::_lose_stat(stat_type which_stat, int8_t stat_loss)
-{
-    return lose_stat(which_stat, stat_loss, false, cause);
-}
-
 bool MiscastEffect::_paralyse(int dur)
 {
     if (special_source != HELL_EFFECT_MISCAST)
@@ -1623,7 +1618,7 @@ void MiscastEffect::_divination_you(int severity)
         switch (random2(2))
         {
         case 0:
-            if (_lose_stat(STAT_INT, 1 + random2(3)))
+            if (lose_stat(STAT_INT, 1 + random2(3)))
             {
                 if (you.undead_state())
                     mpr("You suddenly recall your previous life!");
@@ -1666,7 +1661,7 @@ void MiscastEffect::_divination_you(int severity)
             }
             break;
         case 1:
-            if (_lose_stat(STAT_INT, 3 + random2(3)))
+            if (lose_stat(STAT_INT, 3 + random2(3)))
             {
                 if (you.undead_state())
                     mpr("You suddenly recall your previous life!");
@@ -1969,7 +1964,7 @@ void MiscastEffect::_necromancy(int severity)
                 break;
 
         case 5:
-            _lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
             break;
         }
         break;
@@ -3036,7 +3031,7 @@ void MiscastEffect::_poison(int severity)
             if (player_res_poison() > 0)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
-                _lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
+                lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         }
         break;
@@ -3271,7 +3266,7 @@ void MiscastEffect::_zot()
             break;
         }
         case 11:
-            _lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
+            lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
             break;
         case 12:
             mpr("An unnatural silence engulfs you.");

@@ -849,8 +849,7 @@ static bool _trog_retribution()
 
         case 1:
         case 2:
-            lose_stat(STAT_STR, 1 + random2(you.strength() / 5), false,
-                      "divine retribution from Trog");
+            lose_stat(STAT_STR, 1 + random2(you.strength() / 5));
             break;
 
         case 3:
@@ -1032,8 +1031,7 @@ static bool _sif_muna_retribution()
     {
     case 0:
     case 1:
-        lose_stat(STAT_INT, 1 + random2(you.intel() / 5), false,
-                  "divine retribution from Sif Muna");
+        lose_stat(STAT_INT, 1 + random2(you.intel() / 5));
         break;
 
     case 2:

@@ -2112,7 +2112,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_REMOVE_CURSE:
         fail_check();
         remove_curse();
-        lose_stat(STAT_RANDOM, 1, true, "zot ability");
+        lose_stat(STAT_RANDOM, 1, true);
         break;
 
     case ABIL_MUMMY_RESTORATION:

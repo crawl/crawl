@@ -93,8 +93,7 @@ static int _base_stat(stat_type s)
 }
 
 
-static void _handle_stat_change(stat_type stat, bool see_source = true);
-static void _handle_stat_change(bool see_source = true);
+static void _handle_stat_change(stat_type stat);
 
 /**
  * Handle manual, permanent character stat increases. (Usually from every third
@@ -175,19 +174,19 @@ bool attribute_increase()
         case 's':
         case 'S':
             for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_STR, 1, false, "level gain");
+                modify_stat(STAT_STR, 1, false);
             return true;
 
         case 'i':
         case 'I':
             for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_INT, 1, false, "level gain");
+                modify_stat(STAT_INT, 1, false);
             return true;
 
         case 'd':
         case 'D':
             for (int i = 0; i < statgain; i++)
-                modify_stat(STAT_DEX, 1, false, "level gain");
+                modify_stat(STAT_DEX, 1, false);
             return true;
 #ifdef TOUCH_UI
         default:
@@ -289,21 +288,6 @@ void jiyva_stat_action()
     }
 }
 
-static kill_method_type _statloss_killtype(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return KILLED_BY_WEAKNESS;
-    case STAT_INT:
-        return KILLED_BY_STUPIDITY;
-    case STAT_DEX:
-        return KILLED_BY_CLUMSINESS;
-    default:
-        die("unknown stat");
-    }
-}
-
 static const char* descs[NUM_STATS][NUM_STAT_DESCS] =
 {
     { "strength", "weakened", "weaker", "stronger" },
@@ -316,8 +300,7 @@ const char* stat_desc(stat_type stat, stat_desc_type desc)
     return descs[stat][desc];
 }
 
-void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
-                 bool see_source)
+void modify_stat(stat_type which_stat, int amount, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -341,11 +324,10 @@ void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
 
     you.base_stats[which_stat] += amount;
 
-    _handle_stat_change(which_stat, see_source);
+    _handle_stat_change(which_stat);
 }
 
-void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
-                        bool see_source)
+void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -367,12 +349,13 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
              stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
-    _handle_stat_change(which_stat, see_source);
+    _handle_stat_change(which_stat);
 }
 
 void notify_stat_change()
 {
-    _handle_stat_change();
+    for (int i = 0; i < NUM_STATS; ++i)
+        _handle_stat_change(static_cast<stat_type>(i));
 }
 
 static int _mut_level(mutation_type mut, bool innate)
@@ -520,8 +503,7 @@ static string _stat_name(stat_type stat)
     }
 }
 
-bool lose_stat(stat_type which_stat, int stat_loss, bool force,
-               const char *cause, bool see_source)
+bool lose_stat(stat_type which_stat, int stat_loss, bool force)
 {
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
@@ -551,38 +533,11 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
     {
         you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
-        if (you.stat_zero[which_stat])
-        {
-            mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(which_stat, SD_NAME));
-            ouch(5 + random2(you.hp_max / 10), _statloss_killtype(which_stat), MID_NOBODY, cause);
-        }
-        _handle_stat_change(which_stat, see_source);
+        _handle_stat_change(which_stat);
         return true;
     }
     else
         return false;
-}
-bool lose_stat(stat_type which_stat, int stat_loss, bool force,
-               const string cause, bool see_source)
-{
-    return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
-}
-
-bool lose_stat(stat_type which_stat, int stat_loss,
-               const monster* cause, bool force)
-{
-    if (cause == nullptr || invalid_monster(cause))
-        return lose_stat(which_stat, stat_loss, force, nullptr, true);
-
-    bool   vis  = you.can_see(cause);
-    string name = cause->name(DESC_A, true);
-
-    if (cause->has_ench(ENCH_SHAPESHIFTER))
-        name += " (shapeshifter)";
-    else if (cause->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        name += " (glowing shapeshifter)";
-
-    return lose_stat(which_stat, stat_loss, force, name, vis);
 }
 
 static stat_type _random_lost_stat()
@@ -646,7 +601,7 @@ static void _normalize_stat(stat_type stat)
     you.base_stats[stat] = min<int8_t>(you.base_stats[stat], 72);
 }
 
-static void _handle_stat_change(stat_type stat, bool see_source)
+static void _handle_stat_change(stat_type stat)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
@@ -682,12 +637,6 @@ static void _handle_stat_change(stat_type stat, bool see_source)
     default:
         break;
     }
-}
-
-static void _handle_stat_change(bool see_source)
-{
-    for (int i = 0; i < NUM_STATS; ++i)
-        _handle_stat_change(static_cast<stat_type>(i), see_source);
 }
 
 // Called once per turn.

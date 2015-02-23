@@ -378,5 +378,5 @@ void species_stat_gain(species_type species)
 {
     const species_def& sd = _species_def(species);
     if (you.experience_level % sd.how_often == 0)
-        modify_stat(*random_iterator(sd.level_stats), 1, false, "level gain");
+        modify_stat(*random_iterator(sd.level_stats), 1, false);
 }

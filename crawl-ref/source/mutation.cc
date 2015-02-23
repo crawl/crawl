@@ -1236,13 +1236,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         switch (mutclass)
         {
         case MUTCLASS_TEMPORARY:
-            lose_stat(STAT_RANDOM, 1, false, reason);
+            lose_stat(STAT_RANDOM, 1);
             return true;
         case MUTCLASS_NORMAL:
             mprf(MSGCH_MUTATION, "Your body decomposes!");
 
             if (coinflip())
-                lose_stat(STAT_RANDOM, 1, false, reason);
+                lose_stat(STAT_RANDOM, 1);
             else
             {
                 ouch(3, KILLED_BY_ROTTING, MID_NOBODY, reason.c_str());

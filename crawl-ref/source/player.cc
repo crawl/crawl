@@ -6746,16 +6746,9 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     return amount;
 }
 
-void player::drain_stat(stat_type s, int amount, actor *attacker)
+void player::drain_stat(stat_type s, int amount)
 {
-    if (attacker == nullptr)
-        lose_stat(s, amount, false, "");
-    else if (attacker->is_monster())
-        lose_stat(s, amount, attacker->as_monster(), false);
-    else if (attacker->is_player())
-        lose_stat(s, amount, false, "suicide");
-    else
-        lose_stat(s, amount, false, "");
+    lose_stat(s, amount);
 }
 
 bool player::rot(actor *who, int amount, bool quiet)

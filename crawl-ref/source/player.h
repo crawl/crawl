@@ -637,7 +637,7 @@ public:
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
-    void drain_stat(stat_type stat, int amount, actor* attacker);
+    void drain_stat(stat_type stat, int amount);
 
     void expose_to_element(beam_type element, int strength = 0,
                            bool slow_cold_blood = true);

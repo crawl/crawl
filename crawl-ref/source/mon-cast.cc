@@ -5296,7 +5296,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_BRAIN_FEED:
         if (one_chance_in(3)
-            && lose_stat(STAT_INT, 1 + random2(3), mons))
+            && lose_stat(STAT_INT, 1 + random2(3)))
         {
             mpr("Something feeds on your intellect!");
             xom_is_stimulated(50);
