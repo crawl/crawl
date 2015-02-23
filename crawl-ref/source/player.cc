@@ -2688,7 +2688,7 @@ static void _remove_temp_mutation()
 {
     int num_remove = min(you.attribute[ATTR_TEMP_MUTATIONS],
         max(you.attribute[ATTR_TEMP_MUTATIONS] * 5 / 12 - random2(3),
-        2 + random2(3)));
+        1 + random2(3)));
 
     if (num_remove >= you.attribute[ATTR_TEMP_MUTATIONS])
         mprf(MSGCH_DURATION, "You feel the corruption within you wane completely.");
