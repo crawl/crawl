@@ -814,48 +814,18 @@ static void _handle_magic_contamination(int /*time_delta*/)
     }
 }
 
-// Adjust the player's stats if s/he's diseased (or recovering).
-static void _recover_stats(int /*time_delta*/)
+// Adjust the player's stats if diseased.
+static void _handle_sickness(int /*time_delta*/)
 {
-    if (!you.disease)
+    // If Cheibriados has slowed your biology, disease might
+    // not actually do anything.
+    if (you.disease && one_chance_in(30)
+        && !(you_worship(GOD_CHEIBRIADOS)
+             && you.piety >= piety_breakpoint(0)
+             && coinflip()))
     {
-        bool recovery = true;
-
-        // The better-fed you are, the faster your stat recovery.
-        if (you.species == SP_VAMPIRE)
-        {
-            if (you.hunger_state == HS_STARVING)
-            {
-                // No stat recovery for starving vampires.
-                recovery = false;
-            }
-            else if (you.hunger_state <= HS_HUNGRY)
-            {
-                // Halved stat recovery for hungry vampires.
-                recovery = coinflip();
-            }
-        }
-
-        // Slow heal 3 mutation stops stat recovery.
-        if (player_mutation_level(MUT_SLOW_HEALING) == 3)
-            recovery = false;
-
-        // Rate of recovery equals one level of MUT_DETERIORATION.
-        if (recovery && x_chance_in_y(4, 200))
-            restore_stat(STAT_RANDOM, 1, false, true);
-    }
-    else
-    {
-        // If Cheibriados has slowed your biology, disease might
-        // not actually do anything.
-        if (one_chance_in(30)
-            && !(you_worship(GOD_CHEIBRIADOS)
-                 && you.piety >= piety_breakpoint(0)
-                 && coinflip()))
-        {
-            mprf(MSGCH_WARN, "Your disease is taking its toll.");
-            lose_stat(STAT_RANDOM, 1);
-        }
+        mprf(MSGCH_WARN, "Your disease is taking its toll.");
+        lose_stat(STAT_RANDOM, 1);
     }
 }
 
@@ -1003,7 +973,7 @@ static struct timed_effect timed_effects[] =
 {
     { TIMER_CORPSES,       rot_floor_items,               200,   200, true  },
     { TIMER_HELL_EFFECTS,  _hell_effects,                 200,   600, false },
-    { TIMER_STAT_RECOVERY, _recover_stats,                100,   300, false },
+    { TIMER_SICKNESS,      _handle_sickness,              100,   300, false },
     { TIMER_CONTAM,        _handle_magic_contamination,   200,   600, false },
     { TIMER_DETERIORATION, _deteriorate,                  100,   300, false },
     { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },

@@ -2545,6 +2545,35 @@ static void _remove_temp_mutation()
         you.attribute[ATTR_TEMP_MUT_XP] += temp_mutation_roll();
 }
 
+static void _recover_stat()
+{
+    FixedVector<int, NUM_STATS> recovered_stats(0);
+
+    while (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
+    {
+        stat_type stat = random_lost_stat();
+        ASSERT(stat != NUM_STATS);
+
+        recovered_stats[stat]++;
+
+        bool still_drained = false;
+        for (int i = 0; i < NUM_STATS; ++i)
+            if (you.stat_loss[i] - recovered_stats[i] > 0)
+                still_drained = true;
+
+        if (still_drained)
+            you.attribute[ATTR_STAT_LOSS_XP] += stat_loss_roll();
+        else
+            break;
+    }
+
+    for (int i = 0; i < NUM_STATS; ++i)
+    {
+        if (recovered_stats[i] > 0);
+            restore_stat((stat_type) i, recovered_stats[i], false, true);
+    }
+}
+
 int get_exp_progress()
 {
     if (you.experience_level >= you.get_max_xl())
@@ -2680,6 +2709,16 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         you.attribute[ATTR_TEMP_MUT_XP] -= exp_gained;
         if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
             _remove_temp_mutation();
+    }
+
+    if (you.attribute[ATTR_STAT_LOSS_XP] > 0)
+    {
+        int loss = div_rand_round(exp_gained * 3 / 2,
+                                  calc_skill_cost(you.skill_cost_level));
+        you.attribute[ATTR_STAT_LOSS_XP] -= loss;
+        dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
+        if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
+            _recover_stat();
     }
 
     _recharge_xp_evokers(exp_gained);
