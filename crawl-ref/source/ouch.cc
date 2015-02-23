@@ -391,9 +391,6 @@ void lose_level()
     mprf(MSGCH_WARN,
          "You are now level %d!", you.experience_level);
 
-    ouch(4, KILLED_BY_DRAINING);
-    dec_mp(1);
-
     calc_hp();
     calc_mp();
     _lose_level_abilities();
