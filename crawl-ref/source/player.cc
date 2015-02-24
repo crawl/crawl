@@ -2699,10 +2699,7 @@ static void _remove_temp_mutation()
         delete_temp_mutation();
 
     if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
-    {
-        you.attribute[ATTR_TEMP_MUT_XP] +=
-            min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
-    }
+        you.attribute[ATTR_TEMP_MUT_XP] += temp_mutation_roll();
 }
 
 int get_exp_progress()

@@ -1742,9 +1742,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         {
             you.temp_mutation[mutat]++;
             you.attribute[ATTR_TEMP_MUTATIONS]++;
-            you.attribute[ATTR_TEMP_MUT_XP] =
-                    min(you.experience_level, 17)
-                    * (500 + roll_dice(5, 500)) / 17;
+            you.attribute[ATTR_TEMP_MUT_XP] = temp_mutation_roll();
         }
 
         if (you.hp <= 0)
@@ -2445,6 +2443,11 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
 {
     return mutate(which_mut, reason, false, false, false, false,
                   MUTCLASS_TEMPORARY, false);
+}
+
+int temp_mutation_roll()
+{
+    return min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
 }
 
 /**
