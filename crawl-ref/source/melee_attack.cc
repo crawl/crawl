@@ -89,7 +89,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 bool melee_attack::can_reach()
 {
-    return (attk_type == AT_HIT && weapon && weapon_reach(*weapon))
+    return attk_type == AT_HIT && weapon && weapon_reach(*weapon) > REACH_NONE
            || attk_flavour == AF_REACH
            || attk_type == AT_REACH_STING;
 }
