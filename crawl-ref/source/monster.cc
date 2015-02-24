@@ -5638,8 +5638,10 @@ void monster::apply_location_effects(const coord_def &oldpos,
     if (oldpos != pos())
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
-    if (alive() && mons_habitat(this) == HT_WATER
-        && !feat_is_watery(grd(pos())) && !has_ench(ENCH_AQUATIC_LAND))
+    if (alive()
+        && (mons_habitat(this) == HT_WATER || mons_habitat(this) == HT_LAVA)
+        && !monster_habitable_grid(this, grd(pos()))
+        && !has_ench(ENCH_AQUATIC_LAND))
     {
         // Elemental wellsprings always have water beneath them
         if (type == MONS_ELEMENTAL_WELLSPRING)
@@ -5650,11 +5652,12 @@ void monster::apply_location_effects(const coord_def &oldpos,
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
     {
-        if (!feat_is_watery(grd(pos())))
+        if (!monster_habitable_grid(this, grd(pos())))
             simple_monster_message(this, " flops around on dry land!");
-        else if (!feat_is_watery(grd(oldpos)))
+        else if (!monster_habitable_grid(this, grd(oldpos)))
         {
-            simple_monster_message(this, " dives back into the water!");
+            mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
+                                               feat_type_name(grd(pos())));
             del_ench(ENCH_AQUATIC_LAND);
         }
         // This may have been called via dungeon_terrain_changed instead

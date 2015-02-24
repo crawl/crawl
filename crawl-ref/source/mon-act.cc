@@ -4147,9 +4147,9 @@ static bool _monster_move(monster* mons)
         return false;
     }
 
-    // If a water monster is currently flopping around on land, it cannot
-    // really control where it wants to move, though there's a 50% chance
-    // of flopping into an adjacent water grid.
+    // If a water (or lava) monster is currently flopping around on land, it
+    // cannot really control where it wants to move, though there's a 50%
+    // chance of flopping into an adjacent water (or lava) grid.
     if (mons->has_ench(ENCH_AQUATIC_LAND))
     {
         vector<coord_def> adj_water;
@@ -4159,8 +4159,11 @@ static bool _monster_move(monster* mons)
             if (!cell_is_solid(*ai))
             {
                 adj_move.push_back(*ai);
-                if (feat_is_watery(grd(*ai)))
+                if (habitat == HT_WATER && feat_is_watery(grd(*ai))
+                    || habitat == HT_LAVA && feat_is_lava(grd(*ai)))
+                {
                     adj_water.push_back(*ai);
+                }
             }
         }
         if (adj_move.empty())
