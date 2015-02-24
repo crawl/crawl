@@ -1,9 +1,18 @@
 #include "AppHdr.h"
+#include <map>
 
 #include "species.h"
 
-#include "libutil.h"
+#include "stringutil.h"
 #include "random.h"
+
+#include "species-data.h"
+
+static const species_def& _species_def(species_type species)
+{
+    ASSERT_RANGE(species, 0, NUM_SPECIES);
+    return species_data.at(species);
+}
 
 species_type random_draconian_player_species()
 {
@@ -11,51 +20,22 @@ species_type random_draconian_player_species()
     return static_cast<species_type>(SP_RED_DRACONIAN + random2(num_drac));
 }
 
-static const char * Species_Abbrev_List[NUM_SPECIES] =
-{
-      "Hu", "HE", "DE",
-#if TAG_MAJOR_VERSION == 34
-      "SE",
-#endif
-      "Ha", "HO", "Ko", "Mu", "Na", "Og", "Tr",
-      // the draconians
-      "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
-      "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
-      "Fe", "Op",
-#if TAG_MAJOR_VERSION == 34
-      "Dj", "LO",
-#endif
-      "Gr", "Fo", "VS",
-};
-
 const char *get_species_abbrev(species_type which_species)
 {
     if (which_species == SP_UNKNOWN)
         return "Ya";
-    ASSERT_RANGE(which_species, 0, NUM_SPECIES);
 
-    return Species_Abbrev_List[which_species];
+    return _species_def(which_species).abbrev;
 }
 
 // Needed for debug.cc and hiscores.cc.
 species_type get_species_by_abbrev(const char *abbrev)
 {
-    int i;
-    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES);
-    for (i = 0; i < NUM_SPECIES; i++)
-    {
-        // XXX: this is so Dr works
-        if (i == SP_RED_DRACONIAN)
-            i = SP_BASE_DRACONIAN;
-        // This assumes untranslated abbreviations.
-        if (toalower(abbrev[0]) == toalower(Species_Abbrev_List[i][0])
-            && toalower(abbrev[1]) == toalower(Species_Abbrev_List[i][1]))
-        {
-            break;
-        }
-    }
+    for (auto& entry : species_data)
+        if (lowercase_string(abbrev) == lowercase_string(entry.second.abbrev))
+            return entry.first;
 
-    return (i < NUM_SPECIES) ? static_cast<species_type>(i) : SP_UNKNOWN;
+    return SP_UNKNOWN;
 }
 
 // Does a case-sensitive lookup of the species name supplied.
