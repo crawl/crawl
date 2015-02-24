@@ -7,7 +7,6 @@
 
 #include "ranged_attack.h"
 
-#include "art-enum.h"
 #include "coord.h"
 #include "english.h"
 #include "godconduct.h"
@@ -815,16 +814,7 @@ bool ranged_attack::mons_attack_effects()
 void ranged_attack::player_stab_check()
 {
     if (player_good_stab())
-    {
         attack::player_stab_check();
-        // Sometimes the blowgun of the Assassin lets you stab an aware target.
-        if (!stab_attempt && is_unrandom_artefact(*weapon, UNRAND_BLOWGUN_ASSASSIN)
-            && one_chance_in(3))
-        {
-            stab_attempt = true;
-            stab_bonus = 1;
-        }
-    }
     else
     {
         stab_attempt = false;

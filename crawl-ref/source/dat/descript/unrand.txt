@@ -204,6 +204,7 @@ longbow "Piercer"
 
 An exceptionally large metal longbow.
 %%%%
+# TAG_MAJOR_VERSION == 34
 blowgun of the Assassin
 
 This blowgun seems to guide the needle to seek the most lethal point to hit
