@@ -540,6 +540,7 @@ TILE_EQ: great_bow
 BRAND:   SPWPN_PENETRATION
 EV:      -2
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    BLOWGUN_ASSASSIN
 NAME:    blowgun of the Assassin
 INSCRIP: stab,
