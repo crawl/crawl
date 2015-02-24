@@ -1653,61 +1653,6 @@ static void _qazlal_summon_elementals()
 }
 
 /**
- * Surround the player with dangerous terrain! (Currently just lava!)
- */
-static void _qazlal_deform_terrain()
-{
-    // TODO: think of terrain-ish effects for the other elements
-
-    const god_type god = GOD_QAZLAL;
-
-    vector<coord_weight> candidates;
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-        if (grd(*ri) != DNGN_FLOOR || actor_at(*ri) || igrd(*ri) != NON_ITEM)
-            continue;
-
-        const int weight = LOS_RADIUS*LOS_RADIUS - distance2(you.pos(), *ri);
-        candidates.emplace_back(*ri, weight);
-    }
-
-    const int how_many = min((int)candidates.size(),
-                             3 + (you.experience_level / 2));
-    int deforms = 0;
-    while (deforms < how_many)
-    {
-        const coord_def* pos = random_choose_weighted(candidates);
-        if (!pos)
-            break;
-
-        deforms++;
-        temp_change_terrain(*pos, DNGN_LAVA,
-                            random2(you.experience_level * BASELINE_DELAY),
-                            TERRAIN_CHANGE_FLOOD);
-
-        for (auto it = candidates.begin(); it != candidates.end(); ++it)
-        {
-            if (it->first == *pos)
-            {
-                candidates.erase(it);
-                break;
-            }
-        }
-    }
-
-    if (deforms)
-    {
-        mprf(MSGCH_GOD, god,
-             "The ground around you shudders, and lava spills forth!");
-    }
-    else
-    {
-        mprf(MSGCH_GOD, god,
-             "The ground around you shudders for a moment.");
-    }
-}
-
-/**
  * Give the player temporary elemental-vulnerability mutations.
  */
 static void _qazlal_elemental_vulnerability()
@@ -1742,10 +1687,12 @@ static bool _qazlal_retribution()
         _qazlal_summon_elementals();
         break;
     case 1:
-        _qazlal_deform_terrain();
+        _qazlal_elemental_vulnerability();
         break;
     case 2:
-        _qazlal_elemental_vulnerability();
+        simple_god_message(" causes a mighty clap of thunder!",
+                           GOD_QAZLAL);
+        noisy(25, you.pos());
         break;
     }
 
