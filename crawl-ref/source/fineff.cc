@@ -535,6 +535,27 @@ void rakshasa_clone_fineff::fire()
     }
 }
 
+void bennu_revive_fineff::fire()
+{
+    // Bennu only resurrect once and immediately in the same spot,
+    // so this is rather abbreviated compared to felids.
+    // XXX: Maybe generalize felid_revives and merge the two anyway?
+    monster_type type = MONS_BENNU;
+    monsterentry* me = get_monster_data(type);
+    ASSERT(me);
+
+    bool res_visible = you.see_cell(posn);
+
+    mgen_data mg(type, att, 0, 0, 0, posn, foe,
+                 (res_visible ? MG_DONT_COME : 0), GOD_NO_GOD,
+                 MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
+                 level_id::current());
+
+    monster *newmons = create_monster(mg);
+    if (newmons)
+        newmons->props["bennu_revives"].get_byte() = revives + 1;
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.
