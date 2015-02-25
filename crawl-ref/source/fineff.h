@@ -290,6 +290,30 @@ protected:
     }
     int damage;
 };
+
+class bennu_revive_fineff : public final_effect
+{
+public:
+    // Each trigger is from the death of a different bennu---no merging.
+    bool mergeable(const final_effect &a) const { return false; }
+    void fire();
+
+    static void schedule(coord_def pos, int revives, beh_type att,
+                         unsigned short foe)
+    {
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, att, foe));
+    }
+protected:
+    bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
+                        unsigned short _foe)
+        : final_effect(0, 0, pos), revives(_revives), att(_att), foe(_foe)
+    {
+    }
+    int revives;
+    beh_type att;
+    unsigned short foe;
+};
+
 void fire_final_effects();
 
 #endif

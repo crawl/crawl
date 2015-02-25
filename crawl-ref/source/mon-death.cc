@@ -2551,7 +2551,13 @@ int monster_die(monster* mons, killer_type killer,
              && (!summoned || duration > 0) && !wizard
              && mons_bennu_can_revive(mons))
     {
-        mons_bennu_revive(mons);
+        // All this information may be lost by the time the monster revives.
+        const int revives = (mons->props.exists("bennu_revives"))
+                          ? mons->props["bennu_revives"].get_byte() : 0;
+        const beh_type att = mons->has_ench(ENCH_CHARM) ? BEH_HOSTILE
+                                                        : SAME_ATTITUDE(mons);
+
+        bennu_revive_fineff::schedule(mons->pos(), revives, att, mons->foe);
     }
     else if (!mons->is_summoned())
     {
@@ -3411,6 +3417,10 @@ bool mons_felid_can_revive(const monster* mons)
 
 void mons_felid_revive(monster* mons)
 {
+    // FIXME: this should be a fineff like bennu_revive_fineff. But that
+    // is tricky because the original actor will be dead (and not carrying
+    // its items) by the time the fineff fires.
+
     // Mostly adapted from bring_to_safety()
     coord_def revive_place;
     int tries = 10000;
@@ -3472,35 +3482,4 @@ bool mons_bennu_can_revive(const monster* mons)
 {
     return !mons->props.exists("bennu_revives")
            || mons->props["bennu_revives"].get_byte() < 1;
-}
-
-void mons_bennu_revive(monster* mons)
-{
-    // Bennu only resurrect once and immediately in the same spot,
-    // so this is rather abbreviated compared to felids.
-    // XXX: Maybe generalize felid_revives and merge the two anyway?
-    monster_type type = MONS_BENNU;
-    monsterentry* me = get_monster_data(type);
-    ASSERT(me);
-
-    const int revives = (mons->props.exists("bennu_revives"))
-                        ? mons->props["bennu_revives"].get_byte() + 1
-                        : 1;
-    bool res_visible = you.see_cell(mons->pos());
-
-    mgen_data mg(type, (mons->has_ench(ENCH_CHARM) ? BEH_HOSTILE
-                        : SAME_ATTITUDE(mons)),
-                        0, 0, 0, (mons->pos()), mons->foe,
-                        (res_visible ? MG_DONT_COME : 0), GOD_NO_GOD,
-                        MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
-                        level_id::current());
-
-    mons->set_position(coord_def(0,0));
-
-    monster *newmons = create_monster(mg);
-    if (newmons)
-    {
-        newmons->props["bennu_revives"].get_byte() = revives;
-
-    }
 }

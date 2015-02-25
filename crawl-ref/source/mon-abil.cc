@@ -1062,6 +1062,7 @@ bool lost_soul_revive(monster* mons, killer_type killer)
 
 void treant_release_fauna(monster* mons)
 {
+    // FIXME: this should be a fineff, at least when called from monster_die.
     int count = mons->mangrove_pests;
     bool created = false;
 
