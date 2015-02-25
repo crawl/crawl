@@ -15,12 +15,6 @@ static const species_def& _species_def(species_type species)
     return species_data.at(species);
 }
 
-species_type random_draconian_player_species()
-{
-    const int num_drac = SP_PALE_DRACONIAN - SP_RED_DRACONIAN + 1;
-    return static_cast<species_type>(SP_RED_DRACONIAN + random2(num_drac));
-}
-
 const char *get_species_abbrev(species_type which_species)
 {
     if (which_species == SP_UNKNOWN)
