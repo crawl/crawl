@@ -38,73 +38,6 @@ static void _init_player()
     dlua.callfn("dgn_clear_data", "");
 }
 
-static void _species_stat_init(species_type which_species)
-{
-    int s = 8; // strength
-    int i = 8; // intelligence
-    int d = 8; // dexterity
-
-    // Note: The stats in in this list aren't intended to sum the same
-    // for all races.  The fact that Mummies and Ghouls are really low
-    // is considered acceptable (Mummies don't have to eat, and Ghouls
-    // are supposed to be a really hard race). - bwr
-    switch (which_species)
-    {
-    default:                    s =  8; i =  8; d =  8;      break;  // 24
-    case SP_HUMAN:              s =  8; i =  8; d =  8;      break;  // 24
-    case SP_DEMIGOD:            s = 11; i = 12; d = 11;      break;  // 34
-    case SP_DEMONSPAWN:         s =  8; i =  9; d =  8;      break;  // 25
-
-    case SP_HIGH_ELF:           s =  7; i = 11; d = 10;      break;  // 28
-    case SP_DEEP_ELF:           s =  5; i = 12; d = 10;      break;  // 27
-
-    case SP_DEEP_DWARF:         s = 11; i =  8; d =  8;      break;  // 27
-
-    case SP_TROLL:              s = 15; i =  4; d =  5;      break;  // 24
-    case SP_OGRE:               s = 12; i =  7; d =  5;      break;  // 24
-
-    case SP_MINOTAUR:           s = 12; i =  5; d =  5;      break;  // 22
-    case SP_GARGOYLE:           s = 11; i =  8; d =  5;      break;  // 24
-    case SP_HILL_ORC:           s = 10; i =  8; d =  6;      break;  // 24
-#if TAG_MAJOR_VERSION == 34
-    case SP_LAVA_ORC:           s = 10; i =  8; d =  6;      break;  // 24
-#endif
-    case SP_CENTAUR:            s = 10; i =  7; d =  4;      break;  // 21
-    case SP_NAGA:               s = 10; i =  8; d =  6;      break;  // 24
-
-    case SP_MERFOLK:            s =  8; i =  7; d =  9;      break;  // 24
-    case SP_TENGU:              s =  8; i =  8; d =  9;      break;  // 25
-    case SP_FORMICID:           s = 12; i =  7; d =  6;      break;  // 25
-    case SP_VINE_STALKER:       s = 10; i =  8; d =  9;      break;  // 27
-
-    case SP_KOBOLD:             s =  6; i =  6; d = 11;      break;  // 23
-    case SP_HALFLING:           s =  8; i =  7; d =  9;      break;  // 24
-    case SP_SPRIGGAN:           s =  4; i =  9; d = 11;      break;  // 24
-
-    case SP_MUMMY:              s = 11; i =  7; d =  7;      break;  // 25
-    case SP_GHOUL:              s = 11; i =  3; d =  4;      break;  // 18
-    case SP_VAMPIRE:            s =  7; i = 10; d =  9;      break;  // 26
-
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:     s = 10; i =  8; d =  6;      break;  // 24
-
-    case SP_FELID:              s =  4; i =  9; d = 11;      break;  // 24
-    case SP_OCTOPODE:           s =  7; i = 10; d =  7;      break;  // 24
-    }
-
-    you.base_stats[STAT_STR] = s;
-    you.base_stats[STAT_INT] = i;
-    you.base_stats[STAT_DEX] = d;
-}
-
 // Randomly boost stats a number of times.
 static void _wanderer_assign_remaining_stats(int points_left)
 {
@@ -1177,7 +1110,7 @@ static void _setup_generic(const newgame_def& ng)
 
     you.chr_class_name = get_job_name(you.char_class);
 
-    _species_stat_init(you.species);     // must be down here {dlb}
+    species_stat_init(you.species);     // must be down here {dlb}
 
     // Before we get into the inventory init, set light radius based
     // on species vision. Currently, all species see out to 8 squares.
