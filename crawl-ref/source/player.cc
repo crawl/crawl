@@ -3139,7 +3139,9 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-                    you.species = random_draconian_player_species();
+                    you.species = static_cast<species_type>(
+                                       random_range(SP_FIRST_NONBASE_DRACONIAN,
+                                                    SP_LAST_NONBASE_DRACONIAN));
 
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we

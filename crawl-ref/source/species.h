@@ -19,7 +19,6 @@ bool species_likes_lava(species_type species);
 size_type species_size(species_type species,
                        size_part_type psize = PSIZE_TORSO);
 
-species_type random_draconian_player_species();
 species_type get_species_by_abbrev(const char *abbrev);
 const char *get_species_abbrev(species_type which_species);
 
