@@ -620,9 +620,9 @@ public:
     /**
      * Sets this item as being held by a given monster.
      *
-     * @param midx The mindex of the monster.
+     * @param mon The monster. Must be in menv!
      */
-    void set_holding_monster(int midx);
+    void set_holding_monster(const monster& mon);
 
     /**
      * Get the monster holding this item.

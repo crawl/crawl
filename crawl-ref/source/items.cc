@@ -3240,11 +3240,10 @@ monster* item_def::holding_monster() const
     return &menv[midx];
 }
 
-void item_def::set_holding_monster(int midx)
+void item_def::set_holding_monster(const monster& mon)
 {
-    ASSERT(midx != NON_MONSTER);
     pos = ITEM_IN_MONSTER_INVENTORY;
-    link = NON_ITEM + 1 + midx;
+    link = NON_ITEM + 1 + mon.mindex();
 }
 
 // Note: should not check menv, since it may be called by link_items() from

@@ -345,7 +345,7 @@ void follower::restore_mons_items(monster& m)
 
             item_def &it = mitm[islot];
             it = items[i];
-            it.set_holding_monster(m.mindex());
+            it.set_holding_monster(m);
         }
     }
 }
