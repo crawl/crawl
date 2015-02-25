@@ -1,9 +1,10 @@
 enum species_flag
 {
-    SPF_NONE      = 0,
-    SPF_ELVEN     = 1 << 0, /// If this species counts as an elf
-    SPF_DRACONIAN = 1 << 1, /// If this is a draconian subspecies
-    SPF_ORCISH    = 1 << 2, /// If this species is a kind of orc
+    SPF_NONE        = 0,
+    SPF_ELVEN       = 1 << 0, /// If this species counts as an elf
+    SPF_DRACONIAN   = 1 << 1, /// If this is a draconian subspecies
+    SPF_ORCISH      = 1 << 2, /// If this species is a kind of orc
+    SPF_NO_HAIR     = 1 << 3, /// If members of the species are hairless
 };
 DEF_BITFIELD(species_flags, species_flag);
 
@@ -163,7 +164,7 @@ static const map<species_type, species_def> species_data =
 { SP_GHOUL, {
     "Gh",
     "Ghoul", "Ghoulish", nullptr,
-    SPF_NONE,
+    SPF_NO_HAIR,
     0, 1, -1,
     MONS_GHOUL,
 } },
@@ -171,7 +172,7 @@ static const map<species_type, species_def> species_data =
 { SP_GARGOYLE, {
     "Gr",
     "Gargoyle", nullptr, nullptr,
-    SPF_NONE,
+    SPF_NO_HAIR,
     0, -2, 0,
     MONS_GARGOYLE,
 } },
@@ -259,7 +260,7 @@ static const map<species_type, species_def> species_data =
 { SP_OCTOPODE, {
     "Op",
     "Octopode", "Octopoid", "Octopus",
-    SPF_NONE,
+    SPF_NO_HAIR,
     0, -1, 0,
     MONS_OCTOPODE,
 } },
@@ -275,7 +276,7 @@ static const map<species_type, species_def> species_data =
 { SP_TENGU, {
     "Te",
     "Tengu", nullptr, nullptr,
-    SPF_NONE,
+    SPF_NO_HAIR,
     0, -2, 1,
     MONS_TENGU,
 } },
@@ -315,7 +316,7 @@ static const map<species_type, species_def> species_data =
 { SP_LAVA_ORC, {
     "LO",
     "Lava Orc", "Orcish", "Orc",
-    SPF_ORCISH,
+    SPF_ORCISH | SPF_NO_HAIR,
     -1, 1, 0,
     MONS_LAVA_ORC,
 } },

@@ -437,10 +437,9 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool ignore_transform, bool quiet) const
 {
-    const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
-
     // Only ogres and trolls can wield large rocks (for sandblast).
-    if (bsize < SIZE_LARGE && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
+    if (!species_can_throw_large_rocks(you.species)
+        && item.is_type(OBJ_MISSILES, MI_LARGE_ROCK))
     {
         if (!quiet)
             mpr("That's too large and heavy for you to wield.");
@@ -466,6 +465,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return false;
     }
 
+    const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
     if (!is_weapon_wieldable(item, bsize))
     {

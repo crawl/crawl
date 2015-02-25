@@ -11,8 +11,6 @@
 #include "mpr.h"
 #include "spl-util.h"
 
-bool you_have_hair();
-
 enum nothing_happens_when_type
 {
     NH_DEFAULT,

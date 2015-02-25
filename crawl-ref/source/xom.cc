@@ -2523,7 +2523,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (you_have_hair())
+    if (species_has_hair(you.species))
     {
         messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
         messages.emplace_back("Your eyebrows wriggle.");
