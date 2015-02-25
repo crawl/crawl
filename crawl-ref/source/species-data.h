@@ -410,4 +410,14 @@ static const map<species_type, species_def> species_data =
     8, 8, 8, // 24
 } },
 #endif
+// Ideally this wouldn't be necessary...
+{ SP_UNKNOWN, {
+    "??",
+    "Yak", nullptr, nullptr,
+    SPF_NONE,
+    0, 0, 0,
+    MONS_PROGRAM_BUG,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
+    0, 0, 0, // 0
+} }
 };
