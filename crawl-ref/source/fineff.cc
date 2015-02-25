@@ -540,18 +540,13 @@ void bennu_revive_fineff::fire()
     // Bennu only resurrect once and immediately in the same spot,
     // so this is rather abbreviated compared to felids.
     // XXX: Maybe generalize felid_revives and merge the two anyway?
-    monster_type type = MONS_BENNU;
-    monsterentry* me = get_monster_data(type);
-    ASSERT(me);
 
     bool res_visible = you.see_cell(posn);
 
-    mgen_data mg(type, att, 0, 0, 0, posn, foe,
-                 (res_visible ? MG_DONT_COME : 0), GOD_NO_GOD,
-                 MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
-                 level_id::current());
 
-    monster *newmons = create_monster(mg);
+    monster *newmons = create_monster(mgen_data(MONS_BENNU,
+                                                att, 0, 0, 0, posn, foe,
+                                                res_visible ? MG_DONT_COME : 0));
     if (newmons)
         newmons->props["bennu_revives"].get_byte() = revives + 1;
 }
