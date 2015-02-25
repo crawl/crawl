@@ -3988,17 +3988,17 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     // FIXME: Handle player_genus in case it was not generalised to foe_genus.
     msg = replace_all(msg, "@a_player_genus@",
-                      article_a(species_name(you.species, true)));
-    msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
-    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, true)));
+                      article_a(species_name(you.species, SPNAME_GENUS)));
+    msg = replace_all(msg, "@player_genus@", species_name(you.species, SPNAME_GENUS));
+    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, SPNAME_GENUS)));
 
-    string foe_species;
+    string foe_genus;
 
     if (foe == nullptr)
         ;
     else if (foe->is_player())
     {
-        foe_species = species_name(you.species, true);
+        foe_genus = species_name(you.species, SPNAME_GENUS);
 
         msg = _replace_speech_tag(msg, " @to_foe@", "");
         msg = _replace_speech_tag(msg, " @at_foe@", "");
@@ -4018,10 +4018,10 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
         msg = replace_all(msg, "@foe_name@", you.your_name);
         msg = replace_all(msg, "@foe_species@", species_name(you.species));
-        msg = replace_all(msg, "@foe_genus@", foe_species);
-        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_species));
+        msg = replace_all(msg, "@foe_genus@", foe_genus);
+        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
         msg = replace_all(msg, "@foe_genus_plural@",
-                          pluralise(species_name(you.species, true)));
+                          pluralise(foe_genus));
     }
     else
     {
@@ -4059,13 +4059,11 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
         msg = replace_all(msg, "@foe_species@", species);
 
-        string genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
+        foe_genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
 
-        msg = replace_all(msg, "@foe_genus@", genus);
-        msg = replace_all(msg, "@Foe_genus@", uppercase_first(genus));
-        msg = replace_all(msg, "@foe_genus_plural@", pluralise(genus));
-
-        foe_species = genus;
+        msg = replace_all(msg, "@foe_genus@", foe_genus);
+        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
+        msg = replace_all(msg, "@foe_genus_plural@", pluralise(foe_genus));
     }
 
     description_level_type nocap = DESC_THE, cap = DESC_THE;
@@ -4254,11 +4252,11 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     if (msg.find("@species_insult_") != string::npos)
     {
         msg = replace_all(msg, "@species_insult_adj1@",
-                               _get_species_insult(foe_species, "adj1"));
+                               _get_species_insult(foe_genus, "adj1"));
         msg = replace_all(msg, "@species_insult_adj2@",
-                               _get_species_insult(foe_species, "adj2"));
+                               _get_species_insult(foe_genus, "adj2"));
         msg = replace_all(msg, "@species_insult_noun@",
-                               _get_species_insult(foe_species, "noun"));
+                               _get_species_insult(foe_genus, "noun"));
     }
 
     static const char * sound_list[] =

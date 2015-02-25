@@ -28,7 +28,13 @@ species_type get_species_by_abbrev(const char *abbrev);
 const char *get_species_abbrev(species_type which_species);
 
 // from player.cc
-string species_name(species_type speci, bool genus = false, bool adj = false);
+enum species_name_type
+{
+    SPNAME_PLAIN,
+    SPNAME_GENUS,
+    SPNAME_ADJ
+};
+string species_name(species_type speci, species_name_type spname = SPNAME_PLAIN);
 species_type str_to_species(const string &species);
 string species_walking_verb(species_type sp);
 
