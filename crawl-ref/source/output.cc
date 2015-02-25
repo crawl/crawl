@@ -2044,7 +2044,7 @@ static string _overview_screen_title(int sw)
 
     string species_job = make_stringf("(%s %s)",
                                       species_name(you.species).c_str(),
-                                      you.class_name.c_str());
+                                      get_job_name(you.char_class));
 
     handle_real_time();
     string time_turns = make_stringf(" Turns: %d, Time: ", you.num_turns)

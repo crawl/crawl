@@ -47,6 +47,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "mapmark.h"
 #include "misc.h"
 #if TAG_MAJOR_VERSION == 34
@@ -1293,7 +1294,7 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.species);
     marshallByte(th, you.char_class);
     marshallByte(th, you.experience_level);
-    marshallString2(th, you.class_name);
+    marshallString2(th, string(get_job_name(you.char_class)));
     marshallByte(th, you.religion);
     marshallString2(th, you.jiyva_second_name);
 
@@ -2062,7 +2063,7 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     you.species           = static_cast<species_type>(unmarshallUByte(th));
     you.char_class        = static_cast<job_type>(unmarshallUByte(th));
     you.experience_level  = unmarshallByte(th);
-    you.class_name        = unmarshallString2(th);
+    you.chr_class_name    = unmarshallString2(th);
     you.religion          = static_cast<god_type>(unmarshallUByte(th));
     you.jiyva_second_name = unmarshallString2(th);
 
@@ -2087,19 +2088,19 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 
     if (major > 32 || major == 32 && minor > 26)
     {
-        you.species_name = unmarshallString2(th);
-        you.god_name     = unmarshallString2(th);
+        you.chr_species_name = unmarshallString2(th);
+        you.chr_god_name     = unmarshallString2(th);
     }
     else
     {
         if (you.species >= 0 && you.species < (int)ARRAYSZ(old_species))
-            you.species_name = old_species[you.species];
+            you.chr_species_name = old_species[you.species];
         else
-            you.species_name = "Yak";
+            you.chr_species_name = "Yak";
         if (you.religion >= 0 && you.religion < (int)ARRAYSZ(old_gods))
-            you.god_name = old_gods[you.religion];
+            you.chr_god_name = old_gods[you.religion];
         else
-            you.god_name = "Marduk";
+            you.chr_god_name = "Marduk";
     }
 
     if (major > 34 || major == 34 && minor >= 29)

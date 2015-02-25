@@ -62,13 +62,21 @@ class player : public actor
 {
 public:
   // ---------------
+  // Character save chunk data:
+  // None of this is really necessary, except for some complicated
+  // hacks with player_save_info. Should only be used in tags.cc or
+  // player_save_info::operator=(player).
+  // ---------------
+  string chr_species_name;
+  string chr_class_name;
+  string chr_god_name;
+
+  // ---------------
   // Permanent data:
   // ---------------
   string your_name;
   species_type species;
-  string species_name;
   job_type char_class;
-  string class_name;
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
@@ -206,7 +214,6 @@ public:
   FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
-  string god_name;
   string jiyva_second_name;       // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking

@@ -5596,12 +5596,13 @@ void player::copy_from(const player &other)
 // player struct initialization
 void player::init()
 {
+    chr_god_name.clear();
+    chr_species_name.clear();
+    chr_class_name.clear();
     // Permanent data:
     your_name.clear();
     species          = SP_UNKNOWN;
-    species_name.clear();
     char_class       = JOB_UNKNOWN;
-    class_name.clear();
     type             = MONS_PLAYER;
     mid              = MID_PLAYER;
     position.reset();
@@ -5721,7 +5722,6 @@ void player::init()
 
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
-    god_name.clear();
     piety            = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
@@ -5888,10 +5888,10 @@ player_save_info& player_save_info::operator=(const player& rhs)
     experience_level = rhs.experience_level;
     wizard           = rhs.wizard;
     species          = rhs.species;
-    species_name     = rhs.species_name;
-    class_name       = rhs.class_name;
+    species_name     = rhs.chr_species_name;
+    class_name       = rhs.chr_class_name;
     religion         = rhs.religion;
-    god_name         = rhs.god_name;
+    god_name         = rhs.chr_god_name;
     jiyva_second_name= rhs.jiyva_second_name;
 
     // [ds] Perhaps we should move game type to player?
@@ -6948,7 +6948,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         return "Long-range teleportation is disallowed in Dungeon Sprint.";
 
     if (species == SP_FORMICID)
-        return pluralise(::species_name(species)) + " cannot teleport.";
+        return pluralise(species_name(species)) + " cannot teleport.";
 
     vector<string> problems;
 
