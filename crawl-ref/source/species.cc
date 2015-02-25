@@ -3,8 +3,9 @@
 
 #include "species.h"
 
-#include "stringutil.h"
+#include "mon-enum.h"
 #include "random.h"
+#include "stringutil.h"
 
 #include "species-data.h"
 
@@ -152,21 +153,18 @@ bool species_is_unbreathing(species_type species)
 
 bool species_can_swim(species_type species)
 {
-    return species == SP_OCTOPODE || species == SP_MERFOLK;
+    return _species_def(species).habitat == HT_WATER;
 }
 
 bool species_likes_water(species_type species)
 {
-    return species_can_swim(species) || species == SP_GREY_DRACONIAN;
+    return species_can_swim(species)
+           || _species_def(species).habitat == HT_AMPHIBIOUS;
 }
 
 bool species_likes_lava(species_type species)
 {
-#if TAG_MAJOR_VERSION == 34
-    return species == SP_LAVA_ORC;
-#else
-    return false;
-#endif
+    return _species_def(species).habitat == HT_AMPHIBIOUS_LAVA;
 }
 
 bool species_can_throw_large_rocks(species_type species)
