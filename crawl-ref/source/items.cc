@@ -3246,6 +3246,8 @@ void item_def::set_holding_monster(int midx)
     link = NON_ITEM + 1 + midx;
 }
 
+// Note: should not check menv, since it may be called by link_items() from
+// tags.cc before monsters are unmarshalled.
 bool item_def::held_by_monster() const
 {
     return pos.equals(-2, -2) && !invalid_monster_index(link - NON_ITEM - 1);
