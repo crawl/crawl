@@ -44,44 +44,10 @@ You can:
 - take part in the annual tournament
 - play the most recent development version
 
-The relevant webpage, telnet and ssh addresses are:
+A full list of available servers and information on how to connect to them can
+be found at: http://crawl.develz.org/wordpress/howto
 
-akrasiac.org (located in North America) (CAO)
-  :http: ``http://crawl.akrasiac.org``
-  :tiles: ``http://webtiles.akrasiac.org``
-  :telnet: ``crawl.akrasiac.org:23``
-  :ssh: ``joshua@crawl.akrasiac.org (ssh key or password joshua)``
-
-s-z.org (located in North America) (CSZO)
-  :http: ``http://dobrazupa.org``
-  :tiles: ``https://crawl.s-z.org``
-  :ssh: ``crawl@crawl.s-z.org (ssh key or password crawlingtotheusa)``
-
-berotato.org (located in North America) (CBRO)
-  :http: ``http://crawl.berotato.org/crawl/``
-  :tiles: ``http://crawl.berotato.org``
-  :ssh: ``crawler@crawl.berotato.org (ssh key required)``
-
-develz.org (located in Europe) (CDO)
-  :http: ``http://crawl.develz.org``
-  :telnet: ``crawl.develz.org:345``
-  :ssh: ``crawl@crawl.develz.org (ssh key required)``
-
-lantea.net (located in Europe) (CLAN)
-  :http: ``http://crawl.lantea.net/crawl/``
-  :tiles: ``https://crawl.lantea.net:8080``
-  :ssh: ``terminal@crawl.lantea.net (ssh key or password terminal)``
-
-An ssh key can be obtained at:
-
-  http://crawl.develz.org/cao_key (PuTTY: http://crawl.develz.org/cao_key.ppk) (for CAO, CDO, CLAN)
-
-  http://dobrazupa.org/cszo_key (PuTTY: http://dobrazupa.org/cszo_key.ppk) (for CSZO)
-
-  http://crawl.berotato.org/crawl/keys/ (PuTTY: cbro_key.ppk, unix: cbro_key) (for CBRO)
-
-The servers carry no guarantees, though they are generally always running. More
-information is available at: http://crawl.develz.org/wordpress/howto
+The servers carry no guarantees, though they are generally always running.
 
 There is also a lively IRC channel dedicated to Crawl at ##crawl on irc.freenode.net.
 You can ask for help and there will always be someone to watch your game and
@@ -180,16 +146,16 @@ m
   shows your skills and lets you disable (or focus) training as desired
 
 i
-  the equipment
+  lists equipment and items
 
 ^
-  the text for your god, should you have started with a religion
+  displays information on your god, should you have started with a religion
 
 %
-  a general, if terse, overview of your gear and most attributes
+  gives a general, if terse, overview of your gear and most attributes
 
 Ctrl-O
-  an overview of the parts of the dungeon you have discovered so far
+  gives an overview of the parts of the dungeon you have discovered so far
 
 ****************************************
 C. Attributes and stats
@@ -200,7 +166,7 @@ starts with the character's name and title (determined by the character's
 highest skill), followed by a line listing the species. If the character
 worships a god, the name of the deity is also listed in the second line,
 together with an indicator of piety. Below these two lines follow a lot of
-numbers. These describe different aspects of the hero.
+numbers. These describe different aspects of the character.
 
 Health
   A measure of life force. Synonymous with hit points and sometimes abbreviated
@@ -231,27 +197,26 @@ Shield
   Abbreviated to "SH". This number is a measure of how good your shield (if any)
   is at blocking attacks.
 
-Your hero's primary attributes are Strength, Intelligence and Dexterity:
+Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
-  Abbreviated to "Str". Affects your ability to use heavy armours effectively.
+  Abbreviated to "Str". Increases your effectiveness with melee and ranged
+  weapons. Affects your ability to use heavy armours and shields effectively.
 
 Intelligence
   Abbreviated to "Int". Affects how well you can cast spells as well as how much
   nutrition spellcasting takes.
 
 Dexterity
-  Abbreviated to "Dex". Significantly affects your ability to dodge attacks aimed
+  Abbreviated to "Dex". Somewhat increases your effectiveness with melee and
+  ranged weapons. Significantly affects your ability to dodge attacks aimed
   at you, your general effectiveness with shields, your stealth, and your
   effectiveness when stabbing unaware enemies.
 
-Strength and Dexterity also both increase your effectiveness with melee and ranged
-weapons.
+Attributes grow permanently from gaining levels, and may increase or decrease
+temporarily from mutations or while using certain artefacts or abilities.
 
-They grow permanently from gaining levels, and may increase or decrease
-temporarily from mutations or using appropriate artefacts or abilities.
-
-If any one of these drops to zero for some reason, you will experience very
+If any attribute drops to zero for some reason, you will experience very
 unpleasant side-effects, being slowed significantly and taking damage if the
 stat is drained further, as well as some stat-specific negative effects. These
 effects will persist for a short while even after the attribute is restored.
@@ -391,8 +356,7 @@ apparently nothing there, you will still attack it, just in case there's
 something invisible lurking around.
 
 A variety of dangerous and irritating traps are hidden around the dungeon. Traps
-sometimes like normal floor until discovered. Some traps can be disarmed with
-the Ctrl-direction commands.
+sometimes look like normal floor until discovered.
 
 Shops
 ========================================
@@ -663,7 +627,7 @@ g
   reassign item slot (works also for spell slots and abilities)
 
 i
-  shows inventory - pressing the key of an item shows additional information
+  show inventory - pressing the key of an item shows additional information
 
 {
   inscribe item (see Appendix `6. Inscriptions`_)
@@ -869,11 +833,11 @@ energies. Wands each have a certain amount of charges, and a wand will cease to
 function when its charges run out. You must identify a wand to find out how many
 uses it has left. This can be done with a scroll of identify; characters with a
 good Evocations skill may also deduce the number of charges simply upon evoking
-the wand. Wands are aimed in the same way as missile weapons, and you can
-release the power of a wand by evoking it with 'V'. See section I for
-targeting. There are also a number of wands that may be useful to aim at
-yourself, but it is usually prudent to know what you are evoking before you do
-so.
+the wand. Evoking a wand without having fully identified the number of charges
+remaining will waste some charges. Wands are aimed in the same way as missile
+weapons, and you can release the power of a wand by evoking it with 'V'. See
+section I for targeting. There are also a number of wands that may be useful to
+aim at yourself.
 
 =" Rings and Amulets
 ========================================
@@ -897,7 +861,7 @@ You can press '"' to quickly check what jewellery you're wearing.
 
 There are a number of types of magical staves. Some enhance your general
 spellcasting ability, while some greatly increase the power of a certain class
-of spells (and possibly reduce your effectiveness with others). They can even be
+of spells (and possibly reduce your effectiveness with others). Some can even be
 used in hand-to-hand combat, although with mediocre effectiveness unless you can
 harness their special power, using a combination of the Evocations skill and the
 skill specific to the staff's type. Staves which do not enhance a destructive
@@ -907,7 +871,8 @@ magic school tend to have no combat powers at all.
 ========================================
 
 Rods ('|') hold unique spells that you can evoke while wielding the rod,
-using the 'v' command. They have a pool of magical energy which regenerates
+using the 'v' command. The effectiveness of these spells is increased by
+Evocations skill. They have a pool of magical energy which regenerates
 according to the rod's enchantment (which can be increased using scrolls of
 recharging) and your Evocations skill. They're shorter than full-length staves
 and thus use the Maces &amp; Flails skill instead of Staves when used as cudgels.
@@ -917,12 +882,7 @@ and thus use the Maces &amp; Flails skill instead of Staves when used as cudgels
 
 Most books contain magical spells which your character may be able to learn. You
 can read a book with the 'r' command, which lets you access a description of
-each spell, or memorise spells from it with the 'M' command. Use 'z' to cast
-previously memorised spells. For spells demanding a target, the comments on
-using missile weapons apply. Many spells have a limited range and casting will
-be aborted if there are no potential targets within this range. If this case,
-neither magic nor time are expended. If, for whatever reason, you want to cast
-the spell nonetheless, you can use the 'Z' command.
+each spell, or memorise spells from it with the 'M' command.
 
 In addition to picking up new spells, your character may also wish to get rid of
 old ones. The most convenient way to do so is by reading a scroll of amnesia,
@@ -931,11 +891,6 @@ shortage of such scrolls, you can also forget a spell by tearing out the
 relevant pages of a book. Unfortunately, this violent procedure will inevitably
 consume the whole book. You can undertake this by 'r'eading a book, then
 selecting a spell you already have learnt, and 'F'orget it.
-
-You can also press 'I' to just have a look at all spells memorised. From this
-screen, you can read the descriptions of the spells and check various details
-about your casting abilities. Note that '=' allows you to change what spells are
-assigned to what keys.
 
 Some powerful spellbooks require a certain amount of magical skill to read their
 contents.
@@ -1041,13 +996,6 @@ Many of the more powerful spells carry disadvantages or risks; you should read
 the spell description (obtained by reading the spellbook in which you found the
 spell) before casting anything.
 
-There is a completely different way to use spells: via rods. These are magical
-staves holding their own unique spells. Rods store a certain number of magic
-points, which are used for powering the spells they contain; when not fully
-charged, they regenerate magic points gradually. You can spend scrolls of
-recharging on rods in order to increase the size of their magical reservoir.
-The effectiveness of your rod's spells is governed by your Evocations skill.
-
 Be careful of magic-using enemies! Some of them can use magic just as well as
 you, if not better, and often use it intelligently.
 
@@ -1103,10 +1051,10 @@ and if you find religion to be an inconvenience you can always renounce your
 faith (use the 'a' command - but most gods resent being scorned). There is also
 a second page with additional details, press '^!' to access it.
 
-The 'p' command lets you pray to your god, in order to sacrifice items. For
-example, blood gods will want you to offer corpses to them by pressing 'p' over
-the corpse(s). Praying also gives you a sense of what your god thinks of you.
-Some gods may grant a gift at their altar; if so, this is explained in the '^'
+The 'p' command lets you pray to your god. If your god asks appreciates corpse
+sacrifice, pressing 'p' over corpses will offer them to your god. Praying also
+gives you a sense of what your god thinks of you. Some gods may grant a gift
+when praying at their altar with high piety; if so, this is explained in the '^'
 and '^!' screens.
 
 To use any powers which your god deems you fit for, access the abilities menu
@@ -1125,7 +1073,7 @@ pressing '?/G'.
 Note that the good gods will not accept demonic or undead devotees.
 
 If you like to start the game with a religion, choose your background from
-Healer, Berserker, Chaos Knight, Abyssal Knight, or Death Knight.
+Berserker, Chaos Knight or Abyssal Knight.
 
 ****************************************
 K. Mutations
@@ -1931,20 +1879,9 @@ Berserkers
   prove worthy), but who forbids the use of spell magic. They enter the dungeon
   with a weapon of their choice, and dressed in animal skins.
 
-Healers
-  The Healer is a priest of Elyvilon. Healers begin with minor healing powers,
-  but can gain far greater abilities in the long run. They are able to persuade
-  monsters to abstain from bloodshed, gaining both piety and experience that
-  way.
-
 Chaos Knights
   The Chaos Knight is a plaything of Xom. Xom is a very unpredictable (and
   possibly psychotic) entity who rewards or punishes according to whim.
-
-Death Knights
-  The Death Knight is a fighter who aligns him or herself with the powers of
-  death and worships Yredelemnul the Dark, who grants followers the ability to
-  re-animate the dead and eventually many more powerful undead followers.
 
 Abyssal Knights
   The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
@@ -3163,9 +3100,6 @@ rXXX
 \-XXX
   signifies a suppressed ability
 
-XXX+
-  is a stronger version of property XXX
-
 XX+6
   means a boost to some numerical stat (similar with XX-2, etc.)
 
@@ -3192,6 +3126,9 @@ rF-
 rN+
   one level of negative energy resistance (life protection)
 
+MR++
+  two levels of magical resistance (resistance to hostile enchantments)
+
 rPois
   poison resistance
 
@@ -3215,9 +3152,6 @@ Int+3
 
 Slay+3
   accuracy &amp; damage modifier (to melee and ranged combat)
-
-MR
-  boost to magical resistance to hostile enchantments
 
 Stealth+
   stealth boost
