@@ -279,6 +279,6 @@ sub load_mods
     close $inf;
     for ("Experience", "Hit Points", "Magic Points")
     {
-        die "Can't find table: $_ in $modfile\n" unless $SPECIES_SKILLS{Spriggan}{$_};
+        #die "Can't find table: $_ in $modfile\n" unless $SPECIES_SKILLS{Spriggan}{$_};
     }
 }
