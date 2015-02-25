@@ -1429,11 +1429,10 @@ static void _generate_potion_item(item_def& item, int force_type,
                                             35, POT_LIGNIFY,
                                             34, POT_CANCELLATION,
                                             34, POT_AMBROSIA,
-                                            25, POT_DEGENERATION,
+                                            27, POT_DEGENERATION,
                                             23, POT_CURE_MUTATION,
                                             12, POT_BENEFICIAL_MUTATION,
                                              2, POT_EXPERIENCE,
-                                             2, POT_DECAY,
                                              0);
         }
         while (stype == POT_POISON && item_level < 1

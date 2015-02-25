@@ -678,7 +678,9 @@ const char* potion_type_name(int potiontype)
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
     case POT_DEGENERATION:      return "degeneration";
+#if TAG_MAJOR_VERSION == 34
     case POT_DECAY:             return "decay";
+#endif
     case POT_EXPERIENCE:        return "experience";
     case POT_MAGIC:             return "magic";
     case POT_RESTORE_ABILITIES: return "restore abilities";
@@ -2536,7 +2538,8 @@ void check_item_knowledge(bool unknown_items)
                  || j == POT_SLOWING
                  || j == POT_STRONG_POISON
                  || j == POT_BLOOD_COAGULATED
-                 || j == POT_PORRIDGE))
+                 || j == POT_PORRIDGE
+                 || j == POT_DECAY))
             {
                 continue;
             }
@@ -3284,8 +3287,10 @@ bool is_bad_item(const item_def &item, bool temp)
 #endif
         case POT_DEGENERATION:
             return true;
+#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
+#endif
         case POT_POISON:
             // Poison is not that bad if you're poison resistant.
             return player_res_poison(false) <= 0
@@ -3600,8 +3605,10 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         case POT_BLOOD:
             return you.species != SP_VAMPIRE;
+#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
+#endif
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
             return player_res_poison(false, temp) > 0;
