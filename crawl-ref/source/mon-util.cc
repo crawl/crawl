@@ -333,6 +333,10 @@ resists_t get_mons_class_resists(monster_type mc)
     const monsterentry *me = get_monster_data(mc);
     const resists_t resists = me ? me->resists
                                  : get_monster_data(MONS_PROGRAM_BUG)->resists;
+    // Don't apply fake holiness resists.
+    if (mons_is_sensed(mc))
+        return resists;
+
     // Assumes that, when a monster's holiness differs from other monsters
     // of the same type, that only adds resistances, never removes them.
     // Currently the only such case is MF_FAKE_UNDEAD.
