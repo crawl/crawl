@@ -1231,12 +1231,13 @@ void tag_read(reader &inf, tag_type tag_id)
         tag_read_level(th);
         EAT_CANARY;
         tag_read_level_items(th);
+        // We have to do this here because tag_read_level_monsters()
+        // might kill an elsewhere Ilsuiw follower, which ends up calling
+        // terrain.cc:_dgn_check_terrain_items, which checks mitm.
+        link_items();
         EAT_CANARY;
         tag_read_level_monsters(th);
         EAT_CANARY;
-        // We have to do this here because tag_read_level_tiles() can
-        // call into Lua, which can look at the items ...
-        link_items();
 #if TAG_MAJOR_VERSION == 34
         _add_missing_branches();
 #endif
