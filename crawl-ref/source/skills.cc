@@ -1335,7 +1335,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_SHORT_BLADES:
-            if (player_genus(GENPC_ELVEN, species) && skill_rank == 5)
+            if (species_is_elven(species) && skill_rank == 5)
             {
                 result = "Blademaster";
                 break;
@@ -1348,7 +1348,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_BOWS:
-            if (player_genus(GENPC_ELVEN, species) && skill_rank == 5)
+            if (species_is_elven(species) && skill_rank == 5)
             {
                 result = "Master Archer";
                 break;

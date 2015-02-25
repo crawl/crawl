@@ -3,15 +3,10 @@
 
 #include "enum.h"
 
-enum genus_type
-{
-    GENPC_DRACONIAN,
-    GENPC_ELVEN,
-    GENPC_ORCISH,
-    GENPC_NONE,
-};
+bool species_is_elven(species_type species);
+bool species_is_draconian(species_type species);
+bool species_is_orcish(species_type species);
 
-genus_type species_genus(species_type species);
 int species_has_claws(species_type species, bool mut_level = false);
 undead_state_type species_undead_type(species_type species) PURE;
 bool species_is_undead(species_type species);

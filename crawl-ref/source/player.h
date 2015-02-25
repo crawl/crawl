@@ -994,8 +994,6 @@ bool player_can_open_doors();
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
 
-bool player_genus(genus_type which_genus,
-                   species_type species = SP_UNKNOWN);
 bool is_player_same_genus(const monster_type mon);
 monster_type player_mons(bool transform = true);
 void update_player_symbol();

@@ -175,38 +175,19 @@ bool species_can_throw_large_rocks(species_type species)
            || species == SP_TROLL;
 }
 
-genus_type species_genus(species_type species)
+bool species_is_elven(species_type species)
 {
-    switch (species)
-    {
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:
-        return GENPC_DRACONIAN;
+    return bool(_species_def(species).flags & SPF_ELVEN);
+}
 
-    case SP_HIGH_ELF:
-    case SP_DEEP_ELF:
-#if TAG_MAJOR_VERSION == 34
-    case SP_SLUDGE_ELF:
-#endif
-        return GENPC_ELVEN;
+bool species_is_draconian(species_type species)
+{
+    return bool(_species_def(species).flags & SPF_DRACONIAN);
+}
 
-    case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-    case SP_LAVA_ORC:
-#endif
-        return GENPC_ORCISH;
-
-    default:
-        return GENPC_NONE;
-    }
+bool species_is_orcish(species_type species)
+{
+    return bool(_species_def(species).flags & SPF_ORCISH);
 }
 
 size_type species_size(species_type species, size_part_type psize)

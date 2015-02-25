@@ -679,7 +679,7 @@ public:
      */
     int get_ac_bonus() const
     {
-        if (player_genus(GENPC_DRACONIAN))
+        if (species_is_draconian(you.species))
             return 1000;
         return Form::get_ac_bonus();
     }

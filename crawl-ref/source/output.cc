@@ -2782,12 +2782,12 @@ static string _status_mut_abilities(int sw)
 
     // a bit more stuff
     if (you.species == SP_OGRE || you.species == SP_TROLL
-        || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
+        || species_is_draconian(you.species) || you.species == SP_SPRIGGAN)
     {
         mutations.emplace_back("unfitting armour");
     }
 
-    if (player_genus(GENPC_DRACONIAN))
+    if (species_is_draconian(you.species))
     {
         // The five extra points for grey draconians were handled above.
         AC_change += 4 + you.experience_level / 3;

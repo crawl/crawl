@@ -601,7 +601,7 @@ string help_highlighter::get_species_key() const
 {
     string result = species_name(you.species);
     // The table doesn't repeat the word "Draconian".
-    if (you.species != SP_BASE_DRACONIAN && player_genus(GENPC_DRACONIAN))
+    if (you.species != SP_BASE_DRACONIAN && species_is_draconian(you.species))
         strip_tag(result, "Draconian");
 
     result += "  ";

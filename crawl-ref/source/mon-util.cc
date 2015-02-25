@@ -742,7 +742,7 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_allows_beogh(const monster* mon)
 {
-    if (!player_genus(GENPC_ORCISH) || you_worship(GOD_BEOGH))
+    if (!species_is_orcish(you.species) || you_worship(GOD_BEOGH))
         return false; // no one else gives a damn
 
     return mons_genus(mon->type) == MONS_ORC
@@ -1102,7 +1102,7 @@ monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN
-        || (mc == MONS_PLAYER_ILLUSION && player_genus(GENPC_DRACONIAN)))
+        || (mc == MONS_PLAYER_ILLUSION && species_is_draconian(you.species)))
     {
         return MONS_DRACONIAN;
     }
