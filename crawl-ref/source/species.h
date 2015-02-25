@@ -6,6 +6,8 @@
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);
 bool species_is_orcish(species_type species);
+bool species_has_hair(species_type species);
+bool species_can_throw_large_rocks(species_type species);
 
 int species_has_claws(species_type species, bool mut_level = false);
 undead_state_type species_undead_type(species_type species) PURE;
@@ -14,7 +16,6 @@ bool species_is_unbreathing(species_type species);
 bool species_can_swim(species_type species);
 bool species_likes_water(species_type species);
 bool species_likes_lava(species_type species);
-bool species_can_throw_large_rocks(species_type species);
 size_type species_size(species_type species,
                        size_part_type psize = PSIZE_TORSO);
 

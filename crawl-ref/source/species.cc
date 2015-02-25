@@ -171,8 +171,7 @@ bool species_likes_lava(species_type species)
 
 bool species_can_throw_large_rocks(species_type species)
 {
-    return species == SP_OGRE
-           || species == SP_TROLL;
+    return species_size(species) >= SIZE_LARGE;
 }
 
 bool species_is_elven(species_type species)
@@ -188,6 +187,11 @@ bool species_is_draconian(species_type species)
 bool species_is_orcish(species_type species)
 {
     return bool(_species_def(species).flags & SPF_ORCISH);
+}
+
+bool species_has_hair(species_type species)
+{
+    return !bool(_species_def(species).flags & (SPF_NO_HAIR | SPF_DRACONIAN));
 }
 
 size_type species_size(species_type species, size_part_type psize)
