@@ -3597,7 +3597,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     else if (player_mutation_level(MUT_SPIT_POISON))
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
 
-    if (player_genus(GENPC_DRACONIAN))
+    if (species_is_draconian(you.species))
     {
         ability_type ability = ABIL_NON_ABILITY;
         switch (you.species)

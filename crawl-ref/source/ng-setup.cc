@@ -330,7 +330,7 @@ void give_basic_mutations(species_type speci)
     you.mutation[MUT_UNBREATHING] = species_is_unbreathing(speci);
 
     // Necessary mostly for wizmode race changing.
-    you.mutation[MUT_COLD_BLOODED] = species_genus(speci) == GENPC_DRACONIAN;
+    you.mutation[MUT_COLD_BLOODED] = species_is_draconian(speci);
 
     // Starting mutations are unremovable.
     for (int i = 0; i < NUM_MUTATIONS; ++i)
@@ -524,7 +524,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         _update_weapon(ng);
 
-        if (player_genus(GENPC_DRACONIAN))
+        if (species_is_draconian(you.species))
         {
             newgame_make_item(1, EQ_GLOVES, OBJ_ARMOUR, ARM_GLOVES);
             newgame_make_item(3, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS);
@@ -958,7 +958,7 @@ static void _give_starting_food()
     else
     {
         item.base_type = OBJ_FOOD;
-        if (player_genus(GENPC_ORCISH) || you.species == SP_KOBOLD
+        if (species_is_orcish(you.species) || you.species == SP_KOBOLD
             || you.species == SP_OGRE || you.species == SP_TROLL
             || you.species == SP_FELID)
         {

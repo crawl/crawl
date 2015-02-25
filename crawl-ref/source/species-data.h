@@ -1,9 +1,19 @@
+enum species_flag
+{
+    SPF_NONE      = 0,
+    SPF_ELVEN     = 1 << 0, /// If this species counts as an elf
+    SPF_DRACONIAN = 1 << 1, /// If this is a draconian subspecies
+    SPF_ORCISH    = 1 << 2, /// If this species is a kind of orc
+};
+DEF_BITFIELD(species_flags, species_flag);
+
 struct species_def
 {
     const char* abbrev; ///< Two-letter abbreviation for the species.
     const char* name; ///< Main name for the species.
     const char* adj_name; ///< Adjectival form of name; if null, use name.
     const char* genus_name; ///< Genus name; if null, use name.
+    species_flags flags; ///< Miscellaneous flags.
     int xp_mod; ///< Experience level modifier of the species.
     int hp_mod; ///< HP modifier (in tenths).
     int mp_mod; ///< MP modifier (in tenths).
@@ -16,6 +26,7 @@ static const map<species_type, species_def> species_data =
 { SP_CENTAUR, {
     "Ce",
     "Centaur", nullptr, nullptr,
+    SPF_NONE,
     -1, 1, -1,
     MONS_CENTAUR,
 } },
@@ -23,20 +34,23 @@ static const map<species_type, species_def> species_data =
 { SP_DEEP_DWARF, {
     "DD",
     "Deep Dwarf", "Dwarven", "Dwarf",
-    -1, 2, 0,
+    SPF_NONE,
+     -1, 2, 0,
     MONS_DEEP_DWARF,
 } },
 
 { SP_DEEP_ELF, {
     "DE",
     "Deep Elf", "Elven", "Elf",
-    -1, -2, 3,
+    SPF_ELVEN,
+     -1, -2, 3,
     MONS_ELF,
 } },
 
 { SP_DEMIGOD, {
     "Dg",
     "Demigod", "Divine", nullptr,
+    SPF_NONE,
     -2, 1, 2,
     MONS_DEMIGOD,
 } },
@@ -45,6 +59,7 @@ static const map<species_type, species_def> species_data =
 { SP_BASE_DRACONIAN, {
     "Dr",
     "Draconian", nullptr, nullptr,
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_DRACONIAN,
 } },
@@ -52,6 +67,7 @@ static const map<species_type, species_def> species_data =
 { SP_RED_DRACONIAN, {
     "Dr",
     "Red Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_RED_DRACONIAN,
 } },
@@ -59,6 +75,7 @@ static const map<species_type, species_def> species_data =
 { SP_WHITE_DRACONIAN, {
     "Dr",
     "White Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_WHITE_DRACONIAN,
 } },
@@ -66,6 +83,7 @@ static const map<species_type, species_def> species_data =
 { SP_GREEN_DRACONIAN, {
     "Dr",
     "Green Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_GREEN_DRACONIAN,
 } },
@@ -73,6 +91,7 @@ static const map<species_type, species_def> species_data =
 { SP_YELLOW_DRACONIAN, {
     "Dr",
     "Yellow Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_YELLOW_DRACONIAN,
 } },
@@ -80,6 +99,7 @@ static const map<species_type, species_def> species_data =
 { SP_GREY_DRACONIAN, {
     "Dr",
     "Grey Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_GREY_DRACONIAN,
 } },
@@ -87,6 +107,7 @@ static const map<species_type, species_def> species_data =
 { SP_BLACK_DRACONIAN, {
     "Dr",
     "Black Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_BLACK_DRACONIAN,
 } },
@@ -94,6 +115,7 @@ static const map<species_type, species_def> species_data =
 { SP_PURPLE_DRACONIAN, {
     "Dr",
     "Purple Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_PURPLE_DRACONIAN,
 } },
@@ -101,6 +123,7 @@ static const map<species_type, species_def> species_data =
 { SP_MOTTLED_DRACONIAN, {
     "Dr",
     "Mottled Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_MOTTLED_DRACONIAN,
 } },
@@ -108,6 +131,7 @@ static const map<species_type, species_def> species_data =
 { SP_PALE_DRACONIAN, {
     "Dr",
     "Pale Draconian", "Draconian", "Draconian",
+    SPF_DRACONIAN,
     -1, 1, 0,
     MONS_PALE_DRACONIAN,
 } },
@@ -115,6 +139,7 @@ static const map<species_type, species_def> species_data =
 { SP_DEMONSPAWN, {
     "Ds",
     "Demonspawn", "Demonic", nullptr,
+    SPF_NONE,
     -1, 0, 0,
     MONS_DEMONSPAWN,
 } },
@@ -122,6 +147,7 @@ static const map<species_type, species_def> species_data =
 { SP_FELID, {
     "Fe",
     "Felid", "Feline", "Cat",
+    SPF_NONE,
     -1, -4, 2,
     MONS_FELID,
 } },
@@ -129,6 +155,7 @@ static const map<species_type, species_def> species_data =
 { SP_FORMICID, {
     "Fo",
     "Formicid", nullptr, "Ant",
+    SPF_NONE,
     1, 0, 1,
     MONS_FORMICID,
 } },
@@ -136,6 +163,7 @@ static const map<species_type, species_def> species_data =
 { SP_GHOUL, {
     "Gh",
     "Ghoul", "Ghoulish", nullptr,
+    SPF_NONE,
     0, 1, -1,
     MONS_GHOUL,
 } },
@@ -143,6 +171,7 @@ static const map<species_type, species_def> species_data =
 { SP_GARGOYLE, {
     "Gr",
     "Gargoyle", nullptr, nullptr,
+    SPF_NONE,
     0, -2, 0,
     MONS_GARGOYLE,
 } },
@@ -150,6 +179,7 @@ static const map<species_type, species_def> species_data =
 { SP_HALFLING, {
     "Ha",
     "Halfling", nullptr, nullptr,
+    SPF_NONE,
     1, -1, 0,
     MONS_HALFLING,
 } },
@@ -157,6 +187,7 @@ static const map<species_type, species_def> species_data =
 { SP_HIGH_ELF, {
     "HE",
     "High Elf", "Elven", "Elf",
+    SPF_ELVEN,
     -1, -1, 2,
     MONS_ELF,
 } },
@@ -164,6 +195,7 @@ static const map<species_type, species_def> species_data =
 { SP_HILL_ORC, {
     "HO",
     "Hill Orc", "Orcish", "Orc",
+    SPF_ORCISH,
     0, 1, 0,
     MONS_ORC,
 } },
@@ -171,6 +203,7 @@ static const map<species_type, species_def> species_data =
 { SP_HUMAN, {
     "Hu",
     "Human", nullptr, nullptr,
+    SPF_NONE,
     1, 0, 0,
     MONS_HUMAN,
 } },
@@ -178,6 +211,7 @@ static const map<species_type, species_def> species_data =
 { SP_KOBOLD, {
     "Ko",
     "Kobold", nullptr, nullptr,
+    SPF_NONE,
     1, -2, 0,
     MONS_KOBOLD,
 } },
@@ -185,6 +219,7 @@ static const map<species_type, species_def> species_data =
 { SP_MERFOLK, {
     "Mf",
     "Merfolk", "Merfolkian", nullptr,
+    SPF_NONE,
     0, 0, 0,
     MONS_MERFOLK,
 } },
@@ -192,6 +227,7 @@ static const map<species_type, species_def> species_data =
 { SP_MINOTAUR, {
     "Mi",
     "Minotaur", nullptr, nullptr,
+    SPF_NONE,
     -1, 1, -2,
     MONS_MINOTAUR,
 } },
@@ -199,6 +235,7 @@ static const map<species_type, species_def> species_data =
 { SP_MUMMY, {
     "Mu",
     "Mummy", nullptr, nullptr,
+    SPF_NONE,
     -1, 0, 0,
     MONS_MUMMY,
 } },
@@ -206,6 +243,7 @@ static const map<species_type, species_def> species_data =
 { SP_NAGA, {
     "Na",
     "Naga", nullptr, nullptr,
+    SPF_NONE,
     0, 2, 0,
     MONS_NAGA,
 } },
@@ -213,6 +251,7 @@ static const map<species_type, species_def> species_data =
 { SP_OGRE, {
     "Og",
     "Ogre", "Ogreish", nullptr,
+    SPF_NONE,
     0, 3, 0,
     MONS_OGRE,
 } },
@@ -220,6 +259,7 @@ static const map<species_type, species_def> species_data =
 { SP_OCTOPODE, {
     "Op",
     "Octopode", "Octopoid", "Octopus",
+    SPF_NONE,
     0, -1, 0,
     MONS_OCTOPODE,
 } },
@@ -227,6 +267,7 @@ static const map<species_type, species_def> species_data =
 { SP_SPRIGGAN, {
     "Sp",
     "Spriggan", nullptr, nullptr,
+    SPF_NONE,
     -1, -3, 3,
     MONS_SPRIGGAN,
 } },
@@ -234,6 +275,7 @@ static const map<species_type, species_def> species_data =
 { SP_TENGU, {
     "Te",
     "Tengu", nullptr, nullptr,
+    SPF_NONE,
     0, -2, 1,
     MONS_TENGU,
 } },
@@ -241,6 +283,7 @@ static const map<species_type, species_def> species_data =
 { SP_TROLL, {
     "Tr",
     "Troll", "Trollish", nullptr,
+    SPF_NONE,
     -1, 3, -2,
     MONS_TROLL,
 } },
@@ -248,6 +291,7 @@ static const map<species_type, species_def> species_data =
 { SP_VAMPIRE, {
     "Vp",
     "Vampire", "Vampiric", nullptr,
+    SPF_NONE,
     -1, 0, 0,
     MONS_VAMPIRE,
 } },
@@ -255,6 +299,7 @@ static const map<species_type, species_def> species_data =
 { SP_VINE_STALKER, {
     "VS",
     "Vine Stalker", "Vine", "Vine",
+    SPF_NONE,
     0, -3, 1,
     MONS_VINE_STALKER,
 } },
@@ -262,6 +307,7 @@ static const map<species_type, species_def> species_data =
 { SP_SLUDGE_ELF, {
     "SE",
     "Sludge Elf", "Elven", "Elf",
+    SPF_ELVEN,
     0, -1, 1,
     MONS_ELF,
 } },
@@ -269,6 +315,7 @@ static const map<species_type, species_def> species_data =
 { SP_LAVA_ORC, {
     "LO",
     "Lava Orc", "Orcish", "Orc",
+    SPF_ORCISH,
     -1, 1, 0,
     MONS_LAVA_ORC,
 } },
@@ -276,6 +323,7 @@ static const map<species_type, species_def> species_data =
 { SP_DJINNI, {
     "Dj",
     "Djinni", "Djinn", nullptr,
+    SPF_NONE,
     -1, -1, 0,
     MONS_DJINNI,
 } },

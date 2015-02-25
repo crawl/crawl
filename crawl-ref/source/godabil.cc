@@ -5771,7 +5771,7 @@ static int _get_sacrifice_piety(ability_type sac)
                 piety_gain += 20;
             else if (you.species == SP_OCTOPODE
                     || you.species == SP_FELID
-                    || player_genus(GENPC_DRACONIAN))
+                    || species_is_draconian(you.species))
             {
                 piety_gain += 28; // this sacrifice is worse for these races
             }

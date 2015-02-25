@@ -632,7 +632,7 @@ string describe_mutations(bool center_title)
         }
     }
 
-    if (player_genus(GENPC_DRACONIAN))
+    if (species_is_draconian(you.species))
     {
         // Draconians are large for the purposes of armour, but only medium for
         // weapons and carrying capacity.
@@ -1212,7 +1212,7 @@ static int _body_covered()
     if (you.species == SP_NAGA)
         covered++;
 
-    if (player_genus(GENPC_DRACONIAN))
+    if (species_is_draconian(you.species))
         covered += 3;
 
     for (mutation_type scale : _all_scales)
@@ -1239,7 +1239,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Only Nagas and Draconians can get this one.
-    if (you.species != SP_NAGA && !player_genus(GENPC_DRACONIAN)
+    if (you.species != SP_NAGA && !species_is_draconian(you.species)
         && mutat == MUT_STINGER)
     {
         return true;
@@ -1281,7 +1281,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
 
     // Only Draconians (and gargoyles) can get wings.
-    if (!player_genus(GENPC_DRACONIAN) && you.species != SP_GARGOYLE
+    if (!species_is_draconian(you.species) && you.species != SP_GARGOYLE
         && mutat == MUT_BIG_WINGS)
     {
         return true;

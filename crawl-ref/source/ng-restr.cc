@@ -805,7 +805,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     ASSERT_RANGE(ng.species, 0, NUM_SPECIES);
     ASSERT_RANGE(ng.job, 0, NUM_JOBS);
     ASSERT(ng.species == SP_BASE_DRACONIAN
-           || species_genus(ng.species) != GENPC_DRACONIAN);
+           || !species_is_draconian(ng.species));
     switch (wpn)
     {
     case WPN_UNARMED:

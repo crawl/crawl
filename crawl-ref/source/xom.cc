@@ -2396,7 +2396,7 @@ static void _xom_zero_miscast()
 
     if (in_view[DNGN_ORCISH_IDOL])
     {
-        if (player_genus(GENPC_ORCISH))
+        if (species_is_orcish(you.species))
             priority.emplace_back("The idol of Beogh turns to glare at you.");
         else
             priority.emplace_back("The orcish idol turns to glare at you.");
@@ -2523,9 +2523,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (!player_genus(GENPC_DRACONIAN)
-        && you.species != SP_MUMMY && you.species != SP_OCTOPODE
-        && !form_changed_physiology())
+    if (you_have_hair())
     {
         messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
         messages.emplace_back("Your eyebrows wriggle.");

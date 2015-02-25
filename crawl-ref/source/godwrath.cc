@@ -1805,7 +1805,7 @@ void beogh_idol_revenge()
     // Beogh watches his charges closely, but for others doesn't always
     // notice.
     if (!you_worship(GOD_BEOGH)
-        && (!player_genus(GENPC_ORCISH) || coinflip())
+        && (!species_is_orcish(you.species) || coinflip())
         && x_chance_in_y(2, 3))
     {
         return;
@@ -1815,7 +1815,7 @@ void beogh_idol_revenge()
 
     if (you_worship(GOD_BEOGH))
         revenge = _get_beogh_speech("idol follower").c_str();
-    else if (player_genus(GENPC_ORCISH))
+    else if (species_is_orcish(you.species))
         revenge = _get_beogh_speech("idol orc").c_str();
     else
         revenge = _get_beogh_speech("idol other").c_str();

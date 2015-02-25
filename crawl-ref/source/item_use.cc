@@ -469,7 +469,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (player_genus(GENPC_DRACONIAN) && slot == EQ_BODY_ARMOUR)
+    if (species_is_draconian(you.species) && slot == EQ_BODY_ARMOUR)
     {
         if (verbose)
         {
@@ -692,7 +692,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 return false;
             }
 
-            if (player_genus(GENPC_DRACONIAN))
+            if (species_is_draconian(you.species))
             {
                 if (verbose)
                     mpr("You can't wear that with your reptilian head.");

@@ -588,15 +588,6 @@ bool player_can_open_doors()
     return you.form != TRAN_BAT;
 }
 
-// TODO: get rid of this.
-bool player_genus(genus_type which_genus, species_type species)
-{
-    if (species == SP_UNKNOWN)
-        species = you.species;
-
-    return species_genus(species) == which_genus;
-}
-
 // If transform is true, compare with current transformation instead
 // of (or in addition to) underlying species.
 // (See mon-data.h for species/genus use.)
@@ -766,7 +757,7 @@ bool you_can_wear(int eq, bool special_armour)
 
     case EQ_BODY_ARMOUR:
         // weird races (& draconians) can't wear body armour
-        if (player_genus(GENPC_DRACONIAN)
+        if (species_is_draconian(you.species)
             || you.species == SP_FELID
             || you.species == SP_OCTOPODE)
         {
@@ -817,7 +808,7 @@ bool you_can_wear(int eq, bool special_armour)
             || you.species == SP_SPRIGGAN
             || you.species == SP_OGRE
             || you.species == SP_OCTOPODE
-            || player_genus(GENPC_DRACONIAN))
+            || species_is_draconian(you.species))
         {
             return false;
         }
@@ -3561,7 +3552,7 @@ void adjust_level(int diff, bool just_xp)
  */
 static int _species_stealth_mod()
 {
-    if (player_genus(GENPC_DRACONIAN))
+    if (species_is_draconian(you.species))
         return 12;
 
     switch (you.species)
@@ -6506,7 +6497,7 @@ int player::armour_class(bool /*calc_unid*/) const
     AC += get_form()->get_ac_bonus();
 
     // drac scales suppressed in all serious forms, except dragon
-    if (player_genus(GENPC_DRACONIAN)
+    if (species_is_draconian(you.species)
         && (!player_is_shapechanged() || form == TRAN_DRAGON))
     {
         AC += 400 + 100 * (experience_level / 3);  // max 13
@@ -7557,7 +7548,7 @@ int player::has_tail(bool allow_tran) const
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
-    if (player_genus(GENPC_DRACONIAN)
+    if (species_is_draconian(you.species)
         || fishtail
         || player_mutation_level(MUT_STINGER, allow_tran))
     {

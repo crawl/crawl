@@ -646,7 +646,7 @@ string player::arm_name(bool plural, bool *can_plural) const
     string adj;
     string str = "arm";
 
-    if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
+    if (species_is_draconian(you.species) || species == SP_NAGA)
         adj = "scaled";
     else if (species == SP_TENGU)
         adj = "feathered";
