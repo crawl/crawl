@@ -1250,7 +1250,7 @@ bool monster::pickup(item_def &item, int slot, int near)
 
     inv[slot] = item_index;
 
-    item.set_holding_monster(mindex());
+    item.set_holding_monster(*this);
 
     pickup_message(item, near);
     equip(item, slot, near);
@@ -6582,7 +6582,7 @@ void monster::steal_item_from_player()
             unlink_item(idx);
 
             inv[MSLOT_GOLD] = idx;
-            new_item.set_holding_monster(mindex());
+            new_item.set_holding_monster(*this);
         }
         mitm[inv[MSLOT_GOLD]].flags |= ISFLAG_THROWN;
         mprf("%s steals %s your gold!",
@@ -6664,7 +6664,7 @@ item_def* monster::take_item(int steal_what, int mslot)
 
     unlink_item(index);
     inv[mslot] = index;
-    new_item.set_holding_monster(mindex());
+    new_item.set_holding_monster(*this);
 
     equip(new_item, mslot, true);
 
