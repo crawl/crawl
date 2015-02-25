@@ -351,136 +351,17 @@ string species_prayer_action(species_type species)
 
 int species_exp_modifier(species_type species)
 {
-    switch (species) // table: Experience
-    {
-    case SP_HUMAN:
-    case SP_HALFLING:
-    case SP_KOBOLD:
-    case SP_FORMICID:
-        return 1;
-    case SP_HILL_ORC:
-    case SP_OGRE:
-#if TAG_MAJOR_VERSION == 34
-    case SP_SLUDGE_ELF:
-#endif
-    case SP_NAGA:
-    case SP_GHOUL:
-    case SP_MERFOLK:
-    case SP_OCTOPODE:
-    case SP_TENGU:
-    case SP_GARGOYLE:
-    case SP_VINE_STALKER:
+    if (species == SP_UNKNOWN)
         return 0;
-    case SP_SPRIGGAN:
-    case SP_DEEP_DWARF:
-    case SP_MINOTAUR:
-    case SP_BASE_DRACONIAN:
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_DEEP_ELF:
-    case SP_CENTAUR:
-    case SP_MUMMY:
-    case SP_FELID:
-    case SP_HIGH_ELF:
-    case SP_VAMPIRE:
-    case SP_TROLL:
-    case SP_DEMONSPAWN:
-#if TAG_MAJOR_VERSION == 34
-    case SP_DJINNI:
-    case SP_LAVA_ORC:
-        return -1;
-#endif
-    case SP_DEMIGOD:
-        return -2;
-    default:
-        return 0;
-    }
+    return _species_def(species).xp_mod;
 }
 
 int species_hp_modifier(species_type species)
 {
-    switch (species) // table: Hit Points
-    {
-    case SP_FELID:
-        return -4;
-    case SP_SPRIGGAN:
-    case SP_VINE_STALKER:
-        return -3;
-    case SP_DEEP_ELF:
-    case SP_TENGU:
-    case SP_KOBOLD:
-    case SP_GARGOYLE:
-        return -2;
-    case SP_HIGH_ELF:
-#if TAG_MAJOR_VERSION == 34
-    case SP_SLUDGE_ELF:
-    case SP_DJINNI:
-#endif
-    case SP_HALFLING:
-    case SP_OCTOPODE:
-        return -1;
-    default:
-        return 0;
-    case SP_CENTAUR:
-    case SP_DEMIGOD:
-    case SP_BASE_DRACONIAN:
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_GHOUL:
-    case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-    case SP_LAVA_ORC:
-#endif
-    case SP_MINOTAUR:
-        return 1;
-    case SP_DEEP_DWARF:
-    case SP_NAGA:
-        return 2;
-    case SP_OGRE:
-    case SP_TROLL:
-        return 3;
-    }
+    return _species_def(species).hp_mod;
 }
 
 int species_mp_modifier(species_type species)
 {
-    switch (species) // table: Magic Points
-    {
-    case SP_TROLL:
-    case SP_MINOTAUR:
-        return -2;
-    case SP_CENTAUR:
-    case SP_GHOUL:
-        return -1;
-    default:
-        return 0;
-#if TAG_MAJOR_VERSION == 34
-    case SP_SLUDGE_ELF:
-#endif
-    case SP_TENGU:
-    case SP_VINE_STALKER:
-    case SP_FORMICID:
-        return 1;
-    case SP_FELID:
-    case SP_HIGH_ELF:
-    case SP_DEMIGOD:
-        return 2;
-    case SP_DEEP_ELF:
-    case SP_SPRIGGAN:
-        return 3;
-    }
+    return _species_def(species).mp_mod;
 }
