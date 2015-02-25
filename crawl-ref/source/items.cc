@@ -486,7 +486,7 @@ void unlink_item(int dest)
     }
     // Unlinking a newly created item, or a a temporary one, or an item in
     // the player's inventory.
-    else if (mitm[dest].pos.origin() || mitm[dest].pos.equals(-1, -1))
+    else if (mitm[dest].pos.origin() || mitm[dest].pos == ITEM_IN_INVENTORY)
     {
         mitm[dest].pos.reset();
         mitm[dest].link = NON_ITEM;
@@ -2254,7 +2254,7 @@ coord_def item_pos(const item_def &item)
         else
             die("item held by an invalid monster");
     }
-    else if (pos.equals(-1, -1))
+    else if (pos == ITEM_IN_INVENTORY)
         pos = you.pos();
     return pos;
 }
@@ -4530,7 +4530,7 @@ item_info get_item_info(const item_def& item)
     {
         ii.link = item.link;
         ii.slot = item.slot;
-        ii.pos = coord_def(-1, -1);
+        ii.pos = ITEM_IN_INVENTORY;
     }
     else
         ii.pos = item.pos;
