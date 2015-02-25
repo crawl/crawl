@@ -2248,10 +2248,12 @@ coord_def item_pos(const item_def &item)
 {
     coord_def pos = item.pos;
     if (pos == ITEM_IN_MONSTER_INVENTORY)
+    {
         if (const monster *mon = item.holding_monster())
             pos = mon->pos();
         else
             die("item held by an invalid monster");
+    }
     else if (pos.equals(-1, -1))
         pos = you.pos();
     return pos;
