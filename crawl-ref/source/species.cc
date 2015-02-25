@@ -12,15 +12,13 @@
 
 static const species_def& _species_def(species_type species)
 {
-    ASSERT_RANGE(species, 0, NUM_SPECIES);
+    if (species != SP_UNKNOWN)
+        ASSERT_RANGE(species, 0, NUM_SPECIES);
     return species_data.at(species);
 }
 
 const char *get_species_abbrev(species_type which_species)
 {
-    if (which_species == SP_UNKNOWN)
-        return "Ya";
-
     return _species_def(which_species).abbrev;
 }
 
@@ -60,8 +58,6 @@ species_type str_to_species(const string &species)
  */
 string species_name(species_type speci, species_name_type spname_type)
 {
-    if (speci == SP_UNKNOWN)
-        return "Yak";
     const species_def& def = _species_def(speci);
     if (spname_type == SPNAME_GENUS && def.genus_name)
         return def.genus_name;
@@ -220,8 +216,6 @@ string species_prayer_action(species_type species)
 
 int species_exp_modifier(species_type species)
 {
-    if (species == SP_UNKNOWN)
-        return 0;
     return _species_def(species).xp_mod;
 }
 
