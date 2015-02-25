@@ -55,116 +55,23 @@ species_type str_to_species(const string &species)
     return SP_UNKNOWN;
 }
 
+/**
+ * Return the name of the given species.
+ * @param speci       the species to be named.
+ * @param spname_type the kind of name to get: adjectival, the genus, or plain.
+ * @returns the requested name, which will just be plain if no adjective
+ *          or genus is defined.
+ */
 string species_name(species_type speci, species_name_type spname_type)
 {
-    const bool adj = spname_type == SPNAME_ADJ;
-    const bool genus = spname_type == SPNAME_GENUS;
-    string res;
-
-    switch (species_genus(speci))
-    {
-    case GENPC_DRACONIAN:
-        if (adj || genus)  // adj doesn't care about exact species
-            res = "Draconian";
-        else
-        {
-            switch (speci)
-            {
-            case SP_RED_DRACONIAN:     res = "Red Draconian";     break;
-            case SP_WHITE_DRACONIAN:   res = "White Draconian";   break;
-            case SP_GREEN_DRACONIAN:   res = "Green Draconian";   break;
-            case SP_YELLOW_DRACONIAN:  res = "Yellow Draconian";  break;
-            case SP_GREY_DRACONIAN:    res = "Grey Draconian";    break;
-            case SP_BLACK_DRACONIAN:   res = "Black Draconian";   break;
-            case SP_PURPLE_DRACONIAN:  res = "Purple Draconian";  break;
-            case SP_MOTTLED_DRACONIAN: res = "Mottled Draconian"; break;
-            case SP_PALE_DRACONIAN:    res = "Pale Draconian";    break;
-
-            case SP_BASE_DRACONIAN:
-            default:
-                res = "Draconian";
-                break;
-            }
-        }
-        break;
-    case GENPC_ELVEN:
-        if (adj)  // doesn't care about species/genus
-            res = "Elven";
-        else if (genus)
-            res = "Elf";
-        else
-        {
-            switch (speci)
-            {
-            case SP_HIGH_ELF:   res = "High Elf";   break;
-            case SP_DEEP_ELF:   res = "Deep Elf";   break;
-#if TAG_MAJOR_VERSION == 34
-            case SP_SLUDGE_ELF: res = "Sludge Elf"; break;
-#endif
-            default:            res = "Elf";        break;
-            }
-        }
-        break;
-    case GENPC_ORCISH:
-        if (adj)  // doesn't care about species/genus
-            res = "Orcish";
-        else if (genus)
-            res = "Orc";
-        else
-        {
-            switch (speci)
-            {
-            case SP_HILL_ORC: res = "Hill Orc"; break;
-#if TAG_MAJOR_VERSION == 34
-            case SP_LAVA_ORC: res = "Lava Orc"; break;
-#endif
-            default:          res = "Orc";      break;
-            }
-        }
-        break;
-    case GENPC_NONE:
-    default:
-        switch (speci)
-        {
-        case SP_HUMAN:    res = "Human";    break;
-        case SP_HALFLING: res = "Halfling"; break;
-        case SP_KOBOLD:   res = "Kobold";   break;
-        case SP_MUMMY:    res = "Mummy";    break;
-        case SP_NAGA:     res = "Naga";     break;
-        case SP_CENTAUR:  res = "Centaur";  break;
-        case SP_SPRIGGAN: res = "Spriggan"; break;
-        case SP_MINOTAUR: res = "Minotaur"; break;
-        case SP_TENGU:    res = "Tengu";    break;
-        case SP_GARGOYLE: res = "Gargoyle"; break;
-        case SP_FORMICID: res = "Formicid"; break;
-
-        case SP_VINE_STALKER:
-            res = (adj ? "Vine" : genus ? "Vine" : "Vine Stalker");
-            break;
-        case SP_DEEP_DWARF:
-            res = (adj ? "Dwarven" : genus ? "Dwarf" : "Deep Dwarf");
-            break;
-        case SP_FELID:
-            res = (adj ? "Feline" : genus ? "Cat" : "Felid");
-            break;
-        case SP_OCTOPODE:
-            res = (adj ? "Octopoid" : genus ? "Octopus" : "Octopode");
-            break;
-
-        case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");       break;
-        case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");      break;
-        case SP_DEMIGOD:    res = (adj ? "Divine"     : "Demigod");    break;
-        case SP_DEMONSPAWN: res = (adj ? "Demonic"    : "Demonspawn"); break;
-        case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
-        case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
-        case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
-#if TAG_MAJOR_VERSION == 34
-        case SP_DJINNI:     res = (adj ? "Djinn"      : "Djinni");     break;
-#endif
-        default:            res = (adj ? "Yakish"     : "Yak");        break;
-        }
-    }
-    return res;
+    if (speci == SP_UNKNOWN)
+        return "Yak";
+    const species_def& def = _species_def(speci);
+    if (spname_type == SPNAME_GENUS && def.genus_name)
+        return def.genus_name;
+    else if (spname_type == SPNAME_ADJ && def.adj_name)
+        return def.adj_name;
+    return def.name;
 }
 
 /** What walking-like thing does this species do?
