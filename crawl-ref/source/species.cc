@@ -55,9 +55,10 @@ species_type str_to_species(const string &species)
     return SP_UNKNOWN;
 }
 
-string species_name(species_type speci, bool genus, bool adj)
-// defaults:                                 false       false
+string species_name(species_type speci, species_name_type spname_type)
 {
+    const bool adj = spname_type == SPNAME_ADJ;
+    const bool genus = spname_type == SPNAME_GENUS;
     string res;
 
     switch (species_genus(speci))

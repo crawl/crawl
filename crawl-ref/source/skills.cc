@@ -1168,12 +1168,12 @@ skill_type str_to_skill(const string &skill)
 
 static string _stk_adj_cap()
 {
-    return species_name(Skill_Species, false, true);
+    return species_name(Skill_Species, SPNAME_ADJ);
 }
 
 static string _stk_genus_cap()
 {
-    return species_name(Skill_Species, true, false);
+    return species_name(Skill_Species, SPNAME_GENUS);
 }
 
 static string _stk_genus_nocap()
