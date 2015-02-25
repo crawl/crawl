@@ -5,6 +5,7 @@ enum species_flag
     SPF_DRACONIAN   = 1 << 1, /// If this is a draconian subspecies
     SPF_ORCISH      = 1 << 2, /// If this species is a kind of orc
     SPF_NO_HAIR     = 1 << 3, /// If members of the species are hairless
+    SPF_SMALL_TORSO = 1 << 4, /// Torso is smaller than body
 };
 DEF_BITFIELD(species_flags, species_flag);
 
@@ -21,6 +22,7 @@ struct species_def
     monster_type monster_species; ///< Corresponding monster (for display)
     habitat_type habitat; ///< Where it can live; HT_WATER -> no penalties
     undead_state_type undeadness; ///< What kind of undead (if any)
+    size_type size; ///< Size of body
 };
 
 static const map<species_type, species_def> species_data =
@@ -29,10 +31,10 @@ static const map<species_type, species_def> species_data =
 { SP_CENTAUR, {
     "Ce",
     "Centaur", nullptr, nullptr,
-    SPF_NONE,
+    SPF_SMALL_TORSO,
     -1, 1, -1,
     MONS_CENTAUR,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_LARGE,
 } },
 
 { SP_DEEP_DWARF, {
@@ -41,7 +43,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
      -1, 2, 0,
     MONS_DEEP_DWARF,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_DEEP_ELF, {
@@ -50,7 +52,7 @@ static const map<species_type, species_def> species_data =
     SPF_ELVEN,
      -1, -2, 3,
     MONS_ELF,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_DEMIGOD, {
@@ -59,7 +61,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -2, 1, 2,
     MONS_DEMIGOD,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 // Keep this above the other draconians, so get_species_by_abbrev works
@@ -69,7 +71,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_RED_DRACONIAN, {
@@ -78,7 +80,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_RED_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_WHITE_DRACONIAN, {
@@ -87,7 +89,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_WHITE_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_GREEN_DRACONIAN, {
@@ -96,7 +98,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_GREEN_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_YELLOW_DRACONIAN, {
@@ -105,7 +107,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_YELLOW_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_GREY_DRACONIAN, {
@@ -114,7 +116,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_GREY_DRACONIAN,
-    HT_AMPHIBIOUS, US_ALIVE,
+    HT_AMPHIBIOUS, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_BLACK_DRACONIAN, {
@@ -123,7 +125,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_BLACK_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_PURPLE_DRACONIAN, {
@@ -132,7 +134,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_PURPLE_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_MOTTLED_DRACONIAN, {
@@ -141,7 +143,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_MOTTLED_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_PALE_DRACONIAN, {
@@ -150,7 +152,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_PALE_DRACONIAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_DEMONSPAWN, {
@@ -159,7 +161,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 0, 0,
     MONS_DEMONSPAWN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_FELID, {
@@ -168,7 +170,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, -4, 2,
     MONS_FELID,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_LITTLE,
 } },
 
 { SP_FORMICID, {
@@ -177,7 +179,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     1, 0, 1,
     MONS_FORMICID,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_GHOUL, {
@@ -186,7 +188,7 @@ static const map<species_type, species_def> species_data =
     SPF_NO_HAIR,
     0, 1, -1,
     MONS_GHOUL,
-    HT_LAND, US_HUNGRY_DEAD,
+    HT_LAND, US_HUNGRY_DEAD, SIZE_MEDIUM,
 } },
 
 { SP_GARGOYLE, {
@@ -195,7 +197,7 @@ static const map<species_type, species_def> species_data =
     SPF_NO_HAIR,
     0, -2, 0,
     MONS_GARGOYLE,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_HALFLING, {
@@ -204,7 +206,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     1, -1, 0,
     MONS_HALFLING,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_SMALL,
 } },
 
 { SP_HIGH_ELF, {
@@ -213,7 +215,7 @@ static const map<species_type, species_def> species_data =
     SPF_ELVEN,
     -1, -1, 2,
     MONS_ELF,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_HILL_ORC, {
@@ -222,7 +224,7 @@ static const map<species_type, species_def> species_data =
     SPF_ORCISH,
     0, 1, 0,
     MONS_ORC,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_HUMAN, {
@@ -231,7 +233,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     1, 0, 0,
     MONS_HUMAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_KOBOLD, {
@@ -240,7 +242,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     1, -2, 0,
     MONS_KOBOLD,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_SMALL,
 } },
 
 { SP_MERFOLK, {
@@ -249,7 +251,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     0, 0, 0,
     MONS_MERFOLK,
-    HT_WATER, US_ALIVE,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_MINOTAUR, {
@@ -258,7 +260,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 1, -2,
     MONS_MINOTAUR,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_MUMMY, {
@@ -267,16 +269,16 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 0, 0,
     MONS_MUMMY,
-    HT_LAND, US_UNDEAD,
+    HT_LAND, US_UNDEAD, SIZE_MEDIUM,
 } },
 
 { SP_NAGA, {
     "Na",
     "Naga", nullptr, nullptr,
-    SPF_NONE,
+    SPF_SMALL_TORSO,
     0, 2, 0,
     MONS_NAGA,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_LARGE,
 } },
 
 { SP_OGRE, {
@@ -285,7 +287,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     0, 3, 0,
     MONS_OGRE,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_LARGE,
 } },
 
 { SP_OCTOPODE, {
@@ -294,7 +296,7 @@ static const map<species_type, species_def> species_data =
     SPF_NO_HAIR,
     0, -1, 0,
     MONS_OCTOPODE,
-    HT_WATER, US_ALIVE,
+    HT_WATER, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_SPRIGGAN, {
@@ -303,7 +305,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, -3, 3,
     MONS_SPRIGGAN,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_LITTLE,
 } },
 
 { SP_TENGU, {
@@ -312,7 +314,7 @@ static const map<species_type, species_def> species_data =
     SPF_NO_HAIR,
     0, -2, 1,
     MONS_TENGU,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_TROLL, {
@@ -321,7 +323,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 3, -2,
     MONS_TROLL,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_LARGE,
 } },
 
 { SP_VAMPIRE, {
@@ -330,7 +332,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 0, 0,
     MONS_VAMPIRE,
-    HT_LAND, US_SEMI_UNDEAD,
+    HT_LAND, US_SEMI_UNDEAD, SIZE_MEDIUM,
 } },
 
 { SP_VINE_STALKER, {
@@ -339,7 +341,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     0, -3, 1,
     MONS_VINE_STALKER,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {
@@ -348,7 +350,7 @@ static const map<species_type, species_def> species_data =
     SPF_ELVEN,
     0, -1, 1,
     MONS_ELF,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_LAVA_ORC, {
@@ -357,7 +359,7 @@ static const map<species_type, species_def> species_data =
     SPF_ORCISH | SPF_NO_HAIR,
     -1, 1, 0,
     MONS_LAVA_ORC,
-    HT_AMPHIBIOUS_LAVA, US_ALIVE,
+    HT_AMPHIBIOUS_LAVA, US_ALIVE, SIZE_MEDIUM,
 } },
 
 { SP_DJINNI, {
@@ -366,7 +368,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, -1, 0,
     MONS_DJINNI,
-    HT_LAND, US_ALIVE,
+    HT_LAND, US_ALIVE, SIZE_MEDIUM,
 } },
 #endif
 };

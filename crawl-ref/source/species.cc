@@ -184,24 +184,13 @@ bool species_has_hair(species_type species)
 
 size_type species_size(species_type species, size_part_type psize)
 {
-    switch (species)
+    const size_type size = _species_def(species).size;
+    if (psize == PSIZE_TORSO
+        && bool(_species_def(species).flags & SPF_SMALL_TORSO))
     {
-    case SP_OGRE:
-    case SP_TROLL:
-        return SIZE_LARGE;
-    case SP_NAGA:
-    case SP_CENTAUR:
-        return (psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE;
-    case SP_HALFLING:
-    case SP_KOBOLD:
-        return SIZE_SMALL;
-    case SP_SPRIGGAN:
-    case SP_FELID:
-        return SIZE_LITTLE;
-
-    default:
-        return SIZE_MEDIUM;
+        return static_cast<size_type>(static_cast<int>(size) - 1);
     }
+    return size;
 }
 
 monster_type player_species_to_mons_species(species_type species)
