@@ -1175,7 +1175,7 @@ static void _setup_generic(const newgame_def& ng)
     you.species    = ng.species;
     you.char_class = ng.job;
 
-    you.class_name = get_job_name(you.char_class);
+    you.chr_class_name = get_job_name(you.char_class);
 
     _species_stat_init(you.species);     // must be down here {dlb}
 

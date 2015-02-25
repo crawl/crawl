@@ -143,10 +143,9 @@ static void _dump_player(FILE *file)
     fprintf(file, "Player:\n");
     fprintf(file, "{{{{{{{{{{{\n");
 
-    fprintf(file, "Name:       [%s]\n", you.your_name.c_str());
-    fprintf(file, "Species:    %s\n", species_name(you.species).c_str());
-    fprintf(file, "Job:        %s\n\n", get_job_name(you.char_class));
-    fprintf(file, "class_name: %s\n\n", you.class_name.c_str());
+    fprintf(file, "Name:    [%s]\n", you.your_name.c_str());
+    fprintf(file, "Species: %s\n", species_name(you.species).c_str());
+    fprintf(file, "Job:     %s\n\n", get_job_name(you.char_class));
 
     fprintf(file, "HP: %d/%d; mods: %d/%d\n", you.hp, you.hp_max,
             you.hp_max_adj_temp, you.hp_max_adj_perm);

@@ -118,7 +118,7 @@ void wizard_change_species_to(species_type sp)
 
     species_type old_sp = you.species;
     you.species = sp;
-    you.species_name = species_name(sp);
+    you.chr_species_name = species_name(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
@@ -253,7 +253,7 @@ void wizard_change_species_to(species_type sp)
 void wizard_change_job_to(job_type job)
 {
     you.char_class = job;
-    you.class_name = get_job_name(job);
+    you.chr_class_name = get_job_name(job);
 }
 
 void wizard_change_species()
