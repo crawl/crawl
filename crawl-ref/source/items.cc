@@ -28,6 +28,7 @@
 #include "dactions.h"
 #include "dbg-util.h"
 #include "decks.h"
+#include "defines.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgnevent.h"
@@ -2246,7 +2247,7 @@ bool copy_item_to_grid(item_def &item, const coord_def& p,
 coord_def item_pos(const item_def &item)
 {
     coord_def pos = item.pos;
-    if (pos.equals(-2, -2))
+    if (pos == ITEM_IN_MONSTER_INVENTORY)
         if (const monster *mon = item.holding_monster())
             pos = mon->pos();
         else
@@ -3230,7 +3231,7 @@ int item_def::armour_rating() const
 
 monster* item_def::holding_monster() const
 {
-    if (!pos.equals(-2, -2))
+    if (pos != ITEM_IN_MONSTER_INVENTORY)
         return nullptr;
     const int midx = link - NON_ITEM - 1;
     if (invalid_monster_index(midx))
@@ -3242,7 +3243,7 @@ monster* item_def::holding_monster() const
 void item_def::set_holding_monster(int midx)
 {
     ASSERT(midx != NON_MONSTER);
-    pos.set(-2, -2);
+    pos = ITEM_IN_MONSTER_INVENTORY;
     link = NON_ITEM + 1 + midx;
 }
 
@@ -3250,7 +3251,8 @@ void item_def::set_holding_monster(int midx)
 // tags.cc before monsters are unmarshalled.
 bool item_def::held_by_monster() const
 {
-    return pos.equals(-2, -2) && !invalid_monster_index(link - NON_ITEM - 1);
+    return pos == ITEM_IN_MONSTER_INVENTORY
+             && !invalid_monster_index(link - NON_ITEM - 1);
 }
 
 // Note:  This function is to isolate all the checks to see if
