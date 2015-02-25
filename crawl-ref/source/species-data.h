@@ -19,6 +19,7 @@ struct species_def
     int hp_mod; ///< HP modifier (in tenths).
     int mp_mod; ///< MP modifier (in tenths).
     monster_type monster_species; ///< Corresponding monster (for display).
+    habitat_type habitat; ///< Where this species can live; HT_WATER -> no penalties
 };
 
 static const map<species_type, species_def> species_data =
@@ -30,6 +31,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 1, -1,
     MONS_CENTAUR,
+    HT_LAND,
 } },
 
 { SP_DEEP_DWARF, {
@@ -38,6 +40,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
      -1, 2, 0,
     MONS_DEEP_DWARF,
+    HT_LAND,
 } },
 
 { SP_DEEP_ELF, {
@@ -46,6 +49,7 @@ static const map<species_type, species_def> species_data =
     SPF_ELVEN,
      -1, -2, 3,
     MONS_ELF,
+    HT_LAND,
 } },
 
 { SP_DEMIGOD, {
@@ -54,6 +58,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -2, 1, 2,
     MONS_DEMIGOD,
+    HT_LAND,
 } },
 
 // Keep this above the other draconians, so get_species_by_abbrev works
@@ -63,6 +68,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_RED_DRACONIAN, {
@@ -71,6 +77,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_RED_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_WHITE_DRACONIAN, {
@@ -79,6 +86,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_WHITE_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_GREEN_DRACONIAN, {
@@ -87,6 +95,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_GREEN_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_YELLOW_DRACONIAN, {
@@ -95,6 +104,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_YELLOW_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_GREY_DRACONIAN, {
@@ -103,6 +113,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_GREY_DRACONIAN,
+    HT_AMPHIBIOUS,
 } },
 
 { SP_BLACK_DRACONIAN, {
@@ -111,6 +122,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_BLACK_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_PURPLE_DRACONIAN, {
@@ -119,6 +131,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_PURPLE_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_MOTTLED_DRACONIAN, {
@@ -127,6 +140,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_MOTTLED_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_PALE_DRACONIAN, {
@@ -135,6 +149,7 @@ static const map<species_type, species_def> species_data =
     SPF_DRACONIAN,
     -1, 1, 0,
     MONS_PALE_DRACONIAN,
+    HT_LAND,
 } },
 
 { SP_DEMONSPAWN, {
@@ -143,6 +158,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 0, 0,
     MONS_DEMONSPAWN,
+    HT_LAND,
 } },
 
 { SP_FELID, {
@@ -151,6 +167,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, -4, 2,
     MONS_FELID,
+    HT_LAND,
 } },
 
 { SP_FORMICID, {
@@ -159,6 +176,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     1, 0, 1,
     MONS_FORMICID,
+    HT_LAND,
 } },
 
 { SP_GHOUL, {
@@ -167,6 +185,7 @@ static const map<species_type, species_def> species_data =
     SPF_NO_HAIR,
     0, 1, -1,
     MONS_GHOUL,
+    HT_LAND,
 } },
 
 { SP_GARGOYLE, {
@@ -175,6 +194,7 @@ static const map<species_type, species_def> species_data =
     SPF_NO_HAIR,
     0, -2, 0,
     MONS_GARGOYLE,
+    HT_LAND,
 } },
 
 { SP_HALFLING, {
@@ -183,6 +203,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     1, -1, 0,
     MONS_HALFLING,
+    HT_LAND,
 } },
 
 { SP_HIGH_ELF, {
@@ -191,6 +212,7 @@ static const map<species_type, species_def> species_data =
     SPF_ELVEN,
     -1, -1, 2,
     MONS_ELF,
+    HT_LAND,
 } },
 
 { SP_HILL_ORC, {
@@ -199,6 +221,7 @@ static const map<species_type, species_def> species_data =
     SPF_ORCISH,
     0, 1, 0,
     MONS_ORC,
+    HT_LAND,
 } },
 
 { SP_HUMAN, {
@@ -207,6 +230,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     1, 0, 0,
     MONS_HUMAN,
+    HT_LAND,
 } },
 
 { SP_KOBOLD, {
@@ -215,6 +239,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     1, -2, 0,
     MONS_KOBOLD,
+    HT_LAND,
 } },
 
 { SP_MERFOLK, {
@@ -223,6 +248,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     0, 0, 0,
     MONS_MERFOLK,
+    HT_WATER,
 } },
 
 { SP_MINOTAUR, {
@@ -231,6 +257,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 1, -2,
     MONS_MINOTAUR,
+    HT_LAND,
 } },
 
 { SP_MUMMY, {
@@ -239,6 +266,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 0, 0,
     MONS_MUMMY,
+    HT_LAND,
 } },
 
 { SP_NAGA, {
@@ -247,6 +275,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     0, 2, 0,
     MONS_NAGA,
+    HT_LAND,
 } },
 
 { SP_OGRE, {
@@ -255,6 +284,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     0, 3, 0,
     MONS_OGRE,
+    HT_LAND,
 } },
 
 { SP_OCTOPODE, {
@@ -263,6 +293,7 @@ static const map<species_type, species_def> species_data =
     SPF_NO_HAIR,
     0, -1, 0,
     MONS_OCTOPODE,
+    HT_WATER,
 } },
 
 { SP_SPRIGGAN, {
@@ -271,6 +302,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, -3, 3,
     MONS_SPRIGGAN,
+    HT_LAND,
 } },
 
 { SP_TENGU, {
@@ -279,6 +311,7 @@ static const map<species_type, species_def> species_data =
     SPF_NO_HAIR,
     0, -2, 1,
     MONS_TENGU,
+    HT_LAND,
 } },
 
 { SP_TROLL, {
@@ -287,6 +320,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 3, -2,
     MONS_TROLL,
+    HT_LAND,
 } },
 
 { SP_VAMPIRE, {
@@ -295,6 +329,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, 0, 0,
     MONS_VAMPIRE,
+    HT_LAND,
 } },
 
 { SP_VINE_STALKER, {
@@ -303,6 +338,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     0, -3, 1,
     MONS_VINE_STALKER,
+    HT_LAND,
 } },
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {
@@ -311,6 +347,7 @@ static const map<species_type, species_def> species_data =
     SPF_ELVEN,
     0, -1, 1,
     MONS_ELF,
+    HT_LAND,
 } },
 
 { SP_LAVA_ORC, {
@@ -319,6 +356,7 @@ static const map<species_type, species_def> species_data =
     SPF_ORCISH | SPF_NO_HAIR,
     -1, 1, 0,
     MONS_LAVA_ORC,
+    HT_AMPHIBIOUS_LAVA,
 } },
 
 { SP_DJINNI, {
@@ -327,6 +365,7 @@ static const map<species_type, species_def> species_data =
     SPF_NONE,
     -1, -1, 0,
     MONS_DJINNI,
+    HT_LAND,
 } },
 #endif
 };
