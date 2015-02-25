@@ -896,30 +896,6 @@ public:
     }
 };
 
-class PotionDecay : public PotionEffect
-{
-private:
-    PotionDecay() : PotionEffect(POT_DECAY) { }
-    DISALLOW_COPY_AND_ASSIGN(PotionDecay);
-public:
-    static const PotionDecay &instance()
-    {
-        static PotionDecay inst; return inst;
-    }
-
-    bool effect(bool=true, int=40) const
-    {
-        return you.rot(&you, 0, 3 + random2(3));;
-    }
-
-    bool quaff(bool was_known) const
-    {
-        if (effect(was_known))
-            xom_is_stimulated( 50 / _xom_factor(was_known));
-        return true;
-    }
-};
-
 class PotionLignify : public PotionEffect
 {
 private:
@@ -961,6 +937,30 @@ public:
 
 // Removed potions
 #if TAG_MAJOR_VERSION == 34
+class PotionDecay : public PotionEffect
+{
+private:
+    PotionDecay() : PotionEffect(POT_DECAY) { }
+    DISALLOW_COPY_AND_ASSIGN(PotionDecay);
+public:
+    static const PotionDecay &instance()
+    {
+        static PotionDecay inst; return inst;
+    }
+
+    bool effect(bool=true, int=40) const
+    {
+        return you.rot(&you, 0, 3 + random2(3));;
+    }
+
+    bool quaff(bool was_known) const
+    {
+        if (effect(was_known))
+            xom_is_stimulated( 50 / _xom_factor(was_known));
+        return true;
+    }
+};
+
 class PotionBloodCoagulated : public PotionEffect
 {
 private:
@@ -1176,8 +1176,8 @@ static const PotionEffect* potion_effects[] =
     &PotionPorridge::instance(),
 #endif
     &PotionDegeneration::instance(),
-    &PotionDecay::instance(),
 #if TAG_MAJOR_VERSION == 34
+    &PotionDecay::instance(),
     &PotionWater::instance(),
 #endif
     &PotionExperience::instance(),
