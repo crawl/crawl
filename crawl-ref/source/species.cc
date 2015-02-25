@@ -4,6 +4,7 @@
 #include "species.h"
 
 #include "mon-enum.h"
+#include "player.h"
 #include "random.h"
 #include "stringutil.h"
 
@@ -232,4 +233,11 @@ int species_hp_modifier(species_type species)
 int species_mp_modifier(species_type species)
 {
     return _species_def(species).mp_mod;
+}
+
+void species_stat_init(species_type species)
+{
+    you.base_stats[STAT_STR] = _species_def(species).s;
+    you.base_stats[STAT_INT] = _species_def(species).i;
+    you.base_stats[STAT_DEX] = _species_def(species).d;
 }
