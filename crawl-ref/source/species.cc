@@ -121,17 +121,7 @@ int species_has_claws(species_type species, bool mut_level)
  */
 undead_state_type species_undead_type(species_type species)
 {
-    switch (species)
-    {
-        case SP_MUMMY:
-            return US_UNDEAD;
-        case SP_GHOUL:
-            return US_HUNGRY_DEAD;
-        case SP_VAMPIRE:
-            return US_SEMI_UNDEAD;
-        default:
-            return US_ALIVE;
-    }
+    return _species_def(species).undeadness;
 }
 
 /**
