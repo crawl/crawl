@@ -2028,43 +2028,34 @@ static void _print_overview_screen_equip(column_composer& cols,
 
 static string _overview_screen_title(int sw)
 {
-    char title[50];
-    snprintf(title, sizeof title, " %s ", player_title().c_str());
+    string title = make_stringf(" %s ", player_title().c_str());
 
-    char species_job[50];
-    snprintf(species_job, sizeof species_job,
-             "(%s %s)",
-             species_name(you.species).c_str(),
-             you.class_name.c_str());
-
-    char time_turns[50] = "";
+    string species_job = make_stringf("(%s %s)",
+                                      species_name(you.species).c_str(),
+                                      you.class_name.c_str());
 
     handle_real_time();
-    snprintf(time_turns, sizeof time_turns,
-             " Turns: %d, Time: %s",
-             you.num_turns, make_time_string(you.real_time, true).c_str());
+    string time_turns = make_stringf(" Turns: %d, Time: ", you.num_turns)
+                      + make_time_string(you.real_time, true);
 
-    int linelength = strwidth(you.your_name) + strwidth(title)
-                     + strwidth(species_job) + strwidth(time_turns);
-    for (int count = 0; linelength >= sw && count < 2;
-         count++)
+    const int char_width = strwidth(species_job);
+    const int title_width = strwidth(title);
+
+    int linelength = strwidth(you.your_name) + title_width
+                   + char_width + strwidth(time_turns);
+
+    if (linelength >= sw)
     {
-        switch (count)
-        {
-        case 0:
-            snprintf(species_job, sizeof species_job,
-                     "(%s%s)",
-                     get_species_abbrev(you.species),
-                     get_job_abbrev(you.char_class));
-            break;
-        case 1:
-            strcpy(title, "");
-            break;
-        default:
-            break;
-        }
-        linelength = strwidth(you.your_name) + strwidth(title)
-                     + strwidth(species_job) + strwidth(time_turns);
+        species_job = make_stringf("(%s%s)", get_species_abbrev(you.species),
+                                             get_job_abbrev(you.char_class));
+        linelength -= (char_width - strwidth(species_job));
+    }
+
+    // Still not enough?
+    if (linelength >= sw)
+    {
+        title = "";
+        linelength -= title_width;
     }
 
     string text;
