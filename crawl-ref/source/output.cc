@@ -2054,8 +2054,8 @@ static string _overview_screen_title(int sw)
     // Still not enough?
     if (linelength >= sw)
     {
-        title = "";
-        linelength -= title_width;
+        title = " ";
+        linelength -= (title_width - 1);
     }
 
     string text;
