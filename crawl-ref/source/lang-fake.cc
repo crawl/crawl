@@ -508,7 +508,7 @@ static string _replacement_butt(const string &token)
     }
     else if (lctok[size - 1] == 's')
         butt += plural; // Foos -> Butts, FOOS -> BUTTS
-    else if (size > 2 && lctok.substr(size - 2, 2) == "ly")
+    else if (size > 3 && lctok.substr(size - 2, 2) == "ly")
         butt += ly; // carefully -> butt-ly, THUNDEROUSLY -> BUTT-LY
 
     return butt;
