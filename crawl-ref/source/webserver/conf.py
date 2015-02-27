@@ -127,14 +127,18 @@ class Conf(object):
 
         """
 
-        if self.get('devs_are_server_janitors') \
-           and self.get('dev_nicks_can_be_registered'):
+        if self.get("devs_are_server_janitors") \
+           and self.get("dev_nicks_can_be_registered"):
             raise ConfigError("devs_are_server_janitors is true but "
                               "dev_nicks_can_be_registered is not false. I "
                               "can't let you do that, Dave.")
 
-        if not self.get('password_db'):
+        if not self.get("password_db"):
             raise ConfigError("Password database (password_db) undefined")
+
+        if not self.get("http_connection_timeout"):
+            raise ConfigError("HTTP connection timeout "
+                              "(http_connection_timeout) undefined.")
 
         if not self.get("static_path"):
             raise ConfigError("static_path is undefined.")
@@ -143,11 +147,12 @@ class Conf(object):
         except EnvironmentError as e:
             raise ConfigError("Couldn't read title_path directory '{0}' "
                               "({1}).".format(self.static_path, e.strerror))
+
         if not self.title_images:
             raise ConfigError("No title images (title_*.png) found in "
                               "static_path ({0}).".format(self.static_path))
 
-        init_prog = self.get('init_player_program')
+        init_prog = self.get("init_player_program")
         if init_prog and not os.access(init_prog, os.X_OK):
             raise ConfigError("init_player_program ({0}) is not "
                               "executable".format(init_prog))
@@ -183,7 +188,7 @@ class Conf(object):
             # We leave case intact on the primary account here since it's used
             # for display purposes.
             self.devteam[row[0]] = [u.lower() for u in row[1:]]
-            if self.get('devs_are_server_janitors'):
+            if self.get("devs_are_server_janitors"):
                 self.janitors.add(row[0])
         devteam_fh.close()
 
@@ -208,7 +213,7 @@ class Conf(object):
     def _load_games(self):
         self.games = {}
         # Load any games specified in main config file first
-        if self.data.get('games'):
+        if self.data.get("games"):
             for game in self.data["games"]:
                 if game["id"] in self.games:
                     self._warn("Skipping duplicate game definition '{0}' "
