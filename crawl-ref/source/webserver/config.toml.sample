@@ -34,7 +34,7 @@ template_path = "./webserver/templates/"
 # server_socket_path = ""
 
 max_idle_time = 18000
-connection_timeout = 600
+http_connection_timeout = 600
 kill_timeout = 10
 
 max_connections = 100

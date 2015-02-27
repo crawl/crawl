@@ -172,8 +172,7 @@ def bind_server():
     application = tornado.web.Application(routes, gzip=True, **settings)
 
     kwargs = {}
-    if config.get("http_connection_timeout") is not None:
-        kwargs["idle_connection_timeout"] = config.get("http_connection_timeout")
+    kwargs["idle_connection_timeout"] = config.http_connection_timeout
 
     servers = []
 
