@@ -5387,8 +5387,8 @@ void dec_ambrosia_player(int delay)
     you.duration[DUR_AMBROSIA] = max(0, you.duration[DUR_AMBROSIA] - delay);
 
     // 3-5 per turn, 9-50 over (3-10) turns
-    const int hp_restoration = 3 + random2(3);
-    const int mp_restoration = 3 + random2(3);
+    const int hp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
+    const int mp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
 
     if (!you.duration[DUR_DEATHS_DOOR])
     {
