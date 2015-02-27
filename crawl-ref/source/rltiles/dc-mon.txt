@@ -647,6 +647,7 @@ storm_dragon MONS_STORM_DRAGON
 golden_dragon MONS_GOLDEN_DRAGON
 %rim 1
 shadow_dragon MONS_SHADOW_DRAGON
+%rim 0
 mon/undead/bone_dragon MONS_BONE_DRAGON
 mon/holy/pearl_dragon MONS_PEARL_DRAGON
 
@@ -654,6 +655,7 @@ mon/holy/pearl_dragon MONS_PEARL_DRAGON
 %sdir mon/fungi_plants
 giant_spore MONS_GIANT_SPORE
 %sdir mon/eyes
+%rim 1
 giant_eyeball MONS_GIANT_EYEBALL
 eye_of_draining MONS_EYE_OF_DRAINING
 %rim 0
