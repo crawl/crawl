@@ -369,10 +369,18 @@ commands are also available in the clickable <w>command panel</w> to the right
 of the screen. </localtiles>Rereading old messages with
 <input>$cmd[CMD_REPLAY_MESSAGES]</input> is available as usual.
 %%%%
+tutorial3 trap
+
+Traps can have a variety of unpleasant effects, and may be hidden until you
+discover them by stepping on them. If there's no way around, you'll have to
+trigger the trap and deal with its effects.
+%%%%
 tutorial3 potion
 
-You can quaff one of these potions with <input>$cmd[CMD_QUAFF]</input>
-<localtiles> or with <input>mouseclick</input></localtiles>.
+Alarm traps make a lot of noise and apply an enchantment that lets monsters
+know where to find you. You can quaff this potion with
+<input>$cmd[CMD_QUAFF]</input><localtiles> or with
+<input>mouseclick</input></localtiles> to cancel any enchantments affecting you.
 %%%%
 tutorial3 artefact_armour
 
@@ -648,8 +656,8 @@ In this lesson you're going to learn about gods and how to use their powers.
 tutorial5 dungeon_overview
 
 Up ahead is an altar to Trog the Wrathful! Trog is just one of many gods. In a
-real game, you check <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> or
-<input>click the dungeon overmap button</input> in the command
+real game, you can check <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles>
+or <input>click the dungeon overmap button</input> in the command
 panel</localtiles> for a list of all altars and other interesting features
 found so far.
 %%%%

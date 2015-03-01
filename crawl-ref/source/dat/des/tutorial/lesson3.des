@@ -90,27 +90,28 @@ NAME:    tutorial_lesson3_level2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial_lesson3
 PLACE:   D:2
 ORIENT:  encompass
-KFEAT:   ^ = alarm trap
-KFEAT:   A = .
-COLOUR:  Adefghi = lightblue
-FTILE:   Adefghi = tutorial_pad
+KFEAT:   ^ = known alarm trap
+KFEAT:   AB = .
+COLOUR:  ABdefghi = lightblue
+FTILE:   ABdefghi = tutorial_pad
 RTILE:   c = wall_vines
-ITEM:    potion of cancellation
+ITEM:    potion of cancellation q:1 ident:all
 ITEM:    cloak unrand:ratskin_cloak
 ITEM:    wand of flame charges:9 ident:all
 ITEM:    wand of digging charges:15 ident:all
 ITEM:    amulet of inaccuracy mundane cursed
-ITEM:    scroll of remove curse q:1
+ITEM:    scroll of remove curse q:1 ident:all
 MONS:    goblin ; hunting sling ego:none not_cursed . stone q:30 . dagger \
          ego:none not_cursed
 MONS:    gnoll ; spear mundane
+MARKER:  A = lua:tutorial3.msg("trap")
 MARKER:  d = lua:tutorial3.msg("potion")
 MARKER:  e = lua:tutorial3.msg("artefact_armour")
 MARKER:  f = lua:tutorial3.msg("wand_fire")
 MARKER:  g = lua:tutorial3.msg("wand_digging")
 MARKER:  h = lua:tutorial3.msg("amulet")
 MARKER:  i = lua:tutorial3.msg("scroll_remove_curse")
-MARKER:  A = lua:tutorial3.msg("drop")
+MARKER:  B = lua:tutorial3.msg("drop")
 epilogue{{
  crawl.clear_messages(true)
  crawl.tutorial_msg("tutorial3 command_help")
@@ -121,12 +122,12 @@ cc.....c.....ccc.....c
 cc..[..c..e...+...f..c
 cc.....c.....ccc.....c
 cccc.ccccc.ccccccc.ccc
-cccc.ccccc+ccccccc+ccc
-cccc.ccccc1ccccccc.ccc
+cc...ccccc+ccccccc+ccc
+ccAccccccc1ccccccc.ccc
+cc^ccccccc.ccccccc.ccc
+cc...ccccc.ccccccc.ccc
 cccc.ccccc.ccccccc.ccc
 cccc.ccccc.ccccccc.ccc
-cccc.ccccc.ccccccc.ccc
-cccc^ccccc.ccccccc.ccc
 cc.....ccc.ccccc.....c
 cc..d......ccccc..2..c
 cc.....ccccccccc.....c
@@ -134,7 +135,7 @@ cccccccccccccccccc.ccc
 ccccccccccc.....cc.ccc
 ccc..)..ccc..g.....ccc
 cccc...cccc.....cccccc
-cccccAccccccxbvccccccc
+cccccBccccccxbvccccccc
 ccccc+ccccccxbvccccccc
 ccccc.ccccccxbvccccccc
 ccc.....ccc.....cccccc
