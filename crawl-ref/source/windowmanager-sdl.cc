@@ -136,6 +136,14 @@ static int _translate_keysym(SDL_Keysym &keysym)
     if (keysym.mod & KMOD_LALT)
         mod |= MOD_ALT;
 
+#ifdef TARGET_OS_WINDOWS
+    // AltGr looks like right alt + left ctrl on Windows. Let the input
+    // method geneate a TextInput event rather than trying to handle it
+    // as a KeyDown.
+    if (testbits(keysym.mod, KMOD_RALT | KMOD_LCTRL))
+        return 0;
+#endif
+
     // This is arbitrary, but here's the current mappings.
     // 0-256: ASCII, Crawl arrow keys
     // 0-1k : Other SDL keys (F1, Windows keys, etc...) and modifiers
