@@ -92,8 +92,8 @@ enum hints_event_type
     HINT_YOU_ENCHANTED,
 #if TAG_MAJOR_VERSION == 34
     HINT_CONTAMINATED_CHUNK,
-#endif
     HINT_YOU_SICK,
+#endif
     HINT_YOU_POISON,
     HINT_YOU_ROTTING,
     HINT_YOU_CURSED,

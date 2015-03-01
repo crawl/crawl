@@ -514,7 +514,7 @@ void hints_death_screen()
     Hints.hints_events.init(false);
 }
 
-// If a character survives until Xp 7, the hints mode is declared finished
+// If a character survives until XL 7, the hints mode is declared finished
 // and they get a more advanced playing hint, depending on what they might
 // know by now.
 void hints_finished()
@@ -917,7 +917,7 @@ void hints_monster_seen(const monster& mon)
                     "list of monsters somewhere on the screen.\n";
         }
         text += "You can gain information about it by pressing <w>x</w> and "
-                "moving the cursor on the monster, and read the monster "
+                "moving the cursor over the monster, and read the monster "
                 "description by then pressing <w>v</w>. ";
     }
 
@@ -1064,7 +1064,6 @@ static bool _rare_hints_event(hints_event_type event)
     case HINT_KILLED_MONSTER:
     case HINT_NEW_LEVEL:
     case HINT_YOU_ENCHANTED:
-    case HINT_YOU_SICK:
     case HINT_YOU_POISON:
     case HINT_YOU_ROTTING:
     case HINT_YOU_CURSED:
@@ -1105,7 +1104,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_AUTOPICKUP_THROWN:
     case HINT_TARGET_NO_FOE:
     case HINT_YOU_POISON:
-    case HINT_YOU_SICK:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
     case HINT_FLYING:
@@ -1410,9 +1408,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "it to find out what it does by "
                 "<tiles>clicking on it to e<w>%</w>oke </tiles>"
                 "<console>e<w>%</w>oking </console>"
-                "it. Some items need to be <w>%</w>ielded first before you can "
-                "e<w>%</w>oke them. As usual, selecting it from your "
-                "<w>%</w>nventory might give you more information.";
+                "it. As usual, selecting it from your <w>%</w>nventory "
+                "might give you more information.";
         cmd.push_back(CMD_EVOKE);
         cmd.push_back(CMD_WIELD_WEAPON);
         cmd.push_back(CMD_EVOKE_WIELDED);
@@ -1422,12 +1419,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_ROD:
         text << "You have picked up a magical rod"
                 "<console> ('<w>";
-        text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF))
-             << "</w>', like staves)</console>"
+        text << stringize_glyph(get_item_symbol(SHOW_ITEM_ROD))
+             << "</w>')</console>"
                 ". It must be <w>%</w>ielded to be of use. "
-                "A rod allows the casting of "
-                "certain spells even without magic knowledge simply by "
-                "e<w>%</w>oking it. The power depends on "
+                "A rod allows the casting of the unique spell it contains "
+                "even without magic knowledge simply by "
+                "e<w>%</w>oking it. It has a limited pool of magic which"
+                "recharges over time, and its power depends on "
                 "your Evocations skill. It can also be used as a cudgel, "
                 "with its combat value increasing with its recharge rate.";
         cmd.push_back(CMD_WIELD_WEAPON);
@@ -1446,7 +1444,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<console> ('<w>";
 
         text << stringize_glyph(get_item_symbol(SHOW_ITEM_STAFF))
-             << "</w>', like rods)</console>"
+             << "</w>')</console>"
                 ". It must be <w>%</w>ielded to be of use. "
                 "Magicians use staves to increase their power in certain "
                 "spell schools. It can also be used as a weapon."
@@ -1464,7 +1462,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<console> ('<yellow>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_GOLD))
              << "</yellow>')</console>"
-                ". Unlike all other objects in Crawl it doesn't show up in "
+                ". Unlike most other objects in Crawl it doesn't show up in "
                 "your inventory, takes up no space in your inventory, weighs "
                 "nothing and can't be dropped. Gold can be used to buy "
                 "items from shops, and can also be sacrificed to some gods. ";
@@ -1524,8 +1522,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         tiles.add_text_tag(TAG_TUTORIAL, "Escape hatch", gc);
 #endif
         text << "are some kind of escape hatch. You can use them to "
-                "quickly leave a level with <w>%</w> and <w>%</w>, "
-                "respectively"
+                "leave a level with <w>%</w> and <w>%</w> respectively"
 #ifdef USE_TILE
                 " (or by using your <w>left mouse button</w>)"
 #endif
@@ -1555,8 +1552,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "branches."
 
                 "\n\nThe first three branches you'll encounter are the "
-                "Temple, the Orcish Mines and the Lair. While the Mines "
-                "and the Lair can be dangerous for the new adventurer, "
+                "Temple, the Lair and the Orcish Mines. While the Lair"
+                "and the Mines can be dangerous for the new adventurer, "
                 "the Temple is completely safe and contains a number of "
                 "altars at which you might convert to a new god.";
         break;
@@ -1873,8 +1870,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_CHOOSE_STAT:
         text << "Every third level you get to choose a stat to raise: "
                 "Strength, Intelligence, or Dexterity. "
-                "<w>Strength</w> affects the amount you can carry and makes it "
-                "easier to wear heavy armour. "
+                "<w>Strength</w> affects your effectiveness in combat "
+                "and makes it easier to wear heavy armour. "
                 "<w>Intelligence</w> makes it easier to cast spells and "
                 "reduces the amount by which you hunger when you do so. "
                 "<w>Dexterity</w> increases your evasion "
@@ -1888,21 +1885,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "possible enchantments is in the manual (<w>%5</w>).";
         cmd.push_back(CMD_DISPLAY_CHARACTER_STATUS);
         cmd.push_back(CMD_DISPLAY_COMMANDS);
-        break;
-
-    case HINT_YOU_SICK:
-        if (crawl_state.game_is_hints())
-        {
-            // Hack: reset hints_just_triggered, to force recursive calling of
-            // learned_something_new(). Don't do this for the tutorial!
-            Hints.hints_just_triggered = false;
-            learned_something_new(HINT_YOU_ENCHANTED);
-            Hints.hints_just_triggered = true;
-        }
-        text << "While sick, your health won't regenerate and your attributes "
-                "may decrease. Sickness wears off with time, so you should wait it "
-                "out with %.";
-        cmd.push_back(CMD_REST);
         break;
 
     case HINT_YOU_POISON:
@@ -1946,9 +1928,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_REMOVED_CURSE:
-        text << "All the curses on your worn equipment just got cancelled. "
-                "Since cursed items are more likely to have bad properties, "
-                "the game makes a note of this, so you don't forget about it.";
+        text << "The curses on your worn equipment have been removed, so you "
+                "can now unequip any previously cursed items.";
         break;
 
     case HINT_YOU_HUNGRY:
@@ -2588,9 +2569,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             text << "Uh-oh, that monster noticed you! Fortunately, it "
                     "didn't make any noise, but many monsters do make "
-                    "noise when they notice you, which alerts other monsters "
-                    "in the area, who will come to check out what the "
-                    "commotion was about.";
+                    "noise when they notice you. This will alert other "
+                    "monsters in the area, who will come to check out what "
+                    "the commotion was about.";
         }
         else
         {
@@ -2760,7 +2741,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "(at least partially) resist some of them, if you are "
                 "fortunate enough to find them. There are two basic variants "
                 "of resistances: the innate magic resistance that depends on "
-                "your species, grows with the experience level, and protects "
+                "your species, grows with experience level, and protects "
                 "against hostile enchantments; and the specific resistances "
                 "against certain types of magic and also other effects, e.g. "
                 "fire or draining.\n"
@@ -3199,8 +3180,8 @@ void hints_describe_item(const item_def &item)
             }
             if (item_known_cursed(item) && !long_text)
             {
-                ostr << "\n\nOnce wielded, a cursed weapon won't leave your "
-                        "hands again until the curse has been lifted by "
+                ostr << "\n\nOnce wielded, a cursed weapon can't be "
+                        "unwielded until the curse has been lifted by "
                         "reading a scroll of remove curse or one of the "
                         "enchantment scrolls.";
 
@@ -3315,8 +3296,8 @@ void hints_describe_item(const item_def &item)
             else if (Hints.hints_type == HINT_RANGER_CHAR
                      && is_shield(item))
             {
-                ostr << "\nNote that wearing a shield will greatly decrease "
-                        "the speed at which you can shoot arrows.";
+                ostr << "\nNote that many ranged weapons are two handed and so "
+                        "cannot be used with a shield.";
             }
 
             if (!item_type_known(item)
