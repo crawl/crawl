@@ -1401,6 +1401,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;
+            // Non-hostile uniques might be removed from dungeon annotation
+            // so we add them back.
+            if (mon->props.exists("no_annotate"))
+                mon->props["no_annotate"] = false;
+            set_unique_annotation(mon);
             mons_att_changed(mon);
         }
     }
@@ -1568,10 +1573,7 @@ void make_mons_leave_level(monster* mon)
     if (mon->pacified())
     {
         if (you.can_see(mon))
-        {
             _mons_indicate_level_exit(mon);
-            remove_unique_annotation(mon);
-        }
 
         // Pacified monsters leaving the level take their stuff with
         // them.
