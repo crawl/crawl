@@ -4781,12 +4781,12 @@ bool gozag_call_merchant()
     return true;
 }
 
-typedef struct
+struct bribability
 {
     monster_type type;
     branch_type  branch;
     int          susceptibility;
-} bribability;
+};
 
 bribability mons_bribability[] =
 {
