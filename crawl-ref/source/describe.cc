@@ -4033,7 +4033,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     if (!attitude.empty())
     {
         string att = comma_separated_line(attitude.begin(), attitude.end(),
-                                          "; ", "; ")
+                                          "; ", "; ");
         if (mons.has_ench(ENCH_INSANE))
             inf.body << "; frenzied and insane (otherwise " << att << ")";
         else
