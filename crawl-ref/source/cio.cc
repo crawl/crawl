@@ -170,7 +170,7 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
         // No room for more lines, quit now.
         if (pos.y >= max_y)
             break;
-        if (!buf.empty())
+        if (linestart < len)
             cgotoxy(1, pos.y + 1, region);
     }
 }
