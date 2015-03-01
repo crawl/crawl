@@ -49,12 +49,12 @@ static char *json_strdup(const char *str)
 
 /* String buffer */
 
-typedef struct
+struct SB
 {
     char *cur;
     char *end;
     char *start;
-} SB;
+};
 
 static void sb_init(SB *sb)
 {
