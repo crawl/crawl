@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "branch.h"
+#include "dgn-overview.h"
 #include "message.h"
 #include "mon-util.h"
 #include "religion.h"
@@ -32,11 +33,17 @@ void init_companions()
 void add_companion(monster* mons)
 {
     ASSERT(mons->alive());
+    // Right now this is a special case for Saint Roka, but
+    // future orcish uniques should behave in the same way.
+    mons->props["no_annotate"] = true;
+    remove_unique_annotation(mons);
     companion_list[mons->mid] = companion(*mons);
 }
 
 void remove_companion(monster* mons)
 {
+    mons->props["no_annotate"] = false;
+    set_unique_annotation(mons);
     companion_list.erase(mons->mid);
 }
 

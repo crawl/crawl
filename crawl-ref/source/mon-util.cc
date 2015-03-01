@@ -3152,6 +3152,10 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
     // Remove haunting, which would otherwise cause monster to continue attacking
     mon->del_ench(ENCH_HAUNTING, true, true);
 
+    // Remove level annotation.
+    mon->props["no_annotate"] = true;
+    remove_unique_annotation(mon);
+
     // Make the monster begin leaving the level.
     behaviour_event(mon, ME_EVAL);
 
