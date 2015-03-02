@@ -1110,7 +1110,7 @@ static string _describe_action_subtype(caction_type type, int subtype)
             dummy.base_type = (object_class_type)(subtype >> 16);
             dummy.sub_type  = subtype & 0xffff;
             dummy.quantity  = 1;
-            return uppercase_first(dummy.name(DESC_PLAIN, true));
+            return uppercase_first(dummy.name(DESC_DBNAME, true));
         }
 
         switch ((evoc_type)subtype)
