@@ -273,7 +273,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
 
         // Don't skeletonize a corpse if it's no longer there!
-        if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
+        if (item.defined() && item.is_type(OBJ_CORPSES, CORPSE_BODY)
+            && item.pos == you.pos())
         {
             mpr("All blood oozes out of the corpse!");
 
