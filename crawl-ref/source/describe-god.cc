@@ -954,13 +954,12 @@ static void _describe_god_powers(god_type which_god, int numcols)
     }
     else if (which_god == GOD_CHEIBRIADOS)
     {
-        if (you.piety >= piety_breakpoint(0))
+        if (!player_under_penance())
         {
             have_any = true;
             _print_final_god_abil_desc(which_god,
-                                       uppercase_first(god_name(which_god))
-                                       + " slows and strengthens your metabolism.",
-                                       ABIL_NON_ABILITY);
+                                       "You can bend time to slow others.",
+                                       ABIL_CHEIBRIADOS_TIME_BEND);
         }
     }
     else if (which_god == GOD_VEHUMET)

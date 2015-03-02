@@ -323,7 +323,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "",
+    { "Cheibriados slows and strengthens your metabolism.",
       "",
       "warp the flow of time around you",
       "inflict damage on those overly hasty",
@@ -468,7 +468,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "bend time to slow others",
+    { "Cheibriados no longer slows and strengthens your metabolism.",
       "",
       "warp the flow of time around you",
       "inflict damage on those overly hasty",
