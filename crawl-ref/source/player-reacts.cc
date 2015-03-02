@@ -1371,10 +1371,14 @@ void player_reacts()
     if (grd(you.pos()) == DNGN_LAVA)
         expose_player_to_element(BEAM_LAVA);
 
+    _decrement_durations();
+
+    // Translocations and possibly other duration decrements can
+    // escape a player from beholders and fearmongers. These should
+    // update after.
     you.update_beholders();
     you.update_fearmongers();
 
-    _decrement_durations();
     you.handle_constriction();
 
     // increment constriction durations
