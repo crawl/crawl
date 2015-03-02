@@ -612,9 +612,8 @@ void handle_delay()
             || corpse.pos != you.pos()                            // elsewhere
             || you.hunger_state == HS_ENGORGED
             || you.hunger_state > HS_SATIATED && you.form == TRAN_BAT
-            || (you.hunger_state >= HS_SATIATED
-                && corpse.defined()
-                && is_poisonous(corpse)))
+            || you.hunger_state >= HS_SATIATED
+               && is_poisonous(corpse))
         {
             // Messages handled in _food_change() in food.cc.
             stop_delay();
