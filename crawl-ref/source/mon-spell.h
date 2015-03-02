@@ -1204,7 +1204,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_CATOBLEPAS,
       {
-       { SPELL_PETRIFYING_CLOUD, 64, MON_SPELL_NATURAL },
+       { SPELL_PETRIFYING_CLOUD, 41, MON_SPELL_NATURAL },
       }
     },
 
