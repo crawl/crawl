@@ -273,10 +273,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         const bool was_holy = (mons_class_holiness(item.mon_type) == MH_HOLY);
 
         // Don't skeletonize a corpse if it's no longer there!
-        if (delay.parm1
-            || (item.defined()
-                && item.base_type == OBJ_CORPSES
-                && item.pos == you.pos()))
+        if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
         {
             mpr("All blood oozes out of the corpse!");
 
@@ -602,22 +599,31 @@ void handle_delay()
     // XXX: need to handle passwall when monster digs -- bwr
     if (delay.type == DELAY_FEED_VAMPIRE)
     {
+        item_def &corpse = delay.parm1 ? you.inv[delay.parm2]
+                                       : mitm[delay.parm2];
         // Vampires stop feeding if ...
         // * engorged ("alive")
         // * bat form runs out due to becoming full
         // * corpse becomes poisonous as the Vampire loses poison resistance
         // * corpse disappears for some reason (e.g. animated by a monster)
-        if ((!delay.parm1                                         // on floor
-             && ( !(mitm[ delay.parm2 ].defined())                // missing
-                 || mitm[ delay.parm2 ].base_type != OBJ_CORPSES  // noncorpse
-                 || mitm[ delay.parm2 ].pos != you.pos()) )       // elsewhere
+        if (!corpse.defined()                                     // missing
+            || corpse.base_type != OBJ_CORPSES                    // noncorpse
+            || corpse.pos != you.pos()                            // elsewhere
             || you.hunger_state == HS_ENGORGED
             || you.hunger_state > HS_SATIATED && you.form == TRAN_BAT
             || (you.hunger_state >= HS_SATIATED
-               && mitm[delay.parm2].defined()
-               && is_poisonous(mitm[delay.parm2])) )
+                && corpse.defined()
+                && is_poisonous(corpse)))
         {
             // Messages handled in _food_change() in food.cc.
+            stop_delay();
+            return;
+        }
+        else if (corpse.is_type(OBJ_CORPSES, CORPSE_SKELETON))
+        {
+            mprf("The corpse has rotted away into a skeleton before"
+                 "you could finish drinking it!");
+            _xom_check_corpse_waste();
             stop_delay();
             return;
         }
@@ -641,7 +647,7 @@ void handle_delay()
         }
         else if (item.is_type(OBJ_CORPSES, CORPSE_SKELETON))
         {
-            mprf("The corpse has already rotted away into a skeleton before"
+            mprf("The corpse has rotted away into a skeleton before"
                  "you could %s!",
                  (delay.type == DELAY_BOTTLE_BLOOD ? "bottle its blood"
                                                    : "butcher it"));
