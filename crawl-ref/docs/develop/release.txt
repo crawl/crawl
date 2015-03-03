@@ -21,6 +21,14 @@ for those the list begins with step 3.
     need to make sure the commits pointed to by 0.X-b1 and 0.${X+1}-a0 are
     different.
 
+    Tag message formatting:
+    0.16-a0: You open the 0.16 season. It cackles and vanishes in a puff of smoke!
+        -- should include the phrase "open the 0.x season"
+    0.15-b1: You feel a great weight lift as you enter the 0.15 branch.
+        -- should include the phrases "0.x" and "branch"
+    0.15.0: 0.15 "Storm Over Zot"
+        -- should be the version number followed by the tagline in quotes.
+
 3.  Wait and fix some bugs
     Wait at least 2-3 weeks for bug reports, and fix all severe old ones.
     When fixing bugs concentrate on the important ones (crashes and
