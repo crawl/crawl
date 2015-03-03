@@ -575,30 +575,43 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
     case (ET_WEAPON):
         ASSERT(wpn);
 
-        // Boost weapon skill.
-        if (wpn->base_type == OBJ_WEAPONS)
+        // Boost weapon skill. Plain "staff" means an unrand magical staff,
+        // boosted later.
+        if (wpn->base_type == OBJ_WEAPONS
+            && wpn->sub_type != WPN_STAFF)
+        {
             boost[item_attack_skill(*wpn)] = bondage;
+        }
 
         // Those staves don't benefit from evocation.
         // Boost spellcasting instead.
         if (wpn->base_type == OBJ_STAVES
             && (wpn->sub_type == STAFF_POWER
                 || wpn->sub_type == STAFF_CONJURATION
-                || wpn->sub_type == STAFF_ENERGY
                 || wpn->sub_type == STAFF_WIZARDRY))
         {
             boost[SK_SPELLCASTING] = 2;
         }
-        // Other staves use evocation.
-        else if (wpn->base_type == OBJ_STAVES)
+        // Rods, and staves that are evokable but with no melee effect.
+        else if (wpn->base_type == OBJ_RODS
+                 || wpn->is_type(OBJ_STAVES, STAFF_ENERGY)
+                 || wpn->base_type == OBJ_WEAPONS
+                    && (is_unrandom_artefact(*wpn, UNRAND_WUCAD_MU)
+                        || is_unrandom_artefact(*wpn, UNRAND_DISPATER)
+                        || is_unrandom_artefact(*wpn, UNRAND_ASMODEUS)))
+        {
+            boost[SK_EVOCATIONS] = 2;
+        }
+        // Staves that use evocations to power a melee effect.
+        else if (wpn->base_type == OBJ_STAVES
+                 || wpn->base_type == OBJ_WEAPONS
+                    && (is_unrandom_artefact(*wpn, UNRAND_OLGREB)
+                        || is_unrandom_artefact(*wpn, UNRAND_ELEMENTAL_STAFF)))
         {
             boost[SK_EVOCATIONS] = 1;
             boost[SK_STAVES] = 1;
 
         }
-        else if (wpn->base_type == OBJ_RODS)
-            boost[SK_EVOCATIONS] = 2;
-
         break;
 
     case (ET_SHIELD):
