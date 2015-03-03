@@ -1549,8 +1549,7 @@ bool remove_ring(int slot, bool announce)
         return false;
     }
     else if (hand_used == EQ_AMULET
-        && you.equip[EQ_RING_AMULET] != -1
-        && !remove_ring(you.equip[EQ_RING_AMULET], announce))
+        && you.equip[EQ_RING_AMULET] != -1)
     {
         // This can be removed in the future if more ring amulets are added.
         ASSERT(player_equip_unrand(UNRAND_FINGER_AMULET));
