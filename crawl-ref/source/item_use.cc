@@ -2415,7 +2415,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_CURSE_ARMOUR
            || scroll == SCR_CURSE_JEWELLERY
            || scroll == SCR_BRAND_WEAPON
-           || scroll == SCR_ENCHANT_WEAPON;
+           || scroll == SCR_ENCHANT_WEAPON
+           || scroll == SCR_MAGIC_MAPPING;
 }
 
 /**
@@ -2661,7 +2662,8 @@ void read_scroll(int item_slot)
     case SCR_BLINKING:
     {
         const string reason = you.no_tele_reason(true, true);
-        if (!reason.empty()) {
+        if (!reason.empty())
+        {
             mpr(pre_succ_msg);
             mpr(reason);
             break;
@@ -2731,6 +2733,13 @@ void read_scroll(int item_slot)
         break;
 
     case SCR_MAGIC_MAPPING:
+        if (alreadyknown && testbits(env.level_flags, LFLAG_NO_MAP))
+        {
+            cancel_scroll = true;
+            mpr("It would have no effect in this place.");
+            break;
+        }
+        mpr(pre_succ_msg);
         magic_mapping(500, 100, false);
         break;
 
