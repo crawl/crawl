@@ -1237,7 +1237,8 @@ _init_equipment_removal(transformation_type form)
         const item_def *pitem = you.slot_item(eq, true);
 
         if (pitem && (get_form(form)->blocked_slots & SLOTF(i)
-                      || !get_form(form)->can_wear_item(*pitem)))
+                      || (i != EQ_RING_AMULET
+                          && !get_form(form)->can_wear_item(*pitem))))
         {
             result.insert(eq);
         }

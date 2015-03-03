@@ -1307,6 +1307,7 @@ static equipment_type _choose_ring_slot()
 static bool _puton_item(int item_slot, bool prompt_slot)
 {
     item_def& item = you.inv[item_slot];
+    const bool is_amulet = jewellery_is_amulet(item);
 
     for (int eq = EQ_LEFT_RING; eq < NUM_EQUIP; eq++)
         if (item_slot == you.equip[eq])
@@ -1333,14 +1334,14 @@ static bool _puton_item(int item_slot, bool prompt_slot)
         return false;
     }
 
-    if (!you_tran_can_wear(item))
+    if (!you_tran_can_wear(item)
+        && (is_amulet || !you_can_wear(EQ_RING_AMULET)))
     {
         mpr("You can't wear that in your present form.");
         return false;
     }
 
     const vector<equipment_type> ring_types = _current_ring_types();
-    const bool is_amulet = jewellery_is_amulet(item);
 
     if (!is_amulet)     // i.e. it's a ring
     {
