@@ -166,7 +166,7 @@ static void _CURSES_world_reacts(item_def *item)
 {
     // don't spam messages for ash worshippers
     if (one_chance_in(30) && !you_worship(GOD_ASHENZARI))
-        curse_an_item();
+        curse_an_item(true);
 }
 
 static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
