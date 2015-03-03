@@ -1,6 +1,7 @@
-Stone Soup 0.16 (up to 0.16-a0-4088-g7c8221e)
+Stone Soup 0.16 (up to 0.16-a0-4134-g2ca243f)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
+* Zot Defense has been removed.
 
 Branches, environment
 ---------------------
@@ -198,6 +199,7 @@ Items
   - Tomes of Destruction.
   - The book of Wizardry.
   - The Spear of the Botono.
+  - The blowgun of the Assassin.
 
 
 Cards
