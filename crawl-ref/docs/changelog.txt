@@ -1,3 +1,7 @@
+Stone Soup 0.17 (DUMMY COMMIT)
+--------------------------------------------
+
+
 Stone Soup 0.16 (up to 0.16-a0-4134-g2ca243f)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
