@@ -5815,23 +5815,6 @@ bool monster::do_shaft()
         default:
             return false;
         }
-
-        if (!ground_level() || body_weight() == 0)
-        {
-            if (mons_near(this))
-            {
-                if (visible_to(&you))
-                {
-                    mprf("A shaft briefly opens up underneath %s!",
-                         name(DESC_THE).c_str());
-                }
-                else
-                    mpr("A shaft briefly opens up in the floor!");
-            }
-
-            handle_items_on_shaft(pos(), false);
-            return false;
-        }
     }
 
     level_id lev = shaft_dest(false);
@@ -5844,8 +5827,11 @@ bool monster::do_shaft()
     if (!pacified())
         set_transit(lev);
 
-    const bool reveal =
-        simple_monster_message(this, " falls through a shaft!");
+    string msg = make_stringf(" %s a shaft!",
+                              !ground_level() ? "is sucked into"
+                                              : "falls through");
+
+    const bool reveal = simple_monster_message(this, msg.c_str());
 
     handle_items_on_shaft(pos(), false);
     place_cloud(CLOUD_DUST_TRAIL, pos(), 1 + random2(3), this);

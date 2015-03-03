@@ -662,8 +662,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (!m->will_trigger_shaft()
             || trig_knows && !mons_is_fleeing(m) && !m->pacified())
         {
-            // No message for flying monsters to avoid message spam.
-            if (you_know && triggerer.ground_level())
+            if (you_know)
                 simple_monster_message(m, " carefully avoids the shaft.");
             return;
         }
@@ -1098,9 +1097,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (trig_knows)
             break;
 
-        // Depending on total (body + equipment) weight, give monsters
-        // and player a chance to escape a shaft.
-        if (x_chance_in_y(140, triggerer.body_weight()))
+        // A chance to escape.
+        if (one_chance_in(4))
             break;
 
         // Fire away!
