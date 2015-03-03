@@ -1864,7 +1864,7 @@ static bool _stone_of_tremors()
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (grd(mi->pos()) == DNGN_FLOOR
-            && !mi->airborne() && is_valid_shaft_level()
+            && is_valid_shaft_level()
             && x_chance_in_y(75 + you.skill(SK_EVOCATIONS, 2), 800))
         {
             mi->do_shaft();
