@@ -4442,7 +4442,7 @@ bool gozag_setup_call_merchant(bool quiet)
         const map_def *shop_vault = find_map_by_name("serial_shops"); // XXX
         if (!shop_vault)
             die("Someone changed the shop vault name!");
-        if (!shop_vault->depths.is_usable_in(level_id::current()))
+        if (!is_connected_branch(level_id::current().branch))
         {
             if (!quiet)
             {
