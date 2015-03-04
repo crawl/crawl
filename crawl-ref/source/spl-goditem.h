@@ -33,6 +33,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
                         actor *attacker = nullptr);
 
 void torment(actor *attacker, torment_source_type taux, const coord_def& where);
+void torment_cell(coord_def where, actor *attacker, torment_source_type taux);
 void torment_player(actor *attacker, torment_source_type taux);
 
 void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
