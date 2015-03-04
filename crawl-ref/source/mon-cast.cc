@@ -4077,7 +4077,7 @@ static void _mons_cast_haunt(monster* mons)
 
     _do_high_level_summon(mons, mons_near(mons), SPELL_HAUNT,
                           _pick_random_wraith, random_range(2, 4),
-                          GOD_NO_GOD, &fpos, _haunt_fixup);
+                          GOD_NO_GOD, &fpos, _haunt_fixup, false);
 }
 
 static void _mons_cast_summon_illusion(monster* mons, spell_type spell)
@@ -5280,6 +5280,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_HAUNT:
+        if (_mons_abjured(mons, monsterNearby))
+            return;
+
         if (foe->is_player())
             mpr("You feel haunted.");
         else
