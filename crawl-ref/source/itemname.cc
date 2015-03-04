@@ -2541,6 +2541,9 @@ void check_item_knowledge(bool unknown_items)
                 continue;
             }
 
+            if (i == OBJ_BOOKS && j == BOOK_WIZARDRY)
+                continue;
+
             if (i == OBJ_JEWELLERY
                 && (j == AMU_CONTROLLED_FLIGHT || j == AMU_CONSERVATION
                     || j == RING_REGENERATION))
