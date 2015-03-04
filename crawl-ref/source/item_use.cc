@@ -1307,7 +1307,6 @@ static equipment_type _choose_ring_slot()
 static bool _puton_item(int item_slot, bool prompt_slot)
 {
     item_def& item = you.inv[item_slot];
-    const bool is_amulet = jewellery_is_amulet(item);
 
     for (int eq = EQ_LEFT_RING; eq < NUM_EQUIP; eq++)
         if (item_slot == you.equip[eq])
@@ -1333,6 +1332,8 @@ static bool _puton_item(int item_slot, bool prompt_slot)
         mpr("You can only put on jewellery.");
         return false;
     }
+
+    const bool is_amulet = jewellery_is_amulet(item);
 
     if (!you_tran_can_wear(item)
         && (is_amulet || !you_can_wear(EQ_RING_AMULET)))
