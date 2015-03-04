@@ -120,7 +120,7 @@ static void _read_each_message()
 void read_messages()
 {
     _read_each_message();
-    update_message_status();
+    you.redraw_title = true;
 }
 
 static void _announce_messages()
