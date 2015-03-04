@@ -1183,8 +1183,7 @@ void torment_player(actor *attacker, torment_source_type taux)
     return;
 }
 
-static void _torment_stuff_at(coord_def where, actor *attacker,
-                       torment_source_type taux)
+void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 {
     // Is the player in this cell?
     if (where == you.pos())
@@ -1215,7 +1214,7 @@ static void _torment_stuff_at(coord_def where, actor *attacker,
 void torment(actor *attacker, torment_source_type taux, const coord_def& where)
 {
     for (radius_iterator ri(where, LOS_NO_TRANS); ri; ++ri)
-        _torment_stuff_at(*ri, attacker, taux);
+        torment_cell(*ri, attacker, taux);
 }
 
 void setup_cleansing_flame_beam(bolt &beam, int pow, int caster,
