@@ -517,17 +517,16 @@ static bool _boosted_sh()
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status()
 {
-    static const char *msg = "(Hit _)";
-    static const int len = strwidth(msg);
-    static const string spc(len, ' ');
+    if (!SysEnv.have_messages)
+        return;
+
+    static const char * const msg = "(Hit _)";
 
     textcolour(LIGHTBLUE);
 
-    CGOTOXY(crawl_view.hudsz.x - len + 1, 1, GOTO_STAT);
-    if (SysEnv.have_messages)
-        CPRINTF(msg);
-    else
-        CPRINTF(spc.c_str());
+    CGOTOXY(crawl_view.hudsz.x - strwidth(msg) + 1, 1, GOTO_STAT);
+    CPRINTF(msg);
+
     textcolour(LIGHTGREY);
 }
 #endif
@@ -1136,24 +1135,28 @@ static void _draw_wizmode_flag(const char *word)
     CPRINTF(" *%s*", word);
 }
 
-static void _redraw_title(const string &your_name, const string &job_name)
+static void _redraw_title()
 {
     const unsigned int WIDTH = crawl_view.hudsz.x;
-    string title = your_name + " " + job_name;
-
+    string title = you.your_name + " " + filtered_lang(player_title());
+    const bool small_layout =
 #ifdef USE_TILE_LOCAL
-    if (tiles.is_using_small_layout())
-        title = your_name;
-    else
+                              tiles.is_using_small_layout();
+#else
+                              false;
 #endif
+
+    if (small_layout)
+        title = you.your_name;
+    else
     {
         unsigned int in_len = strwidth(title);
         if (in_len > WIDTH)
         {
-            in_len -= 3;  // What we're getting back from removing "the".
+            in_len -= 3;  // strwidth(" the ") - strwidth(", ")
 
-            const unsigned int name_len = strwidth(your_name);
-            string trimmed_name = your_name;
+            const unsigned int name_len = strwidth(you.your_name);
+            string trimmed_name = you.your_name;
             // Squeeze name if required, the "- 8" is to not squeeze too much.
             if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
             {
@@ -1161,28 +1164,17 @@ static void _redraw_title(const string &your_name, const string &job_name)
                                            name_len - (in_len - WIDTH) - 1);
             }
 
-            title = trimmed_name + ", " + job_name;
+            title = trimmed_name + ", " + filtered_lang(player_title(false));
         }
     }
 
     // Line 1: Foo the Bar    *WIZARD*
     CGOTOXY(1, 1, GOTO_STAT);
-    textcolour(YELLOW);
-#ifdef USE_TILE_LOCAL
-    if (tiles.is_using_small_layout() && you.wizard) textcolour(LIGHTMAGENTA);
-#endif
+    textcolour(small_layout && you.wizard ? LIGHTMAGENTA : YELLOW);
     CPRINTF("%s", chop_string(title, WIDTH).c_str());
-#ifdef USE_TILE_LOCAL
-    if (you.wizard && !tiles.is_using_small_layout())
-#else
-    if (you.wizard)
-#endif
+    if (you.wizard && !small_layout)
         _draw_wizmode_flag("WIZARD");
-#ifdef USE_TILE_LOCAL
-    else if (you.explore && !tiles.is_using_small_layout())
-#else
-    else if (you.explore)
-#endif
+    else if (you.explore && !small_layout)
         _draw_wizmode_flag("EXPLORE");
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
@@ -1275,7 +1267,7 @@ void print_stats()
     if (you.redraw_title)
     {
         you.redraw_title = false;
-        _redraw_title(you.your_name, filtered_lang(player_title()));
+        _redraw_title();
     }
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
