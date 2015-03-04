@@ -1222,15 +1222,22 @@ static void _setup_generic(const newgame_def& ng)
 
     initialise_item_descriptions();
 
+    // A first pass to link the items properly.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         if (!you.inv[i].defined())
             continue;
-        // link properly
         you.inv[i].pos = ITEM_IN_INVENTORY;
         you.inv[i].link = i;
         you.inv[i].slot = index_to_letter(you.inv[i].link);
         item_colour(you.inv[i]);  // set correct special and colour
+    }
+
+    // A second pass to apply item_slot option.
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (!you.inv[i].defined())
+            continue;
         if (!you.inv[i].props.exists("adjusted"))
         {
             you.inv[i].props["adjusted"] = true;
