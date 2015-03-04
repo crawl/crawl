@@ -445,7 +445,10 @@ void fire_thing(int item)
     if (item == -1)
         return;
 
-    if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
+    if (check_warning_inscriptions(you.inv[item], OPER_FIRE)
+        && (!you.weapon()
+            || is_launched(&you, you.weapon(), you.inv[item]) != LRET_LAUNCHED
+            || check_warning_inscriptions(*you.weapon(), OPER_FIRE)))
     {
         bolt beam;
         throw_it(beam, item, &target);
