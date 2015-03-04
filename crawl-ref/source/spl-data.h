@@ -1340,7 +1340,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
      SPTYP_TRANSMUTATION,
-     SPFLAG_BATTLE,
+     SPFLAG_BATTLE | SPFLAG_NO_GHOST,
      2,
      200,
      -1, -1,
