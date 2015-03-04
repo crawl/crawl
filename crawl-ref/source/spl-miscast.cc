@@ -1935,7 +1935,7 @@ void MiscastEffect::_necromancy(int severity)
                 do_msg();
             }
             else
-                torment(nullptr, TORMENT_MISCAST, target->pos());
+                torment_cell(target->pos(), nullptr, TORMENT_MISCAST);
             break;
 
         case 1:
