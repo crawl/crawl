@@ -3608,11 +3608,8 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " is wreathed in shadows.\n";
 
     // Seeing invisible.
-    if (mons_class_flag(mi.type, M_SEE_INVIS)
-            || mons_is_ghost_demon(mi.type) && mi.u.ghost.can_sinv)
-    {
+    if (mi.can_see_invisible())
         result << uppercase_first(pronoun) << " can see invisible.\n";
-    }
 
     // Echolocation, wolf noses, jellies, etc
     if (!mons_can_be_blinded(mi.type))
