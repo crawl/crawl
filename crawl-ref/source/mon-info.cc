@@ -1671,6 +1671,17 @@ int monster_info::randarts(artefact_prop_type ra_prop) const
     return ret;
 }
 
+bool monster_info::can_see_invisible() const
+{
+    // This should match the logic in monster::can_see_invisible().
+    if (mons_is_ghost_demon(type))
+        return u.ghost.can_sinv;
+
+    return mons_class_flag(type, M_SEE_INVIS)
+           || mons_is_demonspawn(type)
+              && mons_class_flag(draco_or_demonspawn_subspecies(), M_SEE_INVIS);
+}
+
 int monster_info::res_magic() const
 {
     int mr = (get_monster_data(type))->resist_magic;
