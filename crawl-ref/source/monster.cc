@@ -5352,6 +5352,8 @@ bool monster::needs_berserk(bool check_spells) const
 
 bool monster::can_see_invisible() const
 {
+    // If you change the non-item parts of this method, be sure to update
+    // monster_info::can_see_invisible() to match!
     if (mons_is_ghost_demon(type))
         return ghost->see_invis;
     else if (mons_class_flag(type, M_SEE_INVIS)
