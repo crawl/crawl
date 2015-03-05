@@ -1188,6 +1188,7 @@ void ghost_demon::init_lich(monster_type type)
     damage = me->attack[0].damage;
     att_type = me->attack[0].type;
     att_flav = me->attack[0].flavour;
+    see_invis = true;
 
     size_t count = 5 + random2(3);
 
