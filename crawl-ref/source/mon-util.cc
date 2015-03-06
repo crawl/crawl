@@ -2101,8 +2101,6 @@ int exper_value(const monster* mon, bool real)
     // Guarantee the value is within limits.
     if (x_val <= 0)
         x_val = 1;
-    else if (x_val > 15000)
-        x_val = 15000;
 
     return x_val;
 }
