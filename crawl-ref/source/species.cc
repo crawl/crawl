@@ -5,6 +5,7 @@
 
 #include "mon-enum.h"
 #include "player.h"
+#include "player-stats.h"
 #include "random.h"
 #include "stringutil.h"
 
@@ -234,4 +235,20 @@ void species_stat_init(species_type species)
     you.base_stats[STAT_STR] = _species_def(species).s;
     you.base_stats[STAT_INT] = _species_def(species).i;
     you.base_stats[STAT_DEX] = _species_def(species).d;
+}
+
+void species_stat_gain(species_type species)
+{
+    const species_def& sd = _species_def(species);
+    if (you.experience_level % sd.how_often != 0)
+        return;
+
+    vector<stat_type> avail_stats;
+    if (sd.gain_s)
+        avail_stats.push_back(STAT_STR);
+    if (sd.gain_i)
+        avail_stats.push_back(STAT_INT);
+    if (sd.gain_d)
+        avail_stats.push_back(STAT_DEX);
+    modify_stat(*random_iterator(avail_stats), 1, false, "level gain");
 }
