@@ -1282,34 +1282,20 @@ unsigned get_skill_rank(unsigned skill_lev)
  *
  * @param best_skill    The skill used to determine the title.
  * @param skill_rank    The player's rank in the given skill.
- * @param species_      The player's species_type.
- * @param str           The player's strength.
- * @param dex           The player's dex.
- * @param god_          The god_type of the god the player follows.
+ * @param species       The player's species.
+ * @param dex_better    Whether the player's dexterity is higher than strength.
+ * @param god           The god_type of the god the player follows.
  * @param piety         The player's piety with the given god.
  * @return              An appropriate and/or humorous title.
  */
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                           int species_, int str, int dex, int god_, int piety)
+                           species_type species, bool dex_better,
+                           god_type god, int piety)
 {
 
     // paranoia
     if (is_invalid_skill(best_skill))
         return "Adventurer";
-
-    if (str == -1)
-        str = you.base_stats[STAT_STR];
-
-    if (dex == -1)
-        dex = you.base_stats[STAT_DEX];
-
-    const species_type species = species_ != -1 ?
-                                 static_cast<species_type>(species_) :
-                                 you.species;
-
-    const god_type god = god_ != -1 ?
-                         static_cast<god_type>(god_) :
-                         you.religion;
 
     // Increment rank by one to "skip" skill name in array {dlb}:
     ++skill_rank;
@@ -1318,9 +1304,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
     if (best_skill < NUM_SKILLS)
     {
-        // Note that ghosts default to (dex == str) and god == no_god, due
-        // to a current lack of that information... the god case is probably
-        // suitable for most cases (TSO/Zin/Ely at the very least). -- bwr
         switch (best_skill)
         {
         case SK_UNARMED_COMBAT:
@@ -1329,8 +1312,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = claw_and_tooth_titles[skill_rank];
                 break;
             }
-            result = (dex >= str) ? martial_arts_titles[skill_rank]
-                                  : skill_titles[best_skill][skill_rank];
+            result = dex_better ? martial_arts_titles[skill_rank]
+                                : skill_titles[best_skill][skill_rank];
 
             break;
 

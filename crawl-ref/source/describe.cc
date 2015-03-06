@@ -52,6 +52,7 @@
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-book.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -4205,47 +4206,11 @@ string get_ghost_description(const monster_info &mi, bool concise)
 
     const species_type gspecies = mi.u.ghost.species;
 
-    // We're fudging stats so that unarmed combat gets based off
-    // of the ghost's species, not the player's stats... exact
-    // stats aren't required anyway, all that matters is whether
-    // dex >= str. -- bwr
-    const int dex = 10;
-    int str = 5;
-
-    switch (gspecies)
-    {
-    case SP_DEEP_DWARF:
-    case SP_TROLL:
-    case SP_OGRE:
-    case SP_MINOTAUR:
-    case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-    case SP_LAVA_ORC:
-#endif
-    case SP_CENTAUR:
-    case SP_NAGA:
-    case SP_MUMMY:
-    case SP_GHOUL:
-    case SP_FORMICID:
-    case SP_VINE_STALKER:
-        str += 10;
-        break;
-
-    case SP_HUMAN:
-    case SP_DEMIGOD:
-    case SP_DEMONSPAWN:
-        str += 5;
-        break;
-
-    default:
-        break;
-    }
-
     gstr << mi.mname << " the "
          << skill_title_by_rank(mi.u.ghost.best_skill,
                         mi.u.ghost.best_skill_rank,
                         gspecies,
-                        str, dex, mi.u.ghost.religion)
+                        species_has_low_str(gspecies), mi.u.ghost.religion)
          << ", " << _xl_rank_name(mi.u.ghost.xl_rank) << " ";
 
     if (concise)
