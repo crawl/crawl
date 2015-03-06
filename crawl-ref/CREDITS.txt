@@ -107,6 +107,7 @@
     Rahul Chandra
     Thom Chiovoloni
     Henry Cipolla
+    Nicholas Connelly
     Vitor 'Baconkid' Costa
     Aaron Curtis
     Simon Curtis
