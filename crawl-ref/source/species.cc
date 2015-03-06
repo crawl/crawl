@@ -230,6 +230,11 @@ int species_mp_modifier(species_type species)
     return _species_def(species).mp_mod;
 }
 
+int species_stealth_modifier(species_type species)
+{
+    return _species_def(species).stealth_mod;
+}
+
 void species_stat_init(species_type species)
 {
     you.base_stats[STAT_STR] = _species_def(species).s;
