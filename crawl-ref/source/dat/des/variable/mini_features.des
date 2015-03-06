@@ -2785,15 +2785,6 @@ MAP
 .........
 ENDMAP
 
-# Don't you wish you knew apportation?
-NAME: baited_tele_trap
-DEPTH: D, Depths, Orc, Elf, Lair, Swamp, Shoals, Snake, Spider, Vaults, Crypt, Zot
-KITEM: ^ = any good_item, any good_item/nothing, any good_item/nothing
-KFEAT: ^ = permanent teleport trap
-MAP
-^
-ENDMAP
-
 # Not hard to obtain as is, but requires getting shafted.
 NAME:  minmay_item_behind_shaft
 TAGS:  extra
