@@ -781,8 +781,7 @@ public:
      */
     int get_stealth_mod() const
     {
-        // vampires handle bat stealth in racial code
-        return you.species == SP_VAMPIRE ? 0 : stealth_mod;
+        return you.species == SP_VAMPIRE ? 20 : stealth_mod;
     }
 
     /**

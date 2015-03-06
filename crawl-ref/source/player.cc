@@ -3394,56 +3394,6 @@ void adjust_level(int diff, bool just_xp)
 }
 
 /**
- * Return a multiplier for dex when calculating stealth values, based on the
- * player's species.
- *
- * @return The stealth multiplier value for the player's species.
- */
-static int _species_stealth_mod()
-{
-    if (species_is_draconian(you.species))
-        return 12;
-
-    switch (you.species)
-    {
-        case SP_TROLL:
-        case SP_OGRE:
-        case SP_CENTAUR:
-#if TAG_MAJOR_VERSION == 34
-        case SP_DJINNI:
-#endif
-            return 9;
-
-        case SP_MINOTAUR:
-            return 12;
-
-        case SP_VAMPIRE:
-            // Thirsty/bat-form vampires are (much) more stealthy
-            if (you.hunger_state == HS_STARVING)
-                return 21;
-            if (you.form == TRAN_BAT
-                     || you.hunger_state <= HS_NEAR_STARVING)
-            {
-                return 20;
-            }
-            if (you.hunger_state < HS_SATIATED)
-                return 19;
-            return 18;
-
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:       // not small but very good at stealth
-        case SP_FELID:
-        case SP_OCTOPODE:
-            return 18;
-
-        default:
-            return 15;
-    }
-}
-
-/**
  * Return a multiplier for skill when calculating stealth values, based on the
  * player's species & form.
  *
@@ -3456,9 +3406,30 @@ static int _stealth_mod()
     if (form_stealth_mod != 0)
         return form_stealth_mod;
 
-    const int species_stealth_mod = _species_stealth_mod();
+    int species_stealth_mod = species_stealth_modifier(you.species);
     if (you.form == TRAN_STATUE)
-        return species_stealth_mod - 3;
+        species_stealth_mod -= 3;
+    // Thirsty vampires are (much) more stealthy
+    if (you.species == SP_VAMPIRE)
+    {
+        switch (you.hunger_state)
+        {
+        case HS_STARVING:
+            species_stealth_mod += 3;
+            break;
+
+        case HS_NEAR_STARVING:
+            species_stealth_mod += 2;
+            break;
+
+        case HS_VERY_HUNGRY:
+        case HS_HUNGRY:
+            species_stealth_mod += 1;
+            break;
+        default:
+            break;
+        }
+    }
     return species_stealth_mod;
 }
 
