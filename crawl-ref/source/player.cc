@@ -6673,39 +6673,11 @@ int player::res_magic() const
 
 int player_res_magic(bool calc_unid, bool temp)
 {
-    int rm = 0;
 
     if (temp && you.form == TRAN_SHADOW)
         return MAG_IMMUNE;
 
-    switch (you.species)
-    {
-    default:
-        rm = you.experience_level * 3;
-        break;
-    case SP_HIGH_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_DEEP_ELF:
-    case SP_VAMPIRE:
-    case SP_DEMIGOD:
-    case SP_OGRE:
-    case SP_FORMICID:
-        rm = you.experience_level * 4;
-        break;
-    case SP_NAGA:
-    case SP_MUMMY:
-    case SP_VINE_STALKER:
-        rm = you.experience_level * 5;
-        break;
-    case SP_PURPLE_DRACONIAN:
-    case SP_DEEP_DWARF:
-    case SP_FELID:
-        rm = you.experience_level * 6;
-        break;
-    case SP_SPRIGGAN:
-        rm = you.experience_level * 7;
-        break;
-    }
+    int rm = you.experience_level * species_mr_modifier(you.species);
 
     // randarts
     rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC, calc_unid);
