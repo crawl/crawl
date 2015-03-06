@@ -3008,39 +3008,11 @@ void level_change(bool skip_attribute_increase)
             tiles.layout_statcol();
             redraw_screen();
 #endif
+            if (!skip_attribute_increase)
+                species_stat_gain(you.species);
 
             switch (you.species)
             {
-            case SP_HUMAN:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                break;
-
-            case SP_HIGH_ELF:
-                if (!(you.experience_level % 3) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_INT
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_DEEP_ELF:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_INT, 1, false, "level gain");
-                break;
-
-#if TAG_MAJOR_VERSION == 34
-            case SP_SLUDGE_ELF:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_INT
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-#endif
-
             case SP_DEEP_DWARF:
                 if (you.experience_level == 14)
                     perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "level up");
@@ -3051,34 +3023,6 @@ void level_change(bool skip_attribute_increase)
                     perma_mutate(MUT_PASSIVE_MAPPING, 1, "level up");
                 }
 
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat(coinflip() ? STAT_STR
-                                           : STAT_INT, 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_HALFLING:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_DEX, 1, false, "level gain");
-                break;
-
-            case SP_KOBOLD:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-            case SP_LAVA_ORC:
-#endif
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_MUMMY:
@@ -3109,9 +3053,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_NAGA:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-
                 if (!(you.experience_level % 3))
                 {
                     mprf(MSGCH_INTRINSIC_GAIN, "Your skin feels tougher.");
@@ -3127,11 +3068,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_TROLL:
-                if (!(you.experience_level % 3) && !skip_attribute_increase)
-                    modify_stat(STAT_STR, 1, false, "level gain");
-                break;
-
-            case SP_OGRE:
                 if (!(you.experience_level % 3) && !skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -3178,6 +3114,7 @@ void level_change(bool skip_attribute_increase)
 
                     redraw_screen();
                 }
+            // fallthrough
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:
             case SP_GREEN_DRACONIAN:
@@ -3192,9 +3129,6 @@ void level_change(bool skip_attribute_increase)
                     mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
                     you.redraw_armour_class = true;
                 }
-
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 14)
                 {
@@ -3213,36 +3147,6 @@ void level_change(bool skip_attribute_increase)
                     default:
                         break;
                     }
-                }
-                break;
-
-            case SP_CENTAUR:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_DEMIGOD:
-                break;
-
-            case SP_SPRIGGAN:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_INT
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_MINOTAUR:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_DEX), 1, false,
-                                "level gain");
                 }
                 break;
 
@@ -3292,74 +3196,24 @@ void level_change(bool skip_attribute_increase)
                     }
                 }
 
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
             }
 
-            case SP_GHOUL:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_STR, 1, false, "level gain");
-                break;
-
             case SP_TENGU:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-
                 if (you.experience_level == 5)
                     mprf(MSGCH_INTRINSIC_GAIN, "You have gained the ability to fly.");
                 else if (you.experience_level == 14)
                     mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
                 break;
 
-            case SP_MERFOLK:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                break;
-
             case SP_FELID:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_INT
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-
                 if (you.experience_level == 6 || you.experience_level == 12)
                     perma_mutate(MUT_SHAGGY_FUR, 1, "growing up");
 
                 _felid_extra_life();
                 break;
 
-            case SP_OCTOPODE:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                break;
-
-#if TAG_MAJOR_VERSION == 34
-            case SP_DJINNI:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                break;
-
-#endif
-            case SP_FORMICID:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_INT), 1, false,
-                                "level gain");
-                }
-                break;
-
             case SP_GARGOYLE:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_INT), 1, false,
-                                "level gain");
-                }
-
                 if (you.experience_level == 14)
                 {
                     perma_mutate(MUT_BIG_WINGS, 1, "gargoyle growth");
@@ -3368,13 +3222,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_VINE_STALKER:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-
                 if (you.experience_level == 6)
                     perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
 
