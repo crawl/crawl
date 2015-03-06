@@ -590,7 +590,14 @@ bool melee_attack::handle_phase_aux()
             player_aux_unarmed();
         }
 
-        print_wounds(defender->as_monster());
+        // Don't print wounds after the first attack with Gyre/Gimble.
+        // DUR_CLEAVE and Gyre/Gimble interact poorly together at the moment,
+        // so don't try to skip print_wounds in that case.
+        if (!(weapon && is_unrandom_artefact(*weapon, UNRAND_GYRE)
+              && !cleaving && !you.duration[DUR_CLEAVE]))
+        {
+            print_wounds(defender->as_monster());
+        }
     }
 
     return true;
