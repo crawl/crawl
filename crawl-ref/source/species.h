@@ -40,6 +40,7 @@ int species_exp_modifier(species_type species);
 int species_hp_modifier(species_type species);
 int species_mp_modifier(species_type species);
 int species_stealth_modifier(species_type species);
+int species_mr_modifier(species_type species);
 
 void species_stat_init(species_type species);
 void species_stat_gain(species_type species);
