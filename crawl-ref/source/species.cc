@@ -240,6 +240,18 @@ int species_mr_modifier(species_type species)
     return _species_def(species).mr_mod;
 }
 
+/**
+ *  Does this species have (relatively) low strength?
+ *  Used to generate the title for UC ghosts.
+ *
+ *  @param species the speciecs to check.
+ *  @returns whether the starting str is lower than the starting dex.
+ */
+bool species_has_low_str(species_type species)
+{
+    return _species_def(species).d >= _species_def(species).s;
+}
+
 void species_stat_init(species_type species)
 {
     you.base_stats[STAT_STR] = _species_def(species).s;

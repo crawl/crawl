@@ -44,4 +44,5 @@ int species_mr_modifier(species_type species);
 
 void species_stat_init(species_type species);
 void species_stat_gain(species_type species);
+bool species_has_low_str(species_type species);
 #endif
