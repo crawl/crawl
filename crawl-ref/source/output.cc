@@ -1269,14 +1269,34 @@ void print_stats()
         you.redraw_title = false;
         _redraw_title();
     }
-    if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
-    if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
+    if (you.redraw_hit_points)
+    {
+        you.redraw_hit_points = false;
+        _print_stats_hp(1, 3);
+    }
+    if (you.redraw_magic_points)
+    {
+        you.redraw_magic_points = false;
+        _print_stats_mp(1, 4);
+    }
 #if TAG_MAJOR_VERSION == 34
     _print_stats_contam(1, 4);
-    if (you.redraw_temperature)  { you.redraw_temperature = false;  _print_stats_temperature (1, temp_pos); }
+    if (you.redraw_temperature)
+    {
+        you.redraw_temperature = false;
+        _print_stats_temperature(1, temp_pos);
+    }
 #endif
-    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, ac_pos); }
-    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (1, ev_pos); }
+    if (you.redraw_armour_class)
+    {
+        you.redraw_armour_class = false;
+        _print_stats_ac(1, ac_pos);
+    }
+    if (you.redraw_evasion)
+    {
+        you.redraw_evasion = false;
+        _print_stats_ev(1, ev_pos);
+    }
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
