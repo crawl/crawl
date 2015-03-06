@@ -1989,6 +1989,7 @@ int exper_value(const monster* mon, bool real)
             case SPELL_TORNADO:
             case SPELL_LEGENDARY_DESTRUCTION:
             case SPELL_SUMMON_ILLUSION:
+            case SPELL_SPELLFORGED_SERVITOR:
                 diff += 25;
                 break;
 
