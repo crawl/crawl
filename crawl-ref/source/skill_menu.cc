@@ -504,26 +504,26 @@ string SkillMenuSwitch::get_help()
     switch (m_state)
     {
     case SKM_MODE_AUTO:
-        return "In automatic mode, skills are trained as you use them.";
+        return "In automatic mode, skills are trained as you use them. ";
     case SKM_MODE_MANUAL:
         return "In manual mode, experience is spread evenly across all "
-                "activated skills.";
+                "activated skills. ";
     case SKM_DO_PRACTISE:
         if (skm.is_set(SKMF_SIMPLE))
             return hints_skills_info();
         else
         {
             return "Press the letter of a skill to choose whether you want to "
-                   "practise it. Skills marked with '-' will not be trained.";
+                   "practise it. Skills marked with '-' will not be trained. ";
         }
     case SKM_DO_FOCUS:
         return "Press the letter of a skill to cycle between "
                "<darkgrey>disabled</darkgrey> (-), enabled (+) and "
                "<white>focused</white> (*). Focused skills train twice as "
-               "fast as others.";
+               "fast as others. ";
     case SKM_LEVEL_ENHANCED:
         if (skm.is_set(SKMF_ENHANCED))
-            return make_stringf("Enhanced skills are in <blue>blue</blue>.");
+            return make_stringf("Enhanced skills are in <blue>blue</blue>. ");
         else
         {
             vector<const char *> causes;
@@ -549,7 +549,7 @@ string SkillMenuSwitch::get_help()
     case SKM_VIEW_TRANSFER:
         return "The progress of the knowledge transfer is displayed in "
                "<cyan>cyan</cyan> in front of the skill receiving the "
-               "knowledge. The donating skill is marked with '*'.";
+               "knowledge. The donating skill is marked with '*'. ";
     default: return "";
     }
 }
