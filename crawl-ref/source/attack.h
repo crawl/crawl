@@ -138,6 +138,7 @@ protected:
     virtual int calc_damage();
     int test_hit(int to_hit, int ev, bool randomise_ev);
     int apply_defender_ac(int damage, int damage_max = 0, bool half_ac = false);
+    bool attack_warded_off();
     // Determine if we're blocking (partially or entirely)
     virtual bool attack_shield_blocked(bool verbose);
     virtual bool attack_ignores_shield(bool verbose) = 0;
