@@ -453,7 +453,7 @@ static void _update_weapon(const newgame_def& ng)
         if (species_can_throw_large_rocks(ng.species))
         {
             newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1,
-                              4 + plus);
+                              multiply_ammo(MI_LARGE_ROCK, 4 + plus));
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             autopickup_starting_ammo(MI_LARGE_ROCK);
             autopickup_starting_ammo(MI_THROWING_NET);
@@ -461,7 +461,7 @@ static void _update_weapon(const newgame_def& ng)
         else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
         {
             newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1,
-                              8 + 2 * plus);
+                              multiply_ammo(MI_TOMAHAWK, 8 + 2 * plus));
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             autopickup_starting_ammo(MI_TOMAHAWK);
             autopickup_starting_ammo(MI_THROWING_NET);
@@ -469,7 +469,7 @@ static void _update_weapon(const newgame_def& ng)
         else
         {
             newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1,
-                              5 + plus);
+                              multiply_ammo(MI_JAVELIN, 5 + plus));
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             autopickup_starting_ammo(MI_JAVELIN);
             autopickup_starting_ammo(MI_THROWING_NET);
@@ -477,7 +477,8 @@ static void _update_weapon(const newgame_def& ng)
         break;
     case WPN_SHORTBOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SHORTBOW, -1, 1, plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 20);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
+                          multiply_ammo(MI_ARROW, 20));
         autopickup_starting_ammo(MI_ARROW);
 
         // Wield the bow instead.
@@ -486,7 +487,8 @@ static void _update_weapon(const newgame_def& ng)
     case WPN_HAND_CROSSBOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW, -1, 1,
                           plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
+                          multiply_ammo(MI_BOLT, 20));
         autopickup_starting_ammo(MI_BOLT);
 
         // Wield the crossbow instead.
@@ -495,7 +497,8 @@ static void _update_weapon(const newgame_def& ng)
     case WPN_HUNTING_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HUNTING_SLING, -1, 1,
                           plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
+                          multiply_ammo(MI_SLING_BULLET, 20));
         autopickup_starting_ammo(MI_SLING_BULLET);
         autopickup_starting_ammo(MI_STONE);
 
@@ -845,9 +848,11 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
 
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 8);
+        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
+                          multiply_ammo(MI_NEEDLE, 8));
         set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
-        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 2);
+        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
+                          multiply_ammo(MI_NEEDLE, 2));
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
         autopickup_starting_ammo(MI_NEEDLE);
 

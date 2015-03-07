@@ -19,7 +19,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         if (plus)
         {
             newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
-                               1 + random2(4));
+                               multiply_ammo(MI_NEEDLE, 1 + random2(4)));
             set_item_ego_type(you.inv[slot], OBJ_MISSILES, SPMSL_CURARE);
             slot++;
         }
@@ -27,7 +27,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         else
         {
             newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
-                               5 + roll_dice(2, 5));
+                               multiply_ammo(MI_NEEDLE, 5 + roll_dice(2, 5)));
             set_item_ego_type(you.inv[slot], OBJ_MISSILES, SPMSL_POISONED);
             slot++;
         }
@@ -806,7 +806,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     if (need_bolts)
     {
         newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
-                           15 + random2avg(21, 5));
+                            multiply_ammo(MI_BOLT, 15 + random2avg(21, 5)));
         slot++;
         autopickup_starting_ammo(MI_BOLT);
     }
@@ -826,7 +826,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     if (needs_arrows)
     {
         newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
-                           15 + random2avg(21, 5));
+                           multiply_ammo(MI_ARROW, 15 + random2avg(21, 5)));
         slot++;
         autopickup_starting_ammo(MI_ARROW);
     }

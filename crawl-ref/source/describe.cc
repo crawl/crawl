@@ -1271,10 +1271,9 @@ void append_missile_info(string &description, const item_def &item)
     if (dam)
         description += make_stringf("\nBase damage: %d\n", dam);
 
-    if (ammo_always_destroyed(item))
+    if (!ammo_never_destroyed(item))
         description += "\nIt will always be destroyed on impact.";
-    else if (!ammo_never_destroyed(item))
-        description += "\nIt may be destroyed on impact.";
+
 }
 
 //---------------------------------------------------------------
