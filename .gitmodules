@@ -30,4 +30,4 @@
 	url = https://gitorious.org/crawl/crawl-sdl2-image.git
 [submodule "crawl-ref/source/contrib/sdl2-mixer"]
 	path = crawl-ref/source/contrib/sdl2-mixer
-	url = https://gitorious.org/crawl/crawl-sdl2-mixer
+	url = https://gitorious.org/crawl/crawl-sdl2-mixer.git
