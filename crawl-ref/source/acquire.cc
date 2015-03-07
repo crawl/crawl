@@ -1416,8 +1416,9 @@ int acquirement_create_item(object_class_type class_wanted,
             {
                 if (agent == GOD_TROG)
                     acq_item.plus += random2(3);
-                if (!is_artefact(acq_item))
-                    acq_item.plus = max(static_cast<int>(acq_item.plus), 1);
+
+                // On a weapon, an enchantment of less than 0 is never viable.
+                acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
             }
         }
         else if (is_deck(acq_item))
