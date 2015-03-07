@@ -1117,7 +1117,6 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_CORONA:
     case SPELL_SLOW:
     case SPELL_CONFUSE:
-    case SPELL_ENSLAVEMENT:
     case SPELL_INNER_FLAME:
     case SPELL_PAIN:
     case SPELL_AGONY:
@@ -1924,6 +1923,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     // Removed spells.
     case SPELL_CIGOTUVIS_DEGENERATION:
     case SPELL_DEMONIC_HORDE:
+    case SPELL_ENSLAVEMENT:
     case SPELL_EVAPORATE:
     case SPELL_FIRE_BRAND:
     case SPELL_FORCEFUL_DISMISSAL:
