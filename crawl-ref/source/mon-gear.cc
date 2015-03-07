@@ -1702,7 +1702,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
 
         case MONS_CHUCK:
             weap_type  = MI_LARGE_ROCK;
-            qty = 2;
+            qty = 50;
             break;
 
         case MONS_POLYPHEMUS:
@@ -1767,9 +1767,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         if (thing_created != NON_ITEM)
         {
             item_def& w(mitm[thing_created]);
-
-            if (mon->type == MONS_CHUCK)
-                set_item_ego_type(w, OBJ_MISSILES, SPMSL_RETURNING);
 
             w.quantity = qty;
             _give_monster_item(mon, thing_created, false);

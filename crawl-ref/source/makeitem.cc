@@ -541,8 +541,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     0);
         break;
     case MI_JAVELIN:
-        rc = random_choose_weighted(30, SPMSL_RETURNING,
-                                    32, SPMSL_PENETRATION,
+        rc = random_choose_weighted(32, SPMSL_PENETRATION,
                                     32, SPMSL_POISONED,
                                     21, SPMSL_STEEL,
                                     20, SPMSL_SILVER,
@@ -554,7 +553,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     10, SPMSL_SILVER,
                                     10, SPMSL_STEEL,
                                     12, SPMSL_DISPERSAL,
-                                    28, SPMSL_RETURNING,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
@@ -655,8 +653,6 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
         return type == MI_SLING_BULLET || type == MI_ARROW
                || type == MI_BOLT || type == MI_JAVELIN
                || type == MI_TOMAHAWK;
-    case SPMSL_RETURNING:
-        return type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_CHAOS:
         return type == MI_SLING_BULLET || type == MI_ARROW
                || type == MI_BOLT || type == MI_TOMAHAWK
@@ -731,8 +727,7 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN || item.sub_type == MI_TOMAHAWK
-        || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
-        || get_ammo_brand(item) == SPMSL_RETURNING)
+        || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED))
     {
         item.quantity = multiply_ammo(item.sub_type, random_range(2, 8));
     }

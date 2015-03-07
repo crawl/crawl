@@ -5573,8 +5573,10 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_POISONED;
         case SPMSL_CURARE:
             return TILE_BRAND_CURARE;
+#if TAG_MAJOR_VERSION == 34
         case SPMSL_RETURNING:
             return TILE_BRAND_RETURNING;
+#endif
         case SPMSL_CHAOS:
             return TILE_BRAND_CHAOS;
         case SPMSL_PENETRATION:

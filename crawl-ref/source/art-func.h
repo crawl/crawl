@@ -914,7 +914,7 @@ static void _HELLFIRE_equip(item_def *item, bool *show_msgs, bool unmeld)
 }
 
 static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
-                                           string* ammo_name, bool* returning)
+                                           string* ammo_name)
 {
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
