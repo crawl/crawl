@@ -482,7 +482,6 @@ static const pop_entry pop_crypt[] =
   {  0,  5,  105, UP,   MONS_VAMPIRE_KNIGHT },
   {  0,  6,   75, SEMI, MONS_DEATH_KNIGHT },
   {  1,  4,   75, FLAT, MONS_SKELETAL_WARRIOR },
-  {  1,  5,   30, FLAT, MONS_SILENT_SPECTRE },
   {  1,  5,   55, SEMI, MONS_SOUL_EATER },
   {  1,  6,  145, SEMI, MONS_EIDOLON },
   {  1,  6,   80, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
