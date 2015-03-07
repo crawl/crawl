@@ -2400,17 +2400,6 @@ bool melee_attack::player_good_stab()
 
 bool melee_attack::attack_ignores_shield(bool verbose)
 {
-    if (attacker->is_monster() && attacker->type == MONS_PHANTASMAL_WARRIOR)
-    {
-        if (needs_message && verbose)
-        {
-            mprf("%s blade passes through %s shield.",
-                atk_name(DESC_ITS).c_str(),
-                def_name(DESC_ITS).c_str());
-            return true;
-        }
-    }
-
     return false;
 }
 
@@ -3747,8 +3736,7 @@ int melee_attack::calc_mon_to_hit_base()
  * Add modifiers to the base damage.
  * Currently only relevant for monsters.
  */
-int melee_attack::apply_damage_modifiers(int damage, int damage_max,
-                                         bool &half_ac)
+int melee_attack::apply_damage_modifiers(int damage, int damage_max)
 {
     ASSERT(attacker->is_monster());
     monster *as_mon = attacker->as_monster();
@@ -3786,8 +3774,6 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max,
 
     if (as_mon->has_ench(ENCH_WEAK))
         damage = damage * 2 / 3;
-
-    half_ac = (as_mon->type == MONS_PHANTASMAL_WARRIOR);
 
     // If the defender is asleep, the attacker gets a stab.
     if (defender && (defender->asleep()

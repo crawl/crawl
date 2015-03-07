@@ -133,11 +133,10 @@ protected:
     int calc_stat_to_hit_base();
     int calc_stat_to_dam_base();
     virtual int calc_mon_to_hit_base() = 0;
-    virtual int apply_damage_modifiers(int damage, int damage_max,
-                                       bool &half_ac) = 0;
+    virtual int apply_damage_modifiers(int damage, int damage_max) = 0;
     virtual int calc_damage();
     int test_hit(int to_hit, int ev, bool randomise_ev);
-    int apply_defender_ac(int damage, int damage_max = 0, bool half_ac = false);
+    int apply_defender_ac(int damage, int damage_max = 0);
     bool attack_warded_off();
     // Determine if we're blocking (partially or entirely)
     virtual bool attack_shield_blocked(bool verbose);

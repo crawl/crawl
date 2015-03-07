@@ -374,8 +374,7 @@ int ranged_attack::calc_mon_to_hit_base()
     return 18 + attacker->get_hit_dice() * hd_mult / 6;
 }
 
-int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
-                                          bool &half_ac)
+int ranged_attack::apply_damage_modifiers(int damage, int damage_max)
 {
     ASSERT(attacker->is_monster());
     if (attacker->as_monster()->is_archer())
@@ -383,7 +382,6 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
         const int bonus = attacker->get_hit_dice() * 4 / 3;
         damage += random2avg(bonus, 2);
     }
-    half_ac = false;
     return damage;
 }
 
