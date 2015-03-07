@@ -597,7 +597,7 @@ static const missile_def Missile_prop[] =
     { MI_STONE,         "stone",         2, 10,  true  },
     { MI_ARROW,         "arrow",         0, 10,  false },
     { MI_BOLT,          "bolt",          0, 10,  false },
-    { MI_LARGE_ROCK,    "large rock",   20,  1,  true  },
+    { MI_LARGE_ROCK,    "large rock",   20, 10,  true  },
     { MI_SLING_BULLET,  "sling bullet",  4, 10,  false },
     { MI_JAVELIN,       "javelin",      10, 25,  true  },
     { MI_THROWING_NET,  "throwing net",  0,  0,  true  },
