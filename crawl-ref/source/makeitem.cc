@@ -230,6 +230,9 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         else if (item.plus < 0 && !one_chance_in(3))
             cursed = true;
 
+        // On body armour, an enchantment of less than 0 is never viable.
+        item.plus = max(static_cast<int>(item.plus), 0);
+
         // The rest are normal randarts.
         make_item_randart(item);
 
@@ -788,6 +791,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             if (item.plus < 0 && !one_chance_in(3))
                 do_curse_item(item);
         }
+
+        // On body armour, an enchantment of less than 0 is never viable.
+        if (get_armour_slot(item) == EQ_BODY_ARMOUR)
+            item.plus = max(static_cast<int>(item.plus), 0);
 
         // Needs to be done after the barding chance else we get randart
         // bardings named Boots of xy.
