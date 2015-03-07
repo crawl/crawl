@@ -1561,13 +1561,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_MEPHITIC_CLOUD:
         return stinking_cloud(powc, beam, fail);
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_EVAPORATE:
-    case SPELL_CIGOTUVIS_DEGENERATION:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
     case SPELL_FREEZING_CLOUD:
@@ -1651,23 +1644,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_STICKS_TO_SNAKES:
         return cast_sticks_to_snakes(powc, god, fail);
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_SUMMON_SCORPIONS:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_SUMMON_SWARM:
         return cast_summon_swarm(powc, god, fail);
 
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
-
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_SUMMON_ELEMENTAL:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_SUMMON_ICE_BEAST:
         return cast_summon_ice_beast(powc, god, fail);
@@ -1702,12 +1683,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_DEMON:
         return cast_summon_demon(powc, god, fail);
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_DEMONIC_HORDE:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_SUMMON_GREATER_DEMON:
         return cast_summon_greater_demon(powc, god, fail);
 
@@ -1732,12 +1707,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SIMULACRUM:
         return cast_simulacrum(powc, god, fail);
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_TWISTED_RESURRECTION:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_HAUNT:
         return cast_haunt(powc, beam.target, god, fail);
 
@@ -1746,12 +1715,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_SPELLFORGED_SERVITOR:
         return cast_spellforged_servitor(powc, god, fail);
-
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_FORCEFUL_DISMISSAL:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_SPECTRAL_WEAPON:
         return cast_spectral_weapon(&you, powc, god, fail);
@@ -1810,14 +1773,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_healing(25, 25);
 
     // Self-enchantments. (Spells that can only affect the player.)
-    // Resistances.
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_INSULATION:
-    case SPELL_SEE_INVISIBLE:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_CONTROL_TELEPORT:
         return cast_teleport_control(powc, fail);
 
@@ -1828,15 +1783,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     // Weapon brands.
     case SPELL_SURE_BLADE:
         return cast_sure_blade(powc, fail);
-
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_FIRE_BRAND:
-    case SPELL_FREEZING_AURA:
-    case SPELL_POISON_WEAPON:
-    case SPELL_LETHAL_INFUSION:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
 
     case SPELL_EXCRUCIATING_WOUNDS:
         return brand_weapon(SPWPN_PAIN, powc, fail);
@@ -1909,12 +1855,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SONG_OF_SLAYING:
         return cast_song_of_slaying(powc, fail);
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_SONG_OF_SHIELDING:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_PORTAL_PROJECTILE:
         return cast_portal_projectile(powc, fail);
 
@@ -1959,12 +1899,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CORPSE_ROT:
         return cast_corpse_rot(fail);
 
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_FULSOME_DISTILLATION:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-#endif
-
     case SPELL_GOLUBRIAS_PASSAGE:
         return cast_golubrias_passage(beam.target, fail);
 
@@ -1991,6 +1925,27 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_SCATTERSHOT:
         return cast_scattershot(&you, powc, target, fail);
+
+#if TAG_MAJOR_VERSION == 34
+    // Removed spells.
+    case SPELL_CIGOTUVIS_DEGENERATION:
+    case SPELL_DEMONIC_HORDE:
+    case SPELL_EVAPORATE:
+    case SPELL_FIRE_BRAND:
+    case SPELL_FORCEFUL_DISMISSAL:
+    case SPELL_FREEZING_AURA:
+    case SPELL_FULSOME_DISTILLATION:
+    case SPELL_INSULATION:
+    case SPELL_LETHAL_INFUSION:
+    case SPELL_POISON_WEAPON:
+    case SPELL_SEE_INVISIBLE:
+    case SPELL_SONG_OF_SHIELDING:
+    case SPELL_SUMMON_SCORPIONS:
+    case SPELL_SUMMON_ELEMENTAL:
+    case SPELL_TWISTED_RESURRECTION:
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     default:
         return SPRET_NONE;
