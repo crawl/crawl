@@ -116,8 +116,7 @@ string pluralise(const string &name, const char * const qualifiers[],
              || ends_with(name, "folk")     || ends_with(name, "spawn")
              || ends_with(name, "tengu")    || ends_with(name, "sheep")
              || ends_with(name, "swine")    || ends_with(name, "efreet")
-             || ends_with(name, "jiangshi") || ends_with(name, "unborn")
-             || ends_with(name, "raiju")    )
+             || ends_with(name, "jiangshi") || ends_with(name, "raiju"))
     {
         return name;
     }

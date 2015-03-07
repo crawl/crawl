@@ -813,7 +813,7 @@ ENDMAP
 NAME: vestibule_tar_grunt_deathgaze
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
-KMONS: T = revenant / lich / unborn / shadow dragon
+KMONS: T = revenant / lich / shadow dragon
 MONS: ancient champion band, reaper / soul eater, skeletal warrior band
 FTILE: +'T12 = floor_infernal_blank
 TILE: c = dngn_stone_dark

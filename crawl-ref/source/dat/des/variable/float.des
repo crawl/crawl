@@ -2138,8 +2138,8 @@ MONS:    patrolling flying skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / ghoul / large abomination / phantasmal warrior
-KMONS:   4 = Boris / lich / unborn
-KMONS:   5 = lich / unborn
+KMONS:   4 = Boris / lich / death knight
+KMONS:   5 = lich / death knight
 : elseif you.absdepth() > 13 then
 MONS:    skeletal warrior / eidolon
 KMONS:   4 = Frances / vampire mage / necromancer
