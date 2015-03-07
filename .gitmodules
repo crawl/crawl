@@ -1,33 +1,33 @@
 [submodule "crawl-ref/source/contrib/sqlite"]
 	path = crawl-ref/source/contrib/sqlite
-	url = git://gitorious.org/crawl/crawl-sqlite.git
+	url = https://gitorious.org/crawl/crawl-sqlite.git
 [submodule "crawl-ref/source/contrib/lua"]
 	path = crawl-ref/source/contrib/lua
-	url = git://gitorious.org/crawl/crawl-lua.git
+	url = https://gitorious.org/crawl/crawl-lua.git
 [submodule "crawl-ref/source/contrib/luajit"]
 	path = crawl-ref/source/contrib/luajit
-	url = git://gitorious.org/crawl/crawl-luajit.git
+	url = https://gitorious.org/crawl/crawl-luajit.git
 [submodule "crawl-ref/source/contrib/pcre"]
 	path = crawl-ref/source/contrib/pcre
-	url = git://gitorious.org/crawl/crawl-pcre.git
+	url = https://gitorious.org/crawl/crawl-pcre.git
 [submodule "crawl-ref/source/contrib/freetype"]
 	path = crawl-ref/source/contrib/freetype
-	url = git://gitorious.org/crawl/crawl-freetype.git
+	url = https://gitorious.org/crawl/crawl-freetype.git
 [submodule "crawl-ref/source/contrib/libpng"]
 	path = crawl-ref/source/contrib/libpng
-	url = git://gitorious.org/crawl/crawl-libpng.git
+	url = https://gitorious.org/crawl/crawl-libpng.git
 [submodule "crawl-ref/source/contrib/zlib"]
 	path = crawl-ref/source/contrib/zlib
-	url = git://gitorious.org/crawl/crawl-zlib.git
+	url = https://gitorious.org/crawl/crawl-zlib.git
 [submodule "crawl-ref/source/contrib/fonts"]
 	path = crawl-ref/source/contrib/fonts
-	url = git://gitorious.org/crawl/crawl-fonts.git
+	url = https://gitorious.org/crawl/crawl-fonts.git
 [submodule "crawl-ref/source/contrib/sdl2"]
 	path = crawl-ref/source/contrib/sdl2
-	url = git://gitorious.org/crawl/crawl-sdl2.git
+	url = https://gitorious.org/crawl/crawl-sdl2.git
 [submodule "crawl-ref/source/contrib/sdl2-image"]
 	path = crawl-ref/source/contrib/sdl2-image
-	url = git://gitorious.org/crawl/crawl-sdl2-image.git
+	url = https://gitorious.org/crawl/crawl-sdl2-image.git
 [submodule "crawl-ref/source/contrib/sdl2-mixer"]
 	path = crawl-ref/source/contrib/sdl2-mixer
-	url = git://gitorious.org/crawl/crawl-sdl2-mixer
+	url = https://gitorious.org/crawl/crawl-sdl2-mixer
