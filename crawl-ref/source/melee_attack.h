@@ -112,7 +112,6 @@ private:
 
     /* Brand / Attack Effects */
     bool do_knockback(bool trample = true);
-    bool attack_warded_off();
 
     /* Output methods */
     void set_attack_verb();
