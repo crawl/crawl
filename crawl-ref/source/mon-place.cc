@@ -1371,8 +1371,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->god = GOD_TROG;
         // Profane servitors and death knights belong to Yredelemnul.
         else if (mg.cls == MONS_PROFANE_SERVITOR
-                 || mg.cls == MONS_DEATH_KNIGHT
-                 || mg.cls == MONS_UNBORN)
+                 || mg.cls == MONS_DEATH_KNIGHT)
         {
             mon->god = GOD_YREDELEMNUL;
         }

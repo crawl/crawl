@@ -342,7 +342,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
-MONS:    death knight / unborn w:5
+MONS:    death knight
 MONS:    shadow wraith / wraith / wight w:5
 : crypt_entry(_G)
 MAP
@@ -1052,10 +1052,10 @@ NSUBST:  2 = 3:2 / *:3
 FTILE:   _567$*|+ = floor_tomb
 TILE:    t = dngn_tree_dead
 MONS:    flayed ghost / phantasmal warrior
-MONS:    vampire mage / vampire knight / death knight
+MONS:    vampire mage / vampire knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
 MONS:    ancient champion / w:20 ghoul
-MONS:    w:20 unborn / w:20 bone dragon / revenant
+MONS:    w:20 death knight / w:20 bone dragon / revenant
 MONS:    profane servitor
 KFEAT:   7 = altar_yredelemnul
 KFEAT:   O = granite_statue
@@ -1102,7 +1102,7 @@ MONS:    necromancer / vampire w:6 / soul eater w:2
 MONS:    vampire mage / deep elf death mage, lich / reaper w:2
 MONS:    shadow wraith / phantasmal warrior / ghost crab w:4
 KMONS:   8 = eidolon / flayed ghost
-KMONS:   9 = revenant / unborn
+KMONS:   9 = revenant
 KMONS:   A = guardian mummy w:7 / ushabti w:3 / \
              skeleton w:8 / flying skull band w:6
 KMONS:   B = ancient champion
@@ -1328,7 +1328,7 @@ KMONS:  7 = vampire / skeletal warrior / w:15 zombie / wraith / w:5 nothing
 # ghost layout
 : elseif brnd > 0 then
 MONS:   curse skull
-MONS:   revenant / unborn w:1
+MONS:   revenant
 MONS:   lich
 MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
@@ -1749,13 +1749,13 @@ SHUFFLE: 9H
 # Temple of yred
 KFEAT: _ = altar_yredelemnul
 KMONS:  9 = patrolling profane servitor
-KMONS:  H = w:20 patrolling unborn / patrolling profane servitor
+KMONS:  H = w:20 patrolling death knight / patrolling profane servitor
 KMONS:  0 = patrolling ghoul
 KMONS:  A = patrolling death knight
 KMONS:  B = skeletal warrior
 KMONS:  C = necrophage
 KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadow / nothing
-KMONS:  F = patrolling bone dragon / patrolling unborn
+KMONS:  F = patrolling bone dragon
 : else
 # Temple of kiku - more necromancers, more demonic (kiku's description refers to
 # him/her/it being demonic). Not as much undead in this set.
@@ -1900,7 +1900,7 @@ KMONS:  6 = generate_awake vampire mage
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling spectral thing w:8
 MONS:   revenant
-MONS:   eidolon / unborn w:6
+MONS:   eidolon
 MONS:   flayed ghost / phantasmal warrior
 MONS:   spectral thing / simulacrum / shadow w:5 / wraith w:5 / shadow wraith / \
         spectral storm dragon w:5 / spectral ice dragon w:5 / \
@@ -1992,7 +1992,7 @@ KMONS:   C = revenant
 KMONS:   BD = freezing wraith / shadow wraith / wraith
 KMONS:   E = deep elf death mage
 KMONS:   F = lost soul / small abomination / large abomination w:2
-KMONS:   H = unborn
+KMONS:   H = death knight
 KMONS:   I = death knight w:5 / nothing
 KMONS:   J = profane servitor
 KMONS:   L = bone dragon

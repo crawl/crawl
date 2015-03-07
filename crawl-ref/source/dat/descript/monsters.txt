@@ -2521,11 +2521,6 @@ ugly thing
 An ugly thing. According to legend, this mutated creature is the otherworldly
 spawn of a wizard's breeding experiment. Yuck.
 %%%%
-unborn
-
-A devotee of Yredelemnul that has committed to eternal worship and servitude —
-even beyond death.
-%%%%
 unseen horror
 
 A creature rarely seen by anyone; those few who have seen one would rather they
