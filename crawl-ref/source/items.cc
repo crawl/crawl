@@ -4393,12 +4393,13 @@ bool get_item_by_name(item_def *item, const char* specs,
                     debug_prompt_for_skill("A manual for which skill? ");
 
             if (skill != SK_NONE)
-            {
-                item->skill        = skill;
-                item->skill_points = random_range(2000, 3000);
-            }
+                item->skill = skill;
             else
+            {
                 mpr("Sorry, no books on that skill today.");
+                item->skill = SK_FIGHTING; // Was probably that anyway.
+            }
+            item->skill_points = random_range(2000, 3000);
         }
         else if (type_wanted == BOOK_RANDART_THEME)
         {
