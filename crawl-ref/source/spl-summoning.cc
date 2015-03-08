@@ -315,7 +315,7 @@ spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool f
         type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM);
 
     if(player_will_anger_monster(type))
-        type = MONS_MANTICORE; //
+        type = MONS_MANTICORE;
 
     int num = (type == MONS_HARPY ? 1 + x_chance_in_y(pow, 80)
                                       + x_chance_in_y(pow - 75, 100)

@@ -230,7 +230,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         else if (item.plus < 0 && !one_chance_in(3))
             cursed = true;
 
-        // On body armour, an enchantment of less than 0 is never viable.
+        // On weapons, an enchantment of less than 0 is never viable.
         item.plus = max(static_cast<int>(item.plus), random2(2));
 
         // The rest are normal randarts.
