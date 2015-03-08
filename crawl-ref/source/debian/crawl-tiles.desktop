@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+
+Name=Dungeon Crawl (tiles)
+Exec=/usr/games/crawl-tiles
+Icon=crawl
+Categories=Game;AdventureGame;

@@ -1,0 +1,164 @@
+#!/usr/bin/make -f
+
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+	NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+	MAKEFLAGS += -j$(NUMJOBS)
+endif
+
+DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
+
+ifneq (,$(shell gcc --version|grep 'gcc (.*) 4\.4\.'))
+  ifeq ($(DEB_HOST_ARCH),powerpc)
+	## g++-4.4 has an ICE there.
+	DEB_BUILD_OPTIONS := $(DEB_BUILD_OPTIONS) noopt
+  endif
+endif
+
+ifneq (,$(findstring amd64,$(DEB_HOST_ARCH)))
+  LTO=y
+endif
+ifneq (,$(findstring x32,$(DEB_HOST_ARCH)))
+  LTO=y
+endif
+ifneq (,$(findstring i386,$(DEB_HOST_ARCH)))
+  LTO=y
+endif
+
+CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) \
+             $(shell dpkg-buildflags --get LDFLAGS) \
+             $(shell dpkg-buildflags --get CPPFLAGS)
+ifneq ($(LTO),)
+  ifeq ($(shell g++ -x c++ /dev/null -flto=jobserver -fwhole-program 2>&1 | grep 'unrecognized command line option'),)
+    CFOPTIMIZE += -flto=jobserver -fwhole-program
+  endif
+  ifeq ($(shell g++ -x c++ /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
+    CFOPTIMIZE += -fno-fat-lto-objects
+  endif
+endif
+## XXX 
+## Package fails to build on ubuntu with LTO unless -g is remove on my system.
+## Doesn't build on debian testing even with -g removed. --gammafunk
+CFOPTIMIZE := $(filter-out -g,$(CFOPTIMIZE))
+
+ifeq (,$(filter terse%,$(DEB_BUILD_OPTIONS))$(filter quiet%,$(DEB_BUILD_OPTIONS)))
+        VERBOSE=V=y
+endif
+
+tree-stamp:
+	dh_testdir
+	mkdir build-console
+	cp -ldpR docs settings source CREDITS.txt build-console/
+	mkdir build-tiles
+	cp -ldpR docs settings source CREDITS.txt build-tiles/
+	touch tree-stamp
+
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
+	CROSS=CROSSHOST=$(DEB_HOST_GNU_TYPE)
+endif
+
+# The makefile is unorthodox, requiring all options to be specified on every invocation.
+ARGS_CONSOLE = prefix=/usr CFOPTIMIZE="$(CFOPTIMIZE)" STRIP=: $(CROSS) $(VERBOSE)
+ARGS_TILES   = $(ARGS_CONSOLE) TILES=y GAME=crawl-tiles \
+	PROPORTIONAL_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
+	MONOSPACED_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
+
+build-arch build-indep: build-stamp
+build-stamp: tree-stamp
+	dh_testdir
+
+	cd build-console/source && $(MAKE) $(ARGS_CONSOLE)
+	cd build-tiles/source && $(MAKE) $(ARGS_TILES)
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	rm -f build-stamp tree-stamp
+	rm -rf build-console build-tiles
+
+	git clean -dfX || true
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	cd build-console/source && $(MAKE) $(ARGS_CONSOLE) install DESTDIR=../../debian/crawl-common
+	#cd debian/crawl-common/usr/share && mkdir -p doc/crawl-common && \
+	#	mv crawl/docs/* doc/crawl-common && \
+	#	mv doc/crawl-common/crawl_manual.txt crawl/docs
+	rm -rf debian/crawl-common/usr/share/crawl/docs/license
+	mkdir -p debian/crawl/usr/
+	mv debian/crawl-common/usr/games debian/crawl/usr/games
+	cd build-tiles/source && $(MAKE) $(ARGS_TILES) install DESTDIR=../../debian/crawl-tiles
+	rm -rf debian/crawl-tiles/var
+	cd debian/crawl-tiles/usr/share/crawl/ && rm -rf docs settings
+	mkdir -p debian/crawl-tiles-data/usr/share/crawl/dat
+	mv debian/crawl-tiles/usr/share/crawl/dat/tiles debian/crawl-tiles-data/usr/share/crawl/dat/
+	rm -rf debian/crawl-tiles/usr/share/crawl/dat
+	
+	mkdir -p debian/crawl/usr/share/man/man6
+	cp docs/crawl.6 debian/crawl/usr/share/man/man6/
+	mkdir -p debian/crawl-tiles/usr/share/man/man6
+	cp docs/crawl.6 debian/crawl-tiles/usr/share/man/man6/crawl-tiles.6
+	mkdir -p debian/crawl-common/usr/share/doc/crawl-common/examples
+	cp settings/init.txt debian/crawl-common/usr/share/doc/crawl-common/examples/crawlrc
+	for i in docs/*.txt; do \
+		ln -sf /usr/share/crawl/$$i debian/crawl-common/usr/share/doc/crawl-common/; \
+	done
+
+	mkdir -p debian/crawl/usr/share/doc
+	ln -sf crawl-common debian/crawl/usr/share/doc/crawl
+	mkdir -p debian/crawl-tiles/usr/share/doc
+	ln -sf crawl-common debian/crawl-tiles/usr/share/doc/crawl-tiles
+	mkdir -p debian/crawl-tiles-data/usr/share/doc
+	ln -sf crawl-common debian/crawl-tiles-data/usr/share/doc/crawl-tiles-data
+	dh_install -pcrawl debian/crawl.desktop usr/share/applications/
+	dh_install -pcrawl-tiles debian/crawl-tiles.desktop usr/share/applications/
+	dh_install -pcrawl-tiles debian/crawl.png usr/share/icons/hicolor/48x48/apps/
+	dh_install -pcrawl-common debian/crawl.xpm usr/share/pixmaps/
+	dh_link -pcrawl-tiles usr/share/crawl/dat/tiles/stone_soup_icon-32x32.png \
+		usr/share/icons/hicolor/32x32/apps/crawl.png
+	mkdir -p debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps
+	cp -p source/util/dcss.svg \
+		debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps/crawl.svg
+
+# Build architecture-independent files here.
+binary-indep: install
+	dh_testdir
+	dh_testroot
+	dh_installdocs -pcrawl-common -Xcrawl_manual.txt -Xaptitudes.txt -Xquickstart.txt -Xmacros_guide.txt -Xoptions_guide.txt -Xtiles_help.txt
+	dh_installchangelogs -pcrawl-common docs/changelog.txt
+	dh_link -i
+	dh_compress -i -Xaptitudes.txt
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: install
+	dh_testdir
+	dh_testroot
+	dh_installmenu -a
+	dh_link -a
+	dh_compress -a -Xaptitudes.txt
+	dh_strip -a
+	dh_fixperms -a
+	dh_installdeb -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+build: build-indep build-arch
+binary: binary-indep binary-arch
+.PHONY: build-indep build-arch build clean binary-indep binary-arch binary install

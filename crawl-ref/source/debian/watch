@@ -1,0 +1,3 @@
+version=3
+opts=uversionmangle=s/\-nodeps// \
+http://sf.net/crawl-ref/stone_soup-(.+)\.t(?:ar.)?(?:gz|bz2|xz)
