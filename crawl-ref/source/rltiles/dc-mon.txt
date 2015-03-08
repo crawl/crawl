@@ -82,9 +82,9 @@ warg MONS_WARG
 wolf MONS_WOLF
 raiju MONS_RAIJU
 hell_hound MONS_HELL_HOUND
+%rim 0
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
-%rim 0
 holy_swine MONS_HOLY_SWINE
 %rim 1
 %sdir player/felids
