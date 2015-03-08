@@ -459,6 +459,9 @@ void ash_id_monster_equipment(monster* mon)
 
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
+        // Wielded weapon brands are IDed for everyone already.
+        if (i == MSLOT_WEAPON)
+            continue;
         if (mon->inv[i] == NON_ITEM)
             continue;
 
@@ -469,7 +472,7 @@ void ash_id_monster_equipment(monster* mon)
             continue;
         }
 
-        if (x_chance_in_y(you.bondage_level, 4))
+        if (x_chance_in_y(piety_rank() - 1, 6))
         {
             if (i == MSLOT_WAND)
             {
