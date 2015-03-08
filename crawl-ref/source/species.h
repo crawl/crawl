@@ -9,7 +9,7 @@ bool species_is_orcish(species_type species);
 bool species_has_hair(species_type species);
 bool species_can_throw_large_rocks(species_type species);
 
-int species_has_claws(species_type species, bool mut_level = false);
+bool species_has_claws(species_type species);
 undead_state_type species_undead_type(species_type species) PURE;
 bool species_is_undead(species_type species);
 bool species_is_unbreathing(species_type species);
@@ -35,6 +35,8 @@ string species_walking_verb(species_type sp);
 
 monster_type player_species_to_mons_species(species_type species);
 string species_prayer_action(species_type species);
+
+void give_basic_mutations(species_type species);
 
 int species_exp_modifier(species_type species);
 int species_hp_modifier(species_type species);

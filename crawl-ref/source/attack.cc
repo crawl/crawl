@@ -192,7 +192,7 @@ int attack::calc_to_hit(bool random)
             // making them more practiced and thus more accurate in unarmed
             // combat. They keep this benefit even when the claws are covered
             // (or missing because of a change in form).
-            mhit += species_has_claws(you.species)
+            mhit += you.innate_mutation[MUT_CLAWS]
                     && wpn_skill == SK_UNARMED_COMBAT ? 4 : 2;
 
             mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,

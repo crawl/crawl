@@ -9,6 +9,13 @@ enum species_flag
 };
 DEF_BITFIELD(species_flags, species_flag);
 
+struct level_up_mutation
+{
+    mutation_type mut; ///< What mutation to give
+    int mut_level; ///< How much to give
+    int xp_level; ///< When to give it (if 1, is a starting mutation)
+};
+
 struct species_def
 {
     const char* abbrev; ///< Two-letter abbreviation
@@ -28,6 +35,7 @@ struct species_def
     int s, i, d; ///< Starting stats contribution
     bool gain_s, gain_i, gain_d; ///< Which stats to gain on level-up
     int how_often; ///< When to level-up stats
+    vector<level_up_mutation> level_up_mutations; ///< Mutations on level-up
 };
 
 static const map<species_type, species_def> species_data =
@@ -43,6 +51,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_LARGE,
     10, 7, 4, // 21
     true, false, true, 4,
+    { { MUT_TOUGH_SKIN, 3, 1 }, { MUT_FAST, 2, 1 },  { MUT_DEFORMED, 1, 1 },
+      { MUT_HOOVES, 3, 1 }, },
 } },
 
 { SP_DEEP_DWARF, {
@@ -55,6 +65,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 8, 8, // 27
     true, true, false, 4,
+    { { MUT_SLOW_HEALING, 3, 1 }, { MUT_PASSIVE_MAPPING, 1, 1 }, },
 } },
 
 { SP_DEEP_ELF, {
@@ -67,6 +78,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     5, 12, 10, // 27
     false, true, false, 4,
+    {},
 } },
 
 { SP_DEMIGOD, {
@@ -79,6 +91,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 12, 11, // 34
     false, false, false, 28, // No natural stat gain (double chosen instead)
+    { { MUT_SUSTAIN_ABILITIES, 1, 1 }, },
 } },
 
 // Keep this above the other draconians, so get_species_by_abbrev works
@@ -92,6 +105,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_RED_DRACONIAN, {
@@ -104,6 +118,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_WHITE_DRACONIAN, {
@@ -116,6 +131,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_GREEN_DRACONIAN, {
@@ -128,6 +144,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_YELLOW_DRACONIAN, {
@@ -140,6 +157,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_GREY_DRACONIAN, {
@@ -152,6 +170,7 @@ static const map<species_type, species_def> species_data =
     HT_AMPHIBIOUS, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, { MUT_UNBREATHING, 1, 7 }, },
 } },
 
 { SP_BLACK_DRACONIAN, {
@@ -164,6 +183,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_PURPLE_DRACONIAN, {
@@ -176,6 +196,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_MOTTLED_DRACONIAN, {
@@ -188,6 +209,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_PALE_DRACONIAN, {
@@ -200,6 +222,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_COLD_BLOODED, 1, 1 }, },
 } },
 
 { SP_DEMONSPAWN, {
@@ -212,6 +235,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 9, 8, // 25
     true, true, true, 4,
+    {},
 } },
 
 { SP_FELID, {
@@ -224,6 +248,9 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_LITTLE,
     4, 9, 11, // 24
     false, true, true, 5,
+    { { MUT_CARNIVOROUS, 3, 1 }, { MUT_FAST, 1, 1 }, { MUT_FANGS, 3, 1 },
+      { MUT_SHAGGY_FUR, 1, 1 }, { MUT_ACUTE_VISION, 1, 1 }, { MUT_PAWS, 1, 1 },
+      { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CLAWS, 1, 1 }, },
 } },
 
 { SP_FORMICID, {
@@ -236,6 +263,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     12, 7, 6, // 25
     true, true, false, 4,
+    { { MUT_ANTENNAE, 3, 1 }, },
 } },
 
 { SP_GHOUL, {
@@ -248,6 +276,10 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_HUNGRY_DEAD, SIZE_MEDIUM,
     11, 3, 4, // 18
     true, false, false, 5,
+    { { MUT_CARNIVOROUS, 3, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 },
+      { MUT_TORMENT_RESISTANCE, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 1 },
+      { MUT_SLOW_HEALING, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
+      { MUT_CLAWS, 1, 1 }, { MUT_UNBREATHING, 1, 1 }, },
 } },
 
 { SP_GARGOYLE, {
@@ -260,6 +292,9 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 8, 5, // 24
     true, true, false, 4,
+    { { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 },
+      { MUT_PETRIFICATION_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 1 },
+      { MUT_UNBREATHING, 1, 1 }, },
 } },
 
 { SP_HALFLING, {
@@ -272,6 +307,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_SMALL,
     8, 7, 9, // 24
     false, false, true, 5,
+    { { MUT_MUTATION_RESISTANCE, 1, 1 }, },
 } },
 
 { SP_HIGH_ELF, {
@@ -284,6 +320,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     7, 11, 10, // 28
     false, true, true, 3,
+    {},
 } },
 
 { SP_HILL_ORC, {
@@ -296,6 +333,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, false, false, 5,
+    {},
 } },
 
 { SP_HUMAN, {
@@ -308,6 +346,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
     true, true, true, 4,
+    {},
 } },
 
 { SP_KOBOLD, {
@@ -320,6 +359,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_SMALL,
     6, 6, 11, // 23
     true, false, true, 5,
+    { { MUT_CARNIVOROUS, 3, 1 }, },
 } },
 
 { SP_MERFOLK, {
@@ -332,6 +372,7 @@ static const map<species_type, species_def> species_data =
     HT_WATER, US_ALIVE, SIZE_MEDIUM,
     8, 7, 9, // 24
     true, true, true, 5,
+    {},
 } },
 
 { SP_MINOTAUR, {
@@ -344,6 +385,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     12, 5, 5, // 22
     true, false, true, 4,
+    { { MUT_HORNS, 2, 1 }, },
 } },
 
 { SP_MUMMY, {
@@ -356,6 +398,9 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_UNDEAD, SIZE_MEDIUM,
     11, 7,  7, // 25
     false, false, false, 28, // No stat gain
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
+      { MUT_TORMENT_RESISTANCE, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 1 },
+      { MUT_UNBREATHING, 1, 1 }, },
 } },
 
 { SP_NAGA, {
@@ -368,6 +413,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_LARGE,
     10, 8, 6, // 24
     true, true, true, 4,
+    { { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW, 2, 1 },  { MUT_DEFORMED, 1, 1 },
+      { MUT_POISON_RESISTANCE, 1, 1 }, },
 } },
 
 { SP_OGRE, {
@@ -380,6 +427,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_LARGE,
     12, 7, 5, // 24
     true, false, false, 3,
+    { { MUT_TOUGH_SKIN, 1, 1 }, },
 } },
 
 { SP_OCTOPODE, {
@@ -392,6 +440,7 @@ static const map<species_type, species_def> species_data =
     HT_WATER, US_ALIVE, SIZE_MEDIUM,
     7, 10, 7, // 24
     true, true, true, 5,
+    { { MUT_CAMOUFLAGE, 1, 1 }, { MUT_GELATINOUS_BODY, 1, 1 }, },
 } },
 
 { SP_SPRIGGAN, {
@@ -404,6 +453,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_LITTLE,
     4, 9, 11, // 24
     false, true, true, 5,
+    { { MUT_FAST, 3, 1 }, { MUT_HERBIVOROUS, 3, 1 },
+      { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW_METABOLISM, 2, 1 }, },
 } },
 
 { SP_TENGU, {
@@ -416,6 +467,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 9, // 25
     true, true, true, 4,
+    { { MUT_BEAK, 1, 1 }, { MUT_TALONS, 3, 1 }, },
 } },
 
 { SP_TROLL, {
@@ -428,6 +480,9 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_LARGE,
     15, 4, 5, // 24
     true, false, false, 3,
+    { { MUT_TOUGH_SKIN, 2, 1 }, { MUT_REGENERATION, 2, 1 }, { MUT_CLAWS, 3, 1 },
+      { MUT_GOURMAND, 1, 1 }, { MUT_FAST_METABOLISM, 3, 1 },
+      { MUT_SHAGGY_FUR, 1, 1 }, },
 } },
 
 { SP_VAMPIRE, {
@@ -440,6 +495,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_SEMI_UNDEAD, SIZE_MEDIUM,
     7, 10, 9, // 26
     false, false, false, 28, // No stat gain
+    { { MUT_FANGS, 3, 1 }, { MUT_ACUTE_VISION, 1, 1 },
+      { MUT_UNBREATHING, 1, 1 }, },
 } },
 
 { SP_VINE_STALKER, {
@@ -452,6 +509,10 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 9, // 27
     true, false, true, 4,
+    { { MUT_FANGS, 2, 1 }, { MUT_REGENERATION, 1, 1 },
+      { MUT_MANA_SHIELD, 1, 1 }, { MUT_ANTIMAGIC_BITE, 1, 1 },
+      { MUT_SHAGGY_FUR, 1, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
+      { MUT_NO_DEVICE_HEAL, 3, 1 }, },
 } },
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {
@@ -464,6 +525,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
     false, true, true, 4,
+    {},
 } },
 
 { SP_LAVA_ORC, {
@@ -476,6 +538,7 @@ static const map<species_type, species_def> species_data =
     HT_AMPHIBIOUS_LAVA, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, false, false, 5,
+    {},
 } },
 
 { SP_DJINNI, {
@@ -488,6 +551,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
     true, true, true, 4,
+    { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, },
 } },
 #endif
 // Ideally this wouldn't be necessary...
@@ -501,5 +565,6 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     0, 0, 0, // 0
     false, false, false, 28,
+    {},
 } }
 };

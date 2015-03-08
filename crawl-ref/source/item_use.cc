@@ -515,8 +515,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             // Hooves and talons were already checked by player_has_feet.
 
-            if (species_has_claws(you.species) >= 3
-                || player_mutation_level(MUT_CLAWS, false) >= 3)
+            if (player_mutation_level(MUT_CLAWS, false) >= 3)
             {
                 if (verbose)
                 {

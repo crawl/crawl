@@ -89,22 +89,6 @@ string species_walking_verb(species_type sp)
     }
 }
 
-int species_has_claws(species_type species, bool mut_level)
-{
-    if (species == SP_TROLL)
-        return 3;
-
-    if (species == SP_GHOUL)
-        return 1;
-
-    // Felid claws don't count as a claws mutation.  The claws mutation
-    // does only hands, not paws.
-    if (species == SP_FELID && !mut_level)
-        return 1;
-
-    return 0;
-}
-
 /**
  * Where does a given species fall on the Undead Spectrum?
  *
@@ -125,12 +109,6 @@ undead_state_type species_undead_type(species_type species)
 bool species_is_undead(species_type species)
 {
     return species_undead_type(species) != US_ALIVE;
-}
-
-bool species_is_unbreathing(species_type species)
-{
-    return species == SP_GREY_DRACONIAN || species == SP_GARGOYLE
-           || species_is_undead(species);
 }
 
 bool species_can_swim(species_type species)
@@ -213,6 +191,30 @@ string species_prayer_action(species_type species)
         default:
             return "kneel at";
     }
+}
+
+bool species_is_unbreathing(species_type species)
+{
+    return any_of(_species_def(species).level_up_mutations.begin(),
+                  _species_def(species).level_up_mutations.end(),
+                  [](level_up_mutation lum)
+                    { return lum.mut == MUT_UNBREATHING;});
+}
+
+bool species_has_claws(species_type species)
+{
+    return any_of(_species_def(species).level_up_mutations.begin(),
+                  _species_def(species).level_up_mutations.end(),
+                  [](level_up_mutation lum) { return lum.mut == MUT_CLAWS
+                                                     && lum.xp_level == 1; });
+}
+
+void give_basic_mutations(species_type species)
+{
+    // Don't perma_mutate since that gives messages.
+    for (const auto& lum : _species_def(species).level_up_mutations)
+        if (lum.xp_level == 1)
+            you.mutation[lum.mut] = you.innate_mutation[lum.mut] = lum.mut_level;
 }
 
 int species_exp_modifier(species_type species)
