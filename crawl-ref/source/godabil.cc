@@ -1418,7 +1418,7 @@ bool trog_burn_spellbooks()
              totalblocked == 1 ? "s" : "");
         for (auto c : mimics)
             discover_mimic(c);
-        return false;
+        return !mimics.empty();
     }
     else
     {
