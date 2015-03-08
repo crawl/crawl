@@ -934,6 +934,12 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     you.turn_is_over = false;
 }
 
+static void _log_wizmode_entrance()
+{
+    scorefile_entry se(INSTANT_DEATH, MID_NOBODY, KILLED_BY_WIZMODE, nullptr);
+    logfile_new_entry(se);
+}
+
 static void _handle_wizard_command()
 {
     int wiz_command;
@@ -962,6 +968,11 @@ static void _handle_wizard_command()
         }
 
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
+
+#ifndef SCORE_WIZARD_CHARACTERS
+        if (!you.explore)
+            _log_wizmode_entrance();
+#endif
 
         you.wizard = true;
         save_game(false);
@@ -1042,6 +1053,10 @@ static void _enter_explore_mode()
         }
 
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered explore mode."));
+
+#ifndef SCORE_WIZARD_CHARACTERS
+        _log_wizmode_entrance();
+#endif
 
         you.explore = true;
         save_game(false);
