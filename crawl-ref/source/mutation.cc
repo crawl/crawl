@@ -318,7 +318,6 @@ string describe_mutations(bool center_title)
     string result;
     bool have_any = false;
     const char *mut_title = "Innate Abilities, Weirdness & Mutations";
-    string scale_type = "plain brown";
 
     _num_full_suppressed = _num_part_suppressed = 0;
     _num_transient = 0;
@@ -422,25 +421,21 @@ string describe_mutations(bool center_title)
     case SP_GREEN_DRACONIAN:
         result += _dragon_abil("You can breathe blasts of noxious fumes.");
         have_any = true;
-        scale_type = "lurid green";
         break;
 
     case SP_GREY_DRACONIAN:
         result += "You can walk through water.\n";
         have_any = true;
-        scale_type = "dull iron-grey";
         break;
 
     case SP_RED_DRACONIAN:
         result += _dragon_abil("You can breathe blasts of fire.");
         have_any = true;
-        scale_type = "fiery red";
         break;
 
     case SP_WHITE_DRACONIAN:
         result += _dragon_abil("You can breathe waves of freezing cold.");
         result += _dragon_abil("You can buffet flying creatures when you breathe cold.");
-        scale_type = "icy white";
         have_any = true;
         break;
 
@@ -448,7 +443,6 @@ string describe_mutations(bool center_title)
         result += _dragon_abil("You can breathe wild blasts of lightning.");
         if (you.experience_level >= 14)
             result += "You can fly continuously.\n";
-        scale_type = "glossy black";
         have_any = true;
         break;
 
@@ -457,27 +451,23 @@ string describe_mutations(bool center_title)
         result += _dragon_abil("You can corrode armour when you spit acid.");
         result += _annotate_form_based("You are resistant to acid.",
                       !form_keeps_mutations() && you.form != TRAN_DRAGON);
-        scale_type = "golden yellow";
         have_any = true;
         break;
 
     case SP_PURPLE_DRACONIAN:
         result += _dragon_abil("You can breathe bolts of energy.");
         result += _dragon_abil("You can dispel enchantments when you breathe energy.");
-        scale_type = "rich purple";
         have_any = true;
         break;
 
     case SP_MOTTLED_DRACONIAN:
         result += _dragon_abil("You can spit globs of burning liquid.");
         result += _dragon_abil("You can ignite nearby creatures when you spit burning liquid.");
-        scale_type = "weird mottled";
         have_any = true;
         break;
 
     case SP_PALE_DRACONIAN:
         result += _dragon_abil("You can breathe blasts of scalding steam.");
-        scale_type = "pale cyan-grey";
         have_any = true;
         break;
 
@@ -640,7 +630,8 @@ string describe_mutations(bool center_title)
         num << 4 + you.experience_level / 3
                  + (you.species == SP_GREY_DRACONIAN ? 5 : 0);
 
-        const string msg = "Your " + scale_type + " scales are "
+        const string msg = string("Your ") + scale_type(you.species)
+              + " scales are "
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
               + " (AC +" + num.str() + ").";
 
