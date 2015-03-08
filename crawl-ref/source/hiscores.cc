@@ -613,7 +613,7 @@ static const char *kill_method_names[] =
 {
     "mon", "pois", "cloud", "beam", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
-    "quitting", "draining", "starvation", "freezing", "burning",
+    "quitting", "wizmode", "draining", "starvation", "freezing", "burning",
     "wild_magic", "xom", "rotting", "targeting", "spore",
     "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
@@ -1951,7 +1951,7 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
         return " (" + level_id(branch, dlvl).describe() + ")";
 
-    if (verbose && death_type != KILLED_BY_QUITTING)
+    if (verbose && death_type != KILLED_BY_QUITTING && death_type != KILLED_BY_WIZMODE)
         place += "...";
 
     // where did we die?
@@ -2233,6 +2233,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_QUITTING:
         desc += terse? "quit" : "Quit the game";
+        break;
+
+    case KILLED_BY_WIZMODE:
+        desc += terse? "wizmode" : "Entered wizard mode";
         break;
 
     case KILLED_BY_DRAINING:
@@ -2606,7 +2610,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else
                 desc = _append_sentence_delimiter(desc, ".");
         }
-        else if (death_type != KILLED_BY_QUITTING)
+        else if (death_type != KILLED_BY_QUITTING
+                 && death_type != KILLED_BY_WIZMODE)
         {
             desc += _hiscore_newline_string();
 
