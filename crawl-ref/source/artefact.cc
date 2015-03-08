@@ -1785,7 +1785,7 @@ static void _make_faerie_armour(item_def &item)
     item.props = doodad.props;
 
     // On body armour, an enchantment of less than 0 is never viable.
-    item.plus = max(static_cast<int>(random2(6) + random2(6) - 2), 0);
+    item.plus = max(static_cast<int>(random2(6) + random2(6) - 2), random2(2));
 }
 
 static jewellery_type octoring_types[8] =
