@@ -971,10 +971,9 @@ bool cast_smiting(int pow, monster* mons)
 
     if (success)
     {
-        // Maxes out at around 40 damage at 27 Invocations, which is
-        // plenty in my book (the old max damage was around 70, which
-        // seems excessive).
-        mons->hurt(&you, 7 + (random2(pow) * 33 / 191));
+        // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
+        int damage_increment = div_rand_round(pow, 8);
+        mons->hurt(&you, 6 + roll_dice(3, damage_increment));
         if (mons->alive())
             print_wounds(mons);
     }
