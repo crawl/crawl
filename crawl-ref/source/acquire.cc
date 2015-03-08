@@ -1418,7 +1418,7 @@ int acquirement_create_item(object_class_type class_wanted,
                     acq_item.plus += random2(3);
 
                 // On a weapon, an enchantment of less than 0 is never viable.
-                acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
+                acq_item.plus = max(static_cast<int>(acq_item.plus), random2(2));
             }
         }
         else if (is_deck(acq_item))
