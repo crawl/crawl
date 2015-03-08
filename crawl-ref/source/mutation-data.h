@@ -439,9 +439,9 @@ static const mutation_def mut_data[] =
 { MUT_SPIT_POISON,                    8,  3, MUTFLAG_GOOD, false,
   "spit poison",
 
-  {"You can spit poison.",
-   "You can spit moderately strong poison.",
-   "You can spit strong poison."},
+  {"You can spit weak poison.",
+   "You can spit poison.",
+   "You can exhale a cloud of poison." },
 
   {"There is a nasty taste in your mouth for a moment.",
    "There is a nasty taste in your mouth for a moment.",
@@ -736,6 +736,54 @@ static const mutation_def mut_data[] =
   "negative energy resistance",
 },
 
+{ MUT_MUMMY_RESTORATION,  0,  1, MUTFLAG_GOOD, false,
+  "restore body",
+
+  {"You can restore your body by infusing magical energy.",
+   "",
+   ""},
+
+  {"You can now infuse your body with magic to restore decomposition.",
+   "",
+   ""},
+
+  {"", "", ""},
+
+  "ability to restore your body",
+},
+
+{ MUT_NECRO_ENHANCER,     0,  2, MUTFLAG_GOOD, false,
+  "in touch with death",
+
+  {"You are in touch with the powers of death.",
+   "You are strongly in touch with the powers of death.",
+   ""},
+
+  {"You feel more in touch with the powers of death.",
+   "You feel more in touch with the powers of death.",
+   ""},
+
+  {"", "", ""},
+
+  "enhanced necromantic magic",
+},
+
+{ MUT_TENGU_FLIGHT,     0,  2, MUTFLAG_GOOD, false,
+  "able to fly",
+
+  {"You can fly.",
+   "You can fly continuously.",
+   ""},
+
+  {"You have gained the ability to fly.",
+   "You can now fly continuously.",
+   ""},
+
+  {"", "", ""},
+
+  "demonic bird flight magic",
+},
+
 { MUT_HURL_HELLFIRE,                  0,  1, MUTFLAG_GOOD, false,
   "hurl hellfire",
 
@@ -883,8 +931,8 @@ static const mutation_def mut_data[] =
 
    "a tentacle spike",
 },
+#if TAG_MAJOR_VERSION == 34
 
-// Naga only
 { MUT_BREATHE_POISON,                 4,  1, MUTFLAG_GOOD, false,
   "breathe poison",
 
@@ -893,6 +941,17 @@ static const mutation_def mut_data[] =
   {"Your breath is less nasty.", "", ""},
 
   "poisonous breath",
+},
+#endif
+
+{ MUT_CONSTRICTING_TAIL,              0,  1, MUTFLAG_GOOD, true,
+  "constrict 1",
+
+  {"You can use your snake-like lower body to constrict enemies.", "", ""},
+  {"Your tail grows strong enough to constrict your enemies.", "", ""},
+  {"", "", ""},
+
+  "a constricting tail",
 },
 
 // Naga and Draconian only
@@ -918,7 +977,7 @@ static const mutation_def mut_data[] =
 { MUT_BIG_WINGS,                      4,  1, MUTFLAG_GOOD, true,
   "big wings",
 
-  {"Your wings are large and strong.", "", ""},
+  {"Your large and strong wings let you fly indefinitely.", "", ""},
   {"Your wings grow larger and stronger.", "", ""},
   {"Your wings shrivel and weaken.", "", ""},
 

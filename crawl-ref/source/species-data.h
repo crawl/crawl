@@ -405,7 +405,9 @@ static const map<species_type, species_def> species_data =
     false, false, false, 28, // No stat gain
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
       { MUT_TORMENT_RESISTANCE, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 1 },
-      { MUT_UNBREATHING, 1, 1 }, },
+      { MUT_UNBREATHING, 1, 1 },
+      { MUT_NECRO_ENHANCER, 1, 13 }, { MUT_NECRO_ENHANCER, 1, 26 },
+      { MUT_MUMMY_RESTORATION, 1, 13}, },
 } },
 
 { SP_NAGA, {
@@ -419,7 +421,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW, 2, 1 },  { MUT_DEFORMED, 1, 1 },
-      { MUT_POISON_RESISTANCE, 1, 1 }, },
+      { MUT_SPIT_POISON, 2, 1 },  { MUT_POISON_RESISTANCE, 1, 1 },
+      { MUT_CONSTRICTING_TAIL, 1, 13 }, },
 } },
 
 { SP_OGRE, {
@@ -472,7 +475,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 9, // 25
     true, true, true, 4,
-    { { MUT_BEAK, 1, 1 }, { MUT_TALONS, 3, 1 }, },
+    { { MUT_BEAK, 1, 1 }, { MUT_TALONS, 3, 1 },
+      { MUT_TENGU_FLIGHT, 1, 5 }, { MUT_TENGU_FLIGHT, 1, 14 }, },
 } },
 
 { SP_TROLL, {

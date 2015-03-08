@@ -3677,8 +3677,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     switch (atk)
     {
     case UNAT_CONSTRICT:
-        return you.species == SP_NAGA && you.experience_level > 12
-                    && form_keeps_mutations()
+        return player_mutation_level(MUT_CONSTRICTING_TAIL)
                 || you.species == SP_OCTOPODE && you.has_usable_tentacle();
     case UNAT_KICK:
         return you.has_usable_hooves()
