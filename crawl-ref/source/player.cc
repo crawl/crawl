@@ -1903,13 +1903,7 @@ int player_spec_death()
     sd += you.wearing(EQ_STAFF, STAFF_DEATH);
 
     // species:
-    if (you.species == SP_MUMMY)
-    {
-        if (you.experience_level >= 13)
-            sd++;
-        if (you.experience_level >= 26)
-            sd++;
-    }
+    sd += player_mutation_level(MUT_NECRO_ENHANCER);
 
     // transformations:
     if (you.form == TRAN_LICH)
@@ -2396,34 +2390,25 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
-    else if  (you.duration[DUR_GRASPING_ROOTS])
+    else if (you.duration[DUR_GRASPING_ROOTS])
         prescaled_ev = prescaled_ev * 2 / 3;
 
-    switch (you.species)
+    // Merfolk get an evasion bonus in water.
+    if (you.fishtail)
     {
-    case SP_MERFOLK:
-        // Merfolk get an evasion bonus in water.
-        if (you.fishtail)
-        {
-            const int ev_bonus = min(9 * scale,
-                                     max(2 * scale, prescaled_ev / 4));
-            return prescaled_ev + ev_bonus;
-        }
-        break;
-
-    case SP_TENGU:
-        // Flying Tengu get an evasion bonus.
-        if (you.flight_mode())
-        {
-            const int ev_bonus = min(9 * scale,
-                                     max(1 * scale, prescaled_ev / 5));
-            return prescaled_ev + ev_bonus;
-        }
-        break;
-
-    default:
-        break;
+        const int ev_bonus = min(9 * scale,
+                                 max(2 * scale, prescaled_ev / 4));
+        return prescaled_ev + ev_bonus;
     }
+
+    // Flying Tengu get an evasion bonus.
+    if (you.tengu_flight())
+    {
+        const int ev_bonus = min(9 * scale,
+                                 max(1 * scale, prescaled_ev / 5));
+        return prescaled_ev + ev_bonus;
+    }
+
     return prescaled_ev;
 }
 
@@ -2959,17 +2944,6 @@ void level_change(bool skip_attribute_increase)
 
             switch (you.species)
             {
-            case SP_MUMMY:
-                if (you.experience_level == 13 || you.experience_level == 26)
-                    mprf(MSGCH_INTRINSIC_GAIN, "You feel more in touch with the powers of death.");
-
-                if (you.experience_level == 13)  // level 13 for now -- bwr
-                {
-                    mprf(MSGCH_INTRINSIC_GAIN, "You can now infuse your body with "
-                                               "magic to restore decomposition.");
-                }
-                break;
-
             case SP_VAMPIRE:
                 if (you.experience_level == 3)
                 {
@@ -2991,13 +2965,6 @@ void level_change(bool skip_attribute_increase)
                 {
                     mprf(MSGCH_INTRINSIC_GAIN, "Your skin feels tougher.");
                     you.redraw_armour_class = true;
-                }
-
-                if (you.experience_level == 13)
-                {
-                    mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your tail grows strong enough to constrict your "
-                         "enemies.");
                 }
                 break;
 
@@ -3110,13 +3077,6 @@ void level_change(bool skip_attribute_increase)
 
                 break;
             }
-
-            case SP_TENGU:
-                if (you.experience_level == 5)
-                    mprf(MSGCH_INTRINSIC_GAIN, "You have gained the ability to fly.");
-                else if (you.experience_level == 14)
-                    mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
-                break;
 
             case SP_FELID:
                 _felid_extra_life();
@@ -6760,12 +6720,11 @@ bool player::permanent_flight() const
 
 bool player::racial_permanent_flight() const
 {
-    return species == SP_TENGU && experience_level >= 14
+    return player_mutation_level(MUT_TENGU_FLIGHT) >= 2
 #if TAG_MAJOR_VERSION == 34
         || species == SP_DJINNI
 #endif
-        || species == SP_BLACK_DRACONIAN && experience_level >= 14
-        || species == SP_GARGOYLE && experience_level >= 14;
+        || player_mutation_level(MUT_BIG_WINGS);
 }
 
 bool player::tengu_flight() const

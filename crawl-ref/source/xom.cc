@@ -2450,10 +2450,10 @@ static void _xom_zero_miscast()
 
         if (you.airborne())
         {
-            // Tengu fly a lot, so don't put airborne messages into the
-            // priority vector for them.
+            // Don't put airborne messages into the priority vector for
+            // anyone who can fly a lot.
             vector<string>* vec;
-            if (you.species == SP_TENGU)
+            if (you.racial_permanent_flight())
                 vec = &messages;
             else
                 vec = &priority;

@@ -2662,15 +2662,6 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_NAGA:
-        // breathe poison replaces spit poison:
-        if (!player_mutation_level(MUT_BREATHE_POISON))
-            mutations.emplace_back("spit poison");
-
-        if (you.experience_level > 12)
-        {
-            mutations.push_back(_annotate_form_based("constrict 1",
-                                                     !form_keeps_mutations()));
-        }
         AC_change += you.experience_level / 3;
         break;
 
@@ -2678,40 +2669,14 @@ static string _status_mut_abilities(int sw)
         mutations.emplace_back("rotting body");
         break;
 
-    case SP_TENGU:
-        if (you.experience_level > 4)
-        {
-            string help = "able to fly";
-            if (you.experience_level > 14)
-                help += " continuously";
-            mutations.push_back(help);
-        }
-        break;
-
     case SP_MUMMY:
         mutations.emplace_back("no food or potions");
         mutations.emplace_back("fire vulnerability");
-        if (you.experience_level > 12)
-        {
-            string help = "in touch with death";
-            if (you.experience_level > 25)
-                help = "strongly " + help;
-            mutations.push_back(help);
-        }
-        mutations.emplace_back("restore body");
-        break;
-
-    case SP_VAMPIRE:
-        mutations.emplace_back("bottle blood");
         break;
 
     case SP_DEEP_DWARF:
         mutations.emplace_back("damage resistance");
         mutations.emplace_back("recharge devices");
-        break;
-
-    case SP_FELID:
-        mutations.emplace_back("paw claws");
         break;
 
     case SP_RED_DRACONIAN:
@@ -2740,8 +2705,6 @@ static string _status_mut_abilities(int sw)
 
     case SP_BLACK_DRACONIAN:
         mutations.push_back(_dragon_abil("breathe lightning"));
-        if (you.experience_level >= 14)
-            mutations.emplace_back("able to fly continuously");
         break;
 
     case SP_PURPLE_DRACONIAN:
@@ -2763,8 +2726,6 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_GARGOYLE:
-        if (you.experience_level >= 14)
-            mutations.emplace_back("able to fly continuously");
         AC_change += 2 + you.experience_level * 2 / 5
                        + max(0, you.experience_level - 7) * 2 / 5;
         break;
