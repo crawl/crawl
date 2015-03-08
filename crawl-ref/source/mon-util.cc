@@ -4304,35 +4304,6 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     return msg;
 }
 
-static mon_body_shape _get_ghost_shape(const monster* mon)
-{
-    const ghost_demon &ghost = *(mon->ghost);
-
-    switch (ghost.species)
-    {
-    case SP_NAGA:
-        return MON_SHAPE_NAGA;
-
-    case SP_CENTAUR:
-        return MON_SHAPE_CENTAUR;
-
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:
-        return MON_SHAPE_HUMANOID_TAILED;
-
-    default:
-        return MON_SHAPE_HUMANOID;
-    }
-}
-
 /**
  * Get the monster body shape of the given monster.
  * @param mon  The monster in question.
@@ -4340,12 +4311,14 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
  */
 mon_body_shape get_mon_shape(const monster* mon)
 {
+    monster_type base_type;
     if (mons_is_pghost(mon->type))
-        return _get_ghost_shape(mon);
+        base_type = player_species_to_mons_species(mon->ghost->species);
     else if (mons_is_zombified(mon))
-        return get_mon_shape(mon->base_monster);
+        base_type = mon->base_monster;
     else
-        return get_mon_shape(mon->type);
+        base_type = mon->type;
+    return get_mon_shape(base_type);
 }
 
 /**
