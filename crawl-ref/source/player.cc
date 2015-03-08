@@ -7262,14 +7262,7 @@ int player::has_claws(bool allow_tran) const
         // blade hands override claws
         if (form == TRAN_BLADE_HANDS)
             return 0;
-
-        // Most forms suppress natural claws.
-        if (!form_keeps_mutations())
-            return 0;
     }
-
-    if (const int c = species_has_claws(species))
-        return c;
 
     return player_mutation_level(MUT_CLAWS, allow_tran);
 }

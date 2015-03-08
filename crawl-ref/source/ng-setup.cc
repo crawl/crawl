@@ -143,133 +143,6 @@ void autopickup_starting_ammo(missile_type missile)
         you.force_autopickup[OBJ_MISSILES][missile] = 1;
 }
 
-void give_basic_mutations(species_type speci)
-{
-    switch (speci)
-    {
-#if TAG_MAJOR_VERSION == 34
-    case SP_LAVA_ORC:
-        you.mutation[MUT_CONSERVE_SCROLLS] = 1;
-        break;
-#endif
-    case SP_OGRE:
-        you.mutation[MUT_TOUGH_SKIN]      = 1;
-        break;
-    case SP_HALFLING:
-        you.mutation[MUT_MUTATION_RESISTANCE] = 1;
-        break;
-    case SP_MINOTAUR:
-        you.mutation[MUT_HORNS]  = 2;
-        break;
-    case SP_DEMIGOD:
-        you.mutation[MUT_SUSTAIN_ABILITIES] = 1;
-        break;
-    case SP_SPRIGGAN:
-        you.mutation[MUT_ACUTE_VISION]    = 1;
-        you.mutation[MUT_FAST]            = 3;
-        you.mutation[MUT_HERBIVOROUS]     = 3;
-        you.mutation[MUT_SLOW_METABOLISM] = 2;
-        break;
-    case SP_CENTAUR:
-        you.mutation[MUT_TOUGH_SKIN]      = 3;
-        you.mutation[MUT_FAST]            = 2;
-        you.mutation[MUT_DEFORMED]        = 1;
-        you.mutation[MUT_HOOVES]          = 3;
-        break;
-    case SP_NAGA:
-        you.mutation[MUT_ACUTE_VISION]      = 1;
-        you.mutation[MUT_POISON_RESISTANCE] = 1;
-        you.mutation[MUT_DEFORMED]          = 1;
-        you.mutation[MUT_SLOW]              = 2;
-        break;
-    case SP_MUMMY:
-        you.mutation[MUT_TORMENT_RESISTANCE]         = 1;
-        you.mutation[MUT_POISON_RESISTANCE]          = 1;
-        you.mutation[MUT_COLD_RESISTANCE]            = 1;
-        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        break;
-    case SP_DEEP_DWARF:
-        you.mutation[MUT_SLOW_HEALING]    = 3;
-        you.mutation[MUT_PASSIVE_MAPPING] = 1;
-        break;
-    case SP_GHOUL:
-        you.mutation[MUT_TORMENT_RESISTANCE]         = 1;
-        you.mutation[MUT_POISON_RESISTANCE]          = 1;
-        you.mutation[MUT_COLD_RESISTANCE]            = 1;
-        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        you.mutation[MUT_CARNIVOROUS]                = 3;
-        you.mutation[MUT_SLOW_HEALING]               = 1;
-        break;
-    case SP_GARGOYLE:
-        you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
-        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
-        you.mutation[MUT_SHOCK_RESISTANCE]           = 1;
-        you.mutation[MUT_ROT_IMMUNITY]               = 1;
-        break;
-    case SP_TENGU:
-        you.mutation[MUT_BEAK]   = 1;
-        you.mutation[MUT_TALONS] = 3;
-        break;
-    case SP_TROLL:
-        you.mutation[MUT_TOUGH_SKIN]      = 2;
-        you.mutation[MUT_REGENERATION]    = 2;
-        you.mutation[MUT_FAST_METABOLISM] = 3;
-        you.mutation[MUT_GOURMAND]        = 1;
-        you.mutation[MUT_SHAGGY_FUR]      = 1;
-        break;
-    case SP_KOBOLD:
-        you.mutation[MUT_CARNIVOROUS] = 3;
-        break;
-    case SP_VAMPIRE:
-        you.mutation[MUT_FANGS]        = 3;
-        you.mutation[MUT_ACUTE_VISION] = 1;
-        break;
-    case SP_FELID:
-        you.mutation[MUT_FANGS]           = 3;
-        you.mutation[MUT_SHAGGY_FUR]      = 1;
-        you.mutation[MUT_ACUTE_VISION]    = 1;
-        you.mutation[MUT_FAST]            = 1;
-        you.mutation[MUT_CARNIVOROUS]     = 3;
-        you.mutation[MUT_SLOW_METABOLISM] = 1;
-        you.mutation[MUT_PAWS]            = 1;
-        break;
-    case SP_OCTOPODE:
-        you.mutation[MUT_CAMOUFLAGE]      = 1;
-        you.mutation[MUT_GELATINOUS_BODY] = 1;
-        break;
-    case SP_FORMICID:
-        you.mutation[MUT_ANTENNAE]    = 3;
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case SP_DJINNI:
-        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        break;
-#endif
-    case SP_VINE_STALKER:
-        you.mutation[MUT_FANGS]          = 2;
-        you.mutation[MUT_ANTIMAGIC_BITE] = 1;
-        you.mutation[MUT_REGENERATION]   = 1;
-        you.mutation[MUT_MANA_SHIELD]    = 1;
-        you.mutation[MUT_NO_DEVICE_HEAL] = 3;
-        you.mutation[MUT_ROT_IMMUNITY]   = 1;
-        break;
-    default:
-        break;
-    }
-
-    // Some mutations out-sourced because they're
-    // relevant during character choice.
-    you.mutation[MUT_CLAWS] = species_has_claws(speci, true);
-    you.mutation[MUT_UNBREATHING] = species_is_unbreathing(speci);
-
-    // Necessary mostly for wizmode race changing.
-    you.mutation[MUT_COLD_BLOODED] = species_is_draconian(speci);
-
-    // Starting mutations are unremovable.
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-        you.innate_mutation[i] = you.mutation[i];
-}
-
 static void _newgame_make_item_tutorial(int slot, equipment_type eqslot,
                                  object_class_type base,
                                  int sub_type, int replacement = -1,
@@ -877,8 +750,8 @@ static void _give_items_skills(const newgame_def& ng)
 
 static void _give_starting_food()
 {
-    // These undead start with no food.
-    if (you.species == SP_MUMMY || you.species == SP_GHOUL)
+    // No food for those who don't need it.
+    if (you_foodless())
         return;
 
     item_def item;
@@ -891,12 +764,8 @@ static void _give_starting_food()
     else
     {
         item.base_type = OBJ_FOOD;
-        if (species_is_orcish(you.species) || you.species == SP_KOBOLD
-            || you.species == SP_OGRE || you.species == SP_TROLL
-            || you.species == SP_FELID)
-        {
+        if (player_mutation_level(MUT_CARNIVOROUS))
             item.sub_type = FOOD_MEAT_RATION;
-        }
         else
             item.sub_type = FOOD_BREAD_RATION;
     }
