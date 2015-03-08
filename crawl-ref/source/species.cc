@@ -4,6 +4,7 @@
 #include "species.h"
 
 #include "mon-enum.h"
+#include "mutation.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -193,6 +194,35 @@ string species_prayer_action(species_type species)
     }
 }
 
+const char* scale_type(species_type species)
+{
+    switch(species)
+    {
+        case SP_RED_DRACONIAN:
+            return "fiery red";
+        case SP_WHITE_DRACONIAN:
+            return "icy white";
+        case SP_GREEN_DRACONIAN:
+            return "lurid green";
+        case SP_YELLOW_DRACONIAN:
+            return "golden yellow";
+        case SP_GREY_DRACONIAN:
+            return "dull iron-grey";
+        case SP_BLACK_DRACONIAN:
+            return "glossy black";
+        case SP_PURPLE_DRACONIAN:
+            return "rich purple";
+        case SP_MOTTLED_DRACONIAN:
+            return "weird mottled";
+        case SP_PALE_DRACONIAN:
+            return "pale cyan-grey";
+        case SP_BASE_DRACONIAN:
+            return "plain brown";
+        default:
+            return "";
+    }
+}
+
 bool species_is_unbreathing(species_type species)
 {
     return any_of(_species_def(species).level_up_mutations.begin(),
@@ -215,6 +245,16 @@ void give_basic_mutations(species_type species)
     for (const auto& lum : _species_def(species).level_up_mutations)
         if (lum.xp_level == 1)
             you.mutation[lum.mut] = you.innate_mutation[lum.mut] = lum.mut_level;
+}
+
+void give_level_mutations(species_type species, int xp_level)
+{
+    for (const auto& lum : _species_def(species).level_up_mutations)
+        if (lum.xp_level == xp_level)
+        {
+            perma_mutate(lum.mut, lum.mut_level,
+                         species_name(species) + " growth");
+        }
 }
 
 int species_exp_modifier(species_type species)

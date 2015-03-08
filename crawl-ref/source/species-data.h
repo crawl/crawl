@@ -65,7 +65,9 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     11, 8, 8, // 27
     true, true, false, 4,
-    { { MUT_SLOW_HEALING, 3, 1 }, { MUT_PASSIVE_MAPPING, 1, 1 }, },
+    { { MUT_SLOW_HEALING, 3, 1 }, { MUT_PASSIVE_MAPPING, 1, 1 },
+      { MUT_PASSIVE_MAPPING, 1, 9 }, { MUT_PASSIVE_MAPPING, 1, 18 },
+      { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 14 }, },
 } },
 
 { SP_DEEP_ELF, {
@@ -118,7 +120,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
-    { { MUT_COLD_BLOODED, 1, 1 }, },
+    { { MUT_COLD_BLOODED, 1, 1 }, { MUT_HEAT_RESISTANCE, 1, 7 }, },
 } },
 
 { SP_WHITE_DRACONIAN, {
@@ -131,7 +133,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
-    { { MUT_COLD_BLOODED, 1, 1 }, },
+    { { MUT_COLD_BLOODED, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 7 }, },
 } },
 
 { SP_GREEN_DRACONIAN, {
@@ -144,7 +146,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
-    { { MUT_COLD_BLOODED, 1, 1 }, },
+    { { MUT_COLD_BLOODED, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 7 },
+      { MUT_STINGER, 1, 14 }, },
 } },
 
 { SP_YELLOW_DRACONIAN, {
@@ -157,7 +160,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
-    { { MUT_COLD_BLOODED, 1, 1 }, },
+    { { MUT_COLD_BLOODED, 1, 1 }, { MUT_ACIDIC_BITE, 1, 14 }, },
 } },
 
 { SP_GREY_DRACONIAN, {
@@ -183,7 +186,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 6, // 24
     true, true, true, 4,
-    { { MUT_COLD_BLOODED, 1, 1 }, },
+    { { MUT_COLD_BLOODED, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 7 },
+      { MUT_BIG_WINGS, 1, 14 }, },
 } },
 
 { SP_PURPLE_DRACONIAN, {
@@ -250,7 +254,8 @@ static const map<species_type, species_def> species_data =
     false, true, true, 5,
     { { MUT_CARNIVOROUS, 3, 1 }, { MUT_FAST, 1, 1 }, { MUT_FANGS, 3, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, { MUT_ACUTE_VISION, 1, 1 }, { MUT_PAWS, 1, 1 },
-      { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CLAWS, 1, 1 }, },
+      { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CLAWS, 1, 1 },
+      { MUT_SHAGGY_FUR, 1, 6 }, { MUT_SHAGGY_FUR, 1, 12 }, },
 } },
 
 { SP_FORMICID, {
@@ -294,7 +299,7 @@ static const map<species_type, species_def> species_data =
     true, true, false, 4,
     { { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 },
       { MUT_PETRIFICATION_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 1 },
-      { MUT_UNBREATHING, 1, 1 }, },
+      { MUT_UNBREATHING, 1, 1 }, { MUT_BIG_WINGS, 1, 14 }, },
 } },
 
 { SP_HALFLING, {
@@ -509,10 +514,12 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     10, 8, 9, // 27
     true, false, true, 4,
-    { { MUT_FANGS, 2, 1 }, { MUT_REGENERATION, 1, 1 },
+    { { MUT_FANGS, 2, 1 }, { MUT_FANGS, 1, 8 },
       { MUT_MANA_SHIELD, 1, 1 }, { MUT_ANTIMAGIC_BITE, 1, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, { MUT_ROT_IMMUNITY, 1, 1 },
-      { MUT_NO_DEVICE_HEAL, 3, 1 }, },
+      { MUT_NO_DEVICE_HEAL, 3, 1 },
+      { MUT_REGENERATION, 1, 1 }, { MUT_REGENERATION, 1, 6 },
+      { MUT_REGENERATION, 1, 12 }, },
 } },
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {

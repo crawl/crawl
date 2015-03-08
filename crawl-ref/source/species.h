@@ -32,11 +32,13 @@ enum species_name_type
 string species_name(species_type speci, species_name_type spname = SPNAME_PLAIN);
 species_type str_to_species(const string &species);
 string species_walking_verb(species_type sp);
+const char* scale_type(species_type species);
 
 monster_type player_species_to_mons_species(species_type species);
 string species_prayer_action(species_type species);
 
 void give_basic_mutations(species_type species);
+void give_level_mutations(species_type species, int xp_level);
 
 int species_exp_modifier(species_type species);
 int species_hp_modifier(species_type species);

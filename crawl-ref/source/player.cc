@@ -2855,60 +2855,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     }
 }
 
-static void _draconian_scale_colour_message()
-{
-    switch (you.species)
-    {
-    case SP_RED_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a fiery red colour.");
-        perma_mutate(MUT_HEAT_RESISTANCE, 1, "draconian maturity");
-        break;
-
-    case SP_WHITE_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on an icy white colour.");
-        perma_mutate(MUT_COLD_RESISTANCE, 1, "draconian maturity");
-        break;
-
-    case SP_GREEN_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a lurid green colour.");
-        perma_mutate(MUT_POISON_RESISTANCE, 1, "draconian maturity");
-        break;
-
-    case SP_YELLOW_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a golden yellow colour.");
-        break;
-
-    case SP_GREY_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a dull iron-grey colour.");
-        perma_mutate(MUT_UNBREATHING, 1, "draconian maturity");
-        break;
-
-    case SP_BLACK_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a glossy black colour.");
-        perma_mutate(MUT_SHOCK_RESISTANCE, 1, "draconian maturity");
-        break;
-
-    case SP_PURPLE_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a rich purple colour.");
-        break;
-
-    case SP_MOTTLED_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a weird mottled pattern.");
-        break;
-
-    case SP_PALE_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start fading to a pale cyan-grey colour.");
-        break;
-
-    case SP_BASE_DRACONIAN:
-        mpr("");
-        break;
-
-    default:
-        break;
-    }
-}
-
 bool will_gain_life(int lev)
 {
     if (lev < you.attribute[ATTR_LIFE_GAINED] - 2)
@@ -3013,18 +2959,6 @@ void level_change(bool skip_attribute_increase)
 
             switch (you.species)
             {
-            case SP_DEEP_DWARF:
-                if (you.experience_level == 14)
-                    perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "level up");
-
-                if (you.experience_level == 9
-                    || you.experience_level == 18)
-                {
-                    perma_mutate(MUT_PASSIVE_MAPPING, 1, "level up");
-                }
-
-                break;
-
             case SP_MUMMY:
                 if (you.experience_level == 13 || you.experience_level == 26)
                     mprf(MSGCH_INTRINSIC_GAIN, "You feel more in touch with the powers of death.");
@@ -3067,11 +3001,6 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
-            case SP_TROLL:
-                if (!(you.experience_level % 3) && !skip_attribute_increase)
-                    modify_stat(STAT_STR, 1, false, "level gain");
-                break;
-
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
@@ -3101,8 +3030,6 @@ void level_change(bool skip_attribute_increase)
 #ifdef USE_TILE
                     init_player_doll();
 #endif
-                    _draconian_scale_colour_message();
-
                     // Produce messages about skill increases/decreases. We
                     // restore one skill level at a time so that at most the
                     // skill being checked is at the wrong level.
@@ -3113,6 +3040,10 @@ void level_change(bool skip_attribute_increase)
                     }
 
                     redraw_screen();
+
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "Your scales start taking on a %s colour.",
+                         scale_type(you.species));
                 }
             // fallthrough
             case SP_RED_DRACONIAN:
@@ -3128,25 +3059,6 @@ void level_change(bool skip_attribute_increase)
                 {
                     mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
                     you.redraw_armour_class = true;
-                }
-
-                if (you.experience_level == 14)
-                {
-                    switch (you.species)
-                    {
-                    case SP_GREEN_DRACONIAN:
-                        perma_mutate(MUT_STINGER, 1, "draconian growth");
-                        break;
-                    case SP_YELLOW_DRACONIAN:
-                        perma_mutate(MUT_ACIDIC_BITE, 1, "draconian growth");
-                        break;
-                    case SP_BLACK_DRACONIAN:
-                        perma_mutate(MUT_BIG_WINGS, 1, "draconian growth");
-                        mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
-                        break;
-                    default:
-                        break;
-                    }
                 }
                 break;
 
@@ -3207,35 +3119,15 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_FELID:
-                if (you.experience_level == 6 || you.experience_level == 12)
-                    perma_mutate(MUT_SHAGGY_FUR, 1, "growing up");
-
                 _felid_extra_life();
-                break;
-
-            case SP_GARGOYLE:
-                if (you.experience_level == 14)
-                {
-                    perma_mutate(MUT_BIG_WINGS, 1, "gargoyle growth");
-                    mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
-                }
-                break;
-
-            case SP_VINE_STALKER:
-                if (you.experience_level == 6)
-                    perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
-
-                if (you.experience_level == 8)
-                    perma_mutate(MUT_FANGS, 1, "vine stalker growth");
-
-                if (you.experience_level == 12)
-                    perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
                 break;
 
             default:
                 break;
             }
         }
+
+        give_level_mutations(you.species, you.experience_level);
 
         // zot defence abilities; must also be updated in ability.cc when these levels are changed
         if (crawl_state.game_is_zotdef())

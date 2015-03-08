@@ -136,6 +136,8 @@ void wizard_change_species_to(species_type sp)
         prev_muts[i] = you.mutation[i];
     }
     give_basic_mutations(sp);
+    for (int i = 2; i <= you.experience_level; ++i)
+        give_level_mutations(sp, i);
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (prev_muts[i] > you.innate_mutation[i])
@@ -144,43 +146,7 @@ void wizard_change_species_to(species_type sp)
             you.innate_mutation[i] -= prev_muts[i];
     }
 
-    switch (sp)
-    {
-    case SP_RED_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_HEAT_RESISTANCE, 1, "wizard race change");
-        break;
-
-    case SP_WHITE_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_COLD_RESISTANCE, 1, "wizard race change");
-        break;
-
-    case SP_GREEN_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_POISON_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_STINGER, 1, "wizard race change");
-        break;
-
-    case SP_YELLOW_DRACONIAN:
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_ACIDIC_BITE, 1, "wizard race change");
-        break;
-
-    case SP_GREY_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_UNBREATHING, 1, "wizard race change");
-        break;
-
-    case SP_BLACK_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_SHOCK_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_BIG_WINGS, 1, "wizard race change");
-        break;
-
-    case SP_DEMONSPAWN:
+    if (sp == SP_DEMONSPAWN)
     {
         roll_demonspawn_mutations();
         for (int i = 0; i < int(you.demonic_traits.size()); ++i)
@@ -193,27 +159,6 @@ void wizard_change_species_to(species_type sp)
             ++you.mutation[m];
             ++you.innate_mutation[m];
         }
-        break;
-    }
-
-    case SP_DEEP_DWARF:
-        if (you.experience_level >= 9)
-            perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 18)
-            perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
-        break;
-
-    case SP_FELID:
-        if (you.experience_level >= 6)
-            perma_mutate(MUT_SHAGGY_FUR, 1, "wizard race change");
-        if (you.experience_level >= 12)
-            perma_mutate(MUT_SHAGGY_FUR, 1, "wizard race change");
-        break;
-
-    default:
-        break;
     }
 
     if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
