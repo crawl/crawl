@@ -1,0 +1,4 @@
+?package(crawl):command="/usr/games/crawl" \
+        needs="text" section="Games/Adventure" \
+        title="Dungeon Crawl" hints="Roguelike,Dungeon" \
+        icon="/usr/share/pixmaps/crawl.xpm"

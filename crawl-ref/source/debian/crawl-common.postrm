@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+# Applies only to versions <0.8
+
+if [ "$1" = "purge" ]; then
+    echo -n "Purging high scores and bone files for Crawl... "
+    rm -rf /var/games/crawl/
+    echo "done."
+fi
+
+#DEBHELPER#
