@@ -1157,13 +1157,13 @@ static monsterentry mondata[] =
 
 {   // effect of porkalator cast on holies
     MONS_HOLY_SWINE, 'h', YELLOW, "holy swine",
-    M_WARM_BLOOD,
+    M_GLOWS_LIGHT,
     MR_NO_FLAGS,
     450, 10, MONS_HOG, MONS_HOLY_SWINE, MH_HOLY, 40,
     { {AT_BITE, AF_HOLY, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 5, 0 },
-    2, 9, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
-    I_ANIMAL, HT_LAND, FL_NONE, 14, DEFAULT_ENERGY,
+    2, 9, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
+    I_ANIMAL, HT_LAND, FL_WINGED, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
 },
 
