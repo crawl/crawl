@@ -3012,21 +3012,6 @@ void level_change(bool skip_attribute_increase)
                          "Your scales start taking on a %s colour.",
                          scale_type(you.species));
                 }
-            // fallthrough
-            case SP_RED_DRACONIAN:
-            case SP_WHITE_DRACONIAN:
-            case SP_GREEN_DRACONIAN:
-            case SP_YELLOW_DRACONIAN:
-            case SP_GREY_DRACONIAN:
-            case SP_BLACK_DRACONIAN:
-            case SP_PURPLE_DRACONIAN:
-            case SP_MOTTLED_DRACONIAN:
-            case SP_PALE_DRACONIAN:
-                if (!(you.experience_level % 3))
-                {
-                    mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
-                    you.redraw_armour_class = true;
-                }
                 break;
 
             case SP_DEMONSPAWN:
@@ -3085,6 +3070,12 @@ void level_change(bool skip_attribute_increase)
             default:
                 break;
             }
+        }
+
+        if (species_is_draconian(you.species) && !(you.experience_level % 3))
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
+            you.redraw_armour_class = true;
         }
 
         give_level_mutations(you.species, you.experience_level);

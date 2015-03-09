@@ -3596,29 +3596,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     else if (player_mutation_level(MUT_SPIT_POISON))
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
 
-    if (species_is_draconian(you.species))
-    {
-        ability_type ability = ABIL_NON_ABILITY;
-        switch (you.species)
-        {
-        case SP_GREEN_DRACONIAN:   ability = ABIL_BREATHE_MEPHITIC;     break;
-        case SP_RED_DRACONIAN:     ability = ABIL_BREATHE_FIRE;         break;
-        case SP_WHITE_DRACONIAN:   ability = ABIL_BREATHE_FROST;        break;
-        case SP_YELLOW_DRACONIAN:  ability = ABIL_SPIT_ACID;            break;
-        case SP_BLACK_DRACONIAN:   ability = ABIL_BREATHE_LIGHTNING;    break;
-        case SP_PURPLE_DRACONIAN:  ability = ABIL_BREATHE_POWER;        break;
-        case SP_PALE_DRACONIAN:    ability = ABIL_BREATHE_STEAM;        break;
-        case SP_MOTTLED_DRACONIAN: ability = ABIL_BREATHE_STICKY_FLAME; break;
-        default: break;
-        }
-
+    if (species_is_draconian(you.species)
         // Draconians don't maintain their original breath weapons
         // if shapechanged into a non-dragon form.
-        if (form_changed_physiology() && you.form != TRAN_DRAGON)
-            ability = ABIL_NON_ABILITY;
-
-        if (ability != ABIL_NON_ABILITY)
-            _add_talent(talents, ability, check_confused);
+        && !form_changed_physiology() || you.form == TRAN_DRAGON
+        && draconian_breath(you.species) != ABIL_NON_ABILITY)
+    {
+        _add_talent(talents, draconian_breath(you.species), check_confused);
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
