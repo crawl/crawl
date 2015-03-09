@@ -1154,7 +1154,17 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     // Faster monsters can wiggle out of the net more quickly.
     const int spd = (me.ench == ENCH_HELD) ? speed :
                                              10;
-    const int actdur = speed_to_duration(spd);
+    int actdur = speed_to_duration(spd);
+
+    // Don't let ENCH_SLOW time out while a torpor snail is around.
+    if (en == ENCH_SLOW)
+    {
+        if (torpor_slowed())
+            actdur = min(actdur, me.degree - 1);
+        else
+            props.erase(TORPOR_SLOWED_KEY);
+    }
+
     if (lose_ench_duration(me, actdur))
         return true;
 
