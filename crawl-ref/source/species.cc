@@ -196,6 +196,7 @@ string species_prayer_action(species_type species)
 
 const char* scale_type(species_type species)
 {
+    ASSERT(species_is_draconian(species));
     switch (species)
     {
         case SP_RED_DRACONIAN:
@@ -220,6 +221,50 @@ const char* scale_type(species_type species)
             return "plain brown";
         default:
             return "";
+    }
+}
+
+monster_type dragon_form_dragon_type()
+{
+    switch (you.species)
+    {
+    case SP_WHITE_DRACONIAN:
+        return MONS_ICE_DRAGON;
+    case SP_GREEN_DRACONIAN:
+        return MONS_SWAMP_DRAGON;
+    case SP_YELLOW_DRACONIAN:
+        return MONS_GOLDEN_DRAGON;
+    case SP_GREY_DRACONIAN:
+        return MONS_IRON_DRAGON;
+    case SP_BLACK_DRACONIAN:
+        return MONS_STORM_DRAGON;
+    case SP_PURPLE_DRACONIAN:
+        return MONS_QUICKSILVER_DRAGON;
+    case SP_MOTTLED_DRACONIAN:
+        return MONS_MOTTLED_DRAGON;
+    case SP_PALE_DRACONIAN:
+        return MONS_STEAM_DRAGON;
+    case SP_RED_DRACONIAN:
+    default:
+        return MONS_FIRE_DRAGON;
+    }
+}
+
+ability_type draconian_breath(species_type species)
+{
+    ASSERT(species_is_draconian(species));
+    switch (species)
+    {
+    case SP_GREEN_DRACONIAN:   return ABIL_BREATHE_MEPHITIC;
+    case SP_RED_DRACONIAN:     return ABIL_BREATHE_FIRE;
+    case SP_WHITE_DRACONIAN:   return ABIL_BREATHE_FROST;
+    case SP_YELLOW_DRACONIAN:  return ABIL_SPIT_ACID;
+    case SP_BLACK_DRACONIAN:   return ABIL_BREATHE_LIGHTNING;
+    case SP_PURPLE_DRACONIAN:  return ABIL_BREATHE_POWER;
+    case SP_PALE_DRACONIAN:    return ABIL_BREATHE_STEAM;
+    case SP_MOTTLED_DRACONIAN: return ABIL_BREATHE_STICKY_FLAME;
+    case SP_BASE_DRACONIAN: case SP_GREY_DRACONIAN:
+    default: return ABIL_NON_ABILITY;
     }
 }
 

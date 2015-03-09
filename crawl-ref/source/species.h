@@ -32,7 +32,10 @@ enum species_name_type
 string species_name(species_type speci, species_name_type spname = SPNAME_PLAIN);
 species_type str_to_species(const string &species);
 string species_walking_verb(species_type sp);
+
+monster_type dragon_form_dragon_type();
 const char* scale_type(species_type species);
+ability_type draconian_breath(species_type species);
 
 monster_type player_species_to_mons_species(species_type species);
 string species_prayer_action(species_type species);
