@@ -196,7 +196,7 @@ string species_prayer_action(species_type species)
 
 const char* scale_type(species_type species)
 {
-    switch(species)
+    switch (species)
     {
         case SP_RED_DRACONIAN:
             return "fiery red";

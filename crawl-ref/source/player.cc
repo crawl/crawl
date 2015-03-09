@@ -6119,6 +6119,40 @@ int player::base_ac_from(const item_def &armour, int scale) const
     return AC;
 }
 
+/**
+ * What bonus AC are you getting from your species?
+ *
+ * Does not account for any real mutations, such as scales or thick skin, that
+ * you may have as a result of your species.
+ * @param temp Whether to account for transformations.
+ * @returns how much AC you are getting from your species "fake mutations" * 100
+ */
+int player::racial_ac(bool temp) const
+{
+    // drac scales suppressed in all serious forms, except dragon
+    if (species_is_draconian(species)
+        && (!player_is_shapechanged() || form == TRAN_DRAGON || !temp))
+    {
+        int AC = 400 + 100 * (experience_level / 3);  // max 13
+        if (species == SP_GREY_DRACONIAN) // no breath
+            AC += 500;
+        return AC;
+    }
+
+    if (!(player_is_shapechanged() && temp))
+    {
+        if (species == SP_NAGA)
+            return 100 * experience_level / 3;              // max 9
+        else if (species == SP_GARGOYLE)
+        {
+            return 200 + 100 * experience_level * 2 / 5     // max 20
+                       + 100 * (max(0, experience_level - 7) * 2 / 5);
+        }
+    }
+
+    return 0;
+}
+
 int player::armour_class(bool /*calc_unid*/) const
 {
     int AC = 0;
@@ -6168,33 +6202,7 @@ int player::armour_class(bool /*calc_unid*/) const
 
     AC += get_form()->get_ac_bonus();
 
-    // drac scales suppressed in all serious forms, except dragon
-    if (species_is_draconian(you.species)
-        && (!player_is_shapechanged() || form == TRAN_DRAGON))
-    {
-        AC += 400 + 100 * (experience_level / 3);  // max 13
-        if (species == SP_GREY_DRACONIAN) // no breath
-            AC += 500;
-    }
-
-    // other race-based ac bonuses (naga, gargoyle)
-    if (!player_is_shapechanged())
-    {
-        switch (species)
-        {
-            case SP_NAGA:
-                AC += 100 * experience_level / 3;              // max 9
-                break;
-
-            case SP_GARGOYLE:
-                AC += 200 + 100 * experience_level * 2 / 5     // max 20
-                          + 100 * (max(0, experience_level - 7) * 2 / 5);
-                break;
-
-            default:
-                break;
-        }
-    }
+    AC += racial_ac(true);
 
     // Scale mutations, etc.  Statues don't get an AC benefit from scales,
     // since the scales are made of the same stone as everything else.
@@ -7184,7 +7192,7 @@ int player::has_tail(bool allow_tran) const
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
-    if (species_is_draconian(you.species)
+    if (species_is_draconian(species)
         || fishtail
         || player_mutation_level(MUT_STINGER, allow_tran))
     {

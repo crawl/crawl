@@ -357,12 +357,10 @@ string describe_mutations(bool center_title)
     case SP_NAGA:
         result += "You cannot wear boots.\n";
 
-        if (you.experience_level > 2)
+        if (you.racial_ac(false))
         {
-            ostringstream num;
-            num << you.experience_level / 3;
             const string acstr = "Your serpentine skin is tough (AC +"
-                                 + num.str() + ").";
+                                 + to_string(you.racial_ac(false) / 100) + ").";
 
             result += _annotate_form_based(acstr, player_is_shapechanged());
         }
@@ -401,8 +399,7 @@ string describe_mutations(bool center_title)
 
     case SP_YELLOW_DRACONIAN:
         result += _dragon_abil("You can spit globs of acid.");
-        result += _annotate_form_based("You are resistant to acid.",
-                      !form_keeps_mutations() && you.form != TRAN_DRAGON);
+        result += _dragon_abil("You are resistant to acid.");
         break;
 
     case SP_PURPLE_DRACONIAN:
@@ -523,14 +520,10 @@ string describe_mutations(bool center_title)
     {
         result += "You are resistant to torment.\n";
 
-        ostringstream num;
-        num << 2 + you.experience_level * 2 / 5
-                 + max(0, you.experience_level - 7) * 2 / 5;
         const string acstr = "Your stone body is very resilient (AC +"
-                                 + num.str() + ").";
+                                 + to_string(you.racial_ac(false) / 100) + ").";
 
-        result += _annotate_form_based(acstr, player_is_shapechanged()
-                                              && you.form != TRAN_STATUE);
+        result += _annotate_form_based(acstr, player_is_shapechanged());
         break;
     }
 
@@ -558,19 +551,16 @@ string describe_mutations(bool center_title)
 
     if (species_is_draconian(you.species))
     {
-        // Draconians are large for the purposes of armour, but only medium for
-        // weapons and carrying capacity.
-        ostringstream num;
-        num << 4 + you.experience_level / 3
-                 + (you.species == SP_GREY_DRACONIAN ? 5 : 0);
-
         const string msg = string("Your ") + scale_type(you.species)
               + " scales are "
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
-              + " (AC +" + num.str() + ").";
+              + " (AC +" + to_string(you.racial_ac(false) / 100) + ").";
 
-        result += _annotate_form_based(msg,
-                      player_is_shapechanged() && you.form != TRAN_DRAGON);
+        // Not _dragon_abil since that checks physiology instead of
+        // shapechanged (lich draconians can't breathe, but they do
+        // keep their scales)
+        result += _annotate_form_based(msg, form_changed_physiology()
+                                            && you.form != TRAN_DRAGON);
 
         result += "Your body does not fit into most forms of armour.\n";
     }
