@@ -945,18 +945,12 @@ static ability_type _fixup_ability(ability_type ability)
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-        switch (you.species)
+        if (you.is_lifeless_undead(false)
+            || you.species == SP_FORMICID)
         {
-#if TAG_MAJOR_VERSION == 34
-        case SP_DJINNI:
-#endif
-        case SP_GHOUL:
-        case SP_MUMMY:
-        case SP_FORMICID:
             return ABIL_NON_ABILITY;
-        default:
-            return ability;
         }
+        return ability;
 
     case ABIL_OKAWARU_FINESSE:
     case ABIL_BLINK:
