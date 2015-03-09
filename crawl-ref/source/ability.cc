@@ -3593,7 +3593,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (species_is_draconian(you.species)
         // Draconians don't maintain their original breath weapons
         // if shapechanged into a non-dragon form.
-        && !form_changed_physiology() || you.form == TRAN_DRAGON
+        && (!form_changed_physiology() || you.form == TRAN_DRAGON)
         && draconian_breath(you.species) != ABIL_NON_ABILITY)
     {
         _add_talent(talents, draconian_breath(you.species), check_confused);
