@@ -1138,35 +1138,18 @@ skill_type str_to_skill(const string &skill)
 
 static string _stk_weight(species_type species)
 {
-    switch (species)
-    {
-    case SP_OGRE:
-    case SP_TROLL:
+    if (species_size(species) == SIZE_LARGE)
         return "Heavy";
-
-    case SP_NAGA:
-    case SP_CENTAUR:
+    else if (species_size(species, PSIZE_BODY) == SIZE_LARGE)
         return "Cruiser";
-
-    default:
-        return "Middle";
-
-    case SP_HIGH_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_TENGU:
-        return "Light";
-
-    case SP_HALFLING:
-    case SP_KOBOLD:
+    else if (species_size(species) == SIZE_SMALL || species == SP_TENGU)
         return "Feather";
-
-    case SP_SPRIGGAN:
+    else if (species_size(species) == SIZE_LITTLE)
         return "Fly";
-
-    case SP_FELID:
-        return "Bacteria"; // not used
-    }
+    else if (species_is_elven(species))
+        return "Light";
+    else
+        return "Middle";
 }
 
 static map<string, function<string (species_type)>> replacements =
