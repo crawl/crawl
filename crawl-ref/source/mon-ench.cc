@@ -1160,7 +1160,7 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
     if (en == ENCH_SLOW)
     {
         if (torpor_slowed())
-            actdur = min(actdur, me.degree - 1);
+            actdur = min(actdur, me.duration - 1);
         else
             props.erase(TORPOR_SLOWED_KEY);
     }
