@@ -32,6 +32,7 @@ enum species_name_type
 string species_name(species_type speci, species_name_type spname = SPNAME_PLAIN);
 species_type str_to_species(const string &species);
 string species_walking_verb(species_type sp);
+const vector<string>& fake_mutations(species_type species, bool terse);
 
 monster_type dragon_form_dragon_type();
 const char* scale_type(species_type species);

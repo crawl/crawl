@@ -169,6 +169,12 @@ monster_type player_species_to_mons_species(species_type species)
     return _species_def(species).monster_species;
 }
 
+const vector<string>& fake_mutations(species_type species, bool terse)
+{
+    return terse ? _species_def(species).terse_fake_mutations
+                 : _species_def(species).verbose_fake_mutations;
+}
+
 /**
  * What message should be printed when a character of the specified species
  * prays at an altar, if not in some form?
@@ -196,7 +202,6 @@ string species_prayer_action(species_type species)
 
 const char* scale_type(species_type species)
 {
-    ASSERT(species_is_draconian(species));
     switch (species)
     {
         case SP_RED_DRACONIAN:

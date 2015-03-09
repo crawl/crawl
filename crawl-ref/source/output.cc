@@ -2645,89 +2645,23 @@ static string _status_mut_abilities(int sw)
 
     vector<string> mutations;
 
-    switch (you.species)   //mv: following code shows innate abilities - if any
+    for (const string& str : fake_mutations(you.species, true))
     {
-    case SP_MERFOLK:
-        mutations.push_back(_annotate_form_based("change form in water",
-                                                 form_changed_physiology()));
-        mutations.push_back(_annotate_form_based("swift swim",
-                                                 form_changed_physiology()));
-        break;
-
-    case SP_MINOTAUR:
-        mutations.push_back(_annotate_form_based("retaliatory headbutt",
-                                                 !form_keeps_mutations()));
-        break;
-
-    case SP_GHOUL:
-        mutations.emplace_back("rotting body");
-        break;
-
-    case SP_MUMMY:
-        mutations.emplace_back("no food or potions");
-        mutations.emplace_back("fire vulnerability");
-        break;
-
-    case SP_DEEP_DWARF:
-        mutations.emplace_back("damage resistance");
-        mutations.emplace_back("recharge devices");
-        break;
-
-    case SP_RED_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe fire"));
-        break;
-
-    case SP_WHITE_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe frost"));
-        break;
-
-    case SP_GREEN_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe noxious fumes"));
-        break;
-
-    case SP_YELLOW_DRACONIAN:
-        mutations.push_back(_dragon_abil("spit acid"));
-        mutations.push_back(_annotate_form_based("acid resistance",
-                                                 !form_keeps_mutations()
-                                                  && you.form != TRAN_DRAGON));
-        break;
-
-    case SP_GREY_DRACONIAN:
-        mutations.emplace_back("walk through water");
-        break;
-
-    case SP_BLACK_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe lightning"));
-        break;
-
-    case SP_PURPLE_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe power"));
-        break;
-
-    case SP_MOTTLED_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe sticky flames"));
-        break;
-
-    case SP_PALE_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe steam"));
-        break;
-
-    case SP_FORMICID:
-        mutations.emplace_back("permanent stasis");
-        mutations.emplace_back("dig shafts and tunnels");
-        mutations.emplace_back("four strong arms");
-        break;
-
-#if TAG_MAJOR_VERSION == 34
-    case SP_DJINNI:
-        mutations.emplace_back("fire immunity");
-        mutations.emplace_back("cold vulnerability");
-        break;
-
-#endif
-    default:
-        break;
-    }                           //end switch - innate abilities
+        if (species_is_draconian(you.species))
+            mutations.push_back(_dragon_abil(str));
+        else if (you.species == SP_MERFOLK)
+        {
+            mutations.push_back(
+                _annotate_form_based(str, form_changed_physiology()));
+        }
+        else if (you.species == SP_MINOTAUR)
+        {
+            mutations.push_back(
+                _annotate_form_based(str, !form_keeps_mutations()));
+        }
+        else
+            mutations.push_back(str);
+    }
 
     // a bit more stuff
     if (you.species == SP_OGRE || you.species == SP_TROLL
@@ -2736,16 +2670,8 @@ static string _status_mut_abilities(int sw)
         mutations.emplace_back("unfitting armour");
     }
 
-    if (you.species == SP_FELID)
-    {
-        mutations.emplace_back("no armour");
-        mutations.emplace_back("no weapons or thrown items");
-    }
-
     if (you.species == SP_OCTOPODE)
     {
-        mutations.emplace_back("almost no armour");
-        mutations.emplace_back("amphibious");
         mutations.push_back(_annotate_form_based(
             make_stringf("%d rings", you.has_tentacles(false)),
             !get_form()->slot_available(EQ_RING_EIGHT)));
