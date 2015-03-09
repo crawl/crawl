@@ -2643,8 +2643,6 @@ static string _status_mut_abilities(int sw)
     //----------------------------
     text += "<w>A:</w> ";
 
-    int AC_change  = 0;
-
     vector<string> mutations;
 
     switch (you.species)   //mv: following code shows innate abilities - if any
@@ -2659,10 +2657,6 @@ static string _status_mut_abilities(int sw)
     case SP_MINOTAUR:
         mutations.push_back(_annotate_form_based("retaliatory headbutt",
                                                  !form_keeps_mutations()));
-        break;
-
-    case SP_NAGA:
-        AC_change += you.experience_level / 3;
         break;
 
     case SP_GHOUL:
@@ -2700,7 +2694,6 @@ static string _status_mut_abilities(int sw)
 
     case SP_GREY_DRACONIAN:
         mutations.emplace_back("walk through water");
-        AC_change += 5;
         break;
 
     case SP_BLACK_DRACONIAN:
@@ -2725,11 +2718,6 @@ static string _status_mut_abilities(int sw)
         mutations.emplace_back("four strong arms");
         break;
 
-    case SP_GARGOYLE:
-        AC_change += 2 + you.experience_level * 2 / 5
-                       + max(0, you.experience_level - 7) * 2 / 5;
-        break;
-
 #if TAG_MAJOR_VERSION == 34
     case SP_DJINNI:
         mutations.emplace_back("fire immunity");
@@ -2746,12 +2734,6 @@ static string _status_mut_abilities(int sw)
         || species_is_draconian(you.species) || you.species == SP_SPRIGGAN)
     {
         mutations.emplace_back("unfitting armour");
-    }
-
-    if (species_is_draconian(you.species))
-    {
-        // The five extra points for grey draconians were handled above.
-        AC_change += 4 + you.experience_level / 3;
     }
 
     if (you.species == SP_FELID)
@@ -2805,18 +2787,11 @@ static string _status_mut_abilities(int sw)
         }
     }
 
-    // Statue form does not get AC benefits from scales etc.  It does
-    // get changes to EV and SH.
-    if (AC_change && you.form != TRAN_STATUE)
-    {
-        const string ac_mut = make_stringf("AC %s%d",
-                                           (AC_change > 0 ? "+" : ""),
-                                           AC_change);
-        mutations.push_back(ac_mut);
-    }
+    if (you.racial_ac(false))
+        mutations.push_back("AC +" + to_string(you.racial_ac(false) / 100));
 
     if (mutations.empty())
-        text +=  "no striking features";
+        text += "no striking features";
     else
     {
         text += comma_separated_line(mutations.begin(), mutations.end(),
