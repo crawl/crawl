@@ -332,90 +332,43 @@ string describe_mutations(bool center_title)
     result += mut_title;
     result += "</white>\n\n";
 
-    // Innate abilities which don't fit as mutations.
-    // TODO: clean these up with respect to transformations.  Currently
-    // we handle only Naga/Draconian AC and Yellow Draconian rAcid.
     result += "<lightblue>";
     const string old_result = result;
-    switch (you.species)
+
+    // Innate abilities which haven't been implemented as mutations yet.
+    // TODO: clean these up with respect to transformations.  Currently
+    // we handle only Naga/Draconian AC and Yellow Draconian rAcid.
+    for (const string& str : fake_mutations(you.species, false))
     {
-    case SP_MERFOLK:
+        if (species_is_draconian(you.species))
+            result += _dragon_abil(str);
+        else if (you.species == SP_MERFOLK)
+            result += _annotate_form_based(str, form_changed_physiology());
+        else if (you.species == SP_MINOTAUR)
+            result += _annotate_form_based(str, !form_keeps_mutations());
+        else
+            result += str + "\n";
+    }
+
+    if (you.racial_ac(false) > 0)
+    {
+        const string scale_clause = string(scale_type(you.species))
+              + " scales are "
+              + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
+
         result += _annotate_form_based(
-            "You revert to your normal form in water.",
-            form_changed_physiology());
-        result += _annotate_form_based(
-            "You are very nimble and swift while swimming.",
-            form_changed_physiology());
-        break;
+                    make_stringf("Your %s (AC +%d).",
+                       you.species == SP_NAGA ? "serpentine skin is tough" :
+                       you.species == SP_GARGOYLE ? "stone body is resilient" :
+                                                    scale_clause.c_str(),
+                       you.racial_ac(false) / 100),
+                    player_is_shapechanged()
+                    && !(species_is_draconian(you.species)
+                         && you.form == TRAN_DRAGON));
+    }
 
-    case SP_MINOTAUR:
-        result += _annotate_form_based(
-            "You reflexively headbutt those who attack you in melee.",
-            !form_keeps_mutations());
-        break;
-
-    case SP_NAGA:
-        result += "You cannot wear boots.\n";
-
-        if (you.racial_ac(false))
-        {
-            const string acstr = "Your serpentine skin is tough (AC +"
-                                 + to_string(you.racial_ac(false) / 100) + ").";
-
-            result += _annotate_form_based(acstr, player_is_shapechanged());
-        }
-        break;
-
-    case SP_GHOUL:
-        result += "Your body is rotting away.\n";
-        result += "You thrive on raw meat.\n";
-        break;
-
-    case SP_MUMMY:
-        result += "You do not eat or drink.\n";
-        result += "Your flesh is vulnerable to fire.\n";
-        break;
-
-    case SP_GREEN_DRACONIAN:
-        result += _dragon_abil("You can breathe blasts of noxious fumes.");
-        break;
-
-    case SP_GREY_DRACONIAN:
-        result += "You can walk through water.\n";
-        break;
-
-    case SP_RED_DRACONIAN:
-        result += _dragon_abil("You can breathe blasts of fire.");
-        break;
-
-    case SP_WHITE_DRACONIAN:
-        result += _dragon_abil("You can breathe waves of freezing cold.");
-        result += _dragon_abil("You can buffet flying creatures when you breathe cold.");
-        break;
-
-    case SP_BLACK_DRACONIAN:
-        result += _dragon_abil("You can breathe wild blasts of lightning.");
-        break;
-
-    case SP_YELLOW_DRACONIAN:
-        result += _dragon_abil("You can spit globs of acid.");
-        result += _dragon_abil("You are resistant to acid.");
-        break;
-
-    case SP_PURPLE_DRACONIAN:
-        result += _dragon_abil("You can breathe bolts of dispelling energy.");
-        break;
-
-    case SP_MOTTLED_DRACONIAN:
-        result += _dragon_abil("You can spit globs of burning liquid.");
-        result += _dragon_abil("You can ignite nearby creatures when you spit burning liquid.");
-        break;
-
-    case SP_PALE_DRACONIAN:
-        result += _dragon_abil("You can breathe blasts of scalding, opaque steam.");
-        break;
-
-    case SP_VAMPIRE:
+    if (you.species == SP_VAMPIRE)
+    {
         if (you.hunger_state == HS_STARVING)
             result += "<green>You do not heal naturally.</green>\n";
         else if (you.hunger_state == HS_ENGORGED)
@@ -424,111 +377,20 @@ string describe_mutations(bool center_title)
             result += "<green>You heal slowly.</green>\n";
         else if (you.hunger_state >= HS_FULL)
             result += "<green>Your natural rate of healing is unusually fast.</green>\n";
+    }
 
-        result += "You can bottle blood from corpses.\n";
-        break;
-
-    case SP_DEEP_DWARF:
-        result += "You are resistant to damage.\n";
-        result += "You can recharge devices by infusing magical energy.\n";
-        break;
-
-    case SP_FELID:
-        result += "You cannot wear armour.\n";
-        result += "You are incapable of wielding weapons or throwing items.\n";
-        break;
-
-    case SP_OCTOPODE:
-        result += "You cannot wear most types of armour.\n";
-        result += "You are amphibious.\n";
+    if (you.species == SP_OCTOPODE)
+    {
+        const char * num_tentacles =
+               number_in_words(you.has_usable_tentacles(false)).c_str();
         result += _annotate_form_based(
             make_stringf("You can wear up to %s rings at the same time.",
-                number_in_words(you.has_usable_tentacles(false)).c_str()),
+                         num_tentacles),
             !get_form()->slot_available(EQ_RING_EIGHT));
         result += _annotate_form_based(
-            "You can use your tentacles to constrict many enemies at once.",
+            make_stringf("You can use your tentacles to constrict %s enemies at once.",
+                         num_tentacles),
             !form_keeps_mutations());
-        break;
-#if TAG_MAJOR_VERSION == 34
-
-    case SP_DJINNI:
-        result += "You are immune to all types of fire, even holy and hellish.\n";
-        result += "You are vulnerable to cold.\n";
-        result += "You need no food.\n";
-        result += "You have no legs.\n";
-        break;
-#endif
-
-#if TAG_MAJOR_VERSION == 34
-    case SP_LAVA_ORC:
-    {
-        string col = "darkgrey";
-
-        col = (temperature_effect(LORC_STONESKIN)) ? "lightgrey" : "darkgrey";
-        result += "<" + col + ">You have stony skin.</" + col + ">\n";
-
-        // Fire res
-        col = (temperature_effect(LORC_FIRE_RES_III)) ? "lightred" :
-              (temperature_effect(LORC_FIRE_RES_II))  ? "white"    :
-              (temperature_effect(LORC_FIRE_RES_I))   ? "lightgrey"    : "bugged";
-
-        result += "<" + col + ">";
-        result += (temperature_effect(LORC_FIRE_RES_III)) ? "Your flesh is almost immune to the effects of heat." :
-                  (temperature_effect(LORC_FIRE_RES_II))  ? "Your flesh is very heat resistant." :
-                  (temperature_effect(LORC_FIRE_RES_I))   ? "Your flesh is heat resistant." : "bugged";
-        result += "</" + col + ">\n";
-
-        // Lava/fire boost
-        if (temperature_effect(LORC_LAVA_BOOST))
-        {
-            col = "white";
-            result += "<" + col + ">Your lava-based spells are more powerful.</" + col + ">\n";
-        }
-        else if (temperature_effect(LORC_FIRE_BOOST))
-        {
-            col = "lightred";
-            result += "<" + col + ">Your fire spells are more powerful.</" + col + ">\n";
-        }
-
-        // Cold vulnerability
-        col = (temperature_effect(LORC_COLD_VULN)) ? "red" : "darkgrey";
-        result += "<" + col + ">Your flesh is vulnerable to cold.</" + col + ">\n";
-
-        // Passive heat
-        col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
-        result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
-
-        // Heat aura
-        col = (temperature_effect(LORC_HEAT_AURA)) ? "lightred" : "darkgrey";
-        result += "<" + col + ">You bathe your surroundings in blazing heat.</" + col + ">\n";
-
-        // No scrolls
-        col = (temperature_effect(LORC_NO_SCROLLS)) ? "red" : "darkgrey";
-        result += "<" + col + ">You are too hot to use scrolls.</" + col + ">\n";
-
-        break;
-    }
-#endif
-
-    case SP_FORMICID:
-        result += "You are under a permanent stasis effect.\n";
-        result += "You can dig through walls and to a lower floor.\n";
-        result += "Your four strong arms can wield two-handed weapons with a shield.\n";
-        break;
-
-    case SP_GARGOYLE:
-    {
-        result += "You are resistant to torment.\n";
-
-        const string acstr = "Your stone body is very resilient (AC +"
-                                 + to_string(you.racial_ac(false) / 100) + ").";
-
-        result += _annotate_form_based(acstr, player_is_shapechanged());
-        break;
-    }
-
-    default:
-        break;
     }
 
     if (you.species != SP_FELID)
@@ -549,21 +411,10 @@ string describe_mutations(bool center_title)
         }
     }
 
+    // Could move this into species-data, but then the hack that assumes
+    // _dragon_abil should get called on all draconian fake muts would break.
     if (species_is_draconian(you.species))
-    {
-        const string msg = string("Your ") + scale_type(you.species)
-              + " scales are "
-              + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
-              + " (AC +" + to_string(you.racial_ac(false) / 100) + ").";
-
-        // Not _dragon_abil since that checks physiology instead of
-        // shapechanged (lich draconians can't breathe, but they do
-        // keep their scales)
-        result += _annotate_form_based(msg, form_changed_physiology()
-                                            && you.form != TRAN_DRAGON);
-
         result += "Your body does not fit into most forms of armour.\n";
-    }
 
     if (player_res_poison(false, false, false) == 3)
         result += "You are immune to poison.\n";

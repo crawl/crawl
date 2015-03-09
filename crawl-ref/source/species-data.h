@@ -36,6 +36,8 @@ struct species_def
     bool gain_s, gain_i, gain_d; ///< Which stats to gain on level-up
     int how_often; ///< When to level-up stats
     vector<level_up_mutation> level_up_mutations; ///< Mutations on level-up
+    vector<string> verbose_fake_mutations; ///< Additional information on 'A'
+    vector<string> terse_fake_mutations; ///< Additional information on '%'
 };
 
 static const map<species_type, species_def> species_data =
@@ -53,6 +55,8 @@ static const map<species_type, species_def> species_data =
     true, false, true, 4,
     { { MUT_TOUGH_SKIN, 3, 1 }, { MUT_FAST, 2, 1 },  { MUT_DEFORMED, 1, 1 },
       { MUT_HOOVES, 3, 1 }, },
+    {},
+    {},
 } },
 
 { SP_DEEP_DWARF, {
@@ -68,6 +72,9 @@ static const map<species_type, species_def> species_data =
     { { MUT_SLOW_HEALING, 3, 1 }, { MUT_PASSIVE_MAPPING, 1, 1 },
       { MUT_PASSIVE_MAPPING, 1, 9 }, { MUT_PASSIVE_MAPPING, 1, 18 },
       { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 14 }, },
+    { "You are resistant to damage.",
+      "You can recharge devices by infusing magical energy." },
+    { "damage resistance", "recharge devices" },
 } },
 
 { SP_DEEP_ELF, {
@@ -80,6 +87,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     5, 12, 10, // 27
     false, true, false, 4,
+    {},
+    {},
     {},
 } },
 
@@ -94,6 +103,8 @@ static const map<species_type, species_def> species_data =
     11, 12, 11, // 34
     false, false, false, 28, // No natural stat gain (double chosen instead)
     { { MUT_SUSTAIN_ABILITIES, 1, 1 }, },
+    {},
+    {},
 } },
 
 // Keep this above the other draconians, so get_species_by_abbrev works
@@ -108,6 +119,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, },
+    {},
+    {},
 } },
 
 { SP_RED_DRACONIAN, {
@@ -121,6 +134,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_HEAT_RESISTANCE, 1, 7 }, },
+    { "You can breathe blasts of fire." },
+    { "breathe fire" },
 } },
 
 { SP_WHITE_DRACONIAN, {
@@ -134,6 +149,9 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 7 }, },
+    { "You can breathe waves of freezing cold.",
+      "You can buffet flying creatures when you breathe cold." },
+    { "breathe frost" },
 } },
 
 { SP_GREEN_DRACONIAN, {
@@ -148,6 +166,8 @@ static const map<species_type, species_def> species_data =
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 7 },
       { MUT_STINGER, 1, 14 }, },
+    { "You can breathe blasts of noxious fumes." },
+    { "breathe noxious fumes" },
 } },
 
 { SP_YELLOW_DRACONIAN, {
@@ -161,6 +181,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_ACIDIC_BITE, 1, 14 }, },
+    { "You can spit globs of acid.", "You are resistant to acid." },
+    { "spit acid", "acid resistance" },
 } },
 
 { SP_GREY_DRACONIAN, {
@@ -174,6 +196,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_UNBREATHING, 1, 7 }, },
+    { "You can walk through water." },
+    { "walk through water" },
 } },
 
 { SP_BLACK_DRACONIAN, {
@@ -188,6 +212,8 @@ static const map<species_type, species_def> species_data =
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 7 },
       { MUT_BIG_WINGS, 1, 14 }, },
+    { "You can breathe wild blasts of lightning." },
+    { "breathe lightning" },
 } },
 
 { SP_PURPLE_DRACONIAN, {
@@ -201,6 +227,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, },
+    { "You can breathe bolts of dispelling energy." },
+    { "breathe power" },
 } },
 
 { SP_MOTTLED_DRACONIAN, {
@@ -214,6 +242,9 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, },
+    { "You can spit globs of burning liquid.",
+      "You can ignite nearby creatures when you spit burning liquid." },
+    { "breathe sticky flame splash" },
 } },
 
 { SP_PALE_DRACONIAN, {
@@ -227,6 +258,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, true, true, 4,
     { { MUT_COLD_BLOODED, 1, 1 }, },
+    { "You can breathe blasts of scalding, opaque steam." },
+    { "breathe steam" },
 } },
 
 { SP_DEMONSPAWN, {
@@ -239,6 +272,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 9, 8, // 25
     true, true, true, 4,
+    {},
+    {},
     {},
 } },
 
@@ -256,6 +291,9 @@ static const map<species_type, species_def> species_data =
       { MUT_SHAGGY_FUR, 1, 1 }, { MUT_ACUTE_VISION, 1, 1 }, { MUT_PAWS, 1, 1 },
       { MUT_SLOW_METABOLISM, 1, 1 }, { MUT_CLAWS, 1, 1 },
       { MUT_SHAGGY_FUR, 1, 6 }, { MUT_SHAGGY_FUR, 1, 12 }, },
+    { "You cannot wear armour.",
+      "You are incapable of wielding weapons or throwing items." },
+    { "no armour", "no weapons or thrown items" },
 } },
 
 { SP_FORMICID, {
@@ -269,6 +307,10 @@ static const map<species_type, species_def> species_data =
     12, 7, 6, // 25
     true, true, false, 4,
     { { MUT_ANTENNAE, 3, 1 }, },
+    { "You are under a permanent stasis effect."
+      "You can dig through walls and to a lower floor."
+      "Your four strong arms can wield two-handed weapons with a shield." },
+    { "permanent stasis", "dig shafts and tunnels", "four strong arms" },
 } },
 
 { SP_GHOUL, {
@@ -285,6 +327,9 @@ static const map<species_type, species_def> species_data =
       { MUT_TORMENT_RESISTANCE, 1, 1 },
       { MUT_SLOW_HEALING, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
       { MUT_CLAWS, 1, 1 }, { MUT_UNBREATHING, 1, 1 }, },
+    { "Your body is rotting away.",
+      "You thrive on raw meat." },
+    { "rotting body" },
 } },
 
 { SP_GARGOYLE, {
@@ -300,6 +345,8 @@ static const map<species_type, species_def> species_data =
     { { MUT_ROT_IMMUNITY, 1, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 1, 1 },
       { MUT_PETRIFICATION_RESISTANCE, 1, 1 }, { MUT_SHOCK_RESISTANCE, 1, 1 },
       { MUT_UNBREATHING, 1, 1 }, { MUT_BIG_WINGS, 1, 14 }, },
+    { "You are resistant to torment." },
+    {},
 } },
 
 { SP_HALFLING, {
@@ -313,6 +360,8 @@ static const map<species_type, species_def> species_data =
     8, 7, 9, // 24
     false, false, true, 5,
     { { MUT_MUTATION_RESISTANCE, 1, 1 }, },
+    {},
+    {},
 } },
 
 { SP_HIGH_ELF, {
@@ -325,6 +374,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     7, 11, 10, // 28
     false, true, true, 3,
+    {},
+    {},
     {},
 } },
 
@@ -339,6 +390,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, false, false, 5,
     {},
+    {},
+    {},
 } },
 
 { SP_HUMAN, {
@@ -351,6 +404,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
     true, true, true, 4,
+    {},
+    {},
     {},
 } },
 
@@ -365,6 +420,8 @@ static const map<species_type, species_def> species_data =
     6, 6, 11, // 23
     true, false, true, 5,
     { { MUT_CARNIVOROUS, 3, 1 }, },
+    {},
+    {},
 } },
 
 { SP_MERFOLK, {
@@ -378,6 +435,9 @@ static const map<species_type, species_def> species_data =
     8, 7, 9, // 24
     true, true, true, 5,
     {},
+    { "You revert to your normal form in water.",
+      "You are very nimble and swift while swimming." },
+    { "change form in water", "swift swim" },
 } },
 
 { SP_MINOTAUR, {
@@ -391,6 +451,8 @@ static const map<species_type, species_def> species_data =
     12, 5, 5, // 22
     true, false, true, 4,
     { { MUT_HORNS, 2, 1 }, },
+    { "You reflexively headbutt those who attack you in melee." },
+    { "retaliatory headbutt" },
 } },
 
 { SP_MUMMY, {
@@ -408,6 +470,9 @@ static const map<species_type, species_def> species_data =
       { MUT_UNBREATHING, 1, 1 },
       { MUT_NECRO_ENHANCER, 1, 13 }, { MUT_NECRO_ENHANCER, 1, 26 },
       { MUT_MUMMY_RESTORATION, 1, 13}, },
+    { "You do not eat or drink.",
+      "Your flesh is vulnerable to fire." },
+    { "no food or potions", "fire vulnerability" },
 } },
 
 { SP_NAGA, {
@@ -423,6 +488,8 @@ static const map<species_type, species_def> species_data =
     { { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW, 2, 1 },  { MUT_DEFORMED, 1, 1 },
       { MUT_SPIT_POISON, 2, 1 },  { MUT_POISON_RESISTANCE, 1, 1 },
       { MUT_CONSTRICTING_TAIL, 1, 13 }, },
+    { "You cannot wear boots." },
+    {},
 } },
 
 { SP_OGRE, {
@@ -436,6 +503,8 @@ static const map<species_type, species_def> species_data =
     12, 7, 5, // 24
     true, false, false, 3,
     { { MUT_TOUGH_SKIN, 1, 1 }, },
+    {},
+    {},
 } },
 
 { SP_OCTOPODE, {
@@ -449,6 +518,9 @@ static const map<species_type, species_def> species_data =
     7, 10, 7, // 24
     true, true, true, 5,
     { { MUT_CAMOUFLAGE, 1, 1 }, { MUT_GELATINOUS_BODY, 1, 1 }, },
+    { "You cannot wear most types of armour.",
+      "You are amphibious." },
+    { "almost no armour", "amphibious" },
 } },
 
 { SP_SPRIGGAN, {
@@ -463,6 +535,8 @@ static const map<species_type, species_def> species_data =
     false, true, true, 5,
     { { MUT_FAST, 3, 1 }, { MUT_HERBIVOROUS, 3, 1 },
       { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW_METABOLISM, 2, 1 }, },
+    {},
+    {},
 } },
 
 { SP_TENGU, {
@@ -477,6 +551,8 @@ static const map<species_type, species_def> species_data =
     true, true, true, 4,
     { { MUT_BEAK, 1, 1 }, { MUT_TALONS, 3, 1 },
       { MUT_TENGU_FLIGHT, 1, 5 }, { MUT_TENGU_FLIGHT, 1, 14 }, },
+    {},
+    {},
 } },
 
 { SP_TROLL, {
@@ -492,6 +568,8 @@ static const map<species_type, species_def> species_data =
     { { MUT_TOUGH_SKIN, 2, 1 }, { MUT_REGENERATION, 2, 1 }, { MUT_CLAWS, 3, 1 },
       { MUT_GOURMAND, 1, 1 }, { MUT_FAST_METABOLISM, 3, 1 },
       { MUT_SHAGGY_FUR, 1, 1 }, },
+    {},
+    {},
 } },
 
 { SP_VAMPIRE, {
@@ -506,6 +584,8 @@ static const map<species_type, species_def> species_data =
     false, false, false, 28, // No stat gain
     { { MUT_FANGS, 3, 1 }, { MUT_ACUTE_VISION, 1, 1 },
       { MUT_UNBREATHING, 1, 1 }, },
+    {},
+    {},
 } },
 
 { SP_VINE_STALKER, {
@@ -524,6 +604,8 @@ static const map<species_type, species_def> species_data =
       { MUT_NO_DEVICE_HEAL, 3, 1 },
       { MUT_REGENERATION, 1, 1 }, { MUT_REGENERATION, 1, 6 },
       { MUT_REGENERATION, 1, 12 }, },
+    {},
+    {},
 } },
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {
@@ -536,6 +618,8 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     8, 8, 8, // 24
     false, true, true, 4,
+    {},
+    {},
     {},
 } },
 
@@ -550,6 +634,8 @@ static const map<species_type, species_def> species_data =
     10, 8, 6, // 24
     true, false, false, 5,
     {},
+    {},
+    {},
 } },
 
 { SP_DJINNI, {
@@ -563,6 +649,11 @@ static const map<species_type, species_def> species_data =
     8, 8, 8, // 24
     true, true, true, 4,
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, },
+    { "You are immune to all types of fire, even holy and hellish.",
+      "You are vulnerable to cold.",
+      "You need no food.",
+      "You have no legs." },
+    { "fire immunity", "cold vulnerability" },
 } },
 #endif
 // Ideally this wouldn't be necessary...
