@@ -38,6 +38,7 @@ struct species_def
     vector<level_up_mutation> level_up_mutations; ///< Mutations on level-up
     vector<string> verbose_fake_mutations; ///< Additional information on 'A'
     vector<string> terse_fake_mutations; ///< Additional information on '%'
+    vector<job_type> recommended_jobs; ///< Which jobs are "good" for it
 };
 
 static const map<species_type, species_def> species_data =
@@ -57,6 +58,7 @@ static const map<species_type, species_def> species_data =
       { MUT_HOOVES, 3, 1 }, },
     {},
     {},
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_HUNTER, JOB_WARPER, JOB_ARCANE_MARKSMAN },
 } },
 
 { SP_DEEP_DWARF, {
@@ -75,6 +77,8 @@ static const map<species_type, species_def> species_data =
     { "You are resistant to damage.",
       "You can recharge devices by infusing magical energy." },
     { "damage resistance", "recharge devices" },
+    { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_NECROMANCER,
+      JOB_EARTH_ELEMENTALIST },
 } },
 
 { SP_DEEP_ELF, {
@@ -90,6 +94,9 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {},
+    { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST,
+      JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
 } },
 
 { SP_DEMIGOD, {
@@ -105,6 +112,8 @@ static const map<species_type, species_def> species_data =
     { { MUT_SUSTAIN_ABILITIES, 1, 1 }, },
     {},
     {},
+    { JOB_TRANSMUTER, JOB_CONJURER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
+      JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
 } },
 
 // Keep this above the other draconians, so get_species_by_abbrev works
@@ -121,6 +130,9 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, },
     {},
     {},
+    { JOB_BERSERKER, JOB_TRANSMUTER, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
+      JOB_VENOM_MAGE },
 } },
 
 { SP_RED_DRACONIAN, {
@@ -136,6 +148,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_HEAT_RESISTANCE, 1, 7 }, },
     { "You can breathe blasts of fire." },
     { "breathe fire" },
+    {}, // not a starting race
 } },
 
 { SP_WHITE_DRACONIAN, {
@@ -152,6 +165,7 @@ static const map<species_type, species_def> species_data =
     { "You can breathe waves of freezing cold.",
       "You can buffet flying creatures when you breathe cold." },
     { "breathe frost" },
+    {}, // not a starting race
 } },
 
 { SP_GREEN_DRACONIAN, {
@@ -168,6 +182,7 @@ static const map<species_type, species_def> species_data =
       { MUT_STINGER, 1, 14 }, },
     { "You can breathe blasts of noxious fumes." },
     { "breathe noxious fumes" },
+    {}, // not a starting race
 } },
 
 { SP_YELLOW_DRACONIAN, {
@@ -183,6 +198,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_ACIDIC_BITE, 1, 14 }, },
     { "You can spit globs of acid.", "You are resistant to acid." },
     { "spit acid", "acid resistance" },
+    {}, // not a starting race
 } },
 
 { SP_GREY_DRACONIAN, {
@@ -198,6 +214,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_UNBREATHING, 1, 7 }, },
     { "You can walk through water." },
     { "walk through water" },
+    {}, // not a starting race
 } },
 
 { SP_BLACK_DRACONIAN, {
@@ -214,6 +231,7 @@ static const map<species_type, species_def> species_data =
       { MUT_BIG_WINGS, 1, 14 }, },
     { "You can breathe wild blasts of lightning." },
     { "breathe lightning" },
+    {}, // not a starting race
 } },
 
 { SP_PURPLE_DRACONIAN, {
@@ -229,6 +247,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, },
     { "You can breathe bolts of dispelling energy." },
     { "breathe power" },
+    {}, // not a starting race
 } },
 
 { SP_MOTTLED_DRACONIAN, {
@@ -245,6 +264,7 @@ static const map<species_type, species_def> species_data =
     { "You can spit globs of burning liquid.",
       "You can ignite nearby creatures when you spit burning liquid." },
     { "breathe sticky flame splash" },
+    {}, // not a starting race
 } },
 
 { SP_PALE_DRACONIAN, {
@@ -260,6 +280,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, },
     { "You can breathe blasts of scalding, opaque steam." },
     { "breathe steam" },
+    {}, // not a starting race
 } },
 
 { SP_DEMONSPAWN, {
@@ -275,6 +296,9 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {},
+    { JOB_GLADIATOR, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_WIZARD,
+      JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
+      JOB_VENOM_MAGE },
 } },
 
 { SP_FELID, {
@@ -294,6 +318,8 @@ static const map<species_type, species_def> species_data =
     { "You cannot wear armour.",
       "You are incapable of wielding weapons or throwing items." },
     { "no armour", "no weapons or thrown items" },
+    { JOB_BERSERKER, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_ICE_ELEMENTALIST,
+      JOB_CONJURER, JOB_SUMMONER, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
 } },
 
 { SP_FORMICID, {
@@ -311,6 +337,8 @@ static const map<species_type, species_def> species_data =
       "You can dig through walls and to a lower floor."
       "Your four strong arms can wield two-handed weapons with a shield." },
     { "permanent stasis", "dig shafts and tunnels", "four strong arms" },
+    { JOB_FIGHTER, JOB_HUNTER, JOB_ABYSSAL_KNIGHT, JOB_ARCANE_MARKSMAN,
+      JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
 } },
 
 { SP_GHOUL, {
@@ -330,6 +358,8 @@ static const map<species_type, species_def> species_data =
     { "Your body is rotting away.",
       "You thrive on raw meat." },
     { "rotting body" },
+    { JOB_WARPER, JOB_GLADIATOR, JOB_MONK, JOB_NECROMANCER,
+      JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
 } },
 
 { SP_GARGOYLE, {
@@ -347,6 +377,9 @@ static const map<species_type, species_def> species_data =
       { MUT_UNBREATHING, 1, 1 }, { MUT_BIG_WINGS, 1, 14 }, },
     { "You are resistant to torment." },
     {},
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_BERSERKER,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
+      JOB_VENOM_MAGE },
 } },
 
 { SP_HALFLING, {
@@ -362,6 +395,8 @@ static const map<species_type, species_def> species_data =
     { { MUT_MUTATION_RESISTANCE, 1, 1 }, },
     {},
     {},
+    { JOB_FIGHTER, JOB_HUNTER, JOB_ASSASSIN, JOB_BERSERKER, JOB_ENCHANTER,
+      JOB_AIR_ELEMENTALIST },
 } },
 
 { SP_HIGH_ELF, {
@@ -377,6 +412,8 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {},
+    { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
 } },
 
 { SP_HILL_ORC, {
@@ -392,6 +429,8 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {},
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT,
+      JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST },
 } },
 
 { SP_HUMAN, {
@@ -407,6 +446,8 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {},
+    { JOB_BERSERKER, JOB_CONJURER, JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST },
 } },
 
 { SP_KOBOLD, {
@@ -422,6 +463,8 @@ static const map<species_type, species_def> species_data =
     { { MUT_CARNIVOROUS, 3, 1 }, },
     {},
     {},
+    { JOB_HUNTER, JOB_ASSASSIN, JOB_BERSERKER, JOB_ARCANE_MARKSMAN,
+      JOB_ENCHANTER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST },
 } },
 
 { SP_MERFOLK, {
@@ -438,6 +481,8 @@ static const map<species_type, species_def> species_data =
     { "You revert to your normal form in water.",
       "You are very nimble and swift while swimming." },
     { "change form in water", "swift swim" },
+    { JOB_GLADIATOR, JOB_BERSERKER, JOB_SKALD, JOB_TRANSMUTER, JOB_SUMMONER,
+      JOB_ICE_ELEMENTALIST, JOB_VENOM_MAGE },
 } },
 
 { SP_MINOTAUR, {
@@ -453,6 +498,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_HORNS, 2, 1 }, },
     { "You reflexively headbutt those who attack you in melee." },
     { "retaliatory headbutt" },
+    { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_BERSERKER },
 } },
 
 { SP_MUMMY, {
@@ -473,6 +519,8 @@ static const map<species_type, species_def> species_data =
     { "You do not eat or drink.",
       "Your flesh is vulnerable to fire." },
     { "no food or potions", "fire vulnerability" },
+    { JOB_WIZARD, JOB_CONJURER, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
+      JOB_FIRE_ELEMENTALIST, JOB_SUMMONER },
 } },
 
 { SP_NAGA, {
@@ -490,6 +538,8 @@ static const map<species_type, species_def> species_data =
       { MUT_CONSTRICTING_TAIL, 1, 13 }, },
     { "You cannot wear boots." },
     {},
+    { JOB_BERSERKER, JOB_TRANSMUTER, JOB_ENCHANTER, JOB_FIRE_ELEMENTALIST,
+      JOB_ICE_ELEMENTALIST, JOB_WARPER, JOB_WIZARD, JOB_VENOM_MAGE },
 } },
 
 { SP_OGRE, {
@@ -505,6 +555,8 @@ static const map<species_type, species_def> species_data =
     { { MUT_TOUGH_SKIN, 1, 1 }, },
     {},
     {},
+    { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_WIZARD,
+      JOB_FIRE_ELEMENTALIST },
 } },
 
 { SP_OCTOPODE, {
@@ -521,6 +573,9 @@ static const map<species_type, species_def> species_data =
     { "You cannot wear most types of armour.",
       "You are amphibious." },
     { "almost no armour", "amphibious" },
+    { JOB_TRANSMUTER, JOB_WIZARD, JOB_CONJURER, JOB_ASSASSIN,
+      JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
+      JOB_VENOM_MAGE },
 } },
 
 { SP_SPRIGGAN, {
@@ -537,6 +592,8 @@ static const map<species_type, species_def> species_data =
       { MUT_ACUTE_VISION, 1, 1 }, { MUT_SLOW_METABOLISM, 2, 1 }, },
     {},
     {},
+    { JOB_ASSASSIN, JOB_ARTIFICER, JOB_ABYSSAL_KNIGHT, JOB_WARPER,
+      JOB_ENCHANTER, JOB_CONJURER, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
 } },
 
 { SP_TENGU, {
@@ -553,6 +610,8 @@ static const map<species_type, species_def> species_data =
       { MUT_TENGU_FLIGHT, 1, 5 }, { MUT_TENGU_FLIGHT, 1, 14 }, },
     {},
     {},
+    { JOB_BERSERKER, JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER,
+      JOB_FIRE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
 } },
 
 { SP_TROLL, {
@@ -570,6 +629,8 @@ static const map<species_type, species_def> species_data =
       { MUT_SHAGGY_FUR, 1, 1 }, },
     {},
     {},
+    { JOB_FIGHTER, JOB_MONK, JOB_HUNTER, JOB_BERSERKER, JOB_WARPER,
+      JOB_EARTH_ELEMENTALIST, JOB_WIZARD },
 } },
 
 { SP_VAMPIRE, {
@@ -586,6 +647,8 @@ static const map<species_type, species_def> species_data =
       { MUT_UNBREATHING, 1, 1 }, },
     {},
     {},
+    { JOB_MONK, JOB_ASSASSIN, JOB_ENCHANTER, JOB_EARTH_ELEMENTALIST,
+      JOB_NECROMANCER, JOB_ICE_ELEMENTALIST },
 } },
 
 { SP_VINE_STALKER, {
@@ -606,6 +669,8 @@ static const map<species_type, species_def> species_data =
       { MUT_REGENERATION, 1, 12 }, },
     {},
     {},
+    { JOB_MONK, JOB_ASSASSIN, JOB_ENCHANTER, JOB_CONJURER, JOB_NECROMANCER,
+      JOB_AIR_ELEMENTALIST, JOB_ICE_ELEMENTALIST },
 } },
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {
@@ -621,6 +686,7 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {},
+    {}, // not a starting race
 } },
 
 { SP_LAVA_ORC, {
@@ -636,6 +702,7 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {},
+    {}, // not a starting race
 } },
 
 { SP_DJINNI, {
@@ -654,6 +721,7 @@ static const map<species_type, species_def> species_data =
       "You need no food.",
       "You have no legs." },
     { "fire immunity", "cold vulnerability" },
+    {}, // not a starting race
 } },
 #endif
 // Ideally this wouldn't be necessary...
@@ -667,6 +735,9 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     0, 0, 0, // 0
     false, false, false, 28,
+    {},
+    {},
+    {},
     {},
 } }
 };

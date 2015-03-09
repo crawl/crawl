@@ -164,6 +164,13 @@ size_type species_size(species_type species, size_part_type psize)
     return size;
 }
 
+bool species_recommends_job(species_type species, job_type job)
+{
+    return find(_species_def(species).recommended_jobs.begin(),
+                _species_def(species).recommended_jobs.end(),
+                job) != _species_def(species).recommended_jobs.end();
+}
+
 monster_type player_species_to_mons_species(species_type species)
 {
     return _species_def(species).monster_species;

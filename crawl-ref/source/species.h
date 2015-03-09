@@ -18,6 +18,7 @@ bool species_likes_water(species_type species);
 bool species_likes_lava(species_type species);
 size_type species_size(species_type species,
                        size_part_type psize = PSIZE_TORSO);
+bool species_recommends_job(species_type species, job_type job);
 
 species_type get_species_by_abbrev(const char *abbrev);
 const char *get_species_abbrev(species_type which_species);
