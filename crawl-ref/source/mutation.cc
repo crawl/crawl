@@ -522,7 +522,6 @@ string describe_mutations(bool center_title)
     case SP_GARGOYLE:
     {
         result += "You are resistant to torment.\n";
-        result += "You are immune to poison.\n";
 
         ostringstream num;
         num << 2 + you.experience_level * 2 / 5
@@ -576,9 +575,10 @@ string describe_mutations(bool center_title)
         result += "Your body does not fit into most forms of armour.\n";
     }
 
-    result += "</lightblue>";
+    if (player_res_poison(false, false, false) == 3)
+        result += "You are immune to poison.\n";
 
-    textcolour(LIGHTGREY);
+    result += "</lightblue>";
 
     // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
