@@ -282,7 +282,7 @@ static const map<species_type, species_def> species_data =
     11, 3, 4, // 18
     true, false, false, 5,
     { { MUT_CARNIVOROUS, 3, 1 }, { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 },
-      { MUT_TORMENT_RESISTANCE, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 1 },
+      { MUT_TORMENT_RESISTANCE, 1, 1 },
       { MUT_SLOW_HEALING, 1, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
       { MUT_CLAWS, 1, 1 }, { MUT_UNBREATHING, 1, 1 }, },
 } },
@@ -404,7 +404,7 @@ static const map<species_type, species_def> species_data =
     11, 7,  7, // 25
     false, false, false, 28, // No stat gain
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, 3, 1 }, { MUT_COLD_RESISTANCE, 1, 1 },
-      { MUT_TORMENT_RESISTANCE, 1, 1 }, { MUT_POISON_RESISTANCE, 1, 1 },
+      { MUT_TORMENT_RESISTANCE, 1, 1 },
       { MUT_UNBREATHING, 1, 1 },
       { MUT_NECRO_ENHANCER, 1, 13 }, { MUT_NECRO_ENHANCER, 1, 26 },
       { MUT_MUMMY_RESTORATION, 1, 13}, },
