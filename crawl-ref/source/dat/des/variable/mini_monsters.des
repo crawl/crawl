@@ -2496,7 +2496,7 @@ ENDMAP
 
 NAME:   hangedman_blasphemy
 DEPTH:  Depths, Crypt
-MONS:   patrolling spectral holy swine
+MONS:   patrolling hell hog
 MONS:   apis skeleton, pearl dragon zombie
 MONS:   patrolling profane servitor, death knight
 COLOUR: G = lightgrey, t = w:5 lightgrey / w:5 darkgrey / brown, c = white
