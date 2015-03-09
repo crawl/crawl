@@ -35,14 +35,6 @@
 #include "stringutil.h"
 #include "unwind.h"
 
-typedef function<string ()> string_fn;
-typedef map<string, string_fn> skill_op_map;
-
-static skill_op_map Skill_Op_Map;
-
-// The species for which the skill title is being worked out.
-static species_type Skill_Species = SP_UNKNOWN;
-
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
 //
@@ -58,36 +50,14 @@ static species_type Skill_Species = SP_UNKNOWN;
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 static void _train_skills(int exp, const int cost, const bool simu);
 
-class skill_title_key_t
-{
-public:
-    skill_title_key_t(const char *k, string_fn o) : key(k), op(o)
-    {
-        Skill_Op_Map[k] = o;
-    }
-
-    static string get(const string &_key)
-    {
-        return lookup(Skill_Op_Map, _key, [] () { return string(); })();
-    }
-private:
-    const char *key;
-    string_fn op;
-};
-
-typedef skill_title_key_t stk;
-
 // Basic goals for titles:
 // The higher titles must come last.
 // Referring to the skill itself is fine ("Transmuter") but not impressive.
 // No overlaps, high diversity.
 
-// Replace @Adj@ with uppercase adjective form, @genus@ with lowercase genus,
-// @Genus@ with uppercase genus, and %s with special cases defined below,
-// including but not limited to species.
-
-// NOTE:  Even though %s could be used with most of these, remember that
-// the character's race will be listed on the next line.  It's only really
+// See the map "replacements" below for what @Genus@, @Adj@, etc. do.
+// NOTE: Even though @foo@ could be used with most of these, remember that
+// the character's race will be listed on the next line. It's only really
 // intended for cases where things might be really awkward without it. -- bwr
 
 // NOTE: If a skill name is changed, remember to also adapt the database entry.
@@ -1166,36 +1136,9 @@ skill_type str_to_skill(const string &skill)
     return SK_FIGHTING;
 }
 
-static string _stk_adj_cap()
+static string _stk_weight(species_type species)
 {
-    return species_name(Skill_Species, SPNAME_ADJ);
-}
-
-static string _stk_genus_cap()
-{
-    return species_name(Skill_Species, SPNAME_GENUS);
-}
-
-static string _stk_genus_nocap()
-{
-    string s = _stk_genus_cap();
-    return lowercase(s);
-}
-
-static string _stk_genus_short_cap()
-{
-    return Skill_Species == SP_DEMIGOD ? "God" :
-           _stk_genus_cap();
-}
-
-static string _stk_walker()
-{
-    return species_walking_verb(Skill_Species) + "er";
-}
-
-static string _stk_weight()
-{
-    switch (Skill_Species)
+    switch (species)
     {
     case SP_OGRE:
     case SP_TROLL:
@@ -1226,22 +1169,24 @@ static string _stk_weight()
     }
 }
 
-static skill_title_key_t _skill_title_keys[] =
+static map<string, function<string (species_type)>> replacements =
 {
-    stk("Adj", _stk_adj_cap),
-    stk("Genus", _stk_genus_cap),
-    stk("genus", _stk_genus_nocap),
-    stk("Genus_Short", _stk_genus_short_cap),
-    stk("Walker", _stk_walker),
-    stk("Weight", _stk_weight),
+    { "Adj", [](species_type sp)
+                 { return species_name(sp, SPNAME_ADJ); } },
+    { "Genus", [](species_type sp)
+                 { return species_name(sp, SPNAME_GENUS); } },
+    { "genus", [](species_type sp)
+                 { return lowercase_string(species_name(sp, SPNAME_GENUS)); } },
+    { "Genus_Short", [](species_type sp)
+                 { return sp == SP_DEMIGOD ? "God" :
+                          species_name(sp, SPNAME_GENUS); } },
+    { "Walker", [](species_type sp)
+                 { return species_walking_verb(sp) + "er"; } },
+    { "Weight", _stk_weight },
 };
 
-static string _replace_skill_keys(const string &text)
+static string _replace_skill_keys(const string &text, species_type species)
 {
-    // The container array is unused, we rely on side effects of constructors
-    // of individual items.  Yay.
-    UNUSED(_skill_title_keys);
-
     string::size_type at = 0, last = 0;
     ostringstream res;
     while ((at = text.find('@', last)) != string::npos)
@@ -1252,7 +1197,7 @@ static string _replace_skill_keys(const string &text)
             break;
 
         const string key = text.substr(at + 1, end - at - 1);
-        const string value = stk::get(key);
+        const string value = replacements[key](species);
 
         ASSERT(!value.empty());
 
@@ -1362,10 +1307,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             result = skill_titles[best_skill][skill_rank];
     }
 
-    {
-        unwind_var<species_type> sp(Skill_Species, species);
-        result = _replace_skill_keys(result);
-    }
+    result = _replace_skill_keys(result, species);
 
     return result.empty() ? string("Invalid Title")
                           : result;
