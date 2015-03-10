@@ -269,6 +269,7 @@ public:
     bool        arena_list_eq;
 
     vector<message_filter> force_more_message;
+    vector<message_filter> flash_screen_message;
 
     int         tc_reachable;   // Colour for squares that are reachable
     int         tc_excluded;    // Colour for excluded squares.
