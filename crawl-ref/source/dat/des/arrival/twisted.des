@@ -927,3 +927,34 @@ XXxxxxxxx'xxxxx'x'JxxXX   XXxxGHIxx
    XXXXxxxxXXXxxxxxxXX     Xxxxxxxx
       XXXXXX XXXXXXXXX     XXxxxxx
 ENDMAP
+
+NAME: nicolae_arrival_memento_mori
+TAGS: arrival no_monster_gen no_trap_gen no_item_gen
+SUBST: n = nN
+KPROP: u = no_rtele_into
+KPROP: Nu = bloody
+SUBST: N = n, u = uU
+: local yourcorpse = ""
+: local yourskel = ""
+: if you.race() == "Vampire" or you.race() == "Mummy" or
+:    you.race() == "Ghoul" or you.race() == "Gargoyle" then
+:   yourcorpse = "human corpse"
+:   yourskel = "human skeleton"
+: elseif you.race() == "Formicid" then
+:   yourcorpse = you.genus() .. " name:" .. you.name() .. " corpse"
+:   yourskel = you.genus() .. " name:" .. you.name() .. " corpse"
+: else
+:   yourcorpse = you.genus() .. " name:" .. you.name() .. " corpse"
+:   yourskel = you.genus() .. " name:" .. you.name() .. " skeleton"
+: end
+: dgn.delayed_decay(_G, 'u', yourcorpse )
+: dgn.delayed_decay(_G, 'U', yourskel )
+MAP
+xxxxxxxxxxx
+x.........x
+x...nnn...x
+x.{.nun...+
+x...nnn...x
+x.........x
+xxxxxxxxxxx
+ENDMAP

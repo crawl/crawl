@@ -3528,3 +3528,30 @@ MAP
  xxxxexxxdxxxx
  xxxxxxxxxxxxx
 ENDMAP
+
+NAME: nicolae_ashenzari_panopticon
+TAGS: uniq_altar_ashenzari temple_overflow_1 temple_overflow_ashenzari \
+      transparent decor
+SHUFFLE: ABCDEF/abcdef
+SUBST: ACEbdf = x, Ba = m, Dc = ., Fe = @
+NSUBST: m = + / m
+KFEAT: _ = altar_ashenzari
+MAP
+E....F..E..F...CE
+CC...D..C..D..CC.
+.CC..DD.C.DD.CC..
+..CC..D.C.D.CC...
+...CC.DDCDDCC....
+FDD.CC.DCDCC..DDF
+..DDDCABABA.DDD..
+....DDB...BDD....
+ECCCCCA._.ACCCCCE
+....DDB...BDD....
+..DDD.ABABACDDD..
+FDD..CCDCD.CC.DDF
+....CCDDCDD.CC...
+...CC.D.C.D..CC..
+..CC.DD.C.DD..CC.
+.CC..D..C..D...CC
+EC...F..E..F....E
+ENDMAP

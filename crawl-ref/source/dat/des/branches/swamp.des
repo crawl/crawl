@@ -1726,6 +1726,91 @@ MAP
    .........
 ENDMAP
 
+# http://i.imgur.com/H7nvQFo.jpg
+NAME: nicolae_swamp_little_tower
+DEPTH: Swamp
+TAGS: decor no_pool_fixup
+NSUBST: X = - / x
+SUBST: T = t-, - = ....P, z = WWw, _ = __w
+KMONS: P = plant
+CLEAR: _
+MAP
+   ttt___
+  ttTwwww___
+  tTWwwwwwww___
+  tTWwwwwwwwwww___
+ tt.Wwwwzzzzzwwwzz
+ t.Tzwwzx---xzwwz.
+ .tzwwzx-xXx-xzzz.
+.Ttwwwz-xx-xx-zz-.
+@Ttwwwz-X---X-WW-@
+.Ttwwwz-xx-xx-zz-.
+ .tzwwzx-xXx-xzzz.
+ t.Tzwwzx---xzwwz.
+ tt.Wwwwzzzzzwwwzz
+  tTWwwwwwwwwww___
+  tTWwwwwwww___
+  ttTwwww___
+   ttt___
+ENDMAP
+
+NAME: nicolae_swamp_dense_foliage
+DEPTH: Swamp
+TAGS: decor transparent
+SUBST: _ = ._, - = t_, t = tttttt., . = ......W
+CLEAR: _
+MAP
+         -_-
+      -_-.t.---
+   -_-.t.ttt.t.-
+  -.t.ttt.t.t.t.-
+ -.ttt.t.t.t.ttt_
+ -t.t.t.t.ttt.t.-
+ -.t.t.ttt.t.t.t.-
+-.t.ttt.t.t.t.ttt_
+_ttt.t.t.t.ttt.t.-
+-.t.t.t.ttt.t.t.t.-
+ -.t.ttt.t.t.t.ttt_
+ _ttt.t.t.t.ttt.t.-
+ -.t.t.t.ttt.t.t.-
+  -.t.ttt.t.t.t.t-
+  _ttt.t.t.t.ttt.-
+  -.t.t.t.ttt.t.-
+   -.t.ttt.t.-_-
+    ---.t.-_-
+       -_-
+ENDMAP
+
+NAME: nicolae_swamp_very_dense_foliage
+DEPTH: Swamp
+TAGS: decor transparent
+SUBST: _ = ._, - = t_, t = tttttt., . = ......W
+CLEAR: _
+MAP
+       -_-
+      tt.----_
+   --tttt.--.-_-
+   -.ttttt..tt.-----
+   --.tt..ttttt.--.-
+   --.t.tt.ttttt..tt
+  --.t.tttt.tt..ttttt
+  _.tt.tttt.t.tt.tttt-
+ _-tttt.tt.t.tttt.tt._
+ -.ttttt..tt.tttt.t.--
+ --.tt..ttttt.tt.t.--
+ --.t.tt.ttttt..tt.--
+--.t.tttt.tt..ttttt.-
+_.tt.tttt.t.tt.ttttt_
+-tttt.tt.t.tttt.tt._
+ ttttt..tt.tttt.t.--
+  tt..ttttt.tt.t.--
+  -.--.ttttt..tt.--
+  -----.tt..ttttt.-
+      -_-.--.ttttt-
+        _----.tt
+            -_-
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

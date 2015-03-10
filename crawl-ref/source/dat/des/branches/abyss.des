@@ -165,6 +165,34 @@ x.x.x.F.xxx
      ..xx
 ENDMAP
 
+NAME: nicolae_abyss_entry_one_way_or_another
+TAGS: nolayout_encompass patrolling
+: abyss_entry(_G, 'O')
+NSUBST: 1 = 1111111112 / .
+# All of these are guaranteed to have banishment in their spell sets.
+# One in ten chance they get a distortion weapon too.
+: local elfweapon = "long sword ego:distortion w:20 | short sword " ..
+:  "ego:distortion | rapier ego:distortion | dagger ego:distortion"
+: local louiseweapon = "long sword ego:distortion | short sword " ..
+:  "ego:distortion | battleaxe ego:distortion | hand axe ego:distortion | " ..
+:  "mace ego:distortion | dire flail ego:distortion | glaive ego:distortion w:2"
+KMONS: 1 = Louise, deep elf demonologist / deep elf sorcerer w:5
+: kmons( "2 = Louise ; " .. louiseweapon .. " , deep elf demonologist ; " ..
+: elfweapon .. " / deep elf sorcerer w:5 ; " .. elfweapon)
+MAP
+   ......
+  ..bbbb..
+ ..b....b..
+..b......b..
+.b..bb1..b...
+...b.1O1.b...
+...b..1bb..b.
+ ..b......b..
+  ..b....b..
+   ..bbbb..
+    ......
+ENDMAP
+
 ###############################################################################
 # abyss random vaults
 ###############################################################################
@@ -1590,6 +1618,66 @@ cc..c..s..c..cc
   c.s.....s.c
   cF.......Ec
   cccccbccccc
+ENDMAP
+
+NAME: nicolae_abyss_rune_left_handed
+TAGS: abyss_rune unrand no_monster_gen
+SUBST: 0 = 0.
+NSUBST: X = 1 / 2 / 3 / 123.., Q = 6 / 7 / 67...
+SHUFFLE: 12, 45
+MONS: ancient zyme, wretched star, starcursed mass, lurking horror, \
+      thrashing horror, tentacled starspawn, apocalypse crab
+KITEM: O = abyssal rune of zot
+KMONS: O = worldbinder
+MAP
+    ...
+   ..c....
+  ..cc0.c.
+ ..ccc.......
+..cccccccccc..
+..0ccc.4cc.cc..
+..cc.+cc+...nc.
+..c.5.cc..X..c.
+.ccc+ccc.XcX.c.
+.....Q.c..X..c.
+..Q....cn...nc.
+.....Q..ccOcc..
+.ccccc...ccc..0
+.ccc.ccccc.cc..
+.ccc...0....cc.
+............c0.
+           .cc.
+           ....
+ENDMAP
+
+
+NAME: nicolae_abyss_rune_containment_breach
+TAGS: abyss_rune patrolling
+SUBST: N = nn., n = nnnc
+NSUBST: v = 2:v / *:v.
+KITEM: O = abyssal rune of zot
+KMONS: O = spatial maelstrom
+KMONS: v = spatial vortex
+MAP
+       .....
+     .........
+   ....NNNNN....
+  ...NNnnnnnNN...
+  ..NnnnnnnnnnN..
+ ..NnnnnnnnnnnnN..
+ ..NnnnnNNNnnnnN..
+..NnnnnN.v.NnnnnN..
+..NnnnN.....NnnnN..
+..NnnnNv.O.vNnnnN..
+..NnnnN.....NnnnN..
+..NnnnnN.v.NnnnnN..
+ ..NnnnnNNNnnnnN..
+ ..NnnnnnnnnnnnN..
+  ..NnnnnnnnnnN..
+  ...NNnnnnnNN...
+   ....NNNNN....
+     .........
+       .....
 ENDMAP
 
 ###############################################################################

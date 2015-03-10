@@ -3476,3 +3476,59 @@ x'c+cccccc""T"ccccccccc+cccccc'x
 x''''''''''''''''''''''''''''''x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+# 6, 8, 9, 12, 15, or 18 gods.
+NAME: nicolae_temple_no_exploring_needed
+PLACE: Temple
+ORIENT: encompass
+TAGS: temple_variable no_pool_fixup temple_altars_6 temple_altars_8 \
+      temple_altars_9 temple_altars_12 temple_altars_15 temple_altars_18
+{{
+local altar_count = get_altar_count(_G, 18)
+if altar_count == "6" then
+   subst("ADGJMP = _")
+   subst("BCEFHIKLNOQR = .")
+elseif altar_count == "8" then
+   subst("RBDGIKMP = _")
+   subst("ACEFHJLNOQ = .")
+elseif altar_count == "9" then
+   subst("ACEGIKMOQ = _")
+   subst("BDFHJLNPR : ....TG")
+elseif altar_count == "12" then
+   subst("BCEFHIKLNOQR = _")
+   subst("AGM = p")
+   subst("DJP = q")
+   shuffle("pq/rr/rr")
+   subst("p : TG")
+   subst("q : TG")
+   subst("r = .")
+elseif altar_count == "15" then
+   subst("BCDEFHIJKLNOPQR = _")
+   subst("AGM : TG")
+elseif altar_count == "18" then
+   subst("ABCDEFGHIJKLMNOPQR = _")
+else
+   subst("ABCGHIMNO = _")
+   subst("DEFJKLPQR = Y")
+end
+}}
+SUBST: _ = B
+SHUFFLE: abdefgh
+SUBST: abd = w, e : .w, f : .w, g : .w, h : .w
+MAP
+   ccccccccc
+  ccD.E.F.Gcc
+ cc.........cc
+ccC..gh.hg..Hcc
+c...bef.feb...c
+cB.gead.daeg.Ic
+c..hfd...dfh..c
+cA.....{.....Jc
+c..hfd...dfh..c
+cR.gead.daeg.Kc
+c...bef.feb...c
+ccQ..gh.hg..Lcc
+ cc.........cc
+  ccP.O.N.Mcc
+   ccccccccc
+ENDMAP

@@ -3126,3 +3126,34 @@ c.....(.....c
 c...........c
 ccccccccccccc
 ENDMAP
+
+NAME: nicolae_arrival_washed_ashore
+ORIENT: northwest
+TAGS: arrival no_monster_gen no_item_gen no_pool_fixup
+SUBST: B = bb., S = bWW, Z = WWw
+COLOUR: b : brown
+FTILE: b{ = floor_sand
+KFEAT: O = open_sea
+KFEAT: b = .
+MAP
+OOOOOOOOOOOOOOOOOOOx
+Owwwwwwwwwwwwwwwwxxx
+Owwwwwwwwwwwwwwwxxxx
+OwwwwwwwwwwwwZZZxxxx
+OwwwwwwwwwZZZZSSxxxx
+OwwwwwwwZZZSSSSSbxxx
+OwwwwwwZZSSSSSSbbxxx
+OwwwwwZZSSSSbbbbbxxx
+OwwwwZZSSSbbbbbbbbx
+OwwwwZSSS{bbbbbbbbx
+OwwwZZSSbbbbbbbbbbx
+OwwwZSSSbbbbbbbbbxx
+OwwwZSSbbbbbbbbbbx
+OwwZZSSbbbbbbbbbbx
+OwwZSSSbbbbbbbbbBB
+OwwZSSbbbbbbbbbBB@
+OwxxxbbbbbbbbbBB@
+OxxxxxxxbbbxxxB@
+Oxxxxxxxxxxx
+xxxxxxx
+ENDMAP
