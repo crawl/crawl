@@ -95,6 +95,11 @@ searing_ray5
 
 hellfire BOLT_HELLFIRE
 
+irradiate0 BOLT_IRRADIATE
+irradiate1
+irradiate2
+irradiate3
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

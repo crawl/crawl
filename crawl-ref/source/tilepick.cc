@@ -4635,6 +4635,11 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         if (bolt.name == "searing ray")
             return TILE_BOLT_SEARING_RAY_I;
         break;
+
+    case ETC_MUTAGENIC:
+        if (bolt.name == "irradiate")
+            return TILE_BOLT_IRRADIATE;
+        break;
     }
 
     return tileidx_zap(col);
@@ -4650,6 +4655,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_STING:
         return tile + dist % tile_main_count(tile);
     case TILE_BOLT_FLAME:
+    case TILE_BOLT_IRRADIATE:
         return tile + ui_random(tile_main_count(tile));
     default:
         return tile;
