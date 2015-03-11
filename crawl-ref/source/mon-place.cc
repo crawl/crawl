@@ -77,7 +77,7 @@ static vector<bool> vault_mon_bands;
 
 #define BIG_BAND        20
 
-static monster_type _band_member(band_type band, int which);
+static monster_type _band_member(band_type band, int which, bool allow_ood);
 static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool& natural_leader);
 
@@ -456,7 +456,8 @@ static bool _is_banded_monster(monster_type mt)
 // is a real monster.
 monster_type pick_random_monster(level_id place,
                                  monster_type kind,
-                                 level_id *final_place)
+                                 level_id *final_place,
+                                 bool allow_ood)
 {
     if (crawl_state.game_is_arena())
     {
@@ -465,7 +466,8 @@ monster_type pick_random_monster(level_id place,
             return type;
     }
 
-    _apply_ood(place);
+    if (allow_ood)
+        _apply_ood(place);
 
     place.depth = min(place.depth, branch_ood_cap(place.branch));
 
@@ -580,7 +582,8 @@ monster_type resolve_monster_type(monster_type mon_type,
                                   unsigned mmask,
                                   dungeon_char_type *stair_type,
                                   level_id *place,
-                                  bool *want_band)
+                                  bool *want_band,
+                                  bool allow_ood)
 {
     if (want_band)
         *want_band = false;
@@ -708,9 +711,8 @@ monster_type resolve_monster_type(monster_type mon_type,
                     mon_type =
                         resolve_monster_type(mon_type, base_type,
                                              proximity, pos, mmask,
-                                             stair_type,
-                                             place,
-                                             want_band);
+                                             stair_type, place,
+                                             want_band, allow_ood);
                 }
                 return mon_type;
             }
@@ -722,7 +724,7 @@ monster_type resolve_monster_type(monster_type mon_type,
             level_id orig_place = *place;
 
             // Now pick a monster of the given branch and level.
-            mon_type = pick_random_monster(*place, mon_type, place);
+            mon_type = pick_random_monster(*place, mon_type, place, allow_ood);
 
             // Don't allow monsters too stupid to use stairs (e.g.
             // non-spectral zombified undead) to be placed near
@@ -737,7 +739,7 @@ monster_type resolve_monster_type(monster_type mon_type,
         }
 
         if (proximity == PROX_NEAR_STAIRS && tries >= 300)
-            mon_type = pick_random_monster(*place, mon_type, place);
+            mon_type = pick_random_monster(*place, mon_type, place, allow_ood);
     }
     return mon_type;
 }
@@ -855,13 +857,15 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (!mg.place.is_valid())
         mg.place = level_id::current();
 
+    const bool allow_ood = !(mg.flags & MG_NO_OOD);
     bool want_band = false;
     level_id place = mg.place;
     mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
                                   &mg.pos, mg.map_mask,
                                   &stair_type,
                                   &place,
-                                  &want_band);
+                                  &want_band,
+                                  allow_ood);
     bool chose_ood_monster = place.absdepth() > mg.place.absdepth() + 5;
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
@@ -915,7 +919,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         band_size++;
         for (int i = 1; i < band_size; ++i)
         {
-            band_monsters[i] = _band_member(band, i);
+            band_monsters[i] = _band_member(band, i, allow_ood);
 
             // Get the (very) ugly thing band colour, so that all (very)
             // ugly things in a band will start with it.
@@ -2982,7 +2986,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
  * @param which     The index of the monster (starting from 1)
  * @return          The type of monster to create
  */
-static monster_type _band_member(band_type band, int which)
+static monster_type _band_member(band_type band, int which, bool allow_ood)
 {
     if (band == BAND_NO_BAND)
         return MONS_PROGRAM_BUG;
@@ -3607,7 +3611,7 @@ static monster_type _band_member(band_type band, int which)
         level_id place = level_id::current();
         return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
                                     PROX_ANYWHERE, &tmppos, 0, &tmpfeat,
-                                    &place, nullptr);
+                                    &place, nullptr, allow_ood);
     }
 
     default:
