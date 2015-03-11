@@ -713,7 +713,8 @@ static void _hydra_consider_devouring(monster &defender)
 bool melee_attack::handle_phase_killed()
 {
     if (attacker->is_player() && you.form == TRAN_HYDRA
-        && defender->is_monster()) // better safe than sorry
+        && defender->is_monster() // better safe than sorry
+        && defender->type != MONS_NO_MONSTER) // already reset
     {
         _hydra_consider_devouring(*defender->as_monster());
     }
