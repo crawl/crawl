@@ -35,7 +35,8 @@ monster_type resolve_monster_type(monster_type mon_type,
                                   unsigned mmask = 0,
                                   dungeon_char_type *stair_type = nullptr,
                                   level_id *place = nullptr,
-                                  bool *want_band = nullptr);
+                                  bool *want_band = nullptr,
+                                  bool allow_ood = true);
 
 const monster_type fixup_zombie_type(const monster_type cls,
                                      const monster_type base_type);
@@ -77,7 +78,8 @@ class level_id;
 
 monster_type pick_random_monster(level_id place,
                                  monster_type kind = RANDOM_MONSTER,
-                                 level_id *final_place = nullptr);
+                                 level_id *final_place = nullptr,
+                                 bool allow_ood = true);
 
 conduct_type player_will_anger_monster(monster_type type);
 conduct_type player_will_anger_monster(monster* mon);

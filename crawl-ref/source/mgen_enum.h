@@ -145,6 +145,7 @@ enum mgen_flag_type
     MG_DONT_COME    = 0x040, ///< suppress the "comes into view" spam
     MG_DONT_CAP     = 0x080, ///< don't automatically apply the summon cap to this monster
     MG_FORBID_BANDS = 0x100, ///< override MG_PERMIT_BANDS
+    MG_NO_OOD       = 0x200, ///< don't choose out-of-depth random monsters
 };
 
 #endif
