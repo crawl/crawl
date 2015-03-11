@@ -2,6 +2,7 @@
 #define SPECIES_H
 
 #include "enum.h"
+#include "itemprop-enum.h"
 
 bool species_is_elven(species_type species);
 bool species_is_draconian(species_type species);
@@ -19,6 +20,7 @@ bool species_likes_lava(species_type species);
 size_type species_size(species_type species,
                        size_part_type psize = PSIZE_TORSO);
 bool species_recommends_job(species_type species, job_type job);
+bool species_recommends_weapon(species_type species, weapon_type wpn);
 
 species_type get_species_by_abbrev(const char *abbrev);
 const char *get_species_abbrev(species_type which_species);

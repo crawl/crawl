@@ -3,6 +3,7 @@
 
 #include "species.h"
 
+#include "itemprop.h"
 #include "mon-enum.h"
 #include "mutation.h"
 #include "player.h"
@@ -169,6 +170,18 @@ bool species_recommends_job(species_type species, job_type job)
     return find(_species_def(species).recommended_jobs.begin(),
                 _species_def(species).recommended_jobs.end(),
                 job) != _species_def(species).recommended_jobs.end();
+}
+
+bool species_recommends_weapon(species_type species, weapon_type wpn)
+{
+    const skill_type sk =
+          wpn == WPN_THROWN  ? SK_THROWING :
+          wpn == WPN_UNARMED ? SK_UNARMED_COMBAT :
+                               item_attack_skill(OBJ_WEAPONS, wpn);
+
+    return find(_species_def(species).recommended_weapons.begin(),
+                _species_def(species).recommended_weapons.end(),
+                sk) != _species_def(species).recommended_weapons.end();
 }
 
 monster_type player_species_to_mons_species(species_type species)

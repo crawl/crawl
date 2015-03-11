@@ -426,238 +426,39 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     ASSERT_RANGE(ng.job, 0, NUM_JOBS);
     ASSERT(ng.species == SP_BASE_DRACONIAN
            || !species_is_draconian(ng.species));
-    switch (wpn)
+
+    // Some special cases:
+
+    if (ng.species == SP_FELID && wpn != WPN_UNARMED)
+        return CC_BANNED;
+
+    // Can't use them with a shield.
+    if (ng.species == SP_SPRIGGAN && ng.job == JOB_FIGHTER
+        && wpn == WPN_TRIDENT)
     {
-    case WPN_UNARMED:
-        if (species_has_claws(ng.species))
-            return CC_UNRESTRICTED;
-        return CC_RESTRICTED;
-
-    case WPN_SHORT_SWORD:
-    case WPN_RAPIER:
-        switch (ng.species)
-        {
-        case SP_NAGA:
-        case SP_VAMPIRE:
-            // The fighter's heavy armour hinders stabbing.
-            if (ng.job == JOB_FIGHTER)
-                return CC_RESTRICTED;
-            // else fall through
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_FORMICID:
-            return CC_UNRESTRICTED;
-
-        default:
-            return CC_RESTRICTED;
-        }
-
-        // Maces and axes usually share the same restrictions.
-    case WPN_MACE:
-    case WPN_FLAIL:
-        if (ng.species == SP_TROLL
-            || ng.species == SP_OGRE
-            || ng.species == SP_GARGOYLE)
-        {
-            return CC_UNRESTRICTED;
-        }
-        if (ng.species == SP_VAMPIRE)
-            return CC_RESTRICTED;
-        // else fall-through
-    case WPN_HAND_AXE:
-    case WPN_WAR_AXE:
-        switch (ng.species)
-        {
-        case SP_HUMAN:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-        case SP_LAVA_ORC:
-#endif
-        case SP_MUMMY:
-        case SP_CENTAUR:
-        case SP_NAGA:
-        case SP_MINOTAUR:
-        case SP_TENGU:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_VAMPIRE:
-        case SP_OCTOPODE:
-        case SP_BASE_DRACONIAN:
-        case SP_FORMICID:
-        case SP_VINE_STALKER:
-            return CC_UNRESTRICTED;
-
-        default:
-            return CC_RESTRICTED;
-        }
-
-    case WPN_SPEAR:
-    case WPN_TRIDENT:
-        switch (ng.species)
-        {
-        case SP_HUMAN:
-        case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-        case SP_LAVA_ORC:
-#endif
-        case SP_MERFOLK:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_MINOTAUR:
-        case SP_TENGU:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_OCTOPODE:
-        case SP_BASE_DRACONIAN:
-        case SP_FORMICID:
-        case SP_VINE_STALKER:
-            return CC_UNRESTRICTED;
-
-        case SP_SPRIGGAN:
-            // Can't use them with a shield.
-            if (ng.job == JOB_FIGHTER)
-                return CC_BANNED;
-
-        default:
-            return CC_RESTRICTED;
-        }
-    case WPN_FALCHION:
-    case WPN_LONG_SWORD:
-        switch (ng.species)
-        {
-        case SP_HUMAN:
-        case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-        case SP_LAVA_ORC:
-#endif
-        case SP_MERFOLK:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_MINOTAUR:
-        case SP_HIGH_ELF:
-        case SP_DEEP_DWARF:
-        case SP_TENGU:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_MUMMY:
-        case SP_VAMPIRE:
-        case SP_OCTOPODE:
-        case SP_BASE_DRACONIAN:
-        case SP_FORMICID:
-        case SP_VINE_STALKER:
-        case SP_HALFLING:
-            return CC_UNRESTRICTED;
-
-        default:
-            return CC_RESTRICTED;
-        }
-
-    case WPN_QUARTERSTAFF:
-        if (ng.job != JOB_GLADIATOR)
-            return CC_BANNED;
-        switch (ng.species)
-        {
-        case SP_CENTAUR:
-        case SP_DEEP_ELF:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
-        case SP_HIGH_ELF:
-        case SP_HUMAN:
-        case SP_TENGU:
-        case SP_KOBOLD:
-        case SP_MINOTAUR:
-        case SP_MUMMY:
-        case SP_OCTOPODE:
-        case SP_BASE_DRACONIAN:
-        case SP_FORMICID:
-        case SP_GARGOYLE:
-        case SP_VINE_STALKER:
-            return CC_UNRESTRICTED;
-
-        default:
-            return CC_RESTRICTED;
-        }
-
-    case WPN_HAND_CROSSBOW:
-        switch (ng.species)
-        {
-        case SP_DEEP_ELF:
-        case SP_HIGH_ELF:
-        case SP_HALFLING:
-        case SP_MERFOLK:
-        case SP_OGRE:
-        case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-        case SP_LAVA_ORC:
-#endif
-        case SP_SPRIGGAN:
-        case SP_TROLL:
-            return CC_RESTRICTED;
-        case SP_FELID:
-            return CC_BANNED;
-        default:
-            return CC_UNRESTRICTED;
-        }
-
-    case WPN_SHORTBOW:
-        switch (ng.species)
-        {
-        case SP_DEEP_DWARF:
-        case SP_KOBOLD:
-        case SP_MERFOLK:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-        case SP_LAVA_ORC:
-#endif
-        case SP_FORMICID:
-        case SP_SPRIGGAN:
-            return CC_RESTRICTED;
-        case SP_FELID:
-            return CC_BANNED;
-        default:
-            return CC_UNRESTRICTED;
-        }
-
-    case WPN_HUNTING_SLING:
-        switch (ng.species)
-        {
-        case SP_DEEP_ELF:
-        case SP_HIGH_ELF:
-        case SP_TENGU:
-        case SP_MERFOLK:
-        case SP_OGRE:
-        case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-        case SP_LAVA_ORC:
-#endif
-        case SP_TROLL:
-        case SP_GARGOYLE:
-            return CC_RESTRICTED;
-        case SP_FELID:
-            return CC_BANNED;
-        default:
-            return CC_UNRESTRICTED;
-        }
-
-    case WPN_THROWN:
-        switch (ng.species)
-        {
-        case SP_DEEP_DWARF:
-            return CC_RESTRICTED;
-        case SP_FELID:
-            return CC_BANNED;
-        default:
-            return CC_UNRESTRICTED;
-        }
-
-    default:
         return CC_BANNED;
     }
+
+    // These recommend short blades because they're good at stabbing,
+    // but the fighter's armour hinders that.
+    if ((ng.species == SP_NAGA || ng.species == SP_VAMPIRE)
+         && ng.job == JOB_FIGHTER && wpn == WPN_RAPIER)
+    {
+        return CC_RESTRICTED;
+    }
+
+    if (wpn == WPN_QUARTERSTAFF && ng.job != JOB_GLADIATOR)
+        return CC_BANNED;
+
+    // Javelins are always good, tomahawks not so much.
+    if (wpn == WPN_THROWN)
+    {
+        return species_size(ng.species) >= SIZE_MEDIUM ? CC_UNRESTRICTED
+                                                       : CC_RESTRICTED;
+    }
+
+    if (species_recommends_weapon(ng.species, wpn))
+        return CC_UNRESTRICTED;
+
+    return CC_RESTRICTED;
 }

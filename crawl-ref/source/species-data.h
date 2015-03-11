@@ -39,6 +39,7 @@ struct species_def
     vector<string> verbose_fake_mutations; ///< Additional information on 'A'
     vector<string> terse_fake_mutations; ///< Additional information on '%'
     vector<job_type> recommended_jobs; ///< Which jobs are "good" for it
+    vector<skill_type> recommended_weapons; ///< Which weapons types are "good"
 };
 
 static const map<species_type, species_def> species_data =
@@ -59,6 +60,8 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     { JOB_FIGHTER, JOB_GLADIATOR, JOB_HUNTER, JOB_WARPER, JOB_ARCANE_MARKSMAN },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_DEEP_DWARF, {
@@ -79,6 +82,7 @@ static const map<species_type, species_def> species_data =
     { "damage resistance", "recharge devices" },
     { JOB_FIGHTER, JOB_HUNTER, JOB_BERSERKER, JOB_NECROMANCER,
       JOB_EARTH_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_LONG_BLADES, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_DEEP_ELF, {
@@ -97,6 +101,7 @@ static const map<species_type, species_def> species_data =
     { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
       JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST,
       JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_SHORT_BLADES, SK_STAVES, SK_BOWS },
 } },
 
 { SP_DEMIGOD, {
@@ -114,6 +119,8 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_TRANSMUTER, JOB_CONJURER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
       JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 // Keep this above the other draconians, so get_species_by_abbrev works
@@ -133,6 +140,8 @@ static const map<species_type, species_def> species_data =
     { JOB_BERSERKER, JOB_TRANSMUTER, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
       JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
       JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_RED_DRACONIAN, {
@@ -148,6 +157,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_HEAT_RESISTANCE, 1, 7 }, },
     { "You can breathe blasts of fire." },
     { "breathe fire" },
+    {}, // not a starting race
     {}, // not a starting race
 } },
 
@@ -166,6 +176,7 @@ static const map<species_type, species_def> species_data =
       "You can buffet flying creatures when you breathe cold." },
     { "breathe frost" },
     {}, // not a starting race
+    {}, // not a starting race
 } },
 
 { SP_GREEN_DRACONIAN, {
@@ -183,6 +194,7 @@ static const map<species_type, species_def> species_data =
     { "You can breathe blasts of noxious fumes." },
     { "breathe noxious fumes" },
     {}, // not a starting race
+    {}, // not a starting race
 } },
 
 { SP_YELLOW_DRACONIAN, {
@@ -199,6 +211,7 @@ static const map<species_type, species_def> species_data =
     { "You can spit globs of acid.", "You are resistant to acid." },
     { "spit acid", "acid resistance" },
     {}, // not a starting race
+    {}, // not a starting race
 } },
 
 { SP_GREY_DRACONIAN, {
@@ -214,6 +227,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, { MUT_UNBREATHING, 1, 7 }, },
     { "You can walk through water." },
     { "walk through water" },
+    {}, // not a starting race
     {}, // not a starting race
 } },
 
@@ -232,6 +246,7 @@ static const map<species_type, species_def> species_data =
     { "You can breathe wild blasts of lightning." },
     { "breathe lightning" },
     {}, // not a starting race
+    {}, // not a starting race
 } },
 
 { SP_PURPLE_DRACONIAN, {
@@ -247,6 +262,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, },
     { "You can breathe bolts of dispelling energy." },
     { "breathe power" },
+    {}, // not a starting race
     {}, // not a starting race
 } },
 
@@ -265,6 +281,7 @@ static const map<species_type, species_def> species_data =
       "You can ignite nearby creatures when you spit burning liquid." },
     { "breathe sticky flame splash" },
     {}, // not a starting race
+    {}, // not a starting race
 } },
 
 { SP_PALE_DRACONIAN, {
@@ -280,6 +297,7 @@ static const map<species_type, species_def> species_data =
     { { MUT_COLD_BLOODED, 1, 1 }, },
     { "You can breathe blasts of scalding, opaque steam." },
     { "breathe steam" },
+    {}, // not a starting race
     {}, // not a starting race
 } },
 
@@ -299,6 +317,8 @@ static const map<species_type, species_def> species_data =
     { JOB_GLADIATOR, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_WIZARD,
       JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
       JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_FELID, {
@@ -320,6 +340,7 @@ static const map<species_type, species_def> species_data =
     { "no armour", "no weapons or thrown items" },
     { JOB_BERSERKER, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_ICE_ELEMENTALIST,
       JOB_CONJURER, JOB_SUMMONER, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_UNARMED_COMBAT },
 } },
 
 { SP_FORMICID, {
@@ -333,12 +354,14 @@ static const map<species_type, species_def> species_data =
     12, 7, 6, // 25
     true, true, false, 4,
     { { MUT_ANTENNAE, 3, 1 }, },
-    { "You are under a permanent stasis effect."
-      "You can dig through walls and to a lower floor."
+    { "You are under a permanent stasis effect.",
+      "You can dig through walls and to a lower floor.",
       "Your four strong arms can wield two-handed weapons with a shield." },
     { "permanent stasis", "dig shafts and tunnels", "four strong arms" },
     { JOB_FIGHTER, JOB_HUNTER, JOB_ABYSSAL_KNIGHT, JOB_ARCANE_MARKSMAN,
       JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_GHOUL, {
@@ -360,6 +383,7 @@ static const map<species_type, species_def> species_data =
     { "rotting body" },
     { JOB_WARPER, JOB_GLADIATOR, JOB_MONK, JOB_NECROMANCER,
       JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST },
+    { SK_UNARMED_COMBAT, SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_GARGOYLE, {
@@ -380,6 +404,7 @@ static const map<species_type, species_def> species_data =
     { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_BERSERKER,
       JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
       JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_STAVES, SK_BOWS, SK_CROSSBOWS },
 } },
 
 { SP_HALFLING, {
@@ -397,6 +422,7 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_FIGHTER, JOB_HUNTER, JOB_ASSASSIN, JOB_BERSERKER, JOB_ENCHANTER,
       JOB_AIR_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_SLINGS },
 } },
 
 { SP_HIGH_ELF, {
@@ -414,6 +440,7 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_HUNTER, JOB_SKALD, JOB_WIZARD, JOB_CONJURER, JOB_FIRE_ELEMENTALIST,
       JOB_ICE_ELEMENTALIST, JOB_AIR_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_BOWS },
 } },
 
 { SP_HILL_ORC, {
@@ -431,6 +458,7 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_FIGHTER, JOB_GLADIATOR, JOB_BERSERKER, JOB_ABYSSAL_KNIGHT,
       JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES },
 } },
 
 { SP_HUMAN, {
@@ -448,6 +476,8 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_BERSERKER, JOB_CONJURER, JOB_NECROMANCER, JOB_FIRE_ELEMENTALIST,
       JOB_ICE_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_KOBOLD, {
@@ -465,6 +495,7 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_HUNTER, JOB_ASSASSIN, JOB_BERSERKER, JOB_ARCANE_MARKSMAN,
       JOB_ENCHANTER, JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_STAVES, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_MERFOLK, {
@@ -483,6 +514,7 @@ static const map<species_type, species_def> species_data =
     { "change form in water", "swift swim" },
     { JOB_GLADIATOR, JOB_BERSERKER, JOB_SKALD, JOB_TRANSMUTER, JOB_SUMMONER,
       JOB_ICE_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_POLEARMS, SK_LONG_BLADES },
 } },
 
 { SP_MINOTAUR, {
@@ -499,6 +531,8 @@ static const map<species_type, species_def> species_data =
     { "You reflexively headbutt those who attack you in melee." },
     { "retaliatory headbutt" },
     { JOB_FIGHTER, JOB_GLADIATOR, JOB_MONK, JOB_HUNTER, JOB_BERSERKER },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_MUMMY, {
@@ -521,6 +555,8 @@ static const map<species_type, species_def> species_data =
     { "no food or potions", "fire vulnerability" },
     { JOB_WIZARD, JOB_CONJURER, JOB_NECROMANCER, JOB_ICE_ELEMENTALIST,
       JOB_FIRE_ELEMENTALIST, JOB_SUMMONER },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_NAGA, {
@@ -540,6 +576,8 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_BERSERKER, JOB_TRANSMUTER, JOB_ENCHANTER, JOB_FIRE_ELEMENTALIST,
       JOB_ICE_ELEMENTALIST, JOB_WARPER, JOB_WIZARD, JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_BOWS,
+      SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_OGRE, {
@@ -557,6 +595,7 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_HUNTER, JOB_BERSERKER, JOB_ARCANE_MARKSMAN, JOB_WIZARD,
       JOB_FIRE_ELEMENTALIST },
+    { SK_MACES_FLAILS },
 } },
 
 { SP_OCTOPODE, {
@@ -576,6 +615,8 @@ static const map<species_type, species_def> species_data =
     { JOB_TRANSMUTER, JOB_WIZARD, JOB_CONJURER, JOB_ASSASSIN,
       JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST, JOB_EARTH_ELEMENTALIST,
       JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
 { SP_SPRIGGAN, {
@@ -594,6 +635,7 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_ASSASSIN, JOB_ARTIFICER, JOB_ABYSSAL_KNIGHT, JOB_WARPER,
       JOB_ENCHANTER, JOB_CONJURER, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_SHORT_BLADES, SK_SLINGS },
 } },
 
 { SP_TENGU, {
@@ -612,6 +654,8 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_BERSERKER, JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER,
       JOB_FIRE_ELEMENTALIST, JOB_AIR_ELEMENTALIST, JOB_VENOM_MAGE },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS },
 } },
 
 { SP_TROLL, {
@@ -631,6 +675,7 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_FIGHTER, JOB_MONK, JOB_HUNTER, JOB_BERSERKER, JOB_WARPER,
       JOB_EARTH_ELEMENTALIST, JOB_WIZARD },
+    { SK_UNARMED_COMBAT, SK_MACES_FLAILS },
 } },
 
 { SP_VAMPIRE, {
@@ -649,6 +694,8 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_MONK, JOB_ASSASSIN, JOB_ENCHANTER, JOB_EARTH_ELEMENTALIST,
       JOB_NECROMANCER, JOB_ICE_ELEMENTALIST },
+    { SK_SHORT_BLADES, SK_AXES, SK_LONG_BLADES, SK_BOWS, SK_CROSSBOWS,
+      SK_SLINGS },
 } },
 
 { SP_VINE_STALKER, {
@@ -671,6 +718,8 @@ static const map<species_type, species_def> species_data =
     {},
     { JOB_MONK, JOB_ASSASSIN, JOB_ENCHANTER, JOB_CONJURER, JOB_NECROMANCER,
       JOB_AIR_ELEMENTALIST, JOB_ICE_ELEMENTALIST },
+    { SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_LONG_BLADES, SK_STAVES,
+      SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 #if TAG_MAJOR_VERSION == 34
 { SP_SLUDGE_ELF, {
@@ -687,6 +736,7 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {}, // not a starting race
+    {}, // not a starting race
 } },
 
 { SP_LAVA_ORC, {
@@ -702,6 +752,7 @@ static const map<species_type, species_def> species_data =
     {},
     {},
     {},
+    {}, // not a starting race
     {}, // not a starting race
 } },
 
@@ -722,6 +773,7 @@ static const map<species_type, species_def> species_data =
       "You have no legs." },
     { "fire immunity", "cold vulnerability" },
     {}, // not a starting race
+    {}, // not a starting race
 } },
 #endif
 // Ideally this wouldn't be necessary...
@@ -735,6 +787,7 @@ static const map<species_type, species_def> species_data =
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
     0, 0, 0, // 0
     false, false, false, 28,
+    {},
     {},
     {},
     {},
