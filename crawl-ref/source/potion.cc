@@ -88,18 +88,26 @@ public:
         const bool ddoor = you.duration[DUR_DEATHS_DOOR];
         if (you.can_device_heal() && !ddoor)
         {
-            inc_hp((5 + random2(7))
-                * (3 - you.mutation[MUT_NO_DEVICE_HEAL])  / 3);
+          int amount = (5 + random2(7))
+            * (3 - you.mutation[MUT_NO_DEVICE_HEAL])  / 3;
+          // Pay for rot right off the top.
+          if (player_rotted())
+          {
+            int rot = player_rotted();
+            int to_unrot = 0;
+            if (2 * rot >= amount) {
+              to_unrot = amount / 2;
+              amount = 0;
+            } else {
+              to_unrot = rot;
+              amount -= 2 * rot;
+            }
+            unrot_hp(to_unrot);
+          }
+          inc_hp(amount);
         }
 
         mprf("You feel %s.", ddoor ? "queasy" : "better");
-
-        // Only fix rot when healed to full.
-        if (you.hp == you.hp_max)
-        {
-            unrot_hp(1);
-            set_hp(you.hp_max);
-        }
 
         // need to redraw from yellow to green even if no hp was gained
         if (you.duration[DUR_POISONING])
@@ -167,16 +175,27 @@ public:
             return false;
         }
 
-        inc_hp((10 + random2avg(28, 3))
-            * (3 - you.mutation[MUT_NO_DEVICE_HEAL] ) / 3);
+        int amount = (10 + random2avg(28, 3))
+            * (3 - you.mutation[MUT_NO_DEVICE_HEAL] ) / 3;
+
+        // Pay for rot right off the top.
+        if (player_rotted())
+        {
+          int rot = player_rotted();
+          int to_unrot = 0;
+          if (2 * rot >= amount) {
+            to_unrot = amount / 2;
+            amount = 0;
+          } else {
+            to_unrot = rot;
+            amount -= 2 * rot;
+          }
+          unrot_hp(to_unrot);
+        }
+        inc_hp(amount);
+           
         mpr("You feel much better.");
 
-        // only fix rot when healed to full
-        if (you.hp == you.hp_max)
-        {
-            unrot_hp(2 + random2avg(5, 2));
-            set_hp(you.hp_max);
-        }
         return true;
     }
 
