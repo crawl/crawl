@@ -23,6 +23,7 @@ struct species_def
     const char* adj_name; ///< Adjectival form of name; if null, use name
     const char* genus_name; ///< Genus name; if null, use name
     species_flags flags; ///< Miscellaneous flags
+    // The following three need to be 2 lines after the name for gen-apt.pl:
     int xp_mod; ///< Experience level modifier
     int hp_mod; ///< HP modifier (in tenths)
     int mp_mod; ///< MP modifier (in tenths)
@@ -777,20 +778,20 @@ static const map<species_type, species_def> species_data =
 } },
 #endif
 // Ideally this wouldn't be necessary...
-{ SP_UNKNOWN, {
-    "??",
-    "Yak", nullptr, nullptr,
-    SPF_NONE,
-    0, 0, 0,
-    0, 0,
-    MONS_PROGRAM_BUG,
-    HT_LAND, US_ALIVE, SIZE_MEDIUM,
-    0, 0, 0, // 0
-    false, false, false, 28,
-    {},
-    {},
-    {},
-    {},
-    {},
+{ SP_UNKNOWN, { // Line 1: enum
+    "??", // Line 2: abbrev
+    "Yak", nullptr, nullptr, // Line 3: name, genus name, adjectival name
+    SPF_NONE, // Line 4: flags
+    0, 0, 0, // Line 5: XP, HP, MP (gen-apt.pl needs them here!)
+    0, 0, // Line 6: Stealth, MR
+    MONS_PROGRAM_BUG, // Line 7: equivalent monster type
+    HT_LAND, US_ALIVE, SIZE_MEDIUM, // Line 8: habitat, life, size
+    0, 0, 0, // Line 9: str, int, dex
+    false, false, false, 28, // Line 10: str gain, int gain, dex gain, frequency
+    {}, // Line 11: Mutations
+    {}, // Line 12: Fake mutations
+    {}, // Line 13: Fake mutations
+    {}, // Line 14: Recommended jobs
+    {}, // Line 15: Recommended weapons
 } }
 };
