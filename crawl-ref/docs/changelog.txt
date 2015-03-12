@@ -6,7 +6,7 @@ Gods
 * Beogh's smite damage now scales better with invocations.
 
 
-Stone Soup 0.16.0 (20150311)
+Stone Soup 0.16 (20150311)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 * Zot Defense has been removed.
