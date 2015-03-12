@@ -79,7 +79,6 @@ void draconian_change_colour(monster* drac)
                                        MONS_GREEN_DRACONIAN,
                                        MONS_PURPLE_DRACONIAN,
                                        MONS_MOTTLED_DRACONIAN,
-                                       MONS_PALE_DRACONIAN,
                                        MONS_YELLOW_DRACONIAN);
     drac->colour = mons_class_colour(drac->base_monster);
 
