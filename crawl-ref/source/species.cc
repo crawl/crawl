@@ -374,15 +374,6 @@ void species_stat_init(species_type species)
 void species_stat_gain(species_type species)
 {
     const species_def& sd = _species_def(species);
-    if (you.experience_level % sd.how_often != 0)
-        return;
-
-    vector<stat_type> avail_stats;
-    if (sd.gain_s)
-        avail_stats.push_back(STAT_STR);
-    if (sd.gain_i)
-        avail_stats.push_back(STAT_INT);
-    if (sd.gain_d)
-        avail_stats.push_back(STAT_DEX);
-    modify_stat(*random_iterator(avail_stats), 1, false, "level gain");
+    if (you.experience_level % sd.how_often == 0)
+        modify_stat(*random_iterator(sd.level_stats), 1, false, "level gain");
 }
