@@ -1,4 +1,4 @@
-Stone Soup 0.16 (up to 0.16-a0-4134-g2ca243f)
+Stone Soup 0.16 (20150311)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
 * Zot Defense has been removed.
