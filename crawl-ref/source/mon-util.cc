@@ -2112,7 +2112,7 @@ int exper_value(const monster* mon, bool real)
 
 monster_type random_draconian_monster_species()
 {
-    const int num_drac = MONS_LAST_BASE_DRACONIAN - MONS_FIRST_BASE_DRACONIAN + 1;
+    const int num_drac = MONS_LAST_SPAWNED_DRACONIAN - MONS_FIRST_BASE_DRACONIAN + 1;
     return static_cast<monster_type>(MONS_FIRST_BASE_DRACONIAN + random2(num_drac));
 }
 

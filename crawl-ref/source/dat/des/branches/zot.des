@@ -929,13 +929,13 @@ KFEAT: X = W
 MARKER: X = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 10, delay = 25, \
             size = 2, walk_dist = 3, spread_rate= 10 }
-KMONS: M = patrolling pale draconian att:neutral / \
-      patrolling pale draconian scorcher att:neutral w:2 / \
-      patrolling pale draconian caller att:neutral w:2 / \
-      patrolling pale draconian shifter att:neutral w:2 / \
-      patrolling pale draconian annihilator att:neutral w:2 / \
-      patrolling pale draconian knight att:neutral w:2 / \
-      patrolling pale draconian monk att:neutral w:2
+KMONS: M = patrolling red draconian att:neutral / \
+      patrolling red draconian scorcher att:neutral w:2 / \
+      patrolling red draconian caller att:neutral w:2 / \
+      patrolling red draconian shifter att:neutral w:2 / \
+      patrolling red draconian annihilator att:neutral w:2 / \
+      patrolling red draconian knight att:neutral w:2 / \
+      patrolling red draconian monk att:neutral w:2
 KFEAT: M = W
 KMONS: F = orb of fire att:neutral
 KFEAT: F = W
@@ -2089,8 +2089,8 @@ DEPTH: Zot, !Zot:$
 ORIENT: float
 # The competitors:
 {{
-  local teams = { "black", "yellow", "pale", "green", "purple",
-                  "red", "white", "grey", "mottled" }
+  local teams = { "black", "yellow", "green", "purple", "red", "white",
+                  "mottled" }
   local team1 = crawl.random2(#teams) + 1
   local team2 = 0
   repeat
