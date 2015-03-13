@@ -430,7 +430,7 @@ spret_type cast_blink(bool allow_control, bool fail)
 spret_type cast_controlled_blink(int pow, bool fail, bool safe)
 {
     // don't prompt if it's useless
-    if (you.no_tele(true, true))
+    if (you.no_tele(true, true, true))
     {
         canned_msg(MSG_STRANGE_STASIS);
         return SPRET_ABORT;
