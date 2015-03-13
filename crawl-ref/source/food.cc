@@ -510,7 +510,7 @@ int eat_from_floor(bool skip_chunks)
     item_def wonteat;
     bool found_valid = false;
 
-    vector<item_def*> food_items;
+    vector<const item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type != OBJ_FOOD)
