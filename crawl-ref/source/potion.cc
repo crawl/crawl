@@ -91,19 +91,7 @@ public:
           int amount = (5 + random2(7))
             * (3 - you.mutation[MUT_NO_DEVICE_HEAL])  / 3;
           // Pay for rot right off the top.
-          if (player_rotted())
-          {
-            int rot = player_rotted();
-            int to_unrot = 0;
-            if (2 * rot >= amount) {
-              to_unrot = amount / 2;
-              amount = 0;
-            } else {
-              to_unrot = rot;
-              amount -= 2 * rot;
-            }
-            unrot_hp(to_unrot);
-          }
+          amount = unrot_hp(amount);
           inc_hp(amount);
         }
 
@@ -179,19 +167,7 @@ public:
             * (3 - you.mutation[MUT_NO_DEVICE_HEAL] ) / 3;
 
         // Pay for rot right off the top.
-        if (player_rotted())
-        {
-          int rot = player_rotted();
-          int to_unrot = 0;
-          if (2 * rot >= amount) {
-            to_unrot = amount / 2;
-            amount = 0;
-          } else {
-            to_unrot = rot;
-            amount -= 2 * rot;
-          }
-          unrot_hp(to_unrot);
-        }
+        amount = unrot_hp(amount);
         inc_hp(amount);
            
         mpr("You feel much better.");

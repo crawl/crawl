@@ -1020,7 +1020,8 @@ void inc_hp(int hp_gain);
 void flush_mp();
 
 void rot_hp(int hp_loss);
-void unrot_hp(int hp_recovered);
+// Unrot the player and return excess HP if any.
+int unrot_hp(int hp_recovered);
 int player_rotted();
 void rot_mp(int mp_loss);
 

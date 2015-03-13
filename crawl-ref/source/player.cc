@@ -4026,15 +4026,21 @@ void rot_hp(int hp_loss)
     you.redraw_hit_points = true;
 }
 
-void unrot_hp(int hp_recovered)
+int unrot_hp(int hp_recovered)
 {
-    you.hp_max_adj_temp = min(0, you.hp_max_adj_temp + hp_recovered);
-
+    int hp_balance = 0;
+    if (hp_recovered > -you.hp_max_adj_temp) {
+      hp_balance = hp_recovered + you.hp_max_adj_temp;
+      you.hp_max_adj_temp = 0;
+    } else {
+      you.hp_max_adj_temp += hp_recovered;
+    }
     calc_hp();
 
     you.redraw_hit_points = true;
     if (!player_rotted())
         you.redraw_magic_points = true;
+    return hp_balance;
 }
 
 int player_rotted()
