@@ -216,7 +216,7 @@ void butchery(item_def* specific_corpse)
                      false, MT_ANY, _butcher_menu_title);
     redraw_screen();
     for (SelItem sel : selected)
-        if (_start_butchering(*sel.item))
+        if (_start_butchering(const_cast<item_def &>(*sel.item)))
             butchered_any = true;
 #else
     item_def* to_eat = nullptr;
