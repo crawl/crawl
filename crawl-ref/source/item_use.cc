@@ -207,7 +207,8 @@ bool can_wield(item_def *weapon, bool say_reason,
  * (Assuming the player was already prompted for that.)
  */
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force, bool show_unwield_msg, bool show_wield_msg)
+                  bool force, bool show_unwield_msg, bool show_wield_msg,
+                  bool adjust_time_taken)
 {
     if (inv_count() < 1)
     {
@@ -305,8 +306,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
             // Switching to bare hands is extra fast.
             you.turn_is_over = true;
-            you.time_taken *= 3;
-            you.time_taken /= 10;
+            if (adjust_time_taken)
+            {
+                you.time_taken *= 3;
+                you.time_taken /= 10;
+            }
         }
         else
             canned_msg(MSG_EMPTY_HANDED_ALREADY);
@@ -354,7 +358,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     check_item_hint(new_wpn, old_talents);
 
     // Time calculations.
-    you.time_taken /= 2;
+    if (adjust_time_taken)
+        you.time_taken /= 2;
 
     you.wield_change  = true;
     you.m_quiver->on_weapon_changed();

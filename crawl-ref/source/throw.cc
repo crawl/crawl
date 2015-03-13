@@ -787,7 +787,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false))
+        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, false, true, false))
             return false;
 
         unwielded = true;
