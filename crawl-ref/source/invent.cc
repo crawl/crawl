@@ -1788,10 +1788,12 @@ bool check_warning_inscriptions(const item_def& item,
                 return true;
         }
 
+        // XXX: duplicates a check in delay.cc:_finish_delay()
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
-        if (nasty_stasis(item, oper))
+        if (nasty_stasis(item, oper)
+            && item_ident(item, ISFLAG_KNOW_TYPE))
         {
             prompt += string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
