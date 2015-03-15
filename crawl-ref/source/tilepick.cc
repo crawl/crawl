@@ -2022,6 +2022,10 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // non-human uniques, sorted by glyph, then difficulty
     // -------------------------------------
 
+    // formicid ('a')
+    case MONS_PYRIFORMIS:
+        return TILEP_MONS_PYRIFORMIS;
+
     // centaur ('c')
     case MONS_NESSOS:
         return TILEP_MONS_NESSOS;

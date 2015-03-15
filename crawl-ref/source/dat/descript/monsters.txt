@@ -400,6 +400,11 @@ An unusually thin troll.
 
 You feel a lump in the pit of your stomach.
 %%%%
+Pyriformis
+
+A formicid warrior. He has come from the formicid burrows to get the Orb
+of Zot for the formicid king.
+%%%%
 Robin
 
 A mountain hobgoblin, recently come in search of the legendary Orb. Not

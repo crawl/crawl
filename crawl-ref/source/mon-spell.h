@@ -779,6 +779,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_PYRIFORMIS,
+      {
+       { SPELL_SWIFTNESS, 20, MON_SPELL_WIZARD },
+      }
+    },
+
     {  MST_RUPERT,
       {
        { SPELL_PARALYSE, 16, MON_SPELL_MAGICAL | MON_SPELL_NO_SILENT },
