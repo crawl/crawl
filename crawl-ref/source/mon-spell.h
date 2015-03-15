@@ -176,7 +176,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_KRAKEN,
       {
        { SPELL_CREATE_TENTACLES, 44, MON_SPELL_NATURAL },
-       { SPELL_INK_CLOUD, 22, MON_SPELL_NATURAL },
+       { SPELL_INK_CLOUD, 22, MON_SPELL_NATURAL | MON_SPELL_EMERGENCY },
       }
     },
 
