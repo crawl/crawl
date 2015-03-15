@@ -1497,7 +1497,10 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
 
     vector<monster* > mons;
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
-        mons.push_back(*mi);
+    {
+        if (!mons_is_tentacle_or_tentacle_segment(mi->type))
+            mons.push_back(*mi);
+    }
 
     if (mons.empty())
         return XOM_DID_NOTHING;
