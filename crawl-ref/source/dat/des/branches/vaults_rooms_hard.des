@@ -942,7 +942,7 @@ ENDMAP
 NAME: nicolae_vaults_quartermaster
 TAGS: vaults_hard
 NSUBST: 0 = 1:9 / *:0
-KFEAT: % = alarm trap / . w:30
+KFEAT: % = known alarm trap / . w:30
 KITEM: % = any
 KMONS: 0 = 0 band
 MAP
