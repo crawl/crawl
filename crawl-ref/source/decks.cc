@@ -40,6 +40,7 @@
 #include "mon-place.h"
 #include "mon-poly.h"
 #include "mon-project.h"
+#include "mon-tentacle.h"
 #include "mutation.h"
 #include "notes.h"
 #include "output.h"
@@ -1384,11 +1385,17 @@ static void _suppressed_card_message(god_type god, conduct_type done)
 
 // Actual card implementations follow.
 
+static bool _is_swappable(const monster* mon)
+{
+    return mon->alive()
+           && !mons_is_tentacle_or_tentacle_segment(mon->type);
+}
+
 static void _swap_monster_card(int power, deck_rarity_type rarity)
 {
     // Swap between you and another monster.
     // Don't choose yourself unless there are no monsters nearby.
-    monster* mon_to_swap = choose_random_nearby_monster(0);
+    monster* mon_to_swap = choose_random_nearby_monster(0, _is_swappable);
     if (!mon_to_swap)
         mpr("You spin around.");
     else
