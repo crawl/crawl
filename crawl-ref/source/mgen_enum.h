@@ -116,6 +116,7 @@ enum band_type
     BAND_ROBIN,
     BAND_RANDOM_SINGLE,
     BAND_JOSEPHINE,
+    BAND_MYRMECIA,
     NUM_BANDS                   // always last
 };
 

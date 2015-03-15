@@ -2974,6 +2974,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = random_range(1, 3); // same as panlords
         break;
 
+    case MONS_MYRMECIA:
+        natural_leader = true;
+        band = BAND_MYRMECIA;
+        band_size = 5 + random2(2);
+        break;
+
     default: ;
     }
 
@@ -3610,6 +3616,11 @@ static monster_type _band_member(band_type band, int which,
                                        50, MONS_DAEVA,
                                         1, MONS_OPHAN,
                                         0);
+
+    case BAND_MYRMECIA:
+        return random_choose_weighted(2, MONS_BOULDER_BEETLE,
+                                      1, MONS_DEATH_SCARAB,
+                                      0);
 
     case BAND_RANDOM_SINGLE:
     {

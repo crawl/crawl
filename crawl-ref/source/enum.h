@@ -3184,6 +3184,7 @@ enum monster_type                      // menv[].type
     MONS_VASHNIA,
     MONS_ROBIN,
     MONS_MOON_TROLL,
+    MONS_MYRMECIA,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -3372,6 +3373,7 @@ enum monster_type                      // menv[].type
     MONS_SALAMANDER_STORMCALLER,
     MONS_ENTROPY_WEAVER,
     MONS_MOON_TROLL,
+    MONS_MYRMECIA,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
