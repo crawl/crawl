@@ -660,8 +660,11 @@ static void _decrement_durations()
         you.redraw_evasion = true;
     }
 
-    _decrement_a_duration(DUR_POWERED_BY_DEATH, delay,
-                          "You feel less regenerative.");
+    if (_decrement_a_duration(DUR_POWERED_BY_DEATH, delay))
+    {
+        if (handle_pbd_corpses() > 0)
+            mprf(MSGCH_DURATION, "You feel less regenerative.");
+    }
 
     _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
 
