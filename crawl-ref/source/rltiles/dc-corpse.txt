@@ -153,6 +153,9 @@ apis CORPSE_APIS
 ### Non-animals
 %sdir mon
 
+## Formicids ('a;)
+formicid CORPSE_FORMICID
+
 ## Centaurs ('c')
 centaur CORPSE_CENTAUR
 yaktaur CORPSE_YAKTAUR
