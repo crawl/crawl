@@ -3456,6 +3456,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SOLDIER_ANT;
     case MONS_QUEEN_ANT:
         return TILE_CORPSE_QUEEN_ANT;
+    case MONS_FORMICID:
+        return TILE_CORPSE_FORMICID;
 
     // bats and birds ('b')
     case MONS_BAT:
