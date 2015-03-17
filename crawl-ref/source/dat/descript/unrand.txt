@@ -308,6 +308,7 @@ robe of Misfortune
 
 A splendid flowing robe of fur and silk.
 %%%%
+# TAG_MAJOR_VERSION == 34
 cloak of Flash
 
 A cloak that twitches and jerks without any intervention.
