@@ -1097,7 +1097,7 @@ const char* transform_name(transformation_type form)
 bool form_can_wield(transformation_type form)
 {
     ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
-    return forms[form]->slot_available(EQ_WEAPON);
+    return forms[form]->can_wield();
 }
 
 /**
