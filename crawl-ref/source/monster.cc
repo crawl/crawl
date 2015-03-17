@@ -4864,6 +4864,10 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (trap.type == TRAP_SHAFT)
         return true;
 
+    // Harmless to everyone.
+    if (trap.type == TRAP_SHADOW_DORMANT)
+        return true;
+
     // Hostile monsters are not afraid of non-mechanical traps.
     // Allies will try to avoid teleportation and zot traps.
     const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
