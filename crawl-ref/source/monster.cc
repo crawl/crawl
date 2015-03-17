@@ -4920,7 +4920,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     }
 
     // Healthy monsters don't mind a little pain.
-    if (mechanical &&hit_points >= max_hit_points / 2
+    if (mechanical && hit_points >= max_hit_points / 2
         && (intel == I_ANIMAL
             || hit_points > _estimated_trap_damage(trap.type)))
     {
@@ -4931,15 +4931,23 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (crawl_state.game_is_zotdef() && mechanical)
         return true;
 
+    // can't avoid traps you don't know about
+    if (!trap.is_known(this))
+        return true;
+
+    // we don't think we have enough hp (per above), so avoid mech traps
+    if (mechanical)
+        return false;
+
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
     // handle accordingly.  In the arena Zot traps affect all monsters.
+
+    // XXX: this logic duplicates the checks for friendly creatures & "traps
+    // that are bad for the player " at the top; probably should be merged
+    // somehow
     if (wont_attack() || crawl_state.game_is_arena())
-    {
-        return mechanical ? mons_flies(this)
-        : !trap.is_known(this) || trap.type != TRAP_ZOT;
-    }
-    else
-        return !mechanical || mons_flies(this) || !trap.is_known(this);
+        return trap.type != TRAP_ZOT;
+    return true;
 }
 
 bool monster::check_set_valid_home(const coord_def &place,
