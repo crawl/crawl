@@ -718,6 +718,7 @@ CURSED:   1
 STEALTH:  -2
 BOOL:     nospell, rnd_tele, randapp, unided, mutate
 
+# TAG_MAJOR_VERSION == 34
 NAME:     cloak of Flash
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +3
@@ -725,7 +726,7 @@ COLOUR:   ETC_FLASH
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
-BOOL:     fly
+BOOL:     fly, nogen
 
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
@@ -853,12 +854,13 @@ SLAY:    2
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
+PLUS:     +2
 COLOUR:   ETC_ICE
 TILE:     urand_starlight
 TILE_EQ:  white
 EV:       4
 COLD:     1
-STEALTH:  -1
+STEALTH:  -2
 BOOL:     elec
 
 NAME:     ratskin cloak
