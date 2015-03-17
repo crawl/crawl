@@ -114,4 +114,33 @@ function callback.amethyst_srp_altar(data, triggerable, triggerer, marker, ev)
   crawl.mpr("Your surroundings suddenly seem different.")
 end
 
+-- Allow people with the ancient champion vault to still clear it.
+function callback.ancient_champions_mu_skele_death(data, triggerable,
+                                                    triggerer, marker, ev)
+  data.skele_number = data.skele_number + 1
+
+  -- Only 7 skeles!
+  if data.skele_number > 7 then
+    return
+  end
+
+  local function get_slave (slavenum)
+    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
+    return myslaves[1]
+  end
+
+  local wall_pos = get_slave(data.skele_number)
+  if wall_pos == nil then
+    crawl.mpr("Couldn't find a slave!")
+  end
+
+  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
+
+  if you.see_cell(wall_pos.x, wall_pos.y) then
+    crawl.mpr("As the champion is destroyed, a metal wall slides away!")
+  else
+    crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
+  end
+end
+
 }}
