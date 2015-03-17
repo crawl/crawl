@@ -346,6 +346,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     unwind_var<FixedBitVector<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
+    crawl_state.disables.set(DIS_AFFLICTIONS);
 
     no_messages mx;
     const int hunger = you.hunger;
