@@ -4876,38 +4876,36 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     {
         if (just_check)
             return false; // Square is blocked.
-        else
+
+        // Test for corridor-like environment.
+        const int x = where.x - pos().x;
+        const int y = where.y - pos().y;
+
+        // The question is whether the monster (m) can easily reach its
+        // presumable destination (x) without stepping on the trap. Traps
+        // in corridors do not allow this. See e.g
+        //  #x#        ##
+        //  #^#   or  m^x
+        //   m         ##
+        //
+        // The same problem occurs if paths are blocked by monsters,
+        // hostile terrain or other traps rather than walls.
+        // What we do is check whether the squares with the relative
+        // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
+        // (relative to the _trap_ position rather than the monster one).
+        // If they don't, the trap square is marked as "unsafe" (because
+        // there's a good alternative move for the monster to take),
+        // otherwise the decision will be made according to later tests
+        // (monster hp, trap type, ...)
+        // If a monster still gets stuck in a corridor it will usually be
+        // because it has less than half its maximum hp.
+
+        if ((mon_can_move_to_pos(this, coord_def(x-1, y), true)
+             || mon_can_move_to_pos(this, coord_def(x+1,y), true))
+            && (mon_can_move_to_pos(this, coord_def(x,y-1), true)
+                || mon_can_move_to_pos(this, coord_def(x,y+1), true)))
         {
-            // Test for corridor-like environment.
-            const int x = where.x - pos().x;
-            const int y = where.y - pos().y;
-
-            // The question is whether the monster (m) can easily reach its
-            // presumable destination (x) without stepping on the trap. Traps
-            // in corridors do not allow this. See e.g
-            //  #x#        ##
-            //  #^#   or  m^x
-            //   m         ##
-            //
-            // The same problem occurs if paths are blocked by monsters,
-            // hostile terrain or other traps rather than walls.
-            // What we do is check whether the squares with the relative
-            // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
-            // (relative to the _trap_ position rather than the monster one).
-            // If they don't, the trap square is marked as "unsafe" (because
-            // there's a good alternative move for the monster to take),
-            // otherwise the decision will be made according to later tests
-            // (monster hp, trap type, ...)
-            // If a monster still gets stuck in a corridor it will usually be
-            // because it has less than half its maximum hp.
-
-            if ((mon_can_move_to_pos(this, coord_def(x-1, y), true)
-                 || mon_can_move_to_pos(this, coord_def(x+1,y), true))
-                && (mon_can_move_to_pos(this, coord_def(x,y-1), true)
-                    || mon_can_move_to_pos(this, coord_def(x,y+1), true)))
-            {
-                return false;
-            }
+            return false;
         }
     }
 
