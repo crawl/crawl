@@ -77,6 +77,7 @@ protected:
     Form(transformation_type tran);
 public:
     bool slot_available(int slot) const;
+    bool can_wield() const { return slot_available(EQ_WEAPON); }
     virtual bool can_wear_item(const item_def& item) const;
 
     int get_duration(int pow) const;
@@ -142,6 +143,7 @@ public:
      */
     virtual brand_type get_uc_brand() const { return uc_brand; }
 
+    virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
     virtual int get_ac_bonus() const;
 
