@@ -182,18 +182,6 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = ISFLAG_KNOW_TYPE;
         _give_monster_item(mon, thing_created);
     }
-    else if (mon->type == MONS_GNOLL_SERGEANT && one_chance_in(3))
-    {
-        const int thing_created =
-            items(false, OBJ_POTIONS,
-                  coinflip() ? POT_HEAL_WOUNDS : POT_CURING, level);
-
-        if (thing_created == NON_ITEM)
-            return;
-
-        mitm[thing_created].flags = 0;
-        _give_monster_item(mon, thing_created);
-    }
     else if (mons_is_unique(mon->type) && one_chance_in(3)
                 && _should_give_unique_item(mon))
     {
