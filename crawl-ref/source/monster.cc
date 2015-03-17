@@ -4844,28 +4844,30 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 
     const bool player_knows_trap = (trap.is_known(&you));
 
-    // No friendly monsters will ever enter a shadow or Zot trap you know.
-    if (player_knows_trap && friendly())
-    {
-        if (trap.type == TRAP_ZOT)
-            return false;
-
-        // except for summoned allies, whch can enter shadow traps without
-        // triggering them.
-        if (trap.type == TRAP_SHADOW && can_trigger_shadow_trap(*this))
-            return false;
-    }
-
-    // Dumb monsters don't care at all.
-    if (intel == I_PLANT)
-        return true;
-
     // Known shafts are safe. Unknown ones are unknown.
     if (trap.type == TRAP_SHAFT)
         return true;
 
     // Harmless to everyone.
     if (trap.type == TRAP_SHADOW_DORMANT)
+        return true;
+
+    // Irrelevant for summoned or hostile creatures
+    if (trap.type == TRAP_SHADOW
+        && (!friendly() || !can_trigger_shadow_trap(*this)))
+    {
+        return true;
+    }
+
+    // No friendly monsters will ever enter a shadow or Zot trap you know.
+    if (player_knows_trap && friendly()
+        && (trap.type == TRAP_ZOT || trap.type == TRAP_SHADOW))
+    {
+        return false;
+    }
+
+    // Dumb monsters don't care at all.
+    if (intel == I_PLANT)
         return true;
 
     // Hostile monsters are not afraid of non-mechanical traps.
