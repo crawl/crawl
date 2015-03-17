@@ -725,6 +725,8 @@ public:
                 return 0;
         }
     }
+
+    bool can_offhand_punch() const override { return true; }
 };
 
 class FormLich : public Form
