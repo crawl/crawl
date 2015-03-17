@@ -4864,7 +4864,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (mg.colour == COLOUR_UNDEF)
         mg.colour = random_monster_colour();
 
-    if (!force_pos && monster_at(where)
+    if (!force_pos && actor_at(where)
         && (mg.cls < NUM_MONSTERS || needs_resolution(mg.cls)))
     {
         const monster_type habitat_target =
