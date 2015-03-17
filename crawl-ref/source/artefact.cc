@@ -618,6 +618,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             // naga already have rPois & sInv!
         case ARTP_RCORR:
         case ARTP_REGENERATION:
+        case ARTP_PREVENT_SPELLCASTING:
             return item_class == OBJ_ARMOUR; // limit availability to armour
         case ARTP_BERSERK:
         case ARTP_ANGRY:
