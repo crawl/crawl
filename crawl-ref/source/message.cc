@@ -337,9 +337,16 @@ class message_window
 
         int i;
         for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i);
-        if (i >= diff && (int) lines[i].width() < crawl_view.msgsz.x)
-            cgotoxy(lines[i].width() + 1, i - diff + 1, GOTO_MSG);
-        else if (i < diff)
+        if (i >= diff)
+        {
+            // If there was room, put the cursor at the end of that line.
+            // Otherwise, put it at the beginning of the next line.
+            if ((int) lines[i].width() < crawl_view.msgsz.x)
+                cgotoxy(lines[i].width() + 1, i - diff + 1, GOTO_MSG);
+            else
+                cgotoxy(1, i - diff + 2, GOTO_MSG);
+        }
+        else
         {
             // If there were no lines, put the cursor at the upper left.
             cgotoxy(1, 1, GOTO_MSG);
