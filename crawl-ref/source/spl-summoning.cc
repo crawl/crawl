@@ -513,7 +513,7 @@ static bool _place_dragon()
         if (!enough_mp(2, true))
         {
             mprf(MSGCH_DURATION, "Having expended the last of your magical "
-                                 "power, your connection to the  dragon horde "
+                                 "power, your connection to the dragon horde "
                                  "fades.");
             you.duration[DUR_DRAGON_CALL] = 0;
             you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
