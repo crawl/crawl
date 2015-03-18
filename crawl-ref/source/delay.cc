@@ -276,7 +276,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         if (item.defined() && item.is_type(OBJ_CORPSES, CORPSE_BODY)
             && item.pos == you.pos())
         {
-            mpr("All blood oozes out of the corpse!");
+            mpr("All the blood oozes out of the corpse!");
 
             bleed_onto_floor(you.pos(), item.mon_type, delay.duration, false);
 
