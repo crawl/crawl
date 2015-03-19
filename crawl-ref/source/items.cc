@@ -4701,6 +4701,13 @@ item_info get_item_info(const item_def& item)
                     info_card_flags.push_back((char)flags);
                 }
             }
+
+            if (info_cards.empty())
+            {
+                // An empty deck would display as BUGGY, so fake a card.
+                info_cards.push_back((char) 0);
+                info_card_flags.push_back((char) 0);
+            }
             ii.props["cards"] = info_cards;
             ii.props["card_flags"] = info_card_flags;
         }
