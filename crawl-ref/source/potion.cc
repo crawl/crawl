@@ -477,7 +477,7 @@ public:
     {
         if (was_known && !can_quaff())
         {
-            mpr("The ambrosia would have no effect on you.");
+            mpr("Your clarity would prevent the potion's effects.");
             return false;
         }
 
