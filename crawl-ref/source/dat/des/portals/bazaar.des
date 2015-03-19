@@ -218,9 +218,9 @@ MARKER: W = lua:fog_machine { cloud_type = "freezing vapour", \
 : place_bazaar_portal(_G)
 MAP
   W
- www
-WwOwW
- www
+ WWW
+WWOWW
+ WWW
   W
 ENDMAP
 
