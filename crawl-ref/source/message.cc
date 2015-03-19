@@ -327,12 +327,11 @@ class message_window
     // Place cursor at end of last non-empty line to handle prompts.
     // TODO: might get rid of this by clearing the whole window when writing,
     //       and then just writing the actual non-empty lines.
-    void place_cursor() const
+    void place_cursor()
     {
         // XXX: the screen may have resized since the last time we
-        //  called lines.resize().  We can't actually resize lines
-        //  here because this is a const method.  Consider only the
-        //  last height() lines if this has happened.
+        //  called lines.resize(). Consider only the last height()
+        //  lines if this has happened.
         const int diff = max(int(lines.size()) - height(), 0);
 
         int i;
@@ -343,8 +342,18 @@ class message_window
             // Otherwise, put it at the beginning of the next line.
             if ((int) lines[i].width() < crawl_view.msgsz.x)
                 cgotoxy(lines[i].width() + 1, i - diff + 1, GOTO_MSG);
-            else
+            else if (i - diff + 2 <= height())
                 cgotoxy(1, i - diff + 2, GOTO_MSG);
+            else
+            {
+                // Scroll to make room for the next line, then redraw.
+                scroll(1);
+                // Results in a recursive call to place_cursor!  But scroll()
+                // made lines[height()] empty, so that recursive call shouldn't
+                // hit this case again.
+                show();
+                return;
+            }
         }
         else
         {
@@ -489,16 +498,15 @@ public:
     }
 
     // write to screen (without refresh)
-    void show() const
+    void show()
     {
         // XXX: this should not be necessary as formatted_string should
         //      already do it
         textcolour(LIGHTGREY);
 
         // XXX: the screen may have resized since the last time we
-        //  called lines.resize().  We can't actually resize lines
-        //  here because this is a const method.  Display the last
-        //  height() lines if this has happened.
+        //  called lines.resize(). Consider only the last height()
+        //  lines if this has happened.
         const int diff = max(int(lines.size()) - height(), 0);
 
         for (size_t i = diff; i < lines.size(); ++i)
