@@ -488,7 +488,9 @@ void line_reader::backspace()
 
     cursorto(pos);
     buffer[length] = 0;
-    wrapcprintf(wrapcol, "%s ", cur);
+    // Two spaces in case we deleted a double-width character, or
+    // caused a double-width character to move back a line.
+    wrapcprintf(wrapcol, "%s  ", cur);
     cursorto(pos);
 }
 
@@ -628,7 +630,9 @@ int line_reader::process_key(int ch)
             length -= del_bytes;
 
             cursorto(pos);
-            wrapcprintf(wrapcol, "%s ", cur);
+            // Two spaces in case we deleted a double-width character, or
+            // caused a double-width character to move back a line.
+            wrapcprintf(wrapcol, "%s  ", cur);
             cursorto(pos);
         }
         break;
