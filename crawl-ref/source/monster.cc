@@ -4844,24 +4844,30 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
 
     const bool player_knows_trap = (trap.is_known(&you));
 
-    // No friendly monsters will ever enter a shadow or Zot trap you know.
-    if (player_knows_trap && friendly())
-    {
-        if (trap.type == TRAP_ZOT)
-            return false;
+    // Known shafts are safe. Unknown ones are unknown.
+    if (trap.type == TRAP_SHAFT)
+        return true;
 
-        // except for summoned allies, whch can enter shadow traps without
-        // triggering them.
-        if (trap.type == TRAP_SHADOW && can_trigger_shadow_trap(*this))
-            return false;
+    // Harmless to everyone.
+    if (trap.type == TRAP_SHADOW_DORMANT)
+        return true;
+
+    // Irrelevant for summoned or hostile creatures
+    if (trap.type == TRAP_SHADOW
+        && (!friendly() || !can_trigger_shadow_trap(*this)))
+    {
+        return true;
+    }
+
+    // No friendly monsters will ever enter a shadow or Zot trap you know.
+    if (player_knows_trap && friendly()
+        && (trap.type == TRAP_ZOT || trap.type == TRAP_SHADOW))
+    {
+        return false;
     }
 
     // Dumb monsters don't care at all.
     if (intel == I_PLANT)
-        return true;
-
-    // Known shafts are safe. Unknown ones are unknown.
-    if (trap.type == TRAP_SHAFT)
         return true;
 
     // Hostile monsters are not afraid of non-mechanical traps.
@@ -4872,38 +4878,36 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     {
         if (just_check)
             return false; // Square is blocked.
-        else
+
+        // Test for corridor-like environment.
+        const int x = where.x - pos().x;
+        const int y = where.y - pos().y;
+
+        // The question is whether the monster (m) can easily reach its
+        // presumable destination (x) without stepping on the trap. Traps
+        // in corridors do not allow this. See e.g
+        //  #x#        ##
+        //  #^#   or  m^x
+        //   m         ##
+        //
+        // The same problem occurs if paths are blocked by monsters,
+        // hostile terrain or other traps rather than walls.
+        // What we do is check whether the squares with the relative
+        // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
+        // (relative to the _trap_ position rather than the monster one).
+        // If they don't, the trap square is marked as "unsafe" (because
+        // there's a good alternative move for the monster to take),
+        // otherwise the decision will be made according to later tests
+        // (monster hp, trap type, ...)
+        // If a monster still gets stuck in a corridor it will usually be
+        // because it has less than half its maximum hp.
+
+        if ((mon_can_move_to_pos(this, coord_def(x-1, y), true)
+             || mon_can_move_to_pos(this, coord_def(x+1,y), true))
+            && (mon_can_move_to_pos(this, coord_def(x,y-1), true)
+                || mon_can_move_to_pos(this, coord_def(x,y+1), true)))
         {
-            // Test for corridor-like environment.
-            const int x = where.x - pos().x;
-            const int y = where.y - pos().y;
-
-            // The question is whether the monster (m) can easily reach its
-            // presumable destination (x) without stepping on the trap. Traps
-            // in corridors do not allow this. See e.g
-            //  #x#        ##
-            //  #^#   or  m^x
-            //   m         ##
-            //
-            // The same problem occurs if paths are blocked by monsters,
-            // hostile terrain or other traps rather than walls.
-            // What we do is check whether the squares with the relative
-            // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
-            // (relative to the _trap_ position rather than the monster one).
-            // If they don't, the trap square is marked as "unsafe" (because
-            // there's a good alternative move for the monster to take),
-            // otherwise the decision will be made according to later tests
-            // (monster hp, trap type, ...)
-            // If a monster still gets stuck in a corridor it will usually be
-            // because it has less than half its maximum hp.
-
-            if ((mon_can_move_to_pos(this, coord_def(x-1, y), true)
-                 || mon_can_move_to_pos(this, coord_def(x+1,y), true))
-                && (mon_can_move_to_pos(this, coord_def(x,y-1), true)
-                    || mon_can_move_to_pos(this, coord_def(x,y+1), true)))
-            {
-                return false;
-            }
+            return false;
         }
     }
 
@@ -4916,7 +4920,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     }
 
     // Healthy monsters don't mind a little pain.
-    if (mechanical &&hit_points >= max_hit_points / 2
+    if (mechanical && hit_points >= max_hit_points / 2
         && (intel == I_ANIMAL
             || hit_points > _estimated_trap_damage(trap.type)))
     {
@@ -4927,15 +4931,23 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     if (crawl_state.game_is_zotdef() && mechanical)
         return true;
 
+    // can't avoid traps you don't know about
+    if (!trap.is_known(this))
+        return true;
+
+    // we don't think we have enough hp (per above), so avoid mech traps
+    if (mechanical)
+        return false;
+
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
     // handle accordingly.  In the arena Zot traps affect all monsters.
+
+    // XXX: this logic duplicates the checks for friendly creatures & "traps
+    // that are bad for the player " at the top; probably should be merged
+    // somehow
     if (wont_attack() || crawl_state.game_is_arena())
-    {
-        return mechanical ? mons_flies(this)
-        : !trap.is_known(this) || trap.type != TRAP_ZOT;
-    }
-    else
-        return !mechanical || mons_flies(this) || !trap.is_known(this);
+        return trap.type != TRAP_ZOT;
+    return true;
 }
 
 bool monster::check_set_valid_home(const coord_def &place,

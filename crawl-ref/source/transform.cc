@@ -536,6 +536,8 @@ public:
                             singular ? "its" : "their");
     }
 
+    bool can_offhand_punch() const override { return true; }
+
     /**
      * Get the name displayed in the UI for the form's unarmed-combat 'weapon'.
      */
@@ -723,6 +725,8 @@ public:
                 return 0;
         }
     }
+
+    bool can_offhand_punch() const override { return true; }
 };
 
 class FormLich : public Form
@@ -1097,7 +1101,7 @@ const char* transform_name(transformation_type form)
 bool form_can_wield(transformation_type form)
 {
     ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
-    return forms[form]->slot_available(EQ_WEAPON);
+    return forms[form]->can_wield();
 }
 
 /**

@@ -1211,8 +1211,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
  */
 bool melee_attack::player_gets_aux_punch()
 {
-    // form_can_wield() used as a proxy for 'has usable hands'
-    if (!form_can_wield())
+    if (!get_form()->can_offhand_punch())
         return false;
 
     // roll for punch chance based on uc skill & armour penalty

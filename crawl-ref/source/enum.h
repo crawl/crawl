@@ -3745,8 +3745,8 @@ enum potion_type
     POT_PORRIDGE,
 #endif
     POT_DEGENERATION,
-    POT_DECAY,
 #if TAG_MAJOR_VERSION == 34
+    POT_DECAY,
     POT_WATER,
 #endif
     POT_EXPERIENCE,
