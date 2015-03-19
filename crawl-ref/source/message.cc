@@ -486,7 +486,10 @@ public:
 
     void scroll(int n)
     {
-        ASSERT(next_line >= n);
+        // We might be asked to scroll off everything by the line reader.
+        if (next_line < n)
+            n = next_line;
+
         int i;
         for (i = 0; i < height() - n; ++i)
             lines[i] = lines[i + n];
