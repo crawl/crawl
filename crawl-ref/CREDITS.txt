@@ -27,20 +27,15 @@
     Robert Vollmert
     Enne Walker
 
-* Marc H. Thoben, for setting up and maintaining our current Mantis tracker,
-  Wiki, development blog and Windows trunk builds, as well as providing public
-  telnet access to development builds, all on crawl.develz.org.
-
-* Rax E. Dillon, for all the work done in running the public telnet server
-  crawl.akrasiac.org, its associated August tourney, and other great
-  contributions.
-
-* Other administrators of public crawl servers, both present:
-    Jan Anders Bremer (crawl.lantea.net)
-    Aleksi Miikkael Luukkonen (crawl.lantea.net)
+* The administrators of public crawl servers, both present:
     John Boyle (crawl.berotato.org)
+    Jan Anders Bremer (crawl.lantea.net)
+    Rax E. Dillon (crawl.akrasiac.org)
     Wongi Hong (webzook.net / kr.dobrazupa.org)
     Alex 'chequers' Jurkiewicz (crawl.project357.org)
+    Aleksi Miikkael Luukkonen (crawl.lantea.net)
+    Neil Moore (crawl.s-z.org)
+    Marc H. Thoben (crawl.develz.org)
     dplusplus (http://lazy-life.ddo.jp/)
   and past:
     sd1989 (kr.dobrazupa.org)
@@ -259,6 +254,7 @@ The Dungeon Crawl Stone Soup development team is:
     Chris Campbell
     Matthew Cline
     Florian Diebold
+    Rax E. Dillon
     Nicholas Feinberg
     Michael Gagno
     gammafunk
@@ -284,6 +280,7 @@ The Dungeon Crawl Stone Soup development team is:
     David Ploog
     reaverb
     Sage
+    Marc H. Thoben
     Jason Van
     Chris West
     Samuel Wilson
