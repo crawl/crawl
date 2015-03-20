@@ -609,6 +609,13 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         level = ISPEC_GOOD_ITEM;
         break;
 
+    case MONS_PYRIFORMIS:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose(WPN_TRIPLE_SWORD, WPN_EXECUTIONERS_AXE,
+                                       WPN_BARDICHE);
+        level = ISPEC_GOOD_ITEM;
+        break;
+
     case MONS_WIGLAF:
         item.base_type = OBJ_WEAPONS;
         // speech references an axe
@@ -1875,14 +1882,10 @@ static void _give_shield(monster* mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                               level * 2 + 1, 1);
         break;
-<<<<<<< HEAD
     case MONS_PYRIFORMIS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 4 + 1, 1);
         break;
-=======
-
->>>>>>> 58570d6c7c8e3d3db79e429b18b3ed955755ba28
     case MONS_WIGLAF:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, 1);
