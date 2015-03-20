@@ -141,13 +141,9 @@ void nowrap_eol_cprintf(const char *s, ...)
     cprintf("%s", chop_string(buf, max(wrapcol + 1 - wherex(), 0), false).c_str());
 }
 
-// cprintf that knows how to wrap down lines
-static void wrapcprintf(int wrapcol, const char *s, ...)
+static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
 {
-    va_list args;
-    va_start(args, s);
-    string buf = vmake_stringf(s, args);
-    va_end(args);
+    ASSERT(skiplines >= 0);
 
     const GotoRegion region = get_cursor_region();
     const int max_y = cgetsize(region).y;
@@ -163,16 +159,32 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
         if (avail > 0)
         {
             const string line = chop_string(buf.c_str() + linestart, avail, false);
-            cprintf("%s", line.c_str());
             linestart += line.length();
+            if (skiplines == 0)
+                cprintf("%s", line.c_str());
         }
 
         // No room for more lines, quit now.
         if (pos.y >= max_y)
             break;
         if (linestart < len)
-            cgotoxy(1, pos.y + 1, region);
+        {
+            // Only advance the cursor line if we printed something.
+            cgotoxy(1, pos.y + (skiplines ? 0 : 1), region);
+        }
+        if (skiplines)
+            --skiplines;
     }
+}
+
+// cprintf that knows how to wrap down lines
+static void wrapcprintf(int wrapcol, const char *s, ...)
+{
+    va_list args;
+    va_start(args, s);
+    string buf = vmake_stringf(s, args);
+    va_end(args);
+    wrapcprint_skipping(0, wrapcol, buf);
 }
 
 int cancellable_get_line(char *buf, int len, input_history *mh,
@@ -291,6 +303,27 @@ void line_reader::cursorto(int ncx)
 {
     int x = (start.x + ncx - 1) % wrapcol + 1;
     int y = start.y + (start.x + ncx - 1) / wrapcol;
+
+    if (y < 1)
+    {
+        // Cursor would go above the visible area. "Scroll" backwards so that
+        // it goes on the top line, and redraw.
+        start.y += 1 - y;
+        const int skip = max(0, 1 - start.y);
+        // If the beginning of the buffer becomes visible, paint over
+        // the place where the prompt used to be. FIXME: It would be nice
+        // to remember and display the visible part of the prompt.
+        if (skip == 0)
+        {
+            cgotoxy(1, start.y + skip, region);
+            cprintf("%*s", start.x - 1, "");
+        }
+        else
+            cgotoxy(start.x, start.y + skip, region);
+        wrapcprint_skipping(skip, wrapcol, buffer);
+        y = 1;
+    }
+
     int diff = y - cgetsize(region).y;
     if (diff > 0)
     {
@@ -299,8 +332,11 @@ void line_reader::cursorto(int ncx)
         cscroll(diff, region);
         start.y -= diff;
         y -= diff;
-        cgotoxy(start.x, start.y, region);
-        wrapcprintf(wrapcol, "%s", buffer);
+
+        const int skip = max(0, 1 - start.y);
+
+        cgotoxy(start.x, start.y + skip, region);
+        wrapcprint_skipping(skip, wrapcol, buffer);
     }
     cgotoxy(x, y, region);
 }
@@ -452,7 +488,9 @@ void line_reader::backspace()
 
     cursorto(pos);
     buffer[length] = 0;
-    wrapcprintf(wrapcol, "%s ", cur);
+    // Two spaces in case we deleted a double-width character, or
+    // caused a double-width character to move back a line.
+    wrapcprintf(wrapcol, "%s  ", cur);
     cursorto(pos);
 }
 
@@ -592,7 +630,9 @@ int line_reader::process_key(int ch)
             length -= del_bytes;
 
             cursorto(pos);
-            wrapcprintf(wrapcol, "%s ", cur);
+            // Two spaces in case we deleted a double-width character, or
+            // caused a double-width character to move back a line.
+            wrapcprintf(wrapcol, "%s  ", cur);
             cursorto(pos);
         }
         break;
