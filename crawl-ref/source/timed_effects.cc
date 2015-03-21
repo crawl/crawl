@@ -722,12 +722,6 @@ static void _handle_magic_contamination()
     if (you.duration[DUR_HASTE])
         added_contamination += 30;
 
-    // Is there a point to this? It's not even strong enough to cancel normal
-    // dissipation, so it only slows it down. Shouldn't it cancel dissipation
-    // like haste and invis do?
-    if (you.duration[DUR_FINESSE])
-        added_contamination += 20;
-
 #if TAG_MAJOR_VERSION == 34
     if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI)
         added_contamination += 20;
