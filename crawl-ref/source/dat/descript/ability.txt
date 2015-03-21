@@ -293,9 +293,7 @@ around.
 %%%%
 Finesse ability
 
-Greatly increase your combat speed, with no loss of accuracy. This unnatural
-effect causes small amounts of magic contamination, prolonged exposure to which
-may be bad for your health.
+Greatly increase your combat speed, with no loss of accuracy.
 %%%%
 # Makhleb
 Minor Destruction ability
