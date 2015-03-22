@@ -1293,6 +1293,7 @@ static const struct spell_desc spelldata[] =
      nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SURE_BLADE, "Sure Blade",
      SPTYP_HEXES | SPTYP_CHARMS,
@@ -1303,7 +1304,7 @@ static const struct spell_desc spelldata[] =
      2, 0,
      nullptr,
 },
-
+#endif
 {
     SPELL_FLAME_TONGUE, "Flame Tongue",
      SPTYP_CONJURATION | SPTYP_FIRE,

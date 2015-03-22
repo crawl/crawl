@@ -178,7 +178,6 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Maledictions
     SPELL_CORONA,
-    SPELL_SURE_BLADE,
     SPELL_HIBERNATION,
     SPELL_CONFUSE,
     SPELL_DAZZLING_SPRAY,

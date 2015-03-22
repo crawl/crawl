@@ -238,15 +238,6 @@ int attack::calc_to_hit(bool random)
 
         // hit roll
         mhit = maybe_random2(mhit, random);
-
-        if (using_weapon() && wpn_skill == SK_SHORT_BLADES
-            && you.duration[DUR_SURE_BLADE])
-        {
-            int turn_duration = you.duration[DUR_SURE_BLADE] / BASELINE_DELAY;
-            mhit += 5 +
-                (random ? random2limit(turn_duration, 10) :
-                 turn_duration / 2);
-        }
     }
     else    // Monster to-hit.
     {
