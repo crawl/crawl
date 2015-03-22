@@ -265,12 +265,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return true;
     }
 
-    // Now we really change weapons! (Most likely, at least...)
-    if (you.duration[DUR_SURE_BLADE])
-    {
-        mpr("The bond with your blade fades away.");
-        you.duration[DUR_SURE_BLADE] = 0;
-    }
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
