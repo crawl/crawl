@@ -93,6 +93,7 @@ bool  hide2armour(item_def &item);
 
 int   fit_armour_size(const item_def &item, size_type size) PURE;
 bool  check_armour_size(const item_def &item, size_type size) PURE;
+bool  check_armour_size(int sub_type, size_type size) PURE;
 
 bool item_is_rechargeable(const item_def &it, bool hide_charged = false) PURE;
 int wand_charge_value(int type) PURE;

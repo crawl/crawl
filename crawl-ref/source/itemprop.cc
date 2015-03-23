@@ -1384,13 +1384,22 @@ bool jewellery_is_amulet(int sub_type)
     return sub_type >= AMU_FIRST_AMULET;
 }
 
-// Returns number of sizes off (0 if fitting).
-int fit_armour_size(const item_def &item, size_type size)
+/**
+ * How many size categories away is the given type of armour from fitting a
+ * creature of the given size - and in what direction?
+ *
+ * @param subtype   The type of armour in question.
+ * @param size      The size of the creature in question.
+ * @return          The difference between the size of the creature and the
+ *                  closest size of creature that might wear the armour.
+ *                  Negative if the creature is too small.
+ *                  Positive if the creature is too large.
+ *                  0 if the creature is just right.
+ */
+int _fit_armour_size(int sub_type, size_type size)
 {
-    ASSERT(item.base_type == OBJ_ARMOUR);
-
-    const size_type min = Armour_prop[ Armour_index[item.sub_type] ].fit_min;
-    const size_type max = Armour_prop[ Armour_index[item.sub_type] ].fit_max;
+    const size_type min = Armour_prop[ Armour_index[sub_type] ].fit_min;
+    const size_type max = Armour_prop[ Armour_index[sub_type] ].fit_max;
 
     if (size < min)
         return min - size;    // -'ve means levels too small
@@ -1400,12 +1409,50 @@ int fit_armour_size(const item_def &item, size_type size)
     return 0;
 }
 
-// Returns true if armour fits size (shape needs additional verification).
+/**
+ * How many size categories away is the given armour from fitting a creature of
+ * the given size - and in what direction?
+ *
+ * @param subtype   The armour in question.
+ * @param size      The size of the creature in question.
+ * @return          The difference between the size of the creature and the
+ *                  closest size of creature that might wear the armour.
+ *                  Negative if the creature is too small.
+ *                  Positive if the creature is too large.
+ *                  0 if the creature is just right.
+ */
+int fit_armour_size(const item_def &item, size_type size)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    return _fit_armour_size(item.sub_type, size);
+}
+
+/**
+ * Does the given type of armour fit a creature of the given size?
+ *
+ * @param subtype   The type of armour in question.
+ * @param size      The size of the creature that might wear the armour.
+ * @return          Whether the armour fits based on size. (It might still not
+ *                  fit for other reasons, e.g. mutations...)
+ */
+bool check_armour_size(int sub_type, size_type size)
+{
+    return _fit_armour_size(sub_type, size) == 0;
+}
+
+/**
+ * Does the given armour fit a creature of the given size?
+ *
+ * @param subtype   The armour in question.
+ * @param size      The size of the creature that might wear the armour.
+ * @return          Whether the armour fits based on size. (It might still not
+ *                  fit for other reasons, e.g. mutations...)
+ */
 bool check_armour_size(const item_def &item, size_type size)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    return fit_armour_size(item, size) == 0;
+    return check_armour_size(item.sub_type, size);
 }
 
 // Returns whether a wand or rod can be charged.
