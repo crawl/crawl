@@ -832,22 +832,6 @@ bool you_tran_can_wear(int eq)
     return true;
 }
 
-bool player_weapon_wielded()
-{
-    if (you.melded[EQ_WEAPON])
-        return false;
-
-    const int wpn = you.equip[EQ_WEAPON];
-
-    if (wpn == -1)
-        return false;
-
-    if (!is_weapon(you.inv[wpn]))
-        return false;
-
-    return true;
-}
-
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
 bool berserk_check_wielded_weapon()
 {
