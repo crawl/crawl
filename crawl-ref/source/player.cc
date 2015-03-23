@@ -698,12 +698,16 @@ bool you_can_wear(equipment_type eq, bool special_armour)
     switch (eq)
     {
     case EQ_LEFT_RING:
-        return you.species != SP_OCTOPODE
-               && !player_mutation_level(MUT_MISSING_HAND);
-
+        if (player_mutation_level(MUT_MISSING_HAND))
+            return false;
+        // intentional fallthrough
     case EQ_RIGHT_RING:
         return you.species != SP_OCTOPODE;
 
+    case EQ_RING_EIGHT:
+        if (player_mutation_level(MUT_MISSING_HAND))
+            return false;
+        // intentional fallthrough
     case EQ_RING_ONE:
     case EQ_RING_TWO:
     case EQ_RING_THREE:
@@ -713,9 +717,9 @@ bool you_can_wear(equipment_type eq, bool special_armour)
     case EQ_RING_SEVEN:
         return you.species == SP_OCTOPODE;
 
-    case EQ_RING_EIGHT:
-        return you.species == SP_OCTOPODE
-               && !player_mutation_level(MUT_MISSING_HAND);
+    case EQ_WEAPON:
+    case EQ_STAFF:
+        return you.species != SP_FELID;
 
     case EQ_AMULET:
         return true;
@@ -723,113 +727,63 @@ bool you_can_wear(equipment_type eq, bool special_armour)
     case EQ_RING_AMULET:
         return player_equip_unrand(UNRAND_FINGER_AMULET);
 
+    default:
+        break;
+    }
+
+    item_def dummy;
+    dummy.base_type = OBJ_ARMOUR;
+    dummy.special = 0; // To be sure can_wear_armour doesn't think it's Lear's.
+
+    switch (eq)
+    {
     case EQ_CLOAK:
-        return you.species != SP_FELID && you.species != SP_OCTOPODE;
+        dummy.sub_type = ARM_CLOAK;
+        break;
 
     case EQ_GLOVES:
-        if (player_mutation_level(MUT_CLAWS, false) == 3)
-            return false;
+        dummy.sub_type = ARM_GLOVES;
+        break;
 
-        // big & tiny & weird races can't wear gloves
-        if (you.species == SP_TROLL
-            || you.species == SP_OGRE
-            || you.species == SP_SPRIGGAN
-            || you.species == SP_FELID
-            || you.species == SP_OCTOPODE)
-        {
-            return false;
-        }
-        return true;
-
-    case EQ_BOOTS:
-        // Bardings.
-        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
-            return special_armour;
-        if (player_mutation_level(MUT_HOOVES, false) == 3
-            || player_mutation_level(MUT_TALONS, false) == 3)
-        {
-            return false;
-        }
-        // big and tiny & weird races can't wear boots.
-        if (you.species == SP_TROLL
-            || you.species == SP_SPRIGGAN
-#if TAG_MAJOR_VERSION == 34
-            || you.species == SP_DJINNI
-#endif
-            || you.species == SP_OGRE
-            || you.species == SP_FELID
-            || you.species == SP_OCTOPODE)
-        {
-            return false;
-        }
-        return true;
+    case EQ_BOOTS: // And bardings
+        if (special_armour && you.species == SP_NAGA)
+            dummy.sub_type = ARM_NAGA_BARDING;
+        else if (special_armour && you.species == SP_CENTAUR)
+            dummy.sub_type = ARM_CENTAUR_BARDING;
+        else
+            dummy.sub_type = ARM_BOOTS;
+        break;
 
     case EQ_BODY_ARMOUR:
-        // weird races (& draconians) can't wear body armour
-        if (player_genus(GENPC_DRACONIAN)
-            || you.species == SP_FELID
-            || you.species == SP_OCTOPODE)
-        {
-            return false;
-        }
-        return true;
+        // Assume that anything that can wear any armour at all can wear a robe
+        // and that anything that can wear CPA can wear all armour.
+        if (special_armour)
+            dummy.sub_type = ARM_ROBE;
+        else
+            dummy.sub_type = ARM_CRYSTAL_PLATE_ARMOUR;
+        break;
 
     case EQ_SHIELD:
-        // no hand, no shield
-        if (player_mutation_level(MUT_MISSING_HAND) || you.species == SP_FELID)
-            return false;
-
-        /// big & tiny races can only wear some shield types.
-        if (you.species == SP_TROLL
-            || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE)
-        {
-            return special_armour;
-        }
-        return true;
+        if (special_armour && you.body_size() < SIZE_MEDIUM)
+            dummy.sub_type = ARM_BUCKLER;
+        else if (special_armour && you.body_size() > SIZE_MEDIUM)
+            dummy.sub_type = ARM_LARGE_SHIELD;
+        else
+            dummy.sub_type = ARM_SHIELD;
+        break;
 
     case EQ_HELMET:
-        // the cat in the hat is strictly disallowed
-        if (you.species == SP_FELID)
-            return false;
-
-        // No hats with Horns 3 or Antennae 3.
-        if (player_mutation_level(MUT_HORNS, false) == 3
-            || player_mutation_level(MUT_ANTENNAE, false) == 3)
-        {
-            return false;
-        }
-
-        // Anyone else can wear hats.
         if (special_armour)
-            return true;
-
-        // Any level of horns/beak/antennae lock out hard helmets.
-        if (player_mutation_level(MUT_HORNS, false)
-            || player_mutation_level(MUT_BEAK, false)
-            || player_mutation_level(MUT_ANTENNAE, false))
-        {
-            return false;
-        }
-
-        // big & tiny & weird races can't wear helmets (& draconians)
-        if (you.species == SP_TROLL
-            || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE
-            || you.species == SP_OCTOPODE
-            || player_genus(GENPC_DRACONIAN))
-        {
-            return false;
-        }
-        return true;
-
-    case EQ_WEAPON:
-    case EQ_STAFF:
-        return you.species != SP_FELID;
+            dummy.sub_type = ARM_HAT;
+        else
+            dummy.sub_type = ARM_HELMET;
+        break;
 
     default:
         return false;
     }
+
+    return can_wear_armour(dummy, false, true);
 }
 
 bool player_has_feet(bool temp)
