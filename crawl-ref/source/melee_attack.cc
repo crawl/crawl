@@ -412,6 +412,7 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
+    damage_done = 0;
     // Slimify does no damage and serves as an on-hit effect, handle it
     if (attacker->is_player() && you.duration[DUR_SLIMIFY]
         && mon_can_be_slimified(defender->as_monster())
@@ -419,16 +420,11 @@ bool melee_attack::handle_phase_hit()
     {
         // Bail out after sliming so we don't get aux unarmed and
         // attack a fellow slime.
-        damage_done = 0;
         slimify_monster(defender->as_monster());
         you.duration[DUR_SLIMIFY] = 0;
 
         return false;
     }
-
-    // This does more than just calculate the damage, it also sets up
-    // messages, etc.
-    damage_done = calc_damage();
 
     if (attacker->is_player() && you.duration[DUR_INFUSION])
     {
@@ -443,11 +439,17 @@ bool melee_attack::handle_phase_hit()
 
             if (hurt > 0)
             {
-                damage_done += hurt;
+                damage_done = hurt;
                 dec_mp(1);
             }
         }
     }
+
+    // This does more than just calculate the damage, it also sets up
+    // messages, etc. It also wakes nearby creatures on a failed stab,
+    // meaning it could have made the attacked creature vanish. That
+    // will be checked early in player_monattack_hit_effects
+    damage_done += calc_damage();
 
     bool stop_hit = false;
     // Check if some hit-effect killed the monster.
@@ -1878,6 +1880,12 @@ void melee_attack::player_weapon_upsets_god()
 bool melee_attack::player_monattk_hit_effects()
 {
     player_weapon_upsets_god();
+
+    // Don't even check vampire bloodletting if the monster has already
+    // been reset (for example, a spectral weapon who noticed in
+    // player_stab_check that it shouldn't exist anymore).
+    if (defender->type == MONS_NO_MONSTER)
+        return false;
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
