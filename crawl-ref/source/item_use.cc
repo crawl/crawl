@@ -720,7 +720,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Can't just use Form::slot_available because of shroom caps.
-    if (!ignore_temporary && !form_can_wear_item(item, you.form))
+    if (!ignore_temporary && !get_form()->can_wear_item(item))
     {
         if (verbose)
             mpr("You can't wear that in your present form.");
@@ -1493,7 +1493,7 @@ bool remove_ring(int slot, bool announce)
 
     for (auto eq : jewellery_slots)
     {
-        if (player_wearing_slot(eq))
+        if (you.slot_item(eq))
         {
             if (has_jewellery || Options.jewellery_prompt)
             {
