@@ -1452,22 +1452,20 @@ int attack::calc_damage()
     }
     else
     {
-        int potential_damage;
+        int potential_damage, damage;
 
-        potential_damage =
-            using_weapon() || wpn_skill == SK_THROWING
-            ? weapon_damage()
-            : calc_base_unarmed_damage();
+        potential_damage = using_weapon() || wpn_skill == SK_THROWING
+            ? weapon_damage() : calc_base_unarmed_damage();
 
         potential_damage = player_stat_modify_damage(potential_damage);
 
-        damage_done = random2(potential_damage+1);
+        damage = random2(potential_damage+1);
 
-        damage_done = player_apply_weapon_skill(damage_done);
-        damage_done = player_apply_fighting_skill(damage_done, false);
-        damage_done = player_apply_misc_modifiers(damage_done);
-        damage_done = player_apply_slaying_bonuses(damage_done, false);
-        damage_done = player_stab(damage_done);
+        damage = player_apply_weapon_skill(damage);
+        damage = player_apply_fighting_skill(damage, false);
+        damage = player_apply_misc_modifiers(damage);
+        damage = player_apply_slaying_bonuses(damage, false);
+        damage = player_stab(damage);
         // A failed stab may have awakened monsters, but that could have
         // caused the defender to cease to exist (spectral weapons with
         // missing summoners; or pacified monsters on a stair).  FIXME:
@@ -1476,13 +1474,13 @@ int attack::calc_damage()
         // in the attack; or to avoid removing monsters in handle_behaviour.
         if (!defender->alive())
             return 0;
-        damage_done = player_apply_final_multipliers(damage_done);
-        damage_done = apply_defender_ac(damage_done);
+        damage = player_apply_final_multipliers(damage);
+        damage = apply_defender_ac(damage);
 
         set_attack_verb();
-        damage_done = max(0, damage_done);
+        damage = max(0, damage);
 
-        return damage_done;
+        return damage;
     }
 
     return 0;
