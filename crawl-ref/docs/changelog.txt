@@ -1,3 +1,20 @@
+Stone Soup 0.16.1 (20150322)
+--------------------------------------------
+* Major bugfix release. Because of the first two bugfixes listed below, it's
+  strongly recommended that all 0.16.0 users upgrade to this version.
+* Fix a bug where all player melee damage was effectively doubled. This only
+  affected player melee damage, not player ranged or spells, or monster damage
+  at all.
+* Fix a bug in sprint where controlled blink was blocked as if from the stasis
+  effect.
+* Artefacts with the Contam property are no longer marked as chaotic and hence
+  hated by Zin, since Zin wouldn't give penance for using e.g. weapons with
+  this property anyhow. There's now a warning under Zin when Contam items are
+  removed, since this does incur penance.
+* Monsters no longer avoid walking on shadow traps.
+* Fix the build for the Android port of DCSS.
+* Other minor bugfixes.
+
 Stone Soup 0.16 (20150311)
 --------------------------------------------
 * New gods: Gozag Ym Sagoz the Greedy and Ru the Awakened.
