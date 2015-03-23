@@ -693,7 +693,7 @@ void update_vision_range()
  *                          bardings); otherwise, those return false.
  * @return                  Whether the player can ever use the given slot.
  */
-bool you_can_wear(int eq, bool special_armour)
+bool you_can_wear(equipment_type eq, bool special_armour)
 {
     switch (eq)
     {
