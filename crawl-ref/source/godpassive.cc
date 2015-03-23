@@ -309,7 +309,12 @@ string ash_describe_bondage(int flags, bool level)
         && you.bondage[ET_WEAPON] != -1)
     {
         if (you.bondage[ET_WEAPON] == you.bondage[ET_SHIELD])
-            desc = you.hands_act("are", "bound.\n");
+        {
+            const string verb = make_stringf("are%s",
+                                             you.bondage[ET_WEAPON] ? ""
+                                                                    : " not");
+            desc = you.hands_act(verb, "bound.\n");
+        }
         else
         {
             // FIXME: what if you sacrificed a hand?
