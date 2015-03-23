@@ -1347,8 +1347,8 @@ static bool _puton_item(int item_slot, bool prompt_slot)
 
     const bool is_amulet = jewellery_is_amulet(item);
 
-    if (!you_tran_can_wear(item)
-        && (is_amulet || !you_can_wear(EQ_RING_AMULET)))
+    if (is_amulet && !you_tran_can_wear(EQ_AMULET)
+        || !is_amulet && !you_tran_can_wear(EQ_RINGS))
     {
         mpr("You can't wear that in your present form.");
         return false;

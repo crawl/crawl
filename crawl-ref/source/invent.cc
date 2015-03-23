@@ -396,7 +396,8 @@ static bool _has_tran_unwearable_armour()
         item_def &item(you.inv[i]);
 
         if (item.defined() && item.base_type == OBJ_ARMOUR
-            && !you_tran_can_wear(item))
+            && can_wear_armour(item, false, true)
+            && !can_wear_armour(item, false, false))
         {
             return true;
         }
@@ -1081,7 +1082,7 @@ bool is_item_selected(const item_def &i, int selector)
     switch (selector)
     {
     case OBJ_ARMOUR:
-        return itype == OBJ_ARMOUR && you_tran_can_wear(i);
+        return itype == OBJ_ARMOUR && can_wear_armour(i, false, false);
 
     case OSEL_FRUIT:
         return is_fruit(i);

@@ -814,32 +814,6 @@ bool player_wearing_slot(int eq)
     return you.equip[eq] != -1 && !you.melded[eq];
 }
 
-bool you_tran_can_wear(const item_def &item)
-{
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        return you_tran_can_wear(EQ_WEAPON);
-
-    case OBJ_JEWELLERY:
-        return you_tran_can_wear(jewellery_is_amulet(item) ? EQ_AMULET
-                                                           : EQ_RINGS);
-    case OBJ_ARMOUR:
-        if (item.sub_type == ARM_NAGA_BARDING)
-            return you.species == SP_NAGA && you_tran_can_wear(EQ_BOOTS);
-        else if (item.sub_type == ARM_CENTAUR_BARDING)
-            return you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS);
-
-        if (fit_armour_size(item, you.body_size()) != 0)
-            return false;
-
-        return you_tran_can_wear(get_armour_slot(item));
-
-    default:
-        return true;
-    }
-}
-
 /**
  * Is the given equipment slot available to the player in their current state?
  *
