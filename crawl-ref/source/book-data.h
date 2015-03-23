@@ -74,7 +74,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Enchantments
-    SPELL_TUKIMAS_DANCE,
     SPELL_CAUSE_FEAR,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
@@ -180,6 +179,7 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CORONA,
     SPELL_HIBERNATION,
     SPELL_CONFUSE,
+    SPELL_TUKIMAS_DANCE,
     SPELL_DAZZLING_SPRAY,
 },
 
