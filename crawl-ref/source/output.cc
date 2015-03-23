@@ -1937,7 +1937,6 @@ static void _print_overview_screen_equip(column_composer& cols,
 
     sw = min(max(sw, 79), 640);
 
-    char buf[641];
     for (equipment_type eqslot : e_order)
     {
         if (you.species == SP_OCTOPODE
@@ -1958,7 +1957,7 @@ static void _print_overview_screen_equip(column_composer& cols,
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
 
-        char slot[15] = "";
+        string str;
 
         if (you.equip[eqslot] != -1)
         {
@@ -1976,9 +1975,8 @@ static void _print_overview_screen_equip(column_composer& cols,
 
             const char equip_char = index_to_letter(item_idx);
 
-            snprintf(buf, sizeof buf,
-                     "%s<w>%c</w> - <%s>%s%s</%s>",
-                     slot,
+            str = make_stringf(
+                     "<w>%c</w> - <%s>%s%s</%s>",
                      equip_char,
                      colname,
                      melded ? "melded " : "",
@@ -1990,43 +1988,31 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (eqslot == EQ_WEAPON
                  && you.skill(SK_UNARMED_COMBAT))
         {
-            snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
+            str = "  - Unarmed";
         }
         else if (eqslot == EQ_WEAPON
                  && you.form == TRAN_BLADE_HANDS)
         {
             const bool plural = !player_mutation_level(MUT_MISSING_HAND);
-            snprintf(buf, sizeof buf, "%s  - Blade Hand%s", slot,
-                     plural ? "s" : "");
+            str = string("  - Blade Hand") + (plural ? "s" : "");
         }
         else if (eqslot == EQ_BOOTS
                  && (you.species == SP_NAGA || you.species == SP_CENTAUR))
         {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
+            str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
         }
         else if (!you_can_wear(eqslot))
+            str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
+        else if (!you_can_wear(eqslot, true))
         {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr.c_str());
-        }
-        else if (!you_tran_can_wear(eqslot))
-        {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s currently unavailable)</darkgrey>",
-                     slot_name_lwr.c_str());
+            str = "<darkgrey>(" + slot_name_lwr +
+                               " currently unavailable)</darkgrey>";
         }
         else if (you_can_wear(eqslot) == MB_MAYBE)
-        {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr.c_str());
-        }
+            str = "<darkgrey>(" + slot_name_lwr + " restricted)</darkgrey>";
         else
-        {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
-        }
-        cols.add_formatted(2, buf, false);
+            str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
+        cols.add_formatted(2, str.c_str(), false);
     }
 }
 

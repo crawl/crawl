@@ -567,7 +567,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!you_tran_can_wear(s))
+                if (!get_form()->slot_available(s))
                 {
                     if (verbose)
                     {
@@ -719,7 +719,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
-    //XXX: slot_available seems like it would be enough, investigate
+    // Can't just use Form::slot_available because of shroom caps.
     if (!ignore_temporary && !form_can_wear_item(item, you.form))
     {
         if (verbose)
@@ -1173,7 +1173,7 @@ static bool _swap_rings(int ring_slot)
     for (auto eq : ring_types)
     {
         item_def* ring = you.slot_item(eq, true);
-        if (!you_tran_can_wear(eq) || you.melded[eq])
+        if (!you_can_wear(eq, true) || you.melded[eq])
             melded++;
         else if (ring != nullptr)
         {
@@ -1347,8 +1347,8 @@ static bool _puton_item(int item_slot, bool prompt_slot)
 
     const bool is_amulet = jewellery_is_amulet(item);
 
-    if (is_amulet && !you_tran_can_wear(EQ_AMULET)
-        || !is_amulet && !you_tran_can_wear(EQ_RINGS))
+    if (is_amulet && !you_can_wear(EQ_AMULET, true)
+        || !is_amulet && !you_can_wear(EQ_RINGS, true))
     {
         mpr("You can't wear that in your present form.");
         return false;

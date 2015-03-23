@@ -2480,7 +2480,7 @@ static void _xom_zero_miscast()
     //////////////////////////////////////////////
     // Body, player species, transformations, etc.
 
-    if (you.species == SP_MUMMY && you_tran_can_wear(EQ_BODY_ARMOUR))
+    if (you.species == SP_MUMMY && you_can_wear(EQ_BODY_ARMOUR, true))
     {
         messages.emplace_back("You briefly get tangled in your bandages.");
         if (!you.airborne() && !you.swimming())
@@ -2518,8 +2518,7 @@ static void _xom_zero_miscast()
     ///////////////////////////
     // Equipment related stuff.
 
-    if (you_tran_can_wear(EQ_WEAPON)
-        && you_can_wear(EQ_WEAPON)
+    if (you_can_wear(EQ_WEAPON, true)
         && !you.slot_item(EQ_WEAPON))
     {
         string str = "A fancy cane briefly appears in your ";
