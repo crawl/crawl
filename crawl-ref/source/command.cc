@@ -212,11 +212,8 @@ void list_armour()
 
         if (!you_can_wear(i, true))
             estr << "    (unavailable)";
-        else if (armour_id != -1 && !you_tran_can_wear(you.inv[armour_id])
-                 || !you_tran_can_wear(i))
-        {
+        else if (!you_tran_can_wear(i))
             estr << "    (currently unavailable)";
-        }
         else if (armour_id != -1)
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
@@ -266,11 +263,8 @@ void list_jewellery()
                                        : "unknown";
 
         string item;
-        if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])
-            || !you_tran_can_wear(i))
-        {
+        if (!you_tran_can_wear(i))
             item = "    (currently unavailable)";
-        }
         else if (jewellery_id != -1)
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);
