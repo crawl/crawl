@@ -684,16 +684,19 @@ void update_vision_range()
 }
 
 /**
- * Ignoring form, but not ignoring equipment, can the player use (usually wear)
- * a given equipment slot?
+ * Can the player use (usually wear) a given equipment slot?
  *
- * @param eq The slot in question.
+ * @param eq   The slot in question.
+ * @param temp Whether to consider forms.
  * @return   MB_FALSE if the player can never use the slot;
  *           MB_MAYBE if the player can only use some items for the slot;
  *           MB_TRUE  if the player can use any (fsvo any) item for the slot.
  */
-maybe_bool you_can_wear(equipment_type eq)
+maybe_bool you_can_wear(equipment_type eq, bool temp)
 {
+    if (temp && !get_form()->slot_available(eq))
+        return MB_FALSE;
+
     switch (eq)
     {
     case EQ_LEFT_RING:
@@ -719,8 +722,8 @@ maybe_bool you_can_wear(equipment_type eq)
     case EQ_WEAPON:
     case EQ_STAFF:
         return you.species == SP_FELID ? MB_FALSE :
-               you.body_size(true) < SIZE_MEDIUM ? MB_MAYBE :
-                                                   MB_TRUE;
+               you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
+                                         MB_TRUE;
 
     case EQ_AMULET:
         return MB_TRUE;
@@ -766,7 +769,7 @@ maybe_bool you_can_wear(equipment_type eq)
     case EQ_SHIELD:
         // No races right now that can wear ARM_LARGE_SHIELD but not ARM_SHIELD
         dummy.sub_type = ARM_LARGE_SHIELD;
-        if (you.body_size(true) < SIZE_MEDIUM)
+        if (you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM)
             alternate.sub_type = ARM_BUCKLER;
         break;
 
@@ -782,10 +785,10 @@ maybe_bool you_can_wear(equipment_type eq)
 
     ASSERT(dummy.base_type != NUM_ARMOURS);
 
-    if (can_wear_armour(dummy, false, true))
+    if (can_wear_armour(dummy, false, !temp))
         return MB_TRUE;
     else if (alternate.sub_type != NUM_ARMOURS
-             && can_wear_armour(alternate, false, true))
+             && can_wear_armour(alternate, false, !temp))
     {
         return MB_MAYBE;
     }
@@ -819,24 +822,6 @@ bool player_wearing_slot(int eq)
 {
     ASSERT(you.equip[eq] != -1 || !you.melded[eq]);
     return you.equip[eq] != -1 && !you.melded[eq];
-}
-
-/**
- * Is the given equipment slot available to the player in their current state?
- *
- * @param eq                The equipment slot.
- * @return                  Whether the given slot is at all available. (Even
- *                          if restricted.)
- */
-bool you_tran_can_wear(int eq)
-{
-    if (eq == EQ_NONE)
-        return true;
-
-    if (!get_form(you.form)->slot_available(eq))
-        return false;
-
-    return true;
 }
 
 // Returns false if the player is wielding a weapon inappropriate for Berserk.

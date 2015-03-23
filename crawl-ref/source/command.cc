@@ -212,7 +212,7 @@ void list_armour()
 
         if (you_can_wear(i) == MB_FALSE)
             estr << "    (unavailable)";
-        else if (!you_tran_can_wear(i))
+        else if (you_can_wear(i, true) == MB_FALSE)
             estr << "    (currently unavailable)";
         else if (armour_id != -1)
         {
@@ -263,7 +263,7 @@ void list_jewellery()
                                        : "unknown";
 
         string item;
-        if (!you_tran_can_wear(i))
+        if (you_can_wear(i, true) == MB_FALSE)
             item = "    (currently unavailable)";
         else if (jewellery_id != -1)
         {
