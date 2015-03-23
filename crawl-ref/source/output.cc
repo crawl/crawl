@@ -1926,7 +1926,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                                          vector<char>& equip_chars,
                                          int sw)
 {
-    const int e_order[] =
+    const equipment_type e_order[] =
     {
         EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
@@ -1938,13 +1938,11 @@ static void _print_overview_screen_equip(column_composer& cols,
     sw = min(max(sw, 79), 640);
 
     char buf[641];
-    for (int i = 0; i < NUM_EQUIP; i++)
+    for (equipment_type eqslot : e_order)
     {
-        int eqslot = e_order[i];
-
         if (you.species == SP_OCTOPODE
-            && e_order[i] != EQ_WEAPON
-            && !you_can_wear(e_order[i], true))
+            && eqslot != EQ_WEAPON
+            && !you_can_wear(eqslot, true))
         {
             continue;
         }
@@ -1968,12 +1966,12 @@ static void _print_overview_screen_equip(column_composer& cols,
 
         char slot[15] = "";
 
-        if (you.equip[ e_order[i] ] != -1)
+        if (you.equip[eqslot] != -1)
         {
             // The player has something equipped.
-            const int item_idx   = you.equip[e_order[i]];
+            const int item_idx   = you.equip[eqslot];
             const item_def& item = you.inv[item_idx];
-            const bool melded    = !player_wearing_slot(e_order[i]);
+            const bool melded    = !player_wearing_slot(eqslot);
             const string prefix = item_prefix(item);
             const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
@@ -1995,36 +1993,36 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname);
             equip_chars.push_back(equip_char);
         }
-        else if (e_order[i] == EQ_WEAPON
+        else if (eqslot == EQ_WEAPON
                  && you.skill(SK_UNARMED_COMBAT))
         {
             snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
         }
-        else if (e_order[i] == EQ_WEAPON
+        else if (eqslot == EQ_WEAPON
                  && you.form == TRAN_BLADE_HANDS)
         {
             const bool plural = !player_mutation_level(MUT_MISSING_HAND);
             snprintf(buf, sizeof buf, "%s  - Blade Hand%s", slot,
                      plural ? "s" : "");
         }
-        else if (e_order[i] == EQ_BOOTS
+        else if (eqslot == EQ_BOOTS
                  && (you.species == SP_NAGA || you.species == SP_CENTAUR))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
         }
-        else if (!you_can_wear(e_order[i], true))
+        else if (!you_can_wear(eqslot, true))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr.c_str());
         }
-        else if (!you_tran_can_wear(e_order[i]))
+        else if (!you_tran_can_wear(eqslot))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s currently unavailable)</darkgrey>",
                      slot_name_lwr.c_str());
         }
-        else if (!you_can_wear(e_order[i]))
+        else if (!you_can_wear(eqslot))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr.c_str());

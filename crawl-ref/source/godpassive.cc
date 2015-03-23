@@ -173,8 +173,9 @@ void ash_check_bondage(bool msg)
 
     int cursed[NUM_ET] = {0}, slots[NUM_ET] = {0};
 
-    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
+    for (int j = EQ_WEAPON; j < NUM_EQUIP; j++)
     {
+        const equipment_type i = static_cast<equipment_type>(j);
         eq_type s;
         if (i == EQ_WEAPON)
             s = ET_WEAPON;

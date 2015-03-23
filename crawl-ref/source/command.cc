@@ -189,8 +189,9 @@ static void _print_version()
 void list_armour()
 {
     ostringstream estr;
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+    for (int j = EQ_MIN_ARMOUR; j <= EQ_MAX_ARMOUR; j++)
     {
+        const equipment_type i = static_cast<equipment_type>(j);
         const int armour_id = you.equip[i];
         int       colour    = MSGCOL_BLACK;
 
@@ -240,8 +241,9 @@ void list_jewellery()
     int cols = get_number_of_cols() - 1;
     bool split = you.species == SP_OCTOPODE && cols > 84;
 
-    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
+    for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
     {
+        const equipment_type i = static_cast<equipment_type>(j);
         if (!you_can_wear(i))
             continue;
 
