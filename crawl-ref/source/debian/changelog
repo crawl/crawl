@@ -1,3 +1,9 @@
+crawl (2:0.16.1-1) UNRELEASED; urgency=low
+
+  * Major bugfix release
+
+ -- gammafunk <gammafunk@gmail.com>  Sun, 22 Mar 2015 21:55:31 -0500
+
 crawl (2:0.16.0-1) UNRELEASED; urgency=low
 
   * New upstream release.

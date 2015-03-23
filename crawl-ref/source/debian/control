@@ -5,7 +5,7 @@ Maintainer: the DCSS Development Team <crawl-ref-discuss@lists.sourceforge.net>
 Uploaders: the DCSS Development Team <crawl-ref-discuss@lists.sourceforge.net>
 Standards-Version: 3.9.5
 Build-Depends: debhelper (>= 7), libncursesw5-dev, bison, flex, liblua5.1-0-dev,
-	pkg-config, libsdl2-image-dev, libsdl2-dev, libsqlite3-dev,
+	libpcre3, pkg-config, libsdl2-image-dev, libsdl2-dev, libsqlite3-dev,
 	libfreetype6-dev, advancecomp, libpng-dev
 Homepage: http://crawl.develz.org/
 

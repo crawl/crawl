@@ -23,6 +23,10 @@ endif
 ifneq (,$(findstring i386,$(DEB_HOST_ARCH)))
   LTO=y
 endif
+## XXX 
+## Package fails to build on ubuntu trusty or debian testing with LTO.
+## Disabling for now.
+LTO=
 
 CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) \
              $(shell dpkg-buildflags --get LDFLAGS) \
@@ -35,10 +39,6 @@ ifneq ($(LTO),)
     CFOPTIMIZE += -fno-fat-lto-objects
   endif
 endif
-## XXX 
-## Package fails to build on ubuntu with LTO unless -g is remove on my system.
-## Doesn't build on debian testing even with -g removed. --gammafunk
-CFOPTIMIZE := $(filter-out -g,$(CFOPTIMIZE))
 
 ifeq (,$(filter terse%,$(DEB_BUILD_OPTIONS))$(filter quiet%,$(DEB_BUILD_OPTIONS)))
         VERBOSE=V=y
@@ -59,7 +59,7 @@ ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 endif
 
 # The makefile is unorthodox, requiring all options to be specified on every invocation.
-ARGS_CONSOLE = prefix=/usr CFOPTIMIZE="$(CFOPTIMIZE)" STRIP=: $(CROSS) $(VERBOSE)
+ARGS_CONSOLE = prefix=/usr CFOPTIMIZE="$(CFOPTIMIZE)" STRIP=: $(CROSS) $(VERBOSE) USE_PCRE=y
 ARGS_TILES   = $(ARGS_CONSOLE) TILES=y GAME=crawl-tiles \
 	PROPORTIONAL_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
 	MONOSPACED_FONT=/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf
