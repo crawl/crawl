@@ -447,6 +447,20 @@ static int armour_equip_delay(const item_def &item)
     return 5;
 }
 
+/**
+ * Can you wear this item of armour currently?
+ *
+ * Ignores whether or not an item is equipped in its slot already.
+ * If the item is Lear's hauberk, some of this comment may be incorrect.
+ *
+ * @param item The item. Only the base_type and sub_type really should get
+ *             checked, since you_can_wear passes in a dummy item.
+ * @param verbose Whether to print a message about your inability to wear item.
+ * @param ignore_temporary Whether to take into account forms/fishtail. Note
+ *                         that no matter what this is set to, all mutations
+ *                         will be taken into account, except for Beastly
+ *                         Appendage (and then only if this is false).
+ */
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
