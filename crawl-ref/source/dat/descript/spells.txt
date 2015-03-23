@@ -627,8 +627,7 @@ Gell's Gravitas spell
 For a brief moment, this spell redirects space around the target, making 'down'
 become exactly where the target is standing. All nearby creatures, save the
 caster, fall helplessly toward the victim - typically colliding with it, or
-with each other. The disorienting experience can leave the afflicted creatures
-confused.
+with each other.
 %%%%
 Ghostly Fireball spell
 

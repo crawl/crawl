@@ -1094,9 +1094,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_SCATTERSHOT:
         return new targetter_shotgun(&you, shotgun_beam_count(pow), range);
     case SPELL_GRAVITAS:
-        return new targetter_beam(&you, range, spell_to_zap(spell), pow,
-                                  singularity_range(pow, 2),
-                                  singularity_range(pow));
+        return new targetter_smite(&you, range, singularity_range(pow, 2),
+                                                singularity_range(pow));
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1585,6 +1584,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_LRD:
         return cast_fragmentation(powc, &you, spd.target, fail);
+
+    case SPELL_GRAVITAS:
+        return cast_gravitas(powc, beam.target, fail);
 
     // other effects
     case SPELL_DISCHARGE:

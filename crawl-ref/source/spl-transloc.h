@@ -40,4 +40,5 @@ void attract_actor(const actor* agent, actor* victim, const coord_def pos,
                    int pow, int strength);
 void singularity_pull(const monster *singularity);
 bool fatal_attraction(actor *victim, actor *agent, int pow);
+spret_type cast_gravitas(int pow, const coord_def& where, bool fail);
 #endif
