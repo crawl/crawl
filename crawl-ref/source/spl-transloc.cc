@@ -1416,10 +1416,28 @@ bool fatal_attraction(actor *victim, actor *agent, int pow)
 
         affected = true;
         attract_actor(agent, *ai, victim->pos(), pow, strength);
-
-        if (ai->alive() && ai->check_res_magic(pow / 2) <= 0)
-            ai->confuse(agent, 1 + random2avg(pow / 10, 2));
     }
 
     return affected;
+}
+
+spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
+{
+    if (cell_is_solid(where))
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    monster* mons = monster_at(where);
+    if (!mons || mons->submerged())
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return SPRET_SUCCESS;
+    }
+
+    fatal_attraction(mons, &you, pow);
+    return SPRET_SUCCESS;
 }
