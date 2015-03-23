@@ -213,7 +213,7 @@ void ash_check_bondage(bool msg)
             s = ET_JEWELS;
 
         // transformed away slots are still considered to be possibly bound
-        if (you_can_wear(i, true))
+        if (you_can_wear(i))
         {
             slots[s]++;
             if (you.equip[i] != -1)

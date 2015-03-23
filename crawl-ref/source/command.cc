@@ -210,7 +210,7 @@ void list_armour()
                                  : "unknown")
              << " : ";
 
-        if (!you_can_wear(i, true))
+        if (you_can_wear(i) == MB_FALSE)
             estr << "    (unavailable)";
         else if (!you_tran_can_wear(i))
             estr << "    (currently unavailable)";
@@ -220,7 +220,7 @@ void list_armour()
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
                                  "equip");
         }
-        else if (!you_can_wear(i))
+        else if (you_can_wear(i) == MB_MAYBE)
             estr << "    (restricted)";
         else
             estr << "    none";
