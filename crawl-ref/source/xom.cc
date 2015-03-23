@@ -2338,23 +2338,6 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     return done;
 }
 
-// Is the equipment type usable, and is the slot empty?
-static bool _could_wear_eq(equipment_type eq)
-{
-    if (!you_tran_can_wear(eq, true))
-        return false;
-
-    return !you.slot_item(eq, true);
-}
-
-static item_def* _tran_get_eq(equipment_type eq)
-{
-    if (you_tran_can_wear(eq, true))
-        return you.slot_item(eq, true);
-
-    return nullptr;
-}
-
 static void _xom_zero_miscast()
 {
     vector<string> messages;
@@ -2539,9 +2522,10 @@ static void _xom_zero_miscast()
 
     ///////////////////////////
     // Equipment related stuff.
-    item_def* item;
 
-    if (_could_wear_eq(EQ_WEAPON))
+    if (you_tran_can_wear(EQ_WEAPON)
+        && you_can_wear(EQ_WEAPON)
+        && !you.slot_item(EQ_WEAPON))
     {
         string str = "A fancy cane briefly appears in your ";
         str += you.hand_name(false);
@@ -2550,10 +2534,10 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (_tran_get_eq(EQ_CLOAK) != nullptr)
+    if (you.slot_item(EQ_CLOAK))
         messages.emplace_back("Your cloak billows in an unfelt wind.");
 
-    if ((item = _tran_get_eq(EQ_HELMET)))
+    if (item_def* item = you.slot_item(EQ_HELMET))
     {
         string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
@@ -2563,18 +2547,20 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS
-        && !you.cannot_act())
+    if (item_def* item = you.slot_item(EQ_BOOTS))
     {
-        string name = item->name(DESC_BASENAME, false, false, false);
-        name = replace_all(name, "pair of ", "");
+        if (item->sub_type == ARM_BOOTS && !you.cannot_act())
+        {
+            string name = item->name(DESC_BASENAME, false, false, false);
+            name = replace_all(name, "pair of ", "");
 
-        string str = "You compulsively click the heels of your ";
-        str += name;
-        str += " together three times.";
+            string str = "You compulsively click the heels of your ";
+            str += name;
+            str += " together three times.";
+        }
     }
 
-    if ((item = _tran_get_eq(EQ_SHIELD)))
+    if (item_def* item = you.slot_item(EQ_SHIELD))
     {
         string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
@@ -2588,7 +2574,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if ((item = _tran_get_eq(EQ_BODY_ARMOUR)))
+    if (item_def* item = you.slot_item(EQ_BODY_ARMOUR))
     {
         string str;
         string name = item->name(DESC_BASENAME, false, false, false);
@@ -2636,7 +2622,7 @@ static void _xom_zero_miscast()
     {
         int idx = inv_items[random2(inv_items.size())];
 
-        item = &you.inv[idx];
+        item_def* item = &you.inv[idx];
 
         string name = item->name(DESC_YOUR, false, false, false);
         string verb = coinflip() ? "glow" : "vibrate";
@@ -2667,11 +2653,10 @@ static void _get_hand_type(string &hand, bool &can_plural)
 
     if (you.species != SP_NAGA || form_changed_physiology())
     {
-        item_def* item;
-        if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS)
+        if (item_def* item = you.slot_item(EQ_BOOTS))
         {
-            hand_vec.emplace_back("boot");
-            plural = true;
+            hand_vec.emplace_back(item->name(DESC_BASENAME, false, false, false));
+            plural = false; // "pair of boots" is singular
         }
         else
             hand_vec.push_back(you.foot_name(false, &plural));

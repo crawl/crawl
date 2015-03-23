@@ -879,7 +879,7 @@ bool you_tran_can_wear(const item_def &item)
         if (fit_armour_size(item, you.body_size()) != 0)
             return false;
 
-        return you_tran_can_wear(get_armour_slot(item), true);
+        return you_tran_can_wear(get_armour_slot(item));
 
     default:
         return true;
@@ -890,49 +890,16 @@ bool you_tran_can_wear(const item_def &item)
  * Is the given equipment slot available to the player in their current state?
  *
  * @param eq                The equipment slot.
- * @param check_mutation    Whether to consider mutations (horns, antennae)
- *                          & mermaid fishtails.
  * @return                  Whether the given slot is at all available. (Even
  *                          if restricted.)
  */
-bool you_tran_can_wear(int eq, bool check_mutation)
+bool you_tran_can_wear(int eq)
 {
     if (eq == EQ_NONE)
         return true;
 
     if (!get_form(you.form)->slot_available(eq))
         return false;
-
-    // missing hand is implemented as a mutation, but it's permanent &
-    // irrevocable, so don't care about check_mutation.
-    if (player_mutation_level(MUT_MISSING_HAND)
-        && (eq == EQ_LEFT_RING
-            || eq == EQ_SHIELD
-            || eq == EQ_RING_EIGHT))
-    {
-        return false;
-    }
-
-    // Not a transformation, but also temporary -> check first.
-    if (check_mutation)
-    {
-        if (eq == EQ_GLOVES && you.has_claws(false) == 3)
-            return false;
-
-        if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
-            return false;
-
-        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) == 3)
-            return false;
-
-        if (eq == EQ_BOOTS
-            && (you.fishtail
-                || player_mutation_level(MUT_HOOVES) == 3
-                || you.has_talons(false) == 3))
-        {
-            return false;
-        }
-    }
 
     return true;
 }
