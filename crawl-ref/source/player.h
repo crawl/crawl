@@ -1071,8 +1071,6 @@ void dec_disease_player(int delay);
 
 void handle_player_drowning(int delay);
 
-bool player_weapon_wielded();
-
 // Determines if the given grid is dangerous for the player to enter.
 bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false,
                        bool ignore_flight = false);

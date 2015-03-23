@@ -470,13 +470,8 @@ static bool _spell_weapon_check(const spell_type spell)
     case SPELL_EXCRUCIATING_WOUNDS:
     case SPELL_WARP_BRAND:
     {
-        if (!player_weapon_wielded())
-            return false;
-
-        // The wielded weapon must be a non-branded non-launcher
-        // non-artefact!
-        const item_def& weapon = *you.weapon();
-        return !is_artefact(weapon) && !is_range_weapon(weapon);
+        const item_def* weapon = you.weapon();
+        return weapon && !is_artefact(*weapon) && is_melee_weapon(*weapon);
     }
     default:
         return true;
