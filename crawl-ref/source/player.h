@@ -998,7 +998,7 @@ bool you_can_wear(int eq, bool special_armour = false);
 bool player_has_feet(bool temp = true);
 bool player_wearing_slot(int eq);
 bool you_tran_can_wear(const item_def &item);
-bool you_tran_can_wear(int eq, bool check_mutation = false);
+bool you_tran_can_wear(int eq);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);

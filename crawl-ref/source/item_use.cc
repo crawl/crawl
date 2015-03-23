@@ -553,13 +553,11 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!you_tran_can_wear(s, true))
+                if (!you_tran_can_wear(s))
                 {
                     if (verbose)
                     {
-                        mprf(you_tran_can_wear(s)
-                                ? "The hauberk won't fit your %s."
-                                : "You have no %s!",
+                        mprf("The hauberk won't fit your %s.",
                              parts[s - EQ_HELMET].c_str());
                     }
                     return false;
@@ -707,6 +705,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
+    //XXX: slot_available seems like it would be enough, investigate
     if (!ignore_temporary && !form_can_wear_item(item, you.form))
     {
         if (verbose)

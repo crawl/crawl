@@ -2018,7 +2018,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr.c_str());
         }
-        else if (!you_tran_can_wear(e_order[i], true))
+        else if (!you_tran_can_wear(e_order[i]))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s currently unavailable)</darkgrey>",
