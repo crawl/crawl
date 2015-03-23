@@ -895,6 +895,7 @@ bool player_effectively_in_light_armour();
 
 int player_energy();
 
+int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 

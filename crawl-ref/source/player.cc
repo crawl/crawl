@@ -684,7 +684,8 @@ void update_vision_range()
 }
 
 /**
- * Can the player use (usually wear) a given equipment slot?
+ * Ignoring form & most equipment, but not the UNRAND_FINGER_AMULET, can the
+ * player use (usually wear) a given equipment slot?
  *
  * @param eq   The slot in question.
  * @param temp Whether to consider forms.
@@ -2194,7 +2195,7 @@ static int _player_evasion_size_factor()
 
 // Determines racial shield penalties (formicids get a bonus compared to
 // other medium-sized races)
-static int _player_shield_racial_factor()
+int player_shield_racial_factor()
 {
     return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
                                                   : _player_evasion_size_factor()));
@@ -6145,13 +6146,13 @@ int player::adjusted_shield_penalty(int scale) const
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
     return max(0, ((base_shield_penalty * scale) - skill(SK_SHIELDS, scale)
-                  / _player_shield_racial_factor() * 10) / 10);
+                  / player_shield_racial_factor() * 10) / 10);
 }
 
 float player::get_shield_skill_to_offset_penalty(const item_def &item)
 {
     int evp = property(item, PARM_EVASION);
-    return -1 * evp * _player_shield_racial_factor() / 10;
+    return -1 * evp * player_shield_racial_factor() / 10;
 }
 
 int player::armour_tohit_penalty(bool random_factor, int scale) const
