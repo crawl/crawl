@@ -818,12 +818,6 @@ bool player_has_feet(bool temp)
     return true;
 }
 
-bool player_wearing_slot(int eq)
-{
-    ASSERT(you.equip[eq] != -1 || !you.melded[eq]);
-    return you.equip[eq] != -1 && !you.melded[eq];
-}
-
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
 bool berserk_check_wielded_weapon()
 {
@@ -2213,7 +2207,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
     // Some lesser armours have small penalties now (barding).
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
     {
-        if (i == EQ_SHIELD || !player_wearing_slot(i))
+        if (i == EQ_SHIELD || !you.slot_item(static_cast<equipment_type>(i)))
             continue;
 
         // [ds] Evasion modifiers for armour are negatives, change
@@ -2428,7 +2422,7 @@ int player_shield_class()
     if (you.incapacitated())
         return 0;
 
-    if (player_wearing_slot(EQ_SHIELD))
+    if (you.shield())
     {
         const item_def& item = you.inv[you.equip[EQ_SHIELD]];
         int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
@@ -6336,7 +6330,7 @@ int player::armour_class(bool /*calc_unid*/) const
         if (eq == EQ_SHIELD)
             continue;
 
-        if (!player_wearing_slot(eq))
+        if (!slot_item(static_cast<equipment_type>(eq)))
             continue;
 
         const item_def& item = inv[equip[eq]];
@@ -7181,7 +7175,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
 {
     int dam = 0;
     bool do_corrosion = false;
-    const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
+    const bool wearing_cloak = slot_item(EQ_CLOAK);
 
     for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; slot++)
     {
@@ -7364,7 +7358,7 @@ int player::has_claws(bool allow_tran) const
 
 bool player::has_usable_claws(bool allow_tran) const
 {
-    return !player_wearing_slot(EQ_GLOVES) && has_claws(allow_tran);
+    return !slot_item(EQ_GLOVES) && has_claws(allow_tran);
 }
 
 int player::has_talons(bool allow_tran) const
@@ -7378,7 +7372,7 @@ int player::has_talons(bool allow_tran) const
 
 bool player::has_usable_talons(bool allow_tran) const
 {
-    return !player_wearing_slot(EQ_BOOTS) && has_talons(allow_tran);
+    return !slot_item(EQ_BOOTS) && has_talons(allow_tran);
 }
 
 int player::has_hooves(bool allow_tran) const
@@ -7393,7 +7387,7 @@ int player::has_hooves(bool allow_tran) const
 bool player::has_usable_hooves(bool allow_tran) const
 {
     return has_hooves(allow_tran)
-           && (!player_wearing_slot(EQ_BOOTS)
+           && (!slot_item(EQ_BOOTS)
                || wearing(EQ_BOOTS, ARM_CENTAUR_BARDING, true));
 }
 
@@ -7457,7 +7451,7 @@ bool player::has_usable_offhand() const
 {
     if (player_mutation_level(MUT_MISSING_HAND))
         return false;
-    if (player_wearing_slot(EQ_SHIELD))
+    if (shield())
         return false;
 
     const item_def* wp = slot_item(EQ_WEAPON);

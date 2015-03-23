@@ -996,7 +996,6 @@ void update_vision_range();
 
 maybe_bool you_can_wear(equipment_type eq, bool temp = false);
 bool player_has_feet(bool temp = true);
-bool player_wearing_slot(int eq);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);

@@ -3327,15 +3327,12 @@ static void _god_welcome_handle_gear()
     // Give a reminder to remove any disallowed equipment.
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
     {
-        if (!player_wearing_slot(i))
-            continue;
-
-        const item_def& item = you.inv[you.equip[i]];
-        if (god_hates_item(item))
+        const item_def* item = you.slot_item(static_cast<equipment_type>(i));
+        if (item && god_hates_item(*item))
         {
             mprf(MSGCH_GOD, "%s warns you to remove %s.",
                  uppercase_first(god_name(you.religion)).c_str(),
-                 item.name(DESC_YOUR, false, false, false).c_str());
+                 item->name(DESC_YOUR, false, false, false).c_str());
         }
     }
 }

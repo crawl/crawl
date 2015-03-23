@@ -1959,12 +1959,11 @@ static void _print_overview_screen_equip(column_composer& cols,
 
         string str;
 
-        if (you.equip[eqslot] != -1)
+        if (you.slot_item(eqslot))
         {
             // The player has something equipped.
-            const int item_idx   = you.equip[eqslot];
-            const item_def& item = you.inv[item_idx];
-            const bool melded    = !player_wearing_slot(eqslot);
+            const item_def& item = *you.slot_item(eqslot);
+            const bool melded    = you.melded[eqslot];
             const string prefix = item_prefix(item);
             const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
@@ -1973,6 +1972,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             const char* colname  = melded ? "darkgrey"
                                           : colour_to_str(col).c_str();
 
+            const int item_idx   = you.equip[eqslot];
             const char equip_char = index_to_letter(item_idx);
 
             str = make_stringf(

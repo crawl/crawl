@@ -905,11 +905,10 @@ static void _debug_acquirement_stats(FILE *ostat)
             // The player has something equipped.
             const int item_idx   = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
-            const bool melded    = !player_wearing_slot(e_order[i]);
 
             fprintf(ostat, "%-7s: %s %s\n", equip_slot_to_name(eqslot),
                     item.name(DESC_PLAIN, true).c_str(),
-                    melded ? "(melded)" : "");
+                    you.melded[i] ? "(melded)" : "");
             naked = false;
         }
     }
