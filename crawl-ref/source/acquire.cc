@@ -38,345 +38,314 @@
 #include "stringutil.h"
 #include "terrain.h"
 
-static armour_type _random_nonbody_armour_type()
-{
-    return random_choose(ARM_SHIELD, ARM_CLOAK, ARM_HELMET, ARM_GLOVES,
-                         ARM_BOOTS);
-}
+static equipment_type _acquirement_armour_slot(bool);
+static armour_type _acquirement_armour_for_slot(equipment_type, bool);
+static armour_type _acquirement_shield_type();
+static armour_type _acquirement_body_armour(bool);
+static armour_type _acquirement_mundane_armour(bool);
+static armour_type _acquirement_hide_armour(bool);
 
-static armour_type _pick_wearable_armour(const armour_type arm)
-{
-    armour_type result = arm;
 
-    // Some species specific fitting problems.
-    // FIXME: switch to the cleaner logic in can_wear_armour()
-    switch (you.species)
-    {
-    case SP_OGRE:
-    case SP_TROLL:
-    case SP_SPRIGGAN:
-        if (arm == ARM_GLOVES
-            || arm == ARM_BOOTS
-            || arm == ARM_CENTAUR_BARDING
-            || arm == ARM_NAGA_BARDING)
-        {
-            result = ARM_ROBE;  // no heavy armour
-        }
-        else if (arm == ARM_SHIELD)
-        {
-            if (you.species == SP_SPRIGGAN)
-                result = ARM_BUCKLER;
-            else if (x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
-                result = ARM_LARGE_SHIELD; // prefer big shields for giant races
-        }
-        else if (arm == NUM_ARMOURS)
-            result = ARM_ROBE;  // no heavy armour, see below
-        break;
-
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:
-        if (arm == ARM_ROBE
-            || arm == NUM_ARMOURS // no heavy armour
-            || arm == ARM_CENTAUR_BARDING
-            || arm == ARM_NAGA_BARDING)
-        {
-            result = random_choose(ARM_HELMET, ARM_GLOVES, ARM_BOOTS);
-        }
-        else if (arm == ARM_SHIELD)
-        {
-            if (x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
-                result = ARM_LARGE_SHIELD;
-        }
-        break;
-
-    case SP_NAGA:
-        if (arm == ARM_BOOTS || arm == ARM_CENTAUR_BARDING)
-            result = ARM_NAGA_BARDING;
-        if (arm == ARM_SHIELD && x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
-            result = ARM_LARGE_SHIELD; // nagas have bonuses to big shields
-        break;
-
-    case SP_CENTAUR:
-        if (arm == ARM_BOOTS || arm == ARM_NAGA_BARDING)
-            result = ARM_CENTAUR_BARDING;
-        if (arm == ARM_SHIELD && x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
-            result = ARM_LARGE_SHIELD; // so have centaurs
-        break;
-
-    case SP_OCTOPODE:
-        if (arm != ARM_HELMET && arm != ARM_SHIELD)
-        {
-            if (coinflip())
-                result = ARM_HELMET;
-            else
-                result = ARM_SHIELD;
-        }
-        // and fall through for shield size adjustments
-
-    default:
-        if (arm == ARM_CENTAUR_BARDING || arm == ARM_NAGA_BARDING)
-            result = ARM_BOOTS;
-        if (arm == ARM_SHIELD)
-        {
-            if (x_chance_in_y(15 - you.skills[SK_SHIELDS], 20))
-                result = ARM_BUCKLER;
-            else if (x_chance_in_y(you.skills[SK_SHIELDS] - 10, 15)
-                     && you.species != SP_KOBOLD && you.species != SP_HALFLING)
-                result = ARM_LARGE_SHIELD;
-        }
-        break;
-    }
-
-    // Mutation specific problems (horns and antennae allow caps, but not
-    // Horns 3 or Antennae 3 (checked below)).
-    if (result == ARM_BOOTS && !player_has_feet(false)
-        || result == ARM_GLOVES && you.has_claws(false) >= 3)
-    {
-        result = NUM_ARMOURS;
-    }
-
-    // Do this here, before acquirement()'s call to can_wear_armour(),
-    // so that caps will be just as common as helmets for those
-    // that can't wear helmets.
-    // We check for the mutation directly to avoid acquirement fiddles
-    // with vampires.
-    if (arm == ARM_HELMET
-        && (!you_can_wear(EQ_HELMET)
-            || you.mutation[MUT_HORNS]
-            || you.mutation[MUT_ANTENNAE]))
-    {
-        // Check for Horns 3 & Antennae 3 - Don't give a cap if those mutation
-        // levels have been reached.
-        if (you.mutation[MUT_HORNS] <= 2 || you.mutation[MUT_ANTENNAE] <= 2)
-            result = ARM_HAT;
-        else
-            result = NUM_ARMOURS;
-    }
-
-    return result;
-}
-
+/**
+ * Choose a random subtype of armour to generate through acquirement/divine
+ * gifts.
+ *
+ * Guaranteed to be wearable, in principle.
+ *
+ * @param divine    Lowers the odds of high-tier body armours being chosen.
+ * @return          The armour_type of the armour to be generated.
+ */
 static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
 {
-    // Increasing the representation of the non-body armour
-    // slots here to make up for the fact that there's only
-    // one type of item for most of them. -- bwr
-    //
-    // NUM_ARMOURS is body armour and handled below
-    armour_type result = NUM_ARMOURS;
+    const equipment_type slot_type = _acquirement_armour_slot(divine);
+    return _acquirement_armour_for_slot(slot_type, divine);
+}
 
+/**
+ * Choose a random slot to acquire armour for.
+ *
+ * For most races, even odds for all armour slots when acquiring, or 50-50
+ * split between body armour/aux armour when getting god gifts.
+ *
+ * Centaurs & nagas get a high extra chance for bardings, especially if they
+ * haven't seen any yet.
+ *
+ * Guaranteed to be wearable, in principle.
+ *
+ * @param divine    Whether the item is a god gift.
+ * @return          A random equipment slot; e.g. EQ_SHIELD, EQ_BODY_ARMOUR...
+ */
+static equipment_type _acquirement_armour_slot(bool divine)
+{
+    if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+    {
+        const armour_type bard =
+            (you.species == SP_NAGA) ? ARM_NAGA_BARDING
+                                     : ARM_CENTAUR_BARDING;
+        if (one_chance_in(you.seen_armour[bard] ? 4 : 2))
+            return EQ_BOOTS;
+    }
+
+    vector<pair<equipment_type, int>> weights = {
+        { EQ_BODY_ARMOUR,   divine ? 5 : 1 },
+        { EQ_SHIELD,        1 },
+        { EQ_CLOAK,         1 },
+        { EQ_HELMET,        1 },
+        { EQ_GLOVES,        1 },
+        { EQ_BOOTS,         1 },
+    };
+
+    for (auto &weight : weights)
+        if (!you_can_wear(weight.first))
+            weight.second = 0;
+
+    const equipment_type* slot = random_choose_weighted(weights);
+    ASSERT(slot);
+    return *slot;
+}
+
+
+/**
+ * Choose a random subtype of armour that will fit in the given equipment slot,
+ * to generate through acquirement/divine gifts.
+ *
+ * Guaranteed to be usable by the player & weighted weakly by their skills;
+ * heavy investment in armour skill, relative to dodging & spellcasting, makes
+ * heavier armours more likely to be generated.
+ *
+ * @param divine    Lowers the odds of high-tier body armours being chosen.
+ * @return          The armour_type of the armour to be generated.
+ */
+static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
+                                                bool divine)
+{
+    switch (slot_type)
+    {
+        case EQ_CLOAK:
+            return ARM_CLOAK;
+        case EQ_GLOVES:
+            return ARM_GLOVES;
+        case EQ_BOOTS:
+            switch (you.species)
+            {
+                case SP_NAGA:
+                    return ARM_NAGA_BARDING;
+                case SP_CENTAUR:
+                    return ARM_CENTAUR_BARDING;
+                default:
+                    return ARM_BOOTS;
+            }
+        case EQ_HELMET:
+            if (you_can_wear(EQ_HELMET) == MB_MAYBE)
+                return coinflip() ? ARM_HELMET : ARM_HAT;
+            return ARM_HAT;
+        case EQ_SHIELD:
+            return _acquirement_shield_type();
+        case EQ_BODY_ARMOUR:
+            return _acquirement_body_armour(divine);
+        default:
+            die("Unknown armour slot %d!", slot_type);
+    }
+}
+
+/**
+ * Choose a random type of shield to be generated via acquirement or god gifts.
+ *
+ * Weighted by Shields skill & the secret racial shield bonus.
+ *
+ * Ratios by shields skill & player size (B = buckler, S = shield, L = lg. sh.)
+ *
+ *     Shields    0           5         10          15        20
+ * Large:   {6B}/5S/4L  ~{1B}/1S/1L  ~{1B}/5S/7L  ~2S/3L     1S/2L
+ * Med.:        2B/1S    6B/4S/1L      2B/2S/1L   4B/8S/3L   1S/1L
+ * Small:      ~3B/1S     ~5B/2S      ~2B/1S     ~3B/2S     ~1B/1S
+ *
+ * XXX: possibly shield skill should count for more for non-med races?
+ *
+ * @return A potentially wearable type of shield.
+ */
+static armour_type _acquirement_shield_type()
+{
+    vector<pair<armour_type, int>> weights = {
+        { ARM_BUCKLER,       player_shield_racial_factor() * 4
+                                - you.skills[SK_SHIELDS] },
+        { ARM_SHIELD,        10 },
+        { ARM_LARGE_SHIELD,  20 - player_shield_racial_factor() * 4
+                                + div_rand_round(you.skills[SK_SHIELDS], 2) },
+    };
+
+    for (auto &weight : weights)
+    {
+        if (!check_armour_size(weight.first, you.body_size()))
+            weight.second = 0;
+        weight.second = max(weight.second, 0);
+    }
+
+    const armour_type* shield_type = random_choose_weighted(weights);
+    ASSERT(shield_type);
+    return *shield_type;
+}
+
+/**
+ * Choose a random type of body armour to be generated via acquirement or
+ * god gifts.
+ *
+ * @param divine      Whether the armour is a god gift.
+ * @return A potentially wearable type of body armour..
+ */
+static armour_type _acquirement_body_armour(bool divine)
+{
+    // TODO: rewrite this to be not ridiculous
+    // (weights in itemprop.cc per-armour-type, modified by skills & filtered
+    // by wearability)
+
+
+    // Everyone can wear things made from hides.
+    if (one_chance_in(20))
+    {
+        return random_choose_weighted(20, ARM_TROLL_LEATHER_ARMOUR,
+                                      20, ARM_STEAM_DRAGON_ARMOUR,
+                                      15, ARM_MOTTLED_DRAGON_ARMOUR,
+                                      10, ARM_SWAMP_DRAGON_ARMOUR,
+                                      10, ARM_FIRE_DRAGON_ARMOUR,
+                                      10, ARM_ICE_DRAGON_ARMOUR,
+                                      5, ARM_STORM_DRAGON_ARMOUR,
+                                      5, ARM_SHADOW_DRAGON_ARMOUR,
+                                      5, ARM_GOLD_DRAGON_ARMOUR,
+                                      5, ARM_PEARL_DRAGON_ARMOUR,
+                                      5, ARM_QUICKSILVER_DRAGON_ARMOUR,
+                                      0);
+    }
+
+    // ugly proxy for "can you wear non-hide armour"
+    if (!check_armour_size(ARM_PLATE_ARMOUR, you.body_size()))
+        return _acquirement_hide_armour(divine);
+    return _acquirement_mundane_armour(divine);
+}
+
+/**
+ * Choose a random type of hide armour (dragon or troll leather) to be
+ * generated via acquirement or god gifts.
+ *
+ * Legacy function; should be removed when _acquirement_body_armour is
+ * rewritten.
+ *
+ * @param fewer_dragons     Reduce the number & variety of dragon armours.
+ * @return                  A random hide-based armour type.
+ */
+static armour_type _acquirement_hide_armour(bool fewer_dragons)
+{
+    const int DRAGON_WEIGHT = fewer_dragons ? 0 : 20;
+
+    // weights out of 1000
+    return random_choose_weighted(
+                    663,                    ARM_ROBE,
+                    221,                    ARM_ANIMAL_SKIN, // no egos
+                    6,                      ARM_TROLL_LEATHER_ARMOUR,
+                    6 + DRAGON_WEIGHT,      ARM_STEAM_DRAGON_ARMOUR,
+                    2 + DRAGON_WEIGHT,      ARM_FIRE_DRAGON_ARMOUR,
+                    2 + DRAGON_WEIGHT,      ARM_SWAMP_DRAGON_ARMOUR,
+                    DRAGON_WEIGHT,          ARM_ICE_DRAGON_ARMOUR,
+                    DRAGON_WEIGHT,          ARM_MOTTLED_DRAGON_ARMOUR,
+                    DRAGON_WEIGHT,          ARM_STORM_DRAGON_ARMOUR,
+                    DRAGON_WEIGHT,          ARM_SHADOW_DRAGON_ARMOUR,
+                    DRAGON_WEIGHT,          ARM_GOLD_DRAGON_ARMOUR,
+                    DRAGON_WEIGHT,          ARM_PEARL_DRAGON_ARMOUR,
+                    DRAGON_WEIGHT,          ARM_QUICKSILVER_DRAGON_ARMOUR,
+                    0);
+}
+
+/**
+ * Choose a random type of mundane armour (not dragon/troll hide) to be
+ * generated via acquirement or god gifts.
+ *
+ * Weighted by skills (Armour, Dodging, Spellcasting) but NOT by stats -
+ * mainly because stuff like Chei makes it very hard to predict what a player
+ * might want from their base stats alone, and we don't want to adjust acq
+ * results based on Chei piety, current equipment stat boosts, etc...
+ *
+ * Legacy function; should be removed when _acquirement_body_armour is
+ * rewritten.
+ *
+ * @param divine        Whether the item is a god gift.
+ * @return              A random 'mundane' armour type.
+ */
+static armour_type _acquirement_mundane_armour(bool divine)
+{
     if (divine)
     {
-        if (coinflip())
-            result = _random_nonbody_armour_type();
+        if (x_chance_in_y(you.skills[SK_ARMOUR], 150))
+            return ARM_CRYSTAL_PLATE_ARMOUR;
+
+        const armour_type armours[] = {
+            ARM_ROBE, ARM_LEATHER_ARMOUR, ARM_RING_MAIL, ARM_SCALE_MAIL,
+            ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR
+        };
+
+        return static_cast<armour_type>(RANDOM_ELEMENT(armours));
     }
-    else
+
+    // Weight sub types relative to (armour skill + 3).
+    // Actually, the AC improvement is not linear, and we
+    // might also want to take into account Dodging/Stealth
+    // but this is definitely better than the random chance above.
+
+    // This formula makes sense only for casters.
+    // ... so we override it for heavy meleers, who get mostly plates.
+    // A scale mail is wasted acquirement, even if it's any but most
+    // über randart).
+    if (random2(you.skills[SK_SPELLCASTING] * 3 + you.skills[SK_DODGING])
+        < random2(you.skills[SK_ARMOUR] * 2))
     {
-        static const equipment_type armour_slots[] =
-            {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS   };
-
-        equipment_type picked = EQ_BODY_ARMOUR;
-        const int num_slots = ARRAYSZ(armour_slots);
-        // Start count at 1, for body armour (already picked).
-        for (int i = 0, count = 1; i < num_slots; ++i)
-            if (you_can_wear(armour_slots[i]) && one_chance_in(++count))
-                picked = armour_slots[i];
-
-        switch (picked)
-        {
-        case EQ_SHIELD:
-            result = ARM_SHIELD; break;
-        case EQ_CLOAK:
-            result = ARM_CLOAK;  break;
-        case EQ_HELMET:
-            result = ARM_HELMET; break;
-        case EQ_GLOVES:
-            result = ARM_GLOVES; break;
-        case EQ_BOOTS:
-            result = ARM_BOOTS;  break;
-        default:
-        case EQ_BODY_ARMOUR:
-            result = NUM_ARMOURS; break;
-        }
-
-        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
-        {
-            armour_type bard = (you.species == SP_NAGA) ? ARM_NAGA_BARDING
-                                                        : ARM_CENTAUR_BARDING;
-            if (one_chance_in(you.seen_armour[bard] ? 4 : 2))
-                result = bard;
-        }
+        return one_chance_in(4) ? ARM_CRYSTAL_PLATE_ARMOUR : ARM_PLATE_ARMOUR;
     }
 
-    result = _pick_wearable_armour(result);
+    static const armour_type armours[] = {
+      ARM_ANIMAL_SKIN, ARM_ROBE, ARM_LEATHER_ARMOUR, ARM_RING_MAIL,
+      ARM_SCALE_MAIL, ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR,
+      ARM_CRYSTAL_PLATE_ARMOUR
+    };
 
-    // Now we'll randomly pick a body armour up to plate armour (light
-    // only in the case of robes or animal skins).  Unlike before, now
-    // we're only giving out the finished products here, never the
-    // hides. - bwr
-    if (result == NUM_ARMOURS || result == ARM_ROBE)
+    const int skill = min(27, you.skills[SK_ARMOUR] + 3);
+    armour_type sub_type = NUM_ARMOURS;
+    int total_weight = 0;
+
+    for (int i = 0; i < ARRAYSZ(armours); ++i)
     {
-        // Start with normal base armour.
-        if (result == ARM_ROBE)
-        {
-            // Animal skins don't get egos, so make them less likely.
-            result = (one_chance_in(4) ? ARM_ANIMAL_SKIN : ARM_ROBE);
-
-            // Armour-restricted species get a bonus chance at
-            // troll/dragon armour.  (In total, the chance is almost
-            // 10%.)
-            if (one_chance_in(20))
-            {
-                result = random_choose_weighted(3, ARM_TROLL_LEATHER_ARMOUR,
-                                                3, ARM_STEAM_DRAGON_ARMOUR,
-                                                1, ARM_SWAMP_DRAGON_ARMOUR,
-                                                1, ARM_FIRE_DRAGON_ARMOUR,
-                                                0);
-            }
-
-            // Non-god acquirement not only has a much better chance, but
-            // can give high-end ones as well.
-            if (!divine && one_chance_in(5))
-            {
-                result = random_choose(
-                        ARM_FIRE_DRAGON_ARMOUR,
-                        ARM_ICE_DRAGON_ARMOUR,
-                        ARM_STEAM_DRAGON_ARMOUR,
-                        ARM_MOTTLED_DRAGON_ARMOUR,
-                        ARM_STORM_DRAGON_ARMOUR,
-                        ARM_SHADOW_DRAGON_ARMOUR,
-                        ARM_GOLD_DRAGON_ARMOUR,
-                        ARM_SWAMP_DRAGON_ARMOUR,
-                        ARM_PEARL_DRAGON_ARMOUR,
-                        ARM_QUICKSILVER_DRAGON_ARMOUR);
-            }
-        }
-        else
-        {
-            if (divine)
-            {
-                const armour_type armours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
-                                                ARM_RING_MAIL, ARM_SCALE_MAIL,
-                                                ARM_CHAIN_MAIL,
-                                                ARM_PLATE_ARMOUR };
-
-                result = static_cast<armour_type>(RANDOM_ELEMENT(armours));
-
-                if (x_chance_in_y(you.skills[SK_ARMOUR], 150))
-                    result = ARM_CRYSTAL_PLATE_ARMOUR;
-            }
-            else
-            {
-                const armour_type armours[] =
-                    { ARM_ANIMAL_SKIN, ARM_ROBE, ARM_LEATHER_ARMOUR,
-                      ARM_RING_MAIL, ARM_SCALE_MAIL, ARM_CHAIN_MAIL,
-                      ARM_PLATE_ARMOUR, ARM_CRYSTAL_PLATE_ARMOUR };
-
-                const int num_arms = ARRAYSZ(armours);
-
-                // Weight sub types relative to (armour skill + 3).
-                // Actually, the AC improvement is not linear, and we
-                // might also want to take into account Dodging/Stealth
-                // and Strength, but this is definitely better than the
-                // random chance above.
-
-                // This formula makes sense only for casters.
-                const int skill = min(27, you.skills[SK_ARMOUR] + 3);
-                int total = 0;
-                for (int i = 0; i < num_arms; ++i)
-                {
-                    int weight = max(1, 27 - abs(skill - i*3));
-                    weight = weight * weight * weight;
-                    total += weight;
-                    if (x_chance_in_y(weight, total))
-                        result = armours[i];
-                }
-                // ... so we override it for heavy meleers, who get mostly plates.
-                // A scale mail is wasted acquirement, even if it's any but most
-                // über randart).
-                if (random2(you.skills[SK_SPELLCASTING] * 3
-                            + you.skills[SK_DODGING])
-                    < random2(you.skills[SK_ARMOUR] * 2))
-                {
-                    result = one_chance_in(4) ? ARM_CRYSTAL_PLATE_ARMOUR :
-                                                ARM_PLATE_ARMOUR;
-                }
-            }
-        }
-
-        // Everyone can wear things made from hides.
-        if (one_chance_in(20))
-        {
-            result = random_choose_weighted(20, ARM_TROLL_LEATHER_ARMOUR,
-                                            20, ARM_STEAM_DRAGON_ARMOUR,
-                                            15, ARM_MOTTLED_DRAGON_ARMOUR,
-                                            10, ARM_SWAMP_DRAGON_ARMOUR,
-                                            10, ARM_FIRE_DRAGON_ARMOUR,
-                                            10, ARM_ICE_DRAGON_ARMOUR,
-                                             5, ARM_STORM_DRAGON_ARMOUR,
-                                             5, ARM_SHADOW_DRAGON_ARMOUR,
-                                             5, ARM_GOLD_DRAGON_ARMOUR,
-                                             5, ARM_PEARL_DRAGON_ARMOUR,
-                                             5, ARM_QUICKSILVER_DRAGON_ARMOUR,
-                                             0);
-        }
+        const int base_weight = max(1, 27 - abs(skill - i*3));
+        const int weight = base_weight * base_weight * base_weight;
+        total_weight += weight;
+        if (x_chance_in_y(weight, total_weight))
+            sub_type = armours[i];
     }
 
-    return result;
+    return sub_type;
 }
 
 static armour_type _pick_unseen_armour()
 {
+    // Consider shields uninteresting always, since unlike with other slots
+    // players might well prefer an empty slot to wearing one. We don't
+    // want to try to guess at this by looking at their weapon's handedness
+    // because this would encourage switching weapons or putting on a
+    // shield right before reading acquirement in some cases. --elliptic
+    // This affects only the "unfilled slot" special-case, not regular
+    // acquirement which can always produce (wearable) shields.
     static const equipment_type armour_slots[] =
-        {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
+        {  EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
 
     armour_type picked = NUM_ARMOURS;
-    const int num_slots = ARRAYSZ(armour_slots);
-    for (int i = 0, count = 0; i < num_slots; ++i)
+    int count = 0;
+    for (auto &slot : armour_slots)
     {
-        if (!you_can_wear(armour_slots[i]))
+        if (!you_can_wear(slot))
             continue;
 
-        // Consider shields uninteresting always, since unlike with other slots
-        // players might well prefer an empty slot to wearing one. We don't
-        // want to try to guess at this by looking at their weapon's handedness
-        // because this would encourage switching weapons or putting on a
-        // shield right before reading acquirement in some cases. --elliptic
-        // This affects only the "unfilled slot" special-case, not regular
-        // acquirement which can always produce (wearable) shields.
-        if (armour_slots[i] == EQ_SHIELD)
-            continue;
+        const armour_type sub_type = _acquirement_armour_for_slot(slot, false);
+        ASSERT(sub_type != NUM_ARMOURS);
 
-        armour_type result;
-        switch (armour_slots[i])
-        {
-        case EQ_SHIELD:
-            result = ARM_SHIELD; break;
-        case EQ_CLOAK:
-            result = ARM_CLOAK;  break;
-        case EQ_HELMET:
-            result = ARM_HELMET; break;
-        case EQ_GLOVES:
-            result = ARM_GLOVES; break;
-        case EQ_BOOTS:
-            result = ARM_BOOTS;  break;
-        default:
-            continue;
-        }
-        result = _pick_wearable_armour(result);
-        if (result == NUM_ARMOURS || you.seen_armour[result])
-            continue;
-
-        if (one_chance_in(++count))
-            picked = result;
+        if (!you.seen_armour[sub_type] && one_chance_in(++count))
+            picked = sub_type;
     }
 
     return picked;
