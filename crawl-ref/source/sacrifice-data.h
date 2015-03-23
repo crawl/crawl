@@ -141,7 +141,7 @@ static const sacrifice_def sac_data[] =
   30,
   SK_ARMOUR,
   nullptr,
-  []() { return you_can_wear(EQ_BODY_ARMOUR); },
+  []() { return you_can_wear(EQ_BODY_ARMOUR) != MB_FALSE; },
 },
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,

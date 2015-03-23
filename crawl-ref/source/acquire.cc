@@ -187,7 +187,7 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
         const int num_slots = ARRAYSZ(armour_slots);
         // Start count at 1, for body armour (already picked).
         for (int i = 0, count = 1; i < num_slots; ++i)
-            if (you_can_wear(armour_slots[i], true) && one_chance_in(++count))
+            if (you_can_wear(armour_slots[i]) && one_chance_in(++count))
                 picked = armour_slots[i];
 
         switch (picked)
@@ -342,7 +342,7 @@ static armour_type _pick_unseen_armour()
     const int num_slots = ARRAYSZ(armour_slots);
     for (int i = 0, count = 0; i < num_slots; ++i)
     {
-        if (!you_can_wear(armour_slots[i], true))
+        if (!you_can_wear(armour_slots[i]))
             continue;
 
         // Consider shields uninteresting always, since unlike with other slots

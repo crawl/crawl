@@ -687,26 +687,25 @@ void update_vision_range()
  * Ignoring form, but not ignoring equipment, can the player use (usually wear)
  * a given equipment slot?
  *
- * @param eq                The slot in question.
- * @param special_armour    Whether to check if the player can use some subset
- *                          of item types for a given slot (e.g. hats,
- *                          bardings); otherwise, those return false.
- * @return                  Whether the player can ever use the given slot.
+ * @param eq The slot in question.
+ * @return   MB_FALSE if the player can never use the slot;
+ *           MB_MAYBE if the player can only use some items for the slot;
+ *           MB_TRUE  if the player can use any (fsvo any) item for the slot.
  */
-bool you_can_wear(equipment_type eq, bool special_armour)
+maybe_bool you_can_wear(equipment_type eq)
 {
     switch (eq)
     {
     case EQ_LEFT_RING:
         if (player_mutation_level(MUT_MISSING_HAND))
-            return false;
+            return MB_FALSE;
         // intentional fallthrough
     case EQ_RIGHT_RING:
-        return you.species != SP_OCTOPODE;
+        return you.species != SP_OCTOPODE ? MB_TRUE : MB_FALSE;
 
     case EQ_RING_EIGHT:
         if (player_mutation_level(MUT_MISSING_HAND))
-            return false;
+            return MB_FALSE;
         // intentional fallthrough
     case EQ_RING_ONE:
     case EQ_RING_TWO:
@@ -715,25 +714,29 @@ bool you_can_wear(equipment_type eq, bool special_armour)
     case EQ_RING_FIVE:
     case EQ_RING_SIX:
     case EQ_RING_SEVEN:
-        return you.species == SP_OCTOPODE;
+        return you.species == SP_OCTOPODE ? MB_TRUE : MB_FALSE;
 
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.species != SP_FELID;
+        return you.species == SP_FELID ? MB_FALSE :
+               you.body_size(true) < SIZE_MEDIUM ? MB_MAYBE :
+                                                   MB_TRUE;
 
     case EQ_AMULET:
-        return true;
+        return MB_TRUE;
 
     case EQ_RING_AMULET:
-        return player_equip_unrand(UNRAND_FINGER_AMULET);
+        return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
 
     default:
         break;
     }
 
-    item_def dummy;
-    dummy.base_type = OBJ_ARMOUR;
-    dummy.special = 0; // To be sure can_wear_armour doesn't think it's Lear's.
+    item_def dummy, alternate;
+    dummy.base_type = alternate.base_type = OBJ_ARMOUR;
+    dummy.sub_type = alternate.sub_type = NUM_ARMOURS;
+    // Make sure can_wear_armour doesn't think it's Lear's.
+    dummy.special = alternate.special = 0;
 
     switch (eq)
     {
@@ -746,44 +749,48 @@ bool you_can_wear(equipment_type eq, bool special_armour)
         break;
 
     case EQ_BOOTS: // And bardings
-        if (special_armour && you.species == SP_NAGA)
-            dummy.sub_type = ARM_NAGA_BARDING;
-        else if (special_armour && you.species == SP_CENTAUR)
-            dummy.sub_type = ARM_CENTAUR_BARDING;
-        else
-            dummy.sub_type = ARM_BOOTS;
+        dummy.sub_type = ARM_BOOTS;
+        if (you.species == SP_NAGA)
+            alternate.sub_type = ARM_NAGA_BARDING;
+        if (you.species == SP_CENTAUR)
+            alternate.sub_type = ARM_CENTAUR_BARDING;
         break;
 
     case EQ_BODY_ARMOUR:
         // Assume that anything that can wear any armour at all can wear a robe
         // and that anything that can wear CPA can wear all armour.
-        if (special_armour)
-            dummy.sub_type = ARM_ROBE;
-        else
-            dummy.sub_type = ARM_CRYSTAL_PLATE_ARMOUR;
+        dummy.sub_type = ARM_CRYSTAL_PLATE_ARMOUR;
+        alternate.sub_type = ARM_ROBE;
         break;
 
     case EQ_SHIELD:
-        if (special_armour && you.body_size() < SIZE_MEDIUM)
-            dummy.sub_type = ARM_BUCKLER;
-        else if (special_armour && you.body_size() > SIZE_MEDIUM)
-            dummy.sub_type = ARM_LARGE_SHIELD;
-        else
-            dummy.sub_type = ARM_SHIELD;
+        // No races right now that can wear ARM_LARGE_SHIELD but not ARM_SHIELD
+        dummy.sub_type = ARM_LARGE_SHIELD;
+        if (you.body_size(true) < SIZE_MEDIUM)
+            alternate.sub_type = ARM_BUCKLER;
         break;
 
     case EQ_HELMET:
-        if (special_armour)
-            dummy.sub_type = ARM_HAT;
-        else
-            dummy.sub_type = ARM_HELMET;
+        dummy.sub_type = ARM_HELMET;
+        alternate.sub_type = ARM_HAT;
         break;
 
     default:
-        return false;
+        die("unhandled equipment type %d", eq);
+        break;
     }
 
-    return can_wear_armour(dummy, false, true);
+    ASSERT(dummy.base_type != NUM_ARMOURS);
+
+    if (can_wear_armour(dummy, false, true))
+        return MB_TRUE;
+    else if (alternate.sub_type != NUM_ARMOURS
+             && can_wear_armour(alternate, false, true))
+    {
+        return MB_MAYBE;
+    }
+    else
+        return MB_FALSE;
 }
 
 bool player_has_feet(bool temp)

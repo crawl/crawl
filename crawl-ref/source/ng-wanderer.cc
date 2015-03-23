@@ -164,7 +164,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
     case STAT_STR:
     {
         int options = 3;
-        if (!you_can_wear(EQ_BODY_ARMOUR))
+        if (you_can_wear(EQ_BODY_ARMOUR))
             options--;
 
         switch (random2(options))

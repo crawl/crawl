@@ -1942,13 +1942,7 @@ static void _print_overview_screen_equip(column_composer& cols,
     {
         if (you.species == SP_OCTOPODE
             && eqslot != EQ_WEAPON
-            && !you_can_wear(eqslot, true))
-        {
-            continue;
-        }
-
-        if (you.species == SP_OCTOPODE && (eqslot == EQ_RIGHT_RING
-                                       || eqslot == EQ_LEFT_RING))
+            && !you_can_wear(eqslot))
         {
             continue;
         }
@@ -2011,7 +2005,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             snprintf(buf, sizeof buf,
                      "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
         }
-        else if (!you_can_wear(eqslot, true))
+        else if (!you_can_wear(eqslot))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr.c_str());
@@ -2022,7 +2016,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      "<darkgrey>(%s currently unavailable)</darkgrey>",
                      slot_name_lwr.c_str());
         }
-        else if (!you_can_wear(eqslot))
+        else if (you_can_wear(eqslot) == MB_MAYBE)
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr.c_str());

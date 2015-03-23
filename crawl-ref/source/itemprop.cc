@@ -131,7 +131,7 @@ static const armour_def Armour_prop[] =
 #endif
 
     { ARM_HAT,                  "hat",                    0,   0,
-        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
+        EQ_HELMET,      SIZE_TINY, SIZE_LARGE, true },
 
     // Note that barding size is compared against torso so it currently
     // needs to fit medium, but that doesn't matter as much as race

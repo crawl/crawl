@@ -446,7 +446,7 @@ string no_selectables_message(int item_selector)
             return "You aren't carrying any armour you can wear in your "
                    "current form.";
         else
-            return "You aren't carrying any armour.";
+            return "You aren't carrying any wearable armour.";
     }
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
