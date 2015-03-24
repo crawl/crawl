@@ -1228,7 +1228,11 @@ int acquirement_create_item(object_class_type class_wanted,
                               ITEM_LEVEL, 0, agent);
 
         if (thing_created == NON_ITEM)
+        {
+            if (!quiet)
+                dprf("Failed to make thing!");
             continue;
+        }
 
         item_def &acq_item(mitm[thing_created]);
 
@@ -1276,6 +1280,8 @@ int acquirement_create_item(object_class_type class_wanted,
                 // as well, even if you didn't see the exact brand yet.
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
+                if (!quiet)
+                    dprf("Destroying already-seen item!");
                 continue;
             }
 
@@ -1312,6 +1318,8 @@ int acquirement_create_item(object_class_type class_wanted,
         {
             destroy_item(thing_created, true);
             thing_created = NON_ITEM;
+            if (!quiet)
+                dprf("Destroying unusable weapon or armour!");
             continue;
         }
 
@@ -1334,6 +1342,8 @@ int acquirement_create_item(object_class_type class_wanted,
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
+                if (!quiet)
+                    dprf("Destroying pain weapon (Trog hates pain!!)!");
                 continue;
             }
         }
@@ -1345,6 +1355,8 @@ int acquirement_create_item(object_class_type class_wanted,
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
+                if (!quiet)
+                    dprf("Destroying pain weapon after Necro sac!");
                 continue;
             }
         }
@@ -1366,6 +1378,8 @@ int acquirement_create_item(object_class_type class_wanted,
                 // Try again.
                 destroy_item(thing_created);
                 thing_created = NON_ITEM;
+                if (!quiet)
+                    dprf("Destroying art that would cause stat-death!");
                 continue;
             }
         }
@@ -1380,6 +1394,8 @@ int acquirement_create_item(object_class_type class_wanted,
             // Try again.
             destroy_item(thing_created);
             thing_created = NON_ITEM;
+            if (!quiet)
+                dprf("Destroying sif-gifted rarebook!");
             continue;
         }
 
@@ -1488,6 +1504,8 @@ int acquirement_create_item(object_class_type class_wanted,
         if ((is_useless_item(acq_item, false) && agent != GOD_XOM)
             || god_hates_item(acq_item))
         {
+            if (!quiet)
+                dprf("destroying useless item");
             destroy_item(thing_created);
             thing_created = NON_ITEM;
             continue;
