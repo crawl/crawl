@@ -2777,7 +2777,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_ROT:
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            rot_defender(2 + random2(3), damage_done > 5 ? 1 : 0);
+            rot_defender(3 + random2(4), damage_done > 5 ? 1 : 0);
         break;
 
     case AF_FIRE:
