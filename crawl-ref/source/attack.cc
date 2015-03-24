@@ -538,20 +538,7 @@ bool attack::distortion_affects_defender()
 
     if (!player_in_branch(BRANCH_ABYSS) && coinflip())
     {
-        if (defender->is_player() && attacker_visible
-            && using_weapon()
-            && !is_unrandom_artefact(*weapon))
-        {
-            // If the player is being sent to the Abyss by being attacked
-            // with a distortion weapon, then we have to ID it before
-            // the player goes to Abyss, while the weapon object is
-            // still in memory.
-            if (is_artefact(*weapon))
-                artefact_learn_prop(*weapon, ARTP_BRAND);
-            else
-                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-        }
-        else if (defender_visible)
+        if (defender_visible)
             obvious_effect = true;
 
         defender->banish(attacker, attacker->name(DESC_PLAIN, true));
