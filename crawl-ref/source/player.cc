@@ -741,6 +741,9 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
             return MB_FALSE;
     }
 
+    // You can always wear at least one ring (forms were already handled).
+    case EQ_RINGS:
+    case EQ_ALL_ARMOUR:
     case EQ_AMULET:
         return MB_TRUE;
 
