@@ -802,7 +802,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         break;
     }
 
-    ASSERT(dummy.base_type != NUM_ARMOURS);
+    ASSERT(dummy.sub_type != NUM_ARMOURS);
 
     if (can_wear_armour(dummy, false, !temp))
         return MB_TRUE;
