@@ -4024,7 +4024,7 @@ bool god_protects_from_harm()
         switch (elyvilon_lifesaving())
         {
         case 1:
-            if (random2(piety_scale(you.piety)) >= piety_breakpoint(0))
+            if (random2(you.piety) >= piety_breakpoint(0))
                 return true;
             break;
         case 2:
@@ -4035,7 +4035,7 @@ bool god_protects_from_harm()
     }
 
     if (god_can_protect_from_harm(you.religion)
-        && (one_chance_in(10) || x_chance_in_y(piety_scale(you.piety), 1000)))
+        && (one_chance_in(10) || x_chance_in_y(you.piety, 1000)))
     {
         return true;
     }
