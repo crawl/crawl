@@ -156,6 +156,7 @@ enum tag_minor_version
     TAG_MINOR_SPIT_POISON,         // Give Nagas MUT_SPIT_POISON
     TAG_MINOR_REAL_MUTS,           // Give some species proper mutations
     TAG_MINOR_NO_FORLORN,          // Remove Forlorn mutation
+    TAG_MINOR_MP_WANDS,            // Make MP wands a single-level mutation
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
