@@ -116,8 +116,6 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
     { MUT_FAST,                MUT_SLOW,                   0},
-    { MUT_UNBREATHING,         MUT_BREATHE_FLAMES,         0},
-    { MUT_UNBREATHING,         MUT_BREATHE_POISON,         0},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
