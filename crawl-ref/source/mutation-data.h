@@ -2091,18 +2091,12 @@ static const mutation_def mut_data[] =
     "disrupted casting (-Wiz)",
 },
 
-{ MUT_MP_WANDS,                        7,  3, MUTFLAG_BAD, false,
+{ MUT_MP_WANDS,                        7,  1, MUTFLAG_BAD, false,
   "MP-powered wands",
 
-  {"You expend magic power (3 MP) to slightly strengthen your wands.",
-    "You expend magic power (6 MP) to strengthen your wands.",
-    "You expend magic power (9 MP) to make your wands much stronger."},
-  {"You feel less able to contain your magic power.",
-    "You feel less able to contain your magic power.",
-    "You feel less able to contain your magic power."},
-  {"You can contain your magic power once more.",
-    "You feel more able to contain your magic power.",
-    "You feel more able to contain your magic power."},
+  {"You expend magic power (3 MP) to strengthen your wands.", "", ""},
+  {"You feel your magical essence link to your wands.", "", ""},
+  {"Your magical essence is no longer linked to your wands.", "", ""},
 
   "MP-powered wands",
 },
