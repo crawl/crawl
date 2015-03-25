@@ -112,6 +112,7 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
+    { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,            1},
     { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
@@ -1257,14 +1258,13 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Red Draconians can already breathe flames.
-    if (you.species == SP_RED_DRACONIAN && mutat == MUT_BREATHE_FLAMES)
+    // Draconians already get breath weapons.
+    if (player_genus(GENPC_DRACONIAN)
+        && (mutat == MUT_BREATHE_FLAMES
+            || mutat == MUT_SPIT_POISON))
+    {
         return true;
-
-    // Green Draconians can breathe mephitic, poison is not really redundant
-    // but its name might confuse players a bit ("noxious" vs "poison").
-    if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
-        return true;
+    }
 
     // Only Draconians (and gargoyles) can get wings.
     if (!player_genus(GENPC_DRACONIAN) && you.species != SP_GARGOYLE
