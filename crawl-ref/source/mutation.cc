@@ -1346,6 +1346,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species == SP_DEMIGOD && mutat == MUT_FORLORN)
         return true;
 
+    // We can't use is_useless_skill() here, since species that can still wear
+    // body armour can sacrifice armour skill with Ru.
+    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL && mutat == MUT_DEFORMED)
+        return true;
+
     equipment_type eq_type = EQ_NONE;
 
     // Mutations of the same slot conflict
@@ -2050,8 +2055,6 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostr << mdef.have[0] << player_icemail_armour_class() << ").";
         result = ostr.str();
     }
-    else if (mut == MUT_DEFORMED && is_useless_skill(SK_ARMOUR))
-        result = "Your body is misshapen.";
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
