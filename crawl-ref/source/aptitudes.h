@@ -3,8 +3,6 @@
 
 #include "enum.h"
 
-const int UNUSABLE_SKILL = -99;
-
 static inline species_skill_aptitude APT(species_type sp,
                                          skill_type sk,
                                          int aptitude)
