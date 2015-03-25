@@ -248,6 +248,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE] = 1;
         you.mutation[MUT_DEFORMED]          = 1;
         you.mutation[MUT_SLOW]              = 2;
+        you.mutation[MUT_SPIT_POISON]       = 2;
         break;
     case SP_MUMMY:
         you.mutation[MUT_TORMENT_RESISTANCE]         = 1;

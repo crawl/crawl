@@ -1050,9 +1050,8 @@ talent get_talent(ability_type ability, bool check_confused)
 
     // begin species abilities - some are mutagenic, too {dlb}
     case ABIL_SPIT_POISON:
-        failure = ((you.species == SP_NAGA) ? 20 : 40)
-                        - 10 * player_mutation_level(MUT_SPIT_POISON)
-                        - you.experience_level;
+        failure = 40 - 10 * player_mutation_level(MUT_SPIT_POISON)
+                     - you.experience_level;
         break;
 
     case ABIL_BREATHE_FIRE:
@@ -2197,10 +2196,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-    case ABIL_SPIT_POISON:      // Naga + spit poison mutation
+    case ABIL_SPIT_POISON:      // Spit poison mutation
         power = you.experience_level
-                + player_mutation_level(MUT_SPIT_POISON) * 5
-                + (you.species == SP_NAGA) * 10;
+                + player_mutation_level(MUT_SPIT_POISON) * 5;
         beam.range = 6;         // following Venom Bolt
 
         if (!spell_direction(abild, beam)
@@ -3588,12 +3586,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
     }
 
-    // Spit Poison. Nagas can upgrade to Breathe Poison.
-    if (you.species == SP_NAGA)
-    {
-        _add_talent(talents, player_mutation_level(MUT_BREATHE_POISON) ?
-                    ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
-    }
+    // Spit Poison.
+    if (player_mutation_level(MUT_SPIT_POISON) == 3)
+        _add_talent(talents, ABIL_BREATHE_POISON, check_confused);
     else if (player_mutation_level(MUT_SPIT_POISON))
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
 
