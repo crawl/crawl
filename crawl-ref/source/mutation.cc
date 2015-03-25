@@ -359,10 +359,6 @@ string describe_mutations(bool center_title)
     case SP_NAGA:
         result += "You cannot wear boots.\n";
 
-        // Breathe poison replaces spit poison.
-        if (!player_mutation_level(MUT_BREATHE_POISON))
-            result += "You can spit poison.\n";
-
         if (you.experience_level > 12)
         {
             result += _annotate_form_based(
@@ -1261,14 +1257,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Naga poison spit can be upgraded to breathe poison instead.
-    if (you.species == SP_NAGA && mutat == MUT_SPIT_POISON)
-        return true;
-
-    // Only Nagas can get this upgrade.
-    if (you.species != SP_NAGA && mutat == MUT_BREATHE_POISON)
-        return true;
-
     // Red Draconians can already breathe flames.
     if (you.species == SP_RED_DRACONIAN && mutat == MUT_BREATHE_FLAMES)
         return true;
@@ -1648,8 +1636,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             }
             break;
 
-        case MUT_BREATHE_POISON:
-            if (you.species == SP_NAGA)
+        case MUT_SPIT_POISON:
+            if (you.mutation[mutat] >= 3)
             {
                 // Breathe poison replaces spit poison (so it takes the slot).
                 for (int i = 0; i < 52; ++i)
@@ -1798,10 +1786,10 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         lose_msg = false;
         break;
 
-    case MUT_BREATHE_POISON:
-        if (you.species == SP_NAGA)
+    case MUT_SPIT_POISON:
+        if (you.mutation[mutat] < 3)
         {
-            // natural ability to spit poison retakes the slot
+            // Spit poison retakes the slot.
             for (int i = 0; i < 52; ++i)
             {
                 if (you.ability_letter_table[i] == ABIL_BREATHE_POISON)
@@ -2037,7 +2025,6 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     }
 
     string result;
-    bool innate_upgrade = (mut == MUT_BREATHE_POISON && you.species == SP_NAGA);
 
     const mutation_def& mdef = _get_mutation_def(mut);
 
@@ -2081,18 +2068,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         const char* colourname = (MUT_BAD(mdef) ? "red" : "lightgrey");
         const bool permanent   = (you.innate_mutation[mut] > 0);
 
-        if (innate_upgrade)
-        {
-            if (fully_inactive)
-                colourname = "darkgrey";
-            else if (is_sacrifice)
-                colourname = "lightred";
-            else if (partially_active)
-                colourname = "blue";
-            else
-                colourname = "cyan";
-        }
-        else if (permanent)
+        if (permanent)
         {
             const bool demonspawn = (you.species == SP_DEMONSPAWN);
             const bool extra = (you.mutation[mut] > you.innate_mutation[mut]);

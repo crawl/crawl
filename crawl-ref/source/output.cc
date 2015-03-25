@@ -2640,10 +2640,6 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_NAGA:
-        // breathe poison replaces spit poison:
-        if (!player_mutation_level(MUT_BREATHE_POISON))
-            mutations.emplace_back("spit poison");
-
         if (you.experience_level > 12)
         {
             mutations.push_back(_annotate_form_based("constrict 1",
