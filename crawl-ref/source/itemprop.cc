@@ -1911,7 +1911,6 @@ static bool _staff_uses_evocations(const item_def &item)
     case STAFF_COLD:
     case STAFF_POISON:
     case STAFF_DEATH:
-    case STAFF_SUMMONING:
     case STAFF_AIR:
     case STAFF_EARTH:
         return true;
