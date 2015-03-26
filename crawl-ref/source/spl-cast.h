@@ -64,6 +64,7 @@ enum spret_type
 #define IOOD_DIST "iood_distance"
 #define IOOD_MID "iood_mid"
 #define IOOD_FLAWED "iood_flawed"
+#define IOOD_TPOS "iood_tpos"
 
 #define fail_check() if (fail) return SPRET_FAIL
 
