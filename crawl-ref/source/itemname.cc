@@ -2836,14 +2836,13 @@ string make_name(uint32_t seed, makename_type name_type)
     };
     static const int NUM_SEEDS = ARRAYSZ(numb);
 
-    int len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
+    size_t len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
 
     if (name_type == MNAME_SCROLL)   // scrolls have longer names
         len += 6;
 
-    const int maxlen = name_type == MNAME_JIYVA ? 8 : -1;
-    if (maxlen != -1 && len > maxlen)
-        len = maxlen;
+    const size_t maxlen = name_type == MNAME_JIYVA ? 8 : SIZE_MAX;
+    len = min(len, maxlen);
 
     ASSERT_RANGE(len, 1, ITEMNAME_SIZE + 1);
 
@@ -2974,7 +2973,7 @@ string make_name(uint32_t seed, makename_type name_type)
         name += _random_cons(numb[cons_seed]);
     }
 
-    if (maxlen != -1)
+    if (maxlen != SIZE_MAX)
         name = chop_string(name, maxlen);
     trim_string_right(name);
 
@@ -2992,7 +2991,7 @@ string make_name(uint32_t seed, makename_type name_type)
     }
 
     string uppercased_name;
-    for (int i = 0; i < name.length(); i++)
+    for (size_t i = 0; i < name.length(); i++)
     {
         if (name_type == MNAME_JIYVA)
             ASSERT(name[i] != ' ');
@@ -3075,7 +3074,7 @@ static string _random_consonant_set(int seed)
         "khl",
     };
 
-    if (seed < 0 || seed > ARRAYSZ(consonant_sets))
+    if (seed < 0 || seed > (int) ARRAYSZ(consonant_sets))
         return "";
 
     return consonant_sets[seed];
