@@ -410,7 +410,7 @@ bool iood_act(monster& mon, bool no_trail)
         // (from 1 to 2) would be a guaranteed escape.  This may be
         // realistic (strafing!), but since the game has no non-cheesy
         // means of waiting a small fraction of a turn, we don't want it.
-        const int old_t_pos = mon.props["iood_tpos"].get_short();
+        const int old_t_pos = mon.props[IOOD_TPOS].get_short();
         const coord_def rpos(static_cast<int>(round(x)), static_cast<int>(round(y)));
         if (old_t_pos && old_t_pos != (256 * target.x + target.y)
             && (rpos - target).rdist() <= 1
@@ -420,7 +420,7 @@ bool iood_act(monster& mon, bool no_trail)
             vx = dx;
             vy = dy;
         }
-        mon.props["iood_tpos"].get_short() = 256 * target.x + target.y;
+        mon.props[IOOD_TPOS].get_short() = 256 * target.x + target.y;
 
         if (!_in_front(vx, vy, dx, dy, 0.3)) // ~17 degrees
         {
@@ -456,7 +456,7 @@ move_again:
         return true;
     }
 
-    if (iood && mon.props.exists("iood_flawed"))
+    if (iood && mon.props.exists(IOOD_FLAWED))
     {
         const actor *caster = actor_by_mid(mon.summoner);
         if (!caster || caster->pos().origin() ||
