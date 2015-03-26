@@ -1897,10 +1897,13 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
 }
 
 // True if item is a staff that deals extra damage based on Evocations skill.
-static bool _staff_uses_evocations(const item_def &item)
+bool staff_uses_evocations(const item_def &item)
 {
-    if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF))
+    if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
+        || is_unrandom_artefact(item, UNRAND_OLGREB))
+    {
         return true;
+    }
 
     if (!item_type_known(item) || item.base_type != OBJ_STAVES)
         return false;
@@ -1953,7 +1956,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         return !skills.empty();
 
     if (item_is_evokable(item, false, false, false, false, false)
-        || _staff_uses_evocations(item)
+        || staff_uses_evocations(item)
         || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
