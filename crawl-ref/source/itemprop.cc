@@ -39,16 +39,23 @@ static iflags_t _full_ident_mask(const item_def& item);
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
+    /// The armour_type enum of this armour type.
     armour_type         id;
+    /// The name of the armour. (E.g. "robe".)
     const char         *name;
+    /// The base AC value provided by the armour, before skill & enchant.
     int                 ac;
+    /// The base EV penalty of the armour; used for EV, stealth, spell %, &c.
     int                 ev;
 
+    /// The slot the armour is equipped into; e.g. EQ_BOOTS.
     equipment_type      slot;
+    /// The smallest size creature the armour will fit.
     size_type           fit_min;
+    /// The largest size creature the armour will fit.
     size_type           fit_max;
     /// Whether this armour is mundane or inherently 'special', for acq.
-    bool                mundane;
+    bool                mundane; // (special armour doesn't need egos etc)
     /// The resists, vulns, &c that this armour type gives when worn.
     armflags_t          flags;
 };
