@@ -53,6 +53,19 @@ enum spret_type
     SPRET_NONE,                 // spell was not handled
 };
 
+#define IOOD_X "iood_x"
+#define IOOD_Y "iood_y"
+#define IOOD_VX "iood_vx"
+#define IOOD_VY "iood_vy"
+#define IOOD_KC "iood_kc"
+#define IOOD_POW "iood_pow"
+#define IOOD_CASTER "iood_caster"
+#define IOOD_REFLECTOR "iood_reflector"
+#define IOOD_DIST "iood_distance"
+#define IOOD_MID "iood_mid"
+#define IOOD_FLAWED "iood_flawed"
+#define IOOD_TPOS "iood_tpos"
+
 #define fail_check() if (fail) return SPRET_FAIL
 
 typedef bool (*spell_selector)(spell_type spell);

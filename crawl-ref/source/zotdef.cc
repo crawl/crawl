@@ -773,7 +773,7 @@ monster* zotdef_spawn(bool boss)
         if (!mon->is_named())        // Don't rename uniques!
         {
             if (!give_monster_proper_name(mon, false))
-                mon->mname = make_name(random_int(), false);
+                mon->mname = make_name(random_int());
 
             mon->props["dbname"].get_string() = mons_class_name(mt);
         }

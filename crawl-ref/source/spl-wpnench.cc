@@ -317,25 +317,3 @@ spret_type cast_confusing_touch(int power, bool fail)
 
     return SPRET_SUCCESS;
 }
-
-spret_type cast_sure_blade(int power, bool fail)
-{
-    if (!you.weapon())
-        mpr("You aren't wielding a weapon!");
-    else if (item_attack_skill(*you.weapon()) != SK_SHORT_BLADES)
-        mpr("You cannot bond with this weapon.");
-    else
-    {
-        fail_check();
-        if (!you.duration[DUR_SURE_BLADE])
-            mpr("You become one with your weapon.");
-        else if (you.duration[DUR_SURE_BLADE] < 25 * BASELINE_DELAY)
-            mpr("Your bond becomes stronger.");
-
-        you.increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10),
-                              25, nullptr);
-        return SPRET_SUCCESS;
-    }
-
-    return SPRET_ABORT;
-}

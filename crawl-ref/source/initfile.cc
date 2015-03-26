@@ -4766,6 +4766,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
         else
             arg = &arg[1];
 
+        // Mac app bundle executables get a process serial number
+        if (strncmp(arg, "psn_", 4) == 0)
+        {
+            current++;
+            continue;
+        }
+
         int o;
         for (o = 0; o < num_cmd_ops; o++)
             if (strcasecmp(cmd_ops[o], arg) == 0)

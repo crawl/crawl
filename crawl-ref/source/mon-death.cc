@@ -1672,26 +1672,7 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     if (!maybe_good_kill && !god_hates_killing(you.religion, &mons))
         return;
 
-    // Abominations were historically split into demonic & undead abominations.
-    // When they were merged, they became considered both demons & undead for
-    // certain purposes, e.g. kill piety.
-    //
-    // Some gods (trog & kiku) like demon kills, but not undead, so for them,
-    // we consider abominations to be demons instead of undead.
-    // (Can't just fire the conduct twice, since then some gods would get
-    // double piety!)
-    //
-    // This is a Vintage Legacy Hack, AAA-grade.
     mon_holy_type holiness = mons.holiness();
-    if ((mons.type == MONS_ABOMINATION_SMALL
-         || mons.type == MONS_ABOMINATION_LARGE
-         || mons.type == MONS_CRAWLING_CORPSE
-         || mons.type == MONS_MACABRE_MASS)
-        && (you_worship(GOD_TROG)
-            || you_worship(GOD_KIKUBAAQUDGHA)))
-    {
-        holiness = MH_DEMONIC;
-    }
 
     if (holiness == MH_DEMONIC || mons_is_demonspawn(mons.type))
         did_kill_conduct(DID_KILL_DEMON, mons);

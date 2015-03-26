@@ -2326,9 +2326,6 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 {
-    // A demonically controlled mass of undead flesh theme-wise, this makes
-    // them MH_DEMONIC|MH_UNDEAD, but this is mostly the same as just
-    // MH_UNDEAD (save for some god interactions).
     MONS_ABOMINATION_SMALL, 'x', LIGHTRED, "small abomination",
     M_NO_REGEN,
     MR_NO_FLAGS,
@@ -2341,7 +2338,6 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 {
-    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_CRAWLING_CORPSE, 'x', BROWN, "crawling corpse",
     M_NO_EXP_GAIN | M_NO_REGEN,
     mrd(MR_RES_COLD, 2),
@@ -2354,7 +2350,6 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 },
 
 {
-    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_MACABRE_MASS, 'x', BROWN, "macabre mass",
     M_NO_EXP_GAIN | M_NO_REGEN,
     mrd(MR_RES_COLD, 2),
@@ -4232,7 +4227,6 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 // large abominations ('X')
 {
-    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_ABOMINATION_LARGE, 'X', LIGHTRED, "large abomination",
     M_NO_REGEN,
     MR_NO_FLAGS,
@@ -6800,8 +6794,8 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     M_UNIQUE | M_FIGHTER | M_SEE_INVIS | M_SPEAKS | M_MALE,
     MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE,
     1300, 15, MONS_PANDEMONIUM_LORD, MONS_PANDEMONIUM_LORD, MH_DEMONIC, MAG_IMMUNE,
-    { {AT_CLAW, AF_KLOWN, 40}, {AT_TENTACLE_SLAP, AF_MUTATE, 35},
-      {AT_GORE, AF_VULN, 30}, {AT_KICK, AF_BLINK, 23} },
+    { {AT_CLAW, AF_PLAIN, 40}, {AT_TENTACLE_SLAP, AF_MUTATE, 35},
+      {AT_GORE, AF_PLAIN, 30}, {AT_KICK, AF_BLINK, 23} },
     { 17, 0, 0, 350 },
     10, 25, MST_MNOLEG, CE_NOCORPSE, S_BUZZ,
     I_HIGH, HT_LAND, FL_NONE, 13, DEFAULT_ENERGY,

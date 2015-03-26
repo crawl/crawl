@@ -39,6 +39,9 @@
 #include "terrain.h"       // For storm bow
 #include "view.h"          // For arc blade's discharge effect
 
+// prop recording whether the singing sword has said hello yet
+#define SS_WELCOME_KEY "ss_welcome"
+
 /*******************
  * Helper functions.
  *******************/
@@ -337,10 +340,10 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
     if (!*show_msgs)
         return;
 
-    if (!item->props.exists("ss_welcome"))
+    if (!item->props.exists(SS_WELCOME_KEY))
     {
         mprf(MSGCH_TALK, "The sword says, \"Hi! I'm the Singing Sword!\"");
-        item->props["ss_welcome"].get_bool() = true;
+        item->props[SS_WELCOME_KEY].get_bool() = true;
     }
     else
         mprf(MSGCH_TALK, "The Singing Sword hums in delight!");

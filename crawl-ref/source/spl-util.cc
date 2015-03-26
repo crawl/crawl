@@ -1230,7 +1230,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_PORTAL_PROJECTILE:
     case SPELL_WARP_BRAND:
     case SPELL_EXCRUCIATING_WOUNDS:
-    case SPELL_SURE_BLADE:
     case SPELL_SPECTRAL_WEAPON:
         if (you.species == SP_FELID)
             return "This spell is useless without hands.";

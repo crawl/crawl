@@ -896,6 +896,7 @@ bool player_effectively_in_light_armour();
 
 int player_energy();
 
+int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
@@ -995,11 +996,8 @@ monster_type player_mons(bool transform = true);
 void update_player_symbol();
 void update_vision_range();
 
-bool you_can_wear(int eq, bool special_armour = false);
+maybe_bool you_can_wear(equipment_type eq, bool temp = false);
 bool player_has_feet(bool temp = true);
-bool player_wearing_slot(int eq);
-bool you_tran_can_wear(const item_def &item);
-bool you_tran_can_wear(int eq, bool check_mutation = false);
 
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
@@ -1072,8 +1070,6 @@ void player_close_door(coord_def doorpos);
 void dec_disease_player(int delay);
 
 void handle_player_drowning(int delay);
-
-bool player_weapon_wielded();
 
 // Determines if the given grid is dangerous for the player to enter.
 bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false,

@@ -18,6 +18,7 @@
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1117,19 +1118,6 @@ bool form_can_wear(transformation_type form)
 }
 
 /**
- * Can the player (W)ear or (P)ut on the given item when in the given form?
- *
- * @param form      The item in question.
- * @param form      The form in question.
- * @return          Whether the player can wear that item when in that form.
- */
-bool form_can_wear_item(const item_def& item, transformation_type form)
-{
-    ASSERT_RANGE(form, 0, NUM_TRANSFORMS);
-    return forms[form]->can_wear_item(item);
-}
-
-/**
  * Can the player fly, if in this form?
  *
  * DOES consider player state besides form.
@@ -1303,40 +1291,6 @@ static void _remove_equipment(const set<equipment_type>& removed,
     }
 }
 
-// FIXME: merge this with you_can_wear(), can_wear_armour(), etc.
-static bool _mutations_prevent_wearing(const item_def& item)
-{
-    const equipment_type eqslot = get_armour_slot(item);
-
-    if (is_hard_helmet(item)
-        && (player_mutation_level(MUT_HORNS)
-            || player_mutation_level(MUT_ANTENNAE)
-            || player_mutation_level(MUT_BEAK)))
-    {
-        return true;
-    }
-
-    // Barding is excepted here.
-    if (item.sub_type == ARM_BOOTS
-        && (player_mutation_level(MUT_HOOVES) >= 3
-            || player_mutation_level(MUT_TALONS) >= 3))
-    {
-        return true;
-    }
-
-    if (eqslot == EQ_GLOVES && player_mutation_level(MUT_CLAWS) >= 3)
-        return true;
-
-    if (eqslot == EQ_HELMET
-        && (player_mutation_level(MUT_HORNS) == 3
-            || player_mutation_level(MUT_ANTENNAE) == 3))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 static void _unmeld_equipment_type(equipment_type e)
 {
     item_def& item = you.inv[you.equip[e]];
@@ -1352,9 +1306,8 @@ static void _unmeld_equipment_type(equipment_type e)
     }
     else if (item.base_type != OBJ_JEWELLERY)
     {
-        // In case the player was mutated during the transformation,
-        // check whether the equipment is still wearable.
-        if (_mutations_prevent_wearing(item))
+        // This could happen if the player was mutated during the form.
+        if (!can_wear_armour(item, false, false))
             force_remove = true;
 
         // If you switched weapons during the transformation, make

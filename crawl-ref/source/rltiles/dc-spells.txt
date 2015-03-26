@@ -48,7 +48,6 @@ haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
 slow SLOW
-sure_blade SURE_BLADE
 tukimas_dance TUKIMAS_DANCE
 infusion INFUSION
 song_of_slaying SONG_OF_SLAYING

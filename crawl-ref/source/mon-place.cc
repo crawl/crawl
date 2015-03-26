@@ -3572,8 +3572,8 @@ static monster_type _band_member(band_type band, int which, bool allow_ood)
         return random_choose_weighted(2, MONS_CACODEMON,
                                       3, MONS_ABOMINATION_LARGE,
                                       3, MONS_NEQOXEC,
-                                      3, MONS_KILLER_KLOWN,
-                                      1, MONS_VERY_UGLY_THING,
+                                      1, MONS_TENTACLED_MONSTROSITY,
+                                      3, MONS_VERY_UGLY_THING,
                                       0);
 
     case BAND_LOM_LOBON:

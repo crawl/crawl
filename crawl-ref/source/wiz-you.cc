@@ -15,6 +15,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "godwrath.h"
+#include "item_use.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
@@ -228,7 +229,7 @@ void wizard_change_species_to(species_type sp)
     // FIXME: this checks only for valid slots, not for suitability of the
     // item in question.  This is enough to make assertions happy, though.
     for (int i = 0; i < NUM_EQUIP; ++i)
-        if (!you_can_wear(i, true) && you.equip[i] != -1)
+        if (you.equip[i] != -1 && !can_wear_armour(you.inv[you.equip[i]], false, false))
         {
             mprf("%s falls away.", you.inv[you.equip[i]].name(DESC_YOUR).c_str());
             // Unwear items without the usual processing.

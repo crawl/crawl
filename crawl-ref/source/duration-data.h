@@ -383,7 +383,6 @@ static const duration_def duration_data[] =
     { DUR_HASTE, 0, "", "", "haste", "", D_DISPELLABLE},
     { DUR_FLIGHT, 0, "", "", "flight", "", D_DISPELLABLE /*but special-cased*/},
     { DUR_POISONING, 0, "", "", "poisoning", "", D_NO_FLAGS},
-    { DUR_SURE_BLADE, 0, "", "", "sure blade", "", D_DISPELLABLE},
     { DUR_PIETY_POOL, 0, "", "", "piety pool", "", D_NO_FLAGS},
     { DUR_REGENERATION, 0, "", "", "regeneration", "", D_DISPELLABLE},
     { DUR_TRANSFORMATION, 0, "", "", "transformation", "", D_DISPELLABLE /*but special-cased*/},
@@ -427,5 +426,6 @@ static const duration_def duration_data[] =
     { DUR_ANTENNAE_EXTEND, 0, "", "", "old antennae extend", "", D_NO_FLAGS},
     { DUR_BUILDING_RAGE, 0, "", "", "old building rage", "", D_NO_FLAGS},
     { DUR_NEGATIVE_VULN, 0, "", "", "old negative vuln", "", D_NO_FLAGS},
+    { DUR_SURE_BLADE, 0, "", "", "old sure blade", "", D_NO_FLAGS},
 #endif
 };
