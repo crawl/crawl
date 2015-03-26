@@ -721,25 +721,9 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
 
     case EQ_WEAPON:
     case EQ_STAFF:
-    {
-        item_def dummy;
-        dummy.base_type = OBJ_WEAPONS;
-        // Something no small races can wield.
-        dummy.sub_type = WPN_BARDICHE;
-        const bool bardiche = you.could_wield(dummy, true, !temp, true);
-        // Something who can wield anything can wield.
-        dummy.sub_type = WPN_STAFF;
-        const bool staff = you.could_wield(dummy, true, !temp, true);
-
-        if (staff && bardiche)
-            return MB_TRUE;
-        else if (staff && eq == EQ_STAFF)
-            return MB_TRUE;
-        else if (staff || bardiche)
-            return MB_MAYBE;
-        else
-            return MB_FALSE;
-    }
+        return you.species == SP_FELID ? MB_FALSE :
+               you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
+                                         MB_TRUE;
 
     // You can always wear at least one ring (forms were already handled).
     case EQ_RINGS:
