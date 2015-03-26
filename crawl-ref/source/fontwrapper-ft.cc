@@ -205,7 +205,9 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
 
     int advance = face->glyph->advance.x >> 6;
 
-    int bmp_width  = bmp->width;
+    // Was int prior to freetype 2.5.4, then became unsigned.
+    typedef decltype(bmp->width) ftint;
+    ftint bmp_width  = bmp->width;
     if (outl)
         bmp_width  += 2;
 
@@ -228,9 +230,9 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
         memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
         if (outl)
         {
-            const int charw = bmp->width;
-            for (int x = 0; x < bmp->width; x++)
-                for (int y = 0; y < bmp->rows; y++)
+            const ftint charw = bmp->width;
+            for (ftint x = 0; x < bmp->width; x++)
+                for (ftint y = 0; y < bmp->rows; y++)
                 {
                     unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
                     idx *= 4;
@@ -255,8 +257,8 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
         }
         else
         {
-            for (int x = 0; x < bmp->width; x++)
-                for (int y = 0; y < bmp->rows; y++)
+            for (ftint x = 0; x < bmp->width; x++)
+                for (ftint y = 0; y < bmp->rows; y++)
                 {
                     unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
                     idx *= 4;
