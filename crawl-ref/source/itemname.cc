@@ -2785,6 +2785,16 @@ void display_runes()
     deleteAll(items);
 }
 
+// Seed ranges for _random_consonant_set: (B)eginning and one-past-the-(E)nd
+// of the (B)eginning, (E)nding, and (M)iddle cluster ranges.
+const size_t RCS_BB = 0;
+const size_t RCS_EB = 27;
+const size_t RCS_BE = 14;
+const size_t RCS_EE = 56;
+const size_t RCS_BM = 0;
+const size_t RCS_EM = 67;
+const size_t RCS_END = RCS_EM;
+
 #define ITEMNAME_SIZE 200
 /**
  * Make a random name from the given seed.
@@ -2927,8 +2937,8 @@ string make_name(uint32_t seed, makename_type name_type)
                 && (numb[(k + 13 * j) % NUM_SEEDS] % 7) <= 1 // 2/7 chance
                 && (!beg || !end))
             {
-                const int first = (beg ?  0 : (end ? 14 :  0));
-                const int last  = (beg ? 27 : (end ? 56 : 67));
+                const int first = (beg ? RCS_BB : (end ? RCS_BE : RCS_BM));
+                const int last  = (beg ? RCS_EB : (end ? RCS_EE : RCS_EM));
 
                 const int range = last - first;
 
@@ -3045,9 +3055,9 @@ static char _random_cons(int seed)
 static string _random_consonant_set(int seed)
 {
     // Pick a random combination of consonants from the set below.
-    //   begin  -> [0,27]
-    //   middle -> [0,67]
-    //   end    -> [14,56]
+    //   begin  -> [RC_BB, RC_EB) = [0,27)
+    //   middle -> [RC_BM, RC_EM) = [0,67)
+    //   end    -> [RC_BE, RC_EE) = [14,56)
 
     static const string consonant_sets[] = {
         // 0-13: start, middle
@@ -3070,6 +3080,7 @@ static string _random_consonant_set(int seed)
         "vv", "nl", "rh", "dw", "nw",
         "khl",
     };
+    COMPILE_CHECK(ARRAYSZ(consonant_sets) == RCS_END);
 
     ASSERT_RANGE(seed, 0, (int) ARRAYSZ(consonant_sets));
 
