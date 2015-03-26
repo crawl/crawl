@@ -112,12 +112,11 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
+    { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,            1},
     { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
     { MUT_FAST,                MUT_SLOW,                   0},
-    { MUT_UNBREATHING,         MUT_BREATHE_FLAMES,         0},
-    { MUT_UNBREATHING,         MUT_BREATHE_POISON,         0},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
@@ -360,10 +359,6 @@ string describe_mutations(bool center_title)
 
     case SP_NAGA:
         result += "You cannot wear boots.\n";
-
-        // Breathe poison replaces spit poison.
-        if (!player_mutation_level(MUT_BREATHE_POISON))
-            result += "You can spit poison.\n";
 
         if (you.experience_level > 12)
         {
@@ -1263,22 +1258,13 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Naga poison spit can be upgraded to breathe poison instead.
-    if (you.species == SP_NAGA && mutat == MUT_SPIT_POISON)
+    // Draconians already get breath weapons.
+    if (player_genus(GENPC_DRACONIAN)
+        && (mutat == MUT_BREATHE_FLAMES
+            || mutat == MUT_SPIT_POISON))
+    {
         return true;
-
-    // Only Nagas can get this upgrade.
-    if (you.species != SP_NAGA && mutat == MUT_BREATHE_POISON)
-        return true;
-
-    // Red Draconians can already breathe flames.
-    if (you.species == SP_RED_DRACONIAN && mutat == MUT_BREATHE_FLAMES)
-        return true;
-
-    // Green Draconians can breathe mephitic, poison is not really redundant
-    // but its name might confuse players a bit ("noxious" vs "poison").
-    if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
-        return true;
+    }
 
     // Only Draconians (and gargoyles) can get wings.
     if (!player_genus(GENPC_DRACONIAN) && you.species != SP_GARGOYLE
@@ -1344,6 +1330,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Can't worship gods.
     if (you.species == SP_DEMIGOD && mutat == MUT_FORLORN)
+        return true;
+
+    // We can't use is_useless_skill() here, since species that can still wear
+    // body armour can sacrifice armour skill with Ru.
+    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL && mutat == MUT_DEFORMED)
         return true;
 
     equipment_type eq_type = EQ_NONE;
@@ -1645,8 +1636,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             }
             break;
 
-        case MUT_BREATHE_POISON:
-            if (you.species == SP_NAGA)
+        case MUT_SPIT_POISON:
+            if (you.mutation[mutat] >= 3)
             {
                 // Breathe poison replaces spit poison (so it takes the slot).
                 for (int i = 0; i < 52; ++i)
@@ -1795,10 +1786,10 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         lose_msg = false;
         break;
 
-    case MUT_BREATHE_POISON:
-        if (you.species == SP_NAGA)
+    case MUT_SPIT_POISON:
+        if (you.mutation[mutat] < 3)
         {
-            // natural ability to spit poison retakes the slot
+            // Spit poison retakes the slot.
             for (int i = 0; i < 52; ++i)
             {
                 if (you.ability_letter_table[i] == ABIL_BREATHE_POISON)
@@ -2034,7 +2025,6 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     }
 
     string result;
-    bool innate_upgrade = (mut == MUT_BREATHE_POISON && you.species == SP_NAGA);
 
     const mutation_def& mdef = _get_mutation_def(mut);
 
@@ -2050,8 +2040,6 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostr << mdef.have[0] << player_icemail_armour_class() << ").";
         result = ostr.str();
     }
-    else if (mut == MUT_DEFORMED && is_useless_skill(SK_ARMOUR))
-        result = "Your body is misshapen.";
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
@@ -2080,18 +2068,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         const char* colourname = (MUT_BAD(mdef) ? "red" : "lightgrey");
         const bool permanent   = (you.innate_mutation[mut] > 0);
 
-        if (innate_upgrade)
-        {
-            if (fully_inactive)
-                colourname = "darkgrey";
-            else if (is_sacrifice)
-                colourname = "lightred";
-            else if (partially_active)
-                colourname = "blue";
-            else
-                colourname = "cyan";
-        }
-        else if (permanent)
+        if (permanent)
         {
             const bool demonspawn = (you.species == SP_DEMONSPAWN);
             const bool extra = (you.mutation[mut] > you.innate_mutation[mut]);

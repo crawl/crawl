@@ -439,9 +439,9 @@ static const mutation_def mut_data[] =
 { MUT_SPIT_POISON,                    8,  3, MUTFLAG_GOOD, false,
   "spit poison",
 
-  {"You can spit poison.",
-   "You can spit moderately strong poison.",
-   "You can spit strong poison."},
+  {"You can spit weak poison.",
+   "You can spit poison.",
+   "You can exhale a cloud of poison."},
 
   {"There is a nasty taste in your mouth for a moment.",
    "There is a nasty taste in your mouth for a moment.",
@@ -884,8 +884,8 @@ static const mutation_def mut_data[] =
    "a tentacle spike",
 },
 
-// Naga only
-{ MUT_BREATHE_POISON,                 4,  1, MUTFLAG_GOOD, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_BREATHE_POISON,                 0,  1, MUTFLAG_GOOD, false,
   "breathe poison",
 
   {"You can exhale a cloud of poison.", "", ""},
@@ -894,6 +894,7 @@ static const mutation_def mut_data[] =
 
   "poisonous breath",
 },
+#endif
 
 // Naga and Draconian only
 { MUT_STINGER,                        8,  3, MUTFLAG_GOOD, true,

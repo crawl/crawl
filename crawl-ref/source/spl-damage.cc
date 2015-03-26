@@ -1741,8 +1741,7 @@ static bool _player_has_poisonous_physiology()
            || you.form == TRAN_SPIDER // poison attack
            || (!form_changed_physiology()
                && (you.species == SP_GREEN_DRACONIAN       // poison breath
-                   || you.species == SP_KOBOLD             // poisonous corpse
-                   || you.species == SP_NAGA));           // spit poison
+                   || you.species == SP_KOBOLD));          // poisonous corpse
 }
 
 static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)

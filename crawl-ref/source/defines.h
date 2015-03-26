@@ -204,6 +204,8 @@ const int MAX_KNOWN_SPELLS = 21;
 
 const int INVALID_ABSDEPTH = -1000;
 
+const int UNUSABLE_SKILL = -99;
+
 //#define DEBUG_MIMIC
 #ifdef DEBUG_MIMIC
 // Missing stairs are replaced in fixup_branch_stairs, but replacing
