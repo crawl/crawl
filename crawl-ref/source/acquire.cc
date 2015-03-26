@@ -311,7 +311,7 @@ static armour_type _acquirement_mundane_armour(bool divine)
     armour_type sub_type = NUM_ARMOURS;
     int total_weight = 0;
 
-    for (int i = 0; i < ARRAYSZ(armours); ++i)
+    for (int i = 0; i < (int) ARRAYSZ(armours); ++i)
     {
         const int base_weight = max(1, 27 - abs(skill - i*3));
         const int weight = base_weight * base_weight * base_weight;
