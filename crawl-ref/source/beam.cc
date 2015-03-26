@@ -543,7 +543,7 @@ static beam_type _chaotic_reflection_flavour(bolt* beam)
 
 bool bolt::visible() const
 {
-    return glyph != 0 && !is_enchantment();
+    return !is_tracer && glyph != 0 && !is_enchantment();
 }
 
 void bolt::initialise_fire()
@@ -603,7 +603,6 @@ void bolt::initialise_fire()
         const monster* mon = monster_at(source);
 
         if (flavour != BEAM_VISUAL
-            && !is_tracer
             && !YOU_KILL(thrower)
             && !crawl_state.is_god_acting()
             && (!mon || !mon->observable()))
