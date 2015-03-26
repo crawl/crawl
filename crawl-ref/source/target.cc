@@ -1025,7 +1025,9 @@ void targetter_shadow_step::get_additional_sites(coord_def a)
     temp_sites.clear();
 
     const actor *victim = actor_at(a);
-    if (!victim || victim->invisible() || !victim->umbraed())
+    if (!victim || !victim->as_monster()
+        || mons_is_firewood(victim->as_monster()) || victim->invisible()
+        || !victim->umbraed())
     {
         no_landing_reason = BLOCKED_NO_TARGET;
         return;
