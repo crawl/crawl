@@ -1540,9 +1540,10 @@ static void _input()
 
         _do_searing_ray();
 
-        update_can_train();
         world_reacts();
     }
+
+    update_can_train();
 
     _update_replay_state();
 
