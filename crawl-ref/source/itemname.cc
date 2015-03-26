@@ -2871,7 +2871,7 @@ string make_name(uint32_t seed, makename_type name_type)
         if (name.empty() && name_type == MNAME_JIYVA)
         {
             // Start the name with a predefined letter.
-            name += 'J';
+            name += 'j';
         }
         else if (name.empty() || prev_char == ' ')
         {
