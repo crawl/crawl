@@ -491,7 +491,8 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     if (!weapon
         || (!needs_handle_warning(*weapon, OPER_ATTACK, penance)
              && is_melee_weapon(*weapon))
-        || you.received_weapon_warning)
+        || you.received_weapon_warning
+        || you.confused())
     {
         return true;
     }
