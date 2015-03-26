@@ -1962,7 +1962,10 @@ bool formatted_scroller::page_down()
 
 bool formatted_scroller::page_up()
 {
-    int old_first = first_entry;
+    if (items.empty())
+        return false;
+
+    const int old_first = first_entry;
 
     // If, when scrolling backward, we encounter a MEL_TITLE
     // somewhere in the newly displayed page, stop scrolling
