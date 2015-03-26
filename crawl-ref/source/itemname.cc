@@ -2937,12 +2937,9 @@ string make_name(uint32_t seed, makename_type name_type)
 
                 const string consonant_set = _random_consonant_set(cons_seed);
 
-                if (!consonant_set.empty())
-                {
-                    ASSERT(consonant_set.size() > 1);
-                    len += consonant_set.size() - 2; // triples increase len
-                    name += consonant_set.c_str();
-                }
+                ASSERT(consonant_set.size() > 1);
+                len += consonant_set.size() - 2; // triples increase len
+                name += consonant_set.c_str();
             }
             else // Place a single letter instead.
             {
@@ -3074,8 +3071,7 @@ static string _random_consonant_set(int seed)
         "khl",
     };
 
-    if (seed < 0 || seed >= (int) ARRAYSZ(consonant_sets))
-        return "";
+    ASSERT_RANGE(seed, 0, (int) ARRAYSZ(consonant_sets));
 
     return consonant_sets[seed];
 }
