@@ -591,36 +591,22 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
         {
             boost[item_attack_skill(*wpn)] = bondage;
         }
-
-        // Those staves don't benefit from evocation.
-        // Boost spellcasting instead.
-        if (wpn->base_type == OBJ_STAVES
-            && (wpn->sub_type == STAFF_POWER
-                || wpn->sub_type == STAFF_CONJURATION
-                || wpn->sub_type == STAFF_WIZARDRY))
-        {
-            boost[SK_SPELLCASTING] = 2;
-        }
-        // Rods, and staves that are evokable but with no melee effect.
-        else if (wpn->base_type == OBJ_RODS
-                 || wpn->is_type(OBJ_STAVES, STAFF_ENERGY)
-                 || wpn->base_type == OBJ_WEAPONS
-                    && (is_unrandom_artefact(*wpn, UNRAND_WUCAD_MU)
-                        || is_unrandom_artefact(*wpn, UNRAND_DISPATER)
-                        || is_unrandom_artefact(*wpn, UNRAND_ASMODEUS)))
-        {
-            boost[SK_EVOCATIONS] = 2;
-        }
-        // Staves that use evocations to power a melee effect.
-        else if (wpn->base_type == OBJ_STAVES
-                 || wpn->base_type == OBJ_WEAPONS
-                    && (is_unrandom_artefact(*wpn, UNRAND_OLGREB)
-                        || is_unrandom_artefact(*wpn, UNRAND_ELEMENTAL_STAFF)))
+        // Staves that have a melee effect, powered by evocations.
+        if (staff_uses_evocations(*wpn))
         {
             boost[SK_EVOCATIONS] = 1;
             boost[SK_STAVES] = 1;
 
         }
+        // Rods and staves with an evokable ability but no melee effect.
+        else if (is_weapon(*wpn)
+                 && item_is_evokable(*wpn, false, false, false, false, false))
+        {
+            boost[SK_EVOCATIONS] = 2;
+        }
+        // Other magical staves.
+        else if (wpn->base_type == OBJ_STAVES)
+            boost[SK_SPELLCASTING] = 2;
         break;
 
     case (ET_SHIELD):
