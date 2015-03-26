@@ -149,7 +149,7 @@ end
 function place_tiny_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=10, pow_max=6,
-                                   delay = 800, size = 80, spread_rate = 10,
+                                   delay = 800, size = 40, spread_rate = 10,
                                    listener = large_warning, excl_rad = -1 })
 end
 -- #
