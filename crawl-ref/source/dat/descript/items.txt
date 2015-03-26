@@ -808,7 +808,7 @@ resistance to negative energies.
 pearl dragon hide
 
 The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
-form it does not provide much protection, beyond resistance to negative energy.
+form it does not provide much protection beyond resistance to negative energy.
 By magical means, however, it may be used to make excellent armour.
 %%%%
 phantom mirror
@@ -979,8 +979,8 @@ beyond its current form.
 quicksilver dragon hide
 
 The sinuous hide of a quicksilver dragon, covered in mercurial scales. In its
-raw form it does not provide much protection, but with magical means, it may
-be used to make excellent armour.
+raw form it does not provide much protection beyond resistance to hostile
+enchantments, but with magical means, it may be used to make excellent armour.
 %%%%
 quick blade
 
