@@ -116,6 +116,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
                 colour = LIGHTCYAN;
             else if (cell.flags & MAP_UMBRAED)
                 colour = fdef.colour(); // Cancels out!
+            else if (cell.flags & MAP_STASISED)
+                colour = BROWN;
             else
                 colour = YELLOW;
         }

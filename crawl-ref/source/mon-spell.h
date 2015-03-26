@@ -779,7 +779,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_PYRIFORMIS,
+    {  MST_MYRMECIA,
       {
        { SPELL_SWIFTNESS, 20, MON_SPELL_WIZARD },
       }

@@ -1154,6 +1154,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if (next_pc.is_liquefied != current_pc.is_liquefied)
             json_write_bool("liquefied", next_pc.is_liquefied);
+            
+        if (next_pc.is_stasised != current_pc.is_stasised)
+            json_write_bool("static", next_pc.is_stasised);
 
         if (next_pc.orb_glow != current_pc.orb_glow)
             json_write_int("orb_glow", next_pc.orb_glow);

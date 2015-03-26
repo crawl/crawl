@@ -3568,6 +3568,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.emplace_back("is covered in magical glow");
     if (disjunction_haloed(where))
         areas.emplace_back("is bathed in translocation energy");
+    if (stasised(where))
+        areas.emplace_back("is static");
     if (!areas.empty())
     {
         mprf("This square %s.",

@@ -1390,6 +1390,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_GOLDEN)
         cell.gold_aura = 1 + random2(3);
+        
+    if (mc.flags & MAP_STASISED)
+        cell.is_stasised = true;
 
     if (Options.show_travel_trail)
     {

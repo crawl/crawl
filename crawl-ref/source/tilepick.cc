@@ -2023,8 +2023,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // -------------------------------------
 
     // formicid ('a')
-    case MONS_PYRIFORMIS:
-        return TILEP_MONS_PYRIFORMIS;
+    case MONS_MYRMECIA:
+        return TILEP_MONS_MYRMECIA;
 
     // centaur ('c')
     case MONS_NESSOS:
@@ -4721,6 +4721,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_STONE_ARROW:              return TILEG_STONE_ARROW;
     case SPELL_DIG:                      return TILEG_DIG;
     case SPELL_BOLT_OF_MAGMA:            return TILEG_BOLT_OF_MAGMA;
+    case SPELL_STASIS:                   return TILEG_STASIS;
     case SPELL_LRD:                      return TILEG_LEES_RAPID_DECONSTRUCTION;
     case SPELL_IRON_SHOT:                return TILEG_IRON_SHOT;
     case SPELL_LEDAS_LIQUEFACTION:       return TILEG_LEDAS_LIQUEFACTION;

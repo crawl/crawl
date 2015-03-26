@@ -41,6 +41,7 @@ struct packed_cell
     uint8_t heat_aura;
 #endif
     uint8_t gold_aura;
+    bool is_stasised;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -54,7 +55,7 @@ struct packed_cell
 #if TAG_MAJOR_VERSION == 34
                     heat_aura(false),
 #endif
-                    gold_aura(0) {}
+                    gold_aura(0), is_stasised(false) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
@@ -76,7 +77,8 @@ struct packed_cell
 #if TAG_MAJOR_VERSION == 34
                                         heat_aura(c->heat_aura),
 #endif
-                                        gold_aura(c->gold_aura) {}
+                                        gold_aura(c->gold_aura),
+                                        is_stasised(c->is_stasised) {}
 
     void clear();
 };

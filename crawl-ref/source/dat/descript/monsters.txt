@@ -400,9 +400,11 @@ An unusually thin troll.
 
 You feel a lump in the pit of your stomach.
 %%%%
-Pyriformis
+Myrmecia
 
-A formicid warrior. He has been sent to get the Orb for the formicid king.
+A formicid warrior. Myrmecia has been sent by the formicid queen to get the
+Orb. Myrmecia has studied the stasis of formicids, and learned how to extend
+that stasis to her surroundings for a short time.
 %%%%
 Robin
 

@@ -1843,6 +1843,7 @@ enum duration_type
     DUR_NEGATIVE_VULN,
 #endif
     DUR_CLEAVE,
+    DUR_STASIS,
     NUM_DURATIONS
 };
 
@@ -1990,6 +1991,7 @@ enum enchant_type
     ENCH_RESISTANCE,
     ENCH_HEXED,
     ENCH_BONE_ARMOUR,
+    ENCH_STASIS,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3167,7 +3169,7 @@ enum monster_type                      // menv[].type
     MONS_NATASHA,
     MONS_VASHNIA,
     MONS_ROBIN,
-    MONS_PYRIFORMIS,
+    MONS_MYRMECIA,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -3354,7 +3356,7 @@ enum monster_type                      // menv[].type
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
     
-    MONS_PYRIFORMIS,
+    MONS_MYRMECIA,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4418,6 +4420,7 @@ enum spell_type
     SPELL_CIGOTUVIS_EMBRACE,
     SPELL_SINGULARITY,
     SPELL_GRAVITAS,
+    SPELL_STASIS,
     NUM_SPELLS
 };
 

@@ -272,6 +272,7 @@ polymorph POLYMORPH
 porkalator PORKALATOR
 %sdir misc
 error PRIMAL_WAVE
+error STASIS
 %sdir gui/spells/monster
 quicksilver_bolt QUICKSILVER_BOLT
 %sdir misc

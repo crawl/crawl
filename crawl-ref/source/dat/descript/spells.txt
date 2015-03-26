@@ -1286,6 +1286,11 @@ This spell releases electric charges against those next to the caster. These
 may arc to adjacent monsters (or even the caster) before they eventually ground
 out.
 %%%%
+Stasis spell
+
+This spell causes the area around the caster to become static. This prevents all
+teleportation, hasting, slowing, and paralasys.
+%%%%
 Statue Form spell
 
 This spell temporarily transforms the caster into a slow-moving (but extremely

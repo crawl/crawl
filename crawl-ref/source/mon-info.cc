@@ -214,6 +214,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_HEXED;
     case ENCH_BONE_ARMOUR:
         return MB_BONE_ARMOUR;
+    case ENCH_STASIS:
+        return MB_STASIS;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1591,6 +1593,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("control wrested from you");
     if (is(MB_BONE_ARMOUR))
         v.emplace_back("corpse armoured");
+    if (is(MB_STASIS))
+        v.emplace_back("static");
     return v;
 }
 

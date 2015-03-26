@@ -42,6 +42,7 @@ void packed_cell::clear()
     heat_aura        = 0;
 #endif
     gold_aura        = 0;
+    is_stasised      = false;
 }
 
 bool packed_cell::operator ==(const packed_cell &other) const
@@ -68,6 +69,7 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (heat_aura != other.heat_aura) return false;
 #endif
     if (gold_aura != other.gold_aura) return false;
+    if (is_stasised != other.is_stasised) return false;
 
     if (num_dngn_overlay != other.num_dngn_overlay) return false;
     for (int i = 0; i < num_dngn_overlay; ++i)

@@ -43,6 +43,7 @@ enum areaprop_flag
     APROP_HOT           = (1 << 11),
 #endif
     APROP_GOLD          = (1 << 12),
+    APROP_STASIS        = (1 << 13),
 };
 
 struct area_centre
@@ -85,6 +86,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
          || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1
+         || act->stasis_radius2() > -1
 #if TAG_MAJOR_VERSION == 34
          || act->heat_radius2() > -1
 #endif
@@ -139,6 +141,15 @@ static void _actor_areas(actor *a)
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, APROP_UMBRA);
+        no_areas = false;
+    }
+    
+    if ((r = a->stasis_radius2()) >= 0)
+    {
+        _agrid_centres.emplace_back(AREA_STASIS, a->pos(), r);
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE); ri; ++ri)
+            _set_agrid_flag(*ri, APROP_STASIS);
         no_areas = false;
     }
 
@@ -273,6 +284,8 @@ static area_centre_type _get_first_area(const coord_def& f)
     // the second.
     if (a & APROP_LIQUID)
         return AREA_LIQUID;
+    if (a & APROP_STASIS)
+        return AREA_STASIS;
 
     return AREA_NONE;
 }
@@ -821,4 +834,41 @@ bool golden(const coord_def& p)
         _update_agrid();
 
     return _check_agrid_flag(p, APROP_GOLD);
+}
+
+/////////////
+// Stasis radius (the same size as silence)
+static int _stasis_range(int dur)
+{
+    if (dur <= 0)
+        return -1;
+    dur /= BASELINE_DELAY;
+    return max(0, min(dur - 6, 37));
+}
+
+int player::stasis_radius2() const
+{
+    return _stasis_range(duration[DUR_STASIS]);
+}
+
+int monster::stasis_radius2() const
+{
+
+    if (!has_ench(ENCH_STASIS))
+        return -1;
+
+    const int dur = get_ench(ENCH_STASIS).duration;
+    // The below is arbitrarily chosen to make monster decay look reasonable.
+    const int moddur = BASELINE_DELAY
+                       * max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
+    return _stasis_range(moddur);
+}
+
+bool stasised(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+    return _check_agrid_flag(p, APROP_STASIS);
 }

@@ -146,6 +146,9 @@ static void _update_feat_at(const coord_def &gp)
 
     if (golden(gp))
         env.map_knowledge(gp).flags |= MAP_GOLDEN;
+        
+    if (stasised(gp))
+        env.map_knowledge(gp).flags |= MAP_STASISED;
 
     if (is_sanctuary(gp))
     {

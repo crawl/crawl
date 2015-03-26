@@ -324,6 +324,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_LIQUEFYING:
     case ENCH_SILENCE:
+    case ENCH_STASIS:
         invalidate_agrid(true);
         break;
 
@@ -1081,6 +1082,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet)
             simple_monster_message(this, " is no longer unusually resistant.");
         break;
+        
+    case ENCH_STASIS:
+        invalidate_agrid();
+        if (!quiet)
+        {
+            if (alive())
+                simple_monster_message(this, " the surroundings become less static.");
+            else
+                mprf("As %s dies, the surroundings become less static.", name(DESC_THE).c_str());
+        }
+        break;
 
     default:
         break;
@@ -1576,6 +1588,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SILENCE:
     case ENCH_LIQUEFYING:
+    case ENCH_STASIS:
         decay_enchantment(en);
         invalidate_agrid();
         break;
@@ -2308,7 +2321,7 @@ static const char *enchant_names[] =
     "negative_vuln",
 #endif
     "condensation_shield", "resistant",
-    "hexed", "corpse_armour", "buggy",
+    "hexed", "corpse_armour", "static", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

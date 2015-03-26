@@ -1569,6 +1569,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AIRSTRIKE:
     case SPELL_WATERSTRIKE:
     case SPELL_FLAY:
+    case SPELL_STASIS:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6762,6 +6763,17 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         return;
     }
+    case SPELL_STASIS:
+        if (!mons->has_ench(ENCH_STASIS) && you.can_see(mons))
+        {
+            mprf("%s makes the surrounding area static %s!", mons->name(DESC_THE).c_str(),
+                 mons->pronoun(PRONOUN_REFLEXIVE).c_str());
+            flash_view_delay(UA_MONSTER, BROWN, 80);
+        }
+
+        mons->add_ench(ENCH_STASIS);
+        invalidate_agrid(true);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,

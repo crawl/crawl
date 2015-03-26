@@ -224,9 +224,9 @@ DEPTH:  D:3-4
 WEIGHT: 1
 : place_unique(_G, "Purgy")
 
-NAME:   uniq_pyriformis
+NAME:   uniq_myrmecia
 DEPTH:  D:15, Elf, Snake, Spider
-: place_unique(_G, "Pyriformis")
+: place_unique(_G, "Myrmecia")
 
 NAME:   uniq_roxanne
 DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider

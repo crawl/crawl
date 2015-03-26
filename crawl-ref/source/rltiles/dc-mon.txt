@@ -43,7 +43,7 @@ queen_ant MONS_QUEEN_ANT
 %rim 0
 formicid MONS_FORMICID
 %sdir mon/unique
-pyriformis MONS_PYRIFORMIS
+myrmecia MONS_MYRMECIA
 %sdir mon/animals
 %rim 1
 

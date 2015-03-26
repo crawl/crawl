@@ -609,7 +609,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         level = ISPEC_GOOD_ITEM;
         break;
 
-    case MONS_PYRIFORMIS:
+    case MONS_MYRMECIA:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_TRIPLE_SWORD, WPN_EXECUTIONERS_AXE,
                                        WPN_BARDICHE);
@@ -1882,7 +1882,7 @@ static void _give_shield(monster* mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                               level * 2 + 1, 1);
         break;
-    case MONS_PYRIFORMIS:
+    case MONS_MYRMECIA:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 4 + 1, 1);
         break;
@@ -2075,7 +2075,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
         break;
     }
 
-    case MONS_PYRIFORMIS:
+    case MONS_MYRMECIA:
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(8, ARM_CHAIN_MAIL,
                                                20, ARM_PLATE_ARMOUR,
