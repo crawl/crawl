@@ -1396,7 +1396,7 @@ bool jewellery_is_amulet(int sub_type)
  *                  Positive if the creature is too large.
  *                  0 if the creature is just right.
  */
-int _fit_armour_size(int sub_type, size_type size)
+static int _fit_armour_size(int sub_type, size_type size)
 {
     const size_type min = Armour_prop[ Armour_index[sub_type] ].fit_min;
     const size_type max = Armour_prop[ Armour_index[sub_type] ].fit_max;
