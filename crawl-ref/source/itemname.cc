@@ -3074,7 +3074,7 @@ static string _random_consonant_set(int seed)
         "khl",
     };
 
-    if (seed < 0 || seed > (int) ARRAYSZ(consonant_sets))
+    if (seed < 0 || seed >= (int) ARRAYSZ(consonant_sets))
         return "";
 
     return consonant_sets[seed];
