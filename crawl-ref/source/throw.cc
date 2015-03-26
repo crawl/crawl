@@ -32,6 +32,7 @@
 #include "religion.h"
 #include "rot.h"
 #include "shout.h"
+#include "showsymb.h"
 #include "skills.h"
 #include "spl-summoning.h"
 #include "state.h"
@@ -537,7 +538,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.item         = &item;
     beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
     beam.source       = agent->pos();
-    beam.colour       = item.get_colour();
+    beam.colour       = get_item_glyph(&item).col;
     beam.flavour      = BEAM_MISSILE;
     beam.pierce       = false;
     beam.aux_source.clear();
