@@ -2798,7 +2798,7 @@ void display_runes()
  * @param name_type The type of name to be generated.
  *                  If MNAME_SCROLL, increase length by 6 and force to allcaps.
  *                  If MNAME_JIYVA, start with J, do not generate spaces,
- *                  recuse instead of ploggifying, and cap length at 8.
+ *                  recurse instead of ploggifying, and cap length at 8.
  *                  Otherwise, no special behaviour.
  * @return          A randomly generated name.
  *                  E.g. "Joiduir", "Jays Fya", ZEFOKY WECZYXE,
