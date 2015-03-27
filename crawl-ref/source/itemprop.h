@@ -79,6 +79,7 @@ int armour_max_enchant(const item_def &item) PURE;
 bool armour_type_is_hide(int type, bool inc_made = false) PURE;
 bool armour_is_hide(const item_def &item, bool inc_made = false) PURE;
 bool armour_is_special(const item_def &item) PURE;
+int armour_acq_weight(const armour_type armour) PURE;
 
 equipment_type get_armour_slot(const item_def &item) PURE;
 equipment_type get_armour_slot(armour_type arm) IMMUTABLE;
