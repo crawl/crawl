@@ -3055,9 +3055,9 @@ static char _random_cons(int seed)
 static string _random_consonant_set(int seed)
 {
     // Pick a random combination of consonants from the set below.
-    //   begin  -> [RC_BB, RC_EB) = [0,27)
-    //   middle -> [RC_BM, RC_EM) = [0,67)
-    //   end    -> [RC_BE, RC_EE) = [14,56)
+    //   begin  -> [RCS_BB, RCS_EB) = [ 0, 27)
+    //   middle -> [RCS_BM, RCS_EM) = [ 0, 67)
+    //   end    -> [RCS_BE, RCS_EE) = [14, 56)
 
     static const string consonant_sets[] = {
         // 0-13: start, middle
