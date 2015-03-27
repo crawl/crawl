@@ -212,6 +212,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp) PURE;
 bool get_jewellery_see_invisible(const item_def &ring, bool check_artp) PURE;
 
 int property(const item_def &item, int prop_type) PURE;
+int armour_prop(int armour, int prop_type) PURE;
 bool gives_ability(const item_def &item) PURE;
 bool gives_resistance(const item_def &item) PURE;
 bool is_item_jelly_edible(const item_def &item);
