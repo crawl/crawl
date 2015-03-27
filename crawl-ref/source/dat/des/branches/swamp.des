@@ -273,7 +273,7 @@ ENDMAP
 # Swamp's layout is chaotic and samey; fill it with decorative vaults.
 NAME:   swamp_ruins_default
 TAGS:   luniq_extradecor chance_extradecor allow_dup extra no_dump
-PLACE:  Swamp:1-4
+PLACE:  Swamp, !Swamp:$
 {{
   local n = 1
   hook("post_place", function()
@@ -283,7 +283,7 @@ PLACE:  Swamp:1-4
 
 NAME:   serial_swamp_ruin
 TAGS:   luniq_serial luniq_extradecor chance_extradecor extra
-PLACE:  Swamp:1-4
+PLACE:  Swamp, !Swamp:$
 WEIGHT: 2
 {{
   local n = 2 + crawl.random2(2)
@@ -294,7 +294,7 @@ WEIGHT: 2
 
 NAME:   swamp_other_decor
 TAGS:   luniq_extradecor chance_extradecor allow_dup extra no_dump
-PLACE:  Swamp:1-4
+PLACE:  Swamp, !Swamp:$
 WEIGHT: 8
 {{
   local n = 1
@@ -364,7 +364,7 @@ ENDMAP
 
 NAME: nicolae_swamp_stair_fork
 TAGS: extra decor
-DEPTH: Swamp:2-4
+DEPTH: Swamp:2-, !Swamp:$
 SHUFFLE: {}[]()
 SUBST: W = w., T = t.
 MAP
@@ -894,7 +894,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_phenomena
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = insubstantial wisp
 KMONS:   2 = ball lightning
 KMONS:   3 = lightning spire
@@ -916,7 +916,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_wriggling
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   0 = swamp worm
 MONS:    giant leech, worm
 KFEAT:   0 = shallow_water
@@ -936,7 +936,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_ravenous
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 MONS:    bog body
 MONS:    necrophage
 MONS:    ghoul
@@ -962,7 +962,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_muck
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = slime creature / jelly
 KMONS:   2 = slime creature
 KMONS:   3 = brown very ugly thing
@@ -986,7 +986,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_dais
 TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling
-DEPTH:   Swamp, Zot:1-4
+DEPTH:   Swamp, Zot, !Zot:$
 KITEM:   *| = % no_pickup w:2 / * no_pickup / | no_pickup
 KFEAT:   aA = stone_arch
 KFEAT:   B = shallow_water
@@ -1042,7 +1042,7 @@ xxxB...twt...Wxxx
 ENDMAP
 
 NAME:    st_shrine_of_shade
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 MONS:    bog body w:20 / necrophage w:5 / ghoul w:5 / nothing w:25, shadow
 KMONS:   P = w:2 col:darkgrey plant name:withered name_adjective             \
            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
@@ -1065,7 +1065,7 @@ opccoo.ppccpo
 ENDMAP
 
 NAME:    st_swamp_mini
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KFEAT:   12 = shallow_water
@@ -1081,7 +1081,7 @@ MAP
 ENDMAP
 
 NAME:    st_swamp_ruins_1
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
@@ -1105,7 +1105,7 @@ C.cc.....cc.C
 ENDMAP
 
 NAME:    st_swamp_ruins_2
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
@@ -1130,7 +1130,7 @@ MAP
 ENDMAP
 
 NAME:    st_swamp_ruins_3
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
@@ -1151,7 +1151,7 @@ MAP
 ENDMAP
 
 NAME:    st_swamp_ruins_4
-DEPTH:   Swamp:1-4
+DEPTH:   Swamp, !Swamp:$
 KMONS:   1 = hydra
 KMONS:   2 = swamp dragon
 KMONS:   3 = swamp drake
@@ -1493,7 +1493,7 @@ ENDMAP
 
 NAME:    cheibrodos_swamp_mausoleum
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-DEPTH:   Swamp, !Swamp:$
+DEPTH:   Swamp:2-, !Swamp:$
 ORIENT:  south
 WEIGHT:  5
 MONS:    spectral hydra, spectral swamp dragon, death drake, necromancer
@@ -1728,7 +1728,6 @@ ENDMAP
 
 # http://i.imgur.com/H7nvQFo.jpg
 NAME: nicolae_swamp_little_tower
-DEPTH: Swamp
 TAGS: decor no_pool_fixup
 NSUBST: X = - / x
 SUBST: T = t-, - = ....P, z = WWw, _ = __w
@@ -1755,7 +1754,6 @@ MAP
 ENDMAP
 
 NAME: nicolae_swamp_dense_foliage
-DEPTH: Swamp
 TAGS: decor transparent
 SUBST: _ = ._, - = t_, t = tttttt., . = ......W
 CLEAR: _
@@ -1782,7 +1780,6 @@ _ttt.t.t.t.ttt.t.-
 ENDMAP
 
 NAME: nicolae_swamp_very_dense_foliage
-DEPTH: Swamp
 TAGS: decor transparent
 SUBST: _ = ._, - = t_, t = tttttt., . = ......W
 CLEAR: _
