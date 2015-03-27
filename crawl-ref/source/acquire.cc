@@ -242,6 +242,9 @@ static armour_type _acquirement_body_armour(bool divine)
         if (get_armour_slot(armour) != EQ_BODY_ARMOUR)
             continue;
 
+        if (!check_armour_size(armour, you.body_size()))
+            continue;
+
         const int weight = _body_acquirement_weight(armour, divine, warrior);
 
         if (weight)
