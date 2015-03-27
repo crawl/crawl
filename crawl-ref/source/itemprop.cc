@@ -58,6 +58,8 @@ struct armour_def
     bool                mundane; // (special armour doesn't need egos etc)
     /// The resists, vulns, &c that this armour type gives when worn.
     armflags_t          flags;
+    /// Used in body armour 'acquirement' code; higher = generated more.
+    int                 acquire_weight;
 };
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -67,37 +69,37 @@ static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, ARMF_NO_FLAGS, 333 },
     { ARM_ROBE,                 "robe",                   2,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true, ARMF_NO_FLAGS, 1000 },
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
 
     { ARM_RING_MAIL,            "ring mail",              5,  -70,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -150,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, ARMF_NO_FLAGS, 500 },
 
-#define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res) \
-    { henum, hname, (aac)/2, aevp,                              \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res },    \
-    { aenum, aname, aac, aevp,                                  \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res }
+#define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res, weight) \
+    { henum, hname, (aac)/2, aevp,                                      \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },         \
+    { aenum, aname, aac, aevp,                                          \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, weight }
 
 #define DRAGON_ARMOUR(id, name, ac, evp, res) \
     HIDE_ARMOUR(ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour", ac, evp, \
-                ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res)
+                ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res, 25)
 
     HIDE_ARMOUR(
       ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -40,
       ARM_TROLL_HIDE,           "troll hide",
-        ARMF_REGENERATION
+        ARMF_REGENERATION, 50
     ),
 
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,
@@ -1365,6 +1367,19 @@ bool armour_is_special(const item_def &item)
     ASSERT(item.base_type == OBJ_ARMOUR);
 
     return !Armour_prop[ Armour_index[item.sub_type] ].mundane;
+}
+
+/**
+ * What weight does this armour type have for acquirement? (Higher = appears
+ * more often.)
+ *
+ * @param arm   The armour item in question.
+ * @return      The base weight the armour should have in acquirement, before
+ *              skills & other effects are factored in.
+ */
+int armour_acq_weight(const armour_type armour)
+{
+    return Armour_prop[ Armour_index[armour] ].acquire_weight;
 }
 
 equipment_type get_armour_slot(const item_def &item)
