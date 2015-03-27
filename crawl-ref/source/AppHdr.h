@@ -24,6 +24,11 @@
 namespace std {}
 using namespace std;
 
+#ifndef SIZE_MAX
+# include <limits>
+# define SIZE_MAX (std::numeric_limits<std::size_t>::max())
+#endif
+
 // Define COMPILE_CHECK before including any of our headers, so even things
 // like externs.h can use it.  platform.h a few lines up is standalone, so
 // doesn't count.
