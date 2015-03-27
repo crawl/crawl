@@ -1808,6 +1808,60 @@ _.tt.tttt.t.tt.ttttt_
             -_-
 ENDMAP
 
+NAME: nicolae_swamp_phyte_club
+DEPTH: Swamp:2-, !Swamp:$
+ORIENT: float
+TAGS: transparent no_monster_gen no_item_gen
+NSUBST: M = 1:M / 1:H / 2:hmm / 2:A / 1:f / *:., \
+        O = 1:O / 1:o / 1:Hh / 1:h^ / 1:b
+SUBST: T = t., A = A.., Z = ttW, _ = t_, v = t--
+KMONS: S = patrolling giant spore w:6 / nothing
+KMONS: Mm = shambling mangrove
+KMONS: A = wandering mushroom
+KMONS: F = fungus
+KMONS: Oo = oklob plant / oklob sapling w:2
+KMONS: Hh = thorn hunter
+KMONS: . = plant w:5 / fungus w:5 / nothing w:100
+KMONS: - = plant / fungus / nothing w:80
+KITEM: h^m = % / * w:5
+KITEM: o = * / | w:5
+KITEM: f = fruit
+KITEM: b = Fen Folio ident:type
+KFEAT: ^, = .
+CLEAR: _
+MAP
+              @
+              ,
+     _______tT,Tt_______
+    __tttttttT,Tttttttt__
+    _ttO--tttT,Tttt--Ott_
+    _t----vAttFttAv----t_
+    _t--v.....t.....v--t_
+    _t--.M..ZZZZZ..M.--t_
+    _tv...ZZ..S..ZZ...vt_
+   tttA..Z.........Z..Attt
+@ TTTtt.Z.S..WWW..S.Z.ttTTT @
+ ,,,,,t.Z..WW...WW..Z.t,,,,,
+  TTTtFZ...W..M..W...ZFtTTT
+  _ttt.Z..W.MtttM.W..Z.ttt_
+ __tA..ZS.W..ttt..W.SZ..At__
+ _ttv..Z..W..ttt..W..Z..vtt_
+__t--..Z...W.M.M.W...Z..--t__
+_tt--.M.Z..WW...WW..Z.M.--tt_
+_tO-v...Z.S..WWW..S.Z...v-Ot_
+_tt---...Z.........Z...---tt_
+__ttt-vA..ZZ..S..ZZ..Av-ttt__
+ ___tttttF..ZZZZZ..Fttttt___
+   __ttT,t....M....t,Ttt__
+     tT,Ttt.......ttT,Tt
+     T,TtttAv...vAtttT,T
+     ,Tt__tt--v--tt__tT,
+    @    __t-----t__    @
+          _tttOttt_
+          ___ttt___
+            _____
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #
