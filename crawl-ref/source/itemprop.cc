@@ -2579,11 +2579,7 @@ int property(const item_def &item, int prop_type)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if (prop_type == PARM_AC)
-            return Armour_prop[ Armour_index[item.sub_type] ].ac;
-        else if (prop_type == PARM_EVASION)
-            return Armour_prop[ Armour_index[item.sub_type] ].ev;
-        break;
+        return armour_prop(item.sub_type, prop_type);
 
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
@@ -2633,6 +2629,28 @@ int property(const item_def &item, int prop_type)
     }
 
     return 0;
+}
+
+/**
+ * Find a given property of a given armour_type.
+ *
+ * @param armour        The armour_type in question (e.g. ARM_ROBE)
+ * @param prop_type     The property being requested (e.g. PARM_AC)
+ * @return              The property value, if the prop_type is valid.
+ *                      Otherwise, 0 (!?)
+ *                      ^ hopefully never comes up...
+ */
+int armour_prop(int armour, int prop_type)
+{
+    switch (prop_type)
+    {
+        case PARM_AC:
+            return Armour_prop[ Armour_index[armour] ].ac;
+        case PARM_EVASION:
+            return Armour_prop[ Armour_index[armour] ].ev;
+        default:
+            return 0; // !?
+    }
 }
 
 // Returns true if item is evokable.
