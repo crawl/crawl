@@ -1206,6 +1206,78 @@ cc.4.cAc...cV...
           cccc
 ENDMAP
 
+NAME: nicolae_crypt_statuary_hall
+DEPTH: Crypt, !Crypt:1, !Crypt:$
+TAGS: decor transparent
+SHUFFLE: {[(, }])
+MAP
+      x@x
+      x.x
+      x.x
+   xxxx.xxxx
+   x..G.G..x
+   x..x.x..x
+xxxx..G.G..xxxx
+@....{x.x}....@
+xxxx..G.G..xxxx
+   x..x.x..x
+   x..G.G..x
+   xxxx.xxxx
+      x.x
+      x.x
+      x@x
+ENDMAP
+
+
+NAME: nicolae_crypt_cryptocurrency
+DEPTH: Crypt
+TAGS: extra decor no_item_gen no_trap_gen no_monster_gen
+KPROP: $-c = no_rtele_into
+KMASK: .@ = !opaque
+KITEM: $ = $ / $ good_item w:3
+KFEAT: m = iron_grate
+MAP
+xxxxxxxxx
+xxxcccxxx@
+xxcc$ccxx.x
+xcc---ccx.x
+xc$-c--m..x
+xcc---ccx.x
+xxcc$ccxx.x
+xxxcccxxx@
+xxxxxxxxx
+ENDMAP
+
+
+NAME: nicolae_crypt_little_mausoleum
+DEPTH: Crypt
+TAGS: transparent allow_dup
+SHUFFLE: ab/ab/ab/ab/ba
+SUBST: b = ., G : G:60 xV0 .:5 t:2 P:2, a = sGVe0 _:5 $:5 %:5
+: if you.depth() == 1 then
+SUBST: s = ]})>
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(<
+: else
+SUBST: s = ]})>[{(<
+: end
+KFEAT: _ = altar_kikubaaqudgha w:15 / altar_yredelemnul w:15 / \
+           altar_dithmenos w:5 / altar_the_shining_one w:1
+KMONS: 0 = zombie / skeleton
+KMONS: P = w:2 col:darkgrey plant name:withered name_adjective \
+           tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
+           name_adjective tile:mons_withered_plant
+: dgn.delayed_decay(_G, 'e', 'human skeleton / orc skeleton / elf skeleton')
+TILE: t = dngn_tree_dead
+: set_feature_name("tree", "dead tree")
+MAP
+xxxxx
+xbabx
+x...x
+xx.xx
+Gx+xG
+.....
+ENDMAP
 
 ##############################################################################
 # Crypt ends

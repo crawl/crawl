@@ -990,9 +990,11 @@ void discover_mimic(const coord_def& pos)
         return;
     }
 
-    const string name = feature_mimic ? feat_type_name(feat) :
-          item->base_type == OBJ_GOLD ? "pile of gold coins"
-                                      : item->name(DESC_BASENAME);
+    const string name = feature_mimic ? "the " + string(feat_type_name(feat)) :
+          item->base_type == OBJ_GOLD ? "the pile of gold coins"
+                                      : item->name(DESC_THE, false, false,
+                                                             false, true);
+    const bool plural = feature_mimic ? false : item->quantity > 1;
 
 #ifdef USE_TILE
     tileidx_t tile = tileidx_feature(pos);
@@ -1000,12 +1002,16 @@ void discover_mimic(const coord_def& pos)
 #endif
 
     if (you.see_cell(pos))
-        mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
+        mprf(MSGCH_WARN, "%s %s a mimic!", name.c_str(), plural ? "are" : "is");
+
+    const string shortname = feature_mimic ? feat_type_name(feat) :
+               item->base_type == OBJ_GOLD ? "pile of gold coins"
+                                           : item->name(DESC_BASENAME);
     if (item)
         destroy_item(item->index(), true);
     else
         _destroy_mimic_feature(pos);
-    _mimic_vanish(pos, name);
+    _mimic_vanish(pos, shortname);
 
     // Just in case there's another one.
     if (mimic_at(pos))

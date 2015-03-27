@@ -1000,6 +1000,74 @@ MAP
     ..ccc...
 ENDMAP
 
+NAME: nicolae_shoals_island_circles
+DEPTH: Shoals
+ORIENT: float
+TAGS: decor transparent
+SHUFFLE: abc/xyz
+SUBST: Z = Ww, ab = ., c = sG, xy = xx., z = x
+: if you.depth() == 1 then
+SUBST: s = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(
+: else
+SUBST: s = ]})[{(
+: end
+MAP
+              wwwwwww
+             wwwZZZwww
+     wwwwwwwwwwZ...Zwww
+    wwwZZZwwwwZ.....Zww
+   wwZZ...ZZwZ...a...Zw
+  wwZ.......ZZ..aaa..Zwwwww
+  wwZ...a...WW...a...ZZZZwww
+  wZ...aba...ZZ.....WZ...Zww
+  wZ..abcba..ZwZ...ZW.....Zw
+  wZ...aba...ZwwZZZwZ..a..Zw
+  wwZ...a...ZwwwwwwwZ.....Zw
+  wwZ.......ZwwwwwwwwZ...Zww
+  wwwZW...ZZwwwwwwwwwwZZWWwww
+ wwwZZWZZZwwwwwwwwwwwwwwZ.Zww
+wwwZ...ZwwwwwwwwwwwwwwwZ...Zw
+wwZ.....ZwwwwwwwwwwwwwwwZ.Zww
+wZ...a...ZwwwwwwwwwwwwwwwWwww
+wZ..aaa..ZwwwwwwwwwwwwwwZWZw
+wZ...a...Zwwwwwwwwwwwww  @
+wwZ.....Zwwwwwwwwwwww
+wwwZ...WWZZwwwwwwwww
+ wwwZZZZ...Zwwwwwww
+  wwwwZ.....Zwwwwww
+     wZ..a..ZwZwww
+     wZ.....WZ.ZwZ
+     wwZ...ZW...WW@
+     wwwZZZwwZ.ZwZ
+      wwwwwwwwZwww
+            wwwww
+ENDMAP
+
+
+NAME: nicolae_shoals_loop_pool
+DEPTH: Shoals
+TAGS: transparent decor
+KPROP: w- = no_tide
+SUBST: Y = yZ, y = x___, Z = w.___, - = .
+CLEAR: _
+MAP
+ yxxxyyY
+yxx-----Y
+yx--www--YZZZ
+yx-wwwww-....@
+yx-wwwwwxxxxxxy
+yx-wwwww-----xxy
+yx--www--www--xy
+yxx-----wwwww-xy
+ yxxxxxxwwwww-xy
+  @....-wwwww-xy
+   ZZZY--www--xy
+       Y-----xxy
+        Yyyxxxy
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps

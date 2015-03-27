@@ -277,7 +277,7 @@ This shield, unearthed from the remains of a ruined city, bears an inscription
 written in an ancient language. Scholars and wise men laboured for countless
 hours to decipher it, poring through ancient tomes and hurling theses and
 counter-theses back and forth. In time, interest faded, and a grudging
-consenus translation was settled on:
+consensus translation was settled on:
 
 "With a shield like this, who needs to think?"
 %%%%
@@ -397,9 +397,9 @@ A phosphorescent cloak, woven of pure light beams.
 ratskin cloak
 
 An enchantress with a magic loom and way too much time on her hands stitched
-this cloak from the hides of hundreds of rats, most of them orange. It's a bit
-awkward to wear and looks rather foolish, but it provides excellent protection
-from rats of all kinds.
+this cloak from the hides of hundreds of hell rats. It's a bit awkward to wear
+and looks rather foolish, but it provides excellent protection from rats of all
+kinds.
 %%%%
 shield of the gong
 
@@ -461,7 +461,7 @@ A robe of a material as flimsy and insubstantial as the clouds.
 %%%%
 hat of Pondering
 
-The favorite hat of the slug wizard Gastronok, stained with reddish slime and
+The favourite hat of the slug wizard Gastronok, stained with reddish slime and
 enchanted to aid in his arcane pondering. It has been specially enchanted to
 protect against the effects of salt.
 %%%%

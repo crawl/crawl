@@ -30,12 +30,8 @@ static void _show_message_line(string line)
         string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
-        formatted_string fs;
-        fs.textcolour(WHITE);
-        fs.cprintf("%s: ", sender.c_str());
-        fs.textcolour(LIGHTGREY);
-        fs.cprintf("%s", line.c_str());
-        formatted_mpr(fs, MSGCH_DGL_MESSAGE, 0);
+        mprf_nocap(MSGCH_DGL_MESSAGE, "<white>%s:</white> %s", sender.c_str(),
+                                                               line.c_str());
         if (Options.note_dgl_messages)
         {
             take_note(Note(NOTE_MESSAGE, MSGCH_DGL_MESSAGE, 0,

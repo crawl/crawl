@@ -42,8 +42,6 @@ static equipment_type _acquirement_armour_slot(bool);
 static armour_type _acquirement_armour_for_slot(equipment_type, bool);
 static armour_type _acquirement_shield_type();
 static armour_type _acquirement_body_armour(bool);
-static armour_type _acquirement_mundane_armour(bool);
-static armour_type _acquirement_hide_armour(bool);
 static armour_type _useless_armour_type();
 
 
@@ -114,7 +112,7 @@ static equipment_type _acquirement_armour_slot(bool divine)
  * heavy investment in armour skill, relative to dodging & spellcasting, makes
  * heavier armours more likely to be generated.
  *
- * @param divine    Lowers the odds of high-tier body armours being chosen.
+ * @param divine    Whether the armour is a god gift.
  * @return          The armour_type of the armour to be generated.
  */
 static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
@@ -188,6 +186,41 @@ static armour_type _acquirement_shield_type()
 }
 
 /**
+ * Determine the weight (likelihood) to acquire a specific type of body armour.
+ *
+ * If divine is set, returns the base weight for the armour type.
+ * Otherwise, if warrior is set, multiplies the base weight by the base ac^2.
+ * Otherwise, uses the player's Armour skill to crudely guess how likely they
+ * are to want the armour, based on its EVP.
+ *
+ * @param armour    The type of armour in question. (E.g. ARM_ROBE.)
+ * @param divine    Whether the 'acquirement' is actually a god gift.
+ * @param warrior   Whether we think the player only cares about AC.
+ * @return          A weight for the armour.
+ */
+static int _body_acquirement_weight(armour_type armour,
+                                    bool divine, bool warrior)
+{
+    const int base_weight = armour_acq_weight(armour);
+    if (divine)
+        return base_weight; // gods don't care about your skills, apparently
+
+    if (warrior)
+    {
+        const int ac = armour_prop(armour, PARM_AC);
+        return base_weight * ac * ac;
+    }
+
+    // highest chance when armour skill = (displayed) evp - 3
+    const int evp = armour_prop(armour, PARM_EVASION);
+    const int skill = min(27, you.skills[SK_ARMOUR] + 3);
+    const int sk_diff = skill + evp / 10;
+    const int inv_diff = max(1, 27 - sk_diff);
+    // armour closest to ideal evp is 27^3 times as likely as the furthest away
+    return base_weight * inv_diff * inv_diff * inv_diff;
+}
+
+/**
  * Choose a random type of body armour to be generated via acquirement or
  * god gifts.
  *
@@ -196,131 +229,34 @@ static armour_type _acquirement_shield_type()
  */
 static armour_type _acquirement_body_armour(bool divine)
 {
-    // TODO: rewrite this to be not ridiculous
-    // (weights in itemprop.cc per-armour-type, modified by skills & filtered
-    // by wearability)
+    // Using an arbitrary legacy formula, do we think the player doesn't care
+    // about armour EVP?
+    const bool warrior = random2(you.skills[SK_SPELLCASTING] * 3
+                            + you.skills[SK_DODGING])
+                         < random2(you.skills[SK_ARMOUR] * 2);
 
-
-    // Everyone can wear things made from hides.
-    if (one_chance_in(20))
+    vector<pair<armour_type, int>> weights;
+    for (int i = ARM_FIRST_MUNDANE_BODY; i < NUM_ARMOURS; ++i)
     {
-        return random_choose_weighted(20, ARM_TROLL_LEATHER_ARMOUR,
-                                      20, ARM_STEAM_DRAGON_ARMOUR,
-                                      15, ARM_MOTTLED_DRAGON_ARMOUR,
-                                      10, ARM_SWAMP_DRAGON_ARMOUR,
-                                      10, ARM_FIRE_DRAGON_ARMOUR,
-                                      10, ARM_ICE_DRAGON_ARMOUR,
-                                      5, ARM_STORM_DRAGON_ARMOUR,
-                                      5, ARM_SHADOW_DRAGON_ARMOUR,
-                                      5, ARM_GOLD_DRAGON_ARMOUR,
-                                      5, ARM_PEARL_DRAGON_ARMOUR,
-                                      5, ARM_QUICKSILVER_DRAGON_ARMOUR,
-                                      0);
+        const armour_type armour = (armour_type)i;
+        if (get_armour_slot(armour) != EQ_BODY_ARMOUR)
+            continue;
+
+        if (!check_armour_size(armour, you.body_size()))
+            continue;
+
+        const int weight = _body_acquirement_weight(armour, divine, warrior);
+
+        if (weight)
+        {
+            const pair<armour_type, int> weight_pair = { armour, weight };
+            weights.push_back(weight_pair);
+        }
     }
 
-    // ugly proxy for "can you wear non-hide armour"
-    if (!check_armour_size(ARM_PLATE_ARMOUR, you.body_size()))
-        return _acquirement_hide_armour(divine);
-    return _acquirement_mundane_armour(divine);
-}
-
-/**
- * Choose a random type of hide armour (dragon or troll leather) to be
- * generated via acquirement or god gifts.
- *
- * Legacy function; should be removed when _acquirement_body_armour is
- * rewritten.
- *
- * @param fewer_dragons     Reduce the number & variety of dragon armours.
- * @return                  A random hide-based armour type.
- */
-static armour_type _acquirement_hide_armour(bool fewer_dragons)
-{
-    const int DRAGON_WEIGHT = fewer_dragons ? 0 : 20;
-
-    // weights out of 1000
-    return random_choose_weighted(
-                    663,                    ARM_ROBE,
-                    221,                    ARM_ANIMAL_SKIN, // no egos
-                    6,                      ARM_TROLL_LEATHER_ARMOUR,
-                    6 + DRAGON_WEIGHT,      ARM_STEAM_DRAGON_ARMOUR,
-                    2 + DRAGON_WEIGHT,      ARM_FIRE_DRAGON_ARMOUR,
-                    2 + DRAGON_WEIGHT,      ARM_SWAMP_DRAGON_ARMOUR,
-                    DRAGON_WEIGHT,          ARM_ICE_DRAGON_ARMOUR,
-                    DRAGON_WEIGHT,          ARM_MOTTLED_DRAGON_ARMOUR,
-                    DRAGON_WEIGHT,          ARM_STORM_DRAGON_ARMOUR,
-                    DRAGON_WEIGHT,          ARM_SHADOW_DRAGON_ARMOUR,
-                    DRAGON_WEIGHT,          ARM_GOLD_DRAGON_ARMOUR,
-                    DRAGON_WEIGHT,          ARM_PEARL_DRAGON_ARMOUR,
-                    DRAGON_WEIGHT,          ARM_QUICKSILVER_DRAGON_ARMOUR,
-                    0);
-}
-
-/**
- * Choose a random type of mundane armour (not dragon/troll hide) to be
- * generated via acquirement or god gifts.
- *
- * Weighted by skills (Armour, Dodging, Spellcasting) but NOT by stats -
- * mainly because stuff like Chei makes it very hard to predict what a player
- * might want from their base stats alone, and we don't want to adjust acq
- * results based on Chei piety, current equipment stat boosts, etc...
- *
- * Legacy function; should be removed when _acquirement_body_armour is
- * rewritten.
- *
- * @param divine        Whether the item is a god gift.
- * @return              A random 'mundane' armour type.
- */
-static armour_type _acquirement_mundane_armour(bool divine)
-{
-    if (divine)
-    {
-        if (x_chance_in_y(you.skills[SK_ARMOUR], 150))
-            return ARM_CRYSTAL_PLATE_ARMOUR;
-
-        const armour_type armours[] = {
-            ARM_ROBE, ARM_LEATHER_ARMOUR, ARM_RING_MAIL, ARM_SCALE_MAIL,
-            ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR
-        };
-
-        return static_cast<armour_type>(RANDOM_ELEMENT(armours));
-    }
-
-    // Weight sub types relative to (armour skill + 3).
-    // Actually, the AC improvement is not linear, and we
-    // might also want to take into account Dodging/Stealth
-    // but this is definitely better than the random chance above.
-
-    // This formula makes sense only for casters.
-    // ... so we override it for heavy meleers, who get mostly plates.
-    // A scale mail is wasted acquirement, even if it's any but most
-    // über randart).
-    if (random2(you.skills[SK_SPELLCASTING] * 3 + you.skills[SK_DODGING])
-        < random2(you.skills[SK_ARMOUR] * 2))
-    {
-        return one_chance_in(4) ? ARM_CRYSTAL_PLATE_ARMOUR : ARM_PLATE_ARMOUR;
-    }
-
-    static const armour_type armours[] = {
-      ARM_ANIMAL_SKIN, ARM_ROBE, ARM_LEATHER_ARMOUR, ARM_RING_MAIL,
-      ARM_SCALE_MAIL, ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR,
-      ARM_CRYSTAL_PLATE_ARMOUR
-    };
-
-    const int skill = min(27, you.skills[SK_ARMOUR] + 3);
-    armour_type sub_type = NUM_ARMOURS;
-    int total_weight = 0;
-
-    for (int i = 0; i < (int) ARRAYSZ(armours); ++i)
-    {
-        const int base_weight = max(1, 27 - abs(skill - i*3));
-        const int weight = base_weight * base_weight * base_weight;
-        total_weight += weight;
-        if (x_chance_in_y(weight, total_weight))
-            sub_type = armours[i];
-    }
-
-    return sub_type;
+    const armour_type* armour_ptr = random_choose_weighted(weights);
+    ASSERT(armour_ptr);
+    return *armour_ptr;
 }
 
 /**
