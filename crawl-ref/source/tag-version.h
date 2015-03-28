@@ -155,6 +155,7 @@ enum tag_minor_version
     TAG_MINOR_XP_PENANCE,          // Let gods other than Ash use xp penance
     TAG_MINOR_SPIT_POISON,         // Give Nagas MUT_SPIT_POISON
     TAG_MINOR_REAL_MUTS,           // Give some species proper mutations
+    TAG_MINOR_NO_FORLORN,          // Remove Forlorn mutation
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

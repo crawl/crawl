@@ -2760,6 +2760,12 @@ static void tag_read_you(reader &th)
         for (int xl = 2; xl <= you.experience_level; ++xl)
             give_level_mutations(you.species, xl);
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_NO_FORLORN)
+    {
+        if (you.mutation[MUT_FORLORN])
+            you.mutation[MUT_FORLORN] = 0;
+    }
 #endif
 
     count = unmarshallUByte(th);

@@ -1089,10 +1089,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
         return true;
 
-    // Can't worship gods.
-    if (you.species == SP_DEMIGOD && mutat == MUT_FORLORN)
-        return true;
-
     // We can't use is_useless_skill() here, since species that can still wear
     // body armour can sacrifice armour skill with Ru.
     if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL && mutat == MUT_DEFORMED)
