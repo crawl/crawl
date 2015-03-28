@@ -1113,7 +1113,8 @@ static const mutation_def mut_data[] =
    "placid magic",
 },
 
-{ MUT_FORLORN,                      3,  1,  MUTFLAG_BAD, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_FORLORN,                      0,  1,  MUTFLAG_BAD, false,
   "forlorn",
 
   {"You have difficulty communicating with the divine.","",""},
@@ -1122,6 +1123,7 @@ static const mutation_def mut_data[] =
 
   "difficulty communicating with the divine",
 },
+#endif
 
 { MUT_STOCHASTIC_TORMENT_RESISTANCE,  0,  1, MUTFLAG_GOOD, false,
   "50% torment resistance",

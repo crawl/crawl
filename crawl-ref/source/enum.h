@@ -3608,7 +3608,9 @@ enum mutation_type
 #else
     MUT_SUSTAIN_ABILITIES,
 #endif
+#if TAG_MAJOR_VERSION == 34
     MUT_FORLORN,
+#endif
     MUT_PLACID_MAGIC,
     MUT_NO_DRINK,
     MUT_NO_READ,
