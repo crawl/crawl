@@ -3367,7 +3367,8 @@ bool mons_has_los_ability(monster_type mon_type)
         || mon_type == MONS_EYE_OF_DRAINING
         || mon_type == MONS_GOLDEN_EYE
         || mon_type == MONS_MOTH_OF_WRATH
-        || mon_type == MONS_GHOST_MOTH)
+        || mon_type == MONS_GHOST_MOTH
+        || mon_type == MONS_STARCURSED_MASS)
     {
         return true;
     }
