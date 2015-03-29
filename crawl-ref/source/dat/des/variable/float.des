@@ -5948,7 +5948,7 @@ ENDMAP
 
 NAME:   cheibrodos_orc_bank
 TAGS:   no_item_gen no_monster_gen
-DEPTH:  Orc:1-3, D:10-14
+DEPTH:  Orc, !Orc:$, D:10-14
 ORIENT: float
 MONS:   orc, orc warrior, orc knight, hobgoblin
 KITEM:  $ = $ no_pickup
