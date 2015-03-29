@@ -606,12 +606,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def set_rc(self, game_id, contents):
         rcfile_path = self.rcfile_path(game_id)
-        with open(rcfile_path, 'w') as f:
-            f.write(contents.encode("utf8"))
+        if contents:
+            with open(rcfile_path, 'w') as f:
+                f.write(contents.encode("utf8"))
 
     def reset_rc(self, game_id):
         rcfile_path = self.rcfile_path(game_id)
-        os.remove(rcfile_path)
+        if os.path.exists(rcfile_path):
+            try:
+                os.remove(rcfile_path)
+            except EnvironmentError as e:
+                self.logger.error("Couldn't delete '{}' ({})".format(
+                    rcfile_path, e))
         if not self.init_user():
             self.logger.warning("User initialization returned an error for "
                                 "user {0}!".format(self.username))
