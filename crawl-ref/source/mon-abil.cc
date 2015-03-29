@@ -99,7 +99,7 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
     string src = "";
 
-    colour_t mon_colour = BLACK;
+    colour_t mon_colour = COLOUR_UNDEF;
 
     if (!proximity)
         success = true;
