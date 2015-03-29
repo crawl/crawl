@@ -1206,6 +1206,75 @@ static void _adjust_brand(item_def &item, bool divine)
         reroll_brand(item, ITEM_LEVEL);
 }
 
+/**
+ * Should the given item be rejected as an acquirement/god gift result &
+ * rerolled? If so, why?
+ *
+ * @param item      The item in question.
+ * @param agent     The entity creating the item; possibly a god.
+ * @return          A reason why the item should be rejected, if it should be;
+ *                  otherwise, the empty string.
+ */
+static string _why_reject(const item_def &item, int agent)
+{
+    if (agent != GOD_XOM
+        && (item.base_type == OBJ_WEAPONS
+                && !can_wield(&item, false, true)
+            || item.base_type == OBJ_ARMOUR
+                && !can_wear_armour(item, false, true)))
+    {
+        return "Destroying unusable weapon or armour!";
+    }
+
+    // Trog does not gift the Wrath of Trog, nor weapons of pain
+    // (which work together with Necromantic magic).
+    // nor fancy magic staffs (wucad mu, majin-bo)
+    if (agent == GOD_TROG
+        && (get_weapon_brand(item) == SPWPN_PAIN
+            || is_unrandom_artefact(item, UNRAND_TROG)
+            || is_unrandom_artefact(item, UNRAND_WUCAD_MU)
+            || is_unrandom_artefact(item, UNRAND_MAJIN)))
+    {
+        return "Destroying a weapon Trog hates!";
+    }
+
+    // Pain brand is useless if you've sacrificed Necromacy.
+    if (player_mutation_level(MUT_NO_NECROMANCY_MAGIC)
+        && get_weapon_brand(item) == SPWPN_PAIN)
+    {
+        return "Destroying pain weapon after Necro sac!";
+    }
+
+    // MT - Check: god-gifted weapons and armour shouldn't kill you.
+    // Except Xom.
+    if ((agent == GOD_TROG || agent == GOD_OKAWARU)
+        && is_artefact(acq_item))
+    {
+        artefact_properties_t  proprt;
+        artefact_properties(acq_item, proprt);
+
+        // Check vs. stats. positive stats will automatically fall
+        // through.  As will negative stats that won't kill you.
+        if (-proprt[ARTP_STRENGTH] >= you.strength()
+            || -proprt[ARTP_INTELLIGENCE] >= you.intel()
+            || -proprt[ARTP_DEXTERITY] >= you.dex())
+        {
+            return "Destroying art that would cause <= 0 stats!");
+        }
+    }
+
+    // Sif Muna shouldn't gift special books.
+    // (The spells therein are still fair game for randart books.)
+    if (agent == GOD_SIF_MUNA
+        && is_rare_book(static_cast<book_type>(acq_item.sub_type)))
+    {
+        ASSERT(acq_item.base_type == OBJ_BOOKS);
+        return "Destroying sif-gifted rarebook!";
+    }
+
+    return ""; // all OK
+}
+
 int acquirement_create_item(object_class_type class_wanted,
                             int agent, bool quiet,
                             const coord_def &pos, bool debug)
@@ -1256,12 +1325,12 @@ int acquirement_create_item(object_class_type class_wanted,
             const special_armour_type sparm = get_armour_ego_type(acq_item);
 
             if (agent != GOD_XOM
-                  && you.seen_armour[acq_item.sub_type] & (1 << sparm)
-                  && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
+                && you.seen_armour[acq_item.sub_type] & (1 << sparm)
+                && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
                 || !divine
-                   && you.seen_armour[acq_item.sub_type]
-                   && !one_chance_in(3)
-                   && item_tries < 20)
+                && you.seen_armour[acq_item.sub_type]
+                && !one_chance_in(3)
+                && item_tries < 20)
             {
                 // We have seen the exact item already, it's very unlikely
                 // extras will do any good.
@@ -1299,92 +1368,21 @@ int acquirement_create_item(object_class_type class_wanted,
             }
         }
 
-        if (agent != GOD_XOM
-             && (acq_item.base_type == OBJ_WEAPONS
-                   && !can_wield(&acq_item, false, true)
-                 || acq_item.base_type == OBJ_ARMOUR
-                   && !can_wear_armour(acq_item, false, true)))
-        {
-            destroy_item(thing_created, true);
-            thing_created = NON_ITEM;
-            if (!quiet)
-                dprf("Destroying unusable weapon or armour!");
-            continue;
-        }
-
-        // Trog does not gift the Wrath of Trog, nor weapons of pain
-        // (which work together with Necromantic magic).
-        if (agent == GOD_TROG)
+        if (agent == GOD_TROG && coinflip()
+            && acq_item.base_type == OBJ_WEAPONS && !is_range_weapon(acq_item)
+            && !is_unrandom_artefact(acq_item))
         {
             // ... but he loves the antimagic brand specially.
-            if (coinflip() && acq_item.base_type == OBJ_WEAPONS
-                && !is_range_weapon(acq_item) && !is_unrandom_artefact(acq_item))
-            {
-                set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
-            }
-
-            int brand = get_weapon_brand(acq_item);
-            if (brand == SPWPN_PAIN
-                || is_unrandom_artefact(acq_item, UNRAND_TROG)
-                || is_unrandom_artefact(acq_item, UNRAND_WUCAD_MU)
-                || is_unrandom_artefact(acq_item, UNRAND_MAJIN))
-            {
-                destroy_item(thing_created, true);
-                thing_created = NON_ITEM;
-                if (!quiet)
-                    dprf("Destroying pain weapon (Trog hates pain!!)!");
-                continue;
-            }
+            set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
         }
 
-        // Pain brand is useless if you've sacrificed Necromacy.
-        if (player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+        const string rejection_reason = _why_reject(acq_item);
+        if (!rejection_reason.empty())
         {
-            if (get_weapon_brand(acq_item) == SPWPN_PAIN)
-            {
-                destroy_item(thing_created, true);
-                thing_created = NON_ITEM;
-                if (!quiet)
-                    dprf("Destroying pain weapon after Necro sac!");
-                continue;
-            }
-        }
-
-        // MT - Check: god-gifted weapons and armour shouldn't kill you.
-        // Except Xom.
-        if ((agent == GOD_TROG || agent == GOD_OKAWARU)
-            && is_artefact(acq_item))
-        {
-            artefact_properties_t  proprt;
-            artefact_properties(acq_item, proprt);
-
-            // Check vs. stats. positive stats will automatically fall
-            // through.  As will negative stats that won't kill you.
-            if (-proprt[ARTP_STRENGTH] >= you.strength()
-                || -proprt[ARTP_INTELLIGENCE] >= you.intel()
-                || -proprt[ARTP_DEXTERITY] >= you.dex())
-            {
-                // Try again.
-                destroy_item(thing_created);
-                thing_created = NON_ITEM;
-                if (!quiet)
-                    dprf("Destroying art that would cause stat-death!");
-                continue;
-            }
-        }
-
-        // Sif Muna shouldn't gift special books.
-        // (The spells therein are still fair game for randart books.)
-        if (agent == GOD_SIF_MUNA
-            && is_rare_book(static_cast<book_type>(acq_item.sub_type)))
-        {
-            ASSERT(acq_item.base_type == OBJ_BOOKS);
-
-            // Try again.
-            destroy_item(thing_created);
-            thing_created = NON_ITEM;
             if (!quiet)
-                dprf("Destroying sif-gifted rarebook!");
+                dprf("%s", rejection_reason.c_str());
+            destroy_item(acq_item);
+            thing_created = NON_ITEM;
             continue;
         }
 
