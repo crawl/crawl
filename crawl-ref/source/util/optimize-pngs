@@ -1,24 +1,55 @@
 #!/bin/sh
 
-if [ -z $1 ]; then
-    CMD="git diff-index --raw --name-status HEAD"
-else
-    CMD="git diff --raw --name-status $1^ $1"
-fi
+case $(uname -s) in
+    Linux)
+        NUM_CPUS=$(nproc 2>/dev/null || echo 1)
+        ;;
+    Darwin|FreeBSD)
+        NUM_CPUS=$(sysctl -n hw.ncpu 2>/dev/null || echo 1)
+        ;;
+esac
 
-echo_exit()
+usage()
 {
-    echo $1
+    if [ -n "$1" ] ; then
+        echo "$1"
+    fi
+    echo "usage: $0"
+    echo "usage: $0 <git-commit>"
+    echo "usage: $0 <file> ..."
+    echo
+    echo 'Optimise some PNGs.'
+    echo 'If run without options, optimise PNGs in the staged commit.'
+    echo 'You can manually specify a commit instead.'
+    echo 'Finally, you can specify a list of images to directly compress.'
     exit
 }
 
-find_files()
-{
-    $CMD | grep '^\(A\|M\).*png$' | sed 's/^.\t//'
-}
+if [ "$1" = '-h' -o "$1" = '--help' ] ; then
+    usage
+fi
 
-cd "$(git rev-parse --show-toplevel)"
-[ $(find_files | wc -l) != 0 ] \
-    || echo_exit "No changed .png files -- please 'git add' them first."
-find_files | xargs -d "\n" optipng -o4 -i0 -fix
-find_files | xargs -d "\n" advpng -z4
+if [ -f "$1" ]; then
+    find "$@" -print0 | xargs -0 -n1 -t -P "$NUM_CPUS" optipng -quiet -o4 -i0 -fix &&
+    find "$@" -print0 | xargs -0 -n1 -t -P "$NUM_CPUS" advpng -q -z4
+else
+    if [ -z "$1" ]; then
+        CMD='git diff-index --raw --name-status HEAD'
+    else
+        CMD="git diff --raw --name-status $1^ $1"
+    fi
+
+    find_files()
+    {
+        $CMD | grep '^\(A\|M\).*png$' | awk '{print $2}'
+    }
+
+    cd "$(git rev-parse --show-toplevel)"
+    if ! [ $(find_files | wc -l | awk '{print $1}') != 0 ] ; then
+        usage "No changed .png files -- please 'git add' them first."
+    fi
+    find_files | tr '\n' '\0' | xargs -n1 -t -P "$NUM_CPUS" -0 optipng -quiet -o4 -i0 -fix &&
+    find_files | tr '\n' '\0' | xargs -n1 -t -P "$NUM_CPUS" -0 advpng -q -z4
+fi
+
+exit 0
