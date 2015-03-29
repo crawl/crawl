@@ -71,7 +71,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
-bool can_wield(item_def *weapon, bool say_reason,
+bool can_wield(const item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
@@ -178,15 +178,16 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     if (id_brand)
     {
+        auto wwpn = const_cast<item_def*>(weapon);
         if (!is_artefact(*weapon) && !is_blessed(*weapon)
             && !item_type_known(*weapon))
         {
-            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+            set_ident_flags(*wwpn, ISFLAG_KNOW_TYPE);
             if (in_inventory(*weapon))
                 mprf_nocap("%s", weapon->name(DESC_INVENTORY_EQUIP).c_str());
         }
         else if (is_artefact(*weapon) && !item_type_known(*weapon))
-            artefact_learn_prop(*weapon, ARTP_BRAND);
+            artefact_learn_prop(*wwpn, ARTP_BRAND);
         return false;
     }
 

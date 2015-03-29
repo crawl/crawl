@@ -33,7 +33,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
 
 bool do_wear_armour(int item, bool quiet);
 
-bool can_wield(item_def *weapon, bool say_why = false,
+bool can_wield(const item_def *weapon, bool say_why = false,
                bool ignore_temporary_disability = false, bool unwield = false,
                bool only_known = true);
 
