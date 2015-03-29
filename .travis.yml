@@ -3,7 +3,7 @@ compiler:
     - clang
     - gcc
 before_install:
-    - sudo sh .travis/apt.sh
+    - sudo bash .travis/apt.sh
 env:
     - NOTHING=1
     - FULLDEBUG=1
