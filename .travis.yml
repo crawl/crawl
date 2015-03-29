@@ -3,7 +3,7 @@ compiler:
     - clang
     - gcc
 before_install:
-    - sudo bash .travis/apt.sh
+    - perl .travis/apt.sh
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 env:
     - NOTHING=1

@@ -2,16 +2,16 @@
 use strict;
 use warnings;
 
-run(qw(add-apt-repository ppa:ubuntu-toolchain-r/test -y));
-run(qw(add-apt-repository ppa:zoogie/sdl2-snapshots -y));
+run(qw(sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y));
+run(qw(sudo add-apt-repository ppa:zoogie/sdl2-snapshots -y));
 
-retry(qw(apt-get update -qq));
+retry(qw(sudo apt-get update -qq));
 
 if ($ENV{CXX} eq "clang++") {
-    retry(qw(retry apt-get install -qq libstdc++-4.8-dev));
+    retry(qw(sudo apt-get install -qq libstdc++-4.8-dev));
 }
 elsif ($ENV{CXX} eq "g++") {
-    retry(qw(retry apt-get install -qq g++-4.8));
+    retry(qw(sudo apt-get install -qq g++-4.8));
 }
 
 sub run {
