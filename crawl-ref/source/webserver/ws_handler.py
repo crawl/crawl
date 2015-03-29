@@ -319,11 +319,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         game_params = dict(config.games[game_id])
-        if self.username == None:
-            if self.watched_game:
-                self.stop_watching()
-            self.send_message("login_required", game = game_params["name"])
-            return
+
+        if self.username is None:
+            if config.allow_guests:
+                username = self.register_guest()
+                if not username:
+                    # Ideally we'd tell the user we can't auto-generate
+                    # a guest account for them.
+                    self.send_message("login_required", game=game_params["name"])
+                    return
+            else:
+                self.send_message("login_required", game=game_params["name"])
+                return
 
         if self.process:
             # ignore multiple requests for the same game, can happen when
@@ -334,12 +341,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.game_id = game_id
 
+        sid = url_unescape(self.get_cookie("sid"))
+        session = userdb.session_info(sid)
+        #session["default-game_id"] = game_id
+
         import process_handler
 
         for process in process_handler.processes.values():
             if (process.username == self.username and
-                process.game_params["id"] == game_id and
-                process.process):
+                    process.game_params["id"] == game_id and
+                    process.process):
                 self.process = process
                 self.process.add_watcher(self)
                 self.send_message("game_started")
@@ -560,7 +571,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             receiver.handle_chat_message(self.username, text)
 
+    def register_guest(self):
+        """Register a new guest user account, return the username."""
+        username = userdb.find_unused_guest_name()
+        if not username:
+            return False
+        self.register(username, None, '')
+        return username
+
     def register(self, username, password, email):
+        """Register a new user account."""
         error = userdb.register_user(username, password, email)
         if error is None:
             self.logger.info("Registered user %s.", username)

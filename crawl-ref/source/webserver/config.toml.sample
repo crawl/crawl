@@ -120,6 +120,8 @@ use_cdn = true
 
 games_conf_d = "webserver/games.conf.d/"
 
+# Whether to allow guests
+allow_guests = true
 # Minimum username length
 min_username_length = 2
 # Prefix for guest account names
