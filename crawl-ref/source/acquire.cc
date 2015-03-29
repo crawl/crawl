@@ -1143,6 +1143,69 @@ static bool _is_armour_plain(const item_def &item)
     return get_armour_ego_type(item) == SPARM_NORMAL;
 }
 
+/**
+ * Has the player already encountered an item with this brand?
+ *
+ * Only supports weapons & armour.
+ *
+ * @param item      The item in question.
+ * @param           Whether the player has encountered another weapon or
+ *                  piece of armour with the same ego.
+ */
+static bool _brand_already_seen(const item_def &item)
+{
+    switch (item.base_type)
+    {
+        case OBJ_WEAPONS:
+            return you.seen_weapon[item.sub_type]
+                   & (1<<get_weapon_brand(item));
+        case OBJ_ARMOUR:
+            return you.seen_armour[item.sub_type]
+                   & (1<<get_armour_ego_type(item));
+        default:
+            die("Unsupported item type!");
+    }
+}
+
+// ugh
+#define ITEM_LEVEL (divine ? ISPEC_GIFT : ISPEC_GOOD_ITEM)
+
+/**
+ * Take a newly-generated acquirement item, and adjust its brand if we don't
+ * like it.
+ *
+ * Specifically, if we think the brand is too weak (for non-divine gifts), or
+ * sometimes if we've seen the brand before.
+ *
+ * @param item      The item which may have its brand adjusted. Not necessarily
+ *                  a weapon or piece of armour.
+ * @param divine    Whether the item is a god gift, rather than from
+ *                  acquirement proper.
+ */
+static void _adjust_brand(item_def &item, bool divine)
+{
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR)
+        return; // don't reroll missile brands, I guess
+
+    if (is_artefact(item))
+        return; // their own kettle of fish
+
+    // Not from a god, so we should prefer better brands.
+    if (!divine && item.base_type == OBJ_WEAPONS)
+    {
+        while (_weapon_brand_quality(get_weapon_brand(item),
+                                     is_range_weapon(item)) < random2(6))
+        {
+            reroll_brand(item, ITEM_LEVEL);
+        }
+    }
+
+    // Try to not generate brands that were already seen, although unlike
+    // jewelry and books, this is not absolute.
+    while (_brand_already_seen(item) && !one_chance_in(5))
+        reroll_brand(item, ITEM_LEVEL);
+}
+
 int acquirement_create_item(object_class_type class_wanted,
                             int agent, bool quiet,
                             const coord_def &pos, bool debug)
@@ -1153,7 +1216,6 @@ int acquirement_create_item(object_class_type class_wanted,
                          || agent == GOD_TROG);
     int thing_created = NON_ITEM;
     int quant = 1;
-#define ITEM_LEVEL (divine ? ISPEC_GIFT : ISPEC_GOOD_ITEM)
 #define MAX_ACQ_TRIES 40
     for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
     {
@@ -1185,30 +1247,7 @@ int acquirement_create_item(object_class_type class_wanted,
         }
 
         item_def &acq_item(mitm[thing_created]);
-
-        // Not a god, prefer better brands.
-        if (!divine && !is_artefact(acq_item) && acq_item.base_type == OBJ_WEAPONS)
-        {
-            while (_weapon_brand_quality(get_weapon_brand(acq_item),
-                                        is_range_weapon(acq_item)) < random2(6))
-            {
-                reroll_brand(acq_item, ITEM_LEVEL);
-            }
-        }
-
-        // Try to not generate brands that were already seen, although unlike
-        // jewelry and books, this is not absolute.
-        while (!is_artefact(acq_item)
-               && (acq_item.base_type == OBJ_WEAPONS
-                     && you.seen_weapon[acq_item.sub_type]
-                        & (1<<get_weapon_brand(acq_item))
-                   || acq_item.base_type == OBJ_ARMOUR
-                     && you.seen_armour[acq_item.sub_type]
-                        & (1<<get_armour_ego_type(acq_item)))
-               && !one_chance_in(5))
-        {
-            reroll_brand(acq_item, ITEM_LEVEL);
-        }
+        _adjust_brand(acq_item, divine);
 
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
