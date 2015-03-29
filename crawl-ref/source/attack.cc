@@ -1447,7 +1447,7 @@ int attack::calc_damage()
         bool half_ac = false;
         damage = apply_damage_modifiers(damage, damage_max, half_ac);
 
-        set_attack_verb();
+        set_attack_verb(damage);
         return apply_defender_ac(damage, damage_max, half_ac);
     }
     else
@@ -1477,8 +1477,8 @@ int attack::calc_damage()
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
 
-        set_attack_verb();
         damage = max(0, damage);
+        set_attack_verb(damage);
 
         return damage;
     }

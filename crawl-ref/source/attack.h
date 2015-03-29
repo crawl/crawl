@@ -169,7 +169,7 @@ protected:
     string attack_strength_punctuation(int dmg);
     string evasion_margin_adverb();
 
-    virtual void set_attack_verb() = 0;
+    virtual void set_attack_verb(int damage) = 0;
     virtual void announce_hit() = 0;
 
     void stab_message();
