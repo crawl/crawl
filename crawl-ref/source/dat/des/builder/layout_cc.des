@@ -29,7 +29,7 @@ ENDMAP
 # Disabled until we can annoy the player less with water monsters.
 #
 NAME:   layout_bigger_room
-DEPTH:  D:9-, Lair:1-7
+DEPTH:  D:9-, Lair, !Lair:$
 WEIGHT: 0
 ORIENT: encompass
 TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open

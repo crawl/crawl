@@ -2047,7 +2047,7 @@ ENDMAP
 NAME:   mu_elephants_graveyard
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
-DEPTH:  Depths, Lair:1-7
+DEPTH:  Depths, Lair, !Lair:$
   # next: we generate more dire elephants at greater depths
   # we also turn the shallow water into deep water at the lowest depths
 : if you.in_branch("Lair") then

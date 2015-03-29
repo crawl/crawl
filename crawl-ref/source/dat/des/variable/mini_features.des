@@ -956,7 +956,7 @@ ENDMAP
 
 NAME:   minmay_holes
 TAGS:   transparent extra decor
-DEPTH:  D:5-, !D:$, Depths, !Depths:$, Lair:1-7
+DEPTH:  D:5-, !D:$, Depths, !Depths:$, Lair, !Lair:$
 KFEAT:  ^ = known shaft trap
 SUBST:  . = . ^:1, ' = . ^:2, " = . ^:4
 WEIGHT: 15
