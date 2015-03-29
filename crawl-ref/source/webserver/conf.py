@@ -59,15 +59,28 @@ class Conf(object):
         config_file = self.path
         self.read()
 
-    def __getattr__(self, name):
-        try:
-            return self.data[name]
-        except KeyError:
-            self._warn("Missing config option %s" % name)
-            raise AttributeError(name)
+    def __getitem__(self, *args, **kwargs):
+        """Pass through to self.data dict."""
+        return self.data.__getitem__(*args, **kwargs)
 
-    def get(self, *args):
-        return self.data.get(*args)
+    def __setitem__(self, *args, **kwargs):
+        """Pass through to self.data dict."""
+        return self.data.__setitem__(*args, **kwargs)
+
+    def __contains__(self, *args, **kwargs):
+        """Pass through to self.data dict."""
+        return self.data.__contains__(*args, **kwargs)
+
+    def get(self, key, default=None):
+        if key in self.data:
+            return self.data[key]
+        else:
+            return default
+
+    def __missing__(self, key):
+        """Log a warning if we access an unset config variable."""
+        self._warn("Missing config option %s" % key)
+        raise KeyError(key)
 
     def _warn(self, msg):
         if self.logging:
@@ -109,7 +122,7 @@ class Conf(object):
         if not self.get("logging_config"):
             raise ConfigError("logging_config table undefined.")
 
-        log_config = self.logging_config
+        log_config = self["logging_config"]
         if log_config.get("filename"):
             if not log_config.get("max_bytes"):
                 raise ConfigError("In logging_config, filename enabled but "
@@ -324,10 +337,10 @@ class Conf(object):
 
     def scan_titles(self):
         self.title_images = []
-        if not self.static_path:
+        if not self["static_path"]:
             return
         title_regex = re.compile(r"^title_.*\.png$")
-        for f in os.listdir(self.static_path):
+        for f in os.listdir(self["static_path"]):
             if title_regex.match(f):
                 self.title_images.append(f)
 

@@ -69,7 +69,7 @@ def status_file_timeout():
         return
     write_dgl_status_file()
     ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.add_timeout(time.time() + config.status_file_update_rate,
+    ioloop.add_timeout(time.time() + config["status_file_update_rate"],
                        status_file_timeout)
 
 def find_user_sockets(username):
@@ -87,7 +87,7 @@ def find_running_game(charname, start):
 
 milestone_file_tailers = []
 def start_reading_milestones():
-    files = config.milestone_files
+    files = config["milestone_files"]
 
     for f in files:
         milestone_file_tailers.append(util.FileTailer(f, handle_new_milestone))
@@ -222,7 +222,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.reset_timeout()
 
-        if config.max_connections < len(sockets):
+        if config["max_connections"] < len(sockets):
             self.send_message("close", reason="The maximum number of "
                               "connections has been reached, sorry :(")
             self.close()
@@ -250,7 +250,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # long-lived saved login
                 self.token_login(url_unescape(self.get_cookie("login")))
             elif config.get("autologin"):
-                self.do_login(config.autologin)
+                self.do_login(config["autologin"])
 
     def check_origin(self, origin):
         return True
@@ -295,7 +295,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = False
         self.send_message("ping")
         self.timeout = self.ioloop.add_timeout(time.time() \
-                                               + config.http_connection_timeout,
+                                               + config["http_connection_timeout"],
                                                self.check_connection)
 
     def check_connection(self):
@@ -306,7 +306,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
         else:
             if self.is_running() \
-               and self.process.idle_time() > config.max_idle_time:
+               and self.process.idle_time() > config["max_idle_time"]:
                 self.logger.info("Stopping crawl after idle time limit.")
                 self.go_lobby()
 
@@ -321,7 +321,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         game_params = dict(config.games[game_id])
 
         if self.username is None:
-            if config.allow_guests:
+            if config["allow_guests"]:
                 username = self.register_guest()
                 if not username:
                     # Ideally we'd tell the user we can't auto-generate
@@ -412,7 +412,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not config.get('init_player_program'):
             return True
         try:
-            output = subprocess.check_output([config.init_player_program,
+            output = subprocess.check_output([config["init_player_program"],
                                               self.username],
                                              stderr = subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
@@ -693,7 +693,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         scores = None
         num_scores = int(num_scores)
         if config.get("max_score_list_length"):
-            num_scores = min(config.max_score_list_length, num_scores)
+            num_scores = min(config["max_score_list_length"], num_scores)
             if num_scores > 0:
                 game = config.get_game(game_version, game_mode)
         else:
@@ -781,7 +781,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_message(self, msg, **data):
         """Sends a JSON message to the client."""
-        if config.websocket_debug_logging:
+        if config["websocket_debug_logging"]:
             self.logger.debug("Sending message '%s' with data '%s'" % (msg, data))
         data["msg"] = msg
         if not self.client_closed:

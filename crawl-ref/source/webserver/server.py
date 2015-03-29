@@ -31,7 +31,7 @@ def maybe_minified(module):
     else:
         logging.warning("use_minified is True, but couldn't find {0}. Falling "
                         "back to non-minified javascript".format(path))
-        config.use_minified = False
+        config["use_minified"] = False
         return "/static/" + module
 
 class MainHandler(tornado.web.RequestHandler):
@@ -153,8 +153,8 @@ def bind_server():
             raise tornado.web.HTTPError(403)
 
     settings = {
-        "static_path": config.static_path,
-        "template_loader": util.DynamicTemplateLoader.get(config.template_path)
+        "static_path": config["static_path"],
+        "template_loader": util.DynamicTemplateLoader.get(config["template_path"])
     }
 
     if config.get("no_cache"):
@@ -172,13 +172,13 @@ def bind_server():
     application = tornado.web.Application(routes, gzip=True, **settings)
 
     kwargs = {}
-    kwargs["idle_connection_timeout"] = config.http_connection_timeout
+    kwargs["idle_connection_timeout"] = config["http_connection_timeout"]
 
     servers = []
 
     if config.get("binds"):
         server = tornado.httpserver.HTTPServer(application, **kwargs)
-        for bind in config.binds:
+        for bind in config["binds"]:
             server.listen(bind["port"], bind["address"])
             logging.debug("Listening on {0}:{1}".format(bind["address"],
                                                         bind["port"]))
@@ -186,7 +186,7 @@ def bind_server():
     if config.get("ssl_options"):
         # TODO: allow different ssl_options per bind pair
         server = tornado.httpserver.HTTPServer(application,
-                                               ssl_options=config.ssl_options,
+                                               ssl_options=config["ssl_options"],
                                                **kwargs)
         for bind in config.get("ssl_binds", []):
             server.listen(bind["port"], bind["address"])
@@ -217,7 +217,7 @@ def init_logging():
     except ConfigError as e:
         err_exit(e.msg)
 
-    log_conf = config.logging_config
+    log_conf = config["logging_config"]
     if log_conf.get("filename"):
         log_handler = RotatingFileHandler(log_conf["filename"],
                                           maxBytes=log_conf["max_bytes"],
@@ -240,8 +240,8 @@ def init_logging():
 
 
 if __name__ == "__main__":
-    if config.get("chroot"):
-        os.chroot(config.chroot)
+    if "chroot" in config:
+        os.chroot(config["chroot"])
 
     init_logging()
     make_dgl_status_file()
@@ -250,7 +250,7 @@ if __name__ == "__main__":
         daemonize()
 
     if config.get("umask") is not None:
-        os.umask(config.umask)
+        os.umask(config["umask"])
 
     write_pidfile()
     servers = bind_server()
@@ -262,7 +262,7 @@ if __name__ == "__main__":
         err_exit(e.msg)
 
     if config.get("locale"):
-        locale.setlocale(locale.LC_ALL, config.locale)
+        locale.setlocale(locale.LC_ALL, config["locale"])
     else:
         locale.setlocale(locale.LC_ALL, '')
 
