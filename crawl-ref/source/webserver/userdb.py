@@ -73,6 +73,18 @@ def get_salt(passwd):
         salt = make_salt(2)
     return salt
 
+def username_exists(username, cursor):
+    """Return True if given username exists or is illegal."""
+    if not username:
+        return True
+    if len(username) < config.min_username_length:
+        return True
+    cursor.execute("select username from dglusers where username=? collate "
+                   "nocase", (username,))
+    result = cursor.fetchone()
+    if result:
+        return True
+
 def register_user(username, passwd, email):
     '''Returns an error message or None (success).'''
     if not passwd:
@@ -99,11 +111,9 @@ def register_user(username, passwd, email):
     try:
         conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
-        c.execute("select username from dglusers where username=? collate "
-                  "nocase", (username,))
-        result = c.fetchone()
 
-        if result: return "User already exists!"
+        if username_exists(username, c):
+            return "User already exists!"
 
         c.execute("insert into dglusers(username, email, password, flags, env) "
                   "values (?,?,?,0,'')", (username, email, crypted_pw))
