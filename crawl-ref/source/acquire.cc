@@ -686,74 +686,88 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
+/**
+ * What weight should wands of Heal Wounds be given in wand acquirement, based
+ * on their utility to the player? (More utile -> higher weight -> more likely)
+ */
+static int _hw_wand_weight()
+{
+    if (you.innate_mutation[MUT_NO_DEVICE_HEAL] != 3)
+        return 25; // quite powerful
+    if (!player_mutation_level(MUT_NO_LOVE))
+        return 5; // can be used on allies...? XXX: should be weight 1?
+    return 0; // with no allies, totally useless
+}
+
+/**
+ * What weight should wands of Haste be given in wand acquirement, based on
+ * their utility to the player? (More utile -> higher weight -> more likely)
+ */
+static int _haste_wand_weight()
+{
+    if (you.species != SP_FORMICID)
+        return 25; // quite powerful
+    if (!player_mutation_level(MUT_NO_LOVE))
+        return 5; // can be used on allies...? XXX: should be weight 1?
+    return 0; // with no allies, totally useless
+}
+
+/**
+ * What weight should wands of Teleportation be given in wand acquirement,
+ * based on their utility to the player? (More utile -> higher weight -> more
+ * likely)
+ */
+static int _tele_wand_weight()
+{
+    if (you.species == SP_FORMICID || crawl_state.game_is_sprint())
+        return 1; // can only be used to tele away enemies
+    return 15;
+}
+
+
+/**
+ * Choose a random type of wand to be generated via acquirement or god gifts.
+ *
+ * Heavily weighted toward more useful wands and wands the player hasn't yet
+ * seen.
+ *
+ * @return  A random wand type.
+ */
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    int picked = NUM_WANDS;
+    vector<pair<wand_type, int>> weights = {
+        // normally 25
+        { WAND_HEAL_WOUNDS,     _hw_wand_weight() },
+        { WAND_HASTING,         _haste_wand_weight() },
+        // normally 15
+        { WAND_TELEPORTATION,   _tele_wand_weight() },
+        { WAND_FIRE,            8 },
+        { WAND_COLD,            8 },
+        { WAND_LIGHTNING,       8 },
+        { WAND_DRAINING,        8 },
+        { WAND_INVISIBILITY,    8 },
+        { WAND_FIREBALL,        8 },
+        { WAND_DIGGING,         5 },
+        { WAND_DISINTEGRATION,  5 },
+        { WAND_POLYMORPH,       5 },
+        { WAND_ENSLAVEMENT,     player_mutation_level(MUT_NO_LOVE) ? 0 : 5 },
+        { WAND_FLAME,           1 },
+        { WAND_FROST,           1 },
+        { WAND_CONFUSION,       1 },
+        { WAND_PARALYSIS,       1 },
+        { WAND_SLOWING,         1 },
+        { WAND_MAGIC_DARTS,     1 },
+        { WAND_RANDOM_EFFECTS,  1 },
+    };
 
-    int total = 0;
-    for (int type = 0; type < NUM_WANDS; ++type)
-    {
-        int w = 0;
+    // Unknown wands get a huge weight bonus.
+    for (auto &weight : weights)
+        if (get_ident_type(OBJ_WANDS, weight.first) == ID_UNKNOWN_TYPE)
+            weight.second *= 2;
 
-        // First, weight according to usefulness.
-        switch (type)
-        {
-        case WAND_HEAL_WOUNDS:
-            if (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3
-                && player_mutation_level(MUT_NO_LOVE))
-            {
-                w = 0; // with no allies, totally useless
-            }
-            else
-                w = (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3 ? 5 : 25);
-            break;
-        case WAND_HASTING:          // each 17.9%, group unknown each 26.3%
-            if (you.species == SP_FORMICID
-                && player_mutation_level(MUT_NO_LOVE))
-            {
-                w = 0; // with no allies, totally useless
-            }
-            else
-                w = (you.species == SP_FORMICID ? 5 : 25);
-            break;
-        case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
-            w = you.species == SP_FORMICID || crawl_state.game_is_sprint()
-                ? 1 : 15;
-            break;
-        case WAND_FIRE:             // each 5.7%, group unknown each 9.3%
-        case WAND_COLD:
-        case WAND_LIGHTNING:
-        case WAND_DRAINING:
-        case WAND_INVISIBILITY:
-        case WAND_FIREBALL:
-            w = 8; break;
-        case WAND_DIGGING:          // each 3.6%, group unknown each 6.25%
-        case WAND_DISINTEGRATION:
-        case WAND_POLYMORPH:
-            w = 5; break;
-        case WAND_ENSLAVEMENT:      // useless under Sacrifice Love
-            w = (player_mutation_level(MUT_NO_LOVE) ? 0 : 5); break;
-        case WAND_FLAME:            // each 0.7%, group unknown each 1.4%
-        case WAND_FROST:
-        case WAND_CONFUSION:
-        case WAND_PARALYSIS:
-        case WAND_SLOWING:
-        case WAND_MAGIC_DARTS:
-        case WAND_RANDOM_EFFECTS:
-        default:
-            w = 1; break;
-        }
-
-        // Unknown wands get another huge weight bonus.
-        if (get_ident_type(OBJ_WANDS, type) == ID_UNKNOWN_TYPE)
-            w *= 2;
-
-        total += w;
-        if (x_chance_in_y(w, total))
-            picked = type;
-    }
-
-    return picked;
+    const wand_type* wand = random_choose_weighted(weights);
+    ASSERT(wand);
+    return *wand;
 }
 
 typedef int (*acquirement_subtype_finder)(bool divine, int &quantity);
