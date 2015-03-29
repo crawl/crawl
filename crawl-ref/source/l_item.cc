@@ -412,12 +412,8 @@ IDEF(quantity)
 
 IDEF(slot)
 {
-    if (item)
-    {
-        int slot = in_inventory(*item) ? item->link
-                                       : letter_to_index(item->slot);
-        lua_pushnumber(ls, slot);
-    }
+    if (item && in_inventory(*item))
+        lua_pushnumber(ls, item->link);
     else
         lua_pushnil(ls);
     return 1;
