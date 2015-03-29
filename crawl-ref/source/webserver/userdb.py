@@ -85,13 +85,36 @@ def username_exists(username, cursor):
     if result:
         return True
 
+def find_unused_guest_name():
+    """Return an unused guest name or None if we can't."""
+    try:
+        name = None
+        loops = 0
+        conn = sqlite3.connect(config.password_db)
+        c = conn.cursor()
+        while username_exists(name, c):
+            loops += 1
+            if loops == 10:
+                logging.warning("Couldn't find an unused guest username. "
+                                "(hint: try increasing guest_name_suffix_len)")
+                name = None
+                break
+            name = config.guest_name_prefix
+            for _ in range(config.guest_name_suffix_len):
+                name += random.choice('abcdefghijklmnopqrstuvwxyz0123456789')
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
+    return name
+
 def register_user(username, passwd, email):
     '''Returns an error message or None (success).'''
     if not passwd:
         return "The password can't be empty!"
     passwd = passwd[0:config.max_passwd_length]
     username = username.strip()
-    if len(username) == 1:
+    if len(username) < config.min_username_length:
         return "Username too short."
     if not re.match(config.nick_regex, username):
         return "Invalid username!"
