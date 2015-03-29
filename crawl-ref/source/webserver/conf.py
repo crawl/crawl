@@ -1,19 +1,25 @@
+"""DCSS Webtiles server config."""
+
 from __future__ import print_function
 
-from copy import copy, deepcopy
 import csv
 import glob
-import locale
 import logging
 import os
 import re
 import string
 import sys
+from copy import copy, deepcopy
 
 import toml
 
+
 class ConfigError(Exception):
+
+    """Simple exception for errors when parsing the config file."""
+
     def __init__(self, msg, conf_file=None):
+        """Exception with msg referring to conf_file."""
         self.msg = msg
         if not conf_file and config:
             conf_file = config.path
@@ -21,13 +27,19 @@ class ConfigError(Exception):
             self.msg = "Config file {0}: {1}".format(conf_file, self.msg)
         Exception.__init__(self, msg)
 
+
 class Conf(object):
+
     """Object representing webtiles server configuration.
 
     One instance of this class should exist in the application, as conf.config.
     """
 
     def __init__(self, path=""):
+        """Initialise, then load config.toml from path.
+
+        If path is "", use the value of WEBTILES_CONF envvar or cwd.
+        """
         self.data = None
         self.logging = True
         self.admins = set()
@@ -56,7 +68,6 @@ class Conf(object):
                 errmsg += " Maybe copy config.toml.sample to config.toml."
             raise ConfigError(errmsg)
 
-        config_file = self.path
         self.read()
 
     def __getitem__(self, *args, **kwargs):
@@ -71,11 +82,9 @@ class Conf(object):
         """Pass through to self.data dict."""
         return self.data.__contains__(*args, **kwargs)
 
-    def get(self, key, default=None):
-        if key in self.data:
-            return self.data[key]
-        else:
-            return default
+    def get(self, *args, **kwargs):
+        """Pass through to self.data dict."""
+        return self.data.get(*args, **kwargs)
 
     def __missing__(self, key):
         """Log a warning if we access an unset config variable."""
@@ -83,23 +92,24 @@ class Conf(object):
         raise KeyError(key)
 
     def _warn(self, msg):
+        """Log a warning, through logging if available, or stderr if not."""
         if self.logging:
             logging.warning(msg)
         else:
             print(msg, file=sys.stderr)
 
     def _info(self, msg):
+        """Log a message, through logging if available, or stdout if not."""
         if self.logging:
             logging.info(msg)
         else:
             print(msg)
 
     def read(self):
-        """Reads the main toml configuration data from self.path
+        """Read the main toml configuration data from self.path.
 
         This makes self.data available but does not check the data for
         consistency.
-
         """
 
         # XXX the toml module uses the base Exception class, so we
@@ -119,6 +129,7 @@ class Conf(object):
                 fh.close()
 
     def check_logging(self):
+        """Check logging config, raise ConfigError if there are problems."""
         if not self.get("logging_config"):
             raise ConfigError("logging_config table undefined.")
 
@@ -138,7 +149,6 @@ class Conf(object):
 
         Should be called after the toml config is read with self.read() and
         after any chroot and privilege dropping is done by the server.
-
         """
 
         if self.get("devs_are_server_janitors") \
@@ -176,7 +186,7 @@ class Conf(object):
             self.admins = set([a.lower() for a in self.get("server_admins")])
         self.janitors = set()
         if self.get("server_janitors"):
-            self.janitors = set([j.lower() for j in \
+            self.janitors = set([j.lower() for j in
                                  self.get("server_janitors")])
         self.janitors.update(self.admins)
         self._load_devteam_file()
@@ -185,6 +195,11 @@ class Conf(object):
         self._load_games()
 
     def _load_devteam_file(self):
+        """Load the devteam file if its location is specified.
+
+        Devteam file stores the nicks (primary nick, *alternates) for every
+        dev.
+        """
         self.devteam = {}
         devteam_file = self.get("devteam_file")
         if not devteam_file:
@@ -207,6 +222,7 @@ class Conf(object):
         devteam_fh.close()
 
     def _load_janitor_commands(self):
+        """Load janitor commands from the currently loaded config file."""
         self.janitor_commands = {}
         if not self.data.get("janitor_commands"):
             return
@@ -225,6 +241,7 @@ class Conf(object):
             self.janitor_commands[cmd["id"]] = cmd
 
     def _load_games(self):
+        """Load game specifications from the currently loaded config file."""
         self.games = {}
         # Load any games specified in main config file first
         if self.data.get("games"):
@@ -241,6 +258,7 @@ class Conf(object):
         self._load_game_conf_dir()
 
     def _load_game_data(self, game):
+        """Load ancillary game data for game (specified by game's key)."""
         if not os.path.exists(game["crawl_binary"]):
             raise ConfigError("Crawl executable {0} doesn't "
                               "exist!".format(game["crawl_binary"]))
@@ -257,7 +275,7 @@ class Conf(object):
         self._info("Loaded game '{0}'".format(game["id"]))
 
     def _load_game_conf_dir(self):
-        """Load from the toml files in games_conf_d"""
+        """Load from the toml files in games_conf_d."""
         conf_dir = self.get("games_conf_d")
         if not conf_dir:
             return
@@ -297,9 +315,7 @@ class Conf(object):
                 self.data["games"].append(game)
 
     def _load_player_titles(self):
-        """Load player titles from the player_title_file.
-
-        """
+        """Load player titles from the player_title_file."""
         self.player_titles = {}
         # Don't bother loading titles if we don't have the title sets defined.
         title_names = self.get("title_names")
@@ -319,6 +335,7 @@ class Conf(object):
         title_fh.close()
 
     def _load_game_map(self, game):
+        """Load game map data into game."""
         if "map_path" not in game:
             return
         if "score_path" not in game:
@@ -336,6 +353,7 @@ class Conf(object):
         game["game_maps"] = data["maps"]
 
     def scan_titles(self):
+        """Find all title images and load them into self.title_images."""
         self.title_images = []
         if not self["static_path"]:
             return
@@ -345,14 +363,13 @@ class Conf(object):
                 self.title_images.append(f)
 
     def reload(self):
-        """Try to reload the WebTiles configuration from self.path
+        """Try to reload the WebTiles configuration from self.path.
 
         If the new configuration fails to load or parse, we rollback to the
         current configuration. Not that any changes to configuration data that
         is used before chroot or privilege dropping are ignored. This would be
         the [[binds]], [[ssl_binds]], [logging_config] tables, and any of the
         permissions and chroot options.
-
         """
 
         # XXX Find a nice way to avoid an explicit list of what to copy
@@ -385,7 +402,6 @@ class Conf(object):
 
         This is called on config reload an on SIGUSR2. The titles are rolled
         back to the current ones if there's an error.
-
         """
         player_titles = deepcopy(self.player_titles)
 
@@ -430,13 +446,15 @@ class Conf(object):
         return title
 
     def is_server_admin(self, username):
+        """Return True if username is a server admin."""
         return self.admins and username.lower() in self.admins
 
     def is_server_janitor(self, username):
+        """Return True if username is a server janitor."""
         return self.janitors and username.lower() in self.janitors
 
     def get_nerd(self, username):
-        """Return {title, canonical_name} for a username."""
+        """Return {title=str, canonical_name=str} for a username."""
         if self.is_server_admin(username):
             return {"type": "admins", "devname": None}
         devname = self.get_devname(username)
@@ -448,6 +466,7 @@ class Conf(object):
         return {"type": "normal", "devname": None}
 
     def get_game(self, game_version, game_mode):
+        """Return game data matching game_version & game_mode (or None)."""
         if not self.games:
             return None
 
@@ -459,6 +478,7 @@ class Conf(object):
         return None
 
     def game_map(self, game_id, map_name):
+        """Return game_map matching game_id & map_name (or None)."""
         if "game_maps" not in self.games[game_id]:
             return None
         for m in self.games[game_id]["game_maps"]:
