@@ -7,6 +7,7 @@ import resource
 import signal
 import sys
 import time
+import logging
 
 BUFSIZ = 2048
 
@@ -15,7 +16,13 @@ class TerminalRecorder(object):
         self.io_loop = io_loop
         self.command = command
         if filename:
-            self.ttyrec = open(filename, "w", 0)
+            d = os.path.dirname(filename)
+            if not os.path.isdir(d):
+                logging.warning("ttyrec directory '%s' doesn't exist, "
+                                "not creating ttyrec.", d)
+                self.ttyrec = None
+            else:
+                self.ttyrec = open(filename, "w", 0)
         else:
             self.ttyrec = None
         self.id = id
