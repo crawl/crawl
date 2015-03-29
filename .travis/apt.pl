@@ -17,6 +17,7 @@ elsif ($ENV{CXX} eq "g++") {
 sub run {
     my @cmd = @_;
 
+    print "Running '@cmd'\n";
     my $ret = system(@cmd);
     exit($ret) if $ret;
     return;
@@ -30,6 +31,7 @@ sub retry {
 
     my $ret;
     while ($tries--) {
+        print "Running '@cmd'\n";
         $ret = system(@cmd);
         return if $ret == 0;
         print "'@cmd' failed ($ret), retrying in $sleep seconds...\n";
