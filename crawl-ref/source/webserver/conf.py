@@ -63,6 +63,7 @@ class Conf(object):
         try:
             return self.data[name]
         except KeyError:
+            self._warn("Missing config option %s" % name)
             raise AttributeError(name)
 
     def get(self, *args):
