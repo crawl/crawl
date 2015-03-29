@@ -166,7 +166,7 @@ def bind_server():
         ("/watch/(.*)", MainHandler, {"action": "watch"}),
         ("/scores/(.*)", MainHandler, {"action": "scores"}),
         ("/socket", CrawlWebSocket),
-        ("/gamedata/(.*)/(.*)", GameDataHandler),
+        ("/gamedata/(.*)", GameDataHandler),
         ("/janitor/(.*)", JanitorHandler)]
 
     application = tornado.web.Application(routes, gzip=True, **settings)
