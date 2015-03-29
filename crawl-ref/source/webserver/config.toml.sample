@@ -129,6 +129,10 @@ guest_name_prefix = "Crawler"
 # How many characters to suffix. Uses a-z0-9
 guest_name_suffix_len = 3
 
+# Enable debug logging of websocket messages
+# Warning: VERY verbose!
+websocket_debug_logging = false
+
 # Non-SSL bindings
 [[binds]]
 port = 8080

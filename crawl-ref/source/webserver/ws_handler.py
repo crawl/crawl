@@ -781,6 +781,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_message(self, msg, **data):
         """Sends a JSON message to the client."""
+        if config.websocket_debug_logging:
+            self.logger.debug("Sending message '%s' with data '%s'" % (msg, data))
         data["msg"] = msg
         if not self.client_closed:
             self.write_message(json_encode(data))
