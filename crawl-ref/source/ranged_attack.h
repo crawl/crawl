@@ -49,7 +49,7 @@ private:
     bool player_good_stab();
 
     /* Output */
-    void set_attack_verb();
+    void set_attack_verb(int damage) override;
     void announce_hit();
 
 private:
