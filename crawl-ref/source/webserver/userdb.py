@@ -1,3 +1,4 @@
+import contextlib
 import crypt
 import logging
 import os.path
@@ -8,6 +9,20 @@ import time
 
 from conf import config
 
+@contextlib.contextmanager
+def cursor():
+    dbpath = config["password_db"]
+    try:
+        conn = sqlite3.connect(dbpath)
+        try:
+            c = conn.cursor()
+            yield c
+            conn.commit()
+        finally:
+            c.close()
+    finally:
+        conn.close()
+
 def user_passwd_match(username, passwd):
     """Return the correctly cased username."""
     try:
@@ -15,9 +30,7 @@ def user_passwd_match(username, passwd):
     except:
         return None
 
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
+    with cursor() as c:
         c.execute("select username,password from dglusers where username=? "
                   "collate nocase", (username,))
         result = c.fetchone()
@@ -26,38 +39,19 @@ def user_passwd_match(username, passwd):
             return None
         elif crypt.crypt(passwd, result[1]) == result[1]:
             return result[0]
-    finally:
-        if c: c.close()
-        if conn: conn.close()
 
 def ensure_user_db_exists():
     if not os.path.exists(config["password_db"]):
         logging.warn("User database didn't exist; creating it now.")
-        c = None
-        conn = None
-        try:
-            conn = sqlite3.connect(config["password_db"])
-            c = conn.cursor()
+        with cursor() as c:
             c.execute("CREATE TABLE dglusers (id integer primary key, username "
                       "text, email text, env text, password text, flags "
                       "integer);")
-            conn.commit()
-        finally:
-            if c: c.close()
-            if conn: conn.close()
 
-    c = None
-    conn = None
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
+    with cursor() as c:
         c.execute("CREATE TABLE IF NOT EXISTS login_tokens (username text, "
                   "seqid text, token text, expires integer, PRIMARY KEY "
                   "(username, seqid));")
-        conn.commit()
-    finally:
-        if c: c.close()
-        if conn: conn.close()
 
 
 saltchars = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -87,11 +81,9 @@ def username_exists(username, cursor):
 
 def find_unused_guest_name():
     """Return an unused guest name or None if we can't."""
-    try:
+    with cursor() as c:
         name = None
         loops = 0
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
         while username_exists(name, c):
             loops += 1
             if loops == 10:
@@ -102,10 +94,6 @@ def find_unused_guest_name():
             name = config["guest_name_prefix"]
             for _ in range(config["guest_name_suffix_len"]):
                 name += random.choice('abcdefghijklmnopqrstuvwxyz0123456789')
-    finally:
-        if c: c.close()
-        if conn: conn.close()
-
     return name
 
 def register_user(username, passwd, email):
@@ -141,22 +129,11 @@ def register_user(username, passwd, email):
     else:
         crypted_pw = 'No Password'
 
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
-
+    with cursor() as c:
         if username_exists(username, c):
             return "User already exists!"
-
         c.execute("insert into dglusers(username, email, password, flags, env) "
                   "values (?,?,?,0,'')", (username, email, crypted_pw))
-
-        conn.commit()
-
-        return None
-    finally:
-        if c: c.close()
-        if conn: conn.close()
 
 def set_password(username, passwd): # Returns True or False
     if passwd == "": return False
@@ -165,19 +142,10 @@ def set_password(username, passwd): # Returns True or False
     salt = get_salt(passwd)
     crypted_pw = crypt.crypt(passwd, salt)
 
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
-
+    with cursor() as c:
         c.execute("update dglusers set password=? where username=?",
                   (crypted_pw, username))
-
-        conn.commit()
-
         return True
-    finally:
-        if c: c.close()
-        if conn: conn.close()
 
 sessions = {}
 rand = random.SystemRandom()
@@ -210,17 +178,9 @@ def delete_session(sid):
         del sessions[sid]
 
 def purge_login_tokens():
-    c = None
-    conn = None
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
+    with cursor() as c:
         c.execute("DELETE FROM login_tokens WHERE expires<?",
                   (int(time.time()),))
-        conn.commit()
-    finally:
-        if c: c.close()
-        if conn: conn.close()
 
     for sid in sessions:
         session = sessions[sid]
@@ -229,16 +189,8 @@ def purge_login_tokens():
             del sessions[sid]
 
 def delete_logins(username):
-    c = None
-    conn = None
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
+    with cursor() as c:
         c.execute("DELETE FROM login_tokens WHERE username=?", (username,))
-        conn.commit()
-    finally:
-        if c: c.close()
-        if conn: conn.close()
 
     # This is a python3-compatible way to list copy the items so we can delete
     # keys.
@@ -251,20 +203,13 @@ def token_login(cookie, logger=logging):
         username, token, seqid = cookie.split(":")
     except ValueError:
         return None, None
-    c = None
-    conn = None
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
+    with cursor() as c:
         c.execute("SELECT token, expires FROM login_tokens WHERE username=? "
                   "AND seqid=?", (username, seqid))
         result = c.fetchone()
+        # XXX is this a bug? should we *always* delete here even if login fails?
         c.execute("DELETE FROM login_tokens WHERE username=? AND seqid=?",
                   (username, seqid))
-        conn.commit()
-    finally:
-        if c: c.close()
-        if conn: conn.close()
 
     if result:
         true_token, expires = result
@@ -285,30 +230,14 @@ def get_login_cookie(username, seqid=None):
     token = pack_sid(rand.getrandbits(128))
     if seqid is None: seqid = pack_sid(rand.getrandbits(128))
     expires = int(time.time()) + config["login_token_lifetime"]*24*60*60
-    c = None
-    conn = None
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
+    with cursor() as c:
         c.execute("INSERT INTO login_tokens(username, seqid, token, expires) "
                   "VALUES (?,?,?,?)", (username, seqid, token, expires))
-        conn.commit()
-    finally:
-        if c: c.close()
-        if conn: conn.close()
     cookie = "{0}:{1}:{2}".format(username, token, seqid)
     return cookie, expires
 
 def forget_login_cookie(cookie):
     username, token, seqid = cookie.split(":")
-    c = None
-    conn = None
-    try:
-        conn = sqlite3.connect(config["password_db"])
-        c = conn.cursor()
+    with cursor() as c:
         c.execute("DELETE FROM login_tokens WHERE username=? AND seqid=?",
                   (username, seqid))
-        conn.commit()
-    finally:
-        if c: c.close()
-        if conn: conn.close()
