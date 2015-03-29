@@ -1,15 +1,14 @@
 #!/bin/sh
 
-set -e
-
 retry () {
-    local cmd=$1
-    shift
-    $cmd $* || (sleep 10 && $cmd $*) || (sleep 10 && $cmd $*)
+    local cmd="$@"
+    until $cmd; do
+        sleep 5
+    done
 }
 
-add-apt-repository ppa:ubuntu-toolchain-r/test -y
-add-apt-repository ppa:zoogie/sdl2-snapshots -y
+retry add-apt-repository ppa:ubuntu-toolchain-r/test -y
+retry add-apt-repository ppa:zoogie/sdl2-snapshots -y
 
 retry apt-get update -qq
 
