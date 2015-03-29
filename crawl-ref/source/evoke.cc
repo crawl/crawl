@@ -295,8 +295,8 @@ static bool _evoke_horn_of_geryon(item_def &item)
         if (!will_anger && random2(you.skill(SK_EVOCATIONS, 10)) > 7)
             beh = BEH_FRIENDLY;
         mgen_data mg(MONS_HELL_BEAST, beh, &you, 3, SPELL_NO_SPELL, you.pos(),
-                     MHITYOU, MG_FORCE_BEH, GOD_NO_GOD, MONS_HELL_BEAST, 0, BLACK,
-                     PROX_CLOSE_TO_PLAYER);
+                     MHITYOU, MG_FORCE_BEH, GOD_NO_GOD, MONS_HELL_BEAST, 0,
+                     COLOUR_INHERIT, PROX_CLOSE_TO_PLAYER);
         mon = create_monster(mg);
         if (mon)
             created = true;
@@ -1500,10 +1500,10 @@ static bool _lamp_of_fire()
             attitude = BEH_HOSTILE;
         for (coord_def epos : elementals)
         {
-            mgen_data mg(MONS_FIRE_ELEMENTAL, attitude, &you, 3,
-                         SPELL_NO_SPELL, epos, 0,
-                         MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
-                         MONS_FIRE_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
+            mgen_data mg(MONS_FIRE_ELEMENTAL, attitude, &you, 3, SPELL_NO_SPELL,
+                         epos, 0, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
+                         MONS_FIRE_ELEMENTAL, 0, COLOUR_INHERIT,
+                         PROX_CLOSE_TO_PLAYER);
             mg.hd = 6 + (pow/20);
             create_monster(mg);
         }
@@ -1774,7 +1774,7 @@ static void _fan_of_gales_elementals()
     {
         mgen_data mg (MONS_AIR_ELEMENTAL, attitude, &you, 3, SPELL_NO_SPELL,
                       elementals[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE,
-                      GOD_NO_GOD, MONS_AIR_ELEMENTAL, 0, BLACK,
+                      GOD_NO_GOD, MONS_AIR_ELEMENTAL, 0, COLOUR_INHERIT,
                       PROX_CLOSE_TO_PLAYER);
         mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
         if (create_monster(mg))
@@ -1904,7 +1904,8 @@ static bool _stone_of_tremors()
 
         mgen_data mg(MONS_EARTH_ELEMENTAL, attitude, &you, 3, SPELL_NO_SPELL,
                      rubble_pos[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
-                     MONS_EARTH_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
+                     MONS_EARTH_ELEMENTAL, 0, COLOUR_INHERIT,
+                     PROX_CLOSE_TO_PLAYER);
         mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
         if (create_monster(mg))
             created = true;
@@ -1974,7 +1975,8 @@ static bool _phial_of_floods()
             mgen_data mg (MONS_WATER_ELEMENTAL, attitude, &you, 3,
                           SPELL_NO_SPELL, elementals[n], 0,
                           MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
-                          MONS_WATER_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
+                          MONS_WATER_ELEMENTAL, 0, COLOUR_INHERIT,
+                          PROX_CLOSE_TO_PLAYER);
             mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15);
             if (create_monster(mg))
                 created = true;

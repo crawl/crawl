@@ -1243,10 +1243,12 @@ spret_type cast_shadow_creatures(int st, god_type god, level_id place,
     {
         if (monster *mons = create_monster(
             mgen_data(critter, BEH_FRIENDLY, &you,
-                      (scroll ? 2 : 1), // This duration is only used for band members.
+                      // This duration is only used for band members.
+                      (scroll ? 2 : 1),
                       st, you.pos(), MHITYOU,
                       MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD, god,
-                      MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE, place), false))
+                      MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE, place),
+            false))
         {
             // In the rare cases that a specific spell set of a monster will
             // cause anger, even if others do not, try rerolling
@@ -2681,13 +2683,8 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         mgen_data mg (MONS_BATTLESPHERE,
                       agent->is_player() ? BEH_FRIENDLY
                                          : SAME_ATTITUDE(agent->as_monster()),
-                      agent,
-                      0, SPELL_BATTLESPHERE,
-                      agent->pos(),
-                      agent->mindex(),
-                      0, god,
-                      MONS_NO_MONSTER, 0, BLACK);
-
+                      agent, 0, SPELL_BATTLESPHERE, agent->pos(),
+                      agent->mindex(), 0, god);
         mg.hd = 1 + div_rand_round(pow, 11);
         battlesphere = create_monster(mg);
 

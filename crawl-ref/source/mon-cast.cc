@@ -5477,7 +5477,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
                           5, spell_cast, mons->pos(), mons->foe, 0, god,
-                          MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE, place));
+                          MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE,
+                          place));
         }
         return;
     }
@@ -6427,8 +6428,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         monster* avatar =
             create_monster(
                 mgen_data(MONS_GRAND_AVATAR, SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, 0,
-                          god, MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
+                          duration, spell_cast, mons->pos(), mons->foe, 0, god,
+                          MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE,
                           level_id::current(), mons->spell_hd(spell_cast)));
         if (avatar)
         {
