@@ -313,8 +313,9 @@ static int l_item_do_ego(lua_State *ls)
 
     const char *s = nullptr;
 
-    if ((item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR
-         || item->base_type == OBJ_MISSILES) && item_ident(*item, ISFLAG_KNOW_TYPE))
+    if ((item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR)
+        && item_ident(*item, ISFLAG_KNOW_TYPE)
+        || item->base_type == OBJ_MISSILES)
     {
         s = ego_type_string(*item, terse).c_str();
     }
@@ -933,7 +934,8 @@ IDEF(sub_type)
 
 IDEF(ego_type)
 {
-    if (CLua::get_vm(ls).managed_vm && !item_ident(*item, ISFLAG_KNOW_TYPE))
+    if (CLua::get_vm(ls).managed_vm && !item_ident(*item, ISFLAG_KNOW_TYPE)
+        && item->base_type != OBJ_MISSILES)
     {
         lua_pushstring(ls, "unknown");
         return 1;
