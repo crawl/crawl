@@ -114,7 +114,7 @@ private:
     bool do_knockback(bool trample = true);
 
     /* Output methods */
-    void set_attack_verb();
+    void set_attack_verb(int damage) override;
     void announce_hit();
 
     /* Misc methods */
