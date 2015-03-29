@@ -119,7 +119,7 @@ def bind_server():
     application = tornado.web.Application([
             (r"/", MainHandler),
             (r"/socket", CrawlWebSocket),
-            (r"/gamedata/(.*)/(.*)", GameDataHandler)
+            (r"/gamedata/(.*)", GameDataHandler)
             ], gzip=True, **settings)
 
     kwargs = {}
