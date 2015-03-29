@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -e
 
 retry () {
     local cmd=$1
