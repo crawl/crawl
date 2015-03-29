@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 retry () {
     local cmd=$1
     shift
