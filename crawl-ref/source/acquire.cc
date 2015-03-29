@@ -1201,7 +1201,7 @@ static void _adjust_brand(item_def &item, bool divine)
     }
 
     // Try to not generate brands that were already seen, although unlike
-    // jewelery and books, this is not absolute.
+    // jewellery and books, this is not absolute.
     while (_brand_already_seen(item) && !one_chance_in(5))
         reroll_brand(item, ITEM_LEVEL);
 }
