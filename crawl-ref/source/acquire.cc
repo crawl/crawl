@@ -1248,10 +1248,10 @@ static string _why_reject(const item_def &item, int agent)
     // MT - Check: god-gifted weapons and armour shouldn't kill you.
     // Except Xom.
     if ((agent == GOD_TROG || agent == GOD_OKAWARU)
-        && is_artefact(acq_item))
+        && is_artefact(item))
     {
         artefact_properties_t  proprt;
-        artefact_properties(acq_item, proprt);
+        artefact_properties(item, proprt);
 
         // Check vs. stats. positive stats will automatically fall
         // through.  As will negative stats that won't kill you.
@@ -1259,16 +1259,16 @@ static string _why_reject(const item_def &item, int agent)
             || -proprt[ARTP_INTELLIGENCE] >= you.intel()
             || -proprt[ARTP_DEXTERITY] >= you.dex())
         {
-            return "Destroying art that would cause <= 0 stats!");
+            return "Destroying art that would cause <= 0 stats!";
         }
     }
 
     // Sif Muna shouldn't gift special books.
     // (The spells therein are still fair game for randart books.)
     if (agent == GOD_SIF_MUNA
-        && is_rare_book(static_cast<book_type>(acq_item.sub_type)))
+        && is_rare_book(static_cast<book_type>(item.sub_type)))
     {
-        ASSERT(acq_item.base_type == OBJ_BOOKS);
+        ASSERT(item.base_type == OBJ_BOOKS);
         return "Destroying sif-gifted rarebook!";
     }
 
@@ -1376,7 +1376,7 @@ int acquirement_create_item(object_class_type class_wanted,
             set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
         }
 
-        const string rejection_reason = _why_reject(acq_item);
+        const string rejection_reason = _why_reject(acq_item, agent);
         if (!rejection_reason.empty())
         {
             if (!quiet)
