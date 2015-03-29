@@ -1,6 +1,6 @@
 #!/bin/sh
 
-function retry {
+retry () {
     local cmd=$1
     shift
     $cmd $* || (sleep 10 && $cmd $*) || (sleep 10 && $cmd $*)
