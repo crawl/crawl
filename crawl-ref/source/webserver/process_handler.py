@@ -401,6 +401,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self._start_process()
 
     def _find_lock(self):
+        if not os.path.isdir(self.config_path("inprogress_path")):
+            logging.warning("Inprogress directory missing, creating it. "
+                            "Perms/owner may not be what you expect.")
+            os.mkdir(self.config_path("inprogress_path"))
         for path in os.listdir(self.config_path("inprogress_path")):
             if (path.startswith(self.username + ":") and
                 path.endswith(".ttyrec")):
