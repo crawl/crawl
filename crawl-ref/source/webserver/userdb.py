@@ -109,7 +109,11 @@ def find_unused_guest_name():
     return name
 
 def register_user(username, passwd, email):
-    '''Returns an error message or None (success).'''
+    '''Register a new user account.
+
+    Returns None on success or error string.
+    Set passwd to None to disable password authentication.
+    Note: email is not checked for validity.'''
     if not passwd:
         return "The password can't be empty!"
     passwd = passwd[0:config.max_passwd_length]
@@ -123,13 +127,16 @@ def register_user(username, passwd, email):
        and config.get_devname(username):
         return "Reserved username!"
 
-    salt = get_salt(passwd)
-    crypted_pw = crypt.crypt(passwd, salt)
-    # crypt.crypt can fail if you pass in a salt it doesn't like
-    if not crypted_pw:
-        logging.warning("User registration failed; crypt_algorithm setting? "
-                        "Tested salt was '{0}'".format(salt))
-        return "Internal registration error." # deliberately generic
+    if passwd:
+        salt = get_salt(passwd)
+        crypted_pw = crypt.crypt(passwd, salt)
+        # crypt.crypt can fail if you pass in a salt it doesn't like
+        if not crypted_pw:
+            logging.warning("User registration failed; crypt_algorithm setting? "
+                            "Tested salt was '{0}'".format(salt))
+            return "Internal registration error." # deliberately generic
+    else:
+        crypted_pw = 'No Password'
 
     try:
         conn = sqlite3.connect(config.password_db)
