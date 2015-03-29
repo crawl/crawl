@@ -131,7 +131,7 @@ CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
 PNGCRUSH = $(COPY)
 PNGCRUSH_LABEL = COPY
-ADVPNG = advpng -z -4
+ADVPNG = advpng -z -4 -q
 PKGCONFIG = pkg-config
 DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
@@ -1103,6 +1103,7 @@ ifndef NO_OPTIMIZE
   ifneq (,$(shell which advpng))
     USE_ADVPNG = y
   else
+    $(info WARNING: Can't find advpng -- PNGs will be ~50% larger than they need to be!)
     ifneq (,$(shell which pngcrush))
       PNGCRUSH = pngcrush -q -m 113
       PNGCRUSH_LABEL = PNGCRUSH
