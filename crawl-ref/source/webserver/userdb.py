@@ -112,11 +112,13 @@ def register_user(username, passwd, email):
     '''Register a new user account.
 
     Returns None on success or error string.
-    Set passwd to None to disable password authentication.
+    Set passwd to None to disable password authentication (ie, the user cannot
+    log in).
     Note: email is not checked for validity.'''
-    if not passwd:
-        return "The password can't be empty!"
-    passwd = passwd[0:config.max_passwd_length]
+    # passwd can be '' or None (which mean different things). Check for ''
+    # here, and None further down. Bit messy.
+    if passwd == '':
+        return "The password can't be None!"
     username = username.strip()
     if len(username) < config.min_username_length:
         return "Username too short."
@@ -128,6 +130,7 @@ def register_user(username, passwd, email):
         return "Reserved username!"
 
     if passwd:
+        passwd = passwd[0:config.max_passwd_length]
         salt = get_salt(passwd)
         crypted_pw = crypt.crypt(passwd, salt)
         # crypt.crypt can fail if you pass in a salt it doesn't like
