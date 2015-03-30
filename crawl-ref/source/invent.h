@@ -27,7 +27,7 @@ enum object_selector
     OSEL_THROWABLE               =  -9,
     OSEL_EVOKABLE                = -10,
     OSEL_WORN_ARMOUR             = -11,
-    OSEL_FRUIT                   = -12,
+//  OSEL_FRUIT                   = -12,
     OSEL_CURSED_WORN             = -13,
     OSEL_UNCURSED_WORN_ARMOUR    = -14,
     OSEL_UNCURSED_WORN_JEWELLERY = -15,
