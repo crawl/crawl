@@ -2750,6 +2750,16 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_SPIT_POISON] = 3;
         }
     }
+
+    // Give nagas constrict, tengu flight, and mummies restoration/enhancers.
+    if (th.getMinorVersion() < TAG_MINOR_REAL_MUTS
+        && (you.species == SP_NAGA
+            || you.species == SP_TENGU
+            || you.species == SP_MUMMY))
+    {
+        for (int xl = 2; xl <= you.experience_level; ++xl)
+            give_level_mutations(you.species, xl);
+    }
 #endif
 
     count = unmarshallUByte(th);
