@@ -355,7 +355,7 @@ random_var player::attack_delay(const item_def *weap,
                            DELAY_SCALE);
     }
     // Give unarmed shield-users a slight penalty always.
-    if (!weap && player_wearing_slot(EQ_SHIELD))
+    if (!weap && shield())
         shield_penalty += rv::random2(2);
 
     if (!do_shield)
@@ -416,7 +416,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
                             || hands_reqd(item) == HANDS_TWO;
 
     if (two_handed && (
-        (!ignore_shield && player_wearing_slot(EQ_SHIELD))
+        (!ignore_shield && shield())
         || player_mutation_level(MUT_MISSING_HAND)))
     {
         return false;

@@ -32,7 +32,7 @@ private:
     int weapon_damage();
     int calc_base_unarmed_damage();
     int calc_mon_to_hit_base();
-    int apply_damage_modifiers(int damage, int damage_max, bool &half_ac);
+    int apply_damage_modifiers(int damage, int damage_max);
     bool attack_ignores_shield(bool verbose);
     bool apply_damage_brand(const char *what = nullptr);
     special_missile_type random_chaos_missile_brand();
@@ -49,7 +49,7 @@ private:
     bool player_good_stab();
 
     /* Output */
-    void set_attack_verb();
+    void set_attack_verb(int damage) override;
     void announce_hit();
 
 private:

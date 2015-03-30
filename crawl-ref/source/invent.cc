@@ -396,7 +396,8 @@ static bool _has_tran_unwearable_armour()
         item_def &item(you.inv[i]);
 
         if (item.defined() && item.base_type == OBJ_ARMOUR
-            && !you_tran_can_wear(item))
+            && can_wear_armour(item, false, true)
+            && !can_wear_armour(item, false, false))
         {
             return true;
         }
@@ -445,7 +446,7 @@ string no_selectables_message(int item_selector)
             return "You aren't carrying any armour you can wear in your "
                    "current form.";
         else
-            return "You aren't carrying any armour.";
+            return "You aren't carrying any wearable armour.";
     }
     case OSEL_UNIDENT:
         return "You don't have any unidentified items.";
@@ -1081,7 +1082,7 @@ bool is_item_selected(const item_def &i, int selector)
     switch (selector)
     {
     case OBJ_ARMOUR:
-        return itype == OBJ_ARMOUR && you_tran_can_wear(i);
+        return itype == OBJ_ARMOUR && can_wear_armour(i, false, false);
 
     case OSEL_FRUIT:
         return is_fruit(i);
@@ -1707,14 +1708,25 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
         }
 
         if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
+        {
+            if (_is_wielded(item) && you_worship(GOD_ZIN))
+                penance = true;
             return true;
+        }
     }
 
     if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
         || oper == OPER_REMOVE)
     {
         if (is_artefact(item) && artefact_property(item, ARTP_MUTAGENIC))
+        {
+            if ((oper == OPER_TAKEOFF || oper == OPER_REMOVE)
+                 && you_worship(GOD_ZIN))
+            {
+                penance = true;
+            }
             return true;
+        }
     }
 
     return false;
@@ -1788,10 +1800,12 @@ bool check_warning_inscriptions(const item_def& item,
                 return true;
         }
 
+        // XXX: duplicates a check in delay.cc:_finish_delay()
         string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
-        if (nasty_stasis(item, oper))
+        if (nasty_stasis(item, oper)
+            && item_ident(item, ISFLAG_KNOW_TYPE))
         {
             prompt += string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :

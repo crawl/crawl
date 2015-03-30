@@ -112,11 +112,11 @@ static const int conflict[][3] =
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          1},
     { MUT_FAST,                MUT_SLOW,                   1},
+    { MUT_BREATHE_FLAMES,      MUT_SPIT_POISON,            1},
     { MUT_REGENERATION,        MUT_SLOW_METABOLISM,        0},
     { MUT_REGENERATION,        MUT_SLOW_HEALING,           0},
     { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,          0},
     { MUT_FAST,                MUT_SLOW,                   0},
-    { MUT_UNBREATHING,         MUT_BREATHE_FLAMES,         0},
     { MUT_FANGS,               MUT_BEAK,                  -1},
     { MUT_ANTENNAE,            MUT_HORNS,                 -1},
     { MUT_HOOVES,              MUT_TALONS,                -1},
@@ -1019,14 +1019,13 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
-    // Red Draconians can already breathe flames.
-    if (you.species == SP_RED_DRACONIAN && mutat == MUT_BREATHE_FLAMES)
+    // Draconians already get breath weapons.
+    if (species_is_draconian(you.species)
+        && (mutat == MUT_BREATHE_FLAMES
+            || mutat == MUT_SPIT_POISON))
+    {
         return true;
-
-    // Green Draconians can breathe mephitic, poison is not really redundant
-    // but its name might confuse players a bit ("noxious" vs "poison").
-    if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
-        return true;
+    }
 
     // Only Draconians (and gargoyles) can get wings.
     if (!species_is_draconian(you.species) && you.species != SP_GARGOYLE
@@ -1092,6 +1091,11 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Can't worship gods.
     if (you.species == SP_DEMIGOD && mutat == MUT_FORLORN)
+        return true;
+
+    // We can't use is_useless_skill() here, since species that can still wear
+    // body armour can sacrifice armour skill with Ru.
+    if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL && mutat == MUT_DEFORMED)
         return true;
 
     equipment_type eq_type = EQ_NONE;
@@ -1395,7 +1399,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_SPIT_POISON:
             // Breathe poison replaces spit poison (so it takes the slot).
-            if (you.mutation[mutat] == 3)
+            if (you.mutation[mutat] >= 3)
                 for (int i = 0; i < 52; ++i)
                     if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
                         you.ability_letter_table[i] = ABIL_BREATHE_POISON;
@@ -1789,8 +1793,6 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostr << mdef.have[0] << player_icemail_armour_class() << ").";
         result = ostr.str();
     }
-    else if (mut == MUT_DEFORMED && is_useless_skill(SK_ARMOUR))
-        result = "Your body is misshapen.";
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 

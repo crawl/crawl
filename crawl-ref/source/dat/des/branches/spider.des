@@ -1388,6 +1388,29 @@ xyyyyyyyyyyyyyyyyxzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
                                                       ...""..
 ENDMAP
 
+NAME: nicolae_spider_webbed_stairs
+DEPTH: Spider
+TAGS: transparent decor
+: if you.depth() == 1 then
+SUBST: s = ]})
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST: s = [{(
+: else
+SUBST: s = ]})[{(
+: end
+SHUFFLE: abcde/^._^^/..x^^/..x^x/.._x^/x^___/^x___/..^xx/x.xx^/^^__^/^^___/ \
+         ^._x^/x.^^^/..^^x/x._^x/^^x^_
+SUBST: ab = ., cde = ^
+KFEAT: ^ = web
+CLEAR: _
+MAP
+cdedc
+dabad
+ebsbe
+dabad
+cdedc
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################

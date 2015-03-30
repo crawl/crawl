@@ -189,8 +189,9 @@ static void _print_version()
 void list_armour()
 {
     ostringstream estr;
-    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+    for (int j = EQ_MIN_ARMOUR; j <= EQ_MAX_ARMOUR; j++)
     {
+        const equipment_type i = static_cast<equipment_type>(j);
         const int armour_id = you.equip[i];
         int       colour    = MSGCOL_BLACK;
 
@@ -209,20 +210,17 @@ void list_armour()
                                  : "unknown")
              << " : ";
 
-        if (!you_can_wear(i, true))
+        if (you_can_wear(i) == MB_FALSE)
             estr << "    (unavailable)";
-        else if (armour_id != -1 && !you_tran_can_wear(you.inv[armour_id])
-                 || !you_tran_can_wear(i))
-        {
+        else if (you_can_wear(i, true) == MB_FALSE)
             estr << "    (currently unavailable)";
-        }
         else if (armour_id != -1)
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
                                  "equip");
         }
-        else if (!you_can_wear(i))
+        else if (you_can_wear(i) == MB_MAYBE)
             estr << "    (restricted)";
         else
             estr << "    none";
@@ -240,8 +238,9 @@ void list_jewellery()
     int cols = get_number_of_cols() - 1;
     bool split = you.species == SP_OCTOPODE && cols > 84;
 
-    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
+    for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
     {
+        const equipment_type i = static_cast<equipment_type>(j);
         if (!you_can_wear(i))
             continue;
 
@@ -264,11 +263,8 @@ void list_jewellery()
                                        : "unknown";
 
         string item;
-        if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])
-            || !you_tran_can_wear(i))
-        {
+        if (you_can_wear(i, true) == MB_FALSE)
             item = "    (currently unavailable)";
-        }
         else if (jewellery_id != -1)
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);

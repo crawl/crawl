@@ -441,7 +441,7 @@ static const mutation_def mut_data[] =
 
   {"You can spit weak poison.",
    "You can spit poison.",
-   "You can exhale a cloud of poison." },
+   "You can exhale a cloud of poison."},
 
   {"There is a nasty taste in your mouth for a moment.",
    "There is a nasty taste in your mouth for a moment.",
@@ -933,7 +933,7 @@ static const mutation_def mut_data[] =
 },
 #if TAG_MAJOR_VERSION == 34
 
-{ MUT_BREATHE_POISON,                 4,  1, MUTFLAG_GOOD, false,
+{ MUT_BREATHE_POISON,                 0,  1, MUTFLAG_GOOD, false,
   "breathe poison",
 
   {"You can exhale a cloud of poison.", "", ""},
@@ -1154,7 +1154,7 @@ static const mutation_def mut_data[] =
 { MUT_ICEMAIL,                        0,  1, MUTFLAG_GOOD, false,
   "icemail",
 
-  {"A meltable icy envelope protects you from harm and freezing vapours (AC +", "", ""},
+  {"A meltable icy envelope protects you from harm (AC +", "", ""},
   {"An icy envelope takes form around you.", "", ""},
   {"", "", ""},
 
@@ -1662,8 +1662,8 @@ static const mutation_def mut_data[] =
 { MUT_FOUL_STENCH,                    0,  2, MUTFLAG_GOOD, false,
   "foul stench",
 
-  {"You emit a foul stench.",
-   "You radiate miasma.",
+  {"You may emit foul miasma when damaged in melee.",
+   "You frequently emit foul miasma when damaged in melee.",
    ""},
 
   {"You begin to emit a foul stench of rot and decay.",
@@ -1678,7 +1678,7 @@ static const mutation_def mut_data[] =
 { MUT_TENDRILS,                       0,  1, MUTFLAG_GOOD | MUTFLAG_JIYVA, true,
   "tendrils",
 
-  {"Thin tendrils of slime have grown from your body.", "", ""},
+  {"You are covered in slimy tendrils that may disarm your opponents.", "", ""},
   {"Thin, slimy tendrils emerge from your body.", "", ""},
   {"Your tendrils retract into your body.", "", ""},
 
@@ -1778,7 +1778,7 @@ static const mutation_def mut_data[] =
 { MUT_COLD_BLOODED,                0,  1, MUTFLAG_BAD, true,
   "cold-blooded",
 
-  {"Your cold-blooded metabolism reacts poorly to cold.", "", ""},
+  {"You are cold-blooded and may be slowed by cold attacks.", "", ""},
   {"You feel cold-blooded.", "", ""},
   {"You feel warm-blooded.", "", ""},
 
@@ -1878,7 +1878,7 @@ static const mutation_def mut_data[] =
 { MUT_COWARDICE,                0,  1, MUTFLAG_RU, false,
   "cowardly",
 
-  {"You are a coward.", "", ""},
+  {"Your cowardice makes you less effective in combat with threatening monsters.", "", ""},
   {"You have lost your courage.", "", ""},
   {"You have regained your courage.", "", ""},
 

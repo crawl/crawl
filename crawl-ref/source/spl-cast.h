@@ -43,6 +43,8 @@ enum spflag_type
     SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
     SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
     SPFLAG_MR_CHECK            = 0x8000000,      // spell that checks monster MR
+    SPFLAG_MONS_ABJURE        = 0x10000000,      // monsters can cast abjuration
+                                                 // instead of this spell
 };
 
 enum spret_type
@@ -52,6 +54,19 @@ enum spret_type
     SPRET_SUCCESS,
     SPRET_NONE,                 // spell was not handled
 };
+
+#define IOOD_X "iood_x"
+#define IOOD_Y "iood_y"
+#define IOOD_VX "iood_vx"
+#define IOOD_VY "iood_vy"
+#define IOOD_KC "iood_kc"
+#define IOOD_POW "iood_pow"
+#define IOOD_CASTER "iood_caster"
+#define IOOD_REFLECTOR "iood_reflector"
+#define IOOD_DIST "iood_distance"
+#define IOOD_MID "iood_mid"
+#define IOOD_FLAWED "iood_flawed"
+#define IOOD_TPOS "iood_tpos"
 
 #define fail_check() if (fail) return SPRET_FAIL
 

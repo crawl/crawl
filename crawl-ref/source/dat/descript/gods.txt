@@ -498,8 +498,8 @@ surrounded by titans and elvish blademasters.
 Qazlal wrath
 
 Qazlal's wrath is swift and unmistakable. Sinners are stripped of their
-resistances, assaulted by furious elementals, and surrounded by waves of
-molten lava.
+resistances and assaulted by furious elementals, and Qazlal will create mighty
+thunderclaps to alert their foes.
 %%%%
 Sif Muna wrath
 

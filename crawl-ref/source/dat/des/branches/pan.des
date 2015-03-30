@@ -44,7 +44,7 @@ function pan_lord_setup(_G, name)
                  "tentacled monstrosity w:5 / brain worm / " ..
                  "giant eyeball / golden eye band / eye of devastation / " ..
                  "eye of draining / shining eye / very ugly thing band / "..
-                 "monstrous corrupter / killer klown w:100",
+                 "monstrous corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
                  "green death w:200 / giant orange brain / rakshasa / " ..
@@ -488,9 +488,8 @@ ORIENT:    northeast
 TAGS:      mnoleg uniq_mnoleg
 : pan_lord_setup(_G, 'Mnoleg')
 TILE:      c = dngn_stone_wall_yellow
-MONS:      patrolling Mnoleg, neqoxec, cacodemon, killer klown
-MONS:      tentacled monstrosity
-NSUBST:    2 = 4:3 / 3 = 2345 / *:2
+MONS:      patrolling Mnoleg, neqoxec, cacodemon, tentacled monstrosity
+NSUBST:    2 = 4:3 / 3 = 234 / *:2
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -536,7 +535,7 @@ TILE:      c = dngn_stone_wall_yellow
 MONS:      patrolling Mnoleg
 MONS:      brain worm, ugly thing, large abomination, neqoxec
 MONS:      very ugly thing, tormentor
-KMONS:     A = cacodemon / killer klown
+KMONS:     A = cacodemon
 KMONS:     B = tentacled monstrosity
 SUBST:     D = 5:20 6 7 A B
 NSUBST:    q = 2:6 / *:.
@@ -592,7 +591,7 @@ MONS:       patrolling mnoleg
 MONS:       giant eyeball / golden eye / eye of devastation / \
             eye of draining / shining eye
 MONS:       w:3 large abomination / w:2 tentacled monstrosity
-MONS:       cacodemon / killer klown
+MONS:       cacodemon
 MONS:       neqoxec / brain worm
 NSUBST:     C = 1:4 / *:N
 NSUBST:     N = 2:4 / *:5
@@ -652,7 +651,7 @@ TILE:    c = dngn_stone_wall_yellow
 SHUFFLE: Od, 1e
 KFEAT:   d = .
 KFEAT:   e = .
-MONS:    patrolling Mnoleg, patrolling cacodemon / patrolling killer klown
+MONS:    patrolling Mnoleg, patrolling cacodemon
 MONS:    neqoxec, tentacled monstrosity, large abomination, very ugly thing band
 epilogue{{
   pan_lord_epilogue('Mnoleg')
@@ -3148,6 +3147,309 @@ MAP
 .b...........b.
 .ababababababa.
 ...............
+ENDMAP
+
+NAME: nicolae_pan_sick_transit
+DEPTH: Pan
+TAGS: transparent extra decor allow_dup
+SHUFFLE: Aai/Bbj/Cck/Ddl/Eem/Ffn/Ggo/Hhp, Ffn/Qqr/Qqr, Ggo/Sst/Sst, Hhp/Uuv/Uuv
+SUBST: ABCDFGHijklnop = x, abcdfgh = -, EQSU = @, emqrstuv = ., \
+       I : x., J : x., K : x., L: x., M: x., N : x.
+KFEAT: - = transit_pandemonium w:36 / known permanent teleport trap w:1 / \
+           exit_pandemonium w:1 / exit_through_abyss w:1
+MAP
+    xxxAxxx
+   xxxxaxxxx
+  Hpx.....xjB
+ xph..I.I..bjx
+xxx..KJ.JK..xxx
+xx..KLM.MLK..xx
+xx.IJMN.NMJI.xx
+Gg...........cC
+xx.IJMN.NMJI.xx
+xx..KLM.MLK..xx
+xxx..KJ.JK..xxx
+ xnf..I.I..dlx
+  Fnx.....xlD
+   xxxxexxxx
+    xxxExxx
+ENDMAP
+
+NAME: nicolae_pan_strange_glyphs
+DEPTH: Pan
+TAGS: allow_dup luniq transparent decor extra
+# 2/15 chance of five glyphs, 1/3 chance of four glyphs, 1/3 chance of three,
+# 2/15 chance of two, 1/15 chance of just one.
+: local count = crawl.random2(15)
+: if count < 13 then
+SUBST: Ee = _
+: end
+: if count < 8 then
+SUBST: Dd = _
+: end
+: if count < 3 then
+SUBST: Cc = _
+: end
+: if count < 1 then
+SUBST: Bb = _
+: end
+SUBVAULT: A : sub_strange_glyph
+SUBVAULT: B : sub_strange_glyph
+SUBVAULT: C : sub_strange_glyph
+SUBVAULT: D : sub_strange_glyph
+SUBVAULT: E : sub_strange_glyph
+SUBST: bcde = .
+CLEAR: _
+MAP
+.........bbbbbbbbccccccccddddddddeeeeeeee
+.AAAAAAA.BBBBBBBbCCCCCCCcDDDDDDDdEEEEEEEe
+.AAAAAAA.BBBBBBBbCCCCCCCcDDDDDDDdEEEEEEEe
+.AAAAAAA.BBBBBBBbCCCCCCCcDDDDDDDdEEEEEEEe
+.AAAAAAA.BBBBBBBbCCCCCCCcDDDDDDDdEEEEEEEe
+.AAAAAAA.BBBBBBBbCCCCCCCcDDDDDDDdEEEEEEEe
+.AAAAAAA.BBBBBBBbCCCCCCCcDDDDDDDdEEEEEEEe
+.AAAAAAA.BBBBBBBbCCCCCCCcDDDDDDDdEEEEEEEe
+.........bbbbbbbbccccccccddddddddeeeeeeee
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_acedia
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: abcde
+SUBST: abcd = x, e : x.
+MAP
+.x..a.b
+x.x.a.b
+x.x.a.b
+.xxxxxx
+..c.d.e
+..c.d.e
+..c.d.e
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_angst
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: AaBbCc/dd-D-E/-E-Ddd
+SUBST: AC- = ., Bbd = x, ac = X, E = .D, D : .x, X = .x
+MAP
+xxxxx.X
+ABC..x.
+ABC...x
+ABC...x
+ABC...x
+ABC...x
+abc..Xx
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_contempt
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: ab, cd, ef
+SUBST: ace = x, bdf = .
+NSUBST: A = . / x, B = . / x, C = . / x, D = . / x
+MAP
+ab.xeex
+AA.cx.f
+BB.c.xf
+CC.xddx
+DD....x
+ba...x.
+.bxxx..
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_despair
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: Aa, Bb
+SUBST: AB = X, ab = ., X = .x
+MAP
+xa....x
+Axxxxxx
+..x...X
+...x...
+.xxxx..
+.x...xb
+xxX..Bx
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_disappointment
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: PQ/PQ/pq, RS/RS/rs, TU/TU/tu
+SUBST: PRT = x, QSU = ., prt = Y, qsu = x, Y : xx.
+MAP
+xxx.xxx
+..x.x.x
+...x..x
+......x
+YxPxRxT
+x.Q.S.U
+x.Q.S.U
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_disgust
+TAGS: unrand sub_strange_glyph allow_dup
+NSUBST: X = Y / x, Y = 2:x... / 1:x. / *:x
+MAP
+..xxxxx
+.x..X..
+x..YxY.
+X...X..
+x..YxY.
+.x..X..
+..xxxxx
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_envy
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: ab, cd, ef, gh
+SUBST: ac = ., bdeg = x, fhX = .x
+MAP
+exX.Xxg
+f.x.x.h
+.cd.dc.
+.x...x.
+x.....x
+x..a..x
+.xxbxx.
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_fear
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: ABCDabcd/-X--XyzX/--X-XXyz/---XzXXy, ab, yz, \
+         12345/rrprp/prrpp
+SUBST: AXyacd = x, BCDbz- = ., 245p = x, 13r = ., Q : ...x, V = .x
+MAP
+V.xDDDx
+x.Aa.dC
+x.A.x.C
+x.Ab.cC
+x2xBBBx
+134....
+115QQQQ
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_humiliation
+TAGS: unrand sub_strange_glyph allow_dup
+SUBST: A : ..x, B : xx., C : xx.
+MAP
+x.A...x
+x..A.x.
+x...x..
+xBBxxx.
+x.x...x
+xx....x
+xCCxxx.
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_loneliness
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: abcd
+SUBST: X = .x, abc = x, d = .
+MAP
+xbxxx.X
+a.c..x.
+xdx...x
+x.....x
+x...X.x
+.x...x.
+X.xxx.X
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_melancholia
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: pq, rs, tu, vw, yz
+SUBST: prtvy = x, qsuwz = .
+MAP
+txx.xxv
+u..x..w
+..yzy..
+x..x..x
+xpqxrsx
+xqpxsrx
+x..x..x
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_rage
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: PQS/pqs, YZ/yz
+SUBST: S : .P, P : .x, Qpr = ., s = q, q : .x, \
+       Y : .x, Z : .x, yz = .
+MAP
+xyyYzzx
+xYY...x
+x....x.
+xxxxx..
+x..Q...
+x...Q..
+xPPPPSS
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_regret
+TAGS: unrand sub_strange_glyph allow_dup
+SUBST: X : .x, Y : ..x, Z : ...x
+MAP
+xxxxxxx
+X.Y.Z.x
+X.Y...x
+X....x.
+.....x.
+...xx..
+xxx....
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_schadenfreude
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: ab
+SUBST: c = a, b = ., a : ..x, d : .x
+MAP
+xxxxaac
+...x..b
+...x..b
+x..xxxx
+x.d...x
+.x...x.
+d.xxx..
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_spite
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: ab, cd, ef, gh
+SUBST: aceg = x, bdfh = .
+MAP
+xxxxxxb
+x....ax
+.x....x
+.gh...x
+..x...x
+e.gh.cx
+fxxxxxd
+ENDMAP
+
+
+NAME: nicolae_pan_strange_glyph_worry
+TAGS: unrand sub_strange_glyph allow_dup
+SHUFFLE: Aa, Bb, Cc
+SUBST: ABC = x, abc = ., q = .pr, p : .x, r : .x, Q = .PR, P : .x, R : .x
+MAP
+.xpqrx.
+x.....x
+xAA.CCx
+xaxbxcx
+x.BBB.x
+x.....x
+.xPQRx.
 ENDMAP
 
 ### Holy Pan Level ############################################################

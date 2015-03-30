@@ -618,6 +618,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             // naga already have rPois & sInv!
         case ARTP_RCORR:
         case ARTP_REGENERATION:
+        case ARTP_PREVENT_SPELLCASTING:
             return item_class == OBJ_ARMOUR; // limit availability to armour
         case ARTP_BERSERK:
         case ARTP_ANGRY:
@@ -1298,7 +1299,7 @@ string make_artefact_name(const item_def &item, bool appearance)
     else
     {
         // construct a unique name
-        const string st_p = make_name(random_int(), false);
+        const string st_p = make_name(random_int());
         result += item_base_name(item);
 
         if (one_chance_in(3))

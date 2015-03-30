@@ -118,6 +118,12 @@ bool ranged_attack::attack()
     {
         if (ev_margin >= 0)
         {
+            if (attacker != defender && attack_warded_off())
+            {
+                handle_phase_end();
+                return false;
+            }
+
             if (!handle_phase_hit())
             {
                 if (!defender->alive())
@@ -263,14 +269,14 @@ bool ranged_attack::handle_phase_hit()
     if (projectile->is_type(OBJ_MISSILES, MI_NEEDLE))
     {
         int dur = blowgun_duration_roll(get_ammo_brand(*projectile));
-        set_attack_verb();
+        set_attack_verb(0);
         int stab = player_stab(dur);
         damage_done = dur + (stab - dur) / 10;
         announce_hit();
     }
     else if (projectile->is_type(OBJ_MISSILES, MI_THROWING_NET))
     {
-        set_attack_verb();
+        set_attack_verb(0);
         announce_hit();
         if (defender->is_player())
             player_caught_in_net();
@@ -368,8 +374,7 @@ int ranged_attack::calc_mon_to_hit_base()
     return 18 + attacker->get_hit_dice() * hd_mult / 6;
 }
 
-int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
-                                          bool &half_ac)
+int ranged_attack::apply_damage_modifiers(int damage, int damage_max)
 {
     ASSERT(attacker->is_monster());
     if (attacker->as_monster()->is_archer())
@@ -377,7 +382,6 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
         const int bonus = attacker->get_hit_dice() * 4 / 3;
         damage += random2avg(bonus, 2);
     }
-    half_ac = false;
     return damage;
 }
 
@@ -828,7 +832,7 @@ bool ranged_attack::player_good_stab()
            && projectile->is_type(OBJ_MISSILES, MI_NEEDLE);
 }
 
-void ranged_attack::set_attack_verb()
+void ranged_attack::set_attack_verb(int/* damage*/)
 {
     attack_verb = attack_ignores_shield(false) ? "pierces through" : "hits";
 }

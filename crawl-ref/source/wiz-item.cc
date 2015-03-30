@@ -659,6 +659,15 @@ void wizard_identify_pack()
     you.redraw_quiver = true;
 }
 
+static void _forget_item(item_def &item)
+{
+    set_ident_type(item, ID_UNKNOWN_TYPE);
+    unset_ident_flags(item, ISFLAG_IDENT_MASK);
+    item.flags &= ~(ISFLAG_SEEN | ISFLAG_TRIED | ISFLAG_HANDLED
+                    |ISFLAG_THROWN | ISFLAG_DROPPED
+                    | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+}
+
 void wizard_unidentify_pack()
 {
     mpr("You feel a rush of antiknowledge.");
@@ -666,10 +675,7 @@ void wizard_unidentify_pack()
     {
         item_def& item = you.inv[i];
         if (item.defined())
-        {
-            set_ident_type(item, ID_UNKNOWN_TYPE);
-            unset_ident_flags(item, ISFLAG_IDENT_MASK);
-        }
+            _forget_item(item);
     }
     you.wield_change  = true;
     you.redraw_quiver = true;
@@ -685,12 +691,8 @@ void wizard_unidentify_pack()
                 continue;
 
             item_def &item = mitm[mon->inv[j]];
-
-            if (!item.defined())
-                continue;
-
-            set_ident_type(item, ID_UNKNOWN_TYPE);
-            unset_ident_flags(item, ISFLAG_IDENT_MASK);
+            if (item.defined())
+                _forget_item(item);
         }
     }
 }
@@ -906,11 +908,10 @@ static void _debug_acquirement_stats(FILE *ostat)
             // The player has something equipped.
             const int item_idx   = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
-            const bool melded    = !player_wearing_slot(e_order[i]);
 
             fprintf(ostat, "%-7s: %s %s\n", equip_slot_to_name(eqslot),
                     item.name(DESC_PLAIN, true).c_str(),
-                    melded ? "(melded)" : "");
+                    you.melded[i] ? "(melded)" : "");
             naked = false;
         }
     }
@@ -1526,7 +1527,7 @@ void wizard_unidentify_all_items()
     {
         item_def& item = mitm[i];
         if (item.defined())
-            unset_ident_flags(item, ISFLAG_IDENT_MASK);
+            _forget_item(item);
     }
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
     {

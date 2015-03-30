@@ -32,7 +32,6 @@
 #include "mon-poly.h"
 #include "mutation.h"
 #include "player-stats.h"
-#include "potion.h"
 #include "random-weight.h"
 #include "religion.h"
 #include "shopping.h"
@@ -845,7 +844,7 @@ static bool _trog_retribution()
         switch (random2(6))
         {
         case 0:
-            potionlike_effect(POT_DECAY, 100);
+            you.rot(nullptr, 0, 3 + random2(3));
             break;
 
         case 1:

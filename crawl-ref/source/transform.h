@@ -77,6 +77,7 @@ protected:
     Form(transformation_type tran);
 public:
     bool slot_available(int slot) const;
+    bool can_wield() const { return slot_available(EQ_WEAPON); }
     virtual bool can_wear_item(const item_def& item) const;
 
     int get_duration(int pow) const;
@@ -142,6 +143,7 @@ public:
      */
     virtual brand_type get_uc_brand() const { return uc_brand; }
 
+    virtual bool can_offhand_punch() const { return can_wield(); }
     virtual string get_uc_attack_name(string default_name) const;
     virtual int get_ac_bonus() const;
 
@@ -272,8 +274,6 @@ bool form_likes_lava(transformation_type form = you.form);
 bool form_changed_physiology(transformation_type form = you.form);
 bool form_can_bleed(transformation_type form = you.form);
 bool form_can_use_wand(transformation_type form = you.form);
-bool form_can_wear_item(const item_def& item,
-                        transformation_type form = you.form);
 // Does the form keep the benefits of resistance, scale, and aux mutations?
 bool form_keeps_mutations(transformation_type form = you.form);
 

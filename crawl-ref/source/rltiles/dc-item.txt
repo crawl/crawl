@@ -836,8 +836,8 @@ i-ambrosia POT_AMBROSIA
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION
-i-decay POT_DECAY
-# please remove when TAG_MAJOR_VERSION is bumped
+# please remove these 2 when TAG_MAJOR_VERSION is bumped
+i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC

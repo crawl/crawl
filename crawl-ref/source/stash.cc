@@ -72,7 +72,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
         formatted_string fs;
         describe_spellset(item_spellset(*item), item, fs);
         text += "\n";
-        text += fs.tostring(2, -2);
+        text += fs.tostring();
     }
 
     // Include singular form (slice of pizza vs slices of pizza).

@@ -39,18 +39,27 @@ static iflags_t _full_ident_mask(const item_def& item);
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
+    /// The armour_type enum of this armour type.
     armour_type         id;
+    /// The name of the armour. (E.g. "robe".)
     const char         *name;
+    /// The base AC value provided by the armour, before skill & enchant.
     int                 ac;
+    /// The base EV penalty of the armour; used for EV, stealth, spell %, &c.
     int                 ev;
 
+    /// The slot the armour is equipped into; e.g. EQ_BOOTS.
     equipment_type      slot;
+    /// The smallest size creature the armour will fit.
     size_type           fit_min;
+    /// The largest size creature the armour will fit.
     size_type           fit_max;
     /// Whether this armour is mundane or inherently 'special', for acq.
-    bool                mundane;
+    bool                mundane; // (special armour doesn't need egos etc)
     /// The resists, vulns, &c that this armour type gives when worn.
     armflags_t          flags;
+    /// Used in body armour 'acquirement' code; higher = generated more.
+    int                 acquire_weight;
 };
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -60,44 +69,44 @@ static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, ARMF_NO_FLAGS, 333 },
     { ARM_ROBE,                 "robe",                   2,   0,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG, true, ARMF_NO_FLAGS, 1000 },
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
 
     { ARM_RING_MAIL,            "ring mail",              5,  -70,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -150,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, ARMF_NO_FLAGS, 500 },
 
-#define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res) \
-    { henum, hname, (aac)/2, aevp,                              \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res },    \
-    { aenum, aname, aac, aevp,                                  \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res }
+#define HIDE_ARMOUR(aenum, aname, aac, aevp, henum, hname, res, weight) \
+    { henum, hname, (aac)/2, aevp,                                      \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },         \
+    { aenum, aname, aac, aevp,                                          \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, weight }
 
 #define DRAGON_ARMOUR(id, name, ac, evp, res) \
     HIDE_ARMOUR(ARM_ ## id ## _DRAGON_ARMOUR, name " dragon armour", ac, evp, \
-                ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res)
+                ARM_ ## id ## _DRAGON_HIDE, name " dragon hide", res, 25)
 
     HIDE_ARMOUR(
       ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -40,
       ARM_TROLL_HIDE,           "troll hide",
-        ARMF_REGENERATION
+        ARMF_REGENERATION, 50
     ),
 
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,
         ARMF_RES_STEAM),
     DRAGON_ARMOUR(MOTTLED,     "mottled",                 6,  -50,
         ARMF_RES_STICKY_FLAME),
-    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",            10,  -70,
+    DRAGON_ARMOUR(QUICKSILVER, "quicksilver",             9,  -70,
         ARMF_RES_MAGIC),
     DRAGON_ARMOUR(SWAMP,       "swamp",                   7,  -70,
         ARMF_RES_POISON),
@@ -131,7 +140,7 @@ static const armour_def Armour_prop[] =
 #endif
 
     { ARM_HAT,                  "hat",                    0,   0,
-        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE, true },
+        EQ_HELMET,      SIZE_TINY, SIZE_LARGE, true },
 
     // Note that barding size is compared against torso so it currently
     // needs to fit medium, but that doesn't matter as much as race
@@ -1360,6 +1369,19 @@ bool armour_is_special(const item_def &item)
     return !Armour_prop[ Armour_index[item.sub_type] ].mundane;
 }
 
+/**
+ * What weight does this armour type have for acquirement? (Higher = appears
+ * more often.)
+ *
+ * @param arm   The armour item in question.
+ * @return      The base weight the armour should have in acquirement, before
+ *              skills & other effects are factored in.
+ */
+int armour_acq_weight(const armour_type armour)
+{
+    return Armour_prop[ Armour_index[armour] ].acquire_weight;
+}
+
 equipment_type get_armour_slot(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -1384,13 +1406,22 @@ bool jewellery_is_amulet(int sub_type)
     return sub_type >= AMU_FIRST_AMULET;
 }
 
-// Returns number of sizes off (0 if fitting).
-int fit_armour_size(const item_def &item, size_type size)
+/**
+ * How many size categories away is the given type of armour from fitting a
+ * creature of the given size - and in what direction?
+ *
+ * @param sub_type  The type of armour in question.
+ * @param size      The size of the creature in question.
+ * @return          The difference between the size of the creature and the
+ *                  closest size of creature that might wear the armour.
+ *                  Negative if the creature is too small.
+ *                  Positive if the creature is too large.
+ *                  0 if the creature is just right.
+ */
+static int _fit_armour_size(armour_type sub_type, size_type size)
 {
-    ASSERT(item.base_type == OBJ_ARMOUR);
-
-    const size_type min = Armour_prop[ Armour_index[item.sub_type] ].fit_min;
-    const size_type max = Armour_prop[ Armour_index[item.sub_type] ].fit_max;
+    const size_type min = Armour_prop[ Armour_index[sub_type] ].fit_min;
+    const size_type max = Armour_prop[ Armour_index[sub_type] ].fit_max;
 
     if (size < min)
         return min - size;    // -'ve means levels too small
@@ -1400,12 +1431,50 @@ int fit_armour_size(const item_def &item, size_type size)
     return 0;
 }
 
-// Returns true if armour fits size (shape needs additional verification).
+/**
+ * How many size categories away is the given armour from fitting a creature of
+ * the given size - and in what direction?
+ *
+ * @param item      The armour in question.
+ * @param size      The size of the creature in question.
+ * @return          The difference between the size of the creature and the
+ *                  closest size of creature that might wear the armour.
+ *                  Negative if the creature is too small.
+ *                  Positive if the creature is too large.
+ *                  0 if the creature is just right.
+ */
+int fit_armour_size(const item_def &item, size_type size)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    return _fit_armour_size(static_cast<armour_type>(item.sub_type), size);
+}
+
+/**
+ * Does the given type of armour fit a creature of the given size?
+ *
+ * @param sub_type  The type of armour in question.
+ * @param size      The size of the creature that might wear the armour.
+ * @return          Whether the armour fits based on size. (It might still not
+ *                  fit for other reasons, e.g. mutations...)
+ */
+bool check_armour_size(armour_type sub_type, size_type size)
+{
+    return _fit_armour_size(sub_type, size) == 0;
+}
+
+/**
+ * Does the given armour fit a creature of the given size?
+ *
+ * @param item      The armour in question.
+ * @param size      The size of the creature that might wear the armour.
+ * @return          Whether the armour fits based on size. (It might still not
+ *                  fit for other reasons, e.g. mutations...)
+ */
 bool check_armour_size(const item_def &item, size_type size)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    return fit_armour_size(item, size) == 0;
+    return check_armour_size(static_cast<armour_type>(item.sub_type), size);
 }
 
 // Returns whether a wand or rod can be charged.
@@ -1449,16 +1518,14 @@ int wand_charge_value(int type)
     switch (type)
     {
     case WAND_INVISIBILITY:
-    case WAND_FIREBALL:
     case WAND_TELEPORTATION:
     case WAND_HEAL_WOUNDS:
     case WAND_HASTING:
         return 3;
 
+    case WAND_FIREBALL:
     case WAND_LIGHTNING:
     case WAND_DRAINING:
-        return 4;
-
     case WAND_FIRE:
     case WAND_COLD:
         return 5;
@@ -1852,10 +1919,13 @@ skill_type item_attack_skill(object_class_type wclass, int wtype)
 }
 
 // True if item is a staff that deals extra damage based on Evocations skill.
-static bool _staff_uses_evocations(const item_def &item)
+bool staff_uses_evocations(const item_def &item)
 {
-    if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF))
+    if (is_unrandom_artefact(item, UNRAND_ELEMENTAL_STAFF)
+        || is_unrandom_artefact(item, UNRAND_OLGREB))
+    {
         return true;
+    }
 
     if (!item_type_known(item) || item.base_type != OBJ_STAVES)
         return false;
@@ -1866,7 +1936,6 @@ static bool _staff_uses_evocations(const item_def &item)
     case STAFF_COLD:
     case STAFF_POISON:
     case STAFF_DEATH:
-    case STAFF_SUMMONING:
     case STAFF_AIR:
     case STAFF_EARTH:
         return true;
@@ -1909,7 +1978,7 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         return !skills.empty();
 
     if (item_is_evokable(item, false, false, false, false, false)
-        || _staff_uses_evocations(item)
+        || staff_uses_evocations(item)
         || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
@@ -2525,11 +2594,7 @@ int property(const item_def &item, int prop_type)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if (prop_type == PARM_AC)
-            return Armour_prop[ Armour_index[item.sub_type] ].ac;
-        else if (prop_type == PARM_EVASION)
-            return Armour_prop[ Armour_index[item.sub_type] ].ev;
-        break;
+        return armour_prop(item.sub_type, prop_type);
 
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
@@ -2579,6 +2644,28 @@ int property(const item_def &item, int prop_type)
     }
 
     return 0;
+}
+
+/**
+ * Find a given property of a given armour_type.
+ *
+ * @param armour        The armour_type in question (e.g. ARM_ROBE)
+ * @param prop_type     The property being requested (e.g. PARM_AC)
+ * @return              The property value, if the prop_type is valid.
+ *                      Otherwise, 0 (!?)
+ *                      ^ hopefully never comes up...
+ */
+int armour_prop(int armour, int prop_type)
+{
+    switch (prop_type)
+    {
+        case PARM_AC:
+            return Armour_prop[ Armour_index[armour] ].ac;
+        case PARM_EVASION:
+            return Armour_prop[ Armour_index[armour] ].ev;
+        default:
+            return 0; // !?
+    }
 }
 
 // Returns true if item is evokable.

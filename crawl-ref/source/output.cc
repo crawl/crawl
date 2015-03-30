@@ -1926,7 +1926,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                                          vector<char>& equip_chars,
                                          int sw)
 {
-    const int e_order[] =
+    const equipment_type e_order[] =
     {
         EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
@@ -1937,20 +1937,11 @@ static void _print_overview_screen_equip(column_composer& cols,
 
     sw = min(max(sw, 79), 640);
 
-    char buf[641];
-    for (int i = 0; i < NUM_EQUIP; i++)
+    for (equipment_type eqslot : e_order)
     {
-        int eqslot = e_order[i];
-
         if (you.species == SP_OCTOPODE
-            && e_order[i] != EQ_WEAPON
-            && !you_can_wear(e_order[i], true))
-        {
-            continue;
-        }
-
-        if (you.species == SP_OCTOPODE && (eqslot == EQ_RIGHT_RING
-                                       || eqslot == EQ_LEFT_RING))
+            && eqslot != EQ_WEAPON
+            && !you_can_wear(eqslot))
         {
             continue;
         }
@@ -1966,14 +1957,13 @@ static void _print_overview_screen_equip(column_composer& cols,
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
 
-        char slot[15] = "";
+        string str;
 
-        if (you.equip[ e_order[i] ] != -1)
+        if (you.slot_item(eqslot))
         {
             // The player has something equipped.
-            const int item_idx   = you.equip[e_order[i]];
-            const item_def& item = you.inv[item_idx];
-            const bool melded    = !player_wearing_slot(e_order[i]);
+            const item_def& item = *you.slot_item(eqslot);
+            const bool melded    = you.melded[eqslot];
             const string prefix = item_prefix(item);
             const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
@@ -1982,11 +1972,11 @@ static void _print_overview_screen_equip(column_composer& cols,
             const char* colname  = melded ? "darkgrey"
                                           : colour_to_str(col).c_str();
 
+            const int item_idx   = you.equip[eqslot];
             const char equip_char = index_to_letter(item_idx);
 
-            snprintf(buf, sizeof buf,
-                     "%s<w>%c</w> - <%s>%s%s</%s>",
-                     slot,
+            str = make_stringf(
+                     "<w>%c</w> - <%s>%s%s</%s>",
                      equip_char,
                      colname,
                      melded ? "melded " : "",
@@ -1995,46 +1985,34 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname);
             equip_chars.push_back(equip_char);
         }
-        else if (e_order[i] == EQ_WEAPON
+        else if (eqslot == EQ_WEAPON
                  && you.skill(SK_UNARMED_COMBAT))
         {
-            snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
+            str = "  - Unarmed";
         }
-        else if (e_order[i] == EQ_WEAPON
+        else if (eqslot == EQ_WEAPON
                  && you.form == TRAN_BLADE_HANDS)
         {
             const bool plural = !player_mutation_level(MUT_MISSING_HAND);
-            snprintf(buf, sizeof buf, "%s  - Blade Hand%s", slot,
-                     plural ? "s" : "");
+            str = string("  - Blade Hand") + (plural ? "s" : "");
         }
-        else if (e_order[i] == EQ_BOOTS
+        else if (eqslot == EQ_BOOTS
                  && (you.species == SP_NAGA || you.species == SP_CENTAUR))
         {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
+            str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
         }
-        else if (!you_can_wear(e_order[i], true))
+        else if (!you_can_wear(eqslot))
+            str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
+        else if (!you_can_wear(eqslot, true))
         {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr.c_str());
+            str = "<darkgrey>(" + slot_name_lwr +
+                               " currently unavailable)</darkgrey>";
         }
-        else if (!you_tran_can_wear(e_order[i], true))
-        {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s currently unavailable)</darkgrey>",
-                     slot_name_lwr.c_str());
-        }
-        else if (!you_can_wear(e_order[i]))
-        {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr.c_str());
-        }
+        else if (you_can_wear(eqslot) == MB_MAYBE)
+            str = "<darkgrey>(" + slot_name_lwr + " restricted)</darkgrey>";
         else
-        {
-            snprintf(buf, sizeof buf,
-                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
-        }
-        cols.add_formatted(2, buf, false);
+            str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
+        cols.add_formatted(2, str.c_str(), false);
     }
 }
 

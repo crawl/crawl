@@ -21,6 +21,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "english.h"
+#include "errors.h" // sysfail
 #include "evoke.h"
 #include "food.h"
 #include "goditem.h"
@@ -48,10 +49,10 @@
 #include "unwind.h"
 #include "viewgeom.h"
 
-static bool _is_random_name_vowel(char let);
-
+static bool _is_consonant(char let);
 static char _random_vowel(int seed);
 static char _random_cons(int seed);
+static string _random_consonant_set(int seed);
 
 static void _maybe_identify_pack_item()
 {
@@ -678,7 +679,9 @@ const char* potion_type_name(int potiontype)
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
     case POT_DEGENERATION:      return "degeneration";
+#if TAG_MAJOR_VERSION == 34
     case POT_DECAY:             return "decay";
+#endif
     case POT_EXPERIENCE:        return "experience";
     case POT_MAGIC:             return "magic";
     case POT_RESTORE_ABILITIES: return "restore abilities";
@@ -1845,7 +1848,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_type)
             buff << "of " << scroll_type_name(item_typ);
         else
-            buff << "labeled " << make_name(subtype_rnd, true);
+            buff << "labeled " << make_name(subtype_rnd, MNAME_SCROLL);
         break;
 
     case OBJ_JEWELLERY:
@@ -2536,7 +2539,8 @@ void check_item_knowledge(bool unknown_items)
                  || j == POT_SLOWING
                  || j == POT_STRONG_POISON
                  || j == POT_BLOOD_COAGULATED
-                 || j == POT_PORRIDGE))
+                 || j == POT_PORRIDGE
+                 || j == POT_DECAY))
             {
                 continue;
             }
@@ -2781,6 +2785,16 @@ void display_runes()
     deleteAll(items);
 }
 
+// Seed ranges for _random_consonant_set: (B)eginning and one-past-the-(E)nd
+// of the (B)eginning, (E)nding, and (M)iddle cluster ranges.
+const size_t RCS_BB = 0;
+const size_t RCS_EB = 27;
+const size_t RCS_BE = 14;
+const size_t RCS_EE = 56;
+const size_t RCS_BM = 0;
+const size_t RCS_EM = 67;
+const size_t RCS_END = RCS_EM;
+
 #define ITEMNAME_SIZE 200
 /**
  * Make a random name from the given seed.
@@ -2791,322 +2805,226 @@ void display_runes()
  *
  * @param seed      The seed to generate the name from.
  *                  The same seed will always generate the same name.
- *
- * @param all_cap   Whether the name should be in allcaps (i.e. whether it's
- *                  a scroll name). Also increases expected length by 6.
- * @param maxlen    The maximum expected length for the name. Actual name may
- *                  exceed this length by up to 50%.
- *                  If -1, max is ITEMNAME_SIZE.
- * @param start     A leading character for the name. If 0, is ignored.
- *                  Does not increase the length of the name (and, in fact,
- *                  slightly decreases it on average).
+ * @param name_type The type of name to be generated.
+ *                  If MNAME_SCROLL, increase length by 6 and force to allcaps.
+ *                  If MNAME_JIYVA, start with J, do not generate spaces,
+ *                  recurse instead of ploggifying, and cap length at 8.
+ *                  Otherwise, no special behaviour.
+ * @return          A randomly generated name.
+ *                  E.g. "Joiduir", "Jays Fya", ZEFOKY WECZYXE,
+ *                  THE GIAGGOSTUONO, etc.
  */
-string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
+string make_name(uint32_t seed, makename_type name_type)
 {
-    char name[ITEMNAME_SIZE];
-    static const int NUM_SEEDS = 17;
-    int  numb[NUM_SEEDS]; // contains the random seeds used for the name
+    string name;
 
-    int i = 0;
-    bool want_vowel = false; // Keep track of whether we want a vowel next.
     bool has_space  = false; // Keep track of whether the name contains a space.
-
-    for (i = 0; i < ITEMNAME_SIZE; ++i)
-        name[i] = '\0';
 
     const int var1 = (seed & 0xFF);
     const int var2 = ((seed >>  8) & 0xFF);
     const int var3 = ((seed >> 16) & 0xFF);
     const int var4 = ((seed >> 24) & 0xFF);
 
-    numb[0]  = 373 * var1 + 409 * var2 + 281 * var3;
-    numb[1]  = 163 * var4 + 277 * var2 + 317 * var3;
-    numb[2]  = 257 * var1 + 179 * var4 +  83 * var3;
-    numb[3]  =  61 * var1 + 229 * var2 + 241 * var4;
-    numb[4]  =  79 * var1 + 263 * var2 + 149 * var3;
-    numb[5]  = 233 * var4 + 383 * var2 + 311 * var3;
-    numb[6]  = 199 * var1 + 211 * var4 + 103 * var3;
-    numb[7]  = 139 * var1 + 109 * var2 + 349 * var4;
-    numb[8]  =  43 * var1 + 389 * var2 + 359 * var3;
-    numb[9]  = 367 * var4 + 101 * var2 + 251 * var3;
-    numb[10] = 293 * var1 +  59 * var4 + 151 * var3;
-    numb[11] = 331 * var1 + 107 * var2 + 307 * var4;
-    numb[12] =  73 * var1 + 157 * var2 + 347 * var3;
-    numb[13] = 379 * var4 + 353 * var2 + 227 * var3;
-    numb[14] = 181 * var1 + 173 * var4 + 193 * var3;
-    numb[15] = 131 * var1 + 167 * var2 +  53 * var4;
-    numb[16] = 313 * var1 + 127 * var2 + 401 * var3 + 337 * var4;
+    const int numb[] = { // contains the random seeds used for the name
+        373 * var1 + 409 * var2 + 281 * var3,
+                     277 * var2 + 317 * var3 + 163 * var4,
+        257 * var1              +  83 * var3 + 179 * var4,
+        61  * var1 + 229 * var2              + 241 * var4,
+        79  * var1 + 263 * var2 + 149 * var3,
+                     383 * var2 + 311 * var3 + 233 * var4,
+        199 * var1              + 103 * var3 + 211 * var4,
+        139 * var1 + 109 * var2              + 349 * var4,
+        43  * var1 + 389 * var2 + 359 * var3,
+                     101 * var2 + 251 * var3 + 367 * var4,
+        293 * var1              + 151 * var3 +  59 * var4,
+        331 * var1 + 107 * var2              + 307 * var4,
+        73  * var1 + 157 * var2 + 347 * var3,
+                     353 * var2 + 227 * var3 + 379 * var4,
+        181 * var1              + 193 * var3 + 173 * var4,
+        131 * var1 + 167 * var2              +  53 * var4,
+        313 * var1 + 127 * var2 + 401 * var3 + 337 * var4,
+    };
+    static const int NUM_SEEDS = ARRAYSZ(numb);
 
-    int len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
+    size_t len = 3 + numb[0] % 5 + ((numb[1] % 5 == 0) ? numb[2] % 6 : 1);
 
-    if (all_cap)   // scrolls have longer names
+    if (name_type == MNAME_SCROLL)   // scrolls have longer names
         len += 6;
 
-    if (maxlen != -1 && len > maxlen)
-        len = maxlen;
+    const size_t maxlen = name_type == MNAME_JIYVA ? 8 : SIZE_MAX;
+    len = min(len, maxlen);
 
     ASSERT_RANGE(len, 1, ITEMNAME_SIZE + 1);
 
-    int j = numb[3] % NUM_SEEDS;
     const int k = numb[4] % NUM_SEEDS;
 
-    int count = 0;
-    for (i = 0; i < len; ++i)
+    static const int MAX_ITERS = 150;
+    for (int iters = 0; iters < MAX_ITERS && name.length() < len; ++iters)
     {
-        j = (j + 1) % NUM_SEEDS;
-        if (j == 0)
-        {
-            count++;
-            if (count > 9)
-                break;
-        }
+        const int j = (numb[3] + iters + 1) % NUM_SEEDS;
 
-        if (i == 0 && start != 0)
+        const char prev_char = name.length() ? name[name.length() - 1]
+                                              : '\0';
+        const char penult_char = name.length() > 1 ? name[name.length() - 2]
+                                                    : '\0';
+
+        if (name.empty() && name_type == MNAME_JIYVA)
         {
             // Start the name with a predefined letter.
-            name[i] = start;
-            want_vowel = _is_random_name_vowel(start);
+            name += 'j';
         }
-        else if (!has_space && i > 5 && i < len - 4
-                 && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance of a space
+        else if (name.empty() || prev_char == ' ')
         {
-            // Hand out a space.
-            want_vowel = true;
-            name[i] = ' ';
+            // Start the word with any letter.
+            name += 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
         }
-        else if (i > 0
-                 && (want_vowel
-                     || (i > 1
-                         && _is_random_name_vowel(name[i - 1])
-                         && !_is_random_name_vowel(name[i - 2])
-                         && (numb[(k + 4 * j) % NUM_SEEDS] % 5) <= 1))) // 2/5 chance
+        else if (!has_space && name_type != MNAME_JIYVA
+                 && name.length() > 5 && name.length() < len - 4
+                 && (numb[(k + 10 * j) % NUM_SEEDS] % 5) != 3) // 4/5 chance
+        {
+             // Hand out a space.
+            name += ' ';
+        }
+        else if (name.length()
+                 && (_is_consonant(prev_char)
+                     || (name.length() > 1
+                         && !_is_consonant(prev_char)
+                         && _is_consonant(penult_char)
+                         && (numb[(k + 4 * j) % NUM_SEEDS] % 5) <= 1))) // 2/5
         {
             // Place a vowel.
-            want_vowel = true;
-            name[i] = _random_vowel(numb[(k + 7 * j) % NUM_SEEDS]);
+            const char vowel = _random_vowel(numb[(k + 7 * j) % NUM_SEEDS]);
 
-            if (name[i] == ' ')
+            if (vowel == ' ')
             {
-                if (i == 0) // Shouldn't happen.
-                {
-                    want_vowel = false;
-                    name[i]    = _random_cons(numb[(k + 14 * j) % NUM_SEEDS]);
-                }
-                else if (len < 7
-                         || i <= 2 || i >= len - 3
-                         || name[i - 1] == ' '
-                         || (i > 1 && name[i - 2] == ' ')
-                         || i > 2
-                            && !_is_random_name_vowel(name[i - 1])
-                            && !_is_random_name_vowel(name[i - 2]))
+                if (len < 7
+                         || name.length() <= 2 || name.length() >= len - 3
+                         || prev_char == ' ' || penult_char == ' '
+                         || name_type == MNAME_JIYVA
+                         || name.length() > 2
+                            && _is_consonant(prev_char)
+                            && _is_consonant(penult_char))
                 {
                     // Replace the space with something else if ...
                     // * the name is really short
-                    // * we're close to the begin/end of the name
-                    // * we just got a space, or
+                    // * we're close to the start/end of the name
+                    // * we just got a space
+                    // * we're generating a jiyva name, or
                     // * the last two letters were consonants
-                    i--;
                     continue;
                 }
             }
-            else if (i > 1
-                     && name[i] == name[i - 1]
-                     && (name[i] == 'y' || name[i] == 'i'
+            else if (name.length() > 1
+                     && vowel == prev_char
+                     && (vowel == 'y' || vowel == 'i'
                          || (numb[(k + 12 * j) % NUM_SEEDS] % 5) <= 1))
             {
                 // Replace the vowel with something else if the previous
                 // letter was the same, and it's a 'y', 'i' or with 2/5 chance.
-                i--;
                 continue;
             }
+
+            name += vowel;
         }
         else // We want a consonant.
         {
+            // Are we at start or end of the (sub) name?
+            const bool beg = (name.empty() || prev_char == ' ');
+            const bool end = (name.length() >= len - 2);
+
             // Use one of number of predefined letter combinations.
-            if ((len > 3 || i != 0)
+            if ((len > 3 || !name.empty())
                 && (numb[(k + 13 * j) % NUM_SEEDS] % 7) <= 1 // 2/7 chance
-                && (i < len - 2
-                    || i > 0 && name[i - 1] != ' '))
+                && (!beg || !end))
             {
-                // Are we at start or end of the (sub) name?
-                const bool beg = (i < 1 || name[i - 1] == ' ');
-                const bool end = (i >= len - 2);
+                const int first = (beg ? RCS_BB : (end ? RCS_BE : RCS_BM));
+                const int last  = (beg ? RCS_EB : (end ? RCS_EE : RCS_EM));
 
-                const int first = (beg ?  0 : (end ? 14 :  0));
-                const int last  = (beg ? 27 : (end ? 56 : 67));
+                const int range = last - first;
 
-                const int num = last - first;
+                const int cons_seed = numb[(k + 11 * j) % NUM_SEEDS] % range
+                                      + first;
 
-                i++;
+                const string consonant_set = _random_consonant_set(cons_seed);
 
-                // Pick a random combination of consonants from the set below.
-                //   begin  -> [0,27]
-                //   middle -> [0,67]
-                //   end    -> [14,56]
-
-                switch (numb[(k + 11 * j) % NUM_SEEDS] % num + first)
-                {
-                // start, middle
-                case  0: strcat(name, "kl"); break;
-                case  1: strcat(name, "gr"); break;
-                case  2: strcat(name, "cl"); break;
-                case  3: strcat(name, "cr"); break;
-                case  4: strcat(name, "fr"); break;
-                case  5: strcat(name, "pr"); break;
-                case  6: strcat(name, "tr"); break;
-                case  7: strcat(name, "tw"); break;
-                case  8: strcat(name, "br"); break;
-                case  9: strcat(name, "pl"); break;
-                case 10: strcat(name, "bl"); break;
-                case 11: strcat(name, "str"); i++; len++; break;
-                case 12: strcat(name, "shr"); i++; len++; break;
-                case 13: strcat(name, "thr"); i++; len++; break;
-                // start, middle, end
-                case 14: strcat(name, "sm"); break;
-                case 15: strcat(name, "sh"); break;
-                case 16: strcat(name, "ch"); break;
-                case 17: strcat(name, "th"); break;
-                case 18: strcat(name, "ph"); break;
-                case 19: strcat(name, "pn"); break;
-                case 20: strcat(name, "kh"); break;
-                case 21: strcat(name, "gh"); break;
-                case 22: strcat(name, "mn"); break;
-                case 23: strcat(name, "ps"); break;
-                case 24: strcat(name, "st"); break;
-                case 25: strcat(name, "sk"); break;
-                case 26: strcat(name, "sch"); i++; len++; break;
-                // middle, end
-                case 27: strcat(name, "ts"); break;
-                case 28: strcat(name, "cs"); break;
-                case 29: strcat(name, "xt"); break;
-                case 30: strcat(name, "nt"); break;
-                case 31: strcat(name, "ll"); break;
-                case 32: strcat(name, "rr"); break;
-                case 33: strcat(name, "ss"); break;
-                case 34: strcat(name, "wk"); break;
-                case 35: strcat(name, "wn"); break;
-                case 36: strcat(name, "ng"); break;
-                case 37: strcat(name, "cw"); break;
-                case 38: strcat(name, "mp"); break;
-                case 39: strcat(name, "ck"); break;
-                case 40: strcat(name, "nk"); break;
-                case 41: strcat(name, "dd"); break;
-                case 42: strcat(name, "tt"); break;
-                case 43: strcat(name, "bb"); break;
-                case 44: strcat(name, "pp"); break;
-                case 45: strcat(name, "nn"); break;
-                case 46: strcat(name, "mm"); break;
-                case 47: strcat(name, "kk"); break;
-                case 48: strcat(name, "gg"); break;
-                case 49: strcat(name, "ff"); break;
-                case 50: strcat(name, "pt"); break;
-                case 51: strcat(name, "tz"); break;
-                case 52: strcat(name, "dgh"); i++; len++; break;
-                case 53: strcat(name, "rgh"); i++; len++; break;
-                case 54: strcat(name, "rph"); i++; len++; break;
-                case 55: strcat(name, "rch"); i++; len++; break;
-                // middle only
-                case 56: strcat(name, "cz"); break;
-                case 57: strcat(name, "xk"); break;
-                case 58: strcat(name, "zx"); break;
-                case 59: strcat(name, "xz"); break;
-                case 60: strcat(name, "cv"); break;
-                case 61: strcat(name, "vv"); break;
-                case 62: strcat(name, "nl"); break;
-                case 63: strcat(name, "rh"); break;
-                case 64: strcat(name, "dw"); break;
-                case 65: strcat(name, "nw"); break;
-                case 66: strcat(name, "khl"); i++; len++; break;
-                default:
-                    i--;
-                    break;
-                }
+                ASSERT(consonant_set.size() > 1);
+                len += consonant_set.size() - 2; // triples increase len
+                name += consonant_set.c_str();
             }
             else // Place a single letter instead.
             {
-                if (i == 0)
-                {
-                    // Start with any letter.
-                    name[i] = 'a' + (numb[(k + 8 * j) % NUM_SEEDS] % 26);
-                    want_vowel = _is_random_name_vowel(name[i]);
-                }
-                else
-                {
-                    // Pick a random consonant.
-                    name[i] = _random_cons(numb[(k + 3 * j) % NUM_SEEDS]);
-                }
+                // Pick a random consonant.
+                name += _random_cons(numb[(k + 3 * j) % NUM_SEEDS]);
             }
         }
 
-        // No letter chosen?
-        if (name[i] == '\0')
+        if (name[name.length() - 1] == ' ')
         {
-            i--;
-            continue;
-        }
-
-        // Picked wrong type?
-        if (want_vowel && !_is_random_name_vowel(name[i])
-            || !want_vowel && _is_random_name_vowel(name[i]))
-        {
-            i--;
-            continue;
-        }
-
-        if (name[i] == ' ')
+            ASSERT(name_type != MNAME_JIYVA);
             has_space = true;
-
-        // If we just got a vowel, we want a consonant next, and vice versa.
-        want_vowel = !_is_random_name_vowel(name[i]);
-    }
-
-    // Catch break and try to give a final letter.
-    if (i > 0
-        && name[i - 1] != ' '
-        && name[i - 1] != 'y'
-        && _is_random_name_vowel(name[i - 1])
-        && (count > 9 || (i < 8 && numb[16] % 3)))
-    {
-        // 2/3 chance of ending in a consonant
-        name[i] = _random_cons(numb[j]);
-    }
-
-    len = strlen(name);
-
-    if (len)
-    {
-        for (i = len - 1; i > 0; i--)
-        {
-            if (!isspace(name[i]))
-                break;
-            else
-            {
-                name[i] = '\0';
-                len--;
-            }
         }
     }
+
+    // Catch early exit and try to give a final letter.
+    const char last_char = name[name.length() - 1];
+    if (!name.empty()
+        && last_char != ' '
+        && last_char != 'y'
+        && !_is_consonant(name[name.length() - 1])
+        && (name.length() < len    // early exit
+            || (len < 8 && numb[16] % 3))) // 2/3 chance for other short names
+    {
+        // Specifically, add a consonant.
+        const int cons_seed = (numb[3] + MAX_ITERS + 1) % NUM_SEEDS;
+        // ^ j if we broke out early, arbitrary otherwise
+        name += _random_cons(numb[cons_seed]);
+    }
+
+    if (maxlen != SIZE_MAX)
+        name = chop_string(name, maxlen);
+    trim_string_right(name);
 
     // Fallback if the name was too short.
-    if (len < 4)
+    if (name.length() < 4)
     {
-        strcpy(name, "plog");
-        len = 4;
+        if (name_type == MNAME_JIYVA)
+        {
+            // convolute & recurse
+            seed_rng(seed);
+            return make_name(random_int(), MNAME_JIYVA);
+        }
+
+        name = "plog";
     }
 
-    for (i = 0; i < len; i++)
-        if (all_cap || i == 0 || name[i - 1] == ' ')
-            name[i] = toupper(name[i]);
+    string uppercased_name;
+    for (size_t i = 0; i < name.length(); i++)
+    {
+        if (name_type == MNAME_JIYVA)
+            ASSERT(name[i] != ' ');
 
-    return name;
+        if (name_type == MNAME_SCROLL || i == 0 || name[i - 1] == ' ')
+            uppercased_name += toupper(name[i]);
+        else
+            uppercased_name += name[i];
+    }
+
+    return uppercased_name;
 }
 #undef ITEMNAME_SIZE
 
-// Returns true for vowels, 'y' or space.
-static bool _is_random_name_vowel(char let)
+/**
+ * Is the given character a lower-case ascii consonant?
+ *
+ * For our purposes, y is not a consonant.
+ */
+static bool _is_consonant(char let)
 {
-    return let == 'a' || let == 'e' || let == 'i' || let == 'o' || let == 'u'
-           || let == 'y' || let == ' ';
+    static const set<char> all_consonants = { 'b', 'c', 'd', 'f', 'g',
+                                              'h', 'j', 'k', 'l', 'm',
+                                              'n', 'p', 'q', 'r', 's',
+                                              't', 'v', 'w', 'x', 'z' };
+    return all_consonants.count(let);
 }
 
 // Returns a random vowel (a, e, i, o, u with equal probability) or space
@@ -3123,6 +3041,117 @@ static char _random_cons(int seed)
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
     return consonants[ seed % (sizeof(consonants) - 1) ];
+}
+
+/**
+ * Choose a random consonant tuple/triple, based on the given seed.
+ *
+ * @param seed  The index into the consonant array; different seed ranges are
+ *              expected to correspond with the place in the name being
+ *              generated where the consonants should be inserted.
+ * @return      A random length 2 or 3 consonant set; e.g. "kl", "str", etc.
+ *              If the seed is out of bounds, return "";
+ */
+static string _random_consonant_set(int seed)
+{
+    // Pick a random combination of consonants from the set below.
+    //   begin  -> [RCS_BB, RCS_EB) = [ 0, 27)
+    //   middle -> [RCS_BM, RCS_EM) = [ 0, 67)
+    //   end    -> [RCS_BE, RCS_EE) = [14, 56)
+
+    static const string consonant_sets[] = {
+        // 0-13: start, middle
+        "kl", "gr", "cl", "cr", "fr",
+        "pr", "tr", "tw", "br", "pl",
+        "bl", "str", "shr", "thr",
+        // 14-26: start, middle, end
+        "sm", "sh", "ch", "th", "ph",
+        "pn", "kh", "gh", "mn", "ps",
+        "st", "sk", "sch",
+        // 27-55: middle, end
+        "ts", "cs", "xt", "nt", "ll",
+        "rr", "ss", "wk", "wn", "ng",
+        "cw", "mp", "ck", "nk", "dd",
+        "tt", "bb", "pp", "nn", "mm",
+        "kk", "gg", "ff", "pt", "tz",
+        "dgh", "rgh", "rph", "rch",
+        // 56-66: middle only
+        "cz", "xk", "zx", "xz", "cv",
+        "vv", "nl", "rh", "dw", "nw",
+        "khl",
+    };
+    COMPILE_CHECK(ARRAYSZ(consonant_sets) == RCS_END);
+
+    ASSERT_RANGE(seed, 0, (int) ARRAYSZ(consonant_sets));
+
+    return consonant_sets[seed];
+}
+
+/**
+ * Write all possible scroll names to the given file.
+ */
+static void _test_scroll_names(const string fname)
+{
+    FILE *f = fopen(fname.c_str(), "w");
+    if (!f)
+        sysfail("can't write test output");
+
+    string longest;
+    for (int i = 0; i < 151; i++)
+    {
+        for (int j = 0; j < 151; j++)
+        {
+            const int seed = i | (j << 8) | (OBJ_SCROLLS << 16);
+            const string name = make_name(seed, MNAME_SCROLL);
+            if (name.length() > longest.length())
+                longest = name;
+            fprintf(f, "%s\n", name.c_str());
+        }
+    }
+
+    fprintf(f, "\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
+
+    fclose(f);
+}
+
+/**
+ * Write one million random Jiyva names to the given file.
+ */
+static void _test_jiyva_names(const string fname)
+{
+    FILE *f = fopen(fname.c_str(), "w");
+    if (!f)
+        sysfail("can't write test output");
+
+    string longest;
+    seed_rng(27);
+    for (int i = 0; i < 1000000; i++)
+    {
+        const string name = make_name(random_int(), MNAME_JIYVA);
+        ASSERT(name[0] == 'J');
+        if (name.length() > longest.length())
+            longest = name;
+        fprintf(f, "%s\n", name.c_str());
+    }
+
+    fprintf(f, "\nLongest: %s (%d)\n", longest.c_str(), (int)longest.length());
+
+    fclose(f);
+}
+
+/**
+ * Test make_name().
+ *
+ * Currently just a stress test iterating over all possible scroll names.
+ */
+void make_name_tests()
+{
+    _test_jiyva_names("jiyva_names.out");
+    _test_scroll_names("scroll_names.out");
+
+    seed_rng(27);
+    for (int i = 0; i < 1000000; ++i)
+        make_name(random_int());
 }
 
 bool is_interesting_item(const item_def& item)
@@ -3284,8 +3313,10 @@ bool is_bad_item(const item_def &item, bool temp)
 #endif
         case POT_DEGENERATION:
             return true;
+#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
+#endif
         case POT_POISON:
             // Poison is not that bad if you're poison resistant.
             return player_res_poison(false) <= 0
@@ -3600,8 +3631,10 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         case POT_BLOOD:
             return you.species != SP_VAMPIRE;
+#if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
+#endif
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
             return player_res_poison(false, temp) > 0;

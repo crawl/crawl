@@ -49,16 +49,6 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_UNBORN,
-      {
-       { SPELL_AGONY, 10, MON_SPELL_WIZARD },
-       { SPELL_DISPEL_UNDEAD, 10, MON_SPELL_WIZARD },
-       { SPELL_INJURY_MIRROR, 20, MON_SPELL_PRIEST },
-       { SPELL_ANIMATE_DEAD, 10, MON_SPELL_WIZARD },
-       { SPELL_HAUNT, 10, MON_SPELL_WIZARD },
-      }
-    },
-
     {  MST_BK_TROG,
       {
        { SPELL_BROTHERS_IN_ARMS, 21, MON_SPELL_PRIEST },
@@ -67,11 +57,11 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_BK_YREDELEMNUL,
+    {  MST_DEATH_KNIGHT,
       {
-       { SPELL_DRAIN_LIFE, 30, MON_SPELL_PRIEST },
-       { SPELL_ANIMATE_DEAD, 15, MON_SPELL_PRIEST },
-       { SPELL_INJURY_MIRROR, 15, MON_SPELL_PRIEST  },
+       { SPELL_HAUNT, 10, MON_SPELL_PRIEST },
+       { SPELL_AGONY, 15, MON_SPELL_PRIEST },
+       { SPELL_INJURY_MIRROR, 20, MON_SPELL_PRIEST },
       }
     },
 
@@ -176,7 +166,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_KRAKEN,
       {
        { SPELL_CREATE_TENTACLES, 44, MON_SPELL_NATURAL },
-       { SPELL_INK_CLOUD, 22, MON_SPELL_NATURAL },
+       { SPELL_INK_CLOUD, 22, MON_SPELL_NATURAL | MON_SPELL_EMERGENCY },
       }
     },
 
@@ -1385,10 +1375,10 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_REVENANT,
       {
-       { SPELL_GHOSTLY_FIREBALL, 17, MON_SPELL_MAGICAL },
-       { SPELL_GHOSTLY_FLAMES, 17, MON_SPELL_MAGICAL },
-       { SPELL_DISPEL_UNDEAD, 17, MON_SPELL_MAGICAL },
-       { SPELL_BLINK_AWAY, 17, MON_SPELL_MAGICAL | MON_SPELL_EMERGENCY },
+       { SPELL_GHOSTLY_FIREBALL, 17, MON_SPELL_WIZARD },
+       { SPELL_GHOSTLY_FLAMES, 17, MON_SPELL_WIZARD },
+       { SPELL_DISPEL_UNDEAD, 17, MON_SPELL_WIZARD },
+       { SPELL_BLINK_AWAY, 17, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
 

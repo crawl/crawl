@@ -675,26 +675,33 @@ void update_vision_range()
 }
 
 /**
- * Ignoring form, but not ignoring equipment, can the player use (usually wear)
- * a given equipment slot?
+ * Ignoring form & most equipment, but not the UNRAND_FINGER_AMULET, can the
+ * player use (usually wear) a given equipment slot?
  *
- * @param eq                The slot in question.
- * @param special_armour    Whether to check if the player can use some subset
- *                          of item types for a given slot (e.g. hats,
- *                          bardings); otherwise, those return false.
- * @return                  Whether the player can ever use the given slot.
+ * @param eq   The slot in question.
+ * @param temp Whether to consider forms.
+ * @return   MB_FALSE if the player can never use the slot;
+ *           MB_MAYBE if the player can only use some items for the slot;
+ *           MB_TRUE  if the player can use any (fsvo any) item for the slot.
  */
-bool you_can_wear(int eq, bool special_armour)
+maybe_bool you_can_wear(equipment_type eq, bool temp)
 {
+    if (temp && !get_form()->slot_available(eq))
+        return MB_FALSE;
+
     switch (eq)
     {
     case EQ_LEFT_RING:
-        return you.species != SP_OCTOPODE
-               && !player_mutation_level(MUT_MISSING_HAND);
-
+        if (player_mutation_level(MUT_MISSING_HAND))
+            return MB_FALSE;
+        // intentional fallthrough
     case EQ_RIGHT_RING:
-        return you.species != SP_OCTOPODE;
+        return you.species != SP_OCTOPODE ? MB_TRUE : MB_FALSE;
 
+    case EQ_RING_EIGHT:
+        if (player_mutation_level(MUT_MISSING_HAND))
+            return MB_FALSE;
+        // intentional fallthrough
     case EQ_RING_ONE:
     case EQ_RING_TWO:
     case EQ_RING_THREE:
@@ -702,125 +709,86 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_RING_FIVE:
     case EQ_RING_SIX:
     case EQ_RING_SEVEN:
-        return you.species == SP_OCTOPODE;
-
-    case EQ_RING_EIGHT:
-        return you.species == SP_OCTOPODE
-               && !player_mutation_level(MUT_MISSING_HAND);
-
-    case EQ_AMULET:
-        return true;
-
-    case EQ_RING_AMULET:
-        return player_equip_unrand(UNRAND_FINGER_AMULET);
-
-    case EQ_CLOAK:
-        return you.species != SP_FELID && you.species != SP_OCTOPODE;
-
-    case EQ_GLOVES:
-        if (player_mutation_level(MUT_CLAWS, false) == 3)
-            return false;
-
-        // big & tiny & weird races can't wear gloves
-        if (you.species == SP_TROLL
-            || you.species == SP_OGRE
-            || you.species == SP_SPRIGGAN
-            || you.species == SP_FELID
-            || you.species == SP_OCTOPODE)
-        {
-            return false;
-        }
-        return true;
-
-    case EQ_BOOTS:
-        // Bardings.
-        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
-            return special_armour;
-        if (player_mutation_level(MUT_HOOVES, false) == 3
-            || player_mutation_level(MUT_TALONS, false) == 3)
-        {
-            return false;
-        }
-        // big and tiny & weird races can't wear boots.
-        if (you.species == SP_TROLL
-            || you.species == SP_SPRIGGAN
-#if TAG_MAJOR_VERSION == 34
-            || you.species == SP_DJINNI
-#endif
-            || you.species == SP_OGRE
-            || you.species == SP_FELID
-            || you.species == SP_OCTOPODE)
-        {
-            return false;
-        }
-        return true;
-
-    case EQ_BODY_ARMOUR:
-        // weird races (& draconians) can't wear body armour
-        if (species_is_draconian(you.species)
-            || you.species == SP_FELID
-            || you.species == SP_OCTOPODE)
-        {
-            return false;
-        }
-        return true;
-
-    case EQ_SHIELD:
-        // no hand, no shield
-        if (player_mutation_level(MUT_MISSING_HAND) || you.species == SP_FELID)
-            return false;
-
-        /// big & tiny races can only wear some shield types.
-        if (you.species == SP_TROLL
-            || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE)
-        {
-            return special_armour;
-        }
-        return true;
-
-    case EQ_HELMET:
-        // the cat in the hat is strictly disallowed
-        if (you.species == SP_FELID)
-            return false;
-
-        // No hats with Horns 3 or Antennae 3.
-        if (player_mutation_level(MUT_HORNS, false) == 3
-            || player_mutation_level(MUT_ANTENNAE, false) == 3)
-        {
-            return false;
-        }
-
-        // Anyone else can wear hats.
-        if (special_armour)
-            return true;
-
-        // Any level of horns/beak/antennae lock out hard helmets.
-        if (player_mutation_level(MUT_HORNS, false)
-            || player_mutation_level(MUT_BEAK, false)
-            || player_mutation_level(MUT_ANTENNAE, false))
-        {
-            return false;
-        }
-
-        // big & tiny & weird races can't wear helmets (& draconians)
-        if (you.species == SP_TROLL
-            || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE
-            || you.species == SP_OCTOPODE
-            || species_is_draconian(you.species))
-        {
-            return false;
-        }
-        return true;
+        return you.species == SP_OCTOPODE ? MB_TRUE : MB_FALSE;
 
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.species != SP_FELID;
+        return you.species == SP_FELID ? MB_FALSE :
+               you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
+                                         MB_TRUE;
+
+    // You can always wear at least one ring (forms were already handled).
+    case EQ_RINGS:
+    case EQ_ALL_ARMOUR:
+    case EQ_AMULET:
+        return MB_TRUE;
+
+    case EQ_RING_AMULET:
+        return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
 
     default:
-        return false;
+        break;
     }
+
+    item_def dummy, alternate;
+    dummy.base_type = alternate.base_type = OBJ_ARMOUR;
+    dummy.sub_type = alternate.sub_type = NUM_ARMOURS;
+    // Make sure can_wear_armour doesn't think it's Lear's.
+    dummy.special = alternate.special = 0;
+
+    switch (eq)
+    {
+    case EQ_CLOAK:
+        dummy.sub_type = ARM_CLOAK;
+        break;
+
+    case EQ_GLOVES:
+        dummy.sub_type = ARM_GLOVES;
+        break;
+
+    case EQ_BOOTS: // And bardings
+        dummy.sub_type = ARM_BOOTS;
+        if (you.species == SP_NAGA)
+            alternate.sub_type = ARM_NAGA_BARDING;
+        if (you.species == SP_CENTAUR)
+            alternate.sub_type = ARM_CENTAUR_BARDING;
+        break;
+
+    case EQ_BODY_ARMOUR:
+        // Assume that anything that can wear any armour at all can wear a robe
+        // and that anything that can wear CPA can wear all armour.
+        dummy.sub_type = ARM_CRYSTAL_PLATE_ARMOUR;
+        alternate.sub_type = ARM_ROBE;
+        break;
+
+    case EQ_SHIELD:
+        // No races right now that can wear ARM_LARGE_SHIELD but not ARM_SHIELD
+        dummy.sub_type = ARM_LARGE_SHIELD;
+        if (you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM)
+            alternate.sub_type = ARM_BUCKLER;
+        break;
+
+    case EQ_HELMET:
+        dummy.sub_type = ARM_HELMET;
+        alternate.sub_type = ARM_HAT;
+        break;
+
+    default:
+        die("unhandled equipment type %d", eq);
+        break;
+    }
+
+    ASSERT(dummy.sub_type != NUM_ARMOURS);
+
+    if (can_wear_armour(dummy, false, !temp))
+        return MB_TRUE;
+    else if (alternate.sub_type != NUM_ARMOURS
+             && can_wear_armour(alternate, false, !temp))
+    {
+        return MB_MAYBE;
+    }
+    else
+        return MB_FALSE;
 }
 
 bool player_has_feet(bool temp)
@@ -841,105 +809,6 @@ bool player_has_feet(bool temp)
     {
         return false;
     }
-
-    return true;
-}
-
-bool player_wearing_slot(int eq)
-{
-    ASSERT(you.equip[eq] != -1 || !you.melded[eq]);
-    return you.equip[eq] != -1 && !you.melded[eq];
-}
-
-bool you_tran_can_wear(const item_def &item)
-{
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        return you_tran_can_wear(EQ_WEAPON);
-
-    case OBJ_JEWELLERY:
-        return you_tran_can_wear(jewellery_is_amulet(item) ? EQ_AMULET
-                                                           : EQ_RINGS);
-    case OBJ_ARMOUR:
-        if (item.sub_type == ARM_NAGA_BARDING)
-            return you.species == SP_NAGA && you_tran_can_wear(EQ_BOOTS);
-        else if (item.sub_type == ARM_CENTAUR_BARDING)
-            return you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS);
-
-        if (fit_armour_size(item, you.body_size()) != 0)
-            return false;
-
-        return you_tran_can_wear(get_armour_slot(item), true);
-
-    default:
-        return true;
-    }
-}
-
-/**
- * Is the given equipment slot available to the player in their current state?
- *
- * @param eq                The equipment slot.
- * @param check_mutation    Whether to consider mutations (horns, antennae)
- *                          & mermaid fishtails.
- * @return                  Whether the given slot is at all available. (Even
- *                          if restricted.)
- */
-bool you_tran_can_wear(int eq, bool check_mutation)
-{
-    if (eq == EQ_NONE)
-        return true;
-
-    if (!get_form(you.form)->slot_available(eq))
-        return false;
-
-    // missing hand is implemented as a mutation, but it's permanent &
-    // irrevocable, so don't care about check_mutation.
-    if (player_mutation_level(MUT_MISSING_HAND)
-        && (eq == EQ_LEFT_RING
-            || eq == EQ_SHIELD
-            || eq == EQ_RING_EIGHT))
-    {
-        return false;
-    }
-
-    // Not a transformation, but also temporary -> check first.
-    if (check_mutation)
-    {
-        if (eq == EQ_GLOVES && you.has_claws(false) == 3)
-            return false;
-
-        if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
-            return false;
-
-        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) == 3)
-            return false;
-
-        if (eq == EQ_BOOTS
-            && (you.fishtail
-                || player_mutation_level(MUT_HOOVES) == 3
-                || you.has_talons(false) == 3))
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool player_weapon_wielded()
-{
-    if (you.melded[EQ_WEAPON])
-        return false;
-
-    const int wpn = you.equip[EQ_WEAPON];
-
-    if (wpn == -1)
-        return false;
-
-    if (!is_weapon(you.inv[wpn]))
-        return false;
 
     return true;
 }
@@ -2311,7 +2180,7 @@ static int _player_evasion_size_factor()
 
 // Determines racial shield penalties (formicids get a bonus compared to
 // other medium-sized races)
-static int _player_shield_racial_factor()
+int player_shield_racial_factor()
 {
     return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
                                                   : _player_evasion_size_factor()));
@@ -2327,7 +2196,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
     // Some lesser armours have small penalties now (barding).
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
     {
-        if (i == EQ_SHIELD || !player_wearing_slot(i))
+        if (i == EQ_SHIELD || !you.slot_item(static_cast<equipment_type>(i)))
             continue;
 
         // [ds] Evasion modifiers for armour are negatives, change
@@ -2533,7 +2402,7 @@ int player_shield_class()
     if (you.incapacitated())
         return 0;
 
-    if (player_wearing_slot(EQ_SHIELD))
+    if (you.shield())
     {
         const item_def& item = you.inv[you.equip[EQ_SHIELD]];
         int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
@@ -4286,31 +4155,28 @@ int get_real_hp(bool trans, bool rotted)
 
 int get_real_mp(bool include_items)
 {
-    int enp = you.experience_level;
-    enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
+    const int scale = 100;
+    int enp = you.experience_level * scale;
 
-    int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level * 3, true) / 14
-                    + you.skill(SK_SPELLCASTING, 1, true);
-    int invoc_extra = you.skill(SK_INVOCATIONS, you.experience_level * 2, true) / 13
-                    + you.skill(SK_INVOCATIONS, 1, true) / 3;
-    int evoc_extra = you.skill(SK_EVOCATIONS, you.experience_level, true) / 6;
+    int spell_extra = you.skill(SK_SPELLCASTING, 1 * scale, true); // 100%
+    int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, true) * 3 / 5; // 60%
+    int evoc_extra = you.skill(SK_EVOCATIONS, 1 * scale, true) / 2; // 50%
 
     enp += max(spell_extra, max(invoc_extra, evoc_extra));
-    enp = stepdown_value(enp, 9, 18, 45, 100);
-
-    // This is our "rotted" base (applied after scaling):
-    enp += you.mp_max_adj;
-
-    // Yes, we really do want this duplication... this is so the stepdown
-    // doesn't truncate before we apply the rotted base.  We're doing this
-    // the nice way. -- bwr
-    enp = min(enp, 50);
 
     // Analogous to ROBUST/FRAIL
-    enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
+    enp *= 100  + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
-               - (player_mutation_level(MUT_LOW_MAGIC) * 10);
+               - (player_mutation_level(MUT_LOW_MAGIC) * 10)
+               + species_mp_modifier(you.species) * 10;
     enp /= 100;
+
+    // starts at 90% of the calculated total for balance reasons
+    enp *= 90;
+    enp /= 100 * scale;
+
+    // This is our "rotted" base, applied after multipliers
+    enp += you.mp_max_adj;
 
     // Now applied after scaling so that power items are more useful -- bwr
     if (include_items)
@@ -4321,9 +4187,6 @@ int get_real_mp(bool include_items)
         if (you.wearing(EQ_STAFF, STAFF_POWER))
             enp += 5 + enp * 2 / 5;
     }
-
-    if (enp > 50)
-        enp = 50 + ((enp - 50) / 2);
 
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
@@ -5931,13 +5794,13 @@ int player::adjusted_shield_penalty(int scale) const
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
     return max(0, ((base_shield_penalty * scale) - skill(SK_SHIELDS, scale)
-                  / _player_shield_racial_factor() * 10) / 10);
+                  / player_shield_racial_factor() * 10) / 10);
 }
 
 float player::get_shield_skill_to_offset_penalty(const item_def &item)
 {
     int evp = property(item, PARM_EVASION);
-    return -1 * evp * _player_shield_racial_factor() / 10;
+    return -1 * evp * player_shield_racial_factor() / 10;
 }
 
 int player::armour_tohit_penalty(bool random_factor, int scale) const
@@ -6153,7 +6016,7 @@ int player::armour_class(bool /*calc_unid*/) const
         if (eq == EQ_SHIELD)
             continue;
 
-        if (!player_wearing_slot(eq))
+        if (!slot_item(static_cast<equipment_type>(eq)))
             continue;
 
         const item_def& item = inv[equip[eq]];
@@ -6943,7 +6806,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
 {
     int dam = 0;
     bool do_corrosion = false;
-    const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
+    const bool wearing_cloak = slot_item(EQ_CLOAK);
 
     for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; slot++)
     {
@@ -7119,7 +6982,7 @@ int player::has_claws(bool allow_tran) const
 
 bool player::has_usable_claws(bool allow_tran) const
 {
-    return !player_wearing_slot(EQ_GLOVES) && has_claws(allow_tran);
+    return !slot_item(EQ_GLOVES) && has_claws(allow_tran);
 }
 
 int player::has_talons(bool allow_tran) const
@@ -7133,7 +6996,7 @@ int player::has_talons(bool allow_tran) const
 
 bool player::has_usable_talons(bool allow_tran) const
 {
-    return !player_wearing_slot(EQ_BOOTS) && has_talons(allow_tran);
+    return !slot_item(EQ_BOOTS) && has_talons(allow_tran);
 }
 
 int player::has_hooves(bool allow_tran) const
@@ -7148,7 +7011,7 @@ int player::has_hooves(bool allow_tran) const
 bool player::has_usable_hooves(bool allow_tran) const
 {
     return has_hooves(allow_tran)
-           && (!player_wearing_slot(EQ_BOOTS)
+           && (!slot_item(EQ_BOOTS)
                || wearing(EQ_BOOTS, ARM_CENTAUR_BARDING, true));
 }
 
@@ -7212,7 +7075,7 @@ bool player::has_usable_offhand() const
 {
     if (player_mutation_level(MUT_MISSING_HAND))
         return false;
-    if (player_wearing_slot(EQ_SHIELD))
+    if (shield())
         return false;
 
     const item_def* wp = slot_item(EQ_WEAPON);

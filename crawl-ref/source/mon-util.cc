@@ -990,9 +990,11 @@ void discover_mimic(const coord_def& pos)
         return;
     }
 
-    const string name = feature_mimic ? feat_type_name(feat) :
-          item->base_type == OBJ_GOLD ? "pile of gold coins"
-                                      : item->name(DESC_BASENAME);
+    const string name = feature_mimic ? "the " + string(feat_type_name(feat)) :
+          item->base_type == OBJ_GOLD ? "the pile of gold coins"
+                                      : item->name(DESC_THE, false, false,
+                                                             false, true);
+    const bool plural = feature_mimic ? false : item->quantity > 1;
 
 #ifdef USE_TILE
     tileidx_t tile = tileidx_feature(pos);
@@ -1000,12 +1002,16 @@ void discover_mimic(const coord_def& pos)
 #endif
 
     if (you.see_cell(pos))
-        mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
+        mprf(MSGCH_WARN, "%s %s a mimic!", name.c_str(), plural ? "are" : "is");
+
+    const string shortname = feature_mimic ? feat_type_name(feat) :
+               item->base_type == OBJ_GOLD ? "pile of gold coins"
+                                           : item->name(DESC_BASENAME);
     if (item)
         destroy_item(item->index(), true);
     else
         _destroy_mimic_feature(pos);
-    _mimic_vanish(pos, name);
+    _mimic_vanish(pos, shortname);
 
     // Just in case there's another one.
     if (mimic_at(pos))
@@ -1675,16 +1681,16 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
             mc = mon->base_monster;
             break;
         case 1:
-            if (mon->props.exists("chimera_part_2"))
+            if (mon->props.exists(CHIMERA_PT2_KEY))
             {
-                mc = static_cast<monster_type>(mon->props["chimera_part_2"].get_int());
+                mc = static_cast<monster_type>(mon->props[CHIMERA_PT2_KEY].get_int());
                 attk_number = 0;
             }
             break;
         case 2:
-            if (mon->props.exists("chimera_part_3"))
+            if (mon->props.exists(CHIMERA_PT3_KEY))
             {
-                mc = static_cast<monster_type>(mon->props["chimera_part_3"].get_int());
+                mc = static_cast<monster_type>(mon->props[CHIMERA_PT3_KEY].get_int());
                 attk_number = 0;
             }
             break;
@@ -1982,10 +1988,15 @@ int exper_value(const monster* mon, bool real)
             case SPELL_CHAIN_LIGHTNING:
             case SPELL_TORNADO:
             case SPELL_LEGENDARY_DESTRUCTION:
+            case SPELL_SUMMON_ILLUSION:
+            case SPELL_SPELLFORGED_SERVITOR:
                 diff += 25;
                 break;
 
             case SPELL_SUMMON_GREATER_DEMON:
+            case SPELL_HASTE:
+            case SPELL_BLINK_RANGE:
+            case SPELL_PETRIFY:
                 diff += 20;
                 break;
 
@@ -1997,10 +2008,11 @@ int exper_value(const monster* mon, bool real)
             case SPELL_IRON_SHOT:
             case SPELL_IOOD:
             case SPELL_FIREBALL:
-            case SPELL_HASTE:
             case SPELL_AGONY:
             case SPELL_LRD:
+            case SPELL_DIG:
             case SPELL_CHAIN_OF_CHAOS:
+            case SPELL_FAKE_MARA_SUMMON:
                 diff += 10;
                 break;
 
@@ -2094,15 +2106,13 @@ int exper_value(const monster* mon, bool real)
     // Guarantee the value is within limits.
     if (x_val <= 0)
         x_val = 1;
-    else if (x_val > 15000)
-        x_val = 15000;
 
     return x_val;
 }
 
 monster_type random_draconian_monster_species()
 {
-    const int num_drac = MONS_LAST_BASE_DRACONIAN - MONS_FIRST_BASE_DRACONIAN + 1;
+    const int num_drac = MONS_LAST_SPAWNED_DRACONIAN - MONS_FIRST_BASE_DRACONIAN + 1;
     return static_cast<monster_type>(MONS_FIRST_BASE_DRACONIAN + random2(num_drac));
 }
 
@@ -3367,7 +3377,8 @@ bool mons_has_los_ability(monster_type mon_type)
         || mon_type == MONS_EYE_OF_DRAINING
         || mon_type == MONS_GOLDEN_EYE
         || mon_type == MONS_MOTH_OF_WRATH
-        || mon_type == MONS_GHOST_MOTH)
+        || mon_type == MONS_GHOST_MOTH
+        || mon_type == MONS_STARCURSED_MASS)
     {
         return true;
     }

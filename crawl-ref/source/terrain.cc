@@ -527,7 +527,7 @@ bool feat_is_metal(dungeon_feature_type feat)
     return feat == DNGN_METAL_WALL || feat == DNGN_GRATE;
 }
 
-/** XXX: not sure what this means
+/** Is this feature ambivalent about whether we're going up or down?
  */
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 {

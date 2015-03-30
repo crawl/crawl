@@ -139,63 +139,30 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
 {
     skill_type selected_skill = SK_NONE;
 
-    switch ((int)selected_role)
+    switch (selected_role)
     {
     case STAT_DEX:
-        switch (random2(6))
-        {
-        case 0:
-        case 1:
-            selected_skill = SK_FIGHTING;
-            break;
-        case 2:
-            selected_skill = SK_DODGING;
-            break;
-        case 3:
-            selected_skill = SK_STEALTH;
-            break;
-        case 4:
-        case 5:
-            selected_skill = sk_1;
-            break;
-        }
+        // Duplicates are intentional.
+        selected_skill = random_choose(SK_FIGHTING, SK_FIGHTING,
+                                       SK_DODGING,
+                                       SK_STEALTH,
+                                       sk_1, sk_1);
         break;
 
     case STAT_STR:
-    {
-        int options = 3;
-        if (!you_can_wear(EQ_BODY_ARMOUR))
-            options--;
-
-        switch (random2(options))
+        do
         {
-        case 0:
-            selected_skill = SK_FIGHTING;
-            break;
-        case 1:
-            selected_skill = sk_1;
-            break;
-        case 2:
-            selected_skill = SK_ARMOUR;
-            break;
+            selected_skill = random_choose(SK_FIGHTING, sk_1, SK_ARMOUR);
         }
+        while (is_useless_skill(selected_skill));
         break;
-    }
 
     case STAT_INT:
-        switch (random2(3))
-        {
-        case 0:
-            selected_skill = SK_SPELLCASTING;
-            break;
-        case 1:
-            selected_skill = sk_1;
-            break;
-        case 2:
-            selected_skill = sk_2;
-            break;
-        }
+        selected_skill = random_choose(SK_SPELLCASTING, sk_1, sk_2);
         break;
+
+    default:
+        die("bad skill_type %d", selected_role);
     }
 
     if (selected_skill == NUM_SKILLS)
@@ -203,6 +170,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
         ASSERT(you.species == SP_FELID);
         selected_skill = SK_UNARMED_COMBAT;
     }
+
     return selected_skill;
 }
 
