@@ -244,7 +244,6 @@ void tornado_damage(actor *caster, int dur)
     int age = _tornado_age(caster);
     ASSERT(age >= 0);
 
-    vector<actor*>        move_act;   // victims to move
     vector<coord_def>     move_avail; // legal destinations
     map<mid_t, coord_def> move_dest;  // chosen destination
     int rdurs[TORNADO_RADIUS+1];           // durations at radii
@@ -361,7 +360,7 @@ void tornado_damage(actor *caster, int dur)
                 }
 
                 if (victim->alive() && !leda && dur > 0)
-                    move_act.push_back(victim);
+                    move_dest[victim->mid] = victim->pos();
             }
 
             if (cell_is_solid(*dam_i))
@@ -387,11 +386,10 @@ void tornado_damage(actor *caster, int dur)
         return;
 
     // Gather actors who are to be moved.
-    for (actor *act : move_act)
-        if (act->alive()) // shouldn't ever change...
+    for (auto &entry : move_dest)
+        if (actor* act = actor_by_mid(entry.first)) // should still be alive...
         {
-            // Record the old position.
-            move_dest[act->mid] = act->pos();
+            ASSERT(entry.second == act->pos());
 
             // Temporarily move to (0,0) to allow permutations.
             if (mgrd(act->pos()) == act->mindex())
@@ -404,26 +402,20 @@ void tornado_damage(actor *caster, int dur)
     erase_if(move_avail, actor_at);
 
     // Calculate destinations.
-    for (actor *act : move_act)
+    for (auto &entry : move_dest)
     {
-        coord_def pos = move_dest[act->mid];
-        int r = pos.range(org);
-        coord_def dest = _rotate(org, pos, move_avail, rdurs[r]);
-        for (unsigned int j = 0; j < move_avail.size(); j++)
-            if (move_avail[j] == dest)
-            {
-                // Only one monster per destination.
-                erase_any(move_avail, j);
-                break;
-            }
-        move_dest[act->mid] = dest;
+        const int r = entry.second.range(org);
+        coord_def dest = _rotate(org, entry.second, move_avail, rdurs[r]);
+        // Only one monster per destination.
+        erase_if(move_avail, [&dest](const coord_def& p) { return p == dest; });
+        entry.second = dest;
     }
 
     // Actually move actors into place.
-    for (actor *act : move_act)
-        if (act->alive())
+    for (auto &entry : move_dest)
+        if (actor* act = actor_by_mid(entry.first)) // should still be alive...
         {
-            coord_def newpos = move_dest[act->mid];
+            const coord_def newpos = entry.second;
             ASSERT(!actor_at(newpos));
             act->move_to_pos(newpos);
             ASSERT(act->pos() == newpos);
