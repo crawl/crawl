@@ -574,7 +574,6 @@ int species_mp_modifier(species_type species)
     {
     case SP_TROLL:
     case SP_MINOTAUR:
-        return -2;
     case SP_CENTAUR:
     case SP_GHOUL:
         return -1;
@@ -586,13 +585,12 @@ int species_mp_modifier(species_type species)
     case SP_TENGU:
     case SP_VINE_STALKER:
     case SP_FORMICID:
-        return 1;
     case SP_FELID:
     case SP_HIGH_ELF:
     case SP_DEMIGOD:
-        return 2;
-    case SP_DEEP_ELF:
     case SP_SPRIGGAN:
-        return 3;
+        return 1;
+    case SP_DEEP_ELF:
+        return 2;
     }
 }
