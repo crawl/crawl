@@ -4167,13 +4167,10 @@ int get_real_mp(bool include_items)
     // Analogous to ROBUST/FRAIL
     enp *= 100  + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
-               - (player_mutation_level(MUT_LOW_MAGIC) * 10)
-               + species_mp_modifier(you.species) * 10;
-    enp /= 100;
-
-    // starts at 90% of the calculated total for balance reasons
-    enp *= 90;
+               - (player_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100 * scale;
+
+    enp += species_mp_modifier(you.species);
 
     // This is our "rotted" base, applied after multipliers
     enp += you.mp_max_adj;
