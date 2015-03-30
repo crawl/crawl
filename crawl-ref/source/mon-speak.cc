@@ -397,8 +397,12 @@ bool mons_speaks(monster* mons)
 {
     ASSERT(!invalid_monster_type(mons->type));
 
-    if (mons->asleep() || mons->cannot_act())
+    // Natasha's death lines aren't physical speech.
+    if ((mons->asleep() || mons->cannot_act() || mons->flags & MF_EXPLODE_KILL)
+        && !(mons->type == MONS_NATASHA && !mons->alive()))
+    {
         return false;
+    }
 
     // Monsters talk on death even if invisible/silenced/etc.
     int duration = 1;
