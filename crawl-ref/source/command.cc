@@ -186,6 +186,115 @@ static void _print_version()
     cmd_version.show();
 }
 
+void list_armour()
+{
+    ostringstream estr;
+    for (int j = EQ_MIN_ARMOUR; j <= EQ_MAX_ARMOUR; j++)
+    {
+        const equipment_type i = static_cast<equipment_type>(j);
+        const int armour_id = you.equip[i];
+        int       colour    = MSGCOL_BLACK;
+
+        estr.str("");
+        estr.clear();
+
+        estr << ((i == EQ_CLOAK)       ? "Cloak  " :
+                 (i == EQ_HELMET)      ? "Helmet " :
+                 (i == EQ_GLOVES)      ? "Gloves " :
+                 (i == EQ_SHIELD)      ? "Shield " :
+                 (i == EQ_BODY_ARMOUR) ? "Armour " :
+                 (i == EQ_BOOTS) ?
+                 ((you.species == SP_CENTAUR
+                   || you.species == SP_NAGA) ? "Barding"
+                                              : "Boots  ")
+                                 : "unknown")
+             << " : ";
+
+        if (you_can_wear(i) == MB_FALSE)
+            estr << "    (unavailable)";
+        else if (you_can_wear(i, true) == MB_FALSE)
+            estr << "    (currently unavailable)";
+        else if (armour_id != -1)
+        {
+            estr << you.inv[armour_id].name(DESC_INVENTORY);
+            colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
+                                 "equip");
+        }
+        else if (you_can_wear(i) == MB_MAYBE)
+            estr << "    (restricted)";
+        else
+            estr << "    none";
+
+        if (colour == MSGCOL_BLACK)
+            colour = menu_colour(estr.str(), "", "equip");
+
+        mprf(MSGCH_EQUIPMENT, colour, "%s", estr.str().c_str());
+    }
+}
+
+void list_jewellery()
+{
+    string jstr;
+    int cols = get_number_of_cols() - 1;
+    bool split = you.species == SP_OCTOPODE && cols > 84;
+
+    for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
+    {
+        const equipment_type i = static_cast<equipment_type>(j);
+        if (!you_can_wear(i))
+            continue;
+
+        const int jewellery_id = you.equip[i];
+        int       colour       = MSGCOL_BLACK;
+
+        const char *slot =
+                 (i == EQ_LEFT_RING)   ? "Left ring" :
+                 (i == EQ_RIGHT_RING)  ? "Right ring" :
+                 (i == EQ_AMULET)      ? "Amulet" :
+                 (i == EQ_RING_ONE)    ? "1st ring" :
+                 (i == EQ_RING_TWO)    ? "2nd ring" :
+                 (i == EQ_RING_THREE)  ? "3rd ring" :
+                 (i == EQ_RING_FOUR)   ? "4th ring" :
+                 (i == EQ_RING_FIVE)   ? "5th ring" :
+                 (i == EQ_RING_SIX)    ? "6th ring" :
+                 (i == EQ_RING_SEVEN)  ? "7th ring" :
+                 (i == EQ_RING_EIGHT)  ? "8th ring" :
+                 (i == EQ_RING_AMULET) ? "Amulet ring"
+                                       : "unknown";
+
+        string item;
+        if (you_can_wear(i, true) == MB_FALSE)
+            item = "    (currently unavailable)";
+        else if (jewellery_id != -1)
+        {
+            item = you.inv[jewellery_id].name(DESC_INVENTORY);
+            string prefix = item_prefix(you.inv[jewellery_id]);
+            colour = menu_colour(item, prefix, "equip");
+        }
+        else
+            item = "    none";
+
+        if (colour == MSGCOL_BLACK)
+            colour = menu_colour(item, "", "equip");
+
+        item = chop_string(make_stringf("%-*s: %s",
+                                        split ? cols > 96 ? 9 : 8 : 11,
+                                        slot, item.c_str()),
+                           split && i > EQ_AMULET ? (cols - 1) / 2 : cols);
+        item = colour_string(item, colour);
+
+        if (i == EQ_RING_SEVEN && you.species == SP_OCTOPODE &&
+                player_mutation_level(MUT_MISSING_HAND))
+        {
+            mprf(MSGCH_EQUIPMENT, "%s", item.c_str());
+        }
+        else if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
+            jstr = item + " ";
+        else
+            mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
+    }
+}
+
 void toggle_viewport_monster_hp()
 {
     crawl_state.viewport_monster_hp = !crawl_state.viewport_monster_hp;
@@ -933,6 +1042,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_MUTATIONS, "show Abilities/mutations", 2);
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
     _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
+    _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
+    _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
     _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
     _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
 
@@ -974,6 +1085,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             true, true, _cmdhelp_textfilter);
 
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "show Inventory list", 2);
+    _add_command(cols, 1, CMD_LIST_EQUIPMENT, "show inventory of equipped items", 2);
     _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
     _add_command(cols, 1, CMD_FIRE, "Fire next appropriate item", 2);
     _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);

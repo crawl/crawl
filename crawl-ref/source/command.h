@@ -8,6 +8,9 @@
 
 #include "enum.h"
 
+void list_armour();
+void list_jewellery();
+
 void toggle_viewport_monster_hp();
 void toggle_viewport_weapons();
 void show_levelmap_help();
