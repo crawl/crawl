@@ -39,6 +39,7 @@
 #include "macro.h"
 #include "mapdef.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "newgame.h"
 #include "options.h"
@@ -1352,12 +1353,9 @@ void game_options::remove_item_glyph_override(const string &text, bool prepend)
     string key = text;
     trim_string(key);
 
-    item_glyph_overrides.erase(
-        remove_if(item_glyph_overrides.begin(),
-                  item_glyph_overrides.end(),
-                  [&key](const item_glyph_override_type& arg)
-                  { return key == arg.first; }),
-        item_glyph_overrides.end());
+    erase_if(item_glyph_overrides,
+             [&key](const item_glyph_override_type& arg)
+             { return key == arg.first; });
 }
 
 void game_options::add_item_glyph_override(const string &text, bool prepend)
@@ -3051,14 +3049,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "ban_pickup")
     {
+        // Only remove negative, not positive, exceptions.
         if (plain)
-        {
-            // Only remove negative, not positive, exceptions.
-            force_autopickup.erase(remove_if(force_autopickup.begin(),
-                                             force_autopickup.end(),
-                                             _is_autopickup_ban),
-                                   force_autopickup.end());
-        }
+            erase_if(force_autopickup, _is_autopickup_ban);
 
         vector<pair<text_pattern, bool> > new_entries;
         vector<string> args = split_string(",", field);
