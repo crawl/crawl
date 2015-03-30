@@ -744,7 +744,7 @@ void ghost_demon::add_spells(bool actual_ghost)
 
     fixup_spells(spells, xl);
 
-    if (species_genus(species) == GENPC_DRACONIAN
+    if (species_is_draconian(species)
         && species != SP_BASE_DRACONIAN
         && species != SP_GREY_DRACONIAN
         // Don't give pillusions extra breath

@@ -483,7 +483,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (player_genus(GENPC_DRACONIAN) && slot == EQ_BODY_ARMOUR)
+    if (species_is_draconian(you.species) && slot == EQ_BODY_ARMOUR)
     {
         if (verbose)
         {
@@ -529,8 +529,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             // Hooves and talons were already checked by player_has_feet.
 
-            if (species_has_claws(you.species) >= 3
-                || player_mutation_level(MUT_CLAWS, false) >= 3)
+            if (player_mutation_level(MUT_CLAWS, false) >= 3)
             {
                 if (verbose)
                 {
@@ -704,7 +703,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 return false;
             }
 
-            if (player_genus(GENPC_DRACONIAN))
+            if (species_is_draconian(you.species))
             {
                 if (verbose)
                     mpr("You can't wear that with your reptilian head.");

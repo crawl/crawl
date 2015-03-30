@@ -68,7 +68,7 @@ static void _fedhas_neutralise_plant(monster* plant);
 
 void beogh_follower_convert(monster* mons, bool orc_hit)
 {
-    if (!player_genus(GENPC_ORCISH) || crawl_state.game_is_arena())
+    if (!species_is_orcish(you.species) || crawl_state.game_is_arena())
         return;
 
     // For followers of Beogh, decide whether orcs will join you.

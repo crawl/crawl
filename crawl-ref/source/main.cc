@@ -87,6 +87,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "lookup_help.h"
@@ -421,7 +422,7 @@ NORETURN static void _launch_game()
         msg::stream << "<yellow>Welcome" << (game_start? "" : " back") << ", "
                     << you.your_name << " the "
                     << species_name(you.species)
-                    << " " << you.class_name << ".</yellow>"
+                    << " " << get_job_name(you.char_class) << ".</yellow>"
                     << endl;
     }
 
@@ -642,7 +643,7 @@ static void _take_starting_note()
     ostringstream notestr;
     notestr << you.your_name << ", the "
             << species_name(you.species) << " "
-            << you.class_name
+            << get_job_name(you.char_class)
             << ", began the quest for the Orb.";
     take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
     mark_milestone("begin", "began the quest for the Orb.");
@@ -1756,7 +1757,7 @@ static void _experience_check()
     mprf("You are a level %d %s %s.",
          you.experience_level,
          species_name(you.species).c_str(),
-         you.class_name.c_str());
+         get_job_name(you.char_class));
     int perc = get_exp_progress();
 
     if (you.experience_level < you.get_max_xl())

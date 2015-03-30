@@ -62,13 +62,21 @@ class player : public actor
 {
 public:
   // ---------------
+  // Character save chunk data:
+  // None of this is really necessary, except for some complicated
+  // hacks with player_save_info. Should only be used in tags.cc or
+  // player_save_info::operator=(player).
+  // ---------------
+  string chr_species_name;
+  string chr_class_name;
+  string chr_god_name;
+
+  // ---------------
   // Permanent data:
   // ---------------
   string your_name;
   species_type species;
-  string species_name;
   job_type char_class;
-  string class_name;
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
@@ -206,7 +214,6 @@ public:
   FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
-  string god_name;
   string jiyva_second_name;       // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
@@ -619,7 +626,7 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate(bool temp = true) const;
-    bool is_lifeless_undead() const;
+    bool is_lifeless_undead(bool temp = true) const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool is_stationary() const;
@@ -742,6 +749,7 @@ public:
     bool can_throw_large_rocks() const;
     bool can_smell() const;
 
+    int racial_ac(bool temp) const;
     int armour_class(bool /*calc_unid*/ = true) const;
     int gdr_perc() const;
     int melee_evasion(const actor *attacker,
@@ -988,8 +996,6 @@ bool player_can_open_doors();
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
 
-bool player_genus(genus_type which_genus,
-                   species_type species = SP_UNKNOWN);
 bool is_player_same_genus(const monster_type mon);
 monster_type player_mons(bool transform = true);
 void update_player_symbol();

@@ -197,7 +197,7 @@ LUARET1(you_constricting, boolean, you.is_constricting())
 static int l_you_genus(lua_State *ls)
 {
     bool plural = lua_toboolean(ls, 1);
-    string genus = species_name(you.species, true);
+    string genus = species_name(you.species, SPNAME_GENUS);
     lowercase(genus);
     if (plural)
         genus = pluralise(genus);

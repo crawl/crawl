@@ -742,7 +742,7 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_allows_beogh(const monster* mon)
 {
-    if (!player_genus(GENPC_ORCISH) || you_worship(GOD_BEOGH))
+    if (!species_is_orcish(you.species) || you_worship(GOD_BEOGH))
         return false; // no one else gives a damn
 
     return mons_genus(mon->type) == MONS_ORC
@@ -1108,7 +1108,7 @@ monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN
-        || (mc == MONS_PLAYER_ILLUSION && player_genus(GENPC_DRACONIAN)))
+        || (mc == MONS_PLAYER_ILLUSION && species_is_draconian(you.species)))
     {
         return MONS_DRACONIAN;
     }
@@ -3999,17 +3999,17 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     // FIXME: Handle player_genus in case it was not generalised to foe_genus.
     msg = replace_all(msg, "@a_player_genus@",
-                      article_a(species_name(you.species, true)));
-    msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
-    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, true)));
+                      article_a(species_name(you.species, SPNAME_GENUS)));
+    msg = replace_all(msg, "@player_genus@", species_name(you.species, SPNAME_GENUS));
+    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, SPNAME_GENUS)));
 
-    string foe_species;
+    string foe_genus;
 
     if (foe == nullptr)
         ;
     else if (foe->is_player())
     {
-        foe_species = species_name(you.species, true);
+        foe_genus = species_name(you.species, SPNAME_GENUS);
 
         msg = _replace_speech_tag(msg, " @to_foe@", "");
         msg = _replace_speech_tag(msg, " @at_foe@", "");
@@ -4029,10 +4029,10 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
         msg = replace_all(msg, "@foe_name@", you.your_name);
         msg = replace_all(msg, "@foe_species@", species_name(you.species));
-        msg = replace_all(msg, "@foe_genus@", foe_species);
-        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_species));
+        msg = replace_all(msg, "@foe_genus@", foe_genus);
+        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
         msg = replace_all(msg, "@foe_genus_plural@",
-                          pluralise(species_name(you.species, true)));
+                          pluralise(foe_genus));
     }
     else
     {
@@ -4070,13 +4070,11 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
         msg = replace_all(msg, "@foe_species@", species);
 
-        string genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
+        foe_genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
 
-        msg = replace_all(msg, "@foe_genus@", genus);
-        msg = replace_all(msg, "@Foe_genus@", uppercase_first(genus));
-        msg = replace_all(msg, "@foe_genus_plural@", pluralise(genus));
-
-        foe_species = genus;
+        msg = replace_all(msg, "@foe_genus@", foe_genus);
+        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
+        msg = replace_all(msg, "@foe_genus_plural@", pluralise(foe_genus));
     }
 
     description_level_type nocap = DESC_THE, cap = DESC_THE;
@@ -4265,11 +4263,11 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     if (msg.find("@species_insult_") != string::npos)
     {
         msg = replace_all(msg, "@species_insult_adj1@",
-                               _get_species_insult(foe_species, "adj1"));
+                               _get_species_insult(foe_genus, "adj1"));
         msg = replace_all(msg, "@species_insult_adj2@",
-                               _get_species_insult(foe_species, "adj2"));
+                               _get_species_insult(foe_genus, "adj2"));
         msg = replace_all(msg, "@species_insult_noun@",
-                               _get_species_insult(foe_species, "noun"));
+                               _get_species_insult(foe_genus, "noun"));
     }
 
     static const char * sound_list[] =
@@ -4317,35 +4315,6 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     return msg;
 }
 
-static mon_body_shape _get_ghost_shape(const monster* mon)
-{
-    const ghost_demon &ghost = *(mon->ghost);
-
-    switch (ghost.species)
-    {
-    case SP_NAGA:
-        return MON_SHAPE_NAGA;
-
-    case SP_CENTAUR:
-        return MON_SHAPE_CENTAUR;
-
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:
-        return MON_SHAPE_HUMANOID_TAILED;
-
-    default:
-        return MON_SHAPE_HUMANOID;
-    }
-}
-
 /**
  * Get the monster body shape of the given monster.
  * @param mon  The monster in question.
@@ -4353,12 +4322,14 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
  */
 mon_body_shape get_mon_shape(const monster* mon)
 {
+    monster_type base_type;
     if (mons_is_pghost(mon->type))
-        return _get_ghost_shape(mon);
+        base_type = player_species_to_mons_species(mon->ghost->species);
     else if (mons_is_zombified(mon))
-        return get_mon_shape(mon->base_monster);
+        base_type = mon->base_monster;
     else
-        return get_mon_shape(mon->type);
+        base_type = mon->type;
+    return get_mon_shape(base_type);
 }
 
 /**
