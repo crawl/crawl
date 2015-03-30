@@ -6839,8 +6839,12 @@ bool monster::stasis(bool calc_unid, bool items) const
     if (mons_genus(type) == MONS_FORMICID
         || type == MONS_PLAYER_GHOST && ghost->species == SP_FORMICID)
 
-    if (stasised(pos()));
-
+    {
+        return true;
+    }
+    
+    if (stasised(pos()))
+    
     {
         return true;
     }

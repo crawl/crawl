@@ -6871,6 +6871,9 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
             found_stasis = true;
         }
 
+        if (stasised(pos()))
+            found_stasis = true;
+
         if (worn_notele.size() > (problems.empty() ? 3 : 1))
         {
             problems.push_back(
@@ -6885,6 +6888,12 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
                              comma_separated_line(worn_notele.begin(),
                                                   worn_notele.end()).c_str()));
         }
+        
+        else if (stasised(pos()))
+            problems.push_back(
+                make_stringf("in a stasis field%s",
+                             comma_separated_line(worn_notele.begin(),
+                                                  worn_notele.end()).c_str()));
 
         if (stasis_block && !found_stasis)
         {
