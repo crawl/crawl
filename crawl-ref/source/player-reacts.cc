@@ -549,6 +549,9 @@ static void _decrement_durations()
     // and liquefying radius.
     if (you.duration[DUR_LIQUEFYING])
         invalidate_agrid();
+    // and stasis radius.
+    if (you.duration[DUR_STASIS])
+        invalidate_agrid();
 
     _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
 

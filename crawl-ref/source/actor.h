@@ -370,7 +370,6 @@ public:
     // Squared liquefying radius
     virtual int liquefying_radius2() const = 0;
     virtual int umbra_radius2() const = 0;
-    // Squared stasis radius.
     virtual int stasis_radius2() const = 0;
 #if TAG_MAJOR_VERSION == 34
     virtual int heat_radius2() const = 0;

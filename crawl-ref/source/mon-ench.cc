@@ -2475,6 +2475,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DEATHS_DOOR:
     case ENCH_SAP_MAGIC:
+    case ENCH_STASIS:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

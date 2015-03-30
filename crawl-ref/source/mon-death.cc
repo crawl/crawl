@@ -2650,8 +2650,7 @@ int monster_die(monster* mons, killer_type killer,
     // Monsters haloes should be removed when they die.
     if (mons->halo_radius2()
         || mons->umbra_radius2()
-        || mons->silence_radius2()
-        || mons->stasis_radius2())
+        || mons->silence_radius2())
     {
         invalidate_agrid();
     }

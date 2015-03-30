@@ -3596,7 +3596,7 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_STASIS, "Stasis",
-     SPTYP_HEXES | SPTYP_AIR,
+     SPTYP_HEXES | SPTYP_EARTH,
      SPFLAG_AREA | SPFLAG_MONSTER,
      5,
      200,

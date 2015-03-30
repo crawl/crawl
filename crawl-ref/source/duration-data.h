@@ -371,7 +371,7 @@ static const duration_def duration_data[] =
     { DUR_STASIS,
       BROWN, "Stasis",
       "stasis", "",
-      "You are under stasis.", D_DISPELLABLE | D_EXPIRES},
+      "You are under stasis.", D_EXPIRES},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

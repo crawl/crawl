@@ -613,7 +613,7 @@ bool fill_status_info(int status, status_info* inf)
     }
     
     case STATUS_STATIC:
-        if (you.liquefied_ground())
+        if (stasised(you.pos()) && !you.duration[DUR_STASIS])
         {
             inf->light_colour = BROWN;
             inf->light_text   = "Stasis";

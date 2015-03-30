@@ -837,31 +837,21 @@ bool golden(const coord_def& p)
 }
 
 /////////////
-// Stasis radius (the same size as silence)
-static int _stasis_range(int dur)
-{
-    if (dur <= 0)
-        return -1;
-    dur /= BASELINE_DELAY;
-    return max(0, min(dur - 6, 37));
-}
-
+// Stasis radius
 int player::stasis_radius2() const
 {
-    return _stasis_range(duration[DUR_STASIS]);
+    return _silence_range(duration[DUR_STASIS]);
 }
 
 int monster::stasis_radius2() const
 {
-
     if (!has_ench(ENCH_STASIS))
         return -1;
-
     const int dur = get_ench(ENCH_STASIS).duration;
     // The below is arbitrarily chosen to make monster decay look reasonable.
-    const int moddur = BASELINE_DELAY
-                       * max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return _stasis_range(moddur);
+    const int moddur = BASELINE_DELAY *
+        max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
+    return _silence_range(moddur);
 }
 
 bool stasised(const coord_def& p)

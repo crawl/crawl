@@ -6764,12 +6764,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
     case SPELL_STASIS:
-        if (!mons->has_ench(ENCH_STASIS) && you.can_see(mons))
-        {
-            mprf("%s makes the surrounding area static %s!", mons->name(DESC_THE).c_str(),
-                 mons->pronoun(PRONOUN_REFLEXIVE).c_str());
-            flash_view_delay(UA_MONSTER, BROWN, 80);
-        }
+        mons->add_ench(ENCH_STASIS);
+        invalidate_agrid(true);
+        simple_monster_message(mons, "'s surroundings become static.");
+        return;
 
         mons->add_ench(ENCH_STASIS);
         invalidate_agrid(true);

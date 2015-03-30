@@ -3666,6 +3666,7 @@ int get_expiration_threshold(duration_type dur)
 
     case DUR_FIRE_SHIELD:
     case DUR_SILENCE: // no message
+    case DUR_STASIS:
         return 5 * BASELINE_DELAY;
 
     case DUR_REGENERATION:
@@ -3981,6 +3982,9 @@ bool player::gourmand(bool calc_unid, bool items) const
 bool player::stasis(bool calc_unid, bool items) const
 {
     if (species == SP_FORMICID)
+        return true;
+
+    if (stasised(pos()))
         return true;
 
     return actor::stasis(calc_unid, items);

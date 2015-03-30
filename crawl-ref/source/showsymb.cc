@@ -116,8 +116,6 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
                 colour = LIGHTCYAN;
             else if (cell.flags & MAP_UMBRAED)
                 colour = fdef.colour(); // Cancels out!
-            else if (cell.flags & MAP_STASISED)
-                colour = BROWN;
             else
                 colour = YELLOW;
         }
@@ -140,6 +138,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 #endif
         else if (cell.flags & MAP_GOLDEN)
             colour = ETC_GOLD;
+        else if (cell.flags & MAP_STASISED)
+                colour = BROWN;
     }
 
     if (Options.show_travel_trail && travel_trail_index(loc) >= 0)

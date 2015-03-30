@@ -781,7 +781,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MYRMECIA,
       {
-       { SPELL_SWIFTNESS, 20, MON_SPELL_WIZARD },
+       { SPELL_STASIS, 20, MON_SPELL_WIZARD }, 
       }
     },
 
