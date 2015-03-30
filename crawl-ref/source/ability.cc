@@ -2878,7 +2878,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, 0,
                              true, true, false, nullptr, nullptr, false, nullptr,
-                             bind(desc_success_chance, placeholders::_1, pow)))
+                             bind(desc_success_chance, placeholders::_1,
+                                  zap_ench_power(ZAP_BANISHMENT, pow))))
         {
             return SPRET_ABORT;
         }
