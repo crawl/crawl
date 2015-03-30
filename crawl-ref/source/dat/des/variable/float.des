@@ -2047,7 +2047,7 @@ ENDMAP
 NAME:   mu_elephants_graveyard
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
-DEPTH:  Depths, Lair:1-7
+DEPTH:  Depths, Lair, !Lair:$
   # next: we generate more dire elephants at greater depths
   # we also turn the shallow water into deep water at the lowest depths
 : if you.in_branch("Lair") then
@@ -2138,8 +2138,8 @@ MONS:    patrolling flying skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / ghoul / large abomination / phantasmal warrior
-KMONS:   4 = Boris / lich / unborn
-KMONS:   5 = lich / unborn
+KMONS:   4 = Boris / lich / death knight
+KMONS:   5 = lich / death knight
 : elseif you.absdepth() > 13 then
 MONS:    skeletal warrior / eidolon
 KMONS:   4 = Frances / vampire mage / necromancer
@@ -5948,7 +5948,7 @@ ENDMAP
 
 NAME:   cheibrodos_orc_bank
 TAGS:   no_item_gen no_monster_gen
-DEPTH:  Orc:1-3, D:10-14
+DEPTH:  Orc, !Orc:$, D:10-14
 ORIENT: float
 MONS:   orc, orc warrior, orc knight, hobgoblin
 KITEM:  $ = $ no_pickup

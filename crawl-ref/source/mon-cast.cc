@@ -3938,12 +3938,12 @@ static int _monster_abjuration(const monster* caster, bool actual)
     return maffected;
 }
 
-static bool _mons_abjured(monster* mons, bool nearby)
+static bool _mons_will_abjure(monster* mons, spell_type spell)
 {
-    if (nearby && _monster_abjuration(mons, false) > 0
+    if (get_spell_flags(spell) & SPFLAG_MONS_ABJURE
+        && _monster_abjuration(mons, false) > 0
         && one_chance_in(3))
     {
-        _monster_abjuration(mons, true);
         return true;
     }
 
@@ -4015,17 +4015,12 @@ static monster_type _pick_vermin()
                                   0);
 }
 
-static void _do_high_level_summon(monster* mons, bool monsterNearby,
-                                  spell_type spell_cast,
+static void _do_high_level_summon(monster* mons, spell_type spell_cast,
                                   monster_type (*mpicker)(), int nsummons,
                                   god_type god, const coord_def *target = nullptr,
                                   void (*post_hook)(monster*, coord_def)
-                                      = nullptr,
-                                  bool allow_abjure = true)
+                                      = nullptr)
 {
-    if (allow_abjure && _mons_abjured(mons, monsterNearby))
-        return;
-
     const int duration = min(2 + mons->spell_hd(spell_cast) / 5, 6);
 
     for (int i = 0; i < nsummons; ++i)
@@ -4045,14 +4040,10 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
 }
 
 static void _mons_summon_elemental(monster* mons,
-                                   bool monsterNearby,
                                    spell_type spell_cast,
                                    monster_type elemental,
                                    god_type god)
 {
-    if (_mons_abjured(mons, monsterNearby))
-        return;
-
     const int count = 1 + (mons->spell_hd(spell_cast) > 15)
                       + random2(mons->spell_hd(spell_cast) / 7 + 1);
 
@@ -4076,9 +4067,8 @@ static void _mons_cast_haunt(monster* mons)
     ASSERT(mons->get_foe());
     const coord_def fpos = mons->get_foe()->pos();
 
-    _do_high_level_summon(mons, mons_near(mons), SPELL_HAUNT,
-                          _pick_random_wraith, random_range(2, 4),
-                          GOD_NO_GOD, &fpos, _haunt_fixup, false);
+    _do_high_level_summon(mons, SPELL_HAUNT, _pick_random_wraith,
+                          random_range(2, 4), GOD_NO_GOD, &fpos, _haunt_fixup);
 }
 
 static void _mons_cast_summon_illusion(monster* mons, spell_type spell)
@@ -5118,7 +5108,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     setup_mons_cast(mons, pbolt, spell_cast);
 
     // single calculation permissible {dlb}
-    const bool monsterNearby = mons_near(mons);
     const unsigned int flags = get_spell_flags(spell_cast);
     const bool orig_noise = do_noise;
     actor* const foe = mons->get_foe();
@@ -5133,6 +5122,19 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     // Targeted spells need a valid target.
     // Wizard-mode cast monster spells may target the boundary (shift-dir).
     ASSERT(map_bounds(pbolt.target) || !(flags & SPFLAG_TARGETING_MASK));
+
+    // Maybe cast abjuration instead of certain summoning spells.
+    if (mons_near(mons) && _mons_will_abjure(mons, spell_cast))
+    {
+        if (do_noise)
+        {
+            pbolt.range = 0;
+            pbolt.glyph = 0;
+            mons_cast_noise(mons, pbolt, SPELL_ABJURATION, 0);
+        }
+        _monster_abjuration(mons, true);
+        return;
+    }
 
     if (spell_cast == SPELL_CANTRIP
         || spell_cast == SPELL_VAMPIRIC_DRAINING
@@ -5281,9 +5283,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_HAUNT:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         if (foe->is_player())
             mpr("You feel haunted.");
         else
@@ -5467,12 +5466,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_WEAVE_SHADOWS:
     {
-        if (spell_cast == SPELL_SHADOW_CREATURES
-            && _mons_abjured(mons, monsterNearby))
-        {
-            return;
-        }
-
         level_id place = (spell_cast == SPELL_SHADOW_CREATURES)
                          ? level_id::current()
                          : level_id(BRANCH_DUNGEON,
@@ -5485,34 +5478,30 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
                           5, spell_cast, mons->pos(), mons->foe, 0, god,
-                          MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE, place));
+                          MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE,
+                          place));
         }
         return;
     }
 
     case SPELL_WATER_ELEMENTALS:
-        _mons_summon_elemental(mons, monsterNearby, spell_cast,
-                               MONS_WATER_ELEMENTAL, god);
+        _mons_summon_elemental(mons, spell_cast, MONS_WATER_ELEMENTAL, god);
         return;
 
     case SPELL_EARTH_ELEMENTALS:
-        _mons_summon_elemental(mons, monsterNearby, spell_cast,
-                               MONS_EARTH_ELEMENTAL, god);
+        _mons_summon_elemental(mons, spell_cast, MONS_EARTH_ELEMENTAL, god);
         return;
 
     case SPELL_IRON_ELEMENTALS:
-        _mons_summon_elemental(mons, monsterNearby, spell_cast,
-                               MONS_IRON_ELEMENTAL, god);
+        _mons_summon_elemental(mons, spell_cast, MONS_IRON_ELEMENTAL, god);
         return;
 
     case SPELL_AIR_ELEMENTALS:
-        _mons_summon_elemental(mons, monsterNearby, spell_cast,
-                               MONS_AIR_ELEMENTAL, god);
+        _mons_summon_elemental(mons, spell_cast, MONS_AIR_ELEMENTAL, god);
         return;
 
     case SPELL_FIRE_ELEMENTALS:
-        _mons_summon_elemental(mons, monsterNearby, spell_cast,
-                               MONS_FIRE_ELEMENTAL, god);
+        _mons_summon_elemental(mons, spell_cast, MONS_FIRE_ELEMENTAL, god);
         return;
 
     case SPELL_SUMMON_ILLUSION:
@@ -5544,9 +5533,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_DEMON: // class 2-4 demons
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 10 + 1);
 
         duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
@@ -5560,9 +5546,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_MONSTROUS_MENAGERIE:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         cast_monstrous_menagerie(mons, splpow, mons->god);
         return;
 
@@ -5621,9 +5604,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_SWARM:
-        _do_high_level_summon(mons, monsterNearby, spell_cast,
-                              _pick_swarmer, random_range(3, 6), god,
-                              nullptr, nullptr, false);
+        _do_high_level_summon(mons, spell_cast, _pick_swarmer,
+                              random_range(3, 6), god, nullptr, nullptr);
         return;
 
     case SPELL_SUMMON_UFETUBUS:
@@ -5658,9 +5640,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon a ring of icky crawling fungi.
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         sumcount2 = 2 + random2(mons->spell_hd(spell_cast) / 4 + 1);
         duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
@@ -5689,8 +5668,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
-        _do_high_level_summon(mons, monsterNearby, spell_cast,
-                              _pick_horrible_thing, random_range(3, 5), god);
+        _do_high_level_summon(mons, spell_cast, _pick_horrible_thing,
+                              random_range(3, 5), god);
         return;
 
     case SPELL_MALIGN_GATEWAY:
@@ -5720,9 +5699,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_SUMMON_UNDEAD:
-        _do_high_level_summon(mons, monsterNearby, spell_cast,
-                              _pick_undead_summon,
-                              2 + random2(mons->spell_hd(spell_cast) / 5 + 1), god);
+        _do_high_level_summon(mons, spell_cast, _pick_undead_summon,
+                              2 + random2(mons->spell_hd(spell_cast) / 5 + 1),
+                              god);
         return;
 
     case SPELL_BROTHERS_IN_ARMS:
@@ -5807,9 +5786,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_GREATER_DEMON:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
 
         create_monster(
@@ -5821,9 +5797,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     // Journey -- Added in Summon Lizards and Draconians
     case SPELL_SUMMON_DRAKES:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
         duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
@@ -5904,9 +5877,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
 
     case SPELL_SUMMON_HOLIES: // Holy monsters.
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         sumcount2 = 1 + random2(2)
                       + random2(mons->spell_hd(spell_cast) / 4 + 1);
 
@@ -6141,12 +6111,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         cast_chain_spell(spell_cast, splpow, mons);
         return;
     case SPELL_SUMMON_EYEBALLS:
-        if (mons->type != MONS_DISSOLUTION
-            && _mons_abjured(mons, monsterNearby))
-        {
-            return;
-        }
-
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 7 + 1);
 
         duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);
@@ -6182,7 +6146,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         {
             mons->add_ench(ENCH_IOOD_CHARGED);
 
-            if (!monsterNearby)
+            if (!mons_near(mons))
                 return;
             string msg = getSpeakString("orb spider charge");
             if (!msg.empty())
@@ -6210,21 +6174,12 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_DRAGON:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         cast_summon_dragon(mons, splpow, god);
         return;
     case SPELL_SUMMON_HYDRA:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         cast_summon_hydra(mons, splpow, god);
         return;
     case SPELL_FIRE_SUMMON:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
         duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);
@@ -6387,8 +6342,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_VERMIN:
-        _do_high_level_summon(mons, monsterNearby, spell_cast,
-                              _pick_vermin, one_chance_in(4) ? 3 : 2 , god);
+        _do_high_level_summon(mons, spell_cast, _pick_vermin,
+                              one_chance_in(4) ? 3 : 2 , god);
         return;
 
     case SPELL_DISCHARGE:
@@ -6474,8 +6429,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         monster* avatar =
             create_monster(
                 mgen_data(MONS_GRAND_AVATAR, SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, 0,
-                          god, MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
+                          duration, spell_cast, mons->pos(), mons->foe, 0, god,
+                          MONS_NO_MONSTER, 0, COLOUR_INHERIT, PROX_ANYWHERE,
                           level_id::current(), mons->spell_hd(spell_cast)));
         if (avatar)
         {
@@ -6591,9 +6546,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
 
     case SPELL_SUMMON_MANA_VIPER:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
@@ -6606,9 +6558,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_EMPEROR_SCORPIONS:
     {
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
@@ -6679,9 +6628,6 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_SCARABS:
     {
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)

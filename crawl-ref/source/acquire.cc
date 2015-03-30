@@ -686,74 +686,88 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
     return result;
 }
 
+/**
+ * What weight should wands of Heal Wounds be given in wand acquirement, based
+ * on their utility to the player? (More utile -> higher weight -> more likely)
+ */
+static int _hw_wand_weight()
+{
+    if (you.innate_mutation[MUT_NO_DEVICE_HEAL] != 3)
+        return 25; // quite powerful
+    if (!player_mutation_level(MUT_NO_LOVE))
+        return 5; // can be used on allies...? XXX: should be weight 1?
+    return 0; // with no allies, totally useless
+}
+
+/**
+ * What weight should wands of Haste be given in wand acquirement, based on
+ * their utility to the player? (More utile -> higher weight -> more likely)
+ */
+static int _haste_wand_weight()
+{
+    if (you.species != SP_FORMICID)
+        return 25; // quite powerful
+    if (!player_mutation_level(MUT_NO_LOVE))
+        return 5; // can be used on allies...? XXX: should be weight 1?
+    return 0; // with no allies, totally useless
+}
+
+/**
+ * What weight should wands of Teleportation be given in wand acquirement,
+ * based on their utility to the player? (More utile -> higher weight -> more
+ * likely)
+ */
+static int _tele_wand_weight()
+{
+    if (you.species == SP_FORMICID || crawl_state.game_is_sprint())
+        return 1; // can only be used to tele away enemies
+    return 15;
+}
+
+
+/**
+ * Choose a random type of wand to be generated via acquirement or god gifts.
+ *
+ * Heavily weighted toward more useful wands and wands the player hasn't yet
+ * seen.
+ *
+ * @return  A random wand type.
+ */
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
-    int picked = NUM_WANDS;
+    vector<pair<wand_type, int>> weights = {
+        // normally 25
+        { WAND_HEAL_WOUNDS,     _hw_wand_weight() },
+        { WAND_HASTING,         _haste_wand_weight() },
+        // normally 15
+        { WAND_TELEPORTATION,   _tele_wand_weight() },
+        { WAND_FIRE,            8 },
+        { WAND_COLD,            8 },
+        { WAND_LIGHTNING,       8 },
+        { WAND_DRAINING,        8 },
+        { WAND_INVISIBILITY,    8 },
+        { WAND_FIREBALL,        8 },
+        { WAND_DIGGING,         5 },
+        { WAND_DISINTEGRATION,  5 },
+        { WAND_POLYMORPH,       5 },
+        { WAND_ENSLAVEMENT,     player_mutation_level(MUT_NO_LOVE) ? 0 : 5 },
+        { WAND_FLAME,           1 },
+        { WAND_FROST,           1 },
+        { WAND_CONFUSION,       1 },
+        { WAND_PARALYSIS,       1 },
+        { WAND_SLOWING,         1 },
+        { WAND_MAGIC_DARTS,     1 },
+        { WAND_RANDOM_EFFECTS,  1 },
+    };
 
-    int total = 0;
-    for (int type = 0; type < NUM_WANDS; ++type)
-    {
-        int w = 0;
+    // Unknown wands get a huge weight bonus.
+    for (auto &weight : weights)
+        if (get_ident_type(OBJ_WANDS, weight.first) == ID_UNKNOWN_TYPE)
+            weight.second *= 2;
 
-        // First, weight according to usefulness.
-        switch (type)
-        {
-        case WAND_HEAL_WOUNDS:
-            if (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3
-                && player_mutation_level(MUT_NO_LOVE))
-            {
-                w = 0; // with no allies, totally useless
-            }
-            else
-                w = (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3 ? 5 : 25);
-            break;
-        case WAND_HASTING:          // each 17.9%, group unknown each 26.3%
-            if (you.species == SP_FORMICID
-                && player_mutation_level(MUT_NO_LOVE))
-            {
-                w = 0; // with no allies, totally useless
-            }
-            else
-                w = (you.species == SP_FORMICID ? 5 : 25);
-            break;
-        case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
-            w = you.species == SP_FORMICID || crawl_state.game_is_sprint()
-                ? 1 : 15;
-            break;
-        case WAND_FIRE:             // each 5.7%, group unknown each 9.3%
-        case WAND_COLD:
-        case WAND_LIGHTNING:
-        case WAND_DRAINING:
-        case WAND_INVISIBILITY:
-        case WAND_FIREBALL:
-            w = 8; break;
-        case WAND_DIGGING:          // each 3.6%, group unknown each 6.25%
-        case WAND_DISINTEGRATION:
-        case WAND_POLYMORPH:
-            w = 5; break;
-        case WAND_ENSLAVEMENT:      // useless under Sacrifice Love
-            w = (player_mutation_level(MUT_NO_LOVE) ? 0 : 5); break;
-        case WAND_FLAME:            // each 0.7%, group unknown each 1.4%
-        case WAND_FROST:
-        case WAND_CONFUSION:
-        case WAND_PARALYSIS:
-        case WAND_SLOWING:
-        case WAND_MAGIC_DARTS:
-        case WAND_RANDOM_EFFECTS:
-        default:
-            w = 1; break;
-        }
-
-        // Unknown wands get another huge weight bonus.
-        if (get_ident_type(OBJ_WANDS, type) == ID_UNKNOWN_TYPE)
-            w *= 2;
-
-        total += w;
-        if (x_chance_in_y(w, total))
-            picked = type;
-    }
-
-    return picked;
+    const wand_type* wand = random_choose_weighted(weights);
+    ASSERT(wand);
+    return *wand;
 }
 
 typedef int (*acquirement_subtype_finder)(bool divine, int &quantity);
@@ -1129,6 +1143,138 @@ static bool _is_armour_plain(const item_def &item)
     return get_armour_ego_type(item) == SPARM_NORMAL;
 }
 
+/**
+ * Has the player already encountered an item with this brand?
+ *
+ * Only supports weapons & armour.
+ *
+ * @param item      The item in question.
+ * @param           Whether the player has encountered another weapon or
+ *                  piece of armour with the same ego.
+ */
+static bool _brand_already_seen(const item_def &item)
+{
+    switch (item.base_type)
+    {
+        case OBJ_WEAPONS:
+            return you.seen_weapon[item.sub_type]
+                   & (1<<get_weapon_brand(item));
+        case OBJ_ARMOUR:
+            return you.seen_armour[item.sub_type]
+                   & (1<<get_armour_ego_type(item));
+        default:
+            die("Unsupported item type!");
+    }
+}
+
+// ugh
+#define ITEM_LEVEL (divine ? ISPEC_GIFT : ISPEC_GOOD_ITEM)
+
+/**
+ * Take a newly-generated acquirement item, and adjust its brand if we don't
+ * like it.
+ *
+ * Specifically, if we think the brand is too weak (for non-divine gifts), or
+ * sometimes if we've seen the brand before.
+ *
+ * @param item      The item which may have its brand adjusted. Not necessarily
+ *                  a weapon or piece of armour.
+ * @param divine    Whether the item is a god gift, rather than from
+ *                  acquirement proper.
+ */
+static void _adjust_brand(item_def &item, bool divine)
+{
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR)
+        return; // don't reroll missile brands, I guess
+
+    if (is_artefact(item))
+        return; // their own kettle of fish
+
+    // Not from a god, so we should prefer better brands.
+    if (!divine && item.base_type == OBJ_WEAPONS)
+    {
+        while (_weapon_brand_quality(get_weapon_brand(item),
+                                     is_range_weapon(item)) < random2(6))
+        {
+            reroll_brand(item, ITEM_LEVEL);
+        }
+    }
+
+    // Try to not generate brands that were already seen, although unlike
+    // jewellery and books, this is not absolute.
+    while (_brand_already_seen(item) && !one_chance_in(5))
+        reroll_brand(item, ITEM_LEVEL);
+}
+
+/**
+ * Should the given item be rejected as an acquirement/god gift result &
+ * rerolled? If so, why?
+ *
+ * @param item      The item in question.
+ * @param agent     The entity creating the item; possibly a god.
+ * @return          A reason why the item should be rejected, if it should be;
+ *                  otherwise, the empty string.
+ */
+static string _why_reject(const item_def &item, int agent)
+{
+    if (agent != GOD_XOM
+        && (item.base_type == OBJ_WEAPONS
+                && !can_wield(&item, false, true)
+            || item.base_type == OBJ_ARMOUR
+                && !can_wear_armour(item, false, true)))
+    {
+        return "Destroying unusable weapon or armour!";
+    }
+
+    // Trog does not gift the Wrath of Trog, nor weapons of pain
+    // (which work together with Necromantic magic).
+    // nor fancy magic staffs (wucad mu, majin-bo)
+    if (agent == GOD_TROG
+        && (get_weapon_brand(item) == SPWPN_PAIN
+            || is_unrandom_artefact(item, UNRAND_TROG)
+            || is_unrandom_artefact(item, UNRAND_WUCAD_MU)
+            || is_unrandom_artefact(item, UNRAND_MAJIN)))
+    {
+        return "Destroying a weapon Trog hates!";
+    }
+
+    // Pain brand is useless if you've sacrificed Necromacy.
+    if (player_mutation_level(MUT_NO_NECROMANCY_MAGIC)
+        && get_weapon_brand(item) == SPWPN_PAIN)
+    {
+        return "Destroying pain weapon after Necro sac!";
+    }
+
+    // MT - Check: god-gifted weapons and armour shouldn't kill you.
+    // Except Xom.
+    if ((agent == GOD_TROG || agent == GOD_OKAWARU)
+        && is_artefact(item))
+    {
+        artefact_properties_t  proprt;
+        artefact_properties(item, proprt);
+
+        // Check vs. stats. positive stats will automatically fall
+        // through.  As will negative stats that won't kill you.
+        if (-proprt[ARTP_STRENGTH] >= you.strength()
+            || -proprt[ARTP_INTELLIGENCE] >= you.intel()
+            || -proprt[ARTP_DEXTERITY] >= you.dex())
+        {
+            return "Destroying art that would cause <= 0 stats!";
+        }
+    }
+
+    // Sif Muna shouldn't gift special books.
+    // (The spells therein are still fair game for randart books.)
+    if (agent == GOD_SIF_MUNA
+        && is_rare_book(static_cast<book_type>(item.sub_type)))
+    {
+        ASSERT(item.base_type == OBJ_BOOKS);
+        return "Destroying sif-gifted rarebook!";
+    }
+
+    return ""; // all OK
+}
+
 int acquirement_create_item(object_class_type class_wanted,
                             int agent, bool quiet,
                             const coord_def &pos, bool debug)
@@ -1139,7 +1285,6 @@ int acquirement_create_item(object_class_type class_wanted,
                          || agent == GOD_TROG);
     int thing_created = NON_ITEM;
     int quant = 1;
-#define ITEM_LEVEL (divine ? ISPEC_GIFT : ISPEC_GOOD_ITEM)
 #define MAX_ACQ_TRIES 40
     for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
     {
@@ -1171,30 +1316,7 @@ int acquirement_create_item(object_class_type class_wanted,
         }
 
         item_def &acq_item(mitm[thing_created]);
-
-        // Not a god, prefer better brands.
-        if (!divine && !is_artefact(acq_item) && acq_item.base_type == OBJ_WEAPONS)
-        {
-            while (_weapon_brand_quality(get_weapon_brand(acq_item),
-                                        is_range_weapon(acq_item)) < random2(6))
-            {
-                reroll_brand(acq_item, ITEM_LEVEL);
-            }
-        }
-
-        // Try to not generate brands that were already seen, although unlike
-        // jewelry and books, this is not absolute.
-        while (!is_artefact(acq_item)
-               && (acq_item.base_type == OBJ_WEAPONS
-                     && you.seen_weapon[acq_item.sub_type]
-                        & (1<<get_weapon_brand(acq_item))
-                   || acq_item.base_type == OBJ_ARMOUR
-                     && you.seen_armour[acq_item.sub_type]
-                        & (1<<get_armour_ego_type(acq_item)))
-               && !one_chance_in(5))
-        {
-            reroll_brand(acq_item, ITEM_LEVEL);
-        }
+        _adjust_brand(acq_item, divine);
 
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
@@ -1203,12 +1325,12 @@ int acquirement_create_item(object_class_type class_wanted,
             const special_armour_type sparm = get_armour_ego_type(acq_item);
 
             if (agent != GOD_XOM
-                  && you.seen_armour[acq_item.sub_type] & (1 << sparm)
-                  && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
+                && you.seen_armour[acq_item.sub_type] & (1 << sparm)
+                && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
                 || !divine
-                   && you.seen_armour[acq_item.sub_type]
-                   && !one_chance_in(3)
-                   && item_tries < 20)
+                && you.seen_armour[acq_item.sub_type]
+                && !one_chance_in(3)
+                && item_tries < 20)
             {
                 // We have seen the exact item already, it's very unlikely
                 // extras will do any good.
@@ -1246,92 +1368,21 @@ int acquirement_create_item(object_class_type class_wanted,
             }
         }
 
-        if (agent != GOD_XOM
-             && (acq_item.base_type == OBJ_WEAPONS
-                   && !can_wield(&acq_item, false, true)
-                 || acq_item.base_type == OBJ_ARMOUR
-                   && !can_wear_armour(acq_item, false, true)))
-        {
-            destroy_item(thing_created, true);
-            thing_created = NON_ITEM;
-            if (!quiet)
-                dprf("Destroying unusable weapon or armour!");
-            continue;
-        }
-
-        // Trog does not gift the Wrath of Trog, nor weapons of pain
-        // (which work together with Necromantic magic).
-        if (agent == GOD_TROG)
+        if (agent == GOD_TROG && coinflip()
+            && acq_item.base_type == OBJ_WEAPONS && !is_range_weapon(acq_item)
+            && !is_unrandom_artefact(acq_item))
         {
             // ... but he loves the antimagic brand specially.
-            if (coinflip() && acq_item.base_type == OBJ_WEAPONS
-                && !is_range_weapon(acq_item) && !is_unrandom_artefact(acq_item))
-            {
-                set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
-            }
-
-            int brand = get_weapon_brand(acq_item);
-            if (brand == SPWPN_PAIN
-                || is_unrandom_artefact(acq_item, UNRAND_TROG)
-                || is_unrandom_artefact(acq_item, UNRAND_WUCAD_MU)
-                || is_unrandom_artefact(acq_item, UNRAND_MAJIN))
-            {
-                destroy_item(thing_created, true);
-                thing_created = NON_ITEM;
-                if (!quiet)
-                    dprf("Destroying pain weapon (Trog hates pain!!)!");
-                continue;
-            }
+            set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
         }
 
-        // Pain brand is useless if you've sacrificed Necromacy.
-        if (player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+        const string rejection_reason = _why_reject(acq_item, agent);
+        if (!rejection_reason.empty())
         {
-            if (get_weapon_brand(acq_item) == SPWPN_PAIN)
-            {
-                destroy_item(thing_created, true);
-                thing_created = NON_ITEM;
-                if (!quiet)
-                    dprf("Destroying pain weapon after Necro sac!");
-                continue;
-            }
-        }
-
-        // MT - Check: god-gifted weapons and armour shouldn't kill you.
-        // Except Xom.
-        if ((agent == GOD_TROG || agent == GOD_OKAWARU)
-            && is_artefact(acq_item))
-        {
-            artefact_properties_t  proprt;
-            artefact_properties(acq_item, proprt);
-
-            // Check vs. stats. positive stats will automatically fall
-            // through.  As will negative stats that won't kill you.
-            if (-proprt[ARTP_STRENGTH] >= you.strength()
-                || -proprt[ARTP_INTELLIGENCE] >= you.intel()
-                || -proprt[ARTP_DEXTERITY] >= you.dex())
-            {
-                // Try again.
-                destroy_item(thing_created);
-                thing_created = NON_ITEM;
-                if (!quiet)
-                    dprf("Destroying art that would cause stat-death!");
-                continue;
-            }
-        }
-
-        // Sif Muna shouldn't gift special books.
-        // (The spells therein are still fair game for randart books.)
-        if (agent == GOD_SIF_MUNA
-            && is_rare_book(static_cast<book_type>(acq_item.sub_type)))
-        {
-            ASSERT(acq_item.base_type == OBJ_BOOKS);
-
-            // Try again.
-            destroy_item(thing_created);
-            thing_created = NON_ITEM;
             if (!quiet)
-                dprf("Destroying sif-gifted rarebook!");
+                dprf("%s", rejection_reason.c_str());
+            destroy_item(acq_item);
+            thing_created = NON_ITEM;
             continue;
         }
 

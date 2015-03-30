@@ -80,7 +80,7 @@ private:
     bool using_weapon();
     int weapon_damage();
     int calc_mon_to_hit_base();
-    int apply_damage_modifiers(int damage, int damage_max, bool &half_ac);
+    int apply_damage_modifiers(int damage, int damage_max);
     int calc_damage();
 
     /* Attack effects */
@@ -114,7 +114,7 @@ private:
     bool do_knockback(bool trample = true);
 
     /* Output methods */
-    void set_attack_verb();
+    void set_attack_verb(int damage) override;
     void announce_hit();
 
     /* Misc methods */

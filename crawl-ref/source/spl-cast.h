@@ -43,6 +43,8 @@ enum spflag_type
     SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
     SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
     SPFLAG_MR_CHECK            = 0x8000000,      // spell that checks monster MR
+    SPFLAG_MONS_ABJURE        = 0x10000000,      // monsters can cast abjuration
+                                                 // instead of this spell
 };
 
 enum spret_type

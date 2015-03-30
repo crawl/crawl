@@ -1644,8 +1644,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_ANCIENT_LICH;
     case MONS_REVENANT:
         return TILEP_MONS_REVENANT;
-    case MONS_UNBORN:
-        return TILEP_MONS_UNBORN;
 
     // mummies ('M')
     case MONS_MUMMY:

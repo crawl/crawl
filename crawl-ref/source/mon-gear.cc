@@ -1061,13 +1061,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = WPN_DAGGER;
         break;
 
-    case MONS_UNBORN:
-        if (one_chance_in(6))
-            level = ISPEC_GOOD_ITEM;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_HAND_AXE;
-        break;
-
     case MONS_DOWAN:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_DAGGER;
@@ -2143,11 +2136,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
                                                0);
         break;
 
-    case MONS_UNBORN:
-        if (one_chance_in(6))
-            level = ISPEC_GOOD_ITEM;
-
-    // deliberate fall through
     case MONS_HELLBINDER:
     case MONS_SALAMANDER_MYSTIC:
         item.base_type = OBJ_ARMOUR;

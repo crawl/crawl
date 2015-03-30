@@ -1422,11 +1422,10 @@ int attack::calc_damage()
         damage_max += attk_damage;
         damage     += 1 + random2(attk_damage);
 
-        bool half_ac = false;
-        damage = apply_damage_modifiers(damage, damage_max, half_ac);
+        damage = apply_damage_modifiers(damage, damage_max);
 
-        set_attack_verb();
-        return apply_defender_ac(damage, damage_max, half_ac);
+        set_attack_verb(damage);
+        return apply_defender_ac(damage, damage_max);
     }
     else
     {
@@ -1455,8 +1454,8 @@ int attack::calc_damage()
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
 
-        set_attack_verb();
         damage = max(0, damage);
+        set_attack_verb(damage);
 
         return damage;
     }
@@ -1484,7 +1483,7 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
     return margin;
 }
 
-int attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
+int attack::apply_defender_ac(int damage, int damage_max)
 {
     ASSERT(defender);
     int stab_bypass = 0;
@@ -1494,8 +1493,7 @@ int attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
         stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
     }
     int after_ac = defender->apply_ac(damage, damage_max,
-                                      half_ac ? AC_HALF : AC_NORMAL,
-                                      stab_bypass);
+                                      AC_NORMAL, stab_bypass);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),

@@ -3049,7 +3049,6 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_ANCIENT_CHAMPION,
     MONS_REVENANT,
-    MONS_UNBORN,
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
 #endif

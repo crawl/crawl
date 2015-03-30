@@ -996,7 +996,7 @@ ENDMAP
 ### Makhleb overflow altars ###################################################
 
 NAME:    demons_altar
-DEPTH:   D:3-11, Orc:1-3
+DEPTH:   D:3-11, Orc, !Orc:$
 TAGS:    no_monster_gen patrolling temple_overflow_1 temple_overflow_makhleb
 TAGS:    layout_rooms layout_city layout_open
 KFEAT:   _ = altar_makhleb
@@ -1927,7 +1927,7 @@ ENDMAP
 
 NAME:   trog_butcher_becter
 TAGS:   overflow_altar_trog
-DEPTH:  D:2-9, Orc:1-3
+DEPTH:  D:2-9, Orc, !Orc:$
 : if you.absdepth() < 6 then
 MONS:   orc ; hand axe . animal skin
 MONS:   giant gecko / rat / giant newt / quokka
@@ -1966,7 +1966,7 @@ ENDMAP
 
 NAME:   trog_hazing_becter
 TAGS:   overflow_altar_trog no_monster_gen no_item_gen no_pool_fixup
-DEPTH:  D:2-9, Orc:1-3
+DEPTH:  D:2-9, Orc, !Orc:$
 MONS:   goblin ; stone q:5 . animal skin / \
         hobgoblin ; stone q:5 . animal skin / \
         kobold ; stone q:5 | throwing net q:1 . animal skin
@@ -2015,7 +2015,7 @@ ENDMAP
 # on the altar properly is safe, and a cautious player can time their entrance
 # to take no damage.
 NAME:   fiery_altar_vehumet
-DEPTH:  D:2-10, Orc:1-3
+DEPTH:  D:2-10, Orc, !Orc:$
 WEIGHT: 8
 TAGS:   temple_overflow_1 temple_overflow_vehumet
 MARKER: : = lua:fog_machine { cloud_type = "flame", \
@@ -2051,7 +2051,7 @@ MAP
 ENDMAP
 
 NAME:    vehumet_crystals
-DEPTH:   D:2-10, Orc:1-3
+DEPTH:   D:2-10, Orc, !Orc:$
 TAGS:    temple_overflow_1 temple_overflow_vehumet transparent
 KFEAT:   _ = altar_vehumet
 : interest_check(_G)
@@ -2340,7 +2340,7 @@ ENDMAP
 
 NAME:   zin_treasury
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
-DEPTH:  D:2-9, Orc:1-3
+DEPTH:  D:2-9, Orc, !Orc:$
 KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
 KPROP:  $ = no_rtele_into
@@ -2364,7 +2364,7 @@ ENDMAP
 NAME:   zin_purify
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
 TAGS:   transparent
-DEPTH:  D:2-9, Orc:1-3
+DEPTH:  D:2-9, Orc, !Orc:$
 KFEAT:  _ = altar_zin
 KFEAT:  v = general shop name:Zin type:Purification suffix:Station count:1 \
         greed:30 ; \
@@ -2867,6 +2867,7 @@ NAME:    grunt_temple_overflow_magic_moments
 DEPTH:   D:2-9
 TAGS:    temple_overflow_3 temple_overflow_kikubaaqudgha
 TAGS:    temple_overflow_sif_muna temple_overflow_vehumet
+TAGS:    no_item_gen
 KFEAT:   A = altar_kikubaaqudgha
 KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
@@ -2874,7 +2875,12 @@ ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:pain \
          numspells:1 / \
          randbook owner:Kikubaaqudgha disc:necromancy spells:animate_skeleton \
          numspells:1
-ITEM:    randbook owner:Sif_Muna numspells:1 slevels:1
+# You already got a direct damage spell by looting the other gods' altars.
+ITEM:    randbook owner:Sif_Muna disc:hexes numspells:1 slevels:1 / \
+         randbook owner:Sif_Muna disc:charms numspells:1 slevels:1 / \
+         randbook owner:Sif_Muna disc:transmutation numspells:1 slevels:1 / \
+         randbook owner:Sif_Muna disc:summoning numspells:1 slevels:1 / \
+         randbook owner:Sif_Muna disc:translocation numspells:1 slevels:1
 ITEM:    randbook owner:Vehumet disc:conjuration spells:magic_dart numspells:1
 SHUFFLE: Ad / Be / Cf
 MAP
@@ -2882,8 +2888,8 @@ MAP
     xx.B.xx
   xxxG.e.Gxxx
  xxGxx...xxGxx
- x...xx+xx...x
- xAd.+...+.fCx
+ x...xx.xx...x
+ xAd.......fCx
  x...x.U.x...x
  xxGxx...xxGxx
   xxx  @  xxx

@@ -1924,9 +1924,8 @@ its claws sear its victims with divine wrath.
 phantasmal warrior
 
 A hideous translucent green spirit of a warrior fallen in battle but recalled
-to this plane by unholy magic. The blade it wields is ethereal, passing easily
-through shields and armour, and rendering those it strikes more susceptible to
-magic.
+to this plane by unholy magic. The blade it wields is ethereal, rendering those
+it strikes more susceptible to magic.
 %%%%
 phantom
 
@@ -2526,11 +2525,6 @@ ugly thing
 
 An ugly thing. According to legend, this mutated creature is the otherworldly
 spawn of a wizard's breeding experiment. Yuck.
-%%%%
-unborn
-
-A devotee of Yredelemnul that has committed to eternal worship and servitude —
-even beyond death.
 %%%%
 unseen horror
 
