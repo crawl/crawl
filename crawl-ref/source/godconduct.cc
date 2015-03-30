@@ -4,6 +4,7 @@
 
 #include "fight.h"
 #include "godabil.h" // ru sac key
+#include "goditem.h" // is_*_spell
 #include "godwrath.h"
 #include "libutil.h"
 #include "message.h"
@@ -960,4 +961,43 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
 {
     for (int i = 0; i < 3; ++i)
         conduct[i].enabled = false;
+}
+
+/**
+ * Will this god definitely be upset if you cast this spell?
+ *
+ * This is as opposed to a likelihood, such as TSO's relationship with PArrow.
+ * TODO: deduplicate with spl-cast.cc:_spellcasting_god_conduct
+ *
+ * @param spell the spell to be cast
+ * @param god   the god to check against
+ * @returns true if you will definitely lose piety/get penance/be excommunicated
+ */
+bool god_punishes_spell(spell_type spell, god_type god)
+{
+    if (map_find(divine_peeves[god], DID_SPELL_CASTING))
+        return true;
+
+    if (god_loathes_spell(spell, god))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_NECROMANCY) && is_evil_spell(spell))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_UNHOLY) && is_unholy_spell(spell))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_UNCLEAN) && is_unclean_spell(spell))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_CHAOS) && is_chaotic_spell(spell))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_CORPSE_VIOLATION)
+        && is_corpse_violating_spell(spell))
+    {
+        return true;
+    }
+
+    return false;
 }

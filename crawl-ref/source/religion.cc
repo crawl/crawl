@@ -35,6 +35,7 @@
 #include "exercise.h"
 #include "godabil.h"
 #include "godcompanions.h"
+#include "godconduct.h"
 #include "goditem.h"
 #include "godpassive.h"
 #include "godprayer.h"
@@ -3917,31 +3918,19 @@ bool god_likes_spell(spell_type spell, god_type god)
 
 bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
 {
-    if (is_good_god(god) && (is_unholy_spell(spell) || is_evil_spell(spell)))
-        return true;
+    if (god == GOD_TROG)
+        return !rod_spell;
 
-    if (god == GOD_TROG && !rod_spell)
+    if (god_punishes_spell(spell, god))
         return true;
 
     spschools_type disciplines = get_spell_disciplines(spell);
 
     switch (god)
     {
-    case GOD_ZIN:
-        if (is_unclean_spell(spell) || is_chaotic_spell(spell))
-            return true;
-        break;
     case GOD_SHINING_ONE:
         // TSO hates using poison, but is fine with curing it.
         if ((disciplines & SPTYP_POISON) && spell != SPELL_CURE_POISON)
-            return true;
-        break;
-    case GOD_YREDELEMNUL:
-        if (spell == SPELL_STATUE_FORM)
-            return true;
-        break;
-    case GOD_FEDHAS:
-        if (is_corpse_violating_spell(spell))
             return true;
         break;
     case GOD_CHEIBRIADOS:
