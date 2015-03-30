@@ -1358,7 +1358,10 @@ void print_stats()
         // Increase y-value for all following lines.
         yhack++;
         CGOTOXY(1+6, 8 + yhack, GOTO_STAT);
-        textcolour(HUD_VALUE_COLOUR);
+        if (you.duration[DUR_GOZAG_GOLD_AURA])
+            textcolour(LIGHTBLUE);
+        else
+            textcolour(HUD_VALUE_COLOUR);
         CPRINTF("%-6d", you.gold);
     }
 
@@ -2195,10 +2198,7 @@ static vector<formatted_string> _get_overview_stats()
     else
         entry.cprintf("Gold:   ");
 
-    if (you.duration[DUR_GOZAG_GOLD_AURA])
-        entry.textcolour(LIGHTBLUE);
-    else
-        entry.textcolour(HUD_VALUE_COLOUR);
+    entry.textcolour(HUD_VALUE_COLOUR);
 
     entry.cprintf("%d", you.gold);
 
