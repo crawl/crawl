@@ -26,7 +26,7 @@ struct species_def
     // The following three need to be 2 lines after the name for gen-apt.pl:
     int xp_mod; ///< Experience level modifier
     int hp_mod; ///< HP modifier (in tenths)
-    int mp_mod; ///< MP modifier (in tenths)
+    int mp_mod; ///< MP modifier
     int stealth_mod; ///< Stealth modifier
     int mr_mod; ///< MR modifier (multiplied by XL for base MR)
     monster_type monster_species; ///< Corresponding monster (for display)
@@ -50,7 +50,7 @@ static const map<species_type, species_def> species_data =
     "Ce",
     "Centaur", nullptr, nullptr,
     SPF_SMALL_TORSO,
-    -1, 1, -1,
+    -1, 1, 0,
     9, 3,
     MONS_CENTAUR,
     HT_LAND, US_ALIVE, SIZE_LARGE,
@@ -90,7 +90,7 @@ static const map<species_type, species_def> species_data =
     "DE",
     "Deep Elf", "Elven", "Elf",
     SPF_ELVEN,
-    -1, -2, 3,
+    -1, -2, 2,
     15, 4,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
@@ -325,7 +325,7 @@ static const map<species_type, species_def> species_data =
     "Fe",
     "Felid", "Feline", "Cat",
     SPF_NONE,
-    -1, -4, 2,
+    -1, -4, 1,
     18, 6,
     MONS_FELID,
     HT_LAND, US_ALIVE, SIZE_LITTLE,
@@ -347,7 +347,7 @@ static const map<species_type, species_def> species_data =
     "Fo",
     "Formicid", nullptr, "Ant",
     SPF_NONE,
-    1, 0, 1,
+    1, 0, 0,
     15, 4,
     MONS_FORMICID,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
@@ -429,7 +429,7 @@ static const map<species_type, species_def> species_data =
     "HE",
     "High Elf", "Elven", "Elf",
     SPF_ELVEN,
-    -1, -1, 2,
+    -1, -1, 1,
     15, 4,
     MONS_ELF,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
@@ -521,7 +521,7 @@ static const map<species_type, species_def> species_data =
     "Mi",
     "Minotaur", nullptr, nullptr,
     SPF_NONE,
-    -1, 1, -2,
+    -1, 1, -1,
     12, 3,
     MONS_MINOTAUR,
     HT_LAND, US_ALIVE, SIZE_MEDIUM,
@@ -623,7 +623,7 @@ static const map<species_type, species_def> species_data =
     "Sp",
     "Spriggan", nullptr, nullptr,
     SPF_NONE,
-    -1, -3, 3,
+    -1, -3, 1,
     18, 7,
     MONS_SPRIGGAN,
     HT_LAND, US_ALIVE, SIZE_LITTLE,
@@ -662,7 +662,7 @@ static const map<species_type, species_def> species_data =
     "Tr",
     "Troll", "Trollish", nullptr,
     SPF_NONE,
-    -1, 3, -2,
+    -1, 3, -1,
     9, 3,
     MONS_TROLL,
     HT_LAND, US_ALIVE, SIZE_LARGE,
