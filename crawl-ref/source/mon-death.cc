@@ -2437,7 +2437,14 @@ int monster_die(monster* mons, killer_type killer,
         // Hack: with cleanup_dead=false, a tentacle [segment] of a dead
         // [malign] kraken has no valid head reference.
         if (!mons_is_tentacle_or_tentacle_segment(mons->type))
+        {
+            const monster_type orig =
+              mons->props.exists(ORIGINAL_TYPE_KEY) ?
+              (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int() :
+                             mons->type;
+            unwind_var<monster_type> mt(mons->type, orig);
             mons_speaks(mons);
+        }
     }
 
     if (mons->type == MONS_BORIS && !in_transit && !mons->pacified())
