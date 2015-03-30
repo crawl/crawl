@@ -28,6 +28,9 @@ const char *get_species_abbrev(species_type which_species)
 // Needed for debug.cc and hiscores.cc.
 species_type get_species_by_abbrev(const char *abbrev)
 {
+    if (lowercase_string(abbrev) == "dr")
+        return SP_BASE_DRACONIAN;
+
     for (auto& entry : species_data)
         if (lowercase_string(abbrev) == lowercase_string(entry.second.abbrev))
             return entry.first;

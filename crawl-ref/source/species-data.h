@@ -124,7 +124,6 @@ static const map<species_type, species_def> species_data =
       SK_BOWS, SK_CROSSBOWS, SK_SLINGS },
 } },
 
-// Keep this above the other draconians, so get_species_by_abbrev works
 { SP_BASE_DRACONIAN, {
     "Dr",
     "Draconian", nullptr, nullptr,
