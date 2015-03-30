@@ -161,7 +161,7 @@ int roll_dice(int num, int size)
     int ret = 0;
 
     // If num <= 0 or size <= 0, then we'll just return the default
-    // value of zero.  This is good behaviour in that it will be
+    // value of zero. This is good behaviour in that it will be
     // appropriate for calculated values that might be passed in.
     if (num > 0 && size > 0)
     {
@@ -346,7 +346,7 @@ bool decimal_chance(double chance)
     return random_real() < chance;
 }
 
-// This is used when the front-end randomness is inconclusive.  There are
+// This is used when the front-end randomness is inconclusive. There are
 // never more than two possibilities, which simplifies things.
 bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
 {

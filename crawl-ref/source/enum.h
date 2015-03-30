@@ -2617,7 +2617,7 @@ enum monster_type                      // menv[].type
     MONS_GNOME,
 #endif
     MONS_HALFLING,              // recolouring + single vault.
-    MONS_FELID,                 // recolouring + single vault.  Miaow!
+    MONS_FELID,                 // recolouring + single vault. Miaow!
     MONS_VAMPIRE_BAT,           // recolouring + vaults
     MONS_DEMIGOD,               // recolouring + single vault
     MONS_DEMONSPAWN,

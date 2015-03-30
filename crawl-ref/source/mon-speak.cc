@@ -412,7 +412,7 @@ bool mons_speaks(monster* mons)
 
     if (!force_speak)
     {
-        // Invisible monster tries to remain unnoticed.  Unless they're
+        // Invisible monster tries to remain unnoticed. Unless they're
         // confused, since then they're too confused to realise they
         // should stay silent, but only if the player can see them, so as
         // to not have to deal with cases of speaking monsters which the
@@ -421,7 +421,7 @@ bool mons_speaks(monster* mons)
             return false;
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
-        // unless they're normally silent (S_SILENT).  Use
+        // unless they're normally silent (S_SILENT). Use
         // get_monster_data(mons->type) to bypass mon_shouts()
         // replacing S_RANDOM with a random value.
         if (silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
@@ -519,7 +519,7 @@ bool mons_speaks(monster* mons)
     }
     else if (mons->type == MONS_PLAYER_GHOST)
     {
-        // Use the *ghost's* religion, to get speech about its god.  Only
+        // Use the *ghost's* religion, to get speech about its god. Only
         // sometimes, though, so we can get skill-based messages as well.
         if (coinflip())
             prefixes.push_back(god_name(mons->ghost->religion));
@@ -684,7 +684,7 @@ bool mons_speaks(monster* mons)
         return false;
     }
 
-    // Monster symbol didn't work, try monster shape.  Since we're
+    // Monster symbol didn't work, try monster shape. Since we're
     // dealing with just the monster shape, change the prefix to
     // include info on if the monster's intelligence is at odds with
     // its shape.
@@ -828,7 +828,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
 
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
-        // warning to scare the player.  In order to accommodate this
+        // warning to scare the player. In order to accommodate this
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr

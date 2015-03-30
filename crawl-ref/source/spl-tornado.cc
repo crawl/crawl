@@ -310,7 +310,7 @@ void tornado_damage(actor *caster, int dur)
                     // or standing on a submerged air elemental, there are
                     // no free spots, and a monster tornado rotates you.
                     // Plants don't get uprooted, so the logic would be
-                    // really complex.  Let's not go there.
+                    // really complex. Let's not go there.
                     continue;
                 }
                 if (victim->is_player() && get_form()->forbids_flight())
@@ -446,7 +446,7 @@ void cancel_tornado(bool tloc)
         {
             // it'd be better to abort flight instantly, but let's first
             // make damn sure all ways of translocating are prevented from
-            // landing you in water.  Insta-kill due to an arrow of dispersal
+            // landing you in water. Insta-kill due to an arrow of dispersal
             // is not nice.
             you.duration[DUR_FLIGHT] = min(20,
                 you.duration[DUR_FLIGHT]);

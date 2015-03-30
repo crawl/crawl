@@ -224,8 +224,8 @@ static void _decrement_petrification(int delay)
         {
             dur = 0;
             // If we'd kill the player when active flight stops, this will
-            // need to pass the killer.  Unlike monsters, almost all flight is
-            // magical, inluding tengu, as there's no flapping of wings.  Should
+            // need to pass the killer. Unlike monsters, almost all flight is
+            // magical, inluding tengu, as there's no flapping of wings. Should
             // we be nasty to dragon and bat forms?  For now, let's not instakill
             // them even if it's inconsistent.
             you.fully_petrify(nullptr);

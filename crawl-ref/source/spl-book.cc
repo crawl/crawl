@@ -720,7 +720,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
                     | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                     text_only);
 #ifdef USE_TILE_LOCAL
-    // [enne] Hack.  Use a separate title, so the column headers are aligned.
+    // [enne] Hack. Use a separate title, so the column headers are aligned.
     spell_menu.set_title(
         new MenuEntry(" Your Spells - Memorisation  (toggle to descriptions with '!')",
             MEL_TITLE));
@@ -1771,7 +1771,7 @@ bool make_book_theme_randart(item_def &book,
     _add_included_spells(chosen_spells, incl_spells);
 
     // If max_levels is 1, there might not be any suitable spells (for
-    // example, in Charms).  Try one more time with max_levels = 2.
+    // example, in Charms). Try one more time with max_levels = 2.
     while (!_get_weighted_spells(completely_random, god, disc1, disc2,
                                  num_spells, max_levels, spells,
                                  chosen_spells, exact_level))

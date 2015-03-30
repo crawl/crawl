@@ -208,7 +208,7 @@ string channel_to_str(int channel)
 
 
 // The map used to interpret a crawlrc entry as a starting weapon
-// type.  For most entries, we can just look up which weapon has the entry as
+// type. For most entries, we can just look up which weapon has the entry as
 // its name; this map contains the exceptions.
 // This should be const, but operator[] on maps isn't const.
 static map<string, weapon_type> _special_weapon_map = {
@@ -1022,7 +1022,7 @@ void game_options::reset_options()
 #endif
 #ifdef USE_TILE_LOCAL
 #ifdef USE_FT
-    // TODO: init this from system settings.  This would probably require
+    // TODO: init this from system settings. This would probably require
     // using fontconfig, but that's planned.
     tile_font_ft_light   = false;
 #endif
@@ -3714,7 +3714,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {
-        // TODO: this option could probably be improved.  For now, keep the
+        // TODO: this option could probably be improved. For now, keep the
         // "= means append" behaviour, and don't allow clearing the list;
         // if we rename to "additional_macro_files" then it could work like
         // other list options.
@@ -5127,7 +5127,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (rc_only)
                 break;
 #ifdef DGAMELAUNCH
-            // Tell DGL we don't use ancient charsets anymore.  The glyph set
+            // Tell DGL we don't use ancient charsets anymore. The glyph set
             // doesn't matter here, just the encoding.
             printf("UNICODE\n");
 #else

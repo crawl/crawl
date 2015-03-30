@@ -1,4 +1,4 @@
-# A note on variations.  To create additional variations for weapons or armour,
+# A note on variations. To create additional variations for weapons or armour,
 # simply create 1-5 images, e.g.:
 #
 #    weapon_normal WEP_SOME_WEAPON
@@ -8,7 +8,7 @@
 #    weapon_randart
 #
 # If only the first linrune has a define on it, then the following images will be
-# considered as variations.  If you don't have five, images will be reused for
+# considered as variations. If you don't have five, images will be reused for
 # multiple types. See tilepick.cc for more details.
 
 ##### Artefacts (fixed and unrandart)

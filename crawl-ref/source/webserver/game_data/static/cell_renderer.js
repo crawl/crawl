@@ -217,7 +217,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             // to an image while drawing; so to achieve the same
             // effect as in local tiles, it would probably be best
             // to pregenerate water tiles with the (inverse) alpha
-            // gradient built in.  This simply draws the lower
+            // gradient built in. This simply draws the lower
             // half with increased transparency; for now, it looks
             // good enough.
 
@@ -664,7 +664,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                         this.draw_dngn(dngn.DISJUNCT + cell.disjunct - 1, x, y);
 
                     // Apply the travel exclusion under the foreground if the cell is
-                    // visible.  It will be applied later if the cell is unseen.
+                    // visible. It will be applied later if the cell is unseen.
                     if (bg.EXCL_CTR)
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_CENTRE_BG, x, y);
                     else if (bg.TRAV_EXCL)

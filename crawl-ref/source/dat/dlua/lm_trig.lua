@@ -3,11 +3,11 @@
 -- DgnTriggerers and triggerables:
 --
 -- This is similar to the observable/observer design pattern: a triggerable
--- class which does something and a triggerer which sets it off.  As an
+-- class which does something and a triggerer which sets it off. As an
 -- example, the ChangeFlags class (dlua/lm_flags.lua), rather than having
 -- three subclasses (for monster death, feature change and item pickup)
 -- needs no subclasses, but is just one class which is given triggerers
--- which listen for different events.  Additionally, new types of triggerers
+-- which listen for different events. Additionally, new types of triggerers
 -- can be developed and used without have to update the ChangeFlags code.
 --
 -- Unlike with the observable/observer design pattern, each triggerer is
@@ -20,25 +20,25 @@
 --
 -- If a triggerable marker has the property "master_name" with the value
 -- "FOO", then when triggered on_trigger() will be called at each marker
--- on the level which has the property "slaved_to" equal to "FOO".  A
+-- on the level which has the property "slaved_to" equal to "FOO". A
 -- master marker can be slaved to itself to cause on_trigger() to be called
--- at its location.  If the master marker has the property
+-- at its location. If the master marker has the property
 -- "single_random_slave" set to anything but the empty string ("") then
 -- on each triggering only a single, randomly chosen slave will have
 -- on_trigger() called.
 --
 -- Ordinarily, a master marker which listens to position-dependent events will
--- only be triggered by events which happen at the master's position.  To make
+-- only be triggered by events which happen at the master's position. To make
 -- the master marker also listen to events which happen at the locations of the
 -- slave markers, set the property "listen_to_slaves" to anything but the empty
--- string true.  This will cause all of the slave markers to be triggered
--- whenever any of the slave markers are triggered.  To only trigger the slave
+-- string true. This will cause all of the slave markers to be triggered
+-- whenever any of the slave markers are triggered. To only trigger the slave
 -- where the event happened, also set the property "only_at_slave" to anything
 -- but the empty string.
 --
 -- on_trigger() shouldn't have to worry about the master/slave business,
 -- and should have the same code regardless of whether or not it's a
--- master or just a plain triggerable.  If on_trigger() calls
+-- master or just a plain triggerable. If on_trigger() calls
 -- self:remove() while it's acting on a slave marker then the slave marker
 -- will be removed, and if called on the master while the master is slaved
 -- to itself it will stop acting as a slave, with the master marker being
@@ -49,7 +49,7 @@
 -- generally and more flexibly done by implementing a framework for
 -- Lua defined/fired events, making Triggerable fire a Lua event every
 -- time it's triggered, and then registering listeners for those Lua
--- events.  However, we don't need that much flexibility yet, so it's
+-- events. However, we don't need that much flexibility yet, so it's
 -- all handled inside of the Triggerable class.
 
 require('dlua/lm_mslav.lua')
@@ -408,7 +408,7 @@ end
 
 --------------------------
 
--- A simple class to invoke an arbitrary Lua function.  Should be split out
+-- A simple class to invoke an arbitrary Lua function. Should be split out
 -- into own file if/when it becomes more complex.
 
 util.subclass(Triggerable, "TriggerableFunction")
@@ -476,7 +476,7 @@ function_in_los  = triggerable_function_constructor('player_los')
 
 --------------------------
 
--- A simple class to give out messages.  Should be split out into own
+-- A simple class to give out messages. Should be split out into own
 -- file if/when it becomes more complex.
 
 TriggerableMessage       = util.subclass(Triggerable)
@@ -551,32 +551,32 @@ end
 
 -- DgnTriggerer listens for dungeon events of these types:
 --
--- * monster_dies: Waits for a monster to die.  Needs the parameter
+-- * monster_dies: Waits for a monster to die. Needs the parameter
 --       "target", who's value is the name of the monster who's death
---       we're wating for, or "any" for any monster.  Doesn't matter where
+--       we're wating for, or "any" for any monster. Doesn't matter where
 --       the triggerable/marker is placed.
 --
--- * feat_change: Waits for a cell's feature to change.  Accepts the
+-- * feat_change: Waits for a cell's feature to change. Accepts the
 --       optional parameter "target", which if set delays the trigger
 --       until the feature the cell turns into contains the target as a
---       substring.  The triggerable/marker must be placed on top of the
+--       substring. The triggerable/marker must be placed on top of the
 --       cell who's feature you wish to monitor.
 --
 -- * item_moved: Wait for an item to move from one cell to another.
 --      Needs the parameter "target", who's value is the name of the
 --      item that is being tracked, or which can be "auto", in which
---      case it will pick the item placed by the vault.  The
+--      case it will pick the item placed by the vault. The
 --      triggerable/marker must be placed on top of the cell containing
 --      the item.
 --
--- * item_pickup: Wait for an item to be picked up.  Needs the parameter
+-- * item_pickup: Wait for an item to be picked up. Needs the parameter
 --      "target", who's value is the name of the item that is being tracked,
 --      or which can be "auto", in which case it will pick the item placed
---      by the vault.  The triggerable/marker must be placed on top of the
---      cell containing the item.  Automatically takes care of the item
+--      by the vault. The triggerable/marker must be placed on top of the
+--      cell containing the item. Automatically takes care of the item
 --      moving from one square to another without being picked up.
 --
--- * player_move: Wait for the player to move to a cell.  The
+-- * player_move: Wait for the player to move to a cell. The
 --      triggerable/marker must be placed on top of cell in question.
 --
 -- * player_los: Wait for the player to come into LOS of a cell. The

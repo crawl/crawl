@@ -265,7 +265,7 @@ struct run_check_dir
  *
  * An mid_t is a persistent (across levels and across save/restore)
  * and unique (within a given game) identifier for a monster, player,
- * or fake actor.  The value 0 indicates "no actor", and any value
+ * or fake actor. The value 0 indicates "no actor", and any value
  * greater than or equal to MID_FIRST_NON_MONSTER indicates an actor
  * other than a monster.
  *
@@ -506,7 +506,7 @@ struct level_pos
 class monster;
 
 // We are not 64 bits clean here yet since many places still pass (or store!)
-// it as 32 bits or, worse, longs.  I considered setting this as uint32_t,
+// it as 32 bits or, worse, longs. I considered setting this as uint32_t,
 // however, since free bits are exhausted, it's very likely we'll have to
 // extend this in the future, so this should be easier than undoing the change.
 typedef uint32_t iflags_t;

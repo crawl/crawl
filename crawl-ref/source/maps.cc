@@ -272,8 +272,8 @@ bool resolve_subvault(map_def &map)
     if (exact_fit && width == height && width == 1)
         return true;
 
-    // Count original mismatches.  If mirroring the map causes more cells to
-    // not be written, then don't mirror.  This allows oddly shaped subvaults
+    // Count original mismatches. If mirroring the map causes more cells to
+    // not be written, then don't mirror. This allows oddly shaped subvaults
     // to be fit correctly into a parent vault that specifies the exact same
     // shape.
     const coord_def svplace(0, 0);

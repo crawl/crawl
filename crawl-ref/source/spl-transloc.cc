@@ -805,7 +805,7 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
                    || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO)));
 
         // Running out of tries should only happen for limited-range teleports,
-        // which are all involuntary; no message.  Return false so it doesn't
+        // which are all involuntary; no message. Return false so it doesn't
         // count as a random teleport for Xom purposes.
         if (tries == 0)
             return false;
@@ -939,7 +939,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     }
 
     // Letting mostly-melee characters spam apport after every Shoals
-    // fight seems like it has too much grinding potential.  We could
+    // fight seems like it has too much grinding potential. We could
     // weaken this for high power.
     if (grd(where) == DNGN_DEEP_WATER || grd(where) == DNGN_LAVA)
     {

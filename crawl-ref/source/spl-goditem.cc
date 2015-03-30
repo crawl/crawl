@@ -1202,7 +1202,7 @@ void torment_cell(coord_def where, actor *attacker, torment_source_type taux)
 
         // Currently, torment doesn't annoy the monsters it affects
         // because it can't kill them, and because hostile monsters use
-        // it.  It does alert them, though.
+        // it. It does alert them, though.
         // XXX: attacker isn't passed through "int torment()".
         behaviour_event(mons, ME_ALERT, attacker);
     }

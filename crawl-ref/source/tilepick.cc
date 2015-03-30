@@ -40,7 +40,7 @@
 
 #ifdef COMPILE_CHECKS_NEED_FUNCTION
 // FIXME: this is too ugly to live, pollutes the executable's debug symbols,
-// and stinks of elderberries.  Need a better non-C++11 way to do static
+// and stinks of elderberries. Need a better non-C++11 way to do static
 // asserts in GCC 4.8.
 void tile_compile_checks(); // shut up -Wmissing-declarations
 void tile_compile_checks()
@@ -625,7 +625,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     tileidx_t mem_cloud = env.tile_bk_cloud(gc);
 
     // Detected info is just stored in map_knowledge and doesn't get
-    // written to what the player remembers.  We'll feather that in here.
+    // written to what the player remembers. We'll feather that in here.
 
     const map_cell &cell = env.map_knowledge(gc);
 
@@ -4339,8 +4339,8 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
 }
 
 // For items with randomized descriptions, only the overlay label is
-// placed in the tile page.  This function looks up what the base item
-// is based on the randomized description.  It returns 0 if there is none.
+// placed in the tile page. This function looks up what the base item
+// is based on the randomized description. It returns 0 if there is none.
 tileidx_t tileidx_known_base_item(tileidx_t label)
 {
     if (label >= TILE_POT_ID_FIRST && label <= TILE_POT_ID_LAST)

@@ -115,7 +115,7 @@ bool g_Slime_Wall_Check = true;
 static uint8_t curr_waypoints[GXM][GYM];
 
 // If true, feat_is_traversable_now() returns the same as feat_is_traversable().
-// FIXME: eliminate this.  It's needed for RMODE_CONNECTIVITY.
+// FIXME: eliminate this. It's needed for RMODE_CONNECTIVITY.
 static bool ignore_player_traversability = false;
 
 // Map of terrain types that are forbidden.
@@ -728,7 +728,7 @@ static void _explore_find_target_square()
     if (whereto.x || whereto.y)
     {
         // Make sure this is a square that is reachable, since we asked
-        // travel_pathfind to give us even unreachable squares.  The
+        // travel_pathfind to give us even unreachable squares. The
         // player's starting position may in some cases not have its
         // travel_point_distance set, but we know it's reachable, since
         // we're there.
@@ -2692,7 +2692,7 @@ static int _find_transtravel_stair(const level_id &cur,
             // Okay, we don't seem to have a distance available to us, which
             // means we're either (a) not standing on stairs or (b) whoever
             // initiated interlevel travel didn't call
-            // _populate_stair_distances.  Assuming we're not on stairs, that
+            // _populate_stair_distances. Assuming we're not on stairs, that
             // situation can arise only if interlevel travel has been triggered
             // for a location on the same level. If that's the case, we can get
             // the distance off the travel_point_distance matrix.
@@ -4288,7 +4288,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
             for (orth_adjacent_iterator ai(pos); ai; ++ai)
             {
                 // If any neighbours have been seen (and thus announced) before,
-                // skip.  For parts seen for the first time this turn, announce
+                // skip. For parts seen for the first time this turn, announce
                 // only the upper leftmost cell.
                 if (env.map_knowledge(*ai).feat() == DNGN_RUNED_DOOR
                     && (env.map_seen(*ai) || *ai < pos))

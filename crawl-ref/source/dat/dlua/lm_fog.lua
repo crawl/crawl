@@ -23,7 +23,7 @@
 --
 -- Marker parameters:
 --
--- cloud_type: The name of the cloud type to use.  Possible cloud types are:
+-- cloud_type: The name of the cloud type to use. Possible cloud types are:
 --     flame, noxious fumes, freezing vapour, poison gas,
 --     grey smoke, blue smoke, translocational energy, steam, rain,
 --     foul pestilence, black smoke, mutagenic fog, thin mist (the default).
@@ -33,30 +33,30 @@
 -- pow_max: The maximum power of each cloud; must be provided.
 -- pow_rolls: The number of rolls of [pow_min, pow_max], with the average
 --     value uses; increasing the values makes the average value more likely
---     and extreme values less likely.  Defaults to 1.
+--     and extreme values less likely. Defaults to 1.
 -- delay, delay_min and delay_max: The delay between laying down one cloud
---     and the next.  10 is equal to normal-speed player turn.  Either
---     delay or delay_max and delay_min must be provided.  Providing just
+--     and the next.  10 is equal to normal-speed player turn. Either
+--     delay or delay_max and delay_min must be provided. Providing just
 --     "delay" is equivalent to delay_min and delay_max being equal.
 -- size, size_min and size_max: The number of grids each cloud will cover.
---     Either size or size_max and size_min must be provided.  Providing
+--     Either size or size_max and size_min must be provided. Providing
 --     just "size" is equivalent to size_min and size_max being equal.
 -- size_buildup_amnt, size_buildup_time: Increase the cloud size over time.
 --     Adds (size_buildup_amnt / size_buildup_time * turns_since_made)
 --     to size_min and size_max, maxing out at size_buildup_amnt.
--- spread_rate: The rate at which a cloud spreads.  Must either be
+-- spread_rate: The rate at which a cloud spreads. Must either be
 --     -1 (default spread rate that varies by cloud type) or between
 --     0 and 100 inclusive.
 -- spread_rate_amnt, spread_rate_buildup: Similar to size_buildup_amnt
 --     and size_buildup_time
 -- start_clouds: The number of clouds to lay when the level containing
---     the cloud machine is entered.  This is necessary since clouds
+--     the cloud machine is entered. This is necessary since clouds
 --     are cleared when the player leaves a level.
 -- colour: A string value with which to recolour the cloud.
 -- name: A string value with which to rebrand (specifically, rename) the
 --     cloud in question.
 -- tile: A string value with which to retile the cloud.
--- listener: A table with a function field called 'func'.  Will be called
+-- listener: A table with a function field called 'func'. Will be called
 --     whenever the countdown is activated, and whenever the fog
 --     machine is reset. It will be called with a reference to the table,
 --     the fog machine, the Triggerer which was the cause, the marker,

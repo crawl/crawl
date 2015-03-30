@@ -435,7 +435,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     item_considered.base_type = OBJ_WEAPONS;
     // Let's guess the percentage of shield use the player did, this is
     // based on empirical data where pure-shield MDs get skills like 17 sh
-    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f.  Pretend formicid
+    // 25 m&f and pure-shield Spriggans 7 sh 18 m&f. Pretend formicid
     // shield skill is 0 so they always weight towards 2H.
     const int shield_sk = you.species == SP_FORMICID
         ? 0
@@ -444,7 +444,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
     const int dont_shield = max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
     // opposite handedness 1/2, assuming your shields usage is respectively
-    // 0% or 100% in the above formula.  At skill 25 that's *3.5 .
+    // 0% or 100% in the above formula. At skill 25 that's *3.5 .
     for (int i = 0; i < NUM_WEAPONS; ++i)
     {
         const int wskill = item_attack_skill(OBJ_WEAPONS, i);
@@ -1255,7 +1255,7 @@ static string _why_reject(const item_def &item, int agent)
         artefact_properties(item, proprt);
 
         // Check vs. stats. positive stats will automatically fall
-        // through.  As will negative stats that won't kill you.
+        // through. As will negative stats that won't kill you.
         if (-proprt[ARTP_STRENGTH] >= you.strength()
             || -proprt[ARTP_INTELLIGENCE] >= you.intel()
             || -proprt[ARTP_DEXTERITY] >= you.dex())
@@ -1457,7 +1457,7 @@ int acquirement_create_item(object_class_type class_wanted,
                  && acq_item.sub_type != WPN_BLOWGUN)
         {
             // These can never get egos, and mundane versions are quite common,
-            // so guarantee artefact status.  Rarity is a bit low to compensate.
+            // so guarantee artefact status. Rarity is a bit low to compensate.
             // ...except actually, trog can give them antimagic brand, so...
             if (is_giant_club_type(acq_item.sub_type)
                 && get_weapon_brand(acq_item) == SPWPN_NORMAL

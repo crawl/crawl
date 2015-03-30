@@ -592,7 +592,7 @@ static stat_type _random_lost_stat()
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
 // a message if suppress_msg is false, and doing so in the recovery
-// channel if recovery is true.  If stat_gain is 0, restore the stat
+// channel if recovery is true. If stat_gain is 0, restore the stat
 // completely.
 bool restore_stat(stat_type which_stat, int stat_gain,
                   bool suppress_msg, bool recovery)

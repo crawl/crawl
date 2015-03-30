@@ -37,7 +37,7 @@ struct demon_data
     tileidx_t wings;
 };
 
-// Internal mcache classes.  The mcache_manager creates these internally.
+// Internal mcache classes. The mcache_manager creates these internally.
 // The only access external clients need is through the virtual
 // info function.
 
@@ -783,7 +783,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
 }
 
 // Returns the amount of pixels necessary to shift a worn shield, like
-// it's done with weapon.  No monster should have a shield hard-drawn
+// it's done with weapon. No monster should have a shield hard-drawn
 // on the tile.
 bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
                                        int *ofs_x, int *ofs_y)

@@ -262,7 +262,7 @@ bool try_pathfind(monster* mon)
         mon->travel_path = mp.calc_waypoints();
         if (!mon->travel_path.empty())
         {
-            // Okay then, we found a path.  Let's use it!
+            // Okay then, we found a path. Let's use it!
             mon->target = mon->travel_path[0];
             mon->travel_target = MTRAV_FOE;
             return true;
@@ -474,7 +474,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
             mprf("Found a path to (%d, %d) with %d surrounding water squares",
                  best_target.x, best_target.y, best_water_count);
 #endif
-            // Okay then, we found a path.  Let's use it!
+            // Okay then, we found a path. Let's use it!
             mon->firing_pos = mon->travel_path[0];
             mon->travel_target = MTRAV_MERFOLK_AVATAR;
             return true;
@@ -817,7 +817,7 @@ static bool _band_wander_target(monster * mon)
             mon->travel_path = mp.calc_waypoints();
             if (!mon->travel_path.empty())
             {
-                // Okay then, we found a path.  Let's use it!
+                // Okay then, we found a path. Let's use it!
                 mon->target = mon->travel_path[0];
                 mon->travel_target = MTRAV_PATROL;
                 return false;
@@ -985,7 +985,7 @@ void check_wander_target(monster* mon, bool isPacified)
         // changing the goal square every turn, better would be to
         // have the monster store a direction and have the monster
         // head in that direction for a while, then shift the
-        // direction to the left or right.  We're changing this so
+        // direction to the left or right. We're changing this so
         // wandering monsters at least appear to have some sort of
         // attention span.  -- bwr
         if (need_target)

@@ -43,7 +43,7 @@ player_quiver::player_quiver()
 
 // Return:
 //   *slot_out filled in with the inv slot of the item we would like
-//   to fire by default.  If -1, the inv doesn't contain our desired
+//   to fire by default. If -1, the inv doesn't contain our desired
 //   item.
 //
 //   *item_out filled in with item we would like to fire by default.
@@ -291,7 +291,7 @@ void player_quiver::on_inv_quantity_changed(int slot, int amt)
 {
     if (m_last_used_of_type[m_last_used_type].base_type == OBJ_UNASSIGNED)
     {
-        // Empty quiver.  Maybe we can fill it now?
+        // Empty quiver. Maybe we can fill it now?
         _maybe_fill_empty_slot();
         you.redraw_quiver = true;
     }
@@ -348,7 +348,7 @@ void player_quiver::_maybe_fill_empty_slot()
     if (unquiver_weapon && order.empty())
     {
         // Setting the quantity to zero will force the quiver to be empty,
-        // should nothing else be found.  We also set the base type to
+        // should nothing else be found. We also set the base type to
         // OBJ_UNASSIGNED so this is not an invalid object with a real type,
         // as that would trigger an assertion on saving.
         m_last_used_of_type[slot].base_type = OBJ_UNASSIGNED;

@@ -1731,7 +1731,7 @@ string get_item_description(const item_def &item, bool verbose,
 
             // Get rid of newline at end of description; in most cases we
             // will be adding "\n\n" immediately, and we want only one,
-            // not two, blank lines.  This allow allows the "unpleasant"
+            // not two, blank lines. This allow allows the "unpleasant"
             // message for chunks to appear on the same line.
             description.seekp((streamoff)-1, ios_base::cur);
             description << " ";
@@ -2055,7 +2055,7 @@ string get_item_description(const item_def &item, bool verbose,
         description << "\n" << origin_desc(item) << ".";
 
     // This information is obscure and differs per-item, so looking it up in
-    // a docs file you don't know to exist is tedious.  On the other hand,
+    // a docs file you don't know to exist is tedious. On the other hand,
     // it breaks the screen for people on very small terminals.
     if (verbose && get_number_of_lines() >= 28)
     {
@@ -2239,7 +2239,7 @@ static void _show_item_description(const item_def &item)
     const int num_lines = count_desc_lines(desc, lineWidth) + 1;
 
     // XXX: hack: Leave room for "Inscribe item?" and the blank line above
-    // it by removing item quote.  This should really be taken care of
+    // it by removing item quote. This should really be taken care of
     // by putting the quotes into a separate DB and treating them as
     // a suffix that can be ignored by print_description().
     if (height - num_lines <= 2)
@@ -3880,7 +3880,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PROGRAM_BUG:
         inf.body << "If this monster is a \"program bug\", then it's "
-                "recommended that you save your game and reload.  Please report "
+                "recommended that you save your game and reload. Please report "
                 "monsters who masquerade as program bugs or run around the "
                 "dungeon without a proper description to the authorities.\n";
         break;

@@ -13,7 +13,7 @@
 #include "random.h"
 
 // Adds a simple hollow box to the map with the specified
-//  coordinates, glyphs, and number of doors.  This is the
+//  coordinates, glyphs, and number of doors. This is the
 //  fallback if we can't place a irregular box.
 static void _make_simple_box(map_lines& map, int x1, int y1, int x2, int y2,
                              char floor_glyph, char wall_glyph,
@@ -78,10 +78,10 @@ static void _randomly_force_sum_below(int& a, int& b, int sum)
 }
 
 // Calculates a vector of up to a random number of values
-//  between the specified minimum and maximum values.  The
-//  minimum and maximum values are always inserted.  All
+//  between the specified minimum and maximum values. The
+//  minimum and maximum values are always inserted. All
 //  other values inserted will be separated by at least the
-//  specified separation.  The values returned are sorted in
+//  specified separation. The values returned are sorted in
 //  ascending order.
 static vector<int> _calculate_random_values(int min_value, int max_value,
                                             int max_count,
@@ -126,9 +126,9 @@ static vector<int> _calculate_random_values(int min_value, int max_value,
 }
 
 // Calculates a vector of the specified number of random
-//  values.  The first and last elements are set to the
-//  specified values.  After this, one value at random is
-//  set to 0.  If count <= 1, this function returns a vector
+//  values. The first and last elements are set to the
+//  specified values. After this, one value at random is
+//  set to 0. If count <= 1, this function returns a vector
 //  containg the single value 0.
 static vector<int> _calculate_random_wall_distances(int first_value,
                                                     int last_value,
@@ -152,14 +152,14 @@ static vector<int> _calculate_random_wall_distances(int first_value,
 
 //
 // These functions draw the sides of the box we calculated to
-//  our temporary map.  They also add the positions of each
+//  our temporary map. They also add the positions of each
 //  non-corner wall cell to our list so we can use them to add
 //  doors.
 //
 // We have 4 similar segemets here, one for each side
-//  of the box.  Sadly, they are different enough to
+//  of the box. Sadly, they are different enough to
 //  make combining them into a single function
-//  difficult.  Each segment does the following:
+//  difficult. Each segment does the following:
 //  -> Build a wall for this division
 //  -> Build a wall connectiing the corner of the
 //     previous division to the start of this division.
@@ -310,7 +310,7 @@ static void _draw_wall_r(vector<vector<char> >& map,
 }
 
 // Flood-fills our approximate map starting from the specified
-//  location.  All glyphs of the specified value at that point
+//  location. All glyphs of the specified value at that point
 //  and connected are filled with the specified replacement
 //  glyph.
 static void _flood_fill(vector<vector<char> >& map, int start_x, int start_y,
@@ -323,7 +323,7 @@ static void _flood_fill(vector<vector<char> >& map, int start_x, int start_y,
     if (old_glyph == new_glyph)
         return;
 
-    // We will use a stack for the glyphs still to replace.  We
+    // We will use a stack for the glyphs still to replace. We
     //  will replace glyphs as we add them to the stack to
     //  avoid adding them twice.
     vector<coord_def> stack;
@@ -362,13 +362,13 @@ static void _flood_fill(vector<vector<char> >& map, int start_x, int start_y,
 
 //
 // Fills the outside of the the box in the specified map with
-//  the specified glyphs.  Only glyphs of the specified value
+//  the specified glyphs. Only glyphs of the specified value
 //  are replaced.
 //
 // The outside is not guaranteed to be connected we fill each
 //  point on each edge inwards in a straight line until it hits
 //  something other than the glyph to replace (or the outside
-//  glyph from before).  We made the irregularities by moving
+//  glyph from before). We made the irregularities by moving
 //  parts of the box edge inwards, so there will be no hidden
 //  nooks to look out for.
 //
@@ -562,7 +562,7 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
         //     case we need the original back
         //
         // There is additional complexity because we store the
-        //  position of every non-corner wall cell.  Then, we
+        //  position of every non-corner wall cell. Then, we
         //  use these to add doors.
         //
 
@@ -585,7 +585,7 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
         //
         // To check if the box is acceptable (i.e. has no
         //  self-intersections), we fill the inside of the box
-        //  with floor and the outside with OUTSIDE_GLYPH.  If
+        //  with floor and the outside with OUTSIDE_GLYPH. If
         //  that leaves no UNSET_GLYPH cells, the box is good.
         //
 

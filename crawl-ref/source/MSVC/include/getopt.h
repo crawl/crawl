@@ -12,7 +12,7 @@
    The GNU C Library is distributed in the hope that it will
    be useful, but WITHOUT ANY WARRANTY; without even the
    implied warranty of MERCHANTABILITY or FITNESS FOR A
-   PARTICULAR PURPOSE.  See the GNU Lesser General Public
+   PARTICULAR PURPOSE. See the GNU Lesser General Public
    License for more details.
 
    You should have received a copy of the GNU Lesser General
@@ -32,7 +32,7 @@
 /* If __GNU_LIBRARY__ is not already defined, either we are being used
    standalone, or this is the first header included in the source file.
    If we are being used with glibc, we need to include <features.h>, but
-   that does not exist if we are standalone.  So: if __GNU_LIBRARY__ is
+   that does not exist if we are standalone. So: if __GNU_LIBRARY__ is
    not defined, include <ctype.h>, which will pull in <features.h> for us
    if it's from glibc.  (Why ctype.h?  It's guaranteed to exist and it
    doesn't flood the namespace with stuff the way some other headers do.)  */
@@ -94,7 +94,7 @@ extern int optopt;
    a compiled-in constant, such as set a value from `optarg', set the
    option's `flag' field to zero and its `val' field to a nonzero
    value (the equivalent single-letter option character, if there is
-   one).  For long options that have a zero `flag' field, `getopt'
+   one). For long options that have a zero `flag' field, `getopt'
    returns the contents of the `val' field.  */
 
 struct option
@@ -123,8 +123,8 @@ struct option
    arguments in ARGV (ARGC of them, minus the program name) for
    options given in OPTS.
 
-   Return the option character from OPTS just read.  Return -1 when
-   there are no more options.  For unrecognized options, or options
+   Return the option character from OPTS just read. Return -1 when
+   there are no more options. For unrecognized options, or options
    missing arguments, `optopt' is set to the option letter, and '?' is
    returned.
 
@@ -133,20 +133,20 @@ struct option
    takes an argument, to be placed in `optarg'.
 
    If a letter in OPTS is followed by two colons, its argument is
-   optional.  This behavior is specific to the GNU `getopt'.
+   optional. This behavior is specific to the GNU `getopt'.
 
    The argument `--' causes premature termination of argument
    scanning, explicitly telling `getopt' that there are no more
    options.
 
    If OPTS begins with `--', then non-option arguments are treated as
-   arguments to the option '\0'.  This behavior is specific to the GNU
+   arguments to the option '\0'. This behavior is specific to the GNU
    `getopt'.  */
 
 #if (defined __STDC__ && __STDC__) || defined __cplusplus
 # ifdef __GNU_LIBRARY__
 /* Many other libraries have conflicting prototypes for getopt, with
-   differences in the consts, in stdlib.h.  To avoid compilation
+   differences in the consts, in stdlib.h. To avoid compilation
    errors, only prototype getopt for the GNU C library.  */
 extern int getopt (int ___argc, char *const *___argv, const char *__shortopts);
 # else /* not __GNU_LIBRARY__ */
@@ -161,7 +161,7 @@ extern int getopt_long_only (int ___argc, char *const *___argv,
                              const char *__shortopts,
                              const struct option *__longopts, int *__longind);
 
-/* Internal only.  Users should not call this directly.  */
+/* Internal only. Users should not call this directly.  */
 extern int _getopt_internal (int ___argc, char *const *___argv,
                              const char *__shortopts,
                              const struct option *__longopts, int *__longind,

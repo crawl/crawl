@@ -266,8 +266,8 @@ void tile::corpsify(int corpse_width, int corpse_height,
         for (int x = 3; x < corpse_width; x++)
         {
             // Extend shadow if there are two real pixels along
-            // the diagonal.  Also, don't extend if the top or
-            // left pixel is not filled in.  This prevents lone
+            // the diagonal. Also, don't extend if the top or
+            // left pixel is not filled in. This prevents lone
             // shadow pixels only connected via diagonals.
 
             if (get_pixel(x-1,y-1) == tile_colour::black

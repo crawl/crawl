@@ -205,7 +205,7 @@ bool trap_def::is_known(const actor* act) const
 
             // This should ultimately be removed, but only after monsters
             // learn to make use of the trap being limited in ZotDef if
-            // there is no other way.  Golubria and Malign Gateway are a
+            // there is no other way. Golubria and Malign Gateway are a
             // problem, too...
             if (crawl_state.game_is_zotdef())
                 return false;
@@ -1041,7 +1041,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
             // The old code rehid the trap, but that's pure interface screw
             // in 99% of cases - a player can just watch who stepped where
-            // and mark the trap on an external paper map.  Not good.
+            // and mark the trap on an external paper map. Not good.
 
             actor* targ = nullptr;
             if (you.see_cell_no_trans(pos))
@@ -1788,7 +1788,7 @@ bool is_valid_shaft_level(bool known)
         return false;
 
     // Don't generate shafts in branches where teleport control
-    // is prevented.  Prevents player from going down levels without
+    // is prevented. Prevents player from going down levels without
     // reaching stairs, and also keeps player from getting stuck
     // on lower levels with the innability to use teleport control to
     // get back up.
@@ -2052,7 +2052,7 @@ void place_webs(int num)
 
         int tries;
         // this is hardly ever enough to place many webs, most of the time
-        // it will fail prematurely.  Which is fine.
+        // it will fail prematurely. Which is fine.
         for (tries = 0; tries < 200; ++tries)
         {
             ts.pos.x = random2(GXM);

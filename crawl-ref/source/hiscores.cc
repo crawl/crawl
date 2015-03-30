@@ -5,7 +5,7 @@
 
 /*
  * ----------- MODIFYING THE PRINTED SCORE FORMAT ---------------------
- *   Do this at your leisure.  Change hiscores_format_single() as much
+ *   Do this at your leisure. Change hiscores_format_single() as much
  * as you like.
  *
  */
@@ -60,7 +60,7 @@
 // enough memory allocated to snarf in the scorefile entries
 static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 
-// hackish: scorefile position of newest entry.  Will be highlit during
+// hackish: scorefile position of newest entry. Will be highlit during
 // highscore printing (always -1 when run from command line).
 static int newest_entry = -1;
 
@@ -1568,7 +1568,7 @@ void scorefile_entry::init(time_t dt)
         num_runes      = runes_in_pack();
         num_diff_runes = num_runes;
 
-        // There's no point in rewarding lugging artefacts.  Thus, no points
+        // There's no point in rewarding lugging artefacts. Thus, no points
         // for the value of the inventory. -- 1KB
         if (death_type == KILLED_BY_WINNING)
         {
@@ -1727,7 +1727,7 @@ string scorefile_entry::game_time(death_desc_verbosity verbosity) const
 
 const char *scorefile_entry::damage_verb() const
 {
-    // GDL: here's an example of using final_hp.  Verbiage could be better.
+    // GDL: here's an example of using final_hp. Verbiage could be better.
     // bwr: changed "blasted" since this is for melee
     return (final_hp > -6)  ? "Slain"   :
            (final_hp > -14) ? "Mangled" :

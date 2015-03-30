@@ -662,7 +662,7 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     noisy(level, act->pos(), msg, act->mid);
 }
 
-// throw_it - currently handles player throwing only.  Monster
+// throw_it - currently handles player throwing only. Monster
 // throwing is handled in mon-act:_mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
 // and teleport the projectile onto the square.
@@ -721,7 +721,7 @@ bool throw_it(bolt &pbolt, int throw_2, dist *target)
     // Did we know the ammo's brand before throwing it?
     const bool ammo_brand_known = item_type_known(thrown);
 
-    // Get the ammo/weapon type.  Convenience.
+    // Get the ammo/weapon type. Convenience.
     const object_class_type wepClass = thrown.base_type;
     const int               wepType  = thrown.sub_type;
 
@@ -1043,7 +1043,7 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     }
 
     // Now, if a monster is, for some reason, throwing something really
-    // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
+    // stupid, it will have baseHit of 0 and damage of 0. Ah well.
     string msg = mons->name(DESC_THE);
     if (teleport)
         msg += " magically";

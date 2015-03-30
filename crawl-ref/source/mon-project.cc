@@ -394,7 +394,7 @@ bool iood_act(monster& mon, bool no_trail)
     // If the target is gone, the orb continues on a ballistic course since
     // picking a new one would require intelligence.
 
-    // Boulders don't home onto their targets.  IOODs can't home in on a
+    // Boulders don't home onto their targets. IOODs can't home in on a
     // submerged creature.
     if (iood && foe && !foe->submerged())
     {
@@ -407,7 +407,7 @@ bool iood_act(monster& mon, bool no_trail)
         // Moving diagonally when the orb is just about to hit you
         //      2
         //    ->*1
-        // (from 1 to 2) would be a guaranteed escape.  This may be
+        // (from 1 to 2) would be a guaranteed escape. This may be
         // realistic (strafing!), but since the game has no non-cheesy
         // means of waiting a small fraction of a turn, we don't want it.
         const int old_t_pos = mon.props[IOOD_TPOS].get_short();

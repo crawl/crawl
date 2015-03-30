@@ -1373,7 +1373,7 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
                 }
                 else
                 {
-                    // Normal glyph.  Turn into a feature keyspec.
+                    // Normal glyph. Turn into a feature keyspec.
                     // This is valid for non-array items and monsters
                     // as well, e.g. '$' and '8'.
                     keyed_mapspec &km = keyspecs[idx];
@@ -1393,14 +1393,14 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
             // Finally, handle merging the cell itself.
 
             // Glyph becomes SUBVAULT_GLYPH.  (The old glyph gets merged into a
-            // keyspec, above).  This is so that the glyphs that are included
-            // from a subvault are immutable by the parent vault.  Otherwise,
+            // keyspec, above). This is so that the glyphs that are included
+            // from a subvault are immutable by the parent vault. Otherwise,
             // latent transformations (like KMONS or KITEM) from the parent
             // vault might confusingly modify a glyph from the subvault.
             //
             // NOTE: It'd be possible to allow subvaults to be modified by the
             // parent vault, but KMONS/KITEM/KFEAT/MONS/ITEM would have to
-            // apply immediately instead of latently.  They would also then
+            // apply immediately instead of latently. They would also then
             // need to be stored per-coord, rather than per-glyph.
             (*this)(x, y) = SUBVAULT_GLYPH;
 
@@ -3335,7 +3335,7 @@ string map_def::subvault_from_tagstring(const string &sub)
 
     // Randomly picking a different vault per-glyph is not supported.
     if (sep != ':')
-        return "SUBVAULT does not support '='.  Use ':' instead.";
+        return "SUBVAULT does not support '='. Use ':' instead.";
 
     map_string_list vlist;
     err = _parse_weighted_str<map_string_list>(substitute, vlist);
@@ -3414,7 +3414,7 @@ string map_def::apply_subvault(string_spec &spec)
     string tag = spec.get_property();
     while (++ntries <= max_tries)
     {
-        // Each iteration, restore tags and names.  This is because this vault
+        // Each iteration, restore tags and names. This is because this vault
         // may successfully load a subvault (registering its tag and name), but
         // then itself fail.
         _reset_subvault_stack(reg_stack);

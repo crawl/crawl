@@ -132,7 +132,7 @@ void link_items()
 
         if (!mitm[i].defined())
         {
-            // Item is not assigned.  Ignore.
+            // Item is not assigned. Ignore.
             mitm[i].link = NON_ITEM;
             continue;
         }
@@ -537,7 +537,7 @@ void unlink_item(int dest)
          mitm[dest].pos.x, mitm[dest].pos.y);
 
     // Okay, first we scan all items to see if we have something
-    // linked to this item.  We're not going to return if we find
+    // linked to this item. We're not going to return if we find
     // such a case... instead, since things are already out of
     // alignment, let's assume there might be multiple links as well.
     bool linked = false;
@@ -2614,7 +2614,7 @@ static void _autoinscribe_item(item_def& item)
         if (ai_entry.first.matches(iname))
         {
             // Don't autoinscribe dropped items on ground with
-            // "=g".  If the item matches a rule which adds "=g",
+            // "=g". If the item matches a rule which adds "=g",
             // "=g" got added to it before it was dropped, and
             // then the user explicitly removed it because they
             // don't want to autopickup it again.
@@ -2687,7 +2687,7 @@ static int _autopickup_subtype(const item_def &item)
         return max_type;
 
     // Only where item_type_known() refers to the subtype (as opposed to the
-    // brand, for example) do we have to check it.  For weapons etc. we always
+    // brand, for example) do we have to check it. For weapons etc. we always
     // know the subtype.
     switch (item.base_type)
     {

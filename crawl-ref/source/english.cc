@@ -25,7 +25,7 @@ bool is_vowel(const ucs_t chr)
     return low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u';
 }
 
-// Pluralises a monster or item name.  This'll need to be updated for
+// Pluralises a monster or item name. This'll need to be updated for
 // correctness whenever new monsters/items are added.
 string pluralise(const string &name, const char * const qualifiers[],
                  const char *no_qualifier[])

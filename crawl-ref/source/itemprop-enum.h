@@ -603,7 +603,7 @@ enum weapon_property_type
 
 enum vorpal_damage_type
 {
-    // These are the types of damage a weapon can do.  You can set more
+    // These are the types of damage a weapon can do. You can set more
     // than one of these.
     DAM_BASH            = 0x0000,       // non-melee weapon blugeoning
     DAM_BLUDGEON        = 0x0001,       // crushing
@@ -612,7 +612,7 @@ enum vorpal_damage_type
     DAM_WHIP            = 0x0008,       // whip slashing
     DAM_MAX_TYPE        = DAM_WHIP,
 
-    // These are used for vorpal weapon descriptions.  You shouldn't set
+    // These are used for vorpal weapon descriptions. You shouldn't set
     // more than one of these.
     DVORP_NONE          = 0x0000,       // used for non-melee weapons
     DVORP_CRUSHING      = 0x1000,

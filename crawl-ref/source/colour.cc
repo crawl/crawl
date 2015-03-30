@@ -835,7 +835,7 @@ static unsigned short _dos_reverse_brand(unsigned short colour)
         // evil, so we strip the background high-intensity bit. This, sadly,
         // limits us to 7 background colours.
 
-        // Strip off high-intensity bit.  Special case DARKGREY, since it's the
+        // Strip off high-intensity bit. Special case DARKGREY, since it's the
         // high-intensity counterpart of black, and we don't want black on
         // black.
         //

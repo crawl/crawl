@@ -87,7 +87,7 @@ struct crawl_environment
 
     // Rate at which random monsters spawn, with lower numbers making
     // them spawn more often (5 or less causes one to spawn about every
-    // 5 turns).  Set to 0 to stop random generation.
+    // 5 turns). Set to 0 to stop random generation.
     int spawn_random_rate;
 
     // Time when level was saved (hence we write out you.elapsed_time

@@ -254,7 +254,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
     case DELAY_EAT:
         // XXX: Large problems with object destruction here... food can
         // be from in the inventory or on the ground and these are
-        // still handled quite differently.  Eventually we would like
+        // still handled quite differently. Eventually we would like
         // this to be stoppable, with partial food items implemented. -- bwr
         break;
 
@@ -966,7 +966,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_DROP_ITEM:
         // We're here if dropping the item required some action to be done
-        // first, like removing armour.  At this point, it should be droppable
+        // first, like removing armour. At this point, it should be droppable
         // immediately.
 
         // Make sure item still exists.

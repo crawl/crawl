@@ -1387,7 +1387,7 @@ static string _curse_prefix(const item_def &weap, description_level_type desc,
     // We don't bother printing "uncursed" if the item is identified
     // for pluses (its state should be obvious), this is so that
     // the weapon name is kept short (there isn't a lot of room
-    // for the name on the main screen).  If you're going to change
+    // for the name on the main screen). If you're going to change
     // this behaviour, *please* make it so that there is an option
     // that maintains this behaviour. -- bwr
     if (_know_pluses(weap, desc, ident, ignore_flags))
@@ -3325,7 +3325,7 @@ bool is_bad_item(const item_def &item, bool temp)
             return false;
         }
     case OBJ_JEWELLERY:
-        // Potentially useful.  TODO: check the properties.
+        // Potentially useful. TODO: check the properties.
         if (is_artefact(item))
             return false;
 
@@ -3656,7 +3656,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return false;
 
-        // Potentially useful.  TODO: check the properties.
+        // Potentially useful. TODO: check the properties.
         if (is_artefact(item))
             return false;
 

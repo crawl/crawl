@@ -468,7 +468,7 @@ struct like_response
 {
     /** Gain in piety for triggering this conduct; added to calculated denom.
      *
-     * This number is usually negative.  In that case, the maximum piety gain
+     * This number is usually negative. In that case, the maximum piety gain
      * is one point, and the chance of *not* getting that point is:
      *    -piety_bonus/(piety_denom_bonus + level - you.xl/xl_denom)
      * (omitting the you.xl term if xl_denom is zero)
@@ -897,7 +897,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
 // These three sets deal with the situation where a beam hits a non-fleeing
 // monster, the monster starts to flee because of the damage, and then the
-// beam bounces and hits the monster again.  If the monster wasn't fleeing
+// beam bounces and hits the monster again. If the monster wasn't fleeing
 // when the beam started then hits from bounces shouldn't count as
 // unchivalric attacks, but if the first hit from the beam *was* unchivalrous
 // then all the bounces should count as unchivalrous as well.

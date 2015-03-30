@@ -451,7 +451,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     if (!crawl_state.game_is_arena())
     {
         // * A monster's attitude shouldn't downgrade from friendly
-        //   or good-neutral because you helped it.  It'd suck to
+        //   or good-neutral because you helped it. It'd suck to
         //   lose a permanent ally that way.
         //
         // * A monster has to be smart enough to realize that you

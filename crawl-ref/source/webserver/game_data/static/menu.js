@@ -173,7 +173,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         if (start >= menu.total_items || end < 0)
             return;
 
-        // Find out which indices are missing.  This assumes that all
+        // Find out which indices are missing. This assumes that all
         // missing items are in a continuous range, which is the case
         // as long as the only ways to jump farther than chunk_size are
         // home and end.

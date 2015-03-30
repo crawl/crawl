@@ -245,7 +245,7 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
             if (Options.tile_menu_icons
                 && text_sx + text_width > entry_start + column_width)
             {
-                // [enne] - Ugh, hack.  Maybe MenuEntry could specify the
+                // [enne] - Ugh, hack. Maybe MenuEntry could specify the
                 // presence and length of this substring?
                 string unfm = entry.text.tostring();
                 bool let = (unfm[1] >= 'a' && unfm[1] <= 'z'
@@ -260,7 +260,7 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
                     m_font_buf.add(header, text_sx, text_sy);
                     text_sx += m_font_entry->string_width(header);
                     text = entry.text;
-                    // remove hotkeys.  As Enne said above, this is a monstrosity.
+                    // remove hotkeys. As Enne said above, this is a monstrosity.
                     for (int k = 0; k < 5; k++)
                         text.del_char();
                 }

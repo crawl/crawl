@@ -294,7 +294,7 @@ bool check_moveto(const coord_def& p, const string &move_verb, const string &msg
            && check_moveto_exclusion(p, move_verb);
 }
 
-// Returns true if this is a valid swap for this monster.  If true, then
+// Returns true if this is a valid swap for this monster. If true, then
 // the valid location is set in loc. (Otherwise loc becomes garbage.)
 bool swap_check(monster* mons, coord_def &loc, bool quiet)
 {
@@ -1120,7 +1120,7 @@ static int _player_bonus_regen()
 
     // Powered By Death mutation, boosts regen by 10 per corpse in
     // a mutation_level * 3 (3/6/9) radius, to a maximum of 7
-    // corpses.  If and only if the duration of the effect is
+    // corpses. If and only if the duration of the effect is
     // still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
         rr += handle_pbd_corpses() * 100;
@@ -1177,7 +1177,7 @@ int player_regen()
 #if TAG_MAJOR_VERSION == 34
 
     // Compared to other races, a starting djinni would have regen of 4 (hp)
-    // plus 17 (mp).  So let's compensate them early; they can stand getting
+    // plus 17 (mp). So let's compensate them early; they can stand getting
     // shafted on the total regen rates later on.
     if (you.species == SP_DJINNI)
         if (you.hp_max < 100)
@@ -1196,7 +1196,7 @@ int player_regen()
     if (you.disease)
         rr = 0;
 
-    // Trog's Hand.  This circumvents the slow healing effect.
+    // Trog's Hand. This circumvents the slow healing effect.
     if (you.duration[DUR_TROGS_HAND])
         rr += 100;
 
@@ -1316,7 +1316,7 @@ int player_spell_levels()
     if (fireball && delayed_fireball)
         sl += spell_difficulty(SPELL_FIREBALL);
 
-    // Note: This can happen because of level drain.  Maybe we should
+    // Note: This can happen because of level drain. Maybe we should
     // force random spells out when that happens. -- bwr
     if (sl < 0)
         sl = 0;
@@ -1986,8 +1986,8 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 // New player movement speed system... allows for a bit more than
 // "player runs fast" and "player walks slow" in that the speed is
 // actually calculated (allowing for centaurs to get a bonus from
-// swiftness and other such things).  Levels of the mutation now
-// also have meaning (before they all just meant fast).  Most of
+// swiftness and other such things). Levels of the mutation now
+// also have meaning (before they all just meant fast). Most of
 // this isn't as fast as it used to be (6 for having anything), but
 // even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
@@ -2062,7 +2062,7 @@ int player_movement_speed()
 }
 
 // This function differs from the above in that it's used to set the
-// initial time_taken value for the turn.  Everything else (movement,
+// initial time_taken value for the turn. Everything else (movement,
 // spellcasting, combat) applies a ratio to this value.
 int player_speed()
 {
@@ -2107,7 +2107,7 @@ static int _mut_level(mutation_type mut, mutation_activity_type minact)
     return 0;
 }
 
-// Output level of player mutation.  If temp is true (the default), take into
+// Output level of player mutation. If temp is true (the default), take into
 // account the suppression of mutations by changes of form.
 int player_mutation_level(mutation_type mut, bool temp)
 {
@@ -6055,7 +6055,7 @@ int player::armour_class(bool /*calc_unid*/) const
 
     AC += racial_ac(true);
 
-    // Scale mutations, etc.  Statues don't get an AC benefit from scales,
+    // Scale mutations, etc. Statues don't get an AC benefit from scales,
     // since the scales are made of the same stone as everything else.
     AC += player_mutation_level(MUT_TOUGH_SKIN)
           ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                   // +1, +2, +3
@@ -6691,7 +6691,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     if (!agent)
     {
         // FIXME: This can happen if a deferred_damage_fineff does damage
-        // to a player from a dead monster.  We should probably not do that,
+        // to a player from a dead monster. We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
         ouch(amount, kill_type, MID_NOBODY, aux.c_str(), false, source.c_str());
@@ -6829,7 +6829,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
         dam = !wearing_cloak;
 
     // Without fur, clothed people have dam 0 (+2 later), Sp/Tr/Dr/Og ~1
-    // (randomized), Fe 5.  Fur helps only against naked spots.
+    // (randomized), Fe 5. Fur helps only against naked spots.
     const int fur = player_mutation_level(MUT_SHAGGY_FUR);
     dam -= fur * dam / 5;
 
@@ -7354,7 +7354,7 @@ bool player::polymorph(int pow)
 
     transformation_type f = TRAN_NONE;
 
-    // Be unreliable over lava.  This is not that important as usually when
+    // Be unreliable over lava. This is not that important as usually when
     // it matters you'll have temp flight and thus that pig will fly (and
     // when flight times out, we'll have roasted bacon).
     for (int tries = 0; tries < 3; tries++)
@@ -7892,9 +7892,9 @@ bool player_has_orb()
 bool player::form_uses_xl() const
 {
     // No body parts that translate in any way to something fisticuffs could
-    // matter to, the attack mode is different.  Plus, it's weird to have
+    // matter to, the attack mode is different. Plus, it's weird to have
     // users of one particular [non-]weapon be effective for this
-    // unintentional form while others can just run or die.  I believe this
+    // unintentional form while others can just run or die. I believe this
     // should apply to more forms, too.  [1KB]
     return form == TRAN_WISP || form == TRAN_FUNGUS;
 }
@@ -8294,7 +8294,7 @@ void player_open_door(coord_def doorpos)
     for (const auto &dc : all_door)
     {
         // Even if some of the door is out of LOS, we want the entire
-        // door to be updated.  Hitting this case requires a really big
+        // door to be updated. Hitting this case requires a really big
         // door!
         if (env.map_knowledge(dc).seen())
         {

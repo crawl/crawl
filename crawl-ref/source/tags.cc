@@ -5,10 +5,10 @@
 
 /*
    The marshalling and unmarshalling of data is done in big endian and
-   is meant to keep savefiles cross-platform.  Note also that the marshalling
-   sizes are 1, 2, and 4 for byte, short, and int.  If a strange platform
+   is meant to keep savefiles cross-platform. Note also that the marshalling
+   sizes are 1, 2, and 4 for byte, short, and int. If a strange platform
    with different sizes of these basic types pops up, please sed it to fixed-
-   width ones.  For now, that wasn't done in order to keep things convenient.
+   width ones. For now, that wasn't done in order to keep things convenient.
 */
 
 #include "AppHdr.h"
@@ -454,7 +454,7 @@ int64_t unmarshallSigned(reader& th)
 }
 
 // Optimized for short vectors that have only the first few bits set, and
-// can have invalid length.  For long ones you might want to do this
+// can have invalid length. For long ones you might want to do this
 // differently to not lose 1/8 bits and speed.
 template<int SIZE>
 void marshallFixedBitVector(writer& th, const FixedBitVector<SIZE>& arr)
@@ -680,7 +680,7 @@ coord_def unmarshallCoord(reader &th)
 
 #if TAG_MAJOR_VERSION == 34
 // Between TAG_MINOR_OPTIONAL_PARTS and TAG_MINOR_FIXED_CONSTRICTION
-// we neglected to marshall the constricting[] map of monsters.  Fix
+// we neglected to marshall the constricting[] map of monsters. Fix
 // those up.
 static void _fix_missing_constrictions()
 {
@@ -1281,7 +1281,7 @@ static void tag_construct_char(writer &th)
 {
     marshallByte(th, TAG_CHR_FORMAT);
     // Important: you may never remove or alter a field without bumping
-    // CHR_FORMAT.  Bumping it makes all saves invisible when browsed in an
+    // CHR_FORMAT. Bumping it makes all saves invisible when browsed in an
     // older version.
     // Please keep this compatible even over major version breaks!
 
@@ -2055,7 +2055,7 @@ static const char* old_gods[]=
 void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 {
     // Important: values out of bounds are good here, the save browser needs to
-    // be forward-compatible.  We validate them only on an actual restore.
+    // be forward-compatible. We validate them only on an actual restore.
     you.your_name         = unmarshallString2(th);
     you.prev_save_version = unmarshallString2(th);
     dprf("Last save Crawl version: %s", you.prev_save_version.c_str());
@@ -3254,7 +3254,7 @@ static void tag_read_you_items(reader &th)
                 you.item_description[i][j] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
             // We briefly had a problem where we sign-extended the old
-            // 8-bit item_descriptions on conversion.  Fix those up.
+            // 8-bit item_descriptions on conversion. Fix those up.
             if (th.getMinorVersion() < TAG_MINOR_NEG_IDESC
                 && (int)you.item_description[i][j] < 0)
             {

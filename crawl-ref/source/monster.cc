@@ -1689,7 +1689,7 @@ bool monster::wants_armour(const item_def &item) const
     }
 
     // Spellcasters won't pick up restricting armour, although they can
-    // start with one.  Applies to arcane spells only, of course.
+    // start with one. Applies to arcane spells only, of course.
     if (!pos().origin() && is_actual_spellcaster()
         && (property(item, PARM_EVASION) / 10 < -5
             || is_artefact(item)
@@ -2969,7 +2969,7 @@ void monster::banish(actor *agent, const string &)
         && !mons_class_flag(type, M_NO_EXP_GAIN))
     {
         // Double the existing damage blame counts, so the unassigned xp for
-        // remaining hp is effectively halved.  No need to pass flags this way.
+        // remaining hp is effectively halved. No need to pass flags this way.
         damage_total *= 2;
         damage_friendly *= 2;
         blame_damage(agent, hit_points);
@@ -3769,7 +3769,7 @@ int monster::how_unclean(bool check_god) const
     if (has_attack_flavour(AF_VAMPIRIC))
         uncleanliness++;
 
-    // Zin considers insanity unclean.  And slugs that speak.
+    // Zin considers insanity unclean. And slugs that speak.
     if (type == MONS_CRAZY_YIUF
         || type == MONS_PSYCHE
         || type == MONS_LOUISE
@@ -4116,7 +4116,7 @@ int monster::res_rotting(bool /*temp*/) const
     switch (holiness())
     {
     case MH_NATURAL:
-    case MH_PLANT: // was 1 before.  Gardening shows it should be -1 instead...
+    case MH_PLANT: // was 1 before. Gardening shows it should be -1 instead...
         res = 0;
         break;
     case MH_UNDEAD:
@@ -4826,7 +4826,7 @@ static int _estimated_trap_damage(trap_type trap)
 
 /**
  * Check whether a given trap (described by trap position) can be
- * regarded as safe.  Takes into account monster intelligence and
+ * regarded as safe. Takes into account monster intelligence and
  * allegiance.
  *
  * @param where       The square to be checked for dangerous traps.
@@ -4940,7 +4940,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
         return false;
 
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
-    // handle accordingly.  In the arena Zot traps affect all monsters.
+    // handle accordingly. In the arena Zot traps affect all monsters.
 
     // XXX: this logic duplicates the checks for friendly creatures & "traps
     // that are bad for the player " at the top; probably should be merged
@@ -5183,7 +5183,7 @@ void monster::forget_random_spell()
 void monster::scale_hp(int num, int den)
 {
     // Without the +1, we lose maxhp on every berserk (the only use) if the
-    // maxhp is odd.  This version does preserve the value correctly, but only
+    // maxhp is odd. This version does preserve the value correctly, but only
     // if it is first inflated then deflated.
     hit_points     = (hit_points * num + 1) / den;
     max_hit_points = (max_hit_points * num + 1) / den;
@@ -5251,7 +5251,7 @@ void monster::calc_speed()
 // Check speed and speed_increment sanity.
 void monster::check_speed()
 {
-    // FIXME: If speed is borked, recalculate.  Need to figure out how
+    // FIXME: If speed is borked, recalculate. Need to figure out how
     // speed is getting borked.
     if (speed < 0 || speed > 130)
     {

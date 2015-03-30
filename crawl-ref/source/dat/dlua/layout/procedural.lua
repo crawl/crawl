@@ -441,7 +441,7 @@ end
 -- Utility functions. These don't return a function themselves, just a value.
 
 -- Maps a value onto a 0..1..0 scale. Outside the boundaries it is 0, and
--- when between b2 and b3 it is 1.  Between b1 and b2, and b3 and b4, it
+-- when between b2 and b3 it is 1. Between b1 and b2, and b3 and b4, it
 -- smoothly scales between 1 and 0.
 function procedural.boundary_map(val, b1,b2,b3,b4)
   if val<=b1 or val>=b4 then return 0

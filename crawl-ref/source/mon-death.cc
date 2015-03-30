@@ -444,7 +444,7 @@ void goldify_corpse(item_def &corpse)
 int place_monster_corpse(const monster* mons, bool silent, bool force)
 {
     // The game can attempt to place a corpse for an out-of-bounds monster
-    // if a shifter turns into a giant spore and explodes.  In this
+    // if a shifter turns into a giant spore and explodes. In this
     // case we place no corpse since the explosion means anything left
     // over would be scattered, tiny chunks of shifter.
     if (!in_bounds(mons->pos()))
@@ -731,8 +731,8 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
 static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
 {
     // Orcs may convert to Beogh under threat of death, either from
-    // you or, less often, your followers.  In both cases, the
-    // checks are made against your stats.  You're the potential
+    // you or, less often, your followers. In both cases, the
+    // checks are made against your stats. You're the potential
     // messiah, after all.
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
@@ -2267,7 +2267,7 @@ int monster_die(monster* mons, killer_type killer,
             }
 
             // Trying to prevent summoning abuse here, so we're trying to
-            // prevent summoned creatures from being done_good kills.  Only
+            // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
             if (created_friendly || !gives_xp || !pet_kill
                 || !anon && invalid_monster_index(killer_index))
@@ -2891,7 +2891,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     }
 
 
-    // Don't worry about invisibility.  You should be able to see if
+    // Don't worry about invisibility. You should be able to see if
     // something has fallen into the lava.
     if (mons_near(mons) && (oldpos == mons->pos() || grd(oldpos) != grid))
     {

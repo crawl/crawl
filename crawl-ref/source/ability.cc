@@ -243,10 +243,10 @@ static const ability_def Ability_List[] =
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
-    // so we have to distinguish them (see above).  The off items
+    // so we have to distinguish them (see above). The off items
     // below are labeled EVOKE because they only work now if the
     // player has an item with the evocable power (not just because
-    // you used a wand, potion, or miscast effect).  I didn't see
+    // you used a wand, potion, or miscast effect). I didn't see
     // any reason to label them as "Evoke" in the text, they don't
     // use or train Evocations (the others do).  -- bwr
     { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation",
@@ -3684,7 +3684,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && !player_mutation_level(MUT_NO_ARTIFICE))
     {
         // Now you can only turn invisibility off if you have an
-        // activatable item.  Wands and potions will have to time
+        // activatable item. Wands and potions will have to time
         // out. -- bwr
         if (you.duration[DUR_INVIS])
             _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
@@ -3705,7 +3705,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
             }
             // Now you can only turn flight off if you have an
-            // activatable item.  Potions and spells will have to time
+            // activatable item. Potions and spells will have to time
             // out.
             if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
@@ -3769,7 +3769,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 // Note: we're trying for a behaviour where the player gets
 // to keep their assigned invocation slots if they get excommunicated
 // and then rejoin (but if they spend time with another god we consider
-// the old invocation slots void and erase them).  We also try to
+// the old invocation slots void and erase them). We also try to
 // protect any bindings the character might have made into the
 // traditional invocation slots (A-E and X). -- bwr
 static void _set_god_ability_helper(ability_type abil, char letter)
@@ -3870,7 +3870,7 @@ static int _find_ability_slot(const ability_def &abil)
     for (int slot = 0; slot < 52; slot++)
         // Placeholder handling, part 2: The ability we have might
         // correspond to a placeholder, in which case the ability letter
-        // table will contain that placeholder.  Convert the latter to
+        // table will contain that placeholder. Convert the latter to
         // its corresponding ability before comparing the two, so that
         // we'll find the placeholder's index properly.
         if (_fixup_ability(you.ability_letter_table[slot]) == abil.ability)

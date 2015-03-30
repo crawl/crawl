@@ -848,7 +848,7 @@ static bool _tso_bless_follower(monster* follower, bool force)
     return true;
 }
 
-// Bless the follower indicated in follower, if any.  If there isn't
+// Bless the follower indicated in follower, if any. If there isn't
 // one, bless a random follower within sight of the player, if any, or,
 // with decreasing chances, any follower on the level.
 // Blessing can be enforced with a wizard mode command.

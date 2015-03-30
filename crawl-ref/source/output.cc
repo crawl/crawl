@@ -977,7 +977,7 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 //
 // Note the usage of bad_ench_colour() correspond to levels that
 // can be found in player.cc, ie those that the player can tell by
-// using the '@' command.  Things like confusion and sticky flame
+// using the '@' command. Things like confusion and sticky flame
 // hide their amounts and are thus always the same colour (so
 // we're not really exposing any new information). --bwr
 static void _get_status_lights(vector<status_light>& out)
@@ -1365,14 +1365,14 @@ void print_stats()
     if (you.wield_change)
     {
         // weapon_change is set in a billion places; probably not all
-        // of them actually mean the user changed their weapon.  Calling
+        // of them actually mean the user changed their weapon. Calling
         // on_weapon_changed redundantly is normally OK; but if the user
         // is wielding a bow and throwing javelins, the on_weapon_changed
         // will switch them back to arrows, which is annoying.
         // Perhaps there should be another bool besides wield_change
         // that's set in fewer places?
         // Also, it's a little bogus to change simulation state in
-        // render code.  We should find a better place for this.
+        // render code. We should find a better place for this.
         you.m_quiver->on_weapon_changed();
         _print_stats_wp(9 + yhack);
     }
@@ -2481,7 +2481,7 @@ static char _get_overview_screen_results()
         for (unsigned int i = 0; i < blines.size(); ++i)
         {
             // Kind of a hack -- we don't really care what items these
-            // hotkeys go to.  So just pick the first few.
+            // hotkeys go to. So just pick the first few.
             const char hotkey = (i < equip_chars.size()) ? equip_chars[i] : 0;
             overview.add_item_formatted_string(blines[i], hotkey);
         }

@@ -1,7 +1,7 @@
 # This file contains the definitions of undrandarts (and what used to be
 # fixed artefacts).  util/art-data.pl translates this file into
 # art-data.h, and also updates the enumeration and NUM_UNRANDARTS in
-# artefact.h.  C/C++ functions which give unrandarts non-standard
+# artefact.h. C/C++ functions which give unrandarts non-standard
 # behaviour are in art-func.h; util/art-data.pl scans art-func.h and
 # puts the function names found into art-data.h.
 #
@@ -21,7 +21,7 @@
 # Add new artefact definitions at the end of the file; doing so should cause
 # no problems with save-file compatibility, but for tile builds it will
 # cause a shift of remembered tiles (since each new unrandart needs its
-# own tiles).  Changing the order of the definitions will likely cause
+# own tiles). Changing the order of the definitions will likely cause
 # strange behaviour in games saved previous to the change, and deleting
 # definitions will break savefile compatibility.
 #
@@ -66,7 +66,7 @@
 # Explanation of unusual fields:
 
 # BOOL: Turn certain boolean properties of the artefact on, with the list
-# of properties separated by commas.  The list includes:
+# of properties separated by commas. The list includes:
 #
 # * berserk:  Lets wearer evoke berserking ability.
 # * blink:    Lets wearer evoke the blink ability.
@@ -83,7 +83,7 @@
 # * life:     Grants negative energy resistance.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
-# * noises:   Weapon makes noises.  Should  be given its own set of noises
+# * noises:   Weapon makes noises. Should  be given its own set of noises
 #             by making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
 #             lowercase.
@@ -102,7 +102,7 @@
 # * unided:   Properties start unidentified.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
-# For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO".  The
+# For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO". The
 # default enumeration is determined as follows:
 #
 # 1) If there's a string between double quotes, use that.
@@ -113,7 +113,7 @@
 #    uppercase the whole thing, and add "UNRAND_" to the front.
 
 # OBJ: The enumerations of the base type and sub type of the artefact,
-# separated by a dash.  E.g., OBJ_WEAPONS/WPN_SWORD
+# separated by a dash. E.g., OBJ_WEAPONS/WPN_SWORD
 
 # PLUS: The pluses of the artefact.
 
@@ -615,7 +615,7 @@ TILE_EQ:  knife_of_accuracy
 BOOL:     tilerim, nogen
 
 # TAG_MAJOR_VERSION == 34
-# A play on the spell of the same name.  Colour taken from crystal walls.
+# A play on the spell of the same name. Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
 NAME:     Lehudib's crystal spear
 OBJ:      OBJ_WEAPONS/WPN_SPEAR

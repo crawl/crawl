@@ -187,7 +187,7 @@ static int crawl_enable_more(lua_State *ls)
 }
 
 /*
---- Wrapper for <code>cancellable_get_line()</code>.  Since that takes
+--- Wrapper for <code>cancellable_get_line()</code>. Since that takes
 -- a pre-allocated buffer, an arbitrary 500-character limit is
 -- currently imposed.
 -- @return Either a string if one is input, or nil if input is cancelled
@@ -861,7 +861,7 @@ static int crawl_random_element(lua_State *ls)
         return 1;
     }
 
-    // Only the first arg does anything now.  Maybe this should
+    // Only the first arg does anything now. Maybe this should
     // select from a variable number of table args?
     lua_pop(ls, lua_gettop(ls) - 1);
 

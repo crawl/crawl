@@ -36,7 +36,7 @@
    function. This function is hardwired to return an average F_1 value
    of 1.0. It returns the <n> most closest feature point distances
    F_1, F_2, .. F_n the vector delta to those points, and a 32 bit
-   seed for each of the feature points.  This function is not
+   seed for each of the feature points. This function is not
    difficult to extend to compute alternative information such as
    higher order F values, to use the Manhattan distance metric, or
    other fun perversions.

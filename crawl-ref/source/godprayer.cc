@@ -401,9 +401,9 @@ int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
             simple_god_message(" ignores your late donation.");
         }
         // A single scroll can give you more than D:1-18, Lair and Orc
-        // together, limit the gains.  You're still required to pay from
+        // together, limit the gains. You're still required to pay from
         // your sudden fortune, yet it's considered your duty to the Church
-        // so piety is capped.  If you want more piety, donate more!
+        // so piety is capped. If you want more piety, donate more!
         //
         // Note that the stepdown is not applied to other gains: it would
         // be simpler, yet when a monster combines a number of gold piles
@@ -581,7 +581,7 @@ static piety_gain_t _sac_corpse(const item_def& item)
 }
 
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
-// out of 20 arrows, etc.).  Does not modify the actual item in any way.
+// out of 20 arrows, etc.). Does not modify the actual item in any way.
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
        int *js, bool first)
 {
