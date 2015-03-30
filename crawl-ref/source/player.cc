@@ -4182,7 +4182,7 @@ int get_real_mp(bool include_items)
         enp +=      you.scan_artefacts(ARTP_MAGICAL_POWER);
 
         if (you.wearing(EQ_STAFF, STAFF_POWER))
-            enp += 5 + enp * 2 / 5;
+            enp += 15;
     }
 
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
