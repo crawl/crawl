@@ -3900,7 +3900,7 @@ bool god_hates_eating(god_type god, monster_type mc)
 
 bool god_likes_fresh_corpses(god_type god)
 {
-    return god == GOD_TROG;
+    return false;
 }
 
 bool god_likes_spell(spell_type spell, god_type god)
@@ -4056,10 +4056,6 @@ void handle_god_time(int /*time_delta*/)
         switch (you.religion)
         {
         case GOD_TROG:
-            if (one_chance_in(14))
-                lose_piety(1);
-            break;
-
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
         case GOD_BEOGH:
