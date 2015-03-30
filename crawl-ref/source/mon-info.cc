@@ -1306,9 +1306,9 @@ static string _verbose_info(const monster_info& mi)
 
 string monster_info::pluralised_name(bool fullname) const
 {
-    // Don't pluralise uniques, ever.  Multiple copies of the same unique
+    // Don't pluralise uniques, ever. Multiple copies of the same unique
     // are unlikely in the dungeon currently, but quite common in the
-    // arena.  This prevens "4 Gra", etc. {due}
+    // arena. This prevens "4 Gra", etc. {due}
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();

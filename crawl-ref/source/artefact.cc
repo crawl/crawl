@@ -304,7 +304,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
     // copied from apostrophise() (libutil.cc):
     // The proper possessive for a word ending in an "s" is to
     // put an apostrophe after the "s": "Chris" -> "Chris'",
-    // not "Chris" -> "Chris's".  Stupid English language...
+    // not "Chris" -> "Chris's". Stupid English language...
     name = replace_all(name, "s's", "s'");
 
     return name;
@@ -542,7 +542,7 @@ static void _add_randart_weapon_brand(const item_def &item,
         else if (item_attack_skill(item) == SK_CROSSBOWS)
         {
             // Penetration and electrocution are only allowed on
-            // crossbows.  This may change in future.
+            // crossbows. This may change in future.
             if (one_chance_in(5))
                 item_props[ARTP_BRAND] = SPWPN_ELECTROCUTION;
             else if (one_chance_in(5))

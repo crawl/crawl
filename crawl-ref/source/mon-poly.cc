@@ -197,7 +197,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
-    // it.  If we don't do this, it'll stay invisible even after losing
+    // it. If we don't do this, it'll stay invisible even after losing
     // the invisibility enchantment below.
     mons->del_ench(ENCH_INVIS, false, false);
 
@@ -208,7 +208,7 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
-    // the polymorph disrupts the beholding process.  Do this before
+    // the polymorph disrupts the beholding process. Do this before
     // changing mons->type, since unbeholding can only happen while
     // the monster is still a siren/merfolk avatar.
     you.remove_beholder(mons);
@@ -418,9 +418,9 @@ void change_monster_type(monster* mons, monster_type targetc)
         check_net_will_hold_monster(mons);
 
     // Even if the new form can constrict, it might be with a different
-    // body part.  Likewise, the new form might be too large for its
-    // current constrictor.  Rather than trying to handle these as special
-    // cases, just stop the constriction entirely.  The usual message about
+    // body part. Likewise, the new form might be too large for its
+    // current constrictor. Rather than trying to handle these as special
+    // cases, just stop the constriction entirely. The usual message about
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all(false);
     mons->stop_being_constricted();
@@ -446,7 +446,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     int tries = 1000;
 
     // Used to be mons_power, but that just returns hit_dice
-    // for the monster class.  By using the current hit dice
+    // for the monster class. By using the current hit dice
     // the player gets the opportunity to use draining more
     // effectively against shapeshifters. - bwr
     source_power = mons->get_hit_dice();

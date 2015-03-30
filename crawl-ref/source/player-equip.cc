@@ -37,7 +37,7 @@ static void _mark_unseen_monsters();
 
 /**
  * Recalculate the player's max hp and set the current hp based on the %change
- * of max hp.  This has resulted from our having equipped an artefact that
+ * of max hp. This has resulted from our having equipped an artefact that
  * changes max hp.
  */
 static void _calc_hp_artefact()

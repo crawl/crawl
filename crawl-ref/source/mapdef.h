@@ -878,7 +878,7 @@ public:
 public:
     keyed_mapspec();
 
-    // Parse the string and set the given entry.  If fix is true,
+    // Parse the string and set the given entry. If fix is true,
     // then whatever is selected for the first feature will be
     // permanently fixed.
     string set_feat(const string &s, bool fix);
@@ -886,7 +886,7 @@ public:
     string set_item(const string &s, bool fix);
     string set_mask(const string &s, bool /*garbage*/);
 
-    // Copy from the given mapspec.  If that entry is fixed,
+    // Copy from the given mapspec. If that entry is fixed,
     // it should be pre-selected prior to the copy.
     void copy_feat(const keyed_mapspec &spec);
     void copy_mons(const keyed_mapspec &spec);

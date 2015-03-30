@@ -589,7 +589,7 @@ static void _dump_options(FILE *file)
     fprintf(file, "\n\n");
 }
 
-// Defined in stuff.cc.  Not a part of crawl_state, since that's a
+// Defined in stuff.cc. Not a part of crawl_state, since that's a
 // global C++ instance which is free'd by exit() hooks when exit()
 // is called, and we don't want to reference free'd memory.
 extern bool CrawlIsExiting;
@@ -601,7 +601,7 @@ void do_crash_dump()
         // We crashed during exit() callbacks, so it's likely that
         // any global C++ instances we could reference would be
         // free'd and invalid, plus their content likely wouldn't help
-        // tracking it down anyway.  Thus, just do the bare bones
+        // tracking it down anyway. Thus, just do the bare bones
         // info to stderr and quit.
         fprintf(stderr, "Crashed while calling exit()!!!!\n");
 
@@ -708,7 +708,7 @@ void do_crash_dump()
     if (crawl_state.game_is_zotdef())
         fprintf(file, "ZotDef wave data: %s\n", zotdef_debug_wave_desc().c_str());
 
-    // Next item and monster scans.  Any messages will be sent straight to
+    // Next item and monster scans. Any messages will be sent straight to
     // the file because of set_msg_dump_file()
 #ifdef DEBUG_ITEM_SCAN
     debug_item_scan();

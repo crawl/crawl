@@ -109,7 +109,7 @@ static void _translate_window_event(const SDL_WindowEvent &sdl_event,
     }
 }
 
-// Suppress the SDL_TEXTINPUT event from this keypress.  XXX: hacks
+// Suppress the SDL_TEXTINPUT event from this keypress. XXX: hacks
 static void _suppress_textinput()
 {
     if (SDL_IsTextInputActive())
@@ -121,7 +121,7 @@ static void _suppress_textinput()
 
 static int _translate_keysym(SDL_Keysym &keysym)
 {
-    // This function returns the key that was hit.  Returning zero implies that
+    // This function returns the key that was hit. Returning zero implies that
     // the keypress (e.g. hitting shift on its own) should be eaten and not
     // handled.
 

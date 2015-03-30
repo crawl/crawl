@@ -548,7 +548,7 @@ bool is_unavailable_god(god_type god)
         return true;
 
     // Don't allow Fedhas in ZotDef, as his invocations are duplicated, and
-    // passives thoroughly overpowered.  Protection for plants, speed-up of
+    // passives thoroughly overpowered. Protection for plants, speed-up of
     // oklobs, etc...
     // Basically, ZotDef is Fedhas.
 
@@ -2225,7 +2225,7 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
         return false;
 
     // Set piety to the passed-in piety breakpoint value when getting
-    // the ability message.  If we have an ability upgrade, which will
+    // the ability message. If we have an ability upgrade, which will
     // change description based on current piety, and current piety has
     // gone up more than one breakpoint, this will ensure that all
     // ability upgrade descriptions display in the proper sequence.
@@ -2883,7 +2883,7 @@ void excommunication(god_type new_god, bool immediate)
             tso_remove_divine_shield();
 
         // Leaving TSO for a non-good god will make all your followers
-        // abandon you.  Leaving him for a good god will make your holy
+        // abandon you. Leaving him for a good god will make your holy
         // followers (daeva and angel servants) indifferent.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
@@ -3508,7 +3508,7 @@ void join_religion(god_type which_god, bool immediate)
 
     take_note(Note(NOTE_GET_GOD, you.religion));
 
-    // Currently, penance is just zeroed.  This could be much more
+    // Currently, penance is just zeroed. This could be much more
     // interesting.
     you.penance[you.religion] = 0;
 
@@ -3597,7 +3597,7 @@ void join_religion(god_type which_god, bool immediate)
         lucre.quantity = you.gold - you.attribute[ATTR_DONATIONS] * 9;
         // Use the harsh acquirement pricing -- with a cap at +50 piety.
         // We don't want you get max piety at start just because you're filthy
-        // rich.  In that case, you have to donate again more...  That the poor
+        // rich. In that case, you have to donate again more... That the poor
         // widow is not spared doesn't mean the rich can't be milked for more.
         lucre.props[ACQUIRE_KEY] = 0;
         you.gold -= zin_tithe(lucre, lucre.quantity, false, true);
@@ -3846,8 +3846,8 @@ bool god_hates_cannibalism(god_type god)
 
 bool god_hates_killing(god_type god, const monster* mon)
 {
-    // Must be at least a creature of sorts.  Smacking down an enchanted
-    // weapon or disrupting a lightning doesn't count.  Technically, this
+    // Must be at least a creature of sorts. Smacking down an enchanted
+    // weapon or disrupting a lightning doesn't count. Technically, this
     // might raise a concern about necromancy but zombies traditionally
     // count as creatures and that's the average person's (even if not ours)
     // intuition.

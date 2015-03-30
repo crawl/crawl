@@ -290,7 +290,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
 }
 
 // Counts of various statuses/types of mutations from the current/most
-// recent call to describe_mutations.  TODO: eliminate
+// recent call to describe_mutations. TODO: eliminate
 static int _num_full_suppressed = 0;
 static int _num_part_suppressed = 0;
 static int _num_transient = 0;
@@ -336,7 +336,7 @@ string describe_mutations(bool center_title)
     const string old_result = result;
 
     // Innate abilities which haven't been implemented as mutations yet.
-    // TODO: clean these up with respect to transformations.  Currently
+    // TODO: clean these up with respect to transformations. Currently
     // we handle only Naga/Draconian AC and Yellow Draconian rAcid.
     for (const string& str : fake_mutations(you.species, false))
     {
@@ -1044,7 +1044,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     }
 
     // Felids have innate claws, and unlike trolls/ghouls, there are no
-    // increases for them.  And octopodes have no hands.
+    // increases for them. And octopodes have no hands.
     if ((you.species == SP_FELID || you.species == SP_OCTOPODE)
          && mutat == MUT_CLAWS)
     {
@@ -1450,7 +1450,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_HORNS:
         case MUT_ANTENNAE:
-            // Horns & Antennae 3 removes all headgear.  Same algorithm as with
+            // Horns & Antennae 3 removes all headgear. Same algorithm as with
             // glove removal.
 
             if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])

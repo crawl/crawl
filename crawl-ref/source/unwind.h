@@ -1,7 +1,7 @@
 #ifndef UNWIND_H
 #define UNWIND_H
 
-/** Type that gives an lvalue a dynamically-scoped temporary value.  An
+/** Type that gives an lvalue a dynamically-scoped temporary value. An
  *  unwind_var wraps a variable or other writable lvalue, assigns it a
  *  temporary value, and restores the original (or a specified) value when
  *  the unwind_var goes out of scope or is otherwise destroyed.

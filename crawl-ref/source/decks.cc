@@ -729,7 +729,7 @@ static bool _check_buggy_deck(item_def& deck)
         if (-deck.used_count != num_cards)
         {
             strm << "There are " << num_cards << " cards left, not "
-                 << (-deck.used_count) << ".  Oops.";
+                 << (-deck.used_count) << ". Oops.";
             strm << endl;
             deck.used_count = -num_cards;
             problems = true;
@@ -2245,7 +2245,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             }
 
             // Note that this bypasses the magic resistance
-            // (though not immunity) check.  Specifically,
+            // (though not immunity) check. Specifically,
             // you can convert Killer Klowns this way.
             // Might be too good.
             if (mi->get_hit_dice() * 35 < random2(power))

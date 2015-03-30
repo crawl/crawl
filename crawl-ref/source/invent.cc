@@ -951,7 +951,7 @@ bool InvMenu::process_key(int key)
 
         case CONTROL('D'):
             // If we cannot select anything (e.g. on the unknown items
-            // page), ignore Ctrl-D.  Likewise if the last key was
+            // page), ignore Ctrl-D. Likewise if the last key was
             // Ctrl-D (we have already disarmed Ctrl-D for the next
             // keypress by resetting lastch).
             if (flags & (MF_SINGLESELECT | MF_MULTISELECT) && !resetting)

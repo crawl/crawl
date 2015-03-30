@@ -410,7 +410,7 @@ void lose_level()
 
     xom_is_stimulated(200);
 
-    // Kill the player if maxhp <= 0.  We can't just move the ouch() call past
+    // Kill the player if maxhp <= 0. We can't just move the ouch() call past
     // dec_max_hp() since it would decrease hp twice, so here's another one.
     ouch(0, KILLED_BY_DRAINING);
 }
@@ -552,7 +552,7 @@ static void _yred_mirrors_injury(int dam, mid_t death_source)
 {
     if (yred_injury_mirror())
     {
-        // Cap damage to what was enough to kill you.  Can matter if
+        // Cap damage to what was enough to kill you. Can matter if
         // Yred saves your life or you have an extra kitty.
         if (you.hp < 0)
             dam += you.hp;
@@ -569,7 +569,7 @@ static void _maybe_ru_retribution(int dam, mid_t death_source)
 {
     if (will_ru_retaliate())
     {
-        // Cap damage to what was enough to kill you.  Can matter if
+        // Cap damage to what was enough to kill you. Can matter if
         // you have an extra kitty.
         if (you.hp < 0)
             dam += you.hp;

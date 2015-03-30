@@ -52,7 +52,7 @@ tileidx_t tileidx_corpse_brand(const item_def &item);
 
 tileidx_t tileidx_unseen_flag(const coord_def &gc);
 
-// Return the level of enchantment as an int.  None is 0, Randart is 4.
+// Return the level of enchantment as an int. None is 0, Randart is 4.
 int enchant_to_int(const item_def &item);
 // If tile has variations, select among them based upon the enchant of item.
 tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile,

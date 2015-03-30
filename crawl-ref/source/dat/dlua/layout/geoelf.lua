@@ -2,7 +2,7 @@
 -- geoelf.lua: The layout engine that generates layouts of
 --             geometric rooms for the Elf branch
 --
--- Main include for Geoelf layouts.  This file (directly)
+-- Main include for Geoelf layouts. This file (directly)
 --  contains the functions for specifying rooms and possible
 --  corridors, as well as the master function that runs the
 --  layout once all the rooms and corridors have been specified.
@@ -11,7 +11,7 @@
 geoelf = {}          -- Main namespace for engine
 
 -- This switch prints what is happening to console and the final
---  map at the end.  Only advisable if you start tiles from a
+--  map at the end. Only advisable if you start tiles from a
 --  command-line.
 geoelf.debug = false
 
@@ -26,7 +26,7 @@ require("dlua/layout/geoelf_corridors.lua")
 --
 --  1. Initialize the room and corridor arrays in the layout.
 --     They will be needed as parameters to the subsequent
---     functions.  Use the following code:
+--     functions. Use the following code:
 --         local room_data     = { count=0 }
 --         local corridor_data = { count=0 }
 --  2. Specify the rooms to include using the geoelf.add_room
@@ -78,16 +78,16 @@ require("dlua/layout/geoelf_corridors.lua")
 -- Purpose: This function adds a room with the specified
 --          properties to the list of rooms for the layout.
 -- Parameter(s):
---  -> room_data: The array of room information.  This new room
+--  -> room_data: The array of room information. This new room
 --                will be added to the array.
 --  -> center_x
 --  -> center_y: The x/y coordinates for the center of the room.
---  -> radius: The radius for the room.  The exact meaning of
+--  -> radius: The radius for the room. The exact meaning of
 --             the radius varies depending on what shape the
 --             room eventually has, but no part of the final
 --             room will be farther than this (chessboard
 --             distance) from the center.
--- Returns: The index of the room.  You will need this to
+-- Returns: The index of the room. You will need this to
 --          specify possible corridors.
 --
 -- The room data structure has
@@ -100,7 +100,7 @@ require("dlua/layout/geoelf_corridors.lua")
 --  -> is_dummy: Whether this room is a plaeholder
 --
 -- The elements in the array of room data are numbered from 0 as
---  in C++, not from 1 as recommended in LUA documentation.  The
+--  in C++, not from 1 as recommended in LUA documentation. The
 --  array also has a count field storing the number of elements.
 --
 
@@ -149,17 +149,17 @@ end
 -- add_room_dummy
 --
 -- Purpose: This function adds a dummy room at the specified
---          position to the list of rooms for the layout.  A
+--          position to the list of rooms for the layout. A
 --          dummy room is connected into the tree but is never
---          drawn to the layout.  Dummy rooms should be used to
+--          drawn to the layout. Dummy rooms should be used to
 --          connect the geoelf room system to parts of a map
 --          generate using a different method.
 -- Parameter(s):
---  -> room_data: The array of room information.  This new room
+--  -> room_data: The array of room information. This new room
 --                will be added to the array.
 --  -> center_x
 --  -> center_y: The x/y coordinates for the center of the room.
--- Returns: The index of the room.  You will need this to
+-- Returns: The index of the room. You will need this to
 --          specify possible corridors.
 --
 -- The room data structure is the same as for add_room
@@ -239,10 +239,10 @@ end
 -- Purpose: This function adds a possible corridor to the list
 --          for the layout with the specified properties.
 -- Parameter(s):
---  -> room_data: The array of room information.  The rooms with
+--  -> room_data: The array of room information. The rooms with
 --                corridor attaches to will be marked as
 --                connected in that direction
---  -> corridor_data: The array of corridor information.  The
+--  -> corridor_data: The array of corridor information. The
 --                    new corridor will be added to this array
 --  -> room1
 --  -> room2: The indexes of the two rooms this corridor
@@ -252,12 +252,12 @@ end
 --                an incorrect direction can produce disconnect
 --                layouts.
 --  -> block_index: The index of the corridor that would
---                  intersect this one.  The block will also
---                  apply in reverse.  A corridor can block at
---                  most one other corridor.  The layout
+--                  intersect this one. The block will also
+--                  apply in reverse. A corridor can block at
+--                  most one other corridor. The layout
 --                  generator will not include 2 corridors that
 --                  block each other.
--- Returns: The index of the corridor.  You can also get this
+-- Returns: The index of the corridor. You can also get this
 --          from the room data array.
 --
 -- The corridor data structure has
@@ -338,7 +338,7 @@ end
 -- Purpose: This function generates the layout from the rooms
 --          and possible corridors that have been specified.
 -- Parameter(s):
---  -> e: A reference to the gobal enviroment.  Pass in _G.
+--  -> e: A reference to the gobal enviroment. Pass in _G.
 --  -> room_data: The array of room information
 --  -> corridor_data: The array of corridor information
 --  -> extra_fraction: The fraction of the extra corridors to
@@ -456,8 +456,8 @@ end
 ----------------
 --
 -- This is the helper function that turns the doors in glass
---  walls into glass doors.  Some doors are made as glass
---  doors, but some are not.  The ones that are not are fixed
+--  walls into glass doors. Some doors are made as glass
+--  doors, but some are not. The ones that are not are fixed
 --  here.
 --
 

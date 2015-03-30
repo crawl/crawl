@@ -1106,7 +1106,7 @@ static const pop_entry pop_depths[] =
 
 // In C++ prior to C++11, we can't have an array of pointers to initialized
 // arrays of different sizes without declaring individual arrays as
-// standalone symbols first.  Thus this fugly list.
+// standalone symbols first. Thus this fugly list.
 // Statically defined counts are merely an inconsequential nicety, no need
 // to preserve them.
 #define POP(x) { pop_##x, ARRAYSZ(pop_##x) - 1 }

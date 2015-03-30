@@ -610,7 +610,7 @@ int monster::halo_radius2() const
 
     if (holiness() != MH_HOLY)
         return size;
-    // The values here depend on 1. power, 2. sentience.  Thus, high-ranked
+    // The values here depend on 1. power, 2. sentience. Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
     // little or none.
     switch (type)

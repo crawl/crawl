@@ -67,7 +67,7 @@ string uppercase_string(string s)
 
 // Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
 // MSVC crt) supporting letters that expand or contract, like German ß (-> SS)
-// upon capitalization / lowercasing.  This is mostly a fault of the API --
+// upon capitalization / lowercasing. This is mostly a fault of the API --
 // there's no way to return two characters in one code point.
 // Also, all characters must have the same length in bytes before and after
 // lowercasing, all platforms currently have this property.

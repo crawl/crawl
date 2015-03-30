@@ -94,7 +94,7 @@
    less = slower. 5 = half speed, 10 = normal, 20 = double speed.
 
    energy usage
-   - How quickly the energy granted by speed is used up.  Most monsters
+   - How quickly the energy granted by speed is used up. Most monsters
    should just use DEFAULT_ENERGY, where all the different types of actions
    use 10 energy units.
 
@@ -105,7 +105,7 @@
      MONUSE_WEAPONS_ARMOUR
 
     From MONUSE_STARTING_EQUIPMENT on, monsters are capable of handling
-    items.  Contrary to what one might expect, MONUSE_WEAPONS_ARMOUR
+    items. Contrary to what one might expect, MONUSE_WEAPONS_ARMOUR
     also means a monster is capable of using wands and will also pick
     them up, something that those with MONUSE_STARTING_EQUIPMENT won't
     do.
@@ -1035,7 +1035,7 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LITTLE, MON_SHAPE_HUMANOID
 },
 
-{ // Another dummy monster.  Zombies and poly allowed.
+{ // Another dummy monster. Zombies and poly allowed.
     MONS_DWARF, 'g', GREEN, "dwarf",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
@@ -5072,7 +5072,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_SIXFIRHY, '4', LIGHTBLUE, "sixfirhy",
     M_NO_FLAGS,
     MR_NO_FLAGS, // Can't have RES_ELEC since most sources of damage do nothing
-                 // in that case.  We want to "suffer" the damage to get healed.
+                 // in that case. We want to "suffer" the damage to get healed.
     300, 6, MONS_SIXFIRHY, MONS_SIXFIRHY, MH_DEMONIC, 60,
     { {AT_HIT, AF_ELEC, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
@@ -5616,7 +5616,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 },
 
 // major demons ('&')
-// Random demon in pan - only one per level.  Stats are stored in ghost struct.
+// Random demon in pan - only one per level. Stats are stored in ghost struct.
 {
     MONS_PANDEMONIUM_LORD, '&', COLOUR_UNDEF, "pandemonium lord",
     // See invis is also set in ghost.cc
@@ -5630,7 +5630,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_HUMANOID
 },
 
-// Demon in hell.  Currently only used as genus/species for hell guardians.
+// Demon in hell. Currently only used as genus/species for hell guardians.
 { // dummy genus monster -- used as a species so not a DUMMY
     MONS_HELL_LORD, '&', COLOUR_UNDEF, "hell lord",
     M_FIGHTER | M_SPEAKS | M_CANT_SPAWN,

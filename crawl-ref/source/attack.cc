@@ -439,7 +439,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
 void attack::alert_defender()
 {
-    // Allow monster attacks to draw the ire of the defender.  Player
+    // Allow monster attacks to draw the ire of the defender. Player
     // attacks are handled elsewhere.
     if (perceived_attack
         && defender->is_monster()
@@ -1445,7 +1445,7 @@ int attack::calc_damage()
         damage = player_stab(damage);
         // A failed stab may have awakened monsters, but that could have
         // caused the defender to cease to exist (spectral weapons with
-        // missing summoners; or pacified monsters on a stair).  FIXME:
+        // missing summoners; or pacified monsters on a stair). FIXME:
         // The correct thing to do would be either to delay the call to
         // alert_nearby_monsters (currently in player_stab) until later
         // in the attack; or to avoid removing monsters in handle_behaviour.

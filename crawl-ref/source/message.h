@@ -70,7 +70,7 @@ int msgwin_get_line(string prompt,
                     input_history *mh = nullptr,
                     const string &fill = "");
 
-// Do not use this templated function directly.  Use the macro below instead.
+// Do not use this templated function directly. Use the macro below instead.
 template<int> static int msgwin_get_line_autohist_temp(string prompt,
                                                        char *buf, int len,
                                                        const string &fill = "")

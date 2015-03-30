@@ -604,7 +604,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         //    = ----- * ---  = -----
         //      m+k+1   m+k    m+k+1
         //
-        // Therefore, it's uniform for n = m + k + 1.  QED
+        // Therefore, it's uniform for n = m + k + 1. QED
         //
         // The important thing to note in calculating the last
         // probability is that the chosen elements have already

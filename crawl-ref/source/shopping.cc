@@ -898,10 +898,10 @@ static bool _purchase(shop_struct& shop, int index, int cost, bool id)
     return true;
 }
 
-// This probably still needs some work.  Rings used to be the only
+// This probably still needs some work. Rings used to be the only
 // artefacts which had a change in price, and that value corresponds
-// to returning 50 from this function.  Good artefacts will probably
-// be returning just over 30 right now.  Note that this isn't used
+// to returning 50 from this function. Good artefacts will probably
+// be returning just over 30 right now. Note that this isn't used
 // as a multiple, its used in the old ring way: 7 * ret is added to
 // the price of the artefact. -- bwr
 int artefact_value(const item_def &item)
@@ -2332,7 +2332,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             continue;
 
         // Don't prompt to remove rings with strictly better pluses
-        // than the new one.  Also, don't prompt to remove rings with
+        // than the new one. Also, don't prompt to remove rings with
         // known pluses when the new ring's pluses are unknown.
         if (item.base_type == OBJ_JEWELLERY)
         {

@@ -85,7 +85,7 @@ static const char *skill_titles[NUM_SKILLS][6] =
 #if TAG_MAJOR_VERSION == 34
     {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
 #endif
-    // STR based fighters, for DEX/martial arts titles see below.  Felids get their own category, too.
+    // STR based fighters, for DEX/martial arts titles see below. Felids get their own category, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},

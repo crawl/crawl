@@ -1606,7 +1606,7 @@ void melee_attack::set_attack_verb(int damage)
         return;
     }
 
-    // Take normal hits into account.  If the hit is from a weapon with
+    // Take normal hits into account. If the hit is from a weapon with
     // more than one damage type, randomly choose one damage type from
     // it.
     monster_type defender_genus = mons_genus(defender->type);
@@ -2643,7 +2643,7 @@ static void _print_resist_messages(actor* defender, int base_damage,
 bool melee_attack::mons_attack_effects()
 {
     // Monsters attacking themselves don't get attack flavour.
-    // The message sequences look too weird.  Also, stealing
+    // The message sequences look too weird. Also, stealing
     // attacks aren't handled until after the damage msg. Also,
     // no attack flavours for dead defenders
     if (attacker != defender && defender->alive())
@@ -2677,8 +2677,8 @@ bool melee_attack::mons_attack_effects()
         practise(EX_MONSTER_WILL_HIT);
 
     // consider_decapitation() returns true if the wound was cauterized or the
-    // last head was removed.  In the former case, we shouldn't apply
-    // the brand damage (so we return here).  If the monster was killed
+    // last head was removed. In the former case, we shouldn't apply
+    // the brand damage (so we return here). If the monster was killed
     // by the decapitation, we should stop the rest of the attack, too.
     if (consider_decapitation(damage_done,
                               attacker->damage_type(attack_number)))
@@ -2693,7 +2693,7 @@ bool melee_attack::mons_attack_effects()
     special_damage_message.clear();
     special_damage_flavour = BEAM_NONE;
 
-    // Defender banished.  Bail since the defender is still alive in the
+    // Defender banished. Bail since the defender is still alive in the
     // Abyss.
     if (defender->is_banished())
     {
@@ -3557,7 +3557,7 @@ bool melee_attack::do_knockback(bool trample)
     }
 
     // Schedule following _before_ actually trampling -- if the defender
-    // is a player, a shaft trap will unload the level.  If trampling will
+    // is a player, a shaft trap will unload the level. If trampling will
     // somehow fail, move attempt will be ignored.
     if (trample)
         trample_follow_fineff::schedule(attacker, old_pos);

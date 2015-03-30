@@ -263,7 +263,7 @@ static int _scale_spawn_parameter(int base_value,
 static void _apply_ood(level_id &place)
 {
     // OODs do not apply to any portal vaults, any 1-level branches, Zot and
-    // hells.  What with newnewabyss?
+    // hells. What with newnewabyss?
     if (!is_connected_branch(place)
         || place.branch == BRANCH_ZOT
         || is_hell_subbranch(place.branch)
@@ -952,7 +952,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         }
     }
 
-    // (4) For first monster, choose location.  This is pretty intensive.
+    // (4) For first monster, choose location. This is pretty intensive.
     bool proxOK;
     bool close_to_player;
 
@@ -1170,7 +1170,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
             if (mon->type == MONS_PIKEL)
             {
-                // Don't give XP for the slaves to discourage hunting.  Pikel
+                // Don't give XP for the slaves to discourage hunting. Pikel
                 // has an artificially large XP modifier to compensate for
                 // this.
                 member->flags |= MF_NO_REWARD;
@@ -1504,7 +1504,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.cls == MONS_PRINCE_RIBBIT)
         mon->props[ORIGINAL_TYPE_KEY].get_int() = MONS_PRINCE_RIBBIT;
 
-    // The return of Boris is now handled in monster_die().  Not setting
+    // The return of Boris is now handled in monster_die(). Not setting
     // this for Boris here allows for multiple Borises in the dungeon at
     // the same time. - bwr
     if (mons_is_unique(mg.cls))
@@ -1528,7 +1528,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         // This enchantment is a timer that counts down until death.
         // It should last longer than the lifespan of a corpse, to avoid
-        // spawning mushrooms in the same place over and over.  Aside
+        // spawning mushrooms in the same place over and over. Aside
         // from that, the value is slightly randomised to avoid
         // simultaneous die-offs of mushroom rings.
         mon->add_ench(ENCH_SLOWLY_DYING);
@@ -1797,7 +1797,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         ASSERT(mon->mslot_item(MSLOT_WEAPON));
         if (mon->type == MONS_DANCING_WEAPON)
         {
-            // Dancing weapons are placed at pretty high power.  Remember, the
+            // Dancing weapons are placed at pretty high power. Remember, the
             // player is fighting them one-on-one, while he will often summon
             // several.
             ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
@@ -2033,7 +2033,7 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 {
 #if TAG_MAJOR_VERSION == 34
     // Upgrading monster enums is a losing battle, they sneak through too many
-    // channels, like env props, etc.  So convert them on placement, too.
+    // channels, like env props, etc. So convert them on placement, too.
     if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
         cs = MONS_ZOMBIE;
     if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)

@@ -1074,7 +1074,7 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
         m->apply_location_effects(pos);
 }
 
-// Clear blood or mold off of terrain that shouldn't have it.  Also clear
+// Clear blood or mold off of terrain that shouldn't have it. Also clear
 // of blood if a bloody wall has been dug out and replaced by a floor,
 // or if a bloody floor has been replaced by a wall.
 static void _dgn_check_terrain_covering(const coord_def &pos,
@@ -2056,8 +2056,8 @@ bool is_temp_terrain(coord_def pos)
 
 bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
 {
-    // ....  Prevent this arrangement by never placing a plant in a way that
-    // #P##  locally disconnects two adjacent cells.  We scan clockwise around
+    // .... Prevent this arrangement by never placing a plant in a way that
+    // #P##  locally disconnects two adjacent cells. We scan clockwise around
     // ##.#  p looking for maximal contiguous sequences of traversable cells.
     // #?##  If we find more than one (and they don't join up cyclically),
     //       reject the configuration so the plant doesn't disconnect floor.
@@ -2081,7 +2081,7 @@ bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
                 first = i;
             else if (last >= 0 && next < 0)
             {
-                // Found a maybe-disconnected traversable cell.  This is only
+                // Found a maybe-disconnected traversable cell. This is only
                 // acceptable if it might connect up at the end.
                 if (first == 0)
                     next = i;
@@ -2098,7 +2098,7 @@ bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
         }
     }
 
-    // ?#.  Forbid this arrangement when the ? squares are walls.
+    // ?#. Forbid this arrangement when the ? squares are walls.
     // #P#  If multiple plants conspire to do something similar, that's
     // ##?  fine: we just want to avoid the most common occurrences.
     //      This would be an info leak (that at least one ? is not a wall)

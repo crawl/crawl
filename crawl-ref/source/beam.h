@@ -72,7 +72,7 @@ struct bolt
     string name = "";
     string short_name = "";
     string hit_verb = "";         // The verb to use when this beam hits
-                                  // something.  If not set, will use
+                                  // something. If not set, will use
                                   // "engulfs" if an explosion or cloud
                                   // and "hits" otherwise.
     int    loudness = 0;          // Noise level on hitting or exploding.

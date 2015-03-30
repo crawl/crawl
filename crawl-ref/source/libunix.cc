@@ -342,7 +342,7 @@ static void unixcurses_defkeys()
     define_key("\033On", 1019); // .
     define_key("\033Oo", 1020); // -
 
-    // variants.  Ugly curses won't allow us to return the same code...
+    // variants. Ugly curses won't allow us to return the same code...
     define_key("\033[1~", 1031); // Home
     define_key("\033[4~", 1034); // End
     define_key("\033[E",  1040); // center arrow
@@ -378,7 +378,7 @@ int unixcurses_get_vi_key(int keyin)
     case KEY_BTAB:   return CK_SHIFT_TAB;
     case KEY_BACKSPACE:
         // If terminfo's entry for backspace (kbs) is ctrl-h, curses
-        // generates KEY_BACKSPACE for the ctrl-h key.  Work around that by
+        // generates KEY_BACKSPACE for the ctrl-h key. Work around that by
         // converting back to CK_BKSP.
         // Note that this mangling occurs entirely on the machine Crawl runs
         // on (and even within crawl's process) rather than where the user's
@@ -520,7 +520,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 
 // These next four are front functions so that we can reduce
 // the amount of curses special code that occurs outside this
-// this file.  This is good, since there are some issues with
+// this file. This is good, since there are some issues with
 // name space collisions between curses macros and the standard
 // C++ string class.  -- bwr
 void update_screen()

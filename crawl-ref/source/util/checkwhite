@@ -42,6 +42,7 @@ for (@files)
     next if !/\./ and !/util\//;
     my $tab = /Makefile/i;      # Allow tabs for makefiles.
     my $bom = /\.js$/;          # And BOM for these.
+    my $french = /\.des$/;      # these may need it for functionality
     $bom = 1 if /CREDITS/;
     undef local $/;
     open F, "<$_" or die "Can't open $_";
@@ -54,7 +55,7 @@ for (@files)
     {
         print "invalid UTF-8: $file\n";
         # We don't know the actual encoding, assume a Windows-using american/
-        # frenchman/german/finn.  Sorry, polacks and russkies.
+        # frenchman/german/finn. Sorry, polacks and russkies.
         Encode::from_to($_, "CP1252", "UTF-8");
     }
     $_.="\n", print "missing newline at eof: $file\n" unless /\n$/s or /^$/;
@@ -68,6 +69,7 @@ for (@files)
     print "BOM: $file\n" if !$bom && s/\xef\xbb\xbf//sg; # U+FFEF
     print "Control statement space: $file\n" if $file =~ /\.(cc|h|js)$/i
         && s/\b(if|while|for|switch|catch)\(/$1 (/sg;
+    print "French spacing fix: $file\n" if !$french && s/\. ( [[:upper:]])/.$1/sg;
 
     if ($_ ne $cont)
     {

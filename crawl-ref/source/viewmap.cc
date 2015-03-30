@@ -598,10 +598,10 @@ static void _forget_map()
     }
 }
 
-// show_map() now centers the known map along x or y.  This prevents
+// show_map() now centers the known map along x or y. This prevents
 // the player from getting "artificial" location clues by using the
-// map to see how close to the end they are.  They'll need to explore
-// to get that.  This function is still a mess, though. -- bwr
+// map to see how close to the end they are. They'll need to explore
+// to get that. This function is still a mess, though. -- bwr
 bool show_map(level_pos &lpos,
               bool travel_mode, bool allow_esc, bool allow_offlevel)
 {
@@ -735,7 +735,7 @@ bool show_map(level_pos &lpos,
                 // else if close to bottom of known map, put max_y on bottom.
                 //
                 // The num_lines comparisons are done to keep things neat, by
-                // keeping things at the top of the screen.  By shifting an
+                // keeping things at the top of the screen. By shifting an
                 // additional one in the num_lines > map_lines case, we can
                 // keep the top line clear... which makes things look a whole
                 // lot better for small maps.
@@ -773,7 +773,7 @@ bool show_map(level_pos &lpos,
             {
 #ifdef USE_TILE
                 // Note: Tile versions just center on the current cursor
-                // location.  It silently ignores everything else going
+                // location. It silently ignores everything else going
                 // on in this function.  --Enne
 #ifdef USE_TILE_LOCAL
                 if (first_run)

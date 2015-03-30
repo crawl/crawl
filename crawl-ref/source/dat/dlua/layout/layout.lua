@@ -32,17 +32,17 @@ end
 --    around the primary vault.
 --
 -- Parameter(s):
---  -> e: A reference to the gobal enviroment.  Pass in _G.
+--  -> e: A reference to the gobal enviroment. Pass in _G.
 --  -> x1
 --  -> y1
 --  -> x2
 --  -> y2: The maximum dimensions of the area to consider.
 --
--- Returns: An array containing the areas.  If there is no
+-- Returns: An array containing the areas. If there is no
 --          primary vault, the array will contain one area
---          bounded by x1, y1, x2, and y2.  If the primary
+--          bounded by x1, y1, x2, and y2. If the primary
 --          vault covers evrything (e.g. an encompass vault) the
---          array will contain zero areas.  Otherwise, the array
+--          array will contain zero areas. Otherwise, the array
 --          will contain 1 or more areas composing a
 --          non-overlapping subset of the area bounded by x1,
 --          y1, x2, and y2.
@@ -51,7 +51,7 @@ end
 --  -> x_min,
 --     x_max,
 --     y_min,
---     y_max: The inclusive bounds of the area.  The area
+--     y_max: The inclusive bounds of the area. The area
 --            includes position (x_max, y_max).
 --  -> x_min_is_soft,
 --     x_max_is_soft,
@@ -59,8 +59,8 @@ end
 --     y_max_is_soft: Whether each of the walls is "soft"
 --
 --  The 4 edges of each area will each be designated "hard" or
---    "soft".  An edge that only borders another open area is
---    soft, while all other edges are hard.  The layout may
+--    "soft". An edge that only borders another open area is
+--    soft, while all other edges are hard. The layout may
 --    want to treat soft edges differently.
 --
 --  Example of area division:

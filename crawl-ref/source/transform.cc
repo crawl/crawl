@@ -1494,7 +1494,7 @@ static mutation_type appendages[] =
 
 static bool _slot_conflict(equipment_type eq)
 {
-    // Choose uncovered slots only.  Melding could make people re-cast
+    // Choose uncovered slots only. Melding could make people re-cast
     // until they get something that doesn't conflict with their randart
     // of überness.
     if (you.equip[eq] != -1)
@@ -1589,7 +1589,7 @@ bool check_form_stat_safety(transformation_type new_form)
     if (!bad_str && !bad_dex)
         return true;
 
-    string prompt = make_stringf("%s will reduce your %s to zero.  Continue?",
+    string prompt = make_stringf("%s will reduce your %s to zero. Continue?",
                                  new_form == TRAN_NONE ? "Turning back"
                                                        : "Transforming",
                                  bad_str ? "strength" : "dexterity");
@@ -1925,9 +1925,9 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
     }
 
-    // Stop constricting if we can no longer constrict.  If any size-changing
+    // Stop constricting if we can no longer constrict. If any size-changing
     // transformations were to allow constriction, we would have to check
-    // relative sizes as well.  Likewise, if any transformations were to allow
+    // relative sizes as well. Likewise, if any transformations were to allow
     // normally non-constricting players to constrict, this would need to
     // be changed.
     if (!form_keeps_mutations(which_trans))

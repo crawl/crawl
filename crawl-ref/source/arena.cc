@@ -1196,7 +1196,7 @@ void arena_monster_died(monster* mons, killer_type killer,
     {
         arena::faction_b.won = true;
     }
-    // Everyone is dead.  Is it a tie, or something else?
+    // Everyone is dead. Is it a tie, or something else?
     else if (arena::faction_a.active_members <= 0
              && arena::faction_b.active_members <= 0)
     {
@@ -1204,7 +1204,7 @@ void arena_monster_died(monster* mons, killer_type killer,
             mpr("Last arena monster was dismissed.");
         // If all monsters are dead, and the last one to die is a giant
         // spore or ball lightning, then that monster's faction is the
-        // winner, since self-destruction is their purpose.  But if a
+        // winner, since self-destruction is their purpose. But if a
         // trap causes the spore to explode, and that kills everything,
         // it's a tie, since it counts as the trap killing everyone.
         else if (mons_self_destructs(mons) && MON_KILL(killer))
@@ -1291,7 +1291,7 @@ static bool _sort_by_age(int a, int b)
 }
 
 // Culls the items which have been on the floor the longest, culling the
-// newest items last.  Items which a monster dropped voluntarily or
+// newest items last. Items which a monster dropped voluntarily or
 // because of being polymorphed, rather than because of dying, are
 // culled earlier than they should be, but it's not like we have to be
 // fair to the arena monsters.

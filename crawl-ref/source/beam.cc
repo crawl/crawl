@@ -1077,7 +1077,7 @@ bool bolt::hit_wall()
     {
         // Okay, with all those tests passed, this is probably an instance
         // of the player manually targeting something whose line of fire
-        // is blocked, even though its line of sight isn't blocked.  Give
+        // is blocked, even though its line of sight isn't blocked. Give
         // a warning about this fact.
         string prompt = "Your line of fire to ";
         const monster* mon = monster_at(target);
@@ -1113,7 +1113,7 @@ bool bolt::hit_wall()
     else
     {
         // Regress for explosions: blow up in an open grid (if regressing
-        // makes any sense).  Also regress when dropping items.
+        // makes any sense). Also regress when dropping items.
         if (pos() != source && need_regress())
         {
             do
@@ -1906,7 +1906,7 @@ void bolt::apply_bolt_paralysis(monster* mons)
 
 // Petrification works in two stages. First the monster is slowed down in
 // all of its actions, and when that times out it remains properly petrified
-// (no movement or actions).  The second part is similar to paralysis,
+// (no movement or actions). The second part is similar to paralysis,
 // except that insubstantial monsters can't be affected and damage is
 // drastically reduced.
 void bolt::apply_bolt_petrify(monster* mons)
@@ -2002,7 +2002,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     mons->add_ench(mon_enchant(ENCH_POISON, levels, who));
     const mon_enchant new_pois = mons->get_ench(ENCH_POISON);
 
-    // Actually do the poisoning.  The order is important here.
+    // Actually do the poisoning. The order is important here.
     if (new_pois.degree > old_pois.degree)
     {
         if (verbose)
@@ -2070,7 +2070,7 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
     mons->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who));
     const mon_enchant new_flame = mons->get_ench(ENCH_STICKY_FLAME);
 
-    // Actually do the napalming.  The order is important here.
+    // Actually do the napalming. The order is important here.
     if (new_flame.degree > old_flame.degree)
     {
         if (verbose)
@@ -2698,7 +2698,7 @@ void bolt::affect_ground()
     if (is_tracer)
         return;
 
-    // Spore explosions might spawn a fungus.  The spore explosion
+    // Spore explosions might spawn a fungus. The spore explosion
     // covers 21 tiles in open space, so the expected number of spores
     // produced is the x in x_chance_in_y() in the conditional below.
     if (is_explosion && flavour == BEAM_SPORE
@@ -4160,9 +4160,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // expected is much closer to 0. This will allow monsters to use
     // ranged attacks vs high AC targets.
       // [1KB] What ds' code actually does is taking the max damage minus
-      // average AC.  This does work well, even using no AC would.  An
+      // average AC. This does work well, even using no AC would. An
       // attack that _usually_ does no damage but can possibly do some means
-      // we'll ultimately get it through.  And monsters with weak ranged
+      // we'll ultimately get it through. And monsters with weak ranged
       // almost always would do no better in melee.
     //
     // This is not an entirely beneficial change; the old tracer
@@ -4469,7 +4469,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     // Don't annoy friendlies or good neutrals if the player's beam
-    // did no damage.  Hostiles will still take umbrage.
+    // did no damage. Hostiles will still take umbrage.
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
     {
         bool was_asleep = mon->asleep();
@@ -4898,7 +4898,7 @@ void bolt::affect_monster(monster* mon)
     int defl = mon->missile_deflection();
 
     // FIXME: We're randomising mon->evasion, which is further
-    // randomised inside test_beam_hit.  This is so we stay close to the
+    // randomised inside test_beam_hit. This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
     if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, pierce, defl, r))
     {
@@ -4937,9 +4937,9 @@ void bolt::affect_monster(monster* mon)
     enable_attack_conducts(conducts);
 
     // We'll say giant spore explosions don't trigger the ally attack conduct
-    // for Fedhas worshipers.  Mostly because you can accidentally blow up a
+    // for Fedhas worshipers. Mostly because you can accidentally blow up a
     // group of 8 plants and get placed under penance until the end of time
-    // otherwise.  I'd prefer to do this elsewhere but the beam information
+    // otherwise. I'd prefer to do this elsewhere but the beam information
     // goes out of scope.
     //
     // Also exempting miscast explosions from this conduct -cao
@@ -5031,11 +5031,11 @@ void bolt::affect_monster(monster* mon)
             _glaciate_freeze(mon, thrower, kindex);
         }
         // Prevent spore explosions killing plants from being registered
-        // as a Fedhas misconduct.  Deaths can trigger the ally dying or
+        // as a Fedhas misconduct. Deaths can trigger the ally dying or
         // plant dying conducts, but spore explosions shouldn't count
         // for either of those.
         //
-        // FIXME: Should be a better way of doing this.  For now, we are
+        // FIXME: Should be a better way of doing this. For now, we are
         // just falsifying the death report... -cao
         else if (you_worship(GOD_FEDHAS) && flavour == BEAM_SPORE
             && fedhas_protects(mon))
@@ -6034,7 +6034,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     determine_affected_cells(exp_map, coord_def(), 0, r, true, true);
 
     // We get a bit fancy, drawing all radius 0 effects, then radius
-    // 1, radius 2, etc.  It looks a bit better that way.
+    // 1, radius 2, etc. It looks a bit better that way.
     const vector< vector<coord_def> > sweep = _radial_sweep(r);
     const coord_def centre(9,9);
 
@@ -6222,7 +6222,7 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_HOLY)
         return mon->res_holy_energy(agent()) <= 0;
 
-    // The orbs are made of pure disintegration energy.  This also has the side
+    // The orbs are made of pure disintegration energy. This also has the side
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
     if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)

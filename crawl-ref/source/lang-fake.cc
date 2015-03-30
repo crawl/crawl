@@ -20,7 +20,7 @@
 #define LETTERS UPPER LOWER
 
 // Any resemblance to the speech of a particular character from Rich Burlew's
-// work is entirely accidental.  Suggestion that this table has been produced
+// work is entirely accidental. Suggestion that this table has been produced
 // by transcribing the whole corpus of that character's speech and making it
 // produce the same output from regular English must be dismissed as a rumour.
 

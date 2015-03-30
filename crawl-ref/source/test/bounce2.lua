@@ -1,5 +1,5 @@
 -- Check bouncing of lightning bolts around in a box with ragged
--- edges.  If there's anything wrong the C/C++ code will assert.
+-- edges. If there's anything wrong the C/C++ code will assert.
 
 local checks = 0
 local iters  = 10

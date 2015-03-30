@@ -410,7 +410,7 @@ void bring_to_safety()
     double min_threat = DBL_MAX;
     int tries = 0;
 
-    // Up to 100 valid spots, but don't lock up when there's none.  This can happen
+    // Up to 100 valid spots, but don't lock up when there's none. This can happen
     // on tiny Zig/portal rooms with a bad summon storm and you in cloud / over water.
     while (tries < 100000 && min_threat > 0)
     {
@@ -817,7 +817,7 @@ void auto_id_inventory()
 // strong ones less, but the regular formula is too hard to apply well to cases
 // when damage is spread into many small chunks.
 //
-// Every point of damage is processed independently.  Every point of AC has
+// Every point of damage is processed independently. Every point of AC has
 // an independent 1/81 chance of blocking that damage.
 //
 // AC 20 stops 22% of damage, AC 40 -- 39%, AC 80 -- 63%.

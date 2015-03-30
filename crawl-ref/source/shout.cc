@@ -400,7 +400,7 @@ void item_noise(const item_def &item, string msg, int loudness)
         msg = "You hear a strange noise.";
     }
 
-    // Replace weapon references.  Can't use DESC_THE because that includes
+    // Replace weapon references. Can't use DESC_THE because that includes
     // pluses etc. and we want just the basename.
     msg = replace_all(msg, "@The_weapon@", "The @weapon@");
     msg = replace_all(msg, "@the_weapon@", "the @weapon@");

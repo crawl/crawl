@@ -166,13 +166,13 @@ void wizard_change_species_to(species_type sp)
     {
         _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
         _swap_equip(EQ_RIGHT_RING, EQ_RING_TWO);
-        // All species allow exactly one amulet.  When (and knowing you guys,
+        // All species allow exactly one amulet. When (and knowing you guys,
         // that's "when" not "if") ettins go in, you'll need handle the Macabre
         // Finger Necklace on neck 2 here.
     }
 
     // FIXME: this checks only for valid slots, not for suitability of the
-    // item in question.  This is enough to make assertions happy, though.
+    // item in question. This is enough to make assertions happy, though.
     for (int i = 0; i < NUM_EQUIP; ++i)
         if (you.equip[i] != -1 && !can_wear_armour(you.inv[you.equip[i]], false, false))
         {

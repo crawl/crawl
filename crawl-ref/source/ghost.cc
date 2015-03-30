@@ -256,7 +256,7 @@ void ghost_demon::init_pandemonium_lord()
     {
         // This bit uses the list of player spells to find appropriate
         // spells for the demon, then converts those spells to the monster
-        // spell indices.  Some special monster-only spells are at the end.
+        // spell indices. Some special monster-only spells are at the end.
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
@@ -320,7 +320,7 @@ void ghost_demon::init_pandemonium_lord()
     colour = one_chance_in(10) ? ETC_RANDOM : random_monster_colour();
 }
 
-// Returns the movement speed for a player ghost.  Note that this is a
+// Returns the movement speed for a player ghost. Note that this is a
 // a movement cost, so lower is better.
 //FIXME: deduplicate with player_movement_speed()
 static int _player_ghost_movement_energy()
@@ -559,7 +559,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
 
     att_type = RANDOM_ELEMENT(att_types);
 
-    // An ugly thing always gets a low-intensity colour.  If we're
+    // An ugly thing always gets a low-intensity colour. If we're
     // mutating it, it always gets a different colour from what it had
     // before.
     colour = _ugly_thing_assign_colour(make_low_colour(force_colour),
@@ -719,7 +719,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
 }
 
 // Used when creating ghosts: goes through and finds spells for the
-// ghost to cast.  Death is a traumatic experience, so ghosts only
+// ghost to cast. Death is a traumatic experience, so ghosts only
 // remember a few spells.
 void ghost_demon::add_spells(bool actual_ghost)
 {
@@ -763,7 +763,7 @@ bool ghost_demon::has_spells() const
 }
 
 // When passed the number for a player spell, returns the equivalent
-// monster spell.  Returns SPELL_NO_SPELL on failure (no equivalent).
+// monster spell. Returns SPELL_NO_SPELL on failure (no equivalent).
 spell_type ghost_demon::translate_spell(spell_type spell) const
 {
     switch (spell)
@@ -794,7 +794,7 @@ vector<ghost_demon> ghost_demon::find_ghosts()
     }
 
     // Pick up any other ghosts that happen to be on the level if we
-    // have space.  If the player is undead, add one to the ghost quota
+    // have space. If the player is undead, add one to the ghost quota
     // for the level.
     find_extra_ghosts(gs, n_extra_ghosts() + 1 - gs.size());
 

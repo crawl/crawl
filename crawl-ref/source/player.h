@@ -201,7 +201,7 @@ public:
   // rather than the object itself, so that we can get away with
   // just a forward declare of the KillMaster class, rather than
   // having to #include kills.h and thus make every single .cc file
-  // dependent on kills.h.  Having a pointer means that we have
+  // dependent on kills.h. Having a pointer means that we have
   // to do our own implementations of copying the player object,
   // since the default implementations will lead to the kills member
   // pointing to freed memory, or worse yet lead to the same piece of
@@ -282,7 +282,7 @@ public:
   // monsters causing fear to the player; see above
   vector<mid_t> fearmongers;
 
-  // Delayed level actions.  This array is never trimmed, as usually D:1 won't
+  // Delayed level actions. This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   vector<daction_type> dactions;
 

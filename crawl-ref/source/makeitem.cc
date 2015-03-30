@@ -278,7 +278,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
     return rc;
 }
 
-// Reject brands which are outright bad for the item.  Unorthodox combinations
+// Reject brands which are outright bad for the item. Unorthodox combinations
 // are ok, since they can happen on randarts.
 bool is_weapon_brand_ok(int type, int brand, bool strict)
 {

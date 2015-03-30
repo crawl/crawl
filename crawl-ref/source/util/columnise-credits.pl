@@ -10,7 +10,7 @@ my $CREDITS = $ARGV[0] || 'CREDITS.txt';
 my $NAMEHEAD = qr/contributed to .*Stone Soup:\s*$/;
 
 # msysgit has the module included (it's in core), but locale code is
-# non-functional.  Do nothing in that case; the result will be CREDITS.txt
+# non-functional. Do nothing in that case; the result will be CREDITS.txt
 # being a single column -- not as nice but good enough.
 my $COLLATOR;
 

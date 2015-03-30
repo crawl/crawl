@@ -171,7 +171,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     string titlestring = make_stringf("%-25.25s", title.c_str());
 #ifdef USE_TILE_LOCAL
     {
-        // [enne] - Hack.  Make title an item so that it's aligned.
+        // [enne] - Hack. Make title an item so that it's aligned.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
                 " " + titlestring + "         Type          "
@@ -779,7 +779,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     }
 
     // This needs more work: there are spells which are hated but allowed if
-    // they don't have a certain effect.  You may use Poison Arrow on those
+    // they don't have a certain effect. You may use Poison Arrow on those
     // immune, use Mephitic Cloud to shield yourself from other clouds.
     // There are also spells which god_hates_spell() doesn't recognize.
     //
@@ -1250,9 +1250,9 @@ spret_type your_spells(spell_type spell, int powc,
         powc = calc_spell_power(spell, true);
 
     // XXX: This handles only some of the cases where spells need
-    // targeting.  There are others that do their own that will be
+    // targeting. There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
-    // because of it).  Hopefully, those will eventually be fixed. - bwr
+    // because of it). Hopefully, those will eventually be fixed. - bwr
     if (flags & SPFLAG_TARGETING_MASK)
     {
         targ_mode_type targ =
@@ -1459,7 +1459,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         // All spell failures give a bit of magical radiation.
         // Failure is a function of power squared multiplied by how
-        // badly you missed the spell.  High power spells can be
+        // badly you missed the spell. High power spells can be
         // quite nasty: 9 * 9 * 90 / 500 = 15 points of
         // contamination!
         int nastiness = spell_difficulty(spell) * spell_difficulty(spell) * fail + 250;

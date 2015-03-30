@@ -214,7 +214,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_SUBMERGED:
         mons_clear_trapping_net(this);
 
-        // Don't worry about invisibility.  You should be able to see if
+        // Don't worry about invisibility. You should be able to see if
         // something has submerged.
         if (!quiet && mons_near(this))
         {
@@ -420,7 +420,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
                  mon->name(DESC_A, true).c_str());
     }
 
-    // Monster un-submerging while under player or another monster.  Try to
+    // Monster un-submerging while under player or another monster. Try to
     // move to an adjacent square in which the monster could have been
     // submerged and have it unsubmerge from there.
     coord_def target_square;
@@ -438,7 +438,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         return mon->move_to_pos(target_square);
 
     // No available adjacent squares from which the monster could also
-    // have unsubmerged.  Can it just stay submerged where it is?
+    // have unsubmerged. Can it just stay submerged where it is?
     if (monster_can_submerge(mon, grd(mon->pos())))
         return false;
 
@@ -1914,7 +1914,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     break;
 
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
-        // Number of actions is fine for shapeshifters.  Don't change
+        // Number of actions is fine for shapeshifters. Don't change
         // shape while taking the stairs because monster_polymorph() has
         // an assert about it. -cao
         if (!(flags & MF_TAKING_STAIRS)

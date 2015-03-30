@@ -259,7 +259,7 @@ static bool _do_mon_spell(monster* mons, bolt &beem)
     if (handle_mon_spell(mons, beem))
     {
         // If a Pan lord/pghost is known to be a spellcaster, it's safer
-        // to assume it has ranged spells too.  For others, it'd just
+        // to assume it has ranged spells too. For others, it'd just
         // lead to unnecessary false positives.
         if (mons_is_ghost_demon(mons->type))
             mons->flags |= MF_SEEN_RANGED;
@@ -575,7 +575,7 @@ static void _handle_movement(monster* mons)
     if (delta.rdist() > 3)
     {
         // Reproduced here is some semi-legacy code that makes monsters
-        // move somewhat randomly along oblique paths.  It is an
+        // move somewhat randomly along oblique paths. It is an
         // exceedingly good idea, given crawl's unique line of sight
         // properties.
         //
@@ -2376,7 +2376,7 @@ void handle_monster_move(monster* mons)
             || mons->has_spell(SPELL_DIG))
         {
             // [ds] Special abilities shouldn't overwhelm
-            // spellcasting in monsters that have both.  This aims
+            // spellcasting in monsters that have both. This aims
             // to give them both roughly the same weight.
             if (coinflip() ? mon_special_ability(mons, beem)
                              || _do_mon_spell(mons, beem)
@@ -2582,7 +2582,7 @@ void handle_monster_move(monster* mons)
     you.update_fearmonger(mons);
 
     // Reevaluate behaviour, since the monster's surroundings have
-    // changed (it may have moved, or died for that matter).  Don't
+    // changed (it may have moved, or died for that matter). Don't
     // bother for dead monsters.  :)
     if (mons->alive())
     {
@@ -3249,7 +3249,7 @@ static bool _handle_pickup(monster* mons)
     if (mons->asleep() || mons->submerged())
         return false;
 
-    // Flying over water doesn't let you pick up stuff.  This is inexact, as
+    // Flying over water doesn't let you pick up stuff. This is inexact, as
     // a merfolk could be flying, but that's currently impossible except for
     // being tornadoed, and with *that* low life expectancy let's not care.
     dungeon_feature_type feat = grd(mons->pos());
@@ -4067,7 +4067,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
             return true;
     }
 
-    // In normal games, that's it.  Gotta keep those butterflies alive...
+    // In normal games, that's it. Gotta keep those butterflies alive...
     if (!crawl_state.game_is_zotdef())
         return false;
 
@@ -4249,7 +4249,7 @@ static bool _monster_move(monster* mons)
     }
 
     // Now, if a monster can't move in its intended direction, try
-    // either side.  If they're both good, move in whichever dir
+    // either side. If they're both good, move in whichever dir
     // gets it closer (farther for fleeing monsters) to its target.
     // If neither does, do nothing.
     if (good_move[mmov.x + 1][mmov.y + 1] == false)

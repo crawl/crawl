@@ -1555,7 +1555,7 @@ int you_min_hunger()
     if (you_foodless())
         return HUNGER_DEFAULT;
 
-    // Vampires can never starve to death.  Ghouls will just rot much faster.
+    // Vampires can never starve to death. Ghouls will just rot much faster.
     if (you.undead_state() != US_ALIVE)
         return (HUNGER_FAINTING + HUNGER_STARVING) / 2; // midpoint
 

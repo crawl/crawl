@@ -72,7 +72,7 @@ gøre det for meget, for uhyrerne bliver kun sværere, jo dybere du søger.
 death random 2
 
 Du bør hvile mellem sammenstød, helst i et område du allerede har udforsket og
-renset for uhyrer.  Når du trykker på <input>$cmd[CMD_REST]</input>
+renset for uhyrer. Når du trykker på <input>$cmd[CMD_REST]</input>
 <localtiles> eller <input>klikker i statistikområdet</input> kan du hvile et
 øjeblik (du holder op med at hvile efter 100 ture, eller når du er fuldt
 udhvilet).

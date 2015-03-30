@@ -244,7 +244,7 @@ static string _religion_help(god_type god)
     return result;
 }
 
-// The various titles granted by the god of your choice.  Note that Xom
+// The various titles granted by the god of your choice. Note that Xom
 // doesn't use piety the same way as the other gods, so these are just
 // placeholders.
 static const char *divine_title[NUM_GODS][8] =

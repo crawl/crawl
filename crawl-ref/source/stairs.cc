@@ -827,7 +827,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 #if TAG_MAJOR_VERSION == 34
 
     // Zotdef: returning from portals (e.g. bazaar) paralyses the player in
-    // place for 5 moves.  Nasty, but punishes players for using portals as
+    // place for 5 moves. Nasty, but punishes players for using portals as
     // quick-healing stopovers.
     if (!going_up && crawl_state.game_is_zotdef())
         start_delay(DELAY_UNINTERRUPTIBLE, 5);

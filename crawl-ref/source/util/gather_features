@@ -7,7 +7,7 @@ my $art = grep /^-a$/, @ARGV;
 #
 # Gather quoted strings from the file named fn, in the region between the first
 # occurrence of the start string and the next line that contains only the end
-# string.  If per_line is true, take only the first string from each line.
+# string. If per_line is true, take only the first string from each line.
 sub extract($$$;$)
 {
     my ($fn, $start, $end, $per_line) = @_;

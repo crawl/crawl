@@ -920,7 +920,7 @@ static bool _is_affordable(const item_def &item)
     if (item.flags & ISFLAG_UNOBTAINABLE)
         return false;
 
-    // On the ground or a monster has it.  Violence is the answer.
+    // On the ground or a monster has it. Violence is the answer.
     return true;
 }
 
@@ -2954,7 +2954,7 @@ void seen_item(const item_def &item)
         }
     }
 
-    // major hack.  Deconstify should be safe here, but it's still repulsive.
+    // major hack. Deconstify should be safe here, but it's still repulsive.
     ((item_def*)&item)->flags |= ISFLAG_SEEN;
     if (you_worship(GOD_ASHENZARI))
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
@@ -2966,7 +2966,7 @@ void seen_item(const item_def &item)
         && you.type_ids[item.base_type][item.sub_type] != ID_KNOWN_TYPE)
     {
         // Can't cull shop items here -- when called from view, we shouldn't
-        // access the UI.  Old ziggurat prompts are a very minor case of what
+        // access the UI. Old ziggurat prompts are a very minor case of what
         // could go wrong.
         set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
     }

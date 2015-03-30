@@ -1246,7 +1246,7 @@ void direction_chooser::draw_beam_if_needed()
     ray_def ray = beam;
 
     // Draw the new ray with magenta '*'s, not including your square
-    // or the target square.  Out-of-range cells get grey '*'s instead.
+    // or the target square. Out-of-range cells get grey '*'s instead.
     for (; ray.pos() != target(); ray.advance())
     {
         const coord_def p = ray.pos();
@@ -1370,7 +1370,7 @@ bool direction_chooser::pickup_item()
     }
     ii->flags |= ISFLAG_THROWN; // make autoexplore greedy
 
-    // From this point, if there's no item, we'll fake one.  False info means
+    // From this point, if there's no item, we'll fake one. False info means
     // it's out of bounds and taken, or a mimic.
     item_def *item = 0;
     unsigned short it = env.igrid(target());

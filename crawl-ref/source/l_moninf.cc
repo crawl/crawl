@@ -79,7 +79,7 @@ MIRES1(res_shock, MR_RES_ELEC)
 MIRES1(res_corr, MR_RES_ACID)
 
 // const char* here would save a tiny bit of memory, but every map
-// for an unique pair of types costs 35KB of code.  We have
+// for an unique pair of types costs 35KB of code. We have
 // map<string, int> elsewhere.
 static map<string, int> mi_flags;
 static void _init_mi_flags()

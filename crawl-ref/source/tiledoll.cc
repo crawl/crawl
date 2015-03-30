@@ -530,7 +530,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     int flags[TILEP_PART_MAX];
     tilep_calc_flags(doll, flags);
 
-    // For skirts, boots go under the leg armour.  For pants, they go over.
+    // For skirts, boots go under the leg armour. For pants, they go over.
     if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order[7] = TILEP_PART_BOOTS;
@@ -589,7 +589,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     // This is drawn in reverse order because this could be a ghost
     // or being drawn in water, in which case we want the top-most part
     // to blend with the background underneath and not with the parts
-    // underneath.  Parts drawn afterwards will not obscure parts drawn
+    // underneath. Parts drawn afterwards will not obscure parts drawn
     // previously, because "i" is passed as the depth below.
     for (int i = TILEP_PART_MAX - 1; i >= 0; --i)
     {

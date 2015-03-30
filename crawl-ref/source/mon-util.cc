@@ -194,7 +194,7 @@ void init_mon_name_cache()
         const monster_type mon   = monster_type(mtype);
 
         // Deal sensibly with duplicate entries; refuse or allow the
-        // insert, depending on which should take precedence.  Mostly we
+        // insert, depending on which should take precedence. Mostly we
         // don't care, except looking up "rakshasa" and getting _FAKE
         // breaks ?/M rakshasa.
         if (Mon_Name_Cache.count(name))
@@ -320,7 +320,7 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
         resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
     // Everything but natural creatures have full rNeg. Set here for the
-    // benefit of the monster_info constructor.  If you change this, also
+    // benefit of the monster_info constructor. If you change this, also
     // change monster::res_negative_energy.
     if (mh != MH_NATURAL)
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
@@ -711,7 +711,7 @@ bool mons_can_cling_to_walls(const monster* mon)
            && _mons_class_is_clingy(get_chimera_legs(mon));
 }
 
-// Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
+// Conjuration or Hexes. Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
 {
@@ -761,7 +761,7 @@ bool mons_allows_beogh_now(const monster* mon)
 }
 
 // Returns true for monsters that obviously (to the player) feel
-// "thematically at home" in a branch.  Currently used for native
+// "thematically at home" in a branch. Currently used for native
 // monsters recognising traps and patrolling branch entrances.
 bool mons_is_native_in_branch(const monster* mons,
                               const branch_type branch)
@@ -1213,7 +1213,7 @@ static bool _shout_fits_monster(monster_type mc, int shout)
     if (mc == MONS_CHAOS_SPAWN)
         return shout != S_DEMON_TAUNT;
 
-    // For Pandemonium lords, almost everything is fair game.  It's only
+    // For Pandemonium lords, almost everything is fair game. It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
     if (mc != MONS_HELL_BEAST)
         return true;
@@ -1889,7 +1889,7 @@ int mons_class_hit_dice(monster_type mc)
 
 int mons_avg_hp(monster_type mc)
 {
-    // Currently, difficulty is defined as "average hp".  Leaks too much info?
+    // Currently, difficulty is defined as "average hp". Leaks too much info?
     const monsterentry* me = get_monster_data(mc);
 
     if (!me)
@@ -1923,7 +1923,7 @@ int exper_value(const monster* mon, bool real)
     int maxhp             = mon->max_hit_points;
 
     // pghosts and pillusions have no reasonable base values, and you can look
-    // up the exact value anyway.  Especially for pillusions.
+    // up the exact value anyway. Especially for pillusions.
     if (real || mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
     {
         // A berserking monster is much harder, but the xp value shouldn't
@@ -1937,16 +1937,16 @@ int exper_value(const monster* mon, bool real)
         ASSERT(m);
 
         // Use real hd, zombies would use the basic species and lose
-        // information known to the player ("orc warrior zombie").  Monsters
+        // information known to the player ("orc warrior zombie"). Monsters
         // levelling up is visible (although it may happen off-screen), so
-        // this is hardly ever a leak.  Only Pan lords are unknown in the
+        // this is hardly ever a leak. Only Pan lords are unknown in the
         // general.
         if (m->mc == MONS_PANDEMONIUM_LORD)
             hd = m->hpdice[0];
         maxhp = hd * m->hpdice[1] + (hd * (1 + m->hpdice[2])) / 2 + m->hpdice[3];
     }
 
-    // Hacks to make merged slime creatures not worth so much exp.  We
+    // Hacks to make merged slime creatures not worth so much exp. We
     // will calculate the experience we would get for 1 blob, and then
     // just multiply it so that exp is linear with blobs merged. -cao
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
@@ -3121,7 +3121,7 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
 void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
 {
     // If the _real_ (non-charmed) attitude is already that or better,
-    // don't degrade it.  This can happen, for example, with a high-power
+    // don't degrade it. This can happen, for example, with a high-power
     // Crusade card on Pikel's slaves who would then go down from friendly
     // to good_neutral when you kill Pikel.
     if (mon->attitude >= att)
@@ -3245,7 +3245,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
 
     // Friendly monsters shouldn't be targeting you: this will happen
     // often because the default behaviour for charmed monsters is to
-    // have you as a target.  While foe_ratio will handle this, we
+    // have you as a target. While foe_ratio will handle this, we
     // don't want a situation where a friendly dragon breathes through
     // you to hit other creatures... it should target the other
     // creatures, and coincidentally hit you.
@@ -3620,7 +3620,7 @@ static bool _mons_has_smite_attack(const monster* mons)
  *
  * A shover should not cause damage to the shovee by
  * displacing it, so monsters that trail clouds of badness are
- * ineligible.  The shover should also benefit from shoving, so monsters
+ * ineligible. The shover should also benefit from shoving, so monsters
  * that can smite/torment are ineligible.
  *
  * @param m     The monster in question.
@@ -4219,7 +4219,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
                           _replace_god_name(god, false, true));
     }
 
-    // The monster's god, not the player's.  Atheists get
+    // The monster's god, not the player's. Atheists get
     // "NO GOD"/"NO GOD"/"NO_GOD"/"NO_GOD", and worshippers of nameless
     // gods get "a god"/"its god/my God/My God".
     //
@@ -4762,7 +4762,7 @@ void reset_all_monsters()
     {
         // The monsters here have already been saved or discarded, so this
         // is the only place when a constricting monster can legitimately
-        // be reset.  Thus, clear constriction manually.
+        // be reset. Thus, clear constriction manually.
         if (!invalid_monster(&menv[i]))
         {
             delete menv[i].constricting;

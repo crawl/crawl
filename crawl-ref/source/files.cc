@@ -1030,7 +1030,7 @@ static void _grab_followers()
 static void _do_lost_monsters()
 {
     // Uniques can be considered wandering Pan just like you, so they're not
-    // gone forever.  The likes of Cerebov won't be generated elsewhere, but
+    // gone forever. The likes of Cerebov won't be generated elsewhere, but
     // there's no need to special-case that.
     if (player_in_branch(BRANCH_PANDEMONIUM))
         for (monster_iterator mi; mi; ++mi)
@@ -1921,7 +1921,7 @@ static bool _restore_game(const string& filename)
     if (numcmp(you.prev_save_version.c_str(), Version::Long, 2) == -1
         && version_is_stable(you.prev_save_version.c_str()))
     {
-        if (!yesno("This game comes from a previous release of Crawl.  If you "
+        if (!yesno("This game comes from a previous release of Crawl. If you "
                    "load it now, you won't be able to go back. Continue?",
                    true, 'n'))
         {
@@ -1999,7 +1999,7 @@ bool restore_game(const string& filename)
     {
         if (yesno(make_stringf(
                    "There exists a save by that name but it appears to be invalid.\n"
-                   "(Error: %s).  Do you want to delete it?", err.msg.c_str()).c_str(),
+                   "(Error: %s). Do you want to delete it?", err.msg.c_str()).c_str(),
                   true, 'n'))
         {
             if (you.save)
@@ -2477,7 +2477,7 @@ FILE *fopen_replace(const char *name)
 {
     int fd;
 
-    // Stave off symlink attacks.  Races will be handled with O_EXCL.
+    // Stave off symlink attacks. Races will be handled with O_EXCL.
     unlink_u(name);
     fd = open_u(name, O_CREAT|O_EXCL|O_WRONLY, 0666);
     if (fd == -1)
