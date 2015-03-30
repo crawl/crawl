@@ -175,7 +175,7 @@ static armour_type _acquirement_shield_type()
 
     for (auto &weight : weights)
     {
-        if (!check_armour_size(weight.first, you.body_size()))
+        if (!check_armour_size(weight.first, you.body_size(PSIZE_TORSO, true)))
             weight.second = 0;
         weight.second = max(weight.second, 0);
     }
@@ -242,7 +242,7 @@ static armour_type _acquirement_body_armour(bool divine)
         if (get_armour_slot(armour) != EQ_BODY_ARMOUR)
             continue;
 
-        if (!check_armour_size(armour, you.body_size()))
+        if (!check_armour_size(armour, you.body_size(PSIZE_TORSO, true)))
             continue;
 
         const int weight = _body_acquirement_weight(armour, divine, warrior);
@@ -303,9 +303,10 @@ static armour_type _useless_armour_type()
                 { ARM_LARGE_SHIELD,  1 },
             };
 
+            const size_type player_size = you.body_size(PSIZE_TORSO, true);
             // XXX: export this idiom ^ v
             for (auto &weight : shield_weights)
-                if (check_armour_size(weight.first, you.body_size()))
+                if (check_armour_size(weight.first, player_size))
                     weight.second = 0;
 
             const armour_type* shield_type
