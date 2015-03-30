@@ -270,7 +270,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
     name = replace_all(name, "@player_name@", you.your_name);
 
     name = replace_all(name, "@player_species@",
-                 species_name(static_cast<species_type>(you.species), true));
+                 species_name(you.species, SPNAME_GENUS));
 
     if (name.find("@branch_name@", 0) != string::npos)
     {

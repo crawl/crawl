@@ -699,7 +699,7 @@ monster_info::monster_info(const monster* m, int milev)
         ASSERT(m->ghost.get());
         ghost_demon& ghost = *m->ghost;
         u.ghost.species = ghost.species;
-        if (species_genus(u.ghost.species) == GENPC_DRACONIAN && ghost.xl < 7)
+        if (species_is_draconian(u.ghost.species) && ghost.xl < 7)
             u.ghost.species = SP_BASE_DRACONIAN;
         u.ghost.job = ghost.job;
         u.ghost.religion = ghost.religion;

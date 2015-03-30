@@ -22,6 +22,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -884,7 +885,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             you.your_name.c_str(), player_title().c_str(),
             you.experience_level,
             species_name(you.species).c_str(),
-            you.class_name.c_str(), godname.c_str());
+            get_job_name(you.char_class), godname.c_str());
 
     // Print player equipment.
     const int e_order[] =

@@ -2377,7 +2377,7 @@ static void _xom_zero_miscast()
 
     if (in_view[DNGN_ORCISH_IDOL])
     {
-        if (player_genus(GENPC_ORCISH))
+        if (species_is_orcish(you.species))
             priority.emplace_back("The idol of Beogh turns to glare at you.");
         else
             priority.emplace_back("The orcish idol turns to glare at you.");
@@ -2431,10 +2431,10 @@ static void _xom_zero_miscast()
 
         if (you.airborne())
         {
-            // Tengu fly a lot, so don't put airborne messages into the
-            // priority vector for them.
+            // Don't put airborne messages into the priority vector for
+            // anyone who can fly a lot.
             vector<string>* vec;
-            if (you.species == SP_TENGU)
+            if (you.racial_permanent_flight())
                 vec = &messages;
             else
                 vec = &priority;
@@ -2504,9 +2504,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (!player_genus(GENPC_DRACONIAN)
-        && you.species != SP_MUMMY && you.species != SP_OCTOPODE
-        && !form_changed_physiology())
+    if (species_has_hair(you.species))
     {
         messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
         messages.emplace_back("Your eyebrows wriggle.");

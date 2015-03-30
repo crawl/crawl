@@ -682,7 +682,7 @@ public:
      */
     int get_ac_bonus() const
     {
-        if (player_genus(GENPC_DRACONIAN))
+        if (species_is_draconian(you.species))
             return 1000;
         return Form::get_ac_bonus();
     }
@@ -786,8 +786,7 @@ public:
      */
     int get_stealth_mod() const
     {
-        // vampires handle bat stealth in racial code
-        return you.species == SP_VAMPIRE ? 0 : stealth_mod;
+        return you.species == SP_VAMPIRE ? 20 : stealth_mod;
     }
 
     /**
@@ -1410,32 +1409,6 @@ string blade_parts(bool terse)
         str = pluralise(str);
 
     return str;
-}
-
-monster_type dragon_form_dragon_type()
-{
-    switch (you.species)
-    {
-    case SP_WHITE_DRACONIAN:
-        return MONS_ICE_DRAGON;
-    case SP_GREEN_DRACONIAN:
-        return MONS_SWAMP_DRAGON;
-    case SP_YELLOW_DRACONIAN:
-        return MONS_GOLDEN_DRAGON;
-    case SP_GREY_DRACONIAN:
-        return MONS_IRON_DRAGON;
-    case SP_BLACK_DRACONIAN:
-        return MONS_STORM_DRAGON;
-    case SP_PURPLE_DRACONIAN:
-        return MONS_QUICKSILVER_DRAGON;
-    case SP_MOTTLED_DRACONIAN:
-        return MONS_MOTTLED_DRAGON;
-    case SP_PALE_DRACONIAN:
-        return MONS_STEAM_DRAGON;
-    case SP_RED_DRACONIAN:
-    default:
-        return MONS_FIRE_DRAGON;
-    }
 }
 
 // with a denominator of 10
