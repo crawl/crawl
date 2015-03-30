@@ -1780,10 +1780,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CURE_POISON:
         return cast_cure_poison(powc, fail);
 
-    // Weapon brands.
-    case SPELL_SURE_BLADE:
-        return cast_sure_blade(powc, fail);
-
     case SPELL_EXCRUCIATING_WOUNDS:
         return brand_weapon(SPWPN_PAIN, powc, fail);
 
@@ -1943,6 +1939,7 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_ELEMENTAL:
     case SPELL_TWISTED_RESURRECTION:
+    case SPELL_SURE_BLADE:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif

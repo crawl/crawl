@@ -318,11 +318,15 @@ Gastronok cast targeted
 
 @The_monster@ casts a spell @at@ @target@.
 %%%%
-Dissolution cast
+Summon Eyeballs Dissolution cast
 
 @The_monster@ gurgles deeply, a call to fellow slimes.
 
 @The_monster@ says, "@My_God@ sees all!"
+%%%%
+Dissolution cast
+
+@The_monster@ gurgles deeply.
 %%%%
 Gastronok cast
 

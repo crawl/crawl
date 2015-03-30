@@ -424,23 +424,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
         if (item.sub_type == STAFF_POWER)
         {
-            int mp = item.special - you.elapsed_time / POWER_DECAY;
-
-            if (mp > 0)
-            {
-#if TAG_MAJOR_VERSION == 34
-                if (you.species == SP_DJINNI)
-                    you.hp += mp;
-                else
-#endif
-                you.magic_points += mp;
-            }
-
-            if (get_real_mp(true) >= 50)
-                mpr("You feel your magic capacity is already quite full.");
-            else
-                canned_msg(MSG_MANA_INCREASE);
-
+            canned_msg(MSG_MANA_INCREASE);
             calc_mp();
         }
 
@@ -759,27 +743,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
     }
     else if (item.is_type(OBJ_STAVES, STAFF_POWER))
     {
-        int mp = you.magic_points;
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-        {
-            mp = you.hp;
-            calc_hp();
-            mp -= you.hp;
-        }
-        else
-        {
-            calc_mp();
-            mp -= you.magic_points;
-        }
-#else
         calc_mp();
-        mp -= you.magic_points;
-#endif
-
-        // Store the MP in case you'll re-wield quickly.
-        item.special = mp + you.elapsed_time / POWER_DECAY;
-
         canned_msg(MSG_MANA_DECREASE);
     }
 
@@ -1156,16 +1120,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_MAGICAL_POWER:
-        if ((you.max_magic_points + 9) *
-            (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
-        {
-            mpr("You feel your magic capacity is already quite full.");
-        }
-        else
-            canned_msg(MSG_MANA_INCREASE);
-
+        canned_msg(MSG_MANA_INCREASE);
         calc_mp();
-
         break;
 
     case RING_TELEPORTATION:

@@ -1533,9 +1533,9 @@ static bool _check_buggy_deck(const item_def &deck, string &desc)
 
     const CrawlHashTable &props = deck.props;
 
-    if (!props.exists("cards")
-        || props["cards"].get_type() != SV_VEC
-        || props["cards"].get_vector().get_type() != SV_BYTE
+    if (!props.exists(CARD_KEY)
+        || props[CARD_KEY].get_type() != SV_VEC
+        || props[CARD_KEY].get_vector().get_type() != SV_BYTE
         || cards_in_deck(deck) == 0)
     {
         return true;
@@ -3121,12 +3121,12 @@ static string _describe_chimera(const monster_info& mi)
     description += apply_description(DESC_A,
                                      get_monster_data(mi.base_type)->name);
 
-    const bool has_wings = mi.props.exists("chimera_batty")
-                           || mi.props.exists("chimera_wings");
-    if (mi.props.exists("chimera_legs"))
+    const bool has_wings = mi.props.exists(CHIMERA_BATTY_KEY)
+                           || mi.props.exists(CHIMERA_WING_KEY);
+    if (mi.props.exists(CHIMERA_LEGS_KEY))
     {
         const monster_type leggy_part =
-            get_chimera_part(&mi, mi.props["chimera_legs"].get_int());
+            get_chimera_part(&mi, mi.props[CHIMERA_LEGS_KEY].get_int());
         if (has_wings)
             description += ", ";
         else
@@ -3138,9 +3138,9 @@ static string _describe_chimera(const monster_info& mi)
 
     if (has_wings)
     {
-        monster_type wing_part = mi.props.exists("chimera_batty") ?
-            get_chimera_part(&mi, mi.props["chimera_batty"].get_int())
-            : get_chimera_part(&mi, mi.props["chimera_wings"].get_int());
+        monster_type wing_part = mi.props.exists(CHIMERA_BATTY_KEY) ?
+            get_chimera_part(&mi, mi.props[CHIMERA_BATTY_KEY].get_int())
+            : get_chimera_part(&mi, mi.props[CHIMERA_WING_KEY].get_int());
 
         switch (mons_class_flies(wing_part))
         {

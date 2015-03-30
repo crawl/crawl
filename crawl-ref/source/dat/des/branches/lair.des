@@ -1669,7 +1669,7 @@ ENDMAP
 
 ## A den of bears.
 NAME:   gammafunk_lair_bear_cave
-DEPTH:  Lair:1-7
+DEPTH:  Lair, !Lair:$
 ORIENT: float
 TAGS:   patrolling no_monster_gen
 MONS:   black bear / polar bear

@@ -46,6 +46,8 @@ portal_note_map_type portal_notes;
 annotation_map_type level_annotations;
 annotation_map_type level_exclusions;
 annotation_map_type level_uniques;
+// FIXME: this should really be a multiset, in case you get multiple
+// ghosts with the same name, combo, and XL on the same level.
 set<monster_annotation> auto_unique_annotations;
 
 static void _seen_altar(god_type god, const coord_def& pos);
@@ -824,7 +826,12 @@ void remove_unique_annotation(monster* mons)
     for (auto i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end();)
     {
-        if (i->first == name)
+        // Only remove player ghosts from the current level: they can't
+        // change levels, but there may be a different ghost with the same
+        // unique_name elsewhere.
+        if ((mons->type != MONS_PLAYER_GHOST
+             || i->second == level_id::current())
+            && i->first == name)
         {
             affected_levels.insert(i->second);
             auto_unique_annotations.erase(i++);

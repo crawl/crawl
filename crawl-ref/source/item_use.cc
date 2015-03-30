@@ -71,7 +71,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
-bool can_wield(item_def *weapon, bool say_reason,
+bool can_wield(const item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
@@ -178,15 +178,16 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     if (id_brand)
     {
+        auto wwpn = const_cast<item_def*>(weapon);
         if (!is_artefact(*weapon) && !is_blessed(*weapon)
             && !item_type_known(*weapon))
         {
-            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+            set_ident_flags(*wwpn, ISFLAG_KNOW_TYPE);
             if (in_inventory(*weapon))
                 mprf_nocap("%s", weapon->name(DESC_INVENTORY_EQUIP).c_str());
         }
         else if (is_artefact(*weapon) && !item_type_known(*weapon))
-            artefact_learn_prop(*weapon, ARTP_BRAND);
+            artefact_learn_prop(*wwpn, ARTP_BRAND);
         return false;
     }
 
@@ -207,7 +208,8 @@ bool can_wield(item_def *weapon, bool say_reason,
  * (Assuming the player was already prompted for that.)
  */
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool force, bool show_unwield_msg, bool show_wield_msg)
+                  bool force, bool show_unwield_msg, bool show_wield_msg,
+                  bool adjust_time_taken)
 {
     if (inv_count() < 1)
     {
@@ -264,12 +266,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return true;
     }
 
-    // Now we really change weapons! (Most likely, at least...)
-    if (you.duration[DUR_SURE_BLADE])
-    {
-        mpr("The bond with your blade fades away.");
-        you.duration[DUR_SURE_BLADE] = 0;
-    }
     // Reset the warning counter.
     you.received_weapon_warning = false;
 
@@ -305,8 +301,11 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
             // Switching to bare hands is extra fast.
             you.turn_is_over = true;
-            you.time_taken *= 3;
-            you.time_taken /= 10;
+            if (adjust_time_taken)
+            {
+                you.time_taken *= 3;
+                you.time_taken /= 10;
+            }
         }
         else
             canned_msg(MSG_EMPTY_HANDED_ALREADY);
@@ -354,7 +353,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     check_item_hint(new_wpn, old_talents);
 
     // Time calculations.
-    you.time_taken /= 2;
+    if (adjust_time_taken)
+        you.time_taken /= 2;
 
     you.wield_change  = true;
     you.m_quiver->on_weapon_changed();
@@ -448,6 +448,20 @@ static int armour_equip_delay(const item_def &item)
     return 5;
 }
 
+/**
+ * Can you wear this item of armour currently?
+ *
+ * Ignores whether or not an item is equipped in its slot already.
+ * If the item is Lear's hauberk, some of this comment may be incorrect.
+ *
+ * @param item The item. Only the base_type and sub_type really should get
+ *             checked, since you_can_wear passes in a dummy item.
+ * @param verbose Whether to print a message about your inability to wear item.
+ * @param ignore_temporary Whether to take into account forms/fishtail. Note
+ *                         that no matter what this is set to, all mutations
+ *                         will be taken into account, except for Beastly
+ *                         Appendage (and then only if this is false).
+ */
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 {
     const object_class_type base_type = item.base_type;
@@ -553,13 +567,11 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                     return false;
                 }
 
-                if (!you_tran_can_wear(s, true))
+                if (!get_form()->slot_available(s))
                 {
                     if (verbose)
                     {
-                        mprf(you_tran_can_wear(s)
-                                ? "The hauberk won't fit your %s."
-                                : "You have no %s!",
+                        mprf("The hauberk won't fit your %s.",
                              parts[s - EQ_HELMET].c_str());
                     }
                     return false;
@@ -707,7 +719,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
-    if (!ignore_temporary && !form_can_wear_item(item, you.form))
+    // Can't just use Form::slot_available because of shroom caps.
+    if (!ignore_temporary && !get_form()->can_wear_item(item))
     {
         if (verbose)
             mpr("You can't wear that in your present form.");
@@ -1160,7 +1173,7 @@ static bool _swap_rings(int ring_slot)
     for (auto eq : ring_types)
     {
         item_def* ring = you.slot_item(eq, true);
-        if (!you_tran_can_wear(eq) || you.melded[eq])
+        if (!you_can_wear(eq, true) || you.melded[eq])
             melded++;
         else if (ring != nullptr)
         {
@@ -1334,8 +1347,8 @@ static bool _puton_item(int item_slot, bool prompt_slot)
 
     const bool is_amulet = jewellery_is_amulet(item);
 
-    if (!you_tran_can_wear(item)
-        && (is_amulet || !you_can_wear(EQ_RING_AMULET)))
+    if (is_amulet && !you_can_wear(EQ_AMULET, true)
+        || !is_amulet && !you_can_wear(EQ_RINGS, true))
     {
         mpr("You can't wear that in your present form.");
         return false;
@@ -1480,7 +1493,7 @@ bool remove_ring(int slot, bool announce)
 
     for (auto eq : jewellery_slots)
     {
-        if (player_wearing_slot(eq))
+        if (you.slot_item(eq))
         {
             if (has_jewellery || Options.jewellery_prompt)
             {

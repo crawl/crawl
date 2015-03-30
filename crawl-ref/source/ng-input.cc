@@ -163,7 +163,7 @@ bool validate_player_name(const string &name, bool verbose)
             if (verbose)
             {
                 cprintf("\n"
-                        "Alpha-numerics, spaces, dashes, periods "
+                        "Alpha-numerics, spaces, hyphens, periods "
                         "and underscores only, please."
                         "\n");
             }

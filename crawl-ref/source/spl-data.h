@@ -574,7 +574,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_HORRIBLE_THINGS, "Summon Horrible Things",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC | SPFLAG_MONS_ABJURE,
      8,
      200,
      -1, -1,
@@ -663,7 +663,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_HAUNT, "Haunt",
      SPTYP_SUMMONING | SPTYP_NECROMANCY,
-     SPFLAG_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_MONS_ABJURE,
      7,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -913,7 +913,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_DEMON, "Summon Demon",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_SELFENCH,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_SELFENCH | SPFLAG_MONS_ABJURE,
      5,
      200,
      -1, -1,
@@ -937,7 +937,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_GREATER_DEMON, "Summon Greater Demon",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_SELFENCH,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_SELFENCH | SPFLAG_MONS_ABJURE,
      7,
      200,
      -1, -1,
@@ -1274,7 +1274,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SHADOW_CREATURES, "Shadow Creatures",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -1293,6 +1293,7 @@ static const struct spell_desc spelldata[] =
      nullptr,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SURE_BLADE, "Sure Blade",
      SPTYP_HEXES | SPTYP_CHARMS,
@@ -1303,7 +1304,7 @@ static const struct spell_desc spelldata[] =
      2, 0,
      nullptr,
 },
-
+#endif
 {
     SPELL_FLAME_TONGUE, "Flame Tongue",
      SPTYP_CONJURATION | SPTYP_FIRE,
@@ -1362,7 +1363,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_DRAGON, "Summon Dragon",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_MONS_ABJURE,
      9,
      200,
      -1, -1,
@@ -1619,7 +1620,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_MONSTROUS_MENAGERIE, "Monstrous Menagerie",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_MONS_ABJURE,
      6,
      200,
      -1, -1,
@@ -1814,7 +1815,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_UNDEAD, "Summon Undead",
      SPTYP_SUMMONING | SPTYP_NECROMANCY,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      7,
      0,
      -1, -1,
@@ -1870,7 +1871,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_DRAKES, "Summon Drakes",
      SPTYP_SUMMONING | SPTYP_NECROMANCY, // since it can summon shadow dragons
-     SPFLAG_UNCLEAN | SPFLAG_MONSTER,
+     SPFLAG_UNCLEAN | SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      6,
      0,
      -1, -1,
@@ -1904,7 +1905,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_MUSHROOMS, "Summon Mushrooms",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER | SPFLAG_SELFENCH,
+     SPFLAG_MONSTER | SPFLAG_SELFENCH | SPFLAG_MONS_ABJURE,
      4,
      0,
      -1, -1,
@@ -2018,7 +2019,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_WATER_ELEMENTALS, "Summon Water Elementals",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -2062,7 +2063,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_EYEBALLS, "Summon Eyeballs",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -2085,7 +2086,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_EARTH_ELEMENTALS, "Summon Earth Elementals",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -2096,7 +2097,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_AIR_ELEMENTALS, "Summon Air Elementals",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -2107,7 +2108,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FIRE_ELEMENTALS, "Summon Fire Elementals",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -2118,7 +2119,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_IRON_ELEMENTALS, "Summon Iron Elementals",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -2335,7 +2336,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_HOLIES, "Summon Holies",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -2414,7 +2415,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_HYDRA, "Summon Hydra",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_MONS_ABJURE,
      7,
      200,
      -1, -1,
@@ -2460,7 +2461,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_FIRE_SUMMON, "Fire Summon",
      SPTYP_SUMMONING | SPTYP_FIRE,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_MONS_ABJURE,
      8,
      0,
      -1, -1,
@@ -2854,7 +2855,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_VERMIN, "Summon Vermin",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER | SPFLAG_UNHOLY | SPFLAG_SELFENCH,
+     SPFLAG_MONSTER | SPFLAG_UNHOLY | SPFLAG_SELFENCH | SPFLAG_MONS_ABJURE,
      5,
      0,
      -1, -1,
@@ -3132,7 +3133,7 @@ static const struct spell_desc spelldata[] =
     SPELL_SUMMON_GUARDIAN_GOLEM, "Summon Guardian Golem",
      SPTYP_SUMMONING | SPTYP_HEXES,
      SPFLAG_NONE,
-     4,
+     3,
      100,
      -1, -1,
      3, 0,
@@ -3254,7 +3255,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_MANA_VIPER, "Summon Mana Viper",
      SPTYP_SUMMONING | SPTYP_HEXES,
-     SPFLAG_NONE,
+     SPFLAG_MONS_ABJURE,
      5,
      100,
      -1, -1,
@@ -3309,7 +3310,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_EMPEROR_SCORPIONS, "Summon Emperor Scorpions",
      SPTYP_SUMMONING | SPTYP_POISON,
-     SPFLAG_NONE,
+     SPFLAG_MONS_ABJURE,
      7,
      100,
      -1, -1,
@@ -3519,7 +3520,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SUMMON_SCARABS, "Summon Scarabs",
      SPTYP_SUMMONING | SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_MONS_ABJURE,
      7,
      100,
      -1, -1,

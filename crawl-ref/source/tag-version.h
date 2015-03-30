@@ -153,6 +153,7 @@ enum tag_minor_version
     TAG_MINOR_MAX_XL,              // Store max XL instead of hardcoding it
     TAG_MINOR_NO_RPOIS_MINUS,      // Remove rPois- artefacts
     TAG_MINOR_XP_PENANCE,          // Let gods other than Ash use xp penance
+    TAG_MINOR_SPIT_POISON,         // Give Nagas MUT_SPIT_POISON
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

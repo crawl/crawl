@@ -2736,6 +2736,20 @@ static void tag_read_you(reader &th)
     if (you.species == SP_FELID && you.innate_mutation[MUT_PAWS] < 1)
         you.mutation[MUT_PAWS] = you.innate_mutation[MUT_PAWS] = 1;
 
+    if (th.getMinorVersion() < TAG_MINOR_SPIT_POISON
+        && you.species == SP_NAGA)
+    {
+        if (you.innate_mutation[MUT_SPIT_POISON] < 2)
+        {
+            you.mutation[MUT_SPIT_POISON] =
+            you.innate_mutation[MUT_SPIT_POISON] = 2;
+        }
+        if (you.mutation[MUT_BREATHE_POISON])
+        {
+            you.mutation[MUT_BREATHE_POISON] = 0;
+            you.mutation[MUT_SPIT_POISON] = 3;
+        }
+    }
 #endif
 
     count = unmarshallUByte(th);
@@ -5578,8 +5592,8 @@ void unmarshallMonster(reader &th, monster& m)
         m.props.erase("bs_mid");
     }
 
-    if (m.props.exists("iood_mid"))
-        m.summoner = m.props["iood_mid"].get_int(), m.props.erase("iood_mid");
+    if (m.props.exists(IOOD_MID))
+        m.summoner = m.props[IOOD_MID].get_int(), m.props.erase(IOOD_MID);
 
     if (m.props.exists("siren_call"))
     {

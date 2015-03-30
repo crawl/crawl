@@ -2194,7 +2194,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
     }
 
-    case ABIL_SPIT_POISON:      // Naga + spit poison mutation
+    case ABIL_SPIT_POISON:      // Spit poison mutation
         power = you.experience_level
                 + player_mutation_level(MUT_SPIT_POISON) * 5;
         beam.range = 6;         // following Venom Bolt

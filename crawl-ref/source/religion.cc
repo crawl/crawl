@@ -3327,15 +3327,12 @@ static void _god_welcome_handle_gear()
     // Give a reminder to remove any disallowed equipment.
     for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
     {
-        if (!player_wearing_slot(i))
-            continue;
-
-        const item_def& item = you.inv[you.equip[i]];
-        if (god_hates_item(item))
+        const item_def* item = you.slot_item(static_cast<equipment_type>(i));
+        if (item && god_hates_item(*item))
         {
             mprf(MSGCH_GOD, "%s warns you to remove %s.",
                  uppercase_first(god_name(you.religion)).c_str(),
-                 item.name(DESC_YOUR, false, false, false).c_str());
+                 item->name(DESC_YOUR, false, false, false).c_str());
         }
     }
 }
@@ -3602,7 +3599,7 @@ void join_religion(god_type which_god, bool immediate)
         // We don't want you get max piety at start just because you're filthy
         // rich.  In that case, you have to donate again more...  That the poor
         // widow is not spared doesn't mean the rich can't be milked for more.
-        lucre.props["acquired"] = 0;
+        lucre.props[ACQUIRE_KEY] = 0;
         you.gold -= zin_tithe(lucre, lucre.quantity, false, true);
     }
 
@@ -3902,9 +3899,6 @@ bool god_hates_eating(god_type god, monster_type mc)
 
 bool god_likes_fresh_corpses(god_type god)
 {
-    if (god == GOD_LUGONU)
-        return !player_in_branch(BRANCH_ABYSS);
-
     return god == GOD_TROG;
 }
 
@@ -4027,7 +4021,7 @@ bool god_protects_from_harm()
         switch (elyvilon_lifesaving())
         {
         case 1:
-            if (random2(piety_scale(you.piety)) >= piety_breakpoint(0))
+            if (random2(you.piety) >= piety_breakpoint(0))
                 return true;
             break;
         case 2:
@@ -4038,7 +4032,7 @@ bool god_protects_from_harm()
     }
 
     if (god_can_protect_from_harm(you.religion)
-        && (one_chance_in(10) || x_chance_in_y(piety_scale(you.piety), 1000)))
+        && (one_chance_in(10) || x_chance_in_y(you.piety, 1000)))
     {
         return true;
     }

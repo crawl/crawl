@@ -1490,11 +1490,6 @@ Summon Water Elementals spell
 
 This spell summons one or more water elementals.
 %%%%
-Sure Blade spell
-
-This spell forms a mystical bond between the caster and a wielded short blade,
-significantly increasing the weapon's accuracy.
-%%%%
 Swiftness spell
 
 This spell imbues its caster with the ability to achieve great movement speeds.

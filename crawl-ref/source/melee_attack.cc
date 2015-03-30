@@ -1211,8 +1211,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
  */
 bool melee_attack::player_gets_aux_punch()
 {
-    // form_can_wield() used as a proxy for 'has usable hands'
-    if (!form_can_wield())
+    if (!get_form()->can_offhand_punch())
         return false;
 
     // roll for punch chance based on uc skill & armour penalty
@@ -1574,16 +1573,15 @@ int melee_attack::player_apply_final_multipliers(int damage)
     return damage;
 }
 
-void melee_attack::set_attack_verb()
+void melee_attack::set_attack_verb(int damage)
 {
     if (!attacker->is_player())
         return;
 
     int weap_type = WPN_UNKNOWN;
 
-    int damage_to_display = damage_done;
     if (Options.has_fake_lang(FLANG_GRUNT))
-        damage_to_display = HIT_STRONG + 1;
+        damage = HIT_STRONG + 1;
 
     if (!weapon)
         weap_type = WPN_UNARMED;
@@ -1598,7 +1596,7 @@ void melee_attack::set_attack_verb()
     }
 
     // All weak hits with weapons look the same.
-    if (damage_to_display < HIT_WEAK
+    if (damage < HIT_WEAK
         && weap_type != WPN_UNARMED)
     {
         if (weap_type != WPN_UNKNOWN)
@@ -1615,9 +1613,9 @@ void melee_attack::set_attack_verb()
     switch (weapon ? single_damage_type(*weapon) : -1)
     {
     case DAM_PIERCE:
-        if (damage_to_display < HIT_MED)
+        if (damage < HIT_MED)
             attack_verb = "puncture";
-        else if (damage_to_display < HIT_STRONG)
+        else if (damage < HIT_STRONG)
             attack_verb = "impale";
         else
         {
@@ -1651,9 +1649,9 @@ void melee_attack::set_attack_verb()
         break;
 
     case DAM_SLICE:
-        if (damage_to_display < HIT_MED)
+        if (damage < HIT_MED)
             attack_verb = "slash";
-        else if (damage_to_display < HIT_STRONG)
+        else if (damage < HIT_STRONG)
             attack_verb = "slice";
         else if (defender_genus == MONS_OGRE)
         {
@@ -1695,9 +1693,9 @@ void melee_attack::set_attack_verb()
         break;
 
     case DAM_BLUDGEON:
-        if (damage_to_display < HIT_MED)
+        if (damage < HIT_MED)
             attack_verb = one_chance_in(4) ? "thump" : "sock";
-        else if (damage_to_display < HIT_STRONG)
+        else if (damage < HIT_STRONG)
             attack_verb = "bludgeon";
         else if (defender_genus == MONS_SKELETON)
         {
@@ -1726,9 +1724,9 @@ void melee_attack::set_attack_verb()
         break;
 
     case DAM_WHIP:
-        if (damage_to_display < HIT_MED)
+        if (damage < HIT_MED)
             attack_verb = "whack";
-        else if (damage_to_display < HIT_STRONG)
+        else if (damage < HIT_STRONG)
             attack_verb = "thrash";
         else
         {
@@ -1751,11 +1749,11 @@ void melee_attack::set_attack_verb()
         const FormAttackVerbs verbs = get_form(you.form)->uc_attack_verbs;
         if (verbs.weak != nullptr)
         {
-            if (damage_to_display < HIT_WEAK)
+            if (damage < HIT_WEAK)
                 attack_verb = verbs.weak;
-            else if (damage_to_display < HIT_MED)
+            else if (damage < HIT_MED)
                 attack_verb = verbs.medium;
-            else if (damage_to_display < HIT_STRONG)
+            else if (damage < HIT_STRONG)
                 attack_verb = verbs.strong;
             else
                 attack_verb = verbs.devastating;
@@ -1764,33 +1762,33 @@ void melee_attack::set_attack_verb()
 
         if (you.damage_type() == DVORP_CLAWING)
         {
-            if (damage_to_display < HIT_WEAK)
+            if (damage < HIT_WEAK)
                 attack_verb = "scratch";
-            else if (damage_to_display < HIT_MED)
+            else if (damage < HIT_MED)
                 attack_verb = "claw";
-            else if (damage_to_display < HIT_STRONG)
+            else if (damage < HIT_STRONG)
                 attack_verb = "mangle";
             else
                 attack_verb = "eviscerate";
         }
         else if (you.damage_type() == DVORP_TENTACLE)
         {
-            if (damage_to_display < HIT_WEAK)
+            if (damage < HIT_WEAK)
                 attack_verb = "tentacle-slap";
-            else if (damage_to_display < HIT_MED)
+            else if (damage < HIT_MED)
                 attack_verb = "bludgeon";
-            else if (damage_to_display < HIT_STRONG)
+            else if (damage < HIT_STRONG)
                 attack_verb = "batter";
             else
                 attack_verb = "thrash";
         }
         else
         {
-            if (damage_to_display < HIT_WEAK)
+            if (damage < HIT_WEAK)
                 attack_verb = "hit";
-            else if (damage_to_display < HIT_MED)
+            else if (damage < HIT_MED)
                 attack_verb = "punch";
-            else if (damage_to_display < HIT_STRONG)
+            else if (damage < HIT_STRONG)
                 attack_verb = "pummel";
             else if (defender->is_monster()
                      && (mons_genus(defender->type) == MONS_WORKER_ANT
@@ -2347,18 +2345,6 @@ void melee_attack::apply_staff_damage()
         break;
 
     case STAFF_SUMMONING:
-        if (!defender->is_summoned())
-            break;
-
-        if (x_chance_in_y(attacker->skill(SK_EVOCATIONS, 20)
-                        + attacker->skill(SK_SUMMONINGS, 10), 300))
-        {
-            cast_abjuration((attacker->skill(SK_SUMMONINGS, 100)
-                            + attacker->skill(SK_EVOCATIONS, 50)) / 80,
-                            defender->pos());
-        }
-        break;
-
     case STAFF_POWER:
     case STAFF_CONJURATION:
 #if TAG_MAJOR_VERSION == 34
@@ -2412,39 +2398,8 @@ bool melee_attack::player_good_stab()
               && (!weapon || is_melee_weapon(*weapon));
 }
 
-bool melee_attack::attack_warded_off()
-{
-    const int WARDING_CHECK = 60;
-
-    if (defender->warding()
-        && attacker->is_summoned()
-        && attacker->as_monster()->check_res_magic(WARDING_CHECK) <= 0)
-    {
-        if (needs_message)
-        {
-            mprf("%s tries to attack %s, but flinches away.",
-                 atk_name(DESC_THE).c_str(),
-                 defender_name(true).c_str());
-        }
-        return true;
-    }
-
-    return false;
-}
-
 bool melee_attack::attack_ignores_shield(bool verbose)
 {
-    if (attacker->is_monster() && attacker->type == MONS_PHANTASMAL_WARRIOR)
-    {
-        if (needs_message && verbose)
-        {
-            mprf("%s blade passes through %s shield.",
-                atk_name(DESC_ITS).c_str(),
-                def_name(DESC_ITS).c_str());
-            return true;
-        }
-    }
-
     return false;
 }
 
@@ -3780,8 +3735,7 @@ int melee_attack::calc_mon_to_hit_base()
  * Add modifiers to the base damage.
  * Currently only relevant for monsters.
  */
-int melee_attack::apply_damage_modifiers(int damage, int damage_max,
-                                         bool &half_ac)
+int melee_attack::apply_damage_modifiers(int damage, int damage_max)
 {
     ASSERT(attacker->is_monster());
     monster *as_mon = attacker->as_monster();
@@ -3819,8 +3773,6 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max,
 
     if (as_mon->has_ench(ENCH_WEAK))
         damage = damage * 2 / 3;
-
-    half_ac = (as_mon->type == MONS_PHANTASMAL_WARRIOR);
 
     // If the defender is asleep, the attacker gets a stab.
     if (defender && (defender->asleep()

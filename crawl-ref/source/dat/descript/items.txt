@@ -808,7 +808,7 @@ resistance to negative energies.
 pearl dragon hide
 
 The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
-form it does not provide much protection, beyond resistance to negative energy.
+form it does not provide much protection beyond resistance to negative energy.
 By magical means, however, it may be used to make excellent armour.
 %%%%
 phantom mirror
@@ -979,8 +979,8 @@ beyond its current form.
 quicksilver dragon hide
 
 The sinuous hide of a quicksilver dragon, covered in mercurial scales. In its
-raw form it does not provide much protection, but with magical means, it may
-be used to make excellent armour.
+raw form it does not provide much protection beyond resistance to hostile
+enchantments, but with magical means, it may be used to make excellent armour.
 %%%%
 quick blade
 
@@ -1403,9 +1403,7 @@ This staff provides an increased reservoir of magical power to its wielder.
 staff of summoning
 
 This staff increases the power of summonings cast by its wielder, and wards
-them from the attacks of summoned creatures. If the wielder is skilled in
-Evocations and Summonings, they can attempt to dismiss summoned creatures that
-they strike.
+them from the attacks of summoned creatures.
 %%%%
 staff of wizardry
 

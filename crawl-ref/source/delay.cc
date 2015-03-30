@@ -276,7 +276,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         if (item.defined() && item.is_type(OBJ_CORPSES, CORPSE_BODY)
             && item.pos == you.pos())
         {
-            mpr("All blood oozes out of the corpse!");
+            mpr("All the blood oozes out of the corpse!");
 
             bleed_onto_floor(you.pos(), item.mon_type, delay.duration, false);
 
@@ -783,6 +783,7 @@ static void _finish_delay(const delay_queue_item &delay)
         // words, this is equivalent to if the user took off the previous
         // amulet and was slowed before putting the amulet of stasis on as a
         // separate action on the next turn
+        // XXX: duplicates a check in invent.cc:check_warning_inscriptions()
         if (nasty_stasis(item, OPER_PUTON)
             && item_ident(item, ISFLAG_KNOW_TYPE))
         {

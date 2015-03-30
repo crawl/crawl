@@ -238,15 +238,6 @@ int attack::calc_to_hit(bool random)
 
         // hit roll
         mhit = maybe_random2(mhit, random);
-
-        if (using_weapon() && wpn_skill == SK_SHORT_BLADES
-            && you.duration[DUR_SURE_BLADE])
-        {
-            int turn_duration = you.duration[DUR_SURE_BLADE] / BASELINE_DELAY;
-            mhit += 5 +
-                (random ? random2limit(turn_duration, 10) :
-                 turn_duration / 2);
-        }
     }
     else    // Monster to-hit.
     {
@@ -547,20 +538,7 @@ bool attack::distortion_affects_defender()
 
     if (!player_in_branch(BRANCH_ABYSS) && coinflip())
     {
-        if (defender->is_player() && attacker_visible
-            && using_weapon()
-            && !is_unrandom_artefact(*weapon))
-        {
-            // If the player is being sent to the Abyss by being attacked
-            // with a distortion weapon, then we have to ID it before
-            // the player goes to Abyss, while the weapon object is
-            // still in memory.
-            if (is_artefact(*weapon))
-                artefact_learn_prop(*weapon, ARTP_BRAND);
-            else
-                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-        }
-        else if (defender_visible)
+        if (defender_visible)
             obvious_effect = true;
 
         defender->banish(attacker, attacker->name(DESC_PLAIN, true));
@@ -1444,30 +1422,27 @@ int attack::calc_damage()
         damage_max += attk_damage;
         damage     += 1 + random2(attk_damage);
 
-        bool half_ac = false;
-        damage = apply_damage_modifiers(damage, damage_max, half_ac);
+        damage = apply_damage_modifiers(damage, damage_max);
 
-        set_attack_verb();
-        return apply_defender_ac(damage, damage_max, half_ac);
+        set_attack_verb(damage);
+        return apply_defender_ac(damage, damage_max);
     }
     else
     {
-        int potential_damage;
+        int potential_damage, damage;
 
-        potential_damage =
-            using_weapon() || wpn_skill == SK_THROWING
-            ? weapon_damage()
-            : calc_base_unarmed_damage();
+        potential_damage = using_weapon() || wpn_skill == SK_THROWING
+            ? weapon_damage() : calc_base_unarmed_damage();
 
         potential_damage = player_stat_modify_damage(potential_damage);
 
-        damage_done = random2(potential_damage+1);
+        damage = random2(potential_damage+1);
 
-        damage_done = player_apply_weapon_skill(damage_done);
-        damage_done = player_apply_fighting_skill(damage_done, false);
-        damage_done = player_apply_misc_modifiers(damage_done);
-        damage_done = player_apply_slaying_bonuses(damage_done, false);
-        damage_done = player_stab(damage_done);
+        damage = player_apply_weapon_skill(damage);
+        damage = player_apply_fighting_skill(damage, false);
+        damage = player_apply_misc_modifiers(damage);
+        damage = player_apply_slaying_bonuses(damage, false);
+        damage = player_stab(damage);
         // A failed stab may have awakened monsters, but that could have
         // caused the defender to cease to exist (spectral weapons with
         // missing summoners; or pacified monsters on a stair).  FIXME:
@@ -1476,13 +1451,13 @@ int attack::calc_damage()
         // in the attack; or to avoid removing monsters in handle_behaviour.
         if (!defender->alive())
             return 0;
-        damage_done = player_apply_final_multipliers(damage_done);
-        damage_done = apply_defender_ac(damage_done);
+        damage = player_apply_final_multipliers(damage);
+        damage = apply_defender_ac(damage);
 
-        set_attack_verb();
-        damage_done = max(0, damage_done);
+        damage = max(0, damage);
+        set_attack_verb(damage);
 
-        return damage_done;
+        return damage;
     }
 
     return 0;
@@ -1508,7 +1483,7 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
     return margin;
 }
 
-int attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
+int attack::apply_defender_ac(int damage, int damage_max)
 {
     ASSERT(defender);
     int stab_bypass = 0;
@@ -1518,8 +1493,7 @@ int attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
         stab_bypass = random2(div_rand_round(stab_bypass, 100 * stab_bonus));
     }
     int after_ac = defender->apply_ac(damage, damage_max,
-                                      half_ac ? AC_HALF : AC_NORMAL,
-                                      stab_bypass);
+                                      AC_NORMAL, stab_bypass);
     dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
@@ -1529,6 +1503,25 @@ int attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
                  after_ac);
 
     return after_ac;
+}
+
+bool attack::attack_warded_off()
+{
+    const int WARDING_CHECK = 60;
+
+    if (defender->warding()
+        && attacker->is_summoned()
+        && attacker->as_monster()->check_res_magic(WARDING_CHECK) <= 0)
+    {
+        if (needs_message)
+        {
+            mprf("%s attack is warded away.",
+                 attacker->name(DESC_ITS).c_str());
+        }
+        return true;
+    }
+
+    return false;
 }
 
 /* Determine whether a block occurred

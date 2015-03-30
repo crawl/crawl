@@ -555,3 +555,14 @@ c.S.c
 .....
  c.c
 ENDMAP
+
+NAME: nicolae_shop_scaring_up_business
+TAGS: allow_dup extra shop
+WEIGHT: 1
+KFEAT: O = food shop
+KMONS: O = patrolling hungry ghost
+MAP
+...
+.O.
+...
+ENDMAP

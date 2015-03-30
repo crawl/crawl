@@ -77,7 +77,8 @@ static vector<bool> vault_mon_bands;
 
 #define BIG_BAND        20
 
-static monster_type _band_member(band_type band, int which, bool allow_ood);
+static monster_type _band_member(band_type band, int which,
+                                 level_id parent_place, bool allow_ood);
 static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool& natural_leader);
 
@@ -919,7 +920,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         band_size++;
         for (int i = 1; i < band_size; ++i)
         {
-            band_monsters[i] = _band_member(band, i, allow_ood);
+            band_monsters[i] = _band_member(band, i, place, allow_ood);
 
             // Get the (very) ugly thing band colour, so that all (very)
             // ugly things in a band will start with it.
@@ -1370,8 +1371,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->god = GOD_TROG;
         // Profane servitors and death knights belong to Yredelemnul.
         else if (mg.cls == MONS_PROFANE_SERVITOR
-                 || mg.cls == MONS_DEATH_KNIGHT
-                 || mg.cls == MONS_UNBORN)
+                 || mg.cls == MONS_DEATH_KNIGHT)
         {
             mon->god = GOD_YREDELEMNUL;
         }
@@ -2986,7 +2986,8 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
  * @param which     The index of the monster (starting from 1)
  * @return          The type of monster to create
  */
-static monster_type _band_member(band_type band, int which, bool allow_ood)
+static monster_type _band_member(band_type band, int which,
+                                 level_id parent_place, bool allow_ood)
 {
     if (band == BAND_NO_BAND)
         return MONS_PROGRAM_BUG;
@@ -3572,8 +3573,8 @@ static monster_type _band_member(band_type band, int which, bool allow_ood)
         return random_choose_weighted(2, MONS_CACODEMON,
                                       3, MONS_ABOMINATION_LARGE,
                                       3, MONS_NEQOXEC,
-                                      3, MONS_KILLER_KLOWN,
-                                      1, MONS_VERY_UGLY_THING,
+                                      1, MONS_TENTACLED_MONSTROSITY,
+                                      3, MONS_VERY_UGLY_THING,
                                       0);
 
     case BAND_LOM_LOBON:
@@ -3608,10 +3609,9 @@ static monster_type _band_member(band_type band, int which, bool allow_ood)
         monster_type tmptype = MONS_PROGRAM_BUG;
         coord_def tmppos;
         dungeon_char_type tmpfeat;
-        level_id place = level_id::current();
         return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
                                     PROX_ANYWHERE, &tmppos, 0, &tmpfeat,
-                                    &place, nullptr, allow_ood);
+                                    &parent_place, nullptr, allow_ood);
     }
 
     default:

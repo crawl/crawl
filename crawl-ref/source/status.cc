@@ -341,22 +341,6 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
-    case DUR_SURE_BLADE:
-    {
-        inf->light_colour = BLUE;
-        inf->light_text   = "SBlade";
-        inf->short_text   = "bonded with blade";
-        string desc;
-        if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY)
-            desc = "strong ";
-        else if (you.duration[DUR_SURE_BLADE] >  5 * BASELINE_DELAY)
-            desc = "";
-        else
-            desc = "weak";
-        inf->long_text = "You have a " + desc + "bond with your blade.";
-        break;
-    }
-
     case DUR_TRANSFORMATION:
         _describe_transform(inf);
         break;

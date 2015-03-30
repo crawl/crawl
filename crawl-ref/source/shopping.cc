@@ -338,7 +338,7 @@ static void _shop_print_stock(const vector<bool>& selected,
         const char c = i + 'a';
 
         // Colour stock as follows:
-        //  * lightcyan, if on the shopping list.
+        //  * lightcyan, if on the shopping list and not selected.
         //  * lightred, if you can't buy all you selected.
         //  * lightgreen, if this item is purchasable along with your selections
         //  * red, if this item is not purchasable even by itself.
@@ -347,7 +347,7 @@ static void _shop_print_stock(const vector<bool>& selected,
 
         // Is this too complicated? (jpeg)
 
-        if (in_list[stock_pos])
+        if (in_list[stock_pos] && !selected[stock_pos])
             textcolour(LIGHTCYAN);
         else if (total_cost > you.gold && selected[stock_pos])
             textcolour(LIGHTRED);
@@ -361,7 +361,7 @@ static void _shop_print_stock(const vector<bool>& selected,
         else
             textcolour(YELLOW);
 
-        if (in_list[stock_pos])
+        if (in_list[stock_pos] && !selected[stock_pos])
             cprintf("%c $ ", c);
         else if (selected[stock_pos])
             cprintf("%c + ", c);
@@ -488,12 +488,17 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
         num_in_list  = 0;
         int num_selected = 0;
+        total_cost = 0;
         for (size_t i = 0; i < shop.stock.size(); i++)
         {
             if (in_list[i])
                 num_in_list++;
             if (selected[i])
+            {
+                total_cost += _shop_get_item_value(shop.stock[i],
+                                                   shop.greed, id_stock);
                 num_selected++;
+            }
         }
 
         clrscr();
@@ -821,50 +826,26 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             }
             else
             {
-                const int gp_value = _shop_get_item_value(item, shop.greed,
-                                                          id_stock);
                 if (in_list[key])
                 {
+                    shopping_list.del_thing(item);
                     if (to_shoplist)
-                    {
-                        shopping_list.del_thing(item);
-                        in_list[key] = false;
                         selected[key] = false;
-                        continue;
-                    }
                     else
-                    {
-                        shopping_list.del_thing(item);
-                        in_list[key]  = false;
-                        // Will be toggled to true later
-                        selected[key] = false;
-                    }
+                        selected[key] = !selected[key];
                 }
                 else if (to_shoplist)
                 {
-                    in_list[key] = true;
-                    if (selected[key])
-                        total_cost -= gp_value;
                     selected[key] = false;
                     const int cost = _shop_get_item_value(item, shop.greed,
                                                           id_stock);
                     shopping_list.add_thing(item, cost);
-                    continue;
                 }
-
-                // Okay, we are now selecting an item normally, and it
-                // is not on the shopping list.
-                ASSERT(!in_list[key]);
-
-                selected[key] = !selected[key];
-                if (selected[key])
-                    total_cost += gp_value;
                 else
-                    total_cost -= gp_value;
-
-                ASSERT(total_cost >= 0);
+                    selected[key] = !selected[key];
             }
         }
+        ASSERT(total_cost >= 0);
     }
 
     if (you.last_pickup.empty())
@@ -1555,12 +1536,12 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 25;
                 break;
 
-            case POT_DECAY:
             case POT_DEGENERATION:
 #if TAG_MAJOR_VERSION == 34
             case POT_STRONG_POISON:
             case POT_PORRIDGE:
             case POT_SLOWING:
+            case POT_DECAY:
 #endif
             case POT_BLOOD:
             case POT_POISON:
@@ -1903,8 +1884,8 @@ bool is_worthless_consumable(const item_def &item)
 #if TAG_MAJOR_VERSION == 34
         case POT_BLOOD_COAGULATED:
         case POT_SLOWING:
-#endif
         case POT_DECAY:
+#endif
         case POT_DEGENERATION:
         case POT_POISON:
             return true;
@@ -2075,7 +2056,7 @@ string shop_name(const coord_def& where, bool add_stop)
             | (static_cast<uint32_t>(cshop->keeper_name[1]) << 8)
             | (static_cast<uint32_t>(cshop->keeper_name[1]) << 16);
 
-        sh_name += apostrophise(make_name(seed, false)) + " ";
+        sh_name += apostrophise(make_name(seed)) + " ";
     }
 
     if (!cshop->shop_type_name.empty())

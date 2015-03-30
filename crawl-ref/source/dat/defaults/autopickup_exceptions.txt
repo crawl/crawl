@@ -81,14 +81,17 @@ ae += [^n]identified.*spellbook
 :  return
 :end)
 
-if it.class == "potion" or it.class == "scroll" then
-    for inv in iter.invent_iterator:new(items.inventory()) do
-      if it.class(true) == inv.class(true)
-      and it.subtype() == inv.subtype() then
-        return true
-      end
-    end
-  end
+: add_autopickup_func(function (it, name)
+:   if it.class(true) == "potion" or it.class(true) == "scroll" then
+:      for inv in iter.invent_iterator:new(items.inventory()) do
+:       if it.class(true) == inv.class(true)
+:       and it.subtype() == inv.subtype() then
+:         return true
+:       end
+:     end
+:   end
+:   return
+: end)
 
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.

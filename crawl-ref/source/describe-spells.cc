@@ -18,6 +18,7 @@
 #include "menu.h"
 #include "mon-book.h"
 #include "prompt.h"
+#include "religion.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stringutil.h"
@@ -259,6 +260,9 @@ static int _spell_colour(spell_type spell, const item_def* const source_item)
     {
         return COL_USELESS;
     }
+
+    if (god_hates_spell(spell, you.religion, rod))
+        return COL_FORBIDDEN;
 
     if (!you.has_spell(spell))
         return COL_UNMEMORIZED;

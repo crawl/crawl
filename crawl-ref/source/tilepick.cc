@@ -1644,8 +1644,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_ANCIENT_LICH;
     case MONS_REVENANT:
         return TILEP_MONS_REVENANT;
-    case MONS_UNBORN:
-        return TILEP_MONS_UNBORN;
 
     // mummies ('M')
     case MONS_MUMMY:
@@ -4761,7 +4759,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_BERSERKER_RAGE:           return TILEG_BERSERKER_RAGE;
     case SPELL_CONFUSING_TOUCH:          return TILEG_CONFUSING_TOUCH;
     case SPELL_CORONA:                   return TILEG_CORONA;
-    case SPELL_SURE_BLADE:               return TILEG_SURE_BLADE;
     case SPELL_CONFUSE:                  return TILEG_CONFUSE;
     case SPELL_SLOW:                     return TILEG_SLOW;
     case SPELL_TUKIMAS_DANCE:            return TILEG_TUKIMAS_DANCE;
