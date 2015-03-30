@@ -13,6 +13,7 @@
 #include "godconduct.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "ouch.h"
@@ -400,9 +401,7 @@ void tornado_damage(actor *caster, int dur)
 
     // Need to check available positions again, as the damage call could
     // have spawned something new (like Royal Jelly spawns).
-    for (int i = move_avail.size() - 1; i >= 0; i--)
-        if (actor_at(move_avail[i]))
-            erase_any(move_avail, i);
+    erase_if(move_avail, actor_at);
 
     // Calculate destinations.
     for (actor *act : move_act)
