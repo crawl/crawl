@@ -1725,7 +1725,7 @@ endif
 	mv build-win/docs/CREDITS.txt build-win/
 	echo $(SRC_VERSION) >build-win/version.txt
 
-ZIP_DOCS=../README.txt ../licence.txt
+ZIP_DOCS=../README.md ../licence.txt
 package-windows-zips:
 ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false
