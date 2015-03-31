@@ -579,13 +579,6 @@ mon_holy_type mons_class_holiness(monster_type mc)
     return smc->holiness;
 }
 
-bool mons_class_is_confusable(monster_type mc)
-{
-    ASSERT_smc();
-    return mons_class_holiness(mc) != MH_NONLIVING
-        && mons_class_holiness(mc) != MH_PLANT;
-}
-
 bool mons_class_is_stationary(monster_type mc)
 {
     return mons_class_flag(mc, M_STATIONARY);

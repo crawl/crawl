@@ -1774,8 +1774,7 @@ bool attack::apply_damage_brand(const char *what)
         const int hdcheck =
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
-        if (!mons_class_is_confusable(defender->type)
-            || hdcheck < defender->get_hit_dice()
+        if (hdcheck < defender->get_hit_dice()
             || one_chance_in(5)
             || defender->as_monster()->check_clarity(false))
         {

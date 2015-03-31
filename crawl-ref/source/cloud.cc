@@ -1103,8 +1103,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             if (cloud.whose == KC_FRIENDLY)
                 beam.source_id = MID_ANON_FRIEND;
 
-            if (mons_class_is_confusable(mons->type)
-                && _mephitic_cloud_roll(mons))
+            if (_mephitic_cloud_roll(mons))
             {
                 beam.apply_enchantment_to_monster(mons);
                 return true;

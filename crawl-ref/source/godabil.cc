@@ -863,8 +863,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case ZIN_CONFUSE:
-        if (mons_class_is_confusable(mon->type)
-            && !mon->check_clarity(false)
+        if (!mon->check_clarity(false)
             && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
