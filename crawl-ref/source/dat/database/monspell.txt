@@ -180,6 +180,17 @@ Ephemeral Infusion cast
 Phantom Mirror cast
 
 @The_monster@ weaves an illusion.
+#################################################
+# The next two have special hard-coded messaging.
+#################################################
+%%%%
+Siren Song cast
+
+__NONE
+%%%%
+Avatar Song cast
+
+__NONE
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################
