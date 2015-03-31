@@ -438,7 +438,7 @@ struct help_file
 static help_file help_files[] =
 {
     { "crawl_manual.txt",  '*', true },
-    { "../README.txt",     '!', false },
+    { "../README.md",      '!', false },
     { "aptitudes.txt",     '%', false },
     { "quickstart.txt",    '^', false },
     { "macros_guide.txt",  '~', false },
