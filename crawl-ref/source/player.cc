@@ -6125,15 +6125,39 @@ int player::gdr_perc() const
     return gdr;
 }
 
+/**
+ * What is the player's actual, current EV relative to the given attacker,
+ * including various temporary penalties?
+ *
+ * Applies to many things, not by any means limited to melee attacks - the name
+ * is very outdated (was it ever right?) and should be changed.
+ *
+ * Penalties are: -3 for being constricted, -10 for not being able to see the
+ * attacker, -5 for being in the middle of a 'delay action' (eating food,
+ * climbing stairs, etc).
+ *
+ * @param act      The creature that the player is attempting to evade, if any.
+ *                 May be null.
+ * @param evit     Penalty types which should be excluded from the calculation.
+ * @return         The player's relevant EV.
+ */
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
-    return player_evasion(evit)
-           - (is_constricted() ? 3 : 0)
-           - ((!act || act->visible_to(this)
-               || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
-           - (you_are_delayed()
-              && !(evit & EV_IGNORE_HELPLESS)
-              && !delay_is_run(current_delay_action())? 5 : 0);
+    const int base_evasion = player_evasion(evit);
+
+    const int constrict_penalty = is_constricted() ? 3 : 0;
+
+    const bool attacker_invis = act && !act->visible_to(this);
+    const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
+                              10 : 0;
+
+    const bool delayed = you_are_delayed()
+                         && !delay_is_run(current_delay_action())
+                         && current_delay_action() != DELAY_MACRO;
+    const int delay_penalty = delayed && !(evit & EV_IGNORE_HELPLESS) ?
+                              5 : 0;
+
+    return base_evasion - constrict_penalty - invis_penalty - delay_penalty;
 }
 
 bool player::heal(int amount, bool max_too)
