@@ -2442,10 +2442,10 @@ int monster_die(monster* mons, killer_type killer,
         // [malign] kraken has no valid head reference.
         if (!mons_is_tentacle_or_tentacle_segment(mons->type))
         {
+            // Make sure Natasha gets her say even if she got polymorphed.
             const monster_type orig =
-              mons->props.exists(ORIGINAL_TYPE_KEY) ?
-              (monster_type) mons->props[ORIGINAL_TYPE_KEY].get_int() :
-                             mons->type;
+                mons_is_mons_class(mons, MONS_NATASHA) ? MONS_NATASHA
+                                                       : mons->type;
             unwind_var<monster_type> mt(mons->type, orig);
             mons_speaks(mons);
         }
