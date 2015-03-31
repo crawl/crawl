@@ -1023,7 +1023,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_MARA,
       {
-       { SPELL_BLINK, 29, MON_SPELL_NATURAL },
+       { SPELL_BLINK, 29, MON_SPELL_DEMONIC },
        { SPELL_BOLT_OF_FIRE, 14, MON_SPELL_DEMONIC },
        { SPELL_FAKE_MARA_SUMMON, 14, MON_SPELL_DEMONIC  },
        { SPELL_SUMMON_ILLUSION, 14, MON_SPELL_DEMONIC },
