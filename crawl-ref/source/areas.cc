@@ -792,4 +792,3 @@ bool actor::heated() const
     return ::heated(pos());
 }
 #endif
-
