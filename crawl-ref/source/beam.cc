@@ -1776,12 +1776,6 @@ static bool _monster_resists_mass_enchantment(monster* mons,
              || wh_enchant == ENCH_INSANE
              || mons->holiness() == MH_NATURAL)
     {
-        if (wh_enchant == ENCH_CONFUSION
-            && !mons_class_is_confusable(mons->type))
-        {
-            return true;
-        }
-
         if (wh_enchant == ENCH_FEAR
             && mons->friendly())
         {
@@ -5484,9 +5478,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_SPORE:
     case BEAM_CONFUSION:
-        if (!mons_class_is_confusable(mon->type))
-            return MON_UNAFFECTED;
-
         if (mon->check_clarity(false))
         {
             if (you.can_see(mon) && !mons_is_lurking(mon))

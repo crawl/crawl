@@ -3340,8 +3340,7 @@ void melee_attack::mons_do_eyeball_confusion()
         const int ench_pow = player_mutation_level(MUT_EYEBALLS) * 30;
         monster* mon = attacker->as_monster();
 
-        if (mon->check_res_magic(ench_pow) <= 0
-            && mons_class_is_confusable(mon->type))
+        if (mon->check_res_magic(ench_pow) <= 0)
         {
             mprf("The eyeballs on your body gaze at %s.",
                  mon->name(DESC_THE).c_str());

@@ -1104,9 +1104,7 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
     bool rc = false;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->wont_attack()
-            || !mons_class_is_confusable(mi->type)
-            || one_chance_in(20))
+        if (mi->wont_attack() || one_chance_in(20))
         {
             continue;
         }
@@ -1287,9 +1285,6 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
 
 static void _confuse_monster(monster* mons, int sever)
 {
-    if (!mons_class_is_confusable(mons->type))
-        return;
-
     if (mons->check_clarity(false))
         return;
 
@@ -2837,8 +2832,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         {
             for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             {
-                if (!mons_class_is_confusable(mi->type)
-                    || one_chance_in(20))
+                if (one_chance_in(20))
                 {
                     continue;
                 }
