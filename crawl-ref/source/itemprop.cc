@@ -3035,14 +3035,7 @@ static inline int _get_armour_flag(armflags_t all, armour_flag res)
  */
 static armflags_t _armour_type_flags(const uint8_t arm)
 {
-    // Ugly hack
-    if (you.species == SP_TROLL && (arm == ARM_TROLL_HIDE
-                                    || arm ==  ARM_TROLL_LEATHER_ARMOUR))
-    {
-        return ARMF_NO_FLAGS;
-    }
-    else
-        return Armour_prop[ Armour_index[arm] ].flags;
+    return Armour_prop[ Armour_index[arm] ].flags;
 }
 
 /**

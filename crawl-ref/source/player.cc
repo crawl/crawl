@@ -1107,10 +1107,9 @@ static int _player_bonus_regen()
     // Artefacts
     rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
 
-    // Troll leather (except for trolls).
-    if ((you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-         || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
-        && you.species != SP_TROLL)
+    // Troll leather
+    if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+        || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
     {
         rr += REGEN_PIP;
     }
@@ -1273,9 +1272,8 @@ int player_hunger_rate(bool temp)
         hunger += 3 * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
         // troll leather
-        if (you.species != SP_TROLL
-            && (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-                || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE)))
+        if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+            || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
         {
             hunger += coinflip() ? 2 : 1;
         }
