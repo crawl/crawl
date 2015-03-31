@@ -284,7 +284,7 @@ static armour_type _useless_armour_type()
     switch (slot)
     {
         case EQ_BOOTS:
-            if (you_can_wear(EQ_BOOTS))
+            if (you_can_wear(EQ_BOOTS) == MB_TRUE)
                 return coinflip() ? ARM_CENTAUR_BARDING : ARM_NAGA_BARDING;
             return ARM_BOOTS;
         case EQ_GLOVES:
