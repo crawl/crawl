@@ -38,7 +38,7 @@ XPStyle on
 Section ""
   SetOutPath $INSTDIR
   File /r /x "*~" "build-win\*"
-  File ..\README.txt
+  File ..\README.md
   File ..\README.pdf
   File /oname=LICENCE.txt ..\licence.txt
 
@@ -76,7 +76,7 @@ Section "Uninstall"
   Delete $INSTDIR\crawl-tiles.exe
   Delete $INSTDIR\crawl-console.exe
   Delete $INSTDIR\version.txt
-  Delete $INSTDIR\README.txt
+  Delete $INSTDIR\README.md
   Delete $INSTDIR\README.pdf
   Delete $INSTDIR\CREDITS.txt
   Delete $INSTDIR\LICENCE.txt
