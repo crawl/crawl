@@ -1990,13 +1990,13 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SIREN,
       {
-       { SPELL_SIREN_SONG, 160, MON_SPELL_WIZARD | MON_SPELL_NO_SILENT },
+       { SPELL_SIREN_SONG, 160, MON_SPELL_WIZARD },
       }
     },
 
     {  MST_MERFOLK_AVATAR,
       {
-       { SPELL_AVATAR_SONG, 160, MON_SPELL_WIZARD | MON_SPELL_NO_SILENT },
+       { SPELL_AVATAR_SONG, 160, MON_SPELL_WIZARD },
       }
     },
 
