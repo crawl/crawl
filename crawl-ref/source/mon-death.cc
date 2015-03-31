@@ -197,10 +197,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     int nchunks = 1;
     if (corpse.base_type == OBJ_GOLD)
-    {
         nchunks = corpse.quantity;
-        corpse.quantity = 1;
-    }
     else
     {
         nchunks += random2(max_chunks);
