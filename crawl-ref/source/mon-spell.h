@@ -130,7 +130,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_BRAIN_WORM,
       {
-       { SPELL_BRAIN_FEED, 55, MON_SPELL_NATURAL /*???*/},
+       { SPELL_BRAIN_FEED, 55, MON_SPELL_MAGICAL },
       }
     },
 
@@ -824,7 +824,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_PRINCE_RIBBIT,
       {
-       { SPELL_BLINK, 29, MON_SPELL_NATURAL },
+       { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
        { SPELL_TELEPORT_SELF, 66, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
       }
     },
@@ -1144,7 +1144,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ORB_SPIDER,
       {
-       { SPELL_IOOD, 57, MON_SPELL_NATURAL },
+       { SPELL_IOOD, 57, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1188,7 +1188,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_BASILISK,
       {
-       { SPELL_PETRIFY, 56, MON_SPELL_NATURAL },
+       { SPELL_PETRIFY, 56, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1252,7 +1252,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_WRETCHED_STAR,
       {
        { SPELL_ISKENDERUNS_MYSTIC_BLAST, 60, MON_SPELL_MAGICAL },
-       { SPELL_CORRUPTING_PULSE, 40, MON_SPELL_NATURAL }, // XXX: _MAGICAL?
+       { SPELL_CORRUPTING_PULSE, 40, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1495,7 +1495,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_THORN_HUNTER,
       {
        { SPELL_THORN_VOLLEY, 43, MON_SPELL_NATURAL },
-       { SPELL_WALL_OF_BRAMBLES, 22, MON_SPELL_NATURAL },
+       { SPELL_WALL_OF_BRAMBLES, 22, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1572,7 +1572,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_RAIJU,
       {
-       { SPELL_BLINKBOLT, 57, MON_SPELL_NATURAL },
+       { SPELL_BLINKBOLT, 57, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1763,10 +1763,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_ORANGE_CRYSTAL_STATUE,
       {
-       // Not really natural, but it shouldn't be AM'd...
-       { SPELL_BRAIN_FEED, 20, MON_SPELL_NATURAL },
-       { SPELL_DRAINING_GAZE, 20, MON_SPELL_NATURAL },
-       { SPELL_MASS_CONFUSION, 20, MON_SPELL_NATURAL },
+       { SPELL_BRAIN_FEED, 20, MON_SPELL_MAGICAL },
+       { SPELL_DRAINING_GAZE, 20, MON_SPELL_MAGICAL },
+       { SPELL_MASS_CONFUSION, 20, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1973,7 +1972,7 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_PHANTASMAL_WARRIOR,
       {
-       { SPELL_BLINK_CLOSE, 67, MON_SPELL_NATURAL },
+       { SPELL_BLINK_CLOSE, 67, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1991,38 +1990,38 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_SIREN,
       {
-       { SPELL_SIREN_SONG, 160, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT },
+       { SPELL_SIREN_SONG, 160, MON_SPELL_WIZARD | MON_SPELL_NO_SILENT },
       }
     },
 
     {  MST_MERFOLK_AVATAR,
       {
-       { SPELL_AVATAR_SONG, 160, MON_SPELL_NATURAL | MON_SPELL_NO_SILENT },
+       { SPELL_AVATAR_SONG, 160, MON_SPELL_WIZARD | MON_SPELL_NO_SILENT },
       }
     },
 
     {  MST_BLINKER,
       {
-       { SPELL_BLINK, 29, MON_SPELL_NATURAL },
+       { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
       }
     },
 
     {  MST_GIANT_EYEBALL,
       {
-       { SPELL_PARALYSIS_GAZE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       { SPELL_PARALYSIS_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
       }
     },
 
     {  MST_DRAIN_GAZE,
       {
-       { SPELL_DRAINING_GAZE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
+       { SPELL_DRAINING_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
       }
     },
 
     {  MST_GOLDEN_EYE,
       {
-       { SPELL_CONFUSION_GAZE, 100, MON_SPELL_NATURAL | MON_SPELL_INSTANT },
-       { SPELL_BLINK, 29, MON_SPELL_NATURAL },
+       { SPELL_CONFUSION_GAZE, 100, MON_SPELL_MAGICAL | MON_SPELL_INSTANT },
+       { SPELL_BLINK, 29, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2088,8 +2087,8 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_INSUBSTANTIAL_WISP,
       {
-       { SPELL_BLINK, 18, MON_SPELL_NATURAL },
-       { SPELL_DISCHARGE, 32, MON_SPELL_NATURAL },
+       { SPELL_BLINK, 18, MON_SPELL_MAGICAL },
+       { SPELL_DISCHARGE, 32, MON_SPELL_MAGICAL },
       }
     },
 };
