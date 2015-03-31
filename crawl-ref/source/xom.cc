@@ -1105,9 +1105,7 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack() || one_chance_in(20))
-        {
             continue;
-        }
 
         if (debug)
             return XOM_GOOD_CONFUSION;
@@ -2833,9 +2831,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
             for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             {
                 if (one_chance_in(20))
-                {
                     continue;
-                }
 
                 if (!mi->check_clarity(false)
                     && mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
