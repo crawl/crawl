@@ -66,7 +66,7 @@
        "scroll of brand weapon | manual of bows | buckler"
 
       elseif s == "C" then i = "amulet of clarity | book of callings | " ..
-       "book of cantrips | book of changes | book of control | cutlass | " ..
+       "book of cantrips | book of changes | book of control | " ..
        "book of conjurations | centaur barding | chain mail | club | " ..
        "crystal ball of energy | crystal plate armour | rod of clouds | " ..
        "wand of cold | potion of cancellation | potion of cure mutation | " ..
@@ -212,9 +212,9 @@ NAME: nicolae_alphabet_shops
 TAGS: transparent allow_dup
 DEPTH: D:4-, Depths, Orc, Elf, Snake, Shoals
 WEIGHT: 5
-## We allow shop lists with no fewer than 5 item types, and place 8-15 items or
-## place itemcount + 2 items, whichever is less, where itemcount is the number
-## of item types.
+## We allow shop lists with no fewer than 5 item types, and place 8-15
+## items or place itemcount items, whichever is less, where itemcount is
+## the number of item types.
 {{
 local letter = pickletter()
 local _, itemcount = string.gsub(shopcontents(letter), "|", "|")
@@ -222,7 +222,7 @@ itemcount = itemcount + 1;
 maxcount = math.min(15, itemcount + 2)
 -- random2 returns 0 for values <= 1
 local shopcount = 8 + crawl.random2(maxcount - 7)
-shopcount = math.min(itemcount + 2, shopcount)
+shopcount = math.min(itemcount, shopcount)
 tags("uniq_alphashops_" .. letter)
 kfeat("s = general shop name:" .. ownername(letter) .. shopname(letter) ..
       " count:" .. shopcount .. " ; " .. shopcontents(letter))
