@@ -984,8 +984,12 @@ bool god_punishes_spell(spell_type spell, god_type god)
     if (map_find(divine_peeves[god], DID_NECROMANCY) && is_evil_spell(spell))
         return true;
 
-    if (map_find(divine_peeves[god], DID_UNHOLY) && is_unholy_spell(spell))
+    if (map_find(divine_peeves[god], DID_UNHOLY)
+        && (is_unholy_spell(spell)
+            || you.spellcasting_unholy()))
+    {
         return true;
+    }
 
     if (map_find(divine_peeves[god], DID_UNCLEAN) && is_unclean_spell(spell))
         return true;
