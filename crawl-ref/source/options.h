@@ -376,6 +376,8 @@ public:
 
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
+    int         rest_wait_percent; // Stop resting after restoring this
+                                   // fraction of HP or MP
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.

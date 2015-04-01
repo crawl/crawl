@@ -4007,6 +4007,8 @@ void runrest::initialise(int dir, int mode)
     // Note HP and MP for reference.
     hp = you.hp;
     mp = you.magic_points;
+    notified_hp_full = false;
+    notified_mp_full = false;
     init_travel_speed();
 
     if (dir == RDIR_REST)
@@ -4202,6 +4204,8 @@ void runrest::clear()
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
     mp = hp = travel_speed = 0;
+    notified_hp_full = false;
+    notified_mp_full = false;
 
     _reset_zigzag_info();
 }

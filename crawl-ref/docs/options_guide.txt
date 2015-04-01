@@ -903,6 +903,11 @@ rest_wait_both = false
         when both HP and MP are fully restored, not when either one of
         them is restored.
 
+rest_wait_percent = 100
+        When resting, if your HP or MP is below this percentage of being full,
+        it will stop resting when this percent of maximum HP or MP is refilled.
+        Resting after this point will still rest up to 100%.
+
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
         Whenever you encounter a sleeping or stationary monster during
