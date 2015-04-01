@@ -1552,41 +1552,67 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
         return 1;
 }
 
+/**
+ * Turn poisonous clouds in the given tile into flame clouds, by the power of
+ * Ignite Poison.
+ *
+ * @param where     The tile in question.
+ * @param pow       The power with which Ignite Poison is being cast.
+ *                  If -1, this indicates the spell is a test-run 'tracer'.
+ * @param agent     The caster of Ignite Poison.
+ * @return          If we're just running a tracer, return the expected 'value'
+ *                  of creating fire clouds in the given location (could be
+ *                  negative if there are allies there).
+ *                  If it's not a tracer, return 1 if a flame cloud is created
+ *                  and 0 otherwise.
+ */
 static int _ignite_poison_clouds(coord_def where, int pow, int, actor *agent)
 {
     const bool tracer = (pow == -1);  // Only testing damage, not dealing it
 
     const int i = env.cgrid(where);
-    if (i != EMPTY_CLOUD)
+    if (i == EMPTY_CLOUD)
+        return false;
+
+    cloud_struct& cloud = env.cloud[i];
+
+    if (tracer && (cloud.type == CLOUD_MEPHITIC
+                   || cloud.type == CLOUD_POISON))
     {
-        cloud_struct& cloud = env.cloud[i];
-
-        if (tracer && (cloud.type == CLOUD_MEPHITIC
-                       || cloud.type == CLOUD_POISON))
-        {
-            return _ignite_tracer_cloud_value(where, agent);
-        }
-
-        if (cloud.type == CLOUD_MEPHITIC)
-        {
-            cloud.decay /= 2;
-
-            if (cloud.decay < 1)
-                cloud.decay = 1;
-        }
-        else if (cloud.type != CLOUD_POISON)
-            return false;
-
-        cloud.type = CLOUD_FIRE;
-        cloud.whose = agent->kill_alignment();
-        cloud.killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
-        cloud.source = agent->mid;
-        return true;
+        return _ignite_tracer_cloud_value(where, agent);
     }
 
-    return false;
+    if (cloud.type == CLOUD_MEPHITIC)
+    {
+        cloud.decay /= 2;
+
+        if (cloud.decay < 1)
+            cloud.decay = 1;
+    }
+    else if (cloud.type != CLOUD_POISON)
+        return false;
+
+    cloud.type = CLOUD_FIRE;
+    cloud.whose = agent->kill_alignment();
+    cloud.killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    cloud.source = agent->mid;
+    return true;
 }
 
+/**
+ * Burn poisoned monsters in the given tile, removing their poison state &
+ * damaging them.
+ *
+ * @param where     The tile in question.
+ * @param pow       The power with which Ignite Poison is being cast.
+ *                  If -1, this indicates the spell is a test-run 'tracer'.
+ * @param agent     The caster of Ignite Poison.
+ * @return          If we're just running a tracer, return the expected damage
+ *                  of burning the monster in the given location (could be
+ *                  negative if there are allies there).
+ *                  If it's not a tracer, return 1 if damage is caused & 0
+ *                  otherwise.
+ */
 static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
 {
     bolt beam;
@@ -1596,77 +1622,66 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
     if (tracer)                       // Give some fake damage to test resists
         pow = 100;
 
-    dice_def dam_dice(0, 5 + pow/7);  // Dice added below if applicable.
-
     // If a monster casts Ignite Poison, it can't hit itself.
     // This doesn't apply to the other functions: it can ignite
-    // clouds or items where it's standing!
+    // clouds where it's standing!
 
     monster* mon = monster_at(where);
     if (mon == nullptr || mon == agent)
         return 0;
 
-    // Monsters which have poison corpses or poisonous attacks.
-    if (mons_is_poisoner(mon))
-        dam_dice.num = 3;
+    // how poisoned is the victim?
+    const mon_enchant ench = mon->get_ench(ENCH_POISON);
+    const int pois_str = ench.ench == ENCH_NONE ? 0 : ench.degree;
 
-    // Monsters which are poisoned:
-    int strength = 0;
+    const dice_def dam_dice(pois_str, 5 + pow/7);
 
-    // First check for player poison.
-    mon_enchant ench = mon->get_ench(ENCH_POISON);
-    if (ench.ench != ENCH_NONE)
-        strength += ench.degree;
+    const int base_dam = dam_dice.roll();
+    const int damage = mons_adjust_flavoured(mon, beam, base_dam, false);
+    if (damage <= 0)
+        return 0;
 
-    // Strength is now the sum of both poison types
-    // (although only one should actually be present at a given time).
-    dam_dice.num += strength;
+    if (tracer)
+        return mons_aligned(mon, agent) ? -1 * damage : damage;
 
-    int damage = dam_dice.roll();
-    damage = mons_adjust_flavoured(mon, beam, damage, false);
-    if (damage > 0)
+    simple_monster_message(mon, " seems to burn from within!");
+
+    dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
+
+    mon->hurt(agent, damage);
+
+    if (mon->alive())
     {
-        if (tracer)
-            return mons_aligned(mon, agent) ? -1 * damage : damage;
-        else
-        {
-            simple_monster_message(mon, " seems to burn from within!");
+        behaviour_event(mon, ME_WHACK, agent);
 
-            dprf("Dice: %dd%d; Damage: %d", dam_dice.num, dam_dice.size, damage);
-
-            mon->hurt(agent, damage);
-
-            if (mon->alive())
-            {
-                behaviour_event(mon, ME_WHACK, agent);
-
-                // Monster survived, remove any poison.
-                mon->del_ench(ENCH_POISON);
-                print_wounds(mon);
-            }
-            else
-            {
-                monster_die(mon,
-                            agent->is_player() ? KILL_YOU : KILL_MON,
-                            agent->mindex());
-            }
-
-            return 1;
-        }
+        // Monster survived, remove any poison.
+        mon->del_ench(ENCH_POISON);
+        print_wounds(mon);
+    }
+    else
+    {
+        monster_die(mon,
+                    agent->is_player() ? KILL_YOU : KILL_MON,
+                    agent->mindex());
     }
 
-    return 0;
+    return 1;
 }
 
-static bool _player_has_poisonous_physiology()
-{
-    return player_mutation_level(MUT_SPIT_POISON)
-           || player_mutation_level(MUT_STINGER)
-           || you.form == TRAN_SPIDER // poison attack
-           || (!form_changed_physiology()
-               && (you.species == SP_GREEN_DRACONIAN       // poison breath
-                   || you.species == SP_KOBOLD));          // poisonous corpse
-}
+/**
+ * Burn poisoned players in the given tile, removing their poison state &
+ * damaging them.
+ *
+ * @param where     The tile in question.
+ * @param pow       The power with which Ignite Poison is being cast.
+ *                  If -1, this indicates the spell is a test-run 'tracer'.
+ * @param agent     The caster of Ignite Poison.
+ * @return          If we're just running a tracer, return the expected damage
+ *                  of burning the player in the given location (could be
+ *                  negative if the player is an ally).
+ *                  If it's not a tracer, return 1 if damage is caused & 0
+ *                  otherwise.
+ */
 
 static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
 {
@@ -1677,53 +1692,42 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
     if (tracer)                       // Give some fake damage to test resists
         pow = 100;
 
-    int str = 0;        // Amount of poison for the spell to work with
-
-    // Player is poisonous.
-    if (_player_has_poisonous_physiology())
-        str = 2;
-
-    // Use the greater of the degree of player poisoning or the player's own
-    // natural poison (meaning that poisoned kobolds are not affected much
-    // worse than poisoned members of other races), but step down heavily beyond
-    // light poisoning (or we could easily one-shot a heavily poisoned character)
-    str = max(str, (int)stepdown((double)you.duration[DUR_POISONING]/5000, 2.25));
-
-    int damage = roll_dice(str, 5 + pow/7);
-    if (damage)
-    {
-        damage = resist_adjust_damage(&you, BEAM_FIRE, damage);
-
-        if (tracer)
-            return mons_aligned(&you, agent) ? -1 * damage : damage;
-        else
-        {
-            const int resist = player_res_fire();
-            if (resist > 0)
-                mpr("You feel like your blood is boiling!");
-            else if (resist < 0)
-                mpr("The poison in your system burns terribly!");
-            else
-                mpr("The poison in your system burns!");
-
-            ouch(damage, KILLED_BY_BEAM, agent->mid,
-                 "by burning poison", you.can_see(agent),
-                 agent->as_monster()->name(DESC_A, true).c_str());
-
-            if (you.duration[DUR_POISONING] > 0)
-            {
-                mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
-                you.duration[DUR_POISONING] = 0;
-            }
-        }
-    }
-
-    if (damage)
-        return 1;
-    else
+    // Step down heavily beyond light poisoning (or we could easily one-shot a heavily poisoned character)
+    const int pois_str = stepdown((double)you.duration[DUR_POISONING] / 5000,
+                                  2.25);
+    if (!pois_str)
         return 0;
+
+    const int base_dam = roll_dice(pois_str, 5 + pow/7);
+    const int damage = resist_adjust_damage(&you, BEAM_FIRE, base_dam);
+
+    if (tracer)
+        return mons_aligned(&you, agent) ? -1 * damage : damage;
+
+    const int resist = player_res_fire();
+    if (resist > 0)
+        mpr("You feel like your blood is boiling!");
+    else if (resist < 0)
+        mpr("The poison in your system burns terribly!");
+    else
+        mpr("The poison in your system burns!");
+
+    ouch(damage, KILLED_BY_BEAM, agent->mid,
+         "by burning poison", you.can_see(agent),
+         agent->as_monster()->name(DESC_A, true).c_str());
+
+    mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
+    you.duration[DUR_POISONING] = 0;
+
+    return damage ? 1 : 0;
 }
 
+/**
+ * Let the player choose to abort a casting of ignite poison, if it seems
+ * like a bad idea. (If they'd ignite themself.)
+ *
+ * @return      Whether the player chose to abort the casting.
+ */
 static bool maybe_abort_ignite()
 {
     // Fire cloud immunity.
@@ -1748,49 +1752,40 @@ static bool maybe_abort_ignite()
         }
     }
 
-    // Now check for items at player position.
-    item_def item;
-    for (stack_iterator si(you.pos()); si; ++si)
-    {
-        item = *si;
-
-        if (item.base_type == OBJ_MISSILES && item.special == SPMSL_POISONED)
-        {
-            prompt += "over ";
-            prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
-            prompt += "! Ignite poison anyway?";
-            return !yesno(prompt.c_str(), false, 'n');
-        }
-        else if (item.base_type == OBJ_POTIONS && item_type_known(item))
-        {
-            switch (item.sub_type)
-            {
-            case POT_DEGENERATION:
-            case POT_POISON:
-                prompt += "over ";
-                prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
-                prompt += "! Ignite poison anyway?";
-                return !yesno(prompt.c_str(), false, 'n');
-            default:
-                break;
-            }
-        }
-    }
-
     return false;
 }
 
+/**
+ * Does Ignite Poison affect the given creature?
+ *
+ * @param act       The creature in question.
+ * @return          Whether Ignite Poison can directly damage the given
+ *                  creature (not counting clouds).
+ */
 bool ignite_poison_affects(const actor* act)
 {
     if (act->is_player())
-        return _player_has_poisonous_physiology() || you.duration[DUR_POISONING];
-    else
-    {
-        return mons_is_poisoner(act->as_monster())
-               || act->as_monster()->has_ench(ENCH_POISON);
-    }
+        return you.duration[DUR_POISONING];
+    return act->as_monster()->has_ench(ENCH_POISON);
 }
 
+/**
+ * Cast the spell Ignite Poison, burning poisoned creatures and poisonous
+ * clouds in LOS.
+ *
+ * @param agent         The spell's caster.
+ * @param pow           The power with which the spell is being cast.
+ * @param fail          If it's a player spell, whether the spell fail chance
+ *                      was hit (whether the spell will fail as soon as the
+ *                      player chooses not to abort the casting)
+ * @param mon_tracer    If it's a monster spell, whether the 'casting' is just
+ *                      a tracer (a check to see if it's worth actually casting)
+ * @return              If it's a tracer, SPRET_SUCCESS if the spell should
+ *                      be cast & SPRET_SUCCESS otherwise.
+ *                      If it's a real spell, SPRET_ABORT if the player chose
+ *                      to abort the spell, SPRET_FAIL if they failed the cast
+ *                      chance, and SPRET_SUCCESS otherwise.
+ */
 spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
 {
     if (agent->is_player())
@@ -1832,6 +1827,14 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
     return SPRET_SUCCESS;
 }
 
+/**
+ * Cast Localized Ignite Poison, burning poisoned creatures & poisonous clouds
+ * in the given tile.
+ *
+ * @param pos       The tile in question.
+ * @param pow       The power with which the spell is being cast.
+ * @param agent     The spell's caster.
+ */
 void local_ignite_poison(coord_def pos, int pow, actor* agent)
 {
     _ignite_poison_clouds(pos, pow, 0, agent);
