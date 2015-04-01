@@ -280,7 +280,7 @@ static const ability_def Ability_List[] =
     { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame",
       5, 0, 100, 2, 0, ABFLAG_NONE},
     { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",
-      8, 0, 150, 6, 0, ABFLAG_NONE},
+      8, 0, 150, 5, 0, ABFLAG_NONE},
 
     // Kikubaaqudgha
     { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
