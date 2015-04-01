@@ -1854,7 +1854,8 @@ static void _do_rest()
                     && you.hunger_state == HS_STARVING))
             && you.magic_points == you.max_magic_points)
         {
-            mpr("You're already fully healed.");
+            mpr("You start waiting.");
+            _start_running(RDIR_REST, RMODE_WAIT_DURATION);
             return;
         }
         else

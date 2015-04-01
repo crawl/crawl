@@ -4033,7 +4033,7 @@ void runrest::initialise(int dir, int mode)
         set_run_check(2, right);
     }
 
-    if (runmode == RMODE_REST_DURATION)
+    if (runmode == RMODE_REST_DURATION || runmode == RMODE_WAIT_DURATION)
         start_delay(DELAY_REST, 1);
     else
         start_delay(DELAY_RUN, 1);
