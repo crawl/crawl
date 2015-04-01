@@ -16,6 +16,7 @@ ignore += standing in the rain
 ignore += A.*toadstool withers and dies
 ignore += toadstools? grows
 ignore += You walk carefully through the
+ignore += Fedhas appreciates ongoing decay
 ignore += Eating .*chunk
 ignore += This .*flesh tastes
 ignore += You .* eating

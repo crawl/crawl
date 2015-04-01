@@ -67,8 +67,8 @@ static const char *conducts[] =
     "Deliberate Mutation", "Cause Glowing", "Use Unclean",
     "Use Chaos", "Desecrate Orcish Remains",
     "Kill Slime", "Kill Plant", "Was Hasty", "Corpse Violation",
-    "Souled Friend Died", "Attack In Sanctuary", "Kill Artificial",
-    "Exploration", "Desecrate Holy Remains", "Seen Monster",
+    "Carrion Rot", "Souled Friend Died", "Attack In Sanctuary",
+    "Kill Artificial", "Exploration", "Desecrate Holy Remains", "Seen Monster",
     "Fire", "Kill Fiery", "Sacrificed Love", "Channel", "Hurt Foe",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
@@ -886,7 +886,11 @@ static like_map divine_likes[] =
     // GOD_JIYVA,
     like_map(),
     // GOD_FEDHAS,
-    like_map(),
+    {
+        { DID_ROT_CARRION, {
+            "corpses rot away", false, 0, 0, 0, " appreciates ongoing decay."
+        } },
+    },
     // GOD_CHEIBRIADOS,
     {
         { DID_KILL_FAST, {
