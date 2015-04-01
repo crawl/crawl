@@ -466,7 +466,7 @@ bool allow_control_teleport(bool quiet)
     if (orb_haloed(you.pos()))
     {
         if (!quiet)
-            mprf(MSGCH_ORB, "The orb prevents control of your teleportation!");
+            mprf(MSGCH_ORB, "The Orb prevents control of your teleportation!");
         return false;
     }
 
@@ -527,7 +527,7 @@ void you_teleport()
         }
         else if (orb_haloed(you.pos()))
         {
-            mprf(MSGCH_ORB, "You feel the orb delaying this translocation!");
+            mprf(MSGCH_ORB, "You feel the Orb delaying this translocation!");
             teleport_delay += 5 + random2(5);
         }
 
@@ -987,16 +987,16 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         if (one_chance_in(3))
         {
             orb_pickup_noise(where, 30,
-                "The orb shrieks and becomes a dead weight against your magic!",
-                "The orb lets out a furious burst of light and becomes "
+                "The Orb shrieks and becomes a dead weight against your magic!",
+                "The Orb lets out a furious burst of light and becomes "
                     "a dead weight against your magic!");
             return SPRET_SUCCESS;
         }
         else // Otherwise it's just a noisy little shiny thing
         {
             orb_pickup_noise(where, 30,
-                "The orb shrieks as your magic touches it!",
-                "The orb lets out a furious burst of light as your magic touches it!");
+                "The Orb shrieks as your magic touches it!",
+                "The Orb lets out a furious burst of light as your magic touches it!");
         }
     }
 

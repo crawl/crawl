@@ -1134,7 +1134,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
     case SPELL_CONTROL_TELEPORT:
         if (player_has_orb())
-            return "The orb interferes with controlled teleportation.";
+            return "The Orb interferes with controlled teleportation.";
         // fallthrough to blink/cblink
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
