@@ -803,12 +803,13 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 
         // Clear list of beholding and constricting/constricted monsters.
         you.clear_beholders();
-        you.clear_fearmongers();
         you.stop_constricting_all();
         you.stop_being_constricted();
 
         trackers_init_new_level(true);
     }
+
+    you.clear_fearmongers();
 
     if (!wizard)
         _update_travel_cache(old_level, stair_pos);
