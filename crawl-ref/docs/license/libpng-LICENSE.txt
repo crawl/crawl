@@ -1,5 +1,5 @@
 
-This copy of the libpng notices is provided for your convenience.  In case of
+This copy of the libpng notices is provided for your convenience. In case of
 any discrepancy between this copy and the notices in the file png.h that is
 included in the libpng distribution, the latter shall prevail.
 
@@ -29,9 +29,9 @@ with the following individuals added to the list of Contributing Authors
 and with the following additions to the disclaimer:
 
    There is no warranty against interference with your enjoyment of the
-   library or against infringement.  There is no warranty that our
+   library or against infringement. There is no warranty that our
    efforts or the library will fulfill any of your particular purposes
-   or needs.  This library is provided with all faults, and the entire
+   or needs. This library is provided with all faults, and the entire
    risk of satisfactory quality, performance, accuracy, and effort is with
    the user.
 
@@ -68,10 +68,10 @@ is defined as the following set of individuals:
    Paul Schmidt
    Tim Wegner
 
-The PNG Reference Library is supplied "AS IS".  The Contributing Authors
+The PNG Reference Library is supplied "AS IS". The Contributing Authors
 and Group 42, Inc. disclaim all warranties, expressed or implied,
 including, without limitation, the warranties of merchantability and of
-fitness for any purpose.  The Contributing Authors and Group 42, Inc.
+fitness for any purpose. The Contributing Authors and Group 42, Inc.
 assume no liability for direct, indirect, incidental, special, exemplary,
 or consequential damages, which may result from the use of the PNG
 Reference Library, even if advised of the possibility of such damage.
@@ -90,7 +90,7 @@ to the following restrictions:
 
 The Contributing Authors and Group 42, Inc. specifically permit, without
 fee, and encourage the use of this source code as a component to
-supporting the PNG file format in commercial products.  If you use this
+supporting the PNG file format in commercial products. If you use this
 source code in a product, acknowledgment is not required but would be
 appreciated.
 
@@ -103,7 +103,7 @@ boxes and the like:
 Also, the PNG logo (in PNG format, of course) is supplied in the
 files "pngbar.png" and "pngbar.jpg (88x31) and "pngnow.png" (98x31).
 
-Libpng is OSI Certified Open Source Software.  OSI Certified Open Source is a
+Libpng is OSI Certified Open Source Software. OSI Certified Open Source is a
 certification mark of the Open Source Initiative.
 
 Glenn Randers-Pehrson

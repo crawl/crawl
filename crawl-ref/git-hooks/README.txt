@@ -18,7 +18,7 @@ access to crawl.develz.org -- or if you have shell access -- to execute:
 
 Old instructions:
 
-This directory contains copies of the git hook scripts.  The actual hooks can
+This directory contains copies of the git hook scripts. The actual hooks can
 be edited by getting an SHH shell on the sourceforge machine:
 
     ssh -t USER,crawl-ref@shell.sourceforge.net create

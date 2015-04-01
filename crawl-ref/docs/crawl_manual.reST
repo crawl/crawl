@@ -570,12 +570,12 @@ The details screen shows:
 - Its difficulty level, speed (if different from average speed), size,
   resistances, and special attacks.
 
-- Its spells and special abilities.  Monster spells and abilities are
+- Its spells and special abilities. Monster spells and abilities are
   of five types:
 
   * Special abilities are innate, non-magical effects.
 
-  * Magical abilities are innate magical effects.  They are affected
+  * Magical abilities are innate magical effects. They are affected
     by antimagic.
 
   * Demonic and angelic abilities are similar to magical abilities.
@@ -583,7 +583,7 @@ The details screen shows:
   * Divine abilities call upon the monster's god for a magical effect.
     They are prevented by silence, but not affected by antimagic.
 
-  * Spells are cast using memorized magical words.  They are both
+  * Spells are cast using memorized magical words. They are both
     prevented by silence and affected by antimagic.
 
 ****************************************
@@ -3244,5 +3244,5 @@ Debugging inscriptions
 ========================================
 
 If you've entered wizard mode, then you can change the zapping range of a wand
-by inscribing it with 'range:number' (e.g., 'range:50').  This only works for
+by inscribing it with 'range:number' (e.g., 'range:50'). This only works for
 wands zapped by the player.

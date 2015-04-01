@@ -5,7 +5,7 @@ Getting DCSS to run
 -------------------
 
 This file describes how to compile a runtime executable of DCSS from the
-source code.  If you're trying to compile Crawl yourself, skip ahead to the
+source code. If you're trying to compile Crawl yourself, skip ahead to the
 next section, "Building Dungeon Crawl Stone Soup".
 
 If, however, you're having trouble getting a precompiled binary to run:
@@ -29,7 +29,7 @@ If, however, you're having trouble getting a precompiled binary to run:
 
 If you still can't get Crawl to run, you can ask for further help on IRC:
 ##crawl-dev on freenode, forums: https://crawl.develz.org/tavern/ or usenet:
-rec.games.roguelike.misc.  Please try to be as detailed as possible about
+rec.games.roguelike.misc. Please try to be as detailed as possible about
 any error messages you're getting.
 
 The rest of the file deals with compiling from the source.
@@ -47,7 +47,7 @@ Crawl Stone Soup is known to run on the following platforms as of version
 - Microsoft Windows 2000/XP/Vista/7/8
 
 The only officially supported compilers are gcc (4.7 or newer) and clang
-(3.4 or newer).  On Windows, gcc is usually available as MinGW; compilation
+(3.4 or newer). On Windows, gcc is usually available as MinGW; compilation
 with MSVC (Microsoft Visual Studio 2013) is supported.
 
 There's no reason Crawl shouldn't work on other modern systems, especially
@@ -61,10 +61,10 @@ Source Code Checkout
 --------------------
 
 If you don't already have the source code downloaded (in the form of a .zip
-or .tar.bz2 file), you can obtain the latest source code from Git.  MinGW
+or .tar.bz2 file), you can obtain the latest source code from Git. MinGW
 users can obtain Git by installing msysgit (described in the MinGW section).
 Linux users can just install the 'git' or 'git-core' package with whatever
-package manager they use.  Note that there used to be another package called
+package manager they use. Note that there used to be another package called
 'git' (now 'gnuit') going around which stands for 'GNU interactive tools'.
 This is not what you want.
 
@@ -90,18 +90,18 @@ Crawl can be built with some optional features:
 
 Crawl Stone Soup also uses a level compiler to compile special level
 definitions; to make changes to the level compiler, you'll need the flex and
-bison/byacc tools (Other lex/yaccs may also work).  More details are
+bison/byacc tools (Other lex/yaccs may also work). More details are
 available below.
 
 Sound can be provided by SDL2_mixer (the default), by WINMM on Windows
 (defined by WINMM_PLAY_SOUNDS in AppHdr.h), or by an external command on
-Unix systems (SOUND_PLAY_COMMAND in AppHdr.h).  To enable this, append
+Unix systems (SOUND_PLAY_COMMAND in AppHdr.h). To enable this, append
 SOUND=y to the make invocation.
 
 Stone Soup 0.6+ includes Lua 5.1.4 in its submodules. Crawl uses Lua for
-dungeon generation.  In addition, Crawl has a (rudimentary) Lua interface
+dungeon generation. In addition, Crawl has a (rudimentary) Lua interface
 for users to run scripts which can do things such as conditionalise parts of
-the .crawlrc/init.txt.  Such user Lua scripts are enabled by default, but
+the .crawlrc/init.txt. Such user Lua scripts are enabled by default, but
 can be turned off by appending NO_LUA_BINDINGS=y to the make invocation.
 
 
@@ -111,7 +111,7 @@ Building on Unix (Linux, *BSD, Solaris, etc.)
 To install or not to install:
 
 If only one user on the system (you) is going to be playing Crawl, you do
-not need to use "make install".  A simple "make" will build Crawl in the
+not need to use "make install". A simple "make" will build Crawl in the
 source directory, where you can run it as "./crawl".
 
 
@@ -122,7 +122,7 @@ typing the following as root/sudo:
 apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
   libsqlite3-dev libz-dev pkg-config libsdl2-image-dev libsdl2-mixer-dev    \
   libsdl2-dev libfreetype6-dev libpng-dev ttf-dejavu-core
-(the last five are needed only for tiles builds).  This is the complete set,
+(the last five are needed only for tiles builds). This is the complete set,
 with it you don't have a need for the bundled "contribs".
 
 If you are going to be rebuilding after doing small changes a lot, it is
@@ -138,8 +138,8 @@ by running the following as root:
 yum install gcc gcc-c++ make bison flex ncurses-devel lua-devel sqlite-devel \
   zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel freetype-devel \
   dejavu-sans-fonts dejavu-sans-mono-fonts
-(the last six are needed only for tile builds).  As with Debian, this package
-list avoids the need for the bundled "contribs".  For Fedora 20 or later,
+(the last six are needed only for tile builds). As with Debian, this package
+list avoids the need for the bundled "contribs". For Fedora 20 or later,
 replace lua-devel by compat-lua-devel.
 
 ccache can be installed with:
@@ -167,8 +167,8 @@ Building:
 * cd to the source directory.
 
 * Most users can simply type 'make' without any extra flags, and get a
-  working build as a result.  If just typing 'make' works for you, then you
-  shouldn't need to read any further.  BSD and Solaris users may have to use
+  working build as a result. If just typing 'make' works for you, then you
+  shouldn't need to read any further. BSD and Solaris users may have to use
   'gmake' instead of 'make'.
 
 * If you want a graphical (tiled) build, then you should add 'TILES=y' to
@@ -177,7 +177,7 @@ Building:
     make TILES=y
 
   Note that the graphical build requires that you have development libraries
-  installed for SDL, SDL_image, libpng, zlib, and freetype.  If your system
+  installed for SDL, SDL_image, libpng, zlib, and freetype. If your system
   doesn't have these installed, you can usually get them via your package
   manager (apt-get, emerge, yum, etc).
 
@@ -309,7 +309,7 @@ Running MSYS and building Crawl:
 
 * If you get a message about missing SDL.h even though you do have contribs
   installed, your version of msys may suffer from a bug that has been fixed
-  since.  Please either update msys, or delete /mingw/bin/sdl-config so it
+  since. Please either update msys, or delete /mingw/bin/sdl-config so it
   won't interfere with the copy shipped with Crawl.
 
 * For you stubborn types who insist on using separate msys and git installs,
@@ -334,8 +334,8 @@ Building on Windows (cygwin)
 
 * Get Cygwin from http://www.cygwin.com/. When installing, ensure that the
   following packages are selected: gcc, g++, make, flex, bison,
-  libncurses-devel.  If you'd like to build from git, install the git-core
-  package.  You may also want to install diff, patch, and other such tools.
+  libncurses-devel. If you'd like to build from git, install the git-core
+  package. You may also want to install diff, patch, and other such tools.
 
 * Once Cygwin is installed, open a Cygwin bash shell (use the Start menu or
   desktop icon, do not double-click bash.exe in Explorer).
@@ -436,14 +436,14 @@ Crawl looks for several data files when starting up. They include:
 All these files are in the source tree under source/dat.
 
 Crawl will also look for documentation files when players invoke the help
-system.  These files are available under the docs directory.
+system. These files are available under the docs directory.
 
 Your built Crawl binary must be able to find these files, or it will not
 start.
 
 If Crawl is built without an explicit DATA_DIR_PATH (this is the most common
 setup), it will search for its data files under the current directory, and
-if it can't find them there, one level above the current directory.  In
+if it can't find them there, one level above the current directory. In
 short, it uses these search paths: ., ./dat, ./docs, .., ../dat, ../docs.
 
 
@@ -459,7 +459,7 @@ If you're using one of standard makefile, the steps described in this
 section are performed automatically:
 
 The level compiler source is in the source/util directory (levcomp.lpp and
-levcomp.ypp).  The steps involved in building the level compiler are:
+levcomp.ypp). The steps involved in building the level compiler are:
 
 * Run flex on levcomp.lpp to produce the levcomp.lex.cc lexer.
 * Run bison on levcomp.ypp to produce the levcomp.tab.cc parser and
@@ -468,7 +468,7 @@ levcomp.ypp).  The steps involved in building the level compiler are:
   files into the Crawl executable.
 
 For convenience on systems that don't have flex/bison, pre-generated
-intermediate files are provided under source/prebuilt.  The makefiles
+intermediate files are provided under source/prebuilt. The makefiles
 provided with the Crawl source distribution will use these pre-generated
 files automatically if flex/bison is not available.
 
@@ -483,12 +483,12 @@ Lua
 Security on multiuser systems (Unix):
 
 As of 0.8, setuid and setgid installs are no longer supported, thus any
-previous concerns are no longer applicable.  Lua user scripts are sandboxed
+previous concerns are no longer applicable. Lua user scripts are sandboxed
 and should be generally safe even on public servers (besides increasing the
 attack surface).
 
-As of 0.3, the Lua source is included with Crawl.  It will be used if you
-don't have Lua headers installed.  Note that we don't provide security
+As of 0.3, the Lua source is included with Crawl. It will be used if you
+don't have Lua headers installed. Note that we don't provide security
 support for Lua, and thus if you run a public server or a kiosk, it is
 strongly recommended to use system Lua which does receive security updates
 from whatever distribution you use.
@@ -496,32 +496,32 @@ from whatever distribution you use.
 
 PCRE
 ----
-As of 0.6.0, PCRE 7.9 source is included with Crawl.  It is enabled by
-default.  The sources in contrib/pcre are identical to the 7.9 distro except
+As of 0.6.0, PCRE 7.9 source is included with Crawl. It is enabled by
+default. The sources in contrib/pcre are identical to the 7.9 distro except
 for the use of a custom-made Makefile instead of the automake system that
 was in place previously.
 
 On Unixes, you're better served by the existing POSIX regular expression
-support.  If you want PCRE, your package management system is again your
-best bet.  Remember to install development headers, not just the plain
+support. If you want PCRE, your package management system is again your
+best bet. Remember to install development headers, not just the plain
 library.
 
 
 Unicode
 -------
-As of 0.8, Unicode support is included in all ports.  Still, you might need
+As of 0.8, Unicode support is included in all ports. Still, you might need
 to ensure your terminal can display non-basic glyphs.
 
-On Unix, you want an UTF-8 locale.  All modern distributions install one by
-default, but you might have somehow dropped required settings.  To check
-this, run "locale charmap", which should say "UTF-8".  If it's not, please
-ensure either LANG, LC_ALL or LC_CTYPE is set.  A typical line would be
+On Unix, you want an UTF-8 locale. All modern distributions install one by
+default, but you might have somehow dropped required settings. To check
+this, run "locale charmap", which should say "UTF-8". If it's not, please
+ensure either LANG, LC_ALL or LC_CTYPE is set. A typical line would be
 "export LC_ALL=en_US.UTF-8".
 
 On Windows, the console behaves differently for TrueType and legacy (bitmap)
-fonts.  The latter (mostly) work only on certain language editions of
+fonts. The latter (mostly) work only on certain language editions of
 Windows, such as English, and even there, they work adequately only for
-Crawl's default settings.  For anything more, please select one of TrueType
-fonts.  If, like one of our players, you are deeply attached to the looks of
+Crawl's default settings. For anything more, please select one of TrueType
+fonts. If, like one of our players, you are deeply attached to the looks of
 bitmap fonts, you can download a corrected version of the Terminal font from
 http://www.yohng.com/software/terminalvector.html
