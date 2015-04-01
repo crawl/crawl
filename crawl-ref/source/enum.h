@@ -1311,6 +1311,7 @@ enum conduct_type
     DID_HASTY,                            // Cheibriados
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
+    DID_ROT_CARRION,                      // Fedhas (a corpse rotted)
     DID_SOULED_FRIEND_DIED,               // Zin
     DID_ATTACK_IN_SANCTUARY,              // Zin
     DID_KILL_NONLIVING,
