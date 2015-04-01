@@ -1570,8 +1570,6 @@ void read_init_file(bool runscript)
     const string init_file_name(find_crawlrc());
 
     FileLineInput f(init_file_name.c_str());
-    if (f.error())
-        return;
 
     Options.filename = init_file_name;
     Options.line_num = 0;
@@ -1580,6 +1578,9 @@ void read_init_file(bool runscript)
 #else
     Options.basefilename = "init.txt";
 #endif
+
+    if (f.error())
+        return;
     Options.read_options(f, runscript);
 
     // Load late binding extra options from the command line AFTER init.txt.
