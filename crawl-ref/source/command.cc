@@ -896,9 +896,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
-            "    Health or Magic become full,\n"
-            "    something is detected, or after\n"
-            "    100 turns over (<w>numpad-5</w>)\n",
+            "    Health or Magic become full or\n"
+            "    something is detected. If Health\n"
+            "    and Magic are already full, stops\n"
+            "    when 100 turns over (<w>numpad-5</w>)\n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -1198,9 +1199,10 @@ static void _add_formatted_hints_help(column_composer &cols)
     _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
-            "    Health or Magic become full,\n"
-            "    something is detected, or after\n"
-            "    100 turns over (<w>numpad-5</w>)\n",
+            "    Health or Magic become full or\n"
+            "    something is detected. If Health\n"
+            "    and Magic are already full, stops\n"
+            "    when 100 turns over (<w>numpad-5</w>)\n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
