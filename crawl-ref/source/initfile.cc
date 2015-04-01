@@ -1452,7 +1452,7 @@ void game_options::add_cset_override(dungeon_char_type dc, int symbol)
     cset_override[dc] = get_glyph_override(symbol);
 }
 
-static string _find_crawlrc()
+string find_crawlrc()
 {
     const char* locations_data[][2] =
     {
@@ -1532,8 +1532,7 @@ static const char* config_defaults[] =
     "defaults/misc.txt",
 };
 
-// Returns an error message if the init.txt was not found.
-string read_init_file(bool runscript)
+void read_init_file(bool runscript)
 {
     Options.reset_options();
 
@@ -1568,23 +1567,11 @@ string read_init_file(bool runscript)
     }
 
     // Load init.txt.
-    const string init_file_name(_find_crawlrc());
+    const string init_file_name(find_crawlrc());
 
     FileLineInput f(init_file_name.c_str());
     if (f.error())
-    {
-        if (!init_file_name.empty())
-        {
-            return make_stringf("(\"%s\" is not readable)",
-                                init_file_name.c_str());
-        }
-
-#ifdef UNIX
-        return "(~/.crawlrc missing)";
-#else
-        return "(no init.txt in current directory)";
-#endif
-    }
+        return;
 
     Options.filename = init_file_name;
     Options.line_num = 0;
@@ -1608,8 +1595,6 @@ string read_init_file(bool runscript)
     Options.filename     = init_file_name;
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
-
-    return "";
 }
 
 newgame_def read_startup_prefs()

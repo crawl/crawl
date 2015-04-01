@@ -182,8 +182,6 @@ player you;
 
 game_state crawl_state;
 
-string init_file_error;    // externed in newgame.cc
-
 void world_reacts();
 
 static key_recorder repeat_again_rec;
@@ -310,7 +308,7 @@ int main(int argc, char *argv[])
     init_item_name_cache();
 
     // Read the init file.
-    init_file_error = read_init_file();
+    read_init_file();
 
     // Now parse the args again, looking for everything else.
     parse_args(argc, argv, false);
