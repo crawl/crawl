@@ -4301,8 +4301,6 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     else
         msg = replace_all(msg, "@says@", sound_list[s_type]);
 
-    msg = apostrophise_fixup(msg);
-
     msg = maybe_capitalise_substring(msg);
 
     return msg;

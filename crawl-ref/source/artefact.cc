@@ -301,12 +301,6 @@ string replace_name_parts(const string &name_in, const item_def& item)
         name = replace_all(name, "@god_name@", god_name(which_god, false));
     }
 
-    // copied from apostrophise() (libutil.cc):
-    // The proper possessive for a word ending in an "s" is to
-    // put an apostrophe after the "s": "Chris" -> "Chris'",
-    // not "Chris" -> "Chris's". Stupid English language...
-    name = replace_all(name, "s's", "s'");
-
     return name;
 }
 

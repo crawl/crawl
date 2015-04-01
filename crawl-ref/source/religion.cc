@@ -4600,7 +4600,6 @@ static void _place_delayed_monsters()
             if (msg[0] == ' ' || msg[0] == '\'')
                 msg = uppercase_first(god_name(mg.god)) + msg;
 
-            msg = apostrophise_fixup(msg);
             trim_string(msg);
 
             god_speaks(mg.god, msg.c_str());

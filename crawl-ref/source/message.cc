@@ -1706,7 +1706,6 @@ bool simple_monster_message(const monster* mons, const char *event,
     {
         string msg = mons->name(descrip);
         msg += event;
-        msg = apostrophise_fixup(msg);
 
         if (channel == MSGCH_PLAIN && mons->wont_attack())
             channel = MSGCH_FRIEND_ACTION;
@@ -1722,7 +1721,6 @@ bool simple_monster_message(const monster* mons, const char *event,
 void simple_god_message(const char *event, god_type which_deity)
 {
     string msg = uppercase_first(god_name(which_deity)) + event;
-    msg = apostrophise_fixup(msg);
     god_speaks(which_deity, msg.c_str());
 }
 
