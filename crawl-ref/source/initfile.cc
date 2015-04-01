@@ -1149,6 +1149,7 @@ void game_options::reset_options()
     item_glyph_cache.clear();
 
     rest_wait_both = false;
+    rest_wait_percent = 100;
 
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
@@ -3651,6 +3652,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
     }
     else BOOL_OPTION(rest_wait_both);
+    else INT_OPTION(rest_wait_percent, 0, 100);
     else BOOL_OPTION(cloud_status);
     else if (key == "dump_message_count")
     {

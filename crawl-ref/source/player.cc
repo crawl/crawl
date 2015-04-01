@@ -3955,6 +3955,11 @@ bool enough_zp(int minimum, bool suppress_msg)
     return true;
 }
 
+static bool should_stop_resting(int cur, int max)
+{
+    return cur == max || cur == (max * Options.rest_wait_percent) / 100;
+}
+
 void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -3976,8 +3981,11 @@ void inc_mp(int mp_gain, bool silent)
 
     if (!silent)
     {
-        if (wasnt_max && you.magic_points == you.max_magic_points)
+        if (wasnt_max
+            && should_stop_resting(you.magic_points, you.max_magic_points))
+        {
             interrupt_activity(AI_FULL_MP);
+        }
         you.redraw_magic_points = true;
     }
 }
@@ -3999,7 +4007,7 @@ void inc_hp(int hp_gain)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if (wasnt_max && you.hp == you.hp_max)
+    if (wasnt_max && should_stop_resting(you.hp, you.hp_max))
         interrupt_activity(AI_FULL_HP);
 
     you.redraw_hit_points = true;

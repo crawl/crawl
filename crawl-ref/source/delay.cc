@@ -1313,9 +1313,10 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
     {
+        int max_hp = (Options.rest_wait_percent * you.hp_max) / 100;
+        int max_mp = (Options.rest_wait_percent * you.max_magic_points) / 100;
         if (Options.rest_wait_both && curr == DELAY_REST
-            && (you.magic_points < you.max_magic_points
-                || you.hp < you.hp_max))
+            && (you.magic_points < max_mp || you.hp < max_hp))
         {
             return false;
         }
@@ -1612,9 +1613,9 @@ bool interrupt_activity(activity_interrupt_type ai,
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
 
-    if (ai == AI_FULL_HP)
+    if (ai == AI_FULL_HP && !you.running.notified_hp_full++)
         mpr("HP restored.");
-    else if (ai == AI_FULL_MP)
+    else if (ai == AI_FULL_MP && !you.running.notified_mp_full++)
         mpr("Magic restored.");
 
     if (_should_stop_activity(item, ai, at))
