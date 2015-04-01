@@ -167,6 +167,7 @@ public:
     int    get_score() const      { return points; }
     int    get_death_type() const { return death_type; }
     time_t get_death_time() const { return death_time; }
+    actor* killer() const; // Obviously does not work across games.
     xlog_fields get_fields() const;
 
     void set_base_xlog_fields() const;
