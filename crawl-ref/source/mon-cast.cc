@@ -7942,7 +7942,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         // The caster may be an (undead) enslaved soul.
         return mon->holiness() == MH_UNDEAD
                || mon->has_ench(ENCH_DEATHS_DOOR)
-               || mon->has_ench(ENCH_FATIGUE);
+               || mon->has_ench(ENCH_FATIGUE)
+               || !foe || !mon->can_see(foe);
 
     case SPELL_OZOCUBUS_ARMOUR:
         return mon->is_insubstantial() || mon->has_ench(ENCH_OZOCUBUS_ARMOUR);
