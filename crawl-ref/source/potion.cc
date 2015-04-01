@@ -169,7 +169,7 @@ public:
         // Pay for rot right off the top.
         amount = unrot_hp(amount);
         inc_hp(amount);
-           
+
         mpr("You feel much better.");
 
         return true;
