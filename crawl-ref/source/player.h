@@ -449,7 +449,7 @@ public:
     int strength(bool nonneg = true) const;
     int intel(bool nonneg = true) const;
     int dex(bool nonneg = true) const;
-    int max_stat(stat_type stat) const;
+    int max_stat(stat_type stat, bool base = false) const;
     int max_strength() const;
     int max_intel() const;
     int max_dex() const;
