@@ -2509,6 +2509,7 @@ enum monster_type                      // menv[].type
     MONS_DEATH_DRAKE,
 #if TAG_MAJOR_VERSION > 34
     MONS_WIND_DRAKE,
+    MONS_STREAM_DRAKE,
     MONS_DRAGON,                // genus
 #endif
     MONS_STEAM_DRAGON,
@@ -3355,6 +3356,8 @@ enum monster_type                      // menv[].type
 
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
+
+    MONS_STREAM_DRAKE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4431,6 +4434,7 @@ enum spell_type
     SPELL_CIGOTUVIS_EMBRACE,
     SPELL_SINGULARITY,
     SPELL_GRAVITAS,
+    SPELL_SPIT_WATER,
     NUM_SPELLS
 };
 

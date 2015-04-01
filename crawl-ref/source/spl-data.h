@@ -3595,6 +3595,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SPIT_WATER, "Spit Water",
+    SPTYP_ICE,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NOISY | SPFLAG_NEEDS_TRACER,
+    2,
+    0,
+    7, 7,
+    3, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

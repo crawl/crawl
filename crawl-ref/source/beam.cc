@@ -2575,17 +2575,24 @@ void bolt::affect_endpoint()
         noise_generated = true;
     }
 
-    if (origin_spell == SPELL_PRIMAL_WAVE) // &&coinflip()
+    if (origin_spell == SPELL_PRIMAL_WAVE || origin_spell == SPELL_SPIT_WATER)
     {
         if (you.see_cell(pos()))
         {
-            mpr("The wave splashes down.");
-            noisy(spell_effect_noise(SPELL_PRIMAL_WAVE), pos());
+            if (origin_spell == SPELL_PRIMAL_WAVE)
+                mpr("The wave splashes down.");
+            else
+                mpr("The water splashes everywhere.");
+            noisy(spell_effect_noise(origin_spell), pos());
         }
         else
-            noisy(spell_effect_noise(SPELL_PRIMAL_WAVE),
+            noisy(spell_effect_noise(origin_spell),
                   pos(), "You hear a splash.");
-        create_feat_splash(pos(), 2, random_range(3, 12, 2));
+
+        int attempts = origin_spell == SPELL_PRIMAL_WAVE
+            ? random_range(3, 12, 2)
+            : random_range(2, 6, 2);
+        create_feat_splash(pos(), 2, attempts);
     }
 
     if (origin_spell == SPELL_BLINKBOLT)

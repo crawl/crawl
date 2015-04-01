@@ -284,6 +284,14 @@ unseen Spit Poison cast
 
 You hear a spitting sound.
 %%%%
+Spit Water cast
+
+@The_monster@ spits water @at@ @target@.
+%%%%
+unseen Spit Water cast
+
+You hear a spitting sound.
+%%%%
 Sticky Flame Splash cast
 
 @The_monster@ spits sticky flame @at@ @target@.

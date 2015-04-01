@@ -2091,4 +2091,10 @@ static const mon_spellbook mspell_list[] =
        { SPELL_DISCHARGE, 32, MON_SPELL_MAGICAL },
       }
     },
+
+    {  MST_STREAM_DRAKE,
+      {
+       { SPELL_SPIT_WATER, 36, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+      }
+    }
 };

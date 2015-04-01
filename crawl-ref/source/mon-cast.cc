@@ -971,6 +971,14 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_ACID;
         break;
 
+    case SPELL_SPIT_WATER:
+        beam.colour   = BLUE;
+        beam.name     = "stream of water";
+        beam.damage   = dice_def(2, 4 + power / 10);
+        beam.hit      = 20 + (3 * mons->get_hit_dice());
+        beam.flavour  = BEAM_WATER;
+        break;
+
     case SPELL_DISINTEGRATE:
         beam.flavour    = BEAM_DISINTEGRATION;
         beam.ench_power = 50;
