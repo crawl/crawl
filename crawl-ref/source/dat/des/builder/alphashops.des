@@ -137,7 +137,8 @@
        "wand of polymorph | ring of positive energy | ring of protection | " ..
        "manual of poison magic | staff of power | wand of paralysis | " ..
        "ring of protection from fire | ring of protection from magic | " ..
-       "staff of poison | ring of protection from cold | manual of polearms"
+       "staff of poison | ring of protection from cold | " ..
+       "manual of polearms | slice of pizza"
 
       elseif s == "Q" then i = "quarterstaff | quicksilver dragon armour | " ..
        "quick blade"
@@ -153,7 +154,7 @@
        "deck of summoning | potion of slowing | ring of see invisible | " ..
        "ring of slaying | spear | ring of stealth | ring of strength | " ..
        "rod of shadows | rod of the swarm | ring of sustain abilities | " ..
-       "sack of spiders | slice of pizza | scroll of summoning | scythe | " ..
+       "sack of spiders | scroll of summoning | scythe | " ..
        "book of spatial translocations | scroll of silence | shield | " ..
        "shortbow | stone of tremors | wand of slowing | manual of staves | " ..
        "steam dragon armour | shadow dragon armour | storm dragon armour | " ..
