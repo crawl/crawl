@@ -57,9 +57,18 @@ int player::dex(bool nonneg) const
 
 static int _stat_modifier(stat_type stat, bool innate_only);
 
-int player::max_stat(stat_type s) const
+/**
+ * What's the player's current maximum for a stat, before ability damage is
+ * applied?
+ *
+ * @param s     The stat in question (e.g. STAT_STR).
+ * @param base  Whether to disregard stat modifiers other than those from
+ *              mutations.
+ * @return      The player's maximum for the given stat; capped at 72.
+ */
+int player::max_stat(stat_type s, bool base) const
 {
-    return min(base_stats[s] + _stat_modifier(s, false), 72);
+    return min(base_stats[s] + _stat_modifier(s, base), 72);
 }
 
 int player::max_strength() const
@@ -80,7 +89,7 @@ int player::max_dex() const
 // Base stat including innate mutations (which base_stats does not)
 static int _base_stat(stat_type s)
 {
-    return min(you.base_stats[s] + _stat_modifier(s, true), 72);
+    return you.max_stat(s, true);
 }
 
 
