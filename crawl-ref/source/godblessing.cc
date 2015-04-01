@@ -779,8 +779,10 @@ bool bless_follower(monster* follower,
 
     // Try *again*, on the entire level
     if (!follower)
+    {
         follower = choose_random_monster_on_level(0, is_follower,
                                                   god == GOD_BEOGH);
+    }
 
     switch (god)
     {
