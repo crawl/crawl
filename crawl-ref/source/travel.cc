@@ -32,6 +32,7 @@
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "format.h"
 #include "godabil.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -4461,7 +4462,7 @@ template <class C> void explore_discoveries::say_any(
     const string message = "Found " +
                            comma_separated_line(coll.begin(), coll.end()) + ".";
 
-    if (strwidth(message) >= get_number_of_cols())
+    if (printed_width(message) >= get_number_of_cols())
         mprf("Found %s %s.", number_in_words(size).c_str(), category);
     else
         mpr(message);
