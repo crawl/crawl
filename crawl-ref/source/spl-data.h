@@ -1331,10 +1331,10 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_IGNITE_POISON, "Ignite Poison",
-     SPTYP_FIRE | SPTYP_TRANSMUTATION,
+     SPTYP_FIRE | SPTYP_TRANSMUTATION | SPTYP_POISON,
      SPFLAG_AREA | SPFLAG_BATTLE,
-     5,
-     200,
+     3,
+     100,
      -1, -1,
      4, 0,
      nullptr,
