@@ -4159,7 +4159,7 @@ int get_real_mp(bool include_items)
     int enp = you.experience_level * scale;
 
     int spell_extra = you.skill(SK_SPELLCASTING, 1 * scale, true); // 100%
-    int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, true) * 3 / 5; // 60%
+    int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, true) / 2; // 50%
     int evoc_extra = you.skill(SK_EVOCATIONS, 1 * scale, true) / 2; // 50%
 
     enp += max(spell_extra, max(invoc_extra, evoc_extra));
