@@ -282,6 +282,19 @@ NORETURN void end_game(scorefile_entry &se)
                 }
                 break;
 
+            case GOD_BEOGH:
+               if (actor* killer = se.killer())
+               {
+                    if (killer->is_monster() && killer->deity() == GOD_BEOGH)
+                    {
+                        const string msg = " appreciates "
+                                           + killer->name(DESC_ITS)
+                                           + " killing of a heretic priest.";
+                        simple_god_message(msg.c_str());
+                    }
+               }
+               break;
+
             default:
                 break;
         }

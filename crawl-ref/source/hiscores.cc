@@ -38,6 +38,7 @@
 #include "libutil.h"
 #include "menu.h"
 #include "misc.h"
+#include "mon-util.h"
 #include "options.h"
 #include "ouch.h"
 #include "place.h"
@@ -746,6 +747,11 @@ void scorefile_entry::init_from(const scorefile_entry &se)
 
     // We could just reset raw_line to "" instead.
     raw_line          = se.raw_line;
+}
+
+actor* scorefile_entry::killer() const
+{
+    return actor_by_mid(death_source);
 }
 
 xlog_fields scorefile_entry::get_fields() const
