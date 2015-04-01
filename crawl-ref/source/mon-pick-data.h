@@ -486,6 +486,7 @@ static const pop_entry pop_crypt[] =
   {  1,  6,  145, SEMI, MONS_EIDOLON },
   {  1,  6,   80, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
   {  1,  7,   85, SEMI, MONS_REVENANT },
+  {  1,  7,   75, SEMI, MONS_CURSE_SKULL },
   {  2,  5,  145, SEMI, MONS_FLAYED_GHOST },
   {  2,  5,   95, SEMI, MONS_SHADOW_WRAITH },
   {  2,  7,   40, SEMI, MONS_REAPER },
