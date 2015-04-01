@@ -1761,6 +1761,12 @@ static void _get_orb(const item_def &it, bool quiet)
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
 
+    if (you.duration[DUR_TELEPORT])
+    {
+        mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
+        you.increase_duration(DUR_TELEPORT, 5 + random2(5));
+    }
+
     mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
 
     if (you_worship(GOD_CHEIBRIADOS))
