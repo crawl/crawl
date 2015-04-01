@@ -2109,7 +2109,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(en))
         {
             add_ench(mon_enchant(ENCH_FATIGUE, 0, 0,
-                                 (1 + random2(3)) * BASELINE_DELAY));
+                                 (10 + random2(20)) * BASELINE_DELAY));
         }
         break;
 
