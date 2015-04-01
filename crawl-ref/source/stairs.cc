@@ -26,6 +26,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "notes.h"
 #include "output.h"
 #include "prompt.h"
@@ -579,6 +580,9 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
         return;
 
     // All checks are done, the player is on the move now.
+
+    // Clean up fake blood.
+    heal_flayed_effect(&you, true, true);
 
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
