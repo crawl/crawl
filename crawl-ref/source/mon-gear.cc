@@ -2133,11 +2133,11 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
     case MONS_MERFOLK_IMPALER:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random_choose_weighted(100, ARM_ROBE,
-                                               60, ARM_LEATHER_ARMOUR,
-                                               5, ARM_TROLL_LEATHER_ARMOUR,
-                                               5, ARM_STEAM_DRAGON_ARMOUR,
+        item.sub_type = random_choose_weighted(6, ARM_ROBE,
+                                               4, ARM_LEATHER_ARMOUR,
                                                0);
+        if (one_chance_in(16))
+            level = ISPEC_GOOD_ITEM;
         break;
 
     case MONS_MERFOLK_JAVELINEER:
