@@ -706,7 +706,7 @@ static void _display_god_blessing(monster* follower, god_type god,
 static bool _beogh_bless_follower(monster* follower, bool force)
 {
     // most blessings fail, tragically...
-    if (!force && one_chance_in(4))
+    if (!force && !one_chance_in(4))
         return false;
 
     // If a follower was specified, and it's suitable, pick it.
