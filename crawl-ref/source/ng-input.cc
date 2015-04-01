@@ -8,13 +8,12 @@
 #include "end.h"
 #include "files.h"
 #include "format.h"
+#include "initfile.h"
 #include "libutil.h"
 #include "options.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
-
-extern string init_file_error; // defined in main.cc
 
 // Eventually, this should be something more grand. {dlb}
 void opening_screen()
@@ -26,7 +25,28 @@ void opening_screen()
     "Read the instructions for legal details."
     "</brown> " ;
 
-    const bool init_found = init_file_error.empty();
+    string initfile_error = "";
+    bool init_found = true;
+
+    const string file = find_crawlrc();
+    FileLineInput f(file.c_str());
+    if (f.error())
+    {
+        if (!file.empty())
+        {
+            initfile_error = make_stringf("(\"%s\" is not readable)",
+                                           file.c_str());
+        }
+        else
+        {
+#ifdef UNIX
+            initfile_error = "(~/.crawlrc missing)";
+#else
+            initfile_error = "(no init.txt in current directory)";
+#endif
+        }
+        init_found = false;
+    }
 
     if (!init_found)
         msg += "<lightred>(No init file ";
@@ -47,7 +67,7 @@ void opening_screen()
     }
     else
     {
-        msg += init_file_error;
+        msg += initfile_error;
         msg += ", using defaults.)";
     }
 
