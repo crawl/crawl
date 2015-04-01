@@ -16,7 +16,7 @@
 #  * settings/init.txt (in the Crawl directory)
 
 ##### Some basic explanation of option syntax #######################
-# Lines beginning with '#' are comments.  The basic syntax is:
+# Lines beginning with '#' are comments. The basic syntax is:
 #
 # field = value         or      field.subfield = value
 #

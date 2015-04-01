@@ -228,15 +228,15 @@ Using git for Stone Soup development
 
    $ git commit -a
 
-   In most cases, this is a good time to compile and test the change.  Make
+   In most cases, this is a good time to compile and test the change. Make
    sure it works correctly, testing in Wizard Mode as appropriate.
 
    When you're happy with your patch, you can make a patch file with the
-   format-patch command.  For example:
+   format-patch command. For example:
 
    $ git format-patch -1
 
-   This will create a patch from the most recent commit you've made.  The
+   This will create a patch from the most recent commit you've made. The
    patch file will be placed in your base Crawl source directory.
 
    For a more detailed patch creation guide, check out patch_guide.txt in the

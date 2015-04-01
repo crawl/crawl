@@ -888,7 +888,7 @@ Monsters
     - Rakshasas gain a monster spell "Phantom Mirror", which summons
       a clone of a nearby allied monster with half the hit points, with
       a 50% chance of swapping the clone for the original; this replaces
-      their previous self-cloning abilities.  They can now also cast
+      their previous self-cloning abilities. They can now also cast
       Iskenderun's Mystic Blast and will summon two clones of themselves
       at 50% HP as a one-time effect.
     - Giant orange brains get Mass Confusion instead of Confusion.
