@@ -70,7 +70,7 @@ This is not what you want.
 
 Once you have Git installed, you just need to do:
 
-    git clone git://gitorious.org/crawl/crawl.git
+    git clone https://github.com/crawl/crawl.git
 
 And then to get the contributing libraries, enter the newly cloned
 repository via 'cd crawl' and type:
