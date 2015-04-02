@@ -121,6 +121,13 @@ game_data_no_cache = true
 use_minified = true
 use_cdn = true
 
+# Additional *.toml files in this directory will be loaded and [[games]]
+# entries within will be parsed. Note that the order of [[games]] entries
+# defines display order of games in the web interface, so you should number
+# files in this directory to manage that ordering. eg:
+# * 10-trunk.toml
+# * 20-0.16.toml
+# * 30-nostalgia.toml
 games_conf_d = "webserver/games.conf.d/"
 
 # Whether to allow guests
