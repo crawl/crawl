@@ -143,6 +143,29 @@ guest_name_suffix_len = 3
 # Warning: VERY verbose!
 websocket_debug_logging = false
 
+# If true, players get an option to make a copy of their save to aid
+# replicating bugs and so on. Only devs can download save backups.
+# If allow_save_backups is true, you must specify save_backup_path and one of
+# save_source_path or save_source_command
+allow_save_backups = false
+
+# This directory will be used to store save backups.
+# save_backup_path = '/var/www/dcss-save-backups'
+
+# There are two ways to specify how Webtiles Server can find the original save
+# files. If the path is simple, you can specify save_backup_dir_path to specify
+# a single path where Webtiles Sever will look. If that's not sufficient, use
+# save_backup_path_command to specify an executable that will return the save
+# path when run.
+# Webtiles Server will try the path specified by save_backup_dir_path (if
+# defined) and if that fails fall back to the path returned by
+# save_backup_path_command (if defined) if it doesn't exist / isn't accessible.
+# You can use {dir_path}, {game_id} and {username} as substitutions in both.
+# dir_path and game_id is from the relevant [[games]] specification. If
+# dir_path isn't defined, using it here will result in an error.
+# save_source_path = '/dgl-chroot/{dir_path}/{username}.cs'
+# save_source_command = '/dgl-config/get-save-location.sh {gameid} {username}'
+
 # Non-SSL bindings
 [[binds]]
 port = 8080

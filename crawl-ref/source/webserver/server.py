@@ -18,6 +18,7 @@ import util
 from ws_handler import *
 from game_data_handler import GameDataHandler
 from janitor_handler import JanitorHandler
+from save_handler import SaveHandler
 import process_handler
 import userdb
 
@@ -167,7 +168,8 @@ def bind_server():
         ("/scores/(.*)", MainHandler, {"action": "scores"}),
         ("/socket", CrawlWebSocket),
         ("/gamedata/(.*)", GameDataHandler),
-        ("/janitor/(.*)", JanitorHandler)]
+        ("/janitor/(.*)", JanitorHandler),
+        ("/save/(.*)", SaveHandler)]
 
     application = tornado.web.Application(routes, gzip=True, **settings)
 
