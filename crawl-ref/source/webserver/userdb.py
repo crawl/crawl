@@ -121,6 +121,8 @@ def register_user(username, passwd, email):
     Returns None on success or error string.
     Set passwd to None to disable password authentication (ie, the user cannot
     log in).
+    Set email to None to register an account without an email address ('' will
+    fail validation).
     Note: email is not checked for validity."""
     # passwd can be '' or None (which mean different things). Check for ''
     # here, and None further down. Bit messy.

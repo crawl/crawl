@@ -576,7 +576,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         username = userdb.find_unused_guest_name()
         if not username:
             return False
-        self.register(username, None, '')
+        self.register(username, None, None)
         return username
 
     def register(self, username, password, email):
