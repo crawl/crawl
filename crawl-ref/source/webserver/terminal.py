@@ -16,12 +16,16 @@ class TerminalRecorder(object):
         self.io_loop = io_loop
         self.command = command
         if filename:
+            # Try to dynamically create the ttyrec parent directory
             d = os.path.dirname(filename)
             if not os.path.isdir(d):
-                logging.warning("ttyrec directory '%s' doesn't exist, "
-                                "not creating ttyrec.", d)
-                self.ttyrec = None
-            else:
+                try:
+                    os.mkdir(d)
+                except EnvironmentError as e:
+                    logging.warning("Couldn't create ttyrec directory '%s' "
+                                    "(%s).", d, e)
+                    self.ttyrec = None
+            if os.path.isdir(d):
                 self.ttyrec = open(filename, "w", 0)
         else:
             self.ttyrec = None
