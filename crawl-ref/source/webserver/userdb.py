@@ -127,7 +127,7 @@ def register_user(username, passwd, email):
     # passwd can be '' or None (which mean different things). Check for ''
     # here, and None further down. Bit messy.
     if passwd == '':
-        return "The password can't be None!"
+        return "The password can't be blank!"
     if email == '':
         return "Email cannot be blank!"
     if email is not None and not re.match(config["email_regex"], email):
