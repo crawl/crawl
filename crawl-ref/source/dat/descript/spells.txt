@@ -236,6 +236,11 @@ This spell releases a massive electrical discharge that arcs from target to
 target until it grounds out. It may ground out harmlessly if there are no
 targets sufficiently close to the caster, however.
 %%%%
+Chant Fire Storm spell
+
+This creature may chant for three turns and then unleash a fire storm on your
+location.
+%%%%
 Chaos Breath spell
 
 This creature may exhale a large cloud of fumes filled with the very essence of

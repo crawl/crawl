@@ -3595,6 +3595,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CHANT_FIRE_STORM, "Chant Fire Storm",
+    SPTYP_CONJURATION | SPTYP_FIRE,
+    SPFLAG_UTILITY,
+    6,
+    200,
+    -1, -1,
+    5, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

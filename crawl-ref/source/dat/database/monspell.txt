@@ -180,6 +180,10 @@ Ephemeral Infusion cast
 Phantom Mirror cast
 
 @The_monster@ weaves an illusion.
+%%%%
+Chant Fire Storm cast
+
+@The_monster@ begins to chant a fire storm spell!
 #################################################
 # The next two have special hard-coded messaging.
 #################################################

@@ -1081,6 +1081,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
+    case MONS_FIRECALLER:
     case MONS_PSYCHE:
     case MONS_JOSEPHINE:
         item.base_type = OBJ_WEAPONS;
