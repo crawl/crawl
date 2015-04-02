@@ -1170,7 +1170,7 @@ A swirling cloud of flame.
 %%%%
 firecaller
 
-A human whose hands are wreathed in lashing tendrils of flame, this fire cultist
+A human whose hands are wreathed in lashing tendrils of flame. This fire cultist
 has the ability to call down a torrent of flames on their foes, though the
 ritual takes some time to complete.
 %%%%
