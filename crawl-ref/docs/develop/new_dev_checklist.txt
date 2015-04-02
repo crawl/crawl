@@ -1,6 +1,6 @@
 This is a checklist for when a new developer joins the team.
 
- * Commit rights: add their gitorious account to the dcss-developers group.
+ * Commit rights: add their github account to the dcss group.
  * Add them to .mailmap (in the repository root) and CREDITS.txt.
  * Upgrade their mantis account to developer.
  * Update https://crawl.develz.org/wiki/doku.php?id=dcss:admin:devteam
