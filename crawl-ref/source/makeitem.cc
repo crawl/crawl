@@ -558,6 +558,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     10, SPMSL_STEEL,
                                     12, SPMSL_DISPERSAL,
                                     28, SPMSL_RETURNING,
+                                    15, SPMSL_EXPLODING,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
@@ -669,7 +670,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_DISPERSAL:
         return type == MI_ARROW || type == MI_TOMAHAWK;
     case SPMSL_EXPLODING:
-        return type == MI_SLING_BULLET;
+        return type == MI_SLING_BULLET || type == MI_TOMAHAWK;
     case SPMSL_STEEL: // deliberate fall through
     case SPMSL_SILVER:
         return type == MI_BOLT || type == MI_SLING_BULLET
