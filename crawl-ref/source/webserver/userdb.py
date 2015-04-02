@@ -126,6 +126,10 @@ def register_user(username, passwd, email):
     # here, and None further down. Bit messy.
     if passwd == '':
         return "The password can't be None!"
+    if email == '':
+        return "Email cannot be blank!"
+    if email is not None and not re.match(config["email_regex"], email):
+        return "Invalid email address!"
     username = username.strip()
     if len(username) < config["min_username_length"]:
         return "Username too short."

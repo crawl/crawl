@@ -23,6 +23,9 @@ crypt_algorithm = "6"
 crypt_salt_length = 16
 
 nick_regex = "^[a-zA-Z0-9]{3,20}$"
+# This regex will forbid some technically valid email addresses. Emails
+# must match anything@anything.anything
+email_regex = "^[a-zA-Z0-9._-+]+@[a-zA-Z0-9._-+]+\.[a-zA-Z0-9._-+]+$"
 max_passwd_length = 20
 
 login_token_lifetime = 7
