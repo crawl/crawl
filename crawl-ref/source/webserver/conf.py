@@ -170,11 +170,11 @@ class Conf(object):
             self.scan_titles()
         except EnvironmentError as e:
             raise ConfigError("Couldn't read title_path directory '{0}' "
-                              "({1}).".format(self.static_path, e.strerror))
+                              "({1}).".format(self["static_path"], e.strerror))
 
         if not self.title_images:
             raise ConfigError("No title images (title_*.png) found in "
-                              "static_path ({0}).".format(self.static_path))
+                              "static_path ({0}).".format(self["static_path"]))
 
         init_prog = self.get("init_player_program")
         if init_prog and not os.access(init_prog, os.X_OK):
