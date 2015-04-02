@@ -20,6 +20,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
+#include "fprop.h"
 #include "hints.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -27,6 +28,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -1998,6 +2000,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_WORD_OF_RECALL:
+    case ENCH_CHANT_FIRE_STORM:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
@@ -2007,10 +2010,10 @@ void monster::apply_enchantment(const mon_enchant &me)
             || has_ench(ENCH_MUTE))
         {
             speed_increment += me.duration;
-            del_ench(ENCH_WORD_OF_RECALL, true, false);
+            del_ench(en, true, false);
             if (you.can_see(this))
             {
-                mprf("%s word of recall is interrupted.",
+                mprf("%s chant is interrupted.",
                      name(DESC_ITS).c_str());
             }
             break;
@@ -2018,7 +2021,26 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (decay_enchantment(en))
         {
-            mons_word_of_recall(this, 3 + random2(5));
+            if (en == ENCH_WORD_OF_RECALL)
+                mons_word_of_recall(this, 3 + random2(5));
+            else if (en == ENCH_CHANT_FIRE_STORM)
+            {
+                actor *mons_foe = get_foe();
+                const coord_def foepos(mons_foe->pos());
+
+                if  (!this->friendly()
+                     && !(is_sanctuary(pos())
+                        || is_sanctuary(mons_foe->pos()))
+                     && can_see(mons_foe))
+                {
+                    mpr("here");
+                    bolt beem;
+                    beem.target = foepos;
+                    mons_cast(this, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,
+                            true);
+                }
+            }
+
             // This is the same delay as vault sentinels.
             mon_enchant breath_timeout =
                 mon_enchant(ENCH_BREATH_WEAPON, 1, this,
@@ -2308,7 +2330,7 @@ static const char *enchant_names[] =
     "negative_vuln",
 #endif
     "condensation_shield", "resistant",
-    "hexed", "corpse_armour", "buggy",
+    "hexed", "corpse_armour", "chanting_fire_storm", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

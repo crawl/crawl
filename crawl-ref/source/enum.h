@@ -1993,6 +1993,7 @@ enum enchant_type
     ENCH_RESISTANCE,
     ENCH_HEXED,
     ENCH_BONE_ARMOUR,
+    ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3355,6 +3356,7 @@ enum monster_type                      // menv[].type
 
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
+    MONS_FIRECALLER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4431,6 +4433,7 @@ enum spell_type
     SPELL_CIGOTUVIS_EMBRACE,
     SPELL_SINGULARITY,
     SPELL_GRAVITAS,
+    SPELL_CHANT_FIRE_STORM,
     NUM_SPELLS
 };
 
