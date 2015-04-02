@@ -1179,9 +1179,9 @@ BRAND:   SPWPN_VAMPIRISM
 BOOL:    unholy
 
 ENUM:    GYRE
-NAME:    quick blades "Gyre" and "Gimble"
+NAME:    pair of quick blades "Gyre" and "Gimble"
 OBJ:     OBJ_WEAPONS/WPN_QUICK_BLADE
-TYPE:    quick blades
+TYPE:    pair of quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
