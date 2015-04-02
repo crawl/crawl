@@ -137,6 +137,7 @@ enum monster_info_flags
     MB_RESISTANCE,
     MB_HEXED,
     MB_BONE_ARMOUR,
+    MB_CHANT_FIRE_STORM,
     NUM_MB_FLAGS
 };
 

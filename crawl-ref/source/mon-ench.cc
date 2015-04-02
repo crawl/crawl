@@ -2026,14 +2026,16 @@ void monster::apply_enchantment(const mon_enchant &me)
             else if (en == ENCH_CHANT_FIRE_STORM)
             {
                 actor *mons_foe = get_foe();
-                const coord_def foepos(mons_foe->pos());
+                coord_def foepos;
+                if (mons_foe)
+                    foepos = mons_foe->pos();
 
-                if  (!this->friendly()
+                if  (mons_foe
+                     && !this->friendly()
                      && !(is_sanctuary(pos())
                         || is_sanctuary(mons_foe->pos()))
                      && can_see(mons_foe))
                 {
-                    mpr("here");
                     bolt beem;
                     beem.target = foepos;
                     mons_cast(this, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,

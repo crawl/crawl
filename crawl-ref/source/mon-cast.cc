@@ -8331,7 +8331,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
 
     case SPELL_CHANT_FIRE_STORM:
-        return mon->has_ench(ENCH_BREATH_WEAPON);
+        return mon->has_ench(ENCH_BREATH_WEAPON) || !foe;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
