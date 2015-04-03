@@ -281,9 +281,11 @@ Using git for Stone Soup development
 
    So our local repository has a "master" branch corresponding to github's
    "master" branch. We do not yet have a branch corresponding to github's
-   "stone_soup-0.16", so let's create the branch and switch to it:
+   "stone_soup-0.16", so let's create the branch and switch to it. By default
+   git will find find the branch origin/stone_soup-0.16 and create a local
+   branch that tracks this one:
 
-   $ git checkout -b stone_soup-0.16 origin/stone_soup-0.16
+   $ git checkout stone_soup-0.16
    Branch stone_soup-0.16 set up to track remote branch stone_soup-0.16
    from origin.
    Switched to a new branch 'stone_soup-0.16'
@@ -315,32 +317,16 @@ Using git for Stone Soup development
    #
    nothing to commit (working directory clean)
 
-   Right, we're ready to push our fix to github. But now that we have multiple
-   local branches, let's first ask git what it plans to do when we push:
+   Right, we're ready to push our fix to github.
 
    $ git push --dry-run -v
    Pushing to git@github.com:crawl/crawl.git
-   Enter passphrase for key '...':
    To git@github.com:crawl/crawl.git
-    = [up to date]      master -> master
       b05bb66..976e722  stone_soup-0.16 -> stone_soup-0.16
 
-   So git wants to push the local master and stone_soup-0.16 branches to the
-   corresponding branches on github; the master branch has no new local
-   changes, whereas the 0.16 branch does (the new change is 976e722).
-
-   By default, git-push will push *all* your local branches to the
-   corresponding branches on github. This is important to remember; if you
-   had local commits on master, they would also be pushed to github. This
-   behaviour can be changed (the option is called "push.default") if it bothers
-   you, or you can do:
-
-   git push <remote> <local branch>:<remote branch>
-
-   So for instance, if I am working on 'master' locally, but want to push to a
-   remote branch called 'fixes-for-upstream', I could do:
-
-   git push origin master:fixes-for-upstream
+   So git wants to push the local stone_soup-0.16 branches to the corresponding
+   branches on github. Run the same command without --dry-run to actually push
+   the commit.
 
    Once you're done working on 0.16, you can switch back to "master"
    with:
@@ -423,7 +409,6 @@ Using git for Stone Soup development
 
       $ git push --dry-run -v origin pizza_tornado
       Pushing to git@github.com:crawl/crawl.git
-      Enter passphrase for key '...':
       To git@github.com:crawl/crawl.git
        * [new branch]      pizza_tornado -> pizza_tornado
 
