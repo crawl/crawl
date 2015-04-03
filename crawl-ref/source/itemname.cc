@@ -1528,12 +1528,6 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
                                      + (has_inscript ? inscription.size() : 0);
             const string inv_slot_text = "x) ";
             const int max_length = crawl_view.hudsz.x - inv_slot_text.size();
-            if (terse)
-            {
-                dprf("full %s (inscr %s (%d)) (%d), ok = %d",
-                     long_name.c_str(), inscription.c_str(), has_inscript,
-                     total_length, max_length);
-            }
             if (!terse || total_length <= max_length)
                 return long_name;
         }
