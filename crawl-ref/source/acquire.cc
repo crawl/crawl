@@ -1252,25 +1252,6 @@ static string _why_reject(const item_def &item, int agent)
         return "Destroying pain weapon after Necro sac!";
     }
 
-    // MT - Check: god-gifted weapons and armour shouldn't stat-zero you.
-    // Except Xom.
-    if ((agent == GOD_TROG || agent == GOD_OKAWARU)
-        && is_artefact(item))
-    {
-        artefact_properties_t  proprt;
-        artefact_properties(item, proprt);
-
-        // Check vs. stats. positive stats will automatically fall
-        // through. As will negative stats that won't kill you.
-        // XXX: would be good to iter...
-        if (-proprt[ARTP_STRENGTH] >= you.max_stat(STAT_STR, true)
-            || -proprt[ARTP_INTELLIGENCE] >= you.max_stat(STAT_INT, true)
-            || -proprt[ARTP_DEXTERITY] >= you.max_stat(STAT_DEX, true))
-        {
-            return "Destroying art that would cause <= 0 stats!";
-        }
-    }
-
     // Sif Muna shouldn't gift special books.
     // (The spells therein are still fair game for randart books.)
     if (agent == GOD_SIF_MUNA
