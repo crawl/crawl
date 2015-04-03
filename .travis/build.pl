@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-chdir "crawl-ref/source"
+chdir "source"
     or die "couldn't chdir: $!";
 
 open my $fh, '>', "util/release_ver"

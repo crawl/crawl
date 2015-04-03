@@ -1,33 +1,33 @@
-[submodule "crawl-ref/source/contrib/sqlite"]
-	path = crawl-ref/source/contrib/sqlite
+[submodule "source/contrib/sqlite"]
+	path = source/contrib/sqlite
 	url = git://github.com/crawl/crawl-sqlite
-[submodule "crawl-ref/source/contrib/lua"]
-	path = crawl-ref/source/contrib/lua
+[submodule "source/contrib/lua"]
+	path = source/contrib/lua
 	url = git://github.com/crawl/crawl-lua
-[submodule "crawl-ref/source/contrib/luajit"]
-	path = crawl-ref/source/contrib/luajit
+[submodule "source/contrib/luajit"]
+	path = source/contrib/luajit
 	url = git://github.com/crawl/crawl-luajit
-[submodule "crawl-ref/source/contrib/pcre"]
-	path = crawl-ref/source/contrib/pcre
+[submodule "source/contrib/pcre"]
+	path = source/contrib/pcre
 	url = git://github.com/crawl/crawl-pcre
-[submodule "crawl-ref/source/contrib/freetype"]
-	path = crawl-ref/source/contrib/freetype
+[submodule "source/contrib/freetype"]
+	path = source/contrib/freetype
 	url = git://github.com/crawl/crawl-freetype
-[submodule "crawl-ref/source/contrib/libpng"]
-	path = crawl-ref/source/contrib/libpng
+[submodule "source/contrib/libpng"]
+	path = source/contrib/libpng
 	url = git://github.com/crawl/crawl-libpng
-[submodule "crawl-ref/source/contrib/zlib"]
-	path = crawl-ref/source/contrib/zlib
+[submodule "source/contrib/zlib"]
+	path = source/contrib/zlib
 	url = git://github.com/crawl/crawl-zlib
-[submodule "crawl-ref/source/contrib/fonts"]
-	path = crawl-ref/source/contrib/fonts
+[submodule "source/contrib/fonts"]
+	path = source/contrib/fonts
 	url = git://github.com/crawl/crawl-fonts
-[submodule "crawl-ref/source/contrib/sdl2"]
-	path = crawl-ref/source/contrib/sdl2
+[submodule "source/contrib/sdl2"]
+	path = source/contrib/sdl2
 	url = git://github.com/crawl/crawl-sdl2
-[submodule "crawl-ref/source/contrib/sdl2-image"]
-	path = crawl-ref/source/contrib/sdl2-image
+[submodule "source/contrib/sdl2-image"]
+	path = source/contrib/sdl2-image
 	url = git://github.com/crawl/crawl-sdl2-image
-[submodule "crawl-ref/source/contrib/sdl2-mixer"]
-	path = crawl-ref/source/contrib/sdl2-mixer
+[submodule "source/contrib/sdl2-mixer"]
+	path = source/contrib/sdl2-mixer
 	url = git://github.com/crawl/crawl-sdl2-mixer
