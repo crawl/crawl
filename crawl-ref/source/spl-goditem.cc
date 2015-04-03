@@ -378,7 +378,10 @@ void debuff_player()
              danger ? "Careful! " : "");
     }
 
+    const int old_contam_level = get_contamination_level();
     contaminate_player(-1 * (1000 + random2(4000)));
+    if (old_contam_level && old_contam_level == get_contamination_level())
+        mpr("You feel slightly less contaminated with magical energies.");
 }
 
 void debuff_monster(monster* mon)
