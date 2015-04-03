@@ -1151,8 +1151,7 @@ void scorefile_entry::set_score_fields() const
     fields->add_field("sc", "%d", points);
     fields->add_field("ktyp", "%s", _kill_method_name(kill_method_type(death_type)));
 
-    const string killer = death_source_desc();
-    fields->add_field("killer", "%s", killer.c_str());
+    fields->add_field("killer", "%s", death_source_desc().c_str());
     if (!death_source_flags.empty())
     {
         const string kflags = comma_separated_line(
@@ -1167,7 +1166,7 @@ void scorefile_entry::set_score_fields() const
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
 
-    if (indirectkiller != killer)
+    if (indirectkiller != death_source_desc())
         fields->add_field("ikiller", "%s", indirectkiller.c_str());
 
     if (!killerpath.empty())
