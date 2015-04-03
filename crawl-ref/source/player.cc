@@ -4640,7 +4640,7 @@ bool miasma_player(actor *who, string source_aux)
 
     if (you.hp_max > 4 && coinflip())
     {
-        you.rot(who, 1);
+        you.rot(who, roll_dice(2, 2));
         success = true;
     }
 
