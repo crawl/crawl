@@ -4168,20 +4168,25 @@ int get_real_hp(bool trans, bool rotted)
 int get_real_mp(bool include_items)
 {
     const int scale = 100;
-    int enp = you.experience_level * scale;
+    int spellcasting = you.skill(SK_SPELLCASTING, 1 * scale, true);
+    int scaled_xl = you.experience_level * scale;
 
-    int spell_extra = you.skill(SK_SPELLCASTING, 1 * scale, true); // 100%
+    // the first 4 experience levels give an extra .5 mp up to your spellcasting
+    // the last 4 give no mp
+    int enp = min(23 * scale, scaled_xl);
+
+    int spell_extra = spellcasting; // 100%
     int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, true) / 2; // 50%
     int evoc_extra = you.skill(SK_EVOCATIONS, 1 * scale, true) / 2; // 50%
-
-    enp += max(spell_extra, max(invoc_extra, evoc_extra));
+    int highest_skill = max(spell_extra, max(invoc_extra, evoc_extra));
+    enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;
 
     // Analogous to ROBUST/FRAIL
     enp *= 100  + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (player_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100 * scale;
-
+//    enp = stepdown_value(enp, 9, 18, 45, 100)
     enp += species_mp_modifier(you.species);
 
     // This is our "rotted" base, applied after multipliers
