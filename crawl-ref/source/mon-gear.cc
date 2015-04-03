@@ -141,7 +141,8 @@ static void _give_wand(monster* mon, int level)
             || mons_class_flag(mon->type, M_NO_HT_WAND))
                 && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
 
-    while (1)
+    // this is very ugly and I should rethink it
+    for (int i = 0; i < 100; ++i)
     {
         const int idx = items(false, OBJ_WANDS, OBJ_RANDOM, level);
 
@@ -154,6 +155,14 @@ static void _give_wand(monster* mon, int level)
         {
             dprf(DIAG_MONPLACE,
                  "Destroying %s because %s doesn't want a high tier wand.",
+                 wand.name(DESC_A).c_str(),
+                 mon->name(DESC_THE).c_str());
+            destroy_item(idx, true);
+        }
+        else if (!mon->likes_wand(wand))
+        {
+            dprf(DIAG_MONPLACE,
+                 "Destroying %s because %s doesn't want a weak wand.",
                  wand.name(DESC_A).c_str(),
                  mon->name(DESC_THE).c_str());
             destroy_item(idx, true);
