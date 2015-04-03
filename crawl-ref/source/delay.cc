@@ -1613,10 +1613,16 @@ bool interrupt_activity(activity_interrupt_type ai,
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
 
-    if (ai == AI_FULL_HP && !you.running.notified_hp_full++)
+    if (ai == AI_FULL_HP && !you.running.notified_hp_full)
+    {
+        you.running.notified_hp_full = true;
         mpr("HP restored.");
-    else if (ai == AI_FULL_MP && !you.running.notified_mp_full++)
+    }
+    else if (ai == AI_FULL_MP && !you.running.notified_mp_full)
+    {
+        you.running.notified_mp_full = true;
         mpr("Magic restored.");
+    }
 
     if (_should_stop_activity(item, ai, at))
     {
