@@ -998,7 +998,7 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     slot.flags = MON_SPELL_WIZARD;
     monster* mon = caster->is_monster() ? caster->as_monster() : nullptr;
 
-    int pow = mon ? 12 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
+    int pow = mon ? 6 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
                   : calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
     colour = LIGHTMAGENTA; // cf. mon-data.h
@@ -1006,7 +1006,7 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     ev = 10;
     ac = 10;
     xl = 9 + div_rand_round(pow, 14);
-    max_hp = 80;
+    max_hp = 60 + roll_dice(8, 5); // 61-100
     damage = 0;
     att_type = AT_NONE;
 
@@ -1023,8 +1023,9 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     }
 
     const size_t count = spells.size();
+    const int base_freq = mon ? 67 : 200;
     for (auto& spellslot : spells)
-        spellslot.freq = 200 / count;
+        spellslot.freq = base_freq / count;
 }
 
 const mon_spell_slot lich_primary_summoner_spells[] =
