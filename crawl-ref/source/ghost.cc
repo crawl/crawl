@@ -1006,7 +1006,7 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     ev = 10;
     ac = 10;
     xl = 9 + div_rand_round(pow, 14);
-    max_hp = 60 + roll_dice(8, 5); // 61-100
+    max_hp = 60 + roll_dice(7, 5); // 67-95
     damage = 0;
     att_type = AT_NONE;
 
