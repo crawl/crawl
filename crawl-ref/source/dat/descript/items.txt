@@ -863,7 +863,8 @@ one who drinks it.
 %%%%
 potion of cancellation
 
-A potion which ends most magical effects, good or bad, affecting you.
+A potion which ends most magical effects, good or bad, affecting you. It also
+reduces your level of magical contamination.
 %%%%
 # if TAG_MAJOR_VERSION == 34
 potion of coagulated blood
