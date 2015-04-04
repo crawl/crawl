@@ -1438,6 +1438,7 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
         return SPRET_SUCCESS;
     }
 
+    mprf("Gravity reorients around %s.", mons->name(DESC_THE).c_str());
     fatal_attraction(mons, &you, pow);
     return SPRET_SUCCESS;
 }
