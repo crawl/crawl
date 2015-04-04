@@ -1430,10 +1430,13 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 
 int get_unrandart_num(const char *name)
 {
+    string uname = name;
+    uname = replace_all(uname, " ", "_");
+    uname = replace_all(uname, "'", "");
+    lowercase(uname);
     string quoted = "\"";
-    quoted += name;
+    quoted += uname;
     quoted += "\"";
-    lowercase(quoted);
 
     for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
     {
@@ -1441,7 +1444,7 @@ int get_unrandart_num(const char *name)
         art = replace_all(art, " ", "_");
         art = replace_all(art, "'", "");
         lowercase(art);
-        if (art == name || art.find(quoted) != string::npos)
+        if (art == uname || art.find(quoted) != string::npos)
             return UNRAND_START + i;
     }
     return SPWPN_NORMAL;
