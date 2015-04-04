@@ -3382,7 +3382,7 @@ void melee_attack::do_spines()
             attacker->hurt(&you, hurt);
         }
     }
-    else if (defender->as_monster()->spiny_degree() > 0)
+    else if (defender->as_monster()->is_spiny())
     {
         // Thorn hunters can attack their own brambles without injury
         if (defender->type == MONS_BRIAR_PATCH
@@ -3393,11 +3393,9 @@ void melee_attack::do_spines()
             return;
         }
 
-        const int degree = defender->as_monster()->spiny_degree();
-
-        if (attacker->alive() && x_chance_in_y(degree, 15))
+        if (attacker->alive() && one_chance_in(3))
         {
-            int dmg = roll_dice(degree, 4);
+            int dmg = roll_dice(5, 4);
             int hurt = attacker->apply_ac(dmg);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 

@@ -4258,7 +4258,7 @@ int monster::res_constrict() const
         return 3;
     if (mons_genus(type) == MONS_JELLY)
         return 3;
-    if (spiny_degree() > 0)
+    if (is_spiny())
         return 3;
 
     return 0;
@@ -5631,22 +5631,17 @@ bool monster::is_skeletal() const
     return _mons_is_skeletal(type);
 }
 
-int monster::spiny_degree() const
+/**
+ * Does this monster have spines?
+ *
+ * (If so, it may do damage when attacked in melee, and has rConstrict (!?)
+ *
+ * @return  Whether this monster has spines.
+ */
+bool monster::is_spiny() const
 {
-    switch (mons_is_demonspawn(type)
-            ? base_monster
-            : type)
-    {
-        case MONS_PORCUPINE:
-        case MONS_TORTUROUS_DEMONSPAWN:
-            return 3;
-        case MONS_HELL_SENTINEL:
-            return 5;
-        case MONS_BRIAR_PATCH:
-            return 4;
-        default:
-            return 0;
-    }
+    return mons_class_flag(mons_is_job(type) ? base_monster : type,
+                           M_SPINY);
 }
 
 bool monster::has_action_energy() const
