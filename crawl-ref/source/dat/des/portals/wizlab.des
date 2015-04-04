@@ -995,7 +995,7 @@ MONS:       statue hd:12 spells:orb_of_destruction.62.magical \
 KMONS:      3DEF = purple draconian
 KITEM:      D = robe ego:archmagi ident:type, star_item / superb_item, star_item
 KITEM:      E = any book, randbook disc:conjuration owner:Iskenderun \
-                spells:iskenderun's_mystic_blast|iskenderun's_battlesphere, \
+                spells:iskenderun's_mystic_blast&iskenderun's_battlesphere, \
                 randbook disc:conjuration owner:Iskenderun
 KITEM:      F = any book good_item, any book good_item, any book
 KMONS:      DEF = purple draconian
@@ -1361,7 +1361,7 @@ KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              plane papyrus w:5 / manual of translocations w:5 / \
              randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
-             spells:shroud_of_golubria|passage_of_golubria
+             spells:shroud_of_golubria&passage_of_golubria
 KITEM:   g = ring of flight / potion of flight q:2 / \
              lantern of shadows / potion of haste w:5 / \
              scroll of fog / royal jelly q:3 / \

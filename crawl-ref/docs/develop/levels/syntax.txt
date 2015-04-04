@@ -672,8 +672,8 @@ ITEM:     (list of items, separated by comma)
           * "slevels:max_levels" the total, combined level of spells to include
             in the book. "slevels:6" will use three level two spells, two level
             three spells, a level two and a level four spell, and so on.
-          * "spells:spell_1|spell_2" a list of spells to include in the book.
-            Spells must be separated by "|" without spaces. Within a spell name,
+          * "spells:spell_1&spell_2" a list of spells to include in the book.
+            Spells must be separated by "&" without spaces. Within a spell name,
             all of "_" will be replaced with " " and will be parsed as such.
             A book may contain at most 8 spells.
           * "title:title" will define the title of the book.
