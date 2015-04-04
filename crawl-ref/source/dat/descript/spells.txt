@@ -243,7 +243,8 @@ location.
 %%%%
 Chant Word of Entropy spell
 
-This creature may chant for three turns terribly corrode your equipment.
+This creature may chant for three turns and then severely corrode your
+equipment.
 %%%%
 Chaos Breath spell
 
