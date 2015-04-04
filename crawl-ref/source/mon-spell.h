@@ -2092,7 +2092,7 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
-    {  MST_FIRECALLER,
+    {  MST_SALAMANDER_STORMCALLER,
       {
        { SPELL_CONJURE_FLAME, 30, MON_SPELL_WIZARD },
        { SPELL_STICKY_FLAME_RANGE, 45, MON_SPELL_WIZARD },
