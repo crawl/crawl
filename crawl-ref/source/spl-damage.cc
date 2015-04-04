@@ -972,7 +972,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 {
     if (cell_is_solid(beam.target))
     {
-        canned_msg(MSG_SPELL_FIZZLES);
+        canned_msg(MSG_UNTHINKING_ACT);
         return SPRET_ABORT;
     }
 
