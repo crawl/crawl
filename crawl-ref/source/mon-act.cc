@@ -870,6 +870,10 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
  * Check if the monster has a swooping attack and is in a position to
  * use it, and do so if they can.
  *
+ * Specifically, this seems to try to move to the opposite side of the target
+ * (if there's space) and perform a melee attack, then set a cooldown for
+ * 4-8 turns.
+ *
  * @param mons The monster who might be swooping.
  * @return Whether they performed a swoop attack. False if the monster
  *         can't swoop, the foe isn't hostile, the positioning doesn't
@@ -909,27 +913,29 @@ static bool _handle_swoop(monster* mons)
 
     for (unsigned int j = 0; j < tracer.path_taken.size(); ++j)
     {
-        if (tracer.path_taken[j] == target)
+        if (tracer.path_taken[j] != target)
+            continue;
+
+        if (tracer.path_taken.size() <= j + 1)
+            continue; // !?
+
+        if (!monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
+            || actor_at(tracer.path_taken[j+1]))
         {
-            if (tracer.path_taken.size() > j + 1)
-            {
-                if (monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
-                    && !actor_at(tracer.path_taken[j+1]))
-                {
-                    if (you.can_see(mons))
-                    {
-                        mprf("%s swoops through the air toward %s!",
-                             mons->name(DESC_THE).c_str(),
-                             defender->name(DESC_THE).c_str());
-                    }
-                    mons->move_to_pos(tracer.path_taken[j+1]);
-                    fight_melee(mons, defender);
-                    mons->props["swoop_cooldown"].get_int() = you.elapsed_time
-                                                              + 40 + random2(51);
-                    return true;
-                }
-            }
+            continue;
         }
+
+        if (you.can_see(mons))
+        {
+            mprf("%s swoops through the air toward %s!",
+                 mons->name(DESC_THE).c_str(),
+                 defender->name(DESC_THE).c_str());
+        }
+        mons->move_to_pos(tracer.path_taken[j+1]);
+        fight_melee(mons, defender);
+        mons->props["swoop_cooldown"].get_int() = you.elapsed_time
+                                                  + 40 + random2(51);
+        return true;
     }
 
     return false;
