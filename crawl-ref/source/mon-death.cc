@@ -2946,7 +2946,7 @@ int dismiss_monsters(string pattern)
     const bool keep_item = strip_tag(pattern, "keepitem");
     const bool harmful = pattern == "harmful";
     const bool mobile  = pattern == "mobile";
-    const bool visible = pattern == "visible";
+    const bool los     = pattern == "los";
 
     // Dismiss by regex.
     text_pattern tpat(pattern);
@@ -2956,7 +2956,7 @@ int dismiss_monsters(string pattern)
         if (mi->alive()
             && (mobile ? !mons_class_is_stationary(mi->type) :
                 harmful ? !mons_is_firewood(*mi) && !mi->wont_attack() :
-                visible ? you.see_cell(mi->pos())
+                los ? you.see_cell(mi->pos())
                 : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {
             if (!keep_item)
