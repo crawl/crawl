@@ -1262,10 +1262,6 @@ giant leech
 
 An aggressive blood-sucking annelid that thrives in swamps and marshlands.
 %%%%
-giant mite
-
-A large acarine creature with poisoned mouth-parts and a thirst for blood.
-%%%%
 giant newt
 
 A tenacious little amphibian, several times the size of a normal newt, but
