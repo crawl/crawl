@@ -2099,4 +2099,10 @@ static const mon_spellbook mspell_list[] =
        { SPELL_CHANT_FIRE_STORM, 30, MON_SPELL_WIZARD },
       }
     },
+
+    {  MST_ENTROPY_WEAVER,
+      {
+       { SPELL_CHANT_WORD_OF_ENTROPY, 50, MON_SPELL_WIZARD },
+      }
+    },
 };

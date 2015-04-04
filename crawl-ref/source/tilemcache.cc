@@ -640,6 +640,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 3;
         break;
     case TILEP_MONS_UNSEEN_HORROR:
+    case TILEP_MONS_ENTROPY_WEAVER:
         *ofs_x = -4;
         *ofs_y = -4;
         break;

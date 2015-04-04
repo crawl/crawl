@@ -3607,6 +3607,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_CHANT_WORD_OF_ENTROPY, "Chant Word of Entropy",
+    SPTYP_HEXES,
+    SPFLAG_UTILITY,
+    5,
+    200,
+    -1, -1,
+    3, 0,
+    nullptr,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

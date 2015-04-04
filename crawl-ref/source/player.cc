@@ -6804,13 +6804,17 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     return true;
 }
 
-void player::corrode_equipment(const char* corrosion_source)
+void player::corrode_equipment(const char* corrosion_source, int degree)
 {
     // rCorr protects against 50% of corrosion.
-    if (res_corr() && coinflip())
+    if (res_corr())
     {
-        dprf("rCorr protects.");
-        return;
+        degree = binomial(degree, 50);
+        if (!degree)
+        {
+            dprf("rCorr protects.");
+            return;
+        }
     }
     // always increase duration, but...
     increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
@@ -6819,10 +6823,14 @@ void player::corrode_equipment(const char* corrosion_source)
 
     // the more corrosion you already have, the lower the odds of more
     const int prev_corr = props["corrosion_amount"].get_int();
-    if (x_chance_in_y(prev_corr, prev_corr + 9))
+    for (int i = 0; i < degree; i++)
+        if (x_chance_in_y(prev_corr, prev_corr + 9))
+            degree--;
+
+    if (!degree)
         return;
 
-    props["corrosion_amount"].get_int()++;
+    props["corrosion_amount"].get_int() += degree;
     redraw_armour_class = true;
     wield_change = true;
     return;

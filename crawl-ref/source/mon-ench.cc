@@ -2001,6 +2001,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_WORD_OF_RECALL:
     case ENCH_CHANT_FIRE_STORM:
+    case ENCH_CHANT_WORD_OF_ENTROPY:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
@@ -2023,7 +2024,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             if (en == ENCH_WORD_OF_RECALL)
                 mons_word_of_recall(this, 3 + random2(5));
-            else if (en == ENCH_CHANT_FIRE_STORM)
+            else if (en == ENCH_CHANT_FIRE_STORM
+                  || en == ENCH_CHANT_WORD_OF_ENTROPY)
             {
                 actor *mons_foe = get_foe();
                 coord_def foepos;
@@ -2031,15 +2033,20 @@ void monster::apply_enchantment(const mon_enchant &me)
                     foepos = mons_foe->pos();
 
                 if  (mons_foe
-                     && !this->friendly()
                      && !(is_sanctuary(pos())
                         || is_sanctuary(mons_foe->pos()))
                      && can_see(mons_foe))
                 {
-                    bolt beem;
-                    beem.target = foepos;
-                    mons_cast(this, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,
-                            true);
+                    if (en == ENCH_CHANT_FIRE_STORM) {
+                        bolt beem;
+                        beem.target = foepos;
+                        mons_cast(this, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,
+                                true);
+                    }
+                    else // word of entropy
+                    {
+                        mons_foe->corrode_equipment("the spell", 5);
+                    }
                 }
             }
 
@@ -2332,7 +2339,8 @@ static const char *enchant_names[] =
     "negative_vuln",
 #endif
     "condensation_shield", "resistant",
-    "hexed", "corpse_armour", "chanting_fire_storm", "buggy",
+    "hexed", "corpse_armour", "chanting_fire_storm",
+    "chanting_word_of_entropy", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

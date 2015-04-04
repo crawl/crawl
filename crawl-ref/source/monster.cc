@@ -4545,17 +4545,24 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
     return true;
 }
 
-void monster::corrode_equipment(const char* corrosion_source)
+void monster::corrode_equipment(const char* corrosion_source, int degree)
 {
     // Don't corrode spectral weapons or temporary items.
     if (mons_is_avatar(type) || type == MONS_PLAYER_SHADOW)
         return;
 
     // rCorr protects against 50% of corrosion.
-    if (res_corr() && coinflip())
+    // As long as degree is at least 1, we'll apply the status once, because
+    // it doesn't look to me like applying it more times does anything.
+    // If I'm wrong, we should fix that.
+    if (res_corr())
     {
-        dprf("rCorr protects.");
-        return;
+        degree = binomial(degree, 50);
+        if (!degree)
+        {
+            dprf("rCorr protects.");
+            return;
+        }
     }
 
     if (you.see_cell(pos()))

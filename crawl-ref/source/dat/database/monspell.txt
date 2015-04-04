@@ -184,6 +184,10 @@ Phantom Mirror cast
 Chant Fire Storm cast
 
 @The_monster@ begins to chant a fire storm spell!
+%%%%
+Chant Word of Entropy cast
+
+@The_monster@ begins to chant word of entropy!
 #################################################
 # The next two have special hard-coded messaging.
 #################################################
