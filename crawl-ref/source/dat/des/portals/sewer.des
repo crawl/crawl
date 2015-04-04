@@ -65,7 +65,7 @@ SUBST:  1 = 2234..........
 MONS:   nothing
 MONS:   rat / river rat w:5
 MONS:   ball python / adder w:2
-MONS:   giant cockroach / worm w:3
+MONS:   giant cockroach / giant mite / worm w:3
 MAP
 .........
 ...111...
@@ -83,7 +83,7 @@ ORIENT: float
 : sewer_portal(_G)
 SUBST:  ' = W. , W = WW1
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / worm w:3
+            giant cockroach / giant mite / worm w:3
 MAP
 xxxxxx
 xOWWW'
@@ -99,7 +99,7 @@ WEIGHT: 4
 NSUBST: c = 1:+ / 2:n / *:c
 NSUBST: W = 8 = 111W / *:W
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / worm w:3
+            giant cockroach / giant mite / worm w:3
 MAP
 .........
 .ccccccc.
@@ -113,7 +113,7 @@ ENDMAP
 
 NAME:   portal_sewer_entry_d
 : sewer_portal(_G)
-KMONS:  1 = patrolling adder
+KMONS:  1 = patrolling giant mite
 KFEAT:  1 = W
 MAP
 xxxxxxxxxx
@@ -128,7 +128,7 @@ NSUBST: X = 2:+ / *:x
 SUBST:  w = WW.
 NSUBST: W = 8:111W / *:W
 KMONS:  1 = rat w:20 / river rat / ball python / adder w:2 / \
-            giant cockroach / worm w:3
+            giant cockroach / giant mite / worm w:3
 MAP
 xxxxxxxxx
 xWWWXWww.
@@ -143,7 +143,7 @@ ENDMAP
 
 NAME:   portal_sewer_entry_f
 : sewer_portal(_G)
-KMONS:  1 = giant gecko / giant cockroach / nothing w:5
+KMONS:  1 = giant gecko / giant mite / giant cockroach / nothing w:5
 NSUBST: W = 6:1 / *:W
 COLOUR: W = green / cyan w:5
 MAP
@@ -157,7 +157,7 @@ ENDMAP
 NAME:   gup_sewer_entry_pipe
 TAGS:   patrolling no_pool_fixup
 : sewer_portal(_G)
-KMONS:  2 = giant cockroach / giant gecko / nothing
+KMONS:  2 = giant cockroach / giant mite / giant gecko / nothing
 SUBST:  W = WW.
 MAP
 @Wxxxxxxxxx
@@ -177,7 +177,7 @@ NAME:   gup_sewer_entry_spiral
 TAGS:   patrolling
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
-            giant gecko / worm w:5 / nothing
+            giant mite / giant gecko / worm w:5 / nothing
 NSUBST: - : 8:1 / 8:. / *:W
 MAP
 xxxxxxxxxx
@@ -197,7 +197,7 @@ NAME:   gup_sewer_entry_bubbles
 TAGS:   patrolling
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / adder w:5 / giant cockroach / \
-            giant gecko / worm w:5 / nothing
+            giant mite / giant gecko / worm w:5 / nothing
 NSUBST: - = 8:1 / *:W
 MAP
  xxx    xxx
@@ -217,7 +217,7 @@ ENDMAP
 NAME:   gup_sewer_entry_bowl
 : sewer_portal(_G)
 KMONS:  1 = rat / river rat w:5 / \
-            giant cockroach / giant gecko / worm w:3 / nothing
+            giant cockroach / giant mite / giant gecko / worm w:3 / nothing
 MAP
 ..........
 .xxx.xxxx..
@@ -392,7 +392,7 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / big kobold w:2
 MONS:    bat / rat / ooze w:5 / ball python / giant newt w:5 / \
-         giant cockroach w:5 / adder w:1
+         giant cockroach w:5 / giant mite w:5 / adder w:1
 KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
 KMONS:   p = plant
 SUBST:   p = ppW
@@ -453,9 +453,9 @@ SUBST:    - = WWW.
 SHUFFLE:  |d
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
-MONS:     giant newt / ball python w:5 / giant cockroach / \
+MONS:     giant newt / ball python w:5 / giant cockroach / giant mite w:5 / \
           generate_awake giant newt / generate_awake ball python w:5 / \
-          generate_awake giant cockroach / generate_awake \
+          generate_awake giant cockroach / generate_awake giant mite w:5 / \
           giant gecko / adder w:8 / nothing w:8
 NSUBST:   ! = 2:! / *:w
 KFEAT:    ! = w
@@ -500,7 +500,7 @@ TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
-KMONS:    W = giant newt / ball python / giant cockroach / \
+KMONS:    W = giant newt / ball python / giant cockroach / giant mite / \
               giant gecko / ooze / adder w:4 / \
               nothing w:270
 KFEAT:    W = W
@@ -777,7 +777,7 @@ ENDMAP
 NAME:   kennysheep_door_sewer
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
-MONS:   kobold w:40 / bat / giant newt / giant cockroach / \
+MONS:   kobold w:40 / bat / giant newt / giant cockroach / giant mite / \
         adder w:5 / big kobold w:1
 KMONS:  2 = purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
@@ -833,13 +833,13 @@ COLOUR:   " = green
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
 KMONS:    ? = bat / giant newt / ball python / giant cockroach / \
-              giant gecko / ooze w:4 / worm w:4 / adder w:2
+              giant mite / giant gecko / ooze w:4 / worm w:4 / adder w:2
 COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
 MONS:     bat / giant newt / ball python / giant cockroach / \
-          giant gecko / ooze w:4 / worm w:4 / adder w:2
+          giant mite / giant gecko / ooze w:4 / worm w:4 / adder w:2
 SHUFFLE:  23
 MONS:     bat / nothing w:2
 MONS:     patrolling jackal
@@ -902,7 +902,7 @@ MONS:   rat w:4 / nothing w:1, rat / river rat w:5
 KMONS:  G = siren hd:3 name:sickly name_adjective name_species
 KMONS:  H = merfolk avatar hd:3 name:malarious name_adjective name_species
 KMONS:  hJ = giant newt / ball python / adder / nothing w:2
-KMONS:  g = giant newt / ball python / giant cockroach / \
+KMONS:  g = giant newt / ball python / giant mite / giant cockroach / \
             giant gecko / nothing w:7
 KFEAT:  gsh = W
 KFEAT:  O = open_sea
@@ -1336,7 +1336,8 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
 MONS:    kobold w:30 / shadow imp / big kobold zombie /\
          ufetubus / nothing w:5
 # Randomly generated monsters.
-MONS:    kobold w:50 / kobold zombie / ooze / giant cockroach / \
+MONS:    kobold w:50 / kobold zombie / ooze / giant mite / \
+         giant mite zombie w:3 / giant cockroach / \
          giant cockroach zombie w:3 / adder / adder zombie w:3 / \
          bat / bat zombie w:3
 SUBST:   . = .:175 2
