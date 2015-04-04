@@ -1204,6 +1204,19 @@ bool pickup_single_item(int link, int qty)
         canned_msg(MSG_OK);
         return false;
     }
+
+    if (is_xp_evoker(*item) &&
+        any_item_matching(item->base_type, item->sub_type))
+    {
+        const string prompt = make_stringf("Are you sure you want to carry an additional %s?",
+                                           item->name(DESC_PLAIN, false,
+                                                      false, false).c_str());
+        if (!yesno(prompt.c_str(), true, 'n')) {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     if (qty == 0 && item->quantity > 1 && item->base_type != OBJ_GOLD)
     {
         const string prompt
