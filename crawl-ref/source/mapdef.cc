@@ -5319,7 +5319,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
         const string spells = strip_tag_prefix(s, "spells:");
 
-        vector<string> spell_list = split_string("|", spells);
+        vector<string> spell_list = split_string("&", spells);
         CrawlVector &incl_spells
             = result.props[RANDBK_SPELLS_KEY].new_vector(SV_INT);
 
