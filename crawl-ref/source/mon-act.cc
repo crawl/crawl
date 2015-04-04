@@ -911,13 +911,10 @@ static bool _handle_swoop(monster* mons)
     tracer.range = LOS_RADIUS;
     tracer.fire();
 
-    for (unsigned int j = 0; j < tracer.path_taken.size(); ++j)
+    for (unsigned int j = 0; j < tracer.path_taken.size() - 1; ++j)
     {
         if (tracer.path_taken[j] != target)
             continue;
-
-        if (tracer.path_taken.size() <= j + 1)
-            continue; // !?
 
         if (!monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
             || actor_at(tracer.path_taken[j+1]))
