@@ -1346,12 +1346,7 @@ void player_reacts()
         const int teleportitis_level = player_teleport();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-        {
-            if (teleportitis_level >= 8)
-                you_teleport_now(false);
-            else
-                you_teleport_now(false, false, teleportitis_level * 5);
-        }
+            you_teleport_now(false, false, true);
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {

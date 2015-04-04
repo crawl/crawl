@@ -1079,10 +1079,10 @@ int player_teleport(bool calc_unid)
     tp += 8 * you.wearing(EQ_RINGS, RING_TELEPORTATION, calc_unid);
 
     // artefacts
-    tp += you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
+    tp += 8 * you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
 
     // mutations
-    tp += player_mutation_level(MUT_TELEPORT) * 3;
+    tp += player_mutation_level(MUT_TELEPORT) * 4;
 
     return tp;
 }

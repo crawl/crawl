@@ -1108,8 +1108,9 @@ that controlled teleports will take longer to trigger than uncontrolled ones.
 %%%%
 ring of teleportation
 
-This ring occasionally exerts its power to randomly translocate its wearer to
-another place, and can be deliberately activated for the same effect.
+This ring occasionally exerts its power to teleport its wearer into the
+vicinity of nearby monsters. It can also be deliberately evoked to randomly
+teleport the wearer.
 %%%%
 ring of wizardry
 
