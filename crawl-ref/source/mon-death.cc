@@ -3326,9 +3326,6 @@ void elven_twins_pacify(monster* twin)
     if (mons->neutral())
         return;
 
-    if (you_worship(GOD_ELYVILON))
-        gain_piety(random2(mons->max_hit_points / (2 + you.piety / 20)), 2);
-
     if (mons_near(mons))
         simple_monster_message(mons, " likewise turns neutral.");
 
