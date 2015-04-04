@@ -26,7 +26,7 @@ It is frequently used as an icebreaker at wizard parties.
 Animate Dead spell
 
 This spell causes the dead to rise up and serve the caster; every corpse within
-sight of the caster is affected. By means of this spell, powerful casters could
+sight of the caster is affected. By means of this spell, powerful casters can
 press into service an army of the mindless undead. Note that zombies are
 incapable of leaving the level they were created on.
 %%%%
@@ -164,7 +164,7 @@ This spell hurls a penetrating bolt of flames.
 Bolt of Inaccuracy spell
 
 This spell inflicts enormous damage upon any creature struck by the bolt of
-incandescent energy conjured into existence. Unfortunately, it is very
+incandescent energy it conjures into existence. Unfortunately, it is very
 difficult to aim and very rarely hits anything. Pity, that.
 %%%%
 Bolt of Magma spell
@@ -238,11 +238,12 @@ targets sufficiently close to the caster, however.
 %%%%
 Chant Fire Storm spell
 
-This creature may chant for a brief time and then unleash a fire storm on you.
+After chanting for a brief time, the caster unleashes a fire storm on their
+target.
 %%%%
 Chant Word of Entropy spell
 
-This creature may chant for a brief time and then severely corrode your
+After chanting for a brief time, the caster severely corrodes their target's
 equipment.
 %%%%
 Chaos Breath spell
@@ -257,8 +258,8 @@ caster.
 %%%%
 Chilling Breath spell
 
-This creatue can breath a blast of frost that bypasses any armour the unfortunate
-victim may have, and might even knock it backwards if in flight.
+This creature can breath a blast of frost that bypasses any armour the
+unfortunate victim may have, and might even knock it backwards if in flight.
 %%%%
 Cigotuvi's Embrace spell
 
@@ -300,8 +301,8 @@ This spell induces a state of bewilderment and confusion in a creature's mind.
 Confusing Touch spell
 
 This spell enchants the caster's dominant hand with magical energy. This energy
-is released when the caster touches a monster with their bare hand, and may
-induce a state of confusion in the monster.
+is released when the caster gently touches a monster with their bare hand, and
+may induce a state of confusion in the monster.
 %%%%
 Confusion Gaze spell
 
@@ -309,10 +310,13 @@ Confusion Gaze spell
 %%%%
 Conjure Ball Lightning spell
 
-This spell allows the conjurer to create ball lightning. Using the spell is not
-without risk — ball lightning can be difficult to control. Note that the magic
-which keeps ball lightning cohesive has limited range, and they may dissipate
-harmlessly if allowed to drift too far away from their caster before exploding.
+This spell creates a pack of ball lightnings, which seek out the nearest enemy
+before exploding in a huge blast of electricity. Casters are advised to use
+caution; the lightning isn't mindful of what it may hit...
+
+Note that the magic which keeps ball lightning cohesive has limited range, so
+they may dissipate harmlessly if allowed to drift too far away from their
+caster before exploding.
 %%%%
 Conjure Flame spell
 
@@ -334,7 +338,6 @@ Control Winds spell
 
 This spell allows limited powers over the flow of air in caster's sight. This
 grants a wide array of minor benefits:
- • provides an accuracy bonus to missiles shot or thrown by allies
  • extinguishes any forest fires and blocks new ones from starting
  • blows airborne agents such as flame or poison gas away
  • dissipates such agents with no safe place to redirect
@@ -390,19 +393,19 @@ This spell removes poison from the caster's system.
 Darkness spell
 
 This spell dims the light of the dungeon, reducing the range of vision. The
-area affected is quite large and it doesn't have sharp edges, thus the effect
-is unlikely to alert anyone not very close to the caster.
+area affected is quite large and it doesn't have sharp edges, so the effect is
+unlikely to alert anyone not very close to the caster.
 %%%%
 Dazzling Spray spell
 
 This spell fires a spread of scintillating energy bolts from the caster's
-fingertips which can dazzle the vision of any living creature they strike,
-leaving them stumbling about blindly.
+fingertips. Any living creature they strike may be dazzled & left stumbling
+blindly.
 %%%%
 Death Channel spell
 
-This spell raises living creatures slain by the caster and his or her allies
-into a state of unliving slavery as spectral things.
+This spell raises living creatures slain by the caster and his or her allies,
+reducing them to a state of spectral slavery.
 %%%%
 Death Rattle spell
 
@@ -417,7 +420,7 @@ dangerously close to death in the process. So close in fact, that the body
 believes itself to be dead — healing effects will do nothing.
 
 The caster will receive one warning shortly before the spell expires. With high
-power, the caster will be left more resilient when the effect ends. Undead
+power, the caster will be left more resilient when the effect ends. The undead
 cannot use this spell.
 %%%%
 Debugging Ray spell
@@ -465,15 +468,15 @@ the distance from the caster, being nearly certain when directly adjacent.
 %%%%
 Dispel Undead spell
 
-This spell uses the very forces that bind an undead creature together to
-inflict a great deal of damage on it.
+This spell uses the forces that bind an undead creature together to harm it
+greatly.
 %%%%
 Dispersal spell
 
 This spell tries to teleport away any monsters within a short distance of the
 caster. Any monster that it fails to teleport will still be irresistibly
 blinked a shorter distance, and any monster it affects at all has a chance of
-being confused by the crazy warping of space.
+being confused by the warping of space.
 %%%%
 Draconian Breath spell
 
@@ -883,12 +886,6 @@ are physically as strong as Mara himself, and hardly weaker in magic.
 Mass Confusion spell
 
 This spell causes confusion in all who gaze upon the caster.
-%%%%
-Melee spell
-
-The rod of striking is designed for melee combat, releasing its charges to deal
-additional damage dependent on evocations skill when it strikes a foe. Maces &
-Flails skill will help improve your basic effectiveness with the weapon.
 %%%%
 Mephitic Cloud spell
 
@@ -1617,14 +1614,12 @@ dealing damage. It can affect targets standing in or flying above water.
 %%%%
 Weave Shadows spell
 
-This spell weaves a creature from shadows and threads of Abyssal matter. The
-creatures thus brought into existence increase in power with spellpower. The
-spell even creates appropriate equipment for the creature from the same
-ethereal matter.
+This spell weaves a creature from shadows and threads of Abyssal matter. More
+powerful creatures are summoned with higher spellpower.
 %%%%
 Wind Blast spell
 
-This spell causes a strong gust of wind to push away creatures and clouds in a
+This spell causes a strong gust of wind, pushing away creatures and clouds in a
 cone.
 %%%%
 Word of Recall spell
