@@ -206,7 +206,7 @@ static const zap_info zap_data[] =
     "",
     100,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 3, 1>,
     BLACK,
     true,
     BEAM_TUKIMAS_DANCE,
