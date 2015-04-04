@@ -1205,7 +1205,8 @@ bool pickup_single_item(int link, int qty)
         return false;
     }
 
-    if (is_xp_evoker(*item) &&
+    if (Options.confirm_pickup_redundant &&
+        is_xp_evoker(*item) &&
         any_item_matching(item->base_type, item->sub_type))
     {
         const string prompt = make_stringf("Are you sure you want to carry an additional %s?",

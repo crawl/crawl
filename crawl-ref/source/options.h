@@ -184,6 +184,7 @@ public:
     bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     bool        easy_door;       // 'O', 'C' don't prompt with just one door.
     int         confirm_butcher; // When to prompt for butchery
+    bool        confirm_pickup_redundant; // When to prompt for picking up redundant XP evokers.
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     skill_focus_mode skill_focus; // is the focus skills available
