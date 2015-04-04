@@ -1425,7 +1425,7 @@ spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
 {
     if (cell_is_solid(where))
     {
-        canned_msg(MSG_SPELL_FIZZLES);
+        canned_msg(MSG_UNTHINKING_ACT);
         return SPRET_ABORT;
     }
 
