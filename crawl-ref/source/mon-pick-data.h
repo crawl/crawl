@@ -11,7 +11,6 @@ static const pop_entry pop_d[] =
   {  1, 11, 1000, FLAT, MONS_HOBGOBLIN },
   {  1, 11,  515, SEMI, MONS_GIANT_GECKO },
   {  1, 11,  335, SEMI, MONS_JACKAL },
-  {  1, 11,  192, PEAK, MONS_GIANT_MITE },
   {  1, 11,  192, PEAK, MONS_GNOLL },
   {  2, 12,  925, FLAT, MONS_ADDER },
   {  2, 12,  515, SEMI, MONS_QUOKKA },
@@ -985,7 +984,6 @@ static const pop_entry pop_sewer[] =
   {  1,  1,  515, FLAT, MONS_WORM },
   {  1,  1,  515, FLAT, MONS_OOZE },
   {  1,  1,  515, FLAT, MONS_GIANT_COCKROACH },
-  {  1,  1,  515, FLAT, MONS_GIANT_MITE },
   { 0,0,0,FLAT,MONS_0 }
 };
 

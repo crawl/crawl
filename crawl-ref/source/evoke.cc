@@ -1057,7 +1057,8 @@ static const pop_entry pop_beasts[] =
 
 static const pop_entry pop_spiders[] =
 { // Sack of Spiders
-  {  0,  10,   10, FALL, MONS_GIANT_MITE },
+  {  0,  10,   5,  FALL, MONS_GIANT_COCKROACH },
+  {  0,  10,   5,  FALL, MONS_SCORPION },
   {  0,  15,   50, FALL, MONS_SPIDER },
   {  5,  20,  100, PEAK, MONS_TRAPDOOR_SPIDER },
   {  8,  27,  100, PEAK, MONS_REDBACK },

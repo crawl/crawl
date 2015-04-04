@@ -757,7 +757,7 @@ DEPTH:  Lair
 ORIENT: north
 MONS:   black mamba / spiny frog / wolf spider
 MONS:   basilisk / komodo dragon / wasp
-MONS:   giant mite / adder
+MONS:   adder
 MONS:   plant / fungus w:2 / bush w:1, bush
 SUBST:  4 = 444. 5:2, . = ...4 5:2
 SUBST:  1 = 1., 2 = 2., 3 = 3.
