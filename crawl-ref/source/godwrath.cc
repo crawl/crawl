@@ -128,8 +128,8 @@ static bool _yred_random_zombified_hostile()
 
 static const pop_entry _okawaru_servants[] =
 { // warriors
-  {  1,  3,   3, DOWN, MONS_ORC },
-  {  1,  3,   3, DOWN, MONS_GNOLL },
+  {  1,  3,   3, FALL, MONS_ORC },
+  {  1,  3,   3, FALL, MONS_GNOLL },
   {  2,  6,   3, PEAK, MONS_OGRE },
   {  2,  6,   2, PEAK, MONS_GNOLL_SERGEANT },
   {  3,  7,   1, FLAT, MONS_TWO_HEADED_OGRE },

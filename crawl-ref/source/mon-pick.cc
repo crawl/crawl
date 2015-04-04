@@ -46,9 +46,9 @@ int mons_depth(monster_type mcls, branch_type branch)
     for (const pop_entry *pe = population[branch].pop; pe->value; pe++)
         if (pe->value == mcls)
         {
-            if (pe->distrib == UP)
+            if (pe->distrib == RISE)
                 return pe->maxr;
-            else if (pe->distrib == DOWN)
+            else if (pe->distrib == FALL)
                 return pe->minr;
             return (pe->minr + pe->maxr) / 2;
         }

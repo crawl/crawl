@@ -1023,9 +1023,9 @@ string manual_skill_names(bool short_text)
 
 static const pop_entry pop_beasts[] =
 { // Box of Beasts
-  {  1,  3,  10,  DOWN, MONS_BUTTERFLY },
-  {  1,  5,  100, DOWN, MONS_RAT   },
-  {  1,  5,  100, DOWN, MONS_BAT   },
+  {  1,  3,  10,  FALL, MONS_BUTTERFLY },
+  {  1,  5,  100, FALL, MONS_RAT   },
+  {  1,  5,  100, FALL, MONS_BAT   },
   {  2,  8,  100, PEAK, MONS_JACKAL },
   {  2, 10,  100, PEAK, MONS_ADDER },
   {  4, 13,  100, PEAK, MONS_HOUND },
@@ -1047,25 +1047,25 @@ static const pop_entry pop_beasts[] =
   { 15, 27,  100, PEAK, MONS_DEATH_YAK },
   { 16, 27,  100, PEAK, MONS_ANACONDA },
   { 16, 27,   50, PEAK, MONS_RAVEN },
-  { 18, 29,   50, UP,   MONS_DIRE_ELEPHANT },
-  { 20, 29,   50, UP,   MONS_FIRE_DRAGON },
-  { 23, 32,   10, UP,   MONS_APIS },
-  { 23, 32,   10, UP,   MONS_HELLEPHANT },
-  { 23, 32,   10, UP,   MONS_GOLDEN_DRAGON },
+  { 18, 29,   50, RISE, MONS_DIRE_ELEPHANT },
+  { 20, 29,   50, RISE, MONS_FIRE_DRAGON },
+  { 23, 32,   10, RISE, MONS_APIS },
+  { 23, 32,   10, RISE, MONS_HELLEPHANT },
+  { 23, 32,   10, RISE, MONS_GOLDEN_DRAGON },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_spiders[] =
 { // Sack of Spiders
-  {  0,  10,   10, DOWN, MONS_GIANT_MITE },
-  {  0,  15,   50, DOWN, MONS_SPIDER },
+  {  0,  10,   10, FALL, MONS_GIANT_MITE },
+  {  0,  15,   50, FALL, MONS_SPIDER },
   {  5,  20,  100, PEAK, MONS_TRAPDOOR_SPIDER },
   {  8,  27,  100, PEAK, MONS_REDBACK },
   { 12,  27,  100, PEAK, MONS_JUMPING_SPIDER },
   { 15,  27,  100, PEAK, MONS_ORB_SPIDER },
   { 18,  27,  100, PEAK, MONS_TARANTELLA },
   { 20,  27,  100, PEAK, MONS_WOLF_SPIDER },
-  { 25,  27,    5,   UP, MONS_GHOST_MOTH },
+  { 25,  27,    5, RISE, MONS_GHOST_MOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
