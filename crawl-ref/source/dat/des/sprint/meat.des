@@ -328,6 +328,7 @@ ORIENT:    encompass
 DESC:      Sprint VIII: "Arena of Blood"
 ORDER:     8
 KFEAT:     { = {
+KFEAT:     J = x
 LROCKCOL:  red
 LFLOORCOL: red
 NSUBST:    ' = 1:& / *:.
