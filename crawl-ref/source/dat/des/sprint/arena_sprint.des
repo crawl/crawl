@@ -230,8 +230,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
                 "ooze / w:5 jelly",
-                "giant cockroach / giant mite w:20 / w:5 spider /\
-                    w:5 goliath beetle / worm / w:5 brain worm",
+                "giant cockroach w:20 / spider / w:5 goliath beetle / worm /\
+                    w:5 brain worm",
                 "giant spore hd:3"
             }
         elseif round <= 5 then

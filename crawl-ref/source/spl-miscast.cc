@@ -2062,16 +2062,16 @@ void MiscastEffect::_transmutation(int severity)
             // piety, perma-allies-on-hostiles-somehow, etc)
             bool success = false;
             for (int i = 2 + random2(3); i > 0; --i)
-                success |= _create_monster(MONS_GIANT_MITE, 0, true);
+                success |= _create_monster(MONS_GIANT_COCKROACH, 0, true);
 
             if (success)
             {
                 you_msg        = "Shape-changing energy floods out "
-                                 "from your body and enlargens the floor mites!";
+                                 "from your body and enlargens the floor bugs!";
                 mon_msg_seen   = "Shape-changing energy floods out "
-                                 "from @the_monster@ and enlargens the floor mites!";
+                                 "from @the_monster@ and enlargens the floor bugs!";
                 mon_msg_unseen = "Shape-changing energy pours out "
-                                 "from thin air and enlargens the floor mites!";
+                                 "from thin air and enlargens the floor bugs!";
             }
             do_msg();
             break;

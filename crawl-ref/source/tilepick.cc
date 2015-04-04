@@ -1313,8 +1313,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_PORCUPINE;
 
     // spiders and insects ('s')
-    case MONS_GIANT_MITE:
-        return TILEP_MONS_GIANT_MITE;
     case MONS_SCORPION:
         return TILEP_MONS_SCORPION;
     case MONS_EMPEROR_SCORPION:
@@ -3667,8 +3665,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_PORCUPINE;
 
     // spiders and insects ('s')
-    case MONS_GIANT_MITE:
-        return TILE_CORPSE_GIANT_MITE;
     case MONS_SCORPION:
         return TILE_CORPSE_SCORPION;
     case MONS_EMPEROR_SCORPION:
