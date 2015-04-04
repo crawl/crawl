@@ -2632,6 +2632,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_ENTROPY_WEAVER:
+        band = BAND_REDBACK;
+        band_size = 1 + random2(4);
+        break;
+
     case MONS_VAULT_WARDEN:
         natural_leader = true;
         if (coinflip())

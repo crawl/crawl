@@ -241,6 +241,10 @@ Chant Fire Storm spell
 This creature may chant for three turns and then unleash a fire storm on your
 location.
 %%%%
+Chant Word of Entropy spell
+
+This creature may chant for three turns terribly corrode your equipment.
+%%%%
 Chaos Breath spell
 
 This creature may exhale a large cloud of fumes filled with the very essence of

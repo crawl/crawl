@@ -1395,6 +1395,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // small abominations ('x')
     case MONS_UNSEEN_HORROR:
         return TILEP_MONS_UNSEEN_HORROR;
+    case MONS_ENTROPY_WEAVER:
+        return TILEP_MONS_ENTROPY_WEAVER;
     case MONS_ABOMINATION_SMALL:
         return _mon_mod(TILEP_MONS_ABOMINATION_SMALL, tile_num_prop);
     case MONS_CRAWLING_CORPSE:

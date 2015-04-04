@@ -365,6 +365,7 @@ static const pop_entry pop_spider[] =
   {  1,  7,   52, SEMI, MONS_BORING_BEETLE },
   {  2,  7,  190, SEMI, MONS_EMPEROR_SCORPION },
   {  2,  7,  155, SEMI, MONS_MOTH_OF_WRATH },
+  {  2, 10,  300, SEMI, MONS_ENTROPY_WEAVER },
   {  2, 10,  200, PEAK, MONS_GHOST_MOTH },
   { -1,  5,  193, SEMI, MONS_NO_MONSTER}, // Old worm/cockroach/mite weight
   { 0,0,0,FLAT,MONS_0 }
@@ -444,6 +445,7 @@ static const pop_entry pop_vaults[] =
   {  3, 11,   68, SEMI, MONS_DEEP_TROLL },
   {  3, 11,   66, PEAK, MONS_LICH },
   {  4,  8,   30, PEAK, MONS_ORC_WARLORD },
+  {  4,  8,   30, PEAK, MONS_ENTROPY_WEAVER },
   {  4, 10,   25, PEAK, MONS_HELL_KNIGHT },
   {  4, 12,  155, PEAK, MONS_TENGU_REAVER },
   {  4, 12,   89, PEAK, MONS_STORM_DRAGON },
@@ -1060,6 +1062,7 @@ static const pop_entry pop_depths[] =
   {  1,  6,  295, FLAT, MONS_FIRE_DRAGON },
   {  1,  6,  295, FLAT, MONS_ICE_DRAGON },
   {  1,  6,  250, FLAT, MONS_VERY_UGLY_THING },
+  {  1,  6,  225, FLAT, MONS_ENTROPY_WEAVER },
   {  1,  6,  225, FLAT, MONS_GREAT_ORB_OF_EYES },
   {  1,  6,  100, FLAT, MONS_GIANT_ORANGE_BRAIN },
   {  1,  7,  100, FALL, MONS_VAMPIRE_MAGE },

@@ -1103,6 +1103,13 @@ on its tail drips with a deadly venom, and its pincers are big enough to shear
 you in half. Though the ordinary dungeon scorpion may be both large and
 dangerous, this freakish relative puts it to shame.
 %%%%
+entropy weaver
+
+A tall, gaunt humanoid creature covered in a flaking, pale chitin. Its spindly
+limbs seem capable of startlingly quick movement and end in razor-sharp talons.
+These creatures know an ancient and slow chant that will temporarily accelerate
+the aging process of a foe's weapon and armour, corroding it badly.
+%%%%
 ettin
 
 A two-headed giant, stronger than most, and able to land devastating blows left

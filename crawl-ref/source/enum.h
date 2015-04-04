@@ -1994,6 +1994,7 @@ enum enchant_type
     ENCH_HEXED,
     ENCH_BONE_ARMOUR,
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
+    ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3357,6 +3358,7 @@ enum monster_type                      // menv[].type
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
     MONS_SALAMANDER_STORMCALLER,
+    MONS_ENTROPY_WEAVER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4434,6 +4436,7 @@ enum spell_type
     SPELL_SINGULARITY,
     SPELL_GRAVITAS,
     SPELL_CHANT_FIRE_STORM,
+    SPELL_CHANT_WORD_OF_ENTROPY,
     NUM_SPELLS
 };
 

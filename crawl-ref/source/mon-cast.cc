@@ -1570,6 +1570,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WATERSTRIKE:
     case SPELL_FLAY:
     case SPELL_CHANT_FIRE_STORM:
+    case SPELL_CHANT_WORD_OF_ENTROPY:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6257,6 +6258,16 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_CHANT_WORD_OF_ENTROPY:
+    {
+        mon_enchant cast_timer =
+            mon_enchant(ENCH_CHANT_WORD_OF_ENTROPY, 1, mons, 30);
+        mons->add_ench(cast_timer);
+        mons->speed_increment -= 30;
+
+        return;
+    }
+
     case SPELL_INJURY_BOND:
     {
         simple_monster_message(mons,
@@ -8331,6 +8342,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return true;
 
     case SPELL_CHANT_FIRE_STORM:
+    case SPELL_CHANT_WORD_OF_ENTROPY:
         return mon->has_ench(ENCH_BREATH_WEAPON) || !foe;
 
 #if TAG_MAJOR_VERSION == 34
