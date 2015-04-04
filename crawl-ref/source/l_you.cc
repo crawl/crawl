@@ -5,6 +5,7 @@
 #include "ability.h"
 #include "abyss.h"
 #include "areas.h"
+#include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cluautil.h"
@@ -676,6 +677,21 @@ static int _you_uniques(lua_State *ls)
     return 1;
 }
 
+static int _you_unrands(lua_State *ls)
+{
+    bool unrand_found = false;
+
+    if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
+    {
+        int unrand_num = get_unrandart_num(lua_tostring(ls, 1));
+        if (unrand_num != SPWPN_NORMAL)
+            unrand_found = get_unique_item_status(unrand_num);
+    }
+
+    lua_pushboolean(ls, unrand_found);
+    return 1;
+}
+
 LUAWRAP(_you_die,ouch(INSTANT_DEATH, KILLED_BY_SOMETHING))
 
 static int _you_piety(lua_State *ls)
@@ -817,6 +833,7 @@ static const struct luaL_reg you_dlib[] =
 { "random_teleport",    you_random_teleport },
 { "teleport_to",        you_teleport_to },
 { "uniques",            _you_uniques },
+{ "unrands",            _you_unrands },
 { "die",                _you_die },
 { "piety",              _you_piety },
 { "dock_piety",         you_dock_piety },
