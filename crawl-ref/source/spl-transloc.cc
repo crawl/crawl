@@ -587,7 +587,7 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 }
 
 static bool _teleport_player(bool allow_control, bool wizard_tele,
-                             int range)
+                             bool teleportitis)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
@@ -598,7 +598,7 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
     if (wizard_tele)
         is_controlled = true;
 
-    if (!wizard_tele
+    if (!wizard_tele && !teleportitis
         && (crawl_state.game_is_sprint() || you.no_tele(true, true))
             && !player_in_branch(BRANCH_ABYSS))
     {
@@ -607,8 +607,9 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
     }
 
     // After this point, we're guaranteed to teleport. Kill the appropriate
-    // delays.
-    interrupt_activity(AI_TELEPORT);
+    // delays. Teleportitis needs to check the target square first, though.
+    if (!teleportitis)
+        interrupt_activity(AI_TELEPORT);
 
     // Update what we can see at the current location as well as its stash,
     // in case something happened in the exact turn that we teleported
@@ -618,6 +619,9 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
 
     if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
+        if (teleportitis)
+            return false;
+
         abyss_teleport();
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
@@ -771,6 +775,9 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
         coord_def centre;
         if (player_in_branch(BRANCH_LABYRINTH))
         {
+            if (teleportitis)
+                return false;
+
             bool success = false;
             for (int xpos = 0; xpos < GXM; xpos++)
             {
@@ -799,17 +806,47 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
         }
         while (--tries > 0
                && (_cell_vetoes_teleport(newpos)
-                   || (newpos - old_pos).abs() > dist_range(range)
                    || need_distance_check && (newpos - centre).abs()
-                                              <= dist_range(min(range - 1, 34))
+                                              <= dist_range(34)
                    || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO)));
 
-        // Running out of tries should only happen for limited-range teleports,
-        // which are all involuntary; no message. Return false so it doesn't
-        // count as a random teleport for Xom purposes.
+        // Running out of tries shouldn't happen; no message. Return false so
+        // it doesn't count as a random teleport for Xom purposes.
         if (tries == 0)
             return false;
-        else if (newpos == old_pos)
+        // Teleportitis requires a monster in LOS of the new location, else
+        // it silently fails.
+        else if (teleportitis)
+        {
+            int mons_near_target = 0;
+            for (monster_near_iterator mi(newpos, LOS_NO_TRANS); mi; ++mi)
+            {
+                if (!mons_is_firewood(*mi)
+                    && mons_attitude(*mi) == ATT_HOSTILE)
+                {
+                    mons_near_target++;
+                }
+            }
+            if (!mons_near_target)
+            {
+                dprf("teleportitis: no monster near target");
+                return false;
+            }
+            else if (you.no_tele(true, true))
+            {
+                canned_msg(MSG_STRANGE_STASIS);
+                return false;
+            }
+            else
+            {
+                interrupt_activity(AI_TELEPORT);
+                mprf("You are suddenly yanked towards %s nearby monster%s!",
+                     mons_near_target > 1 ? "some" : "a",
+                     mons_near_target > 1 ? "s" : "");
+            }
+        }
+
+        if (newpos == old_pos)
             mpr("Your surroundings flicker for a moment.");
         else if (you.see_cell(newpos))
             mpr("Your surroundings seem slightly different.");
@@ -896,10 +933,10 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool allow_control, bool wizard_tele,
-                      int range)
+void you_teleport_now(bool allow_control, bool wizard_tele, bool teleportitis)
 {
-    const bool randtele = _teleport_player(allow_control, wizard_tele, range);
+    const bool randtele = _teleport_player(allow_control, wizard_tele,
+                                           teleportitis);
 
     // Xom is amused by uncontrolled teleports that land you in a
     // dangerous place, unless the player is in the Abyss and
