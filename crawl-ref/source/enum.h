@@ -3356,7 +3356,7 @@ enum monster_type                      // menv[].type
 
     MONS_SHARD_SHRIKE,
     MONS_SINGULARITY,
-    MONS_FIRECALLER,
+    MONS_SALAMANDER_STORMCALLER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

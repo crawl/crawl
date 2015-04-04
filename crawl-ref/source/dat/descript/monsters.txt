@@ -1168,12 +1168,6 @@ fire vortex
 
 A swirling cloud of flame.
 %%%%
-firecaller
-
-A human whose hands are wreathed in lashing tendrils of flame. This fire cultist
-has the ability to call down a torrent of flames on their foes, though the
-ritual takes some time to complete.
-%%%%
 flayed ghost
 
 A hideous floating undead creature, the anguished spirit of a tortured victim,
@@ -2087,6 +2081,12 @@ unparallelled martial prowess. Their mastery of fire is woven into every strike
 of their weapons, filling the air around their opponent with sweltering flames.
 So hot does their blood run that even outside their native terrain, few can
 escape their pursuit.
+%%%%
+salamander stormcaller
+
+A salamander whose hands are wreathed in lashing tendrils of flame. This fire
+cultist has the ability to call down a torrent of flames on their foes, though
+the ritual takes some time to complete.
 %%%%
 salamander mystic
 

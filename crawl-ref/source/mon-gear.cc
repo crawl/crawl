@@ -1090,7 +1090,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
-    case MONS_FIRECALLER:
     case MONS_PSYCHE:
     case MONS_JOSEPHINE:
         item.base_type = OBJ_WEAPONS;
@@ -1232,6 +1231,16 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                  2, WPN_SCIMITAR,
                                                  0);
         break;
+
+    case MONS_SALAMANDER_STORMCALLER:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(5, WPN_HALBERD,
+                                                5, WPN_TRIDENT,
+                                                3, WPN_SPEAR,
+                                                2, WPN_GLAIVE,
+                                                0);
+        break;
+
 
     case MONS_SPRIGGAN:
         item.base_type = OBJ_WEAPONS;
