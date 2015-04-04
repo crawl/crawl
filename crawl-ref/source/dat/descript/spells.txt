@@ -238,8 +238,8 @@ targets sufficiently close to the caster, however.
 %%%%
 Chant Fire Storm spell
 
-This creature may chant for three turns and then unleash a fire storm on your
-location.
+This creature may chant for three and a half turns and then unleash a fire storm
+on your location.
 %%%%
 Chant Word of Entropy spell
 
