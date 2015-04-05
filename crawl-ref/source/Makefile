@@ -608,6 +608,8 @@ ifdef ANDROID
   SAVEDIR="/sdcard/Android/data/org.develz.crawl/saves/"
 else
 
+LIBS += $(shell $(PKGCONFIG) libgflags --libs)
+
 ifndef BUILD_LUA
   ifdef NO_PKGCONFIG
     BUILD_LUA = yes

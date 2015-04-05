@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 #include <fcntl.h>
+#include <gflags/gflags.h>
 
 #ifndef TARGET_OS_WINDOWS
 # ifndef __ANDROID__
@@ -253,8 +254,12 @@ __attribute__((externally_visible))
 # endif
 #endif
 
+DEFINE_bool(test, false, "Are flags working?");
+
 int main(int argc, char *argv[])
 {
+  google::SetUsageMessage("Retrieve the fabulous orb of Zot!");
+  google::ParseCommandLineFlags(&argc, &argv, true);
 #ifndef __ANDROID__
 # ifdef DGAMELAUNCH
     // avoid commas instead of dots, etc, on CDO
