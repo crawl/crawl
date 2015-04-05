@@ -5706,8 +5706,11 @@ void monster::apply_location_effects(const coord_def &oldpos,
             simple_monster_message(this, " flops around on dry land!");
         else if (!monster_habitable_grid(this, grd(oldpos)))
         {
-            mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
-                                               feat_type_name(grd(pos())));
+            if (you.can_see(this))
+            {
+                mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
+                                                   feat_type_name(grd(pos())));
+            }
             del_ench(ENCH_AQUATIC_LAND);
         }
         // This may have been called via dungeon_terrain_changed instead
