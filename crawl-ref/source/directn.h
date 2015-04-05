@@ -207,6 +207,7 @@ private:
     string target_cloud_description() const;
     string target_sanctuary_description() const;
     string target_silence_description() const;
+    string target_stasis_description() const;
     vector<string> target_cell_description_suffixes() const;
     vector<string> monster_description_suffixes(const monster_info& mi) const;
 

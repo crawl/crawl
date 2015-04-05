@@ -1419,6 +1419,41 @@ void player_reacts()
         xom_tick();
     else if (you_worship(GOD_QAZLAL))
         qazlal_storm_clouds();
+
+    // Cancel effects when you are in stasis.
+    if (stasised(you.pos()))
+    {
+        if (you.duration[DUR_SONG_OF_SLAYING])
+        {
+            mpr("The silence causes your song to end.");
+            _decrement_a_duration(DUR_SONG_OF_SLAYING, you.duration[DUR_SONG_OF_SLAYING]);
+        }
+        if (you.duration[DUR_HASTE])
+        {
+            mprf(MSGCH_DURATION, "You abruptly slow down.");
+            you.duration[DUR_HASTE] = 0;
+        }
+        if (you.duration[DUR_SLOW])
+        {
+            mprf(MSGCH_DURATION, "Your slowness suddenly goes away.");
+            you.duration[DUR_SLOW] = 0;
+        }
+        if (you.duration[DUR_TELEPORT])
+        {
+            mprf(MSGCH_DURATION, "You feel strangely stable.");
+            you.duration[DUR_TELEPORT] = 0;
+        }
+        if (you.duration[DUR_BERSERK])
+        {
+            mprf(MSGCH_DURATION, "You violently calm down.");
+            you.duration[DUR_BERSERK] = 0;
+        }
+        if (you.duration[DUR_FINESSE])
+        {
+            mprf(MSGCH_DURATION, "You suddenly lose your finesse.");
+            you.duration[DUR_FINESSE] = 0;
+        }
+    }
 }
 
 void extract_manticore_spikes(const char* endmsg)
