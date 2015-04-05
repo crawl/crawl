@@ -2002,7 +2002,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WORD_OF_RECALL:
     case ENCH_CHANT_FIRE_STORM:
     case ENCH_CHANT_WORD_OF_ENTROPY:
-        int breath_timeout_length;
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
@@ -2023,6 +2022,8 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (decay_enchantment(en))
         {
+            int breath_timeout_length;
+
             if (en == ENCH_WORD_OF_RECALL)
             {
                 mons_word_of_recall(this, 3 + random2(5));
@@ -2055,6 +2056,8 @@ void monster::apply_enchantment(const mon_enchant &me)
                 // shorter because you can avoid the effect entirely out of LOS
                 breath_timeout_length = random2(5);
             }
+            else
+                die("Unknown chant type!"); // squash a warning
 
             // This is the same delay as vault sentinels.
             mon_enchant breath_timeout =
