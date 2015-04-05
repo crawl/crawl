@@ -620,8 +620,10 @@ void display_overview()
     clrscr();
     string disp = overview_description_string(true);
     linebreak_string(disp, get_number_of_cols());
-    formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
-                       disp).show();
+    int flags = MF_ANYPRINTABLE | MF_NOSELECT;
+    if (Options.easy_exit_menu)
+        flags |= MF_EASY_EXIT;
+    formatted_scroller(flags, disp).show();
     redraw_screen();
 }
 
