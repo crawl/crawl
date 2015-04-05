@@ -168,6 +168,7 @@ level-map
 <w>_</w>          : Cycle through altars.
 
 <h>Other</h>
+<w>v</w>          : Examine the last remembered state of the indicated tile.
 <w>!</w>          : Annotate level.
 <w>Ctrl-C</w>     : Clear item and monster memory.
 <w>Ctrl-F</w>     : Forget level map.
