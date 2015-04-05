@@ -654,7 +654,7 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
             cols += w;
         max_cols = max(cols, max_cols);
 
-        // NOTE: only newlines should be used for tool tips.  Don't use EOL.
+        // NOTE: only newlines should be used for tool tips. Don't use EOL.
         ASSERT(c != '\r');
 
         if (c == '\n')

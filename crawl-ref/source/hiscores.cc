@@ -5,7 +5,7 @@
 
 /*
  * ----------- MODIFYING THE PRINTED SCORE FORMAT ---------------------
- *   Do this at your leisure.  Change hiscores_format_single() as much
+ *   Do this at your leisure. Change hiscores_format_single() as much
  * as you like.
  *
  */
@@ -38,6 +38,7 @@
 #include "libutil.h"
 #include "menu.h"
 #include "misc.h"
+#include "mon-util.h"
 #include "options.h"
 #include "ouch.h"
 #include "place.h"
@@ -60,7 +61,7 @@
 // enough memory allocated to snarf in the scorefile entries
 static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 
-// hackish: scorefile position of newest entry.  Will be highlit during
+// hackish: scorefile position of newest entry. Will be highlit during
 // highscore printing (always -1 when run from command line).
 static int newest_entry = -1;
 
@@ -748,6 +749,11 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     raw_line          = se.raw_line;
 }
 
+actor* scorefile_entry::killer() const
+{
+    return actor_by_mid(death_source);
+}
+
 xlog_fields scorefile_entry::get_fields() const
 {
     if (!fields.get())
@@ -1145,8 +1151,7 @@ void scorefile_entry::set_score_fields() const
     fields->add_field("sc", "%d", points);
     fields->add_field("ktyp", "%s", _kill_method_name(kill_method_type(death_type)));
 
-    const string killer = death_source_desc();
-    fields->add_field("killer", "%s", killer.c_str());
+    fields->add_field("killer", "%s", death_source_desc().c_str());
     if (!death_source_flags.empty())
     {
         const string kflags = comma_separated_line(
@@ -1161,7 +1166,7 @@ void scorefile_entry::set_score_fields() const
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
 
-    if (indirectkiller != killer)
+    if (indirectkiller != death_source_desc())
         fields->add_field("ikiller", "%s", indirectkiller.c_str());
 
     if (!killerpath.empty())
@@ -1568,7 +1573,7 @@ void scorefile_entry::init(time_t dt)
         num_runes      = runes_in_pack();
         num_diff_runes = num_runes;
 
-        // There's no point in rewarding lugging artefacts.  Thus, no points
+        // There's no point in rewarding lugging artefacts. Thus, no points
         // for the value of the inventory. -- 1KB
         if (death_type == KILLED_BY_WINNING)
         {
@@ -1727,7 +1732,7 @@ string scorefile_entry::game_time(death_desc_verbosity verbosity) const
 
 const char *scorefile_entry::damage_verb() const
 {
-    // GDL: here's an example of using final_hp.  Verbiage could be better.
+    // GDL: here's an example of using final_hp. Verbiage could be better.
     // bwr: changed "blasted" since this is for melee
     return (final_hp > -6)  ? "Slain"   :
            (final_hp > -14) ? "Mangled" :

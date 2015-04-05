@@ -87,6 +87,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "jobs.h"
 #include "libutil.h"
 #include "luaterp.h"
 #include "lookup_help.h"
@@ -181,8 +182,6 @@ player you;
 
 game_state crawl_state;
 
-string init_file_error;    // externed in newgame.cc
-
 void world_reacts();
 
 static key_recorder repeat_again_rec;
@@ -248,7 +247,7 @@ static void _enter_explore_mode();
 # include <SDL_main.h>
 # if defined(__GNUC__) && !defined(__clang__)
 // SDL plays nasty tricks with main() (actually, _SDL_main()), which for
-// Windows builds somehow fail with -fwhole-program.  Thus, exempt SDL_main()
+// Windows builds somehow fail with -fwhole-program. Thus, exempt SDL_main()
 // from this treatment.
 __attribute__((externally_visible))
 # endif
@@ -309,7 +308,7 @@ int main(int argc, char *argv[])
     init_item_name_cache();
 
     // Read the init file.
-    init_file_error = read_init_file();
+    read_init_file();
 
     // Now parse the args again, looking for everything else.
     parse_args(argc, argv, false);
@@ -421,7 +420,7 @@ NORETURN static void _launch_game()
         msg::stream << "<yellow>Welcome" << (game_start? "" : " back") << ", "
                     << you.your_name << " the "
                     << species_name(you.species)
-                    << " " << you.class_name << ".</yellow>"
+                    << " " << get_job_name(you.char_class) << ".</yellow>"
                     << endl;
     }
 
@@ -513,7 +512,7 @@ static void _show_commandline_options_help()
     puts("  -extra-opt-last  optname=optval");
     puts("");
     puts("Acts as if 'optname=optval' was at the top or bottom of the init");
-    puts("file.  Can be used multiple times.");
+    puts("file. Can be used multiple times.");
     puts("");
 
     puts("Highscore list options: (Can be redirected to more, etc.)");
@@ -563,7 +562,7 @@ static void _wanderer_startup_message()
     {
         // Some wanderers stand to not be able to see any of their
         // skills at the start of the game (one or two skills should be
-        // easily guessed from starting equipment).  Anyway, we'll give
+        // easily guessed from starting equipment). Anyway, we'll give
         // the player a message to warn them (and a reason why). - bwr
         mpr("You wake up in a daze, and can't recall much.");
     }
@@ -642,7 +641,7 @@ static void _take_starting_note()
     ostringstream notestr;
     notestr << you.your_name << ", the "
             << species_name(you.species) << " "
-            << you.class_name
+            << get_job_name(you.char_class)
             << ", began the quest for the Orb.";
     take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
     mark_milestone("begin", "began the quest for the Orb.");
@@ -1458,7 +1457,7 @@ static void _input()
         clear_macro_process_key_delay();
 
         // At this point we are guaranteed to not be in any recursion, so the
-        // Lua stack must be empty.  Unless there's a leak.
+        // Lua stack must be empty. Unless there's a leak.
         ASSERT(lua_gettop(clua.state()) == 0);
 
         if (!has_pending_input() && !kbhit())
@@ -1756,7 +1755,7 @@ static void _experience_check()
     mprf("You are a level %d %s %s.",
          you.experience_level,
          species_name(you.species).c_str(),
-         you.class_name.c_str());
+         get_job_name(you.char_class));
     int perc = get_exp_progress();
 
     if (you.experience_level < you.get_max_xl())
@@ -1854,6 +1853,8 @@ static void _do_rest()
             && you.magic_points == you.max_magic_points)
         {
             mpr("You start waiting.");
+            _start_running(RDIR_REST, RMODE_WAIT_DURATION);
+            return;
         }
         else
             mpr("You start resting.");
@@ -2480,9 +2481,9 @@ void world_reacts()
     you.elapsed_time += you.time_taken;
     if (you.elapsed_time >= 2*1000*1000*1000)
     {
-        // 2B of 1/10 turns.  A 32-bit signed int can hold 2.1B.
+        // 2B of 1/10 turns. A 32-bit signed int can hold 2.1B.
         // The worst case of mummy scumming had 92M turns, the second worst
-        // merely 8M.  This limit is ~200M turns, with an efficient bot that
+        // merely 8M. This limit is ~200M turns, with an efficient bot that
         // keeps resting on a fast machine, it takes ~24 hours to hit it
         // on a level with no monsters, at 100% CPU utilization, producing
         // a gigabyte of bzipped ttyrec.
@@ -2492,7 +2493,7 @@ void world_reacts()
         mpr("Sorry, but your quest for the Orb is now rather pointless. "
             "You quit...");
         // Please do not give it a custom ktyp or make it cool in any way
-        // whatsoever, because players are insane.  Usually, not being dragged
+        // whatsoever, because players are insane. Usually, not being dragged
         // down by sanity is good, but this is not the case here.
         ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
     }
@@ -2644,7 +2645,7 @@ static keycode_type _get_next_keycode()
 }
 
 // Check squares adjacent to player for given feature and return how
-// many there are.  If there's only one, return the dx and dy.
+// many there are. If there's only one, return the dx and dy.
 static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
@@ -2982,7 +2983,7 @@ static void _safe_move_player(coord_def move)
     _move_player(move);
 }
 
-// Swap monster to this location.  Player is swapped elsewhere.
+// Swap monster to this location. Player is swapped elsewhere.
 // Moves the monster into position, but does not move the player
 // or apply location effects: the latter should happen after the
 // player is moved.
@@ -3154,7 +3155,7 @@ static void _move_player(coord_def move)
     else if (you.form == TRAN_WISP && one_chance_in(10))
     {
         // Full confusion appears to be a pain in the rear, and monster
-        // wisps don't attack allies either.  Thus, you can get redirected
+        // wisps don't attack allies either. Thus, you can get redirected
         // only into empty places or towards enemies.
         coord_def dir = Compass[random2(8)];
         coord_def targ = you.pos() + dir;
@@ -3576,7 +3577,7 @@ static void _check_cmd_repeat(int last_turn)
     {
         // This is a catch-all that shouldn't really happen.
         // If the command always takes zero turns, then it
-        // should be prevented in cmd_is_repeatable().  If
+        // should be prevented in cmd_is_repeatable(). If
         // a command sometimes takes zero turns (because it
         // can't be done, for instance), then
         // crawl_state.zero_turns_taken() should be called when

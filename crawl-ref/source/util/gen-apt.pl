@@ -10,7 +10,7 @@ use strict;
 use warnings;
 
 my ($target, $template, $modfile, $skillfile) = @ARGV;
-die "Usage: $0 <target> <template> player.cc skills.cc\n"
+die "Usage: $0 <target> <template> species-data.h aptitudes.h\n"
   unless ($modfile && $skillfile && $template && $target && -r $template
           && -r $skillfile && -r $modfile);
 
@@ -146,7 +146,7 @@ sub aptitude_table
             my $fmt = "%+3d";
             $fmt = "%3d" if $skill == 0;
             $fmt = " NA" if $skill == -99;
-            if ($abbr eq 'HP' || $abbr eq 'MP')
+            if ($abbr eq 'HP')
             {
                 $skill = $skill * 10;
                 $fmt = "%+3d%%";
@@ -248,37 +248,20 @@ sub load_mods
 {
     my $modfile = shift;
     open my $inf, '<', $modfile or die "Can't read $modfile: $!\n";
+    my $file; { local $/; $file = <$inf> };
 
-    my $table;
-
-    my @species;
-    while (<$inf>)
+    foreach (@SPECIES)
     {
-        $table = $1 if m{// table: ([A-Za-z ]+)\s*$};
-        next unless $table;
+        my $sp = $_;
+        $sp =~ s/Base //;
+        my ($xp, $hp, $mp) = $file =~ /$sp.*\n.*\n *(-?\d), (-?\d), (-?\d),/;
 
-        if (/SP_(\w+)/)
-        {
-            push @species, propercase_string(fix_underscores($1));
-        }
-
-        if (/return/ && /(-?\d+)/)
-        {
-            my $mod = $1;
-            #die "$modfile:$.: No species associated with $table mod $1\n"
-            #  unless @species;
-            for my $sp (@species)
-            {
-                $SPECIES_SKILLS{$sp}{$table} = $1;
-            }
-            @species = ();
-        }
-
-        undef $table if /}/;
+        $SPECIES_SKILLS{$_}{"Experience"} = $xp;
+        $SPECIES_SKILLS{$_}{"Hit Points"} = $hp;
+        $SPECIES_SKILLS{$_}{"Magic Points"} = $mp;
+        die "couldn't parse mods for $_" unless defined $xp
+                                                && defined $hp
+                                                && defined $mp;
     }
     close $inf;
-    for ("Experience", "Hit Points", "Magic Points")
-    {
-        die "Can't find table: $_ in $modfile\n" unless $SPECIES_SKILLS{Spriggan}{$_};
-    }
 }

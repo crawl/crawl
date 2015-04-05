@@ -62,13 +62,21 @@ class player : public actor
 {
 public:
   // ---------------
+  // Character save chunk data:
+  // None of this is really necessary, except for some complicated
+  // hacks with player_save_info. Should only be used in tags.cc or
+  // player_save_info::operator=(player).
+  // ---------------
+  string chr_species_name;
+  string chr_class_name;
+  string chr_god_name;
+
+  // ---------------
   // Permanent data:
   // ---------------
   string your_name;
   species_type species;
-  string species_name;
   job_type char_class;
-  string class_name;
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
@@ -193,7 +201,7 @@ public:
   // rather than the object itself, so that we can get away with
   // just a forward declare of the KillMaster class, rather than
   // having to #include kills.h and thus make every single .cc file
-  // dependent on kills.h.  Having a pointer means that we have
+  // dependent on kills.h. Having a pointer means that we have
   // to do our own implementations of copying the player object,
   // since the default implementations will lead to the kills member
   // pointing to freed memory, or worse yet lead to the same piece of
@@ -206,7 +214,6 @@ public:
   FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
-  string god_name;
   string jiyva_second_name;       // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
@@ -275,7 +282,7 @@ public:
   // monsters causing fear to the player; see above
   vector<mid_t> fearmongers;
 
-  // Delayed level actions.  This array is never trimmed, as usually D:1 won't
+  // Delayed level actions. This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   vector<daction_type> dactions;
 
@@ -442,7 +449,7 @@ public:
     int strength(bool nonneg = true) const;
     int intel(bool nonneg = true) const;
     int dex(bool nonneg = true) const;
-    int max_stat(stat_type stat) const;
+    int max_stat(stat_type stat, bool base = false) const;
     int max_strength() const;
     int max_intel() const;
     int max_dex() const;
@@ -619,7 +626,7 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate(bool temp = true) const;
-    bool is_lifeless_undead() const;
+    bool is_lifeless_undead(bool temp = true) const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool is_stationary() const;
@@ -651,7 +658,8 @@ public:
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
                           const char* hurt_msg = nullptr);
-    void corrode_equipment(const char* corrosion_source = "the acid");
+    void corrode_equipment(const char* corrosion_source = "the acid",
+                           int degree = 1);
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
@@ -743,6 +751,7 @@ public:
     bool can_throw_large_rocks() const;
     bool can_smell() const;
 
+    int racial_ac(bool temp) const;
     int armour_class(bool /*calc_unid*/ = true) const;
     int gdr_perc() const;
     int melee_evasion(const actor *attacker,
@@ -989,8 +998,6 @@ bool player_can_open_doors();
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
 
-bool player_genus(genus_type which_genus,
-                   species_type species = SP_UNKNOWN);
 bool is_player_same_genus(const monster_type mon);
 monster_type player_mons(bool transform = true);
 void update_player_symbol();
@@ -1015,7 +1022,8 @@ void inc_hp(int hp_gain);
 void flush_mp();
 
 void rot_hp(int hp_loss);
-void unrot_hp(int hp_recovered);
+// Unrot the player and return excess HP if any.
+int unrot_hp(int hp_recovered);
 int player_rotted();
 void rot_mp(int mp_loss);
 

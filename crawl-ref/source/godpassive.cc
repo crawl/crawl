@@ -681,7 +681,7 @@ int gozag_gold_in_los(actor *who)
     {
         for (stack_iterator j(*ri); j; ++j)
         {
-            if (j->base_type == OBJ_GOLD && j->special > 0)
+            if (j->base_type == OBJ_GOLD)
                 ++gold_count;
         }
     }

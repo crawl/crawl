@@ -604,7 +604,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         //    = ----- * ---  = -----
         //      m+k+1   m+k    m+k+1
         //
-        // Therefore, it's uniform for n = m + k + 1.  QED
+        // Therefore, it's uniform for n = m + k + 1. QED
         //
         // The important thing to note in calculating the last
         // probability is that the chosen elements have already
@@ -1134,7 +1134,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     {
     case SPELL_CONTROL_TELEPORT:
         if (player_has_orb())
-            return "The orb interferes with controlled teleportation.";
+            return "The Orb interferes with controlled teleportation.";
         // fallthrough to blink/cblink
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
@@ -1282,11 +1282,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         if (you.magic_points == you.max_magic_points && temp)
             return "Your magic capacity is already full.";
-        break;
-
-    case SPELL_ENSLAVEMENT:
-        if (player_mutation_level(MUT_NO_LOVE))
-            return "You cannot make allies.";
         break;
 
     case SPELL_MALIGN_GATEWAY:

@@ -838,6 +838,37 @@ bool monster::can_use_missile(const item_def &item) const
     return false;
 }
 
+/**
+ * Does this monster have any interest in using the given wand? (Will they
+ * pick it up?)
+ *
+ * Based purely on monster HD & wand type for now. Higher-HD monsters are less
+ * inclined to bother with wands, especially the weaker ones.
+ *
+ * @param item      The wand in question.
+ * @return          Whether the monster will bother picking up the wand.
+ */
+bool monster::likes_wand(const item_def &item) const
+{
+    ASSERT(item.base_type == OBJ_WANDS);
+    switch (item.sub_type)
+    {
+        case WAND_INVISIBILITY:
+        case WAND_TELEPORTATION:
+        case WAND_HEAL_WOUNDS:
+        case WAND_HASTING:
+            return true; // goodwands
+        default:
+            // kind of a hack
+            // assumptions:
+            // bad wands are value 16, so won't be used past hd 4
+            // mediocre wands are value 8; won't be used past hd 8
+            // fire and cold and so on are value 5, won't be used past hd 10
+            // better implementations welcome
+            return wand_charge_value(item.sub_type) + get_hit_dice() * 2 <= 24;
+    }
+}
+
 void monster::swap_slots(mon_inv_type a, mon_inv_type b)
 {
     const int swap = inv[a];
@@ -1694,7 +1725,7 @@ bool monster::wants_armour(const item_def &item) const
     }
 
     // Spellcasters won't pick up restricting armour, although they can
-    // start with one.  Applies to arcane spells only, of course.
+    // start with one. Applies to arcane spells only, of course.
     if (!pos().origin() && is_actual_spellcaster()
         && (property(item, PARM_EVASION) / 10 < -5
             || is_artefact(item)
@@ -2096,7 +2127,7 @@ bool monster::pickup_wand(item_def &item, int near, bool force)
             return false;
 
         // Only low-HD monsters bother with wands.
-        if (get_hit_dice() >= 14)
+        if (!likes_wand(item))
             return false;
 
         // Holy monsters and worshippers of good gods won't pick up evil
@@ -2974,7 +3005,7 @@ void monster::banish(actor *agent, const string &)
         && !mons_class_flag(type, M_NO_EXP_GAIN))
     {
         // Double the existing damage blame counts, so the unassigned xp for
-        // remaining hp is effectively halved.  No need to pass flags this way.
+        // remaining hp is effectively halved. No need to pass flags this way.
         damage_total *= 2;
         damage_friendly *= 2;
         blame_damage(agent, hit_points);
@@ -3774,7 +3805,7 @@ int monster::how_unclean(bool check_god) const
     if (has_attack_flavour(AF_VAMPIRIC))
         uncleanliness++;
 
-    // Zin considers insanity unclean.  And slugs that speak.
+    // Zin considers insanity unclean. And slugs that speak.
     if (type == MONS_CRAZY_YIUF
         || type == MONS_PSYCHE
         || type == MONS_LOUISE
@@ -4121,7 +4152,7 @@ int monster::res_rotting(bool /*temp*/) const
     switch (holiness())
     {
     case MH_NATURAL:
-    case MH_PLANT: // was 1 before.  Gardening shows it should be -1 instead...
+    case MH_PLANT: // was 1 before. Gardening shows it should be -1 instead...
         res = 0;
         break;
     case MH_UNDEAD:
@@ -4232,7 +4263,7 @@ int monster::res_constrict() const
         return 3;
     if (mons_genus(type) == MONS_JELLY)
         return 3;
-    if (spiny_degree() > 0)
+    if (is_spiny())
         return 3;
 
     return 0;
@@ -4519,17 +4550,24 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
     return true;
 }
 
-void monster::corrode_equipment(const char* corrosion_source)
+void monster::corrode_equipment(const char* corrosion_source, int degree)
 {
     // Don't corrode spectral weapons or temporary items.
     if (mons_is_avatar(type) || type == MONS_PLAYER_SHADOW)
         return;
 
     // rCorr protects against 50% of corrosion.
-    if (res_corr() && coinflip())
+    // As long as degree is at least 1, we'll apply the status once, because
+    // it doesn't look to me like applying it more times does anything.
+    // If I'm wrong, we should fix that.
+    if (res_corr())
     {
-        dprf("rCorr protects.");
-        return;
+        degree = binomial(degree, 50);
+        if (!degree)
+        {
+            dprf("rCorr protects.");
+            return;
+        }
     }
 
     if (you.see_cell(pos()))
@@ -4831,7 +4869,7 @@ static int _estimated_trap_damage(trap_type trap)
 
 /**
  * Check whether a given trap (described by trap position) can be
- * regarded as safe.  Takes into account monster intelligence and
+ * regarded as safe. Takes into account monster intelligence and
  * allegiance.
  *
  * @param where       The square to be checked for dangerous traps.
@@ -4945,7 +4983,7 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
         return false;
 
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
-    // handle accordingly.  In the arena Zot traps affect all monsters.
+    // handle accordingly. In the arena Zot traps affect all monsters.
 
     // XXX: this logic duplicates the checks for friendly creatures & "traps
     // that are bad for the player " at the top; probably should be merged
@@ -5188,7 +5226,7 @@ void monster::forget_random_spell()
 void monster::scale_hp(int num, int den)
 {
     // Without the +1, we lose maxhp on every berserk (the only use) if the
-    // maxhp is odd.  This version does preserve the value correctly, but only
+    // maxhp is odd. This version does preserve the value correctly, but only
     // if it is first inflated then deflated.
     hit_points     = (hit_points * num + 1) / den;
     max_hit_points = (max_hit_points * num + 1) / den;
@@ -5256,7 +5294,7 @@ void monster::calc_speed()
 // Check speed and speed_increment sanity.
 void monster::check_speed()
 {
-    // FIXME: If speed is borked, recalculate.  Need to figure out how
+    // FIXME: If speed is borked, recalculate. Need to figure out how
     // speed is getting borked.
     if (speed < 0 || speed > 130)
     {
@@ -5605,22 +5643,17 @@ bool monster::is_skeletal() const
     return _mons_is_skeletal(type);
 }
 
-int monster::spiny_degree() const
+/**
+ * Does this monster have spines?
+ *
+ * (If so, it may do damage when attacked in melee, and has rConstrict (!?)
+ *
+ * @return  Whether this monster has spines.
+ */
+bool monster::is_spiny() const
 {
-    switch (mons_is_demonspawn(type)
-            ? base_monster
-            : type)
-    {
-        case MONS_PORCUPINE:
-        case MONS_TORTUROUS_DEMONSPAWN:
-            return 3;
-        case MONS_HELL_SENTINEL:
-            return 5;
-        case MONS_BRIAR_PATCH:
-            return 4;
-        default:
-            return 0;
-    }
+    return mons_class_flag(mons_is_job(type) ? base_monster : type,
+                           M_SPINY);
 }
 
 bool monster::has_action_energy() const
@@ -5678,8 +5711,11 @@ void monster::apply_location_effects(const coord_def &oldpos,
             simple_monster_message(this, " flops around on dry land!");
         else if (!monster_habitable_grid(this, grd(oldpos)))
         {
-            mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
-                                               feat_type_name(grd(pos())));
+            if (you.can_see(this))
+            {
+                mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
+                                                   feat_type_name(grd(pos())));
+            }
             del_ench(ENCH_AQUATIC_LAND);
         }
         // This may have been called via dungeon_terrain_changed instead

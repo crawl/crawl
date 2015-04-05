@@ -6,12 +6,12 @@ class map_lines;
 //
 //  The basic idea here is as follows:
 //    We make a box, but the sides go in and out instead
-//    of straight.  Then we add doors on the straight
+//    of straight. Then we add doors on the straight
 //    parts.
 //
 //  In more detail, each side is divided into a number of
 //    divisions, each of which is a certain distance out
-//    from the center of the box.  THe divisions are
+//    from the center of the box. THe divisions are
 //    connected at the corners, giving the box an irregular
 //    shape.
 //
@@ -29,7 +29,7 @@ class map_lines;
 //    3. The box must touch its specified outer bounds at
 //       least once on each side
 //    4. The corners of the box must not pass through each
-//       other.  That would create an unreachable location
+//       other. That would create an unreachable location
 //       and cause the level to veto.
 //
 //  Parameter(s):
@@ -66,7 +66,7 @@ class map_lines;
 //
 //  Some Notes:
 //    <1> The sides of a box never go in past the middle, no
-//        matter what you set the values to.  Otherwise there
+//        matter what you set the values to. Otherwise there
 //        is self-intersection (very bad).
 //
 

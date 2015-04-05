@@ -82,7 +82,7 @@ local function report_monster_counts_at(place, mcount_map)
 
   local monster_counts = util.pairs(mcount_map)
   table.sort(monster_counts, function (a, b)
--- Further sort options can be added later if desired.  Default is XP, -sort_count sorts by count/percentage instead.
+-- Further sort options can be added later if desired. Default is XP, -sort_count sorts by count/percentage instead.
     if sort_type == 'count' then
         return a[2].total > b[2].total
     else

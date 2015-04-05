@@ -94,7 +94,7 @@
    less = slower. 5 = half speed, 10 = normal, 20 = double speed.
 
    energy usage
-   - How quickly the energy granted by speed is used up.  Most monsters
+   - How quickly the energy granted by speed is used up. Most monsters
    should just use DEFAULT_ENERGY, where all the different types of actions
    use 10 energy units.
 
@@ -105,7 +105,7 @@
      MONUSE_WEAPONS_ARMOUR
 
     From MONUSE_STARTING_EQUIPMENT on, monsters are capable of handling
-    items.  Contrary to what one might expect, MONUSE_WEAPONS_ARMOUR
+    items. Contrary to what one might expect, MONUSE_WEAPONS_ARMOUR
     also means a monster is capable of using wands and will also pick
     them up, something that those with MONUSE_STARTING_EQUIPMENT won't
     do.
@@ -252,6 +252,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_MNOLEG_TENTACLE)
     AXED_MON(MONS_MNOLEG_TENTACLE_SEGMENT)
     AXED_MON(MONS_UNBORN)
+    AXED_MON(MONS_GIANT_MITE)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
@@ -543,7 +544,7 @@ static monsterentry mondata[] =
     // Colours are used for picking the right tile for Tiamat,
     // so this needs to be different from the grey draconian. (jpeg)
     MONS_PALE_DRACONIAN, 'd', CYAN, "pale draconian",
-    M_COLD_BLOOD | M_SPEAKS,
+    M_COLD_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_RES_STEAM,
     900, 10, MONS_DRACONIAN, MONS_PALE_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -609,7 +610,7 @@ static monsterentry mondata[] =
 
 {
     MONS_GREY_DRACONIAN, 'd', LIGHTGREY, "grey draconian",
-    M_COLD_BLOOD | M_UNBREATHING | M_SPEAKS,
+    M_COLD_BLOOD | M_UNBREATHING | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_GREY_DRACONIAN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 25}, {AT_TAIL_SLAP, AF_PLAIN, 15}, AT_NO_ATK,
@@ -1035,7 +1036,7 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LITTLE, MON_SHAPE_HUMANOID
 },
 
-{ // Another dummy monster.  Zombies and poly allowed.
+{ // Another dummy monster. Zombies and poly allowed.
     MONS_DWARF, 'g', GREEN, "dwarf",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
@@ -1887,10 +1888,10 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
 
 {
     MONS_PORCUPINE, 'r', BLUE, "porcupine",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_SPINY,
     MR_NO_FLAGS,
     220, 26, MONS_RAT, MONS_PORCUPINE, MH_NATURAL, 20,
-    { {AT_BITE, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_BITE, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 2, 4, 0 },
     2, 12, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_ANIMAL, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
@@ -1908,18 +1909,6 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     3, 10, MST_NO_SPELLS, CE_CLEAN, S_SILENT,
     I_INSECT, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE, MON_SHAPE_INSECT
-},
-
-{
-    MONS_GIANT_MITE, 's', LIGHTRED, "giant mite",
-    M_NO_SKELETON,
-    MR_VUL_POISON,
-    300, 10, MONS_GIANT_MITE, MONS_GIANT_MITE, MH_NATURAL, 0,
-    { {AT_BITE, AF_POISON, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
-    1, 7, MST_NO_SPELLS, CE_POISONOUS, S_SILENT,
-    I_INSECT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE, MON_SHAPE_ARACHNID
 },
 
 {
@@ -2324,6 +2313,18 @@ DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
     5, 10, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_ANIMAL, HT_LAND, FL_NONE, 30, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC
+},
+
+{
+    MONS_ENTROPY_WEAVER, 'x', WHITE, "entropy weaver",
+    M_NO_SKELETON | M_FIGHTER,
+    MR_NO_FLAGS,
+    550, 10, MONS_ENTROPY_WEAVER, MONS_ENTROPY_WEAVER, MH_NATURAL, 60,
+    { {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 17} },
+    { 13, 3, 5, 0 },
+    7, 13, MST_ENTROPY_WEAVER, CE_CLEAN, S_SILENT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
 
 {
@@ -3680,7 +3681,7 @@ DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
 
 {
     MONS_BRIAR_PATCH, 'P', YELLOW, "briar patch",
-    M_STATIONARY | M_NO_EXP_GAIN,
+    M_STATIONARY | M_NO_EXP_GAIN | M_SPINY,
     MR_RES_POISON | MR_VUL_FIRE,
     425, 10, MONS_PLANT, MONS_BRIAR_PATCH, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4207,7 +4208,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     M_FIGHTER | M_SEE_INVIS | M_SHADOW | M_INSUBSTANTIAL,
     MR_RES_COLD,
     0, 13, MONS_WRAITH, MONS_PHANTASMAL_WARRIOR, MH_UNDEAD, 80,
-    { {AT_HIT, AF_VULN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_VULN, 39}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 3, 5, 0 },
     12, 10, MST_PHANTASMAL_WARRIOR, CE_NOCORPSE, S_SILENT,
     I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
@@ -4682,6 +4683,18 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 },
 
 {
+    MONS_SALAMANDER_STORMCALLER, 'N', RED, "salamander stormcaller",
+    M_WARM_BLOOD,
+    mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
+    1000, 10, MONS_NAGA, MONS_SALAMANDER, MH_NATURAL, 60,
+    { {AT_HIT, AF_FIRE, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 11, 4, 5, 0 },
+    5, 10, MST_SALAMANDER_STORMCALLER, CE_CLEAN, S_SILENT,
+    I_HIGH, HT_AMPHIBIOUS_LAVA, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_NAGA
+},
+
+{
     MONS_SALAMANDER_MYSTIC, 'N', YELLOW, "salamander mystic",
     M_WARM_BLOOD | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
@@ -4869,7 +4882,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
 
 {
     MONS_TORTUROUS_DEMONSPAWN, '6', MAGENTA, "torturous demonspawn",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO | M_SPINY,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_TORTUROUS_DEMONSPAWN, MH_NATURAL, 40,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5072,7 +5085,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
     MONS_SIXFIRHY, '4', LIGHTBLUE, "sixfirhy",
     M_NO_FLAGS,
     MR_NO_FLAGS, // Can't have RES_ELEC since most sources of damage do nothing
-                 // in that case.  We want to "suffer" the damage to get healed.
+                 // in that case. We want to "suffer" the damage to get healed.
     300, 6, MONS_SIXFIRHY, MONS_SIXFIRHY, MH_DEMONIC, 60,
     { {AT_HIT, AF_ELEC, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
@@ -5344,7 +5357,7 @@ DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
 
 {
     MONS_HELL_SENTINEL, '1', BROWN, "Hell Sentinel",
-    M_SEE_INVIS | M_GLOWS_LIGHT,
+    M_SEE_INVIS | M_GLOWS_LIGHT | M_SPINY,
     MR_RES_HELLFIRE | mrd(MR_RES_POISON | MR_RES_COLD | MR_RES_ELEC, 3),
     1300, 10, MONS_HELL_SENTINEL, MONS_HELL_SENTINEL, MH_DEMONIC, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 40}, {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK },
@@ -5616,7 +5629,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 },
 
 // major demons ('&')
-// Random demon in pan - only one per level.  Stats are stored in ghost struct.
+// Random demon in pan - only one per level. Stats are stored in ghost struct.
 {
     MONS_PANDEMONIUM_LORD, '&', COLOUR_UNDEF, "pandemonium lord",
     // See invis is also set in ghost.cc
@@ -5630,7 +5643,7 @@ DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_HUMANOID
 },
 
-// Demon in hell.  Currently only used as genus/species for hell guardians.
+// Demon in hell. Currently only used as genus/species for hell guardians.
 { // dummy genus monster -- used as a species so not a DUMMY
     MONS_HELL_LORD, '&', COLOUR_UNDEF, "hell lord",
     M_FIGHTER | M_SPEAKS | M_CANT_SPAWN,

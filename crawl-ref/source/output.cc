@@ -977,7 +977,7 @@ static void _add_status_light_to_out(int i, vector<status_light>& out)
 //
 // Note the usage of bad_ench_colour() correspond to levels that
 // can be found in player.cc, ie those that the player can tell by
-// using the '@' command.  Things like confusion and sticky flame
+// using the '@' command. Things like confusion and sticky flame
 // hide their amounts and are thus always the same colour (so
 // we're not really exposing any new information). --bwr
 static void _get_status_lights(vector<status_light>& out)
@@ -1358,21 +1358,24 @@ void print_stats()
         // Increase y-value for all following lines.
         yhack++;
         CGOTOXY(1+6, 8 + yhack, GOTO_STAT);
-        textcolour(HUD_VALUE_COLOUR);
+        if (you.duration[DUR_GOZAG_GOLD_AURA])
+            textcolour(LIGHTBLUE);
+        else
+            textcolour(HUD_VALUE_COLOUR);
         CPRINTF("%-6d", you.gold);
     }
 
     if (you.wield_change)
     {
         // weapon_change is set in a billion places; probably not all
-        // of them actually mean the user changed their weapon.  Calling
+        // of them actually mean the user changed their weapon. Calling
         // on_weapon_changed redundantly is normally OK; but if the user
         // is wielding a bow and throwing javelins, the on_weapon_changed
         // will switch them back to arrows, which is annoying.
         // Perhaps there should be another bool besides wield_change
         // that's set in fewer places?
         // Also, it's a little bogus to change simulation state in
-        // render code.  We should find a better place for this.
+        // render code. We should find a better place for this.
         you.m_quiver->on_weapon_changed();
         _print_stats_wp(9 + yhack);
     }
@@ -2022,7 +2025,7 @@ static string _overview_screen_title(int sw)
 
     string species_job = make_stringf("(%s %s)",
                                       species_name(you.species).c_str(),
-                                      you.class_name.c_str());
+                                      get_job_name(you.char_class));
 
     handle_real_time();
     string time_turns = make_stringf(" Turns: %d, Time: ", you.num_turns)
@@ -2481,7 +2484,7 @@ static char _get_overview_screen_results()
         for (unsigned int i = 0; i < blines.size(); ++i)
         {
             // Kind of a hack -- we don't really care what items these
-            // hotkeys go to.  So just pick the first few.
+            // hotkeys go to. So just pick the first few.
             const char hotkey = (i < equip_chars.size()) ? equip_chars[i] : 0;
             overview.add_item_formatted_string(blines[i], hotkey);
         }
@@ -2621,162 +2624,35 @@ static string _status_mut_abilities(int sw)
     //----------------------------
     text += "<w>A:</w> ";
 
-    int AC_change  = 0;
-
     vector<string> mutations;
 
-    switch (you.species)   //mv: following code shows innate abilities - if any
+    for (const string& str : fake_mutations(you.species, true))
     {
-    case SP_MERFOLK:
-        mutations.push_back(_annotate_form_based("change form in water",
-                                                 form_changed_physiology()));
-        mutations.push_back(_annotate_form_based("swift swim",
-                                                 form_changed_physiology()));
-        break;
-
-    case SP_MINOTAUR:
-        mutations.push_back(_annotate_form_based("retaliatory headbutt",
-                                                 !form_keeps_mutations()));
-        break;
-
-    case SP_NAGA:
-        if (you.experience_level > 12)
+        if (species_is_draconian(you.species))
+            mutations.push_back(_dragon_abil(str));
+        else if (you.species == SP_MERFOLK)
         {
-            mutations.push_back(_annotate_form_based("constrict 1",
-                                                     !form_keeps_mutations()));
+            mutations.push_back(
+                _annotate_form_based(str, form_changed_physiology()));
         }
-        AC_change += you.experience_level / 3;
-        break;
-
-    case SP_GHOUL:
-        mutations.emplace_back("rotting body");
-        break;
-
-    case SP_TENGU:
-        if (you.experience_level > 4)
+        else if (you.species == SP_MINOTAUR)
         {
-            string help = "able to fly";
-            if (you.experience_level > 14)
-                help += " continuously";
-            mutations.push_back(help);
+            mutations.push_back(
+                _annotate_form_based(str, !form_keeps_mutations()));
         }
-        break;
-
-    case SP_MUMMY:
-        mutations.emplace_back("no food or potions");
-        mutations.emplace_back("fire vulnerability");
-        if (you.experience_level > 12)
-        {
-            string help = "in touch with death";
-            if (you.experience_level > 25)
-                help = "strongly " + help;
-            mutations.push_back(help);
-        }
-        mutations.emplace_back("restore body");
-        break;
-
-    case SP_VAMPIRE:
-        mutations.emplace_back("bottle blood");
-        break;
-
-    case SP_DEEP_DWARF:
-        mutations.emplace_back("damage resistance");
-        mutations.emplace_back("recharge devices");
-        break;
-
-    case SP_FELID:
-        mutations.emplace_back("paw claws");
-        break;
-
-    case SP_RED_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe fire"));
-        break;
-
-    case SP_WHITE_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe frost"));
-        break;
-
-    case SP_GREEN_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe noxious fumes"));
-        break;
-
-    case SP_YELLOW_DRACONIAN:
-        mutations.push_back(_dragon_abil("spit acid"));
-        mutations.push_back(_annotate_form_based("acid resistance",
-                                                 !form_keeps_mutations()
-                                                  && you.form != TRAN_DRAGON));
-        break;
-
-    case SP_GREY_DRACONIAN:
-        mutations.emplace_back("walk through water");
-        AC_change += 5;
-        break;
-
-    case SP_BLACK_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe lightning"));
-        if (you.experience_level >= 14)
-            mutations.emplace_back("able to fly continuously");
-        break;
-
-    case SP_PURPLE_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe power"));
-        break;
-
-    case SP_MOTTLED_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe sticky flames"));
-        break;
-
-    case SP_PALE_DRACONIAN:
-        mutations.push_back(_dragon_abil("breathe steam"));
-        break;
-
-    case SP_FORMICID:
-        mutations.emplace_back("permanent stasis");
-        mutations.emplace_back("dig shafts and tunnels");
-        mutations.emplace_back("four strong arms");
-        break;
-
-    case SP_GARGOYLE:
-        if (you.experience_level >= 14)
-            mutations.emplace_back("able to fly continuously");
-        AC_change += 2 + you.experience_level * 2 / 5
-                       + max(0, you.experience_level - 7) * 2 / 5;
-        break;
-
-#if TAG_MAJOR_VERSION == 34
-    case SP_DJINNI:
-        mutations.emplace_back("fire immunity");
-        mutations.emplace_back("cold vulnerability");
-        break;
-
-#endif
-    default:
-        break;
-    }                           //end switch - innate abilities
+        else
+            mutations.push_back(str);
+    }
 
     // a bit more stuff
     if (you.species == SP_OGRE || you.species == SP_TROLL
-        || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
+        || species_is_draconian(you.species) || you.species == SP_SPRIGGAN)
     {
         mutations.emplace_back("unfitting armour");
     }
 
-    if (player_genus(GENPC_DRACONIAN))
-    {
-        // The five extra points for grey draconians were handled above.
-        AC_change += 4 + you.experience_level / 3;
-    }
-
-    if (you.species == SP_FELID)
-    {
-        mutations.emplace_back("no armour");
-        mutations.emplace_back("no weapons or thrown items");
-    }
-
     if (you.species == SP_OCTOPODE)
     {
-        mutations.emplace_back("almost no armour");
-        mutations.emplace_back("amphibious");
         mutations.push_back(_annotate_form_based(
             make_stringf("%d rings", you.has_tentacles(false)),
             !get_form()->slot_available(EQ_RING_EIGHT)));
@@ -2818,18 +2694,11 @@ static string _status_mut_abilities(int sw)
         }
     }
 
-    // Statue form does not get AC benefits from scales etc.  It does
-    // get changes to EV and SH.
-    if (AC_change && you.form != TRAN_STATUE)
-    {
-        const string ac_mut = make_stringf("AC %s%d",
-                                           (AC_change > 0 ? "+" : ""),
-                                           AC_change);
-        mutations.push_back(ac_mut);
-    }
+    if (you.racial_ac(false))
+        mutations.push_back("AC +" + to_string(you.racial_ac(false) / 100));
 
     if (mutations.empty())
-        text +=  "no striking features";
+        text += "no striking features";
     else
     {
         text += comma_separated_line(mutations.begin(), mutations.end(),

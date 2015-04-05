@@ -32,6 +32,7 @@
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "format.h"
 #include "godabil.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -115,7 +116,7 @@ bool g_Slime_Wall_Check = true;
 static uint8_t curr_waypoints[GXM][GYM];
 
 // If true, feat_is_traversable_now() returns the same as feat_is_traversable().
-// FIXME: eliminate this.  It's needed for RMODE_CONNECTIVITY.
+// FIXME: eliminate this. It's needed for RMODE_CONNECTIVITY.
 static bool ignore_player_traversability = false;
 
 // Map of terrain types that are forbidden.
@@ -728,7 +729,7 @@ static void _explore_find_target_square()
     if (whereto.x || whereto.y)
     {
         // Make sure this is a square that is reachable, since we asked
-        // travel_pathfind to give us even unreachable squares.  The
+        // travel_pathfind to give us even unreachable squares. The
         // player's starting position may in some cases not have its
         // travel_point_distance set, but we know it's reachable, since
         // we're there.
@@ -2692,7 +2693,7 @@ static int _find_transtravel_stair(const level_id &cur,
             // Okay, we don't seem to have a distance available to us, which
             // means we're either (a) not standing on stairs or (b) whoever
             // initiated interlevel travel didn't call
-            // _populate_stair_distances.  Assuming we're not on stairs, that
+            // _populate_stair_distances. Assuming we're not on stairs, that
             // situation can arise only if interlevel travel has been triggered
             // for a location on the same level. If that's the case, we can get
             // the distance off the travel_point_distance matrix.
@@ -4007,6 +4008,8 @@ void runrest::initialise(int dir, int mode)
     // Note HP and MP for reference.
     hp = you.hp;
     mp = you.magic_points;
+    notified_hp_full = false;
+    notified_mp_full = false;
     init_travel_speed();
 
     if (dir == RDIR_REST)
@@ -4031,7 +4034,7 @@ void runrest::initialise(int dir, int mode)
         set_run_check(2, right);
     }
 
-    if (runmode == RMODE_REST_DURATION)
+    if (runmode == RMODE_REST_DURATION || runmode == RMODE_WAIT_DURATION)
         start_delay(DELAY_REST, 1);
     else
         start_delay(DELAY_RUN, 1);
@@ -4202,6 +4205,8 @@ void runrest::clear()
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
     mp = hp = travel_speed = 0;
+    notified_hp_full = false;
+    notified_mp_full = false;
 
     _reset_zigzag_info();
 }
@@ -4288,7 +4293,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
             for (orth_adjacent_iterator ai(pos); ai; ++ai)
             {
                 // If any neighbours have been seen (and thus announced) before,
-                // skip.  For parts seen for the first time this turn, announce
+                // skip. For parts seen for the first time this turn, announce
                 // only the upper leftmost cell.
                 if (env.map_knowledge(*ai).feat() == DNGN_RUNED_DOOR
                     && (env.map_seen(*ai) || *ai < pos))
@@ -4457,7 +4462,7 @@ template <class C> void explore_discoveries::say_any(
     const string message = "Found " +
                            comma_separated_line(coll.begin(), coll.end()) + ".";
 
-    if (strwidth(message) >= get_number_of_cols())
+    if (printed_width(message) >= get_number_of_cols())
         mprf("Found %s %s.", number_in_words(size).c_str(), category);
     else
         mpr(message);

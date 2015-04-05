@@ -762,11 +762,11 @@ bool cell_see_cell_nocache(const coord_def& p1, const coord_def& p2)
 // Look up which cells the surviving rays have, and that's your LOS!
 // OPTIMIZATIONS:
 // WLOG, we can assume that we're in a specific quadrant - say the
-// first quadrant - and just mirror everything after that.  We can
+// first quadrant - and just mirror everything after that. We can
 // likely get away with a single octant, but we don't do that. (To
 // do...)
 // Rays are actually split by each cell they pass. So each "ray" only
-// identifies a single cell, and we can do logical ORs.  Once a cell
+// identifies a single cell, and we can do logical ORs. Once a cell
 // kills a cellray, it will kill all remaining cellrays of that ray.
 // Also, rays are checked to see if they are duplicates of each
 // other. If they are, they're eliminated.

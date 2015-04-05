@@ -682,7 +682,7 @@ public:
      */
     int get_ac_bonus() const
     {
-        if (player_genus(GENPC_DRACONIAN))
+        if (species_is_draconian(you.species))
             return 1000;
         return Form::get_ac_bonus();
     }
@@ -786,8 +786,7 @@ public:
      */
     int get_stealth_mod() const
     {
-        // vampires handle bat stealth in racial code
-        return you.species == SP_VAMPIRE ? 0 : stealth_mod;
+        return you.species == SP_VAMPIRE ? 20 : stealth_mod;
     }
 
     /**
@@ -1412,32 +1411,6 @@ string blade_parts(bool terse)
     return str;
 }
 
-monster_type dragon_form_dragon_type()
-{
-    switch (you.species)
-    {
-    case SP_WHITE_DRACONIAN:
-        return MONS_ICE_DRAGON;
-    case SP_GREEN_DRACONIAN:
-        return MONS_SWAMP_DRAGON;
-    case SP_YELLOW_DRACONIAN:
-        return MONS_GOLDEN_DRAGON;
-    case SP_GREY_DRACONIAN:
-        return MONS_IRON_DRAGON;
-    case SP_BLACK_DRACONIAN:
-        return MONS_STORM_DRAGON;
-    case SP_PURPLE_DRACONIAN:
-        return MONS_QUICKSILVER_DRAGON;
-    case SP_MOTTLED_DRACONIAN:
-        return MONS_MOTTLED_DRAGON;
-    case SP_PALE_DRACONIAN:
-        return MONS_STEAM_DRAGON;
-    case SP_RED_DRACONIAN:
-    default:
-        return MONS_FIRE_DRAGON;
-    }
-}
-
 // with a denominator of 10
 int form_hp_mod()
 {
@@ -1521,7 +1494,7 @@ static mutation_type appendages[] =
 
 static bool _slot_conflict(equipment_type eq)
 {
-    // Choose uncovered slots only.  Melding could make people re-cast
+    // Choose uncovered slots only. Melding could make people re-cast
     // until they get something that doesn't conflict with their randart
     // of überness.
     if (you.equip[eq] != -1)
@@ -1616,7 +1589,7 @@ bool check_form_stat_safety(transformation_type new_form)
     if (!bad_str && !bad_dex)
         return true;
 
-    string prompt = make_stringf("%s will reduce your %s to zero.  Continue?",
+    string prompt = make_stringf("%s will reduce your %s to zero. Continue?",
                                  new_form == TRAN_NONE ? "Turning back"
                                                        : "Transforming",
                                  bad_str ? "strength" : "dexterity");
@@ -1952,9 +1925,9 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         break;
     }
 
-    // Stop constricting if we can no longer constrict.  If any size-changing
+    // Stop constricting if we can no longer constrict. If any size-changing
     // transformations were to allow constriction, we would have to check
-    // relative sizes as well.  Likewise, if any transformations were to allow
+    // relative sizes as well. Likewise, if any transformations were to allow
     // normally non-constricting players to constrict, this would need to
     // be changed.
     if (!form_keeps_mutations(which_trans))

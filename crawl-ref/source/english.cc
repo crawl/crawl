@@ -25,7 +25,7 @@ bool is_vowel(const ucs_t chr)
     return low == 'a' || low == 'e' || low == 'i' || low == 'o' || low == 'u';
 }
 
-// Pluralises a monster or item name.  This'll need to be updated for
+// Pluralises a monster or item name. This'll need to be updated for
 // correctness whenever new monsters/items are added.
 string pluralise(const string &name, const char * const qualifiers[],
                  const char *no_qualifier[])
@@ -181,17 +181,12 @@ string apostrophise(const string &name)
     if (name == "yourself")
         return "your own";
 
-    const char lastc = name[name.length() - 1];
-    return name + (lastc == 's' ? "'" : "'s");
-}
+    // We're going with the assumption that we're finding the possessive of
+    // singular nouns ending in 's' more often than that of plural nouns.
+    // No matter what, we're going to get some cases wrong.
 
-string apostrophise_fixup(const string &msg)
-{
-    if (msg.empty())
-        return msg;
-
-    // XXX: This is rather hackish.
-    return replace_all(msg, "s's", "s'");
+    // const char lastc = name[name.length() - 1];
+    return name + /*(lastc == 's' ? "'" :*/ "'s" /*)*/;
 }
 
 /**

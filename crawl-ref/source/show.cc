@@ -144,9 +144,6 @@ static void _update_feat_at(const coord_def &gp)
         env.map_knowledge(gp).flags |= MAP_HOT;
 #endif
 
-    if (golden(gp))
-        env.map_knowledge(gp).flags |= MAP_GOLDEN;
-        
     if (stasised(gp))
         env.map_knowledge(gp).flags |= MAP_STASISED;
 
@@ -309,7 +306,7 @@ static void _check_monster_pos(const monster* mons)
 
     // [rob] The following in case asserts aren't enabled.
     // [enne] - It's possible that mgrd and mons->x/y are out of
-    // sync because they are updated separately.  If we can see this
+    // sync because they are updated separately. If we can see this
     // monster, then make sure that the mgrd is set correctly.
     if (mgrd(mons->pos()) != s)
     {
@@ -317,7 +314,7 @@ static void _check_monster_pos(const monster* mons)
         // circumstances so we can track down where this is coming
         // from.
         mprf(MSGCH_ERROR, "monster %s (%d) at (%d, %d) was "
-             "improperly placed.  Updating mgrd.",
+             "improperly placed. Updating mgrd.",
              mons->name(DESC_PLAIN, true).c_str(), s,
              mons->pos().x, mons->pos().y);
         mgrd(mons->pos()) = s;
@@ -371,7 +368,7 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
  * Mark the estimated position of an invisible monster.
  *
  * Marks a spot on the map as possibly containing an unseen monster
- * (showing up as a disturbance in the air).  Also flags the square as
+ * (showing up as a disturbance in the air). Also flags the square as
  * updated for invisible monster, which is used by show_init().
  *
  * @param where          The disturbance's map position.
@@ -392,7 +389,7 @@ static void _mark_invisible_at(const coord_def &where,
  * indicator.
  * @param mons      The monster to check.
  * @param hash_ind  The random hash index, combined with the mid to make a
- *                  unique hash for this roll.  Needed for when we can't mark
+ *                  unique hash for this roll. Needed for when we can't mark
  *                  the monster's true position and instead mark an adjacent
  *                  one.
 */
@@ -462,7 +459,7 @@ static void _update_monster(monster* mons)
     // invisible monster indicator.
 
     // We cannot use regular randomness here, otherwise redrawing the screen
-    // would give out the real position.  We need to save the seed too -- but it
+    // would give out the real position. We need to save the seed too -- but it
     // needs to be regenerated every turn.
     if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
     {

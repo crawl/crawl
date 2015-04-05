@@ -51,6 +51,7 @@
 #include "mon-speak.h"
 #include "mon-tentacle.h"
 #include "notes.h"
+#include "output.h"
 #include "religion.h"
 #include "rot.h"
 #include "spl-damage.h"
@@ -196,12 +197,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     int nchunks = 1;
     if (corpse.base_type == OBJ_GOLD)
-    {
         nchunks = corpse.quantity;
-        corpse.quantity = 1;
-        // Don't give a bonus from *all* the gold chunks...
-        corpse.special = 0;
-    }
     else
     {
         nchunks += random2(max_chunks);
@@ -291,21 +287,12 @@ static void _give_monster_experience(int experience, int killer_index)
 
     if (mon->gain_exp(experience))
     {
-        if (!you_worship(GOD_SHINING_ONE) && !you_worship(GOD_BEOGH)
-            || player_under_penance()
-            || !one_chance_in(3))
-        {
+        if (!in_good_standing(GOD_BEOGH) || !one_chance_in(3))
             return;
-        }
 
         // Randomly bless the follower who gained experience.
-        if (you_worship(GOD_SHINING_ONE)
-                && random2(you.piety) >= piety_breakpoint(0)
-            || you_worship(GOD_BEOGH)
-                && random2(you.piety) >= piety_breakpoint(2))
-        {
+        if (random2(you.piety) >= piety_breakpoint(2))
             bless_follower(mon);
-        }
     }
 }
 
@@ -436,15 +423,23 @@ void goldify_corpse(item_def &corpse)
     corpse.clear();
     corpse.base_type = OBJ_GOLD;
     corpse.quantity = base_gold / 2 + random2avg(base_gold, 2);
-    corpse.special = corpse.quantity;
     item_colour(corpse);
+
+    // Apply the gold aura effect to the player.
+    const int dur = corpse.quantity * 2;
+    if (dur > you.duration[DUR_GOZAG_GOLD_AURA])
+    {
+        you.set_duration(DUR_GOZAG_GOLD_AURA, dur);
+        redraw_screen();
+    }
+    you.props["gozag_gold_aura_amount"].get_int()++;
 }
 
 // Returns the item slot of a generated corpse, or -1 if no corpse.
 int place_monster_corpse(const monster* mons, bool silent, bool force)
 {
     // The game can attempt to place a corpse for an out-of-bounds monster
-    // if a shifter turns into a giant spore and explodes.  In this
+    // if a shifter turns into a giant spore and explodes. In this
     // case we place no corpse since the explosion means anything left
     // over would be scattered, tiny chunks of shifter.
     if (!in_bounds(mons->pos()))
@@ -513,9 +508,6 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     }
 
     move_item_to_grid(&o, mons->pos(), !mons->swimming());
-
-    if (o != NON_ITEM && mitm[o].base_type == OBJ_GOLD)
-        invalidate_agrid(true);
 
     if (you.see_cell(mons->pos()))
     {
@@ -731,8 +723,8 @@ static bool _yred_enslave_soul(monster* mons, killer_type killer)
 static bool _beogh_forcibly_convert_orc(monster &mons, killer_type killer)
 {
     // Orcs may convert to Beogh under threat of death, either from
-    // you or, less often, your followers.  In both cases, the
-    // checks are made against your stats.  You're the potential
+    // you or, less often, your followers. In both cases, the
+    // checks are made against your stats. You're the potential
     // messiah, after all.
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Death convert attempt on %s, HD: %d, "
@@ -1637,6 +1629,15 @@ static bool _reaping(monster *mons)
     return false;
 }
 
+static bool _god_will_bless_follower(monster* victim)
+{
+    return in_good_standing(GOD_BEOGH)
+           && random2(you.piety) >= piety_breakpoint(2)
+           || in_good_standing(GOD_SHINING_ONE)
+              && (victim->is_evil() || victim->is_unholy())
+              && random2(you.piety) >= piety_breakpoint(0);
+}
+
 /**
  * Trigger the appropriate god conducts for a monster's death.
  *
@@ -1728,8 +1729,6 @@ static void _fire_kill_conducts(monster &mons, killer_type killer,
     if (mons_is_fiery(&mons))
         did_kill_conduct(DID_KILL_FIERY, mons);
 }
-
-
 
 int monster_die(monster* mons, const actor *killer, bool silent,
                 bool wizard, bool fake)
@@ -2224,9 +2223,8 @@ int monster_die(monster* mons, killer_type killer,
             // Randomly bless a follower.
             if (!created_friendly
                 && gives_xp
-                && in_good_standing(GOD_BEOGH)
-                && random2(you.piety) >= piety_breakpoint(2)
-                && !mons_is_object(mons->type))
+                && !mons_is_object(mons->type)
+                && _god_will_bless_follower(mons))
             {
                 bless_follower();
             }
@@ -2270,7 +2268,7 @@ int monster_die(monster* mons, killer_type killer,
             }
 
             // Trying to prevent summoning abuse here, so we're trying to
-            // prevent summoned creatures from being done_good kills.  Only
+            // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
             if (created_friendly || !gives_xp || !pet_kill
                 || !anon && invalid_monster_index(killer_index))
@@ -2289,30 +2287,8 @@ int monster_die(monster* mons, killer_type killer,
                     anon = true;
             }
 
-            if (in_good_standing(GOD_SHINING_ONE)
-                && (mons->is_evil() || mons->is_unholy())
-                && random2(you.piety) >= piety_breakpoint(0)
-                && !invalid_monster_index(killer_index))
-            {
-                // Randomly bless the follower who killed.
-                if (!one_chance_in(3) && killer_mon->alive()
-                    && bless_follower(killer_mon))
-                {
-                    break;
-                }
-
-                if (killer_mon->alive()
-                    && killer_mon->hit_points < killer_mon->max_hit_points)
-                {
-                    simple_monster_message(killer_mon,
-                                           " looks invigorated.");
-                    killer_mon->heal(1 + random2(mons->get_experience_level() / 4));
-                }
-            }
-
-            if (in_good_standing(GOD_BEOGH)
-                && random2(you.piety) >= piety_breakpoint(2)
-                && !invalid_monster_index(killer_index))
+            if (!invalid_monster_index(killer_index)
+                && _god_will_bless_follower(mons))
             {
                 // Randomly bless the follower who killed.
                 bless_follower(killer_mon);
@@ -2440,7 +2416,14 @@ int monster_die(monster* mons, killer_type killer,
         // Hack: with cleanup_dead=false, a tentacle [segment] of a dead
         // [malign] kraken has no valid head reference.
         if (!mons_is_tentacle_or_tentacle_segment(mons->type))
+        {
+            // Make sure Natasha gets her say even if she got polymorphed.
+            const monster_type orig =
+                mons_is_mons_class(mons, MONS_NATASHA) ? MONS_NATASHA
+                                                       : mons->type;
+            unwind_var<monster_type> mt(mons->type, orig);
             mons_speaks(mons);
+        }
     }
 
     if (mons->type == MONS_BORIS && !in_transit && !mons->pacified())
@@ -2894,7 +2877,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     }
 
 
-    // Don't worry about invisibility.  You should be able to see if
+    // Don't worry about invisibility. You should be able to see if
     // something has fallen into the lava.
     if (mons_near(mons) && (oldpos == mons->pos() || grd(oldpos) != grid))
     {
@@ -2966,6 +2949,7 @@ int dismiss_monsters(string pattern)
     const bool keep_item = strip_tag(pattern, "keepitem");
     const bool harmful = pattern == "harmful";
     const bool mobile  = pattern == "mobile";
+    const bool los     = pattern == "los";
 
     // Dismiss by regex.
     text_pattern tpat(pattern);
@@ -2974,7 +2958,8 @@ int dismiss_monsters(string pattern)
     {
         if (mi->alive()
             && (mobile ? !mons_class_is_stationary(mi->type) :
-                harmful ? !mons_is_firewood(*mi) && !mi->wont_attack()
+                harmful ? !mons_is_firewood(*mi) && !mi->wont_attack() :
+                los ? you.see_cell(mi->pos())
                 : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
         {
             if (!keep_item)
@@ -3345,9 +3330,6 @@ void elven_twins_pacify(monster* twin)
     // Don't consider already neutralised monsters.
     if (mons->neutral())
         return;
-
-    if (you_worship(GOD_ELYVILON))
-        gain_piety(random2(mons->max_hit_points / (2 + you.piety / 20)), 2);
 
     if (mons_near(mons))
         simple_monster_message(mons, " likewise turns neutral.");

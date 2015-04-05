@@ -1606,7 +1606,7 @@ void melee_attack::set_attack_verb(int damage)
         return;
     }
 
-    // Take normal hits into account.  If the hit is from a weapon with
+    // Take normal hits into account. If the hit is from a weapon with
     // more than one damage type, randomly choose one damage type from
     // it.
     monster_type defender_genus = mons_genus(defender->type);
@@ -2643,7 +2643,7 @@ static void _print_resist_messages(actor* defender, int base_damage,
 bool melee_attack::mons_attack_effects()
 {
     // Monsters attacking themselves don't get attack flavour.
-    // The message sequences look too weird.  Also, stealing
+    // The message sequences look too weird. Also, stealing
     // attacks aren't handled until after the damage msg. Also,
     // no attack flavours for dead defenders
     if (attacker != defender && defender->alive())
@@ -2677,8 +2677,8 @@ bool melee_attack::mons_attack_effects()
         practise(EX_MONSTER_WILL_HIT);
 
     // consider_decapitation() returns true if the wound was cauterized or the
-    // last head was removed.  In the former case, we shouldn't apply
-    // the brand damage (so we return here).  If the monster was killed
+    // last head was removed. In the former case, we shouldn't apply
+    // the brand damage (so we return here). If the monster was killed
     // by the decapitation, we should stop the rest of the attack, too.
     if (consider_decapitation(damage_done,
                               attacker->damage_type(attack_number)))
@@ -2693,7 +2693,7 @@ bool melee_attack::mons_attack_effects()
     special_damage_message.clear();
     special_damage_flavour = BEAM_NONE;
 
-    // Defender banished.  Bail since the defender is still alive in the
+    // Defender banished. Bail since the defender is still alive in the
     // Abyss.
     if (defender->is_banished())
     {
@@ -2777,7 +2777,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_ROT:
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            rot_defender(2 + random2(3), damage_done > 5 ? 1 : 0);
+            rot_defender(3 + random2(4), damage_done > 5 ? 1 : 0);
         break;
 
     case AF_FIRE:
@@ -3340,8 +3340,7 @@ void melee_attack::mons_do_eyeball_confusion()
         const int ench_pow = player_mutation_level(MUT_EYEBALLS) * 30;
         monster* mon = attacker->as_monster();
 
-        if (mon->check_res_magic(ench_pow) <= 0
-            && mons_class_is_confusable(mon->type))
+        if (mon->check_res_magic(ench_pow) <= 0)
         {
             mprf("The eyeballs on your body gaze at %s.",
                  mon->name(DESC_THE).c_str());
@@ -3383,7 +3382,7 @@ void melee_attack::do_spines()
             attacker->hurt(&you, hurt);
         }
     }
-    else if (defender->as_monster()->spiny_degree() > 0)
+    else if (defender->as_monster()->is_spiny())
     {
         // Thorn hunters can attack their own brambles without injury
         if (defender->type == MONS_BRIAR_PATCH
@@ -3394,11 +3393,9 @@ void melee_attack::do_spines()
             return;
         }
 
-        const int degree = defender->as_monster()->spiny_degree();
-
-        if (attacker->alive() && x_chance_in_y(degree, 15))
+        if (attacker->alive() && one_chance_in(3))
         {
-            int dmg = roll_dice(degree, 4);
+            int dmg = roll_dice(5, 4);
             int hurt = attacker->apply_ac(dmg);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
@@ -3557,7 +3554,7 @@ bool melee_attack::do_knockback(bool trample)
     }
 
     // Schedule following _before_ actually trampling -- if the defender
-    // is a player, a shaft trap will unload the level.  If trampling will
+    // is a player, a shaft trap will unload the level. If trampling will
     // somehow fail, move attempt will be ignored.
     if (trample)
         trample_follow_fineff::schedule(attacker, old_pos);
@@ -3632,8 +3629,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     switch (atk)
     {
     case UNAT_CONSTRICT:
-        return you.species == SP_NAGA && you.experience_level > 12
-                    && form_keeps_mutations()
+        return player_mutation_level(MUT_CONSTRICTING_TAIL)
                 || you.species == SP_OCTOPODE && you.has_usable_tentacle();
     case UNAT_KICK:
         return you.has_usable_hooves()

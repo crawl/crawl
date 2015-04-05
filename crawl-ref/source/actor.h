@@ -226,7 +226,8 @@ public:
     virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
                                   bool allow_corrosion = true,
                                   const char* hurt_msg = nullptr) = 0;
-    virtual void corrode_equipment(const char* corrosion_source = "the acid") = 0;
+    virtual void corrode_equipment(const char* corrosion_source = "the acid",
+                                    int degree = 1) = 0;
 
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
@@ -317,7 +318,7 @@ public:
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
-    virtual int faith(bool calc_unid = true, bool items = true) const;
+    virtual bool faith(bool calc_unid = true, bool items = true) const;
     virtual bool warding(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;

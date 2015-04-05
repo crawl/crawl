@@ -317,7 +317,7 @@ void corpse_rot(actor* caster)
             for (stack_iterator si(*ri); si; ++si)
                 if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
-                    // Found a corpse.  Skeletonise it if possible.
+                    // Found a corpse. Skeletonise it if possible.
                     if (!mons_skeleton(si->mon_type))
                     {
                         item_was_destroyed(*si);
@@ -472,15 +472,15 @@ void apply_control_winds(const monster* mon)
 
 random_pick_entry<cloud_type> cloud_cone_clouds[] =
 {
-  { 0,   50,  80, DOWN, CLOUD_RAIN },
-  { 0,   50, 100, DOWN, CLOUD_MIST },
-  { 0,   50, 150, DOWN, CLOUD_MEPHITIC },
+  { 0,   50,  80, FALL, CLOUD_RAIN },
+  { 0,   50, 100, FALL, CLOUD_MIST },
+  { 0,   50, 150, FALL, CLOUD_MEPHITIC },
   { 0,  100, 100, PEAK, CLOUD_FIRE },
   { 0,  100, 100, PEAK, CLOUD_COLD },
   { 0,  100, 100, PEAK, CLOUD_POISON },
-  { 30, 100, 125, UP,   CLOUD_NEGATIVE_ENERGY },
-  { 40, 100, 135, UP,   CLOUD_ACID },
-  { 50, 100, 175, UP,   CLOUD_STORM },
+  { 30, 100, 125, RISE, CLOUD_NEGATIVE_ENERGY },
+  { 40, 100, 135, RISE, CLOUD_ACID },
+  { 50, 100, 175, RISE, CLOUD_STORM },
   { 0,0,0,FLAT,CLOUD_NONE }
 };
 

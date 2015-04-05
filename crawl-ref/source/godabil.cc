@@ -402,7 +402,7 @@ static int _heretic_recite_weakness(const monster *mon)
     int degree = 0;
 
     // Sleeping or paralyzed monsters will wake up or still perceive their
-    // surroundings, respectively.  So, you can still recite to them.
+    // surroundings, respectively. So, you can still recite to them.
     if (mons_intel(mon) >= I_NORMAL
         && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
     {
@@ -788,7 +788,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case RECITE_IMPURE:
         // Many creatures normally resistant to rotting are still affected,
-        // because this is divine punishment.  Those with no real flesh are
+        // because this is divine punishment. Those with no real flesh are
         // immune, of course.
         if (check < 5)
         {
@@ -863,8 +863,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case ZIN_CONFUSE:
-        if (mons_class_is_confusable(mon->type)
-            && !mon->check_clarity(false)
+        if (!mon->check_clarity(false)
             && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
@@ -1294,7 +1293,7 @@ bool vehumet_supports_spell(spell_type spell)
         return true;
 
     // Conjurations work by conjuring up a chunk of short-lived matter and
-    // propelling it towards the victim.  This is the most popular way, but
+    // propelling it towards the victim. This is the most popular way, but
     // by no means it has a monopoly for being destructive.
     // Vehumet loves all direct physical destruction.
     if (spell == SPELL_SHATTER
@@ -1720,7 +1719,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
-    // Drop the monster's holy equipment, and keep wielding the rest.  Also
+    // Drop the monster's holy equipment, and keep wielding the rest. Also
     // remove any of its active avatars.
     monster_drop_things(mon, false, is_holy_item);
     mon->remove_avatars();
@@ -1808,7 +1807,7 @@ bool kiku_receive_corpses(int pow)
 
         // Find an appropriate monster corpse for level and power.
         const int adjusted_power = min(pow / 4, random2(random2(pow)));
-        // Pick a place based on the power.  This may be below the branch's
+        // Pick a place based on the power. This may be below the branch's
         // start, that's ok.
         const level_id lev(you.where_are_you, adjusted_power
                            - absdungeon_depth(you.where_are_you, 0));
@@ -2021,8 +2020,8 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
     typedef pair<coord_def, int> coord_dist;
 
     // Using a priority queue because squares don't make very good circles at
-    // larger radii.  We will visit points in order of increasing euclidean
-    // distance from the origin (not path distance).  We want a min queue
+    // larger radii. We will visit points in order of increasing euclidean
+    // distance from the origin (not path distance). We want a min queue
     // based on the distance, so we use greater_second as the comparator.
     priority_queue<coord_dist, vector<coord_dist>,
                    greater_second<coord_dist> > fringe;
@@ -2056,7 +2055,7 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
             current_thresh = current_r * (current_r + 1);
         }
 
-        // We don't include radius 0.  This is also a good place to check if
+        // We don't include radius 0. This is also a good place to check if
         // the squares are already occupied since we want to search past
         // occupied squares but don't want to consider them valid targets.
         if (current.second && !actor_at(current.first))
@@ -2104,7 +2103,7 @@ static int _mushroom_prob(item_def & corpse)
     float trial_prob_f = 1 - powf(p_failure, 1.0f / total_trials);
 
     // The chance of producing mushrooms depends on the weight of the
-    // corpse involved.  Humans weigh 550 so we will take that as the
+    // corpse involved. Humans weigh 550 so we will take that as the
     // base factor here.
     float weight_factor = mons_weight(corpse.mon_type) / 550.0f;
 
@@ -2131,8 +2130,8 @@ static bool _mushroom_spawn_message(int seen_targets, int seen_corpses)
     return true;
 }
 
-// Place a partial ring of toadstools around the given corpse.  Returns
-// the number of mushrooms spawned.  A return of 0 indicates no
+// Place a partial ring of toadstools around the given corpse. Returns
+// the number of mushrooms spawned. A return of 0 indicates no
 // mushrooms were placed -> some sort of failure mode was reached.
 static int _mushroom_ring(item_def &corpse, int & seen_count)
 {
@@ -2189,9 +2188,9 @@ static int _mushroom_ring(item_def &corpse, int & seen_count)
 }
 
 // Try to spawn 'target_count' mushrooms around the position of
-// 'corpse'.  Returns the number of mushrooms actually spawned.
+// 'corpse'. Returns the number of mushrooms actually spawned.
 // Mushrooms radiate outwards from the corpse following bfs with
-// 8-connectivity.  Could change the expansion pattern by using a
+// 8-connectivity. Could change the expansion pattern by using a
 // priority queue for sequencing (priority = distance from origin under
 // some metric).
 static int _spawn_corpse_mushrooms(item_def& corpse,
@@ -2868,9 +2867,9 @@ static void _decrease_amount(vector<pair<int, int> >& available, int amount)
         mpr("A piece of fruit is consumed!");
 }
 
-// Create a ring or partial ring around the caster.  The user is
+// Create a ring or partial ring around the caster. The user is
 // prompted to select a stack of fruit, and then plants are placed on open
-// squares adjacent to the user.  Of course, one piece of fruit is
+// squares adjacent to the user. Of course, one piece of fruit is
 // consumed per plant, so a complete ring may not be formed.
 bool fedhas_plant_ring_from_fruit()
 {
@@ -2974,10 +2973,10 @@ bool fedhas_plant_ring_from_fruit()
 }
 
 // Create a circle of water around the target, with a radius of
-// approximately 2.  This turns normal floor tiles into shallow water
-// and turns (unoccupied) shallow water into deep water.  There is a
+// approximately 2. This turns normal floor tiles into shallow water
+// and turns (unoccupied) shallow water into deep water. There is a
 // chance of spawning plants or fungus on unoccupied dry floor tiles
-// outside of the rainfall area.  Return the number of plants/fungi
+// outside of the rainfall area. Return the number of plants/fungi
 // created.
 int fedhas_rain(const coord_def &target)
 {
@@ -2987,7 +2986,7 @@ int fedhas_rain(const coord_def &target)
     for (radius_iterator rad(target, LOS_NO_TRANS, true); rad; ++rad)
     {
         // Adjust the shape of the rainfall slightly to make it look
-        // nicer.  I want a threshold of 2.5 on the euclidean distance,
+        // nicer. I want a threshold of 2.5 on the euclidean distance,
         // so a threshold of 6 prior to the sqrt is close enough.
         int rain_thresh = 6;
         coord_def local = *rad - target;
@@ -2997,7 +2996,7 @@ int fedhas_rain(const coord_def &target)
         if (local.abs() > rain_thresh)
         {
             // Maybe spawn a plant on (dry, open) squares that are in
-            // LOS but outside the rainfall area.  In open space, there
+            // LOS but outside the rainfall area. In open space, there
             // are 213 squares in LOS, and we are going to drop water on
             // (25-4) of those, so if we want x plants to spawn on
             // average in open space, the trial probability should be
@@ -3035,7 +3034,7 @@ int fedhas_rain(const coord_def &target)
         }
         // We can also turn shallow water into deep water, but we're
         // just going to skip cases where there is something on the
-        // shallow water.  Destroying items will probably be annoying,
+        // shallow water. Destroying items will probably be annoying,
         // and insta-killing monsters is clearly out of the question.
         else if (!actor_at(*rad)
                  && igrd(*rad) == NON_ITEM
@@ -3052,7 +3051,7 @@ int fedhas_rain(const coord_def &target)
             //
             // The rainfall area is 20 (5*5 - 4 (corners) - 1 (center));
             // the expected number of clouds generated by a fixed chance
-            // per tile is 20 * p = expected.  Say an Invocations skill
+            // per tile is 20 * p = expected. Say an Invocations skill
             // of 27 gives expected 5 clouds.
             int max_expected = 5;
             int expected = you.skill_rdiv(SK_INVOCATIONS, max_expected, 27);
@@ -3137,7 +3136,7 @@ int fedhas_check_corpse_spores(bool quiet)
 }
 
 // Destroy corpses in the player's LOS (first corpse on a stack only)
-// and make 1 giant spore per corpse.  Spores are given the input as
+// and make 1 giant spore per corpse. Spores are given the input as
 // their starting behavior; the function returns the number of corpses
 // processed.
 int fedhas_corpse_spores(beh_type attitude)
@@ -3205,7 +3204,7 @@ struct monster_conversion
 
 // Given a monster (which should be a plant/fungus), see if
 // fedhas_evolve_flora() can upgrade it, and set up a monster_conversion
-// structure for it.  Return true (and fill in possible_monster) if the
+// structure for it. Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
 static bool _possible_evolution(const monster_info& input,
                                 monster_conversion& possible_monster)
@@ -3681,7 +3680,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
         manage_clouds();
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
-    // Update corpses, etc.  This does also shift monsters, but only by
+    // Update corpses, etc. This does also shift monsters, but only by
     // a tiny bit.
     update_level(pow * 10);
 
@@ -5771,7 +5770,7 @@ static int _get_sacrifice_piety(ability_type sac)
                 piety_gain += 20;
             else if (you.species == SP_OCTOPODE
                     || you.species == SP_FELID
-                    || player_genus(GENPC_DRACONIAN))
+                    || species_is_draconian(you.species))
             {
                 piety_gain += 28; // this sacrifice is worse for these races
             }

@@ -55,7 +55,7 @@ void clua_push_item(lua_State *ls, item_def *item)
     iw->turn = you.num_turns;
 }
 
-// Push a (wrapped) temporary item_def.  A copy of the item will be allocated,
+// Push a (wrapped) temporary item_def. A copy of the item will be allocated,
 // then deleted when the wrapper is GCed.
 static void _clua_push_item_temp(lua_State *ls, const item_def &item)
 {

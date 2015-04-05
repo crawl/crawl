@@ -42,7 +42,6 @@ enum areaprop_flag
 #if TAG_MAJOR_VERSION == 34
     APROP_HOT           = (1 << 11),
 #endif
-    APROP_GOLD          = (1 << 12),
     APROP_STASIS        = (1 << 13),
 };
 
@@ -199,21 +198,6 @@ static void _update_agrid()
     _actor_areas(&you);
     for (monster_iterator mi; mi; ++mi)
         _actor_areas(*mi);
-
-    if (you_worship(GOD_GOZAG))
-    {
-        for (rectangle_iterator ri(0); ri; ++ri)
-        {
-            // ASSUMPTION: gold will always be on the top of the pile.
-            if (igrd(*ri) != NON_ITEM && mitm[igrd(*ri)].base_type == OBJ_GOLD
-                && mitm[igrd(*ri)].special > 0)
-            {
-                no_areas = false;
-                _agrid_centres.emplace_back(AREA_GOLD, *ri, 0);
-                _set_agrid_flag(*ri, APROP_GOLD);
-            }
-        }
-    }
 
     if (player_has_orb() && !you.pos().origin())
     {
@@ -623,7 +607,7 @@ int monster::halo_radius2() const
 
     if (holiness() != MH_HOLY)
         return size;
-    // The values here depend on 1. power, 2. sentience.  Thus, high-ranked
+    // The values here depend on 1. power, 2. sentience. Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
     // little or none.
     switch (type)
@@ -821,6 +805,7 @@ bool actor::heated() const
     return ::heated(pos());
 }
 #endif
+<<<<<<< HEAD
 
 /////////////
 // Gold aura (Gozag).
@@ -862,3 +847,5 @@ bool stasised(const coord_def& p)
         _update_agrid();
     return _check_agrid_flag(p, APROP_STASIS);
 }
+=======
+>>>>>>> 2a4c9a483866fd3ffd9be9fb18f00dce38fc5331

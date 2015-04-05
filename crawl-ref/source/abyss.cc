@@ -73,7 +73,7 @@ static void _push_items();
 static void _push_displaced_monster(monster* mon);
 
 // If not_seen is true, don't place the feature where it can be seen from
-// the centre.  Returns the chosen location, or INVALID_COORD if it
+// the centre. Returns the chosen location, or INVALID_COORD if it
 // could not be placed.
 static coord_def _place_feature_near(const coord_def &centre,
                                      int radius,
@@ -635,7 +635,7 @@ static bool _pushy_feature(dungeon_feature_type feat)
     // will eventually become accessible again through abyss morphing.
 
     // Perhaps this should instead be merged with (the complement of)
-    // _item_safe_square() in terrain.cc.  Unlike this function, that
+    // _item_safe_square() in terrain.cc. Unlike this function, that
     // one treats traps as unsafe, but closed doors as safe.
     return feat_is_solid(feat) || feat == DNGN_LAVA;
 }
@@ -1412,7 +1412,7 @@ static void abyss_area_shift()
         xom_abyss_feature_amusement_check xomcheck;
 
         // A teleport may move you back to the center, resulting in a (0,0)
-        // shift.  The code can't handle those.  We still to forget the map,
+        // shift. The code can't handle those. We still to forget the map,
         // spawn new monsters or allow return from transit, though.
         if (you.pos() != ABYSS_CENTRE)
         {

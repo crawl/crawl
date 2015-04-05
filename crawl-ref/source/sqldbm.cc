@@ -96,7 +96,7 @@ From SQLite's documentation:
 
 # Note to Windows users: The encoding used for the filename argument of
 # sqlite3_open() and sqlite3_open_v2() must be UTF-8, not whatever codepage
-# is currently defined.  Filenames containing international characters must
+# is currently defined. Filenames containing international characters must
 # be converted to UTF-8 prior to passing them into sqlite3_open() or
 # sqlite3_open_v2().
 

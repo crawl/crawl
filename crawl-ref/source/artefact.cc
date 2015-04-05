@@ -270,7 +270,7 @@ string replace_name_parts(const string &name_in, const item_def& item)
     name = replace_all(name, "@player_name@", you.your_name);
 
     name = replace_all(name, "@player_species@",
-                 species_name(static_cast<species_type>(you.species), true));
+                 species_name(you.species, SPNAME_GENUS));
 
     if (name.find("@branch_name@", 0) != string::npos)
     {
@@ -300,12 +300,6 @@ string replace_name_parts(const string &name_in, const item_def& item)
 
         name = replace_all(name, "@god_name@", god_name(which_god, false));
     }
-
-    // copied from apostrophise() (libutil.cc):
-    // The proper possessive for a word ending in an "s" is to
-    // put an apostrophe after the "s": "Chris" -> "Chris'",
-    // not "Chris" -> "Chris's".  Stupid English language...
-    name = replace_all(name, "s's", "s'");
 
     return name;
 }
@@ -542,7 +536,7 @@ static void _add_randart_weapon_brand(const item_def &item,
         else if (item_attack_skill(item) == SK_CROSSBOWS)
         {
             // Penetration and electrocution are only allowed on
-            // crossbows.  This may change in future.
+            // crossbows. This may change in future.
             if (one_chance_in(5))
                 item_props[ARTP_BRAND] = SPWPN_ELECTROCUTION;
             else if (one_chance_in(5))
@@ -1436,10 +1430,13 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
 
 int get_unrandart_num(const char *name)
 {
+    string uname = name;
+    uname = replace_all(uname, " ", "_");
+    uname = replace_all(uname, "'", "");
+    lowercase(uname);
     string quoted = "\"";
-    quoted += name;
+    quoted += uname;
     quoted += "\"";
-    lowercase(quoted);
 
     for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
     {
@@ -1447,7 +1444,7 @@ int get_unrandart_num(const char *name)
         art = replace_all(art, " ", "_");
         art = replace_all(art, "'", "");
         lowercase(art);
-        if (art == name || art.find(quoted) != string::npos)
+        if (art == uname || art.find(quoted) != string::npos)
             return UNRAND_START + i;
     }
     return SPWPN_NORMAL;

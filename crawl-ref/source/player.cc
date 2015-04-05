@@ -294,7 +294,7 @@ bool check_moveto(const coord_def& p, const string &move_verb, const string &msg
            && check_moveto_exclusion(p, move_verb);
 }
 
-// Returns true if this is a valid swap for this monster.  If true, then
+// Returns true if this is a valid swap for this monster. If true, then
 // the valid location is set in loc. (Otherwise loc becomes garbage.)
 bool swap_check(monster* mons, coord_def &loc, bool quiet)
 {
@@ -586,15 +586,6 @@ bool player_likes_lava(bool permanently)
 bool player_can_open_doors()
 {
     return you.form != TRAN_BAT;
-}
-
-// TODO: get rid of this.
-bool player_genus(genus_type which_genus, species_type species)
-{
-    if (species == SP_UNKNOWN)
-        species = you.species;
-
-    return species_genus(species) == which_genus;
 }
 
 // If transform is true, compare with current transformation instead
@@ -1116,10 +1107,9 @@ static int _player_bonus_regen()
     // Artefacts
     rr += REGEN_PIP * you.scan_artefacts(ARTP_REGENERATION);
 
-    // Troll leather (except for trolls).
-    if ((you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-         || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
-        && you.species != SP_TROLL)
+    // Troll leather
+    if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+        || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
     {
         rr += REGEN_PIP;
     }
@@ -1129,7 +1119,7 @@ static int _player_bonus_regen()
 
     // Powered By Death mutation, boosts regen by 10 per corpse in
     // a mutation_level * 3 (3/6/9) radius, to a maximum of 7
-    // corpses.  If and only if the duration of the effect is
+    // corpses. If and only if the duration of the effect is
     // still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
         rr += handle_pbd_corpses() * 100;
@@ -1186,7 +1176,7 @@ int player_regen()
 #if TAG_MAJOR_VERSION == 34
 
     // Compared to other races, a starting djinni would have regen of 4 (hp)
-    // plus 17 (mp).  So let's compensate them early; they can stand getting
+    // plus 17 (mp). So let's compensate them early; they can stand getting
     // shafted on the total regen rates later on.
     if (you.species == SP_DJINNI)
         if (you.hp_max < 100)
@@ -1205,7 +1195,7 @@ int player_regen()
     if (you.disease)
         rr = 0;
 
-    // Trog's Hand.  This circumvents the slow healing effect.
+    // Trog's Hand. This circumvents the slow healing effect.
     if (you.duration[DUR_TROGS_HAND])
         rr += 100;
 
@@ -1282,9 +1272,8 @@ int player_hunger_rate(bool temp)
         hunger += 3 * you.wearing(EQ_AMULET, AMU_REGENERATION);
 
         // troll leather
-        if (you.species != SP_TROLL
-            && (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-                || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE)))
+        if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+            || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
         {
             hunger += coinflip() ? 2 : 1;
         }
@@ -1325,7 +1314,7 @@ int player_spell_levels()
     if (fireball && delayed_fireball)
         sl += spell_difficulty(SPELL_FIREBALL);
 
-    // Note: This can happen because of level drain.  Maybe we should
+    // Note: This can happen because of level drain. Maybe we should
     // force random spells out when that happens. -- bwr
     if (sl < 0)
         sl = 0;
@@ -1781,13 +1770,7 @@ int player_spec_death()
     sd += you.wearing(EQ_STAFF, STAFF_DEATH);
 
     // species:
-    if (you.species == SP_MUMMY)
-    {
-        if (you.experience_level >= 13)
-            sd++;
-        if (you.experience_level >= 26)
-            sd++;
-    }
+    sd += player_mutation_level(MUT_NECRO_ENHANCER);
 
     // transformations:
     if (you.form == TRAN_LICH)
@@ -2001,8 +1984,8 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 // New player movement speed system... allows for a bit more than
 // "player runs fast" and "player walks slow" in that the speed is
 // actually calculated (allowing for centaurs to get a bonus from
-// swiftness and other such things).  Levels of the mutation now
-// also have meaning (before they all just meant fast).  Most of
+// swiftness and other such things). Levels of the mutation now
+// also have meaning (before they all just meant fast). Most of
 // this isn't as fast as it used to be (6 for having anything), but
 // even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
@@ -2077,7 +2060,7 @@ int player_movement_speed()
 }
 
 // This function differs from the above in that it's used to set the
-// initial time_taken value for the turn.  Everything else (movement,
+// initial time_taken value for the turn. Everything else (movement,
 // spellcasting, combat) applies a ratio to this value.
 int player_speed()
 {
@@ -2122,7 +2105,7 @@ static int _mut_level(mutation_type mut, mutation_activity_type minact)
     return 0;
 }
 
-// Output level of player mutation.  If temp is true (the default), take into
+// Output level of player mutation. If temp is true (the default), take into
 // account the suppression of mutations by changes of form.
 int player_mutation_level(mutation_type mut, bool temp)
 {
@@ -2274,34 +2257,25 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
-    else if  (you.duration[DUR_GRASPING_ROOTS])
+    else if (you.duration[DUR_GRASPING_ROOTS])
         prescaled_ev = prescaled_ev * 2 / 3;
 
-    switch (you.species)
+    // Merfolk get an evasion bonus in water.
+    if (you.fishtail)
     {
-    case SP_MERFOLK:
-        // Merfolk get an evasion bonus in water.
-        if (you.fishtail)
-        {
-            const int ev_bonus = min(9 * scale,
-                                     max(2 * scale, prescaled_ev / 4));
-            return prescaled_ev + ev_bonus;
-        }
-        break;
-
-    case SP_TENGU:
-        // Flying Tengu get an evasion bonus.
-        if (you.flight_mode())
-        {
-            const int ev_bonus = min(9 * scale,
-                                     max(1 * scale, prescaled_ev / 5));
-            return prescaled_ev + ev_bonus;
-        }
-        break;
-
-    default:
-        break;
+        const int ev_bonus = min(9 * scale,
+                                 max(2 * scale, prescaled_ev / 4));
+        return prescaled_ev + ev_bonus;
     }
+
+    // Flying Tengu get an evasion bonus.
+    if (you.tengu_flight())
+    {
+        const int ev_bonus = min(9 * scale,
+                                 max(1 * scale, prescaled_ev / 5));
+        return prescaled_ev + ev_bonus;
+    }
+
     return prescaled_ev;
 }
 
@@ -2733,60 +2707,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     }
 }
 
-static void _draconian_scale_colour_message()
-{
-    switch (you.species)
-    {
-    case SP_RED_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a fiery red colour.");
-        perma_mutate(MUT_HEAT_RESISTANCE, 1, "draconian maturity");
-        break;
-
-    case SP_WHITE_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on an icy white colour.");
-        perma_mutate(MUT_COLD_RESISTANCE, 1, "draconian maturity");
-        break;
-
-    case SP_GREEN_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a lurid green colour.");
-        perma_mutate(MUT_POISON_RESISTANCE, 1, "draconian maturity");
-        break;
-
-    case SP_YELLOW_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a golden yellow colour.");
-        break;
-
-    case SP_GREY_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a dull iron-grey colour.");
-        perma_mutate(MUT_UNBREATHING, 1, "draconian maturity");
-        break;
-
-    case SP_BLACK_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a glossy black colour.");
-        perma_mutate(MUT_SHOCK_RESISTANCE, 1, "draconian maturity");
-        break;
-
-    case SP_PURPLE_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a rich purple colour.");
-        break;
-
-    case SP_MOTTLED_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a weird mottled pattern.");
-        break;
-
-    case SP_PALE_DRACONIAN:
-        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start fading to a pale cyan-grey colour.");
-        break;
-
-    case SP_BASE_DRACONIAN:
-        mpr("");
-        break;
-
-    default:
-        break;
-    }
-}
-
 bool will_gain_life(int lev)
 {
     if (lev < you.attribute[ATTR_LIFE_GAINED] - 2)
@@ -2886,90 +2806,11 @@ void level_change(bool skip_attribute_increase)
             tiles.layout_statcol();
             redraw_screen();
 #endif
+            if (!skip_attribute_increase)
+                species_stat_gain(you.species);
 
             switch (you.species)
             {
-            case SP_HUMAN:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                break;
-
-            case SP_HIGH_ELF:
-                if (!(you.experience_level % 3) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_INT
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_DEEP_ELF:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_INT, 1, false, "level gain");
-                break;
-
-#if TAG_MAJOR_VERSION == 34
-            case SP_SLUDGE_ELF:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_INT
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-#endif
-
-            case SP_DEEP_DWARF:
-                if (you.experience_level == 14)
-                    perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "level up");
-
-                if (you.experience_level == 9
-                    || you.experience_level == 18)
-                {
-                    perma_mutate(MUT_PASSIVE_MAPPING, 1, "level up");
-                }
-
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat(coinflip() ? STAT_STR
-                                           : STAT_INT, 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_HALFLING:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_DEX, 1, false, "level gain");
-                break;
-
-            case SP_KOBOLD:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_HILL_ORC:
-#if TAG_MAJOR_VERSION == 34
-            case SP_LAVA_ORC:
-#endif
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_STR, 1, false, "level gain");
-                break;
-
-            case SP_MUMMY:
-                if (you.experience_level == 13 || you.experience_level == 26)
-                    mprf(MSGCH_INTRINSIC_GAIN, "You feel more in touch with the powers of death.");
-
-                if (you.experience_level == 13)  // level 13 for now -- bwr
-                {
-                    mprf(MSGCH_INTRINSIC_GAIN, "You can now infuse your body with "
-                                               "magic to restore decomposition.");
-                }
-                break;
-
             case SP_VAMPIRE:
                 if (you.experience_level == 3)
                 {
@@ -2987,37 +2828,19 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_NAGA:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-
                 if (!(you.experience_level % 3))
                 {
                     mprf(MSGCH_INTRINSIC_GAIN, "Your skin feels tougher.");
                     you.redraw_armour_class = true;
                 }
-
-                if (you.experience_level == 13)
-                {
-                    mprf(MSGCH_INTRINSIC_GAIN,
-                         "Your tail grows strong enough to constrict your "
-                         "enemies.");
-                }
-                break;
-
-            case SP_TROLL:
-                if (!(you.experience_level % 3) && !skip_attribute_increase)
-                    modify_stat(STAT_STR, 1, false, "level gain");
-                break;
-
-            case SP_OGRE:
-                if (!(you.experience_level % 3) && !skip_attribute_increase)
-                    modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
-                    you.species = random_draconian_player_species();
+                    you.species = static_cast<species_type>(
+                                       random_range(SP_FIRST_NONBASE_DRACONIAN,
+                                                    SP_LAST_NONBASE_DRACONIAN));
 
                     // We just changed our aptitudes, so some skills may now
                     // be at the wrong level (with negative progress); if we
@@ -3041,8 +2864,6 @@ void level_change(bool skip_attribute_increase)
 #ifdef USE_TILE
                     init_player_doll();
 #endif
-                    _draconian_scale_colour_message();
-
                     // Produce messages about skill increases/decreases. We
                     // restore one skill level at a time so that at most the
                     // skill being checked is at the wrong level.
@@ -3053,72 +2874,10 @@ void level_change(bool skip_attribute_increase)
                     }
 
                     redraw_screen();
-                }
-            case SP_RED_DRACONIAN:
-            case SP_WHITE_DRACONIAN:
-            case SP_GREEN_DRACONIAN:
-            case SP_YELLOW_DRACONIAN:
-            case SP_GREY_DRACONIAN:
-            case SP_BLACK_DRACONIAN:
-            case SP_PURPLE_DRACONIAN:
-            case SP_MOTTLED_DRACONIAN:
-            case SP_PALE_DRACONIAN:
-                if (!(you.experience_level % 3))
-                {
-                    mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
-                    you.redraw_armour_class = true;
-                }
 
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-
-                if (you.experience_level == 14)
-                {
-                    switch (you.species)
-                    {
-                    case SP_GREEN_DRACONIAN:
-                        perma_mutate(MUT_STINGER, 1, "draconian growth");
-                        break;
-                    case SP_YELLOW_DRACONIAN:
-                        perma_mutate(MUT_ACIDIC_BITE, 1, "draconian growth");
-                        break;
-                    case SP_BLACK_DRACONIAN:
-                        perma_mutate(MUT_BIG_WINGS, 1, "draconian growth");
-                        mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                break;
-
-            case SP_CENTAUR:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_DEMIGOD:
-                break;
-
-            case SP_SPRIGGAN:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_INT
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_MINOTAUR:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_DEX), 1, false,
-                                "level gain");
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "Your scales start taking on a %s colour.",
+                         scale_type(you.species));
                 }
                 break;
 
@@ -3168,103 +2927,25 @@ void level_change(bool skip_attribute_increase)
                     }
                 }
 
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
             }
 
-            case SP_GHOUL:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_STR, 1, false, "level gain");
-                break;
-
-            case SP_TENGU:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-
-                if (you.experience_level == 5)
-                    mprf(MSGCH_INTRINSIC_GAIN, "You have gained the ability to fly.");
-                else if (you.experience_level == 14)
-                    mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
-                break;
-
-            case SP_MERFOLK:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                break;
-
             case SP_FELID:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_INT
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-
-                if (you.experience_level == 6 || you.experience_level == 12)
-                    perma_mutate(MUT_SHAGGY_FUR, 1, "growing up");
-
                 _felid_extra_life();
-                break;
-
-            case SP_OCTOPODE:
-                if (!(you.experience_level % 5) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                break;
-
-#if TAG_MAJOR_VERSION == 34
-            case SP_DJINNI:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                    modify_stat(STAT_RANDOM, 1, false, "level gain");
-                break;
-
-#endif
-            case SP_FORMICID:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_INT), 1, false,
-                                "level gain");
-                }
-                break;
-
-            case SP_GARGOYLE:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_INT), 1, false,
-                                "level gain");
-                }
-
-                if (you.experience_level == 14)
-                {
-                    perma_mutate(MUT_BIG_WINGS, 1, "gargoyle growth");
-                    mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
-                }
-                break;
-
-            case SP_VINE_STALKER:
-                if (!(you.experience_level % 4) && !skip_attribute_increase)
-                {
-                    modify_stat((coinflip() ? STAT_STR
-                                            : STAT_DEX), 1, false,
-                                "level gain");
-                }
-
-                if (you.experience_level == 6)
-                    perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
-
-                if (you.experience_level == 8)
-                    perma_mutate(MUT_FANGS, 1, "vine stalker growth");
-
-                if (you.experience_level == 12)
-                    perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
                 break;
 
             default:
                 break;
             }
         }
+
+        if (species_is_draconian(you.species) && !(you.experience_level % 3))
+        {
+            mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
+            you.redraw_armour_class = true;
+        }
+
+        give_level_mutations(you.species, you.experience_level);
 
         // zot defence abilities; must also be updated in ability.cc when these levels are changed
         if (crawl_state.game_is_zotdef())
@@ -3423,56 +3104,6 @@ void adjust_level(int diff, bool just_xp)
 }
 
 /**
- * Return a multiplier for dex when calculating stealth values, based on the
- * player's species.
- *
- * @return The stealth multiplier value for the player's species.
- */
-static int _species_stealth_mod()
-{
-    if (player_genus(GENPC_DRACONIAN))
-        return 12;
-
-    switch (you.species)
-    {
-        case SP_TROLL:
-        case SP_OGRE:
-        case SP_CENTAUR:
-#if TAG_MAJOR_VERSION == 34
-        case SP_DJINNI:
-#endif
-            return 9;
-
-        case SP_MINOTAUR:
-            return 12;
-
-        case SP_VAMPIRE:
-            // Thirsty/bat-form vampires are (much) more stealthy
-            if (you.hunger_state == HS_STARVING)
-                return 21;
-            if (you.form == TRAN_BAT
-                     || you.hunger_state <= HS_NEAR_STARVING)
-            {
-                return 20;
-            }
-            if (you.hunger_state < HS_SATIATED)
-                return 19;
-            return 18;
-
-        case SP_HALFLING:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-        case SP_NAGA:       // not small but very good at stealth
-        case SP_FELID:
-        case SP_OCTOPODE:
-            return 18;
-
-        default:
-            return 15;
-    }
-}
-
-/**
  * Return a multiplier for skill when calculating stealth values, based on the
  * player's species & form.
  *
@@ -3485,9 +3116,30 @@ static int _stealth_mod()
     if (form_stealth_mod != 0)
         return form_stealth_mod;
 
-    const int species_stealth_mod = _species_stealth_mod();
+    int species_stealth_mod = species_stealth_modifier(you.species);
     if (you.form == TRAN_STATUE)
-        return species_stealth_mod - 3;
+        species_stealth_mod -= 3;
+    // Thirsty vampires are (much) more stealthy
+    if (you.species == SP_VAMPIRE)
+    {
+        switch (you.hunger_state)
+        {
+        case HS_STARVING:
+            species_stealth_mod += 3;
+            break;
+
+        case HS_NEAR_STARVING:
+            species_stealth_mod += 2;
+            break;
+
+        case HS_VERY_HUNGRY:
+        case HS_HUNGRY:
+            species_stealth_mod += 1;
+            break;
+        default:
+            break;
+        }
+    }
     return species_stealth_mod;
 }
 
@@ -4305,6 +3957,11 @@ bool enough_zp(int minimum, bool suppress_msg)
     return true;
 }
 
+static bool should_stop_resting(int cur, int max)
+{
+    return cur == max || cur == (max * Options.rest_wait_percent) / 100;
+}
+
 void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -4326,8 +3983,11 @@ void inc_mp(int mp_gain, bool silent)
 
     if (!silent)
     {
-        if (wasnt_max && you.magic_points == you.max_magic_points)
+        if (wasnt_max
+            && should_stop_resting(you.magic_points, you.max_magic_points))
+        {
             interrupt_activity(AI_FULL_MP);
+        }
         you.redraw_magic_points = true;
     }
 }
@@ -4349,7 +4009,7 @@ void inc_hp(int hp_gain)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if (wasnt_max && you.hp == you.hp_max)
+    if (wasnt_max && should_stop_resting(you.hp, you.hp_max))
         interrupt_activity(AI_FULL_HP);
 
     you.redraw_hit_points = true;
@@ -4376,15 +4036,21 @@ void rot_hp(int hp_loss)
     you.redraw_hit_points = true;
 }
 
-void unrot_hp(int hp_recovered)
+int unrot_hp(int hp_recovered)
 {
-    you.hp_max_adj_temp = min(0, you.hp_max_adj_temp + hp_recovered);
-
+    int hp_balance = 0;
+    if (hp_recovered > -you.hp_max_adj_temp) {
+      hp_balance = hp_recovered + you.hp_max_adj_temp;
+      you.hp_max_adj_temp = 0;
+    } else {
+      you.hp_max_adj_temp += hp_recovered;
+    }
     calc_hp();
 
     you.redraw_hit_points = true;
     if (!player_rotted())
         you.redraw_magic_points = true;
+    return hp_balance;
 }
 
 int player_rotted()
@@ -4505,31 +4171,30 @@ int get_real_hp(bool trans, bool rotted)
 
 int get_real_mp(bool include_items)
 {
-    int enp = you.experience_level;
-    enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
+    const int scale = 100;
+    int spellcasting = you.skill(SK_SPELLCASTING, 1 * scale, true);
+    int scaled_xl = you.experience_level * scale;
 
-    int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level * 3, true) / 14
-                    + you.skill(SK_SPELLCASTING, 1, true);
-    int invoc_extra = you.skill(SK_INVOCATIONS, you.experience_level * 2, true) / 13
-                    + you.skill(SK_INVOCATIONS, 1, true) / 3;
-    int evoc_extra = you.skill(SK_EVOCATIONS, you.experience_level, true) / 6;
+    // the first 4 experience levels give an extra .5 mp up to your spellcasting
+    // the last 4 give no mp
+    int enp = min(23 * scale, scaled_xl);
 
-    enp += max(spell_extra, max(invoc_extra, evoc_extra));
-    enp = stepdown_value(enp, 9, 18, 45, 100);
-
-    // This is our "rotted" base (applied after scaling):
-    enp += you.mp_max_adj;
-
-    // Yes, we really do want this duplication... this is so the stepdown
-    // doesn't truncate before we apply the rotted base.  We're doing this
-    // the nice way. -- bwr
-    enp = min(enp, 50);
+    int spell_extra = spellcasting; // 100%
+    int invoc_extra = you.skill(SK_INVOCATIONS, 1 * scale, true) / 2; // 50%
+    int evoc_extra = you.skill(SK_EVOCATIONS, 1 * scale, true) / 2; // 50%
+    int highest_skill = max(spell_extra, max(invoc_extra, evoc_extra));
+    enp += highest_skill + min(8 * scale, min(highest_skill, scaled_xl)) / 2;
 
     // Analogous to ROBUST/FRAIL
-    enp *= 100 + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
+    enp *= 100  + (player_mutation_level(MUT_HIGH_MAGIC) * 10)
                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (player_mutation_level(MUT_LOW_MAGIC) * 10);
-    enp /= 100;
+    enp /= 100 * scale;
+//    enp = stepdown_value(enp, 9, 18, 45, 100)
+    enp += species_mp_modifier(you.species);
+
+    // This is our "rotted" base, applied after multipliers
+    enp += you.mp_max_adj;
 
     // Now applied after scaling so that power items are more useful -- bwr
     if (include_items)
@@ -4538,11 +4203,8 @@ int get_real_mp(bool include_items)
         enp +=      you.scan_artefacts(ARTP_MAGICAL_POWER);
 
         if (you.wearing(EQ_STAFF, STAFF_POWER))
-            enp += 5 + enp * 2 / 5;
+            enp += 15;
     }
-
-    if (enp > 50)
-        enp = 50 + ((enp - 50) / 2);
 
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
@@ -4987,7 +4649,7 @@ bool miasma_player(actor *who, string source_aux)
 
     if (you.hp_max > 4 && coinflip())
     {
-        you.rot(who, 1);
+        you.rot(who, roll_dice(2, 2));
         success = true;
     }
 
@@ -5004,7 +4666,7 @@ bool napalm_player(int amount, string source, string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_sticky_flame() || amount <= 0 || you.duration[DUR_WATER_HOLD])
+    if (player_res_sticky_flame() || amount <= 0 || you.duration[DUR_WATER_HOLD] || feat_is_watery(grd(you.pos())))
         return false;
 
     const int old_value = you.duration[DUR_LIQUID_FLAMES];
@@ -5469,12 +5131,13 @@ void player::copy_from(const player &other)
 // player struct initialization
 void player::init()
 {
+    chr_god_name.clear();
+    chr_species_name.clear();
+    chr_class_name.clear();
     // Permanent data:
     your_name.clear();
     species          = SP_UNKNOWN;
-    species_name.clear();
     char_class       = JOB_UNKNOWN;
-    class_name.clear();
     type             = MONS_PLAYER;
     mid              = MID_PLAYER;
     position.reset();
@@ -5594,7 +5257,6 @@ void player::init()
 
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
-    god_name.clear();
     piety            = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
@@ -5761,10 +5423,10 @@ player_save_info& player_save_info::operator=(const player& rhs)
     experience_level = rhs.experience_level;
     wizard           = rhs.wizard;
     species          = rhs.species;
-    species_name     = rhs.species_name;
-    class_name       = rhs.class_name;
+    species_name     = rhs.chr_species_name;
+    class_name       = rhs.chr_class_name;
     religion         = rhs.religion;
-    god_name         = rhs.god_name;
+    god_name         = rhs.chr_god_name;
     jiyva_second_name= rhs.jiyva_second_name;
 
     // [ds] Perhaps we should move game type to player?
@@ -6329,6 +5991,40 @@ int player::base_ac_from(const item_def &armour, int scale) const
     return AC;
 }
 
+/**
+ * What bonus AC are you getting from your species?
+ *
+ * Does not account for any real mutations, such as scales or thick skin, that
+ * you may have as a result of your species.
+ * @param temp Whether to account for transformations.
+ * @returns how much AC you are getting from your species "fake mutations" * 100
+ */
+int player::racial_ac(bool temp) const
+{
+    // drac scales suppressed in all serious forms, except dragon
+    if (species_is_draconian(species)
+        && (!player_is_shapechanged() || form == TRAN_DRAGON || !temp))
+    {
+        int AC = 400 + 100 * (experience_level / 3);  // max 13
+        if (species == SP_GREY_DRACONIAN) // no breath
+            AC += 500;
+        return AC;
+    }
+
+    if (!(player_is_shapechanged() && temp))
+    {
+        if (species == SP_NAGA)
+            return 100 * experience_level / 3;              // max 9
+        else if (species == SP_GARGOYLE)
+        {
+            return 200 + 100 * experience_level * 2 / 5     // max 20
+                       + 100 * (max(0, experience_level - 7) * 2 / 5);
+        }
+    }
+
+    return 0;
+}
+
 int player::armour_class(bool /*calc_unid*/) const
 {
     int AC = 0;
@@ -6378,35 +6074,9 @@ int player::armour_class(bool /*calc_unid*/) const
 
     AC += get_form()->get_ac_bonus();
 
-    // drac scales suppressed in all serious forms, except dragon
-    if (player_genus(GENPC_DRACONIAN)
-        && (!player_is_shapechanged() || form == TRAN_DRAGON))
-    {
-        AC += 400 + 100 * (experience_level / 3);  // max 13
-        if (species == SP_GREY_DRACONIAN) // no breath
-            AC += 500;
-    }
+    AC += racial_ac(true);
 
-    // other race-based ac bonuses (naga, gargoyle)
-    if (!player_is_shapechanged())
-    {
-        switch (species)
-        {
-            case SP_NAGA:
-                AC += 100 * experience_level / 3;              // max 9
-                break;
-
-            case SP_GARGOYLE:
-                AC += 200 + 100 * experience_level * 2 / 5     // max 20
-                          + 100 * (max(0, experience_level - 7) * 2 / 5);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    // Scale mutations, etc.  Statues don't get an AC benefit from scales,
+    // Scale mutations, etc. Statues don't get an AC benefit from scales,
     // since the scales are made of the same stone as everything else.
     AC += player_mutation_level(MUT_TOUGH_SKIN)
           ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                   // +1, +2, +3
@@ -6476,15 +6146,39 @@ int player::gdr_perc() const
     return gdr;
 }
 
+/**
+ * What is the player's actual, current EV relative to the given attacker,
+ * including various temporary penalties?
+ *
+ * Applies to many things, not by any means limited to melee attacks - the name
+ * is very outdated (was it ever right?) and should be changed.
+ *
+ * Penalties are: -3 for being constricted, -10 for not being able to see the
+ * attacker, -5 for being in the middle of a 'delay action' (eating food,
+ * climbing stairs, etc).
+ *
+ * @param act      The creature that the player is attempting to evade, if any.
+ *                 May be null.
+ * @param evit     Penalty types which should be excluded from the calculation.
+ * @return         The player's relevant EV.
+ */
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
-    return player_evasion(evit)
-           - (is_constricted() ? 3 : 0)
-           - ((!act || act->visible_to(this)
-               || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
-           - (you_are_delayed()
-              && !(evit & EV_IGNORE_HELPLESS)
-              && !delay_is_run(current_delay_action())? 5 : 0);
+    const int base_evasion = player_evasion(evit);
+
+    const int constrict_penalty = is_constricted() ? 3 : 0;
+
+    const bool attacker_invis = act && !act->visible_to(this);
+    const int invis_penalty = attacker_invis && !(evit & EV_IGNORE_HELPLESS) ?
+                              10 : 0;
+
+    const bool delayed = you_are_delayed()
+                         && !delay_is_run(current_delay_action())
+                         && current_delay_action() != DELAY_MACRO;
+    const int delay_penalty = delayed && !(evit & EV_IGNORE_HELPLESS) ?
+                              5 : 0;
+
+    return base_evasion - constrict_penalty - invis_penalty - delay_penalty;
 }
 
 bool player::heal(int amount, bool max_too)
@@ -6735,39 +6429,11 @@ int player::res_magic() const
 
 int player_res_magic(bool calc_unid, bool temp)
 {
-    int rm = 0;
 
     if (temp && you.form == TRAN_SHADOW)
         return MAG_IMMUNE;
 
-    switch (you.species)
-    {
-    default:
-        rm = you.experience_level * 3;
-        break;
-    case SP_HIGH_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_DEEP_ELF:
-    case SP_VAMPIRE:
-    case SP_DEMIGOD:
-    case SP_OGRE:
-    case SP_FORMICID:
-        rm = you.experience_level * 4;
-        break;
-    case SP_NAGA:
-    case SP_MUMMY:
-    case SP_VINE_STALKER:
-        rm = you.experience_level * 5;
-        break;
-    case SP_PURPLE_DRACONIAN:
-    case SP_DEEP_DWARF:
-    case SP_FELID:
-        rm = you.experience_level * 6;
-        break;
-    case SP_SPRIGGAN:
-        rm = you.experience_level * 7;
-        break;
-    }
+    int rm = you.experience_level * species_mr_modifier(you.species);
 
     // randarts
     rm += MR_PIP * you.scan_artefacts(ARTP_MAGIC, calc_unid);
@@ -6821,7 +6487,7 @@ string player::no_tele_reason(bool calc_unid, bool blinking) const
         return "Long-range teleportation is disallowed in Dungeon Sprint.";
 
     if (species == SP_FORMICID)
-        return pluralise(::species_name(species)) + " cannot teleport.";
+        return pluralise(species_name(species)) + " cannot teleport.";
 
     vector<string> problems;
 
@@ -6967,12 +6633,11 @@ bool player::permanent_flight() const
 
 bool player::racial_permanent_flight() const
 {
-    return species == SP_TENGU && experience_level >= 14
+    return player_mutation_level(MUT_TENGU_FLIGHT) >= 2
 #if TAG_MAJOR_VERSION == 34
         || species == SP_DJINNI
 #endif
-        || species == SP_BLACK_DRACONIAN && experience_level >= 14
-        || species == SP_GARGOYLE && experience_level >= 14;
+        || player_mutation_level(MUT_BIG_WINGS);
 }
 
 bool player::tengu_flight() const
@@ -7080,7 +6745,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     if (!agent)
     {
         // FIXME: This can happen if a deferred_damage_fineff does damage
-        // to a player from a dead monster.  We should probably not do that,
+        // to a player from a dead monster. We should probably not do that,
         // but it could be tricky to fix, so for now let's at least avoid
         // a crash even if it does mean funny death messages.
         ouch(amount, kill_type, MID_NOBODY, aux.c_str(), false, source.c_str());
@@ -7152,13 +6817,17 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     return true;
 }
 
-void player::corrode_equipment(const char* corrosion_source)
+void player::corrode_equipment(const char* corrosion_source, int degree)
 {
     // rCorr protects against 50% of corrosion.
-    if (res_corr() && coinflip())
+    if (res_corr())
     {
-        dprf("rCorr protects.");
-        return;
+        degree = binomial(degree, 50);
+        if (!degree)
+        {
+            dprf("rCorr protects.");
+            return;
+        }
     }
     // always increase duration, but...
     increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
@@ -7167,10 +6836,14 @@ void player::corrode_equipment(const char* corrosion_source)
 
     // the more corrosion you already have, the lower the odds of more
     const int prev_corr = props["corrosion_amount"].get_int();
-    if (x_chance_in_y(prev_corr, prev_corr + 9))
+    for (int i = 0; i < degree; i++)
+        if (x_chance_in_y(prev_corr, prev_corr + 9))
+            degree--;
+
+    if (!degree)
         return;
 
-    props["corrosion_amount"].get_int()++;
+    props["corrosion_amount"].get_int() += degree;
     redraw_armour_class = true;
     wield_change = true;
     return;
@@ -7218,7 +6891,7 @@ void player::splash_with_acid(const actor* evildoer, int acid_strength,
         dam = !wearing_cloak;
 
     // Without fur, clothed people have dam 0 (+2 later), Sp/Tr/Dr/Og ~1
-    // (randomized), Fe 5.  Fur helps only against naked spots.
+    // (randomized), Fe 5. Fur helps only against naked spots.
     const int fur = player_mutation_level(MUT_SHAGGY_FUR);
     dam -= fur * dam / 5;
 
@@ -7361,14 +7034,7 @@ int player::has_claws(bool allow_tran) const
         // blade hands override claws
         if (form == TRAN_BLADE_HANDS)
             return 0;
-
-        // Most forms suppress natural claws.
-        if (!form_keeps_mutations())
-            return 0;
     }
-
-    if (const int c = species_has_claws(species))
-        return c;
 
     return player_mutation_level(MUT_CLAWS, allow_tran);
 }
@@ -7439,7 +7105,7 @@ int player::has_tail(bool allow_tran) const
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
-    if (player_genus(GENPC_DRACONIAN)
+    if (species_is_draconian(species)
         || fishtail
         || player_mutation_level(MUT_STINGER, allow_tran))
     {
@@ -7688,10 +7354,10 @@ bool player::can_safely_mutate(bool temp) const
 }
 
 // Is the player too undead to bleed, rage, or polymorph?
-bool player::is_lifeless_undead() const
+bool player::is_lifeless_undead(bool temp) const
 {
     if (undead_state() == US_SEMI_UNDEAD)
-        return hunger_state <= HS_SATIATED;
+        return temp ? hunger_state <= HS_SATIATED : false;
     else
         return undead_state() != US_ALIVE;
 }
@@ -7750,7 +7416,7 @@ bool player::polymorph(int pow)
 
     transformation_type f = TRAN_NONE;
 
-    // Be unreliable over lava.  This is not that important as usually when
+    // Be unreliable over lava. This is not that important as usually when
     // it matters you'll have temp flight and thus that pig will fly (and
     // when flight times out, we'll have roasted bacon).
     for (int tries = 0; tries < 3; tries++)
@@ -8288,9 +7954,9 @@ bool player_has_orb()
 bool player::form_uses_xl() const
 {
     // No body parts that translate in any way to something fisticuffs could
-    // matter to, the attack mode is different.  Plus, it's weird to have
+    // matter to, the attack mode is different. Plus, it's weird to have
     // users of one particular [non-]weapon be effective for this
-    // unintentional form while others can just run or die.  I believe this
+    // unintentional form while others can just run or die. I believe this
     // should apply to more forms, too.  [1KB]
     return form == TRAN_WISP || form == TRAN_FUNGUS;
 }
@@ -8690,7 +8356,7 @@ void player_open_door(coord_def doorpos)
     for (const auto &dc : all_door)
     {
         // Even if some of the door is out of LOS, we want the entire
-        // door to be updated.  Hitting this case requires a really big
+        // door to be updated. Hitting this case requires a really big
         // door!
         if (env.map_knowledge(dc).seen())
         {

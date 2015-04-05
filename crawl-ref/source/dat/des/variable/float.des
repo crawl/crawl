@@ -1154,7 +1154,7 @@ KITEM:   + = damaged eveningstar, damaged short sword, \
              damaged long sword, damaged war axe
 KITEM:   & = damaged hammer / nothing
 MONS:    fungus, plant
-MONS:    giant mite, scorpion
+MONS:    adder, scorpion
 MONS:    rat / porcupine, river rat / hell rat
 MONS:    bat
 KFEAT:   w = web
@@ -1238,7 +1238,7 @@ ORIENT: float
 DEPTH:  D:5-12
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
-MONS:   worker ant w:15 / giant mite w:25
+MONS:   worker ant
 MONS:   killer bee / scorpion / soldier ant w:5
 MAP
 cccccccc+cccccccc
@@ -2783,7 +2783,7 @@ WEIGHT:  5 (Depths:$, Geh), 10
 MONS:    hell knight spells:pain.17.wizard;bolt_of_fire.17.wizard;\
                      blink.17.wizard
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-MONS:    grey draconian, black draconian, ettin
+MONS:    mottled draconian, black draconian, ettin
 NSUBST:  2 = 2:2 / 2:3 / 2:4 / * = 222334
 : elseif you.in_branch("Depths") then
 MONS:    deep troll

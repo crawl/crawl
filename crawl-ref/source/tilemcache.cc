@@ -37,7 +37,7 @@ struct demon_data
     tileidx_t wings;
 };
 
-// Internal mcache classes.  The mcache_manager creates these internally.
+// Internal mcache classes. The mcache_manager creates these internally.
 // The only access external clients need is through the virtual
 // info function.
 
@@ -507,6 +507,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     // Shift upwards and to the right.
     case TILEP_MONS_NECROMANCER:
     case TILEP_MONS_WIZARD:
+    case TILEP_MONS_SALAMANDER_STORMCALLER:
     case TILEP_MONS_CLOUD_MAGE:
     case TILEP_MONS_MASTER_ELEMENTALIST:
     case TILEP_MONS_JESSICA:
@@ -640,6 +641,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = 3;
         break;
     case TILEP_MONS_UNSEEN_HORROR:
+    case TILEP_MONS_ENTROPY_WEAVER:
         *ofs_x = -4;
         *ofs_y = -4;
         break;
@@ -784,7 +786,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
 }
 
 // Returns the amount of pixels necessary to shift a worn shield, like
-// it's done with weapon.  No monster should have a shield hard-drawn
+// it's done with weapon. No monster should have a shield hard-drawn
 // on the tile.
 bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
                                        int *ofs_x, int *ofs_y)

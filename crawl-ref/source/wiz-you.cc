@@ -119,7 +119,7 @@ void wizard_change_species_to(species_type sp)
 
     species_type old_sp = you.species;
     you.species = sp;
-    you.species_name = species_name(sp);
+    you.chr_species_name = species_name(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
@@ -137,6 +137,8 @@ void wizard_change_species_to(species_type sp)
         prev_muts[i] = you.mutation[i];
     }
     give_basic_mutations(sp);
+    for (int i = 2; i <= you.experience_level; ++i)
+        give_level_mutations(sp, i);
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (prev_muts[i] > you.innate_mutation[i])
@@ -145,43 +147,7 @@ void wizard_change_species_to(species_type sp)
             you.innate_mutation[i] -= prev_muts[i];
     }
 
-    switch (sp)
-    {
-    case SP_RED_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_HEAT_RESISTANCE, 1, "wizard race change");
-        break;
-
-    case SP_WHITE_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_COLD_RESISTANCE, 1, "wizard race change");
-        break;
-
-    case SP_GREEN_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_POISON_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_STINGER, 1, "wizard race change");
-        break;
-
-    case SP_YELLOW_DRACONIAN:
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_ACIDIC_BITE, 1, "wizard race change");
-        break;
-
-    case SP_GREY_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_UNBREATHING, 1, "wizard race change");
-        break;
-
-    case SP_BLACK_DRACONIAN:
-        if (you.experience_level >= 7)
-            perma_mutate(MUT_SHOCK_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_BIG_WINGS, 1, "wizard race change");
-        break;
-
-    case SP_DEMONSPAWN:
+    if (sp == SP_DEMONSPAWN)
     {
         roll_demonspawn_mutations();
         for (int i = 0; i < int(you.demonic_traits.size()); ++i)
@@ -194,40 +160,19 @@ void wizard_change_species_to(species_type sp)
             ++you.mutation[m];
             ++you.innate_mutation[m];
         }
-        break;
-    }
-
-    case SP_DEEP_DWARF:
-        if (you.experience_level >= 9)
-            perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
-        if (you.experience_level >= 14)
-            perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "wizard race change");
-        if (you.experience_level >= 18)
-            perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
-        break;
-
-    case SP_FELID:
-        if (you.experience_level >= 6)
-            perma_mutate(MUT_SHAGGY_FUR, 1, "wizard race change");
-        if (you.experience_level >= 12)
-            perma_mutate(MUT_SHAGGY_FUR, 1, "wizard race change");
-        break;
-
-    default:
-        break;
     }
 
     if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
     {
         _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
         _swap_equip(EQ_RIGHT_RING, EQ_RING_TWO);
-        // All species allow exactly one amulet.  When (and knowing you guys,
+        // All species allow exactly one amulet. When (and knowing you guys,
         // that's "when" not "if") ettins go in, you'll need handle the Macabre
         // Finger Necklace on neck 2 here.
     }
 
     // FIXME: this checks only for valid slots, not for suitability of the
-    // item in question.  This is enough to make assertions happy, though.
+    // item in question. This is enough to make assertions happy, though.
     for (int i = 0; i < NUM_EQUIP; ++i)
         if (you.equip[i] != -1 && !can_wear_armour(you.inv[you.equip[i]], false, false))
         {
@@ -254,7 +199,7 @@ void wizard_change_species_to(species_type sp)
 void wizard_change_job_to(job_type job)
 {
     you.char_class = job;
-    you.class_name = get_job_name(job);
+    you.chr_class_name = get_job_name(job);
 }
 
 void wizard_change_species()

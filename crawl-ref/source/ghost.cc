@@ -256,7 +256,7 @@ void ghost_demon::init_pandemonium_lord()
     {
         // This bit uses the list of player spells to find appropriate
         // spells for the demon, then converts those spells to the monster
-        // spell indices.  Some special monster-only spells are at the end.
+        // spell indices. Some special monster-only spells are at the end.
 
         if (coinflip())
             ADD_SPELL(RANDOM_ELEMENT(search_order_conj));
@@ -320,7 +320,7 @@ void ghost_demon::init_pandemonium_lord()
     colour = one_chance_in(10) ? ETC_RANDOM : random_monster_colour();
 }
 
-// Returns the movement speed for a player ghost.  Note that this is a
+// Returns the movement speed for a player ghost. Note that this is a
 // a movement cost, so lower is better.
 //FIXME: deduplicate with player_movement_speed()
 static int _player_ghost_movement_energy()
@@ -559,7 +559,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
 
     att_type = RANDOM_ELEMENT(att_types);
 
-    // An ugly thing always gets a low-intensity colour.  If we're
+    // An ugly thing always gets a low-intensity colour. If we're
     // mutating it, it always gets a different colour from what it had
     // before.
     colour = _ugly_thing_assign_colour(make_low_colour(force_colour),
@@ -719,7 +719,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
 }
 
 // Used when creating ghosts: goes through and finds spells for the
-// ghost to cast.  Death is a traumatic experience, so ghosts only
+// ghost to cast. Death is a traumatic experience, so ghosts only
 // remember a few spells.
 void ghost_demon::add_spells(bool actual_ghost)
 {
@@ -744,7 +744,7 @@ void ghost_demon::add_spells(bool actual_ghost)
 
     fixup_spells(spells, xl);
 
-    if (species_genus(species) == GENPC_DRACONIAN
+    if (species_is_draconian(species)
         && species != SP_BASE_DRACONIAN
         && species != SP_GREY_DRACONIAN
         // Don't give pillusions extra breath
@@ -763,7 +763,7 @@ bool ghost_demon::has_spells() const
 }
 
 // When passed the number for a player spell, returns the equivalent
-// monster spell.  Returns SPELL_NO_SPELL on failure (no equivalent).
+// monster spell. Returns SPELL_NO_SPELL on failure (no equivalent).
 spell_type ghost_demon::translate_spell(spell_type spell) const
 {
     switch (spell)
@@ -794,7 +794,7 @@ vector<ghost_demon> ghost_demon::find_ghosts()
     }
 
     // Pick up any other ghosts that happen to be on the level if we
-    // have space.  If the player is undead, add one to the ghost quota
+    // have space. If the player is undead, add one to the ghost quota
     // for the level.
     find_extra_ghosts(gs, n_extra_ghosts() + 1 - gs.size());
 
@@ -998,7 +998,7 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     slot.flags = MON_SPELL_WIZARD;
     monster* mon = caster->is_monster() ? caster->as_monster() : nullptr;
 
-    int pow = mon ? 12 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
+    int pow = mon ? 6 * mon->spell_hd(SPELL_SPELLFORGED_SERVITOR)
                   : calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
     colour = LIGHTMAGENTA; // cf. mon-data.h
@@ -1006,7 +1006,7 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     ev = 10;
     ac = 10;
     xl = 9 + div_rand_round(pow, 14);
-    max_hp = 80;
+    max_hp = 60 + roll_dice(7, 5); // 67-95
     damage = 0;
     att_type = AT_NONE;
 
@@ -1023,8 +1023,9 @@ void ghost_demon::init_spellforged_servitor(actor* caster)
     }
 
     const size_t count = spells.size();
+    const int base_freq = mon ? 67 : 200;
     for (auto& spellslot : spells)
-        spellslot.freq = 200 / count;
+        spellslot.freq = base_freq / count;
 }
 
 const mon_spell_slot lich_primary_summoner_spells[] =

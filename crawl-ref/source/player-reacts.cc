@@ -224,8 +224,8 @@ static void _decrement_petrification(int delay)
         {
             dur = 0;
             // If we'd kill the player when active flight stops, this will
-            // need to pass the killer.  Unlike monsters, almost all flight is
-            // magical, inluding tengu, as there's no flapping of wings.  Should
+            // need to pass the killer. Unlike monsters, almost all flight is
+            // magical, inluding tengu, as there's no flapping of wings. Should
             // we be nasty to dragon and bat forms?  For now, let's not instakill
             // them even if it's inconsistent.
             you.fully_petrify(nullptr);
@@ -1199,6 +1199,11 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
+    if (_decrement_a_duration(DUR_GOZAG_GOLD_AURA, delay))
+    {
+        you.props["gozag_gold_aura_amount"] = 0;
+        redraw_screen();
+    }
     dec_elixir_player(delay);
 
     for (int i = 0; i < delay; ++i)

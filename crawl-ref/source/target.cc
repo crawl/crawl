@@ -652,7 +652,7 @@ bool targetter_los::valid_aim(coord_def a)
 {
     if ((a - origin).abs() > range_max2)
         return notify_fail("Out of range.");
-    // If this message ever becomes used, please improve it.  I did not
+    // If this message ever becomes used, please improve it. I did not
     // bother adding complexity just for monsters and "hit allies" prompts
     // which don't need it.
     if (!is_affected(a))
@@ -1016,7 +1016,7 @@ void targetter_shadow_step::set_additional_sites(coord_def a)
 }
 
 // Determine the set of valid landing sites for the target, putting the results
-// in the private set variable temp_sites.  This uses valid_aim(), so it looks
+// in the private set variable temp_sites. This uses valid_aim(), so it looks
 // for uninhabited squares that are habitable by the player, but doesn't check
 // against e.g. harmful clouds
 void targetter_shadow_step::get_additional_sites(coord_def a)

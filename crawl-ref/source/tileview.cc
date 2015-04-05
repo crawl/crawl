@@ -43,8 +43,8 @@ void tile_new_level(bool first_time, bool init_unseen)
             }
     }
 
-    // Fix up stair markers.  The travel information isn't hooked up
-    // until after we change levels.  So, look through all of the stairs
+    // Fix up stair markers. The travel information isn't hooked up
+    // until after we change levels. So, look through all of the stairs
     // on this level and check if they still need the stair flag.
     for (unsigned int x = 0; x < GXM; x++)
         for (unsigned int y = 0; y < GYM; y++)
@@ -542,7 +542,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
 
             // The special tiles contains part floor and part special, so
             // if there are adjacent floor or special tiles, we should
-            // do our best to "connect" them appropriately.  If there are
+            // do our best to "connect" them appropriately. If there are
             // are other tiles there (walls, doors, whatever...) then it
             // doesn't matter.
             bool l_nrm = (l_flr && !l_target);
@@ -685,7 +685,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
         }
     }
 
-    // Second pass for clean up.  The only bad part about the above
+    // Second pass for clean up. The only bad part about the above
     // algorithm is that it could turn a block of floor like this:
     //
     // N4NN
@@ -700,7 +700,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
     // 3-6, not important
     //
     // Generally the tiles don't fit with a north to the right or left
-    // of a south tile.  What we really want to do is to separate the
+    // of a south tile. What we really want to do is to separate the
     // two regions, by making 1 a SPECIAL_SE and 2 a SPECIAL_NW tile.
     for (int y = 0; y < GYM - 1; ++y)
         for (int x = 0; x < GXM - 1; ++x)
@@ -970,9 +970,9 @@ FixedVector<tile_ray, ENV_SHOW_DIAMETER * ENV_SHOW_DIAMETER> tile_ray_vec;
 
 void tile_place_ray(const coord_def &gc, aff_type in_range)
 {
-    // Record rays for later.  The curses version just applies
-    // rays directly to the screen.  The tiles version doesn't have
-    // (nor want) such direct access.  So, it batches up all of the
+    // Record rays for later. The curses version just applies
+    // rays directly to the screen. The tiles version doesn't have
+    // (nor want) such direct access. So, it batches up all of the
     // rays and applies them in viewwindow(...).
     ASSERT(num_tile_rays < tile_ray_vec.size() - 1);
     tile_ray_vec[num_tile_rays].in_range = in_range;
@@ -1257,7 +1257,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         tileidx_t override = flv.feat;
         /*
-          Was: secret doors.  Is it ever needed anymore?
+          Was: secret doors. Is it ever needed anymore?
          */
         if (is_door_tile(override))
         {
@@ -1388,9 +1388,6 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
 
-    if (mc.flags & MAP_GOLDEN)
-        cell.gold_aura = 1 + random2(3);
-        
     if (mc.flags & MAP_STASISED)
         cell.is_stasised = true;
 

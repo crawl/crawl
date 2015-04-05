@@ -2,12 +2,11 @@
 use strict;
 use Encode;
 
-my $HEAD = system("git rev-parse --verify HEAD >/dev/null 2>&1")
-    ? "4b825dc642cb6eb9a060e54bf8d69288fbee4904" # empty tree
-    : "HEAD";
+## Checks the commit diff for suspicious lines not covered by util/checkwhite
+## and util/unbrace, namely unresolved merges.
 
-open DIFF, "git diff-index -p -M --cached $HEAD --|"
-    or die "pre-commit: Can't obtain the diff.  Run git commit -n to ignore.\n";
+open DIFF, "git diff-index -p -M --cached HEAD --|"
+    or die "pre-commit: Can't obtain the diff. Run git commit -n to ignore.\n";
 
 my $found_bad = 0;
 my $filename;
@@ -15,7 +14,7 @@ my $reported_filename = "";
 my $lineno;
 my $lastadd = 0; # a terrible hack
 my $skip = 0;
-my $tab = 0;
+
 sub bad_line
 {
     return if $skip;
@@ -36,19 +35,10 @@ sub bad_line
     #print STDERR "$_\n" unless $noquote;
 }
 
-sub was_last
-{
-    bad_line("extra newlines at eof",1) if $lastadd && $lastadd == $lineno;
-    $lastadd = 0;
-}
-
-# Was the previous line a deletion?
-my $prev_del = 0;
 while (<DIFF>)
 {
     if (m|^diff --git a/(.*) b/\1$|)
     {
-        was_last;
         $filename = $1;
 
         $skip = $filename =~ /\.(png|gif|ttf|ico|icns|fig|tex|eps|pdf)$/i
@@ -57,8 +47,6 @@ while (<DIFF>)
              || $filename =~ /^\.gitmodules$/
              || $filename =~ /\.(lex|tab)\./
              || $filename !~ /\./;
-        $tab =  $filename =~ /\.(rb|pl|sh)$/i
-             || $filename =~ /Makefile/i;
         next;
     }
     if (/^@@ -\S+ \+(\d+)/)
@@ -71,29 +59,18 @@ while (<DIFF>)
         $lineno++;
         next;
     }
-    my $is_del = /^-/;
     if (s/^\+//)
     {
         $lineno++;
         chomp;
-        bad_line("trailing whitespace") if /\s$/;
-        bad_line("indent SP followed by a TAB") if /^\s* \t/;
         bad_line("unresolved merge conflict") if /^([<>])\1{6} |^={7}$/;
-        bad_line("CR") if /\r$/;
-        eval{decode("UTF-8", "$_", Encode::FB_CROAK)};
-        bad_line("invalid UTF-8") if $@;
-        bad_line("TAB") if /\t/ && !$tab;
     }
     $lastadd = $lineno if $_ eq "";
-    bad_line("no newline at eof",1) if $_ eq "\\ No newline at end of file\n" and not $prev_del;
-    $prev_del = $is_del;
 }
-was_last;
-
 
 if ($found_bad)
 {
-    print STDERR "\nPlease run util/checkwhite to correct or, if it's a false positive,\n".
-                 "commit -n to ignore.  In that case, please report it as a bug.\n";
+    print STDERR "\nPlease correct or, if it's a false positive,\n".
+                 "commit -n to ignore. In that case, please report it as a bug.\n";
     exit 1;
 }

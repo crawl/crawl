@@ -1,0 +1,19 @@
+#!/bin/sh
+
+## This pre-commit hook calls scripts to check the diff contents of the commit
+## before it's commited.
+
+crawl-ref/source/util/checkcommit || exit 1
+
+## With -n to only report the problems, not fix, and -m to only examine
+## modified files. The latter might catch problems not part of the commit, but
+## this is pretty rare.
+if ! crawl-ref/source/util/checkwhite -n -m; then
+    echo "Run checkwhite to fix bad whitespace"
+    exit 1
+fi
+
+if ! crawl-ref/source/util/unbrace -n -m; then
+    echo "Run unbrace to fix bad braces"
+    exit 1
+fi

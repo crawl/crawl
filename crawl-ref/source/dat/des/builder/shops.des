@@ -276,6 +276,17 @@ cww.wwc
 ccc+ccc
 ENDMAP
 
+NAME: nicolae_shop_scaring_up_business
+TAGS: allow_dup extra shop
+WEIGHT: 1
+KFEAT: O = food shop
+KMONS: O = patrolling hungry ghost
+MAP
+...
+.O.
+...
+ENDMAP
+
 #####################################################
 # Custom venom shop Vault
 NAME:    guppyfry_shop_venom
@@ -554,15 +565,4 @@ MAP
 c.S.c
 .....
  c.c
-ENDMAP
-
-NAME: nicolae_shop_scaring_up_business
-TAGS: allow_dup extra shop
-WEIGHT: 1
-KFEAT: O = food shop
-KMONS: O = patrolling hungry ghost
-MAP
-...
-.O.
-...
 ENDMAP

@@ -1103,8 +1103,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             if (cloud.whose == KC_FRIENDLY)
                 beam.source_id = MID_ANON_FRIEND;
 
-            if (mons_class_is_confusable(mons->type)
-                && _mephitic_cloud_roll(mons))
+            if (_mephitic_cloud_roll(mons))
             {
                 beam.apply_enchantment_to_monster(mons);
                 return true;
@@ -1812,9 +1811,9 @@ coord_def get_cloud_originator(const coord_def& pos)
 void remove_tornado_clouds(mid_t whose)
 {
     // Needed to clean up after the end of tornado cooldown, so we can again
-    // assume all "raging winds" clouds are harmful.  This is needed only
+    // assume all "raging winds" clouds are harmful. This is needed only
     // because map_knowledge doesn't preserve the knowledge about whom the
-    // cloud belongs to.  If this changes, please remove this function.  For
+    // cloud belongs to. If this changes, please remove this function. For
     // example, this approach doesn't work if we ever make Tornado a monster
     // spell (excluding immobile and mindless casters).
 

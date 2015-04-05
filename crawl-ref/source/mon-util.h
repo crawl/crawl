@@ -379,7 +379,6 @@ void mons_stop_fleeing_from_sanctuary(monster* mons);
 
 bool mons_landlubbers_in_reach(const monster* mons);
 
-bool mons_class_is_confusable(monster_type mc);
 bool mons_class_is_stationary(monster_type mc);
 bool mons_class_is_firewood(monster_type mc);
 bool mons_is_firewood(const monster* mon);
@@ -486,7 +485,9 @@ monster *choose_random_nearby_monster(
 monster *choose_random_monster_on_level(
     int weight,
     bool (*suitable)(const monster* mon) =
-        choose_any_monster);
+        choose_any_monster,
+    bool prefer_named_or_priest = false);
+
 void update_monster_symbol(monster_type mtype, cglyph_t md);
 
 void fixup_spells(monster_spells &spells, int hd);

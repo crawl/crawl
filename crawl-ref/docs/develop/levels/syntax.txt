@@ -405,7 +405,7 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "overwrite_floor_cell": Tells the dungeon builder that this vault
              intends to overwrite a single floor cell, possibly inside another
              vault, even if that vault does not have the "overwritable" tag.
-             This tag can only be applied to 1x1 vaults.  Don't use it casually.
+             This tag can only be applied to 1x1 vaults. Don't use it casually.
           * "layout": Makes the vault eligible for use as a level layout. Do
              not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is

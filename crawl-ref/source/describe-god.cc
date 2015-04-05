@@ -244,7 +244,7 @@ static string _religion_help(god_type god)
     return result;
 }
 
-// The various titles granted by the god of your choice.  Note that Xom
+// The various titles granted by the god of your choice. Note that Xom
 // doesn't use piety the same way as the other gods, so these are just
 // placeholders.
 static const char *divine_title[NUM_GODS][8] =
@@ -353,8 +353,8 @@ string god_title(god_type which_god, species_type which_species, int piety)
         title = divine_title[which_god][_piety_level(piety)];
 
     //XXX: unify with stuff in skills.cc
-    title = replace_all(title, "@Genus@", species_name(which_species, true, false));
-    title = replace_all(title, "@Adj@", species_name(which_species, false, true));
+    title = replace_all(title, "@Genus@", species_name(which_species, SPNAME_GENUS));
+    title = replace_all(title, "@Adj@", species_name(which_species, SPNAME_ADJ));
     title = replace_all(title, "@Walking@", (species_walking_verb(which_species) + "ing"));
 
     return title;

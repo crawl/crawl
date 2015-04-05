@@ -194,7 +194,7 @@ void init_mon_name_cache()
         const monster_type mon   = monster_type(mtype);
 
         // Deal sensibly with duplicate entries; refuse or allow the
-        // insert, depending on which should take precedence.  Mostly we
+        // insert, depending on which should take precedence. Mostly we
         // don't care, except looking up "rakshasa" and getting _FAKE
         // breaks ?/M rakshasa.
         if (Mon_Name_Cache.count(name))
@@ -320,7 +320,7 @@ static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
         resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
     // Everything but natural creatures have full rNeg. Set here for the
-    // benefit of the monster_info constructor.  If you change this, also
+    // benefit of the monster_info constructor. If you change this, also
     // change monster::res_negative_energy.
     if (mh != MH_NATURAL)
         resists = (resists & ~(MR_RES_NEG * 7)) | (MR_RES_NEG * 3);
@@ -579,13 +579,6 @@ mon_holy_type mons_class_holiness(monster_type mc)
     return smc->holiness;
 }
 
-bool mons_class_is_confusable(monster_type mc)
-{
-    ASSERT_smc();
-    return mons_class_holiness(mc) != MH_NONLIVING
-        && mons_class_holiness(mc) != MH_PLANT;
-}
-
 bool mons_class_is_stationary(monster_type mc)
 {
     return mons_class_flag(mc, M_STATIONARY);
@@ -700,8 +693,7 @@ bool mons_is_boulder(const monster* mon)
 static bool _mons_class_is_clingy(monster_type type)
 {
     return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
-        || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
-        || type == MONS_DEMONIC_CRAWLER;
+        || type == MONS_GIANT_COCKROACH || type == MONS_DEMONIC_CRAWLER;
 }
 
 bool mons_can_cling_to_walls(const monster* mon)
@@ -711,7 +703,7 @@ bool mons_can_cling_to_walls(const monster* mon)
            && _mons_class_is_clingy(get_chimera_legs(mon));
 }
 
-// Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
+// Conjuration or Hexes. Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
 {
@@ -742,7 +734,7 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_allows_beogh(const monster* mon)
 {
-    if (!player_genus(GENPC_ORCISH) || you_worship(GOD_BEOGH))
+    if (!species_is_orcish(you.species) || you_worship(GOD_BEOGH))
         return false; // no one else gives a damn
 
     return mons_genus(mon->type) == MONS_ORC
@@ -761,7 +753,7 @@ bool mons_allows_beogh_now(const monster* mon)
 }
 
 // Returns true for monsters that obviously (to the player) feel
-// "thematically at home" in a branch.  Currently used for native
+// "thematically at home" in a branch. Currently used for native
 // monsters recognising traps and patrolling branch entrances.
 bool mons_is_native_in_branch(const monster* mons,
                               const branch_type branch)
@@ -990,8 +982,7 @@ void discover_mimic(const coord_def& pos)
         return;
     }
 
-    const string name = feature_mimic ? "the " + string(feat_type_name(feat)) :
-          item->base_type == OBJ_GOLD ? "the pile of gold coins"
+    const string name = feature_mimic ? "the " + string(feat_type_name(feat))
                                       : item->name(DESC_THE, false, false,
                                                              false, true);
     const bool plural = feature_mimic ? false : item->quantity > 1;
@@ -1004,8 +995,7 @@ void discover_mimic(const coord_def& pos)
     if (you.see_cell(pos))
         mprf(MSGCH_WARN, "%s %s a mimic!", name.c_str(), plural ? "are" : "is");
 
-    const string shortname = feature_mimic ? feat_type_name(feat) :
-               item->base_type == OBJ_GOLD ? "pile of gold coins"
+    const string shortname = feature_mimic ? feat_type_name(feat)
                                            : item->name(DESC_BASENAME);
     if (item)
         destroy_item(item->index(), true);
@@ -1108,7 +1098,7 @@ monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN
-        || (mc == MONS_PLAYER_ILLUSION && player_genus(GENPC_DRACONIAN)))
+        || (mc == MONS_PLAYER_ILLUSION && species_is_draconian(you.species)))
     {
         return MONS_DRACONIAN;
     }
@@ -1213,7 +1203,7 @@ static bool _shout_fits_monster(monster_type mc, int shout)
     if (mc == MONS_CHAOS_SPAWN)
         return shout != S_DEMON_TAUNT;
 
-    // For Pandemonium lords, almost everything is fair game.  It's only
+    // For Pandemonium lords, almost everything is fair game. It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
     if (mc != MONS_HELL_BEAST)
         return true;
@@ -1889,7 +1879,7 @@ int mons_class_hit_dice(monster_type mc)
 
 int mons_avg_hp(monster_type mc)
 {
-    // Currently, difficulty is defined as "average hp".  Leaks too much info?
+    // Currently, difficulty is defined as "average hp". Leaks too much info?
     const monsterentry* me = get_monster_data(mc);
 
     if (!me)
@@ -1923,7 +1913,7 @@ int exper_value(const monster* mon, bool real)
     int maxhp             = mon->max_hit_points;
 
     // pghosts and pillusions have no reasonable base values, and you can look
-    // up the exact value anyway.  Especially for pillusions.
+    // up the exact value anyway. Especially for pillusions.
     if (real || mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
     {
         // A berserking monster is much harder, but the xp value shouldn't
@@ -1937,16 +1927,16 @@ int exper_value(const monster* mon, bool real)
         ASSERT(m);
 
         // Use real hd, zombies would use the basic species and lose
-        // information known to the player ("orc warrior zombie").  Monsters
+        // information known to the player ("orc warrior zombie"). Monsters
         // levelling up is visible (although it may happen off-screen), so
-        // this is hardly ever a leak.  Only Pan lords are unknown in the
+        // this is hardly ever a leak. Only Pan lords are unknown in the
         // general.
         if (m->mc == MONS_PANDEMONIUM_LORD)
             hd = m->hpdice[0];
         maxhp = hd * m->hpdice[1] + (hd * (1 + m->hpdice[2])) / 2 + m->hpdice[3];
     }
 
-    // Hacks to make merged slime creatures not worth so much exp.  We
+    // Hacks to make merged slime creatures not worth so much exp. We
     // will calculate the experience we would get for 1 blob, and then
     // just multiply it so that exp is linear with blobs merged. -cao
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)
@@ -2021,6 +2011,7 @@ int exper_value(const monster* mon, bool real)
             case SPELL_SUMMON_HORRIBLE_THINGS:
             case SPELL_PLANEREND:
             case SPELL_SUMMON_EMPEROR_SCORPIONS:
+            case SPELL_CHANT_FIRE_STORM:
                 diff += 7;
                 break;
 
@@ -2112,7 +2103,7 @@ int exper_value(const monster* mon, bool real)
 
 monster_type random_draconian_monster_species()
 {
-    const int num_drac = MONS_LAST_BASE_DRACONIAN - MONS_FIRST_BASE_DRACONIAN + 1;
+    const int num_drac = MONS_LAST_SPAWNED_DRACONIAN - MONS_FIRST_BASE_DRACONIAN + 1;
     return static_cast<monster_type>(MONS_FIRST_BASE_DRACONIAN + random2(num_drac));
 }
 
@@ -3121,7 +3112,7 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
 void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
 {
     // If the _real_ (non-charmed) attitude is already that or better,
-    // don't degrade it.  This can happen, for example, with a high-power
+    // don't degrade it. This can happen, for example, with a high-power
     // Crusade card on Pikel's slaves who would then go down from friendly
     // to good_neutral when you kill Pikel.
     if (mon->attitude >= att)
@@ -3245,7 +3236,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
 
     // Friendly monsters shouldn't be targeting you: this will happen
     // often because the default behaviour for charmed monsters is to
-    // have you as a target.  While foe_ratio will handle this, we
+    // have you as a target. While foe_ratio will handle this, we
     // don't want a situation where a friendly dragon breathes through
     // you to hit other creatures... it should target the other
     // creatures, and coincidentally hit you.
@@ -3597,7 +3588,9 @@ static const spell_type smitey_spells[] = {
     SPELL_GLACIATE,         // dubious
     SPELL_CHAOTIC_MIRROR,
     SPELL_OZOCUBUS_REFRIGERATION,
-    SPELL_MASS_CONFUSION
+    SPELL_MASS_CONFUSION,
+    SPELL_CHANT_FIRE_STORM,
+    SPELL_CHANT_WORD_OF_ENTROPY,
 };
 
 /**
@@ -3620,7 +3613,7 @@ static bool _mons_has_smite_attack(const monster* mons)
  *
  * A shover should not cause damage to the shovee by
  * displacing it, so monsters that trail clouds of badness are
- * ineligible.  The shover should also benefit from shoving, so monsters
+ * ineligible. The shover should also benefit from shoving, so monsters
  * that can smite/torment are ineligible.
  *
  * @param m     The monster in question.
@@ -3999,17 +3992,17 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     // FIXME: Handle player_genus in case it was not generalised to foe_genus.
     msg = replace_all(msg, "@a_player_genus@",
-                      article_a(species_name(you.species, true)));
-    msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
-    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, true)));
+                      article_a(species_name(you.species, SPNAME_GENUS)));
+    msg = replace_all(msg, "@player_genus@", species_name(you.species, SPNAME_GENUS));
+    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, SPNAME_GENUS)));
 
-    string foe_species;
+    string foe_genus;
 
     if (foe == nullptr)
         ;
     else if (foe->is_player())
     {
-        foe_species = species_name(you.species, true);
+        foe_genus = species_name(you.species, SPNAME_GENUS);
 
         msg = _replace_speech_tag(msg, " @to_foe@", "");
         msg = _replace_speech_tag(msg, " @at_foe@", "");
@@ -4029,10 +4022,10 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
         msg = replace_all(msg, "@foe_name@", you.your_name);
         msg = replace_all(msg, "@foe_species@", species_name(you.species));
-        msg = replace_all(msg, "@foe_genus@", foe_species);
-        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_species));
+        msg = replace_all(msg, "@foe_genus@", foe_genus);
+        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
         msg = replace_all(msg, "@foe_genus_plural@",
-                          pluralise(species_name(you.species, true)));
+                          pluralise(foe_genus));
     }
     else
     {
@@ -4070,13 +4063,11 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
         msg = replace_all(msg, "@foe_species@", species);
 
-        string genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
+        foe_genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
 
-        msg = replace_all(msg, "@foe_genus@", genus);
-        msg = replace_all(msg, "@Foe_genus@", uppercase_first(genus));
-        msg = replace_all(msg, "@foe_genus_plural@", pluralise(genus));
-
-        foe_species = genus;
+        msg = replace_all(msg, "@foe_genus@", foe_genus);
+        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
+        msg = replace_all(msg, "@foe_genus_plural@", pluralise(foe_genus));
     }
 
     description_level_type nocap = DESC_THE, cap = DESC_THE;
@@ -4221,7 +4212,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
                           _replace_god_name(god, false, true));
     }
 
-    // The monster's god, not the player's.  Atheists get
+    // The monster's god, not the player's. Atheists get
     // "NO GOD"/"NO GOD"/"NO_GOD"/"NO_GOD", and worshippers of nameless
     // gods get "a god"/"its god/my God/My God".
     //
@@ -4265,11 +4256,11 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     if (msg.find("@species_insult_") != string::npos)
     {
         msg = replace_all(msg, "@species_insult_adj1@",
-                               _get_species_insult(foe_species, "adj1"));
+                               _get_species_insult(foe_genus, "adj1"));
         msg = replace_all(msg, "@species_insult_adj2@",
-                               _get_species_insult(foe_species, "adj2"));
+                               _get_species_insult(foe_genus, "adj2"));
         msg = replace_all(msg, "@species_insult_noun@",
-                               _get_species_insult(foe_species, "noun"));
+                               _get_species_insult(foe_genus, "noun"));
     }
 
     static const char * sound_list[] =
@@ -4310,40 +4301,9 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     else
         msg = replace_all(msg, "@says@", sound_list[s_type]);
 
-    msg = apostrophise_fixup(msg);
-
     msg = maybe_capitalise_substring(msg);
 
     return msg;
-}
-
-static mon_body_shape _get_ghost_shape(const monster* mon)
-{
-    const ghost_demon &ghost = *(mon->ghost);
-
-    switch (ghost.species)
-    {
-    case SP_NAGA:
-        return MON_SHAPE_NAGA;
-
-    case SP_CENTAUR:
-        return MON_SHAPE_CENTAUR;
-
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:
-        return MON_SHAPE_HUMANOID_TAILED;
-
-    default:
-        return MON_SHAPE_HUMANOID;
-    }
 }
 
 /**
@@ -4353,12 +4313,14 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
  */
 mon_body_shape get_mon_shape(const monster* mon)
 {
+    monster_type base_type;
     if (mons_is_pghost(mon->type))
-        return _get_ghost_shape(mon);
+        base_type = player_species_to_mons_species(mon->ghost->species);
     else if (mons_is_zombified(mon))
-        return get_mon_shape(mon->base_monster);
+        base_type = mon->base_monster;
     else
-        return get_mon_shape(mon->type);
+        base_type = mon->type;
+    return get_mon_shape(base_type);
 }
 
 /**
@@ -4791,7 +4753,7 @@ void reset_all_monsters()
     {
         // The monsters here have already been saved or discarded, so this
         // is the only place when a constricting monster can legitimately
-        // be reset.  Thus, clear constriction manually.
+        // be reset. Thus, clear constriction manually.
         if (!invalid_monster(&menv[i]))
         {
             delete menv[i].constricting;
@@ -4949,7 +4911,8 @@ monster* choose_random_nearby_monster(int weight,
 }
 
 monster* choose_random_monster_on_level(int weight,
-                                        bool (*suitable)(const monster* mon))
+                                        bool (*suitable)(const monster* mon),
+                                        bool prefer_named_or_priest)
 {
     monster* chosen = nullptr;
 
@@ -4959,9 +4922,10 @@ monster* choose_random_monster_on_level(int weight,
         if (!mon || !suitable(mon))
             continue;
 
-        // Named or priestly monsters have doubled chances.
-        int mon_weight = 1
-                       + mon->is_named() + mon->is_priest();
+        int mon_weight = 1;
+
+        if (prefer_named_or_priest)
+            mon_weight += mon->is_named() + mon->is_priest();
 
         if (x_chance_in_y(mon_weight, weight += mon_weight))
             chosen = mon;

@@ -465,75 +465,6 @@ static bool _increase_ench_duration(monster* mon,
     return true;
 }
 
-/**
- * Attempt to bless a follower's weapon.
- *
- * @param[in] mon      The follower whose weapon should be blessed.
- * @return             The type of blessing; may be empty.
- */
-static string _tso_bless_weapon(monster* mon)
-{
-    if (mon->type == MONS_DANCING_WEAPON)
-    {
-        dprf("Can't bless a dancing weapon's weapon!");
-        return "";
-    }
-
-    item_def* wpn_ptr = mon->weapon();
-    if (wpn_ptr == nullptr)
-    {
-        dprf("Couldn't bless follower's weapon; they have none!");
-        return "";
-    }
-
-    item_def& wpn = *wpn_ptr;
-
-    // Enchant and uncurse it.
-    if (!enchant_weapon(wpn, true))
-    {
-        dprf("Couldn't bless follower's weapon!");
-        return "";
-    }
-
-    item_set_appearance(wpn);
-    set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
-    return "superior armament";
-}
-
-/**
- * Attempt to bless a follower's armour.
- *
- * @param[in] follower      The follower whose armour should be blessed.
- * @return                  The type of blessing; may be empty.
- */
-static string _tso_bless_armour(monster* follower)
-{
-    // Pick either a monster's armour or its shield.
-    const int armour = follower->inv[MSLOT_ARMOUR];
-    const int shield = follower->inv[MSLOT_SHIELD];
-    if (armour == NON_ITEM && shield == NON_ITEM)
-    {
-        dprf("Can't bless the armour of a naked follower!");
-        return "";
-    }
-
-    const int slot = shield == NON_ITEM || (coinflip() && armour != NON_ITEM) ?
-                     armour : shield;
-
-    item_def& arm(mitm[slot]);
-
-    int ac_change;
-    if (!enchant_armour(ac_change, true, arm))
-    {
-        dprf("Couldn't enchant follower's armour!");
-        return "";
-    }
-
-    item_set_appearance(arm);
-    set_ident_flags(arm, ISFLAG_KNOW_PLUSES);
-    return "improved armour";
-}
-
 static bool _tso_blessing_extend_stay(monster* mon)
 {
     if (!mon->has_ench(ENCH_ABJ))
@@ -696,8 +627,7 @@ static void _display_god_blessing(monster* follower, god_type god,
 /**
  * Have Beogh attempt to bless the specified follower.
  *
- * He may choose to bless another nearby follower, if no follower is specified,
- * or the follower is invalid.
+ * If no follower is specified, there is a chance of sending reinforcements.
  *
  * @param[in] follower      The follower to try to bless.
  * @param[in] force         Whether to check follower validity.
@@ -705,24 +635,6 @@ static void _display_god_blessing(monster* follower, god_type god,
  */
 static bool _beogh_bless_follower(monster* follower, bool force)
 {
-    // most blessings fail, tragically...
-    if (!force && one_chance_in(4))
-        return false;
-
-    // If a follower was specified, and it's suitable, pick it.
-    // Otherwise, pick a random follower.
-    // XXX: factor out into another function?
-    if (!follower || (!force && !is_follower(follower)))
-    {
-        // Choose a random follower in LOS, preferably a named or
-        // priestly one.
-        follower = choose_random_nearby_monster(0, is_follower, true);
-    }
-
-    // Try *again*, on the entire level
-    if (!follower)
-        follower = choose_random_monster_on_level(0, is_follower);
-
     if (!follower)
     {
         // 1/20 chance of spawning a palband
@@ -817,8 +729,7 @@ static string _tso_bless_duration(monster* follower)
 /**
  * Have The Shining One attempt to bless the specified follower.
  *
- * 10% chance of blessing equipment; otherwise, increase duration, or
- * barring that, just heal & cure.
+ * Blessings can increase duration, or heal & cure.
  *
  * @param[in] follower      The follower to try to bless.
  * @param[in] force         Whether to check follower validity.
@@ -831,15 +742,10 @@ static bool _tso_bless_follower(monster* follower, bool force)
         return false;
 
     string blessing = "";
-    if (one_chance_in(10) || force)
-    {
-        blessing = coinflip() ? _tso_bless_weapon(follower)
-                              : _tso_bless_armour(follower);
-    }
+    if (blessing.empty() && coinflip())
+        blessing = _bless_with_healing(follower);
     if (blessing.empty())
         blessing = _tso_bless_duration(follower);
-    if (blessing.empty())
-        blessing = _bless_with_healing(follower);
 
     if (blessing.empty())
         return false;
@@ -848,14 +754,36 @@ static bool _tso_bless_follower(monster* follower, bool force)
     return true;
 }
 
-// Bless the follower indicated in follower, if any.  If there isn't
-// one, bless a random follower within sight of the player, if any, or,
-// with decreasing chances, any follower on the level.
+// Bless the follower indicated in follower, if any. If there isn't
+// one, bless a random follower within sight of the player, if any, or
+// any follower on the level.
 // Blessing can be enforced with a wizard mode command.
 bool bless_follower(monster* follower,
                     god_type god,
                     bool force)
 {
+    // most blessings fail, tragically...
+    if (!force && !one_chance_in(4))
+        return false;
+
+    // If a follower was specified, and it's suitable, pick it.
+    // Otherwise, pick a random follower.
+    // XXX: factor out into another function?
+    if (!follower || (!force && !is_follower(follower)))
+    {
+        // Choose a random follower in LOS, preferably a named or
+        // priestly one.
+        follower = choose_random_nearby_monster(0, is_follower,
+                                                god == GOD_BEOGH);
+    }
+
+    // Try *again*, on the entire level
+    if (!follower)
+    {
+        follower = choose_random_monster_on_level(0, is_follower,
+                                                  god == GOD_BEOGH);
+    }
+
     switch (god)
     {
         case GOD_BEOGH: return _beogh_bless_follower(follower, force);

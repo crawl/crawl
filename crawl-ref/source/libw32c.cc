@@ -421,8 +421,8 @@ void console_shutdown()
     if (inbuf == nullptr && outbuf == nullptr && old_outbuf == nullptr)
         return;
 
-    // JWM, 06/12/2004: Code page stuff.  If it was the preferred code page, it
-    // doesn't need restoring.  Shouldn't be an error and too bad if there is.
+    // JWM, 06/12/2004: Code page stuff. If it was the preferred code page, it
+    // doesn't need restoring. Shouldn't be an error and too bad if there is.
     if (InputCP && InputCP != PREFERRED_CODEPAGE)
         SetConsoleCP(InputCP);
 
@@ -719,7 +719,7 @@ static int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
         return VirtCode | 256;
     }
 
-    // now translate the key.  Dammit.  This is !@#$(*& garbage.
+    // now translate the key. Dammit. This is !@#$(*& garbage.
 
     // control key?
     if (ctrlDown)

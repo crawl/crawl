@@ -440,7 +440,7 @@ void clear_excludes()
 {
 #ifdef USE_TILE
     // Tiles needs to update the minimap for each exclusion that is removed,
-    // but the exclusions need to be removed first.  Therefore, make a copy
+    // but the exclusions need to be removed first. Therefore, make a copy
     // of the current set of exclusions and iterate through the copy below.
     exclude_set excludes = curr_excludes;
 #endif

@@ -35,14 +35,6 @@
 #include "stringutil.h"
 #include "unwind.h"
 
-typedef function<string ()> string_fn;
-typedef map<string, string_fn> skill_op_map;
-
-static skill_op_map Skill_Op_Map;
-
-// The species for which the skill title is being worked out.
-static species_type Skill_Species = SP_UNKNOWN;
-
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
 //                by 10 skill points (ie one standard practice).
 //
@@ -58,36 +50,14 @@ static species_type Skill_Species = SP_UNKNOWN;
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 static void _train_skills(int exp, const int cost, const bool simu);
 
-class skill_title_key_t
-{
-public:
-    skill_title_key_t(const char *k, string_fn o) : key(k), op(o)
-    {
-        Skill_Op_Map[k] = o;
-    }
-
-    static string get(const string &_key)
-    {
-        return lookup(Skill_Op_Map, _key, [] () { return string(); })();
-    }
-private:
-    const char *key;
-    string_fn op;
-};
-
-typedef skill_title_key_t stk;
-
 // Basic goals for titles:
 // The higher titles must come last.
 // Referring to the skill itself is fine ("Transmuter") but not impressive.
 // No overlaps, high diversity.
 
-// Replace @Adj@ with uppercase adjective form, @genus@ with lowercase genus,
-// @Genus@ with uppercase genus, and %s with special cases defined below,
-// including but not limited to species.
-
-// NOTE:  Even though %s could be used with most of these, remember that
-// the character's race will be listed on the next line.  It's only really
+// See the map "replacements" below for what @Genus@, @Adj@, etc. do.
+// NOTE: Even though @foo@ could be used with most of these, remember that
+// the character's race will be listed on the next line. It's only really
 // intended for cases where things might be really awkward without it. -- bwr
 
 // NOTE: If a skill name is changed, remember to also adapt the database entry.
@@ -115,7 +85,7 @@ static const char *skill_titles[NUM_SKILLS][6] =
 #if TAG_MAJOR_VERSION == 34
     {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
 #endif
-    // STR based fighters, for DEX/martial arts titles see below.  Felids get their own category, too.
+    // STR based fighters, for DEX/martial arts titles see below. Felids get their own category, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
@@ -1167,82 +1137,40 @@ skill_type str_to_skill(const string &skill)
     return SK_FIGHTING;
 }
 
-static string _stk_adj_cap()
+static string _stk_weight(species_type species)
 {
-    return species_name(Skill_Species, false, true);
-}
-
-static string _stk_genus_cap()
-{
-    return species_name(Skill_Species, true, false);
-}
-
-static string _stk_genus_nocap()
-{
-    string s = _stk_genus_cap();
-    return lowercase(s);
-}
-
-static string _stk_genus_short_cap()
-{
-    return Skill_Species == SP_DEMIGOD ? "God" :
-           _stk_genus_cap();
-}
-
-static string _stk_walker()
-{
-    return species_walking_verb(Skill_Species) + "er";
-}
-
-static string _stk_weight()
-{
-    switch (Skill_Species)
-    {
-    case SP_OGRE:
-    case SP_TROLL:
+    if (species_size(species) == SIZE_LARGE)
         return "Heavy";
-
-    case SP_NAGA:
-    case SP_CENTAUR:
+    else if (species_size(species, PSIZE_BODY) == SIZE_LARGE)
         return "Cruiser";
-
-    default:
-        return "Middle";
-
-    case SP_HIGH_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_TENGU:
-        return "Light";
-
-    case SP_HALFLING:
-    case SP_KOBOLD:
+    else if (species_size(species) == SIZE_SMALL || species == SP_TENGU)
         return "Feather";
-
-    case SP_SPRIGGAN:
+    else if (species_size(species) == SIZE_LITTLE)
         return "Fly";
-
-    case SP_FELID:
-        return "Bacteria"; // not used
-    }
+    else if (species_is_elven(species))
+        return "Light";
+    else
+        return "Middle";
 }
 
-static skill_title_key_t _skill_title_keys[] =
+static map<string, function<string (species_type)>> replacements =
 {
-    stk("Adj", _stk_adj_cap),
-    stk("Genus", _stk_genus_cap),
-    stk("genus", _stk_genus_nocap),
-    stk("Genus_Short", _stk_genus_short_cap),
-    stk("Walker", _stk_walker),
-    stk("Weight", _stk_weight),
+    { "Adj", [](species_type sp)
+                 { return species_name(sp, SPNAME_ADJ); } },
+    { "Genus", [](species_type sp)
+                 { return species_name(sp, SPNAME_GENUS); } },
+    { "genus", [](species_type sp)
+                 { return lowercase_string(species_name(sp, SPNAME_GENUS)); } },
+    { "Genus_Short", [](species_type sp)
+                 { return sp == SP_DEMIGOD ? "God" :
+                          species_name(sp, SPNAME_GENUS); } },
+    { "Walker", [](species_type sp)
+                 { return species_walking_verb(sp) + "er"; } },
+    { "Weight", _stk_weight },
 };
 
-static string _replace_skill_keys(const string &text)
+static string _replace_skill_keys(const string &text, species_type species)
 {
-    // The container array is unused, we rely on side effects of constructors
-    // of individual items.  Yay.
-    UNUSED(_skill_title_keys);
-
     string::size_type at = 0, last = 0;
     ostringstream res;
     while ((at = text.find('@', last)) != string::npos)
@@ -1253,7 +1181,7 @@ static string _replace_skill_keys(const string &text)
             break;
 
         const string key = text.substr(at + 1, end - at - 1);
-        const string value = stk::get(key);
+        const string value = replacements[key](species);
 
         ASSERT(!value.empty());
 
@@ -1283,34 +1211,20 @@ unsigned get_skill_rank(unsigned skill_lev)
  *
  * @param best_skill    The skill used to determine the title.
  * @param skill_rank    The player's rank in the given skill.
- * @param species_      The player's species_type.
- * @param str           The player's strength.
- * @param dex           The player's dex.
- * @param god_          The god_type of the god the player follows.
+ * @param species       The player's species.
+ * @param dex_better    Whether the player's dexterity is higher than strength.
+ * @param god           The god_type of the god the player follows.
  * @param piety         The player's piety with the given god.
  * @return              An appropriate and/or humorous title.
  */
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                           int species_, int str, int dex, int god_, int piety)
+                           species_type species, bool dex_better,
+                           god_type god, int piety)
 {
 
     // paranoia
     if (is_invalid_skill(best_skill))
         return "Adventurer";
-
-    if (str == -1)
-        str = you.base_stats[STAT_STR];
-
-    if (dex == -1)
-        dex = you.base_stats[STAT_DEX];
-
-    const species_type species = species_ != -1 ?
-                                 static_cast<species_type>(species_) :
-                                 you.species;
-
-    const god_type god = god_ != -1 ?
-                         static_cast<god_type>(god_) :
-                         you.religion;
 
     // Increment rank by one to "skip" skill name in array {dlb}:
     ++skill_rank;
@@ -1319,9 +1233,6 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
     if (best_skill < NUM_SKILLS)
     {
-        // Note that ghosts default to (dex == str) and god == no_god, due
-        // to a current lack of that information... the god case is probably
-        // suitable for most cases (TSO/Zin/Ely at the very least). -- bwr
         switch (best_skill)
         {
         case SK_UNARMED_COMBAT:
@@ -1330,13 +1241,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = claw_and_tooth_titles[skill_rank];
                 break;
             }
-            result = (dex >= str) ? martial_arts_titles[skill_rank]
-                                  : skill_titles[best_skill][skill_rank];
+            result = dex_better ? martial_arts_titles[skill_rank]
+                                : skill_titles[best_skill][skill_rank];
 
             break;
 
         case SK_SHORT_BLADES:
-            if (player_genus(GENPC_ELVEN, species) && skill_rank == 5)
+            if (species_is_elven(species) && skill_rank == 5)
             {
                 result = "Blademaster";
                 break;
@@ -1349,7 +1260,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_BOWS:
-            if (player_genus(GENPC_ELVEN, species) && skill_rank == 5)
+            if (species_is_elven(species) && skill_rank == 5)
             {
                 result = "Master Archer";
                 break;
@@ -1380,10 +1291,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             result = skill_titles[best_skill][skill_rank];
     }
 
-    {
-        unwind_var<species_type> sp(Skill_Species, species);
-        result = _replace_skill_keys(result);
-    }
+    result = _replace_skill_keys(result, species);
 
     return result.empty() ? string("Invalid Title")
                           : result;

@@ -77,7 +77,7 @@
 #endif
 
 // Which spells?  First I copied all spells from your_spells(), and then
-// I filtered some out, especially conjurations.  Then I sorted them in
+// I filtered some out, especially conjurations. Then I sorted them in
 // roughly ascending order of power.
 
 // Spells to be cast at tension 0 (no or only low-level monsters around),
@@ -209,7 +209,7 @@ bool xom_is_nice(int tension)
 
     if (you_worship(GOD_XOM))
     {
-        // If you.gift_timeout is 0, then Xom is BORED.  He HATES that.
+        // If you.gift_timeout is 0, then Xom is BORED. He HATES that.
         if (!you.gift_timeout)
             return false;
 
@@ -400,8 +400,8 @@ void xom_tick()
 }
 
 // Picks 100 random grids from the level and checks whether they've been
-// marked as seen (explored) or known (mapped).  If seen_only is true,
-// grids only "seen" via magic mapping don't count.  Returns the
+// marked as seen (explored) or known (mapped). If seen_only is true,
+// grids only "seen" via magic mapping don't count. Returns the
 // estimated percentage value of exploration.
 static int _exploration_estimate(bool seen_only = false, bool debug = false)
 {
@@ -656,9 +656,9 @@ static int _xom_detect_creatures(int sever, int tension, bool debug = false)
         canned_msg(MSG_DETECT_NOTHING);
     else if (num_creatures == prev_detected)
     {
-        // This is not strictly true.  You could have cast Detect
+        // This is not strictly true. You could have cast Detect
         // Creatures with a big enough fuzz that the detected glyph is
-        // still on the map when the original one has been killed.  Then
+        // still on the map when the original one has been killed. Then
         // another one is spawned, so the number is the same as before.
         // There's no way we can check this, however.
         mpr("You detect no further creatures.");
@@ -792,7 +792,7 @@ static int _xom_give_item(int power, bool debug = false)
     // There are two kinds of Xom gifts: acquirement and random object.
     // The result from acquirement is very good (usually as good or
     // better than random object), and it is sometimes tuned to the
-    // player's skills and nature.  Being tuned to the player's skills
+    // player's skills and nature. Being tuned to the player's skills
     // and nature is not very Xomlike...
     if (x_chance_in_y(power, 201))
     {
@@ -941,7 +941,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
             continue;
         const item_def &item(mitm[midx]);
 
-        // The monster already has a chaos weapon.  Give the upgrade to
+        // The monster already has a chaos weapon. Give the upgrade to
         // a different monster.
         if (is_chaotic_item(item))
             return false;
@@ -1104,12 +1104,8 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
     bool rc = false;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->wont_attack()
-            || !mons_class_is_confusable(mi->type)
-            || one_chance_in(20))
-        {
+        if (mi->wont_attack() || one_chance_in(20))
             continue;
-        }
 
         if (debug)
             return XOM_GOOD_CONFUSION;
@@ -1287,9 +1283,6 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
 
 static void _confuse_monster(monster* mons, int sever)
 {
-    if (!mons_class_is_confusable(mons->type))
-        return;
-
     if (mons->check_clarity(false))
         return;
 
@@ -1762,7 +1755,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
 }
 
 /**
- * Have Xom throw divine lightning.  Only acts if hostiles are in LOS,
+ * Have Xom throw divine lightning. Only acts if hostiles are in LOS,
  * but it may include the player as a victim.
  * @param debug  If true, don't have Xom act, but return a value indicating
  *               whether he would have acted.
@@ -2201,7 +2194,7 @@ static bool _vitrify_area(int radius)
 }
 
 
-// The nicer stuff.  Note: these things are not necessarily nice.
+// The nicer stuff. Note: these things are not necessarily nice.
 static int _xom_is_good(int sever, int tension, bool debug = false)
 {
     int done = XOM_DID_NOTHING;
@@ -2271,7 +2264,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
             return XOM_DID_NOTHING;
 
         // This is not very interesting if the level is already fully
-        // explored (presumably cleared).  Even then, it may
+        // explored (presumably cleared). Even then, it may
         // occasionally happen.
         const int explored = _exploration_estimate(true, debug);
         if (explored >= 80 && x_chance_in_y(explored, 120))
@@ -2377,7 +2370,7 @@ static void _xom_zero_miscast()
 
     if (in_view[DNGN_ORCISH_IDOL])
     {
-        if (player_genus(GENPC_ORCISH))
+        if (species_is_orcish(you.species))
             priority.emplace_back("The idol of Beogh turns to glare at you.");
         else
             priority.emplace_back("The orcish idol turns to glare at you.");
@@ -2431,10 +2424,10 @@ static void _xom_zero_miscast()
 
         if (you.airborne())
         {
-            // Tengu fly a lot, so don't put airborne messages into the
-            // priority vector for them.
+            // Don't put airborne messages into the priority vector for
+            // anyone who can fly a lot.
             vector<string>* vec;
-            if (you.species == SP_TENGU)
+            if (you.racial_permanent_flight())
                 vec = &messages;
             else
                 vec = &priority;
@@ -2504,9 +2497,7 @@ static void _xom_zero_miscast()
         messages.push_back(str);
     }
 
-    if (!player_genus(GENPC_DRACONIAN)
-        && you.species != SP_MUMMY && you.species != SP_OCTOPODE
-        && !form_changed_physiology())
+    if (species_has_hair(you.species))
     {
         messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
         messages.emplace_back("Your eyebrows wriggle.");
@@ -2839,11 +2830,8 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         {
             for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             {
-                if (!mons_class_is_confusable(mi->type)
-                    || one_chance_in(20))
-                {
+                if (one_chance_in(20))
                     continue;
-                }
 
                 if (!mi->check_clarity(false)
                     && mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
@@ -3492,7 +3480,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
                 return XOM_DID_NOTHING;
 
             // This is not particularly exciting if the level is already
-            // fully explored (presumably cleared).  If Xom is feeling
+            // fully explored (presumably cleared). If Xom is feeling
             // nasty, this is likelier to happen if the level is
             // unexplored.
             const int explored = _exploration_estimate(true, debug);
@@ -3964,7 +3952,7 @@ static string _get_death_type_keyword(const kill_method_type killed_by)
 }
 
 /**
- * Have Xom maybe act to save your life.  There is both a flat chance
+ * Have Xom maybe act to save your life. There is both a flat chance
  * and an additional chance based on tension that he will refuse to
  * save you.
  * @param death_type  The type of death that occurred.

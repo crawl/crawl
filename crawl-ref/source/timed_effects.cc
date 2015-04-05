@@ -1323,7 +1323,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
 // Consider: Poison/Sticky Flame a monster at range and leave, monster
 // dies but can't leave level to get to player (implied game balance of
 // the delayed damage is that the monster could be a danger before
-// it dies).  This could be fixed by keeping some monsters active
+// it dies). This could be fixed by keeping some monsters active
 // off level and allowing them to take stairs (a very serious change).
 //
 // Compare this to the current abuse where the player gets

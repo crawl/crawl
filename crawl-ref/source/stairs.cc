@@ -26,6 +26,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "notes.h"
 #include "output.h"
 #include "prompt.h"
@@ -580,6 +581,9 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 
     // All checks are done, the player is on the move now.
 
+    // Clean up fake blood.
+    heal_flayed_effect(&you, true, true);
+
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
     end_searing_ray();
@@ -799,12 +803,13 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 
         // Clear list of beholding and constricting/constricted monsters.
         you.clear_beholders();
-        you.clear_fearmongers();
         you.stop_constricting_all();
         you.stop_being_constricted();
 
         trackers_init_new_level(true);
     }
+
+    you.clear_fearmongers();
 
     if (!wizard)
         _update_travel_cache(old_level, stair_pos);
@@ -827,7 +832,7 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 #if TAG_MAJOR_VERSION == 34
 
     // Zotdef: returning from portals (e.g. bazaar) paralyses the player in
-    // place for 5 moves.  Nasty, but punishes players for using portals as
+    // place for 5 moves. Nasty, but punishes players for using portals as
     // quick-healing stopovers.
     if (!going_up && crawl_state.game_is_zotdef())
         start_delay(DELAY_UNINTERRUPTIBLE, 5);

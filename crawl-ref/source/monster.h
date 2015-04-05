@@ -308,6 +308,7 @@ public:
     item_def* disarm();
 
     bool      can_use_missile(const item_def &item) const;
+    bool      likes_wand(const item_def &item) const;
 
     string name(description_level_type type, bool force_visible = false,
                 bool force_article = false) const;
@@ -317,7 +318,7 @@ public:
     // "orc priest".
     string base_name(description_level_type type,
                      bool force_visible = false) const;
-    // Full name of the monster.  For an orc priest named Arbolt, full_name()
+    // Full name of the monster. For an orc priest named Arbolt, full_name()
     // will return "Arbolt the orc priest".
     string full_name(description_level_type type, bool use_comma = false) const;
     string pronoun(pronoun_type pro, bool force_visible = false) const;
@@ -405,7 +406,7 @@ public:
     bool is_icy() const;
     bool is_fiery() const;
     bool is_skeletal() const;
-    int spiny_degree() const;
+    bool is_spiny() const;
     bool paralysed() const;
     bool cannot_move() const;
     bool cannot_act() const;
@@ -477,7 +478,8 @@ public:
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
                           const char* /*hurt_msg*/ = nullptr);
-    void corrode_equipment(const char* corrosion_source = "the acid");
+    void corrode_equipment(const char* corrosion_source = "the acid",
+                            int degree = 1);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              kill_method_type kill_type = KILLED_BY_MONSTER,

@@ -216,6 +216,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_BONE_ARMOUR;
     case ENCH_STASIS:
         return MB_STASIS;
+    case ENCH_CHANT_FIRE_STORM:
+        return MB_CHANT_FIRE_STORM;
+    case ENCH_CHANT_WORD_OF_ENTROPY:
+        return MB_CHANT_WORD_OF_ENTROPY;
     default:
         return NUM_MB_FLAGS;
     }
@@ -701,7 +705,7 @@ monster_info::monster_info(const monster* m, int milev)
         ASSERT(m->ghost.get());
         ghost_demon& ghost = *m->ghost;
         u.ghost.species = ghost.species;
-        if (species_genus(u.ghost.species) == GENPC_DRACONIAN && ghost.xl < 7)
+        if (species_is_draconian(u.ghost.species) && ghost.xl < 7)
             u.ghost.species = SP_BASE_DRACONIAN;
         u.ghost.job = ghost.job;
         u.ghost.religion = ghost.religion;
@@ -1308,9 +1312,9 @@ static string _verbose_info(const monster_info& mi)
 
 string monster_info::pluralised_name(bool fullname) const
 {
-    // Don't pluralise uniques, ever.  Multiple copies of the same unique
+    // Don't pluralise uniques, ever. Multiple copies of the same unique
     // are unlikely in the dungeon currently, but quite common in the
-    // arena.  This prevens "4 Gra", etc. {due}
+    // arena. This prevens "4 Gra", etc. {due}
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();
@@ -1595,6 +1599,10 @@ vector<string> monster_info::attributes() const
         v.emplace_back("corpse armoured");
     if (is(MB_STASIS))
         v.emplace_back("static");
+    if (is(MB_CHANT_FIRE_STORM))
+        v.emplace_back("chanting fire storm");
+    if (is(MB_CHANT_WORD_OF_ENTROPY))
+        v.emplace_back("chanting word of entropy");
     return v;
 }
 

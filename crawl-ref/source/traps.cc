@@ -205,7 +205,7 @@ bool trap_def::is_known(const actor* act) const
 
             // This should ultimately be removed, but only after monsters
             // learn to make use of the trap being limited in ZotDef if
-            // there is no other way.  Golubria and Malign Gateway are a
+            // there is no other way. Golubria and Malign Gateway are a
             // problem, too...
             if (crawl_state.game_is_zotdef())
                 return false;
@@ -1041,7 +1041,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
             // The old code rehid the trap, but that's pure interface screw
             // in 99% of cases - a player can just watch who stepped where
-            // and mark the trap on an external paper map.  Not good.
+            // and mark the trap on an external paper map. Not good.
 
             actor* targ = nullptr;
             if (you.see_cell_no_trans(pos))
@@ -1788,7 +1788,7 @@ bool is_valid_shaft_level(bool known)
         return false;
 
     // Don't generate shafts in branches where teleport control
-    // is prevented.  Prevents player from going down levels without
+    // is prevented. Prevents player from going down levels without
     // reaching stairs, and also keeps player from getting stuck
     // on lower levels with the innability to use teleport control to
     // get back up.
@@ -1976,12 +1976,10 @@ trap_type random_trap_for_place()
     const bool shaft_ok = is_valid_shaft_level();
     const bool tele_ok = !crawl_state.game_is_sprint();
     const bool alarm_ok = env.absdepth0 > 3;
-    const bool shadow_ok = env.absdepth0 > 1;
 
     const pair<trap_type, int> trap_weights[] =
     {
         { TRAP_TELEPORT, tele_ok  ? 2 : 0},
-        { TRAP_SHADOW,  shadow_ok ? 1 : 0 },
         { TRAP_SHAFT,   shaft_ok  ? 1 : 0},
         { TRAP_ALARM,   alarm_ok  ? 1 : 0},
     };
@@ -2052,7 +2050,7 @@ void place_webs(int num)
 
         int tries;
         // this is hardly ever enough to place many webs, most of the time
-        // it will fail prematurely.  Which is fine.
+        // it will fail prematurely. Which is fine.
         for (tries = 0; tries < 200; ++tries)
         {
             ts.pos.x = random2(GXM);

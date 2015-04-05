@@ -14,7 +14,7 @@
  * @param   choices  The collection of choice-weight pairs to choose from.
  *
  * @return  A pointer to the item in the chosen pair, or nullptr if all
- *          weights are zero.  The pointer is const only if necessary.
+ *          weights are zero. The pointer is const only if necessary.
  */
 template <typename V>
 auto random_choose_weighted(V &choices) -> decltype(&(begin(choices)->first))

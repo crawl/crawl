@@ -79,7 +79,6 @@ void draconian_change_colour(monster* drac)
                                        MONS_GREEN_DRACONIAN,
                                        MONS_PURPLE_DRACONIAN,
                                        MONS_MOTTLED_DRACONIAN,
-                                       MONS_PALE_DRACONIAN,
                                        MONS_YELLOW_DRACONIAN);
     drac->colour = mons_class_colour(drac->base_monster);
 
@@ -337,7 +336,7 @@ static void _lose_turn(monster* mons, bool has_gone)
     const monsterentry* entry = get_monster_data(mons->type);
 
     // We want to find out if mons will move next time it has a turn
-    // (assuming for the sake of argument the next delay is 10).  If it's
+    // (assuming for the sake of argument the next delay is 10). If it's
     // already going to lose a turn we don't need to do anything.
     mons->speed_increment += entry->speed;
     if (!mons->has_action_energy())
@@ -502,14 +501,14 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
     merge_to->hit_points += initial_slime->hit_points;
 
     // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
-    // passed on if the merged slime subsequently splits.  Hopefully
+    // passed on if the merged slime subsequently splits. Hopefully
     // this won't do anything weird.
     merge_to->flags |= initial_slime->flags;
 
-    // Merging costs the combined slime some energy.  The idea is that if 2
+    // Merging costs the combined slime some energy. The idea is that if 2
     // slimes merge you can gain a space by moving away the turn after (maybe
     // this is too nice but there will probably be a lot of complaints about
-    // the damage on higher level slimes).  We see if mons has gone already by
+    // the damage on higher level slimes). We see if mons has gone already by
     // checking its mindex (this works because handle_monsters just iterates
     // over env.mons in ascending order).
     _lose_turn(merge_to, merge_to->mindex() < initial_slime->mindex());
@@ -561,7 +560,7 @@ static bool _disabled_merge(monster* thing)
 }
 
 // See if there are any appropriate adjacent slime creatures for 'thing'
-// to merge with.  If so, carry out the merge.
+// to merge with. If so, carry out the merge.
 //
 // A slime creature will merge if there is an adjacent slime, merging
 // onto that slime would reduce the distance to the original slime's
@@ -713,7 +712,7 @@ static monster *_slime_split(monster* thing, bool force_split)
 
         if (_slime_can_spawn(*ai))
         {
-            // This can fail if placing a new monster fails.  That
+            // This can fail if placing a new monster fails. That
             // probably means we have too many monsters on the level,
             // so just return in that case.
             return _do_split(thing, *ai);

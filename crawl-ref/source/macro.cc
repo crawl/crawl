@@ -785,7 +785,7 @@ int getch_with_command_macros()
 }
 
 /*
- * Flush the buffer.  Later we'll probably want to give the player options
+ * Flush the buffer. Later we'll probably want to give the player options
  * as to when this happens (ex. always before command input, casting failed).
  */
 void flush_input_buffer(int reason)

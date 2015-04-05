@@ -20,6 +20,7 @@
 #include "english.h"
 #include "env.h"
 #include "fight.h"
+#include "fprop.h"
 #include "hints.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -27,6 +28,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -214,7 +216,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_SUBMERGED:
         mons_clear_trapping_net(this);
 
-        // Don't worry about invisibility.  You should be able to see if
+        // Don't worry about invisibility. You should be able to see if
         // something has submerged.
         if (!quiet && mons_near(this))
         {
@@ -421,7 +423,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
                  mon->name(DESC_A, true).c_str());
     }
 
-    // Monster un-submerging while under player or another monster.  Try to
+    // Monster un-submerging while under player or another monster. Try to
     // move to an adjacent square in which the monster could have been
     // submerged and have it unsubmerge from there.
     coord_def target_square;
@@ -439,7 +441,7 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
         return mon->move_to_pos(target_square);
 
     // No available adjacent squares from which the monster could also
-    // have unsubmerged.  Can it just stay submerged where it is?
+    // have unsubmerged. Can it just stay submerged where it is?
     if (monster_can_submerge(mon, grd(mon->pos())))
         return false;
 
@@ -1927,7 +1929,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     break;
 
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
-        // Number of actions is fine for shapeshifters.  Don't change
+        // Number of actions is fine for shapeshifters. Don't change
         // shape while taking the stairs because monster_polymorph() has
         // an assert about it. -cao
         if (!(flags & MF_TAKING_STAIRS)
@@ -2011,6 +2013,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_WORD_OF_RECALL:
+    case ENCH_CHANT_FIRE_STORM:
+    case ENCH_CHANT_WORD_OF_ENTROPY:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
@@ -2020,10 +2024,10 @@ void monster::apply_enchantment(const mon_enchant &me)
             || has_ench(ENCH_MUTE))
         {
             speed_increment += me.duration;
-            del_ench(ENCH_WORD_OF_RECALL, true, false);
+            del_ench(en, true, false);
             if (you.can_see(this))
             {
-                mprf("%s word of recall is interrupted.",
+                mprf("%s chant is interrupted.",
                      name(DESC_ITS).c_str());
             }
             break;
@@ -2031,11 +2035,44 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (decay_enchantment(en))
         {
-            mons_word_of_recall(this, 3 + random2(5));
+            int breath_timeout_length;
+
+            if (en == ENCH_WORD_OF_RECALL)
+            {
+                mons_word_of_recall(this, 3 + random2(5));
+                breath_timeout_length = (4 + random2(9)) * BASELINE_DELAY;
+            }
+            else if (en == ENCH_CHANT_FIRE_STORM
+                  || en == ENCH_CHANT_WORD_OF_ENTROPY)
+            {
+                actor *mons_foe = get_foe();
+                coord_def foepos;
+                if (mons_foe)
+                    foepos = mons_foe->pos();
+
+                if  (mons_foe
+                     && !(is_sanctuary(pos())
+                        || is_sanctuary(mons_foe->pos()))
+                     && can_see(mons_foe))
+                {
+                    if (en == ENCH_CHANT_FIRE_STORM) {
+                        bolt beem;
+                        beem.target = foepos;
+                        mons_cast(this, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,
+                                true);
+                    }
+                    else // word of entropy
+                        mons_foe->corrode_equipment("the spell", 5);
+                }
+                // shorter because you can avoid the effect entirely out of LOS
+                breath_timeout_length = random2(5);
+            }
+            else
+                die("Unknown chant type!"); // squash a warning
+
             // This is the same delay as vault sentinels.
             mon_enchant breath_timeout =
-                mon_enchant(ENCH_BREATH_WEAPON, 1, this,
-                            (4 + random2(9)) * BASELINE_DELAY);
+                mon_enchant(ENCH_BREATH_WEAPON, 1, this, breath_timeout_length);
             add_ench(breath_timeout);
         }
         break;
@@ -2122,7 +2159,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (decay_enchantment(en))
         {
             add_ench(mon_enchant(ENCH_FATIGUE, 0, 0,
-                                 (1 + random2(3)) * BASELINE_DELAY));
+                                 (10 + random2(20)) * BASELINE_DELAY));
         }
         break;
 
@@ -2321,7 +2358,8 @@ static const char *enchant_names[] =
     "negative_vuln",
 #endif
     "condensation_shield", "resistant",
-    "hexed", "corpse_armour", "static", "buggy",
+    "hexed", "corpse_armour", "static", "chanting_fire_storm",
+    "chanting_word_of_entropy", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

@@ -4,6 +4,7 @@
 
 #include "fight.h"
 #include "godabil.h" // ru sac key
+#include "goditem.h" // is_*_spell
 #include "godwrath.h"
 #include "libutil.h"
 #include "message.h"
@@ -468,7 +469,7 @@ struct like_response
 {
     /** Gain in piety for triggering this conduct; added to calculated denom.
      *
-     * This number is usually negative.  In that case, the maximum piety gain
+     * This number is usually negative. In that case, the maximum piety gain
      * is one point, and the chance of *not* getting that point is:
      *    -piety_bonus/(piety_denom_bonus + level - you.xl/xl_denom)
      * (omitting the you.xl term if xl_denom is zero)
@@ -726,7 +727,14 @@ static like_map divine_likes[] =
     },
     // GOD_LUGONU,
     {
-        { DID_KILL_LIVING, KILL_LIVING_RESPONSE },
+        { DID_KILL_LIVING, _on_kill(MH_NATURAL, false,
+                                  [](int &piety, int &denom,
+                                     const monster* victim)
+            {
+                piety *= 7;
+                denom *= 6;
+            }
+        ) },
         { DID_KILL_UNDEAD, KILL_UNDEAD_RESPONSE },
         { DID_KILL_DEMON, KILL_DEMON_RESPONSE },
         { DID_KILL_HOLY, KILL_HOLY_RESPONSE },
@@ -890,7 +898,7 @@ void did_god_conduct(conduct_type thing_done, int level, bool known,
 
 // These three sets deal with the situation where a beam hits a non-fleeing
 // monster, the monster starts to flee because of the damage, and then the
-// beam bounces and hits the monster again.  If the monster wasn't fleeing
+// beam bounces and hits the monster again. If the monster wasn't fleeing
 // when the beam started then hits from bounces shouldn't count as
 // unchivalric attacks, but if the first hit from the beam *was* unchivalrous
 // then all the bounces should count as unchivalrous as well.
@@ -953,4 +961,47 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
 {
     for (int i = 0; i < 3; ++i)
         conduct[i].enabled = false;
+}
+
+/**
+ * Will this god definitely be upset if you cast this spell?
+ *
+ * This is as opposed to a likelihood, such as TSO's relationship with PArrow.
+ * TODO: deduplicate with spl-cast.cc:_spellcasting_god_conduct
+ *
+ * @param spell the spell to be cast
+ * @param god   the god to check against
+ * @returns true if you will definitely lose piety/get penance/be excommunicated
+ */
+bool god_punishes_spell(spell_type spell, god_type god)
+{
+    if (map_find(divine_peeves[god], DID_SPELL_CASTING))
+        return true;
+
+    if (god_loathes_spell(spell, god))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_NECROMANCY) && is_evil_spell(spell))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_UNHOLY)
+        && (is_unholy_spell(spell)
+            || you.spellcasting_unholy()))
+    {
+        return true;
+    }
+
+    if (map_find(divine_peeves[god], DID_UNCLEAN) && is_unclean_spell(spell))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_CHAOS) && is_chaotic_spell(spell))
+        return true;
+
+    if (map_find(divine_peeves[god], DID_CORPSE_VIOLATION)
+        && is_corpse_violating_spell(spell))
+    {
+        return true;
+    }
+
+    return false;
 }

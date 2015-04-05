@@ -38,15 +38,6 @@
 #include "traps.h"
 #include "viewgeom.h"
 
-#ifdef COMPILE_CHECKS_NEED_FUNCTION
-// FIXME: this is too ugly to live, pollutes the executable's debug symbols,
-// and stinks of elderberries.  Need a better non-C++11 way to do static
-// asserts in GCC 4.8.
-void tile_compile_checks(); // shut up -Wmissing-declarations
-void tile_compile_checks()
-{
-#endif
-
 // This should not be changed.
 COMPILE_CHECK(TILE_DNGN_UNSEEN == 0);
 
@@ -78,10 +69,6 @@ COMPILE_CHECK(MAX_TERM_COLOUR - 1
               == TILE_AMU_COL_LAST - TILE_AMU_COL_FIRST + 1);
 COMPILE_CHECK(MAX_TERM_COLOUR - 1
               == TILE_BOOK_COL_LAST - TILE_BOOK_COL_FIRST + 1);
-
-#ifdef COMPILE_CHECKS_NEED_FUNCTION
-}
-#endif
 
 TextureID get_dngn_tex(tileidx_t idx)
 {
@@ -625,7 +612,7 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
     tileidx_t mem_cloud = env.tile_bk_cloud(gc);
 
     // Detected info is just stored in map_knowledge and doesn't get
-    // written to what the player remembers.  We'll feather that in here.
+    // written to what the player remembers. We'll feather that in here.
 
     const map_cell &cell = env.map_knowledge(gc);
 
@@ -1326,8 +1313,6 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_PORCUPINE;
 
     // spiders and insects ('s')
-    case MONS_GIANT_MITE:
-        return TILEP_MONS_GIANT_MITE;
     case MONS_SCORPION:
         return TILEP_MONS_SCORPION;
     case MONS_EMPEROR_SCORPION:
@@ -1410,6 +1395,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
     // small abominations ('x')
     case MONS_UNSEEN_HORROR:
         return TILEP_MONS_UNSEEN_HORROR;
+    case MONS_ENTROPY_WEAVER:
+        return TILEP_MONS_ENTROPY_WEAVER;
     case MONS_ABOMINATION_SMALL:
         return _mon_mod(TILEP_MONS_ABOMINATION_SMALL, tile_num_prop);
     case MONS_CRAWLING_CORPSE:
@@ -1832,6 +1819,8 @@ tileidx_t tileidx_monster_base(int type, bool in_water, int colour, int number,
         return TILEP_MONS_NECROMANCER;
     case MONS_WIZARD:
         return TILEP_MONS_WIZARD;
+    case MONS_SALAMANDER_STORMCALLER:
+        return TILEP_MONS_SALAMANDER_STORMCALLER;
     case MONS_HELLBINDER:
         return TILEP_MONS_HELLBINDER;
     case MONS_CLOUD_MAGE:
@@ -3650,6 +3639,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_HELL_KNIGHT:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
+    case MONS_SALAMANDER_STORMCALLER:
     case MONS_DEMIGOD: // haloed corpse looks abysmal
         return TILE_CORPSE_HUMAN;
     case MONS_HALFLING:
@@ -3683,8 +3673,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_PORCUPINE;
 
     // spiders and insects ('s')
-    case MONS_GIANT_MITE:
-        return TILE_CORPSE_GIANT_MITE;
     case MONS_SCORPION:
         return TILE_CORPSE_SCORPION;
     case MONS_EMPEROR_SCORPION:
@@ -4345,8 +4333,8 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
 }
 
 // For items with randomized descriptions, only the overlay label is
-// placed in the tile page.  This function looks up what the base item
-// is based on the randomized description.  It returns 0 if there is none.
+// placed in the tile page. This function looks up what the base item
+// is based on the randomized description. It returns 0 if there is none.
 tileidx_t tileidx_known_base_item(tileidx_t label)
 {
     if (label >= TILE_POT_ID_FIRST && label <= TILE_POT_ID_LAST)

@@ -130,7 +130,7 @@ bool tile_page::write_image(const char *filename)
 #ifdef USE_TILE
     if (m_width * m_height <= 0)
     {
-        fprintf(stderr, "Error: failed to write image.  No images placed?\n");
+        fprintf(stderr, "Error: failed to write image. No images placed?\n");
         return false;
     }
 

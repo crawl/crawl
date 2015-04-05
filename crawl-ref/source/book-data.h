@@ -74,7 +74,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Enchantments
-    SPELL_TUKIMAS_DANCE,
     SPELL_CAUSE_FEAR,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
@@ -180,8 +179,8 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_CORONA,
     SPELL_HIBERNATION,
     SPELL_CONFUSE,
+    SPELL_TUKIMAS_DANCE,
     SPELL_DAZZLING_SPRAY,
-    SPELL_ENSLAVEMENT,
 },
 
 {   // Book of Air
@@ -231,7 +230,6 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Control
     SPELL_CONTROL_TELEPORT,
     SPELL_CONTROL_UNDEAD,
-    SPELL_ENSLAVEMENT,
     SPELL_ENGLACIATION,
     SPELL_MASS_CONFUSION,
 },
@@ -309,8 +307,8 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Debilitation
     SPELL_CORONA,
     SPELL_SLOW,
+    SPELL_GRAVITAS,
     SPELL_INNER_FLAME,
-    SPELL_ENSLAVEMENT,
     SPELL_CAUSE_FEAR,
     SPELL_LEDAS_LIQUEFACTION,
 },

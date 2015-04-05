@@ -1246,7 +1246,7 @@ void direction_chooser::draw_beam_if_needed()
     ray_def ray = beam;
 
     // Draw the new ray with magenta '*'s, not including your square
-    // or the target square.  Out-of-range cells get grey '*'s instead.
+    // or the target square. Out-of-range cells get grey '*'s instead.
     for (; ray.pos() != target(); ray.advance())
     {
         const coord_def p = ray.pos();
@@ -1370,7 +1370,7 @@ bool direction_chooser::pickup_item()
     }
     ii->flags |= ISFLAG_THROWN; // make autoexplore greedy
 
-    // From this point, if there's no item, we'll fake one.  False info means
+    // From this point, if there's no item, we'll fake one. False info means
     // it's out of bounds and taken, or a mimic.
     item_def *item = 0;
     unsigned short it = env.igrid(target());
@@ -2962,7 +2962,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 
     if (grid == DNGN_ROCK_WALL && player_in_branch(BRANCH_PANDEMONIUM))
         return "wall of the weird stuff which makes up Pandemonium";
-    else if (grid == DNGN_ORCISH_IDOL && player_genus(GENPC_ORCISH))
+    else if (grid == DNGN_ORCISH_IDOL && species_is_orcish(you.species))
         return "idol of Beogh";
     else if (!is_valid_feature_type(grid))
         return "";

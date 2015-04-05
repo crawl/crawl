@@ -872,7 +872,7 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
         mons->foe = target->mindex();
     }
 
-    // We are successful.  Unwield the weapon, removing any wield effects.
+    // We are successful. Unwield the weapon, removing any wield effects.
     mprf("%s dances into the air!",
          _get_item_desc(wpn, target_is_player).c_str());
     if (target_is_player)
@@ -1568,7 +1568,7 @@ static bool _animatable_remains(const item_def& item)
             || mons_skeleton(item.mon_type));
 }
 
-// Try to equip the skeleton/zombie with the objects it died with.  This
+// Try to equip the skeleton/zombie with the objects it died with. This
 // excludes holy items, items which were dropped by the player onto the
 // corpse, and corpses which were picked up and moved by the player, so
 // the player can't equip their undead slaves with items of their

@@ -389,7 +389,7 @@ bool TilesFramework::initialise()
     m_image = new ImageManager();
 
     // If the window size is less than the view height, the textures will
-    // have to be shrunk.  If this isn't the case, then don't create mipmaps,
+    // have to be shrunk. If this isn't the case, then don't create mipmaps,
     // as this appears to make things blurry on some users machines.
     bool need_mips = (m_windowsz.y < 32 * VIEW_MIN_HEIGHT);
     if (!m_image->load_textures(need_mips))
@@ -771,7 +771,7 @@ int TilesFramework::getch_ck()
                         continue;
 
                     // Stay within this input loop until the mouse moves
-                    // to a semantically different location.  Crawl doesn't
+                    // to a semantically different location. Crawl doesn't
                     // care about small mouse movements.
                     if (!need_redraw() && last_loc == m_cur_loc)
                         continue;
@@ -1525,7 +1525,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
 
 void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 {
-    // HACK.  Large-tile monsters don't interact well with name tags.
+    // HACK. Large-tile monsters don't interact well with name tags.
     monster_type genus = mons_genus(mon.type);
     if (genus == MONS_PANDEMONIUM_LORD
         || genus == MONS_HELL_LORD

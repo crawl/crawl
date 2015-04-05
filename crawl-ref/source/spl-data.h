@@ -596,7 +596,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ENSLAVEMENT, "Enslavement",
      SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER
+         | SPFLAG_MONSTER | SPFLAG_MR_CHECK,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -902,7 +903,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_TUKIMAS_DANCE, "Tukima's Dance",
      SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER | SPFLAG_MR_CHECK
+         | SPFLAG_NOT_SELF,
      3,
      100,
      LOS_RADIUS, LOS_RADIUS,
@@ -3586,8 +3588,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_GRAVITAS, "Gell's Gravitas",
     SPTYP_TRANSLOCATION | SPTYP_HEXES,
-    SPFLAG_DIR_OR_TARGET | SPFLAG_NEEDS_TRACER,
-    5,
+    SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEEDS_TRACER,
+    3,
     200,
     LOS_RADIUS, LOS_RADIUS,
     3, 0,
@@ -3603,6 +3605,28 @@ static const struct spell_desc spelldata[] =
      -1, -1,
      4, 0,
      nullptr,
+}
+
+{
+    SPELL_CHANT_FIRE_STORM, "Chant Fire Storm",
+    SPTYP_CONJURATION | SPTYP_FIRE,
+    SPFLAG_UTILITY,
+    6,
+    200,
+    -1, -1,
+    5, 0,
+    nullptr,
+},
+
+{
+    SPELL_CHANT_WORD_OF_ENTROPY, "Chant Word of Entropy",
+    SPTYP_HEXES,
+    SPFLAG_UTILITY,
+    5,
+    200,
+    -1, -1,
+    3, 0,
+    nullptr,
 },
 
 {

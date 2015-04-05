@@ -124,7 +124,6 @@ quokka MONS_QUOKKA
 %sdir mon/animals
 
 ## Spiders and insects ('s')
-giant_mite MONS_GIANT_MITE
 scorpion MONS_SCORPION
 emperor_scorpion MONS_EMPEROR_SCORPION
 spider MONS_SPIDER
@@ -421,6 +420,7 @@ very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
+entropy_weaver MONS_ENTROPY_WEAVER
 %sdir mon/demons
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
@@ -765,6 +765,7 @@ guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
 salamander_mystic MONS_SALAMANDER_MYSTIC
 salamander_firebrand MONS_SALAMANDER_FIREBRAND
+salamander_stormcaller MONS_SALAMANDER_STORMCALLER
 
 ## Ogres ('O')
 %sdir mon/unique

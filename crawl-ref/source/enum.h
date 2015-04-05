@@ -1058,6 +1058,8 @@ enum command_type
 
     CMD_MAP_WIZARD_TELEPORT,
 
+    CMD_MAP_DESCRIBE,
+
     CMD_MAP_HELP,
     CMD_MAP_FORGET,
     CMD_MAP_UNFORGET,
@@ -1846,6 +1848,7 @@ enum duration_type
 #endif
     DUR_CLEAVE,
     DUR_STASIS,
+    DUR_GOZAG_GOLD_AURA,
     NUM_DURATIONS
 };
 
@@ -1994,6 +1997,8 @@ enum enchant_type
     ENCH_HEXED,
     ENCH_BONE_ARMOUR,
     ENCH_STASIS,
+    ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
+    ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2595,8 +2600,8 @@ enum monster_type                      // menv[].type
     MONS_GIANT_COCKROACH,
 #if TAG_MAJOR_VERSION == 34
     MONS_GIANT_CENTIPEDE,
-#endif
     MONS_GIANT_MITE,
+#endif
     MONS_SPIDER,
     MONS_WOLF_SPIDER,
     MONS_TRAPDOOR_SPIDER,
@@ -2619,7 +2624,7 @@ enum monster_type                      // menv[].type
     MONS_GNOME,
 #endif
     MONS_HALFLING,              // recolouring + single vault.
-    MONS_FELID,                 // recolouring + single vault.  Miaow!
+    MONS_FELID,                 // recolouring + single vault. Miaow!
     MONS_VAMPIRE_BAT,           // recolouring + vaults
     MONS_DEMIGOD,               // recolouring + single vault
     MONS_DEMONSPAWN,
@@ -2868,6 +2873,7 @@ enum monster_type                      // menv[].type
     MONS_PURPLE_DRACONIAN,
     MONS_RED_DRACONIAN,
     MONS_WHITE_DRACONIAN,
+    MONS_LAST_SPAWNED_DRACONIAN = MONS_WHITE_DRACONIAN,
     MONS_GREY_DRACONIAN,
     MONS_PALE_DRACONIAN,
     MONS_LAST_BASE_DRACONIAN = MONS_PALE_DRACONIAN,
@@ -3358,6 +3364,9 @@ enum monster_type                      // menv[].type
     MONS_SINGULARITY,
     
     MONS_MYRMECIA,
+
+    MONS_SALAMANDER_STORMCALLER,
+    MONS_ENTROPY_WEAVER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3612,7 +3621,9 @@ enum mutation_type
 #else
     MUT_SUSTAIN_ABILITIES,
 #endif
+#if TAG_MAJOR_VERSION == 34
     MUT_FORLORN,
+#endif
     MUT_PLACID_MAGIC,
     MUT_NO_DRINK,
     MUT_NO_READ,
@@ -3647,6 +3658,10 @@ enum mutation_type
     MUT_UNSKILLED,
     MUT_INEXPERIENCED,
     MUT_PAWS,
+    MUT_NECRO_ENHANCER,
+    MUT_MUMMY_RESTORATION,
+    MUT_CONSTRICTING_TAIL,
+    MUT_TENGU_FLIGHT,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3993,7 +4008,9 @@ enum species_type
     SP_NAGA,
     SP_OGRE,
     SP_TROLL,
+
     SP_RED_DRACONIAN,
+      SP_FIRST_NONBASE_DRACONIAN = SP_RED_DRACONIAN,
     SP_WHITE_DRACONIAN,
     SP_GREEN_DRACONIAN,
     SP_YELLOW_DRACONIAN,
@@ -4002,6 +4019,7 @@ enum species_type
     SP_PURPLE_DRACONIAN,
     SP_MOTTLED_DRACONIAN,
     SP_PALE_DRACONIAN,
+      SP_LAST_NONBASE_DRACONIAN = SP_PALE_DRACONIAN,
     SP_BASE_DRACONIAN,
     SP_CENTAUR,
     SP_DEMIGOD,
@@ -4426,6 +4444,8 @@ enum spell_type
     SPELL_SINGULARITY,
     SPELL_GRAVITAS,
     SPELL_STASIS,
+    SPELL_CHANT_FIRE_STORM,
+    SPELL_CHANT_WORD_OF_ENTROPY,
     NUM_SPELLS
 };
 
@@ -4595,7 +4615,6 @@ enum zap_type
     ZAP_CORROSIVE_BOLT,
     ZAP_RANDOM_BOLT_TRACER,
     ZAP_SCATTERSHOT,
-    ZAP_GRAVITAS,
 
     NUM_ZAPS
 };

@@ -35,7 +35,7 @@ misc/error ERROR
 %sdir gui
 
 # Each tab needs to have an unselected, mouseover, and selected image, in that
-# order.  All three of those images must be the same size.
+# order. All three of those images must be the same size.
 
 %start
 %compose tab_unselected

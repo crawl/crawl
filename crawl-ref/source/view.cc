@@ -428,7 +428,7 @@ void update_monsters_in_view()
     // To approximate this, if the number of hostile monsters in view
     // is greater than it ever was for this particular trip to the
     // Abyss, Xom is stimulated in proportion to the number of
-    // hostile monsters.  Thus if the entourage doesn't grow, then
+    // hostile monsters. Thus if the entourage doesn't grow, then
     // Xom becomes bored.
     if (player_in_branch(BRANCH_ABYSS)
         && you.attribute[ATTR_ABYSS_ENTOURAGE] < num_hostile)
@@ -465,7 +465,7 @@ void mark_mon_equipment_seen(const monster *mons)
 
 
 // We logically associate a difficulty parameter with each tile on each level,
-// to make deterministic magic mapping work.  This function returns the
+// to make deterministic magic mapping work. This function returns the
 // difficulty parameters for each tile on the current level, whose difficulty
 // is less than a certain amount.
 //
@@ -715,8 +715,8 @@ bool mon_enemies_around(const monster* mons)
     }
 }
 
-// Returns a string containing a representation of the map.  Leading and
-// trailing spaces are trimmed from each line.  Leading and trailing empty
+// Returns a string containing a representation of the map. Leading and
+// trailing spaces are trimmed from each line. Leading and trailing empty
 // lines are also snipped.
 string screenshot()
 {

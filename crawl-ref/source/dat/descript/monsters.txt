@@ -345,6 +345,9 @@ A magical cat. Once a powerful wizard's familiar, Natasha was abandoned after
 he was consumed by the necromantic forces he sought to control. Now she patrols
 the dungeon, taking a bloody vengeance with spell and claw upon any adventurer
 that crosses her path.
+
+This cat doesn't have nine lives, but just one death isn't going to be enough
+to put her down for good.
 %%%%
 Nellie
 
@@ -1106,6 +1109,13 @@ on its tail drips with a deadly venom, and its pincers are big enough to shear
 you in half. Though the ordinary dungeon scorpion may be both large and
 dangerous, this freakish relative puts it to shame.
 %%%%
+entropy weaver
+
+A tall, gaunt humanoid creature covered in a flaking, pale chitin. Its spindly
+limbs seem capable of startlingly quick movement and end in razor-sharp talons.
+These creatures know an ancient and slow chant that will temporarily accelerate
+the aging process of a foe's weapon and armour, corroding it badly.
+%%%%
 ettin
 
 A two-headed giant, stronger than most, and able to land devastating blows left
@@ -1264,10 +1274,6 @@ belies its agility.
 giant leech
 
 An aggressive blood-sucking annelid that thrives in swamps and marshlands.
-%%%%
-giant mite
-
-A large acarine creature with poisoned mouth-parts and a thirst for blood.
 %%%%
 giant newt
 
@@ -2084,6 +2090,12 @@ unparallelled martial prowess. Their mastery of fire is woven into every strike
 of their weapons, filling the air around their opponent with sweltering flames.
 So hot does their blood run that even outside their native terrain, few can
 escape their pursuit.
+%%%%
+salamander stormcaller
+
+A salamander whose hands are wreathed in lashing tendrils of flame. This fire
+cultist has the ability to call down a torrent of flames on their foes, though
+the ritual takes some time to complete.
 %%%%
 salamander mystic
 

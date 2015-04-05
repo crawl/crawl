@@ -39,6 +39,7 @@
 #include "macro.h"
 #include "mapdef.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "newgame.h"
 #include "options.h"
@@ -208,7 +209,7 @@ string channel_to_str(int channel)
 
 
 // The map used to interpret a crawlrc entry as a starting weapon
-// type.  For most entries, we can just look up which weapon has the entry as
+// type. For most entries, we can just look up which weapon has the entry as
 // its name; this map contains the exceptions.
 // This should be const, but operator[] on maps isn't const.
 static map<string, weapon_type> _special_weapon_map = {
@@ -1022,7 +1023,7 @@ void game_options::reset_options()
 #endif
 #ifdef USE_TILE_LOCAL
 #ifdef USE_FT
-    // TODO: init this from system settings.  This would probably require
+    // TODO: init this from system settings. This would probably require
     // using fontconfig, but that's planned.
     tile_font_ft_light   = false;
 #endif
@@ -1148,6 +1149,7 @@ void game_options::reset_options()
     item_glyph_cache.clear();
 
     rest_wait_both = false;
+    rest_wait_percent = 100;
 
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
@@ -1352,12 +1354,9 @@ void game_options::remove_item_glyph_override(const string &text, bool prepend)
     string key = text;
     trim_string(key);
 
-    item_glyph_overrides.erase(
-        remove_if(item_glyph_overrides.begin(),
-                  item_glyph_overrides.end(),
-                  [&key](const item_glyph_override_type& arg)
-                  { return key == arg.first; }),
-        item_glyph_overrides.end());
+    erase_if(item_glyph_overrides,
+             [&key](const item_glyph_override_type& arg)
+             { return key == arg.first; });
 }
 
 void game_options::add_item_glyph_override(const string &text, bool prepend)
@@ -1453,7 +1452,7 @@ void game_options::add_cset_override(dungeon_char_type dc, int symbol)
     cset_override[dc] = get_glyph_override(symbol);
 }
 
-static string _find_crawlrc()
+string find_crawlrc()
 {
     const char* locations_data[][2] =
     {
@@ -1533,8 +1532,7 @@ static const char* config_defaults[] =
     "defaults/misc.txt",
 };
 
-// Returns an error message if the init.txt was not found.
-string read_init_file(bool runscript)
+void read_init_file(bool runscript)
 {
     Options.reset_options();
 
@@ -1569,23 +1567,9 @@ string read_init_file(bool runscript)
     }
 
     // Load init.txt.
-    const string init_file_name(_find_crawlrc());
+    const string init_file_name(find_crawlrc());
 
     FileLineInput f(init_file_name.c_str());
-    if (f.error())
-    {
-        if (!init_file_name.empty())
-        {
-            return make_stringf("(\"%s\" is not readable)",
-                                init_file_name.c_str());
-        }
-
-#ifdef UNIX
-        return "(~/.crawlrc missing)";
-#else
-        return "(no init.txt in current directory)";
-#endif
-    }
 
     Options.filename = init_file_name;
     Options.line_num = 0;
@@ -1594,6 +1578,9 @@ string read_init_file(bool runscript)
 #else
     Options.basefilename = "init.txt";
 #endif
+
+    if (f.error())
+        return;
     Options.read_options(f, runscript);
 
     // Load late binding extra options from the command line AFTER init.txt.
@@ -1609,8 +1596,6 @@ string read_init_file(bool runscript)
     Options.filename     = init_file_name;
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
-
-    return "";
 }
 
 newgame_def read_startup_prefs()
@@ -3051,14 +3036,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "ban_pickup")
     {
+        // Only remove negative, not positive, exceptions.
         if (plain)
-        {
-            // Only remove negative, not positive, exceptions.
-            force_autopickup.erase(remove_if(force_autopickup.begin(),
-                                             force_autopickup.end(),
-                                             _is_autopickup_ban),
-                                   force_autopickup.end());
-        }
+            erase_if(force_autopickup, _is_autopickup_ban);
 
         vector<pair<text_pattern, bool> > new_entries;
         vector<string> args = split_string(",", field);
@@ -3658,6 +3638,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
     }
     else BOOL_OPTION(rest_wait_both);
+    else INT_OPTION(rest_wait_percent, 0, 100);
     else BOOL_OPTION(cloud_status);
     else if (key == "dump_message_count")
     {
@@ -3714,7 +3695,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {
-        // TODO: this option could probably be improved.  For now, keep the
+        // TODO: this option could probably be improved. For now, keep the
         // "= means append" behaviour, and don't allow clearing the list;
         // if we rename to "additional_macro_files" then it could work like
         // other list options.
@@ -5127,7 +5108,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (rc_only)
                 break;
 #ifdef DGAMELAUNCH
-            // Tell DGL we don't use ancient charsets anymore.  The glyph set
+            // Tell DGL we don't use ancient charsets anymore. The glyph set
             // doesn't matter here, just the encoding.
             printf("UNICODE\n");
 #else

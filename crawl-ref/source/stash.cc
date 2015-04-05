@@ -691,7 +691,7 @@ void Stash::add_item(const item_def &item, bool add_to_front)
         return;
 
     // item.freshness remains unchanged in the stash, to show how fresh it
-    // was when last seen.  It's stash_freshness that's decayed over time.
+    // was when last seen. It's stash_freshness that's decayed over time.
     item_def &it = add_to_front ? items.front() : items.back();
     it.stash_freshness     = it.freshness;
 }

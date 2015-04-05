@@ -47,7 +47,7 @@ namespace worley
 
     /* A hardwired lookup table to quickly determine how many feature
        points should be in each spatial cube. We use a table so we don't
-       need to make multiple slower tests.  A random number indexed into
+       need to make multiple slower tests. A random number indexed into
        this array will give an approximate Poisson distribution of mean
        density 2.5. Read the book for the int32_twinded explanation. */
     static int Poisson_count[256]=
@@ -249,7 +249,7 @@ cases.]
             if (d2<F[max_order-1]) /* Is this point close enough to rememember? */
             {
                 /* Insert the information into the output arrays if it's close enough.
-                   We use an insertion sort.  No need for a binary search to find
+                   We use an insertion sort. No need for a binary search to find
                    the appropriate index.. usually we're dealing with order 2,3,4 so
                    we can just go through the list. If you were computing order 50
                    (wow!!) you could get a speedup with a binary search in the sorted

@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Just because typedefs can't be forward declared.  Argh.
+ * @brief Just because typedefs can't be forward declared. Argh.
 **/
 
 #ifndef TRAVEL_DEFS_H

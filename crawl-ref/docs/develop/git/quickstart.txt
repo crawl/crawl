@@ -1,27 +1,25 @@
-This is for those who haven't used git before and need a crash-course
-on basic operations. I'll keep this as simple as possible, and focus
-specifically on working on Stone Soup, rather than git in general.
-I've also added links to the official git docs at the end, which you
-can read instead of, or in addition to this, if you're inclined.
+This is for those who haven't used git before and need a crash-course on basic
+operations. I'll keep this as simple as possible, and focus specifically on
+working on Stone Soup, rather than git in general. I've also added links to
+the official git docs at the end, which you can read instead of, or in addition
+to this, if you're inclined.
 
 Installing git
 --------------
-I strongly recommend using at least git 1.6 or later. While you can
-use older versions, the newer versions are much more user-friendly.
-This guide assumes you're using 1.6.
+I strongly recommend using at least git 1.6 or later. While you can use older
+versions, the newer versions are much more user-friendly. This guide assumes
+you're using 1.6.
 
-Linux: Install git using your package manager. The git package is
-usually called git-core.
+Linux: Install git using your package manager. The git package is usually
+called git-core.
 
-Mac: Install git using Mac ports or Fink. The MacPorts port is
-called git-core (sudo port install git-core).
+Mac: Install git using Mac ports or Fink. The MacPorts port is called git-core
+(sudo port install git-core).
 
-Windows: Install msysgit (http://msysgit.github.io/#contribute).
-Be sure to download 'msysGit', as this also includes most of the
-necessary tools to build Crawl - other installers include only Git
-itself.
-TortoiseGit is apparently pretty usable now for those who want Windows
-explorer integration, but I have not used it myself.
+Windows: Install msysgit (http://msysgit.github.io/#contribute). See the
+detailed instructions in INSTALL.txt so that you get a recent enough GCC. Be
+sure to download 'msysGit', as this also includes most of the necessary tools
+to build Crawl - other installers include only Git itself.
 
 Using git for Stone Soup development
 ------------------------------------
@@ -34,21 +32,21 @@ Using git for Stone Soup development
    Set your email address:
    $ git config --global user.email "jdoe@users.sourceforge.net"
 
-   This sets your default e-mail id for all git work on your system. You
-   can use any e-mail address you have. In the above, John Doe is still
-   using his old sourceforge id as a spam-catching measure.
+   This sets your default e-mail id for all git work on your system. You can
+   use any e-mail address you have. In the above, John Doe is still using his
+   old sourceforge id as a spam-catching measure.
 
-1. Clone the crawl repository from gitorious (analogous to svn checkout):
+1. Clone the crawl repository from github (analogous to svn checkout):
 
    Developers (anyone with commit rights to the git repo):
-   $ git clone git@gitorious.org:crawl/crawl.git
+   $ git clone git@github.com:crawl/crawl.git
 
    Other users:
-   $ git clone git://gitorious.org/crawl/crawl.git
+   $ git clone https://github.com/crawl/crawl.git
 
-   "git clone" clones Crawl's entire git repository to your machine. When
-   it's done, you have a full local copy of the crawl repository with all
-   its history.
+   "git clone" clones Crawl's entire git repository to your machine. When it's
+   done, you have a full local copy of the crawl repository with all its
+   history.
 
    If you want to build the contributing libraries rather than using the
    versions already installed on your system, you can fetch the submodules:
@@ -57,14 +55,14 @@ Using git for Stone Soup development
 
 2. Sanity-check your cloned repository (optional):
 
-   When you come back to a git repository after a while, you may not
-   recall where you cloned it from. You can check with:
+   When you come back to a git repository after a while, you may not recall
+   where you cloned it from. You can check with:
 
    $ git remote -v
 
-   For me, this reports:
-   origin  git@gitorious.org:crawl/crawl.git (fetch)
-   origin  git@gitorious.org:crawl/crawl.git (push)
+   This reports:
+   origin  git@github.com:crawl/crawl.git (fetch)
+   origin  git@github.com:crawl/crawl.git (push)
 
    See all available branches in the repository:
    $ git branch -a
@@ -74,91 +72,85 @@ Using git for Stone Soup development
 
 3. SSH keys (for core developers):
 
-   If you want to actually push to the gitorious repository, you will
-   need to create an ssh key and upload your public key to gitorious.org.
+   If you want to push to the Github repository, you will need to create an ssh
+   key and upload your public key to github.com.
 
-   Let's create an ssh key (if you already have a key, skip this
-   step):
+   Let's create an ssh key (if you already have a key, skip this step):
    $ ssh-keygen
 
-   You can accept all the default options and use an empty passphrase
-   for convenience (don't do this on an account you share with other
-   people, or they can commit to the repository too :P)
+   You can accept all the default options and use an empty passphrase for
+   convenience (don't do this on an account you share with other people, or
+   they can commit to the repository too :P)
 
-   Once the key is generated, you'll have two files id_rsa, and
-   id_rsa.pub in your ~/.ssh (the .ssh directory in your home
-   directory). id_rsa is your private key, and should not be shared or
-   given to anyone else (or they can pretend to be you); id_rsa.pub is
-   your public key, and this is what you'll upload to gitorious.
+   Once the key is generated, you'll have two files id_rsa, and id_rsa.pub in
+   your ~/.ssh (the .ssh directory in your home directory). id_rsa is your
+   private key, and should not be shared or given to anyone else (or they can
+   pretend to be you); id_rsa.pub is your public key, and this is what you'll
+   upload to github.
 
-   Go to gitorious.org, login, and hit the "Dashboard" link to access
-   your account settings. Click on "Manage SSH keys" and then on
-   "Add SSH key".
+   Go to github.com, login, and from the menu bar, hit the setting gear icon at
+   the top-right to access your account settings. Click on "SSH keys" and then
+   on "Add SSH key".
 
-   Copy the one line in your id_rsa.pub, and paste it into the
-   public SSH keys text area. Hit Save when you're done.
+   Enter your account name or another descriptive name as the title. Copy the
+   one line in your id_rsa.pub, and paste it into the Key text area. Hit Save
+   when you're done.
 
-   Within a few minutes of uploading your key, you should be able to
-   push/pull from gitorious.org.
+   Within a few minutes of uploading your key, you should be able to push/pull
+   from github.com.
 
-   Windows users (msysgit) can follow these exact same steps in a git
-   bash prompt.
+   Windows users (msysgit) can follow these exact same steps in a git bash
+   prompt.
 
-   You can also create a DSA key instead of an RSA key (or use an
-   existing DSA key). gitorious accepts both.
-
-4. Updating your repository with the latest changes from gitorious.org:
+4. Updating your repository with the latest changes from github.com:
 
    Use
    $ git pull
-   to grab the latest commits from gitorious.org.
+   to grab the latest commits from github.com.
 
-   git pull assumes your working tree is clean; it will refuse to
-   overwrite any files that you've modified locally (unlike svn's
-   "svn update", which will happily try to modify the file anyway,
-   and add conflict markers if there are conflicts).
+   git pull assumes your working tree is clean; it will refuse to overwrite any
+   files that you've modified locally (unlike svn's "svn update", which will
+   happily try to modify the file anyway, and add conflict markers if there are
+   conflicts).
 
-   If git pull fails because you have local changes, you have two
-   options:
+   If git pull fails because you have local changes, you have two options:
 
    1. Complete your local changes and create a commit, then pull
       again.
 
-   2. Temporarily save (stash) your local changes, pull changes from
-      gitorious, and reapply your local changes:
+   2. Temporarily save (stash) your local changes, pull changes from github,
+      and reapply your local changes:
       $ git stash
       (this saves your local changes)
       $ git pull
-      (grab changes from gitorious)
+      (grab changes from github)
       $ git stash apply
       (reinstate your local changes)
 
-      If your local changes conflict with the changes from gitorious,
-      git stash apply will warn you of the conflict and add conflict
-      markers to the relevant files.
+      If your local changes conflict with the changes from github, git stash
+      apply will warn you of the conflict and add conflict markers to the
+      relevant files.
 
 5. Committing a change to the 'master' branch:
 
-   git's master branch is the equivalent of svn trunk. Immediately
-   after cloning a repository, the cloned crawl repo will be on the
-   master branch. You can check what branch you're working on at any
-   time with:
+   git's master branch is the equivalent of svn trunk. Immediately after
+   cloning a repository, the cloned crawl repo will be on the master
+   branch. You can check what branch you're working on at any time with:
 
    $ git branch
 
    The active branch will be asterisked.
 
-   Before starting work, let's make sure our working copy is not
-   dirty:
+   Before starting work, let's make sure our working copy is not dirty:
 
    $ git status
    # On branch master
    nothing to commit (working directory clean)
 
-   Looking good. For our first change, let's assume we're fixing a
-   bug in, say, stuff.cc.
+   Looking good. For our first change, let's assume we're fixing a bug in, say,
+   player.cc.
 
-   $ vim stuff.cc
+   $ vim player.cc
    <hackhackhack>
    $ make
    <test; that bugfix rocks the world>
@@ -170,24 +162,23 @@ Using git for Stone Soup development
    #   (use "git add <file>..." to update what will be committed)
    #   (use "git checkout -- <file>..." to discard changes in working directory)
    #
-   #       modified:   stuff.cc
+   #       modified:   player.cc
    #
    no changes added to commit (use "git add" and/or "git commit -a")
 
-   git sees that we've modified stuff.cc. You can see what changes
-   you've made with:
+   git sees that we've modified player.cc. You can see what changes you've made
+   with:
 
    $ git diff
 
    Time to actually commit the change:
    $ git commit -a
 
-   git will bring up your preferred editor for you to enter your
-   commit message. On Windows, you may have to set your EDITOR
-   environment variable; alternatively, you can specify your commit
-   message on the command line:
+   git will bring up your preferred editor for you to enter your commit
+   message. On Windows, you may have to set your EDITOR environment variable;
+   alternatively, you can specify your commit message on the command line:
 
-   $ git commit -a -m "Fitted stuff.cc with warp drive"
+   $ git commit -a -m "Fitted player.cc with mountain dwarves"
 
    When you're done, your change has been committed to your local
    repository. Let's try git status again:
@@ -198,21 +189,21 @@ Using git for Stone Soup development
    #
    nothing to commit (working directory clean)
 
-   So git's telling us that we have one local commit that we haven't
-   sent to gitorious' git repository yet. Let's send in our fix
-   to gitorious.org (core devs only):
+   So git's telling us that we have one local commit that we haven't sent to
+   github's git repository yet. Let's send in our fix to github.com (core devs
+   only):
 
    $ git push
 
-   You will be prompted for your password again. git should then
-   push your commit, producing a last line that looks like:
+   You will be prompted for your password again. git should then push your
+   commit, producing a last line that looks like:
 
    54ea5f1..ec2e15e  master -> master
 
-   The exact commit ids will differ, but a successful push looks
-   like this. Your push may fail if someone has pushed changes to
-   gitorious already (git will warn you about a non-fast-forward).
-   In this case, just pull and push again:
+   The exact commit ids will differ, but a successful push looks like
+   this. Your push may fail if someone has pushed changes to github already
+   (git will warn you about a non-fast-forward). In this case, just pull and
+   push again:
 
    $ git pull
    $ git push
@@ -220,24 +211,24 @@ Using git for Stone Soup development
 6. Patching (for regular contributors, not core devs):
 
    Once you have commited and tested a change, you can create a patch for it.
-   You can then send this patch to the devs or upload it to a mantis
-   issue for review and potential addition to the game.
+   You can then send this patch to the devs or upload it to a mantis issue for
+   review and potential addition to the game.
 
    To start, make and save your changes in whatever text editor you choose.
    Then, as explained above, commit those changes:
 
    $ git commit -a
 
-   In most cases, this is a good time to compile and test the change.  Make
-   sure it works correctly, testing in Wizard Mode as appropriate.
+   In most cases, this is a good time to compile and test the change. Make sure
+   it works correctly, testing in Wizard Mode as appropriate.
 
    When you're happy with your patch, you can make a patch file with the
-   format-patch command.  For example:
+   format-patch command. For example:
 
    $ git format-patch -1
 
-   This will create a patch from the most recent commit you've made.  The
-   patch file will be placed in your base Crawl source directory.
+   This will create a patch from the most recent commit you've made. The patch
+   file will be placed in your base Crawl source directory.
 
    For a more detailed patch creation guide, check out patch_guide.txt in the
    /docs/develop/ directory.
@@ -247,131 +238,103 @@ Using git for Stone Soup development
    You can see a history of changes with
    $ git log
 
-   git log by itself may make it appear that the change history is a
-   straight line, but we know that git can handle branching
-   histories. We can request that git log show us the branching
-   history with:
+   git log by itself may make it appear that the change history is a straight
+   line, but we know that git can handle branching histories. We can request
+   that git log show us the branching history with:
 
    $ git log --graph
 
-   You can also view history using the gitk GUI (this is installed
-   by default; everyone should have it, and I recommend it):
+   You can also view history using the gitk GUI (this is installed by default;
+   everyone should have it, and I recommend it):
 
    $ gitk
 
-   The history commands normally show you the history of the current
-   branch, but you can view other branches/tags' histories by naming
-   the branch or tag:
+   The history commands normally show you the history of the current branch,
+   but you can view other branches/tags' histories by naming the branch or tag:
 
-   $ gitk origin/stone_soup-0.2
-   $ gitk release-0.5.1
+   $ gitk origin/stone_soup-0.16
 
-   If you want to annotate a file with last author and commit to
-   change each line in the file, you can use git blame, which is
-   similar to svn blame:
+   If you want to annotate a file with last author and commit to change each
+   line in the file, you can use git blame, which is similar to svn blame:
 
-   $ git blame stuff.cc
+   $ git blame player.cc
 
-8. Committing a change to the 0.5 branch:
+8. Committing a change to a different branch:
 
-   So far we've restricted our attention to 'master', which is the
-   easiest branch to work with, since it's selected by default. Now
-   let's say we have a bug report with a 0.5.1 save, and we need the
-   0.5 code to test the save with:
+   So far we've restricted our attention to 'master', which is the easiest
+   branch to work with, since it's selected by default. Now let's say we have a
+   bug report with a 0.16 save, and we need the 0.16 code to test the save
+   with:
 
    Let's take a look at the branches we have locally:
    $ git branch
    * master
 
    The only local branch in our repository is master. Let's look at
-   the branches in the remote repository (gitorious):
+   the branches in the remote repository (github):
    $ git branch -r
      origin/HEAD -> origin/master
      origin/master
      origin/stone_soup
-     origin/stone_soup-0.1.3
-     origin/stone_soup-0.1.4
-     origin/stone_soup-0.1.5
-     origin/stone_soup-0.1.6
-     origin/stone_soup-0.1.7
-     origin/stone_soup-0.2
-     origin/stone_soup-0.3
-     origin/stone_soup-0.4
-     origin/stone_soup-0.5
+     ...
+     origin/stone_soup-0.16
 
-   So our local repository has a "master" branch corresponding to
-   gitorious' "master" branch. We do not yet have a branch corresponding
-   to gitorious' "stone_soup-0.5", so let's create the branch and switch
-   to it:
+   So our local repository has a "master" branch corresponding to github's
+   "master" branch. We do not yet have a branch corresponding to github's
+   "stone_soup-0.16", so let's create the branch and switch to it. By default
+   git will find find the branch origin/stone_soup-0.16 and create a local
+   branch that tracks this one:
 
-   $ git checkout -b stone_soup-0.5 origin/stone_soup-0.5
-   Branch stone_soup-0.5 set up to track remote branch stone_soup-0.5
-from origin.
-   Switched to a new branch 'stone_soup-0.5'
+   $ git checkout stone_soup-0.16
+   Branch stone_soup-0.16 set up to track remote branch stone_soup-0.16
+   from origin.
+   Switched to a new branch 'stone_soup-0.16'
 
-   master and stone_soup-0.5 are both local branches now:
+   master and stone_soup-0.16 are both local branches now:
    $ git branch
      master
-   * stone_soup-0.5
+   * stone_soup-0.16
 
-   git status will also confirm that we're on 0.5 now:
+   git status will also confirm that we're on 0.16 now:
    $ git status
-   # On branch stone_soup-0.5
+   # On branch stone_soup-0.16
    nothing to commit (working directory clean)
 
-   A quick peek at the history to make really sure we're on 0.5:
+   A quick peek at the history to make really sure we're on 0.16:
    $ git log
 
-   To grab the latest changes for 0.5:
+   To grab the latest changes for 0.16:
    $ git pull
 
-   Ok, now we compile 0.5, test the 0.5 save and verify that a bug
+   Ok, now we compile 0.16, test the 0.16 save and verify that a bug
    exists. Once we've fixed the bug, we create a commit:
    $ git commit -a
 
    Check git status:
    $ git status
-   # On branch stone_soup-0.5
-   # Your branch is ahead of 'origin/stone_soup-0.5' by 1 commit.
+   # On branch stone_soup-0.16
+   # Your branch is ahead of 'origin/stone_soup-0.16' by 1 commit.
    #
    nothing to commit (working directory clean)
 
-   Right, we're ready to push our fix to gitorious. But now that we
-   have multiple local branches, let's first ask git what it plans to
-   do when we push:
+   Right, we're ready to push our fix to github.
 
    $ git push --dry-run -v
-   Pushing to git@gitorious.org:crawl/crawl.git
-   Enter passphrase for key '...':
-   To git@gitorious.org:crawl/crawl.git
-    = [up to date]      master -> master
-      b05bb66..976e722  stone_soup-0.5 -> stone_soup-0.5
+   Pushing to git@github.com:crawl/crawl.git
+   To git@github.com:crawl/crawl.git
+      b05bb66..976e722  stone_soup-0.16 -> stone_soup-0.16
 
-   So git wants to push the local master and stone_soup-0.5 branches
-   to the corresponding branches on gitorious; the master branch has
-   no new local changes, whereas the 0.5 branch does (the new change
-   is 976e722).
+   So git wants to push the local stone_soup-0.16 branches to the corresponding
+   branches on github. Run the same command without --dry-run to actually push
+   the commit.
 
-   By default, git-push will push *all* your local branches to the
-   corresponding branches on gitorious. This is important to
-   remember; if you had local commits on master, they would also be
-   pushed to gitorious. This behaviour can be changed (the option
-   is called "push.default") if it bothers you, or you can do:
-
-   git push <remote> <local branch>:<remote branch>
-
-   So for instance, if I am working on 'master' locally, but want to push
-   to a remote branch called 'fixes-for-upstream', I could do:
-
-   git push github master:fixes-for-upstream
-
-   Once you're done working on 0.5, you can switch back to "master"
+   Once you're done working on 0.16, you can switch back to "master"
    with:
    $ git checkout master
 
-   The next time you need to work on 0.5 again, you can return to it
+   The next time you need to work on 0.16 again, you can return to it
    with:
-   $ git checkout stone_soup-0.5
+   $ git checkout stone_soup-0.16
 
 9. Common operations:
 
@@ -381,7 +344,7 @@ from origin.
    want, or accidentally delete files that you did want. You can
    revert a file to its pristine version as:
 
-   $ git checkout stuff.cc
+   $ git checkout player.cc
 
    This also works to bring back files you accidentally deleted. If
    you forget these commands, "git status" will remind you:
@@ -426,78 +389,69 @@ from origin.
 
 10. Branching:
 
-   Let's say it's time to create a stable 0.6 branch. Here's how you'd
-   do it:
+   Let's say we want to create a branch with some tentative or incomplete
+   changes that we want others to look at or change. Here's how you'd do it,
+   using a branch called pizza_tornado as an example:
 
-   a) Branch 0.6 from master:
-      $ git checkout -b stone_soup-0.6 master
+   a) Branch pizza_tornado from master:
+      $ git checkout -b pizza_tornado master
 
       Let's check our local branches now:
         master
-        stone_soup-0.5
-      * stone_soup-0.6
+        stone_soup-0.16
+      * pizza_tornado
 
-      stone_soup-0.6 is currently a *local* branch. gitorious' git
-      repo doesn't have it yet.
+      pizza_tornado is currently a *local* branch. github's git repo doesn't
+      have it yet.
 
-   b) Push the local branch to gitorious with a --dry-run first to
-      make sure we're not lousing up anything:
+   b) Push the local branch to github with a --dry-run first to make sure we're
+      not lousing up anything:
 
-      $ git push --dry-run -v origin stone_soup-0.6
-      Pushing to git@gitorious.org:crawl/crawl.git
-      Enter passphrase for key '...':
-      To git@gitorious.org:crawl/crawl.git
-       * [new branch]      stone_soup-0.6 -> stone_soup-0.6
+      $ git push --dry-run -v origin pizza_tornado
+      Pushing to git@github.com:crawl/crawl.git
+      To git@github.com:crawl/crawl.git
+       * [new branch]      pizza_tornado -> pizza_tornado
 
       Now for the real push:
-      $ git push origin stone_soup-0.6
+      $ git push origin pizza_tornado
 
-   c) Point your local branch at the new branch in gitorious:
+   c) Point your local branch at the new branch in github:
 
-      Now that we've created the branch on gitorious, we want to set
-      up our local "stone_soup-0.6" to get changes from gitorious'
-      "stone_soup-0.6" when we do a git pull. We do this as:
+      Now that we've created the branch on github, we want to set up our local
+      "pizza_tornado" to get changes from github's "pizza_tornado" when we do a
+      git pull. We do this as:
 
-      Tell git that stone_soup-0.6's remote repository is on gitorious:
-      $ git config branch.stone_soup-0.6.remote origin
+      Tell git that pizza_tornado's remote repository is on github:
+      $ git config branch.pizza_tornado.remote origin
 
-      And that the corresponding branch in gitorious is stone_soup-0.6:
-      $ git config branch.stone_soup-0.6.merge refs/heads/stone_soup-0.6
+      And that the corresponding branch in github is pizza_tornado:
+      $ git config branch.pizza_tornado.merge refs/heads/pizza_tornado
 
-      Now you can pull changes from gitorious' 0.6 branch:
+      Now you can pull changes from github's pizza_tornado branch:
       $ git pull
 
-      This is only necessary for new branches that you create locally
-      and push to gitorious. This configuration is automatically set
-      up for you when you work with branches that already exist on
-      gitorious.
+      This is only necessary for new branches that you create locally and push
+      to github. This configuration is automatically set up for you when you
+      work with branches that already exist on github.
 
-11. Tagging:
+11. Committing changes from one major branch of development to another:
 
-   Once 0.6 is fit for a release, you'll need to tag it:
-
-   $ git checkout stone_soup-0.6
-   $ git tag -a release-0.6 -m "0.6: Now with extra kangaroos"
-
-12. Committing changes from one major branch of development to another:
-
-   Once we create a stable branch (say 0.5), we usually make all
-   changes to trunk, but apply bugfixes to the 0.5 branch as well.
-   You can apply changes from master to stone_soup-0.5 with git
-   cherry-pick:
+   Once we create a stable branch (say 0.16), we usually make all changes to
+   trunk, but apply bugfixes to the 0.16 branch as well. You can apply changes
+   from master to stone_soup-0.16 with git cherry-pick:
 
    $ git checkout master
    [ make the changes for the bugfix ]
    $ git commit -a
-   $ git checkout stone_soup-0.5
+   $ git checkout stone_soup-0.16
 
-   And cherry-pick the tip commit of the master branch (the bugfix
-   we just committed there):
-   $ git cherry-pick master
+   And cherry-pick the tip commit of the master branch (the bugfix we just
+   committed there):
+   $ git cherry-pick -x master
 
-   If the commit you want to cherry-pick is not the tip of a branch, just
-   use the commit's id:
-   $ git cherry-pick b0ed1449
+   If the commit you want to cherry-pick is not the tip of a branch, just use
+   the commit's id:
+   $ git cherry-pick -x b0ed1449
 
    git push will then send in the commits from both branches.
 
@@ -505,10 +459,9 @@ from origin.
 Additional Reading:
 ------------------
 
-I've intentionally kept my examples very simple and glossed over a
-lot of details. I've covered the common operations in the svn
-workflow, but git can do much more for you if you spend a little
-time learning it.
+I've intentionally kept my examples very simple and glossed over a lot of
+details. I've covered the common operations in the svn workflow, but git can do
+much more for you if you spend a little time learning it.
 
 git documentation central:
 http://git-scm.com/documentation

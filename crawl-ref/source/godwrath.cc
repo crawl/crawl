@@ -128,8 +128,8 @@ static bool _yred_random_zombified_hostile()
 
 static const pop_entry _okawaru_servants[] =
 { // warriors
-  {  1,  3,   3, DOWN, MONS_ORC },
-  {  1,  3,   3, DOWN, MONS_GNOLL },
+  {  1,  3,   3, FALL, MONS_ORC },
+  {  1,  3,   3, FALL, MONS_GNOLL },
   {  2,  6,   3, PEAK, MONS_OGRE },
   {  2,  6,   2, PEAK, MONS_GNOLL_SERGEANT },
   {  3,  7,   1, FLAT, MONS_TWO_HEADED_OGRE },
@@ -1804,7 +1804,7 @@ void beogh_idol_revenge()
     // Beogh watches his charges closely, but for others doesn't always
     // notice.
     if (!you_worship(GOD_BEOGH)
-        && (!player_genus(GENPC_ORCISH) || coinflip())
+        && (!species_is_orcish(you.species) || coinflip())
         && x_chance_in_y(2, 3))
     {
         return;
@@ -1814,7 +1814,7 @@ void beogh_idol_revenge()
 
     if (you_worship(GOD_BEOGH))
         revenge = _get_beogh_speech("idol follower").c_str();
-    else if (player_genus(GENPC_ORCISH))
+    else if (species_is_orcish(you.species))
         revenge = _get_beogh_speech("idol orc").c_str();
     else
         revenge = _get_beogh_speech("idol other").c_str();

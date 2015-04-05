@@ -107,7 +107,7 @@ CFOTHERS := -pipe $(EXTERNAL_FLAGS)
 CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
 
-DEFINES := -DTOURNEY='"0.16"' $(EXTERNAL_DEFINES)
+DEFINES := $(EXTERNAL_DEFINES)
 
 ifdef ANDROID
 LDFLAGS := $(EXTERNAL_LDFLAGS) $(LDFLAGS)
@@ -1318,7 +1318,7 @@ version.o: build.h compflag.h
 ##########################################################################
 # Documentation
 #
-$(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt species.cc aptitudes.h \
+$(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt species-data.h aptitudes.h \
 						   util/gen-apt.pl
 	$(QUIET_GEN)./util/gen-apt.pl $@ $^
 
@@ -1725,7 +1725,7 @@ endif
 	mv build-win/docs/CREDITS.txt build-win/
 	echo $(SRC_VERSION) >build-win/version.txt
 
-ZIP_DOCS=../README.txt ../licence.txt
+ZIP_DOCS=../README.md ../licence.txt
 package-windows-zips:
 ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false

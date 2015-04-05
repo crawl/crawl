@@ -466,7 +466,7 @@ bool allow_control_teleport(bool quiet)
     if (orb_haloed(you.pos()))
     {
         if (!quiet)
-            mprf(MSGCH_ORB, "The orb prevents control of your teleportation!");
+            mprf(MSGCH_ORB, "The Orb prevents control of your teleportation!");
         return false;
     }
 
@@ -527,7 +527,7 @@ void you_teleport()
         }
         else if (orb_haloed(you.pos()))
         {
-            mprf(MSGCH_ORB, "You feel the orb delaying this translocation!");
+            mprf(MSGCH_ORB, "You feel the Orb delaying this translocation!");
             teleport_delay += 5 + random2(5);
         }
 
@@ -805,7 +805,7 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
                    || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO)));
 
         // Running out of tries should only happen for limited-range teleports,
-        // which are all involuntary; no message.  Return false so it doesn't
+        // which are all involuntary; no message. Return false so it doesn't
         // count as a random teleport for Xom purposes.
         if (tries == 0)
             return false;
@@ -939,7 +939,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     }
 
     // Letting mostly-melee characters spam apport after every Shoals
-    // fight seems like it has too much grinding potential.  We could
+    // fight seems like it has too much grinding potential. We could
     // weaken this for high power.
     if (grd(where) == DNGN_DEEP_WATER || grd(where) == DNGN_LAVA)
     {
@@ -987,16 +987,16 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         if (one_chance_in(3))
         {
             orb_pickup_noise(where, 30,
-                "The orb shrieks and becomes a dead weight against your magic!",
-                "The orb lets out a furious burst of light and becomes "
+                "The Orb shrieks and becomes a dead weight against your magic!",
+                "The Orb lets out a furious burst of light and becomes "
                     "a dead weight against your magic!");
             return SPRET_SUCCESS;
         }
         else // Otherwise it's just a noisy little shiny thing
         {
             orb_pickup_noise(where, 30,
-                "The orb shrieks as your magic touches it!",
-                "The orb lets out a furious burst of light as your magic touches it!");
+                "The Orb shrieks as your magic touches it!",
+                "The Orb lets out a furious burst of light as your magic touches it!");
         }
     }
 
@@ -1416,10 +1416,29 @@ bool fatal_attraction(actor *victim, actor *agent, int pow)
 
         affected = true;
         attract_actor(agent, *ai, victim->pos(), pow, strength);
-
-        if (ai->alive() && ai->check_res_magic(pow / 2) <= 0)
-            ai->confuse(agent, 1 + random2avg(pow / 10, 2));
     }
 
     return affected;
+}
+
+spret_type cast_gravitas(int pow, const coord_def& where, bool fail)
+{
+    if (cell_is_solid(where))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    monster* mons = monster_at(where);
+    if (!mons || mons->submerged())
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return SPRET_SUCCESS;
+    }
+
+    mprf("Gravity reorients around %s.", mons->name(DESC_THE).c_str());
+    fatal_attraction(mons, &you, pow);
+    return SPRET_SUCCESS;
 }

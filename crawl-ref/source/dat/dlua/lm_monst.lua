@@ -4,7 +4,7 @@
 --------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
--- This marker creates a monster on certain events.  It uses the following
+-- This marker creates a monster on certain events. It uses the following
 -- parameters:
 --
 -- * death_monster: The name of the monster who's death triggers the creation

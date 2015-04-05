@@ -60,12 +60,12 @@ class player_quiver
     item_def m_last_used_of_type[NUM_AMMO];
 };
 
-// Quiver tracks items, which in most cases is the Right Thing.  But
+// Quiver tracks items, which in most cases is the Right Thing. But
 // when a quivered item is identified, the quiver doesn't change to
-// match.  We would like the quiver to store the identified item.
+// match. We would like the quiver to store the identified item.
 //
 // This class saves off the quiver item slots, and restores them when
-// destroyed.  The expected use is to create one of these around code
+// destroyed. The expected use is to create one of these around code
 // that identifies items in inv.
 class preserve_quiver_slots
 {

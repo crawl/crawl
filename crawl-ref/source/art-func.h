@@ -684,7 +684,7 @@ static void _DEMON_AXE_unequip(item_def *item, bool *show_msgs)
 
 static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, player_genus(GENPC_DRACONIAN) || you.form == TRAN_DRAGON
+    _equip_mpr(show_msgs, species_is_draconian(you.species) || you.form == TRAN_DRAGON
                             ? "You feel an overwhelming desire to commit suicide."
                             : "You feel an overwhelming desire to slay dragons!");
 }
@@ -713,7 +713,7 @@ static bool is_dragonkind(const actor *act)
     }
 
     if (mons_is_ghost_demon(mon->type)
-        && species_genus(mon->ghost->species) == GENPC_DRACONIAN)
+        && species_is_draconian(mon->ghost->species))
     {
         return true;
     }

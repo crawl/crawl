@@ -141,7 +141,8 @@ static void _give_wand(monster* mon, int level)
             || mons_class_flag(mon->type, M_NO_HT_WAND))
                 && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
 
-    while (1)
+    // this is very ugly and I should rethink it
+    for (int i = 0; i < 100; ++i)
     {
         const int idx = items(false, OBJ_WANDS, OBJ_RANDOM, level);
 
@@ -154,6 +155,14 @@ static void _give_wand(monster* mon, int level)
         {
             dprf(DIAG_MONPLACE,
                  "Destroying %s because %s doesn't want a high tier wand.",
+                 wand.name(DESC_A).c_str(),
+                 mon->name(DESC_THE).c_str());
+            destroy_item(idx, true);
+        }
+        else if (!mon->likes_wand(wand))
+        {
+            dprf(DIAG_MONPLACE,
+                 "Destroying %s because %s doesn't want a weak wand.",
                  wand.name(DESC_A).c_str(),
                  mon->name(DESC_THE).c_str());
             destroy_item(idx, true);
@@ -1230,6 +1239,16 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                  0);
         break;
 
+    case MONS_SALAMANDER_STORMCALLER:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(5, WPN_HALBERD,
+                                                5, WPN_TRIDENT,
+                                                3, WPN_SPEAR,
+                                                2, WPN_GLAIVE,
+                                                0);
+        break;
+
+
     case MONS_SPRIGGAN:
         item.base_type = OBJ_WEAPONS;
         // no quick blades for mooks
@@ -2151,11 +2170,11 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
     case MONS_MERFOLK_IMPALER:
         item.base_type = OBJ_ARMOUR;
-        item.sub_type = random_choose_weighted(100, ARM_ROBE,
-                                               60, ARM_LEATHER_ARMOUR,
-                                               5, ARM_TROLL_LEATHER_ARMOUR,
-                                               5, ARM_STEAM_DRAGON_ARMOUR,
+        item.sub_type = random_choose_weighted(6, ARM_ROBE,
+                                               4, ARM_LEATHER_ARMOUR,
                                                0);
+        if (one_chance_in(16))
+            level = ISPEC_GOOD_ITEM;
         break;
 
     case MONS_MERFOLK_JAVELINEER:

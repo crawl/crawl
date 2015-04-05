@@ -52,19 +52,19 @@
 //     if you want to allow for more, then the release should
 //     take at least some amount of time).
 //
-//     The casting of this spell still costs a turn.  So
+//     The casting of this spell still costs a turn. So
 //     casting Delayed Fireball and immediately releasing
 //     the fireball is only slightly different from casting
 //     a regular Fireball (monsters act in the middle instead
-//     of at the end).  This is why we allow for the spell
+//     of at the end). This is why we allow for the spell
 //     level discount so that Fireball is free with this spell
 //     (so that it only costs 7 levels instead of 12 to have
 //     both).
 //
 // (2) When the fireball is released, it is guaranteed to
-//     go off... the spell only fails at this point.  This can
+//     go off... the spell only fails at this point. This can
 //     be a large advantage for characters who have difficulty
-//     casting Fireball in their standard equipment.  However,
+//     casting Fireball in their standard equipment. However,
 //     the power level for the actual fireball is determined at
 //     release, so if you do swap out your enhancers you'll
 //     get a less powerful ball when it's released. - bwr
@@ -972,7 +972,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 {
     if (cell_is_solid(beam.target))
     {
-        canned_msg(MSG_SPELL_FIZZLES);
+        canned_msg(MSG_UNTHINKING_ACT);
         return SPRET_ABORT;
     }
 

@@ -322,7 +322,7 @@ void handle_behaviour(monster* mon)
         }
 
         // Only go after the target if it's still near the owner, and
-        // so are we.  The weapon is restricted to a leash range of 2,
+        // so are we. The weapon is restricted to a leash range of 2,
         // and things reachable within that leash range [qoala]
         const int leash = 2;
 
@@ -418,7 +418,7 @@ void handle_behaviour(monster* mon)
             else
             {
                 // Zotdef - this is all new, for out-of-sight friendlies to do
-                // something useful.  If no current target, get the closest one.
+                // something useful. If no current target, get the closest one.
                 set_nearest_monster_foe(mon);
             }
         }
@@ -652,7 +652,7 @@ void handle_behaviour(monster* mon)
                 if (mon->foe_memory > 0)
                 {
                     // If we've arrived at our target x,y
-                    // do a stealth check.  If the foe
+                    // do a stealth check. If the foe
                     // fails, monster will then start
                     // tracking foe's CURRENT position,
                     // but only for a few moves (smell and
@@ -745,7 +745,7 @@ void handle_behaviour(monster* mon)
             {
                 // If a pacified monster isn't travelling toward
                 // someplace from which it can leave the level, make it
-                // start doing so.  If there's no such place, either
+                // start doing so. If there's no such place, either
                 // search the level for such a place again, or travel
                 // randomly.
                 if (mon->travel_target != MTRAV_PATROL)
@@ -810,7 +810,7 @@ void handle_behaviour(monster* mon)
 
             // During their wanderings, monsters will eventually relax
             // their guard (stupid ones will do so faster, smart
-            // monsters have longer memories).  Pacified monsters will
+            // monsters have longer memories). Pacified monsters will
             // also eventually switch the place from which they want to
             // leave the level, in case their current choice is blocked.
             if (!proxFoe && !mons_is_avatar(mon->type) && mon->foe != MHITNOT
@@ -1142,7 +1142,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         }
 
         // A bit of code to make Projected Noise actually do
-        // something again.  Basically, dumb monsters and
+        // something again. Basically, dumb monsters and
         // monsters who aren't otherwise occupied will at
         // least consider the (apparent) source of the noise
         // interesting for a moment. -- bwr
@@ -1167,13 +1167,13 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             break;
 
         // Monster types that you can't gain experience from cannot
-        // fight back, so don't bother having them do so.  If you
+        // fight back, so don't bother having them do so. If you
         // worship Fedhas, create a ring of friendly plants, and try
         // to break out of the ring by killing a plant, you'll get
-        // a warning prompt and penance only once.  Without the
+        // a warning prompt and penance only once. Without the
         // hostility check, the plant will remain friendly until it
         // dies, and you'll get a warning prompt and penance once
-        // *per hit*.  This may not be the best way to address the
+        // *per hit*. This may not be the best way to address the
         // issue, though. -cao
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && mon->attitude != ATT_FRIENDLY
@@ -1507,7 +1507,7 @@ void alert_nearby_monsters()
 {
     // Judging from the above comment, this function isn't
     // intended to wake up monsters, so we're only going to
-    // alert monsters that aren't sleeping.  For cases where an
+    // alert monsters that aren't sleeping. For cases where an
     // event should wake up monsters and alert them, I'd suggest
     // calling noisy() before calling this function. - bwr
     for (monster_near_iterator mi(you.pos()); mi; ++mi)

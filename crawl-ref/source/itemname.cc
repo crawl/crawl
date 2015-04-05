@@ -1387,7 +1387,7 @@ static string _curse_prefix(const item_def &weap, description_level_type desc,
     // We don't bother printing "uncursed" if the item is identified
     // for pluses (its state should be obvious), this is so that
     // the weapon name is kept short (there isn't a lot of room
-    // for the name on the main screen).  If you're going to change
+    // for the name on the main screen). If you're going to change
     // this behaviour, *please* make it so that there is an option
     // that maintains this behaviour. -- bwr
     if (_know_pluses(weap, desc, ident, ignore_flags))
@@ -1528,12 +1528,6 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
                                      + (has_inscript ? inscription.size() : 0);
             const string inv_slot_text = "x) ";
             const int max_length = crawl_view.hudsz.x - inv_slot_text.size();
-            if (terse)
-            {
-                dprf("full %s (inscr %s (%d)) (%d), ok = %d",
-                     long_name.c_str(), inscription.c_str(), has_inscript,
-                     total_length, max_length);
-            }
             if (!terse || total_length <= max_length)
                 return long_name;
         }
@@ -3325,7 +3319,7 @@ bool is_bad_item(const item_def &item, bool temp)
             return false;
         }
     case OBJ_JEWELLERY:
-        // Potentially useful.  TODO: check the properties.
+        // Potentially useful. TODO: check the properties.
         if (is_artefact(item))
             return false;
 
@@ -3656,7 +3650,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return false;
 
-        // Potentially useful.  TODO: check the properties.
+        // Potentially useful. TODO: check the properties.
         if (is_artefact(item))
             return false;
 

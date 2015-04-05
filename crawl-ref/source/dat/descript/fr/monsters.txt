@@ -990,7 +990,7 @@ marécages.
 %%%%
 giant mite
 
-Un énorme acarien assoiffé de sang.  Ses mandibules sont empoisonnées.
+Un énorme acarien assoiffé de sang. Ses mandibules sont empoisonnées.
 %%%%
 giant newt
 

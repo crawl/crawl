@@ -354,7 +354,7 @@ static void _do_merge_masses(monster* initial_mass, monster* merge_to)
     merge_to->hit_points += initial_mass->hit_points;
 
     // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
-    // passed on if the merged slime subsequently splits.  Hopefully
+    // passed on if the merged slime subsequently splits. Hopefully
     // this won't do anything weird.
     merge_to->flags |= initial_mass->flags;
 

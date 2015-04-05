@@ -43,7 +43,7 @@
 #include "xom.h"
 
 // This determines how likely it is that more powerful wild magic
-// effects will occur.  Set to 100 for the old probabilities (although
+// effects will occur. Set to 100 for the old probabilities (although
 // the individual effects have been made much nastier since then).
 #define WILD_MAGIC_NASTINESS 150
 
@@ -694,14 +694,8 @@ static bool _has_hair(actor* target)
     if (target->is_monster())
         return false;
 
-    return !form_changed_physiology() && you.species != SP_GHOUL
-           && you.species != SP_OCTOPODE
-           && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN)
-           && you.species != SP_GARGOYLE
-#if TAG_MAJOR_VERSION == 34
-           && you.species != SP_LAVA_ORC
-#endif
-           ;
+    return !form_changed_physiology()
+           && (species_has_hair(you.species) || you.species == SP_MUMMY);
 }
 
 static string _hair_str(actor* target, bool &plural)
@@ -2068,16 +2062,16 @@ void MiscastEffect::_transmutation(int severity)
             // piety, perma-allies-on-hostiles-somehow, etc)
             bool success = false;
             for (int i = 2 + random2(3); i > 0; --i)
-                success |= _create_monster(MONS_GIANT_MITE, 0, true);
+                success |= _create_monster(MONS_GIANT_COCKROACH, 0, true);
 
             if (success)
             {
                 you_msg        = "Shape-changing energy floods out "
-                                 "from your body and enlargens the floor mites!";
+                                 "from your body and enlargens the floor bugs!";
                 mon_msg_seen   = "Shape-changing energy floods out "
-                                 "from @the_monster@ and enlargens the floor mites!";
+                                 "from @the_monster@ and enlargens the floor bugs!";
                 mon_msg_unseen = "Shape-changing energy pours out "
-                                 "from thin air and enlargens the floor mites!";
+                                 "from thin air and enlargens the floor bugs!";
             }
             do_msg();
             break;

@@ -192,7 +192,7 @@ int attack::calc_to_hit(bool random)
             // making them more practiced and thus more accurate in unarmed
             // combat. They keep this benefit even when the claws are covered
             // (or missing because of a change in form).
-            mhit += species_has_claws(you.species)
+            mhit += you.innate_mutation[MUT_CLAWS]
                     && wpn_skill == SK_UNARMED_COMBAT ? 4 : 2;
 
             mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
@@ -439,7 +439,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
 void attack::alert_defender()
 {
-    // Allow monster attacks to draw the ire of the defender.  Player
+    // Allow monster attacks to draw the ire of the defender. Player
     // attacks are handled elsewhere.
     if (perceived_attack
         && defender->is_monster()
@@ -1445,7 +1445,7 @@ int attack::calc_damage()
         damage = player_stab(damage);
         // A failed stab may have awakened monsters, but that could have
         // caused the defender to cease to exist (spectral weapons with
-        // missing summoners; or pacified monsters on a stair).  FIXME:
+        // missing summoners; or pacified monsters on a stair). FIXME:
         // The correct thing to do would be either to delay the call to
         // alert_nearby_monsters (currently in player_stab) until later
         // in the attack; or to avoid removing monsters in handle_behaviour.
@@ -1774,8 +1774,7 @@ bool attack::apply_damage_brand(const char *what)
         const int hdcheck =
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
-        if (!mons_class_is_confusable(defender->type)
-            || hdcheck < defender->get_hit_dice()
+        if (hdcheck < defender->get_hit_dice()
             || one_chance_in(5)
             || defender->as_monster()->check_clarity(false))
         {

@@ -652,7 +652,7 @@ player_info::player_info()
 }
 
 /**
- * Send the player properties to the webserver.  Any player properties that
+ * Send the player properties to the webserver. Any player properties that
  * must be available to the WebTiles client must be sent here through an
  * _update_* function call of the correct data type.
  * @param force_full  If true, all properties will be updated in the json
@@ -937,7 +937,7 @@ static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
     int flags[TILEP_PART_MAX];
     tilep_calc_flags(doll, flags);
 
-    // For skirts, boots go under the leg armour.  For pants, they go over.
+    // For skirts, boots go under the leg armour. For pants, they go over.
     if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order[7] = TILEP_PART_BOOTS;
@@ -1180,9 +1180,6 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.heat_aura != current_pc.heat_aura)
             json_write_int("heat_aura", next_pc.heat_aura);
 #endif
-
-        if (next_pc.gold_aura != current_pc.gold_aura)
-            json_write_int("gold_aura", next_pc.gold_aura);
 
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor

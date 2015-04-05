@@ -14,7 +14,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     // Darts skill also gets you some needles.
     if (wpn_skill == SK_THROWING)
     {
-        // Plus is set if we are getting a good item.  In that case, we
+        // Plus is set if we are getting a good item. In that case, we
         // get curare here.
         if (plus)
         {
@@ -737,7 +737,7 @@ static void _wanderer_cover_equip_holes(int & slot)
         slot++;
     }
 
-    // Give a dagger if you have stealth skill.  Maybe this is
+    // Give a dagger if you have stealth skill. Maybe this is
     // unnecessary?
     if (you.skills[SK_STEALTH] > 1)
     {
@@ -840,7 +840,7 @@ void create_wanderer()
     skill_type good_equipment = _weighted_skill_roll();
 
     // The first of these goes through the whole role/aptitude weighting
-    // thing again.  It's quite possible that this will give something
+    // thing again. It's quite possible that this will give something
     // we have no skill in.
     stat_type selected_role = one_chance_in(3) ? secondary_role : primary_role;
     skill_type sk_1 = SK_NONE;

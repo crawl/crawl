@@ -64,7 +64,7 @@ struct mgen_data
     // Generation flags from mgen_flag_type.
     uint32_t        flags;
 
-    // What god the monster worships, if any.  Used for monsters that
+    // What god the monster worships, if any. Used for monsters that
     // are god gifts, to indicate which god sent them, and by priest
     // monsters, to indicate whose priest they are.
     god_type        god;
@@ -105,7 +105,7 @@ struct mgen_data
 
     string          mname;
 
-    // This is used to account for non-actor summoners.  Blasted by an Ice
+    // This is used to account for non-actor summoners. Blasted by an Ice
     // Fiend ... summoned by the effects of Hell.
     string          non_actor_summoner;
 

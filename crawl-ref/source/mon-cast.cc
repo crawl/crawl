@@ -1118,7 +1118,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_DEVASTATION;
         beam.pierce   = true;
         // Doesn't take distance into account, but this is just a tracer so
-        // we'll ignore that.  We need some damage on the tracer so the monster
+        // we'll ignore that. We need some damage on the tracer so the monster
         // doesn't think the spell is useless against other monsters.
         beam.damage   = dice_def(42, 1);
         beam.range    = LOS_RADIUS;
@@ -1570,6 +1570,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WATERSTRIKE:
     case SPELL_FLAY:
     case SPELL_STASIS:
+    case SPELL_CHANT_FIRE_STORM:
+    case SPELL_CHANT_WORD_OF_ENTROPY:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -1644,7 +1646,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
 // Function should return false if friendlies shouldn't animate any dead.
 // Currently, this only happens if the player is in the middle of butchering
-// a corpse (infuriating), or if they are less than satiated.  Only applies
+// a corpse (infuriating), or if they are less than satiated. Only applies
 // to friendly corpse animators. {due}
 static bool _animate_dead_okay(spell_type spell)
 {
@@ -1686,7 +1688,7 @@ static bool _is_hastable_plant(const monster* mons)
            && mons->type != MONS_SNAPLASHER_VINE_SEGMENT;
 }
 
-// Checks if the foe *appears* to be immune to negative energy.  We
+// Checks if the foe *appears* to be immune to negative energy. We
 // can't just use foe->res_negative_energy(), because that'll mean
 // monsters will just "know" whether a player is fully life-protected.
 static bool _foe_should_res_negative_energy(const actor* foe)
@@ -3469,7 +3471,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         && one_chance_in(mons->type == MONS_KRAKEN ? 4 : 8))
     {
         // Note: There should always be at least some chance we don't
-        // get here... even if the monster is on its last HP.  That
+        // get here... even if the monster is on its last HP. That
         // way we don't have to worry about monsters infinitely casting
         // Healing on themselves (e.g. orc high priests).
         int found_spell = 0;
@@ -5103,7 +5105,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         return;
     }
-    // Always do setup.  It might be done already, but it doesn't hurt
+    // Always do setup. It might be done already, but it doesn't hurt
     // to do it again (cheap).
     setup_mons_cast(mons, pbolt, spell_cast);
 
@@ -6247,6 +6249,26 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
     }
 
+    case SPELL_CHANT_FIRE_STORM:
+    {
+        mon_enchant cast_timer =
+            mon_enchant(ENCH_CHANT_FIRE_STORM, 1, mons, 35);
+        mons->add_ench(cast_timer);
+        mons->speed_increment -= 35;
+
+        return;
+    }
+
+    case SPELL_CHANT_WORD_OF_ENTROPY:
+    {
+        mon_enchant cast_timer =
+            mon_enchant(ENCH_CHANT_WORD_OF_ENTROPY, 1, mons, 30);
+        mons->add_ench(cast_timer);
+        mons->speed_increment -= 30;
+
+        return;
+    }
+
     case SPELL_INJURY_BOND:
     {
         simple_monster_message(mons,
@@ -7050,7 +7072,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     // monster isn't just throwing the spell in a random direction,
     // we should be able to tell what the monster was aiming for if
     // we can see the monster's foe and the beam (or the beam path
-    // implied by gesturing).  But only if the beam didn't actually hit
+    // implied by gesturing). But only if the beam didn't actually hit
     // anything (but if it did hit something, why didn't that monster
     // show up in the beam's path?)
     if (target == "nothing"
@@ -7929,7 +7951,7 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         const int power = ench_power_stepdown(_mons_spellpower(monspell, *mon));
 
         // Determine the amount of chance allowed by the benefit from
-        // the spell.  The estimated difficulty is the probability
+        // the spell. The estimated difficulty is the probability
         // of rolling over 100 + diff on 2d100. -- bwr
         int diff = (monspell == SPELL_PAIN
                     || monspell == SPELL_SLOW
@@ -7952,7 +7974,8 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         // The caster may be an (undead) enslaved soul.
         return mon->holiness() == MH_UNDEAD
                || mon->has_ench(ENCH_DEATHS_DOOR)
-               || mon->has_ench(ENCH_FATIGUE);
+               || mon->has_ench(ENCH_FATIGUE)
+               || !foe || !mon->can_see(foe);
 
     case SPELL_OZOCUBUS_ARMOUR:
         return mon->is_insubstantial() || mon->has_ench(ENCH_OZOCUBUS_ARMOUR);
@@ -8327,6 +8350,10 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             }
 
         return true;
+
+    case SPELL_CHANT_FIRE_STORM:
+    case SPELL_CHANT_WORD_OF_ENTROPY:
+        return mon->has_ench(ENCH_BREATH_WEAPON) || !foe;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

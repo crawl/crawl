@@ -8,47 +8,48 @@
 #include "end.h"
 #include "files.h"
 #include "format.h"
+#include "initfile.h"
 #include "libutil.h"
 #include "options.h"
 #include "stringutil.h"
 #include "unicode.h"
 #include "version.h"
 
-extern string init_file_error; // defined in main.cc
-
 // Eventually, this should be something more grand. {dlb}
 void opening_screen()
 {
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"
-    "<brown>(c) Copyright 1997-2002 Linley Henzell, "
-    "2002-2014 Crawl DevTeam\n"
-    "Read the instructions for legal details."
-    "</brown> " ;
+    "<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2014 Crawl DevTeam\n"
+    "Read the instructions for legal details.</brown> ";
 
-    const bool init_found = init_file_error.empty();
 
-    if (!init_found)
-        msg += "<lightred>(No init file ";
-    else
-        msg += "<lightgrey>(Read options from ";
+    FileLineInput f(Options.filename.c_str());
 
-    if (init_found)
+    if (!f.error())
     {
+        msg += "<lightgrey>(Options read from ";
 #ifdef DGAMELAUNCH
         // For dgl installs, show only the last segment of the .crawlrc
         // file name so that we don't leak details of the directory
         // structure to (untrusted) users.
-        msg += get_base_filename(Options.filename);
+        msg += Options.basefilename;
 #else
         msg += Options.filename;
 #endif
-        msg += ".)";
+        msg += ".)</lightgrey>";
     }
     else
     {
-        msg += init_file_error;
-        msg += ", using defaults.)";
+        msg += "<lightred>(Options file ";
+        if (!Options.filename.empty())
+        {
+            msg += make_stringf("\"%s\" is not readable",
+                                Options.filename.c_str());
+        }
+        else
+            msg += "not found";
+        msg += "; using defaults.)</lightred>";
     }
 
     msg += "\n";

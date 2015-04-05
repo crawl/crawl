@@ -243,10 +243,10 @@ static const ability_def Ability_List[] =
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
-    // so we have to distinguish them (see above).  The off items
+    // so we have to distinguish them (see above). The off items
     // below are labeled EVOKE because they only work now if the
     // player has an item with the evocable power (not just because
-    // you used a wand, potion, or miscast effect).  I didn't see
+    // you used a wand, potion, or miscast effect). I didn't see
     // any reason to label them as "Evoke" in the text, they don't
     // use or train Evocations (the others do).  -- bwr
     { ABIL_EVOKE_TELEPORTATION, "Evoke Teleportation",
@@ -280,7 +280,7 @@ static const ability_def Ability_List[] =
     { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame",
       5, 0, 100, 2, 0, ABFLAG_NONE},
     { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior",
-      8, 0, 150, 6, 0, ABFLAG_NONE},
+      8, 0, 150, 5, 0, ABFLAG_NONE},
 
     // Kikubaaqudgha
     { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
@@ -945,18 +945,12 @@ static ability_type _fixup_ability(ability_type ability)
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-        switch (you.species)
+        if (you.is_lifeless_undead(false)
+            || you.species == SP_FORMICID)
         {
-#if TAG_MAJOR_VERSION == 34
-        case SP_DJINNI:
-#endif
-        case SP_GHOUL:
-        case SP_MUMMY:
-        case SP_FORMICID:
             return ABIL_NON_ABILITY;
-        default:
-            return ability;
         }
+        return ability;
 
     case ABIL_OKAWARU_FINESSE:
     case ABIL_BLINK:
@@ -1050,8 +1044,9 @@ talent get_talent(ability_type ability, bool check_confused)
 
     // begin species abilities - some are mutagenic, too {dlb}
     case ABIL_SPIT_POISON:
-        failure = 40 - 10 * player_mutation_level(MUT_SPIT_POISON)
-                     - you.experience_level;
+        failure = 40
+                  - 10 * player_mutation_level(MUT_SPIT_POISON)
+                  - you.experience_level;
         break;
 
     case ABIL_BREATHE_FIRE:
@@ -1400,8 +1395,11 @@ void no_ability_msg()
     // * Vampires can't turn into bats when full of blood.
     // * Tengu can't start to fly if already flying.
     if (you.species == SP_VAMPIRE && you.experience_level >= 3)
+    {
+        ASSERT(you.hunger_state > HS_SATIATED);
         mpr("Sorry, you're too full to transform right now.");
-    else if (you.species == SP_TENGU && you.experience_level >= 5
+    }
+    else if (player_mutation_level(MUT_TENGU_FLIGHT)
              || player_mutation_level(MUT_BIG_WINGS))
     {
         if (you.flight_mode())
@@ -2880,7 +2878,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
         if (!spell_direction(spd, beam, DIR_NONE, TARG_HOSTILE, 0,
                              true, true, false, nullptr, nullptr, false, nullptr,
-                             bind(desc_success_chance, placeholders::_1, pow)))
+                             bind(desc_success_chance, placeholders::_1,
+                                  zap_ench_power(ZAP_BANISHMENT, pow))))
         {
             return SPRET_ABORT;
         }
@@ -3569,7 +3568,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     // Species-based abilities.
-    if (you.species == SP_MUMMY && you.experience_level >= 13)
+    if (player_mutation_level(MUT_MUMMY_RESTORATION))
         _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
 
     if (you.species == SP_DEEP_DWARF)
@@ -3586,35 +3585,19 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
     }
 
-    // Spit Poison.
+    // Spit Poison, possibly upgraded to Breathe Poison.
     if (player_mutation_level(MUT_SPIT_POISON) == 3)
         _add_talent(talents, ABIL_BREATHE_POISON, check_confused);
     else if (player_mutation_level(MUT_SPIT_POISON))
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
 
-    if (player_genus(GENPC_DRACONIAN))
-    {
-        ability_type ability = ABIL_NON_ABILITY;
-        switch (you.species)
-        {
-        case SP_GREEN_DRACONIAN:   ability = ABIL_BREATHE_MEPHITIC;     break;
-        case SP_RED_DRACONIAN:     ability = ABIL_BREATHE_FIRE;         break;
-        case SP_WHITE_DRACONIAN:   ability = ABIL_BREATHE_FROST;        break;
-        case SP_YELLOW_DRACONIAN:  ability = ABIL_SPIT_ACID;            break;
-        case SP_BLACK_DRACONIAN:   ability = ABIL_BREATHE_LIGHTNING;    break;
-        case SP_PURPLE_DRACONIAN:  ability = ABIL_BREATHE_POWER;        break;
-        case SP_PALE_DRACONIAN:    ability = ABIL_BREATHE_STEAM;        break;
-        case SP_MOTTLED_DRACONIAN: ability = ABIL_BREATHE_STICKY_FLAME; break;
-        default: break;
-        }
-
+    if (species_is_draconian(you.species)
         // Draconians don't maintain their original breath weapons
         // if shapechanged into a non-dragon form.
-        if (form_changed_physiology() && you.form != TRAN_DRAGON)
-            ability = ABIL_NON_ABILITY;
-
-        if (ability != ABIL_NON_ABILITY)
-            _add_talent(talents, ability, check_confused);
+        && (!form_changed_physiology() || you.form == TRAN_DRAGON)
+        && draconian_breath(you.species) != ABIL_NON_ABILITY)
+    {
+        _add_talent(talents, draconian_breath(you.species), check_confused);
     }
 
     if (you.species == SP_VAMPIRE && you.experience_level >= 3
@@ -3624,8 +3607,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
 
-    if ((you.species == SP_TENGU && you.experience_level >= 5
-         || player_mutation_level(MUT_BIG_WINGS)) && !you.airborne()
+    if (player_mutation_level(MUT_TENGU_FLIGHT) && !you.airborne()
         || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT]
 #if TAG_MAJOR_VERSION == 34
            && you.species != SP_DJINNI
@@ -3633,7 +3615,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
            )
     {
         // Tengu can fly, but only from the ground
-        // (until level 15, when it becomes permanent until revoked).
+        // (until level 14, when it becomes permanent until revoked).
         // Black draconians and gargoyles get permaflight at XL 14, but they
         // don't get the tengu movement/evasion bonuses and they don't get
         // temporary flight before then.
@@ -3702,7 +3684,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         && !player_mutation_level(MUT_NO_ARTIFICE))
     {
         // Now you can only turn invisibility off if you have an
-        // activatable item.  Wands and potions will have to time
+        // activatable item. Wands and potions will have to time
         // out. -- bwr
         if (you.duration[DUR_INVIS])
             _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
@@ -3723,7 +3705,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
             }
             // Now you can only turn flight off if you have an
-            // activatable item.  Potions and spells will have to time
+            // activatable item. Potions and spells will have to time
             // out.
             if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                 _add_talent(talents, ABIL_STOP_FLYING, check_confused);
@@ -3787,7 +3769,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 // Note: we're trying for a behaviour where the player gets
 // to keep their assigned invocation slots if they get excommunicated
 // and then rejoin (but if they spend time with another god we consider
-// the old invocation slots void and erase them).  We also try to
+// the old invocation slots void and erase them). We also try to
 // protect any bindings the character might have made into the
 // traditional invocation slots (A-E and X). -- bwr
 static void _set_god_ability_helper(ability_type abil, char letter)
@@ -3888,7 +3870,7 @@ static int _find_ability_slot(const ability_def &abil)
     for (int slot = 0; slot < 52; slot++)
         // Placeholder handling, part 2: The ability we have might
         // correspond to a placeholder, in which case the ability letter
-        // table will contain that placeholder.  Convert the latter to
+        // table will contain that placeholder. Convert the latter to
         // its corresponding ability before comparing the two, so that
         // we'll find the placeholder's index properly.
         if (_fixup_ability(you.ability_letter_table[slot]) == abil.ability)

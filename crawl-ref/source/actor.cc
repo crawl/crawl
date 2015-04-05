@@ -134,7 +134,7 @@ int actor::check_res_magic(int power)
     // value because mrs = hd * 2 * 3 for most monsters, and the weak, low
     // level monsters have been adjusted so that the "3" is typically a 1.
     // There are some notable one hd monsters that shouldn't fall under this,
-    // so we do < 6, instead of <= 6...  or checking mons->hit_dice.  The
+    // so we do < 6, instead of <= 6...  or checking mons->hit_dice. The
     // goal here is to make the first level easier for these classes and give
     // them a better shot at getting to level two or three and spells that can
     // help them out (or building a level or two of their base skill so they
@@ -288,17 +288,9 @@ bool actor::clarity(bool calc_unid, bool items) const
                      || scan_artefacts(ARTP_CLARITY, calc_unid));
 }
 
-int actor::faith(bool calc_unid, bool items) const
+bool actor::faith(bool calc_unid, bool items) const
 {
-    int net_faith = 0;
-
-    if (items && wearing(EQ_AMULET, AMU_FAITH, calc_unid))
-        net_faith++;
-
-    if (is_player() && player_mutation_level(MUT_FORLORN))
-        net_faith--;
-
-    return net_faith;
+    return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
 }
 
 bool actor::warding(bool calc_unid, bool items) const

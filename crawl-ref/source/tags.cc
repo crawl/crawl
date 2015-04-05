@@ -5,10 +5,10 @@
 
 /*
    The marshalling and unmarshalling of data is done in big endian and
-   is meant to keep savefiles cross-platform.  Note also that the marshalling
-   sizes are 1, 2, and 4 for byte, short, and int.  If a strange platform
+   is meant to keep savefiles cross-platform. Note also that the marshalling
+   sizes are 1, 2, and 4 for byte, short, and int. If a strange platform
    with different sizes of these basic types pops up, please sed it to fixed-
-   width ones.  For now, that wasn't done in order to keep things convenient.
+   width ones. For now, that wasn't done in order to keep things convenient.
 */
 
 #include "AppHdr.h"
@@ -47,6 +47,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "jobs.h"
 #include "mapmark.h"
 #include "misc.h"
 #if TAG_MAJOR_VERSION == 34
@@ -453,7 +454,7 @@ int64_t unmarshallSigned(reader& th)
 }
 
 // Optimized for short vectors that have only the first few bits set, and
-// can have invalid length.  For long ones you might want to do this
+// can have invalid length. For long ones you might want to do this
 // differently to not lose 1/8 bits and speed.
 template<int SIZE>
 void marshallFixedBitVector(writer& th, const FixedBitVector<SIZE>& arr)
@@ -679,7 +680,7 @@ coord_def unmarshallCoord(reader &th)
 
 #if TAG_MAJOR_VERSION == 34
 // Between TAG_MINOR_OPTIONAL_PARTS and TAG_MINOR_FIXED_CONSTRICTION
-// we neglected to marshall the constricting[] map of monsters.  Fix
+// we neglected to marshall the constricting[] map of monsters. Fix
 // those up.
 static void _fix_missing_constrictions()
 {
@@ -1280,7 +1281,7 @@ static void tag_construct_char(writer &th)
 {
     marshallByte(th, TAG_CHR_FORMAT);
     // Important: you may never remove or alter a field without bumping
-    // CHR_FORMAT.  Bumping it makes all saves invisible when browsed in an
+    // CHR_FORMAT. Bumping it makes all saves invisible when browsed in an
     // older version.
     // Please keep this compatible even over major version breaks!
 
@@ -1293,7 +1294,7 @@ static void tag_construct_char(writer &th)
     marshallByte(th, you.species);
     marshallByte(th, you.char_class);
     marshallByte(th, you.experience_level);
-    marshallString2(th, you.class_name);
+    marshallString2(th, string(get_job_name(you.char_class)));
     marshallByte(th, you.religion);
     marshallString2(th, you.jiyva_second_name);
 
@@ -2054,7 +2055,7 @@ static const char* old_gods[]=
 void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 {
     // Important: values out of bounds are good here, the save browser needs to
-    // be forward-compatible.  We validate them only on an actual restore.
+    // be forward-compatible. We validate them only on an actual restore.
     you.your_name         = unmarshallString2(th);
     you.prev_save_version = unmarshallString2(th);
     dprf("Last save Crawl version: %s", you.prev_save_version.c_str());
@@ -2062,7 +2063,7 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     you.species           = static_cast<species_type>(unmarshallUByte(th));
     you.char_class        = static_cast<job_type>(unmarshallUByte(th));
     you.experience_level  = unmarshallByte(th);
-    you.class_name        = unmarshallString2(th);
+    you.chr_class_name    = unmarshallString2(th);
     you.religion          = static_cast<god_type>(unmarshallUByte(th));
     you.jiyva_second_name = unmarshallString2(th);
 
@@ -2087,19 +2088,19 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 
     if (major > 32 || major == 32 && minor > 26)
     {
-        you.species_name = unmarshallString2(th);
-        you.god_name     = unmarshallString2(th);
+        you.chr_species_name = unmarshallString2(th);
+        you.chr_god_name     = unmarshallString2(th);
     }
     else
     {
         if (you.species >= 0 && you.species < (int)ARRAYSZ(old_species))
-            you.species_name = old_species[you.species];
+            you.chr_species_name = old_species[you.species];
         else
-            you.species_name = "Yak";
+            you.chr_species_name = "Yak";
         if (you.religion >= 0 && you.religion < (int)ARRAYSZ(old_gods))
-            you.god_name = old_gods[you.religion];
+            you.chr_god_name = old_gods[you.religion];
         else
-            you.god_name = "Marduk";
+            you.chr_god_name = "Marduk";
     }
 
     if (major > 34 || major == 34 && minor >= 29)
@@ -2749,6 +2750,28 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_SPIT_POISON] = 3;
         }
     }
+
+    // Give nagas constrict, tengu flight, and mummies restoration/enhancers.
+    if (th.getMinorVersion() < TAG_MINOR_REAL_MUTS
+        && (you.species == SP_NAGA
+            || you.species == SP_TENGU
+            || you.species == SP_MUMMY))
+    {
+        for (int xl = 2; xl <= you.experience_level; ++xl)
+            give_level_mutations(you.species, xl);
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_NO_FORLORN)
+    {
+        if (you.mutation[MUT_FORLORN])
+            you.mutation[MUT_FORLORN] = 0;
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_MP_WANDS)
+    {
+        if (you.mutation[MUT_MP_WANDS] > 1)
+            you.mutation[MUT_MP_WANDS] = 1;
+    }
 #endif
 
     count = unmarshallUByte(th);
@@ -3243,7 +3266,7 @@ static void tag_read_you_items(reader &th)
                 you.item_description[i][j] = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
             // We briefly had a problem where we sign-extended the old
-            // 8-bit item_descriptions on conversion.  Fix those up.
+            // 8-bit item_descriptions on conversion. Fix those up.
             if (th.getMinorVersion() < TAG_MINOR_NEG_IDESC
                 && (int)you.item_description[i][j] < 0)
             {

@@ -1,9 +1,44 @@
-Stone Soup 0.17 (up to 0.17-a0-70-gb617880)
+Stone Soup 0.17 (up to 0.17-a0-287-g93b8e50)
 --------------------------------------------
+
+Character
+---------
+* All races have had their evocations aptitudes reduced by one point.
+* MP scaling has been reworked & simplified.
 
 Gods
 ----
 * Beogh's smite damage now scales better with invocations.
+* Finesse no longer gives contamination.
+* Lugonu no longer accepts corpse sacrifices.
+
+Items
+-----
+* The Cloak of Starlight is now +2 and gives Stlth--.
+* Warding now applies to ranged attacks.
+* Staves of summoning no longer have a chance of abjuring on hit.
+* Removed items:
+  - The Cloak of Flash.
+  - Potions of decay.
+
+Monsters
+--------
+* XP and placement for many uniques has been adjusted; in general, uniques have
+  been removed from depths at which they're no longer threatening, and their XP
+  has increased considerably.
+* rElec++ has been removed; monsters that previously had it now either have
+  rElec+ or full immunity.
+* Revenants no longer ignore silence.
+* Phantasmal warriors' attacks no longer pierce shields & armour.
+* Death knights now have agony & haunt in addition to pain mirror.
+* Removed monsters:
+  - Unborn.
+
+Spells
+------
+* Summon Guardian Golem is now level 3.
+* Removed spells:
+  - Sure Blade.
 
 
 Stone Soup 0.16 (20150311)
@@ -853,7 +888,7 @@ Monsters
     - Rakshasas gain a monster spell "Phantom Mirror", which summons
       a clone of a nearby allied monster with half the hit points, with
       a 50% chance of swapping the clone for the original; this replaces
-      their previous self-cloning abilities.  They can now also cast
+      their previous self-cloning abilities. They can now also cast
       Iskenderun's Mystic Blast and will summon two clones of themselves
       at 50% HP as a one-time effect.
     - Giant orange brains get Mass Confusion instead of Confusion.

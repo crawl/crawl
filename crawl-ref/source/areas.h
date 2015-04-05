@@ -15,7 +15,6 @@ enum area_centre_type
 #if TAG_MAJOR_VERSION == 34
     AREA_HOT,
 #endif
-    AREA_GOLD,
     AREA_STASIS,
 };
 
@@ -55,9 +54,12 @@ bool umbraed(const coord_def& p);
 bool heated(const coord_def& p);
 #endif
 
+<<<<<<< HEAD
 // ...or glowing with fresh gold (Gozag)?
 bool golden(const coord_def& p);
 
 // ...or under stasis?
 bool stasised(const coord_def& p);
+=======
+>>>>>>> 2a4c9a483866fd3ffd9be9fb18f00dce38fc5331
 #endif

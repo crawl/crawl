@@ -206,7 +206,7 @@ static const zap_info zap_data[] =
     "",
     100,
     nullptr,
-    nullptr,
+    new tohit_calculator<0, 3, 1>,
     BLACK,
     true,
     BEAM_TUKIMAS_DANCE,
@@ -1193,22 +1193,6 @@ static const zap_info zap_data[] =
     false,
     false,
     6
-},
-
-{
-    ZAP_GRAVITAS,
-    "",
-    200,
-    nullptr,
-    nullptr,
-    BLACK,
-    true,
-    BEAM_ATTRACT,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
 },
 
 };

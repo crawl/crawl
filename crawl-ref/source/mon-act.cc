@@ -259,7 +259,7 @@ static bool _do_mon_spell(monster* mons, bolt &beem)
     if (handle_mon_spell(mons, beem))
     {
         // If a Pan lord/pghost is known to be a spellcaster, it's safer
-        // to assume it has ranged spells too.  For others, it'd just
+        // to assume it has ranged spells too. For others, it'd just
         // lead to unnecessary false positives.
         if (mons_is_ghost_demon(mons->type))
             mons->flags |= MF_SEEN_RANGED;
@@ -575,7 +575,7 @@ static void _handle_movement(monster* mons)
     if (delta.rdist() > 3)
     {
         // Reproduced here is some semi-legacy code that makes monsters
-        // move somewhat randomly along oblique paths.  It is an
+        // move somewhat randomly along oblique paths. It is an
         // exceedingly good idea, given crawl's unique line of sight
         // properties.
         //
@@ -870,6 +870,10 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
  * Check if the monster has a swooping attack and is in a position to
  * use it, and do so if they can.
  *
+ * Specifically, this seems to try to move to the opposite side of the target
+ * (if there's space) and perform a melee attack, then set a cooldown for
+ * 4-8 turns.
+ *
  * @param mons The monster who might be swooping.
  * @return Whether they performed a swoop attack. False if the monster
  *         can't swoop, the foe isn't hostile, the positioning doesn't
@@ -907,29 +911,28 @@ static bool _handle_swoop(monster* mons)
     tracer.range = LOS_RADIUS;
     tracer.fire();
 
-    for (unsigned int j = 0; j < tracer.path_taken.size(); ++j)
+    for (unsigned int j = 0; j < tracer.path_taken.size() - 1; ++j)
     {
-        if (tracer.path_taken[j] == target)
+        if (tracer.path_taken[j] != target)
+            continue;
+
+        if (!monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
+            || actor_at(tracer.path_taken[j+1]))
         {
-            if (tracer.path_taken.size() > j + 1)
-            {
-                if (monster_habitable_grid(mons, grd(tracer.path_taken[j+1]))
-                    && !actor_at(tracer.path_taken[j+1]))
-                {
-                    if (you.can_see(mons))
-                    {
-                        mprf("%s swoops through the air toward %s!",
-                             mons->name(DESC_THE).c_str(),
-                             defender->name(DESC_THE).c_str());
-                    }
-                    mons->move_to_pos(tracer.path_taken[j+1]);
-                    fight_melee(mons, defender);
-                    mons->props["swoop_cooldown"].get_int() = you.elapsed_time
-                                                              + 40 + random2(51);
-                    return true;
-                }
-            }
+            continue;
         }
+
+        if (you.can_see(mons))
+        {
+            mprf("%s swoops through the air toward %s!",
+                 mons->name(DESC_THE).c_str(),
+                 defender->name(DESC_THE).c_str());
+        }
+        mons->move_to_pos(tracer.path_taken[j+1]);
+        fight_melee(mons, defender);
+        mons->props["swoop_cooldown"].get_int() = you.elapsed_time
+                                                  + 40 + random2(51);
+        return true;
     }
 
     return false;
@@ -2197,15 +2200,27 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    const int gold = gozag_gold_in_los(mons);
-    if (!mons->asleep()
+    if (you.duration[DUR_GOZAG_GOLD_AURA]
+        && in_good_standing(GOD_GOZAG)
+        && !mons->asleep()
         && !mons_is_avatar(mons->type)
-        && !mons->wont_attack() && gold > 0)
+        && !mons->wont_attack())
     {
+        const int gold = you.props["gozag_gold_aura_amount"].get_int();
         if (bernoulli(gold, 3.0/100.0))
         {
-            simple_monster_message(mons,
+            if (gozag_gold_in_los(mons))
+            {
+                simple_monster_message(mons,
                     " is distracted by the nearby gold.");
+            }
+            else if (you.gold > 0)
+                simple_monster_message(mons, " is distracted by your gold.");
+            // Just in case!
+            else
+                simple_monster_message(mons,
+                                       " is distracted by imaginary riches.");
+
             mons->add_ench(
                 mon_enchant(ENCH_GOLD_LUST, 1, nullptr,
                             random_range(1, 5) * BASELINE_DELAY));
@@ -2376,7 +2391,7 @@ void handle_monster_move(monster* mons)
             || mons->has_spell(SPELL_DIG))
         {
             // [ds] Special abilities shouldn't overwhelm
-            // spellcasting in monsters that have both.  This aims
+            // spellcasting in monsters that have both. This aims
             // to give them both roughly the same weight.
             if (coinflip() ? mon_special_ability(mons, beem)
                              || _do_mon_spell(mons, beem)
@@ -2582,7 +2597,7 @@ void handle_monster_move(monster* mons)
     you.update_fearmonger(mons);
 
     // Reevaluate behaviour, since the monster's surroundings have
-    // changed (it may have moved, or died for that matter).  Don't
+    // changed (it may have moved, or died for that matter). Don't
     // bother for dead monsters.  :)
     if (mons->alive())
     {
@@ -3249,7 +3264,7 @@ static bool _handle_pickup(monster* mons)
     if (mons->asleep() || mons->submerged())
         return false;
 
-    // Flying over water doesn't let you pick up stuff.  This is inexact, as
+    // Flying over water doesn't let you pick up stuff. This is inexact, as
     // a merfolk could be flying, but that's currently impossible except for
     // being tornadoed, and with *that* low life expectancy let's not care.
     dungeon_feature_type feat = grd(mons->pos());
@@ -4067,7 +4082,7 @@ static bool _may_cutdown(monster* mons, monster* targ)
             return true;
     }
 
-    // In normal games, that's it.  Gotta keep those butterflies alive...
+    // In normal games, that's it. Gotta keep those butterflies alive...
     if (!crawl_state.game_is_zotdef())
         return false;
 
@@ -4249,7 +4264,7 @@ static bool _monster_move(monster* mons)
     }
 
     // Now, if a monster can't move in its intended direction, try
-    // either side.  If they're both good, move in whichever dir
+    // either side. If they're both good, move in whichever dir
     // gets it closer (farther for fleeing monsters) to its target.
     // If neither does, do nothing.
     if (good_move[mmov.x + 1][mmov.y + 1] == false)

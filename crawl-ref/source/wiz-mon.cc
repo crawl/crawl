@@ -618,7 +618,8 @@ void wizard_dismiss_all_monsters(bool force_all)
     if (!force_all)
     {
         mprf(MSGCH_PROMPT, "What monsters to dismiss (ENTER for all, "
-                           "\"harmful\", \"mobile\" or a regex)? ");
+                           "\"harmful\", \"mobile\", \"los\" or a regex, "
+                           "\"keepitem\" to leave items)? ");
         bool validline = !cancellable_get_line_autohist(buf, sizeof buf);
 
         if (!validline)

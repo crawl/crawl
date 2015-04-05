@@ -1498,9 +1498,9 @@ static void _fixup_branch_stairs()
 static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 {
     // This function ensures that there is exactly one each up and down
-    // stone stairs I, II, and III.  More than three stairs will result in
+    // stone stairs I, II, and III. More than three stairs will result in
     // turning additional stairs into escape hatches (with an attempt to keep
-    // level connectivity).  Fewer than three stone stairs will result in
+    // level connectivity). Fewer than three stone stairs will result in
     // random placement of new stairs.
 
     const unsigned int max_stairs = 20;
@@ -1799,7 +1799,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
 static bool _add_connecting_escape_hatches()
 {
     // For any regions without a down stone stair case, add an
-    // escape hatch.  This will always allow (downward) progress.
+    // escape hatch. This will always allow (downward) progress.
 
     if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         return true;
@@ -1918,9 +1918,9 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 //
 // * The cell of the previous vector is a hash table, containing the
 //   list of gods for the overflow temple and (optionally) the name of
-//   the vault to use for the temple.  If no map name is supplied,
+//   the vault to use for the temple. If no map name is supplied,
 //   it will randomly pick from vaults tagged "temple_overflow_num",
-//   where "num" is the number of gods in the temple.  Gods are listed
+//   where "num" is the number of gods in the temple. Gods are listed
 //   in the order their altars are placed.
 static void _build_overflow_temples()
 {
@@ -6022,6 +6022,7 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
 #if TAG_MAJOR_VERSION == 34
            || spec_type == TRAP_DART || spec_type == TRAP_GAS
 #endif
+           || spec_type == TRAP_SHADOW
            || spec_type == TRAP_SHADOW_DORMANT
            || !is_valid_shaft_level(known) && spec_type == TRAP_SHAFT)
     {
@@ -6555,12 +6556,12 @@ void write_level_connectivity(writer &th)
 static bool _fixup_interlevel_connectivity()
 {
     // Rotate the stairs on this level to attempt to preserve connectivity
-    // as much as possible.  At a minimum, it ensures a path from the bottom
-    // of a branch to the top of a branch.  If this is not possible, it
+    // as much as possible. At a minimum, it ensures a path from the bottom
+    // of a branch to the top of a branch. If this is not possible, it
     // returns false.
     //
     // Note: this check is undirectional and assumes that levels below this
-    // one have not been created yet.  If this is not the case, it will not
+    // one have not been created yet. If this is not the case, it will not
     // guarantee or preserve connectivity.
     //
     // XXX: If successful, the previous level's connectedness information
@@ -6913,7 +6914,7 @@ void vault_placement::apply_grid()
             }
         }
 
-        // Place monsters in a second pass.  Otherwise band followers
+        // Place monsters in a second pass. Otherwise band followers
         // could be overwritten with subsequent walls.
         for (rectangle_iterator ri(pos, pos + size - 1); ri; ++ri)
         {

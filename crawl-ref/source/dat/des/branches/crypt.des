@@ -106,27 +106,6 @@ function crypt_loot_plus(e)
 end
 }}
 
-
-NAME: crypt_curse_skull
-TAGS: allow_dup luniq extra
-DEPTH: Crypt
-CHANCE: 3333
-KMONS: 1 = curse skull
-KITEM: 1 = *, %, % / $, % / nothing, % / nothing
-MAP
-1
-ENDMAP
-
-NAME: crypt_curse_skull_rare
-TAGS: allow_dup luniq extra
-DEPTH: Crypt
-CHANCE: 1429
-KMONS: 1 = curse skull
-KITEM: 1 = *, %, % / $, % / nothing, % / nothing
-MAP
-1
-ENDMAP
-
 ##############################################################################
 # Crypt entry vaults
 ##############################################################################

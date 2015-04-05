@@ -1113,7 +1113,7 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
     int flags[TILEP_PART_MAX];
     tilep_calc_flags(equip_doll, flags);
 
-    // For skirts, boots go under the leg armour.  For pants, they go over.
+    // For skirts, boots go under the leg armour. For pants, they go over.
     if (equip_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order[6] = TILEP_PART_BOOTS;
@@ -3021,7 +3021,7 @@ void SaveMenuItem::_pack_doll()
     int flags[TILEP_PART_MAX];
     tilep_calc_flags(m_save_doll, flags);
 
-    // For skirts, boots go under the leg armour.  For pants, they go over.
+    // For skirts, boots go under the leg armour. For pants, they go over.
     if (m_save_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order[6] = TILEP_PART_BOOTS;

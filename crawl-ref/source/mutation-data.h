@@ -736,6 +736,54 @@ static const mutation_def mut_data[] =
   "negative energy resistance",
 },
 
+{ MUT_MUMMY_RESTORATION,  0,  1, MUTFLAG_GOOD, false,
+  "restore body",
+
+  {"You can restore your body by infusing magical energy.",
+   "",
+   ""},
+
+  {"You can now infuse your body with magic to restore decomposition.",
+   "",
+   ""},
+
+  {"", "", ""},
+
+  "ability to restore your body",
+},
+
+{ MUT_NECRO_ENHANCER,     0,  2, MUTFLAG_GOOD, false,
+  "in touch with death",
+
+  {"You are in touch with the powers of death.",
+   "You are strongly in touch with the powers of death.",
+   ""},
+
+  {"You feel more in touch with the powers of death.",
+   "You feel more in touch with the powers of death.",
+   ""},
+
+  {"", "", ""},
+
+  "enhanced necromantic magic",
+},
+
+{ MUT_TENGU_FLIGHT,     0,  2, MUTFLAG_GOOD, false,
+  "able to fly",
+
+  {"You can fly.",
+   "You can fly continuously.",
+   ""},
+
+  {"You have gained the ability to fly.",
+   "You can now fly continuously.",
+   ""},
+
+  {"", "", ""},
+
+  "demonic bird flight magic",
+},
+
 { MUT_HURL_HELLFIRE,                  0,  1, MUTFLAG_GOOD, false,
   "hurl hellfire",
 
@@ -883,8 +931,8 @@ static const mutation_def mut_data[] =
 
    "a tentacle spike",
 },
-
 #if TAG_MAJOR_VERSION == 34
+
 { MUT_BREATHE_POISON,                 0,  1, MUTFLAG_GOOD, false,
   "breathe poison",
 
@@ -895,6 +943,16 @@ static const mutation_def mut_data[] =
   "poisonous breath",
 },
 #endif
+
+{ MUT_CONSTRICTING_TAIL,              0,  1, MUTFLAG_GOOD, true,
+  "constrict 1",
+
+  {"You can use your snake-like lower body to constrict enemies.", "", ""},
+  {"Your tail grows strong enough to constrict your enemies.", "", ""},
+  {"", "", ""},
+
+  "a constricting tail",
+},
 
 // Naga and Draconian only
 { MUT_STINGER,                        8,  3, MUTFLAG_GOOD, true,
@@ -919,7 +977,7 @@ static const mutation_def mut_data[] =
 { MUT_BIG_WINGS,                      4,  1, MUTFLAG_GOOD, true,
   "big wings",
 
-  {"Your wings are large and strong.", "", ""},
+  {"Your large and strong wings let you fly indefinitely.", "", ""},
   {"Your wings grow larger and stronger.", "", ""},
   {"Your wings shrivel and weaken.", "", ""},
 
@@ -1055,7 +1113,8 @@ static const mutation_def mut_data[] =
    "placid magic",
 },
 
-{ MUT_FORLORN,                      3,  1,  MUTFLAG_BAD, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_FORLORN,                      0,  1,  MUTFLAG_BAD, false,
   "forlorn",
 
   {"You have difficulty communicating with the divine.","",""},
@@ -1064,6 +1123,7 @@ static const mutation_def mut_data[] =
 
   "difficulty communicating with the divine",
 },
+#endif
 
 { MUT_STOCHASTIC_TORMENT_RESISTANCE,  0,  1, MUTFLAG_GOOD, false,
   "50% torment resistance",
@@ -2031,18 +2091,12 @@ static const mutation_def mut_data[] =
     "disrupted casting (-Wiz)",
 },
 
-{ MUT_MP_WANDS,                        7,  3, MUTFLAG_BAD, false,
+{ MUT_MP_WANDS,                        7,  1, MUTFLAG_BAD, false,
   "MP-powered wands",
 
-  {"You expend magic power (3 MP) to slightly strengthen your wands.",
-    "You expend magic power (6 MP) to strengthen your wands.",
-    "You expend magic power (9 MP) to make your wands much stronger."},
-  {"You feel less able to contain your magic power.",
-    "You feel less able to contain your magic power.",
-    "You feel less able to contain your magic power."},
-  {"You can contain your magic power once more.",
-    "You feel more able to contain your magic power.",
-    "You feel more able to contain your magic power."},
+  {"You expend magic power (3 MP) to strengthen your wands.", "", ""},
+  {"You feel your magical essence link to your wands.", "", ""},
+  {"Your magical essence is no longer linked to your wands.", "", ""},
 
   "MP-powered wands",
 },

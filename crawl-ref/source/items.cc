@@ -132,7 +132,7 @@ void link_items()
 
         if (!mitm[i].defined())
         {
-            // Item is not assigned.  Ignore.
+            // Item is not assigned. Ignore.
             mitm[i].link = NON_ITEM;
             continue;
         }
@@ -372,13 +372,6 @@ bool dec_mitm_item_quantity(int obj, int amount)
     if (amount > item.quantity)
         amount = item.quantity; // can't use min due to type mismatch
 
-    // when removing gold from a stack, make it lose its gozag-aura
-    if (item.base_type == OBJ_GOLD && item.special > 0 && amount)
-    {
-        item.special = 0;
-        invalidate_agrid(true);
-    }
-
     if (item.quantity == amount)
     {
         destroy_item(obj);
@@ -537,7 +530,7 @@ void unlink_item(int dest)
          mitm[dest].pos.x, mitm[dest].pos.y);
 
     // Okay, first we scan all items to see if we have something
-    // linked to this item.  We're not going to return if we find
+    // linked to this item. We're not going to return if we find
     // such a case... instead, since things are already out of
     // alignment, let's assume there might be multiple links as well.
     bool linked = false;
@@ -1768,6 +1761,12 @@ static void _get_orb(const item_def &it, bool quiet)
     env.orb_pos = you.pos(); // can be wrong in wizmode
     orb_pickup_noise(you.pos(), 30);
 
+    if (you.duration[DUR_TELEPORT])
+    {
+        mprf(MSGCH_ORB, "You feel the Orb delaying your translocation!");
+        you.increase_duration(DUR_TELEPORT, 5 + random2(5));
+    }
+
     mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
 
     if (you_worship(GOD_CHEIBRIADOS))
@@ -2614,7 +2613,7 @@ static void _autoinscribe_item(item_def& item)
         if (ai_entry.first.matches(iname))
         {
             // Don't autoinscribe dropped items on ground with
-            // "=g".  If the item matches a rule which adds "=g",
+            // "=g". If the item matches a rule which adds "=g",
             // "=g" got added to it before it was dropped, and
             // then the user explicitly removed it because they
             // don't want to autopickup it again.
@@ -2687,7 +2686,7 @@ static int _autopickup_subtype(const item_def &item)
         return max_type;
 
     // Only where item_type_known() refers to the subtype (as opposed to the
-    // brand, for example) do we have to check it.  For weapons etc. we always
+    // brand, for example) do we have to check it. For weapons etc. we always
     // know the subtype.
     switch (item.base_type)
     {

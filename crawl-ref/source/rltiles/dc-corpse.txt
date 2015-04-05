@@ -60,7 +60,6 @@ porcupine CORPSE_PORCUPINE
 
 ## Spiders and insects ('s')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-giant_mite CORPSE_GIANT_MITE
 scorpion CORPSE_SCORPION
 emperor_scorpion CORPSE_EMPEROR_SCORPION
 spider CORPSE_SPIDER

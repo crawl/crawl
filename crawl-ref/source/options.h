@@ -123,7 +123,7 @@ public:
     string      morgue_dir;     // Directory where character dumps and morgue
                                 // dumps are saved. Overrides crawl_dir.
     string      shared_dir;     // Directory where the logfile, scores and bones
-                                // are stored.  On a multi-user system, this dir
+                                // are stored. On a multi-user system, this dir
                                 // should be accessible by different people.
     vector<string> additional_macro_files;
 
@@ -376,6 +376,8 @@ public:
 
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
+    int         rest_wait_percent; // Stop resting after restoring this
+                                   // fraction of HP or MP
 
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.

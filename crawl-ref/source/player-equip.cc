@@ -37,7 +37,7 @@ static void _mark_unseen_monsters();
 
 /**
  * Recalculate the player's max hp and set the current hp based on the %change
- * of max hp.  This has resulted from our having equipped an artefact that
+ * of max hp. This has resulted from our having equipped an artefact that
  * changes max hp.
  */
 static void _calc_hp_artefact()
@@ -424,11 +424,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
         if (item.sub_type == STAFF_POWER)
         {
-            if (get_real_mp(true) >= 50)
-                mpr("You feel your magic capacity is already quite full.");
-            else
-                canned_msg(MSG_MANA_INCREASE);
-
+            canned_msg(MSG_MANA_INCREASE);
             calc_mp();
         }
 
@@ -1124,16 +1120,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_MAGICAL_POWER:
-        if ((you.max_magic_points + 9) *
-            (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
-        {
-            mpr("You feel your magic capacity is already quite full.");
-        }
-        else
-            canned_msg(MSG_MANA_INCREASE);
-
+        canned_msg(MSG_MANA_INCREASE);
         calc_mp();
-
         break;
 
     case RING_TELEPORTATION:
