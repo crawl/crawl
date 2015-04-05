@@ -2049,9 +2049,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                                 true);
                     }
                     else // word of entropy
-                    {
                         mons_foe->corrode_equipment("the spell", 5);
-                    }
                 }
                 // shorter because you can avoid the effect entirely out of LOS
                 breath_timeout_length = random2(5);
