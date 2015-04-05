@@ -219,7 +219,7 @@ def delete_session(sid):
 
 
 def purge_login_tokens():
-    """Delete all login tokens & expired sessions."""s
+    """Delete all login tokens & expired sessions."""
     with cursor() as c:
         c.execute("DELETE FROM login_tokens WHERE expires<?",
                   (int(time.time()),))

@@ -314,11 +314,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def start_crawl(self, game_id):
+        logging.debug('start_crawl')
         if game_id not in config.games:
             self.go_lobby()
             return
 
         game_params = dict(config.games[game_id])
+        self.playing = True
 
         if self.username is None:
             if config["allow_guests"]:
@@ -341,7 +343,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.game_id = game_id
 
-        sid = url_unescape(self.get_cookie("sid"))
+        cookie = self.get_cookie("sid")
+        logging.warning("sid cookie: %r", cookie)
+        sid = url_unescape(cookie)
         session = userdb.session_info(sid)
         #session["default-game_id"] = game_id
 
@@ -388,6 +392,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.process = None
 
     def crawl_ended(self):
+        self.playing = False
         if self.is_running():
             reason = self.process.exit_reason
             message = self.process.exit_message
@@ -440,6 +445,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
 
     def do_login(self, username, sid=None):
+        """Log in a user."""
+        logging.debug('do_login')
         if not sid:
             sid, session = userdb.new_session()
             session["username"] = username
@@ -464,6 +471,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             self.send_lobby_html()
             self.get_game_info()
+            pass
 
     def login(self, username, password, rememberme):
         real_username = userdb.user_passwd_match(username, password)
@@ -577,10 +585,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not username:
             return False
         self.register(username, None, None)
+        cookie, expires = userdb.get_login_cookie(username)
+        self.send_message("login_cookie", cookie=cookie,
+                          expires=expires+time.timezone)
         return username
 
     def register(self, username, password, email):
-        """Register a new user account."""
+        """Register a new user account and return their SID."""
         error = userdb.register_user(username, password, email)
         if error is None:
             self.logger.info("Registered user %s.", username)
@@ -589,6 +600,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
             self.send_message("register_fail", reason = error)
+
 
     def go_lobby(self):
         if self.is_running():

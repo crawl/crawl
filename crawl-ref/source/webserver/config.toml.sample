@@ -116,6 +116,7 @@ daemon = false
 # umask =
 # chroot =
 
+# These options are used to help debugging / development.
 no_cache = false
 game_data_no_cache = true
 use_minified = true

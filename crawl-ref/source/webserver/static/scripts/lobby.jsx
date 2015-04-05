@@ -553,11 +553,13 @@ function (React, comm, pubsub, user, misc, login, scorenav, $) {
             if (this.state.games)
                 score_nav = <ScoreNavigation games={this.state.games}
                              edit_num_scores={false}/>;
-            if (this.state.games && this.state.username)
+            if (this.state.games)
             {
                 var nerd = this.state.nerd;
+                var nerdtype;
+
                 links =  <div>
-                         <br />Hello, <span className={nerd.type} title={title}>
+                         <br />Hello (yo), <span title={title}>
                           {this.state.username}
                          </span>!
                          <GameSelector games={this.state.games}
