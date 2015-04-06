@@ -782,7 +782,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         {
             if (trig_knows && one_chance_in(3))
                 mpr("You avoid triggering a blade trap.");
-            else if (random2limit(player_evasion(), 40)
+            else if (random2limit(you.evasion(), 40)
                      + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 8)
             {
                 mpr("A huge blade swings just past you!");
@@ -863,7 +863,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 item_def item = generate_trap_item();
                 copy_item_to_grid(item, triggerer.pos());
 
-                if (random2limit(player_evasion(), 40)
+                if (random2limit(you.evasion(), 40)
                     + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
                 {
                     mpr("A net drops to the ground!");
@@ -1341,7 +1341,7 @@ static int damage_or_escape_net(int hold)
         damage++;
     if (x_chance_in_y(you.dex(), 12))
         escape++;
-    if (x_chance_in_y(player_evasion(), 20))
+    if (x_chance_in_y(you.evasion(), 20))
         escape++;
 
     // Dangerous monsters around you add urgency.
@@ -1653,10 +1653,10 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     const int con_block = random2(20 + act.shield_block_penalty());
     const int pro_block = act.shield_bonus();
     dprf("%s: hit %d EV %d, shield hit %d block %d", name(DESC_PLAIN).c_str(),
-         trap_hit, act.melee_evasion(0), con_block, pro_block);
+         trap_hit, act.evasion(), con_block, pro_block);
 
     // Determine whether projectile hits.
-    if (!force_hit && trap_hit < act.melee_evasion(nullptr))
+    if (!force_hit && trap_hit < act.evasion())
     {
         if (act.is_player())
         {

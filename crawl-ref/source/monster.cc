@@ -3568,22 +3568,10 @@ int monster::base_evasion() const
 /**
  * What's the current evasion of this monster?
  *
- * @param calc_unid     Whether to include unknown items/properties in the
- *                      calculated results.
- * @return The evasion of this monster, after applying items & statuses.
- **/
-int monster::evasion(bool calc_unid) const
-{
-    return melee_evasion(nullptr, calc_unid ? EV_IGNORE_NONE : EV_IGNORE_UNIDED);
-}
-
-/**
- * What's the current evasion of this monster?
- *
  * @param evit      A bitfield of ev modifiers to ignore.
  * @return The evasion of this monster, after applying items & statuses.
  **/
-int monster::melee_evasion(const actor* /*act*/, ev_ignore_type evit) const
+int monster::evasion(ev_ignore_type evit, const actor* /*act*/) const
 {
     const bool calc_unid = !(evit & EV_IGNORE_UNIDED);
 

@@ -832,7 +832,7 @@ static void _print_stats_ev(int x, int y)
               || you.cannot_move() ? RED :
               _boosted_ev()
               ? LIGHTBLUE : HUD_VALUE_COLOUR);
-    CPRINTF("%2d ", player_evasion());
+    CPRINTF("%2d ", you.evasion());
 }
 
 /**
@@ -2226,7 +2226,7 @@ static vector<formatted_string> _get_overview_stats()
     else
         entry.textcolour(HUD_VALUE_COLOUR);
 
-    entry.cprintf("%2d", player_evasion());
+    entry.cprintf("%2d", you.evasion());
 
     cols.add_formatted(1, entry.to_colour_string(), false);
     entry.clear();

@@ -125,6 +125,8 @@ static void _pop_delay()
 {
     if (!you.delay_queue.empty())
         you.delay_queue.erase(you.delay_queue.begin());
+
+    you.redraw_evasion = true;
 }
 
 static int delays_cleared[NUM_DELAYS];
@@ -170,6 +172,8 @@ void start_delay(delay_type type, int turns, int parm1, int parm2, int parm3)
         clear_travel_trail();
 
     _push_delay(delay);
+
+    you.redraw_evasion = true;
 }
 
 void stop_delay(bool stop_stair_travel, bool force_unsafe)
