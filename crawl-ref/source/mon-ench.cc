@@ -2022,12 +2022,12 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (decay_enchantment(en))
         {
-            int breath_timeout_length;
+            int breath_timeout_turns;
 
             if (en == ENCH_WORD_OF_RECALL)
             {
-                mons_word_of_recall(this, 3 + random2(5));
-                breath_timeout_length = (4 + random2(9)) * BASELINE_DELAY;
+                mons_word_of_recall(this, random_range(3, 7));
+                breath_timeout_turns = random_range(4, 12);
             }
             else if (en == ENCH_CHANT_FIRE_STORM
                   || en == ENCH_CHANT_WORD_OF_ENTROPY)
@@ -2052,15 +2052,13 @@ void monster::apply_enchantment(const mon_enchant &me)
                         mons_foe->corrode_equipment("the Word of Entropy", 5);
                 }
                 // shorter because you can avoid the effect entirely out of LOS
-                breath_timeout_length = random2(5);
+                breath_timeout_turns = random2(5);
             }
             else
                 die("Unknown chant type!"); // squash a warning
 
-            // This is the same delay as vault sentinels.
-            mon_enchant breath_timeout =
-                mon_enchant(ENCH_BREATH_WEAPON, 1, this, breath_timeout_length);
-            add_ench(breath_timeout);
+            add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, this,
+                                 breath_timeout_turns * BASELINE_DELAY));
         }
         break;
 
