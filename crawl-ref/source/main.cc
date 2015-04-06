@@ -224,7 +224,6 @@ static void _do_cmd_repeat();
 static void _do_prev_cmd_again();
 static void _update_replay_state();
 
-static void _show_commandline_options_help();
 static void _wanderer_startup_message();
 static void _announce_goal_message();
 static void _god_greeting_message(bool game_start);
@@ -243,6 +242,11 @@ static void _enter_explore_mode();
 //  It all starts here. Some initialisations are run first, then straight
 //  to new_game and then input.
 //
+
+// FLAGS
+DEFINE_string(rc, "", "init file name");
+DEFINE_string(rcdir, "", "directory that contains (included) rc files");
+DEFINE_string(dir, "", "crawl directory");
 
 #ifdef USE_SDL
 # include <SDL_main.h>
@@ -296,12 +300,14 @@ int main(int argc, char *argv[])
     get_system_environment();
     init_signals();
 
-    // Parse command line args -- look only for initfile & crawl_dir entries.
-    if (!parse_args(argc, argv, true))
-    {
-        _show_commandline_options_help();
-        return 1;
-    }
+    // Setup rc & crawl dir
+    if (!FLAGS_rcdir.empty())
+        SysEnv.add_rcdir(FLAGS_rcdir);
+    if (!FLAGS_dir.empty())
+        SysEnv.crawl_dir = FLAGS_dir;
+    if (!FLAGS_rc.empty())
+        SysEnv.crawl_rc = FLAGS_rc;
+
 
     // Init monsters up front - needed to handle the mon_glyph option right.
     init_char_table(CSET_ASCII);
@@ -315,8 +321,8 @@ int main(int argc, char *argv[])
     // Read the init file.
     read_init_file();
 
-    // Now parse the args again, looking for everything else.
-    parse_args(argc, argv, false);
+    // Handle the command line arguments.
+    parse_args(argc, argv);
 
     if (Options.sc_entries != 0 || !SysEnv.scorefile.empty())
     {
@@ -474,87 +480,6 @@ NORETURN static void _launch_game()
     cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)
         _input();
-}
-
-static void _show_commandline_options_help()
-{
-#if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
-    string help;
-# define puts(x) (help += x, help += '\n')
-#endif
-
-    puts("Command line options:");
-    puts("  -help                 prints this list of options");
-    puts("  -name <string>        character name");
-    puts("  -species <arg>        preselect character species (by letter, abbreviation, or name)");
-    puts("  -background <arg>     preselect character background (by letter, abbreviation, or name)");
-    puts("  -dir <path>           crawl directory");
-    puts("  -rc <file>            init file name");
-    puts("  -rcdir <dir>          directory that contains (included) rc files");
-    puts("  -morgue <dir>         directory to save character dumps");
-    puts("  -macro <dir>          directory to save/find macro.txt");
-    puts("  -version              Crawl version (and compilation info)");
-    puts("  -save-version <name>  Save file version for the given player");
-    puts("  -sprint               select Sprint");
-    puts("  -sprint-map <name>    preselect a Sprint map");
-    puts("  -tutorial             select the Tutorial");
-#ifdef WIZARD
-    puts("  -wizard               allow access to wizard mode");
-    puts("  -explore              allow access to explore mode");
-#endif
-#ifdef DGAMELAUNCH
-    puts("  -no-throttle          disable throttling of user Lua scripts");
-#else
-    puts("  -throttle             enable throttling of user Lua scripts");
-#endif
-
-    puts("");
-
-    puts("Command line options override init file options, which override");
-    puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");
-    puts("");
-    puts("  -extra-opt-first optname=optval");
-    puts("  -extra-opt-last  optname=optval");
-    puts("");
-    puts("Acts as if 'optname=optval' was at the top or bottom of the init");
-    puts("file. Can be used multiple times.");
-    puts("");
-
-    puts("Highscore list options: (Can be redirected to more, etc.)");
-    puts("  -scores [N]            highscore list");
-    puts("  -tscores [N]           terse highscore list");
-    puts("  -vscores [N]           verbose highscore list");
-    puts("  -scorefile <filename>  scorefile to report on");
-    puts("");
-    puts("Arena options: (Stage a tournament between various monsters.)");
-    puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
-#ifdef DEBUG_DIAGNOSTICS
-    puts("");
-    puts("  -test               run all test cases in test/ except test/big/");
-    puts("  -test foo,bar       run only tests \"foo\" and \"bar\"");
-    puts("  -test list          list available tests");
-    puts("  -script <name>      run script matching <name> in ./scripts");
-    puts("  -mapstat [<levels>] run map stats on the given range of levels");
-    puts("      Defaults to entire dungeon; level ranges follow des DEPTH "
-         "syntax.");
-    puts("      Examples: '-mapstat D,Depths' and '-mapstat Snake:1-4,Spider:1-4,Orc'");
-    puts("  -objstat [<levels>] run monster and item stats on the given range "
-         "of levels");
-    puts("      Defaults to entire dungeon; same level syntax as -mapstat.");
-    puts("  -iters <num>        For -mapstat and -objstat, set the number of "
-         "iterations");
-#endif
-    puts("");
-    puts("Miscellaneous options:");
-    puts("  -dump-maps       write map Lua to stderr when parsing .des files");
-#ifndef TARGET_OS_WINDOWS
-    puts("  -gdb/-no-gdb     produce gdb backtrace when a crash happens (default:on)");
-#endif
-    puts("  -list-combos     list playable species, jobs, and character combos.");
-
-#if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
-    text_popup(help, L"Dungeon Crawl command line help");
-#endif
 }
 
 static void _wanderer_startup_message()

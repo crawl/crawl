@@ -82,9 +82,6 @@ extern char **NXArgv;
 
 DEFINE_string(morgue, "", "directory to save character dumps");
 DEFINE_string(name, "", "character name"); 
-DEFINE_string(rc, "", "init file name");
-DEFINE_string(rcdir, "", "directory that contains (included) rc files");
-DEFINE_string(dir, "", "crawl directory");
 DEFINE_string(background, "", "Preselect character background (letter, abbreviation, or name)");
 DEFINE_bool(sprint, false, "Play sprint");
 DEFINE_string(species, "", "Preselect character species (letter, abbreviation, or name)");
@@ -4676,18 +4673,11 @@ static bool _check_extra_opt(char* _opt)
     return true;
 }
 
-bool parse_args(int argc, char **argv, bool rc_only)
+bool parse_args(int argc, char **argv)
 {
     COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS);
 
     // New style flags
-
-    if (!FLAGS_rcdir.empty())
-        SysEnv.add_rcdir(FLAGS_rcdir);
-    if (!FLAGS_dir.empty())
-        SysEnv.crawl_dir = FLAGS_dir;
-    if (!FLAGS_rc.empty())
-        SysEnv.crawl_rc = FLAGS_rc;
 
     if (!FLAGS_sprint_map.empty())
     {
@@ -4695,13 +4685,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
         Options.game.map       = FLAGS_sprint_map;
     }
 
-    if (!rc_only && FLAGS_sprint)
+    if (FLAGS_sprint)
         Options.game.type = GAME_TYPE_SPRINT;
 
-    if (!rc_only && FLAGS_name.empty())
+    if (!FLAGS_name.empty())
         Options.game.name = FLAGS_name;
 
-    if (!rc_only)
     {
         int count = -1;
         if (FLAGS_scores > 0)
@@ -4725,19 +4714,20 @@ bool parse_args(int argc, char **argv, bool rc_only)
         if (count > 0)
             Options.sc_entries = count;
     }
+
     if (!FLAGS_morgue.empty())
         SysEnv.morgue_dir = FLAGS_morgue;
  
 #ifdef WIZARD
-    if (rc_only && FLAGS_wizard)
+    if (FLAGS_wizard)
         Options.wiz_mode = WIZ_NO;
-    if (rc_only && FLAGS_explore)
+    if (FLAGS_explore)
         Options.explore_mode = WIZ_NO;
 #endif
     
-    if (!rc_only && !FLAGS_species.empty())
+    if (!FLAGS_species.empty())
         Options.game.species = _str_to_species(FLAGS_species);
-    if (!rc_only && !FLAGS_background.empty())
+    if (!FLAGS_background.empty())
         Options.game.job = str_to_job(FLAGS_background);
 
     crawl_state.throttle = FLAGS_throttle;
@@ -4898,15 +4888,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_ARENA:
-            if (!rc_only)
-            {
                 Options.game.type = GAME_TYPE_ARENA;
                 Options.restart_after_game = false;
-            }
             if (next_is_param)
             {
-                if (!rc_only)
-                    Options.game.arena_teams = next_arg;
+                Options.game.arena_teams = next_arg;
                 nextUsed = true;
             }
             break;
@@ -4980,8 +4966,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_SCOREFILE:
             if (!next_is_param)
                 return false;
-            if (!rc_only)
-                SysEnv.scorefile = next_arg;
+            SysEnv.scorefile = next_arg;
             nextUsed = true;
             break;
 
@@ -5012,13 +4997,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_TUTORIAL:
-            if (!rc_only)
-                Options.game.type = GAME_TYPE_TUTORIAL;
+            Options.game.type = GAME_TYPE_TUTORIAL;
             break;
 
         case CLO_NO_SAVE:
-            if (!rc_only)
-                Options.no_save = true;
+            Options.no_save = true;
             break;
 
 #ifdef USE_TILE_WEB
@@ -5032,17 +5015,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_PRINT_WEBTILES_OPTIONS:
-            if (!rc_only)
-            {
-                _print_webtiles_options();
-                end(0);
-            }
+            _print_webtiles_options();
+            end(0);
             break;
 #endif
 
         case CLO_PRINT_CHARSET:
-            if (rc_only)
-                break;
 #ifdef DGAMELAUNCH
             // Tell DGL we don't use ancient charsets anymore. The glyph set
             // doesn't matter here, just the encoding.
