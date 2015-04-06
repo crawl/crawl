@@ -17,6 +17,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <gflags/gflags.h>
 #include <set>
 #include <string>
 
@@ -78,6 +79,13 @@ extern char **NXArgv;
 #elif defined (__linux__)
 #include <unistd.h>
 #endif
+
+DEFINE_bool(sprint, false, "Play sprint");
+DEFINE_string(sprint_map, "", "Preselect a sprint map");
+DEFINE_int32(scores, 0, "Highscore list");
+DEFINE_int32(tscores, 0, "Terse highscore list");
+DEFINE_int32(vscores, 0, "Verbose highscore list");
+DEFINE_bool(throttle, false, "Enable throttling of user lua scripts");
 
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
@@ -4213,15 +4221,12 @@ static void set_crawl_base_dir(const char *arg)
 // Keep this in sync with the option names.
 enum commandline_option_type
 {
-    CLO_SCORES,
     CLO_NAME,
     CLO_RACE,
     CLO_CLASS,
     CLO_DIR,
     CLO_RC,
     CLO_RCDIR,
-    CLO_TSCORES,
-    CLO_VSCORES,
     CLO_SCOREFILE,
     CLO_MORGUE,
     CLO_MACRO,
@@ -4237,10 +4242,8 @@ enum commandline_option_type
     CLO_VERSION,
     CLO_SEED,
     CLO_SAVE_VERSION,
-    CLO_SPRINT,
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
-    CLO_SPRINT_MAP,
     CLO_EDIT_SAVE,
     CLO_PRINT_CHARSET,
     CLO_TUTORIAL,
@@ -4249,8 +4252,6 @@ enum commandline_option_type
     CLO_NO_SAVE,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
-    CLO_THROTTLE,
-    CLO_NO_THROTTLE,
     CLO_LIST_COMBOS, // List species, jobs, and legal combos, in that order.
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
@@ -4263,13 +4264,13 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "scores", "name", "species", "background", "dir", "rc",
-    "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
+    "name", "species", "background", "dir", "rc",
+    "rcdir", "scorefile", "morgue", "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
-    "builddb", "help", "version", "seed", "save-version", "sprint",
-    "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
+    "builddb", "help", "version", "seed", "save-version",
+    "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
-    "gdb", "no-gdb", "nogdb", "throttle", "no-throttle", "list-combos",
+    "gdb", "no-gdb", "nogdb", "list-combos",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4681,6 +4682,41 @@ bool parse_args(int argc, char **argv, bool rc_only)
 {
     COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS);
 
+    // New style flags
+    if (!FLAGS_sprint_map.empty()) {
+        crawl_state.sprint_map = FLAGS_sprint_map;
+        Options.game.map       = FLAGS_sprint_map;
+    }
+
+    if (!rc_only && FLAGS_sprint)
+        Options.game.type = GAME_TYPE_SPRINT;
+
+    if (!rc_only) {
+        int count = -1;
+        if (FLAGS_scores > 0)
+        {
+            Options.sc_format = SCORE_REGULAR;
+            count = FLAGS_scores;
+        }
+        if (FLAGS_tscores > 0)
+        {
+            Options.sc_format = SCORE_TERSE;
+            count = FLAGS_tscores;
+        }
+        if (FLAGS_vscores > 0)
+        {
+            Options.sc_format = SCORE_VERBOSE;
+            count = FLAGS_vscores;
+        }
+        if (count > SCORE_FILE_ENTRIES)
+            count = SCORE_FILE_ENTRIES;
+
+        Options.sc_entries = count;
+    }
+
+    crawl_state.throttle = FLAGS_throttle;
+
+    // Old style flags
     if (crawl_state.command_line_arguments.empty())
     {
         crawl_state.command_line_arguments.insert(
@@ -4706,7 +4742,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
     char *arg, *next_arg;
     int current = 1;
     bool nextUsed = false;
-    int ecount;
 
     // initialise
     for (int i = 0; i < num_cmd_ops; i++)
@@ -4791,36 +4826,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
         // Take action according to the cmd chosen.
         switch (o)
         {
-        case CLO_SCORES:
-        case CLO_TSCORES:
-        case CLO_VSCORES:
-            if (!next_is_param)
-                ecount = -1;            // default
-            else // optional number given
-            {
-                ecount = atoi(next_arg);
-                if (ecount < 1)
-                    ecount = 1;
-
-                if (ecount > SCORE_FILE_ENTRIES)
-                    ecount = SCORE_FILE_ENTRIES;
-
-                nextUsed = true;
-            }
-
-            if (!rc_only)
-            {
-                Options.sc_entries = ecount;
-
-                if (o == CLO_TSCORES)
-                    Options.sc_format = SCORE_TERSE;
-                else if (o == CLO_VSCORES)
-                    Options.sc_format = SCORE_VERBOSE;
-                else if (o == CLO_SCORES)
-                    Options.sc_format = SCORE_REGULAR;
-            }
-            break;
-
         case CLO_MAPSTAT:
         case CLO_OBJSTAT:
 #ifdef DEBUG_DIAGNOSTICS
@@ -5047,20 +5052,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed = true;
             break;
 
-        case CLO_SPRINT:
-            if (!rc_only)
-                Options.game.type = GAME_TYPE_SPRINT;
-            break;
-
-        case CLO_SPRINT_MAP:
-            if (!next_is_param)
-                return false;
-
-            nextUsed               = true;
-            crawl_state.sprint_map = next_arg;
-            Options.game.map       = next_arg;
-            break;
-
         case CLO_TUTORIAL:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_TUTORIAL;
@@ -5115,14 +5106,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
             printf("This option is for DGL use only.\n");
 #endif
             end(0);
-            break;
-
-        case CLO_THROTTLE:
-            crawl_state.throttle = true;
-            break;
-
-        case CLO_NO_THROTTLE:
-            crawl_state.throttle = false;
             break;
 
         case CLO_EXTRA_OPT_FIRST:
