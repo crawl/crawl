@@ -92,6 +92,8 @@ DEFINE_int32(scores, 0, "Highscore list");
 DEFINE_int32(tscores, 0, "Terse highscore list");
 DEFINE_int32(vscores, 0, "Verbose highscore list");
 DEFINE_bool(throttle, false, "Enable throttling of user lua scripts");
+DEFINE_bool(explore, false, "Allow access to explore mode");
+DEFINE_bool(wizard, false, "Allow access to wizard mode");
 
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
@@ -4246,8 +4248,6 @@ enum commandline_option_type
     CLO_EDIT_SAVE,
     CLO_PRINT_CHARSET,
     CLO_TUTORIAL,
-    CLO_WIZARD,
-    CLO_EXPLORE,
     CLO_NO_SAVE,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
@@ -4267,7 +4267,7 @@ static const char *cmd_ops[] =
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "version", "seed", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
-    "print-charset", "tutorial", "wizard", "explore", "no-save",
+    "print-charset", "tutorial", "no-save",
     "gdb", "no-gdb", "nogdb", "list-combos",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
@@ -4726,6 +4726,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
             Options.sc_entries = count;
     }
 
+  
+#ifdef WIZARD
+    if (rc_only && FLAGS_wizard)
+        Options.wiz_mode = WIZ_NO;
+    if (rc_only && FLAGS_explore)
+        Options.explore_mode = WIZ_NO;
+#endif
+    
     if (!rc_only && !FLAGS_species.empty())
         Options.game.species = _str_to_species(FLAGS_species);
     if (!rc_only && !FLAGS_background.empty())
@@ -5013,20 +5021,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_TUTORIAL:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_TUTORIAL;
-            break;
-
-        case CLO_WIZARD:
-#ifdef WIZARD
-            if (!rc_only)
-                Options.wiz_mode = WIZ_NO;
-#endif
-            break;
-
-        case CLO_EXPLORE:
-#ifdef WIZARD
-            if (!rc_only)
-                Options.explore_mode = WIZ_NO;
-#endif
             break;
 
         case CLO_NO_SAVE:
