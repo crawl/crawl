@@ -3274,8 +3274,8 @@ bool bolt::misses_player()
         return false;
     }
 
-    const int dodge = player_evasion();
-    const int dodge_less = player_evasion(EV_IGNORE_PHASESHIFT);
+    const int dodge = you.evasion();
+    const int dodge_less = you.evasion(EV_IGNORE_PHASESHIFT);
     int real_tohit  = hit;
 
     if (real_tohit != AUTOMATIC_HIT)
@@ -3364,7 +3364,7 @@ bool bolt::misses_player()
     }
     else
     {
-        int dodge_more = player_evasion(EV_IGNORE_HELPLESS);
+        int dodge_more = you.evasion(EV_IGNORE_HELPLESS);
 
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";

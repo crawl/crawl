@@ -732,7 +732,7 @@ void TilesFramework::_send_player(bool force_full)
 #endif
 
     _update_int(force_full, c.armour_class, you.armour_class(), "ac");
-    _update_int(force_full, c.evasion, player_evasion(), "ev");
+    _update_int(force_full, c.evasion, you.evasion(), "ev");
     _update_int(force_full, c.shield_class, player_displayed_shield_class(),
                 "sh");
 
