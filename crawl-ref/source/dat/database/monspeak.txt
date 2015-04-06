@@ -2677,8 +2677,6 @@ Slime Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "I forgot to wear corrosion-proof armour. Damn, I hate that!"
-
 @The_monster@ says, "Those amoebas look tasty."
 
 @The_monster@ says, "Where's all the loot?"
@@ -2792,43 +2790,6 @@ w:50
 
 @The_monster@ says, "I saw a dragon earlier, but I didn't get too close - it seemed pretty mercurial."
 %%%%
-Blade Donald
-
-w:50
-@_generic_Donald_@
-
-@The_monster@ says, "A great mace doesn't even have a blade."
-
-@The_monster@ says, "How can an animated sword scowl?"
-
-@The_monster@ says, "I feel like half the man I was before coming here."
-
-@The_monster@ says, "I thought dancing weapons might, you know, dance?"
-
-@The_monster@ says, "How did I get over here?"
-
-@The_monster@ says, "That sword's pretty flaming."
-
-@The_monster@ says, "What do you do with a bardiche, anyway?"
-
-@The_monster@ says, "I didn't find what I was looking for. Maybe they'll restock."
-
-@The_monster@ says, "Why would anyone bother coming here? It's boring."
-
-@The_monster@ says, "I hate weapons. I hate dancing weapons even more."
-
-@The_monster@ says, "That axe looks sharp."
-
-@The_monster@ says, "Animated weapons are so last century."
-
-@The_monster@ says, "I'm hungry."
-
-@The_monster@ says, "I've been waiting here for ages. Nothing new."
-
-@The_monster@ says, "What's so great about these maces?"
-
-@The_monster@ says, "Nobody here wants to dance with me. I hate that."
-%%%%
 Crypt Donald
 
 w:50
@@ -2847,8 +2808,6 @@ w:50
 @The_monster@ says, "Is it cursed, or does it curse? I can never tell."
 
 @The_monster@ says, "Curse skulls, curse toes... What next?"
-
-@The_monster@ says, "Why would someone inter a butterfly?"
 
 @The_monster@ says, "This isn't even all that spooky."
 
@@ -2949,7 +2908,7 @@ w:50
 
 @The_monster@ says, "How do you make a golem out of electricity?"
 
-@The_monster@ says, "What's an "orb guardian", anyway?"
+@The_monster@ says, "What's an "Orb Guardian", anyway?"
 
 @The_monster@ says, "Orbs of fire, orbs of destruction, the Orb of Zot... what's with all the orbs?"
 
@@ -3191,8 +3150,6 @@ w:50
 
 @The_monster@ says, "What's all in the cards? Your future?"
 
-@The_monster@ says, "You missed a spot upstairs."
-
 @The_monster@ says, "I bet you're feeling stupid now, huh?"
 
 @The_monster@ says, "If I draw a card, can you tell me which one it is?"
@@ -3217,8 +3174,6 @@ w:50
 @_generic_Donald_@
 
 @The_monster@ says, "Whatever happened to, 'First, do no harm'?"
-
-@The_monster@ says, "Hungry yet?"
 
 @The_monster@ says, "Doesn't healing your enemies sound rather pointless?"
 
@@ -3331,7 +3286,7 @@ w:50
 
 @The_monster@ says, "Slow down!"
 
-@The_monster@ says, "You're not very quick on the up-take, are you?"
+@The_monster@ says, "You're not very quick on the uptake, are you?"
 
 @The_monster@ says, "You know, if you want, I know a very good posture trainer."
 
@@ -3481,8 +3436,6 @@ w:50
 
 w:5
 @The_monster@ says, "I hate the gods, and the gods hate me."
-
-@The_monster@ says, "So, what do you do with all of your corpses? Leave them to rot?"
 
 @The_monster@ says, "You must run out of gods to curse by."
 
