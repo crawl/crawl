@@ -4238,7 +4238,6 @@ enum commandline_option_type
     CLO_TEST,
     CLO_SCRIPT,
     CLO_BUILDDB,
-    CLO_HELP,
     CLO_VERSION,
     CLO_SEED,
     CLO_SAVE_VERSION,
@@ -4267,7 +4266,7 @@ static const char *cmd_ops[] =
     "name",
     "scorefile", "morgue", "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
-    "builddb", "help", "version", "seed", "save-version",
+    "builddb", "version", "seed", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "wizard", "explore", "no-save",
     "gdb", "no-gdb", "nogdb", "list-combos",
@@ -4810,10 +4809,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (strcasecmp(cmd_ops[o], arg) == 0)
                 break;
 
-        // Print the list of commandline options for "--help".
-        if (o == CLO_HELP)
-            return false;
-
         if (o == num_cmd_ops)
         {
             fprintf(stderr,
@@ -4994,10 +4989,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 Options.game.name = next_arg;
             nextUsed = true;
             break;
-
-        case CLO_HELP:
-            // Shouldn't happen.
-            return false;
 
         case CLO_VERSION:
             _print_version();
