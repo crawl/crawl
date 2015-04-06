@@ -80,7 +80,9 @@ extern char **NXArgv;
 #include <unistd.h>
 #endif
 
+DEFINE_string(background, "", "Preselect character background (letter, abbreviation, or name)");
 DEFINE_bool(sprint, false, "Play sprint");
+DEFINE_string(species, "", "Preselect character species (letter, abbreviation, or name)");
 DEFINE_string(sprint_map, "", "Preselect a sprint map");
 DEFINE_int32(scores, 0, "Highscore list");
 DEFINE_int32(tscores, 0, "Terse highscore list");
@@ -4222,8 +4224,6 @@ static void set_crawl_base_dir(const char *arg)
 enum commandline_option_type
 {
     CLO_NAME,
-    CLO_RACE,
-    CLO_CLASS,
     CLO_DIR,
     CLO_RC,
     CLO_RCDIR,
@@ -4264,7 +4264,7 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "name", "species", "background", "dir", "rc",
+    "name", "dir", "rc",
     "rcdir", "scorefile", "morgue", "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "save-version",
@@ -4711,8 +4711,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
         if (count > SCORE_FILE_ENTRIES)
             count = SCORE_FILE_ENTRIES;
 
-        Options.sc_entries = count;
+        if (count > 0)
+            Options.sc_entries = count;
     }
+
+    if (!rc_only && !FLAGS_species.empty())
+        Options.game.species = _str_to_species(FLAGS_species);
+    if (!rc_only && !FLAGS_background.empty())
+        Options.game.job = str_to_job(FLAGS_background);
 
     crawl_state.throttle = FLAGS_throttle;
 
@@ -4976,22 +4982,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 return false;
             if (!rc_only)
                 Options.game.name = next_arg;
-            nextUsed = true;
-            break;
-
-        case CLO_RACE:
-        case CLO_CLASS:
-            if (!next_is_param)
-                return false;
-
-            if (!rc_only)
-            {
-                if (o == 2)
-                    Options.game.species = _str_to_species(string(next_arg));
-
-                if (o == 3)
-                    Options.game.job = str_to_job(string(next_arg));
-            }
             nextUsed = true;
             break;
 
