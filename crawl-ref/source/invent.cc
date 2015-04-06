@@ -1223,6 +1223,28 @@ bool any_items_of_type(int selector, int excluded_slot)
     return false;
 }
 
+/**
+ * Does the player have any item with this base type and subtype?
+ *
+ * @param base_type     The base type of the item
+ * @param sub_type      The subtype of the item
+ * @return              Whether there are any items matching the given base type
+ *                      and subtype in the player's inventory.
+ */
+bool any_item_matching(int base_type, int sub_type) {
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].defined() &&
+            you.inv[i].base_type == base_type &&
+            you.inv[i].sub_type == sub_type)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Use title = nullptr for stock Inventory title
 // type = MT_DROP allows the multidrop toggle
 static unsigned char _invent_select(const char *title = nullptr,

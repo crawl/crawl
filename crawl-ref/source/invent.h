@@ -181,6 +181,7 @@ void get_class_hotkeys(const int type, vector<char> &glyphs);
 
 bool is_item_selected(const item_def &item, int selector);
 bool any_items_of_type(int type_expect, int excluded_slot = -1);
+bool any_item_matching(int base_type, int sub_type);
 string no_selectables_message(int item_selector);
 
 string slot_description();
