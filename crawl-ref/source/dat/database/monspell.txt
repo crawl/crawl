@@ -187,7 +187,7 @@ Chant Fire Storm cast
 %%%%
 Chant Word of Entropy cast
 
-@The_monster@ begins to chant word of entropy!
+@The_monster@ begins to chant the Word of Entropy!
 #################################################
 # The next two have special hard-coded messaging.
 #################################################
