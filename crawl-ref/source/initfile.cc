@@ -80,6 +80,7 @@ extern char **NXArgv;
 #include <unistd.h>
 #endif
 
+DEFINE_string(name, "", "character name"); 
 DEFINE_string(rc, "", "init file name");
 DEFINE_string(rcdir, "", "directory that contains (included) rc files");
 DEFINE_string(dir, "", "crawl directory");
@@ -4226,7 +4227,6 @@ static void set_crawl_base_dir(const char *arg)
 // Keep this in sync with the option names.
 enum commandline_option_type
 {
-    CLO_NAME,
     CLO_SCOREFILE,
     CLO_MORGUE,
     CLO_MACRO,
@@ -4263,7 +4263,6 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "name",
     "scorefile", "morgue", "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "version", "seed", "save-version",
@@ -4699,6 +4698,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
     if (!rc_only && FLAGS_sprint)
         Options.game.type = GAME_TYPE_SPRINT;
 
+    if (!rc_only && FLAGS_name.empty())
+        Options.game.name = FLAGS_name;
+
     if (!rc_only)
     {
         int count = -1;
@@ -4979,14 +4981,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 return false;
             if (!rc_only)
                 SysEnv.scorefile = next_arg;
-            nextUsed = true;
-            break;
-
-        case CLO_NAME:
-            if (!next_is_param)
-                return false;
-            if (!rc_only)
-                Options.game.name = next_arg;
             nextUsed = true;
             break;
 
