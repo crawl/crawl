@@ -80,6 +80,7 @@ extern char **NXArgv;
 #include <unistd.h>
 #endif
 
+DEFINE_string(morgue, "", "directory to save character dumps");
 DEFINE_string(name, "", "character name"); 
 DEFINE_string(rc, "", "init file name");
 DEFINE_string(rcdir, "", "directory that contains (included) rc files");
@@ -4230,7 +4231,6 @@ static void set_crawl_base_dir(const char *arg)
 enum commandline_option_type
 {
     CLO_SCOREFILE,
-    CLO_MORGUE,
     CLO_MACRO,
     CLO_MAPSTAT,
     CLO_OBJSTAT,
@@ -4263,7 +4263,7 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "scorefile", "morgue", "macro",
+    "scorefile", "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "version", "seed", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
@@ -4725,8 +4725,9 @@ bool parse_args(int argc, char **argv, bool rc_only)
         if (count > 0)
             Options.sc_entries = count;
     }
-
-  
+    if (!FLAGS_morgue.empty())
+        SysEnv.morgue_dir = FLAGS_morgue;
+ 
 #ifdef WIZARD
     if (rc_only && FLAGS_wizard)
         Options.wiz_mode = WIZ_NO;
@@ -4973,14 +4974,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
             SysEnv.macro_dir = next_arg;
-            nextUsed = true;
-            break;
-
-        case CLO_MORGUE:
-            if (!next_is_param)
-                return false;
-            if (!rc_only)
-                SysEnv.morgue_dir = next_arg;
             nextUsed = true;
             break;
 
