@@ -86,9 +86,10 @@ DEFINE_string(background, "", "Preselect character background (letter, abbreviat
 DEFINE_bool(sprint, false, "Play sprint");
 DEFINE_string(species, "", "Preselect character species (letter, abbreviation, or name)");
 DEFINE_string(sprint_map, "", "Preselect a sprint map");
-DEFINE_int32(scores, 0, "Highscore list");
-DEFINE_int32(tscores, 0, "Terse highscore list");
-DEFINE_int32(vscores, 0, "Verbose highscore list");
+DEFINE_int32(scores, -1, "Highscore list");
+DEFINE_int32(tscores, -1, "Terse highscore list");
+DEFINE_int32(vscores, -1, "Verbose highscore list");
+DEFINE_string(scorefile, "", "scorefile to report on");
 DEFINE_bool(throttle, false, "Enable throttling of user lua scripts");
 DEFINE_bool(explore, false, "Allow access to explore mode");
 DEFINE_bool(wizard, false, "Allow access to wizard mode");
@@ -4227,7 +4228,6 @@ static void set_crawl_base_dir(const char *arg)
 // Keep this in sync with the option names.
 enum commandline_option_type
 {
-    CLO_SCOREFILE,
     CLO_MACRO,
     CLO_MAPSTAT,
     CLO_OBJSTAT,
@@ -4260,7 +4260,7 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "scorefile", "macro",
+    "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "version", "seed", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
@@ -4685,6 +4685,9 @@ bool parse_args(int argc, char **argv)
         Options.game.map       = FLAGS_sprint_map;
     }
 
+    if (!FLAGS_scorefile.empty())
+        SysEnv.scorefile = FLAGS_scorefile;
+
     if (FLAGS_sprint)
         Options.game.type = GAME_TYPE_SPRINT;
 
@@ -4693,21 +4696,24 @@ bool parse_args(int argc, char **argv)
 
     {
         int count = -1;
-        if (FLAGS_scores > 0)
+        if (FLAGS_scores >= 0)
         {
             Options.sc_format = SCORE_REGULAR;
             count = FLAGS_scores;
         }
-        if (FLAGS_tscores > 0)
+        if (FLAGS_tscores >= 0)
         {
             Options.sc_format = SCORE_TERSE;
             count = FLAGS_tscores;
         }
-        if (FLAGS_vscores > 0)
+        if (FLAGS_vscores >= 0)
         {
             Options.sc_format = SCORE_VERBOSE;
             count = FLAGS_vscores;
         }
+        if (count == 0)
+            count = SCORE_FILE_ENTRIES;
+
         if (count > SCORE_FILE_ENTRIES)
             count = SCORE_FILE_ENTRIES;
 
@@ -4960,13 +4966,6 @@ bool parse_args(int argc, char **argv)
             if (!next_is_param)
                 return false;
             SysEnv.macro_dir = next_arg;
-            nextUsed = true;
-            break;
-
-        case CLO_SCOREFILE:
-            if (!next_is_param)
-                return false;
-            SysEnv.scorefile = next_arg;
             nextUsed = true;
             break;
 
