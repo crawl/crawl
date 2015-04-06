@@ -80,6 +80,9 @@ extern char **NXArgv;
 #include <unistd.h>
 #endif
 
+DEFINE_string(rc, "", "init file name");
+DEFINE_string(rcdir, "", "directory that contains (included) rc files");
+DEFINE_string(dir, "", "crawl directory");
 DEFINE_string(background, "", "Preselect character background (letter, abbreviation, or name)");
 DEFINE_bool(sprint, false, "Play sprint");
 DEFINE_string(species, "", "Preselect character species (letter, abbreviation, or name)");
@@ -4224,9 +4227,6 @@ static void set_crawl_base_dir(const char *arg)
 enum commandline_option_type
 {
     CLO_NAME,
-    CLO_DIR,
-    CLO_RC,
-    CLO_RCDIR,
     CLO_SCOREFILE,
     CLO_MORGUE,
     CLO_MACRO,
@@ -4264,8 +4264,8 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "name", "dir", "rc",
-    "rcdir", "scorefile", "morgue", "macro",
+    "name",
+    "scorefile", "morgue", "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
@@ -4683,7 +4683,16 @@ bool parse_args(int argc, char **argv, bool rc_only)
     COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS);
 
     // New style flags
-    if (!FLAGS_sprint_map.empty()) {
+
+    if (!FLAGS_rcdir.empty())
+        SysEnv.add_rcdir(FLAGS_rcdir);
+    if (!FLAGS_dir.empty())
+        SysEnv.crawl_dir = FLAGS_dir;
+    if (!FLAGS_rc.empty())
+        SysEnv.crawl_rc = FLAGS_rc;
+
+    if (!FLAGS_sprint_map.empty())
+    {
         crawl_state.sprint_map = FLAGS_sprint_map;
         Options.game.map       = FLAGS_sprint_map;
     }
@@ -4691,7 +4700,8 @@ bool parse_args(int argc, char **argv, bool rc_only)
     if (!rc_only && FLAGS_sprint)
         Options.game.type = GAME_TYPE_SPRINT;
 
-    if (!rc_only) {
+    if (!rc_only)
+    {
         int count = -1;
         if (FLAGS_scores > 0)
         {
@@ -4982,33 +4992,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 return false;
             if (!rc_only)
                 Options.game.name = next_arg;
-            nextUsed = true;
-            break;
-
-        case CLO_RCDIR:
-            // Always parse.
-            if (!next_is_param)
-                return false;
-
-            SysEnv.add_rcdir(next_arg);
-            nextUsed = true;
-            break;
-
-        case CLO_DIR:
-            // Always parse.
-            if (!next_is_param)
-                return false;
-
-            SysEnv.crawl_dir = next_arg;
-            nextUsed = true;
-            break;
-
-        case CLO_RC:
-            // Always parse.
-            if (!next_is_param)
-                return false;
-
-            SysEnv.crawl_rc = next_arg;
             nextUsed = true;
             break;
 
