@@ -95,6 +95,7 @@ DEFINE_string(scorefile, "", "scorefile to report on");
 DEFINE_bool(throttle, false, "Enable throttling of user lua scripts");
 DEFINE_bool(explore, false, "Allow access to explore mode");
 DEFINE_bool(wizard, false, "Allow access to wizard mode");
+DEFINE_int32(seed, 0, "Game seed");
 
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
@@ -4239,7 +4240,6 @@ enum commandline_option_type
     CLO_SCRIPT,
     CLO_BUILDDB,
     CLO_VERSION,
-    CLO_SEED,
     CLO_SAVE_VERSION,
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
@@ -4260,7 +4260,7 @@ enum commandline_option_type
 static const char *cmd_ops[] =
 {
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
-    "builddb", "version", "seed", "save-version",
+    "builddb", "version", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
     "list-combos",
@@ -4725,6 +4725,9 @@ bool parse_args(int argc, char **argv)
     if (!FLAGS_macro.empty())
         SysEnv.macro_dir = FLAGS_macro;
 
+    if (FLAGS_seed)
+        Options.seed = FLAGS_seed;
+
 #ifdef WIZARD
     if (FLAGS_wizard)
         Options.wiz_mode = WIZ_NO;
@@ -4979,15 +4982,6 @@ bool parse_args(int argc, char **argv)
             // Always parse.
             _edit_save(argc - current - 1, argv + current + 1);
             end(0);
-
-        case CLO_SEED:
-            if (!next_is_param)
-                return false;
-
-            if (!sscanf(next_arg, "%x", &Options.seed))
-                return false;
-            nextUsed = true;
-            break;
 
         case CLO_TUTORIAL:
             Options.game.type = GAME_TYPE_TUTORIAL;
