@@ -805,21 +805,6 @@ bool actor::heated() const
     return ::heated(pos());
 }
 #endif
-<<<<<<< HEAD
-
-/////////////
-// Gold aura (Gozag).
-
-bool golden(const coord_def& p)
-{
-    if (!map_bounds(p))
-        return false;
-
-    if (!_agrid_valid)
-        _update_agrid();
-
-    return _check_agrid_flag(p, APROP_GOLD);
-}
 
 /////////////
 // Stasis radius
@@ -847,5 +832,3 @@ bool stasised(const coord_def& p)
         _update_agrid();
     return _check_agrid_flag(p, APROP_STASIS);
 }
-=======
->>>>>>> 2a4c9a483866fd3ffd9be9fb18f00dce38fc5331

@@ -1500,6 +1500,12 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_BERSERK:
+        if (stasised(pos()))
+        {
+            del_ench(ENCH_BERSERK);
+            simple_monster_message(this, " is no longer berserk.");
+        }
+
         if (decay_enchantment(en))
         {
             simple_monster_message(this, " is no longer berserk.");
@@ -1530,6 +1536,14 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SLOW:
     case ENCH_HASTE:
+        if (stasised(pos()))
+        {
+            del_ench(ENCH_SLOW);
+            del_ench(ENCH_HASTE);
+        }
+        
+        decay_enchantment(en);
+        break;
     case ENCH_SWIFT:
     case ENCH_MIGHT:
     case ENCH_FEAR:
@@ -1953,6 +1967,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TP:
+        if (stasised(pos()))
+        {
+            del_ench(ENCH_TP);
+            simple_monster_message(this, " is no longer unstable.");
+        }
         if (decay_enchantment(en, true) && !no_tele(true, false))
             monster_teleport(this, true);
         break;
