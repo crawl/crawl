@@ -503,6 +503,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
         // deliberate fall-through
     case DNGN_ROCK_WALL:
     case DNGN_STONE_WALL:
+    case DNGN_CRYSTAL_WALL:
     {
         unsigned colour = env.map_knowledge(gc).feat_colour();
         if (colour == 0)
@@ -513,14 +514,13 @@ tileidx_t tileidx_feature(const coord_def &gc)
         }
         if (colour >= ETC_FIRST)
         {
-            tileidx_t idx =
-                (feat == DNGN_FLOOR)     ? env.tile_flv(gc).floor :
+            tileidx_t idx = (feat == DNGN_FLOOR) ? env.tile_flv(gc).floor :
                 (feat == DNGN_ROCK_WALL) ? env.tile_flv(gc).wall
-                                         : TILE_DNGN_STONE_WALL;
-#ifdef USE_TILE
+                : tileidx_feature_base(feat);
+
             if (feat == DNGN_STONE_WALL)
                 apply_variations(env.tile_flv(gc), &idx, gc);
-#endif
+
             tileidx_t base = tile_dngn_basetile(idx);
             tileidx_t spec = idx - base;
             unsigned rc = real_colour(colour, gc);
