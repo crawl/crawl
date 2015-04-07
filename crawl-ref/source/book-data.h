@@ -109,9 +109,9 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Hinderance
     SPELL_CONFUSING_TOUCH,
     SPELL_CONFUSE,
+    SPELL_GRAVITAS,
     SPELL_PETRIFY,
     SPELL_ENGLACIATION,
-    SPELL_GRAVITAS,
     SPELL_SUMMON_MANA_VIPER,
 },
 
@@ -203,11 +203,11 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of the Warp
     SPELL_RECALL,
+    SPELL_GRAVITAS,
     SPELL_CONTROL_TELEPORT,
     SPELL_FORCE_LANCE,
     SPELL_PHASE_SHIFT,
     SPELL_WARP_BRAND,
-    SPELL_GRAVITAS,
     SPELL_SUMMON_FOREST,
 },
 
