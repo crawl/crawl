@@ -1,6 +1,10 @@
 Stone Soup 0.17 (up to 0.17-a0-477-g451446c)
 --------------------------------------------
 
+Environment
+-----------
+* Shadow Traps have been removed.
+
 Character
 ---------
 * All races have had their evocations aptitudes reduced by one point.
@@ -23,8 +27,9 @@ Items
 -----
 * The Cloak of Starlight is now +2 and gives Stlth--.
 * Warding now applies to ranged attacks.
+* Troll leather armour now provides regeneration to trolls.
 * Staves of summoning no longer have a chance of abjuring on hit.
-* Staves of power now give a flat +9 mp, rather than scaling with your MP; they
+* Staves of power now give a flat +15 mp, rather than scaling with your MP; they
   no longer store MP when swapping.
 * Removed items:
   - The Cloak of Flash.
