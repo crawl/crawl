@@ -105,6 +105,7 @@ DEFINE_bool(gdb, true, "produce gdb backtrace when a crash happens");
 DEFINE_bool(builddb, false, "");
 
 #ifdef DEBUG_DIAGNOSTICS
+DEFINE_string(test, "", "run <test>, or 'all', or 'list' tests");
 DEFINE_string(script, "", "run <script> in ./scripts");
 DEFINE_string(script_args, "", "Comma separated script args");
 DEFINE_bool(dump_maps, false, "Write map Lua to stderr when parsing .dse files");
@@ -4254,7 +4255,6 @@ static void set_crawl_base_dir(const char *arg)
 enum commandline_option_type
 {
     CLO_ARENA,
-    CLO_TEST,
     CLO_BUILDDB,
     CLO_VERSION,
     CLO_SAVE_VERSION,
@@ -4269,7 +4269,7 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "arena", "test",
+    "arena",
     "builddb", "version", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
@@ -4773,6 +4773,15 @@ bool parse_args(int argc, char **argv)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
+    if (!FLAGS_test.empty())
+    {
+        crawl_state.test = true;
+        if (FLAGS_test == "list")
+            crawl_state.test_list  = true;
+        else if (FLAGS_test != "all")
+            crawl_state.tests_selected = split_string(",", next_arg);
+    }
+
     if (!FLAGS_script.empty())
     {
         crawl_state.test   = true;
@@ -4929,16 +4938,6 @@ bool parse_args(int argc, char **argv)
             if (next_is_param)
             {
                 Options.game.arena_teams = next_arg;
-                nextUsed = true;
-            }
-            break;
-
-        case CLO_TEST:
-            crawl_state.test = true;
-            if (next_is_param)
-            {
-                if (!(crawl_state.test_list = !strcmp(next_arg, "list")))
-                    crawl_state.tests_selected = split_string(",", next_arg);
                 nextUsed = true;
             }
             break;
