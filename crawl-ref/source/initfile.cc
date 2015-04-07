@@ -98,6 +98,7 @@ DEFINE_bool(wizard, false, "Allow access to wizard mode");
 DEFINE_int32(seed, 0, "Game seed");
 
 #ifdef DEBUG_DIAGNOSTICS
+DEFINE_bool(dump_maps, false, "Write map Lua to stderr when parsing .dse files");
 DEFINE_bool(mapstat, false, "run map stats");
 DEFINE_bool(objstat, false, "run obj stats");
 DEFINE_string(stat_levels, "", "levels for -mapstat and -objstat.");
@@ -4240,7 +4241,6 @@ static void set_crawl_base_dir(const char *arg)
 enum commandline_option_type
 {
     CLO_ARENA,
-    CLO_DUMP_MAPS,
     CLO_TEST,
     CLO_SCRIPT,
     CLO_BUILDDB,
@@ -4264,7 +4264,7 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "arena", "dump-maps", "test", "script",
+    "arena", "test", "script",
     "builddb", "version", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
@@ -4757,6 +4757,9 @@ bool parse_args(int argc, char **argv)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
+    if (FLAGS_dump_maps)
+        crawl_state.dump_maps = true;
+
     if (FLAGS_mapstat)
     {
         crawl_state.map_stat_gen = true;
@@ -4774,15 +4777,14 @@ bool parse_args(int argc, char **argv)
 #endif
     }
 
-    if (!FLAGS_stat_levels.empty())
+    if (FLAGS_mapstat || FLAGS_objstat)
     {
         SysEnv.map_gen_range.reset(new depth_ranges);
         *SysEnv.map_gen_range =
             depth_ranges::parse_depth_ranges(FLAGS_stat_levels);
+        SysEnv.map_gen_iters = FLAGS_iters;
     }
         
-    if (FLAGS_mapstat || FLAGS_objstat)
-        SysEnv.map_gen_iters = FLAGS_iters;
 #endif
 
     // Old style flags
@@ -4899,10 +4901,6 @@ bool parse_args(int argc, char **argv)
                 Options.game.arena_teams = next_arg;
                 nextUsed = true;
             }
-            break;
-
-        case CLO_DUMP_MAPS:
-            crawl_state.dump_maps = true;
             break;
 
         case CLO_LIST_COMBOS:
