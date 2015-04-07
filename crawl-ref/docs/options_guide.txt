@@ -1047,7 +1047,7 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           (quantities, curse-status, etc.)
 
         * dbname:
-          Sorts based on an item's unqiue internal name which is linked
+          Sorts based on an item's unique internal name which is linked
           to its description. Items with the same description will be
           grouped together.
 
