@@ -4144,6 +4144,8 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 
     bolt beem;
     beem.target = target;
+    beem.aimed_at_spot = orig_beam -> aimed_at_spot;
+
     mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
          mon->name(DESC_THE).c_str());
     mons_cast(mon, beem, shadow_spell, MON_SPELL_WIZARD, false);
