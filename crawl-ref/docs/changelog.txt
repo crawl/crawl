@@ -1,44 +1,71 @@
-Stone Soup 0.17 (up to 0.17-a0-287-g93b8e50)
+Stone Soup 0.17 (up to 0.17-a0-477-g451446c)
 --------------------------------------------
 
 Character
 ---------
 * All races have had their evocations aptitudes reduced by one point.
-* MP scaling has been reworked & simplified.
+* MP scaling has been reworked & simplified; MP aptitudes have been adjusted.
+* Rot is now healed first, instead of last; effectively, rotting reduces the
+  effectiveness of healing until cured.
 
 Gods
 ----
 * Beogh's smite damage now scales better with invocations.
 * Finesse no longer gives contamination.
-* Lugonu no longer accepts corpse sacrifices.
+* Lugonu and Trog no longer accept corpse sacrifices.
+* The Shining One no longer blesses allies' weapons and armour; their angel
+  summoning ability is now slightly cheaper.
+* Gozag's gold distraction is now an effect centered on the player that's
+  refreshed whenever they find (make) new corpse-gold, rather than being
+  centered on the gold piles themselves.
 
 Items
 -----
 * The Cloak of Starlight is now +2 and gives Stlth--.
 * Warding now applies to ranged attacks.
 * Staves of summoning no longer have a chance of abjuring on hit.
+* Staves of power now give a flat +9 mp, rather than scaling with your MP; they
+  no longer store MP when swapping.
 * Removed items:
   - The Cloak of Flash.
   - Potions of decay.
 
 Monsters
 --------
+* New monsters:
+  - Salamander stormcallers, appearing in the late Dungeon and the Vaults. They
+    chant for a few turns before calling down a Fire Storm on their victims.
+  - Entropy weavers, appearing in Spider, Vaults, and Depths. They chant for a
+    few turns before corroding their victims' equipment terribly.
 * XP and placement for many uniques has been adjusted; in general, uniques have
   been removed from depths at which they're no longer threatening, and their XP
   has increased considerably.
 * rElec++ has been removed; monsters that previously had it now either have
   rElec+ or full immunity.
+* Non-magic-immune monsters are now always confuseable.
 * Revenants no longer ignore silence.
 * Phantasmal warriors' attacks no longer pierce shields & armour.
 * Death knights now have agony & haunt in addition to pain mirror.
 * Removed monsters:
   - Unborn.
+  - Giant mites.
 
 Spells
 ------
+* Enslavement is replaced by Tukima's Dance in the Enchanter starting book, and
+  by Gell's Gravitas in the Arcane Marksman starting book. Tukima's Dance no
+  longer appears in the Book of Enchantments.
+* Gell's Gravitas is now level 3 and smite-targeted, but no longer confuses
+  enemies.
 * Summon Guardian Golem is now level 3.
 * Removed spells:
   - Sure Blade.
+  - Enslavement.
+
+Interface
+---------
+* The level map viewer (X) now allows you to examine monsters, items & features
+  (with 'v'), just as the normal examine mode does.
 
 
 Stone Soup 0.16 (20150311)
