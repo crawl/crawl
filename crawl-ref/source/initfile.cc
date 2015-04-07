@@ -81,7 +81,6 @@ extern char **NXArgv;
 #endif
 
 DEFINE_string(macro, "", "directory to save macro.txt");
-DEFINE_bool(gdb, true, "produce gdb backtrace when a crash happens");
 DEFINE_string(morgue, "", "directory to save character dumps");
 DEFINE_string(name, "", "character name"); 
 DEFINE_string(background, "", "Preselect character background (letter, abbreviation, or name)");
@@ -93,10 +92,16 @@ DEFINE_int32(tscores, -1, "Terse highscore list");
 DEFINE_int32(vscores, -1, "Verbose highscore list");
 DEFINE_string(scorefile, "", "scorefile to report on");
 DEFINE_bool(throttle, false, "Enable throttling of user lua scripts");
+
+#ifdef WIZARD
 DEFINE_bool(explore, false, "Allow access to explore mode");
 DEFINE_bool(wizard, false, "Allow access to wizard mode");
+#endif
+
 DEFINE_int32(seed, 0, "Game seed");
 
+DEFINE_bool(gdb, true, "produce gdb backtrace when a crash happens");
+DEFINE_bool(builddb, false, "");
 #ifdef DEBUG_DIAGNOSTICS
 DEFINE_bool(dump_maps, false, "Write map Lua to stderr when parsing .dse files");
 DEFINE_bool(mapstat, false, "run map stats");
@@ -4739,7 +4744,15 @@ bool parse_args(int argc, char **argv)
     if (FLAGS_explore)
         Options.explore_mode = WIZ_NO;
 #endif
-    
+ 
+    if (FLAGS_builddb)
+    {
+        crawl_state.build_db = true;
+#ifdef USE_TILE_LOCAL
+        crawl_state.tiles_disabled = true;
+#endif
+    }
+   
     if (!FLAGS_species.empty())
         Options.game.species = _str_to_species(FLAGS_species);
     if (!FLAGS_background.empty())
@@ -4938,15 +4951,6 @@ bool parse_args(int argc, char **argv)
             else
                 end(1, false,
                     "-script must specify comma-separated script names");
-            break;
-
-        case CLO_BUILDDB:
-            if (next_is_param)
-                return false;
-            crawl_state.build_db = true;
-#ifdef USE_TILE_LOCAL
-            crawl_state.tiles_disabled = true;
-#endif
             break;
 
         case CLO_VERSION:
