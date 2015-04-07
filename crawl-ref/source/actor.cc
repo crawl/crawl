@@ -497,6 +497,9 @@ void actor::end_constriction(mid_t whom, bool intentional, bool quiet)
                 pronoun(PRONOUN_POSSESSIVE).c_str(),
                 constrictee->name(DESC_THE).c_str());
     }
+
+    if (constrictee->is_player())
+        you.redraw_evasion = true;
 }
 
 void actor::stop_constricting(mid_t whom, bool intentional, bool quiet)
@@ -576,6 +579,9 @@ void actor::start_constricting(actor &whom, int dur)
     (*constricting)[whom.mid] = dur;
     whom.constricted_by = mid;
     whom.held = constriction_damage() ? HELD_CONSTRICTED : HELD_MONSTER;
+
+    if (whom.is_player())
+        you.redraw_evasion = true;
 }
 
 int actor::num_constricting() const

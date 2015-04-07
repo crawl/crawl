@@ -94,7 +94,7 @@ bool ranged_attack::attack()
         return true;
     }
 
-    const int ev = defender->melee_evasion(attacker);
+    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(false);
 
@@ -205,7 +205,7 @@ bool ranged_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->melee_evasion(attacker);
+    const int ev = defender->evasion(EV_IGNORE_NONE, attacker);
 
     const int orig_ev_margin =
         test_hit(orig_to_hit, ev, !attacker->is_player());
@@ -230,8 +230,8 @@ bool ranged_attack::handle_phase_dodged()
         return true;
     }
 
-    const int ev_nophase = defender->melee_evasion(attacker,
-                                                   EV_IGNORE_PHASESHIFT);
+    const int ev_nophase = defender->evasion(EV_IGNORE_PHASESHIFT, attacker);
+
     if (ev_margin + (ev - ev_nophase) > 0)
     {
         if (needs_message && defender_visible)

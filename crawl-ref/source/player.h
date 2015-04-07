@@ -754,8 +754,8 @@ public:
     int racial_ac(bool temp) const;
     int armour_class(bool /*calc_unid*/ = true) const;
     int gdr_perc() const;
-    int melee_evasion(const actor *attacker,
-                      ev_ignore_type evit = EV_IGNORE_NONE) const;
+    int evasion(ev_ignore_type evit = EV_IGNORE_NONE,
+                const actor *attacker = nullptr) const;
 
     int stat_hp() const     { return hp; }
     int stat_maxhp() const  { return hp_max; }
@@ -907,7 +907,6 @@ int player_energy();
 
 int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
-int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
 int player_movement_speed();
 

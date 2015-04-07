@@ -2629,7 +2629,7 @@ void forest_damage(const actor *mon)
         for (adjacent_iterator ai(*ri); ai; ++ai)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_NO_TRANS))
             {
-                int evnp = foe->melee_evasion(mon, EV_IGNORE_PHASESHIFT);
+                int evnp = foe->evasion(EV_IGNORE_PHASESHIFT, mon);
                 int dmg = 0;
                 string msg;
 
@@ -2640,7 +2640,8 @@ void forest_damage(const actor *mon)
                             "A tree reaches out but misses @foe@.",
                             "A root lunges up near @foe@.");
                 }
-                else if (!apply_chunked_AC(1, foe->melee_evasion(mon) - evnp))
+                else if (!apply_chunked_AC(1, foe->evasion(EV_IGNORE_NONE, mon)
+                                              - evnp))
                 {
                     msg = random_choose(
                             "A branch passes through @foe@!",

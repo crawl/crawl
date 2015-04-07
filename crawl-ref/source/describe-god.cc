@@ -232,15 +232,6 @@ static string _religion_help(god_type god)
             break;
     }
 
-    if (god_likes_fresh_corpses(god))
-    {
-        if (!result.empty())
-            result += " ";
-
-        result += "You can pray to sacrifice all fresh corpses on your "
-                  "square.";
-    }
-
     return result;
 }
 

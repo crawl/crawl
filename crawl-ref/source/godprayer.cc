@@ -571,25 +571,11 @@ static void _ashenzari_sac_scroll(const item_def& item)
                                             scroll_names.end()).c_str());
 }
 
-static piety_gain_t _sac_corpse(const item_def& item)
-{
-    gain_piety(13, 19);
-
-    // The feedback is not accurate any longer on purpose; it only reveals
-    // the rate you get piety at.
-    return x_chance_in_y(13, 19) ? PIETY_SOME : PIETY_NONE;
-}
-
 // God effects of sacrificing one item from a stack (e.g., a weapon, one
 // out of 20 arrows, etc.). Does not modify the actual item in any way.
 static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
        int *js, bool first)
 {
-    // XXX: this assumes that there's no overlap between
-    //      item-accepting gods and corpse-accepting gods.
-    if (god_likes_fresh_corpses(you.religion))
-        return _sac_corpse(item);
-
     // item_value() multiplies by quantity.
     const int shop_value = item_value(item, true) / item.quantity;
     // Since the god is taking the items as a sacrifice, they must have at
@@ -745,9 +731,7 @@ static bool _offer_items()
     // Explanatory messages if nothing the god likes is sacrificed.
     if (num_sacced == 0 && num_disliked > 0)
     {
-        if (god_likes_fresh_corpses(you.religion))
-            simple_god_message(" only cares about fresh corpses!");
-        else if (you_worship(GOD_BEOGH))
+        if (you_worship(GOD_BEOGH))
             simple_god_message(" only cares about orcish remains!");
         else if (you_worship(GOD_ASHENZARI))
             simple_god_message(" can corrupt only scrolls of remove curse.");

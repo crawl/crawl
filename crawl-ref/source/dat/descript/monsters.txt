@@ -1111,10 +1111,10 @@ dangerous, this freakish relative puts it to shame.
 %%%%
 entropy weaver
 
-A tall, gaunt humanoid creature covered in a flaking, pale chitin. Its spindly
-limbs seem capable of startlingly quick movement and end in razor-sharp talons.
-These creatures know an ancient and slow chant that will temporarily accelerate
-the aging process of a foe's weapon and armour, corroding it badly.
+A gaunt humanoid creature covered in a flaking, pale chitin. Its spindly limbs
+are capable of startlingly quick movement and end in razor-sharp talons. These
+creatures know a slow and ancient chant that temporarily accelerates the aging
+process of a foe's weapon and armour, corroding them badly.
 %%%%
 ettin
 

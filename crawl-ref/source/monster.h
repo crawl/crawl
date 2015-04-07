@@ -462,8 +462,8 @@ public:
     int armour_class(bool calc_unid = true) const;
     int gdr_perc() const { return 0; }
     int base_evasion() const;
-    int evasion(bool calc_unid = true) const;
-    int melee_evasion(const actor* /*attacker*/, ev_ignore_type evit) const;
+    int evasion(ev_ignore_type evit = EV_IGNORE_NONE,
+                const actor* /*attacker*/ = nullptr) const;
 
     bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int strength);

@@ -601,7 +601,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     mintel = mons_intel(m);
     ac = m->armour_class(false);
-    ev = m->evasion(false);
+    ev = m->evasion(EV_IGNORE_UNIDED);
     base_ev = m->base_evasion();
     mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
