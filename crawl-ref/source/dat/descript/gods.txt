@@ -148,9 +148,9 @@ to Elyvilon or Zin while keeping some piety.
 Trog
 
 Trog is an ancient god of anger and violence. Followers are expected to kill in
-Trog's name and sacrifice the dead. In return, worshippers of Trog gain the
-ability to go berserk at will in combat, and will be granted gifts of powerful
-weapons. Trog hates all wizards, and loves to see their spellbooks burn.
+Trog's name and burn books containing spells. Trog hates all wizards, and loves
+to see their spellbooks burn. In return, worshippers of Trog gain the ability
+to go berserk at will in combat, and will be granted gifts of powerful weapons.
 Followers are absolutely forbidden the use of spell magic.
 %%%%
 Vehumet
