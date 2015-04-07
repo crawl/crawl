@@ -97,6 +97,14 @@ DEFINE_bool(explore, false, "Allow access to explore mode");
 DEFINE_bool(wizard, false, "Allow access to wizard mode");
 DEFINE_int32(seed, 0, "Game seed");
 
+#ifdef DEBUG_DIAGNOSTICS
+DEFINE_bool(mapstat, false, "run map stats");
+DEFINE_bool(objstat, false, "run obj stats");
+DEFINE_string(stat_levels, "", "levels for -mapstat and -objstat.");
+DEFINE_int32(iters, 100, "Number of iterations for -mapstat and -objstat");
+#endif
+
+
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
@@ -4231,9 +4239,6 @@ static void set_crawl_base_dir(const char *arg)
 // Keep this in sync with the option names.
 enum commandline_option_type
 {
-    CLO_MAPSTAT,
-    CLO_OBJSTAT,
-    CLO_ITERATIONS,
     CLO_ARENA,
     CLO_DUMP_MAPS,
     CLO_TEST,
@@ -4259,7 +4264,7 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
+    "arena", "dump-maps", "test", "script",
     "builddb", "version", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
@@ -4751,6 +4756,35 @@ bool parse_args(int argc, char **argv)
         crawl_state.no_gdb = "GDB disabled via the command line.";
     }
 
+#ifdef DEBUG_DIAGNOSTICS
+    if (FLAGS_mapstat)
+    {
+        crawl_state.map_stat_gen = true;
+#ifdef USE_TILE_LOCAL
+        crawl_state.tiles_disabled = true;
+#endif
+        SysEnv.map_gen_iters = FLAGS_iters;
+    }
+
+    if (!FLAGS_objstat.empty())
+    {
+        crawl_state.obj_stat_gen = true;
+#ifdef USE_TILE_LOCAL
+        crawl_state.tiles_disabled = true;
+#endif
+    }
+
+    if (!FLAGS_stat_levels.empty())
+    {
+        SysEnv.map_gen_range.reset(new depth_ranges);
+        *SysEnv.map_gen_range =
+            depth_ranges::parse_depth_ranges(FLAGS_stat_levels);
+    }
+        
+    if (FLAGS_mapstat || FLAGS_objstat)
+        SysEnv.map_gen_iters = FLAGS_iters;
+#endif
+
     // Old style flags
     if (crawl_state.command_line_arguments.empty())
     {
@@ -4857,55 +4891,6 @@ bool parse_args(int argc, char **argv)
         // Take action according to the cmd chosen.
         switch (o)
         {
-        case CLO_MAPSTAT:
-        case CLO_OBJSTAT:
-#ifdef DEBUG_DIAGNOSTICS
-            if (o == CLO_MAPSTAT)
-                crawl_state.map_stat_gen = true;
-            else
-                crawl_state.obj_stat_gen = true;
-#ifdef USE_TILE_LOCAL
-            crawl_state.tiles_disabled = true;
-#endif
-
-            if (!SysEnv.map_gen_iters)
-                SysEnv.map_gen_iters = 100;
-            if (next_is_param)
-            {
-                SysEnv.map_gen_range.reset(new depth_ranges);
-                *SysEnv.map_gen_range =
-                    depth_ranges::parse_depth_ranges(next_arg);
-                nextUsed = true;
-            }
-            break;
-#else
-            fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_DIAGNOSTICS builds.\n");
-            end(1);
-#endif
-        case CLO_ITERATIONS:
-#ifdef DEBUG_DIAGNOSTICS
-            if (!next_is_param || !isadigit(*next_arg))
-            {
-                fprintf(stderr, "Integer argument required for -%s\n", arg);
-                end(1);
-            }
-            else
-            {
-                SysEnv.map_gen_iters = atoi(next_arg);
-                if (SysEnv.map_gen_iters < 1)
-                    SysEnv.map_gen_iters = 1;
-                else if (SysEnv.map_gen_iters > 10000)
-                    SysEnv.map_gen_iters = 10000;
-                nextUsed = true;
-            }
-#else
-            fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_DIAGNOSTICS builds.\n");
-            end(1);
-#endif
-            break;
-
         case CLO_ARENA:
                 Options.game.type = GAME_TYPE_ARENA;
                 Options.restart_after_game = false;
