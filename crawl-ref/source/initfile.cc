@@ -92,6 +92,7 @@ DEFINE_int32(tscores, -1, "Terse highscore list");
 DEFINE_int32(vscores, -1, "Verbose highscore list");
 DEFINE_string(scorefile, "", "scorefile to report on");
 DEFINE_bool(throttle, false, "Enable throttling of user lua scripts");
+DEFINE_bool(list_combos, false, "List playable species, jobs and character combos");
 
 #ifdef WIZARD
 DEFINE_bool(explore, false, "Allow access to explore mode");
@@ -102,7 +103,10 @@ DEFINE_int32(seed, 0, "Game seed");
 
 DEFINE_bool(gdb, true, "produce gdb backtrace when a crash happens");
 DEFINE_bool(builddb, false, "");
+
 #ifdef DEBUG_DIAGNOSTICS
+DEFINE_string(script, "", "run <script> in ./scripts");
+DEFINE_string(script_args, "", "Comma separated script args");
 DEFINE_bool(dump_maps, false, "Write map Lua to stderr when parsing .dse files");
 DEFINE_bool(mapstat, false, "run map stats");
 DEFINE_bool(objstat, false, "run obj stats");
@@ -4251,7 +4255,6 @@ enum commandline_option_type
 {
     CLO_ARENA,
     CLO_TEST,
-    CLO_SCRIPT,
     CLO_BUILDDB,
     CLO_VERSION,
     CLO_SAVE_VERSION,
@@ -4261,17 +4264,15 @@ enum commandline_option_type
     CLO_PRINT_CHARSET,
     CLO_TUTORIAL,
     CLO_NO_SAVE,
-    CLO_LIST_COMBOS, // List species, jobs, and legal combos, in that order.
     CLO_NOPS
 };
 
 static const char *cmd_ops[] =
 {
-    "arena", "test", "script",
+    "arena", "test",
     "builddb", "version", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
-    "list-combos",
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4728,6 +4729,18 @@ bool parse_args(int argc, char **argv)
     if (FLAGS_seed)
         Options.seed = FLAGS_seed;
 
+    if (FLAGS_list_combos)
+    {
+        auto join = [](const vector<string> &vs) {
+            return comma_separated_line(vs.begin(), vs.end(), ",", ",");
+        };
+        fprintf(stdout, "%s\n%s\n%s\n",
+                join(playable_species_names()).c_str(),
+                join(playable_job_names()).c_str(),
+                join(playable_combo_names()).c_str());
+        end(0);
+    }
+
 #ifdef WIZARD
     if (FLAGS_wizard)
         Options.wiz_mode = WIZ_NO;
@@ -4760,6 +4773,15 @@ bool parse_args(int argc, char **argv)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
+    if (!FLAGS_script.empty())
+    {
+        crawl_state.test   = true;
+        crawl_state.script = true;
+        crawl_state.tests_selected = split_string(",", FLAGS_script);
+        if (!FLAGS_script_args.empty())
+            crawl_state.script_args = split_string(",", FLAGS_script_args);
+    }
+
     if (FLAGS_dump_maps)
         crawl_state.dump_maps = true;
 
@@ -4911,18 +4933,6 @@ bool parse_args(int argc, char **argv)
             }
             break;
 
-        case CLO_LIST_COMBOS:
-        {
-            auto join = [](const vector<string> &vs) {
-                return comma_separated_line(vs.begin(), vs.end(), ",", ",");
-            };
-            fprintf(stdout, "%s\n%s\n%s\n",
-                    join(playable_species_names()).c_str(),
-                    join(playable_job_names()).c_str(),
-                    join(playable_combo_names()).c_str());
-            end(0);
-        }
-
         case CLO_TEST:
             crawl_state.test = true;
             if (next_is_param)
@@ -4931,21 +4941,6 @@ bool parse_args(int argc, char **argv)
                     crawl_state.tests_selected = split_string(",", next_arg);
                 nextUsed = true;
             }
-            break;
-
-        case CLO_SCRIPT:
-            crawl_state.test   = true;
-            crawl_state.script = true;
-            if (current < argc - 1)
-            {
-                crawl_state.tests_selected = split_string(",", next_arg);
-                for (int extra = current + 2; extra < argc; ++extra)
-                    crawl_state.script_args.emplace_back(argv[extra]);
-                current = argc;
-            }
-            else
-                end(1, false,
-                    "-script must specify comma-separated script names");
             break;
 
         case CLO_VERSION:
