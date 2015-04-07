@@ -699,14 +699,6 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (god_likes_fresh_corpses(which_god))
-    {
-        string like = "you sacrifice fresh corpses";
-        if (verbose)
-            like += " (by standing over them and <w>p</w>raying";
-        likes.push_back(like);
-    }
-
     switch (which_god)
     {
     case GOD_MAKHLEB:
@@ -3170,9 +3162,6 @@ bool god_likes_items(god_type god, bool greedy_explore)
         return false;
     }
 
-    if (god_likes_fresh_corpses(god))
-        return true;
-
     switch (god)
     {
     case GOD_BEOGH:
@@ -3198,9 +3187,6 @@ bool god_likes_item(god_type god, const item_def& item)
 {
     if (!god_likes_items(god))
         return false;
-
-    if (god_likes_fresh_corpses(god))
-        return item.is_type(OBJ_CORPSES, CORPSE_BODY);
 
     switch (god)
     {
@@ -3895,11 +3881,6 @@ bool god_hates_eating(god_type god, monster_type mc)
         return true;
     if (you_worship(GOD_ZIN) && mons_class_intel(mc) >= I_NORMAL)
         return true;
-    return false;
-}
-
-bool god_likes_fresh_corpses(god_type god)
-{
     return false;
 }
 

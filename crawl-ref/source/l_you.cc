@@ -86,14 +86,6 @@ function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
-/*
---- Does this [player's] god like fresh corpses?
--- @param god defaults to you.god()
-function god_likes_fresh_corpses(god) */
-LUARET1(you_god_likes_fresh_corpses, boolean,
-        lua_isstring(ls, 1) ?
-        god_likes_fresh_corpses(str_to_god(lua_tostring(ls, 1))) :
-        god_likes_fresh_corpses(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_base_mp, number, get_real_mp(false))
@@ -578,7 +570,6 @@ static const struct luaL_reg you_clib[] =
     { "antimagic",    you_antimagic },
     { "status",       you_status },
 
-    { "god_likes_fresh_corpses",  you_god_likes_fresh_corpses },
     { "can_consume_corpses",      you_can_consume_corpses },
 
     { "stop_activity", you_stop_activity },

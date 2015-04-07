@@ -542,7 +542,6 @@ void hints_finished()
     you.save->delete_chunk("tut");
 }
 
-// Occasionally remind religious characters of sacrifices.
 void hints_dissection_reminder(bool healthy)
 {
     if (!crawl_state.game_is_hints())
@@ -551,25 +550,9 @@ void hints_dissection_reminder(bool healthy)
     if (Hints.hints_just_triggered)
         return;
 
-    // When hungry, give appropriate message or at least don't suggest
-    // sacrifice.
+    // When hungry, give appropriate message
     if (you.hunger_state < HS_SATIATED && healthy)
-    {
         learned_something_new(HINT_MAKE_CHUNKS);
-        return;
-    }
-
-    if (!god_likes_fresh_corpses(you.religion))
-        return;
-
-    if (Hints.hints_events[HINT_OFFER_CORPSE])
-        learned_something_new(HINT_OFFER_CORPSE);
-    else if (one_chance_in(8))
-    {
-        Hints.hints_just_triggered = true;
-
-        print_hint("dissection reminder");
-    }
 }
 
 static bool _advise_use_healing_potion()
@@ -1371,13 +1354,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "then eat the resulting chunks with <w>Shift + right mouse "
                 "click</w>.</tiles>";
 
-        if (god_likes_fresh_corpses(you.religion))
-        {
-            text << "\nYou can also offer corpses to "
-                 << god_name(you.religion)
-                 << " by <w>%</w>raying over them.";
-            cmd.push_back(CMD_PRAY);
-        }
         text << "\nIn hint mode you can reread this information at "
                 "any time by selecting the item in question in your "
                 "<w>%</w>nventory.";
@@ -2007,20 +1983,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "look at it in your <w>%</w>nventory.";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 #endif
-        break;
-
-    case HINT_OFFER_CORPSE:
-        if (!god_likes_fresh_corpses(you.religion)
-            || you.hunger_state < HS_SATIATED)
-        {
-            return;
-        }
-
-        text << "Hey, that monster left a corpse! If you don't need it for "
-                "food or other purposes, you can sacrifice it to "
-             << god_name(you.religion)
-             << " by <w>%</w>raying over it to offer it. ";
-        cmd.push_back(CMD_PRAY);
         break;
 
     case HINT_SHIFT_RUN:
@@ -3551,13 +3513,6 @@ void hints_describe_item(const item_def &item)
                     "produce chunks for food (though they may be unhealthy)";
             cmd.push_back(CMD_BUTCHER);
 
-            if (god_likes_fresh_corpses(you.religion))
-            {
-                ostr << ", or offered as a sacrifice to "
-                     << god_name(you.religion)
-                     << " by <w>%</w>raying over them";
-                cmd.push_back(CMD_PRAY);
-            }
             ostr << ". ";
 
             if (!in_inventory(item))
