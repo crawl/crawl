@@ -110,6 +110,10 @@ DEFINE_string(stat_levels, "", "levels for -mapstat and -objstat.");
 DEFINE_int32(iters, 100, "Number of iterations for -mapstat and -objstat");
 #endif
 
+#ifdef USE_TILE_WEB
+DEFINE_int32(webtiles_socket, 0, "Webtiles socket");
+DEFINE_bool(await_connection, false, "Await webtiles connection");
+#endif
 
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
@@ -4258,12 +4262,6 @@ enum commandline_option_type
     CLO_TUTORIAL,
     CLO_NO_SAVE,
     CLO_LIST_COMBOS, // List species, jobs, and legal combos, in that order.
-#ifdef USE_TILE_WEB
-    CLO_WEBTILES_SOCKET,
-    CLO_AWAIT_CONNECTION,
-    CLO_PRINT_WEBTILES_OPTIONS,
-#endif
-
     CLO_NOPS
 };
 
@@ -4274,9 +4272,6 @@ static const char *cmd_ops[] =
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
     "list-combos",
-#ifdef USE_TILE_WEB
-    "webtiles-socket", "await-connection", "print-webtiles-options",
-#endif
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4636,11 +4631,6 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_close_object();
 }
 
-static void _print_webtiles_options()
-{
-    Options.write_webtiles_options("");
-    printf("%s\n", tiles.get_message().c_str());
-}
 #endif
 
 static bool _check_extra_opt(char* _opt)
@@ -4782,7 +4772,7 @@ bool parse_args(int argc, char **argv)
         SysEnv.map_gen_iters = FLAGS_iters;
     }
 
-    if (!FLAGS_objstat.empty())
+    if (FLAGS_objstat)
     {
         crawl_state.obj_stat_gen = true;
 #ifdef USE_TILE_LOCAL
@@ -4798,6 +4788,11 @@ bool parse_args(int argc, char **argv)
         SysEnv.map_gen_iters = FLAGS_iters;
     }
         
+#endif
+
+#ifdef USE_TILE_WEB
+    tiles.m_sock_name = FLAGS_webtiles_socket;
+    tiles.m_await_connection = FLAGS_await_connection;
 #endif
 
     // Old style flags
@@ -4977,22 +4972,6 @@ bool parse_args(int argc, char **argv)
         case CLO_NO_SAVE:
             Options.no_save = true;
             break;
-
-#ifdef USE_TILE_WEB
-        case CLO_WEBTILES_SOCKET:
-            nextUsed          = true;
-            tiles.m_sock_name = next_arg;
-            break;
-
-        case CLO_AWAIT_CONNECTION:
-            tiles.m_await_connection = true;
-            break;
-
-        case CLO_PRINT_WEBTILES_OPTIONS:
-            _print_webtiles_options();
-            end(0);
-            break;
-#endif
 
         case CLO_PRINT_CHARSET:
 #ifdef DGAMELAUNCH
