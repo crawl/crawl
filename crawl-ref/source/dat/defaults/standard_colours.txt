@@ -12,4 +12,3 @@ $poisonous    := lightgreen
 $danger   := lightred
 $warning  := yellow
 $boring   := darkgrey
-$item_dmg := $danger
