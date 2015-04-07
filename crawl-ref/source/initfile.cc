@@ -80,6 +80,8 @@ extern char **NXArgv;
 #include <unistd.h>
 #endif
 
+DEFINE_string(macro, "", "directory to save macro.txt");
+DEFINE_bool(gdb, true, "produce gdb backtrace when a crash happens");
 DEFINE_string(morgue, "", "directory to save character dumps");
 DEFINE_string(name, "", "character name"); 
 DEFINE_string(background, "", "Preselect character background (letter, abbreviation, or name)");
@@ -4228,7 +4230,6 @@ static void set_crawl_base_dir(const char *arg)
 // Keep this in sync with the option names.
 enum commandline_option_type
 {
-    CLO_MACRO,
     CLO_MAPSTAT,
     CLO_OBJSTAT,
     CLO_ITERATIONS,
@@ -4246,8 +4247,6 @@ enum commandline_option_type
     CLO_PRINT_CHARSET,
     CLO_TUTORIAL,
     CLO_NO_SAVE,
-    CLO_GDB,
-    CLO_NO_GDB, CLO_NOGDB,
     CLO_LIST_COMBOS, // List species, jobs, and legal combos, in that order.
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
@@ -4260,12 +4259,11 @@ enum commandline_option_type
 
 static const char *cmd_ops[] =
 {
-    "macro",
     "mapstat", "objstat", "iters", "arena", "dump-maps", "test", "script",
     "builddb", "version", "seed", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
-    "gdb", "no-gdb", "nogdb", "list-combos",
+    "list-combos",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4724,6 +4722,9 @@ bool parse_args(int argc, char **argv)
     if (!FLAGS_morgue.empty())
         SysEnv.morgue_dir = FLAGS_morgue;
  
+    if (!FLAGS_macro.empty())
+        SysEnv.macro_dir = FLAGS_macro;
+
 #ifdef WIZARD
     if (FLAGS_wizard)
         Options.wiz_mode = WIZ_NO;
@@ -4737,6 +4738,15 @@ bool parse_args(int argc, char **argv)
         Options.game.job = str_to_job(FLAGS_background);
 
     crawl_state.throttle = FLAGS_throttle;
+
+    if (FLAGS_gdb)
+    {
+        crawl_state.no_gdb = 0;
+    }
+    else
+    {
+        crawl_state.no_gdb = "GDB disabled via the command line.";
+    }
 
     // Old style flags
     if (crawl_state.command_line_arguments.empty())
@@ -4951,22 +4961,6 @@ bool parse_args(int argc, char **argv)
 #ifdef USE_TILE_LOCAL
             crawl_state.tiles_disabled = true;
 #endif
-            break;
-
-        case CLO_GDB:
-            crawl_state.no_gdb = 0;
-            break;
-
-        case CLO_NO_GDB:
-        case CLO_NOGDB:
-            crawl_state.no_gdb = "GDB disabled via the command line.";
-            break;
-
-        case CLO_MACRO:
-            if (!next_is_param)
-                return false;
-            SysEnv.macro_dir = next_arg;
-            nextUsed = true;
             break;
 
         case CLO_VERSION:
