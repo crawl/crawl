@@ -93,6 +93,8 @@ DEFINE_int32(vscores, -1, "Verbose highscore list");
 DEFINE_string(scorefile, "", "scorefile to report on");
 DEFINE_bool(throttle, false, "Enable throttling of user lua scripts");
 DEFINE_bool(list_combos, false, "List playable species, jobs and character combos");
+DEFINE_bool(version, false, "Crawl version and compilation info");
+DEFINE_string(save_version, "", "Save file version for the given player");
 
 #ifdef WIZARD
 DEFINE_bool(explore, false, "Allow access to explore mode");
@@ -4255,8 +4257,6 @@ static void set_crawl_base_dir(const char *arg)
 enum commandline_option_type
 {
     CLO_ARENA,
-    CLO_VERSION,
-    CLO_SAVE_VERSION,
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
     CLO_EDIT_SAVE,
@@ -4269,7 +4269,6 @@ enum commandline_option_type
 static const char *cmd_ops[] =
 {
     "arena",
-    "version", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
 };
@@ -4314,7 +4313,7 @@ static void _print_version()
     printf("%s", compilation_info);
 }
 
-static void _print_save_version(char *name)
+static void _print_save_version(const char *name)
 {
     try
     {
@@ -4740,6 +4739,17 @@ bool parse_args(int argc, char **argv)
         end(0);
     }
 
+    if (FLAGS_version)
+    {
+        _print_version();
+        end(0);
+    }
+
+    if (FLAGS_save_version.empty())
+    {
+        _print_save_version(FLAGS_save_version.c_str());
+        end(0);
+    }
 #ifdef WIZARD
     if (FLAGS_wizard)
         Options.wiz_mode = WIZ_NO;
@@ -4940,19 +4950,6 @@ bool parse_args(int argc, char **argv)
                 nextUsed = true;
             }
             break;
-
-        case CLO_VERSION:
-            _print_version();
-            end(0);
-
-        case CLO_SAVE_VERSION:
-            // Always parse.
-            if (!next_is_param)
-                return false;
-
-            _print_save_version(next_arg);
-            end(0);
-
         case CLO_EDIT_SAVE:
             // Always parse.
             _edit_save(argc - current - 1, argv + current + 1);
