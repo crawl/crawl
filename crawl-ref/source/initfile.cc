@@ -4255,7 +4255,6 @@ static void set_crawl_base_dir(const char *arg)
 enum commandline_option_type
 {
     CLO_ARENA,
-    CLO_BUILDDB,
     CLO_VERSION,
     CLO_SAVE_VERSION,
     CLO_EXTRA_OPT_FIRST,
@@ -4270,7 +4269,7 @@ enum commandline_option_type
 static const char *cmd_ops[] =
 {
     "arena",
-    "builddb", "version", "save-version",
+    "version", "save-version",
     "extra-opt-first", "extra-opt-last", "edit-save",
     "print-charset", "tutorial", "no-save",
 };
@@ -4779,7 +4778,7 @@ bool parse_args(int argc, char **argv)
         if (FLAGS_test == "list")
             crawl_state.test_list  = true;
         else if (FLAGS_test != "all")
-            crawl_state.tests_selected = split_string(",", next_arg);
+            crawl_state.tests_selected = split_string(",", FLAGS_test);
     }
 
     if (!FLAGS_script.empty())
