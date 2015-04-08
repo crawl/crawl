@@ -25,7 +25,7 @@ static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
         DNGN_ROCK_WALL,
         DNGN_ROCK_WALL,
         DNGN_ROCK_WALL,
-        DNGN_GREEN_CRYSTAL_WALL,
+        DNGN_CRYSTAL_WALL,
         DNGN_METAL_WALL
     };
     return features[val%9];
@@ -205,7 +205,7 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
             feature = DNGN_CLEAR_ROCK_WALL;
             break;
         case DNGN_SLIMY_WALL:
-            feature = DNGN_GREEN_CRYSTAL_WALL;
+            feature = DNGN_CRYSTAL_WALL;
             break;
         case DNGN_UNSEEN:
             feature = DNGN_FLOOR;
@@ -474,7 +474,7 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
         dungeon_feature_type city_wall = DNGN_ROCK_WALL;
         if (rich > 0.5) city_wall = DNGN_STONE_WALL;
         else if (rich > 0.75) city_wall = DNGN_METAL_WALL;
-        else if (rich > 0.9) city_wall = DNGN_GREEN_CRYSTAL_WALL;
+        else if (rich > 0.9) city_wall = DNGN_CRYSTAL_WALL;
 
         // Doors and windows
         if (jitter>0.5 && jitter<0.6) city_wall = DNGN_CLOSED_DOOR;

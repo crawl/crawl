@@ -2385,8 +2385,8 @@ static void _xom_zero_miscast()
         messages.emplace_back("Dim shapes swim through the translucent wall.");
     }
 
-    if (in_view[DNGN_GREEN_CRYSTAL_WALL])
-        messages.emplace_back("Dim shapes swim through the green crystal wall.");
+    if (in_view[DNGN_CRYSTAL_WALL])
+        messages.emplace_back("Dim shapes swim through the crystal wall.");
 
     if (in_view[DNGN_METAL_WALL])
     {

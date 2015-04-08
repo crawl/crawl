@@ -26,7 +26,7 @@ Terrain
  n - clear stone wall                              (DNGN_CLEAR_STONE_WALL)
  o - clear permanent rock wall - always undiggable (DNGN_CLEAR_PERMAROCK_WALL)
  v - metal wall - grounds electricity                    (DNGN_METAL_WALL)
- b - crystal wall - reflects cold and fire       (DNGN_GREEN_CRYSTAL_WALL)
+ b - crystal wall - reflects cold and fire              (DNGN_CRYSTAL_WALL)
  t - tree - combustible                                        (DNGN_TREE)
 
  . - floor                                                    (DNGN_FLOOR)

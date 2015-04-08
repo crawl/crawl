@@ -1091,7 +1091,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_CLOSED_DOOR:
         case DNGN_METAL_WALL:
             return CLOUD_GREY_SMOKE;
-        case DNGN_GREEN_CRYSTAL_WALL:
+        case DNGN_CRYSTAL_WALL:
         case DNGN_ROCK_WALL:
         case DNGN_SLIMY_WALL:
         case DNGN_STONE_WALL:
@@ -1780,7 +1780,7 @@ static bool _is_grid_corruptible(const coord_def &c)
         return false;
 
     case DNGN_METAL_WALL:
-    case DNGN_GREEN_CRYSTAL_WALL:
+    case DNGN_CRYSTAL_WALL:
         return one_chance_in(4);
 
     case DNGN_STONE_WALL:

@@ -536,7 +536,7 @@ KFEAT:      o = granite_statue
 FTILE:      WU.Oo = floor_rough_magenta
 TILE:       b = dngn_crystal_magenta
 :           wizlab_portal(_G)
-: set_feature_name("green_crystal_wall", "wall of crystal")
+: set_feature_name("crystal_wall", "wall of crystal")
 MAP
 bbbbbbbbbbb
 bbbb...bbbb
@@ -1692,7 +1692,7 @@ set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spa
 
 set_border_fill_type('permarock_wall')
 set_feature_name("permarock_wall", "The dimension's edge")
-set_feature_name("green_crystal_wall", "wall of crystal")
+set_feature_name("crystal_wall", "wall of crystal")
 wizlab_setup(_G, "The Roulette of Golubria")
 }}
 
@@ -1800,7 +1800,7 @@ COLOUR:     wWv#4 = silver
 :           set_random_mon_list("insubstantial wisp / air elemental / wind drake")
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
 :           set_feature_name("floor", "damp floor")
-:           set_feature_name("green_crystal_wall", "wall of white crystal")
+:           set_feature_name("crystal_wall", "wall of white crystal")
 
 epilogue{{
             wizlab_milestone(_G, "The Chambers of " .. wizname .. " the Cloud Mage")

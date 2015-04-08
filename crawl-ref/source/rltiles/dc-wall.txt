@@ -1425,7 +1425,7 @@ iron2-4
 
 dngn/grate DNGN_GRATE
 
-crystal_wall_green DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
+crystal_wall_green DNGN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 
 %variation DNGN_CRYSTAL blue
 crystal_wall_blue DNGN_CRYSTAL_BLUE

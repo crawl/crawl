@@ -1193,7 +1193,7 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
         chance = pow / 4;
         break;
 
-    case DNGN_GREEN_CRYSTAL_WALL:
+    case DNGN_CRYSTAL_WALL:
         chance = 50;
         break;
 
@@ -2300,7 +2300,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         break;
 
     // Crystal
-    case DNGN_GREEN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
+    case DNGN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
         if (what)
             *what = "crystal wall";
         beam.ex_size    = 2;

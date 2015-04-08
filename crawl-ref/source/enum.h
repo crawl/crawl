@@ -1460,7 +1460,7 @@ enum dungeon_feature_type
 
     // Walls
     DNGN_METAL_WALL,
-    DNGN_GREEN_CRYSTAL_WALL,
+    DNGN_CRYSTAL_WALL,
     DNGN_ROCK_WALL,
     DNGN_SLIMY_WALL,
     DNGN_STONE_WALL,
