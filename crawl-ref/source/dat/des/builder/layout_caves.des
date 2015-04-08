@@ -400,8 +400,8 @@ ENDMAP
 # distinguishing feature for Snake. ~infiniplex
 #
 NAME:   layout_cave_town
-DEPTH:  Snake:3-5
-WEIGHT: 5 (Snake:3), 15 (Snake:4), 50 (Snake:5)
+DEPTH:  Snake:2-
+WEIGHT: 5 (Snake:2), 15 (Snake:3), 50 (Snake:4)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_city
 TAGS:   no_rotate no_hmirror no_vmirror
