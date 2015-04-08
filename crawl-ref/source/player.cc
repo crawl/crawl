@@ -2937,6 +2937,9 @@ void level_change(bool skip_attribute_increase)
             default:
                 break;
             }
+
+            give_level_mutations(you.species, you.experience_level);
+
         }
 
         if (species_is_draconian(you.species) && !(you.experience_level % 3))
@@ -2944,8 +2947,6 @@ void level_change(bool skip_attribute_increase)
             mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
             you.redraw_armour_class = true;
         }
-
-        give_level_mutations(you.species, you.experience_level);
 
         // zot defence abilities; must also be updated in ability.cc when these levels are changed
         if (crawl_state.game_is_zotdef())
