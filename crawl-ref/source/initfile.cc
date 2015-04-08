@@ -97,6 +97,8 @@ DEFINE_bool(save, true, "Enable save game");
 DEFINE_bool(list_combos, false, "List playable species, jobs and character combos");
 DEFINE_bool(version, false, "Crawl version and compilation info");
 DEFINE_string(save_version, "", "Save file version for the given player");
+DEFINE_string(extra_opt_first, "", "Override options before init file. optname1=optval1,optname2=optval2");
+DEFINE_string(extra_opt_last, "", "Override options after init file. optname1=optval1,optname2=optval2");
 
 DEFINE_bool(arena, false, "Enter the arena");
 DEFINE_string(fight, "", "Stage a tournament between monsters");
@@ -4262,23 +4264,6 @@ static void set_crawl_base_dir(const char *arg)
 // parse args, filling in Options and game environment as we go.
 // returns true if no unknown or malformed arguments were found.
 
-// Keep this in sync with the option names.
-enum commandline_option_type
-{
-    CLO_EXTRA_OPT_FIRST,
-    CLO_EXTRA_OPT_LAST,
-    CLO_EDIT_SAVE,
-    CLO_NOPS
-};
-
-static const char *cmd_ops[] =
-{
-    "extra-opt-first", "extra-opt-last", "edit-save",
-};
-
-static const int num_cmd_ops = CLO_NOPS;
-static bool arg_seen[num_cmd_ops];
-
 static string _find_executable_path()
 {
     // A lot of OSes give ways to find the location of the running app's
@@ -4635,30 +4620,29 @@ void game_options::write_webtiles_options(const string& name)
 
 #endif
 
-static bool _check_extra_opt(char* _opt)
+static bool _check_extra_opt(string opt)
 {
-    string opt(_opt);
     trim_string(opt);
 
     if (opt[0] == ':' || opt[0] == '<' || opt[0] == '{'
         || starts_with(opt, "L<") || starts_with(opt, "Lua{"))
     {
         fprintf(stderr, "An extra option can't use Lua (%s)\n",
-                _opt);
+                opt.c_str());
         return false;
     }
 
     if (opt[0] == '#')
     {
         fprintf(stderr, "An extra option can't be a comment (%s)\n",
-                _opt);
+                opt.c_str());
         return false;
     }
 
     if (opt.find_first_of('=') == string::npos)
     {
         fprintf(stderr, "An extra opt must contain a '=' (%s)\n",
-                _opt);
+                opt.c_str());
         return false;
     }
 
@@ -4666,7 +4650,7 @@ static bool _check_extra_opt(char* _opt)
     if (opt.find_first_of('=') == 0 || parts[0].length() == 0)
     {
         fprintf(stderr, "An extra opt must have an option name (%s)\n",
-                _opt);
+                opt.c_str());
         return false;
     }
 
@@ -4675,7 +4659,30 @@ static bool _check_extra_opt(char* _opt)
 
 bool parse_args(int argc, char **argv)
 {
-    COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS);
+    if (crawl_state.command_line_arguments.empty())
+    {
+        crawl_state.command_line_arguments.insert(
+            crawl_state.command_line_arguments.end(),
+            argv, argv + argc);
+    }
+
+    string exe_path = _find_executable_path();
+
+    if (!exe_path.empty())
+        set_crawl_base_dir(exe_path.c_str());
+    else
+        set_crawl_base_dir(argv[0]);
+
+    SysEnv.crawl_exe = get_base_filename(argv[0]);
+
+    SysEnv.rcdirs.clear();
+    SysEnv.map_gen_iters = 0;
+
+    if (SysEnv.cmd_args.empty())
+    {
+        for (int i = 1; i < argc; ++i)
+            SysEnv.cmd_args.emplace_back(argv[i]);
+    }
 
     // New style flags
 
@@ -4740,6 +4747,24 @@ bool parse_args(int argc, char **argv)
                 join(playable_job_names()).c_str(),
                 join(playable_combo_names()).c_str());
         end(0);
+    }
+
+    if (!FLAGS_extra_opt_first.empty())
+    {
+        vector<string> args = split_string(",", FLAGS_extra_opt_first);
+        for (auto arg : args)
+            if (_check_extra_opt(arg))
+            SysEnv.extra_opts_first.emplace_back(arg.c_str());
+
+    }
+
+    if (!FLAGS_extra_opt_last.empty())
+    {
+        vector<string> args = split_string(",", FLAGS_extra_opt_last);
+        for (auto arg : args)
+            if (_check_extra_opt(arg))
+            SysEnv.extra_opts_last.emplace_back(arg.c_str());
+
     }
 
     if (FLAGS_version)
@@ -4863,152 +4888,12 @@ bool parse_args(int argc, char **argv)
 #endif
 
     // Old style flags
-    if (crawl_state.command_line_arguments.empty())
-    {
-        crawl_state.command_line_arguments.insert(
-            crawl_state.command_line_arguments.end(),
-            argv, argv + argc);
-    }
-
-    string exe_path = _find_executable_path();
-
-    if (!exe_path.empty())
-        set_crawl_base_dir(exe_path.c_str());
-    else
-        set_crawl_base_dir(argv[0]);
-
-    SysEnv.crawl_exe = get_base_filename(argv[0]);
-
-    SysEnv.rcdirs.clear();
-    SysEnv.map_gen_iters = 0;
-
-    if (argc < 2)           // no args!
-        return true;
-
-    char *arg, *next_arg;
-    int current = 1;
-    bool nextUsed = false;
-
-    // initialise
-    for (int i = 0; i < num_cmd_ops; i++)
-         arg_seen[i] = false;
-
-    if (SysEnv.cmd_args.empty())
-    {
-        for (int i = 1; i < argc; ++i)
-            SysEnv.cmd_args.emplace_back(argv[i]);
-    }
-
-    while (current < argc)
-    {
-        // get argument
-        arg = argv[current];
-
-        // next argument (if there is one)
-        if (current+1 < argc)
-            next_arg = argv[current+1];
-        else
-            next_arg = nullptr;
-
-        nextUsed = false;
-
-        // arg MUST begin with '-'
-        char c = arg[0];
-        if (c != '-')
-        {
-            fprintf(stderr,
-                    "Option '%s' is invalid; options must be prefixed "
-                    "with -\n\n", arg);
-            return false;
-        }
-
-        // Look for match (we accept both -option and --option).
-        if (arg[1] == '-')
-            arg = &arg[2];
-        else
-            arg = &arg[1];
-
-        // Mac app bundle executables get a process serial number
-        if (strncmp(arg, "psn_", 4) == 0)
-        {
-            current++;
-            continue;
-        }
-
-        int o;
-        for (o = 0; o < num_cmd_ops; o++)
-            if (strcasecmp(cmd_ops[o], arg) == 0)
-                break;
-
-        if (o == num_cmd_ops)
-        {
-            fprintf(stderr,
-                    "Unknown option: %s\n\n", argv[current]);
-            return false;
-        }
-
-        // Disallow options specified more than once.
-        if (arg_seen[o])
-        {
-            fprintf(stderr, "Duplicate option: %s\n\n", argv[current]);
-            return false;
-        }
-
-        // Set arg to 'seen'.
-        arg_seen[o] = true;
-
-        // Partially parse next argument.
-        bool next_is_param = false;
-        if (next_arg != nullptr
-            && (next_arg[0] != '-' || strlen(next_arg) == 1))
-        {
-            next_is_param = true;
-        }
-
-        // Take action according to the cmd chosen.
-        switch (o)
-        {
-        case CLO_EDIT_SAVE:
-            // Always parse.
-            _edit_save(argc - current - 1, argv + current + 1);
-            end(0);
-        case CLO_EXTRA_OPT_FIRST:
-            if (!next_is_param)
-                return false;
-
-            // Don't print the help message if the opt was wrong
-            if (!_check_extra_opt(next_arg))
-                return true;
-
-            SysEnv.extra_opts_first.emplace_back(next_arg);
-            nextUsed = true;
-
-            // Can be used multiple times.
-            arg_seen[o] = false;
-            break;
-
-        case CLO_EXTRA_OPT_LAST:
-            if (!next_is_param)
-                return false;
-
-            // Don't print the help message if the opt was wrong
-            if (!_check_extra_opt(next_arg))
-                return true;
-
-            SysEnv.extra_opts_last.emplace_back(next_arg);
-            nextUsed = true;
-
-            // Can be used multiple times.
-            arg_seen[o] = false;
-            break;
-        }
-
-        // Update position.
-        current++;
-        if (nextUsed)
-            current++;
-    }
-
+    /*
+    case CLO_EDIT_SAVE:
+        // Always parse.
+        _edit_save(argc - current - 1, argv + current + 1);
+        end(0);
+    */
     return true;
 }
 
