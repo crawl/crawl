@@ -100,7 +100,6 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
 {
     switch (state)
     {
-    case SKM_SHOW_KNOWN:   return you.skills[sk];
     case SKM_SHOW_DEFAULT: return you.can_train[sk] || you.skills[sk];
     case SKM_SHOW_ALL:     return true;
     default:               return false;
@@ -600,7 +599,6 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_MODE_MANUAL:    return "manual";
     case SKM_DO_PRACTISE:    return "train";
     case SKM_DO_FOCUS:       return "focus";
-    case SKM_SHOW_KNOWN:     return "known";
     case SKM_SHOW_DEFAULT:   return "trainable";
     case SKM_SHOW_ALL:       return "all";
     case SKM_LEVEL_ENHANCED:
