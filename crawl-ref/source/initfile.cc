@@ -92,9 +92,14 @@ DEFINE_int32(tscores, -1, "Terse highscore list");
 DEFINE_int32(vscores, -1, "Verbose highscore list");
 DEFINE_string(scorefile, "", "scorefile to report on");
 DEFINE_bool(throttle, false, "Enable throttling of user lua scripts");
+DEFINE_bool(tutorial, false, "Select the Tutorial");
+DEFINE_bool(save, true, "Enable save game");
 DEFINE_bool(list_combos, false, "List playable species, jobs and character combos");
 DEFINE_bool(version, false, "Crawl version and compilation info");
 DEFINE_string(save_version, "", "Save file version for the given player");
+
+DEFINE_bool(arena, false, "Enter the arena");
+DEFINE_string(fight, "", "Stage a tournament between monsters");
 
 #ifdef DGAMELAUNCH
 DEFINE_bool(print_charset, false, "Print charset and quit");
@@ -4260,20 +4265,15 @@ static void set_crawl_base_dir(const char *arg)
 // Keep this in sync with the option names.
 enum commandline_option_type
 {
-    CLO_ARENA,
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
     CLO_EDIT_SAVE,
-    CLO_TUTORIAL,
-    CLO_NO_SAVE,
     CLO_NOPS
 };
 
 static const char *cmd_ops[] =
 {
-    "arena",
     "extra-opt-first", "extra-opt-last", "edit-save",
-    "tutorial", "no-save",
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4753,6 +4753,20 @@ bool parse_args(int argc, char **argv)
         _print_save_version(FLAGS_save_version.c_str());
         end(0);
     }
+
+    if (FLAGS_tutorial)
+        Options.game.type = GAME_TYPE_TUTORIAL;
+
+    Options.no_save = !FLAGS_save;
+
+    if (FLAGS_arena || !FLAGS_fight.empty())
+    {
+        Options.game.type = GAME_TYPE_ARENA;
+        Options.restart_after_game = false;
+    }
+    if (!FLAGS_fight.empty())
+        Options.game.arena_teams = FLAGS_fight;
+
 #ifdef WIZARD
     if (FLAGS_wizard)
         Options.wiz_mode = WIZ_NO;
@@ -4954,28 +4968,10 @@ bool parse_args(int argc, char **argv)
         // Take action according to the cmd chosen.
         switch (o)
         {
-        case CLO_ARENA:
-                Options.game.type = GAME_TYPE_ARENA;
-                Options.restart_after_game = false;
-            if (next_is_param)
-            {
-                Options.game.arena_teams = next_arg;
-                nextUsed = true;
-            }
-            break;
         case CLO_EDIT_SAVE:
             // Always parse.
             _edit_save(argc - current - 1, argv + current + 1);
             end(0);
-
-        case CLO_TUTORIAL:
-            Options.game.type = GAME_TYPE_TUTORIAL;
-            break;
-
-        case CLO_NO_SAVE:
-            Options.no_save = true;
-            break;
- 
         case CLO_EXTRA_OPT_FIRST:
             if (!next_is_param)
                 return false;
