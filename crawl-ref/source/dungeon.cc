@@ -1352,7 +1352,7 @@ static void _fixup_walls()
         // Everything but the branch end is handled in Lua.
         if (you.depth == branches[BRANCH_VAULTS].numlevels)
         {
-            wall_type = random_choose_weighted(1, DNGN_GREEN_CRYSTAL_WALL,
+            wall_type = random_choose_weighted(1, DNGN_CRYSTAL_WALL,
                                                9, DNGN_METAL_WALL,
                                                0);
         }
@@ -4992,7 +4992,7 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
            (glyph == 'X') ? DNGN_PERMAROCK_WALL :
            (glyph == 'c') ? DNGN_STONE_WALL :
            (glyph == 'v') ? DNGN_METAL_WALL :
-           (glyph == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
+           (glyph == 'b') ? DNGN_CRYSTAL_WALL :
            (glyph == 'm') ? DNGN_CLEAR_ROCK_WALL :
            (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
            (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
