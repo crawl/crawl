@@ -96,6 +96,10 @@ DEFINE_bool(list_combos, false, "List playable species, jobs and character combo
 DEFINE_bool(version, false, "Crawl version and compilation info");
 DEFINE_string(save_version, "", "Save file version for the given player");
 
+#ifdef DGAMELAUNCH
+DEFINE_bool(print_charset, false, "Print charset and quit");
+#endif
+
 #ifdef WIZARD
 DEFINE_bool(explore, false, "Allow access to explore mode");
 DEFINE_bool(wizard, false, "Allow access to wizard mode");
@@ -4260,7 +4264,6 @@ enum commandline_option_type
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
     CLO_EDIT_SAVE,
-    CLO_PRINT_CHARSET,
     CLO_TUTORIAL,
     CLO_NO_SAVE,
     CLO_NOPS
@@ -4270,7 +4273,7 @@ static const char *cmd_ops[] =
 {
     "arena",
     "extra-opt-first", "extra-opt-last", "edit-save",
-    "print-charset", "tutorial", "no-save",
+    "tutorial", "no-save",
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4835,6 +4838,16 @@ bool parse_args(int argc, char **argv)
     tiles.m_await_connection = FLAGS_await_connection;
 #endif
 
+#ifdef DGAMELAUNCH
+    if (FLAGS_print_charset)
+    {
+            // Tell DGL we don't use ancient charsets anymore. The glyph set
+            // doesn't matter here, just the encoding.
+            printf("UNICODE\n");
+            end(0);
+    }
+#endif
+
     // Old style flags
     if (crawl_state.command_line_arguments.empty())
     {
@@ -4962,18 +4975,7 @@ bool parse_args(int argc, char **argv)
         case CLO_NO_SAVE:
             Options.no_save = true;
             break;
-
-        case CLO_PRINT_CHARSET:
-#ifdef DGAMELAUNCH
-            // Tell DGL we don't use ancient charsets anymore. The glyph set
-            // doesn't matter here, just the encoding.
-            printf("UNICODE\n");
-#else
-            printf("This option is for DGL use only.\n");
-#endif
-            end(0);
-            break;
-
+ 
         case CLO_EXTRA_OPT_FIRST:
             if (!next_is_param)
                 return false;
