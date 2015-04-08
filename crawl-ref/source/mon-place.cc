@@ -3616,7 +3616,7 @@ static monster_type _band_member(band_type band, int which,
                                         0);
 
     case BAND_MYRMECIA:
-        return random_choose_weighted(4, MONS_BOULDER_BEETLE,
+        return random_choose_weighted(2, MONS_BOULDER_BEETLE,
                                       1, MONS_DEATH_SCARAB,
                                       0);
 
