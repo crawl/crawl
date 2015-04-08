@@ -324,21 +324,19 @@ static const pop_entry pop_shoals[] =
 
 static const pop_entry pop_snake[] =
 { // Snake Pit
-  { -3,  5,  750, SEMI, MONS_NAGA },
-  {  1,  5,  200, FLAT, MONS_MANA_VIPER },
-  {  1,  5,  215, SEMI, MONS_SALAMANDER },
-  {  1,  7,  315, SEMI, MONS_ANACONDA },
-  {  1,  7,  650, FALL, MONS_WATER_MOCCASIN },
-  {  1,  9, 1125, SEMI, MONS_BLACK_MAMBA },
-  {  1,  9,  340, SEMI, MONS_NAGA_WARRIOR },
-  {  1,  9,  550, SEMI, MONS_NAGA_MAGE },
-  {  1,  9,  225, SEMI, MONS_NAGA_RITUALIST },
-  {  1,  9,  315, SEMI, MONS_NAGA_SHARPSHOOTER },
-  {  1,  9,  415, PEAK, MONS_SHOCK_SERPENT },
-  {  2,  8,  225, PEAK, MONS_GUARDIAN_SERPENT },
-  {  3,  7,  110, PEAK, MONS_SALAMANDER_MYSTIC },
-  {  3,  9,  245, SEMI, MONS_GREATER_NAGA },
-  {  1,  5,  500, FALL, MONS_NO_MONSTER }, // Old adder weight
+  { -4,  4,  750, SEMI, MONS_NAGA },
+  {  0,  4,  215, SEMI, MONS_SALAMANDER },
+  {  0,  6,  315, SEMI, MONS_ANACONDA },
+  {  0,  8, 1125, SEMI, MONS_BLACK_MAMBA },
+  {  0,  8,  340, SEMI, MONS_NAGA_WARRIOR },
+  {  0,  8,  550, SEMI, MONS_NAGA_MAGE },
+  {  0,  8,  225, SEMI, MONS_NAGA_RITUALIST },
+  {  0,  8,  315, SEMI, MONS_NAGA_SHARPSHOOTER },
+  {  0,  8,  415, PEAK, MONS_SHOCK_SERPENT },
+  {  1,  4,  200, FLAT, MONS_MANA_VIPER },
+  {  1,  7,  225, PEAK, MONS_GUARDIAN_SERPENT },
+  {  2,  5,  110, PEAK, MONS_SALAMANDER_MYSTIC },
+  {  2,  8,  245, SEMI, MONS_GREATER_NAGA },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1290,8 +1288,8 @@ static const pop_entry pop_water_swamp[] =
 
 static const pop_entry pop_water_snake[] =
 { // Snake water monsters
-  {  1,   5,  100, FALL, MONS_ELECTRIC_EEL },
-  {  1,   5,  200, RISE, MONS_SEA_SNAKE },
+  {  1,   4,  100, FALL, MONS_ELECTRIC_EEL },
+  {  0,   4,  200, RISE, MONS_SEA_SNAKE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1382,10 +1380,10 @@ static const pop_entry pop_lava_d[] =
 
 static const pop_entry pop_lava_snake[] =
 { // Snake lava monsters
-  {  1,   5,  200, FLAT, MONS_LAVA_SNAKE },
-  {  1,   5,  200, FLAT, MONS_SALAMANDER },
-  {  1,   7,  85,  SEMI, MONS_SALAMANDER_MYSTIC },
-  {  3,   5,  55,  RISE, MONS_SALAMANDER_FIREBRAND },
+  {  1,   4,  200, FLAT, MONS_LAVA_SNAKE },
+  {  1,   4,  200, FLAT, MONS_SALAMANDER },
+  {  0,   6,  85,  SEMI, MONS_SALAMANDER_MYSTIC },
+  {  2,   4,  55,  RISE, MONS_SALAMANDER_FIREBRAND },
   { 0,0,0,FLAT,MONS_0 }
 };
 
