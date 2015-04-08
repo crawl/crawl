@@ -152,7 +152,7 @@ ENDMAP
 #       connectivity failures when adding vaults
 #
 NAME:   layout_honeycomb
-DEPTH:  Snake:1-4, Depths, Tar
+DEPTH:  Snake, !Snake:$, Depths, Tar
 WEIGHT: 10 (Snake), 15 (Depths), 10 (Tar)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions

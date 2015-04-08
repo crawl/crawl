@@ -172,7 +172,7 @@ ENDMAP
 # ZorbaBeta's fault
 # TODO: Could steer the boulder along the corridor better by placing target markers on the corners and using a monster_move event
 NAME:   boulder_indie
-DEPTH:  D:7-14, Snake:1-4
+DEPTH:  D:7-14, Snake, !Snake:$
 TAGS:   luniq_boulder_trap no_monster_gen
 ORIENT: float
 {{
