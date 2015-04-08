@@ -548,7 +548,7 @@ string SkillMenuSwitch::get_help()
             vector<const char *> causes;
             if (you.duration[DUR_HEROISM])
                 causes.push_back("Heroism");
-            if (you_worship(GOD_ASHENZARI))
+            if (!you.skill_boost.empty() && in_good_standing(GOD_ASHENZARI, 3))
                 causes.push_back("Ashenzari's power");
             if (_any_crosstrained())
                 causes.push_back("cross-training");
