@@ -226,7 +226,7 @@ WEIGHT: 1
 
 NAME:   uniq_myrmecia
 DEPTH:  D:15, Elf, Snake, Spider
-: place_unique(_G, "Myrmecia")
+: place_unique(_G, "Myrmecia band")
 
 NAME:   uniq_roxanne
 DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
