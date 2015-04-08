@@ -3977,7 +3977,6 @@ enum skill_menu_state
     SKM_MODE_AUTO,
     SKM_MODE_MANUAL,
     SKM_SHOW_DEFAULT,
-    SKM_SHOW_KNOWN,
     SKM_SHOW_ALL,
     SKM_VIEW_NEW_LEVEL,
     SKM_VIEW_POINTS,
