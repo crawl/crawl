@@ -143,4 +143,12 @@ function callback.ancient_champions_mu_skele_death(data, triggerable,
   end
 end
 
+function tukima_machine (data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function wizlab_eringya_grow(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
 }}

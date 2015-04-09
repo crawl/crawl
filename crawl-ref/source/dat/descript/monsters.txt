@@ -3069,10 +3069,6 @@ spriggan baker
 
 A spriggan that has mastered the culinary arts.
 %%%%
-strange machine
-
-A glistening silver machine.
-%%%%
 water elementalist statue
 
 A smooth, charming statue of a beautiful merfolk bathing in a fountain,
@@ -3084,12 +3080,6 @@ young spriggan druid
 A junior member of the order of spriggans sworn to protect nature. While less
 dangerous than the elders, this one is perfectly capable of dealing with
 trespassers like you.
-%%%%
-vine covered earth elemental
-
-While formed from ordinary old weathered stone, covered with moss and vines,
-this earth elemental still demands respect. It is still hard as stone, after
-all, and its weight spells massive damage if it connects a blow.
 %%%%
 witch
 

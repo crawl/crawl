@@ -3,12 +3,6 @@
 #
 #Wizard    |Threat                  |Loot                    |XP
 #--------------------------------------------------------------------
-#Tukima    |6 dancing weapons,      |weapons, book,          |14400
-#          |weapon generator        |acquirement             |
-#--------------------------------------------------------------------
-#Eringya   |centaurs, fauns,        |books, staves, potions  |19000
-#          |plants, golems          |                        |
-#--------------------------------------------------------------------
 #Doroklohe |constructs or demons    |scrolls or armour       |12000
 #          |or top-tier undead      |or random               |
 #--------------------------------------------------------------------
@@ -43,11 +37,6 @@
 #---------------------------------------------------------------------
 #Full Name                |Layout               |Colours
 #---------------------------------------------------------------
-#Tukima's Dance Hall      |mirrored hall        |lightgray/white
-#---------------------------------------------------------------
-#Eringya's Formal Garden  |overgrown formal     |green and brown
-#                         |French garden        |
-#---------------------------------------------------------------
 #Doroklohe's Tomb         |densely packed       |yellow walls,
 #                         |collapsing tombs     |dark floor
 #---------------------------------------------------------------
@@ -78,8 +67,7 @@
 # TO-DO:
 #
 # Actual portals need quite a bit of editing, and some unique tiles.
-# Tiles to fix: Tukima's fountains, Eringya's rock-like stone walls,
-# Doroklohe's plain floor, Cigotuvi's doorways, less generic
+# Tiles to fix: Doroklohe's plain floor, Cigotuvi's doorways, less generic
 # Iskenderun tiles, Cloud Mage's "white fluffiness" and "sea of clouds".
 #
 ##
@@ -124,80 +112,6 @@ end
 function wizlab_milestone (e, wizlab_desc)
     crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", "parent")
     crawl.take_note("Entered " .. wizlab_desc)
-end
-
-function tukima_machine (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  local x, y = marker:pos()
-  local you_x, you_y = you.pos()
-
-  if data.weapon_count >= 5 then
-    if you.see_cell(x, y) then
-      crawl.mpr("The machine makes a dull noise.")
-    else
-      crawl.mpr("You hear a distant, dull noise.")
-    end
-    return
-  end
-
-  if (you_x == x and you_y == y) then return end
-  if dgn.mons_at(x, y) then return end
-
-  dgn.apply_area_cloud(x, y, 1, 6, 1, 10, "black smoke", "other", -1)
-
-  if (not dgn.create_monster(x, y, "generate_awake dancing weapon")) then
-    return
-  end
-
-  data.weapon_count = data.weapon_count + 1
-
-  if you.see_cell(x, y) then
-    crawl.mpr("The generator hisses, and spits out a dancing weapon!")
-  else
-    crawl.mpr("You hear a distant hissing noise.")
-  end
-end
-
-function wizlab_eringya_grow(data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  local count = 0
-
-  if data.nofruitsyet and crawl.one_chance_in(5) then
-    -- Fruit! Only once, though: infinite fruit is abusable.
-    for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-         and crawl.one_chance_in(3) then
-        dgn.create_item(spot.x, spot.y, "fruit")
-        count = count + 1
-        data.nofruitsyet = false
-      end
-    end
-    if count > 0 then
-      crawl.mpr("Fruit sprouts up around you!")
-    end
-  else
-    for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-         and not crawl.one_chance_in(3) then
-        if crawl.one_chance_in(9) then
-          dgn.create_monster(spot.x, spot.y, "wandering mushroom")
-          count = count + 1
-        else
-          dgn.create_monster(spot.x, spot.y, "toadstool")
-          count = count + 1
-        end
-      end
-    end
-    if count > 0 then
-      crawl.mpr("Mushrooms sprout up around you!")
-    end
-  end
 end
 
 function wizlab_doroklohe_convert_boxes(data, triggerable, triggerer,
@@ -710,184 +624,6 @@ default-depth: WizLab
 ###############################################################################
 # And arrivals!
 ###############################################################################
-# Firstly, we have Tukima's Dance Studio.
-#
-NAME:       wizlab_tukima
-TAGS:       no_rotate
-MONS:       dancing weapon
-KFEAT:      M = granite_statue
-TILE:       M = dngn_machine_tukima
-MARKER:     M = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
-                                  veto_shatter="veto", slaved_to="tukima"}
-{{
-
-local tukima_marker = TriggerableFunction:new {
-    func = "tukima_machine",
-    repeated = true,
-    data = {weapon_count=0},
-}
-
-tukima_marker:add_triggerer(DgnTriggerer:new {
-    type="turn", delay_min=600, delay_max=900
-})
-
-lua_marker('?', tukima_marker)
-
-}}
-SUBST:      ? = .
-COLOUR:     +cA< = darkgrey
-KMONS:      789 = statue spells:blink_other.63.magical \
-                  col:silver name:strange_machine n_rpl n_des \
-                  hd:13 hp:70 tile:mons_statue_guardian
-# please make sure this is the book with Tukima's Dance
-KITEM:      8 = book of maledictions / book of party tricks
-KITEM:      9 = acquire any, scroll of blinking q:4 ident:type
-SHUFFLE:    XxLl / HhIi, YyRr / JjKK
-SUBST:      XYik = +, xyIK = ., HJRrLl = c, hj = m
-TILE:       c = wall_stone_dark
-TILE:       V = dngn_dry_fountain_white
-LFLOORTILE: floor_w_marble
-COLOUR:     mMV = silver
-TILE:       m = dngn_mirror_wall
-:           set_feature_name("clear_rock_wall", "crystal clear mirror")
-:           set_feature_name("granite_statue", "strange generator")
-:           set_feature_name("dry_fountain", "glistening fountain")
-:           set_feature_name("stone_wall", "black marble wall")
-:           set_feature_name("floor", "marble floor")
-:           set_random_mon_list("dancing weapon")
-:           wizlab_setup(_G, "Tukima's Studio")
-epilogue{{
-            wizlab_milestone(_G, "Tukima's Studio")
-}}
-MAP
-            ccccccc
-            ccmmmcc
-        cccccm...mccccc
-       cc.....A.<.....cc
-      cc..ccm.....mcc..cc
-      cc.ccccm...mcccc.cc
-      cc.cccccc7cccccc.cc
-     cc...cccc...cccc...cc
-     cm...mcm..0..mcm...mc
-     cm...mcm.....mcm...mc
-     cm...mcm..V..mcm...mc
-     cm...mcm.....mcm...mc
-     cm...mcm..0..mcm...mc
-     cc...cccc...cccc...cc
-     ccc.cccccc.cccccc.ccc
-      cc.ccccm...mcccc.cc
-     ccm7mccm.....mccm7mcc
-     cm.0......M......0.mc
-    ccXm.mccm..?..mccm.mYcc
-  cccxccmlcccm...mcccrmccycc
-  ccm.mcccLcccm.mcccRcccm.mcc
- ccm...mLLcccm...mcccRRm...mcc
-ccm..$..mcccm.....mcccm..$..mcc
-cm..$8$..m+m...7...m+m..$9$..mc
-ccm..$..mcccm.....mcccm..$..mcc
- ccm.0.mcc ccm...mcc ccm.0.mcc
-  ccmmmcc   ccmmmcc   ccmmmcc
-   ccccc     ccccc     ccccc
-ENDMAP
-
-###############################################################################
-# Eringya's Formal Garden
-#
-# Map was based on this image:
-# https://upload.wikimedia.org/wikipedia/commons/5/58/Plan_du_château_et_des_jardins_de_Clagny_dessiné_par_Maraine_XVIIe_siècle.jpg
-#
-# TODO: Needs vine-covered statues, rose-covered archway.
-#       Map was previously said to be too static: while this is still the case,
-#       I think the improvements to terrain and monsters should be more than
-#       enough, though more dynamic lua with e.g. oklobs, spores,
-#       fruit-renamed dancing weapons could still contribute to the theme.
-#
-NAME:       wizlab_eringya
-TAGS:       no_rotate
-MONS:       generate_awake patrolling centaur
-MONS:       generate_awake patrolling faun
-MONS:       centaur warrior, satyr, thorn hunter
-MONS:       earth elemental name:vine_covered name_adjective col:lightgreen \
-            tile:mons_vine_golem
-MONS:       bush
-ITEM:       any fixed theme book, any fixed level book
-ITEM:       any magical staff / any rod w:2, any potion no_pickup
-KFEAT:      - = stone_arch
-KFEAT:      _ = altar_fedhas
-NSUBST:     1 = 3:2 / 6:1 / * = 1:14 2:1
-NSUBST:     3 = 2:4 / 2:3 / * = 3:14 4:1
-NSUBST:     P = 1:7 / *:t, A = 1:A / *:-
-SUBST:      y = ct
-SHUFFLE:    ef / ef / fe
-COLOUR:     G = lightgrey
-TILE:       G = dngn_statue_centaur
-MARKER:     A = feat:stone_arch
-TILE:       c = wall_brick_vines
-LROCKTILE:  wall_brick_vines
-LFLOORTILE: floor_grass
-{{
-local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",
-                                              repeated = true,
-                                              data = { nofruitsyet = true } }
-
-grow_marker:add_triggerer(DgnTriggerer:new { type="turn",
-        delay_min=500, delay_max=800, })
-
-
-lua_marker("_", grow_marker)
-}}
-:           set_border_fill_type("stone_wall")
-:           wizlab_setup(_G, "Eringya's Formal Garden")
-:           set_feature_name("stone_arch", "rose-covered archway")
-:           set_feature_name("granite_statue", "vine-covered statue")
-:           set_feature_name("stone_wall", "crumbling stone wall")
-:           set_feature_name("floor", "the grass-covered ground")
-:           set_random_mon_list ("centaur / centaur warrior / faun / satyr w:6 / thorn hunter w:4")
-epilogue{{
-            wizlab_milestone(_G, "Eringya's Formal Garden")
-}}
-MAP
-ccccccccccccccccccccccccccccccccccccccccccccc
-ctttttttttttttttttttttttttttttttttttttttttttc
-ctttttttt...........................ttttttttc
-ctttt.....tttttttttttt.tttttttttttt.....ttttc
-cttt..tt.tttttttttt.......tttttttttt.tt..tttc
-ct.1.tAt............G.<.G............tAt.1.tc
-cttt..tt.tttttttttt.......tttttttttt.tt..tttc
-ctttt.....tttttttttttt.tttttttttttt.....ttttc
-ctttttttt...........................ttttttttc
-cttttttttttttttttttttt.tttttttttttttttttttttc
-ctttttttttyyyttttttty...ytttttttyyytttttttttc
-ctttttttty...yt...ty..T..yt...ty...yttttttttc
-cttttttt..1t1..ttt....P....ttt..1t1..tttttttc
-ctttttt....t1.t...tc.....ct...t.1t....ttttttc
-cttttt.tty...yttttttcc-cctttttty...ytt.tttttc
-ctttt.t.ttytyttttttt.....tttttttytytt.t.ttttc
-cttt.t.tttt.ttttttty.353.yttttttt.tttt.t.tttc
-cttt.t.tttt..tttttttyf.fyttttttt..tttt.t.tttc
-ctttt.t.tttt..tttttttytyttttttt..tttt.t.ttttc
-cttttt.t.tttt..ttttttttttttttt..tttt.t.tttttc
-ctttttt.t.tttt..tttttcccttttt..tttt.t.ttttttc
-cttttyyy-yyytt...tttygggyttt...ttyyy-yyyttttc
-cttty.1...1.y.tt..ty..1..yt..tt.y.1...1.ytttc
-ctty...tTt...y.tt....1T1....tt.y...tTt...yttc
-cttty.1.3.1.y.tt..ty..3..yt..tt.y.1.3.1.ytttc
-cttttyyy-yyytt...tttygggyttt...ttyyy-yyyttttc
-ctttttt.tttttt..tttttcccttttt..tttttt.ttttttc
-cttttt.t.tttt..ttttttttttttttt..tttt.t.tttttc
-ctttt.t.tttt..ttttt5G._.G5ttttt..tttt.t.ttttc
-cttt.t.tttt..ttttt...6.6...ttttt..tttt.t.tttc
-cttt.t.ttt..ttttt...........ttttt..ttt.t.tttc
-ctttt.t.tytyttttde..cc+cc..edttttytyt.t.ttttc
-cttttt.ty...yttttttcc...cctttttty...yt.tttttc
-ctttttt.-.1.-.ttttcc..P..cctttt.-.1.-.ttttttc
-cttttttty...yt.t..t-.3T3.-t..t.ty...ytttttttc
-cttttttttyyyttt.tt.y.....y.tt.tttyyyttttttttc
-cttttttttttttttt..ttyytyytt..tttttttttttttttc
-ctttttttttttttttttttttttttttttttttttttttttttc
-ccccccccccccccccccccccccccccccccccccccccccccc
-ENDMAP
-
 ###############################################################################
 # Doroklohe's Forbidden Tomb
 #
@@ -2185,7 +1921,8 @@ ENDMAP
 ###############################################################################
 # Incomplete and TODO work area.
 #
-# See git history for previous versions of Ozocubu, Alistair, Borgnjor.
+# See git history for previous versions of Ozocubu, Alistair, Borgnjor,
+# Eringya, Tukima.
 #
 # March 2013 note: there isn't the greatest of interest in making
 # the majority of these potential portals, as nice as that would be,
