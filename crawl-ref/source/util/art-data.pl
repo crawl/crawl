@@ -483,6 +483,8 @@ my @art_order = (
     "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 
+    # Move FOG after FLY, and remove two copies of "unused", when
+    # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
