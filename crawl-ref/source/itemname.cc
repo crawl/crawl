@@ -671,10 +671,10 @@ const char* potion_type_name(int potiontype)
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
     case POT_STRONG_POISON:     return "strong poison";
     case POT_PORRIDGE:          return "porridge";
+    case POT_SLOWING:           return "slowing";
 #endif
     case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
-    case POT_SLOWING:           return "slowing";
     case POT_CANCELLATION:      return "cancellation";
     case POT_AMBROSIA:          return "ambrosia";
     case POT_INVISIBILITY:      return "invisibility";
@@ -2517,8 +2517,9 @@ void check_item_knowledge(bool unknown_items)
                  || j == SCR_CURSE_JEWELLERY
 #if TAG_MAJOR_VERSION == 34
                  || j == SCR_ENCHANT_WEAPON_II
-                 || j == SCR_ENCHANT_WEAPON_III))
+                 || j == SCR_ENCHANT_WEAPON_III
 #endif
+                ))
             {
                 continue;
             }
