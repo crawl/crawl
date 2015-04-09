@@ -518,8 +518,10 @@ tileidx_t tileidx_feature(const coord_def &gc)
                 (feat == DNGN_ROCK_WALL) ? env.tile_flv(gc).wall
                 : tileidx_feature_base(feat);
 
+#ifdef USE_TILE
             if (feat == DNGN_STONE_WALL)
                 apply_variations(env.tile_flv(gc), &idx, gc);
+#endif
 
             tileidx_t base = tile_dngn_basetile(idx);
             tileidx_t spec = idx - base;
