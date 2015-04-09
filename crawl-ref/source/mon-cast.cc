@@ -6513,8 +6513,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SHROUD_OF_GOLUBRIA:
         if (you.can_see(mons))
         {
-            mprf("Space distorts along a thin shroud covering %s body.",
-                 apostrophise(mons->name(DESC_THE)).c_str());
+            mprf("Space distorts along a thin shroud covering %s %s.",
+                 apostrophise(mons->name(DESC_THE)).c_str(),
+                 mons->is_insubstantial() ? "form" : "body");
         }
         mons->add_ench(mon_enchant(ENCH_SHROUD));
         return;
