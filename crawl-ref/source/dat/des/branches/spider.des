@@ -224,7 +224,7 @@ ENDMAP
 
 NAME:    spiders_nest_a
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
-DEPTH:   Spider:1-4
+DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 ORIENT:  southeast
 MONS:    scorpion
@@ -270,7 +270,7 @@ ENDMAP
 NAME:   spiders_nest_scorpion_pit
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: southeast
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 KMONS:  1 = spider
 KMONS:  2 = scorpion / wolf spider w:3
 KMONS:  3 = trapdoor spider generate_awake / nothing
@@ -402,7 +402,7 @@ ENDMAP
 NAME:    mumra_spider_spiderweb
 TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  float
-DEPTH:   Spider:1-4
+DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 NSUBST:  y = 1:y / *:.
 {{
@@ -517,7 +517,7 @@ ENDMAP
 NAME:    hangedman_creepy_crawlies
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
-DEPTH:   Spider:1-4
+DEPTH:   Spider, !Spider:$
 WEIGHT:  5
 KMONS:   1 = scorpion w:20 / spider w:13 / worker ant w:35 / \
              giant cockroach w:1 / worm w:1
@@ -630,7 +630,7 @@ ENDMAP
 
 # A few mining accidents
 NAME:   nicolae_spider_mines_1
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 ORIENT: southwest
 TAGS:   uniq_spidermines
 SUBST:  B = z..
@@ -670,7 +670,7 @@ xxXXXXXXXXXXXXx
 ENDMAP
 
 NAME:   nicolae_spider_mines_2
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 ORIENT: southeast
 TAGS:   uniq_spidermines
 SUBST:  B = z..
@@ -709,7 +709,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_spider_mines_3
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 ORIENT: southwest
 TAGS:   uniq_spidermines
 NSUBST: F = 1:Q / *:z
@@ -968,7 +968,7 @@ MAP
 ENDMAP
 
 NAME:    lemuel_spider_zombies
-DEPTH:   Spider:1-4
+DEPTH:   Spider, !Spider:$
 ORIENT:  float
 TAGS:    no_monster_gen
 MONS:    spider zombie / wolf spider zombie / tarantella zombie
@@ -1011,7 +1011,7 @@ ENDMAP
 
 NAME:   nicolae_orb_stairs_large
 TAGS:   no_pool_fixup no_monster_gen
-DEPTH:  Spider:2-4
+DEPTH:  Spider:2-3
 ORIENT: float
 WEIGHT: 3
 MONS:   orb spider / spider
@@ -1042,7 +1042,7 @@ xxss...wwwww...ssxx
 ENDMAP
 
 NAME:   nicolae_spider_corner
-DEPTH:  Spider:1-4
+DEPTH:  Spider, !Spider:$
 ORIENT: southwest
 MONS:   orb spider
 SHUFFLE: ABC, DEF, GH, IJ, abcdefghi
