@@ -262,35 +262,31 @@ static const pop_entry pop_lair[] =
 
 static const pop_entry pop_swamp[] =
 { // Swamp
-  {  1,  5, 1000, FLAT, MONS_FUNGUS },
-  {  1,  5, 1000, FLAT, MONS_PLANT },
-  { -5,  5,  480, RISE, MONS_SLIME_CREATURE },
-  { -2,  5,  275, SEMI, MONS_CROCODILE },
-  { -1,  7,  245, SEMI, MONS_SHADOW },
-  {  1,  5, 1000, FLAT, MONS_ALLIGATOR },
-  {  1,  5, 1000, FLAT, MONS_SPINY_FROG },
-  {  1,  5,  925, FLAT, MONS_BOG_BODY },
-  {  1,  5,  925, FLAT, MONS_SWAMP_DRAKE },
-  {  1,  5,  915, FLAT, MONS_HYDRA },
-  {  1,  5,  880, FLAT, MONS_WATER_MOCCASIN },
-  {  1,  5,  825, FLAT, MONS_GIANT_LEECH },
-  {  1,  5,  665, FLAT, MONS_VAMPIRE_MOSQUITO },
-  {  1,  5,  500, FLAT, MONS_SWAMP_DRAGON },
-  {  1,  5,  335, FLAT, MONS_INSUBSTANTIAL_WISP },
-  {  1,  5,  155, FLAT, MONS_GIANT_FROG },
-  {  1,  5,  345, FLAT, MONS_RAVEN },
-  {  1,  5,  100, FALL, MONS_KOMODO_DRAGON },
-  {  1,  5,  192, FLAT, MONS_HORNET },
-  {  1,  6,  480, SEMI, MONS_SPRIGGAN_RIDER },
-  {  1,  7,   40, PEAK, MONS_PHANTOM },
-  {  1,  7,   40, PEAK, MONS_UGLY_THING },
-  {  2,  5,   25, RISE, MONS_TENTACLED_MONSTROSITY },
-  {  2,  5,  435, RISE, MONS_THORN_HUNTER },
-  {  2,  5,  385, RISE, MONS_GHOST_CRAB },
-  {  2,  6,  425, SEMI, MONS_SHAMBLING_MANGROVE },
-  {  2,  8,  115, PEAK, MONS_BLINK_FROG },
-  {  2,  8,   52, SEMI, MONS_VERY_UGLY_THING },
-  {  3,  5,  525, RISE, MONS_SPRIGGAN_DRUID },
+  {  1,  4, 1000, FLAT, MONS_FUNGUS },
+  {  1,  4, 1000, FLAT, MONS_PLANT },
+  { -6,  4,  480, RISE, MONS_SLIME_CREATURE },
+  { -2,  6,  245, SEMI, MONS_SHADOW },
+  {  0,  5,  480, SEMI, MONS_SPRIGGAN_RIDER },
+  {  0,  6,   40, PEAK, MONS_UGLY_THING },
+  {  1,  4, 1000, FLAT, MONS_ALLIGATOR },
+  {  1,  4, 1000, FLAT, MONS_SPINY_FROG },
+  {  1,  4,  925, FLAT, MONS_BOG_BODY },
+  {  1,  4,  925, FLAT, MONS_SWAMP_DRAKE },
+  {  1,  4,  915, FLAT, MONS_HYDRA },
+  {  1,  4,  825, FLAT, MONS_GIANT_LEECH },
+  {  1,  4,  665, FLAT, MONS_VAMPIRE_MOSQUITO },
+  {  1,  4,  500, FLAT, MONS_SWAMP_DRAGON },
+  {  1,  4,  335, FLAT, MONS_INSUBSTANTIAL_WISP },
+  {  1,  4,  345, FLAT, MONS_RAVEN },
+  {  1,  4,  192, FLAT, MONS_HORNET },
+  {  1,  4,  100, FALL, MONS_KOMODO_DRAGON },
+  {  1,  4,   25, RISE, MONS_TENTACLED_MONSTROSITY },
+  {  1,  4,  435, RISE, MONS_THORN_HUNTER },
+  {  1,  4,  385, RISE, MONS_GHOST_CRAB },
+  {  1,  5,  425, SEMI, MONS_SHAMBLING_MANGROVE },
+  {  1,  7,  115, PEAK, MONS_BLINK_FROG },
+  {  1,  7,   52, SEMI, MONS_VERY_UGLY_THING },
+  {  2,  4,  525, RISE, MONS_SPRIGGAN_DRUID },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1281,8 +1277,8 @@ static const pop_entry pop_water_depths[] =
 
 static const pop_entry pop_water_swamp[] =
 { // Swamp water monsters
-  {  1,  5,   600, FLAT, MONS_SWAMP_WORM },
-  {  1,  5,  1050, FLAT, MONS_NO_MONSTER },
+  {  1,  4,   600, FLAT, MONS_SWAMP_WORM },
+  {  1,  4,  1050, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
