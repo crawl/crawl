@@ -1483,7 +1483,7 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
     return margin;
 }
 
-int attack::apply_defender_ac(int damage, int damage_max)
+int attack::apply_defender_ac(int damage, int damage_max) const
 {
     ASSERT(defender);
     int stab_bypass = 0;
