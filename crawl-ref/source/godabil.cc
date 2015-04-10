@@ -6575,7 +6575,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     ASSERT(mons);
 
     int dmg = 10;
-    //damage scales with XL amd piety
+    //damage scales with XL and piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
     int effect = random2(4);
     int duration = 0;
