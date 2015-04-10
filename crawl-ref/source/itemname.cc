@@ -3632,7 +3632,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
-            return player_res_poison(false, temp) > 0;
+            return !is_bad_item(item, temp);
 #if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return you.species == SP_FORMICID;
