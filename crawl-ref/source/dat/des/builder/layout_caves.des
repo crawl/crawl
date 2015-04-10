@@ -276,7 +276,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 # should widen the occasional thin corridor at the end of each drip.
 #
 NAME:   layout_falls_marsh
-DEPTH:  Swamp:1-4
+DEPTH:  Swamp, !Swamp:$
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
