@@ -1348,13 +1348,10 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     aux_damage  = player_apply_final_multipliers(aux_damage);
 
-    const int pre_ac_dmg = aux_damage;
-    const int post_ac_dmg = apply_defender_ac(aux_damage);
-
     if (atk == UNAT_CONSTRICT)
         aux_damage = 0;
     else
-        aux_damage = post_ac_dmg;
+        aux_damage = apply_defender_ac(aux_damage);
 
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
@@ -1364,28 +1361,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         case UNAT_PUNCH:
             apply_bleeding = true;
             break;
-
-        case UNAT_HEADBUTT:
-        {
-            const int horns = player_mutation_level(MUT_HORNS);
-            const int stun = bestroll(min(damage_done, 7), 1 + horns);
-
-            defender->as_monster()->speed_increment -= stun;
-            break;
-        }
-
-        case UNAT_KICK:
-        {
-            if (you.has_usable_hooves() && pre_ac_dmg > post_ac_dmg)
-            {
-                const int hooves = player_mutation_level(MUT_HOOVES);
-                const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
-                // do some of the previously ignored damage in extra-damage
-                damage_done += inflict_damage(dmg, BEAM_MISSILE);
-            }
-
-            break;
-        }
 
         case UNAT_CONSTRICT:
             attacker->start_constricting(*defender);
@@ -3631,6 +3606,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_CONSTRICT:
         return player_mutation_level(MUT_CONSTRICTING_TAIL)
                 || you.species == SP_OCTOPODE && you.has_usable_tentacle();
+
     case UNAT_KICK:
         return you.has_usable_hooves()
                || you.has_usable_talons()
