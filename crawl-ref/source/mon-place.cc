@@ -2166,7 +2166,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_CAUSTIC_SHRIKE:
         band = BAND_CAUSTIC_SHRIKE;
-        band_size = 2 + random2(4);
+        band_size = 2 + random2(3);
         break;
 
     case MONS_SHARD_SHRIKE:
