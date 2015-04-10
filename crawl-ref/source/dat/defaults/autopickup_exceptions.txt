@@ -83,9 +83,17 @@ ae += [^n]identified.*spellbook
 
 : add_autopickup_func(function (it, name)
 :   if it.class(true) == "potion" or it.class(true) == "scroll" then
-:      for inv in iter.invent_iterator:new(items.inventory()) do
+:     for inv in iter.invent_iterator:new(items.inventory()) do
 :       if it.class(true) == inv.class(true)
 :       and it.subtype() == inv.subtype() then
+:         return true
+:       end
+:     end
+:   elseif it.class(true) == "missile" then
+:     for inv in iter.invent_iterator:new(items.inventory()) do
+:       if it.class(true) == inv.class(true)
+:       and it.subtype() == inv.subtype()
+:       and it.ego(true) == inv.ego(true) then
 :         return true
 :       end
 :     end
