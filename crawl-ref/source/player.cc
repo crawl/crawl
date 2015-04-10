@@ -3617,7 +3617,7 @@ bool player::clarity(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_CLARITY))
         return true;
 
-    if (in_good_standing(GOD_ASHENZARI, 2))
+    if (in_good_standing(GOD_ASHENZARI, 3))
         return true;
 
     return actor::clarity(calc_unid, items);
@@ -5875,7 +5875,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         level = min(level + 5 * scale, 27 * scale);
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
-    else if (religion == GOD_ASHENZARI && piety_rank() > 2)
+    else if (religion == GOD_ASHENZARI && piety_rank() > 3)
     {
         if (skill_boost.count(sk)
             && skill_boost.find(sk)->second)
@@ -7235,7 +7235,7 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
-    if (in_good_standing(GOD_ASHENZARI, 2))
+    if (in_good_standing(GOD_ASHENZARI, 3))
         return true;
 
     return false;
