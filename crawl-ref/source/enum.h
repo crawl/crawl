@@ -1460,7 +1460,7 @@ enum dungeon_feature_type
 
     // Walls
     DNGN_METAL_WALL,
-    DNGN_GREEN_CRYSTAL_WALL,
+    DNGN_CRYSTAL_WALL,
     DNGN_ROCK_WALL,
     DNGN_SLIMY_WALL,
     DNGN_STONE_WALL,
@@ -2680,6 +2680,7 @@ enum monster_type                      // menv[].type
     MONS_AIR_ELEMENTAL,
 #if TAG_MAJOR_VERSION > 34
     MONS_IRON_ELEMENTAL,
+    MONS_ELEMENTAL_WELLSPRING,
 #endif
     MONS_TWISTER,        // air miscasts
     MONS_GOLDEN_EYE,
@@ -2901,6 +2902,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_SALAMANDER_FIREBRAND,
     MONS_SALAMANDER_MYSTIC,
+    MONS_SALAMANDER_STORMCALLER,
 #endif
 
     // Water monsters:
@@ -3001,6 +3003,7 @@ enum monster_type                      // menv[].type
     MONS_STARSPAWN_TENTACLE_SEGMENT,
     MONS_SPATIAL_MAELSTROM,
     MONS_WORLDBINDER,
+    MONS_ENTROPY_WEAVER, // not sure where else to put it
 #endif
     MONS_ELDRITCH_TENTACLE,
     MONS_ELDRITCH_TENTACLE_SEGMENT,
@@ -3177,6 +3180,7 @@ enum monster_type                      // menv[].type
     MONS_VASHNIA,
     MONS_ROBIN,
     MONS_MYRMECIA,
+    MONS_MOON_TROLL,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -3367,6 +3371,7 @@ enum monster_type                      // menv[].type
 
     MONS_SALAMANDER_STORMCALLER,
     MONS_ENTROPY_WEAVER,
+    MONS_MOON_TROLL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

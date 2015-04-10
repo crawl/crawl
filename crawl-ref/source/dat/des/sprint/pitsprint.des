@@ -481,7 +481,7 @@ function coven_setup(e)
         sphinx / lich / ancient lich w:3 / wizard / ogre mage / vampire mage /\
         naga mage / greater naga / base draconian w:20")
   e.kmons("9 = Frederick / Margery band / Boris / Norris / Frances")
-  e.kfeat("v = green_crystal_wall")
+  e.kfeat("v = crystal_wall")
   e.colour("v = green")
   e.tile("v = wall_emerald")
   e.subst("0 = 0:20 9:1")

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/crawl-ref/crawl-ref.svg?branch=master)](https://travis-ci.org/crawl-ref/crawl-ref)
+[![Build Status](https://travis-ci.org/crawl/crawl.svg?branch=master)](https://travis-ci.org/crawl/crawl)
 
 Dungeon Crawl Stone Soup
 ========================

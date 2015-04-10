@@ -1342,9 +1342,9 @@ SHUFFLE: MN / NM / NN, OP / PO / PP, QR / RQ / RR
 SUBST:   ACEGIKMOQ = b
 SUBST:   BDFHJLNPR = .
 {{
-  -- This is a list of monsters in D that have attacks that can bounce
-  -- off of green crystal walls (fire, cold, lightning), weighted by
-  -- their normal dungeon weight functions!
+  -- This is a list of monsters in D that have attacks that can bounce off of
+  -- crystal walls (fire, cold, lightning), weighted by their normal dungeon
+  -- weight functions!
   local function peak(depth, low, high, chance)
     if depth < low or depth > high then return 0 end
     local len = high - low + 2

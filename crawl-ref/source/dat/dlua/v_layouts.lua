@@ -75,7 +75,7 @@ function vaults_default_options()
     layout_wall_weights = {
       { feature = "stone_wall", weight = stone_weight },
       { feature = "metal_wall", weight = metal_weight },
-      { feature = "green_crystal_wall", weight = crystal_weight },
+      { feature = "crystal_wall", weight = crystal_weight },
     },
     layout_floor_type = "floor"
 

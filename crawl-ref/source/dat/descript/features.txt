@@ -489,7 +489,7 @@ A viscous altar of Jiyva
 A slimy, ever-shifting altar to Jiyva. You're not sure what it's made from, and
 you don't really want to know.
 %%%%
-A wall of green crystal
+A crystal wall
 
 This wall is made from polished crystal and imbued with arcane magics. They
 prevent its easy destruction, and make it reflect heat and cold.
@@ -790,7 +790,7 @@ Entering or affecting this black void is impossible.
 %%%%
 A wall of crystal
 
-<A wall of green crystal>
+<A crystal wall>
 %%%%
 # wizlab: Cloud Mage
 The damp floor
@@ -871,11 +871,11 @@ This metal wall is etched with murals depicting, in great and gruesome detail,
 exactly what will be done to anyone caught stealing from the Vaults. It makes
 you feel queasy.
 %%%%
-A heavily etched wall of green crystal
+A heavily etched crystal wall
 
-This wall of green crystal is etched with murals depicting, in great and
-gruesome detail, exactly what will be done to anyone caught stealing from the
-Vaults. It makes you feel queasy.
+This crystal wall is etched with murals depicting, in great and gruesome
+detail, exactly what will be done to anyone caught stealing from the Vaults. It
+makes you feel queasy.
 %%%%
 # moated_graveyard_entry (D:1)
 An adventurer's gravestone

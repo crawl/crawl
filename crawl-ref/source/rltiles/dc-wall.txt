@@ -680,13 +680,19 @@ sandstone_wall7
 sandstone_wall8
 sandstone_wall9
 
-volcanic_wall0 WALL_VOLCANIC
+volcanic_wall0 WALL_VOLCANIC WALL_VOLCANIC_RED
 volcanic_wall1
 volcanic_wall2
 volcanic_wall3
 volcanic_wall4
 volcanic_wall5
 volcanic_wall6
+
+%variation WALL_VOLCANIC blue
+%hue 0 240
+%lum -10 240
+%repeat WALL_VOLCANIC WALL_VOLCANIC_BLUE
+%resetcol
 
 %weight 5
 crystal_wall00 WALL_CRYSTAL_SQUARES
@@ -1419,7 +1425,7 @@ iron2-4
 
 dngn/grate DNGN_GRATE
 
-crystal_wall_green DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
+crystal_wall_green DNGN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 
 %variation DNGN_CRYSTAL blue
 crystal_wall_blue DNGN_CRYSTAL_BLUE
