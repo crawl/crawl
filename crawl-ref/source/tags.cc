@@ -4198,7 +4198,9 @@ void unmarshallItem(reader &th, item_def &item)
             artefact_set_property(item, ARTP_POISON, 0);
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_TELEPORTITIS)
+    if (th.getMinorVersion() < TAG_MINOR_TELEPORTITIS
+        && is_artefact(item)
+        && artefact_property(item, ARTP_CAUSE_TELEPORTATION))
     {
         if (artefact_property(item, ARTP_CAUSE_TELEPORTATION) > 1)
             artefact_set_property(item, ARTP_CAUSE_TELEPORTATION, 1);
