@@ -338,25 +338,23 @@ static const pop_entry pop_snake[] =
 
 static const pop_entry pop_spider[] =
 { // Spider Nest
-  {  0,  5,  260, RISE, MONS_HORNET },
-  {  0, 10,  765, SEMI, MONS_DEMONIC_CRAWLER },
-  {  1,  5,  955, FLAT, MONS_WOLF_SPIDER },
-  {  1,  5,  880, FLAT, MONS_TRAPDOOR_SPIDER },
-  {  1,  5,  765, FLAT, MONS_JUMPING_SPIDER },
-  {  1,  5,  690, FLAT, MONS_TARANTELLA },
-  {  1,  5,  605, FLAT, MONS_REDBACK },
-  {  1,  5,  550, FLAT, MONS_ORB_SPIDER },
-  {  1,  5,  335, FLAT, MONS_SPIDER },
-  {  1,  5,  260, FLAT, MONS_SCORPION },
-  {  1,  5,   52, FLAT, MONS_WASP },
-  {  1,  7,  100, FLAT, MONS_TORPOR_SNAIL },
-  {  1,  7,   89, SEMI, MONS_BOULDER_BEETLE },
-  {  1,  7,   52, SEMI, MONS_BORING_BEETLE },
-  {  2,  7,  190, SEMI, MONS_EMPEROR_SCORPION },
-  {  2,  7,  155, SEMI, MONS_MOTH_OF_WRATH },
-  {  2, 10,  300, SEMI, MONS_ENTROPY_WEAVER },
-  {  2, 10,  200, PEAK, MONS_GHOST_MOTH },
-  { -1,  5,  193, SEMI, MONS_NO_MONSTER}, // Old worm/cockroach/mite weight
+  { -1,  4,  260, RISE, MONS_HORNET },
+  { -1,  6,   89, SEMI, MONS_BOULDER_BEETLE },
+  { -1,  6,   52, SEMI, MONS_BORING_BEETLE },
+  { -1,  9,  765, SEMI, MONS_DEMONIC_CRAWLER },
+  {  1,  4,  955, FLAT, MONS_WOLF_SPIDER },
+  {  1,  4,  880, FLAT, MONS_TRAPDOOR_SPIDER },
+  {  1,  4,  765, FLAT, MONS_JUMPING_SPIDER },
+  {  1,  4,  690, FLAT, MONS_TARANTELLA },
+  {  1,  4,  605, FLAT, MONS_REDBACK },
+  {  1,  4,  550, FLAT, MONS_ORB_SPIDER },
+  {  1,  4,  335, FLAT, MONS_SPIDER },
+  {  1,  4,   52, FLAT, MONS_WASP },
+  {  1,  6,  100, FLAT, MONS_TORPOR_SNAIL },
+  {  1,  6,  190, SEMI, MONS_EMPEROR_SCORPION },
+  {  1,  6,  155, SEMI, MONS_MOTH_OF_WRATH },
+  {  1,  9,  300, SEMI, MONS_ENTROPY_WEAVER },
+  {  1,  9,  200, PEAK, MONS_GHOST_MOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
