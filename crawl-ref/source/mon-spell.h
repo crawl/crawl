@@ -1166,7 +1166,6 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_BOLT_OF_COLD, 28, MON_SPELL_WIZARD },
        { SPELL_SLOW, 28, MON_SPELL_WIZARD },
-       { SPELL_CORPSE_ROT, 28, MON_SPELL_WIZARD },
       }
     },
 
