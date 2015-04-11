@@ -2022,37 +2022,34 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (decay_enchantment(en))
         {
-            int breath_timeout_turns;
+            int breath_timeout_turns = random_range(4, 12);
 
             if (en == ENCH_WORD_OF_RECALL)
-            {
                 mons_word_of_recall(this, random_range(3, 7));
-                breath_timeout_turns = random_range(4, 12);
-            }
             else if (en == ENCH_CHANT_FIRE_STORM
                   || en == ENCH_CHANT_WORD_OF_ENTROPY)
             {
                 actor *mons_foe = get_foe();
-                coord_def foepos;
+                coord_def foe_pos;
                 if (mons_foe)
-                    foepos = mons_foe->pos();
+                    foe_pos = mons_foe->pos();
 
                 if  (mons_foe
                      && !(is_sanctuary(pos())
-                        || is_sanctuary(mons_foe->pos()))
-                     && can_see(mons_foe))
+                        || is_sanctuary(mons_foe->pos())))
                 {
-                    if (en == ENCH_CHANT_FIRE_STORM) {
-                        bolt beem;
-                        beem.target = foepos;
-                        mons_cast(this, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,
-                                true);
+                    if (can_see(mons_foe))
+                    {
+                        if (en == ENCH_CHANT_FIRE_STORM)
+                            finish_chanting_fire_storm(this, foe_pos);
+                        else // word of entropy
+                            finish_chanting_word_of_entropy(this, mons_foe);
                     }
-                    else // word of entropy
-                        mons_foe->corrode_equipment("the Word of Entropy", 6);
+                    // remove the timeout because the effect was entirely dodged
+                    else
+                        breath_timeout_turns = 0;
                 }
-                // shorter because you can avoid the effect entirely out of LOS
-                breath_timeout_turns = random2(5);
+
             }
             else
                 die("Unknown chant type!"); // squash a warning
