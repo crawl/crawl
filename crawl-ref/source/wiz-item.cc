@@ -374,9 +374,9 @@ void wizard_tweak_object()
         {
             mprf_nocap("%s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
 
-            mprf(MSGCH_PROMPT, "a - plus  b - plus2  c - %s  "
-                               "d - quantity  e - flags  ESC - exit",
-                               is_art ? "art props" : "special");
+            mprf_nocap(MSGCH_PROMPT, "a - plus  b - plus2  c - %s  "
+                                     "d - quantity  e - flags  ESC - exit",
+                                     is_art ? "art props" : "special");
 
             mprf(MSGCH_PROMPT, "Which field? ");
 
