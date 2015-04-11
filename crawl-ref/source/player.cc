@@ -4036,12 +4036,13 @@ void rot_hp(int hp_loss)
 int unrot_hp(int hp_recovered)
 {
     int hp_balance = 0;
-    if (hp_recovered > -you.hp_max_adj_temp) {
-      hp_balance = hp_recovered + you.hp_max_adj_temp;
-      you.hp_max_adj_temp = 0;
-    } else {
-      you.hp_max_adj_temp += hp_recovered;
+    if (hp_recovered > -you.hp_max_adj_temp)
+    {
+        hp_balance = hp_recovered + you.hp_max_adj_temp;
+        you.hp_max_adj_temp = 0;
     }
+    else
+        you.hp_max_adj_temp += hp_recovered;
     calc_hp();
 
     you.redraw_hit_points = true;
@@ -6826,7 +6827,8 @@ void player::corrode_equipment(const char* corrosion_source, int degree)
             did_corrode = true;
         }
 
-    if (did_corrode) {
+    if (did_corrode)
+    {
         redraw_armour_class = true;
         wield_change = true;
     }
