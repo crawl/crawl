@@ -6816,17 +6816,20 @@ void player::corrode_equipment(const char* corrosion_source, int degree)
                                    corrosion_source).c_str());
 
     // the more corrosion you already have, the lower the odds of more
-    const int prev_corr = props["corrosion_amount"].get_int();
+    int prev_corr = props["corrosion_amount"].get_int();
+    bool did_corrode = false;
     for (int i = 0; i < degree; i++)
-        if (x_chance_in_y(prev_corr, prev_corr + 9))
-            degree--;
+        if (!x_chance_in_y(prev_corr, prev_corr + 9))
+        {
+            props["corrosion_amount"].get_int()++;
+            prev_corr++;
+            did_corrode = true;
+        }
 
-    if (!degree)
-        return;
-
-    props["corrosion_amount"].get_int() += degree;
-    redraw_armour_class = true;
-    wield_change = true;
+    if (did_corrode) {
+        redraw_armour_class = true;
+        wield_change = true;
+    }
     return;
 }
 
