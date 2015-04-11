@@ -984,12 +984,6 @@ static void _eat_chunk(item_def& food)
         xom_is_stimulated(100);
         break;
 
-    case CE_ROT:
-        you.rot(&you, 10 + random2(10));
-        if (you.sicken(50 + random2(100)))
-            xom_is_stimulated(random2(100));
-        break;
-
     case CE_CLEAN:
     {
         if (you.species == SP_GHOUL)
@@ -1004,6 +998,7 @@ static void _eat_chunk(item_def& food)
         break;
     }
 
+    case CE_ROT:
     case CE_POISONOUS:
     case CE_NOCORPSE:
         mprf(MSGCH_ERROR, "This flesh (%d) tastes buggy!", chunk_effect);
@@ -1197,12 +1192,6 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             break;
 
         case CE_ROT:
-            you.rot(&you, 5 + random2(5));
-            if (you.sicken(50 + random2(100)))
-                xom_is_stimulated(random2(100));
-            stop_delay();
-            break;
-
         case CE_POISONOUS:
         case CE_NOCORPSE:
             mprf(MSGCH_ERROR, "This blood (%d) tastes buggy!", chunk_type);
@@ -1375,9 +1364,9 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
     if (check_hunger)
     {
         if (is_poisonous(food))
-            FAIL("It contains deadly poison!");
+            FAIL("It contains deadly poison.");
         if (causes_rot(food))
-            FAIL("It is caustic! Not only inedible but also greatly harmful!");
+            FAIL("It is putrefying and completely inedible.");
     }
 
     if (you.species == SP_VAMPIRE)
@@ -1436,7 +1425,7 @@ bool carrion_is_poisonous(const item_def &food)
  * players with rPois treat poisonous chunks as clean.
  *
  * @param carrion       The actual chunk or corpse.
- * @param innate        Whether to consider to only consider player species,
+ * @param innate_only   Whether to consider to only consider player species,
  *                      rather than items, forms, mutations, etc (for rPois).
  * @return              A chunk type corresponding to the effect eating the
  *                      given item will have on the player.
@@ -1454,7 +1443,7 @@ corpse_effect_type determine_chunk_effect(const item_def &carrion,
  * players with rPois treat poisonous chunks as clean.
  *
  * @param chunktype     The actual chunk type.
- * @param innate        Whether to consider to only consider player species,
+ * @param innate_only   Whether to consider to only consider player species,
  *                      rather than items, forms, mutations, etc (for rPois).
  * @return              A chunk type corresponding to the effect eating a chunk
  *                      of the given type will have on the player.

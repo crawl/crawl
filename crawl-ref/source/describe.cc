@@ -1872,7 +1872,7 @@ string get_item_description(const item_def &item, bool verbose,
                                "mutations.";
                 break;
             case CE_ROT:
-                description << "\n\nEating this meat will cause rotting.";
+                description << "\n\nThis meat is rotten.";
                 break;
             default:
                 break;
