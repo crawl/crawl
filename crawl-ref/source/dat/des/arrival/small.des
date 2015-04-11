@@ -3157,3 +3157,26 @@ OxxxxxxxbbbxxxB@
 Oxxxxxxxxxxx
 xxxxxxx
 ENDMAP
+
+##############################################################
+NAME:    minmay_arrival_shattered_statue
+TAGS:    arrival
+ORIENT:  float
+ITEM:    stone q:4 / stone q:2 / nothing
+ITEM:    stone q:3 w:5 / stone q:1 / nothing
+ITEM:    stone q:2 w:5 / stone q:1 w:5 / nothing
+ITEM:    stone q:1 w:5 / nothing
+ITEM:    stone q:1 w:1 / nothing w:20
+MAP
+   xxxxxxx
+  xx.....xx
+  x..h{h..x
+  xxhggghxx
+   xxx+xxx
+ xxxeeeeexxx
+xxgfedddefgxx
++hgfedGdefgh+
+xxgfedddefgxx
+ xxxeeeeexxx
+   xxxxxxx
+ENDMAP

@@ -176,7 +176,6 @@ crumbled_column_3
 crumbled_column_4
 crumbled_column_5
 crumbled_column_6
-granite_stump DNGN_GRANITE_STUMP
 
 # Statues in Dis
 statue_iron DNGN_STATUE_IRON

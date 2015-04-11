@@ -842,11 +842,6 @@ An adventurer's gravestone
 
 The grave of an adventurer who came close to victory.
 %%%%
-# minmay_entry_shattered_statue (D:1)
-A granite stump
-
-This stump of granite was probably a statue at some point in the past.
-%%%%
 # Ice Cave
 An ice choked empty arch of ancient stone
 
