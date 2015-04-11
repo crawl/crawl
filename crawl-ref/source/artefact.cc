@@ -186,7 +186,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (brand == SPWPN_PAIN) // Pain involves necromantic spell use.
             return false;
 
-        if (artefact_property(item, ARTP_MAGICAL_POWER))
+        if (artefact_property(item, ARTP_MAGICAL_POWER) > 0)
             return false;
         break;
 
