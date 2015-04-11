@@ -1131,13 +1131,16 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
                          CMD_DROP, 0);
     _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
-    _add_command(cols, 1, CMD_BUTCHER, "Chop up a corpse", 2);
-
     {
-        string interact = (you.species == SP_VAMPIRE ? "Drain corpses on"
-                                                     : "Eat food from");
-        interact += " floor\n";
-        _add_command(cols, 1, CMD_EAT, interact, 2);
+        const bool vampire = you.species == SP_VAMPIRE;
+        string butcher = vampire ? "Bottle blood from"
+                                 : "Chop up";
+        _add_command(cols, 1, CMD_BUTCHER, butcher + " a corpse", 2);
+
+        string eat = vampire ? "Drain corpses on"
+                             : "Eat food from";
+        eat += " floor\n";
+        _add_command(cols, 1, CMD_EAT, eat, 2);
     }
 
     cols.add_formatted(
