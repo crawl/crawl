@@ -68,8 +68,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_POISONED;
     case ENCH_SICK:
         return MB_SICK;
-    case ENCH_ROT:
-        return MB_ROTTING;
     case ENCH_CORONA:
     case ENCH_SILVER_CORONA:
         return MB_GLOWING;
@@ -1290,8 +1288,6 @@ static string _verbose_info0(const monster_info& mi)
         return "wandering";
     if (mi.is(MB_BURNING))
         return "burning";
-    if (mi.is(MB_ROTTING))
-        return "rotting";
     if (mi.is(MB_BLEEDING))
         return "bleeding";
     if (mi.is(MB_INVISIBLE))
@@ -1459,8 +1455,6 @@ vector<string> monster_info::attributes() const
         v.emplace_back("poisoned");
     if (is(MB_SICK))
         v.emplace_back("sick");
-    if (is(MB_ROTTING))
-        v.emplace_back("rotting away"); //jmf: "covered in sores"?
     if (is(MB_GLOWING))
         v.emplace_back("softly glowing");
     if (is(MB_INSANE))

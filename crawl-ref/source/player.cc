@@ -4645,9 +4645,9 @@ bool miasma_player(actor *who, string source_aux)
                                  who ? who->name(DESC_A) : "",
                                  source_aux);
 
-    if (you.hp_max > 4 && coinflip())
+    if (coinflip())
     {
-        you.rot(who, roll_dice(2, 2));
+        you.rot(who, 1);
         success = true;
     }
 
@@ -5203,7 +5203,6 @@ void player::init()
     pet_target      = MHITNOT;
 
     duration.init(0);
-    rotting         = 0;
     apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
@@ -6759,11 +6758,11 @@ void player::drain_stat(stat_type s, int amount, actor *attacker)
         lose_stat(s, amount, false, "");
 }
 
-bool player::rot(actor *who, int amount, int immediate, bool quiet)
+bool player::rot(actor *who, int amount, bool quiet)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (amount <= 0 && immediate <= 0)
+    if (amount <= 0)
         return false;
 
     if (res_rotting() || duration[DUR_DEATHS_DOOR])
@@ -6778,18 +6777,10 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
         return false;
     }
 
-    if (immediate > 0)
-        rot_hp(immediate);
+    rot_hp(amount);
 
-    // Either this, or the actual rotting message should probably
-    // be changed so that they're easier to tell apart. -- bwr
     if (!quiet)
-    {
-        mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             (rotting > 0 || immediate) ? "rotting" : "start to rot");
-    }
-
-    rotting += amount;
+        mprf(MSGCH_WARN, "You feel your flesh rotting away!");
 
     learned_something_new(HINT_YOU_ROTTING);
 

@@ -197,8 +197,7 @@ public:
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow) = 0;
     virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 15) = 0;
-    virtual bool rot(actor *agent, int amount, int immediate = 0,
-                     bool quiet = false) = 0;
+    virtual bool rot(actor *agent, int amount, bool quiet = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
                       kill_method_type kill_type = KILLED_BY_MONSTER,

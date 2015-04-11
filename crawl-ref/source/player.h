@@ -654,7 +654,7 @@ public:
     void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
-    bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
+    bool rot(actor *, int amount, bool quiet = false);
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
                           const char* hurt_msg = nullptr);

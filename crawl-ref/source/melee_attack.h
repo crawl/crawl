@@ -89,7 +89,7 @@ private:
 
     bool attack_ignores_shield(bool verbose);
 
-    void rot_defender(int amount, int immediate = 0);
+    void rot_defender(int amount);
     void splash_defender_with_acid(int strength);
 
     bool consider_decapitation(int damage_done, int damage_type = -1);

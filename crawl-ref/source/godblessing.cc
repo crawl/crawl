@@ -403,8 +403,8 @@ static string _beogh_bless_armour(monster* mon)
 
 static bool _blessing_balms(monster* mon)
 {
-    // Remove poisoning, sickness, confusion, and rotting, like a potion
-    // of curing, but without the healing. Also, remove slowing and
+    // Remove poisoning, sickness and confusion, like a potion of
+    // curing, but without the healing. Also, remove slowing and
     // fatigue.
     bool success = false;
 
@@ -415,9 +415,6 @@ static bool _blessing_balms(monster* mon)
         success = true;
 
     if (mon->del_ench(ENCH_CONFUSION, true))
-        success = true;
-
-    if (mon->del_ench(ENCH_ROT, true))
         success = true;
 
     if (mon->del_ench(ENCH_SLOW, true))
