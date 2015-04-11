@@ -299,7 +299,6 @@ void wizard_heal(bool super_heal)
     }
 
     // Clear most status ailments.
-    you.rotting = 0;
     you.disease = 0;
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_POISONING] = 0;

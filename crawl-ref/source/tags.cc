@@ -1319,7 +1319,6 @@ static void tag_construct_you(writer &th)
 
     marshallInt(th, you.last_mid);
     marshallByte(th, you.piety);
-    marshallByte(th, you.rotting);
     marshallShort(th, you.pet_target);
 
     marshallByte(th, you.max_level);
@@ -2125,7 +2124,10 @@ static void tag_read_you(reader &th)
     you.last_mid          = unmarshallInt(th);
     you.piety             = unmarshallUByte(th);
     ASSERT(you.piety <= MAX_PIETY);
-    you.rotting           = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_ROTTING)
+        unmarshallUByte(th);
+#endif
     you.pet_target        = unmarshallShort(th);
 
     you.max_level         = unmarshallByte(th);

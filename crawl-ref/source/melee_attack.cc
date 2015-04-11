@@ -1913,24 +1913,22 @@ bool melee_attack::player_monattk_hit_effects()
     return true;
 }
 
-void melee_attack::rot_defender(int amount, int immediate)
+void melee_attack::rot_defender(int amount)
 {
-    if (defender->rot(attacker, amount, immediate, true))
+    if (defender->rot(attacker, amount, true))
     {
         // XXX: why is this message separate here?
         if (defender->is_player())
         {
             special_damage_message =
-                make_stringf("You feel your flesh %s away!",
-                             immediate > 0 ? "rotting" : "start to rot");
+                make_stringf("You feel your flesh rotting away!");
         }
         else if (defender->is_monster() && defender_visible)
         {
             special_damage_message =
                 make_stringf(
-                    "%s %s!",
-                    defender_name(false).c_str(),
-                    amount > 0 ? "rots" : "looks less resilient");
+                    "%s looks less resilient!",
+                    defender_name(false).c_str());
         }
     }
 }
@@ -2752,7 +2750,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_ROT:
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            rot_defender(3 + random2(4), damage_done > 5 ? 1 : 0);
+            rot_defender(damage_done > 5 ? 2 : 1);
         break;
 
     case AF_FIRE:

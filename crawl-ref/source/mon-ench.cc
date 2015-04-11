@@ -728,11 +728,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " looks more healthy.");
         break;
 
-    case ENCH_ROT:
-        if (!quiet)
-            simple_monster_message(this, " is no longer rotting.");
-        break;
-
     case ENCH_HELD:
     {
         int net = get_trapping_net(pos());
@@ -1676,18 +1671,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en, true);
         break;
     }
-    case ENCH_ROT:
-    {
-        if (hit_points > 1 && one_chance_in(3))
-        {
-            hurt(me.agent(), 1);
-            if (hit_points < max_hit_points && coinflip())
-                --max_hit_points;
-        }
-
-        decay_enchantment(en, true);
-        break;
-    }
 
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
@@ -2287,7 +2270,11 @@ static inline int _mod_speed(int val, int speed)
 static const char *enchant_names[] =
 {
     "none", "berserk", "haste", "might", "fatigue", "slow", "fear",
-    "confusion", "invis", "poison", "rot", "summon", "abj", "corona",
+    "confusion", "invis", "poison",
+#if TAG_MAJOR_VERSION == 34
+    "rot",
+#endif
+    "summon", "abj", "corona",
     "charm", "sticky_flame", "glowing_shapeshifter", "shapeshifter", "tp",
     "sleep_wary", "submerged", "short_lived", "paralysis", "sick",
 #if TAG_MAJOR_VERSION == 34
@@ -2525,11 +2512,6 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_STICKY_FLAME:
         cturn = 1000 * deg / _mod_speed(200, mons->speed);
-        break;
-    case ENCH_ROT:
-        if (deg > 1)
-            cturn = 1000 * (deg - 1) / _mod_speed(333, mons->speed);
-        cturn += 1000 / _mod_speed(250, mons->speed);
         break;
     case ENCH_CORONA:
     case ENCH_SILVER_CORONA:

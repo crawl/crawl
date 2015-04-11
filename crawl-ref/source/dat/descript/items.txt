@@ -880,8 +880,8 @@ you.
 %%%%
 potion of curing
 
-A potion which heals some wounds, clears the mind and cures diseases. If it is
-used when one is at or near full health, it can also slightly repair rotting.
+A potion which heals some wounds, clears the mind and cures poison and disease.
+It can also slightly repair rotting.
 %%%%
 potion of decay
 
@@ -903,8 +903,7 @@ A potion which confers great buoyancy on one who consumes it.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
-instantly. If it is used when one is at or near full health, it can also repair
-rotting.
+instantly. It can also repair rotting.
 %%%%
 potion of invisibility
 

@@ -1849,7 +1849,7 @@ void MiscastEffect::_necromancy(int severity)
                 if (you.can_smell())
                     all_msg = "You begin to rot!";
 
-                target->rot(act_source, 1, 0, true);
+                target->rot(act_source, 1, true);
             }
             else if (you.species == SP_MUMMY)
             {
@@ -1933,7 +1933,7 @@ void MiscastEffect::_necromancy(int severity)
             break;
 
         case 1:
-            target->rot(act_source, random2avg(7, 2) + 1);
+            target->rot(act_source, 2 + random2(2));
             break;
 
         case 2:
@@ -3180,7 +3180,7 @@ void MiscastEffect::_zot()
             target->petrify(act_source);
             break;
         case 2:
-            target->rot(act_source, 0, 3 + random2(3));
+            target->rot(act_source, 3 + random2(3));
             break;
         case 3:
             if (!_send_to_abyss())
