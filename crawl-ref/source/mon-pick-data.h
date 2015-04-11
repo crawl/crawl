@@ -222,19 +222,16 @@ static const pop_entry pop_blade[] =
 static const pop_entry pop_lair[] =
 { // Lair
   { -4,  6,  825, SEMI, MONS_IGUANA },
-  { -3,  7,  690, SEMI, MONS_HOUND },
   { -2,  8,  750, SEMI, MONS_RIVER_RAT },
   { -1,  5,   52, SEMI, MONS_BLACK_BEAR },
   {  0,  6,   25, PEAK, MONS_SCORPION },
   {  0,  8,  260, SEMI, MONS_BASILISK },
   {  0,  8,  260, SEMI, MONS_WOLF },
-  {  1,  6, 1000, FLAT, MONS_QUOKKA },
   {  1,  7, 1000, FLAT, MONS_GIANT_FROG },
   {  1,  7, 1000, FLAT, MONS_PORCUPINE },
   {  1,  8,  880, FLAT, MONS_SPINY_FROG },
   {  1,  8,  980, FLAT, MONS_CROCODILE },
   {  1,  8,  980, FLAT, MONS_WATER_MOCCASIN },
-  {  1,  8,  925, FLAT, MONS_ADDER },
   {  1,  8,  515, FLAT, MONS_HIPPOGRIFF },
   {  1,  8,  515, FLAT, MONS_KOMODO_DRAGON },
   {  1,  8,  515, FLAT, MONS_YAK },
@@ -261,7 +258,7 @@ static const pop_entry pop_lair[] =
   {  4, 10,   25, PEAK, MONS_LINDWURM },
   {  5,  9,   17, SEMI, MONS_WANDERING_MUSHROOM },
   {  5, 12,   66, RISE, MONS_FIRE_CRAB },
-  {  1,  6, 3000, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
+  {  1,  6, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
