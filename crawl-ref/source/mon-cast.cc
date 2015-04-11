@@ -2623,7 +2623,7 @@ void finish_chanting_word_of_entropy(monster* mons, actor *mons_foe)
     simple_monster_message(mons, " screams the final syllables of the word of"
                                 " entropy!");
     noisy(10, mons->pos(), mons->mid, NF_NONE);
-    mons_foe->corrode_equipment("the word of entropy", 6);
+    mons_foe->corrode_equipment("the word of entropy", 4);
 }
 
 static bool _valid_vine_spot(coord_def p)
