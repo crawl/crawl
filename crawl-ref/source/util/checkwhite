@@ -16,7 +16,7 @@ unless (@files)
 {
     if ($modified_only)
     {
-        open FLIST, "git diff-index -M --name-only --cached HEAD|"
+        open FLIST, "git diff-index -M --name-only --cached --relative HEAD|"
             or die "Can't run git diff-index";
     }
     else
