@@ -8376,6 +8376,19 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CHANT_WORD_OF_ENTROPY:
         return mon->has_ench(ENCH_BREATH_WEAPON) || !foe;
 
+    case SPELL_SINGULARITY:
+    {
+        if (!foe)
+            return true;
+
+        // If the foe is in range of an existing singularity of our monster,
+        // don't cast.
+        for (monster_near_iterator mi(foe->pos(), LOS_NO_TRANS); mi; ++mi)
+            if (mi->type == MONS_SINGULARITY && mi->summoner == mon->mid)
+                return distance2(foe->pos(), mi->pos()) <= mi->get_hit_dice();
+        return false;
+    }
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
