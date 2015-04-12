@@ -406,6 +406,38 @@ static int l_item_do_name_coloured(lua_State *ls)
 
 IDEFN(name_coloured, do_name_coloured)
 
+static int l_item_do_stacks(lua_State *ls)
+{
+    UDATA_ITEM(first);
+
+    if (!first)
+        lua_pushnil(ls);
+    else if (lua_gettop(ls) == 0 || lua_isnil(ls, 1))
+    {
+        bool any_stack = false;
+        // Optimisation: don't bother iterating if it can't possibly stack.
+        if (is_stackable_item(*first))
+        {
+            // Compare against all of inventory, return true for any match.
+            // Note that items_stack already handles undefined items.
+            for (int inv_slot = 0; inv_slot < ENDOFPACK; ++inv_slot)
+                if (items_stack(*first, you.inv[inv_slot]))
+                {
+                    any_stack = true;
+                    break;
+                }
+        }
+        lua_pushboolean(ls, any_stack);
+    }
+    else if (ITEM(second, 1))
+        lua_pushboolean(ls, items_stack(*first, *second));
+    else
+        lua_pushnil(ls);
+    return 1;
+}
+
+IDEFN(stacks, do_stacks)
+
 IDEF(quantity)
 {
     PLUARET(number, item? item->quantity : 0);
@@ -1206,6 +1238,7 @@ static ItemAccessor item_attrs[] =
     { "worn",              l_item_worn },
     { "name",              l_item_name },
     { "name_coloured",     l_item_name_coloured },
+    { "stacks",            l_item_stacks },
     { "quantity",          l_item_quantity },
     { "slot",              l_item_slot },
     { "ininventory",       l_item_ininventory },
