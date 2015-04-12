@@ -3254,14 +3254,6 @@ void melee_attack::do_passive_freeze()
         {
             mon->expose_to_element(BEAM_COLD, orig_hurted);
             print_wounds(mon);
-
-            const int cold_res = mon->res_cold();
-
-            if (cold_res <= 0)
-            {
-                const int stun = (1 - cold_res) * random2(7);
-                mon->speed_increment -= stun;
-            }
         }
     }
 }
