@@ -3600,6 +3600,12 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " cannot move.\n";
     }
 
+    if (mons_class_flag(mi.type, M_COLD_BLOOD)
+        && get_resist(resist, MR_RES_COLD) <= 0)
+    {
+        result << uppercase_first(pronoun) << " is cold-blooded and may be "
+                                              "slowed by cold attacks.\n";
+    }
     // Monsters can glow from both light and radiation.
     if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
         result << uppercase_first(pronoun) << " is outlined in light.\n";
