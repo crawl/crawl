@@ -1652,7 +1652,7 @@ ENDMAP
 
 
 NAME: nicolae_abyss_rune_containment_breach
-TAGS: abyss_rune patrolling
+TAGS: abyss_rune unrand patrolling
 SUBST: N = nn., n = nnnc
 NSUBST: v = 2:v / *:v.
 KITEM: O = abyssal rune of zot

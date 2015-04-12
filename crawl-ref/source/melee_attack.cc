@@ -1348,13 +1348,10 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     aux_damage  = player_apply_final_multipliers(aux_damage);
 
-    const int pre_ac_dmg = aux_damage;
-    const int post_ac_dmg = apply_defender_ac(aux_damage);
-
     if (atk == UNAT_CONSTRICT)
         aux_damage = 0;
     else
-        aux_damage = post_ac_dmg;
+        aux_damage = apply_defender_ac(aux_damage);
 
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
@@ -1364,28 +1361,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         case UNAT_PUNCH:
             apply_bleeding = true;
             break;
-
-        case UNAT_HEADBUTT:
-        {
-            const int horns = player_mutation_level(MUT_HORNS);
-            const int stun = bestroll(min(damage_done, 7), 1 + horns);
-
-            defender->as_monster()->speed_increment -= stun;
-            break;
-        }
-
-        case UNAT_KICK:
-        {
-            if (you.has_usable_hooves() && pre_ac_dmg > post_ac_dmg)
-            {
-                const int hooves = player_mutation_level(MUT_HOOVES);
-                const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
-                // do some of the previously ignored damage in extra-damage
-                damage_done += inflict_damage(dmg, BEAM_MISSILE);
-            }
-
-            break;
-        }
 
         case UNAT_CONSTRICT:
             attacker->start_constricting(*defender);
@@ -1938,24 +1913,22 @@ bool melee_attack::player_monattk_hit_effects()
     return true;
 }
 
-void melee_attack::rot_defender(int amount, int immediate)
+void melee_attack::rot_defender(int amount)
 {
-    if (defender->rot(attacker, amount, immediate, true))
+    if (defender->rot(attacker, amount, true))
     {
         // XXX: why is this message separate here?
         if (defender->is_player())
         {
             special_damage_message =
-                make_stringf("You feel your flesh %s away!",
-                             immediate > 0 ? "rotting" : "start to rot");
+                make_stringf("You feel your flesh rotting away!");
         }
         else if (defender->is_monster() && defender_visible)
         {
             special_damage_message =
                 make_stringf(
-                    "%s %s!",
-                    defender_name(false).c_str(),
-                    amount > 0 ? "rots" : "looks less resilient");
+                    "%s looks less resilient!",
+                    defender_name(false).c_str());
         }
     }
 }
@@ -2777,7 +2750,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_ROT:
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            rot_defender(3 + random2(4), damage_done > 5 ? 1 : 0);
+            rot_defender(damage_done > 5 ? 2 : 1);
         break;
 
     case AF_FIRE:
@@ -2871,8 +2844,7 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (defender->stat_hp() < defender->stat_maxhp())
         {
-            if (attacker->heal(1 + random2(damage_done), coinflip())
-                && needs_message)
+            if (attacker->heal(1 + random2(damage_done)) && needs_message)
             {
                 mprf("%s %s strength from %s injuries!",
                      atk_name(DESC_THE).c_str(),
@@ -2890,7 +2862,7 @@ void melee_attack::mons_apply_attack_flavour()
             stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR :
                                       flavour == AF_DRAIN_INT ? STAT_INT
                                                               : STAT_DEX);
-            defender->drain_stat(drained_stat, 1, attacker);
+            defender->drain_stat(drained_stat, 1);
         }
         break;
 
@@ -3282,14 +3254,6 @@ void melee_attack::do_passive_freeze()
         {
             mon->expose_to_element(BEAM_COLD, orig_hurted);
             print_wounds(mon);
-
-            const int cold_res = mon->res_cold();
-
-            if (cold_res <= 0)
-            {
-                const int stun = (1 - cold_res) * random2(7);
-                mon->speed_increment -= stun;
-            }
         }
     }
 }
@@ -3631,6 +3595,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     case UNAT_CONSTRICT:
         return player_mutation_level(MUT_CONSTRICTING_TAIL)
                 || you.species == SP_OCTOPODE && you.has_usable_tentacle();
+
     case UNAT_KICK:
         return you.has_usable_hooves()
                || you.has_usable_talons()

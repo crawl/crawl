@@ -399,8 +399,8 @@ static const char* _jewellery_base_ability_description(int subtype)
     case RING_ICE:
         return "It enhances your ice magic, and weakens your fire magic.";
     case RING_TELEPORTATION:
-        return "It causes random teleportation, and can be evoked to teleport "
-               "at will.";
+        return "It may teleport you to nearby monsters, and can be evoked to "
+               "randomly teleport.";
     case RING_TELEPORT_CONTROL:
         return "It can be evoked for teleport control.";
     case AMU_CLARITY:
@@ -471,7 +471,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISES, "It may make noises in combat.", false},
         { ARTP_PREVENT_SPELLCASTING, "It prevents spellcasting.", false},
-        { ARTP_CAUSE_TELEPORTATION, "It causes random teleportation.", false},
+        { ARTP_CAUSE_TELEPORTATION, "It may teleport you to nearby monsters.", false},
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It may make you go berserk in combat.", false},
@@ -1872,7 +1872,7 @@ string get_item_description(const item_def &item, bool verbose,
                                "mutations.";
                 break;
             case CE_ROT:
-                description << "\n\nEating this meat will cause rotting.";
+                description << "\n\nThis meat is rotten.";
                 break;
             default:
                 break;
@@ -3600,6 +3600,12 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " cannot move.\n";
     }
 
+    if (mons_class_flag(mi.type, M_COLD_BLOOD)
+        && get_resist(resist, MR_RES_COLD) <= 0)
+    {
+        result << uppercase_first(pronoun) << " is cold-blooded and may be "
+                                              "slowed by cold attacks.\n";
+    }
     // Monsters can glow from both light and radiation.
     if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
         result << uppercase_first(pronoun) << " is outlined in light.\n";

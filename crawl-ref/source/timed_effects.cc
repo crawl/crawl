@@ -854,7 +854,7 @@ static void _recover_stats(int /*time_delta*/)
                  && coinflip()))
         {
             mprf(MSGCH_WARN, "Your disease is taking its toll.");
-            lose_stat(STAT_RANDOM, 1, false, "disease");
+            lose_stat(STAT_RANDOM, 1);
         }
     }
 }
@@ -865,7 +865,7 @@ static void _deteriorate(int /*time_delta*/)
     if (player_mutation_level(MUT_DETERIORATION)
         && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
     {
-        lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
+        lose_stat(STAT_RANDOM, 1);
     }
 }
 
@@ -1355,7 +1355,7 @@ void monster::timeout_enchantments(int levels)
             lose_ench_levels(entry.second, levels);
             break;
 
-        case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
+        case ENCH_POISON: case ENCH_CORONA:
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:

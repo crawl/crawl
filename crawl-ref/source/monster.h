@@ -474,7 +474,7 @@ public:
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
-    bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
+    bool rot(actor *, int amount, bool quiet = false);
     void splash_with_acid(const actor* evildoer, int /*acid_strength*/ = -1,
                           bool /*allow_corrosion*/ = true,
                           const char* /*hurt_msg*/ = nullptr);

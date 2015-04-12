@@ -702,46 +702,6 @@ The features of this statue are strange and alien. Is it because the statue is
 worn and tarnished that it has become so unrecognisable? Or is it that the
 subject was something demonic and evil?
 %%%%
-# wizlab: Tukima
-A crystal clear mirror
-
-A glistening mirror, reflecting everything around it.
-%%%%
-A strange generator
-
-A mechanical contraption, all hisses and pops, ready to dispense dancing
-weapons at any moment.
-%%%%
-A glistening fountain
-
-A dry fountain, glistening brightly.
-%%%%
-A black marble wall
-
-The marble glistens and shines. It certainly is beautiful!
-%%%%
-The marble floor
-
-A marble floor of white and silver, with shades of pink here and there.
-%%%%
-# wizlab: Eringya
-A rose-covered archway
-
-The roses look beautiful!
-%%%%
-A vine-covered statue
-
-This statue looks almost like a monster made entirely from vines.
-%%%%
-A crumbling stone wall
-
-This wall looks ancient.
-%%%%
-The grass-covered ground
-
-Strewn with leaves and twigs that crunch loudly underfoot, this grass is crisp
-and fresh.
-%%%%
 # wizlab: Doroklohe
 A strange rock wall
 
@@ -881,11 +841,6 @@ makes you feel queasy.
 An adventurer's gravestone
 
 The grave of an adventurer who came close to victory.
-%%%%
-# minmay_entry_shattered_statue (D:1)
-A granite stump
-
-This stump of granite was probably a statue at some point in the past.
 %%%%
 # Ice Cave
 An ice choked empty arch of ancient stone

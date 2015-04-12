@@ -3311,6 +3311,7 @@ bool is_bad_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) <= 0;
+        case POT_STRONG_POISON:
 #endif
         case POT_POISON:
             // Poison is not that bad if you're poison resistant.
@@ -3629,10 +3630,11 @@ bool is_useless_item(const item_def &item, bool temp)
 #if TAG_MAJOR_VERSION == 34
         case POT_DECAY:
             return you.res_rotting(temp) > 0;
+        case POT_STRONG_POISON:
 #endif
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
-            return player_res_poison(false, temp) > 0;
+            return !is_bad_item(item, temp);
 #if TAG_MAJOR_VERSION == 34
         case POT_SLOWING:
             return you.species == SP_FORMICID;

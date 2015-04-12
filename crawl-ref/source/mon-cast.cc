@@ -2597,6 +2597,36 @@ bool mons_word_of_recall(monster* mons, int recall_target)
     return num_recalled;
 }
 
+/**
+ * Launch a fire storm!
+ *
+ * @param mons[in] The monster doing the chant
+ * @param foe_pos  The target area to fire storm.
+ * @returns void
+ */
+void finish_chanting_fire_storm(monster* mons, coord_def foe_pos)
+{
+    bolt beem;
+    beem.target = foe_pos;
+    mons_cast(mons, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,
+            true);
+}
+
+/**
+ * Corrode the target badly, generate noise, and do some messaging.
+ *
+ * @param mons[in] The monster doing the chant
+ * @param mons_foe The target to corrode.
+ * @returns void
+ */
+void finish_chanting_word_of_entropy(monster* mons, actor *mons_foe)
+{
+    simple_monster_message(mons, " screams the final syllables of the word of"
+                                " entropy!");
+    noisy(10, mons->pos(), mons->mid, NF_NONE);
+    mons_foe->corrode_equipment("the word of entropy", 4);
+}
+
 static bool _valid_vine_spot(coord_def p)
 {
     if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, grd(p)))
@@ -5267,7 +5297,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_BRAIN_FEED:
         if (one_chance_in(3)
-            && lose_stat(STAT_INT, 1 + random2(3), mons))
+            && lose_stat(STAT_INT, 1 + random2(3)))
         {
             mpr("Something feeds on your intellect!");
             xom_is_stimulated(50);
@@ -6514,8 +6544,9 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_SHROUD_OF_GOLUBRIA:
         if (you.can_see(mons))
         {
-            mprf("Space distorts along a thin shroud covering %s body.",
-                 apostrophise(mons->name(DESC_THE)).c_str());
+            mprf("Space distorts along a thin shroud covering %s %s.",
+                 apostrophise(mons->name(DESC_THE)).c_str(),
+                 mons->is_insubstantial() ? "form" : "body");
         }
         mons->add_ench(mon_enchant(ENCH_SHROUD));
         return;
@@ -8354,6 +8385,19 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
     case SPELL_CHANT_FIRE_STORM:
     case SPELL_CHANT_WORD_OF_ENTROPY:
         return mon->has_ench(ENCH_BREATH_WEAPON) || !foe;
+
+    case SPELL_SINGULARITY:
+    {
+        if (!foe)
+            return true;
+
+        // If the foe is in range of an existing singularity of our monster,
+        // don't cast.
+        for (monster_near_iterator mi(foe->pos(), LOS_NO_TRANS); mi; ++mi)
+            if (mi->type == MONS_SINGULARITY && mi->summoner == mon->mid)
+                return distance2(foe->pos(), mi->pos()) <= mi->get_hit_dice();
+        return false;
+    }
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

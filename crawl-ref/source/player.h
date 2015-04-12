@@ -637,7 +637,7 @@ public:
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
-    void drain_stat(stat_type stat, int amount, actor* attacker);
+    void drain_stat(stat_type stat, int amount);
 
     void expose_to_element(beam_type element, int strength = 0,
                            bool slow_cold_blood = true);
@@ -654,7 +654,7 @@ public:
     void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
-    bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
+    bool rot(actor *, int amount, bool quiet = false);
     void splash_with_acid(const actor* evildoer, int acid_strength,
                           bool allow_corrosion = true,
                           const char* hurt_msg = nullptr);

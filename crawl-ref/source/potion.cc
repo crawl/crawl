@@ -68,17 +68,10 @@ public:
         // cure status effects
         if (you.duration[DUR_CONF]
             || you.duration[DUR_POISONING]
-            || you.rotting
             || you.disease)
         {
             return true;
         }
-
-        // remove rot (when healed to full)
-        // (you can actually remove rot when nearly at max hp, but not if you
-        // have no device heal, so...)
-        if (player_rotted() && you.hp == you.hp_max)
-            return true;
 
         return false;
     }
@@ -102,7 +95,6 @@ public:
             you.redraw_hit_points = true;
 
         you.duration[DUR_POISONING] = 0;
-        you.rotting = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
 
@@ -821,7 +813,8 @@ public:
         const bool mutated = mutate(RANDOM_GOOD_MUTATION,
                                     "potion of beneficial mutation",
                                     true, false, false, true);
-        if (undead_mutation_rot()) {
+        if (undead_mutation_rot())
+        {
             mpr("You feel dead inside.");
             return mutated;
         }
@@ -878,8 +871,7 @@ public:
 
     bool effect(bool=true, int=40) const
     {
-        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2), false,
-                           "drinking a potion of degeneration");
+        return lose_stat(STAT_RANDOM, 1 + random2avg(4, 2));
     }
 
     bool quaff(bool was_known) const
@@ -945,7 +937,7 @@ public:
 
     bool effect(bool=true, int=40) const
     {
-        return you.rot(&you, 0, 3 + random2(3));;
+        return you.rot(&you, 3 + random2(3));;
     }
 
     bool quaff(bool was_known) const

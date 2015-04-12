@@ -1885,16 +1885,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         learned_something_new(HINT_YOU_ENCHANTED);
         Hints.hints_just_triggered = true;
 
-        text << "Ugh, your flesh is rotting! Not only does this slowly "
-                "reduce your health, it also slowly reduces your <w>maximum</w> "
-                "health (your usual maximum health will be indicated by a "
-                "number in parentheses).\n"
-                "While you can wait it out, you'll probably want to stop the "
-                "rotting as soon as possible by <w>%</w>uaffing a potion of "
-                "curing, since the longer you wait the more your maximum "
-                "health will be reduced. Once you've stopped rotting you can "
-                "restore your maximum health to normal by drinking potions of "
-                "curing and heal wounds while fully healed.";
+        text << "Ugh, your flesh has been rotted away! This reduces your"
+                "<w>maximum</w> health (your usual maximum health will be "
+                "indicated by a number in parentheses).\n"
+                "You can restore your maximum health to normal by drinking "
+                "potions of curing and heal wounds.";
         cmd.push_back(CMD_QUAFF);
         break;
 

@@ -186,7 +186,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (brand == SPWPN_PAIN) // Pain involves necromantic spell use.
             return false;
 
-        if (artefact_property(item, ARTP_MAGICAL_POWER))
+        if (artefact_property(item, ARTP_MAGICAL_POWER) > 0)
             return false;
         break;
 
@@ -716,8 +716,8 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 2; }, 0, 0 },
     { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Tele", ARTP_VAL_POS,   0,    // ARTP_CAUSE_TELEPORTATION,
-        nullptr, []() { return 8; }, 0, 0 },
+    { "*Tele", ARTP_VAL_BOOL,  0,   // ARTP_CAUSE_TELEPORTATION,
+        nullptr, []() { return 1; }, 0, 0 },
     { "-Tele", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
     { "*Rage", ARTP_VAL_POS, 25,    // ARTP_ANGRY,
@@ -748,7 +748,7 @@ static const artefact_prop_data artp_data[] =
 #if TAG_MAJOR_VERSION == 34
     { "+Fog", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_FOG,
 #endif
-    { "Regen", ARTP_VAL_POS, 35,    // ARTP_REGENERATION,
+    { "Regen", ARTP_VAL_BOOL, 35,   // ARTP_REGENERATION,
         []() { return 1; }, nullptr, 0, 0 },
     { "SustAb", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 }, // ARTP_SUSTAB,
     { "nupgr", ARTP_VAL_BOOL, 0, nullptr, nullptr, 0, 0 },// ARTP_NO_UPGRADE,

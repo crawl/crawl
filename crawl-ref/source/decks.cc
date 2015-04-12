@@ -2048,8 +2048,8 @@ static void _focus_card(int power, deck_rarity_type rarity)
         worst_stat = static_cast<stat_type>(random2(3));
     }
 
-    modify_stat(best_stat, 1, true, true);
-    modify_stat(worst_stat, -1, true, true);
+    modify_stat(best_stat, 1, true);
+    modify_stat(worst_stat, -1, true);
 
     const char* stats[3] = { "Str", "Int", "Dex" };
     take_note(Note(NOTE_FOCUS_CARD, you.base_stats[best_stat], you.base_stats[worst_stat],
@@ -2733,7 +2733,7 @@ static void _fortitude_card(int power, deck_rarity_type rarity)
     if (!strong)
     {
         mprf(MSGCH_DURATION, "You are filled with a great fortitude.");
-        notify_stat_change(STAT_STR, 10, true, "");
+        notify_stat_change(STAT_STR, 10, true);
     }
     else
         mprf(MSGCH_DURATION, "You become more resolute.");

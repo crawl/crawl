@@ -954,28 +954,6 @@ static void _decrement_durations()
         }
     }
 
-    if (you.rotting > 0)
-    {
-        // XXX: Mummies have an ability (albeit an expensive one) that
-        // can fix rotted HPs now... it's probably impossible for them
-        // to even start rotting right now, but that could be changed. - bwr
-        // It's not normal biology, so Cheibriados won't help.
-        if (you.species == SP_MUMMY)
-            you.rotting = 0;
-        else if (x_chance_in_y(you.rotting, 20)
-                 && !you.duration[DUR_DEATHS_DOOR])
-        {
-            mprf(MSGCH_WARN, "You feel your flesh rotting away.");
-            rot_hp(1);
-            you.rotting--;
-        }
-    }
-
-    // ghoul rotting is special, but will deduct from you.rotting
-    // if it happens to be positive - because this is placed after
-    // the "normal" rotting check, rotting attacks can be somewhat
-    // more painful on ghouls - reversing order would make rotting
-    // attacks somewhat less painful, but that seems wrong-headed {dlb}:
     if (you.species == SP_GHOUL)
     {
         int resilience = 400;
@@ -992,8 +970,6 @@ static void _decrement_durations()
             dprf("rot rate: 1/%d", resilience);
             mprf(MSGCH_WARN, "You feel your flesh rotting away.");
             rot_hp(1);
-            if (you.rotting > 0)
-                you.rotting--;
         }
     }
 
@@ -1349,12 +1325,7 @@ void player_reacts()
         const int teleportitis_level = player_teleport();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-        {
-            if (teleportitis_level >= 8)
-                you_teleport_now(false);
-            else
-                you_teleport_now(false, false, teleportitis_level * 5);
-        }
+            you_teleport_now(false, false, true);
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {

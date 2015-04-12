@@ -729,11 +729,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " looks more healthy.");
         break;
 
-    case ENCH_ROT:
-        if (!quiet)
-            simple_monster_message(this, " is no longer rotting.");
-        break;
-
     case ENCH_HELD:
     {
         int net = get_trapping_net(pos());
@@ -936,7 +931,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_WRETCHED:
         if (!quiet)
         {
-            const string msg = "seems to return to " +
+            const string msg = " seems to return to " +
                                pronoun(PRONOUN_POSSESSIVE, true) +
                                " normal shape.";
             simple_monster_message(this, msg.c_str());
@@ -1703,18 +1698,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(en, true);
         break;
     }
-    case ENCH_ROT:
-    {
-        if (hit_points > 1 && one_chance_in(3))
-        {
-            hurt(me.agent(), 1);
-            if (hit_points < max_hit_points && coinflip())
-                --max_hit_points;
-        }
-
-        decay_enchantment(en, true);
-        break;
-    }
 
     // Assumption: monster::res_fire has already been checked.
     case ENCH_STICKY_FLAME:
@@ -2054,37 +2037,34 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (decay_enchantment(en))
         {
-            int breath_timeout_turns;
+            int breath_timeout_turns = random_range(4, 12);
 
             if (en == ENCH_WORD_OF_RECALL)
-            {
                 mons_word_of_recall(this, random_range(3, 7));
-                breath_timeout_turns = random_range(4, 12);
-            }
             else if (en == ENCH_CHANT_FIRE_STORM
                   || en == ENCH_CHANT_WORD_OF_ENTROPY)
             {
                 actor *mons_foe = get_foe();
-                coord_def foepos;
+                coord_def foe_pos;
                 if (mons_foe)
-                    foepos = mons_foe->pos();
+                    foe_pos = mons_foe->pos();
 
                 if  (mons_foe
                      && !(is_sanctuary(pos())
-                        || is_sanctuary(mons_foe->pos()))
-                     && can_see(mons_foe))
+                        || is_sanctuary(mons_foe->pos())))
                 {
-                    if (en == ENCH_CHANT_FIRE_STORM) {
-                        bolt beem;
-                        beem.target = foepos;
-                        mons_cast(this, beem, SPELL_FIRE_STORM, MON_SPELL_WIZARD,
-                                true);
+                    if (can_see(mons_foe))
+                    {
+                        if (en == ENCH_CHANT_FIRE_STORM)
+                            finish_chanting_fire_storm(this, foe_pos);
+                        else // word of entropy
+                            finish_chanting_word_of_entropy(this, mons_foe);
                     }
-                    else // word of entropy
-                        mons_foe->corrode_equipment("the Word of Entropy", 5);
+                    // remove the timeout because the effect was entirely dodged
+                    else
+                        breath_timeout_turns = 0;
                 }
-                // shorter because you can avoid the effect entirely out of LOS
-                breath_timeout_turns = random2(5);
+
             }
             else
                 die("Unknown chant type!"); // squash a warning
@@ -2322,7 +2302,11 @@ static inline int _mod_speed(int val, int speed)
 static const char *enchant_names[] =
 {
     "none", "berserk", "haste", "might", "fatigue", "slow", "fear",
-    "confusion", "invis", "poison", "rot", "summon", "abj", "corona",
+    "confusion", "invis", "poison",
+#if TAG_MAJOR_VERSION == 34
+    "rot",
+#endif
+    "summon", "abj", "corona",
     "charm", "sticky_flame", "glowing_shapeshifter", "shapeshifter", "tp",
     "sleep_wary", "submerged", "short_lived", "paralysis", "sick",
 #if TAG_MAJOR_VERSION == 34
@@ -2561,11 +2545,6 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_STICKY_FLAME:
         cturn = 1000 * deg / _mod_speed(200, mons->speed);
-        break;
-    case ENCH_ROT:
-        if (deg > 1)
-            cturn = 1000 * (deg - 1) / _mod_speed(333, mons->speed);
-        cturn += 1000 / _mod_speed(250, mons->speed);
         break;
     case ENCH_CORONA:
     case ENCH_SILVER_CORONA:

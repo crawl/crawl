@@ -1079,10 +1079,10 @@ int player_teleport(bool calc_unid)
     tp += 8 * you.wearing(EQ_RINGS, RING_TELEPORTATION, calc_unid);
 
     // artefacts
-    tp += you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
+    tp += 8 * you.scan_artefacts(ARTP_CAUSE_TELEPORTATION, calc_unid);
 
     // mutations
-    tp += player_mutation_level(MUT_TELEPORT) * 3;
+    tp += player_mutation_level(MUT_TELEPORT) * 4;
 
     return tp;
 }
@@ -2070,11 +2070,7 @@ int player_speed()
     if (you.cannot_act())
         return ps;
 
-    for (int i = 0; i < NUM_STATS; ++i)
-        if (you.stat_zero[i])
-            ps *= 2;
-
-    if (you.duration[DUR_SLOW])
+    if (you.duration[DUR_SLOW] || have_stat_zero())
         ps = haste_mul(ps);
 
     if (you.duration[DUR_BERSERK] && !you_worship(GOD_CHEIBRIADOS))
@@ -3618,7 +3614,7 @@ bool player::clarity(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_CLARITY))
         return true;
 
-    if (in_good_standing(GOD_ASHENZARI, 2))
+    if (in_good_standing(GOD_ASHENZARI, 3))
         return true;
 
     return actor::clarity(calc_unid, items);
@@ -4040,12 +4036,13 @@ void rot_hp(int hp_loss)
 int unrot_hp(int hp_recovered)
 {
     int hp_balance = 0;
-    if (hp_recovered > -you.hp_max_adj_temp) {
-      hp_balance = hp_recovered + you.hp_max_adj_temp;
-      you.hp_max_adj_temp = 0;
-    } else {
-      you.hp_max_adj_temp += hp_recovered;
+    if (hp_recovered > -you.hp_max_adj_temp)
+    {
+        hp_balance = hp_recovered + you.hp_max_adj_temp;
+        you.hp_max_adj_temp = 0;
     }
+    else
+        you.hp_max_adj_temp += hp_recovered;
     calc_hp();
 
     you.redraw_hit_points = true;
@@ -4648,9 +4645,9 @@ bool miasma_player(actor *who, string source_aux)
                                  who ? who->name(DESC_A) : "",
                                  source_aux);
 
-    if (you.hp_max > 4 && coinflip())
+    if (coinflip())
     {
-        you.rot(who, roll_dice(2, 2));
+        you.rot(who, 1);
         success = true;
     }
 
@@ -5206,7 +5203,6 @@ void player::init()
     pet_target      = MHITNOT;
 
     duration.init(0);
-    rotting         = 0;
     apply_berserk_penalty = false;
     berserk_penalty = 0;
     attribute.init(0);
@@ -5879,7 +5875,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         level = min(level + 5 * scale, 27 * scale);
     if (penance[GOD_ASHENZARI])
         level = max(level - 4 * scale, level / 2);
-    else if (religion == GOD_ASHENZARI && piety_rank() > 2)
+    else if (religion == GOD_ASHENZARI && piety_rank() > 3)
     {
         if (skill_boost.count(sk)
             && skill_boost.find(sk)->second)
@@ -6759,23 +6755,16 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     return amount;
 }
 
-void player::drain_stat(stat_type s, int amount, actor *attacker)
+void player::drain_stat(stat_type s, int amount)
 {
-    if (attacker == nullptr)
-        lose_stat(s, amount, false, "");
-    else if (attacker->is_monster())
-        lose_stat(s, amount, attacker->as_monster(), false);
-    else if (attacker->is_player())
-        lose_stat(s, amount, false, "suicide");
-    else
-        lose_stat(s, amount, false, "");
+    lose_stat(s, amount);
 }
 
-bool player::rot(actor *who, int amount, int immediate, bool quiet)
+bool player::rot(actor *who, int amount, bool quiet)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (amount <= 0 && immediate <= 0)
+    if (amount <= 0)
         return false;
 
     if (res_rotting() || duration[DUR_DEATHS_DOOR])
@@ -6790,18 +6779,10 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
         return false;
     }
 
-    if (immediate > 0)
-        rot_hp(immediate);
+    rot_hp(amount);
 
-    // Either this, or the actual rotting message should probably
-    // be changed so that they're easier to tell apart. -- bwr
     if (!quiet)
-    {
-        mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             (rotting > 0 || immediate) ? "rotting" : "start to rot");
-    }
-
-    rotting += amount;
+        mprf(MSGCH_WARN, "You feel your flesh rotting away!");
 
     learned_something_new(HINT_YOU_ROTTING);
 
@@ -6829,17 +6810,21 @@ void player::corrode_equipment(const char* corrosion_source, int degree)
                                    corrosion_source).c_str());
 
     // the more corrosion you already have, the lower the odds of more
-    const int prev_corr = props["corrosion_amount"].get_int();
+    int prev_corr = props["corrosion_amount"].get_int();
+    bool did_corrode = false;
     for (int i = 0; i < degree; i++)
-        if (x_chance_in_y(prev_corr, prev_corr + 9))
-            degree--;
+        if (!x_chance_in_y(prev_corr, prev_corr + 9))
+        {
+            props["corrosion_amount"].get_int()++;
+            prev_corr++;
+            did_corrode = true;
+        }
 
-    if (!degree)
-        return;
-
-    props["corrosion_amount"].get_int() += degree;
-    redraw_armour_class = true;
-    wield_change = true;
+    if (did_corrode)
+    {
+        redraw_armour_class = true;
+        wield_change = true;
+    }
     return;
 }
 
@@ -7248,7 +7233,7 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
-    if (in_good_standing(GOD_ASHENZARI, 2))
+    if (in_good_standing(GOD_ASHENZARI, 3))
         return true;
 
     return false;

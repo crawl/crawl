@@ -1028,13 +1028,12 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case ZIN_ROT:
         ASSERT(prayertype == RECITE_IMPURE);
         if (mon->res_rotting() <= 1
-            && mon->add_ench(mon_enchant(ENCH_ROT, degree, &you,
-                             (degree + random2(spellpower)) * BASELINE_DELAY)))
+            && mon->rot(&you, 1 + roll_dice(2, degree), true));
         {
             mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY));
             simple_monster_message(mon,
-                minor ? "'s impure flesh begins to rot away."
+                minor ? "'s impure flesh rots away."
                       : "'s impure flesh sloughs off!");
             affected = true;
         }
@@ -1233,7 +1232,6 @@ void elyvilon_purification()
     mpr("You feel purified!");
 
     you.disease = 0;
-    you.rotting = 0;
     you.duration[DUR_POISONING] = 0;
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
@@ -6575,7 +6573,7 @@ static int _apply_apocalypse(coord_def where, int pow, int dummy, actor* agent)
     ASSERT(mons);
 
     int dmg = 10;
-    //damage scales with XL amd piety
+    //damage scales with XL and piety
     int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 648);
     int effect = random2(4);
     int duration = 0;

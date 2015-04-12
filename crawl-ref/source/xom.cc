@@ -3124,7 +3124,6 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     // Drains stats or skills, or torments the player.
     const string speech = _get_xom_speech("draining or torment");
     const bool nasty = _xom_feels_nasty();
-    const string aux = "the vengeance of Xom";
 
     if (coinflip())
     {
@@ -3142,7 +3141,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
             return XOM_DID_NOTHING;
 
         god_speaks(GOD_XOM, speech.c_str());
-        lose_stat(stat, loss, false, aux.c_str());
+        lose_stat(stat, loss);
 
         // Take a note.
         const char* sstr[3] = { "Str", "Int", "Dex" };
@@ -3582,7 +3581,6 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
 }
 
 static void _handle_accidental_death(const int orig_hp,
-    const FixedVector<int8_t, NUM_STATS> orig_stat_loss,
     const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
     const transformation_type orig_form)
 {
@@ -3616,25 +3614,8 @@ static void _handle_accidental_death(const int orig_hp,
                 speech_type = "weird death";
             break;
 
-        case KILLED_BY_STUPIDITY:
-            if (you.intel() > 0)
-                speech_type = "weird death";
-            break;
-
-        case KILLED_BY_WEAKNESS:
-            if (you.strength() > 0)
-                speech_type = "weird death";
-            break;
-
-        case KILLED_BY_CLUMSINESS:
-            if (you.dex() > 0)
-                speech_type = "weird death";
-            break;
-
         default:
             if (is_feat_dangerous(feat))
-                speech_type = "weird death";
-            if (you.strength() <= 0 || you.intel() <= 0 || you.dex() <= 0)
                 speech_type = "weird death";
         break;
     }
@@ -3658,12 +3639,6 @@ static void _handle_accidental_death(const int orig_hp,
 
     if (pre_mut_hp <= 0)
         set_hp(min(orig_hp, you.hp_max));
-
-    for (int i = 0; i < 3; ++i)
-    {
-        if (you.stat(static_cast<stat_type>(i)) <= 0)
-            you.stat_loss[i] = orig_stat_loss[i];
-    }
 
     if (orig_form != you.form)
     {
@@ -3740,8 +3715,6 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 
     const int  orig_hp       = you.hp;
     const transformation_type orig_form = you.form;
-    const FixedVector<int8_t, NUM_STATS> orig_stat_loss = you.stat_loss;
-
     const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation
         = you.mutation;
 
@@ -3808,7 +3781,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
             return result;
     }
 
-    _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation, orig_form);
+    _handle_accidental_death(orig_hp, orig_mutation, orig_form);
 
     if (you_worship(GOD_XOM) && one_chance_in(5))
     {
@@ -3916,18 +3889,6 @@ static int _death_is_worth_saving(const kill_method_type killed_by,
     // Don't protect the player from these.
     case KILLED_BY_SELF_AIMED:
     case KILLED_BY_TARGETING:
-        return false;
-
-    // Only if not caused by equipment.
-    case KILLED_BY_STUPIDITY:
-    case KILLED_BY_WEAKNESS:
-    case KILLED_BY_CLUMSINESS:
-        if (strstr(aux, "wielding") == nullptr
-            && strstr(aux, "wearing") == nullptr
-            && strstr(aux, "removing") == nullptr)
-        {
-            return true;
-        }
         return false;
 
     // Everything else is fair game.

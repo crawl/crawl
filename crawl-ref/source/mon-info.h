@@ -21,7 +21,9 @@ enum monster_info_flags
     MB_CONFUSED,
     MB_INVISIBLE,
     MB_POISONED,
+#if TAG_MAJOR_VERSION == 34
     MB_ROTTING,
+#endif
     MB_SUMMONED,
     MB_HALOED,
     MB_GLOWING,

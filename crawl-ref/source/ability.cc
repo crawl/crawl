@@ -180,8 +180,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_DISTORTION,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
     // Ashenzari
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
+    { ABIL_NON_ABILITY, ABIL_ASHENZARI_SCRYING, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
     // Dithmenos
     { ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_STEP, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_FORM },
@@ -1587,7 +1587,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_ELYVILON_PURIFICATION:
-        if (!you.disease && !you.rotting && !you.duration[DUR_POISONING]
+        if (!you.disease && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
             && !you.petrifying()
             && you.strength(false) == you.max_strength()
@@ -2112,7 +2112,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_REMOVE_CURSE:
         fail_check();
         remove_curse();
-        lose_stat(STAT_RANDOM, 1, true, "zot ability");
+        lose_stat(STAT_RANDOM, 1, true);
         break;
 
     case ABIL_MUMMY_RESTORATION:

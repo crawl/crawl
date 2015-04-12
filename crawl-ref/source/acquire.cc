@@ -416,10 +416,8 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
         if (you.skills[i] > best_sk)
             best_sk = you.skills[i];
 
-    for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
+    for (skill_type sk = SK_SHORT_BLADES; sk <= SK_CROSSBOWS; ++sk)
     {
-        skill_type sk = static_cast<skill_type>(i);
-
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
         int weight = you.skills[sk] + 1;

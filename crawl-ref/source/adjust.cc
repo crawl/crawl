@@ -156,10 +156,11 @@ static void _adjust_ability()
         return;
     }
 
-    mprf_nocap("%c - %s", static_cast<char>(talents[selected].hotkey),
-               ability_name(talents[selected].which));
+    char old_key = static_cast<char>(talents[selected].hotkey);
 
-    const int index1 = letter_to_index(talents[selected].hotkey);
+    mprf_nocap("%c - %s", old_key, ability_name(talents[selected].which));
+
+    const int index1 = letter_to_index(old_key);
 
     mprf(MSGCH_PROMPT, "Adjust to which letter?");
 
@@ -178,24 +179,18 @@ static void _adjust_ability()
         return;
     }
 
-    // See if we moved something out.
-    bool printed_message = false;
+    mprf_nocap("%c - %s", static_cast<char>(keyin),
+         ability_name(talents[selected].which));
+
     for (unsigned int i = 0; i < talents.size(); ++i)
     {
         if (talents[i].hotkey == keyin)
         {
-            mprf("Swapping with: %c - %s", static_cast<char>(keyin),
-                 ability_name(talents[i].which));
-            printed_message = true;
+            mprf_nocap("%c - %s", old_key, ability_name(talents[i].which));
             break;
         }
     }
 
-    if (!printed_message)
-    {
-        mprf("Moving to: %c - %s", static_cast<char>(keyin),
-             ability_name(talents[selected].which));
-    }
 
     // Swap references in the letter table.
     ability_type tmp = you.ability_letter_table[index2];

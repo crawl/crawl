@@ -4507,33 +4507,23 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
     return true;
 }
 
-bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
+bool monster::rot(actor *agent, int amount, bool quiet)
 {
     if (res_rotting() || amount <= 0)
         return false;
 
     if (!quiet && you.can_see(this))
+        mprf("%s looks less resilient!", name(DESC_THE).c_str());
+
+    // If quiet, don't clean up the monster in order to credit
+    // properly.
+    hurt(agent, amount, BEAM_MISSILE, KILLED_BY_BEAM, "", "", !quiet);
+
+    if (alive())
     {
-        mprf("%s %s!", name(DESC_THE).c_str(),
-             amount > 0 ? "rots" : "looks less resilient");
+        max_hit_points -= amount * 2;
+        hit_points = min(max_hit_points, hit_points);
     }
-
-    // Apply immediate damage because we can't handle rotting for
-    // monsters yet.
-    if (immediate > 0)
-    {
-        // If quiet, don't clean up the monster in order to credit
-        // properly.
-        hurt(agent, immediate, BEAM_MISSILE, KILLED_BY_BEAM, "", "", !quiet);
-
-        if (alive())
-        {
-            max_hit_points -= immediate * 2;
-            hit_points = min(max_hit_points, hit_points);
-        }
-    }
-
-    add_ench(mon_enchant(ENCH_ROT, min(amount, 4), agent));
 
     return true;
 }
@@ -6069,8 +6059,7 @@ bool monster::should_drink_potion(potion_type ptype) const
                && hit_points <= max_hit_points / 2
                || has_ench(ENCH_POISON)
                || has_ench(ENCH_SICK)
-               || has_ench(ENCH_CONFUSION)
-               || has_ench(ENCH_ROT);
+               || has_ench(ENCH_CONFUSION);
     case POT_HEAL_WOUNDS:
         return !has_ench(ENCH_DEATHS_DOOR)
                && hit_points <= max_hit_points / 2;
@@ -6121,7 +6110,7 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
 
         static const enchant_type cured_enchants[] =
         {
-            ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
+            ENCH_POISON, ENCH_SICK, ENCH_CONFUSION
         };
 
         // We can differentiate curing and heal wounds (and blood,

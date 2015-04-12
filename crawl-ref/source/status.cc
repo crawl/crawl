@@ -786,21 +786,24 @@ static void _describe_poison(status_info* inf)
 
 static void _describe_speed(status_info* inf)
 {
-    if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
+    bool slow = you.duration[DUR_SLOW] || have_stat_zero();
+    bool fast = you.duration[DUR_HASTE];
+
+    if (slow && fast)
     {
         inf->light_colour = MAGENTA;
         inf->light_text   = "Fast+Slow";
         inf->short_text   = "hasted and slowed";
         inf->long_text = "You are under both slowing and hasting effects.";
     }
-    else if (you.duration[DUR_SLOW])
+    else if (slow)
     {
         inf->light_colour = RED;
         inf->light_text   = "Slow";
         inf->short_text   = "slowed";
         inf->long_text    = "You are slowed.";
     }
-    else if (you.duration[DUR_HASTE])
+    else if (fast)
     {
         inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_HASTE));
         inf->light_text   = "Fast";
@@ -829,32 +832,21 @@ static void _describe_airborne(status_info* inf)
 
 static void _describe_rotting(status_info* inf)
 {
-    if (you.rotting)
-    {
-        inf->light_colour = _bad_ench_colour(you.rotting, 5, 9);
-        inf->light_text   = "Rot";
-    }
-
-    if (you.rotting || you.species == SP_GHOUL)
+    if (you.species == SP_GHOUL)
     {
         inf->short_text = "rotting";
         inf->long_text = "Your flesh is rotting";
-        int rot = you.rotting;
-        if (you.species == SP_GHOUL)
-            rot += 1 + (1 << max(0, HS_SATIATED - you.hunger_state));
+        int rot = 1 + (1 << max(0, HS_SATIATED - you.hunger_state));
         if (rot > 15)
             inf->long_text += " before your eyes";
         else if (rot > 8)
             inf->long_text += " away quickly";
         else if (rot > 4)
             inf->long_text += " badly";
-        else if (you.species == SP_GHOUL)
-        {
-            if (rot > 2)
-                inf->long_text += " faster than usual";
-            else
-                inf->long_text += " at the usual pace";
-        }
+        else if (rot > 2)
+            inf->long_text += " faster than usual";
+        else
+            inf->long_text += " at the usual pace";
         inf->long_text += ".";
     }
 }

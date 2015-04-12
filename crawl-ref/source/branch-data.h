@@ -239,7 +239,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_TROVE, DNGN_EXIT_TROVE,
       "Trove", "a treasure trove", "Trove",
-      nullptr,
+      "You enter a treasure trove!",
       DARKGREY, BLUE,
       '2', 0 },
 
@@ -247,7 +247,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_SEWER, DNGN_EXIT_SEWER,
       "Sewer", "a sewer", "Sewer",
-      nullptr,
+      "You enter a sewer!",
       LIGHTGREY, BLUE,
       '3', 0 },
 
@@ -255,7 +255,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_OSSUARY, DNGN_EXIT_OSSUARY,
       "Ossuary", "an ossuary", "Ossuary",
-      nullptr,
+      "You enter an ossuary!",
       WHITE, YELLOW,
       '4', 0 },
 
@@ -263,7 +263,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_BAILEY, DNGN_EXIT_BAILEY,
       "Bailey", "a bailey", "Bailey",
-      nullptr,
+      "You enter a bailey!",
       WHITE, LIGHTRED,
       '5', 0 },
 
@@ -271,7 +271,7 @@ const Branch branches[NUM_BRANCHES] =
           BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_ICE_CAVE, DNGN_EXIT_ICE_CAVE,
       "Ice Cave", "an ice cave", "IceCv",
-      nullptr,
+      "You enter an ice cave!",
       BLUE, WHITE,
       '6', 0 },
 
@@ -279,7 +279,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_VOLCANO, DNGN_EXIT_VOLCANO,
       "Volcano", "a volcano", "Volcano",
-      nullptr,
+      "You enter a volcano!",
       RED, RED,
       '7', 0 },
 
@@ -287,7 +287,7 @@ const Branch branches[NUM_BRANCHES] =
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_WIZLAB, DNGN_EXIT_WIZLAB,
       "Wizlab", "a wizard's laboratory", "WizLab",
-      nullptr,
+      "You enter a wizard's laboratory!",
       LIGHTGREY, BROWN, // set per-map
       '8', 0 },
 

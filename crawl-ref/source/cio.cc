@@ -572,13 +572,16 @@ int line_reader::process_key(int ch)
     CASE_ESCAPE
         return CK_ESCAPE;
     case CK_UP:
+    case CONTROL('P'):
     case CK_DOWN:
+    case CONTROL('N'):
     {
         if (!history)
             break;
 
-        const string *text = (ch == CK_UP) ? history->prev()
-                                           : history->next();
+        const string *text = (ch == CK_UP || ch == CONTROL('P'))
+                             ? history->prev()
+                             : history->next();
 
         if (text)
         {
@@ -619,6 +622,7 @@ int line_reader::process_key(int ch)
         break;
     }
     case CK_DELETE:
+    case CONTROL('D'):
         if (*cur)
         {
             const char *np = next_glyph(cur);
@@ -650,6 +654,7 @@ int line_reader::process_key(int ch)
         break;
 
     case CK_LEFT:
+    case CONTROL('B'):
         if (char *np = prev_glyph(cur, buffer))
         {
             cur = np;
@@ -658,6 +663,7 @@ int line_reader::process_key(int ch)
         }
         break;
     case CK_RIGHT:
+    case CONTROL('F'):
         if (char *np = next_glyph(cur))
         {
             cur = np;
