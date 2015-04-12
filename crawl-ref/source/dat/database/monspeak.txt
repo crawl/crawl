@@ -5765,19 +5765,17 @@ w:5
 %%%%
 _Myrmecia_common_
 
-@The_monster@ shouts @at_foe@, "I can hold my own coat while I kill you!"
-
-VISUAL:@The_monster@ feints @at_foe@.
-
-@The_monster@ says, "All the others are hiding in their burrows, but I will come out and fight!"
-%%%%
-_Myrmecia_rare_
-
 VISUAL:@The_monster@ throws a rock @at_foe@ with an extra hand.
 
 VISUAL:@The_monster@ waves @possessive@ antennae @at_foe@.
 
 @The_monster@ taunts @foe@, "Too scared to fight me!"
+
+%%%%
+_Myrmecia_rare_
+
+VISUAL:@The_monster@ feints @at_foe@.
+
 %%%%
 ############ ROXANNE ### a sapphire statue of an earth mage
 Roxanne

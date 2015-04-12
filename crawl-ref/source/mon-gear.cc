@@ -1896,7 +1896,7 @@ static void _give_shield(monster* mon, int level)
         break;
     case MONS_MYRMECIA:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
-                              level * 4 + 2, 1);
+                              level * 4 + 2, 2);
         break;
     case MONS_WIGLAF:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
