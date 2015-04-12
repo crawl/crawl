@@ -639,7 +639,8 @@ void take_stairs(dungeon_feature_type force_stair, bool going_up,
 
     // Some branch specific messages.
     if (old_level.branch == BRANCH_VESTIBULE
-        && !player_in_branch(BRANCH_VESTIBULE))
+        && !(you.where_are_you >= BRANCH_FIRST_HELL
+             && you.where_are_you <= BRANCH_LAST_HELL))
     {
         mpr("Thank you for visiting Hell. Please come again soon.");
     }
