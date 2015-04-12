@@ -956,13 +956,6 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
     {
         mons->expose_to_element(BEAM_COLD, orig_hurted);
         print_wounds(mons);
-
-        const int cold_res = mons->res_cold();
-        if (cold_res <= 0)
-        {
-            const int stun = (1 - cold_res) * random2(2 + pow/5);
-            mons->speed_increment -= stun;
-        }
     }
 
     return SPRET_SUCCESS;
