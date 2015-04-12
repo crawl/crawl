@@ -30,10 +30,6 @@
 #endif
 #include "transform.h"
 
-// Don't make this larger than 255 without changing the type of you.stat_zero
-// in player.h as well as the associated marshalling code in tags.cc
-const int STATZERO_TURN_CAP = 200;
-
 int player::stat(stat_type s, bool nonneg) const
 {
     const int val = max_stat(s) - stat_loss[s];
@@ -608,7 +604,7 @@ static void _handle_stat_change(stat_type stat)
     if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
         // Turns required for recovery once the stat is restored, randomised slightly.
-        you.stat_zero[stat] = 10 + random2(10);
+        you.stat_zero[stat] = 20 + random2(20);
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
         take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
@@ -645,12 +641,7 @@ void update_stat_zero()
     for (int i = 0; i < NUM_STATS; ++i)
     {
         stat_type s = static_cast<stat_type>(i);
-        if (you.stat(s) <= 0)
-        {
-            if (you.stat_zero[s] < STATZERO_TURN_CAP)
-                you.stat_zero[s]++;
-        }
-        else if (you.stat_zero[s])
+        if (you.stat_zero[s] && you.stat(s) > 0)
         {
             you.stat_zero[s]--;
             if (you.stat_zero[s] == 0)
@@ -659,8 +650,6 @@ void update_stat_zero()
                 you.redraw_stats[s] = true;
             }
         }
-        else // no stat penalty at all
-            continue;
     }
 }
 
