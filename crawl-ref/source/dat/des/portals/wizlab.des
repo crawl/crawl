@@ -1777,8 +1777,7 @@ ENDMAP
 # may indeed find powers beyond their comprehension.
 
 NAME:       wizlab_lehudib
-## XXX - Updweighted for testing
-WEIGHT:     20
+KPROP:      `56Nd = no_rtele_into
 ## The substitutions/shuffles below give 1/3 chance each of both paths
 ## open, E-path open, or F-path open, and gives 1/4 chance for the
 ## portal being in any of the 4 locations.
@@ -1789,29 +1788,31 @@ SHUFFLE:    EFPRSTL / HFUVRRZ / FHRRWYZ
 SHUFFLE:    PT / TP, UV / VU / VU / VU, YW / WY / WY / WY
 SUBST:      EF = ., H = c, L = n, RSTVY = G, UW = P, Z = .
 ## Remaining level randomization
-SHUFFLE:    Jep / Odo
-SUBST:      o = 1, ' = llc, I = .KKKKK, N = .NN, ep = .
+SHUFFLE:    Jup / Ofo
+SUBST:      o = 1, ' = llc, I = .KKKKK, N = .NN, `up = .
 NSUBST:     g = 2:1 / *:., h = 2:1 / *:., i = 2:1 / *:., j = 2:1 / *:.
 NSUBST:     k = 2:1 / *:., q = 3:1 / *:., r = 3:1 / *:., s = 1:1 / *:.
-NSUBST:     " = 5:K / *:.
+NSUBST:     " = 3:K / *:.
 KMONS:      MNO = col:random name:demonic name_adjective plant \
                 tile:mons_demonic_plant
 MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
 MONS:       great orb of eyes / golden eye band, giant orange brain
-MONS:       starcursed mass / very ugly thing band col:brown, neqoxec
-KMONS:      6 = cacodemon
-KMONS:      7 = quicksilver dragon / war gargoyle / crystal guardian \
-                / wretched star
-KMONS:      y = orange crystal statue name:Lunar_Statue n_rpl n_des \
+MONS:       starcursed mass / very ugly thing band col:brown
+MONS:       neqoxec, cacodemon
+MONS:       quicksilver dragon / war gargoyle / crystal guardian\
+            / wretched star
+KMONS:      y = orange crystal statue name:lunar_statue n_rpl n_des \
                 spells:brain_feed.40.natural;draining_gaze.40.natural;\
                        lehudib's_crystal_spear.40.natural;\
                        shadow_creatures.80.natural \
                 col:lightmagenta tile:mons_zot_statue
+ITEM:       potion of cure mutation / potion of beneficial mutation, acquire any
 ITEM:       randbook owner:Lehudib disc:earth disc2:transmutation \
+                     spells:lehudib's_crystal_spear\
             / randbook owner:Lehudib disc:earth disc2:translocation \
-            / randbook owner:Lehudib disc:earth disc2:conjuration
-KITEM:      y = acquire any
-KITEM:      6 = potion of cure mutation / potion of beneficial mutation
+                     spells:lehudib's_crystal_spear\
+            / randbook owner:Lehudib disc:earth disc2:conjuration \
+                     spells:lehudib's_crystal_spear
 KFEAT:      PQ = teleporter
 KFEAT:      K = crystal_wall
 TILE:       c = wall_volcanic_blue
@@ -1882,7 +1883,7 @@ ccv.v...v.vccc..cck......ccc|Q|ccc.......cc..ccccccccc.jcccc
 ccv..hvh..vcc....ccc....cc%%|||%%cc....ccc....ccccccc...Mccc
 ccv..vvv..vccc.....ccckcc.%bbbbb%.ccqccc.....cc.jc......cccc
 ccvh..v..hvccc.v...cJccc..bb...bb..cccOc...v.cM..cj.vv..cccc
-ccvv.....vvccc....cce.bb...........bb.dcc....cc..cc.v*.ccccc
+ccvv.....vvccc....ccu.bb...........bb.fcc....cc..cc.v*.ccccc
 cccv.....vccc..v..c...b.............b...c..v..+.........bbcc
 cccv.vhv.vccc..v..c...b......z......b...c..v..+.......7.Tbcc
 cccv.....vccc..v..cp..b.............b..oc..v..+.........bbcc
@@ -1891,30 +1892,28 @@ ccv..hvh..vccc.v..3c...b...........b...c3..v.cM..cj.vv..cccc
 ccv..vvv..vccc.....c...bb.........bb...c.....cc.jc......cccc
 ccv...v...vcc2...cccc...bb.......bb...cccc...2ccccccc...Mccc
 ccv.v...v.vccc..cc..c....bbb...bbb....c.4cc..ccNNNNNcc.jcccc
-ccv.......vccc......cc...............cc...c++cN.....Nc++cccc
-ccvv.....vvcccc......cc.............cc3...c..mN..6..Nm..cccc
-ccccc....cccccc.......ccc.........ccc.....c..mN5...5Nm..cccc
+ccv.......vccc......cc...............cc...c++cN``d``Nc++cccc
+ccvv.....vvcccc......cc.............cc3...c..mN``6``Nm..cccc
+ccccc....cccccc.......ccc.........ccc.....c..mN5```5Nm..cccc
 cccccc...ccccccc..v.....cccc...cccc....s..c..ccNNNNNcc..cccc
 ccccccc...ccccccc..........ccccc......KK..c...cmmmmmc...cccc
 cccccccc...cccccc..vv.v...................cc...........ccccc
 ccccccccc...ccccc..vvr.................K...ccM.......Mcccccc
-cccccccccc...cccr.....cccccc...cccccc....Ks.ccc.....ccc'cccc
+cccccccccc...cccr......cccc.....cccc.....Ks.ccc.....ccc'cccc
 cccc.cccccc........v..cccccc.g.ccccccs..KK....cnLnLnc..''ccc
 ccc...cccccc....vv...ccccccc+++ccccccc..................''cc
 cc.....ccccc..v.vv..rccccccc...ccccccc...................'cc
 ccc..v..cccc........cccccg.G...G.gccccc....sI.."".""..I..''c
 cccc..2.......rv....cccc...........ccccs...II.".....".II..'c
 ccccc..vv.v.vv.....ccccc...........ccccc...I.."....."..I..'c
-cccccc.vv...vv.vv.rccccg...cc.cc...gcccc...I.....y.....I..'c
-cccccc..r......vv.ccccc...cc...cc...ccccc..I.."....."..I..'c
-ccccccc..v.4......cccc....c.....c....cccc..II.".....".II..'c
-cccccccc...v.vv..ccccc...............ccccc..I.."".""..I..''c
-ccccccccc....vv..ccccM.g.....7.....g.Mccc'..II.......II..'cc
-ccccccccccc.....cccccc....c*...*c....cccc''..III...III..''cc
-ccccccccccccc.rcccccccccccccbPbccccccccccc''...IIIII...''ccc
-ccccccccccccccccccccccccccccbbbcccccccccccc'''.......'''cccc
-ccccccccccccccccccccccccccccccccccccccccccccc''.....''cccccc
-cccccccccccccccccccccccccccccccccccccccccccccc'''''''ccccccc
+cccccc.vv...vv.vv.rccccg...cc.cc...gcccc...IKKKKKyKKKKKI..'c
+cccccc..r......vv.ccccc...cc...cc...ccccc..IKKKKK+KKKKKI..'c
+ccccccc..v.4......cccc....c.....c....cccc..IKKKKKeKKKKII..'c
+cccccccc...v.vv..ccccc...............ccccc..IKKKKKKKKKI..''c
+ccccccccc....vv..ccccM.g.....7.....g.Mccc''.....KKK.....''cc
+ccccccccccc.....cccccc....c*...*c....ccccc''...........''ccc
+ccccccccccccc.rcccccccccccccbPbcccccccccccc'''''''''''''cccc
+ccccccccccccccccccccccccccccbbbccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
