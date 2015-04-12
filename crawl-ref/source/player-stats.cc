@@ -663,3 +663,12 @@ void update_stat_zero()
             continue;
     }
 }
+
+bool have_stat_zero()
+{
+    for (int i = 0; i < NUM_STATS; ++i)
+        if (you.stat_zero[i])
+            return true;
+
+    return false;
+}

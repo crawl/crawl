@@ -2070,11 +2070,7 @@ int player_speed()
     if (you.cannot_act())
         return ps;
 
-    for (int i = 0; i < NUM_STATS; ++i)
-        if (you.stat_zero[i])
-            ps *= 2;
-
-    if (you.duration[DUR_SLOW])
+    if (you.duration[DUR_SLOW] || have_stat_zero())
         ps = haste_mul(ps);
 
     if (you.duration[DUR_BERSERK] && !you_worship(GOD_CHEIBRIADOS))

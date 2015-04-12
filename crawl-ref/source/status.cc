@@ -776,21 +776,24 @@ static void _describe_poison(status_info* inf)
 
 static void _describe_speed(status_info* inf)
 {
-    if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
+    bool slow = you.duration[DUR_SLOW] || have_stat_zero();
+    bool fast = you.duration[DUR_HASTE];
+
+    if (slow && fast)
     {
         inf->light_colour = MAGENTA;
         inf->light_text   = "Fast+Slow";
         inf->short_text   = "hasted and slowed";
         inf->long_text = "You are under both slowing and hasting effects.";
     }
-    else if (you.duration[DUR_SLOW])
+    else if (slow)
     {
         inf->light_colour = RED;
         inf->light_text   = "Slow";
         inf->short_text   = "slowed";
         inf->long_text    = "You are slowed.";
     }
-    else if (you.duration[DUR_HASTE])
+    else if (fast)
     {
         inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_HASTE));
         inf->light_text   = "Fast";
