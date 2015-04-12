@@ -1802,7 +1802,7 @@ MONS:       starcursed mass / very ugly thing band col:brown, neqoxec
 KMONS:      6 = cacodemon
 KMONS:      7 = quicksilver dragon / war gargoyle / crystal guardian \
                 / wretched star
-KMONS:      y = orange crystal statue name:Lunar_Statue n_rpl \
+KMONS:      y = orange crystal statue name:Lunar_Statue n_rpl n_des \
                 spells:brain_feed.40.natural;draining_gaze.40.natural;\
                        lehudib's_crystal_spear.40.natural;\
                        shadow_creatures.80.natural \
