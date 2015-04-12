@@ -3606,13 +3606,9 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " is cold-blooded and may be "
                                               "slowed by cold attacks.\n";
     }
-    // Monsters can glow from both light and radiation.
-    if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
+
+    if (mons_class_flag(mi.type, M_GLOWS))
         result << uppercase_first(pronoun) << " is outlined in light.\n";
-    if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
-        result << uppercase_first(pronoun) << " is glowing with mutagenic radiation.\n";
-    if (mons_class_flag(mi.type, M_SHADOW))
-        result << uppercase_first(pronoun) << " is wreathed in shadows.\n";
 
     // Seeing invisible.
     if (mi.can_see_invisible())

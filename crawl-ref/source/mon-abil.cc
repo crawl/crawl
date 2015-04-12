@@ -106,7 +106,6 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
     {
         int you_mutate_chance = 0;
         int ugly_mutate_chance = 0;
-        int mon_mutate_chance = 0;
 
         for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
         {
@@ -117,40 +116,29 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
                 monster* mon_near = monster_at(*ri);
 
                 if (!mon_near
-                    || !mons_class_flag(mon_near->type, M_GLOWS_RADIATION))
+                    || mons_genus(mon_near->type) != MONS_UGLY_THING)
                 {
                     continue;
                 }
 
-                const bool ugly_type =
-                    mon_near->type == MONS_UGLY_THING
-                        || mon_near->type == MONS_VERY_UGLY_THING;
-
-                int i = mon_near->type == MONS_VERY_UGLY_THING ? 3 :
-                        mon_near->type == MONS_UGLY_THING      ? 2
-                                                               : 1;
+                int i = mon_near->type == MONS_VERY_UGLY_THING ? 3 : 2;
 
                 for (; i > 0; --i)
                 {
                     if (coinflip())
                     {
-                        if (ugly_type)
+                        ugly_mutate_chance++;
+
+                        if (coinflip())
                         {
-                            ugly_mutate_chance++;
+                            const colour_t ugly_colour =
+                                make_low_colour(ugly->colour);
+                            const colour_t ugly_near_colour =
+                                make_low_colour(mon_near->colour);
 
-                            if (coinflip())
-                            {
-                                const colour_t ugly_colour =
-                                    make_low_colour(ugly->colour);
-                                const colour_t ugly_near_colour =
-                                    make_low_colour(mon_near->colour);
-
-                                if (ugly_colour != ugly_near_colour)
-                                    mon_colour = ugly_near_colour;
-                            }
+                            if (ugly_colour != ugly_near_colour)
+                                mon_colour = ugly_near_colour;
                         }
-                        else
-                            mon_mutate_chance++;
                     }
                 }
             }
@@ -161,34 +149,16 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
         // monster is 3, so the maximum mutation value is 24.
         you_mutate_chance = min(24, you_mutate_chance);
         ugly_mutate_chance = min(24, ugly_mutate_chance);
-        mon_mutate_chance = min(24, mon_mutate_chance);
 
-        if (!one_chance_in(you_mutate_chance
-                           + ugly_mutate_chance
-                           + mon_mutate_chance
-                           + 1))
+        if (!one_chance_in(you_mutate_chance + ugly_mutate_chance + 1))
         {
-            int proximity_chance = you_mutate_chance;
-            int proximity_type = 0;
-
-            if (ugly_mutate_chance > proximity_chance
-                || (ugly_mutate_chance == proximity_chance && coinflip()))
+            if (ugly_mutate_chance > you_mutate_chance
+                || (ugly_mutate_chance == you_mutate_chance && coinflip()))
             {
-                proximity_chance = ugly_mutate_chance;
-                proximity_type = 1;
+                src += " from its kin";
             }
-
-            if (mon_mutate_chance > proximity_chance
-                || (mon_mutate_chance == proximity_chance && coinflip()))
-            {
-                proximity_chance = mon_mutate_chance;
-                proximity_type = 2;
-            }
-
-            src  = " from ";
-            src += proximity_type == 0 ? "you" :
-                   proximity_type == 1 ? "its kin"
-                                       : "its neighbour";
+            else
+                src += " surrounding you";
 
             success = true;
         }

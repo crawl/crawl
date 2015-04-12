@@ -45,7 +45,7 @@ const uint64_t M_BATTY             = 1<<11;
 const uint64_t M_SPLITS            = 1<<12;
 
 // monster glows with light
-const uint64_t M_GLOWS_LIGHT       = 1<<13;
+const uint64_t M_GLOWS             = 1<<13;
 
 // monster is stationary
 const uint64_t M_STATIONARY        = 1<<14;
@@ -59,8 +59,7 @@ const uint64_t M_COLD_BLOOD        = 1<<16;
 // drainable by vampires, no other effect currently
 const uint64_t M_WARM_BLOOD        = 1<<17;
 
-// monster glows with radiation
-const uint64_t M_GLOWS_RADIATION   = 1<<18;
+                                   //1<<18;
 
 // monster digs through rock
 const uint64_t M_BURROWS           = 1<<19;
@@ -160,8 +159,7 @@ const uint64_t M_PROJECTILE        = (uint64_t)1<<51;
 // monster is an "avatar" (no independent attacks, only support)
 const uint64_t M_AVATAR            = (uint64_t)1<<52;
 
-// monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
-const uint64_t M_SHADOW            = (uint64_t)1<<53;
+                                   //(uint64_t)1<<53;
 
 // monster is a proxy for a charm/conjuration spell (ball lightning, etc.)
 const uint64_t M_CONJURED          = (uint64_t)1<<54;

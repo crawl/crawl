@@ -846,12 +846,6 @@ static like_map divine_likes[] =
  */
 static bool _god_likes_killing(const monster* victim)
 {
-    if (you_worship(GOD_DITHMENOS)
-        && mons_class_flag(victim->type, M_SHADOW))
-    {
-        return false;
-    }
-
     return !god_hates_attacking_friend(you.religion, victim);
 }
 
