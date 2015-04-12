@@ -930,7 +930,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_WRETCHED:
         if (!quiet)
         {
-            const string msg = "seems to return to " +
+            const string msg = " seems to return to " +
                                pronoun(PRONOUN_POSSESSIVE, true) +
                                " normal shape.";
             simple_monster_message(this, msg.c_str());
