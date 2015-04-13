@@ -1797,7 +1797,7 @@ KMONS:      MNO = col:random name:demonic name_adjective plant \
                 tile:mons_demonic_plant
 MONS:       eye of devastation / stone giant / w:15 tentacled starspawn
 MONS:       great orb of eyes / golden eye band, giant orange brain
-MONS:       starcursed mass / very ugly thing band col:brown
+MONS:       starcursed mass / brown very ugly thing band
 MONS:       neqoxec, cacodemon
 MONS:       quicksilver dragon / war gargoyle / crystal guardian\
             / wretched star
