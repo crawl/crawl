@@ -2944,46 +2944,46 @@ KITEM:    * = *
 KITEM:    E| = |
 KFEAT:    f5Z67DER%$*| = W
 KFEAT:    S = w
-KFEAT:    m = t
+KFEAT:    u = t
 KPROP:    ~`ZR = no_rtele_into
 SHUFFLE:  HI / JK
 NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
 SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
 COLOUR:   c = white
 COLOUR:   x = cyan
-TILE:     m = dngn_mangrove
+TILE:     u = dngn_mangrove
 TILE:     x = wall_pebble_cyan
-FTILE:    .+ctmGTUf1234O = floor_pebble_cyan
+FTILE:    .+ctuGTUf1234O = floor_pebble_cyan
 veto {{
   return crawl.game_started() and you.uniques("the Enchantress")
 }}
 MAP
       ccccccccccccccccccccccccc
-    cccttct1t.t.'Gx'Hx'Hx'mcmTccc
+    cccttct1t.t.'Gx'Hx'Hx'ucuTccc
    cc'...+....3.''''''I''''+'wwwcc
   ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
   ccc'.GcccBBccccccccccccccc''''wwc
   ccGR.cc~``cccccUGUccccc""'5x'''Sc
- cccc'.n~Z`cccc''*E*''cccc"'m'm''wcc
- cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
- ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
- cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
+ cccc'.n~Z`cccc''*E*''cccc"'u'u''wcc
+ cT'''.n``~ccc'''$%$'''ccc"''x7u'wwc
+ ct1...cR~cccL'''ccc'''Lccc"'u'x''wc
+ cccc++c`~ccc''cccGccc''ccc"''u5u'Sc
 cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
-c..1...c~ccc''cm''D''mc'5cccG'm'm'wTc
-+.''''.nmcU|$''''...''''''++'D''''llc
+c..1...c~ccc''cu''D''uc'5cccG'u'u'wTc
++.''''.nucU|$''''...''''''++'D''''llc
 +.'ll'2nTcG||'D''.O.''D'''++'''U''lGc
-+.''''.nmcU|$''''...''''''++'D''''llc
-c..1...c~ccc''cm''D''mc'5cccG'm'm'wTc
++.''''.nucU|$''''...''''''++'D''''llc
+c..1...c~ccc''cu''D''uc'5cccG'u'u'wTc
 cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
- cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
- ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
- cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
- cccc'.n~Z`cccc''*E*''cccc"'m'm''wcc
+ cccc++c`~ccc''cccGccc''ccc"''u5u'Sc
+ ct1...cR~cccL'''ccc'''Lccc"'u'x''wc
+ cT'''.n``~ccc'''$%$'''ccc"''x7u'wwc
+ cccc'.n~Z`cccc''*E*''cccc"'u'u''wcc
   ccGR.cc~``cccccUGUccccc""'5x'''Sc
   ccc'.GcccCCccccccccccccccc''''wwc
   ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
    cc'...+....3.''''''K''''+'wwwcc
-    cccttct1t.t.'Gx''''Jx'mcmTccc
+    cccttct1t.t.'Gx''''Jx'ucuTccc
      ccccccccccccccccccccccccccc
 ENDMAP
 
