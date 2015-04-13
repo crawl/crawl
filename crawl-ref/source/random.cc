@@ -304,7 +304,7 @@ int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale)
 // range [0, 1.0)
 double random_real()
 {
-    return get_uint32() / 4294967296.0;
+    return get_uint32() / (1.0 + AsgKISS::max());
 }
 
 // Roll n_trials, return true if at least one succeeded.  n_trials might be

@@ -3168,8 +3168,7 @@ bool monster::umbra() const
 
 bool monster::glows_naturally() const
 {
-    return mons_class_flag(type, M_GLOWS_LIGHT)
-           || mons_class_flag(type, M_GLOWS_RADIATION);
+    return mons_class_flag(type, M_GLOWS);
 }
 
 bool monster::caught() const

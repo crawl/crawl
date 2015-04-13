@@ -72,8 +72,8 @@ spret_type cast_englaciation(int pow, bool fail)
  */
 bool backlight_monster(monster* mons)
 {
-    // Already glowing, or shadowy.
-    if (mons->glows_naturally() || mons_class_flag(mons->type, M_SHADOW))
+    // Already glowing.
+    if (mons->glows_naturally())
         return false;
 
     const mon_enchant bklt = mons->get_ench(ENCH_CORONA);

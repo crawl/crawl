@@ -5196,8 +5196,7 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_CORONA:
-        rc = !mon->glows_naturally()
-             && !mons_class_flag(mon->type, M_SHADOW);
+        rc = !mon->glows_naturally();
         break;
 
     default:
