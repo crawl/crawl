@@ -54,7 +54,7 @@ Swamp
 A swampy wasteland, the Swamp is filled with ooze, muck, flies and large
 slavering carnivorous monsters.
 
-The Swamp is five levels deep and contains the decaying rune. A dungeon
+The Swamp is four levels deep and contains the decaying rune. A dungeon
 features only one of the Swamp and Shoals branches. If the Swamp is present,
 the entrance is located between Lair:3 and Lair:6.
 %%%%
@@ -67,7 +67,7 @@ dreaded sea creatures.
 It is filled with the noise of the sea breaking on sand, and thus all sounds
 travel less far.
 
-The Shoals are five levels deep and contain the barnacled rune. A dungeon
+The Shoals are four levels deep and contain the barnacled rune. A dungeon
 features only one of the Shoals and Swamp branches. If the Shoals are present,
 the entrance is located between Lair:3 and Lair:6.
 %%%%
@@ -76,7 +76,7 @@ Snake Pit
 The corridors of the Snake Pit are home to all varieties of serpent, and are
 inhabited by a society of powerful nagas and salamanders.
 
-The Snake Pit is five levels deep and contains the serpentine rune. A dungeon
+The Snake Pit is four levels deep and contains the serpentine rune. A dungeon
 features only one of the Snake Pit and Spider Nest branches. If the Snake Pit
 is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
@@ -85,7 +85,7 @@ Spider Nest
 The crumbling, web-choked caverns of the Spider Nest are packed with poisonous
 arthropods and assorted creepy-crawlies.
 
-The Spider Nest is five levels deep and contains the gossamer rune. A dungeon
+The Spider Nest is four levels deep and contains the gossamer rune. A dungeon
 features only one of the Spider Nest and Snake Pit branches. If the Spider Nest
 is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
