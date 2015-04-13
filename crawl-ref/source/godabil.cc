@@ -3573,7 +3573,8 @@ void cheibriados_time_bend(int pow)
 
 static int _slouch_base_damage(monster *mon)
 {
-    return mon->speed - 1000/player_movement_speed()/player_speed();
+    return mon->speed * BASELINE_DELAY / mon->action_energy(EUT_MOVE)
+           - 1000 / player_movement_speed() / player_speed();
 }
 
 // Must return an int, not a bool, for apply_area_visible.
