@@ -413,7 +413,9 @@ spret_type cast_blink(bool allow_control, bool fail)
     }
 
     fail_check();
-    allow_control_teleport(); // print messages only after successfully casting
+    // print messages only after successfully casting
+    if (allow_control && player_control_teleport())
+        allow_control_teleport();
     uncontrolled_blink();
     return SPRET_SUCCESS;
 }
@@ -453,7 +455,7 @@ spret_type cast_controlled_blink(int pow, bool fail, bool safe)
 /**
  * Can the player control their teleportation?
  *
- * Doesn't guaranteed that they *can*, just that there aren't any effects
+ * Doesn't guarantee that they *can*, just that there aren't any effects
  * preventing them from doing so.
  *
  * @param quiet     Whether to suppress messages.
