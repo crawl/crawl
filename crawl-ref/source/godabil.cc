@@ -3573,7 +3573,17 @@ void cheibriados_time_bend(int pow)
 
 static int _slouch_base_damage(monster *mon)
 {
-    return mon->speed * BASELINE_DELAY / mon->action_energy(EUT_MOVE)
+    // Please change handle_monster_move to match.
+    const int jerk_num = mon->type == MONS_SIXFIRHY ? 8
+                       : mon->type == MONS_JIANGSHI ? 48
+                                                    : 1;
+
+    const int jerk_denom = mon->type == MONS_SIXFIRHY ? 24
+                         : mon->type == MONS_JIANGSHI ? 90
+                                                      : 1;
+
+    return (mon->speed * BASELINE_DELAY * jerk_num
+                       / mon->action_energy(EUT_MOVE) / jerk_denom)
            - 1000 / player_movement_speed() / player_speed();
 }
 
