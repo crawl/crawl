@@ -603,8 +603,8 @@ static void _handle_stat_change(stat_type stat)
 
     if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
-        // Turns required for recovery once the stat is restored, randomised slightly.
-        you.stat_zero[stat] = 20 + random2(20);
+        // Time required for recovery once the stat is restored, randomised slightly.
+        you.stat_zero[stat] = (20 + random2(20)) * BASELINE_DELAY;
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
         take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
@@ -636,14 +636,18 @@ static void _handle_stat_change(stat_type stat)
 }
 
 // Called once per turn.
-void update_stat_zero()
+void update_stat_zero(int time)
 {
     for (int i = 0; i < NUM_STATS; ++i)
     {
         stat_type s = static_cast<stat_type>(i);
         if (you.stat_zero[s] && you.stat(s) > 0)
         {
-            you.stat_zero[s]--;
+            if (time > you.stat_zero[s])
+                you.stat_zero[s] = 0;
+            else
+                you.stat_zero[s] -= time;
+
             if (you.stat_zero[s] == 0)
             {
                 mprf("Your %s has recovered.", stat_desc(s, SD_NAME));

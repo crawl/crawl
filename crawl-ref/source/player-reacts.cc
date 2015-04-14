@@ -1385,7 +1385,7 @@ void player_reacts()
     // Player stealth check.
     seen_monsters_react(stealth);
 
-    update_stat_zero();
+    update_stat_zero(you.time_taken);
 
     // XOM now ticks from here, to increase his reaction time to tension.
     if (you_worship(GOD_XOM))
