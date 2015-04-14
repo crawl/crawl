@@ -3822,10 +3822,6 @@ int monster::how_unclean(bool check_god) const
     if ((ce == CE_ROT || ce == CE_MUTAGEN) && !how_chaotic())
         uncleanliness++;
 
-    // Zin has a food conduct for monsters too.
-    if (mons_eats_corpses(this))
-        uncleanliness++;
-
     // Corporeal undead are a perversion of natural form.
     if (holiness() == MH_UNDEAD && !is_insubstantial())
         uncleanliness++;

@@ -112,12 +112,10 @@
 
    gmon_eat explanation:
      MONEAT_ITEMS,
-     MONEAT_CORPSES,
      MONEAT_DOORS,
 
     Monsters with MONEAT_ITEMS are capable of eating most items,
-    and monsters with MONEAT_CORPSES are capable of eating corpses.
-    Monsters with MONEAT_DOORS will destroy doors instead of opening them.
+    monsters with MONEAT_DOORS will destroy doors instead of opening them.
 
    size:
      SIZE_TINY,              // rats/bats
@@ -1517,7 +1515,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     { 5, 3, 5, 0 },
     2, 10, MST_NO_SPELLS, CE_ROT, S_SILENT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_CORPSES, SIZE_MEDIUM, MON_SHAPE_HUMANOID
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
 
 {
@@ -1529,7 +1527,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     { 14, 8, 5, 0 },
     4, 10, MST_NO_SPELLS, CE_ROT, S_SILENT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_CORPSES, SIZE_MEDIUM, MON_SHAPE_HUMANOID
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
 
 // orcs ('o')
@@ -4089,7 +4087,7 @@ DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     { 7, 3, 5, 0 },
     0, 17, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
     I_NORMAL, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_CORPSES, SIZE_MEDIUM, MON_SHAPE_HUMANOID
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
 
 {
