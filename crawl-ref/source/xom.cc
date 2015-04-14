@@ -3954,17 +3954,6 @@ bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
     if (you.hp < 1)
         set_hp(1 + random2(you.hp_max/4));
 
-    // Make sure all stats are at least 1.
-    // XXX: This could lead to permanent stat gains.
-    for (int i = 0; i < NUM_STATS; ++i)
-    {
-        stat_type s = static_cast<stat_type>(i);
-        while (you.max_stat(s) < 1)
-            you.base_stats[s]++;
-        you.stat_loss[s] = min<int8_t>(you.stat_loss[s], you.max_stat(s) - 1);
-        you.stat_zero[s] = 0;
-    }
-
     god_speaks(GOD_XOM, "Xom revives you!");
 
     // Ideally, this should contain the death cause but that is too much

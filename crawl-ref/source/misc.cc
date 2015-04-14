@@ -464,6 +464,7 @@ void revive()
     you.magic_contamination = 0;
     set_hunger(HUNGER_DEFAULT, true);
     restore_stat(STAT_ALL, 0, true);
+    you.stat_zero.init(0);
 
     you.attribute[ATTR_DELAYED_FIREBALL] = 0;
     clear_trapping_net();
@@ -484,13 +485,6 @@ void revive()
     for (int dur = 0; dur < NUM_DURATIONS; dur++)
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;
-
-    // Stat death that wasn't cleared might be:
-    // * permanent (focus card): our fix is spot on
-    // * long-term (mutation): we induce some penalty, ok
-    // * short-term (-stat item): could be done better...
-    unfocus_stats();
-    you.stat_zero.init(0);
 
     unrot_hp(9999);
     set_hp(9999);
