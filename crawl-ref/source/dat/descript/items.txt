@@ -1243,7 +1243,7 @@ This scroll surrounds the reader with a dense cloud of fog.
 scroll of holy word
 
 This scroll calls on the good gods to cause great damage to any nearby undead
-or demonic creature — possibly including you! It will briefly stun monsters
+or demonic creature — possibly including you! It will briefly daze monsters
 that are affected.
 %%%%
 scroll of identify
