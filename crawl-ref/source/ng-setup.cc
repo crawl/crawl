@@ -107,7 +107,7 @@ static void _jobs_stat_init(job_type which_job)
 
 // Make sure no stats are unacceptably low
 // (currently possible only for GhBe - 1KB)
-void unfocus_stats()
+static void _unfocus_stats()
 {
     int needed;
 
@@ -991,7 +991,7 @@ static void _setup_generic(const newgame_def& ng)
 
     _jobs_stat_init(you.char_class);
 
-    unfocus_stats();
+    _unfocus_stats();
 
     // Needs to be done before handing out food.
     give_basic_mutations(you.species);
