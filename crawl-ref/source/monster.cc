@@ -3800,10 +3800,6 @@ int monster::how_unclean(bool check_god) const
     if (type == MONS_ANCIENT_ZYME)
         uncleanliness++;
 
-    // Zin _really_ doesn't like death drakes or necrophages.
-    if (type == MONS_NECROPHAGE || type == MONS_DEATH_DRAKE)
-        uncleanliness++;
-
     // Assume that all unknown gods are not chaotic.
     //
     // Being a worshipper of a chaotic god doesn't yet make you
