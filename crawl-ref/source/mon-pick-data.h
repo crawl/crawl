@@ -37,7 +37,6 @@ static const pop_entry pop_d[] =
   {  5, 15,  192, PEAK, MONS_QUASIT },
   {  5, 15,  192, PEAK, MONS_WATER_MOCCASIN },
   {  5, 16, 1000, FLAT, MONS_ZOMBIE },
-  {  6, 11,  515, FALL, MONS_GOLIATH_BEETLE },
   {  6, 13,  285, SEMI, MONS_BLACK_BEAR },
   {  6, 16, 1000, FLAT, MONS_GIANT_FROG },
   {  6, 16,  825, SEMI, MONS_ORC_WARRIOR },
