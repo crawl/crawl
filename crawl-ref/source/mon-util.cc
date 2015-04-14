@@ -889,11 +889,6 @@ bool mons_eats_items(const monster* mon)
            || mon->has_ench(ENCH_EAT_ITEMS);
 }
 
-bool mons_eats_corpses(const monster* mon)
-{
-    return mons_itemeat(mon) == MONEAT_CORPSES;
-}
-
 bool invalid_monster(const monster* mon)
 {
     return !mon || invalid_monster_type(mon->type);

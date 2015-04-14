@@ -185,8 +185,8 @@ enum mon_itemeat_type
 {
     MONEAT_NOTHING,
     MONEAT_ITEMS,
-    MONEAT_CORPSES,
 #if TAG_MAJOR_VERSION == 34
+    MONEAT_CORPSES,
     MONEAT_FOOD,
 #endif
     MONEAT_DOORS,
