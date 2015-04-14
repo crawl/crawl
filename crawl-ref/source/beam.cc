@@ -1947,8 +1947,6 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
         if (hurted)
         {
-            mons->add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, agent,
-                                       BASELINE_DELAY * hurted));
             simple_monster_message(mons, " convulses.");
             mons->hurt(agent, hurted, BEAM_POISON);
         }
@@ -2097,8 +2095,6 @@ static bool _curare_hits_player(actor* agent, int levels, string name,
 
         if (hurted)
         {
-            you.increase_duration(DUR_BREATH_WEAPON, hurted,
-                                  10*levels + random2(10*levels));
             mpr("You have difficulty breathing.");
             ouch(hurted, KILLED_BY_CURARE, agent->mid,
                  "curare-induced apnoea");
