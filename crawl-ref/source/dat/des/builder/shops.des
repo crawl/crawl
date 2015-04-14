@@ -399,14 +399,17 @@ SUBST: G : YlG
 :   "type:Evil suffix:Emporium", "type:Profane suffix:Products",
 :   "type:Sacrilege suffix:Store", "type:Wicked suffix:Wares"})
 : kfeat("s = general shop " .. shopname .. " ; \
-:   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain w:5 | \
-:   any weapon ego:vampirism w:5 | demon blade w:5 | \
-:   demon whip w:5 | demon trident w:5 | wand of draining | scroll of torment | \
-:   staff of death | \
+:   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain | \
+:   any weapon ego:vampirism | any weapon ego:chaos w:1 | rod of clouds w:3 | \
+:   demon blade w:5 | demon trident w:5 | wand of random effects w:3 | \
+:   demon whip w:5 | wand of draining | scroll of torment | staff of death | \
 :   lantern of shadows w:5 | book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
-:   grand grimoire w:1 | scythe unrand:scythe_of_curses w:1 | \
-:   double sword unrand:sword_of_zonguldrok w:1 | mace unrand:sceptre_of_torment w:1")
+:   grand grimoire w:1 | mace unrand:sceptre_of_torment w:1 | \
+:   scythe unrand:scythe_of_curses w:1 | quarterstaff unrand:majin-bo w:1 | \
+:   centaur barding unrand:black_knights_horse_barding w:1 | \
+:   battleaxe unrand:obsidian_axe w:1 | arbalest unrand:hellfire w:1 | \
+:   double sword unrand:sword_of_zonguldrok w:1 | rod of destruction w:3")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
 MAP
@@ -479,9 +482,11 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    wand of frost | wand of cold | wand of lightning | wand of magic darts | \
    staff of conjuration | lightning rod | rod of inaccuracy | \
    rod of destruction | iron rod | large rock ego:exploding | \
-   arrow ego:exploding | bolt ego:exploding | \
+   arrow ego:exploding | bolt ego:exploding | javelin ego:exploding | \
+   tomahawk ego:exploding | rod of ignition | fan of gales | disc of storms | \
+   lamp of fire | phial of floods | stone of tremors | rod of clouds | \
    sling bullet ego:exploding | scroll of immolation | book of flames | \
-   book of fire | book of air | manual of conjurations
+   book of fire | book of air | manual of conjurations | manual of evocations
 FTILE: ' = floor_rough_red
 COLOUR: ' = red
 MAP
