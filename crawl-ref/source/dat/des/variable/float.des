@@ -2854,7 +2854,7 @@ ENDMAP
 
 NAME:   ragdoll_tomb_raider
 TAGS:   no_item_gen no_monster_gen patrolling
-DEPTH:  D:14-, Depths, Crypt:1-4
+DEPTH:  D:14-, Depths, Crypt, !Crypt:$
 ORIENT: float
 KITEM:  $ = amulet of regeneration unrand:amulet_of_vitality / acquire any
 KITEM:  12345d = gold / any / nothing
