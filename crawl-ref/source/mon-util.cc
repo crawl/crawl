@@ -988,7 +988,7 @@ void discover_mimic(const coord_def& pos)
 #endif
 
     if (you.see_cell(pos))
-        mprf(MSGCH_WARN, "%s %s a mimic!", name.c_str(), plural ? "are" : "is");
+        mprf("%s %s a mimic!", name.c_str(), plural ? "are" : "is");
 
     const string shortname = feature_mimic ? feat_type_name(feat)
                                            : item->name(DESC_BASENAME);
