@@ -27,6 +27,6 @@ bool restore_stat(stat_type which_stat, int stat_gain,
                   bool suppress_msg, bool recovery = false);
 
 bool have_stat_zero();
-void update_stat_zero();
+void update_stat_zero(int time);
 
 #endif
