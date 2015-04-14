@@ -2605,6 +2605,16 @@ void read(int slot)
         return;
     }
 
+    // need to handle this before we waste time (with e.g. blurryvis)
+    if (scroll.sub_type == SCR_BLINKING && item_type_known(scroll)
+        && !allow_control_teleport(true)
+        && !yesno("Your blink will be uncontrolled - continue anyway?",
+                  false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -2689,13 +2699,6 @@ void read_scroll(int item_slot)
             cancel_scroll = (cast_controlled_blink(100, false,
                                                    safely_cancellable)
                              == SPRET_ABORT) && alreadyknown;
-        }
-        else if (alreadyknown
-                 && !yesno("Your blink will be uncontrolled - continue anyway?",
-                            false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            cancel_scroll = true;
         }
         else
             uncontrolled_blink();
