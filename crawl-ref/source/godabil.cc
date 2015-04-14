@@ -1028,7 +1028,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
     case ZIN_ROT:
         ASSERT(prayertype == RECITE_IMPURE);
         if (mon->res_rotting() <= 1
-            && mon->rot(&you, 1 + roll_dice(2, degree), true));
+            && mon->rot(&you, 1 + roll_dice(2, degree), true))
         {
             mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
                           (degree + random2(spellpower)) * BASELINE_DELAY));
