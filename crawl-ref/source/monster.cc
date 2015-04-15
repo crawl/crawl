@@ -5401,13 +5401,6 @@ bool monster::near_foe() const
            && summon_can_attack(this, afoe);
 }
 
-bool monster::has_lifeforce() const
-{
-    const mon_holy_type holi = holiness();
-
-    return holi == MH_NATURAL || holi == MH_PLANT;
-}
-
 /**
  * Can the monster be mutated?
  *

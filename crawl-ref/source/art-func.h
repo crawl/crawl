@@ -177,7 +177,7 @@ static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
 {
     if (attacker->is_player())
         did_god_conduct(DID_NECROMANCY, 3);
-    if (!mondied && defender->has_lifeforce())
+    if (!mondied && defender->holiness() == MH_NATURAL)
     {
         MiscastEffect(defender, attacker, MELEE_MISCAST, SPTYP_NECROMANCY,
                       random2(9), random2(70), "the Scythe of Curses",
@@ -299,15 +299,8 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
 static void _OLGREB_melee_effects(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied, int dam)
 {
-    int skill = attacker->skill(SK_POISON_MAGIC, 100);
-    if (defender->alive()
-        && (coinflip() || x_chance_in_y(skill, 800)))
-    {
-        defender->poison(attacker, 2, defender->has_lifeforce()
-                                      && x_chance_in_y(skill, 800));
-        if (attacker->is_player())
-            did_god_conduct(DID_POISON, 3);
-    }
+    if (defender->alive())
+        defender->poison(attacker, 2);
 }
 
 ////////////////////////////////////////////////////

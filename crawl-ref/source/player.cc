@@ -7292,13 +7292,6 @@ void player::backlight()
     }
 }
 
-bool player::has_lifeforce() const
-{
-    const mon_holy_type holi = holiness();
-
-    return holi == MH_NATURAL || holi == MH_PLANT;
-}
-
 bool player::can_mutate() const
 {
     return true;
