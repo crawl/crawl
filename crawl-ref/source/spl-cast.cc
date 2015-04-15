@@ -1764,13 +1764,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_shadow_creatures(spell, god, place, fail);
     }
 
-    // XXX: I don't think any call to healing goes through here. --rla
-    case SPELL_MINOR_HEALING:
-        return cast_healing(5, 5);
-
-    case SPELL_MAJOR_HEALING:
-        return cast_healing(25, 25);
-
     // Self-enchantments. (Spells that can only affect the player.)
     case SPELL_CONTROL_TELEPORT:
         return cast_teleport_control(powc, fail);
