@@ -69,13 +69,11 @@ Monsters
 * Death knights now have agony & haunt in addition to pain mirror.
 * Worms are less vulnerable to some forms of kiting, having more regen in
   exchange for less max hp.
-* Bog bodies no longer have the corpse rot spell.
 * Liches and Ancient Liches can no longer can have Shadow Creatures in their
   spell set.
 * Removed monsters:
   - Unborn.
   - Giant mites.
-  - Goliath beetles (aside from placement in vaults)
 
 Spells
 ------
