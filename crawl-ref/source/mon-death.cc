@@ -521,12 +521,9 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
                      mitm[o].name(DESC_A).c_str());
             }
         }
+
         if (o != NON_ITEM && !silent)
-        {
-            const bool poison =
-                (carrion_is_poisonous(corpse) && player_res_poison() <= 0);
-            hints_dissection_reminder(!poison);
-        }
+            hints_dissection_reminder();
     }
 
     return o == NON_ITEM ? -1 : o;

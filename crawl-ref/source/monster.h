@@ -560,6 +560,7 @@ public:
     void remove_avatars();
 
     bool clear_far_engulf();
+    bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 
 private:
     int hit_dice;
@@ -591,7 +592,6 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
-    bool search_slots(function<bool (const mon_spell_slot &)> func) const;
     bool search_spells(function<bool (spell_type)> func) const;
 };
 

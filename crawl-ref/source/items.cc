@@ -1421,8 +1421,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     }
 
     if (item1.is_type(OBJ_FOOD, FOOD_CHUNK)
-        && determine_chunk_effect(item1, true) !=
-           determine_chunk_effect(item2, true))
+        && determine_chunk_effect(item1) != determine_chunk_effect(item2))
     {
         return false;
     }

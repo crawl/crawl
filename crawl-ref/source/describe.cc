@@ -1861,11 +1861,8 @@ string get_item_description(const item_def &item, bool verbose,
         }
         if (item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
         {
-            switch (determine_chunk_effect(item, true))
+            switch (determine_chunk_effect(item))
             {
-            case CE_POISONOUS:
-                description << "\n\nThis meat is poisonous.";
-                break;
             case CE_MUTAGEN:
                 description << "\n\nEating this meat will cause random "
                                "mutations.";
