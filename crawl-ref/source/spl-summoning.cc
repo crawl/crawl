@@ -152,8 +152,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     const int dur = min(3 + random2(pow) / 20, 5);
     int how_many_max = 1 + min(6, random2(pow) / 15);
-    const bool friendly = (!wpn.cursed());
-    const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
     int count = 0;
 
@@ -180,7 +178,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             else
                 mon = MONS_BALL_PYTHON;
 
-            if (monster *snake = create_monster(mgen_data(mon, beha, &you,
+            if (monster *snake = create_monster(mgen_data(mon, BEH_FRIENDLY, &you,
                                       0, SPELL_STICKS_TO_SNAKES, you.pos(),
                                       MHITYOU, MG_AUTOFOE, god), false))
             {
