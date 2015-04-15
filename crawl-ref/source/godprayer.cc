@@ -582,7 +582,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     // least minimal value, otherwise they wouldn't be taken.
     const int value = (item.base_type == OBJ_CORPSES ?
                           50 * stepdown_value(max(1,
-                          get_max_corpse_chunks(item.mon_type)), 4, 4, 12, 12) :
+                          max_corpse_chunks(item.mon_type)), 4, 4, 12, 12) :
                       (is_worthless_consumable(item) ? 1 : shop_value));
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)

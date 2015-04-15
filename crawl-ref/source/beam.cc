@@ -4568,10 +4568,10 @@ void bolt::knockback_actor(actor *act, int dam)
         (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
 
     const int roll = origin_spell == SPELL_FORCE_LANCE
-                     ? 1000 + 40 * ench_power
-                     : 2500;
-
-    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
+                     ? 7 + 0.27 * ench_power
+                     : 17;
+    const int weight = max_corpse_chunks(act->is_monster() ? act->type :
+                                   player_species_to_mons_species(you.species))
 
     const coord_def oldpos = act->pos();
 
@@ -4585,8 +4585,7 @@ void bolt::knockback_actor(actor *act, int dam)
     coord_def newpos = oldpos;
     for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
     {
-        // Save is based on target's body weight.
-        if (random2(roll) < weight)
+        if (x_chance_in_y(weight, roll))
             continue;
 
         const ray_def oldray(ray);

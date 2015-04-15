@@ -207,29 +207,6 @@ size_type player::body_size(size_part_type psize, bool base) const
     }
 }
 
-int player::body_weight(bool base) const
-{
-    int weight = actor::body_weight(base);
-
-    if (base)
-        return weight;
-
-    switch (form)
-    {
-    case TRAN_STATUE:
-        weight *= 2;
-        break;
-    case TRAN_LICH:
-    case TRAN_SHADOW:
-        weight /= 2;
-        break;
-    default:
-        break;
-    }
-
-    return weight;
-}
-
 int player::damage_type(int)
 {
     if (const item_def* wp = weapon())

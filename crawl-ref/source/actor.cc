@@ -218,29 +218,6 @@ void actor::shield_block_succeeded(actor *foe)
     }
 }
 
-int actor::body_weight(bool base) const
-{
-    switch (body_size(PSIZE_BODY, base))
-    {
-    case SIZE_TINY:
-        return 150;
-    case SIZE_LITTLE:
-        return 300;
-    case SIZE_SMALL:
-        return 425;
-    case SIZE_MEDIUM:
-        return 550;
-    case SIZE_LARGE:
-        return 1300;
-    case SIZE_BIG:
-        return 1500;
-    case SIZE_GIANT:
-        return 1800;
-    default:
-        die("invalid body weight");
-    }
-}
-
 bool actor::inaccuracy() const
 {
     return wearing(EQ_AMULET, AMU_INACCURACY);

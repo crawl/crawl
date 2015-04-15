@@ -1582,7 +1582,7 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_CORPSES:
-        valued = get_max_corpse_chunks(item.mon_type) * 5;
+        valued = max_corpse_chunks(item.mon_type) * 5;
 
     case OBJ_SCROLLS:
         if (!item_type_known(item))

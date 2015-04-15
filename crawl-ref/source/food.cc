@@ -1147,7 +1147,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
     const corpse_effect_type chunk_type = determine_chunk_effect(corpse);
 
     // Duration depends on corpse weight.
-    const int max_chunks = get_max_corpse_chunks(mons_type);
+    const int max_chunks = max_corpse_chunks(mons_type);
     const int chunk_amount = stepdown_value(1 + max_chunks/3, 6, 6, 12, 12);
 
     // Add 1 for the artificial extra call at the start of draining.
@@ -1496,7 +1496,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     // The delay for eating a chunk (mass 1000) is 2
     // Here the base nutrition value equals that of chunks,
     // but the delay should be smaller.
-    const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
+    const int max_chunks = max_corpse_chunks(corpse.mon_type);
     int duration = 1 + max_chunks / 3;
     duration = stepdown_value(duration, 6, 6, 12, 12);
 

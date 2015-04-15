@@ -193,7 +193,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     ld.update();
 
-    const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
+    const int max_chunks = max_corpse_chunks(corpse.mon_type);
 
     int nchunks = 1;
     if (corpse.base_type == OBJ_GOLD)
@@ -413,13 +413,13 @@ static void _give_experience(int player_exp, int monster_exp,
  */
 void goldify_corpse(item_def &corpse)
 {
-    const monsterentry* me = get_monster_data(corpse.mon_type);
-    const int min_base_gold = 7;
-    // monsters weighing more than this give more than base gold
-    const int baseline_weight = 550; // MONS_HUMAN
-    const int base_gold = max(min_base_gold,
-                              (me->weight - baseline_weight) / 80
-                              + min_base_gold);
+    int base_gold = 7;
+    // monsters with more chunks than SIZE_MEDIUM give more than base gold
+    const int extra_chunks = (max_corpse_chunks(corpse.mon_type)
+                              - max_corpse_chunks(MONS_HUMAN)) * 2;
+    if (extra_chunks > 0)
+        base_gold += extra_chunks;
+
     corpse.clear();
     corpse.base_type = OBJ_GOLD;
     corpse.quantity = base_gold / 2 + random2avg(base_gold, 2);

@@ -117,7 +117,6 @@ struct monsterentry
     uint64_t bitfields;
     resists_t resists;
 
-    short weight;
     // [Obsolete] Experience used to be calculated like this:
     // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
     //     ^^^^^^ see below at hpdice
@@ -272,7 +271,7 @@ bool intelligent_ally(const monster* mon);
 bool mons_skeleton(monster_type mc);
 bool mons_zombifiable(monster_type mc);
 
-int mons_weight(monster_type mc);
+int max_corpse_chunks(monster_type mc);
 int mons_class_base_speed(monster_type mc);
 mon_energy_usage mons_class_energy(monster_type mc);
 mon_energy_usage mons_energy(const monster* mon);

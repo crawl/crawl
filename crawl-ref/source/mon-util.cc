@@ -1077,10 +1077,27 @@ bool mons_is_conjured(monster_type mc)
            || mons_class_flag(mc, M_CONJURED);
 }
 
-int mons_weight(monster_type mc)
+int max_corpse_chunks(monster_type mc)
 {
-    ASSERT_smc();
-    return smc->weight;
+    switch (monster_info(mc).body_size())
+    {
+    case SIZE_TINY:
+        return 1;
+    case SIZE_LITTLE:
+        return 2;
+    case SIZE_SMALL:
+        return 3;
+    case SIZE_MEDIUM:
+        return 4;
+    case SIZE_LARGE:
+        return 9;
+    case SIZE_BIG:
+        return 10;
+    case SIZE_GIANT:
+        return 12;
+    default:
+        return 0;
+    }
 }
 
 corpse_effect_type mons_corpse_effect(monster_type mc)
@@ -4528,13 +4545,6 @@ void debug_mondata()
         // Tests below apply only to real monsters.
         if (md->bitfields & M_CANT_SPAWN)
             continue;
-
-        if (md->weight < 0)
-        {
-            fails += make_stringf("%s has negative mass: %d\n", name,
-                                  md->weight);
-        } else if (md->corpse_thingy && !md->weight && md->species == mc)
-            fails += make_stringf("%s drops a nil-weight corpse", name);
 
         if (!md->hpdice[0] && md->basechar != 'Z') // derived undead...
             fails += make_stringf("%s has 0 HD: %d\n", name, md->hpdice[0]);

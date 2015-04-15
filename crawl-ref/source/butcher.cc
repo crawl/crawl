@@ -340,11 +340,6 @@ void maybe_drop_monster_hide(const item_def corpse)
         _create_monster_hide(corpse);
 }
 
-int get_max_corpse_chunks(monster_type mons_class)
-{
-    return mons_weight(mons_class) / 150;
-}
-
 /** Skeletonise this corpse.
  *
  *  @param item the corpse to be turned into a skeleton.
@@ -372,7 +367,7 @@ static void _bleed_monster_corpse(const item_def corpse)
     const coord_def pos = item_pos(corpse);
     if (!pos.origin())
     {
-        const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
+        const int max_chunks = max_corpse_chunks(corpse.mon_type);
         bleed_onto_floor(pos, corpse.mon_type, max_chunks, true);
     }
 }
@@ -383,7 +378,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     ASSERT(item.base_type == OBJ_CORPSES);
     ASSERT(item.sub_type == CORPSE_BODY);
     const item_def corpse = item;
-    const int max_chunks = get_max_corpse_chunks(item.mon_type);
+    const int max_chunks = max_corpse_chunks(item.mon_type);
 
     if (bloodspatter)
         _bleed_monster_corpse(corpse);
@@ -470,7 +465,7 @@ bool can_bottle_blood_from_corpse(monster_type mons_class)
 int num_blood_potions_from_corpse(monster_type mons_class)
 {
     // Max. amount is about one third of the max. amount for chunks.
-    const int max_chunks = get_max_corpse_chunks(mons_class);
+    const int max_chunks = max_corpse_chunks(mons_class);
 
     // Max. amount is about one third of the max. amount for chunks.
     int pot_quantity = max_chunks / 3;

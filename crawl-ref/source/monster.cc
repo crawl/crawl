@@ -350,25 +350,6 @@ size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
     return mi.body_size();
 }
 
-int monster::body_weight(bool /*base*/) const
-{
-    monster_type mc = mons_base_type(this);
-
-    int weight = mons_weight(mc);
-
-    if (type == MONS_SPECTRAL_THING)
-        weight = 0;
-
-    if (type == MONS_SKELETON)
-        weight /= 2;
-
-    // Slime creature weight is multiplied by the number merged.
-    if (mc == MONS_SLIME_CREATURE && blob_size > 1)
-        weight *= blob_size;
-
-    return weight;
-}
-
 brand_type monster::damage_brand(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
