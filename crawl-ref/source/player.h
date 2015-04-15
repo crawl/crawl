@@ -692,7 +692,6 @@ public:
     int res_elec() const;
     int res_poison(bool temp = true) const;
     int res_rotting(bool temp = true) const;
-    bool res_asphyx() const;
     int res_water_drowning() const;
     bool res_sticky_flame() const;
     int res_holy_energy(const actor *) const;

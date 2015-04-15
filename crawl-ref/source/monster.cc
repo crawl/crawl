@@ -3908,6 +3908,9 @@ bool monster::is_unbreathing() const
         return true;
     }
 
+    if (mons_is_slime(this))
+        return true;
+
     return mons_class_flag(type, M_UNBREATHING);
 }
 
@@ -4049,16 +4052,11 @@ int monster::res_elec() const
     return u;
 }
 
-bool monster::res_asphyx() const
-{
-    return is_unbreathing() || get_mons_resist(this, MR_RES_ASPHYX) > 0;
-}
-
 int monster::res_water_drowning() const
 {
     int rw = 0;
 
-    if (res_asphyx())
+    if (is_unbreathing())
         rw++;
 
     habitat_type hab = mons_habitat(this);

@@ -293,7 +293,6 @@ public:
     virtual int res_elec() const = 0;
     virtual int res_poison(bool temp = true) const = 0;
     virtual int res_rotting(bool temp = true) const = 0;
-    virtual bool res_asphyx() const = 0;
     virtual int res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy(const actor *attacker) const = 0;
