@@ -154,7 +154,7 @@ monster_type fill_out_corpse(const monster* mons,
             col = LIGHTRED;
         else
         {
-            minfo = *(new monster_info(mons));
+            minfo = monster_info(mons);
             col = int(minfo.colour());
         }
     }
