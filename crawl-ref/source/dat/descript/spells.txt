@@ -516,7 +516,7 @@ same dungeon level.
 %%%%
 Electrical Bolt spell
 
-Throws a bolt of electricity at the target.
+Throws a bolt of electricity at the target, with high accuracy.
 %%%%
 Energy Bolt spell
 
