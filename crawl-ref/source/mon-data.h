@@ -2014,7 +2014,7 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
 },
 
 {
-    MONS_REDBACK, 's', RED, "redback",
+    MONS_REDBACK, 's', LIGHTRED, "redback",
     M_NO_SKELETON | M_WEB_SENSE,
     MR_VUL_POISON,
     130, 5, MONS_SPIDER, MONS_REDBACK, MH_NATURAL, 20,
