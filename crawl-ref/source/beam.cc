@@ -4571,7 +4571,7 @@ void bolt::knockback_actor(actor *act, int dam)
                      ? 7 + 0.27 * ench_power
                      : 17;
     const int weight = max_corpse_chunks(act->is_monster() ? act->type :
-                                   player_species_to_mons_species(you.species))
+                                   player_species_to_mons_species(you.species));
 
     const coord_def oldpos = act->pos();
 
