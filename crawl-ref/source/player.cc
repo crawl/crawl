@@ -6317,12 +6317,6 @@ int player::res_water_drowning() const
     return rw;
 }
 
-bool player::res_asphyx() const
-{
-    // The unbreathing are immune to asphyxiation.
-    return is_unbreathing();
-}
-
 int player::res_poison(bool temp) const
 {
     return player_res_poison(true, temp);

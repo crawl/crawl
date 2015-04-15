@@ -1941,7 +1941,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     int hurted = 0;
 
-    if (!mons->res_asphyx())
+    if (!mons->is_unbreathing())
     {
         hurted = roll_dice(levels, 6);
 
@@ -2089,7 +2089,7 @@ static bool _curare_hits_player(actor* agent, int levels, string name,
 
     int hurted = 0;
 
-    if (!you.res_asphyx())
+    if (!you.is_unbreathing())
     {
         hurted = roll_dice(levels, 6);
 
