@@ -106,7 +106,7 @@ static const zap_info zap_data[] =
 },
 
 {
-    ZAP_MAJOR_HEALING,
+    ZAP_HEAL_WOUNDS,
     "",
     100,
     new dicedef_calculator<1, 7, 1, 3>,
