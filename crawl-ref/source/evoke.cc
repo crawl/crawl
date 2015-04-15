@@ -582,12 +582,6 @@ void zap_wand(int slot)
             break;
 
         case WAND_HEAL_WOUNDS:
-            if (you_worship(GOD_ELYVILON))
-            {
-                targ_mode = TARG_ANY;
-                break;
-            }
-            // else intentional fall-through
         case WAND_HASTING:
         case WAND_INVISIBILITY:
             targ_mode = TARG_FRIEND;
