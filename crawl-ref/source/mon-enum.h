@@ -15,7 +15,6 @@ enum corpse_effect_type
 {
     CE_NOCORPSE,
     CE_CLEAN,
-    CE_POISONOUS,
     CE_ROT,
     CE_MUTAGEN,
 };

@@ -1497,8 +1497,6 @@ void objstat_record_monster(monster *mons)
         return;
 
     int mons_ind = valid_monsters[type];
-    corpse_effect_type chunk_effect = mons_corpse_effect(type);
-    bool is_clean = chunk_effect == CE_CLEAN || chunk_effect == CE_POISONOUS;
     level_id lev = level_id::current();
 
     _record_monster_stat(lev, mons_ind, "Num", 1);
@@ -1507,6 +1505,8 @@ void objstat_record_monster(monster *mons)
     _record_monster_stat(lev, mons_ind, "TotalXP", exper_value(mons));
     _record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
     _record_monster_stat(lev, mons_ind, "MonsHD", mons->get_experience_level());
+
+    const corpse_effect_type chunk_effect = mons_corpse_effect(type);
     // Record chunks/nutrition if monster leaves a corpse.
     if (chunk_effect != CE_NOCORPSE && mons_class_can_leave_corpse(type))
     {
@@ -1514,7 +1514,7 @@ void objstat_record_monster(monster *mons)
         double chunks = (1 + stepdown_value(max_corpse_chunks(type),
                                             4, 4, 12, 12)) / 2.0;
         _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
-        if (is_clean)
+        if (chunk_effect == CE_CLEAN)
         {
             _record_monster_stat(lev, mons_ind, "TotalNutr",
                                     chunks * CHUNK_BASE_NUTRITION);

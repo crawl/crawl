@@ -1775,22 +1775,6 @@ static bool maybe_abort_ignite()
                 break;
             }
         }
-        else if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
-                 && carrion_is_poisonous(item))
-        {
-            prompt += "over ";
-            prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
-            prompt += "! Ignite poison anyway?";
-            return !yesno(prompt.c_str(), false, 'n');
-        }
-        else if (item.is_type(OBJ_FOOD, FOOD_CHUNK)
-                 && carrion_is_poisonous(item))
-        {
-            prompt += "over ";
-            prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
-            prompt += "! Ignite poison anyway?";
-            return !yesno(prompt.c_str(), false, 'n');
-        }
     }
 
     return false;

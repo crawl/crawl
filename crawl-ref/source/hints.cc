@@ -542,7 +542,7 @@ void hints_finished()
     you.save->delete_chunk("tut");
 }
 
-void hints_dissection_reminder(bool healthy)
+void hints_dissection_reminder()
 {
     if (!crawl_state.game_is_hints())
         return;
@@ -551,7 +551,7 @@ void hints_dissection_reminder(bool healthy)
         return;
 
     // When hungry, give appropriate message
-    if (you.hunger_state < HS_SATIATED && healthy)
+    if (you.hunger_state < HS_SATIATED)
         learned_something_new(HINT_MAKE_CHUNKS);
 }
 
