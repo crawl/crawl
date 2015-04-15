@@ -92,90 +92,43 @@ void draconian_change_colour(monster* drac)
     drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(drac)));
 }
 
-bool ugly_thing_mutate(monster* ugly, bool proximity)
+bool ugly_thing_mutate(monster* ugly, bool force)
 {
-    bool success = false;
+    if (!(one_chance_in(9) || force))
+        return false;
 
-    string src = "";
+    const char* msg = nullptr;
+    // COLOUR_UNDEF means "pick a random colour".
+    colour_t new_colour = COLOUR_UNDEF;
 
-    colour_t mon_colour = COLOUR_UNDEF;
-
-    if (!proximity)
-        success = true;
-    else if (one_chance_in(9))
+    for (fair_adjacent_iterator ai(ugly->pos()); ai && !msg; ++ai)
     {
-        int you_mutate_chance = 0;
-        int ugly_mutate_chance = 0;
+        const actor* act = actor_at(*ai);
 
-        for (adjacent_iterator ri(ugly->pos()); ri; ++ri)
+        if (!act)
+            continue;
+
+        if (act->is_player() && get_contamination_level())
+            msg = " basks in your mutagenic energy and changes!";
+        else if (mons_genus(act->type) == MONS_UGLY_THING)
         {
-            if (you.pos() == *ri)
-                you_mutate_chance = get_contamination_level();
-            else
-            {
-                monster* mon_near = monster_at(*ri);
-
-                if (!mon_near
-                    || mons_genus(mon_near->type) != MONS_UGLY_THING)
-                {
-                    continue;
-                }
-
-                int i = mon_near->type == MONS_VERY_UGLY_THING ? 3 : 2;
-
-                for (; i > 0; --i)
-                {
-                    if (coinflip())
-                    {
-                        ugly_mutate_chance++;
-
-                        if (coinflip())
-                        {
-                            const colour_t ugly_colour =
-                                make_low_colour(ugly->colour);
-                            const colour_t ugly_near_colour =
-                                make_low_colour(mon_near->colour);
-
-                            if (ugly_colour != ugly_near_colour)
-                                mon_colour = ugly_near_colour;
-                        }
-                    }
-                }
-            }
-        }
-
-        // The maximum number of monsters that can surround this monster
-        // is 8, and the maximum mutation chance from each surrounding
-        // monster is 3, so the maximum mutation value is 24.
-        you_mutate_chance = min(24, you_mutate_chance);
-        ugly_mutate_chance = min(24, ugly_mutate_chance);
-
-        if (!one_chance_in(you_mutate_chance + ugly_mutate_chance + 1))
-        {
-            if (ugly_mutate_chance > you_mutate_chance
-                || (ugly_mutate_chance == you_mutate_chance && coinflip()))
-            {
-                src += " from its kin";
-            }
-            else
-                src += " surrounding you";
-
-            success = true;
+            msg = " basks in the mutagenic energy from its kin and changes!";
+            const colour_t other_colour =
+                make_low_colour(act->as_monster()->colour);
+            if (make_low_colour(ugly->colour) != other_colour)
+                new_colour = other_colour;
         }
     }
 
-    if (success)
-    {
-        simple_monster_message(ugly,
-            make_stringf(" basks in the mutagenic energy%s and changes!",
-                         src.c_str()).c_str());
+    if (force)
+        msg = " basks in the mutagenic energy and changes!";
 
-        ugly->uglything_mutate(mon_colour);
+    if (!msg) // didn't find anything to mutate off of
+        return false;
 
-        return true;
-    }
-
-    return false;
+    simple_monster_message(ugly, msg);
+    ugly->uglything_mutate(new_colour);
+    return true;
 }
 
 // Inflict any enchantments the parent slime has on its offspring,
@@ -1141,10 +1094,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
     {
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
-        // A (very) ugly thing's proximity to you if you're glowing, or
-        // to others of its kind, or to other monsters glowing with
-        // radiation, can mutate it into a different (very) ugly thing.
-        used = ugly_thing_mutate(mons, true);
+        // A (very) ugly thing may mutate if it's next to other ones (or
+        // next to you if you're contaminated).
+        used = ugly_thing_mutate(mons, false);
         break;
 
     case MONS_SLIME_CREATURE:
