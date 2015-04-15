@@ -2459,8 +2459,13 @@ int monster_die(monster* mons, killer_type killer,
         // he goes away.
         pikel_band_neutralise();
     }
-    else if (mons->is_named() && mons->friendly() && killer != KILL_RESET)
+    else if (mons->is_named()
+             && mons->friendly()
+             && !summoned
+             && killer != KILL_RESET)
+    {
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
+    }
     else if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         if (destroy_tentacles(mons)
