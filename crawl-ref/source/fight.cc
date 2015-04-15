@@ -460,9 +460,12 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
 
     if (res > 0)
     {
-        const bool immune_at_3_res = is_mon || flavour == BEAM_NEG
-                                            || flavour == BEAM_POISON
-                                            || flavour == BEAM_POISON_ARROW;
+        const bool immune_at_3_res = is_mon
+                                     || flavour == BEAM_NEG
+                                     || flavour == BEAM_POISON
+                                     // just the resistible part
+                                     || flavour == BEAM_POISON_ARROW;
+
         if (immune_at_3_res && res >= 3 || res > 3)
             resistible = 0;
         else
