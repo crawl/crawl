@@ -2631,6 +2631,14 @@ void read(int slot)
     // scroll effect kicks in.
     if (player_mutation_level(MUT_BLURRY_VISION))
     {
+        if (!i_feel_safe(false, false, true)
+            && !yesno("Really read with blurry vision while enemies are nearby?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
         // takes 0.5, 1, 2 extra turns
         const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
         start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
