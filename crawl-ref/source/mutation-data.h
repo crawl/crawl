@@ -2136,7 +2136,7 @@ static const mutation_def mut_data[] =
 { MUT_PAWS,                           0,  1, MUTFLAG_GOOD, true,
   "sharp paws",
 
-  {"Your paws have sharp claws that are effective at stabbing.", "", ""},
+  {"Your sharp claws are effective at attacking unaware monsters.", "", ""},
   {"", "", ""},
   {"", "", ""},
 
