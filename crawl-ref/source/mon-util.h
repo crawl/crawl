@@ -153,7 +153,6 @@ struct monsterentry
     int8_t           speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
-    mon_itemeat_type gmon_eat;
     size_type size;
     mon_body_shape shape;
 };
@@ -208,7 +207,6 @@ bool mons_class_res_wind(monster_type mc);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster* mon);
-mon_itemeat_type mons_itemeat(const monster* mon);
 
 bool mons_can_be_blinded(monster_type mc);
 bool mons_can_be_dazzled(monster_type mc);

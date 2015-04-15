@@ -2259,7 +2259,7 @@ void handle_monster_move(monster* mons)
 
     if (igrd(mons->pos()) != NON_ITEM
         && (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR
-            || mons_itemeat(mons) != MONEAT_NOTHING))
+            || mons_eats_items(mons)))
     {
         // Keep neutral, charmed, summoned, and friendly monsters from
         // picking up stuff.
