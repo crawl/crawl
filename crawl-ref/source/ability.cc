@@ -2634,7 +2634,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (mons == nullptr || !you.can_see(mons)
             || !ench_flavour_affects_monster(BEAM_ENSLAVE_SOUL, mons))
         {
-            mpr("You see nothing there to enslave the soul of!");
+            mpr("You see nothing there you can enslave the soul of!");
             return SPRET_ABORT;
         }
 
