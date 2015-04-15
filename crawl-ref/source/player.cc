@@ -5826,6 +5826,9 @@ int player::shield_tohit_penalty(bool random_factor, int scale) const
 
 int player::skill(skill_type sk, int scale, bool real, bool drained) const
 {
+    // If you add another enhancement/reduction, be sure to change
+    // SkillMenuSwitch::get_help() to reflect that
+
     // wizard racechange, or upgraded old save
     if (is_useless_skill(sk))
         return 0;
