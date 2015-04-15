@@ -1513,17 +1513,13 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     {
         hurted = resist_adjust_damage(mons, pbolt.flavour, hurted);
 
-        const int res = mons->res_poison();
-        if (!hurted && res > 0)
+        if (!hurted && doFlavouredEffects)
         {
-            if (doFlavouredEffects)
-            {
-                simple_monster_message(mons,
-                                       (original > 0) ? " completely resists."
-                                                      : " appears unharmed.");
-            }
+            simple_monster_message(mons,
+                                   (original > 0) ? " completely resists."
+                                                  : " appears unharmed.");
         }
-        else if (res <= 0 && doFlavouredEffects && !one_chance_in(3))
+        else if (doFlavouredEffects && !one_chance_in(3))
             poison_monster(mons, pbolt.agent());
 
         break;
@@ -1537,14 +1533,11 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             {
                 simple_monster_message(mons, " partially resists.");
 
-                // Poison arrow can poison any living thing regardless of
-                // poison resistance. - bwr
-                if (mons->has_lifeforce())
-                    poison_monster(mons, pbolt.agent(), 2, true);
+                poison_monster(mons, pbolt.agent(), 2, true);
             }
         }
         else if (doFlavouredEffects)
-            poison_monster(mons, pbolt.agent(), 4);
+            poison_monster(mons, pbolt.agent(), 4, true);
 
         break;
 
@@ -1986,8 +1979,10 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     if (!mons->alive() || levels <= 0)
         return false;
 
-    int res = mons->res_poison();
-    if (res >= (force ? 3 : 1))
+    const int res = mons->res_poison();
+    if (res >= 3)
+        return false;
+    if (!force && res >= 1 && x_chance_in_y(2, 3))
         return false;
 
     const mon_enchant old_pois = mons->get_ench(ENCH_POISON);
@@ -5641,7 +5636,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (mon->has_ench(ENCH_POISON))
         {
             mon_enchant ench = mon->get_ench(ENCH_POISON);
-            poison_monster(mon, agent(), ench.degree, false, false);
+            poison_monster(mon, agent(), ench.degree, true, false);
             if (you.can_see(mon))
             {
                 mprf("The poison in %s body grows stronger.",

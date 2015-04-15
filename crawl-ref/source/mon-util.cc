@@ -315,8 +315,8 @@ int get_mons_class_ev(monster_type mc)
 
 static resists_t _apply_holiness_resists(resists_t resists, mon_holy_type mh)
 {
-    // Undead get full poison resistance.
-    if (mh == MH_UNDEAD)
+    // Undead and non-living beings get full poison resistance.
+    if (mh == MH_UNDEAD || mh == MH_NONLIVING)
         resists = (resists & ~(MR_RES_POISON * 7)) | (MR_RES_POISON * 3);
 
     // Everything but natural creatures have full rNeg. Set here for the

@@ -1381,7 +1381,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             defender->splash_with_acid(&you);
         }
 
-        // TODO: remove this? Unarmed poison attacks?
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster(defender->as_monster(), &you);
 
@@ -2293,8 +2292,7 @@ void melee_attack::apply_staff_damage()
         // Base chance at 50% -- like mundane weapons.
         if (coinflip() || x_chance_in_y(attacker->skill(SK_POISON_MAGIC, 10), 80))
         {
-            defender->poison(attacker, 2, defender->has_lifeforce()
-                & x_chance_in_y(attacker->skill(SK_POISON_MAGIC, 10), 160));
+            defender->poison(attacker, 2);
         }
         break;
     }
@@ -2513,17 +2511,6 @@ bool melee_attack::mons_do_poison()
     {
         amount = random_range(attacker->get_hit_dice() * 11 / 3,
                               attacker->get_hit_dice() * 13 / 2);
-
-        // strong poison pierces monster rpois (at half strength)
-        // (players have the usual 2/3rds chance to resist)
-        // XXX: do we really need the has_lifeforce() check...? force doesn't
-        // override rpois+++
-        if (defender->res_poison() > 0 && defender->has_lifeforce()
-            && defender->is_monster())
-        {
-            amount /= 2;
-            force = true;
-        }
     }
     else
     {
@@ -2928,8 +2915,7 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         // doesn't affect poison-immune enemies
-        if (defender->res_poison() >= 3
-            || defender->is_monster() && defender->res_poison() >= 1)
+        if (defender->res_poison() >= 3)
         {
             break;
         }
