@@ -1511,7 +1511,7 @@ void objstat_record_monster(monster *mons)
     if (chunk_effect != CE_NOCORPSE && mons_class_can_leave_corpse(type))
     {
         // copied from turn_corpse_into_chunks()
-        double chunks = (1 + stepdown_value(get_max_corpse_chunks(type),
+        double chunks = (1 + stepdown_value(max_corpse_chunks(type),
                                             4, 4, 12, 12)) / 2.0;
         _record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
         if (is_clean)

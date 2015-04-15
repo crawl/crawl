@@ -2117,7 +2117,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     item_def& corpse = mitm[co];
     const int mon_number = _corpse_number(corpse);
     // How many simulacra can this particular monster give at maximum.
-    int num_sim  = 1 + random2(mons_weight(corpse.mon_type) / 150);
+    int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
     mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
@@ -2202,7 +2202,9 @@ bool monster_simulacrum(monster *mon, bool actual)
 
             int co = si->index();
             // Create half as many as the player version.
-            int how_many = 1 + random2(mons_weight(mitm[co].mon_type) / 300);
+            int how_many = 1 + random2(
+                                  div_rand_round(
+                                    max_corpse_chunks(mitm[co].mon_type), 2));
             how_many  = stepdown_value(how_many, 2, 2, 6, 6);
             bool was_draining = is_being_drained(*si);
             bool was_butchering = is_being_butchered(*si);
@@ -2286,7 +2288,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     for (radius_iterator ri(caster->pos(), LOS_NO_TRANS); ri; ++ri)
     {
         int num_corpses = 0;
-        int total_mass = 0;
+        int total_max_chunks = 0;
         const bool visible = you.see_cell(*ri);
 
         // Count up number/size of corpses at this location.
@@ -2305,7 +2307,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                 if (mons_class_holiness(si->mon_type) == MH_HOLY)
                     num_holy++;
 
-                total_mass += mons_weight(si->mon_type);
+                total_max_chunks += max_corpse_chunks(si->mon_type);
 
                 ++num_corpses;
                 item_was_destroyed(*si);
@@ -2316,9 +2318,8 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         if (!actual || num_corpses == 0)
             continue;
 
-        // 20 aum per HD at max power; 30 at 100 power; and 60 at 0 power.
-        // 10 aum per HD at 500 power (monster version).
-        int hd = div_rand_round((pow + 100) * total_mass, (200*300));
+        // 3 HD per 2 max chunks at 500 power.
+        int hd = div_rand_round((pow + 100) * total_max_chunks, 400);
 
         if (hd <= 0)
         {

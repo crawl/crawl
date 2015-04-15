@@ -2100,10 +2100,10 @@ static int _mushroom_prob(item_def & corpse)
 
     float trial_prob_f = 1 - powf(p_failure, 1.0f / total_trials);
 
-    // The chance of producing mushrooms depends on the weight of the
-    // corpse involved. Humans weigh 550 so we will take that as the
-    // base factor here.
-    float weight_factor = mons_weight(corpse.mon_type) / 550.0f;
+    // The chance of producing mushrooms depends on the corpse capacity.
+    // Take humans as the base factor here.
+    float weight_factor = (float) max_corpse_chunks(corpse.mon_type) /
+                          (float) max_corpse_chunks(MONS_HUMAN);
 
     trial_prob_f *= weight_factor;
 

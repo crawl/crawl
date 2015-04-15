@@ -630,7 +630,7 @@ static void _hydra_devour(monster &victim)
     if (filling)
     {
         const int equiv_chunks =
-            1 + random2(get_max_corpse_chunks(victim.type));
+            1 + random2(max_corpse_chunks(victim.type));
         lessen_hunger(CHUNK_BASE_NUTRITION * equiv_chunks, false, max_hunger);
     }
 
