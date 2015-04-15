@@ -5146,7 +5146,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_ENSLAVE_SOUL:
-        rc = (mon->holiness() == MH_NATURAL && mon->attitude != ATT_FRIENDLY);
+        rc = mon->holiness() == MH_NATURAL
+             && mon->attitude != ATT_FRIENDLY
+             && mons_can_be_zombified(mon)
+             && mons_intel(mon) >= I_NORMAL;
         break;
 
     case BEAM_DISPEL_UNDEAD:
@@ -5346,9 +5349,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_ENSLAVE_SOUL:
     {
-        dprf(DIAG_BEAM, "HD: %d; pow: %d", mon->get_hit_dice(), ench_power);
-
-        if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
+        if (!ench_flavour_affects_monster(flavour, mon))
             return MON_UNAFFECTED;
 
         obvious_effect = true;
@@ -6236,7 +6237,7 @@ bool bolt::nasty_to(const monster* mon) const
 
     // enslave soul
     if (flavour == BEAM_ENSLAVE_SOUL)
-        return mon->holiness() == MH_NATURAL;
+        return ench_flavour_affects_monster(flavour, mon);
 
     // sleep
     if (flavour == BEAM_HIBERNATION)
