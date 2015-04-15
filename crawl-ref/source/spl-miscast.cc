@@ -2435,8 +2435,8 @@ void MiscastEffect::_ice(int severity)
         switch (random2(2))
         {
         case 0:
-            mpr("You feel extremely cold.");
-            // Monster messages needed.
+            you_msg = "You feel extremely cold.";
+            mon_msg_seen = "@The_monster@ shivers.";
             break;
         case 1:
             you_msg      = "You are covered in a thin layer of ice.";
@@ -2458,8 +2458,7 @@ void MiscastEffect::_ice(int severity)
         switch (random2(2))
         {
         case 0:
-            you_msg = "Heat is drained from your body, "
-                      "and your mouth freezes shut!";
+            you_msg = "Heat is drained from your body!";
             mon_msg = "Heat is drained from @the_monster@.";
             if (_ouch(5 + random2(6) + random2(7), BEAM_COLD) && target->alive())
                 target->expose_to_element(BEAM_COLD, 4);
@@ -2508,8 +2507,8 @@ void MiscastEffect::_ice(int severity)
 
             break;
         case 1:
-            you_msg        = "Freezing gasses pour from your @hands@!";
-            mon_msg_seen   = "Freezing gasses pour from @the_monster@'s "
+            you_msg        = "Freezing gases pour from your @hands@!";
+            mon_msg_seen   = "Freezing gases pour from @the_monster@'s "
                              "@hands@!";
 
             _big_cloud(CLOUD_COLD, 20, 8 + random2(4));
@@ -2807,10 +2806,10 @@ void MiscastEffect::_air(int severity)
             _ouch(4 + random2avg(9, 2), BEAM_ELECTRICITY);
             break;
         case 1:
-            you_msg        = "Noxious gasses pour from your @hands@!";
-            mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
+            you_msg        = "Noxious gases pour from your @hands@!";
+            mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Noxious gasses appear from out of thin air!";
+            mon_msg_unseen = "Noxious gases appear from out of thin air!";
 
             _big_cloud(CLOUD_MEPHITIC, 20, 9 + random2(4));
             break;
@@ -2845,10 +2844,10 @@ void MiscastEffect::_air(int severity)
             _explosion();
             break;
         case 1:
-            you_msg        = "Venomous gasses pour from your @hands@!";
-            mon_msg_seen   = "Venomous gasses pour from @the_monster@'s "
+            you_msg        = "Venomous gases pour from your @hands@!";
+            mon_msg_seen   = "Venomous gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
+            mon_msg_unseen = "Venomous gases pour forth from the thin air!";
 
             _big_cloud(CLOUD_POISON, 20, 8 + random2(5));
             break;
@@ -2949,10 +2948,10 @@ void MiscastEffect::_poison(int severity)
         case 1:
             if (cell_is_solid(target->pos()))
                 break;
-            you_msg        = "Noxious gasses pour from your @hands@!";
-            mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
+            you_msg        = "Noxious gases pour from your @hands@!";
+            mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
+            mon_msg_unseen = "Noxious gases pour forth from the thin air!";
             place_cloud(CLOUD_MEPHITIC, target->pos(), 2 + random2(4),
                         act_source);
             break;
@@ -2973,10 +2972,10 @@ void MiscastEffect::_poison(int severity)
             break;
 
         case 1:
-            you_msg        = "Noxious gasses pour from your @hands@!";
-            mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
+            you_msg        = "Noxious gases pour from your @hands@!";
+            mon_msg_seen   = "Noxious gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
+            mon_msg_unseen = "Noxious gases pour forth from the thin air!";
 
             _big_cloud(CLOUD_MEPHITIC, 20, 8 + random2(5));
             break;
@@ -3020,10 +3019,10 @@ void MiscastEffect::_poison(int severity)
             do_msg();
             break;
         case 1:
-            you_msg        = "Venomous gasses pour from your @hands@!";
-            mon_msg_seen   = "Venomous gasses pour from @the_monster@'s "
+            you_msg        = "Venomous gases pour from your @hands@!";
+            mon_msg_seen   = "Venomous gases pour from @the_monster@'s "
                              "@hands@!";
-            mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
+            mon_msg_unseen = "Venomous gases pour forth from the thin air!";
 
             _big_cloud(CLOUD_POISON, 20, 7 + random2(7));
             break;
