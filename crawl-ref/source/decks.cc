@@ -750,6 +750,28 @@ static bool _check_buggy_deck(item_def& deck)
     return false;
 }
 
+/**
+ * What message should be printed when a deck of the given rarity is exhausted?
+ *
+ * @param rarity    The deck_rarity of the deck that's been exhausted.
+ * @return          A message to print;
+ *                  e.g. "the deck of cards disappears without a trace."
+ */
+static string _empty_deck_msg(deck_rarity_type rarity)
+{
+    static const map<deck_rarity_type, const char*> empty_deck_messages = {
+        { DECK_RARITY_COMMON,
+            "disappears without a trace." },
+        { DECK_RARITY_RARE,
+            "glows slightly and disappears." },
+        { DECK_RARITY_LEGENDARY,
+            "glows with a rainbow of weird colours and disappears." },
+    };
+    const char* const *rarity_message = map_find(empty_deck_messages, rarity);
+    ASSERT(rarity_message);
+    return make_stringf("The deck of cards %s", *rarity_message);
+}
+
 // Choose a deck from inventory and return its slot (or -1).
 static int _choose_inventory_deck(const char* prompt)
 {
@@ -851,7 +873,7 @@ bool deck_deal()
     // If the deck had cards left, exhaust it.
     if (deck.quantity > 0)
     {
-        canned_msg(MSG_DECK_EXHAUSTED);
+        mpr(_empty_deck_msg(deck.deck_rarity));
         if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
@@ -1199,7 +1221,7 @@ bool draw_three(int slot)
     const deck_rarity_type rarity = deck.deck_rarity;
     if (cards_in_deck(deck) == 0)
     {
-        canned_msg(MSG_DECK_EXHAUSTED);
+        mpr(_empty_deck_msg(deck.deck_rarity));
         if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
@@ -1327,7 +1349,7 @@ void evoke_deck(item_def& deck)
     const bool deck_gone = (cards_in_deck(deck) == 0);
     if (deck_gone)
     {
-        canned_msg(MSG_DECK_EXHAUSTED);
+        mpr(_empty_deck_msg(deck.deck_rarity));
         dec_inv_item_quantity(deck.link, 1);
     }
 
