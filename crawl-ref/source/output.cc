@@ -33,6 +33,7 @@
 #include "misc.h"
 #include "mutation.h"
 #include "notes.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
 #include "showsymb.h"
@@ -757,7 +758,7 @@ static void _print_stats_hp(int x, int y)
 
 static short _get_stat_colour(stat_type stat)
 {
-    if (you.stat_zero[stat])
+    if (you.duration[stat_zero_duration(stat)])
         return LIGHTRED;
 
     // Check the stat_colour option for warning thresholds.

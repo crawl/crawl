@@ -572,7 +572,7 @@ static bool _can_cast()
         return false;
     }
 
-    if (you.stat_zero[STAT_INT])
+    if (you.duration[DUR_BRAINLESS])
     {
         mpr("You lack the mental capacity to cast spells.");
         return false;

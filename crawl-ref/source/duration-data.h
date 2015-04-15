@@ -402,6 +402,9 @@ static const duration_def duration_data[] =
     { DUR_TROGS_HAND, 0, "", "", "trogs hand", "", D_NO_FLAGS},
     { DUR_MAGIC_SAPPED, 0, "", "", "magic sapped", "", D_DISPELLABLE},
     { DUR_GOZAG_GOLD_AURA, 0, "", "", "gold aura", "", D_NO_FLAGS },
+    { DUR_COLLAPSE, 0, "", "", "collapse", "", D_NO_FLAGS },
+    { DUR_BRAINLESS, 0, "", "", "brainless", "", D_NO_FLAGS },
+    { DUR_CLUMSY, 0, "", "", "clumsy", "", D_NO_FLAGS },
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

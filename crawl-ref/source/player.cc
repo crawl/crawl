@@ -1189,7 +1189,7 @@ int player_regen()
         rr *= _slow_heal_rate();
         rr /= 2;
     }
-    if (you.stat_zero[STAT_STR])
+    if (you.duration[DUR_COLLAPSE])
         rr /= 4;
 
     if (you.disease)
@@ -2324,7 +2324,7 @@ static int _player_evasion(ev_ignore_type evit)
     const int size_factor = _player_evasion_size_factor();
     // Repulsion fields and size are all that matters when paralysed or
     // at 0 dex.
-    if ((you.cannot_move() || you.stat_zero[STAT_DEX] || you.form == TRAN_TREE)
+    if ((you.cannot_move() || you.duration[DUR_CLUMSY] || you.form == TRAN_TREE)
         && !(evit & EV_IGNORE_HELPLESS))
     {
         const int paralysed_base_ev = 2 + size_factor / 2;
@@ -3160,7 +3160,7 @@ int check_stealth()
 
     // lantern of shadows, berserking, "clumsy" (0-dex).
     if (you.attribute[ATTR_SHADOWS] || you.berserk()
-        || you.stat_zero[STAT_DEX] || player_mutation_level(MUT_NO_STEALTH))
+        || you.duration[DUR_CLUMSY] || player_mutation_level(MUT_NO_STEALTH))
     {
         return 0;
     }
@@ -5160,7 +5160,6 @@ void player::init()
 
     stat_loss.init(0);
     base_stats.init(0);
-    stat_zero.init(0);
 
     hunger          = HUNGER_DEFAULT;
     hunger_state    = HS_SATIATED;
