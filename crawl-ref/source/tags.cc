@@ -1439,7 +1439,7 @@ static void tag_construct_you(writer &th)
     CANARY;
 
     // how many durations?
-    marshallByte(th, NUM_DURATIONS);
+    marshallUByte(th, NUM_DURATIONS);
     for (j = 0; j < NUM_DURATIONS; ++j)
         marshallInt(th, you.duration[j]);
 
