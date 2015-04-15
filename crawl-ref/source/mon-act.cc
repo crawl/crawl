@@ -54,6 +54,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
@@ -71,7 +72,6 @@ static void _mons_in_cloud(monster* mons);
 static void _heated_area(monster* mons);
 #endif
 static bool _monster_move(monster* mons);
-static spell_type _map_wand_to_mspell(wand_type kind);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -1165,10 +1165,14 @@ static bool _setup_wand_beam(bolt& beem, monster* mons)
 {
     item_def &wand(mitm[mons->inv[MSLOT_WAND]]);
 
-    // map wand type to monster spell type
-    const spell_type mzap = _map_wand_to_mspell((wand_type)wand.sub_type);
-    if (mzap == SPELL_NO_SPELL)
+    //XXX: Why aren't these allowed?
+    if (wand.sub_type == WAND_FIREBALL
+        || wand.sub_type == WAND_RANDOM_EFFECTS)
+    {
         return false;
+    }
+
+    const spell_type mzap = zap_to_spell(wand.zap());
 
     // set up the beam
     int power         = 30 + mons->get_hit_dice();
@@ -4456,29 +4460,3 @@ static void _heated_area(monster* mons)
     }
 }
 #endif
-
-static spell_type _map_wand_to_mspell(wand_type kind)
-{
-    switch (kind)
-    {
-    case WAND_FLAME:           return SPELL_THROW_FLAME;
-    case WAND_FROST:           return SPELL_THROW_FROST;
-    case WAND_SLOWING:         return SPELL_SLOW;
-    case WAND_HASTING:         return SPELL_HASTE;
-    case WAND_MAGIC_DARTS:     return SPELL_MAGIC_DART;
-    case WAND_HEAL_WOUNDS:     return SPELL_MINOR_HEALING;
-    case WAND_PARALYSIS:       return SPELL_PARALYSE;
-    case WAND_FIRE:            return SPELL_BOLT_OF_FIRE;
-    case WAND_COLD:            return SPELL_BOLT_OF_COLD;
-    case WAND_CONFUSION:       return SPELL_CONFUSE;
-    case WAND_INVISIBILITY:    return SPELL_INVISIBILITY;
-    case WAND_TELEPORTATION:   return SPELL_TELEPORT_OTHER;
-    case WAND_LIGHTNING:       return SPELL_LIGHTNING_BOLT;
-    case WAND_DRAINING:        return SPELL_BOLT_OF_DRAINING;
-    case WAND_DISINTEGRATION:  return SPELL_DISINTEGRATE;
-    case WAND_POLYMORPH:       return SPELL_POLYMORPH;
-    case WAND_DIGGING:         return SPELL_DIG;
-    case WAND_ENSLAVEMENT:     return SPELL_ENSLAVEMENT;
-    default:                   return SPELL_NO_SPELL;
-    }
-}
