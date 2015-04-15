@@ -885,7 +885,7 @@ bool mons_is_plant(const monster* mon)
 
 bool mons_eats_items(const monster* mon)
 {
-    return mons_itemeat(mon) == MONEAT_ITEMS
+    return mons_class_flag(mon->type, M_EAT_ITEMS)
            || mon->has_ench(ENCH_EAT_ITEMS);
 }
 
@@ -1373,23 +1373,6 @@ mon_itemuse_type mons_itemuse(const monster* mon)
         return mons_class_itemuse(mons_zombie_base(mon));
 
     return mons_class_itemuse(mon->type);
-}
-
-static mon_itemeat_type _mons_class_itemeat(monster_type mc)
-{
-    ASSERT_smc();
-    return smc->gmon_eat;
-}
-
-mon_itemeat_type mons_itemeat(const monster* mon)
-{
-    if (mons_enslaved_soul(mon))
-        return _mons_class_itemeat(mons_zombie_base(mon));
-
-    if (mon->has_ench(ENCH_EAT_ITEMS))
-        return MONEAT_ITEMS;
-
-    return _mons_class_itemeat(mon->type);
 }
 
 int mons_class_colour(monster_type mc)
@@ -3750,7 +3733,7 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
 // Monsters that eat items (currently only jellies) also eat doors.
 bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 {
-    if (mons_itemeat(mon) != MONEAT_ITEMS)
+    if (!mons_eats_items(mon))
         return false;
 
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
@@ -3761,7 +3744,7 @@ bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 
 bool mons_can_destroy_door(const monster* mon, const coord_def& pos)
 {
-    if (mons_itemeat(mon) != MONEAT_DOORS)
+    if (!mons_class_flag(mons_base_type(mon), M_CRASH_DOORS))
         return false;
 
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")

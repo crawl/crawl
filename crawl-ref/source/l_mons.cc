@@ -207,28 +207,6 @@ MDEF(muse)
     return 0;
 }
 
-static const char *_moneat_names[] =
-{
-    "nothing", "items", "corpses",
-#if TAG_MAJOR_VERSION == 34
-    "food",
-#endif
-    "doors"
-};
-
-static const char *_moneat_to_str(mon_itemeat_type etyp)
-{
-    COMPILE_CHECK(ARRAYSZ(_moneat_names) == NUM_MONEAT);
-    return _moneat_names[etyp];
-}
-
-MDEF(meat)
-{
-    if (const monsterentry *me = mons->find_monsterentry())
-        PLUARET(string, _moneat_to_str(me->gmon_eat));
-    return 0;
-}
-
 static int l_mons_do_dismiss(lua_State *ls)
 {
     // dismiss is only callable from dlua, not from managed VMs (i.e.
@@ -520,7 +498,6 @@ static MonsAccessor mons_attrs[] =
     { "hd"  , l_mons_hd   },
     { "beh" , l_mons_beh  },
     { "muse", l_mons_muse },
-    { "meat", l_mons_meat },
     { "hp"  , l_mons_hp   },
 
     { "targetx", l_mons_targetx },

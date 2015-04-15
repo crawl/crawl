@@ -181,19 +181,6 @@ enum mon_itemuse_type
     NUM_MONUSE
 };
 
-enum mon_itemeat_type
-{
-    MONEAT_NOTHING,
-    MONEAT_ITEMS,
-#if TAG_MAJOR_VERSION == 34
-    MONEAT_CORPSES,
-    MONEAT_FOOD,
-#endif
-    MONEAT_DOORS,
-
-    NUM_MONEAT
-};
-
 typedef uint32_t resists_t;
 #define mrd(res, lev) (resists_t)((res) * ((lev) & 7))
 
