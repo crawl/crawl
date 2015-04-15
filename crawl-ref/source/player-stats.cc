@@ -601,10 +601,11 @@ static void _handle_stat_change(stat_type stat)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
-    if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
+    if (you.stat(stat) <= 0 && !you.duration[stat_zero_duration(stat)])
     {
         // Time required for recovery once the stat is restored, randomised slightly.
-        you.stat_zero[stat] = (20 + random2(20)) * BASELINE_DELAY;
+        you.duration[stat_zero_duration(stat)] =
+            (20 + random2(20)) * BASELINE_DELAY;
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
         take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
@@ -635,32 +636,25 @@ static void _handle_stat_change(stat_type stat)
     }
 }
 
-// Called once per turn.
-void update_stat_zero(int time)
+duration_type stat_zero_duration(stat_type stat)
 {
-    for (int i = 0; i < NUM_STATS; ++i)
+    switch (stat)
     {
-        stat_type s = static_cast<stat_type>(i);
-        if (you.stat_zero[s] && you.stat(s) > 0)
-        {
-            if (time > you.stat_zero[s])
-                you.stat_zero[s] = 0;
-            else
-                you.stat_zero[s] -= time;
-
-            if (you.stat_zero[s] == 0)
-            {
-                mprf("Your %s has recovered.", stat_desc(s, SD_NAME));
-                you.redraw_stats[s] = true;
-            }
-        }
+    case STAT_STR:
+        return DUR_COLLAPSE;
+    case STAT_INT:
+        return DUR_BRAINLESS;
+    case STAT_DEX:
+        return DUR_CLUMSY;
+    default:
+        die("invalid stat");
     }
 }
 
 bool have_stat_zero()
 {
     for (int i = 0; i < NUM_STATS; ++i)
-        if (you.stat_zero[i])
+        if (you.duration[stat_zero_duration(static_cast<stat_type> (i))])
             return true;
 
     return false;

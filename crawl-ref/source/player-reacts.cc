@@ -794,6 +794,17 @@ static void _decrement_durations()
         invalidate_agrid();
     }
 
+    for (int i = 0; i < NUM_STATS; ++i)
+    {
+        stat_type s = static_cast<stat_type>(i);
+        if (you.stat(s) > 0
+            && _decrement_a_duration(stat_zero_duration(s), delay))
+        {
+            mprf(MSGCH_RECOVERY, "Your %s has recovered.", stat_desc(s, SD_NAME));
+            you.redraw_stats[s] = true;
+        }
+    }
+
     if (_decrement_a_duration(DUR_FORTITUDE, delay,
                               "Your fortitude fades away."))
     {
@@ -1177,6 +1188,7 @@ static void _decrement_durations()
         you.props["gozag_gold_aura_amount"] = 0;
         redraw_screen();
     }
+
     dec_elixir_player(delay);
 
     for (int i = 0; i < delay; ++i)
@@ -1384,8 +1396,6 @@ void player_reacts()
 
     // Player stealth check.
     seen_monsters_react(stealth);
-
-    update_stat_zero(you.time_taken);
 
     // XOM now ticks from here, to increase his reaction time to tension.
     if (you_worship(GOD_XOM))

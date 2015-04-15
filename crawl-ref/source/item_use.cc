@@ -2375,7 +2375,7 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
-    if (you.stat_zero[STAT_INT])
+    if (you.duration[DUR_BRAINLESS])
     {
         mpr("Reading books requires mental cohesion, which you lack.");
         return;
@@ -2620,7 +2620,7 @@ void read(int slot)
 
     zin_recite_interrupt();
 
-    if (you.stat_zero[STAT_INT] && !one_chance_in(5))
+    if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
     {
         mpr("You almost manage to decipher the scroll,"
             " but fail in this attempt.");

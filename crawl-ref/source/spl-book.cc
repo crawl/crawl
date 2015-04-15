@@ -865,7 +865,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
 bool can_learn_spell(bool silent)
 {
-    if (you.stat_zero[STAT_INT])
+    if (you.duration[DUR_BRAINLESS])
     {
         if (!silent)
             mpr("Your brain is not functional enough to learn spells.");

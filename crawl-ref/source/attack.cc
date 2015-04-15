@@ -1964,7 +1964,7 @@ int attack::player_stab(int damage)
  */
 void attack::player_stab_check()
 {
-    if (you.stat_zero[STAT_DEX] || you.confused())
+    if (you.duration[DUR_CLUMSY] || you.confused())
     {
         stab_attempt = false;
         stab_bonus = 0;

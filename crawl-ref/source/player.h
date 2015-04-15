@@ -102,7 +102,6 @@ public:
 
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;
-  FixedVector<uint8_t, NUM_STATS> stat_zero;
 
   int hunger;
   int disease;
@@ -737,7 +736,7 @@ public:
     bool liquefied_ground() const;
     bool incapacitated() const
     {
-        return actor::incapacitated() || stat_zero[STAT_DEX];
+        return actor::incapacitated() || duration[DUR_CLUMSY];
     }
 
     bool asleep() const;

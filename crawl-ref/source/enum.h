@@ -1847,6 +1847,9 @@ enum duration_type
 #endif
     DUR_CLEAVE,
     DUR_GOZAG_GOLD_AURA,
+    DUR_COLLAPSE,
+    DUR_BRAINLESS,
+    DUR_CLUMSY,
     NUM_DURATIONS
 };
 

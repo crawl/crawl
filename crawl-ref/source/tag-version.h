@@ -159,6 +159,7 @@ enum tag_minor_version
     TAG_MINOR_MP_WANDS,            // Make MP wands a single-level mutation
     TAG_MINOR_TELEPORTITIS,        // Rescale teleportitis on artefacts
     TAG_MINOR_ROTTING,             // Remove rot-over-time
+    TAG_MINOR_STAT_ZERO_DURATION,  // Stat zero uses a duration
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
