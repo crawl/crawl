@@ -4549,6 +4549,10 @@ void debug_mondata()
             MR = md->hpdice[0] * -MR * 4 / 3;
         if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
+        if (get_resist(md->resists, MR_RES_POISON) == 2)
+            fails += make_stringf("%s has rPois++\n", name);
+        if (get_resist(md->resists, MR_RES_ELEC) == 2)
+            fails += make_stringf("%s has rElec++\n", name);
 
         // Tests below apply only to real monsters.
         if (md->bitfields & M_CANT_SPAWN)
