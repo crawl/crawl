@@ -1813,8 +1813,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 case CE_MUTAGEN:
                     buff << "mutagenic ";
                     break;
-                case CE_ROT:
-                    buff << "putrefying ";
+                case CE_NOXIOUS:
+                    buff << "inedible ";
                     break;
                 default:
                     break;
@@ -3903,8 +3903,8 @@ string item_prefix(const item_def &item, bool temp)
 
         if (is_mutagenic(item))
             prefixes.push_back("mutagenic");
-        else if (causes_rot(item))
-            prefixes.push_back("rot-inducing"), prefixes.push_back("inedible");
+        else if (is_noxious(item))
+            prefixes.push_back("inedible");
         break;
 
     case OBJ_POTIONS:
