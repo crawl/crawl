@@ -228,10 +228,9 @@ void SpellRegion::update()
         desc.idx      = (int) spell;
         desc.quantity = spell_mana(spell);
 
-        string temp;
         if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK)
              && you.no_tele(false, false, true)
-            || spell_is_uncastable(spell, temp)
+            || spell_is_useless(spell, true, true)
             || spell_mana(spell) > you.magic_points)
         {
             desc.flag |= TILEI_FLAG_INVALID;
