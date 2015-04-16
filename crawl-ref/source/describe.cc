@@ -2844,9 +2844,15 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                        "beyond your current level of understanding.\n";
     }
 
-    if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
+    if (!you_can_memorise(spell))
     {
-        description += "\nThis spell will have no effect right now: "
+        description += "\nYou cannot memorise this spell because "
+                       + desc_cannot_memorise_reason(spell)
+                       + "\n";
+    }
+    else if (spell_is_useless(spell, true, false, rod))
+    {
+        description += "\nThis spell will have no effect right now because "
                        + spell_uselessness_reason(spell, true, false, rod)
                        + "\n";
     }
@@ -2938,9 +2944,6 @@ static int _get_spell_description(const spell_type spell,
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
         description += "\n" + quote;
-
-    if (!mon_owner && !you_can_memorise(spell))
-        description += "\n" + desc_cannot_memorise_reason(spell) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {
