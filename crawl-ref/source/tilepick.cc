@@ -3380,7 +3380,7 @@ static tileidx_t _tileidx_chunk(const item_def &item)
     if (is_mutagenic(item))
         return TILE_FOOD_CHUNK_MUTAGENIC;
 
-    if (is_noxious(item))
+    if (causes_rot(item))
         return TILE_FOOD_CHUNK_ROTTING;
 
     if (is_forbidden_food(item))
@@ -5613,7 +5613,7 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     if (is_mutagenic(item))
         return TILE_FOOD_MUTAGENIC;
 
-    if (is_noxious(item))
+    if (causes_rot(item))
         return TILE_FOOD_ROTTING;
 
     if (is_forbidden_food(item))

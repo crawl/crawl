@@ -998,7 +998,7 @@ static void _eat_chunk(item_def& food)
         break;
     }
 
-    case CE_NOXIOUS:
+    case CE_ROT:
     case CE_NOCORPSE:
         mprf(MSGCH_ERROR, "This flesh (%d) tastes buggy!", chunk_effect);
         break;
@@ -1190,7 +1190,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                 _heal_from_food(1);
             break;
 
-        case CE_NOXIOUS:
+        case CE_ROT:
         case CE_NOCORPSE:
             mprf(MSGCH_ERROR, "This blood (%d) tastes buggy!", chunk_type);
             return;
@@ -1202,7 +1202,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
 bool is_bad_food(const item_def &food)
 {
-    return is_mutagenic(food) || is_forbidden_food(food) || is_noxious(food);
+    return is_mutagenic(food) || is_forbidden_food(food) || causes_rot(food);
 }
 
 // Returns true if a food item (or corpse) is mutagenic.
@@ -1214,13 +1214,13 @@ bool is_mutagenic(const item_def &food)
     return determine_chunk_effect(food) == CE_MUTAGEN;
 }
 
-// Returns true if a food item (or corpse) is totally inedible.
-bool is_noxious(const item_def &food)
+// Returns true if a food item (or corpse) will cause rotting.
+bool causes_rot(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return false;
 
-    return determine_chunk_effect(food) == CE_NOXIOUS;
+    return determine_chunk_effect(food) == CE_ROT;
 }
 
 // Returns true if an item of basetype FOOD or CORPSES cannot currently
@@ -1345,8 +1345,8 @@ bool can_eat(const item_def &food, bool suppress_msg, bool check_hunger)
     if (!_eat_check(check_hunger, suppress_msg))
         return false;
 
-    if (is_noxious(food))
-        FAIL("It is completely inedible.");
+    if (check_hunger && causes_rot(food))
+        FAIL("It is putrefying and completely inedible.");
 
     if (you.species == SP_VAMPIRE)
     {
@@ -1413,7 +1413,7 @@ corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype)
 {
     switch (chunktype)
     {
-    case CE_NOXIOUS:
+    case CE_ROT:
     case CE_MUTAGEN:
         if (you.species == SP_GHOUL)
             chunktype = CE_CLEAN;
