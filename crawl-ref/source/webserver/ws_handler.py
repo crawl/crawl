@@ -69,7 +69,7 @@ def status_file_timeout():
         return
     write_dgl_status_file()
     ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.add_timeout(time.time() + config.status_file_update_rate,
+    ioloop.add_timeout(time.time() + config["status_file_update_rate"],
                        status_file_timeout)
 
 def find_user_sockets(username):
@@ -87,7 +87,7 @@ def find_running_game(charname, start):
 
 milestone_file_tailers = []
 def start_reading_milestones():
-    files = config.milestone_files
+    files = config["milestone_files"]
 
     for f in files:
         milestone_file_tailers.append(util.FileTailer(f, handle_new_milestone))
@@ -222,7 +222,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.reset_timeout()
 
-        if config.max_connections < len(sockets):
+        if config["max_connections"] < len(sockets):
             self.send_message("close", reason="The maximum number of "
                               "connections has been reached, sorry :(")
             self.close()
@@ -250,7 +250,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # long-lived saved login
                 self.token_login(url_unescape(self.get_cookie("login")))
             elif config.get("autologin"):
-                self.do_login(config.autologin)
+                self.do_login(config["autologin"])
 
     def check_origin(self, origin):
         return True
@@ -295,7 +295,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = False
         self.send_message("ping")
         self.timeout = self.ioloop.add_timeout(time.time() \
-                                               + config.http_connection_timeout,
+                                               + config["http_connection_timeout"],
                                                self.check_connection)
 
     def check_connection(self):
@@ -306,7 +306,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
         else:
             if self.is_running() \
-               and self.process.idle_time() > config.max_idle_time:
+               and self.process.idle_time() > config["max_idle_time"]:
                 self.logger.info("Stopping crawl after idle time limit.")
                 self.go_lobby()
 
@@ -314,16 +314,25 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def start_crawl(self, game_id):
+        logging.debug('start_crawl')
         if game_id not in config.games:
             self.go_lobby()
             return
 
         game_params = dict(config.games[game_id])
-        if self.username == None:
-            if self.watched_game:
-                self.stop_watching()
-            self.send_message("login_required", game = game_params["name"])
-            return
+        self.playing = True
+
+        if self.username is None:
+            if config["allow_guests"]:
+                username = self.register_guest()
+                if not username:
+                    # Ideally we'd tell the user we can't auto-generate
+                    # a guest account for them.
+                    self.send_message("login_required", game=game_params["name"])
+                    return
+            else:
+                self.send_message("login_required", game=game_params["name"])
+                return
 
         if self.process:
             # ignore multiple requests for the same game, can happen when
@@ -334,12 +343,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.game_id = game_id
 
+        cookie = self.get_cookie("sid")
+        logging.warning("sid cookie: %r", cookie)
+        sid = url_unescape(cookie)
+        session = userdb.session_info(sid)
+        #session["default-game_id"] = game_id
+
         import process_handler
 
         for process in process_handler.processes.values():
             if (process.username == self.username and
-                process.game_params["id"] == game_id and
-                process.process):
+                    process.game_params["id"] == game_id and
+                    process.process):
                 self.process = process
                 self.process.add_watcher(self)
                 self.send_message("game_started")
@@ -377,6 +392,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.process = None
 
     def crawl_ended(self):
+        self.playing = False
         if self.is_running():
             reason = self.process.exit_reason
             message = self.process.exit_message
@@ -401,7 +417,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not config.get('init_player_program'):
             return True
         try:
-            output = subprocess.check_output([config.init_player_program,
+            output = subprocess.check_output([config["init_player_program"],
                                               self.username],
                                              stderr = subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
@@ -429,6 +445,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
 
     def do_login(self, username, sid=None):
+        """Log in a user."""
+        logging.debug('do_login')
         if not sid:
             sid, session = userdb.new_session()
             session["username"] = username
@@ -453,6 +471,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             self.send_lobby_html()
             self.get_game_info()
+            pass
 
     def login(self, username, password, rememberme):
         real_username = userdb.user_passwd_match(username, password)
@@ -560,7 +579,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             receiver.handle_chat_message(self.username, text)
 
+    def register_guest(self):
+        """Register a new guest user account, return the username."""
+        username = userdb.find_unused_guest_name()
+        if not username:
+            return False
+        self.register(username, None, None)
+        cookie, expires = userdb.get_login_cookie(username)
+        self.send_message("login_cookie", cookie=cookie,
+                          expires=expires+time.timezone)
+        return username
+
     def register(self, username, password, email):
+        """Register a new user account and return their SID."""
         error = userdb.register_user(username, password, email)
         if error is None:
             self.logger.info("Registered user %s.", username)
@@ -569,6 +600,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
             self.send_message("register_fail", reason = error)
+
 
     def go_lobby(self):
         if self.is_running():
@@ -586,12 +618,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def set_rc(self, game_id, contents):
         rcfile_path = self.rcfile_path(game_id)
-        with open(rcfile_path, 'w') as f:
-            f.write(contents.encode("utf8"))
+        if contents:
+            with open(rcfile_path, 'w') as f:
+                f.write(contents.encode("utf8"))
 
     def reset_rc(self, game_id):
         rcfile_path = self.rcfile_path(game_id)
-        os.remove(rcfile_path)
+        if os.path.exists(rcfile_path):
+            try:
+                os.remove(rcfile_path)
+            except EnvironmentError as e:
+                self.logger.error("Couldn't delete '{}' ({})".format(
+                    rcfile_path, e))
         if not self.init_user():
             self.logger.warning("User initialization returned an error for "
                                 "user {0}!".format(self.username))
@@ -667,7 +705,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         scores = None
         num_scores = int(num_scores)
         if config.get("max_score_list_length"):
-            num_scores = min(config.max_score_list_length, num_scores)
+            num_scores = min(config["max_score_list_length"], num_scores)
             if num_scores > 0:
                 game = config.get_game(game_version, game_mode)
         else:
@@ -755,6 +793,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_message(self, msg, **data):
         """Sends a JSON message to the client."""
+        if config["websocket_debug_logging"]:
+            self.logger.debug("Sending message '%s' with data '%s'" % (msg, data))
         data["msg"] = msg
         if not self.client_closed:
             self.write_message(json_encode(data))

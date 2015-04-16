@@ -245,7 +245,7 @@ class CrawlProcessHandlerBase(object):
             self.no_player_timeout = None
         if self.process:
             self.process.send_signal(subprocess.signal.SIGHUP)
-            t = time.time() + config.kill_timeout
+            t = time.time() + config["kill_timeout"]
             self.kill_timeout = self.io_loop.add_timeout(t, self.kill)
 
     def kill(self):
@@ -401,6 +401,10 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self._start_process()
 
     def _find_lock(self):
+        if not os.path.isdir(self.config_path("inprogress_path")):
+            logging.warning("Inprogress directory missing, creating it. "
+                            "Perms/owner may not be what you expect.")
+            os.mkdir(self.config_path("inprogress_path"))
         for path in os.listdir(self.config_path("inprogress_path")):
             if (path.startswith(self.username + ":") and
                 path.endswith(".ttyrec")):
@@ -487,7 +491,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.process = TerminalRecorder(call, self.ttyrec_filename,
                                             self._ttyrec_id_header(),
                                             self.logger, self.io_loop,
-                                            tuple(config.recording_term_size),
+                                            tuple(config["recording_term_size"]),
                                             self.config_path("env_lang"))
             self.process.end_callback = self._on_process_end
             self.process.output_callback = self._on_process_output
@@ -550,7 +554,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         tstamp = int(time.time())
         ctime = time.ctime()
         return templ % (self.username, self.game_params["name"],
-                        config.server_id, self.lock_basename,
+                        config["server_id"], self.lock_basename,
                         tstamp, ctime)
 
     def _on_process_end(self):
@@ -810,7 +814,7 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
             self.check_where()
 
     def _send_client(self, watcher):
-        templ_path = os.path.join(config.template_path, self.client_path)
+        templ_path = os.path.join(config["template_path"], self.client_path)
         loader = DynamicTemplateLoader.get(templ_path)
         templ = loader.load("game.html")
         game_html = templ.generate(prefix = self.client_path)

@@ -7,6 +7,7 @@ import resource
 import signal
 import sys
 import time
+import logging
 
 BUFSIZ = 2048
 
@@ -15,7 +16,17 @@ class TerminalRecorder(object):
         self.io_loop = io_loop
         self.command = command
         if filename:
-            self.ttyrec = open(filename, "w", 0)
+            # Try to dynamically create the ttyrec parent directory
+            d = os.path.dirname(filename)
+            if not os.path.isdir(d):
+                try:
+                    os.mkdir(d)
+                except EnvironmentError as e:
+                    logging.warning("Couldn't create ttyrec directory '%s' "
+                                    "(%s).", d, e)
+                    self.ttyrec = None
+            if os.path.isdir(d):
+                self.ttyrec = open(filename, "w", 0)
         else:
             self.ttyrec = None
         self.id = id

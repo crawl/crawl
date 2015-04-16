@@ -6,7 +6,7 @@ This is the Webtiles server and client.
 
 * Linux
 * Python 2.6/2.7
-* Tornado 2.0+
+* Tornado 4.0+
 * Dungeon Crawl compiled with WEBTILES=y
 
 Python 2.6 requires the ordereddict module, available

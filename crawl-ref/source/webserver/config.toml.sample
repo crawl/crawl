@@ -23,6 +23,9 @@ crypt_algorithm = "6"
 crypt_salt_length = 16
 
 nick_regex = "^[a-zA-Z0-9]{3,20}$"
+# This regex will forbid some technically valid email addresses. Emails
+# must match anything@anything.anything
+email_regex = "^[a-zA-Z0-9._-+]+@[a-zA-Z0-9._-+]+\.[a-zA-Z0-9._-+]+$"
 max_passwd_length = 20
 
 login_token_lifetime = 7
@@ -113,12 +116,56 @@ daemon = false
 # umask =
 # chroot =
 
+# These options are used to help debugging / development.
 no_cache = false
 game_data_no_cache = true
 use_minified = true
 use_cdn = true
 
+# Additional *.toml files in this directory will be loaded and [[games]]
+# entries within will be parsed. Note that the order of [[games]] entries
+# defines display order of games in the web interface, so you should number
+# files in this directory to manage that ordering. eg:
+# * 10-trunk.toml
+# * 20-0.16.toml
+# * 30-nostalgia.toml
 games_conf_d = "webserver/games.conf.d/"
+
+# Whether to allow guests
+allow_guests = true
+# Minimum username length
+min_username_length = 2
+# Prefix for guest account names
+guest_name_prefix = "Crawler"
+# How many characters to suffix. Uses a-z0-9
+guest_name_suffix_len = 3
+
+# Enable debug logging of websocket messages
+# Warning: VERY verbose!
+websocket_debug_logging = false
+
+# If true, players get an option to make a copy of their save to aid
+# replicating bugs and so on. Only devs can download save backups.
+# If allow_save_backups is true, you must specify save_backup_path and one of
+# save_source_path or save_source_command
+allow_save_backups = false
+
+# This directory will be used to store save backups.
+# save_backup_path = '/var/www/dcss-save-backups'
+
+# There are two ways to specify how Webtiles Server can find the original save
+# files. If the path is simple, you can specify save_backup_dir_path to specify
+# a single path where Webtiles Sever will look. If that's not sufficient, use
+# save_backup_path_command to specify an executable that will return the save
+# path when run.
+# Webtiles Server will try the path specified by save_backup_dir_path (if
+# defined) and if that fails fall back to the path returned by
+# save_backup_path_command (if defined) if it doesn't exist / isn't accessible.
+# You can use {dir_path}, {game_id} and {username} as substitutions in both.
+# dir_path and game_id is from the relevant [[games]] specification. If
+# dir_path isn't defined, using it here will result in an error.
+# save_source_path = '/dgl-chroot/{dir_path}/{username}.cs'
+# save_source_command = '/dgl-config/get-save-location.sh {gameid} {username}'
 
 # Non-SSL bindings
 [[binds]]
