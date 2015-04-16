@@ -2649,6 +2649,14 @@ bool melee_attack::mons_attack_effects()
     if (defender->is_player())
         practise(EX_MONSTER_WILL_HIT);
 
+    // A tentacle may have banished its own parent/sibling and thus itself.
+    if (!attacker->alive())
+    {
+        if (miscast_target == defender)
+            do_miscast(); // Will handle a missing defender, too.
+        return false;
+    }
+
     // consider_decapitation() returns true if the wound was cauterized or the
     // last head was removed. In the former case, we shouldn't apply
     // the brand damage (so we return here). If the monster was killed
