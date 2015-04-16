@@ -676,6 +676,13 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                         {
                             item_def& item = shop.stock[i];
 
+                            const int gp_value = _shop_get_item_value(item,
+                                                        shop.greed, id_stock);
+
+                            // Can happen if the price changes due to id status
+                            if (gp_value > you.gold)
+                                continue;
+
                             // Remove from shopping list if it's unique
                             // (i.e., if the shop has multiple scrolls of
                             // identify, don't remove the other scrolls
@@ -686,9 +693,6 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                             {
                                 shopping_list.del_thing(item);
                             }
-
-                            const int gp_value = _shop_get_item_value(item,
-                                                        shop.greed, id_stock);
 
                             // Take a note of the purchase.
                             take_note(Note(NOTE_BUY_ITEM, gp_value, 0,
