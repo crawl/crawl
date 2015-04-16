@@ -1575,24 +1575,14 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *agent)
         return false;
 
     cloud_struct& cloud = env.cloud[i];
-
-    if (tracer && (cloud.type == CLOUD_MEPHITIC
-                   || cloud.type == CLOUD_POISON))
-    {
-        return _ignite_tracer_cloud_value(where, agent);
-    }
-
-    if (cloud.type == CLOUD_MEPHITIC)
-    {
-        cloud.decay /= 2;
-
-        if (cloud.decay < 1)
-            cloud.decay = 1;
-    }
-    else if (cloud.type != CLOUD_POISON)
+    if (cloud.type != CLOUD_MEPHITIC && cloud.type != CLOUD_POISON)
         return false;
 
+    if (tracer)
+        return _ignite_tracer_cloud_value(where, agent);
+
     cloud.type = CLOUD_FIRE;
+    cloud.decay = 30 + random2(20 + pow); // from 3-5 turns to 3-15 turns
     cloud.whose = agent->kill_alignment();
     cloud.killer = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     cloud.source = agent->mid;
