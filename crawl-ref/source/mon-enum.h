@@ -270,6 +270,7 @@ enum zombie_size_type
  */
 enum mon_body_shape
 {
+    MON_SHAPE_BUGGY,
     MON_SHAPE_HUMANOID,
     MON_SHAPE_HUMANOID_WINGED,
     MON_SHAPE_HUMANOID_TAILED,

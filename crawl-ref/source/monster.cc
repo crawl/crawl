@@ -2594,6 +2594,9 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 }
                 break;
         }
+    case MON_SHAPE_BUGGY:
+        str = "handbug";
+        break;
     }
 
     if (str.empty())
@@ -2709,6 +2712,10 @@ string monster::foot_name(bool plural, bool *can_plural) const
     case MON_SHAPE_ORB:
         str         = "underside";
         *can_plural = false;
+        break;
+
+    case MON_SHAPE_BUGGY:
+        str = "footbug";
         break;
     }
 

@@ -4348,7 +4348,7 @@ string get_mon_shape_str(const mon_body_shape shape)
 
     static const char *shape_names[] =
     {
-        "humanoid", "winged humanoid", "tailed humanoid",
+        "bug", "humanoid", "winged humanoid", "tailed humanoid",
         "winged tailed humanoid", "centaur", "naga",
         "quadruped", "tailless quadruped", "winged quadruped",
         "bat", "snake", "fish",  "insect", "winged insect",
@@ -4576,6 +4576,9 @@ void debug_mondata()
         const bool female = mons_class_flag(mc, M_FEMALE);
         if (male && female)
             fails += make_stringf("%s is both male and female\n", name);
+
+        if (md->shape == MON_SHAPE_BUGGY)
+            fails += make_stringf("%s has no defined shape\n", name);
     }
 
     if (!fails.empty())
