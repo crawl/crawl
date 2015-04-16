@@ -54,6 +54,7 @@ dgn-swamp.o \
 dgnevent.o \
 directn.o \
 dlua.o \
+domino.o \
 dungeon.o \
 end.o \
 english.o \
