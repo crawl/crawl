@@ -1634,7 +1634,9 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
     const mon_enchant ench = mon->get_ench(ENCH_POISON);
     const int pois_str = ench.ench == ENCH_NONE ? 0 : ench.degree;
 
-    const dice_def dam_dice(pois_str, 5 + pow/7);
+    // poison currently does roughly 6 damage per degree (over its duration)
+    // do roughly 2x to 3x that much, scaling with spellpower
+    const dice_def dam_dice(pois_str * 2, 12 + div_rand_round(pow * 6, 100));
 
     const int base_dam = dam_dice.roll();
     const int damage = mons_adjust_flavoured(mon, beam, base_dam, false);
