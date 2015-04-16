@@ -867,9 +867,8 @@ static void _give_basic_spells(job_type which_job)
         break;
     }
 
-    string temp;
     if (which_spell != SPELL_NO_SPELL
-        && !spell_is_uncastable(which_spell, temp, false))
+        && !spell_is_useless(which_spell, false, true))
     {
         add_spell_to_memory(which_spell);
     }
