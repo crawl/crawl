@@ -1663,7 +1663,8 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            dprf("%s takes poison damage: %d", name(DESC_THE).c_str(), dam);
+            dprf("%s takes poison damage: %d (degree %d)",
+                 name(DESC_THE).c_str(), dam, me.degree);
 
             hurt(me.agent(), dam, BEAM_POISON);
         }
