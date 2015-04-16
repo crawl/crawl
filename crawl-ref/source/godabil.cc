@@ -4223,11 +4223,7 @@ int gozag_potion_price()
 {
     if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
         return 0;
-
-    int multiplier = GOZAG_POTION_BASE_MULTIPLIER
-                     + you.attribute[ATTR_GOZAG_POTIONS];
-    int price = multiplier * 15; // arbitrary
-    return _gozag_faith_adjusted_price(price);
+    return _gozag_faith_adjusted_price(GOZAG_POTION_PETITION_AMOUNT);
 }
 
 bool gozag_setup_potion_petition(bool quiet)
@@ -4263,8 +4259,7 @@ bool gozag_potion_petition()
             for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
             {
                 prices[i] = 0;
-                int multiplier = GOZAG_POTION_BASE_MULTIPLIER
-                                 + you.attribute[ATTR_GOZAG_POTIONS];
+                int multiplier = 25; // arbitrary
 
                 if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
                     multiplier = 0;
