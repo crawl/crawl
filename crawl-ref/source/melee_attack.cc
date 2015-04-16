@@ -2685,7 +2685,7 @@ bool melee_attack::mons_attack_effects()
     if (!defender->alive())
     {
         do_miscast();
-        return true;
+        return attacker->alive();
     }
 
     // Yredelemnul's injury mirroring can kill the attacker.
@@ -2702,13 +2702,13 @@ bool melee_attack::mons_attack_effects()
     if (!defender->alive())
     {
         do_miscast();
-        return true;
+        return attacker->alive();
     }
 
     if (miscast_target == defender)
         do_miscast();
 
-    // Yredelemnul's injury mirroring can kill the attacker.
+    // Miscast explosions may kill the attacker.
     if (!attacker->alive())
         return false;
 
