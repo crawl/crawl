@@ -194,19 +194,11 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     ld.update();
 
     const int max_chunks = max_corpse_chunks(corpse.mon_type);
-
-    int nchunks = 1;
+    const int nchunks = stepdown_value(1 + random2(max_chunks), 4, 4, 12, 12);
     if (corpse.base_type == OBJ_GOLD)
-        nchunks = corpse.quantity;
+        corpse.quantity = div_rand_round(corpse.quantity, nchunks);
     else
-    {
-        nchunks += random2(max_chunks);
-        nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
-    }
-
-    // spray some blood
-    if (corpse.base_type != OBJ_GOLD)
-        blood_spray(where, corpse.mon_type, nchunks * 3);
+        blood_spray(where, corpse.mon_type, nchunks * 3); // spray some blood
 
     // Don't let the player evade food conducts by using OOD (!) or /disint
     // Spray blood, but no chunks. (The mighty hand of your God squashes them
@@ -224,7 +216,8 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     }
 
     // spray chunks everywhere!
-    for (int ntries = 0; nchunks > 0 && ntries < 10000; ++ntries)
+    for (int ntries = 0, chunks_made = 0;
+         chunks_made < nchunks && ntries < 10000; ++ntries)
     {
         coord_def cp = where;
         cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
@@ -243,7 +236,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         if (cell_is_solid(cp) || actor_at(cp))
             continue;
 
-        --nchunks;
+        ++chunks_made;
 
         dprf("Success");
 
