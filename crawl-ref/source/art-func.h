@@ -1280,3 +1280,10 @@ static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
     }
 
 }
+
+///////////////////////////////////////////////////
+
+static void _FENCERS_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "En garde!");
+}
