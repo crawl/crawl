@@ -3925,8 +3925,6 @@ void bolt::affect_player()
     // handling of missiles
     if (item && item->base_type == OBJ_MISSILES)
     {
-        // SPMSL_POISONED is handled via callback _poison_hit_victim()
-        // in item_use.cc.
         if (item->sub_type == MI_THROWING_NET)
         {
             if (player_caught_in_net())
@@ -4506,12 +4504,10 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     // Handle missile effects.
-    if (item && item->base_type == OBJ_MISSILES)
+    if (item && item->base_type == OBJ_MISSILES
+        && item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
     {
-        // SPMSL_POISONED handled via callback _poison_hit_victim() in
-        // item_use.cc
-        if (item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
-            curare_actor(agent(), mon, 2, name, source_name);
+        curare_actor(agent(), mon, 2, name, source_name);
     }
 
     // purple draconian breath
