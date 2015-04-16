@@ -820,9 +820,8 @@ static bool _check_tukima_validity(const actor *target)
  *
  * @param pow               Spellpower.
  * @param target            The spell's target (monster or player)
- * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-static void _animate_weapon(int pow, actor* target, bool force_friendly)
+static void _animate_weapon(int pow, actor* target)
 {
     bool target_is_player = target == &you;
     item_def* wpn = target->weapon();
@@ -842,7 +841,7 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
     // If sac love, the weapon will go after you, not the target.
     const bool sac_love = player_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
-    const bool friendly = (force_friendly || !target_is_player) && !sac_love;
+    const bool friendly = !target_is_player && !sac_love;
     const int dur = min(2 + (random2(pow) / 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
@@ -864,8 +863,8 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
         return;
     }
 
-    // Don't haunt yourself if the weapon is friendly or if sac love.
-    if (!force_friendly && !sac_love)
+    // Don't haunt yourself under sac love.
+    if (!sac_love)
     {
         mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                    INFINITE_DURATION));
@@ -911,16 +910,15 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
  *
  * @param pow               Spellpower.
  * @param where             The target grid.
- * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-void cast_tukimas_dance(int pow, actor* target, bool force_friendly)
+void cast_tukimas_dance(int pow, actor* target)
 {
     ASSERT(target);
 
     if (!_check_tukima_validity(target))
         return;
 
-    _animate_weapon(pow, target, force_friendly);
+    _animate_weapon(pow, target);
 }
 
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
