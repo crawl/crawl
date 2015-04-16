@@ -4331,7 +4331,10 @@ mon_body_shape get_mon_shape(const monster* mon)
 mon_body_shape get_mon_shape(const monster_type mc)
 {
     if (mc == MONS_CHAOS_SPAWN)
-        return static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1));
+    {
+        return static_cast<mon_body_shape>(random_range(MON_SHAPE_HUMANOID,
+                                                        MON_SHAPE_MISC));
+    }
 
     ASSERT_smc();
     return smc->shape;
