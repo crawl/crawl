@@ -128,7 +128,7 @@ static int _corpse_quality(const item_def &item, bool bottle_blood)
     int badness = 3 * item.freshness;
     if (ce == CE_MUTAGEN)
         badness += 1000;
-    else if (ce == CE_NOXIOUS)
+    else if (ce == CE_ROT)
         badness += 1000;
 
     // Bottleable corpses first, unless forbidden
