@@ -117,6 +117,7 @@ public:
 
   FixedVector<int8_t, NUM_EQUIP> equip;
   FixedBitVector<NUM_EQUIP> melded;
+  // Whether these are unrands that we should run the _*_world_reacts func for
   FixedBitVector<NUM_EQUIP> unrand_reacts;
 
   FixedArray<int, NUM_OBJECT_CLASSES, MAX_SUBTYPES> force_autopickup;
