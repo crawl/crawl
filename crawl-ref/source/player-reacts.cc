@@ -1233,17 +1233,13 @@ static void _regenerate_hp_and_mp(int delay)
     if (crawl_state.disables[DIS_PLAYER_REGEN])
         return;
 
-    // XXX: using an int tmp to fix the fact that hit_points_regeneration
-    // is only an unsigned char and is thus likely to overflow. -- bwr
-    int tmp = you.hit_points_regeneration;
-
     if (you.hp < you.hp_max && !you.duration[DUR_DEATHS_DOOR])
     {
         const int base_val = player_regen();
-        tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
+        you.hit_points_regeneration += div_rand_round(base_val * delay, BASELINE_DELAY);
     }
 
-    while (tmp >= 100)
+    while (you.hit_points_regeneration >= 100)
     {
         // at low mp, "mana link" restores mp in place of hp
         if (you.mutation[MUT_MANA_LINK]
@@ -1253,20 +1249,15 @@ static void _regenerate_hp_and_mp(int delay)
         }
         else // standard hp regeneration
             inc_hp(1);
-        tmp -= 100;
+        you.hit_points_regeneration -= 100;
     }
 
-    ASSERT_RANGE(tmp, 0, 100);
-    you.hit_points_regeneration = tmp;
+    ASSERT_RANGE(you.hit_points_regeneration, 0, 100);
 
-    // XXX: Don't let DD use guardian spirit for free HP, since their
+    // Don't let DD use guardian spirit for free HP, since their
     // damage shaving is enough. (due, dpeg)
     if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
         return;
-
-    // XXX: Doing the same as the above, although overflow isn't an
-    // issue with magic point regeneration, yet. -- bwr
-    tmp = you.magic_points_regeneration;
 
     if (you.magic_points < you.max_magic_points)
     {
@@ -1274,17 +1265,16 @@ static void _regenerate_hp_and_mp(int delay)
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
         if (you.mutation[MUT_MANA_REGENERATION])
             mp_regen_countup *= 2;
-        tmp += mp_regen_countup;
+        you.magic_points_regeneration += mp_regen_countup;
     }
 
-    while (tmp >= 100)
+    while (you.magic_points_regeneration >= 100)
     {
         inc_mp(1);
-        tmp -= 100;
+        you.magic_points_regeneration -= 100;
     }
 
-    ASSERT_RANGE(tmp, 0, 100);
-    you.magic_points_regeneration = tmp;
+    ASSERT_RANGE(you.magic_points_regeneration, 0, 100);
 }
 
 void player_reacts()
