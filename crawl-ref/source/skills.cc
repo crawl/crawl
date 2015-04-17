@@ -1255,7 +1255,14 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_INVOCATIONS:
-            if (god != GOD_NO_GOD)
+            if (species == SP_DEMONSPAWN
+                && skill_rank == 5
+                && is_evil_god(god))
+            {
+                result = "Blood Saint";
+                break;
+            }
+            else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             break;
 
