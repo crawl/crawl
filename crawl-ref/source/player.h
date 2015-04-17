@@ -925,7 +925,7 @@ int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
 
-bool player_res_torment(bool random = true, bool temp = true);
+bool player_res_torment(bool random = true);
 bool player_kiku_res_torment();
 
 int player_likes_chunks(bool permanently = false);
