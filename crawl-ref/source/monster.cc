@@ -3803,7 +3803,7 @@ int monster::how_unclean(bool check_god) const
         uncleanliness++;
 
     corpse_effect_type ce = mons_corpse_effect(type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !how_chaotic())
+    if (ce == CE_MUTAGEN && !how_chaotic())
         uncleanliness++;
 
     // Corporeal undead are a perversion of natural form.
