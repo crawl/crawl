@@ -1098,7 +1098,8 @@ void game_options::reset_options()
                     "screenshot,monlist,kills,notes,action_counts");
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
-                      | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY);
+                      | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
+                      | UA_ALWAYS_ON);
 
     hp_colour.clear();
     hp_colour.emplace_back(50, YELLOW);
@@ -2724,7 +2725,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "use_animations")
     {
         if (plain)
-            use_animations = UA_NONE;
+            use_animations = UA_ALWAYS_ON;
 
         const int new_animations = read_use_animations(field);
         if (minus_equal)
