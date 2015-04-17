@@ -225,7 +225,7 @@ WEIGHT: 1
 : place_unique(_G, "Purgy")
 
 NAME:   uniq_myrmecia
-DEPTH:  Vaults:1-3, Elf, Snake, Spider
+DEPTH:  Elf, Snake, Spider
 : place_unique(_G, "Myrmecia band")
 
 NAME:   uniq_roxanne

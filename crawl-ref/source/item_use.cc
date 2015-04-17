@@ -2965,7 +2965,8 @@ void read_scroll(int item_slot)
 bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise,
                           const char *silenced_msg,
-                          const char *formicid_msg)
+                          const char *formicid_msg,
+                          const char *stasised_msg)
 {
     if (you.stasis(calc_unid))
     {
@@ -2983,6 +2984,13 @@ bool stasis_blocks_effect(bool calc_unid,
                 mpr(formicid_msg ? formicid_msg :
                                    "Your stasis keeps you stable.");
             }
+            
+            if (stasised(you.pos()))
+            {
+                mpr(stasised_msg ? stasised_msg :
+                                   "The surrounding stasis keeps you stable.");
+            }
+
             else
             {
                 const string name(amulet? amulet->name(DESC_YOUR) : "Something");
