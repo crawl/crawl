@@ -107,8 +107,8 @@ public:
   int disease;
   hunger_state_t hunger_state;
   uint8_t max_level;
-  uint8_t hit_points_regeneration;
-  uint8_t magic_points_regeneration;
+  int hit_points_regeneration;
+  int magic_points_regeneration;
   unsigned int experience;
   unsigned int total_experience; // Unaffected by draining. Used for skill cost.
   int experience_level;

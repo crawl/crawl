@@ -1358,10 +1358,9 @@ static void tag_construct_you(writer &th)
 
     CANARY;
 
-    marshallByte(th, you.hit_points_regeneration);
-    marshallByte(th, you.magic_points_regeneration);
+    marshallInt(th, you.hit_points_regeneration);
+    marshallInt(th, you.magic_points_regeneration);
 
-    marshallShort(th, you.hit_points_regeneration * 100);
     marshallInt(th, you.experience);
     marshallInt(th, you.total_experience);
     marshallInt(th, you.gold);
@@ -2236,10 +2235,22 @@ static void tag_read_you(reader &th)
 #endif
     EAT_CANARY;
 
-    you.hit_points_regeneration   = unmarshallByte(th);
-    you.magic_points_regeneration = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_INT_REGEN)
+    {
+        you.hit_points_regeneration   = unmarshallByte(th);
+        you.magic_points_regeneration = unmarshallByte(th);
+        unmarshallShort(th);
+    }
+    else
+    {
+#endif
+    you.hit_points_regeneration   = unmarshallInt(th);
+    you.magic_points_regeneration = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
-    you.hit_points_regeneration   = unmarshallShort(th) / 100;
     you.experience                = unmarshallInt(th);
     you.total_experience = unmarshallInt(th);
     you.gold                      = unmarshallInt(th);

@@ -1096,15 +1096,26 @@ void dprf(diag_type param, const char *format, ...)
 
 static bool _updating_view = false;
 
-static bool check_more(const string& line, msg_channel_type channel)
+static bool _check_option(const string& line, msg_channel_type channel,
+                          const vector<message_filter>& option)
 {
-    return any_of(begin(Options.force_more_message),
-                  end(Options.force_more_message),
+    return any_of(begin(option),
+                  end(option),
                   bind(mem_fn(&message_filter::is_filtered),
                        placeholders::_1, channel, line));
 }
 
-static bool check_join(const string& line, msg_channel_type channel)
+static bool _check_more(const string& line, msg_channel_type channel)
+{
+    return _check_option(line, channel, Options.force_more_message);
+}
+
+static bool _check_flash_screen(const string& line, msg_channel_type channel)
+{
+    return _check_option(line, channel, Options.flash_screen_message);
+}
+
+static bool _check_join(const string& line, msg_channel_type channel)
 {
     switch (channel)
     {
@@ -1116,7 +1127,7 @@ static bool check_join(const string& line, msg_channel_type channel)
     return true;
 }
 
-static void debug_channel_arena(msg_channel_type channel)
+static void _debug_channel_arena(msg_channel_type channel)
 {
     switch (channel)
     {
@@ -1215,7 +1226,7 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         return;
 
     if (crawl_state.game_is_arena())
-        debug_channel_arena(channel);
+        _debug_channel_arena(channel);
 
 #ifdef DEBUG_FATAL
     if (channel == MSGCH_ERROR)
@@ -1254,8 +1265,9 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         return;
     }
 
-    bool domore = check_more(text, channel);
-    bool join = !domore && !nojoin && check_join(text, channel);
+    bool domore = _check_more(text, channel);
+    bool do_flash_screen = _check_flash_screen(text, channel);
+    bool join = !domore && !nojoin && _check_join(text, channel);
 
     // Must do this before converting to formatted string and back;
     // that doesn't preserve close tags!
@@ -1283,6 +1295,8 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
 
     if (domore)
         more(true);
+    if (do_flash_screen)
+        flash_view_delay(UA_ALWAYS_ON, YELLOW, 50);
 }
 
 static string show_prompt(string prompt)
