@@ -2290,7 +2290,7 @@ void melee_attack::apply_staff_damage()
             return;
 
         // Base chance at 50% -- like mundane weapons.
-        if (coinflip() || x_chance_in_y(attacker->skill(SK_POISON_MAGIC, 10), 80))
+        if (x_chance_in_y(80 + attacker->skill(SK_POISON_MAGIC, 10), 160))
             defender->poison(attacker, 2);
         break;
     }
