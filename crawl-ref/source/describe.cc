@@ -1867,8 +1867,8 @@ string get_item_description(const item_def &item, bool verbose,
                 description << "\n\nEating this meat will cause random "
                                "mutations.";
                 break;
-            case CE_ROT:
-                description << "\n\nThis meat is rotten.";
+            case CE_NOXIOUS:
+                description << "\n\nThis meat is toxic.";
                 break;
             default:
                 break;

@@ -3808,7 +3808,7 @@ int monster::how_unclean(bool check_god) const
         uncleanliness++;
 
     corpse_effect_type ce = mons_corpse_effect(type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !how_chaotic())
+    if (ce == CE_MUTAGEN && !how_chaotic())
         uncleanliness++;
 
     // Corporeal undead are a perversion of natural form.
@@ -5404,13 +5404,6 @@ bool monster::near_foe() const
     const actor *afoe = get_foe();
     return afoe && see_cell_no_trans(afoe->pos())
            && summon_can_attack(this, afoe);
-}
-
-bool monster::has_lifeforce() const
-{
-    const mon_holy_type holi = holiness();
-
-    return holi == MH_NATURAL || holi == MH_PLANT;
 }
 
 /**

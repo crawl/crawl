@@ -339,7 +339,6 @@ public:
     bool go_frenzy(actor *source);
     bool berserk() const;
     bool berserk_or_insane() const;
-    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate(bool temp = true) const;
     bool can_polymorph() const;

@@ -621,7 +621,6 @@ public:
                         bool quiet = false) const;
     bool go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
-    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate(bool temp = true) const;
     bool is_lifeless_undead(bool temp = true) const;
