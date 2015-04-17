@@ -2291,9 +2291,7 @@ void melee_attack::apply_staff_damage()
 
         // Base chance at 50% -- like mundane weapons.
         if (coinflip() || x_chance_in_y(attacker->skill(SK_POISON_MAGIC, 10), 80))
-        {
             defender->poison(attacker, 2);
-        }
         break;
     }
 
@@ -2916,9 +2914,7 @@ void melee_attack::mons_apply_attack_flavour()
 
         // doesn't affect poison-immune enemies
         if (defender->res_poison() >= 3)
-        {
             break;
-        }
 
         if (attacker->type == MONS_HORNET || one_chance_in(3))
         {
