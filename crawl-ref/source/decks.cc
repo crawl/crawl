@@ -1180,8 +1180,9 @@ bool draw_three(int slot)
             mpr("You draw... (choose one card, ? for their descriptions)");
             for (int i = 0; i < num_to_draw; ++i)
             {
-                msg::streams(MSGCH_PROMPT) << (static_cast<char>(i + 'a')) << " - "
-                                           << card_name(draws[i]) << endl;
+                msg::streams(MSGCH_PROMPT)
+                    << msg::nocap << (static_cast<char>(i + 'a')) << " - "
+                    << card_name(draws[i]) << endl;
             }
             need_prompt_redraw = false;
         }
