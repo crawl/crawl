@@ -80,7 +80,6 @@
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * fly:      Lets wearer evoke flight ability.
-# * life:     Grants negative energy resistance.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
 # * noises:   Weapon makes noises. Should  be given its own set of noises
@@ -136,6 +135,7 @@
 # EV:       Evasion modifier.
 # FIRE:     Fire resistance/vulnerability.
 # INT:      Intelligence modifier.
+# LIFE:     Negative energy resistance/vulnerability.
 # MAGIC:    Magic resistance/vulnerability.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
@@ -344,7 +344,7 @@ TILE_EQ: mace_of_brilliance
 BRAND:   SPWPN_HOLY_WRATH
 AC:      5
 INT:     5
-BOOL:    life
+LIFE:    1
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -358,7 +358,7 @@ EV:      -2
 STR:     -2
 INT:     -2
 DEX:     -2
-BOOL:    life
+LIFE:     1
 
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
@@ -440,7 +440,7 @@ BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    3
 STEALTH:  -1
-BOOL:     life
+LIFE:     1
 
 NAME:    arbalest "Hellfire"
 INSCRIP: hellfire,
@@ -486,7 +486,8 @@ TILE:     urand_botono
 TILE_EQ:  botono
 BRAND:    SPWPN_REAPING
 HP:       -6
-BOOL:     poison, life, nogen
+LIFE:     1
+BOOL:     poison, nogen
 
 NAME:     trident of the Octopus King
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
@@ -593,7 +594,7 @@ PLUS:     +7
 COLOUR:   LIGHTGREY
 TILE:     urand_undeadhunter
 TILE_EQ:  undeadhunter
-BOOL:     life
+LIFE:     1
 
 NAME:    whip "Snakebite"
 OBJ:     OBJ_WEAPONS/WPN_WHIP
@@ -652,7 +653,7 @@ TILE_EQ: lshield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6
-BOOL:    life
+LIFE:    1
 CURSED:  3
 
 NAME:    robe of Augmentation
@@ -701,8 +702,9 @@ COLOUR:   DARKGREY
 TILE:     urand_bear
 TILE_EQ:  bear
 BRAND:    SPARM_SPIRIT_SHIELD
-BOOL:     life, berserk
+BOOL:     berserk
 MAGIC:    2
+LIFE:     1
 
 NAME:     robe of Misfortune
 OBJ:      OBJ_ARMOUR/ARM_ROBE
@@ -840,7 +842,8 @@ TILE_EQ: turban_purple
 FIRE:    1
 COLD:    1
 MAGIC:   1
-BOOL:    elec, poison, life, rMut, rCorr
+LIFE:    1
+BOOL:    elec, poison, rMut, rCorr
 
 ENUM:    FENCERS
 NAME:    fencer's gloves
@@ -871,7 +874,8 @@ TILE:     urand_ratskin_cloak
 TILE_EQ:  ratskin
 INT:      -1
 DEX:      -1
-BOOL:     life, poison
+LIFE:     1
+BOOL:     poison
 
 NAME:     shield of the gong
 OBJ:      OBJ_ARMOUR/ARM_SHIELD
@@ -881,7 +885,8 @@ TILE:     urand_gong
 TILE_EQ:  shield_gong
 EV:       -5
 MAGIC:    1
-BOOL:     elec, life
+LIFE:     1
+BOOL:     elec
 
 NAME:    amulet of the Air
 OBJ:     OBJ_JEWELLERY/AMU_INACCURACY
@@ -895,7 +900,8 @@ INSCRIP: Umbra
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
-BOOL:    life, seeinv
+LIFE:    1
+BOOL:    seeinv
 
 NAME:    amulet of Cekugob
 OBJ:     OBJ_JEWELLERY/AMU_WARDING
@@ -903,13 +909,14 @@ COLOUR:  ETC_SILVER
 TILE:    urand_cekugob
 AC:      1
 EV:      1
-BOOL:    elec, poison, life, notelep
+LIFE:    1
+BOOL:    elec, poison, notelep
 
 NAME:    amulet of the Four Winds
 OBJ:     OBJ_JEWELLERY/AMU_CLARITY
 COLOUR:  ETC_POISON
 TILE:    urand_four_winds
-BOOL:    life
+LIFE:    1
 MAGIC:   3
 
 NAME:    necklace of Bloodlust
@@ -998,7 +1005,8 @@ TILE:     urand_bk_barding
 TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
-BOOL:     life, poison, evil
+LIFE:     1
+BOOL:     poison, evil
 
 NAME:     amulet of Vitality
 OBJ:      OBJ_JEWELLERY/AMU_REGENERATION
@@ -1188,6 +1196,26 @@ TILE_EQ: gyre
 PLUS:    5
 BRAND:   SPWPN_VORPAL
 DEX:     -3
+
+ENUM:    ETHERIC_CAGE
+NAME:    Maxwell's etheric cage
+OBJ:     OBJ_ARMOUR/ARM_HELMET
+COLOUR:  ETC_ELECTRICITY
+PLUS:    +0
+MP:      +4
+BOOL:    mutate, elec
+
+ENUM:    ETERNAL_TORMENT
+NAME:    crown of Eternal Torment
+OBJ:     OBJ_ARMOUR/ARM_HAT
+PLUS:    +3
+COLOUR:  ETC_DARK
+TILE:    urand_eternal_torment
+TILE_EQ: eternal_torment
+INSCRIP: rTorment
+LIFE:    3
+CURSED:  1
+BOOL:    evil, seeinv
 
 # This entry must always be last.
 ENUM:   DUMMY2

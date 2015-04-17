@@ -1616,11 +1616,10 @@ bool player_control_teleport(bool temp)
  * Is the player character immune to torment?
  *
  * @param random    Whether to include unreliable effects (stochastic resist)
- * @param temp      Whether to include temporary effects (forms, statuses...)
  * @return          Whether the player resists a given instance of torment; if
  *                  random is passed, the result may vary from call to call.
  */
-bool player_res_torment(bool random, bool temp)
+bool player_res_torment(bool random)
 {
     if (player_mutation_level(MUT_TORMENT_RESISTANCE))
         return true;
@@ -1632,12 +1631,10 @@ bool player_res_torment(bool random, bool temp)
         return true;
     }
 
-    if (!temp)
-        return false;
-
     return get_form()->res_neg() == 3
            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
-           || you.petrified();
+           || you.petrified()
+           || player_equip_unrand(UNRAND_ETERNAL_TORMENT);
 }
 
 // Kiku protects you from torment to a degree.
@@ -4163,6 +4160,9 @@ int get_real_hp(bool trans, bool rotted)
 
     if (trans) // Some transformations give you extra hp.
         hitp = hitp * form_hp_mod() / 10;
+
+    if (trans && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
+        hitp = hitp * (100 - 35) / 100; // Not -50% because it has rN+++!
 
     return max(1, hitp);
 }

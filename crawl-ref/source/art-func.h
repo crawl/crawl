@@ -1280,3 +1280,43 @@ static void _FENCERS_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "En garde!");
 }
+
+///////////////////////////////////////////////////
+
+static void _ETHERIC_CAGE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "You sense a greater flux of ambient magical fields.");
+}
+
+static void _ETHERIC_CAGE_world_reacts(item_def *item)
+{
+    const int delay = you.time_taken;
+    ASSERT(delay > 0);
+
+    // coinflip() chance of 1 MP per turn.
+    if (!(you.spirit_shield() && you.species == SP_DEEP_DWARF))
+        inc_mp(binomial(div_rand_round(delay, BASELINE_DELAY), 1, 2));
+    // It's more interesting to get a lump of contamination then to just add a
+    // small amount every turn, plus there's a small chance of rapid buildup.
+    if (one_chance_in(80))
+    {
+        // On average the player recovers 25 contam per turn, this should keep
+        // them in the gray a fair amount of time; be nicer if they're already
+        // in the yellow.
+        int contam = get_contamination_level() > 1 ? 300 : 1000;
+        contam = div_rand_round(contam * delay, BASELINE_DELAY);
+        contaminate_player(random_range(contam, contam * 2));
+    }
+}
+
+///////////////////////////////////////////////////
+
+static void _ETERNAL_TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    calc_hp();
+}
+
+static void _ETERNAL_TORMENT_unequip(item_def *item, bool *show_msgs)
+{
+    calc_hp();
+}
