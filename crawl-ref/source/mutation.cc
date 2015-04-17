@@ -2213,8 +2213,6 @@ int how_mutated(bool innate, bool levels)
         }
     }
 
-    dprf("how_mutated(): innate = %u, levels = %u, j = %d", innate, levels, j);
-
     return j;
 }
 
