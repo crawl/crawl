@@ -8398,6 +8398,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
         return false;
     }
 
+    case SPELL_STASIS:
+        return stasised(mon->pos());
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
