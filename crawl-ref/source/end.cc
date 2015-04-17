@@ -321,9 +321,9 @@ NORETURN void end_game(scorefile_entry &se)
 
 #if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
     string reason = se.get_death_type() == KILLED_BY_QUITTING? "quit" :
-    se.get_death_type() == KILLED_BY_WINNING ? "won"  :
-    se.get_death_type() == KILLED_BY_LEAVING ? "bailed out"
-    : "dead";
+                    se.get_death_type() == KILLED_BY_WINNING ? "won"  :
+                    se.get_death_type() == KILLED_BY_LEAVING ? "bailed out" :
+                                                               "dead";
 #ifdef DGL_WHEREIS
     whereis_record(reason.c_str());
 #endif
