@@ -1205,6 +1205,18 @@ PLUS:    +0
 MP:      +4
 BOOL:    mutate, elec
 
+ENUM:    ETERNAL_TORMENT
+NAME:    crown of Eternal Torment
+OBJ:     OBJ_ARMOUR/ARM_HAT
+PLUS:    +3
+COLOUR:  ETC_DARK
+TILE:    urand_eternal_torment
+TILE_EQ: eternal_torment
+INSCRIP: rTorment
+LIFE:    3
+CURSED:  1
+BOOL:    evil, seeinv
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
