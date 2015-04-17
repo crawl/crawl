@@ -39,6 +39,7 @@ static int _spl_zaps[][2] =
     // of Asmodeus.
     { SPELL_HELLFIRE, ZAP_HELLFIRE },
     { SPELL_CORONA, ZAP_CORONA },
+    { SPELL_ENSLAVEMENT, ZAP_ENSLAVEMENT },
     { SPELL_SLOW, ZAP_SLOW },
     { SPELL_CONFUSE, ZAP_CONFUSE },
     { SPELL_HIBERNATION, ZAP_HIBERNATION },
@@ -67,7 +68,7 @@ static int _spl_zaps[][2] =
     { SPELL_STEAM_BALL, ZAP_BREATHE_STEAM },
     { SPELL_ORB_OF_ELECTRICITY, ZAP_ORB_OF_ELECTRICITY },
     { SPELL_CHILLING_BREATH, ZAP_BREATHE_FROST },
-    { SPELL_MAJOR_HEALING, ZAP_MAJOR_HEALING },
+    { SPELL_MINOR_HEALING, ZAP_HEAL_WOUNDS },
 };
 
 zap_type spell_to_zap(spell_type spell)

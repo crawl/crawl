@@ -1172,9 +1172,8 @@ static string _describe_ammo(const item_def &item)
             description += "It is coated with poison.";
             break;
         case SPMSL_CURARE:
-            description += "It is tipped with asphyxiating poison. Compared "
-                           "to other needles, it is twice as likely to be "
-                           "destroyed on impact";
+            description += "It is tipped with impact poison. It is twice as "
+                           "likely to be destroyed on impact as other needles.";
             break;
         case SPMSL_PARALYSIS:
             description += "It is tipped with a paralysing substance.";
@@ -1862,11 +1861,8 @@ string get_item_description(const item_def &item, bool verbose,
         }
         if (item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
         {
-            switch (determine_chunk_effect(item, true))
+            switch (determine_chunk_effect(item))
             {
-            case CE_POISONOUS:
-                description << "\n\nThis meat is poisonous.";
-                break;
             case CE_MUTAGEN:
                 description << "\n\nEating this meat will cause random "
                                "mutations.";
@@ -2848,9 +2844,15 @@ static string _player_spell_desc(spell_type spell, const item_def* item)
                        "beyond your current level of understanding.\n";
     }
 
-    if (spell_is_useless(spell, true, false, rod) && you_can_memorise(spell))
+    if (!you_can_memorise(spell))
     {
-        description += "\nThis spell will have no effect right now: "
+        description += "\nYou cannot memorise this spell because "
+                       + desc_cannot_memorise_reason(spell)
+                       + "\n";
+    }
+    else if (spell_is_useless(spell, true, false, rod))
+    {
+        description += "\nThis spell will have no effect right now because "
                        + spell_uselessness_reason(spell, true, false, rod)
                        + "\n";
     }
@@ -2942,9 +2944,6 @@ static int _get_spell_description(const spell_type spell,
     const string quote = getQuoteString(string(spell_title(spell)) + " spell");
     if (!quote.empty())
         description += "\n" + quote;
-
-    if (!mon_owner && !you_can_memorise(spell))
-        description += "\n" + desc_cannot_memorise_reason(spell) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {

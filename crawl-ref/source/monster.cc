@@ -350,25 +350,6 @@ size_type monster::body_size(size_part_type /* psize */, bool /* base */) const
     return mi.body_size();
 }
 
-int monster::body_weight(bool /*base*/) const
-{
-    monster_type mc = mons_base_type(this);
-
-    int weight = mons_weight(mc);
-
-    if (type == MONS_SPECTRAL_THING)
-        weight = 0;
-
-    if (type == MONS_SKELETON)
-        weight /= 2;
-
-    // Slime creature weight is multiplied by the number merged.
-    if (mc == MONS_SLIME_CREATURE && blob_size > 1)
-        weight *= blob_size;
-
-    return weight;
-}
-
 brand_type monster::damage_brand(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
@@ -2618,6 +2599,9 @@ string monster::hand_name(bool plural, bool *can_plural) const
                 }
                 break;
         }
+    case MON_SHAPE_BUGGY:
+        str = "handbug";
+        break;
     }
 
     if (str.empty())
@@ -2733,6 +2717,10 @@ string monster::foot_name(bool plural, bool *can_plural) const
     case MON_SHAPE_ORB:
         str         = "underside";
         *can_plural = false;
+        break;
+
+    case MON_SHAPE_BUGGY:
+        str = "footbug";
         break;
     }
 
@@ -3805,10 +3793,6 @@ int monster::how_unclean(bool check_god) const
     if (type == MONS_ANCIENT_ZYME)
         uncleanliness++;
 
-    // Zin _really_ doesn't like death drakes or necrophages.
-    if (type == MONS_NECROPHAGE || type == MONS_DEATH_DRAKE)
-        uncleanliness++;
-
     // Assume that all unknown gods are not chaotic.
     //
     // Being a worshipper of a chaotic god doesn't yet make you
@@ -3825,10 +3809,6 @@ int monster::how_unclean(bool check_god) const
 
     corpse_effect_type ce = mons_corpse_effect(type);
     if ((ce == CE_ROT || ce == CE_MUTAGEN) && !how_chaotic())
-        uncleanliness++;
-
-    // Zin has a food conduct for monsters too.
-    if (mons_eats_corpses(this))
         uncleanliness++;
 
     // Corporeal undead are a perversion of natural form.
@@ -3920,6 +3900,9 @@ bool monster::is_unbreathing() const
     {
         return true;
     }
+
+    if (mons_is_slime(this))
+        return true;
 
     return mons_class_flag(type, M_UNBREATHING);
 }
@@ -4062,16 +4045,11 @@ int monster::res_elec() const
     return u;
 }
 
-bool monster::res_asphyx() const
-{
-    return is_unbreathing() || get_mons_resist(this, MR_RES_ASPHYX) > 0;
-}
-
 int monster::res_water_drowning() const
 {
     int rw = 0;
 
-    if (res_asphyx())
+    if (is_unbreathing())
         rw++;
 
     habitat_type hab = mons_habitat(this);

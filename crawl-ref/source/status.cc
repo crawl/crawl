@@ -897,7 +897,7 @@ static const char* s0_names[NUM_STATS] = { "Collapse", "Brainless", "Clumsy", };
 
 static void _describe_stat_zero(status_info* inf, stat_type st)
 {
-    if (you.stat_zero[st])
+    if (you.duration[stat_zero_duration(st)])
     {
         inf->light_colour = you.stat(st) ? LIGHTRED : RED;
         inf->light_text   = s0_names[st];

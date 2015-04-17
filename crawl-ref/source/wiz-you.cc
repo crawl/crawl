@@ -23,6 +23,7 @@
 #include "mutation.h"
 #include "ng-setup.h"
 #include "output.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
 #include "skills.h"
@@ -311,7 +312,7 @@ void wizard_heal(bool super_heal)
     you.redraw_evasion = true;
 
     for (int stat = 0; stat < NUM_STATS; stat++)
-        you.stat_zero[stat] = false;
+        you.duration[stat_zero_duration(static_cast<stat_type> (stat))] = 0;
 }
 
 void wizard_set_hunger_state()

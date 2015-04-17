@@ -159,6 +159,7 @@
     Lorenzo Lami
     Lantier
     Maciej Lapinski
+    Lamil Lerran
     Jordan Lewis
     Sami Liedes
     Dom Light
@@ -179,6 +180,7 @@
     Eva Myers
     nagdon
     Naruni
+    nicolae
     Erkki Nurmi
     Mattias Nyberg
     nyra

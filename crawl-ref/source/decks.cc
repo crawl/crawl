@@ -750,6 +750,28 @@ static bool _check_buggy_deck(item_def& deck)
     return false;
 }
 
+/**
+ * What message should be printed when a deck of the given rarity is exhausted?
+ *
+ * @param rarity    The deck_rarity of the deck that's been exhausted.
+ * @return          A message to print;
+ *                  e.g. "the deck of cards disappears without a trace."
+ */
+static string _empty_deck_msg(deck_rarity_type rarity)
+{
+    static const map<deck_rarity_type, const char*> empty_deck_messages = {
+        { DECK_RARITY_COMMON,
+            "disappears without a trace." },
+        { DECK_RARITY_RARE,
+            "glows slightly and disappears." },
+        { DECK_RARITY_LEGENDARY,
+            "glows with a rainbow of weird colours and disappears." },
+    };
+    const char* const *rarity_message = map_find(empty_deck_messages, rarity);
+    ASSERT(rarity_message);
+    return make_stringf("The deck of cards %s", *rarity_message);
+}
+
 // Choose a deck from inventory and return its slot (or -1).
 static int _choose_inventory_deck(const char* prompt)
 {
@@ -851,7 +873,7 @@ bool deck_deal()
     // If the deck had cards left, exhaust it.
     if (deck.quantity > 0)
     {
-        canned_msg(MSG_DECK_EXHAUSTED);
+        mpr(_empty_deck_msg(deck.deck_rarity));
         if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
@@ -1199,7 +1221,7 @@ bool draw_three(int slot)
     const deck_rarity_type rarity = deck.deck_rarity;
     if (cards_in_deck(deck) == 0)
     {
-        canned_msg(MSG_DECK_EXHAUSTED);
+        mpr(_empty_deck_msg(deck.deck_rarity));
         if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
@@ -1327,7 +1349,7 @@ void evoke_deck(item_def& deck)
     const bool deck_gone = (cards_in_deck(deck) == 0);
     if (deck_gone)
     {
-        canned_msg(MSG_DECK_EXHAUSTED);
+        mpr(_empty_deck_msg(deck.deck_rarity));
         dec_inv_item_quantity(deck.link, 1);
     }
 
@@ -2350,70 +2372,66 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
                       power_level + 2, 0, you.pos(), MHITYOU, MG_AUTOFOE),
             false);
 
-    // Given the abundance of Nemelex decks, not setting hard reset
-    // leaves a trail of weapons behind, most of which just get
-    // offered to Nemelex again, adding an unnecessary source of
-    // piety.
-    // This is of course irrelevant now that Nemelex sacrifices
-    // are gone.
-    if (mon)
+    if (!mon)
     {
-        // Override the weapon.
-        ASSERT(mon->weapon() != nullptr);
-        item_def& wpn(*mon->weapon());
-
-        if (power_level == 0)
-        {
-            // Wimpy, negative-enchantment weapon.
-            wpn.plus = random2(3) - 2;
-            wpn.sub_type = (coinflip() ? WPN_QUARTERSTAFF : WPN_HAND_AXE);
-
-            set_item_ego_type(wpn, OBJ_WEAPONS,
-                              coinflip() ? SPWPN_VENOM : SPWPN_NORMAL);
-        }
-        else if (power_level == 1)
-        {
-            // This is getting good.
-            wpn.plus = random2(4) - 1;
-            wpn.sub_type = (coinflip() ? WPN_LONG_SWORD : WPN_TRIDENT);
-
-            if (coinflip())
-            {
-                set_item_ego_type(wpn, OBJ_WEAPONS,
-                                  coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING);
-            }
-            else
-                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
-        }
-        else if (power_level == 2)
-        {
-            // Rare and powerful.
-            wpn.plus = random2(4) + 2;
-            wpn.sub_type = (coinflip() ? WPN_DEMON_TRIDENT : WPN_EXECUTIONERS_AXE);
-
-            set_item_ego_type(wpn, OBJ_WEAPONS,
-                              coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
-        }
-
-        item_colour(wpn);
-
-        // sometimes give a randart instead
-        if (one_chance_in(3))
-        {
-            make_item_randart(wpn, true);
-            set_ident_flags(wpn, ISFLAG_KNOW_PROPERTIES| ISFLAG_KNOW_TYPE);
-        }
-
-        mon->flags |= MF_HARD_RESET;
-
-        ghost_demon newstats;
-        newstats.init_dancing_weapon(wpn, power / 4);
-
-        mon->set_ghost(newstats);
-        mon->ghost_demon_init();
-    }
-    else
         mpr("You see a puff of smoke.");
+        return;
+    }
+
+    // Override the weapon.
+    ASSERT(mon->weapon() != nullptr);
+    item_def& wpn(*mon->weapon());
+
+    if (power_level == 0)
+    {
+        // Wimpy, negative-enchantment weapon.
+        wpn.plus = random2(3) - 2;
+        wpn.sub_type = (coinflip() ? WPN_QUARTERSTAFF : WPN_HAND_AXE);
+
+        set_item_ego_type(wpn, OBJ_WEAPONS,
+                          coinflip() ? SPWPN_VENOM : SPWPN_NORMAL);
+    }
+    else if (power_level == 1)
+    {
+        // This is getting good.
+        wpn.plus = random2(4) - 1;
+        wpn.sub_type = (coinflip() ? WPN_LONG_SWORD : WPN_TRIDENT);
+
+        if (coinflip())
+        {
+            set_item_ego_type(wpn, OBJ_WEAPONS,
+                              coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING);
+        }
+        else
+            set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
+    }
+    else if (power_level == 2)
+    {
+        // Rare and powerful.
+        wpn.plus = random2(4) + 2;
+        wpn.sub_type = (coinflip() ? WPN_DEMON_TRIDENT : WPN_EXECUTIONERS_AXE);
+
+        set_item_ego_type(wpn, OBJ_WEAPONS,
+                          coinflip() ? SPWPN_SPEED : SPWPN_ELECTROCUTION);
+    }
+
+    item_colour(wpn); // this is probably not needed
+
+    // sometimes give a randart instead
+    if (one_chance_in(3))
+    {
+        make_item_randart(wpn, true);
+        set_ident_flags(wpn, ISFLAG_KNOW_PROPERTIES| ISFLAG_KNOW_TYPE);
+    }
+
+    // Don't leave a trail of weapons behind. (Especially not randarts!)
+    mon->flags |= MF_HARD_RESET;
+
+    ghost_demon newstats;
+    newstats.init_dancing_weapon(wpn, power / 4);
+
+    mon->set_ghost(newstats);
+    mon->ghost_demon_init();
 }
 
 static void _summon_flying(int power, deck_rarity_type rarity)

@@ -1536,54 +1536,6 @@ spret_type cast_irradiate(int powc, actor* who, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _ignite_poison_affect_item(item_def& item, bool in_inv, bool tracer = false)
-{
-    int strength = 0;
-
-    if (item.base_type == OBJ_MISSILES && item.special == SPMSL_POISONED)
-    {
-        // Burn poison ammo.
-        strength = item.quantity;
-    }
-    else if (item.base_type == OBJ_POTIONS)
-    {
-        // Burn poisonous potions.
-        switch (item.sub_type)
-        {
-        case POT_DEGENERATION:
-        case POT_POISON:
-            strength = 10 * item.quantity;
-            break;
-        default:
-            break;
-        }
-    }
-    else if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
-             && carrion_is_poisonous(item))
-    {
-        strength = mons_weight(item.mon_type) / 25;
-    }
-    else if (item.is_type(OBJ_FOOD, FOOD_CHUNK) && carrion_is_poisonous(item))
-        strength += 30 * item.quantity;
-
-    if (strength)
-    {
-        if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
-            && mons_skeleton(item.mon_type)
-            && !tracer)
-        {
-            turn_corpse_into_skeleton(item);
-        }
-        else if (!tracer)
-        {
-            item_was_destroyed(item);
-            destroy_item(item.index());
-        }
-    }
-
-    return strength;
-}
-
 // How much work can we consider we'll have done by igniting a cloud here?
 // Considers a cloud under a susceptible ally bad, a cloud under a a susceptible
 // enemy good, and other clouds relatively unimportant.
@@ -1598,27 +1550,6 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
     // We've done something, but its value is indeterminate
     else
         return 1;
-}
-
-static int _ignite_poison_objects(coord_def where, int pow, int, actor *agent)
-{
-    const bool tracer = (pow == -1);  // Only testing damage, not dealing it
-
-    int strength = 0;
-
-    for (stack_iterator si(where); si; ++si)
-        strength += _ignite_poison_affect_item(*si, false, tracer);
-
-    if (strength > 0)
-    {
-        if (tracer)
-            return _ignite_tracer_cloud_value(where, agent);
-
-        place_cloud(CLOUD_FIRE, where,
-                    strength + roll_dice(3, strength / 4), agent);
-    }
-
-    return strength;
 }
 
 static int _ignite_poison_clouds(coord_def where, int pow, int, actor *agent)
@@ -1844,22 +1775,6 @@ static bool maybe_abort_ignite()
                 break;
             }
         }
-        else if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
-                 && carrion_is_poisonous(item))
-        {
-            prompt += "over ";
-            prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
-            prompt += "! Ignite poison anyway?";
-            return !yesno(prompt.c_str(), false, 'n');
-        }
-        else if (item.is_type(OBJ_FOOD, FOOD_CHUNK)
-                 && carrion_is_poisonous(item))
-        {
-            prompt += "over ";
-            prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
-            prompt += "! Ignite poison anyway?";
-            return !yesno(prompt.c_str(), false, 'n');
-        }
     }
 
     return false;
@@ -1892,7 +1807,6 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
         // Estimate how much useful effect we'd get if we cast the spell now
         int work = 0;
         work += apply_area_visible(_ignite_poison_clouds, -1, agent);
-        work += apply_area_visible(_ignite_poison_objects, -1, agent);
         work += apply_area_visible(_ignite_poison_monsters, -1, agent);
         work += apply_area_visible(_ignite_poison_player, -1, agent);
 
@@ -1911,7 +1825,6 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
          agent->pronoun(PRONOUN_POSSESSIVE).c_str());
 
     apply_area_visible(_ignite_poison_clouds, pow, agent);
-    apply_area_visible(_ignite_poison_objects, pow, agent);
     apply_area_visible(_ignite_poison_monsters, pow, agent);
     // Only relevant if a monster is casting this spell (never hurts the caster)
     apply_area_visible(_ignite_poison_player, pow, agent);
@@ -1922,7 +1835,6 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
 void local_ignite_poison(coord_def pos, int pow, actor* agent)
 {
     _ignite_poison_clouds(pos, pow, 0, agent);
-    _ignite_poison_objects(pos, pow, 0, agent);
     _ignite_poison_monsters(pos, pow, 0, agent);
     _ignite_poison_player(pos, pow, 0, agent);
 }

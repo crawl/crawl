@@ -582,12 +582,6 @@ void zap_wand(int slot)
             break;
 
         case WAND_HEAL_WOUNDS:
-            if (you_worship(GOD_ELYVILON))
-            {
-                targ_mode = TARG_ANY;
-                break;
-            }
-            // else intentional fall-through
         case WAND_HASTING:
         case WAND_INVISIBILITY:
             targ_mode = TARG_FRIEND;
@@ -2150,18 +2144,19 @@ bool evoke_item(int slot, bool check_range)
         return false;
     }
 
-    if (you.berserk() && (slot == -1
-                       || slot != you.equip[EQ_WEAPON]
-                       || weapon_reach(*you.weapon()) <= 2))
+    const bool reaching = slot != -1 && slot == you.equip[EQ_WEAPON]
+                          && !you.melded[EQ_WEAPON]
+                          && weapon_reach(*you.weapon()) > REACH_NONE;
+
+    if (you.berserk() && !reaching)
     {
         canned_msg(MSG_TOO_BERSERK);
         return false;
     }
-    else if (player_mutation_level(MUT_NO_ARTIFICE)
-             && (slot == -1 || slot != you.equip[EQ_WEAPON]
-                            || weapon_reach(*you.weapon()) <= 2))
+    else if (player_mutation_level(MUT_NO_ARTIFICE) && !reaching)
     {
-        return mpr("You cannot evoke magical items."), false;
+        mpr("You cannot evoke magical items.");
+        return false;
     }
 
     if (slot == -1)

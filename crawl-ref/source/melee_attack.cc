@@ -630,7 +630,7 @@ static void _hydra_devour(monster &victim)
     if (filling)
     {
         const int equiv_chunks =
-            1 + random2(get_max_corpse_chunks(victim.type));
+            1 + random2(max_corpse_chunks(victim.type));
         lessen_hunger(CHUNK_BASE_NUTRITION * equiv_chunks, false, max_hunger);
     }
 
@@ -2649,6 +2649,14 @@ bool melee_attack::mons_attack_effects()
     if (defender->is_player())
         practise(EX_MONSTER_WILL_HIT);
 
+    // A tentacle may have banished its own parent/sibling and thus itself.
+    if (!attacker->alive())
+    {
+        if (miscast_target == defender)
+            do_miscast(); // Will handle a missing defender, too.
+        return false;
+    }
+
     // consider_decapitation() returns true if the wound was cauterized or the
     // last head was removed. In the former case, we shouldn't apply
     // the brand damage (so we return here). If the monster was killed
@@ -2677,14 +2685,12 @@ bool melee_attack::mons_attack_effects()
     if (!defender->alive())
     {
         do_miscast();
-        return true;
+        return attacker->alive();
     }
 
-    // Yredelemnul's injury mirroring can kill the attacker.
-    // Also, bail if the monster is attacking itself without a
-    // weapon, since intrinsic monster attack flavours aren't
-    // applied for self-attacks.
-    if (!attacker->alive() || (attacker == defender && !weapon))
+    // Bail if the monster is attacking itself without a weapon, since
+    // intrinsic monster attack flavours aren't applied for self-attacks.
+    if (attacker == defender && !weapon)
     {
         if (miscast_target == defender)
             do_miscast();
@@ -2694,13 +2700,13 @@ bool melee_attack::mons_attack_effects()
     if (!defender->alive())
     {
         do_miscast();
-        return true;
+        return attacker->alive();
     }
 
     if (miscast_target == defender)
         do_miscast();
 
-    // Yredelemnul's injury mirroring can kill the attacker.
+    // Miscast explosions may kill the attacker.
     if (!attacker->alive())
         return false;
 
@@ -3823,8 +3829,6 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         int food_value = 0;
         if (chunk_type == CE_CLEAN)
             food_value = 30 + random2avg(59, 2);
-        else if (chunk_type == CE_POISONOUS)
-            food_value = 15 + random2avg(29, 2);
 
         // Bats get rather less nutrition out of it.
         if (you.form == TRAN_BAT)
@@ -3856,7 +3860,6 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
-    // Don't drink poisonous or mutagenic blood.
-    return chunk_type == CE_CLEAN
-           || (chunk_type == CE_POISONOUS && player_res_poison());
+    // Don't drink mutagenic or rotten blood.
+    return chunk_type == CE_CLEAN;
 }

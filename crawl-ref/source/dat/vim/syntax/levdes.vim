@@ -155,7 +155,7 @@ syn keyword desOrientation vault no_item_gen no_monster_gen no_pool_fixup no_wal
 " KPROP
 syn keyword desOrientation bloody highlight mold no_cloud_gen no_rtele_into no_ctele_into no_tele_into no_submerge no_tide no_jiyva
 
-syn match desComment "^\s*#.*$"
+syn match desComment "^\s*#.*$&"
 
 "Note: `;` and `|` are necessary due to monster/randbook `spells:`,
 " `.` can be an empty spell slot and `'` is contained in certain spell names,

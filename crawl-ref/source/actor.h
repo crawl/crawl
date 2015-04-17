@@ -89,7 +89,6 @@ public:
 
     virtual size_type body_size(size_part_type psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
-    virtual int       body_weight(bool base = false) const;
 
     virtual brand_type damage_brand(int which_attack = -1) = 0;
     virtual int       damage_type(int which_attack = -1) = 0;
@@ -293,7 +292,6 @@ public:
     virtual int res_elec() const = 0;
     virtual int res_poison(bool temp = true) const = 0;
     virtual int res_rotting(bool temp = true) const = 0;
-    virtual bool res_asphyx() const = 0;
     virtual int res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy(const actor *attacker) const = 0;

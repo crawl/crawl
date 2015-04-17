@@ -1,16 +1,28 @@
-Stone Soup 0.17 (up to 0.17-a0-477-g451446c)
+Stone Soup 0.17 (up to 0.17-a0-570-g4b92f67)
 --------------------------------------------
 
-Environment
------------
+Branches, Environment
+---------------------
 * Shadow Traps have been removed.
+* New WizLab: Lehudib's Moon Base, where the player can fight the legendary
+  Moon Troll.
+* Tukima's Studio and Eringya's Formal Garden WizLabs have been removed.
 
 Character
 ---------
 * All races have had their evocations aptitudes reduced by one point.
 * MP scaling has been reworked & simplified; MP aptitudes have been adjusted.
 * Rot is now healed first, instead of last; effectively, rotting reduces the
-  effectiveness of healing until cured.
+  effectiveness of healing until cured. The Rot status is also gone, with rot
+  taking place immediately.
+* Being at 0 in a stat no longer causes direct damage to the player.
+* Undead stat gain: Mummies get one of Str, Int, or Dex every 5 levels, and
+  Vampires get either Int or Dex every 5 levels.
+* Headbutt aux attacks no longer apply a small stun and the hooves aux kicks no
+  longer bypass AC.
+* Teleportitis only triggers when it would land the player in LOS of
+  enemies. It triggers slightly more frequently as a result, but no longer
+  triggers in Labyrinths or the Abyss.
 
 Gods
 ----
@@ -22,6 +34,8 @@ Gods
 * Gozag's gold distraction is now an effect centered on the player that's
   refreshed whenever they find (make) new corpse-gold, rather than being
   centered on the gold piles themselves.
+* Cheibriados' slouch damage is now based on monster movement speed.
+* Ashenzari now gives the Scrying ability at 2* piety.
 
 Items
 -----
@@ -31,6 +45,8 @@ Items
 * Staves of summoning no longer have a chance of abjuring on hit.
 * Staves of power now give a flat +15 mp, rather than scaling with your MP; they
   no longer store MP when swapping.
+* For the player and for monsters, curare needles no longer have an effect that
+  prevents the use of abilities relying on breath.
 * Removed items:
   - The Cloak of Flash.
   - Potions of decay.
@@ -51,6 +67,10 @@ Monsters
 * Revenants no longer ignore silence.
 * Phantasmal warriors' attacks no longer pierce shields & armour.
 * Death knights now have agony & haunt in addition to pain mirror.
+* Worms are less vulnerable to some forms of kiting, having more regen in
+  exchange for less max hp.
+* Liches and Ancient Liches can no longer can have Shadow Creatures in their
+  spell set.
 * Removed monsters:
   - Unborn.
   - Giant mites.
@@ -63,6 +83,7 @@ Spells
 * Gell's Gravitas is now level 3 and smite-targeted, but no longer confuses
   enemies.
 * Summon Guardian Golem is now level 3.
+* Freeze no longer has a stun effect.
 * Removed spells:
   - Sure Blade.
   - Enslavement.

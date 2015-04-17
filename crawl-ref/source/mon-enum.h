@@ -15,7 +15,6 @@ enum corpse_effect_type
 {
     CE_NOCORPSE,
     CE_CLEAN,
-    CE_POISONOUS,
     CE_ROT,
     CE_MUTAGEN,
 };
@@ -181,19 +180,6 @@ enum mon_itemuse_type
     NUM_MONUSE
 };
 
-enum mon_itemeat_type
-{
-    MONEAT_NOTHING,
-    MONEAT_ITEMS,
-    MONEAT_CORPSES,
-#if TAG_MAJOR_VERSION == 34
-    MONEAT_FOOD,
-#endif
-    MONEAT_DOORS,
-
-    NUM_MONEAT
-};
-
 typedef uint32_t resists_t;
 #define mrd(res, lev) (resists_t)((res) * ((lev) & 7))
 
@@ -217,10 +203,11 @@ enum mon_resist_flags
 
     MR_RES_TORMENT       = 1 << 22,
     MR_RES_PETRIFY       = 1 << 23,
-    MR_RES_ASPHYX        = 1 << 24,
 #if TAG_MAJOR_VERSION == 34
+    MR_OLD_RES_ASPHYX    = 1 << 24,
     MR_OLD_RES_ACID      = 1 << 25,
 #else
+    // unused 1 << 24,
     // unused 1 << 25,
 #endif
     MR_RES_STICKY_FLAME  = 1 << 26,
@@ -283,6 +270,7 @@ enum zombie_size_type
  */
 enum mon_body_shape
 {
+    MON_SHAPE_BUGGY,
     MON_SHAPE_HUMANOID,
     MON_SHAPE_HUMANOID_WINGED,
     MON_SHAPE_HUMANOID_TAILED,

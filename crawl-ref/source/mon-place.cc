@@ -928,7 +928,9 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
                 || band_monsters[i] == MONS_VERY_UGLY_THING)
                     && ugly_colour == COLOUR_UNDEF)
             {
-                ugly_colour = ugly_thing_random_colour();
+                ugly_colour = ugly_thing_colour_offset(mg.colour) == -1
+                            ? ugly_thing_random_colour()
+                            : mg.colour;
             }
         }
     }

@@ -1189,7 +1189,7 @@ int player_regen()
         rr *= _slow_heal_rate();
         rr /= 2;
     }
-    if (you.stat_zero[STAT_STR])
+    if (you.duration[DUR_COLLAPSE])
         rr /= 4;
 
     if (you.disease)
@@ -2324,7 +2324,7 @@ static int _player_evasion(ev_ignore_type evit)
     const int size_factor = _player_evasion_size_factor();
     // Repulsion fields and size are all that matters when paralysed or
     // at 0 dex.
-    if ((you.cannot_move() || you.stat_zero[STAT_DEX] || you.form == TRAN_TREE)
+    if ((you.cannot_move() || you.duration[DUR_CLUMSY] || you.form == TRAN_TREE)
         && !(evit & EV_IGNORE_HELPLESS))
     {
         const int paralysed_base_ev = 2 + size_factor / 2;
@@ -3160,7 +3160,7 @@ int check_stealth()
 
     // lantern of shadows, berserking, "clumsy" (0-dex).
     if (you.attribute[ATTR_SHADOWS] || you.berserk()
-        || you.stat_zero[STAT_DEX] || player_mutation_level(MUT_NO_STEALTH))
+        || you.duration[DUR_CLUMSY] || player_mutation_level(MUT_NO_STEALTH))
     {
         return 0;
     }
@@ -5164,7 +5164,6 @@ void player::init()
 
     stat_loss.init(0);
     base_stats.init(0);
-    stat_zero.init(0);
 
     hunger          = HUNGER_DEFAULT;
     hunger_state    = HS_SATIATED;
@@ -5830,6 +5829,9 @@ int player::shield_tohit_penalty(bool random_factor, int scale) const
 
 int player::skill(skill_type sk, int scale, bool real, bool drained) const
 {
+    // If you add another enhancement/reduction, be sure to change
+    // SkillMenuSwitch::get_help() to reflect that
+
     // wizard racechange, or upgraded old save
     if (is_useless_skill(sk))
         return 0;
@@ -5870,6 +5872,11 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         int drain_scale = max(0, (30 * 100 - you.attribute[ATTR_XP_DRAIN]) * scale);
         level = skill(sk, drain_scale, real, false);
         return max(0, (level - 30 * scale * you.attribute[ATTR_XP_DRAIN]) / (30 * 100));
+    }
+    if ((sk == SK_LONG_BLADES || sk == SK_SHORT_BLADES)
+        && player_equip_unrand(UNRAND_FENCERS))
+    {
+        level = min(level + 4 * scale, 27 * scale);
     }
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
@@ -6319,12 +6326,6 @@ int player::res_water_drowning() const
 #endif
 
     return rw;
-}
-
-bool player::res_asphyx() const
-{
-    // The unbreathing are immune to asphyxiation.
-    return is_unbreathing();
 }
 
 int player::res_poison(bool temp) const
@@ -7587,8 +7588,6 @@ bool player::do_shaft()
         case DNGN_TRAP_SHAFT:
         case DNGN_UNDISCOVERED_TRAP:
         case DNGN_ENTER_SHOP:
-            if (!ground_level() || body_weight() == 0)
-                return true;
             break;
 
         default:

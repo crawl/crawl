@@ -89,10 +89,8 @@ static int food_dangerous(lua_State *ls)
 
     bool dangerous = false;
     if (item)
-    {
-        dangerous = (is_poisonous(*item) || is_mutagenic(*item)
-                     || causes_rot(*item) || is_forbidden_food(*item));
-    }
+        dangerous = is_bad_food(*item);
+
     lua_pushboolean(ls, dangerous);
     return 1;
 }

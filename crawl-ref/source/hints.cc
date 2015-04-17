@@ -542,7 +542,7 @@ void hints_finished()
     you.save->delete_chunk("tut");
 }
 
-void hints_dissection_reminder(bool healthy)
+void hints_dissection_reminder()
 {
     if (!crawl_state.game_is_hints())
         return;
@@ -551,7 +551,7 @@ void hints_dissection_reminder(bool healthy)
         return;
 
     // When hungry, give appropriate message
-    if (you.hunger_state < HS_SATIATED && healthy)
+    if (you.hunger_state < HS_SATIATED)
         learned_something_new(HINT_MAKE_CHUNKS);
 }
 
@@ -2873,8 +2873,7 @@ string hints_skills_info()
         "experience is allocated to go towards that skill. "
         "You can toggle which skills to train by "
         "pressing their slot letters. A <darkgrey>grey</darkgrey> skill "
-        "will not be trained and ease the training of others. "
-        "Press <w>?</w> to read your skills' descriptions.";
+        "will not be trained and ease the training of others.";
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 

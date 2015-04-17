@@ -715,7 +715,7 @@ static void _place_player_corpse(bool explode)
         return;
 
     item_def corpse;
-    if (fill_out_corpse(0, player_mons(), corpse) == MONS_NO_MONSTER)
+    if (fill_out_corpse(0, player_mons(false), corpse) == MONS_NO_MONSTER)
         return;
 
     if (in_good_standing(GOD_GOZAG))
@@ -723,6 +723,9 @@ static void _place_player_corpse(bool explode)
 
     if (explode && explode_corpse(corpse, you.pos()))
         return;
+
+    if (you.form != TRAN_NONE)
+        mpr("Your shape twists and changes as you die.");
 
     int o = get_mitm_slot();
     if (o == NON_ITEM)

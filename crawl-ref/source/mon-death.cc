@@ -154,7 +154,7 @@ monster_type fill_out_corpse(const monster* mons,
             col = LIGHTRED;
         else
         {
-            minfo = *(new monster_info(mons));
+            minfo = monster_info(mons);
             col = int(minfo.colour());
         }
     }
@@ -193,20 +193,12 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     ld.update();
 
-    const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
-
-    int nchunks = 1;
+    const int max_chunks = max_corpse_chunks(corpse.mon_type);
+    const int nchunks = stepdown_value(1 + random2(max_chunks), 4, 4, 12, 12);
     if (corpse.base_type == OBJ_GOLD)
-        nchunks = corpse.quantity;
+        corpse.quantity = div_rand_round(corpse.quantity, nchunks);
     else
-    {
-        nchunks += random2(max_chunks);
-        nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
-    }
-
-    // spray some blood
-    if (corpse.base_type != OBJ_GOLD)
-        blood_spray(where, corpse.mon_type, nchunks * 3);
+        blood_spray(where, corpse.mon_type, nchunks * 3); // spray some blood
 
     // Don't let the player evade food conducts by using OOD (!) or /disint
     // Spray blood, but no chunks. (The mighty hand of your God squashes them
@@ -224,7 +216,8 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     }
 
     // spray chunks everywhere!
-    for (int ntries = 0; nchunks > 0 && ntries < 10000; ++ntries)
+    for (int ntries = 0, chunks_made = 0;
+         chunks_made < nchunks && ntries < 10000; ++ntries)
     {
         coord_def cp = where;
         cp.x += random_range(-LOS_RADIUS, LOS_RADIUS);
@@ -243,7 +236,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
         if (cell_is_solid(cp) || actor_at(cp))
             continue;
 
-        --nchunks;
+        ++chunks_made;
 
         dprf("Success");
 
@@ -413,13 +406,13 @@ static void _give_experience(int player_exp, int monster_exp,
  */
 void goldify_corpse(item_def &corpse)
 {
-    const monsterentry* me = get_monster_data(corpse.mon_type);
-    const int min_base_gold = 7;
-    // monsters weighing more than this give more than base gold
-    const int baseline_weight = 550; // MONS_HUMAN
-    const int base_gold = max(min_base_gold,
-                              (me->weight - baseline_weight) / 80
-                              + min_base_gold);
+    int base_gold = 7;
+    // monsters with more chunks than SIZE_MEDIUM give more than base gold
+    const int extra_chunks = (max_corpse_chunks(corpse.mon_type)
+                              - max_corpse_chunks(MONS_HUMAN)) * 2;
+    if (extra_chunks > 0)
+        base_gold += extra_chunks;
+
     corpse.clear();
     corpse.base_type = OBJ_GOLD;
     corpse.quantity = base_gold / 2 + random2avg(base_gold, 2);
@@ -521,12 +514,9 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
                      mitm[o].name(DESC_A).c_str());
             }
         }
+
         if (o != NON_ITEM && !silent)
-        {
-            const bool poison =
-                (carrion_is_poisonous(corpse) && player_res_poison() <= 0);
-            hints_dissection_reminder(!poison);
-        }
+            hints_dissection_reminder();
     }
 
     return o == NON_ITEM ? -1 : o;
@@ -2462,8 +2452,13 @@ int monster_die(monster* mons, killer_type killer,
         // he goes away.
         pikel_band_neutralise();
     }
-    else if (mons->is_named() && mons->friendly() && killer != KILL_RESET)
+    else if (mons->is_named()
+             && mons->friendly()
+             && !summoned
+             && killer != KILL_RESET)
+    {
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
+    }
     else if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         if (destroy_tentacles(mons)

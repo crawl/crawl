@@ -485,13 +485,6 @@ void revive()
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
             you.duration[dur] = 0;
 
-    // Stat death that wasn't cleared might be:
-    // * permanent (focus card): our fix is spot on
-    // * long-term (mutation): we induce some penalty, ok
-    // * short-term (-stat item): could be done better...
-    unfocus_stats();
-    you.stat_zero.init(0);
-
     unrot_hp(9999);
     set_hp(9999);
     set_mp(9999);

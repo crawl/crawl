@@ -572,7 +572,7 @@ static bool _can_cast()
         return false;
     }
 
-    if (you.stat_zero[STAT_INT])
+    if (you.duration[DUR_BRAINLESS])
     {
         mpr("You lack the mental capacity to cast spells.");
         return false;
@@ -938,23 +938,6 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
     alert_nearby_monsters();
 }
 
-/**
- * Is the player currently unable to cast the given spell?
- *
- * @param[in] spell     The spell to check.
- * @param[out] msg      A string set to the (or a) reason that the spell is
- *                      uncastable, if it is.
- * @param[in] temp      Include checks for volatile or temporary states
- *                      (status effects, mana, gods, items, etc.).
- * @param[in] evoke     Was this spell 'cast' through item evocation?
- * @return              True if the spell is uncastable, false otherwise.
-*/
-bool spell_is_uncastable(spell_type spell, string &msg, bool temp, bool evoked)
-{
-    msg = spell_uselessness_reason(spell, temp, true, evoked);
-    return msg != "";
-}
-
 #ifdef WIZARD
 static void _try_monster_cast(spell_type spell, int powc,
                               dist &spd, bolt &beam)
@@ -1032,19 +1015,19 @@ static bool _spellcasting_aborted(spell_type spell,
 {
     string msg;
 
-    bool uncastable = false;
-
     {
         // FIXME: we might be called in a situation ([a]bilities, Xom) that
-        // isn't evoked but still doesn't use the spell's MP.  your_spells,
-        // this function, and spell_is_uncastable should take a flag
+        // isn't evoked but still doesn't use the spell's MP. your_spells,
+        // this function, and spell_uselessness_reason should take a flag
         // indicating whether MP should be checked (or should never check).
         const int rest_mp = evoked ? 0 : spell_mana(spell);
 
         // Temporarily restore MP so that we're not uncastable for lack of MP.
         unwind_var<int> fake_mp(you.magic_points, you.magic_points + rest_mp);
-        uncastable = !wiz_cast && spell_is_uncastable(spell, msg, true, evoked);
+        msg = spell_uselessness_reason(spell, true, true, evoked);
     }
+
+    bool uncastable = !wiz_cast && msg != "";
 
     if (uncastable)
         mpr(msg);
@@ -1763,13 +1746,6 @@ static spret_type _do_cast(spell_type spell, int powc,
             place.depth = level;
         return cast_shadow_creatures(spell, god, place, fail);
     }
-
-    // XXX: I don't think any call to healing goes through here. --rla
-    case SPELL_MINOR_HEALING:
-        return cast_healing(5, 5);
-
-    case SPELL_MAJOR_HEALING:
-        return cast_healing(25, 25);
 
     // Self-enchantments. (Spells that can only affect the player.)
     case SPELL_CONTROL_TELEPORT:

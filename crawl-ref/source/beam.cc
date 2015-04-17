@@ -1941,14 +1941,12 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     int hurted = 0;
 
-    if (!mons->res_asphyx())
+    if (!mons->is_unbreathing())
     {
         hurted = roll_dice(levels, 6);
 
         if (hurted)
         {
-            mons->add_ench(mon_enchant(ENCH_BREATH_WEAPON, 1, agent,
-                                       BASELINE_DELAY * hurted));
             simple_monster_message(mons, " convulses.");
             mons->hurt(agent, hurted, BEAM_POISON);
         }
@@ -2091,14 +2089,12 @@ static bool _curare_hits_player(actor* agent, int levels, string name,
 
     int hurted = 0;
 
-    if (!you.res_asphyx())
+    if (!you.is_unbreathing())
     {
         hurted = roll_dice(levels, 6);
 
         if (hurted)
         {
-            you.increase_duration(DUR_BREATH_WEAPON, hurted,
-                                  10*levels + random2(10*levels));
             mpr("You have difficulty breathing.");
             ouch(hurted, KILLED_BY_CURARE, agent->mid,
                  "curare-induced apnoea");
@@ -3929,8 +3925,6 @@ void bolt::affect_player()
     // handling of missiles
     if (item && item->base_type == OBJ_MISSILES)
     {
-        // SPMSL_POISONED is handled via callback _poison_hit_victim()
-        // in item_use.cc.
         if (item->sub_type == MI_THROWING_NET)
         {
             if (player_caught_in_net())
@@ -4510,12 +4504,10 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 
     // Handle missile effects.
-    if (item && item->base_type == OBJ_MISSILES)
+    if (item && item->base_type == OBJ_MISSILES
+        && item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
     {
-        // SPMSL_POISONED handled via callback _poison_hit_victim() in
-        // item_use.cc
-        if (item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
-            curare_actor(agent(), mon, 2, name, source_name);
+        curare_actor(agent(), mon, 2, name, source_name);
     }
 
     // purple draconian breath
@@ -4572,10 +4564,10 @@ void bolt::knockback_actor(actor *act, int dam)
         (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
 
     const int roll = origin_spell == SPELL_FORCE_LANCE
-                     ? 1000 + 40 * ench_power
-                     : 2500;
-
-    const int weight = act->body_weight() / (act->airborne() ? 2 : 1);
+                     ? 7 + 0.27 * ench_power
+                     : 17;
+    const int weight = max_corpse_chunks(act->is_monster() ? act->type :
+                                   player_species_to_mons_species(you.species));
 
     const coord_def oldpos = act->pos();
 
@@ -4589,8 +4581,7 @@ void bolt::knockback_actor(actor *act, int dam)
     coord_def newpos = oldpos;
     for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
     {
-        // Save is based on target's body weight.
-        if (random2(roll) < weight)
+        if (x_chance_in_y(weight, roll))
             continue;
 
         const ray_def oldray(ray);
@@ -5150,7 +5141,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_ENSLAVE_SOUL:
-        rc = (mon->holiness() == MH_NATURAL && mon->attitude != ATT_FRIENDLY);
+        rc = mon->holiness() == MH_NATURAL
+             && mon->attitude != ATT_FRIENDLY
+             && mons_can_be_zombified(mon)
+             && mons_intel(mon) >= I_NORMAL;
         break;
 
     case BEAM_DISPEL_UNDEAD:
@@ -5350,9 +5344,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_ENSLAVE_SOUL:
     {
-        dprf(DIAG_BEAM, "HD: %d; pow: %d", mon->get_hit_dice(), ench_power);
-
-        if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
+        if (!ench_flavour_affects_monster(flavour, mon))
             return MON_UNAFFECTED;
 
         obvious_effect = true;
@@ -6241,7 +6233,7 @@ bool bolt::nasty_to(const monster* mon) const
 
     // enslave soul
     if (flavour == BEAM_ENSLAVE_SOUL)
-        return mon->holiness() == MH_NATURAL;
+        return ench_flavour_affects_monster(flavour, mon);
 
     // sleep
     if (flavour == BEAM_HIBERNATION)

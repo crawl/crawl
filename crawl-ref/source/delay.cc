@@ -609,15 +609,12 @@ void handle_delay()
         // Vampires stop feeding if ...
         // * engorged ("alive")
         // * bat form runs out due to becoming full
-        // * corpse becomes poisonous as the Vampire loses poison resistance
         // * corpse disappears for some reason (e.g. animated by a monster)
         if (!corpse.defined()                                     // missing
             || corpse.base_type != OBJ_CORPSES                    // noncorpse
             || corpse.pos != you.pos()                            // elsewhere
             || you.hunger_state == HS_ENGORGED
-            || you.hunger_state > HS_SATIATED && you.form == TRAN_BAT
-            || you.hunger_state >= HS_SATIATED
-               && is_poisonous(corpse))
+            || you.hunger_state > HS_SATIATED && you.form == TRAN_BAT)
         {
             // Messages handled in _food_change() in food.cc.
             stop_delay();

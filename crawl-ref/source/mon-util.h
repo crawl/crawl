@@ -117,7 +117,6 @@ struct monsterentry
     uint64_t bitfields;
     resists_t resists;
 
-    short weight;
     // [Obsolete] Experience used to be calculated like this:
     // ((((max_hp / 7) + 1) * (mHD * mHD) + 1) * exp_mod) / 10
     //     ^^^^^^ see below at hpdice
@@ -153,7 +152,6 @@ struct monsterentry
     int8_t           speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
-    mon_itemeat_type gmon_eat;
     size_type size;
     mon_body_shape shape;
 };
@@ -208,7 +206,6 @@ bool mons_class_res_wind(monster_type mc);
 
 mon_itemuse_type mons_class_itemuse(monster_type mc);
 mon_itemuse_type mons_itemuse(const monster* mon);
-mon_itemeat_type mons_itemeat(const monster* mon);
 
 bool mons_can_be_blinded(monster_type mc);
 bool mons_can_be_dazzled(monster_type mc);
@@ -274,7 +271,7 @@ bool intelligent_ally(const monster* mon);
 bool mons_skeleton(monster_type mc);
 bool mons_zombifiable(monster_type mc);
 
-int mons_weight(monster_type mc);
+int max_corpse_chunks(monster_type mc);
 int mons_class_base_speed(monster_type mc);
 mon_energy_usage mons_class_energy(monster_type mc);
 mon_energy_usage mons_energy(const monster* mon);
@@ -363,7 +360,6 @@ bool mons_is_slime(const monster* mon);
 bool mons_class_is_plant(monster_type mc);
 bool mons_is_plant(const monster* mon);
 bool mons_eats_items(const monster* mon);
-bool mons_eats_corpses(const monster* mon);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
 monster_type draco_or_demonspawn_subspecies(const monster* mon);

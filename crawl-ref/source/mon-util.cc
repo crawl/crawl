@@ -832,8 +832,13 @@ bool mons_is_abyssal_only(monster_type mc)
 
 bool mons_is_poisoner(const monster* mon)
 {
-    if (mons_corpse_effect(mon->type) == CE_POISONOUS)
+    if (mon->search_slots([] (const mon_spell_slot& slot)
+                             { return slot.flags & MON_SPELL_NATURAL
+                                      && spell_typematch(slot.spell,
+                                                         SPTYP_POISON); } ))
+    {
         return true;
+    }
 
     if (mon->has_attack_flavour(AF_POISON)
         || mon->has_attack_flavour(AF_POISON_STRONG))
@@ -885,13 +890,8 @@ bool mons_is_plant(const monster* mon)
 
 bool mons_eats_items(const monster* mon)
 {
-    return mons_itemeat(mon) == MONEAT_ITEMS
+    return mons_class_flag(mon->type, M_EAT_ITEMS)
            || mon->has_ench(ENCH_EAT_ITEMS);
-}
-
-bool mons_eats_corpses(const monster* mon)
-{
-    return mons_itemeat(mon) == MONEAT_CORPSES;
 }
 
 bool invalid_monster(const monster* mon)
@@ -993,7 +993,7 @@ void discover_mimic(const coord_def& pos)
 #endif
 
     if (you.see_cell(pos))
-        mprf(MSGCH_WARN, "%s %s a mimic!", name.c_str(), plural ? "are" : "is");
+        mprf("%s %s a mimic!", name.c_str(), plural ? "are" : "is");
 
     const string shortname = feature_mimic ? feat_type_name(feat)
                                            : item->name(DESC_BASENAME);
@@ -1082,10 +1082,27 @@ bool mons_is_conjured(monster_type mc)
            || mons_class_flag(mc, M_CONJURED);
 }
 
-int mons_weight(monster_type mc)
+int max_corpse_chunks(monster_type mc)
 {
-    ASSERT_smc();
-    return smc->weight;
+    switch (monster_info(mc).body_size())
+    {
+    case SIZE_TINY:
+        return 1;
+    case SIZE_LITTLE:
+        return 2;
+    case SIZE_SMALL:
+        return 3;
+    case SIZE_MEDIUM:
+        return 4;
+    case SIZE_LARGE:
+        return 9;
+    case SIZE_BIG:
+        return 10;
+    case SIZE_GIANT:
+        return 12;
+    default:
+        return 0;
+    }
 }
 
 corpse_effect_type mons_corpse_effect(monster_type mc)
@@ -1378,23 +1395,6 @@ mon_itemuse_type mons_itemuse(const monster* mon)
         return mons_class_itemuse(mons_zombie_base(mon));
 
     return mons_class_itemuse(mon->type);
-}
-
-static mon_itemeat_type _mons_class_itemeat(monster_type mc)
-{
-    ASSERT_smc();
-    return smc->gmon_eat;
-}
-
-mon_itemeat_type mons_itemeat(const monster* mon)
-{
-    if (mons_enslaved_soul(mon))
-        return _mons_class_itemeat(mons_zombie_base(mon));
-
-    if (mon->has_ench(ENCH_EAT_ITEMS))
-        return MONEAT_ITEMS;
-
-    return _mons_class_itemeat(mon->type);
 }
 
 int mons_class_colour(monster_type mc)
@@ -3755,7 +3755,7 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
 // Monsters that eat items (currently only jellies) also eat doors.
 bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 {
-    if (mons_itemeat(mon) != MONEAT_ITEMS)
+    if (!mons_eats_items(mon))
         return false;
 
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
@@ -3766,7 +3766,7 @@ bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 
 bool mons_can_destroy_door(const monster* mon, const coord_def& pos)
 {
-    if (mons_itemeat(mon) != MONEAT_DOORS)
+    if (!mons_class_flag(mons_base_type(mon), M_CRASH_DOORS))
         return false;
 
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
@@ -4331,7 +4331,10 @@ mon_body_shape get_mon_shape(const monster* mon)
 mon_body_shape get_mon_shape(const monster_type mc)
 {
     if (mc == MONS_CHAOS_SPAWN)
-        return static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1));
+    {
+        return static_cast<mon_body_shape>(random_range(MON_SHAPE_HUMANOID,
+                                                        MON_SHAPE_MISC));
+    }
 
     ASSERT_smc();
     return smc->shape;
@@ -4348,7 +4351,7 @@ string get_mon_shape_str(const mon_body_shape shape)
 
     static const char *shape_names[] =
     {
-        "humanoid", "winged humanoid", "tailed humanoid",
+        "bug", "humanoid", "winged humanoid", "tailed humanoid",
         "winged tailed humanoid", "centaur", "naga",
         "quadruped", "tailless quadruped", "winged quadruped",
         "bat", "snake", "fish",  "insect", "winged insect",
@@ -4551,13 +4554,6 @@ void debug_mondata()
         if (md->bitfields & M_CANT_SPAWN)
             continue;
 
-        if (md->weight < 0)
-        {
-            fails += make_stringf("%s has negative mass: %d\n", name,
-                                  md->weight);
-        } else if (md->corpse_thingy && !md->weight && md->species == mc)
-            fails += make_stringf("%s drops a nil-weight corpse", name);
-
         if (!md->hpdice[0] && md->basechar != 'Z') // derived undead...
             fails += make_stringf("%s has 0 HD: %d\n", name, md->hpdice[0]);
 
@@ -4583,6 +4579,9 @@ void debug_mondata()
         const bool female = mons_class_flag(mc, M_FEMALE);
         if (male && female)
             fails += make_stringf("%s is both male and female\n", name);
+
+        if (md->shape == MON_SHAPE_BUGGY)
+            fails += make_stringf("%s has no defined shape\n", name);
     }
 
     if (!fails.empty())

@@ -1048,7 +1048,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     if (attacker == mons)
         hploss = max(0, mons->hit_points / 2 - 1);
     else
-        hploss = roll_dice(3, 15) + (random2(pow) / 10);
+        hploss = roll_dice(3, 15) + (random2(pow) / 5);
 
     if (hploss)
     {
@@ -1061,7 +1061,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
     if (!hploss || !mons->alive())
         return;
-    // Holy word won't annoy or stun its user.
+    // Holy word won't annoy or daze its user.
     if (attacker != mons)
     {
         // Currently, holy word annoys the monsters it affects
@@ -1076,8 +1076,8 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
             behaviour_event(mons, ME_ANNOY, attacker);
         }
 
-        if (mons->speed_increment >= 25)
-            mons->speed_increment -= 20;
+        mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
+                                   (10 + random2(10)) * BASELINE_DELAY));
     }
 }
 

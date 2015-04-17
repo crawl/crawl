@@ -247,7 +247,6 @@ public:
     bool        shove(const char* name = "");
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const;
-    int         body_weight(bool base = false) const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
     random_var  attack_delay(const item_def *weapon,
@@ -374,7 +373,6 @@ public:
     int res_elec() const;
     int res_poison(bool temp = true) const;
     int res_rotting(bool /*temp*/ = true) const;
-    bool res_asphyx() const;
     int res_water_drowning() const;
     bool res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
@@ -564,6 +562,7 @@ public:
     void remove_avatars();
 
     bool clear_far_engulf();
+    bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 
 private:
     int hit_dice;
@@ -595,7 +594,6 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
-    bool search_slots(function<bool (const mon_spell_slot &)> func) const;
     bool search_spells(function<bool (spell_type)> func) const;
 };
 

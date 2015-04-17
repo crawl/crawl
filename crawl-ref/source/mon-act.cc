@@ -54,6 +54,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
@@ -71,7 +72,6 @@ static void _mons_in_cloud(monster* mons);
 static void _heated_area(monster* mons);
 #endif
 static bool _monster_move(monster* mons);
-static spell_type _map_wand_to_mspell(wand_type kind);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -1165,10 +1165,14 @@ static bool _setup_wand_beam(bolt& beem, monster* mons)
 {
     item_def &wand(mitm[mons->inv[MSLOT_WAND]]);
 
-    // map wand type to monster spell type
-    const spell_type mzap = _map_wand_to_mspell((wand_type)wand.sub_type);
-    if (mzap == SPELL_NO_SPELL)
+    //XXX: Why aren't these allowed?
+    if (wand.sub_type == WAND_FIREBALL
+        || wand.sub_type == WAND_RANDOM_EFFECTS)
+    {
         return false;
+    }
+
+    const spell_type mzap = zap_to_spell(wand.zap());
 
     // set up the beam
     int power         = 30 + mons->get_hit_dice();
@@ -2188,7 +2192,7 @@ void handle_monster_move(monster* mons)
         return;
     }
 
-    if (mons->has_ench(ENCH_DAZED) && one_chance_in(5))
+    if (mons->has_ench(ENCH_DAZED) && one_chance_in(4))
     {
         simple_monster_message(mons, " is lost in a daze.");
         mons->speed_increment -= non_move_energy;
@@ -2255,7 +2259,7 @@ void handle_monster_move(monster* mons)
 
     if (igrd(mons->pos()) != NON_ITEM
         && (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR
-            || mons_itemeat(mons) != MONEAT_NOTHING))
+            || mons_eats_items(mons)))
     {
         // Keep neutral, charmed, summoned, and friendly monsters from
         // picking up stuff.
@@ -3097,8 +3101,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
     int max_eat = roll_dice(1, (crawl_state.game_is_zotdef() ? 8 : 10));
     int eaten = 0;
     bool eaten_net = false;
-    bool death_ooze_ate_good = false;
-    bool death_ooze_ate_corpse = false;
     bool shown_msg = false;
     piety_gain_t gain = PIETY_NONE;
     int js = JS_NONE;
@@ -3114,13 +3116,6 @@ static bool _monster_eat_item(monster* mons, bool nearby)
              si->name(DESC_PLAIN).c_str());
 
         int quant = si->quantity;
-
-        death_ooze_ate_good = (mons->type == MONS_DEATH_OOZE
-                               && (get_weapon_brand(*si) == SPWPN_HOLY_WRATH
-                                   || get_ammo_brand(*si) == SPMSL_SILVER));
-        death_ooze_ate_corpse = (mons->type == MONS_DEATH_OOZE
-                                 && (si->is_type(OBJ_CORPSES, CORPSE_BODY)
-                                     || si->is_type(OBJ_FOOD, FOOD_CHUNK)));
 
         if (si->base_type != OBJ_GOLD)
         {
@@ -3175,78 +3170,18 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         hps_changed = max(hps_changed, 1);
         hps_changed = min(hps_changed, 50);
 
-        if (death_ooze_ate_good)
-        {
-            mons->hurt(nullptr, hps_changed, BEAM_NONE, KILLED_BY_SOMETHING,
-                       "", "", false);
-        }
-        else
-        {
-            // This is done manually instead of using heal_monster(),
-            // because that function doesn't work quite this way. - bwr
-            const int avg_hp = mons_avg_hp(mons->type);
-            mons->hit_points += hps_changed;
-            mons->hit_points = min(MAX_MONSTER_HP,
-                                   min(avg_hp * 4, mons->hit_points));
-            mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
-        }
+        // This is done manually instead of using heal_monster(),
+        // because that function doesn't work quite this way. - bwr
+        const int avg_hp = mons_avg_hp(mons->type);
+        mons->hit_points += hps_changed;
+        mons->hit_points = min(MAX_MONSTER_HP,
+                               min(avg_hp * 4, mons->hit_points));
+        mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
 
-        if (death_ooze_ate_corpse)
-            place_cloud(CLOUD_MIASMA, mons->pos(), 4 + random2(5), mons);
-
-        if (death_ooze_ate_good)
-            simple_monster_message(mons, " twists violently!");
-        else if (eaten_net)
+        if (eaten_net)
             simple_monster_message(mons, " devours the net!");
         else
             _jelly_divide(mons);
-    }
-
-    return eaten > 0;
-}
-
-static bool _monster_eat_single_corpse(monster* mons, item_def& item,
-                                       bool do_heal, bool nearby)
-{
-    if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-        return false;
-
-    const monster_type mt = item.mon_type;
-    if (do_heal)
-    {
-        const int avg_hp = mons_avg_hp(mons->type);
-        mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
-        mons->hit_points = min(MAX_MONSTER_HP,
-                               min(avg_hp * 2, mons->hit_points));
-        mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
-    }
-
-    if (nearby)
-    {
-        mprf("%s eats %s.", mons->name(DESC_THE).c_str(),
-             item.name(DESC_THE).c_str());
-    }
-
-    // Butcher the corpse without leaving chunks.
-    butcher_corpse(item, MB_MAYBE, false);
-
-    return true;
-}
-
-static bool _monster_eat_corpse(monster* mons, bool do_heal, bool nearby)
-{
-    if (!mons_eats_corpses(mons))
-        return false;
-
-    int eaten = 0;
-
-    for (stack_iterator si(mons->pos()); si; ++si)
-    {
-        if (_monster_eat_single_corpse(mons, *si, do_heal, nearby))
-        {
-            eaten++;
-            break;
-        }
     }
 
     return eaten > 0;
@@ -3276,23 +3211,8 @@ static bool _handle_pickup(monster* mons)
     const bool nearby = mons_near(mons);
     int count_pickup = 0;
 
-    if (mons_itemeat(mons) != MONEAT_NOTHING)
-    {
-        if (mons_eats_items(mons))
-        {
-            if (_monster_eat_item(mons, nearby))
-                return false;
-        }
-        else if (mons_eats_corpses(mons))
-        {
-            // Assume that only undead can heal from eating corpses.
-            if (_monster_eat_corpse(mons, mons->holiness() == MH_UNDEAD,
-                                    nearby))
-            {
-                return false;
-            }
-        }
-    }
+    if (mons_eats_items(mons) && _monster_eat_item(mons, nearby))
+        return false;
 
     if (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR)
     {
@@ -4540,29 +4460,3 @@ static void _heated_area(monster* mons)
     }
 }
 #endif
-
-static spell_type _map_wand_to_mspell(wand_type kind)
-{
-    switch (kind)
-    {
-    case WAND_FLAME:           return SPELL_THROW_FLAME;
-    case WAND_FROST:           return SPELL_THROW_FROST;
-    case WAND_SLOWING:         return SPELL_SLOW;
-    case WAND_HASTING:         return SPELL_HASTE;
-    case WAND_MAGIC_DARTS:     return SPELL_MAGIC_DART;
-    case WAND_HEAL_WOUNDS:     return SPELL_MINOR_HEALING;
-    case WAND_PARALYSIS:       return SPELL_PARALYSE;
-    case WAND_FIRE:            return SPELL_BOLT_OF_FIRE;
-    case WAND_COLD:            return SPELL_BOLT_OF_COLD;
-    case WAND_CONFUSION:       return SPELL_CONFUSE;
-    case WAND_INVISIBILITY:    return SPELL_INVISIBILITY;
-    case WAND_TELEPORTATION:   return SPELL_TELEPORT_OTHER;
-    case WAND_LIGHTNING:       return SPELL_LIGHTNING_BOLT;
-    case WAND_DRAINING:        return SPELL_BOLT_OF_DRAINING;
-    case WAND_DISINTEGRATION:  return SPELL_DISINTEGRATE;
-    case WAND_POLYMORPH:       return SPELL_POLYMORPH;
-    case WAND_DIGGING:         return SPELL_DIG;
-    case WAND_ENSLAVEMENT:     return SPELL_ENSLAVEMENT;
-    default:                   return SPELL_NO_SPELL;
-    }
-}

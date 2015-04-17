@@ -1789,6 +1789,8 @@ string mutation_desc(mutation_type mut, int level, bool colour,
         ostr << mdef.have[0] << player_icemail_armour_class() << ").";
         result = ostr.str();
     }
+    else if (!ignore_player && you.species == SP_FELID && mut == MUT_CLAWS)
+        result = "You have sharp claws.";
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 

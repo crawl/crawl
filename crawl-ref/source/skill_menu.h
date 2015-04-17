@@ -175,6 +175,7 @@ private:
     void init_title();
     void init_switches();
     void refresh_display();
+    void refresh_help_button();
     void refresh_names();
     void set_default_help();
     void set_help(string msg);

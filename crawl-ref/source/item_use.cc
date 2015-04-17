@@ -2375,7 +2375,7 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
-    if (you.stat_zero[STAT_INT])
+    if (you.duration[DUR_BRAINLESS])
     {
         mpr("Reading books requires mental cohesion, which you lack.");
         return;
@@ -2605,12 +2605,22 @@ void read(int slot)
         return;
     }
 
+    // need to handle this before we waste time (with e.g. blurryvis)
+    if (scroll.sub_type == SCR_BLINKING && item_type_known(scroll)
+        && !allow_control_teleport(true)
+        && !yesno("Your blink will be uncontrolled - continue anyway?",
+                  false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
     zin_recite_interrupt();
 
-    if (you.stat_zero[STAT_INT] && !one_chance_in(5))
+    if (you.duration[DUR_BRAINLESS] && !one_chance_in(5))
     {
         mpr("You almost manage to decipher the scroll,"
             " but fail in this attempt.");
@@ -2621,6 +2631,14 @@ void read(int slot)
     // scroll effect kicks in.
     if (player_mutation_level(MUT_BLURRY_VISION))
     {
+        if (!i_feel_safe(false, false, true)
+            && !yesno("Really read with blurry vision while enemies are nearby?",
+                      false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+
         // takes 0.5, 1, 2 extra turns
         const int turns = max(1, player_mutation_level(MUT_BLURRY_VISION) - 1);
         start_delay(DELAY_BLURRY_SCROLL, turns, item_slot);
@@ -2689,13 +2707,6 @@ void read_scroll(int item_slot)
             cancel_scroll = (cast_controlled_blink(100, false,
                                                    safely_cancellable)
                              == SPRET_ABORT) && alreadyknown;
-        }
-        else if (alreadyknown
-                 && !yesno("Your blink will be uncontrolled - continue anyway?",
-                            false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            cancel_scroll = true;
         }
         else
             uncontrolled_blink();

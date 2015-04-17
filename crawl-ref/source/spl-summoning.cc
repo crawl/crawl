@@ -820,9 +820,8 @@ static bool _check_tukima_validity(const actor *target)
  *
  * @param pow               Spellpower.
  * @param target            The spell's target (monster or player)
- * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-static void _animate_weapon(int pow, actor* target, bool force_friendly)
+static void _animate_weapon(int pow, actor* target)
 {
     bool target_is_player = target == &you;
     item_def* wpn = target->weapon();
@@ -842,7 +841,7 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
     // If sac love, the weapon will go after you, not the target.
     const bool sac_love = player_mutation_level(MUT_NO_LOVE);
     // Self-casting haunts yourself! MUT_NO_LOVE overrides force friendly.
-    const bool friendly = (force_friendly || !target_is_player) && !sac_love;
+    const bool friendly = !target_is_player && !sac_love;
     const int dur = min(2 + (random2(pow) / 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
@@ -864,8 +863,8 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
         return;
     }
 
-    // Don't haunt yourself if the weapon is friendly or if sac love.
-    if (!force_friendly && !sac_love)
+    // Don't haunt yourself under sac love.
+    if (!sac_love)
     {
         mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
                                    INFINITE_DURATION));
@@ -911,16 +910,15 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
  *
  * @param pow               Spellpower.
  * @param where             The target grid.
- * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-void cast_tukimas_dance(int pow, actor* target, bool force_friendly)
+void cast_tukimas_dance(int pow, actor* target)
 {
     ASSERT(target);
 
     if (!_check_tukima_validity(target))
         return;
 
-    _animate_weapon(pow, target, force_friendly);
+    _animate_weapon(pow, target);
 }
 
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
@@ -2117,7 +2115,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     item_def& corpse = mitm[co];
     const int mon_number = _corpse_number(corpse);
     // How many simulacra can this particular monster give at maximum.
-    int num_sim  = 1 + random2(mons_weight(corpse.mon_type) / 150);
+    int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
     mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
@@ -2202,7 +2200,9 @@ bool monster_simulacrum(monster *mon, bool actual)
 
             int co = si->index();
             // Create half as many as the player version.
-            int how_many = 1 + random2(mons_weight(mitm[co].mon_type) / 300);
+            int how_many = 1 + random2(
+                                  div_rand_round(
+                                    max_corpse_chunks(mitm[co].mon_type), 2));
             how_many  = stepdown_value(how_many, 2, 2, 6, 6);
             bool was_draining = is_being_drained(*si);
             bool was_butchering = is_being_butchered(*si);
@@ -2286,7 +2286,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     for (radius_iterator ri(caster->pos(), LOS_NO_TRANS); ri; ++ri)
     {
         int num_corpses = 0;
-        int total_mass = 0;
+        int total_max_chunks = 0;
         const bool visible = you.see_cell(*ri);
 
         // Count up number/size of corpses at this location.
@@ -2305,7 +2305,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                 if (mons_class_holiness(si->mon_type) == MH_HOLY)
                     num_holy++;
 
-                total_mass += mons_weight(si->mon_type);
+                total_max_chunks += max_corpse_chunks(si->mon_type);
 
                 ++num_corpses;
                 item_was_destroyed(*si);
@@ -2316,9 +2316,8 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         if (!actual || num_corpses == 0)
             continue;
 
-        // 20 aum per HD at max power; 30 at 100 power; and 60 at 0 power.
-        // 10 aum per HD at 500 power (monster version).
-        int hd = div_rand_round((pow + 100) * total_mass, (200*300));
+        // 3 HD per 2 max chunks at 500 power.
+        int hd = div_rand_round((pow + 100) * total_max_chunks, 400);
 
         if (hd <= 0)
         {

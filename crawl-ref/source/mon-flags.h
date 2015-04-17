@@ -8,9 +8,11 @@
 // constants.
 const uint64_t M_NO_FLAGS = 0;
 
-                                   //1<< 0;
+// monster eats items off the floor
+const uint64_t M_EAT_ITEMS         = 1<< 0;
 
-                                   //1<< 1;
+// monster crashes through doors rather than opening
+const uint64_t M_CRASH_DOORS       = 1<< 1;
 
                                    //1<< 2;
 

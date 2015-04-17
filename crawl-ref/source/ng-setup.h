@@ -18,5 +18,4 @@ void newgame_make_item(int slot, equipment_type eqslot,
 
 struct newgame_def;
 void setup_game(const newgame_def& ng);
-void unfocus_stats();
 #endif

@@ -1,0 +1,9 @@
+# Changes for 0.16 include glyph colour changes.
+
+###########################
+# monsters
+###########################
+
+mon_glyph += wyvern : lightred D
+mon_glyph += fire dragon : green D
+mon_glyph += redback : red s
