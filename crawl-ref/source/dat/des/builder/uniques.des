@@ -490,7 +490,7 @@ DEPTH:   D:2-7
 TAGS:    place_unique no_monster_gen no_item_gen
 MONS:    Crazy Yiuf
 MONS:    fungus / bush w:1
-ITEM:    hammer
+ITEM:    hammer, good_item hammer
 # Randomisation 1: Some chance for a gate.
 SHUFFLE: Bb/Aa
 SUBST:   B=;, b=;
@@ -512,6 +512,9 @@ SUBST:   ; = .:10 d:2
 SUBST:   t="
 : end
 SUBST:   ':.......' , "=' , ':d' , '=..d
+: if crawl.one_chance_in(5) then
+NSUBST: d = 1:e
+: end
 # Randomisation 5: trees or rock
 SUBST:   t : ttx
 MAP
