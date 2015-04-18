@@ -496,7 +496,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 ///////////////////////////////////////////////////
 
 // XXX: Always getting maximal vampiric drain is hardcoded in
-// melee_attack::apply_damage_brand()
+// attack::apply_damage_brand()
 
 static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
@@ -1319,4 +1319,17 @@ static void _ETERNAL_TORMENT_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _ETERNAL_TORMENT_unequip(item_def *item, bool *show_msgs)
 {
     calc_hp();
+}
+
+///////////////////////////////////////////////////
+
+// Vampiric effect triggers on every hit, see attack::apply_damage_brand()
+
+static void _LEECH_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (you.undead_state() == US_ALIVE && !you_foodless())
+        _equip_mpr(show_msgs, "You feel a powerful hunger.");
+    else if (you.species != SP_VAMPIRE)
+        _equip_mpr(show_msgs, "You feel very empty.");
+    // else let player-equip.cc handle message
 }
