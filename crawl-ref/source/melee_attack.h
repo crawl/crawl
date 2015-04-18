@@ -161,8 +161,7 @@ private:
     int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
                                  bool vampiric = false);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
-                                     bool needs_bite_msg = false,
-                                     int reduction = 1);
+                                     bool needs_bite_msg = false);
     bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach();

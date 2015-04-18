@@ -30,6 +30,7 @@
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-cast.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -1383,17 +1384,6 @@ monster_type transform_mons()
     return get_form()->get_equivalent_mons();
 }
 
-static bool _abort_or_fizzle(bool just_check)
-{
-    if (!just_check && you.turn_is_over)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        move_player_to_grid(you.pos(), false);
-        return true; // pay the necessary costs
-    }
-    return false; // SPRET_ABORT
-}
-
 string blade_parts(bool terse)
 {
     string str;
@@ -1640,11 +1630,71 @@ static void _print_head_change_message(int old_heads, int new_heads)
         mpr("A new head grows.");
 }
 
-// Transforms you into the specified form. If involuntary, checks for
-// inscription warnings are skipped, and the transformation fails silently
-// (if it fails). If just_check is true the transformation doesn't actually
-// happen, but the method returns whether it would be successful.
-bool transform(int pow, transformation_type which_trans, bool involuntary,
+/**
+ * Is the player alive enough to become the given form?
+ *
+ * All undead can enter shadow form; vampires also can enter batform, and, when
+ * full, other forms (excepting lichform).
+ *
+ * @param which_trans   The tranformation which the player is undergoing.
+ * @return              True if the player is not blocked from entering the
+ *                      given form by their undead race; false otherwise.
+ */
+static bool _player_alive_enough_for(transformation_type which_trans)
+{
+    if (!you.undead_state(false))
+        return true; // not undead!
+
+    if (which_trans == TRAN_NONE)
+        return true; // everything can become itself
+
+    if (which_trans == TRAN_SHADOW)
+        return true; // even the undead can use dith's shadow form
+
+    if (you.species != SP_VAMPIRE)
+        return false; // ghouls & mummies can't become anything else, though
+
+    if (which_trans == TRAN_LICH)
+        return false; // vampires can never lichform
+
+    if (which_trans == TRAN_BAT)
+        return true; // ...but they can always batform.
+
+    // other forms can only be entered when full or above.
+    return you.hunger_state > HS_SATIATED;
+
+}
+
+/**
+ * Attempts to transform the player into the specified form.
+ *
+ * If the player is already in that form, attempt to refresh its duration and
+ * power.
+ *
+ * @param pow               Thw power of the transformation (equivalent to
+ *                          spellpower of form spells)
+ * @param which_trans       The form which the player should become.
+ * @param involuntary       Checks for inscription warnings are skipped, and
+ *                          failure is silent.
+ * @param just_check        A dry run; just check to see whether the player
+ *                          *can* enter the given form, but don't actually
+ *                          transform them.
+ * @return                  A spret_type corresponding to the results of the
+ *                          transformation.
+ *                          If the player was transformed, or if their form's
+ *                          duration was refreshed, SPRET_SUCCESS.
+ *                          If the transformation failed at no cost in
+ *                          time or resources, SPRET_ABORT.
+ *                          If the transformation was prevented but still costs
+ *                          time and resources, SPRET_FAIL.
+ *                          Never returns SPRET_NONE.
+ *                          If just_check is set, returns SPRET_SUCCESS if
+ *                          the player could enter the form and SPRET_ABORT
+ *                          otherwise.
+ *                          XXX: it might be possible to simplify this to a
+ *                          bool...
+ */
+int transform(int pow, transformation_type which_trans, bool involuntary,
                bool just_check)
 {
     const transformation_type previous_trans = you.form;
@@ -1655,7 +1705,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
-        return false;
+        return SPRET_ABORT;
     }
 
     if (!involuntary && crawl_state.is_god_acting())
@@ -1665,20 +1715,20 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     {
         if (!involuntary)
             mpr("You are stuck in your current form!");
-        return false;
+        return SPRET_ABORT;
     }
 
     if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
         involuntary))
     {
-        return false;
+        return SPRET_ABORT;
     }
 
     // This must occur before the untransform() and the undead_state() check.
-    if (previous_trans == which_trans)
+    if (previous_trans == which_trans && !just_check)
     {
         // update power
-        if (!just_check && which_trans != TRAN_NONE)
+        if (which_trans != TRAN_NONE)
         {
             you.props[TRANSFORM_POW_KEY] = pow;
             you.redraw_armour_class = true;
@@ -1696,50 +1746,40 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         int dur = _transform_duration(which_trans, pow);
         if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
         {
-            if (just_check)
-                return true;
-
             mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
-            return true;
+            return SPRET_SUCCESS;
         }
         else
         {
             if (!involuntary && which_trans != TRAN_NONE)
                 mpr("You fail to extend your transformation any further.");
-            return false;
+            return SPRET_FAIL;
         }
     }
 
-    // The actual transformation may still fail later (e.g. due to cursed
-    // equipment). Ideally, untransforming should cost a turn but nothing
-    // else (as does the "End Transformation" ability). As it is, you
-    // pay with mana and hunger if you already untransformed.
-    if (!just_check && previous_trans != TRAN_NONE)
-        untransform(true);
-
-    // Catch some conditions which prevent transformation.
-    if (you.undead_state()
-        && which_trans != TRAN_SHADOW
-        && (you.species != SP_VAMPIRE
-            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED
-            || which_trans == TRAN_LICH))
+    // the undead cannot enter most forms.
+    if (!_player_alive_enough_for(which_trans))
     {
         if (!involuntary)
             mpr("Your unliving flesh cannot be transformed in this way.");
-        return _abort_or_fizzle(just_check);
+        return SPRET_ABORT;
     }
 
     if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
         if (!involuntary)
-        {
-            mpr("The transformation conflicts with an enchantment "
-                "already in effect.");
-        }
-        return _abort_or_fizzle(just_check);
+            mpr("You cannot become a lich while in Death's Door.");
+        return SPRET_ABORT;
     }
+
+    // The actual transformation may still fail later.
+    // Ideally, untransforming should cost a turn but nothing
+    // else (as does the "End Transformation" ability). As it is, you
+    // pay with mana and hunger if you already untransformed.
+    if (!just_check && previous_trans != TRAN_NONE)
+        untransform(true);
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
@@ -1747,7 +1787,13 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     {
         if (!involuntary)
             mpr("Your temperature is too high to benefit from that spell.");
-        return _abort_or_fizzle(just_check);
+
+        if (!just_check && you.turn_is_over)
+        {
+            move_player_to_grid(you.pos(), false);
+            return SPRET_FAIL; // pay the necessary costs
+        }
+        return SPRET_ABORT;
     }
 #endif
 
@@ -1760,7 +1806,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         {
             if (!involuntary)
                 mpr("You have no appropriate body parts free.");
-            return false;
+            return SPRET_ABORT;
         }
 
         if (!just_check)
@@ -1771,11 +1817,11 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     if (!involuntary && just_check && !check_form_stat_safety(which_trans))
-        return false;
+        return SPRET_ABORT;
 
     // If we're just pretending return now.
     if (just_check)
-        return true;
+        return SPRET_SUCCESS;
 
     // Switching between forms takes a bit longer.
     if (!involuntary && previous_trans != TRAN_NONE
@@ -1982,7 +2028,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
                           transform_name(which_trans)).c_str());
     }
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 /**

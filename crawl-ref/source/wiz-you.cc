@@ -1028,7 +1028,7 @@ void wizard_transform()
     }
 
     you.transform_uncancellable = false;
-    if (!transform(200, form) && you.form != form)
+    if (transform(200, form) != SPRET_SUCCESS && you.form != form)
         mpr("Transformation failed.");
 }
 

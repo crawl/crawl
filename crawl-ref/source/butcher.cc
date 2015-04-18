@@ -454,10 +454,7 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
 
 bool can_bottle_blood_from_corpse(monster_type mons_class)
 {
-    if (you.species != SP_VAMPIRE || !mons_has_blood(mons_class))
-        return false;
-
-    return mons_corpse_effect(mons_class) == CE_CLEAN;
+    return you.species == SP_VAMPIRE && mons_has_blood(mons_class);
 }
 
 int num_blood_potions_from_corpse(monster_type mons_class)

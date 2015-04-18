@@ -1180,8 +1180,9 @@ bool draw_three(int slot)
             mpr("You draw... (choose one card, ? for their descriptions)");
             for (int i = 0; i < num_to_draw; ++i)
             {
-                msg::streams(MSGCH_PROMPT) << (static_cast<char>(i + 'a')) << " - "
-                                           << card_name(draws[i]) << endl;
+                msg::streams(MSGCH_PROMPT)
+                    << msg::nocap << (static_cast<char>(i + 'a')) << " - "
+                    << card_name(draws[i]) << endl;
             }
             need_prompt_redraw = false;
         }
@@ -3090,12 +3091,15 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_SWINE:
-        if (!transform(5 + power/10 + random2(power/10), TRAN_PIG, true))
-        {
-            mpr("You feel like a pig.");
-            break;
-        }
+    {
+        const int piggified = transform(5 + power/10 + random2(power/10),
+                                        TRAN_PIG, true);
+        if (piggified == SPRET_SUCCESS)
+            you.transform_uncancellable = true;
+        else
+            mpr("You feel a momentary urge to oink.");
         break;
+    }
 
 #if TAG_MAJOR_VERSION == 34
     case CARD_SHUFFLE:
