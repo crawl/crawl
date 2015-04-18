@@ -41,7 +41,7 @@
 #include "terrain.h"
 #include "version.h"
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
 static FILE *stat_outf;
 const static char *stat_out_prefix = "objstat_";
 const static char *stat_out_ext = ".txt";
@@ -1274,4 +1274,4 @@ void objstat_generate_stats()
         printf("Object statistics complete.\n");
     }
 }
-#endif // DEBUG_DIAGNOSTICS
+#endif // DEBUG_STATISTICS
