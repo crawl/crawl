@@ -15,7 +15,7 @@
 #include "ctest.h"
 #include "database.h"
 #include "dbg-maps.h"
-#include "dbg-scan.h"
+#include "dbg-objstat.h"
 #include "dungeon.h"
 #include "end.h"
 #include "exclude.h"

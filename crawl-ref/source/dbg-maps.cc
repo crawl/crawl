@@ -10,7 +10,7 @@
 #include "branch.h"
 #include "chardump.h"
 #include "crash.h"
-#include "dbg-scan.h"
+#include "dbg-objstat.h"
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
