@@ -7400,7 +7400,7 @@ bool player::polymorph(int pow)
         f = TRAN_NONE;
     }
 
-    if (f && transform(pow, f))
+    if (f && transform(pow, f) == SPRET_SUCCESS)
     {
         transform_uncancellable = true;
         return true;

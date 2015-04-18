@@ -1338,7 +1338,7 @@ static void _jiyva_tmut()
     const transformation_type form = random_choose(TRAN_BAT, TRAN_STATUE,
                                                    TRAN_SPIDER);
 
-    if (transform(random2(you.penance[god]) * 2, form, true))
+    if (transform(random2(you.penance[god]) * 2, form, true) == SPRET_SUCCESS)
         you.transform_uncancellable = true;
 }
 
