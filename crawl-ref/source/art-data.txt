@@ -1213,7 +1213,7 @@ PLUS:    +3
 COLOUR:  ETC_DARK
 TILE:    urand_eternal_torment
 TILE_EQ: eternal_torment
-INSCRIP: rTorment
+INSCRIP: rTorment HP--
 LIFE:    3
 CURSED:  1
 BOOL:    evil, seeinv
