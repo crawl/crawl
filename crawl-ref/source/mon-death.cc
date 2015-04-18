@@ -450,10 +450,10 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     const monster_type corpse_class = fill_out_corpse(mons, mons->type,
                                                       corpse);
 
-    // Corpseless monsters still drop gold for gozag
+    // Corpseless monsters still drop gold for Gozag.
     if (corpse_class == MONS_NO_MONSTER)
     {
-        if (in_good_standing(GOD_GOZAG) && coinflip())
+        if (in_good_standing(GOD_GOZAG))
             goldify_corpse(corpse);
         else
             return -1;
