@@ -1384,27 +1384,6 @@ monster_type transform_mons()
     return get_form()->get_equivalent_mons();
 }
 
-/**
- * Check whether an invalid transformation should take time, and perform a
- * check for terrain effects if so. (Since we just untransformed and haven't
- * yet checked for terrain effects, since we were expecting to be able to
- * switch another form first.)
- *
- * @param just_check    Whether this is an actual attempt at transforming,
- *                      or just a dry run (which should never take time).
- * @return              SPRET_ABORT if the failure is free;
- *                      SPRET_FAIL otherwise.
- */
-static spret_type _abort_or_fizzle(bool just_check)
-{
-    if (!just_check && you.turn_is_over)
-    {
-        move_player_to_grid(you.pos(), false);
-        return SPRET_FAIL; // pay the necessary costs
-    }
-    return SPRET_ABORT;
-}
-
 string blade_parts(bool terse)
 {
     string str;
@@ -1652,6 +1631,41 @@ static void _print_head_change_message(int old_heads, int new_heads)
 }
 
 /**
+ * Is the player alive enough to become the given form?
+ *
+ * All undead can enter shadow form; vampires also can enter batform, and, when
+ * full, other forms (excepting lichform).
+ *
+ * @param which_trans   The tranformation which the player is undergoing.
+ * @return              True if the player is not blocked from entering the
+ *                      given form by their undead race; false otherwise.
+ */
+static bool _player_alive_enough_for(transformation_type which_trans)
+{
+    if (!you.undead_state(false))
+        return true; // not undead!
+
+    if (which_trans == TRAN_NONE)
+        return true; // everything can become itself
+
+    if (which_trans == TRAN_SHADOW)
+        return true; // even the undead can use dith's shadow form
+
+    if (you.species != SP_VAMPIRE)
+        return false; // ghouls & mummies can't become anything else, though
+
+    if (which_trans == TRAN_LICH)
+        return false; // vampires can never lichform
+
+    if (which_trans == TRAN_BAT)
+        return true; // ...but they can always batform.
+
+    // other forms can only be entered when full or above.
+    return you.hunger_state > HS_SATIATED;
+
+}
+
+/**
  * Attempts to transform the player into the specified form.
  *
  * If the player is already in that form, attempt to refresh its duration and
@@ -1677,6 +1691,8 @@ static void _print_head_change_message(int old_heads, int new_heads)
  *                          If just_check is set, returns SPRET_SUCCESS if
  *                          the player could enter the form and SPRET_ABORT
  *                          otherwise.
+ *                          XXX: it might be possible to simplify this to a
+ *                          bool...
  */
 int transform(int pow, transformation_type which_trans, bool involuntary,
                bool just_check)
@@ -1743,34 +1759,27 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
         }
     }
 
-    // The actual transformation may still fail later (e.g. due to cursed
-    // equipment). Ideally, untransforming should cost a turn but nothing
-    // else (as does the "End Transformation" ability). As it is, you
-    // pay with mana and hunger if you already untransformed.
-    if (!just_check && previous_trans != TRAN_NONE)
-        untransform(true);
-
-    // Catch some conditions which prevent transformation.
-    if (you.undead_state()
-        && which_trans != TRAN_SHADOW
-        && (you.species != SP_VAMPIRE
-            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED
-            || which_trans == TRAN_LICH))
+    // the undead cannot enter most forms.
+    if (!_player_alive_enough_for(which_trans))
     {
         if (!involuntary)
             mpr("Your unliving flesh cannot be transformed in this way.");
-        return _abort_or_fizzle(just_check);
+        return SPRET_ABORT;
     }
 
     if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
         if (!involuntary)
-        {
-            mpr("The transformation conflicts with an enchantment "
-                "already in effect.");
-        }
-        return _abort_or_fizzle(just_check);
+            mpr("You cannot become a lich while in Death's Door.");
+        return SPRET_ABORT;
     }
+
+    // The actual transformation may still fail later.
+    // Ideally, untransforming should cost a turn but nothing
+    // else (as does the "End Transformation" ability). As it is, you
+    // pay with mana and hunger if you already untransformed.
+    if (!just_check && previous_trans != TRAN_NONE)
+        untransform(true);
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
@@ -1778,7 +1787,13 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
     {
         if (!involuntary)
             mpr("Your temperature is too high to benefit from that spell.");
-        return _abort_or_fizzle(just_check);
+
+        if (!just_check && you.turn_is_over)
+        {
+            move_player_to_grid(you.pos(), false);
+            return SPRET_FAIL; // pay the necessary costs
+        }
+        return SPRET_ABORT;
     }
 #endif
 
