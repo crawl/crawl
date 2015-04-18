@@ -4842,7 +4842,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_MAPSTAT:
         case CLO_OBJSTAT:
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
             if (o == CLO_MAPSTAT)
                 crawl_state.map_stat_gen = true;
             else
@@ -4863,11 +4863,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 #else
             fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_DIAGNOSTICS builds.\n");
+                    "DEBUG_STATISTICS builds.\n");
             end(1);
 #endif
         case CLO_ITERATIONS:
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
             if (!next_is_param || !isadigit(*next_arg))
             {
                 fprintf(stderr, "Integer argument required for -%s\n", arg);
@@ -4884,7 +4884,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
 #else
             fprintf(stderr, "mapstat and objstat are available only in "
-                    "DEBUG_DIAGNOSTICS builds.\n");
+                    "DEBUG_STATISTICS builds.\n");
             end(1);
 #endif
             break;

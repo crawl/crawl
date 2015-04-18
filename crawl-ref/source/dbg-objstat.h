@@ -6,7 +6,7 @@
 #ifndef DBGOBJSTAT_H
 #define DBGOBJSTAT_H
 
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_STATISTICS
 void objstat_record_item(item_def &item);
 void objstat_generate_stats();
 void objstat_record_monster(monster *mons);
