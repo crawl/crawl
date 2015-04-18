@@ -3760,8 +3760,6 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         return false;
     }
 
-    const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
-
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && you.form != TRAN_BAT)
     {
@@ -3778,9 +3776,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Regain hp.
     if (you.hp < you.hp_max)
     {
-        int heal = 1 + random2(damage);
-        if (chunk_type == CE_CLEAN)
-            heal += 1 + random2(damage);
+        int heal = 2 + random2(damage) + random2(damage);
         if (heal > you.experience_level)
             heal = you.experience_level;
 
@@ -3798,9 +3794,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     // Gain nutrition.
     if (you.hunger_state != HS_ENGORGED)
     {
-        int food_value = 0;
-        if (chunk_type == CE_CLEAN)
-            food_value = 30 + random2avg(59, 2);
+        int food_value = 30 + random2avg(59, 2);
 
         // Bats get rather less nutrition out of it.
         if (you.form == TRAN_BAT)
@@ -3816,20 +3810,8 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
-    if (you.species != SP_VAMPIRE)
-        return false;
-
-    if (you.hunger_state == HS_ENGORGED)
-        return false;
-
-    if (mon->is_summoned())
-        return false;
-
-    if (!mons_has_blood(mon->type))
-        return false;
-
-    const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
-
-    // Don't drink mutagenic or rotten blood.
-    return chunk_type == CE_CLEAN;
+    return you.species == SP_VAMPIRE
+           && you.hunger_state < HS_ENGORGED
+           && !mon->is_summoned()
+           && mons_has_blood(mon->type);
 }
