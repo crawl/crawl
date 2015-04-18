@@ -401,10 +401,6 @@ public:
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 
-  // Did you spent this turn walking (/flying)?
-  // 0 = no, 1 = cardinal move, 2 = diagonal move
-  int walking;
-
   // View code clears and needs new data in places where we can't announce the
   // portal right away; delay the announcements then.
   int seen_portals;
