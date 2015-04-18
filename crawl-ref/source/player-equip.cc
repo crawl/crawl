@@ -1056,8 +1056,7 @@ static void _remove_amulet_of_faith(item_def &item)
         if (you_worship(GOD_GOZAG))
         {
             you.attribute[ATTR_GOZAG_SHOPS]   += 2;
-
-            simple_god_message(" increases your offered prices.");
+            simple_god_message("'s merchants increase their required prices.");
             return;
         }
 
