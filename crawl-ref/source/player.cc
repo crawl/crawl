@@ -1281,7 +1281,7 @@ int player_hunger_rate(bool temp)
 
     // If Cheibriados has slowed your life processes, you will hunger less.
     if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
-        hunger = hunger * 3 / 4;
+        hunger /= 2;
 
     if (hunger < 1)
         hunger = 1;
@@ -5374,7 +5374,6 @@ void player::init()
 
     reset_escaped_death();
     on_current_level    = true;
-    walking             = 0;
     seen_portals        = 0;
     seen_invis          = false;
     frame_no            = 0;

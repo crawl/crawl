@@ -63,6 +63,7 @@
 #include "place.h"
 #include "religion.h"
 #include "skills.h"
+#include "species.h"
 #include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
@@ -2787,6 +2788,9 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_MP_WANDS] = 1;
     }
 #endif
+
+    // normally this does nothing but it's simpler than adding a tag
+    give_basic_mutations(you.species);
 
     count = unmarshallUByte(th);
     you.demonic_traits.clear();
