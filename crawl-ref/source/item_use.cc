@@ -2635,6 +2635,7 @@ void read(int slot)
             && !yesno("Really read with blurry vision while enemies are nearby?",
                       false, 'n'))
         {
+            you.turn_is_over = false;
             canned_msg(MSG_OK);
             return;
         }
