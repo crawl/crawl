@@ -4348,8 +4348,6 @@ bool gozag_potion_petition()
 
     if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
         you.attribute[ATTR_GOZAG_FIRST_POTION] = 1;
-    else
-        you.attribute[ATTR_GOZAG_POTIONS]++;
 
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
