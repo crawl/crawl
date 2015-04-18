@@ -763,12 +763,12 @@ int prompt_eat_chunks(bool only_auto)
             if (!mons_has_blood(si->mon_type))
                 continue;
         }
-        else if (si->base_type != OBJ_FOOD || si->sub_type != FOOD_CHUNK)
+        else if (si->base_type != OBJ_FOOD
+                 || si->sub_type != FOOD_CHUNK
+                 || is_bad_food(*si))
+        {
             continue;
-
-        // Don't prompt for bad food types.
-        if (is_bad_food(*si))
-            continue;
+        }
 
         found_valid = true;
         chunks.push_back(&(*si));
@@ -1143,7 +1143,6 @@ void finished_eating_message(int food_type)
 void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 {
     const monster_type mons_type = corpse.mon_type;
-    const corpse_effect_type chunk_type = determine_chunk_effect(corpse);
 
     // Duration depends on corpse weight.
     const int max_chunks = max_corpse_chunks(mons_type);
@@ -1165,36 +1164,14 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
     else if (feeding > 0)
         end_feeding = true;
 
-    switch (chunk_type)
+    if (start_feeding)
     {
-        case CE_CLEAN:
-            if (start_feeding)
-            {
-                mprf("This %sblood tastes delicious!",
-                     mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
-                                                              : "");
-            }
-            else if (end_feeding && corpse.special > 150)
-                _heal_from_food(1);
-            break;
-
-        case CE_MUTAGEN:
-            food_value /= 2;
-            if (start_feeding)
-                mpr("This blood tastes really weird!");
-            mutate(RANDOM_MUTATION, "mutagenic blood");
-            did_god_conduct(DID_DELIBERATE_MUTATING, 10);
-            xom_is_stimulated(100);
-            // Sometimes heal by one hp.
-            if (end_feeding && corpse.special > 150 && coinflip())
-                _heal_from_food(1);
-            break;
-
-        case CE_NOXIOUS:
-        case CE_NOCORPSE:
-            mprf(MSGCH_ERROR, "This blood (%d) tastes buggy!", chunk_type);
-            return;
+        mprf("This %sblood tastes delicious!",
+             mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
+                                                      : "");
     }
+    else if (end_feeding && corpse.special > 150)
+        _heal_from_food(1);
 
     if (!end_feeding)
         lessen_hunger(food_value / duration, !start_feeding);
@@ -1403,7 +1380,7 @@ corpse_effect_type determine_chunk_effect(const item_def &carrion)
 
 /**
  * Determine the 'effective' chunk type for a given input for the player.
- * E.g., ghouls treat rotting and mutagenic chunks as normal chunks.
+ * E.g., ghouls/vampires treat rotting and mutagenic chunks as normal chunks.
  *
  * @param chunktype     The actual chunk type.
  * @return              A chunk type corresponding to the effect eating a chunk
@@ -1415,7 +1392,7 @@ corpse_effect_type determine_chunk_effect(corpse_effect_type chunktype)
     {
     case CE_NOXIOUS:
     case CE_MUTAGEN:
-        if (you.species == SP_GHOUL)
+        if (you.species == SP_GHOUL || you.species == SP_VAMPIRE)
             chunktype = CE_CLEAN;
         break;
 
