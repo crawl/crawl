@@ -388,7 +388,8 @@ experiments.
 %%%%
 fencer's gloves
 
-A pair of gloves made of white silk.
+A pair of gloves made of white silk. They greatly enhance their wearer's
+skill with blades.
 %%%%
 cloak of Starlight
 
@@ -598,5 +599,7 @@ Perhaps you could wear it on your head?
 %%%%
 crown of Eternal Torment
 
-A gold crown set with jet-black gems.
+A gold crown set with jet-black gems. It permanently afflicts its wearer with
+agonising pain, substantially reducing their resilience but rendering them
+immune to further torments.
 %%%%

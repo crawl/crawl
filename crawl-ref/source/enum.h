@@ -468,7 +468,9 @@ enum attribute_type
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
     ATTR_NEXT_DRAGON_TIME,     // aut remaining until Dragon's Call summons another
     ATTR_GOLD_GENERATED,       // Count gold generated this game.
+#if TAG_MAJOR_VERSION == 34
     ATTR_GOZAG_POTIONS,        // Number of times you've bought potions from Gozag.
+#endif
     ATTR_GOZAG_SHOPS,          // Number of shops you've funded from Gozag.
     ATTR_GOZAG_SHOPS_CURRENT,  // As above, but since most recent time worshipping.
 #if TAG_MAJOR_VERSION == 34

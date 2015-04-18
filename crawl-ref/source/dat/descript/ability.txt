@@ -579,8 +579,7 @@ your skills will be further drained when taking damage.
 Potion Petition ability
 
 Petition Gozag to sell you the effects of a set of potions. Gozag will offer
-three lists at a time, with varying prices. Prices will slowly increase as you
-purchase potions.
+three lists at a time, with varying prices.
 %%%%
 Call Merchant ability
 
