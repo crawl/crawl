@@ -30,6 +30,7 @@
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-cast.h"
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -1383,15 +1384,25 @@ monster_type transform_mons()
     return get_form()->get_equivalent_mons();
 }
 
-static bool _abort_or_fizzle(bool just_check)
+/**
+ * Check whether an invalid transformation should take time, and perform a
+ * check for terrain effects if so. (Since we just untransformed and haven't
+ * yet checked for terrain effects, since we were expecting to be able to
+ * switch another form first.)
+ *
+ * @param just_check    Whether this is an actual attempt at transforming,
+ *                      or just a dry run (which should never take time).
+ * @return              SPRET_ABORT if the failure is free;
+ *                      SPRET_FAIL otherwise.
+ */
+static spret_type _abort_or_fizzle(bool just_check)
 {
     if (!just_check && you.turn_is_over)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
         move_player_to_grid(you.pos(), false);
-        return true; // pay the necessary costs
+        return SPRET_FAIL; // pay the necessary costs
     }
-    return false; // SPRET_ABORT
+    return SPRET_ABORT;
 }
 
 string blade_parts(bool terse)
@@ -1640,11 +1651,34 @@ static void _print_head_change_message(int old_heads, int new_heads)
         mpr("A new head grows.");
 }
 
-// Transforms you into the specified form. If involuntary, checks for
-// inscription warnings are skipped, and the transformation fails silently
-// (if it fails). If just_check is true the transformation doesn't actually
-// happen, but the method returns whether it would be successful.
-bool transform(int pow, transformation_type which_trans, bool involuntary,
+/**
+ * Attempts to transform the player into the specified form.
+ *
+ * If the player is already in that form, attempt to refresh its duration and
+ * power.
+ *
+ * @param pow               Thw power of the transformation (equivalent to
+ *                          spellpower of form spells)
+ * @param which_trans       The form which the player should become.
+ * @param involuntary       Checks for inscription warnings are skipped, and
+ *                          failure is silent.
+ * @param just_check        A dry run; just check to see whether the player
+ *                          *can* enter the given form, but don't actually
+ *                          transform them.
+ * @return                  A spret_type corresponding to the results of the
+ *                          transformation.
+ *                          If the player was transformed, or if their form's
+ *                          duration was refreshed, SPRET_SUCCESS.
+ *                          If the transformation failed at no cost in
+ *                          time or resources, SPRET_ABORT.
+ *                          If the transformation was prevented but still costs
+ *                          time and resources, SPRET_FAIL.
+ *                          Never returns SPRET_NONE.
+ *                          If just_check is set, returns SPRET_SUCCESS if
+ *                          the player could enter the form and SPRET_ABORT
+ *                          otherwise.
+ */
+int transform(int pow, transformation_type which_trans, bool involuntary,
                bool just_check)
 {
     const transformation_type previous_trans = you.form;
@@ -1655,7 +1689,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
-        return false;
+        return SPRET_ABORT;
     }
 
     if (!involuntary && crawl_state.is_god_acting())
@@ -1665,20 +1699,20 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     {
         if (!involuntary)
             mpr("You are stuck in your current form!");
-        return false;
+        return SPRET_ABORT;
     }
 
     if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
         involuntary))
     {
-        return false;
+        return SPRET_ABORT;
     }
 
     // This must occur before the untransform() and the undead_state() check.
-    if (previous_trans == which_trans)
+    if (previous_trans == which_trans && !just_check)
     {
         // update power
-        if (!just_check && which_trans != TRAN_NONE)
+        if (which_trans != TRAN_NONE)
         {
             you.props[TRANSFORM_POW_KEY] = pow;
             you.redraw_armour_class = true;
@@ -1696,19 +1730,16 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         int dur = _transform_duration(which_trans, pow);
         if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
         {
-            if (just_check)
-                return true;
-
             mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
-            return true;
+            return SPRET_SUCCESS;
         }
         else
         {
             if (!involuntary && which_trans != TRAN_NONE)
                 mpr("You fail to extend your transformation any further.");
-            return false;
+            return SPRET_FAIL;
         }
     }
 
@@ -1760,7 +1791,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         {
             if (!involuntary)
                 mpr("You have no appropriate body parts free.");
-            return false;
+            return SPRET_ABORT;
         }
 
         if (!just_check)
@@ -1771,11 +1802,11 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     if (!involuntary && just_check && !check_form_stat_safety(which_trans))
-        return false;
+        return SPRET_ABORT;
 
     // If we're just pretending return now.
     if (just_check)
-        return true;
+        return SPRET_SUCCESS;
 
     // Switching between forms takes a bit longer.
     if (!involuntary && previous_trans != TRAN_NONE
@@ -1982,7 +2013,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
                           transform_name(which_trans)).c_str());
     }
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 /**
