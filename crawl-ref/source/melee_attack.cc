@@ -1384,7 +1384,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster(defender->as_monster(), &you);
 
-
         // Normal vampiric biting attack, not if already got stabbing special.
         if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
             && (!stab_attempt || stab_bonus <= 0))
@@ -1862,19 +1861,9 @@ bool melee_attack::player_monattk_hit_effects()
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
-        && damage_done > 0 && stab_attempt && stab_bonus > 0
-        && _player_vampire_draws_blood(defender->as_monster(),
-                                       damage_done, true))
+        && damage_done > 0 && stab_attempt && stab_bonus > 0)
     {
-        // No further effects.
-    }
-    else if (you.species == SP_VAMPIRE
-             && damage_brand == SPWPN_VAMPIRISM
-             && you.weapon()
-             && _player_vampire_draws_blood(defender->as_monster(),
-                                            damage_done, false, 5))
-    {
-        // No further effects.
+        _player_vampire_draws_blood(defender->as_monster(), damage_done, true);
     }
 
     if (!defender->alive())
@@ -3756,11 +3745,12 @@ int melee_attack::calc_damage()
  *
  * Should eventually remove in favor of player/monster symmetry
  *
- * Called when stabbing, for bite attacks, and vampires wielding vampiric weapons
+ * Called when stabbing and for bite attacks.
+ *
  * Returns true if blood was drawn.
  */
 bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int damage,
-                                               bool needs_bite_msg, int reduction)
+                                               bool needs_bite_msg)
 {
     ASSERT(you.species == SP_VAMPIRE);
 
@@ -3815,8 +3805,6 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         // Bats get rather less nutrition out of it.
         if (you.form == TRAN_BAT)
             food_value /= 2;
-
-        food_value /= reduction;
 
         lessen_hunger(food_value, false);
     }
