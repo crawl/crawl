@@ -41,7 +41,7 @@ static void _eat_chunk(item_def& food);
 static void _eating(item_def &food);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(int slot, bool invent);
-static void _heal_from_food(int hp_amt, bool unrot = false);
+static void _heal_from_food(int hp_amt);
 
 void make_hungry(int hunger_amount, bool suppress_msg,
                  bool magic)
@@ -990,7 +990,7 @@ static void _eat_chunk(item_def& food)
         {
             suppress_msg = true;
             const int hp_amt = 1 + random2avg(5 + you.experience_level, 3);
-            _heal_from_food(hp_amt, true);
+            _heal_from_food(hp_amt);
         }
 
         mprf("This raw flesh %s", _chunk_flavour_phrase(likes_chunks));
@@ -1170,8 +1170,6 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
              mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
                                                       : "");
     }
-    else if (end_feeding && corpse.special > 150)
-        _heal_from_food(1);
 
     if (!end_feeding)
         lessen_hunger(food_value / duration, !start_feeding);
@@ -1437,12 +1435,12 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     return true;
 }
 
-static void _heal_from_food(int hp_amt, bool unrot)
+static void _heal_from_food(int hp_amt)
 {
     if (hp_amt > 0)
         inc_hp(hp_amt);
 
-    if (unrot && player_rotted())
+    if (player_rotted())
     {
         mpr("You feel more resilient.");
         unrot_hp(1);
