@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\ability.cc" />
@@ -35,6 +35,7 @@
     <ClCompile Include="..\database.cc" />
     <ClCompile Include="..\dbg-asrt.cc" />
     <ClCompile Include="..\dbg-maps.cc" />
+    <ClCompile Include="..\dbg-objstat.cc" />
     <ClCompile Include="..\dbg-scan.cc" />
     <ClCompile Include="..\dbg-util.cc" />
     <ClCompile Include="..\decks.cc" />
@@ -347,6 +348,7 @@
     <ClInclude Include="..\database.h" />
     <ClInclude Include="..\dbg-crsh.h" />
     <ClInclude Include="..\dbg-maps.h" />
+    <ClInclude Include="..\dbg-objstat.h" />
     <ClInclude Include="..\dbg-scan.h" />
     <ClInclude Include="..\dbg-util.h" />
     <ClInclude Include="..\debug.h" />
