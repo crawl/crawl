@@ -4158,7 +4158,7 @@ int get_real_hp(bool trans, bool rotted)
         hitp = hitp * form_hp_mod() / 10;
 
     if (trans && player_equip_unrand(UNRAND_ETERNAL_TORMENT))
-        hitp = hitp * (100 - 35) / 100; // Not -50% because it has rN+++!
+        hitp = hitp * 4 / 5;
 
     return max(1, hitp);
 }
