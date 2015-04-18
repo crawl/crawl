@@ -332,8 +332,8 @@ bool check_awaken(monster* mons, int stealth)
         }
     }
 
-    if (mons_perc < 0)
-        mons_perc = 0;
+    if (mons_perc < 4)
+        mons_perc = 4;
 
     if (x_chance_in_y(mons_perc + 1, stealth))
         return true; // Oops, the monster wakes up!
