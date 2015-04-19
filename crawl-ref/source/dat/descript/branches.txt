@@ -274,6 +274,11 @@ distant relatives of the pharaohs, along with the corpses of their retainers
 and household animals. It is undoubtedly riddled with many traps, and its
 undead denizens are unlikely to take kindly to looting.
 %%%%
+Oubliette
+
+The oubliette is a dark, damp place where prisoners are left to rot. Rescuing
+such a poor fellow might open up opportunities for revenge and plunder!
+%%%%
 Bailey
 
 The bailey is the still-occupied and well-guarded fortress of an orcish lord.
