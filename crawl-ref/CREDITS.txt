@@ -99,6 +99,7 @@
     Joe Buzzelli
     Policarpo Caballero
     Can of Worms
+    Edgar Carballo
     Cedor
     Rahul Chandra
     Thom Chiovoloni
@@ -196,6 +197,7 @@
     Pedro
     Arlen Phillips
     Lemuel Pitkin
+    Iago Porto
     pubby
     Derek Ray
     Terence Reeves
