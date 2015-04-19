@@ -118,11 +118,11 @@ function oubliette_portal(e)
         feat_tile = "dngn_portal_oubliette",
         msg = messager })
   e.tags("uniq_oubliette no_monster_gen chance_oubliette")
-  e.chance(10000)                   # CHANGE TO 500 AFTER TESTING!
+  e.chance(10000)                   -- CHANGE TO 500 AFTER TESTING!
   e.kfeat("O = enter_oubliette")
-  e.colour("' = yellow")            # COPIED FROM OSSUARY
-  e.ftile("' = floor_sandstone")    # NEEDS SPECIFIC TILES!
-  e.tile("c = wall_tomb")           #
+  e.colour("' = yellow")            -- COPIED FROM OSSUARY
+  e.ftile("' = floor_sandstone")    -- NEEDS SPECIFIC TILES!
+  e.tile("c = wall_tomb")           -- AND COLOURS
 end
 
 -- Use the following line in destination maps after all SUBSTs
@@ -131,6 +131,7 @@ end
 function oubliette_setup_features(e)
   e.kfeat("< = exit_oubliette")
 end
+}}
 
 ############################################################
 # Portal entry vaults
