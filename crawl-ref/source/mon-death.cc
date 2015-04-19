@@ -450,13 +450,11 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
     const monster_type corpse_class = fill_out_corpse(mons, mons->type,
                                                       corpse);
 
-    // Corpseless monsters still drop gold for Gozag.
-    if (corpse_class == MONS_NO_MONSTER)
+    // Corpseless monsters still drop gold for Gozag. (Not firewood, though.)
+    if (corpse_class == MONS_NO_MONSTER &&
+        !(in_good_standing(GOD_GOZAG) && !mons_is_firewood(mons)))
     {
-        if (in_good_standing(GOD_GOZAG))
-            goldify_corpse(corpse);
-        else
-            return -1;
+        return -1;
     }
 
     // Don't place a corpse?  If a zombified monster is somehow capable
