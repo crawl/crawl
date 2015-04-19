@@ -902,7 +902,7 @@ public:
 
     bool effect(bool was_known = true, int=40) const
     {
-        return transform(30, TRAN_TREE, !was_known) == SPRET_SUCCESS;
+        return transform(30, TRAN_TREE, !was_known);
     }
 
     bool quaff(bool was_known) const

@@ -1679,22 +1679,17 @@ static bool _player_alive_enough_for(transformation_type which_trans)
  * @param just_check        A dry run; just check to see whether the player
  *                          *can* enter the given form, but don't actually
  *                          transform them.
- * @return                  A spret_type corresponding to the results of the
- *                          transformation.
- *                          If the player was transformed, or if their form's
- *                          duration was refreshed, SPRET_SUCCESS.
- *                          If the transformation failed at no cost in
- *                          time or resources, SPRET_ABORT.
- *                          If the transformation was prevented but still costs
- *                          time and resources, SPRET_FAIL.
- *                          Never returns SPRET_NONE.
- *                          If just_check is set, returns SPRET_SUCCESS if
- *                          the player could enter the form and SPRET_ABORT
- *                          otherwise.
- *                          XXX: it might be possible to simplify this to a
- *                          bool...
+ * @return                  If the player was transformed, or if they were
+ *                          already in the given form, returns true.
+ *                          Otherwise, false.
+ *                          If just_check is set, returns true if the player
+ *                          could enter the form (or is in it already) and
+ *                          false otherwise.
+ *                          N.b. that transform() can fail even when a
+ *                          just_check run returns true; e.g. when Zin decides
+ *                          to intervene. (That may be the only case.)
  */
-int transform(int pow, transformation_type which_trans, bool involuntary,
+bool transform(int pow, transformation_type which_trans, bool involuntary,
                bool just_check)
 {
     const transformation_type previous_trans = you.form;
@@ -1705,7 +1700,7 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
-        return SPRET_ABORT;
+        return false;
     }
 
     if (!involuntary && crawl_state.is_god_acting())
@@ -1715,18 +1710,21 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
     {
         if (!involuntary)
             mpr("You are stuck in your current form!");
-        return SPRET_ABORT;
+        return false;
     }
 
     if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
         involuntary))
     {
-        return SPRET_ABORT;
+        return false;
     }
 
     // This must occur before the untransform() and the undead_state() check.
-    if (previous_trans == which_trans && !just_check)
+    if (previous_trans == which_trans)
     {
+        if (just_check)
+            return true;
+
         // update power
         if (which_trans != TRAN_NONE)
         {
@@ -1749,14 +1747,11 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
             mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
-            return SPRET_SUCCESS;
         }
-        else
-        {
-            if (!involuntary && which_trans != TRAN_NONE)
-                mpr("You fail to extend your transformation any further.");
-            return SPRET_FAIL;
-        }
+        else if (!involuntary && which_trans != TRAN_NONE)
+            mpr("You fail to extend your transformation any further.");
+
+        return true;
     }
 
     // the undead cannot enter most forms.
@@ -1764,22 +1759,15 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
     {
         if (!involuntary)
             mpr("Your unliving flesh cannot be transformed in this way.");
-        return SPRET_ABORT;
+        return false;
     }
 
     if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
         if (!involuntary)
             mpr("You cannot become a lich while in Death's Door.");
-        return SPRET_ABORT;
+        return false;
     }
-
-    // The actual transformation may still fail later.
-    // Ideally, untransforming should cost a turn but nothing
-    // else (as does the "End Transformation" ability). As it is, you
-    // pay with mana and hunger if you already untransformed.
-    if (!just_check && previous_trans != TRAN_NONE)
-        untransform(true);
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
@@ -1787,15 +1775,12 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
     {
         if (!involuntary)
             mpr("Your temperature is too high to benefit from that spell.");
-
-        if (!just_check && you.turn_is_over)
-        {
-            move_player_to_grid(you.pos(), false);
-            return SPRET_FAIL; // pay the necessary costs
-        }
-        return SPRET_ABORT;
+        return false;
     }
 #endif
+
+    if (!just_check && previous_trans != TRAN_NONE)
+        untransform(true);
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
@@ -1806,7 +1791,7 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
         {
             if (!involuntary)
                 mpr("You have no appropriate body parts free.");
-            return SPRET_ABORT;
+            return false; // XXX: VERY dubious, since an untransform occurred
         }
 
         if (!just_check)
@@ -1817,11 +1802,11 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
     }
 
     if (!involuntary && just_check && !check_form_stat_safety(which_trans))
-        return SPRET_ABORT;
+        return false;
 
     // If we're just pretending return now.
     if (just_check)
-        return SPRET_SUCCESS;
+        return true;
 
     // Switching between forms takes a bit longer.
     if (!involuntary && previous_trans != TRAN_NONE
@@ -2028,7 +2013,7 @@ int transform(int pow, transformation_type which_trans, bool involuntary,
                           transform_name(which_trans)).c_str());
     }
 
-    return SPRET_SUCCESS;
+    return true;
 }
 
 /**
