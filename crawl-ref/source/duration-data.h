@@ -368,6 +368,10 @@ static const duration_def duration_data[] =
       "You are cleaving through your foes.", D_DISPELLABLE },
     { DUR_AMBROSIA, GREEN, "Ambros", "", "ambrosia",
       "You are regenerating under the effects of ambrosia.", D_DISPELLABLE },
+    { DUR_STASIS,
+      BROWN, "Stasis",
+      "stasis", "",
+      "You are under stasis.", D_EXPIRES},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

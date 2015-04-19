@@ -216,6 +216,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_CHANT_FIRE_STORM;
     case ENCH_CHANT_WORD_OF_ENTROPY:
         return MB_CHANT_WORD_OF_ENTROPY;
+    case ENCH_STASIS:
+        return MB_STASIS;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1593,6 +1595,8 @@ vector<string> monster_info::attributes() const
         v.emplace_back("chanting fire storm");
     if (is(MB_CHANT_WORD_OF_ENTROPY))
         v.emplace_back("chanting word of entropy");
+    if (is(MB_STASIS))
+        v.emplace_back("static");
     return v;
 }
 

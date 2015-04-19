@@ -1571,6 +1571,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FLAY:
     case SPELL_CHANT_FIRE_STORM:
     case SPELL_CHANT_WORD_OF_ENTROPY:
+    case SPELL_STASIS:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -6761,6 +6762,15 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         return;
     }
+    case SPELL_STASIS:
+        mons->add_ench(ENCH_STASIS);
+        invalidate_agrid(true);
+        simple_monster_message(mons, "'s surroundings become static.");
+        return;
+
+        mons->add_ench(ENCH_STASIS);
+        invalidate_agrid(true);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -8387,6 +8397,9 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
                 return distance2(foe->pos(), mi->pos()) <= mi->get_hit_dice();
         return false;
     }
+
+    case SPELL_STASIS:
+        return stasised(mon->pos());
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:

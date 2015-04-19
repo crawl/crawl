@@ -141,6 +141,7 @@ enum monster_info_flags
     MB_BONE_ARMOUR,
     MB_CHANT_FIRE_STORM,
     MB_CHANT_WORD_OF_ENTROPY,
+    MB_STASIS,
     NUM_MB_FLAGS
 };
 

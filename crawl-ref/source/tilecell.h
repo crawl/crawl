@@ -40,6 +40,7 @@ struct packed_cell
 #if TAG_MAJOR_VERSION == 34
     uint8_t heat_aura;
 #endif
+    bool is_stasised;
 
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
@@ -51,9 +52,9 @@ struct packed_cell
                     old_blood(false), travel_trail(0), quad_glow(false),
                     disjunct(false)
 #if TAG_MAJOR_VERSION == 34
-                    , heat_aura(false)
+                    , heat_aura(false),
 #endif
-                    {}
+                    is_stasised(false) {}
 
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
@@ -73,9 +74,9 @@ struct packed_cell
                                         quad_glow(c->quad_glow),
                                         disjunct(c->disjunct)
 #if TAG_MAJOR_VERSION == 34
-                                        , heat_aura(c->heat_aura)
+                                        , heat_aura(c->heat_aura),
 #endif
-                                        {}
+                                        is_stasised(c->is_stasised) {}
 
     void clear();
 };

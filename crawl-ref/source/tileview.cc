@@ -1,3 +1,4 @@
+
 #include "AppHdr.h"
 
 #include "tileview.h"
@@ -1386,6 +1387,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
+
+    if (mc.flags & MAP_STASISED)
+        cell.is_stasised = true;
 
     if (Options.show_travel_trail)
     {

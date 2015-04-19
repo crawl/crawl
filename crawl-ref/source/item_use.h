@@ -56,7 +56,8 @@ void prompt_inscribe_item();
 bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise = 0,
                           const char *silenced_msg = nullptr,
-                          const char *formicid_msg = nullptr);
+                          const char *formicid_msg = nullptr,
+                          const char *stasised_msg = nullptr);
 
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);

@@ -1852,6 +1852,7 @@ enum duration_type
     DUR_COLLAPSE,
     DUR_BRAINLESS,
     DUR_CLUMSY,
+    DUR_STASIS,
     NUM_DURATIONS
 };
 
@@ -2003,6 +2004,7 @@ enum enchant_type
     ENCH_BONE_ARMOUR,
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
+    ENCH_STASIS,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -4451,6 +4453,7 @@ enum spell_type
     SPELL_GRAVITAS,
     SPELL_CHANT_FIRE_STORM,
     SPELL_CHANT_WORD_OF_ENTROPY,
+    SPELL_STASIS,
     NUM_SPELLS
 };
 
